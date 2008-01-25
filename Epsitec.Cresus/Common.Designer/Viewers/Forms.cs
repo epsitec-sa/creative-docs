@@ -102,6 +102,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonRemove.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
 			this.fieldsToolbar.Items.Add(this.fieldsButtonRemove);
 
+			this.fieldsButtonReset = new IconButton();
+			this.fieldsButtonReset.AutoFocus = false;
+			this.fieldsButtonReset.CaptionId = Res.Captions.Editor.Forms.Reset.Id;
+			this.fieldsButtonReset.Clicked += new MessageEventHandler(this.HandleFieldsButtonClicked);
+			this.fieldsToolbar.Items.Add(this.fieldsButtonReset);
+
 			this.fieldsToolbar.Items.Add(new IconSeparator());
 
 			this.fieldsButtonGlue = new IconButton();
@@ -278,6 +284,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.fieldsButtonRemove.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
+				this.fieldsButtonReset.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonGlue.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonLine.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
 				this.fieldsButtonTitle.Clicked -= new MessageEventHandler(this.HandleFieldsButtonClicked);
@@ -596,6 +603,8 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isGoto = false;
 			bool isUnbox = false;
 			bool isForm = false;
+			bool isReset = false;
+			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
 
 			if (!this.designerApplication.IsReadonly)
 			{
@@ -606,6 +615,7 @@ namespace Epsitec.Common.Designer.Viewers
 					isSel = true;
 					isPrev = true;
 					isNext = true;
+					isReset = isPatch;
 					isGoto = (sels.Count == 1);
 
 					foreach (int sel in sels)
@@ -629,6 +639,11 @@ namespace Epsitec.Common.Designer.Viewers
 						{
 							isGoto = false;
 						}
+
+						if (FormEngine.Arrange.IndexOfGuid(this.form.Fields, this.formEditor.ObjectModifier.TableContent[sel].Guid) == -1)
+						{
+							isReset = false;
+						}
 					}
 				}
 
@@ -651,9 +666,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
-
 			this.fieldsButtonRemove.Enable = isSel;
+			this.fieldsButtonReset.Enable = isReset;
 			this.fieldsButtonGlue.Enable = isSel;
 			this.fieldsButtonLine.Enable = isSel;
 			this.fieldsButtonTitle.Enable = isSel;
@@ -1104,6 +1118,48 @@ namespace Epsitec.Common.Designer.Viewers
 
 					guids.Add(item.Guid);
 				}
+			}
+
+			this.SetForm(this.form, this.druidToSerialize, true);
+			this.UpdateFieldsTable(false);
+
+			sels.Clear();
+			foreach (System.Guid guid in guids)
+			{
+				int index = this.formEditor.ObjectModifier.GetTableContentIndex(guid);
+				if (index != -1)
+				{
+					sels.Add(index);
+				}
+			}
+			this.fieldsTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
+			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(false);
+			this.UpdateRelationsButtons();
+			this.module.AccessForms.SetLocalDirty();
+		}
+
+		protected void SelectedFieldsReset()
+		{
+			//	Remet à zéro les champs sélectionnés, dans un masque de patch.
+			List<int> sels = this.fieldsTable.SelectedRows;
+			sels.Sort();
+
+			List<System.Guid> guids = new List<System.Guid>();
+
+			foreach (int sel in sels)
+			{
+				System.Guid guid = this.formEditor.ObjectModifier.TableContent[sel].Guid;
+
+				int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, guid);
+				if (index != -1)
+				{
+					this.form.Fields.RemoveAt(index);
+				}
+
+				guids.Add(guid);
 			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);
@@ -1655,6 +1711,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleFormEditorUpdateCommands(object sender)
 		{
 			this.UpdateCommands();
+			this.UpdateFieldsButtons();
 		}
 
 		private void HandleFieldsButtonClicked(object sender, MessageEventArgs e)
@@ -1664,6 +1721,11 @@ namespace Epsitec.Common.Designer.Viewers
 			if (sender == this.fieldsButtonRemove)
 			{
 				this.SelectedFieldsRemove();
+			}
+
+			if (sender == this.fieldsButtonReset)
+			{
+				this.SelectedFieldsReset();
 			}
 
 			if (sender == this.fieldsButtonGlue)
@@ -1838,6 +1900,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabPage						tabPageFields;
 		protected HToolBar						fieldsToolbar;
 		protected IconButton					fieldsButtonRemove;
+		protected IconButton					fieldsButtonReset;
 		protected IconButton					fieldsButtonGlue;
 		protected IconButton					fieldsButtonLine;
 		protected IconButton					fieldsButtonTitle;

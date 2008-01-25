@@ -260,6 +260,8 @@ namespace Epsitec.Common.Designer.FormEditor
 					FieldDescription copy = new FieldDescription(field);
 					copy.PatchModified = true;
 					this.formEditor.Form.Fields.Add(copy);
+
+					this.formEditor.OnUpdateCommands();
 				}
 				else
 				{

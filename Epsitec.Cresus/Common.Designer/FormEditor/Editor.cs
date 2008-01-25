@@ -1030,7 +1030,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		protected virtual void OnUpdateCommands()
+		public virtual void OnUpdateCommands()
 		{
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("UpdateCommands");
 			if (handler != null)
