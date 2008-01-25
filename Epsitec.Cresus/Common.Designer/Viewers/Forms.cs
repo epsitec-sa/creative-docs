@@ -603,7 +603,6 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isGoto = false;
 			bool isUnbox = false;
 			bool isForm = false;
-			bool isReset = false;
 			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
 
 			if (!this.designerApplication.IsReadonly)
@@ -615,7 +614,6 @@ namespace Epsitec.Common.Designer.Viewers
 					isSel = true;
 					isPrev = true;
 					isNext = true;
-					isReset = isPatch;
 					isGoto = (sels.Count == 1);
 
 					foreach (int sel in sels)
@@ -638,11 +636,6 @@ namespace Epsitec.Common.Designer.Viewers
 						if (this.formEditor.ObjectModifier.TableContent[sel].FieldType != FieldDescription.FieldType.Field)
 						{
 							isGoto = false;
-						}
-
-						if (FormEngine.Arrange.IndexOfGuid(this.form.Fields, this.formEditor.ObjectModifier.TableContent[sel].Guid) == -1)
-						{
-							isReset = false;
 						}
 					}
 				}
@@ -667,7 +660,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.fieldsButtonRemove.Enable = isSel;
-			this.fieldsButtonReset.Enable = isReset;
+			this.fieldsButtonReset.Enable = isSel;
 			this.fieldsButtonGlue.Enable = isSel;
 			this.fieldsButtonLine.Enable = isSel;
 			this.fieldsButtonTitle.Enable = isSel;
@@ -1068,7 +1061,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			List<System.Guid> guids = new List<System.Guid>();
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
 			{
 				foreach (int sel in sels)
 				{
@@ -1104,7 +1097,7 @@ namespace Epsitec.Common.Designer.Viewers
 					guids.Add(item.Guid);
 				}
 			}
-			else  // module normal ?
+			else  // masque normal ?
 			{
 				foreach (int sel in sels)
 				{
@@ -1151,15 +1144,22 @@ namespace Epsitec.Common.Designer.Viewers
 
 			foreach (int sel in sels)
 			{
-				System.Guid guid = this.formEditor.ObjectModifier.TableContent[sel].Guid;
-
-				int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, guid);
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+				int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
 				if (index != -1)
 				{
-					this.form.Fields.RemoveAt(index);
+					if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+					{
+						this.form.Fields.RemoveAt(index);
+					}
+					else  // masque normal ?
+					{
+						FieldDescription field = this.form.Fields[index];
+						field.Reset();
+					}
 				}
 
-				guids.Add(guid);
+				guids.Add(item.Guid);
 			}
 
 			this.SetForm(this.form, this.druidToSerialize, true);
@@ -1193,7 +1193,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
 			{
 				System.Guid ag = System.Guid.Empty;
 				if (sels[0] > 0)
@@ -1207,7 +1207,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field.PatchAttachGuid = ag;
 				this.form.Fields.Add(field);
 			}
-			else  // module normal ?
+			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Glue);
 				field.ColumnsRequired = 0;
@@ -1236,7 +1236,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
 			{
 				System.Guid ag = System.Guid.Empty;
 				if (sels[0] > 0)
@@ -1249,7 +1249,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field.PatchAttachGuid = ag;
 				this.form.Fields.Add(field);
 			}
-			else  // module normal ?
+			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Line);
 				this.form.Fields.Insert(index, field);
@@ -1277,7 +1277,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
 			{
 				System.Guid ag = System.Guid.Empty;
 				if (sels[0] > 0)
@@ -1290,7 +1290,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field.PatchAttachGuid = ag;
 				this.form.Fields.Add(field);
 			}
-			else  // module normal ?
+			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Title);
 				this.form.Fields.Insert(index, field);
@@ -1438,7 +1438,7 @@ namespace Epsitec.Common.Designer.Viewers
 				sels.Reverse();
 			}
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
 			{
 				List<FormEditor.ObjectModifier.TableItem> items = new List<Epsitec.Common.Designer.FormEditor.ObjectModifier.TableItem>();
 
@@ -1456,7 +1456,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.UpdateFieldsTable(false);
 				}
 			}
-			else  // module normal ?
+			else  // masque normal ?
 			{
 				foreach (int sel in sels)
 				{
@@ -1513,7 +1513,7 @@ namespace Epsitec.Common.Designer.Viewers
 			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // module de patch ?
+			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
 			{
 				FormEditor.ObjectModifier.TableItem ti = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1];
 					
@@ -1523,7 +1523,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field.PatchAttachGuid = ti.Guid;
 				this.form.Fields.Add(field);
 			}
-			else  // module normal ?
+			else  // masque normal ?
 			{
 				if (item.Relation == FieldRelation.None)  // champ normal ?
 				{

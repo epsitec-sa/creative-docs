@@ -56,14 +56,8 @@ namespace Epsitec.Common.FormEngine
 		private FieldDescription()
 		{
 			//	Constructeur protégé, commun à tous les autres.
+			this.Reset();
 			this.subFormId = Druid.Empty;
-			this.backColor = BackColorType.None;
-			this.separatorBottom = SeparatorType.Normal;
-			this.columnsRequired = Engine.MaxColumnsRequired;
-			this.rowsRequired = 1;
-			this.boxPaddingType = BoxPaddingType.Normal;
-			this.boxFrameState = FrameState.None;
-			this.boxFrameWidth = 1;
 			this.patchHidden = false;
 			this.patchMoved = false;
 			this.patchInserted = false;
@@ -104,6 +98,18 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Constructeur qui désérialise.
 			this.ReadXml(reader);
+		}
+
+		public void Reset()
+		{
+			//	Remet à zéro les propriétés liées à l'aspect.
+			this.backColor = BackColorType.None;
+			this.separatorBottom = SeparatorType.Normal;
+			this.columnsRequired = Engine.MaxColumnsRequired;
+			this.rowsRequired = 1;
+			this.boxPaddingType = BoxPaddingType.Normal;
+			this.boxFrameState = FrameState.None;
+			this.boxFrameWidth = 1;
 		}
 
 
