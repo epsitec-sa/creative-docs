@@ -474,8 +474,45 @@ namespace Epsitec.Common.Designer.FormEditor
 			final.RemoveAt(index);
 			final.Insert(index+direction, guid);  // effectue le mouvement (monter ou descendre un élément)
 
+			//	Construit la liste de tous les éléments déplacés.
+			List<System.Guid> moved = new List<System.Guid>();
+			moved.Add(guid);
+			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			{
+				if (field.PatchMoved || field.PatchInserted)
+				{
+					moved.Add(field.Guid);
+				}
+			}
+
 			//	Génére la liste des opérations de déplacement nécessaires.
+			//	Traite d'abord les éléments qu'on sait devoir déplacer (selon la liste moved).
 			List<LinkAfter> oper = new List<LinkAfter>();
+			index = 0;
+			while (index < final.Count)
+			{
+				if (moved.Contains(final[index]) && (index >= original.Count || original[index] != final[index]))
+				{
+					System.Guid element = final[index];  // élément à déplacer
+					System.Guid link = (index==0) ? System.Guid.Empty : final[index-1];  // *après* cet élément
+					bool isInserted = !original.Contains(element);  // true = nouvel élément, false = élément existant
+					oper.Insert(0, new LinkAfter(element, link, isInserted));  // insère au début
+
+					final.RemoveAt(index);  // supprime l'élément déplacé
+
+					int i = original.IndexOf(element);
+					if (i != -1)
+					{
+						original.RemoveAt(i);  // supprime l'élément déplacé
+					}
+				}
+				else
+				{
+					index++;
+				}
+			}
+
+			//	Traite ensuite les éventuels autres éléments.
 			index = 0;
 			while (index < final.Count)
 			{
