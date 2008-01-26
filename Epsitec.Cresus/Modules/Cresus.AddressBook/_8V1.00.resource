@@ -6,6 +6,7 @@
     <xml>
       <Form>
         <EI>[8V1]</EI>
+        <FIP>&lt;invalid&gt;</FIP>
         <FD>
           <Guid>82f99a0d-a4fc-4764-8fc9-1293bbbbb6ff</Guid>
           <Type>Field</Type>
@@ -29,8 +30,8 @@
           <BFW>1</BFW>
         </FD>
         <FD>
-          <Guid>6cf5b9b1-e5b8-4692-97e4-370f6e3f5b2f</Guid>
-          <Type>Line</Type>
+          <Guid>ceac1419-745d-4955-a90b-843cd62c5bbc</Guid>
+          <Type>Title</Type>
           <FI />
           <SB>Normal</SB>
           <CR>10</CR>
