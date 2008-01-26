@@ -223,12 +223,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Gets the type based on the data stored in the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <param name="namedTypeResolver">The named type resolver which knows how to resolve an id to a type.</param>
+		/// <returns>The type or <c>null</c>.</returns>
 		public StructuredType GetStructuredTypeViewOfData(CultureMap item, string twoLetterISOLanguageName, System.Func<Druid, INamedType> namedTypeResolver)
 		{
+			if (this.ContainsCaption (twoLetterISOLanguageName) == false)
+			{
+				twoLetterISOLanguageName = Resources.DefaultTwoLetterISOLanguageName;
+			}
+
 			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
-			string  capName = item.Name;
-			Caption caption = base.CreateCaptionFromData (null, data, capName, twoLetterISOLanguageName);
+			Caption caption = base.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
 
 			return this.CreateTypeFromData (data, caption, namedTypeResolver);
 		}

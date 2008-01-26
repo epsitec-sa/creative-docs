@@ -123,23 +123,25 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 
+		/// <summary>
+		/// Gets the caption based on the data stored in the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetCaptionViewOfData(CultureMap item, string twoLetterISOLanguageName)
 		{
-			ResourceBundle refBundle;
-			ResourceBundle patchBundle;
+			if (this.ContainsCaption (twoLetterISOLanguageName))
+			{
+				StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
+				Caption caption = this.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
 
-			this.ResolveBundles (twoLetterISOLanguageName, out refBundle, out patchBundle);
-
-			if ((refBundle == null) &&
-				(patchBundle == null))
+				return caption;
+			}
+			else
 			{
 				return null;
 			}
-			
-			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
-			Caption caption = this.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
-
-			return caption;
 		}
 
 
@@ -683,6 +685,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Determines whether a caption exists for the specified two letter
+		/// ISO language name.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <returns>
+		/// 	<c>true</c> if captions exist for the specified language; otherwise, <c>false</c>.
+		/// </returns>
+		protected bool ContainsCaption(string twoLetterISOLanguageName)
+		{
+			ResourceBundle refBundle;
+			ResourceBundle patchBundle;
+
+			this.ResolveBundles (twoLetterISOLanguageName, out refBundle, out patchBundle);
+
+			if ((refBundle == null) &&
+				(patchBundle == null))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
 
 		/// <summary>
 		/// Gets the reference and patch bundles for the specified language, if any.
