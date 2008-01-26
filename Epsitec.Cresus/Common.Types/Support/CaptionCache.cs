@@ -1,10 +1,10 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Globalization;
 using System.Collections.Generic;
-
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Support
 {
@@ -15,10 +15,21 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class CaptionCache
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CaptionCache"/> class.
+		/// This is a singleton.
+		/// </summary>
 		private CaptionCache()
 		{
+			CacheManager.RegisterTrimCache (this, this.TrimCache);
 		}
 
+		/// <summary>
+		/// Gets the caption.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="id">The caption id.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetCaption(ResourceManager manager, long id)
 		{
 			if (id >= 0)
@@ -32,12 +43,17 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public Caption GetCaption(ResourceManager manager, Druid druid)
+		/// <summary>
+		/// Gets the caption.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="id">The caption id.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
+		public Caption GetCaption(ResourceManager manager, Druid id)
 		{
-			if (druid.Type == DruidType.Full)
+			if (id.Type == DruidType.Full)
 			{
-				long id = druid.ToLong ();
-				return this.GetCaption (manager, druid, id);
+				return this.GetCaption (manager, id, id.ToLong ());
 			}
 			else
 			{
@@ -45,6 +61,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="id">The caption id.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetCaption(ResourceManager manager, string id)
 		{
 			Druid druid;
@@ -59,6 +81,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption for the specified property.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="property">The property.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetPropertyCaption(ResourceManager manager, DependencyProperty property)
 		{
 			if (property != null)
@@ -71,6 +99,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption for the specified property of the specified object.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="obj">The dependency object.</param>
+		/// <param name="property">The property.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetPropertyCaption(ResourceManager manager, DependencyObject obj, DependencyProperty property)
 		{
 			if (property != null)
@@ -83,6 +118,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the property caption for the specified type.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="property">The property.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetPropertyCaption(ResourceManager manager, System.Type type, DependencyProperty property)
 		{
 			if (property != null)
@@ -95,11 +137,24 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption for the specified type object.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="type">The type object.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetTypeCaption(ResourceManager manager, INamedType type)
 		{
 			return this.GetObjectCaption (manager, type);
 		}
 
+		/// <summary>
+		/// Gets the caption for the type of the data represented by the specified
+		/// property.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="property">The property.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetTypeCaption(ResourceManager manager, DependencyProperty property)
 		{
 			if (property != null)
@@ -113,6 +168,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption for the type of the data represented by the specified
+		/// property of the specified object.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="obj">The dependency object.</param>
+		/// <param name="property">The property.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetTypeCaption(ResourceManager manager, DependencyObject obj, DependencyProperty property)
 		{
 			if (property != null)
@@ -126,6 +189,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption for the type of the data represented by the specified
+		/// property of the specified type.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="sysType">The type.</param>
+		/// <param name="property">The property.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetTypeCaption(ResourceManager manager, System.Type sysType, DependencyProperty property)
 		{
 			if (property != null)
@@ -139,6 +210,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		/// <summary>
+		/// Gets the caption for the specified named object.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="obj">The named object.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
 		public Caption GetObjectCaption(ResourceManager manager, ICaption obj)
 		{
 			if (obj != null)
@@ -151,9 +228,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+
+		/// <summary>
+		/// Trims the cache by removing any dead entries.
+		/// </summary>
 		public void TrimCache()
 		{
-			lock (this.exclusion)
+			lock (CaptionCache.exclusion)
 			{
 				Dictionary<BigKey, Weak<Caption>> copy = new Dictionary<BigKey, Weak<Caption>> ();
 
@@ -169,7 +250,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public int DebugCountLiveCaptions()
+		public int DebugGetLiveCaptionsCount()
 		{
 			int count = 0;
 			
@@ -184,6 +265,17 @@ namespace Epsitec.Common.Support
 			return count;
 		}
 
+
+
+		/// <summary>
+		/// Gets the cached caption for the specified resource manager. If it
+		/// cannot be found in the cache, it will be retrieved directly from the
+		/// resource manager.
+		/// </summary>
+		/// <param name="manager">The resource manager.</param>
+		/// <param name="druid">The DRUID.</param>
+		/// <param name="id">The 64-bit id for the DRUID.</param>
+		/// <returns>The caption or <c>null</c> if the caption does not exist.</returns>
 		private Caption GetCaption(ResourceManager manager, Druid druid, long id)
 		{
 			Caption caption;
@@ -200,7 +292,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			lock (this.exclusion)
+			lock (CaptionCache.exclusion)
 			{
 				caption = manager.GetCaption (druid);
 
@@ -217,10 +309,20 @@ namespace Epsitec.Common.Support
 			return caption;
 		}
 
+
 		#region BigKey Structure
 
+		/// <summary>
+		/// The <c>BigKey</c> structure represents a key vector based on the
+		/// resource manager serial id and a DRUID id.
+		/// </summary>
 		private struct BigKey : System.IEquatable<BigKey>
 		{
+			/// <summary>
+			/// Initializes a new instance of the <see cref="BigKey"/> struct.
+			/// </summary>
+			/// <param name="manager">The resource manager.</param>
+			/// <param name="id">The 64-bit id of the DRUID.</param>
 			public BigKey(ResourceManager manager, long id)
 			{
 				this.serial = manager.SerialId;
@@ -246,16 +348,32 @@ namespace Epsitec.Common.Support
 
 			#endregion
 
-			private long serial;
-			private long id;
+			private readonly long serial;
+			private readonly long id;
 		}
 
 		#endregion
 
 
-		public static readonly CaptionCache Instance = new CaptionCache ();
+		public static CaptionCache			Instance
+		{
+			get
+			{
+				if (CaptionCache.instance == null)
+				{
+					lock (CaptionCache.exclusion)
+					{
+						CaptionCache.instance = new CaptionCache ();
+					}
+				}
 
-		private Dictionary<BigKey, Weak<Caption>> cache = new Dictionary<BigKey, Weak<Caption>> ();
-		private readonly object exclusion = new object ();
+				return CaptionCache.instance;
+			}
+		}
+
+		private readonly static object		exclusion	= new object ();
+		private static CaptionCache			instance;
+
+		Dictionary<BigKey, Weak<Caption>>	cache		= new Dictionary<BigKey, Weak<Caption>> ();
 	}
 }

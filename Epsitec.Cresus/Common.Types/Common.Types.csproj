@@ -106,6 +106,7 @@
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
     <Compile Include="IStructuredTypeProviderId.cs" />
+    <Compile Include="Support\CacheManager.cs" />
     <Compile Include="Support\ExceptionHelper.cs" />
     <Compile Include="ValueStoreSetMode.cs" />
     <Compile Include="INotifyCollectionChangedProvider.cs" />

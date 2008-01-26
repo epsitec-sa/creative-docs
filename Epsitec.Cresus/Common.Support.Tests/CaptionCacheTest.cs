@@ -76,12 +76,12 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, idQ.ToLong ()));
 			Assert.AreEqual (captionQ_fr, CaptionCache.Instance.GetCaption (this.manager_fr, "[4003]"));
 
-			Assert.AreEqual (4, CaptionCache.Instance.DebugCountLiveCaptions ());
+			Assert.AreEqual (4, CaptionCache.Instance.DebugGetLiveCaptionsCount ());
 
 			System.GC.Collect ();
 			CaptionCache.Instance.TrimCache ();
 
-			Assert.AreEqual (4, CaptionCache.Instance.DebugCountLiveCaptions ());
+			Assert.AreEqual (4, CaptionCache.Instance.DebugGetLiveCaptionsCount ());
 
 			Assert.AreEqual ("A", Collection.Extract (captionA_en.SortedLabels, 0));
 			Assert.AreEqual ("Q", Collection.Extract (captionQ_en.SortedLabels, 0));
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Support
 			System.GC.Collect ();
 			CaptionCache.Instance.TrimCache ();
 
-			Assert.AreEqual (2, CaptionCache.Instance.DebugCountLiveCaptions ());
+			Assert.AreEqual (2, CaptionCache.Instance.DebugGetLiveCaptionsCount ());
 		}
 
 		[Test]
