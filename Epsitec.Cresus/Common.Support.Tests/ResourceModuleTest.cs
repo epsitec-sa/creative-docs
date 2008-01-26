@@ -216,24 +216,24 @@ namespace Epsitec.Common.Support
 			stringAccessor1.Load (manager1);
 			stringAccessor2.Load (manager2);
 
-			Assert.AreEqual (4, stringAccessor1.Collection.Count);
+			Assert.AreEqual (5, stringAccessor1.Collection.Count);
 			Assert.AreEqual ("Image.Description", stringAccessor1.Collection[0].Name);
 			Assert.AreEqual ("Author", stringAccessor1.Collection[1].Name);
 			Assert.AreEqual ("Null", stringAccessor1.Collection[2].Name);
 			Assert.AreEqual ("CopyrightHolder", stringAccessor1.Collection[3].Name);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor1.Collection[0].Source);
 
-			Assert.AreEqual (5, stringAccessor2.Collection.Count);
+			Assert.AreEqual (6, stringAccessor2.Collection.Count);
 			Assert.AreEqual ("Image.Description", stringAccessor2.Collection[0].Name);
 			Assert.AreEqual ("Author", stringAccessor2.Collection[1].Name);
 			Assert.AreEqual ("Null", stringAccessor2.Collection[2].Name);
 			Assert.AreEqual ("CopyrightHolder", stringAccessor2.Collection[3].Name);
-			Assert.AreEqual ("Foo", stringAccessor2.Collection[4].Name);
+			Assert.AreEqual ("Foo", stringAccessor2.Collection[5].Name);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[0].Source);
 			Assert.AreEqual (CultureMapSource.DynamicMerge, stringAccessor2.Collection[1].Source);
 			Assert.AreEqual (CultureMapSource.ReferenceModule, stringAccessor2.Collection[2].Source);
 			Assert.AreEqual (CultureMapSource.DynamicMerge, stringAccessor2.Collection[3].Source);
-			Assert.AreEqual (CultureMapSource.PatchModule, stringAccessor2.Collection[4].Source);
+			Assert.AreEqual (CultureMapSource.PatchModule, stringAccessor2.Collection[5].Source);
 
 			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor1, 0, null).StartsWith ("Taille"));
 			Assert.IsTrue (ResourceModuleTest.GetText (stringAccessor2, 0, null).StartsWith ("Taille"));
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Pierre Arnaud &amp; EPSITEC SA (Schweiz)", ResourceModuleTest.GetText (stringAccessor2, 3, "de"));	//	inherit
 			Assert.AreEqual (null, ResourceModuleTest.GetText (stringAccessor1, 3, "en"));											//	(no definition)
 			Assert.AreEqual ("Pierre Arnaud &amp; OPaC bright ideas", ResourceModuleTest.GetText (stringAccessor2, 3, "en"));		//	override
-			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 4, null));											//	local definition
+			Assert.AreEqual ("foo", ResourceModuleTest.GetText (stringAccessor2, 5, null));											//	local definition
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor1, 1, null));
 			Assert.AreEqual ("Cf. Common.Support.Tests", ResourceModuleTest.GetComment (stringAccessor2, 1, null));
 		}

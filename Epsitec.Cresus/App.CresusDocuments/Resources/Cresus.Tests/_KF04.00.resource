@@ -52,4 +52,6 @@
     </xml>
   </data>
   <data name="DefaultSize">475;350</data>
+  <data name="RootEntityId">
+  </data>
 </bundle>
