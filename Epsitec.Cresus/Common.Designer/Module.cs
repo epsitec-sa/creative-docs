@@ -435,7 +435,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		
+
+		#region InternalFormResourceProvider Class
+
+		/// <summary>
+		/// The <c>InternalFormResourceProvider</c> class implements the <see cref="FormEngine.IFormResourceProvider"/>
+		/// used by the <see cref="FormEngine.Engine"/>.
+		/// </summary>
 		private class InternalFormResourceProvider : FormEngine.IFormResourceProvider
 		{
 			public InternalFormResourceProvider(Module module)
@@ -519,12 +525,25 @@ namespace Epsitec.Common.Designer
 				//	Cherche le caption dans tous les accesseurs possibles et imaginables
 				//	qui représentent les données sous la forme de captions :
 
-				CultureMap item = module.accessCaptions.Accessor.Collection[captionId] ??
-					/**/		  module.accessCommands.Accessor.Collection[captionId] ??
-					/**/		  module.accessEntities.Accessor.Collection[captionId] ??
-					/**/		  module.accessFields.Accessor.Collection[captionId] ??
-					/**/		  module.accessTypes.Accessor.Collection[captionId] ??
-					/**/		  module.accessValues.Accessor.Collection[captionId];
+				CultureMap item = null;
+				AbstractCaptionResourceAccessor accessor = null;
+				
+				foreach (ResourceAccess access in this.module.Accesses)
+				{
+					accessor = access.Accessor as AbstractCaptionResourceAccessor;
+
+					if (accessor == null)
+					{
+						continue;
+					}
+
+					item = accessor.Collection[captionId];
+
+					if (item != null)
+					{
+						break;
+					}
+				}
 
 				if (item == null)
 				{
@@ -532,8 +551,6 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					AbstractCaptionResourceAccessor accessor = item.Owner as AbstractCaptionResourceAccessor;
-
 					Caption captionDefaultCulture = accessor.GetCaptionViewOfData (item, Resources.DefaultTwoLetterISOLanguageName);
 					Caption captionCurrentCulture = accessor.GetCaptionViewOfData (item, this.TwoLetterISOLanguageName);
 
@@ -649,6 +666,8 @@ namespace Epsitec.Common.Designer
 			private readonly Dictionary<Druid, INamedType> typeCache;
 			private readonly FormEngine.DefaultResourceProvider defaultProvider;
 		}
+
+		#endregion
 
 
 		internal void Regenerate()

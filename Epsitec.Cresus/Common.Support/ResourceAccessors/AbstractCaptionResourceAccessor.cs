@@ -78,36 +78,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </returns>
 		public override Types.StructuredData LoadCultureData(CultureMap item, string twoLetterISOLanguageName)
 		{
-			CultureInfo culture;
-			ResourceLevel level;
-
-			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
-			{
-				culture = null;
-				level = ResourceLevel.Default;
-			}
-			else
-			{
-				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
-				level   = ResourceLevel.Localized;
-			}
-
-			//	If the module is a patch module, then handle the merge between the
-			//	data coming from the reference module and the patch module :
-
 			ResourceBundle refBundle;
 			ResourceBundle patchBundle;
 
-			if (this.ResourceManager.BasedOnPatchModule)
-			{
-				refBundle   = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (this.GetBundleName (), level, culture);
-				patchBundle = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
-			}
-			else
-			{
-				refBundle   = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
-				patchBundle = null;
-			}
+			this.ResolveBundles (twoLetterISOLanguageName, out refBundle, out patchBundle);
 
 			ResourceBundle.Field refField   = refBundle   == null ? ResourceBundle.Field.Empty : refBundle[item.Id];
 			ResourceBundle.Field patchField = patchBundle == null ? ResourceBundle.Field.Empty : patchBundle[item.Id];
@@ -151,6 +125,17 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public Caption GetCaptionViewOfData(CultureMap item, string twoLetterISOLanguageName)
 		{
+			ResourceBundle refBundle;
+			ResourceBundle patchBundle;
+
+			this.ResolveBundles (twoLetterISOLanguageName, out refBundle, out patchBundle);
+
+			if ((refBundle == null) &&
+				(patchBundle == null))
+			{
+				return null;
+			}
+			
 			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
 			Caption caption = this.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
 
@@ -698,6 +683,43 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Gets the reference and patch bundles for the specified language, if any.
+		/// </summary>
+		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
+		/// <param name="refBundle">The reference bundle.</param>
+		/// <param name="patchBundle">The patch bundle.</param>
+		private void ResolveBundles(string twoLetterISOLanguageName, out ResourceBundle refBundle, out ResourceBundle patchBundle)
+		{
+			CultureInfo culture;
+			ResourceLevel level;
+
+			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
+			{
+				culture = null;
+				level = ResourceLevel.Default;
+			}
+			else
+			{
+				culture = Resources.FindCultureInfo (twoLetterISOLanguageName);
+				level   = ResourceLevel.Localized;
+			}
+
+			//	If the module is a patch module, then handle the merge between the
+			//	data coming from the reference module and the patch module :
+
+			if (this.ResourceManager.BasedOnPatchModule)
+			{
+				refBundle   = this.ResourceManager.GetManagerForReferenceModule ().GetBundle (this.GetBundleName (), level, culture);
+				patchBundle = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
+			}
+			else
+			{
+				refBundle   = this.ResourceManager.GetBundle (this.GetBundleName (), level, culture);
+				patchBundle = null;
+			}
+		}
 
 		/// <summary>
 		/// Determines whether the specified data record is empty. This calls
