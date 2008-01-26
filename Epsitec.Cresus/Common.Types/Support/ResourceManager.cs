@@ -364,8 +364,8 @@ namespace Epsitec.Common.Support
 				string moduleName;
 
 				Resources.SplitFullId (id, out prefix, out localId);
-				Resources.ResolveStringsDruidReference (ref prefix, ref localId);
-				Resources.ResolveBundleDruidReference (ref prefix, ref localId);
+				Resources.ResolveStringsIdReference (ref prefix, ref localId);
+				Resources.ResolveBundleIdReference (ref prefix, ref localId);
 				Resources.SplitFullPrefix (prefix, out prefix, out moduleName);
 
 				if (string.IsNullOrEmpty (prefix))
@@ -400,8 +400,8 @@ namespace Epsitec.Common.Support
 			string localId;
 
 			Resources.SplitFullId (id, out prefix, out localId);
-			Resources.ResolveStringsDruidReference (ref prefix, ref localId);
-			Resources.ResolveBundleDruidReference (ref prefix, ref localId);
+			Resources.ResolveStringsIdReference (ref prefix, ref localId);
+			Resources.ResolveBundleIdReference (ref prefix, ref localId);
 
 			return this.NormalizeFullId (prefix, localId);
 		}
@@ -919,13 +919,13 @@ namespace Epsitec.Common.Support
 		{
 			culture = culture ?? this.culture;
 
-			string resource = Resources.ResolveCaptionsDruidReference (druid.ToResourceId ());
+			string resource = Resources.ResolveCaptionsIdReference (druid.ToResourceId ());
 			string bundleName;
 			string fieldName;
 			
 			resource = this.NormalizeFullId (resource);
 
-			if (Resources.SplitFieldIdWithoutDruidResolution (resource, out bundleName, out fieldName))
+			if (Resources.SplitFieldIdWithoutIdResolution (resource, out bundleName, out fieldName))
 			{
 				bool removed = false;
 
@@ -973,7 +973,7 @@ namespace Epsitec.Common.Support
 
 			culture = culture ?? this.culture;
 
-			string resource = Resources.ResolveCaptionsDruidReference (druid.ToResourceId ());
+			string resource = Resources.ResolveCaptionsIdReference (druid.ToResourceId ());
 			string bundleName;
 			string fieldName;
 			
@@ -981,7 +981,7 @@ namespace Epsitec.Common.Support
 
 			Caption caption = null;
 			
-			if (Resources.SplitFieldIdWithoutDruidResolution (resource, out bundleName, out fieldName))
+			if (Resources.SplitFieldIdWithoutIdResolution (resource, out bundleName, out fieldName))
 			{
 				string key = Resources.CreateCaptionKey (druid, level, culture);
 				Weak<Caption> weakCaption;

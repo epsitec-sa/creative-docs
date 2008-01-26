@@ -1,6 +1,7 @@
 //	Copyright © 2005-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
@@ -11,7 +12,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	using PropertyChangedEventHandler=Epsitec.Common.Support.EventHandler<DependencyPropertyChangedEventArgs>;
+	using PropertyChangedEventHandler=EventHandler<DependencyPropertyChangedEventArgs>;
 	using FlatChildrenCollection=Collections.FlatChildrenCollection;
 	using ContentAlignment=Drawing.ContentAlignment;
 	
@@ -126,12 +127,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Support.Druid					CommandDruid
+		public Druid							CommandId
 		{
 			get
 			{
 				Command command = this.CommandObject;
-				return command == null ? Support.Druid.Empty : command.Caption.Id;
+				return command == null ? Druid.Empty : command.Caption.Id;
 			}
 			set
 			{
@@ -141,7 +142,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Support.ResourceManager manager = Visual.cachedResourceManager ?? Helpers.VisualTree.FindResourceManager (this);
+					ICaptionResolver manager = Visual.cachedCaptionResolver ?? Helpers.VisualTree.GetCaptionResolver (this);
 
 					this.CommandObject = Command.Get (value, manager);
 				}
@@ -188,6 +189,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public ICaptionResolver					CaptionResolver
+		{
+			get
+			{
+				return (ICaptionResolver) this.GetValue (Visual.CaptionResolverProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (Visual.CaptionResolverProperty);
+				}
+				else
+				{
+					this.SetValue (Visual.CaptionResolverProperty, value);
+				}
+			}
+		}
+
 		public Caption							Caption
 		{
 			get
@@ -204,11 +224,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Support.Druid					CaptionId
+		public Druid							CaptionId
 		{
 			get
 			{
-				return (Support.Druid) this.GetValue (Visual.CaptionIdProperty);
+				return (Druid) this.GetValue (Visual.CaptionIdProperty);
 			}
 			set
 			{
@@ -891,7 +911,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double						DrawFrameWidth
+		public double							DrawFrameWidth
 		{
 			//	Epaisseur du cadre dans les quatre bords du widget.
 			get
@@ -1374,12 +1394,8 @@ namespace Epsitec.Common.Widgets
 			if ((commandCaption != null) &&
 				(commandCaption.Id.IsValid))
 			{
-				Support.ResourceManager manager = Visual.cachedResourceManager ?? Helpers.VisualTree.FindResourceManager (this);
-
-				if (manager != null)
-				{
-					commandCaption = manager.GetCaption (commandCaption.Id);
-				}
+				ICaptionResolver manager = Visual.cachedCaptionResolver ?? Helpers.VisualTree.GetCaptionResolver (this);
+				commandCaption = manager.GetCaption (commandCaption.Id);
 			}
 
 			return Caption.Merge (commandCaption, this.Caption);
@@ -1387,14 +1403,14 @@ namespace Epsitec.Common.Widgets
 
 		public void UpdateDisplayCaptions()
 		{
-			Support.ResourceManager oldManager = Visual.cachedResourceManager;
-			Support.ResourceManager newManager = Helpers.VisualTree.GetResourceManager (this);
+			ICaptionResolver oldManager = Visual.cachedCaptionResolver;
+			ICaptionResolver newManager = Helpers.VisualTree.GetCaptionResolver (this);
 
-			Visual.cachedResourceManager = newManager;
+			Visual.cachedCaptionResolver = newManager;
 
 			this.RecursiveUpdateDisplayCaptions ();
-			
-			Visual.cachedResourceManager = oldManager;
+
+			Visual.cachedCaptionResolver = oldManager;
 		}
 
 		private void RecursiveUpdateDisplayCaptions()
@@ -1411,7 +1427,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[System.ThreadStatic]
-		private static Support.ResourceManager cachedResourceManager;
+		private static ICaptionResolver cachedCaptionResolver;
 		
 		internal virtual void InvalidateTextLayout()
 		{
@@ -1523,11 +1539,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private bool AttachCaption(Support.Druid caption)
+		private bool AttachCaption(Druid caption)
 		{
 			if (caption.IsValid)
 			{
-				Support.ResourceManager manager = Helpers.VisualTree.GetResourceManager (this);
+				ICaptionResolver manager = Helpers.VisualTree.GetCaptionResolver (this);
 				return this.AttachCaption (manager.GetCaption (caption));
 			}
 			else
@@ -1562,7 +1578,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnDisplayCaptionChanged()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("DisplayCaptionChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("DisplayCaptionChanged");
 
 			if (handler != null)
 			{
@@ -1592,7 +1608,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnChildrenChanged()
 		{
-			Support.EventHandler handler = (Support.EventHandler) this.GetUserEventHandler ("ChildrenChanged");
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("ChildrenChanged");
 
 			if (handler != null)
 			{
@@ -1862,11 +1878,11 @@ namespace Epsitec.Common.Widgets
 		{
 			Visual that = o as Visual;
 			
-			Support.Druid oldDruid = (Support.Druid) oldValue;
-			Support.Druid newDruid = (Support.Druid) newValue;
+			Druid oldId = (Druid) oldValue;
+			Druid newId = (Druid) newValue;
 
 			that.DetachCaption ();
-			that.AttachCaption (newDruid);
+			that.AttachCaption (newId);
 			that.InvalidateDisplayCaption ();
 		}
 
@@ -1961,7 +1977,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event Support.EventHandler			ChildrenChanged
+		public event EventHandler					ChildrenChanged
 		{
 			add
 			{
@@ -2021,7 +2037,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event Support.EventHandler			DisplayCaptionChanged
+		public event EventHandler					DisplayCaptionChanged
 		{
 			add
 			{
@@ -2107,6 +2123,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty IsValidProperty				= DependencyProperty.RegisterReadOnly ("IsValid", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (Visual.GetIsValidValue));
 		public static readonly DependencyProperty ValidatorProperty				= DependencyProperty.RegisterReadOnly ("Validator", typeof (IValidator), typeof (Visual), new DependencyPropertyMetadata ());
 		public static readonly DependencyProperty ValidationGroupsProperty		= DependencyProperty.Register ("ValidationGroups", typeof (string), typeof (Visual), new DependencyPropertyMetadata (Visual.NotifyValidationGroupsChanged));
+		public static readonly DependencyProperty CaptionResolverProperty		= DependencyProperty.Register ("CaptionResolver", typeof (ICaptionResolver), typeof (Visual), new DependencyPropertyMetadata ());
 
 		public static readonly DependencyProperty SyncPaintProperty				= DependencyProperty.Register ("SyncPaint", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoCaptureProperty			= DependencyProperty.Register ("AutoCapture", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (true));
@@ -2122,7 +2139,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 
 		public static readonly DependencyProperty CommandObjectProperty			= DependencyProperty.Register ("CommandObject", typeof (Command), typeof (Visual), new VisualPropertyMetadata (null, new PropertyInvalidatedCallback (Visual.NotifyCommandObjectChanged), VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty CaptionIdProperty				= DependencyProperty.Register ("CaptionId", typeof (Support.Druid), typeof (Visual), new VisualPropertyMetadata (Support.Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionIdChanged), VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty CaptionIdProperty				= DependencyProperty.Register ("CaptionId", typeof (Druid), typeof (Visual), new VisualPropertyMetadata (Druid.Empty, new PropertyInvalidatedCallback (Visual.NotifyCaptionIdChanged), VisualPropertyMetadataOptions.AffectsDisplay));
 		private static readonly DependencyProperty CommandCacheIdProperty		= DependencyProperty.Register ("CommandCacheId", typeof (int), typeof (Visual), new VisualPropertyMetadata (-1));
 
 		private static long						nextSerialId = 1;

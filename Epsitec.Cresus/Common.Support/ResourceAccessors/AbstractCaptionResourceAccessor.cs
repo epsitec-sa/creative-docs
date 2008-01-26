@@ -315,7 +315,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					if (field.IsEmpty)
 					{
 						field = bundle.CreateField (ResourceFieldType.Data);
-						field.SetDruid (item.Id);
+						field.SetId (item.Id);
 						bundle.Add (field);
 					}
 

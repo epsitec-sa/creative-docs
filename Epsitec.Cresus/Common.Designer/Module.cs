@@ -499,14 +499,6 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			public ResourceManager ResourceManager
-			{
-				get
-				{
-					return this.module.resourceManager;
-				}
-			}
-
 			#endregion
 
 			#region ICaptionResolver Members

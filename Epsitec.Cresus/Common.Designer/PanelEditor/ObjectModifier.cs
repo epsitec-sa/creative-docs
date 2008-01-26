@@ -258,7 +258,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.Button)
 			{
-				obj.CommandDruid = d;
+				obj.CommandId = d;
 			}
 			else if (type == ObjectType.StaticText || type == ObjectType.GroupBox)
 			{
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			ObjectType type = ObjectModifier.GetObjectType(obj);
 			if (type == ObjectType.Button)
 			{
-				druid = obj.CommandDruid;
+				druid = obj.CommandId;
 			}
 			else if (type == ObjectType.StaticText || type == ObjectType.GroupBox)
 			{

@@ -37,14 +37,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.primaryAspectIcon = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
-			this.primaryAspectIcon.CommandDruid = Res.Values.Widgets.ButtonAspect.IconButton.Id;
+			this.primaryAspectIcon.CommandId = Res.Values.Widgets.ButtonAspect.IconButton.Id;
 			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectIcon.Dock = DockStyle.Left;
 			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryAspectDialog = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
-			this.primaryAspectDialog.CommandDruid = Res.Values.Widgets.ButtonAspect.DialogButton.Id;
+			this.primaryAspectDialog.CommandId = Res.Values.Widgets.ButtonAspect.DialogButton.Id;
 			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);

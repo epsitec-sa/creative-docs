@@ -98,7 +98,7 @@ namespace Epsitec.Common.FormEngine
 			//	enfants héritent de cette propriété.
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			root.ResourceManager = this.resourceProvider.ResourceManager;
+			root.CaptionResolver = this.resourceProvider;
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 

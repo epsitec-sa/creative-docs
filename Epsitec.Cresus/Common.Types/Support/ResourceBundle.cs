@@ -1741,7 +1741,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			public void SetDruid(Druid druid)
+			public void SetId(Druid druid)
 			{
 				if (this.IsEmpty)
 				{

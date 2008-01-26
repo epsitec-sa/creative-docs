@@ -1315,13 +1315,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					return;
 				}
 
-				Druid                 baseDruid    = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
+				Druid                 baseId       = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceStructuredType.BaseType));
 				IList<StructuredData> interfaceIds = data.GetValue (Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
 				IList<StructuredData> fields       = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
-				if (baseDruid.IsValid)
+				if (baseId.IsValid)
 				{
-					this.IncludeType (baseDruid, definingTypeId, FieldMembership.Inherited, depth+1);
+					this.IncludeType (baseId, definingTypeId, FieldMembership.Inherited, depth+1);
 				}
 
 				if (interfaceIds != null)

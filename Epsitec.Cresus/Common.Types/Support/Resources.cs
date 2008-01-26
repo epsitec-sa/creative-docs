@@ -199,12 +199,12 @@ namespace Epsitec.Common.Support
 
 		public static bool SplitFieldId(string id, out string bundle, out string field)
 		{
-			id = Resources.ResolveStringsDruidReference (id);
+			id = Resources.ResolveStringsIdReference (id);
 
-			return Resources.SplitFieldIdWithoutDruidResolution (id, out bundle, out field);
+			return Resources.SplitFieldIdWithoutIdResolution (id, out bundle, out field);
 		}
 
-		public static bool SplitFieldIdWithoutDruidResolution(string id, out string bundle, out string field)
+		public static bool SplitFieldIdWithoutIdResolution(string id, out string bundle, out string field)
 		{
 			int pos = id.IndexOf (Resources.FieldSeparator);
 
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Support
 			return string.Concat (bundle, Resources.FieldSeparator, field);
 		}
 
-		public static string ResolveCaptionsDruidReference(string fullId)
+		public static string ResolveCaptionsIdReference(string fullId)
 		{
 			string prefix;
 			string localId;
@@ -246,13 +246,13 @@ namespace Epsitec.Common.Support
 			return Resources.JoinFullId (prefix, localId);
 		}
 		
-		public static string ResolveStringsDruidReference(string fullId)
+		public static string ResolveStringsIdReference(string fullId)
 		{
 			string prefix;
 			string localId;
 
 			Resources.SplitFullId (fullId, out prefix, out localId);
-			Resources.ResolveStringsDruidReference (ref prefix, ref localId);
+			Resources.ResolveStringsIdReference (ref prefix, ref localId);
 
 			return Resources.JoinFullId (prefix, localId);
 		}
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public static void ResolveStringsDruidReference(ref string prefix, ref string localId)
+		public static void ResolveStringsIdReference(ref string prefix, ref string localId)
 		{
 			if (Druid.IsValidResourceId (localId))
 			{
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public static void ResolveBundleDruidReference(ref string prefix, ref string localId)
+		public static void ResolveBundleIdReference(ref string prefix, ref string localId)
 		{
 			if (Druid.IsValidBundleId (localId))
 			{

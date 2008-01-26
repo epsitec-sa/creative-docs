@@ -16,18 +16,18 @@ namespace Epsitec.Common.Widgets
 	/// La classe <c>Command</c> permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec l'état des widgets associés.
 	/// </summary>
-	public class Command : DependencyObject, System.IEquatable<Command>, Types.INamedType
+	public class Command : DependencyObject, System.IEquatable<Command>, INamedType
 	{
 		protected Command()
 		{
 		}
 
 		protected Command(string id)
-			: this (id, Support.Resources.DefaultManager)
+			: this (id, Resources.DefaultManager)
 		{
 		}
 		
-		protected Command(string id, Support.ResourceManager manager)
+		protected Command(string id, ICaptionResolver manager)
 			: this ()
 		{
 			if (string.IsNullOrEmpty (id))
@@ -44,12 +44,12 @@ namespace Epsitec.Common.Widgets
 			this.Shortcuts.AddRange (shortcuts);
 		}
 
-		protected Command(Support.Druid druid)
-			: this (druid, Support.Resources.DefaultManager)
+		protected Command(Druid druid)
+			: this (druid, Resources.DefaultManager)
 		{
 		}
-		
-		protected Command(Support.Druid druid, Support.ResourceManager manager)
+
+		protected Command(Druid druid, ICaptionResolver manager)
 			: this ()
 		{
 			string id = druid.ToResourceId ();
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			this.InitializeCommandId (id, manager);
 		}
 
-		protected Command(Types.Caption caption, Support.ResourceManager manager)
+		protected Command(Caption caption, ICaptionResolver manager)
 			: this ()
 		{
 			this.uniqueId = -1;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Widgets
 			this.InitializeCommandId (caption.Id.ToResourceId (), manager);
 		}
 
-		public static Command CreateTemporary(Types.Caption caption, Support.ResourceManager manager)
+		public static Command CreateTemporary(Caption caption, ICaptionResolver manager)
 		{
 			Command command = new Command (caption, manager);
 			command.temporary = true;
@@ -330,12 +330,12 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="druid">The command DRUID.</param>
 		/// <returns>The command.</returns>
-		public static Command Get(Support.Druid druid)
+		public static Command Get(Druid druid)
 		{
 			return Command.Get (druid, null);
 		}
 
-		public static Command Get(Support.Druid druid, Support.ResourceManager manager)
+		public static Command Get(Druid druid, ICaptionResolver manager)
 		{
 			if (druid.IsEmpty)
 			{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Widgets
 			return Command.Get (id, null);
 		}
 
-		public static Command Get(string id, Support.ResourceManager manager)
+		public static Command Get(string id, ICaptionResolver manager)
 		{
 			if (string.IsNullOrEmpty (id))
 			{
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="druid">The command DRUID.</param>
 		/// <returns>The command, or <c>null</c> if none could be found.</returns>
-		public static Command Find(Support.Druid druid)
+		public static Command Find(Druid druid)
 		{
 			if (druid.IsEmpty)
 			{
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Widgets
 
 		#region ICaption Members
 
-		Support.Druid ICaption.CaptionId
+		Druid ICaption.CaptionId
 		{
 			get
 			{
@@ -580,14 +580,14 @@ namespace Epsitec.Common.Widgets
 		
 		#region Internal Methods
 
-		private void InitializeCommandId(string commandId, Support.ResourceManager manager)
+		private void InitializeCommandId(string commandId, ICaptionResolver manager)
 		{
 			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (commandId) == false);
 			System.Diagnostics.Debug.Assert (this.commandId == null);
 
 			if (manager == null)
 			{
-				manager = Support.Resources.DefaultManager;
+				manager = Resources.DefaultManager;
 			}
 
 			if (this.uniqueId == 0)
@@ -606,11 +606,11 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			Support.Druid druid;
+			Druid druid;
 
-			if (Support.Druid.TryParse (commandId, out druid))
+			if (Druid.TryParse (commandId, out druid))
 			{
-				this.InitializeDruid (druid, manager);
+				this.InitializeId (druid, manager);
 			}
 			else
 			{
@@ -630,15 +630,15 @@ namespace Epsitec.Common.Widgets
 			switch (type)
 			{
 				case CommandType.Standard:
-					this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (Command.SimpleState)));
+					this.DefineStateObjectType (DependencyObjectType.FromSystemType (typeof (Command.SimpleState)));
 					break;
 				
 				case CommandType.Multiple:
-					this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (MultiCommand.MultiState)));
+					this.DefineStateObjectType (DependencyObjectType.FromSystemType (typeof (MultiCommand.MultiState)));
 					break;
 				
 				case CommandType.Structured:
-					this.DefineStateObjectType (Types.DependencyObjectType.FromSystemType (typeof (StructuredCommand.StructuredState)));
+					this.DefineStateObjectType (DependencyObjectType.FromSystemType (typeof (StructuredCommand.StructuredState)));
 					break;
 				
 				default:
@@ -646,11 +646,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void InitializeDruid(Support.Druid druid, Support.ResourceManager manager)
+		private void InitializeId(Druid druid, ICaptionResolver manager)
 		{
 			System.Diagnostics.Debug.Assert (manager != null);
 			System.Diagnostics.Debug.Assert (druid.IsValid);
-			System.Diagnostics.Debug.Assert (this.captionId == Support.Druid.Empty);
+			System.Diagnostics.Debug.Assert (this.captionId == Druid.Empty);
 
 			this.captionId = druid;
 
@@ -658,7 +658,7 @@ namespace Epsitec.Common.Widgets
 
 			if (this.caption == null)
 			{
-				Types.Caption caption = manager.GetCaption (druid);
+				Caption caption = manager.GetCaption (druid);
 
 				System.Diagnostics.Debug.Assert (caption != null);
 				System.Diagnostics.Debug.Assert (caption.Id.ToResourceId () == this.commandId);

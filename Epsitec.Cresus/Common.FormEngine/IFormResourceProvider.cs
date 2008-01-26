@@ -25,11 +25,5 @@ namespace Epsitec.Common.FormEngine
 		/// <param name="formId">The form id.</param>
 		/// <returns>The XML source or <c>null</c>.</returns>
 		string GetFormXmlSource(Druid formId);
-
-		
-		ResourceManager ResourceManager
-		{
-			get;
-		}
 	}
 }

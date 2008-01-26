@@ -104,6 +104,36 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets the caption.
+		/// </summary>
+		/// <param name="resolver">The resolver.</param>
+		/// <param name="id">The caption id.</param>
+		/// <returns>The caption or <c>null</c>.</returns>
+		public Caption GetCaption(ICaptionResolver resolver, Druid id)
+		{
+			if (id.Type == DruidType.Full)
+			{
+				ResourceManager manager = resolver as ResourceManager;
+
+				if (manager == null)
+				{
+					//	This does not go through a standard resource manager. Do not
+					//	cache the result :
+					
+					return resolver.GetCaption (id);
+				}
+				else
+				{
+					return this.GetCaption (manager, id, id.ToLong ());
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Gets the caption for the specified property.
 		/// </summary>
 		/// <param name="manager">The manager.</param>

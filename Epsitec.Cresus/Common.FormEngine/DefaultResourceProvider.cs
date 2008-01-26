@@ -52,14 +52,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public ResourceManager ResourceManager
-		{
-			get
-			{
-				return this.resourceManager;
-			}
-		}
-
 		#endregion
 
 		#region IStructuredTypeResolver Members

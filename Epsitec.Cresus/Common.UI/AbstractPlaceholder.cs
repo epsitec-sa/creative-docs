@@ -93,10 +93,11 @@ namespace Epsitec.Common.UI
 				{
 					return null;
 				}
-				
-				Support.ResourceManager manager = Widgets.Helpers.VisualTree.GetResourceManager (this);
-				
-				return Support.CaptionCache.Instance.GetCaption (manager, captionId);
+				else
+				{
+					Support.ICaptionResolver resolver = Widgets.Helpers.VisualTree.GetCaptionResolver (this);
+					return Support.CaptionCache.Instance.GetCaption (resolver, captionId);
+				}
 			}
 		}
 

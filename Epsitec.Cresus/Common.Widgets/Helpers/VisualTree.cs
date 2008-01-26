@@ -350,6 +350,48 @@ namespace Epsitec.Common.Widgets.Helpers
 			return VisualTree.GetRoot (visual) as WindowRoot;
 		}
 
+
+		public static Support.ICaptionResolver GetCaptionResolver(Visual visual)
+		{
+			return VisualTree.FindCaptionResolver (visual) ?? Support.Resources.DefaultManager;
+		}
+
+		public static Support.ICaptionResolver FindCaptionResolver(Visual visual)
+		{
+			Support.ICaptionResolver resolver = null;
+
+			while (visual != null)
+			{
+				resolver = visual.CaptionResolver ?? Support.ResourceManager.GetResourceManager (visual);
+
+				if (resolver != null)
+				{
+					break;
+				}
+
+				WindowRoot root = visual as WindowRoot;
+
+				if (root != null)
+				{
+					resolver = Support.ResourceManager.GetResourceManager (root.Window);
+					break;
+				}
+
+				ILogicalTree logicalTree = visual as ILogicalTree;
+
+				if (logicalTree == null)
+				{
+					visual = visual.Parent;
+				}
+				else
+				{
+					visual = logicalTree.Parent;
+				}
+			}
+
+			return resolver;
+		}
+
 		/// <summary>
 		/// Gets the resource manager for a specified <see cref="Visual"/> instance.
 		/// </summary>
