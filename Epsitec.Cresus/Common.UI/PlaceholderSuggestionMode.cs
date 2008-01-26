@@ -17,10 +17,15 @@ namespace Epsitec.Common.UI
 		None,
 
 		/// <summary>
-		/// Suggestion mode; the placeholder value defines the hint text.
+		/// Suggestion mode; the placeholder value defines the hint text in
+		/// an active search field.
 		/// </summary>
 		DisplayActiveHint,
 
+		/// <summary>
+		/// Suggestion mode; the placeholder value defines the hint text in
+		/// a passive search field.
+		/// </summary>
 		DisplayPassiveHint,
 
 		/// <summary>

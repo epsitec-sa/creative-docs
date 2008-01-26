@@ -192,6 +192,12 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Handles the focused widget changes. This is used to track the active
+		/// search context.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="Epsitec.Common.Types.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
 		private void HandleWindowFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			AbstractPlaceholder oldPlaceholder = this.FindParentPlaceholder (e.OldValue as Widgets.Visual);
@@ -348,6 +354,12 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Called when the dialog window changes. This is used to attach or detach
+		/// event handlers to track the keyboard focus.
+		/// </summary>
+		/// <param name="oldWindow">The old window.</param>
+		/// <param name="newWindow">The new window.</param>
 		private void OnDialogWindowChanged(Widgets.Window oldWindow, Widgets.Window newWindow)
 		{
 			if (oldWindow != null)
@@ -682,6 +694,11 @@ namespace Epsitec.Common.Dialogs
 
 			#endregion
 
+			/// <summary>
+			/// Activates the specified context by making all its placeholders
+			/// display an active hint.
+			/// </summary>
+			/// <param name="context">The search context.</param>
 			public static void Activate(SearchContext context)
 			{
 				foreach (Node node in context.nodes)
@@ -690,6 +707,11 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Deactivates the specified context by making all its placeholders
+			/// display a passive hint.
+			/// </summary>
+			/// <param name="context">The search context.</param>
 			public static void Deactivate(SearchContext context)
 			{
 				foreach (Node node in context.nodes)

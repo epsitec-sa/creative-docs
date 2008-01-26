@@ -32,6 +32,10 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		ActiveHint,
 
+		/// <summary>
+		/// Displays a hint instead of the text typed in by the user. Visually,
+		/// there will be no difference between the standard text and the hint.
+		/// </summary>
 		PassiveHint,
 	}
 }

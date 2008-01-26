@@ -146,6 +146,10 @@ namespace Epsitec.Common.UI
 			return AbstractPlaceholder.ValueProperty;
 		}
 
+		/// <summary>
+		/// Simulates an edition of the value, which is useful to force a refresh
+		/// of the user interface.
+		/// </summary>
 		public virtual void SimulateEdition()
 		{
 			object value = this.Value;
