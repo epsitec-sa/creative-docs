@@ -223,7 +223,7 @@ namespace Epsitec.Common.FormEngine
 
 					//	Cherche le sous-masque
 					FormDescription subForm = null;
-					string xml = this.resourceProvider.GetXmlSource(field.SubFormId);
+					string xml = this.resourceProvider.GetFormXmlSource(field.SubFormId);
 					if (!string.IsNullOrEmpty(xml))
 					{
 						subForm = Serialization.DeserializeForm(xml);

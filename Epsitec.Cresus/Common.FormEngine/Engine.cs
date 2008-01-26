@@ -46,12 +46,13 @@ namespace Epsitec.Common.FormEngine
 			//	Crée un masque de saisie pour une entité donnée.
 			//	La liste de FieldDescription doit être plate (pas de Node).
 			this.forDesigner = forDesigner;
+			this.resourceProvider.ClearCache();
 
 			List<FieldDescription> fields0 = form.Fields;
 
 			if (form.IsPatch)
 			{
-				string xml = this.resourceProvider.GetXmlSource(form.FormIdToPatch);
+				string xml = this.resourceProvider.GetFormXmlSource(form.FormIdToPatch);
 				if (!string.IsNullOrEmpty(xml))
 				{
 					FormDescription refForm = Serialization.DeserializeForm(xml);

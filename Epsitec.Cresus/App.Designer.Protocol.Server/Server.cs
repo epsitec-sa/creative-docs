@@ -1,11 +1,23 @@
+//	Copyright © 2007-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.ServiceModel.Description;
 
 namespace Epsitec.Designer.Protocol
 {
+	/// <summary>
+	/// The <c>Server</c> class is used to implement the <see cref="INavigator"/>
+	/// service through a named pipes binding.
+	/// </summary>
 	public sealed class Server : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Server"/> class.
+		/// </summary>
+		/// <param name="enableMetadata">If set to <c>true</c>, enables metadata
+		/// publishing through a MEX service endpoint.</param>
 		public Server(bool enableMetadata)
 		{
 			this.serviceHost = new ServiceHost (typeof (NavigatorService));
@@ -22,6 +34,10 @@ namespace Epsitec.Designer.Protocol
 			this.isReady = true;
 		}
 
+		/// <summary>
+		/// Opens the server: the service host will listen to incoming requests
+		/// until <see cref="M:Close"/> is called.
+		/// </summary>
 		public void Open()
 		{
 			if (this.isDisposed)
@@ -39,6 +55,9 @@ namespace Epsitec.Designer.Protocol
 			}
 		}
 
+		/// <summary>
+		/// Shuts down the server.
+		/// </summary>
 		public void Close()
 		{
 			if (this.isDisposed)
@@ -71,10 +90,10 @@ namespace Epsitec.Designer.Protocol
 		#endregion
 
 
+		private readonly ServiceHost serviceHost;
+		
 		private bool isReady;
 		private bool isOpen;
 		private bool isDisposed;
-
-		private ServiceHost serviceHost;
 	}
 }

@@ -434,26 +434,45 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		
 		private class InternalFormResourceProvider : FormEngine.IFormResourceProvider
 		{
 			public InternalFormResourceProvider(Module module)
 			{
 				this.module = module;
-				this.typeDict = new Dictionary<Druid, INamedType> ();
+				this.typeCache = new Dictionary<Druid, INamedType> ();
+				this.defaultProvider = new FormEngine.DefaultResourceProvider (this.module.resourceManager);
 			}
 
+			
 			#region IFormResourceProvider Members
 
-			public string GetXmlSource(Druid id)
+			/// <summary>
+			/// Clears the cached information.
+			/// </summary>
+			public void ClearCache()
 			{
-				Module module = this.module.designerApplication.SearchModule (id);
+				this.typeCache.Clear ();
+				this.defaultProvider.ClearCache ();
+			}
+
+			/// <summary>
+			/// Gets the XML source for the specified form.
+			/// </summary>
+			/// <param name="formId">The form id.</param>
+			/// <returns>The XML source or <c>null</c>.</returns>
+			public string GetFormXmlSource(Druid formId)
+			{
+				Module module = this.module.designerApplication.SearchModule (formId);
 
 				if (module == null)
 				{
-					return null;
+					//	Pas trouvé de module chargé pour le masque spécifié, alors on va
+					//	passer par le gestionnaire de ressources standard :
+					return this.defaultProvider.GetFormXmlSource (formId);
 				}
 
-				CultureMap item = module.accessForms.Accessor.Collection[id];
+				CultureMap item = module.accessForms.Accessor.Collection[formId];
 
 				if (item != null)
 				{
@@ -466,21 +485,31 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			public string GetCaptionDefaultLabel(Druid id)
+			/// <summary>
+			/// Gets the default label for the specified caption.
+			/// </summary>
+			/// <param name="captionId">The caption id.</param>
+			/// <returns>The default label or <c>null</c>.</returns>
+			public string GetCaptionDefaultLabel(Druid captionId)
 			{
-				Module module = this.module.designerApplication.SearchModule (id);
+				Module module = this.module.designerApplication.SearchModule (captionId);
 
 				if (module == null)
 				{
-					return null;
+					//	Pas trouvé de module chargé pour le caption spécifié, alors on va
+					//	passer par le gestionnaire de ressources standard :
+					return this.defaultProvider.GetCaptionDefaultLabel (captionId);
 				}
 
-				CultureMap item = module.accessCaptions.Accessor.Collection[id] ??
-					/**/		  module.accessCommands.Accessor.Collection[id] ??
-					/**/		  module.accessEntities.Accessor.Collection[id] ??
-					/**/		  module.accessFields.Accessor.Collection[id] ??
-					/**/		  module.accessTypes.Accessor.Collection[id] ??
-					/**/		  module.accessValues.Accessor.Collection[id];
+				//	Cherche le caption dans tous les accesseurs possibles et imaginables
+				//	qui représentent les données sous la forme de captions :
+
+				CultureMap item = module.accessCaptions.Accessor.Collection[captionId] ??
+					/**/		  module.accessCommands.Accessor.Collection[captionId] ??
+					/**/		  module.accessEntities.Accessor.Collection[captionId] ??
+					/**/		  module.accessFields.Accessor.Collection[captionId] ??
+					/**/		  module.accessTypes.Accessor.Collection[captionId] ??
+					/**/		  module.accessValues.Accessor.Collection[captionId];
 
 				if (item == null)
 				{
@@ -515,11 +544,16 @@ namespace Epsitec.Common.Designer
 
 			#region IStructuredTypeProviderId Members
 
+			/// <summary>
+			/// Gets the structured type for the specified id.
+			/// </summary>
+			/// <param name="id">The id for the structured type.</param>
+			/// <returns>The structured type or <c>null</c>.</returns>
 			public StructuredType GetStructuredType(Druid id)
 			{
 				INamedType type;
 
-				if (this.typeDict.TryGetValue (id, out type))
+				if (this.typeCache.TryGetValue (id, out type))
 				{
 					return type as StructuredType;
 				}
@@ -528,7 +562,7 @@ namespace Epsitec.Common.Designer
 
 				if (module == null)
 				{
-					type = null;
+					type = this.defaultProvider.GetStructuredType (id);
 				}
 				else
 				{
@@ -546,18 +580,24 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				this.typeDict[id] = type;
+				//	Prend note du type dans un cache interne.
+				this.typeCache[id] = type;
 
 				return type as StructuredType;
 			}
 
 			#endregion
 
+			/// <summary>
+			/// Gets the named type for the specified type id.
+			/// </summary>
+			/// <param name="id">The type id.</param>
+			/// <returns>The named type or <c>null</c>.</returns>
 			private INamedType GetAnyType(Druid id)
 			{
 				INamedType type;
 
-				if (this.typeDict.TryGetValue (id, out type))
+				if (this.typeCache.TryGetValue (id, out type))
 				{
 					return type;
 				}
@@ -566,7 +606,14 @@ namespace Epsitec.Common.Designer
 
 				if (module == null)
 				{
-					type = null;
+					//	Pas trouvé de module chargé pour le type spécifié, alors on va
+					//	passer par le gestionnaire de ressources standard :
+					Caption caption = module.resourceManager.GetCaption (id);
+
+					if (caption != null)
+					{
+						type = TypeRosetta.CreateTypeObject (caption, false);
+					}
 				}
 				else
 				{
@@ -591,13 +638,15 @@ namespace Epsitec.Common.Designer
 					}
 				}
 
-				this.typeDict[id] = type;
+				//	Prend note du type dans un cache interne.
+				this.typeCache[id] = type;
 
 				return type;
 			}
 
 			private readonly Module module;
-			private readonly Dictionary<Druid, INamedType> typeDict;
+			private readonly Dictionary<Druid, INamedType> typeCache;
+			private readonly FormEngine.DefaultResourceProvider defaultProvider;
 		}
 
 

@@ -12,10 +12,10 @@ namespace Epsitec.Common.Types
 	public interface IStructuredTypeProviderId
 	{
 		/// <summary>
-		/// Gets the structured type associated with the specified caption id.
+		/// Gets the structured type for the specified id.
 		/// </summary>
-		/// <param name="id">The caption id.</param>
-		/// <returns>The structured type.</returns>
+		/// <param name="id">The id for the structured type.</param>
+		/// <returns>The structured type or <c>null</c>.</returns>
 		StructuredType GetStructuredType(Druid id);
 	}
 }
