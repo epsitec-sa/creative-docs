@@ -26,10 +26,10 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
-		/// Gets or sets the dialog data atteched to this search controller.
+		/// Gets or sets the dialog data attached to this search controller.
 		/// </summary>
 		/// <value>The dialog data.</value>
-		public DialogData DialogData
+		public DialogData						DialogData
 		{
 			get
 			{
@@ -45,10 +45,34 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets or sets the dialog window attached to this search controller.
+		/// </summary>
+		/// <value>The dialog window.</value>
+		public Widgets.Window					DialogWindow
+		{
+			get
+			{
+				return this.dialogWindow;
+			}
+			set
+			{
+				if (this.dialogWindow != value)
+				{
+					Widgets.Window oldWindow = this.dialogWindow;
+					Widgets.Window newWindow = value;
+					
+					this.dialogWindow = value;
+
+					this.OnDialogWindowChanged (oldWindow, newWindow);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the entity resolver for this search controller.
 		/// </summary>
 		/// <value>The entity resolver.</value>
-		public IEntityResolver Resolver
+		public IEntityResolver					Resolver
 		{
 			get
 			{
@@ -64,7 +88,7 @@ namespace Epsitec.Common.Dialogs
 		/// Gets the active search context.
 		/// </summary>
 		/// <value>The active search context.</value>
-		public ISearchContext ActiveSearchContext
+		public ISearchContext					ActiveSearchContext
 		{
 			get
 			{
@@ -134,6 +158,23 @@ namespace Epsitec.Common.Dialogs
 			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
 		}
 
+		private AbstractPlaceholder FindParentPlaceholder(Widgets.Visual visual)
+		{
+			while (visual != null)
+			{
+				AbstractPlaceholder placeholder = visual as AbstractPlaceholder;
+
+				if (placeholder != null)
+				{
+					return placeholder;
+				}
+
+				visual = visual.Parent;
+			}
+
+			return null;
+		}
+
 		/// <summary>
 		/// Handles the activation of a placeholder context. If this is the first
 		/// activation on the placeholder context stack, then it originates from
@@ -148,6 +189,25 @@ namespace Epsitec.Common.Dialogs
 				object value = controller.GetActualValue ();
 
 				this.UpdateSearchTemplate (PlaceholderContext.InteractivePlaceholder, value);
+			}
+		}
+
+		private void HandleWindowFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			AbstractPlaceholder oldPlaceholder = this.FindParentPlaceholder (e.OldValue as Widgets.Visual);
+			AbstractPlaceholder newPlaceholder = this.FindParentPlaceholder (e.NewValue as Widgets.Visual);
+
+			System.Diagnostics.Debug.WriteLine (e.ToString ());
+
+			if ((this.activeSearchContext != null) &&
+				(this.activeSearchContext.ContainsNode (newPlaceholder)))
+			{
+				//	Nothing to do : the currently active search context still has
+				//	the focus.
+			}
+			else
+			{
+				this.UpdateSearchTemplate (newPlaceholder, UndefinedValue.Value);
 			}
 		}
 
@@ -186,13 +246,16 @@ namespace Epsitec.Common.Dialogs
 				//	required.
 
 				SearchContext newContext = null;
-				
-				foreach (SearchContext context in this.searchContexts)
+
+				if (placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint)
 				{
-					if (context.ContainsNode (placeholder))
+					foreach (SearchContext context in this.searchContexts)
 					{
-						newContext = context;
-						break;
+						if (context.ContainsNode (placeholder))
+						{
+							newContext = context;
+							break;
+						}
 					}
 				}
 
@@ -267,9 +330,23 @@ namespace Epsitec.Common.Dialogs
 		/// containing the event data.</param>
 		private void OnSearchContextChanged(DependencyPropertyChangedEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine (e.ToString ());
+ 
 			if (this.SearchContextChanged != null)
 			{
 				this.SearchContextChanged (this, e);
+			}
+		}
+
+		private void OnDialogWindowChanged(Widgets.Window oldWindow, Widgets.Window newWindow)
+		{
+			if (oldWindow != null)
+			{
+				oldWindow.FocusedWidgetChanged -= this.HandleWindowFocusedWidgetChanged;
+			}
+			if (newWindow != null)
+			{
+				newWindow.FocusedWidgetChanged += this.HandleWindowFocusedWidgetChanged;
 			}
 		}
 
@@ -461,7 +538,16 @@ namespace Epsitec.Common.Dialogs
 
 			public void SetTemplateValue(AbstractPlaceholder placeholder, object value)
 			{
-				this.SetTemplateValue (this.FindNode (placeholder), value);
+				if (value == UndefinedValue.Value)
+				{
+					//	Do nothing - this can happen if the user did not type
+					//	anything yet but simply set the focus on one of the
+					//	placeholders participating in the search.
+				}
+				else
+				{
+					this.SetTemplateValue (this.FindNode (placeholder), value);
+				}
 			}
 
 			public void SetTemplateValue(Node node, object value)
@@ -744,5 +830,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly List<SearchContext>	searchContexts;
 		private SearchContext					activeSearchContext;
 		private DialogData						dialogData;
+		private Widgets.Window					dialogWindow;
 	}
 }

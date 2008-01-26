@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle name="Captions" type="Caption" culture="de">
+  <data id="13">&lt;s:data id="_0" f:Labels="{Collection {Text 'Strasse'}}" /&gt;</data>
+  <data id="14">&lt;s:data id="_0" f:Labels="{Collection {Text 'Postfach'}}" /&gt;</data>
+  <data id="15">&lt;s:data id="_0" f:Labels="{Collection {Text 'Ort'}}" /&gt;</data>
+  <data id="19">&lt;s:data id="_0" f:Labels="{Collection {Text 'PLZ'}}" /&gt;</data>
+  <data id="1B">&lt;s:data id="_0" f:Labels="{Collection {Text 'Land'}}" /&gt;</data>
+</bundle>

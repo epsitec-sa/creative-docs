@@ -200,6 +200,7 @@ namespace Epsitec.Common.Dialogs
 				if (this.dialogSearchController != null)
 				{
 					this.dialogSearchController.DialogData = this.dialogData;
+					this.dialogSearchController.DialogWindow = this.DialogWindow;
 				}
 
 				ValidationContext.SetContext (this.panel, this.dialogData.ValidationContext);
@@ -217,6 +218,7 @@ namespace Epsitec.Common.Dialogs
 				if (this.dialogSearchController != null)
 				{
 					this.dialogSearchController.DialogData = null;
+					this.dialogSearchController.DialogWindow = null;
 				}
 				
 				this.dialogData.UnbindFromUserInterface (this.panel);

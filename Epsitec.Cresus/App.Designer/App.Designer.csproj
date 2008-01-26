@@ -112,6 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.ico" />
+    <Content Include="..\External\System.Core.dll">
+      <Link>System.Core.dll</Link>
+    </Content>
     <Content Include="default.identities" />
     <Content Include="Resources\Common.Widgets\Captions.de.resource" />
     <Content Include="Resources\Common.Support\Captions.de.resource" />

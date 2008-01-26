@@ -37,7 +37,7 @@ namespace Epsitec.Common.Dialogs
 		/// Gets the dialog data mode.
 		/// </summary>
 		/// <value>The dialog data mode.</value>
-		public DialogDataMode Mode
+		public DialogDataMode					Mode
 		{
 			get
 			{
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Dialogs
 		/// Gets the (live) dialog data.
 		/// </summary>
 		/// <value>The dialog data.</value>
-		public AbstractEntity Data
+		public AbstractEntity					Data
 		{
 			get
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public AbstractEntity ExternalData
+		public AbstractEntity					ExternalData
 		{
 			get
 			{
@@ -65,13 +65,14 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public ValidationContext ValidationContext
+		public ValidationContext				ValidationContext
 		{
 			get
 			{
 				return this.validationContext;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the changes. The result is sorted based on the field path of
