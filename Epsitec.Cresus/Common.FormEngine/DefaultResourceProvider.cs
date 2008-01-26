@@ -52,25 +52,6 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		/// <summary>
-		/// Gets the caption default label.
-		/// </summary>
-		/// <param name="CaptionId">The caption id.</param>
-		/// <returns></returns>
-		public string GetCaptionDefaultLabel(Druid CaptionId)
-		{
-			Caption caption = this.resourceManager.GetCaption (CaptionId);
-
-			if (caption == null)
-			{
-				return null;
-			}
-			else
-			{
-				return caption.DefaultLabel;
-			}
-		}
-
 		public ResourceManager ResourceManager
 		{
 			get
@@ -95,6 +76,19 @@ namespace Epsitec.Common.FormEngine
 
 		#endregion
 
+		#region ICaptionResolver Members
+
+		/// <summary>
+		/// Gets the caption for the specified id.
+		/// </summary>
+		/// <param name="captionId">The caption id.</param>
+		/// <returns>The caption <c>null</c>.</returns>
+		public Caption GetCaption(Druid captionId)
+		{
+			return CaptionCache.Instance.GetCaption (this.resourceManager, captionId);
+		}
+
+		#endregion
 
 		private readonly ResourceManager resourceManager;
 	}

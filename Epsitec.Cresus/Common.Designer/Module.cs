@@ -13,6 +13,7 @@ using Epsitec.Common.Support.CodeCompilation;
 namespace Epsitec.Common.Designer
 {
 	using AbstractResourceAccessor=Support.ResourceAccessors.AbstractResourceAccessor;
+	using AbstractCaptionResourceAccessor=Support.ResourceAccessors.AbstractCaptionResourceAccessor;
 	using StructuredTypeResourceAccessor=Support.ResourceAccessors.StructuredTypeResourceAccessor;
 	using AnyTypeResourceAccessor=Support.ResourceAccessors.AnyTypeResourceAccessor;
 
@@ -444,6 +445,13 @@ namespace Epsitec.Common.Designer
 				this.defaultProvider = new FormEngine.DefaultResourceProvider (this.module.resourceManager);
 			}
 
+			public string TwoLetterISOLanguageName
+			{
+				get
+				{
+					return this.module.ResourceManager.ActiveCulture.TwoLetterISOLanguageName;
+				}
+			}
 			
 			#region IFormResourceProvider Members
 
@@ -485,12 +493,19 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			/// <summary>
-			/// Gets the default label for the specified caption.
-			/// </summary>
-			/// <param name="captionId">The caption id.</param>
-			/// <returns>The default label or <c>null</c>.</returns>
-			public string GetCaptionDefaultLabel(Druid captionId)
+			public ResourceManager ResourceManager
+			{
+				get
+				{
+					return this.module.resourceManager;
+				}
+			}
+
+			#endregion
+
+			#region ICaptionResolver Members
+
+			public Caption GetCaption(Druid captionId)
 			{
 				Module module = this.module.designerApplication.SearchModule (captionId);
 
@@ -498,7 +513,7 @@ namespace Epsitec.Common.Designer
 				{
 					//	Pas trouvé de module chargé pour le caption spécifié, alors on va
 					//	passer par le gestionnaire de ressources standard :
-					return this.defaultProvider.GetCaptionDefaultLabel (captionId);
+					return this.defaultProvider.GetCaption (captionId);
 				}
 
 				//	Cherche le caption dans tous les accesseurs possibles et imaginables
@@ -517,26 +532,12 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-					IList<string> labels = data.GetValue (Support.Res.Fields.ResourceCaption.Labels) as IList<string>;
+					AbstractCaptionResourceAccessor accessor = item.Owner as AbstractCaptionResourceAccessor;
 
-					if ((labels != null) &&
-						(labels.Count > 0))
-					{
-						return labels[0];
-					}
-					else
-					{
-						return "";
-					}
-				}
-			}
+					Caption captionDefaultCulture = accessor.GetCaptionViewOfData (item, Resources.DefaultTwoLetterISOLanguageName);
+					Caption captionCurrentCulture = accessor.GetCaptionViewOfData (item, this.TwoLetterISOLanguageName);
 
-			public ResourceManager ResourceManager
-			{
-				get
-				{
-					return this.module.resourceManager;
+					return Caption.Merge (captionDefaultCulture, captionCurrentCulture);
 				}
 			}
 

@@ -658,7 +658,7 @@ namespace Epsitec.Common.FormEngine
 						builder.Append(", ");
 					}
 
-					builder.Append(this.resourceProvider.GetCaptionDefaultLabel(druid));
+					builder.Append(this.GetCaptionDefaultLabel(druid));
 				}
 
 				if (builder.Length == 0)  // titre sans texte ?
@@ -709,6 +709,12 @@ namespace Epsitec.Common.FormEngine
 
 				row++;
 			}
+		}
+
+		private string GetCaptionDefaultLabel(Druid druid)
+		{
+			Caption caption = this.resourceProvider.GetCaption(druid);
+			return caption == null ? "" : caption.DefaultLabel;
 		}
 
 

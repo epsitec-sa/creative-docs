@@ -148,6 +148,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return base.GetDataBroker (container, fieldId);
 		}
 
+
+		public Caption GetCaptionViewOfData(CultureMap item, string twoLetterISOLanguageName)
+		{
+			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
+			Caption caption = this.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
+
+			return caption;
+		}
+
+
 		/// <summary>
 		/// Gets the bundle name used by this accessor.
 		/// </summary>

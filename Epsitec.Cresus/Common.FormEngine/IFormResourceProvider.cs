@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// The <c>IFormResourceProvider</c> interface defines the methods needed
 	/// by the form engine to access data stored in the resources.
 	/// </summary>
-	public interface IFormResourceProvider : IStructuredTypeResolver
+	public interface IFormResourceProvider : IStructuredTypeResolver, ICaptionResolver
 	{
 		/// <summary>
 		/// Clears the cached information.
@@ -26,13 +26,6 @@ namespace Epsitec.Common.FormEngine
 		/// <returns>The XML source or <c>null</c>.</returns>
 		string GetFormXmlSource(Druid formId);
 
-		/// <summary>
-		/// Gets the default label for the specified caption.
-		/// </summary>
-		/// <param name="captionId">The caption id.</param>
-		/// <returns>The default label or <c>null</c>.</returns>
-		string GetCaptionDefaultLabel(Druid captionId);
-		
 		
 		ResourceManager ResourceManager
 		{

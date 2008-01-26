@@ -19,7 +19,7 @@ namespace Epsitec.Common.Support
 	/// accessed through its full resource id ("provider/module:bundle#field")
 	/// or by specifying a DRUID.
 	/// </summary>
-	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>, IStructuredTypeResolver
+	public sealed class ResourceManager : DependencyObject, System.IComparable<ResourceManager>, System.IEquatable<ResourceManager>, IStructuredTypeResolver, ICaptionResolver
 	{
 		public ResourceManager()
 			: this (null, Support.Globals.Directories.ExecutableRoot, null)
