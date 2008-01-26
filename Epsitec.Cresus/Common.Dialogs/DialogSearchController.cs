@@ -247,7 +247,7 @@ namespace Epsitec.Common.Dialogs
 
 				SearchContext newContext = null;
 
-				if (placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint)
+				if (placeholder.SuggestionMode != PlaceholderSuggestionMode.None)
 				{
 					foreach (SearchContext context in this.searchContexts)
 					{
@@ -311,12 +311,22 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="newContext">The new context.</param>
 		private void ActivateSearchContext(SearchContext context)
 		{
-			ISearchContext newContext = context;
-			ISearchContext oldContext = this.activeSearchContext;
+			SearchContext newContext = context;
+			SearchContext oldContext = this.activeSearchContext;
 
 			if (oldContext != newContext)
 			{
+				if (oldContext != null)
+				{
+					SearchContext.Deactivate (oldContext);
+				}
+
 				this.activeSearchContext = context;
+
+				if (newContext != null)
+				{
+					SearchContext.Activate (newContext);
+				}
 
 				this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
 			}
@@ -495,7 +505,7 @@ namespace Epsitec.Common.Dialogs
 			public SearchContext(DialogSearchController searchController, AbstractEntity rootData, EntityFieldPath rootPath)
 			{
 				this.searchController = searchController;
-				this.activeNodes = new List<Node> ();
+				this.nodes = new List<Node> ();
 				this.searchRootData = rootData;
 				this.searchRootPath = rootPath;
 			}
@@ -504,7 +514,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				get
 				{
-					return this.activeNodes;
+					return this.nodes;
 				}
 			}
 
@@ -512,7 +522,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (Node node in this.GetPlaceholderGraph (root))
 				{
-					this.activeNodes.Add (node);
+					this.nodes.Add (node);
 				}
 
 				AbstractEntity entityData = this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
@@ -524,13 +534,13 @@ namespace Epsitec.Common.Dialogs
 
 			public void Clear()
 			{
-				foreach (Node node in this.activeNodes)
+				foreach (Node node in this.nodes)
 				{
-					System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
+					System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayActiveHint);
 
 					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHintResetText;
 					node.Placeholder.Value = UndefinedValue.Value;
-					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHint;
+					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayActiveHint;
 
 					this.SetTemplateValue (node, UndefinedValue.Value);
 				}
@@ -564,7 +574,7 @@ namespace Epsitec.Common.Dialogs
 
 			public void SetSuggestionValue(Node node, AbstractEntity entity)
 			{
-				System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayHint);
+				System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayActiveHint);
 				EntityFieldPath readPath = node.Path.StripStart (this.searchRootPath);
 				
 				object oldValue = node.Placeholder.Value;
@@ -595,7 +605,7 @@ namespace Epsitec.Common.Dialogs
 
 			public int FindNodeIndex(AbstractPlaceholder placeholder)
 			{
-				return this.activeNodes.FindIndex (node => node.Placeholder == placeholder);
+				return this.nodes.FindIndex (node => node.Placeholder == placeholder);
 			}
 
 			public Node FindNode(AbstractPlaceholder placeholder)
@@ -608,7 +618,7 @@ namespace Epsitec.Common.Dialogs
 				}
 				else
 				{
-					return this.activeNodes[index];
+					return this.nodes[index];
 				}
 			}
 
@@ -652,7 +662,7 @@ namespace Epsitec.Common.Dialogs
 
 			public IEnumerable<AbstractPlaceholder> GetActivePlaceholders()
 			{
-				foreach (Node node in this.activeNodes)
+				foreach (Node node in this.nodes)
 				{
 					yield return node.Placeholder;
 				}
@@ -660,7 +670,7 @@ namespace Epsitec.Common.Dialogs
 
 			public void SetSuggestion(AbstractEntity suggestion)
 			{
-				foreach (Node node in this.activeNodes)
+				foreach (Node node in this.nodes)
 				{
 					this.SetSuggestionValue (node, suggestion);
 				}
@@ -671,6 +681,23 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			#endregion
+
+			public static void Activate(SearchContext context)
+			{
+				foreach (Node node in context.nodes)
+				{
+					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayActiveHint;
+				}
+			}
+
+			public static void Deactivate(SearchContext context)
+			{
+				foreach (Node node in context.nodes)
+				{
+					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayPassiveHint;
+					node.Placeholder.SimulateEdition ();
+				}
+			}
 
 			private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root)
 			{
@@ -709,7 +736,7 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			private readonly List<Node>			activeNodes;
+			private readonly List<Node>			nodes;
 			private readonly DialogSearchController searchController;
 			private AbstractEntity				searchTemplate;
 			private EntityFieldPath				searchRootPath;

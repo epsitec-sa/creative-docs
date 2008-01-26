@@ -30,6 +30,8 @@ namespace Epsitec.Common.Widgets
 		/// Displays a hint instead of the text typed in by the user. The real
 		/// text must be part of the hint and will be made somehow more visible.
 		/// </summary>
-		Hint,
+		ActiveHint,
+
+		PassiveHint,
 	}
 }

@@ -146,6 +146,12 @@ namespace Epsitec.Common.UI
 			return AbstractPlaceholder.ValueProperty;
 		}
 
+		public virtual void SimulateEdition()
+		{
+			object value = this.Value;
+			this.InvalidateProperty (Placeholder.ValueProperty, value, value);
+		}
+
 		/// <summary>
 		/// Gets the type of the value after executing <c>UpdateValueType</c>.
 		/// This method is reserved for internal use.

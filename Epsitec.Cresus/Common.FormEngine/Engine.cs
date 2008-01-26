@@ -554,7 +554,7 @@ namespace Epsitec.Common.FormEngine
 					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.None;
 					break;
 				case FieldEditionMode.Search:
-					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.DisplayHint;
+					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.DisplayPassiveHint;
 					break;
 				default:
 					throw new System.InvalidOperationException(string.Format("Invalid edition mode {0}", editionMode));

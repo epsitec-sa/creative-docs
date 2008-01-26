@@ -19,7 +19,9 @@ namespace Epsitec.Common.UI
 		/// <summary>
 		/// Suggestion mode; the placeholder value defines the hint text.
 		/// </summary>
-		DisplayHint,
+		DisplayActiveHint,
+
+		DisplayPassiveHint,
 
 		/// <summary>
 		/// Suggestion mode; the placeholder value defines the text; this is a

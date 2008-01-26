@@ -139,12 +139,6 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public void SimulateEdition()
-		{
-			object value = this.Value;
-			this.InvalidateProperty (Placeholder.ValueProperty, value, value);
-		}
-
 		public bool GetMinSpan(Widget parent, int column, int row, out int minColumnSpan, out int minRowSpan)
 		{
 			minColumnSpan = 0;

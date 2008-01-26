@@ -1901,7 +1901,7 @@ namespace Epsitec.Common.Widgets
 					copy.Text = string.Concat ("<i>", original.Text, "</i>");
 					return copy;
 				}
-				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.Hint) &&
+				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.ActiveHint) &&
 					/**/ (this.HintText != null))
 				{
 					TextLayout copy = new TextLayout (original);
@@ -1927,6 +1927,13 @@ namespace Epsitec.Common.Widgets
 						this.SetValue (AbstractTextField.HintOffsetProperty, pos /*fontBegin.Length + hintPrefix.Length + fontEnd.Length*/);
 					}
 
+					return copy;
+				}
+				else if ((this.textFieldDisplayMode == TextFieldDisplayMode.PassiveHint) &&
+					/**/ (this.HintText != null))
+				{
+					TextLayout copy = new TextLayout (original);
+					copy.Text = TextLayout.ConvertToSimpleText (this.HintText);
 					return copy;
 				}
 				else
