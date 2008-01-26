@@ -81,7 +81,7 @@ namespace Epsitec.Common.FormEngine
 
 		#endregion
 
-		#region IStructuredTypeProviderId Members
+		#region IStructuredTypeResolver Members
 
 		/// <summary>
 		/// Gets the structured type for the specified id.

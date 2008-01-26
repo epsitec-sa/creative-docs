@@ -11,15 +11,26 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public static class CacheManager
 	{
+		/// <summary>
+		/// Initializes the <see cref="CacheManager"/> class.
+		/// </summary>
 		static CacheManager()
 		{
 		}
 
+		/// <summary>
+		/// Trims all the caches, removing dead entries.
+		/// </summary>
 		public static void TrimCaches()
 		{
 			CacheManager.ForEach (rec => rec.TrimCacheAction ());
 		}
 
+		/// <summary>
+		/// Registers a cache trimming function for the specified cache.
+		/// </summary>
+		/// <param name="cache">The cache.</param>
+		/// <param name="trimCacheAction">The cache trimming function.</param>
 		public static void RegisterTrimCache(object cache, System.Action trimCacheAction)
 		{
 			CacheRecord record = CacheManager.GetCacheRecord (cache);
@@ -27,6 +38,10 @@ namespace Epsitec.Common.Support
 			record.TrimCacheAction = trimCacheAction;
 		}
 
+		/// <summary>
+		/// Removes the cache from the cache manager.
+		/// </summary>
+		/// <param name="cache">The cache.</param>
 		public static void RemoveCache(object cache)
 		{
 			lock (CacheManager.exclusion)
@@ -36,6 +51,10 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Loops through every cache record and applies the specified action.
+		/// </summary>
+		/// <param name="action">The action.</param>
 		private static void ForEach(System.Action<CacheRecord> action)
 		{
 			List<CacheRecord> records = new List<CacheRecord> ();
@@ -51,7 +70,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Gets the cache record for the specified cache.
+		/// </summary>
+		/// <param name="cache">The cache.</param>
+		/// <returns>The <c>CacheRecord</c>.</returns>
 		private static CacheRecord GetCacheRecord(object cache)
 		{
 			CacheRecord record;

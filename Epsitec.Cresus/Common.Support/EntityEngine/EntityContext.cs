@@ -26,7 +26,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		/// <param name="resourceManager">The resource manager.</param>
 		/// <param name="loopHandlingMode">The loop handling mode.</param>
-		public EntityContext(IStructuredTypeProviderId resourceManager, EntityLoopHandlingMode loopHandlingMode)
+		public EntityContext(IStructuredTypeResolver resourceManager, EntityLoopHandlingMode loopHandlingMode)
 		{
 			this.resourceManager     = resourceManager;
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
@@ -751,7 +751,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private EventHandler<EntityEventArgs> entityCreatedEvent;
 
-		private readonly IStructuredTypeProviderId resourceManager;
+		private readonly IStructuredTypeResolver resourceManager;
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;

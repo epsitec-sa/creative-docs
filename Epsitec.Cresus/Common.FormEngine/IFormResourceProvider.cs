@@ -12,7 +12,7 @@ namespace Epsitec.Common.FormEngine
 	/// The <c>IFormResourceProvider</c> interface defines the methods needed
 	/// by the form engine to access data stored in the resources.
 	/// </summary>
-	public interface IFormResourceProvider : IStructuredTypeProviderId
+	public interface IFormResourceProvider : IStructuredTypeResolver
 	{
 		/// <summary>
 		/// Clears the cached information.

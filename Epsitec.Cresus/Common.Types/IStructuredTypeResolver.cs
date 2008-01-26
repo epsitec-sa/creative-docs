@@ -6,10 +6,10 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>IStructuredTypeProviderId</c> interface is used to resolve an id
+	/// The <c>IStructuredTypeResolver</c> interface is used to resolve an id
 	/// into a <see cref="StructuredType"/> instance.
 	/// </summary>
-	public interface IStructuredTypeProviderId
+	public interface IStructuredTypeResolver
 	{
 		/// <summary>
 		/// Gets the structured type for the specified id.

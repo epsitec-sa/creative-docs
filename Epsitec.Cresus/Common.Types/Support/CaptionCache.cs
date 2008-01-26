@@ -24,6 +24,28 @@ namespace Epsitec.Common.Support
 			CacheManager.RegisterTrimCache (this, this.TrimCache);
 		}
 
+
+		/// <summary>
+		/// Gets the singleton instance of the caption cache.
+		/// </summary>
+		/// <value>The caption cache instance.</value>
+		public static CaptionCache			Instance
+		{
+			get
+			{
+				if (CaptionCache.instance == null)
+				{
+					lock (CaptionCache.exclusion)
+					{
+						CaptionCache.instance = new CaptionCache ();
+					}
+				}
+
+				return CaptionCache.instance;
+			}
+		}
+
+		
 		/// <summary>
 		/// Gets the caption.
 		/// </summary>
@@ -354,22 +376,6 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-
-		public static CaptionCache			Instance
-		{
-			get
-			{
-				if (CaptionCache.instance == null)
-				{
-					lock (CaptionCache.exclusion)
-					{
-						CaptionCache.instance = new CaptionCache ();
-					}
-				}
-
-				return CaptionCache.instance;
-			}
-		}
 
 		private readonly static object		exclusion	= new object ();
 		private static CaptionCache			instance;
