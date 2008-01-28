@@ -973,6 +973,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
 			this.panelContainer.UpdateDisplayCaptions();
 			this.UpdateCultureButtons();
+			this.SetForm(this.form, this.druidToSerialize, true);
 		}
 
 		protected void UpdateCultureButtons()

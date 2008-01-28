@@ -1338,7 +1338,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayVertical").Enable = true;
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
-			this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
+			//?this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("EditOk").Enable = this.module.IsLocalDirty;
 			this.GetCommandState("EditCancel").Enable = this.module.IsLocalDirty;
 
