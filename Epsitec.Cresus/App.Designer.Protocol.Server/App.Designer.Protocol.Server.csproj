@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    </Compile>
     <Compile Include="NavigatorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server.cs" />

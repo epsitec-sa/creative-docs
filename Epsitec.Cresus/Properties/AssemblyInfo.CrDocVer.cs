@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
@@ -9,3 +10,5 @@ using System.Reflection;
 
 [assembly: AssemblyVersion ("2.1.8.0")]
 [assembly: AssemblyFileVersion ("2.1.8.0")]
+
+[assembly: ComVisible (false)]

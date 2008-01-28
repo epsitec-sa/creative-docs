@@ -9,5 +9,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("Crésus Server Manager")]
 [assembly: AssemblyProduct("Crésus")]
 [assembly: AssemblyCopyright("Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
-
-[assembly: ComVisibleAttribute (false)]

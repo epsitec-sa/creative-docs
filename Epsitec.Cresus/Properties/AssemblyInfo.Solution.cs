@@ -2,11 +2,14 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
+using System.Runtime.InteropServices;
 
-[assembly: AssemblyCompany ("EPSITEC SA")]
+[assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]
 
 [assembly: AssemblyVersion ("2.2.0.0")]
 [assembly: AssemblyFileVersion ("2.2.0.0")]
+
+[assembly: ComVisibleAttribute (false)]

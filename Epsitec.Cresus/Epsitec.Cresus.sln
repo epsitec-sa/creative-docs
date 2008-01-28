@@ -139,6 +139,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Properties", "Properties", "{9A0E2839-7E47-4A4F-9AB9-4F191CCFB4B9}"
 	ProjectSection(SolutionItems) = preProject
 		Properties\AssemblyInfo.Solution.cs = Properties\AssemblyInfo.Solution.cs
+		Properties\AssemblyInfo.CrDocVer.cs = Properties\AssemblyInfo.CrDocVer.cs
 	EndProjectSection
 EndProject
 Global

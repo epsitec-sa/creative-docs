@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{FF4203B6-50D1-4915-9BBA-E0B57EA07D13}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    </Compile>
     <Compile Include="EmptyForm.cs">
       <SubType>Form</SubType>
     </Compile>

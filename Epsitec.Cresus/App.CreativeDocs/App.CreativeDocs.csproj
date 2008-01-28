@@ -156,10 +156,13 @@
     <Content Include="Resources\Common.Types\Strings.00.resource" />
     <Content Include="Resources\Common.Types\Strings.en.resource" />
     <Content Include="Original Samples\normal.crmod" />
+    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    </Compile>
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AssemblyInfo.cs">
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <EmbeddedResource Include="SplashScreen.png" />

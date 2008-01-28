@@ -8,5 +8,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("Types Library")]
 [assembly: AssemblyProduct ("Framework")]
 [assembly: AssemblyCopyright ("Copyright © 2004-2008, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
-
-[assembly: ComVisibleAttribute (false)]

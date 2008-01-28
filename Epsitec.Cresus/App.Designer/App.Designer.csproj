@@ -153,7 +153,10 @@
     <Content Include="Resources\Common.Types\Captions.en.resource" />
     <Content Include="Resources\Common.Types\Strings.00.resource" />
     <Content Include="Resources\Common.Types\Strings.en.resource" />
-    <Compile Include="AssemblyInfo.cs">
+    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Program.cs" />

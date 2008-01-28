@@ -8,5 +8,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("Crésus Application Core")]
 [assembly: AssemblyProduct ("Crésus")]
 [assembly: AssemblyCopyright ("Copyright © 2007-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
-
-[assembly: ComVisible (false)]

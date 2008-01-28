@@ -41,6 +41,9 @@
     <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
+      <Link>Properties\AssemblyInfo.CrDocVer.cs</Link>
+    </Compile>
     <Compile Include="Comparers\BundleRank.cs" />
     <Compile Include="Comparers\Connection.cs" />
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />

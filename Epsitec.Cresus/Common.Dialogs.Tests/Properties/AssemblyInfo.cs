@@ -8,5 +8,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("Tests for the Dialogs Library")]
 [assembly: AssemblyProduct ("Framework Tests")]
 [assembly: AssemblyCopyright ("Copyright © 2003-2008, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
-
-[assembly: ComVisibleAttribute (false)]

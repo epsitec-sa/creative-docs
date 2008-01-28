@@ -5,14 +5,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle ("*.Common.Document")]
-[assembly: AssemblyDescription ("Document Library")]
-[assembly: AssemblyConfiguration ("")]
+[assembly: AssemblyTitle ("Epsitec.Common.Document")]
+[assembly: AssemblyDescription ("Epsitec Document Library")]
 [assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
 [assembly: AssemblyProduct ("Framework")]
 [assembly: AssemblyCopyright ("Copyright © 2003-2008, Daniel Roux, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
-[assembly: AssemblyTrademark ("")]
-[assembly: AssemblyCulture ("")]
-
-[assembly: AssemblyVersion ("2.1.7.0")]
-[assembly: ComVisibleAttribute (false)]
