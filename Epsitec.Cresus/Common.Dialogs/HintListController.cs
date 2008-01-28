@@ -19,6 +19,7 @@ namespace Epsitec.Common.Dialogs
 		public HintListController()
 		{
 			this.searchController = new DialogSearchController ();
+			this.searchController.SuggestionChanged += this.HandleSearchControllerSuggestionChanged;
 
 			DialogSearchController.GlobalSearchContextChanged += this.HandleGlobalSearchContextChanged;
 		}
@@ -43,24 +44,33 @@ namespace Epsitec.Common.Dialogs
 				if (this.activeSearchContext != value)
 				{
 					this.activeSearchContext = value;
+					this.OnActiveSearchContextChanged ();
 				}
 			}
 		}
-
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				this.searchController.SuggestionChanged -= this.HandleSearchControllerSuggestionChanged;
 				DialogSearchController.GlobalSearchContextChanged -= this.HandleGlobalSearchContextChanged;
 			}
 
 			base.Dispose (disposing);
 		}
 
+		private void OnActiveSearchContextChanged()
+		{
+			//	TODO: the active search context changed, refresh the UI list
+		}
+
+
 		
 		private void HandleGlobalSearchContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			System.Diagnostics.Debug.Write (e.ToString ());
+
 			ISearchContext context = e.NewValue as ISearchContext;
 
 			if ((context != null) &&
@@ -68,6 +78,10 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.activeSearchContext = context;
 			}
+		}
+
+		private void HandleSearchControllerSuggestionChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
 		}
 
 

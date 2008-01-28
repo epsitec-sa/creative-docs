@@ -679,6 +679,8 @@ namespace Epsitec.Common.Dialogs
 					//	Do nothing - this can happen if the user did not type
 					//	anything yet but simply set the focus on one of the
 					//	placeholders participating in the search.
+
+					DialogSearchController.globalContext.NotifyActivity (this);
 				}
 				else
 				{
