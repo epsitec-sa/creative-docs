@@ -69,6 +69,25 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets or sets the dialog panel attached to this search controller.
+		/// </summary>
+		/// <value>The dialog panel.</value>
+		public UI.Panel							DialogPanel
+		{
+			get
+			{
+				return this.dialogPanel;
+			}
+			set
+			{
+				if (this.dialogPanel != value)
+				{
+					this.dialogPanel = value;
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the entity resolver for this search controller.
 		/// </summary>
 		/// <value>The entity resolver.</value>
@@ -158,7 +177,13 @@ namespace Epsitec.Common.Dialogs
 			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
 		}
 
-		private AbstractPlaceholder FindParentPlaceholder(Widgets.Visual visual)
+		/// <summary>
+		/// Finds the parent placeholder for the specified visual.
+		/// </summary>
+		/// <param name="visual">The visual.</param>
+		/// <returns>The parent placeholder or <c>null</c> if no parent is a
+		/// placeholder.</returns>
+		private static AbstractPlaceholder FindParentPlaceholder(Widgets.Visual visual)
 		{
 			while (visual != null)
 			{
@@ -200,8 +225,8 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="e">The <see cref="Epsitec.Common.Types.DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
 		private void HandleWindowFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			AbstractPlaceholder oldPlaceholder = this.FindParentPlaceholder (e.OldValue as Widgets.Visual);
-			AbstractPlaceholder newPlaceholder = this.FindParentPlaceholder (e.NewValue as Widgets.Visual);
+			AbstractPlaceholder oldPlaceholder = DialogSearchController.FindParentPlaceholder (e.OldValue as Widgets.Visual);
+			AbstractPlaceholder newPlaceholder = DialogSearchController.FindParentPlaceholder (e.NewValue as Widgets.Visual);
 
 			System.Diagnostics.Debug.WriteLine (e.ToString ());
 
@@ -302,6 +327,36 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Notifies the dialog search controller that the suggestion changed and
+		/// that the dialog data validty changed as a result.
+		/// </summary>
+		/// <param name="suggestion">The suggestion.</param>
+		/// <param name="oldValidity">Old dialog data validity.</param>
+		/// <param name="newValidity">New dialog data validity.</param>
+		private void NotifySuggestionChangedDialogDataValidty(AbstractEntity suggestion, bool oldValidity, bool newValidity)
+		{
+			System.Diagnostics.Debug.WriteLine ("Suggestion set to " + (suggestion == null ? "<null>" : suggestion.Dump ()));
+
+			if ((oldValidity != newValidity) &&
+				(this.dialogPanel != null))
+			{
+				Widgets.CommandContext    commandContext    = Widgets.Helpers.VisualTree.GetCommandContext (this.dialogPanel);
+				Widgets.ValidationContext validationContext = Widgets.Helpers.VisualTree.GetValidationContext (this.dialogPanel);
+
+				if ((commandContext != null) &&
+					(validationContext != null))
+				{
+					commandContext.SetGroupEnable (validationContext, "Accept", newValidity);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Runs the real search, resolve to a given suggestion and set it as
+		/// the current suggestion in the active search context; this method
+		/// is called asynchronously from the main event loop.
+		/// </summary>
 		private void AsyncResolveSearch()
 		{
 			if ((this.activeSearchContext != null) &&
@@ -687,9 +742,14 @@ namespace Epsitec.Common.Dialogs
 					this.SetSuggestionValue (node, suggestion);
 				}
 
-				System.Diagnostics.Debug.WriteLine ("Suggestion set to " + (suggestion == null ? "<null>" : suggestion.Dump ()));
-
+				bool oldValidity = this.searchController.dialogData.AreReferenceReplacementsValid ();
 				this.searchController.dialogData.SetReferenceReplacement (this.searchRootPath, suggestion);
+				bool newValidity = this.searchController.dialogData.AreReferenceReplacementsValid ();
+
+				if (oldValidity != newValidity)
+				{
+					this.searchController.NotifySuggestionChangedDialogDataValidty (suggestion, oldValidity, newValidity);
+				}
 			}
 
 			#endregion
@@ -880,5 +940,6 @@ namespace Epsitec.Common.Dialogs
 		private SearchContext					activeSearchContext;
 		private DialogData						dialogData;
 		private Widgets.Window					dialogWindow;
+		private UI.Panel						dialogPanel;
 	}
 }

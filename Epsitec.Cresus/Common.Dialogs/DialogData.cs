@@ -29,7 +29,6 @@ namespace Epsitec.Common.Dialogs
 			this.mode = mode;
 			this.externalData = data;
 			this.internalData = this.CreateEntityProxy (this.externalData, null);
-			this.validationContext = new ValidationContext ();
 		}
 
 
@@ -64,15 +63,6 @@ namespace Epsitec.Common.Dialogs
 				return this.externalData;
 			}
 		}
-
-		public ValidationContext				ValidationContext
-		{
-			get
-			{
-				return this.validationContext;
-			}
-		}
-
 
 		/// <summary>
 		/// Gets the changes. The result is sorted based on the field path of
@@ -203,22 +193,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
 		{
-			bool oldValid = this.AreReferenceReplacementsValid ();
-			
 			this.replacements[path] = suggestion;
-
-			bool newValid = this.AreReferenceReplacementsValid ();
-
-			if ((oldValid != newValid) &&
-				(this.panel != null))
-			{
-				CommandContext context = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
-
-				if (context != null)
-				{
-					context.SetGroupEnable (this.validationContext, "Accept", newValid);
-				}
-			}
 		}
 
 		public void ClearReferenceReplacement(EntityFieldPath path)
@@ -242,8 +217,6 @@ namespace Epsitec.Common.Dialogs
 				source.SetDataSource (UI.DataSource.DataName, data);
 
 				this.panel = panel;
-				this.validationContext.CommandContext = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
-				this.validationContext.Refresh (this.panel);
 			}
 		}
 
@@ -262,7 +235,6 @@ namespace Epsitec.Common.Dialogs
 				source.SetDataSource (UI.DataSource.DataName, null);
 
 				this.panel = null;
-				this.validationContext.CommandContext = null;
 			}
 		}
 
@@ -791,7 +763,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly DialogDataMode			mode;
 		private readonly AbstractEntity			externalData;
 		private readonly AbstractEntity			internalData;
-		private readonly ValidationContext		validationContext;
 		private UI.Panel						panel;
 	}
 }

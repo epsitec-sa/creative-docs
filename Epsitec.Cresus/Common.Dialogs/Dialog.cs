@@ -26,6 +26,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.name            = name;
 			this.resourceManager = resourceManager;
+			this.validationContext = new ValidationContext ();
 		}
 
 		public Druid UserInterfaceResourceId
@@ -195,15 +196,20 @@ namespace Epsitec.Common.Dialogs
 				(this.isDataBound == false))
 			{
 				this.isDataBound = true;
+
 				this.dialogData.BindToUserInterface (this.panel);
 
 				if (this.dialogSearchController != null)
 				{
 					this.dialogSearchController.DialogData = this.dialogData;
 					this.dialogSearchController.DialogWindow = this.DialogWindow;
+					this.dialogSearchController.DialogPanel = this.panel;
 				}
 
-				ValidationContext.SetContext (this.panel, this.dialogData.ValidationContext);
+				ValidationContext.SetContext (this.panel, this.validationContext);
+				
+				this.validationContext.CommandContext = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
+				this.validationContext.Refresh (this.panel);
 			}
 		}
 
@@ -224,6 +230,7 @@ namespace Epsitec.Common.Dialogs
 				this.dialogData.UnbindFromUserInterface (this.panel);
 
 				ValidationContext.SetContext (this.panel, null);
+				this.validationContext.CommandContext = null;
 			}
 		}
 
@@ -296,6 +303,7 @@ namespace Epsitec.Common.Dialogs
 		private Druid							userInterfaceEntityId;
 		private DialogData						dialogData;
 		private DialogSearchController			dialogSearchController;
+		private ValidationContext				validationContext;
 		private bool							isDataBound;
 		private UI.Panel						panel;
 	}
