@@ -851,6 +851,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Widget								Embedder
+		{
+			get
+			{
+				if ((this.internal_state & InternalState.Embedded) == 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.Parent;
+				}
+			}
+			set
+			{
+				this.SetEmbedder (value);
+			}
+		}
+		
 
 		public static readonly IComparer<Widget>	TabIndexComparer = new TabIndexComparerImplementation ();
 
@@ -1177,7 +1196,7 @@ namespace Epsitec.Common.Widgets
 				this.OnClicked (null);
 			}
 		}
-		
+
 		
 		public void SetEmbedder(Widget embedder)
 		{

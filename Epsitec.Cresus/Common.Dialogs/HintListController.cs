@@ -5,6 +5,7 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
@@ -67,6 +68,63 @@ namespace Epsitec.Common.Dialogs
 		private void OnActiveSearchContextChanged()
 		{
 			//	TODO: the active search context changed, refresh the UI list
+
+			if (this.activeSearchContext == null)
+			{
+				this.HideHintListWidget ();
+			}
+			else
+			{
+				this.ShowHintListWidget ();
+			}
+		}
+
+		private void HideHintListWidget()
+		{
+			if ((this.hintListWidget != null) &&
+				(this.hintListWidget.IsVisible))
+			{
+				Window     window = this.searchController.DialogWindow;
+				WindowRoot root   = window.Root;
+
+				root.Padding = new Drawing.Margins (0, 0, 0, 0);
+
+				this.hintListWidget.Hide ();
+
+				Drawing.Rectangle bounds = window.WindowBounds;
+				bounds.Left += 200;
+				window.WindowBounds = bounds;
+			}
+		}
+
+		private void ShowHintListWidget()
+		{
+			Window     window = this.searchController.DialogWindow;
+			WindowRoot root   = window.Root;
+			
+			root.Padding = new Drawing.Margins (200, 0, 0, 0);
+
+			if (this.hintListWidget == null)
+			{
+				this.hintListWidget = new HintListWidget ();
+				this.hintListWidget.SetManualBounds (new Drawing.Rectangle (0, 0, 200, 100));
+				this.hintListWidget.Anchor = AnchorStyles.TopAndBottom;
+				this.hintListWidget.SetParent (root);
+			}
+			else if (this.hintListWidget.IsVisible)
+			{
+				//	Do nothing, list already visible.
+
+				return;
+			}
+			else
+			{
+				this.hintListWidget.Show ();
+			}
+
+			Drawing.Rectangle bounds = window.WindowBounds;
+			bounds.Left -= 200;
+			window.WindowBounds = bounds;
 		}
 
 
@@ -80,7 +138,11 @@ namespace Epsitec.Common.Dialogs
 			if ((context != null) &&
 				(context.SearchController == this.searchController))
 			{
-				this.activeSearchContext = context;
+				this.ActiveSearchContext = context;
+			}
+			else
+			{
+				this.ActiveSearchContext = null;
 			}
 		}
 
@@ -91,12 +153,14 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleSearchControllerResolved(object sender)
 		{
-			EntityResolverResult resolverResult = this.searchController.GetResolverResult (this.activeSearchContext);
+			this.searchResult = this.searchController.GetResolverResult (this.activeSearchContext);
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", resolverResult.AllResults.Count));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", this.searchResult.AllResults.Count));
 		}
 
 		private readonly DialogSearchController searchController;
 		private ISearchContext activeSearchContext;
+		private EntityResolverResult searchResult;
+		private HintListWidget hintListWidget;
 	}
 }
