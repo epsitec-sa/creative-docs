@@ -87,7 +87,8 @@ namespace Epsitec.Common.Dialogs
 			//	- CasePostale
 			//	- Localité.Résumé
 
-			DialogSearchController searchController = new DialogSearchController ();
+			HintListController hintListController = new HintListController ();
+			DialogSearchController searchController = hintListController.SearchController;
 			searchController.Resolver = DialogTest.CreateSuggestions ();
 
 			dialog.DialogWindowCreated +=
@@ -160,6 +161,8 @@ namespace Epsitec.Common.Dialogs
 
 			System.Console.Out.WriteLine ("Resulting dialog data:");
 			System.Console.Out.WriteLine (dialog.Data.ExternalData.Dump ());
+
+			hintListController.Dispose ();
 		}
 
 		

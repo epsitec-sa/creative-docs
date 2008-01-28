@@ -916,7 +916,8 @@ namespace Epsitec.Common.Dialogs
 		public event EventHandler<DependencyPropertyChangedEventArgs> SearchContextChanged;
 
 		/// <summary>
-		/// Occurs when the search context changed, globally.
+		/// Occurs when the search context changed, globally. This is signalled
+		/// internally by the <see cref="GlobalContext"/> singleton.
 		/// </summary>
 		public static event EventHandler<DependencyPropertyChangedEventArgs> GlobalSearchContextChanged
 		{
