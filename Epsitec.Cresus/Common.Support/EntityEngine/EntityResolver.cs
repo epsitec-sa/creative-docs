@@ -21,14 +21,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="resolver">The entity resolver.</param>
 		/// <param name="template">The search template.</param>
 		/// <returns>The most appropriate entity or <c>null</c>.</returns>
-		public static AbstractEntity Resolve(IEntityResolver resolver, AbstractEntity template)
+		public static EntityResolverResult Resolve(IEntityResolver resolver, AbstractEntity template)
 		{
 			if (resolver != null)
 			{
-				foreach (AbstractEntity result in resolver.Resolve (template))
-				{
-					return result;
-				}
+				return new EntityResolverResult (resolver.Resolve (template));
 			}
 
 			return null;

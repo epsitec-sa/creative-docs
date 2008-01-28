@@ -134,6 +134,25 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the resolver result for the specified search context.
+		/// </summary>
+		/// <param name="searchContext">The search context.</param>
+		/// <returns>The resolver results, never <c>null</c>.</returns>
+		public EntityResolverResult GetResolverResult(ISearchContext searchContext)
+		{
+			SearchContext context = searchContext as SearchContext;
+
+			if (context == null)
+			{
+				return EntityResolverResult.Empty;
+			}
+			else
+			{
+				return context.ResolverResult;
+			}
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -644,6 +663,14 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			public EntityResolverResult ResolverResult
+			{
+				get
+				{
+					return this.resolverResult;
+				}
+			}
+
 			public void AnalysePlaceholderGraph(Widgets.Widget root)
 			{
 				foreach (Node node in this.GetPlaceholderGraph (root))
@@ -757,8 +784,8 @@ namespace Epsitec.Common.Dialogs
 
 			public void Resolve(IEntityResolver entityResolver)
 			{
-				AbstractEntity result = EntityResolver.Resolve (entityResolver, this.searchTemplate);
-				this.SetSuggestion (result);
+				this.resolverResult = EntityResolver.Resolve (entityResolver, this.searchTemplate);
+				this.SetSuggestion (this.resolverResult.FirstResult);
 			}
 
 			#region IDisposable Members
@@ -895,6 +922,7 @@ namespace Epsitec.Common.Dialogs
 			private EntityFieldPath				searchRootPath;
 			private AbstractEntity				searchRootData;
 			private AbstractEntity				activeSuggestion;
+			private EntityResolverResult		resolverResult;
 		}
 
 		#endregion

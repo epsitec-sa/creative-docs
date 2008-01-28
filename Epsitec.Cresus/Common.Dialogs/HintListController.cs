@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.searchController = new DialogSearchController ();
 			this.searchController.SuggestionChanged += this.HandleSearchControllerSuggestionChanged;
+			this.searchController.Resolved += this.HandleSearchControllerResolved;
 
 			DialogSearchController.GlobalSearchContextChanged += this.HandleGlobalSearchContextChanged;
 		}
@@ -54,6 +57,7 @@ namespace Epsitec.Common.Dialogs
 			if (disposing)
 			{
 				this.searchController.SuggestionChanged -= this.HandleSearchControllerSuggestionChanged;
+				this.searchController.Resolved -= this.HandleSearchControllerResolved;
 				DialogSearchController.GlobalSearchContextChanged -= this.HandleGlobalSearchContextChanged;
 			}
 
@@ -82,8 +86,15 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleSearchControllerSuggestionChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			AbstractEntity suggestion = e.NewValue as AbstractEntity;
 		}
 
+		private void HandleSearchControllerResolved(object sender)
+		{
+			EntityResolverResult resolverResult = this.searchController.GetResolverResult (this.activeSearchContext);
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", resolverResult.AllResults.Count));
+		}
 
 		private readonly DialogSearchController searchController;
 		private ISearchContext activeSearchContext;
