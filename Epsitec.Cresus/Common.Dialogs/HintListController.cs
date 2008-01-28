@@ -79,54 +79,107 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void HideHintListWidget()
-		{
-			if ((this.hintListWidget != null) &&
-				(this.hintListWidget.IsVisible))
-			{
-				Window     window = this.searchController.DialogWindow;
-				WindowRoot root   = window.Root;
-
-				root.Padding = new Drawing.Margins (0, 0, 0, 0);
-
-				this.hintListWidget.Hide ();
-
-				Drawing.Rectangle bounds = window.WindowBounds;
-				bounds.Left += 200;
-				window.WindowBounds = bounds;
-			}
-		}
-
 		private void ShowHintListWidget()
 		{
-			Window     window = this.searchController.DialogWindow;
-			WindowRoot root   = window.Root;
-			
-			root.Padding = new Drawing.Margins (200, 0, 0, 0);
-
-			if (this.hintListWidget == null)
+			if (this.hintListEmbedder == null)
 			{
 				this.hintListWidget = new HintListWidget ();
-				this.hintListWidget.SetManualBounds (new Drawing.Rectangle (0, 0, 200, 100));
-				this.hintListWidget.Anchor = AnchorStyles.TopAndBottom;
-				this.hintListWidget.SetParent (root);
-			}
-			else if (this.hintListWidget.IsVisible)
-			{
-				//	Do nothing, list already visible.
-
-				return;
-			}
-			else
-			{
-				this.hintListWidget.Show ();
+				this.hintListEmbedder = new HintListEmbedder (this.searchController.DialogWindow, this.hintListWidget);
 			}
 
-			Drawing.Rectangle bounds = window.WindowBounds;
-			bounds.Left -= 200;
-			window.WindowBounds = bounds;
+			this.hintListEmbedder.Show ();
 		}
 
+		private void HideHintListWidget()
+		{
+			if (this.hintListEmbedder != null)
+			{
+				this.hintListEmbedder.Hide ();
+			}
+		}
+
+
+		private class HintListEmbedder
+		{
+			public HintListEmbedder(Window window, HintListWidget widget)
+			{
+				this.window = window;
+				this.widget = widget;
+
+				this.rootPadding = this.window.Root.Padding;
+				
+				this.widget.Visibility = false;
+				this.widget.SetParent (this.window.Root);
+
+				this.SetWidth (200);
+			}
+
+			public void Show()
+			{
+				if (!this.widget.Visibility)
+				{
+					WindowRoot        root    = this.window.Root;
+					Drawing.Rectangle bounds  = this.window.WindowBounds;
+					Drawing.Margins   padding = this.rootPadding;
+
+					padding.Left += this.width;
+					root.Padding = padding;
+
+					bounds.Left -= this.width;
+
+					this.widget.Margins = new Drawing.Margins (-padding.Left, 0, 0, 0);
+					this.widget.Visibility   = true;
+					this.window.WindowBounds = bounds;
+				}
+			}
+
+			public void Hide()
+			{
+				if (this.widget.Visibility)
+				{
+					WindowRoot        root    = this.window.Root;
+					Drawing.Rectangle bounds  = this.window.WindowBounds;
+					Drawing.Margins   padding = this.rootPadding;
+
+					root.Padding = padding;
+
+					bounds.Left += this.width;
+					
+					this.widget.Visibility   = false;
+					this.window.WindowBounds = bounds;
+				}
+			}
+
+			private void SetWidth(double width)
+			{
+				if (this.width != width)
+				{
+					bool show = false;
+
+					if (this.widget.Visibility)
+					{
+						this.Hide ();
+						show = true;
+					}
+
+					this.widget.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+					this.widget.PreferredWidth = width;
+					this.width = width;
+
+					if (show)
+					{
+						this.Show ();
+					}
+				}
+			}
+
+
+			private readonly Window window;
+			private readonly HintListWidget widget;
+			private readonly Drawing.Margins rootPadding;
+
+			private double width;
+		}
 
 		
 		private void HandleGlobalSearchContextChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -162,5 +215,6 @@ namespace Epsitec.Common.Dialogs
 		private ISearchContext activeSearchContext;
 		private EntityResolverResult searchResult;
 		private HintListWidget hintListWidget;
+		private HintListEmbedder hintListEmbedder;
 	}
 }

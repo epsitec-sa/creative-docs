@@ -130,6 +130,7 @@ namespace Epsitec.Common.Dialogs
 					frame.Dock = DockStyle.Bottom;
 
 					dialog.DialogWindow.Root.Children.Add (frame);
+					dialog.DialogWindow.Root.Padding = new Drawing.Margins (8, 8, 4, 4);
 				};
 
 			Assert.IsNotNull (dialog);

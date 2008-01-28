@@ -31,6 +31,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
+
 		private readonly UI.ItemTable itemTable;
 	}
 }
