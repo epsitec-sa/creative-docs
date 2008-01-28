@@ -212,8 +212,11 @@ namespace Epsitec.Common.Designer
 					this.StyleButton("EditLocked", this.isEditLocked ? null : "Unlock");  // ouvre ou ferme le cadenas
 
 					ModuleInfo mi = this.CurrentModuleInfo;
-					Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
-					viewer.Update();
+					if (mi != null)
+					{
+						Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
+						viewer.Update();
+					}
 				}
 			}
 		}
@@ -1753,6 +1756,8 @@ namespace Epsitec.Common.Designer
 			this.lastModule = this.currentModule;
 			this.currentModule = rank;
 
+			this.UpdateCommandEditLocked();
+
 			if ( rank >= 0 )
 			{
 				this.ignoreChange = true;
@@ -1784,7 +1789,6 @@ namespace Epsitec.Common.Designer
 				this.modificationNextState.Enable = false;
 				this.modificationAllState.Enable = false;
 				this.modificationClearState.Enable = false;
-				this.editLockedState.Enable = false;
 				this.editOkState.Enable = false;
 				this.editCancelState.Enable = false;
 				this.deleteState.Enable = false;
@@ -1836,6 +1840,12 @@ namespace Epsitec.Common.Designer
 				this.ribbonActive = this.ribbonMain;
 				this.ribbonBook.ActivePage = this.ribbonMain;
 			}
+		}
+
+		public void UpdateCommandEditLocked()
+		{
+			//	Met à jour la commande "EditLocked".
+			this.editLockedState.Enable = (this.settings.IdentityCard != null);
 		}
 
 		protected bool AutoSave(CommandDispatcher dispatcher)

@@ -618,7 +618,7 @@ namespace Epsitec.Common.Designer
 				{
 					//	Pas trouvé de module chargé pour le type spécifié, alors on va
 					//	passer par le gestionnaire de ressources standard :
-					Caption caption = module.resourceManager.GetCaption (id);
+					Caption caption = this.module.resourceManager.GetCaption (id);
 
 					if (caption != null)
 					{
