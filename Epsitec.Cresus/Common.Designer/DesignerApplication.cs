@@ -198,38 +198,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public bool IsEditLocked
-		{
-			get
-			{
-				ModuleInfo mi = this.CurrentModuleInfo;
-				if (mi == null)
-				{
-					return true;
-				}
-				else
-				{
-					return mi.Module.IsEditLocked;
-				}
-			}
-			set
-			{
-				if (this.IsEditLocked != value)
-				{
-					ModuleInfo mi = this.CurrentModuleInfo;
-					mi.Module.IsEditLocked = value;
-
-					this.UpdateCommandEditLocked();
-
-					if (mi != null)
-					{
-						Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
-						viewer.Update();
-					}
-				}
-			}
-		}
-
 		protected void CreateLayout()
 		{
 			this.ribbonBook = new RibbonBook(this.Window.Root);
@@ -1854,8 +1822,8 @@ namespace Epsitec.Common.Designer
 		public void UpdateCommandEditLocked()
 		{
 			//	Met à jour la commande "EditLocked".
-			this.editLockedState.Enable = (this.CurrentModule != null);
-			this.StyleButton("EditLocked", this.IsEditLocked ? null : "Unlock");  // ouvre ou ferme le cadenas
+			this.editLockedState.Enable = (this.CurrentModule != null && this.settings.IdentityCard != null);
+			this.StyleButton("EditLocked", this.IsReadonly ? null : "Unlock");  // ouvre ou ferme le cadenas
 		}
 
 		protected bool AutoSave(CommandDispatcher dispatcher)
@@ -1945,6 +1913,38 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		protected bool IsEditLocked
+		{
+			get
+			{
+				ModuleInfo mi = this.CurrentModuleInfo;
+				if (mi == null)
+				{
+					return true;
+				}
+				else
+				{
+					return mi.Module.IsEditLocked;
+				}
+			}
+			set
+			{
+				if (this.IsEditLocked != value)
+				{
+					ModuleInfo mi = this.CurrentModuleInfo;
+					mi.Module.IsEditLocked = value;
+
+					this.UpdateCommandEditLocked();
+
+					if (mi != null)
+					{
+						Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
+						viewer.Update();
+					}
+				}
+			}
+		}
+
 		public void UpdateBookModules()
 		{
 			//	Met à jour le nom de l'onglet des modules.
@@ -2025,7 +2025,7 @@ namespace Epsitec.Common.Designer
 		public bool DlgEntityExpression(bool isInterface, string deepExpression, ref string expression)
 		{
 			//	Ouvre le dialogue pour éditer une expression.
-			this.dlgEntityExpression.Initialise(this.IsEditLocked, isInterface, deepExpression, expression);
+			this.dlgEntityExpression.Initialise(this.IsReadonly, isInterface, deepExpression, expression);
 			this.dlgEntityExpression.Show();  // choix dans le dialogue...
 			expression = this.dlgEntityExpression.Expression;
 			return this.dlgEntityExpression.IsEditOk;

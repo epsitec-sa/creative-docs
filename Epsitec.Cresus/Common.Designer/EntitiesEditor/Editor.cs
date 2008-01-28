@@ -1480,9 +1480,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le mode de travail courant.
 			get
 			{
-				if (this.module.DesignerApplication.IsEditLocked)
+				if (this.module.DesignerApplication.IsReadonly)
 				{
-					if (this.entities.SubView == 3)
+					if (this.entities.SubView == 3)  // sous-vue T ?
 					{
 						return ModifyMode.Partial;
 					}

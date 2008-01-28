@@ -58,11 +58,9 @@ namespace Epsitec.Common.Designer.Ribbons
 				this.designerApplication.Settings.IdentityCard = card;
 				this.widget.IdentityCard = card;
 
-				if (this.designerApplication.CurrentModule == null)
-				{
-					this.designerApplication.UpdateCommandEditLocked();
-				}
-				else
+				this.designerApplication.UpdateCommandEditLocked();
+
+				if (this.designerApplication.CurrentModule != null)
 				{
 					this.designerApplication.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
 					this.designerApplication.CurrentModule.Modifier.ActiveViewer.Update();
