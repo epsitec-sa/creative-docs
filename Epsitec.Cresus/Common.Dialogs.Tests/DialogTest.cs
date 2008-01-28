@@ -24,6 +24,7 @@ namespace Epsitec.Common.Dialogs
 		public void SetUp()
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 		}
 		
 		[Test]
