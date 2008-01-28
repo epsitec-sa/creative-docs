@@ -4,8 +4,7 @@
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The <c>CancelEventArgs</c> class provides a <c>Cancel</c> property for the
-	/// <c>CancelEventHandler</c>.
+	/// The <c>CancelEventArgs</c> class provides data for a cancelable event.
 	/// </summary>
 	public class CancelEventArgs : System.ComponentModel.CancelEventArgs
 	{

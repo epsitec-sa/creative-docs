@@ -327,6 +327,14 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private void NotifySuggestionChanged(AbstractEntity oldSuggestion, AbstractEntity newSuggestion)
+		{
+			if (oldSuggestion != newSuggestion)
+			{
+				this.OnSuggestionChanged (new DependencyPropertyChangedEventArgs ("Suggestion", oldSuggestion, newSuggestion));
+			}
+		}
+
 		/// <summary>
 		/// Notifies the dialog search controller that the suggestion changed and
 		/// that the dialog data validty changed as a result.
@@ -359,10 +367,45 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		private void AsyncResolveSearch()
 		{
-			if ((this.activeSearchContext != null) &&
-				(this.entityResolver != null))
+			CancelEventArgs e = new CancelEventArgs ();
+			this.OnResolving (e);
+
+			if (e.Cancel)
 			{
-				this.activeSearchContext.Resolve (this.entityResolver);
+				//	Do nothing more - the event was cancelled.
+			}
+			else
+			{
+				if ((this.activeSearchContext != null) &&
+					(this.entityResolver != null))
+				{
+					this.activeSearchContext.Resolve (this.entityResolver);
+				}
+
+				this.OnResolved ();
+			}
+		}
+
+		/// <summary>
+		/// Raises the <see cref="E:Resolving"/> event.
+		/// </summary>
+		/// <param name="e">The <see cref="CancelEventArgs"/> instance containing the event data.</param>
+		private void OnResolving(CancelEventArgs e)
+		{
+			if (this.Resolving != null)
+			{
+				this.Resolving (this, e);
+			}
+		}
+
+		/// <summary>
+		/// Raises the <see cref="E:Resolved"/> event.
+		/// </summary>
+		private void OnResolved()
+		{
+			if (this.Resolved != null)
+			{
+				this.Resolved (this);
 			}
 		}
 
@@ -388,6 +431,10 @@ namespace Epsitec.Common.Dialogs
 				{
 					SearchContext.Activate (newContext);
 				}
+				else
+				{
+					DialogSearchController.globalContext.NotifyActivity (null);
+				}
 
 				this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
 			}
@@ -406,6 +453,18 @@ namespace Epsitec.Common.Dialogs
 			if (this.SearchContextChanged != null)
 			{
 				this.SearchContextChanged (this, e);
+			}
+		}
+
+		/// <summary>
+		/// Raises the <see cref="E:SuggestionChanged"/> event.
+		/// </summary>
+		/// <param name="dependencyPropertyChangedEventArgs">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
+		private void OnSuggestionChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.SuggestionChanged != null)
+			{
+				this.SuggestionChanged (this, e);
 			}
 		}
 
@@ -750,6 +809,16 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.searchController.NotifySuggestionChangedDialogDataValidty (suggestion, oldValidity, newValidity);
 				}
+
+				AbstractEntity oldSuggestion = this.activeSuggestion;
+				AbstractEntity newSuggestion = suggestion;
+				
+				if (oldSuggestion != newSuggestion)
+				{
+					this.activeSuggestion = suggestion;
+
+					this.searchController.NotifySuggestionChanged (oldSuggestion, newSuggestion);
+				}
 			}
 
 			#endregion
@@ -823,6 +892,7 @@ namespace Epsitec.Common.Dialogs
 			private AbstractEntity				searchTemplate;
 			private EntityFieldPath				searchRootPath;
 			private AbstractEntity				searchRootData;
+			private AbstractEntity				activeSuggestion;
 		}
 
 		#endregion
@@ -898,7 +968,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					lock (this)
 					{
-						this.ContextChanged -= value;
+						this.contextChanged -= value;
 					}
 				}
 			}
@@ -914,6 +984,24 @@ namespace Epsitec.Common.Dialogs
 		/// <see cref="DialogSearchController"/>.
 		/// </summary>
 		public event EventHandler<DependencyPropertyChangedEventArgs> SearchContextChanged;
+
+		/// <summary>
+		/// Occurs immediately before resolving a template from the active
+		/// search context into a suggestion. The event can be cancelled,
+		/// which aborts the resolution.
+		/// </summary>
+		public event EventHandler<CancelEventArgs> Resolving;
+
+		/// <summary>
+		/// Occurs when a template from the active search context was
+		/// resolved into a suggestion.
+		/// </summary>
+		public event EventHandler				Resolved;
+
+		/// <summary>
+		/// Occurs when the suggestion for the active search context changed.
+		/// </summary>
+		public event EventHandler<DependencyPropertyChangedEventArgs> SuggestionChanged;
 
 		/// <summary>
 		/// Occurs when the search context changed, globally. This is signalled
