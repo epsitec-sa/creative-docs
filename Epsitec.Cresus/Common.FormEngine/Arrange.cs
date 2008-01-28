@@ -47,10 +47,17 @@ namespace Epsitec.Common.FormEngine
 					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
 					{
-						//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-						//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
-						//	à la valeur requise !
-						int dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
+						//	field.PatchAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+						//	de liste.
+						int dst = -1;  // position pour mettre en-tête de liste
+						if (field.PatchAttachGuid != System.Guid.Empty)
+						{
+							dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
+							if (dst == -1)  // l'élément d'attache n'existe plus ?
+							{
+								continue;  // on laisse le champ ici
+							}
+						}
 
 						FieldDescription temp = merged[src];
 						merged.RemoveAt(src);
@@ -64,10 +71,17 @@ namespace Epsitec.Common.FormEngine
 
 				if (field.PatchInserted)  // champ à insérer ?
 				{
-					//	field.AttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-					//	de liste. Par hazard, IndexOfGuid retourne -1 dans dst, ce qui correspond exactement
-					//	à la valeur requise !
-					int dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où l'insérer
+					//	field.PatchAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+					//	de liste.
+					int dst = -1;  // position pour mettre en-tête de liste
+					if (field.PatchAttachGuid != System.Guid.Empty)
+					{
+						dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
+						if (dst == -1)  // l'élément d'attache n'existe plus ?
+						{
+							dst = merged.Count-1;  // on insère le champ à la fin
+						}
+					}
 
 					FieldDescription copy = new FieldDescription(field);
 					copy.PatchInserted = true;
