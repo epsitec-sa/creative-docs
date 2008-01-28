@@ -252,6 +252,19 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public bool IsEditLocked
+		{
+			//	Indique si les modifications sont interdites dans ce module.
+			get
+			{
+				return this.isEditLocked;
+			}
+			set
+			{
+				this.isEditLocked = value;
+			}
+		}
+
 		public bool IsPatch
 		{
 			//	Indique si on est dans un module de patch.
@@ -920,5 +933,6 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessValues;
 		protected ResourceAccess			accessTypes;
 		protected ResourceAccess			accessForms;
+		protected bool						isEditLocked = true;
 	}
 }

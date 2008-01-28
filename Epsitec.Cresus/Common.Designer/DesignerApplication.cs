@@ -202,16 +202,25 @@ namespace Epsitec.Common.Designer
 		{
 			get
 			{
-				return this.isEditLocked;
+				ModuleInfo mi = this.CurrentModuleInfo;
+				if (mi == null)
+				{
+					return true;
+				}
+				else
+				{
+					return mi.Module.IsEditLocked;
+				}
 			}
 			set
 			{
-				if (this.isEditLocked != value)
+				if (this.IsEditLocked != value)
 				{
-					this.isEditLocked = value;
-					this.StyleButton("EditLocked", this.isEditLocked ? null : "Unlock");  // ouvre ou ferme le cadenas
-
 					ModuleInfo mi = this.CurrentModuleInfo;
+					mi.Module.IsEditLocked = value;
+
+					this.UpdateCommandEditLocked();
+
 					if (mi != null)
 					{
 						Viewers.Abstract viewer = mi.Module.Modifier.ActiveViewer;
@@ -1845,7 +1854,8 @@ namespace Epsitec.Common.Designer
 		public void UpdateCommandEditLocked()
 		{
 			//	Met à jour la commande "EditLocked".
-			this.editLockedState.Enable = (this.settings.IdentityCard != null);
+			this.editLockedState.Enable = (this.CurrentModule != null);
+			this.StyleButton("EditLocked", this.IsEditLocked ? null : "Unlock");  // ouvre ou ferme le cadenas
 		}
 
 		protected bool AutoSave(CommandDispatcher dispatcher)
@@ -1931,7 +1941,7 @@ namespace Epsitec.Common.Designer
 			//	ou lorsqu'on est en mode "bloqué".
 			get
 			{
-				return this.settings.IdentityCard == null || this.isEditLocked;
+				return this.settings.IdentityCard == null || this.IsEditLocked;
 			}
 		}
 
@@ -2237,7 +2247,6 @@ namespace Epsitec.Common.Designer
 		protected bool							ignoreChange = false;
 		protected double						moveHorizontal = 5;
 		protected double						moveVertical = 5;
-		protected bool							isEditLocked = true;
 
 		protected List<Viewers.Locator>			locators;
 		protected int							locatorIndex;
