@@ -707,6 +707,21 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.batchSaver.Execute ();
+			
+			if (this.AccessForms.AccessCount > 0)
+			{
+				//	Il y a des masques de saisie définis pour ce module; il faut donc encore
+				//	générer le code C# correspondant.
+
+				List<ResourceBundle> bundles = new List<ResourceBundle> ();
+				
+				foreach (CultureMap item in this.AccessForms.Accessor.Collection)
+				{
+					bundles.Add (this.ResourceManager.GetBundle (item.Id, ResourceLevel.Default));
+				}
+
+				this.RegenerateFormsSourceCode (bundles);
+			}
 		}
 
 		private void UpdateManifest()
@@ -820,7 +835,7 @@ namespace Epsitec.Common.Designer
 					{
 						try
 						{
-							this.RegenerateSourceCode (manager, bundle);
+							this.RegenerateEntitiesSourceCode (manager, bundle);
 						}
 						catch (System.Exception ex)
 						{
@@ -832,7 +847,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		private void RegenerateSourceCode(ResourceManager manager, ResourceBundle bundle)
+		private void RegenerateEntitiesSourceCode(ResourceManager manager, ResourceBundle bundle)
 		{
 			CodeGenerator generator = new CodeGenerator (manager);
 			generator.Emit ();
@@ -884,6 +899,23 @@ namespace Epsitec.Common.Designer
 				}
 			}
 #endif
+		}
+
+		private void RegenerateFormsSourceCode(IEnumerable<ResourceBundle> bundles)
+		{
+			FormEngine.CodeGenerator generator = new FormEngine.CodeGenerator (this.ResourceManager, bundles);
+			generator.Emit ();
+
+			string modulePath = this.moduleId.Path;
+			string sourceCodeRoot = System.IO.Path.Combine (modulePath, "SourceCode");
+			string sourceCodePath = System.IO.Path.Combine (sourceCodeRoot, "Forms.cs");
+
+			if (!System.IO.Directory.Exists (sourceCodeRoot))
+			{
+				System.IO.Directory.CreateDirectory (sourceCodeRoot);
+			}
+
+			generator.Formatter.SaveCodeToTextFile (sourceCodePath, System.Text.Encoding.UTF8);
 		}
 
 		private void HandleAccessDirtyChanged(object sender)

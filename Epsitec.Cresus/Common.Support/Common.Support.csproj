@@ -130,6 +130,7 @@
     <Compile Include="AbstractOplet.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeGeneration\CodeHelper.cs" />
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />

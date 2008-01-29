@@ -2984,50 +2984,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static char AnalyseEntityChar(string text, ref int offset)
-		{
-			//	Retourne le caractère à un offset quelconque, en interprétant les
-			//	commandes &...;
-			if ( text[offset] == '&' )
-			{
-				int length = text.IndexOf(";", offset)-offset+1;
-				
-				if ( length < 3 )
-				{
-					throw new System.FormatException(string.Format("Invalid entity found (too short)."));
-				}
-				
-				char code;
-				string entity = text.Substring(offset, length);
-				
-				switch ( entity )
-				{
-					case "&lt;":    code = '<';   break;
-					case "&gt;":    code = '>';   break;
-					case "&amp;":   code = '&';   break;
-					case "&quot;":  code = '"';   break;
-					case "&apos;":  code = '\'';  break;
-					
-					default:
-						if ( entity.StartsWith("&#") )
-						{
-							entity = entity.Substring(2, entity.Length-3);
-							code   = (char)System.Int32.Parse(entity, System.Globalization.CultureInfo.InvariantCulture);
-						}
-						else
-						{
-							throw new System.FormatException(string.Format("Invalid entity {0} found.", entity));
-						}
-						break;
-				}
-				
-				offset += length;
-				return code;
-			}
-			
-			return text[offset++];
-		}
-		
 		public static Tag ParseTag(string text, ref int offset, out Dictionary<string, string> parameters)
 		{
 			//	Avance d'un caractère ou d'un tag dans le texte.
@@ -3289,54 +3245,12 @@ namespace Epsitec.Common.Widgets
 		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text)
 		{
-			return TextLayout.ConvertToSimpleText(text, TextLayout.CodeObject.ToString());
+			return Types.Converters.TextConverter.ConvertToSimpleText (text);
 		}
 		
 		public static string ConvertToSimpleText(string text, string imageReplacement)
 		{
-			//	Epure le texte en supprimant les tags <> et en remplaçant les
-			//	tags &gt; et &lt; (et autres) par leurs caractères équivalents.
-			//	En plus, les images sont remplacées par le texte 'imageReplacement'
-			System.Diagnostics.Debug.Assert(text != null);
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-
-			for ( int offset=0 ; offset<text.Length ; )
-			{
-				if ( text[offset] == '<' )
-				{
-					int length = text.IndexOf(">", offset)-offset+1;
-					if ( length > 0 )
-					{
-						string tag = text.Substring(offset, length);
-					
-						offset += length;
-
-						if ( tag.IndexOf("<img ") == 0 )
-						{
-							buffer.Append(imageReplacement);
-						}
-						if ( tag.IndexOf("<br/>") == 0 )
-						{
-							buffer.Append("\n");
-						}
-						if ( tag.IndexOf("<tab/>") == 0 ||
-							 tag.IndexOf("<list")  == 0 )
-						{
-							buffer.Append("\t");
-						}
-					}
-				}
-				else if ( text[offset] == '&' )
-				{
-					buffer.Append(TextLayout.AnalyseEntityChar(text, ref offset));
-				}
-				else
-				{
-					buffer.Append(text[offset++]);
-				}
-			}
-
-			return buffer.ToString();
+			return Types.Converters.TextConverter.ConvertToSimpleText (text, imageReplacement);
 		}
 
 		public static string SelectBestText(TextLayout model, IEnumerable<string> texts, Drawing.Size size)
@@ -4203,7 +4117,7 @@ namespace Epsitec.Common.Widgets
 
 							case Tag.None:
 								endOffset = beginOffset;
-								char c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
+								char c = Types.Converters.TextConverter.AnalyseEntityChar(this.text, ref endOffset);
 								buffer.Append(c);
 								currentIndex ++;
 								break;

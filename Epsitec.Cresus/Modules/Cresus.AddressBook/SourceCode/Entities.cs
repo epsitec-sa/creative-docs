@@ -1,6 +1,6 @@
 ﻿//  --------------------------------------------------------------------------- 
 //  ATTENTION !
-//  Ce fichier a été généré automatiquement. Ne pas l&apos;éditer manuellement, car 
+//  Ce fichier a été généré automatiquement. Ne pas l'éditer manuellement, car 
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
