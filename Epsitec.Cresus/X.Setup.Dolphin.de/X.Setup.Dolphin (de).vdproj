@@ -21,12 +21,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_42896CC3A644456FB28DD35EB952582E"
-        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_59C2CADB4BAF4200AB5061BE85415427"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -35,6 +29,12 @@
         {
         "MsmKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_9C864BA6AEA84A5A852791C0B541B092"
+        "OwnerKey" = "8:_99A1ECCB35B241B391BC9274DB770594"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -300,14 +300,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Dauphin-Simulator"
-        "ProductCode" = "8:{708DDFB8-30EE-46E2-AAF4-EF85A760BD31}"
-        "PackageCode" = "8:{DE9EBDB5-08CB-4641-BB82-931EA529FFBC}"
+        "ProductCode" = "8:{6B188547-02F5-46AB-9E1D-379DB72E4C4D}"
+        "PackageCode" = "8:{8E1F5D9F-A67A-4EEA-A0F9-93FE1A92CCE5}"
         "UpgradeCode" = "8:{8C9BFBF0-BC27-4D4F-917A-6B7BF4E709A5}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.1.2"
+        "ProductVersion" = "8:1.1.3"
         "Manufacturer" = "8:Epsitec"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.epsitec.ch"
@@ -736,11 +736,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_42896CC3A644456FB28DD35EB952582E"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
+            "IsDependency" = "11:FALSE"
+            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -750,11 +750,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_99A1ECCB35B241B391BC9274DB770594"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_9C864BA6AEA84A5A852791C0B541B092"
             {
             "UseDynamicProperties" = "11:TRUE"
-            "IsDependency" = "11:FALSE"
-            "SourcePath" = "8:C:\\Program Files\\Common Files\\Merge Modules\\Microsoft_VC80_CRT_x86.msm"
+            "IsDependency" = "11:TRUE"
+            "SourcePath" = "8:policy_8_0_microsoft_vc80_crt_x86.msm"
                 "Properties"
                 {
                 }

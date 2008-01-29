@@ -1,8 +1,10 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartWorkingDirectory>S:\Epsitec.Cresus\App.Dolphin.Core\Executable</StartWorkingDirectory>
     <StartArguments>
     </StartArguments>
+    <StartAction>Program</StartAction>
+    <StartProgram>S:\Epsitec.Cresus\App.Dolphin.Core\Executable\Shell.exe</StartProgram>
   </PropertyGroup>
   <PropertyGroup>
     <PublishUrlHistory>publish\</PublishUrlHistory>

@@ -2,6 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D718549-67C4-4FEE-BA97-10F50E189F83}"
 	ProjectSection(SolutionItems) = preProject
+		Properties\AssemblyInfo.Dolphin.cs = Properties\AssemblyInfo.Dolphin.cs
 		CreateAcrobatDistillerAssembly.bat = CreateAcrobatDistillerAssembly.bat
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		External\uac.manifest = External\uac.manifest

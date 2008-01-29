@@ -11,6 +11,7 @@
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <ApplicationIcon>Dolphin.ico</ApplicationIcon>
     <ApplicationRevision>0</ApplicationRevision>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,6 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Dolphin.cs">
+      <Link>Properties\AssemblyInfo.Dolphin.cs</Link>
+    </Compile>
     <Compile Include="Components\AbstractProcessor.cs" />
     <Compile Include="Components\TinyProcessor.cs" />
     <Compile Include="Assembler.cs" />
@@ -106,6 +110,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
     <None Include="App.ico" />
     <EmbeddedResource Include="Images\Application.icon" />
     <None Include="Dolphin.ico" />

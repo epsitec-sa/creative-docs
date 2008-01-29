@@ -14,6 +14,8 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Dolphin.cs">
+      <Link>Properties\AssemblyInfo.Dolphin.cs</Link>
+    </Compile>
     <Compile Include="Core.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
