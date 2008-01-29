@@ -372,8 +372,15 @@ namespace Epsitec.Common.FormEngine
 			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
-			Engine.LabelIdUse(labelsId, -(labelId++), column, 1);
-			Engine.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
+			if (columnsRequired == 1)
+			{
+				Engine.LabelIdUse(labelsId, labelId++, column, 1);
+			}
+			else
+			{
+				Engine.LabelIdUse(labelsId, -(labelId++), column, 1);
+				Engine.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
+			}
 
 			if (isGlueAfter)
 			{
