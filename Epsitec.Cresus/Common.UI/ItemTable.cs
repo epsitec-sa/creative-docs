@@ -506,7 +506,8 @@ namespace Epsitec.Common.UI
 				//	A table with groups can not be configured in the item based
 				//	scroll mode :
 				
-				if (this.Items.Groups.Count > 0)
+				if ((this.Items != null) &&
+					(this.Items.Groups.Count > 0))
 				{
 					mode = ItemTableScrollMode.Linear;
 				}

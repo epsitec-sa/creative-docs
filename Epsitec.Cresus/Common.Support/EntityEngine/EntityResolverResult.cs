@@ -18,6 +18,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			this.entityEnumerator = entities == null ? null : entities.GetEnumerator ();
 			this.cache = new List<AbstractEntity> ();
+			this.view = new CollectionView (this.cache);
 		}
 
 
@@ -45,6 +46,14 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 
 				return this.cache;
+			}
+		}
+
+		public ICollectionView CollectionView
+		{
+			get
+			{
+				return this.view;
 			}
 		}
 
@@ -87,5 +96,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private IEnumerator<AbstractEntity> entityEnumerator;
 		private readonly List<AbstractEntity> cache;
+		private readonly CollectionView view;
 	}
 }

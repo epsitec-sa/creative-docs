@@ -77,7 +77,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		[Test]
-		public void Check02SimpleForm()
+		public void Check02SimpleFormWithHintList()
 		{
 			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
 

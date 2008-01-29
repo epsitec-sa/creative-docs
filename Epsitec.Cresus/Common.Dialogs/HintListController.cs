@@ -209,6 +209,12 @@ namespace Epsitec.Common.Dialogs
 			this.searchResult = this.searchController.GetResolverResult (this.activeSearchContext);
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", this.searchResult.AllResults.Count));
+
+			ICollectionView view = this.searchResult.CollectionView;
+
+			view.Refresh ();
+
+			this.hintListWidget.Items = view;
 		}
 
 		private readonly DialogSearchController searchController;
