@@ -21,8 +21,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
 			//	Aspect (pour DefaultParameter).
-			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
-			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
+			this.buttonSuiteCompactLeft = leftContainer.ExtendButton;
+			this.buttonSuiteCompactLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
 			leftResetBox.IsPatch = this.module.IsPatch;
@@ -134,8 +135,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
-			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
+			this.buttonSuiteExtendLeft = leftContainer.ExtendButton;
+			this.buttonSuiteExtendRight = rightContainer.ExtendButton;
+			this.buttonSuiteExtendLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonSuiteExtendRight.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);
 			this.primarySuiteSummary.MinHeight = 30;

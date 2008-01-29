@@ -52,6 +52,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 			set
 			{
 				this.isLeftPart = value;
+
+				if (this.extendButton != null)
+				{
+					this.extendButton.Visibility = this.isLeftPart;  // bouton visible seulement dans la partie de gauche
+				}
 			}
 		}
 
@@ -120,6 +125,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 					}
 
 					this.extendButton.GlyphShape = value;
+					this.extendButton.Visibility = this.isLeftPart;
 				}
 			}
 		}

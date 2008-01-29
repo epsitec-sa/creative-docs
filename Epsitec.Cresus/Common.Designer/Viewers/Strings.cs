@@ -17,8 +17,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Résumé des captions.
 			MyWidgets.StackedPanel leftContainer, rightContainer;
 
-			this.buttonMainExtend = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
-			this.buttonMainExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
+			this.buttonMainExtendLeft = leftContainer.ExtendButton;
+			this.buttonMainExtendRight = rightContainer.ExtendButton;
+			this.buttonMainExtendLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonMainExtendRight.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySummary = new StaticText(leftContainer.Container);
 			this.primarySummary.MinHeight = 30;
@@ -29,8 +32,11 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondarySummary.Dock = DockStyle.Fill;
 
 			//	Textes.
-			this.buttonMainCompact = this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.3);
-			this.buttonMainCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.3);
+			this.buttonMainCompactLeft = leftContainer.ExtendButton;
+			this.buttonMainCompactRight = rightContainer.ExtendButton;
+			this.buttonMainCompactLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonMainCompactRight.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.groupPrimaryText = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupPrimaryText.IsPatch = this.module.IsPatch;

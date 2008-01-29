@@ -196,16 +196,28 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				if (this.buttonMainExtend != null)
+				if (this.buttonMainExtendLeft != null)
 				{
-					this.buttonMainExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-					this.buttonMainCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainExtendLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainCompactLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				}
 
-				if (this.buttonSuiteExtend != null)
+				if (this.buttonMainExtendRight != null)
 				{
-					this.buttonSuiteExtend.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-					this.buttonSuiteCompact.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainExtendRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainCompactRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteExtendLeft != null)
+				{
+					this.buttonSuiteExtendLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteCompactLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteExtendRight != null)
+				{
+					this.buttonSuiteExtendRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteCompactRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				}
 
 				this.splitter.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
@@ -1804,7 +1816,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Band
-		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
+		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, out MyWidgets.StackedPanel rightContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
 			//	Crée une bande horizontale avec deux containers gauche/droite pour les
 			//	ressources primaire/secondaire.
@@ -1829,17 +1841,17 @@ namespace Epsitec.Common.Designer.Viewers
 			rightContainer.Name = "RightContainer";
 			rightContainer.Title = title;
 			rightContainer.IsLeftPart = false;
+			rightContainer.IsNewSection = isNewSection;
+			rightContainer.ExtendShape = extendShape;
 			rightContainer.MinWidth = 100;
 			rightContainer.Dock = DockStyle.StackFill;
 			rightContainer.TabIndex = this.tabIndex++;
 			rightContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.bands.Add(new Band(band, leftContainer, rightContainer, mode, backgroundIntensity));
-
-			return leftContainer.ExtendButton;
 		}
 
-		protected GlyphButton CreateBand(out MyWidgets.StackedPanel leftContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
+		protected void CreateBand(out MyWidgets.StackedPanel leftContainer, string title, BandMode mode, GlyphShape extendShape, bool isNewSection, double backgroundIntensity)
 		{
 			//	Crée une bande horizontale avec un seul container gauche pour la
 			//	ressource primaire.
@@ -1861,8 +1873,6 @@ namespace Epsitec.Common.Designer.Viewers
 			leftContainer.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.bands.Add(new Band(band, leftContainer, null, mode, backgroundIntensity));
-
-			return leftContainer.ExtendButton;
 		}
 
 		protected void ColoriseBands(ResourceAccess.ModificationState state1, ResourceAccess.ModificationState state2)
@@ -1900,11 +1910,23 @@ namespace Epsitec.Common.Designer.Viewers
 				if (rc == null)  // pas de panneau à droite ?
 				{
 					lc.Visibility = true;  // panneau unique traversant, toujours visible
+					lc.IsLeftPart = true;
 				}
 				else
 				{
 					lc.Visibility = Abstract.showPrimaryCulture;
 					rc.Visibility = Abstract.showSecondaryCulture && (this.GetTwoLetters(1) != null);
+
+					if (lc.Visibility)
+					{
+						lc.IsLeftPart = true;
+						rc.IsLeftPart = false;
+					}
+					else
+					{
+						lc.IsLeftPart = false;
+						rc.IsLeftPart = true;
+					}
 				}
 			}
 		}
@@ -2417,22 +2439,22 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (sender == this.buttonMainCompact)
+			if (sender == this.buttonMainCompactLeft || sender == this.buttonMainCompactRight)
 			{
 				Abstract.mainExtended = false;
 			}
 
-			if (sender == this.buttonMainExtend)
+			if (sender == this.buttonMainExtendLeft || sender == this.buttonMainExtendRight)
 			{
 				Abstract.mainExtended = true;
 			}
 
-			if (sender == this.buttonSuiteCompact)
+			if (sender == this.buttonSuiteCompactLeft || sender == this.buttonSuiteCompactRight)
 			{
 				Abstract.suiteExtended = false;
 			}
 
-			if (sender == this.buttonSuiteExtend)
+			if (sender == this.buttonSuiteExtendLeft || sender == this.buttonSuiteExtendRight)
 			{
 				Abstract.suiteExtended = true;
 			}
@@ -2531,10 +2553,14 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected StaticText					primarySummary;
 		protected StaticText					secondarySummary;
-		protected GlyphButton					buttonMainExtend;
-		protected GlyphButton					buttonMainCompact;
-		protected GlyphButton					buttonSuiteExtend;
-		protected GlyphButton					buttonSuiteCompact;
+		protected GlyphButton					buttonMainExtendLeft;
+		protected GlyphButton					buttonMainExtendRight;
+		protected GlyphButton					buttonMainCompactLeft;
+		protected GlyphButton					buttonMainCompactRight;
+		protected GlyphButton					buttonSuiteExtendLeft;
+		protected GlyphButton					buttonSuiteExtendRight;
+		protected GlyphButton					buttonSuiteCompactLeft;
+		protected GlyphButton					buttonSuiteCompactRight;
 
 		protected bool							ignoreChange = false;
 		protected bool							lastActionIsReplace = false;

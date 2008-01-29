@@ -20,8 +20,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, "", BandMode.Separator, GlyphShape.None, false, 0.0);
 
 			//	Choix du contrôleur.
-			this.buttonSuiteCompact = this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
-			this.buttonSuiteCompact.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
+			this.buttonSuiteCompactLeft = leftContainer.ExtendButton;
+			this.buttonSuiteCompactLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.groupController = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupController.IsPatch = this.module.IsPatch;
@@ -75,8 +76,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out this.container, Res.Strings.Viewers.Types.Editor.Title, BandMode.SuiteView, GlyphShape.None, false, 0.1);
 
 			//	Résumé des paramètres.
-			this.buttonSuiteExtend = this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
-			this.buttonSuiteExtend.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
+			this.buttonSuiteExtendLeft = leftContainer.ExtendButton;
+			this.buttonSuiteExtendLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);
 			this.primarySuiteSummary.MinHeight = 30;
