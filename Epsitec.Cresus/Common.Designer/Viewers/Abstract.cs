@@ -997,6 +997,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateArray();
 			this.UpdateEdit();
 			this.UpdateCommands();
+			this.ShowBands();
 		}
 
 		protected virtual void ClearCache()
