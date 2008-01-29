@@ -7,5 +7,5 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle ("Creative Docs .NET")]
 [assembly: AssemblyDescription ("Creative Docs .NET Application")]
 [assembly: AssemblyCompany ("OPaC bright ideas")]
-[assembly: AssemblyProduct ("CrDoc")]
+[assembly: AssemblyProduct ("Creative Docs .NET")]
 [assembly: AssemblyCopyright ("Copyright © 2002-2008, OPaC bright ideas, CH-1400 Yverdon-les-Bains, Switzerland")]
