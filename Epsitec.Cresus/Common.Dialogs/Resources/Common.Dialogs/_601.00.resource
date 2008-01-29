@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_8V11" caption="Search.Localite" type="Form" culture="fr" rank="2">
+<bundle name="_601" caption="Searchable" type="Form" culture="fr" rank="1">
   <data name="Source">
     <xml>
       <Form>

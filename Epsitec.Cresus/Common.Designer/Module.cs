@@ -533,7 +533,7 @@ namespace Epsitec.Common.Designer
 				CultureMap item = null;
 				AbstractCaptionResourceAccessor accessor = null;
 				
-				foreach (ResourceAccess access in this.module.Accesses)
+				foreach (ResourceAccess access in module.Accesses)
 				{
 					accessor = access.Accessor as AbstractCaptionResourceAccessor;
 
