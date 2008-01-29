@@ -2475,6 +2475,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.DrawRoundButton(graphics, this.PositionCloseButton, AbstractObject.buttonRadius, GlyphShape.Close, false, false, !this.isRoot);
 			}
 
+#if false
 			//	Dessine le moignon pour les sources à gauche.
 			if (this.sourcesClosedCount > 0)
 			{
@@ -2489,6 +2490,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.LineWidth = 1;
 				graphics.RenderSolid(colorFrame);
 			}
+#endif
 
 			//	Dessine le bouton des sources.
 			if (this.hilitedElement == ActiveElement.BoxSources)
