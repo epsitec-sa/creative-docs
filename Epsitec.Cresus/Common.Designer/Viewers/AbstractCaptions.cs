@@ -258,6 +258,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ColorizeResetBox(this.groupSecondaryDescription, source, usesOriginalData);
 				this.secondaryComment.Text = data.GetValue(Support.Res.Fields.ResourceBase.Comment, out usesOriginalData) as string;
 				this.ColorizeResetBox(this.groupSecondaryComment, source, usesOriginalData);
+				this.groupSecondaryLabels.Enable = true;
 				this.groupSecondaryDescription.Enable = true;
 				this.groupSecondaryComment.Enable = true;
 			}
