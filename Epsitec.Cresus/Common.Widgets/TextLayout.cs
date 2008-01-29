@@ -4117,7 +4117,7 @@ namespace Epsitec.Common.Widgets
 
 							case Tag.None:
 								endOffset = beginOffset;
-								char c = Types.Converters.TextConverter.AnalyseEntityChar(this.text, ref endOffset);
+								char c = Types.Converters.TextConverter.AnalyzeEntityChar(this.text, ref endOffset);
 								buffer.Append(c);
 								currentIndex ++;
 								break;

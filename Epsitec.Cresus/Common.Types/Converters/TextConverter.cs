@@ -5,18 +5,41 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Converters
 {
+	/// <summary>
+	/// The <c>TextConverter</c> class provides simple conversion methods to
+	/// translate HTML like code to simple (raw) text.
+	/// </summary>
 	public static class TextConverter
 	{
+		/// <summary>
+		/// Converts the specified HTML text to simple text.
+		/// </summary>
+		/// <param name="text">The html text.</param>
+		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text)
 		{
 			return TextConverter.ConvertToSimpleText (text, TextConverter.CodeObject);
 		}
 
+		/// <summary>
+		/// Converts the specified HTML text to simple text. The image tag will
+		/// be repalced with a specific image replacement character.
+		/// </summary>
+		/// <param name="text">The html text.</param>
+		/// <param name="imageReplacement">The image replacement character.</param>
+		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text, char imageReplacement)
 		{
 			return TextConverter.ConvertToSimpleText (text, imageReplacement == 0 ? "" : imageReplacement.ToString ());
 		}
 
+		/// <summary>
+		/// Converts the specified HTML text to simple text. The image tag will
+		/// be repalced with a specific image replacement text.
+		/// </summary>
+		/// <param name="text">The html text.</param>
+		/// <param name="imageReplacement">The image replacement text.</param>
+		/// <returns>The simple text.</returns>
 		public static string ConvertToSimpleText(string text, string imageReplacement)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -56,7 +79,7 @@ namespace Epsitec.Common.Types.Converters
 				}
 				else if (c == '&')
 				{
-					buffer.Append (TextConverter.AnalyseEntityChar (text, ref offset));
+					buffer.Append (TextConverter.AnalyzeEntityChar (text, ref offset));
 				}
 				else
 				{
@@ -68,7 +91,14 @@ namespace Epsitec.Common.Types.Converters
 			return buffer.ToString ();
 		}
 
-		public static char AnalyseEntityChar(string text, ref int offset)
+		/// <summary>
+		/// Analyses a character defined as an entity.
+		/// </summary>
+		/// <param name="text">The text to analyze.</param>
+		/// <param name="offset">The offset, which will be updated to point after the
+		/// entity or character.</param>
+		/// <returns>The character.</returns>
+		public static char AnalyzeEntityChar(string text, ref int offset)
 		{
 			//	Retourne le caractère à un offset quelconque, en interprétant les
 			//	commandes &...;

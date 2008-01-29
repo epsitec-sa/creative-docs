@@ -217,20 +217,21 @@ namespace Epsitec.Common.Widgets
 			Assert.AreEqual(55, layout.FindIndexFromOffset(92));
 //?			Assert.AreEqual(reference.Length, layout.FindIndexFromOffset(layout.Text.Length));
 		}
-		
-		[Test] public void CheckEntityChar()
+
+		[Test]
+		public void CheckEntityChar()
 		{
 			int index = 0;
 			string text = "A&lt;&amp;&gt;.&quot;&#160;";
-			
-			Assert.AreEqual('A', TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual('<', TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual('&', TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual('>', TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual('.', TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual('"', TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual(160, TextLayout.AnalyseEntityChar(text, ref index));
-			Assert.AreEqual(text.Length, index);
+
+			Assert.AreEqual ('A', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('<', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('&', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('>', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('.', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual ('"', Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual (160, Types.Converters.TextConverter.AnalyzeEntityChar (text, ref index));
+			Assert.AreEqual (text.Length, index);
 		}
 		
 		[Test] public void CheckAnchor()

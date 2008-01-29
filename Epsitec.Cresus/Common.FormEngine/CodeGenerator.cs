@@ -11,12 +11,19 @@ namespace Epsitec.Common.FormEngine
 {
 	using Keywords=CodeHelper.Keywords;
 
+	/// <summary>
+	/// The <c>CodeGenerator</c> class produces a C# source code wrapper for
+	/// the forms defined in the resource files.
+	/// </summary>
 	public sealed class CodeGenerator
 	{
-		public CodeGenerator(ResourceManager resourceManager, IEnumerable<ResourceBundle> bundles)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CodeGenerator"/> class.
+		/// </summary>
+		/// <param name="resourceManager">The resource manager.</param>
+		public CodeGenerator(ResourceManager resourceManager)
 		{
 			this.formatter = new CodeFormatter ();
-			this.bundles = new List<ResourceBundle> (bundles);
 			
 			this.resourceManager = resourceManager;
 			this.resourceManagerPool = this.resourceManager.Pool;
@@ -24,19 +31,35 @@ namespace Epsitec.Common.FormEngine
 			this.sourceNamespace = this.resourceModuleInfo.SourceNamespace;
 		}
 
-		public void Emit()
+		/// <summary>
+		/// Gets the formatter used when generating code.
+		/// </summary>
+		/// <value>The formatter.</value>
+		public CodeFormatter Formatter
+		{
+			get
+			{
+				return this.formatter;
+			}
+		}
+
+		/// <summary>
+		/// Emits the code for the specified form bundles.
+		/// </summary>
+		/// <param name="bundles">The form bundles.</param>
+		public void Emit(IEnumerable<ResourceBundle> bundles)
 		{
 			CodeHelper.EmitHeader (this.formatter);
 
 			this.formatter.WriteBeginNamespace (this.sourceNamespace);
-			this.formatter.WriteBeginClass (CodeHelper.StaticClassAttributes, "FormIds");
+			this.formatter.WriteBeginClass (CodeHelper.FormIdsClassAttributes, "FormIds");
 
-			foreach (ResourceBundle bundle in this.bundles)
+			foreach (ResourceBundle bundle in bundles)
 			{
 				Druid  id   = bundle.Id;
 				string name = bundle.Caption;
 
-				this.formatter.WriteField (CodeHelper.StaticReadOnlyFieldAttributes,
+				this.formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes,
 					/**/				   Keywords.Druid, " ", name, " = ",
 					/**/				   Keywords.New, " ", Keywords.Druid, " (",
 					/**/				   id.Module.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
@@ -50,23 +73,8 @@ namespace Epsitec.Common.FormEngine
 			this.Formatter.Flush ();
 		}
 
-		public CodeFormatter Formatter
-		{
-			get
-			{
-				return this.formatter;
-			}
-		}
-
-		private static string CreateFormsNamespace(string name)
-		{
-			return string.Concat (name, ".", Keywords.Forms);
-		}
-
-
-				
+		
 		private readonly CodeFormatter formatter;
-		private readonly List<ResourceBundle> bundles;
 		private readonly ResourceManager resourceManager;
 		private readonly ResourceManagerPool resourceManagerPool;
 		private readonly ResourceModuleInfo resourceModuleInfo;

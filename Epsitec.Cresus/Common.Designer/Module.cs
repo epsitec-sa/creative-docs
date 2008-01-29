@@ -847,6 +847,11 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		/// <summary>
+		/// Regenerates the C# entities source code.
+		/// </summary>
+		/// <param name="manager">The manager.</param>
+		/// <param name="bundle">The bundle.</param>
 		private void RegenerateEntitiesSourceCode(ResourceManager manager, ResourceBundle bundle)
 		{
 			CodeGenerator generator = new CodeGenerator (manager);
@@ -901,10 +906,14 @@ namespace Epsitec.Common.Designer
 #endif
 		}
 
+		/// <summary>
+		/// Regenerates the C# forms source code.
+		/// </summary>
+		/// <param name="bundles">The bundles.</param>
 		private void RegenerateFormsSourceCode(IEnumerable<ResourceBundle> bundles)
 		{
-			FormEngine.CodeGenerator generator = new FormEngine.CodeGenerator (this.ResourceManager, bundles);
-			generator.Emit ();
+			FormEngine.CodeGenerator generator = new FormEngine.CodeGenerator (this.ResourceManager);
+			generator.Emit (bundles);
 
 			string modulePath = this.moduleId.Path;
 			string sourceCodeRoot = System.IO.Path.Combine (modulePath, "SourceCode");

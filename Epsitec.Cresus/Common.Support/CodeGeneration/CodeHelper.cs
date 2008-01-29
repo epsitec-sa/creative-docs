@@ -8,8 +8,17 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.CodeGeneration
 {
+	/// <summary>
+	/// The <c>CodeHelper</c> class provides useful methods and constants which
+	/// ease the implementation of a code generator (see <see cref="Epsitec.Common.Support.EntityEngine.CodeGenerator"/>
+	/// for an example).
+	/// </summary>
 	public static class CodeHelper
 	{
+		/// <summary>
+		/// Emits the header of a C# file, which contains a "do not edit" warning.
+		/// </summary>
+		/// <param name="formatter">The code formatter.</param>
 		public static void EmitHeader(CodeFormatter formatter)
 		{
 			string   html = Epsitec.Common.Support.Res.Strings.CodeGenerator.SourceFileHeader;
@@ -26,17 +35,21 @@ namespace Epsitec.Common.Support.CodeGeneration
 		#region CodeAttributes Constants
 
 		public static readonly CodeAttributes PublicAttributes = new CodeAttributes (CodeVisibility.Public);
-		public static readonly CodeAttributes StaticMethodAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
-		public static readonly CodeAttributes OverrideMethodAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Override);
+
+		public static readonly CodeAttributes PublicStaticMethodAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
+		public static readonly CodeAttributes PublicOverrideMethodAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Override);
+		public static readonly CodeAttributes PublicStaticPartialClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.PartialAttribute);
+		public static readonly CodeAttributes PublicStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
+		public static readonly CodeAttributes PublicInterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
+		public static readonly CodeAttributes PublicPropertyAttributes = new CodeAttributes (CodeVisibility.Public);
+		
 		public static readonly CodeAttributes EntityClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default, CodeAttributes.PartialAttribute);
-		public static readonly CodeAttributes StaticClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
-		public static readonly CodeAttributes StaticPartialClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.PartialAttribute);
-		public static readonly CodeAttributes InterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
-		public static readonly CodeAttributes PropertyAttributes = new CodeAttributes (CodeVisibility.Public);
+		public static readonly CodeAttributes FormIdsClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
+		
+		public static readonly CodeAttributes InternalStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Internal, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
+
 		public static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
-		public static readonly CodeAttributes StaticPartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Static, CodeAttributes.PartialDefinitionAttribute);
-		public static readonly CodeAttributes StaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
-		public static readonly CodeAttributes StaticInternalReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Internal, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
+		public static readonly CodeAttributes PartialStaticMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Static, CodeAttributes.PartialDefinitionAttribute);
 
 		#endregion
 
