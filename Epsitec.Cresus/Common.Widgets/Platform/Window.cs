@@ -2405,7 +2405,8 @@ namespace Epsitec.Common.Widgets.Platform
 			data.WriteText (buffer.ToString ());
 			Support.Clipboard.SetData (data);
 
-			string email = (Globals.Properties["Bug report e-mail"] as string) ?? "bugs@opac.ch";
+			string key   = "Bug report e-mail";
+			string email = Globals.Properties.GetProperty (key, "bugs@opac.ch");
 			
 			string msg_fr = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
 							"description de ce que vous étiez en train de faire au moment où ce message\n" + 
