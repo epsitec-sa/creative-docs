@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		protected void UpdateTitle()
+		protected virtual void UpdateTitle()
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;

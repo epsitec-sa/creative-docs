@@ -288,6 +288,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 
 
+		public void UpdateTitle()
+		{
+			//	Met à jour le titre de la boîte.
+			this.Title = this.cultureMap.Name;
+		}
+
+
 		public List<ObjectConnection> ConnectionListBt
 		{
 			get
