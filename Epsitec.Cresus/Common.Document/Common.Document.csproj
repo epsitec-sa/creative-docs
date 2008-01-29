@@ -698,6 +698,11 @@
     <Content Include="Resources\Common.Document\Captions.00.resource" />
     <Content Include="Resources\Common.Document\Strings.de.resource" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

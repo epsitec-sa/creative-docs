@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -143,6 +143,9 @@
     <Compile Include="Res.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
     <None Include="Resources\Cresus.Tests\Captions.00.resource" />
     <None Include="Resources\Cresus.Tests\module.info" />
     <None Include="Resources\Cresus.Tests\Strings.00.resource" />
