@@ -2404,17 +2404,19 @@ namespace Epsitec.Common.Widgets.Platform
 			Support.Clipboard.WriteData data = new Epsitec.Common.Support.Clipboard.WriteData ();
 			data.WriteText (buffer.ToString ());
 			Support.Clipboard.SetData (data);
+
+			string email = (Globals.Properties["Bug report e-mail"] as string) ?? "bugs@opac.ch";
 			
 			string msg_fr = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
 							"description de ce que vous étiez en train de faire au moment où ce message\n" + 
 							"est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n" +
-							"Envoyez s'il-vous-plaît ces informations à bugs@opac.ch\n\n" +
+							"Envoyez s'il-vous-plaît ces informations à " + email + "\n\n" +
 							"Merci pour votre aide.";
 			
 			string msg_en = "An internal error occurred. Please send an e-mail with a short description\n" +
 							"of what you were doing when this message appeared and include (press CTRL+V)\n" +
 							"contents of the clipboard, which contains useful debugging information.\n\n" +
-							"Please send these informations to bugs@opac.ch\n\n" +
+							"Please send these informations to " + email + "\n\n" +
 							"Thank you very much for your help.";
 			
 			bool is_french = (System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr");
