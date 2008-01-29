@@ -65,6 +65,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			//	Cette méthode est appelée par Proxies.Abstract quand on connecte
 			//	le premier widget avec le proxy.
+			if (this.ObjectModifier.IsReadonly)
+			{
+				return;
+			}
+
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
 				this.ObjectModifier.IsBox(this.DefaultWidget) ||
 				this.ObjectModifier.IsGlue(this.DefaultWidget))

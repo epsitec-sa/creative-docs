@@ -85,6 +85,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetColumnsRequired(Widget obj, int columnsRequired)
 		{
 			//	Choix du nombre de colonnes requises.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -110,6 +115,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetRowsRequired(Widget obj, int rowsRequired)
 		{
 			//	Choix du nombre de lignes requises.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -136,6 +146,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetSeparatorBottom(Widget obj, FieldDescription.SeparatorType sep)
 		{
 			//	Choix du type du séparateur d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -162,6 +177,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetBoxPadding(Widget obj, FieldDescription.BoxPaddingType type)
 		{
 			//	Choix du type des marges intérieures d'une boîte.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -188,6 +208,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetBackColor(Widget obj, FieldDescription.BackColorType color)
 		{
 			//	Choix de la couleur de fond d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -214,6 +239,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetBoxFrameState(Widget obj, FrameState state)
 		{
 			//	Choix de la couleur de fond d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -240,6 +270,11 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void SetBoxFrameWidth(Widget obj, double width)
 		{
 			//	Choix de la couleur de fond d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
 			FieldDescription field = this.GetFormDescription(obj);
 			if (field != null)
 			{
@@ -447,6 +482,15 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			rect.Inflate(ix, iy);
 			return rect;
+		}
+
+
+		public bool IsReadonly
+		{
+			get
+			{
+				return this.formEditor.Module.DesignerApplication.IsReadonly;
+			}
 		}
 
 
@@ -974,7 +1018,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsTableRelationUseable(int index)
 		{
 			//	Indique si l'opération "utiliser" est autorisée.
-			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
+			if (index == -1 || this.IsReadonly)
 			{
 				return false;
 			}
@@ -985,7 +1029,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsTableRelationExpandable(int index)
 		{
 			//	Indique si l'opération "étendre" est autorisée.
-			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
+			if (index == -1 || this.IsReadonly)
 			{
 				return false;
 			}
@@ -996,7 +1040,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsTableRelationCompactable(int index)
 		{
 			//	Indique si l'opération "compacter" est autorisée.
-			if (index == -1 || this.formEditor.Module.DesignerApplication.IsReadonly)
+			if (index == -1 || this.IsReadonly)
 			{
 				return false;
 			}
