@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.Viewers
 			Widget sup = new FrameBox(this.lastGroup);
 			sup.Name = "Sup";
 			sup.PreferredHeight = 26;
-			sup.Padding = new Margins(0, 17, 1, 0);
+			sup.Padding = new Margins(0, 0, 1, 0);
 			sup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			sup.Dock = DockStyle.Top;
 			sup.TabIndex = this.tabIndex++;
@@ -152,6 +152,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryButtonsCultureGroup.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			this.secondaryButtonsCultureGroup.Dock = DockStyle.Fill;
 			this.secondaryButtonsCultureGroup.TabIndex = this.tabIndex++;
+
+			this.cultureMenuButton = new GlyphButton(sup);
+			this.cultureMenuButton.GlyphShape = GlyphShape.Menu;
+			this.cultureMenuButton.ButtonStyle = ButtonStyle.ToolItem;
+			this.cultureMenuButton.AutoFocus = false;
+			this.cultureMenuButton.Clicked += new MessageEventHandler(this.HandleCultureMenuButtonClicked);
+			this.cultureMenuButton.Margins = new Margins(1, 0, 2, 7);
+			this.cultureMenuButton.Dock = DockStyle.Right;
 
 			//	Crée le titre.
 			this.titleBox = new FrameBox(this.lastGroup);
@@ -210,6 +218,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.table.ItemPanel.SelectionChanged -= new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
 				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
+
+				this.cultureMenuButton.Clicked -= new MessageEventHandler(this.HandleCultureMenuButtonClicked);
 			}
 
 			base.Dispose(disposing);
@@ -846,6 +856,32 @@ namespace Epsitec.Common.Designer.Viewers
 		public virtual void DoCommand(string name)
 		{
 			//	Exécute une commande.
+			if (name == "ShowPrimaryCulture")
+			{
+				Abstract.showPrimaryCulture = !Abstract.showPrimaryCulture;
+
+				if (Abstract.showPrimaryCulture == false && Abstract.showSecondaryCulture == false)
+				{
+					Abstract.showSecondaryCulture = true;  // au moins une culture doit être visible
+				}
+
+				this.ShowBands();
+				return;
+			}
+
+			if (name == "ShowSecondaryCulture")
+			{
+				Abstract.showSecondaryCulture = !Abstract.showSecondaryCulture;
+
+				if (Abstract.showPrimaryCulture == false && Abstract.showSecondaryCulture == false)
+				{
+					Abstract.showPrimaryCulture = true;  // au moins une culture doit être visible
+				}
+
+				this.ShowBands();
+				return;
+			}
+
 			this.UpdateCommands();
 		}
 
@@ -1842,7 +1878,33 @@ namespace Epsitec.Common.Designer.Viewers
 				if (rc != null)
 				{
 					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.bands[i].intensityContainer);
-					rc.Visibility = (this.GetTwoLetters(1) != null);
+					//?rc.Visibility = (this.GetTwoLetters(1) != null);
+				}
+			}
+
+			this.ShowBands();
+		}
+
+		protected void ShowBands()
+		{
+			//	Montre ou cache les parties gauche et droite dans le panneau principal, en fonction
+			//	des cultures que l'utilisateur a choisi de voir.
+			this.primaryButtonCulture.Visibility = Abstract.showPrimaryCulture;
+			this.secondaryButtonsCultureGroup.Visibility = Abstract.showSecondaryCulture;
+
+			foreach (Band band in this.bands)
+			{
+				MyWidgets.StackedPanel lc = band.leftContainer;
+				MyWidgets.StackedPanel rc = band.rightContainer;
+
+				if (rc == null)  // pas de panneau à droite ?
+				{
+					lc.Visibility = true;  // panneau unique traversant, toujours visible
+				}
+				else
+				{
+					lc.Visibility = Abstract.showPrimaryCulture;
+					rc.Visibility = Abstract.showSecondaryCulture && (this.GetTwoLetters(1) != null);
 				}
 			}
 		}
@@ -2241,7 +2303,34 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		protected VMenu CreateCultureMenu()
+		{
+			//	Crée le petit menu associé au bouton "v" des cultures.
+			VMenu menu = new VMenu();
+			MenuItem item;
+
+			item = new MenuItem("ShowPrimaryCulture", Misc.GetMenuIconState(Abstract.showPrimaryCulture), "Afficher la culture de référence", "", "ShowPrimaryCulture");
+			menu.Items.Add(item);
+
+			item = new MenuItem("ShowSecondaryCulture", Misc.GetMenuIconState(Abstract.showSecondaryCulture), "Afficher la culture secondaire", "", "ShowSecondaryCulture");
+			menu.Items.Add(item);
+
+			return menu;
+		}
+
+	
 		#region Handle methods
+		private void HandleCultureMenuButtonClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton "v" pour le menu est cliqué.
+			AbstractButton button = sender as AbstractButton;
+
+			VMenu menu = this.CreateCultureMenu();
+			menu.Host = button.Window;
+			TextFieldCombo.AdjustComboSize(button, menu, false);
+			menu.ShowAsComboList(button, Point.Zero, button);
+		}
+
 		protected void HandleEditKeyboardFocusChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
 			//	Appelé lorsqu'une ligne éditable voit son focus changer.
@@ -2410,6 +2499,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					topArrayHeight = 220;
 		protected static bool					mainExtended = false;
 		protected static bool					suiteExtended = false;
+		protected static bool					showPrimaryCulture = true;
+		protected static bool					showSecondaryCulture = true;
 		private static double[]					columnWidthHorizontal = {200, 100, 100, 20, 80, 50, 100};
 		private static double[]					columnWidthVertical = {250, 300, 300, 20, 80, 50, 100};
 
@@ -2436,6 +2527,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButtonMark				primaryButtonCulture;
 		protected FrameBox						secondaryButtonsCultureGroup;
 		protected IconButtonMark[]				secondaryButtonsCulture;
+		protected GlyphButton					cultureMenuButton;
 
 		protected StaticText					primarySummary;
 		protected StaticText					secondarySummary;
