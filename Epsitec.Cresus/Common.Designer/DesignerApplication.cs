@@ -797,6 +797,7 @@ namespace Epsitec.Common.Designer
 		[Command("FormFieldsShowColumn1")]
 		[Command("FormFieldsShowColumn2")]
 		[Command("FormFieldsClearPatch")]
+		[Command("ShowBothCulture")]
 		[Command("ShowPrimaryCulture")]
 		[Command("ShowSecondaryCulture")]
 		void CommandCommand(CommandDispatcher dispatcher, CommandEventArgs e)

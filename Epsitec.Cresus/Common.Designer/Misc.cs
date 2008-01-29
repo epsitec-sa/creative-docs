@@ -673,10 +673,16 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public string GetMenuIconState(bool state)
+		static public string GetMenuIconCheckState(bool state)
 		{
-			//	Retourne l'icône à utiliser dans un menu, pour un item booléen.
+			//	Retourne l'icône à utiliser dans un menu, pour un item booléen de type check.
 			return state ? Misc.Icon("ActiveYes") : Misc.Icon("ActiveNo");
+		}
+
+		static public string GetMenuIconRadioState(bool state)
+		{
+			//	Retourne l'icône à utiliser dans un menu, pour un item booléen de type radio.
+			return state ? Misc.Icon("RadioYes") : Misc.Icon("RadioNo");
 		}
 
 		static public void GetIconNames(string fullName, out string moduleName, out string shortName)

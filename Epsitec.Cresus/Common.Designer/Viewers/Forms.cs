@@ -1657,18 +1657,18 @@ namespace Epsitec.Common.Designer.Viewers
 			VMenu menu = new VMenu();
 			MenuItem item;
 
-			item = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
+			item = new MenuItem("FormFieldsShowPrefix", Misc.GetMenuIconCheckState(Forms.showPrefix), Res.Strings.Viewers.Forms.Menu.ShowPrefix, "", "FormFieldsShowPrefix");
 			menu.Items.Add(item);
 
 #if true
-			item = new MenuItem("FormFieldsShowGuid", Misc.GetMenuIconState(Forms.showGuid), "Afficher les Guids (debug)", "", "FormFieldsShowGuid");
+			item = new MenuItem("FormFieldsShowGuid", Misc.GetMenuIconCheckState(Forms.showGuid), "Afficher les Guids (debug)", "", "FormFieldsShowGuid");
 			menu.Items.Add(item);
 #endif
 
-			item = new MenuItem("FormFieldsShowColumn1", Misc.GetMenuIconState(Forms.showColumn1), "Afficher la deuxième colonne", "", "FormFieldsShowColumn1");
+			item = new MenuItem("FormFieldsShowColumn1", Misc.GetMenuIconCheckState(Forms.showColumn1), "Afficher la deuxième colonne", "", "FormFieldsShowColumn1");
 			menu.Items.Add(item);
 
-			item = new MenuItem("FormFieldsShowColumn2", Misc.GetMenuIconState(Forms.showColumn2), "Afficher la troisième colonne", "", "FormFieldsShowColumn2");
+			item = new MenuItem("FormFieldsShowColumn2", Misc.GetMenuIconCheckState(Forms.showColumn2), "Afficher la troisième colonne", "", "FormFieldsShowColumn2");
 			menu.Items.Add(item);
 
 			if (this.formEditor.ObjectModifier.IsPatch && !this.designerApplication.IsReadonly)

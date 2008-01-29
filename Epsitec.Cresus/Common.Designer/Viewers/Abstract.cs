@@ -868,28 +868,26 @@ namespace Epsitec.Common.Designer.Viewers
 		public virtual void DoCommand(string name)
 		{
 			//	Exécute une commande.
+			if (name == "ShowBothCulture")
+			{
+				Abstract.showPrimaryCulture = true;
+				Abstract.showSecondaryCulture = true;
+				this.ShowBands();
+				return;
+			}
+
 			if (name == "ShowPrimaryCulture")
 			{
-				Abstract.showPrimaryCulture = !Abstract.showPrimaryCulture;
-
-				if (Abstract.showPrimaryCulture == false && Abstract.showSecondaryCulture == false)
-				{
-					Abstract.showSecondaryCulture = true;  // au moins une culture doit être visible
-				}
-
+				Abstract.showPrimaryCulture = true;
+				Abstract.showSecondaryCulture = false;
 				this.ShowBands();
 				return;
 			}
 
 			if (name == "ShowSecondaryCulture")
 			{
-				Abstract.showSecondaryCulture = !Abstract.showSecondaryCulture;
-
-				if (Abstract.showPrimaryCulture == false && Abstract.showSecondaryCulture == false)
-				{
-					Abstract.showPrimaryCulture = true;  // au moins une culture doit être visible
-				}
-
+				Abstract.showPrimaryCulture = false;
+				Abstract.showSecondaryCulture = true;
 				this.ShowBands();
 				return;
 			}
@@ -2332,10 +2330,13 @@ namespace Epsitec.Common.Designer.Viewers
 			VMenu menu = new VMenu();
 			MenuItem item;
 
-			item = new MenuItem("ShowPrimaryCulture", Misc.GetMenuIconState(Abstract.showPrimaryCulture), "Afficher la culture de référence", "", "ShowPrimaryCulture");
+			item = new MenuItem("ShowBothCulture", Misc.GetMenuIconRadioState(Abstract.showPrimaryCulture && Abstract.showSecondaryCulture), "Afficher les deux cultures", "", "ShowBothCulture");
 			menu.Items.Add(item);
 
-			item = new MenuItem("ShowSecondaryCulture", Misc.GetMenuIconState(Abstract.showSecondaryCulture), "Afficher la culture secondaire", "", "ShowSecondaryCulture");
+			item = new MenuItem("ShowPrimaryCulture", Misc.GetMenuIconRadioState(Abstract.showPrimaryCulture && !Abstract.showSecondaryCulture), "Afficher seulement la culture de référence", "", "ShowPrimaryCulture");
+			menu.Items.Add(item);
+
+			item = new MenuItem("ShowSecondaryCulture", Misc.GetMenuIconRadioState(!Abstract.showPrimaryCulture && Abstract.showSecondaryCulture), "Afficher seulement la culture secondaire", "", "ShowSecondaryCulture");
 			menu.Items.Add(item);
 
 			return menu;
