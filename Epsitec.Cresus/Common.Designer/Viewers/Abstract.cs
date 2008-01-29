@@ -756,6 +756,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.UpdateCultures();
 			this.UpdateArray();
+			this.UpdateEdit();
+			this.UpdateModificationsState();
 			this.UpdateModificationsCulture();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
@@ -778,6 +780,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			this.UpdateArray();
 			this.UpdateEdit();
+			this.UpdateModificationsState();
 			this.UpdateModificationsCulture();
 			this.UpdateClientGeometry();
 			this.UpdateCommands();
