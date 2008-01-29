@@ -378,7 +378,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				return this.typeIds.Contains(cultureMap.Id);
 			}
 
-			if (this.operation == Operation.InheritEntities || this.operation == Operation.Entities)
+			if (this.operation == Operation.InheritEntities)
 			{
 				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				StructuredTypeClass typeClass = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
