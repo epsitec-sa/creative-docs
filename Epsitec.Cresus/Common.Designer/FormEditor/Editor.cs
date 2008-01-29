@@ -264,6 +264,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			if (!this.isEditEnabled)
 			{
+				message.Captured = true;
+				message.Consumer = this;
 				return;
 			}
 
