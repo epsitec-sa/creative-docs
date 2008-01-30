@@ -368,6 +368,62 @@ namespace Epsitec.Common.Designer
 		}
 
 
+		public void CheckForms(System.Text.StringBuilder builder)
+		{
+			//	Vérifie les Forms, en construisant un message d'avertissement.
+			System.Diagnostics.Debug.Assert(this.type == Type.Forms);
+			bool first = true;
+			FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+
+			foreach (CultureMap item in this.accessor.Collection)
+			{
+				FormEngine.FormDescription form = this.GetForm(item);
+
+				if (form.FormIdToPatch.IsEmpty)  // pas un Form de patch ?
+				{
+					continue;  // toujours ok
+				}
+
+				//	Fusionne le masque de référence selon les indications du masque de patch, pour
+				//	déterminer les éventuelles erreurs.
+				FormEngine.FormDescription refForm = this.GetForm(form.FormIdToPatch);
+				engine.Arrange.Merge(refForm.Fields, form.Fields);
+
+				//	Compte le nombre de liens cassés.
+				int error = 0;
+				foreach (FormEngine.FieldDescription field in form.Fields)
+				{
+					if (field.PatchBrokenAttach)
+					{
+						error++;
+					}
+				}
+
+				if (error != 0)  // au moins un lien cassé ?
+				{
+					if (first)  // premier avertissement de Form ?
+					{
+						first = false;
+
+						if (builder.Length > 0)  // déjà d'autres avertissements ?
+						{
+							builder.Append("<br/>");
+						}
+
+						builder.Append("<font size=\"120%\">");
+						builder.Append("Ces masques contiennent des références indéfinies :");
+						builder.Append("</font><br/>");
+					}
+
+					//	Génère une erreur explicite.
+					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
+					builder.Append(string.Format("<b>{0}</b>: {1} erreur(s)", item.FullName, error.ToString()));
+					builder.Append("<br/>");
+				}
+			}
+		}
+
+
 		public void ClearGlobalDirty()
 		{
 			//	Met les ressources dans l'état "propre", c'est-à-dire "non modifiées".

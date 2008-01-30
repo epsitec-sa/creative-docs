@@ -501,7 +501,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if ((state & WidgetPaintState.Enabled) != 0 && this.cells[i].Selected)
 				{
 					state |= WidgetPaintState.Selected;
-					state |= WidgetPaintState.InheritedFocus;
+					state |= WidgetPaintState.InheritedFocus;  // pour peindre toutes les colonnes avec la même couleur !
 				}
 				else
 				{

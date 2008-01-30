@@ -384,6 +384,7 @@ namespace Epsitec.Common.Designer
 			//	Retourne l'éventuel rapport.
 			List<ResourceAccess.ShortcutItem> list = new List<ResourceAccess.ShortcutItem>();
 
+			//	Vérifie l'éventuel usage à double des raccourcis clavier.
 			foreach (ResourceAccess access in this.Accesses)
 			{
 				access.AddShortcuts(list);
@@ -392,7 +393,8 @@ namespace Epsitec.Common.Designer
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			ResourceAccess.CheckShortcuts(builder, list);
 
-			//	On pourrait vérifier ici d'autres choses que les raccourcis...
+			//	Vérifie les liens cassés dans les Forms.
+			this.accessForms.CheckForms(builder);
 
 			return builder.ToString();
 		}
@@ -460,8 +462,8 @@ namespace Epsitec.Common.Designer
 			public InternalFormResourceProvider(Module module)
 			{
 				this.module = module;
-				this.typeCache = new Dictionary<Druid, INamedType> ();
-				this.defaultProvider = new FormEngine.DefaultResourceProvider (this.module.resourceManager);
+				this.typeCache = new Dictionary<Druid, INamedType>();
+				this.defaultProvider = new FormEngine.DefaultResourceProvider(this.module.resourceManager);
 			}
 
 			public string TwoLetterISOLanguageName
@@ -479,8 +481,8 @@ namespace Epsitec.Common.Designer
 			/// </summary>
 			public void ClearCache()
 			{
-				this.typeCache.Clear ();
-				this.defaultProvider.ClearCache ();
+				this.typeCache.Clear();
+				this.defaultProvider.ClearCache();
 			}
 
 			/// <summary>
@@ -490,21 +492,21 @@ namespace Epsitec.Common.Designer
 			/// <returns>The XML source or <c>null</c>.</returns>
 			public string GetFormXmlSource(Druid formId)
 			{
-				Module module = this.module.designerApplication.SearchModule (formId);
+				Module module = this.module.designerApplication.SearchModule(formId);
 
 				if (module == null)
 				{
 					//	Pas trouvé de module chargé pour le masque spécifié, alors on va
 					//	passer par le gestionnaire de ressources standard :
-					return this.defaultProvider.GetFormXmlSource (formId);
+					return this.defaultProvider.GetFormXmlSource(formId);
 				}
 
 				CultureMap item = module.accessForms.Accessor.Collection[formId];
 
 				if (item != null)
 				{
-					StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-					return data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+					return data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 				}
 				else
 				{
@@ -518,13 +520,13 @@ namespace Epsitec.Common.Designer
 
 			public Caption GetCaption(Druid captionId)
 			{
-				Module module = this.module.designerApplication.SearchModule (captionId);
+				Module module = this.module.designerApplication.SearchModule(captionId);
 
 				if (module == null)
 				{
 					//	Pas trouvé de module chargé pour le caption spécifié, alors on va
 					//	passer par le gestionnaire de ressources standard :
-					return this.defaultProvider.GetCaption (captionId);
+					return this.defaultProvider.GetCaption(captionId);
 				}
 
 				//	Cherche le caption dans tous les accesseurs possibles et imaginables
@@ -556,10 +558,10 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					Caption captionDefaultCulture = accessor.GetCaptionViewOfData (item, Resources.DefaultTwoLetterISOLanguageName);
-					Caption captionCurrentCulture = accessor.GetCaptionViewOfData (item, this.TwoLetterISOLanguageName);
+					Caption captionDefaultCulture = accessor.GetCaptionViewOfData(item, Resources.DefaultTwoLetterISOLanguageName);
+					Caption captionCurrentCulture = accessor.GetCaptionViewOfData(item, this.TwoLetterISOLanguageName);
 
-					return Caption.Merge (captionDefaultCulture, captionCurrentCulture);
+					return Caption.Merge(captionDefaultCulture, captionCurrentCulture);
 				}
 			}
 
@@ -620,12 +622,12 @@ namespace Epsitec.Common.Designer
 			{
 				INamedType type;
 
-				if (this.typeCache.TryGetValue (id, out type))
+				if (this.typeCache.TryGetValue(id, out type))
 				{
 					return type;
 				}
 
-				Module module = this.module.designerApplication.SearchModule (id);
+				Module module = this.module.designerApplication.SearchModule(id);
 
 				if (module == null)
 				{
@@ -635,7 +637,7 @@ namespace Epsitec.Common.Designer
 
 					if (caption != null)
 					{
-						type = TypeRosetta.CreateTypeObject (caption, false);
+						type = TypeRosetta.CreateTypeObject(caption, false);
 					}
 				}
 				else
@@ -648,7 +650,7 @@ namespace Epsitec.Common.Designer
 					{
 						AnyTypeResourceAccessor accessor = module.accessTypes.Accessor as AnyTypeResourceAccessor;
 						string culture = Resources.DefaultTwoLetterISOLanguageName;
-						type = accessor.GetAnyTypeViewOfData (item, culture, this.GetAnyType);
+						type = accessor.GetAnyTypeViewOfData(item, culture, this.GetAnyType);
 					}
 					else
 					{
@@ -656,7 +658,7 @@ namespace Epsitec.Common.Designer
 
 						if (item != null)
 						{
-							type = this.GetStructuredType (id);
+							type = this.GetStructuredType(id);
 						}
 					}
 				}
@@ -683,9 +685,9 @@ namespace Epsitec.Common.Designer
 
 				if (accessor != null)
 				{
-					access.RegenerateAllFieldsInBundle ();
+					access.RegenerateAllFieldsInBundle();
 					accessor.ForceModuleMerge = true;
-					accessor.PersistChanges ();
+					accessor.PersistChanges();
 					accessor.ForceModuleMerge = false;
 				}
 			}
@@ -696,31 +698,31 @@ namespace Epsitec.Common.Designer
 			//	Enregistre toutes les ressources.
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				access.Save (this.batchSaver);
+				access.Save(this.batchSaver);
 			}
 
 			//	Passe en revue les bundles tels que les accesseurs les ont
 			//	préparés pour les optimiser :
-			foreach (ResourceBundle bundle in this.batchSaver.GetLiveBundles ())
+			foreach (ResourceBundle bundle in this.batchSaver.GetLiveBundles())
 			{
-				this.OptimizeBundles (bundle);
+				this.OptimizeBundles(bundle);
 			}
 
-			this.batchSaver.Execute ();
+			this.batchSaver.Execute();
 			
 			if (this.AccessForms.AccessCount > 0)
 			{
 				//	Il y a des masques de saisie définis pour ce module; il faut donc encore
 				//	générer le code C# correspondant.
 
-				List<ResourceBundle> bundles = new List<ResourceBundle> ();
+				List<ResourceBundle> bundles = new List<ResourceBundle>();
 				
 				foreach (CultureMap item in this.AccessForms.Accessor.Collection)
 				{
-					bundles.Add (this.ResourceManager.GetBundle (item.Id, ResourceLevel.Default));
+					bundles.Add (this.ResourceManager.GetBundle(item.Id, ResourceLevel.Default));
 				}
 
-				this.RegenerateFormsSourceCode (bundles);
+				this.RegenerateFormsSourceCode(bundles);
 			}
 		}
 
@@ -740,16 +742,16 @@ namespace Epsitec.Common.Designer
 
 			if (version == null)
 			{
-				version = new ResourceModuleVersion (devId, 1, System.DateTime.Now.ToUniversalTime ());
+				version = new ResourceModuleVersion(devId, 1, System.DateTime.Now.ToUniversalTime());
 			}
 			else
 			{
-				version = new ResourceModuleVersion (devId, version.BuildNumber+1, System.DateTime.Now.ToUniversalTime ());
+				version = new ResourceModuleVersion(devId, version.BuildNumber+1, System.DateTime.Now.ToUniversalTime());
 			}
 
-			this.moduleInfo.UpdateVersion (version);
+			this.moduleInfo.UpdateVersion(version);
 
-			ResourceModule.SaveManifest (this.moduleInfo);
+			ResourceModule.SaveManifest(this.moduleInfo);
 		}
 
 		private void OptimizeBundles(ResourceBundle bundle)
@@ -766,35 +768,35 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			System.Diagnostics.Debug.Assert (bundle.ResourceLevel != ResourceLevel.Merged);
-			System.Diagnostics.Debug.Assert (bundle.ResourceLevel != ResourceLevel.None);
+			System.Diagnostics.Debug.Assert(bundle.ResourceLevel != ResourceLevel.Merged);
+			System.Diagnostics.Debug.Assert(bundle.ResourceLevel != ResourceLevel.None);
 
-			if ((bundle.Name == Resources.CaptionsBundleName) ||
-				(bundle.Name == Resources.StringsBundleName))
+			if (bundle.Name == Resources.CaptionsBundleName ||
+				bundle.Name == Resources.StringsBundleName)
 			{
 				for (int i=0; i<bundle.FieldCount; i++)
 				{
 					ResourceBundle.Field field = bundle[i];
 
-					if (field.About == "" || ResourceBundle.Field.IsNullString (field.About))
+					if (field.About == "" || ResourceBundle.Field.IsNullString(field.About))
 					{
 						//	Si un champ contient un commentaire vide et qu'il
 						//	s'agit d'une ressource d'un module de référence,
 						//	alors on peut supprimer complètement son contenu.
 
-						field.SetAbout (null);
+						field.SetAbout(null);
 					}
 
 					if (bundle.ResourceLevel != ResourceLevel.Default)
 					{
-						System.Diagnostics.Debug.Assert (field.Name == null);
+						System.Diagnostics.Debug.Assert(field.Name == null);
 
 						//	Si une ressource est vide dans un bundle autre que le bundle
 						//	par défaut, il faut la supprimer.
-						if ((ResourceBundle.Field.IsNullString (field.AsString)) &&
-							(ResourceBundle.Field.IsNullString (field.About)))
+						if (ResourceBundle.Field.IsNullString(field.AsString) &&
+							ResourceBundle.Field.IsNullString(field.About))
 						{
-							bundle.Remove (i);
+							bundle.Remove(i);
 							i--;
 						}
 					}
@@ -817,29 +819,29 @@ namespace Epsitec.Common.Designer
 					return;
 
 				default:
-					throw new System.NotSupportedException ();
+					throw new System.NotSupportedException();
 			}
 
-			if ((bundle.Type == Resources.CaptionTypeName) &&
-				(!string.IsNullOrEmpty (this.moduleInfo.SourceNamespace)))
+			if (bundle.Type == Resources.CaptionTypeName &&
+				!string.IsNullOrEmpty(this.moduleInfo.SourceNamespace))
 			{
 				foreach (ResourceBundle.Field field in bundle.Fields)
 				{
 					if (field.Name == null)
 					{
-						System.Diagnostics.Debug.WriteLine ("Found suspect field (no name)");
+						System.Diagnostics.Debug.WriteLine("Found suspect field (no name)");
 					}
 
-					if ((field.Name != null) &&
-						(field.Name.StartsWith ("Typ.StructuredType.")))
+					if (field.Name != null &&
+						field.Name.StartsWith("Typ.StructuredType."))
 					{
 						try
 						{
-							this.RegenerateEntitiesSourceCode (manager, bundle);
+							this.RegenerateEntitiesSourceCode(manager, bundle);
 						}
 						catch (System.Exception ex)
 						{
-							System.Diagnostics.Debug.WriteLine ("Exception : " + ex.Message);
+							System.Diagnostics.Debug.WriteLine("Exception : " + ex.Message);
 						}
 						break;
 					}
@@ -854,19 +856,19 @@ namespace Epsitec.Common.Designer
 		/// <param name="bundle">The bundle.</param>
 		private void RegenerateEntitiesSourceCode(ResourceManager manager, ResourceBundle bundle)
 		{
-			CodeGenerator generator = new CodeGenerator (manager);
-			generator.Emit ();
+			CodeGenerator generator = new CodeGenerator(manager);
+			generator.Emit();
 
 			string modulePath = this.moduleId.Path;
-			string sourceCodeRoot = System.IO.Path.Combine (modulePath, "SourceCode");
-			string sourceCodePath = System.IO.Path.Combine (sourceCodeRoot, "Entities.cs");
+			string sourceCodeRoot = System.IO.Path.Combine(modulePath, "SourceCode");
+			string sourceCodePath = System.IO.Path.Combine(sourceCodeRoot, "Entities.cs");
 
-			if (!System.IO.Directory.Exists (sourceCodeRoot))
+			if (!System.IO.Directory.Exists(sourceCodeRoot))
 			{
-				System.IO.Directory.CreateDirectory (sourceCodeRoot);
+				System.IO.Directory.CreateDirectory(sourceCodeRoot);
 			}
 
-			generator.Formatter.SaveCodeToTextFile (sourceCodePath, System.Text.Encoding.UTF8);
+			generator.Formatter.SaveCodeToTextFile(sourceCodePath, System.Text.Encoding.UTF8);
 
 #if false
 			using (BuildDriver driver = new BuildDriver ())
@@ -912,19 +914,19 @@ namespace Epsitec.Common.Designer
 		/// <param name="bundles">The bundles.</param>
 		private void RegenerateFormsSourceCode(IEnumerable<ResourceBundle> bundles)
 		{
-			FormEngine.CodeGenerator generator = new FormEngine.CodeGenerator (this.ResourceManager);
-			generator.Emit (bundles);
+			FormEngine.CodeGenerator generator = new FormEngine.CodeGenerator(this.ResourceManager);
+			generator.Emit(bundles);
 
 			string modulePath = this.moduleId.Path;
-			string sourceCodeRoot = System.IO.Path.Combine (modulePath, "SourceCode");
-			string sourceCodePath = System.IO.Path.Combine (sourceCodeRoot, "Forms.cs");
+			string sourceCodeRoot = System.IO.Path.Combine(modulePath, "SourceCode");
+			string sourceCodePath = System.IO.Path.Combine(sourceCodeRoot, "Forms.cs");
 
-			if (!System.IO.Directory.Exists (sourceCodeRoot))
+			if (!System.IO.Directory.Exists(sourceCodeRoot))
 			{
-				System.IO.Directory.CreateDirectory (sourceCodeRoot);
+				System.IO.Directory.CreateDirectory(sourceCodeRoot);
 			}
 
-			generator.Formatter.SaveCodeToTextFile (sourceCodePath, System.Text.Encoding.UTF8);
+			generator.Formatter.SaveCodeToTextFile(sourceCodePath, System.Text.Encoding.UTF8);
 		}
 
 		private void HandleAccessDirtyChanged(object sender)
@@ -932,10 +934,10 @@ namespace Epsitec.Common.Designer
 			//	Appelé lorsque l'état IsDirty d'un accès a changé.
 			if (this.designerApplication != null)
 			{
-				this.designerApplication.GetCommandState ("Save").Enable = this.IsGlobalDirty;
-				this.designerApplication.GetCommandState ("EditOk").Enable = this.IsLocalDirty;
-				this.designerApplication.GetCommandState ("EditCancel").Enable = this.IsLocalDirty;
-				this.designerApplication.UpdateBookModules ();
+				this.designerApplication.GetCommandState("Save").Enable = this.IsGlobalDirty;
+				this.designerApplication.GetCommandState("EditOk").Enable = this.IsLocalDirty;
+				this.designerApplication.GetCommandState("EditCancel").Enable = this.IsLocalDirty;
+				this.designerApplication.UpdateBookModules();
 			}
 		}
 
