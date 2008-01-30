@@ -27,14 +27,14 @@ namespace Epsitec.Common.Dialogs
 				Embedder = this,
 				Dock = DockStyle.Fill,
 				HeaderVisibility = false,
-				HorizontalScrollMode = ItemTableScrollMode.Linear,
+				HorizontalScrollMode = ItemTableScrollMode.None,
 				VerticalScrollMode = ItemTableScrollMode.ItemBased
 			};
  
 			this.BackColor = Drawing.Color.FromName ("White");
 		}
 
-
+		
 		public ICollectionView Items
 		{
 			get

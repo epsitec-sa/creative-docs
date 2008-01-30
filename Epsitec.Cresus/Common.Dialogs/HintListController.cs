@@ -84,6 +84,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.hintListEmbedder == null)
 			{
 				this.hintListWidget = new HintListWidget ();
+				this.hintListWidget.PreferredWidth = 200;
 				this.hintListEmbedder = new HintListEmbedder (this.searchController.DialogWindow, this.hintListWidget);
 			}
 
@@ -111,7 +112,7 @@ namespace Epsitec.Common.Dialogs
 				this.widget.Visibility = false;
 				this.widget.SetParent (this.window.Root);
 
-				this.SetWidth (200);
+				this.SetWidth (this.widget.PreferredWidth);
 			}
 
 			public void Show()
@@ -163,7 +164,6 @@ namespace Epsitec.Common.Dialogs
 					}
 
 					this.widget.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					this.widget.PreferredWidth = width;
 					this.width = width;
 
 					if (show)

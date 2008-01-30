@@ -42,6 +42,7 @@ namespace Epsitec.Common.Dialogs.ItemViewFactories
 
 		public Drawing.Size GetPreferredSize(ItemView itemView)
 		{
+			return new Drawing.Size (200, 16);
 			this.textTemplate.Text = EntityItemViewFactory.GetText (itemView);
 			Drawing.Size size = this.textTemplate.GetBestFitSize ();
 
