@@ -81,7 +81,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Dialog dialog = Dialog.Load (this.resourceManager, Druid.Parse ("_8V1"));	//	mask for AdresseEntity, from Cresus.AddressBook
 
-			StringType.Default.DefineMaximumLength (25);
+			StringType.Default.DefineMaximumLength (40);
 
 			//	Mask with :
 			//	- Rue
@@ -212,6 +212,7 @@ namespace Epsitec.Common.Dialogs
 			resolver.PaysSuggestions.Add (countryF);
 			resolver.PaysSuggestions.Add (countryDe);
 
+#if false
 			resolver.LocalitéSuggestions.Add (new LocalitéEntity ()
 			{
 				Nom = "Yverdon-les-Bains",
@@ -239,6 +240,12 @@ namespace Epsitec.Common.Dialogs
 				Numéro = "1462",
 				Pays = countryCh
 			});
+#else
+			foreach (LocalitéEntity loc in DialogTest.ReadNuPost ())
+			{
+				resolver.LocalitéSuggestions.Add (loc);
+			}
+#endif
 			
 			return resolver;
 		}
@@ -373,6 +380,31 @@ namespace Epsitec.Common.Dialogs
 
 			private readonly List<LocalitéEntity> localitéSuggestions;
 			private readonly List<PaysEntity> paysSuggestions;
+		}
+
+		public static IEnumerable<LocalitéEntity> ReadNuPost()
+		{
+			PaysEntity countryCh = new PaysEntity ()
+			{
+				Code = "CH",
+				Nom = "Suisse"
+			};
+			
+			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\NUPOST.TXT", System.Text.Encoding.Default))
+			{
+				string[] values = line.Split ('\t');
+
+				LocalitéEntity loc = new LocalitéEntity ();
+
+				using (loc.DefineOriginalValues ())
+				{
+					loc.Numéro = values[2];
+					loc.Nom = values[5];
+					loc.Pays = countryCh;
+				}
+
+				yield return loc;
+			}
 		}
 
 
