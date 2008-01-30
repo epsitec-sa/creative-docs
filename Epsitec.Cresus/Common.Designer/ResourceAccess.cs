@@ -310,7 +310,6 @@ namespace Epsitec.Common.Designer
 			//	pour tous les raccourcis utilisés plus d'une fois.
 			string culture = null;
 			List<ShortcutItem> uses = new List<ShortcutItem>();
-			bool foo = false;
 
 			for (int i=0; i<list.Count; i++)
 			{
@@ -352,18 +351,8 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				builder.Append("<br/>");
-				foo = true;
 
 				uses.Add(list[i]);  // ajoute à la liste des raccourcis traités
-			}
-
-			if (foo)
-			{
-				//	Pour compenser un bug dans TextLayout. Si le texte se termine par "<br/>", le calcul
-				//	de la hauteur est incorrect (la dernière ligne n'est pas comptée). En revanche, si
-				//	le texte se termine par "<br/> ", tout semble fonctionner !
-				//	TODO: corriger TextLayout et supprimer cette magouille !
-				builder.Append(" ");
 			}
 		}
 

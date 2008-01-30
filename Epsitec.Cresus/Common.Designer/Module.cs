@@ -396,7 +396,17 @@ namespace Epsitec.Common.Designer
 			//	Vérifie les liens cassés dans les Forms.
 			this.accessForms.CheckForms(builder);
 
-			return builder.ToString();
+			string message = builder.ToString();
+			if (message.EndsWith("<br/>"))
+			{
+				//	Pour compenser un bug dans TextLayout. Si le texte se termine par "<br/>", le calcul
+				//	de la hauteur est incorrect (la dernière ligne n'est pas comptée). En revanche, si
+				//	le texte se termine par "<br/> ", tout semble fonctionner !
+				//	TODO: corriger TextLayout et supprimer cette magouille !
+				message += " ";
+			}
+
+			return message;
 		}
 
 		public void Check()
