@@ -501,6 +501,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if ((state & WidgetPaintState.Enabled) != 0 && this.cells[i].Selected)
 				{
 					state |= WidgetPaintState.Selected;
+					state |= WidgetPaintState.InheritedFocus;
 				}
 				else
 				{
@@ -576,6 +577,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				rect.Offset(0, -h);
 			}
+			graphics.RenderSolid(Color.FromAlphaRgb(0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
 
 			rect = this.Client.Bounds;
 			rect.Deflate(0.5);

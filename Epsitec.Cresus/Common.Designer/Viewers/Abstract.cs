@@ -1887,7 +1887,6 @@ namespace Epsitec.Common.Designer.Viewers
 				if (rc != null)
 				{
 					rc.BackgroundColor = Abstract.GetBackgroundColor(state2, this.bands[i].intensityContainer);
-					//?rc.Visibility = (this.GetTwoLetters(1) != null);
 				}
 			}
 
