@@ -241,7 +241,11 @@ namespace Epsitec.Common.Dialogs
 				Pays = countryCh
 			});
 #else
-			foreach (LocalitéEntity loc in DialogTest.ReadNuPost ())
+			List<LocalitéEntity> locs = new List<LocalitéEntity> (DialogTest.ReadNuPost ());
+
+			locs.Sort ((a, b) => string.Compare (a.Nom, b.Nom));
+			
+			foreach (LocalitéEntity loc in locs)
 			{
 				resolver.LocalitéSuggestions.Add (loc);
 			}
