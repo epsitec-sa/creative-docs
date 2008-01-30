@@ -486,8 +486,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(adorner.ColorTextBackground);
+			//	Dessine le cadre et le fond du tableau.
+			adorner.PaintArrayBackground(graphics, rect, this.PaintState);
 
 			double h = rect.Height/this.cells.Length;
 			rect.Bottom = rect.Top-h;
@@ -577,12 +577,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 				rect.Offset(0, -h);
 			}
-			graphics.RenderSolid(Color.FromAlphaRgb(0.2, adorner.ColorBorder.R, adorner.ColorBorder.G, adorner.ColorBorder.B));
 
-			rect = this.Client.Bounds;
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
+			Drawing.Color separatorColor = adorner.ColorTextFieldBorder((this.PaintState&WidgetPaintState.Enabled) != 0);
+			separatorColor.A = 0.1;
+			graphics.RenderSolid(separatorColor);
 		}
 
 
