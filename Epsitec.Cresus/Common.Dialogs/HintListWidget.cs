@@ -56,7 +56,13 @@ namespace Epsitec.Common.Dialogs
 					this.itemTable.Items = value;
 
 					ItemPanel itemPanel = this.itemTable.ItemPanel;
-					ItemView  itemView  = itemPanel.FindItemView (this.items.CurrentItem);
+					
+					itemPanel.Refresh ();
+
+					object    currentItem = this.items.CurrentItem;
+					ItemView  itemView    = itemPanel.FindItemView (currentItem);
+
+					System.Diagnostics.Debug.Assert ((currentItem == null) || (itemView != null));
 
 					itemPanel.SelectItemView (itemView);
 					itemPanel.FocusItemView (itemView);
