@@ -533,6 +533,13 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
+			//	Si l'élément déplacé est cassé, enlève immédiatement son état cassé.
+			index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, guid);
+			if (index != -1)
+			{
+				this.formEditor.Form.Fields[index].PatchBrokenAttach = false;
+			}
+
 			//	Génére la liste des opérations de déplacement nécessaires.
 			//	1) Traite d'abord les éléments qu'on sait devoir déplacer (selon la liste moved).
 			List<LinkAfter> oper = new List<LinkAfter>();
