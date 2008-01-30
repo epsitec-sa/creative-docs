@@ -30,6 +30,8 @@ namespace Epsitec.Common.Dialogs
 				HorizontalScrollMode = ItemTableScrollMode.None,
 				VerticalScrollMode = ItemTableScrollMode.ItemBased
 			};
+
+			this.itemTable.ItemPanel.CurrentItemTrackingMode = CurrentItemTrackingMode.AutoSelect;
  
 			this.BackColor = Drawing.Color.FromName ("White");
 		}
@@ -52,6 +54,12 @@ namespace Epsitec.Common.Dialogs
 
 					this.items = value;
 					this.itemTable.Items = value;
+
+					ItemPanel itemPanel = this.itemTable.ItemPanel;
+					ItemView  itemView  = itemPanel.FindItemView (this.items.CurrentItem);
+
+					itemPanel.SelectItemView (itemView);
+					itemPanel.FocusItemView (itemView);
 
 					if (this.items != null)
 					{

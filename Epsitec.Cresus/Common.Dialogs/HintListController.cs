@@ -218,6 +218,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			AbstractEntity suggestion = e.NewValue as AbstractEntity;
 
+#if false
 			if ((this.hintListWidget != null) &&
 				(this.hintListWidget.Items != null))
 			{
@@ -230,6 +231,7 @@ namespace Epsitec.Common.Dialogs
 					this.hintListWidget.Items.MoveCurrentTo (suggestion);
 				}
 			}
+#endif
 		}
 
 		private void HandleSearchControllerPlaceholderPostProcessing(object sender, MessageEventArgs e)
@@ -252,8 +254,10 @@ namespace Epsitec.Common.Dialogs
 			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", this.searchResult.AllResults.Count));
 
 			ICollectionView view = this.searchResult.CollectionView;
+			AbstractEntity suggestion = this.searchController.ActiveSearchContext.ActiveSuggestion;
 
 			view.Refresh ();
+			view.MoveCurrentTo (suggestion);
 
 			this.hintListWidget.Items = view;
 		}

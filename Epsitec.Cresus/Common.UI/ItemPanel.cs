@@ -829,6 +829,18 @@ namespace Epsitec.Common.UI
 			state.GenerateEvents ();
 		}
 
+		public void FocusItemView(ItemView view)
+		{
+			if (view == null)
+			{
+				this.ClearFocus ();
+			}
+			else
+			{
+				this.Focus (view);
+			}
+		}
+
 		#region SelectionState Class
 
 		class SelectionState

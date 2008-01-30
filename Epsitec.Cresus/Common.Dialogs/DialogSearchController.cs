@@ -859,6 +859,10 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Gets the search template data used by this search controller.
+			/// </summary>
+			/// <value>The search template data.</value>
 			public AbstractEntity SearchTemplate
 			{
 				get
@@ -867,6 +871,24 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Gets the active suggestion.
+			/// </summary>
+			/// <value>The active suggestion.</value>
+			public AbstractEntity ActiveSuggestion
+			{
+				get
+				{
+					return this.activeSuggestion;
+				}
+			}
+
+			/// <summary>
+			/// Gets the active placeholders used by this search controller.
+			/// </summary>
+			/// <returns>
+			/// A collection of <see cref="AbstractPlaceholder"/> instances.
+			/// </returns>
 			public IEnumerable<AbstractPlaceholder> GetActivePlaceholders()
 			{
 				foreach (Node node in this.nodes)
@@ -875,6 +897,10 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Sets the suggestion.
+			/// </summary>
+			/// <param name="suggestion">The suggestion.</param>
 			public void SetSuggestion(AbstractEntity suggestion)
 			{
 				foreach (Node node in this.nodes)

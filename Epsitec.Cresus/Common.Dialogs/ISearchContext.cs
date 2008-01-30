@@ -33,6 +33,15 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets the active suggestion.
+		/// </summary>
+		/// <value>The active suggestion.</value>
+		AbstractEntity ActiveSuggestion
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets the active placeholders used by this search controller.
 		/// </summary>
 		/// <returns>A collection of <see cref="AbstractPlaceholder"/> instances.</returns>
