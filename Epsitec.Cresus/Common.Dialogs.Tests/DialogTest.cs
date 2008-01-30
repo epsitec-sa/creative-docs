@@ -90,7 +90,21 @@ namespace Epsitec.Common.Dialogs
 
 			HintListController hintListController = new HintListController ();
 			DialogSearchController searchController = hintListController.SearchController;
-			searchController.Resolver = DialogTest.CreateSuggestions ();
+
+			TestResolver resolver = DialogTest.CreateSuggestions ();
+			
+			searchController.Resolver = resolver;
+			
+			LocalitéEntity yverdon = null;
+
+			foreach (LocalitéEntity loc in resolver.LocalitéSuggestions)
+			{
+				if (loc.Résumé == "CH-1400 Yverdon-les-Bains")
+				{
+					yverdon = loc;
+					break;
+				}
+			}
 
 			dialog.DialogWindowCreated +=
 				delegate
@@ -142,7 +156,7 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsTrue (dialog.HasWindow);
 
 			dialog.IsModal = false;
-			dialog.Data = DialogTest.CreateDefaultDialogData ();
+			dialog.Data = DialogTest.CreateDefaultDialogData (yverdon);
 			dialog.SearchController = searchController;
 			dialog.OpenDialog ();
 			Window.RunInTestEnvironment (window);
@@ -167,7 +181,7 @@ namespace Epsitec.Common.Dialogs
 			hintListController.Dispose ();
 		}
 
-		
+
 		internal static AdresseEntity CreateDefaultAdresseEntity()
 		{
 			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
@@ -181,12 +195,22 @@ namespace Epsitec.Common.Dialogs
 			return adresse;
 		}
 
-		internal static DialogData CreateDefaultDialogData()
+		internal static AdresseEntity CreateDefaultAdresseEntity(LocalitéEntity loc)
 		{
-			return new DialogData (DialogTest.CreateDefaultAdresseEntity (), DialogDataMode.Isolated);
+			AdresseEntity adresse = EntityContext.Current.CreateEntity<AdresseEntity> ();
+
+			adresse.Rue = "Ch. du Fontenay 6";
+			adresse.Localité = loc;
+
+			return adresse;
 		}
 
-		private static IEntityResolver CreateSuggestions()
+		internal static DialogData CreateDefaultDialogData(LocalitéEntity loc)
+		{
+			return new DialogData (DialogTest.CreateDefaultAdresseEntity (loc), DialogDataMode.Isolated);
+		}
+
+		private static TestResolver CreateSuggestions()
 		{
 			TestResolver resolver = new TestResolver ();
 

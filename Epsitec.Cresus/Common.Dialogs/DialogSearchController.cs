@@ -374,11 +374,7 @@ namespace Epsitec.Common.Dialogs
 
 			if (this.activeSearchContext != null)
 			{
-				if ((this.activeSearchContext.ActiveSuggestion == null) ||
-					(!UndefinedValue.IsUndefinedValue (value)))
-				{
-					Widgets.Application.QueueAsyncCallback (this.AsyncResolveSearch);
-				}
+				Widgets.Application.QueueAsyncCallback (this.AsyncResolveSearch);
 			}
 		}
 
@@ -838,7 +834,18 @@ namespace Epsitec.Common.Dialogs
 			public void Resolve(IEntityResolver entityResolver)
 			{
 				this.resolverResult = EntityResolver.Resolve (entityResolver, this.searchTemplate);
-				this.SetSuggestion (this.resolverResult.FirstResult);
+
+				AbstractEntity suggestion = this.activeSuggestion ?? this.GetDefaultSuggestion ();
+
+				if ((suggestion != null) &&
+					(this.resolverResult.AllResults.Contains (suggestion)))
+				{
+					this.SetSuggestion (suggestion);
+				}
+				else
+				{
+					this.SetSuggestion (this.resolverResult.FirstResult);
+				}
 			}
 
 			#region IDisposable Members
@@ -967,6 +974,22 @@ namespace Epsitec.Common.Dialogs
 					(e.Message.IsKeyType))
 				{
 					this.searchController.OnPlaceholderPostProcessing (sender as AbstractPlaceholder, e);
+				}
+			}
+
+			private AbstractEntity GetDefaultSuggestion()
+			{
+				AbstractEntity item = this.searchRootPath.NavigateRead (this.searchController.dialogData.Data) as AbstractEntity;
+
+				int pos = Types.Collection.FindIndex (this.resolverResult.AllResults, x => EntityContext.CompareEqual (x, item));
+
+				if (pos < 0)
+				{
+					return null;
+				}
+				else
+				{
+					return this.resolverResult.AllResults[pos];
 				}
 			}
 

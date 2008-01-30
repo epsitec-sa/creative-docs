@@ -117,6 +117,28 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		public static bool CompareEqual(AbstractEntity a, AbstractEntity b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+
+			//	TODO: improve equality comparison !
+
+			string da = a.Dump ();
+			string db = b.Dump ();
+
+			return da == db;
+		}
+
+
+
 		/// <summary>
 		/// Starts a new data generation. This increments the <see cref="DataGeneration"/>
 		/// property.

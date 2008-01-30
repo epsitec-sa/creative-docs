@@ -45,7 +45,7 @@
           <Type>Field</Type>
           <FI>[8V15].[8V19]</FI>
           <SB>Normal</SB>
-          <CR>2</CR>
+          <CR>3</CR>
           <RR>1</RR>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
@@ -67,7 +67,7 @@
           <Type>Field</Type>
           <FI>[8V15].[8V1A]</FI>
           <SB>Normal</SB>
-          <CR>8</CR>
+          <CR>7</CR>
           <RR>1</RR>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
