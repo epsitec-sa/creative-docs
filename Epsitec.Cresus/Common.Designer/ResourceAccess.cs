@@ -390,16 +390,23 @@ namespace Epsitec.Common.Designer
 				engine.Arrange.Merge(refForm.Fields, form.Fields);
 
 				//	Compte le nombre de liens cassés.
-				int error = 0;
+				List<string> errors = new List<string>();
 				foreach (FormEngine.FieldDescription field in form.Fields)
 				{
 					if (field.PatchBrokenAttach)
 					{
-						error++;
+						string name = this.GetFieldNames(field.GetPath(null));
+
+						if (string.IsNullOrEmpty(name))
+						{
+							name = field.Description;
+						}
+
+						errors.Add(name);
 					}
 				}
 
-				if (error != 0)  // au moins un lien cassé ?
+				if (errors.Count > 0)  // au moins un lien cassé ?
 				{
 					if (first)  // premier avertissement de Form ?
 					{
@@ -417,7 +424,25 @@ namespace Epsitec.Common.Designer
 
 					//	Génère une erreur explicite.
 					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
-					builder.Append(string.Format("<b>{0}</b>: {1} erreur(s)", item.FullName, error.ToString()));
+					builder.Append(string.Format("<b>{0}</b>: ", item.FullName));
+
+					for (int i=0; i<errors.Count; i++)
+					{
+						if (i > 0)
+						{
+							if (i == errors.Count-1)
+							{
+								builder.Append(" et ");
+							}
+							else
+							{
+								builder.Append(", ");
+							}
+						}
+
+						builder.Append(errors[i]);
+					}
+
 					builder.Append("<br/>");
 				}
 			}
