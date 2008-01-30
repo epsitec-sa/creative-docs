@@ -193,8 +193,28 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	///	The <c>Localité</c> entity.
 	///	designer:cap/8V18
 	///	</summary>
-	public partial class LocalitéEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class LocalitéEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Common.Dialogs.Entities.ISearchable
 	{
+		#region ISearchable Members
+		///	<summary>
+		///	The <c>SearchValue</c> field.
+		///	designer:fld/8V18/6016
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[6016]")]
+		public string SearchValue
+		{
+			get
+			{
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.FuncSearchValue);
+			}
+			set
+			{
+				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[6016]", value);
+			}
+		}
+		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncSearchValue = loc => loc.Résumé; // λ [8V18] [6016]
+		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprSearchValue = loc => loc.Résumé; // λ [8V18] [6016]
+		#endregion
 		///	<summary>
 		///	The <c>Numéro</c> field.
 		///	designer:fld/8V18/8V19

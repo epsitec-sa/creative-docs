@@ -64,11 +64,24 @@ namespace Epsitec.Common.Dialogs
 
 			public ItemViewWidget CreateUserInterface(ItemView itemView)
 			{
-				ItemViewWidget container = new ItemViewWidget (itemView);
-				AbstractEntity data      = itemView.Item as AbstractEntity;
-				StaticText     widget    = new StaticText (container);
+				ItemViewWidget container  = new ItemViewWidget (itemView);
+				AbstractEntity data       = itemView.Item as AbstractEntity;
+				StaticText     widget     = new StaticText (container);
 
-				widget.Text          = TextLayout.ConvertToTaggedText (data.Dump ());
+				Entities.ISearchable searchable = data as Entities.ISearchable;
+
+				string text;
+
+				if (searchable == null)
+				{
+					text = data.Dump ();
+				}
+				else
+				{
+					text = searchable.SearchValue;
+				}
+
+				widget.Text          = TextLayout.ConvertToTaggedText (text ?? "");
 				widget.PreferredSize = widget.GetBestFitSize ();
 
 				return container;

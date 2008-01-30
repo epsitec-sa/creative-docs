@@ -230,6 +230,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Res.cs" />
+    <Compile Include="Resources\Common.Dialogs\SourceCode\Entities.cs" />
     <Compile Include="Resources\Common.Dialogs\SourceCode\Forms.cs" />
     <Compile Include="SelectFromList.cs">
       <SubType>Code</SubType>
