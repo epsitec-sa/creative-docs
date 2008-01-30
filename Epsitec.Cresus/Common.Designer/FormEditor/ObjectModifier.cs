@@ -738,7 +738,6 @@ namespace Epsitec.Common.Designer.FormEditor
 					{
 						icon = Misc.Image("FormPatchMoved");  // prioritaire, car pas de fond coloré
 					}
-
 				}
 			}
 
@@ -783,6 +782,11 @@ namespace Epsitec.Common.Designer.FormEditor
 						color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 					}
 
+
+					if (this.formEditor.Form.Fields[index].PatchBrokenAttach)
+					{
+						color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
+					}
 				}
 			}
 
