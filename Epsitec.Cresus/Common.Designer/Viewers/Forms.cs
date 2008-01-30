@@ -1089,7 +1089,7 @@ namespace Epsitec.Common.Designer.Viewers
 							actual.PatchHidden = true;  // cache le champ
 						}
 
-						if (!actual.PatchMoved && !actual.PatchModified && !actual.PatchHidden)
+						if (!actual.PatchMoved && !actual.PatchModified && !actual.PatchHidden && !actual.PatchBrokenAttach)
 						{
 							this.form.Fields.RemoveAt(index);
 						}

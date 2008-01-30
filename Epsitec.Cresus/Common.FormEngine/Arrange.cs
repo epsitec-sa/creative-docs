@@ -42,8 +42,6 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (FieldDescription field in patch)
 			{
-				field.PatchBrokenAttach = false;
-
 				if (field.PatchMoved)  // champ à déplacer ?
 				{
 					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
@@ -55,7 +53,7 @@ namespace Epsitec.Common.FormEngine
 						if (field.PatchAttachGuid != System.Guid.Empty)
 						{
 							dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
-							if (dst == -1)  // l'élément d'attache n'existe plus ?
+							if (dst == -1 || field.PatchBrokenAttach)  // l'élément d'attache n'existe plus ?
 							{
 								field.PatchBrokenAttach = true;
 								continue;  // on laisse le champ ici
@@ -80,7 +78,7 @@ namespace Epsitec.Common.FormEngine
 					if (field.PatchAttachGuid != System.Guid.Empty)
 					{
 						dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
-						if (dst == -1)  // l'élément d'attache n'existe plus ?
+						if (dst == -1 || field.PatchBrokenAttach)  // l'élément d'attache n'existe plus ?
 						{
 							dst = merged.Count-1;  // on insère le champ à la fin
 							field.PatchBrokenAttach = true;

@@ -629,7 +629,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				FieldDescription field = this.formEditor.Form.Fields[index];
 
-				if (!field.PatchMoved && !field.PatchInserted && !field.PatchModified && !field.PatchHidden)
+				if (!field.PatchMoved && !field.PatchInserted && !field.PatchModified && !field.PatchHidden && !field.PatchBrokenAttach)
 				{
 					this.formEditor.Form.Fields.RemoveAt(index);
 				}
