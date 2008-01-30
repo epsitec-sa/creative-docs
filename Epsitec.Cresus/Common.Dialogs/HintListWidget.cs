@@ -31,7 +31,6 @@ namespace Epsitec.Common.Dialogs
 				VerticalScrollMode = ItemTableScrollMode.ItemBased
 			};
  
-			this.factory = new ItemViewFactory (this);
 			this.BackColor = Drawing.Color.FromName ("White");
 		}
 
@@ -48,64 +47,11 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.items = value;
 					this.itemTable.Items = value;
-					this.itemTable.ItemPanel.CustomItemViewFactoryGetter = x => this.factory;
 				}
 			}
 		}
-
-		private class ItemViewFactory : IItemViewFactory
-		{
-			public ItemViewFactory(HintListWidget widget)
-			{
-				this.widget = widget;
-			}
-
-			#region IItemViewFactory Members
-
-			public ItemViewWidget CreateUserInterface(ItemView itemView)
-			{
-				ItemViewWidget container  = new ItemViewWidget (itemView);
-				AbstractEntity data       = itemView.Item as AbstractEntity;
-				StaticText     widget     = new StaticText (container);
-
-				Entities.ISearchable searchable = data as Entities.ISearchable;
-
-				string text;
-
-				if (searchable == null)
-				{
-					text = data.Dump ();
-				}
-				else
-				{
-					text = searchable.SearchValue;
-				}
-
-				widget.Text          = TextLayout.ConvertToTaggedText (text ?? "");
-				widget.PreferredSize = widget.GetBestFitSize ();
-
-				return container;
-			}
-
-			public void DisposeUserInterface(ItemViewWidget widget)
-			{
-				widget.Dispose ();
-			}
-
-			public Epsitec.Common.Drawing.Size GetPreferredSize(ItemView itemView)
-			{
-				return itemView.Owner.ItemViewDefaultSize;
-			}
-
-			#endregion
-
-
-			private readonly HintListWidget widget;
-		}
-
 
 		private readonly ItemTable itemTable;
-		private readonly ItemViewFactory factory;
 		private ICollectionView items;
 	}
 }

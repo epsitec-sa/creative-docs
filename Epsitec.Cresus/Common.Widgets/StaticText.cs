@@ -70,17 +70,22 @@ namespace Epsitec.Common.Widgets
 
 			if (textLayout != null)
 			{
-				Drawing.Size size = textLayout.SingleLineSize;
-
-				size.Width  = System.Math.Ceiling (size.Width);
-				size.Height = System.Math.Ceiling (size.Height);
-
-				return size;
+				return StaticText.GetTextBestFitSize (textLayout);
 			}
 			else
 			{
 				return new Drawing.Size (0, widget.DefaultFont.LineHeight * widget.DefaultFontSize);
 			}
+		}
+
+		public static Drawing.Size GetTextBestFitSize(TextLayout textLayout)
+		{
+			Drawing.Size size = textLayout.SingleLineSize;
+
+			size.Width  = System.Math.Ceiling (size.Width);
+			size.Height = System.Math.Ceiling (size.Height);
+
+			return size;
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

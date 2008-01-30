@@ -173,6 +173,7 @@
     <Compile Include="DialogSearchController.cs" />
     <Compile Include="HintListController.cs" />
     <Compile Include="ISearchContext.cs" />
+    <Compile Include="ItemViewFactories\EntityItemViewFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
