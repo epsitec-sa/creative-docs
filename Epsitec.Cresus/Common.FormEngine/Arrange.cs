@@ -131,14 +131,14 @@ namespace Epsitec.Common.FormEngine
 					level--;
 					if (level < 0)
 					{
-						return "Il manque un BoxBegin";
+						return "Il manque un début de boîte";
 					}
 				}
 			}
 
 			if (level > 0)
 			{
-				return "Il manque un BoxEnd";
+				return "Il manque une fin de boîte";
 			}
 
 			return null;

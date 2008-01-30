@@ -372,9 +372,42 @@ namespace Epsitec.Common.Designer
 		{
 			//	Vérifie les Forms, en construisant un message d'avertissement.
 			System.Diagnostics.Debug.Assert(this.type == Type.Forms);
-			bool first = true;
 			FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+			bool first;
 
+			//	Vérifie la structure des Forms.
+			first = true;
+			foreach (CultureMap item in this.accessor.Collection)
+			{
+				FormEngine.FormDescription form = this.GetForm(item);
+
+				string error = engine.Arrange.Check(form.Fields);
+
+				if (!string.IsNullOrEmpty(error))  // une erreur ?
+				{
+					if (first)  // premier avertissement de Form ?
+					{
+						first = false;
+
+						if (builder.Length > 0)  // déjà d'autres avertissements ?
+						{
+							builder.Append("<br/>");
+						}
+
+						builder.Append("<font size=\"120%\">");
+						builder.Append("Ces masques contiennent des erreurs :");
+						builder.Append("</font><br/>");
+					}
+
+					//	Génère une erreur explicite.
+					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
+					builder.Append(string.Format("<b>{0}</b>: {1}", item.FullName, error));
+					builder.Append("<br/>");
+				}
+			}
+
+			//	Vérifie les liens PatchAttachGuid.
+			first = true;
 			foreach (CultureMap item in this.accessor.Collection)
 			{
 				FormEngine.FormDescription form = this.GetForm(item);
