@@ -1841,56 +1841,68 @@ namespace Epsitec.Common.UI
 			
 			if (!message.Handled)
 			{
-				//	Change the current item (this does not select the item).
-
-				ItemView oldFocusedItemView = this.GetFocusedItemView ();
-				ItemView newFocusedItemView;
-				ItemView oldCurrentItemView = this.FindItemView (this.Items.CurrentItem);
-				ItemView newCurrentItemView;
-
-				if (this.ProcessNavigationKeys (message.KeyCode))
+				if (this.Navigate (message))
 				{
-					newCurrentItemView = this.FindItemView (this.Items.CurrentItem);
-					
-					if ((newCurrentItemView != null) &&
-						(newCurrentItemView != oldCurrentItemView))
-					{
-						newCurrentItemView.Owner.TrackCurrentItem (newCurrentItemView, true, false);
-					}
-
-					newFocusedItemView = this.GetFocusedItemView ();
-
-					if (newCurrentItemView != oldCurrentItemView)
-					{
-						if (!message.IsControlPressed)
-						{
-							IList<ItemView> list = this.GetSelectedItemViews ();
-							SelectionState state = new SelectionState (this);
-
-							if (message.IsShiftPressed && list.Count > 0)
-							{
-								this.ContinuousKeySelection (list, oldFocusedItemView, newFocusedItemView);
-							}
-							else
-							{
-								this.InternalDeselectItemViews (list);
-								this.InternalSelectItemView (newFocusedItemView);
-							}
-
-							state.GenerateEvents ();
-						}
-					}
-
-					if (oldFocusedItemView != newFocusedItemView)
-					{
-						if (newFocusedItemView != null)
-						{
-							newFocusedItemView.Owner.Show (newFocusedItemView);
-						}
-					}
-					
 					message.Handled = true;
 				}
+			}
+		}
+
+		public bool Navigate(Widgets.Message message)
+		{
+			//	Change the current item (this does not select the item).
+
+			ItemView oldFocusedItemView = this.GetFocusedItemView ();
+			ItemView newFocusedItemView;
+			ItemView oldCurrentItemView = this.FindItemView (this.Items.CurrentItem);
+			ItemView newCurrentItemView;
+
+			if (this.ProcessNavigationKeys (message.KeyCode))
+			{
+				newCurrentItemView = this.FindItemView (this.Items.CurrentItem);
+
+				if ((newCurrentItemView != null) &&
+						(newCurrentItemView != oldCurrentItemView))
+				{
+					newCurrentItemView.Owner.TrackCurrentItem (newCurrentItemView, true, false);
+				}
+
+				newFocusedItemView = this.GetFocusedItemView ();
+
+				if (newCurrentItemView != oldCurrentItemView)
+				{
+					if (!message.IsControlPressed)
+					{
+						IList<ItemView> list = this.GetSelectedItemViews ();
+						SelectionState state = new SelectionState (this);
+
+						if (message.IsShiftPressed && list.Count > 0)
+						{
+							this.ContinuousKeySelection (list, oldFocusedItemView, newFocusedItemView);
+						}
+						else
+						{
+							this.InternalDeselectItemViews (list);
+							this.InternalSelectItemView (newFocusedItemView);
+						}
+
+						state.GenerateEvents ();
+					}
+				}
+
+				if (oldFocusedItemView != newFocusedItemView)
+				{
+					if (newFocusedItemView != null)
+					{
+						newFocusedItemView.Owner.Show (newFocusedItemView);
+					}
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 

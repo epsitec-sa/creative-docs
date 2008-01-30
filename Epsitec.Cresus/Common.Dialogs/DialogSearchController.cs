@@ -127,6 +127,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					context.Clear ();
 					context.Resolve (this.entityResolver);
+					context.Dispose ();
 				}
 
 				this.searchContexts.Clear ();
@@ -157,6 +158,12 @@ namespace Epsitec.Common.Dialogs
 
 		public void Dispose()
 		{
+			foreach (SearchContext context in this.searchContexts)
+			{
+				context.Dispose ();
+			}
+
+			this.searchContexts.Clear ();
 			this.DialogData = null;
 			this.Resolver = null;
 		}
@@ -261,9 +268,18 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Handles the focused widget changes, before they are applied, in order
+		/// to avoid setting the focus on the hint list.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="Epsitec.Common.Widgets.FocusChangingEventArgs"/> instance containing the event data.</param>
 		private void HandleWindowFocusedWidgetChanging(object sender, Widgets.FocusChangingEventArgs e)
 		{
 			Widgets.Widget focus = e.NewFocus;
+
+			//	Prevent the focus from being set into the dialog search controller,
+			//	when the user clicks in the left pane.
 
 			while (focus != null)
 			{
@@ -523,6 +539,14 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private void OnPlaceholderPostProcessing(AbstractPlaceholder sender, Widgets.MessageEventArgs e)
+		{
+			if (this.PlaceholderPostProcessing != null)
+			{
+				this.PlaceholderPostProcessing (sender, e);
+			}
+		}
+
 		/// <summary>
 		/// Temporarily disables the search handler.
 		/// </summary>
@@ -566,11 +590,13 @@ namespace Epsitec.Common.Dialogs
 				get;
 				set;
 			}
+			
 			public EntityFieldPath Path
 			{
 				get;
 				set;
 			}
+			
 			public SearchContext Context
 			{
 				get;
@@ -701,6 +727,11 @@ namespace Epsitec.Common.Dialogs
 
 				this.searchTemplate = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
 				this.searchTemplate.DisableCalculations ();
+
+				foreach (Node node in this.nodes)
+				{
+					node.Placeholder.PostProcessing += this.HandlePlaceholderPostProcessing;
+				}
 			}
 
 			public void Clear()
@@ -810,7 +841,10 @@ namespace Epsitec.Common.Dialogs
 
 			public void Dispose()
 			{
-				throw new System.NotImplementedException ();
+				foreach (Node node in this.nodes)
+				{
+					node.Placeholder.PostProcessing -= this.HandlePlaceholderPostProcessing;
+				}
 			}
 
 			#endregion
@@ -894,6 +928,15 @@ namespace Epsitec.Common.Dialogs
 				{
 					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayPassiveHint;
 					node.Placeholder.SimulateEdition ();
+				}
+			}
+
+			private void HandlePlaceholderPostProcessing(object sender, Widgets.MessageEventArgs e)
+			{
+				if ((e.Message.Handled == false) &&
+					(e.Message.IsKeyType))
+				{
+					this.searchController.OnPlaceholderPostProcessing (sender as AbstractPlaceholder, e);
 				}
 			}
 
@@ -1050,6 +1093,8 @@ namespace Epsitec.Common.Dialogs
 		/// Occurs when the suggestion for the active search context changed.
 		/// </summary>
 		public event EventHandler<DependencyPropertyChangedEventArgs> SuggestionChanged;
+
+		public event EventHandler<Widgets.MessageEventArgs> PlaceholderPostProcessing;
 
 		/// <summary>
 		/// Occurs when the search context changed, globally. This is signalled

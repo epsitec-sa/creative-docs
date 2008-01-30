@@ -14,10 +14,14 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		/// <param name="oldFocus">The old focus.</param>
 		/// <param name="newFocus">The new focus.</param>
-		public FocusChangingEventArgs(Widget oldFocus, Widget newFocus)
+		/// <param name="tabNavigationDirection">The tab navigation direction.</param>
+		/// <param name="tabNavigationMode">The tab navigation mode.</param>
+		public FocusChangingEventArgs(Widget oldFocus, Widget newFocus, TabNavigationDir tabNavigationDirection, TabNavigationMode tabNavigationMode)
 		{
 			this.oldFocus = oldFocus;
 			this.newFocus = newFocus;
+			this.dir = tabNavigationDirection;
+			this.mode = tabNavigationMode;
 		}
 
 		/// <summary>
@@ -44,7 +48,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Gets the tab navigation direction.
+		/// </summary>
+		/// <value>The tab navigation direction.</value>
+		public TabNavigationDir TabNavigationDirection
+		{
+			get
+			{
+				return this.dir;
+			}
+		}
+
+		/// <summary>
+		/// Gets the tab navigation mode.
+		/// </summary>
+		/// <value>The tab navigation mode.</value>
+		public TabNavigationMode TabNavigationMode
+		{
+			get
+			{
+				return this.mode;
+			}
+		}
+
 		private readonly Widget oldFocus;
 		private readonly Widget newFocus;
+		private readonly TabNavigationDir dir;
+		private readonly TabNavigationMode mode;
 	}
 }

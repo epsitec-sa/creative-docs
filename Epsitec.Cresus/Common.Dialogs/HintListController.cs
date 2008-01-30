@@ -23,6 +23,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.searchController = new DialogSearchController ();
 			this.searchController.SuggestionChanged += this.HandleSearchControllerSuggestionChanged;
+			this.searchController.PlaceholderPostProcessing += this.HandleSearchControllerPlaceholderPostProcessing;
 			this.searchController.Resolved += this.HandleSearchControllerResolved;
 
 			DialogSearchController.GlobalSearchContextChanged += this.HandleGlobalSearchContextChanged;
@@ -58,6 +59,7 @@ namespace Epsitec.Common.Dialogs
 			if (disposing)
 			{
 				this.searchController.SuggestionChanged -= this.HandleSearchControllerSuggestionChanged;
+				this.searchController.PlaceholderPostProcessing -= this.HandleSearchControllerPlaceholderPostProcessing;
 				this.searchController.Resolved -= this.HandleSearchControllerResolved;
 				DialogSearchController.GlobalSearchContextChanged -= this.HandleGlobalSearchContextChanged;
 			}
@@ -215,6 +217,32 @@ namespace Epsitec.Common.Dialogs
 		private void HandleSearchControllerSuggestionChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			AbstractEntity suggestion = e.NewValue as AbstractEntity;
+
+			if ((this.hintListWidget != null) &&
+				(this.hintListWidget.Items != null))
+			{
+				if (suggestion == null)
+				{
+					this.hintListWidget.Items.MoveCurrentToFirst ();
+				}
+				else
+				{
+					this.hintListWidget.Items.MoveCurrentTo (suggestion);
+				}
+			}
+		}
+
+		private void HandleSearchControllerPlaceholderPostProcessing(object sender, MessageEventArgs e)
+		{
+			switch (e.Message.MessageType)
+			{
+				case MessageType.KeyDown:
+					if (this.hintListWidget.Navigate (e.Message))
+					{
+						e.Message.Handled = true;
+					}
+					break;
+			}
 		}
 
 		private void HandleSearchControllerResolved(object sender)

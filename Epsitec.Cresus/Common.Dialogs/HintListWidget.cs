@@ -61,6 +61,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public bool Navigate(Message message)
+		{
+			return this.itemTable.ItemPanel.Navigate (message);
+		}
+		
 		private void HandleItemsCurrentChanged(object sender)
 		{
 			this.OnCurrentItemChanged ();
@@ -73,7 +78,6 @@ namespace Epsitec.Common.Dialogs
 				this.CurrentItemChanged (this);
 			}
 		}
-
 
 		public event EventHandler CurrentItemChanged;
 

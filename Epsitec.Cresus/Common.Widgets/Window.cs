@@ -2216,7 +2216,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (widget.InternalAboutToGetFocus (dir, mode, out focus))
 					{
-						FocusChangingEventArgs e = new FocusChangingEventArgs (this.focused_widget, focus);
+						FocusChangingEventArgs e = new FocusChangingEventArgs (this.focused_widget, focus, dir, mode);
 						
 						this.OnFocusedWidgetChanging (e);
 
