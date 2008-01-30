@@ -482,6 +482,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool PatchBrokenAttach
+		{
+			//	Indique si un lien PatchAttachGuid est cassé, c'est-à-dire si le Guid n'eixste plus.
+			//	Utilisé uniquement si this.type == FieldType.PatchAttach ou PatchInsert !
+			get
+			{
+				return this.patchBrokenAttach;
+			}
+			set
+			{
+				this.patchBrokenAttach = value;
+			}
+		}
+
 
 		#region IEquatable<FieldDescription> Members
 
@@ -619,6 +633,11 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.PatchAttachGuid, this.patchAttachGuid.ToString());
 			}
 
+			if (this.patchBrokenAttach)
+			{
+				writer.WriteElementString(Xml.PatchBrokenAttach, this.patchBrokenAttach.ToString());
+			}
+
 			writer.WriteEndElement();
 		}
 
@@ -704,6 +723,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.PatchAttachGuid)
 						{
 							this.patchAttachGuid = new System.Guid(element);
+						}
+						else if (name == Xml.PatchBrokenAttach)
+						{
+							this.patchBrokenAttach = bool.Parse(element);
 						}
 						else
 						{
@@ -795,5 +818,6 @@ namespace Epsitec.Common.FormEngine
 		private bool						patchInserted;
 		private bool						patchModified;
 		private System.Guid					patchAttachGuid;
+		private bool						patchBrokenAttach;
 	}
 }

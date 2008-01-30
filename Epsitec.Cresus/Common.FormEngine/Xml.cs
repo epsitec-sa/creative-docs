@@ -22,5 +22,6 @@ namespace Epsitec.Common.FormEngine
 		public const string PatchInserted		= "PIn";
 		public const string PatchModified		= "PMd";
 		public const string PatchAttachGuid		= "PAG";
+		public const string PatchBrokenAttach	= "PBA";
 	}
 }
