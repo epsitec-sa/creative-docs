@@ -68,7 +68,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.dragWindow.DefineWidget(widget, new Size(w, h), Margins.Zero);
 			this.dragWindow.WindowLocation = this.dragOrigin + cursor;
 			this.dragWindow.Owner = this.Window;
-			this.dragWindow.FocusedWidget = widget;
+			this.dragWindow.FocusWidget (widget);
 			this.dragWindow.Show();
 			
 			this.OnDragStarting();

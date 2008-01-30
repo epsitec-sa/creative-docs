@@ -887,7 +887,7 @@ namespace Epsitec.Common.Widgets
 			tab.Items.Add(page6);
 
 			tab.ActivePage = page2;
-			window.FocusedWidget = a;
+			window.FocusWidget (a);
 
 			Assert.IsFalse (window.IsVisible);
 			Assert.IsFalse (window.Root.IsVisible);
@@ -1084,7 +1084,7 @@ namespace Epsitec.Common.Widgets
 			buttonRedo.SetParent (window.Root);
 			buttonRedo.Clicked += new MessageEventHandler(this.HandleMultiRedo);
 //			window.Root.DebugActive = true;
-			window.FocusedWidget    = multi;
+			window.FocusWidget (multi);
 
 			Assert.IsFalse (window.IsVisible);
 			Assert.IsFalse (window.Root.IsVisible);
@@ -1315,7 +1315,7 @@ namespace Epsitec.Common.Widgets
 
 			tb.ActivePage = page1;
 
-			window.FocusedWidget = tb;
+			window.FocusWidget (tb);
 
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -1419,7 +1419,7 @@ namespace Epsitec.Common.Widgets
 			table.Margins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
-			window.FocusedWidget = table;
+			window.FocusWidget (table);
 
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -1492,7 +1492,7 @@ namespace Epsitec.Common.Widgets
 			table.Margins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
-			window.FocusedWidget = table;
+			window.FocusWidget (table);
 
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -1580,7 +1580,7 @@ namespace Epsitec.Common.Widgets
 			table.Margins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
-			window.FocusedWidget = table;
+			window.FocusWidget (table);
 
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -1625,7 +1625,7 @@ namespace Epsitec.Common.Widgets
 			table.Margins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
-			window.FocusedWidget = table;
+			window.FocusWidget (table);
 
 			window.Show();
 			Window.RunInTestEnvironment (window);

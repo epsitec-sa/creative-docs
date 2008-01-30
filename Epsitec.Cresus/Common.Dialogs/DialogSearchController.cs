@@ -261,6 +261,22 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private void HandleWindowFocusedWidgetChanging(object sender, Widgets.FocusChangingEventArgs e)
+		{
+			Widgets.Widget focus = e.NewFocus;
+
+			while (focus != null)
+			{
+				if (focus is HintListWidget)
+				{
+					e.Cancel = true;
+					break;
+				}
+
+				focus = focus.Parent;
+			}
+		}
+
 		/// <summary>
 		/// Updates the search template based on the contents of the specified
 		/// <see cref="Placeholder"/> widget.
@@ -498,10 +514,12 @@ namespace Epsitec.Common.Dialogs
 			if (oldWindow != null)
 			{
 				oldWindow.FocusedWidgetChanged -= this.HandleWindowFocusedWidgetChanged;
+				oldWindow.FocusedWidgetChanging -= this.HandleWindowFocusedWidgetChanging;
 			}
 			if (newWindow != null)
 			{
 				newWindow.FocusedWidgetChanged += this.HandleWindowFocusedWidgetChanged;
+				newWindow.FocusedWidgetChanging += this.HandleWindowFocusedWidgetChanging;
 			}
 		}
 

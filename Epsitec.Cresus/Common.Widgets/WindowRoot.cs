@@ -323,20 +323,7 @@ namespace Epsitec.Common.Widgets
 					//	Navigue dans la hiérarchie...
 					
 					Widget find = focused.FindTabWidget (dir, mode);
-					
-					if (find != null)
-					{
-						if (find != focused)
-						{
-							Widget focus;
-							
-							if (focused.InternalAboutToLoseFocus (dir, mode) &&
-								find.InternalAboutToGetFocus (dir, mode, out focus))
-							{
-								focus.SetFocused (true);
-							}
-						}
-					}
+					this.Window.FocusWidget (find, dir, mode);
 				}
 			}
 				

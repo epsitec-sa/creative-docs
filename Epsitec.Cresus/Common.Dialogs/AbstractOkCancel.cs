@@ -82,7 +82,8 @@ namespace Epsitec.Common.Dialogs
 
 			AbstractMessageDialog.LayoutButtons (dialogWindow.ClientSize.Width, button1, button2);
 
-			dialogWindow.FocusedWidget = body.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab);
+			body.SetFocusOnTabWidget ();
+
 			dialogWindow.WindowCloseClicked +=
 				delegate
 				{

@@ -1300,7 +1300,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.creatingWindow.DefineWidget(this.creatingObject, this.creatingObject.PreferredSize, Margins.Zero);
 			this.creatingWindow.WindowLocation = this.creatingOrigin + pos;
 			this.creatingWindow.Owner = this.Window;
-			this.creatingWindow.FocusedWidget = this.creatingObject;
+			this.creatingWindow.FocusWidget (this.creatingObject);
 			this.creatingWindow.Show();
 
 			Separator sep = new Separator();
@@ -1776,7 +1776,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.handlingWindow.DefineWidget(clone, this.handlingRectangle.Size, Margins.Zero);
 				this.handlingWindow.WindowBounds = this.MapClientToScreen(this.ConvPanelToEditor(this.handlingRectangle));
 				this.handlingWindow.Owner = this.Window;
-				this.handlingWindow.FocusedWidget = clone;
+				this.handlingWindow.FocusWidget (clone);
 				this.handlingWindow.Show();
 
 				this.SetEnteredObjects(null);
@@ -1890,7 +1890,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.draggingWindow.DefineWidget(container, container.PreferredSize, Margins.Zero);
 			this.draggingWindow.WindowLocation = this.draggingOrigin + pos;
 			this.draggingWindow.Owner = this.Window;
-			this.draggingWindow.FocusedWidget = container;
+			this.draggingWindow.FocusWidget (container);
 			this.draggingWindow.Show();
 
 			this.SetEnteredObjects(null);

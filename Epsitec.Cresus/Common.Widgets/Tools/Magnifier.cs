@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			this.zoom_view.Dock   = DockStyle.Fill;
 			this.zoom_view.SetParent (this.zoom_window.Root);
-			this.zoom_view.SetFocused (true);
+			this.zoom_view.Focus ();
 			
 			this.DisplayRadius = 55;
 			this.SampleRadius  = 3;

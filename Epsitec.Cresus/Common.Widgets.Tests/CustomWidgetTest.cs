@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets
 						switch (message.KeyCode)
 						{
 							case KeyCode.Escape:
-								this.Window.FocusedWidget = null;
+								this.Window.ClearFocusedWidget ();
 								break;
 							case KeyCode.Space:
 								this.Toggle ();

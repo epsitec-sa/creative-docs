@@ -547,7 +547,7 @@ namespace Epsitec.Common.Widgets
 					return null;
 				}
 			}
-			set
+			private set
 			{
 				if (this.focused_widget != value)
 				{
@@ -567,8 +567,8 @@ namespace Epsitec.Common.Widgets
 					{
 						new_focus.SetFocused (true);
 					}
-					
-					this.OnFocusedWidgetChanged (old_focus, new_focus);
+
+					this.OnFocusedWidgetChanged (new DependencyPropertyChangedEventArgs ("FocusedWidget", old_focus, new_focus));
 				}
 			}
 		}
@@ -1665,13 +1665,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void OnFocusedWidgetChanged(Widget oldValue, Widget newValue)
+		protected virtual void OnFocusedWidgetChanged(DependencyPropertyChangedEventArgs e)
 		{
 			this.root.ClearFocusChain ();
 			
 			if (this.FocusedWidgetChanged != null)
 			{
-				this.FocusedWidgetChanged (this, new DependencyPropertyChangedEventArgs ("FocusedWidget", oldValue, newValue));
+				this.FocusedWidgetChanged (this, e);
+			}
+		}
+
+		protected virtual void OnFocusedWidgetChanging(FocusChangingEventArgs e)
+		{
+			if (this.FocusedWidgetChanging != null)
+			{
+				this.FocusedWidgetChanging (this, e);
 			}
 		}
 		
@@ -2185,7 +2193,12 @@ namespace Epsitec.Common.Widgets
 			this.ReleaseCapturingWidget ();
 		}
 
-		internal void FocusWidget(Widget widget)
+		public void FocusWidget(Widget widget)
+		{
+			this.FocusWidget (widget, TabNavigationDir.None, TabNavigationMode.None);
+		}
+
+		public void FocusWidget(Widget widget, TabNavigationDir dir, TabNavigationMode mode)
 		{
 			if ((widget != null) &&
 				(widget.IsFocused == false) &&
@@ -2197,16 +2210,32 @@ namespace Epsitec.Common.Widgets
 				//	focus soient d'accord...
 				
 				if ((this.focused_widget == null) ||
-					(this.focused_widget.AcceptsDefocus && this.focused_widget.InternalAboutToLoseFocus (TabNavigationDir.None, TabNavigationMode.None)))
+					(this.focused_widget.AcceptsDefocus && this.focused_widget.InternalAboutToLoseFocus (dir, mode)))
 				{
 					Widget focus;
 					
-					if (widget.InternalAboutToGetFocus (TabNavigationDir.None, TabNavigationMode.None, out focus))
+					if (widget.InternalAboutToGetFocus (dir, mode, out focus))
 					{
-						this.FocusedWidget = focus;
+						FocusChangingEventArgs e = new FocusChangingEventArgs (this.focused_widget, focus);
+						
+						this.OnFocusedWidgetChanging (e);
+
+						if (e.Cancel)
+						{
+							//	Do nothing - the listener decided to cancel the event.
+						}
+						else
+						{
+							this.FocusedWidget = focus;
+						}
 					}
 				}
 			}
+		}
+
+		public void ClearFocusedWidget()
+		{
+			this.FocusedWidget = null;
 		}
 		
 		internal void PostProcessMessage(Message message)
@@ -2565,6 +2594,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowResizeEnded;
 
 		public event EventHandler<DependencyPropertyChangedEventArgs> FocusedWidgetChanged;
+		public event EventHandler<FocusChangingEventArgs> FocusedWidgetChanging;
 		
 		public event EventHandler				AboutToShowWindow;
 		public event EventHandler				AboutToHideWindow;

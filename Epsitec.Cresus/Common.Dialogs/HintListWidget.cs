@@ -45,11 +45,37 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (this.items != value)
 				{
+					if (this.items != null)
+					{
+						this.items.CurrentChanged -= this.HandleItemsCurrentChanged;
+					}
+
 					this.items = value;
 					this.itemTable.Items = value;
+
+					if (this.items != null)
+					{
+						this.items.CurrentChanged += this.HandleItemsCurrentChanged;
+					}
 				}
 			}
 		}
+
+		private void HandleItemsCurrentChanged(object sender)
+		{
+			this.OnCurrentItemChanged ();
+		}
+
+		private void OnCurrentItemChanged()
+		{
+			if (this.CurrentItemChanged != null)
+			{
+				this.CurrentItemChanged (this);
+			}
+		}
+
+
+		public event EventHandler CurrentItemChanged;
 
 		private readonly ItemTable itemTable;
 		private ICollectionView items;

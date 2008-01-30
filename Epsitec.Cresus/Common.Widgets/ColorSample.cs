@@ -525,7 +525,7 @@ namespace Epsitec.Common.Widgets
 				this.window.DefineWidget (widget, new Drawing.Size (11, 11), Drawing.Margins.Zero);
 				this.window.WindowLocation = this.Origin + cursor;
 				this.window.Owner = widget.DragHost.Window;
-				this.window.FocusedWidget = widget;
+				this.window.FocusWidget (widget);
 				this.window.Show ();
 			}
 

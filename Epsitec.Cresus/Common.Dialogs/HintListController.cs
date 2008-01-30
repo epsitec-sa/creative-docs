@@ -85,6 +85,8 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.hintListWidget = new HintListWidget ();
 				this.hintListWidget.PreferredWidth = 200;
+				this.hintListWidget.CurrentItemChanged += this.HandleHintListWidgetCurrentItemChanged;
+
 				this.hintListEmbedder = new HintListEmbedder (this.searchController.DialogWindow, this.hintListWidget);
 			}
 
@@ -96,6 +98,17 @@ namespace Epsitec.Common.Dialogs
 			if (this.hintListEmbedder != null)
 			{
 				this.hintListEmbedder.Hide ();
+			}
+		}
+
+		private void HandleHintListWidgetCurrentItemChanged(object sender)
+		{
+			AbstractEntity item = this.hintListWidget.Items.CurrentItem as AbstractEntity;
+			ISearchContext context = this.searchController.ActiveSearchContext;
+
+			if (context != null)
+			{
+				context.SetSuggestion (item);
 			}
 		}
 

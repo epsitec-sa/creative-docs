@@ -1071,6 +1071,24 @@ namespace Epsitec.Common.Widgets
 				window.FocusWidget (this);
 			}
 		}
+
+		public void ClearFocus()
+		{
+			if (this.KeyboardFocus)
+			{
+				Window window = this.Window;
+
+				if ((window != null) &&
+					(window.FocusedWidget == this))
+				{
+					window.ClearFocusedWidget ();
+				}
+				else
+				{
+					this.SetFocused (false);
+				}
+			}
+		}
 		
 		internal void SetFocused(bool focused)
 		{
@@ -1092,23 +1110,21 @@ namespace Epsitec.Common.Widgets
 				if (window != null)
 				{
 					this.SetValue (Visual.KeyboardFocusProperty, true);
-					window.FocusedWidget = this;
+//-					window.FocusedWidget = this;
 				}
-				
-				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 			else
 			{
 				this.SetValue (Visual.KeyboardFocusProperty, false);
 				this.ClearValue (Visual.KeyboardFocusProperty);
 				
-				if (window != null)
-				{
-					window.FocusedWidget = null;
-				}
-				
-				this.Invalidate (InvalidateReason.FocusedChanged);
+//-				if (window != null)
+//-				{
+//-					window.FocusedWidget = null;
+//-				}
 			}
+
+			this.Invalidate (InvalidateReason.FocusedChanged);
 		}
 		
 		public void SetSelected(bool value)
@@ -2335,7 +2351,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (focus.InternalAboutToGetFocus (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, out focus))
 				{
-					focus.SetFocused (true);
+					focus.Focus ();
 				}
 			}
 		}
@@ -2834,7 +2850,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void AboutToBecomeOrphan()
 		{
-			this.SetFocused (false);
+			this.ClearFocus ();
 			this.SetEngaged (false);
 			this.SetEntered (false);
 			

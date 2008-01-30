@@ -1727,8 +1727,8 @@ namespace Epsitec.Common.Widgets
 				if ( this.focusedCell == cell )
 				{
 					this.focusedCell = null;
-					cell.SetFocused(false);
-					this.SetFocused(true);
+					cell.ClearFocus ();
+					this.Focus ();
 				}
 				
 				cell.SetArrayRank(null, -1, -1);
