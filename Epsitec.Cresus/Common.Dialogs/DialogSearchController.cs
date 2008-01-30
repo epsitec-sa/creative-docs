@@ -374,7 +374,11 @@ namespace Epsitec.Common.Dialogs
 
 			if (this.activeSearchContext != null)
 			{
-				Widgets.Application.QueueAsyncCallback (this.AsyncResolveSearch);
+				if ((this.activeSearchContext.ActiveSuggestion == null) ||
+					(!UndefinedValue.IsUndefinedValue (value)))
+				{
+					Widgets.Application.QueueAsyncCallback (this.AsyncResolveSearch);
+				}
 			}
 		}
 
