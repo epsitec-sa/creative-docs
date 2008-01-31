@@ -355,7 +355,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if ((this.BasedOnPatchModule) &&
 					(item.Source == CultureMapSource.ReferenceModule))
 				{
-					item.Source = CultureMapSource.DynamicMerge;
+					if (e.PropertyName == Res.Fields.ResourceForm.XmlSourceMerge.ToString ())
+					{
+						//	The modification of the "merged" information should not be
+						//	considered as a modification which promotes the resource to
+						//	the dynamic merge state.
+					}
+					else
+					{
+						//	The user edited a resource originally only found in the
+						//	reference module, while in a patch module : this promotes
+						//	the resource to the dynamic merge state.
+
+						item.Source = CultureMapSource.DynamicMerge;
+					}
 				}
 			}
 		}
