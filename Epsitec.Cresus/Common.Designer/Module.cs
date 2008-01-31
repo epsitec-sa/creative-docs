@@ -529,20 +529,30 @@ namespace Epsitec.Common.Designer
 						//	Oups: c'est un module de patch. La vue "réelle" des données est
 						//	synthétisée par Designer, à partir du Form du module de référence
 						//	et du Form du module de patch.
+
+						string value;
+
 						switch (item.Source)
 						{
 							case CultureMapSource.DynamicMerge:
-								throw new System.NotImplementedException ();
+								value = data.GetValue (Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
+								break;
 
 							case CultureMapSource.PatchModule:
-								return data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+								value = data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+								break;
 
 							case CultureMapSource.ReferenceModule:
-								return data.GetValue (Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+								value = data.GetValue (Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+								break;
 
 							default:
 								throw new System.InvalidOperationException ();
 						}
+
+						System.Diagnostics.Debug.Assert (value != null);
+
+						return value;
 					}
 					else
 					{
