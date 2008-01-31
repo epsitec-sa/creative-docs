@@ -24,7 +24,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourcePanel;
 		}
 
-		protected override void FillDataFromBundle(StructuredData data, ResourceBundle bundle)
+		protected override void FillDataFromBundle(CultureMapSource source, StructuredData data, ResourceBundle bundle, ResourceBundle auxBundle)
 		{
 			ResourceBundle.Field panelSourceField   = bundle[Strings.XmlSource];
 			ResourceBundle.Field panelSizeField     = bundle[Strings.DefaultSize];

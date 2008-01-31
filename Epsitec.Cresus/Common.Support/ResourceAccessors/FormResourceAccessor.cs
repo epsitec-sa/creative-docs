@@ -24,25 +24,57 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			return Res.Types.ResourceForm;
 		}
 
-		protected override void FillDataFromBundle(StructuredData data, ResourceBundle bundle)
+		protected override void FillDataFromBundle(CultureMapSource source, StructuredData data, ResourceBundle bundle, ResourceBundle auxBundle)
 		{
-			ResourceBundle.Field panelSourceField   = bundle[Strings.XmlSource];
-			ResourceBundle.Field panelEntityIdField = bundle[Strings.RootEntityId];
-			ResourceBundle.Field panelSizeField     = bundle[Strings.DefaultSize];
+			ResourceBundle.Field formSourceField   = bundle[Strings.XmlSource];
+			ResourceBundle.Field formEntityIdField = bundle[Strings.RootEntityId];
+			ResourceBundle.Field formSizeField     = bundle[Strings.DefaultSize];
 
-			string panelSource   = panelSourceField.IsValid ? panelSourceField.AsString : null;
-			string panelSize     = panelSizeField.IsValid ? panelSizeField.AsString : null;
-			Druid  panelEntityId = AbstractFileResourceAccessor.ToDruid (panelEntityIdField);
+			string formSource    = formSourceField.IsValid ? formSourceField.AsString : null;
+			string formSize      = formSizeField.IsValid ? formSizeField.AsString : null;
+			Druid  formEntityId  = AbstractFileResourceAccessor.ToDruid (formEntityIdField);
+			string formAuxSource = null;
 
-			data.SetValue (Res.Fields.ResourceForm.DefaultSize, panelSize);
-			data.SetValue (Res.Fields.ResourceForm.XmlSource, panelSource);
-			data.SetValue (Res.Fields.ResourceForm.RootEntityId, panelEntityId);
+			if (auxBundle != null)
+			{
+				ResourceBundle.Field formAuxSourceField = auxBundle[Strings.XmlSource];
+				formAuxSource = formAuxSourceField.IsValid ? formAuxSourceField.AsString : null;
+			}
+
+			data.SetValue (Res.Fields.ResourceForm.DefaultSize, formSize);
+			data.SetValue (Res.Fields.ResourceForm.RootEntityId, formEntityId);
+			
+			if (this.manager.BasedOnPatchModule)
+			{
+				switch (source)
+				{
+					case CultureMapSource.ReferenceModule:
+						data.SetValue (Res.Fields.ResourceForm.XmlSource, "");
+						data.SetValue (Res.Fields.ResourceForm.XmlSourceAux, formAuxSource);
+						break;
+					
+					case CultureMapSource.PatchModule:
+						data.SetValue (Res.Fields.ResourceForm.XmlSource, formSource);
+						data.SetValue (Res.Fields.ResourceForm.XmlSourceAux, "");
+						break;
+					
+					case CultureMapSource.DynamicMerge:
+						data.SetValue (Res.Fields.ResourceForm.XmlSource, formSource);
+						data.SetValue (Res.Fields.ResourceForm.XmlSourceAux, formAuxSource);
+						break;
+				}
+			}
+			else
+			{
+				data.SetValue (Res.Fields.ResourceForm.XmlSource, formSource);
+			}
 		}
 
 		protected override void FillData(StructuredData data)
 		{
 			data.SetValue (Res.Fields.ResourceForm.DefaultSize, "");
 			data.SetValue (Res.Fields.ResourceForm.XmlSource, "");
+			data.SetValue (Res.Fields.ResourceForm.XmlSourceAux, "");
 			data.SetValue (Res.Fields.ResourceForm.RootEntityId, Druid.Empty);
 		}
 
@@ -68,6 +100,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			string xmlSource    = data.GetValue (Res.Fields.ResourceForm.XmlSource) as string;
 			string defaultSize  = data.GetValue (Res.Fields.ResourceForm.DefaultSize) as string;
 			Druid  rootEntityId = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.ResourceForm.RootEntityId));
+
+			if (this.ForceModuleMerge)
+			{
+				xmlSource = data.GetValue (Res.Fields.ResourceForm.XmlSourceMerge) as string;
+			}
 
 			bundle[Strings.XmlSource].SetXmlValue (xmlSource);
 			bundle[Strings.DefaultSize].SetStringValue (defaultSize);

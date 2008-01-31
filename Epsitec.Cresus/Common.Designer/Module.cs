@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer
 	using AbstractCaptionResourceAccessor=Support.ResourceAccessors.AbstractCaptionResourceAccessor;
 	using StructuredTypeResourceAccessor=Support.ResourceAccessors.StructuredTypeResourceAccessor;
 	using AnyTypeResourceAccessor=Support.ResourceAccessors.AnyTypeResourceAccessor;
+	using AbstractFileResourceAccessor=Support.ResourceAccessors.AbstractFileResourceAccessor;
 
 	/// <summary>
 	/// Description d'un module de ressources ouvert par l'application Designer.
@@ -691,14 +692,22 @@ namespace Epsitec.Common.Designer
 		{
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				AbstractResourceAccessor accessor = access.Accessor as AbstractResourceAccessor;
+				AbstractResourceAccessor resAccessor = access.Accessor as AbstractResourceAccessor;
+				AbstractFileResourceAccessor fileAccessor = access.Accessor as AbstractFileResourceAccessor;
 
-				if (accessor != null)
+				if (resAccessor != null)
 				{
 					access.RegenerateAllFieldsInBundle();
-					accessor.ForceModuleMerge = true;
-					accessor.PersistChanges();
-					accessor.ForceModuleMerge = false;
+					resAccessor.ForceModuleMerge = true;
+					resAccessor.PersistChanges();
+					resAccessor.ForceModuleMerge = false;
+				}
+				if (fileAccessor != null)
+				{
+					access.RegenerateAllFieldsInBundle();
+					fileAccessor.ForceModuleMerge = true;
+					fileAccessor.PersistChanges();
+					fileAccessor.ForceModuleMerge = false;
 				}
 			}
 		}
@@ -720,7 +729,7 @@ namespace Epsitec.Common.Designer
 
 			this.batchSaver.Execute();
 			
-			if (this.AccessForms.AccessCount > 0)
+			if ((this.AccessForms.AccessCount > 0) && (this.IsPatch == false))
 			{
 				//	Il y a des masques de saisie définis pour ce module; il faut donc encore
 				//	générer le code C# correspondant.

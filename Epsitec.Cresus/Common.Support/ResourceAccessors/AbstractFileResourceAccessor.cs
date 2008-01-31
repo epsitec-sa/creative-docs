@@ -17,6 +17,23 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			this.dirtyItems = new Dictionary<CultureMap, bool> ();
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether to force a module merge when
+		/// persisting an item.
+		/// </summary>
+		/// <value><c>true</c> to force a module merge; otherwise, <c>false</c>.</value>
+		public bool ForceModuleMerge
+		{
+			get
+			{
+				return this.forceModuleMerge;
+			}
+			set
+			{
+				this.forceModuleMerge = value;
+			}
+		}
+
 		public void Load(ResourceManager manager)
 		{
 			this.manager = manager;
@@ -42,12 +59,109 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 			accessors.Add (this);
 
-			string[] names = this.manager.GetBundleIds ("*", this.GetResourceFileType (), ResourceLevel.Default);
+			if (this.manager.BasedOnPatchModule)
+			{
+				ResourceManager patchModuleManager = this.manager;
+				ResourceManager refModuleManager   = this.manager.GetManagerForReferenceModule ();
+
+				List<ResourceBundle> refBundles   = this.CreateBundleList (refModuleManager);
+				List<ResourceBundle> patchBundles = this.CreateBundleList (patchModuleManager);
+
+				using (this.SuspendNotifications ())
+				{
+					foreach (ResourceBundle refBundle in refBundles)
+					{
+						ResourceBundle patchBundle = patchBundles.Find (b => b.Name == refBundle.Name);
+
+						if (patchBundle == null)
+						{
+							this.AddItem (refBundle, null, CultureMapSource.ReferenceModule);
+						}
+						else
+						{
+							this.AddItem (refBundle, patchBundle, CultureMapSource.DynamicMerge);
+							patchBundles.Remove (patchBundle);
+						}
+					}
+
+					foreach (ResourceBundle patchBundle in patchBundles)
+					{
+						this.AddItem (null, patchBundle, CultureMapSource.PatchModule);
+					}
+				}
+
+			}
+			else
+			{
+				List<ResourceBundle> bundles = this.CreateBundleList (this.manager);
+
+				using (this.SuspendNotifications ())
+				{
+					foreach (ResourceBundle bundle in bundles)
+					{
+						this.AddItem (bundle, null, CultureMapSource.ReferenceModule);
+					}
+				}
+			}
+		}
+
+		private void AddItem(ResourceBundle bundle, ResourceBundle patchBundle, CultureMapSource source)
+		{
+			CultureMap     item;
+			StructuredData data = new StructuredData (this.GetResourceType ());
+
+			switch (source)
+			{
+				case CultureMapSource.ReferenceModule:
+					item = new CultureMap (this, bundle.Id, source);
+					item.Name = bundle.Caption;
+					
+					if (this.manager.BasedOnPatchModule)
+					{
+//-						data.SetValue (Res.Fields.ResourceBaseFile.Bundle, null);
+						data.SetValue (Res.Fields.ResourceBaseFile.BundleAux, bundle);
+					}
+					else
+					{
+						data.SetValue (Res.Fields.ResourceBaseFile.Bundle, bundle);
+						data.SetValue (Res.Fields.ResourceBaseFile.BundleAux, bundle);
+					}
+					
+					this.FillDataFromBundle (source, data, bundle, bundle);
+					break;
+				
+				case CultureMapSource.PatchModule:
+					item = new CultureMap (this, patchBundle.Id, source);
+					item.Name = patchBundle.Caption;
+					data.SetValue (Res.Fields.ResourceBaseFile.Bundle, patchBundle);
+//-					data.SetValue (Res.Fields.ResourceBaseFile.BundleAux, bundle);
+					this.FillDataFromBundle (source, data, patchBundle, null);
+					break;
+				
+				case CultureMapSource.DynamicMerge:
+					item = new CultureMap (this, bundle.Id, source);
+					item.Name = bundle.Caption;
+					data.SetValue (Res.Fields.ResourceBaseFile.Bundle, patchBundle);
+					data.SetValue (Res.Fields.ResourceBaseFile.BundleAux, bundle);
+					this.FillDataFromBundle (source, data, patchBundle, bundle);
+					break;
+
+				default:
+					throw new System.ArgumentException ("Invalid source", "source");
+			}
+
+			item.RecordCultureData (Resources.DefaultTwoLetterISOLanguageName, data);
+			this.Collection.Add (item);
+		}
+
+		private List<ResourceBundle> CreateBundleList(ResourceManager manager)
+		{
+			string[] names = manager.GetBundleIds ("*", this.GetResourceFileType (), ResourceLevel.Default);
 			List<ResourceBundle> bundles = new List<ResourceBundle> ();
 
 			foreach (string name in names)
 			{
-				bundles.Add (this.manager.GetBundle (name, ResourceLevel.Default, null));
+				bundles.Add (manager.GetBundle (name, ResourceLevel.Default, null));
 			}
 
 			bundles.Sort (
@@ -64,24 +178,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					return 0;
 				});
 
-			using (this.SuspendNotifications ())
-			{
-				foreach (ResourceBundle bundle in bundles)
-				{
-					CultureMap item = new CultureMap (this, bundle.Id, CultureMapSource.ReferenceModule);
-
-					item.Name = bundle.Caption;
-
-					StructuredData data = new StructuredData (this.GetResourceType ());
-
-					data.SetValue (Res.Fields.ResourceBaseFile.Bundle, bundle);
-					
-					this.FillDataFromBundle (data, bundle);
-					
-					item.RecordCultureData (Resources.DefaultTwoLetterISOLanguageName, data);
-					this.Collection.Add (item);
-				}
-			}
+			return bundles;
 		}
 
 		/// <summary>
@@ -168,7 +265,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		public CultureMap CreateItem()
 		{
-			CultureMap item = new CultureMap (this, this.CreateId (), CultureMapSource.ReferenceModule);
+			CultureMapSource source = this.manager.BasedOnPatchModule ? CultureMapSource.PatchModule : CultureMapSource.ReferenceModule;
+			CultureMap item = new CultureMap (this, this.CreateId (), source);
 			item.IsNewItem = true;
 			return item;
 		}
@@ -253,6 +351,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (this.suspendNotifications == 0)
 			{
 				this.dirtyItems[item] = true;
+
+				if ((this.BasedOnPatchModule) &&
+					(item.Source == CultureMapSource.ReferenceModule))
+				{
+					item.Source = CultureMapSource.DynamicMerge;
+				}
 			}
 		}
 
@@ -284,7 +388,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		protected abstract IStructuredType GetResourceType();
 
-		protected abstract void FillDataFromBundle(StructuredData data, ResourceBundle bundle);
+		protected abstract void FillDataFromBundle(CultureMapSource source, StructuredData data, ResourceBundle bundle, ResourceBundle auxBundle);
 
 		protected abstract void FillData(StructuredData data);
 
@@ -360,6 +464,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item to delete.</param>
 		protected void DeleteItem(CultureMap item)
 		{
+			if (this.manager.BasedOnPatchModule)
+			{
+				System.Diagnostics.Debug.Assert (item.Source != CultureMapSource.ReferenceModule);
+			}
+
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			ResourceBundle bundle = data.GetValue (Res.Fields.ResourceBaseFile.Bundle) as ResourceBundle;
 
@@ -385,6 +494,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <param name="item">The item to store as a resource.</param>
 		protected void PersistItem(CultureMap item)
 		{
+			if (this.manager.BasedOnPatchModule)
+			{
+				System.Diagnostics.Debug.Assert (item.Source != CultureMapSource.ReferenceModule);
+			}
+
 			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
 			ResourceBundle bundle = data.GetValue (Res.Fields.ResourceBaseFile.Bundle) as ResourceBundle;
 			
@@ -571,5 +685,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		
 		protected ResourceManager manager;
 		private int suspendNotifications;
+		private bool forceModuleMerge;
 	}
 }

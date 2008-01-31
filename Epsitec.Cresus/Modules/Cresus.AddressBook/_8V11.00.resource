@@ -10,7 +10,7 @@
           <Type>Field</Type>
           <FI>[6016]</FI>
           <SB>Normal</SB>
-          <CR>1</CR>
+          <CR>2</CR>
           <RR>1</RR>
           <BPT>Normal</BPT>
           <BFS>None</BFS>

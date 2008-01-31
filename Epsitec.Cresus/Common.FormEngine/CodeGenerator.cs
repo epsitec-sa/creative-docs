@@ -56,15 +56,18 @@ namespace Epsitec.Common.FormEngine
 
 			foreach (ResourceBundle bundle in bundles)
 			{
-				Druid  id   = bundle.Id;
-				string name = bundle.Caption;
+				if (bundle != null)
+				{
+					Druid  id   = bundle.Id;
+					string name = bundle.Caption;
 
-				this.formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes,
-					/**/				   Keywords.Druid, " ", name, " = ",
-					/**/				   Keywords.New, " ", Keywords.Druid, " (",
-					/**/				   id.Module.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
-					/**/				   id.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
-					/**/				   id.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
+					this.formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes,
+						/**/				   Keywords.Druid, " ", name, " = ",
+						/**/				   Keywords.New, " ", Keywords.Druid, " (",
+						/**/				   id.Module.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+						/**/				   id.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+						/**/				   id.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
+				}
 			}
 
 			this.formatter.WriteEndClass ();
