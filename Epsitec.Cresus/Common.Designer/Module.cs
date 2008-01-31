@@ -477,7 +477,12 @@ namespace Epsitec.Common.Designer
 				this.defaultProvider = new FormEngine.DefaultResourceProvider(this.module.resourceManager);
 			}
 
-			public string TwoLetterISOLanguageName
+			/// <summary>
+			/// Gets the two letter ISO language name for the currently active
+			/// culture.
+			/// </summary>
+			/// <value>The two letter ISO language name.</value>
+			private string TwoLetterISOLanguageName
 			{
 				get
 				{
@@ -512,12 +517,39 @@ namespace Epsitec.Common.Designer
 					return this.defaultProvider.GetFormXmlSource(formId);
 				}
 
-				CultureMap item = module.accessForms.Accessor.Collection[formId];
+				IResourceAccessor accessor = module.accessForms.Accessor;
+				CultureMap item = accessor.Collection[formId];
 
 				if (item != null)
 				{
 					StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-					return data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+					
+					if (accessor.BasedOnPatchModule)
+					{
+						//	Oups: c'est un module de patch. La vue "réelle" des données est
+						//	synthétisée par Designer, à partir du Form du module de référence
+						//	et du Form du module de patch.
+						switch (item.Source)
+						{
+							case CultureMapSource.DynamicMerge:
+								throw new System.NotImplementedException ();
+
+							case CultureMapSource.PatchModule:
+								return data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+							case CultureMapSource.ReferenceModule:
+								return data.GetValue (Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+
+							default:
+								throw new System.InvalidOperationException ();
+						}
+					}
+					else
+					{
+						//	Si c'est un module normal, pas de problème: on peut simplement lire
+						//	le XML source tel qu'il est stocké dans les ressources :
+						return data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+					}
 				}
 				else
 				{
