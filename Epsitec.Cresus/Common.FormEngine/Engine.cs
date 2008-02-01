@@ -52,11 +52,31 @@ namespace Epsitec.Common.FormEngine
 
 			if (form.IsDelta)
 			{
-				string xml = this.resourceProvider.GetFormXmlSource(form.DeltaBaseFormId);
-				if (!string.IsNullOrEmpty(xml))
+				List<FormDescription> baseForms = new List<FormDescription>();
+				FormDescription baseForm = form;
+				baseForms.Add(baseForm);
+
+				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas
+				//	un Form delta.
+				while (baseForm != null && baseForm.IsDelta)
 				{
-					FormDescription refForm = Serialization.DeserializeForm(xml);
-					fields0 = this.arrange.Merge(refForm.Fields, fields0);
+					string xml = this.resourceProvider.GetFormXmlSource(baseForm.DeltaBaseFormId);
+					if (string.IsNullOrEmpty(xml))
+					{
+						baseForm = null;
+					}
+					else
+					{
+						baseForm = Serialization.DeserializeForm(xml);
+						baseForms.Add(baseForm);
+					}
+				}
+
+				//	A partir du Form de base initial, fusionne avec tous les Forms delta.
+				fields0 = baseForms[baseForms.Count-1].Fields;
+				for (int i=baseForms.Count-2; i>=0; i--)
+				{
+					fields0 = this.arrange.Merge(fields0, baseForms[i].Fields);
 				}
 			}
 

@@ -20,31 +20,31 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public List<FieldDescription> Merge(List<FieldDescription> reference, List<FieldDescription> delta)
+		public List<FieldDescription> Merge(List<FieldDescription> baseList, List<FieldDescription> deltaList)
 		{
-			//	Retourne la liste fusionnée.
-			List<FieldDescription> merged = new List<FieldDescription>();
+			//	Retourne la liste finale fusionnée.
+			List<FieldDescription> finalList = new List<FieldDescription>();
 
 			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,
 			//	mais avec la propriété DeltaHidden = true.
-			foreach (FieldDescription field in reference)
+			foreach (FieldDescription field in baseList)
 			{
 				FieldDescription copy = new FieldDescription(field);
 
-				int index = Arrange.IndexOfGuid(delta, field.Guid);
-				if (index != -1 && delta[index].DeltaHidden)
+				int index = Arrange.IndexOfGuid(deltaList, field.Guid);
+				if (index != -1 && deltaList[index].DeltaHidden)
 				{
 					copy.DeltaHidden = true;  // champ à cacher
 				}
 
-				merged.Add(copy);
+				finalList.Add(copy);
 			}
 
-			foreach (FieldDescription field in delta)
+			foreach (FieldDescription field in deltaList)
 			{
 				if (field.DeltaMoved)  // champ à déplacer ?
 				{
-					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
+					int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
 					{
 						//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
@@ -52,7 +52,7 @@ namespace Epsitec.Common.FormEngine
 						int dst = -1;  // position pour mettre en-tête de liste
 						if (field.DeltaAttachGuid != System.Guid.Empty)
 						{
-							dst = Arrange.IndexOfGuid(merged, field.DeltaAttachGuid);  // cherche où le déplacer
+							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
 							if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
 							{
 								field.DeltaBrokenAttach = true;
@@ -60,11 +60,11 @@ namespace Epsitec.Common.FormEngine
 							}
 						}
 
-						FieldDescription temp = merged[src];
-						merged.RemoveAt(src);
+						FieldDescription temp = finalList[src];
+						finalList.RemoveAt(src);
 
-						dst = Arrange.IndexOfGuid(merged, field.DeltaAttachGuid);  // recalcule le "où" après suppression
-						merged.Insert(dst+1, temp);  // remet l'élément après dst
+						dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // recalcule le "où" après suppression
+						finalList.Insert(dst+1, temp);  // remet l'élément après dst
 
 						temp.DeltaMoved = true;
 					}
@@ -77,34 +77,34 @@ namespace Epsitec.Common.FormEngine
 					int dst = -1;  // position pour mettre en-tête de liste
 					if (field.DeltaAttachGuid != System.Guid.Empty)
 					{
-						dst = Arrange.IndexOfGuid(merged, field.DeltaAttachGuid);  // cherche où le déplacer
+						dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
 						if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
 						{
-							dst = merged.Count-1;  // on insère le champ à la fin
+							dst = finalList.Count-1;  // on insère le champ à la fin
 							field.DeltaBrokenAttach = true;
 						}
 					}
 
 					FieldDescription copy = new FieldDescription(field);
 					copy.DeltaInserted = true;
-					merged.Insert(dst+1, copy);  // insère l'élément après dst
+					finalList.Insert(dst+1, copy);  // insère l'élément après dst
 				}
 
 				if (field.DeltaModified)  // champ à modifier ?
 				{
-					int index = Arrange.IndexOfGuid(merged, field.Guid);
+					int index = Arrange.IndexOfGuid(finalList, field.Guid);
 					if (index != -1)
 					{
-						merged.RemoveAt(index);  // supprime le champ original
+						finalList.RemoveAt(index);  // supprime le champ original
 
 						FieldDescription copy = new FieldDescription(field);
 						copy.DeltaModified = true;
-						merged.Insert(index, copy);  // et remplace-le par le champ modifié
+						finalList.Insert(index, copy);  // et remplace-le par le champ modifié
 					}
 				}
 			}
 
-			return merged;
+			return finalList;
 		}
 
 

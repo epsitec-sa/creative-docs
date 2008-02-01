@@ -234,7 +234,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				if (!typeId.IsEmpty)
 				{
-					//	Dans ce cas, typeId correspond au Druid du Form de patch. Il ne faudra donc lister
+					//	Dans ce cas, typeId correspond au Druid du Form delta. Il ne faudra donc lister
 					//	que les entités qui héritent de l'entité de base de ce masque.
 					FormEngine.FormDescription form = this.module.AccessForms.GetForm(typeId);
 					if (form != null)
