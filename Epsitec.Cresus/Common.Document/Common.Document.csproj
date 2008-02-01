@@ -98,9 +98,8 @@
       <Name>System.XML</Name>
     </Reference>
     <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
-      <Name>Common.Dialogs</Name>
       <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Common.Dialogs</Name>
     </ProjectReference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Name>Common.Drawing.Agg</Name>
