@@ -827,7 +827,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
-			engine.Build(this.formEditor.Form, out this.baseFields, out this.finalFields);
+			engine.Arrange.Build(this.formEditor.Form, out this.baseFields, out this.finalFields);
 
 			this.tableContent.Clear();
 

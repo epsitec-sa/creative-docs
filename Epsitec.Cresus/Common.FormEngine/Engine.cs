@@ -37,58 +37,6 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public void Build(FormDescription form, out List<FieldDescription> baseFields, out List<FieldDescription> finalFields)
-		{
-			//	Construit la liste des FieldDescription finale.
-			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent à le définir, jusqu'au Form de base initial:
-			//	 - baseFields contient la liste de base (la génération précédente n-1)
-			//   - finalFields contient la liste finale (la dernière génération n)
-			//	S'il s'agit d'un Form de base:
-			//	 - baseFields est nul
-			//   - finalFields contient la liste finale
-			if (form.IsDelta)
-			{
-				List<FormDescription> baseForms = new List<FormDescription>();
-				FormDescription baseForm = form;
-				baseForms.Add(baseForm);
-
-				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas un Form delta.
-				//	Par exemple:
-				//	- Form1 est un masque de base
-				//	- Form2 est un masque delta basé sur Form1
-				//	- Form3 est un masque delta basé sur Form2
-				//	Si on cherche à construire Form3, la liste baseForms contiendra Form3, Form2 et Form1.
-				while (baseForm != null && baseForm.IsDelta)
-				{
-					string xml = this.resourceProvider.GetFormXmlSource(baseForm.DeltaBaseFormId);
-					if (string.IsNullOrEmpty(xml))
-					{
-						baseForm = null;
-					}
-					else
-					{
-						baseForm = Serialization.DeserializeForm(xml);
-						baseForms.Add(baseForm);
-					}
-				}
-
-				//	A partir du Form de base initial, fusionne avec tous les Forms delta.
-				finalFields = baseForms[baseForms.Count-1].Fields;
-				baseFields = null;
-				for (int i=baseForms.Count-2; i>=0; i--)
-				{
-					baseFields = finalFields;
-					finalFields = this.arrange.Merge(baseFields, baseForms[i].Fields);
-				}
-			}
-			else
-			{
-				baseFields = null;
-				finalFields = form.Fields;
-			}
-		}
-
-
 		public UI.Panel CreateForm(FormDescription form)
 		{
 			return this.CreateForm(form, false);
@@ -102,7 +50,7 @@ namespace Epsitec.Common.FormEngine
 			this.resourceProvider.ClearCache();
 
 			List<FieldDescription> baseFields, finalFields;
-			this.Build(form, out baseFields, out finalFields);
+			this.arrange.Build(form, out baseFields, out finalFields);
 
 			string err = this.arrange.Check(finalFields);
 			if (err != null)

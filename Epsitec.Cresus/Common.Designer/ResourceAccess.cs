@@ -411,7 +411,7 @@ namespace Epsitec.Common.Designer
 				//	les éléments FieldDescription de form. Donc, les deux listes générées
 				//	baseFields et finalFields ne sont pas utiles !
 				List<FormEngine.FieldDescription> baseFields, finalFields;
-				engine.Build(form, out baseFields, out finalFields);
+				engine.Arrange.Build(form, out baseFields, out finalFields);
 
 				//	Compte le nombre de liens cassés.
 				List<string> errors = new List<string>();
