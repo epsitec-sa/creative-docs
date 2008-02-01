@@ -826,45 +826,8 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			if (this.IsDelta)  // masque delta ?
-			{
-				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
-				List<FormDescription> baseForms = new List<FormDescription>();
-				FormDescription baseForm = this.formEditor.Form;
-				baseForms.Add(baseForm);
-
-				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas un Form delta.
-				//	Par exemple:
-				//	- Form1 est un masque de base
-				//	- Form2 est un masque delta basé sur Form1
-				//	- Form3 est un masque delta basé sur Form2
-				//	Si on cherche à construire Form3, la liste baseForms contiendra Form3, Form2 et Form1.
-				while (baseForm != null && baseForm.IsDelta)
-				{
-					baseForm = this.formEditor.Module.AccessForms.GetForm(baseForm.DeltaBaseFormId);
-					if (baseForm != null)
-					{
-						baseForms.Add(baseForm);
-					}
-				}
-
-				//	A partir du Form de base initial, fusionne avec tous les Forms delta.
-				this.finalFields = baseForms[baseForms.Count-1].Fields;
-				this.baseFields = null;
-				for (int i=baseForms.Count-2; i>=0; i--)
-				{
-					this.baseFields = this.finalFields;
-					this.finalFields = engine.Arrange.Merge(this.baseFields, baseForms[i].Fields);
-				}
-
-				// this.baseFields contient la liste de base (la génération précédente n-1)
-				// this.finalFields contient la liste finale (la dernière génération n)
-			}
-			else  // masque normal ?
-			{
-				this.finalFields = this.formEditor.Form.Fields;
-				this.baseFields = null;
-			}
+			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
+			engine.Build(this.formEditor.Form, out this.baseFields, out this.finalFields);
 
 			this.tableContent.Clear();
 

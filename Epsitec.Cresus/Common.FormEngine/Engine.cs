@@ -36,20 +36,16 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public UI.Panel CreateForm(FormDescription form)
+
+		public void Build(FormDescription form, out List<FieldDescription> baseFields, out List<FieldDescription> finalFields)
 		{
-			return this.CreateForm(form, false);
-		}
-
-		public UI.Panel CreateForm(FormDescription form, bool forDesigner)
-		{
-			//	Crée un masque de saisie pour une entité donnée.
-			//	La liste de FieldDescription doit être plate (pas de Node).
-			this.forDesigner = forDesigner;
-			this.resourceProvider.ClearCache();
-
-			List<FieldDescription> fields0 = form.Fields;
-
+			//	Construit la liste des FieldDescription finale.
+			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent à le définir, jusqu'au Form de base initial:
+			//	 - baseFields contient la liste de base (la génération précédente n-1)
+			//   - finalFields contient la liste finale (la dernière génération n)
+			//	S'il s'agit d'un Form de base:
+			//	 - baseFields est nul
+			//   - finalFields contient la liste finale
 			if (form.IsDelta)
 			{
 				List<FormDescription> baseForms = new List<FormDescription>();
@@ -77,14 +73,38 @@ namespace Epsitec.Common.FormEngine
 				}
 
 				//	A partir du Form de base initial, fusionne avec tous les Forms delta.
-				fields0 = baseForms[baseForms.Count-1].Fields;
+				finalFields = baseForms[baseForms.Count-1].Fields;
+				baseFields = null;
 				for (int i=baseForms.Count-2; i>=0; i--)
 				{
-					fields0 = this.arrange.Merge(fields0, baseForms[i].Fields);
+					baseFields = finalFields;
+					finalFields = this.arrange.Merge(baseFields, baseForms[i].Fields);
 				}
 			}
+			else
+			{
+				baseFields = null;
+				finalFields = form.Fields;
+			}
+		}
 
-			string err = this.arrange.Check(fields0);
+
+		public UI.Panel CreateForm(FormDescription form)
+		{
+			return this.CreateForm(form, false);
+		}
+
+		public UI.Panel CreateForm(FormDescription form, bool forDesigner)
+		{
+			//	Crée un masque de saisie pour une entité donnée.
+			//	La liste de FieldDescription doit être plate (pas de Node).
+			this.forDesigner = forDesigner;
+			this.resourceProvider.ClearCache();
+
+			List<FieldDescription> baseFields, finalFields;
+			this.Build(form, out baseFields, out finalFields);
+
+			string err = this.arrange.Check(finalFields);
 			if (err != null)
 			{
 				UI.Panel container = new UI.Panel();
@@ -97,7 +117,7 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
-			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(fields0);
+			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(finalFields);
 			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
 			if (this.GetEntityDefinition(form.EntityId) == null)
