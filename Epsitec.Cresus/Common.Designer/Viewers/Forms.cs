@@ -1067,7 +1067,7 @@ namespace Epsitec.Common.Designer.Viewers
 				foreach (int sel in sels)
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-					FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+					FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 
 					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
 					if (index == -1)
@@ -1104,7 +1104,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
 						this.form.Fields.RemoveAt(index);
@@ -1191,7 +1191,7 @@ namespace Epsitec.Common.Designer.Viewers
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Designer.Viewers
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
@@ -1275,7 +1275,7 @@ namespace Epsitec.Common.Designer.Viewers
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
@@ -1320,7 +1320,7 @@ namespace Epsitec.Common.Designer.Viewers
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+			FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 
 			Druid druid = field.SubFormId;
 			Druid typeId = this.access.FormRelationEntity(this.entityId, field.GetPath(null));
@@ -1349,7 +1349,7 @@ namespace Epsitec.Common.Designer.Viewers
 			sels.Sort();
 
 			FormEditor.ObjectModifier.TableItem firstItem = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int first = this.formEditor.ObjectModifier.GetFormDescriptionIndex(firstItem.Guid);
+			int first = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(firstItem.Guid);
 
 			if (sels.Count == 1)
 			{
@@ -1371,7 +1371,7 @@ namespace Epsitec.Common.Designer.Viewers
 							level--;
 							if (level == 0)
 							{
-								int last = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+								int last = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 								this.form.Fields.RemoveAt(last);  // enlève le BoxEnd
 								this.form.Fields.RemoveAt(first);  // enlève le BoxBegin
 
@@ -1450,7 +1450,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 				foreach (FormEditor.ObjectModifier.TableItem item in items)
 				{
-					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 					this.formEditor.ObjectModifier.FormDeltaMove(index, direction);
 
 					this.SetForm(this.form, this.druidToSerialize, true);
@@ -1462,7 +1462,7 @@ namespace Epsitec.Common.Designer.Viewers
 				foreach (int sel in sels)
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
+					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
 						FieldDescription field = this.form.Fields[index];
@@ -1490,7 +1490,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+			FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 			Druid druid = field.FieldIds[field.FieldIds.Count-1];
 
 			Module module = this.designerApplication.SearchModule(druid);
@@ -1554,7 +1554,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldsTable(false);
 
 			List<int> sels = new List<int>();
-			sels.Add(this.formEditor.ObjectModifier.GetFormCount-1);
+			sels.Add(this.formEditor.ObjectModifier.GetFieldCount-1);
 			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
 

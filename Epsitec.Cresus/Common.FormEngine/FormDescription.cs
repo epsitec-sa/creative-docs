@@ -41,7 +41,15 @@ namespace Epsitec.Common.FormEngine
 
 		public Druid DeltaBaseFormId
 		{
-			//	Druid du masque de base à fusionner.
+			//	Druid du masque de base à fusionner. Il s'agit normalement d'un masque de base complet.
+			//	Mais il peut s'agit d'un masque delta. Dans ce cas, il faudra remonter jusqu'au masque
+			//	de base (IsDelta = false) pour construire le masque final.
+			//	Par exemple:
+			//	- Form1 est un masque de base
+			//	- Form2 est un masque delta basé sur Form1
+			//	- Form3 est un masque delta basé sur Form2
+			//	Si on cherche à construire Form3, il faut utiliser FormEngine.Arrange.Merge ainsi:
+			//	final = Merge(Merge(Form1, Form2), Form3);
 			get
 			{
 				return this.deltaBaseFormId;
@@ -51,6 +59,9 @@ namespace Epsitec.Common.FormEngine
 		public List<FieldDescription> Fields
 		{
 			//	Liste des champs, séparateurs, etc.
+			//	S'il s'agit d'un masque de base, il s'agit directement de la liste des éléments du masque.
+			//	S'il s'agit d'un masque delta, il s'agit de la liste des modifications à appliquer au
+			//	masque de base défini dans DeltaBaseFormId.
 			get
 			{
 				return this.fields;
@@ -59,7 +70,7 @@ namespace Epsitec.Common.FormEngine
 
 		public bool IsDelta
 		{
-			//	Indique s'il s'agit d'un formulaire delta.
+			//	Indique s'il s'agit d'un masque delta (Delta form).
 			get
 			{
 				return !this.deltaBaseFormId.IsEmpty;

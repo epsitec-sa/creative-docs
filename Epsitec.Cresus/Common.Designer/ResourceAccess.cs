@@ -2176,6 +2176,7 @@ namespace Epsitec.Common.Designer
 		
 		private FormEngine.FormDescription GetForm(CultureMap item)
 		{
+			//	Désérialise un masque.
 			if (item != null)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);

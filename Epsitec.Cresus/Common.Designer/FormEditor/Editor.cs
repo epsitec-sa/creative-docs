@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			foreach (Widget obj in this.selectedObjects)
 			{
-				FieldDescription field = this.objectModifier.GetFormDescription(obj);
+				FieldDescription field = this.objectModifier.GetFieldDescription(obj);
 				if (field != null)
 				{
 					guids.Add(field.Guid);
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Supprime tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
-				int index = this.objectModifier.GetFormDescriptionIndex(obj);
+				int index = this.objectModifier.GetFieldDescriptionIndex(obj);
 				if (index != -1)
 				{
 					this.form.Fields.RemoveAt(index);

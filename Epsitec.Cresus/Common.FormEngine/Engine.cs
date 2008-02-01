@@ -56,8 +56,12 @@ namespace Epsitec.Common.FormEngine
 				FormDescription baseForm = form;
 				baseForms.Add(baseForm);
 
-				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas
-				//	un Form delta.
+				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas un Form delta.
+				//	Par exemple:
+				//	- Form1 est un masque de base
+				//	- Form2 est un masque delta basé sur Form1
+				//	- Form3 est un masque delta basé sur Form2
+				//	Si on cherche à construire Form3, la liste baseForms contiendra Form3, Form2 et Form1.
 				while (baseForm != null && baseForm.IsDelta)
 				{
 					string xml = this.resourceProvider.GetFormXmlSource(baseForm.DeltaBaseFormId);

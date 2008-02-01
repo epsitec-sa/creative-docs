@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsField(Widget obj)
 		{
 			//	Indique si l'objet correspond à un champ.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return false;
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsBox(Widget obj)
 		{
 			//	Indique si l'objet correspond à une boîte.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return false;
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public bool IsGlue(Widget obj)
 		{
 			//	Indique si l'objet correspond à de la colle.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return false;
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetColumnsRequired(Widget obj)
 		{
 			//	Retourne le nombre de colonnes requises.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return 0;
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.ColumnsRequired = columnsRequired;
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetRowsRequired(Widget obj)
 		{
 			//	Retourne le nombre de lignes requises.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return 0;
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.RowsRequired = rowsRequired;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public FieldDescription.SeparatorType GetSeparatorBottom(Widget obj)
 		{
 			//	Retourne le type du séparateur d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return FieldDescription.SeparatorType.Normal;
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.SeparatorBottom = sep;
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public FieldDescription.BoxPaddingType GetBoxPadding(Widget obj)
 		{
 			//	Retourne le type des marges intérieures d'une boîte.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return FieldDescription.BoxPaddingType.Normal;
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.BoxPadding = type;
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public FieldDescription.BackColorType GetBackColor(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return FieldDescription.BackColorType.None;
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.BackColor = color;
@@ -225,7 +225,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public FrameState GetBoxFrameState(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return FrameState.None;
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.BoxFrameState = state;
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public double GetBoxFrameWidth(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
 				return 0.0;
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			FieldDescription field = this.GetFormDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
 				field.BoxFrameWidth = 2*width-1;
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public int GetFormCount
+		public int GetFieldCount
 		{
 			//	Retourne le nombre de champs.
 			get
@@ -360,14 +360,14 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public FieldDescription GetFormDescription(TableItem item)
+		public FieldDescription GetFieldDescription(TableItem item)
 		{
 			//	Retourne un champ d'après son TableItem.
-			int index = this.GetFormDescriptionIndex(item.Guid);
+			int index = this.GetFieldDescriptionIndex(item.Guid);
 
 			if (index == -1)
 			{
-				index = this.GetFormDescriptionIndex(item.DruidsPath);
+				index = this.GetFieldDescriptionIndex(item.DruidsPath);
 			}
 
 			if (index == -1)
@@ -380,10 +380,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public FieldDescription GetFormDescription(Widget obj)
+		public FieldDescription GetFieldDescription(Widget obj)
 		{
 			//	Retourne un champ d'après l'identificateur unique d'un widget.
-			int index = this.GetFormDescriptionIndex(obj);
+			int index = this.GetFieldDescriptionIndex(obj);
 			if (index == -1)
 			{
 				return null;
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public int GetFormDescriptionIndex(Widget obj)
+		public int GetFieldDescriptionIndex(Widget obj)
 		{
 			//	Retourne l'index d'un champ d'après l'identificateur unique d'un widget.
 			if (string.IsNullOrEmpty(obj.Name))
@@ -403,10 +403,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			System.Guid guid = new System.Guid(obj.Name);
-			return this.GetFormDescriptionIndex(guid);
+			return this.GetFieldDescriptionIndex(guid);
 		}
 
-		public int GetFormDescriptionIndex(System.Guid guid)
+		public int GetFieldDescriptionIndex(System.Guid guid)
 		{
 			//	Retourne l'index d'un champ d'après le Guid.
 			for (int i=0; i<this.finalFields.Count; i++)
@@ -422,7 +422,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			return -1;
 		}
 
-		protected int GetFormDescriptionIndex(string druidsPath)
+		protected int GetFieldDescriptionIndex(string druidsPath)
 		{
 			//	Retourne l'index d'un champ d'après le chemin de Druis.
 			for (int i=0; i<this.finalFields.Count; i++)
@@ -487,9 +487,27 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public bool IsReadonly
 		{
+			//	Indique si Designer est en mode "consultation", lorsque l'identificateur est anonyme
+			//	ou lorsqu'on est en mode "bloqué".
 			get
 			{
 				return this.formEditor.Module.DesignerApplication.IsReadonly;
+			}
+		}
+
+		public bool IsDelta
+		{
+			//	Indique si l'on est dans un masque delta.
+			get
+			{
+				if (this.formEditor.Form == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.formEditor.Form.IsDelta;
+				}
 			}
 		}
 
@@ -689,7 +707,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
 			if (name == null)
 			{
-				FieldDescription field = this.formEditor.ObjectModifier.GetFormDescription(item);
+				FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 				if (field != null)
 				{
 					if (field.Type == FieldDescription.FieldType.BoxBegin ||
@@ -800,22 +818,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			return color;
 		}
 
-		public bool IsDelta
-		{
-			//	Indique si l'on est dans un masque delta.
-			get
-			{
-				if (this.formEditor.Form == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.formEditor.Form.IsDelta;
-				}
-			}
-		}
-
 		public void UpdateTableContent()
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
@@ -831,8 +833,12 @@ namespace Epsitec.Common.Designer.FormEditor
 				FormDescription baseForm = this.formEditor.Form;
 				baseForms.Add(baseForm);
 
-				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas
-				//	un Form delta.
+				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas un Form delta.
+				//	Par exemple:
+				//	- Form1 est un masque de base
+				//	- Form2 est un masque delta basé sur Form1
+				//	- Form3 est un masque delta basé sur Form2
+				//	Si on cherche à construire Form3, la liste baseForms contiendra Form3, Form2 et Form1.
 				while (baseForm != null && baseForm.IsDelta)
 				{
 					baseForm = this.formEditor.Module.AccessForms.GetForm(baseForm.DeltaBaseFormId);
@@ -851,8 +857,8 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.finalFields = engine.Arrange.Merge(this.baseFields, baseForms[i].Fields);
 				}
 
-				// this.baseFields contient la liste de base (la génération précédente)
-				// this.finalFields contient la liste finale (la dernière génération)
+				// this.baseFields contient la liste de base (la génération précédente n-1)
+				// this.finalFields contient la liste finale (la dernière génération n)
 			}
 			else  // masque normal ?
 			{
