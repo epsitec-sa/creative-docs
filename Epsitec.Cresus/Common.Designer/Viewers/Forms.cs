@@ -459,7 +459,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			if (name == "FormFieldsClearPatch")  // efface tout le masque de patch ?
+			if (name == "FormFieldsClearDelta")  // efface tout le masque delta ?
 			{
 				this.form.Fields.Clear();
 				this.SetForm(this.form, this.druidToSerialize, false);
@@ -603,7 +603,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isGoto = false;
 			bool isUnbox = false;
 			bool isForm = false;
-			bool isPatch = this.formEditor.ObjectModifier.IsPatch;
+			bool isDelta = this.formEditor.ObjectModifier.IsDelta;
 
 			if (!this.designerApplication.IsReadonly)
 			{
@@ -664,14 +664,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGlue.Enable = isSel;
 			this.fieldsButtonLine.Enable = isSel;
 			this.fieldsButtonTitle.Enable = isSel;
-			this.fieldsButtonBox.Enable = isSel && !isPatch;
+			this.fieldsButtonBox.Enable = isSel && !isDelta;
 
-			this.fieldsButtonForm.Enable = isForm && !isPatch;
+			this.fieldsButtonForm.Enable = isForm && !isDelta;
 			this.fieldsButtonPrev.Enable = isPrev;
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
 
-			this.fieldsButtonRemove.IconName = isPatch ? Misc.Icon("FormPatchHide") : Misc.Icon("Delete");
+			this.fieldsButtonRemove.IconName = isDelta ? Misc.Icon("FormDeltaHide") : Misc.Icon("Delete");
 			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 		}
 
@@ -1062,7 +1062,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			List<System.Guid> guids = new List<System.Guid>();
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				foreach (int sel in sels)
 				{
@@ -1073,23 +1073,23 @@ namespace Epsitec.Common.Designer.Viewers
 					if (index == -1)
 					{
 						FieldDescription copy = new FieldDescription(field);
-						copy.PatchHidden = true;
+						copy.DeltaHidden = true;
 						this.form.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
 					}
 					else
 					{
 						FieldDescription actual = this.form.Fields[index];
 
-						if (actual.PatchHidden)  // champ caché ?
+						if (actual.DeltaHidden)  // champ caché ?
 						{
-							actual.PatchHidden = false;  // rend le champ visible
+							actual.DeltaHidden = false;  // rend le champ visible
 						}
 						else  // champ visible ?
 						{
-							actual.PatchHidden = true;  // cache le champ
+							actual.DeltaHidden = true;  // cache le champ
 						}
 
-						if (!actual.PatchMoved && !actual.PatchModified && !actual.PatchHidden && !actual.PatchBrokenAttach)
+						if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaBrokenAttach)
 						{
 							this.form.Fields.RemoveAt(index);
 						}
@@ -1137,7 +1137,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void SelectedFieldsReset()
 		{
-			//	Remet à zéro les champs sélectionnés, dans un masque de patch.
+			//	Remet à zéro les champs sélectionnés, dans un masque delta.
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1149,7 +1149,7 @@ namespace Epsitec.Common.Designer.Viewers
 				int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+					if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 					{
 						this.form.Fields.RemoveAt(index);
 					}
@@ -1194,7 +1194,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				System.Guid ag = System.Guid.Empty;
 				if (sels[0] > 0)
@@ -1204,8 +1204,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 				field = new FieldDescription(FieldDescription.FieldType.Glue);
 				field.ColumnsRequired = 0;
-				field.PatchInserted = true;
-				field.PatchAttachGuid = ag;
+				field.DeltaInserted = true;
+				field.DeltaAttachGuid = ag;
 				this.form.Fields.Add(field);
 			}
 			else  // masque normal ?
@@ -1237,7 +1237,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				System.Guid ag = System.Guid.Empty;
 				if (sels[0] > 0)
@@ -1246,8 +1246,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.Line);
-				field.PatchInserted = true;
-				field.PatchAttachGuid = ag;
+				field.DeltaInserted = true;
+				field.DeltaAttachGuid = ag;
 				this.form.Fields.Add(field);
 			}
 			else  // masque normal ?
@@ -1278,7 +1278,7 @@ namespace Epsitec.Common.Designer.Viewers
 			int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				System.Guid ag = System.Guid.Empty;
 				if (sels[0] > 0)
@@ -1287,8 +1287,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.Title);
-				field.PatchInserted = true;
-				field.PatchAttachGuid = ag;
+				field.DeltaInserted = true;
+				field.DeltaAttachGuid = ag;
 				this.form.Fields.Add(field);
 			}
 			else  // masque normal ?
@@ -1439,7 +1439,7 @@ namespace Epsitec.Common.Designer.Viewers
 				sels.Reverse();
 			}
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				List<FormEditor.ObjectModifier.TableItem> items = new List<Epsitec.Common.Designer.FormEditor.ObjectModifier.TableItem>();
 
@@ -1451,7 +1451,7 @@ namespace Epsitec.Common.Designer.Viewers
 				foreach (FormEditor.ObjectModifier.TableItem item in items)
 				{
 					int index = this.formEditor.ObjectModifier.GetFormDescriptionIndex(item.Guid);
-					this.formEditor.ObjectModifier.FormPatchMove(index, direction);
+					this.formEditor.ObjectModifier.FormDeltaMove(index, direction);
 
 					this.SetForm(this.form, this.druidToSerialize, true);
 					this.UpdateFieldsTable(false);
@@ -1514,14 +1514,14 @@ namespace Epsitec.Common.Designer.Viewers
 			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
 			FieldDescription field;
 
-			if (this.formEditor.ObjectModifier.IsPatch)  // masque de patch ?
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				FormEditor.ObjectModifier.TableItem ti = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1];
 					
 				field = new FieldDescription(FieldDescription.FieldType.Field);
 				field.SetFields(item.DruidsPath);
-				field.PatchInserted = true;
-				field.PatchAttachGuid = ti.Guid;
+				field.DeltaInserted = true;
+				field.DeltaAttachGuid = ti.Guid;
 				this.form.Fields.Add(field);
 			}
 			else  // masque normal ?
@@ -1671,11 +1671,11 @@ namespace Epsitec.Common.Designer.Viewers
 			item = new MenuItem("FormFieldsShowColumn2", Misc.GetMenuIconCheckState(Forms.showColumn2), "Afficher la troisième colonne", "", "FormFieldsShowColumn2");
 			menu.Items.Add(item);
 
-			if (this.formEditor.ObjectModifier.IsPatch && !this.designerApplication.IsReadonly)
+			if (this.formEditor.ObjectModifier.IsDelta && !this.designerApplication.IsReadonly)
 			{
 				menu.Items.Add(new MenuSeparator());
 
-				item = new MenuItem("FormFieldsClearPatch", Misc.Icon("Delete"), "Effacer tout le masque de patch", "", "FormFieldsClearPatch");
+				item = new MenuItem("FormFieldsClearDelta", Misc.Icon("Delete"), "Effacer tout le masque correctif", "", "FormFieldsClearDelta");
 				menu.Items.Add(item);
 			}
 

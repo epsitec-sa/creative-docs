@@ -796,7 +796,7 @@ namespace Epsitec.Common.Designer
 		[Command("FormFieldsShowGuid")]
 		[Command("FormFieldsShowColumn1")]
 		[Command("FormFieldsShowColumn2")]
-		[Command("FormFieldsClearPatch")]
+		[Command("FormFieldsClearDelta")]
 		[Command("ShowBothCulture")]
 		[Command("ShowPrimaryCulture")]
 		[Command("ShowSecondaryCulture")]

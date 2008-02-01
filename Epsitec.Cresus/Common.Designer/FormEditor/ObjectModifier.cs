@@ -94,7 +94,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.ColumnsRequired = columnsRequired;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.RowsRequired = rowsRequired;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.SeparatorBottom = sep;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BoxPadding = type;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BackColor = color;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BoxFrameState = state;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
@@ -279,21 +279,21 @@ namespace Epsitec.Common.Designer.FormEditor
 			if (field != null)
 			{
 				field.BoxFrameWidth = 2*width-1;
-				this.PatchUpdate(field);
+				this.DeltaUpdate(field);
 			}
 		}
 
 
-		protected void PatchUpdate(FieldDescription field)
+		protected void DeltaUpdate(FieldDescription field)
 		{
-			//	Si on est dans un masque de patch, le champ modifié doit être copié dans la liste de patch.
-			if (this.IsPatch)
+			//	Si on est dans un masque delta, le champ modifié doit être copié dans la liste delta.
+			if (this.IsDelta)
 			{
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, field.Guid);
 				if (index == -1)
 				{
 					FieldDescription copy = new FieldDescription(field);
-					copy.PatchModified = true;
+					copy.DeltaModified = true;
 					this.formEditor.Form.Fields.Add(copy);
 
 					this.formEditor.OnUpdateCommands();  // pour mettre à jour le bouton fieldsButtonReset
@@ -303,9 +303,9 @@ namespace Epsitec.Common.Designer.FormEditor
 					FieldDescription original = this.formEditor.Form.Fields[index];
 
 					FieldDescription copy = new FieldDescription(field);
-					copy.PatchModified = true;
-					copy.PatchMoved = original.PatchMoved;
-					copy.PatchAttachGuid = original.PatchAttachGuid;
+					copy.DeltaModified = true;
+					copy.DeltaMoved = original.DeltaMoved;
+					copy.DeltaAttachGuid = original.DeltaAttachGuid;
 					this.formEditor.Form.Fields[index] = copy;
 				}
 			}
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Widget GetWidget(System.Guid guid)
 		{
 			//	Cherche le widget correspondant à un Guid.
-			foreach (FieldDescription field in this.fields)
+			foreach (FieldDescription field in this.finalFields)
 			{
 				if (guid == field.Guid)
 				{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne le nombre de champs.
 			get
 			{
-				return this.fields.Count;
+				return this.finalFields.Count;
 			}
 		}
 
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return this.fields[index];
+				return this.finalFields[index];
 			}
 		}
 
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return this.fields[index];
+				return this.finalFields[index];
 			}
 		}
 
@@ -409,9 +409,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetFormDescriptionIndex(System.Guid guid)
 		{
 			//	Retourne l'index d'un champ d'après le Guid.
-			for (int i=0; i<this.fields.Count; i++)
+			for (int i=0; i<this.finalFields.Count; i++)
 			{
-				FieldDescription field = this.fields[i];
+				FieldDescription field = this.finalFields[i];
 
 				if (field.Guid == guid)
 				{
@@ -425,9 +425,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int GetFormDescriptionIndex(string druidsPath)
 		{
 			//	Retourne l'index d'un champ d'après le chemin de Druis.
-			for (int i=0; i<this.fields.Count; i++)
+			for (int i=0; i<this.finalFields.Count; i++)
 			{
-				FieldDescription field = this.fields[i];
+				FieldDescription field = this.finalFields[i];
 
 				if (field.GetPath(null) == druidsPath)
 				{
@@ -495,24 +495,24 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region TableContent
-		public void FormPatchMove(int index, int direction)
+		public void FormDeltaMove(int index, int direction)
 		{
 			//	Déplace un élément en le montant ou en le descendant d'une ligne. Pour cela, les déplacements
-			//	de tous les éléments sont recalculés, à partir de la situation initiale (non patchée).
-			//	this.referenceFields		= liste initiale non patchée
-			//	this.formEditor.Form.Fields	= liste de patch
-			//	this.fields					= liste résultante
+			//	de tous les éléments sont recalculés, à partir de la situation initiale.
+			//	this.baseFields				= liste initiale
+			//	this.formEditor.Form.Fields	= liste delta
+			//	this.finalFields			= liste résultante
 
 			//	Construit la liste originale.
 			List<System.Guid> original = new List<System.Guid>();
-			foreach (FieldDescription field in this.referenceFields)
+			foreach (FieldDescription field in this.baseFields)
 			{
 				original.Add(field.Guid);
 			}
 
 			//	Construit la liste finale souhaitée.
 			List<System.Guid> final = new List<System.Guid>();
-			foreach (FieldDescription field in this.fields)
+			foreach (FieldDescription field in this.finalFields)
 			{
 				final.Add(field.Guid);
 			}
@@ -527,7 +527,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
-				if (field.PatchMoved || field.PatchInserted)
+				if (field.DeltaMoved || field.DeltaInserted)
 				{
 					moved.Add(field.Guid);
 				}
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, guid);
 			if (index != -1)
 			{
-				this.formEditor.Form.Fields[index].PatchBrokenAttach = false;
+				this.formEditor.Form.Fields[index].DeltaBrokenAttach = false;
 			}
 
 			//	Génére la liste des opérations de déplacement nécessaires.
@@ -592,51 +592,51 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
-			//	Supprime tous les déplacements dans la liste de patch actuelle, mais en conservant les éléments.
+			//	Supprime tous les déplacements dans la liste delta actuelle, mais en conservant les éléments.
 			foreach (FieldDescription field in this.formEditor.Form.Fields)
 			{
-				field.PatchMoved = false;
-				field.PatchInserted = false;
+				field.DeltaMoved = false;
+				field.DeltaInserted = false;
 			}
 
 			//	Remet tous les déplacements selon la liste des opérations.
 			foreach (LinkAfter item in oper)
 			{
 				int i = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Element);
-				if (i == -1)  // élément pas (ou pas encore) patché ?
+				if (i == -1)  // élément pas (ou pas encore) adapté ?
 				{
-					i = FormEngine.Arrange.IndexOfGuid(this.referenceFields, item.Element);
+					i = FormEngine.Arrange.IndexOfGuid(this.baseFields, item.Element);
 					if (i != -1)  // élément dans la liste de référence ?
 					{
-						FieldDescription field = new FieldDescription(this.referenceFields[i]);  // copie de l'élément
+						FieldDescription field = new FieldDescription(this.baseFields[i]);  // copie de l'élément
 
-						field.PatchMoved = !item.IsInserted;
-						field.PatchInserted = item.IsInserted;
-						field.PatchAttachGuid = item.Link;
+						field.DeltaMoved = !item.IsInserted;
+						field.DeltaInserted = item.IsInserted;
+						field.DeltaAttachGuid = item.Link;
 
-						this.formEditor.Form.Fields.Add(field);  // met l'élément à la fin de la liste de patch
+						this.formEditor.Form.Fields.Add(field);  // met l'élément à la fin de la liste delta
 					}
 				}
-				else  // élément déjà dans la liste de patch ?
+				else  // élément déjà dans la liste delta ?
 				{
 					FieldDescription field = this.formEditor.Form.Fields[i];
-					this.formEditor.Form.Fields.RemoveAt(i);  // supprime l'élément dans la liste de patch
+					this.formEditor.Form.Fields.RemoveAt(i);  // supprime l'élément dans la liste delta
 
-					field.PatchMoved = !item.IsInserted;
-					field.PatchInserted = item.IsInserted;
-					field.PatchAttachGuid = item.Link;
+					field.DeltaMoved = !item.IsInserted;
+					field.DeltaInserted = item.IsInserted;
+					field.DeltaAttachGuid = item.Link;
 
-					this.formEditor.Form.Fields.Add(field);  // remet l'élément à la fin de la liste de patch
+					this.formEditor.Form.Fields.Add(field);  // remet l'élément à la fin de la liste delta
 				}
 			}
 
-			//	Supprime réellement tous les éléments dans la liste de patch qui n'ont plus aucune fonction.
+			//	Supprime réellement tous les éléments dans la liste delta qui n'ont plus aucune fonction.
 			index = 0;
 			while (index < this.formEditor.Form.Fields.Count)
 			{
 				FieldDescription field = this.formEditor.Form.Fields[index];
 
-				if (!field.PatchMoved && !field.PatchInserted && !field.PatchModified && !field.PatchHidden && !field.PatchBrokenAttach)
+				if (!field.DeltaMoved && !field.DeltaInserted && !field.DeltaModified && !field.DeltaHidden && !field.DeltaBrokenAttach)
 				{
 					this.formEditor.Form.Fields.RemoveAt(index);
 				}
@@ -723,27 +723,27 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public string GetTableContentIcon1(TableItem item)
 		{
-			//	Retourne le texte permettant de décrire l'opération de patch d'un TableItem dans une liste.
+			//	Retourne le texte permettant de décrire l'opération delta d'un TableItem dans une liste.
 			string icon = null;
 
-			if (this.IsPatch)
+			if (this.IsDelta)
 			{
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.Form.Fields[index].PatchHidden)
+					if (this.formEditor.Form.Fields[index].DeltaHidden)
 					{
-						icon = Misc.Image("FormPatchHidden");  // peu prioritaire à cause du fond rouge
+						icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
 					}
 
-					if (this.formEditor.Form.Fields[index].PatchInserted)
+					if (this.formEditor.Form.Fields[index].DeltaInserted)
 					{
-						icon = Misc.Image("FormPatchInserted");  // peu prioritaire à cause du fond vert
+						icon = Misc.Image("FormDeltaInserted");  // peu prioritaire à cause du fond vert
 					}
 
-					if (this.formEditor.Form.Fields[index].PatchMoved)
+					if (this.formEditor.Form.Fields[index].DeltaMoved)
 					{
-						icon = Misc.Image("FormPatchMoved");  // prioritaire, car pas de fond coloré
+						icon = Misc.Image("FormDeltaMoved");  // prioritaire, car pas de fond coloré
 					}
 				}
 			}
@@ -769,28 +769,28 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne la couleur décrivant un TableItem dans une liste.
 			Color color = Color.Empty;
 
-			if (this.IsPatch)
+			if (this.IsDelta)
 			{
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.Form.Fields[index].PatchHidden)
+					if (this.formEditor.Form.Fields[index].DeltaHidden)
 					{
 						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 					}
 
-					if (this.formEditor.Form.Fields[index].PatchModified)
+					if (this.formEditor.Form.Fields[index].DeltaModified)
 					{
 						color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
 					}
 
-					if (this.formEditor.Form.Fields[index].PatchInserted)
+					if (this.formEditor.Form.Fields[index].DeltaInserted)
 					{
 						color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 					}
 
 
-					if (this.formEditor.Form.Fields[index].PatchBrokenAttach)
+					if (this.formEditor.Form.Fields[index].DeltaBrokenAttach)
 					{
 						color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
 					}
@@ -800,9 +800,9 @@ namespace Epsitec.Common.Designer.FormEditor
 			return color;
 		}
 
-		public bool IsPatch
+		public bool IsDelta
 		{
-			//	Indique si l'on est dans un masque de patch.
+			//	Indique si l'on est dans un masque delta.
 			get
 			{
 				if (this.formEditor.Form == null)
@@ -811,7 +811,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 				else
 				{
-					return this.formEditor.Form.IsPatch;
+					return this.formEditor.Form.IsDelta;
 				}
 			}
 		}
@@ -824,18 +824,18 @@ namespace Epsitec.Common.Designer.FormEditor
 				return;
 			}
 
-			if (this.IsPatch)  // masque de patch ?
+			if (this.IsDelta)  // masque delta ?
 			{
-				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.FormIdToPatch);
-				this.referenceFields = refForm.Fields;
+				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.DeltaBaseFormId);
+				this.baseFields = refForm.Fields;
 
 				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
-				this.fields = engine.Arrange.Merge(this.referenceFields, this.formEditor.Form.Fields);
+				this.finalFields = engine.Arrange.Merge(this.baseFields, this.formEditor.Form.Fields);
 			}
 			else  // masque normal ?
 			{
-				this.fields = this.formEditor.Form.Fields;
-				this.referenceFields = null;
+				this.finalFields = this.formEditor.Form.Fields;
+				this.baseFields = null;
 			}
 
 			this.tableContent.Clear();
@@ -843,7 +843,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
 			int level = 0;
-			foreach (FieldDescription field in this.fields)
+			foreach (FieldDescription field in this.finalFields)
 			{
 				string prefix = null;
 				if (field.FieldIds != null)
@@ -1216,7 +1216,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Indique si une relation est utilisée dans le masque de saisie.
 			string druidsPath = this.tableRelations[index].DruidsPath;
 
-			foreach (FieldDescription field in this.fields)
+			foreach (FieldDescription field in this.finalFields)
 			{
 				if (field.GetPath(null) == druidsPath)
 				{
@@ -1294,8 +1294,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Editor							formEditor;
 		protected Druid								entityId;
-		protected List<FieldDescription>			fields;
-		protected List<FieldDescription>			referenceFields;
+		protected List<FieldDescription>			baseFields;
+		protected List<FieldDescription>			finalFields;
 		protected List<TableItem>					tableContent;
 		protected List<RelationItem>				tableRelations;
 	}

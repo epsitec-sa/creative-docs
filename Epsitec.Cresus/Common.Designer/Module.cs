@@ -394,7 +394,7 @@ namespace Epsitec.Common.Designer
 			System.Text.StringBuilder builder = new System.Text.StringBuilder();
 			ResourceAccess.CheckShortcuts(builder, list);
 
-			//	Vérifie les liens cassés dans les Forms.
+			//	Vérifie les Forms.
 			this.accessForms.CheckForms(builder);
 
 			string message = builder.ToString();

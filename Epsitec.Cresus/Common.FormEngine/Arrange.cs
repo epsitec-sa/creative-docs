@@ -20,42 +20,42 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		public List<FieldDescription> Merge(List<FieldDescription> reference, List<FieldDescription> patch)
+		public List<FieldDescription> Merge(List<FieldDescription> reference, List<FieldDescription> delta)
 		{
 			//	Retourne la liste fusionnée.
 			List<FieldDescription> merged = new List<FieldDescription>();
 
 			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,
-			//	mais avec la propriété PatchHidden = true.
+			//	mais avec la propriété DeltaHidden = true.
 			foreach (FieldDescription field in reference)
 			{
 				FieldDescription copy = new FieldDescription(field);
 
-				int index = Arrange.IndexOfGuid(patch, field.Guid);
-				if (index != -1 && patch[index].PatchHidden)
+				int index = Arrange.IndexOfGuid(delta, field.Guid);
+				if (index != -1 && delta[index].DeltaHidden)
 				{
-					copy.PatchHidden = true;  // champ à cacher
+					copy.DeltaHidden = true;  // champ à cacher
 				}
 
 				merged.Add(copy);
 			}
 
-			foreach (FieldDescription field in patch)
+			foreach (FieldDescription field in delta)
 			{
-				if (field.PatchMoved)  // champ à déplacer ?
+				if (field.DeltaMoved)  // champ à déplacer ?
 				{
 					int src = Arrange.IndexOfGuid(merged, field.Guid);  // cherche le champ à déplacer
 					if (src != -1)
 					{
-						//	field.PatchAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+						//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 						//	de liste.
 						int dst = -1;  // position pour mettre en-tête de liste
-						if (field.PatchAttachGuid != System.Guid.Empty)
+						if (field.DeltaAttachGuid != System.Guid.Empty)
 						{
-							dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
-							if (dst == -1 || field.PatchBrokenAttach)  // l'élément d'attache n'existe plus ?
+							dst = Arrange.IndexOfGuid(merged, field.DeltaAttachGuid);  // cherche où le déplacer
+							if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
 							{
-								field.PatchBrokenAttach = true;
+								field.DeltaBrokenAttach = true;
 								continue;  // on laisse le champ ici
 							}
 						}
@@ -63,34 +63,34 @@ namespace Epsitec.Common.FormEngine
 						FieldDescription temp = merged[src];
 						merged.RemoveAt(src);
 
-						dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // recalcule le "où" après suppression
+						dst = Arrange.IndexOfGuid(merged, field.DeltaAttachGuid);  // recalcule le "où" après suppression
 						merged.Insert(dst+1, temp);  // remet l'élément après dst
 
-						temp.PatchMoved = true;
+						temp.DeltaMoved = true;
 					}
 				}
 
-				if (field.PatchInserted)  // champ à insérer ?
+				if (field.DeltaInserted)  // champ à insérer ?
 				{
-					//	field.PatchAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+					//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 					//	de liste.
 					int dst = -1;  // position pour mettre en-tête de liste
-					if (field.PatchAttachGuid != System.Guid.Empty)
+					if (field.DeltaAttachGuid != System.Guid.Empty)
 					{
-						dst = Arrange.IndexOfGuid(merged, field.PatchAttachGuid);  // cherche où le déplacer
-						if (dst == -1 || field.PatchBrokenAttach)  // l'élément d'attache n'existe plus ?
+						dst = Arrange.IndexOfGuid(merged, field.DeltaAttachGuid);  // cherche où le déplacer
+						if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
 						{
 							dst = merged.Count-1;  // on insère le champ à la fin
-							field.PatchBrokenAttach = true;
+							field.DeltaBrokenAttach = true;
 						}
 					}
 
 					FieldDescription copy = new FieldDescription(field);
-					copy.PatchInserted = true;
+					copy.DeltaInserted = true;
 					merged.Insert(dst+1, copy);  // insère l'élément après dst
 				}
 
-				if (field.PatchModified)  // champ à modifier ?
+				if (field.DeltaModified)  // champ à modifier ?
 				{
 					int index = Arrange.IndexOfGuid(merged, field.Guid);
 					if (index != -1)
@@ -98,7 +98,7 @@ namespace Epsitec.Common.FormEngine
 						merged.RemoveAt(index);  // supprime le champ original
 
 						FieldDescription copy = new FieldDescription(field);
-						copy.PatchModified = true;
+						copy.DeltaModified = true;
 						merged.Insert(index, copy);  // et remplace-le par le champ modifié
 					}
 				}

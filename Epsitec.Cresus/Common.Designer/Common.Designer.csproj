@@ -662,16 +662,16 @@
     <EmbeddedResource Include="Images\TreeSubForm.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\FormPatchMoved.icon" />
+    <EmbeddedResource Include="Images\FormDeltaMoved.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\FormPatchHide.icon" />
+    <EmbeddedResource Include="Images\FormDeltaHide.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\FormPatchHidden.icon" />
+    <EmbeddedResource Include="Images\FormDeltaHidden.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\FormPatchInserted.icon" />
+    <EmbeddedResource Include="Images\FormDeltaInserted.icon" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\FormReset.icon" />

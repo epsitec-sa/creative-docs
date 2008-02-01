@@ -395,27 +395,27 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			//	Vérifie les liens PatchAttachGuid.
+			//	Vérifie les liens DeltaAttachGuid.
 			first = true;
 			foreach (CultureMap item in this.accessor.Collection)
 			{
 				FormEngine.FormDescription form = this.GetForm(item);
 
-				if (form.FormIdToPatch.IsEmpty)  // pas un Form de patch ?
+				if (form.DeltaBaseFormId.IsEmpty)  // pas un Form delta ?
 				{
 					continue;  // toujours ok
 				}
 
-				//	Fusionne le masque de référence selon les indications du masque de patch, pour
+				//	Fusionne le masque de base selon les indications du masque delta, pour
 				//	déterminer les éventuelles erreurs.
-				FormEngine.FormDescription refForm = this.GetForm(form.FormIdToPatch);
+				FormEngine.FormDescription refForm = this.GetForm(form.DeltaBaseFormId);
 				engine.Arrange.Merge(refForm.Fields, form.Fields);
 
 				//	Compte le nombre de liens cassés.
 				List<string> errors = new List<string>();
 				foreach (FormEngine.FieldDescription field in form.Fields)
 				{
-					if (field.PatchBrokenAttach)
+					if (field.DeltaBrokenAttach)
 					{
 						string name = this.GetFieldNames(field.GetPath(null));
 
@@ -609,7 +609,7 @@ namespace Epsitec.Common.Designer
 
 				List<string> questions = new List<string>();
 				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Normal, Res.Strings.Forms.Question.Create.Long.Normal));
-				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Patch, Res.Strings.Forms.Question.Create.Long.Patch));
+				questions.Add(ConfirmationButton.FormatContent(Res.Strings.Forms.Question.Create.Quick.Delta, Res.Strings.Forms.Question.Create.Long.Delta));
 				
 				Common.Dialogs.DialogResult result = this.designerApplication.DialogConfirmation(header, questions, true);
 				if (result == Epsitec.Common.Dialogs.DialogResult.Cancel)
@@ -643,15 +643,15 @@ namespace Epsitec.Common.Designer
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 				}
 
-				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // patch ?
+				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // delta ?
 				{
-					//	On demande le masque sur lequel sera basé le masque de patch.
-					Druid formIdToPatch = Druid.Empty;
+					//	On demande le masque sur lequel sera basé le masque delta.
+					Druid deltaBaseformId = Druid.Empty;
 					bool isNullable = false;
 					bool isPrivateRelation = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref formIdToPatch, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -664,13 +664,13 @@ namespace Epsitec.Common.Designer
 					isPrivateRelation = false;
 					typeClass = StructuredTypeClass.Entity;
 
-					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, formIdToPatch);
+					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, deltaBaseformId);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
 					}
 
-					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, formIdToPatch);
+					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, deltaBaseformId);
 					this.FormInitialize(form, ref newName);
 
 					string xml = FormEngine.Serialization.SerializeForm(form);
@@ -796,10 +796,10 @@ namespace Epsitec.Common.Designer
 		private void FormInitialize(FormEngine.FormDescription form, ref string newName)
 		{
 			//	Initialise un masque de saisie avec tous les champs de l'entité de base associée.
-			//	S'il s'agit d'un masque de patch, on laisse vide la liste des champs.
-			if (form.IsPatch)
+			//	S'il s'agit d'un masque delta, on laisse vide la liste des champs.
+			if (form.IsDelta)
 			{
-				newName = this.GetDuplicateName(this.GetFormName(form.FormIdToPatch));
+				newName = this.GetDuplicateName(this.GetFormName(form.DeltaBaseFormId));
 			}
 			else
 			{

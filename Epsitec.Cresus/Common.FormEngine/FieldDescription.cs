@@ -58,10 +58,10 @@ namespace Epsitec.Common.FormEngine
 			//	Constructeur protégé, commun à tous les autres.
 			this.Reset();
 			this.subFormId = Druid.Empty;
-			this.patchHidden = false;
-			this.patchMoved = false;
-			this.patchInserted = false;
-			this.patchModified = false;
+			this.deltaHidden = false;
+			this.deltaMoved = false;
+			this.deltaInserted = false;
+			this.deltaModified = false;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -88,10 +88,10 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
-			this.patchHidden = model.patchHidden;
-			this.patchMoved = model.patchMoved;
-			this.patchInserted = model.patchInserted;
-			this.patchModified = model.patchModified;
+			this.deltaHidden = model.deltaHidden;
+			this.deltaMoved = model.deltaMoved;
+			this.deltaInserted = model.deltaInserted;
+			this.deltaModified = model.deltaModified;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -405,94 +405,94 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public bool PatchHidden
+		public bool DeltaHidden
 		{
-			//	Dans un Form de patch, indique un champ qu'il faut cacher dans la liste finale.
+			//	Dans un Form delta, indique un champ qu'il faut cacher dans la liste finale.
 			//	Dans un Form final, indique un champ caché. Il est important que le champ soit là, même si
 			//	FormEngine ne générera pas les widgets correspondant.
 			//	Guid = champ à cacher
 			get
 			{
-				return this.patchHidden;
+				return this.deltaHidden;
 			}
 			set
 			{
-				this.patchHidden = value;
+				this.deltaHidden = value;
 			}
 		}
 
-		public bool PatchMoved
+		public bool DeltaMoved
 		{
-			//	Dans un Form de patch, indique un champ qu'il faut déplacer dans la liste finale.
+			//	Dans un Form delta, indique un champ qu'il faut déplacer dans la liste finale.
 			//	Guid = champ à déplacer
-			//	PatchAttachGuid = champ *après* lequel on s'attache
+			//	DeltaAttachGuid = champ *après* lequel on s'attache
 			//	... = paramètres du champ
 			get
 			{
-				return this.patchMoved;
+				return this.deltaMoved;
 			}
 			set
 			{
-				this.patchMoved = value;
+				this.deltaMoved = value;
 			}
 		}
 
-		public bool PatchInserted
+		public bool DeltaInserted
 		{
-			//	Dans un Form de patch, indique un champ supplémentaire qu'il faut insérer dans la liste finale.
-			//	Guid = champ inséré dans le masque de patch
-			//	PatchAttachGuid = champ *après* lequel on s'attache
+			//	Dans un Form delta, indique un champ supplémentaire qu'il faut insérer dans la liste finale.
+			//	Guid = champ inséré dans le masque final
+			//	DeltaAttachGuid = champ *après* lequel on s'attache
 			//	... = paramètres du champ
 			get
 			{
-				return this.patchInserted;
+				return this.deltaInserted;
 			}
 			set
 			{
-				this.patchInserted = value;
+				this.deltaInserted = value;
 			}
 		}
 
-		public bool PatchModified
+		public bool DeltaModified
 		{
-			//	Dans un Form de patch, indique un champ qu'il faut modifier dans la liste finale.
+			//	Dans un Form delta, indique un champ qu'il faut modifier dans la liste finale.
 			//	Guid = champ modifié
 			//	... = paramètres du champ
 			get
 			{
-				return this.patchModified;
+				return this.deltaModified;
 			}
 			set
 			{
-				this.patchModified = value;
+				this.deltaModified = value;
 			}
 		}
 
-		public System.Guid PatchAttachGuid
+		public System.Guid DeltaAttachGuid
 		{
-			//	Retourne l'identificateur unique *après* lequel est attaché un champ déplacé par un patch.
-			//	Utilisé uniquement si this.type == FieldType.PatchAttach ou PatchInsert !
+			//	Retourne l'identificateur unique *après* lequel est attaché un champ déplacé par un delta.
+			//	Utilisé uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
 			get
 			{
-				return this.patchAttachGuid;
+				return this.deltaAttachGuid;
 			}
 			set
 			{
-				this.patchAttachGuid = value;
+				this.deltaAttachGuid = value;
 			}
 		}
 
-		public bool PatchBrokenAttach
+		public bool DeltaBrokenAttach
 		{
-			//	Indique si un lien PatchAttachGuid est cassé, c'est-à-dire si le Guid n'eixste plus.
-			//	Utilisé uniquement si this.type == FieldType.PatchAttach ou PatchInsert !
+			//	Indique si un lien DeltaAttachGuid est cassé, c'est-à-dire si le Guid n'eixste plus.
+			//	Utilisé uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
 			get
 			{
-				return this.patchBrokenAttach;
+				return this.deltaBrokenAttach;
 			}
 			set
 			{
-				this.patchBrokenAttach = value;
+				this.deltaBrokenAttach = value;
 			}
 		}
 
@@ -540,11 +540,11 @@ namespace Epsitec.Common.FormEngine
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
-				a.patchHidden != b.patchHidden ||
-				a.patchMoved != b.patchMoved ||
-				a.patchInserted != b.patchInserted ||
-				a.patchModified != b.patchModified ||
-				!a.patchAttachGuid.Equals(b.patchAttachGuid) )
+				a.deltaHidden != b.deltaHidden ||
+				a.deltaMoved != b.deltaMoved ||
+				a.deltaInserted != b.deltaInserted ||
+				a.deltaModified != b.deltaModified ||
+				!a.deltaAttachGuid.Equals(b.deltaAttachGuid) )
 			{
 				return false;
 			}
@@ -608,34 +608,34 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
-			if (this.patchHidden)
+			if (this.deltaHidden)
 			{
-				writer.WriteElementString(Xml.PatchHidden, this.patchHidden.ToString());
+				writer.WriteElementString(Xml.DeltaHidden, this.deltaHidden.ToString());
 			}
 
-			if (this.patchMoved)
+			if (this.deltaMoved)
 			{
-				writer.WriteElementString(Xml.PatchMoved, this.patchMoved.ToString());
+				writer.WriteElementString(Xml.DeltaMoved, this.deltaMoved.ToString());
 			}
 
-			if (this.patchInserted)
+			if (this.deltaInserted)
 			{
-				writer.WriteElementString(Xml.PatchInserted, this.patchInserted.ToString());
+				writer.WriteElementString(Xml.DeltaInserted, this.deltaInserted.ToString());
 			}
 
-			if (this.patchModified)
+			if (this.deltaModified)
 			{
-				writer.WriteElementString(Xml.PatchModified, this.patchModified.ToString());
+				writer.WriteElementString(Xml.DeltaModified, this.deltaModified.ToString());
 			}
 
-			if (this.patchAttachGuid != System.Guid.Empty)
+			if (this.deltaAttachGuid != System.Guid.Empty)
 			{
-				writer.WriteElementString(Xml.PatchAttachGuid, this.patchAttachGuid.ToString());
+				writer.WriteElementString(Xml.DeltaAttachGuid, this.deltaAttachGuid.ToString());
 			}
 
-			if (this.patchBrokenAttach)
+			if (this.deltaBrokenAttach)
 			{
-				writer.WriteElementString(Xml.PatchBrokenAttach, this.patchBrokenAttach.ToString());
+				writer.WriteElementString(Xml.DeltaBrokenAttach, this.deltaBrokenAttach.ToString());
 			}
 
 			writer.WriteEndElement();
@@ -704,29 +704,29 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.boxFrameWidth = double.Parse(element);
 						}
-						else if (name == Xml.PatchHidden)
+						else if (name == Xml.DeltaHidden)
 						{
-							this.patchHidden = bool.Parse(element);
+							this.deltaHidden = bool.Parse(element);
 						}
-						else if (name == Xml.PatchMoved)
+						else if (name == Xml.DeltaMoved)
 						{
-							this.patchMoved = bool.Parse(element);
+							this.deltaMoved = bool.Parse(element);
 						}
-						else if (name == Xml.PatchInserted)
+						else if (name == Xml.DeltaInserted)
 						{
-							this.patchInserted = bool.Parse(element);
+							this.deltaInserted = bool.Parse(element);
 						}
-						else if (name == Xml.PatchModified)
+						else if (name == Xml.DeltaModified)
 						{
-							this.patchModified = bool.Parse(element);
+							this.deltaModified = bool.Parse(element);
 						}
-						else if (name == Xml.PatchAttachGuid)
+						else if (name == Xml.DeltaAttachGuid)
 						{
-							this.patchAttachGuid = new System.Guid(element);
+							this.deltaAttachGuid = new System.Guid(element);
 						}
-						else if (name == Xml.PatchBrokenAttach)
+						else if (name == Xml.DeltaBrokenAttach)
 						{
-							this.patchBrokenAttach = bool.Parse(element);
+							this.deltaBrokenAttach = bool.Parse(element);
 						}
 						else
 						{
@@ -813,11 +813,11 @@ namespace Epsitec.Common.FormEngine
 		private BoxPaddingType				boxPaddingType;
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
-		private bool						patchHidden;
-		private bool						patchMoved;
-		private bool						patchInserted;
-		private bool						patchModified;
-		private System.Guid					patchAttachGuid;
-		private bool						patchBrokenAttach;
+		private bool						deltaHidden;
+		private bool						deltaMoved;
+		private bool						deltaInserted;
+		private bool						deltaModified;
+		private System.Guid					deltaAttachGuid;
+		private bool						deltaBrokenAttach;
 	}
 }

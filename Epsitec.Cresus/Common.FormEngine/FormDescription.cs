@@ -18,33 +18,33 @@ namespace Epsitec.Common.FormEngine
 		{
 		}
 
-		public FormDescription(Druid entityId, Druid formIdToPatch)
+		public FormDescription(Druid entityId, Druid deltaBaseFormId)
 		{
 			this.entityId = entityId;
-			this.formIdToPatch = formIdToPatch;
+			this.deltaBaseFormId = deltaBaseFormId;
 			this.fields = new List<FieldDescription>();
 		}
 
-		public FormDescription(FormDescription model) : this(model.EntityId, model.FormIdToPatch)
+		public FormDescription(FormDescription model) : this(model.EntityId, model.DeltaBaseFormId)
 		{
 			this.fields.AddRange(model.Fields);
 		}
 
 		public Druid EntityId
 		{
-			//	Druid de l'entité de base du masque de saisie, utilisé pour un masque normal/patch.
+			//	Druid de l'entité de base du masque de saisie, utilisé pour un masque normal/delta.
 			get
 			{
 				return this.entityId;
 			}
 		}
 
-		public Druid FormIdToPatch
+		public Druid DeltaBaseFormId
 		{
-			//	Druid du masque de base à patcher.
+			//	Druid du masque de base à fusionner.
 			get
 			{
-				return this.formIdToPatch;
+				return this.deltaBaseFormId;
 			}
 		}
 
@@ -57,12 +57,12 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public bool IsPatch
+		public bool IsDelta
 		{
-			//	Indique s'il s'agit d'un formulaire de patch.
+			//	Indique s'il s'agit d'un formulaire delta.
 			get
 			{
-				return !this.formIdToPatch.IsEmpty;
+				return !this.deltaBaseFormId.IsEmpty;
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace Epsitec.Common.FormEngine
 				return false;
 			}
 
-			if (a.formIdToPatch != b.formIdToPatch)
+			if (a.deltaBaseFormId != b.deltaBaseFormId)
 			{
 				return false;
 			}
@@ -164,7 +164,7 @@ namespace Epsitec.Common.FormEngine
 
 			writer.WriteStartElement(Xml.Form);
 			writer.WriteElementString(Xml.EntityId, this.entityId.ToString());
-			writer.WriteElementString(Xml.FormIdToPatch, this.formIdToPatch.ToString());
+			writer.WriteElementString(Xml.DeltaBaseFormId, this.deltaBaseFormId.ToString());
 			foreach (FieldDescription field in this.fields)
 			{
 				field.WriteXml(writer);
@@ -205,9 +205,9 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.entityId = Druid.Parse(element);
 						}
-						else if (name == Xml.FormIdToPatch)
+						else if (name == Xml.DeltaBaseFormId)
 						{
-							this.formIdToPatch = Druid.Parse(element);
+							this.deltaBaseFormId = Druid.Parse(element);
 						}
 						else
 						{
@@ -240,7 +240,7 @@ namespace Epsitec.Common.FormEngine
 
 
 		private Druid							entityId;
-		private Druid							formIdToPatch;
+		private Druid							deltaBaseFormId;
 		private readonly List<FieldDescription>	fields;
 	}
 }

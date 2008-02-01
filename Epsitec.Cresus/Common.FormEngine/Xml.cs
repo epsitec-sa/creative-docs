@@ -4,7 +4,6 @@ namespace Epsitec.Common.FormEngine
 	{
 		public const string Form				= "Form";
 		public const string EntityId			= "EI";
-		public const string FormIdToPatch		= "FIP";
 		public const string FieldDescription	= "FD";
 		public const string Guid				= "Guid";
 		public const string Type				= "Type";
@@ -17,11 +16,12 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxPaddingType		= "BPT";
 		public const string BoxFrameState		= "BFS";
 		public const string BoxFrameWidth		= "BFW";
-		public const string PatchHidden			= "PHi";
-		public const string PatchMoved			= "PMo";
-		public const string PatchInserted		= "PIn";
-		public const string PatchModified		= "PMd";
-		public const string PatchAttachGuid		= "PAG";
-		public const string PatchBrokenAttach	= "PBA";
+		public const string DeltaBaseFormId		= "DBI";
+		public const string DeltaHidden			= "DHi";
+		public const string DeltaMoved			= "DMo";
+		public const string DeltaInserted		= "DIn";
+		public const string DeltaModified		= "DMd";
+		public const string DeltaAttachGuid		= "DAG";
+		public const string DeltaBrokenAttach	= "DBA";
 	}
 }

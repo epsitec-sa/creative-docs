@@ -50,9 +50,9 @@ namespace Epsitec.Common.FormEngine
 
 			List<FieldDescription> fields0 = form.Fields;
 
-			if (form.IsPatch)
+			if (form.IsDelta)
 			{
-				string xml = this.resourceProvider.GetFormXmlSource(form.FormIdToPatch);
+				string xml = this.resourceProvider.GetFormXmlSource(form.DeltaBaseFormId);
 				if (!string.IsNullOrEmpty(xml))
 				{
 					FormDescription refForm = Serialization.DeserializeForm(xml);
@@ -168,7 +168,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
-				if (field.PatchHidden)
+				if (field.DeltaHidden)
 				{
 					continue;
 				}
@@ -275,7 +275,7 @@ namespace Epsitec.Common.FormEngine
 			{
 				FieldDescription field = fields[i];
 
-				if (field.PatchHidden)
+				if (field.DeltaHidden)
 				{
 					continue;
 				}

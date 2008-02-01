@@ -1045,9 +1045,9 @@ namespace Epsitec.Common.Designer.Viewers
 						string formName = null;
 						string entityName = null;
 
-						if (form.IsPatch)
+						if (form.IsDelta)
 						{
-							formName = this.module.AccessForms.GetFormName(form.FormIdToPatch);
+							formName = this.module.AccessForms.GetFormName(form.DeltaBaseFormId);
 							backColor = Misc.SourceColor(CultureMapSource.DynamicMerge);
 						}
 
@@ -1057,11 +1057,11 @@ namespace Epsitec.Common.Designer.Viewers
 						{
 							if (string.IsNullOrEmpty(entityName))
 							{
-								based = string.Format(Res.Strings.Viewers.Forms.Title.Patch, formName);
+								based = string.Format(Res.Strings.Viewers.Forms.Title.Delta, formName);
 							}
 							else
 							{
-								based = string.Format(Res.Strings.Viewers.Forms.Title.PatchNormal, formName, entityName);
+								based = string.Format(Res.Strings.Viewers.Forms.Title.DeltaNormal, formName, entityName);
 							}
 						}
 						else
