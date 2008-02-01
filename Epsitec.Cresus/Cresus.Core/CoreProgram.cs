@@ -1,8 +1,6 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Widgets;
-
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core
@@ -16,7 +14,7 @@ namespace Epsitec.Cresus.Core
 		static void Main(string[] args)
 		{
 			UI.Initialize ();
-			
+
 			CoreApplication application = new CoreApplication ();
 
 			System.Diagnostics.Debug.Assert (application.ResourceManagerPool.PoolName == "Core");

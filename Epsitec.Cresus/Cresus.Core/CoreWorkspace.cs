@@ -26,17 +26,46 @@ namespace Epsitec.Cresus.Core
 			}
 			internal set
 			{
-				System.Diagnostics.Debug.Assert (value != null);
-				System.Diagnostics.Debug.Assert (this.application == null);
-
-				this.application = value;
+				this.DefineCoreApplication (value);
 			}
 		}
 
+		public AbstractGroup Container
+		{
+			get
+			{
+				if (this.container == null)
+				{
+					System.Diagnostics.Debug.Assert (this.Application != null);
+					System.Diagnostics.Debug.Assert (this.Application.Window != null);
+
+					this.SetupUserInterface (this.CreateUserInterface ());
+				}
+
+				return this.container;
+			}
+		}
+
+		private void SetupUserInterface(AbstractGroup container)
+		{
+			this.container = container;
+			this.container.Dock = DockStyle.Fill;
+			this.container.Name = this.GetType ().Name;
+		}
 		
-		public abstract void CreateUserInterface();
+		private void DefineCoreApplication(CoreApplication coreApplication)
+		{
+			System.Diagnostics.Debug.Assert (coreApplication != null);
+			System.Diagnostics.Debug.Assert (this.application == null);
+
+			this.application = coreApplication;
+		}
+
+
+		public abstract AbstractGroup CreateUserInterface();
 
 
 		private CoreApplication application;
+		private AbstractGroup container;
 	}
 }

@@ -7,6 +7,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core
 {
+	/// <summary>
+	/// The <c>CoreApplication</c> class implements the central application
+	/// logic.
+	/// </summary>
 	public class CoreApplication : Application
 	{
 		public CoreApplication()
@@ -21,6 +25,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		
 		public void CreateUserInterface()
 		{
 			Window window = new Window ();
@@ -28,6 +33,22 @@ namespace Epsitec.Cresus.Core
 			window.Text = this.ShortWindowTitle;
 
 			this.Window = window;
+
+			this.CreateWorkspaces ();
 		}
+
+		private void CreateWorkspaces()
+		{
+			this.formWorkspace = new FormWorkspace ()
+			{
+				Application = this
+			};
+
+			this.Window.Root.Children.Add (this.formWorkspace.Container);
+		}
+
+
+
+		FormWorkspace formWorkspace;
 	}
 }

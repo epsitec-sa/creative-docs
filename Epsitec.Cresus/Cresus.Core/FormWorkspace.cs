@@ -18,8 +18,9 @@ namespace Epsitec.Cresus.Core
 		{
 		}
 
-		public override void CreateUserInterface()
+		public override AbstractGroup CreateUserInterface()
 		{
+			return new FrameBox ();
 		}
 	}
 }
