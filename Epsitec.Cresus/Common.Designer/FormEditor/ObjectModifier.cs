@@ -826,11 +826,33 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsDelta)  // masque delta ?
 			{
-				FormEngine.FormDescription refForm = this.formEditor.Module.AccessForms.GetForm(this.formEditor.Form.DeltaBaseFormId);
-				this.baseFields = refForm.Fields;
-
 				FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
-				this.finalFields = engine.Arrange.Merge(this.baseFields, this.formEditor.Form.Fields);
+				List<FormDescription> baseForms = new List<FormDescription>();
+				FormDescription baseForm = this.formEditor.Form;
+				baseForms.Add(baseForm);
+
+				//	Cherche tous les Forms de base, jusqu'à trouver le Form initial qui n'est pas
+				//	un Form delta.
+				while (baseForm != null && baseForm.IsDelta)
+				{
+					baseForm = this.formEditor.Module.AccessForms.GetForm(baseForm.DeltaBaseFormId);
+					if (baseForm != null)
+					{
+						baseForms.Add(baseForm);
+					}
+				}
+
+				//	A partir du Form de base initial, fusionne avec tous les Forms delta.
+				this.finalFields = baseForms[baseForms.Count-1].Fields;
+				this.baseFields = null;
+				for (int i=baseForms.Count-2; i>=0; i--)
+				{
+					this.baseFields = this.finalFields;
+					this.finalFields = engine.Arrange.Merge(this.baseFields, baseForms[i].Fields);
+				}
+
+				// this.baseFields contient la liste de base (la génération précédente)
+				// this.finalFields contient la liste finale (la dernière génération)
 			}
 			else  // masque normal ?
 			{

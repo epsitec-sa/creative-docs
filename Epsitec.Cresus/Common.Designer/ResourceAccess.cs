@@ -408,8 +408,8 @@ namespace Epsitec.Common.Designer
 
 				//	Fusionne le masque de base selon les indications du masque delta, pour
 				//	déterminer les éventuelles erreurs.
-				FormEngine.FormDescription refForm = this.GetForm(form.DeltaBaseFormId);
-				engine.Arrange.Merge(refForm.Fields, form.Fields);
+				FormEngine.FormDescription baseForm = this.GetForm(form.DeltaBaseFormId);
+				engine.Arrange.Merge(baseForm.Fields, form.Fields);
 
 				//	Compte le nombre de liens cassés.
 				List<string> errors = new List<string>();
