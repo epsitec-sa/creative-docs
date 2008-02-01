@@ -17,21 +17,9 @@ namespace Epsitec.Cresus.Core
 		{
 			UI.Initialize ();
 			
-			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
-			List<string> paths;
-
-#if false
-			paths = new List<string> ();
-			paths.Add (System.IO.Path.Combine (execPath, "Resources"));
-
-			Epsitec.Common.Support.Implementation.FileProvider.DefineGlobalProbingPath (string.Join (";", paths.ToArray ()));
-#endif
-
 			CoreApplication application = new CoreApplication ();
-			
-			application.ResourceManagerPool.DefaultPrefix = "file";
-			application.ResourceManagerPool.SetupDefaultRootPaths ();
-			application.ResourceManagerPool.ScanForAllModules ();
+
+			System.Diagnostics.Debug.Assert (application.ResourceManagerPool.PoolName == "Core");
 
 			application.CreateUserInterface ();
 

@@ -100,11 +100,11 @@ namespace Epsitec.Common.Types
 		public override string ToString()
 		{
 			return string.Concat ("Changed ",
-				/**/			  this.PropertyName ?? (this.property == null ? "?" : this.property.Name),
-				/**/			  " from ",
-				/**/			  this.oldValue == null ? "<null>" : this.oldValue.ToString (),
-				/**/			  " to ",
-				/**/			  this.newValue == null ? "<null>" : this.newValue.ToString ());
+				/* */			  this.PropertyName ?? (this.property == null ? "?" : this.property.Name),
+				/* */			  " from ",
+				/* */			  this.oldValue == null ? "<null>" : this.oldValue.ToString (),
+				/* */			  " to ",
+				/* */			  this.newValue == null ? "<null>" : this.newValue.ToString ());
 		}
 		
 		private DependencyProperty				property;

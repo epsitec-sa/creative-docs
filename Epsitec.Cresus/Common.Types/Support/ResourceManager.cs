@@ -65,7 +65,7 @@ namespace Epsitec.Common.Support
 
 		public ResourceManager(ResourceManagerPool pool, string executablePath, string modulePath)
 		{
-			this.pool = pool ?? new ResourceManagerPool ();
+			this.pool = pool ?? ResourceManagerPool.Default ?? new ResourceManagerPool ();
 			this.bundleRelatedCache = new Dictionary<string, BundleRelatedCache> ();
 			this.captionCache = new Dictionary<string, Weak<Caption>> ();
 			this.defaultModulePath = modulePath;

@@ -688,11 +688,25 @@ namespace Epsitec.Common.Support
 			public const string Live		= "%live%";
 		}
 
+		public static ResourceManagerPool		Default
+		{
+			get
+			{
+				return ResourceManagerPool.defaultPool;
+			}
+			set
+			{
+				ResourceManagerPool.defaultPool = value;
+			}
+		}
+
 		internal const string ModulesDirectory        = "Modules";
 		internal const string CustomModulesDirectory  = "Custom Modules";
 		internal const string PatchModulesDirectory   = "Patch Modules";
 		internal const string LibraryModulesDirectory = "Library Modules";
 		internal const string LiveModulesDirectory    = "Live Modules";
+
+		private static ResourceManagerPool		defaultPool;
 		
 		string									name;
 		string									defaultPrefix;
