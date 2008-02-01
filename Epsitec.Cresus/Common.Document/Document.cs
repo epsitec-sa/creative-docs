@@ -480,7 +480,15 @@ namespace Epsitec.Common.Document
 		public ImageCache ImageCache
 		{
 			//	Cache des images de ce document.
-			get { return this.imageCache; }
+			get
+			{
+				if (this.imageCache == null)
+				{
+					this.imageCache = new ImageCache (this);
+				}
+				
+				return this.imageCache;
+			}
 		}
 
 		public DocumentManager DocumentManager

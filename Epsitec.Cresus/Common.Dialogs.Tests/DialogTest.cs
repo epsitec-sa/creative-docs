@@ -25,6 +25,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
+			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
 		}
 		
 		[Test]
@@ -88,8 +89,11 @@ namespace Epsitec.Common.Dialogs
 			//	- CasePostale
 			//	- Localité.Résumé
 
-			HintListController hintListController = new HintListController ();
-			DialogSearchController searchController = hintListController.SearchController;
+			HintListController     hintListController = new HintListController ();
+			DialogSearchController searchController   = hintListController.SearchController;
+
+			hintListController.Visibility = HintListVisibilityMode.AutoHide;
+			hintListController.ContentType = HintListContentType.Suggestions;
 
 			TestResolver resolver = DialogTest.CreateSuggestions ();
 			

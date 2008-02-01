@@ -16,11 +16,24 @@ namespace Epsitec.Cresus.Core
 	{
 		public FormWorkspace()
 		{
+			this.hintListController = new HintListController ()
+			{
+				Visibility = HintListVisibilityMode.Visible,
+				ContentType = HintListContentType.Catalog
+			};
 		}
 
+		
 		public override AbstractGroup CreateUserInterface()
 		{
-			return new FrameBox ();
+			FrameBox frame = new FrameBox ();
+
+			this.hintListController.DefineContainer (frame);
+
+			return frame;
 		}
+
+
+		private readonly HintListController hintListController;
 	}
 }

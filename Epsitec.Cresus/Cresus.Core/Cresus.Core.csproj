@@ -73,6 +73,10 @@
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Drawing.Images\Common.Drawing.Images.csproj">
+      <Project>{FD37B74B-455D-4706-9ED3-BD210EB91975}</Project>
+      <Name>Common.Drawing.Images</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Drawing\Common.Drawing.csproj">
       <Project>{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}</Project>
       <Name>Common.Drawing</Name>

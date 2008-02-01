@@ -30,6 +30,51 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
+		/// <summary>
+		/// Gets or sets the hint list visibility mode.
+		/// </summary>
+		/// <value>The visibility.</value>
+		public HintListVisibilityMode Visibility
+		{
+			get
+			{
+				return this.visiblityMode;
+			}
+			set
+			{
+				if (this.visiblityMode != value)
+				{
+					this.visiblityMode = value;
+					this.OnVisibilityModeChanged ();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the content type, which will define what header the
+		/// hint list will display.
+		/// </summary>
+		/// <value>The content type.</value>
+		public HintListContentType ContentType
+		{
+			get
+			{
+				return this.contentType;
+			}
+			set
+			{
+				if (this.contentType != value)
+				{
+					this.contentType = value;
+					this.OnContentTypeChanged ();
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the search controller associated with this hint list.
+		/// </summary>
+		/// <value>The search controller.</value>
 		public DialogSearchController SearchController
 		{
 			get
@@ -38,6 +83,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the active search context, if any.
+		/// </summary>
+		/// <value>The active search context, or <c>null</c>.</value>
 		public ISearchContext ActiveSearchContext
 		{
 			get
@@ -54,6 +103,16 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public void DefineContainer(Widget widget)
+		{
+			this.CreateUserInterface ();
+			
+			this.hintListWidget.SetParent (widget);
+			this.hintListWidget.Anchor = AnchorStyles.None;
+			this.hintListWidget.Dock = DockStyle.Left;
+		}
+		
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -67,32 +126,85 @@ namespace Epsitec.Common.Dialogs
 			base.Dispose (disposing);
 		}
 
+		
+		private void OnVisibilityModeChanged()
+		{
+			this.UpdateVisibility ();
+		}
+
+		private void OnContentTypeChanged()
+		{
+			this.UpdateContentHeader ();
+		}
+
 		private void OnActiveSearchContextChanged()
 		{
-			//	TODO: the active search context changed, refresh the UI list
-
-			if (this.activeSearchContext == null)
+			this.UpdateVisibility ();
+		}
+		
+		
+		private void UpdateContentHeader()
+		{
+			if (this.hintListWidget != null)
 			{
-				this.HideHintListWidget ();
-			}
-			else
-			{
-				this.ShowHintListWidget ();
+				this.hintListWidget.Header.ContentType = this.contentType;
 			}
 		}
 
+		private void UpdateVisibility()
+		{
+			switch (this.visiblityMode)
+			{
+				case HintListVisibilityMode.AutoHide:
+					if (this.activeSearchContext == null)
+					{
+						this.HideHintListWidget ();
+					}
+					else
+					{
+						this.ShowHintListWidget ();
+					}
+					break;
+
+				case HintListVisibilityMode.Invisible:
+					this.HideHintListWidget ();
+					break;
+
+				case HintListVisibilityMode.Visible:
+					this.ShowHintListWidget ();
+					break;
+
+				default:
+					throw new System.InvalidOperationException ();
+			}
+		}
+
+
 		private void ShowHintListWidget()
 		{
-			if (this.hintListEmbedder == null)
+			this.CreateUserInterface ();
+
+			if (this.hintListEmbedder != null)
+			{
+				this.hintListEmbedder.Show ();
+			}
+		}
+
+		private void CreateUserInterface()
+		{
+			if (this.hintListWidget == null)
 			{
 				this.hintListWidget = new HintListWidget ();
 				this.hintListWidget.PreferredWidth = 200;
+				this.hintListWidget.Header.ContentType = this.contentType;
 				this.hintListWidget.CurrentItemChanged += this.HandleHintListWidgetCurrentItemChanged;
-
-				this.hintListEmbedder = new HintListEmbedder (this.searchController.DialogWindow, this.hintListWidget);
 			}
 
-			this.hintListEmbedder.Show ();
+			if ((this.hintListEmbedder == null) &&
+				(this.Visibility == HintListVisibilityMode.AutoHide))
+			{
+				this.hintListEmbedder = new HintListEmbedder (this.searchController.DialogWindow, this.hintListWidget);
+			}
 		}
 
 		private void HideHintListWidget()
@@ -103,6 +215,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		
 		private void HandleHintListWidgetCurrentItemChanged(object sender)
 		{
 			AbstractEntity item = this.hintListWidget.Items.CurrentItem as AbstractEntity;
@@ -263,9 +376,11 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		private readonly DialogSearchController searchController;
-		private ISearchContext activeSearchContext;
-		private EntityResolverResult searchResult;
-		private HintListWidget hintListWidget;
-		private HintListEmbedder hintListEmbedder;
+		private ISearchContext					activeSearchContext;
+		private EntityResolverResult			searchResult;
+		private HintListWidget					hintListWidget;
+		private HintListEmbedder				hintListEmbedder;
+		private HintListVisibilityMode			visiblityMode;
+		private HintListContentType				contentType;
 	}
 }

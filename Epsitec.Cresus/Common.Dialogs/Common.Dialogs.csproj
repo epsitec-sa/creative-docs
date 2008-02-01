@@ -166,6 +166,9 @@
     <Compile Include="AbstractYesNoCancel.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HintListHeaderWidget.cs" />
+    <Compile Include="HintListVisibilityMode.cs" />
+    <Compile Include="HintListContentType.cs" />
     <Compile Include="HintListWidget.cs" />
     <Compile Include="DialogDataChangeSet.cs" />
     <Compile Include="DialogDataMode.cs" />
@@ -278,6 +281,9 @@
     <EmbeddedResource Include="Images\FileRefresh.icon" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\External\images\bitmap\binocular-64x48.png">
+      <Link>Images\binocular-64x48.png</Link>
+    </EmbeddedResource>
     <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.en.resource" />

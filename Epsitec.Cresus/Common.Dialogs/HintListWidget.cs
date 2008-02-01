@@ -22,6 +22,13 @@ namespace Epsitec.Common.Dialogs
 	{
 		public HintListWidget()
 		{
+			this.header = new HintListHeaderWidget ()
+			{
+				Embedder = this,
+				Dock = DockStyle.Top,
+				PreferredHeight =  100
+			};
+
 			this.itemTable = new ItemTable ()
 			{
 				Embedder = this,
@@ -36,6 +43,13 @@ namespace Epsitec.Common.Dialogs
 			this.BackColor = Drawing.Color.FromName ("White");
 		}
 
+		public HintListHeaderWidget Header
+		{
+			get
+			{
+				return this.header;
+			}
+		}
 		
 		public ICollectionView Items
 		{
@@ -96,6 +110,7 @@ namespace Epsitec.Common.Dialogs
 		public event EventHandler CurrentItemChanged;
 
 		private readonly ItemTable itemTable;
+		private readonly HintListHeaderWidget header;
 		private ICollectionView items;
 	}
 }
