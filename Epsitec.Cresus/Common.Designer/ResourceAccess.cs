@@ -2199,17 +2199,8 @@ namespace Epsitec.Common.Designer
 					switch (item.Source)
 					{
 						case CultureMapSource.DynamicMerge:
-#if true
+							this.FormMerge(item);  // utile si un autre module a changé
 							xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
-#else
-							string xmlDelta = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
-							string xmlBase = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
-							FormEngine.FormDescription formDelta = FormEngine.Serialization.DeserializeForm(xmlDelta);
-							FormEngine.FormDescription formBase = FormEngine.Serialization.DeserializeForm(xmlBase);
-
-							FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
-							engine.Arrange.Merge(formBase.Fields, formDelta.Fields);
-#endif
 							break;
 
 						case CultureMapSource.PatchModule:
