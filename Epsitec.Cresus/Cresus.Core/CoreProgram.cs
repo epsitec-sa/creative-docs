@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Core
 
 			application.Window.Show ();
 			application.Window.Run ();
+
+			UI.ShutDown ();
 		}
 	}
 }

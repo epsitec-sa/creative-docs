@@ -16,7 +16,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Collections.WidgetCollection		Items
+		public Collections.WidgetCollection	Items
 		{
 			get { return this.items; }
 		}

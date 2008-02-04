@@ -21,12 +21,21 @@ namespace Epsitec.Common.Dialogs
 	{
 		public HintListHeaderWidget()
 		{
-			this.topHalf = new Widget ()
+			this.topHalf = new FrameBox ()
 			{
 				Embedder = this,
 				Dock = DockStyle.Top,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredHeight = 52
+				PreferredHeight = 52,
+				Name = "TopHalf"
+			};
+
+			this.bottomHalf = new FrameBox ()
+			{
+				Embedder = this,
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Name = "BottomHalf"
 			};
 
 			this.image = new StaticImage ()
@@ -36,15 +45,28 @@ namespace Epsitec.Common.Dialogs
 				VerticalAlignment = VerticalAlignment.Top,
 				Margins = new Drawing.Margins (0, 4, 0, 0),
 				PreferredSize = new Drawing.Size (64, 48),
-				ImageSize = new Drawing.Size (64, 48)
+				ImageSize = new Drawing.Size (64, 48),
+				Name = "Icon"
 			};
 
 			this.title = new StaticText ()
 			{
 				Embedder = this.topHalf,
 				Dock = DockStyle.StackFill,
-				TextBreakMode = Drawing.TextBreakMode.Ellipsis
+				TextBreakMode = Drawing.TextBreakMode.Ellipsis,
+				Name = "Title"
 			};
+
+			this.toolBar = new HToolBar ()
+			{
+				Embedder = this.bottomHalf,
+				Dock = DockStyle.Fill,
+				VerticalAlignment = VerticalAlignment.Center,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				PreferredHeight = 20
+			};
+
+			this.toolBar.Items.Add (new IconButton (Res.Commands.Dialog.Generic.Cancel));
 		}
 
 
@@ -74,7 +96,7 @@ namespace Epsitec.Common.Dialogs
 
 				case HintListContentType.Catalog:
 					this.image.Visibility =	true;
-					this.image.ImageName = @"manifest:Epsitec.Common.Dialogs.Images.binocular-64x48.png";
+					this.image.ImageName = @"manifest:Epsitec.Common.Dialogs.Images.box-64x48.png";
 					break;
 
 				case HintListContentType.Suggestions:
@@ -102,8 +124,10 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		private readonly Widget topHalf;
+		private readonly Widget bottomHalf;
 		private readonly StaticImage image;
 		private readonly StaticText title;
+		private readonly HToolBar toolBar;
 
 		private HintListContentType contentType;
 	}

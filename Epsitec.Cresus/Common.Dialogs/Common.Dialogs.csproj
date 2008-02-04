@@ -284,6 +284,9 @@
     <EmbeddedResource Include="..\External\images\bitmap\binocular-64x48.png">
       <Link>Images\binocular-64x48.png</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\External\images\bitmap\box-64x48.png">
+      <Link>Images\box-64x48.png</Link>
+    </EmbeddedResource>
     <Content Include="Resources\Common.Dialogs\Captions.de.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.de.resource" />
     <Content Include="Resources\Common.Dialogs\Strings.en.resource" />
