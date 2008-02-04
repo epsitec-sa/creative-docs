@@ -1330,6 +1330,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					{
 						Druid id = StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
 						this.IncludeType (id, definingTypeId, membership, depth+1);
+//-						this.IncludeType (id, id, FieldMembership.Local, depth+1);
 						this.IncludeInterfaceId (id);
 					}
 				}

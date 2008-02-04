@@ -46,14 +46,21 @@ namespace Epsitec.Cresus.Core
 			if (empty)
 			{
 				this.CreateSchemas ();
-				System.Diagnostics.Debug.WriteLine ("Database ready");
 			}
+			else
+			{
+				this.VerifySchemas ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine ("Database ready");
+		}
+
+		private void VerifySchemas()
+		{
 		}
 
 		private void CreateSchemas()
 		{
-			System.Diagnostics.Debug.Assert (this.dataContext != null);
-
 			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ();
 		}
 

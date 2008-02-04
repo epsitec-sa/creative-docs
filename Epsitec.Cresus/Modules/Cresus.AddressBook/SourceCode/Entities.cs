@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	///	The <c>Adresse</c> entity.
 	///	designer:cap/8V1
 	///	</summary>
-	public partial class AdresseEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class AdresseEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Common.Dialogs.Entities.ISearchable
 	{
 		///	<summary>
 		///	The <c>Rue</c> field.
@@ -40,6 +40,26 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				}
 			}
 		}
+		#region ISearchable Members
+		///	<summary>
+		///	The <c>SearchValue</c> field.
+		///	designer:fld/8V1/6016
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[6016]")]
+		public string SearchValue
+		{
+			get
+			{
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.FuncSearchValue);
+			}
+			set
+			{
+				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> (this, "[6016]", value);
+			}
+		}
+		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> FuncSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé); // λ [8V1] [6016]
+		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string>> ExprSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé); // λ [8V1] [6016]
+		#endregion
 		///	<summary>
 		///	The <c>CasePostale</c> field.
 		///	designer:fld/8V1/8V14
@@ -109,6 +129,26 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	///	</summary>
 	public partial class AdressePersonneEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
 	{
+		///	<summary>
+		///	The <c>SearchValue</c> field.
+		///	designer:fld/8V11/6016
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[6016]")]
+		public string SearchValue
+		{
+			get
+			{
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.FuncSearchValue);
+			}
+			set
+			{
+				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", value);
+			}
+		}
+		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> FuncSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé)
+; // λ [8V11] [6016]
+		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string>> ExprSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé)
+; // λ [8V11] [6016]
 		///	<summary>
 		///	The <c>Prénom</c> field.
 		///	designer:fld/8V11/8V16
