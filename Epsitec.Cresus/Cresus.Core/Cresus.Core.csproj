@@ -51,6 +51,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="CoreData.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreWorkspace.cs" />
     <Compile Include="CoreApplication.cs" />
@@ -108,6 +109,10 @@
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
+      <Name>Cresus.Database.Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>

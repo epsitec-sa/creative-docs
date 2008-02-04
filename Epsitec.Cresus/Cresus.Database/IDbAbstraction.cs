@@ -55,6 +55,17 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether the connection was properly initialized.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the connection was properly initialized; otherwise, <c>false</c>.
+		/// </value>
+		bool IsConnectionInitialized
+		{
+			get;
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether the connection is open.
 		/// </summary>
 		/// <value>

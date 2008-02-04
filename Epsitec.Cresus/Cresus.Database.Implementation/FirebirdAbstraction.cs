@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 			else
 			{
-				this.CreateConnection (this.dbAccess.CheckConnection);
+				this.CreateConnection (this.dbAccess.CheckConnection, this.dbAccess.IgnoreInitialConnectionErrors);
 			}
 			
 			this.sqlBuilder = new FirebirdSqlBuilder (this);
@@ -90,14 +90,19 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		private void CreateConnection()
 		{
-			this.dbConnection = new FbConnection (this.dbConnectionString);
+			this.CreateConnection (false, false);
 		}
 
 		private void CreateConnection(bool testConnection)
 		{
+			this.CreateConnection (testConnection, false);
+		}
+
+		private void CreateConnection(bool testConnection, bool ignoreErrors)
+		{
 			try
 			{
-				this.CreateConnection ();
+				this.dbConnection = new FbConnection (this.dbConnectionString);
 				
 				if (testConnection)
 				{
@@ -106,10 +111,20 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 			catch
 			{
-				this.dbConnection.Dispose ();
-				this.dbConnection = null;
-				
-				throw;
+				if (this.dbConnection != null)
+				{
+					this.dbConnection.Dispose ();
+					this.dbConnection = null;
+				}
+
+				if (ignoreErrors)
+				{
+					//	Swallow exception silently
+				}
+				else
+				{
+					throw;
+				}
 			}
 		}
 
@@ -321,6 +336,14 @@ namespace Epsitec.Cresus.Database.Implementation
 			get
 			{
 				return this.dbServiceTools;
+			}
+		}
+
+		public bool									IsConnectionInitialized
+		{
+			get
+			{
+				return this.dbConnection != null;
 			}
 		}
 		

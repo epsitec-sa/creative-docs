@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
+			this.data = new CoreData ();
 		}
 
 		public override string ShortWindowTitle
@@ -26,7 +27,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-		public void CreateUserInterface()
+		public void SetupInterface()
 		{
 			Window window = new Window ();
 
@@ -35,6 +36,11 @@ namespace Epsitec.Cresus.Core
 			this.Window = window;
 
 			this.CreateWorkspaces ();
+		}
+
+		public void SetupData()
+		{
+			this.data.SetupDatabase ();
 		}
 
 		private void CreateWorkspaces()
@@ -47,8 +53,22 @@ namespace Epsitec.Cresus.Core
 			this.Window.Root.Children.Add (this.formWorkspace.Container);
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.data != null)
+				{
+					this.data.Dispose ();
+					this.data = null;
+				}
+			}
+
+			base.Dispose (disposing);
+		}
 
 
 		FormWorkspace formWorkspace;
+		CoreData data;
 	}
 }

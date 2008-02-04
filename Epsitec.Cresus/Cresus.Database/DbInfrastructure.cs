@@ -20,7 +20,21 @@ namespace Epsitec.Cresus.Database
 			this.liveTransactions = new List<DbTransaction> ();
 			this.releaseRequested = new List<IDbAbstraction> ();
 		}
-		
+
+
+		/// <summary>
+		/// Gets a value indicating whether the connection is open.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the connection is open; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsConnectionOpen
+		{
+			get
+			{
+				return (this.abstraction != null) && (this.abstraction.IsConnectionOpen);
+			}
+		}
 		
 		public string[]							DefaultLocalizations
 		{
@@ -162,9 +176,9 @@ namespace Epsitec.Cresus.Database
 		/// to any database.
 		/// </summary>
 		/// <param name="access">The database access.</param>
-		public void CreateDatabase(DbAccess access)
+		public bool CreateDatabase(DbAccess access)
 		{
-			this.CreateDatabase (access, false);
+			return this.CreateDatabase (access, false);
 		}
 
 		/// <summary>
@@ -174,7 +188,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="access">The database access.</param>
 		/// <param name="isServer">If set to <c>true</c> creates the database for a server.</param>
-		public void CreateDatabase(DbAccess access, bool isServer)
+		public bool CreateDatabase(DbAccess access, bool isServer)
 		{
 			if (this.access.IsValid)
 			{
@@ -184,7 +198,11 @@ namespace Epsitec.Cresus.Database
 			this.access = access;
 			this.access.CreateDatabase = true;
 
-			this.InitializeDatabaseAbstraction ();
+			if (this.InitializeDatabaseAbstraction () == false)
+			{
+				this.access = new DbAccess ();
+				return false;
+			}
 			
 			this.types.RegisterTypes ();
 			
@@ -249,6 +267,8 @@ namespace Epsitec.Cresus.Database
 			//	The database is ready. Start using it...
 			
 			this.StartUsingDatabase ();
+
+			return true;
 		}
 
 		/// <summary>
@@ -256,7 +276,7 @@ namespace Epsitec.Cresus.Database
 		/// <c>DbInfrastructure</c> is not yet connected to any database.
 		/// </summary>
 		/// <param name="access">The database access.</param>
-		public void AttachToDatabase(DbAccess access)
+		public bool AttachToDatabase(DbAccess access)
 		{
 			if (this.access.IsValid)
 			{
@@ -266,12 +286,19 @@ namespace Epsitec.Cresus.Database
 			this.access = access;
 			this.access.CreateDatabase = false;
 
-			this.InitializeDatabaseAbstraction ();
+			if (this.InitializeDatabaseAbstraction () == false)
+			{
+				this.access = new DbAccess ();
+				return false;
+			}
 			
 			//	The database must have user tables (at least, it has our metadata
 			//	tables)...
-			
-			System.Diagnostics.Debug.Assert (this.abstraction.QueryUserTableNames ().Length > 0);
+
+			if (this.abstraction.QueryUserTableNames ().Length == 0)
+			{
+				throw new Exceptions.GenericException (this.access, "No user tables found in database");
+			}
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -288,6 +315,8 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.StartUsingDatabase ();
+
+			return true;
 		}
 
 		/// <summary>
@@ -435,8 +464,15 @@ namespace Epsitec.Cresus.Database
 		public IDbAbstraction CreateDatabaseAbstraction()
 		{
 			IDbAbstraction abstraction = DbFactory.CreateDatabaseAbstraction (this.access);
-			
-			abstraction.SqlBuilder.AutoClear = true;
+
+			if (abstraction.IsConnectionInitialized == false)
+			{
+				//	Could not open connection and configured to not throw any
+				//	exceptions...
+
+				abstraction.Dispose ();
+				abstraction = null;
+			}
 			
 			return abstraction;
 		}
@@ -2522,17 +2558,29 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Initializes the database abstraction.
 		/// </summary>
-		private void InitializeDatabaseAbstraction()
+		/// <returns><c>true</c> if the connection was successfully established;
+		/// otherwise, <c>false</c>.</returns>
+		private bool InitializeDatabaseAbstraction()
 		{
-			this.types       = new TypeHelper (this);
 			this.abstraction = this.CreateDatabaseAbstraction ();
-			this.sqlEngine   = this.abstraction.SqlEngine;
-			this.converter   = this.abstraction.Factory.TypeConverter;
 
-			System.Diagnostics.Debug.Assert (this.sqlEngine != null);
-			System.Diagnostics.Debug.Assert (this.converter != null);
-			
-			this.abstraction.SqlBuilder.AutoClear = true;
+			if (this.abstraction == null)
+			{
+				return false;
+			}
+			else
+			{
+				this.types       = new TypeHelper (this);
+				this.sqlEngine   = this.abstraction.SqlEngine;
+				this.converter   = this.abstraction.Factory.TypeConverter;
+
+				System.Diagnostics.Debug.Assert (this.sqlEngine != null);
+				System.Diagnostics.Debug.Assert (this.converter != null);
+
+				this.abstraction.SqlBuilder.AutoClear = true;
+
+				return true;
+			}
 		}
 
 		#endregion

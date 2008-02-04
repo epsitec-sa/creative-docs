@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="loginName">The login name.</param>
 		/// <param name="loginPassword">The login password.</param>
 		/// <param name="createDatabase">If set to <c>true</c>, requests database creation.</param>
-		public DbAccess (string provider, string database, string server, string loginName, string loginPassword, bool createDatabase)
+		public DbAccess(string provider, string database, string server, string loginName, string loginPassword, bool createDatabase)
 		{
 			this.provider		 = provider;
 			this.database		 = database;
@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Database
 			this.loginPassword	 = loginPassword;
 			this.createDatabase	 = createDatabase;
 			this.checkConnection = true;
+			this.ignoreErrors    = false;
 		}
 
 		/// <summary>
@@ -154,6 +155,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the database engine should
+		/// ignore initial connection errors.
+		/// </summary>
+		/// <value><c>true</c> to ignore initial connection errors; otherwise, <c>false</c>.</value>
+		public bool								IgnoreInitialConnectionErrors
+		{
+			get
+			{
+				return this.ignoreErrors;
+			}
+			set
+			{
+				this.ignoreErrors = value;
+			}
+		}
+
 		public static readonly DbAccess			Empty;
 		
 		private string							provider;
@@ -163,5 +181,6 @@ namespace Epsitec.Cresus.Database
 		private string							loginPassword;
 		private bool							createDatabase;
 		private bool							checkConnection;
+		private bool							ignoreErrors;
 	}
 }

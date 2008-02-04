@@ -19,7 +19,8 @@ namespace Epsitec.Cresus.Core
 
 			System.Diagnostics.Debug.Assert (application.ResourceManagerPool.PoolName == "Core");
 
-			application.CreateUserInterface ();
+			application.SetupInterface ();
+			application.SetupData ();
 
 			application.Window.Show ();
 			application.Window.Run ();
