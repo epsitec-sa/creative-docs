@@ -535,22 +535,22 @@ namespace Epsitec.Common.Designer
 						switch (item.Source)
 						{
 							case CultureMapSource.DynamicMerge:
-								value = data.GetValue (Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
+								value = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
 								break;
 
 							case CultureMapSource.PatchModule:
-								value = data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+								value = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 								break;
 
 							case CultureMapSource.ReferenceModule:
-								value = data.GetValue (Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+								value = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
 								break;
 
 							default:
-								throw new System.InvalidOperationException ();
+								throw new System.InvalidOperationException();
 						}
 
-						System.Diagnostics.Debug.Assert (value != null);
+						System.Diagnostics.Debug.Assert(value != null);
 
 						return value;
 					}
@@ -558,7 +558,7 @@ namespace Epsitec.Common.Designer
 					{
 						//	Si c'est un module normal, pas de problème: on peut simplement lire
 						//	le XML source tel qu'il est stocké dans les ressources :
-						return data.GetValue (Support.Res.Fields.ResourceForm.XmlSource) as string;
+						return data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 					}
 				}
 				else

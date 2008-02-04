@@ -71,10 +71,9 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		protected List<FieldDescription> Merge(List<FieldDescription> baseList, List<FieldDescription> deltaList)
+		public List<FieldDescription> Merge(List<FieldDescription> baseList, List<FieldDescription> deltaList)
 		{
-			//	Retourne la liste finale fusionnée. Ne doit être utilisé qu'en interne.
-			//	De l'extérieur, il faut utiliser Build !
+			//	Retourne la liste finale fusionnée.
 			List<FieldDescription> finalList = new List<FieldDescription>();
 
 			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,

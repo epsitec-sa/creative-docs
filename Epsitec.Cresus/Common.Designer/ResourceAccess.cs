@@ -645,7 +645,7 @@ namespace Epsitec.Common.Designer
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 				}
 
-				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // delta ?
+				if (result == Epsitec.Common.Dialogs.DialogResult.Answer2)  // delta (correctif) ?
 				{
 					//	On demande le masque sur lequel sera basé le masque delta.
 					Druid deltaBaseformId = Druid.Empty;
@@ -1996,7 +1996,12 @@ namespace Epsitec.Common.Designer
 				ResourceBundle bundle = this.resourceManager.GetBundle(this.GetBundleName(), ResourceLevel.Default);
 				this.primaryCulture = bundle.Culture;
 			}
-			
+
+			if (this.type == Type.Forms)
+			{
+				this.FormsMerge();
+			}
+
 			this.cultures = new List<string>(this.accessor.GetAvailableCultures());
 		}
 
@@ -2159,6 +2164,11 @@ namespace Epsitec.Common.Designer
 				if (xml != oldXml)
 				{
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
+
+					if (this.accessor.BasedOnPatchModule && item.Source == CultureMapSource.DynamicMerge)
+					{
+						this.FormMerge(item);
+					}
 				}
 			}
 		}
@@ -2182,7 +2192,42 @@ namespace Epsitec.Common.Designer
 			if (item != null)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+				string xml;
+
+				if (this.accessor.BasedOnPatchModule)
+				{
+					switch (item.Source)
+					{
+						case CultureMapSource.DynamicMerge:
+#if true
+							xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
+#else
+							string xmlDelta = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+							string xmlBase = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+							FormEngine.FormDescription formDelta = FormEngine.Serialization.DeserializeForm(xmlDelta);
+							FormEngine.FormDescription formBase = FormEngine.Serialization.DeserializeForm(xmlBase);
+
+							FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+							engine.Arrange.Merge(formBase.Fields, formDelta.Fields);
+#endif
+							break;
+
+						case CultureMapSource.PatchModule:
+							xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+							break;
+
+						case CultureMapSource.ReferenceModule:
+							xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+							break;
+
+						default:
+							throw new System.InvalidOperationException();
+					}
+				}
+				else
+				{
+					xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+				}
 
 				if (!string.IsNullOrEmpty(xml))
 				{
@@ -2191,6 +2236,52 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+		protected void FormsMerge()
+		{
+			//	Génère la ressource XmlSourceMerge de tous les masques si nécessaire.
+			if (this.accessor.BasedOnPatchModule)
+			{
+				foreach (CultureMap item in this.accessor.Collection)
+				{
+					if (item.Source == CultureMapSource.DynamicMerge)
+					{
+						this.FormMerge(item);
+					}
+				}
+			}
+		}
+
+		protected void FormMerge(CultureMap item)
+		{
+			//	Génère la ressource XmlSourceMerge d'un masque si nécessaire.
+			if (this.accessor.BasedOnPatchModule && item.Source == CultureMapSource.DynamicMerge)
+			{
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+				string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+				FormEngine.FormDescription form = FormEngine.Serialization.DeserializeForm(xml);
+
+				string xmlBase = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+				string xmlDelta = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+				FormEngine.FormDescription formBase = FormEngine.Serialization.DeserializeForm(xmlBase);
+				FormEngine.FormDescription formDelta = FormEngine.Serialization.DeserializeForm(xmlDelta);
+
+				FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+				List<FormEngine.FieldDescription> fields = engine.Arrange.Merge(formBase.Fields, formDelta.Fields);
+
+				FormEngine.FormDescription copy = new FormEngine.FormDescription(formBase);
+				copy.Fields.Clear();
+				foreach (FormEngine.FieldDescription field in fields)
+				{
+					copy.Fields.Add(field);
+				}
+
+				string xmlFinal = FormEngine.Serialization.SerializeForm(form);
+				data.SetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge, xmlFinal);
+			}
 		}
 		#endregion
 
