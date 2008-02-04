@@ -57,6 +57,11 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		/// <summary>
+		/// Creates the schema for the specified type.
+		/// </summary>
+		/// <typeparam name="T">The entity type for which to create the schema.</typeparam>
+		/// <returns><c>true</c> if a new table definition was created; otherwise, <c>false</c>.</returns>
 		public bool CreateSchema<T>() where T : AbstractEntity, new ()
 		{
 			T entity = new T ();

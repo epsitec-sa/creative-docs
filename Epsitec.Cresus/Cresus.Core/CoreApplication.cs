@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Core
 		public void SetupData()
 		{
 			this.data.SetupDatabase ();
+			this.data.CreateSchemas ();
 		}
 
 		private void CreateWorkspaces()
