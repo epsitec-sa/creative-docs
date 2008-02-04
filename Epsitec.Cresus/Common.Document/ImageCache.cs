@@ -158,7 +158,11 @@ namespace Epsitec.Common.Document
 			}
 
 			string key = ImageManager.GetKey (fileName, fileDate);
-			this.items[key].UsedInDocument = true;
+
+			if (this.items.ContainsKey (key))
+			{
+				this.items[key].UsedInDocument = true;
+			}
 		}
 
 		public void FlushUnused()
