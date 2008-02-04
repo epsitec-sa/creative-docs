@@ -182,7 +182,10 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 				if ((field.Membership == FieldMembership.Local) ||
 					(field.Membership == FieldMembership.LocalOverride))
 				{
-					this.CreateColumn (table, field);
+					if (field.Source == FieldSource.Value)
+					{
+						this.CreateColumn (table, field);
+					}
 				}
 			}
 
