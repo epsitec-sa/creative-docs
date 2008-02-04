@@ -2053,11 +2053,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (listInherited.Count == 0)
 			{
-				builder.Append(Misc.Italic(Res.Strings.Entities.Info.InheritFrom));
+				builder.Append(Misc.Italic(Res.Strings.Entities.Info.InheritNull));
 			}
 			else
 			{
-				builder.Append(Res.Strings.Entities.Info.InheritFrom);
+				if (listInherited.Count == 1)
+				{
+					builder.Append(Res.Strings.Entities.Info.InheritFromOne);
+				}
+				else
+				{
+					builder.Append(Res.Strings.Entities.Info.InheritFromMany);
+				}
 
 				for (int i=0; i<listInherited.Count; i++)
 				{
@@ -2087,7 +2094,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				builder.Append(Res.Strings.Entities.Info.InterfaceFrom);
+				if (listInterface.Count == 1)
+				{
+					builder.Append(Res.Strings.Entities.Info.InterfaceFromOne);
+				}
+				else
+				{
+					builder.Append(Res.Strings.Entities.Info.InterfaceFromMany);
+				}
 
 				for (int i=0; i<listInterface.Count; i++)
 				{

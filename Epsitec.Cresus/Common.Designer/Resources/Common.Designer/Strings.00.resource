@@ -417,10 +417,10 @@
   <data name="Entities.Question.RemoveField.Base" id="2Q2">Voulez-vous supprimer le champ &lt;b&gt;{0}&lt;/b&gt; ?</data>
   <data name="Entities.Question.RemoveInterface.Base" id="2R2">Voulez-vous supprimer l&amp;apos;interface &lt;b&gt;{0}&lt;/b&gt; ?</data>
   <data name="Entities.Info.InheritNull" id="2S2">Aucun héritage</data>
-  <data name="Entities.Info.InheritFrom" id="2T2">Hérite de </data>
+  <data name="Entities.Info.InheritFromOne" id="2T2">Hérite de </data>
   <data name="Entities.Info.InheritAnd" id="2U2"> et </data>
   <data name="Entities.Info.InterfaceAnd" id="2V2"> et </data>
-  <data name="Entities.Info.InterfaceFrom" id="203">Interfacé avec </data>
+  <data name="Entities.Info.InterfaceFromMany" id="203">Comprend les interfaces </data>
   <data name="Entities.Info.InterfaceNull" id="213">Aucune interface</data>
   <data name="Entities.Button.BoxComment" id="223">C</data>
   <data name="Entities.Button.BoxInfo" id="233">i</data>
@@ -486,4 +486,6 @@
   <data name="Viewers.Forms.Title.Delta" id="2V4"> ― correctif basé sur le masque &lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Title.DeltaNormal" id="205"> ― correctif basé sur le masque &lt;b&gt;{0}&lt;/b&gt; et l&amp;apos;entité &lt;b&gt;{1}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Menu.ShowPrefix" id="215">Afficher les préfixes</data>
+  <data name="Entities.Info.InheritFromMany" id="225">Hérite de </data>
+  <data name="Entities.Info.InterfaceFromOne" id="235">Comprend l&amp;apos;interface </data>
 </bundle>
