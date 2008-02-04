@@ -46,9 +46,9 @@ namespace Epsitec.Cresus.Core
 		{
 			System.Diagnostics.Debug.Assert (this.dataContext != null);
 
-			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ();
-			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
-			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.PaysEntity> ();
+//			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ();
+//			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
+//			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.PaysEntity> ();
 			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.PersonAddressEntity> ();
 		}
 

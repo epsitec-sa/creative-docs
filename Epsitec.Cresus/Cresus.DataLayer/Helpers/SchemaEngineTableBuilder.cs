@@ -172,6 +172,12 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 				table.Columns.Add (column);
 			}
+			else
+			{
+				this.CreateTable (entityType.BaseTypeId);
+			}
+
+
 
 			//	For every locally defined field (this includes field inserted
 			//	through an interface, possibly locally overridden), create a
