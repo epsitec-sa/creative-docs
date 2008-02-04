@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.Assert (this.dataContext == null);
 
 			DbAccess access = DbInfrastructure.CreateDatabaseAccess ("core");
+			bool     empty  = false;
 
 			access.IgnoreInitialConnectionErrors = true;
 			access.CheckConnection = true;
@@ -35,21 +36,25 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("Cannot connect to database");
 				this.infrastructure.CreateDatabase (access);
 				System.Diagnostics.Debug.WriteLine ("Created new database");
+				empty = true;
 			}
 
 			this.dataContext = new DataContext (this.infrastructure);
 
 			System.Diagnostics.Debug.Assert (this.infrastructure.IsConnectionOpen);
+
+			if (empty)
+			{
+				this.CreateSchemas ();
+				System.Diagnostics.Debug.WriteLine ("Database ready");
+			}
 		}
 
-		public void CreateSchemas()
+		private void CreateSchemas()
 		{
 			System.Diagnostics.Debug.Assert (this.dataContext != null);
 
-//			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ();
-//			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> ();
-//			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.PaysEntity> ();
-			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.PersonAddressEntity> ();
+			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ();
 		}
 
 

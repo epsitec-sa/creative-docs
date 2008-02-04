@@ -5,8 +5,8 @@
 //  --------------------------------------------------------------------------- 
 
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8V1]", typeof (Epsitec.Cresus.AddressBook.Entities.AdresseEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[8V11]", typeof (Epsitec.Cresus.AddressBook.Entities.PersonAddressEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[8V12]", typeof (Epsitec.Cresus.AddressBook.Entities.EnterpriseAddressEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8V11]", typeof (Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8V12]", typeof (Epsitec.Cresus.AddressBook.Entities.AdresseEntrepriseEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8V18]", typeof (Epsitec.Cresus.AddressBook.Entities.LocalitéEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8V1C]", typeof (Epsitec.Cresus.AddressBook.Entities.PaysEntity))]
 #region Epsitec.Cresus.AddressBook.Adresse Entity
@@ -100,21 +100,21 @@ namespace Epsitec.Cresus.AddressBook.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.AddressBook.PersonAddress Entity
+#region Epsitec.Cresus.AddressBook.AdressePersonne Entity
 namespace Epsitec.Cresus.AddressBook.Entities
 {
 	///	<summary>
-	///	The <c>PersonAddress</c> entity.
+	///	The <c>AdressePersonne</c> entity.
 	///	designer:cap/8V11
 	///	</summary>
-	public partial class PersonAddressEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
+	public partial class AdressePersonneEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
 	{
 		///	<summary>
-		///	The <c>FirstName</c> field.
+		///	The <c>Prénom</c> field.
 		///	designer:fld/8V11/8V16
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[8V16]")]
-		public string FirstName
+		public string Prénom
 		{
 			get
 			{
@@ -122,21 +122,21 @@ namespace Epsitec.Cresus.AddressBook.Entities
 			}
 			set
 			{
-				string oldValue = this.FirstName;
+				string oldValue = this.Prénom;
 				if (oldValue != value)
 				{
-					this.OnFirstNameChanging (oldValue, value);
+					this.OnPrénomChanging (oldValue, value);
 					this.SetField<string> ("[8V16]", oldValue, value);
-					this.OnFirstNameChanged (oldValue, value);
+					this.OnPrénomChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>LastName</c> field.
+		///	The <c>Nom</c> field.
 		///	designer:fld/8V11/8V17
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[8V17]")]
-		public string LastName
+		public string Nom
 		{
 			get
 			{
@@ -144,20 +144,20 @@ namespace Epsitec.Cresus.AddressBook.Entities
 			}
 			set
 			{
-				string oldValue = this.LastName;
+				string oldValue = this.Nom;
 				if (oldValue != value)
 				{
-					this.OnLastNameChanging (oldValue, value);
+					this.OnNomChanging (oldValue, value);
 					this.SetField<string> ("[8V17]", oldValue, value);
-					this.OnLastNameChanged (oldValue, value);
+					this.OnNomChanged (oldValue, value);
 				}
 			}
 		}
 		
-		partial void OnFirstNameChanging(string oldValue, string newValue);
-		partial void OnFirstNameChanged(string oldValue, string newValue);
-		partial void OnLastNameChanging(string oldValue, string newValue);
-		partial void OnLastNameChanged(string oldValue, string newValue);
+		partial void OnPrénomChanging(string oldValue, string newValue);
+		partial void OnPrénomChanged(string oldValue, string newValue);
+		partial void OnNomChanging(string oldValue, string newValue);
+		partial void OnNomChanged(string oldValue, string newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -167,14 +167,14 @@ namespace Epsitec.Cresus.AddressBook.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.AddressBook.EnterpriseAddress Entity
+#region Epsitec.Cresus.AddressBook.AdresseEntreprise Entity
 namespace Epsitec.Cresus.AddressBook.Entities
 {
 	///	<summary>
-	///	The <c>EnterpriseAddress</c> entity.
+	///	The <c>AdresseEntreprise</c> entity.
 	///	designer:cap/8V12
 	///	</summary>
-	public partial class EnterpriseAddressEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
+	public partial class AdresseEntrepriseEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
 	{
 		
 		
