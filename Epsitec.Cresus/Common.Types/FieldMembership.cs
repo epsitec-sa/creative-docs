@@ -26,11 +26,5 @@ namespace Epsitec.Common.Types
 		/// defined by a locally included interface).
 		/// </summary>
 		LocalOverride=2,
-
-		/// <summary>
-		/// The field is redefined locally (e.g. override of an expression
-		/// defined by a parent entity).
-		/// </summary>
-		InheritedLocalOverride=3,
 	}
 }
