@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.AddressBook
 	{
 		public static readonly global::Epsitec.Common.Support.Druid Adresse = new global::Epsitec.Common.Support.Druid (1000, 1, 0);
 		public static readonly global::Epsitec.Common.Support.Druid SearchLocalite = new global::Epsitec.Common.Support.Druid (1000, 1, 1);
+		public static readonly global::Epsitec.Common.Support.Druid AdressePersonne = new global::Epsitec.Common.Support.Druid (1000, 1, 2);
 	}
 }

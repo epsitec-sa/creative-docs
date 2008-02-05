@@ -9,6 +9,7 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core
 {
@@ -29,11 +30,36 @@ namespace Epsitec.Cresus.Core
 			FrameBox frame = new FrameBox ();
 
 			this.hintListController.DefineContainer (frame);
+			this.panel = UI.LoadPanel (Epsitec.Cresus.AddressBook.FormIds.AdressePersonne);
+			this.panel.Dock = DockStyle.Fill;
+			this.panel.SetEmbedder (frame);
 
+			this.currentData = EntityContext.Current.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
+			this.dialogData = new DialogData (this.currentData, DialogDataMode.Isolated);
+
+			this.dialogData.BindToUserInterface (this.panel);
+
+#if false
+			if (this.dialogSearchController != null)
+			{
+				this.dialogSearchController.DialogData = this.dialogData;
+				this.dialogSearchController.DialogWindow = this.DialogWindow;
+				this.dialogSearchController.DialogPanel = this.panel;
+			}
+
+			ValidationContext.SetContext (this.panel, this.validationContext);
+
+			this.validationContext.CommandContext = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
+			this.validationContext.Refresh (this.panel);
+#endif
+			
 			return frame;
 		}
 
 
 		private readonly HintListController hintListController;
+		private Panel panel;
+		private DialogData dialogData;
+		private AbstractEntity currentData;
 	}
 }

@@ -15,17 +15,31 @@ namespace Epsitec.Cresus.Core
 		{
 			UI.Initialize ();
 
-			CoreApplication application = new CoreApplication ();
+			CoreProgram.application = new CoreApplication ();
 
-			System.Diagnostics.Debug.Assert (application.ResourceManagerPool.PoolName == "Core");
+			System.Diagnostics.Debug.Assert (CoreProgram.application.ResourceManagerPool.PoolName == "Core");
 
-			application.SetupInterface ();
-			application.SetupData ();
+			CoreProgram.application.SetupInterface ();
+			CoreProgram.application.SetupData ();
 
-			application.Window.Show ();
-			application.Window.Run ();
+			CoreProgram.application.Window.Show ();
+			CoreProgram.application.Window.Run ();
 
 			UI.ShutDown ();
+
+			CoreProgram.application.Dispose ();
+			CoreProgram.application = null;
 		}
+
+		public static CoreApplication Application
+		{
+			get
+			{
+				return CoreProgram.application;
+			}
+		}
+
+		
+		private static CoreApplication application;
 	}
 }
