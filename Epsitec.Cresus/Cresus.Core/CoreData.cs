@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Core
 			if (empty)
 			{
 				this.CreateSchemas ();
+				this.PopulateDatabase ();
 			}
 			else
 			{
@@ -63,6 +64,45 @@ namespace Epsitec.Cresus.Core
 		{
 			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ();
 		}
+
+		private void PopulateDatabase()
+		{
+			AddressBook.Entities.PaysEntity paysCh = this.dataContext.CreateEntity<AddressBook.Entities.PaysEntity> ();
+
+			paysCh.Code = "CH";
+			paysCh.Nom = "Suisse";
+
+			this.dataContext.SaveChanges ();
+			System.Diagnostics.Debug.WriteLine ("Created CH-Suisse");
+
+			int count = 0;
+
+			foreach (AddressBook.Entities.LocalitéEntity localité in this.ReadNuPost (paysCh))
+			{
+				count++;
+			}
+
+			this.dataContext.SaveChanges ();
+			System.Diagnostics.Debug.WriteLine (string.Format ("Created {0} entities", count));
+			
+		}
+
+		public IEnumerable<AddressBook.Entities.LocalitéEntity> ReadNuPost(AddressBook.Entities.PaysEntity paysCh)
+		{
+			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\NUPOST.TXT", System.Text.Encoding.Default))
+			{
+				string[] values = line.Split ('\t');
+
+				AddressBook.Entities.LocalitéEntity loc = this.dataContext.CreateEntity<AddressBook.Entities.LocalitéEntity> ();
+
+				loc.Numéro = values[2];
+				loc.Nom = values[5];
+				loc.Pays = paysCh;
+				
+				yield return loc;
+			}
+		}
+
 
 
 		#region IDisposable Members

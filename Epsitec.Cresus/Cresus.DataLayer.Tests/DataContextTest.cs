@@ -52,7 +52,6 @@ namespace Epsitec.Cresus.DataLayer
 			article.PrixAchat.Ht = 0.04M;
 
 			System.Diagnostics.Debug.WriteLine ("Saving changes.");
-			context.SerializeChanges ();
 			context.SaveChanges ();
 			System.Diagnostics.Debug.WriteLine ("Done.");
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
@@ -271,18 +270,15 @@ namespace Epsitec.Cresus.DataLayer
 			rabais3Entity.SetField<decimal> ("[63082]", 5.0M);
 			rabais3Entity.SetField<int> ("[63092]", 2);
 
-			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			list.Add (rabais3Entity);
 
-			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			list.RemoveAt (0);
 			list.Add (rabais2Entity);
 
-			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			this.keyCheck16 = context.GetEntityDataMapping (positionEntity).RowKey;
@@ -334,7 +330,6 @@ namespace Epsitec.Cresus.DataLayer
 
 			Assert.AreEqual (2, Collection.Count (context.GetModifiedEntities ()));
 
-			context.SerializeChanges ();
 			context.SaveChanges ();
 
 			Assert.AreEqual (0, Collection.Count (context.GetModifiedEntities ()));

@@ -313,6 +313,11 @@ namespace Epsitec.Cresus.DataLayer
 					continue;
 				}
 
+				if (fieldDef.Source == FieldSource.Expression)
+				{
+					continue;
+				}
+
 				//	Depending on the relation (and therefore cardinality), write
 				//	the data into the row :
 
