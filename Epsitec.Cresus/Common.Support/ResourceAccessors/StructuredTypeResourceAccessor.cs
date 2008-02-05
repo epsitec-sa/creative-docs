@@ -657,7 +657,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					Druid fieldType = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.TypeId));
 					Druid fieldCaption = StructuredTypeResourceAccessor.ToDruid (fieldData.GetValue (Res.Fields.Field.CaptionId));
 					FieldRelation relation = (FieldRelation) fieldData.GetValue (Res.Fields.Field.Relation);
-					FieldMembership membership = (FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership);
+					FieldMembership membership = StructuredTypeResourceAccessor.Simplify ((FieldMembership) fieldData.GetValue (Res.Fields.Field.Membership));
 					FieldSource source = (FieldSource) fieldData.GetValue (Res.Fields.Field.Source);
 					FieldOptions options = (FieldOptions) fieldData.GetValue (Res.Fields.Field.Options);
 					string expression = fieldData.GetValue (Res.Fields.Field.Expression) as string;
@@ -1113,12 +1113,32 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						}
 						else
 						{
-							System.Diagnostics.Debug.Assert ((FieldMembership) field.GetValue (Res.Fields.Field.Membership) == FieldMembership.Local);
-							System.Diagnostics.Debug.Assert (updater.InterfaceIds.Contains (StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.DefiningTypeId))));
+							FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
+							Druid definingTypeId = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.DefiningTypeId));
 
-							//	The field is defined both locally and in the interface; keep
-							//	only the expression from the local definition and otherwise,
-							//	use the interface definition of the field :
+							switch (membership)
+							{
+								case FieldMembership.Local:
+									//	The local field definition provides an implementation for the
+									//	matching field in the interface.
+
+									System.Diagnostics.Debug.Assert (updater.InterfaceIds.Contains (definingTypeId));
+									break;
+
+								case FieldMembership.Inherited:
+									//	The local field definition overrides the parent field definition. The
+									//	field will be identified with the special membership value.
+									field.SetValue (Res.Fields.Field.Membership, FieldMembership.LocalOverride);
+									break;
+
+								default:
+									throw new System.NotImplementedException (string.Format ("Unsupported field override for field {0}", field.GetValue (Res.Fields.Field.CaptionId)));
+							}
+
+							//	The field is defined both locally and in the interface or in
+							//	parent (this is a real class inheritance); keep just the
+							//	expression from the local definition and for the other values,
+							//	use the inherited or interface definitions :
 
 							field.SetValue (Res.Fields.Field.Source, fields[pos].GetValue (Res.Fields.Field.Source));
 							field.SetValue (Res.Fields.Field.Expression, fields[pos].GetValue (Res.Fields.Field.Expression));
@@ -1329,8 +1349,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					foreach (StructuredData interfaceId in interfaceIds)
 					{
 						Druid id = StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
+
 						this.IncludeType (id, definingTypeId, membership, depth+1);
-//-						this.IncludeType (id, id, FieldMembership.Local, depth+1);
 						this.IncludeInterfaceId (id);
 					}
 				}
@@ -1482,7 +1502,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			private static bool IsLocalField(StructuredData data)
 			{
 				Druid fieldDefiningType = StructuredTypeResourceAccessor.ToDruid (data.GetValue (Res.Fields.Field.DefiningTypeId));
-				FieldMembership membership = (FieldMembership) data.GetValue (Res.Fields.Field.Membership);
+				FieldMembership membership = StructuredTypeResourceAccessor.Simplify ((FieldMembership) data.GetValue (Res.Fields.Field.Membership));
 				bool? interfaceDefinition = StructuredTypeResourceAccessor.ToBoolean (data.GetValue (Res.Fields.Field.IsInterfaceDefinition));
 
 				if (((membership == FieldMembership.Local) && (fieldDefiningType.IsEmpty)) ||
@@ -1732,6 +1752,18 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		private static StructuredTypeClass ToStructuredTypeClass(object value)
 		{
 			return UndefinedValue.GetValue<StructuredTypeClass> (value, StructuredTypeClass.None);
+		}
+
+		private static FieldMembership Simplify(FieldMembership membership)
+		{
+			switch (membership)
+			{
+				case FieldMembership.LocalOverride:
+					return FieldMembership.Local;
+				
+				default:
+					return membership;
+			}
 		}
 
 

@@ -22,8 +22,15 @@ namespace Epsitec.Common.Types
 		Inherited=1,
 
 		/// <summary>
-		/// The field is redefined locally.
+		/// The field is redefined locally (e.g. override of an expression
+		/// defined by a locally included interface).
 		/// </summary>
-		LocalOverride=2
+		LocalOverride=2,
+
+		/// <summary>
+		/// The field is redefined locally (e.g. override of an expression
+		/// defined by a parent entity).
+		/// </summary>
+		InheritedLocalOverride=3,
 	}
 }

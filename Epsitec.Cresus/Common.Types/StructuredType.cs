@@ -759,11 +759,12 @@ namespace Epsitec.Common.Types
 				{
 					if (this.fields.ContainsKey (id))
 					{
+						StructuredTypeField local = this.fields[id];
+						StructuredTypeField model = type.Fields[id];
+						StructuredTypeField clone = null;
+
 						if (membership == FieldMembership.Local)
 						{
-							StructuredTypeField local = this.fields[id];
-							StructuredTypeField model = type.Fields[id];
-
 							FieldMembership localMembership;
 							FieldSource source;
 							string expression;
@@ -781,10 +782,22 @@ namespace Epsitec.Common.Types
 								localMembership = FieldMembership.Local;
 							}
 
-							StructuredTypeField clone = new StructuredTypeField (model.Id, model.Type, model.CaptionId, model.Rank, model.Relation, localMembership, source, model.Options, expression);
+							clone = new StructuredTypeField (model.Id, model.Type, model.CaptionId, model.Rank, model.Relation, localMembership, source, model.Options, expression);
+						}
+						else if ((membership == FieldMembership.Inherited) &&
+								 (local.Expression != null) &&
+								 (model.Expression != null))
+						{
+							clone = new StructuredTypeField (model.Id, model.Type, model.CaptionId, model.Rank, model.Relation, FieldMembership.LocalOverride, local.Source, model.Options, local.Expression);
+						}
 
+						if (clone == null)
+						{
+							throw new System.NotImplementedException (string.Format ("Unhandled field inheritance override for field {0} in type {1}", id, typeId));
+						}
+						else
+						{
 							clone.DefineDefiningTypeId (typeId);
-							
 							this.fields[id] = clone;
 						}
 					}

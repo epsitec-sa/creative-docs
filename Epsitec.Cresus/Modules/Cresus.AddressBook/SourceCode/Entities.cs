@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		///	designer:fld/8V1/6016
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[6016]")]
-		public string SearchValue
+		public virtual string SearchValue
 		{
 			get
 			{
@@ -57,8 +57,8 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> (this, "[6016]", value);
 			}
 		}
-		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> FuncSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé); // λ [8V1] [6016]
-		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string>> ExprSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé); // λ [8V1] [6016]
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> FuncSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé); // λ [8V1] [6016]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string>> ExprSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé); // λ [8V1] [6016]
 		#endregion
 		///	<summary>
 		///	The <c>CasePostale</c> field.
@@ -129,12 +129,13 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	///	</summary>
 	public partial class AdressePersonneEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
 	{
+		#region AdresseEntity Members
 		///	<summary>
 		///	The <c>SearchValue</c> field.
 		///	designer:fld/8V11/6016
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[6016]")]
-		public string SearchValue
+		public override string SearchValue
 		{
 			get
 			{
@@ -145,10 +146,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", value);
 			}
 		}
-		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> FuncSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé)
-; // λ [8V11] [6016]
-		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string>> ExprSearchValue = x => string.Concat (x.Rue, ", ", x.Localité.Résumé)
-; // λ [8V11] [6016]
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> FuncSearchValue = x => string.Concat (x.Prénom, " ", x.Nom, ", ", x.Rue, ", ", x.Localité.Résumé); // λ [8V11] [6016]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string>> ExprSearchValue = x => string.Concat (x.Prénom, " ", x.Nom, ", ", x.Rue, ", ", x.Localité.Résumé); // λ [8V11] [6016]
+		#endregion
 		///	<summary>
 		///	The <c>Prénom</c> field.
 		///	designer:fld/8V11/8V16
@@ -241,7 +241,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		///	designer:fld/8V18/6016
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[6016]")]
-		public string SearchValue
+		public virtual string SearchValue
 		{
 			get
 			{
@@ -252,8 +252,8 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[6016]", value);
 			}
 		}
-		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncSearchValue = loc => loc.Résumé; // λ [8V18] [6016]
-		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprSearchValue = loc => loc.Résumé; // λ [8V18] [6016]
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncSearchValue = loc => loc.Résumé; // λ [8V18] [6016]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprSearchValue = loc => loc.Résumé; // λ [8V18] [6016]
 		#endregion
 		///	<summary>
 		///	The <c>Numéro</c> field.
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		///	designer:fld/8V18/8V1F
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[8V1F]")]
-		public string Résumé
+		public virtual string Résumé
 		{
 			get
 			{
@@ -337,8 +337,8 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[8V1F]", value);
 			}
 		}
-		internal static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncRésumé = loc => string.Concat (loc.Pays.Code, "-", loc.Numéro, " ", loc.Nom); // λ [8V18] [8V1F]
-		internal static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprRésumé = loc => string.Concat (loc.Pays.Code, "-", loc.Numéro, " ", loc.Nom); // λ [8V18] [8V1F]
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncRésumé = loc => string.Concat (loc.Pays.Code, "-", loc.Numéro, " ", loc.Nom); // λ [8V18] [8V1F]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprRésumé = loc => string.Concat (loc.Pays.Code, "-", loc.Numéro, " ", loc.Nom); // λ [8V18] [8V1F]
 		
 		partial void OnNuméroChanging(string oldValue, string newValue);
 		partial void OnNuméroChanged(string oldValue, string newValue);

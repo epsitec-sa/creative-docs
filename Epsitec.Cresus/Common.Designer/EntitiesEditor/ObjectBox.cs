@@ -877,7 +877,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=-1; i<this.fields.Count; i++)
 				{
 					rect = this.GetFieldMovingBounds(i);
-					if (i >= this.skipedField-1 && rect.Contains(pos))
+					if (i >= this.skippedField-1 && rect.Contains(pos))
 					{
 						element = ActiveElement.BoxFieldMoving;
 						fieldRank = i;
@@ -1017,7 +1017,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						for (int i=-1; i<this.fields.Count; i++)
 						{
 							rect = this.GetFieldAddBounds(i);
-							if (i >= this.skipedField-1 && rect.Contains(pos))
+							if (i >= this.skippedField-1 && rect.Contains(pos))
 							{
 								element = ActiveElement.BoxFieldAdd;
 								fieldRank = i;
@@ -1055,7 +1055,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						rect = this.GetFieldRemoveBounds(i);
 						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource == CultureMapSource.PatchModule) &&
-							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos))
+							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skippedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldRemove;
 							fieldRank = i;
@@ -1065,7 +1065,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = this.GetFieldMovableBounds(i);
 						if ((!this.editor.Module.IsPatch || this.fields[i].CultureMapSource == CultureMapSource.PatchModule) &&
-							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skipedField && rect.Contains(pos) && this.Fields.Count-this.skipedField > 1)
+							this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked && i >= this.skippedField && rect.Contains(pos) && this.Fields.Count-this.skippedField > 1)
 						{
 							element = ActiveElement.BoxFieldMovable;
 							fieldRank = i;
@@ -1074,7 +1074,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldNameBounds(i);
-						if (i >= this.skipedField && rect.Contains(pos))
+						if (i >= this.skippedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldName;
 							fieldRank = i;
@@ -1083,7 +1083,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldTypeBounds(i);
-						if (i >= this.skipedField && rect.Contains(pos))
+						if (i >= this.skippedField && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldType;
 							fieldRank = i;
@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Rectangle GetFieldInterfaceBounds()
 		{
 			//	Retourne le rectangle occupé par le bouton interface.
-			Rectangle rect = this.GetFieldBounds(this.skipedField-1);
+			Rectangle rect = this.GetFieldBounds(this.skippedField-1);
 			
 			rect.Left = rect.Right-rect.Height;
 			rect.Bottom -= 6;
@@ -1889,19 +1889,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void UpdateFieldsContent()
 		{
 			//	Crée tous les champs de titrage.
-			this.skipedField = 0;
+			this.skippedField = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
 				if (this.fields[i].Membership == FieldMembership.Inherited)
 				{
-					this.skipedField++;  // nombre de champs hérités au début de la liste
+					this.skippedField++;  // nombre de champs hérités au début de la liste
 				}
 			}
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 			//	Ajoute le titre de l'entité dont on hérite, s'il existe.
-			if (this.skipedField > 0)
+			if (this.skippedField > 0)
 			{
 				Field field = new Field(this.editor);
 				field.IsTitle = true;
@@ -1921,7 +1921,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				this.fields.Insert(0, field);
-				this.skipedField++;  // compte le titre lui-même
+				this.skippedField++;  // compte le titre lui-même
 			}
 
 			//	Ajoute les titres des interfaces, si elles existent.
@@ -1935,7 +1935,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
 				{
-					this.skipedField++;
+					this.skippedField++;
 
 					if (last != this.fields[i].DefiningTypeId)
 					{
@@ -1951,7 +1951,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						field.FieldName = Misc.Bold(cultureMap.Name);
 
 						this.fields.Insert(i, field);
-						this.skipedField++;  // compte le titre lui-même
+						this.skippedField++;  // compte le titre lui-même
 						i++;
 					}
 				}
@@ -2759,7 +2759,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					!this.IsHeaderHilite && !this.isFieldMoving && !this.isChangeWidth && !this.isMoveColumnsSeparator1)
 				{
 					//	Dessine la glissière à gauche pour suggérer les boutons Add/Remove des champs.
-					Point p1 = this.GetFieldAddBounds(this.skipedField-1).Center;
+					Point p1 = this.GetFieldAddBounds(this.skippedField-1).Center;
 					Point p2 = this.GetFieldAddBounds(this.fields.Count-1).Center;
 					bool hilited = this.hilitedElement == ActiveElement.BoxFieldAdd || this.hilitedElement == ActiveElement.BoxFieldRemove;
 					this.DrawEmptySlider(graphics, p1, p2, hilited);
@@ -3513,7 +3513,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout title;
 		protected TextLayout subtitle;
 		protected List<Field> fields;
-		protected int skipedField;
+		protected int skippedField;
 		protected List<SourceInfo> sourcesList;
 		protected int sourcesClosedCount;
 		protected List<ObjectConnection> connectionListBt;
