@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Core
 			this.currentData = EntityContext.Current.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
 			this.dialogData = new DialogData (this.currentData, DialogDataMode.Isolated);
 
+			this.controller = new DialogSearchController ();
+			this.controller.DialogData = this.dialogData;
+			this.controller.DialogPanel = this.panel;
+			this.controller.DialogWindow = this.Application.Window;
+
 			this.dialogData.BindToUserInterface (this.panel);
 
 #if false
@@ -61,5 +66,6 @@ namespace Epsitec.Cresus.Core
 		private Panel panel;
 		private DialogData dialogData;
 		private AbstractEntity currentData;
+		private DialogSearchController controller;
 	}
 }

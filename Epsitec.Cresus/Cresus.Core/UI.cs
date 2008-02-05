@@ -75,8 +75,10 @@ namespace Epsitec.Cresus.Core
 			Size size = FormResourceAccessor.GetFormDefaultSize (bundle);
 
 			Epsitec.Common.FormEngine.FormDescription formDescription = new Epsitec.Common.FormEngine.FormDescription ();
-			Epsitec.Common.FormEngine.Engine formEngine = new Epsitec.Common.FormEngine.Engine (new Epsitec.Common.FormEngine.DefaultResourceProvider (bundle.ResourceManager));
+			Epsitec.Common.FormEngine.IFormResourceProvider provider = new Epsitec.Common.FormEngine.DefaultResourceProvider (bundle.ResourceManager);
+			Epsitec.Common.FormEngine.Engine formEngine = new Epsitec.Common.FormEngine.Engine (provider);
 
+			formEngine.EnableSearchMode ();
 			formDescription.Deserialize (xmlSource);
 
 			Panel panel = formEngine.CreateForm (formDescription);

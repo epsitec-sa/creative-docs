@@ -26,6 +26,7 @@ namespace Epsitec.Common.FormEngine
 
 			this.arrange = new Arrange(this.resourceProvider);
 			this.entityContext = new EntityContext(this.resourceProvider, EntityLoopHandlingMode.Skip);
+			this.defaultMode = FieldEditionMode.Data;
 		}
 
 		public Arrange Arrange
@@ -36,6 +37,10 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public void EnableSearchMode()
+		{
+			this.defaultMode = FieldEditionMode.Search;
+		}
 
 		public UI.Panel CreateForm(FormDescription form)
 		{
@@ -132,7 +137,7 @@ namespace Epsitec.Common.FormEngine
 
 				if (fieldDef.Relation == FieldRelation.None)
 				{
-					return FieldEditionMode.Data;
+					return this.defaultMode;
 				}
 
 				if (fieldDef.IsSharedRelation)
@@ -143,7 +148,7 @@ namespace Epsitec.Common.FormEngine
 				entityId = fieldDef.TypeId;
 			}
 
-			return FieldEditionMode.Data;
+			return this.defaultMode;
 		}
 
 		private void CreateFormBox(UI.Panel root, Druid entityId, List<FieldDescription> fields, int index)
@@ -801,5 +806,6 @@ namespace Epsitec.Common.FormEngine
 		private readonly EntityContext entityContext;
 		private Arrange arrange;
 		private bool forDesigner;
+		private FieldEditionMode defaultMode;
 	}
 }
