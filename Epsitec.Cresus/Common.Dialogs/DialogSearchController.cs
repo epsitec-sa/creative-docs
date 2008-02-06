@@ -1024,19 +1024,34 @@ namespace Epsitec.Common.Dialogs
 
 					if (proxy == null)
 					{
-						continue;
-					}
+						//	Are we currently working with a special full-search dialog? If so,
+						//	there won't be a proxy for the root.
 
-					EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
-
-					if (fieldPath.StartsWith (this.searchRootPath))
-					{
-						yield return new Node ()
+						if ((this.searchController.DialogData.Mode == DialogDataMode.Search) &&
+							(this.searchRootData == entity) &&
+							(this.searchRootPath.IsEmpty))
 						{
-							Placeholder = placeholder,
-							Path = fieldPath,
-							Context = this
-						};
+							yield return new Node ()
+							{
+								Placeholder = placeholder,
+								Path = EntityFieldPath.CreateRelativePath (field),
+								Context = this
+							};
+						}
+					}
+					else
+					{
+						EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
+
+						if (fieldPath.StartsWith (this.searchRootPath))
+						{
+							yield return new Node ()
+							{
+								Placeholder = placeholder,
+								Path = fieldPath,
+								Context = this
+							};
+						}
 					}
 				}
 			}
