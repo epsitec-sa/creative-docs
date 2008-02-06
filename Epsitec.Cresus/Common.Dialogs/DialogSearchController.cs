@@ -343,35 +343,38 @@ namespace Epsitec.Common.Dialogs
 
 				if (newContext == null)
 				{
-					IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Entity;
-					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
-
-					if (proxy == null)
+					if (this.dialogData.Mode == DialogDataMode.Search)
 					{
-						if ((this.dialogData.Mode == DialogDataMode.Search) &&
-							(proxyProvider == this.dialogData.Data))
-						{
-							newContext = new SearchContext (this, this.dialogData.Data, EntityFieldPath.CreateRelativePath ());
-							newContext.AnalysePlaceholderGraph (Panel.GetParentPanel (placeholder));
+						newContext = new SearchContext (this, this.dialogData.Data, EntityFieldPath.CreateRelativePath ());
+						newContext.AnalysePlaceholderGraph (Panel.GetParentPanel (placeholder));
 
-							this.searchContexts.Add (newContext);
-						}
+						this.searchContexts.Add (newContext);
 					}
 					else
 					{
-						EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
-						AbstractEntity  rootData   = proxy.DialogData.Data;
-						Widgets.Widget  rootWidget = Panel.GetParentPanel (placeholder);
+						IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Entity;
+						DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
-						System.Diagnostics.Debug.Assert (rootPath != null);
-						System.Diagnostics.Debug.Assert (rootPath.Count == 1);
-						System.Diagnostics.Debug.Assert (rootData != null);
-						System.Diagnostics.Debug.Assert (rootWidget != null);
+						if (proxy == null)
+						{
+							System.Diagnostics.Debug.Fail ("No proxy data backing found for the specified search template");
+						}
+						else
+						{
+							EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
+							AbstractEntity  rootData   = proxy.DialogData.Data;
+							Widgets.Widget  rootWidget = Panel.GetParentPanel (placeholder);
 
-						newContext = new SearchContext (this, rootData, rootPath);
-						newContext.AnalysePlaceholderGraph (rootWidget);
+							System.Diagnostics.Debug.Assert (rootPath != null);
+							System.Diagnostics.Debug.Assert (rootPath.Count == 1);
+							System.Diagnostics.Debug.Assert (rootData != null);
+							System.Diagnostics.Debug.Assert (rootWidget != null);
 
-						this.searchContexts.Add (newContext);
+							newContext = new SearchContext (this, rootData, rootPath);
+							newContext.AnalysePlaceholderGraph (rootWidget);
+
+							this.searchContexts.Add (newContext);
+						}
 					}
 				}
 

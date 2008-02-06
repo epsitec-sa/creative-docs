@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Core
 
 				AddressBook.Entities.AdressePersonneEntity personne = this.dataContext.CreateEmptyEntity<AddressBook.Entities.AdressePersonneEntity> ();
 
-				personne.Titre = titres.Find (x => x.IntituléLong == values[1]);
+				personne.Titre = titres.Find (x => string.Compare (x.IntituléLong, values[1], true) == 0) ?? titres.Find (x => x.IntituléCourt == "M.");
 				personne.Nom = values[2];
 				personne.Prénom = values[3];
 				personne.Rue = values[4];
@@ -239,7 +239,8 @@ namespace Epsitec.Cresus.Core
 
 					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
-						if ((ResolverImplementation.Match (example.Nom, entity.Nom)) &&
+						if ((ResolverImplementation.Match (example.Titre, entity.Titre)) &&
+							(ResolverImplementation.Match (example.Nom, entity.Nom)) &&
 							(ResolverImplementation.Match (example.Prénom, entity.Prénom)) &&
 							(ResolverImplementation.Match (example.Rue, entity.Rue)) &&
 							(ResolverImplementation.Match (example.Localité, entity.Localité)))
@@ -305,6 +306,22 @@ namespace Epsitec.Cresus.Core
 				else
 				{
 					return ResolverImplementation.Match (a.Résumé, b.Résumé);
+				}
+			}
+
+			private static bool Match(AddressBook.Entities.TitrePersonneEntity a, AddressBook.Entities.TitrePersonneEntity b)
+			{
+				if (a == null)
+				{
+					return true;
+				}
+				else if (b == null)
+				{
+					return false;
+				}
+				else
+				{
+					return ResolverImplementation.Match (a.IntituléLong, b.IntituléLong);
 				}
 			}
 

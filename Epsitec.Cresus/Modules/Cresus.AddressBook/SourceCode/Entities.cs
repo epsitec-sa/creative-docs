@@ -131,6 +131,26 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	///	</summary>
 	public partial class AdressePersonneEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
 	{
+		#region AdresseEntity Members
+		///	<summary>
+		///	The <c>SearchValue</c> field.
+		///	designer:fld/8V11/6016
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[6016]")]
+		public override string SearchValue
+		{
+			get
+			{
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.FuncSearchValue);
+			}
+			set
+			{
+				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", value);
+			}
+		}
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> FuncSearchValue = x => string.Concat (x.Titre.IntituléCourt, " ", x.Prénom, " ", x.Nom, ", ", x.Rue, ", ", x.Localité.Résumé); // λ [8V11] [6016]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string>> ExprSearchValue = x => string.Concat (x.Titre.IntituléCourt, " ", x.Prénom, " ", x.Nom, ", ", x.Rue, ", ", x.Localité.Résumé); // λ [8V11] [6016]
+		#endregion
 		///	<summary>
 		///	The <c>Titre</c> field.
 		///	designer:fld/8V11/8V1J
@@ -458,8 +478,8 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> (this, "[6016]", value);
 			}
 		}
-		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> FuncSearchValue = titre => string.Concat (titre.IntituléCourt, ", ", titre.IntituléLong); // λ [8V1G] [6016]
-		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string>> ExprSearchValue = titre => string.Concat (titre.IntituléCourt, ", ", titre.IntituléLong); // λ [8V1G] [6016]
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> FuncSearchValue = titre => string.IsNullOrEmpty (titre.IntituléLong) ? titre.IntituléCourt : titre.IntituléLong; // λ [8V1G] [6016]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string>> ExprSearchValue = titre => string.IsNullOrEmpty (titre.IntituléLong) ? titre.IntituléCourt : titre.IntituléLong; // λ [8V1G] [6016]
 		#endregion
 		///	<summary>
 		///	The <c>IntituléCourt</c> field.
