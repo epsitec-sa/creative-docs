@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core
 
 				if (localité == null)
 				{
-					System.Diagnostics.Debug.WriteLine ("No exact match found for " + values[5] + " " + values[6]);
+//-					System.Diagnostics.Debug.WriteLine ("No exact match found for " + values[5] + " " + values[6]);
 					
 					if (localitéList.Count > 0)
 					{
