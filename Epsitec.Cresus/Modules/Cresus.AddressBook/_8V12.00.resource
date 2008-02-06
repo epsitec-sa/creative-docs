@@ -6,6 +6,17 @@
         <EI>[8V11]</EI>
         <DBI>&lt;invalid&gt;</DBI>
         <FD>
+          <Guid>8349009a-9989-4303-983c-fb068ab68d8a</Guid>
+          <Type>Field</Type>
+          <FI>[8V1J].[8V1I]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+        </FD>
+        <FD>
           <Guid>2bc217f9-3b05-4fc6-8cc7-fd51846b0239</Guid>
           <Type>Field</Type>
           <FI>[8V16]</FI>

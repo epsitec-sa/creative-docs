@@ -74,6 +74,8 @@ namespace Epsitec.Cresus.Core
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Database ready");
+
+			this.dataBrowser = new DataBrowser (this.infrastructure);
 		}
 
 		private void VerifySchemas()
@@ -82,6 +84,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateSchemas()
 		{
+			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ();
 			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ();
 		}
 
@@ -95,16 +98,16 @@ namespace Epsitec.Cresus.Core
 			this.dataContext.SaveChanges ();
 			System.Diagnostics.Debug.WriteLine ("Created CH-Suisse");
 
-			int count = 0;
-
-			foreach (AddressBook.Entities.LocalitéEntity localité in this.ReadNuPost (paysCh))
-			{
-				count++;
-			}
-
+			List<AddressBook.Entities.LocalitéEntity> localités = new List<Epsitec.Cresus.AddressBook.Entities.LocalitéEntity> (this.ReadNuPost (paysCh));
 			this.dataContext.SaveChanges ();
-			System.Diagnostics.Debug.WriteLine (string.Format ("Created {0} entities", count));
+
+			List<AddressBook.Entities.TitrePersonneEntity> titres = new List<Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity> (this.ReadTitres ());
+			this.dataContext.SaveChanges ();
+
+			List<AddressBook.Entities.AdressePersonneEntity> personnes = new List<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> (this.ReadPersonnes (localités, titres));
+			this.dataContext.SaveChanges ();
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Created {0} x Localité, {1} x TitrePersonne, {2} x AdressePersonne", localités.Count, titres.Count, personnes.Count));
 		}
 
 		public IEnumerable<AddressBook.Entities.LocalitéEntity> ReadNuPost(AddressBook.Entities.PaysEntity paysCh)
@@ -113,16 +116,72 @@ namespace Epsitec.Cresus.Core
 			{
 				string[] values = line.Split ('\t');
 
-				AddressBook.Entities.LocalitéEntity loc = this.dataContext.CreateEntity<AddressBook.Entities.LocalitéEntity> ();
+				AddressBook.Entities.LocalitéEntity loc = this.dataContext.CreateEmptyEntity<AddressBook.Entities.LocalitéEntity> ();
 
 				loc.Numéro = values[2];
 				loc.Nom = values[5];
 				loc.Pays = paysCh;
-				
+
 				yield return loc;
 			}
 		}
 
+		public IEnumerable<AddressBook.Entities.TitrePersonneEntity> ReadTitres()
+		{
+			foreach (string line in new string[] { "M.,Monsieur", "Mme,Madame", "Mlle,Mademoiselle", "MM.,Messieurs" })
+			{
+				string[] values = line.Split (',');
+				AddressBook.Entities.TitrePersonneEntity titre = this.dataContext.CreateEmptyEntity<AddressBook.Entities.TitrePersonneEntity> ();
+
+				titre.IntituléCourt = values[0];
+				titre.IntituléLong = values[1];
+
+				yield return titre;
+			}
+		}
+
+		public IEnumerable<AddressBook.Entities.AdressePersonneEntity> ReadPersonnes(List<AddressBook.Entities.LocalitéEntity> localités, List<AddressBook.Entities.TitrePersonneEntity> titres)
+		{
+			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\EPSITEC.CSV", System.Text.Encoding.Default))
+			{
+				string[] values = line.Split (';');
+
+				if ((values.Length < 7) ||
+					(values[5].Length == 0))
+				{
+					continue;
+				}
+
+				List<AddressBook.Entities.LocalitéEntity> localitéList = localités.FindAll (x => x.Numéro == values[5]);
+				AddressBook.Entities.LocalitéEntity localité = localitéList.Find (x => string.Compare (x.Nom, values[6], true) == 0);
+
+				if (localité == null)
+				{
+					System.Diagnostics.Debug.WriteLine ("No exact match found for " + values[5] + " " + values[6]);
+					
+					if (localitéList.Count > 0)
+					{
+						localité = localitéList[0];
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine ("ERROR: no match found for " + values[5] + " " + values[6]);
+						continue;
+					}
+				}
+
+
+				AddressBook.Entities.AdressePersonneEntity personne = this.dataContext.CreateEmptyEntity<AddressBook.Entities.AdressePersonneEntity> ();
+
+				personne.Titre = titres.Find (x => x.IntituléLong == values[1]);
+				personne.Nom = values[2];
+				personne.Prénom = values[3];
+				personne.Rue = values[4];
+				personne.Localité = localité;
+
+				yield return personne;
+			}
+		}
 
 
 		#region IDisposable Members
@@ -162,6 +221,37 @@ namespace Epsitec.Cresus.Core
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
 				Druid id = template.GetEntityStructuredTypeId ();
+
+				if (id == AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId)
+				{
+					AddressBook.Entities.AdressePersonneEntity example = template as AddressBook.Entities.AdressePersonneEntity;
+
+					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					{
+						if ((ResolverImplementation.Match (example.Nom, entity.Nom)) &&
+							(ResolverImplementation.Match (example.Prénom, entity.Prénom)) &&
+							(ResolverImplementation.Match (example.Rue, entity.Rue)) &&
+							(ResolverImplementation.Match (example.Localité, entity.Localité)))
+						{
+							yield return entity;
+						}
+					}
+
+//-					this.data.dataBrowser.QueryByExample (transaction, example, query);
+				}
+				else if (id == AddressBook.Entities.LocalitéEntity.EntityStructuredTypeId)
+				{
+					AddressBook.Entities.LocalitéEntity example = template as AddressBook.Entities.LocalitéEntity;
+
+					foreach (AddressBook.Entities.LocalitéEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					{
+						if (entity.SearchValue.Contains (example.Résumé))
+						{
+							yield return entity;
+						}
+					}
+				}
+
 				yield break;
 			}
 
@@ -175,11 +265,45 @@ namespace Epsitec.Cresus.Core
 
 			#endregion
 
+			private static bool Match(string a, string b)
+			{
+				if (string.IsNullOrEmpty (a))
+				{
+					return true;
+				}
+				else if (string.IsNullOrEmpty (b))
+				{
+					return false;
+				}
+				else
+				{
+					return b.Contains (a);
+				}
+			}
+
+			private static bool Match(AddressBook.Entities.LocalitéEntity a, AddressBook.Entities.LocalitéEntity b)
+			{
+				if (a == null)
+				{
+					return true;
+				}
+				else if (b == null)
+				{
+					return false;
+				}
+				else
+				{
+					return ResolverImplementation.Match (a.Résumé, b.Résumé);
+				}
+			}
+
+
 			private readonly CoreData data;
 		}
 
 		private readonly DbInfrastructure infrastructure;
 		private DataContext dataContext;
+		private DataBrowser dataBrowser;
 		private ResolverImplementation resolver;
 	}
 }

@@ -9,6 +9,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8V12]", typeof (Epsitec.Cresus.AddressBook.Entities.AdresseEntrepriseEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8V18]", typeof (Epsitec.Cresus.AddressBook.Entities.LocalitéEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[8V1C]", typeof (Epsitec.Cresus.AddressBook.Entities.PaysEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[8V1G]", typeof (Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity))]
 #region Epsitec.Cresus.AddressBook.Adresse Entity
 namespace Epsitec.Cresus.AddressBook.Entities
 {
@@ -116,6 +117,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return new global::Epsitec.Common.Support.Druid (1000, 1, 0);	// [8V1]
 		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 0);	// [8V1]
 	}
 }
 #endregion
@@ -129,26 +131,28 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	///	</summary>
 	public partial class AdressePersonneEntity : global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity
 	{
-		#region AdresseEntity Members
 		///	<summary>
-		///	The <c>SearchValue</c> field.
-		///	designer:fld/8V11/6016
+		///	The <c>Titre</c> field.
+		///	designer:fld/8V11/8V1J
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[6016]")]
-		public override string SearchValue
+		[global::Epsitec.Common.Support.EntityField ("[8V1J]")]
+		public global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity Titre
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.FuncSearchValue);
+				return this.GetField<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity> ("[8V1J]");
 			}
 			set
 			{
-				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", value);
+				global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity oldValue = this.Titre;
+				if (oldValue != value)
+				{
+					this.OnTitreChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity> ("[8V1J]", oldValue, value);
+					this.OnTitreChanged (oldValue, value);
+				}
 			}
 		}
-		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> FuncSearchValue = x => string.Concat (x.Prénom, " ", x.Nom, ", ", x.Rue, ", ", x.Localité.Résumé); // λ [8V11] [6016]
-		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string>> ExprSearchValue = x => string.Concat (x.Prénom, " ", x.Nom, ", ", x.Rue, ", ", x.Localité.Résumé); // λ [8V11] [6016]
-		#endregion
 		///	<summary>
 		///	The <c>Prénom</c> field.
 		///	designer:fld/8V11/8V16
@@ -194,6 +198,8 @@ namespace Epsitec.Cresus.AddressBook.Entities
 			}
 		}
 		
+		partial void OnTitreChanging(global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity newValue);
+		partial void OnTitreChanged(global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity newValue);
 		partial void OnPrénomChanging(string oldValue, string newValue);
 		partial void OnPrénomChanged(string oldValue, string newValue);
 		partial void OnNomChanging(string oldValue, string newValue);
@@ -203,6 +209,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return new global::Epsitec.Common.Support.Druid (1000, 1, 1);	// [8V11]
 		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 1);	// [8V11]
 	}
 }
 #endregion
@@ -222,6 +229,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return new global::Epsitec.Common.Support.Druid (1000, 1, 2);	// [8V12]
 		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 2);	// [8V12]
 	}
 }
 #endregion
@@ -351,6 +359,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return new global::Epsitec.Common.Support.Druid (1000, 1, 8);	// [8V18]
 		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 8);	// [8V18]
 	}
 }
 #endregion
@@ -418,6 +427,95 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return new global::Epsitec.Common.Support.Druid (1000, 1, 12);	// [8V1C]
 		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 12);	// [8V1C]
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.AddressBook.TitrePersonne Entity
+namespace Epsitec.Cresus.AddressBook.Entities
+{
+	///	<summary>
+	///	The <c>TitrePersonne</c> entity.
+	///	designer:cap/8V1G
+	///	</summary>
+	public partial class TitrePersonneEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Common.Dialogs.Entities.ISearchable
+	{
+		#region ISearchable Members
+		///	<summary>
+		///	The <c>SearchValue</c> field.
+		///	designer:fld/8V1G/6016
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[6016]")]
+		public virtual string SearchValue
+		{
+			get
+			{
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.FuncSearchValue);
+			}
+			set
+			{
+				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> (this, "[6016]", value);
+			}
+		}
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> FuncSearchValue = titre => string.Concat (titre.IntituléCourt, ", ", titre.IntituléLong); // λ [8V1G] [6016]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string>> ExprSearchValue = titre => string.Concat (titre.IntituléCourt, ", ", titre.IntituléLong); // λ [8V1G] [6016]
+		#endregion
+		///	<summary>
+		///	The <c>IntituléCourt</c> field.
+		///	designer:fld/8V1G/8V1H
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8V1H]")]
+		public string IntituléCourt
+		{
+			get
+			{
+				return this.GetField<string> ("[8V1H]");
+			}
+			set
+			{
+				string oldValue = this.IntituléCourt;
+				if (oldValue != value)
+				{
+					this.OnIntituléCourtChanging (oldValue, value);
+					this.SetField<string> ("[8V1H]", oldValue, value);
+					this.OnIntituléCourtChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IntituléLong</c> field.
+		///	designer:fld/8V1G/8V1I
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8V1I]")]
+		public string IntituléLong
+		{
+			get
+			{
+				return this.GetField<string> ("[8V1I]");
+			}
+			set
+			{
+				string oldValue = this.IntituléLong;
+				if (oldValue != value)
+				{
+					this.OnIntituléLongChanging (oldValue, value);
+					this.SetField<string> ("[8V1I]", oldValue, value);
+					this.OnIntituléLongChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnIntituléCourtChanging(string oldValue, string newValue);
+		partial void OnIntituléCourtChanged(string oldValue, string newValue);
+		partial void OnIntituléLongChanging(string oldValue, string newValue);
+		partial void OnIntituléLongChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return new global::Epsitec.Common.Support.Druid (1000, 1, 16);	// [8V1G]
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 16);	// [8V1G]
 	}
 }
 #endregion

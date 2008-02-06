@@ -90,6 +90,11 @@ namespace Epsitec.Cresus.DataLayer
 			return this.entityContext.CreateEntity<T> ();
 		}
 
+		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
+		{
+			return this.entityContext.CreateEmptyEntity<T> ();
+		}
+
 		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId)
 		{
 			return this.InternalResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
@@ -928,6 +933,14 @@ namespace Epsitec.Cresus.DataLayer
 
 				this.entityTableDefinitions[entityId] = tableDef;
 				this.LoadTableSchema (tableDef);
+				
+				StructuredType entityType = this.entityContext.GetStructuredType (entityId) as StructuredType;
+				Druid          baseTypeId = entityType.BaseTypeId;
+
+				if (baseTypeId.IsValid)
+				{
+					this.LoadEntitySchema (baseTypeId);
+				}
 			}
 		}
 
