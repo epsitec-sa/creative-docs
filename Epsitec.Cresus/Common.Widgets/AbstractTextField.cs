@@ -1915,14 +1915,14 @@ namespace Epsitec.Common.Widgets
 
 					if (pos < 0)
 					{
-						copy.Text = string.Concat (fontBegin, hint, fontEnd);
+						copy.Text = string.Concat (fontBegin, TextLayout.ConvertToTaggedText (hint), fontEnd);
 					}
 					else
 					{
-						string hintPrefix = hint.Substring (0, pos);
-						string hintSuffix = hint.Substring (pos + text.Length);
+						string hintPrefix = TextLayout.ConvertToTaggedText (hint.Substring (0, pos));
+						string hintSuffix = TextLayout.ConvertToTaggedText (hint.Substring (pos + text.Length));
 						
-						copy.Text = string.Concat (fontBegin, hintPrefix, fontEnd, text, fontBegin, hintSuffix, fontEnd);
+						copy.Text = string.Concat (fontBegin, hintPrefix, fontEnd, TextLayout.ConvertToTaggedText (text), fontBegin, hintSuffix, fontEnd);
 						
 						this.SetValue (AbstractTextField.HintOffsetProperty, pos /*fontBegin.Length + hintPrefix.Length + fontEnd.Length*/);
 					}

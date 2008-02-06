@@ -4,6 +4,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
@@ -114,7 +115,7 @@ namespace Epsitec.Cresus.Core
 		{
 			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\NUPOST.TXT", System.Text.Encoding.Default))
 			{
-				string[] values = line.Split ('\t');
+				string[] values = CoreData.Filter (line.Split ('\t'));
 
 				AddressBook.Entities.LocalitéEntity loc = this.dataContext.CreateEmptyEntity<AddressBook.Entities.LocalitéEntity> ();
 
@@ -126,11 +127,21 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		private static string[] Filter(string[] values)
+		{
+			for (int i = 0; i < values.Length; i++)
+			{
+				values[i] = TextLayout.ConvertToTaggedText (values[i].Trim ()); //.Replace ("|", "<br/>");
+			}
+
+			return values;
+		}
+
 		public IEnumerable<AddressBook.Entities.TitrePersonneEntity> ReadTitres()
 		{
 			foreach (string line in new string[] { "M.,Monsieur", "Mme,Madame", "Mlle,Mademoiselle", "MM.,Messieurs" })
 			{
-				string[] values = line.Split (',');
+				string[] values = CoreData.Filter (line.Split (','));
 				AddressBook.Entities.TitrePersonneEntity titre = this.dataContext.CreateEmptyEntity<AddressBook.Entities.TitrePersonneEntity> ();
 
 				titre.IntituléCourt = values[0];
@@ -144,7 +155,7 @@ namespace Epsitec.Cresus.Core
 		{
 			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\EPSITEC.CSV", System.Text.Encoding.Default))
 			{
-				string[] values = line.Split (';');
+				string[] values = CoreData.Filter (line.Split (';'));
 
 				if ((values.Length < 7) ||
 					(values[5].Length == 0))

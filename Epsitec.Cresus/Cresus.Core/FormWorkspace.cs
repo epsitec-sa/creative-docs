@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Core
 			this.panel.Dock = DockStyle.Fill;
 			this.panel.SetEmbedder (frame);
 
-			this.currentData = EntityContext.Current.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
+			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
+			this.currentData = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
 			this.dialogData = new DialogData (this.currentData, DialogDataMode.Search);
 			this.resolver = this.Application.Data.Resolver;
 
@@ -68,6 +69,7 @@ namespace Epsitec.Cresus.Core
 		private Panel panel;
 		private DialogData dialogData;
 		private AbstractEntity currentData;
+		private EntityContext searchContext;
 		private DialogSearchController controller;
 		private IEntityResolver resolver;
 	}

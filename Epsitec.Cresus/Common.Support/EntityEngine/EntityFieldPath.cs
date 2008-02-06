@@ -367,6 +367,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		public void CreateMissingNodes(AbstractEntity root)
 		{
 			EntityContext context = root.GetEntityContext ();
+			
+			//	If the root has disabled calculations, we will propagate this setting
+			//	down to every child entity.
+
+			bool disableCalculations = root.CalculationsDisabled;
 
 			string[] fields = this.Fields;
 			int      last   = fields.Length - 1;
@@ -391,6 +396,11 @@ namespace Epsitec.Common.Support.EntityEngine
 						{
 							next = context.CreateEmptyEntity (fieldType.TypeId);
 							node.SetField<AbstractEntity> (fieldId, next);
+
+							if (disableCalculations)
+							{
+								next.DisableCalculations ();
+							}
 						}
 
 						node = next;

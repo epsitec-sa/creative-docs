@@ -282,11 +282,22 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
-			AbstractEntity entity = EntityClassResolver.CreateEmptyEntity (entityId);
+			AbstractEntity entity;
 
-			if (entity == null)
+			EntityContext.Push (this);
+
+			try
 			{
-				entity = this.CreateGenericEntity (entityId);
+				entity = EntityClassResolver.CreateEmptyEntity (entityId);
+				
+				if (entity == null)
+				{
+					entity = this.CreateGenericEntity (entityId);
+				}
+			}
+			finally
+			{
+				EntityContext.Pop ();
 			}
 
 			this.OnEntityCreated (new EntityEventArgs (entity));
@@ -295,7 +306,19 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public T CreateEmptyEntity<T>() where T : AbstractEntity, new ()
 		{
-			T entity = new T ();
+			T entity;
+			
+			EntityContext.Push (this);
+			
+			try
+			{
+				entity = new T ();
+			}
+			finally
+			{
+				EntityContext.Pop ();
+			}
+			
 			this.OnEntityCreated (new EntityEventArgs (entity));
 			return entity;
 		}
