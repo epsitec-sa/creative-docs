@@ -40,6 +40,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 		public static readonly CodeAttributes PublicOverrideMethodAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Override);
 		public static readonly CodeAttributes PublicStaticPartialClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.PartialAttribute);
 		public static readonly CodeAttributes PublicStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
+		public static readonly CodeAttributes PublicStaticNewReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute, CodeAttributes.NewAttribute);
 		public static readonly CodeAttributes PublicInterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 		public static readonly CodeAttributes PublicPropertyAttributes = new CodeAttributes (CodeVisibility.Public);
 		public static readonly CodeAttributes PublicVirtualPropertyAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Virtual);

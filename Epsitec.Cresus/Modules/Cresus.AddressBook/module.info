@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1000" name="Cresus.AddressBook" layer="A" namespace="Epsitec.Cresus.AddressBook">
   <Versions>
-    <Version id="1" build="55" date="2008-02-06T12:32:42.9704112Z" />
+    <Version id="1" build="58" date="2008-02-06T12:56:24.0758209Z" />
   </Versions>
 </ModuleInfo>

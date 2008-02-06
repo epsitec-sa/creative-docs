@@ -810,9 +810,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		public static readonly Druid EntityStructuredTypeId = Druid.Empty;
+		
 		private static long nextSerialId = 1;
 		private static readonly object globalExclusion = new object ();
-
+		
 		private readonly EntityContext context;
 		private readonly long entitySerialId;
 		private long dataGeneration;

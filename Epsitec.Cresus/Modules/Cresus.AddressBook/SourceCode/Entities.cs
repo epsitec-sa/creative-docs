@@ -115,9 +115,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (1000, 1, 0);	// [8V1]
+			return global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.EntityStructuredTypeId;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 0);	// [8V1]
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 0);	// [8V1]
 	}
 }
 #endregion
@@ -227,9 +227,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (1000, 1, 1);	// [8V11]
+			return global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 1);	// [8V11]
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 1);	// [8V11]
 	}
 }
 #endregion
@@ -247,9 +247,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (1000, 1, 2);	// [8V12]
+			return global::Epsitec.Cresus.AddressBook.Entities.AdresseEntrepriseEntity.EntityStructuredTypeId;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 2);	// [8V12]
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 2);	// [8V12]
 	}
 }
 #endregion
@@ -377,9 +377,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (1000, 1, 8);	// [8V18]
+			return global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.EntityStructuredTypeId;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 8);	// [8V18]
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 8);	// [8V18]
 	}
 }
 #endregion
@@ -445,9 +445,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (1000, 1, 12);	// [8V1C]
+			return global::Epsitec.Cresus.AddressBook.Entities.PaysEntity.EntityStructuredTypeId;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 12);	// [8V1C]
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 12);	// [8V1C]
 	}
 }
 #endregion
@@ -533,9 +533,9 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (1000, 1, 16);	// [8V1G]
+			return global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.EntityStructuredTypeId;
 		}
-		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 16);	// [8V1G]
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 16);	// [8V1G]
 	}
 }
 #endregion
