@@ -28,6 +28,10 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		Transparent,
 
+		/// <summary>
+		/// The search mode considers all data typed in by the user as defining
+		/// a search template; the original data will never be altered.
+		/// </summary>
 		Search,
 	}
 }

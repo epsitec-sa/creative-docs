@@ -27,8 +27,10 @@ namespace Epsitec.Common.Dialogs
 			this.originalValues = new Dictionary<EntityFieldPath, object> ();
 			this.replacements = new Dictionary<EntityFieldPath, AbstractEntity> ();
 			this.mode = mode;
+			this.defaultContext = data.GetEntityContext ();
+			this.originalData = data;
 			this.externalData = data;
-			this.internalData = this.CreateEntityProxy (this.externalData, null);
+			this.internalData = this.CreateEntityProxy (this.originalData, null);
 		}
 
 
@@ -126,6 +128,8 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		public void ApplyChanges()
 		{
+			System.Diagnostics.Debug.Assert (this.mode != DialogDataMode.Search);
+
 			this.ApplyChanges (this.externalData);
 		}
 
@@ -164,8 +168,12 @@ namespace Epsitec.Common.Dialogs
 
 		public bool AreReferenceReplacementsValid()
 		{
-			EntityContext         context = this.externalData.GetEntityContext ();
-			List<EntityFieldPath> paths   = new List<EntityFieldPath> (this.replacements.Keys);
+			if (this.externalData == null)
+			{
+				return false;
+			}
+
+			List<EntityFieldPath> paths = new List<EntityFieldPath> (this.replacements.Keys);
 
 			paths.Sort ();
 
@@ -184,9 +192,9 @@ namespace Epsitec.Common.Dialogs
 						return false;
 					}
 
-					path.Navigate (context, rootId, out entityId, out fieldId);
+					path.Navigate (this.defaultContext, rootId, out entityId, out fieldId);
 
-					if (context.IsNullable (entityId, fieldId) == false)
+					if (this.defaultContext.IsNullable (entityId, fieldId) == false)
 					{
 						return false;
 					}
@@ -198,12 +206,26 @@ namespace Epsitec.Common.Dialogs
 		
 		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
 		{
-			this.replacements[path] = suggestion;
+			if (path.IsEmpty)
+			{
+				this.externalData = suggestion;
+			}
+			else
+			{
+				this.replacements[path] = suggestion;
+			}
 		}
 
 		public void ClearReferenceReplacement(EntityFieldPath path)
 		{
-			this.replacements.Remove (path);
+			if (path.IsEmpty)
+			{
+				this.externalData = null;
+			}
+			else
+			{
+				this.replacements.Remove (path);
+			}
 		}
 
 		/// <summary>
@@ -313,8 +335,7 @@ namespace Epsitec.Common.Dialogs
 				System.Diagnostics.Debug.Assert (externalData != null);
 				System.Diagnostics.Debug.Assert (host.mode != DialogDataMode.Transparent);
 
-				EntityContext context = externalData.GetEntityContext ();
-				StructuredTypeField field = context.GetStructuredTypeField (externalData, nodeId);
+				StructuredTypeField field = host.defaultContext.GetStructuredTypeField (externalData, nodeId);
 
 				this.parent = parent;
 				this.nodeId = nodeId;
@@ -443,7 +464,7 @@ namespace Epsitec.Common.Dialogs
 						//	was not defined to be nullable. Let's replace it with an
 						//	empty entity instead.
 
-						EntityContext context = this.externalData.GetEntityContext ();
+						EntityContext context = this.host.defaultContext;
 						StructuredTypeField field = context.GetStructuredTypeField (this.externalData, this.nodeId);
 						AbstractEntity entity = context.CreateEmptyEntity (field.TypeId);
 
@@ -567,7 +588,7 @@ namespace Epsitec.Common.Dialogs
 					//	on IValueStore.GetValue to properly handle the fact that the
 					//	entity should be handled as a null.
 
-					EntityContext context = this.externalData.GetEntityContext ();
+					EntityContext context = this.host.defaultContext;
 					IStructuredType type = context.GetStructuredType (this.externalData);
 
 					FieldProxy proxy = new FieldProxy (this.parent, this.nodeId, this.host, this.externalData);
@@ -707,9 +728,8 @@ namespace Epsitec.Common.Dialogs
 				return entity;
 			}
 
-			EntityContext context = entity.GetEntityContext ();
 			Druid entityId = entity.GetEntityStructuredTypeId ();
-			AbstractEntity copy = context.CreateEmptyEntity (entityId);
+			AbstractEntity copy = this.defaultContext.CreateEmptyEntity (entityId);
 			
 			copy.InternalDefineProxy (parent);
 
@@ -719,10 +739,10 @@ namespace Epsitec.Common.Dialogs
 				//	to disable all calculations so that the user can type in values
 				//	in them to build a search query :
 
-				context.DisableCalculations (copy);
+				this.defaultContext.DisableCalculations (copy);
 			}
 
-			foreach (string id in context.GetEntityFieldIds (entity))
+			foreach (string id in this.defaultContext.GetEntityFieldIds (entity))
 			{
 				copy.InternalSetValue (id, new FieldProxy (parent, id, this, entity));
 			}
@@ -774,8 +794,10 @@ namespace Epsitec.Common.Dialogs
 		private readonly Dictionary<EntityFieldPath, object> originalValues;
 		private readonly Dictionary<EntityFieldPath, AbstractEntity> replacements;
 		private readonly DialogDataMode			mode;
-		private readonly AbstractEntity			externalData;
+		private readonly AbstractEntity			originalData;
+		private AbstractEntity					externalData;
 		private readonly AbstractEntity			internalData;
+		private readonly EntityContext			defaultContext;
 		private UI.Panel						panel;
 	}
 }

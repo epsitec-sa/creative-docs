@@ -357,7 +357,8 @@ namespace Epsitec.Common.Dialogs
 
 						if (proxy == null)
 						{
-							System.Diagnostics.Debug.Fail ("No proxy data backing found for the specified search template");
+							//	There is no proxy backing the current placeholder, assume that
+							//	it does not belong to a search field...
 						}
 						else
 						{
