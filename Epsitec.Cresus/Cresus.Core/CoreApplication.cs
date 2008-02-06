@@ -18,6 +18,15 @@ namespace Epsitec.Cresus.Core
 			this.data = new CoreData ();
 		}
 
+
+		public CoreData Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+		
 		public override string ShortWindowTitle
 		{
 			get

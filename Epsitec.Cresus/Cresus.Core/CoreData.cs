@@ -1,6 +1,10 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
+
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
@@ -13,8 +17,24 @@ namespace Epsitec.Cresus.Core
 		public CoreData()
 		{
 			this.infrastructure = new DbInfrastructure ();
+			this.resolver = new ResolverImplementation (this);
 		}
 
+		public DataContext DataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
+		}
+
+		public IEntityResolver Resolver
+		{
+			get
+			{
+				return this.resolver;
+			}
+		}
 
 		public void SetupDatabase()
 		{
@@ -109,6 +129,12 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
+			if (this.resolver != null)
+			{
+				this.resolver.Dispose ();
+				this.resolver = null;
+			}
+			
 			if (this.dataContext != null)
 			{
 				this.dataContext.Dispose ();
@@ -123,7 +149,37 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
+
+		private class ResolverImplementation : IEntityResolver, System.IDisposable
+		{
+			public ResolverImplementation(CoreData data)
+			{
+				this.data = data;
+			}
+
+			#region IEntityResolver Members
+
+			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
+			{
+				Druid id = template.GetEntityStructuredTypeId ();
+				yield break;
+			}
+
+			#endregion
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+			}
+
+			#endregion
+
+			private readonly CoreData data;
+		}
+
 		private readonly DbInfrastructure infrastructure;
 		private DataContext dataContext;
+		private ResolverImplementation resolver;
 	}
 }

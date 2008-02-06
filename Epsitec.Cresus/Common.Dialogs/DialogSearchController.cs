@@ -346,7 +346,18 @@ namespace Epsitec.Common.Dialogs
 					IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Entity;
 					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
 
-					if (proxy != null)
+					if (proxy == null)
+					{
+						if ((this.dialogData.Mode == DialogDataMode.Search) &&
+							(proxyProvider == this.dialogData.Data))
+						{
+							newContext = new SearchContext (this, this.dialogData.Data, EntityFieldPath.CreateRelativePath ());
+							newContext.AnalysePlaceholderGraph (Panel.GetParentPanel (placeholder));
+
+							this.searchContexts.Add (newContext);
+						}
+					}
+					else
 					{
 						EntityFieldPath rootPath   = proxy.GetFieldPath ().GetRootPath ();
 						AbstractEntity  rootData   = proxy.DialogData.Data;
@@ -722,7 +733,7 @@ namespace Epsitec.Common.Dialogs
 					this.nodes.Add (node);
 				}
 
-				AbstractEntity entityData = this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
+				AbstractEntity entityData = this.searchRootPath.IsEmpty ? this.searchRootData : this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
 				EntityContext  context = entityData.GetEntityContext ();
 
 				this.searchTemplate = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());

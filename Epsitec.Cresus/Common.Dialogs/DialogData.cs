@@ -178,7 +178,12 @@ namespace Epsitec.Common.Dialogs
 					Druid  rootId = this.externalData.GetEntityStructuredTypeId ();
 					Druid  entityId;
 					string fieldId;
-					
+
+					if (path.IsEmpty)
+					{
+						return false;
+					}
+
 					path.Navigate (context, rootId, out entityId, out fieldId);
 
 					if (context.IsNullable (entityId, fieldId) == false)
@@ -422,6 +427,7 @@ namespace Epsitec.Common.Dialogs
 				object value = this.ResolveField ();
 
 				if ((this.host.mode == DialogDataMode.Isolated) ||
+					(this.host.mode == DialogDataMode.Search) ||
 					(this.relation != FieldRelation.None))
 				{
 					//	Record the original value for this node, if we have never done
@@ -707,7 +713,7 @@ namespace Epsitec.Common.Dialogs
 			
 			copy.InternalDefineProxy (parent);
 
-			if (DialogData.IsSharedRelation (parent))
+			if (this.IsSharedRelation (parent))
 			{
 				//	If this entity is accessed through a shared relation, we have
 				//	to disable all calculations so that the user can type in values
@@ -724,11 +730,18 @@ namespace Epsitec.Common.Dialogs
 			return copy;
 		}
 
-		private static bool IsSharedRelation(FieldProxy parent)
+		private bool IsSharedRelation(FieldProxy parent)
 		{
 			if (parent == null)
 			{
-				return false;
+				if (this.mode == DialogDataMode.Search)
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
 			}
 			else if ((parent.FieldOptions & FieldOptions.PrivateRelation) == 0)
 			{
@@ -736,7 +749,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
-				return DialogData.IsSharedRelation (parent.Parent);
+				return this.IsSharedRelation (parent.Parent);
 			}
 		}
 

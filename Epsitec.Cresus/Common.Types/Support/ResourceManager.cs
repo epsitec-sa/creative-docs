@@ -903,7 +903,15 @@ namespace Epsitec.Common.Support
 		public StructuredType GetStructuredType(Druid id)
 		{
 			Caption caption = this.GetCaption (id);
-			return TypeRosetta.GetTypeObject (caption) as StructuredType;
+			
+			if (caption == null)
+			{
+				return null;
+			}
+			else
+			{
+				return TypeRosetta.GetTypeObject (caption) as StructuredType;
+			}
 		}
 
 		#endregion

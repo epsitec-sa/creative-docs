@@ -26,6 +26,8 @@ namespace Epsitec.Common.Dialogs
 		/// directly to the provided data. Use this if the user interface must
 		/// reflect external changes in the provided data.
 		/// </summary>
-		Transparent
+		Transparent,
+
+		Search,
 	}
 }
