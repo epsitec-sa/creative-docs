@@ -25,4 +25,7 @@
   <data id="14" mod="1">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Apply'}}" /&gt;</data>
   <data id="15">&lt;s:data id="_0" /&gt;</data>
   <data id="16">&lt;s:data id="_0" /&gt;</data>
+  <data id="17">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="18">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
+  <data id="19">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" /&gt;</data>
 </bundle>
