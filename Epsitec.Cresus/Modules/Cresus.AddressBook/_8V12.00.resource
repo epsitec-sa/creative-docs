@@ -44,7 +44,7 @@
           <FI>[8V13]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
-          <RR>1</RR>
+          <RR>2</RR>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
           <BFW>1</BFW>

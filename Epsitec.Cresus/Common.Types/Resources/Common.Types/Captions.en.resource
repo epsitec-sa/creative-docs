@@ -52,4 +52,5 @@
   <data id="13">&lt;s:data id="_0" f:Labels="{Collection {Text 'Patch module'}}" /&gt;</data>
   <data id="14">&lt;s:data id="_0" f:Labels="{Collection {Text 'Dynamic merge'}}" /&gt;</data>
   <data id="15">&lt;s:data id="_0" f:Labels="{Collection {Text '&amp;lt;i&amp;gt;object&amp;lt;/i&amp;gt; Type (.NET)'}}" /&gt;</data>
+  <data id="16">&lt;s:data id="_0" f:Labels="{Collection {Text 'String Type (.NET, multiline)'}}" /&gt;</data>
 </bundle>
