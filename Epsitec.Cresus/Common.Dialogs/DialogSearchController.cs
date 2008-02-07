@@ -116,7 +116,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
-		/// Clears the suggestions and the text typed in by the user in the
+		/// Resets the suggestions and the text typed in by the user in the
 		/// associated <see cref="Placeholder"/> widgets.
 		/// </summary>
 		public void ResetSuggestions()
@@ -767,13 +767,14 @@ namespace Epsitec.Common.Dialogs
 			{
 				foreach (Node node in this.nodes)
 				{
-					System.Diagnostics.Debug.Assert (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayActiveHint);
+					if (node.Placeholder.SuggestionMode == PlaceholderSuggestionMode.DisplayActiveHint)
+					{
+						node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHintResetText;
+						node.Placeholder.Value = UndefinedValue.Value;
+						node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayActiveHint;
 
-					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayHintResetText;
-					node.Placeholder.Value = UndefinedValue.Value;
-					node.Placeholder.SuggestionMode = PlaceholderSuggestionMode.DisplayActiveHint;
-
-					this.SetTemplateValue (node, UndefinedValue.Value);
+						this.SetTemplateValue (node, UndefinedValue.Value);
+					}
 				}
 			}
 

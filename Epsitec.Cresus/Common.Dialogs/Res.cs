@@ -77,6 +77,8 @@ namespace Epsitec.Common.Dialogs
 				public static readonly global::Epsitec.Common.Widgets.Command ClearSearch = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 7));
 				//	designer:cap/6019
 				public static readonly global::Epsitec.Common.Widgets.Command StartItemEdition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 9));
+				//	designer:cap/601A
+				public static readonly global::Epsitec.Common.Widgets.Command ValidateItemEdition = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 10));
 				//	designer:cap/6018
 				public static readonly global::Epsitec.Common.Widgets.Command ValidateSearch = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 8));
 			}
@@ -155,6 +157,8 @@ namespace Epsitec.Common.Dialogs
 				public const long ClearSearch = 0x600001000007L;
 				//	designer:cap/6019
 				public const long StartItemEdition = 0x600001000009L;
+				//	designer:cap/601A
+				public const long ValidateItemEdition = 0x60000100000AL;
 				//	designer:cap/6018
 				public const long ValidateSearch = 0x600001000008L;
 			}

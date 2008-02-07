@@ -73,10 +73,16 @@ namespace Epsitec.Cresus.Core
 				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition,
 				PreferredWidth = 40
 			});
-			
+
 			this.hintListController.HintListWidget.Header.ToolBar.Items.Add (new Button ()
 			{
 				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch,
+				PreferredWidth = 40
+			});
+
+			this.hintListController.HintListWidget.Header.ToolBar.Items.Add (new Button ()
+			{
+				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition,
 				PreferredWidth = 40
 			});
 
@@ -90,6 +96,7 @@ namespace Epsitec.Cresus.Core
 
 			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand);
 			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand);
+			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition, this.ExecuteValidateItemEditionCommand);
 		}
 
 		protected override void DisableWorkspace()
@@ -98,6 +105,7 @@ namespace Epsitec.Cresus.Core
 
 			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand);
 			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand);
+			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition, this.ExecuteValidateItemEditionCommand);
 		}
 
 
@@ -110,7 +118,8 @@ namespace Epsitec.Cresus.Core
 		{
 			AbstractEntity data = this.dialogData.ExternalData;
 
-			if (data != null)
+			if ((data != null) &&
+				(this.editionDialogData == null))
 			{
 				this.controller.ResetSuggestions ();
 				this.searchPanel.Visibility = false;
@@ -118,6 +127,27 @@ namespace Epsitec.Cresus.Core
 				this.editionDialogData = new DialogData (data, this.searchContext, DialogDataMode.Isolated);
 				this.controller.DialogData = this.editionDialogData;
 				this.editionDialogData.BindToUserInterface (this.editionPanel);
+				this.dialogData.UnbindFromUserInterface (this.searchPanel);
+				this.editionPanel.SetFocusOnTabWidget ();
+			}
+		}
+
+		private void ExecuteValidateItemEditionCommand(object sender, CommandEventArgs e)
+		{
+			AbstractEntity data = this.dialogData.ExternalData;
+
+			if ((data != null) &&
+				(this.editionDialogData != null))
+			{
+				this.editionDialogData.ApplyChanges ();
+				this.controller.ResetSuggestions ();
+				this.editionPanel.Visibility = false;
+				this.editionDialogData.UnbindFromUserInterface (this.editionPanel);
+				this.editionDialogData = null;
+				this.searchPanel.Visibility = true;
+				this.controller.DialogData = this.dialogData;
+				this.dialogData.BindToUserInterface (this.searchPanel);
+				this.searchPanel.SetFocusOnTabWidget ();
 			}
 		}
 
