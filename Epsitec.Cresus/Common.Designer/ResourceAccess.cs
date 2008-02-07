@@ -2166,7 +2166,7 @@ namespace Epsitec.Common.Designer
 				{
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 
-					if (this.accessor.BasedOnPatchModule && item.Source == CultureMapSource.DynamicMerge)
+					if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
 					{
 						this.FormMerge(item);
 					}
@@ -2332,12 +2332,9 @@ namespace Epsitec.Common.Designer
 		protected void FormMerge(CultureMap item)
 		{
 			//	Génère la ressource XmlSourceMerge d'un masque si nécessaire.
-			if (this.accessor.BasedOnPatchModule && item.Source == CultureMapSource.DynamicMerge)
+			if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-
-				string xml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
-				FormEngine.FormDescription form = FormEngine.Serialization.DeserializeForm(xml);
 
 				string xmlBase = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
 				string xmlDelta = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
@@ -2355,7 +2352,7 @@ namespace Epsitec.Common.Designer
 					copy.Fields.Add(field);
 				}
 
-				string xmlFinal = FormEngine.Serialization.SerializeForm(form);
+				string xmlFinal = FormEngine.Serialization.SerializeForm(copy);
 				data.SetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge, xmlFinal);
 			}
 		}
