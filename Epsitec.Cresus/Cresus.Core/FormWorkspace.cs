@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.currentData = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
 			this.dialogData = new DialogData (this.currentData, DialogDataMode.Search);
+			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 			this.resolver = this.Application.Data.Resolver;
 
 			this.controller = this.hintListController.SearchController;
@@ -62,6 +63,16 @@ namespace Epsitec.Cresus.Core
 #endif
 			
 			return frame;
+		}
+
+		private void HandleDialogDataExternalDataChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			AbstractEntity value = e.NewValue as AbstractEntity;
+
+			if (value != null)
+			{
+				System.Diagnostics.Debug.WriteLine (value.Dump ());
+			}
 		}
 
 

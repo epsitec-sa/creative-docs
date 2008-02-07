@@ -64,6 +64,18 @@ namespace Epsitec.Common.Dialogs
 			{
 				return this.externalData;
 			}
+			private set
+			{
+				if (this.externalData != value)
+				{
+					AbstractEntity oldValue = this.externalData;
+					AbstractEntity newValue = value;
+
+					this.externalData = value;
+
+					this.OnExternalDataChanged (oldValue, newValue);
+				}
+			}
 		}
 
 		/// <summary>
@@ -208,7 +220,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (path.IsEmpty)
 			{
-				this.externalData = suggestion;
+				this.ExternalData = suggestion;
 			}
 			else
 			{
@@ -220,7 +232,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (path.IsEmpty)
 			{
-				this.externalData = null;
+				this.ExternalData = null;
 			}
 			else
 			{
@@ -789,6 +801,17 @@ namespace Epsitec.Common.Dialogs
 
 			return copy;
 		}
+
+		private void OnExternalDataChanged(AbstractEntity oldValue, AbstractEntity newValue)
+		{
+			if (this.ExternalDataChanged != null)
+			{
+				this.ExternalDataChanged (this, new DependencyPropertyChangedEventArgs ("ExternalData", oldValue, newValue));
+			}
+		}
+
+
+		public event EventHandler<DependencyPropertyChangedEventArgs> ExternalDataChanged;
 
 
 		private readonly Dictionary<EntityFieldPath, object> originalValues;
