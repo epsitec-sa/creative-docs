@@ -441,10 +441,10 @@ namespace Epsitec.Common.Designer
 		{
 			//	Montre une ressource 'Form' dans une fenêtre.
 			string name = this.accessForms.GetField(index, null, ResourceAccess.FieldType.Name).String;
-			FormEngine.FormDescription form = this.accessForms.GetForm(index);
+			Druid druid = this.accessForms.AccessDruid(index);
 
 			FormEngine.Engine engine = new FormEngine.Engine(this.FormResourceProvider);
-			UI.Panel panel = engine.CreateForm(form, false);
+			UI.Panel panel = engine.CreateForm(druid);
 
 			if (panel != null)
 			{
@@ -491,7 +491,6 @@ namespace Epsitec.Common.Designer
 			}
 			
 			#region IFormResourceProvider Members
-
 			/// <summary>
 			/// Clears the cached information.
 			/// </summary>
@@ -566,11 +565,9 @@ namespace Epsitec.Common.Designer
 					return null;
 				}
 			}
-
 			#endregion
 
 			#region ICaptionResolver Members
-
 			public Caption GetCaption(Druid captionId)
 			{
 				Module module = this.module.designerApplication.SearchModule(captionId);
@@ -617,11 +614,9 @@ namespace Epsitec.Common.Designer
 					return Caption.Merge(captionDefaultCulture, captionCurrentCulture);
 				}
 			}
-
 			#endregion
 
 			#region IStructuredTypeResolver Members
-
 			/// <summary>
 			/// Gets the structured type for the specified id.
 			/// </summary>
@@ -631,16 +626,16 @@ namespace Epsitec.Common.Designer
 			{
 				INamedType type;
 
-				if (this.typeCache.TryGetValue (id, out type))
+				if (this.typeCache.TryGetValue(id, out type))
 				{
 					return type as StructuredType;
 				}
 
-				Module module = this.module.designerApplication.SearchModule (id);
+				Module module = this.module.designerApplication.SearchModule(id);
 
 				if (module == null)
 				{
-					type = this.defaultProvider.GetStructuredType (id);
+					type = this.defaultProvider.GetStructuredType(id);
 				}
 				else
 				{
@@ -654,7 +649,7 @@ namespace Epsitec.Common.Designer
 					{
 						StructuredTypeResourceAccessor accessor = module.accessEntities.Accessor as StructuredTypeResourceAccessor;
 						string culture = Resources.DefaultTwoLetterISOLanguageName;
-						type = accessor.GetStructuredTypeViewOfData (item, culture, this.GetAnyType);
+						type = accessor.GetStructuredTypeViewOfData(item, culture, this.GetAnyType);
 					}
 				}
 
@@ -663,7 +658,6 @@ namespace Epsitec.Common.Designer
 
 				return type as StructuredType;
 			}
-
 			#endregion
 
 			/// <summary>

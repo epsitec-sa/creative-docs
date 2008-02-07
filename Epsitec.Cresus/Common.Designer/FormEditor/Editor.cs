@@ -74,16 +74,40 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		public FormDescription Form
+		public FormDescription WorkingForm
 		{
 			//	Masque de saisie associé.
 			get
 			{
-				return this.form;
+				return this.workingForm;
 			}
 			set
 			{
-				this.form = value;
+				this.workingForm = value;
+			}
+		}
+
+		public List<FieldDescription> BaseFields
+		{
+			get
+			{
+				return this.baseFields;
+			}
+			set
+			{
+				this.baseFields = value;
+			}
+		}
+
+		public List<FieldDescription> FinalFields
+		{
+			get
+			{
+				return this.finalFields;
+			}
+			set
+			{
+				this.finalFields = value;
 			}
 		}
 
@@ -616,44 +640,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		#endregion
 
 
-		#region Operations
-		protected void DeleteSelection()
-		{
-			//	Supprime tous les objets sélectionnés.
-			foreach (Widget obj in this.selectedObjects)
-			{
-				int index = this.objectModifier.GetFieldDescriptionIndex(obj);
-				if (index != -1)
-				{
-					this.form.Fields.RemoveAt(index);
-				}
-			}
-
-			this.SetDirty();
-			this.selectedObjects.Clear();
-			this.UpdateAfterChanging(Viewers.Changing.Delete);
-			this.OnChildrenSelected();
-			this.Invalidate();
-			this.SetDirty();
-		}
-
-		protected void DuplicateSelection()
-		{
-			//	Duplique tous les objets sélectionnés.
-		}
-
-		protected Rectangle SelectBounds
-		{
-			//	Retourne le rectangle englobant tous les objets sélectionnés.
-			get
-			{
-				Rectangle bounds = Rectangle.Empty;
-				return bounds;
-			}
-		}
-		#endregion
-
-
 		#region Paint
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -1058,7 +1044,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		public static readonly double		margin = 10;
 
 		protected Module					module;
-		protected FormDescription			form;
+		protected FormDescription			workingForm;
+		protected List<FieldDescription>	baseFields;
+		protected List<FieldDescription>	finalFields;
 		protected UI.Panel					panel;
 		protected Druid						druid;
 		protected PanelsContext				context;

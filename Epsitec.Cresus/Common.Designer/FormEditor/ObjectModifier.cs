@@ -289,24 +289,24 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Si on est dans un masque delta, le champ modifié doit être copié dans la liste delta.
 			if (this.IsDelta)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, field.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, field.Guid);
 				if (index == -1)
 				{
 					FieldDescription copy = new FieldDescription(field);
 					copy.DeltaModified = true;
-					this.formEditor.Form.Fields.Add(copy);
+					this.formEditor.WorkingForm.Fields.Add(copy);
 
 					this.formEditor.OnUpdateCommands();  // pour mettre à jour le bouton fieldsButtonReset
 				}
 				else
 				{
-					FieldDescription original = this.formEditor.Form.Fields[index];
+					FieldDescription original = this.formEditor.WorkingForm.Fields[index];
 
 					FieldDescription copy = new FieldDescription(field);
 					copy.DeltaModified = true;
 					copy.DeltaMoved = original.DeltaMoved;
 					copy.DeltaAttachGuid = original.DeltaAttachGuid;
-					this.formEditor.Form.Fields[index] = copy;
+					this.formEditor.WorkingForm.Fields[index] = copy;
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Widget GetWidget(System.Guid guid)
 		{
 			//	Cherche le widget correspondant à un Guid.
-			foreach (FieldDescription field in this.finalFields)
+			foreach (FieldDescription field in this.formEditor.FinalFields)
 			{
 				if (guid == field.Guid)
 				{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne le nombre de champs.
 			get
 			{
-				return this.finalFields.Count;
+				return this.formEditor.FinalFields.Count;
 			}
 		}
 
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return this.finalFields[index];
+				return this.formEditor.FinalFields[index];
 			}
 		}
 
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 			else
 			{
-				return this.finalFields[index];
+				return this.formEditor.FinalFields[index];
 			}
 		}
 
@@ -409,9 +409,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetFieldDescriptionIndex(System.Guid guid)
 		{
 			//	Retourne l'index d'un champ d'après le Guid.
-			for (int i=0; i<this.finalFields.Count; i++)
+			for (int i=0; i<this.formEditor.FinalFields.Count; i++)
 			{
-				FieldDescription field = this.finalFields[i];
+				FieldDescription field = this.formEditor.FinalFields[i];
 
 				if (field.Guid == guid)
 				{
@@ -425,9 +425,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int GetFieldDescriptionIndex(string druidsPath)
 		{
 			//	Retourne l'index d'un champ d'après le chemin de Druis.
-			for (int i=0; i<this.finalFields.Count; i++)
+			for (int i=0; i<this.formEditor.FinalFields.Count; i++)
 			{
-				FieldDescription field = this.finalFields[i];
+				FieldDescription field = this.formEditor.FinalFields[i];
 
 				if (field.GetPath(null) == druidsPath)
 				{
@@ -500,13 +500,13 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Indique si l'on est dans un masque delta.
 			get
 			{
-				if (this.formEditor.Form == null)
+				if (this.formEditor.WorkingForm == null)
 				{
 					return false;
 				}
 				else
 				{
-					return this.formEditor.Form.IsDelta;
+					return this.formEditor.WorkingForm.IsDelta;
 				}
 			}
 		}
@@ -517,20 +517,20 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Déplace un élément en le montant ou en le descendant d'une ligne. Pour cela, les déplacements
 			//	de tous les éléments sont recalculés, à partir de la situation initiale.
-			//	this.baseFields				= liste initiale
-			//	this.formEditor.Form.Fields	= liste delta
-			//	this.finalFields			= liste résultante
+			//	this.formEditor.BaseFields			= liste initiale
+			//	this.formEditor.WorkingForm.Fields	= liste delta
+			//	this.formEditor.FinalFields			= liste résultante
 
 			//	Construit la liste originale.
 			List<System.Guid> original = new List<System.Guid>();
-			foreach (FieldDescription field in this.baseFields)
+			foreach (FieldDescription field in this.formEditor.BaseFields)
 			{
 				original.Add(field.Guid);
 			}
 
 			//	Construit la liste finale souhaitée.
 			List<System.Guid> final = new List<System.Guid>();
-			foreach (FieldDescription field in this.finalFields)
+			foreach (FieldDescription field in this.formEditor.FinalFields)
 			{
 				final.Add(field.Guid);
 			}
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			moved.Add(guid);  // ce n'est pas grave si cet élément est 2x dans la liste
 
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			foreach (FieldDescription field in this.formEditor.WorkingForm.Fields)
 			{
 				if (field.DeltaMoved || field.DeltaInserted)
 				{
@@ -552,10 +552,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			//	Si l'élément déplacé est cassé, enlève immédiatement son état cassé.
-			index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, guid);
+			index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, guid);
 			if (index != -1)
 			{
-				this.formEditor.Form.Fields[index].DeltaBrokenAttach = false;
+				this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach = false;
 			}
 
 			//	Génére la liste des opérations de déplacement nécessaires.
@@ -611,7 +611,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			//	Supprime tous les déplacements dans la liste delta actuelle, mais en conservant les éléments.
-			foreach (FieldDescription field in this.formEditor.Form.Fields)
+			foreach (FieldDescription field in this.formEditor.WorkingForm.Fields)
 			{
 				field.DeltaMoved = false;
 				field.DeltaInserted = false;
@@ -620,43 +620,43 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Remet tous les déplacements selon la liste des opérations.
 			foreach (LinkAfter item in oper)
 			{
-				int i = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Element);
+				int i = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Element);
 				if (i == -1)  // élément pas (ou pas encore) adapté ?
 				{
-					i = FormEngine.Arrange.IndexOfGuid(this.baseFields, item.Element);
+					i = FormEngine.Arrange.IndexOfGuid(this.formEditor.BaseFields, item.Element);
 					if (i != -1)  // élément dans la liste de référence ?
 					{
-						FieldDescription field = new FieldDescription(this.baseFields[i]);  // copie de l'élément
+						FieldDescription field = new FieldDescription(this.formEditor.BaseFields[i]);  // copie de l'élément
 
 						field.DeltaMoved = !item.IsInserted;
 						field.DeltaInserted = item.IsInserted;
 						field.DeltaAttachGuid = item.Link;
 
-						this.formEditor.Form.Fields.Add(field);  // met l'élément à la fin de la liste delta
+						this.formEditor.WorkingForm.Fields.Add(field);  // met l'élément à la fin de la liste delta
 					}
 				}
 				else  // élément déjà dans la liste delta ?
 				{
-					FieldDescription field = this.formEditor.Form.Fields[i];
-					this.formEditor.Form.Fields.RemoveAt(i);  // supprime l'élément dans la liste delta
+					FieldDescription field = this.formEditor.WorkingForm.Fields[i];
+					this.formEditor.WorkingForm.Fields.RemoveAt(i);  // supprime l'élément dans la liste delta
 
 					field.DeltaMoved = !item.IsInserted;
 					field.DeltaInserted = item.IsInserted;
 					field.DeltaAttachGuid = item.Link;
 
-					this.formEditor.Form.Fields.Add(field);  // remet l'élément à la fin de la liste delta
+					this.formEditor.WorkingForm.Fields.Add(field);  // remet l'élément à la fin de la liste delta
 				}
 			}
 
 			//	Supprime réellement tous les éléments dans la liste delta qui n'ont plus aucune fonction.
 			index = 0;
-			while (index < this.formEditor.Form.Fields.Count)
+			while (index < this.formEditor.WorkingForm.Fields.Count)
 			{
-				FieldDescription field = this.formEditor.Form.Fields[index];
+				FieldDescription field = this.formEditor.WorkingForm.Fields[index];
 
 				if (!field.DeltaMoved && !field.DeltaInserted && !field.DeltaModified && !field.DeltaHidden && !field.DeltaBrokenAttach)
 				{
-					this.formEditor.Form.Fields.RemoveAt(index);
+					this.formEditor.WorkingForm.Fields.RemoveAt(index);
 				}
 				else
 				{
@@ -746,20 +746,20 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsDelta)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.Form.Fields[index].DeltaHidden)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 					{
 						icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
 					}
 
-					if (this.formEditor.Form.Fields[index].DeltaInserted)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
 					{
 						icon = Misc.Image("FormDeltaInserted");  // peu prioritaire à cause du fond vert
 					}
 
-					if (this.formEditor.Form.Fields[index].DeltaMoved)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaMoved)
 					{
 						icon = Misc.Image("FormDeltaMoved");  // prioritaire, car pas de fond coloré
 					}
@@ -789,26 +789,26 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsDelta)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.Form.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.Form.Fields[index].DeltaHidden)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 					{
 						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 					}
 
-					if (this.formEditor.Form.Fields[index].DeltaModified)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaModified)
 					{
 						color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
 					}
 
-					if (this.formEditor.Form.Fields[index].DeltaInserted)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
 					{
 						color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
 					}
 
 
-					if (this.formEditor.Form.Fields[index].DeltaBrokenAttach)
+					if (this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach)
 					{
 						color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
 					}
@@ -821,20 +821,17 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void UpdateTableContent()
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
-			if (this.formEditor.Form == null)
+			if (this.formEditor.WorkingForm == null)
 			{
 				return;
 			}
-
-			FormEngine.Engine engine = new FormEngine.Engine(this.formEditor.Module.FormResourceProvider);
-			engine.Arrange.Build(this.formEditor.Form, out this.baseFields, out this.finalFields);
 
 			this.tableContent.Clear();
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
 			int level = 0;
-			foreach (FieldDescription field in this.finalFields)
+			foreach (FieldDescription field in this.formEditor.FinalFields)
 			{
 				string prefix = null;
 				if (field.FieldIds != null)
@@ -1207,7 +1204,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Indique si une relation est utilisée dans le masque de saisie.
 			string druidsPath = this.tableRelations[index].DruidsPath;
 
-			foreach (FieldDescription field in this.finalFields)
+			foreach (FieldDescription field in this.formEditor.FinalFields)
 			{
 				if (field.GetPath(null) == druidsPath)
 				{
@@ -1285,8 +1282,6 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected Editor							formEditor;
 		protected Druid								entityId;
-		protected List<FieldDescription>			baseFields;
-		protected List<FieldDescription>			finalFields;
 		protected List<TableItem>					tableContent;
 		protected List<RelationItem>				tableRelations;
 	}

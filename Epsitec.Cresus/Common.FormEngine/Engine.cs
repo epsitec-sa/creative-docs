@@ -42,22 +42,35 @@ namespace Epsitec.Common.FormEngine
 			this.defaultMode = FieldEditionMode.Search;
 		}
 
-		public UI.Panel CreateForm(FormDescription form)
+		public UI.Panel CreateForm(Druid formId)
 		{
-			return this.CreateForm(form, false);
+			//	Crée un masque de saisie.
+			//	Si le Druid correspond à un Form delta, il est fusionné jusqu'au Form de base parent.
+			//	Cette méthode est utilisée par une application finale pour construire un masque.
+			string xml = this.resourceProvider.GetFormXmlSource(formId);
+			if (string.IsNullOrEmpty(xml))
+			{
+				return null;
+			}
+
+			FormDescription form = Serialization.DeserializeForm(xml);
+
+			List<FieldDescription> baseFields, finalFields;
+			Druid entityId;
+			this.arrange.Build(form, null, out baseFields, out finalFields, out entityId);
+
+			return this.CreateForm(finalFields, entityId, false);
 		}
 
-		public UI.Panel CreateForm(FormDescription form, bool forDesigner)
+		public UI.Panel CreateForm(List<FieldDescription> fields, Druid entityId, bool forDesigner)
 		{
-			//	Crée un masque de saisie pour une entité donnée.
+			//	Crée un masque de saisie.
 			//	La liste de FieldDescription doit être plate (pas de Node).
+			//	Cette méthode est utilisée par Designer pour construire un masque.
 			this.forDesigner = forDesigner;
 			this.resourceProvider.ClearCache();
 
-			List<FieldDescription> baseFields, finalFields;
-			this.arrange.Build(form, out baseFields, out finalFields);
-
-			string err = this.arrange.Check(finalFields);
+			string err = this.arrange.Check(fields);
 			if (err != null)
 			{
 				UI.Panel container = new UI.Panel();
@@ -70,10 +83,10 @@ namespace Epsitec.Common.FormEngine
 				return container;
 			}
 
-			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(finalFields);
+			List<FieldDescription> fields1 = this.arrange.DevelopSubForm(fields);
 			List<FieldDescription> fields2 = this.arrange.Organize(fields1);
 
-			if (this.GetEntityDefinition(form.EntityId) == null)
+			if (this.GetEntityDefinition(entityId) == null)
 			{
 				return null;
 			}
@@ -84,7 +97,7 @@ namespace Epsitec.Common.FormEngine
 			
 			try
 			{
-				entityData = entityContext.CreateEntity(form.EntityId);
+				entityData = entityContext.CreateEntity(entityId);
 			}
 			finally
 			{
@@ -99,7 +112,7 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
-			this.CreateFormBox(root, form.EntityId, fields2, 0);
+			this.CreateFormBox(root, entityId, fields2, 0);
 
 			return root;
 		}

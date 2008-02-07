@@ -411,7 +411,8 @@ namespace Epsitec.Common.Designer
 				//	les éléments FieldDescription de form. Donc, les deux listes générées
 				//	baseFields et finalFields ne sont pas utiles !
 				List<FormEngine.FieldDescription> baseFields, finalFields;
-				engine.Arrange.Build(form, out baseFields, out finalFields);
+				Druid entityId;
+				engine.Arrange.Build(form, null, out baseFields, out finalFields, out entityId);
 
 				//	Compte le nombre de liens cassés.
 				List<string> errors = new List<string>();
@@ -2173,19 +2174,103 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void GetForm(Druid druid, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)
+		{
+			this.GetForm(this.accessor.Collection[druid], out workingForm, out baseFields, out finalFields, out entityId);
+		}
+
+		public void GetForm(CultureMap item, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)
+		{
+			if (item == null)
+			{
+				workingForm = null;
+				baseFields = null;
+				finalFields = null;
+				entityId = Druid.Empty;
+			}
+			else
+			{
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+				string baseXml, deltaXml=null;
+				FormEngine.FormDescription baseForm, deltaForm;
+
+				if (this.accessor.BasedOnPatchModule)
+				{
+					switch (item.Source)
+					{
+						case CultureMapSource.ReferenceModule:
+							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+							deltaXml = "";
+							break;
+
+						case CultureMapSource.PatchModule:
+							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+							break;
+
+						case CultureMapSource.DynamicMerge:
+							this.FormMerge(item);  // utile si un autre module a changé
+
+							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
+							deltaXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+							break;
+
+						default:
+							throw new System.InvalidOperationException();
+					}
+				}
+				else
+				{
+					baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+				}
+
+				if (string.IsNullOrEmpty(baseXml))
+				{
+					baseForm = null;
+				}
+				else
+				{
+					baseForm = FormEngine.Serialization.DeserializeForm(baseXml);
+				}
+
+				if (deltaXml == null)
+				{
+					deltaForm = null;
+				}
+				else if (deltaXml == "")
+				{
+					deltaForm = new FormEngine.FormDescription(baseForm);
+					deltaForm.Fields.Clear();
+				}
+				else
+				{
+					deltaForm = FormEngine.Serialization.DeserializeForm(deltaXml);
+				}
+
+				engine.Arrange.Build(baseForm, deltaForm, out baseFields, out finalFields, out entityId);
+
+				if (deltaForm == null)
+				{
+					workingForm = baseForm;
+				}
+				else
+				{
+					workingForm = deltaForm;
+				}
+
+				if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
+				{
+					workingForm.IsForceDelta = true;
+				}
+			}
+		}
+
 		public FormEngine.FormDescription GetForm(Druid druid)
 		{
 			//	Retourne le masque de saisie associé à une ressource.
 			return this.GetForm(this.accessor.Collection[druid]);
 		}
 
-		public FormEngine.FormDescription GetForm(int index)
-		{
-			//?CultureMap item = this.accessor.Collection[index];  // "RunPanel" affiche parfois la mauvaise resource avec cela !
-			CultureMap item = this.collectionView.Items[index] as CultureMap;
-			return this.GetForm(item);
-		}
-		
 		private FormEngine.FormDescription GetForm(CultureMap item)
 		{
 			//	Désérialise un masque.

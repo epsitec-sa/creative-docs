@@ -73,7 +73,22 @@ namespace Epsitec.Common.FormEngine
 			//	Indique s'il s'agit d'un masque delta (Delta form).
 			get
 			{
-				return !this.deltaBaseFormId.IsEmpty;
+				return this.isForceDelta || this.deltaBaseFormId.IsValid;
+			}
+		}
+
+		public bool IsForceDelta
+		{
+			//	Force ce masque a apparaître comme un masque delta. C'est utile pour un masque dans un
+			//	module de patch, qui est vu comme un masque normal, mais qui agit bien comme un delta.
+			//	Cette information n'est pas sérialisée.
+			get
+			{
+				return this.isForceDelta;
+			}
+			set
+			{
+				this.isForceDelta = value;
 			}
 		}
 
@@ -253,5 +268,6 @@ namespace Epsitec.Common.FormEngine
 		private Druid							entityId;
 		private Druid							deltaBaseFormId;
 		private readonly List<FieldDescription>	fields;
+		private bool							isForceDelta;
 	}
 }

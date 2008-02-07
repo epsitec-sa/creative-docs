@@ -20,6 +20,65 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
+		public void Build(FormDescription baseForm, FormDescription deltaForm, out List<FieldDescription> baseFields, out List<FieldDescription> finalFields, out Druid entityId)
+		{
+			//	Construit la liste des FieldDescription finale.
+			//	S'il s'agit d'un Form delta, cherche tous les Forms qui servent à le définir, jusqu'au Form de base initial:
+			//	 - baseFields contient la liste de base (la génération précédente n-1)
+			//   - finalFields contient la liste finale (la dernière génération n)
+			//	S'il s'agit d'un Form de base:
+			//	 - baseFields est nul
+			//   - finalFields contient la liste finale
+			List<List<FieldDescription>> list = new List<List<FieldDescription>>();
+			Druid parentId;
+
+			if (deltaForm != null)
+			{
+				list.Add(deltaForm.Fields);
+			}
+
+			list.Add(baseForm.Fields);
+			parentId = baseForm.DeltaBaseFormId;
+			entityId = baseForm.EntityId;
+
+			while (parentId.IsValid)
+			{
+				string xml = this.resourceProvider.GetFormXmlSource(parentId);
+				if (string.IsNullOrEmpty(xml))
+				{
+					break;
+				}
+
+				FormDescription form = Serialization.DeserializeForm(xml);
+				list.Add(form.Fields);
+				parentId = form.DeltaBaseFormId;
+				entityId = form.EntityId;
+			}
+
+			//	A partir du Form de base initial, fusionne avec tous les Forms delta.
+			if (list.Count == 1)
+			{
+				baseFields = null;
+				finalFields = list[0];
+			}
+			else
+			{
+				finalFields = list[list.Count-1];
+				baseFields = null;
+				for (int i=list.Count-2; i>=0; i--)
+				{
+					baseFields = finalFields;
+					finalFields = this.Merge(baseFields, list[i]);
+				}
+			}
+
+			if (baseFields == null)
+			{
+				baseFields = new List<FieldDescription>();
+			}
+		}
+
+#if false
 		public void Build(FormDescription form, out List<FieldDescription> baseFields, out List<FieldDescription> finalFields)
 		{
 			//	Construit la liste des FieldDescription finale.
@@ -70,6 +129,7 @@ namespace Epsitec.Common.FormEngine
 				finalFields = form.Fields;
 			}
 		}
+#endif
 
 		public List<FieldDescription> Merge(List<FieldDescription> baseList, List<FieldDescription> deltaList)
 		{

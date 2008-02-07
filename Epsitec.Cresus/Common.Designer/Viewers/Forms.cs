@@ -15,6 +15,8 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Forms(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
+			this.engine = new FormEngine.Engine(this.module.FormResourceProvider);
+
 			this.scrollable.Visibility = false;
 
 			FrameBox surface = new FrameBox(this.lastGroup);
@@ -461,8 +463,8 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (name == "FormFieldsClearDelta")  // efface tout le masque delta ?
 			{
-				this.form.Fields.Clear();
-				this.SetForm(this.form, this.druidToSerialize, false);
+				this.workingForm.Fields.Clear();
+				this.SetForm(false);
 				this.UpdateFieldsTable(true);
 				this.ReflectSelectionToList();
 				this.UpdateFieldsButtons();
@@ -743,7 +745,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonExpand.Enable = this.formEditor.ObjectModifier.IsTableRelationExpandable(sel);
 			this.relationsButtonCompact.Enable = this.formEditor.ObjectModifier.IsTableRelationCompactable(sel);
 
-			this.relationsButtonAuto.Enable = !this.designerApplication.IsReadonly && this.form != null;
+			this.relationsButtonAuto.Enable = !this.designerApplication.IsReadonly && this.finalFields != null;
 		}
 
 
@@ -761,7 +763,7 @@ namespace Epsitec.Common.Designer.Viewers
 				
 				if (this.druidToSerialize.IsValid)
 				{
-					Forms.softSerialize = this.FormToXml(this.GetForm());
+					//?Forms.softSerialize = this.FormToXml(this.GetForm());
 				}
 				else
 				{
@@ -778,7 +780,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Stocke la version XML (sérialisée) du masque de saisie dans l'accesseur
 			//	s'il y a eu des modifications.
-			this.access.SetForm(this.druidToSerialize, this.GetForm());
+			//?this.GetForm();
+			this.access.SetForm(this.druidToSerialize, this.workingForm);
 			base.PersistChanges();
 		}
 
@@ -795,8 +798,10 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (Forms.softSerialize == null)
 			{
-				FormDescription form = this.access.GetForm(this.druidToSerialize);
-				this.SetForm(form, this.druidToSerialize, false);
+				//?FormDescription form = this.access.GetForm(this.druidToSerialize);
+				//?this.SetForm(form, this.druidToSerialize, false);
+				this.access.GetForm(this.druidToSerialize, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
+				this.SetForm(false);
 			}
 			else
 			{
@@ -810,7 +815,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				FormDescription form = this.XmlToForm(Forms.softSerialize);
-				this.SetForm(form, this.druidToSerialize, false);
+				//?this.SetForm(form, this.druidToSerialize, false);
 
 				Forms.softDirtySerialization = false;
 				Forms.softSerialize = null;
@@ -829,13 +834,7 @@ namespace Epsitec.Common.Designer.Viewers
 			return FormEngine.Serialization.DeserializeForm(xml);
 		}
 
-		protected FormDescription GetForm()
-		{
-			//	Retourne le masque de saisie en cours d'édition.
-			return this.form;
-		}
-
-		protected void SetForm(FormDescription form, Druid druid, bool keepSelection)
+		protected void SetForm(bool keepSelection)
 		{
 			//	Spécifie le masque de saisie en cours d'édition.
 			//	Construit physiquement le masque de saisie (UI.Panel contenant des widgets) sur la
@@ -846,42 +845,34 @@ namespace Epsitec.Common.Designer.Viewers
 				this.panelContainer = null;
 			}
 
-			if (form == null || druid.IsEmpty)
+			if (this.finalFields == null)
 			{
-				this.form = null;
-				this.entityId = Druid.Empty;
-
 				this.panelContainer = new UI.Panel();
 				this.InitializePanel();
 
 				this.formEditor.Panel = this.panelContainer;
-				this.formEditor.Druid = druid;
+				this.formEditor.Druid = this.druidToSerialize;
 				this.formEditor.IsEditEnabled = false;
-				this.formEditor.Form = null;
+				this.formEditor.WorkingForm = null;
+				this.formEditor.BaseFields = null;
+				this.formEditor.FinalFields = null;
 
 				this.entityFields = null;
 			}
 			else
 			{
-				FormEngine.Engine engine = new FormEngine.Engine(this.module.FormResourceProvider);
-
-#if false
-				FormDescription copy = new FormDescription(form);
-				copy.Fields = engine.Arrange.DevelopSubForm(copy.Fields);
-				this.form = copy;
-#else
-				this.form = form;
-#endif
-
-				this.entityId = this.form.EntityId;
-
 				List<System.Guid> guids = null;
 				if (keepSelection)
 				{
 					guids = this.formEditor.GetSelectedGuids();  // Guid des objets sélectionnés
 				}
 
-				this.panelContainer = engine.CreateForm(this.form, true);
+				if (this.workingForm.IsDelta)
+				{
+					this.finalFields = this.engine.Arrange.Merge(this.baseFields, this.workingForm.Fields);
+				}
+
+				this.panelContainer = this.engine.CreateForm(this.finalFields, this.entityId, true);
 				if (this.panelContainer == null)
 				{
 					this.panelContainer = new UI.Panel();
@@ -889,9 +880,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.InitializePanel();
 
 				this.formEditor.Panel = this.panelContainer;
-				this.formEditor.Druid = druid;
+				this.formEditor.Druid = this.druidToSerialize;
 				this.formEditor.IsEditEnabled = !this.designerApplication.IsReadonly;
-				this.formEditor.Form = this.form;
+				this.formEditor.WorkingForm = this.workingForm;
+				this.formEditor.BaseFields = this.baseFields;
+				this.formEditor.FinalFields = this.finalFields;
 
 				if (keepSelection)
 				{
@@ -973,7 +966,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.module.ResourceManager.ActiveCulture = Resources.FindSpecificCultureInfo(button.Name);
 			this.panelContainer.UpdateDisplayCaptions();
 			this.UpdateCultureButtons();
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 		}
 
 		protected void UpdateCultureButtons()
@@ -1001,7 +994,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (oper == Changing.Create || oper == Changing.Delete || oper == Changing.Move || oper == Changing.Regenerate)
 			{
 				//	Régénère le panneau contenant le masque de saisie.
-				this.SetForm(this.form, this.druidToSerialize, oper == Changing.Regenerate);
+				this.SetForm(oper == Changing.Regenerate);
 				this.UpdateFieldsTable(false);
 			}
 		}
@@ -1069,16 +1062,16 @@ namespace Epsitec.Common.Designer.Viewers
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 					FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 
-					int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+					int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
 					if (index == -1)
 					{
 						FieldDescription copy = new FieldDescription(field);
 						copy.DeltaHidden = true;
-						this.form.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
+						this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
 					}
 					else
 					{
-						FieldDescription actual = this.form.Fields[index];
+						FieldDescription actual = this.workingForm.Fields[index];
 
 						if (actual.DeltaHidden)  // champ caché ?
 						{
@@ -1091,7 +1084,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 						if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaBrokenAttach)
 						{
-							this.form.Fields.RemoveAt(index);
+							this.workingForm.Fields.RemoveAt(index);
 						}
 					}
 
@@ -1107,14 +1100,14 @@ namespace Epsitec.Common.Designer.Viewers
 					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
-						this.form.Fields.RemoveAt(index);
+						this.workingForm.Fields.RemoveAt(index);
 					}
 
 					guids.Add(item.Guid);
 				}
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1146,16 +1139,16 @@ namespace Epsitec.Common.Designer.Viewers
 			foreach (int sel in sels)
 			{
 				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-				int index = FormEngine.Arrange.IndexOfGuid(this.form.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
 				if (index != -1)
 				{
 					if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 					{
-						this.form.Fields.RemoveAt(index);
+						this.workingForm.Fields.RemoveAt(index);
 					}
 					else  // masque normal ?
 					{
-						FieldDescription field = this.form.Fields[index];
+						FieldDescription field = this.workingForm.Fields[index];
 						field.Reset();
 					}
 				}
@@ -1163,7 +1156,7 @@ namespace Epsitec.Common.Designer.Viewers
 				guids.Add(item.Guid);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1206,16 +1199,16 @@ namespace Epsitec.Common.Designer.Viewers
 				field.ColumnsRequired = 0;
 				field.DeltaInserted = true;
 				field.DeltaAttachGuid = ag;
-				this.form.Fields.Add(field);
+				this.workingForm.Fields.Add(field);
 			}
 			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Glue);
 				field.ColumnsRequired = 0;
-				this.form.Fields.Insert(index, field);
+				this.workingForm.Fields.Insert(index, field);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1248,15 +1241,15 @@ namespace Epsitec.Common.Designer.Viewers
 				field = new FieldDescription(FieldDescription.FieldType.Line);
 				field.DeltaInserted = true;
 				field.DeltaAttachGuid = ag;
-				this.form.Fields.Add(field);
+				this.workingForm.Fields.Add(field);
 			}
 			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Line);
-				this.form.Fields.Insert(index, field);
+				this.workingForm.Fields.Insert(index, field);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1289,15 +1282,15 @@ namespace Epsitec.Common.Designer.Viewers
 				field = new FieldDescription(FieldDescription.FieldType.Title);
 				field.DeltaInserted = true;
 				field.DeltaAttachGuid = ag;
-				this.form.Fields.Add(field);
+				this.workingForm.Fields.Add(field);
 			}
 			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Title);
-				this.form.Fields.Insert(index, field);
+				this.workingForm.Fields.Insert(index, field);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1336,7 +1329,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			field.SubFormId = druid;
 			
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 			this.UpdateFieldsButtons();
 			this.module.AccessForms.SetLocalDirty();
@@ -1372,10 +1365,10 @@ namespace Epsitec.Common.Designer.Viewers
 							if (level == 0)
 							{
 								int last = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
-								this.form.Fields.RemoveAt(last);  // enlève le BoxEnd
-								this.form.Fields.RemoveAt(first);  // enlève le BoxBegin
+								this.workingForm.Fields.RemoveAt(last);  // enlève le BoxEnd
+								this.workingForm.Fields.RemoveAt(first);  // enlève le BoxBegin
 
-								this.SetForm(this.form, this.druidToSerialize, true);
+								this.SetForm(true);
 								this.UpdateFieldsTable(false);
 
 								sels.Clear();
@@ -1398,8 +1391,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				int sel = sels[i];
 
-				FieldDescription field = this.form.Fields[sel];
-				this.form.Fields.RemoveAt(sel);
+				FieldDescription field = this.workingForm.Fields[sel];
+				this.workingForm.Fields.RemoveAt(sel);
 				content.Insert(0, field);
 			}
 
@@ -1407,17 +1400,17 @@ namespace Epsitec.Common.Designer.Viewers
 
 			FieldDescription box = new FieldDescription(FieldDescription.FieldType.BoxBegin);
 			box.BoxFrameState = FrameState.All;
-			this.form.Fields.Insert(index++, box);
+			this.workingForm.Fields.Insert(index++, box);
 
 			foreach (FieldDescription field in content)
 			{
-				this.form.Fields.Insert(index++, field);
+				this.workingForm.Fields.Insert(index++, field);
 			}
 
 			box = new FieldDescription(FieldDescription.FieldType.BoxEnd);
-			this.form.Fields.Insert(index++, box);
+			this.workingForm.Fields.Insert(index++, box);
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			sels.Clear();
@@ -1453,7 +1446,7 @@ namespace Epsitec.Common.Designer.Viewers
 					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 					this.formEditor.ObjectModifier.FormDeltaMove(index, direction);
 
-					this.SetForm(this.form, this.druidToSerialize, true);
+					this.SetForm(true);
 					this.UpdateFieldsTable(false);
 				}
 			}
@@ -1465,13 +1458,13 @@ namespace Epsitec.Common.Designer.Viewers
 					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 					if (index != -1)
 					{
-						FieldDescription field = this.form.Fields[index];
-						this.form.Fields.RemoveAt(index);
-						this.form.Fields.Insert(index+direction, field);
+						FieldDescription field = this.workingForm.Fields[index];
+						this.workingForm.Fields.RemoveAt(index);
+						this.workingForm.Fields.Insert(index+direction, field);
 					}
 				}
 
-				this.SetForm(this.form, this.druidToSerialize, true);
+				this.SetForm(true);
 				this.UpdateFieldsTable(false);
 			}
 
@@ -1522,7 +1515,7 @@ namespace Epsitec.Common.Designer.Viewers
 				field.SetFields(item.DruidsPath);
 				field.DeltaInserted = true;
 				field.DeltaAttachGuid = ti.Guid;
-				this.form.Fields.Add(field);
+				this.workingForm.Fields.Add(field);
 			}
 			else  // masque normal ?
 			{
@@ -1547,10 +1540,10 @@ namespace Epsitec.Common.Designer.Viewers
 					field.SubFormId = formId;
 				}
 
-				this.form.Fields.Add(field);
+				this.workingForm.Fields.Add(field);
 			}
 
-			this.SetForm(this.form, this.druidToSerialize, true);
+			this.SetForm(true);
 			this.UpdateFieldsTable(false);
 
 			List<int> sels = new List<int>();
@@ -1591,7 +1584,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedRelationsAuto()
 		{
 			//	Etend automatiquement les champs utilisés.
-			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields, this.form);
+			this.formEditor.ObjectModifier.UpdateTableRelation(this.entityId, this.entityFields, this.workingForm);
 
 			this.UpdateRelationsTable(false);
 			this.UpdateRelationsButtons();
@@ -1889,14 +1882,17 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					showColumn1 = true;
 		protected static bool					showColumn2 = true;
 
+		protected FormEngine.Engine				engine;
 		protected FormEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected Scrollable					drawingScrollable;
 		protected FrameBox						panelContainerParent;
 		protected UI.Panel						panelContainer;
+		protected FormDescription				workingForm;
+		protected List<FieldDescription>		baseFields;
+		protected List<FieldDescription>		finalFields;
 		protected Druid							entityId;
-		protected FormDescription				form;
 		protected IList<StructuredData>			entityFields;
 		protected FormEditor.Editor				formEditor;
 		protected FrameBox						right;
