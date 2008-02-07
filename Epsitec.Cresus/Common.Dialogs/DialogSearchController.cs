@@ -119,7 +119,7 @@ namespace Epsitec.Common.Dialogs
 		/// Clears the suggestions and the text typed in by the user in the
 		/// associated <see cref="Placeholder"/> widgets.
 		/// </summary>
-		public void ClearSuggestions()
+		public void ResetSuggestions()
 		{
 			using (this.SuspendSearchHandler ())
 			{
@@ -132,6 +132,20 @@ namespace Epsitec.Common.Dialogs
 
 				this.searchContexts.Clear ();
 				this.ActivateSearchContext (null);
+			}
+		}
+
+		public void ClearActiveSuggestion()
+		{
+			using (this.SuspendSearchHandler ())
+			{
+				SearchContext context = this.activeSearchContext;
+
+				if (context != null)
+				{
+					context.Clear ();
+					this.AsyncResolveSearch ();
+				}
 			}
 		}
 

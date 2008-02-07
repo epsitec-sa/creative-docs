@@ -127,7 +127,7 @@ namespace Epsitec.Common.Dialogs
 					buttonClear.Clicked +=
 						delegate
 						{
-							searchController.ClearSuggestions ();
+							searchController.ResetSuggestions ();
 						};
 
 					buttonDump.Text = "Dump";

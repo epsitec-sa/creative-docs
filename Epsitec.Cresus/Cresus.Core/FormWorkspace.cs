@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Core
 
 		private void ExecuteClearSearchCommand(object sender, CommandEventArgs e)
 		{
-			this.controller.ClearSuggestions ();
+			this.controller.ClearActiveSuggestion ();
 		}
 
 		private void ExecuteStartItemEditionCommand(object sender, CommandEventArgs e)
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Core
 
 			if (data != null)
 			{
-				this.controller.ClearSuggestions ();
+				this.controller.ResetSuggestions ();
 				this.searchPanel.Visibility = false;
 				this.editionPanel.Visibility = true;
 				this.editionDialogData = new DialogData (data, this.searchContext, DialogDataMode.Isolated);
