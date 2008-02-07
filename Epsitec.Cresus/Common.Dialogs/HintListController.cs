@@ -26,6 +26,8 @@ namespace Epsitec.Common.Dialogs
 			this.searchController.PlaceholderPostProcessing += this.HandleSearchControllerPlaceholderPostProcessing;
 			this.searchController.Resolved += this.HandleSearchControllerResolved;
 
+			this.emptyCollectionView = new CollectionView (new System.Collections.ArrayList ());
+
 			DialogSearchController.GlobalSearchContextChanged += this.HandleGlobalSearchContextChanged;
 		}
 
@@ -150,6 +152,11 @@ namespace Epsitec.Common.Dialogs
 		private void OnActiveSearchContextChanged()
 		{
 			this.UpdateVisibility ();
+			
+			if (this.activeSearchContext == null)
+			{
+				this.hintListWidget.Items = this.emptyCollectionView;
+			}
 		}
 		
 		
@@ -386,6 +393,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		private readonly DialogSearchController searchController;
+		private readonly CollectionView			emptyCollectionView;
 		private ISearchContext					activeSearchContext;
 		private EntityResolverResult			searchResult;
 		private HintListWidget					hintListWidget;
