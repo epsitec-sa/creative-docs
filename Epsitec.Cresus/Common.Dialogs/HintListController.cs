@@ -103,6 +103,16 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public HintListWidget HintListWidget
+		{
+			get
+			{
+				this.CreateUserInterface ();
+
+				return this.hintListWidget;
+			}
+		}
+
 		public void DefineContainer(Widget widget)
 		{
 			this.CreateUserInterface ();

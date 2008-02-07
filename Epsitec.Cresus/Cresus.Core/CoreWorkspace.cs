@@ -46,6 +46,37 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public bool Enabled
+		{
+			get
+			{
+				return this.enabled;
+			}
+		}
+
+		public void SetEnable(bool enable)
+		{
+			if (this.enabled != enable)
+			{
+				if (enable)
+				{
+					this.EnableWorkspace ();
+					this.enabled = true;
+				}
+				else
+				{
+					this.DisableWorkspace ();
+					this.enabled = false;
+				}
+			}
+		}
+
+		public abstract AbstractGroup CreateUserInterface();
+
+		protected abstract void EnableWorkspace();
+		
+		protected abstract void DisableWorkspace();
+		
 		private void SetupUserInterface(AbstractGroup container)
 		{
 			this.container = container;
@@ -62,10 +93,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public abstract AbstractGroup CreateUserInterface();
-
 
 		private CoreApplication application;
 		private AbstractGroup container;
+		private bool enabled;
 	}
 }

@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static Panel LoadPanel(Druid id)
+		public static Panel LoadPanel(Druid id, PanelInteractionMode mode)
 		{
 			ResourceManager manager = CoreProgram.Application.ResourceManager;
 			ResourceBundle  bundle  = manager.GetBundle (id);
@@ -59,17 +59,17 @@ namespace Epsitec.Cresus.Core
 			switch (bundle.Type)
 			{
 				case Resources.PanelTypeName:
-					return UI.CreateUserInterfaceFromPanel (bundle);
+					return UI.CreateUserInterfaceFromPanel (bundle, mode);
 
 				case Resources.FormTypeName:
-					return UI.CreateUserInterfaceFromForm (bundle);
+					return UI.CreateUserInterfaceFromForm (bundle, mode);
 
 				default:
 					return null;
 			}
 		}
 
-		private static Panel CreateUserInterfaceFromForm(ResourceBundle bundle)
+		private static Panel CreateUserInterfaceFromForm(ResourceBundle bundle, PanelInteractionMode mode)
 		{
 			string xmlSource = bundle[FormResourceAccessor.Strings.XmlSource].AsString;
 			Size size = FormResourceAccessor.GetFormDefaultSize (bundle);
@@ -78,7 +78,13 @@ namespace Epsitec.Cresus.Core
 			Epsitec.Common.FormEngine.IFormResourceProvider provider = new Epsitec.Common.FormEngine.DefaultResourceProvider (bundle.ResourceManager);
 			Epsitec.Common.FormEngine.Engine formEngine = new Epsitec.Common.FormEngine.Engine (provider);
 
-			formEngine.EnableSearchMode ();
+			switch (mode)
+			{
+				case PanelInteractionMode.Search:
+					formEngine.EnableSearchMode ();
+					break;
+			}
+
 			formDescription.Deserialize (xmlSource);
 
 			Panel panel = formEngine.CreateForm (formDescription);
@@ -88,7 +94,7 @@ namespace Epsitec.Cresus.Core
 			return panel;
 		}
 
-		private static Panel CreateUserInterfaceFromPanel(ResourceBundle bundle)
+		private static Panel CreateUserInterfaceFromPanel(ResourceBundle bundle, PanelInteractionMode mode)
 		{
 			throw new System.NotImplementedException ();
 		}

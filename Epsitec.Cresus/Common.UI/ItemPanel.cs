@@ -2049,7 +2049,7 @@ namespace Epsitec.Common.UI
 			this.focusedItemView = itemView;
 		}
 
-		private void ClearFocus()
+		private new void ClearFocus()
 		{
 			if (this.focusedItemView == null)
 			{

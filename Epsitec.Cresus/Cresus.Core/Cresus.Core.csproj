@@ -61,6 +61,7 @@
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreWorkspace.cs" />
     <Compile Include="CoreApplication.cs" />
+    <Compile Include="PanelInteractionMode.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="FormWorkspace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

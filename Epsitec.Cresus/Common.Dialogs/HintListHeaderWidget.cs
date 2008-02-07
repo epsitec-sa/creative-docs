@@ -65,8 +65,6 @@ namespace Epsitec.Common.Dialogs
 				HorizontalAlignment = HorizontalAlignment.Center,
 				PreferredHeight = 20
 			};
-
-			this.toolBar.Items.Add (new IconButton (Res.Commands.Dialog.Generic.Cancel));
 		}
 
 
@@ -83,6 +81,14 @@ namespace Epsitec.Common.Dialogs
 					this.contentType = value;
 					this.OnContentTypeChanged ();
 				}
+			}
+		}
+
+		public AbstractToolBar ToolBar
+		{
+			get
+			{
+				return this.toolBar;
 			}
 		}
 

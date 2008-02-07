@@ -23,13 +23,18 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="data">The dialog data.</param>
 		/// <param name="mode">The dialog data mode.</param>
 		public DialogData(AbstractEntity data, DialogDataMode mode)
+			: this (data, data.GetEntityContext (), mode)
+		{
+		}
+		
+		public DialogData(AbstractEntity data, EntityContext defaultContext, DialogDataMode mode)
 		{
 			this.originalValues = new Dictionary<EntityFieldPath, object> ();
 			this.replacements = new Dictionary<EntityFieldPath, AbstractEntity> ();
 			this.mode = mode;
-			this.defaultContext = data.GetEntityContext ();
+			this.defaultContext = defaultContext;
 			this.originalData = data;
-			this.externalData = data;
+			this.externalData = this.mode == DialogDataMode.Search ? null : data;
 			this.internalData = this.CreateEntityProxy (this.originalData, null);
 		}
 

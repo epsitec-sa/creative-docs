@@ -257,7 +257,20 @@ namespace Epsitec.Cresus.Core
 
 					foreach (AddressBook.Entities.LocalitéEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
-						if (entity.SearchValue.Contains (example.Résumé))
+						if (ResolverImplementation.Match (example.Résumé, entity.SearchValue))
+						{
+							yield return entity;
+						}
+					}
+				}
+				else if (id == AddressBook.Entities.TitrePersonneEntity.EntityStructuredTypeId)
+				{
+					AddressBook.Entities.TitrePersonneEntity example = template as AddressBook.Entities.TitrePersonneEntity;
+
+					foreach (AddressBook.Entities.TitrePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					{
+						if ((ResolverImplementation.Match (example.IntituléLong, entity.IntituléLong)) ||
+							(ResolverImplementation.Match (example.IntituléLong, entity.IntituléCourt)))
 						{
 							yield return entity;
 						}

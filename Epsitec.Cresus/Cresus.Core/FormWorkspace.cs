@@ -30,23 +30,29 @@ namespace Epsitec.Cresus.Core
 			FrameBox frame = new FrameBox ();
 
 			this.hintListController.DefineContainer (frame);
-			this.panel = UI.LoadPanel (Epsitec.Cresus.AddressBook.FormIds.AdressePersonne);
-			this.panel.Dock = DockStyle.Fill;
-			this.panel.SetEmbedder (frame);
+			
+			this.searchPanel = UI.LoadPanel (Epsitec.Cresus.AddressBook.FormIds.AdressePersonne, PanelInteractionMode.Search);
+			this.searchPanel.Dock = DockStyle.Fill;
+			this.searchPanel.SetEmbedder (frame);
+			
+			this.editionPanel = UI.LoadPanel (Epsitec.Cresus.AddressBook.FormIds.AdressePersonne, PanelInteractionMode.Default);
+			this.editionPanel.Dock = DockStyle.Fill;
+			this.editionPanel.SetEmbedder (frame);
+			this.editionPanel.Visibility = false;
 
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.currentData = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
-			this.dialogData = new DialogData (this.currentData, DialogDataMode.Search);
+			this.dialogData = new DialogData (this.currentData, this.searchContext, DialogDataMode.Search);
 			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 			this.resolver = this.Application.Data.Resolver;
 
 			this.controller = this.hintListController.SearchController;
 			this.controller.DialogData = this.dialogData;
-			this.controller.DialogPanel = this.panel;
+			this.controller.DialogPanel = this.searchPanel;
 			this.controller.DialogWindow = this.Application.Window;
 			this.controller.Resolver = this.resolver;
 
-			this.dialogData.BindToUserInterface (this.panel);
+			this.dialogData.BindToUserInterface (this.searchPanel);
 
 #if false
 			if (this.dialogSearchController != null)
@@ -61,9 +67,60 @@ namespace Epsitec.Cresus.Core
 			this.validationContext.CommandContext = Widgets.Helpers.VisualTree.GetCommandContext (this.panel);
 			this.validationContext.Refresh (this.panel);
 #endif
+
+			this.hintListController.HintListWidget.Header.ToolBar.Items.Add (new Button ()
+			{
+				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition,
+				PreferredWidth = 40
+			});
+			
+			this.hintListController.HintListWidget.Header.ToolBar.Items.Add (new Button ()
+			{
+				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch,
+				PreferredWidth = 40
+			});
+
 			
 			return frame;
 		}
+
+		protected override void EnableWorkspace()
+		{
+			CommandDispatcher dispatcher = this.Application.CommandDispatcher;
+
+			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand);
+			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand);
+		}
+
+		protected override void DisableWorkspace()
+		{
+			CommandDispatcher dispatcher = this.Application.CommandDispatcher;
+
+			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand);
+			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand);
+		}
+
+
+		private void ExecuteClearSearchCommand(object sender, CommandEventArgs e)
+		{
+			this.controller.ClearSuggestions ();
+		}
+
+		private void ExecuteStartItemEditionCommand(object sender, CommandEventArgs e)
+		{
+			AbstractEntity data = this.dialogData.ExternalData;
+
+			if (data != null)
+			{
+				this.controller.ClearSuggestions ();
+				this.searchPanel.Visibility = false;
+				this.editionPanel.Visibility = true;
+				this.editionDialogData = new DialogData (data, this.searchContext, DialogDataMode.Isolated);
+				this.controller.DialogData = this.editionDialogData;
+				this.editionDialogData.BindToUserInterface (this.editionPanel);
+			}
+		}
+
 
 		private void HandleDialogDataExternalDataChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -77,8 +134,10 @@ namespace Epsitec.Cresus.Core
 
 
 		private readonly HintListController hintListController;
-		private Panel panel;
+		private Panel searchPanel;
+		private Panel editionPanel;
 		private DialogData dialogData;
+		private DialogData editionDialogData;
 		private AbstractEntity currentData;
 		private EntityContext searchContext;
 		private DialogSearchController controller;

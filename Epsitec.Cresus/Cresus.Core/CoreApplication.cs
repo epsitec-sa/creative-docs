@@ -41,10 +41,12 @@ namespace Epsitec.Cresus.Core
 			Window window = new Window ();
 
 			window.Text = this.ShortWindowTitle;
+			window.ClientSize = new Epsitec.Common.Drawing.Size (600, 400);
 
 			this.Window = window;
 
 			this.CreateWorkspaces ();
+			this.formWorkspace.SetEnable (true);
 		}
 
 		public void SetupData()
