@@ -2162,13 +2162,20 @@ namespace Epsitec.Common.Designer
 
 				string oldXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 				
-				if (xml != oldXml)
+				if (xml != oldXml || this.accessor.ForceModuleMerge)
 				{
 					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
 
 					if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
 					{
-						this.FormMerge(item);
+						if (this.accessor.ForceModuleMerge)
+						{
+							this.FormMerge(item);
+						}
+						else
+						{
+							this.ClearFormMerge(item);
+						}
 					}
 				}
 			}
@@ -2329,7 +2336,17 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		protected void FormMerge(CultureMap item)
+		protected void ClearFormMerge(CultureMap item)
+		{
+			System.Diagnostics.Debug.Assert (this.accessor.BasedOnPatchModule);
+			System.Diagnostics.Debug.Assert (item.Source == CultureMapSource.DynamicMerge);
+
+			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+
+			data.SetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge, null);
+		}
+
+		internal void FormMerge(CultureMap item)
 		{
 			//	Génère la ressource XmlSourceMerge d'un masque si nécessaire.
 			if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)

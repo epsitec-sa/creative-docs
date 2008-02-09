@@ -534,6 +534,11 @@ namespace Epsitec.Common.Designer
 						switch (item.Source)
 						{
 							case CultureMapSource.DynamicMerge:
+								//	On va forcer la re-génération du "merge", comme ça je suis
+								//	sûr que les données avec lesquelles on travaille sont bien
+								//	à jour, même si l'utilisateur a édité une ressource provenant
+								//	d'un autre module.
+								module.accessForms.FormMerge(item);
 								value = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge) as string;
 								break;
 
@@ -728,22 +733,14 @@ namespace Epsitec.Common.Designer
 		{
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				AbstractResourceAccessor resAccessor = access.Accessor as AbstractResourceAccessor;
-				AbstractFileResourceAccessor fileAccessor = access.Accessor as AbstractFileResourceAccessor;
-
-				if (resAccessor != null)
+				IResourceAccessor accessor = access.Accessor;
+				
+				if (accessor != null)
 				{
 					access.RegenerateAllFieldsInBundle();
-					resAccessor.ForceModuleMerge = true;
-					resAccessor.PersistChanges();
-					resAccessor.ForceModuleMerge = false;
-				}
-				if (fileAccessor != null)
-				{
-					access.RegenerateAllFieldsInBundle();
-					fileAccessor.ForceModuleMerge = true;
-					fileAccessor.PersistChanges();
-					fileAccessor.ForceModuleMerge = false;
+					accessor.ForceModuleMerge = true;
+					accessor.PersistChanges();
+					accessor.ForceModuleMerge = false;
 				}
 			}
 		}

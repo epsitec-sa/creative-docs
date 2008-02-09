@@ -34,6 +34,17 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether to force a module merge when
+		/// persisting an item.
+		/// </summary>
+		/// <value><c>true</c> to force a module merge; otherwise, <c>false</c>.</value>
+		bool ForceModuleMerge
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Loads resources from the specified resource manager. The resource
 		/// manager will be used for all upcoming accesses.
 		/// </summary>
