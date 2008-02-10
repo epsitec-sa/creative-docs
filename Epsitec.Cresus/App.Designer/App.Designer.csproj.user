@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
-    <StartArguments>-command-file "S:\Epsitec.Cresus\App.Designer\merge-settings.ini"</StartArguments>
+    <StartArguments>-command-file "S:\Epsitec.Cresus\App.Designer\no-merge-settings.ini"</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
     <PublishUrlHistory>publish\</PublishUrlHistory>
