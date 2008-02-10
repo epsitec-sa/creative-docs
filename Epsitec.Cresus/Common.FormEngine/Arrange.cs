@@ -138,25 +138,57 @@ namespace Epsitec.Common.FormEngine
 
 			//	Génère la liste fusionnée de tous les champs. Les champs cachés sont quand même dans la liste,
 			//	mais avec la propriété DeltaHidden = true.
-			foreach (FieldDescription field in baseList)
+			if (baseList != null)
 			{
-				FieldDescription copy = new FieldDescription(field);
-
-				int index = Arrange.IndexOfGuid(deltaList, field.Guid);
-				if (index != -1 && deltaList[index].DeltaHidden)
+				foreach (FieldDescription field in baseList)
 				{
-					copy.DeltaHidden = true;  // champ à cacher
-				}
+					FieldDescription copy = new FieldDescription(field);
 
-				finalList.Add(copy);
+					if (deltaList != null)
+					{
+						int index = Arrange.IndexOfGuid(deltaList, field.Guid);
+						if (index != -1 && deltaList[index].DeltaHidden)
+						{
+							copy.DeltaHidden = true;  // champ à cacher
+						}
+					}
+					finalList.Add(copy);
+				}
 			}
 
-			foreach (FieldDescription field in deltaList)
+			if (deltaList != null)
 			{
-				if (field.DeltaMoved)  // champ à déplacer ?
+				foreach (FieldDescription field in deltaList)
 				{
-					int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
-					if (src != -1)
+					if (field.DeltaMoved)  // champ à déplacer ?
+					{
+						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
+						if (src != -1)
+						{
+							//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
+							//	de liste.
+							int dst = -1;  // position pour mettre en-tête de liste
+							if (field.DeltaAttachGuid != System.Guid.Empty)
+							{
+								dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
+								if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
+								{
+									field.DeltaBrokenAttach = true;
+									continue;  // on laisse le champ ici
+								}
+							}
+
+							FieldDescription temp = finalList[src];
+							finalList.RemoveAt(src);
+
+							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // recalcule le "où" après suppression
+							finalList.Insert(dst+1, temp);  // remet l'élément après dst
+
+							temp.DeltaMoved = true;
+						}
+					}
+
+					if (field.DeltaInserted)  // champ à insérer ?
 					{
 						//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
 						//	de liste.
@@ -166,55 +198,31 @@ namespace Epsitec.Common.FormEngine
 							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
 							if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
 							{
+								dst = finalList.Count-1;  // on insère le champ à la fin
 								field.DeltaBrokenAttach = true;
-								continue;  // on laisse le champ ici
 							}
 						}
 
-						FieldDescription temp = finalList[src];
-						finalList.RemoveAt(src);
-
-						dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // recalcule le "où" après suppression
-						finalList.Insert(dst+1, temp);  // remet l'élément après dst
-
-						temp.DeltaMoved = true;
-					}
-				}
-
-				if (field.DeltaInserted)  // champ à insérer ?
-				{
-					//	field.DeltaAttachGuid vaut System.Guid.Empty lorsqu'il faut déplacer l'élément en tête
-					//	de liste.
-					int dst = -1;  // position pour mettre en-tête de liste
-					if (field.DeltaAttachGuid != System.Guid.Empty)
-					{
-						dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
-						if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
-						{
-							dst = finalList.Count-1;  // on insère le champ à la fin
-							field.DeltaBrokenAttach = true;
-						}
-					}
-
-					FieldDescription copy = new FieldDescription(field);
-					copy.DeltaInserted = true;
-					finalList.Insert(dst+1, copy);  // insère l'élément après dst
-				}
-
-				if (field.DeltaModified)  // champ à modifier ?
-				{
-					int index = Arrange.IndexOfGuid(finalList, field.Guid);
-					if (index != -1)
-					{
-						finalList.RemoveAt(index);  // supprime le champ original
-
 						FieldDescription copy = new FieldDescription(field);
-						copy.DeltaModified = true;
-						finalList.Insert(index, copy);  // et remplace-le par le champ modifié
+						copy.DeltaInserted = true;
+						finalList.Insert(dst+1, copy);  // insère l'élément après dst
+					}
+
+					if (field.DeltaModified)  // champ à modifier ?
+					{
+						int index = Arrange.IndexOfGuid(finalList, field.Guid);
+						if (index != -1)
+						{
+							finalList.RemoveAt(index);  // supprime le champ original
+
+							FieldDescription copy = new FieldDescription(field);
+							copy.DeltaModified = true;
+							finalList.Insert(index, copy);  // et remplace-le par le champ modifié
+						}
 					}
 				}
 			}
-
+			
 			return finalList;
 		}
 

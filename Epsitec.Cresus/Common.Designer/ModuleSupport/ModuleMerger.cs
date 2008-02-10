@@ -107,8 +107,10 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					return ResourceManager.SetBundleOperation.Skip;
 				});
 
+			srcModule.SetMergeMode (true, dstManager);
 			srcModule.Regenerate ();
 			srcModule.SaveResources ();
+			srcModule.SetMergeMode (false, null);
 		}
 
 		/// <summary>
@@ -160,8 +162,10 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					return ResourceManager.SetBundleOperation.Skip;
 				});
 
+			patchModule.SetMergeMode (true, mergedManager);
 			patchModule.Regenerate ();
 			patchModule.SaveResources ();
+			patchModule.SetMergeMode (false, null);
 		}
 
 		/// <summary>

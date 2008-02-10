@@ -59,6 +59,11 @@ namespace Epsitec.Designer
 
 			for (int i = 0; i < args.Length; i++)
 			{
+				if (args[i].StartsWith (";"))
+				{
+					continue;
+				}
+
 				switch (args[i])
 				{
 					case "-command-file":

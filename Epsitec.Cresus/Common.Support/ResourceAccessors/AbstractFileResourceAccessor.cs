@@ -355,7 +355,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				if ((this.BasedOnPatchModule) &&
 					(item.Source == CultureMapSource.ReferenceModule))
 				{
-					if (e.PropertyName == Res.Fields.ResourceForm.XmlSourceMerge.ToString ())
+					if ((e != null) &&
+						(e.PropertyName == Res.Fields.ResourceForm.XmlSourceMerge.ToString ()))
 					{
 						//	The modification of the "merged" information should not be
 						//	considered as a modification which promotes the resource to

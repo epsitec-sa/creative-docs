@@ -245,8 +245,10 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void Load()
+		public void Load(Module ownerModule)
 		{
+			this.ownerModule = ownerModule;
+			
 			this.CreateEmptyBundle();
 			this.accessor.Load(this.resourceManager);
 			this.collectionView.MoveCurrentToFirst();
@@ -361,7 +363,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Vérifie les Forms, en construisant un message d'avertissement.
 			System.Diagnostics.Debug.Assert(this.type == Type.Forms);
-			FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+			FormEngine.Engine engine = new FormEngine.Engine(this.ownerModule.FormResourceProvider);
 			bool first;
 
 			//	Vérifie la structure des Forms.
@@ -593,7 +595,7 @@ namespace Epsitec.Common.Designer
 				bool isPrivateRelation = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return;
@@ -628,7 +630,7 @@ namespace Epsitec.Common.Designer
 					bool isPrivateRelation = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -654,7 +656,7 @@ namespace Epsitec.Common.Designer
 					bool isPrivateRelation = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.designerApplication.CurrentModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -667,7 +669,7 @@ namespace Epsitec.Common.Designer
 					isPrivateRelation = false;
 					typeClass = StructuredTypeClass.Entity;
 
-					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.designerApplication.CurrentModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, deltaBaseformId);
+					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, deltaBaseformId);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return;
@@ -2198,7 +2200,7 @@ namespace Epsitec.Common.Designer
 			else
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
+				FormEngine.Engine engine = new FormEngine.Engine(this.ownerModule.FormResourceProvider);
 				string baseXml, deltaXml=null;
 				FormEngine.FormDescription baseForm, deltaForm;
 
@@ -2321,7 +2323,7 @@ namespace Epsitec.Common.Designer
 			return null;
 		}
 
-		protected void FormsMerge()
+		internal void FormsMerge()
 		{
 			//	Génère la ressource XmlSourceMerge de tous les masques si nécessaire.
 			if (this.accessor.BasedOnPatchModule)
@@ -2329,6 +2331,10 @@ namespace Epsitec.Common.Designer
 				foreach (CultureMap item in this.accessor.Collection)
 				{
 					if (item.Source == CultureMapSource.DynamicMerge)
+					{
+						this.FormMerge(item);
+					}
+					else if (item.Source == CultureMapSource.ReferenceModule && this.accessor.ForceModuleMerge)
 					{
 						this.FormMerge(item);
 					}
@@ -2356,13 +2362,13 @@ namespace Epsitec.Common.Designer
 				string xmlBase = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
 				string xmlDelta = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 
-				FormEngine.FormDescription formBase = FormEngine.Serialization.DeserializeForm(xmlBase);
-				FormEngine.FormDescription formDelta = FormEngine.Serialization.DeserializeForm(xmlDelta);
+				FormEngine.FormDescription formBase = string.IsNullOrEmpty(xmlBase) ? null : FormEngine.Serialization.DeserializeForm(xmlBase);
+				FormEngine.FormDescription formDelta = string.IsNullOrEmpty(xmlDelta) ? null : FormEngine.Serialization.DeserializeForm(xmlDelta);
 
-				FormEngine.Engine engine = new FormEngine.Engine(this.designerApplication.CurrentModule.FormResourceProvider);
-				List<FormEngine.FieldDescription> fields = engine.Arrange.Merge(formBase.Fields, formDelta.Fields);
+				FormEngine.Engine engine = new FormEngine.Engine(this.ownerModule.FormResourceProvider);
+				List<FormEngine.FieldDescription> fields = engine.Arrange.Merge(formBase == null ? null : formBase.Fields, formDelta == null ? null : formDelta.Fields);
 
-				FormEngine.FormDescription copy = new FormEngine.FormDescription(formBase);
+				FormEngine.FormDescription copy = new FormEngine.FormDescription(formBase ?? formDelta);
 				copy.Fields.Clear();
 				foreach (FormEngine.FieldDescription field in fields)
 				{
@@ -2614,6 +2620,7 @@ namespace Epsitec.Common.Designer
 
 		protected static string								filterPrefix = "Epsitec.Common.";
 
+		private Module										ownerModule;
 		protected Type										type;
 		protected ResourceManager							resourceManager;
 		protected ResourceBundleBatchSaver					batchSaver;

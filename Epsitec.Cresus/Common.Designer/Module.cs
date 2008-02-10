@@ -62,11 +62,11 @@ namespace Epsitec.Common.Designer
 
 			//	Attention: il faut avoir fait le this.accessEntities.Load() avant de créer this.accessFields !
 			this.accessFields   = new ResourceAccess(ResourceAccess.Type.Fields,   this, this.moduleId);
-			this.accessFields.Load();
+			this.accessFields.Load(this);
 
 			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de créer this.accessValues !
 			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId);
-			this.accessValues.Load();
+			this.accessValues.Load(this);
 
 			foreach (ResourceAccess access in this.Accesses)
 			{
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (access != null)
 				{
-					access.Load();
+					access.Load(this);
 				}
 			}
 		}
@@ -729,18 +729,31 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		internal void SetMergeMode(bool mode, ResourceManager manager)
+		{
+			this.isMergingModules = mode;
+			this.mergedManager = manager;
+			foreach (ResourceAccess access in this.Accesses)
+			{
+				access.Accessor.ForceModuleMerge = mode;
+			}
+		}
+
 		internal void Regenerate()
 		{
+			if (this.accessForms.Accessor.Collection.Count > 0)
+			{
+				this.accessForms.FormsMerge ();
+			}
+
 			foreach (ResourceAccess access in this.Accesses)
 			{
 				IResourceAccessor accessor = access.Accessor;
-				
+
 				if (accessor != null)
 				{
 					access.RegenerateAllFieldsInBundle();
-					accessor.ForceModuleMerge = true;
 					accessor.PersistChanges();
-					accessor.ForceModuleMerge = false;
 				}
 			}
 		}
@@ -812,7 +825,7 @@ namespace Epsitec.Common.Designer
 			//	d'informations inutiles (par ex. des ressources secondaires
 			//	vides).
 
-			if (bundle.BasedOnPatchModule)
+			if (bundle.BasedOnPatchModule && !this.isMergingModules)
 			{
 				//	N'optimise pas les ressources d'un module de patch, car
 				//	l'optimisation ne peut se faire qu'après fusion.
@@ -889,7 +902,7 @@ namespace Epsitec.Common.Designer
 					{
 						try
 						{
-							this.RegenerateEntitiesSourceCode(manager, bundle);
+							this.RegenerateEntitiesSourceCode(this.mergedManager ?? manager, bundle);
 						}
 						catch (System.Exception ex)
 						{
@@ -1029,5 +1042,7 @@ namespace Epsitec.Common.Designer
 		protected ResourceAccess			accessTypes;
 		protected ResourceAccess			accessForms;
 		protected bool						isEditLocked = true;
+		protected bool						isMergingModules;
+		protected ResourceManager			mergedManager;
 	}
 }
