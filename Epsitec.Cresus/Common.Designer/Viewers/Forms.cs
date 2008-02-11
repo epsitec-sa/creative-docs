@@ -1065,15 +1065,30 @@ namespace Epsitec.Common.Designer.Viewers
 					int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
 					if (index == -1)
 					{
-						FieldDescription copy = new FieldDescription(field);
-						copy.DeltaHidden = true;
-						this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
+						if (field.DeltaHidden)
+						{
+							FieldDescription copy = new FieldDescription(field);
+							copy.DeltaShowed = true;
+							copy.DeltaHidden = false;
+							this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "montré"
+						}
+						else
+						{
+							FieldDescription copy = new FieldDescription(field);
+							copy.DeltaHidden = true;
+							copy.DeltaShowed = false;
+							this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
+						}
 					}
 					else
 					{
 						FieldDescription actual = this.workingForm.Fields[index];
 
-						if (actual.DeltaHidden)  // champ caché ?
+						if (actual.DeltaShowed)  // champ montré ?
+						{
+							actual.DeltaShowed = false;  // cet élément sera supprimé, et c'est donc le parent DeltaHidden qui dira de cacher
+						}
+						else if (actual.DeltaHidden)  // champ caché ?
 						{
 							actual.DeltaHidden = false;  // rend le champ visible
 						}
@@ -1082,7 +1097,7 @@ namespace Epsitec.Common.Designer.Viewers
 							actual.DeltaHidden = true;  // cache le champ
 						}
 
-						if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaBrokenAttach)
+						if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaShowed && !actual.DeltaBrokenAttach)
 						{
 							this.workingForm.Fields.RemoveAt(index);
 						}

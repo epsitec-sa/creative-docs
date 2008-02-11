@@ -654,7 +654,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				FieldDescription field = this.formEditor.WorkingForm.Fields[index];
 
-				if (!field.DeltaMoved && !field.DeltaInserted && !field.DeltaModified && !field.DeltaHidden && !field.DeltaBrokenAttach)
+				if (!field.DeltaMoved && !field.DeltaInserted && !field.DeltaModified && !field.DeltaHidden && !field.DeltaShowed && !field.DeltaBrokenAttach)
 				{
 					this.formEditor.WorkingForm.Fields.RemoveAt(index);
 				}
@@ -746,12 +746,21 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsDelta)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.FinalFields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+					if (this.formEditor.FinalFields[index].DeltaHidden)
 					{
 						icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
+					}
+				}
+
+				index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+				if (index != -1)
+				{
+					if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+					{
+						icon = Misc.Image("FormDeltaShowed");  // peu prioritaire à cause du fond rouge
 					}
 
 					if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
@@ -789,10 +798,19 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsDelta)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.FinalFields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+					if (this.formEditor.FinalFields[index].DeltaHidden)
+					{
+						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+					}
+				}
+
+				index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+				if (index != -1)
+				{
+					if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
 					{
 						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 					}

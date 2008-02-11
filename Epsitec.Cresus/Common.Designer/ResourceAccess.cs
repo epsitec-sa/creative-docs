@@ -2344,10 +2344,10 @@ namespace Epsitec.Common.Designer
 
 		protected void ClearFormMerge(CultureMap item)
 		{
-			System.Diagnostics.Debug.Assert (this.accessor.BasedOnPatchModule);
-			System.Diagnostics.Debug.Assert (item.Source == CultureMapSource.DynamicMerge);
+			System.Diagnostics.Debug.Assert(this.accessor.BasedOnPatchModule);
+			System.Diagnostics.Debug.Assert(item.Source == CultureMapSource.DynamicMerge);
 
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 			data.SetValue(Support.Res.Fields.ResourceForm.XmlSourceMerge, null);
 		}

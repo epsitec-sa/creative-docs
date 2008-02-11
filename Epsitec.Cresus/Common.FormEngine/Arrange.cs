@@ -160,6 +160,16 @@ namespace Epsitec.Common.FormEngine
 			{
 				foreach (FieldDescription field in deltaList)
 				{
+					if (field.DeltaShowed)  // champ à montrer (pour inverser un DeltaHidden) ?
+					{
+						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
+						if (src != -1)
+						{
+							finalList[src].DeltaHidden = false;
+							finalList[src].DeltaShowed = true;
+						}
+					}
+
 					if (field.DeltaMoved)  // champ à déplacer ?
 					{
 						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer

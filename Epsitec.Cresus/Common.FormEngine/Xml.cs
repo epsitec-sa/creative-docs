@@ -18,6 +18,7 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxFrameWidth		= "BFW";
 		public const string DeltaBaseFormId		= "DBI";
 		public const string DeltaHidden			= "DHi";
+		public const string DeltaShowed			= "DSh";
 		public const string DeltaMoved			= "DMo";
 		public const string DeltaInserted		= "DIn";
 		public const string DeltaModified		= "DMd";

@@ -59,6 +59,7 @@ namespace Epsitec.Common.FormEngine
 			this.Reset();
 			this.subFormId = Druid.Empty;
 			this.deltaHidden = false;
+			this.deltaShowed = false;
 			this.deltaMoved = false;
 			this.deltaInserted = false;
 			this.deltaModified = false;
@@ -89,6 +90,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
 			this.deltaHidden = model.deltaHidden;
+			this.deltaShowed = model.deltaShowed;
 			this.deltaMoved = model.deltaMoved;
 			this.deltaInserted = model.deltaInserted;
 			this.deltaModified = model.deltaModified;
@@ -421,6 +423,22 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool DeltaShowed
+		{
+			//	Dans un Form delta, indique un champ qu'il faut montrer (décacher) dans la liste finale.
+			//	Dans un Form final, indique un champ visible.
+			//	En fait, cette propriété annule l'effet DeltaHidden du parent.
+			//	Guid = champ à montrer
+			get
+			{
+				return this.deltaShowed;
+			}
+			set
+			{
+				this.deltaShowed = value;
+			}
+		}
+
 		public bool DeltaMoved
 		{
 			//	Dans un Form delta, indique un champ qu'il faut déplacer dans la liste finale.
@@ -541,6 +559,7 @@ namespace Epsitec.Common.FormEngine
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
 				a.deltaHidden != b.deltaHidden ||
+				a.deltaShowed != b.deltaShowed ||
 				a.deltaMoved != b.deltaMoved ||
 				a.deltaInserted != b.deltaInserted ||
 				a.deltaModified != b.deltaModified ||
@@ -611,6 +630,11 @@ namespace Epsitec.Common.FormEngine
 			if (this.deltaHidden)
 			{
 				writer.WriteElementString(Xml.DeltaHidden, this.deltaHidden.ToString());
+			}
+
+			if (this.deltaShowed)
+			{
+				writer.WriteElementString(Xml.DeltaShowed, this.deltaShowed.ToString());
 			}
 
 			if (this.deltaMoved)
@@ -707,6 +731,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.DeltaHidden)
 						{
 							this.deltaHidden = bool.Parse(element);
+						}
+						else if (name == Xml.DeltaShowed)
+						{
+							this.deltaShowed = bool.Parse(element);
 						}
 						else if (name == Xml.DeltaMoved)
 						{
@@ -814,6 +842,7 @@ namespace Epsitec.Common.FormEngine
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
 		private bool						deltaHidden;
+		private bool						deltaShowed;
 		private bool						deltaMoved;
 		private bool						deltaInserted;
 		private bool						deltaModified;
