@@ -160,6 +160,10 @@ namespace Epsitec.Common.FormEngine
 			{
 				foreach (FieldDescription field in deltaList)
 				{
+					//	On considère qu'un champ provenant de la liste delta a des liens corrects, tant que
+					//	l'on n'a pas effectivement échoué de le lier aux champs de la liste finale.
+					field.DeltaBrokenAttach = false;
+
 					if (field.DeltaShowed)  // champ à montrer (pour inverser un DeltaHidden) ?
 					{
 						int src = Arrange.IndexOfGuid(finalList, field.Guid);  // cherche le champ à déplacer
@@ -181,7 +185,7 @@ namespace Epsitec.Common.FormEngine
 							if (field.DeltaAttachGuid != System.Guid.Empty)
 							{
 								dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
-								if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
+								if (dst == -1)  // l'élément d'attache n'existe plus ?
 								{
 									field.DeltaBrokenAttach = true;
 									continue;  // on laisse le champ ici
@@ -206,7 +210,7 @@ namespace Epsitec.Common.FormEngine
 						if (field.DeltaAttachGuid != System.Guid.Empty)
 						{
 							dst = Arrange.IndexOfGuid(finalList, field.DeltaAttachGuid);  // cherche où le déplacer
-							if (dst == -1 || field.DeltaBrokenAttach)  // l'élément d'attache n'existe plus ?
+							if (dst == -1)  // l'élément d'attache n'existe plus ?
 							{
 								dst = finalList.Count-1;  // on insère le champ à la fin
 								field.DeltaBrokenAttach = true;
