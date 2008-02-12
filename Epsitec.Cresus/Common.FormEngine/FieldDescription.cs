@@ -94,6 +94,8 @@ namespace Epsitec.Common.FormEngine
 			this.deltaMoved = model.deltaMoved;
 			this.deltaInserted = model.deltaInserted;
 			this.deltaModified = model.deltaModified;
+			this.deltaAttachGuid = model.deltaAttachGuid;
+			this.deltaBrokenAttach = model.deltaBrokenAttach;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -502,7 +504,7 @@ namespace Epsitec.Common.FormEngine
 
 		public bool DeltaBrokenAttach
 		{
-			//	Indique si un lien DeltaAttachGuid est cassé, c'est-à-dire si le Guid n'eixste plus.
+			//	Indique si un lien DeltaAttachGuid est cassé, c'est-à-dire si le Guid n'existe plus.
 			//	Utilisé uniquement si this.type == FieldType.DeltaAttach ou DeltaInsert !
 			get
 			{
