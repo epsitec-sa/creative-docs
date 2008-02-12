@@ -786,6 +786,17 @@ namespace Epsitec.Common.Designer.FormEditor
 					}
 				}
 			}
+			else
+			{
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+				if (index != -1)
+				{
+					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+					{
+						icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
+					}
+				}
+			}
 
 			return icon;
 		}
@@ -833,6 +844,17 @@ namespace Epsitec.Common.Designer.FormEditor
 					if (this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach)
 					{
 						color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
+					}
+				}
+			}
+			else
+			{
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+				if (index != -1)
+				{
+					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+					{
+						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 					}
 				}
 			}

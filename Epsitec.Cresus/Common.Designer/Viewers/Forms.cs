@@ -673,7 +673,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
 
-			this.fieldsButtonRemove.IconName = isDelta ? Misc.Icon("FormDeltaHide") : Misc.Icon("Delete");
+			//?this.fieldsButtonRemove.IconName = isDelta ? Misc.Icon("FormDeltaHide") : Misc.Icon("Delete");
 			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 		}
 
@@ -1112,10 +1112,10 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 
-					int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
+					int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
 					if (index != -1)
 					{
-						this.workingForm.Fields.RemoveAt(index);
+						this.workingForm.Fields[index].DeltaHidden = !this.workingForm.Fields[index].DeltaHidden;
 					}
 
 					guids.Add(item.Guid);
