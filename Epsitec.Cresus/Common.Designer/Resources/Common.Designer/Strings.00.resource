@@ -479,12 +479,12 @@
   <data name="Viewers.Panels.TabFields" id="2O4">Contenu</data>
   <data name="Forms.Question.Create.Base" id="2P4">Quelle sorte de masque voulez-vous créer ?</data>
   <data name="Forms.Question.Create.Long.Normal" id="2Q4">Masque normal, basé sur une entité à choix.</data>
-  <data name="Forms.Question.Create.Long.Delta" id="2R4">Masque correctif, basé sur un masque existant.</data>
+  <data name="Forms.Question.Create.Long.Delta" id="2R4">Masque dérivé, basé sur un masque existant.</data>
   <data name="Forms.Question.Create.Quick.Normal" id="2S4">Normal</data>
-  <data name="Forms.Question.Create.Quick.Delta" id="2T4">Correctif</data>
+  <data name="Forms.Question.Create.Quick.Delta" id="2T4">Dérivé</data>
   <data name="Viewers.Forms.Title.Normal" id="2U4"> ― basé sur l&amp;apos;entité &lt;b&gt;{0}&lt;/b&gt;</data>
-  <data name="Viewers.Forms.Title.Delta" id="2V4"> ― correctif basé sur le masque &lt;b&gt;{0}&lt;/b&gt;</data>
-  <data name="Viewers.Forms.Title.DeltaNormal" id="205"> ― correctif basé sur le masque &lt;b&gt;{0}&lt;/b&gt; et l&amp;apos;entité &lt;b&gt;{1}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Title.Delta" id="2V4"> ― dérivé du masque &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data name="Viewers.Forms.Title.DeltaNormal" id="205"> ― dérivé du masque &lt;b&gt;{0}&lt;/b&gt; et de l&amp;apos;entité &lt;b&gt;{1}&lt;/b&gt;</data>
   <data name="Viewers.Forms.Menu.ShowPrefix" id="215">Afficher les préfixes</data>
   <data name="Entities.Info.InheritFromMany" id="225">Hérite de </data>
   <data name="Entities.Info.InterfaceFromOne" id="235">Comprend l&amp;apos;interface </data>
