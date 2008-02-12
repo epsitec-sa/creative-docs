@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="102" name="Demo5juin" layer="A" namespace="Demo.Demo5juin">
   <Versions>
-    <Version id="1" build="17" date="2007-12-17T05:45:58.3750000Z" />
     <Version id="2" build="8" date="2008-02-04T15:59:02.4623952Z" />
+    <Version id="1" build="18" date="2008-02-12T06:28:11.7936250Z" />
   </Versions>
 </ModuleInfo>

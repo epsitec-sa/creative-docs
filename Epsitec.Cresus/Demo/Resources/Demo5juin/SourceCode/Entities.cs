@@ -110,8 +110,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 5);	// [6305]
+			return global::Demo.Demo5juin.Entities.MonnaieEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 5);	// [6305]
 	}
 }
 #endregion
@@ -201,8 +202,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 7);	// [6307]
+			return global::Demo.Demo5juin.Entities.CodeTvaEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 7);	// [6307]
 	}
 }
 #endregion
@@ -364,8 +366,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 8);	// [6308]
+			return global::Demo.Demo5juin.Entities.PrixEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 8);	// [6308]
 	}
 }
 #endregion
@@ -467,8 +470,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 9);	// [6309]
+			return global::Demo.Demo5juin.Entities.PrixComposeEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 9);	// [6309]
 	}
 }
 #endregion
@@ -666,8 +670,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 26);	// [630Q]
+			return global::Demo.Demo5juin.Entities.ArticleEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 26);	// [630Q]
 	}
 }
 #endregion
@@ -721,8 +726,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 27);	// [630R]
+			return global::Demo.Demo5juin.Entities.StockEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 27);	// [630R]
 	}
 }
 #endregion
@@ -884,8 +890,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 28);	// [630S]
+			return global::Demo.Demo5juin.Entities.ArticleStockEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 28);	// [630S]
 	}
 }
 #endregion
@@ -999,8 +1006,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 29);	// [630T]
+			return global::Demo.Demo5juin.Entities.MouvementStockEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 29);	// [630T]
 	}
 }
 #endregion
@@ -1114,8 +1122,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 30);	// [630U]
+			return global::Demo.Demo5juin.Entities.EmplacementStockEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 30);	// [630U]
 	}
 }
 #endregion
@@ -1229,8 +1238,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 31);	// [630V]
+			return global::Demo.Demo5juin.Entities.UniteEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 31);	// [630V]
 	}
 }
 #endregion
@@ -1332,8 +1342,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 32);	// [63001]
+			return global::Demo.Demo5juin.Entities.PositionEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 32);	// [63001]
 	}
 }
 #endregion
@@ -1399,8 +1410,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 33);	// [63011]
+			return global::Demo.Demo5juin.Entities.RabaisSurArticleEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 33);	// [63011]
 	}
 }
 #endregion
@@ -1694,8 +1706,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 34);	// [63021]
+			return global::Demo.Demo5juin.Entities.FactureEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 34);	// [63021]
 	}
 }
 #endregion
@@ -1833,8 +1846,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 35);	// [63031]
+			return global::Demo.Demo5juin.Entities.RappelEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 35);	// [63031]
 	}
 }
 #endregion
@@ -1876,8 +1890,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 36);	// [63041]
+			return global::Demo.Demo5juin.Entities.MoyenDePaiementEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 36);	// [63041]
 	}
 }
 #endregion
@@ -2015,8 +2030,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 37);	// [63051]
+			return global::Demo.Demo5juin.Entities.AffaireEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 37);	// [63051]
 	}
 }
 #endregion
@@ -2082,8 +2098,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 38);	// [63061]
+			return global::Demo.Demo5juin.Entities.PaiementEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 38);	// [63061]
 	}
 }
 #endregion
@@ -2149,8 +2166,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 39);	// [63071]
+			return global::Demo.Demo5juin.Entities.PrixSimpleEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 39);	// [63071]
 	}
 }
 #endregion
@@ -2360,8 +2378,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 0, 40);	// [63081]
+			return global::Demo.Demo5juin.Entities.AdresseEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 40);	// [63081]
 	}
 }
 #endregion
@@ -2427,8 +2446,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 1, 0);	// [631]
+			return global::Demo.Demo5juin.Entities.ArticleVisserieEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 1, 0);	// [631]
 	}
 }
 #endregion
@@ -2470,8 +2490,9 @@ namespace Demo.Demo5juin.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return new global::Epsitec.Common.Support.Druid (102, 2, 1);	// [6321]
+			return global::Demo.Demo5juin.Entities.AdressePlusEntity.EntityStructuredTypeId;
 		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 2, 1);	// [6321]
 	}
 }
 #endregion

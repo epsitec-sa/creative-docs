@@ -262,8 +262,16 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					//	TODO: really handle patch depth
-					return 0;
+					ResourceModuleInfo info = this.DefaultModuleInfo;
+
+					if (info == null)
+					{
+						return 0;
+					}
+					else
+					{
+						return info.PatchDepth;
+					}
 				}
 			}
 		}

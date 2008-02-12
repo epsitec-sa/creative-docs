@@ -80,6 +80,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			dstInfo.FullId          = dstModule;
 			dstInfo.SourceNamespace = srcInfo.SourceNamespace;
+			dstInfo.PatchDepth      = srcInfo.PatchDepth;
 			dstInfo.UpdateVersions (srcInfo.Versions);
 			
 			ResourceModule.SaveManifest (dstInfo, ModuleMerger.CreateModuleComment ("Copied"));
@@ -138,6 +139,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			mergedInfo.FullId          = mergedModule;
 			mergedInfo.SourceNamespace = refInfo.SourceNamespace;
+			mergedInfo.PatchDepth      = refInfo.PatchDepth + 1;
 
 			mergedInfo.UpdateVersions (refInfo.Versions);
 			mergedInfo.UpdateVersions (patchInfo.Versions);

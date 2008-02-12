@@ -104,6 +104,21 @@ namespace Epsitec.Common.Support
 								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlReferenceModulePath, modulePath));
 							}
 
+							nodes = root.GetElementsByTagName (ResourceModule.XmlPatchDepth);
+							node  = nodes.Count == 1 ? (nodes[0] as System.Xml.XmlElement) : null;
+
+							if (node != null)
+							{
+								if (!string.IsNullOrEmpty (node.InnerText))
+								{
+									info.PatchDepth = int.Parse (node.InnerText, NumberStyles.Integer, CultureInfo.InvariantCulture);
+								}
+							}
+							else if (nodes.Count > 1)
+							{
+								throw new System.FormatException (string.Format ("{0} specifies more than 1 {1} element in module {2}", ResourceModule.XmlModuleInfo, ResourceModule.XmlPatchDepth, modulePath));
+							}
+
 							nodes = root.GetElementsByTagName (ResourceModule.XmlVersions);
 							node  = nodes.Count == 1 ? (nodes[0] as System.Xml.XmlElement) : null;
 
@@ -202,6 +217,14 @@ namespace Epsitec.Common.Support
 				System.Xml.XmlElement node = xml.CreateElement (ResourceModule.XmlReferenceModulePath);
 
 				node.InnerText = info.ReferenceModulePath;
+				root.AppendChild (node);
+			}
+
+			if (info.PatchDepth > 0)
+			{
+				System.Xml.XmlElement node = xml.CreateElement (ResourceModule.XmlPatchDepth);
+
+				node.InnerText = info.PatchDepth.ToString (CultureInfo.InvariantCulture);
 				root.AppendChild (node);
 			}
 
@@ -305,6 +328,7 @@ namespace Epsitec.Common.Support
 		internal const string XmlVersion			 = "Version";
 		internal const string XmlVersions			 = "Versions";
 		internal const string XmlReferenceModulePath = "ReferenceModulePath";
+		internal const string XmlPatchDepth			 = "PatchDepth";
 
 		internal const string XmlAttributeBuild		= "build";
 		internal const string XmlAttributeDate		= "date";

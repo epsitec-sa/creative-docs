@@ -53,6 +53,24 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets or sets the patch depth for this module. Zero means that this
+		/// is a root reference module.
+		/// </summary>
+		/// <value>The patch depth.</value>
+		public int PatchDepth
+		{
+			get
+			{
+				return this.patchDepth;
+			}
+			set
+			{
+				this.VerifyWritable ("PatchDepth");
+				this.patchDepth = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the source namespace used when generating associated
 		/// code.
 		/// </summary>
@@ -231,10 +249,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		bool isFrozen;
-		ResourceModuleId fullId;
-		string referenceModulePath;
-		string sourceNamespace;
-		List<ResourceModuleVersion> versions;
+		private bool							isFrozen;
+		private ResourceModuleId				fullId;
+		private string							referenceModulePath;
+		private string							sourceNamespace;
+		private List<ResourceModuleVersion>		versions;
+		private int								patchDepth;
 	}
 }
