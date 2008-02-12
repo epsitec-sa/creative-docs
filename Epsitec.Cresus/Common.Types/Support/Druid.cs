@@ -129,11 +129,12 @@ namespace Epsitec.Common.Support
 				int dev = this.Developer;
 				int local = this.Local;
 
-				if ((dev < 0) || (dev > 0x000fffff))
+				if (!Druid.IsValidDeveloper (dev))
 				{
 					return DruidType.Invalid;
 				}
-				if ((local < 0) || (local > 0x00ffffff))
+				
+				if (!Druid.IsValidLocal (local))
 				{
 					return DruidType.Invalid;
 				}
@@ -143,7 +144,7 @@ namespace Epsitec.Common.Support
 					return DruidType.ModuleRelative;
 				}
 
-				if ((module < 0) || (module > 0x000fffff))
+				if (!Druid.IsValidModule (module))
 				{
 					return DruidType.Invalid;
 				}
@@ -518,6 +519,42 @@ namespace Epsitec.Common.Support
 			else
 			{
 				return false;
+			}
+		}
+
+		public static bool IsValidDeveloper(int dev)
+		{
+			if ((dev < 0) || (dev > 0x000fffff))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static bool IsValidLocal(int local)
+		{
+			if ((local < 0) || (local > 0x00ffffff))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		public static bool IsValidModule(int module)
+		{
+			if ((module < 0) || (module > 0x000fffff))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
 

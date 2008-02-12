@@ -126,7 +126,7 @@ namespace Epsitec.Common.FormEngine
 			}
 			else
 			{
-				return this.engine.CreateForm(form, false);
+				return this.engine.CreateForm(form);
 			}
 		}
 

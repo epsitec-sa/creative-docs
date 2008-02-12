@@ -250,7 +250,23 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
-		
+
+		public int								PatchDepth
+		{
+			get
+			{
+				if (this.BasedOnPatchModule)
+				{
+					ResourceManager parent = this.GetManagerForReferenceModule ();
+					return parent.PatchDepth + 1;
+				}
+				else
+				{
+					//	TODO: really handle patch depth
+					return 0;
+				}
+			}
+		}
 		
 		public void DefineDefaultModuleName(string defaultModuleName)
 		{

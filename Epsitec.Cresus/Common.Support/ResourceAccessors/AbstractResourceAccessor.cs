@@ -334,18 +334,19 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <returns>A unique id.</returns>
 		internal static Druid CreateId(IEnumerable<CultureMap> collection, ResourceManager manager, params ResourceBundle[] bundles)
 		{
-			return AbstractResourceAccessor.CreateId (collection, manager.DefaultModuleId, bundles);
+			return AbstractResourceAccessor.CreateId (collection, manager.DefaultModuleId, manager.PatchDepth, bundles);
 		}
-		
+
 		/// <summary>
 		/// Creates a unique id, making sure there are no collisions.
 		/// </summary>
 		/// <param name="collection">The collection of <see cref="CultureMap"/> items (or <c>null</c>)
 		/// which contains ids that are already in use.</param>
 		/// <param name="moduleId">The module id.</param>
+		/// <param name="patchDepth">The patch depth (<code>0</code> means root reference module).</param>
 		/// <param name="bundles">The bundle(s) where to look for existing ids.</param>
 		/// <returns>A unique id.</returns>
-		internal static Druid CreateId(IEnumerable<CultureMap> collection, int moduleId, ResourceBundle[] bundles)
+		internal static Druid CreateId(IEnumerable<CultureMap> collection, int moduleId, int patchDepth, ResourceBundle[] bundles)
 		{
 			//	Derive the developer id from the value stored in the global properties
 			//	repository. This must have been initialized by the user application,
@@ -361,9 +362,22 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				throw new System.InvalidOperationException ("Undefined developer id");
 			}
 
+			if ((patchDepth < 0) ||
+				(patchDepth >= AbstractResourceAccessor.DeveloperIdMultiplier))
+			{
+				throw new System.InvalidOperationException ("Invalid patch depth");
+			}
+
 			devId = (int) devIdValue;
 
-			if (devId < 0)
+			if (!Druid.IsValidDeveloper (devId))
+			{
+				throw new System.InvalidOperationException ("Invalid developer id");
+			}
+
+			devId = patchDepth + AbstractResourceAccessor.DeveloperIdMultiplier * devId;
+
+			if (!Druid.IsValidDeveloper (devId))
 			{
 				throw new System.InvalidOperationException ("Invalid developer id");
 			}
@@ -651,7 +665,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// This constant is used to tag a global property which contains the
 		/// <c>DeveloperId</c> value (an <c>int</c>).
 		/// </summary>
-		public const string DeveloperIdPropertyName = "DeveloperId";
+		public const string		DeveloperIdPropertyName = "DeveloperId";
+		public const int		DeveloperIdMultiplier	= 10;
 		
 		private readonly CultureMapList items;
 		private readonly Dictionary<CultureMap, bool> dirtyItems;

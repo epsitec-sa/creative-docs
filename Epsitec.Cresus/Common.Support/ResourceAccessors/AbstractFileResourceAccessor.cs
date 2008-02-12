@@ -573,7 +573,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private Druid CreateId()
 		{
-			return AbstractResourceAccessor.CreateId (this.GetFullCollection (), this.manager.DefaultModuleId, null);
+			return AbstractResourceAccessor.CreateId (this.GetFullCollection (), this.manager.DefaultModuleId, this.manager.PatchDepth, null);
 		}
 
 		private IEnumerable<CultureMap> GetFullCollection()

@@ -53,11 +53,19 @@ namespace Epsitec.Common.FormEngine
 				return null;
 			}
 
-			FormDescription form = Serialization.DeserializeForm(xml);
+			return this.CreateForm(Serialization.DeserializeForm(xml));
+		}
+
+		public UI.Panel CreateForm(FormDescription formDescription)
+		{
+			if (formDescription == null)
+			{
+				return null;
+			}
 
 			List<FieldDescription> baseFields, finalFields;
 			Druid entityId;
-			this.arrange.Build(form, null, out baseFields, out finalFields, out entityId);
+			this.arrange.Build(formDescription, null, out baseFields, out finalFields, out entityId);
 
 			return this.CreateForm(finalFields, entityId, false);
 		}
