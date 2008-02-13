@@ -58,11 +58,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				TextLayout tl = new TextLayout (Helpers.VisualTree.GetResourceManager (this));
+				TextLayout temp = new TextLayout ()
+				{
+					Text = this.tabButton.Text
+				};
 				
-				tl.Text = this.tabButton.Text;
-				
-				return tl.SingleLineSize;
+				return temp.SingleLineSize;
 			}
 		}
 		

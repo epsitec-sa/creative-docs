@@ -3628,7 +3628,6 @@ namespace Epsitec.Common.Widgets
 				this.textLayout.DefaultFont     = this.DefaultFont;
 				this.textLayout.DefaultFontSize = this.DefaultFontSize;
 				this.textLayout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
-				this.textLayout.ResourceManager = Helpers.VisualTree.GetResourceManager (this);
 				
 				this.UpdateTextLayout ();
 			}

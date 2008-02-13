@@ -233,7 +233,6 @@ namespace Epsitec.Common.Widgets
 			double dy = 0;
 
 			TextLayout layout = new TextLayout();
-			layout.ResourceManager = Helpers.VisualTree.GetResourceManager (this);
 			layout.DefaultFont     = this.DefaultFont;
 			layout.DefaultFontSize = this.DefaultFontSize;
 
@@ -543,7 +542,6 @@ namespace Epsitec.Common.Widgets
 					
 					string text = (i+this.firstLine < this.items.Count) ? this.items[i+this.firstLine] : "";
 
-					this.textLayouts[i].ResourceManager = Helpers.VisualTree.GetResourceManager (this);
 					this.textLayouts[i].Text            = text;
 					this.textLayouts[i].DefaultFont     = this.DefaultFont;
 					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;

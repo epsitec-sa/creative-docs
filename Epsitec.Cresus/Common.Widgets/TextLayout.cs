@@ -39,10 +39,8 @@ namespace Epsitec.Common.Widgets
 	public class TextLayout
 	{
 		public TextLayout()
+			: this (Drawing.TextStyle.Default)
 		{
-			this.style = Drawing.TextStyle.Default;
-			this.drawingScale = 1.0;
-			this.verticalMark = double.NaN;
 		}
 
 		public TextLayout(TextLayout model)
@@ -50,7 +48,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (model != null)
 			{
-				this.ResourceManager = model.ResourceManager;
 				this.style           = model.style;
 				this.DrawingScale    = model.DrawingScale;
 				this.VerticalMark    = model.VerticalMark;
@@ -58,10 +55,12 @@ namespace Epsitec.Common.Widgets
 				this.Alignment       = model.Alignment;
 			}
 		}
-		
-		public TextLayout(Support.ResourceManager resource_manager) : this ()
+
+		public TextLayout(Drawing.TextStyle style)
 		{
-			this.resourceManager = resource_manager;
+			this.style = style;
+			this.drawingScale = 1.0;
+			this.verticalMark = double.NaN;
 		}
 
 		internal Widget							Embedder
@@ -155,20 +154,11 @@ namespace Epsitec.Common.Widgets
 			get { return this.FindIndexFromOffset(this.MaxTextOffset); }
 		}
 
-		public Support.ResourceManager			ResourceManager
+		private Support.ResourceManager			ResourceManager
 		{
 			get
 			{
-				if (this.resourceManager == null)
-				{
-					return Support.Resources.DefaultManager;
-				}
-				
-				return this.resourceManager;
-			}
-			set
-			{
-				this.resourceManager = value;
+				return Support.Resources.DefaultManager;
 			}
 		}
 		
@@ -4021,11 +4011,11 @@ namespace Epsitec.Common.Widgets
 								string imageName = parameters["src"];
 								double verticalOffset = 0;
 							
-								Drawing.Image image = Support.ImageProvider.Default.GetImage(imageName, this.resourceManager);
+								Drawing.Image image = Support.ImageProvider.Default.GetImage(imageName, this.ResourceManager);
 								
 								if ( image == null )
 								{
-									image = Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.resourceManager);
+									image = Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
 									System.Diagnostics.Debug.WriteLine (string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 //-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}
@@ -5356,7 +5346,6 @@ noText:
 		private static Dictionary<string, Drawing.RichColor> localColors = new Dictionary<string, Drawing.RichColor> ();
 
 		private Widget							embedder;
-		private Support.ResourceManager			resourceManager;
 		private Drawing.TextStyle				style;
 
 		private bool							isContentsDirty;

@@ -1812,7 +1812,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.layouts[row, column] == null)
 						{
-							this.layouts[row, column] = new TextLayout (manager);
+							this.layouts[row, column] = new TextLayout ();
 						}
 
 						string text = this[row + top, column];
