@@ -798,7 +798,8 @@ namespace Epsitec.Common.Document
 				zip.LoadFileName = this.ioDocumentManager.GetLocalFilePath();
 				DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
 				bool isCrDoc = (ext == DocumentFileExtension.CrDoc);
-				this.type = isCrDoc ? DocumentType.Graphic : DocumentType.Pictogram;
+				bool isCrMod = (ext == DocumentFileExtension.CrMod);
+				this.type = (isCrDoc || isCrMod) ? DocumentType.Graphic : DocumentType.Pictogram;
 
 				if (ext != DocumentFileExtension.Icon &&
 					zip.TryLoadFile(sourceStream, delegate(string entryName) { return entryName == "document.data" || entryName.StartsWith("fonts/"); }))
