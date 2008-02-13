@@ -236,19 +236,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override TextLayout TextLayout
+		protected override TextLayout GetTextLayout()
 		{
-			get
+			if (string.IsNullOrEmpty (this.textSuffix) || this.IsTextEmpty)
 			{
-				if (this.textSuffix == null || this.IsTextEmpty)
-				{
-					return base.TextLayout;
-				}
-
-				TextLayout layout = new TextLayout (base.TextLayout);
-				layout.Text = string.Concat (this.Text, this.textSuffix);
-				return layout;
+				return base.GetTextLayout ();
 			}
+
+			TextLayout layout = new TextLayout (base.GetTextLayout ());
+			layout.Text = string.Concat (this.Text, this.textSuffix);
+			return layout;
 		}
 
 		protected override bool CanStartEdition

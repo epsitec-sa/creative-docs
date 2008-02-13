@@ -1,8 +1,10 @@
 //	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
-using System;
 
 namespace Epsitec.Common.Drawing
 {
@@ -12,8 +14,8 @@ namespace Epsitec.Common.Drawing
 	/// </summary>
 	
 	[System.ComponentModel.TypeConverter (typeof (TextStyle.Converter))]
-	
-	public sealed class TextStyle : System.ICloneable
+
+	public sealed class TextStyle : System.ICloneable, IReadOnly, IReadOnlyLock, System.IDisposable
 	{
 		public TextStyle()
 			: this (TextStyle.Default)
@@ -29,9 +31,9 @@ namespace Epsitec.Common.Drawing
 			
 			this.parent          = parent;
 			this.font            = null;
-			this.size            = 0;
+			this.fontSize        = 0;
 			
-			this.color           = RichColor.Empty;
+			this.fontColor       = RichColor.Empty;
 			this.anchorColor     = Color.Empty;
 			this.waveColor       = Color.Empty;
 			
@@ -45,15 +47,17 @@ namespace Epsitec.Common.Drawing
 
 			this.defaultTabWidth = 0.0;
 			this.tabs            = new List<Tab> ();
+
+			this.parent.Changed += this.HandleParentChanged;
 		}
 		
 		
 		private TextStyle(int __unused__)
 		{
 			this.font            = Font.DefaultFont;
-			this.size            = Font.DefaultFontSize;
+			this.fontSize        = Font.DefaultFontSize;
 			
-			this.color           = new RichColor (1.0, 0.0, 0.0, 0.0, 1.0);
+			this.fontColor       = new RichColor (1.0, 0.0, 0.0, 0.0, 1.0);
 			this.anchorColor     = new Color (0, 0, 1);
 			this.waveColor       = new Color (1, 0, 0);
 			
@@ -67,12 +71,9 @@ namespace Epsitec.Common.Drawing
 
 			this.defaultTabWidth = 40;
 			this.tabs            = new List<Tab> ();
-		}
-		
-		static TextStyle()
-		{
-			TextStyle.defaultStyle = new TextStyle (0);
-			TextStyle.defaultStyle.isDefaultStyle = true;
+			
+			this.isDefaultStyle  = true;
+			this.isReadOnly      = true;
 		}
 		
 		
@@ -83,6 +84,20 @@ namespace Epsitec.Common.Drawing
 				return this.isDefaultStyle;
 			}
 		}
+
+
+		#region IReadOnly Members
+
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.isReadOnly;
+			}
+		}
+
+		#endregion
+		
 		
 		public TextStyle						Parent
 		{
@@ -118,15 +133,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.size == 0) ? this.parent.Size : this.size;
+				return (this.fontSize == 0) ? this.parent.Size : this.fontSize;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.size != value)
+				if (this.fontSize != value)
 				{
-					this.size = value;
+					this.fontSize = value;
 					this.OnChanged ();
 				}
 			}
@@ -136,15 +151,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.color.IsEmpty) ? new RichColor(this.parent.Color) : this.color;
+				return (this.fontColor.IsEmpty) ? new RichColor(this.parent.Color) : this.fontColor;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.color != value)
+				if (this.fontColor != value)
 				{
-					this.color = value;
+					this.fontColor = value;
 					this.OnChanged ();
 				}
 			}
@@ -154,15 +169,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.color.IsEmpty) ? this.parent.Color : this.color.Basic;
+				return (this.fontColor.IsEmpty) ? this.parent.Color : this.fontColor.Basic;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.color.Basic != value)
+				if (this.fontColor.Basic != value)
 				{
-					this.color.Basic = value;
+					this.fontColor.Basic = value;
 					this.OnChanged ();
 				}
 			}
@@ -466,6 +481,29 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+
+		#region IReadOnlyLock Members
+
+		public void Lock()
+		{
+			this.isReadOnly = true;
+		}
+
+		public void Unlock()
+		{
+			this.isReadOnly = false;
+		}
+
+		#endregion
+		
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.parent.Changed -= this.HandleParentChanged;
+		}
+
+		#endregion
 		
 		#region ICloneable Members
 		object System.ICloneable.Clone()
@@ -509,12 +547,12 @@ namespace Epsitec.Common.Drawing
 				buffer.Append (">");
 			}
 				
-			if (this.size != 0)
+			if (this.fontSize != 0)
 			{
 				if (buffer.Length > 0) buffer.Append (";");
 					
 				buffer.Append ("<Size=");
-				buffer.Append (this.size.ToString (culture));
+				buffer.Append (this.fontSize.ToString (culture));
 				buffer.Append (">");
 			}
 				
@@ -573,12 +611,12 @@ namespace Epsitec.Common.Drawing
 		
 		public static void DefineDefaultRichColor(Drawing.RichColor color)
 		{
-			TextStyle.defaultStyle.color = color;
+			TextStyle.defaultStyle.fontColor = color;
 		}
 		
 		public static void DefineDefaultColor(Drawing.Color color)
 		{
-			TextStyle.defaultStyle.color.Basic = color;
+			TextStyle.defaultStyle.fontColor.Basic = color;
 		}
 		
 		
@@ -603,29 +641,31 @@ namespace Epsitec.Common.Drawing
 			//	Copie tous les éléments en utilisant "this" comme modèle. Il y a juste le
 			//	parent pour lequel nous devons faire attention.
 			
-			that.parent          = this.isDefaultStyle ? TextStyle.defaultStyle : this.parent;
-			that.font            = this.font;
-			that.size            = this.size;
-			that.color           = this.color;
+			that.parent         = this.isDefaultStyle ? TextStyle.defaultStyle : this.parent;
+			that.font           = this.font;
+			that.fontSize       = this.fontSize;
+			that.fontColor          = this.fontColor;
 			that.anchorColor    = this.anchorColor;
 			that.waveColor      = this.waveColor;
-			that.alignment       = this.alignment;
+			that.alignment      = this.alignment;
 			that.breakMode      = this.breakMode;
 			that.justifMode     = this.justifMode;
 			that.showLineBreaks = this.showLineBreaks;
-			that.showTabMarks        = this.showTabMarks;
-			that.language        = this.language;
-			that.tabs            = new List<Tab> (this.tabs);
+			that.showTabMarks   = this.showTabMarks;
+			that.language       = this.language;
+			that.tabs           = new List<Tab> (this.tabs);
 			
 			return that;
 		}
 
+		private void HandleParentChanged(object sender)
+		{
+			this.OnChanged ();
+		}
+
 		private void OnChanged()
 		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
+			this.changedListeners.Invoke (this);
 		}
 
 		#region ThreeState Enumeration
@@ -662,7 +702,7 @@ namespace Epsitec.Common.Drawing
 		#region Tab Structure
 
 		[System.Serializable]
-		public struct Tab : IEquatable<Tab>
+		public struct Tab : System.IEquatable<Tab>
 		{
 			public Tab(Tab model)
 			{
@@ -733,17 +773,31 @@ namespace Epsitec.Common.Drawing
 
 		#endregion
 
-		public event Support.EventHandler		Changed;
+
+		public event Support.EventHandler		Changed
+		{
+			add
+			{
+				this.changedListeners.Add (value);
+			}
+			remove
+			{
+				this.changedListeners.Remove (value);
+			}
+		}
+
+		private WeakEventListeners				changedListeners;
+
+
+		private static readonly TextStyle		defaultStyle = new TextStyle (0);
 		
-		
-		private static readonly TextStyle		defaultStyle;
-		
-		private bool							isDefaultStyle;
+		private readonly bool					isDefaultStyle;
+		private bool							isReadOnly;
 		private TextStyle						parent;
 		
 		private Font							font;
-		private double							size;
-		private RichColor						color;
+		private double							fontSize;
+		private RichColor						fontColor;
 		private Color							anchorColor;
 		private Color							waveColor;
 		private ContentAlignment				alignment;

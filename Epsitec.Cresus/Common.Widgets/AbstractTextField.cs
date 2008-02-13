@@ -1876,6 +1876,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual TextLayout GetTextLayout()
+		{
+			System.Diagnostics.Debug.Assert (this.TextLayout != null);
+
+			return this.TextLayout;
+		}
+
 		/// <summary>
 		/// Gets the text layout used for painting. This can be a synthetic text
 		/// layout object (e.g. a masked password or a hint).
@@ -1993,6 +2000,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#region IReadOnly Members
+		
 		bool Types.IReadOnly.IsReadOnly
 		{
 			get
@@ -2000,6 +2008,7 @@ namespace Epsitec.Common.Widgets
 				return this.IsReadOnly;
 			}
 		}
+		
 		#endregion
 
 		#region CommandController Class

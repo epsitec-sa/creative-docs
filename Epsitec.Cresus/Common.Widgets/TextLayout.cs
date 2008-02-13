@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextLayout permet de stocker et d'afficher des contenus
 	/// riches (un sous-ensemble très restreint de HTML).
 	/// </summary>
-	public class TextLayout
+	public class TextLayout : System.IDisposable
 	{
 		public TextLayout()
 		{
@@ -44,10 +44,11 @@ namespace Epsitec.Common.Widgets
 			this.drawingScale = 1.0;
 			this.verticalMark = double.NaN;
 		}
-		
-		public TextLayout(TextLayout model) : this()
+
+		public TextLayout(TextLayout model)
+			: this ()
 		{
-			if ( model != null )
+			if (model != null)
 			{
 				this.ResourceManager = model.ResourceManager;
 				this.style           = model.style;
@@ -190,7 +191,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.DefaultFont != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.Font = value;
 				}
 			}
@@ -207,7 +208,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.DefaultFontSize != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.Size = value;
 				}
 			}
@@ -223,7 +224,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.DefaultRichColor != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.RichColor = value;
 				}
 			}
@@ -239,7 +240,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.DefaultColor != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.Color = value;
 				}
 			}
@@ -256,7 +257,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.AnchorColor != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.AnchorColor = value;
 				}
 			}
@@ -273,7 +274,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.WaveColor != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.WaveColor = value;
 				}
 			}
@@ -290,7 +291,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.Alignment != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.Alignment = value;
 				}
 			}
@@ -307,7 +308,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.BreakMode != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.BreakMode = value;
 				}
 			}
@@ -324,7 +325,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.JustifMode != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.JustifMode = value;
 				}
 			}
@@ -341,7 +342,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.ShowLineBreak != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.ShowLineBreaks = value;
 				}
 			}
@@ -358,7 +359,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.ShowTab != value )
 				{
-					this.CloneStyleIfDefaultStyleInUse();
+					this.CloneStyleIfCopyOnWriteNeeded();
 					this.style.ShowTabMarks = value;
 				}
 			}
@@ -399,7 +400,7 @@ namespace Epsitec.Common.Widgets
 
 		public int TabInsert(Drawing.TextStyle.Tab tab)
 		{
-			this.CloneStyleIfDefaultStyleInUse();
+			this.CloneStyleIfCopyOnWriteNeeded();
 			return this.style.TabInsert(tab);
 		}
 
@@ -413,7 +414,7 @@ namespace Epsitec.Common.Widgets
 
 		public void TabRemoveAt(int rank)
 		{
-			this.CloneStyleIfDefaultStyleInUse();
+			this.CloneStyleIfCopyOnWriteNeeded();
 			this.style.TabRemoveAt(rank);
 		}
 
@@ -424,7 +425,7 @@ namespace Epsitec.Common.Widgets
 
 		public void SetTabPosition(int rank, double pos)
 		{
-			this.CloneStyleIfDefaultStyleInUse();
+			this.CloneStyleIfCopyOnWriteNeeded();
 			this.style.SetTabPosition(rank, pos);
 		}
 
@@ -1625,6 +1626,20 @@ namespace Epsitec.Common.Widgets
 			}
 			return false;
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (this.hasPrivateStyle)
+			{
+				this.style.Dispose ();
+				this.style = null;
+				this.hasPrivateStyle = false;
+			}
+		}
+
+		#endregion
 
 
 		public bool MoveCursor(TextLayoutContext context, int move, bool select, bool word)
@@ -5323,12 +5338,15 @@ noText:
 		public event AnchorEventHandler			Anchor;
 
 
-		private void CloneStyleIfDefaultStyleInUse()
+		private void CloneStyleIfCopyOnWriteNeeded()
 		{
-			if ( this.style.IsDefaultStyle )
+			if (this.style.IsReadOnly)
 			{
-				this.style = new Drawing.TextStyle();
-				this.style.Changed += new Support.EventHandler(this.HandleTextStyleChanged);
+				System.Diagnostics.Debug.Assert (this.hasPrivateStyle == false);
+
+				this.style = new Drawing.TextStyle (this.style);
+				this.style.Changed += this.HandleTextStyleChanged;
+				this.hasPrivateStyle = true;
 			}
 		}
 		
@@ -5357,6 +5375,7 @@ noText:
 		private Widget							embedder;
 		private Support.ResourceManager			resourceManager;
 		private Drawing.TextStyle				style;
+		private bool							hasPrivateStyle;
 
 		private bool							isContentsDirty;
 		private bool							isSimpleDirty;
