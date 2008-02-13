@@ -876,7 +876,7 @@ namespace Epsitec.Common.Widgets
 				this.type = type;
 				this.textCopy = string.Copy(this.host.textLayout.InternalText);
 				this.contextCopy = new TextLayoutContext (this.host.context);
-				this.host.textLayout.Style.TabCopyTo(out this.tabs);
+				this.tabs = this.host.textLayout.Style.GetTabs ();
 			}
 
 			public TextNavigator Navigator
@@ -903,9 +903,8 @@ namespace Epsitec.Common.Widgets
 				undoContext.CopyTo(this.host.context);
 				redoContext.CopyTo(this.contextCopy);
 
-				Drawing.TextStyle.Tab[] temp;
-				this.host.textLayout.Style.TabCopyTo(out temp);
-				this.host.textLayout.Style.TabCopyFrom(this.tabs);
+				Drawing.TextStyle.Tab[] temp = this.host.textLayout.Style.GetTabs ();
+				this.host.textLayout.Style.SetTabs(this.tabs);
 				this.tabs = temp;
 
 				this.host.OnCursorChanged(true);

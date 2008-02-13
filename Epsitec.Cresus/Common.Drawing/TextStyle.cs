@@ -15,7 +15,8 @@ namespace Epsitec.Common.Drawing
 	
 	public sealed class TextStyle : System.ICloneable
 	{
-		public TextStyle() : this (null)
+		public TextStyle()
+			: this (TextStyle.Default)
 		{
 		}
 		
@@ -31,18 +32,18 @@ namespace Epsitec.Common.Drawing
 			this.size            = 0;
 			
 			this.color           = RichColor.Empty;
-			this.color_anchor    = Color.Empty;
-			this.color_wave      = Color.Empty;
+			this.anchorColor     = Color.Empty;
+			this.waveColor       = Color.Empty;
 			
 			this.alignment       = ContentAlignment.None;
-			this.break_mode      = TextBreakMode.None;
-			this.justif_mode     = TextJustifMode.Undefined;
-			this.show_line_break = ThreeState.None;
-			this.show_tab_marks        = ThreeState.None;
+			this.breakMode       = TextBreakMode.None;
+			this.justifMode      = TextJustifMode.Undefined;
+			this.showLineBreaks  = ThreeState.None;
+			this.showTabMarks    = ThreeState.None;
 			
 			this.language        = null;
 
-			this.def_tab_width   = 0.0;
+			this.defaultTabWidth = 0.0;
 			this.tabs            = new List<Tab> ();
 		}
 		
@@ -53,25 +54,25 @@ namespace Epsitec.Common.Drawing
 			this.size            = Font.DefaultFontSize;
 			
 			this.color           = new RichColor (1.0, 0.0, 0.0, 0.0, 1.0);
-			this.color_anchor    = new Color (0, 0, 1);
-			this.color_wave      = new Color (1, 0, 0);
+			this.anchorColor     = new Color (0, 0, 1);
+			this.waveColor       = new Color (1, 0, 0);
 			
 			this.alignment       = ContentAlignment.TopLeft;
-			this.break_mode      = TextBreakMode.Ellipsis | TextBreakMode.SingleLine;
-			this.justif_mode     = TextJustifMode.None;
-			this.show_line_break = ThreeState.False;
-			this.show_tab_marks  = ThreeState.False;
+			this.breakMode       = TextBreakMode.Ellipsis | TextBreakMode.SingleLine;
+			this.justifMode      = TextJustifMode.None;
+			this.showLineBreaks  = ThreeState.False;
+			this.showTabMarks    = ThreeState.False;
 			
 			this.language        = "";
 
-			this.def_tab_width   = 40;
+			this.defaultTabWidth = 40;
 			this.tabs            = new List<Tab> ();
 		}
 		
 		static TextStyle()
 		{
-			TextStyle.default_style = new TextStyle (0);
-			TextStyle.default_style.is_default_style = true;
+			TextStyle.defaultStyle = new TextStyle (0);
+			TextStyle.defaultStyle.isDefaultStyle = true;
 		}
 		
 		
@@ -79,7 +80,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.is_default_style;
+				return this.isDefaultStyle;
 			}
 		}
 		
@@ -171,15 +172,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.color_anchor.IsEmpty) ? this.parent.AnchorColor : this.color_anchor;
+				return (this.anchorColor.IsEmpty) ? this.parent.AnchorColor : this.anchorColor;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.color_anchor != value)
+				if (this.anchorColor != value)
 				{
-					this.color_anchor = value;
+					this.anchorColor = value;
 					this.OnChanged ();
 				}
 			}
@@ -189,15 +190,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.color_wave.IsEmpty) ? this.parent.WaveColor : this.color_wave;
+				return (this.waveColor.IsEmpty) ? this.parent.WaveColor : this.waveColor;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.color_wave != value)
+				if (this.waveColor != value)
 				{
-					this.color_wave = value;
+					this.waveColor = value;
 					this.OnChanged ();
 				}
 			}
@@ -225,16 +226,16 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.break_mode == TextBreakMode.None) ? this.parent.BreakMode : this.break_mode;
+				return (this.breakMode == TextBreakMode.None) ? this.parent.BreakMode : this.breakMode;
 			}
 
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.break_mode != value)
+				if (this.breakMode != value)
 				{
-					this.break_mode = value;
+					this.breakMode = value;
 					this.OnChanged ();
 				}
 			}
@@ -244,15 +245,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.justif_mode == TextJustifMode.Undefined) ? this.parent.JustifMode : this.justif_mode;
+				return (this.justifMode == TextJustifMode.Undefined) ? this.parent.JustifMode : this.justifMode;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.justif_mode != value)
+				if (this.justifMode != value)
 				{
-					this.justif_mode = value;
+					this.justifMode = value;
 					this.OnChanged ();
 				}
 			}
@@ -262,12 +263,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.show_line_break == ThreeState.None)
+				if (this.showLineBreaks == ThreeState.None)
 				{
 					return this.parent.ShowLineBreaks;
 				}
 				
-				switch (this.show_line_break)
+				switch (this.showLineBreaks)
 				{
 					case ThreeState.True:	return true;
 					case ThreeState.False:	return false;
@@ -281,9 +282,9 @@ namespace Epsitec.Common.Drawing
 				
 				ThreeState test = (value ? ThreeState.True : ThreeState.False);
 				
-				if (this.show_line_break != test)
+				if (this.showLineBreaks != test)
 				{
-					this.show_line_break = test;
+					this.showLineBreaks = test;
 					this.OnChanged ();
 				}
 			}
@@ -293,12 +294,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.show_tab_marks == ThreeState.None)
+				if (this.showTabMarks == ThreeState.None)
 				{
 					return this.parent.ShowTabMarks;
 				}
 				
-				switch (this.show_tab_marks)
+				switch (this.showTabMarks)
 				{
 					case ThreeState.True:	return true;
 					case ThreeState.False:	return false;
@@ -312,9 +313,9 @@ namespace Epsitec.Common.Drawing
 				
 				ThreeState test = (value ? ThreeState.True : ThreeState.False);
 				
-				if (this.show_tab_marks != test)
+				if (this.showTabMarks != test)
 				{
-					this.show_tab_marks = test;
+					this.showTabMarks = test;
 					this.OnChanged ();
 				}
 			}
@@ -343,15 +344,15 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.def_tab_width == 0.0) ? this.parent.DefaultTabWidth : this.def_tab_width;
+				return (this.defaultTabWidth == 0.0) ? this.parent.DefaultTabWidth : this.defaultTabWidth;
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.def_tab_width != value)
+				if (this.defaultTabWidth != value)
 				{
-					this.def_tab_width = value;
+					this.defaultTabWidth = value;
 					this.OnChanged ();
 				}
 			}
@@ -361,7 +362,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return TextStyle.default_style;
+				return TextStyle.defaultStyle;
 			}
 		}
 		
@@ -406,38 +407,16 @@ namespace Epsitec.Common.Drawing
 			return new Tab (this.tabs[rank]);
 		}
 
-		public Tab[] GetTabArray()
+		public Tab[] GetTabs()
 		{
 			return this.tabs.ToArray ();
 		}
 
-		public void TabCopyTo(TextStyle dst)
-		{
-			dst.CheckForDefaultStyle ();
-			dst.tabs.Clear();
-			foreach (Tab tab in this.tabs)
-			{
-				dst.tabs.Add (new Tab (tab));
-			}
-		}
-		
-		public void TabCopyTo(out Tab[] dst)
-		{
-			dst = new Tab[this.tabs.Count];
-			for (int i=0; i<this.tabs.Count; i++)
-			{
-				dst[i] = this.tabs[i];
-			}
-		}
-
-		public void TabCopyFrom(Tab[] src)
+		public void SetTabs(IEnumerable<Tab> src)
 		{
 			this.CheckForDefaultStyle ();
 			this.tabs.Clear ();
-			for (int i=0; i<src.Length; i++)
-			{
-				this.tabs.Add (new Tab (src[i]));
-			}
+			this.tabs.AddRange (src);
 			this.OnChanged ();
 		}
 		
@@ -594,18 +573,18 @@ namespace Epsitec.Common.Drawing
 		
 		public static void DefineDefaultRichColor(Drawing.RichColor color)
 		{
-			TextStyle.default_style.color = color;
+			TextStyle.defaultStyle.color = color;
 		}
 		
 		public static void DefineDefaultColor(Drawing.Color color)
 		{
-			TextStyle.default_style.color.Basic = color;
+			TextStyle.defaultStyle.color.Basic = color;
 		}
 		
 		
 		private void CheckForDefaultStyle ()
 		{
-			if (this.is_default_style)
+			if (this.isDefaultStyle)
 			{
 				throw new System.InvalidOperationException ("TextStyle.Default cannot be modified.");
 			}
@@ -624,17 +603,17 @@ namespace Epsitec.Common.Drawing
 			//	Copie tous les éléments en utilisant "this" comme modèle. Il y a juste le
 			//	parent pour lequel nous devons faire attention.
 			
-			that.parent          = this.is_default_style ? TextStyle.default_style : this.parent;
+			that.parent          = this.isDefaultStyle ? TextStyle.defaultStyle : this.parent;
 			that.font            = this.font;
 			that.size            = this.size;
 			that.color           = this.color;
-			that.color_anchor    = this.color_anchor;
-			that.color_wave      = this.color_wave;
+			that.anchorColor    = this.anchorColor;
+			that.waveColor      = this.waveColor;
 			that.alignment       = this.alignment;
-			that.break_mode      = this.break_mode;
-			that.justif_mode     = this.justif_mode;
-			that.show_line_break = this.show_line_break;
-			that.show_tab_marks        = this.show_tab_marks;
+			that.breakMode      = this.breakMode;
+			that.justifMode     = this.justifMode;
+			that.showLineBreaks = this.showLineBreaks;
+			that.showTabMarks        = this.showTabMarks;
 			that.language        = this.language;
 			that.tabs            = new List<Tab> (this.tabs);
 			
@@ -757,23 +736,23 @@ namespace Epsitec.Common.Drawing
 		public event Support.EventHandler		Changed;
 		
 		
-		private static readonly TextStyle		default_style;
+		private static readonly TextStyle		defaultStyle;
 		
-		private bool							is_default_style;
+		private bool							isDefaultStyle;
 		private TextStyle						parent;
 		
 		private Font							font;
 		private double							size;
 		private RichColor						color;
-		private Color							color_anchor;
-		private Color							color_wave;
+		private Color							anchorColor;
+		private Color							waveColor;
 		private ContentAlignment				alignment;
-		private TextBreakMode					break_mode;
-		private TextJustifMode					justif_mode;
-		private ThreeState						show_line_break;
-		private ThreeState						show_tab_marks;
+		private TextBreakMode					breakMode;
+		private TextJustifMode					justifMode;
+		private ThreeState						showLineBreaks;
+		private ThreeState						showTabMarks;
 		private string							language;
-		private double							def_tab_width;
+		private double							defaultTabWidth;
 		private List<Tab>						tabs;
 	}
 }

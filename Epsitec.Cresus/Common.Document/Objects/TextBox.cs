@@ -257,7 +257,7 @@ namespace Epsitec.Common.Document.Objects
 
 			TextBox obj = src as TextBox;
 			this.textLayout.Text = obj.textLayout.Text;
-			obj.textLayout.Style.TabCopyTo(this.textLayout.Style);
+			this.textLayout.Style.SetTabs(obj.textLayout.Style.GetTabs());
 			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
 			this.textLayout.Simplify(this.textNavigator.Context);
 		}
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Sérialise l'objet.
 			base.GetObjectData(info, context);
 			info.AddValue("Text", this.textLayout.Text);
-			info.AddValue("TabArray", this.textLayout.Style.GetTabArray());
+			info.AddValue("TabArray", this.textLayout.Style.GetTabs());
 		}
 
 		protected TextBox(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.Text = info.GetString("Text");
 
 			Drawing.TextStyle.Tab[] tabs = (Drawing.TextStyle.Tab[]) info.GetValue("TabArray", typeof(Drawing.TextStyle.Tab[]));
-			this.textLayout.Style.TabCopyFrom(tabs);
+			this.textLayout.Style.SetTabs(tabs);
 		}
 
 		public override void ReadCheckWarnings(System.Collections.ArrayList warnings)
