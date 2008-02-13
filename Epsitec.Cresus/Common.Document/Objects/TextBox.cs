@@ -449,7 +449,7 @@ namespace Epsitec.Common.Document.Objects
 
 			     if ( jh == Properties.JustifHorizontal.Justif )  this.textLayout.JustifMode = TextJustifMode.AllButLast;
 			else if ( jh == Properties.JustifHorizontal.All    )  this.textLayout.JustifMode = TextJustifMode.All;
-			else                                                  this.textLayout.JustifMode = TextJustifMode.NoLine;
+			else                                                  this.textLayout.JustifMode = TextJustifMode.None;
 
 			Transform ot = port.Transform;
 

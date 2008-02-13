@@ -335,14 +335,14 @@ namespace Epsitec.Common.Widgets
 			//	Détermine si les <br/> sont visibles ou non.
 			get
 			{
-				return this.style.ShowLineBreak;
+				return this.style.ShowLineBreaks;
 			}
 			set
 			{
 				if ( this.ShowLineBreak != value )
 				{
 					this.CloneStyleIfDefaultStyleInUse();
-					this.style.ShowLineBreak = value;
+					this.style.ShowLineBreaks = value;
 				}
 			}
 		}
@@ -352,14 +352,14 @@ namespace Epsitec.Common.Widgets
 			//	Détermine si les tabulateurs sont visibles ou non.
 			get
 			{
-				return this.style.ShowTab;
+				return this.style.ShowTabMarks;
 			}
 			set
 			{
 				if ( this.ShowTab != value )
 				{
 					this.CloneStyleIfDefaultStyleInUse();
-					this.style.ShowTab = value;
+					this.style.ShowTabMarks = value;
 				}
 			}
 		}
@@ -916,7 +916,7 @@ namespace Epsitec.Common.Widgets
 
 				if (block.List)
 				{
-					return this.ProcessListType (block.Parameters, "type", Drawing.TextListType.Fix);
+					return this.ProcessListType (block.Parameters, "type", Drawing.TextListType.Fixed);
 				}
 
 				i--;
@@ -933,12 +933,12 @@ namespace Epsitec.Common.Widgets
 			this.Simplify(context);
 			this.ListDelete(context);
 
-			if ( list == Drawing.TextListType.Fix )
+			if ( list == Drawing.TextListType.Fixed )
 			{
 				this.ListInsert(context, "<list type=\"fix\"/>");
 			}
 
-			if ( list == Drawing.TextListType.Num )
+			if ( list == Drawing.TextListType.Numbered )
 			{
 				this.ListInsert(context, "<list type=\"num\"/>");
 			}
@@ -2035,9 +2035,9 @@ namespace Epsitec.Common.Widgets
 								 JustifBlock block, ref double listValue)
 		{
 			//	Dessine une puce.
-			Drawing.TextListType type = this.ProcessListType(block.Parameters, "type", Drawing.TextListType.Fix);
+			Drawing.TextListType type = this.ProcessListType(block.Parameters, "type", Drawing.TextListType.Fixed);
 
-			if ( type == Drawing.TextListType.Fix )
+			if ( type == Drawing.TextListType.Fixed )
 			{
 				Drawing.TextListGlyph glyph = this.ProcessListGlyph(block.Parameters, "glyph", Drawing.TextListGlyph.Circle);
 				Drawing.Path path = new Drawing.Path();
@@ -2090,8 +2090,7 @@ namespace Epsitec.Common.Widgets
 
 				graphics.PaintSurface(path);
 			}
-
-			if ( type == Drawing.TextListType.Num )
+			else if ( type == Drawing.TextListType.Numbered )
 			{
 				string format = this.ProcessString(block.Parameters, "format", "#.");
 				format = format.Replace("#", "{0}");
@@ -3340,7 +3339,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.textChangeEventQueue == null)
 					{
-						this.textChangeEventQueue = new Queue<Epsitec.Common.Support.SimpleCallback> ();
+						this.textChangeEventQueue = new Queue<Support.SimpleCallback> ();
 					}
 					
 					this.textChangeEventQueue.Enqueue (
@@ -3839,8 +3838,8 @@ namespace Epsitec.Common.Widgets
 			string s = parameters[key];
 			switch ( s )
 			{
-				case "fix":  return Drawing.TextListType.Fix;
-				case "num":  return Drawing.TextListType.Num;
+				case "fix":  return Drawing.TextListType.Fixed;
+				case "num":  return Drawing.TextListType.Numbered;
 			}
 			return def;
 		}
@@ -4199,9 +4198,7 @@ noText:
 					Drawing.TextStyle.Tab tab;
 					if ( listEnding )  // partie précédente terminée par <list/> ?
 					{
-						tab = new Drawing.TextStyle.Tab();
-						tab.Type = Drawing.TextTabType.Indent;
-						tab.Pos  = pos+tb.FontSize*this.ProcessNum(tb.Parameters, "width", 2.0);
+						tab = new Drawing.TextStyle.Tab(pos+tb.FontSize*this.ProcessNum (tb.Parameters, "width", 2.0), Drawing.TextTabType.Indent, Drawing.TextTabLine.None);
 					}
 					else
 					{
@@ -4383,7 +4380,7 @@ noText:
 								
 //-								block.VerticalOffset = run.VerticalOffset;
 							
-								if ( this.JustifMode != Drawing.TextJustifMode.NoLine )
+								if ( this.JustifMode != Drawing.TextJustifMode.None )
 								{
 									double width = dx/run.FontSize;
 									block.Infos = new Drawing.FontClassInfo[1];
@@ -4394,7 +4391,7 @@ noText:
 							}
 							else
 							{
-								if ( this.JustifMode == Drawing.TextJustifMode.NoLine )
+								if ( this.JustifMode == Drawing.TextJustifMode.None )
 								{
 									block.Infos     = null;
 									block.InfoWidth = 0;
@@ -5355,7 +5352,7 @@ noText:
 			return name;
 		}
 
-		private static Dictionary<string, Drawing.RichColor> localColors = new Dictionary<string, Epsitec.Common.Drawing.RichColor> ();
+		private static Dictionary<string, Drawing.RichColor> localColors = new Dictionary<string, Drawing.RichColor> ();
 
 		private Widget							embedder;
 		private Support.ResourceManager			resourceManager;

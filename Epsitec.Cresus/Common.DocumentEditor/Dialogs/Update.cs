@@ -108,8 +108,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			this.buy.Text = b.ToString();
 			this.buy.HypertextClicked += new MessageEventHandler(this.HandleLinkHypertextClicked);
 
-			TextStyle.Tab tab = new TextStyle.Tab();
-			tab.Pos = 70;
+			TextStyle.Tab tab = new TextStyle.Tab(70, TextTabType.Left, TextTabLine.None);
 			this.buy.TextLayout.TabInsert(tab);
 
 			this.window.ShowDialog();

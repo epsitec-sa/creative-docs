@@ -1,5 +1,8 @@
 //	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+using System;
 
 namespace Epsitec.Common.Drawing
 {
@@ -10,7 +13,7 @@ namespace Epsitec.Common.Drawing
 	
 	[System.ComponentModel.TypeConverter (typeof (TextStyle.Converter))]
 	
-	public class TextStyle : System.ICloneable
+	public sealed class TextStyle : System.ICloneable
 	{
 		public TextStyle() : this (null)
 		{
@@ -33,18 +36,18 @@ namespace Epsitec.Common.Drawing
 			
 			this.alignment       = ContentAlignment.None;
 			this.break_mode      = TextBreakMode.None;
-			this.justif_mode     = TextJustifMode.None;
+			this.justif_mode     = TextJustifMode.Undefined;
 			this.show_line_break = ThreeState.None;
-			this.show_tab        = ThreeState.None;
+			this.show_tab_marks        = ThreeState.None;
 			
 			this.language        = null;
 
 			this.def_tab_width   = 0.0;
-			this.tabs            = new System.Collections.ArrayList ();
+			this.tabs            = new List<Tab> ();
 		}
 		
 		
-		private TextStyle(int i)
+		private TextStyle(int __unused__)
 		{
 			this.font            = Font.DefaultFont;
 			this.size            = Font.DefaultFontSize;
@@ -55,14 +58,14 @@ namespace Epsitec.Common.Drawing
 			
 			this.alignment       = ContentAlignment.TopLeft;
 			this.break_mode      = TextBreakMode.Ellipsis | TextBreakMode.SingleLine;
-			this.justif_mode     = TextJustifMode.NoLine;
+			this.justif_mode     = TextJustifMode.None;
 			this.show_line_break = ThreeState.False;
-			this.show_tab        = ThreeState.False;
+			this.show_tab_marks  = ThreeState.False;
 			
 			this.language        = "";
 
 			this.def_tab_width   = 40;
-			this.tabs            = new System.Collections.ArrayList ();
+			this.tabs            = new List<Tab> ();
 		}
 		
 		static TextStyle()
@@ -241,7 +244,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return (this.justif_mode == TextJustifMode.None) ? this.parent.JustifMode : this.justif_mode;
+				return (this.justif_mode == TextJustifMode.Undefined) ? this.parent.JustifMode : this.justif_mode;
 			}
 			set
 			{
@@ -255,13 +258,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool								ShowLineBreak
+		public bool								ShowLineBreaks
 		{
 			get
 			{
 				if (this.show_line_break == ThreeState.None)
 				{
-					return this.parent.ShowLineBreak;
+					return this.parent.ShowLineBreaks;
 				}
 				
 				switch (this.show_line_break)
@@ -286,16 +289,16 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public bool								ShowTab
+		public bool								ShowTabMarks
 		{
 			get
 			{
-				if (this.show_tab == ThreeState.None)
+				if (this.show_tab_marks == ThreeState.None)
 				{
-					return this.parent.ShowTab;
+					return this.parent.ShowTabMarks;
 				}
 				
-				switch (this.show_tab)
+				switch (this.show_tab_marks)
 				{
 					case ThreeState.True:	return true;
 					case ThreeState.False:	return false;
@@ -309,9 +312,9 @@ namespace Epsitec.Common.Drawing
 				
 				ThreeState test = (value ? ThreeState.True : ThreeState.False);
 				
-				if (this.show_tab != test)
+				if (this.show_tab_marks != test)
 				{
-					this.show_tab = test;
+					this.show_tab_marks = test;
 					this.OnChanged ();
 				}
 			}
@@ -354,11 +357,21 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public static TextStyle					Default
+		{
+			get
+			{
+				return TextStyle.default_style;
+			}
+		}
+		
+		
 		
 		public int TabInsert(Tab tab)
 		{
 			this.CheckForDefaultStyle ();
-			int rank = this.tabs.Add (tab);
+			int rank = this.tabs.Count;
+			this.tabs.Add (tab);
 			this.OnChanged ();
 			return rank;
 		}
@@ -390,41 +403,40 @@ namespace Epsitec.Common.Drawing
 		{
 			System.Diagnostics.Debug.Assert (rank >= 0);
 			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
-			return new Tab (this.tabs[rank] as Tab);
+			return new Tab (this.tabs[rank]);
 		}
 
 		public Tab[] GetTabArray()
 		{
-			return (Tab[]) this.tabs.ToArray (typeof (Tab));
+			return this.tabs.ToArray ();
 		}
 
 		public void TabCopyTo(TextStyle dst)
 		{
 			dst.CheckForDefaultStyle ();
 			dst.tabs.Clear();
-			foreach ( Tab tab in this.tabs )
+			foreach (Tab tab in this.tabs)
 			{
-				dst.tabs.Add(new Tab(tab));
+				dst.tabs.Add (new Tab (tab));
 			}
 		}
 		
 		public void TabCopyTo(out Tab[] dst)
 		{
 			dst = new Tab[this.tabs.Count];
-			for ( int i=0 ; i<this.tabs.Count ; i++ )
+			for (int i=0; i<this.tabs.Count; i++)
 			{
-				Tab tab = this.tabs[i] as Tab;
-				dst[i] = new Tab(tab);
+				dst[i] = this.tabs[i];
 			}
 		}
-		
+
 		public void TabCopyFrom(Tab[] src)
 		{
 			this.CheckForDefaultStyle ();
-			this.tabs.Clear();
-			for ( int i=0 ; i<src.Length ; i++ )
+			this.tabs.Clear ();
+			for (int i=0; i<src.Length; i++)
 			{
-				this.tabs.Add(new Tab(src[i]));
+				this.tabs.Add (new Tab (src[i]));
 			}
 			this.OnChanged ();
 		}
@@ -433,8 +445,8 @@ namespace Epsitec.Common.Drawing
 		{
 			System.Diagnostics.Debug.Assert (rank >= 0);
 			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
-			Tab tab = this.tabs[rank] as Tab;
-			tab.Pos = pos;
+			Tab tab = this.tabs[rank];
+			this.tabs[rank] = new Tab (pos, tab.Type, tab.Line);
 			this.OnChanged ();
 		}
 
@@ -443,32 +455,30 @@ namespace Epsitec.Common.Drawing
 			//	Cherche la position du prochain tabulateur après une position donnée.
 			double lastPos = 0.0;
 			double bestDist = 1000000;
-			Tab bestTab = null;
-			foreach ( Tab tab in this.tabs )
+			Tab bestTab = Tab.Empty;
+			foreach (Tab tab in this.tabs)
 			{
-				lastPos = System.Math.Max(lastPos, tab.Pos);
+				lastPos = System.Math.Max (lastPos, tab.Pos);
 
-				if ( pos+0.001 >= tab.Pos )  continue;
+				if (pos+0.001 >= tab.Pos)
+					continue;
 
 				double dist = tab.Pos - pos;
-				if ( bestDist > dist )
+				if (bestDist > dist)
 				{
 					bestDist = dist;
 					bestTab = tab;
 				}
 			}
 
-			if ( bestTab == null )
+			if (bestTab.IsEmpty)
 			{
 				double def = this.DefaultTabWidth;
 				pos -= lastPos;
 				pos = System.Math.Ceiling((pos+1)/def)*def;
 				pos += lastPos;
 
-				Tab tab = new Tab();
-				tab.Pos  = pos;
-				tab.Type = TextTabType.Right;
-				tab.Line = TextTabLine.None;
+				Tab tab = new Tab (pos, TextTabType.Right, TextTabLine.None);
 				return tab;
 			}
 			else
@@ -477,15 +487,6 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		
-		public static TextStyle					Default
-		{
-			get
-			{
-				return TextStyle.default_style;
-			}
-		}
-		
 		
 		#region ICloneable Members
 		object System.ICloneable.Clone()
@@ -602,21 +603,21 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		protected void CheckForDefaultStyle ()
+		private void CheckForDefaultStyle ()
 		{
 			if (this.is_default_style)
 			{
 				throw new System.InvalidOperationException ("TextStyle.Default cannot be modified.");
 			}
 		}
-				
-		
-		protected virtual object CloneNewObject()
+
+
+		private object CloneNewObject()
 		{
 			return new TextStyle ();
 		}
-		
-		protected virtual object CloneCopyToNewObject(object o)
+
+		private object CloneCopyToNewObject(object o)
 		{
 			TextStyle that = o as TextStyle;
 			
@@ -633,32 +634,35 @@ namespace Epsitec.Common.Drawing
 			that.break_mode      = this.break_mode;
 			that.justif_mode     = this.justif_mode;
 			that.show_line_break = this.show_line_break;
-			that.show_tab        = this.show_tab;
+			that.show_tab_marks        = this.show_tab_marks;
 			that.language        = this.language;
-			that.tabs            = new System.Collections.ArrayList (this.tabs);	//	##
+			that.tabs            = new List<Tab> (this.tabs);
 			
 			return that;
 		}
-		
-		
-		protected virtual void OnChanged()
+
+		private void OnChanged()
 		{
 			if (this.Changed != null)
 			{
 				this.Changed (this);
 			}
 		}
-		
-		
-		protected enum ThreeState
+
+		#region ThreeState Enumeration
+
+		private enum ThreeState
 		{
 			None,								//	état non défini
 			False,
 			True
 		}
-		
-		
-		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+
+		#endregion
+
+		#region Converter Class
+
+		internal class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
@@ -674,32 +678,86 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		#endregion
+
+		#region Tab Structure
 
 		[System.Serializable]
-		public class Tab
+		public struct Tab : IEquatable<Tab>
 		{
-			public Tab()
-			{
-			}
-			
 			public Tab(Tab model)
 			{
 				this.Pos  = model.Pos;
 				this.Type = model.Type;
 				this.Line = model.Line;
 			}
+
+			public Tab(double pos, TextTabType type, TextTabLine line)
+			{
+				this.Pos = pos;
+				this.Type = type;
+				this.Line = line;
+			}
+
+
+			public static readonly Tab		Empty = new Tab (double.NaN, TextTabType.None, TextTabLine.None);
 			
-			
-			public double			Pos;
-			public TextTabType		Type;
-			public TextTabLine		Line;
+			public readonly double			Pos;
+			public readonly TextTabType		Type;
+			public readonly TextTabLine		Line;
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return double.IsNaN (this.Pos);
+				}
+			}
+
+			#region IEquatable<Tab> Members
+
+			public bool Equals(Tab other)
+			{
+				if ((double.IsNaN (this.Pos)) &&
+					(double.IsNaN (other.Pos)))
+				{
+					//	Same...
+				}
+				else if (this.Pos != other.Pos)
+				{
+					return false;
+				}
+
+				return this.Type == other.Type
+					&& this.Line == other.Line;
+			}
+
+			#endregion
+
+			public override bool Equals(object obj)
+			{
+				if (obj is Tab)
+				{
+					return this.Equals ((Tab) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public override int GetHashCode()
+			{
+				return this.Pos.GetHashCode () ^  this.Type.GetHashCode () ^ this.Line.GetHashCode ();
+			}
 		}
-		
-		
+
+		#endregion
+
 		public event Support.EventHandler		Changed;
 		
 		
-		private static TextStyle				default_style;
+		private static readonly TextStyle		default_style;
 		
 		private bool							is_default_style;
 		private TextStyle						parent;
@@ -713,9 +771,9 @@ namespace Epsitec.Common.Drawing
 		private TextBreakMode					break_mode;
 		private TextJustifMode					justif_mode;
 		private ThreeState						show_line_break;
-		private ThreeState						show_tab;
+		private ThreeState						show_tab_marks;
 		private string							language;
 		private double							def_tab_width;
-		private System.Collections.ArrayList	tabs;
+		private List<Tab>						tabs;
 	}
 }
