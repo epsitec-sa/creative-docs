@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
@@ -15,7 +16,7 @@ namespace Epsitec.Common.Dialogs
 	/// <see cref="DialogData"/> and a set of <see cref="Placeholder"/>
 	/// instances.
 	/// </summary>
-	public sealed class DialogSearchController : System.IDisposable
+	public sealed class DialogSearchController : System.IDisposable, IPaintFilter
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DialogSearchController"/> class.
@@ -534,6 +535,11 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.SearchContextChanged (this, e);
 			}
+
+			if (this.dialogPanel != null)
+			{
+				this.dialogPanel.Invalidate ();
+			}
 		}
 
 		/// <summary>
@@ -560,11 +566,13 @@ namespace Epsitec.Common.Dialogs
 			{
 				oldWindow.FocusedWidgetChanged -= this.HandleWindowFocusedWidgetChanged;
 				oldWindow.FocusedWidgetChanging -= this.HandleWindowFocusedWidgetChanging;
+				oldWindow.PaintFilter = null;
 			}
 			if (newWindow != null)
 			{
 				newWindow.FocusedWidgetChanged += this.HandleWindowFocusedWidgetChanged;
 				newWindow.FocusedWidgetChanging += this.HandleWindowFocusedWidgetChanging;
+				newWindow.PaintFilter = this;
 			}
 		}
 
@@ -609,6 +617,42 @@ namespace Epsitec.Common.Dialogs
 				return new EntityField ();
 			}
 		}
+
+		#region IPaintFilter Members
+
+		bool IPaintFilter.IsWidgetFullyDiscarded(Widget widget)
+		{
+			return false;
+		}
+
+		bool IPaintFilter.IsWidgetPaintDiscarded(Widget widget)
+		{
+			return false;
+		}
+
+		void IPaintFilter.NotifyAboutToProcessChildren(Widget sender, PaintEventArgs e)
+		{
+			if (this.activeSearchContext != null)
+			{
+				if (Widgets.Helpers.VisualTree.IsAncestor (this.dialogPanel, sender))
+				{
+					foreach (Node node in this.activeSearchContext.Nodes)
+					{
+						AbstractPlaceholder placeholder = node.Placeholder;
+						Drawing.Rectangle rootRect  = placeholder.MapClientToRoot (placeholder.Client.Bounds);
+						Drawing.Rectangle localRect = Drawing.Rectangle.Inflate (sender.MapRootToClient (rootRect), 1, 1);
+						e.Graphics.AddFilledRectangle (localRect);
+						e.Graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.8, 1, 0, 0));
+					}
+				}
+			}
+		}
+
+		void IPaintFilter.NotifyChildrenProcessed(Widget sender, PaintEventArgs e)
+		{
+		}
+
+		#endregion
 
 		#region Node Structure
 
