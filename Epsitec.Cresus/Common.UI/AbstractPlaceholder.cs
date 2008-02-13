@@ -104,7 +104,13 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Support.Druid ValueCaptionOverride
+		/// <summary>
+		/// Gets or sets the override for the value caption. An empty DRUID means
+		/// that there will be no override and that the value caption will be
+		/// derived automatically by using the binding information.
+		/// </summary>
+		/// <value>The override for the value caption.</value>
+		public Support.Druid					ValueCaptionOverride
 		{
 			get
 			{
