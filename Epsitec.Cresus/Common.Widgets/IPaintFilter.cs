@@ -33,12 +33,16 @@ namespace Epsitec.Common.Widgets
 		/// This gets called by <c>PaintHandler</c> before a widget's children
 		/// get processed.
 		/// </summary>
-		void NotifyAboutToProcessChildren();
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
+		void NotifyAboutToProcessChildren(Widget sender, PaintEventArgs e);
 
 		/// <summary>
 		/// This gets called by <c>PaintHandler</c> after a widget's children
 		/// have all been processed.
 		/// </summary>
-		void NotifyChildrenProcessed();
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="PaintEventArgs"/> instance containing the event data.</param>
+		void NotifyChildrenProcessed(Widget sender, PaintEventArgs e);
 	}
 }

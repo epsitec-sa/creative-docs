@@ -1,5 +1,5 @@
 //	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -16,8 +16,12 @@ namespace Epsitec.Common.Widgets.Helpers
 		/// Initializes a new instance of the <see cref="T:WidgetSyncPaintFilter"/>
 		/// class.
 		/// </summary>
-		public WidgetSyncPaintFilter()
+		/// <param name="parent">The parent filter.</param>
+		public WidgetSyncPaintFilter(IPaintFilter parent)
 		{
+			this.parent  = parent;
+			this.allowed = new List<Widget> ();
+			this.parents = new List<Widget> ();
 		}
 
 		/// <summary>
@@ -26,7 +30,9 @@ namespace Epsitec.Common.Widgets.Helpers
 		/// be discarded.
 		/// </summary>
 		/// <param name="widget">The widget to add.</param>
-		public WidgetSyncPaintFilter(Widget widget) : this ()
+		/// <param name="parent">The parent filter.</param>
+		public WidgetSyncPaintFilter(Widget widget, IPaintFilter parent)
+			: this (parent)
 		{
 			this.Add (widget);
 		}
@@ -60,8 +66,15 @@ namespace Epsitec.Common.Widgets.Helpers
 				//	Process all children, allowed widgets and parents. This will
 				//	not necessarily paint them, but their children PaintHandler
 				//	will be called.
-				
-				return false;
+
+				if (this.parent == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.parent.IsWidgetFullyDiscarded (widget);
+				}
 			}
 			else
 			{
@@ -75,8 +88,15 @@ namespace Epsitec.Common.Widgets.Helpers
 				(this.allowed.Contains (widget)))
 			{
 				//	Paint all children and all allowed widgets.
-				
-				return false;
+
+				if (this.parent == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.parent.IsWidgetPaintDiscarded (widget);
+				}
 			}
 			else
 			{
@@ -84,14 +104,24 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
-		void IPaintFilter.NotifyAboutToProcessChildren()
+		void IPaintFilter.NotifyAboutToProcessChildren(Widget sender, PaintEventArgs e)
 		{
 			this.enableAllChildren++;
+
+			if (this.parent != null)
+			{
+				this.parent.NotifyAboutToProcessChildren (sender, e);
+			}
 		}
 
-		void IPaintFilter.NotifyChildrenProcessed()
+		void IPaintFilter.NotifyChildrenProcessed(Widget sender, PaintEventArgs e)
 		{
 			this.enableAllChildren--;
+
+			if (this.parent != null)
+			{
+				this.parent.NotifyChildrenProcessed (sender, e);
+			}
 		}
 		
 		#endregion
@@ -110,8 +140,9 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 
-		private List<Widget> allowed = new List<Widget> ();
-		private List<Widget> parents = new List<Widget> ();
-		private int enableAllChildren = 0;
+		private readonly IPaintFilter parent;
+		private readonly List<Widget> allowed;
+		private readonly List<Widget> parents;
+		private int enableAllChildren;
 	}
 }

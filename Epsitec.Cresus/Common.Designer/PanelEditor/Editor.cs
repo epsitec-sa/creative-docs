@@ -4684,11 +4684,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 			return false;
 		}
 
-		void IPaintFilter.NotifyAboutToProcessChildren()
+		void IPaintFilter.NotifyAboutToProcessChildren(Widget sender, PaintEventArgs e)
 		{
 		}
 
-		void IPaintFilter.NotifyChildrenProcessed()
+		void IPaintFilter.NotifyChildrenProcessed(Widget sender, PaintEventArgs e)
 		{
 		}
 		#endregion
