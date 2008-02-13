@@ -1422,11 +1422,12 @@ namespace Epsitec.Common.Widgets
 						else
 						{
 							window.SynchronousRepaint ();
-							
-							window.PaintFilter = new Helpers.WidgetSyncPaintFilter (this);
-							window.MarkForRepaint (this.MapClientToRoot (rect));
-							window.SynchronousRepaint ();
-							window.PaintFilter = null;
+
+							using (window.PushPaintFilter (new Helpers.WidgetSyncPaintFilter (this)))
+							{
+								window.MarkForRepaint (this.MapClientToRoot (rect));
+								window.SynchronousRepaint ();
+							}
 						}
 					}
 				}

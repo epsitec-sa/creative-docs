@@ -1109,9 +1109,47 @@ namespace Epsitec.Common.Widgets
 				System.Windows.Forms.Application.Run (form);
 			}
 		}
-		
-		
-		
+
+
+		public System.IDisposable PushPaintFilter(IPaintFilter filter)
+		{
+			return new PushPaintFilterHelper (this, filter);
+		}
+
+		#region PushPaintFilterHelper Class
+
+		private class PushPaintFilterHelper : System.IDisposable
+		{
+			public PushPaintFilterHelper(Window window, IPaintFilter filter)
+			{
+				this.window = window;
+				this.filter = window.paint_filter;
+				
+				window.paint_filter = filter;
+			}
+
+			~PushPaintFilterHelper()
+			{
+				throw new System.InvalidOperationException ("Caller of PushPaintFilter forgot to call Dispose");
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				System.GC.SuppressFinalize (this);
+
+				this.window.paint_filter = this.filter;
+			}
+
+			#endregion
+
+			private readonly Window window;
+			private readonly IPaintFilter filter;
+		}
+
+		#endregion
+
 		#region IContainer Members
 		public void NotifyComponentInsertion(Support.Data.ComponentCollection collection, Support.Data.IComponent component)
 		{
