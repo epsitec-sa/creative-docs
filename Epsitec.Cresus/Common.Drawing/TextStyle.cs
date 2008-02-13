@@ -106,13 +106,13 @@ namespace Epsitec.Common.Drawing
 				return this.parent;
 			}
 		}
-		
-		
-		public Font								Font
+
+
+		//	UnderlineThickness
+		//	UnderlineOffset
+
+		public Font Font
 		{
-			//	UnderlineThickness
-			//	UnderlineOffset
-			
 			get
 			{
 				return (this.font == null) ? this.parent.Font : this.font;
@@ -124,16 +124,16 @@ namespace Epsitec.Common.Drawing
 				if (value != this.font)
 				{
 					this.font = value;
-					this.OnChanged ();
+					this.OnChanged ("Font");
 				}
 			}
 		}
 		
-		public double							Size
+		public double							FontSize
 		{
 			get
 			{
-				return (this.fontSize == 0) ? this.parent.Size : this.fontSize;
+				return (this.fontSize == 0) ? this.parent.FontSize : this.fontSize;
 			}
 			set
 			{
@@ -142,16 +142,16 @@ namespace Epsitec.Common.Drawing
 				if (this.fontSize != value)
 				{
 					this.fontSize = value;
-					this.OnChanged ();
+					this.OnChanged ("FontSize");
 				}
 			}
 		}
 		
-		public RichColor						RichColor
+		public RichColor						FontRichColor
 		{
 			get
 			{
-				return (this.fontColor.IsEmpty) ? new RichColor(this.parent.Color) : this.fontColor;
+				return (this.fontColor.IsEmpty) ? new RichColor(this.parent.FontColor) : this.fontColor;
 			}
 			set
 			{
@@ -160,16 +160,16 @@ namespace Epsitec.Common.Drawing
 				if (this.fontColor != value)
 				{
 					this.fontColor = value;
-					this.OnChanged ();
+					this.OnChanged ("FontColor");
 				}
 			}
 		}
 		
-		public Color							Color
+		public Color							FontColor
 		{
 			get
 			{
-				return (this.fontColor.IsEmpty) ? this.parent.Color : this.fontColor.Basic;
+				return (this.fontColor.IsEmpty) ? this.parent.FontColor : this.fontColor.Basic;
 			}
 			set
 			{
@@ -177,8 +177,8 @@ namespace Epsitec.Common.Drawing
 				
 				if (this.fontColor.Basic != value)
 				{
-					this.fontColor.Basic = value;
-					this.OnChanged ();
+					this.fontColor = new RichColor (value);
+					this.OnChanged ("FontColor");
 				}
 			}
 		}
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Drawing
 				if (this.anchorColor != value)
 				{
 					this.anchorColor = value;
-					this.OnChanged ();
+					this.OnChanged ("AnchorColor");
 				}
 			}
 		}
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Drawing
 				if (this.waveColor != value)
 				{
 					this.waveColor = value;
-					this.OnChanged ();
+					this.OnChanged ("WaveColor");
 				}
 			}
 		}
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Drawing
 				if (this.alignment != value)
 				{
 					this.alignment = value;
-					this.OnChanged ();
+					this.OnChanged ("Alignment");
 				}
 			}
 		}
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Drawing
 				if (this.breakMode != value)
 				{
 					this.breakMode = value;
-					this.OnChanged ();
+					this.OnChanged ("BreakMode");
 				}
 			}
 		}
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Drawing
 				if (this.justifMode != value)
 				{
 					this.justifMode = value;
-					this.OnChanged ();
+					this.OnChanged ("JustifMode");
 				}
 			}
 		}
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Drawing
 				if (this.showLineBreaks != test)
 				{
 					this.showLineBreaks = test;
-					this.OnChanged ();
+					this.OnChanged ("ShowLineBreaks");
 				}
 			}
 		}
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Drawing
 				if (this.showTabMarks != test)
 				{
 					this.showTabMarks = test;
-					this.OnChanged ();
+					this.OnChanged ("ShowTabMarks");
 				}
 			}
 		}
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Drawing
 				if (this.language != value)
 				{
 					this.language = value;
-					this.OnChanged ();
+					this.OnChanged ("Language");
 				}
 			}
 		}
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Drawing
 				if (this.defaultTabWidth != value)
 				{
 					this.defaultTabWidth = value;
-					this.OnChanged ();
+					this.OnChanged ("DefaultTabWidth");
 				}
 			}
 		}
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Drawing
 			this.CheckForDefaultStyle ();
 			int rank = this.tabs.Count;
 			this.tabs.Add (tab);
-			this.OnChanged ();
+			this.OnChanged ("Tabs");
 			return rank;
 		}
 		
@@ -403,7 +403,7 @@ namespace Epsitec.Common.Drawing
 		public void TabRemove(Tab tab)
 		{
 			this.tabs.Remove (tab);
-			this.OnChanged ();
+			this.OnChanged ("Tabs");
 		}
 		
 		public void TabRemoveAt(int rank)
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
 			this.CheckForDefaultStyle ();
 			this.tabs.RemoveAt (rank);
-			this.OnChanged ();
+			this.OnChanged ("Tabs");
 		}
 		
 		public Tab GetTab(int rank)
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Drawing
 			this.CheckForDefaultStyle ();
 			this.tabs.Clear ();
 			this.tabs.AddRange (src);
-			this.OnChanged ();
+			this.OnChanged ("Tabs");
 		}
 		
 		public void SetTabPosition(int rank, double pos)
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
 			Tab tab = this.tabs[rank];
 			this.tabs[rank] = new Tab (pos, tab.Type, tab.Line);
-			this.OnChanged ();
+			this.OnChanged ("Tabs");
 		}
 
 		public Tab FindTabAfterPosition(double pos)
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Drawing
 					}
 						
 					case "Size":
-						this.Size = System.Double.Parse (data, culture);
+						this.FontSize = System.Double.Parse (data, culture);
 						break;
 
 						//	TODO: ajouter les autres propriétés ici...
@@ -658,14 +658,14 @@ namespace Epsitec.Common.Drawing
 			return that;
 		}
 
-		private void HandleParentChanged(object sender)
+		private void HandleParentChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			this.OnChanged ();
+			this.OnChanged (e.PropertyName);
 		}
 
-		private void OnChanged()
+		private void OnChanged(string propertyName)
 		{
-			this.changedListeners.Invoke (this);
+			this.changedListeners.Invoke (this, new DependencyPropertyChangedEventArgs (propertyName));
 		}
 
 		#region ThreeState Enumeration
@@ -774,7 +774,7 @@ namespace Epsitec.Common.Drawing
 		#endregion
 
 
-		public event Support.EventHandler		Changed
+		public event EventHandler<DependencyPropertyChangedEventArgs> Changed
 		{
 			add
 			{

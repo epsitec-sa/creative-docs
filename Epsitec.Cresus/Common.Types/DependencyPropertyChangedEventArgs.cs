@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// The <c>DependencyPropertyChangedEventArgs</c> class provides information for
 	/// the <c>INotifyPropertyChanged.PropertyChanged</c> event.
 	/// </summary>
-	public class DependencyPropertyChangedEventArgs : System.EventArgs
+	public class DependencyPropertyChangedEventArgs : Support.EventArgs
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DependencyPropertyChangedEventArgs"/> class.

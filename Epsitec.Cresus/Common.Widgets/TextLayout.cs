@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextLayout permet de stocker et d'afficher des contenus
 	/// riches (un sous-ensemble très restreint de HTML).
 	/// </summary>
-	public class TextLayout : System.IDisposable
+	public class TextLayout
 	{
 		public TextLayout()
 		{
@@ -202,14 +202,14 @@ namespace Epsitec.Common.Widgets
 			//	Taille de la fonte par défaut.
 			get
 			{
-				return this.style.Size;
+				return this.style.FontSize;
 			}
 			set
 			{
 				if ( this.DefaultFontSize != value )
 				{
 					this.CloneStyleIfCopyOnWriteNeeded();
-					this.style.Size = value;
+					this.style.FontSize = value;
 				}
 			}
 		}
@@ -218,14 +218,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.style.RichColor;
+				return this.style.FontRichColor;
 			}
 			set
 			{
 				if ( this.DefaultRichColor != value )
 				{
 					this.CloneStyleIfCopyOnWriteNeeded();
-					this.style.RichColor = value;
+					this.style.FontRichColor = value;
 				}
 			}
 		}
@@ -234,14 +234,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.style.Color;
+				return this.style.FontColor;
 			}
 			set
 			{
 				if ( this.DefaultColor != value )
 				{
 					this.CloneStyleIfCopyOnWriteNeeded();
-					this.style.Color = value;
+					this.style.FontColor = value;
 				}
 			}
 		}
@@ -1627,21 +1627,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			if (this.hasPrivateStyle)
-			{
-				this.style.Dispose ();
-				this.style = null;
-				this.hasPrivateStyle = false;
-			}
-		}
-
-		#endregion
-
-
+		
 		public bool MoveCursor(TextLayoutContext context, int move, bool select, bool word)
 		{
 			//	Déplace le curseur.
@@ -5342,15 +5328,12 @@ noText:
 		{
 			if (this.style.IsReadOnly)
 			{
-				System.Diagnostics.Debug.Assert (this.hasPrivateStyle == false);
-
 				this.style = new Drawing.TextStyle (this.style);
 				this.style.Changed += this.HandleTextStyleChanged;
-				this.hasPrivateStyle = true;
 			}
 		}
 		
-		private void HandleTextStyleChanged(object sender)
+		private void HandleTextStyleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
 			this.MarkContentsAsDirty();
 		}
@@ -5375,7 +5358,6 @@ noText:
 		private Widget							embedder;
 		private Support.ResourceManager			resourceManager;
 		private Drawing.TextStyle				style;
-		private bool							hasPrivateStyle;
 
 		private bool							isContentsDirty;
 		private bool							isSimpleDirty;

@@ -67,7 +67,7 @@ namespace Epsitec.Common.Drawing
 			TextStyle a = new TextStyle ();
 			
 			a.Font = Font.GetFont ("Tahoma", "Regular");
-			a.Size = 12.0;
+			a.FontSize = 12.0;
 			
 			//	TODO : ajouter les autres propriétés ici...
 			
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Drawing
 			
 			Assert.IsNotNull (b);
 			Assert.AreEqual (a.Font, b.Font);
-			Assert.AreEqual (a.Size, b.Size);
+			Assert.AreEqual (a.FontSize, b.FontSize);
 			
 			//	TODO : ajouter les autres propriétés ici...
 		}
