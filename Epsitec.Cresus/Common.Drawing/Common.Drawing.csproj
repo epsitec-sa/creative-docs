@@ -128,6 +128,11 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="TextListGlyph.cs" />
+    <Compile Include="TextListType.cs" />
+    <Compile Include="TextTabLine.cs" />
+    <Compile Include="TextTabType.cs" />
+    <Compile Include="TextJustifMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
