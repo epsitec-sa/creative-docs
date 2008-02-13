@@ -736,20 +736,9 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			builder.Append(name);
 
-			if (this.IsDelta)
+			if (this.IsTableContentInheritHidden(item))
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.FinalFields, item.Guid);
-				if (index != -1)
-				{
-					if (this.formEditor.FinalFields[index].DeltaHidden)
-					{
-						index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
-						if (index == -1 || !this.formEditor.WorkingForm.Fields[index].DeltaHidden)
-						{
-							builder.Append(" (caché)");
-						}
-					}
-				}
+				builder.Append(" (caché)");
 			}
 
 			return builder.ToString();
@@ -765,14 +754,17 @@ namespace Epsitec.Common.Designer.FormEditor
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+					if (!this.IsTableContentInheritHidden(item))
 					{
-						icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
-					}
+						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+						{
+							icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
+						}
 
-					if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
-					{
-						icon = Misc.Image("FormDeltaShowed");  // peu prioritaire à cause du fond rouge
+						if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+						{
+							icon = Misc.Image("FormDeltaShowed");  // peu prioritaire à cause du fond rouge
+						}
 					}
 
 					if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
@@ -824,10 +816,13 @@ namespace Epsitec.Common.Designer.FormEditor
 				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
 				if (index != -1)
 				{
-					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden ||
-						this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+					if (!this.IsTableContentInheritHidden(item))
 					{
-						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden ||
+						this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+						{
+							color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+						}
 					}
 
 					if (this.formEditor.WorkingForm.Fields[index].DeltaModified)
@@ -860,6 +855,27 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			return color;
+		}
+
+		public bool IsTableContentInheritHidden(TableItem item)
+		{
+			//	Indique si un champ est caché par un delta plus profond que simplement le précédent.
+			//	Dans ce cas, il ne faut pas afficher le champ sur un fond rosé, mais simplement ajouter
+			//	l'indication "(caché)" après son nom.
+			if (this.IsDelta)
+			{
+				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.FinalFields, item.Guid);
+				if (index != -1 && this.formEditor.FinalFields[index].DeltaHidden)
+				{
+					index = FormEngine.Arrange.IndexOfGuid(this.formEditor.BaseFields, item.Guid);
+					if (index != -1 && this.formEditor.BaseFields[index].DeltaHidden)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		public void UpdateTableContent()

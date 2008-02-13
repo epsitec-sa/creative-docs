@@ -1061,8 +1061,8 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
 					FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
-
 					int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
+
 					if (index == -1)
 					{
 						if (field.DeltaHidden)
@@ -1084,22 +1084,38 @@ namespace Epsitec.Common.Designer.Viewers
 					{
 						FieldDescription actual = this.workingForm.Fields[index];
 
-						if (actual.DeltaShowed)  // champ montré ?
+						if (this.formEditor.ObjectModifier.IsTableContentInheritHidden(item))
 						{
-							actual.DeltaShowed = false;  // cet élément sera supprimé, et c'est donc le parent DeltaHidden qui dira de cacher
+							if (field.DeltaHidden)
+							{
+								actual.DeltaShowed = true;
+								actual.DeltaHidden = false;
+							}
+							else
+							{
+								actual.DeltaHidden = true;
+								actual.DeltaShowed = false;
+							}
 						}
-						else if (actual.DeltaHidden)  // champ caché ?
+						else
 						{
-							actual.DeltaHidden = false;  // rend le champ visible
-						}
-						else  // champ visible ?
-						{
-							actual.DeltaHidden = true;  // cache le champ
-						}
+							if (actual.DeltaShowed)  // champ montré ?
+							{
+								actual.DeltaShowed = false;  // cet élément sera supprimé, et c'est donc le parent DeltaHidden qui dira de cacher
+							}
+							else if (actual.DeltaHidden)  // champ caché ?
+							{
+								actual.DeltaHidden = false;  // rend le champ visible
+							}
+							else  // champ visible ?
+							{
+								actual.DeltaHidden = true;  // cache le champ
+							}
 
-						if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaShowed && !actual.DeltaBrokenAttach)
-						{
-							this.workingForm.Fields.RemoveAt(index);
+							if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaShowed && !actual.DeltaBrokenAttach)
+							{
+								this.workingForm.Fields.RemoveAt(index);
+							}
 						}
 					}
 
