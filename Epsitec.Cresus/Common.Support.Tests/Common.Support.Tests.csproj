@@ -175,6 +175,7 @@
     <Compile Include="CaptionCacheTest.cs" />
     <Compile Include="CommandTest.cs" />
     <Compile Include="CodeGeneratorTest.cs" />
+    <Compile Include="WeakEventListenersTest.cs" />
     <Compile Include="EntityFieldPathTest.cs" />
     <Compile Include="EntityTest.cs" />
     <Compile Include="ResourceModuleTest.cs" />

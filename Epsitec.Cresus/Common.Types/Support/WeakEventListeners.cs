@@ -8,27 +8,104 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
+	/// <summary>
+	/// The <c>WeakEventListeners</c> structure stores a list of weak references
+	/// to event handlers (aka listeners) which can be invoked.
+	/// </summary>
 	public struct WeakEventListeners
 	{
+		/// <summary>
+		/// Adds the specified listener delegate.
+		/// </summary>
+		/// <param name="listener">The listener.</param>
 		public void Add(System.Delegate listener)
 		{
-			if (this.listeners == null)
+			if (listener is System.MulticastDelegate)
 			{
-				this.listeners = new List<WeakEventListener> ();
-			}
+				System.MulticastDelegate multicast = (System.MulticastDelegate) listener;
 
-			this.listeners.Add (new WeakEventListener (listener));
+				foreach (System.Delegate item in multicast.GetInvocationList ())
+				{
+					this.Add (item);
+				}
+			}
+			else
+			{
+				if (this.listeners == null)
+				{
+					this.listeners = new List<WeakEventListener> ();
+				}
+
+				this.listeners.Add (new WeakEventListener (listener));
+			}
 		}
 
+		/// <summary>
+		/// Removes the specified listener delegate.
+		/// </summary>
+		/// <param name="listener">The listener.</param>
 		public void Remove(System.Delegate listener)
 		{
-			if (this.listeners != null)
+			if (listener is System.MulticastDelegate)
 			{
-				this.listeners.RemoveAll (e => e.IsDead || e.Equals (listener));
+				System.MulticastDelegate multicast = (System.MulticastDelegate) listener;
+
+				foreach (System.Delegate item in multicast.GetInvocationList ())
+				{
+					this.Remove (item);
+				}
+			}
+			else
+			{
+				if (this.listeners != null)
+				{
+					bool removed = false;
+					this.listeners.RemoveAll (e => e.IsDead || (removed == false && (true == (removed = e.Equals (listener)))));
+				}
 			}
 		}
 
-		public void Invoke(params object[] parameters)
+		/// <summary>
+		/// Invokes the listeners.
+		/// </summary>
+		public void Invoke()
+		{
+			this.Invoke (new object[0]);
+		}
+
+		/// <summary>
+		/// Invokes the listeners with the specified sender as parameter.
+		/// </summary>
+		/// <param name="sender">The sender.</param>
+		public void Invoke(object sender)
+		{
+			this.Invoke (new object[] { sender });
+		}
+
+		/// <summary>
+		/// Invokes the listerners with the specified sender and event as
+		/// parameters.
+		/// </summary>
+		/// <typeparam name="T">The event argument type.</typeparam>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The event argument.</param>
+		public void Invoke<T>(object sender, T e) where T : EventArgs
+		{
+			this.Invoke (new object[] { sender, e });
+		}
+
+
+		/// <summary>
+		/// Gets the number of items in the listener list.
+		/// </summary>
+		/// <returns>The number of items.</returns>
+		public int DebugGetListenerCount()
+		{
+			return this.listeners == null ? 0 : this.listeners.Count;
+		}
+
+		
+		private void Invoke(object[] parameters)
 		{
 			WeakEventListener[] temp = this.listeners.ToArray ();
 
@@ -40,7 +117,6 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
-
 
 		private List<WeakEventListener> listeners;
 	}
