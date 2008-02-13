@@ -80,24 +80,39 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				BindingExpression expression = this.ValueBindingExpression;
-				
-				if (expression == null)
-				{
-					return null;
-				}
-
-				Support.Druid captionId = expression.GetSourceCaptionId ();
+				Support.Druid captionId = this.ValueCaptionOverride;
 
 				if (captionId.IsEmpty)
 				{
-					return null;
+					BindingExpression expression = this.ValueBindingExpression;
+
+					if (expression == null)
+					{
+						return null;
+					}
+
+					captionId = expression.GetSourceCaptionId ();
+					
+					if (captionId.IsEmpty)
+					{
+						return null;
+					}
 				}
-				else
-				{
-					Support.ICaptionResolver resolver = Widgets.Helpers.VisualTree.GetCaptionResolver (this);
-					return Support.CaptionCache.Instance.GetCaption (resolver, captionId);
-				}
+
+				Support.ICaptionResolver resolver = Widgets.Helpers.VisualTree.GetCaptionResolver (this);
+				return Support.CaptionCache.Instance.GetCaption (resolver, captionId);
+			}
+		}
+
+		public Support.Druid ValueCaptionOverride
+		{
+			get
+			{
+				return (Support.Druid) this.GetValue (AbstractPlaceholder.ValueCaptionOverrideProperty);
+			}
+			set
+			{
+				this.SetValue (AbstractPlaceholder.ValueCaptionOverrideProperty, value);
 			}
 		}
 
@@ -262,6 +277,7 @@ namespace Epsitec.Common.UI
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (UndefinedValue.Value, AbstractPlaceholder.NotifyValueChanged).MakeNotSerializable ());
 		public static readonly DependencyProperty SuggestionModeProperty = DependencyProperty.Register ("SuggestionMode", typeof (PlaceholderSuggestionMode), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (PlaceholderSuggestionMode.None));
+		public static readonly DependencyProperty ValueCaptionOverrideProperty = DependencyProperty.Register ("ValueCaptionOverride", typeof (Support.Druid), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (Support.Druid.Empty));
 		
 		private INamedType						valueType;
 		private string							valueName;
