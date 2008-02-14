@@ -324,7 +324,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return 14.0;
+				return System.Math.Round (Drawing.TextStyle.Default.FontSize * 1.2 + 1);
 			}
 		}
 		
