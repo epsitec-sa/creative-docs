@@ -229,6 +229,7 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			this.NotifyChanged ();
 		}
+		
 		private void DetachVisual(Visual visual)
 		{
 			//	Détache le visual de son parent.
@@ -448,6 +449,7 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			this.NotifyChanges (snapshot);
 		}
+		
 		public bool Remove(Visual item)
 		{
 			if (item == null)
@@ -592,6 +594,7 @@ namespace Epsitec.Common.Widgets.Collections
 		#endregion
 
 		#region Shapshot Class
+		
 		class Snapshot
 		{
 			private Snapshot()
@@ -620,11 +623,13 @@ namespace Epsitec.Common.Widgets.Collections
 				snapshot.Add (visual);
 				return snapshot;
 			}
+			
 			public static Snapshot RecordTree(params Visual[] visuals)
 			{
 				IEnumerable<Visual> collection = visuals;
 				return Snapshot.RecordTree (collection);
 			}
+			
 			public static Snapshot RecordTree(IEnumerable<Visual> collection)
 			{
 				Snapshot snapshot = new Snapshot ();
@@ -652,6 +657,7 @@ namespace Epsitec.Common.Widgets.Collections
 			Types.DependencyObjectTreeSnapshot	snapshot;
 			List<Visual>						visuals;
 		}
+		
 		#endregion
 
 		private const string					NullVisualMessage = "Visual children may not be null";

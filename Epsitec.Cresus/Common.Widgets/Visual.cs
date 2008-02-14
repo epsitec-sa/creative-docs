@@ -1462,6 +1462,7 @@ namespace Epsitec.Common.Widgets
 				
 				Layouts.LayoutContext.RemoveFromQueues (this);
 
+				this.UpdateVisualTreeChangeCounter ();
 				this.ClearCachedFocus ();
 				this.Invalidate ();
 				this.parent = null;
@@ -1484,6 +1485,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.ClearCachedFocus ();
+					this.UpdateVisualTreeChangeCounter ();
 				}
 
 				this.parent = visual;
@@ -1499,6 +1501,17 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.ClearCachedFocus ();
+				this.UpdateVisualTreeChangeCounter ();
+			}
+		}
+
+		private void UpdateVisualTreeChangeCounter()
+		{
+			WindowRoot root = Helpers.VisualTree.GetRoot (this) as WindowRoot;
+
+			if (root != null)
+			{
+				root.IncrementTreeChangeCounter ();
 			}
 		}
 

@@ -32,6 +32,7 @@ namespace Epsitec.Common.Widgets
 		ExecCmdOnPressed	= 0x00001000,		//	=> exécute la commande quand on presse le widget
 		
 		AutoMnemonic		= 0x00100000,
+		AutoFitWidth		= 0x00200000,
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionEnabled		= 0x02000000,		//	widget peut être édité
@@ -424,8 +425,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+
 		public bool									AutoMnemonic
 		{
 			get
@@ -444,13 +445,35 @@ namespace Epsitec.Common.Widgets
 					{
 						this.internal_state &= ~InternalState.AutoMnemonic;
 					}
-					
+
 					this.ResetMnemonicShortcut ();
 				}
 			}
 		}
-		
-		protected InternalState						InternalState
+
+		public bool									AutoFitWidth
+		{
+			get
+			{
+				return (this.internal_state & InternalState.AutoFitWidth) != 0;
+			}
+			set
+			{
+				if (this.AutoFitWidth != value)
+				{
+					if (value)
+					{
+						this.internal_state |= InternalState.AutoFitWidth;
+					}
+					else
+					{
+						this.internal_state &= ~InternalState.AutoFitWidth;
+					}
+				}
+			}
+		}
+
+		protected InternalState InternalState
 		{
 			get
 			{
@@ -2115,6 +2138,15 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 
+
+		public IEnumerable<Widget> FindAll()
+		{
+			List<Widget> list = new List<Widget> ();
+			list.Add (this);
+			this.FindAllChildren (list, null);
+			return list;
+		}
+		
 		public IEnumerable<Widget> FindAllChildren()
 		{
 			List<Widget> list = new List<Widget> ();

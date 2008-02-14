@@ -80,6 +80,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public int								TreeChangeCounter
+		{
+			get
+			{
+				return this.treeChangeCounter;
+			}
+		}
 		
 		
 		public bool DoesVisualContainKeyboardFocus(Visual visual)
@@ -435,7 +443,11 @@ namespace Epsitec.Common.Widgets
 		internal override void SetDirtyLayoutFlag()
 		{
 		}
-		
+
+		internal void IncrementTreeChangeCounter()
+		{
+			this.treeChangeCounter++;
+		}
 		
 		public event EventHandler					WindowStylesChanged
 		{
@@ -467,6 +479,6 @@ namespace Epsitec.Common.Widgets
 		protected Window							window;
 		protected bool								is_ready;
 		protected List<Visual>						focus_chain = new List<Visual> ();
-
+		protected int								treeChangeCounter;
 	}
 }
