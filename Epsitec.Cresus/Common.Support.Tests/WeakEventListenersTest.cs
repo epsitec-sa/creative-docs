@@ -112,6 +112,16 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (1, this.event4Counter);
 		}
 
+		[Test]
+		public void Check05InvokeNoListener()
+		{
+			WeakEventListeners listeners = new WeakEventListeners ();
+
+			listeners.Invoke ();
+			listeners.Invoke (this);
+			listeners.Invoke (this, new EventArgs ());
+		}
+
 
 		class Dummy
 		{

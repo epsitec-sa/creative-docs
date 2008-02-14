@@ -107,13 +107,17 @@ namespace Epsitec.Common.Support
 		
 		private void Invoke(object[] parameters)
 		{
-			WeakEventListener[] temp = this.listeners.ToArray ();
-
-			foreach (WeakEventListener listener in temp)
+			if ((this.listeners != null) &&
+				(this.listeners.Count > 0))
 			{
-				if (listener.Invoke (parameters) == false)
+				WeakEventListener[] temp = this.listeners.ToArray ();
+
+				foreach (WeakEventListener listener in temp)
 				{
-					this.listeners.Remove (listener);
+					if (listener.Invoke (parameters) == false)
+					{
+						this.listeners.Remove (listener);
+					}
 				}
 			}
 		}
