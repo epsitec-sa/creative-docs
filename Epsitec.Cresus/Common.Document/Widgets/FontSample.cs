@@ -57,9 +57,8 @@ namespace Epsitec.Common.Document.Widgets
 					if ( this.textLayout == null )
 					{
 						this.textLayout = new TextLayout();
-						this.textLayout.DefaultFont     = this.DefaultFont;
-						this.textLayout.DefaultFontSize = this.DefaultFontSize;
-						this.textLayout.Alignment       = ContentAlignment.MiddleLeft;
+						this.textLayout.SetEmbedder (this);
+						this.textLayout.Alignment = ContentAlignment.MiddleLeft;
 					}
 					
 					string f = TextLayout.ConvertToTaggedText(this.fontName);
@@ -246,8 +245,9 @@ namespace Epsitec.Common.Document.Widgets
 
 					//	Dessine le nombre de variantes.
 					string text = this.fontIdentity.FontStyleCount.ToString();
+					Drawing.TextStyle style = this.textLayout.Style;
 					ox = this.frontier-16-1;
-					graphics.PaintText(ox, oy-1, 16, 20, text, this.DefaultFont, this.DefaultFontSize, ContentAlignment.BottomCenter);
+					graphics.PaintText(ox, oy-1, 16, 20, text, style.Font, style.FontSize, ContentAlignment.BottomCenter);
 
 					ox = this.frontier+5;
 				}

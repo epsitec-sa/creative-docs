@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				return new Drawing.Size (0, widget.DefaultFont.LineHeight * widget.DefaultFontSize);
+				return new Drawing.Size (0, Drawing.TextStyle.Default.Font.LineHeight * Drawing.TextStyle.Default.FontSize);
 			}
 		}
 

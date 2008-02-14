@@ -1813,13 +1813,12 @@ namespace Epsitec.Common.Widgets
 						if (this.layouts[row, column] == null)
 						{
 							this.layouts[row, column] = new TextLayout ();
+							this.layouts[row, column].SetEmbedder (this);
 						}
 
 						string text = this[row + top, column];
 
-						this.layouts[row, column].Text            = text;
-						this.layouts[row, column].DefaultFont     = this.DefaultFont;
-						this.layouts[row, column].DefaultFontSize = this.DefaultFontSize;
+						this.layouts[row, column].Text = text;
 					}
 
 					this.layouts[row, column].LayoutSize = new Drawing.Size (this.Columns[column].Width - this.text_margin * 2, this.row_height);

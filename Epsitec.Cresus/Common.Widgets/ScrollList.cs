@@ -233,9 +233,8 @@ namespace Epsitec.Common.Widgets
 			double dy = 0;
 
 			TextLayout layout = new TextLayout();
-			layout.DefaultFont     = this.DefaultFont;
-			layout.DefaultFontSize = this.DefaultFontSize;
-
+			layout.SetEmbedder (this);
+			
 			int max = this.allLinesWidthSameWidth ? 1 : this.items.Count;
 			for ( int i=0 ; i<max ; i++ )
 			{
@@ -538,14 +537,13 @@ namespace Epsitec.Common.Widgets
 					if ( this.textLayouts[i] == null )
 					{
 						this.textLayouts[i] = new TextLayout();
+						this.textLayouts[i].SetEmbedder (this);
 					}
 					
 					string text = (i+this.firstLine < this.items.Count) ? this.items[i+this.firstLine] : "";
 
-					this.textLayouts[i].Text            = text;
-					this.textLayouts[i].DefaultFont     = this.DefaultFont;
-					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;
-					this.textLayouts[i].LayoutSize      = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
+					this.textLayouts[i].Text       = text;
+					this.textLayouts[i].LayoutSize = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
 				}
 				this.isDirty = false;
 			}

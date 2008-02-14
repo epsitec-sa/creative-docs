@@ -56,9 +56,7 @@ namespace Epsitec.Common.Widgets
 
 			this.InternalState |= InternalState.WasValid;
 			this.InternalState |= InternalState.AutoMnemonic;
-			
-			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
-			
+
 			lock (Widget.aliveWidgets)
 			{
 				Widget.aliveWidgets.Add (new System.WeakReference (this));
@@ -322,19 +320,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Drawing.Font					DefaultFont
-		{
-			get { return Drawing.Font.DefaultFont; }
-		}
-		
-		public virtual double						DefaultFontSize
-		{
-			get { return Drawing.Font.DefaultFontSize; }
-		}
-		
 		public static double						DefaultFontHeight
 		{
-			get { return 14.0; }
+			get
+			{
+				return 14.0;
+			}
 		}
 		
 		public virtual bool							IsFrozen
@@ -3094,6 +3085,20 @@ namespace Epsitec.Common.Widgets
 			return Drawing.Point.Zero;
 		}
 
+		internal void InternalNotifyTextLayoutAnchorEvent(object sender, AnchorEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.textLayout);
+
+			HypertextInfo info = new HypertextInfo (this.textLayout, e.Bounds, e.Index);
+
+			if (this.hypertext_list == null)
+			{
+				this.hypertext_list = new System.Collections.ArrayList ();
+			}
+
+			this.hypertext_list.Add (info);
+		}
+
 		internal void InternalNotifyTextLayoutTextChanged(string oldText, string newText)
 		{
 			this.NotifyTextLayoutTextChanged (oldText, newText);
@@ -3623,11 +3628,7 @@ namespace Epsitec.Common.Widgets
 			if (this.textLayout == null)
 			{
 				this.textLayout = new TextLayout ();
-
-				this.textLayout.Embedder        = this;
-				this.textLayout.DefaultFont     = this.DefaultFont;
-				this.textLayout.DefaultFontSize = this.DefaultFontSize;
-				this.textLayout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.textLayout.SetEmbedder (this);
 				
 				this.UpdateTextLayout ();
 			}
@@ -3653,7 +3654,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.textLayout != null)
 			{
-				this.textLayout.Anchor -= new AnchorEventHandler (this.HandleTextLayoutAnchor);
 				this.textLayout = null;
 			}
 		}
@@ -3734,21 +3734,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.OnCultureChanged ();
 		}
-		
-		protected void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
-		{
-			System.Diagnostics.Debug.Assert (sender == this.textLayout);
-			
-			HypertextInfo info = new HypertextInfo (this.textLayout, e.Bounds, e.Index);
-			
-			if (this.hypertext_list == null)
-			{
-				this.hypertext_list = new System.Collections.ArrayList ();
-			}
-			
-			this.hypertext_list.Add (info);
-		}
-		
 		
 		protected virtual void OnClientGeometryUpdated()
 		{
@@ -4311,7 +4296,6 @@ namespace Epsitec.Common.Widgets
 		
 		private TextLayout						textLayout;
 		private Collections.ShortcutCollection	shortcuts;
-		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
 		
 		static List<Widget>						enteredWidgets = new List<Widget> ();

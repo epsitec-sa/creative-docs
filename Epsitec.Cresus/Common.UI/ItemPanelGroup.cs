@@ -319,10 +319,13 @@ namespace Epsitec.Common.UI
 			double dy = bounds.Height;
 			double y  = bounds.Bottom;
 
+			Drawing.TextStyle style = this.TextLayout.Style;
+			
+
 			if (group != null)
 			{
-				graphics.AddText (dy, y, dx-dy, dy, group.Name, this.DefaultFont, this.DefaultFontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleLeft);
-				graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+				graphics.AddText (dy, y, dx-dy, dy, group.Name, style.Font, style.FontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleLeft);
+				graphics.RenderSolid (style.FontColor);
 			}
 
 			string text = this.ItemView.IsExpanded ? "-" : "+";
@@ -332,8 +335,8 @@ namespace Epsitec.Common.UI
 			graphics.AddFilledRectangle ((dy-r)/2, y+(dy-r)/2-1, r, r);
 			graphics.RenderSolid (Drawing.Color.FromBrightness (1));
 			graphics.AddRectangle ((dy-r)/2, y+(dy-r)/2-1, r, r);
-			graphics.AddText (0, y, dy, dy, text, this.DefaultFont, this.DefaultFontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleCenter);
-			graphics.RenderSolid (Drawing.Color.FromBrightness (0));
+			graphics.AddText (0, y, dy, dy, text, style.Font, style.FontSize, Epsitec.Common.Drawing.ContentAlignment.MiddleCenter);
+			graphics.RenderSolid (style.FontColor);
 		}
 
 		protected override void OnClicked(Epsitec.Common.Widgets.MessageEventArgs e)

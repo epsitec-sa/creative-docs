@@ -1,3 +1,5 @@
+//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -38,11 +40,20 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class TextLayout
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TextLayout"/> class.
+		/// </summary>
 		public TextLayout()
 			: this (Drawing.TextStyle.Default)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TextLayout"/> class
+		/// based on the specified model. The instance is temporary and should
+		/// be short lived. It does not handle any change events.
+		/// </summary>
+		/// <param name="model">The model text layout.</param>
 		public TextLayout(TextLayout model)
 			: this ()
 		{
@@ -53,29 +64,26 @@ namespace Epsitec.Common.Widgets
 
 			if (model != null)
 			{
-				this.DrawingScale    = model.DrawingScale;
-				this.VerticalMark    = model.VerticalMark;
-				this.LayoutSize      = model.LayoutSize;
-				this.Alignment       = model.Alignment;
+				this.drawingScale = model.drawingScale;
+				this.verticalMark = model.verticalMark;
+				this.layoutSize   = model.layoutSize;
+				this.embedder     = model.embedder;
 				
 				this.SetTextStyle (model.style);
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TextLayout"/> class
+		/// using the specified initial text style.
+		/// </summary>
+		/// <param name="style">The initial text style.</param>
 		public TextLayout(Drawing.TextStyle style)
 		{
 			this.drawingScale = 1.0;
 			this.verticalMark = double.NaN;
 			
 			this.SetTextStyle (style);
-		}
-
-		internal Widget							Embedder
-		{
-			set
-			{
-				this.embedder = value;
-			}
 		}
 
 		public string							Text
@@ -125,12 +133,6 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
-		}
-
-		private string GetSimplifiedText()
-		{
-			string text = this.text ?? "";
-			return text.Contains ("<put ") ? this.GetSimplify () : text;
 		}
 
 		public string							InternalText
@@ -601,6 +603,20 @@ namespace Epsitec.Common.Widgets
 			return totalRect;
 		}
 
+		private string GetSimplifiedText()
+		{
+			string text = this.text ?? "";
+			return text.Contains ("<put ") ? this.GetSimplify () : text;
+		}
+
+
+		public void SetEmbedder(Widget embedder)
+		{
+			System.Diagnostics.Debug.Assert (this.embedder == null);
+			System.Diagnostics.Debug.Assert (embedder != null);
+
+			this.embedder = embedder;
+		}
 
 		internal bool IsSelectionBold(TextLayoutContext context)
 		{
@@ -2094,9 +2110,9 @@ namespace Epsitec.Common.Widgets
 
 		private void OnAnchor(AnchorEventArgs e)
 		{
-			if ( this.Anchor != null )
+			if (this.embedder != null)
 			{
-				this.Anchor(this, e);
+				this.embedder.InternalNotifyTextLayoutAnchorEvent (this, e);
 			}
 		}
 		
@@ -5309,9 +5325,6 @@ noText:
 			}
 		}
 		
-		public event AnchorEventHandler			Anchor;
-
-
 		private void CloneStyleIfCopyOnWriteNeeded()
 		{
 			if (this.style.IsReadOnly)

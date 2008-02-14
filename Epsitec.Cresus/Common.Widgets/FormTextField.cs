@@ -18,30 +18,28 @@ namespace Epsitec.Common.Widgets
 			this.BackColor = Drawing.Color.Transparent;
 		}
 		
-		public override Drawing.Font DefaultFont
+		private Drawing.TextStyle DefaultTextStyle
 		{
 			get
 			{
-				if (FormTextField.defaultFont == null)
+				if (FormTextField.defaultStyle == null)
 				{
-					FormTextField.defaultFont = Drawing.Font.GetFont ("Calibri", "Regular");
-					
-					if (FormTextField.defaultFont == null)
-					{
-						FormTextField.defaultFont = Drawing.Font.DefaultFont;
-					}
+					FormTextField.defaultStyle = new Drawing.TextStyle ();
+
+					FormTextField.defaultStyle.Font = Drawing.Font.GetFont ("Calibri", "Regular") ?? Drawing.Font.DefaultFont;
+					FormTextField.defaultStyle.FontSize = 16.0;
 				}
-				
-				return FormTextField.defaultFont;
+
+				return FormTextField.defaultStyle;
 			}
 		}
 
-		public override double DefaultFontSize
+
+		protected override void CreateTextLayout()
 		{
-			get
-			{
-				return 16.0;
-			}
+			base.CreateTextLayout ();
+
+			this.TextLayout.Style = this.DefaultTextStyle;
 		}
 		
 
@@ -58,6 +56,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private static Drawing.Font defaultFont;
+		private static Drawing.TextStyle defaultStyle;
 	}
 }

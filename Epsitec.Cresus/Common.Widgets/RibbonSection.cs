@@ -11,8 +11,7 @@ namespace Epsitec.Common.Widgets
 		public RibbonSection()
 		{
 			this.title = new TextLayout();
-			this.title.DefaultFont     = this.DefaultFont;
-			this.title.DefaultFontSize = this.DefaultFontSize;
+			this.title.SetEmbedder (this);
 
 			this.Padding = new Margins(5, 5, 5, RibbonSection.LabelHeight+5);
 		}
