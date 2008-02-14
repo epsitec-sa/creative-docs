@@ -80,6 +80,10 @@ namespace Epsitec.Common.Widgets
 		/// <param name="style">The initial text style.</param>
 		public TextLayout(Drawing.TextStyle style)
 		{
+			this.alignment  = Drawing.ContentAlignment.Undefined;
+			this.breakMode  = Drawing.TextBreakMode.Undefined;
+			this.justifMode = Drawing.TextJustifMode.Undefined;
+
 			this.drawingScale = 1.0;
 			this.verticalMark = double.NaN;
 			
@@ -126,6 +130,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.SetText (value);
 						this.MarkContentsAsDirty();
+						this.UpdateEmbedderGeometry ();
 					}
 					else
 					{
@@ -183,6 +188,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SetTextStyle (value);
 					this.MarkContentsAsDirty ();
+					this.UpdateEmbedderGeometry ();
 				}
 			}
 		}
@@ -292,14 +298,14 @@ namespace Epsitec.Common.Widgets
 			//	Alignement du texte dans le rectangle.
 			get
 			{
-				return this.style.Alignment;
+				return this.alignment == Drawing.ContentAlignment.Undefined ? this.style.Alignment : this.alignment;
 			}
 			set
 			{
-				if ( this.Alignment != value )
+				if (this.alignment != value)
 				{
-					this.CloneStyleIfCopyOnWriteNeeded();
-					this.style.Alignment = value;
+					this.alignment = value;
+					this.MarkContentsAsDirty ();
 				}
 			}
 		}
@@ -309,14 +315,14 @@ namespace Epsitec.Common.Widgets
 			//	Mode de césure.
 			get
 			{
-				return this.style.BreakMode;
+				return this.breakMode == Drawing.TextBreakMode.Undefined ? this.style.BreakMode : this.breakMode;
 			}
 			set
 			{
-				if ( this.BreakMode != value )
+				if (this.breakMode != value )
 				{
-					this.CloneStyleIfCopyOnWriteNeeded();
-					this.style.BreakMode = value;
+					this.breakMode = value;
+					this.MarkContentsAsDirty ();
 				}
 			}
 		}
@@ -326,14 +332,14 @@ namespace Epsitec.Common.Widgets
 			//	Mode de justification.
 			get
 			{
-				return this.style.JustifMode;
+				return this.justifMode == Drawing.TextJustifMode.Undefined ? this.style.JustifMode : this.justifMode;
 			}
 			set
 			{
-				if ( this.JustifMode != value )
+				if (this.justifMode != value)
 				{
-					this.CloneStyleIfCopyOnWriteNeeded();
-					this.style.JustifMode = value;
+					this.justifMode = value;
+					this.MarkContentsAsDirty ();
 				}
 			}
 		}
@@ -5352,7 +5358,19 @@ noText:
 		
 		private void HandleTextStyleChanged(object sender, Types.DependencyPropertyChangedEventArgs e)
 		{
-			this.MarkContentsAsDirty();
+			this.MarkContentsAsDirty ();
+			this.UpdateEmbedderGeometry ();
+		}
+
+		private void UpdateEmbedderGeometry()
+		{
+			if (this.embedder != null)
+			{
+				if (this.embedder.AutoFitWidth)
+				{
+					this.embedder.PreferredWidth = this.embedder.GetBestFitSize ().Width;
+				}
+			}
 		}
 
 
@@ -5380,6 +5398,11 @@ noText:
 		private bool							isLayoutDirty;
 		private bool							isPrepareDirty;
 		private bool							isTemporaryLayout;
+
+		private Drawing.TextBreakMode			breakMode;
+		private Drawing.ContentAlignment		alignment;
+		private Drawing.TextJustifMode			justifMode;
+
 		private string							text;
 		private string							simpleText;
 		private string							simplifiedText;
