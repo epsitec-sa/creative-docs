@@ -549,6 +549,68 @@ namespace Epsitec.Common.UI
 			return null;
 		}
 
+		public void DefineStaticTextStyle(Drawing.TextStyle style)
+		{
+			if (style == null)
+			{
+				style = Drawing.TextStyle.Default;
+			}
+
+			if (style.IsReadOnly == false)
+			{
+				style = style.Clone ();
+				style.Lock ();
+			}
+
+			this.staticTextStyle = style;
+			this.staticTextStyleChangeId = this.GetVisualTreeChangeId ();
+			
+			this.SetTextStyle (style, widget => !(widget is Widgets.AbstractTextField));
+		}
+
+		private void SyncTextStyles()
+		{
+			if (this.staticTextStyle != null)
+			{
+				int changeId = this.GetVisualTreeChangeId ();
+
+				if (this.staticTextStyleChangeId != changeId)
+				{
+					this.staticTextStyleChangeId = changeId;
+					this.SetTextStyle (this.staticTextStyle, widget => !(widget is Widgets.AbstractTextField));
+				}
+			}
+		}
+
+		private int GetVisualTreeChangeId()
+		{
+			Widgets.WindowRoot root = Widgets.Helpers.VisualTree.GetRoot (this) as Widgets.WindowRoot;
+
+			if (root == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return root.TreeChangeCounter;
+			}
+		}
+
+		private void SetTextStyle(Drawing.TextStyle style, System.Predicate<Widgets.Widget> predicate)
+		{
+			foreach (Widgets.Widget widget in this.FindAllChildren ())
+			{
+				if (predicate (widget))
+				{
+					if ((widget.TextLayout != null) &&
+						(widget.TextLayout.Style.IsReadOnly))
+					{
+						widget.TextLayout.Style = style;
+					}
+				}
+			}
+		}
+
 		
 		protected override bool PreProcessMessage(Widgets.Message message, Drawing.Point pos)
 		{
@@ -675,6 +737,13 @@ namespace Epsitec.Common.UI
 			{
 				return false;
 			}
+		}
+
+		protected override void MeasureOverride(Epsitec.Common.Widgets.Layouts.LayoutContext context)
+		{
+			this.SyncTextStyles ();
+			
+			base.MeasureOverride (context);
 		}
 
 		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
@@ -912,5 +981,7 @@ namespace Epsitec.Common.UI
 		private Panels.SearchPanel searchPanel;
 		private bool isDataContextChangeHandlerRegistered;
 		private bool isMouseDown;
+		private Drawing.TextStyle staticTextStyle;
+		private int staticTextStyleChangeId;
 	}
 }

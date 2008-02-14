@@ -80,45 +80,22 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				Support.Druid captionId = this.ValueCaptionOverride;
+				BindingExpression expression = this.ValueBindingExpression;
 
+				if (expression == null)
+				{
+					return null;
+				}
+
+				Support.Druid captionId = expression.GetSourceCaptionId ();
+				
 				if (captionId.IsEmpty)
 				{
-					BindingExpression expression = this.ValueBindingExpression;
-
-					if (expression == null)
-					{
-						return null;
-					}
-
-					captionId = expression.GetSourceCaptionId ();
-					
-					if (captionId.IsEmpty)
-					{
-						return null;
-					}
+					return null;
 				}
 
 				Support.ICaptionResolver resolver = Widgets.Helpers.VisualTree.GetCaptionResolver (this);
 				return Support.CaptionCache.Instance.GetCaption (resolver, captionId);
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets the override for the value caption. An empty DRUID means
-		/// that there will be no override and that the value caption will be
-		/// derived automatically by using the binding information.
-		/// </summary>
-		/// <value>The override for the value caption.</value>
-		public Support.Druid					ValueCaptionOverride
-		{
-			get
-			{
-				return (Support.Druid) this.GetValue (AbstractPlaceholder.ValueCaptionOverrideProperty);
-			}
-			set
-			{
-				this.SetValue (AbstractPlaceholder.ValueCaptionOverrideProperty, value);
 			}
 		}
 
@@ -283,7 +260,6 @@ namespace Epsitec.Common.UI
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (object), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (UndefinedValue.Value, AbstractPlaceholder.NotifyValueChanged).MakeNotSerializable ());
 		public static readonly DependencyProperty SuggestionModeProperty = DependencyProperty.Register ("SuggestionMode", typeof (PlaceholderSuggestionMode), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (PlaceholderSuggestionMode.None));
-		public static readonly DependencyProperty ValueCaptionOverrideProperty = DependencyProperty.Register ("ValueCaptionOverride", typeof (Support.Druid), typeof (AbstractPlaceholder), new DependencyPropertyMetadata (Support.Druid.Empty));
 		
 		private INamedType						valueType;
 		private string							valueName;

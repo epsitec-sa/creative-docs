@@ -360,6 +360,7 @@ namespace Epsitec.Common.UI.Controllers
 
 			//	TODO: determine size of widget based on the verbosity
 
+			labelWidget.AutoFitWidth   = true;
 			labelWidget.PreferredWidth = labelWidget.GetBestFitSize ().Width;
 			labelWidget.Margins        = new Drawing.Margins (4, 4, 0, 0);
 
