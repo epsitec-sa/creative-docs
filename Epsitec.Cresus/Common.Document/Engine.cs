@@ -17,6 +17,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( Engine.current == null )
 			{
+				Epsitec.Common.Widgets.Widget.Initialize();
 				Engine.current = new Engine();
 			}
 		}
