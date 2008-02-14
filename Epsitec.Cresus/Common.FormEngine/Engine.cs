@@ -120,6 +120,13 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
+#if false
+			Drawing.TextStyle style = new TextStyle ();
+			style.FontSize = 14.0;
+			style.FontColor = Drawing.Color.FromRgb (0, 0, 0.4);
+			root.DefineStaticTextStyle (style);
+#endif
+
 			this.CreateFormBox(root, entityId, fields2, 0);
 
 			return root;
