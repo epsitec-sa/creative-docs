@@ -46,21 +46,28 @@ namespace Epsitec.Common.Widgets
 		public TextLayout(TextLayout model)
 			: this ()
 		{
+			this.isTemporaryLayout = true;
+
+			System.Diagnostics.Debug.Assert (this.style.IsDefaultStyle);
+			System.Diagnostics.Debug.Assert (this.style.IsReadOnly);
+
 			if (model != null)
 			{
-				this.style           = model.style;
 				this.DrawingScale    = model.DrawingScale;
 				this.VerticalMark    = model.VerticalMark;
 				this.LayoutSize      = model.LayoutSize;
 				this.Alignment       = model.Alignment;
+				
+				this.SetTextStyle (model.style);
 			}
 		}
 
 		public TextLayout(Drawing.TextStyle style)
 		{
-			this.style = style;
 			this.drawingScale = 1.0;
 			this.verticalMark = double.NaN;
+			
+			this.SetTextStyle (style);
 		}
 
 		internal Widget							Embedder
@@ -167,6 +174,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.style;
+			}
+			set
+			{
+				if (this.style != value)
+				{
+					this.SetTextStyle (value);
+					this.MarkContentsAsDirty ();
+				}
 			}
 		}
 
@@ -430,23 +445,6 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Size						LayoutSize
 		{
-	//		public Drawing.IImageProvider			ImageProvider
-	//		{
-	//			// Gestionnaire d'images.
-	//			get
-	//			{
-	//				return this.style.ImageProvider;
-	//			}
-	//			set
-	//			{
-	//				if ( this.ImageProvider != value )
-	//				{
-	//					this.CloneStyleIfDefaultStyleInUse();
-	//					this.style.ImageProvider = value;
-	//				}
-	//			}
-	//		}
-	
 			//	Dimensions du rectangle.
 			get
 			{
@@ -5318,7 +5316,23 @@ noText:
 		{
 			if (this.style.IsReadOnly)
 			{
-				this.style = new Drawing.TextStyle (this.style);
+				this.SetTextStyle (new Drawing.TextStyle (this.style));
+			}
+		}
+
+		private void SetTextStyle(Drawing.TextStyle style)
+		{
+			if ((this.style != null) &&
+				(this.style.IsReadOnly == false))
+			{
+				this.style.Changed -= this.HandleTextStyleChanged;
+			}
+
+			this.style = style ?? Drawing.TextStyle.Default;
+
+			if ((this.style.IsReadOnly == false) &&
+				(this.isTemporaryLayout == false))
+			{
 				this.style.Changed += this.HandleTextStyleChanged;
 			}
 		}
@@ -5352,6 +5366,7 @@ noText:
 		private bool							isSimpleDirty;
 		private bool							isLayoutDirty;
 		private bool							isPrepareDirty;
+		private bool							isTemporaryLayout;
 		private string							text;
 		private string							simpleText;
 		private string							simplifiedText;
