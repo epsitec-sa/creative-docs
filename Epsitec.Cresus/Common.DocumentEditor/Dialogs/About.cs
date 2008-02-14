@@ -149,7 +149,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			int i = version.LastIndexOf('.');
 			if (i != -1)
 			{
-				version = version.Substring(0, i);
+				version = version.Substring(0, i);  // transforme "2.1.9.xxx" en "2.1.9"
 			}
 			return version;
 		}

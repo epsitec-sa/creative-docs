@@ -988,17 +988,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					//	Souris dans un titre ?
 					for (int i=0; i<this.fields.Count; i++)
 					{
-						if (this.fields[i].IsTitle)
+						if (this.fields[i].IsTitle || this.fields[i].IsSubtitle)
 						{
-							rect = this.GetFieldMovableBounds(i);
-							if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
-								this.fields[i].IsInterface &&
-								(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
-								rect.Contains(pos))
+							if (this.fields[i].IsTitle)
 							{
-								element = ActiveElement.BoxFieldRemoveInterface;
-								fieldRank = i;
-								return true;
+								rect = this.GetFieldMovableBounds(i);
+								if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
+									this.fields[i].IsInterface &&
+									(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
+									rect.Contains(pos))
+								{
+									element = ActiveElement.BoxFieldRemoveInterface;
+									fieldRank = i;
+									return true;
+								}
 							}
 
 							rect = this.GetFieldBounds(i);
@@ -1352,7 +1355,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void LocateTitle(int rank)
 		{
 			//	Montre l'entité héritée ou l'interface cliquée avec le bouton de droite.
-			System.Diagnostics.Debug.Assert(this.fields[rank].IsTitle);
+			System.Diagnostics.Debug.Assert(this.fields[rank].IsTitle || this.fields[rank].IsSubtitle);
 			Druid druid = this.fields[rank].CaptionId;
 			System.Diagnostics.Debug.Assert(druid.IsValid);
 
@@ -1901,19 +1904,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 			//	Ajoute le titre de l'entité dont on hérite, s'il existe.
+			Druid title = Druid.Empty;
 			if (this.skippedField > 0)
 			{
 				Field field = new Field(this.editor);
 				field.IsTitle = true;
 				field.IsInherited = true;
 
-				Druid druid = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
-				if (druid.IsValid)
+				title = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+				if (title.IsValid)
 				{
-					field.CaptionId = druid;
+					field.CaptionId = title;
 
-					Module module = this.SearchModule(druid);
-					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
+					Module module = this.SearchModule(title);
+					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[title];
 					if (cultureMap != null)
 					{
 						field.FieldName = Misc.Bold(cultureMap.Name);
@@ -1933,6 +1937,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					continue;
 				}
 
+#if false
 				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
 				{
 					this.skippedField++;
@@ -1955,6 +1960,40 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						i++;
 					}
 				}
+#else
+				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
+				{
+					this.skippedField++;
+				}
+
+				if (this.fields[i].DeepDefiningTypeId.IsValid)  // champ d'une interface ?
+				{
+					if (last != this.fields[i].DeepDefiningTypeId && this.fields[i].DeepDefiningTypeId != title)
+					{
+						last = this.fields[i].DeepDefiningTypeId;
+
+						Module module = this.SearchModule(last);
+						CultureMap cultureMap = module.AccessEntities.Accessor.Collection[last];
+
+						Field field = new Field(this.editor);
+						if (this.fields[i].Membership == FieldMembership.Local)
+						{
+							field.IsTitle = true;
+						}
+						else
+						{
+							field.IsSubtitle = true;
+						}
+						field.IsInterface = true;
+						field.CaptionId = last;
+						field.FieldName = Misc.Bold(cultureMap.Name);
+
+						this.fields.Insert(i, field);
+						this.skippedField++;  // compte le titre lui-même
+						i++;
+					}
+				}
+#endif
 			}
 
 			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
@@ -2129,7 +2168,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				this.fields[i].Index = i;
 
-				if (!this.fields[i].IsTitle)
+				if (!this.fields[i].IsTitle && !this.fields[i].IsSubtitle)
 				{
 					this.fields[i].IsSourceExpanded = this.isExtended;
 					this.fields[i].Rank = rank++;
@@ -2563,7 +2602,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 
-					if (this.fields[i].IsTitle)
+					if (this.fields[i].IsTitle || this.fields[i].IsSubtitle)
 					{
 						bool hilite = this.hilitedElement == ActiveElement.BoxFieldTitle && this.hilitedFieldRank == i;
 						rect = this.GetFieldBounds(i);
@@ -2697,6 +2736,39 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
 							rect = new Rectangle(rect.Left-25, rect.Center.Y-5, 25, 6);
+							this.DrawGlyphInterface(graphics, rect, 1, this.GetColorMain(0.8));
+						}
+					}
+					else if (this.fields[i].IsSubtitle)
+					{
+						int j = i + this.SubgroupLineCount(i);
+
+						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
+						rect.Deflate(9.5+2, 1.5);
+						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
+
+						rect = this.GetFieldBounds(i);
+						rect.Deflate(9.5+2, 0.5);
+
+						if (this.fields[i].IsInherited)
+						{
+							dashedPath.MoveTo(rect.Left+2, rect.Bottom);
+							dashedPath.LineTo(rect.Right-1, rect.Bottom);
+							Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+						}
+						else
+						{
+							dashedPath.MoveTo(rect.Left, rect.Bottom);
+							dashedPath.LineTo(rect.Right, rect.Bottom);
+							graphics.Rasterizer.AddOutline(dashedPath);
+							graphics.RenderSolid(this.GetColorMain(0.8));
+						}
+
+						if (this.fields[i].IsInterface)
+						{
+							rect = this.GetFieldBounds(i);
+							rect.Deflate(9.5+2, 0.5);
+							rect = new Rectangle(rect.Left-25-2, rect.Center.Y-5, 25+2, 6);
 							this.DrawGlyphInterface(graphics, rect, 1, this.GetColorMain(0.8));
 						}
 					}
@@ -3199,6 +3271,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne le nombre de ligne d'un groupe (héritage ou interface) d'après le rang de son titre.
 			for (int i=titleRank+1; i<this.fields.Count; i++)
 			{
+				if (this.fields[i].IsSubtitle)
+				{
+					continue;
+				}
+
 				if (this.fields[i].IsTitle || this.fields[i].DefiningTypeId.IsEmpty)
 				{
 					return i-titleRank-1;
@@ -3206,6 +3283,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			return this.fields.Count-titleRank-1;
+		}
+
+		protected int SubgroupLineCount(int subtitleRank)
+		{
+			//	Retourne le nombre de ligne d'un sous-groupe (héritage ou interface) d'après le rang de son sous-titre.
+			Druid druid = this.fields[subtitleRank+1].DeepDefiningTypeId;
+
+			for (int i=subtitleRank+1; i<this.fields.Count; i++)
+			{
+				if (this.fields[i].IsSubtitle || this.fields[i].DeepDefiningTypeId != druid)
+				{
+					return i-subtitleRank-1;
+				}
+			}
+
+			return this.fields.Count-subtitleRank-1;
 		}
 
 		protected string GetGroupTooltip(int rank)

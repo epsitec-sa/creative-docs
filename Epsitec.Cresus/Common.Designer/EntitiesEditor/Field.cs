@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	- Un champ d'une interface
 			get
 			{
-				return this.IsTitle || this.IsInherited || this.IsInterface;
+				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterface;
 			}
 		}
 
@@ -137,7 +137,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.isTitle != value)
 				{
 					this.isTitle = value;
-					this.textLayoutField.Alignment = this.isTitle ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+					this.textLayoutField.Alignment = (this.isTitle || this.isSubtitle) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+				}
+			}
+		}
+
+		public bool IsSubtitle
+		{
+			//	Indique si le champ est un sous-titre d'héritage ou d'interface.
+			get
+			{
+				return this.isSubtitle;
+			}
+			set
+			{
+				if (this.isSubtitle != value)
+				{
+					this.isSubtitle = value;
+					this.textLayoutField.Alignment = (this.isTitle || this.isSubtitle) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
 				}
 			}
 		}
@@ -147,7 +164,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique s'il s'agit d'un champ hérité.
 			get
 			{
-				if (this.IsTitle)
+				if (this.IsTitle || this.IsSubtitle)
 				{
 					return this.isInherited;
 				}
@@ -167,7 +184,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Indique s'il s'agit d'un champ d'une interface.
 			get
 			{
-				if (this.IsTitle)
+				if (this.IsTitle || this.IsSubtitle)
 				{
 					return this.isInterface;
 				}
@@ -947,6 +964,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Editor editor;
 		protected bool isTitle;
+		protected bool isSubtitle;
 		protected bool isInherited;
 		protected bool isInterface;
 		protected TextLayout textLayoutField;
