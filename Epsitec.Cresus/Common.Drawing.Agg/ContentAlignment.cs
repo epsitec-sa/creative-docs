@@ -7,7 +7,7 @@ namespace Epsitec.Common.Drawing
 	/// The <c>ContentAlignment</c> enumeration defines how content should be
 	/// aligned in a 2 dimension space.
 	/// </summary>
-	public enum ContentAlignment
+	public enum ContentAlignment : byte
 	{
 		/// <summary>
 		/// No alignment.
@@ -57,6 +57,11 @@ namespace Epsitec.Common.Drawing
 		/// <summary>
 		/// Top right alignment.
 		/// </summary>
-		TopRight
+		TopRight,
+
+		/// <summary>
+		/// Undefined alignement.
+		/// </summary>
+		Undefined=0xff,
 	}
 }

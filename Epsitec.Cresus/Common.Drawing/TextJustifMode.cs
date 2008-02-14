@@ -7,7 +7,7 @@ namespace Epsitec.Common.Drawing
 	/// The <c>TextJustifMode</c> enumeration defines how text should be
 	/// justified.
 	/// </summary>
-	public enum TextJustifMode
+	public enum TextJustifMode : byte
 	{
 		/// <summary>
 		/// The justification mode is not defined.

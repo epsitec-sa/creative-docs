@@ -4,9 +4,10 @@
 namespace Epsitec.Common.Drawing
 {
 	[System.Flags]
-	public enum TextBreakMode
+	public enum TextBreakMode : ushort
 	{
 		None		= 0x0000,
+		Undefined	= 0x8000,
 
 		Hyphenate	= 0x0001,		//	césure des mots, si possible
 		Ellipsis	= 0x0002,		//	ajoute une ellipse (...) si le dernier mot est tronqué
