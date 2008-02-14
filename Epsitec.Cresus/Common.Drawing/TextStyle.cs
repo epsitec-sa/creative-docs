@@ -607,16 +607,21 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 		}
-	
-		
-		public static void DefineDefaultRichColor(Drawing.RichColor color)
+
+
+		public static void DefineDefaultFont(Font font)
 		{
-			TextStyle.defaultStyle.fontColor = color;
+			TextStyle.defaultStyle.font = font ?? Font.DefaultFont;
+		}
+
+		public static void DefineDefaultFontSize(double fontSize)
+		{
+			TextStyle.defaultStyle.fontSize = (double.IsNaN (fontSize) || fontSize <= 0) ? Font.DefaultFontSize : fontSize;
 		}
 		
-		public static void DefineDefaultColor(Drawing.Color color)
+		public static void DefineDefaultFontColor(Drawing.Color color)
 		{
-			TextStyle.defaultStyle.fontColor.Basic = color;
+			TextStyle.defaultStyle.fontColor = new RichColor (color);
 		}
 		
 		

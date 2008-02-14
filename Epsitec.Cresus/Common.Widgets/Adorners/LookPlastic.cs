@@ -1679,7 +1679,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if (text != null)
 			{
-				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.TextStyle.DefineDefaultFontColor(this.colorBlack);
 				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+2);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
@@ -1850,7 +1850,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			text = AbstractAdorner.AdaptTextLayout (text, mode);
 			
-			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+			Drawing.TextStyle.DefineDefaultFontColor(this.colorBlack);
 
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{

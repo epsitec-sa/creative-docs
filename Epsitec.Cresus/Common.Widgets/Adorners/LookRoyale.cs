@@ -2006,7 +2006,7 @@ namespace Epsitec.Common.Widgets.Adorners
 
 			if (text != null)
 			{
-				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.TextStyle.DefineDefaultFontColor(this.colorBlack);
 				Drawing.Point pos = new Drawing.Point(textRect.Left+3, textRect.Bottom+1);
 				text.LayoutSize = new Drawing.Size(textRect.Width-4, textRect.Height);
 				text.Alignment = Drawing.ContentAlignment.MiddleCenter;
@@ -2199,11 +2199,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			
 			if ( style == PaintTextStyle.Group )
 			{
-				Drawing.TextStyle.DefineDefaultColor(this.colorBorderButton);
+				Drawing.TextStyle.DefineDefaultFontColor(this.colorBorderButton);
 			}
 			else
 			{
-				Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
+				Drawing.TextStyle.DefineDefaultFontColor(this.colorBlack);
 			}
 
 			if ( (state&WidgetPaintState.Enabled) != 0 )
