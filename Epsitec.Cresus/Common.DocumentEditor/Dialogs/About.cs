@@ -146,9 +146,10 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		{
 			//	Donne le numéro de version.
 			string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
-			if ( version.EndsWith(".0") )
+			int i = version.LastIndexOf('.');
+			if (i != -1)
 			{
-				version = version.Substring(0, version.Length-2);
+				version = version.Substring(0, i);
 			}
 			return version;
 		}
