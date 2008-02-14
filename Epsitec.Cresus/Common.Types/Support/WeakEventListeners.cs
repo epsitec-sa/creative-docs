@@ -20,16 +20,16 @@ namespace Epsitec.Common.Support
 		/// <param name="listener">The listener.</param>
 		public void Add(System.Delegate listener)
 		{
-			if (listener is System.MulticastDelegate)
+			System.Delegate[] invocations = listener.GetInvocationList ();
+			
+			if (invocations.Length > 1)
 			{
-				System.MulticastDelegate multicast = (System.MulticastDelegate) listener;
-
-				foreach (System.Delegate item in multicast.GetInvocationList ())
+				foreach (System.Delegate item in invocations)
 				{
 					this.Add (item);
 				}
 			}
-			else
+			else if (invocations.Length == 1)
 			{
 				if (this.listeners == null)
 				{
@@ -46,16 +46,16 @@ namespace Epsitec.Common.Support
 		/// <param name="listener">The listener.</param>
 		public void Remove(System.Delegate listener)
 		{
-			if (listener is System.MulticastDelegate)
-			{
-				System.MulticastDelegate multicast = (System.MulticastDelegate) listener;
+			System.Delegate[] invocations = listener.GetInvocationList ();
 
-				foreach (System.Delegate item in multicast.GetInvocationList ())
+			if (invocations.Length > 1)
+			{
+				foreach (System.Delegate item in invocations)
 				{
 					this.Remove (item);
 				}
 			}
-			else
+			else if (invocations.Length == 1)
 			{
 				if (this.listeners != null)
 				{
