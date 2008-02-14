@@ -2786,9 +2786,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 							if (this.fields[i].IsInherited)
 							{
+#if false
 								dashedPath.MoveTo(rect.Left+2, rect.Bottom);
 								dashedPath.LineTo(rect.Right-1, rect.Bottom);
 								Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
+#endif
 							}
 							else
 							{
