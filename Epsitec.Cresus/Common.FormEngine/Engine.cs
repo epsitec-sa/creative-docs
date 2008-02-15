@@ -129,13 +129,13 @@ namespace Epsitec.Common.FormEngine
 			Drawing.TextStyle staticTextStyle = new TextStyle ();
 			staticTextStyle.FontSize = 14.0;
 			staticTextStyle.FontColor = Drawing.Color.FromRgb (0, 0, 0.4);
-			textStyleManager.DefineStaticTextStyle (staticTextStyle);
+			textStyleManager.StaticTextStyle = staticTextStyle;
 			
 			//	Crée un style pour les champs éditables :
 			Drawing.TextStyle textFieldStyle = new TextStyle ();
 			textFieldStyle.FontSize = 14.0;
 			textFieldStyle.Font = Drawing.Font.GetFont ("Calibri", "Regular");
-			textStyleManager.DefineTextFieldStyle (textFieldStyle);
+			textStyleManager.TextFieldStyle = textFieldStyle;
 
 			//	Active les styles pour le panneau spécifié, et tous ses enfants !
 			textStyleManager.Attach (root);
