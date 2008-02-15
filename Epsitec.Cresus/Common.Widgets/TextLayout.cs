@@ -70,6 +70,7 @@ namespace Epsitec.Common.Widgets
 				this.embedder     = model.embedder;
 				
 				this.SetTextStyle (model.style);
+				this.SuspendTextChangeNotifications ();
 			}
 		}
 
