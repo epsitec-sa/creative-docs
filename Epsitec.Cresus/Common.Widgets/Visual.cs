@@ -1114,6 +1114,7 @@ namespace Epsitec.Common.Widgets
 
 		public void Measure(Layouts.LayoutContext context)
 		{
+			this.OnMeasuring ();
 			this.MeasureOverride (context);
 			
 			Drawing.Size min = Drawing.Size.Zero;
@@ -1592,6 +1593,16 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnDisplayCaptionChanged()
 		{
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("DisplayCaptionChanged");
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		protected virtual void OnMeasuring()
+		{
+			EventHandler handler = (EventHandler) this.GetUserEventHandler ("Measuring");
 
 			if (handler != null)
 			{
@@ -2083,6 +2094,18 @@ namespace Epsitec.Common.Widgets
 			remove
 			{
 				this.RemoveUserEventHandler ("SizeChanged", value);
+			}
+		}
+
+		public event EventHandler					Measuring
+		{
+			add
+			{
+				this.AddUserEventHandler ("Measuring", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("Measuring", value);
 			}
 		}
 

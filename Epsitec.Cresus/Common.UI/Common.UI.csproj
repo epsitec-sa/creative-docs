@@ -127,6 +127,7 @@
     <Compile Include="Controllers\ControllerParameters.cs" />
     <Compile Include="Controllers\WidgetRecord.cs" />
     <Compile Include="Controllers\WidgetType.cs" />
+    <Compile Include="TextStyleManager.cs" />
     <Compile Include="PlaceholderContext.cs" />
     <Compile Include="PlaceholderSuggestionMode.cs" />
     <Compile Include="ItemPanelSelectionChangedEventArgs.cs" />

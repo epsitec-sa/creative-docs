@@ -481,6 +481,43 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		public void RedefineParent(TextStyle parent)
+		{
+			this.CheckForDefaultStyle ();
+
+			if (parent == null)
+			{
+				parent = TextStyle.Default;
+			}
+			if (parent == this.parent)
+			{
+				return;
+			}
+			
+			//	Check that the caller is not building a circular parent relationship.
+			
+			TextStyle iter = parent;
+
+			while (iter != null)
+			{
+				if (iter == this)
+				{
+					throw new System.ArgumentException ("Circular definition");
+				}
+
+				iter = iter.parent;
+			}
+
+			if (!this.parent.IsDefaultStyle)
+			{
+				this.parent.Changed -= this.HandleParentChanged;
+			}
+			
+			this.parent = parent;
+			this.parent.Changed += this.HandleParentChanged;
+			
+			this.OnChanged ("Parent");
+		}
 
 		#region IReadOnlyLock Members
 

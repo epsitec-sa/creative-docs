@@ -121,10 +121,24 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
 #if false
-			Drawing.TextStyle style = new TextStyle ();
-			style.FontSize = 14.0;
-			style.FontColor = Drawing.Color.FromRgb (0, 0, 0.4);
-			root.DefineStaticTextStyle (style);
+			//	Crée un gestionnaire de styles pour le panneau dans son entier; un tel
+			//	gestionnaire doit être attaché au panneau racine au moment de sa création
+			UI.TextStyleManager textStyleManager = new Epsitec.Common.UI.TextStyleManager (root);
+
+			//	Crée un style pour les labels :
+			Drawing.TextStyle staticTextStyle = new TextStyle ();
+			staticTextStyle.FontSize = 14.0;
+			staticTextStyle.FontColor = Drawing.Color.FromRgb (0, 0, 0.4);
+			textStyleManager.DefineStaticTextStyle (staticTextStyle);
+			
+			//	Crée un style pour les champs éditables :
+			Drawing.TextStyle textFieldStyle = new TextStyle ();
+			textFieldStyle.FontSize = 14.0;
+			textFieldStyle.Font = Drawing.Font.GetFont ("Calibri", "Regular");
+			textStyleManager.DefineTextFieldStyle (textFieldStyle);
+
+			//	Active les styles pour le panneau spécifié, et tous ses enfants !
+			textStyleManager.Attach (root);
 #endif
 
 			this.CreateFormBox(root, entityId, fields2, 0);
