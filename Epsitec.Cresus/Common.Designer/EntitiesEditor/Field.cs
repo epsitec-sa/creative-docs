@@ -199,6 +199,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public int Level
+		{
+			//	Niveau d'indentation (0..n).
+			get
+			{
+				return this.level;
+			}
+			set
+			{
+				this.level = value;
+			}
+		}
+
 		public string FieldName
 		{
 			//	Nom du champ ou du titre.
@@ -967,6 +980,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSubtitle;
 		protected bool isInherited;
 		protected bool isInterface;
+		protected int level;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected string typeName;

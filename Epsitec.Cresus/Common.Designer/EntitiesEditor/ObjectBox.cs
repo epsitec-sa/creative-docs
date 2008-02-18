@@ -1937,30 +1937,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					continue;
 				}
 
-#if false
-				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
-				{
-					this.skippedField++;
-
-					if (last != this.fields[i].DefiningTypeId)
-					{
-						last = this.fields[i].DefiningTypeId;
-
-						Module module = this.SearchModule(last);
-						CultureMap cultureMap = module.AccessEntities.Accessor.Collection[last];
-
-						Field field = new Field(this.editor);
-						field.IsTitle = true;
-						field.IsInterface = true;
-						field.CaptionId = last;
-						field.FieldName = Misc.Bold(cultureMap.Name);
-
-						this.fields.Insert(i, field);
-						this.skippedField++;  // compte le titre lui-même
-						i++;
-					}
-				}
-#else
 				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
 				{
 					this.skippedField++;
@@ -1999,7 +1975,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 				}
-#endif
+			}
+
+			for (int i=0; i<this.fields.Count; i++)
+			{
+				if (this.fields[i].IsSubtitle)
+				{
+					int j = i + this.SubgroupLineCount(i);
+					for (int k=i; k<=j; k++)
+					{
+						this.fields[k].Level++;
+					}
+				}
 			}
 
 			IList<StructuredData> dataInterfaces = data.GetValue(Support.Res.Fields.ResourceStructuredType.InterfaceIds) as IList<StructuredData>;
@@ -2783,6 +2770,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (i < this.fields.Count-1 &&
 							this.fields[i].IsInherited == this.fields[i+1].IsInherited &&
 							this.fields[i].IsInterface == this.fields[i+1].IsInterface &&
+							this.fields[i].Level == this.fields[i+1].Level &&
 							this.fields[i].DeepDefiningTypeId != this.fields[i+1].DeepDefiningTypeId &&
 							!this.fields[i+1].IsTitle)
 						{
@@ -2792,11 +2780,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 							if (this.fields[i].IsInherited)
 							{
-#if false
 								dashedPath.MoveTo(rect.Left+2, rect.Bottom);
 								dashedPath.LineTo(rect.Right-1, rect.Bottom);
 								Misc.DrawPathDash(graphics, dashedPath, 1, 0, 2, false, this.GetColorMain(0.8));
-#endif
 							}
 							else
 							{
