@@ -1975,22 +1975,28 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						Module module = this.SearchModule(last);
 						CultureMap cultureMap = module.AccessEntities.Accessor.Collection[last];
 
-						Field field = new Field(this.editor);
-						if (this.fields[i].Membership == FieldMembership.Local)
-						{
-							field.IsTitle = true;
-						}
-						else
-						{
-							field.IsSubtitle = true;
-						}
-						field.IsInterface = true;
-						field.CaptionId = last;
-						field.FieldName = Misc.Bold(cultureMap.Name);
+						StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+						StructuredTypeClass definingTypeClass = (StructuredTypeClass) definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
 
-						this.fields.Insert(i, field);
-						this.skippedField++;  // compte le titre lui-même
-						i++;
+						if (definingTypeClass == StructuredTypeClass.Interface)
+						{
+							Field field = new Field(this.editor);
+							if (this.fields[i].Membership == FieldMembership.Local)
+							{
+								field.IsTitle = true;
+							}
+							else
+							{
+								field.IsSubtitle = true;
+							}
+							field.IsInterface = true;
+							field.CaptionId = last;
+							field.FieldName = Misc.Bold(cultureMap.Name);
+
+							this.fields.Insert(i, field);
+							this.skippedField++;  // compte le titre lui-même
+							i++;
+						}
 					}
 				}
 #endif
