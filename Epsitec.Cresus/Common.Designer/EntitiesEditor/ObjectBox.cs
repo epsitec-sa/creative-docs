@@ -1757,26 +1757,31 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string name = fieldCultureMap.Name;
 			
 			Module module = this.editor.Module;
-			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Modify, Dialogs.ResourceName.Type.Field, name);
-			if (string.IsNullOrEmpty(name))
+			while (true)
 			{
-				this.hilitedElement = ActiveElement.None;
-				return;
-			}
+				name = fieldCultureMap.Name;
+				name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Modify, Dialogs.ResourceName.Type.Field, name);
+				if (string.IsNullOrEmpty(name))
+				{
+					this.hilitedElement = ActiveElement.None;
+					return;
+				}
 
-			string err = this.editor.Module.AccessFields.CheckNewName(fieldCultureMap.Prefix, ref name);
-			if (!string.IsNullOrEmpty(err))
-			{
-				module.DesignerApplication.DialogError(err);
-				return;
+				if (name == fieldCultureMap.Name)  // nom inchangé ?
+				{
+					return;
+				}
+
+				string err = this.editor.Module.AccessFields.CheckNewName(fieldCultureMap.Prefix, ref name);
+				if (string.IsNullOrEmpty(err))
+				{
+					break;
+				}
+				else
+				{
+					module.DesignerApplication.DialogError(err);
+				}
 			}
-#if false
-			if (!Misc.IsValidLabel(ref name))
-			{
-				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
-				return;
-			}
-#endif
 
 			fieldCultureMap.Name = name;
 			this.UpdateField(dataField, this.fields[rank]);
