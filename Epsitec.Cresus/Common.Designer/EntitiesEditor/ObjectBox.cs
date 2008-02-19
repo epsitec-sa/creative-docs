@@ -1764,11 +1764,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
+			string err = this.editor.Module.AccessFields.CheckNewName(fieldCultureMap.Prefix, ref name);
+			if (!string.IsNullOrEmpty(err))
+			{
+				module.DesignerApplication.DialogError(err);
+				return;
+			}
+#if false
 			if (!Misc.IsValidLabel(ref name))
 			{
 				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 				return;
 			}
+#endif
 
 			fieldCultureMap.Name = name;
 			this.UpdateField(dataField, this.fields[rank]);
@@ -1900,7 +1908,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				//	Dans Cresus.AddressBook, entité AdresseEntreprise, le champ SearchValue a Membership = Inherited.
 				//	Dans Cresus.AddressBook, entité AdressePersonne, le champ SearchValue a Membership = LocalOverride.
 				//	Je ne sais pas quelle est la bonne valeur, mais il me semble que ce devrait être la même dans les deux cas.
-				//	Je m’aperçoit que je corrige tantôt dans un sens, tantôt dans l’autre, et je ne peux évidemment pas m’en sortir…
+				//	Je m’aperçois que je corrige tantôt dans un sens, tantôt dans l’autre, et je ne peux évidemment pas m’en sortir...
 #if false
 				if (this.fields[i].Membership == FieldMembership.Inherited)
 				{

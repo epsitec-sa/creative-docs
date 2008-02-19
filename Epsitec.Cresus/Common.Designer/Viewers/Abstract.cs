@@ -1200,6 +1200,10 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.Items[sel] as CultureMap;
 			if (item != null && !string.IsNullOrEmpty(item.Prefix))
 			{
+				//	Si on est sur sur ressource de type 'Field', il faut tenir compte du préfixe.
+				//	Par exemple, le champ Client de l'entité Facture a un préfixe 'Facture' et il
+				//	faut comparer le nom 'Facture.Client', pour éviter de confondre avec les champs
+				//	d'une autre entité comme 'Adresse.Client'.
 				prefix = item.Prefix;
 			}
 
