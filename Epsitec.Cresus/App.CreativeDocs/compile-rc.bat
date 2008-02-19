@@ -1,7 +1,9 @@
 @echo off
 
+set
+
 pushd
-call "C:\Program Files\Microsoft Visual Studio 8\VC\bin\vcvars32.bat"
+call "%VS90COMNTOOLS%\..\..\VC\bin\vcvars32.bat"
 popd
 
 del /Q "%~1.res"
