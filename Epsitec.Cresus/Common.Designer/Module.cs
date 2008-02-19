@@ -376,8 +376,8 @@ namespace Epsitec.Common.Designer
 		public void Save()
 		{
 			//	Enregistre toutes les ressources et met à jour le fichier module.info.
-			this.SaveResources ();
-			this.UpdateManifest ();
+			this.SaveResources();
+			this.UpdateManifest();
 		}
 
 		public string CheckMessage()

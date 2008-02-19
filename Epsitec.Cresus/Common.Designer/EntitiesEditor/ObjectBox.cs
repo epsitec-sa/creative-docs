@@ -1895,9 +1895,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.skippedField = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				if (this.fields[i].Membership == FieldMembership.Inherited)
+				if (this.fields[i].Membership != FieldMembership.Local)
 				{
-					this.skippedField++;  // nombre de champs hérités au début de la liste
+					this.skippedField++;  // nombre de champs hérités ou provenant d'une interface, au début de la liste
 				}
 			}
 
