@@ -1274,10 +1274,10 @@ namespace Epsitec.Common.Designer
 		public bool IsCorrectNewName(ref string name)
 		{
 			//	Retourne true s'il est possible de créer cette nouvelle ressource.
-			return (this.CheckNewName(ref name) == null);
+			return (this.CheckNewName(null, ref name) == null);
 		}
 
-		public string CheckNewName(ref string name)
+		public string CheckNewName(string prefix, ref string name)
 		{
 			//	Retourne l'éventuelle erreur si on tente de créer cette nouvelle ressource.
 			//	Retourne null si tout est correct.
@@ -1301,7 +1301,13 @@ namespace Epsitec.Common.Designer
 			CollectionView cv = new CollectionView(this.accessor.Collection);
 			foreach (CultureMap item in cv.Items)
 			{
-				string err = ResourceAccess.CheckNames(item.Name, name);
+				string fullName = name;
+				if (!string.IsNullOrEmpty(prefix))
+				{
+					fullName = string.Concat(prefix, ".", name);
+				}
+
+				string err = ResourceAccess.CheckNames(item.FullName, fullName);
 				if (err != null)
 				{
 					return err;

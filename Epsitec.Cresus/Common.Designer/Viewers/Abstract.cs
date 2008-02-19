@@ -563,7 +563,7 @@ namespace Epsitec.Common.Designer.Viewers
 					//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
 					this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
-					string err = this.access.CheckNewName(ref text);
+					string err = this.access.CheckNewName(null, ref text);
 					if (err != null)
 					{
 						this.access.SetField(searcher.Row, cultureName, fieldType, new ResourceAccess.Field(initialName));
@@ -1194,12 +1194,19 @@ namespace Epsitec.Common.Designer.Viewers
 			sel = this.access.SortDefer(sel);
 
 			string editedName = edit.Text;
+			string prefix = null;
 			string initialName = this.access.GetField(sel, null, ResourceAccess.FieldType.Name).String;
+
+			CultureMap item = this.access.CollectionView.Items[sel] as CultureMap;
+			if (item != null && !string.IsNullOrEmpty(item.Prefix))
+			{
+				prefix = item.Prefix;
+			}
 
 			//	Met un nom dont on est certain qu'il est valide et qu'il n'existe pas !
 			this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field("wXrfGjkleWEuio"));
 
-			string err = this.access.CheckNewName(ref editedName);
+			string err = this.access.CheckNewName(prefix, ref editedName);
 			if (err != null)
 			{
 				this.access.SetField(sel, null, ResourceAccess.FieldType.Name, new ResourceAccess.Field(initialName));
