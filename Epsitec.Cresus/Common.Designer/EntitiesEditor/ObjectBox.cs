@@ -1895,10 +1895,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.skippedField = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
+				//	TODO:
+				//	Je ne sais pas quelle version est la bonne, lié à ce problème:
+				//	Dans Cresus.AddressBook, entité AdresseEntreprise, le champ SearchValue a Membership = Inherited.
+				//	Dans Cresus.AddressBook, entité AdressePersonne, le champ SearchValue a Membership = LocalOverride.
+				//	Je ne sais pas quelle est la bonne valeur, mais il me semble que ce devrait être la même dans les deux cas.
+				//	Je m’aperçoit que je corrige tantôt dans un sens, tantôt dans l’autre, et je ne peux évidemment pas m’en sortir…
+#if false
+				if (this.fields[i].Membership == FieldMembership.Inherited)
+				{
+					this.skippedField++;  // nombre de champs hérités au début de la liste
+				}
+#else
 				if (this.fields[i].Membership != FieldMembership.Local)
 				{
 					this.skippedField++;  // nombre de champs hérités ou provenant d'une interface, au début de la liste
 				}
+#endif
 			}
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
