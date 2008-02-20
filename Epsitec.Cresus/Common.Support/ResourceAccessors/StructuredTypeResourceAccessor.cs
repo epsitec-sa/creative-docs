@@ -1153,6 +1153,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 							item.NotifyDataAdded (field);
 						}
+
+                        Druid DT = StructuredTypeResourceAccessor.ToDruid(field.GetValue(Res.Fields.Field.DefiningTypeId));
+                        bool? IID = StructuredTypeResourceAccessor.ToBoolean(field.GetValue(Res.Fields.Field.IsInterfaceDefinition));
+                        FieldMembership M = (FieldMembership)field.GetValue(Res.Fields.Field.Membership);
+                        Druid FI = StructuredTypeResourceAccessor.ToDruid(field.GetValue(Res.Fields.Field.CaptionId));
+
+                        System.Diagnostics.Debug.WriteLine (string.Format ("EntityName={0} EntityId={1} FieldId={2} DT={3} M={4} IID={5}", item.Name, item.Id, FI, DT, M, IID.HasValue ? IID.Value.ToString() : "<null>"));
 					}
 				}
 				else
