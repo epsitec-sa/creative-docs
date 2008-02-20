@@ -1328,7 +1328,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (rank >= 0 && rank < this.fields.Count)
 			{
-				rect.Deflate(2*this.fields[rank].Level, 0);
+				rect.Deflate(ObjectBox.indentWidth*this.fields[rank].Level, 0);
 			}
 
 			return rect;
@@ -1855,127 +1855,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
-#if false
-		protected void UpdateField(StructuredData dataField, Field field)
-		{
-			//	Met à jour une instance de la classe Field, selon le StructuredData d'un champ.
-			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
-
-			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
-			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
-			Druid definingTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DefiningTypeId);
-			Druid deepDefiningTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DeepDefiningTypeId);
-			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
-			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
-
-			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-			string sourceCode = expression.SourceCode;
-			
-			Module typeModule = this.SearchModule(typeId);
-			CultureMap typeCultureMap = null;
-			if (typeModule != null)
-			{
-				typeCultureMap = typeModule.AccessTypes.Accessor.Collection[typeId];
-				if (typeCultureMap == null)
-				{
-					typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
-				}
-				else
-				{
-					//	Le type est un type simple, pas une entité. Cela ne peut donc
-					//	pas être une relation !
-					rel = FieldRelation.None;
-				}
-			}
-
-			Module fieldModule = this.SearchModule(fieldCaptionId);
-			CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
-
-			string definingName = null;
-			StructuredTypeClass definingType = StructuredTypeClass.None;
-
-			if (deepDefiningTypeId.IsValid)
-			{
-				Module definingModule = this.SearchModule(deepDefiningTypeId);
-				CultureMap definingCultureMap = definingModule.AccessEntities.Accessor.Collection[deepDefiningTypeId];
-
-				definingName = definingCultureMap.Name;
-				if (definingModule != this.editor.Module)  // dans un autre module ?
-				{
-					definingName = string.Concat(definingModule.ModuleId.Name, ".", definingName);
-				}
-
-				StructuredData definingData = definingCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				definingType = (StructuredTypeClass) definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
-			}
-
-			field.CaptionId = fieldCaptionId;
-			field.DefiningTypeId = definingTypeId;
-			field.DeepDefiningTypeId = deepDefiningTypeId;
-			field.DefiningName = definingName;
-			field.DefiningType = definingType;
-			field.Expression = sourceCode;
-			field.IsNullable = (options & FieldOptions.Nullable) != 0;
-			field.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
-			field.CultureMapSource = source;
-			field.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
-			field.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
-			field.Relation = rel;
-			field.Membership = membership;
-			field.Destination = typeId;
-			field.SrcBox = this;
-		}
-#endif
-
 		protected void UpdateFieldsContent()
 		{
 			//	Crée tous les champs de titrage.
 			this.skippedField = 0;
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				//	TODO:
-				//	Je ne sais pas quelle version est la bonne, lié à ce problème:
-				//	Dans Cresus.AddressBook, entité AdresseEntreprise, le champ SearchValue a Membership = Inherited.
-				//	Dans Cresus.AddressBook, entité AdressePersonne, le champ SearchValue a Membership = LocalOverride.
-				//	Je ne sais pas quelle est la bonne valeur, mais il me semble que ce devrait être la même dans les deux cas.
-				//	Je m’aperçois que je corrige tantôt dans un sens, tantôt dans l’autre, et je ne peux évidemment pas m’en sortir...
-#if false
-				if (this.fields[i].Membership == FieldMembership.Inherited)
-				{
-					this.skippedField++;  // nombre de champs hérités au début de la liste
-				}
-#else
-				if (this.fields[i].Membership != FieldMembership.Local)
+				if (this.fields[i].IsReadOnly)
 				{
 					this.skippedField++;  // nombre de champs hérités ou provenant d'une interface, au début de la liste
 				}
-#endif
 			}
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 
 			//	Ajoute le titre de l'entité dont on hérite, s'il existe.
-			Druid title = Druid.Empty;
-			if (this.skippedField > 0)
+			Druid title = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
+			if (this.skippedField > 0 && title.IsValid)
 			{
 				Field field = new Field(this.editor);
 				field.IsTitle = true;
 				field.IsInherited = true;
+				field.CaptionId = title;
 
-				title = (Druid) data.GetValue(Support.Res.Fields.ResourceStructuredType.BaseType);
-				if (title.IsValid)
+				Module module = this.SearchModule(title);
+				CultureMap cultureMap = module.AccessEntities.Accessor.Collection[title];
+				if (cultureMap != null)
 				{
-					field.CaptionId = title;
-
-					Module module = this.SearchModule(title);
-					CultureMap cultureMap = module.AccessEntities.Accessor.Collection[title];
-					if (cultureMap != null)
-					{
-						field.FieldName = Misc.Bold(cultureMap.Name);
-					}
+					field.FieldName = Misc.Bold(cultureMap.Name);
 				}
 
 				this.fields.Insert(0, field);
@@ -1989,11 +1896,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.fields[i].IsTitle)
 				{
 					continue;
-				}
-
-				if (this.fields[i].DefiningTypeId.IsValid && this.fields[i].Membership == FieldMembership.Local)  // champ d'une interface ?
-				{
-					this.skippedField++;
 				}
 
 				if (this.fields[i].DeepDefiningTypeId.IsValid)  // champ d'une interface ?
@@ -2013,11 +1915,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							Field field = new Field(this.editor);
 							if (this.fields[i].Membership == FieldMembership.Local)
 							{
-								field.IsTitle = true;
+								field.IsTitle = true;  // interface ajoutée à cette entitié
 							}
 							else
 							{
-								field.IsSubtitle = true;
+								field.IsSubtitle = true;  // interface héritée
 							}
 							field.IsInterface = true;
 							field.CaptionId = last;
@@ -2787,7 +2689,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					else if (this.fields[i].IsSubtitle)
 					{
 						int j = i + this.SubgroupLineCount(i);
-						double indent = this.fields[i].Level*2.0;
+						double indent = ObjectBox.indentWidth*this.fields[i].Level;
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
@@ -3605,6 +3507,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected static readonly double expressionWidth = 20;
 		protected static readonly double fieldHeight = 20;
 		protected static readonly double sourcesMenuHeight = 20;
+		protected static readonly double indentWidth = 2;
 
 		protected CultureMap cultureMap;
 		protected ObjectComment comment;
