@@ -117,7 +117,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=0; i<dataFields.Count; i++)
 				{
 					Field field = new Field(this.editor);
-					//?this.UpdateField(dataFields[i], field);
 					field.Initialize(this, dataFields[i]);
 					this.fields.Add(field);
 				}
@@ -1327,6 +1326,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
 			rect.Height = ObjectBox.fieldHeight;
 
+			if (rank >= 0 && rank < this.fields.Count)
+			{
+				rect.Deflate(2*this.fields[rank].Level, 0);
+			}
+
 			return rect;
 		}
 
@@ -1519,7 +1523,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dataFields.Insert(fieldRank+1, newField);
 
 			Field field = new Field(this.editor);
-			//?this.UpdateField(newField, field);
 			field.Initialize(this, newField);
 			this.fields.Insert(rank+1, field);
 
@@ -1787,7 +1790,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			fieldCultureMap.Name = name;
-			//?this.UpdateField(dataField, this.fields[rank]);
 			this.fields[rank].Initialize(this, dataField);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.Invalidate();
@@ -1848,7 +1850,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (isPrivateRelation)  fieldOptions |= FieldOptions.PrivateRelation;
 			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
 
-			//?this.UpdateField(dataField, this.fields[rank]);
 			this.fields[rank].Initialize(this, dataField);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
@@ -2789,11 +2790,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						double indent = this.fields[i].Level*2.0;
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
-						rect.Deflate(9.5+indent, 1.5);
+						rect.Deflate(9.5, 1.5);
 						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
 
 						rect = this.GetFieldBounds(i);
-						rect.Deflate(9.5+indent, 0.5);
+						rect.Deflate(9.5, 0.5);
 
 						if (this.fields[i].IsInherited)
 						{
@@ -2812,7 +2813,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						if (this.fields[i].IsInterface)
 						{
 							rect = this.GetFieldBounds(i);
-							rect.Deflate(9.5+indent, 0.5);
+							rect.Deflate(9.5, 0.5);
 							rect = new Rectangle(rect.Left-25-indent, rect.Center.Y-5, 25+indent, 6);
 							this.DrawGlyphInterface(graphics, rect, 1, this.GetColorMain(0.8));
 						}
@@ -3539,7 +3540,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=0; i<dataFields.Count; i++)
 				{
 					Field field = new Field(this.editor);
-					//?this.UpdateField(dataFields[i], field);
 					field.Initialize(this, dataFields[i]);
 
 					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
