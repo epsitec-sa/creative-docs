@@ -1754,7 +1754,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
 			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
-			string name = fieldCultureMap.Name;
+			System.Diagnostics.Debug.Assert(fieldCultureMap != null);
+			string name;
 			
 			Module module = this.editor.Module;
 			while (true)
@@ -1887,9 +1888,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Module fieldModule = this.SearchModule(fieldCaptionId);
 			CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
 
+			string definingName = null;
+			StructuredTypeClass definingType = StructuredTypeClass.None;
+
+			if (deepDefiningTypeId.IsValid)
+			{
+				Module definingModule = this.SearchModule(deepDefiningTypeId);
+				CultureMap definingCultureMap = definingModule.AccessEntities.Accessor.Collection[deepDefiningTypeId];
+
+				definingName = definingCultureMap.Name;
+				if (definingModule != this.editor.Module)  // dans un autre module ?
+				{
+					definingName = string.Concat(definingModule.ModuleId.Name, ".", definingName);
+				}
+
+				StructuredData definingData = definingCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				definingType = (StructuredTypeClass) definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+			}
+
 			field.CaptionId = fieldCaptionId;
 			field.DefiningTypeId = definingTypeId;
 			field.DeepDefiningTypeId = deepDefiningTypeId;
+			field.DefiningName = definingName;
+			field.DefiningType = definingType;
 			field.Expression = sourceCode;
 			field.IsNullable = (options & FieldOptions.Nullable) != 0;
 			field.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
@@ -2081,25 +2102,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Cherche toutes les interfaces utilisées par les champs.
 			for (int i=0; i<this.fields.Count; i++)
 			{
-				StructuredTypeClass type;
-				string name;
-				this.GetGroupName(i, out type, out name);
-
 #if false
-				if (type == StructuredTypeClass.Entity)
+				if (this.fields[i].DefiningType == StructuredTypeClass.Entity)
 				{
-					if (!listInherited.Contains(name))
+					if (!listInherited.Contains(this.fields[i].DefiningName))
 					{
-						listInherited.Add(name);
+						listInherited.Add(this.fields[i].DefiningName);
 					}
 				}
 #endif
 
-				if (type == StructuredTypeClass.Interface)
+				if (this.fields[i].DefiningType == StructuredTypeClass.Interface)
 				{
-					if (!listInterface.Contains(name))
+					if (!listInterface.Contains(this.fields[i].DefiningName))
 					{
-						listInterface.Add(name);
+						listInterface.Add(this.fields[i].DefiningName);
 					}
 				}
 			}
@@ -3327,51 +3344,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected string GetGroupTooltip(int rank)
 		{
 			//	Retourne le tooltip à afficher pour un groupe.
-			StructuredTypeClass type;
-			string name;
-			this.GetGroupName(rank, out type, out name);
-
-			if (type == StructuredTypeClass.Interface)
+			if (this.fields[rank].DefiningType == StructuredTypeClass.Interface)
 			{
-				return string.Format(Res.Strings.Entities.Action.BoxGroup.Interface, name);
+				return string.Format(Res.Strings.Entities.Action.BoxGroup.Interface, this.fields[rank].DefiningName);
 			}
 
-			if (type == StructuredTypeClass.Entity)
+			if (this.fields[rank].DefiningType == StructuredTypeClass.Entity)
 			{
-				return string.Format(Res.Strings.Entities.Action.BoxGroup.Inherit, name);
+				return string.Format(Res.Strings.Entities.Action.BoxGroup.Inherit, this.fields[rank].DefiningName);
 			}
 
 			return null;  // pas de tooltip
-		}
-
-		protected void GetGroupName(int rank, out StructuredTypeClass type, out string name)
-		{
-			//	Retourne le nom à afficher pour un groupe.
-			type = StructuredTypeClass.None;
-			name = null;
-
-			if (rank == -1)
-			{
-				return;  // pas de nom
-			}
-
-			Druid druid = this.fields[rank].DeepDefiningTypeId;
-			if (druid.IsEmpty)
-			{
-				return;  // pas de nom
-			}
-
-			Module module = this.SearchModule(druid);
-			CultureMap cultureMap = module.AccessEntities.Accessor.Collection[druid];
-			name = cultureMap.Name;
-
-			if (module != this.editor.Module)  // dans un autre module ?
-			{
-				name = string.Concat(module.ModuleId.Name, ".", name);
-			}
-
-			StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			type = (StructuredTypeClass) data.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
 		}
 
 		protected double ColumnsSeparatorAbsolute(int rank)

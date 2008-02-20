@@ -199,6 +199,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public string DefiningName
+		{
+			get
+			{
+				return this.definingName;
+			}
+			set
+			{
+				this.definingName = value;
+			}
+		}
+
+		public StructuredTypeClass DefiningType
+		{
+			get
+			{
+				return this.definingType;
+			}
+			set
+			{
+				this.definingType = value;
+			}
+		}
+
 		public int Level
 		{
 			//	Niveau d'indentation (0..n).
@@ -980,6 +1004,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSubtitle;
 		protected bool isInherited;
 		protected bool isInterface;
+		protected string definingName;
+		protected StructuredTypeClass definingType;
 		protected int level;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
