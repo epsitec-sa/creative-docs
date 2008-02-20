@@ -5,4 +5,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription ("CrDoc Application Engine")]
 [assembly: AssemblyCompany ("EPSITEC SA")]
 [assembly: AssemblyProduct ("CrDoc")]
-[assembly: AssemblyCopyright ("Copyright © 2002-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2002-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

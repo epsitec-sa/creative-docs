@@ -207,11 +207,9 @@
   <data id="0D6">mailto:info@creativedocs.net</data>
   <data id="0E6">info@creativedocs.net</data>
   <data id="0F6">Snail mail:</data>
-  <data id="0G6">Epsitec SA, Mouette 5, CH-1092 Belmont, Switzerland</data>
+  <data id="0G6">Epsitec SA, Ch. du Fontenay 6, 1400 Yverdon-les-Bains, Switzerland</data>
   <data id="0H6">Phone:</data>
   <data id="0I6">+41 84 827 37 87</data>
-  <data id="0J6">Fax:</data>
-  <data id="0K6">+41 21 728 44 83</data>
   <data id="0L6" mod="1">New document</data>
   <data id="0M6" mod="1">Open</data>
   <data id="0N6" mod="1">Preview</data>

@@ -100,7 +100,7 @@ BEGIN
             VALUE "FileDescription", "Creative Docs .NET"
             VALUE "FileVersion", "2, 1, 9, 0"
             VALUE "InternalName", "Creative Docs .NET"
-            VALUE "LegalCopyright", "Copyright © 2002-2008, OPaC bright ideas, CH-1400 Yverdon-les-Bains & EPSITEC SA, CH-1920 Belmont-sur-Lausanne, Switzerland"
+            VALUE "LegalCopyright", "Copyright © 2002-2008, OPaC bright ideas, 1400 Yverdon-les-Bains & EPSITEC SA, CH-1920 Belmont-sur-Lausanne, Switzerland"
             VALUE "OriginalFilename", "Creative Docs .NET.exe"
             VALUE "ProductName", "Creative Docs .NET"
             VALUE "ProductVersion", "2, 0, 0, 0"

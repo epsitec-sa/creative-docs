@@ -282,9 +282,7 @@
   <data name="Dialog.Update.Mail2" id="0D6">mailto:epsitec@epsitec.ch</data>
   <data name="Dialog.Update.Mail3" id="0E6">epsitec@epsitec.ch</data>
   <data name="Dialog.Update.Address1" id="0F6">Poste:</data>
-  <data name="Dialog.Update.Address2" id="0G6">Epsitec SA, Mouette 5, CH-1092 Belmont</data>
+  <data name="Dialog.Update.Address2" id="0G6">Epsitec SA, Ch. du Fontenay 6, 1400 Yverdon-les-Bains, Suisse</data>
   <data name="Dialog.Update.Phone1" id="0H6">Tél:</data>
-  <data name="Dialog.Update.Phone2" id="0I6">021 728 44 83</data>
-  <data name="Dialog.Update.Fax1" id="0J6">Fax:</data>
-  <data name="Dialog.Update.Fax2" id="0K6">021 728 44 83</data>
+  <data name="Dialog.Update.Phone2" id="0I6">0848 27 37 87</data>
 </bundle>

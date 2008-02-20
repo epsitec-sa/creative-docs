@@ -73,7 +73,7 @@ BEGIN
             VALUE "FileDescription", "Win32 Clipboard Interface for .NET"
             VALUE "FileVersion", "2, 2, 0, 0"
             VALUE "InternalName", "Clipboard"
-            VALUE "LegalCopyright", "Copyright © 2005-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland"
+            VALUE "LegalCopyright", "Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland"
             VALUE "OriginalFilename", "Clipboard.Win32"
             VALUE "ProductName", "Clipboard.Win32"
             VALUE "ProductVersion", "2, 2, 0, 0"

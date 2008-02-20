@@ -133,10 +133,8 @@
   <data id="046">&lt;i&gt;Keine weiteren kostenlosen Updates.&lt;/i&gt;</data>
   <data id="0C6">E-Mail:</data>
   <data id="036">Kostenlose Updates bis &lt;b&gt;{0}&lt;/b&gt;</data>
-  <data id="0J6">Fax:</data>
-  <data id="0K6">+41 21 728 44 83</data>
   <data id="0F6">Adresse:</data>
-  <data id="0G6">Epsitec SA, Mouette 5, CH-1092 Belmont, Switzerland</data>
+  <data id="0G6">Epsitec SA, Ch. du Fontenay 6, 1400 Yverdon-les-Bains, Switzerland</data>
   <data id="0V2">Alle Zeichen</data>
   <data id="0U2">Ausgewählte Zeichen</data>
   <data id="0T2">Symbole</data>

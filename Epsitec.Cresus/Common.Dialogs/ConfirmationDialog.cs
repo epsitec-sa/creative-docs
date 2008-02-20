@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel Roux
 
 using System.Collections.Generic;

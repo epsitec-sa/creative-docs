@@ -103,8 +103,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			b.Append(string.Format("{0}<tab/>{1}<br/>", Res.Strings.Dialog.Update.Address1, Res.Strings.Dialog.Update.Address2));
 			b.Append(chip);
 			b.Append(string.Format("{0}<tab/>{1}<br/>", Res.Strings.Dialog.Update.Phone1, Res.Strings.Dialog.Update.Phone2));
-			b.Append(chip);
-			b.Append(string.Format("{0}<tab/>{1}", Res.Strings.Dialog.Update.Fax1, Res.Strings.Dialog.Update.Fax2));
+//-			b.Append(chip);
+//-			b.Append(string.Format("{0}<tab/>{1}", Res.Strings.Dialog.Update.Fax1, Res.Strings.Dialog.Update.Fax2));
 			this.buy.Text = b.ToString();
 			this.buy.HypertextClicked += new MessageEventHandler(this.HandleLinkHypertextClicked);
 

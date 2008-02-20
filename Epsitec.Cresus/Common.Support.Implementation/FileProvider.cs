@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;
@@ -6,14 +6,15 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support.Implementation
-{	
+{
 	/// <summary>
 	/// La classe FileProvider donne accès aux ressources stockées dans des
 	/// fichiers.
 	/// </summary>
 	public class FileProvider : AbstractResourceProvider
 	{
-		public FileProvider(ResourceManager manager) : base (manager)
+		public FileProvider(ResourceManager manager)
+			: base (manager)
 		{
 			string dir1 = manager.DefaultPath;
 			string dir2 = System.IO.Directory.GetCurrentDirectory ();
@@ -25,16 +26,19 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
 			}
-			
+
 			this.idRegex = RegexFactory.FileName;
 			this.SelectLocale (CultureInfo.CurrentCulture);
 		}
-		
-		public override string			Prefix
+
+		public override string Prefix
 		{
-			get { return "file"; }
+			get
+			{
+				return "file";
+			}
 		}
-		
+
 		public override bool SelectModule(ref ResourceModuleId module)
 		{
 			string moduleName = null;
@@ -65,7 +69,7 @@ namespace Epsitec.Common.Support.Implementation
 				moduleName = module.Name;
 				modulePath = module.Path;
 			}
-			
+
 			if (moduleName != null)
 			{
 				//	Search the module based on its module name. 
@@ -82,12 +86,12 @@ namespace Epsitec.Common.Support.Implementation
 						}
 					}
 				}
-				
+
 				if ((!string.IsNullOrEmpty (modulePath)) &&
 					(System.IO.Directory.Exists (modulePath)))
 				{
 					ResourceModuleId info = FileProvider.GetModuleId (modulePath);
-					
+
 					moduleId = info.Id;
 
 					if ((moduleId >= 0) &&
@@ -111,45 +115,45 @@ namespace Epsitec.Common.Support.Implementation
 			base.SelectLocale (culture);
 
 			this.genericFileSuffix = ".resource";
-			
+
 			this.defaultFileSuffix = string.Concat (".", this.defaultSuffix, this.genericFileSuffix);
-			this.localFileSuffix   = string.Concat (".", this.localSuffix,   this.genericFileSuffix);
-			this.customFileSuffix  = string.Concat (".", this.customSuffix,  this.genericFileSuffix);
+			this.localFileSuffix   = string.Concat (".", this.localSuffix, this.genericFileSuffix);
+			this.customFileSuffix  = string.Concat (".", this.customSuffix, this.genericFileSuffix);
 		}
-		
+
 		public override bool ValidateId(string id)
 		{
 			return base.ValidateId (id) && this.idRegex.IsMatch (id);
 		}
-		
+
 		public override bool Contains(string id)
 		{
 			if (this.ValidateId (id))
 			{
 				//	On valide toujours le nom avant, pour éviter des mauvaises surprises si
 				//	l'appelant est malicieux.
-				
+
 				string path = this.GetPathFromId (id, ResourceLevel.Default);
-				
+
 				if (System.IO.File.Exists (path))
 				{
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
-		
-		
+
+
 		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			if (this.culture != culture)
 			{
 				this.SelectLocale (culture);
 			}
-			
+
 			string path = this.GetPathFromId (id, level);
-			
+
 			if ((string.IsNullOrEmpty (path) == false) &&
 				(System.IO.File.Exists (path)))
 			{
@@ -167,7 +171,7 @@ namespace Epsitec.Common.Support.Implementation
 				{
 				}
 			}
-			
+
 			return null;
 		}
 
@@ -185,10 +189,13 @@ namespace Epsitec.Common.Support.Implementation
 				if (this.ValidateId (moduleName))
 				{
 					ResourceModuleId info = FileProvider.GetModuleId (file);
-					
+
 					if (info.Id >= 0)
 					{
-						if (modules.FindIndex (delegate (ResourceModuleId item) { return item.Id == info.Id; }) == -1)
+						if (modules.FindIndex (delegate (ResourceModuleId item)
+						{
+							return item.Id == info.Id;
+						}) == -1)
 						{
 							modules.Add (info);
 						}
@@ -208,7 +215,7 @@ namespace Epsitec.Common.Support.Implementation
 						return string.CompareOrdinal (a.Name, b.Name);
 					}
 				});
-			
+
 			return modules.ToArray ();
 		}
 
@@ -218,13 +225,13 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				this.SelectLocale (culture);
 			}
-			
+
 			string fileFilter = nameFilter;
-			
+
 			string path   = this.pathPrefix;
 			string suffix = this.GetLevelSuffix (level);
 			string search;
-			
+
 			if (level == ResourceLevel.All)
 			{
 				search = string.Concat (fileFilter, ".*", suffix);
@@ -233,39 +240,39 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				search = string.Concat (fileFilter, suffix);
 			}
-			
+
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			string[] files = System.IO.Directory.GetFiles (path, search);
-			
+
 			int start = path.Length;
 			int strip = suffix.Length + start;
-			
+
 			for (int i = 0; i < files.Length; i++)
 			{
 				string fullName   = files[i];
 				string bundleName = fullName.Substring (start, fullName.Length - strip);
-				
-				if (! RegexFactory.ResourceBundleName.IsMatch (bundleName))
+
+				if (!RegexFactory.ResourceBundleName.IsMatch (bundleName))
 				{
 					continue;
 				}
-				
+
 				if ((typeFilter != null) &&
 					(typeFilter != "*"))
 				{
 					System.Text.RegularExpressions.Regex typeRegex = Support.RegexFactory.FromSimpleJoker (typeFilter);
 					ResourceBundle bundle = ResourceBundle.Create (this.manager, bundleName);
-					
+
 					bundle.RefInclusionEnabled = false;
 					bundle.AutoMergeEnabled    = false;
-					
+
 					byte[] data = this.GetData (bundleName, ResourceLevel.Default, culture);
-					
+
 					if (ResourceBundle.CheckBundleHeader (data) == false)
 					{
 						continue;
 					}
-					
+
 					try
 					{
 						bundle.Compile (data);
@@ -274,24 +281,24 @@ namespace Epsitec.Common.Support.Implementation
 					{
 						//	Ce n'est pas un bundle compilable, probablement parce qu'il contient des
 						//	données binaires. Sautons-le.
-						
+
 						continue;
 					}
-					
-					if (! typeRegex.IsMatch (bundle.Type))
+
+					if (!typeRegex.IsMatch (bundle.Type))
 					{
 						//	Saute ce bundle, car il n'est pas du type adéquat :
-						
+
 						continue;
 					}
 				}
-				
+
 				list.Add (bundleName);
 			}
-			
+
 			files = new string[list.Count];
 			list.CopyTo (files);
-			
+
 			return files;
 		}
 
@@ -305,20 +312,20 @@ namespace Epsitec.Common.Support.Implementation
 		{
 			FileProvider.globalProbingPath = path;
 		}
-		
+
 		public override bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
 			if (this.culture != culture)
 			{
 				this.SelectLocale (culture);
 			}
-			
+
 			string path = this.GetPathFromId (id, level);
-			
+
 			if (path != null)
 			{
 				System.IO.FileMode fileMode = System.IO.FileMode.Open;
-				
+
 				switch (mode)
 				{
 					case ResourceSetMode.CreateOnly:
@@ -333,20 +340,20 @@ namespace Epsitec.Common.Support.Implementation
 					default:
 						throw new System.ArgumentException (string.Format ("Mode {0} not supported.", mode), "mode");
 				}
-				
+
 				using (System.IO.FileStream stream = new System.IO.FileStream (path, fileMode, System.IO.FileAccess.Write))
 				{
 					stream.Write (data, 0, data.Length);
 					stream.SetLength (data.Length);
 					stream.Flush ();
-					
+
 					return true;
 				}
 			}
-			
+
 			return false;
 		}
-		
+
 		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			if (this.culture != culture)
@@ -457,7 +464,7 @@ namespace Epsitec.Common.Support.Implementation
 			{
 				paths.AddRange (FileProvider.globalProbingPath.Split (';'));
 			}
-			
+
 			paths.Add (this.pathPrefixRoot);
 
 			foreach (string path in paths)
@@ -483,7 +490,7 @@ namespace Epsitec.Common.Support.Implementation
 
 		private string						pathPrefix;
 		private string						pathPrefixRoot;
-		
+
 		private Regex						idRegex;
 
 		private string						defaultFileSuffix;
@@ -494,3 +501,4 @@ namespace Epsitec.Common.Support.Implementation
 		private ResourceModuleId			module;
 	}
 }
+
