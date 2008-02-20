@@ -16,24 +16,16 @@ namespace Epsitec.Common.Drawing
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-	public class Gradient : IRenderer, System.IDisposable, ITransformProvider
+	public sealed class Gradient : IRenderer, System.IDisposable, ITransformProvider
 	{
 		public Gradient()
 		{
+			this.agg_ren = new Agg.SafeGradientRendererHandle ();
 		}
 		
-		~Gradient()
-		{
-			this.Dispose (false);
-		}
-		
-		
+
 		public Pixmap							Pixmap
 		{
-			get
-			{
-				return this.pixmap;
-			}
 			set
 			{
 				if (this.pixmap != value)
@@ -172,25 +164,10 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.pixmap != null)
-				{
-					this.pixmap.Dispose ();
-					this.pixmap = null;
-				}
-			}
-			
 			this.Detach ();
 		}
 		
-		protected virtual void AssertAttached()
+		private void AssertAttached()
 		{
 			if (this.agg_ren == System.IntPtr.Zero)
 			{
@@ -199,20 +176,19 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		protected void Attach(Pixmap pixmap)
+		private void Attach(Pixmap pixmap)
 		{
 			this.Detach ();
 			
-			this.agg_ren = AntiGrain.Renderer.Gradient.New (pixmap.Handle);
-			this.pixmap  = pixmap;
+			this.agg_ren.Create (pixmap.Handle);
+			this.pixmap = pixmap;
 		}
 		
-		protected void Detach()
+		private void Detach()
 		{
-			if (this.agg_ren != System.IntPtr.Zero)
+			if (this.pixmap != null)
 			{
-				AntiGrain.Renderer.Gradient.Delete (this.agg_ren);
-				this.agg_ren = System.IntPtr.Zero;
+				this.agg_ren.Delete ();
 				this.pixmap  = null;
 				this.fill    = GradientFill.None;
 				this.transform.Reset ();
@@ -220,7 +196,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		protected virtual void OnTransformUpdating()
+		private void OnTransformUpdating()
 		{
 			if (this.TransformUpdating != null)
 			{
@@ -230,7 +206,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		
 		
-		private System.IntPtr					agg_ren;
+		private readonly Agg.SafeGradientRendererHandle	agg_ren;
 		private Pixmap							pixmap;
 		private GradientFill					fill			= GradientFill.None;
 		private Transform						transform		= new Transform ();

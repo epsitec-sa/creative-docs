@@ -22,7 +22,6 @@ namespace Epsitec.Common.Drawing
 	{
 		Pixmap									Pixmap
 		{
-			get;
 			set;
 		}
 

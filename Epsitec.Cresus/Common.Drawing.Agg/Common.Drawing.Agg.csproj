@@ -125,9 +125,11 @@
     <Compile Include="AbstractRasterizer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Agg\SafeGradientRendererHandle.cs" />
     <Compile Include="Agg\Library.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Agg\SafeRasterizerHandle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

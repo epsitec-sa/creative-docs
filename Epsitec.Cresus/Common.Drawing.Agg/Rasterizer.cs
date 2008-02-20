@@ -12,14 +12,10 @@ namespace Epsitec.Common.Drawing
 	{
 		public Rasterizer()
 		{
+			this.agg_ras = new Agg.SafeRasterizerHandle ();
 		}
 		
-		~Rasterizer()
-		{
-			this.Dispose (false);
-		}
-		
-		
+
 		public override void SetClipBox(double x1, double y1, double x2, double y2)
 		{
 			//	The clip box is specified in destination pixel coordinates (without any transform
@@ -191,24 +187,17 @@ namespace Epsitec.Common.Drawing
 		protected override void Dispose(bool disposing)
 		{
 			//	Free unmanaged resources :
-			
-			if (this.agg_ras != System.IntPtr.Zero)
-			{
-				AntiGrain.Rasterizer.Delete (this.agg_ras);
-				this.agg_ras = System.IntPtr.Zero;
-			}
+
+			this.agg_ras.Close ();
 		}
 		
 		
 		private void CreateOnTheFly()
 		{
-			if (this.agg_ras == System.IntPtr.Zero)
-			{
-				this.agg_ras = AntiGrain.Rasterizer.New ();
-			}
+			this.agg_ras.CreateOnTheFly ();
 		}
 		
 		
-		private System.IntPtr					agg_ras;
+		private readonly Agg.SafeRasterizerHandle	agg_ras;
 	}
 }

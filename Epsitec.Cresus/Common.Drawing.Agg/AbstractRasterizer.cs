@@ -1,11 +1,11 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// The AbstractRasterizer is the base classe used by all rasterizers. See the
-	/// Rasterizer class for details.
+	/// The <c>AbstractRasterizer</c> is the base classe used by all rasterizers.
+	/// See the <see cref="Rasterizer"/> class for details.
 	/// </summary>
 	public abstract class AbstractRasterizer : System.IDisposable
 	{
