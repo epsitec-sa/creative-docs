@@ -117,7 +117,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=0; i<dataFields.Count; i++)
 				{
 					Field field = new Field(this.editor);
-					this.UpdateField(dataFields[i], field);
+					//?this.UpdateField(dataFields[i], field);
+					field.Initialize(this, dataFields[i]);
 					this.fields.Add(field);
 				}
 			}
@@ -1518,7 +1519,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			dataFields.Insert(fieldRank+1, newField);
 
 			Field field = new Field(this.editor);
-			this.UpdateField(newField, field);
+			//?this.UpdateField(newField, field);
+			field.Initialize(this, newField);
 			this.fields.Insert(rank+1, field);
 
 			this.UpdateFieldsLink();
@@ -1785,7 +1787,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			fieldCultureMap.Name = name;
-			this.UpdateField(dataField, this.fields[rank]);
+			//?this.UpdateField(dataField, this.fields[rank]);
+			this.fields[rank].Initialize(this, dataField);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.Invalidate();
 		}
@@ -1845,11 +1848,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (isPrivateRelation)  fieldOptions |= FieldOptions.PrivateRelation;
 			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
 
-			this.UpdateField(dataField, this.fields[rank]);
+			//?this.UpdateField(dataField, this.fields[rank]);
+			this.fields[rank].Initialize(this, dataField);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 		}
 
+#if false
 		protected void UpdateField(StructuredData dataField, Field field)
 		{
 			//	Met à jour une instance de la classe Field, selon le StructuredData d'un champ.
@@ -1922,6 +1927,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			field.Destination = typeId;
 			field.SrcBox = this;
 		}
+#endif
 
 		protected void UpdateFieldsContent()
 		{
@@ -3533,7 +3539,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				for (int i=0; i<dataFields.Count; i++)
 				{
 					Field field = new Field(this.editor);
-					this.UpdateField(dataFields[i], field);
+					//?this.UpdateField(dataFields[i], field);
+					field.Initialize(this, dataFields[i]);
 
 					Druid fieldCaptionId = (Druid) dataFields[i].GetValue(Support.Res.Fields.Field.CaptionId);
 					Field rField = this.AdjustAfterReadSearchField(fieldCaptionId);  // cherche le champ correspondant désérialisé

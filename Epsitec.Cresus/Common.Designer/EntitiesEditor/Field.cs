@@ -98,6 +98,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.index = -1;
 			this.isExplored = false;
 			this.isSourceExpanded = false;
+			this.definingName = null;
+			this.definingType = StructuredTypeClass.None;
+			this.level = 0;
 			
 			this.routeType = RouteType.Close;
 			this.routeRelativeAX1 = 0.2;
@@ -111,6 +114,80 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.commentAttach = AbstractObject.minAttach;
 			this.commentMainColor = AbstractObject.MainColor.Yellow;
 			this.commentText = Res.Strings.Entities.Comment.DefaultText;
+		}
+
+		public void Initialize(AbstractObject obj, StructuredData dataField)
+		{
+			//	Met à jour selon le StructuredData du champ.
+			System.Diagnostics.Debug.Assert(obj is ObjectBox);
+			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
+
+			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
+			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+			Druid typeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			Druid definingTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DefiningTypeId);
+			Druid deepDefiningTypeId = (Druid) dataField.GetValue(Support.Res.Fields.Field.DeepDefiningTypeId);
+			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
+
+			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+			string sourceCode = expression.SourceCode;
+
+			Module typeModule = obj.Editor.Module.DesignerApplication.SearchModule(typeId);
+			CultureMap typeCultureMap = null;
+			if (typeModule != null)
+			{
+				typeCultureMap = typeModule.AccessTypes.Accessor.Collection[typeId];
+				if (typeCultureMap == null)
+				{
+					typeCultureMap = typeModule.AccessEntities.Accessor.Collection[typeId];
+				}
+				else
+				{
+					//	Le type est un type simple, pas une entité. Cela ne peut donc
+					//	pas être une relation !
+					rel = FieldRelation.None;
+				}
+			}
+
+			Module fieldModule = obj.Editor.Module.DesignerApplication.SearchModule(fieldCaptionId);
+			CultureMap fieldCultureMap = fieldModule.AccessFields.Accessor.Collection[fieldCaptionId];
+
+			string definingName = null;
+			StructuredTypeClass definingType = StructuredTypeClass.None;
+
+			if (deepDefiningTypeId.IsValid)
+			{
+				Module definingModule = obj.Editor.Module.DesignerApplication.SearchModule(deepDefiningTypeId);
+				CultureMap definingCultureMap = definingModule.AccessEntities.Accessor.Collection[deepDefiningTypeId];
+
+				definingName = definingCultureMap.Name;
+				if (definingModule != obj.Editor.Module)  // dans un autre module ?
+				{
+					definingName = string.Concat(definingModule.ModuleId.Name, ".", definingName);
+				}
+
+				StructuredData definingData = definingCultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				definingType = (StructuredTypeClass) definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+			}
+
+			this.captionId = fieldCaptionId;
+			this.definingTypeId = definingTypeId;
+			this.deepDefiningTypeId = deepDefiningTypeId;
+			this.definingName = definingName;
+			this.definingType = definingType;
+			this.expression = sourceCode;
+			this.IsNullable = (options & FieldOptions.Nullable) != 0;
+			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
+			this.cultureMapSource = source;
+			this.FieldName = (fieldCultureMap == null) ? "" : fieldCultureMap.Name;
+			this.TypeName = (typeCultureMap == null) ? "" : typeCultureMap.Name;
+			this.relation = rel;
+			this.membership = membership;
+			this.destination = typeId;
+			this.srcBox = obj as ObjectBox;
 		}
 
 		public bool IsReadOnly
@@ -170,7 +247,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					return this.membership == FieldMembership.Inherited;
+					return this.membership != FieldMembership.Local;
 				}
 			}
 			set
@@ -190,7 +267,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					return this.definingTypeId.IsValid && this.membership == FieldMembership.Local;
+					return (this.definingTypeId.IsValid && this.membership == FieldMembership.Local) || this.membership == FieldMembership.LocalOverride;
 				}
 			}
 			set
@@ -205,10 +282,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return this.definingName;
 			}
-			set
-			{
-				this.definingName = value;
-			}
 		}
 
 		public StructuredTypeClass DefiningType
@@ -216,10 +289,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.definingType;
-			}
-			set
-			{
-				this.definingType = value;
 			}
 		}
 
@@ -317,10 +386,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return this.membership;
 			}
-			set
-			{
-				this.membership = value;
-			}
 		}
 
 		public Druid CaptionId
@@ -343,10 +408,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return this.definingTypeId;
 			}
-			set
-			{
-				this.definingTypeId = value;
-			}
 		}
 
 		public Druid DeepDefiningTypeId
@@ -356,10 +417,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				return this.deepDefiningTypeId;
 			}
-			set
-			{
-				this.deepDefiningTypeId = value;
-			}
 		}
 
 		public Druid Destination
@@ -368,10 +425,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.destination;
-			}
-			set
-			{
-				this.destination = value;
 			}
 		}
 
@@ -455,10 +508,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.srcBox;
-			}
-			set
-			{
-				this.srcBox = value;
 			}
 		}
 
