@@ -1718,6 +1718,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.access.RevertChanges();
 				this.access.ClearLocalDirty();
+				this.UpdateList();  // met à jour la liste de gauche avec les données modifiées
 				this.Update();  // met à jour la partie éditable centrale avec les données initiales
 			}
 		}
