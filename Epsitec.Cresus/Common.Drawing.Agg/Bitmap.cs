@@ -1,5 +1,5 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
 
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		static System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> bitmapDataCache = new System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> ();
+		static System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> lockedBitmapDataCache = new System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> ();
 		
 		public bool LockBits()
 		{
@@ -200,12 +200,12 @@ namespace Epsitec.Common.Drawing
 					int width  = this.bitmap_dx;
 					int height = this.bitmap_dy;
 					
-					lock (bitmapDataCache)
+					lock (lockedBitmapDataCache)
 					{
-						System.Diagnostics.Debug.Assert (!bitmapDataCache.ContainsKey (this.bitmap));
+						System.Diagnostics.Debug.Assert (!Bitmap.lockedBitmapDataCache.ContainsKey (this.bitmap));
 					}
 
-					lock (bitmapDataCache)
+					lock (Bitmap.lockedBitmapDataCache)
 					{
 						int  attempt = 0;
 						bool success = false;
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Drawing
 							}
 						}
 
-						bitmapDataCache[this.bitmap] = this.bitmap_data;
+						Bitmap.lockedBitmapDataCache[this.bitmap] = this.bitmap_data;
 					}
 				}
 				
@@ -254,9 +254,9 @@ namespace Epsitec.Common.Drawing
 						this.bitmap.UnlockBits (this.bitmap_data);
 						this.bitmap_data = null;
 						
-						lock (bitmapDataCache)
+						lock (Bitmap.lockedBitmapDataCache)
 						{
-							bitmapDataCache.Remove (this.bitmap);
+							Bitmap.lockedBitmapDataCache.Remove (this.bitmap);
 						}
 					}
 				}

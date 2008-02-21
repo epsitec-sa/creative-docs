@@ -95,8 +95,6 @@ namespace Epsitec.Common.Widgets.Adorners
 				if (Factory.activeAdorner != adorner)
 				{
 					Factory.activeAdorner = adorner;
-					
-					Drawing.Color.DefineCaptionColor (adorner.ColorCaption);
 
 					Window.InvalidateAll (Window.InvalidateReason.AdornerChanged);
 				}

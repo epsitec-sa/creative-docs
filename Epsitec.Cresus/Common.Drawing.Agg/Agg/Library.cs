@@ -6,7 +6,12 @@ using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Drawing.Agg
 {
-	public class Library : System.IDisposable
+	/// <summary>
+	/// The <c>Library</c> class provides the basic initialization interface
+	/// for AGG. It must be called to properly set up the underlying drawing
+	/// engine.
+	/// </summary>
+	public sealed class Library
 	{
 		Library()
 		{
@@ -15,33 +20,18 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		~Library()
 		{
-			this.Dispose (false);
+			Library.instance = null;
+			AntiGrain.Interface.ShutDown ();
 		}
 
 
+		/// <summary>
+		/// Initializes the AGG library.
+		/// </summary>
 		public static void Initialize()
 		{
 		}
 
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-		#endregion
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-			}
-			
-			Library.instance = null;
-			AntiGrain.Interface.ShutDown ();
-		}
-		
-		
 		
 		public static Library		Current
 		{

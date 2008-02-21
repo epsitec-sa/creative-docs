@@ -12,7 +12,7 @@ namespace Epsitec.Common.Drawing
 	{
 		public Rasterizer()
 		{
-			this.agg_ras = new Agg.SafeRasterizerHandle ();
+			this.handle = new Agg.SafeRasterizerHandle ();
 		}
 		
 
@@ -21,13 +21,13 @@ namespace Epsitec.Common.Drawing
 			//	The clip box is specified in destination pixel coordinates (without any transform
 			//	matrix).
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.SetClipBox (this.agg_ras, x1, y1, x2, y2);
+			AntiGrain.Rasterizer.SetClipBox (this.handle, x1, y1, x2, y2);
 		}
 		
 		public override void ResetClipBox()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.ResetClipBox (this.agg_ras);
+			AntiGrain.Rasterizer.ResetClipBox (this.handle);
 		}
 		
 		
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Drawing
 			if (path != null)
 			{
 				this.CreateOnTheFly ();
-				AntiGrain.Rasterizer.AddPath (this.agg_ras, path.Handle, path.ContainsCurves);
+				AntiGrain.Rasterizer.AddPath (this.handle, path.Handle, path.ContainsCurves);
 			}
 		}
 		
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Drawing
 			if (path != null)
 			{
 				this.CreateOnTheFly ();
-				AntiGrain.Rasterizer.AddPathStroke1 (this.agg_ras, path.Handle, width, path.ContainsCurves);
+				AntiGrain.Rasterizer.AddPathStroke1 (this.handle, path.Handle, width, path.ContainsCurves);
 			}
 		}
 		
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Drawing
 			if (path != null)
 			{
 				this.CreateOnTheFly ();
-				AntiGrain.Rasterizer.AddPathStroke2 (this.agg_ras, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
+				AntiGrain.Rasterizer.AddPathStroke2 (this.handle, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
 			}
 		}
 		
@@ -73,9 +73,9 @@ namespace Epsitec.Common.Drawing
 				{
 					case SyntheticFontMode.Oblique:
 						font_transform.MultiplyBy (this.transform);
-						AntiGrain.Rasterizer.SetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
-						AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
-						AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+						AntiGrain.Rasterizer.SetTransform (this.handle, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+						AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
+						AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 						return;
 					
 					default:
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
+			AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, x, y, scale);
 		}
 
 		protected override void AddPlainGlyphs(Font font, ushort[] glyphs, double[] x, double xx, double xy, double yx, double yy, double tx, double ty)
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Drawing
 			Transform transform = new Transform (xx, xy, yx, yy, tx, ty);
 
 			transform.MultiplyBy (this.transform);
-			AntiGrain.Rasterizer.SetTransform (this.agg_ras, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
-			AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, 1.0, glyphs, x, null, null);
-			AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+			AntiGrain.Rasterizer.SetTransform (this.handle, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+			AntiGrain.Rasterizer.AddGlyphs (this.handle, font.Handle, 1.0, glyphs, x, null, null);
+			AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 		}
 		
 		public override void AddGlyph(Font font, int glyph, double x, double y, double scale, double sx, double sy)
@@ -120,9 +120,9 @@ namespace Epsitec.Common.Drawing
 				font_transform.MultiplyBy (this.transform);
 				font_transform.MultiplyByPostfix (Transform.FromScale (sx, sy));
 				
-				AntiGrain.Rasterizer.SetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
-				AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
-				AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+				AntiGrain.Rasterizer.SetTransform (this.handle, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+				AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
+				AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 			}
 		}
 		
@@ -130,22 +130,22 @@ namespace Epsitec.Common.Drawing
 		public override void Render(Renderers.Solid renderer)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.RenderSolid (this.agg_ras, renderer.Handle);
-			AntiGrain.Rasterizer.Clear (this.agg_ras);
+			AntiGrain.Rasterizer.RenderSolid (this.handle, renderer.Handle);
+			AntiGrain.Rasterizer.Clear (this.handle);
 		}
 		
 		public override void Render(Renderers.Image renderer)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.RenderImage (this.agg_ras, renderer.Handle);
-			AntiGrain.Rasterizer.Clear (this.agg_ras);
+			AntiGrain.Rasterizer.RenderImage (this.handle, renderer.Handle);
+			AntiGrain.Rasterizer.Clear (this.handle);
 		}
 		
 		public override void Render(Renderers.Gradient renderer)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.RenderGradient (this.agg_ras, renderer.Handle);
-			AntiGrain.Rasterizer.Clear (this.agg_ras);
+			AntiGrain.Rasterizer.RenderGradient (this.handle, renderer.Handle);
+			AntiGrain.Rasterizer.Clear (this.handle);
 		}
 
 		public override bool HitTest(double x, double y)
@@ -154,33 +154,33 @@ namespace Epsitec.Common.Drawing
 			int yy = (int) (y + 0.5);
 			
 			this.CreateOnTheFly ();
-			return AntiGrain.Rasterizer.HitTest (this.agg_ras, xx, yy);
+			return AntiGrain.Rasterizer.HitTest (this.handle, xx, yy);
 		}
 		
 		
 		protected override void SyncFillMode()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.FillingRule (this.agg_ras, (int) this.fill_mode);
+			AntiGrain.Rasterizer.FillingRule (this.handle, (int) this.fill_mode);
 		}
 		
 		protected override void SyncGamma()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.Gamma (this.agg_ras, this.gamma);
+			AntiGrain.Rasterizer.Gamma (this.handle, this.gamma);
 		}
 		
 		protected override void SyncTransform()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+			AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 		}
 		
 		
 		protected override void AddPlainGlyphs(Font font, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.AddGlyphs (this.agg_ras, font.Handle, scale, glyphs, x, y, sx);
+			AntiGrain.Rasterizer.AddGlyphs (this.handle, font.Handle, scale, glyphs, x, y, sx);
 		}
 		
 		
@@ -188,16 +188,19 @@ namespace Epsitec.Common.Drawing
 		{
 			//	Free unmanaged resources :
 
-			this.agg_ras.Close ();
+			this.handle.Close ();
 		}
 		
 		
 		private void CreateOnTheFly()
 		{
-			this.agg_ras.CreateOnTheFly ();
+			if (this.handle.IsInvalid)
+			{
+				this.handle.Create ();
+			}
 		}
 		
 		
-		private readonly Agg.SafeRasterizerHandle	agg_ras;
+		private readonly Agg.SafeRasterizerHandle	handle;
 	}
 }

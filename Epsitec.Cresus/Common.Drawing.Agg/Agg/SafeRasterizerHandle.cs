@@ -35,12 +35,9 @@ namespace Epsitec.Common.Drawing.Agg
 		/// <summary>
 		/// Creates the AGG rasterizer on the fly, if needed.
 		/// </summary>
-		public void CreateOnTheFly()
+		public void Create()
 		{
-			if (this.handle == System.IntPtr.Zero)
-			{
-				this.handle = AntiGrain.Rasterizer.New ();
-			}
+			this.handle = AntiGrain.Rasterizer.New ();
 		}
 
 		/// <summary>
