@@ -1,27 +1,18 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-	public class Smooth : IRenderer, System.IDisposable
+	public sealed class Smooth : IRenderer, System.IDisposable
 	{
 		public Smooth(Graphics graphics)
 		{
 			this.graphics = graphics;
+			this.handle = new Agg.SafeSmoothRendererHandle ();
 		}
-		
-		~Smooth()
-		{
-			this.Dispose (false);
-		}
-		
 		
 		public Pixmap							Pixmap
 		{
-			get
-			{
-				return this.pixmap;
-			}
 			set
 			{
 				if (this.pixmap != value)
@@ -37,33 +28,39 @@ namespace Epsitec.Common.Drawing.Renderers
 				}
 			}
 		}
-		
-		
-		public System.IntPtr					Handle
+
+
+		public System.IntPtr Handle
 		{
-			get { return this.agg_ren; }
+			get
+			{
+				return this.handle;
+			}
 		}
-		
-		public Color							Color
+
+		public Color Color
 		{
-			set { this.SetColor (value); }
+			set
+			{
+				this.SetColor (value);
+			}
 		}
-		
-		
+
+
 		public void SetColor(Color color)
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				return;
 			}
-			
-			AntiGrain.Renderer.Smooth.Color (this.agg_ren, color.R, color.G, color.B, color.A);
+
+			AntiGrain.Renderer.Smooth.Color (this.handle, color.R, color.G, color.B, color.A);
 		}
 		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
-			AntiGrain.Renderer.Smooth.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+			AntiGrain.Renderer.Smooth.SetAlphaMask (this.handle, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		
 		public void SetParameters(double r1, double r2)
@@ -74,7 +71,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.r1 = r1;
 				this.r2 = r2;
 				
-				if (this.agg_ren == System.IntPtr.Zero)
+				if (this.handle.IsInvalid)
 				{
 					return;
 				}
@@ -86,75 +83,60 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			this.SetTransform (graphics.Transform);
 			
-			AntiGrain.Renderer.Smooth.Setup (this.agg_ren, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
-			AntiGrain.Renderer.Smooth.AddPath (this.agg_ren, path.Handle);
+			AntiGrain.Renderer.Smooth.Setup (this.handle, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+			AntiGrain.Renderer.Smooth.AddPath (this.handle, path.Handle);
 		}
 		
 		
 		#region IDisposable Members
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.pixmap != null)
-				{
-					this.pixmap.Dispose ();
-					this.pixmap = null;
-				}
-			}
-			
 			this.Detach ();
 		}
-		
-		protected void SetTransform(Transform value)
+		#endregion
+
+
+		private void SetTransform(Transform value)
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				return;
 			}
 			
 			this.transform = new Transform (value);
-			AntiGrain.Renderer.Smooth.Setup (this.agg_ren, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+			AntiGrain.Renderer.Smooth.Setup (this.handle, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 		}
-		
-		protected virtual void AssertAttached()
+
+		private void AssertAttached()
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				throw new System.NullReferenceException ("RendererSmooth not attached");
 			}
 		}
-		
-		
-		protected void Attach(Pixmap pixmap)
+
+
+		private void Attach(Pixmap pixmap)
 		{
 			this.Detach ();
 			
-			this.agg_ren = AntiGrain.Renderer.Smooth.New (pixmap.Handle);
-			this.pixmap  = pixmap;
+			this.handle.Create (pixmap.Handle);
+			this.pixmap = pixmap;
 		}
-		
-		protected void Detach()
+
+		private void Detach()
 		{
-			if (this.agg_ren != System.IntPtr.Zero)
+			if (this.pixmap != null)
 			{
-				AntiGrain.Renderer.Smooth.Delete (this.agg_ren);
-				this.agg_ren = System.IntPtr.Zero;
-				this.pixmap  = null;
+				this.handle.Delete ();
+				this.pixmap = null;
 				this.transform.Reset ();
 			}
 		}
 		
 		
 		private Graphics						graphics;
-		private System.IntPtr					agg_ren;
+		private readonly Agg.SafeSmoothRendererHandle handle;
 		private Pixmap							pixmap;
 		private Transform						transform = new Transform ();
 		private	double							r1;

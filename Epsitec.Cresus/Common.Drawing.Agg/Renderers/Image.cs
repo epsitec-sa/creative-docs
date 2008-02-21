@@ -1,28 +1,18 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-	using BitmapData = System.Drawing.Imaging.BitmapData;
-	
-	public class Image : IRenderer, System.IDisposable, ITransformProvider
+	public sealed class Image : IRenderer, System.IDisposable, ITransformProvider
 	{
 		public Image()
 		{
-		}
-		
-		~Image()
-		{
-			this.Dispose (false);
+			this.handle = new Agg.SafeImageRendererHandle ();
 		}
 		
 		
 		public Pixmap							Pixmap
 		{
-			get
-			{
-				return this.pixmap;
-			}
 			set
 			{
 				if (this.pixmap != value)
@@ -53,7 +43,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				{
 					if (this.bitmap != null)
 					{
-						if (this.bitmap_needs_unlock)
+						if (this.bitmapNeedsUnlock)
 						{
 							this.bitmap.UnlockBits ();
 						}
@@ -61,9 +51,9 @@ namespace Epsitec.Common.Drawing.Renderers
 						this.AssertAttached ();
 						
 						this.bitmap = null;
-						this.bitmap_needs_unlock = false;
+						this.bitmapNeedsUnlock = false;
 						
-						AntiGrain.Renderer.Image.Source2 (this.agg_ren, System.IntPtr.Zero, 0, 0, 0);
+						AntiGrain.Renderer.Image.Source2 (this.handle, System.IntPtr.Zero, 0, 0, 0);
 					}
 					
 					this.image = value;
@@ -71,19 +61,19 @@ namespace Epsitec.Common.Drawing.Renderers
 					if (this.image != null)
 					{
 						this.bitmap              = this.image.BitmapImage;
-						this.bitmap_needs_unlock = ! this.bitmap.IsLocked;
+						this.bitmapNeedsUnlock = ! this.bitmap.IsLocked;
 						
 						int width  = this.bitmap.PixelWidth;
 						int height = this.bitmap.PixelHeight;
 						
-						if (this.bitmap_needs_unlock)
+						if (this.bitmapNeedsUnlock)
 						{
 							this.bitmap.LockBits ();
 						}
 						
 						this.AssertAttached ();
 						
-						AntiGrain.Renderer.Image.Source2 (this.agg_ren, this.bitmap.Scan0, width, height, -this.bitmap.Stride);
+						AntiGrain.Renderer.Image.Source2 (this.handle, this.bitmap.Scan0, width, height, -this.bitmap.Stride);
 					}
 				}
 			}
@@ -93,7 +83,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			get
 			{
-				return this.agg_ren;
+				return this.handle;
 			}
 		}
 		
@@ -113,18 +103,18 @@ namespace Epsitec.Common.Drawing.Renderers
 				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
 				//	Graphics.UpdateTransform...
 				
-				if (this.agg_ren == System.IntPtr.Zero)
+				if (this.handle.IsInvalid)
 				{
 					return;
 				}
 				
 				this.transform     = new Transform (value);
-				this.int_transform = new Transform (value);
+				this.internalTransform = new Transform (value);
 				this.OnTransformUpdating ();
 				
-				Transform inverse = Transform.Inverse (this.int_transform);
+				Transform inverse = Transform.Inverse (this.internalTransform);
 				
-				AntiGrain.Renderer.Image.Matrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
+				AntiGrain.Renderer.Image.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
 			}
 		}
 		
@@ -132,7 +122,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			get
 			{
-				return this.int_transform;
+				return this.internalTransform;
 			}
 		}
 		
@@ -141,70 +131,52 @@ namespace Epsitec.Common.Drawing.Renderers
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
-			AntiGrain.Renderer.Image.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+			AntiGrain.Renderer.Image.SetAlphaMask (this.handle, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		
 		public void SelectAdvancedFilter(ImageFilteringMode mode, double radius)
 		{
 			this.AssertAttached ();
-			AntiGrain.Renderer.Image.SetStretchMode (this.agg_ren, (int) mode, radius);
+			AntiGrain.Renderer.Image.SetStretchMode (this.handle, (int) mode, radius);
 		}
 		
 		
 		#region IDisposable Members
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
+			this.Detach ();
+			this.BitmapImage = null;
 		}
 		#endregion
 		
-		protected virtual void Dispose(bool disposing)
+		private void AssertAttached()
 		{
-			if (disposing)
-			{
-				if (this.pixmap != null)
-				{
-					this.pixmap.Dispose ();
-					this.pixmap = null;
-				}
-				
-				this.BitmapImage = null;
-			}
-			
-			this.Detach ();
-		}
-		
-		
-		protected virtual void AssertAttached()
-		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				throw new System.NullReferenceException ("RendererImage not attached");
 			}
 		}
 		
-		protected void Attach(Pixmap pixmap)
+		private void Attach(Pixmap pixmap)
 		{
 			this.Detach ();
 			
 			this.transform.Reset ();
-			this.agg_ren = AntiGrain.Renderer.Image.New (pixmap.Handle);
-			this.pixmap  = pixmap;
+			this.handle.Create (pixmap.Handle);
+			this.pixmap = pixmap;
 		}
 		
-		protected void Detach()
+		private void Detach()
 		{
-			if (this.agg_ren != System.IntPtr.Zero)
+			if (this.pixmap != null)
 			{
-				AntiGrain.Renderer.Image.Delete (this.agg_ren);
-				this.agg_ren = System.IntPtr.Zero;
-				this.pixmap  = null;
+				this.handle.Delete ();
+				this.pixmap = null;
 			}
 		}
 		
 		
-		protected virtual void OnTransformUpdating()
+		private void OnTransformUpdating()
 		{
 			if (this.TransformUpdating != null)
 			{
@@ -214,13 +186,13 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		
 		
-		private System.IntPtr					agg_ren;
+		private readonly Agg.SafeImageRendererHandle handle;
 		private Pixmap							pixmap;
 		private Drawing.Image					image;
 		private Drawing.Bitmap					bitmap;
-		private bool							bitmap_needs_unlock;
+		private bool							bitmapNeedsUnlock;
 		
-		private Transform						transform		= new Transform ();
-		private Transform						int_transform	= new Transform ();
+		private Transform						transform		  = new Transform ();
+		private Transform						internalTransform = new Transform ();
 	}
 }

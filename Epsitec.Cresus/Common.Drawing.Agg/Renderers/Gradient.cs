@@ -1,5 +1,5 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Drawing.Renderers
 	{
 		public Gradient()
 		{
-			this.agg_ren = new Agg.SafeGradientRendererHandle ();
+			this.handle = new Agg.SafeGradientRendererHandle ();
 		}
 		
 
@@ -54,14 +54,14 @@ namespace Epsitec.Common.Drawing.Renderers
 				{
 					this.AssertAttached ();
 					this.fill = value;
-					AntiGrain.Renderer.Gradient.Select (this.agg_ren, (int) this.fill);
+					AntiGrain.Renderer.Gradient.Select (this.handle, (int) this.fill);
 				}
 			}
 		}
 		
 		public System.IntPtr					Handle
 		{
-			get { return this.agg_ren; }
+			get { return this.handle; }
 		}
 		
 		public Transform						Transform
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
 				//	Graphics.UpdateTransform...
 				
-				if (this.agg_ren == System.IntPtr.Zero)
+				if (this.handle.IsInvalid)
 				{
 					return;
 				}
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.int_transform = new Transform (value);
 				this.OnTransformUpdating ();
 				Transform inverse = Transform.Inverse (this.int_transform);
-				AntiGrain.Renderer.Gradient.Matrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
+				AntiGrain.Renderer.Gradient.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
 			}
 		}
 		
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
-			AntiGrain.Renderer.Gradient.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+			AntiGrain.Renderer.Gradient.SetAlphaMask (this.handle, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		
 		
@@ -151,14 +151,14 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 			
 			this.AssertAttached ();
-			AntiGrain.Renderer.Gradient.Color1 (this.agg_ren, r, g, b, a);
+			AntiGrain.Renderer.Gradient.Color1 (this.handle, r, g, b, a);
 		}
 
 		
 		public void SetParameters(double r1, double r2)
 		{
 			this.AssertAttached ();
-			AntiGrain.Renderer.Gradient.Range (this.agg_ren, r1, r2);
+			AntiGrain.Renderer.Gradient.Range (this.handle, r1, r2);
 		}
 		
 		
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		private void AssertAttached()
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				throw new System.NullReferenceException ("RendererGradient not attached");
 			}
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			this.Detach ();
 			
-			this.agg_ren.Create (pixmap.Handle);
+			this.handle.Create (pixmap.Handle);
 			this.pixmap = pixmap;
 		}
 		
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			if (this.pixmap != null)
 			{
-				this.agg_ren.Delete ();
+				this.handle.Delete ();
 				this.pixmap  = null;
 				this.fill    = GradientFill.None;
 				this.transform.Reset ();
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		
 		
-		private readonly Agg.SafeGradientRendererHandle	agg_ren;
+		private readonly Agg.SafeGradientRendererHandle	handle;
 		private Pixmap							pixmap;
 		private GradientFill					fill			= GradientFill.None;
 		private Transform						transform		= new Transform ();

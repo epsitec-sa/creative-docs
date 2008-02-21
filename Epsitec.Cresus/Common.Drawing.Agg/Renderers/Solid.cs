@@ -1,26 +1,17 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-	public class Solid : IRenderer, System.IDisposable
+	public sealed class Solid : IRenderer, System.IDisposable
 	{
 		public Solid()
 		{
+			this.handle = new Agg.SafeSolidRendererHandle ();
 		}
-		
-		~Solid()
-		{
-			this.Dispose (false);
-		}
-		
 		
 		public Pixmap							Pixmap
 		{
-			get
-			{
-				return this.pixmap;
-			}
 			set
 			{
 				if (this.pixmap != value)
@@ -39,7 +30,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public System.IntPtr					Handle
 		{
-			get { return this.agg_ren; }
+			get { return this.handle; }
 		}
 		
 		public Color							Color
@@ -74,22 +65,22 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void ClearAlphaRgb(double a, double r, double g, double b)
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				return;
 			}
 			
-			AntiGrain.Renderer.Solid.Clear (this.agg_ren, r, g, b, a);
+			AntiGrain.Renderer.Solid.Clear (this.handle, r, g, b, a);
 		}
 		
 		public void Clear4Colors(int x, int y, int dx, int dy, Color c1, Color c2, Color c3, Color c4)
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				return;
 			}
 
-			AntiGrain.Renderer.Special.Fill4Colors (this.agg_ren, x, y, dx, dy, c1.R, c1.G, c1.B, c2.R, c2.G, c2.B, c3.R, c3.G, c3.B, c4.R, c4.G, c4.B);
+			AntiGrain.Renderer.Special.Fill4Colors (this.handle, x, y, dx, dy, c1.R, c1.G, c1.B, c2.R, c2.G, c2.B, c3.R, c3.G, c3.B, c4.R, c4.G, c4.B);
 		}
 		
 		
@@ -112,79 +103,63 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void SetColorAlphaRgb(double a, double r, double g, double b)
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				return;
 			}
 
-			AntiGrain.Renderer.Solid.Color (this.agg_ren, r, g, b, a);
+			AntiGrain.Renderer.Solid.Color (this.handle, r, g, b, a);
 		}
 		
 		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				return;
 			}
 
-			AntiGrain.Renderer.Solid.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+			AntiGrain.Renderer.Solid.SetAlphaMask (this.handle, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
 		}
 		
 		
 		#region IDisposable Members
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
+			this.Detach ();
 		}
 		#endregion
 		
-		protected void AssertAttached()
+		private void AssertAttached()
 		{
-			if (this.agg_ren == System.IntPtr.Zero)
+			if (this.handle.IsInvalid)
 			{
 				throw new System.NullReferenceException ("SolidRenderer not attached");
 			}
 		}
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.pixmap != null)
-				{
-					this.pixmap.Dispose ();
-					this.pixmap = null;
-				}
-			}
-			
-			this.Detach ();
-		}
-		
-		
-		protected void Attach(Pixmap pixmap)
+
+
+		private void Attach(Pixmap pixmap)
 		{
 			this.Detach ();
 			
-			this.agg_ren = AntiGrain.Renderer.Solid.New (pixmap.Handle);
-			this.pixmap  = pixmap;
-			this.color   = new Color ();
+			this.handle.Create (pixmap.Handle);
+			this.pixmap = pixmap;
+			this.color  = new Color ();
 		}
-		
-		protected void Detach()
+
+		private void Detach()
 		{
-			if (this.agg_ren != System.IntPtr.Zero)
+			if (this.pixmap != null)
 			{
-				AntiGrain.Renderer.Solid.Delete (this.agg_ren);
-				this.agg_ren = System.IntPtr.Zero;
-				this.pixmap  = null;
+				this.handle.Delete ();
+				this.pixmap = null;
 			}
 		}
 		
 		
 		private Color							color;
-		private System.IntPtr					agg_ren;
+		private readonly Agg.SafeSolidRendererHandle handle;
 		private Pixmap							pixmap;
 	}
 }
