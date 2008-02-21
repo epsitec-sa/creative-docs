@@ -764,13 +764,16 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.druidToSerialize.IsValid)
 				{
 					Forms.softWorkingForm = new FormDescription(this.workingForm);
-					Forms.softBaseFields = this.baseFields;
+					Forms.softBaseFields  = this.baseFields;
 					Forms.softFinalFields = this.finalFields;
-					Forms.softEntityId = this.entityId;
+					Forms.softEntityId    = this.entityId;
 				}
 				else
 				{
 					Forms.softWorkingForm = null;
+					Forms.softBaseFields  = null;
+					Forms.softFinalFields = null;
+					Forms.softEntityId    = Druid.Empty;
 				}
 
 				Forms.softDirty = this.module.AccessForms.IsLocalDirty;
@@ -815,13 +818,16 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.workingForm = Forms.softWorkingForm;
-				this.baseFields = Forms.softBaseFields;
+				this.baseFields  = Forms.softBaseFields;
 				this.finalFields = Forms.softFinalFields;
-				this.entityId = Forms.softEntityId;
+				this.entityId    = Forms.softEntityId;
 				this.SetForm(false);
 
-				Forms.softDirty = false;
 				Forms.softWorkingForm = null;
+				Forms.softBaseFields  = null;
+				Forms.softFinalFields = null;
+				Forms.softEntityId    = Druid.Empty;
+				Forms.softDirty       = false;
 			}
 		}
 
@@ -1910,10 +1916,11 @@ namespace Epsitec.Common.Designer.Viewers
 		private static double[]					columnWidthVertical = { 250, 80, 50, 100 };
 
 		protected static FormDescription		softWorkingForm = null;
-		protected static List<FieldDescription>	softBaseFields = null;
+		protected static List<FieldDescription>	softBaseFields  = null;
 		protected static List<FieldDescription>	softFinalFields = null;
-		protected static Druid					softEntityId = Druid.Empty;
-		protected static bool					softDirty = false;
+		protected static Druid					softEntityId    = Druid.Empty;
+		protected static bool					softDirty       = false;
+
 		protected static bool					showPrefix = false;
 		protected static bool					showGuid = false;
 		protected static bool					showColumn1 = true;
