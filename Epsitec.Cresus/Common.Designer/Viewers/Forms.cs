@@ -775,8 +775,6 @@ namespace Epsitec.Common.Designer.Viewers
 					Forms.softFinalFields = null;
 					Forms.softEntityId    = Druid.Empty;
 				}
-
-				Forms.softDirty = this.module.AccessForms.IsLocalDirty;
 			}
 
 			return true;
@@ -827,7 +825,6 @@ namespace Epsitec.Common.Designer.Viewers
 				Forms.softBaseFields  = null;
 				Forms.softFinalFields = null;
 				Forms.softEntityId    = Druid.Empty;
-				Forms.softDirty       = false;
 			}
 		}
 
@@ -1919,7 +1916,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static List<FieldDescription>	softBaseFields  = null;
 		protected static List<FieldDescription>	softFinalFields = null;
 		protected static Druid					softEntityId    = Druid.Empty;
-		protected static bool					softDirty       = false;
 
 		protected static bool					showPrefix = false;
 		protected static bool					showGuid = false;
