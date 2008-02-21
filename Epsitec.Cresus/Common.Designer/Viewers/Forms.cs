@@ -759,18 +759,21 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.module.AccessForms.IsLocalDirty)
 			{
-				System.Diagnostics.Debug.Assert (soft);
+				System.Diagnostics.Debug.Assert(soft);
 				
 				if (this.druidToSerialize.IsValid)
 				{
-					//?Forms.softSerialize = this.FormToXml(this.GetForm());
+					Forms.softWorkingForm = new FormDescription(this.workingForm);
+					Forms.softBaseFields = this.baseFields;
+					Forms.softFinalFields = this.finalFields;
+					Forms.softEntityId = this.entityId;
 				}
 				else
 				{
-					Forms.softSerialize = null;
+					Forms.softWorkingForm = null;
 				}
 
-				Forms.softDirtySerialization = this.module.AccessForms.IsLocalDirty;
+				Forms.softDirty = this.module.AccessForms.IsLocalDirty;
 			}
 
 			return true;
@@ -780,7 +783,6 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Stocke la version XML (sérialisée) du masque de saisie dans l'accesseur
 			//	s'il y a eu des modifications.
-			//?this.GetForm();
 			this.access.SetForm(this.druidToSerialize, this.workingForm);
 			base.PersistChanges();
 		}
@@ -796,10 +798,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.druidToSerialize = this.access.AccessDruid(sel);
 			}
 
-			if (Forms.softSerialize == null)
+			if (Forms.softWorkingForm == null)
 			{
-				//?FormDescription form = this.access.GetForm(this.druidToSerialize);
-				//?this.SetForm(form, this.druidToSerialize, false);
 				this.access.GetForm(this.druidToSerialize, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
 				this.SetForm(false);
 			}
@@ -814,11 +814,14 @@ namespace Epsitec.Common.Designer.Viewers
 					this.module.AccessForms.ClearLocalDirty();
 				}
 
-				FormDescription form = this.XmlToForm(Forms.softSerialize);
-				//?this.SetForm(form, this.druidToSerialize, false);
+				this.workingForm = Forms.softWorkingForm;
+				this.baseFields = Forms.softBaseFields;
+				this.finalFields = Forms.softFinalFields;
+				this.entityId = Forms.softEntityId;
+				this.SetForm(false);
 
-				Forms.softDirtySerialization = false;
-				Forms.softSerialize = null;
+				Forms.softDirty = false;
+				Forms.softWorkingForm = null;
 			}
 		}
 
@@ -1906,8 +1909,11 @@ namespace Epsitec.Common.Designer.Viewers
 		private static double[]					columnWidthHorizontal = { 200, 80, 50, 100 };
 		private static double[]					columnWidthVertical = { 250, 80, 50, 100 };
 
-		protected static string					softSerialize = null;
-		protected static bool					softDirtySerialization = false;
+		protected static FormDescription		softWorkingForm = null;
+		protected static List<FieldDescription>	softBaseFields = null;
+		protected static List<FieldDescription>	softFinalFields = null;
+		protected static Druid					softEntityId = Druid.Empty;
+		protected static bool					softDirty = false;
 		protected static bool					showPrefix = false;
 		protected static bool					showGuid = false;
 		protected static bool					showColumn1 = true;
