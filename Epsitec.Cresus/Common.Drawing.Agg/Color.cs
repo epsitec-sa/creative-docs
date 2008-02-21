@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
@@ -455,34 +455,33 @@ namespace Epsitec.Common.Drawing
 		public static void ConvertHsvToRgb(double h, double s, double v, out double r, out double g, out double b)
 		{
 			r = g = b = v;
-			if ( s == 0 )  return;  // noir ?
+			
+			if (s == 0)
+			{
+				//	Unsaturated color: this is a gray color.
+				return;
+			}
 
-			while ( h <   0 )  h += 360;
-			while ( h > 360 )  h -= 360;
-			h /= 60;  // 0..6
+			while (h <    0) h += 360;
+			while (h >= 360) h -= 360;
+			
+			h /= 60;  // 0..5
+			
 			double f = h-System.Math.Floor(h);
 			double p = v*(1-s);
 			double q = v*(1-s*f);
 			double t = v*(1-s*(1-f));
 
-			int i = (int)h;
-			if ( i == 6 )  i = 0;
-			switch ( i )
+			switch ((int)h)
 			{
-				case 0:  r=v;  g=t;  b=p;  break;
-				case 1:  r=q;  g=v;  b=p;  break;
-				case 2:  r=p;  g=v;  b=t;  break;
-				case 3:  r=p;  g=q;  b=v;  break;
-				case 4:  r=t;  g=p;  b=v;  break;
-				case 5:  r=v;  g=p;  b=q;  break;
+				case 0:  r=v; g=t; b=p; break;
+				case 1:  r=q; g=v; b=p; break;
+				case 2:  r=p; g=v; b=t; break;
+				case 3:  r=p; g=q; b=v; break;
+				case 4:  r=t; g=p; b=v; break;
+				case 5:  r=v; g=p; b=q; break;
 			}
 		}
-
-		public static void DefineCaptionColor(Color color)
-		{
-			Color.captionColor = color;
-		}
-
 		
 		#region Converter Class
 		public class Converter : Types.AbstractStringConverter
@@ -499,13 +498,28 @@ namespace Epsitec.Common.Drawing
 		}
 		#endregion
 		
-		public const int						ColorComponentDigits = 4;
-		public const double						ColorComponentDelta  = (1.0 / 65535.0) / 2.0;
+		public static readonly int				ColorComponentDigits = 4;
+		public static readonly double			ColorComponentDelta  = (1.0 / 65535.0) / 2.0;
 
-		private static Color					captionColor;
-		
 		private double							r, g, b;
 		private double							a;
-		private bool							is_empty;
+		private bool is_empty
+		{
+			get
+			{
+				return double.IsNaN (this.a);
+			}
+			set
+			{
+				if (value)
+				{
+					this.a = double.NaN;
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (this.is_empty == false);
+				}
+			}
+		}
 	}
 }
