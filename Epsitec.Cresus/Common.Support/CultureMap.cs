@@ -56,6 +56,12 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
+				if ((this.map != null) &&
+					(this.map.Length == 0))
+				{
+					this.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				}
+
 				return this.name;
 			}
 			set
@@ -407,7 +413,7 @@ namespace Epsitec.Common.Support
 					this.owner.NotifyCultureDataCleared (this, this.map[i].Key, this.map[i].Value);
 				}
 				
-				this.map = null;
+				this.map = new KeyValuePair<string,StructuredData>[0];
 			}
 			
 			this.source = this.originalSource;
