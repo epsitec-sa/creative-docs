@@ -827,6 +827,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Path PathRoundRectangle(Rectangle rect, double radius)
 		{
 			//	Retourne le chemin d'un rectangle à coins arrondis.
+			return this.PathRoundRectangle(rect, radius, true, true);
+		}
+
+		protected Path PathRoundRectangle(Rectangle rect, double radius, bool isGroupTop, bool isGroupBottom)
+		{
+			//	Retourne le chemin d'un rectangle, avec des coins arrondis en haut et/ou en bas.
 			double ox = rect.Left;
 			double oy = rect.Bottom;
 			double dx = rect.Width;
@@ -835,15 +841,33 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			radius = System.Math.Min(radius, System.Math.Min(dx, dy)/2);
 
 			Path path = new Path();
-			path.MoveTo (ox+radius, oy);
-			path.LineTo (ox+dx-radius, oy);
-			path.CurveTo(ox+dx, oy, ox+dx, oy+radius);
-			path.LineTo (ox+dx, oy+dy-radius);
-			path.CurveTo(ox+dx, oy+dy, ox+dx-radius, oy+dy);
-			path.LineTo (ox+radius, oy+dy);
-			path.CurveTo(ox, oy+dy, ox, oy+dy-radius);
-			path.LineTo (ox, oy+radius);
-			path.CurveTo(ox, oy, ox+radius, oy);
+
+			if (isGroupBottom)
+			{
+				path.MoveTo(ox, oy+radius);
+				path.CurveTo(ox, oy, ox+radius, oy);
+				path.LineTo(ox+dx-radius, oy);
+				path.CurveTo(ox+dx, oy, ox+dx, oy+radius);
+			}
+			else
+			{
+				path.MoveTo(ox, oy);
+				path.LineTo(ox+dx, oy);
+			}
+
+			if (isGroupTop)
+			{
+				path.LineTo(ox+dx, oy+dy-radius);
+				path.CurveTo(ox+dx, oy+dy, ox+dx-radius, oy+dy);
+				path.LineTo(ox+radius, oy+dy);
+				path.CurveTo(ox, oy+dy, ox, oy+dy-radius);
+			}
+			else
+			{
+				path.LineTo(ox+dx, oy+dy);
+				path.LineTo(ox, oy+dy);
+			}
+
 			path.Close();
 
 			return path;

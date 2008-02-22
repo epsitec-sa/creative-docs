@@ -101,6 +101,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.definingName = null;
 			this.definingType = StructuredTypeClass.None;
 			this.level = 0;
+			this.isGroupTop = false;
+			this.isGroupBottom = false;
 			
 			this.routeType = RouteType.Close;
 			this.routeRelativeAX1 = 0.2;
@@ -302,6 +304,32 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.level = value;
+			}
+		}
+
+		public bool IsGroupTop
+		{
+			//	Case supérieure d'un groupe ?
+			get
+			{
+				return this.isGroupTop;
+			}
+			set
+			{
+				this.isGroupTop = value;
+			}
+		}
+
+		public bool IsGroupBottom
+		{
+			//	Case inférieure d'un groupe ?
+			get
+			{
+				return this.isGroupBottom;
+			}
+			set
+			{
+				this.isGroupBottom = value;
 			}
 		}
 
@@ -1056,6 +1084,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected string definingName;
 		protected StructuredTypeClass definingType;
 		protected int level;
+		protected bool isGroupTop;
+		protected bool isGroupBottom;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected string typeName;

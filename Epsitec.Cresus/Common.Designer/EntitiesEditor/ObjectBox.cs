@@ -1933,11 +1933,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			//	Pour chaque case, initialise les propriétés Level, IsGroupTop et IsGroupBottom.
 			for (int i=0; i<this.fields.Count; i++)
 			{
+				if (this.fields[i].IsTitle)
+				{
+					int j = i + this.GroupLineCount(i);
+
+					this.fields[i].IsGroupTop = true;
+					this.fields[j].IsGroupBottom = true;
+				}
+
 				if (this.fields[i].IsSubtitle)
 				{
 					int j = i + this.SubgroupLineCount(i);
+
+					this.fields[i].IsGroupTop = true;
+					this.fields[j].IsGroupBottom = true;
+
 					for (int k=i; k<=j; k++)
 					{
 						this.fields[k].Level++;
@@ -2544,7 +2557,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						{
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.0, 0.0);
-							graphics.AddFilledRectangle(rect);
+							rect.Bottom += 1.0;
+							Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, this.fields[i].IsGroupTop, this.fields[i].IsGroupBottom);
+							graphics.Rasterizer.AddSurface(roundedPath);
 							graphics.RenderSolid(sourceColor);
 						}
 					}
@@ -2554,6 +2569,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						bool hilite = this.hilitedElement == ActiveElement.BoxFieldTitle && this.hilitedFieldRank == i;
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
+						rect.Top -= 1.0;
 						graphics.AddFilledRectangle(rect);
 						Color ci1 = this.GetColorMain(hilite ? 0.5 : (dragging ? 0.2 : 0.1));
 						Color ci2 = this.GetColorMain(0.0);
@@ -2659,7 +2675,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
-						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
+						rect.Top += 1.0;
+						Path dashedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -2693,7 +2710,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 						rect = Rectangle.Union(this.GetFieldBounds(i), this.GetFieldBounds(j));
 						rect.Deflate(9.5, 1.5);
-						Path dashedPath = this.PathRoundRectangle(rect, 8.0);
+						Path dashedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
@@ -2755,13 +2772,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					rect = this.GetFieldGroupBounds(this.hilitedFieldRank);
 					rect.Deflate(1.5);
+					rect.Bottom += 1.0;
+					Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, false, true);
 
-					graphics.AddFilledRectangle(rect);
+					graphics.Rasterizer.AddSurface(roundedPath);
 					graphics.RenderSolid(this.GetColorMain(0.1));
 
-					graphics.LineWidth = 3;
-					graphics.AddRectangle(rect);
-					graphics.LineWidth = 1;
+					graphics.Rasterizer.AddOutline(roundedPath, 3);
 					graphics.RenderSolid(this.GetColorMain(0.5));
 				}
 
@@ -3502,6 +3519,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 
 		public static readonly double roundFrameRadius = 12;
+		protected static readonly double roundInsideRadius = 8;
 		protected static readonly double shadowOffset = 6;
 		protected static readonly double textMargin = 13;
 		protected static readonly double expressionWidth = 20;
