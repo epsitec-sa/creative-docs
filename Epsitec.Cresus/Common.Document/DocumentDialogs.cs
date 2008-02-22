@@ -974,7 +974,7 @@ namespace Epsitec.Common.Document
 			TextFieldReal field;
 
 			Viewport container = new Viewport(parent);
-			container.PreferredHeight = 22+2+22;
+			container.PreferredHeight = 22-1+22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.Margins = new Margins(10, 10, 0, 5);
@@ -1029,7 +1029,7 @@ namespace Epsitec.Common.Document
 			containerY.PreferredHeight = 22;
 			containerY.TabIndex = this.tabIndex++;
 			containerY.Dock = DockStyle.Bottom;
-			containerY.Margins = new Margins(0, 0, 0, 0);
+			containerY.Margins = new Margins(0, 0, -1, 0);
 
 			text = new StaticText(containerY);
 			text.Text = sPoint.TextY;
@@ -1133,7 +1133,7 @@ namespace Epsitec.Common.Document
 				containerDY.PreferredHeight = 22;
 				containerDY.TabIndex = this.tabIndex++;
 				containerDY.Dock = DockStyle.Top;
-				containerDY.Margins = new Margins(0, 0, 0, 0);
+				containerDY.Margins = new Margins(0, 0, -1, 0);
 
 				button = new Button(containerDY);
 				button.ButtonStyle = ButtonStyle.Icon;
