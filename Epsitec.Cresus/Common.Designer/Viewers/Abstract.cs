@@ -1716,6 +1716,18 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Annule les changements effectués dans les ressources.
 			if (this.access.IsLocalDirty)
 			{
+#if true
+				if (this.access.ResourceType == ResourceAccess.Type.Entities)
+				{
+					//	TODO: Si on a renommé des champs dans l'éditeur d'entités, il faut annuler également les
+					//	changements de noms dans les ressources 'Fields'. Mais le code ci-dessous ne fonctionne pas
+					//	(en fait, il ne semble rien faire). Les ressources 'Fields' ont disparu et l'éditeur
+					//	d'entité est alors dans un état bizarre...
+					this.module.AccessFields.RevertChanges();
+					this.module.AccessFields.ClearLocalDirty();
+				}
+#endif
+
 				this.access.RevertChanges();
 				this.access.ClearLocalDirty();
 				this.UpdateList();  // met à jour la liste de gauche avec les données modifiées

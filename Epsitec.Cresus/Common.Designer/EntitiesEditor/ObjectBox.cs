@@ -1320,15 +1320,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		protected Rectangle GetFieldBounds(int rank)
 		{
-			//	Retourne le rectangle occupé par un champ.
+			//	Retourne le rectangle occupé par un champ, en tenant compte du niveau.
 			Rectangle rect = this.bounds;
 			rect.Deflate(2, 0);
 			rect.Bottom = rect.Top - AbstractObject.headerHeight - ObjectBox.fieldHeight*(rank+1) - 12;
 			rect.Height = ObjectBox.fieldHeight;
 
-			if (rank >= 0 && rank < this.fields.Count)
+			if (rank >= 0 && rank < this.fields.Count)  // rang d'un champ existant ?
 			{
-				rect.Deflate(ObjectBox.indentWidth*this.fields[rank].Level, 0);
+				rect.Deflate(ObjectBox.indentWidth*this.fields[rank].Level, 0);  // plus étroit si Level > 0
 			}
 
 			return rect;
@@ -2364,8 +2364,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public override void DrawBackground(Graphics graphics)
 		{
 			//	Dessine le fond de l'objet.
-			//	Traitillé = héritage
-			//	Trait plein avec o--- = interface
+			//	Héritage	->	Traitillé
+			//	Interface	->	Trait plein avec o---
 			Rectangle rect;
 
 			bool dragging = (this.hilitedElement == ActiveElement.BoxHeader);
