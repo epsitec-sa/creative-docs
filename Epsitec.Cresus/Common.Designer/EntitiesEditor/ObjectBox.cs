@@ -2853,8 +2853,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked)
 				{
-					if (this.hilitedElement == ActiveElement.BoxFieldAddInterface ||
-					(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface))
+					if (this.hilitedElement == ActiveElement.BoxFieldAddInterface || this.IsHeaderHilite)
 					{
 						rect = this.GetFieldInterfaceBounds();
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldAddInterface, this.hilitedElement == ActiveElement.BoxFieldAddInterface, true);
@@ -2867,6 +2866,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldRemoveInterface, this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
 					}
 
+#if false
 					//	Si la souris est dans la barre de titre, montre les boutons pour les interfaces.
 					if (this.IsHeaderHilite)
 					{
@@ -2884,6 +2884,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						rect = this.GetFieldInterfaceBounds();
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldAddInterface, false, true);
 					}
+#endif
 				}
 			}
 

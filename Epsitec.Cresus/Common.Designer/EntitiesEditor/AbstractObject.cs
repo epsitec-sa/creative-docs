@@ -827,10 +827,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected Path PathRoundRectangle(Rectangle rect, double radius)
 		{
 			//	Retourne le chemin d'un rectangle à coins arrondis.
-			return this.PathRoundRectangle(rect, radius, true, true);
+			return this.PathRoundRectangle(rect, radius, true, true);  // coins arrondis partout
 		}
 
-		protected Path PathRoundRectangle(Rectangle rect, double radius, bool isGroupTop, bool isGroupBottom)
+		protected Path PathRoundRectangle(Rectangle rect, double radius, bool isTopRounded, bool isBottomRounded)
 		{
 			//	Retourne le chemin d'un rectangle, avec des coins arrondis en haut et/ou en bas.
 			double ox = rect.Left;
@@ -842,27 +842,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Path path = new Path();
 
-			if (isGroupBottom)
+			if (isBottomRounded)  // coins bas/gauche et bas/droite arrondis ?
 			{
 				path.MoveTo(ox, oy+radius);
 				path.CurveTo(ox, oy, ox+radius, oy);
 				path.LineTo(ox+dx-radius, oy);
 				path.CurveTo(ox+dx, oy, ox+dx, oy+radius);
 			}
-			else
+			else  // coins bas/gauche et bas/droite droits ?
 			{
 				path.MoveTo(ox, oy);
 				path.LineTo(ox+dx, oy);
 			}
 
-			if (isGroupTop)
+			if (isTopRounded)  // coins haut/gauche et haut/droite arrondis ?
 			{
 				path.LineTo(ox+dx, oy+dy-radius);
 				path.CurveTo(ox+dx, oy+dy, ox+dx-radius, oy+dy);
 				path.LineTo(ox+radius, oy+dy);
 				path.CurveTo(ox, oy+dy, ox, oy+dy-radius);
 			}
-			else
+			else  // coins haut/gauche et haut/droite droits ?
 			{
 				path.LineTo(ox+dx, oy+dy);
 				path.LineTo(ox, oy+dy);
