@@ -71,7 +71,7 @@ namespace Epsitec.Common.FormEngine
 
 			//	Si des dimensions par défaut sont spécifiées, initialise Min/Max Width/Height.
 			//	Il ne faut pas initialiser PreferredWidth/Height, car il n'est pas possible de
-			//	savoir si une valeur a été spécifiée ou pas !
+			//	savoir si une valeur a été spécifiée ou pas (voir Designer.Module.RunForm) !
 			if (!double.IsNaN(formDescription.DefaultSize.Width))
 			{
 				panel.MinWidth = formDescription.DefaultSize.Width;

@@ -888,10 +888,16 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				this.panelContainer = this.engine.CreateForm(this.finalFields, this.entityId, true);
+
 				if (this.panelContainer == null)
 				{
 					this.panelContainer = new UI.Panel();
 				}
+				else
+				{
+					this.UpdateMiscPagePanel();
+				}
+				
 				this.InitializePanel();
 
 				this.formEditor.Panel = this.panelContainer;
@@ -1046,6 +1052,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.workingForm.DefaultSize = defaultSize;
 			this.module.AccessForms.SetLocalDirty();
 			this.UpdateMiscPage();
+			this.UpdateMiscPagePanel();
 		}
 
 		private void HandleMiscFieldTextChanged(object sender)
@@ -1086,6 +1093,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.workingForm.DefaultSize != defaultSize)
 			{
 				this.workingForm.DefaultSize = defaultSize;
+				this.UpdateMiscPagePanel();
 				this.module.AccessForms.SetLocalDirty();
 			}
 		}
@@ -1127,6 +1135,34 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.ignoreChange = false;
+		}
+
+		protected void UpdateMiscPagePanel()
+		{
+			//	Met à jour le vrai panneau (this.panelContainer) en fonction des réglages de l'onglet "divers".
+			Size defautSize = this.workingForm.DefaultSize;
+
+			if (double.IsNaN(defautSize.Width))
+			{
+				this.panelContainer.MinWidth = 0.0;
+				this.panelContainer.MaxWidth = double.PositiveInfinity;
+			}
+			else
+			{
+				this.panelContainer.MinWidth = defautSize.Width;
+				this.panelContainer.MaxWidth = defautSize.Width;
+			}
+
+			if (double.IsNaN(defautSize.Height))
+			{
+				this.panelContainer.MinHeight = 0.0;
+				this.panelContainer.MaxHeight = double.PositiveInfinity;
+			}
+			else
+			{
+				this.panelContainer.MinHeight = defautSize.Height;
+				this.panelContainer.MaxHeight = defautSize.Height;
+			}
 		}
 		#endregion
 
