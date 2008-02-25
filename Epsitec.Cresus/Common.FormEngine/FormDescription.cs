@@ -23,6 +23,7 @@ namespace Epsitec.Common.FormEngine
 			this.entityId = entityId;
 			this.deltaBaseFormId = deltaBaseFormId;
 			this.fields = new List<FieldDescription>();
+			this.defaultSize = new Size(double.NaN, double.NaN);
 		}
 
 		public FormDescription(FormDescription model) : this(model.EntityId, model.DeltaBaseFormId)
@@ -53,6 +54,20 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.deltaBaseFormId;
+			}
+		}
+
+		public Size DefaultSize
+		{
+			//	Taille par défaut du masque. La largeur et/ou la hauteur peuvent être définis avec NaN
+			//	s'il n'y a pas de dimension par défaut.
+			get
+			{
+				return this.defaultSize;
+			}
+			set
+			{
+				this.defaultSize = value;
 			}
 		}
 
@@ -135,6 +150,11 @@ namespace Epsitec.Common.FormEngine
 				return false;
 			}
 
+			if (a.defaultSize != b.defaultSize)
+			{
+				return false;
+			}
+
 			if (a.fields.Count != b.fields.Count)
 			{
 				return false;
@@ -191,6 +211,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteStartElement(Xml.Form);
 			writer.WriteElementString(Xml.EntityId, this.entityId.ToString());
 			writer.WriteElementString(Xml.DeltaBaseFormId, this.deltaBaseFormId.ToString());
+			writer.WriteElementString(Xml.DefaultSize, this.defaultSize.ToString());
 			foreach (FieldDescription field in this.fields)
 			{
 				field.WriteXml(writer);
@@ -235,6 +256,10 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.deltaBaseFormId = Druid.Parse(element);
 						}
+						else if (name == Xml.DefaultSize)
+						{
+							this.defaultSize = Size.Parse(element);
+						}
 						else
 						{
 							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in FieldDescription", name));
@@ -267,6 +292,7 @@ namespace Epsitec.Common.FormEngine
 
 		private Druid							entityId;
 		private Druid							deltaBaseFormId;
+		private Size							defaultSize;
 		private readonly List<FieldDescription>	fields;
 		private bool							isForceDelta;
 	}
