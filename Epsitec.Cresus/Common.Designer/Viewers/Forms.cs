@@ -1027,7 +1027,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					defaultSize.Width = 1000;
+					defaultSize.Width = 800;
 				}
 			}
 
@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 				else
 				{
-					defaultSize.Height = 1000;
+					defaultSize.Height = 600;
 				}
 			}
 

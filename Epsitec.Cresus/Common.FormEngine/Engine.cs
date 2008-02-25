@@ -67,7 +67,24 @@ namespace Epsitec.Common.FormEngine
 			Druid entityId;
 			this.arrange.Build(formDescription, null, out baseFields, out finalFields, out entityId);
 
-			return this.CreateForm(finalFields, entityId, false);
+			UI.Panel panel = this.CreateForm(finalFields, entityId, false);
+
+			//	Si des dimensions par défaut sont spécifiées, initialise Min/Max Width/Height.
+			//	Il ne faut pas initialiser PreferredWidth/Height, car il n'est pas possible de
+			//	savoir si une valeur a été spécifiée ou pas !
+			if (!double.IsNaN(formDescription.DefaultSize.Width))
+			{
+				panel.MinWidth = formDescription.DefaultSize.Width;
+				panel.MaxWidth = formDescription.DefaultSize.Width;
+			}
+
+			if (!double.IsNaN(formDescription.DefaultSize.Height))
+			{
+				panel.MinHeight = formDescription.DefaultSize.Height;
+				panel.MaxHeight = formDescription.DefaultSize.Height;
+			}
+
+			return panel;
 		}
 
 		public UI.Panel CreateForm(List<FieldDescription> fields, Druid entityId, bool forDesigner)
