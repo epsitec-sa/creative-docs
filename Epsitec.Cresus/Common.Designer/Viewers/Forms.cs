@@ -948,52 +948,16 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		protected void UpdateMiscPage()
-		{
-			//	Met à jour tous les widgets pour la page "divers".
-			this.ignoreChange = true;
-			Size defaultSize = this.workingForm.DefaultSize;
-
-			if (double.IsNaN(defaultSize.Width))
-			{
-				this.miscWidthButton.ActiveState = ActiveState.No;
-				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
-				this.miscWidthField.Text = "";
-				this.miscWidthField.Enable = false;
-			}
-			else
-			{
-				this.miscWidthButton.ActiveState = ActiveState.Yes;
-				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
-				this.miscWidthField.Value = (decimal) defaultSize.Width;
-				this.miscWidthField.Enable = !this.designerApplication.IsReadonly;
-			}
-
-			if (double.IsNaN(defaultSize.Height))
-			{
-				this.miscHeightButton.ActiveState = ActiveState.No;
-				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
-				this.miscHeightField.Text = "";
-				this.miscHeightField.Enable = false;
-			}
-			else
-			{
-				this.miscHeightButton.ActiveState = ActiveState.Yes;
-				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
-				this.miscHeightField.Value = (decimal) defaultSize.Height;
-				this.miscHeightField.Enable = !this.designerApplication.IsReadonly;
-			}
-
-			this.ignoreChange = false;
-		}
-
+		#region MiscPage
 		protected void CreateMiscPage()
 		{
 			//	Crée tous les widgets pour la page "divers".
 			int index = 1;
 
 			FrameBox widthBox = new FrameBox(this.tabPageMisc);
-			widthBox.Margins = new Margins(0, 0, 0, 3);
+			widthBox.TabIndex = index++;
+			widthBox.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			widthBox.Margins = new Margins(0, 0, 0, 2);
 			widthBox.Dock = DockStyle.Top;
 
 			this.miscWidthButton = new CheckButton(widthBox);
@@ -1017,7 +981,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscWidthField.TextChanged += new EventHandler(this.HandleMiscFieldTextChanged);
 
 			FrameBox heightBox = new FrameBox(this.tabPageMisc);
-			heightBox.Margins = new Margins(0, 0, 0, 3);
+			heightBox.TabIndex = index++;
+			heightBox.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			heightBox.Margins = new Margins(0, 0, 0, 2);
 			heightBox.Dock = DockStyle.Top;
 
 			this.miscHeightButton = new CheckButton(heightBox);
@@ -1124,7 +1090,48 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		protected void UpdateMiscPage()
+		{
+			//	Met à jour tous les widgets pour la page "divers".
+			this.ignoreChange = true;
+			Size defaultSize = this.workingForm.DefaultSize;
 
+			if (double.IsNaN(defaultSize.Width))
+			{
+				this.miscWidthButton.ActiveState = ActiveState.No;
+				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscWidthField.Text = "";
+				this.miscWidthField.Enable = false;
+			}
+			else
+			{
+				this.miscWidthButton.ActiveState = ActiveState.Yes;
+				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscWidthField.Value = (decimal) defaultSize.Width;
+				this.miscWidthField.Enable = !this.designerApplication.IsReadonly;
+			}
+
+			if (double.IsNaN(defaultSize.Height))
+			{
+				this.miscHeightButton.ActiveState = ActiveState.No;
+				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscHeightField.Text = "";
+				this.miscHeightField.Enable = false;
+			}
+			else
+			{
+				this.miscHeightButton.ActiveState = ActiveState.Yes;
+				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscHeightField.Value = (decimal) defaultSize.Height;
+				this.miscHeightField.Enable = !this.designerApplication.IsReadonly;
+			}
+
+			this.ignoreChange = false;
+		}
+		#endregion
+
+
+		#region CultureButtons
 		protected void CreateCultureButtons()
 		{
 			//	Crée tous les boutons pour les cultures.
@@ -1172,6 +1179,7 @@ namespace Epsitec.Common.Designer.Viewers
 				button.ActiveState = active ? ActiveState.Yes : ActiveState.No;
 			}
 		}
+		#endregion
 
 
 		public override void UpdateViewer(Viewers.Changing oper)
