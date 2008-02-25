@@ -2403,8 +2403,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			//	Dessine l'intérieur en dégradé.
 			graphics.Rasterizer.AddSurface(path);
-			Color c1 = this.GetColorMain(dragging ? 0.6 : 0.4);
-			Color c2 = this.GetColorMain(dragging ? 0.2 : 0.1);
+			Color c1 = this.GetColorMain(dragging ? 0.8 : 0.4);
+			Color c2 = this.GetColorMain(dragging ? 0.4 : 0.1);
 			this.RenderHorizontalGradient(graphics, this.bounds, c1, c2);
 
 			Color colorLine = this.GetColor(0.9);
@@ -2447,24 +2447,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Dessine le titre.
+			Color titleColor = dragging ? this.GetColor(1) : this.GetColor(0);
+
 			if (string.IsNullOrEmpty(this.subtitleString))
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight, this.bounds.Width, AbstractObject.headerHeight);
 				rect.Deflate(4, 2);
 				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
+				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 			}
 			else
 			{
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+10, this.bounds.Width, AbstractObject.headerHeight-10);
 				rect.Deflate(4, 0);
 				this.title.LayoutSize = rect.Size;
-				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
+				this.title.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 				
 				rect = new Rectangle(this.bounds.Left, this.bounds.Top-AbstractObject.headerHeight+4, this.bounds.Width, 10);
 				rect.Deflate(4, 0);
 				this.subtitle.LayoutSize = rect.Size;
-				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColor(0), GlyphPaintStyle.Normal);
+				this.subtitle.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, titleColor, GlyphPaintStyle.Normal);
 			}
 
 			//	Dessine le bouton compact/étendu.
