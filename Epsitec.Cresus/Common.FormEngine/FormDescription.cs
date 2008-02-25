@@ -22,8 +22,8 @@ namespace Epsitec.Common.FormEngine
 		{
 			this.entityId = entityId;
 			this.deltaBaseFormId = deltaBaseFormId;
-			this.fields = new List<FieldDescription>();
 			this.defaultSize = new Size(double.NaN, double.NaN);
+			this.fields = new List<FieldDescription>();
 		}
 
 		public FormDescription(FormDescription model) : this(model.EntityId, model.DeltaBaseFormId)

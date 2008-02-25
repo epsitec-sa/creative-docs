@@ -257,6 +257,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.Viewport.Margins = new Margins(10, 10, 10, 10);
 			this.propertiesScrollable.PaintForegroundFrame = true;
 
+			//	Crée l'onglet 'divers'.
+			this.tabPageMisc = new TabPage();
+			this.tabPageMisc.TabTitle = "Divers";
+			this.tabPageMisc.Padding = new Margins(10, 10, 10, 10);
+			this.tabBookSecondary.Items.Add(this.tabPageMisc);
+
+			this.CreateMiscPage();
+
 			//	Crée l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();
 			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
@@ -516,6 +524,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldsButtons();
 			this.UpdateRelationsTable(true);
 			this.UpdateRelationsButtons();
+			this.UpdateMiscPage();
 			this.ignoreChange = iic;
 		}
 
@@ -934,7 +943,185 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldsButtons();
 			this.UpdateRelationsTable(true);
 			this.UpdateRelationsButtons();
+			this.UpdateMiscPage();
 			this.UpdateCommands();
+		}
+
+
+		protected void UpdateMiscPage()
+		{
+			//	Met à jour tous les widgets pour la page "divers".
+			this.ignoreChange = true;
+			Size defaultSize = this.workingForm.DefaultSize;
+
+			if (double.IsNaN(defaultSize.Width))
+			{
+				this.miscWidthButton.ActiveState = ActiveState.No;
+				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscWidthField.Text = "";
+				this.miscWidthField.Enable = false;
+			}
+			else
+			{
+				this.miscWidthButton.ActiveState = ActiveState.Yes;
+				this.miscWidthButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscWidthField.Value = (decimal) defaultSize.Width;
+				this.miscWidthField.Enable = !this.designerApplication.IsReadonly;
+			}
+
+			if (double.IsNaN(defaultSize.Height))
+			{
+				this.miscHeightButton.ActiveState = ActiveState.No;
+				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscHeightField.Text = "";
+				this.miscHeightField.Enable = false;
+			}
+			else
+			{
+				this.miscHeightButton.ActiveState = ActiveState.Yes;
+				this.miscHeightButton.Enable = !this.designerApplication.IsReadonly;
+				this.miscHeightField.Value = (decimal) defaultSize.Height;
+				this.miscHeightField.Enable = !this.designerApplication.IsReadonly;
+			}
+
+			this.ignoreChange = false;
+		}
+
+		protected void CreateMiscPage()
+		{
+			//	Crée tous les widgets pour la page "divers".
+			int index = 1;
+
+			FrameBox widthBox = new FrameBox(this.tabPageMisc);
+			widthBox.Margins = new Margins(0, 0, 0, 3);
+			widthBox.Dock = DockStyle.Top;
+
+			this.miscWidthButton = new CheckButton(widthBox);
+			this.miscWidthButton.AutoToggle = false;
+			this.miscWidthButton.PreferredWidth = 140;
+			this.miscWidthButton.Text = "Largeur préférentielle";
+			this.miscWidthButton.TabIndex = index++;
+			this.miscWidthButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.miscWidthButton.Dock = DockStyle.Left;
+			this.miscWidthButton.Clicked += new MessageEventHandler(this.HandleMiscButtonClicked);
+
+			this.miscWidthField = new TextFieldUpDown(widthBox);
+			this.miscWidthField.Resolution = 1.0M;
+			this.miscWidthField.Step = 1.0M;
+			this.miscWidthField.MinValue = 10.0M;
+			this.miscWidthField.MaxValue = 2000.0M;
+			this.miscWidthField.PreferredWidth = 60;
+			this.miscWidthField.TabIndex = index++;
+			this.miscWidthField.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.miscWidthField.Dock = DockStyle.Left;
+			this.miscWidthField.TextChanged += new EventHandler(this.HandleMiscFieldTextChanged);
+
+			FrameBox heightBox = new FrameBox(this.tabPageMisc);
+			heightBox.Margins = new Margins(0, 0, 0, 3);
+			heightBox.Dock = DockStyle.Top;
+
+			this.miscHeightButton = new CheckButton(heightBox);
+			this.miscHeightButton.AutoToggle = false;
+			this.miscHeightButton.PreferredWidth = 140;
+			this.miscHeightButton.Text = "Hauteur préférentielle";
+			this.miscHeightButton.TabIndex = index++;
+			this.miscHeightButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.miscHeightButton.Dock = DockStyle.Left;
+			this.miscHeightButton.Clicked += new MessageEventHandler(this.HandleMiscButtonClicked);
+
+			this.miscHeightField = new TextFieldUpDown(heightBox);
+			this.miscHeightField.Resolution = 1.0M;
+			this.miscHeightField.Step = 1.0M;
+			this.miscHeightField.MinValue = 10.0M;
+			this.miscHeightField.MaxValue = 2000.0M;
+			this.miscHeightField.PreferredWidth = 60;
+			this.miscHeightField.TabIndex = index++;
+			this.miscHeightField.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			this.miscHeightField.Dock = DockStyle.Left;
+			this.miscHeightField.TextChanged += new EventHandler(this.HandleMiscFieldTextChanged);
+		}
+
+		private void HandleMiscButtonClicked(object sender, MessageEventArgs e)
+		{
+			//	Le bouton pour la largeur ou la hauteur préférentielle a changé.
+			if (this.ignoreChange || this.designerApplication.IsReadonly)
+			{
+				return;
+			}
+
+			CheckButton button = sender as CheckButton;
+			button.ActiveState = (button.ActiveState == ActiveState.No) ? ActiveState.Yes : ActiveState.No;
+			Size defaultSize = this.workingForm.DefaultSize;
+
+			if (button == this.miscWidthButton)
+			{
+				if (button.ActiveState == ActiveState.No)
+				{
+					defaultSize.Width = double.NaN;
+				}
+				else
+				{
+					defaultSize.Width = 1000;
+				}
+			}
+
+			if (button == this.miscHeightButton)
+			{
+				if (button.ActiveState == ActiveState.No)
+				{
+					defaultSize.Height = double.NaN;
+				}
+				else
+				{
+					defaultSize.Height = 1000;
+				}
+			}
+
+			this.workingForm.DefaultSize = defaultSize;
+			this.module.AccessForms.SetLocalDirty();
+			this.UpdateMiscPage();
+		}
+
+		private void HandleMiscFieldTextChanged(object sender)
+		{
+			//	Le texte pour la largeur ou la hauteur préférentielle a changé.
+			if (this.ignoreChange || this.designerApplication.IsReadonly)
+			{
+				return;
+			}
+
+			TextFieldUpDown field = sender as TextFieldUpDown;
+			Size defaultSize = this.workingForm.DefaultSize;
+
+			if (field == this.miscWidthField)
+			{
+				double value = double.NaN;
+
+				if (!string.IsNullOrEmpty(field.Text))
+				{
+					value = (double) field.Value;
+				}
+
+				defaultSize.Width = value;
+			}
+
+			if (field == this.miscHeightField)
+			{
+				double value = double.NaN;
+
+				if (!string.IsNullOrEmpty(field.Text))
+				{
+					value = (double) field.Value;
+				}
+
+				defaultSize.Height = value;
+			}
+
+			if (this.workingForm.DefaultSize != defaultSize)
+			{
+				this.workingForm.DefaultSize = defaultSize;
+				this.module.AccessForms.SetLocalDirty();
+			}
 		}
 
 
@@ -965,7 +1152,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateCultureButtons();
 		}
 
-		void HandleCultureButtonClicked(object sender, MessageEventArgs e)
+		private void HandleCultureButtonClicked(object sender, MessageEventArgs e)
 		{
 			//	Un bouton pour changer de culture a été cliqué.
 			IconButton button = sender as IconButton;
@@ -1965,6 +2152,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected TabPage						tabPageProperties;
 		protected Scrollable					propertiesScrollable;
+
+		protected TabPage						tabPageMisc;
+		protected CheckButton					miscWidthButton;
+		protected TextFieldUpDown				miscWidthField;
+		protected CheckButton					miscHeightButton;
+		protected TextFieldUpDown				miscHeightField;
 
 		protected TabPage						tabPageCultures;
 		protected List<IconButton>				cultureButtonList;
