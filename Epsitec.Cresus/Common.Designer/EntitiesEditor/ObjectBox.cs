@@ -2569,16 +2569,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						bool hilite = this.hilitedElement == ActiveElement.BoxFieldTitle && this.hilitedFieldRank == i;
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(9.5, 0.5);
-						rect.Top -= 1.0;
-						graphics.AddFilledRectangle(rect);
+						if (this.fields[i].IsSubtitle)
+						{
+							rect.Top -= 1.0;
+						}
+						Path roundedPath = this.PathRoundRectangle(rect, ObjectBox.roundInsideRadius, true, false);
+						graphics.Rasterizer.AddSurface(roundedPath);
 						Color ci1 = this.GetColorMain(hilite ? 0.5 : (dragging ? 0.2 : 0.1));
-						Color ci2 = this.GetColorMain(0.0);
+						Color ci2 = this.GetColorMain(hilite ? 0.3 : (dragging ? 0.1 : 0.0));
 						this.RenderVerticalGradient(graphics, rect, ci1, ci2);
 
 						rect = this.GetFieldBounds(i);
 						rect.Deflate(ObjectBox.textMargin, 2);
 						this.fields[i].TextLayoutField.LayoutSize = rect.Size;
-						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, this.GetColorMain(0.8), GlyphPaintStyle.Normal);
+						this.fields[i].TextLayoutField.Paint(rect.BottomLeft, graphics, Rectangle.MaxValue, hilite ? this.GetColor(1) : this.GetColorMain(0.8), GlyphPaintStyle.Normal);
 
 						rect = this.GetFieldBounds(i);
 						graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
