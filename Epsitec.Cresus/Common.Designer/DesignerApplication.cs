@@ -210,14 +210,13 @@ namespace Epsitec.Common.Designer
 
 			this.ribbonMain.Items.Add(new Ribbons.Identity(this));
 			this.ribbonMain.Items.Add(new Ribbons.File(this));
-			this.ribbonMain.Items.Add(new Ribbons.Culture(this));
 			this.ribbonMain.Items.Add(new Ribbons.Clipboard(this));
 			if (this.mode == DesignerMode.Build)
 			{
+				this.ribbonMain.Items.Add(new Ribbons.Undo(this));
 				this.ribbonMain.Items.Add(new Ribbons.Edit(this));
 			}
 			this.ribbonMain.Items.Add(new Ribbons.Access(this));
-			this.ribbonMain.Items.Add(new Ribbons.Character(this));
 			this.ribbonMain.Items.Add(new Ribbons.Display(this));
 			this.ribbonMain.Items.Add(new Ribbons.Locator(this));
 
@@ -226,6 +225,8 @@ namespace Epsitec.Common.Designer
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
 			this.ribbonBook.Items.Add(this.ribbonOper);
 
+			this.ribbonOper.Items.Add(new Ribbons.Culture(this));
+			this.ribbonOper.Items.Add(new Ribbons.Character(this));
 			this.ribbonOper.Items.Add(new Ribbons.PanelShow(this));
 			this.ribbonOper.Items.Add(new Ribbons.PanelSelect(this));
 			this.ribbonOper.Items.Add(new Ribbons.Move(this));
@@ -810,6 +811,26 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Modifier.ActiveViewer.DoCommand(e.Command.CommandId);
 		}
 
+		[Command("Undo")]
+		void CommandUndo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.Undo();
+		}
+
+		[Command("Redo")]
+		void CommandRedo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.Redo();
+		}
+
+		[Command("UndoRedoListDo")]
+		void CommandUndoRedoListDo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
+			int i = System.Convert.ToInt32(value);
+			this.UndoRedoMenuGoto(i);
+		}
+
 		[Command("LocatorPrev")]
 		void CommandLocatorPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -966,6 +987,10 @@ namespace Epsitec.Common.Designer
 			this.tabIndexLastState = this.CreateCommandState("TabIndexLast");
 			this.tabIndexRenumState = this.CreateCommandState("TabIndexRenum");
 
+			this.undoState = this.CreateCommandState("Undo", KeyCode.AlphaZ|KeyCode.ModifierControl);
+			this.redoState = this.CreateCommandState("Redo", KeyCode.AlphaY|KeyCode.ModifierControl);
+			this.undoRedoListState = this.CreateCommandState("UndoRedoList");
+
 			this.locatorPrevState = this.CreateCommandState("LocatorPrev", KeyCode.ArrowLeft|KeyCode.ModifierAlt);
 			this.locatorNextState = this.CreateCommandState("LocatorNext", KeyCode.ArrowRight|KeyCode.ModifierAlt);
 
@@ -1088,6 +1113,32 @@ namespace Epsitec.Common.Designer
 			}
 
 			return viewer.EditExpression(fieldId);
+		}
+		#endregion
+
+
+		#region UndoRedo
+		protected void Undo()
+		{
+			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.Undo();
+		}
+
+		protected void Redo()
+		{
+			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.Redo();
+		}
+
+		public VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		{
+			VMenu menu = new VMenu();
+			menu.Items.Add(new MenuSeparator());
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected void UndoRedoMenuGoto(int index)
+		{
+			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.UndoRedoGoto(index);
 		}
 		#endregion
 
@@ -2342,6 +2393,9 @@ namespace Epsitec.Common.Designer
 		protected CommandState					tabIndexNextState;
 		protected CommandState					tabIndexLastState;
 		protected CommandState					tabIndexRenumState;
+		protected CommandState					undoState;
+		protected CommandState					redoState;
+		protected CommandState					undoRedoListState;
 		protected CommandState					locatorPrevState;
 		protected CommandState					locatorNextState;
 		protected CommandState					displayHorizontalState;

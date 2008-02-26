@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.Ribbons
 
 			this.group = new FrameBox(this);
 
-			this.buttonList = this.CreateMenuButton("UndoRedoList", Res.Strings.Action.LocatorList, new MessageEventHandler(this.HandleListPressed));
+			this.buttonList = this.CreateMenuButton("LocatorList", Res.Strings.Action.LocatorList, new MessageEventHandler(this.HandleListPressed));
 			this.buttonList.ContentAlignment = ContentAlignment.BottomCenter;
 			this.buttonList.GlyphSize = new Size(dx*3.0, dy*0.5);
 			this.buttonList.Anchor = AnchorStyles.All;

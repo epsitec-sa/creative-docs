@@ -1399,6 +1399,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayVertical").Enable = true;
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
+			this.GetCommandState("Undo").Enable = this.IsUndoEnable();
+			this.GetCommandState("Redo").Enable = this.IsRedoEnable();
+			this.GetCommandState("UndoRedoList").Enable = this.IsUndoRedoListEnable();
+
 			//?this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("EditOk").Enable = this.module.IsLocalDirty;
 			this.GetCommandState("EditCancel").Enable = this.module.IsLocalDirty;
@@ -1658,6 +1662,40 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Retourne le texte résumé de la ressource sélectionnée.
 			return null;
+		}
+
+
+		public virtual void Undo()
+		{
+			//	Annule la dernière action.
+		}
+
+		public virtual void Redo()
+		{
+			//	Refait la dernière action.
+		}
+
+		public virtual void UndoRedoGoto(int index)
+		{
+			//	Annule ou refait quelques actions.
+		}
+
+		protected virtual bool IsUndoEnable()
+		{
+			//	Retourne true si la commande "Undo" doit être active.
+			return false;
+		}
+
+		protected virtual bool IsRedoEnable()
+		{
+			//	Retourne true si la commande "Redo" doit être active.
+			return false;
+		}
+
+		protected virtual bool IsUndoRedoListEnable()
+		{
+			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
+			return false;
 		}
 
 

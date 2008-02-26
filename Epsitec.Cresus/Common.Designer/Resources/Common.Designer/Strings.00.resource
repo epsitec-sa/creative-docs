@@ -12,7 +12,7 @@
   <data name="Ribbon.Section.Access" id="08">Accès</data>
   <data name="Ribbon.Section.Culture" id="09">Culture</data>
   <data name="Ribbon.Section.PanelSelect" id="0A">Sélection</data>
-  <data name="Ribbon.Section.PanelShow" id="0B">Affichage</data>
+  <data name="Ribbon.Section.PanelShow" id="0B">Panneau</data>
   <data name="Ribbon.Section.Order" id="0C">Ordre</data>
   <data name="Ribbon.Section.TabIndex" id="0D">Touche Tab</data>
   <data name="Ribbon.Section.Align" id="0E">Alignement</data>
@@ -488,4 +488,8 @@
   <data name="Viewers.Forms.Menu.ShowPrefix" id="215">Afficher les préfixes</data>
   <data name="Entities.Info.InheritFromMany" id="225">Hérite de </data>
   <data name="Entities.Info.InterfaceFromOne" id="235">Comprend l&amp;apos;interface </data>
+  <data name="Action.Undo" id="K">Annuler</data>
+  <data name="Action.Redo" id="K1">Refaire</data>
+  <data name="Action.UndoRedoList" id="K2">Annuler ou refaire plusieurs actions</data>
+  <data name="Ribbon.Section.Undo" id="K3">Annuler</data>
 </bundle>

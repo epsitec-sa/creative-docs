@@ -29,7 +29,7 @@
   <data id="08">Access</data>
   <data id="09">Culture</data>
   <data id="0A">Object Selection</data>
-  <data id="0B">Display</data>
+  <data id="0B">Panel</data>
   <data id="0C">Order</data>
   <data id="0D">Tab Index</data>
   <data id="0E">Align</data>
@@ -238,4 +238,5 @@
   <data id="0V5" mod="1">Shortcut &lt;i&gt;{0}&lt;/i&gt; used multiple times:</data>
   <data id="006" mod="1">No error found.</data>
   <data id="0E7">Text Button</data>
+  <data id="09A">Display</data>
 </bundle>
