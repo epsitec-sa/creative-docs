@@ -430,7 +430,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				box.ConnectionListD.Clear();
 			}
 
-			//	Adapte toutes les commentaires.
+			//	Adapte tous les commentaires.
 			foreach (ObjectComment comment in this.comments)
 			{
 				if (comment.AttachObject is ObjectConnection)

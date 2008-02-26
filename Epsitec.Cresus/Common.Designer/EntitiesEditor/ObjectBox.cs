@@ -46,6 +46,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.connectionListD = new List<ObjectConnection>();
 
 			this.parents = new List<ObjectBox>();
+			this.fieldRenameList = new List<FieldRename>();
 		}
 
 
@@ -1789,6 +1790,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
+			FieldRename rename = new FieldRename(fieldCultureMap);
+			this.fieldRenameList.Add(rename);
+
 			fieldCultureMap.Name = name;
 			this.fields[rank].Initialize(this, dataField);
 			this.editor.Module.AccessEntities.SetLocalDirty();
@@ -3525,6 +3529,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#endregion
 
 
+		#region FieldRename
+		public void SpecialRevertChanges()
+		{
+			for (int i=this.fieldRenameList.Count-1; i>=0; i--)
+			{
+				FieldRename rename = this.fieldRenameList[i];
+				rename.CultureMap.Name = rename.OldName;
+			}
+		}
+
+		protected class FieldRename
+		{
+			public FieldRename(CultureMap cultureMap)
+			{
+				this.CultureMap = cultureMap;
+				this.OldName = cultureMap.Name;
+			}
+
+			public CultureMap CultureMap;
+			public string OldName;
+		}
+		#endregion
+
+
 		public static readonly double roundFrameRadius = 12;
 		protected static readonly double roundInsideRadius = 8;
 		protected static readonly double shadowOffset = 6;
@@ -3555,6 +3583,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected List<ObjectConnection> connectionListC;
 		protected List<ObjectConnection> connectionListD;
 		protected List<ObjectBox> parents;
+		protected List<FieldRename> fieldRenameList;
 
 		protected bool isDragging;
 		protected Point draggingPos;

@@ -1726,6 +1726,8 @@ namespace Epsitec.Common.Designer.Viewers
 					this.module.AccessFields.RevertChanges();
 					this.module.AccessFields.ClearLocalDirty();
 				}
+#else
+				this.SpecialRevertChanges();
 #endif
 
 				this.access.RevertChanges();
@@ -1733,6 +1735,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.UpdateList();  // met à jour la liste de gauche avec les données modifiées
 				this.Update();  // met à jour la partie éditable centrale avec les données initiales
 			}
+		}
+
+		protected virtual void SpecialRevertChanges()
+		{
+			//	Action spéciale pour annuler les changements effectués dans les ressources.
 		}
 
 
