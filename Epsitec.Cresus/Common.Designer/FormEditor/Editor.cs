@@ -56,13 +56,22 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
-		public void Initialize(Module module, PanelsContext context, UI.Panel panel)
+		public void Initialize(Viewers.Forms viewersForms, Module module, PanelsContext context, UI.Panel panel)
 		{
+			this.viewersForms = viewersForms;
 			this.module = module;
 			this.context = context;
 			this.panel = panel;
 
 			this.objectModifier = new ObjectModifier(this);
+		}
+
+		public Viewers.Forms ViewersForms
+		{
+			get
+			{
+				return this.viewersForms;
+			}
 		}
 
 		public Module Module
@@ -1043,6 +1052,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public static readonly double		margin = 10;
 
+		protected Viewers.Forms				viewersForms;
 		protected Module					module;
 		protected FormDescription			workingForm;
 		protected List<FieldDescription>	baseFields;

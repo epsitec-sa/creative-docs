@@ -84,10 +84,13 @@ namespace Epsitec.Common.Designer.Ribbons
 			}
 
 			VMenu menu = this.designerApplication.UndoRedoCreateMenu(null);
-			menu.Host = this;
-			menu.MinWidth = button.ActualWidth;
-			TextFieldCombo.AdjustComboSize(button, menu, false);
-			menu.ShowAsComboList(button, Point.Zero, button);
+			if (menu != null)
+			{
+				menu.Host = this;
+				menu.MinWidth = button.ActualWidth;
+				TextFieldCombo.AdjustComboSize(button, menu, false);
+				menu.ShowAsComboList(button, Point.Zero, button);
+			}
 		}
 
 

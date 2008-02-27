@@ -17,6 +17,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			this.engine = new FormEngine.Engine(this.module.FormResourceProvider);
 
+			this.undoActions = new List<UndoAction>();
+			this.undoCount = 0;
+			this.undoIndex = 0;
+
 			this.scrollable.Visibility = false;
 
 			FrameBox surface = new FrameBox(this.lastGroup);
@@ -58,7 +62,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
 			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
 			this.formEditor = new FormEditor.Editor(container);
-			this.formEditor.Initialize(this.module, this.context, this.panelContainer);
+			this.formEditor.Initialize(this, this.module, this.context, this.panelContainer);
 			this.formEditor.MinWidth = 100;
 			this.formEditor.MinHeight = 100;
 			this.formEditor.Anchor = AnchorStyles.All;
@@ -758,6 +762,214 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		#region UndoRedo
+		public override void Undo()
+		{
+			//	Annule la dernière action.
+			System.Diagnostics.Debug.Assert(this.IsUndoEnable());
+
+			if (this.undoActions.Count == this.undoIndex)
+			{
+				this.undoActions.Add(this.UndoCurrentState(null));  // ajoute l'état actuel à la fin de la liste
+			}
+
+			UndoAction action = this.undoActions[--this.undoIndex];
+			this.UndoRestore(action);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public override void Redo()
+		{
+			//	Refait la dernière action.
+			System.Diagnostics.Debug.Assert(this.IsRedoEnable());
+
+			UndoAction action = this.undoActions[++this.undoIndex];
+			this.UndoRestore(action);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		{
+			//	Crée le menu undo/redo.
+			VMenu menu = new VMenu();
+
+			for (int i=0; i<this.undoCount; i++)
+			{
+				UndoAction action = this.undoActions[i];
+				string name = action.ActionName;
+				int active;
+
+				if (i < this.undoIndex-1)  // undo ?
+				{
+					active = 1;
+				}
+				else if (i > this.undoIndex-1)  // redo ?
+				{
+					name = Misc.Italic(name);
+					active = 0;
+				}
+				else // if (i == this.undoIndex-1)
+				{
+					name = Misc.Bold(name);
+					active = 2;
+				}
+
+				MenuItem item = this.UndoRedoCreateItem(message, active, i+1, name, i);
+				menu.Items.Add(item);
+
+				if (active == 2 && i < this.undoCount-1)
+				{
+					menu.Items.Add(new MenuSeparator());
+				}
+			}
+
+			menu.AdjustSize();
+			return menu;
+		}
+
+		protected MenuItem UndoRedoCreateItem(MessageEventHandler message, int active, int rank, string action, int todo)
+		{
+			//	Crée une case du menu des actions à refaire/annuler.
+			string icon = "";
+			if (active == 1)  icon = Misc.Icon("ActiveNo");
+			if (active == 2)  icon = Misc.Icon("ActiveCurrent");
+
+			string name = string.Format("{0}: {1}", rank.ToString(), action);
+			string cmd = "UndoRedoListDo";
+			Misc.CreateStructuredCommandWithName(cmd);
+
+			MenuItem item = new MenuItem(cmd, icon, name, "", todo.ToString());
+
+			if (message != null)
+			{
+				item.Pressed += message;
+			}
+
+			return item;
+		}
+
+		public override void UndoRedoGoto(int index)
+		{
+			//	Annule ou refait quelques actions, selon le menu.
+			if (this.undoActions.Count == this.undoIndex)
+			{
+				this.undoActions.Add(this.UndoCurrentState(null));  // ajoute l'état actuel à la fin de la liste
+			}
+
+			if (index >= this.undoIndex)
+			{
+				index++;
+			}
+
+			UndoAction action = this.undoActions[index];
+			this.UndoRestore(action);
+			this.undoIndex = index;
+			this.UpdateUndoRedoCommands();
+		}
+
+		public override void UndoFlush()
+		{
+			//	Les commandes annuler/refaire ne seront plus possibles.
+			this.undoActions.Clear();
+			this.undoCount = 0;
+			this.undoIndex = 0;
+			this.UpdateUndoRedoCommands();
+		}
+
+		protected override bool IsUndoEnable()
+		{
+			//	Retourne true si la commande "Undo" doit être active.
+			return this.undoIndex > 0;
+		}
+
+		protected override bool IsRedoEnable()
+		{
+			//	Retourne true si la commande "Redo" doit être active.
+			return this.undoIndex < this.undoCount;
+		}
+
+		protected override bool IsUndoRedoListEnable()
+		{
+			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
+			return this.undoCount > 0;
+		}
+
+		public void UndoMemorize(string actionName, bool merge)
+		{
+			//	Mémorise l'état actuel, avant d'effectuer une modification dans this.workingForm.
+			//	Si merge = true et que la dernière action avait le même nom, on conserve le dernier
+			//	état mémorisé.
+			while (this.undoActions.Count > this.undoIndex)
+			{
+				this.undoActions.RemoveAt(this.undoActions.Count-1);  // supprime la dernière action
+			}
+
+			UndoAction action = this.UndoCurrentState(actionName);
+
+			if (merge && this.undoCount > 0 && this.undoIndex > 0 && this.undoActions[this.undoIndex-1].ActionName == actionName)
+			{
+				// Conserve le dernier état mémorisé.
+			}
+			else
+			{
+				this.undoActions.Add(action);
+				this.undoIndex = this.undoActions.Count;
+				this.undoCount = this.undoIndex;
+				this.UpdateUndoRedoCommands();
+			}
+		}
+
+		protected UndoAction UndoCurrentState(string actionName)
+		{
+			//	Retourne l'état courant, prêt à être mémorisé dans this.undoActions.
+			UndoAction action = new UndoAction();
+
+			action.ActionName = actionName;
+			action.SerializedData = this.FormToXml(this.workingForm);
+
+			action.FieldsSelected = new List<int>();
+			foreach (int sel in this.fieldsTable.SelectedRows)
+			{
+				action.FieldsSelected.Add(sel);
+			}
+
+			return action;
+		}
+
+		protected void UndoRestore(UndoAction action)
+		{
+			//	Remet l'éditeur de masques dans un état précédent.
+			this.workingForm = this.XmlToForm(action.SerializedData);
+			this.finalFields = this.workingForm.Fields;  //??? TOTO: si delta ???
+			this.SetForm(false);
+
+			this.formEditor.DeselectAll();
+			this.UpdateFieldsTable(false);
+
+			List<int> sels = new List<int>();
+			foreach (int sel in action.FieldsSelected)
+			{
+				sels.Add(sel);
+			}
+			this.fieldsTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+			
+			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(false);
+			this.UpdateRelationsButtons();
+			this.UpdateMiscPage();
+		}
+
+		protected class UndoAction
+		{
+			//	Cette classe mémorise l'état de l'éditeur de masques.
+			public string		ActionName;
+			public string		SerializedData;
+			public List<int>	FieldsSelected;
+		}
+		#endregion
+
+	
 		public override bool Terminate(bool soft)
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
@@ -1050,6 +1262,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
+			this.UndoMemorize("Taille préférentielle", true);
 			this.workingForm.DefaultSize = defaultSize;
 			this.module.AccessForms.SetLocalDirty();
 			this.UpdateMiscPage();
@@ -1093,6 +1306,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.workingForm.DefaultSize != defaultSize)
 			{
+				this.UndoMemorize("Taille préférentielle", true);
 				this.workingForm.DefaultSize = defaultSize;
 				this.UpdateMiscPagePanel();
 				this.module.AccessForms.SetLocalDirty();
@@ -1288,6 +1502,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsRemove()
 		{
 			//	Utilise ou supprime les champs sélectionnés.
+			this.UndoMemorize("Montrer ou cacher", false);
+
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1400,6 +1616,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsReset()
 		{
 			//	Remet à zéro les champs sélectionnés, dans un masque delta.
+			this.UndoMemorize("Remise à zéro", false);
+
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1449,6 +1667,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsGlue()
 		{
 			//	Insère une "glue" avant le champ sélectionné.
+			this.UndoMemorize("Coller l'élément", false);
+
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1492,6 +1712,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsLine()
 		{
 			//	Insère une ligne avant le champ sélectionné.
+			this.UndoMemorize("Insérer un séparateur", false);
+
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1533,6 +1755,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsTitle()
 		{
 			//	Insère un titre avant le champ sélectionné.
+			this.UndoMemorize("Insérer un titre", false);
+
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
@@ -1596,6 +1820,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
+			this.UndoMemorize("Choix d'un sous-masque", false);
 			field.SubFormId = druid;
 			
 			this.SetForm(true);
@@ -1618,6 +1843,8 @@ namespace Epsitec.Common.Designer.Viewers
 				if (firstItem.FieldType == FieldDescription.FieldType.BoxBegin)
 				{
 					//	Sépare le groupe sélectionné.
+					this.UndoMemorize("Séparer", false);
+
 					int level = 0;
 					for (int i=sels[0]; i<this.formEditor.ObjectModifier.TableContent.Count; i++)
 					{
@@ -1655,6 +1882,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			//	Groupe les champs sélectionnés.
+			this.UndoMemorize("Grouper", false);
+
 			List<FieldDescription> content = new List<FieldDescription>();
 			for (int i=sels.Count-1; i>=0; i--)
 			{
@@ -1694,6 +1923,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsMove(int direction)
 		{
 			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
+			this.UndoMemorize("Déplacer", false);
+
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 			if (direction > 0)
@@ -1772,6 +2003,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				return;
 			}
+
+			this.UndoMemorize("Ajouter", false);
 
 			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
 			FieldDescription field;
@@ -2209,5 +2442,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected UI.PanelMode					panelMode = UI.PanelMode.Default;
 		protected Druid							druidToSerialize;
+
+		protected List<UndoAction>				undoActions;
+		protected int							undoCount;
+		protected int							undoIndex;
 	}
 }

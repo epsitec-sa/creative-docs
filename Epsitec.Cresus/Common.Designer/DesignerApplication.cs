@@ -1130,10 +1130,7 @@ namespace Epsitec.Common.Designer
 
 		public VMenu UndoRedoCreateMenu(MessageEventHandler message)
 		{
-			VMenu menu = new VMenu();
-			menu.Items.Add(new MenuSeparator());
-			menu.AdjustSize();
-			return menu;
+			return this.CurrentModuleInfo.Module.Modifier.ActiveViewer.UndoRedoCreateMenu(message);
 		}
 
 		protected void UndoRedoMenuGoto(int index)

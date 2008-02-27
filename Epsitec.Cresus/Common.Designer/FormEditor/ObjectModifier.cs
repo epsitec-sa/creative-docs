@@ -93,6 +93,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Nombre de colonnes");
 				field.ColumnsRequired = columnsRequired;
 				this.DeltaUpdate(field);
 			}
@@ -123,6 +124,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Nombre de lignes");
 				field.RowsRequired = rowsRequired;
 				this.DeltaUpdate(field);
 			}
@@ -154,6 +156,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Type de séparateur");
 				field.SeparatorBottom = sep;
 				this.DeltaUpdate(field);
 			}
@@ -185,6 +188,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Marges");
 				field.BoxPadding = type;
 				this.DeltaUpdate(field);
 			}
@@ -216,6 +220,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Couleur de fond");
 				field.BackColor = color;
 				this.DeltaUpdate(field);
 			}
@@ -238,7 +243,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetBoxFrameState(Widget obj, FrameState state)
 		{
-			//	Choix de la couleur de fond d'un champ.
+			//	Choix du type du cadre d'une boîte.
 			if (this.IsReadonly)
 			{
 				return;
@@ -247,6 +252,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Type du cadre");
 				field.BoxFrameState = state;
 				this.DeltaUpdate(field);
 			}
@@ -269,7 +275,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetBoxFrameWidth(Widget obj, double width)
 		{
-			//	Choix de la couleur de fond d'un champ.
+			//	Choix de l'épaisseur du cadre d'une boîte.
 			if (this.IsReadonly)
 			{
 				return;
@@ -278,11 +284,18 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
+				this.UndoMemorize("Epaisseur du cadre");
 				field.BoxFrameWidth = 2*width-1;
 				this.DeltaUpdate(field);
 			}
 		}
 
+
+		protected void UndoMemorize(string actionName)
+		{
+			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
+			this.formEditor.ViewersForms.UndoMemorize(actionName, true);
+		}
 
 		protected void DeltaUpdate(FieldDescription field)
 		{

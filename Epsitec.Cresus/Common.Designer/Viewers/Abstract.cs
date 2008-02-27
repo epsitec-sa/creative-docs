@@ -1399,10 +1399,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.GetCommandState("DisplayVertical").Enable = true;
 			this.GetCommandState("DisplayFullScreen").Enable = true;
 
-			this.GetCommandState("Undo").Enable = this.IsUndoEnable();
-			this.GetCommandState("Redo").Enable = this.IsRedoEnable();
-			this.GetCommandState("UndoRedoList").Enable = this.IsUndoRedoListEnable();
-
 			//?this.GetCommandState("EditLocked").ActiveState = this.designerApplication.IsEditLocked ? ActiveState.Yes : ActiveState.No;
 			this.GetCommandState("EditOk").Enable = this.module.IsLocalDirty;
 			this.GetCommandState("EditCancel").Enable = this.module.IsLocalDirty;
@@ -1634,9 +1630,19 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("TabIndexFirst").Enable = false;
 			}
 
+			this.UpdateUndoRedoCommands();
+
 			this.designerApplication.UpdateInfoCurrentModule();
 			this.designerApplication.UpdateInfoAccess();
 			this.designerApplication.UpdateInfoViewer();
+		}
+
+		protected void UpdateUndoRedoCommands()
+		{
+			//	Met à jour les commandes undo/redo.
+			this.GetCommandState("Undo").Enable = this.IsUndoEnable();
+			this.GetCommandState("Redo").Enable = this.IsRedoEnable();
+			this.GetCommandState("UndoRedoList").Enable = this.IsUndoRedoListEnable();
 		}
 
 		protected void UpdateCommandTool(string name)
@@ -1665,6 +1671,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		#region UndoRedo
 		public virtual void Undo()
 		{
 			//	Annule la dernière action.
@@ -1675,9 +1682,20 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Refait la dernière action.
 		}
 
+		public virtual VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		{
+			//	Crée le menu undo/redo.
+			return null;
+		}
+
 		public virtual void UndoRedoGoto(int index)
 		{
-			//	Annule ou refait quelques actions.
+			//	Annule ou refait quelques actions, selon le menu.
+		}
+
+		public virtual void UndoFlush()
+		{
+			//	Les commandes annuler/refaire ne seront plus possibles.
 		}
 
 		protected virtual bool IsUndoEnable()
@@ -1697,6 +1715,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
 			return false;
 		}
+		#endregion
 
 
 		protected void SetValue(CultureMap item, StructuredData data, Druid id, object value, bool update)
@@ -1730,6 +1749,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
+			if (!soft)
+			{
+				this.UndoFlush();
+			}
+
 			if (!soft && this.access.IsLocalDirty)
 			{
 				this.PersistChanges();
@@ -1752,6 +1776,8 @@ namespace Epsitec.Common.Designer.Viewers
 		public void RevertChanges()
 		{
 			//	Annule les changements effectués dans les ressources.
+			this.UndoFlush();
+
 			if (this.access.IsLocalDirty)
 			{
 #if true
