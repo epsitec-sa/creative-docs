@@ -939,8 +939,13 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UndoRestore(UndoAction action)
 		{
 			//	Remet l'éditeur de masques dans un état précédent.
+#if false
 			this.workingForm = this.XmlToForm(action.SerializedData);
 			this.finalFields = this.workingForm.Fields;  //??? TOTO: si delta ???
+#else
+			FormDescription inputForm = this.XmlToForm(action.SerializedData);
+			this.access.GetForm(this.druidToSerialize, inputForm, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
+#endif
 			this.SetForm(false);
 
 			this.formEditor.DeselectAll();
@@ -1022,7 +1027,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (Forms.softWorkingForm == null)
 			{
-				this.access.GetForm(this.druidToSerialize, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
+				this.access.GetForm(this.druidToSerialize, null, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
 				this.SetForm(false);
 			}
 			else

@@ -2193,13 +2193,12 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		public void GetForm(Druid druid, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)
+		public void GetForm(Druid druid, FormEngine.FormDescription inputForm, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)
 		{
-			this.GetForm(this.accessor.Collection[druid], out workingForm, out baseFields, out finalFields, out entityId);
-		}
+			//	Désérialise le masque de saisie dans les ressources.
+			//	Si inputForm != null, il s'agit du Form que l'on désire retrouver après un undo/redo.
+			CultureMap item = this.accessor.Collection[druid];
 
-		public void GetForm(CultureMap item, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)
-		{
 			if (item == null)
 			{
 				workingForm = null;
@@ -2211,7 +2210,7 @@ namespace Epsitec.Common.Designer
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				FormEngine.Engine engine = new FormEngine.Engine(this.ownerModule.FormResourceProvider);
-				string baseXml, deltaXml=null;
+				string baseXml, deltaXml;
 				FormEngine.FormDescription baseForm, deltaForm;
 
 				if (this.accessor.BasedOnPatchModule)
@@ -2220,18 +2219,80 @@ namespace Epsitec.Common.Designer
 					{
 						case CultureMapSource.ReferenceModule:
 							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
-							deltaXml = "";
+
+							if (string.IsNullOrEmpty(baseXml))
+							{
+								baseForm = null;
+							}
+							else
+							{
+								baseForm = FormEngine.Serialization.DeserializeForm(baseXml);
+							}
+
+							if (inputForm == null)
+							{
+								deltaForm = new FormEngine.FormDescription(baseForm);
+								deltaForm.Fields.Clear();
+							}
+							else
+							{
+								deltaForm = inputForm;
+							}
 							break;
 
 						case CultureMapSource.PatchModule:
-							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+							if (inputForm == null)
+							{
+								baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+								if (string.IsNullOrEmpty(baseXml))
+								{
+									baseForm = null;
+								}
+								else
+								{
+									baseForm = FormEngine.Serialization.DeserializeForm(baseXml);
+								}
+							}
+							else
+							{
+								baseForm = inputForm;
+							}
+
+							deltaForm = null;
 							break;
 
 						case CultureMapSource.DynamicMerge:
 							this.FormMerge(item);  // utile si un autre module a changé
 
 							baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSourceAux) as string;
-							deltaXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+							if (string.IsNullOrEmpty(baseXml))
+							{
+								baseForm = null;
+							}
+							else
+							{
+								baseForm = FormEngine.Serialization.DeserializeForm(baseXml);
+							}
+
+							if (inputForm == null)
+							{
+								deltaXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+								if (deltaXml == null)
+								{
+									deltaForm = null;
+								}
+								else
+								{
+									deltaForm = FormEngine.Serialization.DeserializeForm(deltaXml);
+								}
+							}
+							else
+							{
+								deltaForm = inputForm;
+							}
 							break;
 
 						default:
@@ -2240,30 +2301,25 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
-				}
+					if (inputForm == null)
+					{
+						baseXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
 
-				if (string.IsNullOrEmpty(baseXml))
-				{
-					baseForm = null;
-				}
-				else
-				{
-					baseForm = FormEngine.Serialization.DeserializeForm(baseXml);
-				}
+						if (string.IsNullOrEmpty(baseXml))
+						{
+							baseForm = null;
+						}
+						else
+						{
+							baseForm = FormEngine.Serialization.DeserializeForm(baseXml);
+						}
+					}
+					else
+					{
+						baseForm = inputForm;
+					}
 
-				if (deltaXml == null)
-				{
 					deltaForm = null;
-				}
-				else if (deltaXml == "")
-				{
-					deltaForm = new FormEngine.FormDescription(baseForm);
-					deltaForm.Fields.Clear();
-				}
-				else
-				{
-					deltaForm = FormEngine.Serialization.DeserializeForm(deltaXml);
 				}
 
 				engine.Arrange.Build(baseForm, deltaForm, out baseFields, out finalFields, out entityId);
