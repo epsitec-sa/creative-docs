@@ -47,7 +47,7 @@ namespace Epsitec.Common.Support
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
 		/// </summary>
-		/// <param name="dev">The developer id.</param>
+		/// <param name="dev">The developer and patch level id.</param>
 		/// <param name="local">The local id.</param>
 		public Druid(int dev, int local)
 		{
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Support
 		/// Initializes a new instance of the <see cref="T:Druid"/> structure.
 		/// </summary>
 		/// <param name="module">The module id.</param>
-		/// <param name="dev">The developer id.</param>
+		/// <param name="dev">The developer and patch level id.</param>
 		/// <param name="local">The local id.</param>
 		public Druid(int module, int dev, int local)
 		{
@@ -126,10 +126,10 @@ namespace Epsitec.Common.Support
 			get
 			{
 				int module = this.Module;
-				int dev = this.Developer;
+				int dev = this.DeveloperAndPatchLevel;
 				int local = this.Local;
 
-				if (!Druid.IsValidDeveloper (dev))
+				if (!Druid.IsValidDeveloperAndPatchId (dev))
 				{
 					return DruidType.Invalid;
 				}
@@ -166,14 +166,40 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Gets the developer id.
+		/// Gets the encoded developer and patch level id.
 		/// </summary>
-		/// <value>The developer id.</value>
-		public int								Developer
+		/// <value>The encoded developer and patch level id.</value>
+		public int								DeveloperAndPatchLevel
 		{
 			get
 			{
 				return this.developer-1;
+			}
+		}
+
+		/// <summary>
+		/// Gets the decoded developer id.
+		/// </summary>
+		/// <value>The decoded developer id.</value>
+		public int								Developer
+		{
+			get
+			{
+				int id = this.DeveloperAndPatchLevel;
+
+				return id < Druid.DeveloperIdMultiplier ? id : id / Druid.DeveloperIdMultiplier;
+			}
+		}
+
+		/// <summary>
+		/// Gets the decoded patch level.
+		/// </summary>
+		/// <value>The decoded patch level.</value>
+		public int								PatchLevel
+		{
+			get
+			{
+				return this.DeveloperAndPatchLevel % Druid.DeveloperIdMultiplier;
 			}
 		}
 
@@ -202,7 +228,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a resource id", type));
 			}
 
-			return string.Concat ("[", Druid.ToFullString (Druid.FromIds (this.Module, this.Developer, this.Local)), "]");
+			return string.Concat ("[", Druid.ToFullString (Druid.FromIds (this.Module, this.DeveloperAndPatchLevel, this.Local)), "]");
 		}
 
 		/// <summary>
@@ -218,7 +244,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a resource id", type));
 			}
 
-			return string.Concat ("_", Druid.ToFullString (Druid.FromIds (this.Module, this.Developer, this.Local)));
+			return string.Concat ("_", Druid.ToFullString (Druid.FromIds (this.Module, this.DeveloperAndPatchLevel, this.Local)));
 		}
 
 		/// <summary>
@@ -235,7 +261,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a field id name", type));
 			}
 
-			return string.Concat (Resources.FieldIdPrefix, Druid.ToModuleString (Druid.FromIds (this.Developer, this.Local)));
+			return string.Concat (Resources.FieldIdPrefix, Druid.ToModuleString (Druid.FromIds (this.DeveloperAndPatchLevel, this.Local)));
 		}
 
 		/// <summary>
@@ -252,7 +278,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a field id", type));
 			}
 
-			return Druid.FromIds (this.Developer, this.Local);
+			return Druid.FromIds (this.DeveloperAndPatchLevel, this.Local);
 		}
 
 		/// <summary>
@@ -266,10 +292,10 @@ namespace Epsitec.Common.Support
 			switch (type)
 			{
 				case DruidType.Full:
-					return Druid.FromIds (this.Module, this.Developer, this.Local);
+					return Druid.FromIds (this.Module, this.DeveloperAndPatchLevel, this.Local);
 
 				case DruidType.ModuleRelative:
-					return Druid.FromIds (this.Developer, this.Local);
+					return Druid.FromIds (this.DeveloperAndPatchLevel, this.Local);
 
 				default:
 					throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a long", type));
@@ -522,7 +548,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public static bool IsValidDeveloper(int dev)
+		public static bool IsValidDeveloperAndPatchId(int dev)
 		{
 			if ((dev < 0) || (dev > 0x000fffff))
 			{
@@ -1047,6 +1073,7 @@ namespace Epsitec.Common.Support
 		#endregion
 
 		public static readonly Druid			Empty = new Druid ();
+		public const int						DeveloperIdMultiplier	= 10;
 
 		private static long						uniqueId;
 

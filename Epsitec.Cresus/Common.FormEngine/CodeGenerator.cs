@@ -65,7 +65,7 @@ namespace Epsitec.Common.FormEngine
 						/**/				   Keywords.Druid, " ", name, " = ",
 						/**/				   Keywords.New, " ", Keywords.Druid, " (",
 						/**/				   id.Module.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
-						/**/				   id.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+						/**/				   id.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
 						/**/				   id.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
 				}
 			}

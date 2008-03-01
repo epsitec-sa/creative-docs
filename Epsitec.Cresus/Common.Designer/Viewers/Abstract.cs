@@ -2340,8 +2340,8 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap itemA = a as CultureMap;
 			CultureMap itemB = b as CultureMap;
 
-			int iA = itemA.Id.Developer;
-			int iB = itemB.Id.Developer;
+			int iA = itemA.Id.DeveloperAndPatchLevel;
+			int iB = itemB.Id.DeveloperAndPatchLevel;
 
 			return iA.CompareTo(iB);
 		}
@@ -2387,18 +2387,18 @@ namespace Epsitec.Common.Designer.Viewers
 		public string GetIdentityText(CultureMap item)
 		{
 			//	Retourne le texte pour la colonne Identity.
-			if (item.Id.Developer == 0)
+			if (item.Id.DeveloperAndPatchLevel == 0)
 			{
 				return Res.Strings.Viewers.Identity.God;
 			}
 
-			Identity.IdentityCard card = Identity.IdentityRepository.Default.FindIdentityCard(item.Id.Developer);
+			Identity.IdentityCard card = Identity.IdentityRepository.Default.FindIdentityCard(item.Id.DeveloperAndPatchLevel);
 			if (card != null)
 			{
 				return card.UserName;
 			}
 
-			return string.Format(Res.Strings.Viewers.Identity.Developer, item.Id.Developer.ToString());
+			return string.Format(Res.Strings.Viewers.Identity.Developer, item.Id.DeveloperAndPatchLevel.ToString());
 		}
 
 

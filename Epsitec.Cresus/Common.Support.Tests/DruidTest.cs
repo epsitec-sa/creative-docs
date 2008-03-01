@@ -102,7 +102,7 @@ namespace Epsitec.Common.Support
 		{
 			Druid druid = Druid.Parse ("[1023000008]");
 
-			Assert.AreEqual (2, druid.Developer);
+			Assert.AreEqual (2, druid.DeveloperAndPatchLevel);
 			Assert.AreEqual (3, druid.Local);
 			Assert.AreEqual (0x40001, druid.Module);
 			

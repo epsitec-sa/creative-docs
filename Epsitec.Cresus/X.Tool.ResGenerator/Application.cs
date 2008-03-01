@@ -438,7 +438,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append ("public static readonly global::Epsitec.Common.Widgets.Command ");
 				buffer.Append (delta);
 				buffer.Append (@" = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
 				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("));\n");
@@ -661,7 +661,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
 				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
 				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (")); } }\n");
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
 				buffer.Append (delta);
 				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
 				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (")); } }\n");
@@ -869,7 +869,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append ("public static readonly global::Epsitec.Common.Support.Druid ");
 				buffer.Append (delta);
 				buffer.Append (@" = new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
 				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (");\n");
@@ -1009,7 +1009,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				buffer.Append (typeName);
 				buffer.Append (") global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (");
 				buffer.Append ("new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.Developer.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (", ");
 				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("));\n");

@@ -363,21 +363,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			if ((patchDepth < 0) ||
-				(patchDepth >= AbstractResourceAccessor.DeveloperIdMultiplier))
+				(patchDepth >= Druid.DeveloperIdMultiplier))
 			{
 				throw new System.InvalidOperationException ("Invalid patch depth");
 			}
 
 			devId = (int) devIdValue;
 
-			if (!Druid.IsValidDeveloper (devId))
+			if (!Druid.IsValidDeveloperAndPatchId (devId))
 			{
 				throw new System.InvalidOperationException ("Invalid developer id");
 			}
 
-			devId = patchDepth + AbstractResourceAccessor.DeveloperIdMultiplier * devId;
+			devId = patchDepth + Druid.DeveloperIdMultiplier * devId;
 
-			if (!Druid.IsValidDeveloper (devId))
+			if (!Druid.IsValidDeveloperAndPatchId (devId))
 			{
 				throw new System.InvalidOperationException ("Invalid developer id");
 			}
@@ -407,7 +407,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						System.Diagnostics.Debug.Assert (id.IsValid);
 
-						if (id.Developer == devId)
+						if (id.DeveloperAndPatchLevel == devId)
 						{
 							localId = System.Math.Max (localId, id.Local);
 						}
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					System.Diagnostics.Debug.Assert (id.IsValid);
 
-					if (id.Developer == devId)
+					if (id.DeveloperAndPatchLevel == devId)
 					{
 						localId = System.Math.Max (localId, id.Local);
 					}
@@ -666,7 +666,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <c>DeveloperId</c> value (an <c>int</c>).
 		/// </summary>
 		public const string		DeveloperIdPropertyName = "DeveloperId";
-		public const int		DeveloperIdMultiplier	= 10;
 		
 		private readonly CultureMapList items;
 		private readonly Dictionary<CultureMap, bool> dirtyItems;
