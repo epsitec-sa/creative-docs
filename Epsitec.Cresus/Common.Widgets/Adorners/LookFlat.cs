@@ -1761,8 +1761,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				double alpha = color.A;
 				double intensity = color.GetBrightness();
-				color = Drawing.Color.FromBrightness(intensity);
-				color.A = alpha;
+				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity, intensity);
 			}
 
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
@@ -1771,8 +1770,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
-				color = Drawing.Color.FromBrightness(intensity);
-				color.A = alpha;
+				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity, intensity);
 			}
 		}
 

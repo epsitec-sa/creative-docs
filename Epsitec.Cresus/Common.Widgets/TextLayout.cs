@@ -1922,9 +1922,7 @@ namespace Epsitec.Common.Widgets
 				graphics.Align (ref x, ref y);
 				path.MoveTo (x+0.5, pos.Y);
 				path.LineTo (x+0.5, pos.Y+this.layoutSize.Height);
-				Drawing.Color color = adorner.ColorCaption;
-				color.A = 0.5;
-				graphics.Color = color;
+				graphics.Color = Drawing.Color.FromAlphaColor (0.5, adorner.ColorCaption);
 				graphics.PaintOutline (path);
 			}
 		}

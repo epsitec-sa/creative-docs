@@ -400,8 +400,7 @@ namespace Epsitec.Common.Document.Objects
 				Color color;
 				if ( this.isHilited )
 				{
-					color = context.HiliteOutlineColor;
-					color.A = 1.0;
+					color = Color.FromAlphaColor(1.0, context.HiliteOutlineColor);
 				}
 				else
 				{
@@ -560,8 +559,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Adapte une couleur au mode d'aperçu avant impression.
 			if ( context.PreviewActive )
 			{
-				//?color = Color.FromBrightness(color.GetBrightness());
-				color.A *= 0.3;
+				color = Color.FromAlphaColor(0.3, color);
 			}
 			return color;
 		}

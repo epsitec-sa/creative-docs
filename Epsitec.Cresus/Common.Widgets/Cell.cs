@@ -139,8 +139,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.isFlyOver )
 			{
-				Drawing.Color color = adorner.ColorCaption;
-				color.A = 0.2;
+				Drawing.Color color = Drawing.Color.FromAlphaColor(0.2, adorner.ColorCaption);
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(color);
 			}

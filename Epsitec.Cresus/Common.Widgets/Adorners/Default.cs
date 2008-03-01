@@ -1618,10 +1618,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				color.R = 1.0-(1.0-color.R)*0.5;
-				color.G = 1.0-(1.0-color.G)*0.5;
-				color.B = 1.0-(1.0-color.B)*0.5;
-				this.PaintCircle(graphics, rInside, color);
+				double r = 1.0-(1.0-color.R)*0.5;
+				double g = 1.0-(1.0-color.G)*0.5;
+				double b = 1.0-(1.0-color.B)*0.5;
+				this.PaintCircle(graphics, rInside, Drawing.Color.FromRgb(r, g, b));
 			}
 		}
 
@@ -1987,9 +1987,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled ||
 				 paintStyle == Drawing.GlyphPaintStyle.Shadow   )
 			{
-				color.R = uniqueColor.R;
-				color.G = uniqueColor.G;
-				color.B = uniqueColor.B;
+				color = Drawing.Color.FromAlphaRgb(color.A, uniqueColor.R, uniqueColor.G, uniqueColor.B);
 			}
 		}
 

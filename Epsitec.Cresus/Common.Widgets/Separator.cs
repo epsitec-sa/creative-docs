@@ -63,9 +63,8 @@ namespace Epsitec.Common.Widgets
 			{
 				color = this.color;
 			}
-			color.A = this.alpha;
 
-			graphics.RenderSolid(color);
+			graphics.RenderSolid(Drawing.Color.FromAlphaColor(this.alpha, color));
 		}
 
 

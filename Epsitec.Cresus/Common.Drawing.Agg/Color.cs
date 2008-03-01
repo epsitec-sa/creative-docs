@@ -5,7 +5,7 @@ namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	
-	[System.Serializable]
+//	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Color.Converter))]
 	
 	public struct Color
@@ -47,28 +47,32 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		[XmlAttribute] public double			R
+		//[XmlAttribute]
+		public double			R
 		{
 			get { return this.r; }
-			set { this.r = value; }
+		//	set { this.r = value; }
 		}
 		
-		[XmlAttribute] public double			G
+		//[XmlAttribute]
+		public double			G
 		{
 			get { return this.g; }
-			set { this.g = value; }
+		//	set { this.g = value; }
 		}
 		
-		[XmlAttribute] public double			B
+		//[XmlAttribute]
+		public double			B
 		{
 			get { return this.b; }
-			set { this.b = value; }
+		//	set { this.b = value; }
 		}
 		
-		[XmlAttribute] public double			A
+		//[XmlAttribute]
+		public double			A
 		{
 			get { return this.a; }
-			set { this.a = value; }
+		//	set { this.a = value; }
 		}
 		
 		
@@ -171,7 +175,12 @@ namespace Epsitec.Common.Drawing
 		{
 			return new Color (color.a * alpha, color.r, color.g, color.b);
 		}
-		
+
+		public static Color FromAlphaColor(double a, Color color)
+		{
+			return new Color (a, color.R, color.G, color.B);
+		}
+
 		public static Color FromAlphaRgb(double a, double r, double g, double b)
 		{
 			return new Color (a, r, g, b);
@@ -196,9 +205,7 @@ namespace Epsitec.Common.Drawing
 
 		public static Color FromAlphaHsv(double a, double h, double s, double v)
 		{
-			Color color = Color.FromHsv (h, s, v);
-			color.A = a;
-			return color;
+			return Color.FromAlphaColor (a, Color.FromHsv (h, s, v));
 		}
 		
 		public static Color FromName(string name)

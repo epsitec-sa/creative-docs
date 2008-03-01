@@ -2610,11 +2610,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
-				color = Drawing.Color.FromBrightness(intensity);
-				color.G *= 1.02;
-				color.B *= 1.05;  // bleuté
+				color = Drawing.Color.FromAlphaRgb (alpha, intensity, intensity*1.02, intensity*1.05);  // bleuté
 				color = color.ClipToRange();
-				color.A = alpha;
 			}
 		}
 

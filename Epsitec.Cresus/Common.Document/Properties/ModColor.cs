@@ -258,29 +258,21 @@ namespace Epsitec.Common.Document.Properties
 				double h,s,v;
 				basic.GetHsv(out h, out s, out v);
 				h += this.h;
-				basic = Drawing.Color.FromHsv(h,s,v);
-				basic.A = a;
+				basic = Drawing.Color.FromAlphaHsv(a, h,s,v);
 			}
 
 			if ( this.s != 0.0 )  // saturation ?
 			{
 				double avg = (basic.R+basic.G+basic.B)/3.0;
 				double factor = this.s+1.0;  // 0..2
-				basic.R = avg+(basic.R-avg)*factor;
-				basic.G = avg+(basic.G-avg)*factor;
-				basic.B = avg+(basic.B-avg)*factor;
+				basic = Drawing.Color.FromAlphaRgb(basic.A, avg+(basic.R-avg)*factor, avg+(basic.G-avg)*factor, avg+(basic.B-avg)*factor);
 			}
 
-			basic.R = basic.R+this.v+this.r;
-			basic.G = basic.G+this.v+this.g;
-			basic.B = basic.B+this.v+this.b;
-			basic.A = basic.A+this.a;
+			basic = Drawing.Color.FromAlphaRgb(basic.A+this.a, basic.R+this.v+this.r, basic.G+this.v+this.g, basic.B+this.v+this.b);
 
 			if ( this.n )  // négatif ?
 			{
-				basic.R = 1.0-basic.R;
-				basic.G = 1.0-basic.G;
-				basic.B = 1.0-basic.B;
+				basic = Drawing.Color.FromAlphaRgb(basic.A, 1.0-basic.R, 1.0-basic.G, 1.0-basic.B);
 			}
 
 			basic = basic.ClipToRange();

@@ -785,7 +785,7 @@ namespace Epsitec.Common.Document
 			if ( this.finalData.Handles && !drawingContext.PreviewActive )
 			{
 				Color filledColor = drawingContext.HiliteOutlineColor;
-				filledColor.A *= 0.2;
+				filledColor = Color.FromAlphaColor(filledColor.A*0.2, filledColor);
 				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(filledColor);
 			}

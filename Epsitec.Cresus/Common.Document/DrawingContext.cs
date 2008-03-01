@@ -1521,7 +1521,7 @@ namespace Epsitec.Common.Document
 				if ( this.previewActive )
 				{
 					color = Color.FromBrightness(color.GetBrightness());
-					color.A *= 0.5;
+					color = Color.FromAlphaColor(color.A*0.5, color);
 				}
 				return color;
 			}
@@ -1537,7 +1537,7 @@ namespace Epsitec.Common.Document
 				if ( this.previewActive )
 				{
 					color = Color.FromBrightness(color.GetBrightness());
-					color.A *= 0.5;
+					color = Color.FromAlphaColor(color.A*0.5, color);
 				}
 				return color;
 			}

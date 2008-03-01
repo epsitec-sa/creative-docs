@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Initialise les couleurs en fonction des réglages de Windows.
 			this.colorBlack           = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorControl         = Drawing.Color.FromRgb( 53.0/255.0, 146.0/255.0, 255.0/255.0);
-			this.colorCaption         = Drawing.Color.FromRgb(  0.0/255.0, 115.0/255.0, 244.0/255.0);
+			this.colorCaption         = Drawing.Color.FromAlphaRgb(0.7,  0.0/255.0, 115.0/255.0, 244.0/255.0);
 			this.colorCaptionNF       = Drawing.Color.FromRgb(190.0/255.0, 190.0/255.0, 190.0/255.0);
 			this.colorCaptionText     = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
 			this.colorCaptionProposal = Drawing.Color.FromRgb(191.0/255.0, 128.0/255.0,  53.0/255.0);
@@ -28,8 +28,6 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorDisabled        = Drawing.Color.FromRgb(140.0/255.0, 140.0/255.0, 140.0/255.0);
 			this.colorError           = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorWindow          = Drawing.Color.FromRgb(255.0/255.0, 255.0/255.0, 255.0/255.0);
-
-			this.colorCaption.A = 0.7;
 		}
 		
 
@@ -2712,8 +2710,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.4, 1.0);  // augmente l'intensité
-				color = Drawing.Color.FromBrightness(intensity);
-				color.A = alpha;
+				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity, intensity);
 			}
 		}
 

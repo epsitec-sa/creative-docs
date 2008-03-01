@@ -1715,8 +1715,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				color.A = 0.5;
-				graphics.RenderSolid(color);
+				graphics.RenderSolid(Drawing.Color.FromAlphaColor(0.5, color));
 			}
 
 			Drawing.Rectangle rInside;
@@ -2119,10 +2118,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.2, 1.0);  // augmente l'intensité
-				color = Drawing.Color.FromBrightness(intensity);
-				color.G = System.Math.Min(color.G*1.4, 1.0);
-				color.B = System.Math.Min(color.B*1.4, 1.0);  // bleuté
-				color.A = alpha;
+				color = Drawing.Color.FromAlphaRgb(alpha, intensity, System.Math.Min (intensity*1.4, 1.0), System.Math.Min (intensity*1.4, 1.0));  // bleuté
 			}
 		}
 

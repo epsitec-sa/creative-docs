@@ -136,7 +136,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 			if (!this.isActivate)
 			{
-				color.A *= 0.2;  // plus transparent s'il s'agit d'une contrainte inactive
+				color = Color.FromAlphaColor(color.A*0.2, color);  // plus transparent s'il s'agit d'une contrainte inactive
 			}
 			graphics.RenderSolid(color);
 		}

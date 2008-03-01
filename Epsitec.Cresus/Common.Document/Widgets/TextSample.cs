@@ -49,8 +49,7 @@ namespace Epsitec.Common.Document.Widgets
 			if ( this.textStyle == null || !this.document.Wrappers.IsStyleAsDefaultParent(this.textStyle) )
 			{
 				rect.Deflate(0.5);
-				Color color = adorner.ColorBorder;
-				color.A = 0.3;
+				Color color = Drawing.Color.FromAlphaColor(0.3, adorner.ColorBorder);
 
 				graphics.AddLine(rect.BottomLeft, rect.TopRight);  // dessine une croix
 				graphics.RenderSolid(color);

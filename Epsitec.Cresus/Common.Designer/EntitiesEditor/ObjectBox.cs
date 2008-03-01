@@ -3107,9 +3107,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (hilited)
 			{
 				hiliteColor = this.GetColorMain();
-				hiliteColor.R = 1-(1-hiliteColor.R)*0.2;
-				hiliteColor.G = 1-(1-hiliteColor.G)*0.2;
-				hiliteColor.B = 1-(1-hiliteColor.B)*0.2;
+				hiliteColor = Color.FromAlphaRgb(hiliteColor.A, 1-(1-hiliteColor.R)*0.2, 1-(1-hiliteColor.G)*0.2, 1-(1-hiliteColor.B)*0.2);
 			}
 
 			graphics.Rasterizer.AddSurface(path);

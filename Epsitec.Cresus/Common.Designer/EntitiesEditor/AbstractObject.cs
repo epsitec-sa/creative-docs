@@ -771,20 +771,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private Color GetColorLighter(Color color, double factor)
 		{
 			//	Retourne une couleur éclaircie, sans changer la transparence.
-			color.R = 1-(1-color.R)*factor;
-			color.G = 1-(1-color.G)*factor;
-			color.B = 1-(1-color.B)*factor;
-			return color;
+			return Color.FromAlphaRgb(color.A, 1-(1-color.R)*factor, 1-(1-color.G)*factor, 1-(1-color.B)*factor);
 		}
 
 		private Color GetColorDarker(Color color, double factor)
 		{
 			//	Retourne une couleur assombrie, sans changer la transparence.
 			factor = 0.5+(factor*0.5);
-			color.R = color.R*factor;
-			color.G = color.G*factor;
-			color.B = color.B*factor;
-			return color;
+			return Color.FromAlphaRgb(color.A, color.R*factor, color.G*factor, color.B*factor);
 		}
 
 

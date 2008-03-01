@@ -579,7 +579,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			}
 
 			Drawing.Color separatorColor = adorner.ColorTextFieldBorder((this.PaintState&WidgetPaintState.Enabled) != 0);
-			separatorColor.A = 0.1;
+			separatorColor = Drawing.Color.FromAlphaColor(0.1, separatorColor);
 			graphics.RenderSolid(separatorColor);
 		}
 

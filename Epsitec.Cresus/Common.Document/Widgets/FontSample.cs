@@ -215,8 +215,7 @@ namespace Epsitec.Common.Document.Widgets
 			Color hiliColor = Color.Empty;
 			if ( this.IsEntered )
 			{
-				hiliColor = adorner.ColorCaption;
-				hiliColor.A = 0.2;
+				hiliColor = Color.FromAlphaColor(0.2, adorner.ColorCaption);
 			}
 
 			if ( this.textLayout != null )

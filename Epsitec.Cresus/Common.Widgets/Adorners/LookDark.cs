@@ -1920,9 +1920,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				color.R = color.R*0.6;
-				color.G = color.G*0.6;
-				color.B = color.B*0.6;
+				color = Drawing.Color.FromAlphaRgb(color.A, 0.6*color.R, 0.6*color.G, 0.6*color.B);
 				graphics.RenderSolid(color);
 			}
 
@@ -2256,8 +2254,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				//intensity = System.Math.Min(intensity+0.0, 1.0);  // augmente l'intensité
-				color = Drawing.Color.FromBrightness(intensity);
-				color.A = alpha;
+				color = Drawing.Color.FromAlphaRgb (alpha, intensity, intensity, intensity);
 			}
 		}
 

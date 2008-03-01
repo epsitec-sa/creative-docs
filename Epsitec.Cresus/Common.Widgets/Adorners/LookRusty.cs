@@ -21,15 +21,13 @@ namespace Epsitec.Common.Widgets.Adorners
 			this.colorCaptionNF      = Drawing.Color.FromRgb(240.0/255.0, 204.0/255.0, 134.0/255.0);
 			this.colorCaptionText    = Drawing.Color.FromRgb(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorInfo           = Drawing.Color.FromRgb(213.0/255.0, 233.0/255.0, 255.0/255.0);
-			this.colorBorder         = Drawing.Color.FromRgb( 31.0/255.0,   7.0/255.0,   8.0/255.0);
+			this.colorBorder         = Drawing.Color.FromAlphaRgb(0.6, 31.0/255.0,   7.0/255.0,   8.0/255.0);
 			this.colorDisabled       = Drawing.Color.FromRgb(140.0/255.0, 140.0/255.0, 140.0/255.0);
 			this.colorError          = Drawing.Color.FromRgb(255.0/255.0, 177.0/255.0, 177.0/255.0);
 			this.colorTextBackground = Drawing.Color.FromRgb( 63.0/255.0,  45.0/255.0,  15.0/255.0);
 			this.colorThreeState     = Drawing.Color.FromRgb(206.0/255.0, 182.0/255.0, 154.0/255.0);
 			this.colorActivableIcon  = Drawing.Color.FromRgb( 96.0/255.0,  70.0/255.0,  27.0/255.0);
 			this.colorWindow         = Drawing.Color.FromRgb( 79.0/255.0,  74.0/255.0,  66.0/255.0);
-
-			this.colorBorder.A = 0.6;
 		}
 		
 
@@ -2457,8 +2455,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				double alpha = color.A;
 				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.7)*0.25;  // diminue le contraste
-				color = Drawing.Color.FromBrightness(intensity);
-				color.A = alpha;
+				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity, intensity);
 			}
 		}
 

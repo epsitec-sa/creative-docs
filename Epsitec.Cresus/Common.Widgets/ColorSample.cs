@@ -392,12 +392,9 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				color.R = 1.0;
-				color.G = 1.0;
-				color.B = 1.0;
+				color = Drawing.Color.FromBrightness(1);
 			}
 			
-			color.A = 1.0;
 			return color;
 		}
 		

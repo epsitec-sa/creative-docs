@@ -50,10 +50,7 @@ namespace Epsitec.Common.Widgets.Tools
 			{
 				double bright = color_1.GetBrightness ();
 				
-				color_1.R = bright;
-				color_1.G = bright;
-				color_1.B = bright;
-				
+				color_1 = Drawing.Color.FromAlphaRgb (color_1.A, bright, bright, bright);
 				color_2 = Adorners.Factory.Active.ColorTextFieldBorder (false);
 			}
 			

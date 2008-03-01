@@ -1584,8 +1584,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				graphics.AddFilledRectangle(rect);  // en bas
 			}
 
-			Color colorOver = adorner.ColorBorder;
-			colorOver.A = 0.3;
+			Color colorOver = Color.FromAlphaColor(0.3, adorner.ColorBorder);
 			graphics.RenderSolid(colorOver);
 
 			//	Dessine l'arrière-plan de tous les objets.

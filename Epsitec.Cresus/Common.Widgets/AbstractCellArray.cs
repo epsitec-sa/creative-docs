@@ -2018,8 +2018,7 @@ namespace Epsitec.Common.Widgets
 
 			graphics.LineWidth = 1;
 			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetPaintState.Enabled) != 0);
-			Drawing.Color separatorColor = color;
-			separatorColor.A = this.alphaSeparator;
+			Drawing.Color separatorColor = Drawing.Color.FromAlphaRgb(this.alphaSeparator, color.R, color.G, color.B);
 
 			//	Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);

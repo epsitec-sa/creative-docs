@@ -348,9 +348,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( this.edited )
 				{
 					double factor = 0.3+0.6*color.GetBrightness();
-					color.R *= factor;  // couleur plus foncée
-					color.G *= factor;
-					color.B *= factor;
+					color = Drawing.Color.FromRgb(color.R*factor, color.G*factor, color.B*factor);  // couleur plus foncée
 				}
 				return color;
 			}
