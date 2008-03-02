@@ -44,6 +44,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.drawingScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.drawingScrollable.Viewport.IsAutoFitting = true;
+			this.drawingScrollable.Viewport.TabNavigationMode = TabNavigationMode.None;
 			this.drawingScrollable.PaintForegroundFrame = true;
 
 			FrameBox container = new FrameBox(this.drawingScrollable.Viewport);
