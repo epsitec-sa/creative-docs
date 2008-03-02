@@ -1360,29 +1360,35 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateMiscPagePanel()
 		{
-			//	Met à jour le vrai panneau (this.panelContainer) en fonction des réglages de l'onglet "divers".
-			Size defautSize = this.workingForm.DefaultSize;
+			//	Met à jour le vrai panneau (this.panelContainer) en fonction des réglages de
+			//	l'onglet "divers", dans le but de représenter le panneau avec la taille que
+			//	l'utilisateur spécifie.
+			Size defaultSize = this.workingForm.DefaultSize;
 
-			if (double.IsNaN(defautSize.Width))
+			if (double.IsNaN(defaultSize.Width))
 			{
 				this.panelContainer.MinWidth = 0.0;
 				this.panelContainer.MaxWidth = double.PositiveInfinity;
+				this.panelContainer.HorizontalAlignment = HorizontalAlignment.Stretch;
 			}
 			else
 			{
-				this.panelContainer.MinWidth = defautSize.Width;
-				this.panelContainer.MaxWidth = defautSize.Width;
+				this.panelContainer.MinWidth = defaultSize.Width;
+				this.panelContainer.MaxWidth = defaultSize.Width;
+				this.panelContainer.HorizontalAlignment = HorizontalAlignment.Left;
 			}
 
-			if (double.IsNaN(defautSize.Height))
+			if (double.IsNaN(defaultSize.Height))
 			{
 				this.panelContainer.MinHeight = 0.0;
 				this.panelContainer.MaxHeight = double.PositiveInfinity;
+				this.panelContainer.VerticalAlignment = VerticalAlignment.Stretch;
 			}
 			else
 			{
-				this.panelContainer.MinHeight = defautSize.Height;
-				this.panelContainer.MaxHeight = defautSize.Height;
+				this.panelContainer.MinHeight = defaultSize.Height;
+				this.panelContainer.MaxHeight = defaultSize.Height;
+				this.panelContainer.VerticalAlignment = VerticalAlignment.Top;
 			}
 		}
 		#endregion
