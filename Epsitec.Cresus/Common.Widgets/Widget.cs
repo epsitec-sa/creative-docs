@@ -2516,17 +2516,23 @@ namespace Epsitec.Common.Widgets
 							
 							if (find != null)
 							{
-								if (((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
-									(find.HasChildren))
+								if ((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
 								{
 									//	Entre en marche arrière dans le widget...
-									
-									Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
-									
-									if (candidates.Length > 0)
+
+									if (find.HasChildren)
 									{
-										int count = candidates.Length;
-										find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
+										Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
+
+										if (candidates.Length > 0)
+										{
+											int count = candidates.Length;
+											find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
+										}
+										else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
+										{
+											find = null;
+										}
 									}
 									else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
 									{
