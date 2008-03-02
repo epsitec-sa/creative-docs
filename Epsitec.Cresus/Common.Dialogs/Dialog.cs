@@ -266,7 +266,7 @@ namespace Epsitec.Common.Dialogs
 
 			this.userInterfaceEntityId = formDescription.EntityId;
 
-			return formEngine.CreateForm (bundle.Id);
+			return formEngine.CreateForm (bundle.Id, ref size);
 		}
 
 		private DialogData CreateDefaultDialogData()

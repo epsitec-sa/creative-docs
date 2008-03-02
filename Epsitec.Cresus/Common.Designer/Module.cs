@@ -442,24 +442,14 @@ namespace Epsitec.Common.Designer
 			//	Montre une ressource 'Form' dans une fenêtre.
 			string name = this.accessForms.GetField(index, null, ResourceAccess.FieldType.Name).String;
 			Druid druid = this.accessForms.AccessDruid(index);
-
+			
+			Size size = new Size (800, 600);  // dimensions par défaut
+			
 			FormEngine.Engine engine = new FormEngine.Engine(this.FormResourceProvider);
-			UI.Panel panel = engine.CreateForm(druid);
+			UI.Panel panel = engine.CreateForm(druid, ref size);
 
 			if (panel != null)
 			{
-				Size size = new Size(800, 600);  // dimensions par défaut
-
-				if (panel.MinWidth != 0)  // est-ce que le Form définit une largeur (DefaultSize.Width) ?
-				{
-					size.Width = panel.MinWidth;
-				}
-
-				if (panel.MinHeight != 0)  // est-ce que le Form définit une hauteur (DefaultSize.Height) ?
-				{
-					size.Height = panel.MinHeight;
-				}
-
 				UserInterface.RunForm(panel, this.designerApplication.Window, size, name);
 			}
 		}

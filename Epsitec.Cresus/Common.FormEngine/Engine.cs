@@ -42,18 +42,30 @@ namespace Epsitec.Common.FormEngine
 			this.defaultMode = FieldEditionMode.Search;
 		}
 
-		public UI.Panel CreateForm(Druid formId)
+		public UI.Panel CreateForm(Druid formId, ref Drawing.Size defaultSize)
 		{
 			//	Crée un masque de saisie.
 			//	Si le Druid correspond à un Form delta, il est fusionné jusqu'au Form de base parent.
 			//	Cette méthode est utilisée par une application finale pour construire un masque.
 			string xml = this.resourceProvider.GetFormXmlSource(formId);
+			
 			if (string.IsNullOrEmpty(xml))
 			{
 				return null;
 			}
 
-			return this.CreateForm(Serialization.DeserializeForm(xml));
+			FormDescription formDescription = Serialization.DeserializeForm(xml);
+
+			if (!double.IsNaN(formDescription.DefaultSize.Width))
+			{
+				defaultSize.Width = formDescription.DefaultSize.Width;
+			}
+			if (!double.IsNaN(formDescription.DefaultSize.Height))
+			{
+				defaultSize.Height = formDescription.DefaultSize.Height;
+			}
+
+			return this.CreateForm(formDescription);
 		}
 
 		public UI.Panel CreateForm(FormDescription formDescription)
@@ -68,22 +80,6 @@ namespace Epsitec.Common.FormEngine
 			this.arrange.Build(formDescription, null, out baseFields, out finalFields, out entityId);
 
 			UI.Panel panel = this.CreateForm(finalFields, entityId, false);
-
-			//	Si des dimensions par défaut sont spécifiées, initialise Min/Max Width/Height.
-			//	Il ne faut pas initialiser PreferredWidth/Height, car il n'est pas possible de
-			//	savoir si une valeur a été spécifiée ou pas (voir Designer.Module.RunForm) !
-			if (!double.IsNaN(formDescription.DefaultSize.Width))
-			{
-				panel.MinWidth = formDescription.DefaultSize.Width;
-				panel.MaxWidth = formDescription.DefaultSize.Width;
-			}
-
-			if (!double.IsNaN(formDescription.DefaultSize.Height))
-			{
-				panel.MinHeight = formDescription.DefaultSize.Height;
-				panel.MaxHeight = formDescription.DefaultSize.Height;
-			}
-
 			return panel;
 		}
 
