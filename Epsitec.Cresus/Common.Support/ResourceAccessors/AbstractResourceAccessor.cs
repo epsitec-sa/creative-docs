@@ -547,6 +547,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
+
+		/// <summary>
+		/// Executes the cleanup code after all resources have been added to
+		/// the collection, while loading data (called by method <see cref="Load"/>.
+		/// </summary>
+		protected void PostLoadCleanup()
+		{
+			foreach (CultureMap item in this.Collection)
+			{
+				item.IsNewItem = false;
+			}
+		}
+
+
 		/// <summary>
 		/// Loads data from a resource bundle field.
 		/// </summary>

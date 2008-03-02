@@ -55,6 +55,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				this.LoadFromBundle (this.ResourceManager.GetBundle (this.GetBundleName (), ResourceLevel.Default), Resources.DefaultTwoLetterISOLanguageName);
 			}
+
+			this.PostLoadCleanup ();
 		}
 
 		/// <summary>
