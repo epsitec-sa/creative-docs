@@ -172,7 +172,14 @@ namespace Epsitec.Common.Support
 		{
 			string modulePath     = info.FullId.Path;
 			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
-	
+
+			System.Xml.XmlDocument xml = ResourceModule.CreateXmlManifest (info, comment);
+			
+			xml.Save (moduleInfoPath);
+		}
+
+		public static System.Xml.XmlDocument CreateXmlManifest(ResourceModuleInfo info, string comment)
+		{
 			System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
 			System.Xml.XmlElement root = xml.CreateElement (ResourceModule.XmlModuleInfo);
 
@@ -228,7 +235,7 @@ namespace Epsitec.Common.Support
 				root.AppendChild (node);
 			}
 
-			xml.Save (moduleInfoPath);
+			return xml;
 		}
 
 		/// <summary>

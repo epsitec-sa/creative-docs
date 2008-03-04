@@ -7,7 +7,7 @@
     <ProjectGuid>{9DEB3B56-6C6B-4D84-90DD-3A3FCE84441C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.DruidModuleRepository</RootNamespace>
+    <RootNamespace>Epsitec.ModuleRepository</RootNamespace>
     <AssemblyName>DruidModuleRepository.Service</AssemblyName>
     <ProjectTypeGuids>{3D9AD99F-2412-4246-B90B-4EAA41C64699};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <StartArguments>/client:"WcfTestClient.exe"</StartArguments>

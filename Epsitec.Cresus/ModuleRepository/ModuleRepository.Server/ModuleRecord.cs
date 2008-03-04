@@ -2,23 +2,29 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
-using System.ServiceModel;
-using System.Runtime.Serialization;
 
 namespace Epsitec.ModuleRepository
 {
-	[DataContract]
-	public class ModuleFile
+	sealed class ModuleRecord
 	{
-		[DataMember]
-		public string Path
+		public ModuleRecord()
+		{
+		}
+
+
+		public int ModuleId
 		{
 			get;
 			set;
 		}
 
-		[DataMember]
-		public byte[] Data
+		public string ModuleName
+		{
+			get;
+			set;
+		}
+
+		public string DeveloperName
 		{
 			get;
 			set;

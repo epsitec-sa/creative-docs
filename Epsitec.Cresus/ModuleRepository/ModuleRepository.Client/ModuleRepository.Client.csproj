@@ -8,7 +8,7 @@
     <ProjectGuid>{EC31ACEA-8F8A-43E8-9A26-584D8B22552C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DruidModuleRepository.Client</RootNamespace>
+    <RootNamespace>Epsitec.ModuleRepository</RootNamespace>
     <AssemblyName>DruidModuleRepository.Client</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

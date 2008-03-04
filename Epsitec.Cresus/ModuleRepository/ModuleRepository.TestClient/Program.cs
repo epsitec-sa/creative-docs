@@ -10,6 +10,9 @@ namespace TestClient
 	{
 		static void Main(string[] args)
 		{
+			System.Console.WriteLine ("Press a key to connect");
+			System.Console.ReadKey ();
+
 			IModuleRepositoryService service = ModuleRepositoryClient.GetService ();
 
 			int moduleId = service.GetNewModuleId ("ModuleRepositoryTest", "Pierre Arnaud");
@@ -21,6 +24,11 @@ namespace TestClient
 			foreach (ModuleFile file in directory.Files)
 			{
 				System.Console.WriteLine ("  ModuleFile.Path = {0}", file.Path);
+
+				string path = System.IO.Path.Combine (@"S:\Epsitec.Cresus\xxx", file.Path);
+
+				System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (path));
+				System.IO.File.WriteAllBytes (path, file.Data);
 			}
 
 			System.Console.ReadKey ();
