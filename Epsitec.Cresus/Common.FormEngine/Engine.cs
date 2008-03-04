@@ -42,7 +42,7 @@ namespace Epsitec.Common.FormEngine
 			this.defaultMode = FieldEditionMode.Search;
 		}
 
-		public UI.Panel CreateForm(Druid formId, ref Drawing.Size defaultSize)
+		public UI.Panel CreateForm(Druid formId, ref Size defaultSize)
 		{
 			//	Crée un masque de saisie.
 			//	Si le Druid correspond à un Form delta, il est fusionné jusqu'au Form de base parent.
@@ -139,15 +139,15 @@ namespace Epsitec.Common.FormEngine
 			UI.TextStyleManager textStyleManager = new Epsitec.Common.UI.TextStyleManager (root);
 
 			//	Crée un style pour les labels :
-			Drawing.TextStyle staticTextStyle = new TextStyle ();
+			TextStyle staticTextStyle = new TextStyle ();
 			staticTextStyle.FontSize = 14.0;
-			staticTextStyle.FontColor = Drawing.Color.FromRgb (0, 0, 0.4);
+			staticTextStyle.FontColor = Color.FromRgb (0, 0, 0.4);
 			textStyleManager.StaticTextStyle = staticTextStyle;
 			
 			//	Crée un style pour les champs éditables :
-			Drawing.TextStyle textFieldStyle = new TextStyle ();
+			TextStyle textFieldStyle = new TextStyle ();
 			textFieldStyle.FontSize = 14.0;
-			textFieldStyle.Font = Drawing.Font.GetFont ("Calibri", "Regular");
+			textFieldStyle.Font = Font.GetFont ("Calibri", "Regular");
 			textStyleManager.TextFieldStyle = textFieldStyle;
 
 			//	Active les styles pour le panneau spécifié, et tous ses enfants !

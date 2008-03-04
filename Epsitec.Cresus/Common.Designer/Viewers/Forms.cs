@@ -1149,8 +1149,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Initialise le panneau contenant le masque pour pouvoir être édité.
 			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			this.panelContainer.ContentAlignment = ContentAlignment.TopLeft;  // TODO: aucun effet !
-			this.panelContainer.Dock = DockStyle.Fill;  // TODO: comment faire si panelContainer est plus petit ?
+			//?this.panelContainer.ContentAlignment = ContentAlignment.TopLeft;
+			this.panelContainer.Dock = DockStyle.Fill;
 			this.panelContainer.Margins = new Margins(Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin);
 			this.panelContainer.DrawDesignerFrame = true;
 			this.panelContainer.SetParent(this.panelContainerParent);

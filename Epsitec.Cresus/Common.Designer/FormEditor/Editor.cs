@@ -693,7 +693,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			Transform it = graphics.Transform;
-			graphics.TranslateTransform(Editor.margin, Editor.margin);
+			Point offset = this.ConvOffset;
+			graphics.TranslateTransform(offset.X, offset.Y);
 
 			bounds = this.RealBounds;
 
@@ -841,30 +842,35 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.module.AccessForms.SetLocalDirty();
 		}
 
-		protected Point ConvPanelToEditor(Point pos)
-		{
-			pos.X += Editor.margin;
-			pos.Y += Editor.margin;
-			return pos;
-		}
-
-		protected Point ConvEditorToPanel(Point pos)
-		{
-			pos.X -= Editor.margin;
-			pos.Y -= Editor.margin;
-			return pos;
-		}
-
 		protected Rectangle ConvPanelToEditor(Rectangle rect)
 		{
-			rect.Offset(Editor.margin, Editor.margin);
-			return rect;
+			return new Rectangle(this.ConvPanelToEditor(rect.BottomLeft), rect.Size);
 		}
 
 		protected Rectangle ConvEditorToPanel(Rectangle rect)
 		{
-			rect.Offset(-Editor.margin, -Editor.margin);
-			return rect;
+			return new Rectangle(this.ConvEditorToPanel(rect.BottomLeft), rect.Size);
+		}
+
+		protected Point ConvPanelToEditor(Point pos)
+		{
+			return pos+this.ConvOffset;
+		}
+
+		protected Point ConvEditorToPanel(Point pos)
+		{
+			return pos-this.ConvOffset;
+		}
+
+		protected Point ConvOffset
+		{
+			//	Retourne l'offset à ajouter/soustraire lors d'une conversion Editor <-> Panel.
+			//	On suppose que le Form sous-jascent est aligné en mode TopLeft (voir Viewers.Form.UpdateMiscPagePanel,
+			//	this.panelContainer.HorizontalAlignment et this.panelContainer.VerticalAlignment).
+			get
+			{
+				return new Point(Editor.margin, Editor.margin+this.ActualHeight-(Editor.margin*2+this.panel.ActualHeight));
+			}
 		}
 		#endregion
 
