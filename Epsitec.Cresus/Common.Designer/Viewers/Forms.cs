@@ -792,6 +792,81 @@ namespace Epsitec.Common.Designer.Viewers
 		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
 		{
 			//	Crée le menu undo/redo.
+#if true
+			int undoLength = this.undoIndex;
+			int redoLength = this.undoCount-this.undoIndex;
+			int all = this.undoCount;
+			int total = System.Math.Min(all, 20);
+			int start = this.undoIndex;
+			start -= total/2;  if ( start < 0     )  start = 0;
+			start += total-1;  if ( start > all-1 )  start = all-1;
+
+			List<Widget> list = new List<Widget>();
+
+			//	Met éventuellement la dernière action à refaire.
+			if (start < all-1)
+			{
+				string action = this.undoActions[all-1].ActionName;
+				action = Misc.Italic(action);
+				MenuItem item = this.UndoRedoCreateItem(message, 0, all, action, all-1);
+				list.Add(item);
+
+				if (start < all-2)
+				{
+					list.Add(new MenuSeparator());
+				}
+			}
+
+			//	Met les actions à refaire puis à celles à annuler.
+			for (int i=start; i>start-total; i--)
+			{
+				if (i >= undoLength)  // redo ?
+				{
+					string action = this.undoActions[i].ActionName;
+					action = Misc.Italic(action);
+					MenuItem item = this.UndoRedoCreateItem(message, 0, i+1, action, i);
+					list.Add(item);
+
+					if (i == undoLength && undoLength != 0)
+					{
+						list.Add(new MenuSeparator());
+					}
+				}
+				else	// undo ?
+				{
+					string action = this.undoActions[i].ActionName;
+					int active = 1;
+					if (i == undoLength-1)
+					{
+						active = 2;
+						action = Misc.Bold(action);
+					}
+					MenuItem item = this.UndoRedoCreateItem(message, active, i+1, action, i);
+					list.Add(item);
+				}
+			}
+
+			//	Met éventuellement la dernière action à annuler.
+			if (start-total >= 0)
+			{
+				if (start-total > 0)
+				{
+					list.Add(new MenuSeparator());
+				}
+
+				string action = this.undoActions[0].ActionName;
+				MenuItem item = this.UndoRedoCreateItem(message, 1, 1, action, 0);
+				list.Add(item);
+			}
+
+			//	Génère le menu à l'envers, c'est-à-dire la première action au
+			//	début du menu (en haut).
+			VMenu menu = new VMenu();
+			for (int i=list.Count-1; i>=0; i--)
+			{
+				menu.Items.Add(list[i]);
+			}
+#else
 			VMenu menu = new VMenu();
 
 			for (int i=0; i<this.undoCount; i++)
@@ -823,6 +898,7 @@ namespace Epsitec.Common.Designer.Viewers
 					menu.Items.Add(new MenuSeparator());
 				}
 			}
+#endif
 
 			menu.AdjustSize();
 			return menu;
