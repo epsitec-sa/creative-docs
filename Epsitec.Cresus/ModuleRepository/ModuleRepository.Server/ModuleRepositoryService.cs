@@ -16,7 +16,23 @@ namespace Epsitec.ModuleRepository
 
 		public int GetNewModuleId(string moduleName, string developerName)
 		{
-			ModuleRecord record = new ModuleRecord ();
+			ModuleRecord record = null;
+
+			lock (this.records)
+			{
+				record = this.records.Find (item => item.DeveloperName == developerName && item.ModuleState == ModuleState.FreeForReuse);
+				
+				if (record != null)
+				{
+					record.ModuleName = moduleName;
+					record.ModuleState = ModuleState.InUse;
+					
+					return record.ModuleId;
+				}
+			}
+
+
+			record = new ModuleRecord ();
 
 			record.ModuleName = moduleName;
 			record.DeveloperName = developerName;
@@ -43,6 +59,7 @@ namespace Epsitec.ModuleRepository
 				}
 
 				record.ModuleId = moduleId;
+				record.ModuleState = ModuleState.InUse;
 
 				this.records.Insert (insertIndex, record);
 			}

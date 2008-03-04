@@ -51,6 +51,7 @@
     <Compile Include="..\ModuleRespository.AssemblyInfo.cs">
       <Link>Properties\ModuleRespository.AssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ModuleState.cs" />
     <Compile Include="ModuleRecord.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
