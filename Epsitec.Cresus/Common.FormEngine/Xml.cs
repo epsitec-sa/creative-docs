@@ -11,6 +11,12 @@ namespace Epsitec.Common.FormEngine
 		public const string FieldIds			= "FI";
 		public const string SubFormId			= "SFI";
 		public const string BackColor			= "BC";
+		public const string LabelFontColor		= "LFC";
+		public const string FieldFontColor		= "FFC";
+		public const string LabelFontStyle		= "LFS";
+		public const string FieldFontStyle		= "FFS";
+		public const string LabelFontSize		= "LFT";
+		public const string FieldFontSize		= "FFT";
 		public const string SeparatorBottom		= "SB";
 		public const string ColumnsRequired		= "CR";
 		public const string RowsRequired		= "RR";

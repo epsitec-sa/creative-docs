@@ -133,21 +133,22 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
-#if false
+#if true
 			//	Crée un gestionnaire de styles pour le panneau dans son entier; un tel
 			//	gestionnaire doit être attaché au panneau racine au moment de sa création
-			UI.TextStyleManager textStyleManager = new Epsitec.Common.UI.TextStyleManager (root);
+			UI.TextStyleManager textStyleManager = new Epsitec.Common.UI.TextStyleManager(root);
 
 			//	Crée un style pour les labels :
-			TextStyle staticTextStyle = new TextStyle ();
+			TextStyle staticTextStyle = new TextStyle();
 			staticTextStyle.FontSize = 14.0;
-			staticTextStyle.FontColor = Color.FromRgb (0, 0, 0.4);
+			staticTextStyle.FontColor = Color.FromRgb(0, 0, 0.4);
 			textStyleManager.StaticTextStyle = staticTextStyle;
 			
 			//	Crée un style pour les champs éditables :
 			TextStyle textFieldStyle = new TextStyle ();
 			textFieldStyle.FontSize = 14.0;
-			textFieldStyle.Font = Font.GetFont ("Calibri", "Regular");
+			textFieldStyle.FontColor = Color.FromRgb(0.8, 0, 0);
+			textFieldStyle.Font = Font.GetFont("Calibri", "Regular");
 			textStyleManager.TextFieldStyle = textFieldStyle;
 
 			//	Active les styles pour le panneau spécifié, et tous ses enfants !
@@ -565,7 +566,7 @@ namespace Epsitec.Common.FormEngine
 			UI.Panel box = new UI.Panel(root);
 			box.DrawFrameState = FrameState.All;
 			box.Padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
-			box.BackColor = FieldDescription.GetRealColor(field.BackColor);
+			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
 			box.Name = guid.ToString();
@@ -600,7 +601,7 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, field.GetPath(UI.DataSource.DataName)));
-			placeholder.BackColor = FieldDescription.GetRealColor(field.BackColor);
+			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 			placeholder.Name = guid.ToString();
 
@@ -661,7 +662,7 @@ namespace Epsitec.Common.FormEngine
 			if (this.forDesigner)
 			{
 				FrameBox glue = new FrameBox(root);
-				glue.BackColor = FieldDescription.GetRealColor(field.BackColor);
+				glue.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 				glue.Name = guid.ToString();
 
 				if (columnsRequired == 0)

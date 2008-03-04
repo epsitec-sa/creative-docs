@@ -52,6 +52,33 @@ namespace Epsitec.Common.FormEngine
 			Red				= 3,	// rouge pâle
 		}
 
+		[DesignerVisible]
+		public enum FontColorType
+		{
+			Default			= 0,	// transparent
+			Red				= 1,	// rouge
+			Green			= 2,	// vert
+			Blue			= 3,	// bleu
+		}
+
+		[DesignerVisible]
+		public enum FontStyleType
+		{
+			Normal			= 0,	// roman
+			Bold			= 1,	// gras
+			Italic			= 2,	// italique
+			BoldItalic		= 3,	// gras-italique
+		}
+
+		[DesignerVisible]
+		public enum FontSizeType
+		{
+			Normal			= 0,	// normal
+			Small			= 1,	// petit
+			Large			= 2,	// grand
+			VeryLarge		= 3,	// très grand
+		}
+
 
 		private FieldDescription()
 		{
@@ -108,6 +135,12 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Remet à zéro les propriétés liées à l'aspect.
 			this.backColor = BackColorType.None;
+			this.labelFontColor = FontColorType.Default;
+			this.fieldFontColor = FontColorType.Default;
+			this.labelFontStyle = FontStyleType.Normal;
+			this.fieldFontStyle = FontStyleType.Normal;
+			this.labelFontSize = FontSizeType.Normal;
+			this.fieldFontSize = FontSizeType.Normal;
 			this.separatorBottom = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
@@ -334,6 +367,84 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				this.backColor = value;
+			}
+		}
+
+		public FontColorType LabelFontColor
+		{
+			//	Couleur de la police pour l'étiquette.
+			get
+			{
+				return this.labelFontColor;
+			}
+			set
+			{
+				this.labelFontColor = value;
+			}
+		}
+
+		public FontColorType FieldFontColor
+		{
+			//	Couleur de la police pour le champ.
+			get
+			{
+				return this.fieldFontColor;
+			}
+			set
+			{
+				this.fieldFontColor = value;
+			}
+		}
+
+		public FontStyleType LabelFontStyle
+		{
+			//	Style de la police pour l'étiquette.
+			get
+			{
+				return this.labelFontStyle;
+			}
+			set
+			{
+				this.labelFontStyle = value;
+			}
+		}
+
+		public FontStyleType FieldFontStyle
+		{
+			//	Style de la police pour le champ.
+			get
+			{
+				return this.fieldFontStyle;
+			}
+			set
+			{
+				this.fieldFontStyle = value;
+			}
+		}
+
+		public FontSizeType LabelFontSize
+		{
+			//	Taille de la police pour l'étiquette.
+			get
+			{
+				return this.labelFontSize;
+			}
+			set
+			{
+				this.labelFontSize = value;
+			}
+		}
+
+		public FontSizeType FieldFontSize
+		{
+			//	Taille de la police pour le champ.
+			get
+			{
+				return this.fieldFontSize;
+			}
+			set
+			{
+				this.fieldFontSize = value;
 			}
 		}
 
@@ -621,6 +732,36 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.BackColor, this.backColor.ToString());
 			}
 
+			if (this.labelFontColor != FontColorType.Default)
+			{
+				writer.WriteElementString(Xml.LabelFontColor, this.labelFontColor.ToString());
+			}
+
+			if (this.fieldFontColor != FontColorType.Default)
+			{
+				writer.WriteElementString(Xml.FieldFontColor, this.fieldFontColor.ToString());
+			}
+
+			if (this.labelFontStyle != FontStyleType.Normal)
+			{
+				writer.WriteElementString(Xml.LabelFontStyle, this.labelFontStyle.ToString());
+			}
+
+			if (this.fieldFontStyle != FontStyleType.Normal)
+			{
+				writer.WriteElementString(Xml.FieldFontStyle, this.fieldFontStyle.ToString());
+			}
+
+			if (this.labelFontSize != FontSizeType.Normal)
+			{
+				writer.WriteElementString(Xml.LabelFontSize, this.labelFontSize.ToString());
+			}
+
+			if (this.fieldFontSize != FontSizeType.Normal)
+			{
+				writer.WriteElementString(Xml.FieldFontSize, this.fieldFontSize.ToString());
+			}
+
 			writer.WriteElementString(Xml.SeparatorBottom, this.separatorBottom.ToString());
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -705,6 +846,30 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.BackColor)
 						{
 							this.backColor = (BackColorType) System.Enum.Parse(typeof(BackColorType), element);
+						}
+						else if (name == Xml.LabelFontColor)
+						{
+							this.labelFontColor = (FontColorType) System.Enum.Parse(typeof(FontColorType), element);
+						}
+						else if (name == Xml.FieldFontColor)
+						{
+							this.fieldFontColor = (FontColorType) System.Enum.Parse(typeof(FontColorType), element);
+						}
+						else if (name == Xml.LabelFontStyle)
+						{
+							this.labelFontStyle = (FontStyleType) System.Enum.Parse(typeof(FontStyleType), element);
+						}
+						else if (name == Xml.FieldFontStyle)
+						{
+							this.fieldFontStyle = (FontStyleType) System.Enum.Parse(typeof(FontStyleType), element);
+						}
+						else if (name == Xml.LabelFontSize)
+						{
+							this.labelFontSize = (FontSizeType) System.Enum.Parse(typeof(FontSizeType), element);
+						}
+						else if (name == Xml.FieldFontSize)
+						{
+							this.fieldFontSize = (FontSizeType) System.Enum.Parse(typeof(FontSizeType), element);
 						}
 						else if (name == Xml.SeparatorBottom)
 						{
@@ -810,7 +975,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public static Color GetRealColor(BackColorType type)
+		public static Color GetRealBackColor(BackColorType type)
 		{
 			//	Retourne la couleur réelle d'après son type.
 			switch (type)
@@ -829,6 +994,63 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public static Color GetRealFontColor(FontColorType type)
+		{
+			//	Retourne la couleur réelle d'après son type.
+			switch (type)
+			{
+				case FontColorType.Red:
+					return Color.FromRgb(1.0, 0.0, 0.0);
+
+				case FontColorType.Green:
+					return Color.FromRgb(0.8, 0.0, 0.0);
+
+				case FontColorType.Blue:
+					return Color.FromRgb(0.0, 0.4, 1.0);
+
+				default:
+					return Color.Empty;
+			}
+		}
+
+		public static string GetRealFontStyle(FontStyleType type)
+		{
+			//	Retourne le style réel d'après son type.
+			switch (type)
+			{
+				case FontStyleType.Bold:
+					return "Bold";
+
+				case FontStyleType.Italic:
+					return "Italic";
+
+				case FontStyleType.BoldItalic:
+					return "BoldItalic";
+
+				default:
+					return null;
+			}
+		}
+
+		public static double GetRealFontSize(FontSizeType type)
+		{
+			//	Retourne la taille réelle d'après son type.
+			switch (type)
+			{
+				case FontSizeType.Small:
+					return 8.0;
+
+				case FontSizeType.Large:
+					return 12.0;
+
+				case FontSizeType.VeryLarge:
+					return 15.0;
+
+				default:
+					return double.NaN;
+			}
+		}
+
 
 		private System.Guid					guid;
 		private FieldType					type;
@@ -837,6 +1059,12 @@ namespace Epsitec.Common.FormEngine
 		private List<Druid>					fieldIds;
 		private Druid						subFormId;
 		private BackColorType				backColor;
+		private FontColorType				labelFontColor;
+		private FontColorType				fieldFontColor;
+		private FontStyleType				labelFontStyle;
+		private FontStyleType				fieldFontStyle;
+		private FontSizeType				labelFontSize;
+		private FontSizeType				fieldFontSize;
 		private SeparatorType				separatorBottom;
 		private int							columnsRequired;
 		private int							rowsRequired;
