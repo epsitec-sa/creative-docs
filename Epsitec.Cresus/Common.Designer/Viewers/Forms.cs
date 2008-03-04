@@ -791,8 +791,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
 		{
-			//	Crée le menu undo/redo.
-#if true
+			//	Crée le menu undo/redo. Même si le nombre d'actions mémorisées est grand, le menu
+			//	présente toujours un nombre raisonnable de lignes. La première action (undo) et la
+			//	dernière (redo) sont toujours présentes.
 			int undoLength = this.undoIndex;
 			int redoLength = this.undoCount-this.undoIndex;
 			int all = this.undoCount;
@@ -808,8 +809,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				string action = this.undoActions[all-1].ActionName;
 				action = Misc.Italic(action);
-				MenuItem item = this.UndoRedoCreateItem(message, 0, all, action, all-1);
-				list.Add(item);
+				list.Add(this.UndoRedoCreateItem(message, 0, all, action, all-1));
 
 				if (start < all-2)
 				{
@@ -824,8 +824,7 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					string action = this.undoActions[i].ActionName;
 					action = Misc.Italic(action);
-					MenuItem item = this.UndoRedoCreateItem(message, 0, i+1, action, i);
-					list.Add(item);
+					list.Add(this.UndoRedoCreateItem(message, 0, i+1, action, i));
 
 					if (i == undoLength && undoLength != 0)
 					{
@@ -841,8 +840,7 @@ namespace Epsitec.Common.Designer.Viewers
 						active = 2;
 						action = Misc.Bold(action);
 					}
-					MenuItem item = this.UndoRedoCreateItem(message, active, i+1, action, i);
-					list.Add(item);
+					list.Add(this.UndoRedoCreateItem(message, active, i+1, action, i));
 				}
 			}
 
@@ -855,50 +853,17 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				string action = this.undoActions[0].ActionName;
-				MenuItem item = this.UndoRedoCreateItem(message, 1, 1, action, 0);
-				list.Add(item);
+				list.Add(this.UndoRedoCreateItem(message, 1, 1, action, 0));
 			}
 
 			//	Génère le menu à l'envers, c'est-à-dire la première action au
 			//	début du menu (en haut).
 			VMenu menu = new VMenu();
+
 			for (int i=list.Count-1; i>=0; i--)
 			{
 				menu.Items.Add(list[i]);
 			}
-#else
-			VMenu menu = new VMenu();
-
-			for (int i=0; i<this.undoCount; i++)
-			{
-				UndoAction action = this.undoActions[i];
-				string name = action.ActionName;
-				int active;
-
-				if (i < this.undoIndex-1)  // undo ?
-				{
-					active = 1;
-				}
-				else if (i > this.undoIndex-1)  // redo ?
-				{
-					name = Misc.Italic(name);
-					active = 0;
-				}
-				else // if (i == this.undoIndex-1)
-				{
-					name = Misc.Bold(name);
-					active = 2;
-				}
-
-				MenuItem item = this.UndoRedoCreateItem(message, active, i+1, name, i);
-				menu.Items.Add(item);
-
-				if (active == 2 && i < this.undoCount-1)
-				{
-					menu.Items.Add(new MenuSeparator());
-				}
-			}
-#endif
 
 			menu.AdjustSize();
 			return menu;
