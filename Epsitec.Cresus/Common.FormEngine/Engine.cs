@@ -812,21 +812,10 @@ namespace Epsitec.Common.FormEngine
 
 		private void ApplyFontTextStyle(TextStyle textStyle, FieldDescription.FontFaceType face, FieldDescription.FontStyleType style)
 		{
-			if (face  != FieldDescription.FontFaceType.Default ||
-				style != FieldDescription.FontStyleType.Normal)
+			if (face != FieldDescription.FontFaceType.Default || style != FieldDescription.FontStyleType.Normal)
 			{
-				string faceName = Font.DefaultFontFamily;
-				if (face != FieldDescription.FontFaceType.Default)
-				{
-					faceName = FieldDescription.GetRealFontFace(face);
-				}
-
-				string styleName = "Regular";
-				if (style != FieldDescription.FontStyleType.Normal)
-				{
-					styleName = FieldDescription.GetRealFontStyle(style);
-				}
-
+				string faceName, styleName;
+				FieldDescription.GetRealFontStrings(face, style, out faceName, out styleName);
 				textStyle.Font = Font.GetFont(faceName, styleName);
 			}
 		}

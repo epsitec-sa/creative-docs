@@ -1109,41 +1109,54 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		public static string GetRealFontFace(FontFaceType type)
+		public static void GetRealFontStrings(FontFaceType faceType, FontStyleType styleType, out string faceName, out string styleName)
 		{
 			//	Retourne la police réelle d'après son type.
-			switch (type)
+			faceName = Font.DefaultFontFamily;
+			styleName = "Regular";
+			string styleAdd = null;
+
+			switch (faceType)
 			{
 				case FontFaceType.Courier:
-					return "Courier New";
+					faceName = "Courier New";
+					break;
 
 				case FontFaceType.Times:
-					return "Times New Roman";
+					faceName = "Times New Roman";
+					break;
 
 				case FontFaceType.Black:
-					return "Arial Black";
-
-				default:
-					return null;
+					faceName = "Arial";
+					styleName = "Black";
+					break;
 			}
-		}
 
-		public static string GetRealFontStyle(FontStyleType type)
-		{
-			//	Retourne le style réel d'après son type.
-			switch (type)
+			switch (styleType)
 			{
 				case FontStyleType.Bold:
-					return "Bold";
+					styleAdd = "Bold";
+					break;
 
 				case FontStyleType.Italic:
-					return "Italic";
+					styleAdd = "Italic";
+					break;
 
 				case FontStyleType.BoldItalic:
-					return "Bold Italic";
+					styleAdd = "Bold Italic";
+					break;
+			}
 
-				default:
-					return null;
+			if (styleAdd != null)
+			{
+				if (styleName == "Regular")
+				{
+					styleName = styleAdd;
+				}
+				else
+				{
+					styleName = string.Concat(styleName, " ", styleAdd);
+				}
 			}
 		}
 
