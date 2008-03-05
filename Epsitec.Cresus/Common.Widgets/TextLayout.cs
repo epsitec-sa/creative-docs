@@ -3710,12 +3710,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private Stack<FontItem> CreateFontStack()
+		private Stack<FontItem> CreateFontStack(out SupplItem supplItem)
 		{
 			Stack<FontItem> stack = new Stack<FontItem> ();
 			FontItem font = new FontItem(this);
+			Drawing.Font defaultFont = this.DefaultFont;
+
+			supplItem = new SupplItem ()
+			{
+				Bold = defaultFont.IsStyleBold ? 1 : 0,
+				Italic = defaultFont.IsStyleItalic ? 1 : 0
+			};
 			
-			font.FontFace  = TextLayout.CodeDefault + this.DefaultFont.FaceName;
+			font.FontFace  = TextLayout.CodeDefault + defaultFont.FaceName;
 			font.FontScale = 1;  // 100%
 			font.FontColor = Drawing.RichColor.Empty;
 			
@@ -3969,9 +3976,9 @@ namespace Epsitec.Common.Widgets
 				this.tabs.Clear();
 			}
 
-			Stack<FontItem>				fontStack = this.CreateFontStack();
+			SupplItem					supplItem;
+			Stack<FontItem>				fontStack = this.CreateFontStack(out supplItem);
 			Dictionary<string, string>	parameters;
-			SupplItem					supplItem = new SupplItem();
 
 			int		textLength = this.MaxTextOffset;
 			int		beginOffset, endOffset = 0;
