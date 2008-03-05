@@ -53,6 +53,7 @@
     </Compile>
     <Compile Include="ModuleState.cs" />
     <Compile Include="ModuleRecord.cs" />
+    <Compile Include="ModuleStore.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ModuleRepositoryService.cs" />

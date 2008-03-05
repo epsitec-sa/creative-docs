@@ -18,53 +18,60 @@ namespace Epsitec.ModuleRepository
 		{
 			ModuleRecord record = null;
 
-			lock (this.records)
+			try
 			{
-				record = this.records.Find (item => item.DeveloperName == developerName && item.ModuleState == ModuleState.FreeForReuse);
-				
-				if (record != null)
+				lock (this.records)
 				{
-					record.ModuleName = moduleName;
-					record.ModuleState = ModuleState.InUse;
-					
-					return record.ModuleId;
-				}
-			}
+					record = this.records.Find (item => item.DeveloperName == developerName && item.ModuleState == ModuleState.FreeForReuse);
 
-
-			record = new ModuleRecord ();
-
-			record.ModuleName = moduleName;
-			record.DeveloperName = developerName;
-
-			int moduleId = 0;
-			int insertIndex = 0;
-
-			lock (this.records)
-			{
-				for (int i = 0; i < this.records.Count-1; i++)
-				{
-					if (this.records[i].ModuleId+1 < this.records[i+1].ModuleId)
+					if (record != null)
 					{
-						moduleId = this.records[i].ModuleId+1;
-						insertIndex = i+1;
-						break;
+						record.ModuleName = moduleName;
+						record.ModuleState = ModuleState.InUse;
+
+						return record.ModuleId;
 					}
 				}
 
-				if (moduleId == 0)
+
+				record = new ModuleRecord ();
+
+				record.ModuleName = moduleName;
+				record.DeveloperName = developerName;
+
+				int moduleId = 0;
+				int insertIndex = 0;
+
+				lock (this.records)
 				{
-					moduleId = 1000 + this.records.Count;
-					insertIndex = this.records.Count;
+					for (int i = 0; i < this.records.Count-1; i++)
+					{
+						if (this.records[i].ModuleId+1 < this.records[i+1].ModuleId)
+						{
+							moduleId = this.records[i].ModuleId+1;
+							insertIndex = i+1;
+							break;
+						}
+					}
+
+					if (moduleId == 0)
+					{
+						moduleId = 1000 + this.records.Count;
+						insertIndex = this.records.Count;
+					}
+
+					record.ModuleId = moduleId;
+					record.ModuleState = ModuleState.InUse;
+
+					this.records.Insert (insertIndex, record);
 				}
 
-				record.ModuleId = moduleId;
-				record.ModuleState = ModuleState.InUse;
-
-				this.records.Insert (insertIndex, record);
+				return record.ModuleId;
 			}
-
-			return record.ModuleId;
+			finally
+			{
+				this.Persist ();
+			}
 		}
 
 		public ModuleDirectory CreateEmptyModule(int moduleId, string moduleLayerPrefix, string sourceNamespace)
@@ -98,9 +105,36 @@ namespace Epsitec.ModuleRepository
 			directory.AddFile (new ModuleFile () { Path = System.IO.Path.Combine (directory.Name, "module.info"), Data = stream.ToArray () });
 		}
 
+		private void Persist()
+		{
+			lock (this.records)
+			{
+				ModuleStore.Write (ModuleRepositoryService.storePath, this.records);
+			}
+		}
+
+		private void Reload()
+		{
+			lock (this.records)
+			{
+				this.records.Clear ();
+				
+				if (System.IO.File.Exists (ModuleRepositoryService.storePath))
+				{
+					this.records.AddRange (ModuleStore.Read (ModuleRepositoryService.storePath));
+				}
+			}
+		}
+
+		static ModuleRepositoryService()
+		{
+			ModuleRepositoryService service = new ModuleRepositoryService ();
+			service.Reload ();
+		}
 
 		private List<ModuleRecord> records = ModuleRepositoryService.globalRecords;
 
 		private static List<ModuleRecord> globalRecords = new List<ModuleRecord> ();
+		private static string storePath = @"S:\Epsitec.Cresus\module store.xml";
 	}
 }
