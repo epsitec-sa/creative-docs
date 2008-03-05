@@ -18,7 +18,25 @@ namespace Epsitec.ModuleRepository
 
 		public static IModuleRepositoryService GetService()
 		{
-			return ModuleRepositoryClient.factory.CreateChannel ();
+			IModuleRepositoryService service = ModuleRepositoryClient.factory.CreateChannel ();
+			System.ServiceModel.Channels.IChannel channel = service as System.ServiceModel.Channels.IChannel;
+
+			System.Diagnostics.Debug.Assert (channel != null);
+			System.Diagnostics.Debug.Assert (channel.State == CommunicationState.Created);
+			channel.Open ();
+			System.Diagnostics.Debug.Assert (channel.State == CommunicationState.Opened);
+
+			return service;
+		}
+
+		public static void CloseService(IModuleRepositoryService service)
+		{
+			System.ServiceModel.Channels.IChannel channel = service as System.ServiceModel.Channels.IChannel;
+
+			System.Diagnostics.Debug.Assert (channel != null);
+			System.Diagnostics.Debug.Assert (channel.State != CommunicationState.Closed);
+			channel.Close ();
+			System.Diagnostics.Debug.Assert (channel.State == CommunicationState.Closed);
 		}
 
 

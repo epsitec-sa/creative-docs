@@ -11,11 +11,14 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Designer.ModuleSupport
 {
-	class ModuleStore
+	/// <summary>
+	/// The <c>ModuleStore</c> class provides the mechanisms needed to create
+	/// and recycle modules.
+	/// </summary>
+	sealed class ModuleStore : System.IDisposable
 	{
 		public ModuleStore()
 		{
-			this.service = ModuleRepositoryClient.GetService ();
 		}
 
 		public ResourceModuleInfo CreateModule(string rootDirectoryPath, string moduleName, string sourceNamespace, ResourceModuleLayer moduleLayer, IdentityCard identity)
@@ -82,6 +85,29 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 		}
 
-		private readonly IModuleRepositoryService service;
+
+		private void ConnectToService()
+		{
+			if (this.service == null)
+			{
+				this.service = ModuleRepositoryClient.GetService ();
+			}
+		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (this.service != null)
+			{
+				ModuleRepositoryClient.CloseService (this.service);
+				this.service = null;
+			}
+		}
+
+		#endregion
+
+
+		private IModuleRepositoryService service;
 	}
 }

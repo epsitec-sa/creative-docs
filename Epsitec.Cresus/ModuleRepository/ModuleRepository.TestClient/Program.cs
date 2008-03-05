@@ -36,6 +36,8 @@ namespace TestClient
 			System.Diagnostics.Debug.Assert (service.RecycleModuleId (moduleId, "Daniel Roux") == false);
 			System.Diagnostics.Debug.Assert (service.RecycleModuleId (moduleId, "Pierre Arnaud") == true);
 
+			ModuleRepositoryClient.CloseService (service);
+
 			System.Console.ReadKey ();
 		}
 	}
