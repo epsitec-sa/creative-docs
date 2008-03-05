@@ -370,6 +370,37 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool HasTextStyle
+		{
+			//	Indique si au moins un style de texte est défini.
+			get
+			{
+				return this.HasLabelTextStyle || this.HasFieldTextStyle;
+			}
+		}
+
+		public bool HasLabelTextStyle
+		{
+			//	Indique si au moins un style de texte est défini pour l'étiquette.
+			get
+			{
+				return this.labelFontColor != FontColorType.Default ||
+					   this.labelFontStyle != FontStyleType.Normal ||
+					   this.labelFontSize != FontSizeType.Normal;
+			}
+		}
+
+		public bool HasFieldTextStyle
+		{
+			//	Indique si au moins un style de texte est défini pour le champ.
+			get
+			{
+				return this.fieldFontColor != FontColorType.Default ||
+					   this.fieldFontStyle != FontStyleType.Normal ||
+					   this.fieldFontSize != FontSizeType.Normal;
+			}
+		}
+
 		public FontColorType LabelFontColor
 		{
 			//	Couleur de la police pour l'étiquette.
@@ -665,6 +696,12 @@ namespace Epsitec.Common.FormEngine
 				a.source != b.source ||
 				a.subFormId != b.subFormId ||
 				a.backColor != b.backColor ||
+				a.labelFontColor != b.labelFontColor ||
+				a.fieldFontColor != b.fieldFontColor ||
+				a.labelFontStyle != b.labelFontStyle ||
+				a.fieldFontStyle != b.fieldFontStyle ||
+				a.labelFontSize != b.labelFontSize ||
+				a.fieldFontSize != b.fieldFontSize ||
 				a.separatorBottom != b.separatorBottom ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
@@ -1003,7 +1040,7 @@ namespace Epsitec.Common.FormEngine
 					return Color.FromRgb(1.0, 0.0, 0.0);
 
 				case FontColorType.Green:
-					return Color.FromRgb(0.8, 0.0, 0.0);
+					return Color.FromRgb(0.0, 0.8, 0.0);
 
 				case FontColorType.Blue:
 					return Color.FromRgb(0.0, 0.4, 1.0);
@@ -1025,7 +1062,7 @@ namespace Epsitec.Common.FormEngine
 					return "Italic";
 
 				case FontStyleType.BoldItalic:
-					return "BoldItalic";
+					return "Bold Italic";
 
 				default:
 					return null;
@@ -1041,10 +1078,10 @@ namespace Epsitec.Common.FormEngine
 					return 8.0;
 
 				case FontSizeType.Large:
-					return 12.0;
+					return 13.0;
 
 				case FontSizeType.VeryLarge:
-					return 15.0;
+					return 16.0;
 
 				default:
 					return double.NaN;

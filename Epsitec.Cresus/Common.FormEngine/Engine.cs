@@ -133,27 +133,10 @@ namespace Epsitec.Common.FormEngine
 			root.DataSource = new UI.DataSource();
 			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
 
-#if true
 			//	Crée un gestionnaire de styles pour le panneau dans son entier; un tel
 			//	gestionnaire doit être attaché au panneau racine au moment de sa création
-			UI.TextStyleManager textStyleManager = new Epsitec.Common.UI.TextStyleManager(root);
-
-			//	Crée un style pour les labels :
-			TextStyle staticTextStyle = new TextStyle();
-			staticTextStyle.FontSize = 14.0;
-			staticTextStyle.FontColor = Color.FromRgb(0, 0, 0.4);
-			textStyleManager.StaticTextStyle = staticTextStyle;
-			
-			//	Crée un style pour les champs éditables :
-			TextStyle textFieldStyle = new TextStyle ();
-			textFieldStyle.FontSize = 14.0;
-			textFieldStyle.FontColor = Color.FromRgb(0.8, 0, 0);
-			textFieldStyle.Font = Font.GetFont("Calibri", "Regular");
-			textStyleManager.TextFieldStyle = textFieldStyle;
-
-			//	Active les styles pour le panneau spécifié, et tous ses enfants !
-			textStyleManager.Attach (root);
-#endif
+			UI.TextStyleManager textStyleManager = new UI.TextStyleManager(root);
+			textStyleManager.Attach(root);  // active les styles pour le panneau spécifié et tous ses enfants
 
 			this.CreateFormBox(root, entityId, fields2, 0);
 
@@ -570,6 +553,7 @@ namespace Epsitec.Common.FormEngine
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
 			box.Name = guid.ToString();
+			this.ApplyTextStyle(box, field);
 			
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
@@ -604,6 +588,7 @@ namespace Epsitec.Common.FormEngine
 			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			placeholder.TabIndex = grid.RowDefinitions.Count;
 			placeholder.Name = guid.ToString();
+			this.ApplyTextStyle(placeholder, field);
 
 			//	Détermine si le placeholder doit être utilisé pour saisir du texte ou pour
 			//	saisir un critère de recherche et le configure en conséquence.
@@ -769,6 +754,64 @@ namespace Epsitec.Common.FormEngine
 
 				row++;
 			}
+		}
+
+		private void ApplyTextStyle(Widget widget, FieldDescription field)
+		{
+			//	Applique les différents styles de texte définis, s'ils existent, pour le widget et ses enfants.
+			if (!field.HasTextStyle)
+			{
+				return;
+			}
+
+			UI.TextStyleManager textStyleManager = new UI.TextStyleManager();
+
+			if (field.HasLabelTextStyle)
+			{
+				TextStyle style = new TextStyle();
+
+				if (field.LabelFontColor != FieldDescription.FontColorType.Default)
+				{
+					style.FontColor = FieldDescription.GetRealFontColor(field.LabelFontColor);
+				}
+
+				if (field.LabelFontStyle != FieldDescription.FontStyleType.Normal)
+				{
+					style.Font = Font.GetFont(Font.DefaultFontFamily, FieldDescription.GetRealFontStyle(field.LabelFontStyle));
+				}
+
+				if (field.LabelFontSize != FieldDescription.FontSizeType.Normal)
+				{
+					style.FontSize = FieldDescription.GetRealFontSize(field.LabelFontSize);
+				}
+
+				textStyleManager.StaticTextStyle = style;
+			}
+
+			if (field.HasFieldTextStyle)
+			{
+				TextStyle style = new TextStyle();
+
+				if (field.FieldFontColor != FieldDescription.FontColorType.Default)
+				{
+					style.FontColor = FieldDescription.GetRealFontColor(field.FieldFontColor);
+				}
+
+				if (field.FieldFontStyle != FieldDescription.FontStyleType.Normal)
+				{
+					style.Font = Font.GetFont(Font.DefaultFontFamily, FieldDescription.GetRealFontStyle(field.FieldFontStyle));
+				}
+
+				if (field.FieldFontSize != FieldDescription.FontSizeType.Normal)
+				{
+					style.FontSize = FieldDescription.GetRealFontSize(field.FieldFontSize);
+				}
+
+				textStyleManager.TextFieldStyle = style;
+			}
+
+			//	Active les styles pour le widget spécifié et tous ses enfants.
+			textStyleManager.Attach(widget);
 		}
 
 		private string GetCaptionDefaultLabel(Druid druid)
