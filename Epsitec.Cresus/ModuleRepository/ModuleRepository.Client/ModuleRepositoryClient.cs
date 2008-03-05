@@ -7,8 +7,14 @@ using System.ServiceModel;
 
 namespace Epsitec.ModuleRepository
 {
+	/// <summary>
+	/// The <c>ModuleRepositoryClient</c> class manages the access to the
+	/// proxy implementing <see cref="IModuleRepositoryService"/>.
+	/// </summary>
 	public static class ModuleRepositoryClient
 	{
+		#region Private Static Initializer
+
 		static ModuleRepositoryClient()
 		{
 			BasicHttpBinding binding = new BasicHttpBinding ();
@@ -16,6 +22,12 @@ namespace Epsitec.ModuleRepository
 			ModuleRepositoryClient.factory = new ChannelFactory<IModuleRepositoryService> (binding, address);
 		}
 
+		#endregion
+
+		/// <summary>
+		/// Gets and opens a proxy to the service.
+		/// </summary>
+		/// <returns>The proxy implementing <see cref="IModuleRepositoryService"/>.</returns>
 		public static IModuleRepositoryService GetService()
 		{
 			IModuleRepositoryService service = ModuleRepositoryClient.factory.CreateChannel ();
@@ -29,6 +41,10 @@ namespace Epsitec.ModuleRepository
 			return service;
 		}
 
+		/// <summary>
+		/// Closes the service.
+		/// </summary>
+		/// <param name="service">The proxy obtained through <see cref="GetService"/>.</param>
 		public static void CloseService(IModuleRepositoryService service)
 		{
 			System.ServiceModel.Channels.IChannel channel = service as System.ServiceModel.Channels.IChannel;
@@ -38,7 +54,6 @@ namespace Epsitec.ModuleRepository
 			channel.Close ();
 			System.Diagnostics.Debug.Assert (channel.State == CommunicationState.Closed);
 		}
-
 
 		private static ChannelFactory<IModuleRepositoryService> factory;
 	}
