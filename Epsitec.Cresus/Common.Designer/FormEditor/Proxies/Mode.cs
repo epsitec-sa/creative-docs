@@ -260,6 +260,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.LabelFontColor = this.ObjectModifier.GetLabelFontColor(this.DefaultWidget);
 				this.LabelFontFace  = this.ObjectModifier.GetLabelFontFace(this.DefaultWidget);
 				this.LabelFontStyle = this.ObjectModifier.GetLabelFontStyle(this.DefaultWidget);
+				this.LabelFontSize  = this.ObjectModifier.GetLabelFontSize(this.DefaultWidget);
 			}
 		}
 
