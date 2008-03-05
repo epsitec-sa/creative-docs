@@ -32,6 +32,11 @@ namespace TestClient
 			}
 
 			System.Console.ReadKey ();
+
+			System.Diagnostics.Debug.Assert (service.RecycleModuleId (moduleId, "Daniel Roux") == false);
+			System.Diagnostics.Debug.Assert (service.RecycleModuleId (moduleId, "Pierre Arnaud") == true);
+
+			System.Console.ReadKey ();
 		}
 	}
 }

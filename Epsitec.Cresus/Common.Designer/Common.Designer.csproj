@@ -16,6 +16,7 @@
     <OldToolsVersion>2.0</OldToolsVersion>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.Core, Version=3.5.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Properties\AssemblyInfo.CrDocVer.cs">
@@ -54,6 +57,7 @@
     <Compile Include="FormEditor\Proxies\Mode.cs" />
     <Compile Include="FormEditor\Proxies\Geometry.cs" />
     <Compile Include="FormEditor\ProxyManager.cs" />
+    <Compile Include="ModuleSupport\ModuleStore.cs" />
     <Compile Include="PanelEditor\Constrain.cs" />
     <Compile Include="PanelEditor\ConstrainsList.cs" />
     <Compile Include="Dialogs\EntityExpression.cs" />
@@ -219,6 +223,14 @@
     <ProjectReference Include="..\Common.Widgets\Common.Widgets.csproj">
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModuleRepository\ModuleRepository.Client\ModuleRepository.Client.csproj">
+      <Project>{EC31ACEA-8F8A-43E8-9A26-584D8B22552C}</Project>
+      <Name>ModuleRepository.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ModuleRepository\ModuleRepository.Service\ModuleRepository.Service.csproj">
+      <Project>{9DEB3B56-6C6B-4D84-90DD-3A3FCE84441C}</Project>
+      <Name>ModuleRepository.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

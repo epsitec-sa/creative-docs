@@ -74,6 +74,30 @@ namespace Epsitec.ModuleRepository
 			}
 		}
 
+		public bool RecycleModuleId(int moduleId, string developerName)
+		{
+			lock (this.records)
+			{
+				ModuleRecord record = this.records.Find (item => item.ModuleId == moduleId);
+
+				if (record == null)
+				{
+					return false;
+				}
+				else if (record.DeveloperName == developerName)
+				{
+					record.ModuleState = ModuleState.FreeForReuse;
+					this.Persist ();
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		
 		public ModuleDirectory CreateEmptyModule(int moduleId, string moduleLayerPrefix, string sourceNamespace)
 		{
 			ModuleRecord record = this.records.Find (item => item.ModuleId == moduleId);

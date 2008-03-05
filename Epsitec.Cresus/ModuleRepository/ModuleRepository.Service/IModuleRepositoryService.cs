@@ -11,6 +11,9 @@ namespace Epsitec.ModuleRepository
 	{
 		[OperationContract]
 		int GetNewModuleId(string moduleName, string developerName);
+		
+		[OperationContract]
+		bool RecycleModuleId(int moduleId, string developerName);
 
 		[OperationContract]
 		ModuleDirectory CreateEmptyModule(int moduleId, string moduleLayerPrefix, string sourceNamespace);
