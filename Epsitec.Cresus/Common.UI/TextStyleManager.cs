@@ -19,12 +19,25 @@ namespace Epsitec.Common.UI
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TextStyleManager"/> class.
+		/// This constructor creates the primary text style manager for a visual
+		/// tree.
 		/// </summary>
 		/// <param name="root">The root of the visual tree.</param>
 		public TextStyleManager(Widgets.Widget root)
 		{
 			this.root = root;
 			this.root.Measuring += this.HandleRootMeasuring;
+			this.targets = new List<Epsitec.Common.Widgets.Widget> ();
+		}
+
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TextStyleManager"/> class.
+		/// Use this constructor only for secondary text styles; the visual tree
+		/// must have a primary text style manager.
+		/// </summary>
+		public TextStyleManager()
+		{
 			this.targets = new List<Epsitec.Common.Widgets.Widget> ();
 		}
 
@@ -139,7 +152,11 @@ namespace Epsitec.Common.UI
 			}
 
 			this.lastChangeCounter = 0;
-			Widgets.Layouts.LayoutContext.AddToMeasureQueue (this.root);
+
+			if (this.root != null)
+			{
+				Widgets.Layouts.LayoutContext.AddToMeasureQueue (this.root);
+			}
 		}
 
 		/// <summary>
@@ -164,7 +181,11 @@ namespace Epsitec.Common.UI
 			}
 
 			this.lastChangeCounter = 0;
-			Widgets.Layouts.LayoutContext.AddToMeasureQueue (this.root);
+
+			if (this.root != null)
+			{
+				Widgets.Layouts.LayoutContext.AddToMeasureQueue (this.root);
+			}
 		}
 
 
@@ -276,6 +297,8 @@ namespace Epsitec.Common.UI
 		/// <param name="sender">The sender.</param>
 		private void HandleRootMeasuring(object sender)
 		{
+			System.Diagnostics.Debug.Assert (this.root != null);
+
 			int currentChangeCounter = this.GetVisualTreeChangeId (this.root);
 			
 			if (this.lastChangeCounter == currentChangeCounter)
