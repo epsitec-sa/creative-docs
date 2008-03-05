@@ -227,6 +227,195 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FieldDescription.FontColorType GetLabelFontColor(Widget obj)
+		{
+			//	Retourne la couleur de la police d'une étiquette.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontColorType.Default;
+			}
+			else
+			{
+				return field.LabelFontColor;
+			}
+		}
+
+		public void SetLabelFontColor(Widget obj, FieldDescription.FontColorType color)
+		{
+			//	Choix de la couleur de la police d'une étiquette.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Couleur de la police de l'étiquette");
+				field.LabelFontColor = color;
+				this.DeltaUpdate(field);
+			}
+		}
+
+		public FieldDescription.FontColorType GetFieldFontColor(Widget obj)
+		{
+			//	Retourne la couleur de la police d'un champ.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontColorType.Default;
+			}
+			else
+			{
+				return field.FieldFontColor;
+			}
+		}
+
+		public void SetFieldFontColor(Widget obj, FieldDescription.FontColorType color)
+		{
+			//	Choix de la couleur de la police d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Couleur de la police du champ");
+				field.FieldFontColor = color;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
+		public FieldDescription.FontStyleType GetLabelFontStyle(Widget obj)
+		{
+			//	Retourne le style de la police d'une étiquette.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontStyleType.Normal;
+			}
+			else
+			{
+				return field.LabelFontStyle;
+			}
+		}
+
+		public void SetLabelFontStyle(Widget obj, FieldDescription.FontStyleType style)
+		{
+			//	Choix du style de la police d'une étiquette.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Style de la police de l'étiquette");
+				field.LabelFontStyle = style;
+				this.DeltaUpdate(field);
+			}
+		}
+
+		public FieldDescription.FontStyleType GetFieldFontStyle(Widget obj)
+		{
+			//	Retourne le style de la police d'un champ.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontStyleType.Normal;
+			}
+			else
+			{
+				return field.FieldFontStyle;
+			}
+		}
+
+		public void SetFieldFontStyle(Widget obj, FieldDescription.FontStyleType style)
+		{
+			//	Choix du style de la police d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Style de la police du champ");
+				field.FieldFontStyle = style;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
+		public FieldDescription.FontSizeType GetLabelFontSize(Widget obj)
+		{
+			//	Retourne la taille de la police d'une étiquette.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontSizeType.Normal;
+			}
+			else
+			{
+				return field.LabelFontSize;
+			}
+		}
+
+		public void SetLabelFontSize(Widget obj, FieldDescription.FontSizeType size)
+		{
+			//	Choix de la taille de la police d'une étiquette.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Taille de la police de l'étiquette");
+				field.LabelFontSize = size;
+				this.DeltaUpdate(field);
+			}
+		}
+
+		public FieldDescription.FontSizeType GetFieldFontSize(Widget obj)
+		{
+			//	Retourne la taille de la police d'un champ.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontSizeType.Normal;
+			}
+			else
+			{
+				return field.FieldFontSize;
+			}
+		}
+
+		public void SetFieldFontSize(Widget obj, FieldDescription.FontSizeType size)
+		{
+			//	Choix de la taille de la police d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Taille de la police du champ");
+				field.FieldFontSize = size;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
 		public FrameState GetBoxFrameState(Widget obj)
 		{
 			//	Retourne la couleur de fond d'un champ.

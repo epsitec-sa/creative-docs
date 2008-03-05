@@ -681,6 +681,16 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\FontSizeLarge.icon" />
+    <EmbeddedResource Include="Images\FontSizeVeryLarge.icon" />
+    <EmbeddedResource Include="Images\FontSizeSmall.icon" />
+    <EmbeddedResource Include="Images\FontSizeDefault.icon" />
+    <EmbeddedResource Include="Images\FontColorGreen.icon" />
+    <EmbeddedResource Include="Images\FontColorRed.icon" />
+    <EmbeddedResource Include="Images\FontColorBlue.icon" />
+    <EmbeddedResource Include="Images\FontColorDefault.icon" />
+    <EmbeddedResource Include="Images\FontBoldItalic.icon" />
+    <EmbeddedResource Include="Images\FontRoman.icon" />
     <EmbeddedResource Include="Images\Redo.icon" />
     <EmbeddedResource Include="Images\Undo.icon" />
     <EmbeddedResource Include="Images\FormDeltaShowed.icon" />
