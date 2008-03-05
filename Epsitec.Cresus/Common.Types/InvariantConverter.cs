@@ -748,6 +748,13 @@ namespace Epsitec.Common.Types
 			
 			return num;
 		}
+
+
+		public static T ToEnum<T>(this string text)
+		{
+			return (T) System.Enum.Parse (typeof (T), text);
+		}
+
 		
 		internal static bool ParseEnum(System.Type type, string name, out System.Enum value)
 		{

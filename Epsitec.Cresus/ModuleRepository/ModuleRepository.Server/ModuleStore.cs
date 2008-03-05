@@ -4,27 +4,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.ModuleRepository
 {
+	/// <summary>
+	/// The <c>ModuleStore</c> class provides read and write support for the
+	/// module store, which contains a collection of <see cref="ModuleRecord"/>
+	/// items.
+	/// </summary>
 	static class ModuleStore
 	{
+		/// <summary>
+		/// Reads the specified XML file and returns the collection of
+		/// <see cref="ModuleRecord"/> items.
+		/// </summary>
+		/// <param name="path">The path to the XML file.</param>
+		/// <returns>The collection of <see cref="ModuleRecord"/> items.</returns>
 		public static IEnumerable<ModuleRecord> Read(string path)
 		{
 			XDocument doc = XDocument.Load (path);
 
-			var q = from c in doc.Descendants ("module")
-					select new ModuleRecord ()
-					{
-						ModuleId = (int) c.Attribute ("id"),
-						ModuleName = (string) c.Attribute ("name"),
-						ModuleState = (ModuleState) System.Enum.Parse (typeof (ModuleState), (string) c.Attribute ("state")),
-						DeveloperName = (string) c.Attribute ("owner")
-					};
-
-			return q;
+			return from c in doc.Descendants ("module")
+				   select new ModuleRecord ()
+				   {
+					   ModuleId = (int) c.Attribute ("id"),
+					   ModuleName = (string) c.Attribute ("name"),
+					   ModuleState = ((string) c.Attribute ("state")).ToEnum<ModuleState> (),
+					   DeveloperName = (string) c.Attribute ("owner")
+				   };
 		}
 
+		/// <summary>
+		/// Writes the collection of <see cref="ModuleRecord"/> items to the XML
+		/// file at the specified path.
+		/// </summary>
+		/// <param name="path">The path to the XML file.</param>
+		/// <param name="records">The <see cref="ModuleRecord"/> items.</param>
 		public static void Write(string path, IEnumerable<ModuleRecord> records)
 		{
 			System.DateTime now = System.DateTime.Now;
