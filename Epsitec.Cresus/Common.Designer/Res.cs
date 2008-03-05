@@ -138,12 +138,16 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption BoxPaddingType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 46)); } }
 				//	designer:cap/30KG
 				public static global::Epsitec.Common.Types.Caption FieldFontColorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16)); } }
+				//	designer:cap/30KL
+				public static global::Epsitec.Common.Types.Caption FieldFontFaceType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21)); } }
 				//	designer:cap/30KK
 				public static global::Epsitec.Common.Types.Caption FieldFontSizeType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20)); } }
 				//	designer:cap/30KI
 				public static global::Epsitec.Common.Types.Caption FieldFontStyleType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18)); } }
 				//	designer:cap/30KF
 				public static global::Epsitec.Common.Types.Caption LabelFontColorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15)); } }
+				//	designer:cap/30KM
+				public static global::Epsitec.Common.Types.Caption LabelFontFaceType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22)); } }
 				//	designer:cap/30KJ
 				public static global::Epsitec.Common.Types.Caption LabelFontSizeType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19)); } }
 				//	designer:cap/30KH
@@ -314,6 +318,8 @@ namespace Epsitec.Common.Designer
 				public static readonly global::Epsitec.Common.Types.EnumType BoxPaddingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 47));
 				//	designer:cap/30K
 				public static readonly global::Epsitec.Common.Types.EnumType FontColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+				//	designer:cap/30KN
+				public static readonly global::Epsitec.Common.Types.EnumType FontFaceType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23));
 				//	designer:cap/30KA
 				public static readonly global::Epsitec.Common.Types.EnumType FontSizeType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
 				//	designer:cap/30K5
@@ -395,6 +401,18 @@ namespace Epsitec.Common.Designer
 					public static global::Epsitec.Common.Types.Caption Green { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3)); } }
 					//	designer:cap/30K2
 					public static global::Epsitec.Common.Types.Caption Red { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2)); } }
+				}
+				
+				public static class FontFaceType
+				{
+					//	designer:cap/30KR
+					public static global::Epsitec.Common.Types.Caption Black { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 27)); } }
+					//	designer:cap/30KP
+					public static global::Epsitec.Common.Types.Caption Courier { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 25)); } }
+					//	designer:cap/30KO
+					public static global::Epsitec.Common.Types.Caption Default { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24)); } }
+					//	designer:cap/30KQ
+					public static global::Epsitec.Common.Types.Caption Times { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 26)); } }
 				}
 				
 				public static class FontSizeType

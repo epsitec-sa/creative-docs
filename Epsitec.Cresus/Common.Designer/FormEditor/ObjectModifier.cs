@@ -67,6 +67,18 @@ namespace Epsitec.Common.Designer.FormEditor
 			return field.Type == FieldDescription.FieldType.Glue;
 		}
 
+		public bool IsTitle(Widget obj)
+		{
+			//	Indique si l'objet correspond à un titre.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return false;
+			}
+
+			return field.Type == FieldDescription.FieldType.Title;
+		}
+
 
 		public int GetColumnsRequired(Widget obj)
 		{
@@ -285,6 +297,69 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				this.UndoMemorize("Couleur de la police du champ");
 				field.FieldFontColor = color;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
+		public FieldDescription.FontFaceType GetLabelFontFace(Widget obj)
+		{
+			//	Retourne le nom de la police d'une étiquette.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontFaceType.Default;
+			}
+			else
+			{
+				return field.LabelFontFace;
+			}
+		}
+
+		public void SetLabelFontFace(Widget obj, FieldDescription.FontFaceType face)
+		{
+			//	Choix du nom de la police d'une étiquette.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Nom de la police de l'étiquette");
+				field.LabelFontFace = face;
+				this.DeltaUpdate(field);
+			}
+		}
+
+		public FieldDescription.FontFaceType GetFieldFontFace(Widget obj)
+		{
+			//	Retourne le nom de la police d'un champ.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.FontFaceType.Default;
+			}
+			else
+			{
+				return field.FieldFontFace;
+			}
+		}
+
+		public void SetFieldFontFace(Widget obj, FieldDescription.FontFaceType face)
+		{
+			//	Choix du nom de la police d'un champ.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize("Nom de la police du champ");
+				field.FieldFontFace = face;
 				this.DeltaUpdate(field);
 			}
 		}

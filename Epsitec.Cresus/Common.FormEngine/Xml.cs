@@ -13,6 +13,8 @@ namespace Epsitec.Common.FormEngine
 		public const string BackColor			= "BC";
 		public const string LabelFontColor		= "LFC";
 		public const string FieldFontColor		= "FFC";
+		public const string LabelFontFace		= "LFF";
+		public const string FieldFontFace		= "FFF";
 		public const string LabelFontStyle		= "LFS";
 		public const string FieldFontStyle		= "FFS";
 		public const string LabelFontSize		= "LFH";

@@ -722,6 +722,7 @@ namespace Epsitec.Common.FormEngine
 					text.Text = string.Concat("<font size=\"", size.ToString(System.Globalization.CultureInfo.InvariantCulture), "%\"><b>", builder.ToString(), "</b></font>");
 					text.PreferredHeight = size/100*16;
 					text.Name = guid.ToString();
+					this.ApplyTextStyle(text, field);
 
 					int i = Engine.GetColumnIndex(labelsId, 0);
 					int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
@@ -756,6 +757,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+
 		private void ApplyTextStyle(Widget widget, FieldDescription field)
 		{
 			//	Applique les différents styles de texte définis, s'ils existent, pour le widget et ses enfants.
@@ -775,10 +777,7 @@ namespace Epsitec.Common.FormEngine
 					style.FontColor = FieldDescription.GetRealFontColor(field.LabelFontColor);
 				}
 
-				if (field.LabelFontStyle != FieldDescription.FontStyleType.Normal)
-				{
-					style.Font = Font.GetFont(Font.DefaultFontFamily, FieldDescription.GetRealFontStyle(field.LabelFontStyle));
-				}
+				this.ApplyFontTextStyle(style, field.LabelFontFace, field.LabelFontStyle);
 
 				if (field.LabelFontSize != FieldDescription.FontSizeType.Normal)
 				{
@@ -797,10 +796,7 @@ namespace Epsitec.Common.FormEngine
 					style.FontColor = FieldDescription.GetRealFontColor(field.FieldFontColor);
 				}
 
-				if (field.FieldFontStyle != FieldDescription.FontStyleType.Normal)
-				{
-					style.Font = Font.GetFont(Font.DefaultFontFamily, FieldDescription.GetRealFontStyle(field.FieldFontStyle));
-				}
+				this.ApplyFontTextStyle(style, field.FieldFontFace, field.FieldFontStyle);
 
 				if (field.FieldFontSize != FieldDescription.FontSizeType.Normal)
 				{
@@ -813,6 +809,28 @@ namespace Epsitec.Common.FormEngine
 			//	Active les styles pour le widget spécifié et tous ses enfants.
 			textStyleManager.Attach(widget);
 		}
+
+		private void ApplyFontTextStyle(TextStyle textStyle, FieldDescription.FontFaceType face, FieldDescription.FontStyleType style)
+		{
+			if (face  != FieldDescription.FontFaceType.Default ||
+				style != FieldDescription.FontStyleType.Normal)
+			{
+				string faceName = Font.DefaultFontFamily;
+				if (face != FieldDescription.FontFaceType.Default)
+				{
+					faceName = FieldDescription.GetRealFontFace(face);
+				}
+
+				string styleName = "Regular";
+				if (style != FieldDescription.FontStyleType.Normal)
+				{
+					styleName = FieldDescription.GetRealFontStyle(style);
+				}
+
+				textStyle.Font = Font.GetFont(faceName, styleName);
+			}
+		}
+
 
 		private string GetCaptionDefaultLabel(Druid druid)
 		{

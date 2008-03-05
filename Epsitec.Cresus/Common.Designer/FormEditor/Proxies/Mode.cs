@@ -112,6 +112,30 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FieldDescription.FontFaceType LabelFontFace
+		{
+			get
+			{
+				return (FieldDescription.FontFaceType) this.GetValue(Mode.LabelFontFaceProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.LabelFontFaceProperty, value);
+			}
+		}
+
+		public FieldDescription.FontFaceType FieldFontFace
+		{
+			get
+			{
+				return (FieldDescription.FontFaceType) this.GetValue(Mode.FieldFontFaceProperty);
+			}
+			set
+			{
+				this.SetValue(Mode.FieldFontFaceProperty, value);
+			}
+		}
+
 		public FieldDescription.FontStyleType LabelFontStyle
 		{
 			get
@@ -216,12 +240,26 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.ObjectModifier.IsGlue(this.DefaultWidget))
 			{
 				this.BackColor = this.ObjectModifier.GetBackColor(this.DefaultWidget);
+			}
+
+			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
+				this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
 				this.LabelFontColor = this.ObjectModifier.GetLabelFontColor(this.DefaultWidget);
 				this.FieldFontColor = this.ObjectModifier.GetFieldFontColor(this.DefaultWidget);
+				this.LabelFontFace  = this.ObjectModifier.GetLabelFontFace(this.DefaultWidget);
+				this.FieldFontFace  = this.ObjectModifier.GetFieldFontFace(this.DefaultWidget);
 				this.LabelFontStyle = this.ObjectModifier.GetLabelFontStyle(this.DefaultWidget);
 				this.FieldFontStyle = this.ObjectModifier.GetFieldFontStyle(this.DefaultWidget);
-				this.LabelFontSize = this.ObjectModifier.GetLabelFontSize(this.DefaultWidget);
-				this.FieldFontSize = this.ObjectModifier.GetFieldFontSize(this.DefaultWidget);
+				this.LabelFontSize  = this.ObjectModifier.GetLabelFontSize(this.DefaultWidget);
+				this.FieldFontSize  = this.ObjectModifier.GetFieldFontSize(this.DefaultWidget);
+			}
+
+			if (this.ObjectModifier.IsTitle(this.DefaultWidget))
+			{
+				this.LabelFontColor = this.ObjectModifier.GetLabelFontColor(this.DefaultWidget);
+				this.LabelFontFace  = this.ObjectModifier.GetLabelFontFace(this.DefaultWidget);
+				this.LabelFontStyle = this.ObjectModifier.GetLabelFontStyle(this.DefaultWidget);
 			}
 		}
 
@@ -251,6 +289,12 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Mode.LabelFontColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontColorType.Id);
 			Mode.FieldFontColorProperty.DefaultMetadata.DefineNamedType(fontColorEnumType);
 			Mode.FieldFontColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontColorType.Id);
+
+			EnumType fontFaceEnumType = Res.Types.FieldDescription.FontFaceType;
+			Mode.LabelFontFaceProperty.DefaultMetadata.DefineNamedType(fontFaceEnumType);
+			Mode.LabelFontFaceProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontFaceType.Id);
+			Mode.FieldFontFaceProperty.DefaultMetadata.DefineNamedType(fontFaceEnumType);
+			Mode.FieldFontFaceProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontFaceType.Id);
 
 			EnumType fontStyleEnumType = Res.Types.FieldDescription.FontStyleType;
 			Mode.LabelFontStyleProperty.DefaultMetadata.DefineNamedType(fontStyleEnumType);
@@ -376,6 +420,54 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 					foreach (Widget obj in that.Widgets)
 					{
 						that.ObjectModifier.SetFieldFontColor(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyLabelFontFaceChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.FontFaceType value = (FieldDescription.FontFaceType) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetLabelFontFace(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyFieldFontFaceChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.FontFaceType value = (FieldDescription.FontFaceType) newValue;
+			Mode that = (Mode) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetFieldFontFace(obj, value);
 					}
 				}
 				finally
@@ -536,6 +628,8 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		public static readonly DependencyProperty BackColorProperty       = DependencyProperty.Register("BackColor",       typeof(FieldDescription.BackColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,    Mode.NotifyBackColorChanged));
 		public static readonly DependencyProperty LabelFontColorProperty  = DependencyProperty.Register("LabelFontColor",  typeof(FieldDescription.FontColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontColorType.Default, Mode.NotifyLabelFontColorChanged));
 		public static readonly DependencyProperty FieldFontColorProperty  = DependencyProperty.Register("FieldFontColor",  typeof(FieldDescription.FontColorType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontColorType.Default, Mode.NotifyFieldFontColorChanged));
+		public static readonly DependencyProperty LabelFontFaceProperty   = DependencyProperty.Register("LabelFontFace",   typeof(FieldDescription.FontFaceType),   typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontFaceType.Default,  Mode.NotifyLabelFontFaceChanged));
+		public static readonly DependencyProperty FieldFontFaceProperty   = DependencyProperty.Register("FieldFontFace",   typeof(FieldDescription.FontFaceType),   typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontFaceType.Default,  Mode.NotifyFieldFontFaceChanged));
 		public static readonly DependencyProperty LabelFontStyleProperty  = DependencyProperty.Register("LabelFontStyle",  typeof(FieldDescription.FontStyleType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontStyleType.Normal,  Mode.NotifyLabelFontStyleChanged));
 		public static readonly DependencyProperty FieldFontStyleProperty  = DependencyProperty.Register("FieldFontStyle",  typeof(FieldDescription.FontStyleType),  typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontStyleType.Normal,  Mode.NotifyFieldFontStyleChanged));
 		public static readonly DependencyProperty LabelFontSizeProperty   = DependencyProperty.Register("LabelFontSize",   typeof(FieldDescription.FontSizeType),   typeof(Mode), new DependencyPropertyMetadata(FieldDescription.FontSizeType.Normal,   Mode.NotifyLabelFontSizeChanged));

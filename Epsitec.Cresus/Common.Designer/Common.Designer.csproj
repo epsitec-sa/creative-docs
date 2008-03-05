@@ -693,6 +693,10 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\FontFaceBlack.icon" />
+    <EmbeddedResource Include="Images\FontFaceTimes.icon" />
+    <EmbeddedResource Include="Images\FontFaceDefault.icon" />
+    <EmbeddedResource Include="Images\FontFaceCourier.icon" />
     <EmbeddedResource Include="Images\FontSizeLarge.icon" />
     <EmbeddedResource Include="Images\FontSizeVeryLarge.icon" />
     <EmbeddedResource Include="Images\FontSizeSmall.icon" />

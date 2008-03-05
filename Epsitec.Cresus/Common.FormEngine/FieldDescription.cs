@@ -62,6 +62,15 @@ namespace Epsitec.Common.FormEngine
 		}
 
 		[DesignerVisible]
+		public enum FontFaceType
+		{
+			Default			= 0,	// standard
+			Courier			= 1,	// Courier New
+			Times			= 2,	// Times New Roman
+			Black			= 3,	// Arial Black
+		}
+
+		[DesignerVisible]
 		public enum FontStyleType
 		{
 			Normal			= 0,	// roman
@@ -137,6 +146,8 @@ namespace Epsitec.Common.FormEngine
 			this.backColor = BackColorType.None;
 			this.labelFontColor = FontColorType.Default;
 			this.fieldFontColor = FontColorType.Default;
+			this.labelFontFace = FontFaceType.Default;
+			this.fieldFontFace = FontFaceType.Default;
 			this.labelFontStyle = FontStyleType.Normal;
 			this.fieldFontStyle = FontStyleType.Normal;
 			this.labelFontSize = FontSizeType.Normal;
@@ -385,8 +396,9 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.labelFontColor != FontColorType.Default ||
-					   this.labelFontStyle != FontStyleType.Normal ||
-					   this.labelFontSize != FontSizeType.Normal;
+					   this.labelFontFace  != FontFaceType.Default  ||
+					   this.labelFontStyle != FontStyleType.Normal  ||
+					   this.labelFontSize  != FontSizeType.Normal;
 			}
 		}
 
@@ -396,8 +408,9 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.fieldFontColor != FontColorType.Default ||
-					   this.fieldFontStyle != FontStyleType.Normal ||
-					   this.fieldFontSize != FontSizeType.Normal;
+					   this.fieldFontFace  != FontFaceType.Default  ||
+					   this.fieldFontStyle != FontStyleType.Normal  ||
+					   this.fieldFontSize  != FontSizeType.Normal;
 			}
 		}
 
@@ -424,6 +437,32 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				this.fieldFontColor = value;
+			}
+		}
+
+		public FontFaceType LabelFontFace
+		{
+			//	Nom de la police pour l'étiquette.
+			get
+			{
+				return this.labelFontFace;
+			}
+			set
+			{
+				this.labelFontFace = value;
+			}
+		}
+
+		public FontFaceType FieldFontFace
+		{
+			//	Nom de la police pour le champ.
+			get
+			{
+				return this.fieldFontFace;
+			}
+			set
+			{
+				this.fieldFontFace = value;
 			}
 		}
 
@@ -698,6 +737,8 @@ namespace Epsitec.Common.FormEngine
 				a.backColor != b.backColor ||
 				a.labelFontColor != b.labelFontColor ||
 				a.fieldFontColor != b.fieldFontColor ||
+				a.labelFontFace != b.labelFontFace ||
+				a.fieldFontFace != b.fieldFontFace ||
 				a.labelFontStyle != b.labelFontStyle ||
 				a.fieldFontStyle != b.fieldFontStyle ||
 				a.labelFontSize != b.labelFontSize ||
@@ -777,6 +818,16 @@ namespace Epsitec.Common.FormEngine
 			if (this.fieldFontColor != FontColorType.Default)
 			{
 				writer.WriteElementString(Xml.FieldFontColor, this.fieldFontColor.ToString());
+			}
+
+			if (this.labelFontFace != FontFaceType.Default)
+			{
+				writer.WriteElementString(Xml.LabelFontFace, this.labelFontFace.ToString());
+			}
+
+			if (this.fieldFontFace != FontFaceType.Default)
+			{
+				writer.WriteElementString(Xml.FieldFontFace, this.fieldFontFace.ToString());
 			}
 
 			if (this.labelFontStyle != FontStyleType.Normal)
@@ -891,6 +942,14 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.FieldFontColor)
 						{
 							this.fieldFontColor = (FontColorType) System.Enum.Parse(typeof(FontColorType), element);
+						}
+						else if (name == Xml.LabelFontFace)
+						{
+							this.labelFontFace = (FontFaceType) System.Enum.Parse(typeof(FontFaceType), element);
+						}
+						else if (name == Xml.FieldFontFace)
+						{
+							this.fieldFontFace = (FontFaceType) System.Enum.Parse(typeof(FontFaceType), element);
 						}
 						else if (name == Xml.LabelFontStyle)
 						{
@@ -1050,6 +1109,25 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public static string GetRealFontFace(FontFaceType type)
+		{
+			//	Retourne la police réelle d'après son type.
+			switch (type)
+			{
+				case FontFaceType.Courier:
+					return "Courier New";
+
+				case FontFaceType.Times:
+					return "Times New Roman";
+
+				case FontFaceType.Black:
+					return "Arial Black";
+
+				default:
+					return null;
+			}
+		}
+
 		public static string GetRealFontStyle(FontStyleType type)
 		{
 			//	Retourne le style réel d'après son type.
@@ -1098,6 +1176,8 @@ namespace Epsitec.Common.FormEngine
 		private BackColorType				backColor;
 		private FontColorType				labelFontColor;
 		private FontColorType				fieldFontColor;
+		private FontFaceType				labelFontFace;
+		private FontFaceType				fieldFontFace;
 		private FontStyleType				labelFontStyle;
 		private FontStyleType				fieldFontStyle;
 		private FontSizeType				labelFontSize;
