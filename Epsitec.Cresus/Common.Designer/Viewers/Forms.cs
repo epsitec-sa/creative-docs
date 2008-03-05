@@ -995,6 +995,8 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			this.fieldsTable.SelectedRows = sels;
 			this.ReflectSelectionToEditor();
+
+			this.relationsTable.SelectedRow = -1;
 			
 			this.UpdateFieldsButtons();
 			this.UpdateRelationsTable(false);
