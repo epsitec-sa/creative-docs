@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		}
 
 		/// <summary>
-		/// Creates an empty module based on the specified parameters.
+		/// Creates an empty reference module based on the specified parameters.
 		/// </summary>
 		/// <param name="rootDirectoryPath">The path of the root directory.</param>
 		/// <param name="moduleName">The module name.</param>
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <param name="moduleLayer">The module layer.</param>
 		/// <param name="identity">The developer identity.</param>
 		/// <returns>The <see cref="ResourceModuleInfo"/> or <c>null</c>.</returns>
-		public ResourceModuleInfo CreateModule(string rootDirectoryPath, string moduleName, string sourceNamespace, ResourceModuleLayer moduleLayer, IdentityCard identity)
+		public ResourceModuleInfo CreateReferenceModule(string rootDirectoryPath, string moduleName, string sourceNamespace, ResourceModuleLayer moduleLayer, IdentityCard identity)
 		{
 			if ((identity == null) ||
 				(string.IsNullOrEmpty (identity.UserName)) ||
@@ -47,6 +47,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			//	First, contact the server to allocate a new module ID. This might
 			//	either fail gracefully (by returning an invalid module ID) or it
 			//	could throw an exception.
+
+			this.ConnectToService ();
 			
 			int moduleId = this.service.GetNewModuleId (moduleName, identity.UserName);
 
@@ -97,28 +99,93 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 		}
 
-		public bool RecycleModule(ResourceModuleInfo moduleInfo, IdentityCard identity)
+		/// <summary>
+		/// Creates the patch module for the specified reference module.
+		/// </summary>
+		/// <param name="rootDirectoryPath">The root directory path.</param>
+		/// <param name="referenceModule">The reference module.</param>
+		/// <param name="identity">The identity.</param>
+		/// <returns></returns>
+		public ResourceModuleInfo CreatePatchModule(string rootDirectoryPath, ResourceModuleInfo referenceModule, IdentityCard identity)
 		{
 			if ((identity == null) ||
+				(referenceModule == null) ||
 				(string.IsNullOrEmpty (identity.UserName)) ||
-				(moduleInfo == null) ||
-				(moduleInfo.IsPatchModule) ||
-				(moduleInfo.FullId.Id < 1000))
+				(string.IsNullOrEmpty (rootDirectoryPath)) ||
+				(string.IsNullOrEmpty (referenceModule.FullId.Path)) ||
+				(referenceModule.IsPatchModule))
+			{
+				return null;
+			}
+
+			string              moduleName  = referenceModule.FullId.Name;
+			string              modulePath  = System.IO.Path.Combine (rootDirectoryPath, moduleName);
+			int                 moduleId    = referenceModule.FullId.Id;
+			ResourceModuleLayer moduleLayer = referenceModule.FullId.Layer;
+			ResourceModuleInfo  patchModule = new ResourceModuleInfo ()
+			{
+				FullId = new ResourceModuleId (moduleName, modulePath, moduleId, moduleLayer),
+				PatchDepth = referenceModule.PatchDepth+1,
+				ReferenceModulePath = referenceModule.FullId.Path,
+				SourceNamespace = referenceModule.SourceNamespace
+			};
+
+			patchModule.Freeze ();
+			
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+			string comment   = string.Concat ("Created by ", identity.UserName, " on ", timeStamp);
+			
+			ResourceModule.SaveManifest (patchModule, comment);
+
+			return patchModule;
+		}
+
+		/// <summary>
+		/// Recycles the specified module. Its ID will be free for reuse. Do not
+		/// call this method for a patch module, as it shares its ID with the
+		/// reference module!
+		/// </summary>
+		/// <param name="moduleInfo">The module info.</param>
+		/// <param name="identity">The developer identity.</param>
+		/// <returns><c>true</c> if the module was successfully recycled; otherwise,
+		/// <c>false</c>.</returns>
+		public bool RecycleModule(ResourceModuleInfo moduleInfo, IdentityCard identity)
+		{
+			if ((moduleInfo == null) ||
+				(moduleInfo.IsPatchModule))
 			{
 				return false;
 			}
 			else
 			{
-				return this.service.RecycleModuleId (moduleInfo.FullId.Id, identity.UserName);
+				return this.RecycleModule (moduleInfo.FullId.Id, identity);
 			}
 		}
 
-
-		private void ConnectToService()
+		/// <summary>
+		/// Recycles the specified module. Its ID will be free for reuse. Do not
+		/// call this method for a patch module, as it shares its ID with the
+		/// reference module!
+		/// </summary>
+		/// <param name="moduleId">The module id.</param>
+		/// <param name="identity">The identity.</param>
+		/// <returns><c>true</c> if the module was successfully recycled; otherwise,
+		/// <c>false</c>.</returns>
+		public bool RecycleModule(int moduleId, IdentityCard identity)
 		{
-			if (this.service == null)
+			if ((identity == null) ||
+				(string.IsNullOrEmpty (identity.UserName)) ||
+				(moduleId < 1000))
 			{
-				this.service = ModuleRepositoryClient.GetService ();
+				return false;
+			}
+			else
+			{
+				this.ConnectToService ();
+
+				return this.service.RecycleModuleId (moduleId, identity.UserName);
 			}
 		}
 
@@ -136,6 +203,24 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		#endregion
 
 
+
+		/// <summary>
+		/// Connects to the service, if the connection is not yet or no longer
+		/// valid.
+		/// </summary>
+		private void ConnectToService()
+		{
+			if (this.service == null)
+			{
+				this.service = ModuleRepositoryClient.GetService ();
+			}
+			else
+			{
+				ModuleRepositoryClient.ReopenService (ref this.service);
+			}
+		}
+
+		
 		private IModuleRepositoryService service;
 	}
 }

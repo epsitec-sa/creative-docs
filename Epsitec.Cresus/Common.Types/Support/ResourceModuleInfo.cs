@@ -54,7 +54,8 @@ namespace Epsitec.Common.Support
 
 		/// <summary>
 		/// Gets or sets the patch depth for this module. Zero means that this
-		/// is a root reference module.
+		/// is a root reference module, any other value that this module is
+		/// the result of a (possibly multi-level) merge.
 		/// </summary>
 		/// <value>The patch depth.</value>
 		public int PatchDepth

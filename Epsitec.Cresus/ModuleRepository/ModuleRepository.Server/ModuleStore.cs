@@ -43,8 +43,8 @@ namespace Epsitec.ModuleRepository
 		/// <param name="records">The <see cref="ModuleRecord"/> items.</param>
 		public static void Write(string path, IEnumerable<ModuleRecord> records)
 		{
-			System.DateTime now = System.DateTime.Now;
-			string timeStamp = string.Concat (now.ToShortDateString (), " ", System.DateTime.Now.ToShortTimeString ());
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
 			XDocument doc = new XDocument (
 				new XDeclaration ("1.0", "utf-8", "yes"),

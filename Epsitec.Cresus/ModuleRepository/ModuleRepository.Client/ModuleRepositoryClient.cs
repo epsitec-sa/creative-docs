@@ -42,6 +42,37 @@ namespace Epsitec.ModuleRepository
 		}
 
 		/// <summary>
+		/// Reopens the service if needs to be reopened.
+		/// </summary>
+		/// <param name="service">The service.</param>
+		public static void ReopenService(ref IModuleRepositoryService service)
+		{
+			if (service == null)
+			{
+				throw new System.ArgumentNullException ("service");
+			}
+			else
+			{
+				System.ServiceModel.Channels.IChannel channel = service as System.ServiceModel.Channels.IChannel;
+
+				System.Diagnostics.Debug.Assert (channel != null);
+				
+				if (channel.State != CommunicationState.Opened)
+				{
+					if (channel.State != CommunicationState.Closed)
+					{
+						channel.Close ();
+					}
+
+					service = ModuleRepositoryClient.GetService ();
+					channel = service as System.ServiceModel.Channels.IChannel;
+					
+					System.Diagnostics.Debug.Assert (channel.State == CommunicationState.Opened);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Closes the service.
 		/// </summary>
 		/// <param name="service">The proxy obtained through <see cref="GetService"/>.</param>
