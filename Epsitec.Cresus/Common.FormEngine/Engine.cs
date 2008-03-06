@@ -211,7 +211,7 @@ namespace Epsitec.Common.FormEngine
 
 				bool isGlueAfter = false;
 				FieldDescription nextField = Engine.SearchNextElement(fields, i);
-				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue)
+				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue && !nextField.DeltaHidden)
 				{
 					isGlueAfter = true;
 				}
@@ -318,7 +318,7 @@ namespace Epsitec.Common.FormEngine
 
 				bool isGlueAfter = false;
 				FieldDescription nextField = Engine.SearchNextElement(fields, i);
-				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue)
+				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue && !nextField.DeltaHidden)
 				{
 					isGlueAfter = true;
 				}
