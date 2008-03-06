@@ -1114,7 +1114,6 @@ namespace Epsitec.Common.FormEngine
 			//	Retourne la police réelle d'après son type.
 			faceName = Font.DefaultFontFamily;
 			styleName = "Regular";
-			string styleAdd = null;
 
 			switch (faceType)
 			{
@@ -1128,35 +1127,22 @@ namespace Epsitec.Common.FormEngine
 
 				case FontFaceType.Black:
 					faceName = "Arial";
-					styleName = "Black";
 					break;
 			}
 
 			switch (styleType)
 			{
 				case FontStyleType.Bold:
-					styleAdd = "Bold";
+					styleName = "Bold";
 					break;
 
 				case FontStyleType.Italic:
-					styleAdd = "Italic";
+					styleName = "Italic";
 					break;
 
 				case FontStyleType.BoldItalic:
-					styleAdd = "Bold Italic";
+					styleName = "Bold Italic";
 					break;
-			}
-
-			if (styleAdd != null)
-			{
-				if (styleName == "Regular")
-				{
-					styleName = styleAdd;
-				}
-				else
-				{
-					styleName = string.Concat(styleName, " ", styleAdd);
-				}
 			}
 		}
 
