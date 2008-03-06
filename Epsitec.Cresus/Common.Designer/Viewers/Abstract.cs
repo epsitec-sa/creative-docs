@@ -249,6 +249,7 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Druid", StringType.Default);
 			cultureMapType.Fields.Add("Local", StringType.Default);
 			cultureMapType.Fields.Add("Identity", StringType.Default);
+			cultureMapType.Fields.Add("PatchLevel", StringType.Default);
 
 			this.table.SourceType = cultureMapType;
 
@@ -259,6 +260,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("PatchLevel", new Widgets.Layouts.GridLength(this.GetColumnWidth(7), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnComparer(1, this.ComparePrimary);
 			this.table.ColumnHeader.SetColumnComparer(2, this.CompareSecondary);
@@ -266,11 +268,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnComparer(4, this.CompareDruid);
 			this.table.ColumnHeader.SetColumnComparer(5, this.CompareLocal);
 			this.table.ColumnHeader.SetColumnComparer(6, this.CompareIdentity);
+			this.table.ColumnHeader.SetColumnComparer(7, this.ComparePatchLevel);
 
 			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
 			this.table.ColumnHeader.SetColumnText(4, Res.Strings.Viewers.Column.Druid);
 			this.table.ColumnHeader.SetColumnText(5, Res.Strings.Viewers.Column.Local);
 			this.table.ColumnHeader.SetColumnText(6, Res.Strings.Viewers.Column.Identity);
+			this.table.ColumnHeader.SetColumnText(7, "Niveau"); // Res.Strings.Viewers.Column.PatchLevel);
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
@@ -2087,6 +2091,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 					case "Identity":
 						return this.CreateIdentity(item, shape);
+
+					case "PatchLevel":
+						return this.CreatePatchLevel(item, shape);
 				}
 
 				return null;
@@ -2226,6 +2233,18 @@ namespace Epsitec.Common.Designer.Viewers
 				return this.CreateItemViewText(item, text, ContentAlignment.MiddleLeft, Color.Empty);
 			}
 
+			private Widget CreatePatchLevel(CultureMap item, UI.ItemViewShape shape)
+			{
+				//	Crée le contenu pour le niveau de patch du créateur de la ressource.
+				if (shape == UI.ItemViewShape.ToolTip)
+				{
+					return null;
+				}
+
+				string text = TextLayout.ConvertToTaggedText(this.owner.GetPatchLevelText(item));
+				return this.CreateItemViewText(item, text, ContentAlignment.MiddleRight, Color.Empty);
+			}
+
 			private UI.ItemViewText CreateItemViewText(CultureMap item, string text, ContentAlignment alignment, Color backColor)
 			{
 				//	Crée un ou deux UI.ItemViewText, avec éventuellement un fond coloré.
@@ -2333,6 +2352,17 @@ namespace Epsitec.Common.Designer.Viewers
 			return iA.CompareTo(iB);
 		}
 
+		protected int ComparePatchLevel(object a, object b)
+		{
+			CultureMap itemA = a as CultureMap;
+			CultureMap itemB = b as CultureMap;
+
+			int iA = itemA.Id.PatchLevel;
+			int iB = itemB.Id.PatchLevel;
+
+			return iA.CompareTo(iB);
+		}
+
 		public virtual string GetColumnText(CultureMap item, string twoLettersCulture)
 		{
 			//	Retourne le texte pour une colonne primaire ou secondaire.
@@ -2386,6 +2416,12 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			return string.Format(Res.Strings.Viewers.Identity.Developer, item.Id.Developer.ToString());
+		}
+
+		public string GetPatchLevelText(CultureMap item)
+		{
+			//	Retourne le texte pour la colonne PatchLevel.
+			return item.Id.PatchLevel.ToString();
 		}
 
 
@@ -2606,8 +2642,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					suiteExtended = false;
 		protected static bool					showPrimaryCulture = true;
 		protected static bool					showSecondaryCulture = true;
-		private static double[]					columnWidthHorizontal = {200, 100, 100, 20, 80, 50, 100};
-		private static double[]					columnWidthVertical = {250, 300, 300, 20, 80, 50, 100};
+		private static double[]					columnWidthHorizontal = { 200, 100, 100, 20, 80, 50, 100, 50 };
+		private static double[]					columnWidthVertical = { 250, 300, 300, 20, 80, 50, 100, 50 };
 
 		protected Module						module;
 		protected PanelsContext					context;

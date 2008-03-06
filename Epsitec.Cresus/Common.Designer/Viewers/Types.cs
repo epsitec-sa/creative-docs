@@ -242,6 +242,7 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Druid", StringType.Default);
 			cultureMapType.Fields.Add("Local", StringType.Default);
 			cultureMapType.Fields.Add("Identity", StringType.Default);
+			cultureMapType.Fields.Add("PatchLevel", StringType.Default);
 
 			this.table.SourceType = cultureMapType;
 
@@ -253,6 +254,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(5), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(6), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(7), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("PatchLevel", new Widgets.Layouts.GridLength(this.GetColumnWidth(8), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnComparer(1, Types.CompareTypeColumns);
 			this.table.ColumnHeader.SetColumnComparer(2, this.ComparePrimary);
@@ -261,12 +263,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnComparer(5, this.CompareDruid);
 			this.table.ColumnHeader.SetColumnComparer(6, this.CompareLocal);
 			this.table.ColumnHeader.SetColumnComparer(7, this.CompareIdentity);
+			this.table.ColumnHeader.SetColumnComparer(8, this.ComparePatchLevel);
 
 			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
 			this.table.ColumnHeader.SetColumnText(1, Res.Strings.Viewers.Column.Type);
 			this.table.ColumnHeader.SetColumnText(5, Res.Strings.Viewers.Column.Druid);
 			this.table.ColumnHeader.SetColumnText(6, Res.Strings.Viewers.Column.Local);
 			this.table.ColumnHeader.SetColumnText(7, Res.Strings.Viewers.Column.Identity);
+			this.table.ColumnHeader.SetColumnText(8, "Niveau"); // Res.Strings.Viewers.Column.PatchLevel);
 			
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 			this.table.ColumnHeader.SetColumnSort(1, ListSortDirection.Ascending);
@@ -404,8 +408,8 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private static double[]					columnWidthHorizontal = {140, 60, 100, 100, 20, 80, 50, 100};
-		private static double[]					columnWidthVertical = {250, 60, 270, 270, 20, 80, 50, 100};
+		private static double[]					columnWidthHorizontal = { 140, 60, 100, 100, 20, 80, 50, 100, 50 };
+		private static double[]					columnWidthVertical = { 250, 60, 270, 270, 20, 80, 50, 100, 50 };
 
 		protected MyWidgets.StackedPanel		container;
 		protected TypeCode						typeCode = TypeCode.Invalid;

@@ -358,6 +358,7 @@ namespace Epsitec.Common.Designer.Viewers
 			cultureMapType.Fields.Add("Druid", StringType.Default);
 			cultureMapType.Fields.Add("Local", StringType.Default);
 			cultureMapType.Fields.Add("Identity", StringType.Default);
+			cultureMapType.Fields.Add("PatchLevel", StringType.Default);
 
 			this.table.SourceType = cultureMapType;
 
@@ -365,15 +366,18 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.Columns.Add(new UI.ItemTableColumn("Druid", new Widgets.Layouts.GridLength(this.GetColumnWidth(1), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Local", new Widgets.Layouts.GridLength(this.GetColumnWidth(2), Widgets.Layouts.GridUnitType.Proportional)));
 			this.table.Columns.Add(new UI.ItemTableColumn("Identity", new Widgets.Layouts.GridLength(this.GetColumnWidth(3), Widgets.Layouts.GridUnitType.Proportional)));
+			this.table.Columns.Add(new UI.ItemTableColumn("PatchLevel", new Widgets.Layouts.GridLength(this.GetColumnWidth(4), Widgets.Layouts.GridUnitType.Proportional)));
 
 			this.table.ColumnHeader.SetColumnComparer(1, this.CompareDruid);
 			this.table.ColumnHeader.SetColumnComparer(2, this.CompareLocal);
 			this.table.ColumnHeader.SetColumnComparer(3, this.CompareIdentity);
+			this.table.ColumnHeader.SetColumnComparer(4, this.ComparePatchLevel);
 
 			this.table.ColumnHeader.SetColumnText(0, Res.Strings.Viewers.Column.Name);
 			this.table.ColumnHeader.SetColumnText(1, Res.Strings.Viewers.Column.Druid);
 			this.table.ColumnHeader.SetColumnText(2, Res.Strings.Viewers.Column.Local);
 			this.table.ColumnHeader.SetColumnText(3, Res.Strings.Viewers.Column.Identity);
+			this.table.ColumnHeader.SetColumnText(4, "Niveau"); // Res.Strings.Viewers.Column.PatchLevel);
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
@@ -2461,8 +2465,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static double					rightPanelWidth = 280;
 		protected static double					bottomPanelHeight = 200;
 
-		private static double[]					columnWidthHorizontal = { 200, 80, 50, 100 };
-		private static double[]					columnWidthVertical = { 250, 80, 50, 100 };
+		private static double[]					columnWidthHorizontal = { 200, 80, 50, 100, 50 };
+		private static double[]					columnWidthVertical = { 250, 80, 50, 100, 50 };
 
 		protected static FormDescription		softWorkingForm = null;
 		protected static List<FieldDescription>	softBaseFields  = null;
