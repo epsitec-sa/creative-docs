@@ -144,6 +144,11 @@ namespace Epsitec.Common.FormEngine
 				{
 					FieldDescription copy = new FieldDescription(field);
 
+					//	Un élément inséré dans un masque delta 'A' ne doit pas être vu comme DeltaInserted
+					//	dans les masques suivants qui héritent de 'A'. En effet, il doit être alors possible
+					//	de le montrer/cacher, mais pas de le supprimer réellement (par exemple) !
+					copy.DeltaInserted = false;
+
 					if (deltaList != null)
 					{
 						int index = Arrange.IndexOfGuid(deltaList, field.Guid);

@@ -619,18 +619,20 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isGoto = false;
 			bool isUnbox = false;
 			bool isForm = false;
+			bool isDeletable = false;
 			bool isDelta = this.formEditor.ObjectModifier.IsDelta;
 
 			if (!this.designerApplication.IsReadonly)
 			{
 				List<int> sels = this.fieldsTable.SelectedRows;
 
-				if (sels != null && sels.Count > 0)
+				if (sels != null && sels.Count > 0)  // sélection multiple ?
 				{
 					isSel = true;
 					isPrev = true;
 					isNext = true;
 					isGoto = (sels.Count == 1);
+					isDeletable = true;
 
 					foreach (int sel in sels)
 					{
@@ -653,10 +655,15 @@ namespace Epsitec.Common.Designer.Viewers
 						{
 							isGoto = false;
 						}
+
+						if (!this.IsDeletableField(sel))
+						{
+							isDeletable = false;
+						}
 					}
 				}
 
-				if (sels != null && sels.Count == 1)
+				if (sels != null && sels.Count == 1)  // sélection simple ?
 				{
 					int sel = sels[0];
 
@@ -670,6 +677,11 @@ namespace Epsitec.Common.Designer.Viewers
 						if (this.formEditor.ObjectModifier.TableContent[sel].FieldType == FieldDescription.FieldType.SubForm)
 						{
 							isForm = true;
+						}
+
+						if (this.IsDeletableField(sel))
+						{
+							isDeletable = true;
 						}
 					}
 				}
@@ -687,8 +699,33 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
 
-			//?this.fieldsButtonRemove.IconName = isDelta ? Misc.Icon("FormDeltaHide") : Misc.Icon("Delete");
+			this.fieldsButtonRemove.IconName = isDeletable ? Misc.Icon("Delete") : Misc.Icon("FormDeltaHide");
 			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
+		}
+
+		protected bool IsDeletableField(int sel)
+		{
+			//	Indique si un élément peut être véritablement supprimé, et non simplement caché.
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+			int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
+
+			if (index == -1)
+			{
+				return false;
+			}
+
+			FieldDescription field = this.workingForm.Fields[index];
+
+			if (this.formEditor.ObjectModifier.IsDelta)
+			{
+				return field.DeltaInserted;
+			}
+			else
+			{
+				return field.Type == FieldDescription.FieldType.Line ||
+					   field.Type == FieldDescription.FieldType.Title ||
+					   field.Type == FieldDescription.FieldType.Glue;
+			}
 		}
 
 		protected void UpdateRelationsTable(bool newContent)
@@ -1019,7 +1056,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Termine le travail sur une ressource, avant de passer à une autre.
 			//	Si soft = true, on sérialise temporairement sans poser de question.
 			//	Retourne false si l'utilisateur a choisi "annuler".
-			
 			base.Terminate(soft);
 
 			if (this.module.AccessForms.IsLocalDirty)
@@ -1187,7 +1223,6 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Initialise le panneau contenant le masque pour pouvoir être édité.
 			this.panelContainer.ChildrenLayoutMode = Widgets.Layouts.LayoutMode.Stacked;
 			this.panelContainer.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-			//?this.panelContainer.ContentAlignment = ContentAlignment.TopLeft;
 			this.panelContainer.Dock = DockStyle.Fill;
 			this.panelContainer.Margins = new Margins(Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin, Common.Designer.FormEditor.Editor.margin);
 			this.panelContainer.DrawDesignerFrame = true;
@@ -1559,83 +1594,85 @@ namespace Epsitec.Common.Designer.Viewers
 
 			List<System.Guid> guids = new List<System.Guid>();
 
-			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
+			foreach (int sel in sels)
 			{
-				foreach (int sel in sels)
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
+				FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
+				int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
+
+				if (this.IsDeletableField(sel))  // élément à supprimer réellement ?
 				{
-					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-					FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
-					int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
-
-					if (index == -1)
+					if (index != -1)
 					{
-						if (field.DeltaHidden)
-						{
-							FieldDescription copy = new FieldDescription(field);
-							copy.DeltaShowed = true;
-							copy.DeltaHidden = false;
-							this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "montré"
-						}
-						else
-						{
-							FieldDescription copy = new FieldDescription(field);
-							copy.DeltaHidden = true;
-							copy.DeltaShowed = false;
-							this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
-						}
+						this.workingForm.Fields.RemoveAt(index);
 					}
-					else
+				}
+				else  // élément à montrer/cacher ?
+				{
+					if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 					{
-						FieldDescription actual = this.workingForm.Fields[index];
-
-						if (this.formEditor.ObjectModifier.IsTableContentInheritHidden(item))
+						if (index == -1)
 						{
 							if (field.DeltaHidden)
 							{
-								actual.DeltaShowed = true;
-								actual.DeltaHidden = false;
+								FieldDescription copy = new FieldDescription(field);
+								copy.DeltaShowed = true;
+								copy.DeltaHidden = false;
+								this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "montré"
 							}
 							else
 							{
-								actual.DeltaHidden = true;
-								actual.DeltaShowed = false;
+								FieldDescription copy = new FieldDescription(field);
+								copy.DeltaHidden = true;
+								copy.DeltaShowed = false;
+								this.workingForm.Fields.Add(copy);  // ajoute l'élément pour dire "caché"
 							}
 						}
 						else
 						{
-							if (actual.DeltaShowed)  // champ montré ?
-							{
-								actual.DeltaShowed = false;  // cet élément sera supprimé, et c'est donc le parent DeltaHidden qui dira de cacher
-							}
-							else if (actual.DeltaHidden)  // champ caché ?
-							{
-								actual.DeltaHidden = false;  // rend le champ visible
-							}
-							else  // champ visible ?
-							{
-								actual.DeltaHidden = true;  // cache le champ
-							}
+							FieldDescription actual = this.workingForm.Fields[index];
 
-							if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaShowed && !actual.DeltaBrokenAttach)
+							if (this.formEditor.ObjectModifier.IsTableContentInheritHidden(item))
 							{
-								this.workingForm.Fields.RemoveAt(index);
+								if (field.DeltaHidden)
+								{
+									actual.DeltaShowed = true;
+									actual.DeltaHidden = false;
+								}
+								else
+								{
+									actual.DeltaHidden = true;
+									actual.DeltaShowed = false;
+								}
+							}
+							else
+							{
+								if (actual.DeltaShowed)  // champ montré ?
+								{
+									actual.DeltaShowed = false;  // cet élément sera supprimé, et c'est donc le parent DeltaHidden qui dira de cacher
+								}
+								else if (actual.DeltaHidden)  // champ caché ?
+								{
+									actual.DeltaHidden = false;  // rend le champ visible
+								}
+								else  // champ visible ?
+								{
+									actual.DeltaHidden = true;  // cache le champ
+								}
+
+								if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaShowed && !actual.DeltaBrokenAttach)
+								{
+									this.workingForm.Fields.RemoveAt(index);
+								}
 							}
 						}
 					}
-
-					guids.Add(item.Guid);
-				}
-			}
-			else  // masque normal ?
-			{
-				foreach (int sel in sels)
-				{
-					FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sel];
-
-					int index = FormEngine.Arrange.IndexOfGuid(this.workingForm.Fields, item.Guid);
-					if (index != -1)
+					else  // masque normal ?
 					{
-						this.workingForm.Fields[index].DeltaHidden = !this.workingForm.Fields[index].DeltaHidden;
+						if (index != -1)
+						{
+							this.workingForm.Fields[index].DeltaHidden = !this.workingForm.Fields[index].DeltaHidden;
+						}
 					}
 
 					guids.Add(item.Guid);
