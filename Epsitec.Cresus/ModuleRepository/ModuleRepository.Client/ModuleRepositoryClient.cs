@@ -18,7 +18,7 @@ namespace Epsitec.ModuleRepository
 		static ModuleRepositoryClient()
 		{
 			BasicHttpBinding binding = new BasicHttpBinding ();
-			EndpointAddress address = new EndpointAddress (new System.Uri ("http://localhost:8080/ModuleRepository"));
+			EndpointAddress address = new EndpointAddress (new System.Uri ("http://cresus.opac.ch:31415/ModuleRepository"));
 			ModuleRepositoryClient.factory = new ChannelFactory<IModuleRepositoryService> (binding, address);
 		}
 

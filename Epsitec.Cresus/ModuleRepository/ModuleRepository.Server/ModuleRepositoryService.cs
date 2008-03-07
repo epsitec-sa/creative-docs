@@ -29,6 +29,8 @@ namespace Epsitec.ModuleRepository
 						record.ModuleName = moduleName;
 						record.ModuleState = ModuleState.InUse;
 
+						Program.WriteLine ("reused module id {0} for module {1}, by {2}", record.ModuleId, record.ModuleName, developerName);
+
 						return record.ModuleId;
 					}
 				}
@@ -66,6 +68,8 @@ namespace Epsitec.ModuleRepository
 					this.records.Insert (insertIndex, record);
 				}
 
+				Program.WriteLine ("new module id {0} for module {1}, by {2}", record.ModuleId, record.ModuleName, developerName);
+				
 				return record.ModuleId;
 			}
 			finally
@@ -82,16 +86,22 @@ namespace Epsitec.ModuleRepository
 
 				if (record == null)
 				{
+					Program.WriteLine ("failed to recycle module id {0}, by {1}", moduleId, developerName);
+
 					return false;
 				}
 				else if (record.DeveloperName == developerName)
 				{
+					Program.WriteLine ("recycled module id {0} for module {1}, by {2}", record.ModuleId, record.ModuleName, developerName);
+					
 					record.ModuleState = ModuleState.FreeForReuse;
 					this.Persist ();
 					return true;
 				}
 				else
 				{
+					Program.WriteLine ("failed to recycle module id {0} for module {1}, by {2} - created by {3}", record.ModuleId, record.ModuleName, developerName, record.DeveloperName);
+					
 					return false;
 				}
 			}
@@ -115,6 +125,8 @@ namespace Epsitec.ModuleRepository
 
 			this.CreateModuleInfo (directory, info);
 
+			Program.WriteLine ("created module {1} (id={0}, namespace={3}), by {2}", record.ModuleId, record.ModuleName, record.DeveloperName, sourceNamespace);
+			
 			return directory;
 		}
 
@@ -134,6 +146,7 @@ namespace Epsitec.ModuleRepository
 			lock (this.records)
 			{
 				ModuleStore.Write (ModuleRepositoryService.storePath, this.records);
+				Program.WriteLine ("persisted repository");
 			}
 		}
 
@@ -159,6 +172,6 @@ namespace Epsitec.ModuleRepository
 		private List<ModuleRecord> records = ModuleRepositoryService.globalRecords;
 
 		private static List<ModuleRecord> globalRecords = new List<ModuleRecord> ();
-		private static string storePath = @"S:\Epsitec.Cresus\module store.xml";
+		private static string storePath = System.IO.Path.Combine (Properties.Settings.Default.RepositoryPath, Properties.Settings.Default.RepositoryName);
 	}
 }
