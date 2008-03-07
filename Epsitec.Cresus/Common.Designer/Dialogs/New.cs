@@ -65,6 +65,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateButtons();
+			this.fieldRootDirectoryPath.Focus();
 
 			this.window.ShowDialog();
 		}
@@ -110,6 +111,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			FrameBox box = new FrameBox(this.window.Root);
 			box.Margins = new Margins(0, 0, 0, 5);
 			box.Dock = DockStyle.Top;
+			box.TabIndex = tabIndex;
 			box.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 
 			StaticText label = new StaticText(box);
