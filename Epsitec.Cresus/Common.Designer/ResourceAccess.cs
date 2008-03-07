@@ -547,9 +547,9 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public void Duplicate(string newName, bool duplicateContent)
+		public bool Duplicate(string newName, bool duplicateContent)
 		{
-			//	Duplique la ressource courante.
+			//	Duplique la ressource courante. Retourne false si rien n'a été créé.
 			CultureMap newItem = null;
 			bool generateMissingValues = false;
 
@@ -559,7 +559,7 @@ namespace Epsitec.Common.Designer
 				this.designerApplication.DlgResourceTypeCode(this, ref code, out this.lastTypeCodeSystem);
 				if (code == TypeCode.Invalid)  // annuler ?
 				{
-					return;
+					return false;
 				}
 				
 				this.lastTypeCodeCreatated = code;
@@ -581,13 +581,13 @@ namespace Epsitec.Common.Designer
 				newName = this.designerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Entity, newName);
 				if (string.IsNullOrEmpty(newName))
 				{
-					return;
+					return false;
 				}
 
 				if (!Misc.IsValidName(ref newName))
 				{
 					this.designerApplication.DialogError(Res.Strings.Error.Name.Invalid);
-					return;
+					return false;
 				}
 
 				Druid druid = Druid.Empty;
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Designer
 				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
-					return;
+					return false;
 				}
 
 				newItem = this.accessor.CreateItem();
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Designer
 				Common.Dialogs.DialogResult result = this.designerApplication.DialogConfirmation(header, questions, true);
 				if (result == Epsitec.Common.Dialogs.DialogResult.Cancel)
 				{
-					return;
+					return false;
 				}
 
 				if (result == Epsitec.Common.Dialogs.DialogResult.Answer1)  // normal ?
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Designer
 					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
-						return;
+						return false;
 					}
 
 					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, Druid.Empty);
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Designer
 					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
-						return;
+						return false;
 					}
 
 					//	On demande ensuite l'entité sur laquelle sera basée le masque. Le dialogue ne montrera
@@ -672,7 +672,7 @@ namespace Epsitec.Common.Designer
 					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, deltaBaseformId);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
-						return;
+						return false;
 					}
 
 					FormEngine.FormDescription form = new FormEngine.FormDescription(entityId, deltaBaseformId);
@@ -722,6 +722,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.SetLocalDirty();
+			return true;
 		}
 
 		private static void CopyData(IResourceAccessor accessor, CultureMap dstItem, StructuredData src, StructuredData dst)

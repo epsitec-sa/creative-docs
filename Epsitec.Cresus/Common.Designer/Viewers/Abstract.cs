@@ -745,18 +745,20 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				newName = this.access.GetDuplicateName(newName);
-				this.access.Duplicate(newName, duplicate);
-
-				this.UpdateArray();
-				this.SelectedRow = this.access.AccessIndex;
-				this.UpdateEdit();
-				this.UpdateCommands();
-				this.designerApplication.LocatorFix();
-
-				if (this.currentTextField != null)
+				if (this.access.Duplicate(newName, duplicate))
 				{
-					this.currentTextField.SelectAll();
-					this.currentTextField.Focus();
+					this.UpdateArray();
+					this.SelectedRow = this.access.AccessIndex;
+					this.UpdateEdit();
+					this.access.SetLocalDirty();  // nécessaire, car UpdateEdit à fait un ClearLocalDirty !
+					this.UpdateCommands();
+					this.designerApplication.LocatorFix();
+
+					if (this.currentTextField != null)
+					{
+						this.currentTextField.SelectAll();
+						this.currentTextField.Focus();
+					}
 				}
 			}
 		}
