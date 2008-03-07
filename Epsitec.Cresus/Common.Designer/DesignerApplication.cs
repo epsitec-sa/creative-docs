@@ -81,6 +81,7 @@ namespace Epsitec.Common.Designer
 				
 				DesignerApplication.SetInstance(window, this);  // attache l'instance de DesignerApplication à la fenêtre
 
+				this.dlgNew              = new Dialogs.New(this);
 				this.dlgOpen             = new Dialogs.Open(this);
 				this.dlgGlyphs           = new Dialogs.Glyphs(this);
 				this.dlgIcon             = new Dialogs.Icon(this);
@@ -421,6 +422,28 @@ namespace Epsitec.Common.Designer
 				this.CreateModuleLayout();
 
 				this.bookModules.ActivePage = mi.TabPage;
+			}
+		}
+
+		[Command("New")]
+		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.Terminate())
+			{
+				return;
+			}
+
+			this.dlgNew.Initialize("", "", "");
+			this.dlgNew.Show();
+
+			string rootDirectoryPath = this.dlgNew.RootDirectoryPath;
+			string moduleName        = this.dlgNew.ModuleName;
+			string sourceNamespace   = this.dlgNew.SourceNamespace;
+
+			if (!string.IsNullOrEmpty(rootDirectoryPath) && !string.IsNullOrEmpty(moduleName) && !string.IsNullOrEmpty(sourceNamespace))
+			{
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore();
+				store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
 			}
 		}
 
@@ -2275,6 +2298,7 @@ namespace Epsitec.Common.Designer
 		protected TabBook						bookModules;
 		protected StatusBar						info;
 		protected ResizeKnob					resize;
+		protected Dialogs.New					dlgNew;
 		protected Dialogs.Open					dlgOpen;
 		protected Dialogs.Glyphs				dlgGlyphs;
 		protected Dialogs.Icon					dlgIcon;

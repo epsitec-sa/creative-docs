@@ -52,6 +52,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Dialogs\New.cs" />
     <Compile Include="FormEditor\ObjectModifier.cs" />
     <Compile Include="FormEditor\Proxies\Abstract.cs" />
     <Compile Include="FormEditor\Proxies\Style.cs" />
