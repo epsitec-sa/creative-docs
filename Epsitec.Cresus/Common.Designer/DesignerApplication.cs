@@ -433,12 +433,24 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			this.dlgNew.Initialize("", "", "");
-			this.dlgNew.Show();
+			string rootDirectoryPath = "";
+			string moduleName        = "";
+			string sourceNamespace   = "";
 
-			string rootDirectoryPath = this.dlgNew.RootDirectoryPath;
-			string moduleName        = this.dlgNew.ModuleName;
-			string sourceNamespace   = this.dlgNew.SourceNamespace;
+			if (this.IsCurrentModule)
+			{
+				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
+				rootDirectoryPath = this.ResourceManagerPool.GetRootRelativePath(info.FullId.Path);
+				//?rootDirectoryPath = info.ReferenceModulePath;
+				sourceNamespace = info.SourceNamespace;
+			}
+
+			this.dlgNew.Initialize(rootDirectoryPath, moduleName, sourceNamespace);
+			this.dlgNew.Show();  // montre le dialogue et attend...
+
+			rootDirectoryPath = this.dlgNew.RootDirectoryPath;
+			moduleName        = this.dlgNew.ModuleName;
+			sourceNamespace   = this.dlgNew.SourceNamespace;
 
 			if (!string.IsNullOrEmpty(rootDirectoryPath) && !string.IsNullOrEmpty(moduleName) && !string.IsNullOrEmpty(sourceNamespace))
 			{

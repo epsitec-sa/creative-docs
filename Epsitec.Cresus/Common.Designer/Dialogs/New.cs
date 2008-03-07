@@ -18,12 +18,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		public override void Show()
 		{
 			//	Crée et montre la fenêtre du dialogue.
-			if ( this.window == null )
+			if (this.window == null)
 			{
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("New", 400, 200, true);
+				this.WindowInit("New", 500, 200, true);
 				this.window.Text = "Nouveau"; // Res.Strings.Dialog.New.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -35,8 +35,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				this.fieldRootDirectoryPath = this.CreateTextField(1, "Chemin de la racine", this.initialRootDirectoryPath);
-				this.fieldModuleName        = this.CreateTextField(2, "Nom du module",       this.initialModuleName);
-				this.fieldSourceNamespace   = this.CreateTextField(3, "Namespace source",    this.initialSourceNamespace);
+				this.fieldModuleName        = this.CreateTextField(2, "Nom du module", this.initialModuleName);
+				this.fieldSourceNamespace   = this.CreateTextField(3, "Namespace source", this.initialSourceNamespace);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -62,6 +62,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
 				this.buttonNew.TabIndex = 10;
 				this.buttonNew.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+			}
+			else
+			{
+				this.fieldRootDirectoryPath.Text = this.initialRootDirectoryPath;
+				this.fieldModuleName.Text        = this.initialModuleName;
+				this.fieldSourceNamespace.Text   = this.initialSourceNamespace;
 			}
 
 			this.UpdateButtons();
