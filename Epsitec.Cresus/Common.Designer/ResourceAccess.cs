@@ -2161,36 +2161,46 @@ namespace Epsitec.Common.Designer
 
 
 		#region Form
-		public void SetForm(Druid druid, FormEngine.FormDescription form)
+		public bool SetForm(Druid druid, FormEngine.FormDescription form)
 		{
 			//	Sérialise le masque de saisie dans les ressources.
-			if (druid.IsValid)
+			//	Retourne false si le Druid ne correspond plus à une ressource existante.
+			if (!druid.IsValid)
 			{
-				string xml = FormEngine.Serialization.SerializeForm(form);
+				this.ClearLocalDirty();
+				return false;
+			}
 
-				CultureMap item = this.accessor.Collection[druid];
-				System.Diagnostics.Debug.Assert(item != null);
-				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			CultureMap item = this.accessor.Collection[druid];
+			if (item == null)
+			{
+				this.ClearLocalDirty();
+				return false;
+			}
 
-				string oldXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
-				
-				if (xml != oldXml || this.accessor.ForceModuleMerge)
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+
+			string xml = FormEngine.Serialization.SerializeForm(form);
+			string oldXml = data.GetValue(Support.Res.Fields.ResourceForm.XmlSource) as string;
+
+			if (xml != oldXml || this.accessor.ForceModuleMerge)
+			{
+				data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
+
+				if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
 				{
-					data.SetValue(Support.Res.Fields.ResourceForm.XmlSource, xml);
-
-					if (this.accessor.BasedOnPatchModule && item.Source != CultureMapSource.PatchModule)
+					if (this.accessor.ForceModuleMerge)
 					{
-						if (this.accessor.ForceModuleMerge)
-						{
-							this.FormMerge(item);
-						}
-						else
-						{
-							this.ClearFormMerge(item);
-						}
+						this.FormMerge(item);
+					}
+					else
+					{
+						this.ClearFormMerge(item);
 					}
 				}
 			}
+
+			return true;
 		}
 
 		public void GetForm(Druid druid, FormEngine.FormDescription inputForm, out FormEngine.FormDescription workingForm, out List<FormEngine.FieldDescription> baseFields, out List<FormEngine.FieldDescription> finalFields, out Druid entityId)

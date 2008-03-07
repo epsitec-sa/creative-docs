@@ -1089,8 +1089,10 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Stocke la version XML (sérialisée) du masque de saisie dans l'accesseur
 			//	s'il y a eu des modifications.
-			this.access.SetForm(this.druidToSerialize, this.workingForm);
-			base.PersistChanges();
+			if (this.access.SetForm(this.druidToSerialize, this.workingForm))
+			{
+				base.PersistChanges();
+			}
 		}
 
 		protected void Deserialize()
