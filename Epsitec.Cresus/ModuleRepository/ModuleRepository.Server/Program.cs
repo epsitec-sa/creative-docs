@@ -30,12 +30,19 @@ namespace Epsitec.ModuleRepository
 				//	information
 
 
-				ServiceMetadataBehavior behavior = new ServiceMetadataBehavior ();
-				behavior.HttpGetEnabled = true;
-				host.Description.Behaviors.Add (behavior);
+#if false
+				ServiceMetadataBehavior metadataBehavior = new ServiceMetadataBehavior ();
+				metadataBehavior.HttpGetEnabled = true;
+				metadataBehavior.HttpGetUrl = new System.Uri ("http://localhost:8001/ModuleRepository");
+				host.Description.Behaviors.Add (metadataBehavior);
+#endif
 
-				host.AddServiceEndpoint (typeof (IModuleRepositoryService), new BasicHttpBinding (), Properties.Settings.Default.ServiceName);
-				host.AddServiceEndpoint (typeof (IMetadataExchange), new BasicHttpBinding (), "MEX");
+				NetTcpBinding tcpBinding = new NetTcpBinding (SecurityMode.Transport, true);
+
+				tcpBinding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
+				tcpBinding.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
+
+				host.AddServiceEndpoint (typeof (IModuleRepositoryService), tcpBinding, "");
 				host.Open ();
 
 				Program.WriteLine ("Listening for requests");
@@ -52,6 +59,13 @@ namespace Epsitec.ModuleRepository
 		public static void WriteLine(string format, params object[] args)
 		{
 			string message = string.Concat (System.DateTime.Now.ToString (), ": ", string.Format (format, args));
+
+			ServiceSecurityContext security = ServiceSecurityContext.Current;
+
+			if (security != null)
+			{
+				System.Console.WriteLine ("Security.WindowsIdentity: {0} ({1})", security.WindowsIdentity.Name, security.WindowsIdentity.User.Value);
+			}
 
 			System.Console.WriteLine (message);
 			System.Diagnostics.Trace.WriteLine (message);
