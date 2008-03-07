@@ -43,7 +43,7 @@ namespace Epsitec.ModuleRepository.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("net.tcp://localhost:8000/ModuleRepository")]
+        [global::System.Configuration.DefaultSettingValueAttribute("net.tcp://localhost:8080/ModuleRepository")]
         public string ServiceUrl {
             get {
                 return ((string)(this["ServiceUrl"]));
