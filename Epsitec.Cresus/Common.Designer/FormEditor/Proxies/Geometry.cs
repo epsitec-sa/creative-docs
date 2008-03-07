@@ -35,6 +35,22 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public override double DataColumnWidth
+		{
+			get
+			{
+				return 22*4+1;
+			}
+		}
+
+		public override double RowsSpacing
+		{
+			get
+			{
+				return 3;
+			}
+		}
+
 
 		public int ColumnsRequired
 		{
@@ -60,6 +76,54 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FieldDescription.SeparatorType SeparatorBottom
+		{
+			get
+			{
+				return (FieldDescription.SeparatorType) this.GetValue(Geometry.SeparatorBottomProperty);
+			}
+			set
+			{
+				this.SetValue(Geometry.SeparatorBottomProperty, value);
+			}
+		}
+
+		public FieldDescription.BoxPaddingType BoxPadding
+		{
+			get
+			{
+				return (FieldDescription.BoxPaddingType) this.GetValue(Geometry.BoxPaddingProperty);
+			}
+			set
+			{
+				this.SetValue(Geometry.BoxPaddingProperty, value);
+			}
+		}
+
+		public FrameState BoxFrameState
+		{
+			get
+			{
+				return (FrameState) this.GetValue(Geometry.BoxFrameStateProperty);
+			}
+			set
+			{
+				this.SetValue(Geometry.BoxFrameStateProperty, value);
+			}
+		}
+
+		public double BoxFrameWidth
+		{
+			get
+			{
+				return (double) this.GetValue(Geometry.BoxFrameWidthProperty);
+			}
+			set
+			{
+				this.SetValue(Geometry.BoxFrameWidthProperty, value);
+			}
+		}
+
 
 		protected override void InitializePropertyValues()
 		{
@@ -68,6 +132,23 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			if (this.ObjectModifier.IsReadonly)
 			{
 				return;
+			}
+
+			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
+				this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
+				this.SeparatorBottom = this.ObjectModifier.GetSeparatorBottom(this.DefaultWidget);
+			}
+
+			if (this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
+				this.BoxPadding = this.ObjectModifier.GetBoxPadding(this.DefaultWidget);
+			}
+
+			if (this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
+				this.BoxFrameState = this.ObjectModifier.GetBoxFrameState(this.DefaultWidget);
+				this.BoxFrameWidth = this.ObjectModifier.GetBoxFrameWidth(this.DefaultWidget);
 			}
 
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
@@ -86,6 +167,21 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 		static Geometry()
 		{
+			EnumType separatorBottomEnumType = Res.Types.FieldDescription.SeparatorType;
+			Geometry.SeparatorBottomProperty.DefaultMetadata.DefineNamedType(separatorBottomEnumType);
+			Geometry.SeparatorBottomProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorBottomType.Id);
+
+			EnumType boxPaddingBottomEnumType = Res.Types.FieldDescription.BoxPaddingType;
+			Geometry.BoxPaddingProperty.DefaultMetadata.DefineNamedType(boxPaddingBottomEnumType);
+			Geometry.BoxPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxPaddingType.Id);
+
+			EnumType boxFrameStateEnumType = Res.Types.FieldDescription.FrameState;
+			Geometry.BoxFrameStateProperty.DefaultMetadata.DefineNamedType(boxFrameStateEnumType);
+			Geometry.BoxFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameState.Id);
+
+			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.WidthNumericType);
+			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameWidth.Id);
+
 			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.ColumnsRequiredNumericType);
 			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
 
@@ -93,6 +189,102 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Geometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.RowsRequired.Id);
 		}
 
+
+		private static void NotifySeparatorBottomChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.SeparatorType value = (FieldDescription.SeparatorType) newValue;
+			Geometry that = (Geometry) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetSeparatorBottom(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyBoxPaddingChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.BoxPaddingType value = (FieldDescription.BoxPaddingType) newValue;
+			Geometry that = (Geometry) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetBoxPadding(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyBoxFrameStateChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FrameState value = (FrameState) newValue;
+			Geometry that = (Geometry) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetBoxFrameState(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyBoxFrameWidthChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetBoxFrameWidth(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
 
 		private static void NotifyColumnsRequiredChanged(DependencyObject o, object oldValue, object newValue)
 		{
@@ -143,7 +335,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty ColumnsRequiredProperty = DependencyProperty.Register("ColumnsRequired", typeof(int), typeof(Geometry), new DependencyPropertyMetadata(0, Geometry.NotifyColumnsRequiredChanged));
-		public static readonly DependencyProperty RowsRequiredProperty    = DependencyProperty.Register("RowsRequired",    typeof(int), typeof(Geometry), new DependencyPropertyMetadata(0, Geometry.NotifyRowsRequiredChanged));
+		public static readonly DependencyProperty SeparatorBottomProperty = DependencyProperty.Register("SeparatorBottom", typeof(FieldDescription.SeparatorType),  typeof(Geometry), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal,  Geometry.NotifySeparatorBottomChanged));
+		public static readonly DependencyProperty BoxPaddingProperty      = DependencyProperty.Register("BoxPadding",      typeof(FieldDescription.BoxPaddingType), typeof(Geometry), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Geometry.NotifyBoxPaddingChanged));
+		public static readonly DependencyProperty BoxFrameStateProperty   = DependencyProperty.Register("BoxFrameState",   typeof(FrameState),                      typeof(Geometry), new DependencyPropertyMetadata(FrameState.None,                        Geometry.NotifyBoxFrameStateChanged));
+		public static readonly DependencyProperty BoxFrameWidthProperty   = DependencyProperty.Register("BoxFrameWidth",   typeof(double),                          typeof(Geometry), new DependencyPropertyMetadata(1.0,                                    Geometry.NotifyBoxFrameWidthChanged));
+		public static readonly DependencyProperty ColumnsRequiredProperty = DependencyProperty.Register("ColumnsRequired", typeof(int),                             typeof(Geometry), new DependencyPropertyMetadata(0,                                      Geometry.NotifyColumnsRequiredChanged));
+		public static readonly DependencyProperty RowsRequiredProperty    = DependencyProperty.Register("RowsRequired",    typeof(int),                             typeof(Geometry), new DependencyPropertyMetadata(0,                                      Geometry.NotifyRowsRequiredChanged));
 	}
 }
