@@ -58,14 +58,21 @@ namespace Epsitec.ModuleRepository
 
 		public static void WriteLine(string format, params object[] args)
 		{
-			string message = string.Concat (System.DateTime.Now.ToString (), ": ", string.Format (format, args));
-
 			ServiceSecurityContext security = ServiceSecurityContext.Current;
+			string user;
 
-			if (security != null)
+			if ((security != null) &&
+				(security.WindowsIdentity != null))
 			{
-				System.Console.WriteLine ("Security.WindowsIdentity: {0} ({1})", security.WindowsIdentity.Name, security.WindowsIdentity.User.Value);
+				user = security.WindowsIdentity.Name;
 			}
+			else
+			{
+				user = "<anonymous>";
+			}
+			
+			string message = string.Concat (System.DateTime.Now.ToString (), ": ", string.Format (format, args), " (", user, ")");
+
 
 			System.Console.WriteLine (message);
 			System.Diagnostics.Trace.WriteLine (message);
