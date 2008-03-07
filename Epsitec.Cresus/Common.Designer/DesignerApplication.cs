@@ -443,7 +443,24 @@ namespace Epsitec.Common.Designer
 			if (!string.IsNullOrEmpty(rootDirectoryPath) && !string.IsNullOrEmpty(moduleName) && !string.IsNullOrEmpty(sourceNamespace))
 			{
 				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore();
-				store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+				ResourceModuleInfo info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+
+				if (info == null)
+				{
+					this.DialogError("Impossible de créer le module.");
+				}
+				else
+				{
+					// Ouvre le module d'on vient de créer.
+					Module module = new Module(this, this.mode, info.FullId);
+
+					ModuleInfo mi = new ModuleInfo();
+					mi.Module = module;
+					this.moduleInfoList.Insert(++this.currentModule, mi);
+					this.CreateModuleLayout();
+
+					this.bookModules.ActivePage = mi.TabPage;
+				}
 			}
 		}
 
