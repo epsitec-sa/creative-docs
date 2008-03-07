@@ -196,7 +196,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		private IEnumerable<IProxy> GenerateWidgetProxies(Widget widget)
 		{
 			yield return new Proxies.Geometry(this);
-			yield return new Proxies.Mode(this);
+			yield return new Proxies.Style(this);
 		}
 
 		static private bool EqualLists(List<IProxy> list1, List<IProxy> list2)
