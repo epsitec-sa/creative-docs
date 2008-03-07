@@ -492,4 +492,5 @@
   <data name="Action.Redo" id="K1">Refaire</data>
   <data name="Action.UndoRedoList" id="K2">Annuler ou refaire plusieurs actions</data>
   <data name="Ribbon.Section.Undo" id="K3">Annuler</data>
+  <data name="Viewers.Column.PatchLevel" id="K4">Niveau</data>
 </bundle>

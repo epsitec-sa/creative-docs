@@ -377,7 +377,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ColumnHeader.SetColumnText(1, Res.Strings.Viewers.Column.Druid);
 			this.table.ColumnHeader.SetColumnText(2, Res.Strings.Viewers.Column.Local);
 			this.table.ColumnHeader.SetColumnText(3, Res.Strings.Viewers.Column.Identity);
-			this.table.ColumnHeader.SetColumnText(4, "Niveau"); // Res.Strings.Viewers.Column.PatchLevel);
+			this.table.ColumnHeader.SetColumnText(4, Res.Strings.Viewers.Column.PatchLevel);
 
 			this.table.ColumnHeader.SetColumnSort(0, ListSortDirection.Ascending);
 		}
