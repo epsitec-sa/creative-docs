@@ -1380,19 +1380,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		private void HandleCultureMapRemoved(CultureMap item)
 		{
-			System.Diagnostics.Debug.Assert (item.IsCultureDefined (Resources.DefaultTwoLetterISOLanguageName));
-			
-			StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-			TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
-
-			if (code == TypeCode.Invalid)
+			if (item.IsCultureDefined (Resources.DefaultTwoLetterISOLanguageName))
 			{
-				throw new System.ArgumentException ("Item has no valid TypeCode defined");
+				StructuredData data = item.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				TypeCode code = AnyTypeResourceAccessor.ToTypeCode (data.GetValue (Res.Fields.ResourceBaseType.TypeCode));
+
+				if (code == TypeCode.Invalid)
+				{
+					throw new System.ArgumentException ("Item has no valid TypeCode defined");
+				}
+
+				if (code == TypeCode.Enum)
+				{
+					item.PropertyChanged -= this.HandleItemPropertyChanged;
+				}
 			}
-
-			if (code == TypeCode.Enum)
+			else
 			{
-				item.PropertyChanged -= this.HandleItemPropertyChanged;
+				//	Nothing to do, the resource has no associated data.
 			}
 		}
 
