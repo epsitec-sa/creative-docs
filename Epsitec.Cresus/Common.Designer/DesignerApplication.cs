@@ -475,6 +475,15 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		[Command("Recycle")]
+		void CommandRecycle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if (!this.Terminate())
+			{
+				return;
+			}
+		}
+
 		[Command("Check")]
 		void CommandCheck(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -937,6 +946,7 @@ namespace Epsitec.Common.Designer
 		protected void InitCommands()
 		{
 			this.newState = this.CreateCommandState("New", KeyCode.ModifierControl|KeyCode.AlphaN);
+			this.recycleState = this.CreateCommandState("Recycle");
 			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
@@ -2356,6 +2366,7 @@ namespace Epsitec.Common.Designer
 		protected bool							locatorIgnore;
 
 		protected CommandState					newState;
+		protected CommandState					recycleState;
 		protected CommandState					openState;
 		protected CommandState					saveState;
 		protected CommandState					saveAsState;

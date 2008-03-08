@@ -694,6 +694,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Recycle.icon" />
     <EmbeddedResource Include="Images\FontFaceBlack.icon" />
     <EmbeddedResource Include="Images\FontFaceTimes.icon" />
     <EmbeddedResource Include="Images\FontFaceDefault.icon" />
