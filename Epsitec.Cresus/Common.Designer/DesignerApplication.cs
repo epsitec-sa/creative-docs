@@ -433,16 +433,15 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
-			string rootDirectoryPath = "";
+			string rootDirectoryPath = ResourceManagerPool.SymbolicNames.Custom;
 			string moduleName        = "";
 			string sourceNamespace   = "";
 
 			if (this.IsCurrentModule)
 			{
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
-				rootDirectoryPath = this.ResourceManagerPool.GetRootRelativePath(info.FullId.Path);
-				//?rootDirectoryPath = info.ReferenceModulePath;
-				sourceNamespace = info.SourceNamespace;
+				string[] namespaceElements = (info.SourceNamespace ?? "").Split ('.');
+				sourceNamespace = string.Join(".", Common.Types.Collection.StripLast(namespaceElements));
 			}
 
 			this.dlgNew.Initialize(rootDirectoryPath, moduleName, sourceNamespace);
@@ -454,7 +453,7 @@ namespace Epsitec.Common.Designer
 
 			if (!string.IsNullOrEmpty(rootDirectoryPath) && !string.IsNullOrEmpty(moduleName) && !string.IsNullOrEmpty(sourceNamespace))
 			{
-				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore();
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
 				ResourceModuleInfo info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
 
 				if (info == null)

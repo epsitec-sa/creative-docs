@@ -20,8 +20,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModuleStore"/> class.
 		/// </summary>
-		public ModuleStore()
+		public ModuleStore(ResourceManagerPool pool)
 		{
+			this.pool = pool;
 		}
 
 		/// <summary>
@@ -76,6 +77,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				string modulePath = System.IO.Path.Combine (rootDirectoryPath, dir.Name);
 
+				modulePath = this.pool.GetRootAbsolutePath (modulePath);
+
 				//	Create the files as specified by the server; usually, this will
 				//	just create the module directory with the module.info file, but
 				//	this could change...
@@ -83,6 +86,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				foreach (ModuleFile file in dir.Files)
 				{
 					string path = System.IO.Path.Combine (rootDirectoryPath, file.Path);
+					
+					path = this.pool.GetRootAbsolutePath (path);
 
 					System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (path));
 					System.IO.File.WriteAllBytes (path, file.Data);
@@ -220,7 +225,8 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 		}
 
-		
+
+		private readonly ResourceManagerPool pool;
 		private IModuleRepositoryService service;
 	}
 }

@@ -547,7 +547,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 		}
 
-
 		/// <summary>
 		/// Executes the cleanup code after all resources have been added to
 		/// the collection, while loading data (called by method <see cref="Load"/>.
@@ -559,7 +558,6 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				item.IsNewItem = false;
 			}
 		}
-
 
 		/// <summary>
 		/// Loads data from a resource bundle field.
@@ -681,11 +679,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// </summary>
 		public const string		DeveloperIdPropertyName = "DeveloperId";
 		
-		private readonly CultureMapList items;
-		private readonly Dictionary<CultureMap, bool> dirtyItems;
+		readonly CultureMapList					items;
+		readonly Dictionary<CultureMap, bool>	dirtyItems;
 
-		private ResourceManager resourceManager;
-		private int suspendNotifications;
-		private bool forceModuleMerge;
+		private ResourceManager					resourceManager;
+		private int								suspendNotifications;
+		private bool							forceModuleMerge;
 	}
 }

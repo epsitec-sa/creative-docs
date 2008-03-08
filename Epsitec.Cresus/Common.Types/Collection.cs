@@ -155,6 +155,20 @@ namespace Epsitec.Common.Types
 			return list[n-1];
 		}
 
+		public static T[] StripLast<T>(T[] array)
+		{
+			if (array.Length < 2)
+			{
+				return new T[0];
+			}
+			else
+			{
+				T[] copy = new T[array.Length-1];
+				System.Array.Copy (array, 0, copy, 0, array.Length-1);
+				return copy;
+			}
+		}
+
 		public static void RemoveDuplicates<T>(IList<T> list) where T : System.IEquatable<T>
 		{
 			for (int index = 0; index < list.Count-1; index++)
