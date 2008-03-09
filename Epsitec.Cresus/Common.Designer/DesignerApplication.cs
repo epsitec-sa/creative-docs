@@ -478,9 +478,28 @@ namespace Epsitec.Common.Designer
 		[Command("Recycle")]
 		void CommandRecycle(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if (!this.Terminate())
+			if (!this.IsCurrentModule || !this.Terminate())
 			{
 				return;
+			}
+
+			string name = this.CurrentModuleInfo.Module.ModuleId.Name;
+			string question = string.Format("Voulez-vous recycler le module <b>{0}</b> ?", name);
+			if (this.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
+			{
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
+				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
+				if (store.RecycleModule(info, this.settings.IdentityCard))
+				{
+					string message = string.Format("Le module <b>{0}</b> est recyclé.", name);
+					this.DialogMessage(message);
+					this.CloseModule();
+				}
+				else
+				{
+					string message = string.Format("Impossible de recycler le module <b>{0}</b>.", name);
+					this.DialogError(message);
+				}
 			}
 		}
 
@@ -1855,9 +1874,12 @@ namespace Epsitec.Common.Designer
 
 				this.DialogSearchAdapt();
 				this.CurrentModule.Modifier.ActiveViewer.UpdateWhenModuleUsed();
+
+				this.recycleState.Enable = true;
 			}
 			else
 			{
+				this.recycleState.Enable = false;
 				this.saveState.Enable = false;
 				this.saveAsState.Enable = false;
 				this.checkState.Enable = false;
@@ -2202,7 +2224,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DialogQuestion(string question)
 		{
-			//	Affiche le dialogue pour signaler une erreur.
+			//	Affiche le dialogue pour poser une question oui/non.
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
 
 			string title = Res.Strings.Application.Title;
@@ -2217,7 +2239,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DialogQuestion(string question, string yes, string no, string cancel)
 		{
-			//	Affiche le dialogue pour signaler une erreur.
+			//	Affiche le dialogue pour poser une question oui/non.
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
 
 			string title = Res.Strings.Application.Title;
@@ -2232,7 +2254,7 @@ namespace Epsitec.Common.Designer
 
 		public Common.Dialogs.DialogResult DialogMessage(string message)
 		{
-			//	Affiche le dialogue pour signaler une erreur.
+			//	Affiche le dialogue pour afficher un message neutre.
 			if ( this.Window == null )  return Common.Dialogs.DialogResult.None;
 
 			string title = Res.Strings.Application.Title;
