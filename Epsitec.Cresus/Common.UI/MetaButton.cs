@@ -13,25 +13,10 @@ namespace Epsitec.Common.UI
 	/// The <c>MetaButton</c> class implements a button which can behave like
 	/// a plain button or like an icon button, depending on its settings.
 	/// </summary>
-	public class MetaButton : Button
+	public sealed class MetaButton : Button
 	{
 		public MetaButton()
 		{
-		}
-
-		static MetaButton()
-		{
-			DependencyPropertyMetadata metadataButtonStyle = Button.ButtonStyleProperty.DefaultMetadata.Clone ();
-			DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
-			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
-
-			metadataButtonStyle.MakeNotSerializable ();
-			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
-			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight+10);
-
-			Button.ButtonStyleProperty.OverrideMetadata(typeof(MetaButton), metadataButtonStyle);
-			Visual.ContentAlignmentProperty.OverrideMetadata(typeof(MetaButton), metadataAlign);
-			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
 
 		public ButtonClass						ButtonClass
@@ -139,6 +124,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		#region Overridden Methods
 
 		protected override Drawing.Size GetTextLayoutSize()
 		{
@@ -148,8 +134,8 @@ namespace Epsitec.Common.UI
 
 		protected override void UpdateClientGeometry()
 		{
-			base.UpdateClientGeometry();
-			this.UpdateIcon();
+			base.UpdateClientGeometry ();
+			this.UpdateIcon ();
 		}
 
 		protected override void OnIconNameChanged(string oldIconName, string newIconName)
@@ -165,139 +151,6 @@ namespace Epsitec.Common.UI
 			else
 			{
 				this.UpdateIcon();
-			}
-		}
-
-
-		protected void UpdateIcon()
-		{
-			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
-			//	suivi des différentes préférences (taille, langue et style).
-
-			string iconName = this.IconName;
-
-			if ((string.IsNullOrEmpty (iconName)) || 
-				(this.ButtonClass == ButtonClass.DialogButton))
-			{
-				if (this.iconLayout != null)
-				{
-					this.iconLayout = null;
-					this.Invalidate ();
-				}
-			}
-			else
-			{
-				Drawing.Rectangle iconBounds = this.GetIconBounds ();
-				string    iconSource = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
-
-				if (this.iconLayout == null)
-				{
-					this.iconLayout = new TextLayout ();
-				}
-				else
-				{
-					if ((this.iconLayout.Text == iconSource) &&
-						(this.iconLayout.Alignment == Drawing.ContentAlignment.MiddleCenter))
-					{
-						return;
-					}
-				}
-
-				this.iconLayout.Text      = iconSource;
-				this.iconLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
-				
-				this.Invalidate ();
-			}
-		}
-
-		protected void UpdateButtonClass(ButtonClass aspect)
-		{
-			//	Met à jour le bouton lorsque son aspect a changé.
-			switch (aspect)
-			{
-				case ButtonClass.DialogButton:
-					base.ButtonStyle = ButtonStyle.Normal;
-					base.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
-					break;
-
-				case ButtonClass.IconButton:
-					base.ButtonStyle = ButtonStyle.ToolItem;
-					base.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
-					break;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("ButtonClass.{0} not supported", aspect));
-			}
-		}
-
-		protected Drawing.Rectangle GetIconBounds()
-		{
-			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
-			if (this.iconLayout == null)
-			{
-				return Drawing.Rectangle.Empty;
-			}
-			else
-			{
-				Drawing.Rectangle rect = this.GetInnerBounds ();
-
-				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
-				{
-					rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
-				}
-
-				rect.Width = rect.Height;  // forcément un carré
-				return rect;
-			}
-		}
-
-		protected Drawing.Rectangle GetTextBounds()
-		{
-			//	Donne le rectangle à utiliser pour le texte du bouton.
-			Drawing.Rectangle rect = this.GetInnerBounds ();
-
-			if (this.ButtonClass == ButtonClass.IconButton && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
-			{
-				return Drawing.Rectangle.Empty;
-			}
-
-			if (this.iconLayout != null)
-			{
-				rect.Left += rect.Height;
-			}
-
-			switch (this.ContentAlignment)
-			{
-				case Drawing.ContentAlignment.BottomLeft:
-				case Drawing.ContentAlignment.MiddleLeft:
-				case Drawing.ContentAlignment.TopLeft:
-					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
-					break;
-			}
-
-			return rect;
-		}
-
-		protected Drawing.Rectangle GetInnerBounds()
-		{
-			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
-			Drawing.Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
-
-			if (!this.BulletColor.IsEmpty)
-			{
-				bounds.Left += bounds.Height;
-			}
-			
-			switch (this.ButtonStyle)
-			{
-				case ButtonStyle.Normal:
-				case ButtonStyle.DefaultAccept:
-				case ButtonStyle.DefaultAcceptAndCancel:
-				case ButtonStyle.DefaultCancel:
-					return Drawing.Rectangle.Deflate (bounds, new Drawing.Margins (4));
-				
-				default:
-					return bounds;
 			}
 		}
 
@@ -377,6 +230,157 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		#endregion
+
+		private void UpdateIcon()
+		{
+			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
+			//	suivi des différentes préférences (taille, langue et style).
+
+			string iconName = this.IconName;
+
+			if ((string.IsNullOrEmpty (iconName)) || 
+				(this.ButtonClass == ButtonClass.DialogButton))
+			{
+				if (this.iconLayout != null)
+				{
+					this.iconLayout = null;
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				Drawing.Rectangle iconBounds = this.GetIconBounds ();
+				string            iconSource = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
+
+				if (this.iconLayout == null)
+				{
+					this.iconLayout = new TextLayout ();
+				}
+				else
+				{
+					if ((this.iconLayout.Text == iconSource) &&
+						(this.iconLayout.Alignment == Drawing.ContentAlignment.MiddleCenter))
+					{
+						return;
+					}
+				}
+
+				this.iconLayout.Text      = iconSource;
+				this.iconLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				
+				this.Invalidate ();
+			}
+		}
+
+		private void UpdateButtonClass(ButtonClass aspect)
+		{
+			//	Met à jour le bouton lorsque son aspect a changé.
+			switch (aspect)
+			{
+				case ButtonClass.DialogButton:
+					base.ButtonStyle = ButtonStyle.Normal;
+					base.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
+					break;
+
+				case ButtonClass.IconButton:
+					base.ButtonStyle = ButtonStyle.ToolItem;
+					base.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("ButtonClass.{0} not supported", aspect));
+			}
+		}
+
+		private Drawing.Rectangle GetIconBounds()
+		{
+			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
+			if (this.iconLayout == null)
+			{
+				return Drawing.Rectangle.Empty;
+			}
+			else
+			{
+				Drawing.Rectangle rect = this.GetInnerBounds ();
+
+				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+				{
+					rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
+				}
+
+				rect.Width = rect.Height;  // forcément un carré
+				return rect;
+			}
+		}
+
+		private Drawing.Rectangle GetTextBounds()
+		{
+			//	Donne le rectangle à utiliser pour le texte du bouton.
+			Drawing.Rectangle rect = this.GetInnerBounds ();
+
+			if (this.ButtonClass == ButtonClass.IconButton && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+			{
+				return Drawing.Rectangle.Empty;
+			}
+
+			if (this.iconLayout != null)
+			{
+				rect.Left += rect.Height;
+			}
+
+			switch (this.ContentAlignment)
+			{
+				case Drawing.ContentAlignment.BottomLeft:
+				case Drawing.ContentAlignment.MiddleLeft:
+				case Drawing.ContentAlignment.TopLeft:
+					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+					break;
+			}
+
+			return rect;
+		}
+
+		private Drawing.Rectangle GetInnerBounds()
+		{
+			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
+			Drawing.Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
+
+			if (!this.BulletColor.IsEmpty)
+			{
+				bounds.Left += bounds.Height;
+			}
+			
+			switch (this.ButtonStyle)
+			{
+				case ButtonStyle.Normal:
+				case ButtonStyle.DefaultAccept:
+				case ButtonStyle.DefaultAcceptAndCancel:
+				case ButtonStyle.DefaultCancel:
+					return Drawing.Rectangle.Deflate (bounds, new Drawing.Margins (4));
+				
+				default:
+					return bounds;
+			}
+		}
+
+
+		static MetaButton()
+		{
+			DependencyPropertyMetadata metadataButtonStyle = Button.ButtonStyleProperty.DefaultMetadata.Clone ();
+			DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+
+			metadataButtonStyle.MakeNotSerializable ();
+			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
+			metadataDy.DefineDefaultValue (Widget.DefaultFontHeight+10);
+
+			Button.ButtonStyleProperty.OverrideMetadata(typeof(MetaButton), metadataButtonStyle);
+			Visual.ContentAlignmentProperty.OverrideMetadata(typeof(MetaButton), metadataAlign);
+			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
+		}
+
+
 		private static void HandleButtonClassChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			MetaButton that = (MetaButton) obj;
@@ -385,9 +389,8 @@ namespace Epsitec.Common.UI
 
 		private static void HandleIconDefinitionChanged(DependencyObject obj, object oldValue, object newValue)
 		{
-			MetaButton that = obj as MetaButton;
-
-			that.UpdateIcon();
+			MetaButton that = (MetaButton) obj;
+			that.UpdateIcon ();
 		}
 
 		public static readonly DependencyProperty ButtonClassProperty			= DependencyProperty.Register ("ButtonClass", typeof (ButtonClass), typeof (MetaButton), new DependencyPropertyMetadata (ButtonClass.None, MetaButton.HandleButtonClassChanged));
@@ -397,6 +400,6 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty PreferredIconLanguageProperty	= DependencyProperty.Register ("PreferredIconLanguage", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty PreferredIconStyleProperty	= DependencyProperty.Register ("PreferredIconStyle", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (null, MetaButton.HandleIconDefinitionChanged));
 
-		protected TextLayout			iconLayout;
+		private TextLayout			iconLayout;
 	}
 }
