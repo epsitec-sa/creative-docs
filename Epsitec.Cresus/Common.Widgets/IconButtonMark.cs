@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public ButtonMarkDisposition							SiteMark
+		public ButtonMarkDisposition			SiteMark
 		{
 			//	Emplacement de la marque.
 			get

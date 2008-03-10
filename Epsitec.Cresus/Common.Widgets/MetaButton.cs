@@ -1,35 +1,11 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
-[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.Widgets.MetaButton))]
+[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.UI.MetaButton))]
 
-namespace Epsitec.Common.Widgets
+namespace Epsitec.Common.UI
 {
-	[Types.DesignerVisible]
-	public enum ButtonAspect
-	{
-		[Types.Hidden] None,
-		DialogButton,	// bouton textuel pour dialogue (typiquement: "D'accord", "Annuler", etc.)
-		IconButton,		// bouton automatique pour ruban, palette, etc.
-	}
-
-	public enum ButtonDisplayMode
-	{
-		TextOnly,		// texte seul
-		Automatic,		// icône et/ou texte selon la taille disponible
-	}
-
-	public enum ButtonMarkDisposition
-	{
-		None,			// pas de marque
-		Below,			// marque au dessous
-		Above,			// marque au dessus
-		Left,			// marque à gauche
-		Right,			// marque à droite
-	}
-
-
-
 	/// <summary>
 	/// La classe MetaButton est un Button pouvant contenir une icône et/ou un texte.
 	/// </summary>
@@ -38,12 +14,6 @@ namespace Epsitec.Common.Widgets
 		public MetaButton()
 		{
 		}
-
-		public MetaButton(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
-		}
-
 
 		static MetaButton()
 		{

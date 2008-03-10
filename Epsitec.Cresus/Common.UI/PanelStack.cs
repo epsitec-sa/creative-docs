@@ -42,7 +42,7 @@ namespace Epsitec.Common.UI
 			button.Dock    = Widgets.DockStyle.Stacked;
 			button.Margins = new Drawing.Margins (0, spaceAfter, 0, 0);
 			button.AutoFocus = false;
-			button.SetValue (Widgets.MetaButton.ButtonStyleProperty, Widgets.ButtonStyle.Normal);
+			button.SetValue (Widgets.Button.ButtonStyleProperty, Widgets.ButtonStyle.Normal);
 			button.PreferredSize = new Drawing.Size (28, 28);
 			
 			this.toolbar.Children.Add (button);
