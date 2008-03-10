@@ -433,28 +433,39 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 
+			string actualModuleName  = null;
 			string rootDirectoryPath = ResourceManagerPool.SymbolicNames.Custom;
 			string moduleName        = "";
 			string sourceNamespace   = "";
 
 			if (this.IsCurrentModule)
 			{
+				actualModuleName = this.CurrentModuleInfo.Module.ModuleId.Name;
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
 				string[] namespaceElements = (info.SourceNamespace ?? "").Split ('.');
 				sourceNamespace = string.Join(".", Common.Types.Collection.StripLast(namespaceElements));
 			}
 
-			this.dlgNew.Initialize(rootDirectoryPath, moduleName, sourceNamespace);
+			this.dlgNew.Initialize(actualModuleName, rootDirectoryPath, moduleName, sourceNamespace);
 			this.dlgNew.Show();  // montre le dialogue et attend...
 
 			rootDirectoryPath = this.dlgNew.RootDirectoryPath;
 			moduleName        = this.dlgNew.ModuleName;
 			sourceNamespace   = this.dlgNew.SourceNamespace;
 
-			if (!string.IsNullOrEmpty(rootDirectoryPath) && !string.IsNullOrEmpty(moduleName) && !string.IsNullOrEmpty(sourceNamespace))
+			if (!string.IsNullOrEmpty(rootDirectoryPath))
 			{
 				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
-				ResourceModuleInfo info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+				ResourceModuleInfo info;
+
+				if (this.dlgNew.IsPatch)
+				{
+					info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard);
+				}
+				else
+				{
+					info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+				}
 
 				if (info == null)
 				{
