@@ -142,6 +142,6 @@ namespace Epsitec.Common.Widgets
 
 		protected ButtonMarkDisposition		markDisposition = ButtonMarkDisposition.Below;
 		protected double					markLength = 8;
-		protected Color						bulletColor;
+		protected Color						bulletColor = Drawing.Color.Empty;
 	}
 }
