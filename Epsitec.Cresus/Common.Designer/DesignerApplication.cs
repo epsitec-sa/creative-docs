@@ -446,7 +446,7 @@ namespace Epsitec.Common.Designer
 				sourceNamespace = string.Join(".", Common.Types.Collection.StripLast(namespaceElements));
 			}
 
-			this.dlgNew.Initialize(actualModuleName, rootDirectoryPath, moduleName, sourceNamespace);
+			this.dlgNew.Initialize(actualModuleName, rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application);
 			this.dlgNew.Show();  // montre le dialogue et attend...
 
 			rootDirectoryPath = this.dlgNew.RootDirectoryPath;
@@ -472,7 +472,7 @@ namespace Epsitec.Common.Designer
 					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration,
 						progress =>
 						{
-							info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+							info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, this.dlgNew.ResourceModuleLayer, this.settings.IdentityCard);
 						},
 						this.Window);
 				}

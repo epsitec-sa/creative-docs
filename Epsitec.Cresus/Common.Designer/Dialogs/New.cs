@@ -23,7 +23,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("New", 500, 180, true);
+				this.WindowInit("New", 500, 230, true);
 				this.window.Text = "Nouveau"; // Res.Strings.Dialog.New.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -38,17 +38,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				box.Margins = new Margins(0, 0, 0, 12);
 				box.Dock = DockStyle.Top;
 
-				this.radioReference = new RadioButton(box);
-				this.radioReference.Text = "Module de référence";
-				this.radioReference.PreferredWidth = 150;
-				this.radioReference.Dock = DockStyle.Left;
-				this.radioReference.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioTypeReference = new RadioButton(box);
+				this.radioTypeReference.Text = "Module de référence";
+				this.radioTypeReference.PreferredWidth = 150;
+				this.radioTypeReference.Dock = DockStyle.Left;
+				this.radioTypeReference.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
 
-				this.radioPatch = new RadioButton(box);
-				this.radioPatch.Text = "Module de patch";
-				this.radioPatch.PreferredWidth = 300;
-				this.radioPatch.Dock = DockStyle.Left;
-				this.radioPatch.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioTypePatch = new RadioButton(box);
+				this.radioTypePatch.Text = "Module de patch";
+				this.radioTypePatch.PreferredWidth = 300;
+				this.radioTypePatch.Dock = DockStyle.Left;
+				this.radioTypePatch.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
 
 				Separator sep = new Separator(this.window.Root);
 				sep.PreferredHeight = 1;
@@ -58,6 +58,25 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldRootDirectoryPath = this.CreateTextField(1, "Chemin de la racine", this.initialRootDirectoryPath);
 				this.fieldModuleName        = this.CreateTextField(2, "Nom du module",       this.initialModuleName);
 				this.fieldSourceNamespace   = this.CreateTextField(3, "Namespace source",    this.initialSourceNamespace);
+
+				this.radioLayerBox = new FrameBox(this.window.Root);
+				this.radioLayerBox.Margins = new Margins(125, 0, 5, 0);
+				this.radioLayerBox.Dock = DockStyle.Top;
+
+				this.radioLayerSystem = new RadioButton(this.radioLayerBox);
+				this.radioLayerSystem.Text = "Système";
+				this.radioLayerSystem.Dock = DockStyle.Top;
+				this.radioLayerSystem.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
+
+				this.radioLayerApplication = new RadioButton(this.radioLayerBox);
+				this.radioLayerApplication.Text = "Application";
+				this.radioLayerApplication.Dock = DockStyle.Top;
+				this.radioLayerApplication.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
+
+				this.radioLayerUser = new RadioButton(this.radioLayerBox);
+				this.radioLayerUser.Text = "Utilisateur";
+				this.radioLayerUser.Dock = DockStyle.Top;
+				this.radioLayerUser.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -98,15 +117,19 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void Initialize(string actualModuleName, string rootDirectoryPath, string moduleName, string sourceNamespace)
+		public void Initialize(string actualModuleName, string rootDirectoryPath, string moduleName, string sourceNamespace, ResourceModuleLayer resourceModuleLayer)
 		{
 			this.actualModuleName         = actualModuleName;
+
 			this.initialRootDirectoryPath = rootDirectoryPath;
 			this.initialModuleName        = moduleName;
 			this.initialSourceNamespace   = sourceNamespace;
+
 			this.finalRootDirectoryPath   = null;
 			this.finalModuleName          = null;
 			this.finalSourceNamespace     = null;
+
+			this.resourceModuleLayer = resourceModuleLayer;
 			this.isPatch = false;
 		}
 
@@ -131,6 +154,14 @@ namespace Epsitec.Common.Designer.Dialogs
 			get
 			{
 				return this.finalSourceNamespace;
+			}
+		}
+
+		public ResourceModuleLayer ResourceModuleLayer
+		{
+			get
+			{
+				return this.resourceModuleLayer;
 			}
 		}
 
@@ -174,20 +205,25 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour tous les boutons.
 			if (string.IsNullOrEmpty(this.actualModuleName))
 			{
-				this.radioPatch.Text = "Module de patch";
-				this.radioPatch.Enable = false;
+				this.radioTypePatch.Text = "Module de patch";
+				this.radioTypePatch.Enable = false;
 			}
 			else
 			{
-				this.radioPatch.Text = string.Format("Module de patch basé sur {0}", this.actualModuleName);
-				this.radioPatch.Enable = true;
+				this.radioTypePatch.Text = string.Format("Module de patch basé sur {0}", this.actualModuleName);
+				this.radioTypePatch.Enable = true;
 			}
 
-			this.radioReference.ActiveState = this.isPatch ? ActiveState.No  : ActiveState.Yes;
-			this.radioPatch.ActiveState     = this.isPatch ? ActiveState.Yes : ActiveState.No;
+			this.radioTypeReference.ActiveState = this.isPatch ? ActiveState.No  : ActiveState.Yes;
+			this.radioTypePatch.ActiveState     = this.isPatch ? ActiveState.Yes : ActiveState.No;
+
+			this.radioLayerSystem.ActiveState      = (this.resourceModuleLayer == ResourceModuleLayer.System     ) ? ActiveState.Yes : ActiveState.No;
+			this.radioLayerApplication.ActiveState = (this.resourceModuleLayer == ResourceModuleLayer.Application) ? ActiveState.Yes : ActiveState.No;
+			this.radioLayerUser.ActiveState        = (this.resourceModuleLayer == ResourceModuleLayer.User       ) ? ActiveState.Yes : ActiveState.No;
 
 			this.fieldModuleName.Enable      = !this.isPatch;
 			this.fieldSourceNamespace.Enable = !this.isPatch;
+			this.radioLayerBox.Enable        = !this.isPatch;
 
 			bool defined = !string.IsNullOrEmpty(this.fieldRootDirectoryPath.Text) &&
 						   (!string.IsNullOrEmpty(this.fieldModuleName.Text)      || this.isPatch) &&
@@ -198,18 +234,38 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 
-		private void HandleRadioClicked(object sender, MessageEventArgs e)
+		private void HandleRadioTypeClicked(object sender, MessageEventArgs e)
 		{
-			if (sender == this.radioReference)
+			if (sender == this.radioTypeReference)
 			{
 				this.isPatch = false;
 				this.fieldRootDirectoryPath.Text = "%custom%";
 			}
 
-			if (sender == this.radioPatch)
+			if (sender == this.radioTypePatch)
 			{
 				this.isPatch = true;
 				this.fieldRootDirectoryPath.Text = "%patches%";
+			}
+
+			this.UpdateButtons();
+		}
+
+		private void HandleRadioLayerClicked(object sender, MessageEventArgs e)
+		{
+			if (sender == this.radioLayerSystem)
+			{
+				this.resourceModuleLayer = ResourceModuleLayer.System;
+			}
+
+			if (sender == this.radioLayerApplication)
+			{
+				this.resourceModuleLayer = ResourceModuleLayer.Application;
+			}
+
+			if (sender == this.radioLayerUser)
+			{
+				this.resourceModuleLayer = ResourceModuleLayer.User;
 			}
 
 			this.UpdateButtons();
@@ -250,16 +306,21 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string						initialRootDirectoryPath;
 		protected string						initialModuleName;
 		protected string						initialSourceNamespace;
+		protected ResourceModuleLayer			resourceModuleLayer;
 		protected string						finalRootDirectoryPath;
 		protected string						finalModuleName;
 		protected string						finalSourceNamespace;
-		protected Button						buttonNew;
-		protected Button						buttonCancel;
+		protected RadioButton					radioTypeReference;
+		protected RadioButton					radioTypePatch;
 		protected TextField						fieldRootDirectoryPath;
 		protected TextField						fieldModuleName;
 		protected TextField						fieldSourceNamespace;
-		protected RadioButton					radioReference;
-		protected RadioButton					radioPatch;
+		protected FrameBox						radioLayerBox;
+		protected RadioButton					radioLayerSystem;
+		protected RadioButton					radioLayerApplication;
+		protected RadioButton					radioLayerUser;
+		protected Button						buttonNew;
+		protected Button						buttonCancel;
 		protected bool							isPatch;
 		protected bool							ignoreChange;
 	}
