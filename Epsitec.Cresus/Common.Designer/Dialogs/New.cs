@@ -203,11 +203,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (sender == this.radioReference)
 			{
 				this.isPatch = false;
+				this.fieldRootDirectoryPath.Text = "%custom%";
 			}
 
 			if (sender == this.radioPatch)
 			{
 				this.isPatch = true;
+				this.fieldRootDirectoryPath.Text = "%patches%";
 			}
 
 			this.UpdateButtons();
