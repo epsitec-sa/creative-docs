@@ -284,7 +284,7 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					Rectangle rect = this.InsideButtonBounds;
+					Rectangle rect = this.GetInnerBounds ();
 
 					if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 					{
@@ -302,7 +302,7 @@ namespace Epsitec.Common.UI
 			//	Donne le rectangle à utiliser pour le texte du bouton.
 			get
 			{
-				Rectangle rect = this.InsideButtonBounds;
+				Rectangle rect = this.GetInnerBounds ();
 
 				if (this.DisplayMode == ButtonDisplayMode.Automatic && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 				{
@@ -327,57 +327,22 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected Rectangle InsideButtonBounds
+		protected Rectangle GetInnerBounds()
 		{
 			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
-			get
+			Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
+			
+			switch (this.ButtonStyle)
 			{
-				Rectangle bounds = this.ButtonBounds;
-				
-				switch (this.ButtonStyle)
-				{
-					case ButtonStyle.Normal:
-					case ButtonStyle.DefaultAccept:
-					case ButtonStyle.DefaultAcceptAndCancel:
-					case ButtonStyle.DefaultCancel:
-						bounds.Deflate(4);
-						break;
-				}
-
-				return bounds;
+				case ButtonStyle.Normal:
+				case ButtonStyle.DefaultAccept:
+				case ButtonStyle.DefaultAcceptAndCancel:
+				case ButtonStyle.DefaultCancel:
+					return Rectangle.Deflate (bounds, new Margins (4));
+				default:
+					return bounds;
 			}
 		}
-
-		protected Rectangle ButtonBounds
-		{
-			//	Donne le rectangle à utiliser pour le cadre du bouton.
-			get
-			{
-				Rectangle rect = this.Client.Bounds;
-
-				switch (this.MarkDisposition)
-				{
-					case ButtonMarkDisposition.Below:
-						rect.Bottom += this.MarkLength;
-						break;
-
-					case ButtonMarkDisposition.Above:
-						rect.Top -= this.MarkLength;
-						break;
-
-					case ButtonMarkDisposition.Left:
-						rect.Left += this.MarkLength;
-						break;
-
-					case ButtonMarkDisposition.Right:
-						rect.Right -= this.MarkLength;
-						break;
-				}
-
-				return rect;
-			}
-		}
-
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -401,7 +366,7 @@ namespace Epsitec.Common.UI
 				adorner.PaintButtonMark (graphics, rect, state, this.MarkDisposition, this.MarkLength);
 			}
 
-			rect = this.ButtonBounds;
+			rect  = IconButtonMark.GetFrameBounds (rect, this.MarkDisposition, this.MarkLength);
 			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
 			adorner.PaintButtonBullet (graphics, ref rect, state, this.BulletColor);

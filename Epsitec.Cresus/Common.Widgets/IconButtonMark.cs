@@ -71,34 +71,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected Rectangle						IconButtonBounds
+		public static Rectangle GetFrameBounds(Rectangle bounds, ButtonMarkDisposition markDisposition, double markLength)
 		{
-			//	Donne le rectangle à utiliser pour le bouton.
-			get
+			switch (markDisposition)
 			{
-				Rectangle rect = this.Client.Bounds;
+				case ButtonMarkDisposition.Below:
+					bounds.Bottom += markLength;
+					break;
 
-				switch ( this.markDisposition )
-				{
-					case ButtonMarkDisposition.Below:
-						rect.Bottom += this.markLength;
-						break;
+				case ButtonMarkDisposition.Above:
+					bounds.Top -= markLength;
+					break;
 
-					case ButtonMarkDisposition.Above:
-						rect.Top -= this.markLength;
-						break;
+				case ButtonMarkDisposition.Left:
+					bounds.Left += markLength;
+					break;
 
-					case ButtonMarkDisposition.Left:
-						rect.Left += this.markLength;
-						break;
-
-					case ButtonMarkDisposition.Right:
-						rect.Right -= this.markLength;
-						break;
-				}
-
-				return rect;
+				case ButtonMarkDisposition.Right:
+					bounds.Right -= markLength;
+					break;
 			}
+			
+			return bounds;
 		}
 
 
@@ -122,8 +116,8 @@ namespace Epsitec.Common.Widgets
 			{
 				adorner.PaintButtonMark (graphics, rect, state, this.markDisposition, this.markLength);
 			}
-			
-			rect = this.IconButtonBounds;
+
+			rect  = IconButtonMark.GetFrameBounds (rect, this.markDisposition, this.markLength);
 			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
 			adorner.PaintButtonBullet (graphics, ref rect, state, this.bulletColor);
