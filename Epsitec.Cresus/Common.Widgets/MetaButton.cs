@@ -294,6 +294,11 @@ namespace Epsitec.Common.UI
 		{
 			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
 			Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
+
+			if (!this.BulletColor.IsEmpty)
+			{
+				bounds.Left += bounds.Height;
+			}
 			
 			switch (this.ButtonStyle)
 			{
@@ -302,6 +307,7 @@ namespace Epsitec.Common.UI
 				case ButtonStyle.DefaultAcceptAndCancel:
 				case ButtonStyle.DefaultCancel:
 					return Rectangle.Deflate (bounds, new Margins (4));
+				
 				default:
 					return bounds;
 			}
@@ -332,48 +338,53 @@ namespace Epsitec.Common.UI
 			rect  = IconButtonMark.GetFrameBounds (rect, this.MarkDisposition, this.MarkLength);
 			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
-			adorner.PaintButtonBullet (graphics, ref rect, state, this.BulletColor);
+			adorner.PaintButtonBullet (graphics, rect, state, this.BulletColor);
 
 			//	Dessine l'icône.
 			if (this.iconLayout != null)
 			{
-				Rectangle ricon = this.GetIconBounds ();
-				if (!ricon.IsSurfaceZero)
+				rect = this.GetIconBounds ();
+				
+				if (!rect.IsSurfaceZero)
 				{
 					if (this.innerZoom != 1.0)
 					{
 						double zoom = (this.innerZoom-1)/2+1;
-						this.iconLayout.LayoutSize = ricon.Size/this.innerZoom;
+						this.iconLayout.LayoutSize = rect.Size/this.innerZoom;
 						Transform transform = graphics.Transform;
 						graphics.ScaleTransform (zoom, zoom, 0, -this.Client.Size.Height*zoom);
-						adorner.PaintButtonTextLayout (graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
+						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.iconLayout, state, this.ButtonStyle);
 						graphics.Transform = transform;
 					}
 					else
 					{
-						this.iconLayout.LayoutSize = ricon.Size;
-						adorner.PaintButtonTextLayout (graphics, ricon.BottomLeft, this.iconLayout, state, this.ButtonStyle);
+						this.iconLayout.LayoutSize = rect.Size;
+						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.iconLayout, state, this.ButtonStyle);
 					}
 				}
 			}
 
 			//	Dessine le texte.
-			rect = this.GetTextBounds ();
-			if ((!rect.IsSurfaceZero) &&
-				(this.TextLayout != null))
+			if (this.TextLayout != null)
 			{
-				if (this.innerZoom != 1.0)
+				rect = this.GetTextBounds ();
+				
+				if (!rect.IsSurfaceZero)
 				{
-					this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
-					Transform transform = graphics.Transform;
-					graphics.ScaleTransform (this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
-					adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
-					graphics.Transform = transform;
-				}
-				else
-				{
-					this.TextLayout.LayoutSize = rect.Size;
-					adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+					if (this.innerZoom != 1.0)
+					{
+						Point center = this.Client.Bounds.Center;
+						this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
+						Transform transform = graphics.Transform;
+						graphics.ScaleTransform (this.innerZoom, this.innerZoom, center.X, center.Y);
+						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+						graphics.Transform = transform;
+					}
+					else
+					{
+						this.TextLayout.LayoutSize = rect.Size;
+						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
+					}
 				}
 			}
 		}

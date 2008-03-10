@@ -120,7 +120,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Widgets.WidgetPaintState state, Widgets.ButtonStyle style);
 		public abstract void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.ButtonStyle style);
 		
-		public virtual void PaintButtonBullet(Drawing.Graphics graphics, ref Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color)
+		public virtual void PaintButtonBullet(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color)
 		{
 			if (!color.IsEmpty)
 			{
@@ -135,8 +135,6 @@ namespace Epsitec.Common.Widgets.Adorners
 
 				graphics.AddRectangle (r);
 				graphics.RenderSolid (this.ColorTextFieldBorder (enable));
-
-				rect.Left += rect.Height;
 			}
 		}
 

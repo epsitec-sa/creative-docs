@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 		void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, ButtonStyle style);
 		void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetPaintState state, ButtonStyle style);
 		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Direction dir, ButtonStyle style);
-		void PaintButtonBullet(Drawing.Graphics graphics, ref Drawing.Rectangle rect, WidgetPaintState state, Drawing.Color color);
+		void PaintButtonBullet(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, Drawing.Color color);
 		void PaintButtonMark(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, ButtonMarkDisposition markDisposition, double markLength);
 		
 		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);

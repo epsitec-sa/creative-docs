@@ -101,7 +101,7 @@ namespace Epsitec.Common.Widgets
 			//	Dessine le bouton.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Rectangle   rect  = this.Client.Bounds;
+			Rectangle        rect  = this.Client.Bounds;
 			WidgetPaintState state = this.PaintState;
 
 			bool enable = ((state & WidgetPaintState.Enabled) != 0);
@@ -120,7 +120,12 @@ namespace Epsitec.Common.Widgets
 			rect  = IconButtonMark.GetFrameBounds (rect, this.markDisposition, this.markLength);
 			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
-			adorner.PaintButtonBullet (graphics, ref rect, state, this.bulletColor);
+			adorner.PaintButtonBullet (graphics, rect, state, this.bulletColor);
+
+			if (!this.bulletColor.IsEmpty)
+			{
+				rect.Left += rect.Height;
+			}
 
 			if ( this.innerZoom != 1.0 )
 			{
