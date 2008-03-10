@@ -1546,7 +1546,7 @@ namespace Epsitec.Common.UI
 				this.ClearFocus ();
 				
 				focus      = false;
-				autoSelect = (mode == CurrentItemTrackingMode.AutoSelectAndDeselect) ? autoSelect : false;
+				autoSelect = ((mode == CurrentItemTrackingMode.AutoSelectAndDeselect) || (this.Items.IsEmpty)) ? autoSelect : false;
 			}
 			else
 			{

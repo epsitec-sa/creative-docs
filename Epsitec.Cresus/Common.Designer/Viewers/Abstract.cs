@@ -1315,7 +1315,14 @@ namespace Epsitec.Common.Designer.Viewers
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item != null)
 			{
-				this.labelEdit.Text = item.Name;
+				if (!this.labelEdit.IsEditing)
+				{
+					if (this.labelEdit.Text != item.Name)
+					{
+						this.labelEdit.Text = item.Name;
+						this.labelEdit.SelectAll();
+					}
+				}
 			}
 
 			this.ignoreChange = iic;

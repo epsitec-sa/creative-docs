@@ -46,6 +46,7 @@ namespace Epsitec.Common.Designer
 			this.moduleInfoList = new List<ModuleInfo>();
 			this.settings = Epsitec.Common.Designer.Settings.Default;
 			this.context = new PanelsContext();
+			this.CommandDispatcher.CommandDispatching += this.HandleCommandDispatcherCommandDispatching;
 		}
 
 		public void Show(Window parentWindow)
@@ -330,6 +331,18 @@ namespace Epsitec.Common.Designer
 			}
 
 			return null;
+		}
+
+		private void HandleCommandDispatcherCommandDispatching(object sender)
+		{
+			AbstractTextField focusedWidget = this.Window.FocusedWidget as AbstractTextField;
+
+			if ((focusedWidget != null) &&
+				(focusedWidget.IsEditing))
+			{
+				this.Window.ClearFocusedWidget();
+				this.Window.FocusWidget(focusedWidget);
+			}
 		}
 
 
@@ -1925,7 +1938,15 @@ namespace Epsitec.Common.Designer
 			if ( rank >= 0 )
 			{
 				this.ignoreChange = true;
+				
+				//	Force le défocus du widget courant, qui peut être une ligne éditable
+				//	TextFieldEx avec DefocusAction et remet le focus sur le 1er widget du
+				//	nouvel onglet :
+				
+				this.Window.ClearFocusedWidget();
 				this.bookModules.ActivePage = this.CurrentModuleInfo.TabPage;
+				this.bookModules.ActivePage.SetFocusOnTabWidget();
+				
 				this.ignoreChange = false;
 
 				this.DialogSearchAdapt();

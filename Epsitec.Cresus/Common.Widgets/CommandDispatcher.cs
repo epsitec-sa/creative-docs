@@ -646,6 +646,8 @@ namespace Epsitec.Common.Widgets
 			
 			CommandEventArgs e = new CommandEventArgs (source, commandObject, commandContext, commandState);
 
+			this.OnCommandDispatching ();
+
 			EventSlot slot;
 			int handled = 0;
 			
@@ -695,8 +697,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
 		protected void OnOpletQueueBindingChanged()
 		{
 			if (this.OpletQueueBindingChanged != null)
@@ -704,7 +705,16 @@ namespace Epsitec.Common.Widgets
 				this.OpletQueueBindingChanged (this);
 			}
 		}
-		
+
+		protected void OnCommandDispatching()
+		{
+			if (this.CommandDispatching != null)
+			{
+				this.CommandDispatching (this);
+			}
+		}
+
+
 		protected void OnCommandDispatched()
 		{
 			//	Indique qu'une commande (ou un paquet de commandes) a été exécutée.
@@ -756,6 +766,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		public event Support.EventHandler		OpletQueueBindingChanged;
+		public event Support.EventHandler		CommandDispatching;
 		public event Support.EventHandler		CommandDispatched;
 		
 		private string							name;
