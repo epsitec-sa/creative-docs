@@ -460,7 +460,8 @@ namespace Epsitec.Common.Designer
 
 				if (this.dlgNew.IsPatch)
 				{
-					info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard);
+					//?info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard);
+					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration, dialog => (info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard)), this.Window);
 				}
 				else
 				{
