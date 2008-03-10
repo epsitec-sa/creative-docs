@@ -85,7 +85,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Color BulletColor
+		public Color							BulletColor
 		{
 			//	Couleur de la puce éventuelle (si différent de Color.Empty).
 			get
@@ -99,7 +99,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public string PreferredIconLanguage
+		public string							PreferredIconLanguage
 		{
 			get
 			{
@@ -112,7 +112,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public string PreferredIconStyle
+		public string							PreferredIconStyle
 		{
 			get
 			{
@@ -125,7 +125,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public override ButtonStyle ButtonStyle
+		public override ButtonStyle				ButtonStyle
 		{
 			get
 			{
@@ -137,7 +137,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public override ContentAlignment ContentAlignment
+		public override ContentAlignment		ContentAlignment
 		{
 			get
 			{
