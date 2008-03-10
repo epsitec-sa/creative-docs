@@ -484,6 +484,11 @@ namespace Epsitec.Common.Designer
 				else
 				{
 					// Ouvre le module d'on vient de créer.
+					if (this.dlgNew.IsPatch)
+					{
+						this.CloseModule();  // ferme le module initial de référence
+					}
+
 					Module module = new Module(this, this.mode, info.FullId);
 
 					ModuleInfo mi = new ModuleInfo();
