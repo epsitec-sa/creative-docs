@@ -172,7 +172,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			if ((moduleInfo == null) ||
 				(moduleInfo.IsPatchModule))
 			{
-				return false;
+				return true;
 			}
 			else
 			{
