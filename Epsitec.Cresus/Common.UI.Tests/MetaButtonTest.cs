@@ -28,12 +28,12 @@ namespace Epsitec.Common.UI
 		}
 
 		[Test]
-		public void CheckInteractive()
+		public void Check01Variations()
 		{
 			Widgets.Window window = new Widgets.Window ();
-			
-			window.Text = "MetaButtonTest.CheckInteractive";
-			window.ClientSize = new Drawing.Size (400, 300);
+
+			window.Text = "MetaButtonTest.Check01Variations";
+			window.ClientSize = new Drawing.Size (300, 600);
 
 			FrameBox box = new FrameBox ()
 			{
@@ -129,6 +129,75 @@ namespace Epsitec.Common.UI
 
 			window.Show ();
 			
+			Widgets.Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void Check02CreateFromCommandId()
+		{
+			Widgets.Window window = new Widgets.Window ();
+
+			window.Text = "MetaButtonTest.Check02CreateFromCommandId";
+			window.ClientSize = new Drawing.Size (400, 300);
+
+			FrameBox box = new FrameBox ()
+			{
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Margins = new Drawing.Margins (4, 4, 8, 8),
+				Dock = DockStyle.Fill,
+				Embedder = window.Root
+			};
+
+			MetaButton b1 = new MetaButton ()
+			{
+				ButtonClass = ButtonClass.DialogButton,
+				Dock = DockStyle.Stacked,
+				Embedder = box,
+				CommandId = ApplicationCommands.Cut.Caption.Id,
+				Margins = new Drawing.Margins (0, 0, 0, 2),
+				PreferredHeight = 32
+			};
+
+			MetaButton b2 = new MetaButton ()
+			{
+				ButtonClass = ButtonClass.FlatButton,
+				Dock = DockStyle.Stacked,
+				Embedder = box,
+				CommandId = ApplicationCommands.Cut.Caption.Id,
+				Margins = new Drawing.Margins (0, 0, 0, 2),
+				PreferredHeight = 32
+			};
+
+			MetaButton b3 = new MetaButton ()
+			{
+				ButtonClass = ButtonClass.RichDialogButton,
+				Dock = DockStyle.Stacked,
+				Embedder = box,
+				CommandId = ApplicationCommands.Cut.Caption.Id,
+				Margins = new Drawing.Margins (0, 0, 0, 2),
+				PreferredHeight = 32
+			};
+
+			Separator sep = new Separator ()
+			{
+				Dock = DockStyle.Stacked,
+				Embedder = box,
+				PreferredHeight = 1,
+				Margins = new Drawing.Margins (0, 0, 0, 2)
+			};
+
+			MetaButton b4 = new MetaButton ()
+			{
+				Dock = DockStyle.Stacked,
+				Embedder = box,
+				CommandId = ApplicationCommands.Cut.Caption.Id,
+				Margins = new Drawing.Margins (0, 0, 0, 2),
+				PreferredHeight = 32
+			};
+			
+
+			window.Show ();
+
 			Widgets.Window.RunInTestEnvironment (window);
 		}
 	}
