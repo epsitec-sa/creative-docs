@@ -74,19 +74,40 @@ namespace Epsitec.Common.UI
 
 				MetaButton b3 = new MetaButton ()
 				{
-					ButtonClass = ButtonClass.FlatButton,
+					ButtonClass = ButtonClass.RichDialogButton,
 					Dock = DockStyle.Stacked,
 					Embedder = box,
-					Text = "Text, IconButton",
-					Margins = new Drawing.Margins (0, 0, 0, 2)
+					Text = "Text, RichDialogButton",
+					Margins = new Drawing.Margins (0, 0, 0, 2),
+					PreferredHeight = 28
 				};
 
 				MetaButton b4 = new MetaButton ()
 				{
+					ButtonClass = ButtonClass.RichDialogButton,
+					Dock = DockStyle.Stacked,
+					Embedder = box,
+					Text = "Text+Icon, RichDialogButton",
+					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+					Margins = new Drawing.Margins (0, 0, 0, 2),
+					PreferredHeight = 28
+				};
+
+				MetaButton b5 = new MetaButton ()
+				{
 					ButtonClass = ButtonClass.FlatButton,
 					Dock = DockStyle.Stacked,
 					Embedder = box,
-					Text = "Text+Icon, IconButton",
+					Text = "Text, FlatButton",
+					Margins = new Drawing.Margins (0, 0, 0, 2)
+				};
+
+				MetaButton b6 = new MetaButton ()
+				{
+					ButtonClass = ButtonClass.FlatButton,
+					Dock = DockStyle.Stacked,
+					Embedder = box,
+					Text = "Text+Icon, FlatButton",
 					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
 					Margins = new Drawing.Margins (0, 0, 0, 2)
 				};
@@ -95,11 +116,15 @@ namespace Epsitec.Common.UI
 				setup (b2);
 				setup (b3);
 				setup (b4);
+				setup (b5);
+				setup (b6);
 				 
 				b1.Clicked += (s,e) => { b1.ActiveState = b1.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
 				b2.Clicked += (s,e) => { b2.ActiveState = b2.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
 				b3.Clicked += (s,e) => { b3.ActiveState = b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
 				b4.Clicked += (s,e) => { b4.ActiveState = b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
+				b5.Clicked += (s,e) => { b5.ActiveState = b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
+				b6.Clicked += (s,e) => { b6.ActiveState = b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
 			}
 
 			window.Show ();

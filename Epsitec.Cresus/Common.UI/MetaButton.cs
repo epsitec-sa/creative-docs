@@ -279,6 +279,7 @@ namespace Epsitec.Common.UI
 			switch (aspect)
 			{
 				case ButtonClass.DialogButton:
+				case ButtonClass.RichDialogButton:
 					base.ButtonStyle = ButtonStyle.Normal;
 					base.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 					break;
@@ -319,7 +320,7 @@ namespace Epsitec.Common.UI
 			//	Donne le rectangle à utiliser pour le texte du bouton.
 			Drawing.Rectangle rect = this.GetInnerBounds ();
 
-			if (this.ButtonClass == ButtonClass.FlatButton && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+			if ((this.ButtonClass == ButtonClass.FlatButton || this.ButtonClass == ButtonClass.RichDialogButton) && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 			{
 				return Drawing.Rectangle.Empty;
 			}
