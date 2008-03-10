@@ -475,7 +475,7 @@
     <EmbeddedResource Include="Images\TypeEnumSort.icon" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Images\ButtonAspectIcon.icon" />
+    <EmbeddedResource Include="Images\ButtonAspectFlat.icon" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\ButtonAspectDialog.icon" />
@@ -694,6 +694,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\ButtonAspectRichDialog.icon" />
     <EmbeddedResource Include="Images\Recycle.icon" />
     <EmbeddedResource Include="Images\FontFaceBlack.icon" />
     <EmbeddedResource Include="Images\FontFaceTimes.icon" />

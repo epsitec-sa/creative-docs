@@ -1,0 +1,110 @@
+//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
+using NUnit.Framework;
+
+using System.Collections.Generic;
+
+namespace Epsitec.Common.UI
+{
+	[TestFixture]
+	public class MetaButtonTest
+	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+		}
+		
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckInteractive()
+		{
+			Widgets.Window window = new Widgets.Window ();
+			
+			window.Text = "MetaButtonTest.CheckInteractive";
+			window.ClientSize = new Drawing.Size (400, 300);
+
+			FrameBox box = new FrameBox ()
+			{
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Margins = new Drawing.Margins (4, 4, 8, 8),
+				Dock = DockStyle.Fill,
+				Embedder = window.Root
+			};
+
+			System.Action<MetaButton>[] modes = new System.Action<MetaButton>[]
+			{
+				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Drawing.Color.Empty; },
+				button => { button.MarkDisposition = ButtonMarkDisposition.Left;  button.BulletColor = Drawing.Color.Empty; },
+				button => { button.MarkDisposition = ButtonMarkDisposition.Below; button.BulletColor = Drawing.Color.Empty; button.PreferredHeight += button.MarkLength; },
+				button => { button.MarkDisposition = ButtonMarkDisposition.None;  button.BulletColor = Drawing.Color.FromName ("Lime"); }
+			};
+
+			foreach (System.Action<MetaButton> setup in modes)
+			{
+				MetaButton b1 = new MetaButton ()
+				{
+					ButtonClass = ButtonClass.DialogButton,
+					Dock = DockStyle.Stacked,
+					Embedder = box,
+					Text = "Text, DialogButton",
+					Margins = new Drawing.Margins (0, 0, 0, 2)
+				};
+
+				MetaButton b2 = new MetaButton ()
+				{
+					ButtonClass = ButtonClass.DialogButton,
+					Dock = DockStyle.Stacked,
+					Embedder = box,
+					Text = "Text+Icon, DialogButton",
+					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+					Margins = new Drawing.Margins (0, 0, 0, 2)
+				};
+
+				MetaButton b3 = new MetaButton ()
+				{
+					ButtonClass = ButtonClass.FlatButton,
+					Dock = DockStyle.Stacked,
+					Embedder = box,
+					Text = "Text, IconButton",
+					Margins = new Drawing.Margins (0, 0, 0, 2)
+				};
+
+				MetaButton b4 = new MetaButton ()
+				{
+					ButtonClass = ButtonClass.FlatButton,
+					Dock = DockStyle.Stacked,
+					Embedder = box,
+					Text = "Text+Icon, IconButton",
+					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+					Margins = new Drawing.Margins (0, 0, 0, 2)
+				};
+
+				setup (b1);
+				setup (b2);
+				setup (b3);
+				setup (b4);
+				 
+				b1.Clicked += (s,e) => { b1.ActiveState = b1.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
+				b2.Clicked += (s,e) => { b2.ActiveState = b2.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
+				b3.Clicked += (s,e) => { b3.ActiveState = b3.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
+				b4.Clicked += (s,e) => { b4.ActiveState = b4.ActiveState == ActiveState.Yes ? ActiveState.No : ActiveState.Yes; };
+			}
+
+			window.Show ();
+			
+			Widgets.Window.RunInTestEnvironment (window);
+		}
+	}
+}

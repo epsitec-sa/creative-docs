@@ -1518,7 +1518,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonClass(button, ButtonClass.IconButton);
+				this.objectModifier.SetButtonClass(button, ButtonClass.FlatButton);
 				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carré
 				button.MinHeight = button.PreferredHeight;
 				button.PreferredWidth = button.PreferredHeight;
@@ -1530,7 +1530,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				MetaButton button = new MetaButton();
 				button.Text = Misc.Italic("Button");
-				this.objectModifier.SetButtonClass(button, ButtonClass.IconButton);
+				this.objectModifier.SetButtonClass(button, ButtonClass.FlatButton);
 				button.MinWidth = button.PreferredHeight;  // largeur minimale pour former un carré
 				button.MinHeight = button.PreferredHeight;
 

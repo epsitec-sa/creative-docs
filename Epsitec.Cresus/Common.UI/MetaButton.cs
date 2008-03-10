@@ -283,7 +283,7 @@ namespace Epsitec.Common.UI
 					base.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 					break;
 
-				case ButtonClass.IconButton:
+				case ButtonClass.FlatButton:
 					base.ButtonStyle = ButtonStyle.ToolItem;
 					base.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 					break;
@@ -319,7 +319,7 @@ namespace Epsitec.Common.UI
 			//	Donne le rectangle à utiliser pour le texte du bouton.
 			Drawing.Rectangle rect = this.GetInnerBounds ();
 
-			if (this.ButtonClass == ButtonClass.IconButton && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+			if (this.ButtonClass == ButtonClass.FlatButton && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 			{
 				return Drawing.Rectangle.Empty;
 			}

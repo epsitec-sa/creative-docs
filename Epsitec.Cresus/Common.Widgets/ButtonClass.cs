@@ -23,9 +23,15 @@ namespace Epsitec.Common.Widgets
 		DialogButton,
 
 		/// <summary>
-		/// Automatic button for use in the ribbon, in tool palettes, etc.
+		/// Rich text button for a dialog, used to implement standard
+		/// buttons, including an optional icon.
+		/// </summary>
+		RichDialogButton,
+
+		/// <summary>
+		/// Flat button for use in the ribbon, in tool palettes, etc.
 		/// The content (icon and/or text) is managed by the button itself.
 		/// </summary>
-		IconButton,
+		FlatButton,
 	}
 }

@@ -105,7 +105,7 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 		
 		static Aspect()
 		{
-			EnumType ButtonAspectEnumType = Res.Types.Widgets.ButtonAspect;
+			EnumType ButtonAspectEnumType = Res.Types.Widgets.ButtonClass;
 			Aspect.ButtonAspectProperty.DefaultMetadata.DefineNamedType(ButtonAspectEnumType);
 			Aspect.ButtonAspectProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Aspect.ButtonAspect.Id);
 		}

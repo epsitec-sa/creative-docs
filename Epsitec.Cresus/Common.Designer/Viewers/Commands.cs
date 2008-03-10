@@ -36,16 +36,16 @@ namespace Epsitec.Common.Designer.Viewers
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Left;
 
-			this.primaryAspectIcon = new IconButton(leftResetBox.GroupBox);
-			this.primaryAspectIcon.MinSize = this.primaryAspectIcon.PreferredSize;  // attention, très important !
-			this.primaryAspectIcon.CommandId = Res.Values.Widgets.ButtonAspect.IconButton.Id;
-			this.primaryAspectIcon.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
-			this.primaryAspectIcon.Dock = DockStyle.Left;
-			this.primaryAspectIcon.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+			this.primaryAspectFlat = new IconButton(leftResetBox.GroupBox);
+			this.primaryAspectFlat.MinSize = this.primaryAspectFlat.PreferredSize;  // attention, très important !
+			this.primaryAspectFlat.CommandId = Res.Values.Widgets.ButtonClass.FlatButton.Id;
+			this.primaryAspectFlat.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
+			this.primaryAspectFlat.Dock = DockStyle.Left;
+			this.primaryAspectFlat.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
 			this.primaryAspectDialog = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
-			this.primaryAspectDialog.CommandId = Res.Values.Widgets.ButtonAspect.DialogButton.Id;
+			this.primaryAspectDialog.CommandId = Res.Values.Widgets.ButtonClass.DialogButton.Id;
 			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Designer.Viewers
 			if (disposing)
 			{
 				this.primaryAspectDialog.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
-				this.primaryAspectIcon.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
+				this.primaryAspectFlat.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
 				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
 
 				this.primaryShortcut1.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool iic = this.ignoreChange;
 			this.ignoreChange = true;
 
-			this.primaryAspectIcon.Enable = !this.designerApplication.IsReadonly;
+			this.primaryAspectFlat.Enable = !this.designerApplication.IsReadonly;
 			this.primaryAspectDialog.Enable = !this.designerApplication.IsReadonly;
 			this.primaryStatefull.Enable = !this.designerApplication.IsReadonly;
 			this.primaryGroup.Enable = !this.designerApplication.IsReadonly;
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (data == null || this.designerApplication.IsReadonly)
 			{
-				this.primaryAspectIcon.ActiveState = ActiveState.No;
+				this.primaryAspectFlat.ActiveState = ActiveState.No;
 				this.primaryAspectDialog.ActiveState = ActiveState.No;
 				this.primaryStatefull.ActiveState = ActiveState.No;
 				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, null);
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-				this.primaryAspectIcon.ActiveState = (dp == "IconButton" || string.IsNullOrEmpty(dp)) ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectFlat.ActiveState = (dp == "FlatButton" || string.IsNullOrEmpty(dp)) ? ActiveState.Yes : ActiveState.No;
 				this.primaryAspectDialog.ActiveState = (dp == "DialogButton") ? ActiveState.Yes : ActiveState.No;
 
 				bool statefull = false;
@@ -258,9 +258,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondarySuiteSummary.Text = this.GetSuiteSummary(this.secondaryShortcut1, this.secondaryShortcut2, this.primaryGroup);
 
 			string icon = null;
-			if (this.primaryAspectIcon.ActiveState == ActiveState.Yes)
+			if (this.primaryAspectFlat.ActiveState == ActiveState.Yes)
 			{
-				icon = Misc.Icon("ButtonAspectIcon");
+				icon = Misc.Icon("ButtonAspectFlat");
 			}
 			if (this.primaryAspectDialog.ActiveState == ActiveState.Yes)
 			{
@@ -379,9 +379,9 @@ namespace Epsitec.Common.Designer.Viewers
 				defaultParameter = "DialogButton";
 			}
 
-			if (sender == this.primaryAspectIcon)
+			if (sender == this.primaryAspectFlat)
 			{
-				defaultParameter = "IconButton";
+				defaultParameter = "FlatButton";
 			}
 
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
@@ -582,7 +582,7 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 		
-		protected IconButton					primaryAspectIcon;
+		protected IconButton					primaryAspectFlat;
 		protected IconButton					primaryAspectDialog;
 		protected CheckButton					primaryStatefull;
 		protected ShortcutEditor				primaryShortcut1;
