@@ -20,9 +20,10 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModuleStore"/> class.
 		/// </summary>
-		public ModuleStore(ResourceManagerPool pool)
+		public ModuleStore(ResourceManagerPool pool, Widgets.Window ownerWindow)
 		{
 			this.pool = pool;
+			this.ownerWindow = ownerWindow;
 		}
 
 		/// <summary>
@@ -158,6 +159,16 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <c>false</c>.</returns>
 		public bool RecycleModule(ResourceModuleInfo moduleInfo, IdentityCard identity)
 		{
+			try
+			{
+				FileOperationMode mode = new FileOperationMode (this.ownerWindow);
+				FileManager.DeleteFile (mode, moduleInfo.FullId.Path);
+			}
+			catch
+			{
+				return false;
+			}
+
 			if ((moduleInfo == null) ||
 				(moduleInfo.IsPatchModule))
 			{
@@ -227,6 +238,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 
 		private readonly ResourceManagerPool pool;
+		private readonly Widgets.Window ownerWindow;
 		private IModuleRepositoryService service;
 	}
 }

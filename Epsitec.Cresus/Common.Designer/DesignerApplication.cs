@@ -455,17 +455,27 @@ namespace Epsitec.Common.Designer
 
 			if (!string.IsNullOrEmpty(rootDirectoryPath))
 			{
-				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
-				ResourceModuleInfo info;
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool, this.Window);
+				ResourceModuleInfo info = null;
 
 				if (this.dlgNew.IsPatch)
 				{
 					//?info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard);
-					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration, dialog => (info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard)), this.Window);
+					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration,
+						progress =>
+						{
+							info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard);
+						},
+						this.Window);
 				}
 				else
 				{
-					info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration,
+						progress =>
+						{
+							info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, ResourceModuleLayer.Application, this.settings.IdentityCard);
+						},
+						this.Window);
 				}
 
 				if (info == null)
@@ -499,7 +509,7 @@ namespace Epsitec.Common.Designer
 			string question = string.Format("Voulez-vous recycler le module <b>{0}</b> ?", name);
 			if (this.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
 			{
-				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool, this.Window);
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
 				if (store.RecycleModule(info, this.settings.IdentityCard))
 				{
