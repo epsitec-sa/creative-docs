@@ -533,21 +533,20 @@ namespace Epsitec.Common.Designer
 				
 				try
 				{
-					FileOperationMode mode = new FileOperationMode (this.Window);
+					FileOperationMode mode = new FileOperationMode(this.Window);
 
-					if (FileManager.DeleteFile (mode, info.FullId.Path))
+					if (FileManager.DeleteFile(mode, info.FullId.Path))
 					{
-						if ((info != null) &&
-							(info.IsPatchModule || info.PatchDepth > 0))
+						if (info != null && (info.IsPatchModule || info.PatchDepth > 0))
 						{
 							ok = true;
 						}
 						else
 						{
-							Common.Dialogs.WorkInProgressDialog.Execute ("Recyclage en cours", ProgressIndicatorStyle.UnknownDuration,
+							Common.Dialogs.WorkInProgressDialog.Execute("Recyclage en cours", ProgressIndicatorStyle.UnknownDuration,
 								progress =>
 								{
-									ok = store.RecycleModule (info, this.settings.IdentityCard);
+									ok = store.RecycleModule(info, this.settings.IdentityCard);
 								},
 								this.Window);
 						}
@@ -556,13 +555,13 @@ namespace Epsitec.Common.Designer
 				catch
 				{
 				}
-
 				
 				if (ok)
 				{
 					string message = string.Format("Le module <b>{0}</b> a été recyclé.", name);
 					this.DialogMessage(message);
-					this.CloseModule();
+
+					this.CloseModule();  // ferme le module qu'on vient de recycler
 				}
 				else
 				{

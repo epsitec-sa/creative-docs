@@ -1035,7 +1035,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
-			if (item != null)
+			if (item == null)
+			{
+				this.titleText.Text = "";
+				this.titleBox.BackColor = Color.Empty;
+			}
+			else
 			{
 				Color backColor = Color.Empty;
 
