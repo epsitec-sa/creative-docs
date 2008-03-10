@@ -150,17 +150,10 @@ namespace Epsitec.Common.UI
 		}
 
 
-		public Rectangle InnerTextBounds
-		{
-			get
-			{
-				return this.TextBounds;
-			}
-		}
-
 		protected override Size GetTextLayoutSize()
 		{
-			return this.TextBounds.Size;
+			Rectangle bounds = this.GetTextBounds ();
+			return bounds.Size;
 		}
 
 		protected override void UpdateClientGeometry()
@@ -190,64 +183,38 @@ namespace Epsitec.Common.UI
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille, langue et style).
-			
+
 			string iconName = this.IconName;
-			
-			if (string.IsNullOrEmpty(iconName) || this.DisplayMode == ButtonDisplayMode.TextOnly)
+
+			if (string.IsNullOrEmpty (iconName) || this.DisplayMode == ButtonDisplayMode.TextOnly)
 			{
 				if (this.iconLayout != null)
 				{
 					this.iconLayout = null;
-					this.Invalidate();
+					this.Invalidate ();
 				}
 			}
 			else
 			{
-				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				builder.Append(@"<img src=""");
-				builder.Append(iconName);
-				builder.Append(@"""");
-
-				Rectangle rect = this.IconBounds;
-				builder.Append(@" dx=""");
-				builder.Append(rect.Width.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				builder.Append(@""" dy=""");
-				builder.Append(rect.Height.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				builder.Append(@"""");
-
-				if (string.IsNullOrEmpty(this.PreferredIconLanguage) == false)
-				{
-					builder.Append(@" lang=""");
-					builder.Append(this.PreferredIconLanguage);
-					builder.Append(@"""");
-				}
-
-				if (string.IsNullOrEmpty(this.PreferredIconStyle) == false)
-				{
-					builder.Append(@" style=""");
-					builder.Append(this.PreferredIconStyle);
-					builder.Append(@"""");
-				}
-
-				builder.Append(@"/>");
+				Rectangle iconBounds = this.GetIconBounds ();
+				string source = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
 
 				if (this.iconLayout == null)
 				{
-					this.iconLayout = new TextLayout();
+					this.iconLayout = new TextLayout ();
 				}
 				else
 				{
-					if ((this.iconLayout.Text == builder.ToString()) &&
+					if ((this.iconLayout.Text == source) &&
 						(this.iconLayout.Alignment == ContentAlignment.MiddleCenter))
 					{
 						return;
 					}
 				}
 
-				this.iconLayout.Text = builder.ToString();
+				this.iconLayout.Text = source;
 				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
-				this.Invalidate();
+				this.Invalidate ();
 			}
 		}
 
@@ -273,58 +240,52 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected Rectangle IconBounds
+		protected Rectangle GetIconBounds()
 		{
 			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
-			get
+			if (this.iconLayout == null)
 			{
-				if (this.iconLayout == null)
-				{
-					return Rectangle.Empty;
-				}
-				else
-				{
-					Rectangle rect = this.GetInnerBounds ();
-
-					if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
-					{
-						rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
-					}
-
-					rect.Width = rect.Height;  // forcément un carré
-					return rect;
-				}
+				return Rectangle.Empty;
 			}
-		}
-
-		protected Rectangle TextBounds
-		{
-			//	Donne le rectangle à utiliser pour le texte du bouton.
-			get
+			else
 			{
 				Rectangle rect = this.GetInnerBounds ();
 
-				if (this.DisplayMode == ButtonDisplayMode.Automatic && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 				{
-					return Rectangle.Empty;
+					rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
 				}
 
-				if (this.iconLayout != null)
-				{
-					rect.Left += rect.Height;
-				}
-
-				switch (this.ContentAlignment)
-				{
-					case ContentAlignment.BottomLeft:
-					case ContentAlignment.MiddleLeft:
-					case ContentAlignment.TopLeft:
-						rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
-						break;
-				}
-
+				rect.Width = rect.Height;  // forcément un carré
 				return rect;
 			}
+		}
+
+		protected Rectangle GetTextBounds()
+		{
+			//	Donne le rectangle à utiliser pour le texte du bouton.
+			Rectangle rect = this.GetInnerBounds ();
+
+			if (this.DisplayMode == ButtonDisplayMode.Automatic && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+			{
+				return Rectangle.Empty;
+			}
+
+			if (this.iconLayout != null)
+			{
+				rect.Left += rect.Height;
+			}
+
+			switch (this.ContentAlignment)
+			{
+				case ContentAlignment.BottomLeft:
+				case ContentAlignment.MiddleLeft:
+				case ContentAlignment.TopLeft:
+					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+					break;
+			}
+
+			return rect;
 		}
 
 		protected Rectangle GetInnerBounds()
@@ -374,7 +335,7 @@ namespace Epsitec.Common.UI
 			//	Dessine l'icône.
 			if (this.iconLayout != null)
 			{
-				Rectangle ricon = this.IconBounds;
+				Rectangle ricon = this.GetIconBounds ();
 				if (!ricon.IsSurfaceZero)
 				{
 					if (this.innerZoom != 1.0)
@@ -395,7 +356,7 @@ namespace Epsitec.Common.UI
 			}
 
 			//	Dessine le texte.
-			rect = this.TextBounds;
+			rect = this.GetTextBounds ();
 			if ((!rect.IsSurfaceZero) &&
 				(this.TextLayout != null))
 			{

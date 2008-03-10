@@ -132,9 +132,15 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille et langue).
+			
+			this.Text = IconButton.GetSourceForIconText (iconName, this.PreferredIconSize, this.PreferredIconLanguage, this.PreferredIconStyle);
+		}
+
+		public static string GetSourceForIconText(string iconName, Drawing.Size preferredIconSize, string preferredIconLanguage, string preferredIconStyle)
+		{
 			if (string.IsNullOrEmpty (iconName))
 			{
-				this.Text = null;
+				return null;
 			}
 			else
 			{
@@ -144,32 +150,32 @@ namespace Epsitec.Common.Widgets
 				builder.Append (iconName);
 				builder.Append (@"""");
 
-				if (this.preferredIconSize.Width != 0 && this.preferredIconSize.Height != 0)
+				if (preferredIconSize.Width != 0 && preferredIconSize.Height != 0)
 				{
 					builder.Append (@" dx=""");
-					builder.Append (this.preferredIconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append (preferredIconSize.Width.ToString (System.Globalization.CultureInfo.InvariantCulture));
 					builder.Append (@""" dy=""");
-					builder.Append (this.preferredIconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					builder.Append (preferredIconSize.Height.ToString (System.Globalization.CultureInfo.InvariantCulture));
 					builder.Append (@"""");
 				}
 
-				if (string.IsNullOrEmpty (this.preferredIconLanguage) == false)
+				if (string.IsNullOrEmpty (preferredIconLanguage) == false)
 				{
 					builder.Append (@" lang=""");
-					builder.Append (this.preferredIconLanguage);
+					builder.Append (preferredIconLanguage);
 					builder.Append (@"""");
 				}
 
-				if (string.IsNullOrEmpty (this.preferredIconStyle) == false)
+				if (string.IsNullOrEmpty (preferredIconStyle) == false)
 				{
 					builder.Append (@" style=""");
-					builder.Append (this.preferredIconStyle);
+					builder.Append (preferredIconStyle);
 					builder.Append (@"""");
 				}
 
 				builder.Append (@"/>");
 
-				this.Text = builder.ToString ();
+				return builder.ToString ();
 			}
 		}
 
