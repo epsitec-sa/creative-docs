@@ -173,6 +173,8 @@ namespace Epsitec.Common.Support
 			string modulePath     = info.FullId.Path;
 			string moduleInfoPath = System.IO.Path.Combine (modulePath, ResourceModule.ManifestFileName);
 
+			System.IO.Directory.CreateDirectory (modulePath);
+
 			System.Xml.XmlDocument xml = ResourceModule.CreateXmlManifest (info, comment);
 			
 			xml.Save (moduleInfoPath);
