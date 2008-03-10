@@ -510,7 +510,20 @@ namespace Epsitec.Common.Designer
 			{
 				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool, this.Window);
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
+
+#if true
 				if (store.RecycleModule(info, this.settings.IdentityCard))
+#else
+				bool ok = false;
+				Common.Dialogs.WorkInProgressDialog.Execute("Recyclage en cours", ProgressIndicatorStyle.UnknownDuration,
+					progress =>
+					{
+						ok = store.RecycleModule(info, this.settings.IdentityCard);
+					},
+					this.Window);
+				
+				if (ok)
+#endif
 				{
 					string message = string.Format("Le module <b>{0}</b> est recyclé.", name);
 					this.DialogMessage(message);
