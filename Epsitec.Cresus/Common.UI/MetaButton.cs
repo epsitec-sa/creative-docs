@@ -1,16 +1,17 @@
 //	Copyright © 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
-[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.UI.MetaButton))]
+[assembly: DependencyClass (typeof (MetaButton))]
 
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// La classe MetaButton est un Button pouvant contenir une icône et/ou un texte.
+	/// The <c>MetaButton</c> class implements a button which can behave like
+	/// a plain button or like an icon button, depending on its settings.
 	/// </summary>
 	public class MetaButton : Button
 	{
@@ -20,9 +21,9 @@ namespace Epsitec.Common.UI
 
 		static MetaButton()
 		{
-			Types.DependencyPropertyMetadata metadataButtonStyle = Button.ButtonStyleProperty.DefaultMetadata.Clone ();
-			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
-			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
+			DependencyPropertyMetadata metadataButtonStyle = Button.ButtonStyleProperty.DefaultMetadata.Clone ();
+			DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
+			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
 			metadataButtonStyle.MakeNotSerializable ();
 			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
@@ -35,7 +36,6 @@ namespace Epsitec.Common.UI
 
 		public ButtonClass						ButtonClass
 		{
-			//	Aspect du bouton.
 			get
 			{
 				return (ButtonClass) this.GetValue(MetaButton.ButtonClassProperty);
@@ -44,16 +44,6 @@ namespace Epsitec.Common.UI
 			set
 			{
 				this.SetValue (MetaButton.ButtonClassProperty, value);
-			}
-		}
-
-		public ButtonDisplayMode				DisplayMode
-		{
-			//	Mode d'affichage du contenu du bouton.
-			//	Pas de 'set' disponible; il faut utilser ButtonClass.
-			get
-			{
-				return (ButtonDisplayMode) this.GetValue(MetaButton.DisplayModeProperty);
 			}
 		}
 
@@ -85,12 +75,12 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public Color							BulletColor
+		public Drawing.Color					BulletColor
 		{
 			//	Couleur de la puce éventuelle (si différent de Color.Empty).
 			get
 			{
-				return (Color) this.GetValue(MetaButton.BulletColorProperty);
+				return (Drawing.Color) this.GetValue(MetaButton.BulletColorProperty);
 			}
 
 			set
@@ -137,7 +127,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		public override ContentAlignment		ContentAlignment
+		public override Drawing.ContentAlignment ContentAlignment
 		{
 			get
 			{
@@ -150,9 +140,9 @@ namespace Epsitec.Common.UI
 		}
 
 
-		protected override Size GetTextLayoutSize()
+		protected override Drawing.Size GetTextLayoutSize()
 		{
-			Rectangle bounds = this.GetTextBounds ();
+			Drawing.Rectangle bounds = this.GetTextBounds ();
 			return bounds.Size;
 		}
 
@@ -187,7 +177,7 @@ namespace Epsitec.Common.UI
 			string iconName = this.IconName;
 
 			if ((string.IsNullOrEmpty (iconName)) || 
-				(this.DisplayMode == ButtonDisplayMode.TextOnly))
+				(this.ButtonClass == ButtonClass.DialogButton))
 			{
 				if (this.iconLayout != null)
 				{
@@ -197,7 +187,7 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				Rectangle iconBounds = this.GetIconBounds ();
+				Drawing.Rectangle iconBounds = this.GetIconBounds ();
 				string    iconSource = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
 
 				if (this.iconLayout == null)
@@ -207,14 +197,14 @@ namespace Epsitec.Common.UI
 				else
 				{
 					if ((this.iconLayout.Text == iconSource) &&
-						(this.iconLayout.Alignment == ContentAlignment.MiddleCenter))
+						(this.iconLayout.Alignment == Drawing.ContentAlignment.MiddleCenter))
 					{
 						return;
 					}
 				}
 
 				this.iconLayout.Text      = iconSource;
-				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
+				this.iconLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
 				
 				this.Invalidate ();
 			}
@@ -226,15 +216,13 @@ namespace Epsitec.Common.UI
 			switch (aspect)
 			{
 				case ButtonClass.DialogButton:
-					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.TextOnly);
 					base.ButtonStyle = ButtonStyle.Normal;
-					base.ContentAlignment = ContentAlignment.MiddleCenter;
+					base.ContentAlignment = Drawing.ContentAlignment.MiddleCenter;
 					break;
 
 				case ButtonClass.IconButton:
-					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
 					base.ButtonStyle = ButtonStyle.ToolItem;
-					base.ContentAlignment = ContentAlignment.MiddleLeft;
+					base.ContentAlignment = Drawing.ContentAlignment.MiddleLeft;
 					break;
 
 				default:
@@ -242,16 +230,16 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected Rectangle GetIconBounds()
+		protected Drawing.Rectangle GetIconBounds()
 		{
 			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
 			if (this.iconLayout == null)
 			{
-				return Rectangle.Empty;
+				return Drawing.Rectangle.Empty;
 			}
 			else
 			{
-				Rectangle rect = this.GetInnerBounds ();
+				Drawing.Rectangle rect = this.GetInnerBounds ();
 
 				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 				{
@@ -263,14 +251,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		protected Rectangle GetTextBounds()
+		protected Drawing.Rectangle GetTextBounds()
 		{
 			//	Donne le rectangle à utiliser pour le texte du bouton.
-			Rectangle rect = this.GetInnerBounds ();
+			Drawing.Rectangle rect = this.GetInnerBounds ();
 
-			if (this.DisplayMode == ButtonDisplayMode.Automatic && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+			if (this.ButtonClass == ButtonClass.IconButton && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
 			{
-				return Rectangle.Empty;
+				return Drawing.Rectangle.Empty;
 			}
 
 			if (this.iconLayout != null)
@@ -280,9 +268,9 @@ namespace Epsitec.Common.UI
 
 			switch (this.ContentAlignment)
 			{
-				case ContentAlignment.BottomLeft:
-				case ContentAlignment.MiddleLeft:
-				case ContentAlignment.TopLeft:
+				case Drawing.ContentAlignment.BottomLeft:
+				case Drawing.ContentAlignment.MiddleLeft:
+				case Drawing.ContentAlignment.TopLeft:
 					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
 					break;
 			}
@@ -290,10 +278,10 @@ namespace Epsitec.Common.UI
 			return rect;
 		}
 
-		protected Rectangle GetInnerBounds()
+		protected Drawing.Rectangle GetInnerBounds()
 		{
 			//  Donne le rectangle utilisable à l'intérieur du cadre du bouton.
-			Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
+			Drawing.Rectangle bounds = IconButtonMark.GetFrameBounds (this.Client.Bounds, this.MarkDisposition, this.MarkLength);
 
 			if (!this.BulletColor.IsEmpty)
 			{
@@ -306,19 +294,19 @@ namespace Epsitec.Common.UI
 				case ButtonStyle.DefaultAccept:
 				case ButtonStyle.DefaultAcceptAndCancel:
 				case ButtonStyle.DefaultCancel:
-					return Rectangle.Deflate (bounds, new Margins (4));
+					return Drawing.Rectangle.Deflate (bounds, new Drawing.Margins (4));
 				
 				default:
 					return bounds;
 			}
 		}
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Dessine le bouton.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			Rectangle rect = this.Client.Bounds;
+			Drawing.Rectangle rect = this.Client.Bounds;
 			WidgetPaintState state = this.PaintState;
 
 			bool enable = ((state & WidgetPaintState.Enabled) != 0);
@@ -351,7 +339,7 @@ namespace Epsitec.Common.UI
 					{
 						double zoom = (this.innerZoom-1)/2+1;
 						this.iconLayout.LayoutSize = rect.Size/this.innerZoom;
-						Transform transform = graphics.Transform;
+						Drawing.Transform transform = graphics.Transform;
 						graphics.ScaleTransform (zoom, zoom, 0, -this.Client.Size.Height*zoom);
 						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.iconLayout, state, this.ButtonStyle);
 						graphics.Transform = transform;
@@ -373,9 +361,9 @@ namespace Epsitec.Common.UI
 				{
 					if (this.innerZoom != 1.0)
 					{
-						Point center = this.Client.Bounds.Center;
+						Drawing.Point center = this.Client.Bounds.Center;
 						this.TextLayout.LayoutSize = rect.Size/this.innerZoom;
-						Transform transform = graphics.Transform;
+						Drawing.Transform transform = graphics.Transform;
 						graphics.ScaleTransform (this.innerZoom, this.innerZoom, center.X, center.Y);
 						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 						graphics.Transform = transform;
@@ -403,12 +391,11 @@ namespace Epsitec.Common.UI
 		}
 
 		public static readonly DependencyProperty ButtonClassProperty			= DependencyProperty.Register ("ButtonClass", typeof (ButtonClass), typeof (MetaButton), new DependencyPropertyMetadata (ButtonClass.None, MetaButton.HandleButtonClassChanged));
-		public static readonly DependencyProperty DisplayModeProperty			= DependencyProperty.RegisterReadOnly("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleIconDefinitionChanged));
-		public static readonly DependencyProperty MarkDispositionProperty		= DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleIconDefinitionChanged));
-		public static readonly DependencyProperty MarkLengthProperty			= DependencyProperty.Register("MarkLength", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleIconDefinitionChanged));
-		public static readonly DependencyProperty BulletColorProperty			= DependencyProperty.Register("BulletColor", typeof(Color), typeof(MetaButton), new DependencyPropertyMetadata(Color.Empty, MetaButton.HandleIconDefinitionChanged));
-		public static readonly DependencyProperty PreferredIconLanguageProperty	= DependencyProperty.Register("PreferredIconLanguage", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleIconDefinitionChanged));
-		public static readonly DependencyProperty PreferredIconStyleProperty	= DependencyProperty.Register("PreferredIconStyle", typeof(string), typeof(MetaButton), new DependencyPropertyMetadata(null, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty MarkDispositionProperty		= DependencyProperty.Register ("MarkDisposition", typeof (ButtonMarkDisposition), typeof (MetaButton), new DependencyPropertyMetadata (ButtonMarkDisposition.None, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty MarkLengthProperty			= DependencyProperty.Register ("MarkLength", typeof (double), typeof (MetaButton), new DependencyPropertyMetadata (8.0, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty BulletColorProperty			= DependencyProperty.Register ("BulletColor", typeof (Drawing.Color), typeof (MetaButton), new DependencyPropertyMetadata (Drawing.Color.Empty, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty PreferredIconLanguageProperty	= DependencyProperty.Register ("PreferredIconLanguage", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty PreferredIconStyleProperty	= DependencyProperty.Register ("PreferredIconStyle", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (null, MetaButton.HandleIconDefinitionChanged));
 
 		protected TextLayout			iconLayout;
 	}
