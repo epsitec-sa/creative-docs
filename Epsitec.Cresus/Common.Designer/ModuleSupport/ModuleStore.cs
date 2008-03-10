@@ -149,9 +149,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		}
 
 		/// <summary>
-		/// Recycles the specified module. Its ID will be free for reuse. Do not
-		/// call this method for a patch module, as it shares its ID with the
-		/// reference module!
+		/// Recycles the specified module. Its ID will be free for reuse if the
+		/// specified module is a reference module. The associated directory
+		/// will be moved to the recycle bin.
 		/// </summary>
 		/// <param name="moduleInfo">The module info.</param>
 		/// <param name="identity">The developer identity.</param>
