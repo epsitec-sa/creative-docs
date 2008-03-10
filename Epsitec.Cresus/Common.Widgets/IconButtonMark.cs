@@ -17,37 +17,37 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public ButtonMarkDisposition			SiteMark
+		public ButtonMarkDisposition			MarkDisposition
 		{
 			//	Emplacement de la marque.
 			get
 			{
-				return this.siteMark;
+				return this.markDisposition;
 			}
 
 			set
 			{
-				if ( this.siteMark != value )
+				if ( this.markDisposition != value )
 				{
-					this.siteMark = value;
+					this.markDisposition = value;
 					this.Invalidate();
 				}
 			}
 		}
 
-		public double							MarkDimension
+		public double							MarkLength
 		{
 			//	Dimension de la marque.
 			get
 			{
-				return this.markDimension;
+				return this.markLength;
 			}
 
 			set
 			{
-				if ( this.markDimension != value )
+				if ( this.markLength != value )
 				{
-					this.markDimension = value;
+					this.markLength = value;
 					this.Invalidate();
 				}
 			}
@@ -78,22 +78,22 @@ namespace Epsitec.Common.Widgets
 			{
 				Rectangle rect = this.Client.Bounds;
 
-				switch ( this.siteMark )
+				switch ( this.markDisposition )
 				{
 					case ButtonMarkDisposition.Below:
-						rect.Bottom += this.markDimension;
+						rect.Bottom += this.markLength;
 						break;
 
 					case ButtonMarkDisposition.Above:
-						rect.Top -= this.markDimension;
+						rect.Top -= this.markLength;
 						break;
 
 					case ButtonMarkDisposition.Left:
-						rect.Left += this.markDimension;
+						rect.Left += this.markLength;
 						break;
 
 					case ButtonMarkDisposition.Right:
-						rect.Right -= this.markDimension;
+						rect.Right -= this.markLength;
 						break;
 				}
 
@@ -120,64 +120,13 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.ActiveState == ActiveState.Yes )  // dessine la marque triangulaire ?
 			{
-				Drawing.Path path = new Path();
-				double middle;
-				double factor = 1.0;
-
-				switch ( this.siteMark )
-				{
-					case ButtonMarkDisposition.Below:
-						middle = (rect.Left+rect.Right)/2;
-						path.MoveTo(middle, rect.Bottom);
-						path.LineTo(middle-this.markDimension*factor, rect.Bottom+this.markDimension);
-						path.LineTo(middle+this.markDimension*factor, rect.Bottom+this.markDimension);
-						break;
-
-					case ButtonMarkDisposition.Above:
-						middle = (rect.Left+rect.Right)/2;
-						path.MoveTo(middle, rect.Top);
-						path.LineTo(middle-this.markDimension*factor, rect.Top-this.markDimension);
-						path.LineTo(middle+this.markDimension*factor, rect.Top-this.markDimension);
-						break;
-
-					case ButtonMarkDisposition.Left:
-						middle = (rect.Bottom+rect.Top)/2;
-						path.MoveTo(rect.Left, middle);
-						path.LineTo(rect.Left+this.markDimension, middle-this.markDimension*factor);
-						path.LineTo(rect.Left+this.markDimension, middle+this.markDimension*factor);
-						break;
-
-					case ButtonMarkDisposition.Right:
-						middle = (rect.Bottom+rect.Top)/2;
-						path.MoveTo(rect.Right, middle);
-						path.LineTo(rect.Right-this.markDimension, middle-this.markDimension*factor);
-						path.LineTo(rect.Right-this.markDimension, middle+this.markDimension*factor);
-						break;
-				}
-				path.Close();
-
-				graphics.Color = adorner.ColorTextFieldBorder(enable);
-				graphics.PaintSurface(path);
+				adorner.PaintButtonMark (graphics, rect, state, this.markDisposition, this.markLength);
 			}
 			
 			rect = this.IconButtonBounds;
 			state &= ~WidgetPaintState.Selected;
 			adorner.PaintButtonBackground (graphics, rect, state, Direction.Down, this.ButtonStyle);
-
-			if (!this.bulletColor.IsEmpty)
-			{
-				Rectangle r = rect;
-				r.Deflate(3.5);
-				r.Width = r.Height;
-
-				graphics.AddFilledRectangle(r);
-				graphics.RenderSolid(this.bulletColor);
-
-				graphics.AddRectangle(r);
-				graphics.RenderSolid(adorner.ColorTextFieldBorder(enable));
-
-				rect.Left += rect.Height;
-			}
+			adorner.PaintButtonBullet (graphics, ref rect, state, this.bulletColor);
 
 			if ( this.innerZoom != 1.0 )
 			{
@@ -196,8 +145,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected ButtonMarkDisposition		siteMark = ButtonMarkDisposition.Below;
-		protected double					markDimension = 8;
-		protected Color						bulletColor = Color.Empty;
+
+		protected ButtonMarkDisposition		markDisposition = ButtonMarkDisposition.Below;
+		protected double					markLength = 8;
+		protected Color						bulletColor;
 	}
 }

@@ -1660,27 +1660,27 @@ namespace Epsitec.Common.Designer.PanelEditor
 			return (button != null);
 		}
 
-		public ButtonAspect GetButtonAspect(Widget obj)
+		public ButtonClass GetButtonAspect(Widget obj)
 		{
 			//	Retourne le mode mode pour le bouton de l'objet.
 			//	Uniquement pour les objects MetaButton.
 			MetaButton button = obj as MetaButton;
 			if (button != null)
 			{
-				return button.Aspect;
+				return button.Class;
 			}
 
-			return ButtonAspect.None;
+			return ButtonClass.None;
 		}
 
-		public void SetButtonAspect(Widget obj, ButtonAspect mode)
+		public void SetButtonAspect(Widget obj, ButtonClass mode)
 		{
 			//	Choix du mode pour le bouton de l'objet.
 			//	Uniquement pour les objects MetaButton.
 			MetaButton button = obj as MetaButton;
 			System.Diagnostics.Debug.Assert(button != null);
 
-			button.Aspect = mode;
+			button.Class = mode;
 			this.Invalidate();
 		}
 		#endregion

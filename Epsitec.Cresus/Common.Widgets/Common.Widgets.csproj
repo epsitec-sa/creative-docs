@@ -155,6 +155,8 @@
     <Compile Include="CheckIconGrid.cs" />
     <Compile Include="ButtonMarkDisposition.cs" />
     <Compile Include="ButtonStyle.cs" />
+    <Compile Include="ButtonDisplayMode.cs" />
+    <Compile Include="ButtonClass.cs" />
     <Compile Include="FocusChangingEventArgs.cs" />
     <Compile Include="TextFieldDisplayMode.cs" />
     <Compile Include="TextFieldStyle.cs" />

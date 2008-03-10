@@ -119,6 +119,73 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.ButtonStyle style);
 		public abstract void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Widgets.WidgetPaintState state, Widgets.ButtonStyle style);
 		public abstract void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.Direction dir, Widgets.ButtonStyle style);
+		
+		public virtual void PaintButtonBullet(Drawing.Graphics graphics, ref Drawing.Rectangle rect, Widgets.WidgetPaintState state, Drawing.Color color)
+		{
+			if (!color.IsEmpty)
+			{
+				bool enable = ((state & WidgetPaintState.Enabled) != 0);
+
+				Drawing.Rectangle r = rect;
+				r.Deflate (3.5);
+				r.Width = r.Height;
+
+				graphics.AddFilledRectangle (r);
+				graphics.RenderSolid (color);
+
+				graphics.AddRectangle (r);
+				graphics.RenderSolid (this.ColorTextFieldBorder (enable));
+
+				rect.Left += rect.Height;
+			}
+		}
+
+		public virtual void PaintButtonMark(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetPaintState state, ButtonMarkDisposition markDisposition, double markLength)
+		{
+			using (Drawing.Path path = new Drawing.Path ())
+			{
+				bool enable = ((state & WidgetPaintState.Enabled) != 0);
+
+				double middle;
+				double factor = 1.0;
+
+				switch (markDisposition)
+				{
+					case ButtonMarkDisposition.Below:
+						middle = (rect.Left+rect.Right)/2;
+						path.MoveTo (middle, rect.Bottom);
+						path.LineTo (middle-markLength*factor, rect.Bottom+markLength);
+						path.LineTo (middle+markLength*factor, rect.Bottom+markLength);
+						break;
+
+					case ButtonMarkDisposition.Above:
+						middle = (rect.Left+rect.Right)/2;
+						path.MoveTo (middle, rect.Top);
+						path.LineTo (middle-markLength*factor, rect.Top-markLength);
+						path.LineTo (middle+markLength*factor, rect.Top-markLength);
+						break;
+
+					case ButtonMarkDisposition.Left:
+						middle = (rect.Bottom+rect.Top)/2;
+						path.MoveTo (rect.Left, middle);
+						path.LineTo (rect.Left+markLength, middle-markLength*factor);
+						path.LineTo (rect.Left+markLength, middle+markLength*factor);
+						break;
+
+					case ButtonMarkDisposition.Right:
+						middle = (rect.Bottom+rect.Top)/2;
+						path.MoveTo (rect.Right, middle);
+						path.LineTo (rect.Right-markLength, middle-markLength*factor);
+						path.LineTo (rect.Right-markLength, middle+markLength*factor);
+						break;
+				}
+				path.Close ();
+
+				graphics.Color = this.ColorTextFieldBorder (enable);
+				graphics.PaintSurface (path);
+			}
+		}
+		
 		public abstract void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);
 		public abstract void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Widgets.WidgetPaintState state, Widgets.TextFieldStyle style, TextFieldDisplayMode mode, bool readOnly);
 		public abstract void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, Widgets.WidgetPaintState state, Widgets.Direction dir);

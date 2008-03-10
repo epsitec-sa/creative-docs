@@ -47,11 +47,11 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 			}
 		}
 
-		public ButtonAspect ButtonAspect
+		public ButtonClass ButtonAspect
 		{
 			get
 			{
-				return (ButtonAspect) this.GetValue(Aspect.ButtonAspectProperty);
+				return (ButtonClass) this.GetValue(Aspect.ButtonAspectProperty);
 			}
 			set
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 			//	pour pouvoir ensuite travailler dessus :
 			if (this.ObjectModifier.HasButtonAspect(this.DefaultWidget))
 			{
-				ButtonAspect aspect = this.ObjectModifier.GetButtonAspect(this.DefaultWidget);
+				ButtonClass aspect = this.ObjectModifier.GetButtonAspect(this.DefaultWidget);
 
 				this.ButtonAspect = aspect;
 			}
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 			//	nos propriétés de définition pour permettre de mettre à jour les
 			//	widgets connectés :
 			Aspect that = (Aspect) o;
-			ButtonAspect aspect = (ButtonAspect) newValue;
+			ButtonClass aspect = (ButtonClass) newValue;
 
 			if (that.IsNotSuspended)
 			{
@@ -111,6 +111,6 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 		}
 
 
-		public static readonly DependencyProperty ButtonAspectProperty = DependencyProperty.Register("ButtonAspect", typeof(ButtonAspect), typeof(Aspect), new DependencyPropertyMetadata(ButtonAspect.None, Aspect.NotifyButtonAspectChanged));
+		public static readonly DependencyProperty ButtonAspectProperty = DependencyProperty.Register("ButtonAspect", typeof(ButtonClass), typeof(Aspect), new DependencyPropertyMetadata(ButtonClass.None, Aspect.NotifyButtonAspectChanged));
 	}
 }

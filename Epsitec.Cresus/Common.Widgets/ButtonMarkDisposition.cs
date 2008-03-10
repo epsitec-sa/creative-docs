@@ -1,31 +1,38 @@
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
-
-[assembly: Epsitec.Common.Types.DependencyClass(typeof(Epsitec.Common.UI.MetaButton))]
+//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
-	[Types.DesignerVisible]
-	public enum ButtonAspect
-	{
-		[Types.Hidden] None,
-		DialogButton,	// bouton textuel pour dialogue (typiquement: "D'accord", "Annuler", etc.)
-		IconButton,		// bouton automatique pour ruban, palette, etc.
-	}
-
-	public enum ButtonDisplayMode
-	{
-		TextOnly,		// texte seul
-		Automatic,		// icône et/ou texte selon la taille disponible
-	}
-
+	/// <summary>
+	/// The <c>ButtonMarkDisposition</c> enumeration defines if and where a mark
+	/// should be painted relative to the button box. The mark is usually a small
+	/// triangle pointing to the outside of the box.
+	/// </summary>
 	public enum ButtonMarkDisposition
 	{
-		None,			// pas de marque
-		Below,			// marque au dessous
-		Above,			// marque au dessus
-		Left,			// marque à gauche
-		Right,			// marque à droite
+		/// <summary>
+		/// No mark.
+		/// </summary>
+		None,
+
+		/// <summary>
+		/// Mark on the left hand side of the button.
+		/// </summary>
+		Left,
+
+		/// <summary>
+		/// Mark on the right hand side of the button.
+		/// </summary>
+		Right,
+		
+		/// <summary>
+		/// Mark above the button.
+		/// </summary>
+		Above,
+		
+		/// <summary>
+		/// Mark below the button.
+		/// </summary>
+		Below,
 	}
 }

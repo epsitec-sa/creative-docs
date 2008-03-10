@@ -139,8 +139,8 @@ namespace Epsitec.Common.Designer.Viewers
 			
 			this.primaryButtonCulture = new IconButtonMark(sup);
 			this.primaryButtonCulture.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.primaryButtonCulture.SiteMark = ButtonMarkDisposition.Below;
-			this.primaryButtonCulture.MarkDimension = 5;
+			this.primaryButtonCulture.MarkDisposition = ButtonMarkDisposition.Below;
+			this.primaryButtonCulture.MarkLength = 5;
 			this.primaryButtonCulture.PreferredHeight = 25;
 			this.primaryButtonCulture.ActiveState = ActiveState.Yes;
 			this.primaryButtonCulture.AutoFocus = false;
@@ -1275,8 +1275,8 @@ namespace Epsitec.Common.Designer.Viewers
 				{
 					this.secondaryButtonsCulture[i] = new IconButtonMark(this.secondaryButtonsCultureGroup);
 					this.secondaryButtonsCulture[i].ButtonStyle = ButtonStyle.ActivableIcon;
-					this.secondaryButtonsCulture[i].SiteMark = ButtonMarkDisposition.Below;
-					this.secondaryButtonsCulture[i].MarkDimension = 5;
+					this.secondaryButtonsCulture[i].MarkDisposition = ButtonMarkDisposition.Below;
+					this.secondaryButtonsCulture[i].MarkLength = 5;
 					this.secondaryButtonsCulture[i].Name = list[i];
 					this.secondaryButtonsCulture[i].Text = this.access.GetCultureName(list[i]);
 					this.secondaryButtonsCulture[i].AutoFocus = false;
