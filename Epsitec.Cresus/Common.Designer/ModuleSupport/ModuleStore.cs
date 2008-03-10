@@ -20,10 +20,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ModuleStore"/> class.
 		/// </summary>
-		public ModuleStore(ResourceManagerPool pool, Widgets.Window ownerWindow)
+		public ModuleStore(ResourceManagerPool pool)
 		{
 			this.pool = pool;
-			this.ownerWindow = ownerWindow;
 		}
 
 		/// <summary>
@@ -79,6 +78,12 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				string modulePath = System.IO.Path.Combine (rootDirectoryPath, dir.Name);
 
 				modulePath = this.pool.GetRootAbsolutePath (modulePath);
+
+				if (System.IO.Directory.Exists (modulePath))
+				{
+					this.service.RecycleModuleId (moduleId, identity.UserName);
+					return null;
+				}
 
 				//	Create the files as specified by the server; usually, this will
 				//	just create the module directory with the module.info file, but
@@ -136,6 +141,11 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				SourceNamespace = referenceModule.SourceNamespace
 			};
 
+			if (System.IO.Directory.Exists (modulePath))
+			{
+				return null;
+			}
+
 			patchModule.Freeze ();
 			
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
@@ -149,9 +159,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		}
 
 		/// <summary>
-		/// Recycles the specified module. Its ID will be free for reuse if the
-		/// specified module is a reference module. The associated directory
-		/// will be moved to the recycle bin.
+		/// Recycles the specified module. Its ID will be free for reuse. Do not
+		/// call this method for a patch module, as it shares its ID with the
+		/// reference module!
 		/// </summary>
 		/// <param name="moduleInfo">The module info.</param>
 		/// <param name="identity">The developer identity.</param>
@@ -159,20 +169,11 @@ namespace Epsitec.Common.Designer.ModuleSupport
 		/// <c>false</c>.</returns>
 		public bool RecycleModule(ResourceModuleInfo moduleInfo, IdentityCard identity)
 		{
-			try
-			{
-				FileOperationMode mode = new FileOperationMode (this.ownerWindow);
-				FileManager.DeleteFile (mode, moduleInfo.FullId.Path);
-			}
-			catch
+			if ((moduleInfo == null) ||
+				(moduleInfo.IsPatchModule) ||
+				(moduleInfo.PatchDepth > 0))
 			{
 				return false;
-			}
-
-			if ((moduleInfo == null) ||
-				(moduleInfo.IsPatchModule))
-			{
-				return true;
 			}
 			else
 			{
@@ -238,7 +239,6 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 
 		private readonly ResourceManagerPool pool;
-		private readonly Widgets.Window ownerWindow;
 		private IModuleRepositoryService service;
 	}
 }

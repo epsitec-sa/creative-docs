@@ -111,6 +111,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateButtons();
+			this.fieldRootDirectoryPath.SelectAll();
 			this.fieldRootDirectoryPath.Focus();
 
 			this.window.ShowDialog();

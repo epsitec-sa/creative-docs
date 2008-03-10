@@ -455,7 +455,7 @@ namespace Epsitec.Common.Designer
 
 			if (!string.IsNullOrEmpty(rootDirectoryPath))
 			{
-				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool, this.Window);
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
 				ResourceModuleInfo info = null;
 
 				if (this.dlgNew.IsPatch)
@@ -513,24 +513,41 @@ namespace Epsitec.Common.Designer
 			string question = string.Format("Voulez-vous recycler le module <b>{0}</b> ?", name);
 			if (this.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
 			{
-				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool, this.Window);
+				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
 				ResourceModuleInfo info = this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo;
 
-#if true
-				if (store.RecycleModule(info, this.settings.IdentityCard))
-#else
 				bool ok = false;
-				Common.Dialogs.WorkInProgressDialog.Execute("Recyclage en cours", ProgressIndicatorStyle.UnknownDuration,
-					progress =>
+				
+				try
+				{
+					FileOperationMode mode = new FileOperationMode (this.Window);
+
+					if (FileManager.DeleteFile (mode, info.FullId.Path))
 					{
-						ok = store.RecycleModule(info, this.settings.IdentityCard);
-					},
-					this.Window);
+						if ((info != null) &&
+							(info.IsPatchModule || info.PatchDepth > 0))
+						{
+							ok = true;
+						}
+						else
+						{
+							Common.Dialogs.WorkInProgressDialog.Execute ("Recyclage en cours", ProgressIndicatorStyle.UnknownDuration,
+								progress =>
+								{
+									ok = store.RecycleModule (info, this.settings.IdentityCard);
+								},
+								this.Window);
+						}
+					}
+				}
+				catch
+				{
+				}
+
 				
 				if (ok)
-#endif
 				{
-					string message = string.Format("Le module <b>{0}</b> est recyclé.", name);
+					string message = string.Format("Le module <b>{0}</b> a été recyclé.", name);
 					this.DialogMessage(message);
 					this.CloseModule();
 				}
