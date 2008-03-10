@@ -67,9 +67,9 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 			
 			//	Recopie localement les diverses propriétés du widget sélectionné
 			//	pour pouvoir ensuite travailler dessus :
-			if (this.ObjectModifier.HasButtonAspect(this.DefaultWidget))
+			if (this.ObjectModifier.HasButtonClass(this.DefaultWidget))
 			{
-				ButtonClass aspect = this.ObjectModifier.GetButtonAspect(this.DefaultWidget);
+				ButtonClass aspect = this.ObjectModifier.GetButtonClass(this.DefaultWidget);
 
 				this.ButtonAspect = aspect;
 			}
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 				{
 					foreach (Widget obj in that.Widgets)
 					{
-						that.ObjectModifier.SetButtonAspect(obj, aspect);
+						that.ObjectModifier.SetButtonClass(obj, aspect);
 					}
 				}
 				finally

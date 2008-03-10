@@ -33,24 +33,24 @@ namespace Epsitec.Common.UI
 			Visual.PreferredHeightProperty.OverrideMetadata(typeof(MetaButton), metadataDy);
 		}
 
-		public ButtonClass						Class
+		public ButtonClass						ButtonClass
 		{
 			//	Aspect du bouton.
 			get
 			{
-				return (ButtonClass) this.GetValue(MetaButton.ClassProperty);
+				return (ButtonClass) this.GetValue(MetaButton.ButtonClassProperty);
 			}
 
 			set
 			{
-				this.SetValue (MetaButton.ClassProperty, value);
+				this.SetValue (MetaButton.ButtonClassProperty, value);
 			}
 		}
 
 		public ButtonDisplayMode				DisplayMode
 		{
 			//	Mode d'affichage du contenu du bouton.
-			//	Pas de 'set' disponible; il faut utilser Class.
+			//	Pas de 'set' disponible; il faut utilser ButtonClass.
 			get
 			{
 				return (ButtonDisplayMode) this.GetValue(MetaButton.DisplayModeProperty);
@@ -133,7 +133,7 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				throw new System.InvalidOperationException("Use Class instead");
+				throw new System.InvalidOperationException ("Use ButtonClass instead");
 			}
 		}
 
@@ -145,7 +145,7 @@ namespace Epsitec.Common.UI
 			}
 			set
 			{
-				throw new System.InvalidOperationException("Use Class instead");
+				throw new System.InvalidOperationException ("Use ButtonClass instead");
 			}
 		}
 
@@ -186,7 +186,8 @@ namespace Epsitec.Common.UI
 
 			string iconName = this.IconName;
 
-			if (string.IsNullOrEmpty (iconName) || this.DisplayMode == ButtonDisplayMode.TextOnly)
+			if ((string.IsNullOrEmpty (iconName)) || 
+				(this.DisplayMode == ButtonDisplayMode.TextOnly))
 			{
 				if (this.iconLayout != null)
 				{
@@ -197,7 +198,7 @@ namespace Epsitec.Common.UI
 			else
 			{
 				Rectangle iconBounds = this.GetIconBounds ();
-				string source = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
+				string    iconSource = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
 
 				if (this.iconLayout == null)
 				{
@@ -205,38 +206,39 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					if ((this.iconLayout.Text == source) &&
+					if ((this.iconLayout.Text == iconSource) &&
 						(this.iconLayout.Alignment == ContentAlignment.MiddleCenter))
 					{
 						return;
 					}
 				}
 
-				this.iconLayout.Text = source;
+				this.iconLayout.Text      = iconSource;
 				this.iconLayout.Alignment = ContentAlignment.MiddleCenter;
+				
 				this.Invalidate ();
 			}
 		}
 
-		protected void UpdateClass(ButtonClass aspect)
+		protected void UpdateButtonClass(ButtonClass aspect)
 		{
 			//	Met à jour le bouton lorsque son aspect a changé.
 			switch (aspect)
 			{
 				case ButtonClass.DialogButton:
-					this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.TextOnly);
+					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.TextOnly);
 					base.ButtonStyle = ButtonStyle.Normal;
 					base.ContentAlignment = ContentAlignment.MiddleCenter;
 					break;
 
 				case ButtonClass.IconButton:
-					this.SetValue(MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
+					this.SetValue (MetaButton.DisplayModeProperty, ButtonDisplayMode.Automatic);
 					base.ButtonStyle = ButtonStyle.ToolItem;
 					base.ContentAlignment = ContentAlignment.MiddleLeft;
 					break;
 
 				default:
-					throw new System.NotSupportedException(string.Format("ButtonClass.{0} not supported", aspect));
+					throw new System.NotSupportedException (string.Format ("ButtonClass.{0} not supported", aspect));
 			}
 		}
 
@@ -376,10 +378,10 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		private static void HandleClassChanged(DependencyObject obj, object oldValue, object newValue)
+		private static void HandleButtonClassChanged(DependencyObject obj, object oldValue, object newValue)
 		{
 			MetaButton that = (MetaButton) obj;
-			that.UpdateClass((ButtonClass) newValue);
+			that.UpdateButtonClass((ButtonClass) newValue);
 		}
 
 		private static void HandleIconDefinitionChanged(DependencyObject obj, object oldValue, object newValue)
@@ -389,7 +391,7 @@ namespace Epsitec.Common.UI
 			that.UpdateIcon();
 		}
 
-		public static readonly DependencyProperty ClassProperty					= DependencyProperty.Register ("Class", typeof (ButtonClass), typeof (MetaButton), new DependencyPropertyMetadata (ButtonClass.None, MetaButton.HandleClassChanged));
+		public static readonly DependencyProperty ButtonClassProperty			= DependencyProperty.Register ("ButtonClass", typeof (ButtonClass), typeof (MetaButton), new DependencyPropertyMetadata (ButtonClass.None, MetaButton.HandleButtonClassChanged));
 		public static readonly DependencyProperty DisplayModeProperty			= DependencyProperty.RegisterReadOnly("DisplayMode", typeof(ButtonDisplayMode), typeof(MetaButton), new DependencyPropertyMetadata(ButtonDisplayMode.Automatic, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty MarkDispositionProperty		= DependencyProperty.Register("MarkDisposition", typeof(ButtonMarkDisposition), typeof(MetaButton), new DependencyPropertyMetadata(ButtonMarkDisposition.None, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty MarkLengthProperty			= DependencyProperty.Register("MarkLength", typeof(double), typeof(MetaButton), new DependencyPropertyMetadata(8.0, MetaButton.HandleIconDefinitionChanged));
