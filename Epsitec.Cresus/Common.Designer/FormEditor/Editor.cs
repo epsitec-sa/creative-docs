@@ -288,19 +288,19 @@ namespace Epsitec.Common.Designer.FormEditor
 					break;
 
 				case "TabIndexFirst":
-					//?this.SelectTabIndex(-10000);
+					this.SelectTabIndex(-10000);
 					break;
 
 				case "TabIndexPrev":
-					//?this.SelectTabIndex(-1);
+					this.SelectTabIndex(-1);
 					break;
 
 				case "TabIndexNext":
-					//?this.SelectTabIndex(1);
+					this.SelectTabIndex(1);
 					break;
 
 				case "TabIndexLast":
-					//?this.SelectTabIndex(10000);
+					this.SelectTabIndex(10000);
 					break;
 			}
 		}
@@ -647,6 +647,29 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectObjectsInRectangle(Rectangle sel, Widget parent)
 		{
 		}
+
+
+		protected void SelectTabIndex(int direction)
+		{
+			//	Modifie l'ordre TabIndex des objets sélectionnés.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				FieldDescription field = this.objectModifier.GetFieldDescription(obj);
+				if (field != null)
+				{
+					int index = this.workingForm.TabOrder.Index(field.Guid);
+					if (index == -1)
+					{
+						this.workingForm.TabOrder.Add(field.Guid);
+					}
+					else
+					{
+						this.workingForm.TabOrder.Move(field.Guid, direction);
+					}
+				}
+			}
+		}
+
 
 		public void RegenerateForm()
 		{

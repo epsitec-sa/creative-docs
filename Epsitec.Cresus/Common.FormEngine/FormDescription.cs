@@ -84,6 +84,15 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public TabOrder TabOrder
+		{
+			//	Retourne la liste pour le flux TabIndex.
+			get
+			{
+				return this.tabOrder;
+			}
+		}
+
 		public bool IsDelta
 		{
 			//	Indique s'il s'agit d'un masque delta (Delta form).

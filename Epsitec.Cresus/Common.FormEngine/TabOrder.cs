@@ -23,7 +23,28 @@ namespace Epsitec.Common.FormEngine
 
 		public void Clear()
 		{
+			//	Supprime tous les éléments du flux TabIndex.
 			this.guids.Clear();
+		}
+
+		public void Add(System.Guid guid)
+		{
+			//	Ajoute un élément, qui sera le dernier dans le flux TabIndex.
+			int index = this.guids.IndexOf(guid);
+			if (index == -1)
+			{
+				this.guids.Add(guid);
+			}
+		}
+
+		public void Remove(System.Guid guid)
+		{
+			//	Supprime un élément, qui ne sera donc plus dans le flux TabIndex.
+			int index = this.guids.IndexOf(guid);
+			if (index != -1)
+			{
+				this.guids.RemoveAt(index);
+			}
 		}
 
 		public int Index(System.Guid guid)
@@ -128,10 +149,13 @@ namespace Epsitec.Common.FormEngine
 			//	Utilisé pour la désérialisation.
 			TabOrder tab = new TabOrder();
 
-			string[] list = value.Split(';');
-			foreach (string one in list)
+			if (!string.IsNullOrEmpty(value))
 			{
-				tab.guids.Add(new System.Guid(one));
+				string[] list = value.Split(';');
+				foreach (string one in list)
+				{
+					tab.guids.Add(new System.Guid(one));
+				}
 			}
 
 			return tab;

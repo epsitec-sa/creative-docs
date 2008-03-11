@@ -277,6 +277,7 @@ namespace Epsitec.Common.FormEngine
 
 		public TabOrder TabOrder
 		{
+			//	Retourne la liste pour le flux TabIndex.
 			get
 			{
 				return this.tabOrder;
