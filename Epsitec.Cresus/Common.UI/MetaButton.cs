@@ -259,6 +259,8 @@ namespace Epsitec.Common.UI
 				{
 					this.cachedButtonClass = buttonClassParam.ToEnum<ButtonClass> ();
 				}
+
+				this.UpdateButtonClass (this.cachedButtonClass);
 			}
 		}
 
