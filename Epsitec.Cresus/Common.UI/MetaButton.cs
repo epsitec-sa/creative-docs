@@ -23,12 +23,20 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return (ButtonClass) this.GetValue(MetaButton.ButtonClassProperty);
-			}
+				ButtonClass value = (ButtonClass) this.GetValue(MetaButton.ButtonClassProperty);
 
+				return (value == ButtonClass.None) ? this.cachedButtonClass : value;
+			}
 			set
 			{
-				this.SetValue (MetaButton.ButtonClassProperty, value);
+				if (value == ButtonClass.None)
+				{
+					this.ClearValue (MetaButton.ButtonClassProperty);
+				}
+				else
+				{
+					this.SetValue (MetaButton.ButtonClassProperty, value);
+				}
 			}
 		}
 
@@ -123,6 +131,8 @@ namespace Epsitec.Common.UI
 				throw new System.InvalidOperationException ("Use ButtonClass instead");
 			}
 		}
+
+
 
 		#region Overridden Methods
 
@@ -226,6 +236,28 @@ namespace Epsitec.Common.UI
 						this.TextLayout.LayoutSize = rect.Size;
 						adorner.PaintButtonTextLayout (graphics, rect.BottomLeft, this.TextLayout, state, this.ButtonStyle);
 					}
+				}
+			}
+		}
+
+		protected override void OnCommandObjectChanged(DependencyPropertyChangedEventArgs e)
+		{
+			base.OnCommandObjectChanged (e);
+
+			Command command = e.NewValue as Command;
+
+			if ((command != null) &&
+				(!this.ContainsValue (MetaButton.ButtonClassProperty)))
+			{
+				string buttonClassParam = command.CommandParameters["ButtonClass"];
+
+				if (string.IsNullOrEmpty (buttonClassParam))
+				{
+					this.cachedButtonClass = ButtonClass.FlatButton;
+				}
+				else
+				{
+					this.cachedButtonClass = buttonClassParam.ToEnum<ButtonClass> ();
 				}
 			}
 		}
@@ -402,5 +434,6 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty PreferredIconStyleProperty	= DependencyProperty.Register ("PreferredIconStyle", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (null, MetaButton.HandleIconDefinitionChanged));
 
 		private TextLayout			iconLayout;
+		private ButtonClass			cachedButtonClass;
 	}
 }

@@ -224,7 +224,7 @@ namespace Epsitec.Common.Widgets
 				{
 					//	TODO: définir clairement quelles valeurs DefaultParameter peut prendre
 
-					switch (command.DefaultParameter)
+					switch (command.CommandParameters["ButtonStyle"])
 					{
 						case "GlyphButton":
 							this.ButtonStyle = ButtonStyle.Icon;

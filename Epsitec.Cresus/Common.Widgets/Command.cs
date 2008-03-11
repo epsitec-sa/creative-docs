@@ -97,11 +97,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string							DefaultParameter
+		public CommandParameters				CommandParameters
 		{
 			get
 			{
-				return Command.GetDefaultParameter (this.caption);
+				return new CommandParameters (Command.GetDefaultParameter (this.caption));
 			}
 		}
 

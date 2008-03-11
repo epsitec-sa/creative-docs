@@ -1,9 +1,12 @@
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
+using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
+
+using System.Collections.Generic;
+
+using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Designer.Viewers
 {
@@ -224,8 +227,11 @@ namespace Epsitec.Common.Designer.Viewers
 			else
 			{
 				string dp = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
-				this.primaryAspectFlat.ActiveState = (dp == "FlatButton" || string.IsNullOrEmpty(dp)) ? ActiveState.Yes : ActiveState.No;
-				this.primaryAspectDialog.ActiveState = (dp == "DialogButton") ? ActiveState.Yes : ActiveState.No;
+				CommandParameters cp = new CommandParameters(dp);
+				string aspect = cp["ButtonClass"];
+				
+				this.primaryAspectFlat.ActiveState = (aspect == "FlatButton" || string.IsNullOrEmpty(aspect)) ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectDialog.ActiveState = (aspect == "DialogButton") ? ActiveState.Yes : ActiveState.No;
 
 				bool statefull = false;
 				object value = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull);
@@ -372,18 +378,6 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandlePrimaryAspectClicked(object sender, MessageEventArgs e)
 		{
 			//	Bouton 'aspect' pressé.
-			string defaultParameter = null;
-
-			if (sender == this.primaryAspectDialog)
-			{
-				defaultParameter = "DialogButton";
-			}
-
-			if (sender == this.primaryAspectFlat)
-			{
-				defaultParameter = "FlatButton";
-			}
-
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 			if (item == null)
 			{
@@ -391,6 +385,20 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			StructuredData data = item.GetCultureData(this.GetTwoLetters(0));
+			string defaultParameter = data.GetValue(Support.Res.Fields.ResourceCommand.DefaultParameter) as string;
+			CommandParameters commandParameters = new CommandParameters(defaultParameter);
+			
+			if (sender == this.primaryAspectDialog)
+			{
+				commandParameters["ButtonClass"] = "DialogButton";
+			}
+			
+			if (sender == this.primaryAspectFlat)
+			{
+				commandParameters["ButtonClass"] = "FlatButton";
+			}
+
+			defaultParameter = commandParameters.ToString();
 			data.SetValue(Support.Res.Fields.ResourceCommand.DefaultParameter, defaultParameter);
 
 			this.access.SetLocalDirty();
