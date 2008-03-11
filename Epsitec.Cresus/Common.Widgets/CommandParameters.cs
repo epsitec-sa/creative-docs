@@ -5,12 +5,23 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>CommandParameters</c> class stores the default parameters associated
+	/// with the <see cref="Command"/> class.
+	/// </summary>
 	public class CommandParameters : Dictionary<string, string>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandParameters"/> class.
+		/// </summary>
 		public CommandParameters()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandParameters"/> class.
+		/// </summary>
+		/// <param name="source">The serialized source for the parameters.</param>
 		public CommandParameters(string source)
 		{
 			if (string.IsNullOrEmpty (source))
@@ -32,6 +43,11 @@ namespace Epsitec.Common.Widgets
 
 		}
 
+		/// <summary>
+		/// Gets or sets the value for the specified key. Setting to <c>null</c>
+		/// clears the value. Querying for a missing key returns <c>null</c>.
+		/// </summary>
+		/// <value>The value.</value>
 		public new string this[string key]
 		{
 			get
@@ -57,19 +73,24 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Parses the specified serialized source for the parameters.
+		/// </summary>
+		/// <param name="source">The serialized source.</param>
+		/// <returns>The <see cref="CommandParameters"/> instance.</returns>
 		public static CommandParameters Parse(string source)
 		{
 			return new CommandParameters (source);
 		}
 
-		public static string SetParameter(string source, string key, string value)
-		{
-			CommandParameters param = new CommandParameters (source);
-			param[key] = value;
-			return param.ToString ();
-		}
-
+		/// <summary>
+		/// Returns a serialized source that represents the current parameter
+		/// settings.
+		/// </summary>
+		/// <returns>
+		/// The serialized source.
+		/// </returns>
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
