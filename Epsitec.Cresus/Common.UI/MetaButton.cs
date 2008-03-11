@@ -353,15 +353,23 @@ namespace Epsitec.Common.UI
 		{
 			//	Donne le rectangle à utiliser pour le texte du bouton.
 			Drawing.Rectangle rect = this.GetInnerBounds ();
+			ButtonClass buttonClass = this.ButtonClass;
 
-			if ((this.ButtonClass == ButtonClass.FlatButton || this.ButtonClass == ButtonClass.RichDialogButton) && rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+			if ((buttonClass == ButtonClass.FlatButton) ||
+				(buttonClass == ButtonClass.RichDialogButton))
 			{
-				return Drawing.Rectangle.Empty;
+				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+				{
+					return Drawing.Rectangle.Empty;
+				}
 			}
 
 			if (this.iconLayout != null)
 			{
-				rect.Left += rect.Height;
+				if (buttonClass == ButtonClass.FlatButton)
+				{
+					rect.Left += rect.Height;
+				}
 			}
 
 			switch (this.ContentAlignment)
@@ -370,6 +378,12 @@ namespace Epsitec.Common.UI
 				case Drawing.ContentAlignment.MiddleLeft:
 				case Drawing.ContentAlignment.TopLeft:
 					rect.Left += 5;  // espace entre le bord gauche ou l'icône et le texte
+					break;
+				
+				case Drawing.ContentAlignment.BottomRight:
+				case Drawing.ContentAlignment.MiddleRight:
+				case Drawing.ContentAlignment.TopRight:
+					rect.Right -= 5;  // espace entre le bord droite et le texte
 					break;
 			}
 
