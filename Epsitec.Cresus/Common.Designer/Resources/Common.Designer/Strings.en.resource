@@ -239,4 +239,6 @@
   <data id="006" mod="1">No error found.</data>
   <data id="0E7">Text Button</data>
   <data id="09A">Display</data>
+  <data id="KQ1">Cultures</data>
+  <data id="KR1">Properties</data>
 </bundle>

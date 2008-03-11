@@ -1541,12 +1541,6 @@ namespace Epsitec.Common.Designer
 						}
 					}
 				}
-				
-				public static class TableContent
-				{
-					//	designer:str/30K61
-					public static string Hide { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544358)); } }
-				}
 			}
 			
 			public static class Misc
@@ -1791,10 +1785,46 @@ namespace Epsitec.Common.Designer
 				
 				public static class Forms
 				{
+					//	designer:str/300R
+					public static string TabCultures { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (27)); } }
+					//	designer:str/30KP1
+					public static string TabMisc { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544377)); } }
+					//	designer:str/300P
+					public static string TabProperties { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (25)); } }
+					//	designer:str/302N4
+					public static string TabRelations { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554583)); } }
+					public static class Error
+					{
+						//	designer:str/30KK1
+						public static string RelationUse { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544372)); } }
+					}
+					
 					public static class Menu
 					{
+						//	designer:str/30KO1
+						public static string ClearDelta { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544376)); } }
+						//	designer:str/30KM1
+						public static string ShowColumn1 { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544374)); } }
+						//	designer:str/30KN1
+						public static string ShowColumn2 { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544375)); } }
+						//	designer:str/30KL1
+						public static string ShowGuid { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544373)); } }
 						//	designer:str/30215
 						public static string ShowPrefix { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554593)); } }
+					}
+					
+					public static class MiscPage
+					{
+						//	designer:str/30KJ1
+						public static string Height { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544371)); } }
+						//	designer:str/30KI1
+						public static string Width { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544370)); } }
+					}
+					
+					public static class TableContent
+					{
+						//	designer:str/30K61
+						public static string Hide { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544358)); } }
 					}
 					
 					public static class Title
@@ -1824,16 +1854,14 @@ namespace Epsitec.Common.Designer
 					public static string New { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (24)); } }
 					//	designer:str/300T
 					public static string Rectangle { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (29)); } }
-					//	designer:str/300R
-					public static string TabCultures { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (27)); } }
+					//	designer:str/30KQ1
+					public static string TabCultures { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544378)); } }
 					//	designer:str/302O4
 					public static string TabFields { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554584)); } }
 					//	designer:str/300Q
 					public static string TabObjects { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (26)); } }
-					//	designer:str/300P
-					public static string TabProperties { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (25)); } }
-					//	designer:str/302N4
-					public static string TabRelations { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554583)); } }
+					//	designer:str/30KR1
+					public static string TabProperties { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544379)); } }
 					public static class StatusBar
 					{
 						//	designer:str/300K9

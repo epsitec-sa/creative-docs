@@ -40,9 +40,9 @@
   <data name="Viewers.Strings.Edit" id="0M">Textes</data>
   <data name="Viewers.Strings.About" id="0N">Commentaires</data>
   <data name="Viewers.Panels.New" id="0O">New</data>
-  <data name="Viewers.Panels.TabProperties" id="0P">Propriétés</data>
+  <data name="Viewers.Forms.TabProperties" id="0P">Propriétés</data>
   <data name="Viewers.Panels.TabObjects" id="0Q">Objets</data>
-  <data name="Viewers.Panels.TabCultures" id="0R">Cultures</data>
+  <data name="Viewers.Forms.TabCultures" id="0R">Cultures</data>
   <data name="Viewers.Panels.Info" id="0S">Objets: {0}/{1}  Sélection: {2}</data>
   <data name="Viewers.Panels.Rectangle" id="0T">x={0} y={1} dx={2} dy={3}</data>
   <data name="Viewers.Panels.StatusBar.DeselectAll" id="0E9">Tout désélectionner</data>
@@ -475,7 +475,7 @@
   <data name="Viewers.Types.Boolean.False" id="2K4">Faux</data>
   <data name="BundleType.Form" id="2L4">Masque</data>
   <data name="BundleType.Forms" id="2M4">Masques</data>
-  <data name="Viewers.Panels.TabRelations" id="2N4">Source</data>
+  <data name="Viewers.Forms.TabRelations" id="2N4">Source</data>
   <data name="Viewers.Panels.TabFields" id="2O4">Contenu</data>
   <data name="Forms.Question.Create.Base" id="2P4">Quelle sorte de masque voulez-vous créer ?</data>
   <data name="Forms.Question.Create.Long.Normal" id="2Q4">Masque normal, basé sur une entité à choix.</data>
@@ -526,7 +526,7 @@
   <data name="Undo.Action.FieldFontSize" id="K31">Taille de la police du champ</data>
   <data name="Undo.Action.BoxFrameState" id="K41">Type du cadre</data>
   <data name="Undo.Action.BoxFrameWidth" id="K51">Epaisseur du cadre</data>
-  <data name="Forms.TableContent.Hide" id="K61"> (caché)</data>
+  <data name="Viewers.Forms.TableContent.Hide" id="K61"> (caché)</data>
   <data name="Undo.Action.DefaultSize" id="K71">Taille préférentielle</data>
   <data name="Undo.Action.FieldRemove" id="K81">Montrer ou cacher</data>
   <data name="Undo.Action.FieldReset" id="K91">Remise à zéro</data>
@@ -538,4 +538,14 @@
   <data name="Undo.Action.FieldBoxLink" id="KF1">Grouper</data>
   <data name="Undo.Action.FieldMove" id="KG1">Déplacer</data>
   <data name="Undo.Action.RelationUse" id="KH1">Ajouter</data>
+  <data name="Viewers.Forms.MiscPage.Width" id="KI1">Largeur préférentielle</data>
+  <data name="Viewers.Forms.MiscPage.Height" id="KJ1">Hauteur préférentielle</data>
+  <data name="Viewers.Forms.Error.RelationUse" id="KK1">Il n&amp;apos;existe aucun masque pour cette relation.</data>
+  <data name="Viewers.Forms.Menu.ShowGuid" id="KL1">Afficher les Guids (debug)</data>
+  <data name="Viewers.Forms.Menu.ShowColumn1" id="KM1">Afficher la deuxième colonne</data>
+  <data name="Viewers.Forms.Menu.ShowColumn2" id="KN1">Afficher la troisième colonne</data>
+  <data name="Viewers.Forms.Menu.ClearDelta" id="KO1">Effacer tout le masque correctif</data>
+  <data name="Viewers.Forms.TabMisc" id="KP1">Divers</data>
+  <data name="Viewers.Panels.TabCultures" id="KQ1">Cultures</data>
+  <data name="Viewers.Panels.TabProperties" id="KR1">Propriétés</data>
 </bundle>

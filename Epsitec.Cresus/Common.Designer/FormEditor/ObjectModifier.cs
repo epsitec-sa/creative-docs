@@ -1015,7 +1015,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsTableContentInheritHidden(item))
 			{
-				builder.Append(Res.Strings.Forms.TableContent.Hide);
+				builder.Append(Res.Strings.Viewers.Forms.TableContent.Hide);
 			}
 
 			return builder.ToString();

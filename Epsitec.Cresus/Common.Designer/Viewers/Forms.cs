@@ -193,7 +193,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée l'onglet 'relations'.
 			this.tabPageRelations = new TabPage();
-			this.tabPageRelations.TabTitle = Res.Strings.Viewers.Panels.TabRelations;
+			this.tabPageRelations.TabTitle = Res.Strings.Viewers.Forms.TabRelations;
 			this.tabPageRelations.Padding = new Margins(4, 4, 4, 4);
 			this.tabBookSecondary.Items.Add(this.tabPageRelations);
 
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée l'onglet 'propriétés'.
 			this.tabPageProperties = new TabPage();
-			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Panels.TabProperties;
+			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Forms.TabProperties;
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBookSecondary.Items.Add(this.tabPageProperties);
 
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée l'onglet 'divers'.
 			this.tabPageMisc = new TabPage();
-			this.tabPageMisc.TabTitle = "Divers";
+			this.tabPageMisc.TabTitle = Res.Strings.Viewers.Forms.TabMisc;
 			this.tabPageMisc.Padding = new Margins(10, 10, 10, 10);
 			this.tabBookSecondary.Items.Add(this.tabPageMisc);
 
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			//	Crée l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();
-			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Panels.TabCultures;
+			this.tabPageCultures.TabTitle = Res.Strings.Viewers.Forms.TabCultures;
 			this.tabPageCultures.Padding = new Margins(10, 10, 10, 10);
 			this.tabBookSecondary.Items.Add(this.tabPageCultures);
 
@@ -1267,7 +1267,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscWidthButton = new CheckButton(widthBox);
 			this.miscWidthButton.AutoToggle = false;
 			this.miscWidthButton.PreferredWidth = 140;
-			this.miscWidthButton.Text = "Largeur préférentielle";
+			this.miscWidthButton.Text = Res.Strings.Viewers.Forms.MiscPage.Width;
 			this.miscWidthButton.TabIndex = index++;
 			this.miscWidthButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.miscWidthButton.Dock = DockStyle.Left;
@@ -1293,7 +1293,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscHeightButton = new CheckButton(heightBox);
 			this.miscHeightButton.AutoToggle = false;
 			this.miscHeightButton.PreferredWidth = 140;
-			this.miscHeightButton.Text = "Hauteur préférentielle";
+			this.miscHeightButton.Text = Res.Strings.Viewers.Forms.MiscPage.Height;
 			this.miscHeightButton.TabIndex = index++;
 			this.miscHeightButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.miscHeightButton.Dock = DockStyle.Left;
@@ -2125,7 +2125,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					if (formId.IsEmpty)
 					{
-						this.designerApplication.DialogError("Il n'existe aucun masque pour cette relation.");
+						this.designerApplication.DialogError(Res.Strings.Viewers.Forms.Error.RelationUse);
 						return;
 					}
 
@@ -2249,21 +2249,21 @@ namespace Epsitec.Common.Designer.Viewers
 			menu.Items.Add(item);
 
 #if true
-			item = new MenuItem("FormFieldsShowGuid", Misc.GetMenuIconCheckState(Forms.showGuid), "Afficher les Guids (debug)", "", "FormFieldsShowGuid");
+			item = new MenuItem("FormFieldsShowGuid", Misc.GetMenuIconCheckState(Forms.showGuid), Res.Strings.Viewers.Forms.Menu.ShowGuid, "", "FormFieldsShowGuid");
 			menu.Items.Add(item);
 #endif
 
-			item = new MenuItem("FormFieldsShowColumn1", Misc.GetMenuIconCheckState(Forms.showColumn1), "Afficher la deuxième colonne", "", "FormFieldsShowColumn1");
+			item = new MenuItem("FormFieldsShowColumn1", Misc.GetMenuIconCheckState(Forms.showColumn1), Res.Strings.Viewers.Forms.Menu.ShowColumn1, "", "FormFieldsShowColumn1");
 			menu.Items.Add(item);
 
-			item = new MenuItem("FormFieldsShowColumn2", Misc.GetMenuIconCheckState(Forms.showColumn2), "Afficher la troisième colonne", "", "FormFieldsShowColumn2");
+			item = new MenuItem("FormFieldsShowColumn2", Misc.GetMenuIconCheckState(Forms.showColumn2), Res.Strings.Viewers.Forms.Menu.ShowColumn2, "", "FormFieldsShowColumn2");
 			menu.Items.Add(item);
 
 			if (this.formEditor.ObjectModifier.IsDelta && !this.designerApplication.IsReadonly)
 			{
 				menu.Items.Add(new MenuSeparator());
 
-				item = new MenuItem("FormFieldsClearDelta", Misc.Icon("Delete"), "Effacer tout le masque correctif", "", "FormFieldsClearDelta");
+				item = new MenuItem("FormFieldsClearDelta", Misc.Icon("Delete"), Res.Strings.Viewers.Forms.Menu.ClearDelta, "", "FormFieldsClearDelta");
 				menu.Items.Add(item);
 			}
 
