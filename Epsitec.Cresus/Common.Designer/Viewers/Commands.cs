@@ -53,6 +53,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAspectDialog.Dock = DockStyle.Left;
 			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
 
+			this.primaryAspectRichDialog = new IconButton(leftResetBox.GroupBox);
+			this.primaryAspectRichDialog.MinSize = this.primaryAspectRichDialog.PreferredSize;  // attention, très important !
+			this.primaryAspectRichDialog.CommandId = Res.Values.Widgets.ButtonClass.RichDialogButton.Id;
+			this.primaryAspectRichDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
+			this.primaryAspectRichDialog.Dock = DockStyle.Left;
+			this.primaryAspectRichDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+
 			//	Statefull.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.None, true, 0.1);
 
@@ -167,6 +174,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
+				this.primaryAspectRichDialog.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
 				this.primaryAspectDialog.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
 				this.primaryAspectFlat.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
 				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
@@ -204,6 +212,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.primaryAspectFlat.Enable = !this.designerApplication.IsReadonly;
 			this.primaryAspectDialog.Enable = !this.designerApplication.IsReadonly;
+			this.primaryAspectRichDialog.Enable = !this.designerApplication.IsReadonly;
 			this.primaryStatefull.Enable = !this.designerApplication.IsReadonly;
 			this.primaryGroup.Enable = !this.designerApplication.IsReadonly;
 
@@ -220,6 +229,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				this.primaryAspectFlat.ActiveState = ActiveState.No;
 				this.primaryAspectDialog.ActiveState = ActiveState.No;
+				this.primaryAspectRichDialog.ActiveState = ActiveState.No;
 				this.primaryStatefull.ActiveState = ActiveState.No;
 				this.SetShortcut(this.primaryShortcut1, this.primaryShortcut2, null);
 				this.primaryGroup.Text = "";
@@ -232,6 +242,7 @@ namespace Epsitec.Common.Designer.Viewers
 				
 				this.primaryAspectFlat.ActiveState = (aspect == "FlatButton" || string.IsNullOrEmpty(aspect)) ? ActiveState.Yes : ActiveState.No;
 				this.primaryAspectDialog.ActiveState = (aspect == "DialogButton") ? ActiveState.Yes : ActiveState.No;
+				this.primaryAspectRichDialog.ActiveState = (dp == "RichDialogButton") ? ActiveState.Yes : ActiveState.No;
 
 				bool statefull = false;
 				object value = data.GetValue(Support.Res.Fields.ResourceCommand.Statefull);
@@ -271,6 +282,10 @@ namespace Epsitec.Common.Designer.Viewers
 			if (this.primaryAspectDialog.ActiveState == ActiveState.Yes)
 			{
 				icon = Misc.Icon("ButtonAspectDialog");
+			}
+			if (this.primaryAspectRichDialog.ActiveState == ActiveState.Yes)
+			{
+				icon = Misc.Icon("ButtonAspectRichDialog");
 			}
 			this.primarySuiteSummaryIcon.IconName = icon;
 			this.secondarySuiteSummaryIcon.IconName = icon;
@@ -393,6 +408,11 @@ namespace Epsitec.Common.Designer.Viewers
 				commandParameters["ButtonClass"] = "DialogButton";
 			}
 			
+			if (sender == this.primaryAspectRichDialog)
+			{
+				defaultParameter = "RichDialogButton";
+			}
+
 			if (sender == this.primaryAspectFlat)
 			{
 				commandParameters["ButtonClass"] = "FlatButton";
@@ -592,6 +612,7 @@ namespace Epsitec.Common.Designer.Viewers
 		
 		protected IconButton					primaryAspectFlat;
 		protected IconButton					primaryAspectDialog;
+		protected IconButton					primaryAspectRichDialog;
 		protected CheckButton					primaryStatefull;
 		protected ShortcutEditor				primaryShortcut1;
 		protected ShortcutEditor				primaryShortcut2;
