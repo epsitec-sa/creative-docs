@@ -272,6 +272,12 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
+
+				case "PanelShowTabIndex":
+					this.context.ShowTabIndex = !this.context.ShowTabIndex;
+					this.Invalidate();
+					this.OnUpdateCommands();
+					break;
 			}
 		}
 
@@ -716,6 +722,12 @@ namespace Epsitec.Common.Designer.FormEditor
 				}
 			}
 
+			//	Dessine les numéros d'index pour la touche Tab.
+			if (this.context.ShowTabIndex)
+			{
+				this.DrawTabIndex(graphics, this.panel);
+			}
+
 			//	Dessine les objets sélectionnés.
 			if (this.selectedObjects.Count > 0 && !this.isDragging)
 			{
@@ -738,6 +750,77 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			graphics.Transform = it;
+		}
+
+		protected void DrawTabIndex(Graphics graphics, Widget parent)
+		{
+			//	Dessine les numéros d'index pour la touche Tab.
+			foreach (Widget obj in parent.Children)
+			{
+				Rectangle rect = this.objectModifier.GetActualBounds(obj);
+				Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
+
+				graphics.AddFilledRectangle(box);
+				graphics.RenderSolid(Color.FromBrightness(1));
+
+				string text = this.GetObjectTabIndex(obj);
+				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid(PanelsContext.ColorTabIndex);
+
+				if (ObjectModifier.IsBox(obj))
+				{
+					this.DrawTabIndex(graphics, obj);
+				}
+			}
+		}
+
+		protected string GetObjectTabIndex(Widget obj)
+		{
+			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
+			if (obj.Parent == this.panel)
+			{
+				if (Editor.IsObjectTabActive(obj))
+				{
+					return (obj.TabIndex+1).ToString();
+				}
+				else
+				{
+					return "x";
+				}
+			}
+
+			List<string> list = new List<string>();
+			while (obj != this.panel)
+			{
+				if (Editor.IsObjectTabActive(obj))
+				{
+					list.Add((obj.TabIndex+1).ToString());
+				}
+				else
+				{
+					list.Add("x");
+				}
+
+				obj = obj.Parent;
+			}
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+			for (int i=list.Count-1; i>=0; i--)
+			{
+				if (builder.Length > 0)
+				{
+					builder.Append(".");
+				}
+
+				builder.Append(list[i]);
+			}
+			return builder.ToString();
+		}
+
+		protected static bool IsObjectTabActive(Widget obj)
+		{
+			//	Indique si l'objet à un ordre pour la touche Tab.
+			return (obj.TabNavigationMode & TabNavigationMode.ActivateOnTab) != 0;
 		}
 
 		protected void DrawSelectedObjects(Graphics graphics)
