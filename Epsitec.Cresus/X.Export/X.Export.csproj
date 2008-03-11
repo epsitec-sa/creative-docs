@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F3A53056-6C28-470B-A79F-9AA9C2235BBF}</ProjectGuid>
     <OutputType>Exe</OutputType>
@@ -51,6 +51,7 @@ xcopy "$(TargetDir)*.exe" "$(SolutionDir)Export" /S/Y /EXCLUDE:..\..\..\excludes
 xcopy "$(SolutionDir)External\*.dll" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)External\*.pdb" "$(SolutionDir)Export" /Y /EXCLUDE:..\..\..\excludesvn.ini
 
+xcopy "$(SolutionDir)App.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.DocumentEditor\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Designer\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Dialogs\Resources\*" "$(SolutionDir)Export\Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
