@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("New", 500, 230, true);
-				this.window.Text = "Nouveau"; // Res.Strings.Dialog.New.Title;
+				this.window.Text = Res.Strings.Dialog.New.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -39,13 +39,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				box.Dock = DockStyle.Top;
 
 				this.radioTypeReference = new RadioButton(box);
-				this.radioTypeReference.Text = "Module de référence";
+				this.radioTypeReference.Text = Res.Strings.Dialog.New.Type.Reference;
 				this.radioTypeReference.PreferredWidth = 150;
 				this.radioTypeReference.Dock = DockStyle.Left;
 				this.radioTypeReference.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
 
 				this.radioTypePatch = new RadioButton(box);
-				this.radioTypePatch.Text = "Module de patch";
+				this.radioTypePatch.Text = Res.Strings.Dialog.New.Type.Patch0;
 				this.radioTypePatch.PreferredWidth = 300;
 				this.radioTypePatch.Dock = DockStyle.Left;
 				this.radioTypePatch.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
@@ -55,26 +55,26 @@ namespace Epsitec.Common.Designer.Dialogs
 				sep.Margins = new Margins(0, 0, 0, 18);
 				sep.Dock = DockStyle.Top;
 
-				this.fieldRootDirectoryPath = this.CreateTextField(1, "Chemin de la racine", this.initialRootDirectoryPath);
-				this.fieldModuleName        = this.CreateTextField(2, "Nom du module",       this.initialModuleName);
-				this.fieldSourceNamespace   = this.CreateTextField(3, "Namespace source",    this.initialSourceNamespace);
+				this.fieldRootDirectoryPath = this.CreateTextField(1, Res.Strings.Dialog.New.Field.RootDirectoryPath, this.initialRootDirectoryPath);
+				this.fieldModuleName        = this.CreateTextField(2, Res.Strings.Dialog.New.Field.ModuleName,        this.initialModuleName);
+				this.fieldSourceNamespace   = this.CreateTextField(3, Res.Strings.Dialog.New.Field.SourceNamespace,   this.initialSourceNamespace);
 
 				this.radioLayerBox = new FrameBox(this.window.Root);
 				this.radioLayerBox.Margins = new Margins(125, 0, 5, 0);
 				this.radioLayerBox.Dock = DockStyle.Top;
 
 				this.radioLayerSystem = new RadioButton(this.radioLayerBox);
-				this.radioLayerSystem.Text = "Système";
+				this.radioLayerSystem.Text = Res.Strings.Dialog.New.Layer.System;
 				this.radioLayerSystem.Dock = DockStyle.Top;
 				this.radioLayerSystem.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
 
 				this.radioLayerApplication = new RadioButton(this.radioLayerBox);
-				this.radioLayerApplication.Text = "Application";
+				this.radioLayerApplication.Text = Res.Strings.Dialog.New.Layer.Application;
 				this.radioLayerApplication.Dock = DockStyle.Top;
 				this.radioLayerApplication.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
 
 				this.radioLayerUser = new RadioButton(this.radioLayerBox);
-				this.radioLayerUser.Text = "Utilisateur";
+				this.radioLayerUser.Text = Res.Strings.Dialog.New.Layer.User;
 				this.radioLayerUser.Dock = DockStyle.Top;
 				this.radioLayerUser.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
 
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonNew = new Button(footer);
 				this.buttonNew.PreferredWidth = 75;
-				this.buttonNew.Text = "Créer"; // Res.Strings.Dialog.Open.Button.New;
+				this.buttonNew.Text = Res.Strings.Dialog.New.Button.New;
 				this.buttonNew.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonNew.Dock = DockStyle.Right;
 				this.buttonNew.Margins = new Margins(0, 6, 0, 0);
@@ -206,12 +206,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Met à jour tous les boutons.
 			if (string.IsNullOrEmpty(this.actualModuleName))
 			{
-				this.radioTypePatch.Text = "Module de patch";
+				this.radioTypePatch.Text = Res.Strings.Dialog.New.Type.Patch0;
 				this.radioTypePatch.Enable = false;
 			}
 			else
 			{
-				this.radioTypePatch.Text = string.Format("Module de patch basé sur {0}", this.actualModuleName);
+				this.radioTypePatch.Text = string.Format(Res.Strings.Dialog.New.Type.Patch1, this.actualModuleName);
 				this.radioTypePatch.Enable = true;
 			}
 

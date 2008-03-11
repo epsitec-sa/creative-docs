@@ -105,7 +105,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Nombre de colonnes");
+				this.UndoMemorize(Res.Strings.Undo.Action.ColumnsRequired);
 				field.ColumnsRequired = columnsRequired;
 				this.DeltaUpdate(field);
 			}
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Nombre de lignes");
+				this.UndoMemorize(Res.Strings.Undo.Action.RowsRequired);
 				field.RowsRequired = rowsRequired;
 				this.DeltaUpdate(field);
 			}
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Type de séparateur");
+				this.UndoMemorize(Res.Strings.Undo.Action.SeparatorBottom);
 				field.SeparatorBottom = sep;
 				this.DeltaUpdate(field);
 			}
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Marges");
+				this.UndoMemorize(Res.Strings.Undo.Action.BoxPadding);
 				field.BoxPadding = type;
 				this.DeltaUpdate(field);
 			}
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Couleur de fond");
+				this.UndoMemorize(Res.Strings.Undo.Action.BackColor);
 				field.BackColor = color;
 				this.DeltaUpdate(field);
 			}
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Couleur de la police de l'étiquette");
+				this.UndoMemorize(Res.Strings.Undo.Action.LabelFontColor);
 				field.LabelFontColor = color;
 				this.DeltaUpdate(field);
 			}
@@ -295,7 +295,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Couleur de la police du champ");
+				this.UndoMemorize(Res.Strings.Undo.Action.FieldFontColor);
 				field.FieldFontColor = color;
 				this.DeltaUpdate(field);
 			}
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Nom de la police de l'étiquette");
+				this.UndoMemorize(Res.Strings.Undo.Action.LabelFontFace);
 				field.LabelFontFace = face;
 				this.DeltaUpdate(field);
 			}
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Nom de la police du champ");
+				this.UndoMemorize(Res.Strings.Undo.Action.FieldFontFace);
 				field.FieldFontFace = face;
 				this.DeltaUpdate(field);
 			}
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Style de la police de l'étiquette");
+				this.UndoMemorize(Res.Strings.Undo.Action.LabelFontStyle);
 				field.LabelFontStyle = style;
 				this.DeltaUpdate(field);
 			}
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Style de la police du champ");
+				this.UndoMemorize(Res.Strings.Undo.Action.FieldFontStyle);
 				field.FieldFontStyle = style;
 				this.DeltaUpdate(field);
 			}
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Taille de la police de l'étiquette");
+				this.UndoMemorize(Res.Strings.Undo.Action.LabelFontSize);
 				field.LabelFontSize = size;
 				this.DeltaUpdate(field);
 			}
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Taille de la police du champ");
+				this.UndoMemorize(Res.Strings.Undo.Action.FieldFontSize);
 				field.FieldFontSize = size;
 				this.DeltaUpdate(field);
 			}
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Type du cadre");
+				this.UndoMemorize(Res.Strings.Undo.Action.BoxFrameState);
 				field.BoxFrameState = state;
 				this.DeltaUpdate(field);
 			}
@@ -548,7 +548,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize("Epaisseur du cadre");
+				this.UndoMemorize(Res.Strings.Undo.Action.BoxFrameWidth);
 				field.BoxFrameWidth = 2*width-1;
 				this.DeltaUpdate(field);
 			}
@@ -1015,7 +1015,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			if (this.IsTableContentInheritHidden(item))
 			{
-				builder.Append(" (caché)");
+				builder.Append(Res.Strings.Forms.TableContent.Hide);
 			}
 
 			return builder.ToString();

@@ -494,4 +494,48 @@
   <data name="Ribbon.Section.Undo" id="K3">Annuler</data>
   <data name="Viewers.Column.PatchLevel" id="K4">Niveau</data>
   <data name="Action.Recycle" id="K5">Recycler</data>
+  <data name="Dialog.New.Title" id="K6">Nouveau</data>
+  <data name="Dialog.New.Type.Reference" id="K7">Module de référence</data>
+  <data name="Dialog.New.Type.Patch0" id="K8">Module de patch</data>
+  <data name="Dialog.New.Type.Patch1" id="K9">Module de patch basé sur {0}</data>
+  <data name="Dialog.New.Field.RootDirectoryPath" id="KA">Chemin de la racine</data>
+  <data name="Dialog.New.Field.ModuleName" id="KB">Nom du module</data>
+  <data name="Dialog.New.Field.SourceNamespace" id="KC">Namespace source</data>
+  <data name="Dialog.New.Layer.System" id="KD">Système</data>
+  <data name="Dialog.New.Layer.Application" id="KE">Application</data>
+  <data name="Dialog.New.Layer.User" id="KF">Utilisateur</data>
+  <data name="Dialog.New.Button.New" id="KG">Créer</data>
+  <data name="Dialog.New.Progress.Title" id="KH">Création en cours</data>
+  <data name="Dialog.New.Error.Create" id="KI">Impossible de créer le module.</data>
+  <data name="Dialog.Recycle.Question" id="KJ">Voulez-vous recycler le module &lt;b&gt;{0}&lt;/b&gt; ?</data>
+  <data name="Dialog.Recycle.Progress.Title" id="KK">Recyclage en cours</data>
+  <data name="Dialog.Recycle.Error.Recycle" id="KL">Impossible de recycler le module &lt;b&gt;{0}&lt;/b&gt;.</data>
+  <data name="Dialog.Recycle.Message.Ok" id="KM">Le module &lt;b&gt;{0}&lt;/b&gt; a été recyclé.</data>
+  <data name="Undo.Action.ColumnsRequired" id="KN">Nombre de colonnes</data>
+  <data name="Undo.Action.RowsRequired" id="KO">Nombre de lignes</data>
+  <data name="Undo.Action.SeparatorBottom" id="KP">Type de séparateur</data>
+  <data name="Undo.Action.BoxPadding" id="KQ">Marges</data>
+  <data name="Undo.Action.BackColor" id="KR">Couleur de fond</data>
+  <data name="Undo.Action.LabelFontColor" id="KS">Couleur de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.FieldFontColor" id="KT">Couleur de la police du champ</data>
+  <data name="Undo.Action.LabelFontFace" id="KU">Nom de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.FieldFontFace" id="KV">Nom de la police du champ</data>
+  <data name="Undo.Action.LabelFontStyle" id="K01">Style de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.FieldFontStyle" id="K11">Style de la police du champ</data>
+  <data name="Undo.Action.LabelFontSize" id="K21">Taille de la police de l&amp;apos;étiquette</data>
+  <data name="Undo.Action.FieldFontSize" id="K31">Taille de la police du champ</data>
+  <data name="Undo.Action.BoxFrameState" id="K41">Type du cadre</data>
+  <data name="Undo.Action.BoxFrameWidth" id="K51">Epaisseur du cadre</data>
+  <data name="Forms.TableContent.Hide" id="K61"> (caché)</data>
+  <data name="Undo.Action.DefaultSize" id="K71">Taille préférentielle</data>
+  <data name="Undo.Action.FieldRemove" id="K81">Montrer ou cacher</data>
+  <data name="Undo.Action.FieldReset" id="K91">Remise à zéro</data>
+  <data name="Undo.Action.FieldGlue" id="KA1">Coller l&amp;apos;élément</data>
+  <data name="Undo.Action.FieldLine" id="KB1">Insérer un séparateur</data>
+  <data name="Undo.Action.FieldTitle" id="KC1">Insérer un titre</data>
+  <data name="Undo.Action.FieldForm" id="KD1">Choix d&amp;apos;un sous-masque</data>
+  <data name="Undo.Action.FieldBoxUnlink" id="KE1">Séparer</data>
+  <data name="Undo.Action.FieldBoxLink" id="KF1">Grouper</data>
+  <data name="Undo.Action.FieldMove" id="KG1">Déplacer</data>
+  <data name="Undo.Action.RelationUse" id="KH1">Ajouter</data>
 </bundle>

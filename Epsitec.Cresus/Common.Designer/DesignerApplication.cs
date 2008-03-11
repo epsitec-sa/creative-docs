@@ -473,7 +473,7 @@ namespace Epsitec.Common.Designer
 
 				if (this.dlgNew.IsPatch)
 				{
-					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration,
+					Common.Dialogs.WorkInProgressDialog.Execute(Res.Strings.Dialog.New.Progress.Title, ProgressIndicatorStyle.UnknownDuration,
 						progress =>
 						{
 							info = store.CreatePatchModule(rootDirectoryPath, this.CurrentModuleInfo.Module.ResourceManager.DefaultModuleInfo, this.settings.IdentityCard);
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Designer
 				}
 				else
 				{
-					Common.Dialogs.WorkInProgressDialog.Execute("Création en cours", ProgressIndicatorStyle.UnknownDuration,
+					Common.Dialogs.WorkInProgressDialog.Execute(Res.Strings.Dialog.New.Progress.Title, ProgressIndicatorStyle.UnknownDuration,
 						progress =>
 						{
 							info = store.CreateReferenceModule(rootDirectoryPath, moduleName, sourceNamespace, this.dlgNew.ResourceModuleLayer, this.settings.IdentityCard);
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Designer
 
 				if (info == null)
 				{
-					this.DialogError("Impossible de créer le module.");
+					this.DialogError(Res.Strings.Dialog.New.Error.Create);
 				}
 				else
 				{
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			string name = this.CurrentModuleInfo.Module.ModuleId.Name;
-			string question = string.Format("Voulez-vous recycler le module <b>{0}</b> ?", name);
+			string question = string.Format(Res.Strings.Dialog.Recycle.Question, name);
 			if (this.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
 			{
 				ModuleSupport.ModuleStore store = new ModuleSupport.ModuleStore(this.resourceManagerPool);
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Designer
 						}
 						else
 						{
-							Common.Dialogs.WorkInProgressDialog.Execute("Recyclage en cours", ProgressIndicatorStyle.UnknownDuration,
+							Common.Dialogs.WorkInProgressDialog.Execute(Res.Strings.Dialog.Recycle.Progress.Title, ProgressIndicatorStyle.UnknownDuration,
 								progress =>
 								{
 									ok = store.RecycleModule(info, this.settings.IdentityCard);
@@ -558,14 +558,14 @@ namespace Epsitec.Common.Designer
 				
 				if (ok)
 				{
-					string message = string.Format("Le module <b>{0}</b> a été recyclé.", name);
+					string message = string.Format(Res.Strings.Dialog.Recycle.Message.Ok, name);
 					this.DialogMessage(message);
 
 					this.CloseModule();  // ferme le module qu'on vient de recycler
 				}
 				else
 				{
-					string message = string.Format("Impossible de recycler le module <b>{0}</b>.", name);
+					string message = string.Format(Res.Strings.Dialog.Recycle.Error.Recycle, name);
 					this.DialogError(message);
 				}
 			}

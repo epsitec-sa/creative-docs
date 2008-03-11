@@ -1347,7 +1347,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.UndoMemorize("Taille préférentielle", true);
+			this.UndoMemorize(Res.Strings.Undo.Action.DefaultSize, true);
 			this.workingForm.DefaultSize = defaultSize;
 			this.module.AccessForms.SetLocalDirty();
 			this.UpdateMiscPage();
@@ -1391,7 +1391,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (this.workingForm.DefaultSize != defaultSize)
 			{
-				this.UndoMemorize("Taille préférentielle", true);
+				this.UndoMemorize(Res.Strings.Undo.Action.DefaultSize, true);
 				this.workingForm.DefaultSize = defaultSize;
 				this.UpdateMiscPagePanel();
 				this.module.AccessForms.SetLocalDirty();
@@ -1593,7 +1593,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsRemove()
 		{
 			//	Utilise ou supprime les champs sélectionnés.
-			this.UndoMemorize("Montrer ou cacher", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldRemove, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
@@ -1709,7 +1709,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsReset()
 		{
 			//	Remet à zéro les champs sélectionnés, dans un masque delta.
-			this.UndoMemorize("Remise à zéro", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldReset, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
@@ -1760,7 +1760,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsGlue()
 		{
 			//	Insère une "glue" avant le champ sélectionné.
-			this.UndoMemorize("Coller l'élément", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldGlue, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
@@ -1805,7 +1805,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsLine()
 		{
 			//	Insère une ligne avant le champ sélectionné.
-			this.UndoMemorize("Insérer un séparateur", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldLine, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
@@ -1848,7 +1848,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsTitle()
 		{
 			//	Insère un titre avant le champ sélectionné.
-			this.UndoMemorize("Insérer un titre", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldTitle, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
@@ -1913,7 +1913,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			this.UndoMemorize("Choix d'un sous-masque", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldForm, false);
 			field.SubFormId = druid;
 			
 			this.SetForm(true);
@@ -1936,7 +1936,7 @@ namespace Epsitec.Common.Designer.Viewers
 				if (firstItem.FieldType == FieldDescription.FieldType.BoxBegin)
 				{
 					//	Sépare le groupe sélectionné.
-					this.UndoMemorize("Séparer", false);
+					this.UndoMemorize(Res.Strings.Undo.Action.FieldBoxUnlink, false);
 
 					int level = 0;
 					for (int i=sels[0]; i<this.formEditor.ObjectModifier.TableContent.Count; i++)
@@ -1975,7 +1975,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			//	Groupe les champs sélectionnés.
-			this.UndoMemorize("Grouper", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldBoxLink, false);
 
 			List<FieldDescription> content = new List<FieldDescription>();
 			for (int i=sels.Count-1; i>=0; i--)
@@ -2016,7 +2016,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedFieldsMove(int direction)
 		{
 			//	Déplace les champs sélectionnés vers le haut ou vers le bas.
-			this.UndoMemorize("Déplacer", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldMove, false);
 
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
@@ -2097,7 +2097,7 @@ namespace Epsitec.Common.Designer.Viewers
 				return;
 			}
 
-			this.UndoMemorize("Ajouter", false);
+			this.UndoMemorize(Res.Strings.Undo.Action.RelationUse, false);
 
 			FormEditor.ObjectModifier.RelationItem item = this.formEditor.ObjectModifier.TableRelations[sel];
 			FieldDescription field;
