@@ -24,6 +24,7 @@ namespace Epsitec.Common.FormEngine
 			this.deltaBaseFormId = deltaBaseFormId;
 			this.defaultSize = new Size(double.NaN, double.NaN);
 			this.fields = new List<FieldDescription>();
+			this.tabOrder = new TabOrder();
 		}
 
 		public FormDescription(FormDescription model) : this(model.EntityId, model.DeltaBaseFormId)
@@ -170,6 +171,11 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 
+			if (a.tabOrder != b.tabOrder)
+			{
+				return false;
+			}
+
 			return true;
 		}
 
@@ -212,6 +218,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.EntityId, this.entityId.ToString());
 			writer.WriteElementString(Xml.DeltaBaseFormId, this.deltaBaseFormId.ToString());
 			writer.WriteElementString(Xml.DefaultSize, this.defaultSize.ToString());
+			writer.WriteElementString(Xml.TabOrder, this.tabOrder.ToString());
 			foreach (FieldDescription field in this.fields)
 			{
 				field.WriteXml(writer);
@@ -260,6 +267,10 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.defaultSize = Size.Parse(element);
 						}
+						else if (name == Xml.TabOrder)
+						{
+							this.tabOrder = TabOrder.Parse(element);
+						}
 						else
 						{
 							throw new System.NotSupportedException(string.Format("Unexpected XML node {0} found in FieldDescription", name));
@@ -294,6 +305,7 @@ namespace Epsitec.Common.FormEngine
 		private Druid							deltaBaseFormId;
 		private Size							defaultSize;
 		private readonly List<FieldDescription>	fields;
+		private TabOrder						tabOrder;
 		private bool							isForceDelta;
 	}
 }

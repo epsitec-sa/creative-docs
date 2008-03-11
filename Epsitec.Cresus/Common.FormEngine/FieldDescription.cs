@@ -107,6 +107,11 @@ namespace Epsitec.Common.FormEngine
 			//	Le type est toujours déterminé à la création. Il ne pourra plus changer par la suite.
 			this.guid = System.Guid.NewGuid();
 			this.type = type;
+
+			if (this.type == FieldType.BoxBegin)
+			{
+				this.tabOrder = new TabOrder();
+			}
 		}
 
 		public FieldDescription(FieldDescription model) : this()
@@ -121,6 +126,7 @@ namespace Epsitec.Common.FormEngine
 			this.rowsRequired = model.rowsRequired;
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
+			this.tabOrder = model.tabOrder;
 			this.subFormId = model.subFormId;
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
@@ -265,6 +271,15 @@ namespace Epsitec.Common.FormEngine
 			get
 			{
 				return this.nodeDescription;
+			}
+		}
+
+
+		public TabOrder TabOrder
+		{
+			get
+			{
+				return this.tabOrder;
 			}
 		}
 
@@ -780,6 +795,19 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 
+			if ((a.tabOrder == null) != (b.tabOrder == null))
+			{
+				return false;
+			}
+
+			if (a.tabOrder != null && b.tabOrder != null)
+			{
+				if (a.tabOrder != b.tabOrder)
+				{
+					return false;
+				}
+			}
+
 			return true;
 		}
 
@@ -891,6 +919,11 @@ namespace Epsitec.Common.FormEngine
 			if (this.deltaBrokenAttach)
 			{
 				writer.WriteElementString(Xml.DeltaBrokenAttach, this.deltaBrokenAttach.ToString());
+			}
+
+			if (this.tabOrder != null)
+			{
+				writer.WriteElementString(Xml.TabOrder, this.tabOrder.ToString());
 			}
 
 			writer.WriteEndElement();
@@ -1018,6 +1051,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.DeltaBrokenAttach)
 						{
 							this.deltaBrokenAttach = bool.Parse(element);
+						}
+						else if (name == Xml.TabOrder)
+						{
+							this.tabOrder = TabOrder.Parse(element);
 						}
 						else
 						{
@@ -1171,6 +1208,7 @@ namespace Epsitec.Common.FormEngine
 		private FieldDescription			source;
 		private List<FieldDescription>		nodeDescription;
 		private List<Druid>					fieldIds;
+		private TabOrder					tabOrder;
 		private Druid						subFormId;
 		private BackColorType				backColor;
 		private FontColorType				labelFontColor;
