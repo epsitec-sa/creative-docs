@@ -552,6 +552,7 @@ namespace Epsitec.Common.FormEngine
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
+			box.TabIndex = grid.RowDefinitions.Count;
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
 			
