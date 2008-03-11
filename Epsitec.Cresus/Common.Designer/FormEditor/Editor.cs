@@ -757,19 +757,22 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine les numéros d'index pour la touche Tab.
 			foreach (Widget obj in parent.Children)
 			{
-				Rectangle rect = this.objectModifier.GetActualBounds(obj);
-				Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
-
-				graphics.AddFilledRectangle(box);
-				graphics.RenderSolid(Color.FromBrightness(1));
-
-				string text = this.GetObjectTabIndex(obj);
-				graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid(PanelsContext.ColorTabIndex);
-
-				if (ObjectModifier.IsBox(obj))
+				if (this.objectModifier.IsField(obj) || this.objectModifier.IsBox(obj))
 				{
-					this.DrawTabIndex(graphics, obj);
+					Rectangle rect = this.objectModifier.GetActualBounds(obj);
+					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
+
+					graphics.AddFilledRectangle(box);
+					graphics.RenderSolid(Color.FromBrightness(1));
+
+					string text = this.GetObjectTabIndex(obj);
+					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+					graphics.RenderSolid(PanelsContext.ColorTabIndex);
+
+					if (this.objectModifier.IsBox(obj))
+					{
+						this.DrawTabIndex(graphics, obj);
+					}
 				}
 			}
 		}
