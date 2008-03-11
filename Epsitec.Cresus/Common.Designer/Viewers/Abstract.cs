@@ -1534,7 +1534,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("PanelOrderDownOne").Enable = (objSelected != 0 && objCount >= 2);
 
 				this.GetCommandState("TabIndexClear").Enable = (objSelected != 0);
-				this.GetCommandState("TabIndexRenum").Enable = (objCount != 0);
+				this.GetCommandState("TabIndexRenum").Enable = (objCount != 0 && !this.designerApplication.IsReadonly);
 				this.GetCommandState("TabIndexLast").Enable = (objSelected != 0);
 				this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0);
 				this.GetCommandState("TabIndexNext").Enable = (objSelected != 0);
@@ -1596,12 +1596,12 @@ namespace Epsitec.Common.Designer.Viewers
 				this.GetCommandState("PanelOrderUpOne").Enable = false;
 				this.GetCommandState("PanelOrderDownOne").Enable = false;
 
-				this.GetCommandState("TabIndexClear").Enable = false;
-				this.GetCommandState("TabIndexRenum").Enable = false;
-				this.GetCommandState("TabIndexLast").Enable = false;
-				this.GetCommandState("TabIndexPrev").Enable = false;
-				this.GetCommandState("TabIndexNext").Enable = false;
-				this.GetCommandState("TabIndexFirst").Enable = false;
+				this.GetCommandState("TabIndexClear").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexRenum").Enable = (objCount != 0 && !this.designerApplication.IsReadonly);
+				this.GetCommandState("TabIndexLast").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexPrev").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexNext").Enable = (objSelected != 0);
+				this.GetCommandState("TabIndexFirst").Enable = (objSelected != 0);
 			}
 			else
 			{

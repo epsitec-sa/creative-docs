@@ -278,6 +278,30 @@ namespace Epsitec.Common.Designer.FormEditor
 					this.Invalidate();
 					this.OnUpdateCommands();
 					break;
+
+				case "TabIndexClear":
+					//?this.SelectTabIndex(0);
+					break;
+
+				case "TabIndexRenum":
+					//?this.SelectTabIndexRenum();
+					break;
+
+				case "TabIndexFirst":
+					//?this.SelectTabIndex(-10000);
+					break;
+
+				case "TabIndexPrev":
+					//?this.SelectTabIndex(-1);
+					break;
+
+				case "TabIndexNext":
+					//?this.SelectTabIndex(1);
+					break;
+
+				case "TabIndexLast":
+					//?this.SelectTabIndex(10000);
+					break;
 			}
 		}
 
