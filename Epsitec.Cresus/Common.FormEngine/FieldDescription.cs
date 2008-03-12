@@ -132,6 +132,7 @@ namespace Epsitec.Common.FormEngine
 			this.deltaModified = model.deltaModified;
 			this.deltaAttachGuid = model.deltaAttachGuid;
 			this.deltaBrokenAttach = model.deltaBrokenAttach;
+			this.tabNextGuid = model.tabNextGuid;
 		}
 
 		public FieldDescription(XmlReader reader) : this()
@@ -697,6 +698,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public System.Guid TabNextGuid
+		{
+			//	Retourne l'identificateur unique où doit amener la touche Tab (exception).
+			get
+			{
+				return this.tabNextGuid;
+			}
+			set
+			{
+				this.tabNextGuid = value;
+			}
+		}
+
 
 		#region IEquatable<FieldDescription> Members
 
@@ -754,7 +768,8 @@ namespace Epsitec.Common.FormEngine
 				a.deltaMoved != b.deltaMoved ||
 				a.deltaInserted != b.deltaInserted ||
 				a.deltaModified != b.deltaModified ||
-				!a.deltaAttachGuid.Equals(b.deltaAttachGuid) )
+				!a.deltaAttachGuid.Equals(b.deltaAttachGuid) ||
+				!a.tabNextGuid.Equals(b.tabNextGuid))
 			{
 				return false;
 			}
@@ -893,6 +908,11 @@ namespace Epsitec.Common.FormEngine
 				writer.WriteElementString(Xml.DeltaBrokenAttach, this.deltaBrokenAttach.ToString());
 			}
 
+			if (this.tabNextGuid != System.Guid.Empty)
+			{
+				writer.WriteElementString(Xml.TabNextGuid, this.tabNextGuid.ToString());
+			}
+
 			writer.WriteEndElement();
 		}
 
@@ -1018,6 +1038,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.DeltaBrokenAttach)
 						{
 							this.deltaBrokenAttach = bool.Parse(element);
+						}
+						else if (name == Xml.TabNextGuid)
+						{
+							this.tabNextGuid = new System.Guid(element);
 						}
 						else
 						{
@@ -1149,6 +1173,7 @@ namespace Epsitec.Common.FormEngine
 		public static double GetRealFontSize(FontSizeType type)
 		{
 			//	Retourne la taille réelle d'après son type.
+			//	Rappel: la taille standard vaut 10.8 !
 			switch (type)
 			{
 				case FontSizeType.Small:
@@ -1194,5 +1219,6 @@ namespace Epsitec.Common.FormEngine
 		private bool						deltaModified;
 		private System.Guid					deltaAttachGuid;
 		private bool						deltaBrokenAttach;
+		private System.Guid					tabNextGuid;
 	}
 }
