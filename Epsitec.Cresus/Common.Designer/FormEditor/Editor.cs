@@ -697,43 +697,41 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			//	Dessine le panneau.
-			if (!this.isEditEnabled)
-			{
-				return;
-			}
-
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			//	Dessine les surfaces inutilisées.
 			Rectangle box = this.Client.Bounds;
 			Rectangle bounds = this.ConvPanelToEditor(this.RealBounds);
 
-			if (bounds.Top < box.Top)  // bande supérieure ?
+			if (this.isEditEnabled)
 			{
-				Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(PanelsContext.ColorOutsurface);
-			}
+				if (bounds.Top < box.Top)  // bande supérieure ?
+				{
+					Rectangle part = new Rectangle(box.Left, bounds.Top, box.Width, box.Top-bounds.Top);
+					graphics.AddFilledRectangle(part);
+					graphics.RenderSolid(PanelsContext.ColorOutsurface);
+				}
 
-			if (box.Bottom < bounds.Bottom)  // bande inférieure ?
-			{
-				Rectangle part = new Rectangle(box.Left, box.Bottom, box.Width, bounds.Bottom-box.Bottom);
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(PanelsContext.ColorOutsurface);
-			}
+				if (box.Bottom < bounds.Bottom)  // bande inférieure ?
+				{
+					Rectangle part = new Rectangle(box.Left, box.Bottom, box.Width, bounds.Bottom-box.Bottom);
+					graphics.AddFilledRectangle(part);
+					graphics.RenderSolid(PanelsContext.ColorOutsurface);
+				}
 
-			if (bounds.Right < box.Right)  // bande droite ?
-			{
-				Rectangle part = new Rectangle(bounds.Right, bounds.Bottom, box.Right-bounds.Right, bounds.Height);
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(PanelsContext.ColorOutsurface);
-			}
+				if (bounds.Right < box.Right)  // bande droite ?
+				{
+					Rectangle part = new Rectangle(bounds.Right, bounds.Bottom, box.Right-bounds.Right, bounds.Height);
+					graphics.AddFilledRectangle(part);
+					graphics.RenderSolid(PanelsContext.ColorOutsurface);
+				}
 
-			if (box.Left < bounds.Left)  // bande gauche ?
-			{
-				Rectangle part = new Rectangle(box.Left, bounds.Bottom, bounds.Left-box.Left, bounds.Height);
-				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(PanelsContext.ColorOutsurface);
+				if (box.Left < bounds.Left)  // bande gauche ?
+				{
+					Rectangle part = new Rectangle(box.Left, bounds.Bottom, bounds.Left-box.Left, bounds.Height);
+					graphics.AddFilledRectangle(part);
+					graphics.RenderSolid(PanelsContext.ColorOutsurface);
+				}
 			}
 
 			Transform it = graphics.Transform;
@@ -743,7 +741,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			bounds = this.RealBounds;
 
 			//	Dessine la grille magnétique
-			if (this.context.ShowGrid)
+			if (this.isEditEnabled && this.context.ShowGrid)
 			{
 				double step = this.context.GridStep;
 				int hilite = 0;
@@ -766,25 +764,28 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.DrawTabIndex(graphics, this.panel);
 			}
 
-			//	Dessine les objets sélectionnés.
-			if (this.selectedObjects.Count > 0 && !this.isDragging)
+			if (this.isEditEnabled)
 			{
-				this.DrawSelectedObjects(graphics);
-			}
+				//	Dessine les objets sélectionnés.
+				if (this.selectedObjects.Count > 0 && !this.isDragging)
+				{
+					this.DrawSelectedObjects(graphics);
+				}
 
-			//	Dessine l'objet survolé.
-			if (this.hilitedObject != null)
-			{
-				this.DrawHilitedObject(graphics, this.hilitedObject);
-			}
+				//	Dessine l'objet survolé.
+				if (this.hilitedObject != null)
+				{
+					this.DrawHilitedObject(graphics, this.hilitedObject);
+				}
 
-			//	Dessine le rectangle de sélection.
-			if (!this.selectedRectangle.IsEmpty)
-			{
-				Rectangle sel = this.selectedRectangle;
-				sel.Deflate(0.5);
-				graphics.AddRectangle(sel);
-				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				//	Dessine le rectangle de sélection.
+				if (!this.selectedRectangle.IsEmpty)
+				{
+					Rectangle sel = this.selectedRectangle;
+					sel.Deflate(0.5);
+					graphics.AddRectangle(sel);
+					graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				}
 			}
 
 			graphics.Transform = it;
