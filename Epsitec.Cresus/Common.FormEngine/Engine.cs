@@ -554,7 +554,7 @@ namespace Epsitec.Common.FormEngine
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
-			box.TabIndex = this.tabIndex++;
+			box.TabIndex = this.tabIndex;  // pas besoin d'incrémenter, pour que le groupe ne fasse pas perdre un numéro
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
 			
@@ -833,9 +833,11 @@ namespace Epsitec.Common.FormEngine
 
 		private void GenerateForwardTab(UI.Panel root, List<FieldDescription> fields)
 		{
+			//	Initialise les propriétés ForwardTabOverride et BackwardTabOverride aux widgets du masque
+			//	qui sont définis par des exceptions FieldDescription.ForwardTabGuid pour la navigation.
 			foreach (FieldDescription srcField in fields)
 			{
-				if (srcField.ForwardTabGuid != System.Guid.Empty)
+				if (srcField.ForwardTabGuid != System.Guid.Empty)  // définition d'une exception pour la navigation ?
 				{
 					FieldDescription dstField = this.SearchField(fields, srcField.ForwardTabGuid);
 					if (dstField != null)
@@ -845,7 +847,7 @@ namespace Epsitec.Common.FormEngine
 
 						if (srcWidget != null && dstWidget != null)
 						{
-							srcWidget.ForwardTabOverride = dstWidget;
+							srcWidget.ForwardTabOverride  = dstWidget;
 							dstWidget.BackwardTabOverride = srcWidget;
 						}
 					}
@@ -855,6 +857,7 @@ namespace Epsitec.Common.FormEngine
 
 		private Widget SearchWidget(Widget parent, System.Guid guid)
 		{
+			//	Cherche un widget défini par son System.Guid dans tout le masque.
 			foreach (Widget widget in parent.Children.Widgets)
 			{
 				if (!string.IsNullOrEmpty(widget.Name))
@@ -878,6 +881,7 @@ namespace Epsitec.Common.FormEngine
 
 		private FieldDescription SearchField(List<FieldDescription> fields, System.Guid guid)
 		{
+			//	Cherche un champ défini par son System.Guid dans la liste des champs.
 			foreach (FieldDescription field in fields)
 			{
 				if (field.Guid == guid)
