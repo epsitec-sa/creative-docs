@@ -671,6 +671,20 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
+		public FieldDescription GetFieldDescription(System.Guid guid)
+		{
+			//	Retourne un champ d'après l'identificateur unique d'un widget.
+			int index = this.GetFieldDescriptionIndex(guid);
+			if (index == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return this.formEditor.FinalFields[index];
+			}
+		}
+
 		public int GetFieldDescriptionIndex(Widget obj)
 		{
 			//	Retourne l'index d'un champ d'après l'identificateur unique d'un widget.

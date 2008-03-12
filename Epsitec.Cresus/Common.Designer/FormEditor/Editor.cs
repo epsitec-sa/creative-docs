@@ -803,24 +803,16 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawSelectedObjects(Graphics graphics)
 		{
+			//	Dessine tous les objets sélectionnés.
 			foreach (Widget obj in this.selectedObjects)
 			{
 				this.DrawSelectedObject(graphics, obj);
-				this.DrawPadding(graphics, obj, 1.0);
-			}
-
-			if (this.selectedObjects.Count > 0)
-			{
-				Widget obj = this.selectedObjects[0];
-				if (obj != this.panel)
-				{
-					this.DrawPadding(graphics, obj.Parent, 0.4);
-				}
 			}
 		}
 
 		protected void DrawSelectedObject(Graphics graphics, Widget obj)
 		{
+			//	Dessine un objet sélectionné.
 			Rectangle bounds = this.objectModifier.GetActualBounds(obj);
 			bounds.Deflate(0.5);
 
@@ -828,11 +820,29 @@ namespace Epsitec.Common.Designer.FormEditor
 			graphics.AddRectangle(bounds);
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
+
+			Point src, dst;
+			if (this.GetForwardTabArrow(obj, true, out src, out dst))
+			{
+				this.DrawForwardTabArrow(graphics, src, dst);
+			}
 		}
 
-		protected void DrawPadding(Graphics graphics, Widget obj, double factor)
+		protected void DrawForwardTabArrow(Graphics graphics, Point start, Point end)
 		{
-			//	Dessine les marges de padding d'un objet, sous forme de hachures.
+			//	Dessine une flèche de 'start' à l'extrémité 'end'.
+			Point p = Point.Move(end, start, 8);
+
+			Point e1 = Transform.RotatePointDeg(end,  25, p);
+			Point e2 = Transform.RotatePointDeg(end, -25, p);
+
+			graphics.AddFilledCircle(start, 3);
+			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+
+			graphics.AddLine(start, end);
+			graphics.AddLine(end, e1);
+			graphics.AddLine(end, e2);
+			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 		}
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
@@ -846,6 +856,54 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(color);
+		}
+
+		protected bool GetForwardTabArrow(Widget obj, bool selected, out Point src, out Point dst)
+		{
+			//	Retourne les positions pour la flèche "ForwardTab".
+			//	Si l'objet est sélectionné (selected = true), on retourne une flèche sur soi-même
+			//	s'il n'existe aucun objet destination (ForwardTabGuid indéfini).
+			src = Point.Zero;
+			dst = Point.Zero;
+
+			FieldDescription srcField = this.objectModifier.GetFieldDescription(obj);
+			if (srcField == null || srcField.Type != FieldDescription.FieldType.Field)
+			{
+				return false;
+			}
+
+			if (srcField.ForwardTabGuid == System.Guid.Empty)
+			{
+				if (selected)
+				{
+					src = this.objectModifier.GetActualBounds(obj).Center;
+					dst = src;
+					src.X -= 10;
+					dst.X += 10;  // flèche sur soi-même
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			FieldDescription dstField = this.objectModifier.GetFieldDescription(srcField.ForwardTabGuid);
+			if (dstField == null)
+			{
+				return false;
+			}
+
+			Widget dstObj = this.objectModifier.GetWidget(dstField.Guid);
+			if (dstObj == null)
+			{
+				return false;
+			}
+
+			src = this.objectModifier.GetActualBounds(obj).Center;
+			dst = this.objectModifier.GetActualBounds(dstObj).Center;
+
+			return true;
 		}
 
 		protected Rectangle GetDrawBox(Graphics graphics, Point p1, Point p2, double thickness)
