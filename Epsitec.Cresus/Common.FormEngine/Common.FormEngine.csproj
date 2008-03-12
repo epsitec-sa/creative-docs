@@ -45,7 +45,6 @@
     </Compile>
     <Compile Include="Arrange.cs" />
     <Compile Include="CodeGenerator.cs" />
-    <Compile Include="TabOrder.cs" />
     <Compile Include="DefaultResourceProvider.cs" />
     <Compile Include="FormDescription.cs" />
     <Compile Include="IFormResourceProvider.cs" />

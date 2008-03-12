@@ -657,15 +657,6 @@ namespace Epsitec.Common.Designer.FormEditor
 				FieldDescription field = this.objectModifier.GetFieldDescription(obj);
 				if (field != null)
 				{
-					int index = this.workingForm.TabOrder.Index(field.Guid);
-					if (index == -1)
-					{
-						this.workingForm.TabOrder.Add(field.Guid);
-					}
-					else
-					{
-						this.workingForm.TabOrder.Move(field.Guid, direction);
-					}
 				}
 			}
 		}
