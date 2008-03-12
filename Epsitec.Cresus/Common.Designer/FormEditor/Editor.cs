@@ -336,6 +336,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 				case MessageType.MouseLeave:
 					this.SetHilitedObject(null);
+					this.SetHilitedForwardTab(null);
 					break;
 
 				case MessageType.KeyDown:
@@ -381,7 +382,18 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectDown(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris pressée.
-			Widget obj = this.Detect(pos);
+			Widget obj;
+			
+			obj = this.DetectForwardTab(pos);
+			if (obj != null)
+			{
+				this.draggingForwardTab = obj;
+				this.posForwardTab = pos;
+				this.Invalidate();
+				return;
+			}
+
+			obj = this.Detect(pos);
 			bool selectionChanged = false;
 
 			if (!isControlPressed && this.selectedObjects.Count > 0)  // touche Ctrl relâchée ?
@@ -415,13 +427,60 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void SelectMove(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris déplacée.
-			Widget obj = this.Detect(pos);
+			Widget obj;
+
+			if (this.draggingForwardTab != null)
+			{
+				obj = this.Detect(pos);
+				if (obj != null)
+				{
+					FieldDescription dstField = this.objectModifier.GetFieldDescription(obj);
+					if (dstField == null || dstField.Type != FieldDescription.FieldType.Field)
+					{
+						obj = null;
+					}
+				}
+				this.SetHilitedObject(obj);  // met en évidence l'objet survolé par la souris
+				this.posForwardTab = pos;
+				this.Invalidate();
+				return;
+			}
+
+			obj = this.DetectForwardTab(pos);
+			this.SetHilitedForwardTab(obj);  // met en évidence l'objet survolé par la souris
+
+			obj = this.Detect(pos);
 			this.SetHilitedObject(obj);  // met en évidence l'objet survolé par la souris
 		}
 
 		protected void SelectUp(Point pos, bool isRightButton, bool isControlPressed, bool isShiftPressed)
 		{
 			//	Sélection ponctuelle, souris relâchée.
+			if (this.draggingForwardTab != null)
+			{
+				FieldDescription field = this.objectModifier.GetFieldDescription(this.draggingForwardTab);
+				System.Guid guid = System.Guid.Empty;
+
+				Widget obj = this.Detect(pos);
+				if (obj != null && obj != this.draggingForwardTab)
+				{
+					FieldDescription dstField = this.objectModifier.GetFieldDescription(obj);
+					if (dstField != null && dstField.Type == FieldDescription.FieldType.Field)
+					{
+						guid = dstField.Guid;
+					}
+				}
+
+				if (field.ForwardTabGuid != guid)
+				{
+					this.viewersForms.UndoMemorize("Destination pour Tab", false);
+					field.ForwardTabGuid = guid;
+					this.module.AccessForms.SetLocalDirty();
+				}
+
+				this.draggingForwardTab = null;
+				this.Invalidate();
+			}
 		}
 
 		protected void SelectKeyChanged(bool isControlPressed, bool isShiftPressed)
@@ -466,10 +525,24 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		#region Selection
+		protected Widget DetectForwardTab(Point pos)
+		{
+			//	Détecte la poignée (à l'extrémité de la flèche 'ForwardTab' de l'objet sélectionné) visée par la souris.
+			foreach (Widget obj in this.selectedObjects)
+			{
+				Rectangle rect = this.GetForwardTabHandle(obj);
+				if (!rect.IsEmpty && rect.Contains(pos))
+				{
+					return obj;
+				}
+			}
+
+			return null;
+		}
+
 		protected Widget Detect(Point pos)
 		{
-			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
-			//	dessiné (donc placé dessus).
+			//	Détecte l'objet visé par la souris, avec priorité au dernier objet dessiné (donc placé dessus).
 			return this.Detect(pos, this.panel);
 		}
 
@@ -653,6 +726,16 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.Invalidate();
 			}
 		}
+
+		protected void SetHilitedForwardTab(Widget obj)
+		{
+			//	Détermine l'objet à mettre en évidence lors d'un survol.
+			if (this.hilitedForwardTab != obj)
+			{
+				this.hilitedForwardTab = obj;
+				this.Invalidate();
+			}
+		}
 		#endregion
 
 
@@ -739,6 +822,12 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (this.hilitedObject != null)
 				{
 					this.DrawHilitedObject(graphics, this.hilitedObject);
+
+					if (this.draggingForwardTab != null)
+					{
+						Point src = this.objectModifier.GetActualBounds(this.draggingForwardTab).Center;
+						this.DrawForwardTabArrow(graphics, false, false, src, this.posForwardTab);
+					}
 				}
 
 				//	Dessine le rectangle de sélection.
@@ -756,10 +845,16 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		protected void DrawTabIndex(Graphics graphics, Widget parent)
 		{
-			//	Dessine les numéros d'index pour la touche Tab.
+			//	Dessine les numéros d'index pour la touche Tab et les flèches 'ForwardTab'.
 			foreach (Widget obj in parent.Children)
 			{
-				if (this.objectModifier.IsField(obj))
+				FieldDescription field = this.objectModifier.GetFieldDescription(obj);
+				if (field == null)
+				{
+					continue;
+				}
+
+				if (field.Type == FieldDescription.FieldType.Field)
 				{
 					Rectangle rect = this.objectModifier.GetActualBounds(obj);
 					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
@@ -773,9 +868,18 @@ namespace Epsitec.Common.Designer.FormEditor
 						graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
 						graphics.RenderSolid(PanelsContext.ColorTabIndex);
 					}
+
+					if (field.ForwardTabGuid != System.Guid.Empty && this.draggingForwardTab == null)  // flèche 'ForwardTab' ?
+					{
+						Point src, dst;
+						if (this.GetForwardTabArrow(obj, false, out src, out dst))
+						{
+							this.DrawForwardTabArrow(graphics, false, false, src, dst);
+						}
+					}
 				}
 
-				if (this.objectModifier.IsBox(obj))
+				if (field.Type == FieldDescription.FieldType.BoxBegin || field.Type == FieldDescription.FieldType.SubForm)
 				{
 					this.DrawTabIndex(graphics, obj);
 				}
@@ -821,28 +925,57 @@ namespace Epsitec.Common.Designer.FormEditor
 			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
 			graphics.LineWidth = 1;
 
-			Point src, dst;
-			if (this.GetForwardTabArrow(obj, true, out src, out dst))
+			if (this.draggingForwardTab == null)
 			{
-				this.DrawForwardTabArrow(graphics, src, dst);
+				Point src, dst;
+				if (this.GetForwardTabArrow(obj, true, out src, out dst))
+				{
+					bool hilited = (obj == this.hilitedForwardTab);
+					this.DrawForwardTabArrow(graphics, true, hilited, src, dst);
+				}
 			}
 		}
 
-		protected void DrawForwardTabArrow(Graphics graphics, Point start, Point end)
+		protected void DrawForwardTabArrow(Graphics graphics, bool selected, bool hilited, Point start, Point end)
 		{
 			//	Dessine une flèche de 'start' à l'extrémité 'end'.
-			Point p = Point.Move(end, start, 8);
+			//	Si selected = true, on dessine une poignée à l'extrémité 'end'.
+			graphics.Align(ref start);
+			graphics.Align(ref end);
+			start.X += 0.5;
+			start.Y += 0.5;
+			end.X += 0.5;
+			end.Y += 0.5;
 
-			Point e1 = Transform.RotatePointDeg(end,  25, p);
-			Point e2 = Transform.RotatePointDeg(end, -25, p);
+			if (start != end)
+			{
+				Point p = Point.Move(end, start, Editor.forwardTabArrowLength);
 
-			graphics.AddFilledCircle(start, 3);
-			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				Point e1 = Transform.RotatePointDeg(end,  Editor.forwardTabArrowAngle, p);
+				Point e2 = Transform.RotatePointDeg(end, -Editor.forwardTabArrowAngle, p);
 
-			graphics.AddLine(start, end);
-			graphics.AddLine(end, e1);
-			graphics.AddLine(end, e2);
-			graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+				graphics.AddFilledCircle(start, Editor.forwardTabStartRadius);
+				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+
+				graphics.AddLine(start, end);
+				graphics.AddLine(end, e1);
+				graphics.AddLine(end, e2);
+				graphics.RenderSolid(PanelsContext.ColorHiliteOutline);
+			}
+
+			if (selected)  // dessine une poignée à l'extrémité 'end' ?
+			{
+				Rectangle rect = new Rectangle(end, end);
+				rect.Inflate(Editor.forwardTabHalfHandle);
+				graphics.Align(ref rect);
+				rect.Offset(-0.5, -0.5);
+
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(hilited ? PanelsContext.ColorHandleHilited : PanelsContext.ColorHandleNormal);
+
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(Color.FromBrightness(0));
+			}
 		}
 
 		protected void DrawHilitedObject(Graphics graphics, Widget obj)
@@ -858,28 +991,49 @@ namespace Epsitec.Common.Designer.FormEditor
 			graphics.RenderSolid(color);
 		}
 
+		protected Rectangle GetForwardTabHandle(Widget obj)
+		{
+			//	Retourne le rectangle de la poignée 'ForwardTab'.
+			Point src, dst;
+			if (this.GetForwardTabArrow(obj, true, out src, out dst))
+			{
+				Rectangle rect = new Rectangle(dst, dst);
+				rect.Inflate(Editor.forwardTabHalfHandle+1);
+				return rect;
+			}
+
+			return Rectangle.Empty;
+		}
+
 		protected bool GetForwardTabArrow(Widget obj, bool selected, out Point src, out Point dst)
 		{
-			//	Retourne les positions pour la flèche "ForwardTab".
+			//	Retourne les positions pour la flèche 'ForwardTab'.
 			//	Si l'objet est sélectionné (selected = true), on retourne une flèche sur soi-même
 			//	s'il n'existe aucun objet destination (ForwardTabGuid indéfini).
 			src = Point.Zero;
 			dst = Point.Zero;
 
-			FieldDescription srcField = this.objectModifier.GetFieldDescription(obj);
+			int index = this.objectModifier.GetFieldDescriptionIndex(obj);
+			if (index == -1)
+			{
+				return false;
+			}
+
+			FieldDescription srcField = this.objectModifier.GetFieldDescription(index);
 			if (srcField == null || srcField.Type != FieldDescription.FieldType.Field)
 			{
 				return false;
 			}
+
+			double offset = (index%10)*6;
 
 			if (srcField.ForwardTabGuid == System.Guid.Empty)
 			{
 				if (selected)
 				{
 					src = this.objectModifier.GetActualBounds(obj).Center;
+					src.X += offset;
 					dst = src;
-					src.X -= 10;
-					dst.X += 10;  // flèche sur soi-même
 					return true;
 				}
 				else
@@ -902,6 +1056,8 @@ namespace Epsitec.Common.Designer.FormEditor
 
 			src = this.objectModifier.GetActualBounds(obj).Center;
 			dst = this.objectModifier.GetActualBounds(dstObj).Center;
+			src.X += offset;
+			dst.X += offset;
 
 			return true;
 		}
@@ -1176,6 +1332,10 @@ namespace Epsitec.Common.Designer.FormEditor
 
 
 		public static readonly double		margin = 10;
+		protected static readonly double	forwardTabArrowLength = 8;
+		protected static readonly double	forwardTabArrowAngle = 25;
+		protected static readonly double	forwardTabStartRadius = 3;
+		protected static readonly double	forwardTabHalfHandle = 3.5;
 
 		protected Viewers.Forms				viewersForms;
 		protected Module					module;
@@ -1191,6 +1351,9 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected List<Widget>				selectedObjects = new List<Widget>();
 		protected Rectangle					selectedRectangle = Rectangle.Empty;
 		protected Widget					hilitedObject;
+		protected Widget					hilitedForwardTab;
+		protected Widget					draggingForwardTab;
+		protected Point						posForwardTab;
 		protected bool						isDragging;
 		protected MouseCursorType			lastCursor = MouseCursorType.Unknown;
 
