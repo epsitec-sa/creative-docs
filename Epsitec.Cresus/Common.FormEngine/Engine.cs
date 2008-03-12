@@ -138,6 +138,7 @@ namespace Epsitec.Common.FormEngine
 			UI.TextStyleManager textStyleManager = new UI.TextStyleManager(root);
 			textStyleManager.Attach(root);  // active les styles pour le panneau spécifié et tous ses enfants
 
+			this.tabIndex = 1;
 			this.CreateFormBox(root, entityId, fields2, 0);
 
 			return root;
@@ -552,7 +553,7 @@ namespace Epsitec.Common.FormEngine
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
-			box.TabIndex = grid.RowDefinitions.Count;
+			box.TabIndex = this.tabIndex++;
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
 			
@@ -587,7 +588,7 @@ namespace Epsitec.Common.FormEngine
 			UI.Placeholder placeholder = new UI.Placeholder(root);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, field.GetPath(UI.DataSource.DataName)));
 			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
-			placeholder.TabIndex = grid.RowDefinitions.Count;
+			placeholder.TabIndex = this.tabIndex++;
 			placeholder.Name = guid.ToString();
 			this.ApplyTextStyle(placeholder, field);
 
@@ -914,5 +915,6 @@ namespace Epsitec.Common.FormEngine
 		private Arrange arrange;
 		private bool forDesigner;
 		private FieldEditionMode defaultMode;
+		private int tabIndex;
 	}
 }

@@ -796,67 +796,40 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Dessine les numéros d'index pour la touche Tab.
 			foreach (Widget obj in parent.Children)
 			{
-				if (this.objectModifier.IsField(obj) || this.objectModifier.IsBox(obj))
+				if (this.objectModifier.IsField(obj))
 				{
 					Rectangle rect = this.objectModifier.GetActualBounds(obj);
 					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
 
-					graphics.AddFilledRectangle(box);
-					graphics.RenderSolid(Color.FromBrightness(1));
-
 					string text = this.GetObjectTabIndex(obj);
-					graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid(PanelsContext.ColorTabIndex);
-
-					if (this.objectModifier.IsBox(obj))
+					if (!string.IsNullOrEmpty(text))
 					{
-						this.DrawTabIndex(graphics, obj);
+						graphics.AddFilledRectangle(box);
+						graphics.RenderSolid(Color.FromBrightness(1));
+
+						graphics.AddText(box.Left, box.Bottom, box.Width, box.Height, text, Font.DefaultFont, 9.0, ContentAlignment.MiddleCenter);
+						graphics.RenderSolid(PanelsContext.ColorTabIndex);
 					}
+				}
+
+				if (this.objectModifier.IsBox(obj))
+				{
+					this.DrawTabIndex(graphics, obj);
 				}
 			}
 		}
 
 		protected string GetObjectTabIndex(Widget obj)
 		{
-			//	Retourne la chaîne indiquant l'ordre Z, y compris des parents, sous la forme "n.n.n".
-			if (obj.Parent == this.panel)
+			//	Retourne la chaîne indiquant l'ordre pour la touche Tab.
+			if (Editor.IsObjectTabActive(obj))
 			{
-				if (Editor.IsObjectTabActive(obj))
-				{
-					return (obj.TabIndex+1).ToString();
-				}
-				else
-				{
-					return "x";
-				}
+				return obj.TabIndex.ToString();
 			}
-
-			List<string> list = new List<string>();
-			while (obj != this.panel)
+			else
 			{
-				if (Editor.IsObjectTabActive(obj))
-				{
-					list.Add((obj.TabIndex+1).ToString());
-				}
-				else
-				{
-					list.Add("x");
-				}
-
-				obj = obj.Parent;
+				return null;
 			}
-
-			System.Text.StringBuilder builder = new System.Text.StringBuilder();
-			for (int i=list.Count-1; i>=0; i--)
-			{
-				if (builder.Length > 0)
-				{
-					builder.Append(".");
-				}
-
-				builder.Append(list[i]);
-			}
-			return builder.ToString();
 		}
 
 		protected static bool IsObjectTabActive(Widget obj)
