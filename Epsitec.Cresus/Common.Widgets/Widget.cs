@@ -819,6 +819,82 @@ namespace Epsitec.Common.Widgets
 				this.SetValue (Widget.TabNavigationModeProperty, value);
 			}
 		}
+
+		public Widget								ForwardTabOverride
+		{
+			get
+			{
+				return (Widget) this.GetValue (Widget.ForwardTabOverrideProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (Widget.ForwardTabOverrideProperty);
+				}
+				else
+				{
+					this.SetValue (Widget.ForwardTabOverrideProperty, value);
+				}
+			}
+		}
+
+		public Widget								BackwardTabOverride
+		{
+			get
+			{
+				return (Widget) this.GetValue (Widget.BackwardTabOverrideProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (Widget.BackwardTabOverrideProperty);
+				}
+				else
+				{
+					this.SetValue (Widget.BackwardTabOverrideProperty, value);
+				}
+			}
+		}
+
+		public Widget								ForwardEnterTabOverride
+		{
+			get
+			{
+				return (Widget) this.GetValue (Widget.ForwardEnterTabOverrideProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (Widget.ForwardEnterTabOverrideProperty);
+				}
+				else
+				{
+					this.SetValue (Widget.ForwardEnterTabOverrideProperty, value);
+				}
+			}
+		}
+
+		public Widget								BackwardEnterTabOverride
+		{
+			get
+			{
+				return (Widget) this.GetValue (Widget.BackwardEnterTabOverrideProperty);
+			}
+			set
+			{
+				if (value == null)
+				{
+					this.ClearValue (Widget.BackwardEnterTabOverrideProperty);
+				}
+				else
+				{
+					this.SetValue (Widget.BackwardEnterTabOverrideProperty, value);
+				}
+			}
+		}
 		
 		public Collections.ShortcutCollection		Shortcuts
 		{
@@ -2454,6 +2530,29 @@ namespace Epsitec.Common.Widgets
 			{
 				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
 				//	touche TAB.
+
+				System.Diagnostics.Debug.Assert (find == null);
+
+				switch (dir)
+				{
+					case TabNavigationDir.Forwards:
+						find = this.ForwardEnterTabOverride;
+						break;
+
+					case TabNavigationDir.Backwards:
+						find = this.BackwardEnterTabOverride;
+						break;
+				}
+
+				if (find != null)
+				{
+					find = find.FindTabWidget (dir, mode, false, true, ref iterations);
+					
+					if (find != null)
+					{
+						return find;
+					}
+				}
 				
 				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
 				
@@ -2495,7 +2594,30 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			//	Cherche parmi les frères...
-			
+
+			System.Diagnostics.Debug.Assert (find == null);
+
+			switch (dir)
+			{
+				case TabNavigationDir.Forwards:
+					find = this.ForwardTabOverride;
+					break;
+
+				case TabNavigationDir.Backwards:
+					find = this.BackwardTabOverride;
+					break;
+			}
+
+			if (find != null)
+			{
+				find = Widget.FindTabWidgetFromSibling (find, dir, mode, ref iterations);
+
+				if (find != null)
+				{
+					return find;
+				}
+			}
+
 			Widget[] tabSiblings = this.FindTabWidgets (mode);
 			bool     search_z    = true;
 			
@@ -2511,72 +2633,15 @@ namespace Epsitec.Common.Widgets
 					switch (dir)
 					{
 						case TabNavigationDir.Backwards:
-							
 							find = this.GetTabFromSiblings (i, dir, tabSiblings);
-							
-							if (find != null)
-							{
-								if ((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
-								{
-									//	Entre en marche arrière dans le widget...
-
-									if (find.HasChildren)
-									{
-										Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
-
-										if (candidates.Length > 0)
-										{
-											int count = candidates.Length;
-											find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
-										}
-										else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
-										{
-											find = null;
-										}
-									}
-									else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
-									{
-										find = null;
-									}
-								}
-							}
 							break;
 						
 						case TabNavigationDir.Forwards:
-							
 							find = this.GetTabFromSiblings (i, dir, tabSiblings);
-							
-							if (find != null)
-							{
-								if (((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
-									((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0))
-								{
-									if (find.HasChildren)
-									{
-										//	Entre en marche avant dans le widget...
-
-										Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
-										
-										find = null;
-										
-										foreach (Widget candidate in candidates)
-										{
-											find = candidate.FindTabWidget (dir, mode, false, true, ref iterations);
-											
-											if (find != null)
-											{
-												break;
-											}
-										}
-									}
-									else
-									{
-										find = null;
-									}
-								}
-							}
 							break;
 					}
+
+					find = Widget.FindTabWidgetFromSibling (find, dir, mode, ref iterations);
 					
 					break;
 				}
@@ -2700,6 +2765,70 @@ namespace Epsitec.Common.Widgets
 			
 			return find;
 		}
+
+		private static Widget FindTabWidgetFromSibling(Widget find, TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
+		{
+			if (find != null)
+			{
+				if (dir == TabNavigationDir.Backwards)
+				{
+					if ((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
+					{
+						//	Entre en marche arrière dans le widget...
+
+						if (find.HasChildren)
+						{
+							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
+
+							if (candidates.Length > 0)
+							{
+								int count = candidates.Length;
+								find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
+							}
+							else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
+							{
+								find = null;
+							}
+						}
+						else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
+						{
+							find = null;
+						}
+					}
+				}
+				else if (dir == TabNavigationDir.Forwards)
+				{
+					if (((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
+						((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0))
+					{
+						if (find.HasChildren)
+						{
+							//	Entre en marche avant dans le widget...
+
+							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
+
+							find = null;
+
+							foreach (Widget candidate in candidates)
+							{
+								find = candidate.FindTabWidget (dir, mode, false, true, ref iterations);
+
+								if (find != null)
+								{
+									break;
+								}
+							}
+						}
+						else
+						{
+							find = null;
+						}
+					}
+				}
+			}
+
+			return find;
+		}
 		
 		private Widget[] FindTabWidgets(TabNavigationMode mode)
 		{
@@ -2722,7 +2851,8 @@ namespace Epsitec.Common.Widgets
 					
 					if (((sibling.TabNavigationMode & mode) != 0) &&
 						(sibling.IsEnabled) &&
-						(sibling.Visibility))
+						(sibling.Visibility) &&
+						(sibling.AcceptsFocus))
 					{
 						if (((sibling.TabNavigationMode & TabNavigationMode.SkipIfReadOnly) != 0) &&
 							(sibling is Types.IReadOnly))
@@ -4326,6 +4456,11 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty TabIndexProperty = DependencyProperty.Register ("TabIndex", typeof (int), typeof (Widget), new DependencyPropertyMetadata (0));
 		public static readonly DependencyProperty IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (Widget), new Helpers.VisualPropertyMetadata (null, Widget.NotifyIconNameChanged, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty TabNavigationModeProperty = DependencyProperty.Register ("TabNavigationMode", typeof (TabNavigationMode), typeof (Widget), new DependencyPropertyMetadata (TabNavigationMode.None));
+
+		public static readonly DependencyProperty ForwardTabOverrideProperty  = DependencyProperty.Register ("ForwardTabOverride", typeof (Widget), typeof (Widget));
+		public static readonly DependencyProperty BackwardTabOverrideProperty = DependencyProperty.Register ("BackwardTabOverride", typeof (Widget), typeof (Widget));
+		public static readonly DependencyProperty ForwardEnterTabOverrideProperty = DependencyProperty.Register ("ForwardEnterTabOverride", typeof (Widget), typeof (Widget));
+		public static readonly DependencyProperty BackwardEnterTabOverrideProperty = DependencyProperty.Register ("BackwardEnterTabOverride", typeof (Widget), typeof (Widget));
 		
 		private InternalState					internal_state;
 		
