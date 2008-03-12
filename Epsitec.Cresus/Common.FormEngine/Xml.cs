@@ -33,6 +33,6 @@ namespace Epsitec.Common.FormEngine
 		public const string DeltaModified		= "DMd";
 		public const string DeltaAttachGuid		= "DAG";
 		public const string DeltaBrokenAttach	= "DBA";
-		public const string TabNextGuid			= "TNG";
+		public const string ForwardTabGuid		= "FTG";
 	}
 }
