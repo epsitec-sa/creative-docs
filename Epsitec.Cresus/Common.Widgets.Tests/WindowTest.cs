@@ -675,7 +675,7 @@ namespace Epsitec.Common.Widgets
 			text.Text      = "<b>Group 1:</b> cannot be entered with TAB<br/>"
 				/**/       + "<b>Group 2:</b> can be focused and entered with TAB<br/>"
 				/**/       + "<b>Group 3:</b> cannot be focused, but can be entered with TAB<br/>"
-				/**/	   + "<i>Overrides: C to Group 1.B, Group 1.C to Group 2</i><br/>";
+				/**/	   + "<i>Overrides: C to Group 1.B, Group 1.C to Group 2; Group 3: enter &gt;B, C&lt;</i><br/>";
 			text.TextLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
 
 			text = new StaticText ();

@@ -2533,25 +2533,11 @@ namespace Epsitec.Common.Widgets
 
 				System.Diagnostics.Debug.Assert (find == null);
 
-				switch (dir)
-				{
-					case TabNavigationDir.Forwards:
-						find = this.ForwardEnterTabOverride;
-						break;
-
-					case TabNavigationDir.Backwards:
-						find = this.BackwardEnterTabOverride;
-						break;
-				}
+				find = this.FindTabWidgetWithEnterOverride (dir, mode, ref iterations);
 
 				if (find != null)
 				{
-					find = find.FindTabWidget (dir, mode, false, true, ref iterations);
-					
-					if (find != null)
-					{
-						return find;
-					}
+					return find;
 				}
 				
 				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (dir, mode);
@@ -2780,6 +2766,13 @@ namespace Epsitec.Common.Widgets
 						{
 							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (dir, mode);
 
+							find = find.FindTabWidgetWithEnterOverride (dir, mode, ref iterations);
+
+							if (find != null)
+							{
+								return find;
+							}
+
 							if (candidates.Length > 0)
 							{
 								int count = candidates.Length;
@@ -2807,7 +2800,12 @@ namespace Epsitec.Common.Widgets
 
 							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (dir, mode);
 
-							find = null;
+							find = find.FindTabWidgetWithEnterOverride (dir, mode, ref iterations);
+							
+							if (find != null)
+							{
+								return find;
+							}
 
 							foreach (Widget candidate in candidates)
 							{
@@ -2825,6 +2823,29 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
+			}
+
+			return find;
+		}
+
+		private Widget FindTabWidgetWithEnterOverride(TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
+		{
+			Widget find = null;
+			
+			switch (dir)
+			{
+				case TabNavigationDir.Forwards:
+					find = this.ForwardEnterTabOverride;
+					break;
+
+				case TabNavigationDir.Backwards:
+					find = this.BackwardEnterTabOverride;
+					break;
+			}
+
+			if (find != null)
+			{
+				find = find.FindTabWidget (dir, mode, false, true, ref iterations);
 			}
 
 			return find;
