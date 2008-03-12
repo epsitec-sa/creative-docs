@@ -225,16 +225,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override List<Widget> FindTabWidgetList(TabNavigationDir dir, TabNavigationMode mode)
+		protected override List<Widget> GetTabNavigationSiblings(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			if (mode != TabNavigationMode.ActivateOnTab)
 			{
-				return base.FindTabWidgetList (dir, mode);
+				return base.GetTabNavigationSiblings (dir, mode);
 			}
 
 			List<Widget> list = new List<Widget> ();
 
-			foreach (Widget widget in base.FindTabWidgetList (dir, mode))
+			foreach (Widget widget in base.GetTabNavigationSiblings (dir, mode))
 			{
 				ColorSample sample = widget as ColorSample;
 

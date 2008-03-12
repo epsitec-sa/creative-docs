@@ -2533,14 +2533,14 @@ namespace Epsitec.Common.Widgets
 
 				System.Diagnostics.Debug.Assert (find == null);
 
-				find = this.FindTabWidgetWithEnterOverride (dir, mode, ref iterations);
+				find = Widget.TabNavigateEnterOverride (this, dir, mode, ref iterations);
 
 				if (find != null)
 				{
 					return find;
 				}
-				
-				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (dir, mode);
+
+				Widget[] candidates = this.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
 				
 				for (int i = 0; i < candidates.Length; i++)
 				{
@@ -2596,7 +2596,7 @@ namespace Epsitec.Common.Widgets
 
 			if (find != null)
 			{
-				find = Widget.FindTabWidgetFromSibling (find, dir, mode, ref iterations);
+				find = Widget.TabNavigateSibling (find, dir, mode, ref iterations);
 
 				if (find != null)
 				{
@@ -2604,7 +2604,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			Widget[] tabSiblings = this.FindTabWidgets (dir, mode);
+			Widget[] tabSiblings = this.GetTabNavigationSiblings (dir, mode).ToArray ();
 			bool     search_z    = true;
 			
 			for (int i = 0; i < tabSiblings.Length; i++)
@@ -2619,15 +2619,15 @@ namespace Epsitec.Common.Widgets
 					switch (dir)
 					{
 						case TabNavigationDir.Backwards:
-							find = this.GetTabFromSiblings (i, dir, tabSiblings);
+							find = this.TabNavigate (i, dir, tabSiblings);
 							break;
 						
 						case TabNavigationDir.Forwards:
-							find = this.GetTabFromSiblings (i, dir, tabSiblings);
+							find = this.TabNavigate (i, dir, tabSiblings);
 							break;
 					}
 
-					find = Widget.FindTabWidgetFromSibling (find, dir, mode, ref iterations);
+					find = Widget.TabNavigateSibling (find, dir, mode, ref iterations);
 					
 					break;
 				}
@@ -2698,8 +2698,8 @@ namespace Epsitec.Common.Widgets
 					//	Il n'y a plus de parents au-dessus. C'est donc vraisemblablement WindowRoot et
 					//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
 					//	premier descendant trouvé :
-					
-					Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (dir, mode);
+
+					Widget[] candidates = this.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
 					iterations++;
 					
 					for (int i = 0; i < candidates.Length; i++)
@@ -2752,66 +2752,76 @@ namespace Epsitec.Common.Widgets
 			return find;
 		}
 
-		private static Widget FindTabWidgetFromSibling(Widget find, TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
+		
+		/// <summary>
+		/// Finds the definitive widget based on an initial result obtained by
+		/// navigating to a sibling. This method will enter groups, if needed.
+		/// </summary>
+		/// <param name="sibling">The sibling.</param>
+		/// <param name="dir">The tab navigation direction.</param>
+		/// <param name="mode">The tab navigation mode.</param>
+		/// <param name="iterations">The iteration counter.</param>
+		/// <returns>The definitive widget.</returns>
+		private static Widget TabNavigateSibling(Widget sibling, TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
 		{
-			if (find != null)
+			if (sibling != null)
 			{
 				if (dir == TabNavigationDir.Backwards)
 				{
-					if ((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
+					if ((sibling.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0)
 					{
 						//	Entre en marche arrière dans le widget...
 
-						if (find.HasChildren)
+						if (sibling.HasChildren)
 						{
-							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (dir, mode);
+							Widget[] candidates = sibling.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
 
-							find = find.FindTabWidgetWithEnterOverride (dir, mode, ref iterations);
+							sibling = Widget.TabNavigateEnterOverride (sibling, dir, mode, ref iterations);
 
-							if (find != null)
+							if (sibling != null)
 							{
-								return find;
+								return sibling;
 							}
 
 							if (candidates.Length > 0)
 							{
 								int count = candidates.Length;
-								find = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
+								sibling = candidates[count-1].FindTabWidget (dir, mode, false, true, ref iterations);
 							}
-							else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
+							else if ((sibling.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
 							{
-								find = null;
+								sibling = null;
 							}
 						}
-						else if ((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
+						else if ((sibling.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0)
 						{
-							find = null;
+							sibling = null;
 						}
 					}
 				}
 				else if (dir == TabNavigationDir.Forwards)
 				{
-					if (((find.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
-						((find.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0))
+					if (((sibling.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
+						((sibling.TabNavigationMode & TabNavigationMode.ForwardOnly) != 0))
 					{
-						if (find.HasChildren)
+						if (sibling.HasChildren)
 						{
 							//	Entre en marche avant dans le widget...
 
-							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (dir, mode);
+							Widget[] candidates = sibling.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
 
-							find = find.FindTabWidgetWithEnterOverride (dir, mode, ref iterations);
+							sibling = Widget.TabNavigateEnterOverride (sibling, dir, mode, ref iterations);
 							
-							if (find != null)
+							if (sibling != null)
 							{
-								return find;
+								return sibling;
 							}
 
 							foreach (Widget candidate in candidates)
 							{
-								find = candidate.FindTabWidget (dir, mode, false, true, ref iterations);
+								sibling = candidate.FindTabWidget (dir, mode, false, true, ref iterations);
 
-								if (find != null)
+								if (sibling != null)
 								{
 									break;
 								}
@@ -2819,27 +2829,39 @@ namespace Epsitec.Common.Widgets
 						}
 						else
 						{
-							find = null;
+							sibling = null;
 						}
 					}
 				}
 			}
 
-			return find;
+			return sibling;
 		}
 
-		private Widget FindTabWidgetWithEnterOverride(TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
+		/// <summary>
+		/// Navigates to the child specified by the enter override property.
+		/// </summary>
+		/// <param name="widget">The widget.</param>
+		/// <param name="dir">The tab navigation direction.</param>
+		/// <param name="mode">The tab navigation mode.</param>
+		/// <param name="iterations">The iteration counter.</param>
+		/// <returns>
+		/// The override, or <c>null</c> if the default navigation should be used.
+		/// </returns>
+		private static Widget TabNavigateEnterOverride(Widget widget, TabNavigationDir dir, TabNavigationMode mode, ref int iterations)
 		{
+			System.Diagnostics.Debug.Assert (widget != null);
+
 			Widget find = null;
 			
 			switch (dir)
 			{
 				case TabNavigationDir.Forwards:
-					find = this.ForwardEnterTabOverride;
+					find = widget.ForwardEnterTabOverride;
 					break;
 
 				case TabNavigationDir.Backwards:
-					find = this.BackwardEnterTabOverride;
+					find = widget.BackwardEnterTabOverride;
 					break;
 			}
 
@@ -2850,13 +2872,30 @@ namespace Epsitec.Common.Widgets
 
 			return find;
 		}
-		
-		private Widget[] FindTabWidgets(TabNavigationDir dir, TabNavigationMode mode)
+
+		protected virtual Widget TabNavigate(int index, TabNavigationDir dir, Widget[] siblings)
 		{
-			return this.FindTabWidgetList (dir, mode).ToArray ();
+			switch (dir)
+			{
+				case TabNavigationDir.Backwards:
+					if (index > 0)
+					{
+						return siblings[index-1];
+					}
+					break;
+
+				case TabNavigationDir.Forwards:
+					if (index < siblings.Length-1)
+					{
+						return siblings[index+1];
+					}
+					break;
+			}
+
+			return null;
 		}
 		
-		protected virtual List<Widget> FindTabWidgetList(TabNavigationDir dir, TabNavigationMode mode)
+		protected virtual List<Widget> GetTabNavigationSiblings(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			List<Widget> list = new List<Widget> ();
 			
@@ -2948,28 +2987,6 @@ namespace Epsitec.Common.Widgets
 			{
 				return list;
 			}
-		}
-		
-		protected virtual Widget GetTabFromSiblings(int index, TabNavigationDir dir, Widget[] siblings)
-		{
-			switch (dir)
-			{
-				case TabNavigationDir.Backwards:
-					if (index > 0)
-					{
-						return siblings[index-1];
-					}
-					break;
-				
-				case TabNavigationDir.Forwards:
-					if (index < siblings.Length-1)
-					{
-						return siblings[index+1];
-					}
-					break;
-			}
-			
-			return null;
 		}
 
 
