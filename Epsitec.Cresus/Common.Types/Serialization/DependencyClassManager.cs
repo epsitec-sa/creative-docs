@@ -143,22 +143,36 @@ namespace Epsitec.Common.Types.Serialization
 		{
 			if (!DependencyObjectType.IsExecutingStaticConstructor)
 			{
-				if (DependencyClassManager.pendingActions != null)
+				if (DependencyClassManager.pendingActionsRecursionCount > 0)
 				{
-					while (DependencyClassManager.pendingActions.Count > 0)
-					{
-						if (DependencyClassManager.analyseCount > 0)
-						{
-							break;
-						}
-						
-						DependencyClassManager.pendingActions.Dequeue () ();
-					}
+					return;
+				}
 
-					if (DependencyClassManager.pendingActions.Count == 0)
+				DependencyClassManager.pendingActionsRecursionCount++;
+
+				try
+				{
+					if (DependencyClassManager.pendingActions != null)
 					{
-						DependencyClassManager.pendingActions = null;
+						while (DependencyClassManager.pendingActions.Count > 0)
+						{
+							if (DependencyClassManager.analyseCount > 0)
+							{
+								break;
+							}
+
+							DependencyClassManager.pendingActions.Dequeue () ();
+						}
+
+						if (DependencyClassManager.pendingActions.Count == 0)
+						{
+							DependencyClassManager.pendingActions = null;
+						}
 					}
+				}
+				finally
+				{
+					DependencyClassManager.pendingActionsRecursionCount--;
 				}
 			}
 		}
@@ -214,6 +228,9 @@ namespace Epsitec.Common.Types.Serialization
 
 		[System.ThreadStatic]
 		private static Queue<Support.SimpleCallback> pendingActions;
+		[System.ThreadStatic]
+		private static int							 pendingActionsRecursionCount;
+
 		private static Queue<Support.SimpleCallback> bootingActions;
 
 		[System.ThreadStatic]
