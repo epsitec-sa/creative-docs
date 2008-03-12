@@ -140,6 +140,7 @@ namespace Epsitec.Common.FormEngine
 
 			this.tabIndex = 1;
 			this.CreateFormBox(root, entityId, fields2, 0);
+			this.GenerateForwardTab(root, fields2);
 
 			return root;
 		}
@@ -827,6 +828,65 @@ namespace Epsitec.Common.FormEngine
 		{
 			Caption caption = this.resourceProvider.GetCaption(druid);
 			return caption == null ? "" : caption.DefaultLabel;
+		}
+
+
+		private void GenerateForwardTab(UI.Panel root, List<FieldDescription> fields)
+		{
+			foreach (FieldDescription srcField in fields)
+			{
+				if (srcField.ForwardTabGuid != System.Guid.Empty)
+				{
+					FieldDescription dstField = this.SearchField(fields, srcField.ForwardTabGuid);
+					if (dstField != null)
+					{
+						Widget srcWidget = this.SearchWidget(root, srcField.Guid);
+						Widget dstWidget = this.SearchWidget(root, dstField.Guid);
+
+						if (srcWidget != null && dstWidget != null)
+						{
+							srcWidget.ForwardTabOverride = dstWidget;
+							dstWidget.BackwardTabOverride = srcWidget;
+						}
+					}
+				}
+			}
+		}
+
+		private Widget SearchWidget(Widget parent, System.Guid guid)
+		{
+			foreach (Widget widget in parent.Children.Widgets)
+			{
+				if (!string.IsNullOrEmpty(widget.Name))
+				{
+					System.Guid current = new System.Guid(widget.Name);
+					if (current == guid)
+					{
+						return widget;
+					}
+				}
+
+				Widget search = this.SearchWidget(widget, guid);
+				if (search != null)
+				{
+					return search;
+				}
+			}
+
+			return null;
+		}
+
+		private FieldDescription SearchField(List<FieldDescription> fields, System.Guid guid)
+		{
+			foreach (FieldDescription field in fields)
+			{
+				if (field.Guid == guid)
+				{
+					return field;
+				}
+			}
+
+			return null;
 		}
 
 
