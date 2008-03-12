@@ -2554,7 +2554,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
+				Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (dir, mode);
 				
 				for (int i = 0; i < candidates.Length; i++)
 				{
@@ -2618,7 +2618,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			Widget[] tabSiblings = this.FindTabWidgets (mode);
+			Widget[] tabSiblings = this.FindTabWidgets (dir, mode);
 			bool     search_z    = true;
 			
 			for (int i = 0; i < tabSiblings.Length; i++)
@@ -2713,7 +2713,7 @@ namespace Epsitec.Common.Widgets
 					//	dans ce cas, il ne sert à rien de boucler. On va simplement tenter d'activer le
 					//	premier descendant trouvé :
 					
-					Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (mode);
+					Widget[] candidates = this.Children.Widgets[0].FindTabWidgets (dir, mode);
 					iterations++;
 					
 					for (int i = 0; i < candidates.Length; i++)
@@ -2778,7 +2778,7 @@ namespace Epsitec.Common.Widgets
 
 						if (find.HasChildren)
 						{
-							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
+							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (dir, mode);
 
 							if (candidates.Length > 0)
 							{
@@ -2805,7 +2805,7 @@ namespace Epsitec.Common.Widgets
 						{
 							//	Entre en marche avant dans le widget...
 
-							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (mode);
+							Widget[] candidates = find.Children.Widgets[0].FindTabWidgets (dir, mode);
 
 							find = null;
 
@@ -2830,12 +2830,12 @@ namespace Epsitec.Common.Widgets
 			return find;
 		}
 		
-		private Widget[] FindTabWidgets(TabNavigationMode mode)
+		private Widget[] FindTabWidgets(TabNavigationDir dir, TabNavigationMode mode)
 		{
-			return this.FindTabWidgetList (mode).ToArray ();
+			return this.FindTabWidgetList (dir, mode).ToArray ();
 		}
 		
-		protected virtual List<Widget> FindTabWidgetList(TabNavigationMode mode)
+		protected virtual List<Widget> FindTabWidgetList(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			List<Widget> list = new List<Widget> ();
 			
@@ -2865,6 +2865,27 @@ namespace Epsitec.Common.Widgets
 							if (read_only.IsReadOnly)
 							{
 								continue;
+							}
+						}
+
+						if (sibling != this)
+						{
+							//	Skip widgets which have an overridden tab order, since they would
+							//	interfere with the logical flow :
+
+							if (dir == TabNavigationDir.Forwards)
+							{
+								if (sibling.BackwardTabOverride != null)
+								{
+									continue;
+								}
+							}
+							if (dir == TabNavigationDir.Backwards)
+							{
+								if (sibling.ForwardTabOverride != null)
+								{
+									continue;
+								}
 							}
 						}
 						
