@@ -4,7 +4,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
+[assembly: AssemblyCompany ("Epsitec")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]

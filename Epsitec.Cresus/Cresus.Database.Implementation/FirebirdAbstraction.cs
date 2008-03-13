@@ -1,5 +1,7 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 using FirebirdSql.Data.FirebirdClient;
@@ -238,7 +240,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (this.engineType)
 			{
 				case EngineType.Embedded:
-					buffer.Append (Common.Support.Globals.Directories.UserAppDataRevision);
+					buffer.Append (Globals.Directories.UserAppData);
 					buffer.Append (System.IO.Path.DirectorySeparatorChar);
 					break;
 				
@@ -265,7 +267,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				throw new Exceptions.SyntaxException (dbAccess, string.Format ("Name is to long (length={0})", name));
 			}
 			
-			if (Epsitec.Common.Support.RegexFactory.AlphaNumName.IsMatch (name) == false)
+			if (RegexFactory.AlphaNumName.IsMatch (name) == false)
 			{
 				throw new Exceptions.SyntaxException (dbAccess, string.Format ("{0} contains an invalid character", name));
 			}
@@ -296,7 +298,6 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		#endregion
 
-		
 		#region IDbAbstraction Members
 		
 		public IDbAbstractionFactory				Factory
@@ -447,6 +448,17 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		#endregion
+
+		static FirebirdAbstraction()
+		{
+			string path;
+			
+			path = Globals.Directories.CommonAppData;
+			path = System.IO.Path.GetDirectoryName (path);
+			path = System.IO.Path.Combine (path, "Firebird Databases");
+
+			FirebirdAbstraction.fbRootDbPath = path;
+		}
 		
 		
 		private FbServerType					serverType;
@@ -466,7 +478,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private static readonly byte			fbDialect			= 3;
 		private static readonly short			fbPageSize			= 8192;
 		private static readonly string			fbCharset			= "UTF8";
-		private static readonly string			fbRootDbPath		= @"C:\Program Files\Firebird\Data\Epsitec";
+		private static readonly string			fbRootDbPath;
 		private static readonly string			fbDbFileExtension	= ".firebird";
 	}
 }
