@@ -22,10 +22,12 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+#if false
 		public IEnumerable<object[]> QueryByExample<T>(DbTransaction transaction, T example, DataQuery query) where T : AbstractEntity, new ()
 		{
 			return this.QueryByExample (transaction, (AbstractEntity) example, query);
 		}
+#endif
 
 		public IEnumerable<object[]> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
 		{

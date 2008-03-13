@@ -237,6 +237,32 @@ namespace Epsitec.Cresus.Core
 				{
 					AddressBook.Entities.AdressePersonneEntity example = template as AddressBook.Entities.AdressePersonneEntity;
 
+					DataQuery query = new DataQuery ();
+					
+					query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[8V16]")));
+					query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[8V17]")));
+
+					using (DbTransaction transaction = this.data.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+					{
+						foreach (object[] row in this.data.dataBrowser.QueryByExample (transaction, example, query))
+						{
+							System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+							
+							foreach (object column in row)
+							{
+								if (buffer.Length > 0)
+								{
+									buffer.Append (", ");
+								}
+								buffer.Append (column.ToString ());
+							}
+
+							System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+						}
+						
+						transaction.Commit ();
+					}
+
 					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
 						if ((ResolverImplementation.Match (example.Titre, entity.Titre)) &&
@@ -248,8 +274,6 @@ namespace Epsitec.Cresus.Core
 							yield return entity;
 						}
 					}
-
-//-					this.data.dataBrowser.QueryByExample (transaction, example, query);
 				}
 				else if (id == AddressBook.Entities.LocalitéEntity.EntityStructuredTypeId)
 				{
