@@ -2212,20 +2212,13 @@ namespace Epsitec.Common.Designer.Viewers
 				else
 				{
 					FieldDescription actual = this.workingForm.Fields[index];
+
+					actual.DeltaForwardTab = (forwardTabGuid != System.Guid.Empty);
 					actual.ForwardTabGuid = forwardTabGuid;
 
-					if (forwardTabGuid == System.Guid.Empty)
+					if (!actual.Delta)
 					{
-						actual.DeltaForwardTab = false;
-
-						if (!actual.Delta)
-						{
-							this.workingForm.Fields.RemoveAt(index);  // supprime l'élément dans la liste delta
-						}
-					}
-					else
-					{
-						field.ForwardTabGuid = forwardTabGuid;
+						this.workingForm.Fields.RemoveAt(index);  // supprime l'élément dans la liste delta
 					}
 				}
 			}

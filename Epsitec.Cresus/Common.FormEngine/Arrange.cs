@@ -227,7 +227,7 @@ namespace Epsitec.Common.FormEngine
 						finalList.Insert(dst+1, copy);  // insère l'élément après dst
 					}
 
-					if (field.DeltaModified)  // champ à modifier ?
+					if (field.DeltaModified || field.DeltaForwardTab)  // champ à modifier ?
 					{
 						int index = Arrange.IndexOfGuid(finalList, field.Guid);
 						if (index != -1)
@@ -235,20 +235,6 @@ namespace Epsitec.Common.FormEngine
 							finalList.RemoveAt(index);  // supprime le champ original
 
 							FieldDescription copy = new FieldDescription(field);
-							copy.DeltaModified = true;
-							finalList.Insert(index, copy);  // et remplace-le par le champ modifié
-						}
-					}
-
-					if (field.DeltaForwardTab)  // champ à modifier ?
-					{
-						int index = Arrange.IndexOfGuid(finalList, field.Guid);
-						if (index != -1)
-						{
-							finalList.RemoveAt(index);  // supprime le champ original
-
-							FieldDescription copy = new FieldDescription(field);
-							copy.DeltaForwardTab = true;
 							finalList.Insert(index, copy);  // et remplace-le par le champ modifié
 						}
 					}
