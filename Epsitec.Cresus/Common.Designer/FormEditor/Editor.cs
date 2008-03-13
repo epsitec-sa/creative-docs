@@ -473,7 +473,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 				if (field.ForwardTabGuid != guid)
 				{
-					this.viewersForms.UndoMemorize("Destination pour Tab", false);
+					this.viewersForms.UndoMemorize(Res.Strings.Undo.Action.ForwardTab, false);
 					field.ForwardTabGuid = guid;
 					this.module.AccessForms.SetLocalDirty();
 				}
@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				return false;
 			}
 
-			double offset = (index%10)*6;
+			double offset = (index%10)*Editor.forwardTabSpaceX;  // offset horizontal, pour éviter les superpositions
 
 			if (srcField.ForwardTabGuid == System.Guid.Empty)
 			{
@@ -1033,7 +1033,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				{
 					src = this.objectModifier.GetActualBounds(obj).Center;
 					src.X += offset;
-					dst = src;
+					dst = src;  // flèche sur soi-même
 					return true;
 				}
 				else
@@ -1336,6 +1336,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected static readonly double	forwardTabArrowAngle = 25;
 		protected static readonly double	forwardTabStartRadius = 3;
 		protected static readonly double	forwardTabHalfHandle = 3.5;
+		protected static readonly double	forwardTabSpaceX = 6;
 
 		protected Viewers.Forms				viewersForms;
 		protected Module					module;
