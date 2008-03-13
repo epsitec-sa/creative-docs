@@ -397,7 +397,9 @@ namespace Epsitec.Cresus.Database
 				case DbCompare.GreaterThan:			return SqlFunctionCode.CompareGreaterThan;
 				case DbCompare.GreaterThanOrEqual:	return SqlFunctionCode.CompareGreaterThanOrEqual;
 				case DbCompare.Like:				return SqlFunctionCode.CompareLike;
+				case DbCompare.LikeEscape:			return SqlFunctionCode.CompareLikeEscape;
 				case DbCompare.NotLike:				return SqlFunctionCode.CompareNotLike;
+				case DbCompare.NotLikeEscape:		return SqlFunctionCode.CompareNotLikeEscape;
 				case DbCompare.IsNull:				return SqlFunctionCode.CompareIsNull;
 				case DbCompare.IsNotNull:			return SqlFunctionCode.CompareIsNotNull;
 			}

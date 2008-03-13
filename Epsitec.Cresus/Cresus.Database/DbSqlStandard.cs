@@ -38,6 +38,19 @@ namespace Epsitec.Cresus.Database
 
 
 		/// <summary>
+		/// Gets the escape character used for the <c>LIKE</c> comparisons.
+		/// </summary>
+		/// <value>The escape character.</value>
+		public static string CompareLikeEscapeCharacter
+		{
+			get
+			{
+				return "#";
+			}
+		}
+
+
+		/// <summary>
 		/// Concatenates two SQL names.
 		/// </summary>
 		/// <param name="a">First part of the name.</param>
@@ -151,7 +164,7 @@ namespace Epsitec.Cresus.Database
 			throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name", value));
 		}
 
-
+		
 		/// <summary>
 		/// Validates the SQL name.
 		/// </summary>

@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Database
 		CompareIsNotNull,						//	a NOT IS NULL
 		CompareLike,							//	a LIKE b
 		CompareNotLike,							//	a NOT LIKE b
+		CompareLikeEscape,						//	a LIKE 'b' ESCAPE '#'
+		CompareNotLikeEscape,					//	a NOT LIKE 'b' ESCAPE '#'
 		CompareFalse,							//	0 = 1
 		CompareTrue,							//	1 = 1
 

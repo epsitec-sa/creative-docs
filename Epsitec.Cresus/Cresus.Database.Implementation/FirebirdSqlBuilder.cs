@@ -873,7 +873,9 @@ namespace Epsitec.Cresus.Database.Implementation
 						case SqlFunctionCode.CompareGreaterThan:		this.Append (" > ");		break;
 						case SqlFunctionCode.CompareGreaterThanOrEqual:	this.Append (" >= ");		break;
 						case SqlFunctionCode.CompareLike:				this.Append (" LIKE ");		break;
+						case SqlFunctionCode.CompareLikeEscape:			this.Append (" LIKE ");		break;
 						case SqlFunctionCode.CompareNotLike:			this.Append (" NOT LIKE ");	break;
+						case SqlFunctionCode.CompareNotLikeEscape:		this.Append (" NOT LIKE ");	break;
 						case SqlFunctionCode.SetIn:						this.Append (" IN ");		break;
 						case SqlFunctionCode.SetNotIn:					this.Append (" NOT IN ");	break;
 						case SqlFunctionCode.LogicAnd:					this.Append (" AND ");		break;
@@ -884,6 +886,28 @@ namespace Epsitec.Cresus.Database.Implementation
 					}
 					
 					this.Append (sqlFunction.B, onlyAcceptQualifiedNames);
+
+					switch (sqlFunction.Code)
+					{
+						case SqlFunctionCode.CompareLikeEscape:
+						case SqlFunctionCode.CompareNotLikeEscape:
+							if (sqlFunction.B.FieldType != SqlFieldType.Constant)
+							{
+								throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Function {0} requires a constant argument", sqlFunction.Code));
+							}
+							
+							string constantValue = sqlFunction.B.Value as string;
+							
+							if ((constantValue != null) &&
+								(constantValue.Contains (DbSqlStandard.CompareLikeEscapeCharacter)))
+							{
+								//	TODO: make sure the user escaped only escapable characters here !
+								
+								this.Append (string.Concat (" ESCAPE '", DbSqlStandard.CompareLikeEscapeCharacter, "'"));
+							}
+							break;
+					}
+
 					this.Append (')');
 					break;
 

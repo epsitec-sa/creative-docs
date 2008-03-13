@@ -60,6 +60,9 @@ namespace Epsitec.Cresus.DataLayer
 						DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 						EntityFieldPath fieldPath = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
 						DbTableColumn tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
+						
+						//	TODO: LikeEscape ?
+						
 						condition.AddCondition (tableColumn, DbCompare.Like, value);
 						reader.AddCondition (condition);
 					}

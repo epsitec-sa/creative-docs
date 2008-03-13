@@ -40,14 +40,28 @@ namespace Epsitec.Cresus.Database
 		GreaterThanOrEqual,
 
 		/// <summary>
-		/// Returns <c>true</c> if both fields are alike (this uses SQL pattern based string comparison).
+		/// Returns <c>true</c> if both fields are alike (this uses SQL pattern based
+		/// string comparison).
 		/// </summary>
 		Like,
-		
+
 		/// <summary>
-		/// Returns <c>true</c> if both fields are not alike (this uses SQL pattern based string comparison).
+		/// Returns <c>true</c> if both fields are not alike (this uses SQL pattern based
+		/// string comparison).
 		/// </summary>
 		NotLike,
+
+		/// <summary>
+		/// Returns <c>true</c> if both fields are alike (this uses SQL pattern based
+		/// string comparison, including support for special character escaping).
+		/// </summary>
+		LikeEscape,
+
+		/// <summary>
+		/// Returns <c>true</c> if both fields are not alike (this uses SQL pattern based
+		/// string comparison, including support for special character escaping).
+		/// </summary>
+		NotLikeEscape,
 
 
 		IsNull,
