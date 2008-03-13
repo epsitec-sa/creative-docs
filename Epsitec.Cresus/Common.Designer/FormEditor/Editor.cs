@@ -471,12 +471,8 @@ namespace Epsitec.Common.Designer.FormEditor
 					}
 				}
 
-				if (field.ForwardTabGuid != guid)
-				{
-					this.viewersForms.UndoMemorize(Res.Strings.Undo.Action.ForwardTab, false);
-					field.ForwardTabGuid = guid;
-					this.module.AccessForms.SetLocalDirty();
-				}
+				//?this.objectModifier.ChangeForwardTab(field.Guid, guid);
+				this.viewersForms.ChangeForwardTab(field.Guid, guid);
 
 				this.draggingForwardTab = null;
 				this.Invalidate();

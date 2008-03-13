@@ -99,6 +99,7 @@ namespace Epsitec.Common.FormEngine
 			this.deltaMoved = false;
 			this.deltaInserted = false;
 			this.deltaModified = false;
+			this.deltaForwardTab = false;
 		}
 
 		public FieldDescription(FieldType type) : this()
@@ -130,6 +131,7 @@ namespace Epsitec.Common.FormEngine
 			this.deltaMoved = model.deltaMoved;
 			this.deltaInserted = model.deltaInserted;
 			this.deltaModified = model.deltaModified;
+			this.deltaForwardTab = model.deltaForwardTab;
 			this.deltaAttachGuid = model.deltaAttachGuid;
 			this.deltaBrokenAttach = model.deltaBrokenAttach;
 			this.forwardTabGuid = model.forwardTabGuid;
@@ -591,6 +593,21 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool Delta
+		{
+			//	Retourne true si une information delta quelconque existe.
+			get
+			{
+				return this.DeltaHidden ||
+					   this.DeltaShowed ||
+					   this.DeltaMoved ||
+					   this.DeltaInserted ||
+					   this.DeltaModified ||
+					   this.DeltaForwardTab ||
+					   this.DeltaBrokenAttach;
+			}
+		}
+
 		public bool DeltaHidden
 		{
 			//	Dans un Form delta, indique un champ qu'il faut cacher dans la liste finale.
@@ -667,6 +684,21 @@ namespace Epsitec.Common.FormEngine
 			set
 			{
 				this.deltaModified = value;
+			}
+		}
+
+		public bool DeltaForwardTab
+		{
+			//	Dans un Form delta, indique une destination pour Tab dans la liste finale.
+			//	Guid = champ modifié
+			//	... = paramètres du champ
+			get
+			{
+				return this.deltaForwardTab;
+			}
+			set
+			{
+				this.deltaForwardTab = value;
 			}
 		}
 
@@ -768,6 +800,7 @@ namespace Epsitec.Common.FormEngine
 				a.deltaMoved != b.deltaMoved ||
 				a.deltaInserted != b.deltaInserted ||
 				a.deltaModified != b.deltaModified ||
+				a.deltaForwardTab != b.deltaForwardTab ||
 				!a.deltaAttachGuid.Equals(b.deltaAttachGuid) ||
 				!a.forwardTabGuid.Equals(b.forwardTabGuid))
 			{
@@ -896,6 +929,11 @@ namespace Epsitec.Common.FormEngine
 			if (this.deltaModified)
 			{
 				writer.WriteElementString(Xml.DeltaModified, this.deltaModified.ToString());
+			}
+
+			if (this.deltaForwardTab)
+			{
+				writer.WriteElementString(Xml.DeltaForwardTab, this.deltaForwardTab.ToString());
 			}
 
 			if (this.deltaAttachGuid != System.Guid.Empty)
@@ -1030,6 +1068,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.DeltaModified)
 						{
 							this.deltaModified = bool.Parse(element);
+						}
+						else if (name == Xml.DeltaForwardTab)
+						{
+							this.deltaForwardTab = bool.Parse(element);
 						}
 						else if (name == Xml.DeltaAttachGuid)
 						{
@@ -1217,6 +1259,7 @@ namespace Epsitec.Common.FormEngine
 		private bool						deltaMoved;
 		private bool						deltaInserted;
 		private bool						deltaModified;
+		private bool						deltaForwardTab;
 		private System.Guid					deltaAttachGuid;
 		private bool						deltaBrokenAttach;
 		private System.Guid					forwardTabGuid;

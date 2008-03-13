@@ -816,6 +816,41 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+#if false
+		public void ChangeForwardTab(System.Guid fieldGuid, System.Guid forwardTabGuid)
+		{
+			//	Modifie l'élément suivant pour la navigation avec Tab.
+			this.formEditor.ViewersForms.UndoMemorize(Res.Strings.Undo.Action.ForwardTab, false);
+
+			FieldDescription field = this.GetFieldDescription(fieldGuid);
+			int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, fieldGuid);
+			if (index == -1)
+			{
+				if (forwardTabGuid != System.Guid.Empty)
+				{
+					FieldDescription copy = new FieldDescription(field);
+					copy.DeltaForwardTab = true;
+					copy.ForwardTabGuid = forwardTabGuid;
+
+					this.formEditor.WorkingForm.Fields.Add(copy);  // met l'élément à la fin de la liste delta
+				}
+			}
+			else
+			{
+				if (forwardTabGuid == System.Guid.Empty)
+				{
+					this.formEditor.WorkingForm.Fields.RemoveAt(index);  // supprime l'élément dans la liste delta
+				}
+				else
+				{
+					field.ForwardTabGuid = forwardTabGuid;
+				}
+			}
+
+			this.formEditor.Module.AccessForms.SetLocalDirty();
+#endif
+
+
 		#region TableContent
 		public void FormDeltaMove(int index, int direction)
 		{
@@ -958,7 +993,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				FieldDescription field = this.formEditor.WorkingForm.Fields[index];
 
-				if (!field.DeltaMoved && !field.DeltaInserted && !field.DeltaModified && !field.DeltaHidden && !field.DeltaShowed && !field.DeltaBrokenAttach)
+				if (!field.Delta)
 				{
 					this.formEditor.WorkingForm.Fields.RemoveAt(index);
 				}

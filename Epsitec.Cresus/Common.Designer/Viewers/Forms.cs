@@ -1666,7 +1666,7 @@ namespace Epsitec.Common.Designer.Viewers
 									actual.DeltaHidden = true;  // cache le champ
 								}
 
-								if (!actual.DeltaMoved && !actual.DeltaModified && !actual.DeltaHidden && !actual.DeltaShowed && !actual.DeltaBrokenAttach)
+								if (!actual.Delta)
 								{
 									this.workingForm.Fields.RemoveAt(index);
 								}
@@ -2185,6 +2185,60 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateRelationsButtons();
 			this.UpdateFieldsTable(false);
 			this.UpdateFieldsButtons();
+		}
+
+
+		public void ChangeForwardTab(System.Guid fieldGuid, System.Guid forwardTabGuid)
+		{
+			//	Modifie l'élément suivant pour la navigation avec Tab.
+			this.UndoMemorize(Res.Strings.Undo.Action.ForwardTab, false);
+
+			FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(fieldGuid);
+			int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, fieldGuid);
+
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
+			{
+				if (index == -1)
+				{
+					if (forwardTabGuid != System.Guid.Empty)
+					{
+						FieldDescription copy = new FieldDescription(field);
+						copy.DeltaForwardTab = true;
+						copy.ForwardTabGuid = forwardTabGuid;
+
+						this.workingForm.Fields.Add(copy);  // met l'élément à la fin de la liste delta
+					}
+				}
+				else
+				{
+					FieldDescription actual = this.workingForm.Fields[index];
+					actual.ForwardTabGuid = forwardTabGuid;
+
+					if (forwardTabGuid == System.Guid.Empty)
+					{
+						actual.DeltaForwardTab = false;
+
+						if (!actual.Delta)
+						{
+							this.workingForm.Fields.RemoveAt(index);  // supprime l'élément dans la liste delta
+						}
+					}
+					else
+					{
+						field.ForwardTabGuid = forwardTabGuid;
+					}
+				}
+			}
+			else  // masque normal ?
+			{
+				field.ForwardTabGuid = forwardTabGuid;
+			}
+
+			this.SetForm(true);
+			this.UpdateFieldsTable(false);
+			this.ReflectSelectionToList();
+			this.UpdateFieldsButtons();
+			this.module.AccessForms.SetLocalDirty();
 		}
 
 

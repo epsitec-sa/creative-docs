@@ -31,6 +31,7 @@ namespace Epsitec.Common.FormEngine
 		public const string DeltaMoved			= "DMo";
 		public const string DeltaInserted		= "DIn";
 		public const string DeltaModified		= "DMd";
+		public const string DeltaForwardTab		= "DFT";
 		public const string DeltaAttachGuid		= "DAG";
 		public const string DeltaBrokenAttach	= "DBA";
 		public const string ForwardTabGuid		= "FTG";
