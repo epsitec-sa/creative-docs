@@ -1,5 +1,5 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -46,6 +46,25 @@ namespace Epsitec.Common.Types
 		/// 	<c>true</c> if the strings use multilingual storage; otherwise, <c>false</c>.
 		/// </value>
 		bool UseMultilingualStorage
+		{
+			get;
+		}
+
+
+		/// <summary>
+		/// Gets the default search behavior for this string type.
+		/// </summary>
+		/// <value>The default search behavior.</value>
+		StringSearchBehavior DefaultSearchBehavior
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the default comparison behavior for this string type.
+		/// </summary>
+		/// <value>The default comparison behavior.</value>
+		System.StringComparison DefaultComparisonBehavior
 		{
 			get;
 		}

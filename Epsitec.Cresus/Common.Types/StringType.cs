@@ -1,7 +1,9 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.StringType))]
+using Epsitec.Common.Types;
+
+[assembly: DependencyClass (typeof (StringType))]
 
 namespace Epsitec.Common.Types
 {
@@ -86,6 +88,22 @@ namespace Epsitec.Common.Types
 			get
 			{
 				return (bool) this.Caption.GetValue (StringType.UseMultilingualStorageProperty);
+			}
+		}
+
+		public StringSearchBehavior				DefaultSearchBehavior
+		{
+			get
+			{
+				return (StringSearchBehavior) this.Caption.GetValue (StringType.DefaultSearchBehaviorProperty);
+			}
+		}
+
+		public System.StringComparison			DefaultComparisonBehavior
+		{
+			get
+			{
+				return (System.StringComparison) this.Caption.GetValue (StringType.DefaultComparisonBehaviorProperty);
 			}
 		}
 
@@ -175,6 +193,30 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void DefineDefaultSearchBehavior(StringSearchBehavior value)
+		{
+			if (value == StringSearchBehavior.ExactMatch)
+			{
+				this.Caption.ClearValue (StringType.DefaultSearchBehaviorProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (StringType.DefaultSearchBehaviorProperty, value);
+			}
+		}
+
+		public void DefineDefaultComparisonBehavior(System.StringComparison value)
+		{
+			if (value == System.StringComparison.Ordinal)
+			{
+				this.Caption.ClearValue (StringType.DefaultComparisonBehaviorProperty);
+			}
+			else
+			{
+				this.Caption.SetValue (StringType.DefaultComparisonBehaviorProperty, value);
+			}
+		}
+
 		public static StringType Default
 		{
 			get
@@ -195,6 +237,9 @@ namespace Epsitec.Common.Types
 		
 		public static readonly DependencyProperty UseFixedLengthStorageProperty  = DependencyProperty.RegisterAttached ("UseFixedLengthStorage",  typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
+
+		public static readonly DependencyProperty DefaultSearchBehaviorProperty     = DependencyProperty.RegisterAttached ("DefaultSearchBehavior", typeof (StringSearchBehavior), typeof (StringType), new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
+		public static readonly DependencyProperty DefaultComparisonBehaviorProperty = DependencyProperty.RegisterAttached ("DefaultComparisonBehavior", typeof (System.StringComparison), typeof (StringType), new DependencyPropertyMetadata (System.StringComparison.Ordinal));
 
 		private static StringType defaultValue;
 	}

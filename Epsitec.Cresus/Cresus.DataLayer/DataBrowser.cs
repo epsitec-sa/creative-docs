@@ -57,13 +57,14 @@ namespace Epsitec.Cresus.DataLayer
 
 					foreach (string id in context.GetDefinedFieldIds (example))
 					{
-						System.Type fieldType  = context.GetFieldSystemType (example, id);
-						object      fieldValue = example.InternalGetValue (id);
+						AbstractType fieldType  = context.GetFieldType (example, id) as AbstractType;
+						object       fieldValue = example.InternalGetValue (id);
 
 						System.Diagnostics.Debug.Assert (fieldType != null);
-						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.Name));
+						System.Diagnostics.Debug.Assert (fieldType.SystemType != null);
+						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.SystemType.Name));
 
-						if (fieldType == typeof (string))
+						if (fieldType.TypeCode == TypeCode.String)
 						{
 							string textValue = fieldValue as string;
 
