@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer
 				query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[630B3]")));
 				
 				AdresseEntity example = new AdresseEntity ();
-				example.Npa = "%14%";
+				example.Npa = "*14*";
 
 				foreach (object[] values in browser.QueryByExample (transaction, example, query))
 				{

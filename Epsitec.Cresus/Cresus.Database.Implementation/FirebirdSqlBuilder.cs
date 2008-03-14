@@ -630,6 +630,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			return fbParam.Value;
 		}
+
+		public char[] GetSupportedCompareLikeWildcards()
+		{
+			return new char[] { '%', '_' };
+		}
 		
 		#endregion
 		
@@ -899,11 +904,11 @@ namespace Epsitec.Cresus.Database.Implementation
 							string constantValue = sqlFunction.B.Value as string;
 							
 							if ((constantValue != null) &&
-								(constantValue.Contains (DbSqlStandard.CompareLikeEscapeCharacter)))
+								(constantValue.Contains (DbSqlStandard.CompareLikeEscape)))
 							{
 								//	TODO: make sure the user escaped only escapable characters here !
 								
-								this.Append (string.Concat (" ESCAPE '", DbSqlStandard.CompareLikeEscapeCharacter, "'"));
+								this.Append (string.Concat (" ESCAPE '", DbSqlStandard.CompareLikeEscape, "'"));
 							}
 							break;
 					}

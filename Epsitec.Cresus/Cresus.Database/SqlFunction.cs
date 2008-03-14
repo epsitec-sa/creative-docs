@@ -96,7 +96,9 @@ namespace Epsitec.Cresus.Database
 						return 1;
 
 					case SqlFunctionCode.CompareLike:
+					case SqlFunctionCode.CompareLikeEscape:
 					case SqlFunctionCode.CompareNotLike:
+					case SqlFunctionCode.CompareNotLikeEscape:
 						return 2;
 
 					case SqlFunctionCode.CompareFalse:

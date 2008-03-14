@@ -337,7 +337,8 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
-		public IEnumerable<string> GetDefinedFields(AbstractEntity entity)
+		
+		public IEnumerable<string> GetDefinedFieldIds(AbstractEntity entity)
 		{
 			HashSet<string> ids = new HashSet<string> ();
 
@@ -353,6 +354,19 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return ids;
 		}
+
+		public INamedType GetFieldType(AbstractEntity entity, string id)
+		{
+			StructuredTypeField field = this.GetStructuredTypeField (entity, id);
+			return field == null ? null : field.Type;
+		}
+
+		public System.Type GetFieldSystemType(AbstractEntity entity, string id)
+		{
+			INamedType type = this.GetFieldType (entity, id);
+			return type == null ? null : type.SystemType;
+		}
+
 
 		public void DisableCalculations(AbstractEntity entity)
 		{

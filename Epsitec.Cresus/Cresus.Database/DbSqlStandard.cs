@@ -41,12 +41,62 @@ namespace Epsitec.Cresus.Database
 		/// Gets the escape character used for the <c>LIKE</c> comparisons.
 		/// </summary>
 		/// <value>The escape character.</value>
-		public static string CompareLikeEscapeCharacter
+		public static string CompareLikeEscape
 		{
 			get
 			{
 				return "#";
 			}
+		}
+
+
+		public static string ConvertToCompareLikeWildcards(ISqlBuilder builder, string pattern)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			char   escapeCharacter    = DbSqlStandard.CompareLikeEscape[0];
+			char[] supportedWildcards = builder.GetSupportedCompareLikeWildcards ();
+
+			System.Diagnostics.Debug.Assert (DbSqlStandard.Contains (supportedWildcards, escapeCharacter) == false);
+			
+			foreach (char c in pattern)
+			{
+				switch (c)
+				{
+					case '*':
+						buffer.Append ("%");
+						break;
+
+					case '?':
+						buffer.Append ("_");
+						break;
+
+					default:
+						if ((c == escapeCharacter) ||
+							(DbSqlStandard.Contains (supportedWildcards, c)))
+						{
+							buffer.Append (escapeCharacter);
+						}
+						buffer.Append (c);
+						break;
+				}
+			}
+			
+			return buffer.ToString ();
+		}
+
+
+		private static bool Contains(char[] supportedWildcards, char c)
+		{
+			for (int i = 0; i < supportedWildcards.Length; i++)
+			{
+				if (c == supportedWildcards[i])
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 

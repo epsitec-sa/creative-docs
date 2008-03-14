@@ -53,18 +53,36 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				if (example != null)
 				{
-					foreach (string id in example.GetEntityContext ().GetDefinedFields (example))
+					EntityContext context = example.GetEntityContext ();
+
+					foreach (string id in context.GetDefinedFieldIds (example))
 					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1}", id, example.InternalGetValue (id)));
-						string value = example.GetField<string> (id);
-						DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
-						EntityFieldPath fieldPath = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
-						DbTableColumn tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
-						
-						//	TODO: LikeEscape ?
-						
-						condition.AddCondition (tableColumn, DbCompare.Like, value);
-						reader.AddCondition (condition);
+						System.Type fieldType  = context.GetFieldSystemType (example, id);
+						object      fieldValue = example.InternalGetValue (id);
+
+						System.Diagnostics.Debug.Assert (fieldType != null);
+						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.Name));
+
+						if (fieldType == typeof (string))
+						{
+							string textValue = fieldValue as string;
+
+							if (string.IsNullOrEmpty (textValue))
+							{
+								continue;
+							}
+
+							DbSelectCondition condition   = new DbSelectCondition (this.infrastructure.Converter);
+							EntityFieldPath   fieldPath   = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
+							DbTableColumn     tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
+
+							string pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+
+							condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
+							reader.AddCondition (condition);
+
+							System.Diagnostics.Debug.WriteLine ("Condition : " + pattern);
+						}
 					}
 				}
 

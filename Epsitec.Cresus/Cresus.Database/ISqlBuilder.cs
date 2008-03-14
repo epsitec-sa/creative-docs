@@ -181,5 +181,12 @@ namespace Epsitec.Cresus.Database
 		/// <param name="index">The parameter index.</param>
 		/// <returns>The value.</returns>
 		object GetCommandParameterValue(System.Data.IDbCommand command, int index);
+
+		/// <summary>
+		/// Gets the wildcards supported by the <c>LIKE</c> comparison.
+		/// </summary>
+		/// <returns>An array of characters which are recognized by the <c>LIKE</c>
+		/// predicator as wildcard specifiers.</returns>
+		char[] GetSupportedCompareLikeWildcards();
 	}
 }

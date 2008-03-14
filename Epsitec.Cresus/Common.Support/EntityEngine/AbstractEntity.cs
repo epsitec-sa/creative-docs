@@ -149,7 +149,9 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				foreach (string id in this.context.GetEntityFieldIds (this))
 				{
-					string name = manager.GetCaption (this.context.GetStructuredTypeField (this, id).CaptionId).Name;
+					StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+					Caption caption = manager.GetCaption (field.CaptionId);
+					string name = caption.Name;
 					object value = this.DynamicGetField (id);
 					AbstractEntity child = value as AbstractEntity;
 
@@ -218,7 +220,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public T GetField<T>(string id)
 		{
-			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
+			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
@@ -440,8 +442,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					using (this.DefineOriginalValues ())
 					{
-						IStructuredType     type  = this.context.GetStructuredType (this);
-						StructuredTypeField field = type.GetField (id);
+						StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
 
 						System.Type itemType = model.GetType ();
@@ -554,7 +555,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private void GenericSetValue(string id, object oldValue, object newValue)
 		{
-			StructuredTypeField field = this.context.GetStructuredType (this).GetField (id);
+			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
