@@ -2775,12 +2775,11 @@ namespace Epsitec.Common.Widgets
 						if (sibling.HasChildren)
 						{
 							Widget[] candidates = sibling.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
+							Widget   widget     = Widget.TabNavigateEnterOverride (sibling, dir, mode, ref iterations);
 
-							sibling = Widget.TabNavigateEnterOverride (sibling, dir, mode, ref iterations);
-
-							if (sibling != null)
+							if (widget != null)
 							{
-								return sibling;
+								return widget;
 							}
 
 							if (candidates.Length > 0)
@@ -2809,13 +2808,14 @@ namespace Epsitec.Common.Widgets
 							//	Entre en marche avant dans le widget...
 
 							Widget[] candidates = sibling.Children.Widgets[0].GetTabNavigationSiblings (dir, mode).ToArray ();
-
-							sibling = Widget.TabNavigateEnterOverride (sibling, dir, mode, ref iterations);
+							Widget   widget     = Widget.TabNavigateEnterOverride (sibling, dir, mode, ref iterations);
 							
-							if (sibling != null)
+							if (widget != null)
 							{
-								return sibling;
+								return widget;
 							}
+
+							sibling = null;
 
 							foreach (Widget candidate in candidates)
 							{

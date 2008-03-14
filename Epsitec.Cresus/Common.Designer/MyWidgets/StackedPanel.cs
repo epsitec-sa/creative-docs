@@ -12,7 +12,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 	{
 		public StackedPanel()
 		{
-			this.Padding = new Margins(StackedPanel.leftMargin+10, 10, 5-1, 5);
+			this.InternalState |= InternalState.PossibleContainer;
+			this.InternalState |= InternalState.Focusable;
+			
+			this.Padding = new Margins (StackedPanel.leftMargin+10, 10, 5-1, 5);
 
 			this.container = new FrameBox(this);
 			this.container.Dock = DockStyle.Fill;
