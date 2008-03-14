@@ -66,7 +66,8 @@ namespace Epsitec.Cresus.DataLayer
 
 						if (fieldType.TypeCode == TypeCode.String)
 						{
-							string textValue = fieldValue as string;
+							IStringType fieldStringType = fieldType as IStringType;
+							string      textValue       = fieldValue as string;
 
 							if (string.IsNullOrEmpty (textValue))
 							{
@@ -77,9 +78,34 @@ namespace Epsitec.Cresus.DataLayer
 							EntityFieldPath   fieldPath   = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
 							DbTableColumn     tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
 
-							string pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+							StringSearchBehavior     searchBehavior     = fieldStringType.DefaultSearchBehavior;
+							StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
 
-							condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
+							IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
+
+							if (fieldProperties != null)
+							{
+								if (fieldProperties.ContainsValue (id, StringType.DefaultSearchBehaviorProperty))
+								{
+									searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (id, StringType.DefaultSearchBehaviorProperty);
+								}
+								if (fieldProperties.ContainsValue (id, StringType.DefaultComparisonBehaviorProperty))
+								{
+									comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (id, StringType.DefaultComparisonBehaviorProperty);
+								}
+							}
+
+							string pattern = this.CreateSearchPattern (textValue, searchBehavior);
+
+							if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
+							{
+								condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
+							}
+							else
+							{
+								condition.AddCondition (tableColumn, DbCompare.Like, pattern);
+							}
+							
 							reader.AddCondition (condition);
 
 							System.Diagnostics.Debug.WriteLine ("Condition : " + pattern);
@@ -94,6 +120,41 @@ namespace Epsitec.Cresus.DataLayer
 					yield return values;
 				}
 			}
+		}
+
+		private string CreateSearchPattern(string textValue, StringSearchBehavior searchBehavior)
+		{
+			string pattern;
+
+			switch (searchBehavior)
+			{
+				case StringSearchBehavior.ExactMatch:
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					break;
+
+				case StringSearchBehavior.WildcardMatch:
+					pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					break;
+
+				case StringSearchBehavior.MatchStart:
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = string.Concat (pattern, "%");
+					break;
+
+				case StringSearchBehavior.MatchEnd:
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = string.Concat ("%", pattern);
+					break;
+
+				case StringSearchBehavior.MatchAnywhere:
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = string.Concat ("%", pattern, "%");
+					break;
+
+				default:
+					throw new System.ArgumentException (string.Format ("Unsupported search behavior {0}", searchBehavior));
+			}
+			return pattern;
 		}
 
 

@@ -85,6 +85,35 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 
+		public static string EscapeCompareLikeWildcards(ISqlBuilder builder, string pattern)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			char   escapeCharacter    = DbSqlStandard.CompareLikeEscape[0];
+			char[] supportedWildcards = builder.GetSupportedCompareLikeWildcards ();
+
+			System.Diagnostics.Debug.Assert (DbSqlStandard.Contains (supportedWildcards, escapeCharacter) == false);
+
+			int escaped = 0;
+
+			foreach (char c in pattern)
+			{
+				if (c == escapeCharacter)
+				{
+					buffer.Append (escapeCharacter);
+				}
+				else if(DbSqlStandard.Contains (supportedWildcards, c))
+				{
+					buffer.Append (escapeCharacter);
+					escaped++;
+				}
+				
+				buffer.Append (c);
+			}
+
+			return escaped == 0 ? pattern : buffer.ToString ();
+		}
+
 
 		private static bool Contains(char[] supportedWildcards, char c)
 		{
