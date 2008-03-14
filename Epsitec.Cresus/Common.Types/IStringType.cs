@@ -64,7 +64,7 @@ namespace Epsitec.Common.Types
 		/// Gets the default comparison behavior for this string type.
 		/// </summary>
 		/// <value>The default comparison behavior.</value>
-		System.StringComparison DefaultComparisonBehavior
+		StringComparisonBehavior DefaultComparisonBehavior
 		{
 			get;
 		}

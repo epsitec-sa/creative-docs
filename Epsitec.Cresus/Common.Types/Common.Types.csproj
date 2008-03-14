@@ -106,6 +106,8 @@
     <Compile Include="AbstractDateTimeType.cs" />
     <Compile Include="BinaryType.cs" />
     <Compile Include="Converters\TextConverter.cs" />
+    <Compile Include="IFieldPropertyStore.cs" />
+    <Compile Include="StringComparisonBehavior.cs" />
     <Compile Include="StringSearchBehavior.cs" />
     <Compile Include="Support\WeakEventListeners.cs" />
     <Compile Include="Support\WeakEventListener.cs" />

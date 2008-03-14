@@ -550,7 +550,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 						if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.MinimumLength))) &&
 							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.MaximumLength))) &&
-							((UndefinedValue.IsUndefinedValue (useMultilingualStorage)) || ((bool) useMultilingualStorage == false)))
+							((UndefinedValue.IsUndefinedValue (useMultilingualStorage)) || ((bool) useMultilingualStorage == false)) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.DefaultSearchBehavior))) &&
+							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.DefaultComparisonBehavior))))
 						{
 							return true;
 						}
@@ -654,6 +656,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.UseMultilingualStorage);
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.MinimumLength);
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.MaximumLength);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.DefaultSearchBehavior);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.DefaultComparisonBehavior);
 					break;
 
 				default:
@@ -1053,6 +1057,20 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					type.DefineMaximumLength (max);
 				}
 			}
+
+			value = data.GetValue (Res.Fields.ResourceStringType.DefaultSearchBehavior);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineDefaultSearchBehavior ((StringSearchBehavior) value);
+			}
+
+			value = data.GetValue (Res.Fields.ResourceStringType.DefaultComparisonBehavior);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineDefaultComparisonBehavior ((StringComparisonBehavior) value);
+			}
 		}
 
 
@@ -1257,6 +1275,14 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (caption.ContainsLocalValue (StringType.UseMultilingualStorageProperty))
 			{
 				data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
+			}
+			if (caption.ContainsLocalValue (StringType.DefaultSearchBehaviorProperty))
+			{
+				data.SetValue (Res.Fields.ResourceStringType.DefaultSearchBehavior, type.DefaultSearchBehavior);
+			}
+			if (caption.ContainsLocalValue (StringType.DefaultComparisonBehaviorProperty))
+			{
+				data.SetValue (Res.Fields.ResourceStringType.DefaultComparisonBehavior, type.DefaultComparisonBehavior);
 			}
 		}
 

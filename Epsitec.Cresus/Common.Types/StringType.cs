@@ -95,15 +95,15 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return (StringSearchBehavior) this.Caption.GetValue (StringType.DefaultSearchBehaviorProperty);
+				return StringType.GetDefaultSearchBehavior (this.Caption);
 			}
 		}
 
-		public System.StringComparison			DefaultComparisonBehavior
+		public StringComparisonBehavior			DefaultComparisonBehavior
 		{
 			get
 			{
-				return (System.StringComparison) this.Caption.GetValue (StringType.DefaultComparisonBehaviorProperty);
+				return StringType.GetDefaultComparisonBehavior (this.Caption);
 			}
 		}
 
@@ -195,28 +195,48 @@ namespace Epsitec.Common.Types
 
 		public void DefineDefaultSearchBehavior(StringSearchBehavior value)
 		{
+			StringType.SetDefaultSearchBehavior (this.Caption, value);
+		}
+
+		public void DefineDefaultComparisonBehavior(StringComparisonBehavior value)
+		{
+			StringType.SetDefaultComparisonBehavior (this.Caption, value);
+		}
+
+		public static StringSearchBehavior GetDefaultSearchBehavior(DependencyObject obj)
+		{
+			return (StringSearchBehavior) obj.GetValue (StringType.DefaultSearchBehaviorProperty);
+		}
+
+		public static void SetDefaultSearchBehavior(DependencyObject obj, StringSearchBehavior value)
+		{
 			if (value == StringSearchBehavior.ExactMatch)
 			{
-				this.Caption.ClearValue (StringType.DefaultSearchBehaviorProperty);
+				obj.ClearValue (StringType.DefaultSearchBehaviorProperty);
 			}
 			else
 			{
-				this.Caption.SetValue (StringType.DefaultSearchBehaviorProperty, value);
+				obj.SetValue (StringType.DefaultSearchBehaviorProperty, value);
 			}
 		}
-
-		public void DefineDefaultComparisonBehavior(System.StringComparison value)
+		
+		public static StringComparisonBehavior GetDefaultComparisonBehavior(DependencyObject obj)
 		{
-			if (value == System.StringComparison.Ordinal)
+			return (StringComparisonBehavior) obj.GetValue (StringType.DefaultComparisonBehaviorProperty);
+		}
+
+		public static void SetDefaultComparisonBehavior(DependencyObject obj, StringComparisonBehavior value)
+		{
+			if (value == StringComparisonBehavior.Ordinal)
 			{
-				this.Caption.ClearValue (StringType.DefaultComparisonBehaviorProperty);
+				obj.ClearValue (StringType.DefaultComparisonBehaviorProperty);
 			}
 			else
 			{
-				this.Caption.SetValue (StringType.DefaultComparisonBehaviorProperty, value);
+				obj.SetValue (StringType.DefaultComparisonBehaviorProperty, value);
 			}
 		}
-
+		
 		public static StringType Default
 		{
 			get
@@ -239,7 +259,7 @@ namespace Epsitec.Common.Types
 		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 
 		public static readonly DependencyProperty DefaultSearchBehaviorProperty     = DependencyProperty.RegisterAttached ("DefaultSearchBehavior", typeof (StringSearchBehavior), typeof (StringType), new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
-		public static readonly DependencyProperty DefaultComparisonBehaviorProperty = DependencyProperty.RegisterAttached ("DefaultComparisonBehavior", typeof (System.StringComparison), typeof (StringType), new DependencyPropertyMetadata (System.StringComparison.Ordinal));
+		public static readonly DependencyProperty DefaultComparisonBehaviorProperty = DependencyProperty.RegisterAttached ("DefaultComparisonBehavior", typeof (StringComparisonBehavior), typeof (StringType), new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
 
 		private static StringType defaultValue;
 	}
