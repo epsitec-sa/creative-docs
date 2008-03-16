@@ -280,6 +280,31 @@ namespace Epsitec.Common.Support.EntityEngine
 			return id;
 		}
 
+		/// <summary>
+		/// Creates an entity which can be used as a search template. The entity
+		/// implements <see cref="IFieldPropertyStore"/>.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns>The search template entity.</returns>
+		public AbstractEntity CreateSearchEntity(Druid entityId)
+		{
+			AbstractEntity entity;
+
+			EntityContext.Push (this);
+
+			try
+			{
+				entity = new GenericEntity (entityId);
+			}
+			finally
+			{
+				EntityContext.Pop ();
+			}
+
+			this.OnEntityCreated (new EntityEventArgs (entity));
+			return entity;
+		}
+
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
 			AbstractEntity entity;
