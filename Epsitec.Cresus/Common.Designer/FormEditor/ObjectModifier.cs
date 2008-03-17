@@ -1086,10 +1086,11 @@ namespace Epsitec.Common.Designer.FormEditor
 				builder.Append(" ");
 			}
 
+			FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
+
 			string name = this.formEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
-			if (name == null)
+			if (name == null || (field != null && field.Type == FieldDescription.FieldType.Command))
 			{
-				FieldDescription field = this.formEditor.ObjectModifier.GetFieldDescription(item);
 				if (field != null)
 				{
 					if (field.Type == FieldDescription.FieldType.BoxBegin ||
