@@ -160,6 +160,18 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FieldDescription.CommandButtonClass CommandButtonClass
+		{
+			get
+			{
+				return (FieldDescription.CommandButtonClass) this.GetValue(Style.CommandButtonClassProperty);
+			}
+			set
+			{
+				this.SetValue(Style.CommandButtonClassProperty, value);
+			}
+		}
+
 
 		protected override void InitializePropertyValues()
 		{
@@ -198,6 +210,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.LabelFontStyle = this.ObjectModifier.GetLabelFontStyle(this.DefaultWidget);
 				this.LabelFontSize  = this.ObjectModifier.GetLabelFontSize(this.DefaultWidget);
 			}
+
+			if (this.ObjectModifier.IsCommand(this.DefaultWidget))
+			{
+				this.CommandButtonClass = this.ObjectModifier.GetCommandButtonClass(this.DefaultWidget);
+			}
 		}
 
 		static Style()
@@ -229,6 +246,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Style.LabelFontSizeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontSizeType.Id);
 			Style.FieldFontSizeProperty.DefaultMetadata.DefineNamedType(fontSizeEnumType);
 			Style.FieldFontSizeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontSizeType.Id);
+
+			EnumType commandButtonClass = Res.Types.FieldDescription.CommandButtonClass;
+			Style.CommandButtonClassProperty.DefaultMetadata.DefineNamedType(commandButtonClass);
+			Style.CommandButtonClassProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.CommandButtonClass.Id);
 		}
 
 
@@ -448,15 +469,40 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		private static void NotifyCommandButtonClassChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.CommandButtonClass value = (FieldDescription.CommandButtonClass) newValue;
+			Style that = (Style) o;
 
-		public static readonly DependencyProperty BackColorProperty       = DependencyProperty.Register("BackColor",       typeof(FieldDescription.BackColorType),  typeof(Style), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,    Style.NotifyBackColorChanged));
-		public static readonly DependencyProperty LabelFontColorProperty  = DependencyProperty.Register("LabelFontColor",  typeof(FieldDescription.FontColorType),  typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontColorType.Default, Style.NotifyLabelFontColorChanged));
-		public static readonly DependencyProperty FieldFontColorProperty  = DependencyProperty.Register("FieldFontColor",  typeof(FieldDescription.FontColorType),  typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontColorType.Default, Style.NotifyFieldFontColorChanged));
-		public static readonly DependencyProperty LabelFontFaceProperty   = DependencyProperty.Register("LabelFontFace",   typeof(FieldDescription.FontFaceType),   typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontFaceType.Default,  Style.NotifyLabelFontFaceChanged));
-		public static readonly DependencyProperty FieldFontFaceProperty   = DependencyProperty.Register("FieldFontFace",   typeof(FieldDescription.FontFaceType),   typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontFaceType.Default,  Style.NotifyFieldFontFaceChanged));
-		public static readonly DependencyProperty LabelFontStyleProperty  = DependencyProperty.Register("LabelFontStyle",  typeof(FieldDescription.FontStyleType),  typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontStyleType.Normal,  Style.NotifyLabelFontStyleChanged));
-		public static readonly DependencyProperty FieldFontStyleProperty  = DependencyProperty.Register("FieldFontStyle",  typeof(FieldDescription.FontStyleType),  typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontStyleType.Normal,  Style.NotifyFieldFontStyleChanged));
-		public static readonly DependencyProperty LabelFontSizeProperty   = DependencyProperty.Register("LabelFontSize",   typeof(FieldDescription.FontSizeType),   typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontSizeType.Normal,   Style.NotifyLabelFontSizeChanged));
-		public static readonly DependencyProperty FieldFontSizeProperty   = DependencyProperty.Register("FieldFontSize",   typeof(FieldDescription.FontSizeType),   typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontSizeType.Normal,   Style.NotifyFieldFontSizeChanged));
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetCommandButtonClass(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+
+		public static readonly DependencyProperty BackColorProperty          = DependencyProperty.Register("BackColor",          typeof(FieldDescription.BackColorType),      typeof(Style), new DependencyPropertyMetadata(FieldDescription.BackColorType.None,         Style.NotifyBackColorChanged));
+		public static readonly DependencyProperty LabelFontColorProperty     = DependencyProperty.Register("LabelFontColor",     typeof(FieldDescription.FontColorType),      typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontColorType.Default,      Style.NotifyLabelFontColorChanged));
+		public static readonly DependencyProperty FieldFontColorProperty     = DependencyProperty.Register("FieldFontColor",     typeof(FieldDescription.FontColorType),      typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontColorType.Default,      Style.NotifyFieldFontColorChanged));
+		public static readonly DependencyProperty LabelFontFaceProperty      = DependencyProperty.Register("LabelFontFace",      typeof(FieldDescription.FontFaceType),       typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontFaceType.Default,       Style.NotifyLabelFontFaceChanged));
+		public static readonly DependencyProperty FieldFontFaceProperty      = DependencyProperty.Register("FieldFontFace",      typeof(FieldDescription.FontFaceType),       typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontFaceType.Default,       Style.NotifyFieldFontFaceChanged));
+		public static readonly DependencyProperty LabelFontStyleProperty     = DependencyProperty.Register("LabelFontStyle",     typeof(FieldDescription.FontStyleType),      typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontStyleType.Normal,       Style.NotifyLabelFontStyleChanged));
+		public static readonly DependencyProperty FieldFontStyleProperty     = DependencyProperty.Register("FieldFontStyle",     typeof(FieldDescription.FontStyleType),      typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontStyleType.Normal,       Style.NotifyFieldFontStyleChanged));
+		public static readonly DependencyProperty LabelFontSizeProperty      = DependencyProperty.Register("LabelFontSize",      typeof(FieldDescription.FontSizeType),       typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontSizeType.Normal,        Style.NotifyLabelFontSizeChanged));
+		public static readonly DependencyProperty FieldFontSizeProperty      = DependencyProperty.Register("FieldFontSize",      typeof(FieldDescription.FontSizeType),       typeof(Style), new DependencyPropertyMetadata(FieldDescription.FontSizeType.Normal,        Style.NotifyFieldFontSizeChanged));
+		public static readonly DependencyProperty CommandButtonClassProperty = DependencyProperty.Register("CommandButtonClass", typeof(FieldDescription.CommandButtonClass), typeof(Style), new DependencyPropertyMetadata(FieldDescription.CommandButtonClass.Default, Style.NotifyCommandButtonClassChanged));
 	}
 }

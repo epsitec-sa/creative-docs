@@ -19,6 +19,7 @@ namespace Epsitec.Common.FormEngine
 		public const string FieldFontStyle		= "FFS";
 		public const string LabelFontSize		= "LFH";
 		public const string FieldFontSize		= "FFH";
+		public const string CommandButtonClass	= "CBC";
 		public const string SeparatorBottom		= "SB";
 		public const string ColumnsRequired		= "CR";
 		public const string RowsRequired		= "RR";

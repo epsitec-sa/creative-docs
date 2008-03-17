@@ -138,6 +138,8 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption BoxFrameWidth { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 41)); } }
 				//	designer:cap/302E1
 				public static global::Epsitec.Common.Types.Caption BoxPaddingType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 46)); } }
+				//	designer:cap/30K21
+				public static global::Epsitec.Common.Types.Caption CommandButtonClass { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 34)); } }
 				//	designer:cap/30KG
 				public static global::Epsitec.Common.Types.Caption FieldFontColorType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16)); } }
 				//	designer:cap/30KL
@@ -318,6 +320,8 @@ namespace Epsitec.Common.Designer
 				public static readonly global::Epsitec.Common.Types.EnumType BackColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 8));
 				//	designer:cap/302F1
 				public static readonly global::Epsitec.Common.Types.EnumType BoxPaddingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 47));
+				//	designer:cap/30KT
+				public static readonly global::Epsitec.Common.Types.EnumType CommandButtonClass = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29));
 				//	designer:cap/30K
 				public static readonly global::Epsitec.Common.Types.EnumType FontColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 				//	designer:cap/30KN
@@ -383,6 +387,18 @@ namespace Epsitec.Common.Designer
 					public static global::Epsitec.Common.Types.Caption Extend { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 50)); } }
 					//	designer:cap/302G1
 					public static global::Epsitec.Common.Types.Caption Normal { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 48)); } }
+				}
+				
+				public static class CommandButtonClass
+				{
+					//	designer:cap/30KU
+					public static global::Epsitec.Common.Types.Caption Default { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 30)); } }
+					//	designer:cap/30KV
+					public static global::Epsitec.Common.Types.Caption DialogButton { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 31)); } }
+					//	designer:cap/30K11
+					public static global::Epsitec.Common.Types.Caption FlatButton { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 33)); } }
+					//	designer:cap/30K01
+					public static global::Epsitec.Common.Types.Caption RichDialogButton { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 32)); } }
 				}
 				
 				public static class ContainerLayoutMode
@@ -1652,6 +1668,8 @@ namespace Epsitec.Common.Designer
 					public static string BoxPadding { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544346)); } }
 					//	designer:str/30KN
 					public static string ColumnsRequired { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544343)); } }
+					//	designer:str/30KU1
+					public static string CommandButtonClass { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544382)); } }
 					//	designer:str/30KT1
 					public static string CommandInsert { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544381)); } }
 					//	designer:str/30K71

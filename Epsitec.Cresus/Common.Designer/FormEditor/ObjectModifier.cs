@@ -502,6 +502,37 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
+		public FieldDescription.CommandButtonClass GetCommandButtonClass(Widget obj)
+		{
+			//	Retourne le type d'une commande.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.CommandButtonClass.Default;
+			}
+			else
+			{
+				return field.CommandButtonClassValue;
+			}
+		}
+
+		public void SetCommandButtonClass(Widget obj, FieldDescription.CommandButtonClass type)
+		{
+			//	Choix du type d'une commande.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize(Res.Strings.Undo.Action.CommandButtonClass);
+				field.CommandButtonClassValue = type;
+				this.DeltaUpdate(field);
+			}
+		}
+
 
 		public FrameState GetBoxFrameState(Widget obj)
 		{

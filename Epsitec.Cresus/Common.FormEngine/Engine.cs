@@ -681,7 +681,7 @@ namespace Epsitec.Common.FormEngine
 			button.TabIndex = this.tabIndex++;
 			button.Name = guid.ToString();
 			button.CommandId = field.FieldIds[0];
-			button.ButtonClass = ButtonClass.RichDialogButton;
+			this.ApplyCommandButtonClass(button, field);
 			this.ApplyTextStyle(button, field);
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
@@ -876,6 +876,29 @@ namespace Epsitec.Common.FormEngine
 
 			//	Active les styles pour le widget spécifié et tous ses enfants.
 			textStyleManager.Attach(widget);
+		}
+
+		private void ApplyCommandButtonClass(UI.MetaButton button, FieldDescription field)
+		{
+			//	Applique le type pour le bouton d'une commande.
+			switch (field.CommandButtonClassValue)
+			{
+				case FieldDescription.CommandButtonClass.DialogButton:
+					button.ButtonClass = ButtonClass.DialogButton;
+					break;
+
+				case FieldDescription.CommandButtonClass.RichDialogButton:
+					button.ButtonClass = ButtonClass.RichDialogButton;
+					break;
+
+				case FieldDescription.CommandButtonClass.FlatButton:
+					button.ButtonClass = ButtonClass.FlatButton;
+					break;
+
+				default:
+					button.ButtonClass = ButtonClass.None;
+					break;
+			}
 		}
 
 		private void ApplyFontTextStyle(TextStyle textStyle, FieldDescription.FontFaceType face, FieldDescription.FontStyleType style)

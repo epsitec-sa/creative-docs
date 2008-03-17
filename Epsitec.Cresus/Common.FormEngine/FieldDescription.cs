@@ -89,6 +89,15 @@ namespace Epsitec.Common.FormEngine
 			VeryLarge		= 3,	// très grand
 		}
 
+		[DesignerVisible]
+		public enum CommandButtonClass
+		{
+			Default			= 0,	// utilise les réglages par défaut définis au niveau de la commande
+			DialogButton	= 1,	// bouton pour les dialogues
+			RichDialogButton= 2,	// comme ci-dessus, avec icône
+			FlatButton		= 3,	// bouton plat pour barre d'outils
+		}
+
 
 		private FieldDescription()
 		{
@@ -156,6 +165,7 @@ namespace Epsitec.Common.FormEngine
 			this.fieldFontStyle = FontStyleType.Normal;
 			this.labelFontSize = FontSizeType.Normal;
 			this.fieldFontSize = FontSizeType.Normal;
+			this.commandButtonClass = CommandButtonClass.Default;
 			this.separatorBottom = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
@@ -525,6 +535,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public CommandButtonClass CommandButtonClassValue
+		{
+			//	Type d'une commande.
+			get
+			{
+				return this.commandButtonClass;
+			}
+			set
+			{
+				this.commandButtonClass = value;
+			}
+		}
+
 		public int ColumnsRequired
 		{
 			//	Nombre de colonnes requises [1..10].
@@ -793,6 +816,7 @@ namespace Epsitec.Common.FormEngine
 				a.fieldFontStyle != b.fieldFontStyle ||
 				a.labelFontSize != b.labelFontSize ||
 				a.fieldFontSize != b.fieldFontSize ||
+				a.commandButtonClass != b.commandButtonClass ||
 				a.separatorBottom != b.separatorBottom ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
@@ -900,6 +924,11 @@ namespace Epsitec.Common.FormEngine
 			if (this.fieldFontSize != FontSizeType.Normal)
 			{
 				writer.WriteElementString(Xml.FieldFontSize, this.fieldFontSize.ToString());
+			}
+
+			if (this.commandButtonClass != CommandButtonClass.Default)
+			{
+				writer.WriteElementString(Xml.CommandButtonClass, this.commandButtonClass.ToString());
 			}
 
 			writer.WriteElementString(Xml.SeparatorBottom, this.separatorBottom.ToString());
@@ -1028,6 +1057,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.FieldFontSize)
 						{
 							this.fieldFontSize = (FontSizeType) System.Enum.Parse(typeof(FontSizeType), element);
+						}
+						else if (name == Xml.CommandButtonClass)
+						{
+							this.commandButtonClass = (CommandButtonClass) System.Enum.Parse(typeof(CommandButtonClass), element);
 						}
 						else if (name == Xml.SeparatorBottom)
 						{
@@ -1252,6 +1285,7 @@ namespace Epsitec.Common.FormEngine
 		private FontStyleType				fieldFontStyle;
 		private FontSizeType				labelFontSize;
 		private FontSizeType				fieldFontSize;
+		private CommandButtonClass			commandButtonClass;
 		private SeparatorType				separatorBottom;
 		private int							columnsRequired;
 		private int							rowsRequired;
