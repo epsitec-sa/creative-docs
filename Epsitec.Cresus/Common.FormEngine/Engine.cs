@@ -682,6 +682,7 @@ namespace Epsitec.Common.FormEngine
 			button.Name = guid.ToString();
 			button.CommandId = field.FieldIds[0];
 			button.ButtonClass = ButtonClass.RichDialogButton;
+			this.ApplyTextStyle(button, field);
 
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 

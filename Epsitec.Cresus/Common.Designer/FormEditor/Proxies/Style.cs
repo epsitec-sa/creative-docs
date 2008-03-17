@@ -190,7 +190,8 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.FieldFontSize  = this.ObjectModifier.GetFieldFontSize(this.DefaultWidget);
 			}
 
-			if (this.ObjectModifier.IsTitle(this.DefaultWidget))
+			if (this.ObjectModifier.IsTitle(this.DefaultWidget) ||
+				this.ObjectModifier.IsCommand(this.DefaultWidget))
 			{
 				this.LabelFontColor = this.ObjectModifier.GetLabelFontColor(this.DefaultWidget);
 				this.LabelFontFace  = this.ObjectModifier.GetLabelFontFace(this.DefaultWidget);
