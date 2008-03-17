@@ -136,7 +136,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (this.ContainsCaption (twoLetterISOLanguageName))
 			{
 				StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
-				Caption caption = this.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
+				Caption caption = this.CreateCaptionFromData (item.Id, null, data, item.Name, twoLetterISOLanguageName);
 
 				return caption;
 			}
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					}
 
 					string  capName = (level == ResourceLevel.Default) && (!usePatchModule || item.Source != CultureMapSource.DynamicMerge) ? item.Name : null;
-					Caption caption = this.CreateCaptionFromData (bundle, data, capName, twoLetterISOLanguageName);
+					Caption caption = this.CreateCaptionFromData (item.Id, bundle, data, capName, twoLetterISOLanguageName);
 					string  about   = data.GetValue (Res.Fields.ResourceBase.Comment) as string;
 					object  modId   = data.GetValue (Res.Fields.ResourceBase.ModificationId);
 
@@ -434,12 +434,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.
 		/// </summary>
+		/// <param name="captionId">The caption id.</param>
 		/// <param name="sourceBundle">The source bundle.</param>
 		/// <param name="data">The data record.</param>
 		/// <param name="name">The name of the caption.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <returns>A <see cref="Caption"/> instance.</returns>
-		protected abstract Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName);
+		protected abstract Caption CreateCaptionFromData(Druid captionId, ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName);
 
 		/// <summary>
 		/// Fills the data record from a given caption.

@@ -618,7 +618,9 @@ namespace Epsitec.Common.Designer
 					Caption captionDefaultCulture = accessor.GetCaptionViewOfData(item, Resources.DefaultTwoLetterISOLanguageName);
 					Caption captionCurrentCulture = accessor.GetCaptionViewOfData(item, this.TwoLetterISOLanguageName);
 
-					return Caption.Merge(captionDefaultCulture, captionCurrentCulture);
+					Caption result = Caption.Merge(captionDefaultCulture, captionCurrentCulture);
+
+					return result;
 				}
 			}
 			#endregion

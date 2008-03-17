@@ -79,12 +79,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.
 		/// </summary>
+		/// <param name="captionId">The caption id.</param>
 		/// <param name="sourceBundle">The source bundle.</param>
 		/// <param name="data">The data record.</param>
 		/// <param name="name">The name of the caption.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <returns>A <see cref="Caption"/> instance.</returns>
-		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
+		protected override Caption CreateCaptionFromData(Druid captionId, ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
 			string description = data.GetValue (Res.Fields.ResourceCaption.Description) as string;
 			string icon        = data.GetValue (Res.Fields.ResourceCaption.Icon) as string;
@@ -130,6 +131,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			Support.ResourceManager.SetSourceBundle (caption, sourceBundle);
+
+			caption.DefineId (captionId);
 
 			return caption;
 		}

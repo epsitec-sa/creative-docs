@@ -352,23 +352,24 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			}
 
 			StructuredData data = item.GetCultureData (twoLetterISOLanguageName);
-			Caption caption = base.CreateCaptionFromData (null, data, item.Name, twoLetterISOLanguageName);
+			Caption caption = base.CreateCaptionFromData (item.Id, null, data, item.Name, twoLetterISOLanguageName);
 			this.FillCaptionWithData (caption, data);
 			return TypeRosetta.CreateTypeObject (caption, false);
 		}
 
-		
+
 		/// <summary>
 		/// Creates a caption based on the definitions stored in a data record.
 		/// </summary>
+		/// <param name="captionId">The caption id.</param>
 		/// <param name="sourceBundle">The source bundle.</param>
 		/// <param name="data">The data record.</param>
 		/// <param name="name">The name of the caption.</param>
 		/// <param name="twoLetterISOLanguageName">The two letter ISO language name.</param>
 		/// <returns>A <see cref="Caption"/> instance.</returns>
-		protected override Caption CreateCaptionFromData(ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
+		protected override Caption CreateCaptionFromData(Druid captionId, ResourceBundle sourceBundle, Types.StructuredData data, string name, string twoLetterISOLanguageName)
 		{
-			Caption caption = base.CreateCaptionFromData (sourceBundle, data, name, twoLetterISOLanguageName);
+			Caption caption = base.CreateCaptionFromData (captionId, sourceBundle, data, name, twoLetterISOLanguageName);
 			
 			if (twoLetterISOLanguageName == Resources.DefaultTwoLetterISOLanguageName)
 			{
