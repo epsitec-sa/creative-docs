@@ -43,6 +43,18 @@ namespace Epsitec.Common.Designer.FormEditor
 			return field.Type == FieldDescription.FieldType.Field;
 		}
 
+		public bool IsCommand(Widget obj)
+		{
+			//	Indique si l'objet correspond à une commande.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return false;
+			}
+
+			return field.Type == FieldDescription.FieldType.Command;
+		}
+
 		public bool IsBox(Widget obj)
 		{
 			//	Indique si l'objet correspond à une boîte.
