@@ -197,6 +197,15 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public bool IsForwardTab
+		{
+			//	Retourne true si cet élément gère la touche Tab.
+			get
+			{
+				return this.type == FieldType.Field || this.type == FieldType.Command;
+			}
+		}
+
 		public FieldDescription Source
 		{
 			//	Descripteur source, non sérialisé. Est utilisé pour les champs en provenance d'un sous-masque.

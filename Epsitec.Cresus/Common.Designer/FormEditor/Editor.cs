@@ -435,7 +435,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (obj != null)
 				{
 					FieldDescription dstField = this.objectModifier.GetFieldDescription(obj);
-					if (dstField == null || dstField.Type != FieldDescription.FieldType.Field)
+					if (dstField == null || !dstField.IsForwardTab)
 					{
 						obj = null;
 					}
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				if (obj != null && obj != this.draggingForwardTab)
 				{
 					FieldDescription dstField = this.objectModifier.GetFieldDescription(obj);
-					if (dstField != null && dstField.Type == FieldDescription.FieldType.Field)
+					if (dstField != null && dstField.IsForwardTab)
 					{
 						guid = dstField.Guid;
 					}
@@ -850,7 +850,7 @@ namespace Epsitec.Common.Designer.FormEditor
 					continue;
 				}
 
-				if (field.Type == FieldDescription.FieldType.Field)
+				if (field.IsForwardTab)
 				{
 					Rectangle rect = this.objectModifier.GetActualBounds(obj);
 					Rectangle box = new Rectangle(rect.BottomRight+new Point(-20-1, 1), new Size(20, 10));
@@ -1016,7 +1016,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 
 			FieldDescription srcField = this.objectModifier.GetFieldDescription(index);
-			if (srcField == null || srcField.Type != FieldDescription.FieldType.Field)
+			if (srcField == null || !srcField.IsForwardTab)
 			{
 				return false;
 			}
