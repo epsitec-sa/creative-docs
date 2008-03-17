@@ -549,4 +549,5 @@
   <data name="Viewers.Panels.TabCultures" id="KQ1">Cultures</data>
   <data name="Viewers.Panels.TabProperties" id="KR1">Propriétés</data>
   <data name="Undo.Action.ForwardTab" id="KS1">Destination pour Tab</data>
+  <data name="Undo.Action.CommandInsert" id="KT1">Insérer une commande</data>
 </bundle>

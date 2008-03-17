@@ -244,6 +244,13 @@ namespace Epsitec.Common.FormEngine
 						this.PreprocessField(field, labelsId, ref labelId, ref column, isGlueAfter);
 					}
 				}
+				else if (field.Type == FieldDescription.FieldType.Command)  // commande ?
+				{
+					if (level == 0)
+					{
+						this.PreprocessCommand(field, labelsId, ref labelId, ref column, isGlueAfter);
+					}
+				}
 				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
 				{
 					if (level == 0)
@@ -366,6 +373,13 @@ namespace Epsitec.Common.FormEngine
 						this.CreateField(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
 					}
 				}
+				else if (field.Type == FieldDescription.FieldType.Command)  // commande ?
+				{
+					if (level == 0)
+					{
+						this.CreateCommand(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
+					}
+				}
 				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
 				{
 					if (level == 0)
@@ -419,6 +433,23 @@ namespace Epsitec.Common.FormEngine
 				Engine.LabelIdUse(labelsId, -(labelId++), column, 1);
 				Engine.LabelIdUse(labelsId, labelId++, column+1, columnsRequired-1);
 			}
+
+			if (isGlueAfter)
+			{
+				column += columnsRequired;
+			}
+			else
+			{
+				column = 0;
+			}
+		}
+
+		private void PreprocessCommand(FieldDescription field, List<int> labelsId, ref int labelId, ref int column, bool isGlueAfter)
+		{
+			//	Détermine quelles colonnes contiennent des labels, lors de la première passe.
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+			Engine.LabelIdUse(labelsId, labelId++, column, columnsRequired);
 
 			if (isGlueAfter)
 			{
@@ -630,6 +661,39 @@ namespace Epsitec.Common.FormEngine
 			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, i);
 			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
 			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, j-i);
+
+			if (isGlueAfter)
+			{
+				column += columnsRequired;
+			}
+			else
+			{
+				row++;
+				column = 0;
+			}
+		}
+
+		private void CreateCommand(UI.Panel root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		{
+			//	Crée les widgets pour une commande dans la grille, lors de la deuxième passe.
+			UI.MetaButton button = new UI.MetaButton();
+			button.SetParent(root);
+			button.TabIndex = this.tabIndex++;
+			button.Name = guid.ToString();
+			button.CommandId = field.FieldIds[0];
+			button.ButtonClass = ButtonClass.RichDialogButton;
+
+			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+
+			int i = Engine.GetColumnIndex(labelsId, column);
+			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+			Widgets.Layouts.GridLayoutEngine.SetColumn(button, i);
+			Widgets.Layouts.GridLayoutEngine.SetRow(button, row);
+			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(button, j-i);
 
 			if (isGlueAfter)
 			{
@@ -901,9 +965,10 @@ namespace Epsitec.Common.FormEngine
 
 			for (int i=index; i<fields.Count; i++)
 			{
-				if (fields[i].Type == FieldDescription.FieldType.Field ||
-					fields[i].Type == FieldDescription.FieldType.Line  ||
-					fields[i].Type == FieldDescription.FieldType.Title )
+				if (fields[i].Type == FieldDescription.FieldType.Field    ||
+					fields[i].Type == FieldDescription.FieldType.Command  ||
+					fields[i].Type == FieldDescription.FieldType.Line     ||
+					fields[i].Type == FieldDescription.FieldType.Title    )
 				{
 					count++;
 				}

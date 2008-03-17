@@ -25,6 +25,7 @@ namespace Epsitec.Common.FormEngine
 			Title			= 21,	// séparateur titre automatique
 			BoxBegin		= 30,	// début d'une boîte
 			BoxEnd			= 31,	// fin d'une boîte
+			Command			= 40,	// commande
 		}
 
 		[DesignerVisible]
@@ -224,6 +225,9 @@ namespace Epsitec.Common.FormEngine
 				{
 					case FieldType.Field:
 						return "Champ";
+
+					case FieldType.Command:
+						return "Commande";
 
 					case FieldType.SubForm:
 						return "Masque de saisie";

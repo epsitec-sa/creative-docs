@@ -191,7 +191,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
 			this.UpdateFieldsTableColumns();
 
-			//	Crée l'onglet 'relations'.
+			//	Crée l'onglet 'source'.
 			this.tabPageRelations = new TabPage();
 			this.tabPageRelations.TabTitle = Res.Strings.Viewers.Forms.TabRelations;
 			this.tabPageRelations.Padding = new Margins(4, 4, 4, 4);
@@ -206,6 +206,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
 			this.relationsButtonUse.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
 			this.relationsToolbar.Items.Add(this.relationsButtonUse);
+
+			this.relationsButtonCommand = new IconButton();
+			this.relationsButtonCommand.AutoFocus = false;
+			this.relationsButtonCommand.CaptionId = Res.Captions.Editor.Forms.Command.Id;
+			this.relationsButtonCommand.Clicked += new MessageEventHandler(this.HandleRelationsButtonClicked);
+			this.relationsToolbar.Items.Add(this.relationsButtonCommand);
 
 			this.relationsToolbar.Items.Add(new IconSeparator());
 
@@ -315,6 +321,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.fieldsTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
 
 				this.relationsButtonUse.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
+				this.relationsButtonCommand.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonExpand.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonCompact.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
 				this.relationsButtonAuto.Clicked -= new MessageEventHandler(this.HandleRelationsButtonClicked);
@@ -2088,6 +2095,56 @@ namespace Epsitec.Common.Designer.Viewers
 			this.designerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, druid, this.Window.FocusedWidget);
 		}
 
+		protected void SelectedRelationsCommand()
+		{
+			//	Insère une commande sous forme d'un MetaButton.
+			StructuredTypeClass typeClass = StructuredTypeClass.None;
+			Druid druid = Druid.Empty;
+			bool isNullable = false;
+			bool isPrivateRelation = false;
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Epsitec.Common.Designer.Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Commands, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
+			{
+				return;
+			}
+
+			this.UndoMemorize(Res.Strings.Undo.Action.CommandInsert, false);
+
+			FieldDescription field;
+
+			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
+			{
+				FormEditor.ObjectModifier.TableItem ti = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1];
+
+				field = new FieldDescription(FieldDescription.FieldType.Command);
+				field.SetField(druid);
+				field.DeltaInserted = true;
+				field.DeltaAttachGuid = ti.Guid;
+
+				this.workingForm.Fields.Add(field);
+			}
+			else  // masque normal ?
+			{
+				field = new FieldDescription(FieldDescription.FieldType.Command);
+				field.SetField(druid);
+
+				this.workingForm.Fields.Add(field);
+			}
+
+			this.SetForm(true);
+			this.UpdateFieldsTable(false);
+
+			List<int> sels = new List<int>();
+			sels.Add(this.formEditor.ObjectModifier.GetFieldCount-1);
+			this.fieldsTable.SelectedRows = sels;
+			this.ReflectSelectionToEditor();
+
+			this.UpdateFieldsButtons();
+			this.UpdateRelationsTable(false);
+			this.UpdateRelationsButtons();
+			this.module.AccessForms.SetLocalDirty();
+		}
+
 		protected void SelectedRelationsUse()
 		{
 			//	Utilise la relation sélectionnée.
@@ -2424,6 +2481,11 @@ namespace Epsitec.Common.Designer.Viewers
 				this.SelectedRelationsUse();
 			}
 
+			if (sender == this.relationsButtonCommand)
+			{
+				this.SelectedRelationsCommand();
+			}
+
 			if (sender == this.relationsButtonExpand)
 			{
 				this.SelectedRelationsExpand();
@@ -2563,6 +2625,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabPage						tabPageRelations;
 		protected HToolBar						relationsToolbar;
 		protected IconButton					relationsButtonUse;
+		protected IconButton					relationsButtonCommand;
 		protected IconButton					relationsButtonExpand;
 		protected IconButton					relationsButtonCompact;
 		protected IconButton					relationsButtonAuto;
