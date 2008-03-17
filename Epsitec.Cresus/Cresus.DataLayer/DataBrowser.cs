@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 #endif
 
-		public IEnumerable<object[]> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
+		public IEnumerable<DataBrowserRow> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
 		{
 			Druid rootEntityId = example.GetEntityStructuredTypeId ();
 
@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.DataLayer
 				if (example != null)
 				{
 					EntityContext context = example.GetEntityContext ();
+					
+					IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
 
 					foreach (string id in context.GetDefinedFieldIds (example))
 					{
@@ -81,8 +83,9 @@ namespace Epsitec.Cresus.DataLayer
 							StringSearchBehavior     searchBehavior     = fieldStringType.DefaultSearchBehavior;
 							StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
 
-							IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
-
+							//	If the provided example implements IFieldPropertyStore, check
+							//	if special properties are attached to the current field :
+							
 							if (fieldProperties != null)
 							{
 								if (fieldProperties.ContainsValue (id, StringType.DefaultSearchBehaviorProperty))
@@ -117,43 +120,50 @@ namespace Epsitec.Cresus.DataLayer
 
 				foreach (object[] values in reader.Rows)
 				{
-					yield return values;
+					yield return new DataBrowserRow (query, values);
 				}
 			}
 		}
 
-		private string CreateSearchPattern(string textValue, StringSearchBehavior searchBehavior)
+		/// <summary>
+		/// Creates the SQL LIKE compatible search pattern.
+		/// </summary>
+		/// <param name="searchPattern">The search pattern.</param>
+		/// <param name="searchBehavior">The search behavior.</param>
+		/// <returns>The SQL LIKE compatible search pattern.</returns>
+		private string CreateSearchPattern(string searchPattern, StringSearchBehavior searchBehavior)
 		{
 			string pattern;
 
 			switch (searchBehavior)
 			{
 				case StringSearchBehavior.ExactMatch:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
 					break;
 
 				case StringSearchBehavior.WildcardMatch:
-					pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
 					break;
 
 				case StringSearchBehavior.MatchStart:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
 					pattern = string.Concat (pattern, "%");
 					break;
 
 				case StringSearchBehavior.MatchEnd:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
 					pattern = string.Concat ("%", pattern);
 					break;
 
 				case StringSearchBehavior.MatchAnywhere:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, textValue);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
 					pattern = string.Concat ("%", pattern, "%");
 					break;
 
 				default:
 					throw new System.ArgumentException (string.Format ("Unsupported search behavior {0}", searchBehavior));
 			}
+			
 			return pattern;
 		}
 

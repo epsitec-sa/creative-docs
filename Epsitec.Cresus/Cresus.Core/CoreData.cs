@@ -244,11 +244,11 @@ namespace Epsitec.Cresus.Core
 
 					using (DbTransaction transaction = this.data.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 					{
-						foreach (object[] row in this.data.dataBrowser.QueryByExample (transaction, example, query))
+						foreach (DataBrowserRow row in this.data.dataBrowser.QueryByExample (transaction, example, query))
 						{
 							System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 							
-							foreach (object column in row)
+							foreach (object column in row.Items)
 							{
 								if (buffer.Length > 0)
 								{

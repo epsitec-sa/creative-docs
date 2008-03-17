@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataQuery</c> class defines a high level query used by the
 	/// <see cref="DataBrowser"/> to define a SQL SELECT statement.
 	/// </summary>
-	public class DataQuery
+	public sealed class DataQuery
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataQuery"/> class.
@@ -53,6 +53,19 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		/// <summary>
+		/// Searches for the specified path and returns the zero-based index to the
+		/// first matching column.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns>The zero-based index to the first matching column; otherwise
+		/// <c>-1</c>.</returns>
+		public int IndexOf(EntityFieldPath path)
+		{
+			return this.columns.FindIndex (column => column.FieldPath.Equals (path));
+		}
+
+		
 		private readonly List<DataQueryColumn> columns;
 	}
 }

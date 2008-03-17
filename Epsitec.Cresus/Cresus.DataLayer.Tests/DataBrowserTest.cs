@@ -210,9 +210,9 @@ namespace Epsitec.Cresus.DataLayer
 				AdresseEntity example = new AdresseEntity ();
 				example.Npa = "*14*";
 
-				foreach (object[] values in browser.QueryByExample (transaction, example, query))
+				foreach (DataBrowserRow row in browser.QueryByExample (transaction, example, query))
 				{
-					lines.Add (string.Format ("{0}, {1}, {2}", values[0], values[1], values[2]));
+					lines.Add (string.Format ("{0}, {1}, {2}", row[0], row[1], row[2]));
 				}
 
 				transaction.Commit ();
