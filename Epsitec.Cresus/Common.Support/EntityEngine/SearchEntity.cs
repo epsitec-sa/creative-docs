@@ -49,6 +49,32 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Sets the value associated with the property of the specified field.
+		/// </summary>
+		/// <param name="fieldId">The field id.</param>
+		/// <param name="property">The property.</param>
+		/// <param name="value">The value to set.</param>
+		public void SetValue(string fieldId, DependencyProperty property, object value)
+		{
+			PropertyStore properties;
+
+			if (this.store.TryGetValue (fieldId, out properties))
+			{
+				properties[property] = value;
+			}
+			else if (UndefinedValue.IsUndefinedValue (value))
+			{
+				//	Undefining an undefined value does not do anything.
+			}
+			else
+			{
+				properties = new PropertyStore ();
+				properties[property] = value;
+				this.store[fieldId] = properties;
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the specified field contains a value for the
 		/// specified property.
 		/// </summary>

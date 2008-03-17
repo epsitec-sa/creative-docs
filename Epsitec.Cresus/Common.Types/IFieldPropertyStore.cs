@@ -19,6 +19,14 @@ namespace Epsitec.Common.Types
 		object GetValue(string fieldId, DependencyProperty property);
 
 		/// <summary>
+		/// Sets the value associated with the property of the specified field.
+		/// </summary>
+		/// <param name="fieldId">The field id.</param>
+		/// <param name="property">The property.</param>
+		/// <param name="value">The value to set.</param>
+		void SetValue(string fieldId, DependencyProperty property, object value);
+
+		/// <summary>
 		/// Determines whether the specified field contains a value for the
 		/// specified property.
 		/// </summary>

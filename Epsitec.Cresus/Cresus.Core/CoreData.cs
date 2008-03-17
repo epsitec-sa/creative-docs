@@ -242,9 +242,17 @@ namespace Epsitec.Cresus.Core
 					query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[8V16]")));
 					query.Columns.Add (new DataQueryColumn (EntityFieldPath.CreateRelativePath ("[8V17]")));
 
+					IFieldPropertyStore propertyStore = template as IFieldPropertyStore;
+
+					if (propertyStore != null)
+					{
+						propertyStore.SetValue ("[8V16]", StringType.DefaultSearchBehaviorProperty, StringSearchBehavior.MatchAnywhere);
+						propertyStore.SetValue ("[8V17]", StringType.DefaultSearchBehaviorProperty, StringSearchBehavior.MatchStart);
+					}
+
 					using (DbTransaction transaction = this.data.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 					{
-						foreach (DataBrowserRow row in this.data.dataBrowser.QueryByExample (transaction, example, query))
+						foreach (DataBrowserRow row in this.data.dataBrowser.QueryByExample (transaction, template, query))
 						{
 							System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 							
@@ -263,6 +271,11 @@ namespace Epsitec.Cresus.Core
 						transaction.Commit ();
 					}
 
+					if (example == null)
+					{
+						yield break;
+					}
+
 					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
 						if ((ResolverImplementation.Match (example.Titre, entity.Titre)) &&
@@ -279,6 +292,11 @@ namespace Epsitec.Cresus.Core
 				{
 					AddressBook.Entities.LocalitéEntity example = template as AddressBook.Entities.LocalitéEntity;
 
+					if (example == null)
+					{
+						yield break;
+					}
+
 					foreach (AddressBook.Entities.LocalitéEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
 						if (ResolverImplementation.Match (example.Résumé, entity.SearchValue))
@@ -291,6 +309,11 @@ namespace Epsitec.Cresus.Core
 				{
 					AddressBook.Entities.TitrePersonneEntity example = template as AddressBook.Entities.TitrePersonneEntity;
 
+					if (example == null)
+					{
+						yield break;
+					}
+
 					foreach (AddressBook.Entities.TitrePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
 						if ((ResolverImplementation.Match (example.IntituléLong, entity.IntituléLong)) ||
@@ -300,8 +323,6 @@ namespace Epsitec.Cresus.Core
 						}
 					}
 				}
-
-				yield break;
 			}
 
 			#endregion

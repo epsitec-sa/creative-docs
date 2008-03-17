@@ -798,7 +798,7 @@ namespace Epsitec.Common.Dialogs
 				AbstractEntity entityData = this.searchRootPath.IsEmpty ? this.searchRootData : this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
 				EntityContext  context = this.searchController.DialogData.Data.GetEntityContext ();
 
-				this.searchTemplate = context.CreateEmptyEntity (entityData.GetEntityStructuredTypeId ());
+				this.searchTemplate = context.CreateSearchEntity (entityData.GetEntityStructuredTypeId ());
 				this.searchTemplate.DisableCalculations ();
 
 				foreach (Node node in this.nodes)
