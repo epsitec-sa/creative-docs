@@ -83,7 +83,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <value>The state of the entity data.</value>
 		public EntityDataState GetEntityDataState()
 		{
-			if (this.modifiedValues != null)
+			if (this.ModifiedValues != null)
 			{
 				return EntityDataState.Modified;
 			}
@@ -124,9 +124,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			switch (version)
 			{
 				case EntityDataVersion.Modified:
-					return this.modifiedValues != null;
+					return this.ModifiedValues != null;
 				case EntityDataVersion.Original:
-					return this.originalValues != null;
+					return this.OriginalValues != null;
 				default:
 					throw new System.NotImplementedException ();
 			}
@@ -216,6 +216,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		internal void DisableCalculations()
 		{
 			this.calculationsDisabled = true;
+		}
+
+		public static T Resolve<T>(AbstractEntity entity) where T : AbstractEntity
+		{
+			return entity == null ? null : entity.Resolve () as T;
 		}
 
 		public T GetField<T>(string id)
@@ -371,20 +376,20 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			object value;
 
-			if ((this.modifiedValues != null) &&
+			if ((this.ModifiedValues != null) &&
 				(this.IsDefiningOriginalValues == false))
 			{
-				value = this.modifiedValues.GetValue (id);
+				value = this.ModifiedValues.GetValue (id);
 
-				if ((this.originalValues != null) &&
+				if ((this.OriginalValues != null) &&
 					(UndefinedValue.IsUndefinedValue (value)))
 				{
-					value = this.originalValues.GetValue (id);
+					value = this.OriginalValues.GetValue (id);
 				}
 			}
-			else if (this.originalValues != null)
+			else if (this.OriginalValues != null)
 			{
-				value = this.originalValues.GetValue (id);
+				value = this.OriginalValues.GetValue (id);
 			}
 			else
 			{
@@ -398,21 +403,21 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (this.IsDefiningOriginalValues)
 			{
-				if (this.originalValues == null)
+				if (this.OriginalValues == null)
 				{
-					this.originalValues = this.context.CreateValueStore (this);
+					this.CreateOriginalValues ();
 				}
 
-				this.originalValues.SetValue (id, value, ValueStoreSetMode.Default);
+				this.OriginalValues.SetValue (id, value, ValueStoreSetMode.Default);
 			}
 			else
 			{
-				if (this.modifiedValues == null)
+				if (this.ModifiedValues == null)
 				{
-					this.modifiedValues = this.context.CreateValueStore (this);
+					this.CreateModifiedValues ();
 				}
 
-				this.modifiedValues.SetValue (id, value, ValueStoreSetMode.Default);
+				this.ModifiedValues.SetValue (id, value, ValueStoreSetMode.Default);
 			}
 		}
 
@@ -487,13 +492,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal IEnumerable<IValueStore> InternalGetValueStores()
 		{
-			if (this.originalValues != null)
+			if (this.OriginalValues != null)
 			{
-				yield return this.originalValues;
+				yield return this.OriginalValues;
 			}
-			if (this.modifiedValues != null)
+			if (this.ModifiedValues != null)
 			{
-				yield return this.modifiedValues;
+				yield return this.ModifiedValues;
 			}
 		}
 
@@ -512,7 +517,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal IStructuredTypeProvider GetStructuredTypeProvider()
 		{
-			return (this.originalValues ?? this.modifiedValues) as IStructuredTypeProvider;
+			return (this.OriginalValues ?? this.ModifiedValues) as IStructuredTypeProvider;
 		}
 
 		protected virtual object DynamicGetField(string id)
@@ -548,6 +553,57 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		protected virtual IValueStore OriginalValues
+		{
+			get
+			{
+				return this.originalValues;
+			}
+		}
+
+		protected virtual IValueStore ModifiedValues
+		{
+			get
+			{
+				return this.modifiedValues;
+			}
+		}
+
+		protected virtual void CreateOriginalValues()
+		{
+			AbstractEntity that = this.Resolve ();
+
+			if (that.originalValues == null)
+			{
+				that.originalValues = that.context.CreateValueStore (that);
+			}
+			if (this != that)
+			{
+				this.originalValues = that.originalValues;
+			}
+		}
+
+		protected virtual void CreateModifiedValues()
+		{
+			AbstractEntity that = this.Resolve ();
+
+			if (that.modifiedValues == null)
+			{
+				that.modifiedValues = that.context.CreateValueStore (that);
+			}
+			if (this != that)
+			{
+				this.modifiedValues = that.modifiedValues;
+			}
+		}
+
+		protected virtual AbstractEntity Resolve()
+		{
+			return this;
+		}
+
+		
+		
 		private object GenericGetValue(string id)
 		{
 			return this.InternalGetValue (id);
@@ -819,10 +875,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly EntityContext context;
 		private readonly long entitySerialId;
 		private long dataGeneration;
-		private IValueStore originalValues;
-		private IValueStore modifiedValues;
 		private int defineOriginalValuesCount;
 		private bool calculationsDisabled;
+		private IValueStore originalValues;
+		private IValueStore modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		private IEntityProxy proxy;
 	}

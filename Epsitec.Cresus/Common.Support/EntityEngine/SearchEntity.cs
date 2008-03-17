@@ -11,16 +11,48 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>SearchEntity</c> class is a <see cref="GenericEntity"/> with
 	/// additional support for the <see cref="IFieldPropertyStore"/> interface.
 	/// </summary>
-	internal sealed class SearchEntity : GenericEntity, IFieldPropertyStore
+	internal sealed class SearchEntity : AbstractEntity, IFieldPropertyStore
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SearchEntity"/> class.
 		/// </summary>
 		/// <param name="entityId">The entity id.</param>
 		public SearchEntity(Druid entityId)
-			: base (entityId)
+			: this (entityId, new GenericEntity (entityId))
 		{
+		}
+
+		public SearchEntity(AbstractEntity entity)
+			: this (entity.GetEntityStructuredTypeId (), entity)
+		{
+		}
+
+		private SearchEntity(Druid entityId, AbstractEntity entity)
+		{
+			this.entityId = entityId;
 			this.store = new Dictionary<string, PropertyStore> ();
+			this.target = entity;
+		}
+
+		/// <summary>
+		/// Gets the id of the <see cref="StructuredType"/> which describes
+		/// this entity.
+		/// </summary>
+		/// <returns>
+		/// The id of the <see cref="StructuredType"/>.
+		/// </returns>
+		public override Druid GetEntityStructuredTypeId()
+		{
+			return this.entityId;
+		}
+
+
+
+
+
+		protected override AbstractEntity Resolve()
+		{
+			return AbstractEntity.Resolve<AbstractEntity> (this.target);
 		}
 
 		#region IFieldPropertyStore Members
@@ -140,6 +172,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		#endregion
 
 
+		private readonly Druid entityId;
 		private readonly Dictionary<string, PropertyStore> store;
+		private readonly AbstractEntity target;
 	}
 }

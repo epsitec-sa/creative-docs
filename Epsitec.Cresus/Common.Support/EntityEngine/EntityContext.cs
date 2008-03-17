@@ -294,7 +294,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			try
 			{
-				entity = new GenericEntity (entityId);
+				entity = EntityClassResolver.CreateEmptyEntity (entityId) ?? this.CreateGenericEntity (entityId);
+				entity = new SearchEntity (entity);
 			}
 			finally
 			{

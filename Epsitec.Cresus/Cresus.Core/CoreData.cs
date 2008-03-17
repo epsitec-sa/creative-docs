@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Core
 
 				if (id == AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId)
 				{
-					AddressBook.Entities.AdressePersonneEntity example = template as AddressBook.Entities.AdressePersonneEntity;
+					AddressBook.Entities.AdressePersonneEntity example = AbstractEntity.Resolve<AddressBook.Entities.AdressePersonneEntity> (template);
 
 					DataQuery query = new DataQuery ();
 					
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Core
 				}
 				else if (id == AddressBook.Entities.LocalitéEntity.EntityStructuredTypeId)
 				{
-					AddressBook.Entities.LocalitéEntity example = template as AddressBook.Entities.LocalitéEntity;
+					AddressBook.Entities.LocalitéEntity example = AbstractEntity.Resolve<AddressBook.Entities.LocalitéEntity> (template);
 
 					if (example == null)
 					{
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Core
 				}
 				else if (id == AddressBook.Entities.TitrePersonneEntity.EntityStructuredTypeId)
 				{
-					AddressBook.Entities.TitrePersonneEntity example = template as AddressBook.Entities.TitrePersonneEntity;
+					AddressBook.Entities.TitrePersonneEntity example = AbstractEntity.Resolve<AddressBook.Entities.TitrePersonneEntity> (template);
 
 					if (example == null)
 					{
