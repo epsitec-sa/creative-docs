@@ -1636,64 +1636,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[fieldRank];
-#if false
-			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-			string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
-			string deepSource = null;
-
-			bool isInterface;
-			object isInterfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
-			if (UndefinedValue.IsUndefinedValue(isInterfaceDefinition))
-			{
-				//	Champ défini localement, ne provenant pas d'une interface.
-				isInterface = false;
-			}
-			else
-			{
-				isInterface = true;
-
-				if ((bool) isInterfaceDefinition)
-				{
-					//	Champ inclus dans une entité au moyen d'une interface locale.
-					source = null;  // expression locale non définie
-				}
-				else
-				{
-					//	Champ inclus dans une entité au moyen d'une interface locale, mais dont le calcul
-					//	(ou la source, à savoir si c'est une valeur ou une expression) est redéfini localement dans l'entité.
-				}
-
-				//	Cherche l'expression définie dans le champ de l'interface.
-				Druid          interfaceId      = this.fields[rank].DefiningTypeId;
-				Druid          interfaceFieldId = this.fields[rank].CaptionId;
-				Module         interfaceModule  = this.SearchModule(interfaceId);
-				CultureMap     interfaceItem    = interfaceModule.AccessEntities.Accessor.Collection[interfaceId];
-				StructuredData interfaceData    = interfaceItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				StructuredData interfaceFieldData;
-
-				IList<StructuredData> interfaceDataFields = interfaceData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-				if (Collection.TryFind(interfaceDataFields,
-					delegate (StructuredData fieldData)
-					{
-						Druid fieldDataId = (Druid) fieldData.GetValue(Support.Res.Fields.Field.CaptionId);
-						return fieldDataId == interfaceFieldId;
-					}, out interfaceFieldData))
-				{
-					string interfaceEncoded = interfaceFieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
-					Support.EntityEngine.EntityExpression interfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(interfaceEncoded);
-					deepSource = TextLayout.ConvertToTaggedText(interfaceExpression.SourceCode);
-				}
-			}
-#else
 			string source = TextLayout.ConvertToTaggedText(this.fields[rank].Expression);
 			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].DeepExpression);
 			bool isInterface = this.fields[rank].IsInterfaceDefinition;
-
-			Support.EntityEngine.EntityExpression expression;
-			string encoded;
-#endif
 
 			//	Edition de l'expression.
 			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isInterface, deepSource, ref source))
@@ -1701,14 +1646,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (source == null)
-			{
-				encoded = null;
-			}
-			else
+			string encoded = null;
+			if (source != null)
 			{
 				source = TextLayout.ConvertToSimpleText(source);
-				expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
+				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
 				encoded = expression.GetEncodedExpression();
 			}
 			
