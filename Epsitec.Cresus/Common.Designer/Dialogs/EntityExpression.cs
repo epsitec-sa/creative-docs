@@ -28,15 +28,30 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.MinSize = new Size(400, 150);
-				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
+				FrameBox main = new FrameBox(this.window.Root);
+				main.Dock = DockStyle.Fill;
+
+				FrameBox top = new FrameBox(main);
+				top.Dock = DockStyle.Fill;
+				top.Padding = new Margins(8, 8, 8, 8);
+
+				this.bottom = new FrameBox(main);
+				this.bottom.PreferredHeight = 100;
+				this.bottom.Dock = DockStyle.Bottom;
+				this.bottom.Padding = new Margins(8, 8, 8, 8);
+
+				this.splitter = new HSplitter(main);
+				this.splitter.Dock = DockStyle.Bottom;
+				this.splitter.Margins = new Margins(0, 0, 0, 0);
+
 				//	Crée l'en-tête et son contenu.
-				this.header = new FrameBox(this.window.Root);
+				this.header = new FrameBox(top);
 				this.header.PreferredHeight = 0;
 				this.header.MinHeight = 0;
 				this.header.Margins = new Margins(0, 0, 0, 3);
@@ -50,26 +65,23 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonRedefine.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				//	Crée le grand pavé de texte éditable.
-				this.fieldExpression = new TextFieldMulti(this.window.Root);
+				this.fieldExpression = new TextFieldMulti(top);
 				this.fieldExpression.Dock = DockStyle.Fill;
 				this.fieldExpression.TabIndex = 1;
 
-				this.deepGroup = new FrameBox(this.window.Root);
-				this.deepGroup.Dock = DockStyle.Fill;
-
-				StaticText label = new StaticText(this.deepGroup);
+				StaticText label = new StaticText(this.bottom);
 				label.Text = "Expression de base :";
 				label.Dock = DockStyle.Top;
-				label.Margins = new Margins(0, 0, 6, 2);
+				label.Margins = new Margins(0, 0, -2, 2);
 
-				this.fieldDeepExpression = new TextFieldMulti(this.deepGroup);
+				this.fieldDeepExpression = new TextFieldMulti(this.bottom);
 				this.fieldDeepExpression.Dock = DockStyle.Fill;
 				this.fieldDeepExpression.IsReadOnly = true;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
 				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Margins = new Margins(8, 8, 0, 8);
 				footer.Dock = DockStyle.Bottom;
 
 				this.buttonCancel = new Button(footer);
@@ -149,7 +161,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldExpression.SelectAll();
 			this.fieldExpression.Focus();
 
-			this.deepGroup.Visibility = this.isInterface;
+			this.splitter.Visibility = this.isInterface;
+			this.bottom.Visibility = this.isInterface;
 			this.fieldDeepExpression.Text = this.deepExpression;
 
 			this.buttonOk.Enable = true;
@@ -213,7 +226,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected FrameBox						header;
 		protected CheckButton					buttonRedefine;
 		protected TextFieldMulti				fieldExpression;
-		protected FrameBox						deepGroup;
+		protected HSplitter						splitter;
+		protected FrameBox						bottom;
 		protected TextFieldMulti				fieldDeepExpression;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
