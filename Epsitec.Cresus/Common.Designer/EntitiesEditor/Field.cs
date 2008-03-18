@@ -133,33 +133,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
 
-			//	Cherche l'expression définie dans le champ de l'interface.
-			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-			string sourceCode = expression.SourceCode;
+			//	Cherche les expressions définies dans le champ de l'interface.
+			string expression = this.GetExpression(dataField);
 
-			//	Cherche l'expression définie dans le champ de l'interface.
-			string deepSourceCode = null;
+			string deepExpression = null;
 			if (definingTypeId.IsValid)
 			{
-				Module         deepInterfaceModule = obj.Editor.Module.DesignerApplication.SearchModule(definingTypeId);
-				CultureMap     deepInterfaceItem   = deepInterfaceModule.AccessEntities.Accessor.Collection[definingTypeId];
-				StructuredData deepInterfaceData   = deepInterfaceItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				StructuredData deepInterfaceFieldData;
-
-				IList<StructuredData> deepInterfaceDataFields = deepInterfaceData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-				if (Collection.TryFind(deepInterfaceDataFields,
-					delegate(StructuredData fieldData)
-					{
-						Druid fieldDataId = (Druid) fieldData.GetValue(Support.Res.Fields.Field.CaptionId);
-						return fieldDataId == fieldCaptionId;
-					}, out deepInterfaceFieldData))
-				{
-					string deepInterfaceEncoded = deepInterfaceFieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
-					Support.EntityEngine.EntityExpression deepInterfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(deepInterfaceEncoded);
-					deepSourceCode = deepInterfaceExpression.SourceCode;
-				}
+				deepExpression = this.GetDeepExpression(obj.Editor.Module.DesignerApplication, dataField, fieldCaptionId, definingTypeId);
 			}
 
 			object interfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
@@ -209,8 +189,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.definingName = definingName;
 			this.definingType = definingType;
 			this.isInterfaceDefinition = isInterfaceDefinition;
-			this.expression = sourceCode;
-			this.deepExpression = deepSourceCode;
+			this.expression = expression;
+			this.deepExpression = deepExpression;
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
 			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			this.cultureMapSource = source;
@@ -221,6 +201,51 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.destination = typeId;
 			this.srcBox = obj as ObjectBox;
 		}
+
+		protected string GetExpression(StructuredData dataField)
+		{
+			//	Cherche l'expression définie dans le champ de l'interface.
+			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+			return expression.SourceCode;
+		}
+
+		protected string GetDeepExpression(DesignerApplication designerApplication, StructuredData dataField, Druid fieldCaptionId, Druid definingTypeId)
+		{
+			//	Cherche l'expression profonde définie dans le champ d'un parent de l'interface.
+			string deepExpression = null;
+
+			Module module = designerApplication.SearchModule(definingTypeId);
+			CultureMap item = module.AccessEntities.Accessor.Collection[definingTypeId];
+			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData fieldData = Field.FindCaptionId(dataFields, fieldCaptionId);
+			if (fieldData != null)
+			{
+				string encoded = fieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
+				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+				deepExpression = expression.SourceCode;
+			}
+
+			return deepExpression;
+		}
+
+		static protected StructuredData FindCaptionId(IList<StructuredData> dataFields, Druid id)
+		{
+			//	Retourne le StructuredData dont le CaptionId est égal à Id.
+			foreach (StructuredData data in dataFields)
+			{
+				Druid fieldDataId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
+				if (fieldDataId == id)
+				{
+					return data;
+				}
+			}
+
+			return null;
+		}
+
 
 		public bool IsReadOnly
 		{
@@ -310,6 +335,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsInterfaceDefinition
 		{
+			//	Indique s'il s'agit d'un champ d'une interface.
+			//	Reflète l'état de Support.Res.Fields.Field.IsInterfaceDefinition.
+			//	Je n'ai pas compris la différence avec IsInterface juste en dessus !
 			get
 			{
 				return this.isInterfaceDefinition;

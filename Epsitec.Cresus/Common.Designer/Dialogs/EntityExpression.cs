@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Expression locale:   isInterface = false, deepExpression = null, expression = null (valeur) ou calcul
 			//	Selon interface:     isInterface = true, deepExpression = null/calcul, expression = null
-			//	Intertace redéfinie: isInterface = true, deepExpression = null/calcul, expression = "" (valeur) ou calcul
+			//	Interface redéfinie: isInterface = true, deepExpression = null/calcul, expression = "" (valeur) ou calcul
 			//
 			//	Donc, si isInterface = true, expression peut prendre trois valeurs:
 			//	expression = null:   pas de redéfinition locale, on utilise le calcul défini dans l'interface (deepExpression)
