@@ -1631,6 +1631,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[fieldRank];
+#if false
 			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 			string source = TextLayout.ConvertToTaggedText(expression.SourceCode);
@@ -1680,6 +1681,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					deepSource = TextLayout.ConvertToTaggedText(interfaceExpression.SourceCode);
 				}
 			}
+#else
+			string source = TextLayout.ConvertToTaggedText(this.fields[rank].Expression);
+			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].DeepExpression);
+			bool isInterface = this.fields[rank].IsInterfaceDefinition;
+
+			Support.EntityEngine.EntityExpression expression;
+			string encoded;
+#endif
 
 			//	Edition de l'expression.
 			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isInterface, deepSource, ref source))

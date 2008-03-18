@@ -133,9 +133,37 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
 
+			//	Cherche l'expression définie dans le champ de l'interface.
 			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
 			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
 			string sourceCode = expression.SourceCode;
+
+			//	Cherche l'expression définie dans le champ de l'interface.
+			string deepSourceCode = null;
+			if (definingTypeId.IsValid)
+			{
+				Module         deepInterfaceModule = obj.Editor.Module.DesignerApplication.SearchModule(definingTypeId);
+				CultureMap     deepInterfaceItem   = deepInterfaceModule.AccessEntities.Accessor.Collection[definingTypeId];
+				StructuredData deepInterfaceData   = deepInterfaceItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				StructuredData deepInterfaceFieldData;
+
+				IList<StructuredData> deepInterfaceDataFields = deepInterfaceData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+				if (Collection.TryFind(deepInterfaceDataFields,
+					delegate(StructuredData fieldData)
+					{
+						Druid fieldDataId = (Druid) fieldData.GetValue(Support.Res.Fields.Field.CaptionId);
+						return fieldDataId == fieldCaptionId;
+					}, out deepInterfaceFieldData))
+				{
+					string deepInterfaceEncoded = deepInterfaceFieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
+					Support.EntityEngine.EntityExpression deepInterfaceExpression = Support.EntityEngine.EntityExpression.FromEncodedExpression(deepInterfaceEncoded);
+					deepSourceCode = deepInterfaceExpression.SourceCode;
+				}
+			}
+
+			object interfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
+			bool isInterfaceDefinition = !UndefinedValue.IsUndefinedValue(interfaceDefinition);
 
 			Module typeModule = obj.Editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap typeCultureMap = null;
@@ -180,7 +208,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.deepDefiningTypeId = deepDefiningTypeId;
 			this.definingName = definingName;
 			this.definingType = definingType;
+			this.isInterfaceDefinition = isInterfaceDefinition;
 			this.expression = sourceCode;
+			this.deepExpression = deepSourceCode;
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
 			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			this.cultureMapSource = source;
@@ -278,6 +308,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsInterfaceDefinition
+		{
+			get
+			{
+				return this.isInterfaceDefinition;
+			}
+		}
+
 		public string DefiningName
 		{
 			get
@@ -360,6 +398,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					this.typeName = value;
 					this.UpdateTypeName();
 				}
+			}
+		}
+
+		public string DeepExpression
+		{
+			//	Eventuelle expression lambda calculant le champ.
+			get
+			{
+				return this.deepExpression;
 			}
 		}
 
@@ -1081,6 +1128,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSubtitle;
 		protected bool isInherited;
 		protected bool isInterface;
+		protected bool isInterfaceDefinition;
 		protected string definingName;
 		protected StructuredTypeClass definingType;
 		protected int level;
@@ -1089,6 +1137,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
 		protected string typeName;
+		protected string deepExpression;
 		protected string expression;
 		protected FieldRelation relation;
 		protected FieldMembership membership;
