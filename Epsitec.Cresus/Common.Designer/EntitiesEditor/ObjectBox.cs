@@ -473,7 +473,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			switch (element)
 			{
-				case AbstractObject.ActiveElement.BoxHeader:
+				case ActiveElement.BoxHeader:
 					if (this.editor.BoxCount == 1)
 					{
 						return null;
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 					}
 
-				case AbstractObject.ActiveElement.BoxSources:
+				case ActiveElement.BoxSources:
 					if (this.sourcesList.Count == 0)
 					{
 						return null;
@@ -504,7 +504,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return Res.Strings.Entities.Action.BoxSources1;
 					}
 
-				case AbstractObject.ActiveElement.BoxExtend:
+				case ActiveElement.BoxExtend:
 					if (this.isExtended)
 					{
 						return Res.Strings.Entities.Action.BoxExtend1;
@@ -514,7 +514,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return Res.Strings.Entities.Action.BoxExtend2;
 					}
 
-				case AbstractObject.ActiveElement.BoxComment:
+				case ActiveElement.BoxComment:
 					if (this.comment == null)
 					{
 						return Res.Strings.Entities.Action.BoxComment1;
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return Res.Strings.Entities.Action.BoxComment3;
 					}
 
-				case AbstractObject.ActiveElement.BoxInfo:
+				case ActiveElement.BoxInfo:
 					if (this.info == null || !this.info.IsVisible)
 					{
 						return string.Format(Res.Strings.Entities.Action.BoxInfo1, this.GetInformations(true));
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return Res.Strings.Entities.Action.BoxInfo2;
 					}
 
-				case AbstractObject.ActiveElement.BoxClose:
+				case ActiveElement.BoxClose:
 					if (this.isRoot)
 					{
 						return null;
@@ -548,10 +548,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						return Res.Strings.Entities.Action.BoxClose;
 					}
 
-				case AbstractObject.ActiveElement.BoxFieldGroup:
+				case ActiveElement.BoxFieldGroup:
 					return this.GetGroupTooltip(fieldRank);
 
-				case AbstractObject.ActiveElement.BoxFieldExpression:
+				case ActiveElement.BoxFieldExpression:
 					string expression = this.fields[fieldRank].Expression;
 					string deepExpression = this.fields[fieldRank].DeepExpression;
 					if (!string.IsNullOrEmpty(expression))
@@ -1100,7 +1100,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldExpressionBounds(i);
-						if (!this.fields[i].IsInherited && rect.Contains(pos))
+						//?if (!this.fields[i].IsInherited && rect.Contains(pos))
+						if (this.fields[i].IsEditExpressionEnabled && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldExpression;
 							fieldRank = i;
@@ -1659,7 +1660,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (encoded == null)
 				{
 					Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-					dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, true);
+					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
 					accessor.RefreshFields(this.cultureMap);
 					//	TODO: il faut rafraîchir ta représentation graphique pour refléter le nouveau
 					//	contenu du champ en question; je ne sais pas comment faire cela ici...

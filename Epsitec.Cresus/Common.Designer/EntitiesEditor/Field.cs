@@ -344,6 +344,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsEditExpressionEnabled
+		{
+			//	Retourne true s'il est possible d'éditer l'expression de ce champ.
+			get
+			{
+				return !string.IsNullOrEmpty(this.expression) || !string.IsNullOrEmpty(this.deepExpression);
+			}
+		}
+
 		public string DefiningName
 		{
 			get
