@@ -706,21 +706,21 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			this.fieldsButtonRemove.Enable = isSel;
-			this.fieldsButtonReset.Enable = isSel;
-			this.fieldsButtonBox.Enable = isSel && !isDelta;
+			this.fieldsButtonReset.Enable  = isSel;
+			this.fieldsButtonBox.Enable    = isSel && !isDelta;
 
 			this.fieldsButtonForm.Enable = isForm && !isDelta;
 			this.fieldsButtonPrev.Enable = isPrev;
 			this.fieldsButtonNext.Enable = isNext;
 			this.fieldsButtonGoto.Enable = isGoto;
 
-			this.otherButtonCommand.Enable = isSel;
-			this.otherButtonLine.Enable = isSel;
-			this.otherButtonTitle.Enable = isSel;
-			this.otherButtonGlue.Enable = isSel;
+			this.otherButtonCommand.Enable = !this.designerApplication.IsReadonly;
+			this.otherButtonLine.Enable    = !this.designerApplication.IsReadonly;
+			this.otherButtonTitle.Enable   = !this.designerApplication.IsReadonly;
+			this.otherButtonGlue.Enable    = isSel;
 
 			this.fieldsButtonRemove.IconName = isDeletable ? Misc.Icon("Delete") : Misc.Icon("FormDeltaHide");
-			this.fieldsButtonBox.IconName = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
+			this.fieldsButtonBox.IconName    = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 		}
 
 		protected bool IsDeletableField(int sel)
@@ -2091,16 +2091,32 @@ namespace Epsitec.Common.Designer.Viewers
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
-			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
+			int index;
+
+			if (sels.Count == 0)
+			{
+				index = this.formEditor.ObjectModifier.GetFieldCount;
+			}
+			else
+			{
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+				index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
+			}
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				System.Guid ag = System.Guid.Empty;
-				if (sels[0] > 0)
+				if (sels.Count == 0)
 				{
-					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+					ag = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1].Guid;
+				}
+				else
+				{
+					if (sels[0] > 0)
+					{
+						ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+					}
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.Command);
@@ -2138,16 +2154,32 @@ namespace Epsitec.Common.Designer.Viewers
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
-			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
+			int index;
+
+			if (sels.Count == 0)
+			{
+				index = this.formEditor.ObjectModifier.GetFieldCount;
+			}
+			else
+			{
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+				index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
+			}
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				System.Guid ag = System.Guid.Empty;
-				if (sels[0] > 0)
+				if (sels.Count == 0)
 				{
-					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+					ag = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1].Guid;
+				}
+				else
+				{
+					if (sels[0] > 0)
+					{
+						ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+					}
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.Line);
@@ -2181,16 +2213,32 @@ namespace Epsitec.Common.Designer.Viewers
 			List<int> sels = this.fieldsTable.SelectedRows;
 			sels.Sort();
 
-			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
-			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
+			int index;
+
+			if (sels.Count == 0)
+			{
+				index = this.formEditor.ObjectModifier.GetFieldCount;
+			}
+			else
+			{
+				FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+				index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
+			}
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
 				System.Guid ag = System.Guid.Empty;
-				if (sels[0] > 0)
+				if (sels.Count == 0)
 				{
-					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+					ag = this.formEditor.ObjectModifier.TableContent[this.fieldsTable.TotalRows-1].Guid;
+				}
+				else
+				{
+					if (sels[0] > 0)
+					{
+						ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
+					}
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.Title);
