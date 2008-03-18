@@ -50,6 +50,13 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		/// <summary>
+		/// Converts the simple search pattern to a SQL LIKE compatible search
+		/// pattern.
+		/// </summary>
+		/// <param name="builder">The SQL builder.</param>
+		/// <param name="pattern">The search pattern (using <c>"*"</c> and <c>"?"</c>).</param>
+		/// <returns>The SQL LIKE compatible search pattern.</returns>
 		public static string ConvertToCompareLikeWildcards(ISqlBuilder builder, string pattern)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -85,6 +92,13 @@ namespace Epsitec.Cresus.Database
 			return buffer.ToString ();
 		}
 
+		/// <summary>
+		/// Escapes characters which have a special meaning for the SQL LIKE
+		/// keyword.
+		/// </summary>
+		/// <param name="builder">The SQL builder.</param>
+		/// <param name="pattern">The search pattern.</param>
+		/// <returns>The escaped search pattern.</returns>
 		public static string EscapeCompareLikeWildcards(ISqlBuilder builder, string pattern)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -112,20 +126,6 @@ namespace Epsitec.Cresus.Database
 			}
 
 			return escaped == 0 ? pattern : buffer.ToString ();
-		}
-
-
-		private static bool Contains(char[] supportedWildcards, char c)
-		{
-			for (int i = 0; i < supportedWildcards.Length; i++)
-			{
-				if (c == supportedWildcards[i])
-				{
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 
@@ -563,6 +563,28 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+
+		/// <summary>
+		/// Determines whether the character is found in the samples.
+		/// </summary>
+		/// <param name="samples">The samples.</param>
+		/// <param name="c">The character to look for.</param>
+		/// <returns>
+		/// 	<c>true</c> if the character is found in the samples; otherwise, <c>false</c>.
+		/// </returns>
+		private static bool Contains(char[] samples, char c)
+		{
+			for (int i = 0; i < samples.Length; i++)
+			{
+				if (c == samples[i])
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 
 		#region TablePrefixes Static Class
 

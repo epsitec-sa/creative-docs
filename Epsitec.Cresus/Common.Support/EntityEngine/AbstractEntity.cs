@@ -218,6 +218,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.calculationsDisabled = true;
 		}
 
+		/// <summary>
+		/// Resolves the specified entity to the specified type. If the specified
+		/// entity is a façade, this will return the real underlying entity, cast
+		/// appropriately.
+		/// </summary>
+		/// <typeparam name="T">The type to resolve to.</typeparam>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The resolved entity.</returns>
 		public static T Resolve<T>(AbstractEntity entity) where T : AbstractEntity
 		{
 			return entity == null ? null : entity.Resolve () as T;
@@ -597,6 +605,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Resolves this instance; override this method if the entity is just
+		/// a façade.
+		/// </summary>
+		/// <returns>The real entity instance.</returns>
 		protected virtual AbstractEntity Resolve()
 		{
 			return this;
