@@ -22,6 +22,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Gets the first result.
+		/// </summary>
+		/// <value>The first result.</value>
 		public AbstractEntity FirstResult
 		{
 			get
@@ -30,6 +34,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets a list of all results.
+		/// </summary>
+		/// <value>All results.</value>
 		public IList<AbstractEntity> AllResults
 		{
 			get
@@ -49,6 +57,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the collection view representing the list of results.
+		/// </summary>
+		/// <value>The collection view.</value>
 		public ICollectionView CollectionView
 		{
 			get
@@ -57,6 +69,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets the empty result set.
+		/// </summary>
+		/// <value>The empty result set.</value>
 		public static EntityResolverResult Empty
 		{
 			get
@@ -66,6 +82,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Gets the result at the specified index. This uses a cache which is
+		/// only filled on a demand base.
+		/// </summary>
+		/// <param name="index">The index of the result.</param>
+		/// <returns>The result or <c>null</c>.</returns>
 		private AbstractEntity GetResult(int index)
 		{
 			while (index >= this.cache.Count)
@@ -94,8 +116,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		
 
 
-		private IEnumerator<AbstractEntity> entityEnumerator;
-		private readonly List<AbstractEntity> cache;
-		private readonly CollectionView view;
+		private IEnumerator<AbstractEntity>		entityEnumerator;
+		private readonly List<AbstractEntity>	cache;
+		private readonly CollectionView			view;
 	}
 }

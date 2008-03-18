@@ -8,8 +8,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
-	/// The <c>SearchEntity</c> class is a <see cref="GenericEntity"/> with
-	/// additional support for the <see cref="IFieldPropertyStore"/> interface.
+	/// The <c>SearchEntity</c> class is a façade to <see cref="AbstractEntity"/>
+	/// with support for the <see cref="IFieldPropertyStore"/> interface.
 	/// </summary>
 	internal sealed class SearchEntity : AbstractEntity, IFieldPropertyStore
 	{
@@ -22,16 +22,25 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchEntity"/> class.
+		/// </summary>
+		/// <param name="entity">The real entity.</param>
 		public SearchEntity(AbstractEntity entity)
 			: this (entity.GetEntityStructuredTypeId (), entity)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SearchEntity"/> class.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="entity">The real entity.</param>
 		private SearchEntity(Druid entityId, AbstractEntity entity)
 		{
+			this.store    = new Dictionary<string, PropertyStore> ();
 			this.entityId = entityId;
-			this.store = new Dictionary<string, PropertyStore> ();
-			this.target = entity;
+			this.target   = entity;
 		}
 
 		/// <summary>
@@ -46,14 +55,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.entityId;
 		}
 
-
-
-
-
+		
 		protected override AbstractEntity Resolve()
 		{
 			return AbstractEntity.Resolve<AbstractEntity> (this.target);
 		}
+
 
 		#region IFieldPropertyStore Members
 
@@ -134,6 +141,9 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#region Private PropertyStore Class
 
+		/// <summary>
+		/// The <c>PropertyStore</c> class stores values based on properties.
+		/// </summary>
 		private sealed class PropertyStore : Dictionary<DependencyProperty, object>
 		{
 			public PropertyStore()
@@ -172,8 +182,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		#endregion
 
 
-		private readonly Druid entityId;
 		private readonly Dictionary<string, PropertyStore> store;
-		private readonly AbstractEntity target;
+		private readonly Druid					entityId;
+		private readonly AbstractEntity			target;
 	}
 }
