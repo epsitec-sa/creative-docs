@@ -553,13 +553,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.BoxFieldExpression:
 					string expression = this.fields[fieldRank].Expression;
-					if (string.IsNullOrEmpty(expression))
+					string deepExpression = this.fields[fieldRank].DeepExpression;
+					if (!string.IsNullOrEmpty(expression))
 					{
-						return Res.Strings.Entities.Action.BoxFieldExpression;
+						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, expression);
+					}
+					else if (!string.IsNullOrEmpty(deepExpression))
+					{
+						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, deepExpression);
 					}
 					else
 					{
-						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, expression);
+						return Res.Strings.Entities.Action.BoxFieldExpression;
 					}
 			}
 
@@ -2672,6 +2677,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.Expression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
+							graphics.RenderSolid(colorExpr);
+						}
+						else if (!string.IsNullOrEmpty(this.fields[i].DeepExpression))
+						{
+							rect = this.GetFieldExpressionBounds(i);
+							rect.Right -= 2;
+							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.DeepExpression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 							graphics.RenderSolid(colorExpr);
 						}
 

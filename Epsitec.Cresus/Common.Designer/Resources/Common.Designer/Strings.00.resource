@@ -551,4 +551,5 @@
   <data name="Undo.Action.ForwardTab" id="KS1">Destination pour Tab</data>
   <data name="Undo.Action.CommandInsert" id="KT1">Insérer une commande</data>
   <data name="Undo.Action.CommandButtonClass" id="KU1">Type de la commande</data>
+  <data name="Entities.Icon.DeepExpression" id="KV1">(e)</data>
 </bundle>
