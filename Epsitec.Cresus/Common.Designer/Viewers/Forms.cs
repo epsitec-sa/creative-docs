@@ -179,36 +179,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageSource.Padding = new Margins(4, 4, 4, 4);
 			this.tabBookSecondary.Items.Add(this.tabPageSource);
 
-			FrameBox radio = new FrameBox(this.tabPageSource);
-			radio.Dock = DockStyle.Top;
-
-			this.radioSourceRelation = new RadioButton(radio);
-			this.radioSourceRelation.Text = "Champs";
-			this.radioSourceRelation.PreferredWidth = 100;
-			this.radioSourceRelation.Dock = DockStyle.Left;
-			this.radioSourceRelation.Clicked += new MessageEventHandler(this.HandleRadioSourceClicked);
-			this.radioSourceRelation.ActiveState = ActiveState.Yes;
-
-			this.radioSourceOther = new RadioButton(radio);
-			this.radioSourceOther.Text = "Autres";
-			this.radioSourceOther.PreferredWidth = 100;
-			this.radioSourceOther.Dock = DockStyle.Left;
-			this.radioSourceOther.Clicked += new MessageEventHandler(this.HandleRadioSourceClicked);
-
-			Separator sep = new Separator(this.tabPageSource);
-			sep.PreferredHeight = 1;
-			sep.Dock = DockStyle.Top;
-			sep.Margins = new Margins(0, 0, 0, 2);
-
-			this.relationsPanel = new FrameBox(this.tabPageSource);
-			this.relationsPanel.Dock = DockStyle.Fill;
-
-			this.otherPanel = new FrameBox(this.tabPageSource);
-			this.otherPanel.Dock = DockStyle.Fill;
-			this.otherPanel.Visibility = false;
-
-			//	Crée le panneau 'source.relation'.
-			this.relationsToolbar = new HToolBar(this.relationsPanel);
+			this.relationsToolbar = new HToolBar(this.tabPageSource);
 			this.relationsToolbar.Dock = DockStyle.Top;
 			this.relationsToolbar.Margins = new Margins(0, 0, 0, 5);
 
@@ -240,7 +211,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonAuto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.relationsToolbar.Items.Add(this.relationsButtonAuto);
 
-			this.relationsTable = new MyWidgets.StringArray(this.relationsPanel);
+			this.relationsTable = new MyWidgets.StringArray(this.tabPageSource);
 			this.relationsTable.Columns = 3;
 			this.relationsTable.SetColumnsRelativeWidth(0, 0.10);
 			this.relationsTable.SetColumnsRelativeWidth(1, 0.80);
@@ -257,8 +228,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsTable.SelectedRowChanged += new EventHandler(this.HandleRelationsTableSelectedRowChanged);
 			this.relationsTable.SelectedRowDoubleClicked += new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
 
-			//	Crée le panneau 'source.other'.
-			this.otherToolbar = new HToolBar(this.otherPanel);
+			//	Crée l'onglet 'propriétés'.
+			this.tabPageProperties = new TabPage();
+			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Forms.TabProperties;
+			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
+			this.tabBookSecondary.Items.Add(this.tabPageProperties);
+
+			this.otherToolbar = new HToolBar(this.tabPageProperties);
 			this.otherToolbar.Dock = DockStyle.Top;
 			this.otherToolbar.Margins = new Margins(0, 0, 0, 5);
 
@@ -289,12 +265,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
 			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.otherToolbar.Items.Add(this.otherButtonGlue);
-
-			//	Crée l'onglet 'propriétés'.
-			this.tabPageProperties = new TabPage();
-			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Forms.TabProperties;
-			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
-			this.tabBookSecondary.Items.Add(this.tabPageProperties);
 
 			this.proxyManager = new FormEditor.ProxyManager(this);
 
@@ -342,9 +312,6 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.radioSourceRelation.Clicked -= new MessageEventHandler(this.HandleRadioSourceClicked);
-				this.radioSourceOther.Clicked -= new MessageEventHandler(this.HandleRadioSourceClicked);
-
 				this.fieldsButtonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.fieldsButtonReset.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
 				this.fieldsButtonBox.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
@@ -2425,21 +2392,6 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		private void HandleRadioSourceClicked(object sender, MessageEventArgs e)
-		{
-			if (sender == this.radioSourceRelation)
-			{
-				this.relationsPanel.Visibility = true;
-				this.otherPanel.Visibility = false;
-			}
-
-			if (sender == this.radioSourceOther)
-			{
-				this.relationsPanel.Visibility = false;
-				this.otherPanel.Visibility = true;
-			}
-		}
-
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Un splitter a été bougé.
@@ -2682,10 +2634,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected TabBook						tabBookSecondary;
 
 		protected TabPage						tabPageSource;
-		protected RadioButton					radioSourceRelation;
-		protected RadioButton					radioSourceOther;
-
-		protected FrameBox						relationsPanel;
 		protected HToolBar						relationsToolbar;
 		protected IconButton					relationsButtonUse;
 		protected IconButton					relationsButtonExpand;
@@ -2693,14 +2641,12 @@ namespace Epsitec.Common.Designer.Viewers
 		protected IconButton					relationsButtonAuto;
 		protected MyWidgets.StringArray			relationsTable;
 
-		protected FrameBox						otherPanel;
+		protected TabPage						tabPageProperties;
 		protected HToolBar						otherToolbar;
 		protected IconButton					otherButtonCommand;
 		protected IconButton					otherButtonLine;
 		protected IconButton					otherButtonTitle;
 		protected IconButton					otherButtonGlue;
-
-		protected TabPage						tabPageProperties;
 		protected Scrollable					propertiesScrollable;
 
 		protected TabPage						tabPageMisc;
