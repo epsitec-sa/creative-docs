@@ -54,18 +54,23 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldExpression.Dock = DockStyle.Fill;
 				this.fieldExpression.TabIndex = 1;
 
+				this.deepGroup = new FrameBox(this.window.Root);
+				this.deepGroup.Dock = DockStyle.Fill;
+
+				StaticText label = new StaticText(this.deepGroup);
+				label.Text = "Expression de base :";
+				label.Dock = DockStyle.Top;
+				label.Margins = new Margins(0, 0, 6, 2);
+
+				this.fieldDeepExpression = new TextFieldMulti(this.deepGroup);
+				this.fieldDeepExpression.Dock = DockStyle.Fill;
+				this.fieldDeepExpression.IsReadOnly = true;
+
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
 				footer.PreferredHeight = 22;
 				footer.Margins = new Margins(0, 0, 8, 0);
 				footer.Dock = DockStyle.Bottom;
-
-				this.buttonDeep = new CheckButton(footer);
-				this.buttonDeep.Text = "Voir l'expression dans l'interface";
-				this.buttonDeep.PreferredWidth = 200;
-				this.buttonDeep.AutoToggle = false;
-				this.buttonDeep.Dock = DockStyle.Left;
-				this.buttonDeep.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
@@ -135,18 +140,17 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected void UpdateExpression()
 		{
-			this.buttonDeep.Visibility = this.isInterface;
-			this.buttonDeep.ActiveState = ActiveState.No;
-
 			this.buttonRedefine.Visibility = this.isInterface;
 			this.buttonRedefine.ActiveState = (this.expression == null) ? ActiveState.No : ActiveState.Yes;
 			this.header.Visibility = this.buttonRedefine.Visibility;
 
 			this.fieldExpression.Text = this.expression;
 			this.fieldExpression.Enable = (!this.isInterface || this.expression != null);
-			this.fieldExpression.IsReadOnly = this.isEditLocked;
 			this.fieldExpression.SelectAll();
 			this.fieldExpression.Focus();
+
+			this.deepGroup.Visibility = this.isInterface;
+			this.fieldDeepExpression.Text = this.deepExpression;
 
 			this.buttonOk.Enable = true;
 		}
@@ -179,35 +183,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			AbstractButton button = sender as AbstractButton;
 
-			if (button == this.buttonDeep)
-			{
-				if (this.buttonDeep.ActiveState == ActiveState.No)
-				{
-					this.buttonDeep.ActiveState = ActiveState.Yes;
-					this.buttonRedefine.Visibility = false;
-					this.header.Visibility = this.buttonRedefine.Visibility;
-
-					this.expression = this.fieldExpression.Text;
-					this.fieldExpression.Text = this.deepExpression;
-					this.fieldExpression.Enable = true;
-					this.fieldExpression.IsReadOnly = true;
-
-					this.buttonOk.Enable = false;
-				}
-				else
-				{
-					this.buttonDeep.ActiveState = ActiveState.No;
-					this.buttonRedefine.Visibility = true;
-					this.header.Visibility = this.buttonRedefine.Visibility;
-
-					this.fieldExpression.Text = this.expression;
-					this.fieldExpression.Enable = (this.buttonRedefine.ActiveState == ActiveState.Yes);
-					this.fieldExpression.IsReadOnly = this.isEditLocked;
-
-					this.buttonOk.Enable = true;
-				}
-			}
-
 			if (button == this.buttonRedefine)
 			{
 				if (this.buttonRedefine.ActiveState == ActiveState.No)
@@ -236,9 +211,10 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected string						deepExpression;
 		protected string						expression;
 		protected FrameBox						header;
-		protected CheckButton					buttonDeep;
 		protected CheckButton					buttonRedefine;
 		protected TextFieldMulti				fieldExpression;
+		protected FrameBox						deepGroup;
+		protected TextFieldMulti				fieldDeepExpression;
 		protected Button						buttonOk;
 		protected Button						buttonCancel;
 	}

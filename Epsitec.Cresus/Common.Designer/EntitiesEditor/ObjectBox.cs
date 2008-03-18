@@ -1100,7 +1100,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						rect = this.GetFieldExpressionBounds(i);
-						//?if (!this.fields[i].IsInherited && rect.Contains(pos))
 						if (this.fields[i].IsEditExpressionEnabled && rect.Contains(pos))
 						{
 							element = ActiveElement.BoxFieldExpression;
