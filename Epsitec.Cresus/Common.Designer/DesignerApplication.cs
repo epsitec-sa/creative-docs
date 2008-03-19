@@ -1190,31 +1190,29 @@ namespace Epsitec.Common.Designer
 
 		public DisplayMode DisplayModeState
 		{
-			//	Disposition de l'affichage (horizontal ou vertical).
+			//	Disposition de l'affichage (horizontal, vertical ou autre).
 			get
 			{
-				if (this.displayHorizontalState.ActiveState == ActiveState.Yes)  return DisplayMode.Horizontal;
-				if (this.displayVerticalState.ActiveState   == ActiveState.Yes)  return DisplayMode.Vertical;
-				if (this.displayFullScreenState.ActiveState == ActiveState.Yes)  return DisplayMode.FullScreen;
-				if (this.displayWindowState.ActiveState     == ActiveState.Yes)  return DisplayMode.Window;
-				return DisplayMode.Horizontal;
+				return this.displayMode;
 			}
 
 			set
 			{
-				if (this.DisplayModeState != value)
+				if (this.displayMode != value)
 				{
 					if (!this.Terminate(true))
 					{
 						return;
 					}
 
-					this.displayHorizontalState.ActiveState = (value == DisplayMode.Horizontal) ? ActiveState.Yes : ActiveState.No;
-					this.displayVerticalState.ActiveState   = (value == DisplayMode.Vertical  ) ? ActiveState.Yes : ActiveState.No;
-					this.displayFullScreenState.ActiveState = (value == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
-					this.displayWindowState.ActiveState     = (value == DisplayMode.Window    ) ? ActiveState.Yes : ActiveState.No;
+					this.displayMode = value;
 
-					if (value == DisplayMode.Window)  // mode avec fenêtre supplémentaire ?
+					this.displayHorizontalState.ActiveState = (this.displayMode == DisplayMode.Horizontal) ? ActiveState.Yes : ActiveState.No;
+					this.displayVerticalState.ActiveState   = (this.displayMode == DisplayMode.Vertical  ) ? ActiveState.Yes : ActiveState.No;
+					this.displayFullScreenState.ActiveState = (this.displayMode == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
+					this.displayWindowState.ActiveState     = (this.displayMode == DisplayMode.Window    ) ? ActiveState.Yes : ActiveState.No;
+
+					if (this.displayMode == DisplayMode.Window)  // mode avec fenêtre supplémentaire ?
 					{
 						if (this.viewersWindow == null)  // fenêtre pas encore créée ?
 						{
@@ -1252,7 +1250,7 @@ namespace Epsitec.Common.Designer
 			//	Si le mode n'est pas DisplayMode.Window, retourne null.
 			get
 			{
-				if (this.DisplayModeState == DisplayMode.Window)
+				if (this.displayMode == DisplayMode.Window)
 				{
 					return this.viewersWindow;
 				}
@@ -1260,6 +1258,15 @@ namespace Epsitec.Common.Designer
 				{
 					return null;
 				}
+			}
+		}
+
+		protected void ViewersWindowClear()
+		{
+			//	Supprime tous les widgets contenus dans la fenêtre supplémentaire.
+			if (this.viewersWindow != null)
+			{
+				this.viewersWindow.Root.Children.Clear();
 			}
 		}
 
@@ -1801,6 +1808,7 @@ namespace Epsitec.Common.Designer
 		protected void UpdateAfterTypeChanged()
 		{
 			//	Mise à jour après avoir changé le type de ressource.
+			this.ViewersWindowClear();
 			this.CreateViewerLayout();
 			this.DialogSearchAdapt();
 			this.LocatorFix();
@@ -2506,6 +2514,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected PanelsContext					context;
+		protected DisplayMode					displayMode;
 		protected Window						viewersWindow;
 
 		protected Support.ResourceManagerPool	resourceManagerPool;

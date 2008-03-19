@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Crée les deux volets séparés d'un splitter.
 			this.firstPane = new FrameBox(this);
 			this.firstPane.Name = "FirstPane";
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				this.firstPane.MinWidth = 80;
 				this.firstPane.MaxWidth = 600;
@@ -57,12 +57,12 @@ namespace Epsitec.Common.Designer.Viewers
 				this.firstPane.MaxHeight = 600;
 				this.firstPane.PreferredHeight = Abstract.topArrayHeight;
 			}
-			this.firstPane.Dock = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal) ? DockStyle.Left : DockStyle.Top;
+			this.firstPane.Dock = this.IsDisplayModeHorizontal ? DockStyle.Left : DockStyle.Top;
 			this.firstPane.Padding = new Margins(10, 10, 10, 10);
 			this.firstPane.TabIndex = this.tabIndex++;
 			this.firstPane.Visibility = (this.designerApplication.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				this.splitter = new VSplitter(this);
 				this.splitter.Dock = DockStyle.Left;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.lastPane = new FrameBox(this);
 			this.lastPane.Name = "LastPane";
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				this.lastPane.MinWidth = 200;
 			}
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 			this.table.Items = this.access.CollectionView;
 			this.InitializeTable();
-			this.table.HorizontalScrollMode = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal) ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
+			this.table.HorizontalScrollMode = this.IsDisplayModeHorizontal ? UI.ItemTableScrollMode.Linear : UI.ItemTableScrollMode.None;
 			this.table.VerticalScrollMode = UI.ItemTableScrollMode.ItemBased;
 			this.table.HeaderVisibility = true;
 			this.table.FrameVisibility = true;
@@ -1890,7 +1890,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				return Abstract.columnWidthHorizontal[column];
 			}
@@ -1903,13 +1903,23 @@ namespace Epsitec.Common.Designer.Viewers
 		protected virtual void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				Abstract.columnWidthHorizontal[column] = value;
 			}
 			else
 			{
 				Abstract.columnWidthVertical[column] = value;
+			}
+		}
+
+		protected bool IsDisplayModeHorizontal
+		{
+			//	Retourne true si le mode s'apparentele plus possible à une disposition horizontale normale.
+			get
+			{
+				return (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal ||
+						this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window);
 			}
 		}
 
@@ -2500,7 +2510,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleSplitterDragged(object sender)
 		{
 			//	Le splitter a été bougé.
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				Abstract.leftArrayWidth = this.firstPane.ActualWidth;
 			}
