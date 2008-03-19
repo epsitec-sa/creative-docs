@@ -1639,9 +1639,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string source = TextLayout.ConvertToTaggedText(this.fields[rank].Expression);
 			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].DeepExpression);
 			bool isInterface = this.fields[rank].IsInterfaceDefinition;
+			bool isOverridable = isInterface || this.fields[rank].Membership != FieldMembership.Local;
 
 			//	Edition de l'expression.
-			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isInterface, deepSource, ref source))
+			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isOverridable, deepSource, ref source))
 			{
 				return;
 			}
@@ -1658,14 +1659,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (encoded == null)
 				{
+					//	La définition doit être reprise dans l'interface; il n'y a plus de définition
+					//	locale.
+					dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, true);
+					
 					Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
 					accessor.RefreshFields(this.cultureMap);
 					//	TODO: il faut rafraîchir ta représentation graphique pour refléter le nouveau
 					//	contenu du champ en question; je ne sais pas comment faire cela ici...
 				}
 				else
 				{
+					//	La définition ne doit plus être reprise dans l'interface, mais bien dans les
+					//	réglages locaux (qui peuvent être vides).
 					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
 
 					if (string.IsNullOrEmpty(source))  //  pas de source = valeur
@@ -1682,15 +1688,21 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				if (string.IsNullOrEmpty (source))  //  pas de source = valeur
+				if (encoded == null)
 				{
-					dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
-					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 				}
 				else
 				{
-					dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
-					dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
+					if (string.IsNullOrEmpty (source))  //  pas de source = valeur
+					{
+						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
+						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
+					}
+					else
+					{
+						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
+						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
+					}
 				}
 			}
 

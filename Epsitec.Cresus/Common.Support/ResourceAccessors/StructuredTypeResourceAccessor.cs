@@ -1136,7 +1136,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 									throw new System.NotImplementedException (string.Format ("Unsupported field override for field {0}", field.GetValue (Res.Fields.Field.CaptionId)));
 							}
 
-							//	The field is defined both locally and in the interface or in
+							//	The field is defined both locally and in the interface or in a
 							//	parent (this is a real class inheritance); keep just the
 							//	expression from the local definition and for the other values,
 							//	use the inherited or interface definitions :

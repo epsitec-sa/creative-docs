@@ -134,12 +134,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
 
 			//	Cherche les expressions définies dans le champ de l'interface.
-			string expression = this.GetExpression(dataField);
+			string expression = this.GetLocalExpression(dataField);
 
 			string deepExpression = null;
 			if (definingTypeId.IsValid)
 			{
-				deepExpression = this.GetDeepExpression(obj.Editor.Module.DesignerApplication, dataField, fieldCaptionId, definingTypeId);
+				deepExpression = this.GetInheritedExpression(obj.Editor.Module.DesignerApplication, dataField, fieldCaptionId, definingTypeId);
 			}
 
 			object interfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
@@ -202,19 +202,30 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.srcBox = obj as ObjectBox;
 		}
 
-		protected string GetExpression(StructuredData dataField)
+		protected string GetLocalExpression(StructuredData dataField)
 		{
 			//	Cherche l'expression définie dans le champ de l'interface.
-			string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-			Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-			return expression.SourceCode;
+			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
+			if (membership == FieldMembership.Inherited)
+			{
+				//	L'expression n'est pas définie (ou redéfinie) localement; elle provient
+				//	d'un héritage direct et doit par conséquent être ignorée.
+				return null;
+			}
+			else
+			{
+				string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
+				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
+				return expression.SourceCode;
+			}
 		}
 
-		protected string GetDeepExpression(DesignerApplication designerApplication, StructuredData dataField, Druid fieldCaptionId, Druid definingTypeId)
+		protected string GetInheritedExpression(DesignerApplication designerApplication, StructuredData dataField, Druid fieldCaptionId, Druid definingTypeId)
 		{
-			//	Cherche l'expression profonde définie dans le champ d'un parent de l'interface.
-			string deepExpression = null;
-
+			//	Cherche l'expression héritée par le champ depuis un parent (ou grand-parent
+			//	ou une interface).
+			
+		again:
 			Module module = designerApplication.SearchModule(definingTypeId);
 			CultureMap item = module.AccessEntities.Accessor.Collection[definingTypeId];
 			StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -224,11 +235,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (fieldData != null)
 			{
 				string encoded = fieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
-				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-				deepExpression = expression.SourceCode;
+
+				if (!string.IsNullOrEmpty (encoded))
+				{
+					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+					return expression.SourceCode;
+				}
 			}
 
-			return deepExpression;
+			Druid ancestorTypeId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.DefiningTypeId);
+
+			if ((ancestorTypeId != definingTypeId) &&
+				(ancestorTypeId.IsValid))
+			{
+				definingTypeId = ancestorTypeId;
+				goto again;
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		static protected StructuredData FindCaptionId(IList<StructuredData> dataFields, Druid id)
@@ -349,7 +375,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne true s'il est possible d'éditer l'expression de ce champ.
 			get
 			{
-				return !string.IsNullOrEmpty(this.expression) || !string.IsNullOrEmpty(this.deepExpression);
+				return !string.IsNullOrEmpty(this.expression) || !string.IsNullOrEmpty(this.deepExpression) || this.isInterfaceDefinition || this.membership == FieldMembership.Local;
 			}
 		}
 
