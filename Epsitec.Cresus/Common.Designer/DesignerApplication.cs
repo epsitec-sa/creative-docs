@@ -1223,11 +1223,12 @@ namespace Epsitec.Common.Designer
 
 							this.viewersWindow = new Window();
 							this.viewersWindow.MakeSecondaryWindow();
-							this.viewersWindow.PreventAutoClose = true;
-							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);
+							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);  // fond blanc
 							this.viewersWindow.WindowBounds = bounds;
 							this.viewersWindow.Owner = this.Window;
 							this.viewersWindow.Root.MinSize = new Size(400, 300);
+							this.viewersWindow.PreventAutoClose = true;
+							this.viewersWindow.WindowCloseClicked += new EventHandler(this.HandleViewersWindowCloseClicked);
 						}
 					}
 					else  // mode normal (sans fenêtre supplémentaire) ?
@@ -1241,6 +1242,14 @@ namespace Epsitec.Common.Designer
 					this.UpdateAfterTypeChanged();
 				}
 			}
+		}
+
+		private void HandleViewersWindowCloseClicked(object sender)
+		{
+			//	Le bouton de fermeture de la fenêtre supplémentaire a été cliqué.
+			//	Il faut juste cacher la fenêtre sans la supprimer et remettre le mode DisplayMode.Horizontal.
+			this.viewersWindow.Hide();  // cache la fenêtre supplémentaire
+			this.DisplayModeState = DisplayMode.Horizontal;
 		}
 
 		public Window ViewersWindow
