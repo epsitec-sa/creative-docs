@@ -1638,7 +1638,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData dataField = dataFields[fieldRank];
 			string source = TextLayout.ConvertToTaggedText(this.fields[rank].Expression);
 			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].DeepExpression);
-			bool isInterface = this.fields[rank].IsInterfaceDefinition;
+			bool isInterface = this.fields[rank].IsInterfaceLocal;
 			bool isOverridable = isInterface || this.fields[rank].Membership != FieldMembership.Local;
 
 			//	Edition de l'expression.

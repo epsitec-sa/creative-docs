@@ -142,9 +142,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				deepExpression = this.GetInheritedExpression(obj.Editor.Module.DesignerApplication, dataField, fieldCaptionId, definingTypeId);
 			}
 
-			object interfaceDefinition = dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition);
-			bool isInterfaceDefinition = !UndefinedValue.IsUndefinedValue(interfaceDefinition);
-
 			Module typeModule = obj.Editor.Module.DesignerApplication.SearchModule(typeId);
 			CultureMap typeCultureMap = null;
 			if (typeModule != null)
@@ -188,7 +185,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.deepDefiningTypeId = deepDefiningTypeId;
 			this.definingName = definingName;
 			this.definingType = definingType;
-			this.isInterfaceDefinition = isInterfaceDefinition;
 			this.expression = expression;
 			this.deepExpression = deepExpression;
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
@@ -359,14 +355,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public bool IsInterfaceDefinition
+		public bool IsInterfaceLocal
 		{
-			//	Indique s'il s'agit d'un champ d'une interface.
-			//	Reflète l'état de Support.Res.Fields.Field.IsInterfaceDefinition.
-			//	Je n'ai pas compris la différence avec IsInterface juste en dessus !
+			//	Indique s'il s'agit d'un champ d'une interface importée
+			//	directement dans cette entité (un champ provenant d'une
+			//	interface qui serait héritée d'un parent retourne false).
 			get
 			{
-				return this.isInterfaceDefinition;
+				return this.definingType == StructuredTypeClass.Interface && this.membership != FieldMembership.Inherited;
 			}
 		}
 
@@ -375,7 +371,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Retourne true s'il est possible d'éditer l'expression de ce champ.
 			get
 			{
-				return !string.IsNullOrEmpty(this.expression) || !string.IsNullOrEmpty(this.deepExpression) || this.isInterfaceDefinition || this.membership == FieldMembership.Local;
+				return !string.IsNullOrEmpty(this.expression) || !string.IsNullOrEmpty(this.deepExpression) || this.IsInterfaceLocal || this.membership == FieldMembership.Local;
 			}
 		}
 
@@ -1191,7 +1187,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSubtitle;
 		protected bool isInherited;
 		protected bool isInterface;
-		protected bool isInterfaceDefinition;
 		protected string definingName;
 		protected StructuredTypeClass definingType;
 		protected int level;
