@@ -15,6 +15,8 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Panels(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
+			bool isWindow = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window);
+
 			this.scrollable.Visibility = false;
 
 			FrameBox surface = new FrameBox(this.lastGroup);
@@ -23,8 +25,10 @@ namespace Epsitec.Common.Designer.Viewers
 			surface.Dock = DockStyle.Fill;
 
 			//	Crée le groupe central.
-			this.middle = new FrameBox(surface);
-			this.middle.Padding = new Margins(2, 5, 5, 5);
+			this.middle = new FrameBox(isWindow ? (Widget) this.designerApplication.ViewersWindow.Root : surface);
+			double m1 = isWindow ? 0 : 2;
+			double m2 = isWindow ? 0 : 5;
+			this.middle.Padding = new Margins(m1, m2, m2, m2);
 			this.middle.Dock = DockStyle.Fill;
 
 			this.statusBar = new HToolBar(this.middle);
@@ -93,7 +97,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.PreferredWidth = 240;
 			this.right.MaxWidth = 400;
 			this.right.Padding = new Margins(5, 5, 5, 5);
-			this.right.Dock = DockStyle.Right;
+			this.right.Dock = isWindow ? DockStyle.Fill : DockStyle.Right;
 
 			//	Crée la toolbar horizontale, au dessus des onglets.
 			this.hToolBar = new HToolBar(this.right);
@@ -177,6 +181,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Margins = new Margins(0, 0, 1, 1);
 			this.splitter2.Dock = DockStyle.Right;
+			this.splitter2.Visibility = !isWindow;
 
 			this.UpdateAll();
 			this.UpdateType();
