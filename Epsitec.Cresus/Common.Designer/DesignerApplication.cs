@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Designer
 
 							this.viewersWindow = new Window();
 							this.viewersWindow.MakeSecondaryWindow();
-							this.viewersWindow.MakeSizableToolWindow();
+							//?this.viewersWindow.MakeSizableToolWindow();
 							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);  // fond blanc
 							this.viewersWindow.WindowBounds = bounds;
 							this.viewersWindow.Owner = this.Window;
