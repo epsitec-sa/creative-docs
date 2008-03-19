@@ -1199,6 +1199,7 @@ namespace Epsitec.Common.Designer
 				if (this.displayWindowState.ActiveState     == ActiveState.Yes)  return DisplayMode.Window;
 				return DisplayMode.Horizontal;
 			}
+
 			set
 			{
 				if (this.DisplayModeState != value)
@@ -1213,7 +1214,51 @@ namespace Epsitec.Common.Designer
 					this.displayFullScreenState.ActiveState = (value == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
 					this.displayWindowState.ActiveState     = (value == DisplayMode.Window    ) ? ActiveState.Yes : ActiveState.No;
 
+					if (value == DisplayMode.Window)  // mode avec fenêtre supplémentaire ?
+					{
+						if (this.viewersWindow == null)  // fenêtre pas encore créée ?
+						{
+							Rectangle bounds = new Rectangle(this.Window.WindowLocation, this.Window.WindowSize);
+							bounds = new Rectangle(bounds.Center, bounds.Center);
+							bounds.Inflate(640/2, 480/2);
+
+							this.viewersWindow = new Window();
+							this.viewersWindow.MakeSecondaryWindow();
+							this.viewersWindow.PreventAutoClose = true;
+							this.viewersWindow.Text = "Vue";
+							this.viewersWindow.WindowBounds = bounds;
+							this.viewersWindow.Owner = this.Window;
+							this.viewersWindow.Root.MinSize = new Size(400, 300);
+						}
+
+						this.viewersWindow.Show();  // montre la fenêtre supplémentaire
+					}
+					else  // mode normal (sans fenêtre supplémentaire) ?
+					{
+						if (this.viewersWindow != null)
+						{
+							this.viewersWindow.Hide();  // si la fenêtre supplémentaire existe, ferme-la sans la supprimer
+						}
+					}
+
 					this.UpdateAfterTypeChanged();
+				}
+			}
+		}
+
+		public Window ViewersWindow
+		{
+			//	Retourne la fenêtre à utiliser pour étendre l'interface en mode DisplayMode.Window.
+			//	Si le mode n'est pas DisplayMode.Window, retourne null.
+			get
+			{
+				if (this.DisplayModeState == DisplayMode.Window)
+				{
+					return this.viewersWindow;
+				}
+				else
+				{
+					return null;
 				}
 			}
 		}
@@ -2461,6 +2506,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected PanelsContext					context;
+		protected Window						viewersWindow;
 
 		protected Support.ResourceManagerPool	resourceManagerPool;
 		protected List<ModuleInfo>				moduleInfoList;
