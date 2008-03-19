@@ -608,6 +608,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.CloseModule();
+			this.UpdateAfterTypeChanged();
 		}
 
 		[Command(ApplicationCommands.Id.Quit)]
@@ -1267,6 +1268,7 @@ namespace Epsitec.Common.Designer
 			if (this.viewersWindow != null)
 			{
 				this.viewersWindow.Root.Children.Clear();
+				this.viewersWindow.Text = "";  // plus de titre
 			}
 		}
 
@@ -1809,10 +1811,14 @@ namespace Epsitec.Common.Designer
 		{
 			//	Mise à jour après avoir changé le type de ressource.
 			this.ViewersWindowClear();
-			this.CreateViewerLayout();
-			this.DialogSearchAdapt();
-			this.LocatorFix();
-			this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
+
+			if (this.IsCurrentModule)
+			{
+				this.CreateViewerLayout();
+				this.DialogSearchAdapt();
+				this.LocatorFix();
+				this.CurrentModule.Modifier.ActiveViewer.UpdateCommands();
+			}
 		}
 
 		private void HandleTypeChanged(object sender, CancelEventArgs e)
@@ -1848,6 +1854,7 @@ namespace Epsitec.Common.Designer
 				if (di.TabPage == this.bookModules.ActivePage)
 				{
 					this.UseModule(i);
+					this.UpdateAfterTypeChanged();
 					return;
 				}
 			}

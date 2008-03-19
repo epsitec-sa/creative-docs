@@ -1104,16 +1104,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	S'il existe une fenêtre supplémentaire, affiche son titre.
 			if (this.designerApplication.ViewersWindow != null)
 			{
-				string title = Res.Strings.Application.Title;
+				string title = string.Concat(Res.Strings.Application.Title, " - ", this.designerApplication.CurrentModule.ModuleId.Name, " - ", ResourceAccess.TypeDisplayName(this.access.ResourceType));
 
-				if (this.designerApplication.CurrentModule != null)
+				if (item != null)
 				{
-					title = string.Concat(title, " - ", this.designerApplication.CurrentModule.ModuleId.Name, " - ", ResourceAccess.TypeDisplayName(this.access.ResourceType));
-
-					if (item != null)
-					{
-						title = string.Concat(title, " - ", item.FullName);
-					}
+					title = string.Concat(title, " - ", item.FullName);
 				}
 
 				this.designerApplication.ViewersWindow.Text = title;
