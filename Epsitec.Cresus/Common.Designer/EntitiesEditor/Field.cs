@@ -372,7 +372,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					return (this.definingTypeId.IsValid && this.membership == FieldMembership.Local) || this.membership == FieldMembership.LocalOverride;
+					return (this.definingTypeId.IsValid && this.membership == FieldMembership.Local);
 				}
 			}
 			set
