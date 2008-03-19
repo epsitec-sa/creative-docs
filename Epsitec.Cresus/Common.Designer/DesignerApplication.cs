@@ -1223,7 +1223,7 @@ namespace Epsitec.Common.Designer
 							this.viewersWindow = new Window();
 							this.viewersWindow.MakeSecondaryWindow();
 							this.viewersWindow.PreventAutoClose = true;
-							this.viewersWindow.Text = "Vue";
+							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);
 							this.viewersWindow.WindowBounds = bounds;
 							this.viewersWindow.Owner = this.Window;
 							this.viewersWindow.Root.MinSize = new Size(400, 300);

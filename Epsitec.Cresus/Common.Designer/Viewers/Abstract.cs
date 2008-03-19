@@ -1035,6 +1035,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour le titre en dessus de la zone scrollable.
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+
 			if (item == null)
 			{
 				this.titleText.Text = "";
@@ -1098,6 +1099,24 @@ namespace Epsitec.Common.Designer.Viewers
 
 				this.titleText.Text = string.Concat("<font size=\"150%\">", name, "</font>", based, mode);
 				this.titleBox.BackColor = backColor;
+			}
+
+			//	S'il existe une fenêtre supplémentaire, affiche son titre.
+			if (this.designerApplication.ViewersWindow != null)
+			{
+				string title = Res.Strings.Application.Title;
+
+				if (this.designerApplication.CurrentModule != null)
+				{
+					title = string.Concat(title, " - ", this.designerApplication.CurrentModule.ModuleId.Name, " - ", ResourceAccess.TypeDisplayName(this.access.ResourceType));
+
+					if (item != null)
+					{
+						title = string.Concat(title, " - ", item.FullName);
+					}
+				}
+
+				this.designerApplication.ViewersWindow.Text = title;
 			}
 		}
 
