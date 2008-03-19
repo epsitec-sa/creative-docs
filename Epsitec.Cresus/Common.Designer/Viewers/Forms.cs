@@ -15,6 +15,8 @@ namespace Epsitec.Common.Designer.Viewers
 	{
 		public Forms(Module module, PanelsContext context, ResourceAccess access, DesignerApplication designerApplication) : base(module, context, access, designerApplication)
 		{
+			bool isWindow = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window);
+
 			this.engine = new FormEngine.Engine(this.module.FormResourceProvider);
 
 			this.undoActions = new List<UndoAction>();
@@ -29,8 +31,9 @@ namespace Epsitec.Common.Designer.Viewers
 			surface.Dock = DockStyle.Fill;
 
 			//	Crée le groupe central.
-			this.middle = new FrameBox(surface);
-			this.middle.Padding = new Margins(5, 5, 5, 5);
+			this.middle = new FrameBox(isWindow ? (Widget) this.designerApplication.ViewersWindow.Root : surface);
+			double m = isWindow ? 0 : 5;
+			this.middle.Padding = new Margins(m, m, m, m);
 			this.middle.Dock = DockStyle.Fill;
 
 			FrameBox drawing = new FrameBox(this.middle);  // conteneur pour scrollable
@@ -79,7 +82,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = Forms.rightPanelWidth;
 			this.right.MaxWidth = 400;
-			this.right.Dock = DockStyle.Right;
+			this.right.Dock = isWindow ? DockStyle.Fill : DockStyle.Right;
 
 			//	Crée le tabbook primaire pour les onglets.
 			FrameBox top = new FrameBox(this.right);
@@ -298,6 +301,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2.Dock = DockStyle.Right;
 			this.splitter2.Margins = new Margins(0, 0, 1, 1);
 			this.splitter2.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
+			this.splitter2.Visibility = !isWindow;
 
 			this.splitter3 = new HSplitter(this.right);
 			this.splitter3.Dock = DockStyle.Bottom;
@@ -417,7 +421,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override double GetColumnWidth(int column)
 		{
 			//	Retourne la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				return Forms.columnWidthHorizontal[column];
 			}
@@ -430,7 +434,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected override void SetColumnWidth(int column, double value)
 		{
 			//	Mémorise la largeur à utiliser pour une colonne de la liste de gauche.
-			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Horizontal)
+			if (this.IsDisplayModeHorizontal)
 			{
 				Forms.columnWidthHorizontal[column] = value;
 			}
