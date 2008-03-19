@@ -12,11 +12,12 @@ namespace Epsitec.Common.Designer.Ribbons
 		public Display(DesignerApplication designerApplication) : base(designerApplication)
 		{
 			this.Title = Res.Strings.Ribbon.Section.Display;
-			this.PreferredWidth = 8 + 22*1.5*3;
+			this.PreferredWidth = 8 + 22*1.5*4;
 
 			this.buttonHorizontal = this.CreateIconButton("DisplayHorizontal", "Large");
 			this.buttonVertical   = this.CreateIconButton("DisplayVertical",   "Large");
 			this.buttonFullScreen = this.CreateIconButton("DisplayFullScreen", "Large");
+			this.buttonWindow     = this.CreateIconButton("DisplayWindow",     "Large");
 			
 			this.UpdateClientGeometry();
 		}
@@ -50,11 +51,14 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.buttonVertical.SetManualBounds(rect);
 			rect.Offset(dx*1.5, 0);
 			this.buttonFullScreen.SetManualBounds(rect);
+			rect.Offset(dx*1.5, 0);
+			this.buttonWindow.SetManualBounds(rect);
 		}
 
 
 		protected IconButton				buttonHorizontal;
 		protected IconButton				buttonVertical;
 		protected IconButton				buttonFullScreen;
+		protected IconButton				buttonWindow;
 	}
 }

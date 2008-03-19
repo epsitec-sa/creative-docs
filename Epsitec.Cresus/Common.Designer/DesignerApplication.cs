@@ -22,6 +22,7 @@ namespace Epsitec.Common.Designer
 			Horizontal,
 			Vertical,
 			FullScreen,
+			Window,
 		}
 
 
@@ -1016,7 +1017,13 @@ namespace Epsitec.Common.Designer
 			this.DisplayModeState = DisplayMode.FullScreen;
 		}
 
-		[Command ("ZoomChange")]
+		[Command("DisplayWindow")]
+		void CommandDisplayWindow(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.DisplayModeState = DisplayMode.Window;
+		}
+
+		[Command("ZoomChange")]
 		void CommandZoomChange(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			string value = StructuredCommand.GetFieldValue(e.CommandState, "Name") as string;
@@ -1145,6 +1152,7 @@ namespace Epsitec.Common.Designer
 			this.displayHorizontalState = this.CreateCommandState("DisplayHorizontal");
 			this.displayVerticalState = this.CreateCommandState("DisplayVertical");
 			this.displayFullScreenState = this.CreateCommandState("DisplayFullScreen");
+			this.displayWindowState = this.CreateCommandState("DisplayWindow");
 			this.displayHorizontalState.ActiveState = ActiveState.Yes;
 		}
 
@@ -1169,7 +1177,8 @@ namespace Epsitec.Common.Designer
 								  commandName.StartsWith("PanelShow") ||
 								  commandName == "DisplayHorizontal" ||
 								  commandName == "DisplayVertical" ||
-								  commandName == "DisplayFullScreen");
+								  commandName == "DisplayFullScreen" ||
+								  commandName == "DisplayWindow");
 
 				command.ManuallyDefineCommand(description, Misc.Icon(iconName), null, statefull);
 			}
@@ -1185,8 +1194,10 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				if (this.displayHorizontalState.ActiveState == ActiveState.Yes)  return DisplayMode.Horizontal;
-				if (this.displayVerticalState.ActiveState == ActiveState.Yes)  return DisplayMode.Vertical;
-				return DisplayMode.FullScreen;
+				if (this.displayVerticalState.ActiveState   == ActiveState.Yes)  return DisplayMode.Vertical;
+				if (this.displayFullScreenState.ActiveState == ActiveState.Yes)  return DisplayMode.FullScreen;
+				if (this.displayWindowState.ActiveState     == ActiveState.Yes)  return DisplayMode.Window;
+				return DisplayMode.Horizontal;
 			}
 			set
 			{
@@ -1200,6 +1211,7 @@ namespace Epsitec.Common.Designer
 					this.displayHorizontalState.ActiveState = (value == DisplayMode.Horizontal) ? ActiveState.Yes : ActiveState.No;
 					this.displayVerticalState.ActiveState   = (value == DisplayMode.Vertical  ) ? ActiveState.Yes : ActiveState.No;
 					this.displayFullScreenState.ActiveState = (value == DisplayMode.FullScreen) ? ActiveState.Yes : ActiveState.No;
+					this.displayWindowState.ActiveState     = (value == DisplayMode.Window    ) ? ActiveState.Yes : ActiveState.No;
 
 					this.UpdateAfterTypeChanged();
 				}
@@ -1989,6 +2001,7 @@ namespace Epsitec.Common.Designer
 				this.displayHorizontalState.Enable = false;
 				this.displayVerticalState.Enable = false;
 				this.displayFullScreenState.Enable = false;
+				this.displayWindowState.Enable = false;
 
 				this.UpdateInfoCurrentModule();
 				this.UpdateInfoAccess();
@@ -2559,6 +2572,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					displayHorizontalState;
 		protected CommandState					displayVerticalState;
 		protected CommandState					displayFullScreenState;
+		protected CommandState					displayWindowState;
 
 		public static readonly DependencyProperty InstanceProperty = DependencyProperty.RegisterAttached("Instance", typeof(DesignerApplication), typeof(DesignerApplication));
 	}

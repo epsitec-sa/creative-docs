@@ -694,6 +694,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\DisplayWindow.icon" />
     <EmbeddedResource Include="Images\FormCommand.icon" />
     <EmbeddedResource Include="Images\ButtonAspectRichDialog.icon" />
     <EmbeddedResource Include="Images\Recycle.icon" />
