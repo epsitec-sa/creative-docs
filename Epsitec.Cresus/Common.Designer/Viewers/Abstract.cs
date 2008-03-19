@@ -353,9 +353,9 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		public virtual bool UseViewerWindow
+		public virtual bool HasUsefulViewerWindow
 		{
-			//	Indique si cette vue utilise la fenêtre supplémentaire.
+			//	Indique si cette vue a l'utilité d'une fenêtre supplémentaire.
 			get
 			{
 				return false;
@@ -1121,7 +1121,7 @@ namespace Epsitec.Common.Designer.Viewers
 					title = string.Concat(title, " - ", item.FullName);
 				}
 
-				this.designerApplication.ViewersWindowUpdate(title, this.UseViewerWindow);
+				this.designerApplication.ViewersWindowUpdate(title, this.HasUsefulViewerWindow);
 			}
 		}
 

@@ -217,9 +217,9 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
-		public override bool UseViewerWindow
+		public override bool HasUsefulViewerWindow
 		{
-			//	Indique si cette vue utilise la fenêtre supplémentaire.
+			//	Indique si cette vue a l'utilité d'une fenêtre supplémentaire.
 			get
 			{
 				return true;
