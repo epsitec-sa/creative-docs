@@ -552,8 +552,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					return this.GetGroupTooltip(fieldRank);
 
 				case ActiveElement.BoxFieldExpression:
-					string expression = this.fields[fieldRank].Expression;
-					string deepExpression = this.fields[fieldRank].DeepExpression;
+					string expression = this.fields[fieldRank].LocalExpression;
+					string deepExpression = this.fields[fieldRank].InheritedExpression;
 					if (!string.IsNullOrEmpty(expression))
 					{
 						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, expression);
@@ -999,7 +999,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							{
 								rect = this.GetFieldMovableBounds(i);
 								if (this.editor.CurrentModifyMode == Editor.ModifyMode.Unlocked &&
-									this.fields[i].IsInterface &&
+									this.fields[i].IsInterfaceOrInterfaceTitle &&
 									(!this.editor.Module.IsPatch || this.fields[i].CultureMapSource != CultureMapSource.ReferenceModule) &&
 									rect.Contains(pos))
 								{
@@ -1319,8 +1319,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			return !this.fields[i].IsTitle && !this.fields[j].IsTitle &&
 					this.fields[i].IsInherited == this.fields[j].IsInherited &&
-					this.fields[i].IsInterface == this.fields[j].IsInterface &&
-					this.fields[i].DeepDefiningTypeId == this.fields[j].DeepDefiningTypeId;
+					this.fields[i].IsInterfaceOrInterfaceTitle == this.fields[j].IsInterfaceOrInterfaceTitle &&
+					this.fields[i].DefiningRootEntityId == this.fields[j].DefiningRootEntityId;
 		}
 
 		protected Rectangle GetFieldBounds(int rank)
@@ -1636,8 +1636,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[fieldRank];
-			string source = TextLayout.ConvertToTaggedText(this.fields[rank].Expression);
-			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].DeepExpression);
+			string source = TextLayout.ConvertToTaggedText(this.fields[rank].LocalExpression);
+			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].InheritedExpression);
 			FieldMembership membership = this.fields[rank].Membership;
 			bool isInterface = this.fields[rank].IsInterfaceLocal;
 			bool isOverridable = isInterface || membership != FieldMembership.Local;
@@ -1881,32 +1881,33 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					continue;
 				}
 
-				if (this.fields[i].DeepDefiningTypeId.IsValid)  // champ d'une interface ?
+				if (this.fields[i].DefiningRootEntityId.IsValid)  // champ d'une interface ?
 				{
-					if (last != this.fields[i].DeepDefiningTypeId && this.fields[i].DeepDefiningTypeId != title)
+					if (last != this.fields[i].DefiningRootEntityId && this.fields[i].DefiningRootEntityId != title)
 					{
-						last = this.fields[i].DeepDefiningTypeId;
+						last = this.fields[i].DefiningRootEntityId;
 
 						Module module = this.SearchModule(last);
-						CultureMap cultureMap = module.AccessEntities.Accessor.Collection[last];
+						CultureMap entity = module.AccessEntities.Accessor.Collection[last];
 
-						StructuredData definingData = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-						StructuredTypeClass definingTypeClass = (StructuredTypeClass) definingData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
+						StructuredData entityData = entity.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+						StructuredTypeClass entityTypeClass = (StructuredTypeClass) entityData.GetValue(Support.Res.Fields.ResourceStructuredType.Class);
 
-						if (definingTypeClass == StructuredTypeClass.Interface)
+						if (entityTypeClass == StructuredTypeClass.Interface)
 						{
 							Field field = new Field(this.editor);
 							if (this.fields[i].Membership == FieldMembership.Local)
 							{
 								field.IsTitle = true;  // interface ajoutée à cette entitié
+								field.IsInterfaceOrInterfaceTitle = true;
 							}
 							else
 							{
 								field.IsSubtitle = true;  // interface héritée
+								field.IsInterfaceOrInterfaceTitle = true;
 							}
-							field.IsInterface = true;
 							field.CaptionId = last;
-							field.FieldName = Misc.Bold(cultureMap.Name);
+							field.FieldName = Misc.Bold(entity.Name);
 
 							this.fields.Insert(i, field);
 							this.skippedField++;  // compte le titre lui-même
@@ -2017,11 +2018,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 #endif
 
-				if (this.fields[i].DefiningType == StructuredTypeClass.Interface)
+				if (this.fields[i].DefiningEntityClass == StructuredTypeClass.Interface)
 				{
-					if (!listInterface.Contains(this.fields[i].DefiningName))
+					if (!listInterface.Contains(this.fields[i].DefiningEntityName))
 					{
-						listInterface.Add(this.fields[i].DefiningName);
+						listInterface.Add(this.fields[i].DefiningEntityName);
 					}
 				}
 			}
@@ -2641,14 +2642,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						}
 
 						//	Affiche l'expression du champ.
-						if (!string.IsNullOrEmpty(this.fields[i].Expression))
+						if (!string.IsNullOrEmpty(this.fields[i].LocalExpression))
 						{
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.Expression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 							graphics.RenderSolid(colorExpr);
 						}
-						else if (!string.IsNullOrEmpty(this.fields[i].DeepExpression))
+						else if (!string.IsNullOrEmpty(this.fields[i].InheritedExpression))
 						{
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
@@ -2691,7 +2692,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.RenderSolid(this.GetColorMain(0.8));
 						}
 
-						if (this.fields[i].IsInterface)
+						if (this.fields[i].IsInterfaceOrInterfaceTitle)
 						{
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
@@ -2725,7 +2726,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.RenderSolid(this.GetColorMain(0.8));
 						}
 
-						if (this.fields[i].IsInterface)
+						if (this.fields[i].IsInterfaceOrInterfaceTitle)
 						{
 							rect = this.GetFieldBounds(i);
 							rect.Deflate(9.5, 0.5);
@@ -2737,9 +2738,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (i < this.fields.Count-1 &&
 							this.fields[i].IsInherited == this.fields[i+1].IsInherited &&
-							this.fields[i].IsInterface == this.fields[i+1].IsInterface &&
+							this.fields[i].IsInterfaceOrInterfaceTitle == this.fields[i+1].IsInterfaceOrInterfaceTitle &&
 							this.fields[i].Level == this.fields[i+1].Level &&
-							this.fields[i].DeepDefiningTypeId != this.fields[i+1].DeepDefiningTypeId &&
+							this.fields[i].DefiningRootEntityId != this.fields[i+1].DefiningRootEntityId &&
 							!this.fields[i+1].IsTitle)
 						{
 							rect = this.GetFieldBounds(i);
@@ -2850,7 +2851,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 
 					if (this.hilitedElement == ActiveElement.BoxFieldRemoveInterface ||
-						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterface) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource == CultureMapSource.PatchModule))
+						(this.hilitedElement == ActiveElement.BoxFieldTitle && this.fields[this.hilitedFieldRank].IsInterfaceOrInterfaceTitle) && (!this.editor.Module.IsPatch || this.fields[this.hilitedFieldRank].CultureMapSource == CultureMapSource.PatchModule))
 					{
 						rect = this.GetFieldMovableBounds(this.hilitedFieldRank);
 						this.DrawRoundButton(graphics, rect.Center, AbstractObject.buttonRadius, Res.Strings.Entities.Button.BoxFieldRemoveInterface, this.hilitedElement == ActiveElement.BoxFieldRemoveInterface, true);
@@ -3237,7 +3238,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					continue;
 				}
 
-				if (this.fields[i].IsTitle || this.fields[i].DefiningTypeId.IsEmpty)
+				if (this.fields[i].IsTitle || this.fields[i].DefiningEntityId.IsEmpty)
 				{
 					return i-titleRank-1;
 				}
@@ -3249,11 +3250,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected int SubgroupLineCount(int subtitleRank)
 		{
 			//	Retourne le nombre de ligne d'un sous-groupe (héritage ou interface) d'après le rang de son sous-titre.
-			Druid druid = this.fields[subtitleRank+1].DeepDefiningTypeId;
+			Druid druid = this.fields[subtitleRank+1].DefiningRootEntityId;
 
 			for (int i=subtitleRank+1; i<this.fields.Count; i++)
 			{
-				if (this.fields[i].IsSubtitle || this.fields[i].DeepDefiningTypeId != druid)
+				if (this.fields[i].IsSubtitle || this.fields[i].DefiningRootEntityId != druid)
 				{
 					return i-subtitleRank-1;
 				}
@@ -3265,14 +3266,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected string GetGroupTooltip(int rank)
 		{
 			//	Retourne le tooltip à afficher pour un groupe.
-			if (this.fields[rank].DefiningType == StructuredTypeClass.Interface)
+			if (this.fields[rank].DefiningEntityClass == StructuredTypeClass.Interface)
 			{
-				return string.Format(Res.Strings.Entities.Action.BoxGroup.Interface, this.fields[rank].DefiningName);
+				return string.Format(Res.Strings.Entities.Action.BoxGroup.Interface, this.fields[rank].DefiningEntityName);
 			}
 
-			if (this.fields[rank].DefiningType == StructuredTypeClass.Entity)
+			if (this.fields[rank].DefiningEntityClass == StructuredTypeClass.Entity)
 			{
-				return string.Format(Res.Strings.Entities.Action.BoxGroup.Inherit, this.fields[rank].DefiningName);
+				return string.Format(Res.Strings.Entities.Action.BoxGroup.Inherit, this.fields[rank].DefiningEntityName);
 			}
 
 			return null;  // pas de tooltip

@@ -88,8 +88,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.relation = FieldRelation.None;
 			this.membership = FieldMembership.Local;
 			this.captionId = Druid.Empty;
-			this.definingTypeId = Druid.Empty;
-			this.deepDefiningTypeId = Druid.Empty;
+			this.definingEntityId = Druid.Empty;
+			this.definingRootEntityId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.isNullable = false;
 			this.isPrivateRelation = false;
@@ -98,8 +98,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.index = -1;
 			this.isExplored = false;
 			this.isSourceExpanded = false;
-			this.definingName = null;
-			this.definingType = StructuredTypeClass.None;
+			this.definingEntityName = null;
+			this.definingEntityClass = StructuredTypeClass.None;
 			this.level = 0;
 			this.isGroupTop = false;
 			this.isGroupBottom = false;
@@ -145,155 +145,22 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string definingName = Field.GetDefiningEntityName (app, obj.Editor.Module, deepDefiningTypeId, out definingType);
 			
 			this.captionId = fieldCaptionId;
-			this.definingTypeId = definingTypeId;
-			this.deepDefiningTypeId = deepDefiningTypeId;
-			this.definingName = definingName;
-			this.definingType = definingType;
-			this.expression = localExpression;
-			this.deepExpression = inheritedExpression;
+			this.definingEntityId = definingTypeId;
+			this.definingRootEntityId = deepDefiningTypeId;
+			this.definingEntityName = definingName;
+			this.definingEntityClass = definingType;
+			this.localExpression = localExpression;
+			this.inheritedExpression = inheritedExpression;
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
 			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			this.cultureMapSource = source;
 			this.FieldName = fieldName;
-			this.TypeName = typeName;
+			this.FieldTypeName = typeName;
 			this.relation = relation;
 			this.membership = membership;
 			this.destination = typeId;
 			this.srcBox = obj as ObjectBox;
 		}
-
-		private static string GetDefiningEntityName(DesignerApplication app, Module objModule, Druid typeId, out StructuredTypeClass typeClass)
-		{
-			//	Retourne le nom de l'entité spécifiée par typeId, ainsi que typeClass qui
-			//	permet de savoir s'il s'agit d'une entité ou d'une interface.
-			string name = null;
-
-			if (typeId.IsValid)
-			{
-				Module module = app.SearchModule (typeId);	// TODO: gérer module == null
-				CultureMap entity = module.AccessEntities.Accessor.Collection[typeId];
-
-				if (module != objModule)
-				{
-					//	Si l'entité est définie dans un autre module, on ajoute le nom
-					//	du module au nom de l'entité :
-					name = string.Concat (module.ModuleId.Name, ".", entity.Name);
-				}
-				else
-				{
-					name = entity.Name;
-				}
-
-				StructuredData data = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
-				typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
-			}
-			else
-			{
-				typeClass = StructuredTypeClass.None;
-			}
-
-			return name;
-		}
-
-		private static string GetFieldName(DesignerApplication app, Druid fieldId)
-		{
-			//	Retourne le nom du champ spécifié par fieldId.
-			Module module = app.SearchModule (fieldId);  // TODO: gérer module == null
-			CultureMap field = module.AccessFields.Accessor.Collection[fieldId];
-			return (field == null) ? "" : field.Name;
-		}
-
-		private static string GetFieldTypeName(DesignerApplication app, Druid typeId, FieldRelation rel)
-		{
-			//	Retourne le nom du type ou de l'entité spécifiée par typeId.
-			Module module = app.SearchModule (typeId);  // TODO: gérer module == null
-			CultureMap type = module.AccessTypes.Accessor.Collection[typeId];
-			if (type == null)
-			{
-				//	Ce n'est pas un type simple, c'est donc (forcément) une
-				//	entité.
-				type = module.AccessEntities.Accessor.Collection[typeId];
-			}
-			else
-			{
-				//	Le type est un type simple, pas une entité. Cela ne peut donc
-				//	pas être une relation !
-				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
-			}
-			return (type == null) ? "" : type.Name;
-		}
-
-		private static string GetLocalExpression(StructuredData dataField)
-		{
-			//	Cherche l'expression définie localement par le champ.
-			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
-			if (membership == FieldMembership.Inherited)
-			{
-				//	L'expression n'est pas définie (ou redéfinie) localement; elle provient
-				//	d'un héritage direct et doit par conséquent être ignorée.
-				return null;
-			}
-			else
-			{
-				string encoded = dataField.GetValue(Support.Res.Fields.Field.Expression) as string;
-				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression(encoded);
-				return expression.SourceCode;
-			}
-		}
-
-		private static string GetInheritedExpression(DesignerApplication app, StructuredData dataField, Druid fieldId, Druid definingEntityId)
-		{
-			//	Cherche l'expression héritée par le champ depuis un parent (ou grand-parent
-			//	ou une interface).
-		again:
-			if (!definingEntityId.IsValid)
-			{
-				return null;
-			}
-
-			Module module = app.SearchModule(definingEntityId);
-			CultureMap entity = module.AccessEntities.Accessor.Collection[definingEntityId];
-			StructuredData entityData = entity.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> fields = entityData.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-			StructuredData fieldData = Field.FindField(fields, fieldId);
-			if (fieldData != null)
-			{
-				string encoded = fieldData.GetValue(Support.Res.Fields.Field.Expression) as string;
-
-				if (!string.IsNullOrEmpty (encoded))
-				{
-					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
-					return expression.SourceCode;
-				}
-			}
-
-			Druid ancestorEntityId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.DefiningTypeId);
-
-			if (definingEntityId != ancestorEntityId)
-			{
-				definingEntityId = ancestorEntityId;
-				goto again;
-			}
-			
-			return null;
-		}
-
-		static protected StructuredData FindField(IList<StructuredData> fields, Druid fieldId)
-		{
-			//	Retourne le StructuredData dont le CaptionId est égal à fieldId.
-			foreach (StructuredData data in fields)
-			{
-				Druid fieldDataId = (Druid) data.GetValue(Support.Res.Fields.Field.CaptionId);
-				if (fieldDataId == fieldId)
-				{
-					return data;
-				}
-			}
-
-			return null;
-		}
-
 
 		public bool IsReadOnly
 		{
@@ -303,7 +170,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	- Un champ d'une interface
 			get
 			{
-				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterface;
+				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterfaceOrInterfaceTitle;
 			}
 		}
 
@@ -361,23 +228,26 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public bool IsInterface
+		public bool IsInterfaceOrInterfaceTitle
 		{
-			//	Indique s'il s'agit d'un champ d'une interface.
+			//	Indique s'il s'agit d'un champ d'une interface ou d'un
+			//	titre appartenant à une interface.
 			get
 			{
 				if (this.IsTitle || this.IsSubtitle)
 				{
-					return this.isInterface;
+					return this.isInterfaceTitle;
 				}
 				else
 				{
-					return (this.definingTypeId.IsValid && this.membership == FieldMembership.Local);
+					return this.definingEntityClass == StructuredTypeClass.Interface;
 				}
 			}
 			set
 			{
-				this.isInterface = value;
+				//	Si c'est un titre, on doit pouvoir spécifier s'il appartient
+				//	à une interface. Cf. ObjectBox.UpdateFieldsContent.
+				this.isInterfaceTitle = value;
 			}
 		}
 
@@ -388,32 +258,66 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	interface qui serait héritée d'un parent retourne false).
 			get
 			{
-				return this.definingType == StructuredTypeClass.Interface && this.membership == FieldMembership.Local;
+				return this.definingEntityClass == StructuredTypeClass.Interface && this.membership == FieldMembership.Local;
 			}
 		}
 
 		public bool IsEditExpressionEnabled
 		{
 			//	Retourne true s'il est possible d'éditer l'expression de ce champ.
+			//	A savoir : si une expression est définie localement ou dans un des
+			//	parents, si c'est un champ appartenant à une interface importée
+			//	localement ou si c'est un champ local.
 			get
 			{
-				return !string.IsNullOrEmpty(this.expression) || !string.IsNullOrEmpty(this.deepExpression) || this.IsInterfaceLocal || this.membership == FieldMembership.Local;
+				if (!string.IsNullOrEmpty(this.localExpression))
+				{
+					return true;
+				}
+				if (!string.IsNullOrEmpty(this.inheritedExpression))
+				{
+					return true;
+				}
+				if (this.IsInterfaceLocal)
+				{
+					return true;
+				}
+				
+				return this.membership == FieldMembership.Local;
 			}
 		}
 
-		public string DefiningName
+		public string DefiningEntityName
 		{
 			get
 			{
-				return this.definingName;
+				return this.definingEntityName;
 			}
 		}
 
-		public StructuredTypeClass DefiningType
+		public StructuredTypeClass DefiningEntityClass
 		{
 			get
 			{
-				return this.definingType;
+				return this.definingEntityClass;
+			}
+		}
+
+		public Druid DefiningEntityId
+		{
+			//	Druid définissant l'interface.
+			get
+			{
+				return this.definingEntityId;
+			}
+		}
+
+		public Druid DefiningRootEntityId
+		{
+			//	Druid du parent définissant l'interface.
+			get
+			{
+				return this.definingRootEntityId;
 			}
 		}
 
@@ -469,42 +373,42 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public string TypeName
+		public string FieldTypeName
 		{
-			//	Nom du type.
+			//	Nom du type du champ.
 			get
 			{
-				return this.typeName;
+				return this.fieldTypeName;
 			}
 			set
 			{
-				if (this.typeName != value)
+				if (this.fieldTypeName != value)
 				{
-					this.typeName = value;
+					this.fieldTypeName = value;
 					this.UpdateTypeName();
 				}
 			}
 		}
 
-		public string DeepExpression
+		public string InheritedExpression
 		{
 			//	Eventuelle expression lambda calculant le champ.
 			get
 			{
-				return this.deepExpression;
+				return this.inheritedExpression;
 			}
 		}
 
-		public string Expression
+		public string LocalExpression
 		{
 			//	Eventuelle expression lambda calculant le champ.
 			get
 			{
-				return this.expression;
+				return this.localExpression;
 			}
 			set
 			{
-				this.expression = value;
+				this.localExpression = value;
 			}
 		}
 
@@ -558,24 +462,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			set
 			{
 				this.captionId = value;
-			}
-		}
-
-		public Druid DefiningTypeId
-		{
-			//	Druid définissant l'interface.
-			get
-			{
-				return this.definingTypeId;
-			}
-		}
-
-		public Druid DeepDefiningTypeId
-		{
-			//	Druid du parent définissant l'interface.
-			get
-			{
-				return this.deepDefiningTypeId;
 			}
 		}
 
@@ -1014,11 +900,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour le nom du type.
 			if (this.isNullable)
 			{
-				this.textLayoutType.Text = string.Concat("(", this.typeName, ")");
+				this.textLayoutType.Text = string.Concat("(", this.fieldTypeName, ")");
 			}
 			else
 			{
-				this.textLayoutType.Text = this.typeName;
+				this.textLayoutType.Text = this.fieldTypeName;
 			}
 		}
 
@@ -1207,27 +1093,159 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		}
 		#endregion
 
+		private static string GetDefiningEntityName(DesignerApplication app, Module objModule, Druid typeId, out StructuredTypeClass typeClass)
+		{
+			//	Retourne le nom de l'entité spécifiée par typeId, ainsi que typeClass qui
+			//	permet de savoir s'il s'agit d'une entité ou d'une interface.
+			string name = null;
+
+			if (typeId.IsValid)
+			{
+				Module module = app.SearchModule (typeId);	// TODO: gérer module == null
+				CultureMap entity = module.AccessEntities.Accessor.Collection[typeId];
+
+				if (module != objModule)
+				{
+					//	Si l'entité est définie dans un autre module, on ajoute le nom
+					//	du module au nom de l'entité :
+					name = string.Concat (module.ModuleId.Name, ".", entity.Name);
+				}
+				else
+				{
+					name = entity.Name;
+				}
+
+				StructuredData data = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+				typeClass = (StructuredTypeClass) data.GetValue (Support.Res.Fields.ResourceStructuredType.Class);
+			}
+			else
+			{
+				typeClass = StructuredTypeClass.None;
+			}
+
+			return name;
+		}
+
+		private static string GetFieldName(DesignerApplication app, Druid fieldId)
+		{
+			//	Retourne le nom du champ spécifié par fieldId.
+			Module module = app.SearchModule (fieldId);  // TODO: gérer module == null
+			CultureMap field = module.AccessFields.Accessor.Collection[fieldId];
+			return (field == null) ? "" : field.Name;
+		}
+
+		private static string GetFieldTypeName(DesignerApplication app, Druid typeId, FieldRelation rel)
+		{
+			//	Retourne le nom du type ou de l'entité spécifiée par typeId.
+			Module module = app.SearchModule (typeId);  // TODO: gérer module == null
+			CultureMap type = module.AccessTypes.Accessor.Collection[typeId];
+			if (type == null)
+			{
+				//	Ce n'est pas un type simple, c'est donc (forcément) une
+				//	entité.
+				type = module.AccessEntities.Accessor.Collection[typeId];
+			}
+			else
+			{
+				//	Le type est un type simple, pas une entité. Cela ne peut donc
+				//	pas être une relation !
+				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
+			}
+			return (type == null) ? "" : type.Name;
+		}
+
+		private static string GetLocalExpression(StructuredData dataField)
+		{
+			//	Cherche l'expression définie localement par le champ.
+			FieldMembership membership = (FieldMembership) dataField.GetValue (Support.Res.Fields.Field.Membership);
+			if (membership == FieldMembership.Inherited)
+			{
+				//	L'expression n'est pas définie (ou redéfinie) localement; elle provient
+				//	d'un héritage direct et doit par conséquent être ignorée.
+				return null;
+			}
+			else
+			{
+				string encoded = dataField.GetValue (Support.Res.Fields.Field.Expression) as string;
+				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+				return expression.SourceCode;
+			}
+		}
+
+		private static string GetInheritedExpression(DesignerApplication app, StructuredData dataField, Druid fieldId, Druid definingEntityId)
+		{
+		//	Cherche l'expression héritée par le champ depuis un parent (ou grand-parent
+		//	ou une interface).
+		again:
+			if (!definingEntityId.IsValid)
+			{
+				return null;
+			}
+
+			Module module = app.SearchModule (definingEntityId);
+			CultureMap entity = module.AccessEntities.Accessor.Collection[definingEntityId];
+			StructuredData entityData = entity.GetCultureData (Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> fields = entityData.GetValue (Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			StructuredData fieldData = Field.FindField (fields, fieldId);
+			if (fieldData != null)
+			{
+				string encoded = fieldData.GetValue (Support.Res.Fields.Field.Expression) as string;
+
+				if (!string.IsNullOrEmpty (encoded))
+				{
+					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+					return expression.SourceCode;
+				}
+			}
+
+			Druid ancestorEntityId = (Druid) fieldData.GetValue (Support.Res.Fields.Field.DefiningTypeId);
+
+			if (definingEntityId != ancestorEntityId)
+			{
+				definingEntityId = ancestorEntityId;
+				goto again;
+			}
+
+			return null;
+		}
+
+		private static StructuredData FindField(IList<StructuredData> fields, Druid fieldId)
+		{
+			//	Retourne le StructuredData dont le CaptionId est égal à fieldId.
+			foreach (StructuredData data in fields)
+			{
+				Druid fieldDataId = (Druid) data.GetValue (Support.Res.Fields.Field.CaptionId);
+				if (fieldDataId == fieldId)
+				{
+					return data;
+				}
+			}
+
+			return null;
+		}
+
 
 		protected Editor editor;
 		protected bool isTitle;
 		protected bool isSubtitle;
 		protected bool isInherited;
-		protected bool isInterface;
-		protected string definingName;
-		protected StructuredTypeClass definingType;
+		protected bool isInterfaceTitle;
+		protected string definingEntityName;
+		protected StructuredTypeClass definingEntityClass;
 		protected int level;
 		protected bool isGroupTop;
 		protected bool isGroupBottom;
 		protected TextLayout textLayoutField;
 		protected TextLayout textLayoutType;
-		protected string typeName;
-		protected string deepExpression;
-		protected string expression;
+		protected string fieldTypeName;
+		protected string inheritedExpression;
+		protected string localExpression;
 		protected FieldRelation relation;
 		protected FieldMembership membership;
 		protected Druid captionId;
-		protected Druid definingTypeId;
-		protected Druid deepDefiningTypeId;
+		protected Druid definingEntityId;
+		protected Druid definingRootEntityId;
 		protected Druid destination;
 		protected bool isNullable;
 		protected bool isPrivateRelation;
