@@ -217,6 +217,15 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public override bool UseViewerWindow
+		{
+			//	Indique si cette vue utilise la fenêtre supplémentaire.
+			get
+			{
+				return true;
+			}
+		}
+
 
 		public PanelEditor.Editor PanelEditor
 		{

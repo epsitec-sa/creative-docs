@@ -353,6 +353,16 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
+		public virtual bool UseViewerWindow
+		{
+			//	Indique si cette vue utilise la fenêtre supplémentaire.
+			get
+			{
+				return false;
+			}
+		}
+
+
 		public virtual AbstractTextField CurrentTextField
 		{
 			//	Retourne le texte éditable en cours d'édition.
@@ -1111,7 +1121,7 @@ namespace Epsitec.Common.Designer.Viewers
 					title = string.Concat(title, " - ", item.FullName);
 				}
 
-				this.designerApplication.ViewersWindow.Text = title;
+				this.designerApplication.ViewersWindowUpdate(title, this.UseViewerWindow);
 			}
 		}
 

@@ -1219,7 +1219,7 @@ namespace Epsitec.Common.Designer
 						{
 							Rectangle bounds = new Rectangle(this.Window.WindowLocation, this.Window.WindowSize);
 							bounds = new Rectangle(bounds.Center, bounds.Center);
-							bounds.Inflate(640/2, 480/2);
+							bounds.Inflate(640/2, 480/2);  // fenêtre initiale de 640x480
 
 							this.viewersWindow = new Window();
 							this.viewersWindow.MakeSecondaryWindow();
@@ -1229,8 +1229,6 @@ namespace Epsitec.Common.Designer
 							this.viewersWindow.Owner = this.Window;
 							this.viewersWindow.Root.MinSize = new Size(400, 300);
 						}
-
-						this.viewersWindow.Show();  // montre la fenêtre supplémentaire
 					}
 					else  // mode normal (sans fenêtre supplémentaire) ?
 					{
@@ -1262,12 +1260,27 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public void ViewersWindowUpdate(string title, bool useWindow)
+		{
+			//	Met à jour le titre de la fenêtre supplémentaire et détermine si elle est visible.
+			this.viewersWindow.Text = title;
+
+			if (useWindow)
+			{
+				this.viewersWindow.Show();  // montre la fenêtre supplémentaire
+			}
+			else
+			{
+				this.viewersWindow.Hide();  // cache la fenêtre supplémentaire
+			}
+		}
+
 		protected void ViewersWindowClear()
 		{
 			//	Supprime tous les widgets contenus dans la fenêtre supplémentaire.
 			if (this.viewersWindow != null)
 			{
-				this.viewersWindow.Root.Children.Clear();
+				this.viewersWindow.Root.Children.Clear();  // vide tout le contenu
 				this.viewersWindow.Text = "";  // plus de titre
 			}
 		}
