@@ -1761,7 +1761,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 		#endregion
 
-		internal static bool? ToBoolean(object value)
+		public static bool? ToBoolean(object value)
 		{
 			return UndefinedValue.GetValue<bool?> (value, null);
 		}

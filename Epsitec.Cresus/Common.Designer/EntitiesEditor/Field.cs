@@ -134,6 +134,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 			CultureMapSource source = (CultureMapSource) dataField.GetValue(Support.Res.Fields.Field.CultureMapSource);
 			StructuredTypeClass definingType;
+			bool? isInterfaceDefinition = Support.ResourceAccessors.StructuredTypeResourceAccessor.ToBoolean(dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition));
 
 			//	Cherche les expressions définies localement et par héritage, le nom
 			//	de l'entité qui définit le champ, le nom du champ et le nom du parent
@@ -153,6 +154,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.inheritedExpression = inheritedExpression;
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
 			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
+			this.IsUnchangedInterfaceField = isInterfaceDefinition.HasValue && isInterfaceDefinition.Value;
 			this.cultureMapSource = source;
 			this.FieldName = fieldName;
 			this.FieldTypeName = typeName;
@@ -259,6 +261,20 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.definingEntityClass == StructuredTypeClass.Interface && this.membership == FieldMembership.Local;
+			}
+		}
+
+		public bool IsUnchangedInterfaceField
+		{
+			//	Indique si le champ provient d'une interface et qu'il n'a
+			//	pas été modifié localement.
+			get
+			{
+				return this.isUnchangedInterfaceField;
+			}
+			set
+			{
+				this.isUnchangedInterfaceField = value;
 			}
 		}
 
@@ -1137,6 +1153,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private static string GetFieldTypeName(DesignerApplication app, Druid typeId, FieldRelation rel)
 		{
 			//	Retourne le nom du type ou de l'entité spécifiée par typeId.
+			if (!typeId.IsValid)
+			{
+				return "";
+			}
+
 			Module module = app.SearchModule (typeId);  // TODO: gérer module == null
 			CultureMap type = module.AccessTypes.Accessor.Collection[typeId];
 			if (type == null)
@@ -1238,6 +1259,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected bool isSubtitle;
 		protected bool isInherited;
 		protected bool isInterfaceTitle;
+		protected bool isUnchangedInterfaceField;
 		protected string definingEntityName;
 		protected StructuredTypeClass definingEntityClass;
 		protected int level;

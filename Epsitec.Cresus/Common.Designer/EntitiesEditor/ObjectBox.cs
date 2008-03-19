@@ -1641,7 +1641,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldMembership membership = this.fields[rank].Membership;
 			bool isInterface = this.fields[rank].IsInterfaceLocal;
 			bool isOverridable = isInterface || membership != FieldMembership.Local;
+			bool isUnchanged = this.fields[rank].IsUnchangedInterfaceField;
 
+			if (isUnchanged)
+			{
+				source = null;
+			}
+			
 			//	Edition de l'expression.
 			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isOverridable, deepSource, ref source))
 			{
