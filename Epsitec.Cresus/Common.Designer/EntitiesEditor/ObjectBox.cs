@@ -558,7 +558,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, expression);
 					}
-					else if (!string.IsNullOrEmpty(deepExpression))
+					else if (expression != "" && !string.IsNullOrEmpty(deepExpression))
 					{
 						return string.Format(Res.Strings.Entities.Action.BoxFieldExpression1, deepExpression);
 					}
@@ -2649,8 +2649,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.Expression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);
 							graphics.RenderSolid(colorExpr);
 						}
-						else if (!string.IsNullOrEmpty(this.fields[i].InheritedExpression))
+						else if (this.fields[i].LocalExpression != "" && !string.IsNullOrEmpty(this.fields[i].InheritedExpression))
 						{
+							//	L'expression n'est héritée que si elle n'est pas remplacée par
+							//	une valeur au niveau du champ, ce qui est encodé ici avec une
+							//	expression locale égale à "".
 							rect = this.GetFieldExpressionBounds(i);
 							rect.Right -= 2;
 							graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, Res.Strings.Entities.Icon.DeepExpression, Font.DefaultFont, 14, ContentAlignment.MiddleCenter);

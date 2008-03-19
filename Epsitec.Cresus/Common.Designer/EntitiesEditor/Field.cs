@@ -1158,11 +1158,18 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Cherche l'expression définie localement par le champ.
 			FieldMembership membership = (FieldMembership) dataField.GetValue (Support.Res.Fields.Field.Membership);
+			FieldSource source = (FieldSource) dataField.GetValue (Support.Res.Fields.Field.Source);
 			if (membership == FieldMembership.Inherited)
 			{
 				//	L'expression n'est pas définie (ou redéfinie) localement; elle provient
 				//	d'un héritage direct et doit par conséquent être ignorée.
 				return null;
+			}
+			else if (source == FieldSource.Value)
+			{
+				//	Il n'y a pas d'expression définie; le champ contient une valeur et il
+				//	faut retourner une chaîne vide pour représenter cela.
+				return "";
 			}
 			else
 			{
