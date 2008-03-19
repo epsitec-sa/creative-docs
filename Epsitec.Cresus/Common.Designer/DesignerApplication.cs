@@ -1189,6 +1189,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		#region DisplayMode & ViewersWindow
 		public DisplayMode DisplayModeState
 		{
 			//	Disposition de l'affichage (horizontal, vertical ou autre).
@@ -1223,6 +1224,7 @@ namespace Epsitec.Common.Designer
 
 							this.viewersWindow = new Window();
 							this.viewersWindow.MakeSecondaryWindow();
+							this.viewersWindow.MakeSizableToolWindow();
 							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);  // fond blanc
 							this.viewersWindow.WindowBounds = bounds;
 							this.viewersWindow.Owner = this.Window;
@@ -1293,6 +1295,7 @@ namespace Epsitec.Common.Designer
 				this.viewersWindow.Text = "";  // plus de titre
 			}
 		}
+		#endregion
 
 
 		#region Navigate
