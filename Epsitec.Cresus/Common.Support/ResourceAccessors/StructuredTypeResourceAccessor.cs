@@ -667,7 +667,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					//	A field must be stored in the type only if it is defined locally
 					//	and if it does not belong to a locally defined interface; or
-					//	if it redefines the expression for a local interface field.
+					//	if it redefines the expression for a local interface field or
+					//	overrides an inherited field.
 
 					if (((membership == FieldMembership.Local) && (fieldDefiningType.IsEmpty)) ||
 						((membership == FieldMembership.Local) && (interfaceDefinition.HasValue) && (interfaceDefinition.Value == false)) ||
@@ -1203,7 +1204,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 		}
 
 		/// <summary>
-		/// Removes the inherited and included fields.
+		/// Removes the inherited and included fields, but keeps locally redefined
+		/// or overriden fields.
 		/// </summary>
 		/// <param name="fields">The field collection.</param>
 		/// <param name="interfaceIds">The live interface ids.</param>
@@ -1215,31 +1217,38 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				FieldMembership membership = (FieldMembership) field.GetValue (Res.Fields.Field.Membership);
 				Druid definingTypeId = StructuredTypeResourceAccessor.ToDruid (field.GetValue (Res.Fields.Field.DefiningTypeId));
 				bool? interfaceDefinition = StructuredTypeResourceAccessor.ToBoolean (field.GetValue (Res.Fields.Field.IsInterfaceDefinition));
-
-				//	If the field is inherited from a base entity or imported through
-				//	an interface, then we remove it from the collection :
 				
 				if (membership == FieldMembership.Inherited)
 				{
+					//	If the field is inherited from a base entity or imported through
+					//	an interface, then we remove it from the collection :
+					
 					fields.RemoveAt (i--);
 					item.NotifyDataRemoved (field);
+				}
+				else if (membership == FieldMembership.LocalOverride)
+				{
+					//	If the field is inherited from a parent entity and is overridden
+					//	locally, then we keep it.
 				}
 				else if (definingTypeId.IsValid)
 				{
 					if ((interfaceDefinition.HasValue) &&
 						(interfaceDefinition.Value == false))
 					{
+						//	The field is defined locally and its content is not defined
+						//	in an interface; if the interface still exists for this entity,
+						//	then keep the field.
+
 						if (interfaceIds.Contains (definingTypeId))
 						{
 							continue;
 						}
 					}
 
-					if (membership == FieldMembership.LocalOverride)
-					{
-						continue;
-					}
-
+					//	The field is simply inherited by a parent, without any additional
+					//	local information; discard it.
+					
 					fields.RemoveAt (i--);
 					item.NotifyDataRemoved (field);
 				}
