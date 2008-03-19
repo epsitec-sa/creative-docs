@@ -1638,8 +1638,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredData dataField = dataFields[fieldRank];
 			string source = TextLayout.ConvertToTaggedText(this.fields[rank].Expression);
 			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].DeepExpression);
+			FieldMembership membership = this.fields[rank].Membership;
 			bool isInterface = this.fields[rank].IsInterfaceLocal;
-			bool isOverridable = isInterface || this.fields[rank].Membership != FieldMembership.Local;
+			bool isOverridable = isInterface || membership != FieldMembership.Local;
 
 			//	Edition de l'expression.
 			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isOverridable, deepSource, ref source))
@@ -1690,9 +1691,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (encoded == null)
 				{
+					if (membership == FieldMembership.LocalOverride)
+					{
+						dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, UndefinedValue.Value);
+						dataField.SetValue (Support.Res.Fields.Field.Membership, FieldMembership.Inherited);
+						
+						Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+						accessor.RefreshFields (this.cultureMap);
+					}
 				}
 				else
 				{
+					if (membership != FieldMembership.Local)
+					{
+						dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, false);
+						dataField.SetValue (Support.Res.Fields.Field.Membership, FieldMembership.LocalOverride);
+					}
+
 					if (string.IsNullOrEmpty (source))  //  pas de source = valeur
 					{
 						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);

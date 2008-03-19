@@ -109,21 +109,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(bool isEditLocked, bool isInterface, string deepExpression, string expression)
+		public void Initialise(bool isReadOnly, bool isOverridable, string inheritedExpression, string localExpression)
 		{
-			//	Expression locale:   isInterface = false, deepExpression = null, expression = null (valeur) ou calcul
-			//	Selon interface:     isInterface = true, deepExpression = null/calcul, expression = null
-			//	Interface redéfinie: isInterface = true, deepExpression = null/calcul, expression = "" (valeur) ou calcul
+			//	Expression locale:    isOverridable = false, inheritedExpression = null,        localExpression = null (valeur) ou calcul
+			//	Selon héritage:       isOverridable = true,  inheritedExpression = null/calcul, localExpression = null
+			//	Surchargé localement: isOverridable = true,  inheritedExpression = null/calcul, localExpression = "" (valeur) ou calcul
 			//
-			//	Donc, si isInterface = true, expression peut prendre trois valeurs:
-			//	expression = null:   pas de redéfinition locale, on utilise le calcul défini dans l'interface (deepExpression)
-			//	expression = "":     redéfinition d'une valeur, qui aura la priorité sur le calcul défini dans l'interface (deepExpression)
-			//	expression = calcul: redéfinition d'un calcul, qui aura la priorité sur le calcul défini dans l'interface (deepExpression)
+			//	Donc, si isOverridable = true, localExpression peut prendre trois valeurs:
+			//	localExpression = null:   pas de redéfinition locale, on utilise le calcul hérité
+			//	localExpression = "":     redéfinition d'une valeur, qui aura la priorité sur le calcul hérité
+			//	localExpression = calcul: redéfinition d'un calcul, qui aura la priorité sur le calcul hérité
 			this.isEditOk = false;
-			this.isEditLocked = isEditLocked;
-			this.isInterface = isInterface;
-			this.deepExpression = deepExpression;
-			this.expression = expression;
+			this.isEditLocked = isReadOnly;
+			this.isInterface = isOverridable;
+			this.deepExpression = inheritedExpression;
+			this.expression = localExpression;
 		}
 
 		public bool IsEditOk

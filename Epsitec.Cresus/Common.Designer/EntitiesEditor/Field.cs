@@ -202,7 +202,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Cherche l'expression définie dans le champ de l'interface.
 			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
-			if (membership == FieldMembership.Inherited)
+			if (membership == FieldMembership.Inherited && false)
 			{
 				//	L'expression n'est pas définie (ou redéfinie) localement; elle provient
 				//	d'un héritage direct et doit par conséquent être ignorée.
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	interface qui serait héritée d'un parent retourne false).
 			get
 			{
-				return this.definingType == StructuredTypeClass.Interface && this.membership != FieldMembership.Inherited;
+				return this.definingType == StructuredTypeClass.Interface && this.membership == FieldMembership.Local;
 			}
 		}
 

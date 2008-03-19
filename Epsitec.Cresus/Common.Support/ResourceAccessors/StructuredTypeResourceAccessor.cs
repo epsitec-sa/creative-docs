@@ -1235,6 +1235,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						}
 					}
 
+					if (membership == FieldMembership.LocalOverride)
+					{
+						continue;
+					}
+
 					fields.RemoveAt (i--);
 					item.NotifyDataRemoved (field);
 				}
