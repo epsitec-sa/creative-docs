@@ -136,6 +136,8 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption BoxFrameState { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 39)); } }
 				//	designer:cap/30291
 				public static global::Epsitec.Common.Types.Caption BoxFrameWidth { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 41)); } }
+				//	designer:cap/30K81
+				public static global::Epsitec.Common.Types.Caption BoxLayoutType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40)); } }
 				//	designer:cap/302E1
 				public static global::Epsitec.Common.Types.Caption BoxPaddingType { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 46)); } }
 				//	designer:cap/30K21
@@ -318,6 +320,8 @@ namespace Epsitec.Common.Designer
 			{
 				//	designer:cap/3028
 				public static readonly global::Epsitec.Common.Types.EnumType BackColorType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 8));
+				//	designer:cap/30K31
+				public static readonly global::Epsitec.Common.Types.EnumType BoxLayoutType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 35));
 				//	designer:cap/302F1
 				public static readonly global::Epsitec.Common.Types.EnumType BoxPaddingType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 47));
 				//	designer:cap/30KT
@@ -377,6 +381,18 @@ namespace Epsitec.Common.Designer
 					public static global::Epsitec.Common.Types.Caption Red { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 12)); } }
 					//	designer:cap/302B
 					public static global::Epsitec.Common.Types.Caption Yellow { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 11)); } }
+				}
+				
+				public static class BoxLayoutType
+				{
+					//	designer:cap/30K41
+					public static global::Epsitec.Common.Types.Caption Grid { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 36)); } }
+					//	designer:cap/30K61
+					public static global::Epsitec.Common.Types.Caption HorizontalCenter { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38)); } }
+					//	designer:cap/30K51
+					public static global::Epsitec.Common.Types.Caption HorizontalLeft { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 37)); } }
+					//	designer:cap/30K71
+					public static global::Epsitec.Common.Types.Caption HorizontalRight { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 39)); } }
 				}
 				
 				public static class BoxPaddingType
@@ -1674,6 +1690,8 @@ namespace Epsitec.Common.Designer
 					public static string BoxFrameState { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544356)); } }
 					//	designer:str/30K51
 					public static string BoxFrameWidth { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544357)); } }
+					//	designer:str/30K22
+					public static string BoxLayout { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544386)); } }
 					//	designer:str/30KQ
 					public static string BoxPadding { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544346)); } }
 					//	designer:str/30KN

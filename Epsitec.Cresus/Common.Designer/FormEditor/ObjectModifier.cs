@@ -187,6 +187,38 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public FieldDescription.BoxLayoutType GetBoxLayout(Widget obj)
+		{
+			//	Retourne le type du contenu d'une boîte.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return FieldDescription.BoxLayoutType.Grid;
+			}
+			else
+			{
+				return field.BoxLayout;
+			}
+		}
+
+		public void SetBoxLayout(Widget obj, FieldDescription.BoxLayoutType type)
+		{
+			//	Choix du type du contenu d'une boîte.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize(Res.Strings.Undo.Action.BoxLayout);
+				field.BoxLayout = type;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
 		public FieldDescription.BoxPaddingType GetBoxPadding(Widget obj)
 		{
 			//	Retourne le type des marges intérieures d'une boîte.

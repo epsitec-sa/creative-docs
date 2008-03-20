@@ -37,6 +37,15 @@ namespace Epsitec.Common.FormEngine
 		}
 
 		[DesignerVisible]
+		public enum BoxLayoutType
+		{
+			Grid			= 0,	// grille
+			HorizontalLeft	= 1,	// empilement horizontal calé à gauche
+			HorizontalCenter= 2,	// empilement horizontal centré
+			HorizontalRight	= 3,	// empilement horizontal calé à droite
+		}
+
+		[DesignerVisible]
 		public enum BoxPaddingType
 		{
 			Normal			= 0,	// marge standard
@@ -133,6 +142,7 @@ namespace Epsitec.Common.FormEngine
 			this.nodeDescription = model.nodeDescription;
 			this.fieldIds = model.fieldIds;
 			this.subFormId = model.subFormId;
+			this.boxLayoutType = model.boxLayoutType;
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
@@ -169,6 +179,7 @@ namespace Epsitec.Common.FormEngine
 			this.separatorBottom = SeparatorType.Normal;
 			this.columnsRequired = Engine.MaxColumnsRequired;
 			this.rowsRequired = 1;
+			this.boxLayoutType = BoxLayoutType.Grid;
 			this.boxPaddingType = BoxPaddingType.Normal;
 			this.boxFrameState = FrameState.None;
 			this.boxFrameWidth = 1;
@@ -587,6 +598,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public BoxLayoutType BoxLayout
+		{
+			//	Type du contenu pour les boîtes.
+			get
+			{
+				return this.boxLayoutType;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.BoxBegin || this.type == FieldType.SubForm);
+				this.boxLayoutType = value;
+			}
+		}
+
 		public BoxPaddingType BoxPadding
 		{
 			//	Type de marge intérieure pour les boîtes.
@@ -829,6 +854,7 @@ namespace Epsitec.Common.FormEngine
 				a.separatorBottom != b.separatorBottom ||
 				a.columnsRequired != b.columnsRequired ||
 				a.rowsRequired != b.rowsRequired ||
+				a.boxLayoutType != b.boxLayoutType ||
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
@@ -944,6 +970,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.ColumnsRequired, this.columnsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.RowsRequired, this.rowsRequired.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
+			writer.WriteElementString(Xml.BoxLayoutType, this.boxLayoutType.ToString());
 			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
@@ -1082,6 +1109,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.RowsRequired)
 						{
 							this.rowsRequired = int.Parse(element);
+						}
+						else if (name == Xml.BoxLayoutType)
+						{
+							this.boxLayoutType = (BoxLayoutType) System.Enum.Parse(typeof(BoxLayoutType), element);
 						}
 						else if (name == Xml.BoxPaddingType)
 						{
@@ -1298,6 +1329,7 @@ namespace Epsitec.Common.FormEngine
 		private SeparatorType				separatorBottom;
 		private int							columnsRequired;
 		private int							rowsRequired;
+		private BoxLayoutType				boxLayoutType;
 		private BoxPaddingType				boxPaddingType;
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;

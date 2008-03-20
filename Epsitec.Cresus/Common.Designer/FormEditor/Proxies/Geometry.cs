@@ -88,6 +88,18 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public FieldDescription.BoxLayoutType BoxLayout
+		{
+			get
+			{
+				return (FieldDescription.BoxLayoutType) this.GetValue(Geometry.BoxLayoutProperty);
+			}
+			set
+			{
+				this.SetValue(Geometry.BoxLayoutProperty, value);
+			}
+		}
+
 		public FieldDescription.BoxPaddingType BoxPadding
 		{
 			get
@@ -143,6 +155,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 			if (this.ObjectModifier.IsBox(this.DefaultWidget))
 			{
+				this.BoxLayout = this.ObjectModifier.GetBoxLayout(this.DefaultWidget);
 				this.BoxPadding = this.ObjectModifier.GetBoxPadding(this.DefaultWidget);
 			}
 
@@ -172,6 +185,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			EnumType separatorBottomEnumType = Res.Types.FieldDescription.SeparatorType;
 			Geometry.SeparatorBottomProperty.DefaultMetadata.DefineNamedType(separatorBottomEnumType);
 			Geometry.SeparatorBottomProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorBottomType.Id);
+
+			EnumType boxLayoutBottomEnumType = Res.Types.FieldDescription.BoxLayoutType;
+			Geometry.BoxLayoutProperty.DefaultMetadata.DefineNamedType(boxLayoutBottomEnumType);
+			Geometry.BoxLayoutProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxLayoutType.Id);
 
 			EnumType boxPaddingBottomEnumType = Res.Types.FieldDescription.BoxPaddingType;
 			Geometry.BoxPaddingProperty.DefaultMetadata.DefineNamedType(boxPaddingBottomEnumType);
@@ -206,6 +223,30 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 					foreach (Widget obj in that.Widgets)
 					{
 						that.ObjectModifier.SetSeparatorBottom(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
+		private static void NotifyBoxLayoutChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			FieldDescription.BoxLayoutType value = (FieldDescription.BoxLayoutType) newValue;
+			Geometry that = (Geometry) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetBoxLayout(obj, value);
 					}
 				}
 				finally
@@ -338,6 +379,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 
 		public static readonly DependencyProperty SeparatorBottomProperty = DependencyProperty.Register("SeparatorBottom", typeof(FieldDescription.SeparatorType),  typeof(Geometry), new DependencyPropertyMetadata(FieldDescription.SeparatorType.Normal,  Geometry.NotifySeparatorBottomChanged));
+		public static readonly DependencyProperty BoxLayoutProperty       = DependencyProperty.Register("BoxLayout",       typeof(FieldDescription.BoxLayoutType),  typeof(Geometry), new DependencyPropertyMetadata(FieldDescription.BoxLayoutType.Grid,    Geometry.NotifyBoxLayoutChanged));
 		public static readonly DependencyProperty BoxPaddingProperty      = DependencyProperty.Register("BoxPadding",      typeof(FieldDescription.BoxPaddingType), typeof(Geometry), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Geometry.NotifyBoxPaddingChanged));
 		public static readonly DependencyProperty BoxFrameStateProperty   = DependencyProperty.Register("BoxFrameState",   typeof(FrameState),                      typeof(Geometry), new DependencyPropertyMetadata(FrameState.None,                        Geometry.NotifyBoxFrameStateChanged));
 		public static readonly DependencyProperty BoxFrameWidthProperty   = DependencyProperty.Register("BoxFrameWidth",   typeof(double),                          typeof(Geometry), new DependencyPropertyMetadata(1.0,                                    Geometry.NotifyBoxFrameWidthChanged));

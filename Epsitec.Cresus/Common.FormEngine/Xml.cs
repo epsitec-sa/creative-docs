@@ -23,6 +23,7 @@ namespace Epsitec.Common.FormEngine
 		public const string SeparatorBottom		= "SB";
 		public const string ColumnsRequired		= "CR";
 		public const string RowsRequired		= "RR";
+		public const string BoxLayoutType		= "BLT";
 		public const string BoxPaddingType		= "BPT";
 		public const string BoxFrameState		= "BFS";
 		public const string BoxFrameWidth		= "BFW";
