@@ -1513,7 +1513,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			if (!Misc.IsValidLabel(ref name))
 			{
-				module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
+				this.Application.DialogError(Res.Strings.Error.Name.Invalid);
 				return;
 			}
 
@@ -1692,9 +1692,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					//	d'expression à valeur.
 					if (membership != FieldMembership.Local)
 					{
-						//	TODO: afficher un message d'erreur :
-						//	"Il n'est pas possible de remplacer l'expression par une valeur pour ce champ."
-						System.Diagnostics.Debugger.Break();
+						this.Application.DialogError(Res.Strings.Error.Entities.ReplaceExpression);
 						return;
 					}
 				}
@@ -1703,7 +1701,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (isInterface)
 			{
 				//	Le champ provient d'une interface locale...
-
 				if (encoded == null)
 				{
 					//	La définition doit être reprise dans l'interface; il n'y a plus de définition
@@ -1823,7 +1820,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				else
 				{
-					module.DesignerApplication.DialogError(err);
+					this.Application.DialogError(err);
 				}
 			}
 
