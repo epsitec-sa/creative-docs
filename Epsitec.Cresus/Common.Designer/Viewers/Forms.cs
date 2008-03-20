@@ -31,13 +31,21 @@ namespace Epsitec.Common.Designer.Viewers
 			surface.Dock = DockStyle.Fill;
 
 			//	Crée le groupe central.
-			this.middle = new FrameBox(isWindow ? (Widget) this.designerApplication.ViewersWindow.Root : surface);
-			double m = isWindow ? 0 : 5;
-			this.middle.Padding = new Margins(m, m, m, m);
+			this.middle = new FrameBox(surface);
+			this.middle.Padding = new Margins(5, 5, 5, 5);
 			this.middle.Dock = DockStyle.Fill;
 
-			FrameBox drawing = new FrameBox(this.middle);  // conteneur pour scrollable
-			drawing.Dock = DockStyle.Fill;
+			FrameBox drawing;
+			if (isWindow)
+			{
+				drawing = new FrameBox(this.designerApplication.ViewersWindow.Root);
+				drawing.Dock = DockStyle.Fill;
+			}
+			else
+			{
+				drawing = new FrameBox(this.middle);  // conteneur pour scrollable
+				drawing.Dock = DockStyle.Fill;
+			}
 
 			this.drawingScrollable = new Scrollable(drawing);
 			this.drawingScrollable.MinWidth = 100;
@@ -82,7 +90,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.right.MinWidth = 150;
 			this.right.PreferredWidth = Forms.rightPanelWidth;
 			this.right.MaxWidth = 400;
-			this.right.Dock = isWindow ? DockStyle.Fill : DockStyle.Right;
+			this.right.Dock = DockStyle.Right;
 
 			//	Crée le tabbook primaire pour les onglets.
 			FrameBox top = new FrameBox(this.right);
@@ -176,6 +184,59 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
 			this.UpdateFieldsTableColumns();
 
+			//	Crée l'onglet 'propriétés'.
+			if (!isWindow)
+			{
+				this.tabPageProperties = new TabPage();
+				this.tabPageProperties.TabTitle = Res.Strings.Viewers.Forms.TabProperties;
+				this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
+				this.tabBookSecondary.Items.Add(this.tabPageProperties);
+			}
+
+			Widget parentProperties = isWindow ? this.middle : this.tabPageProperties;
+
+			this.otherToolbar = new HToolBar(parentProperties);
+			this.otherToolbar.Dock = DockStyle.Top;
+			this.otherToolbar.Margins = new Margins(0, 0, 0, 5);
+
+			this.otherButtonCommand = new IconButton();
+			this.otherButtonCommand.AutoFocus = false;
+			this.otherButtonCommand.CaptionId = Res.Captions.Editor.Forms.Command.Id;
+			this.otherButtonCommand.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherToolbar.Items.Add(this.otherButtonCommand);
+
+			this.otherToolbar.Items.Add(new IconSeparator());
+
+			this.otherButtonLine = new IconButton();
+			this.otherButtonLine.AutoFocus = false;
+			this.otherButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
+			this.otherButtonLine.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherToolbar.Items.Add(this.otherButtonLine);
+
+			this.otherButtonTitle = new IconButton();
+			this.otherButtonTitle.AutoFocus = false;
+			this.otherButtonTitle.CaptionId = Res.Captions.Editor.Forms.Title.Id;
+			this.otherButtonTitle.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherToolbar.Items.Add(this.otherButtonTitle);
+
+			this.otherToolbar.Items.Add(new IconSeparator());
+
+			this.otherButtonGlue = new IconButton();
+			this.otherButtonGlue.AutoFocus = false;
+			this.otherButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
+			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherToolbar.Items.Add(this.otherButtonGlue);
+
+			this.proxyManager = new FormEditor.ProxyManager(this);
+
+			this.propertiesScrollable = new Scrollable(parentProperties);
+			this.propertiesScrollable.Dock = DockStyle.Fill;
+			this.propertiesScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
+			this.propertiesScrollable.Viewport.IsAutoFitting = true;
+			this.propertiesScrollable.Viewport.Margins = new Margins(10, 10, 10, 10);
+			this.propertiesScrollable.PaintForegroundFrame = true;
+
 			//	Crée l'onglet 'source'.
 			this.tabPageSource = new TabPage();
 			this.tabPageSource.TabTitle = Res.Strings.Viewers.Forms.TabRelations;
@@ -231,54 +292,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsTable.SelectedRowChanged += new EventHandler(this.HandleRelationsTableSelectedRowChanged);
 			this.relationsTable.SelectedRowDoubleClicked += new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
 
-			//	Crée l'onglet 'propriétés'.
-			this.tabPageProperties = new TabPage();
-			this.tabPageProperties.TabTitle = Res.Strings.Viewers.Forms.TabProperties;
-			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
-			this.tabBookSecondary.Items.Add(this.tabPageProperties);
-
-			this.otherToolbar = new HToolBar(this.tabPageProperties);
-			this.otherToolbar.Dock = DockStyle.Top;
-			this.otherToolbar.Margins = new Margins(0, 0, 0, 5);
-
-			this.otherButtonCommand = new IconButton();
-			this.otherButtonCommand.AutoFocus = false;
-			this.otherButtonCommand.CaptionId = Res.Captions.Editor.Forms.Command.Id;
-			this.otherButtonCommand.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.otherToolbar.Items.Add(this.otherButtonCommand);
-
-			this.otherToolbar.Items.Add(new IconSeparator());
-
-			this.otherButtonLine = new IconButton();
-			this.otherButtonLine.AutoFocus = false;
-			this.otherButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
-			this.otherButtonLine.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.otherToolbar.Items.Add(this.otherButtonLine);
-
-			this.otherButtonTitle = new IconButton();
-			this.otherButtonTitle.AutoFocus = false;
-			this.otherButtonTitle.CaptionId = Res.Captions.Editor.Forms.Title.Id;
-			this.otherButtonTitle.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.otherToolbar.Items.Add(this.otherButtonTitle);
-
-			this.otherToolbar.Items.Add(new IconSeparator());
-
-			this.otherButtonGlue = new IconButton();
-			this.otherButtonGlue.AutoFocus = false;
-			this.otherButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
-			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.otherToolbar.Items.Add(this.otherButtonGlue);
-
-			this.proxyManager = new FormEditor.ProxyManager(this);
-
-			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
-			this.propertiesScrollable.Dock = DockStyle.Fill;
-			this.propertiesScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
-			this.propertiesScrollable.Viewport.IsAutoFitting = true;
-			this.propertiesScrollable.Viewport.Margins = new Margins(10, 10, 10, 10);
-			this.propertiesScrollable.PaintForegroundFrame = true;
-
 			//	Crée l'onglet 'divers'.
 			this.tabPageMisc = new TabPage();
 			this.tabPageMisc.TabTitle = Res.Strings.Viewers.Forms.TabMisc;
@@ -295,13 +308,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			this.CreateCultureButtons();
 
-			this.tabBookSecondary.ActivePage = this.tabPageSource;
+			this.tabBookSecondary.ActivePage = isWindow ? this.tabPageSource : this.tabPageProperties;
 
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
 			this.splitter2.Margins = new Margins(0, 0, 1, 1);
 			this.splitter2.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
-			this.splitter2.Visibility = !isWindow;
 
 			this.splitter3 = new HSplitter(this.right);
 			this.splitter3.Dock = DockStyle.Bottom;
