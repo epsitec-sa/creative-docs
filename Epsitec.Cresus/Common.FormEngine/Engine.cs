@@ -192,7 +192,7 @@ namespace Epsitec.Common.FormEngine
 			return this.defaultMode;
 		}
 
-		private void CreateFormBox(UI.Panel root, Druid entityId, List<FieldDescription> fields, int index)
+		private void CreateFormBox(Widget root, Druid entityId, List<FieldDescription> fields, int index)
 		{
 			//	Crée tous les champs dans une boîte.
 			//	Cette méthode est appelée récursivement pour chaque BoxBegin/BoxEnd.
@@ -202,114 +202,119 @@ namespace Epsitec.Common.FormEngine
 			int level = 0;
 			List<int> labelsId = new List<int>();
 			int labelId = 1;
-			for (int i=index; i<fields.Count; i++)
-			{
-				FieldDescription field = fields[i];
-
-				if (field.DeltaHidden)
-				{
-					continue;
-				}
-
-				bool isGlueAfter = false;
-				FieldDescription nextField = Engine.SearchNextElement(fields, i);
-				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue && !nextField.DeltaHidden)
-				{
-					isGlueAfter = true;
-				}
-
-				if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
-					field.Type == FieldDescription.FieldType.SubForm)
-				{
-					if (level == 0)
-					{
-						this.PreprocessBoxBegin(field, labelsId, ref labelId, ref column, isGlueAfter);
-					}
-
-					level++;
-				}
-				else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boîte ?
-				{
-					level--;
-
-					if (level < 0)
-					{
-						break;
-					}
-				}
-				else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
-				{
-					if (level == 0)
-					{
-						this.PreprocessField(field, labelsId, ref labelId, ref column, isGlueAfter);
-					}
-				}
-				else if (field.Type == FieldDescription.FieldType.Command)  // commande ?
-				{
-					if (level == 0)
-					{
-						this.PreprocessCommand(field, labelsId, ref labelId, ref column, isGlueAfter);
-					}
-				}
-				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
-				{
-					if (level == 0)
-					{
-						this.PreprocessGlue(field, labelsId, ref labelId, ref column, isGlueAfter);
-					}
-				}
-				else if (field.Type == FieldDescription.FieldType.Node)
-				{
-					throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait être aplatie).");
-				}
-			}
-
-			//	Crée les différentes colonnes, en fonction des résultats de la première passe.
-			Widgets.Layouts.GridLayoutEngine grid = new Widgets.Layouts.GridLayoutEngine();
+			Widgets.Layouts.GridLayoutEngine grid = null;
 			int lastLabelId = int.MinValue;
-			for (int i=0; i<labelsId.Count; i++)
-			{
-				if (lastLabelId != labelsId[i])
-				{
-					lastLabelId = labelsId[i];
 
-					if (labelsId[i] < 0)  // est-ce que cette colonne contient un label ?
+			if (root is UI.Panel)
+			{
+				for (int i=index; i<fields.Count; i++)
+				{
+					FieldDescription field = fields[i];
+
+					if (field.DeltaHidden)
 					{
-						//	Largeur automatique selon la taille minimale du contenu.
-						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
-						System.Console.WriteLine(string.Format("Column {0}: automatic", i));
+						continue;
 					}
-					else
+
+					bool isGlueAfter = false;
+					FieldDescription nextField = Engine.SearchNextElement(fields, i);
+					if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue && !nextField.DeltaHidden)
 					{
-						//	Largeur de 10%, 10 pixels au minimum, pas de maximum (par colonne virtuelle).
-						double relWidth = 0;
-						double minWidth = 0;
-						for (int j=i; j<labelsId.Count; j++)
+						isGlueAfter = true;
+					}
+
+					if (field.Type == FieldDescription.FieldType.BoxBegin ||  // début de boîte ?
+					field.Type == FieldDescription.FieldType.SubForm)
+					{
+						if (level == 0)
 						{
-							if (lastLabelId == labelsId[j])
-							{
-								relWidth += 10;  // largeur relative en %
-								minWidth += 10;  // largeur minimale
-							}
-							else
-							{
-								break;
-							}
+							this.PreprocessBoxBegin(field, labelsId, ref labelId, ref column, isGlueAfter);
 						}
 
-						grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(relWidth, Widgets.Layouts.GridUnitType.Proportional), minWidth, double.PositiveInfinity));
-						System.Console.WriteLine(string.Format("Column {0}: relWidth={1}%", i, relWidth));
+						level++;
+					}
+					else if (field.Type == FieldDescription.FieldType.BoxEnd)  // fin de boîte ?
+					{
+						level--;
+
+						if (level < 0)
+						{
+							break;
+						}
+					}
+					else if (field.Type == FieldDescription.FieldType.Field)  // champ ?
+					{
+						if (level == 0)
+						{
+							this.PreprocessField(field, labelsId, ref labelId, ref column, isGlueAfter);
+						}
+					}
+					else if (field.Type == FieldDescription.FieldType.Command)  // commande ?
+					{
+						if (level == 0)
+						{
+							this.PreprocessCommand(field, labelsId, ref labelId, ref column, isGlueAfter);
+						}
+					}
+					else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
+					{
+						if (level == 0)
+						{
+							this.PreprocessGlue(field, labelsId, ref labelId, ref column, isGlueAfter);
+						}
+					}
+					else if (field.Type == FieldDescription.FieldType.Node)
+					{
+						throw new System.InvalidOperationException("Type incorrect (la liste de FieldDescription devrait être aplatie).");
 					}
 				}
-			}
-			System.Console.WriteLine(string.Format("GridLayoutEngine with {0} columns", grid.ColumnDefinitions.Count));
 
-			if (grid.ColumnDefinitions.Count != 0)
-			{
-				grid.ColumnDefinitions[0].RightBorder = 1;
-			}
+				//	Crée les différentes colonnes, en fonction des résultats de la première passe.
+				grid = new Widgets.Layouts.GridLayoutEngine();
+				for (int i=0; i<labelsId.Count; i++)
+				{
+					if (lastLabelId != labelsId[i])
+					{
+						lastLabelId = labelsId[i];
 
-			Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
+						if (labelsId[i] < 0)  // est-ce que cette colonne contient un label ?
+						{
+							//	Largeur automatique selon la taille minimale du contenu.
+							grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition());
+							System.Console.WriteLine(string.Format("Column {0}: automatic", i));
+						}
+						else
+						{
+							//	Largeur de 10%, 10 pixels au minimum, pas de maximum (par colonne virtuelle).
+							double relWidth = 0;
+							double minWidth = 0;
+							for (int j=i; j<labelsId.Count; j++)
+							{
+								if (lastLabelId == labelsId[j])
+								{
+									relWidth += 10;  // largeur relative en %
+									minWidth += 10;  // largeur minimale
+								}
+								else
+								{
+									break;
+								}
+							}
+
+							grid.ColumnDefinitions.Add(new Widgets.Layouts.ColumnDefinition(new Widgets.Layouts.GridLength(relWidth, Widgets.Layouts.GridUnitType.Proportional), minWidth, double.PositiveInfinity));
+							System.Console.WriteLine(string.Format("Column {0}: relWidth={1}%", i, relWidth));
+						}
+					}
+				}
+				System.Console.WriteLine(string.Format("GridLayoutEngine with {0} columns", grid.ColumnDefinitions.Count));
+
+				if (grid.ColumnDefinitions.Count != 0)
+				{
+					grid.ColumnDefinitions[0].RightBorder = 1;
+				}
+
+				Widgets.Layouts.LayoutEngine.SetLayoutEngine(root, grid);
+			}
 
 			//	Deuxième passe pour générer le contenu.
 			column = 0;
@@ -351,7 +356,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						UI.Panel box = this.CreateBox(root, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
+						Widget box = this.CreateBox(root, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
 						this.CreateFormBox(box, entityId, fields, i+1);
 					}
 
@@ -576,10 +581,35 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		private UI.Panel CreateBox(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private Widget CreateBox(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
-			UI.Panel box = new UI.Panel(root);
+			Widget box;
+
+			if (field.BoxLayout == FieldDescription.BoxLayoutType.Grid)
+			{
+				box = new UI.Panel(root);
+			}
+			else
+			{
+				box = new FrameBox(root);
+
+				switch (field.BoxLayout)
+				{
+					case FieldDescription.BoxLayoutType.HorizontalLeft:
+						box.HorizontalAlignment = HorizontalAlignment.Left;
+						break;
+
+					case FieldDescription.BoxLayoutType.HorizontalRight:
+						box.HorizontalAlignment = HorizontalAlignment.Right;
+						break;
+					
+					default:
+						box.HorizontalAlignment = HorizontalAlignment.Center;
+						break;
+				}
+			}
+
 			box.DrawFrameState = FrameState.All;
 			box.Padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
@@ -588,7 +618,7 @@ namespace Epsitec.Common.FormEngine
 			box.TabIndex = this.tabIndex;  // pas besoin d'incrémenter, pour que le groupe ne fasse pas perdre un numéro
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
-			
+
 			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
 
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
@@ -614,7 +644,7 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
-		private void CreateField(UI.Panel root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateField(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new UI.Placeholder(root);
@@ -639,41 +669,48 @@ namespace Epsitec.Common.FormEngine
 					throw new System.InvalidOperationException(string.Format("Invalid edition mode {0}", editionMode));
 			}
 
-			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-
-			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
-
-			if (columnsRequired == 1)  // tout sur une seule colonne ?
+			if (grid == null)
 			{
-				placeholder.Controller = "*";
-				placeholder.ControllerParameters = UI.Controllers.AbstractController.NoLabelsParameter;  // cache le label
-			}
-
-			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
-
-			if (field.RowsRequired > 1)
-			{
-				placeholder.PreferredHeight = field.RowsRequired*20;
-			}
-
-			int i = Engine.GetColumnIndex(labelsId, column);
-			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
-			Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, i);
-			Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, j-i);
-
-			if (isGlueAfter)
-			{
-				column += columnsRequired;
+				placeholder.Dock = DockStyle.Left;
 			}
 			else
 			{
-				row++;
-				column = 0;
+				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+				int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+				if (columnsRequired == 1)  // tout sur une seule colonne ?
+				{
+					placeholder.Controller = "*";
+					placeholder.ControllerParameters = UI.Controllers.AbstractController.NoLabelsParameter;  // cache le label
+				}
+
+				grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+
+				if (field.RowsRequired > 1)
+				{
+					placeholder.PreferredHeight = field.RowsRequired*20;
+				}
+
+				int i = Engine.GetColumnIndex(labelsId, column);
+				int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+				Widgets.Layouts.GridLayoutEngine.SetColumn(placeholder, i);
+				Widgets.Layouts.GridLayoutEngine.SetRow(placeholder, row);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(placeholder, j-i);
+
+				if (isGlueAfter)
+				{
+					column += columnsRequired;
+				}
+				else
+				{
+					row++;
+					column = 0;
+				}
 			}
 		}
 
-		private void CreateCommand(UI.Panel root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateCommand(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour une commande dans la grille, lors de la deuxième passe.
 			UI.MetaButton button = new UI.MetaButton();
@@ -684,35 +721,42 @@ namespace Epsitec.Common.FormEngine
 			this.ApplyCommandButtonClass(button, field);
 			this.ApplyTextStyle(button, field);
 
-			grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-
-			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
-
-			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
-
-			int i = Engine.GetColumnIndex(labelsId, column);
-			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
-			Widgets.Layouts.GridLayoutEngine.SetColumn(button, i);
-			Widgets.Layouts.GridLayoutEngine.SetRow(button, row);
-			Widgets.Layouts.GridLayoutEngine.SetColumnSpan(button, j-i);
-
-			if (isGlueAfter)
+			if (grid == null)
 			{
-				column += columnsRequired;
+				button.Dock = DockStyle.Left;
 			}
 			else
 			{
-				row++;
-				column = 0;
+				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+				int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
+
+				grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+
+				int i = Engine.GetColumnIndex(labelsId, column);
+				int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+				Widgets.Layouts.GridLayoutEngine.SetColumn(button, i);
+				Widgets.Layouts.GridLayoutEngine.SetRow(button, row);
+				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(button, j-i);
+
+				if (isGlueAfter)
+				{
+					column += columnsRequired;
+				}
+				else
+				{
+					row++;
+					column = 0;
+				}
 			}
 		}
 
-		private void CreateGlue(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateGlue(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
 		{
 			//	Crée les widgets pour un collage dans la grille, lors de la deuxième passe.
 			int columnsRequired = field.ColumnsRequired;
 
-			if (this.forDesigner)
+			if (this.forDesigner && grid != null)
 			{
 				FrameBox glue = new FrameBox(root);
 				glue.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
@@ -742,7 +786,7 @@ namespace Epsitec.Common.FormEngine
 			column += columnsRequired;
 		}
 
-		private void CreateSeparator(UI.Panel root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, FieldDescription nextField, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, ref List<Druid> lastTitle)
+		private void CreateSeparator(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, FieldDescription nextField, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, ref List<Druid> lastTitle)
 		{
 			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
 			FieldDescription.FieldType type = field.Type;
@@ -780,9 +824,12 @@ namespace Epsitec.Common.FormEngine
 				}
 				else
 				{
-					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-					grid.RowDefinitions[row].TopBorder = 5;
-					grid.RowDefinitions[row].BottomBorder = 0;
+					if (grid != null)
+					{
+						grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+						grid.RowDefinitions[row].TopBorder = 5;
+						grid.RowDefinitions[row].BottomBorder = 0;
+					}
 
 					double size = System.Math.Max(200-(druids.Count-2)*25, 100);
 
@@ -792,13 +839,20 @@ namespace Epsitec.Common.FormEngine
 					text.Name = guid.ToString();
 					this.ApplyTextStyle(text, field);
 
-					int i = Engine.GetColumnIndex(labelsId, 0);
-					int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
-					Widgets.Layouts.GridLayoutEngine.SetColumn(text, i);
-					Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
-					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, j-i);
+					if (grid == null)
+					{
+						text.Dock = DockStyle.Left;
+					}
+					else
+					{
+						int i = Engine.GetColumnIndex(labelsId, 0);
+						int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
+						Widgets.Layouts.GridLayoutEngine.SetColumn(text, i);
+						Widgets.Layouts.GridLayoutEngine.SetRow(text, row);
+						Widgets.Layouts.GridLayoutEngine.SetColumnSpan(text, j-i);
 
-					row++;
+						row++;
+					}
 				}
 
 				lastTitle = druids;  // pour se rappeler du titre précédent
@@ -807,21 +861,31 @@ namespace Epsitec.Common.FormEngine
 			if (type == FieldDescription.FieldType.Line ||
 				type == FieldDescription.FieldType.Title)
 			{
-				grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-				grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : 10;
-				grid.RowDefinitions[row].BottomBorder = 10;
+				if (grid != null)
+				{
+					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+					grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : 10;
+					grid.RowDefinitions[row].BottomBorder = 10;
+				}
 
 				Separator sep = new Separator(root);
 				sep.PreferredHeight = 1;
 				sep.Name = guid.ToString();
 
-				int i = Engine.GetColumnIndex(labelsId, 0);
-				int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
-				Widgets.Layouts.GridLayoutEngine.SetColumn(sep, i);
-				Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
-				Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, j-i);
+				if (grid == null)
+				{
+					sep.Dock = DockStyle.Left;
+				}
+				else
+				{
+					int i = Engine.GetColumnIndex(labelsId, 0);
+					int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
+					Widgets.Layouts.GridLayoutEngine.SetColumn(sep, i);
+					Widgets.Layouts.GridLayoutEngine.SetRow(sep, row);
+					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(sep, j-i);
 
-				row++;
+					row++;
+				}
 			}
 		}
 
@@ -919,7 +983,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		private void GenerateForwardTab(UI.Panel root, List<FieldDescription> fields)
+		private void GenerateForwardTab(Widget root, List<FieldDescription> fields)
 		{
 			//	Initialise les propriétés ForwardTabOverride et BackwardTabOverride aux widgets du masque
 			//	qui sont définis par des exceptions FieldDescription.ForwardTabGuid pour la navigation.
