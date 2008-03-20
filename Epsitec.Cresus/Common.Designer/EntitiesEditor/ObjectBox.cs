@@ -3,6 +3,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 
@@ -54,6 +55,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			get
 			{
 				return this.cultureMap;
+			}
+		}
+
+		public DesignerApplication Application
+		{
+			get
+			{
+				return this.editor.Module.DesignerApplication;
 			}
 		}
 
@@ -1358,7 +1367,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
+				this.Application.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, this.cultureMap.Id, null);
 			}
 		}
 
@@ -1373,7 +1382,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, druid, null);
+				this.Application.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Entities, -1, druid, null);
 			}
 		}
 
@@ -1396,7 +1405,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			if (module != null)
 			{
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, fieldCaptionId, null);
+				this.Application.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Fields, -1, fieldCaptionId, null);
 			}
 		}
 
@@ -1421,7 +1430,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if (module != null)
 			{
 				ResourceAccess.Type access = (rel == FieldRelation.None) ? ResourceAccess.Type.Types : ResourceAccess.Type.Entities;
-				this.editor.Module.DesignerApplication.LocatorGoto(module.ModuleId.Name, access, -1, typeId, null);
+				this.Application.LocatorGoto(module.ModuleId.Name, access, -1, typeId, null);
 			}
 		}
 
@@ -1462,7 +1471,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Supprime un champ.
 			string question = string.Format(Res.Strings.Entities.Question.RemoveField.Base, this.fields[rank].FieldName);
-			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
+			if (this.Application.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				Druid fieldId = this.fields[rank].CaptionId;
 
@@ -1578,7 +1587,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Supprime une interface de l'entité.
 			string question = string.Format(Res.Strings.Entities.Question.RemoveInterface.Base, this.fields[rank].FieldName);
-			if (this.editor.Module.DesignerApplication.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
+			if (this.Application.DialogQuestion(question) == Epsitec.Common.Dialogs.DialogResult.Yes)
 			{
 				int count = this.GroupLineCount(rank);
 				for (int i=rank+1; i<rank+1+count; i++)
@@ -1630,64 +1639,94 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void EditExpression(int rank)
 		{
 			//	Edite l'expresion associée à un champ.
-			int fieldRank = (rank == -1) ? -1 : this.fields[rank].Rank;
+
+			if (rank < 0 || rank >= this.fields.Count)
+			{
+				return;
+			}
+
+			Field field = this.fields[rank];
+			int fieldRank = field.Rank;
 
 			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
 
 			StructuredData dataField = dataFields[fieldRank];
-			string source = TextLayout.ConvertToTaggedText(this.fields[rank].LocalExpression);
-			string deepSource = TextLayout.ConvertToTaggedText(this.fields[rank].InheritedExpression);
-			FieldMembership membership = this.fields[rank].Membership;
-			bool isInterface = this.fields[rank].IsInterfaceLocal;
+			string localSource = TextLayout.ConvertToTaggedText(field.LocalExpression);
+			string inheritedSource = TextLayout.ConvertToTaggedText(field.InheritedExpression);
+			FieldMembership membership = field.Membership;
+			bool isInterface = field.IsInterfaceLocal;
 			bool isOverridable = isInterface || membership != FieldMembership.Local;
-			bool isUnchanged = this.fields[rank].IsUnchangedInterfaceField;
+			bool isUnchanged = field.IsUnchangedInterfaceField;
 
 			if (isUnchanged)
 			{
-				source = null;
+				//	Le champ reprend de manière transparente ce qui est défini au
+				//	niveau de l'interface. Le source local est donc à ignorer ici.
+				localSource = null;
 			}
 			
 			//	Edition de l'expression.
-			if (!this.editor.Module.DesignerApplication.DlgEntityExpression(isOverridable, deepSource, ref source))
+			if (!this.Application.DlgEntityExpression(isOverridable, inheritedSource, ref localSource))
 			{
 				return;
 			}
 
-			string encoded = null;
-			if (source != null)
+			string encoded;
+			if (localSource == null)
 			{
-				source = TextLayout.ConvertToSimpleText(source);
-				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromSourceCode(Support.EntityEngine.EntityExpressionEncoding.LambdaCSharpSourceCode, source);
+				encoded = null;
+			}
+			else
+			{
+				localSource = TextLayout.ConvertToSimpleText(localSource);
+				EntityExpression expression = EntityExpression.FromSourceCode(EntityExpressionEncoding.LambdaCSharpSourceCode, localSource);
 				encoded = expression.GetEncodedExpression();
+				localSource = localSource.Trim();
+
+				if (localSource.Length == 0)
+				{
+					//	L'utilisateur désire utiliser une valeur plutôt qu'une expression
+					//	pour ce champ. Vérifie que ce soit autorisé dans ce contexte : il
+					//	faut que ce soit un champ local, sinon c'est illégal de changer
+					//	d'expression à valeur.
+					if (membership != FieldMembership.Local)
+					{
+						//	TODO: afficher un message d'erreur :
+						//	"Il n'est pas possible de remplacer l'expression par une valeur pour ce champ."
+						System.Diagnostics.Debugger.Break();
+						return;
+					}
+				}
 			}
 			
 			if (isInterface)
 			{
+				//	Le champ provient d'une interface locale...
+
 				if (encoded == null)
 				{
 					//	La définition doit être reprise dans l'interface; il n'y a plus de définition
 					//	locale.
-					dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, true);
-					
-					Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-					accessor.RefreshFields(this.cultureMap);
-					//	TODO: il faut rafraîchir ta représentation graphique pour refléter le nouveau
-					//	contenu du champ en question; je ne sais pas comment faire cela ici...
+					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, true);
 				}
 				else
 				{
 					//	La définition ne doit plus être reprise dans l'interface, mais bien dans les
-					//	réglages locaux (qui peuvent être vides).
+					//	réglages locaux.
 					dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
 
-					if (string.IsNullOrEmpty(source))  //  pas de source = valeur
+					if (localSource.Length == 0)
 					{
+						//	L'utilisateur n'a pas spécifié de source, ce qui implique que ce n'est
+						//	pas une expression, mais un valeur qu'il faut utiliser ici.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 					else
 					{
+						//	L'utilisateur a spécifié une expression qui remplace celle qui était
+						//	définie au niveau de l'interface.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 					}
@@ -1699,33 +1738,43 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					if (membership == FieldMembership.LocalOverride)
 					{
-						dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, UndefinedValue.Value);
-						dataField.SetValue (Support.Res.Fields.Field.Membership, FieldMembership.Inherited);
-						
-						Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-						accessor.RefreshFields (this.cultureMap);
+						//	Ce champ redéfinissait une expression locale; supprime cette
+						//	définition locale et reprend la valeur héritée.
+						dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, UndefinedValue.Value);
+						dataField.SetValue(Support.Res.Fields.Field.Membership, FieldMembership.Inherited);
 					}
 				}
 				else
 				{
 					if (membership != FieldMembership.Local)
 					{
-						dataField.SetValue (Support.Res.Fields.Field.IsInterfaceDefinition, false);
-						dataField.SetValue (Support.Res.Fields.Field.Membership, FieldMembership.LocalOverride);
+						//	Ce champ n'est pas un champ local, mais un champ hérité ou qui
+						//	redéfinissait déjà l'expression héritée; dans tous les cas, note
+						//	que maintenant, le champ redéfinit localement l'expression héritée.
+						dataField.SetValue(Support.Res.Fields.Field.IsInterfaceDefinition, false);
+						dataField.SetValue(Support.Res.Fields.Field.Membership, FieldMembership.LocalOverride);
 					}
 
-					if (string.IsNullOrEmpty (source))  //  pas de source = valeur
+					if (string.IsNullOrEmpty(localSource))
 					{
+						//	Aucune expression n'a été spécifiée; force l'utilisation d'une
+						//	valeur.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, UndefinedValue.Value);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Value);
 					}
 					else
 					{
+						//	Une expression a été spécifiée; force l'utilisation de celle-ci
+						//	localement.
 						dataField.SetValue(Support.Res.Fields.Field.Expression, encoded);
 						dataField.SetValue(Support.Res.Fields.Field.Source, FieldSource.Expression);
 					}
 				}
 			}
+
+			//	Termine en mettant à jour les champs hérités...
+			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			accessor.RefreshFields(this.cultureMap);
 
 			this.SetContent(this.cultureMap);
 			this.editor.Module.AccessEntities.SetLocalDirty();
@@ -2211,7 +2260,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private Module SearchModule(Druid id)
 		{
-			return this.editor.Module.DesignerApplication.SearchModule(id);
+			return this.Application.SearchModule(id);
 		}
 
 		private Field SearchDruid(Druid druid)
@@ -2270,7 +2319,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Met à jour la liste de toutes les sources potentielles de l'entité courante.
 			this.sourcesList = new List<SourceInfo>();
 
-			List<Module> modules = this.editor.Module.DesignerApplication.Modules;
+			List<Module> modules = this.Application.Modules;
 			foreach (Module module in modules)
 			{
 				foreach (CultureMap cultureMap in module.AccessEntities.Accessor.Collection)
@@ -3312,7 +3361,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		{
 			//	Met à jour le sous-titre de l'entité (nom du module).
 			Module module = this.SearchModule(this.cultureMap.Id);
-			if (module == this.editor.Module.DesignerApplication.CurrentModule)
+			if (module == this.Application.CurrentModule)
 			{
 				this.Subtitle = null;
 				this.isDimmed = false;
