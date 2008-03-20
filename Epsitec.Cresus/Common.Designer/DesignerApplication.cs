@@ -1224,11 +1224,11 @@ namespace Epsitec.Common.Designer
 
 							this.viewersWindow = new Window();
 							this.viewersWindow.MakeSecondaryWindow();
-							//?this.viewersWindow.MakeSizableToolWindow();
 							this.viewersWindow.Root.BackColor = Color.FromBrightness(1);  // fond blanc
 							this.viewersWindow.WindowBounds = bounds;
 							this.viewersWindow.Owner = this.Window;
 							this.viewersWindow.Root.MinSize = new Size(400, 300);
+							this.viewersWindow.Root.WindowStyles = WindowStyles.HasCloseButton | WindowStyles.CanResize | WindowStyles.CanMaximize;
 							this.viewersWindow.PreventAutoClose = true;
 							this.viewersWindow.WindowCloseClicked += new EventHandler(this.HandleViewersWindowCloseClicked);
 						}
