@@ -759,30 +759,45 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un collage dans la grille, lors de la deuxième passe.
 			int columnsRequired = field.ColumnsRequired;
 
-			if (this.forDesigner && grid != null)
+			if (grid == null)
 			{
 				FrameBox glue = new FrameBox(root);
 				glue.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 				glue.Name = guid.ToString();
+				glue.Dock = DockStyle.Left;
 
-				if (columnsRequired == 0)
+				if (root is FrameBox)
 				{
-					glue.Index = Engine.GlueNull;  // pour feinter les dimensions lors des détections et du dessin de la sélection
-					glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
-
-					int i = Engine.GetColumnIndex(labelsId, column);
-					Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
-					Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+					glue.PreferredWidth = field.PreferredWidth;
 				}
-				else
+			}
+			else
+			{
+				if (this.forDesigner)
 				{
-					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+					FrameBox glue = new FrameBox(root);
+					glue.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
+					glue.Name = guid.ToString();
 
-					int i = Engine.GetColumnIndex(labelsId, column);
-					int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
-					Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
-					Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
-					Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+					if (columnsRequired == 0)
+					{
+						glue.Index = Engine.GlueNull;  // pour feinter les dimensions lors des détections et du dessin de la sélection
+						glue.PreferredWidth = 0; // pour ne pas perturber le calcul de la largeur d'une colonne contenant un label
+
+						int i = Engine.GetColumnIndex(labelsId, column);
+						Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+						Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+					}
+					else
+					{
+						grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
+
+						int i = Engine.GetColumnIndex(labelsId, column);
+						int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
+						Widgets.Layouts.GridLayoutEngine.SetColumn(glue, i);
+						Widgets.Layouts.GridLayoutEngine.SetRow(glue, row);
+						Widgets.Layouts.GridLayoutEngine.SetColumnSpan(glue, j-i);
+					}
 				}
 			}
 

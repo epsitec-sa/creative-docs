@@ -193,7 +193,8 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 
 			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
 				this.ObjectModifier.IsCommand(this.DefaultWidget) ||
-				this.ObjectModifier.IsBox(this.DefaultWidget))
+				this.ObjectModifier.IsBox(this.DefaultWidget) ||
+				this.ObjectModifier.IsGlue(this.DefaultWidget))
 			{
 				this.PreferredWidth = this.ObjectModifier.GetPreferredWidth(this.DefaultWidget);
 			}
