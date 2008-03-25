@@ -141,8 +141,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	Cherche les expressions définies localement et par héritage, le nom
 			//	de l'entité qui définit le champ, le nom du champ et le nom du parent
 			//	qui définit pour la première fois le champ :
-			string localExpression = Field.GetLocalExpression(dataField);
-			string inheritedExpression = Field.GetInheritedExpression(app, dataField, fieldCaptionId, definingTypeId);
+			string localExpression = Field.GetLocalExpression(dataField, this.IsPatch, source);
+			string inheritedExpression = Field.GetInheritedExpression(app, dataField, fieldCaptionId, definingTypeId, this.IsPatch, source);
 			string typeName = Field.GetFieldTypeName (app, typeId, relation);
 			string fieldName = Field.GetFieldName(app, fieldCaptionId);
 			string definingName = Field.GetDefiningEntityName (app, this.editor.Module, deepDefiningTypeId, out definingType);
@@ -1185,7 +1185,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return (type == null) ? "" : type.Name;
 		}
 
-		private static string GetLocalExpression(StructuredData dataField)
+		private static string GetLocalExpression(StructuredData dataField, bool isPatch, CultureMapSource itemSource)
 		{
 			//	Cherche l'expression définie localement par le champ.
 			FieldMembership membership = (FieldMembership) dataField.GetValue (Support.Res.Fields.Field.Membership);
@@ -1204,16 +1204,56 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			else
 			{
-				string encoded = dataField.GetValue (Support.Res.Fields.Field.Expression) as string;
+				bool usesOriginalData;
+				string encoded = dataField.GetValue (Support.Res.Fields.Field.Expression, out usesOriginalData) as string;
+
+				if (isPatch)
+				{
+					if ((itemSource == CultureMapSource.ReferenceModule) ||
+						(itemSource == CultureMapSource.DynamicMerge && usesOriginalData))
+					{
+						return null;
+					}
+				}
+
 				Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
 				return expression.SourceCode;
 			}
 		}
 
-		private static string GetInheritedExpression(DesignerApplication app, StructuredData dataField, Druid fieldId, Druid definingEntityId)
+		private static string GetInheritedExpression(DesignerApplication app, StructuredData dataField, Druid fieldId, Druid definingEntityId, bool isPatch, CultureMapSource itemSource)
 		{
-		//	Cherche l'expression héritée par le champ depuis un parent (ou grand-parent
-		//	ou une interface).
+			//	Cherche l'expression héritée par le champ depuis un parent (ou grand-parent
+			//	ou une interface).
+			if (isPatch && itemSource == CultureMapSource.DynamicMerge)
+			{
+				bool usesOriginalData;
+				string encoded = dataField.GetValue (Support.Res.Fields.Field.Expression, out usesOriginalData) as string;
+
+				if (usesOriginalData)
+				{
+					if (string.IsNullOrEmpty (encoded))
+					{
+						return null;
+					}
+					else
+					{
+						Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+						return expression.SourceCode;
+					}
+				}
+			}
+			if (isPatch && itemSource == CultureMapSource.ReferenceModule)
+			{
+				string encoded = dataField.GetValue (Support.Res.Fields.Field.Expression) as string;
+
+				if (!string.IsNullOrEmpty (encoded))
+				{
+					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+					return expression.SourceCode;
+				}
+			}
+
 		again:
 			if (!definingEntityId.IsValid)
 			{
