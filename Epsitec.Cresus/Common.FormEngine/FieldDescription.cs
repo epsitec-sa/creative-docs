@@ -146,6 +146,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
+			this.preferredWidth = model.preferredWidth;
 			this.deltaHidden = model.deltaHidden;
 			this.deltaShowed = model.deltaShowed;
 			this.deltaMoved = model.deltaMoved;
@@ -183,6 +184,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = BoxPaddingType.Normal;
 			this.boxFrameState = FrameState.None;
 			this.boxFrameWidth = 1;
+			this.preferredWidth = 100;
 		}
 
 
@@ -654,6 +656,19 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public double PreferredWidth
+		{
+			//	Largeur préférentielle, si le parent est en mode BoxLayoutType.Horizontal*.
+			get
+			{
+				return this.preferredWidth;
+			}
+			set
+			{
+				this.preferredWidth = value;
+			}
+		}
+
 		public bool Delta
 		{
 			//	Retourne true si une information delta quelconque existe.
@@ -858,6 +873,7 @@ namespace Epsitec.Common.FormEngine
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
+				a.preferredWidth != b.preferredWidth ||
 				a.deltaHidden != b.deltaHidden ||
 				a.deltaShowed != b.deltaShowed ||
 				a.deltaMoved != b.deltaMoved ||
@@ -974,6 +990,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString(Xml.PreferredWidth, this.preferredWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			if (this.deltaHidden)
 			{
@@ -1125,6 +1142,10 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.BoxFrameWidth)
 						{
 							this.boxFrameWidth = double.Parse(element);
+						}
+						else if (name == Xml.PreferredWidth)
+						{
+							this.preferredWidth = double.Parse(element);
 						}
 						else if (name == Xml.DeltaHidden)
 						{
@@ -1333,6 +1354,7 @@ namespace Epsitec.Common.FormEngine
 		private BoxPaddingType				boxPaddingType;
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
+		private double						preferredWidth;
 		private bool						deltaHidden;
 		private bool						deltaShowed;
 		private bool						deltaMoved;
