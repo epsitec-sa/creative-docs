@@ -575,6 +575,39 @@ namespace Epsitec.Common.Types
 
 			return false;
 		}
+
+		public void SilentlyCopyValueFrom(Support.Druid id, StructuredData source)
+		{
+			this.SilentlyCopyValueFrom (id.ToString (), source);
+		}
+
+		public void SilentlyCopyValueFrom(string id, StructuredData source)
+		{
+			if (this.values == null)
+			{
+				this.AllocateValues ();
+			}
+
+			Record srcRecord;
+			Record dstRecord;
+
+			if ((source.values != null) &&
+				(source.values.TryGetValue (id, out srcRecord)))
+			{
+				if (this.values.TryGetValue (id, out dstRecord))
+				{
+					this.values[id] = new Record (srcRecord.Data, srcRecord.OriginalData, srcRecord.UsesOriginalData, srcRecord.IsReadOnly, dstRecord.Handler);
+				}
+				else
+				{
+					this.values[id] = new Record (srcRecord.Data, srcRecord.OriginalData, srcRecord.UsesOriginalData, srcRecord.IsReadOnly, null);
+				}
+			}
+			else
+			{
+				System.Diagnostics.Debug.Fail ("Unexpected empty source");
+			}
+		}
 		
 		public void SetValue(Support.Druid id, object value)
 		{

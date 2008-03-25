@@ -759,6 +759,8 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					StructuredData newField = new StructuredData (Res.Types.Field);
 					StructuredTypeResourceAccessor.FillDataFromField (item, newField, typeField, recordFields ? item.Source : CultureMapSource.PatchModule);
 
+				again:
+
 					if (Types.Collection.TryFind (fields,
 						/**/					  delegate (StructuredData find)
 												  {
@@ -779,6 +781,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						{
 							this.SnapshotReferenceFields (item, data, fields);
 							state = UpdateState.Merging;
+
+							//	The previously queried "old" field might no longer be in
+							//	use now: creating a snapshot will call UpdateInheritedFields
+							//	which can replace the field definitions when merging inherited
+							//	data with local overrides.
+
+							goto again;
 						}
 
 						oldField.SetValue (Res.Fields.Field.Expression, newField.GetValue (Res.Fields.Field.Expression));
@@ -1142,8 +1151,9 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							//	expression from the local definition and for the other values,
 							//	use the inherited or interface definitions :
 
-							field.SetValue (Res.Fields.Field.Source, fields[pos].GetValue (Res.Fields.Field.Source));
-							field.SetValue (Res.Fields.Field.Expression, fields[pos].GetValue (Res.Fields.Field.Expression));
+							field.SilentlyCopyValueFrom (Res.Fields.Field.CultureMapSource, fields[pos]);
+							field.SilentlyCopyValueFrom (Res.Fields.Field.Source, fields[pos]);
+							field.SilentlyCopyValueFrom (Res.Fields.Field.Expression, fields[pos]);
 							field.SetValue (Res.Fields.Field.IsInterfaceDefinition, false);
 
 							System.Diagnostics.Debug.Assert (i <= pos);
