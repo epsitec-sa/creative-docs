@@ -136,6 +136,18 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		public double PreferredWidth
+		{
+			get
+			{
+				return (double) this.GetValue(Geometry.PreferredWidthProperty);
+			}
+			set
+			{
+				this.SetValue(Geometry.PreferredWidthProperty, value);
+			}
+		}
+
 
 		protected override void InitializePropertyValues()
 		{
@@ -177,6 +189,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.ObjectModifier.IsBox(this.DefaultWidget))
 			{
 				this.RowsRequired = this.ObjectModifier.GetRowsRequired(this.DefaultWidget);
+				this.PreferredWidth = this.ObjectModifier.GetPreferredWidth(this.DefaultWidget);
 			}
 		}
 
@@ -198,8 +211,11 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			Geometry.BoxFrameStateProperty.DefaultMetadata.DefineNamedType(boxFrameStateEnumType);
 			Geometry.BoxFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameState.Id);
 
-			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.WidthNumericType);
+			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.FrameWidthNumericType);
 			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameWidth.Id);
+
+			Geometry.PreferredWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.PreferredWidthNumericType);
+			Geometry.PreferredWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.PreferredWidth.Id);
 
 			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.ColumnsRequiredNumericType);
 			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
@@ -329,6 +345,30 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 			}
 		}
 
+		private static void NotifyPreferredWidthChanged(DependencyObject o, object oldValue, object newValue)
+		{
+			double value = (double) newValue;
+			Geometry that = (Geometry) o;
+
+			if (that.IsNotSuspended)
+			{
+				that.SuspendChanges();
+
+				try
+				{
+					foreach (Widget obj in that.Widgets)
+					{
+						that.ObjectModifier.SetPreferredWidth(obj, value);
+					}
+				}
+				finally
+				{
+					that.ResumeChanges();
+					that.RegenerateProxiesAndForm();
+				}
+			}
+		}
+
 		private static void NotifyColumnsRequiredChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			int value = (int) newValue;
@@ -383,6 +423,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		public static readonly DependencyProperty BoxPaddingProperty      = DependencyProperty.Register("BoxPadding",      typeof(FieldDescription.BoxPaddingType), typeof(Geometry), new DependencyPropertyMetadata(FieldDescription.BoxPaddingType.Normal, Geometry.NotifyBoxPaddingChanged));
 		public static readonly DependencyProperty BoxFrameStateProperty   = DependencyProperty.Register("BoxFrameState",   typeof(FrameState),                      typeof(Geometry), new DependencyPropertyMetadata(FrameState.None,                        Geometry.NotifyBoxFrameStateChanged));
 		public static readonly DependencyProperty BoxFrameWidthProperty   = DependencyProperty.Register("BoxFrameWidth",   typeof(double),                          typeof(Geometry), new DependencyPropertyMetadata(1.0,                                    Geometry.NotifyBoxFrameWidthChanged));
+		public static readonly DependencyProperty PreferredWidthProperty  = DependencyProperty.Register("PreferredWidth",  typeof(double),                          typeof(Geometry), new DependencyPropertyMetadata(100.0,                                  Geometry.NotifyPreferredWidthChanged));
 		public static readonly DependencyProperty ColumnsRequiredProperty = DependencyProperty.Register("ColumnsRequired", typeof(int),                             typeof(Geometry), new DependencyPropertyMetadata(0,                                      Geometry.NotifyColumnsRequiredChanged));
 		public static readonly DependencyProperty RowsRequiredProperty    = DependencyProperty.Register("RowsRequired",    typeof(int),                             typeof(Geometry), new DependencyPropertyMetadata(0,                                      Geometry.NotifyRowsRequiredChanged));
 	}

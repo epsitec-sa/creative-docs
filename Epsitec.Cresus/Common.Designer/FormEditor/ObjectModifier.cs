@@ -568,7 +568,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public FrameState GetBoxFrameState(Widget obj)
 		{
-			//	Retourne la couleur de fond d'un champ.
+			//	Retourne le type du cadre d'une boîte.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public double GetBoxFrameWidth(Widget obj)
 		{
-			//	Retourne la couleur de fond d'un champ.
+			//	Retourne l'épaisseur du cadre d'une boîte.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -625,6 +625,38 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				this.UndoMemorize(Res.Strings.Undo.Action.BoxFrameWidth);
 				field.BoxFrameWidth = 2*width-1;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
+		public double GetPreferredWidth(Widget obj)
+		{
+			//	Retourne la largeur préférentielle
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return 0.0;
+			}
+			else
+			{
+				return field.PreferredWidth;
+			}
+		}
+
+		public void SetPreferredWidth(Widget obj, double width)
+		{
+			//	Choix de la largeur préférentielle.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize(Res.Strings.Undo.Action.PreferredWidth);
+				field.PreferredWidth = width;
 				this.DeltaUpdate(field);
 			}
 		}
