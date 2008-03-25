@@ -1690,7 +1690,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					//	pour ce champ. Vérifie que ce soit autorisé dans ce contexte : il
 					//	faut que ce soit un champ local, sinon c'est illégal de changer
 					//	d'expression à valeur.
-					if (membership != FieldMembership.Local)
+					if (membership != FieldMembership.Local ||
+						(field.IsPatch && !string.IsNullOrEmpty(inheritedSource)))
 					{
 						this.Application.DialogError(Res.Strings.Error.Entities.ReplaceExpression);
 						return;
@@ -1702,9 +1703,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (encoded == null)
 				{
+					//	L'utilisateur a décidé de supprimer le réglage local au module
+					//	de patch pour reprendre les réglages du module de référence. Il
+					//	suffit pour cela de reprendre les valeurs originales.
 					dataField.ResetToOriginalValue (Support.Res.Fields.Field.IsInterfaceDefinition);
 					dataField.ResetToOriginalValue (Support.Res.Fields.Field.Expression);
 					dataField.ResetToOriginalValue (Support.Res.Fields.Field.Source);
+
+					//	Il ne faut pas oublier de réinitialiser la source du champ de
+					//	manière à ce que l'accesseur considère que le champ provient
+					//	du module de référence et n'est plus le résultat d'une fusion:
 					dataField.SetValue (Support.Res.Fields.Field.CultureMapSource, CultureMapSource.ReferenceModule);
 
 					goto end;
