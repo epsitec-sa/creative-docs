@@ -73,6 +73,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		
 		public Field(Editor editor)
 		{
+			System.Diagnostics.Debug.Assert(editor != null);
+
 			this.editor = editor;
 
 			this.textLayoutField = new TextLayout();
@@ -124,7 +126,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			System.Diagnostics.Debug.Assert(obj is ObjectBox);
 			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
 
-			DesignerApplication app = obj.Editor.Module.DesignerApplication;
+			DesignerApplication app = this.editor.Module.DesignerApplication;
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 			FieldMembership membership = (FieldMembership) dataField.GetValue(Support.Res.Fields.Field.Membership);
 			FieldRelation relation = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
@@ -143,7 +145,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			string inheritedExpression = Field.GetInheritedExpression(app, dataField, fieldCaptionId, definingTypeId);
 			string typeName = Field.GetFieldTypeName (app, typeId, relation);
 			string fieldName = Field.GetFieldName(app, fieldCaptionId);
-			string definingName = Field.GetDefiningEntityName (app, obj.Editor.Module, deepDefiningTypeId, out definingType);
+			string definingName = Field.GetDefiningEntityName (app, this.editor.Module, deepDefiningTypeId, out definingType);
 			
 			this.captionId = fieldCaptionId;
 			this.definingEntityId = definingTypeId;
@@ -300,6 +302,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 				
 				return this.membership == FieldMembership.Local;
+			}
+		}
+
+		public bool IsPatch
+		{
+			get
+			{
+				return this.editor.Module.IsPatch;
 			}
 		}
 
