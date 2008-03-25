@@ -189,6 +189,12 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				this.ObjectModifier.IsBox(this.DefaultWidget))
 			{
 				this.RowsRequired = this.ObjectModifier.GetRowsRequired(this.DefaultWidget);
+			}
+
+			if (this.ObjectModifier.IsField(this.DefaultWidget) ||
+				this.ObjectModifier.IsCommand(this.DefaultWidget) ||
+				this.ObjectModifier.IsBox(this.DefaultWidget))
+			{
 				this.PreferredWidth = this.ObjectModifier.GetPreferredWidth(this.DefaultWidget);
 			}
 		}

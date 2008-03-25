@@ -615,6 +615,7 @@ namespace Epsitec.Common.FormEngine
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
+			box.PreferredWidth = field.PreferredWidth;
 			box.TabIndex = this.tabIndex;  // pas besoin d'incrémenter, pour que le groupe ne fasse pas perdre un numéro
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
@@ -652,6 +653,7 @@ namespace Epsitec.Common.FormEngine
 			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			placeholder.TabIndex = this.tabIndex++;
 			placeholder.Name = guid.ToString();
+			placeholder.PreferredWidth = field.PreferredWidth;
 			this.ApplyTextStyle(placeholder, field);
 
 			//	Détermine si le placeholder doit être utilisé pour saisir du texte ou pour
@@ -718,6 +720,7 @@ namespace Epsitec.Common.FormEngine
 			button.TabIndex = this.tabIndex++;
 			button.Name = guid.ToString();
 			button.CommandId = field.FieldIds[0];
+			button.PreferredWidth = field.PreferredWidth;
 			this.ApplyCommandButtonClass(button, field);
 			this.ApplyTextStyle(button, field);
 
