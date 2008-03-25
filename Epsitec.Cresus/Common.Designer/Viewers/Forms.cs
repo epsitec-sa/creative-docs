@@ -664,6 +664,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isForm = false;
 			bool isDeletable = false;
 			bool isDelta = this.formEditor.ObjectModifier.IsDelta;
+			bool isGlue = false;
 
 			if (!this.designerApplication.IsReadonly)
 			{
@@ -728,6 +729,14 @@ namespace Epsitec.Common.Designer.Viewers
 						}
 					}
 				}
+
+				if (sels != null && sels.Count == 2)  // sélection double ?
+				{
+					if (sels[0] == sels[1]+1 || sels[0] == sels[1]-1)
+					{
+						isGlue = true;
+					}
+				}
 			}
 
 			this.fieldsButtonRemove.Enable = isSel;
@@ -742,7 +751,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonCommand.Enable = !this.designerApplication.IsReadonly;
 			this.otherButtonLine.Enable    = !this.designerApplication.IsReadonly;
 			this.otherButtonTitle.Enable   = !this.designerApplication.IsReadonly;
-			this.otherButtonGlue.Enable    = isSel;
+			this.otherButtonGlue.Enable    = isGlue;
 
 			this.fieldsButtonRemove.IconName = isDeletable ? Misc.Icon("Delete") : Misc.Icon("FormDeltaHide");
 			this.fieldsButtonBox.IconName    = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
@@ -2292,22 +2301,22 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void SelectedOtherGlue()
 		{
 			//	Insère une "glue" avant le champ sélectionné.
-			this.UndoMemorize(Res.Strings.Undo.Action.FieldGlue, false);
-
 			List<int> sels = this.fieldsTable.SelectedRows;
+			if (sels == null || sels.Count != 2)
+			{
+				return;
+			}
 			sels.Sort();
 
-			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[0]];
+			this.UndoMemorize(Res.Strings.Undo.Action.FieldGlue, false);
+
+			FormEditor.ObjectModifier.TableItem item = this.formEditor.ObjectModifier.TableContent[sels[1]];
 			int index = this.formEditor.ObjectModifier.GetFieldDescriptionIndex(item.Guid);
 			FieldDescription field;
 
 			if (this.formEditor.ObjectModifier.IsDelta)  // masque delta ?
 			{
-				System.Guid ag = System.Guid.Empty;
-				if (sels[0] > 0)
-				{
-					ag = this.formEditor.ObjectModifier.TableContent[sels[0]-1].Guid;
-				}
+				System.Guid ag = this.formEditor.ObjectModifier.TableContent[sels[0]].Guid;
 
 				field = new FieldDescription(FieldDescription.FieldType.Glue);
 				field.ColumnsRequired = 0;

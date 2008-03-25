@@ -530,7 +530,7 @@
   <data name="Undo.Action.DefaultSize" id="K71">Taille préférentielle</data>
   <data name="Undo.Action.FieldRemove" id="K81">Montrer ou cacher</data>
   <data name="Undo.Action.FieldReset" id="K91">Remise à zéro</data>
-  <data name="Undo.Action.FieldGlue" id="KA1">Coller l&amp;apos;élément</data>
+  <data name="Undo.Action.FieldGlue" id="KA1">Coller les éléments</data>
   <data name="Undo.Action.FieldLine" id="KB1">Insérer un séparateur</data>
   <data name="Undo.Action.FieldTitle" id="KC1">Insérer un titre</data>
   <data name="Undo.Action.FieldForm" id="KD1">Choix d&amp;apos;un sous-masque</data>
