@@ -1697,6 +1697,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 				}
 			}
+
+			if (field.IsPatch && field.CultureMapSource != CultureMapSource.PatchModule)
+			{
+				if (encoded == null)
+				{
+					dataField.ResetToOriginalValue (Support.Res.Fields.Field.IsInterfaceDefinition);
+					dataField.ResetToOriginalValue (Support.Res.Fields.Field.Expression);
+					dataField.ResetToOriginalValue (Support.Res.Fields.Field.Source);
+					dataField.SetValue (Support.Res.Fields.Field.CultureMapSource, CultureMapSource.ReferenceModule);
+
+					goto end;
+				}
+			}
 			
 			if (isInterface)
 			{
@@ -1770,6 +1783,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Termine en mettant à jour les champs hérités...
+
+		end:
+
 			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
 			accessor.RefreshFields(this.cultureMap);
 

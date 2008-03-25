@@ -1227,20 +1227,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	ou une interface).
 			if (isPatch && itemSource == CultureMapSource.DynamicMerge)
 			{
-				bool usesOriginalData;
-				string encoded = dataField.GetValue (Support.Res.Fields.Field.Expression, out usesOriginalData) as string;
+				string encoded = dataField.GetOriginalValue (Support.Res.Fields.Field.Expression) as string;
 
-				if (usesOriginalData)
+				if (string.IsNullOrEmpty (encoded))
 				{
-					if (string.IsNullOrEmpty (encoded))
-					{
-						return null;
-					}
-					else
-					{
-						Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
-						return expression.SourceCode;
-					}
+					return null;
+				}
+				else
+				{
+					Support.EntityEngine.EntityExpression expression = Support.EntityEngine.EntityExpression.FromEncodedExpression (encoded);
+					return expression.SourceCode;
 				}
 			}
 			if (isPatch && itemSource == CultureMapSource.ReferenceModule)

@@ -1155,6 +1155,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 							field.SilentlyCopyValueFrom (Res.Fields.Field.Source, fields[pos]);
 							field.SilentlyCopyValueFrom (Res.Fields.Field.Expression, fields[pos]);
 							field.SetValue (Res.Fields.Field.IsInterfaceDefinition, false);
+							field.PromoteToOriginalValue (Res.Fields.Field.IsInterfaceDefinition.ToString ());
 
 							System.Diagnostics.Debug.Assert (i <= pos);
 

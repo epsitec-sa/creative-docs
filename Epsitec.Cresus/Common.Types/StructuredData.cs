@@ -448,6 +448,29 @@ namespace Epsitec.Common.Types
 
 		public object GetValue(string id, out bool usesOriginalData)
 		{
+			return this.GetValue (id, DataVersion.Default, out usesOriginalData);
+		}
+
+		public object GetOriginalValue(Support.Druid id)
+		{
+			return this.GetOriginalValue (id.ToString ());
+		}
+
+		public object GetOriginalValue(string id)
+		{
+			bool usesOriginalData;
+			return this.GetValue (id, DataVersion.Original, out usesOriginalData);
+		}
+
+
+		private enum DataVersion
+		{
+			Default,
+			Original
+		}
+
+		private object GetValue(string id, DataVersion version, out bool usesOriginalData)
+		{
 			StructuredTypeField type;
 
 			if (!this.CheckFieldIdValidity (id, out type))
@@ -461,25 +484,48 @@ namespace Epsitec.Common.Types
 			if (this.values == null)
 			{
 				usesOriginalData = true;
-				return this.GetUndefinedValue (type, id);
+
+				if (version == DataVersion.Original)
+				{
+					return UndefinedValue.Value;
+				}
+				else
+				{
+					return this.GetUndefinedValue (type, id);
+				}
 			}
 			else if (this.values.TryGetValue (id, out record))
 			{
 				usesOriginalData = record.UsesOriginalData;
 
-				if (UndefinedValue.IsUndefinedValue (record.Data))
+				if (version == DataVersion.Original)
 				{
-					return this.GetUndefinedValue (type, id);
+					return record.OriginalData;
 				}
 				else
 				{
-					return record.Data;
+					if (UndefinedValue.IsUndefinedValue (record.Data))
+					{
+						return this.GetUndefinedValue (type, id);
+					}
+					else
+					{
+						return record.Data;
+					}
 				}
 			}
 			else
 			{
 				usesOriginalData = true;
-				return this.GetUndefinedValue (type, id);
+
+				if (version == DataVersion.Original)
+				{
+					return UndefinedValue.Value;
+				}
+				else
+				{
+					return this.GetUndefinedValue (type, id);
+				}
 			}
 		}
 
