@@ -40,6 +40,9 @@ namespace Epsitec.Common.Widgets
 		
 		public bool IsHorizontal
 		{
+			//	Si IsHorizontal=true, on est dans une ToolBar horizontale, et le trait de séparation
+			//	est donc vertical. Mais attention, selon l'adorner utilisé, le trait de séparation
+			//	n'est pas dessiné !
 			get
 			{
 				return this.isHorizontal;

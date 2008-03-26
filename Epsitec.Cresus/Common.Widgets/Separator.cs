@@ -48,14 +48,62 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
+		public bool IsHorizontalLine
+		{
+			//	Force un trait horizontal.
+			//	Si IsHorizontalLine=false et IsVerticalLine=false, tout le rectangle est dessiné.
+			get
+			{
+				return this.isHorizontalLine;
+			}
+
+			set
+			{
+				if (this.isHorizontalLine != value)
+				{
+					this.isHorizontalLine = value;
+				}
+			}
+		}
+
+		public bool IsVerticalLine
+		{
+			//	Force un trait vertical.
+			//	Si IsHorizontalLine=false et IsVerticalLine=false, tout le rectangle est dessiné.
+			get
+			{
+				return this.isVerticalLine;
+			}
+
+			set
+			{
+				if (this.isVerticalLine != value)
+				{
+					this.isVerticalLine = value;
+				}
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			if ( !this.IsEnabled || this.alpha == 0 )  return;
+			if (!this.IsEnabled || this.alpha == 0)  return;
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			Drawing.Rectangle rect = this.Client.Bounds;
 
-			Drawing.Rectangle rect  = this.Client.Bounds;
+			if (this.isHorizontalLine)
+			{
+				rect.Bottom = System.Math.Floor(rect.Center.Y);
+				rect.Height = 1;
+			}
+
+			if (this.isVerticalLine)
+			{
+				rect.Left = System.Math.Floor(rect.Center.X);
+				rect.Width = 1;
+			}
+
 			graphics.AddFilledRectangle(rect);
 
 			Drawing.Color color = adorner.ColorBorder;
@@ -70,5 +118,7 @@ namespace Epsitec.Common.Widgets
 
 		protected Drawing.Color			color = Drawing.Color.Empty;
 		protected double				alpha = 1.0;
+		protected bool					isHorizontalLine = false;
+		protected bool					isVerticalLine = false;
 	}
 }

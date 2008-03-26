@@ -91,6 +91,18 @@ namespace Epsitec.Common.Designer.FormEditor
 			return field.Type == FieldDescription.FieldType.Title;
 		}
 
+		public bool IsLine(Widget obj)
+		{
+			//	Indique si l'objet correspond à une ligne.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return false;
+			}
+
+			return field.Type == FieldDescription.FieldType.Line;
+		}
+
 
 		public int GetColumnsRequired(Widget obj)
 		{

@@ -809,7 +809,7 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
 			FieldDescription.FieldType type = field.Type;
 
-			if (nextField == null)
+			if (nextField == null || grid == null)
 			{
 				type = FieldDescription.FieldType.Line;
 			}
@@ -890,12 +890,20 @@ namespace Epsitec.Common.FormEngine
 				sep.PreferredHeight = 1;
 				sep.Name = guid.ToString();
 
+				if (root is FrameBox)
+				{
+					sep.PreferredWidth = field.PreferredWidth;
+				}
+
 				if (grid == null)
 				{
+					sep.IsVerticalLine = true;
 					sep.Dock = DockStyle.Left;
 				}
 				else
 				{
+					sep.IsHorizontalLine = true;
+
 					int i = Engine.GetColumnIndex(labelsId, 0);
 					int j = Engine.GetColumnIndex(labelsId, labelsId.Count-1)+1;
 					Widgets.Layouts.GridLayoutEngine.SetColumn(sep, i);
