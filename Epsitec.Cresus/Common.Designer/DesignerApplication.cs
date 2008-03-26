@@ -2330,10 +2330,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityComment.SelectedText;
 		}
 
-		public bool DlgEntityExpression(bool isInterface, string deepExpression, ref string expression)
+		public bool DlgEntityExpression(bool isInterface, bool isPatchModule, string deepExpression, ref string expression)
 		{
 			//	Ouvre le dialogue pour éditer une expression.
-			this.dlgEntityExpression.Initialise(this.IsReadonly, isInterface, deepExpression, expression);
+			this.dlgEntityExpression.Initialise(this.IsReadonly, isInterface, isPatchModule, deepExpression, expression);
 			this.dlgEntityExpression.Show();  // choix dans le dialogue...
 			expression = this.dlgEntityExpression.Expression;
 			return this.dlgEntityExpression.IsEditOk;

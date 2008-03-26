@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.window.ShowDialog();
 		}
 
-		public void Initialise(bool isReadOnly, bool isOverridable, string inheritedExpression, string localExpression)
+		public void Initialise(bool isReadOnly, bool isOverridable, bool isPatchModule, string inheritedExpression, string localExpression)
 		{
 			//	Expression locale:    isOverridable = false, inheritedExpression = null,        localExpression = null (valeur) ou calcul
 			//	Selon héritage:       isOverridable = true,  inheritedExpression = null/calcul, localExpression = null
@@ -120,9 +120,13 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	localExpression = null:   pas de redéfinition locale, on utilise le calcul hérité
 			//	localExpression = "":     redéfinition d'une valeur, qui aura la priorité sur le calcul hérité
 			//	localExpression = calcul: redéfinition d'un calcul, qui aura la priorité sur le calcul hérité
+			//
+			//	Si isPatchModle = true, cela implique que l'expression héritée provient en fait d'un
+			//	module de référence.
 			this.isEditOk = false;
 			this.isEditLocked = isReadOnly;
 			this.isInterface = isOverridable;
+			this.isPatchModule = isPatchModule;
 			this.deepExpression = inheritedExpression;
 			this.expression = localExpression;
 		}
@@ -239,6 +243,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected bool							isEditLocked;
 		protected bool							isEditOk;
 		protected bool							isInterface;
+		protected bool							isPatchModule;
 		protected string						deepExpression;
 		protected string						expression;
 		protected FrameBox						header;

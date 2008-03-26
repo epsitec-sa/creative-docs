@@ -1658,6 +1658,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			bool isInterface = field.IsInterfaceLocal;
 			bool isOverridable = isInterface || membership != FieldMembership.Local;
 			bool isUnchanged = field.IsUnchangedInterfaceField;
+			bool isPatchModule = field.IsPatch && field.CultureMapSource != CultureMapSource.PatchModule;
 
 			if (isUnchanged)
 			{
@@ -1667,7 +1668,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			
 			//	Edition de l'expression.
-			if (!this.Application.DlgEntityExpression(isOverridable, inheritedSource, ref localSource))
+			if (!this.Application.DlgEntityExpression(isOverridable, isPatchModule, inheritedSource, ref localSource))
 			{
 				return;
 			}
