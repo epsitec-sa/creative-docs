@@ -104,6 +104,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
+			this.UpdateEnable();
 			this.UpdateExpression();
 
 			this.window.ShowDialog();
@@ -149,6 +150,23 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		protected void UpdateEnable()
+		{
+			if (this.isEditLocked)
+			{
+				this.fieldExpression.IsReadOnly = true;
+				this.buttonRedefine.Enable = false;
+				this.buttonOk.Visibility = false;
+				this.buttonOk.Enable = false;
+			}
+			else
+			{
+				this.fieldExpression.IsReadOnly = false;
+				this.buttonRedefine.Enable = true;
+				this.buttonOk.Visibility = true;
+				this.buttonOk.Enable = true;
+			}
+		}
 
 		protected void UpdateExpression()
 		{
@@ -165,7 +183,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.bottom.Visibility = this.isInterface;
 			this.fieldDeepExpression.Text = this.deepExpression;
 
-			this.buttonOk.Enable = true;
+			this.buttonOk.Enable = !this.isEditLocked;
 		}
 
 
