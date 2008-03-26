@@ -287,8 +287,8 @@ namespace Epsitec.Common.Designer.FormEditor
 			frameWidthNumericType.DefinePreferredRange(new DecimalRange(1, 5, 1));
 			ProxyManager.FrameWidthNumericType = frameWidthNumericType;
 
-			DoubleType preferredWidthNumericType = new DoubleType(10, 1000, 1.0M);
-			preferredWidthNumericType.DefinePreferredRange(new DecimalRange(10, 1000, 1));
+			DoubleType preferredWidthNumericType = new DoubleType(1, 1000, 1.0M);
+			preferredWidthNumericType.DefinePreferredRange(new DecimalRange(1, 1000, 1));
 			ProxyManager.PreferredWidthNumericType = preferredWidthNumericType;
 
 			DoubleType marginNumericType = new DoubleType(-1, 9999, 1.0M);
