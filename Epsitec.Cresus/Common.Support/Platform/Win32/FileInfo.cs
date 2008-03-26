@@ -279,9 +279,18 @@ namespace Epsitec.Common.Support.Platform.Win32
 						}
 						else
 						{
-							FileFilterInfo filterInfo = new FileFilterInfo (fullPath, fileAttributes);
+							FileFilterInfo filterInfo;
 
-							if (filter (filterInfo))
+							try
+							{
+								filterInfo = new FileFilterInfo (fullPath, fileAttributes);
+							}
+							catch
+							{
+								filterInfo = FileFilterInfo.Empty;
+							}
+							
+							if ((!filterInfo.IsEmpty) && filter (filterInfo))
 							{
 								yield return FileInfo.CreateFolderItemAndInheritPidl (mode, pidlTemp, fullPath, fileAttributes);
 							}

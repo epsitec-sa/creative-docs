@@ -41,7 +41,17 @@ namespace Epsitec.Common.Support
 				return this.attributes;
 			}
 		}
-		
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.path == null;
+			}
+		}
+
+		public static readonly FileFilterInfo Empty = new FileFilterInfo ();
+
 		string path;
 		string extension;
 		System.IO.FileAttributes attributes;
