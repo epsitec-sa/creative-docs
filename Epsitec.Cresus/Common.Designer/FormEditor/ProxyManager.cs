@@ -48,14 +48,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 		
-		public void SetSelection(Widget widget)
-		{
-			//	Spécifie l'objet sélectionné et construit la liste des proxies nécessaires.
-			this.widgets = new List<Widget>();
-			this.widgets.Add(widget);
-			this.GenerateProxies();
-		}
-		
 		public void SetSelection(IEnumerable<Widget> collection)
 		{
 			//	Spécifie les objets sélectionnés et construit la liste des proxies nécessaires.
@@ -67,19 +59,28 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void CreateUserInterface(Widget container)
 		{
 			//	Crée l'interface utilisateur (panneaux) pour la liste des proxies.
+#if false
 			foreach (IProxy proxy in this.proxies)
 			{
 				this.CreateUserInterface(container, proxy);
 			}
+#else
+			//	Code expérimental...
+			Common.Designer.Proxies.ObjectManagerForm objectManager = new Common.Designer.Proxies.ObjectManagerForm(this.objectModifier);
+			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm();
+			Common.Designer.Proxies.ProxyManager manager = new Common.Designer.Proxies.ProxyManager(objectManager, proxy);
+
+			manager.CreateInterface(container, this.widgets);
+#endif
 		}
 
 		public void UpdateUserInterface()
 		{
 			//	Met à jour l'interface utilisateur (panneaux), sans changer le nombre de
 			//	propriétés visibles par panneau.
-			if (this.Proxies != null)
+			if (this.proxies != null)
 			{
-				foreach (IProxy proxy in this.Proxies)
+				foreach (IProxy proxy in this.proxies)
 				{
 					proxy.Update();
 				}

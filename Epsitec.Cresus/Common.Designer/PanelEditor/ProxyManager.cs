@@ -12,8 +12,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 		{
 			this.panel = panel;
 			this.objectModifier = this.panel.PanelEditor.ObjectModifier;
-			this.widgets = new List<Widget> ();
-			this.proxies = new List<IProxy> ();
+			this.widgets = new List<Widget>();
+			this.proxies = new List<IProxy>();
 		}
 
 		public IEnumerable<Widget> Widgets
@@ -48,14 +48,6 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 		}
 		
-		public void SetSelection(Widget widget)
-		{
-			//	Spécifie l'objet sélectionné et construit la liste des proxies nécessaires.
-			this.widgets = new List<Widget>();
-			this.widgets.Add(widget);
-			this.GenerateProxies();
-		}
-		
 		public void SetSelection(IEnumerable<Widget> collection)
 		{
 			//	Spécifie les objets sélectionnés et construit la liste des proxies nécessaires.
@@ -77,9 +69,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 		{
 			//	Met à jour l'interface utilisateur (panneaux), sans changer le nombre de
 			//	propriétés visibles par panneau.
-			if (this.Proxies != null)
+			if (this.proxies != null)
 			{
-				foreach (IProxy proxy in this.Proxies)
+				foreach (IProxy proxy in this.proxies)
 				{
 					proxy.Update();
 				}

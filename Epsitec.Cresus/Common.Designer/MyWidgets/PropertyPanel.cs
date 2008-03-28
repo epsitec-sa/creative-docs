@@ -73,6 +73,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 		}
 
 
+		public FrameBox Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
+
 		public string Icon
 		{
 			set

@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 				
 				try
 				{
-					this.InitializePropertyValues ();
+					this.InitializePropertyValues();
 				}
 				finally
 				{

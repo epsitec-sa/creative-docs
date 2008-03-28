@@ -69,6 +69,14 @@
     <Compile Include="MyWidgets\TypeEditorBoolean.cs" />
     <Compile Include="MyWidgets\ResetBox.cs" />
     <Compile Include="MyWidgets\TypeEditorNative.cs" />
+    <Compile Include="Proxies\AbstractValue.cs" />
+    <Compile Include="Proxies\AbstractProxy.cs" />
+    <Compile Include="Proxies\AbstractObjectManager.cs" />
+    <Compile Include="Proxies\ValueEnum.cs" />
+    <Compile Include="Proxies\ProxyForm.cs" />
+    <Compile Include="Proxies\ObjectManagerForm.cs" />
+    <Compile Include="Proxies\ProxyManager.cs" />
+    <Compile Include="Proxies\ValueDouble.cs" />
     <Compile Include="Ribbons\Undo.cs" />
     <Compile Include="Ribbons\Identity.cs" />
     <Compile Include="Settings.cs" />
