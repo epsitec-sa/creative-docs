@@ -91,6 +91,47 @@ namespace Epsitec.Common.Types.Converters
 			return buffer.ToString ();
 		}
 
+
+		/// <summary>
+		/// Converts the specified simple text to HTML text.
+		/// </summary>
+		/// <param name="text">The simple text.</param>
+		/// <returns>The html text.</returns>
+		public static string ConvertToTaggedText(string text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (char c in text)
+			{
+				buffer.Append (TextConverter.ConvertToEntity (c));
+			}
+
+			return buffer.ToString ();
+		}
+
+		/// <summary>
+		/// Converts a character to an entity, if needed.
+		/// </summary>
+		/// <param name="c">The character.</param>
+		/// <returns>The entity for the specified character.</returns>
+		public static string ConvertToEntity(char c)
+		{
+			switch (c)
+			{
+				case '&':	return "&amp;";
+				case '<':	return "&lt;";
+				case '>':	return "&gt;";
+				case '\"':	return "&quot;";
+				case '\'':	return "&apos;";
+				case '\n':	return "<br/>";
+				case '\t':	return "<tab/>";
+				case '\r':	return "";
+			}
+
+			return new string (c, 1);
+		}
+
+
 		/// <summary>
 		/// Analyses a character defined as an entity.
 		/// </summary>

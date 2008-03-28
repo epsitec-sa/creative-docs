@@ -3190,33 +3190,23 @@ namespace Epsitec.Common.Widgets
 				
 				for ( int pos=0 ; pos<text.Length ; pos++ )
 				{
-					if ( text[pos] == '&' && pos < text.Length-1 )
+					if (text[pos] == '&' && pos < text.Length-1)
 					{
-						if ( text[pos+1] == '&' )
+						if (text[pos+1] == '&')
 						{
-							buffer.Append("&amp;");
+							buffer.Append ("&amp;");
 						}
 						else
 						{
-							buffer.Append("<m>");
-							buffer.Append(text[pos+1]);
-							buffer.Append("</m>");
+							buffer.Append ("<m>");
+							buffer.Append (text[pos+1]);
+							buffer.Append ("</m>");
 						}
-						pos ++;
-						continue;
+						pos++;
 					}
-					
-					switch ( text[pos] )
+					else
 					{
-						case '&':   buffer.Append("&amp;");    break;
-						case '<':   buffer.Append("&lt;");     break;
-						case '>':   buffer.Append("&gt;");     break;
-						case '\"':  buffer.Append("&quot;");   break;
-						case '\'':  buffer.Append("&apos;");   break;
-						case '\n':  buffer.Append("<br/>");    break;
-						case '\t':  buffer.Append("<tab/>");   break;
-						case '\r':  buffer.Append(" ");        break;
-						default:    buffer.Append(text[pos]);  break;
+						buffer.Append (Types.Converters.TextConverter.ConvertToEntity (text[pos]));
 					}
 				}
 				
@@ -3224,26 +3214,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-				
-				for ( int i=0 ; i<text.Length ; i++ )
-				{
-					char c = text[i];
-					switch ( c )
-					{
-						case '&':   buffer.Append("&amp;");   break;
-						case '<':   buffer.Append("&lt;");    break;
-						case '>':   buffer.Append("&gt;");    break;
-						case '\"':  buffer.Append("&quot;");  break;
-						case '\'':  buffer.Append("&apos;");  break;
-						case '\n':  buffer.Append("<br/>");   break;
-						case '\t':  buffer.Append("<tab/>");  break;
-						case '\r':  buffer.Append(' ');       break;
-						default:    buffer.Append(c);         break;
-					}
-				}
-				
-				return buffer.ToString();
+				return Types.Converters.TextConverter.ConvertToTaggedText (text);
 			}
 		}
 

@@ -24,6 +24,7 @@ namespace Epsitec.ModuleRepository
 		public static IEnumerable<ModuleRecord> Read(string path)
 		{
 			XDocument doc = XDocument.Load (path);
+			IGrouping<int, string> x;
 
 			return from c in doc.Descendants ("module")
 				   select new ModuleRecord ()
