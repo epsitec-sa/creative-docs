@@ -76,7 +76,7 @@
     <Compile Include="Proxies\ProxyForm.cs" />
     <Compile Include="Proxies\ObjectManagerForm.cs" />
     <Compile Include="Proxies\ProxyManager.cs" />
-    <Compile Include="Proxies\ValueDouble.cs" />
+    <Compile Include="Proxies\ValueNumeric.cs" />
     <Compile Include="Ribbons\Undo.cs" />
     <Compile Include="Ribbons\Identity.cs" />
     <Compile Include="Settings.cs" />

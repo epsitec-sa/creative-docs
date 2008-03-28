@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Proxies
 	/// <summary>
 	/// Cette classe permet de représenter une valeur de type 'double'.
 	/// </summary>
-	public class ValueDouble : AbstractValue
+	public class ValueNumeric : AbstractValue
 	{
-		public ValueDouble()
+		public ValueNumeric()
 		{
 			this.min = 0.0;
 			this.max = 100.0;
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.resolution = 1.0;
 		}
 
-		public ValueDouble(double min, double max, double step, double resolution)
+		public ValueNumeric(double min, double max, double step, double resolution)
 		{
 			this.min = min;
 			this.max = max;

@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
 			{
-				ValueDouble columnsRequired = new ValueDouble(1, 10, 1, 1);
+				ValueNumeric columnsRequired = new ValueNumeric(1, 10, 1, 1);
 				columnsRequired.Name = "ColumnsRequired";
 				columnsRequired.Label = "Nb de colonnes";
 				columnsRequired.Value = this.ObjectModifier.GetColumnsRequired(selectedObject);
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				ValueDouble rowsRequired = new ValueDouble(1, 10, 1, 1);
+				ValueNumeric rowsRequired = new ValueNumeric(1, 10, 1, 1);
 				rowsRequired.Name = "RowsRequired";
 				rowsRequired.Label = "Nb de lignes";
 				rowsRequired.Value = this.ObjectModifier.GetRowsRequired(selectedObject);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsLine(selectedObject))
 			{
-				ValueDouble preferredWidth = new ValueDouble(1, 1000, 1, 1);
+				ValueNumeric preferredWidth = new ValueNumeric(1, 1000, 1, 1);
 				preferredWidth.Name = "PreferredWidth";
 				preferredWidth.Label = "Largeur";
 				preferredWidth.Value = this.ObjectModifier.GetPreferredWidth(selectedObject);

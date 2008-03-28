@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Proxies
 					string proxyName = ProxyManager.SearchProxyName(possibleProxies, value.Name);
 					System.Diagnostics.Debug.Assert(proxyName != null);
 
-					if (!ProxyManager.IsExisting(proxiesToCreate, values, proxyName))
+					if (!ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyName))
 					{
 						ProxyToCreate newProxy = new ProxyToCreate();
 						newProxy.ProxyName = proxyName;
@@ -69,6 +69,52 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
+		static protected bool IsExisting(List<PossibleProxy> possibleProxies, List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, string proxyName)
+		{
+			//	Cherche s'il existe déjà un proxy avec exactement les mêmes valeurs.
+			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
+			{
+				if (proxyToCreate.ProxyName == proxyName)
+				{
+					if (ProxyManager.IsEqual(possibleProxies, proxyToCreate, values, proxyName))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+		static protected bool IsEqual(List<PossibleProxy> possibleProxies, ProxyToCreate proxyToCreate, List<AbstractValue> values, string proxyName)
+		{
+			//	Cherche si un proxy contient exactement les mêmes valeurs. Le proxy peut contenir plus de valeurs
+			//	que la liste cherchée, mais toutes les valeurs de la liste cherchée doivent exister et être identiques
+			//	dans le proxy.
+			foreach (AbstractValue value in values)
+			{
+				string valueProxyName = ProxyManager.SearchProxyName(possibleProxies, value.Name);
+				if (valueProxyName == proxyName)
+				{
+					bool equal = false;
+					foreach (AbstractValue valueToCreate in proxyToCreate.Values)
+					{
+						if (valueToCreate.Name == value.Name && valueToCreate.Value.Equals(value.Value))
+						{
+							equal = true;
+						}
+					}
+
+					if (!equal)
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
 		static protected string SearchProxyName(List<PossibleProxy> possibleProxies, string valueName)
 		{
 			//	Cherche le nom du proxy permettant de représenter une valeur.
@@ -84,48 +130,6 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 
 			return null;
-		}
-
-		static protected bool IsExisting(List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, string proxyName)
-		{
-			//	Cherche s'il existe déjà un proxy avec exactement les mêmes valeurs.
-			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
-			{
-				if (proxyToCreate.ProxyName == proxyName)
-				{
-					if (ProxyManager.IsEqual(proxyToCreate, values))
-					{
-						return true;
-					}
-				}
-			}
-
-			return false;
-		}
-
-		static protected bool IsEqual(ProxyToCreate proxyToCreate, List<AbstractValue> values)
-		{
-			//	Cherche si un proxy contient exactement les mêmes valeurs. Le proxy peut contenir plus de valeurs
-			//	la liste cherchée, mais toutes les valeurs de la liste cherchée doivent exister et être identiques
-			//	dans le proxy.
-			foreach (AbstractValue value in values)
-			{
-				bool equal = false;
-				foreach (AbstractValue valueToCreate in proxyToCreate.Values)
-				{
-					if (valueToCreate.Name == value.Name && valueToCreate.Value.Equals(value.Value))
-					{
-						equal = true;
-					}
-				}
-
-				if (!equal)
-				{
-					return false;
-				}
-			}
-
-			return true;
 		}
 
 
