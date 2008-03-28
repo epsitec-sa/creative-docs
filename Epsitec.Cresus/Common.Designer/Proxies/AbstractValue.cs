@@ -10,6 +10,11 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public abstract class AbstractValue : Types.DependencyObject
 	{
+		public AbstractValue()
+		{
+			this.selectedObjects = new List<Widget>();
+		}
+
 		public string Name
 		{
 			//	Nom interne de la valeur. Chaque valeur doit avoir un nom différent.
@@ -56,6 +61,15 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		public List<Widget> SelectedObjects
+		{
+			get
+			{
+				return this.selectedObjects;
+			}
+		}
+
+
 		public virtual Widget CreateInterface(Widget parent)
 		{
 			//	Crée les widgets permettant d'éditer la valeur.
@@ -96,6 +110,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected string name;
 		protected string label;
 		protected object value;
+		protected List<Widget> selectedObjects;
 		protected bool ignoreChange;
 	}
 }

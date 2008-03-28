@@ -47,7 +47,11 @@ namespace Epsitec.Common.Designer.Proxies
 					string proxyName = ProxyManager.SearchProxyName(possibleProxies, value.Name);
 					System.Diagnostics.Debug.Assert(proxyName != null);
 
-					if (!ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyName))
+					if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyName))
+					{
+						//	TODO: fusionne les AbstractValue.SelectedObjects !
+					}
+					else
 					{
 						ProxyToCreate newProxy = new ProxyToCreate();
 						newProxy.ProxyName = proxyName;

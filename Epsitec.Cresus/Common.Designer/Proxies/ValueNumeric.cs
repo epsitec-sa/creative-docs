@@ -107,11 +107,27 @@ namespace Epsitec.Common.Designer.Proxies
 				return;
 			}
 
-			double value = (double) this.field.Value;
-			if ((double) this.value != value)
+			System.TypeCode code;
+			code = System.Type.GetTypeCode(this.value.GetType());
+
+			if (code == System.TypeCode.Int32)
 			{
-				this.value = value;
-				this.OnValueChanged();
+				int value = (int) this.field.Value;
+				if ((int) this.value != value)
+				{
+					this.value = value;
+					this.OnValueChanged();
+				}
+			}
+
+			if (code == System.TypeCode.Double)
+			{
+				double value = (int) this.field.Value;
+				if ((double) this.value != value)
+				{
+					this.value = value;
+					this.OnValueChanged();
+				}
 			}
 		}
 
