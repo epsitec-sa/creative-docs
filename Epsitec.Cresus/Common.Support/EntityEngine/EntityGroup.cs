@@ -110,6 +110,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+
 		private readonly List<T> values;
 		private object key;
 		private string keyTitle;

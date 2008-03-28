@@ -131,6 +131,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="CodeGeneration\CodeHelper.cs" />
+    <Compile Include="EntityEngine\EntityGroupExtensions.cs" />
     <Compile Include="EntityEngine\EntityGroup.cs" />
     <Compile Include="EntityEngine\SearchEntity.cs" />
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
