@@ -160,6 +160,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override Drawing.Size GetBestFitSize()
+		{
+			if (this.list == null || this.list.Count == 0)
+			{
+				return Drawing.Size.Zero;
+			}
+			else
+			{
+				double dx = this.list[0].PreferredWidth;
+				double dy = this.list[0].PreferredHeight;
+				return new Drawing.Size(dx*this.list.Count, dy);
+			}
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
