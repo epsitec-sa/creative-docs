@@ -121,9 +121,7 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.field != null)
 			{
 				this.ignoreChange = true;
-				//?this.field.Value = (decimal) this.value;  // TODO: pourquoi y a-t-il une exception à l'exécution ???
-				//?this.field.Text = this.value.ToString();
-				this.field.Value = (decimal) (int) this.value;
+				this.field.Value = Types.InvariantConverter.ToDecimal(this.value);
 				this.ignoreChange = false;
 			}
 		}
