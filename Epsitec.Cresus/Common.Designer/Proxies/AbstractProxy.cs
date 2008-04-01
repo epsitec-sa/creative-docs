@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public abstract class AbstractProxy
 	{
-		public virtual IEnumerable<string> ProxyNames
+		public virtual IEnumerable<AbstractObjectManager.Type> ProxyTypes
 		{
 			get
 			{
@@ -18,31 +18,31 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public virtual IEnumerable<string> ValueNames(string proxyName)
+		public virtual IEnumerable<AbstractObjectManager.Type> ValueTypes(AbstractObjectManager.Type proxyType)
 		{
 			return null;
 		}
 
-		public virtual Widget CreateInterface(Widget parent, string proxyName, List<AbstractValue> values)
+		public virtual Widget CreateInterface(Widget parent, AbstractObjectManager.Type proxyType, List<AbstractValue> values)
 		{
 			return null;
 		}
 
-		protected virtual string GetIcon(string proxyName)
+		protected virtual string GetIcon(AbstractObjectManager.Type proxyType)
 		{
 			return null;
 		}
 
-		protected virtual string GetTitle(string proxyName)
+		protected virtual string GetTitle(AbstractObjectManager.Type proxyType)
 		{
 			return null;
 		}
 
-		static protected AbstractValue IndexOf(List<AbstractValue> values, string valueName)
+		static protected AbstractValue IndexOf(List<AbstractValue> values, AbstractObjectManager.Type valueType)
 		{
 			foreach (AbstractValue value in values)
 			{
-				if (value.Name == valueName)
+				if (value.Type == valueType)
 				{
 					return value;
 				}

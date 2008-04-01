@@ -10,6 +10,23 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public abstract class AbstractObjectManager
 	{
+		public enum Type
+		{
+			None,
+
+			FormGeometry,
+			FormStyle,
+
+			FormColumnsRequired,
+			FormRowsRequired,
+			FormPreferredWidth,
+			FormSeparatorBottom,
+			FormBackColor,
+			FormLabelFontColor,
+			FormFieldFontColor,
+		}
+
+
 		public AbstractObjectManager(object objectModifier)
 		{
 			this.objectModifier = objectModifier;

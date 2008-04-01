@@ -15,16 +15,16 @@ namespace Epsitec.Common.Designer.Proxies
 			this.selectedObjects = new List<Widget>();
 		}
 
-		public string Name
+		public AbstractObjectManager.Type Type
 		{
-			//	Nom interne de la valeur. Chaque valeur doit avoir un nom différent.
+			//	Type interne de la valeur.
 			get
 			{
-				return this.name;
+				return this.type;
 			}
 			set
 			{
-				this.name = value;
+				this.type = value;
 			}
 		}
 
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Proxies
 		#endregion
 
 
-		protected string name;
+		protected AbstractObjectManager.Type type;
 		protected string label;
 		protected object value;
 		protected List<Widget> selectedObjects;

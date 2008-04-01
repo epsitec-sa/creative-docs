@@ -24,13 +24,13 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
 			{
-				this.AddValue(list, selectedObject, "ColumnsRequired", "Nb de colonnes", 1, 10, 1, 1);
+				this.AddValue(list, selectedObject, Type.FormColumnsRequired, "Nb de colonnes", 1, 10, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, "RowsRequired", "Nb de lignes", 1, 10, 1, 1);
+				this.AddValue(list, selectedObject, Type.FormRowsRequired, "Nb de lignes", 1, 10, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
@@ -40,38 +40,38 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsLine(selectedObject))
 			{
-				this.AddValue(list, selectedObject, "PreferredWidth", "Largeur", 1, 1000, 1, 1);
+				this.AddValue(list, selectedObject, Type.FormPreferredWidth, "Largeur", 1, 1000, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, "SeparatorBottom", "Séparateur", Res.Types.FieldDescription.SeparatorType);
+				this.AddValue(list, selectedObject, Type.FormSeparatorBottom, "Séparateur", Res.Types.FieldDescription.SeparatorType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
 			{
-				this.AddValue(list, selectedObject, "BackColor", "Couleur fond", Res.Types.FieldDescription.BackColorType);
+				this.AddValue(list, selectedObject, Type.FormBackColor, "Couleur fond", Res.Types.FieldDescription.BackColorType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, "LabelFontColor", "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, "FieldFontColor", "Couleur champ", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, Type.FormLabelFontColor, "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, Type.FormFieldFontColor, "Couleur champ", Res.Types.FieldDescription.FontColorType);
 			}
 
 			return list;
 		}
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, string name, string label, double min, double max, double step, double resolution)
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, Type type, string label, double min, double max, double step, double resolution)
 		{
 			ValueNumeric value = new ValueNumeric(min, max, step, resolution);
 			value.SelectedObjects.Add(selectedObject);
-			value.Name = name;
+			value.Type = type;
 			value.Label = label;
 			value.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.SendObjectToValue(value);
@@ -79,11 +79,11 @@ namespace Epsitec.Common.Designer.Proxies
 			list.Add(value);
 		}
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, string name, string label, Types.EnumType enumType)
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, Type type, string label, Types.EnumType enumType)
 		{
 			ValueEnum value = new ValueEnum(enumType);
 			value.SelectedObjects.Add(selectedObject);
-			value.Name = name;
+			value.Type = type;
 			value.Label = label;
 			value.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.SendObjectToValue(value);
@@ -96,33 +96,33 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
 			Widget selectedObject = value.SelectedObjects[0];
 
-			switch (value.Name)
+			switch (value.Type)
 			{
-				case "ColumnsRequired":
+				case Type.FormColumnsRequired:
 					value.Value = this.ObjectModifier.GetColumnsRequired(selectedObject);
 					break;
 
-				case "RowsRequired":
+				case Type.FormRowsRequired:
 					value.Value = this.ObjectModifier.GetRowsRequired(selectedObject);
 					break;
 
-				case "PreferredWidth":
+				case Type.FormPreferredWidth:
 					value.Value = this.ObjectModifier.GetPreferredWidth(selectedObject);
 					break;
 
-				case "SeparatorBottom":
+				case Type.FormSeparatorBottom:
 					value.Value = this.ObjectModifier.GetSeparatorBottom(selectedObject);
 					break;
 
-				case "BackColor":
+				case Type.FormBackColor:
 					value.Value = this.ObjectModifier.GetBackColor(selectedObject);
 					break;
 
-				case "LabelFontColor":
+				case Type.FormLabelFontColor:
 					value.Value = this.ObjectModifier.GetLabelFontColor(selectedObject);
 					break;
 
-				case "FieldFontColor":
+				case Type.FormFieldFontColor:
 					value.Value = this.ObjectModifier.GetFieldFontColor(selectedObject);
 					break;
 			}
@@ -132,33 +132,33 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			foreach (Widget selectedObject in value.SelectedObjects)
 			{
-				switch (value.Name)
+				switch (value.Type)
 				{
-					case "ColumnsRequired":
+					case Type.FormColumnsRequired:
 						this.ObjectModifier.SetColumnsRequired(selectedObject, (int) value.Value);
 						break;
 
-					case "RowsRequired":
+					case Type.FormRowsRequired:
 						this.ObjectModifier.SetRowsRequired(selectedObject, (int) value.Value);
 						break;
 
-					case "PreferredWidth":
+					case Type.FormPreferredWidth:
 						this.ObjectModifier.SetPreferredWidth(selectedObject, (double) value.Value);
 						break;
 
-					case "SeparatorBottom":
+					case Type.FormSeparatorBottom:
 						this.ObjectModifier.SetSeparatorBottom(selectedObject, (FormEngine.FieldDescription.SeparatorType) value.Value);
 						break;
 
-					case "BackColor":
+					case Type.FormBackColor:
 						this.ObjectModifier.SetBackColor(selectedObject, (FormEngine.FieldDescription.BackColorType) value.Value);
 						break;
 
-					case "LabelFontColor":
+					case Type.FormLabelFontColor:
 						this.ObjectModifier.SetLabelFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
 						break;
 
-					case "FieldFontColor":
+					case Type.FormFieldFontColor:
 						this.ObjectModifier.SetFieldFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
 						break;
 				}

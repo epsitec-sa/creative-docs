@@ -24,12 +24,12 @@ namespace Epsitec.Common.Designer.Proxies
 
 			//	Construit la liste de tous les proxies possibles.
 			List<PossibleProxy> possibleProxies = new List<PossibleProxy>();
-			IEnumerable<string> proxyNames = this.proxy.ProxyNames;
-			foreach (string proxyName in proxyNames)
+			IEnumerable<AbstractObjectManager.Type> proxyTypes = this.proxy.ProxyTypes;
+			foreach (AbstractObjectManager.Type proxyType in proxyTypes)
 			{
 				PossibleProxy proxy = new PossibleProxy();
-				proxy.ProxyName = proxyName;
-				proxy.ValueNames = this.proxy.ValueNames(proxyName);
+				proxy.ProxyType = proxyType;
+				proxy.ValueTypes = this.proxy.ValueTypes(proxyType);
 
 				possibleProxies.Add(proxy);
 			}
@@ -44,17 +44,17 @@ namespace Epsitec.Common.Designer.Proxies
 				//	Passe en revue les valeurs de chaque objet sélectionné.
 				foreach (AbstractValue value in values)
 				{
-					string proxyName = ProxyManager.SearchProxyName(possibleProxies, value.Name);
-					System.Diagnostics.Debug.Assert(proxyName != null);
+					AbstractObjectManager.Type proxyType = ProxyManager.SearchProxyType(possibleProxies, value.Type);
+					System.Diagnostics.Debug.Assert(proxyType == AbstractObjectManager.Type.None);
 
-					if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyName))
+					if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyType))
 					{
 						//	TODO: fusionne les AbstractValue.SelectedObjects !
 					}
 					else
 					{
 						ProxyToCreate newProxy = new ProxyToCreate();
-						newProxy.ProxyName = proxyName;
+						newProxy.ProxyType = proxyType;
 						newProxy.Values = values;
 
 						proxiesToCreate.Add(newProxy);
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Construit tous les panneaux pour les proxies.
 			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
 			{
-				Widget panel = this.proxy.CreateInterface(box, proxyToCreate.ProxyName, proxyToCreate.Values);
+				Widget panel = this.proxy.CreateInterface(box, proxyToCreate.ProxyType, proxyToCreate.Values);
 				panel.Margins = new Margins(0, 0, 0, 5);
 				panel.Dock = DockStyle.Top;
 			}
@@ -73,14 +73,14 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
-		static protected bool IsExisting(List<PossibleProxy> possibleProxies, List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, string proxyName)
+		static protected bool IsExisting(List<PossibleProxy> possibleProxies, List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, AbstractObjectManager.Type proxyType)
 		{
 			//	Cherche s'il existe déjà un proxy avec exactement les mêmes valeurs.
 			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
 			{
-				if (proxyToCreate.ProxyName == proxyName)
+				if (proxyToCreate.ProxyType == proxyType)
 				{
-					if (ProxyManager.IsEqual(possibleProxies, proxyToCreate, values, proxyName))
+					if (ProxyManager.IsEqual(possibleProxies, proxyToCreate, values, proxyType))
 					{
 						return true;
 					}
@@ -90,20 +90,20 @@ namespace Epsitec.Common.Designer.Proxies
 			return false;
 		}
 
-		static protected bool IsEqual(List<PossibleProxy> possibleProxies, ProxyToCreate proxyToCreate, List<AbstractValue> values, string proxyName)
+		static protected bool IsEqual(List<PossibleProxy> possibleProxies, ProxyToCreate proxyToCreate, List<AbstractValue> values, AbstractObjectManager.Type proxyType)
 		{
 			//	Cherche si un proxy contient exactement les mêmes valeurs. Le proxy peut contenir plus de valeurs
 			//	que la liste cherchée, mais toutes les valeurs de la liste cherchée doivent exister et être identiques
 			//	dans le proxy.
 			foreach (AbstractValue value in values)
 			{
-				string valueProxyName = ProxyManager.SearchProxyName(possibleProxies, value.Name);
-				if (valueProxyName == proxyName)
+				AbstractObjectManager.Type valueProxyType = ProxyManager.SearchProxyType(possibleProxies, value.Type);
+				if (valueProxyType == proxyType)
 				{
 					bool equal = false;
 					foreach (AbstractValue valueToCreate in proxyToCreate.Values)
 					{
-						if (valueToCreate.Name == value.Name && valueToCreate.Value.Equals(value.Value))
+						if (valueToCreate.Type == value.Type && valueToCreate.Value.Equals(value.Value))
 						{
 							equal = true;
 						}
@@ -119,33 +119,33 @@ namespace Epsitec.Common.Designer.Proxies
 			return true;
 		}
 
-		static protected string SearchProxyName(List<PossibleProxy> possibleProxies, string valueName)
+		static protected AbstractObjectManager.Type SearchProxyType(List<PossibleProxy> possibleProxies, AbstractObjectManager.Type valueType)
 		{
 			//	Cherche le nom du proxy permettant de représenter une valeur.
 			foreach (PossibleProxy proxy in possibleProxies)
 			{
-				foreach (string proxyValueName in proxy.ValueNames)
+				foreach (AbstractObjectManager.Type proxyValueType in proxy.ValueTypes)
 				{
-					if (proxyValueName == valueName)
+					if (proxyValueType == valueType)
 					{
-						return proxy.ProxyName;
+						return proxy.ProxyType;
 					}
 				}
 			}
 
-			return null;
+			return AbstractObjectManager.Type.None;
 		}
 
 
 		protected class PossibleProxy
 		{
-			public string ProxyName;
-			public IEnumerable<string> ValueNames;
+			public AbstractObjectManager.Type ProxyType;
+			public IEnumerable<AbstractObjectManager.Type> ValueTypes;
 		}
 
 		protected class ProxyToCreate
 		{
-			public string ProxyName;
+			public AbstractObjectManager.Type ProxyType;
 			public List<AbstractValue> Values;
 		}
 

@@ -10,45 +10,45 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ProxyForm : AbstractProxy
 	{
-		public override IEnumerable<string> ProxyNames
+		public override IEnumerable<AbstractObjectManager.Type> ProxyTypes
 		{
 			get
 			{
-				yield return "Geometry";
-				yield return "Style";
+				yield return AbstractObjectManager.Type.FormGeometry;
+				yield return AbstractObjectManager.Type.FormStyle;
 			}
 		}
 
-		public override IEnumerable<string> ValueNames(string proxyName)
+		public override IEnumerable<AbstractObjectManager.Type> ValueTypes(AbstractObjectManager.Type proxyType)
 		{
-			switch (proxyName)
+			switch (proxyType)
 			{
-				case "Geometry":
-					yield return "ColumnsRequired";
-					yield return "RowsRequired";
-					yield return "PreferredWidth";
-					yield return "SeparatorBottom";
+				case AbstractObjectManager.Type.FormGeometry:
+					yield return AbstractObjectManager.Type.FormColumnsRequired;
+					yield return AbstractObjectManager.Type.FormRowsRequired;
+					yield return AbstractObjectManager.Type.FormPreferredWidth;
+					yield return AbstractObjectManager.Type.FormSeparatorBottom;
 					break;
 
-				case "Style":
-					yield return "BackColor";
-					yield return "LabelFontColor";
-					yield return "FieldFontColor";
+				case AbstractObjectManager.Type.FormStyle:
+					yield return AbstractObjectManager.Type.FormBackColor;
+					yield return AbstractObjectManager.Type.FormLabelFontColor;
+					yield return AbstractObjectManager.Type.FormFieldFontColor;
 					break;
 			}
 		}
 
-		public override Widget CreateInterface(Widget parent, string proxyName, List<AbstractValue> values)
+		public override Widget CreateInterface(Widget parent, AbstractObjectManager.Type proxyType, List<AbstractValue> values)
 		{
 			//	Crée un panneau complet.
 			MyWidgets.PropertyPanel panel = new MyWidgets.PropertyPanel(parent);
-			panel.Icon = this.GetIcon(proxyName);
-			panel.Title = this.GetTitle(proxyName);
+			panel.Icon = this.GetIcon(proxyType);
+			panel.Title = this.GetTitle(proxyType);
 			panel.IsExtendedSize = true;
 
-			foreach (string valueName in this.ValueNames(proxyName))
+			foreach (AbstractObjectManager.Type valueType in this.ValueTypes(proxyType))
 			{
-				AbstractValue value = AbstractProxy.IndexOf(values, valueName);
+				AbstractValue value = AbstractProxy.IndexOf(values, valueType);
 				if (value != null)
 				{
 					Widget widget = value.CreateInterface(panel.Container);
@@ -60,28 +60,28 @@ namespace Epsitec.Common.Designer.Proxies
 			return panel;
 		}
 
-		protected override string GetIcon(string proxyName)
+		protected override string GetIcon(AbstractObjectManager.Type proxyType)
 		{
-			switch (proxyName)
+			switch (proxyType)
 			{
-				case "Geometry":
+				case AbstractObjectManager.Type.FormGeometry:
 					return "PropertyGeometry";
 
-				case "Style":
+				case AbstractObjectManager.Type.FormStyle:
 					return "PropertyAspect";
 			}
 
 			return null;
 		}
 
-		protected override string GetTitle(string proxyName)
+		protected override string GetTitle(AbstractObjectManager.Type proxyType)
 		{
-			switch (proxyName)
+			switch (proxyType)
 			{
-				case "Geometry":
+				case AbstractObjectManager.Type.FormGeometry:
 					return "Géométrie";
 
-				case "Style":
+				case AbstractObjectManager.Type.FormStyle:
 					return "Style";
 			}
 
