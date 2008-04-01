@@ -15,7 +15,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.selectedObjects = new List<Widget>();
 		}
 
-		public AbstractObjectManager.Type Type
+		public AbstractProxy.Type Type
 		{
 			//	Type interne de la valeur.
 			get
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Proxies
 		#endregion
 
 
-		protected AbstractObjectManager.Type type;
+		protected AbstractProxy.Type type;
 		protected string label;
 		protected object value;
 		protected List<Widget> selectedObjects;

@@ -10,7 +10,29 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public abstract class AbstractProxy
 	{
-		public virtual IEnumerable<AbstractObjectManager.Type> ProxyTypes
+		public enum Panel
+		{
+			None,
+
+			FormGeometry,
+			FormStyle,
+		}
+
+		public enum Type
+		{
+			None,
+
+			FormColumnsRequired,
+			FormRowsRequired,
+			FormPreferredWidth,
+			FormSeparatorBottom,
+			FormBackColor,
+			FormLabelFontColor,
+			FormFieldFontColor,
+		}
+
+
+		public virtual IEnumerable<Panel> ProxyPanels
 		{
 			get
 			{
@@ -18,27 +40,27 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public virtual IEnumerable<AbstractObjectManager.Type> ValueTypes(AbstractObjectManager.Type proxyType)
+		public virtual IEnumerable<Type> ValueTypes(Panel proxyPanel)
 		{
 			return null;
 		}
 
-		public virtual Widget CreateInterface(Widget parent, AbstractObjectManager.Type proxyType, List<AbstractValue> values)
+		public virtual Widget CreateInterface(Widget parent, Panel proxyPanel, List<AbstractValue> values)
 		{
 			return null;
 		}
 
-		protected virtual string GetIcon(AbstractObjectManager.Type proxyType)
+		protected virtual string GetIcon(Panel proxyPanel)
 		{
 			return null;
 		}
 
-		protected virtual string GetTitle(AbstractObjectManager.Type proxyType)
+		protected virtual string GetTitle(Panel proxyPanel)
 		{
 			return null;
 		}
 
-		static protected AbstractValue IndexOf(List<AbstractValue> values, AbstractObjectManager.Type valueType)
+		static protected AbstractValue IndexOf(List<AbstractValue> values, Type valueType)
 		{
 			foreach (AbstractValue value in values)
 			{
