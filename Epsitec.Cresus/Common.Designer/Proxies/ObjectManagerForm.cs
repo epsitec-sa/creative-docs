@@ -18,7 +18,6 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			//	Retourne la liste des valeurs nécessaires pour représenter un objet.
 			List<AbstractValue> list = new List<AbstractValue>();
-			this.suspendNotify = true;
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject) ||
@@ -65,32 +64,49 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, "Couleur champ", Res.Types.FieldDescription.FontColorType);
 			}
 
-			this.suspendNotify = false;
 			return list;
 		}
 
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, string label, double min, double max, double step, double resolution)
 		{
-			ValueNumeric value = new ValueNumeric(min, max, step, resolution);
-			value.SelectedObjects.Add(selectedObject);
-			value.Type = type;
-			value.Label = label;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
-			this.SendObjectToValue(value);
+			this.SuspendChanges();
 
-			list.Add(value);
+			try
+			{
+				ValueNumeric value = new ValueNumeric(min, max, step, resolution);
+				value.SelectedObjects.Add(selectedObject);
+				value.Type = type;
+				value.Label = label;
+				value.ValueChanged += new EventHandler(this.HandleValueChanged);
+				this.SendObjectToValue(value);
+
+				list.Add(value);
+			}
+			finally
+			{
+				this.ResumeChanges();
+			}
 		}
 
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, string label, Types.EnumType enumType)
 		{
-			ValueEnum value = new ValueEnum(enumType);
-			value.SelectedObjects.Add(selectedObject);
-			value.Type = type;
-			value.Label = label;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
-			this.SendObjectToValue(value);
+			this.SuspendChanges();
 
-			list.Add(value);
+			try
+			{
+				ValueEnum value = new ValueEnum(enumType);
+				value.SelectedObjects.Add(selectedObject);
+				value.Type = type;
+				value.Label = label;
+				value.ValueChanged += new EventHandler(this.HandleValueChanged);
+				this.SendObjectToValue(value);
+
+				list.Add(value);
+			}
+			finally
+			{
+				this.ResumeChanges();
+			}
 		}
 
 		protected void SendObjectToValue(AbstractValue value)
@@ -169,13 +185,11 @@ namespace Epsitec.Common.Designer.Proxies
 
 		private void HandleValueChanged(object sender)
 		{
-			if (this.suspendNotify)
+			if (this.IsNotSuspended)
 			{
-				return;
+				AbstractValue value = sender as AbstractValue;
+				this.SendValueToObject(value);
 			}
-
-			AbstractValue value = sender as AbstractValue;
-			this.SendValueToObject(value);
 		}
 
 

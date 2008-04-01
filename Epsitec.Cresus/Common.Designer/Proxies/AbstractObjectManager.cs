@@ -22,7 +22,34 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		protected bool IsSuspended
+		{
+			get
+			{
+				return this.suspendChanges > 0;
+			}
+		}
+
+		protected bool IsNotSuspended
+		{
+			get
+			{
+				return this.suspendChanges == 0;
+			}
+		}
+
+		protected void SuspendChanges()
+		{
+			this.suspendChanges++;
+		}
+
+		protected void ResumeChanges()
+		{
+			this.suspendChanges--;
+		}
+
+
 		protected object objectModifier;
-		protected bool suspendNotify;
+		protected int suspendChanges;
 	}
 }
