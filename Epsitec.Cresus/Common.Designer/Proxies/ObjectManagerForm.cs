@@ -18,6 +18,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			//	Retourne la liste des valeurs nécessaires pour représenter un objet.
 			List<AbstractValue> list = new List<AbstractValue>();
+			this.suspendNotify = true;
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject) ||
@@ -64,6 +65,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, "Couleur champ", Res.Types.FieldDescription.FontColorType);
 			}
 
+			this.suspendNotify = false;
 			return list;
 		}
 
@@ -167,6 +169,11 @@ namespace Epsitec.Common.Designer.Proxies
 
 		private void HandleValueChanged(object sender)
 		{
+			if (this.suspendNotify)
+			{
+				return;
+			}
+
 			AbstractValue value = sender as AbstractValue;
 			this.SendValueToObject(value);
 		}

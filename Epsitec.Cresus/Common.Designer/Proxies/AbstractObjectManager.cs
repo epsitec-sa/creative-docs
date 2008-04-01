@@ -23,5 +23,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 
 		protected object objectModifier;
+		protected bool suspendNotify;
 	}
 }

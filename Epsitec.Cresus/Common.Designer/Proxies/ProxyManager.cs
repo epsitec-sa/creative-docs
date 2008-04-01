@@ -45,7 +45,7 @@ namespace Epsitec.Common.Designer.Proxies
 				foreach (AbstractValue value in values)
 				{
 					AbstractProxy.Panel proxyPanel = ProxyManager.SearchProxyPanel(possibleProxies, value.Type);
-					System.Diagnostics.Debug.Assert(proxyPanel == AbstractProxy.Panel.None);
+					System.Diagnostics.Debug.Assert(proxyPanel != AbstractProxy.Panel.None);
 
 					if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyPanel))
 					{
