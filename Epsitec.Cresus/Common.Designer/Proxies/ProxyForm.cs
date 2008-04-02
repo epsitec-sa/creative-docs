@@ -28,13 +28,23 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormRowsRequired;
 					yield return Type.FormPreferredWidth;
 					yield return Type.FormSeparatorBottom;
+					yield return Type.FormBoxLayout;
+					yield return Type.FormBoxPadding;
 					yield return Type.FormBoxFrameState;
+					yield return Type.FormBoxFrameWidth;
 					break;
 
 				case Panel.FormStyle:
 					yield return Type.FormBackColor;
 					yield return Type.FormLabelFontColor;
 					yield return Type.FormFieldFontColor;
+					yield return Type.FormLabelFontFace;
+					yield return Type.FormFieldFontFace;
+					yield return Type.FormLabelFontStyle;
+					yield return Type.FormFieldFontStyle;
+					yield return Type.FormLabelFontSize;
+					yield return Type.FormFieldFontSize;
+					yield return Type.FormButtonClass;
 					break;
 			}
 		}

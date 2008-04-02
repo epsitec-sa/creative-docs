@@ -62,11 +62,34 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, "Couleur champ", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police étiquette", Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace, "Police champ", Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style étiquette", Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, "Style champ", Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille étiquette", Res.Types.FieldDescription.FontSizeType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize, "Taille champ", Res.Types.FieldDescription.FontSizeType);
+			}
+
+			if (this.ObjectModifier.IsTitle(selectedObject) ||
+				this.ObjectModifier.IsCommand(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police étiquette", Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style étiquette", Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille étiquette", Res.Types.FieldDescription.FontSizeType);
 			}
 
 			if (this.ObjectModifier.IsBox(selectedObject))
 			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout, "Disposition", Res.Types.FieldDescription.BoxLayoutType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding, "Marges", Res.Types.FieldDescription.BoxPaddingType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, "Cadre", Res.Types.FieldDescription.FrameState);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, "Epaisseur cadre", 0, 5, 1, 1);
+			}
+
+			if (this.ObjectModifier.IsCommand(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormButtonClass, "Bouton", Res.Types.FieldDescription.CommandButtonClass);
 			}
 
 			return list;
@@ -149,8 +172,48 @@ namespace Epsitec.Common.Designer.Proxies
 					value.Value = this.ObjectModifier.GetFieldFontColor(selectedObject);
 					break;
 
+				case AbstractProxy.Type.FormLabelFontFace:
+					value.Value = this.ObjectModifier.GetLabelFontFace(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormFieldFontFace:
+					value.Value = this.ObjectModifier.GetFieldFontFace(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormLabelFontStyle:
+					value.Value = this.ObjectModifier.GetLabelFontStyle(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormFieldFontStyle:
+					value.Value = this.ObjectModifier.GetFieldFontStyle(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormLabelFontSize:
+					value.Value = this.ObjectModifier.GetLabelFontSize(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormFieldFontSize:
+					value.Value = this.ObjectModifier.GetFieldFontSize(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormBoxLayout:
+					value.Value = this.ObjectModifier.GetBoxLayout(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormBoxPadding:
+					value.Value = this.ObjectModifier.GetBoxPadding(selectedObject);
+					break;
+
 				case AbstractProxy.Type.FormBoxFrameState:
 					value.Value = this.ObjectModifier.GetBoxFrameState(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormBoxFrameWidth:
+					value.Value = this.ObjectModifier.GetBoxFrameWidth(selectedObject);
+					break;
+
+				case AbstractProxy.Type.FormButtonClass:
+					value.Value = this.ObjectModifier.GetCommandButtonClass(selectedObject);
 					break;
 			}
 		}
@@ -189,8 +252,48 @@ namespace Epsitec.Common.Designer.Proxies
 						this.ObjectModifier.SetFieldFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
 						break;
 
+					case AbstractProxy.Type.FormLabelFontFace:
+						this.ObjectModifier.SetLabelFontFace(selectedObject, (FormEngine.FieldDescription.FontFaceType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormFieldFontFace:
+						this.ObjectModifier.SetFieldFontFace(selectedObject, (FormEngine.FieldDescription.FontFaceType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormLabelFontStyle:
+						this.ObjectModifier.SetLabelFontStyle(selectedObject, (FormEngine.FieldDescription.FontStyleType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormFieldFontStyle:
+						this.ObjectModifier.SetFieldFontStyle(selectedObject, (FormEngine.FieldDescription.FontStyleType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormLabelFontSize:
+						this.ObjectModifier.SetLabelFontSize(selectedObject, (FormEngine.FieldDescription.FontSizeType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormFieldFontSize:
+						this.ObjectModifier.SetFieldFontSize(selectedObject, (FormEngine.FieldDescription.FontSizeType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormBoxLayout:
+						this.ObjectModifier.SetBoxLayout(selectedObject, (FormEngine.FieldDescription.BoxLayoutType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormBoxPadding:
+						this.ObjectModifier.SetBoxPadding(selectedObject, (FormEngine.FieldDescription.BoxPaddingType) value.Value);
+						break;
+
 					case AbstractProxy.Type.FormBoxFrameState:
 						this.ObjectModifier.SetBoxFrameState(selectedObject, (FrameState) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormBoxFrameWidth:
+						this.ObjectModifier.SetBoxFrameWidth(selectedObject, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormButtonClass:
+						this.ObjectModifier.SetCommandButtonClass(selectedObject, (FormEngine.FieldDescription.CommandButtonClass) value.Value);
 						break;
 				}
 			}

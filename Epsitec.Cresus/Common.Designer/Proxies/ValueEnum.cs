@@ -72,11 +72,11 @@ namespace Epsitec.Common.Designer.Proxies
 				int flags = button.SelectedValue;
 				IEnumerable<Types.IEnumValue> enumValues = Types.EnumType.ConvertEnumValuesFromFlags(this.enumType, flags);
 				string valueText = Types.EnumType.ConvertToString(enumValues);
-				System.Enum valueEnum = System.Enum.Parse(this.enumType.SystemType, valueText) as System.Enum;
+				System.Enum e = System.Enum.Parse(this.enumType.SystemType, valueText) as System.Enum;
 
-				if (this.value != valueEnum)
+				if (this.value != e)
 				{
-					this.value = valueEnum;
+					this.value = e;
 					this.OnValueChanged();
 				}
 			}

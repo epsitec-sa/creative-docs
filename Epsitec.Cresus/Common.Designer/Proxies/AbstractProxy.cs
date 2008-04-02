@@ -26,10 +26,20 @@ namespace Epsitec.Common.Designer.Proxies
 			FormRowsRequired,
 			FormPreferredWidth,
 			FormSeparatorBottom,
+			FormBoxLayout,
+			FormBoxPadding,
+			FormBoxFrameState,
+			FormBoxFrameWidth,
 			FormBackColor,
 			FormLabelFontColor,
 			FormFieldFontColor,
-			FormBoxFrameState,
+			FormLabelFontFace,
+			FormFieldFontFace,
+			FormLabelFontStyle,
+			FormFieldFontStyle,
+			FormLabelFontSize,
+			FormFieldFontSize,
+			FormButtonClass,
 		}
 
 
