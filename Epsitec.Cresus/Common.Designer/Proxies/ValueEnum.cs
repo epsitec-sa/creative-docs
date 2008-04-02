@@ -44,7 +44,8 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 
 				Types.Caption caption = enumValue.Caption;
-				this.buttons.AddRadioIcon(caption.Icon, caption.Description, enumValue.Rank, false);
+				int value = this.enumType.IsDefinedAsFlags ? Types.EnumType.ConvertToInt(enumValue.Value) : enumValue.Rank;
+				this.buttons.AddRadioIcon(caption.Icon, caption.Description, value, false);
 				count++;
 			}
 
