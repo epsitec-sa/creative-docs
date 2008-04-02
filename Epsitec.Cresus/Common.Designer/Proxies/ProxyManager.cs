@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 
 			//	Construit tous les panneaux pour les proxies.
-			proxiesToCreate.Sort();
+			proxiesToCreate.Sort();  // trie les panneaux
 
 			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
 			{

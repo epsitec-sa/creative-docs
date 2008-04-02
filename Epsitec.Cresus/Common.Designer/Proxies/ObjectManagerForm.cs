@@ -137,6 +137,16 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		private void HandleValueChanged(object sender)
+		{
+			if (this.IsNotSuspended)
+			{
+				AbstractValue value = sender as AbstractValue;
+				this.SendValueToObject(value);
+			}
+		}
+
+
 		protected void SendObjectToValue(AbstractValue value)
 		{
 			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
@@ -300,15 +310,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 			Application.QueueAsyncCallback(this.ObjectModifier.FormEditor.RegenerateForm);
 			this.ObjectModifier.FormEditor.Module.AccessForms.SetLocalDirty();
-		}
-
-		private void HandleValueChanged(object sender)
-		{
-			if (this.IsNotSuspended)
-			{
-				AbstractValue value = sender as AbstractValue;
-				this.SendValueToObject(value);
-			}
 		}
 
 

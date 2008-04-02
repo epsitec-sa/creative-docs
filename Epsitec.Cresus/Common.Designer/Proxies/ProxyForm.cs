@@ -14,6 +14,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
+				//	L'ordre n'a aucune importance.
 				yield return Panel.FormGeometry;
 				yield return Panel.FormBox;
 				yield return Panel.FormFont;
@@ -25,6 +26,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			switch (proxyPanel)
 			{
+				//	L'ordre n'a aucune importance.
 				case Panel.FormGeometry:
 					yield return Type.FormColumnsRequired;
 					yield return Type.FormRowsRequired;
@@ -65,7 +67,10 @@ namespace Epsitec.Common.Designer.Proxies
 			panel.Title = this.GetTitle(proxyPanel);
 			panel.IsExtendedSize = true;
 
-			foreach (Type valueType in this.ValueTypes(proxyPanel))
+			List<Type> list = new List<Type>(this.ValueTypes(proxyPanel));
+			list.Sort();  // trie les valeurs dans le panneau
+
+			foreach (Type valueType in list)
 			{
 				AbstractValue value = AbstractProxy.IndexOf(values, valueType);
 				if (value != null)

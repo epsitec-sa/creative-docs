@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// <summary>
 	/// Cette classe permet de représenter la valeur d'une propriété d'un objet reflété.
 	/// </summary>
-	public abstract class AbstractValue : Types.DependencyObject
+	public abstract class AbstractValue : Types.DependencyObject, System.IComparable
 	{
 		public AbstractValue()
 		{
@@ -80,6 +80,15 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			//	Met à jour la valeur dans l'interface.
 		}
+
+
+		#region IComparable Members
+		public int CompareTo(object obj)
+		{
+			AbstractValue that = obj as AbstractValue;
+			return this.type.CompareTo(that.type);
+		}
+		#endregion
 
 
 		#region Events handler

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Proxies
 	{
 		public enum Panel
 		{
-			//	L'ordre détermine l'ordre d'apparaition des panneaux, de haut en bas.
+			//	L'ordre détermine l'ordre d'apparition des panneaux, de haut en bas.
 			None,
 
 			FormGeometry,
@@ -23,18 +23,22 @@ namespace Epsitec.Common.Designer.Proxies
 
 		public enum Type
 		{
-			//	L'ordre n'a aucune importance.
+			//	L'ordre détermine l'ordre d'apparition dans un panneau.
 			None,
 
+			//	FormGeometry
 			FormColumnsRequired,
 			FormRowsRequired,
 			FormPreferredWidth,
 			FormSeparatorBottom,
+
+			//	FormBox
 			FormBoxLayout,
 			FormBoxPadding,
 			FormBoxFrameState,
 			FormBoxFrameWidth,
-			FormBackColor,
+
+			//	FormFont
 			FormLabelFontColor,
 			FormFieldFontColor,
 			FormLabelFontFace,
@@ -43,6 +47,9 @@ namespace Epsitec.Common.Designer.Proxies
 			FormFieldFontStyle,
 			FormLabelFontSize,
 			FormFieldFontSize,
+
+			//	FormStyle
+			FormBackColor,
 			FormButtonClass,
 		}
 
