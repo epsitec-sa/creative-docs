@@ -119,8 +119,7 @@ namespace Epsitec.Common.Designer.Proxies
 					this.OnValueChanged();
 				}
 			}
-
-			if (code == System.TypeCode.Double)
+			else if (code == System.TypeCode.Double)
 			{
 				double value = (int) this.field.Value;
 				if ((double) this.value != value)
@@ -128,6 +127,10 @@ namespace Epsitec.Common.Designer.Proxies
 					this.value = value;
 					this.OnValueChanged();
 				}
+			}
+			else
+			{
+				throw new System.NotImplementedException();
 			}
 		}
 

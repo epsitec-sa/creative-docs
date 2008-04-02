@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Designer.Proxies
 {
 	/// <summary>
-	/// Cette classe permet...
+	/// Cette classe gère les proxies.
 	/// </summary>
 	public class ProxyManager
 	{
