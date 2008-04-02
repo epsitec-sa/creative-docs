@@ -12,6 +12,7 @@ namespace Epsitec.Common.Designer.Proxies
 	{
 		public enum Panel
 		{
+			//	L'ordre détermine l'ordre d'apparaition des panneaux, de haut en bas.
 			None,
 
 			FormGeometry,
@@ -22,6 +23,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		public enum Type
 		{
+			//	L'ordre n'a aucune importance.
 			None,
 
 			FormColumnsRequired,

@@ -69,6 +69,8 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 
 			//	Construit tous les panneaux pour les proxies.
+			proxiesToCreate.Sort();
+
 			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
 			{
 				Widget panel = this.proxy.CreateInterface(box, proxyToCreate.ProxyPanel, proxyToCreate.Values);
@@ -170,10 +172,18 @@ namespace Epsitec.Common.Designer.Proxies
 			public IEnumerable<AbstractProxy.Type> ValueTypes;
 		}
 
-		protected class ProxyToCreate
+		protected class ProxyToCreate : System.IComparable
 		{
 			public AbstractProxy.Panel ProxyPanel;
 			public List<AbstractValue> Values;
+
+			#region IComparable Members
+			public int CompareTo(object obj)
+			{
+				ProxyToCreate that = obj as ProxyToCreate;
+				return this.ProxyPanel.CompareTo(that.ProxyPanel);
+			}
+			#endregion
 		}
 
 
