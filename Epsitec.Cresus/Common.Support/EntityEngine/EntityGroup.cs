@@ -1,6 +1,9 @@
 //	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Converters;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,11 +54,11 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					if (this.key == null)
 					{
-						return Types.Converters.TextConverter.ConvertToTaggedText ("<null>");
+						return TextConverter.ConvertToTaggedText ("<null>");
 					}
 					else
 					{
-						return Types.Converters.TextConverter.ConvertToTaggedText (this.key.ToString ());
+						return TextConverter.ConvertToTaggedText (this.key.ToString ());
 					}
 				}
 				else

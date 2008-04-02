@@ -10,31 +10,58 @@ namespace Epsitec.Common.Support.EntityEngine
 	{
 		public static IEnumerable<IGrouping<object, T>> GroupBy<T>(this IEnumerable<T> collection, System.Func<T, object> keySelector) where T : AbstractEntity, new ()
 		{
-			Dictionary<object, EntityGroup<T>> buckets = new Dictionary<object, EntityGroup<T>> ();
+			GroupBucket<T> bucket = new GroupBucket<T> ();
 
 			foreach (T item in collection)
 			{
 				object key = keySelector (item);
-				EntityGroup<T> group;
-				if (buckets.TryGetValue (key, out group))
+				EntityGroup<T> group = bucket[key];
+				group.Add (item);
+			}
+
+			return bucket.Groups;
+		}
+
+		
+		class GroupBucket<T> : Dictionary<object, EntityGroup<T>> where T : AbstractEntity, new ()
+		{
+			public new EntityGroup<T> this[object key]
+			{
+				get
 				{
-					group.Add (item);
-				}
-				else
-				{
-					group = new EntityGroup<T> ()
+					EntityGroup<T> group;
+					
+					if (this.TryGetValue (key, out group))
 					{
-						Key = key
-					};
-					group.Add (item);
-					buckets[key] = group;
+						//	OK, nothing more to do here
+					}
+					else
+					{
+						group = new EntityGroup<T> ()
+						{
+							Key = key
+						};
+						
+						base[key] = group;
+						this.keys.Add (key);
+					}
+					
+					return group;
 				}
 			}
 
-			foreach (var item in buckets.Values)
+			public IEnumerable<IGrouping<object, T>> Groups
 			{
-				yield return item;
+				get
+				{
+					foreach (object key in this.keys)
+					{
+						yield return base[key];
+					}
+				}
 			}
+
+			private readonly List<object> keys = new List<object> ();
 		}
 	}
 }
