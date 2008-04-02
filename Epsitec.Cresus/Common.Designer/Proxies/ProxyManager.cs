@@ -51,17 +51,18 @@ namespace Epsitec.Common.Designer.Proxies
 					}
 					else
 					{
-						if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyPanel))
-						{
-							//	TODO: fusionne les AbstractValue.SelectedObjects !
-						}
-						else
+						int index = ProxyManager.IndexOf(possibleProxies, proxiesToCreate, values, proxyPanel);
+						if (index == -1)
 						{
 							ProxyToCreate newProxy = new ProxyToCreate();
 							newProxy.ProxyPanel = proxyPanel;
 							newProxy.Values = values;
 
 							proxiesToCreate.Add(newProxy);
+						}
+						else
+						{
+							ProxyManager.Merge(possibleProxies, proxiesToCreate[index], values, proxyPanel);
 						}
 					}
 				}
@@ -78,21 +79,23 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
-		static protected bool IsExisting(List<PossibleProxy> possibleProxies, List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, AbstractProxy.Panel proxyPanel)
+		static protected int IndexOf(List<PossibleProxy> possibleProxies, List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, AbstractProxy.Panel proxyPanel)
 		{
-			//	Cherche s'il existe déjà un proxy avec exactement les mêmes valeurs.
-			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
+			//	Cherche l'index d'un proxy ayant exactement les mêmes valeurs.
+			for (int i=0; i<proxiesToCreate.Count; i++)
 			{
+				ProxyToCreate proxyToCreate = proxiesToCreate[i];
+
 				if (proxyToCreate.ProxyPanel == proxyPanel)
 				{
 					if (ProxyManager.IsEqual(possibleProxies, proxyToCreate, values, proxyPanel))
 					{
-						return true;
+						return i;
 					}
 				}
 			}
 
-			return false;
+			return -1;
 		}
 
 		static protected bool IsEqual(List<PossibleProxy> possibleProxies, ProxyToCreate proxyToCreate, List<AbstractValue> values, AbstractProxy.Panel proxyPanel)
@@ -122,6 +125,25 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 
 			return true;
+		}
+
+		static protected void Merge(List<PossibleProxy> possibleProxies, ProxyToCreate proxyToCreate, List<AbstractValue> values, AbstractProxy.Panel proxyPanel)
+		{
+			//	Fusionne les AbstractValue.SelectedObjects contenus dans 'values' aux listes de 'proxyToCreate'.
+			foreach (AbstractValue value in values)
+			{
+				AbstractProxy.Panel valueProxyPanel = ProxyManager.SearchProxyPanel(possibleProxies, value.Type);
+				if (valueProxyPanel == proxyPanel)
+				{
+					foreach (AbstractValue valueToCreate in proxyToCreate.Values)
+					{
+						if (valueToCreate.Type == value.Type && valueToCreate.Value.Equals(value.Value))
+						{
+							valueToCreate.SelectedObjects.AddRange(value.SelectedObjects);
+						}
+					}
+				}
+			}
 		}
 
 		static protected AbstractProxy.Panel SearchProxyPanel(List<PossibleProxy> possibleProxies, AbstractProxy.Type valueType)
