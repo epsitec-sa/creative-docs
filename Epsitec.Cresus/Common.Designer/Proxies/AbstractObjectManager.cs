@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Designer.Proxies
 {
 	/// <summary>
-	/// Cette classe permet...
+	/// Cette classe gère les objets associés à un proxy.
 	/// </summary>
 	public abstract class AbstractObjectManager
 	{
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
-				return this.suspendChanges > 0;
+				return this.suspendChanges != 0;
 			}
 		}
 
@@ -40,12 +40,15 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected void SuspendChanges()
 		{
+			//	Suspend les changements jusqu'au prochain ResumeChanges.
 			this.suspendChanges++;
 		}
 
 		protected void ResumeChanges()
 		{
+			//	Reprend les changements après un SuspendChanges.
 			this.suspendChanges--;
+			System.Diagnostics.Debug.Assert(this.suspendChanges >= 0);
 		}
 
 

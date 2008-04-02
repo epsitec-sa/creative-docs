@@ -28,6 +28,7 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormRowsRequired;
 					yield return Type.FormPreferredWidth;
 					yield return Type.FormSeparatorBottom;
+					yield return Type.FormBoxFrameState;
 					break;
 
 				case Panel.FormStyle:

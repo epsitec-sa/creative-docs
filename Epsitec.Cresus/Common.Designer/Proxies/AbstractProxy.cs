@@ -29,6 +29,7 @@ namespace Epsitec.Common.Designer.Proxies
 			FormBackColor,
 			FormLabelFontColor,
 			FormFieldFontColor,
+			FormBoxFrameState,
 		}
 
 

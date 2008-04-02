@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Designer.Proxies
 {
 	/// <summary>
-	/// Cette classe permet...
+	/// Cette classe gère les objets associés à un proxy de type Form.
 	/// </summary>
 	public class ObjectManagerForm : AbstractObjectManager
 	{
@@ -62,6 +62,11 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, "Couleur champ", Res.Types.FieldDescription.FontColorType);
+			}
+
+			if (this.ObjectModifier.IsBox(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, "Cadre", Res.Types.FieldDescription.FrameState);
 			}
 
 			return list;
@@ -143,6 +148,10 @@ namespace Epsitec.Common.Designer.Proxies
 				case AbstractProxy.Type.FormFieldFontColor:
 					value.Value = this.ObjectModifier.GetFieldFontColor(selectedObject);
 					break;
+
+				case AbstractProxy.Type.FormBoxFrameState:
+					value.Value = this.ObjectModifier.GetBoxFrameState(selectedObject);
+					break;
 			}
 		}
 
@@ -178,6 +187,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 					case AbstractProxy.Type.FormFieldFontColor:
 						this.ObjectModifier.SetFieldFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
+						break;
+
+					case AbstractProxy.Type.FormBoxFrameState:
+						this.ObjectModifier.SetBoxFrameState(selectedObject, (FrameState) value.Value);
 						break;
 				}
 			}
