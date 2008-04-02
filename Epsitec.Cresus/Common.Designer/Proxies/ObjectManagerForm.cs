@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsCommand(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormSeparatorBottom, "Séparateur", Res.Types.FieldDescription.SeparatorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormSeparatorBottom, "Lien suivant", Res.Types.FieldDescription.SeparatorType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
@@ -73,23 +73,23 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police étiquette", Res.Types.FieldDescription.FontFaceType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style étiquette", Res.Types.FieldDescription.FontStyleType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille étiquette", Res.Types.FieldDescription.FontSizeType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur texte", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police texte", Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style texte", Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille texte", Res.Types.FieldDescription.FontSizeType);
 			}
 
 			if (this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout, "Disposition", Res.Types.FieldDescription.BoxLayoutType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding, "Marges", Res.Types.FieldDescription.BoxPaddingType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout, "Contenu", Res.Types.FieldDescription.BoxLayoutType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding, "Marges int", Res.Types.FieldDescription.BoxPaddingType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, "Cadre", Res.Types.FieldDescription.FrameState);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, "Epaisseur cadre", 0, 5, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, "Epaisseur", 0, 5, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormButtonClass, "Bouton", Res.Types.FieldDescription.CommandButtonClass);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormButtonClass, "Type commande", Res.Types.FieldDescription.CommandButtonClass);
 			}
 
 			return list;

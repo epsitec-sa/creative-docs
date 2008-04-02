@@ -45,19 +45,24 @@ namespace Epsitec.Common.Designer.Proxies
 				foreach (AbstractValue value in values)
 				{
 					AbstractProxy.Panel proxyPanel = ProxyManager.SearchProxyPanel(possibleProxies, value.Type);
-					System.Diagnostics.Debug.Assert(proxyPanel != AbstractProxy.Panel.None);
-
-					if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyPanel))
+					if (proxyPanel == AbstractProxy.Panel.None)
 					{
-						//	TODO: fusionne les AbstractValue.SelectedObjects !
+						//?throw new System.NotImplementedException();
 					}
 					else
 					{
-						ProxyToCreate newProxy = new ProxyToCreate();
-						newProxy.ProxyPanel = proxyPanel;
-						newProxy.Values = values;
+						if (ProxyManager.IsExisting(possibleProxies, proxiesToCreate, values, proxyPanel))
+						{
+							//	TODO: fusionne les AbstractValue.SelectedObjects !
+						}
+						else
+						{
+							ProxyToCreate newProxy = new ProxyToCreate();
+							newProxy.ProxyPanel = proxyPanel;
+							newProxy.Values = values;
 
-						proxiesToCreate.Add(newProxy);
+							proxiesToCreate.Add(newProxy);
+						}
 					}
 				}
 			}

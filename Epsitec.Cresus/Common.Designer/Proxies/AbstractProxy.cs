@@ -15,6 +15,8 @@ namespace Epsitec.Common.Designer.Proxies
 			None,
 
 			FormGeometry,
+			FormBox,
+			FormFont,
 			FormStyle,
 		}
 

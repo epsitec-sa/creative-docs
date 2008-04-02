@@ -15,6 +15,8 @@ namespace Epsitec.Common.Designer.Proxies
 			get
 			{
 				yield return Panel.FormGeometry;
+				yield return Panel.FormBox;
+				yield return Panel.FormFont;
 				yield return Panel.FormStyle;
 			}
 		}
@@ -28,14 +30,16 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormRowsRequired;
 					yield return Type.FormPreferredWidth;
 					yield return Type.FormSeparatorBottom;
+					break;
+
+				case Panel.FormBox:
 					yield return Type.FormBoxLayout;
 					yield return Type.FormBoxPadding;
 					yield return Type.FormBoxFrameState;
 					yield return Type.FormBoxFrameWidth;
 					break;
 
-				case Panel.FormStyle:
-					yield return Type.FormBackColor;
+				case Panel.FormFont:
 					yield return Type.FormLabelFontColor;
 					yield return Type.FormFieldFontColor;
 					yield return Type.FormLabelFontFace;
@@ -44,6 +48,10 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormFieldFontStyle;
 					yield return Type.FormLabelFontSize;
 					yield return Type.FormFieldFontSize;
+					break;
+
+				case Panel.FormStyle:
+					yield return Type.FormBackColor;
 					yield return Type.FormButtonClass;
 					break;
 			}
@@ -78,6 +86,12 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormGeometry:
 					return "PropertyGeometry";
 
+				case Panel.FormBox:
+					return "PropertyLayout";
+
+				case Panel.FormFont:
+					return "PropertyPadding";
+
 				case Panel.FormStyle:
 					return "PropertyAspect";
 			}
@@ -91,6 +105,12 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				case Panel.FormGeometry:
 					return "Géométrie";
+
+				case Panel.FormBox:
+					return "Groupe";
+
+				case Panel.FormFont:
+					return "Police";
 
 				case Panel.FormStyle:
 					return "Style";
