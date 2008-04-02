@@ -59,6 +59,29 @@ namespace Epsitec.Common.Designer.Proxies
 
 		private void HandleButtonsSelectionChanged(object sender)
 		{
+			if (this.ignoreChange)
+			{
+				return;
+			}
+
+			RadioIconGrid button = sender as RadioIconGrid;
+
+			IEnumerable<Types.EnumValue> enumValues = this.enumType.Values;
+			foreach (Types.EnumValue enumValue in enumValues)
+			{
+				if (enumValue.Rank == button.SelectedValue)
+				{
+					System.Enum e = enumValue.Value;
+
+					if (this.value != e)
+					{
+						this.value = e;
+						this.OnValueChanged();
+					}
+
+					break;
+				}
+			}
 		}
 
 		protected override void UpdateInterface()
