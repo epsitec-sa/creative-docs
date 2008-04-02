@@ -181,6 +181,9 @@ namespace Epsitec.Common.Designer.Proxies
 						break;
 				}
 			}
+
+			Application.QueueAsyncCallback(this.ObjectModifier.FormEditor.RegenerateForm);
+			this.ObjectModifier.FormEditor.Module.AccessForms.SetLocalDirty();
 		}
 
 		private void HandleValueChanged(object sender)

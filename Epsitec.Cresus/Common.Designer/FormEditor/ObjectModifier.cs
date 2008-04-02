@@ -22,6 +22,14 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public Editor FormEditor
+		{
+			get
+			{
+				return this.formEditor;
+			}
+		}
+
 		public List<TableItem> TableContent
 		{
 			get

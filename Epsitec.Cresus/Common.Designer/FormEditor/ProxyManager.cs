@@ -14,6 +14,10 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.objectModifier = this.formViewer.FormEditor.ObjectModifier;
 			this.widgets = new List<Widget>();
 			this.proxies = new List<IProxy>();
+
+			Common.Designer.Proxies.ObjectManagerForm objectManager = new Common.Designer.Proxies.ObjectManagerForm(this.objectModifier);
+			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm();
+			this.manager = new Common.Designer.Proxies.ProxyManager(objectManager, proxy);
 		}
 
 		public IEnumerable<Widget> Widgets
@@ -65,12 +69,7 @@ namespace Epsitec.Common.Designer.FormEditor
 				this.CreateUserInterface(container, proxy);
 			}
 #else
-			//	Code expérimental...
-			Common.Designer.Proxies.ObjectManagerForm objectManager = new Common.Designer.Proxies.ObjectManagerForm(this.objectModifier);
-			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm();
-			Common.Designer.Proxies.ProxyManager manager = new Common.Designer.Proxies.ProxyManager(objectManager, proxy);
-
-			manager.CreateInterface(container, this.widgets);
+			this.manager.CreateInterface(container, this.widgets);
 #endif
 		}
 
@@ -415,5 +414,6 @@ namespace Epsitec.Common.Designer.FormEditor
 		private ObjectModifier				objectModifier;
 		private List<Widget>				widgets;
 		private List<IProxy>				proxies;
+		private Common.Designer.Proxies.ProxyManager manager;
 	}
 }
