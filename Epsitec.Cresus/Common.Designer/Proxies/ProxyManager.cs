@@ -71,11 +71,21 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Construit tous les panneaux pour les proxies.
 			proxiesToCreate.Sort();  // trie les panneaux à créer
 
+			bool first = true;
 			foreach (ProxyToCreate proxyToCreate in proxiesToCreate)
 			{
+				double space = first ? 0 : 5;
+
+				if (proxyToCreate.ProxyPanel == AbstractProxy.Panel.FormFontField)
+				{
+					space = -1;  // collé au panneau précédent
+				}
+
 				Widget panel = this.proxy.CreateInterface(box, proxyToCreate.ProxyPanel, proxyToCreate.Values);
-				panel.Margins = new Margins(0, 0, 0, 5);
+				panel.Margins = new Margins(0, 0, space, 0);
 				panel.Dock = DockStyle.Top;
+
+				first = false;
 			}
 
 			return box;
