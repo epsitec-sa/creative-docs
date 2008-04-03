@@ -27,10 +27,10 @@ namespace Epsitec.Common.Designer.Proxies
 			None,
 
 			//	FormGeometry
+			FormSeparatorBottom,
 			FormColumnsRequired,
 			FormRowsRequired,
 			FormPreferredWidth,
-			FormSeparatorBottom,
 
 			//	FormBox
 			FormBoxLayout,

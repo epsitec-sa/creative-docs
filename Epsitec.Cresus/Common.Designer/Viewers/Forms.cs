@@ -573,6 +573,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateRelationsTable(true);
 			this.UpdateRelationsButtons();
 			this.UpdateMiscPage();
+			this.DefineProxies(this.formEditor.SelectedObjects);  // met à jour les proxies
 			this.ignoreChange = iic;
 		}
 
