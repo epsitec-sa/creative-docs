@@ -145,18 +145,10 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		}
 
 
-		protected void RegenerateProxies()
-		{
-			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
-			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
-			//	par panneau.
-			Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateProxies);
-		}
-
 		protected void RegenerateProxiesAndForm()
 		{
 			//	Régénère les proxies et le masque de saisie.
-			Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateProxiesAndForm);
+			//?Application.QueueAsyncCallback(this.manager.FormViewer.RegenerateProxiesAndForm);
 		}
 		
 

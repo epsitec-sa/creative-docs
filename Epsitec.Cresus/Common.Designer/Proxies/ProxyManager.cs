@@ -91,6 +91,7 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
+
 		static protected int IndexOf(List<PossibleProxy> possibleProxies, List<ProxyToCreate> proxiesToCreate, List<AbstractValue> values, AbstractProxy.Panel proxyPanel)
 		{
 			//	Cherche l'index d'un proxy ayant exactement les mêmes valeurs.

@@ -228,6 +228,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected void SendValueToObject(AbstractValue value)
 		{
+			//	Il faut envoyer la valeur à tous les objets sélectionnés.
 			foreach (Widget selectedObject in value.SelectedObjects)
 			{
 				switch (value.Type)

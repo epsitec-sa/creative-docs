@@ -80,7 +80,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.formEditor.Anchor = AnchorStyles.All;
 			this.formEditor.ChildrenAdded += new EventHandler(this.HandleFormEditorChildrenAdded);
 			this.formEditor.ChildrenSelected += new EventHandler(this.HandleFormEditorChildrenSelected);
-			this.formEditor.ChildrenGeometryChanged += new EventHandler(this.HandleFormEditorChildrenGeometryChanged);
 			this.formEditor.UpdateCommands += new EventHandler(this.HandleFormEditorUpdateCommands);
 
 			this.InitializePanel();
@@ -227,7 +226,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.otherToolbar.Items.Add(this.otherButtonGlue);
 
-			this.proxyManager = new FormEditor.ProxyManager(this);
+			Common.Designer.Proxies.ObjectManagerForm objectManager = new Common.Designer.Proxies.ObjectManagerForm(this.formEditor.ObjectModifier);
+			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm(this);
+			this.proxyManager = new Common.Designer.Proxies.ProxyManager(objectManager, proxy);
+			//?this.proxyManager = new FormEditor.ProxyManager(this);
 
 			this.propertiesScrollable = new Scrollable(parentProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -573,7 +575,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateRelationsTable(true);
 			this.UpdateRelationsButtons();
 			this.UpdateMiscPage();
-			this.DefineProxies(this.formEditor.SelectedObjects);  // met à jour les proxies
+			this.DefineProxies();  // met à jour les proxies
 			this.ignoreChange = iic;
 		}
 
@@ -1263,7 +1265,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 					//	Il ne faut surtout pas régénérer les proxies ici, car cela cause de gros problèmes
 					//	pendant le drag d'un slider, par exemple !
-					//	this.DefineProxies(this.formEditor.SelectedObjects);  // met à jour les proxies
+					//	this.DefineProxies();  // met à jour les proxies
 				}
 				else
 				{
@@ -2396,52 +2398,20 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Proxies
-		protected void DefineProxies(IEnumerable<Widget> widgets)
+		protected void DefineProxies()
 		{
 			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
 			this.ClearProxies();
-			this.proxyManager.SetSelection(widgets);
-			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			//?this.proxyManager.SetSelection(widgets);
+			//?this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			this.proxyManager.CreateInterface(this.propertiesScrollable.Viewport, this.formEditor.SelectedObjects);
 		}
 
 		protected void ClearProxies()
 		{
 			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
-			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
-		}
-
-		protected void UpdateProxies()
-		{
-			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
-			//	le nombre de propriétés visibles par panneau.
-			this.proxyManager.UpdateUserInterface();
-			this.module.AccessForms.SetLocalDirty();
-		}
-
-		public void RegenerateProxies()
-		{
-			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
-			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
-			//	par panneau.
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-			}
-			this.module.AccessForms.SetLocalDirty();
-		}
-
-		public void RegenerateProxiesAndForm()
-		{
-			//	Régénère les proxies et le masque de saisie.
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-			}
-
-			this.formEditor.RegenerateForm();
-			this.module.AccessForms.SetLocalDirty();
+			//?this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
+			this.propertiesScrollable.Viewport.Children.Clear();
 		}
 		#endregion
 
@@ -2500,12 +2470,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandleFormEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
-			this.DefineProxies(this.formEditor.SelectedObjects);
-		}
-
-		private void HandleFormEditorChildrenGeometryChanged(object sender)
-		{
-			this.UpdateProxies();
+			this.DefineProxies();
 		}
 
 		private void HandleFormEditorUpdateCommands(object sender)
@@ -2690,7 +2655,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					showColumn2 = true;
 
 		protected FormEngine.Engine				engine;
-		protected FormEditor.ProxyManager		proxyManager;
+		//?protected FormEditor.ProxyManager		proxyManager;
+		protected Common.Designer.Proxies.ProxyManager proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected Scrollable					drawingScrollable;

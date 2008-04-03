@@ -1283,27 +1283,6 @@ namespace Epsitec.Common.Designer.FormEditor
 			}
 		}
 
-		protected virtual void OnChildrenGeometryChanged()
-		{
-			EventHandler handler = (EventHandler) this.GetUserEventHandler("ChildrenGeometryChanged");
-			if (handler != null)
-			{
-				handler(this);
-			}
-		}
-
-		public event EventHandler ChildrenGeometryChanged
-		{
-			add
-			{
-				this.AddUserEventHandler("ChildrenGeometryChanged", value);
-			}
-			remove
-			{
-				this.RemoveUserEventHandler("ChildrenGeometryChanged", value);
-			}
-		}
-
 		public virtual void OnUpdateCommands()
 		{
 			EventHandler handler = (EventHandler) this.GetUserEventHandler("UpdateCommands");
