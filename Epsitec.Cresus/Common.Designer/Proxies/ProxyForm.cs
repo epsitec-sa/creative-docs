@@ -81,9 +81,20 @@ namespace Epsitec.Common.Designer.Proxies
 				AbstractValue value = AbstractProxy.IndexOf(values, valueType);
 				if (value != null)
 				{
+					double space = 3;
+
+					if (valueType == Type.FormColumnsRequired ||
+						valueType == Type.FormLabelFontColor ||
+						valueType == Type.FormLabelFontFace ||
+						valueType == Type.FormLabelFontStyle ||
+						valueType == Type.FormLabelFontSize)
+					{
+						space = -1;
+					}
+
 					Widget widget = value.CreateInterface(panel.Container);
 					widget.Dock = DockStyle.Top;
-					widget.Margins = new Margins(0, 0, 0, 1);
+					widget.Margins = new Margins(0, 0, 0, space);
 				}
 			}
 
