@@ -16,7 +16,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			this.proxies = new List<IProxy>();
 
 			Common.Designer.Proxies.ObjectManagerForm objectManager = new Common.Designer.Proxies.ObjectManagerForm(this.objectModifier);
-			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm();
+			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm(this.formViewer);
 			this.manager = new Common.Designer.Proxies.ProxyManager(objectManager, proxy);
 		}
 
@@ -231,7 +231,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			panel.RowsSpacing = proxy.RowsSpacing;
 			panel.Title = source.GetType().Name;
 			panel.Rank = proxy.Rank;
-			panel.IsExtendedSize = this.formViewer.PanelsContext.IsExtendedProxies(proxy.Rank);
+			//?panel.IsExtendedSize = this.formViewer.PanelsContext.IsExtendedProxies(proxy.Rank);
 			panel.ExtendedSize += new Epsitec.Common.Support.EventHandler(this.HandlePanelExtendedSize);
 
 			foreach (DependencyProperty property in source.DefinedProperties)
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			MyWidgets.PropertyPanel panel = sender as MyWidgets.PropertyPanel;
 			System.Diagnostics.Debug.Assert(panel != null);
 
-			this.formViewer.PanelsContext.SetExtendedProxies(panel.Rank, panel.IsExtendedSize);
+			//?this.formViewer.PanelsContext.SetExtendedProxies(panel.Rank, panel.IsExtendedSize);
 		}
 
 

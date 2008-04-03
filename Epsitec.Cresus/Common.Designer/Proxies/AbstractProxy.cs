@@ -54,6 +54,12 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		public AbstractProxy(Viewers.Abstract viewer)
+		{
+			this.viewer = viewer;
+		}
+
+
 		public virtual IEnumerable<Panel> ProxyPanels
 		{
 			get
@@ -94,5 +100,8 @@ namespace Epsitec.Common.Designer.Proxies
 
 			return null;
 		}
+
+
+		protected Viewers.Abstract viewer;
 	}
 }

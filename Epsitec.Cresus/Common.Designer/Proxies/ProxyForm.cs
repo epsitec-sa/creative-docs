@@ -10,6 +10,10 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ProxyForm : AbstractProxy
 	{
+		public ProxyForm(Viewers.Abstract viewer) : base(viewer)
+		{
+		}
+
 		public override IEnumerable<Panel> ProxyPanels
 		{
 			get
@@ -63,9 +67,11 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			//	Crée un panneau complet.
 			MyWidgets.PropertyPanel panel = new MyWidgets.PropertyPanel(parent);
+			panel.Name = proxyPanel.ToString();
 			panel.Icon = this.GetIcon(proxyPanel);
 			panel.Title = this.GetTitle(proxyPanel);
-			panel.IsExtendedSize = true;
+			panel.IsExtendedSize = this.viewer.PanelsContext.IsExtendedProxies(panel.Name);
+			panel.ExtendedSize += new EventHandler(this.HandlePanelExtendedSize);
 
 			List<Type> list = new List<Type>(this.ValueTypes(proxyPanel));
 			list.Sort();  // trie les valeurs dans le panneau
@@ -83,6 +89,15 @@ namespace Epsitec.Common.Designer.Proxies
 
 			return panel;
 		}
+
+		private void HandlePanelExtendedSize(object sender)
+		{
+			MyWidgets.PropertyPanel panel = sender as MyWidgets.PropertyPanel;
+			System.Diagnostics.Debug.Assert(panel != null);
+
+			this.viewer.PanelsContext.SetExtendedProxies(panel.Name, panel.IsExtendedSize);
+		}
+
 
 		protected override string GetIcon(Panel proxyPanel)
 		{

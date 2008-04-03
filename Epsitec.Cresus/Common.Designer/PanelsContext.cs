@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer
 	{
 		public PanelsContext()
 		{
-			this.extendedProxies = new Dictionary<int, bool>();
+			this.extendedProxies = new Dictionary<string, bool>();
 		}
 
 
@@ -244,26 +244,26 @@ namespace Epsitec.Common.Designer
 
 
 		#region ExtendedProxies
-		public bool IsExtendedProxies(int rank)
+		public bool IsExtendedProxies(string name)
 		{
 			//	Indique si un panneau pour un proxy est étendu ou non.
-			if (!this.extendedProxies.ContainsKey(rank))
+			if (!this.extendedProxies.ContainsKey(name))
 			{
-				this.extendedProxies.Add(rank, false);
+				this.extendedProxies.Add(name, false);
 			}
 
-			return this.extendedProxies[rank];
+			return this.extendedProxies[name];
 		}
 
-		public void SetExtendedProxies(int rank, bool extended)
+		public void SetExtendedProxies(string name, bool extended)
 		{
 			//	Modifie l'état étendu ou non d'un panneau pour un proxy.
-			if (!this.extendedProxies.ContainsKey(rank))
+			if (!this.extendedProxies.ContainsKey(name))
 			{
-				this.extendedProxies.Add(rank, false);
+				this.extendedProxies.Add(name, false);
 			}
 
-			this.extendedProxies[rank] = extended;
+			this.extendedProxies[name] = extended;
 		}
 		#endregion
 
@@ -449,6 +449,6 @@ namespace Epsitec.Common.Designer
 		protected double					sizeMarkThickness = 8;
 		protected double					dockedTriangleThickness = 10;
 		protected double					dockedTriangleLength = 10;
-		protected Dictionary<int, bool>		extendedProxies;	
+		protected Dictionary<string, bool>	extendedProxies;	
 	}
 }
