@@ -21,7 +21,8 @@ namespace Epsitec.Common.Designer.Proxies
 				//	L'ordre n'a aucune importance.
 				yield return Panel.FormGeometry;
 				yield return Panel.FormBox;
-				yield return Panel.FormFont;
+				yield return Panel.FormFontLabel;
+				yield return Panel.FormFontField;
 				yield return Panel.FormStyle;
 			}
 		}
@@ -45,14 +46,17 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormBoxFrameWidth;
 					break;
 
-				case Panel.FormFont:
+				case Panel.FormFontLabel:
 					yield return Type.FormLabelFontColor;
-					yield return Type.FormFieldFontColor;
 					yield return Type.FormLabelFontFace;
-					yield return Type.FormFieldFontFace;
 					yield return Type.FormLabelFontStyle;
-					yield return Type.FormFieldFontStyle;
 					yield return Type.FormLabelFontSize;
+					break;
+
+				case Panel.FormFontField:
+					yield return Type.FormFieldFontColor;
+					yield return Type.FormFieldFontFace;
+					yield return Type.FormFieldFontStyle;
 					yield return Type.FormFieldFontSize;
 					break;
 
@@ -83,13 +87,9 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					double space = 3;
 
-					if (valueType == Type.FormColumnsRequired ||
-						valueType == Type.FormLabelFontColor ||
-						valueType == Type.FormLabelFontFace ||
-						valueType == Type.FormLabelFontStyle ||
-						valueType == Type.FormLabelFontSize)
+					if (valueType == Type.FormColumnsRequired)
 					{
-						space = -1;
+						space = -1;  // la valeur suivante sera collé à celle-çi
 					}
 
 					Widget widget = value.CreateInterface(panel.Container);
@@ -118,10 +118,11 @@ namespace Epsitec.Common.Designer.Proxies
 					return "PropertyGeometry";
 
 				case Panel.FormBox:
-					return "PropertyLayout";
-
-				case Panel.FormFont:
 					return "PropertyPadding";
+
+				case Panel.FormFontLabel:
+				case Panel.FormFontField:
+					return "PropertyTextFont";
 
 				case Panel.FormStyle:
 					return "PropertyAspect";
@@ -140,8 +141,11 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormBox:
 					return "Groupe";
 
-				case Panel.FormFont:
-					return "Police";
+				case Panel.FormFontLabel:
+					return "Police étiquette";
+
+				case Panel.FormFontField:
+					return "Police champ";
 
 				case Panel.FormStyle:
 					return "Style";

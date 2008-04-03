@@ -58,25 +58,23 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
-				this.ObjectModifier.IsBox(selectedObject))
-			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur étiquette", Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, "Couleur champ", Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police étiquette", Res.Types.FieldDescription.FontFaceType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace, "Police champ", Res.Types.FieldDescription.FontFaceType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style étiquette", Res.Types.FieldDescription.FontStyleType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, "Style champ", Res.Types.FieldDescription.FontStyleType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille étiquette", Res.Types.FieldDescription.FontSizeType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize, "Taille champ", Res.Types.FieldDescription.FontSizeType);
-			}
-
-			if (this.ObjectModifier.IsTitle(selectedObject) ||
+				this.ObjectModifier.IsBox(selectedObject) ||
+				this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur texte", Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police texte", Res.Types.FieldDescription.FontFaceType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style texte", Res.Types.FieldDescription.FontStyleType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille texte", Res.Types.FieldDescription.FontSizeType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, "Couleur", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, "Police", Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, "Style", Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, "Taille", Res.Types.FieldDescription.FontSizeType);
+			}
+
+			if (this.ObjectModifier.IsField(selectedObject) ||
+				this.ObjectModifier.IsBox(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, "Couleur", Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace, "Police", Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, "Style", Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize, "Taille", Res.Types.FieldDescription.FontSizeType);
 			}
 
 			if (this.ObjectModifier.IsBox(selectedObject))

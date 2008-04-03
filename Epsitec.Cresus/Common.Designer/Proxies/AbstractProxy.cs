@@ -17,7 +17,8 @@ namespace Epsitec.Common.Designer.Proxies
 
 			FormGeometry,
 			FormBox,
-			FormFont,
+			FormFontLabel,
+			FormFontField,
 			FormStyle,
 		}
 
@@ -38,14 +39,16 @@ namespace Epsitec.Common.Designer.Proxies
 			FormBoxFrameState,
 			FormBoxFrameWidth,
 
-			//	FormFont
+			//	FormFontLabel
 			FormLabelFontColor,
-			FormFieldFontColor,
 			FormLabelFontFace,
-			FormFieldFontFace,
 			FormLabelFontStyle,
-			FormFieldFontStyle,
 			FormLabelFontSize,
+
+			//	FormFontField
+			FormFieldFontColor,
+			FormFieldFontFace,
+			FormFieldFontStyle,
 			FormFieldFontSize,
 
 			//	FormStyle
