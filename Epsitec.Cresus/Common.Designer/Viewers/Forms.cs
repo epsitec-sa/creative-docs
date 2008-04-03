@@ -1260,7 +1260,10 @@ namespace Epsitec.Common.Designer.Viewers
 				if (keepSelection)
 				{
 					this.formEditor.SetSelectedGuids(guids);  // resélectionne les mêmes objets
-					this.DefineProxies(this.formEditor.SelectedObjects);  // met à jour les proxies
+
+					//	Il ne faut surtout pas régénérer les proxies ici, car cela cause de gros problèmes
+					//	pendant le drag d'un slider, par exemple !
+					//	this.DefineProxies(this.formEditor.SelectedObjects);  // met à jour les proxies
 				}
 				else
 				{
