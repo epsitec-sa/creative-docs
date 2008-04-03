@@ -107,8 +107,7 @@ namespace Epsitec.Common.Designer.Proxies
 				return;
 			}
 
-			System.TypeCode code;
-			code = System.Type.GetTypeCode(this.value.GetType());
+			System.TypeCode code = System.Type.GetTypeCode(this.value.GetType());
 
 			if (code == System.TypeCode.Int32)
 			{
