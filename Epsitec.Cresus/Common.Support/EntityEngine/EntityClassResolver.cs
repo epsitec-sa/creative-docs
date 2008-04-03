@@ -39,6 +39,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Finds the entity id for the specified entity type.
+		/// </summary>
+		/// <param name="type">The entity type.</param>
+		/// <returns>The entity id or <c>Druid.Empty</c> if the type does not
+		/// match an entity.</returns>
+		public static Druid FindEntityId(System.Type type)
+		{
+			foreach (var entry in EntityClassResolver.types)
+			{
+				if (entry.Value.Type == type)
+				{
+					return entry.Key;
+				}
+			}
+
+			return Druid.Empty;
+		}
+
 		public static void Setup()
 		{
 		}
@@ -100,6 +119,14 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.exclusion = new object ();
 				this.allocator = null;
 				this.type = type;
+			}
+
+			public System.Type Type
+			{
+				get
+				{
+					return this.type;
+				}
 			}
 
 			public AbstractEntity CreateInstance()

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>AbstractEntity</c> class is the base class used to store the
 	/// data represented by entity instances.
 	/// </summary>
-	public abstract class AbstractEntity : IStructuredTypeProvider, IStructuredData, IEntityProxyProvider
+	public abstract class AbstractEntity : InternalEntityBase, IStructuredData, IEntityProxyProvider
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AbstractEntity"/> class.
@@ -22,7 +22,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		protected AbstractEntity()
 		{
 			this.entitySerialId = System.Threading.Interlocked.Increment (ref AbstractEntity.nextSerialId);
-			this.context = EntityContext.Current;
 		}
 
 		/// <summary>
@@ -60,22 +59,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
-		/// <summary>
-		/// Gets the id of the <see cref="StructuredType"/> which describes
-		/// this entity.
-		/// </summary>
-		/// <returns>The id of the <see cref="StructuredType"/>.</returns>
-		public abstract Druid GetEntityStructuredTypeId();
-
-		/// <summary>
-		/// Gets the context associated with this entity.
-		/// </summary>
-		/// <returns>The <see cref="EntityContext"/> instance.</returns>
-		public EntityContext GetEntityContext()
-		{
-			return this.context;
-		}
 
 		/// <summary>
 		/// Gets the state of the entity data.
@@ -146,10 +129,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			if (history.Add (this))
 			{
 				ResourceManager manager = Resources.DefaultManager;
+				EntityContext   context = this.GetEntityContext ();
 
-				foreach (string id in this.context.GetEntityFieldIds (this))
+				foreach (string id in context.GetEntityFieldIds (this))
 				{
-					StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+					StructuredTypeField field = context.GetStructuredTypeField (this, id);
 					Caption caption = manager.GetCaption (field.CaptionId);
 					string name = caption.Name;
 					object value = this.DynamicGetField (id);
@@ -233,7 +217,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public T GetField<T>(string id)
 		{
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+			EntityContext       context = this.GetEntityContext ();
+			StructuredTypeField field   = context.GetStructuredTypeField (this, id);
 
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
@@ -431,13 +416,15 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal FieldRelation InternalGetFieldRelation(string id)
 		{
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+			EntityContext       context = this.GetEntityContext ();
+			StructuredTypeField field   = context.GetStructuredTypeField (this, id);
 			return field == null ? FieldRelation.None : field.Relation;
 		}
 
 		internal FieldSource InternalGetFieldSource(string id)
 		{
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+			EntityContext       context = this.GetEntityContext ();
+			StructuredTypeField field   = context.GetStructuredTypeField (this, id);
 			return field.Source;
 		}
 
@@ -445,6 +432,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			object value = this.InternalGetValue (id);
 			System.Collections.IList list = value as System.Collections.IList;
+
+			EntityContext context = this.GetEntityContext ();
 
 			if (list == null)
 			{
@@ -455,8 +444,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 					using (this.DefineOriginalValues ())
 					{
-						StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
-						AbstractEntity      model = this.context.CreateEmptyEntity (field.TypeId);
+						StructuredTypeField field = context.GetStructuredTypeField (this, id);
+						AbstractEntity      model = context.CreateEmptyEntity (field.TypeId);
 
 						System.Type itemType = model.GetType ();
 						System.Type genericType = typeof (EntityCollection<>);
@@ -530,7 +519,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected virtual object DynamicGetField(string id)
 		{
-			PropertyGetter getter = this.context.FindPropertyGetter (this, id);
+			EntityContext  context = this.GetEntityContext ();
+			PropertyGetter getter  = context.FindPropertyGetter (this, id);
 
 			if (getter == null)
 			{
@@ -549,7 +539,8 @@ namespace Epsitec.Common.Support.EntityEngine
 				newValue = null;
 			}
 
-			PropertySetter setter = this.context.FindPropertySetter (this, id);
+			EntityContext  context = this.GetEntityContext ();
+			PropertySetter setter  = context.FindPropertySetter (this, id);
 
 			if (setter == null)
 			{
@@ -579,11 +570,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected virtual void CreateOriginalValues()
 		{
-			AbstractEntity that = this.Resolve ();
+			AbstractEntity that    = this.Resolve ();
+			EntityContext  context = that.GetEntityContext ();
 
 			if (that.originalValues == null)
 			{
-				that.originalValues = that.context.CreateValueStore (that);
+				that.originalValues = context.CreateValueStore (that);
 			}
 			if (this != that)
 			{
@@ -593,11 +585,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		protected virtual void CreateModifiedValues()
 		{
-			AbstractEntity that = this.Resolve ();
+			AbstractEntity that    = this.Resolve ();
+			EntityContext  context = that.GetEntityContext ();
 
 			if (that.modifiedValues == null)
 			{
-				that.modifiedValues = that.context.CreateValueStore (that);
+				that.modifiedValues = context.CreateValueStore (that);
 			}
 			if (this != that)
 			{
@@ -624,7 +617,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		private void GenericSetValue(string id, object oldValue, object newValue)
 		{
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+			EntityContext       context = this.GetEntityContext ();
+			StructuredTypeField field   = context.GetStructuredTypeField (this, id);
 
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
@@ -689,14 +683,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		#region IStructuredTypeProvider Members
-
-		IStructuredType IStructuredTypeProvider.GetStructuredType()
+		protected override IStructuredType GetStructuredType()
 		{
-			return this.context.GetStructuredType (this);
+			EntityContext context = this.GetEntityContext ();
+			return context.GetStructuredType (this);
 		}
-
-		#endregion
 
 		#region IStructuredData Members
 
@@ -759,7 +750,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The collection of identifiers.</returns>
 		IEnumerable<string> IStructuredData.GetValueIds()
 		{
-			return this.context.GetEntityFieldIds (this);
+			EntityContext context = this.GetEntityContext ();
+			return context.GetEntityFieldIds (this);
 		}
 
 		/// <summary>
@@ -837,7 +829,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			if (this.defineOriginalValuesCount == 0)
 			{
-				this.dataGeneration = this.context.DataGeneration;
+				EntityContext context = this.GetEntityContext ();
+				this.dataGeneration = context.DataGeneration;
 			}
 		}
 
@@ -885,7 +878,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		private static long nextSerialId = 1;
 		private static readonly object globalExclusion = new object ();
 		
-		private readonly EntityContext context;
 		private readonly long entitySerialId;
 		private long dataGeneration;
 		private int defineOriginalValuesCount;

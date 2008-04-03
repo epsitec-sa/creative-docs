@@ -13,20 +13,11 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityGroup&lt;T&gt;</c> class used to represent a group of entities
 	/// which share a common key.
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
-	public class EntityGroup<T> : IGrouping<object, T> where T : AbstractEntity, new ()
+	/// <typeparam name="T">The entity type, derived from <see cref="AbstractEntity"/>.</typeparam>
+	public class EntityGroup<T> : EntityTable<T>, IGrouping<object, T> where T : AbstractEntity, new ()
 	{
 		public EntityGroup()
 		{
-			this.values = new List<T> ();
-		}
-
-		public int Count
-		{
-			get
-			{
-				return this.values.Count;
-			}
 		}
 
 		public object Key
@@ -42,15 +33,17 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
-		/// Gets or sets the key title. The title may contain formatting (this is
+		/// Gets or sets the title. The title may contain formatting (this is
 		/// a full fledged tagged text).
 		/// </summary>
-		/// <value>The key title encoded as a tagged text.</value>
-		public string KeyTitle
+		/// <value>The title encoded as a tagged text.</value>
+		public override string Title
 		{
 			get
 			{
-				if (this.keyTitle == null)
+				string title = base.Title;
+				
+				if (title == null)
 				{
 					if (this.key == null)
 					{
@@ -63,23 +56,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 				else
 				{
-					return this.keyTitle;
+					return title;
 				}
 			}
 			set
 			{
-				this.keyTitle = value;
+				base.Title = value;
 			}
-		}
-
-		public void Add(T item)
-		{
-			this.values.Add (item);
-		}
-
-		public void AddRange(IEnumerable<T> collection)
-		{
-			this.values.AddRange (collection);
 		}
 
 		#region IGrouping<object,T> Members
@@ -94,28 +77,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
-		#region IEnumerable<T> Members
-
-		public System.Collections.Generic.IEnumerator<T> GetEnumerator()
-		{
-			return this.values.GetEnumerator ();
-		}
-
-		#endregion
-
-		#region IEnumerable Members
-
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-		{
-			System.Collections.IList list = this.values;
-			return list.GetEnumerator ();
-		}
-
-		#endregion
-
-
-		private readonly List<T> values;
 		private object key;
-		private string keyTitle;
 	}
 }
