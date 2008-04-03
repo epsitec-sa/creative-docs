@@ -226,10 +226,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.otherToolbar.Items.Add(this.otherButtonGlue);
 
-			Common.Designer.Proxies.ObjectManagerForm objectManager = new Common.Designer.Proxies.ObjectManagerForm(this.formEditor.ObjectModifier);
-			Common.Designer.Proxies.ProxyForm proxy = new Common.Designer.Proxies.ProxyForm(this);
-			this.proxyManager = new Common.Designer.Proxies.ProxyManager(objectManager, proxy);
-			//?this.proxyManager = new FormEditor.ProxyManager(this);
+			Common.Designer.Proxies.ObjectManagerForm objectManager = new Proxies.ObjectManagerForm(this.formEditor.ObjectModifier);
+			Common.Designer.Proxies.ProxyForm proxy = new Proxies.ProxyForm(this);
+			this.proxyManager = new Proxies.ProxyManager(objectManager, proxy);
 
 			this.propertiesScrollable = new Scrollable(parentProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -2397,23 +2396,12 @@ namespace Epsitec.Common.Designer.Viewers
 		}
 
 
-		#region Proxies
 		protected void DefineProxies()
 		{
 			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
-			this.ClearProxies();
-			//?this.proxyManager.SetSelection(widgets);
-			//?this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			this.propertiesScrollable.Viewport.Children.Clear();  // supprime les panneaux existants
 			this.proxyManager.CreateInterface(this.propertiesScrollable.Viewport, this.formEditor.SelectedObjects);
 		}
-
-		protected void ClearProxies()
-		{
-			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
-			//?this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
-			this.propertiesScrollable.Viewport.Children.Clear();
-		}
-		#endregion
 
 
 		protected VMenu CreateFieldsMenu()
@@ -2655,8 +2643,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static bool					showColumn2 = true;
 
 		protected FormEngine.Engine				engine;
-		//?protected FormEditor.ProxyManager		proxyManager;
-		protected Common.Designer.Proxies.ProxyManager proxyManager;
+		protected Proxies.ProxyManager			proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected Scrollable					drawingScrollable;
