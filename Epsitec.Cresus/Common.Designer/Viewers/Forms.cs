@@ -389,6 +389,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public Proxies.ProxyManager ProxyManager
+		{
+			get
+			{
+				return this.proxyManager;
+			}
+		}
+
 
 		protected override void InitializeTable()
 		{

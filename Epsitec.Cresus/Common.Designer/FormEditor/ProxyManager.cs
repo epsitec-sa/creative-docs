@@ -63,7 +63,7 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void CreateUserInterface(Widget container)
 		{
 			//	Crée l'interface utilisateur (panneaux) pour la liste des proxies.
-#if false
+#if true
 			foreach (IProxy proxy in this.proxies)
 			{
 				this.CreateUserInterface(container, proxy);

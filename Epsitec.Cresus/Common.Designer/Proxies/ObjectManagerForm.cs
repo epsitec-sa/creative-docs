@@ -93,6 +93,18 @@ namespace Epsitec.Common.Designer.Proxies
 			return list;
 		}
 
+		public override bool IsEnable(AbstractValue value)
+		{
+			//	Indique si la valeur pour représenter un objet est enable.
+			if (value.Type == AbstractProxy.Type.FormPreferredWidth)
+			{
+				return false;  // TODO: juste pour essayer...
+			}
+
+			return true;
+		}
+
+	
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, string label, double min, double max, double step, double resolution)
 		{
 			this.SuspendChanges();
@@ -307,10 +319,19 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 
+			this.Viewer.ProxyManager.UpdateInterface();
 			Application.QueueAsyncCallback(this.ObjectModifier.FormEditor.RegenerateForm);
 			this.ObjectModifier.FormEditor.Module.AccessForms.SetLocalDirty();
 		}
 
+
+		protected Viewers.Forms Viewer
+		{
+			get
+			{
+				return this.ObjectModifier.FormEditor.ViewersForms;
+			}
+		}
 
 		protected FormEditor.ObjectModifier ObjectModifier
 		{

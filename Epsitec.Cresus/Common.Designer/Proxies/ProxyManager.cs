@@ -70,6 +70,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 			//	Construit tous les panneaux pour les proxies.
 			proxiesToCreate.Sort();  // trie les panneaux à créer
+			this.proxies = proxiesToCreate;
 
 			AbstractProxy.Panel lastPanel = AbstractProxy.Panel.None;
 
@@ -89,7 +90,21 @@ namespace Epsitec.Common.Designer.Proxies
 				lastPanel = proxyToCreate.ProxyPanel;
 			}
 
+			this.UpdateInterface();
+
 			return box;
+		}
+
+		public void UpdateInterface()
+		{
+			//	Met à jour (enable/disable) toutes les valeurs dans les panneaux des proxies.
+			foreach (ProxyToCreate proxy in this.proxies)  // passe en revue tous les panneaux
+			{
+				foreach (AbstractValue value in proxy.Values)  // passe en revue toutes les valeurs d'un panneau
+				{
+					value.WidgetInterface.Enable = this.objectManager.IsEnable(value);
+				}
+			}
 		}
 
 
@@ -192,6 +207,7 @@ namespace Epsitec.Common.Designer.Proxies
 			#region IComparable Members
 			public int CompareTo(object obj)
 			{
+				//	Compare les types. Utilisé lors d'un tri.
 				ProxyToCreate that = obj as ProxyToCreate;
 				return this.ProxyPanel.CompareTo(that.ProxyPanel);
 			}
@@ -201,5 +217,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected AbstractObjectManager objectManager;
 		protected AbstractProxy proxy;
+		protected List<ProxyToCreate> proxies;
 	}
 }

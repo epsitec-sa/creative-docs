@@ -21,6 +21,12 @@ namespace Epsitec.Common.Designer.Proxies
 			return null;
 		}
 
+		public virtual bool IsEnable(AbstractValue value)
+		{
+			//	Indique si la valeur pour représenter un objet est enable.
+			return true;
+		}
+
 
 		protected bool IsSuspended
 		{

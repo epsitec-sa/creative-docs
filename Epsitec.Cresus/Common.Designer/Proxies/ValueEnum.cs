@@ -55,6 +55,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 			this.UpdateInterface();
 
+			this.widgetInterface = box;
 			return box;
 		}
 

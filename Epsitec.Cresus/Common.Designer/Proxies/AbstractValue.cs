@@ -69,6 +69,14 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public Widget WidgetInterface
+		{
+			//	Retourne le widget parent de l'interface permettant d'éditer la valeur.
+			get
+			{
+				return this.widgetInterface;
+			}
+		}
 
 		public virtual Widget CreateInterface(Widget parent)
 		{
@@ -117,6 +125,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 
 		protected AbstractProxy.Type type;
+		protected Widget widgetInterface;
 		protected string label;
 		protected object value;
 		protected List<Widget> selectedObjects;

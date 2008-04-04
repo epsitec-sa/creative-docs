@@ -96,6 +96,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			this.UpdateInterface();
 
+			this.widgetInterface = box;
 			return box;
 		}
 

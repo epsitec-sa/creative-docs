@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 					if (valueType == Type.FormColumnsRequired)
 					{
-						space = -1;  // la valeur suivante sera collé à celle-çi
+						space = -1;  // la valeur suivante sera collée à celle-çi
 					}
 
 					Widget widget = value.CreateInterface(panel.Container);
