@@ -19,7 +19,12 @@ namespace Epsitec.Common.Designer.Proxies
 			get
 			{
 				//	L'ordre n'a aucune importance.
+				yield return Panel.PanelContent;
+				yield return Panel.PanelAspect;
 				yield return Panel.PanelGeometry;
+				yield return Panel.PanelPadding;
+				yield return Panel.PanelLayout;
+				yield return Panel.PanelGrid;
 			}
 		}
 
@@ -28,8 +33,63 @@ namespace Epsitec.Common.Designer.Proxies
 			switch (proxyPanel)
 			{
 				//	L'ordre n'a aucune importance.
+				case Panel.PanelContent:
+					yield return Type.PanelDruidCaption;
+					yield return Type.PanelDruidPanel;
+					yield return Type.PanelBinding;
+					yield return Type.PanelTableColumns;
+					yield return Type.PanelStructuredType;
+					break;
+
+				case Panel.PanelAspect:
+					yield return Type.PanelButtonAspect;
+					break;
+
 				case Panel.PanelGeometry:
 					yield return Type.PanelLeftMargin;
+					yield return Type.PanelRightMargin;
+					yield return Type.PanelTopMargin;
+					yield return Type.PanelBottomMargin;
+					yield return Type.PanelOriginX;
+					yield return Type.PanelOriginY;
+					yield return Type.PanelWidth;
+					yield return Type.PanelHeight;
+					break;
+
+				case Panel.PanelPadding:
+					yield return Type.PanelLeftPadding;
+					yield return Type.PanelRightPadding;
+					yield return Type.PanelTopPadding;
+					yield return Type.PanelBottomPadding;
+					break;
+
+				case Panel.PanelLayout:
+					yield return Type.PanelChildrenPlacement;
+					yield return Type.PanelAnchoredHorizontalAttachment;
+					yield return Type.PanelAnchoredVerticalAttachment;
+					yield return Type.PanelStackedHorizontalAttachment;
+					yield return Type.PanelStackedVerticalAttachment;
+					yield return Type.PanelStackedHorizontalAlignment;
+					yield return Type.PanelStackedVerticalAlignment;
+					break;
+
+				case Panel.PanelGrid:
+					yield return Type.PanelGridColumnsCount;
+					yield return Type.PanelGridRowsCount;
+					yield return Type.PanelGridColumnSpan;
+					yield return Type.PanelGridRowSpan;
+					yield return Type.PanelGridColumnMode;
+					yield return Type.PanelGridColumnValue;
+					yield return Type.PanelGridMinWidth;
+					yield return Type.PanelGridMaxWidth;
+					yield return Type.PanelGridLeftBorder;
+					yield return Type.PanelGridRightBorder;
+					yield return Type.PanelGridRowMode;
+					yield return Type.PanelGridRowValue;
+					yield return Type.PanelGridMinHeight;
+					yield return Type.PanelGridMaxHeight;
+					yield return Type.PanelGridTopBorder;
+					yield return Type.PanelGridBottomBorder;
 					break;
 			}
 		}
@@ -54,7 +114,11 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					double space = 3;
 
-					if (valueType == Type.FormColumnsRequired)
+					if (valueType == Type.PanelLeftMargin ||
+						valueType == Type.PanelRightMargin ||
+						valueType == Type.PanelTopMargin ||
+						valueType == Type.PanelOriginX ||
+						valueType == Type.PanelWidth)
 					{
 						space = -1;  // la valeur suivante sera collée à celle-çi
 					}
@@ -73,8 +137,23 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			switch (proxyPanel)
 			{
+				case Panel.PanelContent:
+					return "PropertyContent";
+
+				case Panel.PanelAspect:
+					return "PropertyAspect";
+
 				case Panel.PanelGeometry:
 					return "PropertyGeometry";
+
+				case Panel.PanelPadding:
+					return "PropertyPadding";
+
+				case Panel.PanelLayout:
+					return "PropertyLayout";
+
+				case Panel.PanelGrid:
+					return "PropertyGrid";
 			}
 
 			return null;
@@ -84,8 +163,23 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			switch (proxyPanel)
 			{
+				case Panel.PanelContent:
+					return "Contenu";
+
+				case Panel.PanelAspect:
+					return "Aspect";
+
 				case Panel.PanelGeometry:
 					return "Géométrie";
+
+				case Panel.PanelPadding:
+					return "Marges";
+
+				case Panel.PanelLayout:
+					return "Mise en page";
+
+				case Panel.PanelGrid:
+					return "Grille";
 			}
 
 			return null;

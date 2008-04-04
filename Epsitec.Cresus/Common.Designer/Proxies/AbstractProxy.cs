@@ -21,7 +21,12 @@ namespace Epsitec.Common.Designer.Proxies
 			FormFontField,
 			FormStyle,
 
+			PanelContent,
+			PanelAspect,
 			PanelGeometry,
+			PanelPadding,
+			PanelLayout,
+			PanelGrid,
 		}
 
 		public enum Type
@@ -57,8 +62,58 @@ namespace Epsitec.Common.Designer.Proxies
 			FormBackColor,
 			FormButtonClass,
 
+			//	PanelContent
+			PanelDruidCaption,
+			PanelDruidPanel,
+			PanelBinding,
+			PanelTableColumns,
+			PanelStructuredType,
+
+			//	PanelAspect
+			PanelButtonAspect,
+			
 			//	PanelGeometry
 			PanelLeftMargin,
+			PanelRightMargin,
+			PanelTopMargin,
+			PanelBottomMargin,
+			PanelOriginX,
+			PanelOriginY,
+			PanelWidth,
+			PanelHeight,
+			
+			//	PanelPadding
+			PanelLeftPadding,
+			PanelRightPadding,
+			PanelTopPadding,
+			PanelBottomPadding,
+			
+			//	PanelLayout
+			PanelChildrenPlacement,
+			PanelAnchoredHorizontalAttachment,
+			PanelAnchoredVerticalAttachment,
+			PanelStackedHorizontalAttachment,
+			PanelStackedVerticalAttachment,
+			PanelStackedHorizontalAlignment,
+			PanelStackedVerticalAlignment,
+			
+			//	PanelGrid
+			PanelGridColumnsCount,
+			PanelGridRowsCount,
+			PanelGridColumnSpan,
+			PanelGridRowSpan,
+			PanelGridColumnMode,
+			PanelGridColumnValue,
+			PanelGridMinWidth,
+			PanelGridMaxWidth,
+			PanelGridLeftBorder,
+			PanelGridRightBorder,
+			PanelGridRowMode,
+			PanelGridRowValue,
+			PanelGridMinHeight,
+			PanelGridMaxHeight,
+			PanelGridTopBorder,
+			PanelGridBottomBorder,
 		}
 
 

@@ -21,7 +21,33 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin, Res.Captions.Form.ColumnsRequired, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin, Res.Captions.Geometry.LeftMargin, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightMargin, Res.Captions.Geometry.RightMargin, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopMargin, Res.Captions.Geometry.TopMargin, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomMargin, Res.Captions.Geometry.BottomMargin, -1, 9999, 1, 1);
+			}
+
+			if (this.ObjectModifier.HasBounds(selectedObject))
+			{
+				if (this.ObjectModifier.HasBounds(selectedObject, PanelEditor.ObjectModifier.BoundsMode.OriginX))
+				{
+					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelOriginX, Res.Captions.Geometry.OriginX, -9999, 9999, 1, 1);
+				}
+
+				if (this.ObjectModifier.HasBounds(selectedObject, PanelEditor.ObjectModifier.BoundsMode.OriginY))
+				{
+					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelOriginY, Res.Captions.Geometry.OriginX, -9999, 9999, 1, 1);
+				}
+
+				if (this.ObjectModifier.HasBounds(selectedObject, PanelEditor.ObjectModifier.BoundsMode.Width))
+				{
+					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelWidth, Res.Captions.Geometry.Width, 0, 9999, 1, 1);
+				}
+
+				if (this.ObjectModifier.HasBounds(selectedObject, PanelEditor.ObjectModifier.BoundsMode.OriginX))
+				{
+					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelHeight, Res.Captions.Geometry.Height, 0, 9999, 1, 1);
+				}
 			}
 
 			return list;
@@ -44,6 +70,19 @@ namespace Epsitec.Common.Designer.Proxies
 				case AbstractProxy.Type.PanelLeftMargin:
 					value.Value = this.ObjectModifier.GetMargins(selectedObject).Left;
 					break;
+
+				case AbstractProxy.Type.PanelRightMargin:
+					value.Value = this.ObjectModifier.GetMargins(selectedObject).Right;
+					break;
+
+				case AbstractProxy.Type.PanelTopMargin:
+					value.Value = this.ObjectModifier.GetMargins(selectedObject).Top;
+					break;
+
+				case AbstractProxy.Type.PanelBottomMargin:
+					value.Value = this.ObjectModifier.GetMargins(selectedObject).Bottom;
+					break;
+
 			}
 		}
 
@@ -52,13 +91,34 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Il faut envoyer la valeur à tous les objets sélectionnés.
 			foreach (Widget selectedObject in value.SelectedObjects)
 			{
+				Margins m;
+
 				switch (value.Type)
 				{
 					case AbstractProxy.Type.PanelLeftMargin:
-						Margins m = this.ObjectModifier.GetMargins(selectedObject);
+						m = this.ObjectModifier.GetMargins(selectedObject);
 						m.Left = (double) value.Value;
 						this.ObjectModifier.SetMargins(selectedObject, m);
 						break;
+
+					case AbstractProxy.Type.PanelRightMargin:
+						m = this.ObjectModifier.GetMargins(selectedObject);
+						m.Right = (double) value.Value;
+						this.ObjectModifier.SetMargins(selectedObject, m);
+						break;
+
+					case AbstractProxy.Type.PanelTopMargin:
+						m = this.ObjectModifier.GetMargins(selectedObject);
+						m.Top = (double) value.Value;
+						this.ObjectModifier.SetMargins(selectedObject, m);
+						break;
+
+					case AbstractProxy.Type.PanelBottomMargin:
+						m = this.ObjectModifier.GetMargins(selectedObject);
+						m.Bottom = (double) value.Value;
+						this.ObjectModifier.SetMargins(selectedObject, m);
+						break;
+
 				}
 			}
 
