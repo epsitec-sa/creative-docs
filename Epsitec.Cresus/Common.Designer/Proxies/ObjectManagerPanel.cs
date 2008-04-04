@@ -44,7 +44,19 @@ namespace Epsitec.Common.Designer.Proxies
 					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelWidth, Res.Captions.Geometry.Width, 0, 9999, 1, 1);
 				}
 
-				if (this.ObjectModifier.HasBounds(selectedObject, PanelEditor.ObjectModifier.BoundsMode.OriginX))
+				if (this.ObjectModifier.HasBounds(selectedObject, PanelEditor.ObjectModifier.BoundsMode.Height))
+				{
+					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelHeight, Res.Captions.Geometry.Height, 0, 9999, 1, 1);
+				}
+			}
+			else
+			{
+				if (this.ObjectModifier.HasWidth(selectedObject))
+				{
+					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelWidth, Res.Captions.Geometry.Width, 0, 9999, 1, 1);
+				}
+
+				if (this.ObjectModifier.HasHeight(selectedObject))
 				{
 					this.AddValue(list, selectedObject, AbstractProxy.Type.PanelHeight, Res.Captions.Geometry.Height, 0, 9999, 1, 1);
 				}
@@ -83,6 +95,36 @@ namespace Epsitec.Common.Designer.Proxies
 					value.Value = this.ObjectModifier.GetMargins(selectedObject).Bottom;
 					break;
 
+				case AbstractProxy.Type.PanelOriginX:
+					value.Value = this.ObjectModifier.GetBounds(selectedObject).Left;
+					break;
+
+				case AbstractProxy.Type.PanelOriginY:
+					value.Value = this.ObjectModifier.GetBounds(selectedObject).Bottom;
+					break;
+
+				case AbstractProxy.Type.PanelWidth:
+					if (this.ObjectModifier.HasBounds(selectedObject))
+					{
+						value.Value = this.ObjectModifier.GetBounds(selectedObject).Width;
+					}
+					else
+					{
+						value.Value = this.ObjectModifier.GetWidth(selectedObject);
+					}
+					break;
+
+				case AbstractProxy.Type.PanelHeight:
+					if (this.ObjectModifier.HasBounds(selectedObject))
+					{
+						value.Value = this.ObjectModifier.GetBounds(selectedObject).Height;
+					}
+					else
+					{
+						value.Value = this.ObjectModifier.GetHeight(selectedObject);
+					}
+					break;
+
 			}
 		}
 
@@ -92,6 +134,7 @@ namespace Epsitec.Common.Designer.Proxies
 			foreach (Widget selectedObject in value.SelectedObjects)
 			{
 				Margins m;
+				Rectangle r;
 
 				switch (value.Type)
 				{
@@ -117,6 +160,44 @@ namespace Epsitec.Common.Designer.Proxies
 						m = this.ObjectModifier.GetMargins(selectedObject);
 						m.Bottom = (double) value.Value;
 						this.ObjectModifier.SetMargins(selectedObject, m);
+						break;
+
+					case AbstractProxy.Type.PanelOriginX:
+						r = this.ObjectModifier.GetBounds(selectedObject);
+						r.Left = (double) value.Value;
+						this.ObjectModifier.SetBounds(selectedObject, r);
+						break;
+
+					case AbstractProxy.Type.PanelOriginY:
+						r = this.ObjectModifier.GetBounds(selectedObject);
+						r.Bottom = (double) value.Value;
+						this.ObjectModifier.SetBounds(selectedObject, r);
+						break;
+
+					case AbstractProxy.Type.PanelWidth:
+						if (this.ObjectModifier.HasBounds(selectedObject))
+						{
+							r = this.ObjectModifier.GetBounds(selectedObject);
+							r.Width = (double) value.Value;
+							this.ObjectModifier.SetBounds(selectedObject, r);
+						}
+						else
+						{
+							this.ObjectModifier.SetWidth(selectedObject, (double) value.Value);
+						}
+						break;
+
+					case AbstractProxy.Type.PanelHeight:
+						if (this.ObjectModifier.HasBounds(selectedObject))
+						{
+							r = this.ObjectModifier.GetBounds(selectedObject);
+							r.Height = (double) value.Value;
+							this.ObjectModifier.SetBounds(selectedObject, r);
+						}
+						else
+						{
+							this.ObjectModifier.SetHeight(selectedObject, (double) value.Value);
+						}
 						break;
 
 				}
