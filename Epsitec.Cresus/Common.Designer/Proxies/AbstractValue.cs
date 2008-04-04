@@ -41,16 +41,16 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public Druid CaptionId
+		public Types.Caption Caption
 		{
 			//	Nom visible de la valeur.
 			get
 			{
-				return this.captionId;
+				return this.caption;
 			}
 			set
 			{
-				this.captionId = value;
+				this.caption = value;
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected AbstractProxy.Type type;
 		protected Widget widgetInterface;
 		protected string label;
-		protected Druid captionId;
+		protected Types.Caption caption;
 		protected object value;
 		protected List<Widget> selectedObjects;
 		protected bool ignoreChange;

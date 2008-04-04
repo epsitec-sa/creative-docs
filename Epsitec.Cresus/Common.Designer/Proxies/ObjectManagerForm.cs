@@ -24,13 +24,13 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormColumnsRequired, Res.Captions.Form.ColumnsRequired.Id, 1, 10, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormColumnsRequired, Res.Captions.Form.ColumnsRequired, 1, 10, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormRowsRequired, Res.Captions.Form.RowsRequired.Id, 1, 10, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormRowsRequired, Res.Captions.Form.RowsRequired, 1, 10, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
@@ -40,21 +40,21 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsLine(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormPreferredWidth, Res.Captions.Form.PreferredWidth.Id, 1, 1000, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormPreferredWidth, Res.Captions.Form.PreferredWidth, 1, 1000, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormSeparatorBottom, Res.Captions.Form.SeparatorBottom.Id, Res.Types.FieldDescription.SeparatorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormSeparatorBottom, Res.Captions.Form.SeparatorBottom, Res.Types.FieldDescription.SeparatorType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBackColor, Res.Captions.Form.BackColor.Id, Res.Types.FieldDescription.BackColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBackColor, Res.Captions.Form.BackColor, Res.Types.FieldDescription.BackColorType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
@@ -62,32 +62,32 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, Res.Captions.Form.FontColor.Id, Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, Res.Captions.Form.FontFace.Id, Res.Types.FieldDescription.FontFaceType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, Res.Captions.Form.FontStyle.Id, Res.Types.FieldDescription.FontStyleType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, Res.Captions.Form.FontSize.Id, Res.Types.FieldDescription.FontSizeType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, Res.Captions.Form.FontColor, Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace, Res.Captions.Form.FontFace, Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, Res.Captions.Form.FontStyle, Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize, Res.Captions.Form.FontSize, Res.Types.FieldDescription.FontSizeType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, Res.Captions.Form.FontColor.Id, Res.Types.FieldDescription.FontColorType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace, Res.Captions.Form.FontFace.Id, Res.Types.FieldDescription.FontFaceType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, Res.Captions.Form.FontStyle.Id, Res.Types.FieldDescription.FontStyleType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize, Res.Captions.Form.FontSize.Id, Res.Types.FieldDescription.FontSizeType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, Res.Captions.Form.FontColor, Res.Types.FieldDescription.FontColorType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace, Res.Captions.Form.FontFace, Res.Types.FieldDescription.FontFaceType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, Res.Captions.Form.FontStyle, Res.Types.FieldDescription.FontStyleType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize, Res.Captions.Form.FontSize, Res.Types.FieldDescription.FontSizeType);
 			}
 
 			if (this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout, Res.Captions.Form.BoxLayout.Id, Res.Types.FieldDescription.BoxLayoutType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding, Res.Captions.Form.BoxPadding.Id, Res.Types.FieldDescription.BoxPaddingType);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, Res.Captions.Form.BoxFrameState.Id, Res.Types.FieldDescription.FrameState);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, Res.Captions.Form.BoxFrameWidth.Id, 0, 5, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout, Res.Captions.Form.BoxLayout, Res.Types.FieldDescription.BoxLayoutType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding, Res.Captions.Form.BoxPadding, Res.Types.FieldDescription.BoxPaddingType);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, Res.Captions.Form.BoxFrameState, Res.Types.FieldDescription.FrameState);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, Res.Captions.Form.BoxFrameWidth, 0, 5, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormButtonClass, Res.Captions.Form.CommandButtonClass.Id, Res.Types.FieldDescription.CommandButtonClass);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormButtonClass, Res.Captions.Form.CommandButtonClass, Res.Types.FieldDescription.CommandButtonClass);
 			}
 
 			return list;
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Druid captionId, double min, double max, double step, double resolution)
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
 			this.SuspendChanges();
 
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Designer.Proxies
 				ValueNumeric value = new ValueNumeric(min, max, step, resolution);
 				value.SelectedObjects.Add(selectedObject);
 				value.Type = type;
-				value.CaptionId = captionId;
+				value.Caption = caption;
 				value.ValueChanged += new EventHandler(this.HandleValueChanged);
 				this.SendObjectToValue(value);
 
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Druid captionId, Types.EnumType enumType)
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
 		{
 			this.SuspendChanges();
 
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.Proxies
 				ValueEnum value = new ValueEnum(enumType);
 				value.SelectedObjects.Add(selectedObject);
 				value.Type = type;
-				value.CaptionId = captionId;
+				value.Caption = caption;
 				value.ValueChanged += new EventHandler(this.HandleValueChanged);
 				this.SendObjectToValue(value);
 
