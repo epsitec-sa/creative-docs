@@ -98,10 +98,16 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Indique si la valeur pour représenter un objet est enable.
 			if (value.Type == AbstractProxy.Type.FormPreferredWidth)
 			{
-				if (value.SelectedObjects.Count != 0)
+				foreach (Widget widget in value.SelectedObjects)
 				{
-					return !(value.SelectedObjects[0].Parent is UI.Panel);
+					//	En cas de sélection multiple, il suffit qu'un seul objet ne soit pas dans une grille
+					//	pour que la valeur FormPreferredWidth soit enable.
+					if (!(widget.Parent is UI.Panel))
+					{
+						return true;
+					}
 				}
+				return false;
 			}
 
 			return true;
