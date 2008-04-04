@@ -114,59 +114,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
-		{
-			this.SuspendChanges();
-
-			try
-			{
-				ValueNumeric value = new ValueNumeric(min, max, step, resolution);
-				value.SelectedObjects.Add(selectedObject);
-				value.Type = type;
-				value.Caption = caption;
-				value.ValueChanged += new EventHandler(this.HandleValueChanged);
-				this.SendObjectToValue(value);
-
-				list.Add(value);
-			}
-			finally
-			{
-				this.ResumeChanges();
-			}
-		}
-
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
-		{
-			this.SuspendChanges();
-
-			try
-			{
-				ValueEnum value = new ValueEnum(enumType);
-				value.SelectedObjects.Add(selectedObject);
-				value.Type = type;
-				value.Caption = caption;
-				value.ValueChanged += new EventHandler(this.HandleValueChanged);
-				this.SendObjectToValue(value);
-
-				list.Add(value);
-			}
-			finally
-			{
-				this.ResumeChanges();
-			}
-		}
-
-		private void HandleValueChanged(object sender)
-		{
-			if (this.IsNotSuspended)
-			{
-				AbstractValue value = sender as AbstractValue;
-				this.SendValueToObject(value);
-			}
-		}
-
-
-		protected void SendObjectToValue(AbstractValue value)
+		protected override void SendObjectToValue(AbstractValue value)
 		{
 			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
 			Widget selectedObject = value.SelectedObjects[0];
@@ -247,7 +195,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		protected void SendValueToObject(AbstractValue value)
+		protected override void SendValueToObject(AbstractValue value)
 		{
 			//	Il faut envoyer la valeur à tous les objets sélectionnés.
 			foreach (Widget selectedObject in value.SelectedObjects)

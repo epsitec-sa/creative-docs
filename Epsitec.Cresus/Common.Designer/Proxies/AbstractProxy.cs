@@ -20,6 +20,8 @@ namespace Epsitec.Common.Designer.Proxies
 			FormFontLabel,
 			FormFontField,
 			FormStyle,
+
+			PanelGeometry,
 		}
 
 		public enum Type
@@ -54,6 +56,9 @@ namespace Epsitec.Common.Designer.Proxies
 			//	FormStyle
 			FormBackColor,
 			FormButtonClass,
+
+			//	PanelGeometry
+			PanelLeftMargin,
 		}
 
 
@@ -90,6 +95,16 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			return null;
 		}
+
+
+		protected void HandlePanelExtendedSize(object sender)
+		{
+			MyWidgets.PropertyPanel panel = sender as MyWidgets.PropertyPanel;
+			System.Diagnostics.Debug.Assert(panel != null);
+
+			this.viewer.PanelsContext.SetExtendedProxies(panel.Name, panel.IsExtendedSize);
+		}
+
 
 		static protected AbstractValue IndexOf(List<AbstractValue> values, Type valueType)
 		{

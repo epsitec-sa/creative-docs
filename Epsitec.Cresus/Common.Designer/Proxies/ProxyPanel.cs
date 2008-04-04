@@ -8,9 +8,9 @@ namespace Epsitec.Common.Designer.Proxies
 	/// <summary>
 	/// Cette classe détermine l'ensemble des valeurs représentées par un proxy, qui sera matérialisé par un panneau.
 	/// </summary>
-	public class ProxyForm : AbstractProxy
+	public class ProxyPanel : AbstractProxy
 	{
-		public ProxyForm(Viewers.Abstract viewer) : base(viewer)
+		public ProxyPanel(Viewers.Abstract viewer) : base(viewer)
 		{
 		}
 
@@ -19,11 +19,7 @@ namespace Epsitec.Common.Designer.Proxies
 			get
 			{
 				//	L'ordre n'a aucune importance.
-				yield return Panel.FormGeometry;
-				yield return Panel.FormBox;
-				yield return Panel.FormFontLabel;
-				yield return Panel.FormFontField;
-				yield return Panel.FormStyle;
+				yield return Panel.PanelGeometry;
 			}
 		}
 
@@ -32,37 +28,8 @@ namespace Epsitec.Common.Designer.Proxies
 			switch (proxyPanel)
 			{
 				//	L'ordre n'a aucune importance.
-				case Panel.FormGeometry:
-					yield return Type.FormColumnsRequired;
-					yield return Type.FormRowsRequired;
-					yield return Type.FormPreferredWidth;
-					yield return Type.FormSeparatorBottom;
-					break;
-
-				case Panel.FormBox:
-					yield return Type.FormBoxLayout;
-					yield return Type.FormBoxPadding;
-					yield return Type.FormBoxFrameState;
-					yield return Type.FormBoxFrameWidth;
-					break;
-
-				case Panel.FormFontLabel:
-					yield return Type.FormLabelFontColor;
-					yield return Type.FormLabelFontFace;
-					yield return Type.FormLabelFontStyle;
-					yield return Type.FormLabelFontSize;
-					break;
-
-				case Panel.FormFontField:
-					yield return Type.FormFieldFontColor;
-					yield return Type.FormFieldFontFace;
-					yield return Type.FormFieldFontStyle;
-					yield return Type.FormFieldFontSize;
-					break;
-
-				case Panel.FormStyle:
-					yield return Type.FormBackColor;
-					yield return Type.FormButtonClass;
+				case Panel.PanelGeometry:
+					yield return Type.PanelLeftMargin;
 					break;
 			}
 		}
@@ -106,18 +73,8 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			switch (proxyPanel)
 			{
-				case Panel.FormGeometry:
+				case Panel.PanelGeometry:
 					return "PropertyGeometry";
-
-				case Panel.FormBox:
-					return "PropertyPadding";
-
-				case Panel.FormFontLabel:
-				case Panel.FormFontField:
-					return "PropertyTextFont";
-
-				case Panel.FormStyle:
-					return "PropertyAspect";
 			}
 
 			return null;
@@ -127,20 +84,8 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			switch (proxyPanel)
 			{
-				case Panel.FormGeometry:
+				case Panel.PanelGeometry:
 					return "Géométrie";
-
-				case Panel.FormBox:
-					return "Groupe";
-
-				case Panel.FormFontLabel:
-					return "Police étiquette";
-
-				case Panel.FormFontField:
-					return "Police champ";
-
-				case Panel.FormStyle:
-					return "Style";
 			}
 
 			return null;

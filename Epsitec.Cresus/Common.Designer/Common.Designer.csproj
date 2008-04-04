@@ -72,6 +72,8 @@
     <Compile Include="Proxies\AbstractValue.cs" />
     <Compile Include="Proxies\AbstractProxy.cs" />
     <Compile Include="Proxies\AbstractObjectManager.cs" />
+    <Compile Include="Proxies\ObjectManagerPanel.cs" />
+    <Compile Include="Proxies\ProxyPanel.cs" />
     <Compile Include="Proxies\ValueEnum.cs" />
     <Compile Include="Proxies\ProxyForm.cs" />
     <Compile Include="Proxies\ObjectManagerForm.cs" />

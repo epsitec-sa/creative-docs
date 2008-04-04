@@ -28,6 +28,67 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
+		{
+			this.SuspendChanges();
+
+			try
+			{
+				ValueNumeric value = new ValueNumeric(min, max, step, resolution);
+				value.SelectedObjects.Add(selectedObject);
+				value.Type = type;
+				value.Caption = caption;
+				value.ValueChanged += new EventHandler(this.HandleValueChanged);
+				this.SendObjectToValue(value);
+
+				list.Add(value);
+			}
+			finally
+			{
+				this.ResumeChanges();
+			}
+		}
+
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
+		{
+			this.SuspendChanges();
+
+			try
+			{
+				ValueEnum value = new ValueEnum(enumType);
+				value.SelectedObjects.Add(selectedObject);
+				value.Type = type;
+				value.Caption = caption;
+				value.ValueChanged += new EventHandler(this.HandleValueChanged);
+				this.SendObjectToValue(value);
+
+				list.Add(value);
+			}
+			finally
+			{
+				this.ResumeChanges();
+			}
+		}
+
+		private void HandleValueChanged(object sender)
+		{
+			if (this.IsNotSuspended)
+			{
+				AbstractValue value = sender as AbstractValue;
+				this.SendValueToObject(value);
+			}
+		}
+
+
+		protected virtual void SendObjectToValue(AbstractValue value)
+		{
+		}
+
+		protected virtual void SendValueToObject(AbstractValue value)
+		{
+		}
+
+
 		protected bool IsSuspended
 		{
 			get
