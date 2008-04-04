@@ -98,7 +98,10 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Indique si la valeur pour représenter un objet est enable.
 			if (value.Type == AbstractProxy.Type.FormPreferredWidth)
 			{
-				return false;  // TODO: juste pour essayer...
+				if (value.SelectedObjects.Count != 0)
+				{
+					return !(value.SelectedObjects[0].Parent is UI.Panel);
+				}
 			}
 
 			return true;
