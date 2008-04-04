@@ -41,6 +41,19 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public Druid CaptionId
+		{
+			//	Nom visible de la valeur.
+			get
+			{
+				return this.captionId;
+			}
+			set
+			{
+				this.captionId = value;
+			}
+		}
+
 		public object Value
 		{
 			//	Valeur de n'importe quel type contenue dans l'instance de la classe.
@@ -127,6 +140,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected AbstractProxy.Type type;
 		protected Widget widgetInterface;
 		protected string label;
+		protected Druid captionId;
 		protected object value;
 		protected List<Widget> selectedObjects;
 		protected bool ignoreChange;

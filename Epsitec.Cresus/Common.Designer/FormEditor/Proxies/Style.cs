@@ -221,35 +221,35 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			EnumType backColorEnumType = Res.Types.FieldDescription.BackColorType;
 			Style.BackColorProperty.DefaultMetadata.DefineNamedType(backColorEnumType);
-			Style.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
+			//?Style.BackColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BackColorType.Id);
 
 			EnumType fontColorEnumType = Res.Types.FieldDescription.FontColorType;
 			Style.LabelFontColorProperty.DefaultMetadata.DefineNamedType(fontColorEnumType);
-			Style.LabelFontColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontColorType.Id);
+			//?Style.LabelFontColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontColorType.Id);
 			Style.FieldFontColorProperty.DefaultMetadata.DefineNamedType(fontColorEnumType);
-			Style.FieldFontColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontColorType.Id);
+			//?Style.FieldFontColorProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontColorType.Id);
 
 			EnumType fontFaceEnumType = Res.Types.FieldDescription.FontFaceType;
 			Style.LabelFontFaceProperty.DefaultMetadata.DefineNamedType(fontFaceEnumType);
-			Style.LabelFontFaceProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontFaceType.Id);
+			//?Style.LabelFontFaceProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontFaceType.Id);
 			Style.FieldFontFaceProperty.DefaultMetadata.DefineNamedType(fontFaceEnumType);
-			Style.FieldFontFaceProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontFaceType.Id);
+			//?Style.FieldFontFaceProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontFaceType.Id);
 
 			EnumType fontStyleEnumType = Res.Types.FieldDescription.FontStyleType;
 			Style.LabelFontStyleProperty.DefaultMetadata.DefineNamedType(fontStyleEnumType);
-			Style.LabelFontStyleProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontStyleType.Id);
+			//?Style.LabelFontStyleProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontStyleType.Id);
 			Style.FieldFontStyleProperty.DefaultMetadata.DefineNamedType(fontStyleEnumType);
-			Style.FieldFontStyleProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontStyleType.Id);
+			//?Style.FieldFontStyleProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontStyleType.Id);
 
 			EnumType fontSizeEnumType = Res.Types.FieldDescription.FontSizeType;
 			Style.LabelFontSizeProperty.DefaultMetadata.DefineNamedType(fontSizeEnumType);
-			Style.LabelFontSizeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontSizeType.Id);
+			//?Style.LabelFontSizeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.LabelFontSizeType.Id);
 			Style.FieldFontSizeProperty.DefaultMetadata.DefineNamedType(fontSizeEnumType);
-			Style.FieldFontSizeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontSizeType.Id);
+			//?Style.FieldFontSizeProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.FieldFontSizeType.Id);
 
 			EnumType commandButtonClass = Res.Types.FieldDescription.CommandButtonClass;
 			Style.CommandButtonClassProperty.DefaultMetadata.DefineNamedType(commandButtonClass);
-			Style.CommandButtonClassProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.CommandButtonClass.Id);
+			//?Style.CommandButtonClassProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.CommandButtonClass.Id);
 		}
 
 

@@ -82,6 +82,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 			StaticText label = new StaticText(box);
 			label.Text = this.label;
+			label.CaptionId = this.captionId;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Fill;

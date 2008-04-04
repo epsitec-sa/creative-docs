@@ -206,31 +206,31 @@ namespace Epsitec.Common.Designer.FormEditor.Proxies
 		{
 			EnumType separatorBottomEnumType = Res.Types.FieldDescription.SeparatorType;
 			Geometry.SeparatorBottomProperty.DefaultMetadata.DefineNamedType(separatorBottomEnumType);
-			Geometry.SeparatorBottomProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorBottomType.Id);
+			//?Geometry.SeparatorBottomProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.SeparatorBottomType.Id);
 
 			EnumType boxLayoutBottomEnumType = Res.Types.FieldDescription.BoxLayoutType;
 			Geometry.BoxLayoutProperty.DefaultMetadata.DefineNamedType(boxLayoutBottomEnumType);
-			Geometry.BoxLayoutProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxLayoutType.Id);
+			//?Geometry.BoxLayoutProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxLayoutType.Id);
 
 			EnumType boxPaddingBottomEnumType = Res.Types.FieldDescription.BoxPaddingType;
 			Geometry.BoxPaddingProperty.DefaultMetadata.DefineNamedType(boxPaddingBottomEnumType);
-			Geometry.BoxPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxPaddingType.Id);
+			//?Geometry.BoxPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxPaddingType.Id);
 
 			EnumType boxFrameStateEnumType = Res.Types.FieldDescription.FrameState;
 			Geometry.BoxFrameStateProperty.DefaultMetadata.DefineNamedType(boxFrameStateEnumType);
-			Geometry.BoxFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameState.Id);
+			//?Geometry.BoxFrameStateProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameState.Id);
 
 			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.FrameWidthNumericType);
-			Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameWidth.Id);
+			//?Geometry.BoxFrameWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.BoxFrameWidth.Id);
 
 			Geometry.PreferredWidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.PreferredWidthNumericType);
-			Geometry.PreferredWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.PreferredWidth.Id);
+			//?Geometry.PreferredWidthProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldMode.PreferredWidth.Id);
 
 			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.ColumnsRequiredNumericType);
-			Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
+			//?Geometry.ColumnsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.ColumnsRequired.Id);
 
 			Geometry.RowsRequiredProperty.DefaultMetadata.DefineNamedType(ProxyManager.RowsRequiredNumericType);
-			Geometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.RowsRequired.Id);
+			//?Geometry.RowsRequiredProperty.DefaultMetadata.DefineCaptionId(Res.Captions.FieldGeometry.RowsRequired.Id);
 		}
 
 
