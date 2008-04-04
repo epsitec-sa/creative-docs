@@ -168,7 +168,13 @@ namespace Epsitec.Common.Designer.Proxies
 					{
 						if (valueToCreate.Type == value.Type && valueToCreate.Value.Equals(value.Value))
 						{
-							valueToCreate.SelectedObjects.AddRange(value.SelectedObjects);
+							foreach (Widget widget in value.SelectedObjects)
+							{
+								if (!valueToCreate.SelectedObjects.Contains(widget))
+								{
+									valueToCreate.SelectedObjects.Add(widget);
+								}
+							}
 						}
 					}
 				}
