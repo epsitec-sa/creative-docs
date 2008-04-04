@@ -21,9 +21,9 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin, Res.Captions.Geometry.LeftMargin, -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightMargin, Res.Captions.Geometry.RightMargin, -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopMargin, Res.Captions.Geometry.TopMargin, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin,   Res.Captions.Geometry.LeftMargin,   -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightMargin,  Res.Captions.Geometry.RightMargin,  -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopMargin,    Res.Captions.Geometry.TopMargin,    -1, 9999, 1, 1);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomMargin, Res.Captions.Geometry.BottomMargin, -1, 9999, 1, 1);
 			}
 

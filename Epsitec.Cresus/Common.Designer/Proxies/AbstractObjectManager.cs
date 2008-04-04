@@ -30,6 +30,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
+			//	Ajoute une valeur de type numérique.
 			this.SuspendChanges();
 
 			try
@@ -51,6 +52,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
 		{
+			//	Ajoute une valeur de type énumération.
 			this.SuspendChanges();
 
 			try
@@ -82,10 +84,12 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected virtual void SendObjectToValue(AbstractValue value)
 		{
+			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
 		}
 
 		protected virtual void SendValueToObject(AbstractValue value)
 		{
+			//	Il faut envoyer la valeur à tous les objets sélectionnés.
 		}
 
 
