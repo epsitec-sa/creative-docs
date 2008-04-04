@@ -56,8 +56,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 		}
 
 
-		public void Initialize(Module module, PanelsContext context, UI.Panel panel)
+		public void Initialize(Viewers.Panels viewersPanels, Module module, PanelsContext context, UI.Panel panel)
 		{
+			this.viewersPanels = viewersPanels;
 			this.module = module;
 			this.context = context;
 			this.panel = panel;
@@ -67,6 +68,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.constrainsList = new ConstrainsList(this);
 			this.handlesList = new HandlesList(this);
 			this.dimensionsList = new DimensionsList(this);
+		}
+
+		public Viewers.Panels ViewersPanels
+		{
+			get
+			{
+				return this.viewersPanels;
+			}
 		}
 
 		public Module Module
@@ -4855,6 +4864,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		protected static readonly double	attachmentThickness = 3.0;
 		protected static readonly double	attachmentScale = 0.4;
 
+		protected Viewers.Panels			viewersPanels;
 		protected Module					module;
 		protected UI.Panel					panel;
 		protected Druid						druid;

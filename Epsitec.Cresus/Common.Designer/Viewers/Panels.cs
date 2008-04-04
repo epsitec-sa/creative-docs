@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	donc des marges) et tient compte lui-même du décalage. C'est le seul moyen pour
 			//	pouvoir dessiner dans les marges ET y détecter les événements souris.
 			this.panelEditor = new PanelEditor.Editor(container);
-			this.panelEditor.Initialize(this.module, this.context, this.panelContainer);
+			this.panelEditor.Initialize(this, this.module, this.context, this.panelContainer);
 			this.panelEditor.MinWidth = 100;
 			this.panelEditor.MinHeight = 100;
 			this.panelEditor.Anchor = AnchorStyles.All;
@@ -126,7 +126,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			this.proxyManager = new PanelEditor.ProxyManager(this);
+			//?this.proxyManager = new PanelEditor.ProxyManager(this);
+			Proxies.ObjectManagerPanel objectManager = new Proxies.ObjectManagerPanel(this.panelEditor.ObjectModifier);
+			Proxies.ProxyPanel proxy = new Proxies.ProxyPanel(this);
+			this.proxyManager = new Proxies.ProxyManager(objectManager, proxy);
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -232,6 +235,14 @@ namespace Epsitec.Common.Designer.Viewers
 			get
 			{
 				return this.panelEditor;
+			}
+		}
+
+		public Proxies.ProxyManager ProxyManager
+		{
+			get
+			{
+				return this.proxyManager;
 			}
 		}
 
@@ -1068,25 +1079,27 @@ namespace Epsitec.Common.Designer.Viewers
 
 
 		#region Proxies
-		protected void DefineProxies(IEnumerable<Widget> widgets)
+		protected void DefineProxies()
 		{
 			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
-			this.ClearProxies();
-			this.proxyManager.SetSelection(widgets);
-			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			//?this.ClearProxies();
+			//?this.proxyManager.SetSelection(this.panelEditor.SelectedObjects);
+			//?this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			this.propertiesScrollable.Viewport.Children.Clear();  // supprime les panneaux existants
+			this.proxyManager.CreateInterface(this.propertiesScrollable.Viewport, this.panelEditor.SelectedObjects);
 		}
 
 		protected void ClearProxies()
 		{
 			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
-			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
+			//?this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
 		}
 
 		protected void UpdateProxies()
 		{
 			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
 			//	le nombre de propriétés visibles par panneau.
-			this.proxyManager.UpdateUserInterface();
+			//?this.proxyManager.UpdateUserInterface();
 		}
 
 		public void RegenerateProxies()
@@ -1094,11 +1107,11 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-			}
+			//?if (this.proxyManager.RegenerateProxies())
+			//?{
+			//?	this.ClearProxies();
+			//?	this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			//?}
 		}
 
 		public void RegenerateDimensions()
@@ -1110,11 +1123,11 @@ namespace Epsitec.Common.Designer.Viewers
 		public void RegenerateProxiesAndDimensions()
 		{
 			//	Régénère les proxies et les cotes.
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-			}
+			//?if (this.proxyManager.RegenerateProxies())
+			//?{
+			//?	this.ClearProxies();
+			//?	this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
+			//?}
 
 			this.panelEditor.RegenerateDimensions();
 		}
@@ -1129,7 +1142,7 @@ namespace Epsitec.Common.Designer.Viewers
 		private void HandlePanelEditorChildrenSelected(object sender)
 		{
 			this.UpdateCommands();
-			this.DefineProxies(this.panelEditor.SelectedObjects);
+			this.DefineProxies();
 		}
 
 		private void HandlePanelEditorChildrenGeometryChanged(object sender)
@@ -1241,7 +1254,8 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 
-		protected PanelEditor.ProxyManager		proxyManager;
+		protected Proxies.ProxyManager			proxyManager;
+		//?protected PanelEditor.ProxyManager		proxyManager;
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;

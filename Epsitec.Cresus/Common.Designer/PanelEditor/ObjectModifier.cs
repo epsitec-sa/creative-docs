@@ -120,6 +120,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.panelEditor = panelEditor;
 		}
 
+		public Editor PanelEditor
+		{
+			get
+			{
+				return this.panelEditor;
+			}
+		}
+
 		protected UI.Panel Container
 		{
 			get

@@ -21,7 +21,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormColumnsRequired, Res.Captions.Form.ColumnsRequired, 1, 10, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin, Res.Captions.Form.ColumnsRequired, -1, 9999, 1, 1);
 			}
 
 			return list;
@@ -62,9 +62,9 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 
-			//?this.Viewer.ProxyManager.UpdateInterface();
-			//?Application.QueueAsyncCallback(this.ObjectModifier.FormEditor.RegenerateForm);
-			//?this.ObjectModifier.FormEditor.Module.AccessPanels.SetLocalDirty();
+			this.Viewer.ProxyManager.UpdateInterface();
+			Application.QueueAsyncCallback(this.ObjectModifier.PanelEditor.RegenerateDimensions);
+			this.ObjectModifier.PanelEditor.Module.AccessPanels.SetLocalDirty();
 		}
 
 
@@ -72,8 +72,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			get
 			{
-				//?return this.ObjectModifier.PanelEditor.ViewersForms;
-				return null;
+				return this.ObjectModifier.PanelEditor.ViewersPanels;
 			}
 		}
 
