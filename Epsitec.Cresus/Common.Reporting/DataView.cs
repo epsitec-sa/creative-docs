@@ -81,38 +81,6 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		abstract class EnumeratorFactory
-		{
-			public abstract System.Collections.IEnumerable GetEnumerable(object value);
-		}
-
-		class EnumeratorFactory<T> : EnumeratorFactory
-		{
-			public override System.Collections.IEnumerable GetEnumerable(object value)
-			{
-				System.Collections.IEnumerable enumerable = value as System.Collections.IEnumerable;
-
-				if (enumerable == null)
-				{
-					return EnumeratorFactory<T>.CreateEnumerable (value as IEnumerable<T>);
-				}
-				else
-				{
-					return enumerable;
-				}
-			}
-
-			private static System.Collections.IEnumerable CreateEnumerable(IEnumerable<T> enumerable)
-			{
-				foreach (T item in enumerable)
-				{
-					yield return item;
-				}
-			}
-		}
-
-
-
 		private readonly DataViewContext context;
 		private readonly AbstractEntity root;
 	}
