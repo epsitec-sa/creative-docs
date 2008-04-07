@@ -19,6 +19,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Retourne la liste des valeurs nécessaires pour représenter un objet.
 			List<AbstractValue> list = new List<AbstractValue>();
 
+			//	Panel.Geometry:
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin,   Res.Captions.Geometry.LeftMargin,   -1, 9999, 1, 1);
@@ -62,6 +63,7 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 
+			//	Panel.Layout:
 			if (this.ObjectModifier.HasChildrenPlacement(selectedObject))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelChildrenPlacement, Res.Captions.Layout.ChildrenPlacement, Res.Types.ObjectModifier.ChildrenPlacement);
@@ -91,6 +93,61 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.HasStackedVerticalAlignment(selectedObject))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedVerticalAlignment, Res.Captions.Layout.StackedVerticalAlignment, Res.Types.ObjectModifier.StackedVerticalAlignment);
+			}
+
+			//	Panel.Grid:
+			if (this.ObjectModifier.AreChildrenGrid(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnsCount, Res.Captions.Grid.ColumnsCount, 1, 100, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowsCount,    Res.Captions.Grid.RowsCount,    1, 100, 1, 1);
+			}
+
+			if (this.ObjectModifier.AreChildrenGrid(selectedObject.Parent))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnSpan, Res.Captions.Grid.ColumnSpan, 1, 100, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowSpan,    Res.Captions.Grid.RowSpan,    1, 100, 1, 1);
+			}
+
+			if (this.ObjectModifier.AreChildrenGrid(selectedObject))
+			{
+				PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(selectedObject);
+				if (gs != null && gs.Count > 0)
+				{
+					foreach (PanelEditor.GridSelection.OneItem item in gs)
+					{
+						if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+						{
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnMode, Res.Captions.Grid.ColumnMode, Res.Types.ObjectModifier.GridMode);
+
+							if (this.ObjectModifier.GetGridColumnMode(selectedObject, item.Index) != PanelEditor.ObjectModifier.GridMode.Auto)
+							{
+								this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnWidth, Res.Captions.Grid.ColumnWidth, 0, 999, 1, 1);
+							}
+
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnMinWidth, Res.Captions.Grid.MinWidth, 0, 999, 1, 1);
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnMaxWidth, Res.Captions.Grid.MaxWidth, 0, 999, 1, 1);
+
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridLeftBorder,  Res.Captions.Grid.LeftBorder,  0, 999, 1, 1);
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRightBorder, Res.Captions.Grid.RightBorder, 0, 999, 1, 1);
+						}
+
+						if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+						{
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowMode, Res.Captions.Grid.RowMode, Res.Types.ObjectModifier.GridMode);
+
+							if (this.ObjectModifier.GetGridRowMode(selectedObject, item.Index) != PanelEditor.ObjectModifier.GridMode.Auto)
+							{
+								this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowHeight, Res.Captions.Grid.RowHeight, 0, 999, 1, 1);
+							}
+
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowMinHeight, Res.Captions.Grid.MinHeight, 0, 999, 1, 1);
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowMaxHeight, Res.Captions.Grid.MaxHeight, 0, 999, 1, 1);
+
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridTopBorder,    Res.Captions.Grid.TopBorder,    0, 999, 1, 1);
+							this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridBottomBorder, Res.Captions.Grid.BottomBorder, 0, 999, 1, 1);
+						}
+					}
+				}
 			}
 
 			return list;
@@ -182,6 +239,70 @@ namespace Epsitec.Common.Designer.Proxies
 
 				case AbstractProxy.Type.PanelStackedVerticalAlignment:
 					value.Value = this.ObjectModifier.GetStackedVerticalAlignment(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnsCount:
+					value.Value = this.ObjectModifier.GetGridColumnsCount(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowsCount:
+					value.Value = this.ObjectModifier.GetGridRowsCount(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnSpan:
+					value.Value = this.ObjectModifier.GetGridColumnSpan(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowSpan:
+					value.Value = this.ObjectModifier.GetGridRowSpan(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnMode:
+					value.Value = this.ObjectModifier.GetGridColumnMode(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnWidth:
+					value.Value = this.ObjectModifier.GetGridColumnWidth(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnMinWidth:
+					value.Value = this.ObjectModifier.GetGridColumnMinWidth(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnMaxWidth:
+					value.Value = this.ObjectModifier.GetGridColumnMaxWidth(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridLeftBorder:
+					value.Value = this.ObjectModifier.GetGridColumnLeftBorder(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridRightBorder:
+					value.Value = this.ObjectModifier.GetGridColumnRightBorder(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowMode:
+					value.Value = this.ObjectModifier.GetGridRowMode(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowHeight:
+					value.Value = this.ObjectModifier.GetGridRowHeight(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowMinHeight:
+					value.Value = this.ObjectModifier.GetGridRowMinHeight(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowMaxHeight:
+					value.Value = this.ObjectModifier.GetGridRowMaxHeight(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridTopBorder:
+					value.Value = this.ObjectModifier.GetGridRowTopBorder(selectedObject, 0);
+					break;
+
+				case AbstractProxy.Type.PanelGridBottomBorder:
+					value.Value = this.ObjectModifier.GetGridRowBottomBorder(selectedObject, 0);
 					break;
 
 			}
@@ -285,6 +406,70 @@ namespace Epsitec.Common.Designer.Proxies
 
 					case AbstractProxy.Type.PanelStackedVerticalAlignment:
 						this.ObjectModifier.SetStackedVerticalAlignment(selectedObject, (PanelEditor.ObjectModifier.StackedVerticalAlignment) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridColumnsCount:
+						this.ObjectModifier.SetGridColumnsCount(selectedObject, (int) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRowsCount:
+						this.ObjectModifier.SetGridRowsCount(selectedObject, (int) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridColumnSpan:
+						this.ObjectModifier.SetGridColumnSpan(selectedObject, (int) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRowSpan:
+						this.ObjectModifier.SetGridRowSpan(selectedObject, (int) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridColumnMode:
+						this.ObjectModifier.SetGridColumnMode(selectedObject, 0, (PanelEditor.ObjectModifier.GridMode) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridColumnWidth:
+						this.ObjectModifier.SetGridColumnWidth(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridColumnMinWidth:
+						this.ObjectModifier.SetGridColumnMinWidth(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridColumnMaxWidth:
+						this.ObjectModifier.SetGridColumnMaxWidth(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridLeftBorder:
+						this.ObjectModifier.SetGridColumnLeftBorder(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRightBorder:
+						this.ObjectModifier.SetGridColumnRightBorder(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRowMode:
+						this.ObjectModifier.SetGridRowMode(selectedObject, 0, (PanelEditor.ObjectModifier.GridMode) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRowHeight:
+						this.ObjectModifier.SetGridRowHeight(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRowMinHeight:
+						this.ObjectModifier.SetGridRowMinHeight(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridRowMaxHeight:
+						this.ObjectModifier.SetGridRowMaxHeight(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridTopBorder:
+						this.ObjectModifier.SetGridRowTopBorder(selectedObject, 0, (double) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelGridBottomBorder:
+						this.ObjectModifier.SetGridRowBottomBorder(selectedObject, 0, (double) value.Value);
 						break;
 
 				}
