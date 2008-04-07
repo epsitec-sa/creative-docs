@@ -124,9 +124,10 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					System.Enum e = (System.Enum) this.value;
 					Types.EnumValue enumValue = this.enumType[e];
+					int rank = (enumValue == null) ? -1 : enumValue.Rank;
 
 					this.ignoreChange = true;
-					this.buttons.SelectedValue = enumValue.Rank;
+					this.buttons.SelectedValue = rank;
 					this.ignoreChange = false;
 				}
 			}

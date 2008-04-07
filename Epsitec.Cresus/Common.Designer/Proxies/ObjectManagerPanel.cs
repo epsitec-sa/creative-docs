@@ -62,6 +62,37 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 
+			if (this.ObjectModifier.HasChildrenPlacement(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelChildrenPlacement, Res.Captions.Layout.ChildrenPlacement, Res.Types.ObjectModifier.ChildrenPlacement);
+			}
+
+			if (this.ObjectModifier.AreChildrenAnchored(selectedObject.Parent))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelAnchoredHorizontalAttachment, Res.Captions.Layout.AnchoredHorizontalAttachment, Res.Types.ObjectModifier.AnchoredHorizontalAttachment);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelAnchoredVerticalAttachment, Res.Captions.Layout.AnchoredVerticalAttachment, Res.Types.ObjectModifier.AnchoredVerticalAttachment);
+			}
+
+			if (this.ObjectModifier.HasStackedHorizontalAttachment(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedHorizontalAttachment, Res.Captions.Layout.StackedHorizontalAttachment, Res.Types.ObjectModifier.StackedHorizontalAttachment);
+			}
+
+			if (this.ObjectModifier.HasStackedVerticalAttachment(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedVerticalAttachment, Res.Captions.Layout.StackedVerticalAttachment, Res.Types.ObjectModifier.StackedVerticalAttachment);
+			}
+
+			if (this.ObjectModifier.HasStackedHorizontalAlignment(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedHorizontalAlignment, Res.Captions.Layout.StackedHorizontalAlignment, Res.Types.ObjectModifier.StackedHorizontalAlignment);
+			}
+
+			if (this.ObjectModifier.HasStackedVerticalAlignment(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedVerticalAlignment, Res.Captions.Layout.StackedVerticalAlignment, Res.Types.ObjectModifier.StackedVerticalAlignment);
+			}
+
 			return list;
 		}
 
@@ -123,6 +154,34 @@ namespace Epsitec.Common.Designer.Proxies
 					{
 						value.Value = this.ObjectModifier.GetHeight(selectedObject);
 					}
+					break;
+
+				case AbstractProxy.Type.PanelChildrenPlacement:
+					value.Value = this.ObjectModifier.GetChildrenPlacement(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelAnchoredHorizontalAttachment:
+					value.Value = this.ObjectModifier.GetAnchoredHorizontalAttachment(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelAnchoredVerticalAttachment:
+					value.Value = this.ObjectModifier.GetAnchoredVerticalAttachment(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelStackedHorizontalAttachment:
+					value.Value = this.ObjectModifier.GetStackedHorizontalAttachment(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelStackedVerticalAttachment:
+					value.Value = this.ObjectModifier.GetStackedVerticalAttachment(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelStackedHorizontalAlignment:
+					value.Value = this.ObjectModifier.GetStackedHorizontalAlignment(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelStackedVerticalAlignment:
+					value.Value = this.ObjectModifier.GetStackedVerticalAlignment(selectedObject);
 					break;
 
 			}
@@ -198,6 +257,34 @@ namespace Epsitec.Common.Designer.Proxies
 						{
 							this.ObjectModifier.SetHeight(selectedObject, (double) value.Value);
 						}
+						break;
+
+					case AbstractProxy.Type.PanelChildrenPlacement:
+						this.ObjectModifier.SetChildrenPlacement(selectedObject, (PanelEditor.ObjectModifier.ChildrenPlacement) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelAnchoredHorizontalAttachment:
+						this.ObjectModifier.SetAnchoredHorizontalAttachment(selectedObject, (PanelEditor.ObjectModifier.AnchoredHorizontalAttachment) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelAnchoredVerticalAttachment:
+						this.ObjectModifier.SetAnchoredVerticalAttachment(selectedObject, (PanelEditor.ObjectModifier.AnchoredVerticalAttachment) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelStackedHorizontalAttachment:
+						this.ObjectModifier.SetStackedHorizontalAttachment(selectedObject, (PanelEditor.ObjectModifier.StackedHorizontalAttachment) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelStackedVerticalAttachment:
+						this.ObjectModifier.SetStackedVerticalAttachment(selectedObject, (PanelEditor.ObjectModifier.StackedVerticalAttachment) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelStackedHorizontalAlignment:
+						this.ObjectModifier.SetStackedHorizontalAlignment(selectedObject, (PanelEditor.ObjectModifier.StackedHorizontalAlignment) value.Value);
+						break;
+
+					case AbstractProxy.Type.PanelStackedVerticalAlignment:
+						this.ObjectModifier.SetStackedVerticalAlignment(selectedObject, (PanelEditor.ObjectModifier.StackedVerticalAlignment) value.Value);
 						break;
 
 				}
