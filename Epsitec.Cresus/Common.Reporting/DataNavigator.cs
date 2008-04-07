@@ -8,10 +8,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Reporting
 {
-	public sealed class Navigator
+	public sealed class DataNavigator
 	{
-		public Navigator()
+		public DataNavigator(DataView view)
 		{
+			if (view == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+
+			this.view = view;
 		}
 
 		public bool IsValid
@@ -32,7 +38,7 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		public EntityFieldPath CurrentPath
+		public string CurrentDataPath
 		{
 			get
 			{
@@ -47,7 +53,7 @@ namespace Epsitec.Common.Reporting
 		}
 
 		
-		public bool NavigateTo(EntityFieldPath path)
+		public bool NavigateTo(string dataPath)
 		{
 			this.path = path;
 
@@ -103,7 +109,7 @@ namespace Epsitec.Common.Reporting
 			throw new System.NotImplementedException ();
 		}
 
-		public void RequestBreak(IEnumerable<SplitInfo> collection, int index)
+		public void RequestBreak(IEnumerable<CellSplitInfo> collection, int index)
 		{
 			this.EnsureValid ();
 
@@ -123,8 +129,9 @@ namespace Epsitec.Common.Reporting
 		}
 
 
-		private EntityFieldPath path;
-		private IEnumerable<SplitInfo> currentSplitInfos;
+		private readonly DataView view;
+		private string path;
+		private IEnumerable<CellSplitInfo> currentSplitInfos;
 		private int currentSplitIndex;
 	}
 }

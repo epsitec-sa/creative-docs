@@ -24,8 +24,9 @@ namespace Epsitec.Common.Reporting
 		GroupFooter1,
 		GroupFooter2,
 
-		Values,
+		ValueRow,
+		ValueItem,
 
-		Aggregates,
+		AggregateRow,
 	}
 }

@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Reporting
 {
-	public class SplitInfo
+	public class CellSplitInfo
 	{
-		public SplitInfo()
+		public CellSplitInfo()
 		{
 		}
 

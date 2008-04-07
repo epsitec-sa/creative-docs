@@ -10,9 +10,13 @@ namespace Epsitec.Common.Reporting
 {
 	public enum DataItemType
 	{
-		BlockBegin,
-		BlockEnd,
+		None,
+
+		Table,
+		Group,
 		Row,
+		Value,
+
 		Break,
 		Rewind,
 		Restart

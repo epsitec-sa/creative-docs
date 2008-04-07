@@ -15,12 +15,22 @@ namespace Epsitec.Common.Reporting
 			get;
 		}
 
-		DataItemClass Class
+		int Count
 		{
 			get;
 		}
 
-		DataItemType Type
+		DataItemClass ItemClass
+		{
+			get;
+		}
+
+		DataItemType ItemType
+		{
+			get;
+		}
+
+		INamedType DataType
 		{
 			get;
 		}

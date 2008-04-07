@@ -13,7 +13,7 @@ namespace Epsitec.Common.Reporting
 		[Test]
 		public void Check01CreateNavigator()
 		{
-			Navigator navigator = new Navigator ();
+			DataNavigator navigator = new DataNavigator ();
 		}
 	}
 }
