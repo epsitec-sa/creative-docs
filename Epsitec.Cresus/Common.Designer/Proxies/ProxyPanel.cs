@@ -118,7 +118,12 @@ namespace Epsitec.Common.Designer.Proxies
 						valueType == Type.PanelRightMargin ||
 						valueType == Type.PanelTopMargin ||
 						valueType == Type.PanelOriginX ||
-						valueType == Type.PanelWidth)
+						valueType == Type.PanelWidth ||
+						valueType == Type.PanelGridColumnsCount ||
+						valueType == Type.PanelGridColumnMinWidth ||
+						valueType == Type.PanelGridLeftBorder ||
+						valueType == Type.PanelGridRowMinHeight ||
+						valueType == Type.PanelGridTopBorder)
 					{
 						space = -1;  // la valeur suivante sera collée à celle-çi
 					}
