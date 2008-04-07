@@ -97,12 +97,13 @@ namespace Epsitec.Common.Designer.Proxies
 
 		public void UpdateInterface()
 		{
-			//	Met à jour (enable/disable) toutes les valeurs dans les panneaux des proxies.
+			//	Met à jour toutes les valeurs dans les panneaux des proxies, ainsi que l'état enable/disable.
 			foreach (ProxyToCreate proxy in this.proxies)  // passe en revue tous les panneaux
 			{
 				foreach (AbstractValue value in proxy.Values)  // passe en revue toutes les valeurs d'un panneau
 				{
-					value.WidgetInterface.Enable = this.objectManager.IsEnable(value);
+					this.objectManager.SendObjectToValue(value);  // met à jour la valeur
+					value.WidgetInterface.Enable = this.objectManager.IsEnable(value);  // met à jour l'état enable/disable
 				}
 			}
 		}

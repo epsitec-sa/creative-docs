@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected override void SendObjectToValue(AbstractValue value)
+		public override void SendObjectToValue(AbstractValue value)
 		{
 			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
 			Widget selectedObject = value.SelectedObjects[0];

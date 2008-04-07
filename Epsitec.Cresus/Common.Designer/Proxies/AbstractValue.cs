@@ -64,7 +64,12 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 			set
 			{
-				if (this.value != value)
+				//	'this.value' et 'value' sont de type 'object'. Ils peuvent contenir des 'double', des 'int'
+				//	ou des énumérations, donc des types par valeur. Mais lorsqu'un type par valeur est vu à travers
+				//	un 'object', il est vu comme un type par référence. Donc, 'this.value != value' compare les
+				//	références, ce qui n'est pas l'effet escompté ici. D'où l'utilisation de Equals, qui compare
+				//	bit à bit les valeurs.
+				if (!object.Equals(this.value, value))
 				{
 					this.value = value;
 					this.UpdateInterface();

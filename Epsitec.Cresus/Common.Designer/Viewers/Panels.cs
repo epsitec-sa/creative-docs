@@ -1115,6 +1115,8 @@ namespace Epsitec.Common.Designer.Viewers
 			//	le nombre de propriétés visibles par panneau.
 #if OldProxy
 			this.proxyManager.UpdateUserInterface();
+#else
+			this.proxyManager.UpdateInterface();
 #endif
 		}
 

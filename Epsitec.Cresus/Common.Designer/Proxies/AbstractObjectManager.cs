@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected virtual void SendObjectToValue(AbstractValue value)
+		public virtual void SendObjectToValue(AbstractValue value)
 		{
 			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
 		}
