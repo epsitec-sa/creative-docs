@@ -35,19 +35,19 @@ namespace Epsitec.Common.Designer
 
 		private Module(DesignerApplication designerApplication, DesignerMode mode, ResourceManagerPool pool, ResourceModuleId moduleId)
 		{
-			System.Diagnostics.Debug.Assert (pool != null);
+			System.Diagnostics.Debug.Assert(pool != null);
 			
 			this.designerApplication = designerApplication;
 			this.mode = mode;
 
 			this.moduleId = moduleId;
-			this.batchSaver = new ResourceBundleBatchSaver ();
+			this.batchSaver = new ResourceBundleBatchSaver();
 			this.batchSaver.BundleSaved += this.HandleBatchSaverModuleSaved;
 
 			this.resourceManager = new ResourceManager(pool, moduleId);
 			this.resourceManager.DefineDefaultModuleName(this.moduleId.Name);
 
-			this.moduleInfo = this.resourceManager.DefaultModuleInfo.Clone ();
+			this.moduleInfo = this.resourceManager.DefaultModuleInfo.Clone();
 
 			this.modifier = new Modifier(this);
 
@@ -67,6 +67,11 @@ namespace Epsitec.Common.Designer
 			//	Attention: il faut avoir fait le this.accessTypes.Load() avant de créer this.accessValues !
 			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId);
 			this.accessValues.Load(this);
+
+			if (this.AccessTypes.TypesCreateMissingValueItems())
+			{
+				this.designerApplication.DialogMessage("Des énumérations ont été complétées.");
+			}
 
 			foreach (ResourceAccess access in this.Accesses)
 			{

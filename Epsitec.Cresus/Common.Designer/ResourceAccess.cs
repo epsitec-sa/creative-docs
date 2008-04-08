@@ -2011,11 +2011,6 @@ namespace Epsitec.Common.Designer
 				this.primaryCulture = bundle.Culture;
 			}
 
-			if (this.type == Type.Types)
-			{
-				this.TypesCreateMissingValueItems();
-			}
-
 			if (this.type == Type.Forms)
 			{
 				this.FormsMerge();
@@ -2085,9 +2080,10 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		protected void TypesCreateMissingValueItems()
+		public bool TypesCreateMissingValueItems()
 		{
 			//	Passe en revue toutes les énumérations à la recherche des énumérations système à compléter.
+			bool completed = false;
 			foreach (CultureMap item in this.accessor.Collection)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2104,6 +2100,7 @@ namespace Epsitec.Common.Designer
 							if (druid.IsEmpty)
 							{
 								missing = true;
+								break;
 							}
 						}
 
@@ -2111,10 +2108,18 @@ namespace Epsitec.Common.Designer
 						{
 							Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 							accessor.CreateMissingValueItems(item);
+							completed = true;
 						}
 					}
 				}
 			}
+
+			if (completed)
+			{
+				this.PersistChanges();
+			}
+
+			return completed;
 		}
 
 
