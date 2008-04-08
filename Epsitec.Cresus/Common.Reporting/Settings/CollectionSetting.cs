@@ -9,6 +9,10 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Reporting.Settings
 {
+	/// <summary>
+	/// The <c>CollectionSetting</c> class defines how a collection will be
+	/// mapped to a list of items, fit for use as rows in a table.
+	/// </summary>
 	public class CollectionSetting
 	{
 		public CollectionSetting()
@@ -17,12 +21,21 @@ namespace Epsitec.Common.Reporting.Settings
 
 
 
+		/// <summary>
+		/// Gets or sets the sort comparison used when sorting entities.
+		/// </summary>
+		/// <value>The sort comparison.</value>
 		public System.Comparison<AbstractEntity> SortComparison
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the filter comparison used when preliminarily
+		/// filtering entities.
+		/// </summary>
+		/// <value>The filter comparison.</value>
 		public System.Predicate<AbstractEntity> FilterComparison
 		{
 			get;
@@ -38,6 +51,12 @@ namespace Epsitec.Common.Reporting.Settings
 			}
 		}
 
+		/// <summary>
+		/// Creates the filtered, sorted (but not grouped) list for the given
+		/// input collection.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <returns>The list.</returns>
 		public List<AbstractEntity> CreateList(IEnumerable<AbstractEntity> collection)
 		{
 			List<AbstractEntity> list = new List<AbstractEntity> ();

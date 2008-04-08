@@ -25,7 +25,9 @@ namespace Epsitec.Common.Reporting
 
 			List<AbstractEntity> entities = setting.CreateList (CollectionSettingTest.GetSampleEntities ());
 
-			System.Console.Out.WriteLine ("Unsorted\n--------------------\n{0}", entities.FlattenSamples ());
+			System.Console.Out.WriteLine ("Unsorted\n--------------------\n{0}", entities.FlattenSamples ("\n"));
+
+			Assert.AreEqual ("Pierre Arnaud 1972;Daphné Arnaud 2008;Clarisse Arnaud 2006;Daniel Roux 1958;Denis Dumoulin 1957;Jérôme André 1994;", entities.FlattenSamples (";"));
 		}
 		
 		[Test]
@@ -39,7 +41,9 @@ namespace Epsitec.Common.Reporting
 
 			List<AbstractEntity> entities = setting.CreateList (CollectionSettingTest.GetSampleEntities ());
 
-			System.Console.Out.WriteLine ("Filtered\n--------------------\n{0}", entities.FlattenSamples ());
+			System.Console.Out.WriteLine ("Filtered\n--------------------\n{0}", entities.FlattenSamples ("\n"));
+
+			Assert.AreEqual ("Pierre Arnaud 1972;Daphné Arnaud 2008;Clarisse Arnaud 2006;", entities.FlattenSamples (";"));
 		}
 
 		[Test]
@@ -53,9 +57,13 @@ namespace Epsitec.Common.Reporting
 
 			List<AbstractEntity> entities = setting.CreateList (CollectionSettingTest.GetSampleEntities ());
 
-			System.Console.Out.WriteLine ("Sorted\n--------------------\n{0}", entities.FlattenSamples ());
+			System.Console.Out.WriteLine ("Sorted\n--------------------\n{0}", entities.FlattenSamples ("\n"));
+
+			Assert.AreEqual ("Jérôme André 1994;Clarisse Arnaud 2006;Daphné Arnaud 2008;Pierre Arnaud 1972;Denis Dumoulin 1957;Daniel Roux 1958;", entities.FlattenSamples (";"));
 		}
 
+		
+		
 		private static IEnumerable<AbstractEntity> GetSampleEntities()
 		{
 			yield return CollectionSettingTest.CreateEntity ("Pierre", "Arnaud", 1972);
@@ -83,7 +91,7 @@ namespace Epsitec.Common.Reporting
 
 	public static class Extensions
 	{
-		public static string FlattenSamples(this IEnumerable<AbstractEntity> samples)
+		public static string FlattenSamples(this IEnumerable<AbstractEntity> samples, string separator)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 
@@ -94,7 +102,7 @@ namespace Epsitec.Common.Reporting
 				buffer.Append (item.GetField<string> ("last"));
 				buffer.Append (" ");
 				buffer.Append (item.GetField<int> ("year").ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append ("\n");
+				buffer.Append (separator);
 			}
 
 			return buffer.ToString ();
