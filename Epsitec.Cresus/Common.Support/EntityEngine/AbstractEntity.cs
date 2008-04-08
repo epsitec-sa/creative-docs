@@ -616,11 +616,24 @@ namespace Epsitec.Common.Support.EntityEngine
 
 
 
+		/// <summary>
+		/// Gets the value for the specified field, without any casting. Calls
+		/// <c>InternalGetValue</c>.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <returns>The value or <c>UndefinedValue.Value</c>.</returns>
 		protected object GenericGetValue(string id)
 		{
 			return this.InternalGetValue (id);
 		}
 
+		/// <summary>
+		/// Sets the value for the specified field, without any casting. Calls
+		/// <c>InternalSetValue</c>, <c>UpdateDataGeneration</c> and <c>NotifyEventHandlers</c>.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="oldValue">The old value.</param>
+		/// <param name="newValue">The new value.</param>
 		protected virtual void GenericSetValue(string id, object oldValue, object newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
@@ -674,6 +687,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.NotifyEventHandlers (id, oldValue, newValue);
 		}
 
+		/// <summary>
+		/// Notifies the event handlers of the field change. This will both
+		/// notify the handlers listening for the specific field and those
+		/// listening for any field change.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="oldValue">The old value.</param>
+		/// <param name="newValue">The new value.</param>
 		protected void NotifyEventHandlers(string id, object oldValue, object newValue)
 		{
 			if (this.eventHandlers != null)
@@ -699,6 +720,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Asserts that the id identifies a simple field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
 		[System.Diagnostics.Conditional ("DEBUG")]
 		protected virtual void AssertSimpleField(string id)
 		{
@@ -708,6 +733,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 		}
 
+		/// <summary>
+		/// Asserts that the id identifies a collection field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
 		[System.Diagnostics.Conditional ("DEBUG")]
 		protected virtual void AssertCollectionField(string id)
 		{

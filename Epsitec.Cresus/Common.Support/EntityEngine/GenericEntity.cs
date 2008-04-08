@@ -34,6 +34,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Sets the value for the specified field, without any casting. Calls
+		/// <c>InternalSetValue</c>, <c>UpdateDataGeneration</c> and <c>NotifyEventHandlers</c>.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="oldValue">The old value.</param>
+		/// <param name="newValue">The new value.</param>
 		protected override void GenericSetValue(string id, object oldValue, object newValue)
 		{
 			if (this.entityId.IsValid)
@@ -42,12 +49,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
+				//	If we have no associated schema information, then simply sets
+				//	the value without any further checks.
+
 				this.InternalSetValue (id, newValue);
 				this.UpdateDataGeneration ();
 				this.NotifyEventHandlers (id, oldValue, newValue);
 			}
 		}
 
+		/// <summary>
+		/// Asserts that the id identifies a simple field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
 		protected override void AssertSimpleField(string id)
 		{
 			if (this.entityId.IsValid)
@@ -56,6 +70,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Asserts that the id identifies a collection field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
 		protected override void AssertCollectionField(string id)
 		{
 			if (this.entityId.IsValid)
