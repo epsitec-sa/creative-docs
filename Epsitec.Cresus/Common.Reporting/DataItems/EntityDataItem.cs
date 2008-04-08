@@ -25,6 +25,14 @@ namespace Epsitec.Common.Reporting.DataItems
 			}
 		}
 
+		public override DataItemType ItemType
+		{
+			get
+			{
+				return DataItemType.Row;
+			}
+		}
+
 		private readonly AbstractEntity entity;
 	}
 }

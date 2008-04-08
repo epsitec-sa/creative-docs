@@ -58,16 +58,19 @@ namespace Epsitec.Common.Reporting
 				System.Diagnostics.Debug.Assert (item != null);
 				System.Diagnostics.Debug.Assert (item.ValueStore != null);
 				System.Diagnostics.Debug.Assert (item.DataView != null);
+
+				DataItem cachedItem;
 				
 				view = item.DataView;
 
 				if ((view.items != null) &&
-					(view.items.TryGetValue (id, out item)))
+					(view.items.TryGetValue (id, out cachedItem)))
 				{
 					//	We have already been asked at least once about this path; we
 					//	can reuse the existing data item, since the source graphe is
 					//	read only
 
+					item = cachedItem;
 					continue;
 				}
 
@@ -86,7 +89,7 @@ namespace Epsitec.Common.Reporting
 
 				//	If the item is stored as an enumerable, handle it as a collection.
 
-				System.Collections.IEnumerable collection = context.GetEnumerable (value);
+				System.Collections.IEnumerable collection = context.GetCollection (value);
 
 				if (collection != null)
 				{
@@ -128,15 +131,20 @@ namespace Epsitec.Common.Reporting
 		private static DataItem CreateSimpleDataItem(DataViewContext context, object value)
 		{
 			AbstractEntity entity = value as AbstractEntity;
+			DataItem item;
 
 			if (entity != null)
 			{
-				return new DataItems.EntityDataItem (context, entity);
+				item = new DataItems.EntityDataItem (context, entity);
+				item.ItemClass = DataItemClass.ValueRow;
 			}
 			else
 			{
-				return new DataItems.ValueDataItem (value);
+				item = new DataItems.ValueDataItem (value);
+				item.ItemClass = DataItemClass.ValueItem;
 			}
+
+			return item;
 		}
 
 
@@ -204,10 +212,8 @@ namespace Epsitec.Common.Reporting
 
 			public virtual DataItemClass ItemClass
 			{
-				get
-				{
-					throw new System.NotImplementedException ();
-				}
+				get;
+				set;
 			}
 
 			public virtual DataItemType ItemType

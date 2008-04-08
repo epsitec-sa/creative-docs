@@ -17,6 +17,12 @@ namespace Epsitec.Common.Reporting
 		}
 
 
+		public System.Collections.IEnumerable GetCollection(object value)
+		{
+			System.Collections.IList list = value as System.Collections.IList;
+			return list;
+		}
+
 		public System.Collections.IEnumerable GetEnumerable(object value)
 		{
 			if (value == null)
