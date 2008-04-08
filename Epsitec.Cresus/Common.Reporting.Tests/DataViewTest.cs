@@ -43,12 +43,19 @@ namespace Epsitec.Common.Reporting
 			DataViewContext context = new DataViewContext ();
 			DataView view = DataView.CreateRoot (context, root);
 
-			DataView.DataItem item = DataView.GetValue (view, "loop") as DataView.DataItem;
+			DataView.DataItem item1 = DataView.GetValue (view, "loop") as DataView.DataItem;
+			DataView.DataItem item2 = DataView.GetValue (view, "loop") as DataView.DataItem;
+			DataView.DataItem item3 = DataView.GetValue (view, "loop.loop") as DataView.DataItem;
 
-			Assert.IsNotNull (item);
-			Assert.AreNotEqual (item.DataView, view);
-			Assert.AreEqual (item.ObjectValue, root);
-			Assert.AreEqual (item.ValueStore, root);
+			Assert.AreNotEqual (item1.DataView, view);
+
+			Assert.AreEqual (item1.ValueStore, root);
+			Assert.AreEqual (item2.ValueStore, root);
+			Assert.AreEqual (item3.ValueStore, root);
+
+			Assert.AreEqual (item1, item2);
+			Assert.AreNotEqual (item1, item3);						//	item for loop != loop.loop
+			Assert.AreNotEqual (item1.DataView, item3.DataView);	//	view for loop != loop.loop
 		}
 	}
 }
