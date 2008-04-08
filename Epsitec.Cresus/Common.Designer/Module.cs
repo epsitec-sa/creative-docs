@@ -68,10 +68,7 @@ namespace Epsitec.Common.Designer
 			this.accessValues   = new ResourceAccess(ResourceAccess.Type.Values,   this, this.moduleId);
 			this.accessValues.Load(this);
 
-			if (this.AccessTypes.TypesCreateMissingValueItems())
-			{
-				this.designerApplication.DialogMessage("Des énumérations ont été complétées.");
-			}
+			this.initialMessage = this.AccessTypes.TypesCreateMissingValueItems(this.moduleId.Name);
 
 			foreach (ResourceAccess access in this.Accesses)
 			{
@@ -145,6 +142,16 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.moduleInfo;
+			}
+		}
+
+		public string InitialMessage
+		{
+			//	Retourne le message initial donnant des informations sur le déroulement
+			//	de l'ouverture du module.
+			get
+			{
+				return this.initialMessage;
 			}
 		}
 
@@ -1053,5 +1060,6 @@ namespace Epsitec.Common.Designer
 		protected bool						isEditLocked = true;
 		protected bool						isMergingModules;
 		protected ResourceManager			mergedManager;
+		protected string					initialMessage;
 	}
 }

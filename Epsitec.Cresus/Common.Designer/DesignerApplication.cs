@@ -110,6 +110,17 @@ namespace Epsitec.Common.Designer
 
 			this.ReadSettings();
 			this.Window.Show();
+
+			//	Passe en revue tous les modules ouverts, pour afficher leurs éventuels messages initiaux.
+			List<Module> modules = this.OpeningListModule;
+			foreach (Module module in modules)
+			{
+				if (module.InitialMessage != null)
+				{
+					this.DialogError(module.InitialMessage);
+				}
+			}
+
 		}
 
 		internal void Hide()
@@ -436,6 +447,12 @@ namespace Epsitec.Common.Designer
 				this.CreateModuleLayout();
 
 				this.bookModules.ActivePage = mi.TabPage;
+
+				//	Affiche l'éventuel message initial.
+				if (this.CurrentModule.InitialMessage != null)
+				{
+					this.DialogError(this.CurrentModule.InitialMessage);
+				}
 			}
 		}
 
@@ -2185,12 +2202,12 @@ namespace Epsitec.Common.Designer
 			{
 				foreach (ResourceModuleId id in this.settings.Modules)
 				{
-					Module module = new Module (this, this.mode, id);
+					Module module = new Module(this, this.mode, id);
 
-					ModuleInfo mi = new ModuleInfo ();
+					ModuleInfo mi = new ModuleInfo();
 					mi.Module = module;
-					this.moduleInfoList.Insert (++this.currentModule, mi);
-					this.CreateModuleLayout ();
+					this.moduleInfoList.Insert(++this.currentModule, mi);
+					this.CreateModuleLayout();
 
 					this.bookModules.ActivePage = mi.TabPage;
 				}

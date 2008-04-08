@@ -2080,10 +2080,12 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		public bool TypesCreateMissingValueItems()
+		public string TypesCreateMissingValueItems(string moduleName)
 		{
 			//	Passe en revue toutes les énumérations à la recherche des énumérations système à compléter.
-			bool completed = false;
+			//	Retourne un éventuel message donnant les noms des énumérations complétées.
+			List<string> names = new List<string>();
+
 			foreach (CultureMap item in this.accessor.Collection)
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
@@ -2108,18 +2110,38 @@ namespace Epsitec.Common.Designer
 						{
 							Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 							accessor.CreateMissingValueItems(item);
-							completed = true;
+
+							names.Add(item.FullName);
 						}
 					}
 				}
 			}
 
-			if (completed)
+			if (names.Count == 0)
+			{
+				return null;
+			}
+			else
 			{
 				this.PersistChanges();
-			}
 
-			return completed;
+				//	Construit un joli message clair.
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				builder.Append(string.Format("<font size=\"120%\">Module <b>{0}</b>, onglet <b>Types</b></font><br/><br/>", moduleName));
+				builder.Append("Les énumérations suivantes ont été complétées :<br/>");
+
+				foreach (string name in names)
+				{
+					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
+					builder.Append(name);
+					builder.Append("<br/>");
+				}
+
+				builder.Append(" ");
+
+				return builder.ToString();
+			}
 		}
 
 
