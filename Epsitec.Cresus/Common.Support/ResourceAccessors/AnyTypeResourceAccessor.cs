@@ -195,8 +195,35 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						
 						if (!found)
 						{
-							CultureMap newValue = this.CreateValueItem (item);
-							StructuredData dataValue = this.GetDataBroker (data, Res.Fields.ResourceEnumType.Values.ToString ()).CreateData (item);
+							CultureMap     newValue  = this.CreateValueItem (item);
+							StructuredData dataValue = null;
+							bool           insert    = false;
+
+							//	Try to reuse an empty value (one which has no DRUID associated
+							//	to it yet) in the list; there should always be one, because of
+							//	how the EnumType class is initialized by the Caption deseriali-
+							//	zation.
+
+							foreach (StructuredData v in values)
+							{
+								if (StructuredTypeResourceAccessor.ToDruid (v.GetValue (Res.Fields.EnumValue.CaptionId)).IsEmpty)
+								{
+									dataValue = v;
+									break;
+								}
+							}
+
+							System.Diagnostics.Debug.Assert (dataValue != null);
+							
+							if (dataValue == null)
+							{
+								//	This should never happen... but I decided to keep the code
+								//	nevertheless, just to make sure that if the assertion fails,
+								//	we can safely continue.
+
+								dataValue = this.GetDataBroker (data, Res.Fields.ResourceEnumType.Values.ToString ()).CreateData (item);
+								insert    = true;
+							}
 
 							newValue.Name = name;
 							this.valueAccessor.Collection.Add (newValue);
@@ -204,8 +231,11 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 							dataValue.SetValue (Res.Fields.EnumValue.CaptionId, newValue.Id);
 							dataValue.SetValue (Res.Fields.EnumValue.CultureMapSource, item.Source);
-							
-							values.Add (dataValue);
+
+							if (insert)
+							{
+								values.Add (dataValue);
+							}
 						}
 					}
 				}
