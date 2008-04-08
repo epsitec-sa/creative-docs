@@ -140,10 +140,45 @@ namespace Epsitec.Common.Reporting
 					view.items = new Dictionary<string, DataItem> ();
 				}
 
+				item.Id = id;
+				item.ParentDataView = view;
 				view.items[id] = item;
 			}
 			
 			return item;
+		}
+
+
+		public static string GetPath(IDataItem dataItem)
+		{
+			DataItem item = dataItem as DataItem;
+
+			if (item == null)
+			{
+				throw new System.ArgumentException ("Invalid data item");
+			}
+
+			List<string> items = new List<string> (DataView.GetReversePath (item));
+			items.Reverse ();
+
+			return string.Join (".", items.ToArray ());
+		}
+		
+		private static IEnumerable<string> GetReversePath(DataItem item)
+		{
+			while ((item != null) && (item.Id != null))
+			{
+				yield return item.Id;
+				
+				DataView view = item.ParentDataView;
+				
+				if (view == null)
+				{
+					break;
+				}
+
+				item = view.self;
+			}
 		}
 
 
@@ -182,6 +217,26 @@ namespace Epsitec.Common.Reporting
 		{
 			public DataItem()
 			{
+			}
+
+			/// <summary>
+			/// Gets or sets the id for this item.
+			/// </summary>
+			/// <value>The id.</value>
+			public string Id
+			{
+				get;
+				set;
+			}
+
+			/// <summary>
+			/// Gets or sets the parent data view.
+			/// </summary>
+			/// <value>The parent data view.</value>
+			public DataView ParentDataView
+			{
+				get;
+				set;
 			}
 
 			/// <summary>

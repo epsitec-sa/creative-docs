@@ -80,13 +80,37 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("hello", (string) item2.ObjectValue);
 			Assert.AreEqual (123, (int) item3.ObjectValue);
 
-			Assert.AreEqual (DataItemClass.ValueRow,  item1.ItemClass);
+			Assert.AreEqual (DataItemClass.ValueRow, item1.ItemClass);
 			Assert.AreEqual (DataItemClass.ValueItem, item2.ItemClass);
 			Assert.AreEqual (DataItemClass.ValueItem, item3.ItemClass);
 
-			Assert.AreEqual (DataItemType.Row,   item1.ItemType);
+			Assert.AreEqual (DataItemType.Row, item1.ItemType);
 			Assert.AreEqual (DataItemType.Value, item2.ItemType);
 			Assert.AreEqual (DataItemType.Value, item3.ItemType);
+		}
+
+		[Test]
+		public void Check04GetPath()
+		{
+			GenericEntity root = new GenericEntity (Druid.Empty);
+			root.SetField<GenericEntity> ("loop", root);
+			root.SetField<string> ("text", "hello");
+			root.SetField<int> ("number", 123);
+
+			DataViewContext context = new DataViewContext ();
+			DataView view = DataView.CreateRoot (context, root);
+
+			DataView.DataItem item1 = DataView.GetDataItem (view, "loop") as DataView.DataItem;
+			DataView.DataItem item2 = DataView.GetDataItem (view, "loop.text") as DataView.DataItem;
+			DataView.DataItem item3 = DataView.GetDataItem (view, "loop.number") as DataView.DataItem;
+			DataView.DataItem item4 = DataView.GetDataItem (view, "loop.loop.loop") as DataView.DataItem;
+			DataView.DataItem item5 = DataView.GetDataItem (view, "text") as DataView.DataItem;
+
+			Assert.AreEqual ("loop", DataView.GetPath (item1));
+			Assert.AreEqual ("loop.text", DataView.GetPath (item2));
+			Assert.AreEqual ("loop.number", DataView.GetPath (item3));
+			Assert.AreEqual ("loop.loop.loop", DataView.GetPath (item4));
+			Assert.AreEqual ("text", DataView.GetPath (item5));
 		}
 	}
 }
