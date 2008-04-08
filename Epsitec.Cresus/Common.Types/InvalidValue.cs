@@ -1,5 +1,5 @@
 //	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -20,6 +20,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The object which should be tested.</param>
 		/// <returns><c>true</c> if the object is an invalid value; otherwise,
 		/// <c>false</c>.</returns>
+		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsInvalidValue(object value)
 		{
 			return (value == InvalidValue.Value);

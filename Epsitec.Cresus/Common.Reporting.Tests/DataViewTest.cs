@@ -31,5 +31,24 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual (item.ObjectValue, root);
 			Assert.AreEqual (item.ValueStore, root);
 		}
+		
+		[Test]
+		public void Check02RecursiveDataView()
+		{
+			GenericEntity root = new GenericEntity (Druid.Empty);
+			root.SetField<GenericEntity> ("loop", root);
+
+			Assert.AreEqual (root, root.GetField<GenericEntity> ("loop"));
+
+			DataViewContext context = new DataViewContext ();
+			DataView view = DataView.CreateRoot (context, root);
+
+			DataView.DataItem item = DataView.GetValue (view, "loop") as DataView.DataItem;
+
+			Assert.IsNotNull (item);
+			Assert.AreNotEqual (item.DataView, view);
+			Assert.AreEqual (item.ObjectValue, root);
+			Assert.AreEqual (item.ValueStore, root);
+		}
 	}
 }

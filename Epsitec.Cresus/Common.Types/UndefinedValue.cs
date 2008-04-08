@@ -20,6 +20,7 @@ namespace Epsitec.Common.Types
 		/// <param name="value">The object which should be tested.</param>
 		/// <returns><c>true</c> if the object is an undefined value; otherwise,
 		/// <c>false</c>.</returns>
+		[System.Diagnostics.DebuggerStepThrough]
 		public static bool IsUndefinedValue(object value)
 		{
 			return (value == UndefinedValue.Value);

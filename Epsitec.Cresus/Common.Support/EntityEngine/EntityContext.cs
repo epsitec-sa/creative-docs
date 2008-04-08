@@ -160,7 +160,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			if (type == null)
 			{
-				throw new System.NotSupportedException (string.Format ("Type {0} is not supported", typeId));
+				GenericEntity genericEntity = entity as GenericEntity;
+
+				if ((genericEntity == null) ||
+					(typeId.IsValid))
+				{
+					throw new System.NotSupportedException (string.Format ("Type {0} is not supported", typeId));
+				}
 			}
 			
 			return new Data (type);

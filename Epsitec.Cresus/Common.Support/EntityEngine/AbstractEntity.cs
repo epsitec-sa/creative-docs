@@ -233,10 +233,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public T GetField<T>(string id)
 		{
-			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
-
-			System.Diagnostics.Debug.Assert (field != null);
-			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
+			this.AssertSimpleField (id);
 
 			object value = this.InternalGetValue (id);
 
@@ -255,6 +252,8 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public IList<T> GetFieldCollection<T>(string id) where T : AbstractEntity
 		{
+			this.AssertCollectionField (id);
+			
 			object  value = this.InternalGetValue (id);
 			IList<T> list = value as IList<T>;
 
@@ -699,6 +698,26 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+
+		[System.Diagnostics.Conditional ("DEBUG")]
+		protected virtual void AssertSimpleField(string id)
+		{
+			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+
+			System.Diagnostics.Debug.Assert (field != null);
+			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
+		}
+
+		[System.Diagnostics.Conditional ("DEBUG")]
+		protected virtual void AssertCollectionField(string id)
+		{
+			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+
+			System.Diagnostics.Debug.Assert (field != null);
+			System.Diagnostics.Debug.Assert (field.Relation == FieldRelation.Collection);
+		}
+
+		
 		#region IStructuredTypeProvider Members
 
 		IStructuredType IStructuredTypeProvider.GetStructuredType()

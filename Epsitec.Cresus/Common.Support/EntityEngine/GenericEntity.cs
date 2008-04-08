@@ -42,12 +42,28 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				this.InternalSetValue (id, UndefinedValue.Value);
+				this.InternalSetValue (id, newValue);
 				this.UpdateDataGeneration ();
 				this.NotifyEventHandlers (id, oldValue, newValue);
 			}
 		}
 
+		protected override void AssertSimpleField(string id)
+		{
+			if (this.entityId.IsValid)
+			{
+				base.AssertSimpleField (id);
+			}
+		}
+
+		protected override void AssertCollectionField(string id)
+		{
+			if (this.entityId.IsValid)
+			{
+				base.AssertCollectionField (id);
+			}
+		}
+		
 		private readonly Druid entityId;
 	}
 }

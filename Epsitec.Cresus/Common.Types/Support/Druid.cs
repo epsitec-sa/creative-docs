@@ -19,6 +19,8 @@ namespace Epsitec.Common.Support
 	/// </summary>
 
 	[Types.SerializationConverter (typeof (Druid.SerializationConverter))]
+	[System.Diagnostics.DebuggerStepThrough]
+
 	public struct Druid : System.IEquatable<Druid>
 	{
 		/// <summary>
