@@ -61,7 +61,7 @@ namespace Epsitec.Common.Reporting
 		}
 
 
-		#region EnumerableFactory Classes
+		#region EnumerableFactory Class
 
 		/// <summary>
 		/// The <c>EnumerableFactory</c> class is used to retrieve the <see cref="System.Collections.IEnumerable"/>
@@ -72,6 +72,10 @@ namespace Epsitec.Common.Reporting
 		{
 			public abstract System.Collections.IEnumerable GetEnumerable(object value);
 		}
+
+		#endregion
+
+		#region NullEnumerableFactory Class
 
 		/// <summary>
 		/// The <c>NullEnumerableFactory</c> class always returns <c>null</c>.
@@ -84,6 +88,10 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
+		#endregion
+
+		#region TransparentEnumerableFactory Class
+
 		/// <summary>
 		/// The <c>TransparentEnumerableFactory</c> class casts the value to its
 		/// <see cref="System.Collections.IEnumerable"/> implementation.
@@ -95,6 +103,10 @@ namespace Epsitec.Common.Reporting
 				return value as System.Collections.IEnumerable;
 			}
 		}
+
+		#endregion
+
+		#region GenericEnumerableFactory Class
 
 		/// <summary>
 		/// The <c>GenericEnumerableFactory&lt;T&gt;</c> class reimplements the

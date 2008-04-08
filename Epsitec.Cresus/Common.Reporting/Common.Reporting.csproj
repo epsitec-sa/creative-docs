@@ -49,7 +49,10 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="DataItem.cs" />
+    <Compile Include="DataItems\CollectionDataItem.cs" />
+    <Compile Include="DataItems\ValueDataItem.cs" />
+    <Compile Include="DataItems\EmptyDataItem.cs" />
+    <Compile Include="DataItems\EntityDataItem.cs" />
     <Compile Include="DataViewContext.cs" />
     <Compile Include="DataItemType.cs" />
     <Compile Include="DataItemClass.cs" />
