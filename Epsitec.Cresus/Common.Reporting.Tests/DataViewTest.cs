@@ -12,15 +12,24 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Reporting
 {
 	[TestFixture]
-	public class NavigatorTest
+	public class DataViewTest
 	{
 		[Test]
-		public void Check01CreateNavigator()
+		public void Check01SimpleDataView()
 		{
 			GenericEntity root = new GenericEntity (Druid.Empty);
 			DataViewContext context = new DataViewContext ();
-			DataView view = new DataView (context);
-			DataNavigator navigator = new DataNavigator (view);
+			DataView view = DataView.CreateRoot (context, root);
+
+			Assert.IsNotNull (DataView.GetValue (view, ""));
+			Assert.IsNotNull (DataView.GetValue (view, null));
+
+			DataView.DataItem item = DataView.GetValue (view, "") as DataView.DataItem;
+
+			Assert.IsNotNull (item);
+			Assert.AreEqual (item.DataView, view);
+			Assert.AreEqual (item.ObjectValue, root);
+			Assert.AreEqual (item.ValueStore, root);
 		}
 	}
 }

@@ -9,57 +9,21 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Reporting.DataItems
 {
-	class CollectionDataItem : IDataItem
+	class CollectionDataItem : DataView.DataItem
 	{
 		public CollectionDataItem(System.Collections.IList collection)
 		{
 			this.collection = collection;
 		}
 
-		#region IDataItem Members
-
-		public string Value
+		public override object ObjectValue
 		{
 			get
 			{
-				throw new System.NotImplementedException ();
+				return this.collection;
 			}
 		}
-
-		public int Count
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-		public DataItemClass ItemClass
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-		public DataItemType ItemType
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-		public INamedType DataType
-		{
-			get
-			{
-				throw new System.NotImplementedException ();
-			}
-		}
-
-		#endregion
-
+		
 		private readonly System.Collections.IList collection;
 	}
 }

@@ -615,16 +615,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this;
 		}
 
-		
-		
-		private object GenericGetValue(string id)
+
+
+		protected object GenericGetValue(string id)
 		{
 			return this.InternalGetValue (id);
 		}
 
-		private void GenericSetValue(string id, object oldValue, object newValue)
+		protected virtual void GenericSetValue(string id, object oldValue, object newValue)
 		{
 			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+
+			if (field == null)
+			{
+				throw new System.ArithmeticException (string.Format ("Invalid field '{0}' specified", id));
+			}
 
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
@@ -667,11 +672,16 @@ namespace Epsitec.Common.Support.EntityEngine
 				}
 			}
 
+			this.NotifyEventHandlers (id, oldValue, newValue);
+		}
+
+		protected void NotifyEventHandlers(string id, object oldValue, object newValue)
+		{
 			if (this.eventHandlers != null)
 			{
 				System.Delegate fieldHandler;
 				System.Delegate contentHandler;
-				
+
 				lock (this.eventHandlers)
 				{
 					this.eventHandlers.TryGetValue (id, out fieldHandler);

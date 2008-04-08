@@ -34,6 +34,20 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		protected override void GenericSetValue(string id, object oldValue, object newValue)
+		{
+			if (this.entityId.IsValid)
+			{
+				base.GenericSetValue (id, oldValue, newValue);
+			}
+			else
+			{
+				this.InternalSetValue (id, UndefinedValue.Value);
+				this.UpdateDataGeneration ();
+				this.NotifyEventHandlers (id, oldValue, newValue);
+			}
+		}
+
 		private readonly Druid entityId;
 	}
 }

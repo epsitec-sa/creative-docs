@@ -16,6 +16,14 @@ namespace Epsitec.Common.Reporting.DataItems
 			this.value = value;
 		}
 
+		public override object ObjectValue
+		{
+			get
+			{
+				return this.value;
+			}
+		}
+
 		private readonly object value;
 	}
 }

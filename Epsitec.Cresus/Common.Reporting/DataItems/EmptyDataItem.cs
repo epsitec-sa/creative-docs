@@ -14,5 +14,13 @@ namespace Epsitec.Common.Reporting.DataItems
 		public EmptyDataItem()
 		{
 		}
+
+		public override object ObjectValue
+		{
+			get
+			{
+				return null;
+			}
+		}
 	}
 }

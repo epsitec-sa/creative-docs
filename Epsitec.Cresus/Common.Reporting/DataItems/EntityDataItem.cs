@@ -11,9 +11,18 @@ namespace Epsitec.Common.Reporting.DataItems
 {
 	class EntityDataItem : DataView.DataItem
 	{
-		public EntityDataItem(AbstractEntity entity)
+		public EntityDataItem(DataViewContext context, AbstractEntity entity)
 		{
 			this.entity = entity;
+			this.DataView = new DataView (context);
+		}
+
+		public override object ObjectValue
+		{
+			get
+			{
+				return this.entity;
+			}
 		}
 
 		private readonly AbstractEntity entity;
