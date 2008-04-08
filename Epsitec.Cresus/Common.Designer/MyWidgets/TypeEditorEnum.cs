@@ -307,7 +307,6 @@ namespace Epsitec.Common.Designer.MyWidgets
 			newValue.SetValue(Support.Res.Fields.EnumValue.CaptionId, druid);
 
 			list.Insert(sel+1, newValue);
-			accessor.CreateMissingValueItems(this.cultureMap);
 
 			this.UpdateArray();
 			this.UpdateButtons();

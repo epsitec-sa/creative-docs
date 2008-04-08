@@ -2011,6 +2011,11 @@ namespace Epsitec.Common.Designer
 				this.primaryCulture = bundle.Culture;
 			}
 
+			if (this.type == Type.Types)
+			{
+				this.TypesCreateMissingValueItems();
+			}
+
 			if (this.type == Type.Forms)
 			{
 				this.FormsMerge();
@@ -2076,6 +2081,39 @@ namespace Epsitec.Common.Designer
 				System.Diagnostics.Debug.Assert(this.collectionViewInitialSorts != null);
 				this.collectionView.SortDescriptions.AddRange(this.collectionViewInitialSorts);
 				this.collectionViewInitialSorts = null;
+			}
+		}
+
+
+		protected void TypesCreateMissingValueItems()
+		{
+			//	Passe en revue toutes les énumérations à la recherche des énumérations système à compléter.
+			foreach (CultureMap item in this.accessor.Collection)
+			{
+				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				object value = data.GetValue(Support.Res.Fields.ResourceEnumType.Values);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					IList<StructuredData> list = value as IList<StructuredData>;
+					if (list != null)
+					{
+						bool missing = false;
+						foreach (StructuredData valueData in list)
+						{
+							Druid druid = (Druid) valueData.GetValue(Support.Res.Fields.EnumValue.CaptionId);
+							if (druid.IsEmpty)
+							{
+								missing = true;
+							}
+						}
+
+						if (missing)
+						{
+							Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
+							accessor.CreateMissingValueItems(item);
+						}
+					}
+				}
 			}
 		}
 
