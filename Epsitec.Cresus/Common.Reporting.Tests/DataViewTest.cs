@@ -111,6 +111,7 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("loop.number", DataView.GetPath (item3));
 			Assert.AreEqual ("loop.loop.loop", DataView.GetPath (item4));
 			Assert.AreEqual ("text", DataView.GetPath (item5));
+			Assert.AreEqual ("text.foo.bar", DataView.GetPath (item5, "foo", "bar"));
 		}
 	}
 }

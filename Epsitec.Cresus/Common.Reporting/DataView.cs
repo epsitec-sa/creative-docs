@@ -107,15 +107,27 @@ namespace Epsitec.Common.Reporting
 
 				//	If the item is stored as an enumerable, handle it as a collection.
 
-				System.Collections.IEnumerable collection = context.GetCollection (value);
+				IEnumerable<AbstractEntity> collection = context.ToEntityEnumerable (value);
 
 				if (collection != null)
 				{
 					//	The value is a collection; we will have to map it to a
 					//	(sorted/filtered/grouped) table, as required.
 
-					//	TODO: ...
-					throw new System.NotImplementedException ();
+					string                     fullPath = DataView.GetPath (view.self, id);
+					Settings.CollectionSetting setting  = context.GetCollectionSetting (fullPath);
+
+					if (setting.GroupDepth > 0)
+					{
+						//	TODO: grouping
+						throw new System.NotImplementedException ();
+					}
+					else
+					{
+						List<AbstractEntity> list = setting.CreateList (collection);
+						item = new DataItems.TableCollectionDataItem (list);
+						item.ItemClass = DataItemClass.Table;
+					}
 				}
 				else
 				{
@@ -149,7 +161,13 @@ namespace Epsitec.Common.Reporting
 		}
 
 
-		public static string GetPath(IDataItem dataItem)
+		/// <summary>
+		/// Gets the full path for the specified item.
+		/// </summary>
+		/// <param name="dataItem">The data item.</param>
+		/// <param name="additionalPathElements">The additional path elements.</param>
+		/// <returns>The full path.</returns>
+		public static string GetPath(IDataItem dataItem, params string[] additionalPathElements)
 		{
 			DataItem item = dataItem as DataItem;
 
@@ -160,10 +178,16 @@ namespace Epsitec.Common.Reporting
 
 			List<string> items = new List<string> (DataView.GetReversePath (item));
 			items.Reverse ();
+			items.AddRange (additionalPathElements);
 
 			return string.Join (".", items.ToArray ());
 		}
-		
+
+		/// <summary>
+		/// Gets the reverse path for the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns>The reverse path.</returns>
 		private static IEnumerable<string> GetReversePath(DataItem item)
 		{
 			while ((item != null) && (item.Id != null))

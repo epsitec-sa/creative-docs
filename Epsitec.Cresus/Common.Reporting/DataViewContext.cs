@@ -14,16 +14,31 @@ namespace Epsitec.Common.Reporting
 		public DataViewContext()
 		{
 			this.enumerableFactories = new Dictionary<System.Type, EnumerableFactory> ();
+
+			this.DefaultCollectionSetting = new Settings.CollectionSetting ();
 		}
 
 
-		public System.Collections.IEnumerable GetCollection(object value)
+		public Settings.CollectionSetting DefaultCollectionSetting
 		{
-			System.Collections.IList list = value as System.Collections.IList;
-			return list;
+			get;
+			set;
 		}
 
-		public System.Collections.IEnumerable GetEnumerable(object value)
+		public Settings.CollectionSetting GetCollectionSetting(string fullPath)
+		{
+			Settings.CollectionSetting setting = this.FindCollectionSetting (fullPath);
+			return setting ?? this.DefaultCollectionSetting;
+		}
+
+		protected Settings.CollectionSetting FindCollectionSetting(string fullPath)
+		{
+			//	TODO: ...
+			return null;
+		}
+
+
+		public IEnumerable<AbstractEntity> ToEntityEnumerable(object value)
 		{
 			if (value == null)
 			{
@@ -35,29 +50,23 @@ namespace Epsitec.Common.Reporting
 
 			if (!this.enumerableFactories.TryGetValue (type, out factory))
 			{
-				if (TypeRosetta.DoesTypeImplementInterface (type, typeof (System.Collections.IEnumerable)))
+				//	Check if the value implements IEnumerable<T> and create the
+				//	matching enumerable factory.
+				
+				System.Type enumerableItemType = TypeRosetta.GetEnumerableItemType (type);
+
+				if ((enumerableItemType != null) &&
+					(typeof (AbstractEntity).IsAssignableFrom (enumerableItemType)))
 				{
-					factory = new TransparentEnumerableFactory ();
+					System.Type genericType  = typeof (GenericEnumerableFactory<>);
+					System.Type concreteType = genericType.MakeGenericType (new System.Type[] { enumerableItemType });
+
+					Allocator<EnumerableFactory> factoryAllocator = DynamicCodeFactory.CreateAllocator<EnumerableFactory> (concreteType);
+					factory = factoryAllocator.Invoke ();
 				}
 				else
 				{
-					//	Check if the value implements IEnumerable<T> and create the
-					//	matching enumerable factory.
-					
-					System.Type enumerableItemType = TypeRosetta.GetEnumerableItemType (type);
-
-					if (enumerableItemType != null)
-					{
-						System.Type genericType  = typeof (GenericEnumerableFactory<>);
-						System.Type concreteType = genericType.MakeGenericType (new System.Type[] { enumerableItemType });
-
-						Allocator<EnumerableFactory> factoryAllocator = DynamicCodeFactory.CreateAllocator<EnumerableFactory> (concreteType);
-						factory = factoryAllocator.Invoke ();
-					}
-					else
-					{
-						factory = new NullEnumerableFactory ();
-					}
+					factory = new NullEnumerableFactory ();
 				}
 
 				this.enumerableFactories[type] = factory;
@@ -76,7 +85,7 @@ namespace Epsitec.Common.Reporting
 		/// </summary>
 		abstract class EnumerableFactory
 		{
-			public abstract System.Collections.IEnumerable GetEnumerable(object value);
+			public abstract IEnumerable<AbstractEntity> GetEnumerable(object value);
 		}
 
 		#endregion
@@ -88,25 +97,9 @@ namespace Epsitec.Common.Reporting
 		/// </summary>
 		class NullEnumerableFactory : EnumerableFactory
 		{
-			public override System.Collections.IEnumerable GetEnumerable(object value)
+			public override IEnumerable<AbstractEntity> GetEnumerable(object value)
 			{
 				return null;
-			}
-		}
-
-		#endregion
-
-		#region TransparentEnumerableFactory Class
-
-		/// <summary>
-		/// The <c>TransparentEnumerableFactory</c> class casts the value to its
-		/// <see cref="System.Collections.IEnumerable"/> implementation.
-		/// </summary>
-		class TransparentEnumerableFactory : EnumerableFactory
-		{
-			public override System.Collections.IEnumerable GetEnumerable(object value)
-			{
-				return value as System.Collections.IEnumerable;
 			}
 		}
 
@@ -120,11 +113,11 @@ namespace Epsitec.Common.Reporting
 		/// using the generic version of <c>IEnumerable</c>.
 		/// </summary>
 		/// <typeparam name="T">The enumerable item type.</typeparam>
-		class GenericEnumerableFactory<T> : EnumerableFactory
+		class GenericEnumerableFactory<T> : EnumerableFactory where T : AbstractEntity
 		{
-			public override System.Collections.IEnumerable GetEnumerable(object value)
+			public override IEnumerable<AbstractEntity> GetEnumerable(object value)
 			{
-				System.Collections.IEnumerable enumerable = value as System.Collections.IEnumerable;
+				IEnumerable<AbstractEntity> enumerable = value as IEnumerable<AbstractEntity>;
 
 				if (enumerable == null)
 				{
@@ -136,7 +129,7 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
-			private static System.Collections.IEnumerable CreateEnumerable(IEnumerable<T> enumerable)
+			private static IEnumerable<AbstractEntity> CreateEnumerable(IEnumerable<T> enumerable)
 			{
 				foreach (T item in enumerable)
 				{

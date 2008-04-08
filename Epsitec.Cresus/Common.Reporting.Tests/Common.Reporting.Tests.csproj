@@ -52,6 +52,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="CollectionSettingTest.cs" />
     <Compile Include="DataViewTest.cs" />
     <Compile Include="NavigatorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

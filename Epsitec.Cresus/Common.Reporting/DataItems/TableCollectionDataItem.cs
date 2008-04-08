@@ -9,29 +9,19 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Reporting.DataItems
 {
-	class CollectionDataItem : DataView.DataItem
+	class TableCollectionDataItem : CollectionDataItem
 	{
-		public CollectionDataItem(System.Collections.IList collection)
+		public TableCollectionDataItem(System.Collections.IList collection)
+			: base (collection)
 		{
-			this.collection = collection;
 		}
 
-		public override int Count
+		public override DataItemType ItemType
 		{
 			get
 			{
-				return this.collection.Count;
+				return DataItemType.Table;
 			}
 		}
-
-		public override object ObjectValue
-		{
-			get
-			{
-				return this.collection;
-			}
-		}
-		
-		private readonly System.Collections.IList collection;
 	}
 }
