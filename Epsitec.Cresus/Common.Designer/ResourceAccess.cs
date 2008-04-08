@@ -2129,8 +2129,11 @@ namespace Epsitec.Common.Designer
 				//	Construit un joli message clair.
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-				builder.Append(string.Format("<font size=\"120%\">Module <b>{0}</b>, onglet <b>Types</b></font><br/><br/>", moduleName));
-				builder.Append("Les énumérations suivantes ont été complétées :<br/>");
+				builder.Append("<font size=\"120%\">");
+				builder.Append(string.Format(Res.Strings.Error.CreateMissingValueItems.Title, moduleName));
+				builder.Append("</font><br/><br/>");
+				builder.Append(Res.Strings.Error.CreateMissingValueItems.Subtitle);
+				builder.Append("<br/>");
 
 				foreach (string name in names)
 				{
