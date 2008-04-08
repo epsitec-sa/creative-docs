@@ -95,6 +95,15 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedVerticalAlignment, Res.Captions.Layout.StackedVerticalAlignment, Res.Types.ObjectModifier.StackedVerticalAlignment);
 			}
 
+			//	Panel.Padding:
+			if (this.ObjectModifier.HasPadding(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftPadding,   Res.Captions.Padding.Left,   -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightPadding,  Res.Captions.Padding.Right,  -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopPadding,    Res.Captions.Padding.Top,    -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomPadding, Res.Captions.Padding.Bottom, -1, 9999, 1, 1);
+			}
+
 			//	Panel.Grid:
 			if (this.ObjectModifier.AreChildrenGrid(selectedObject))
 			{
@@ -212,6 +221,22 @@ namespace Epsitec.Common.Designer.Proxies
 					{
 						value.Value = this.ObjectModifier.GetHeight(selectedObject);
 					}
+					break;
+
+				case AbstractProxy.Type.PanelLeftPadding:
+					value.Value = this.ObjectModifier.GetPadding(selectedObject).Left;
+					break;
+
+				case AbstractProxy.Type.PanelRightPadding:
+					value.Value = this.ObjectModifier.GetPadding(selectedObject).Right;
+					break;
+
+				case AbstractProxy.Type.PanelTopPadding:
+					value.Value = this.ObjectModifier.GetPadding(selectedObject).Top;
+					break;
+
+				case AbstractProxy.Type.PanelBottomPadding:
+					value.Value = this.ObjectModifier.GetPadding(selectedObject).Bottom;
 					break;
 
 				case AbstractProxy.Type.PanelChildrenPlacement:
@@ -416,6 +441,30 @@ namespace Epsitec.Common.Designer.Proxies
 						{
 							this.ObjectModifier.SetHeight(selectedObject, (double) value.Value);
 						}
+						break;
+
+					case AbstractProxy.Type.PanelLeftPadding:
+						m = this.ObjectModifier.GetPadding(selectedObject);
+						m.Left = (double) value.Value;
+						this.ObjectModifier.SetPadding(selectedObject, m);
+						break;
+
+					case AbstractProxy.Type.PanelRightPadding:
+						m = this.ObjectModifier.GetPadding(selectedObject);
+						m.Right = (double) value.Value;
+						this.ObjectModifier.SetPadding(selectedObject, m);
+						break;
+
+					case AbstractProxy.Type.PanelTopPadding:
+						m = this.ObjectModifier.GetPadding(selectedObject);
+						m.Top = (double) value.Value;
+						this.ObjectModifier.SetPadding(selectedObject, m);
+						break;
+
+					case AbstractProxy.Type.PanelBottomPadding:
+						m = this.ObjectModifier.GetPadding(selectedObject);
+						m.Bottom = (double) value.Value;
+						this.ObjectModifier.SetPadding(selectedObject, m);
 						break;
 
 					case AbstractProxy.Type.PanelChildrenPlacement:

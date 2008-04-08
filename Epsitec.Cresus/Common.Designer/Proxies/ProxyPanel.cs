@@ -119,6 +119,9 @@ namespace Epsitec.Common.Designer.Proxies
 						valueType == Type.PanelTopMargin ||
 						valueType == Type.PanelOriginX ||
 						valueType == Type.PanelWidth ||
+						valueType == Type.PanelLeftPadding ||
+						valueType == Type.PanelRightPadding ||
+						valueType == Type.PanelTopPadding ||
 						valueType == Type.PanelGridColumnsCount ||
 						valueType == Type.PanelGridColumnMinWidth ||
 						valueType == Type.PanelGridLeftBorder ||
