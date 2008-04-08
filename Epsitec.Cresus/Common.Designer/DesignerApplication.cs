@@ -112,12 +112,13 @@ namespace Epsitec.Common.Designer
 			this.Window.Show();
 
 			//	Passe en revue tous les modules ouverts, pour afficher leurs éventuels messages initiaux.
+			//	Il est important de faire ceci après le this.Window.Show().
 			List<Module> modules = this.OpeningListModule;
 			foreach (Module module in modules)
 			{
-				if (module.InitialMessage != null)
+				if (module.InitialMessage != null)  // message initial existe ?
 				{
-					this.DialogError(module.InitialMessage);
+					this.DialogError(module.InitialMessage);  // affiche le message initial
 				}
 			}
 
@@ -449,9 +450,9 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = mi.TabPage;
 
 				//	Affiche l'éventuel message initial.
-				if (this.CurrentModule.InitialMessage != null)
+				if (this.CurrentModule.InitialMessage != null)  // message initial existe ?
 				{
-					this.DialogError(this.CurrentModule.InitialMessage);
+					this.DialogError(this.CurrentModule.InitialMessage);  // affiche le message initial
 				}
 			}
 		}

@@ -2083,6 +2083,7 @@ namespace Epsitec.Common.Designer
 		public string TypesCreateMissingValueItems(string moduleName)
 		{
 			//	Passe en revue toutes les énumérations à la recherche des énumérations système à compléter.
+			//	Ceci peut se produire lorsqu'une énumération C# reflètée par une ressource a été complétée.
 			//	Retourne un éventuel message donnant les noms des énumérations complétées.
 			List<string> names = new List<string>();
 
@@ -2090,7 +2091,7 @@ namespace Epsitec.Common.Designer
 			{
 				StructuredData data = item.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
 				object value = data.GetValue(Support.Res.Fields.ResourceEnumType.Values);
-				if (!UndefinedValue.IsUndefinedValue(value))
+				if (!UndefinedValue.IsUndefinedValue(value))  // est-ce une énumération ?
 				{
 					IList<StructuredData> list = value as IList<StructuredData>;
 					if (list != null)
@@ -2099,14 +2100,14 @@ namespace Epsitec.Common.Designer
 						foreach (StructuredData valueData in list)
 						{
 							Druid druid = (Druid) valueData.GetValue(Support.Res.Fields.EnumValue.CaptionId);
-							if (druid.IsEmpty)
+							if (druid.IsEmpty)  // si on ne trouve pas le Druid, c'est que la valeur n'existe pas
 							{
 								missing = true;
 								break;
 							}
 						}
 
-						if (missing)
+						if (missing)  // manque une ou plusieurs valeurs ?
 						{
 							Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 							accessor.CreateMissingValueItems(item);
@@ -2117,11 +2118,11 @@ namespace Epsitec.Common.Designer
 				}
 			}
 
-			if (names.Count == 0)
+			if (names.Count == 0)  // toutes les énumérations sont complètes ?
 			{
 				return null;
 			}
-			else
+			else  // une ou plusieurs énumérations incomplètes ?
 			{
 				this.PersistChanges();
 
@@ -2138,7 +2139,7 @@ namespace Epsitec.Common.Designer
 					builder.Append("<br/>");
 				}
 
-				builder.Append(" ");
+				builder.Append(" ");  // à cause d'un bug de TextLayout !
 
 				return builder.ToString();
 			}
