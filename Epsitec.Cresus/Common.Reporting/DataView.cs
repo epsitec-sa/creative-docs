@@ -11,24 +11,42 @@ namespace Epsitec.Common.Reporting
 {
 	public class DataView
 	{
-		public DataView(DataViewContext context)
+		internal DataView(DataViewContext context)
 		{
 			this.context = context;
 		}
 
 
+		/// <summary>
+		/// Creates a root data view starting with the specified root entity.
+		/// </summary>
+		/// <param name="context">The data view context.</param>
+		/// <param name="root">The root entity.</param>
+		/// <returns>A root data view.</returns>
 		public static DataView CreateRoot(DataViewContext context, GenericEntity root)
 		{
 			DataItem item = new DataItems.EntityDataItem (context, root);
 			return item.DataView;
 		}
 
-		public static IDataItem GetValue(DataView view, string path)
+		/// <summary>
+		/// Gets the data item for the specified view and path.
+		/// </summary>
+		/// <param name="view">The view.</param>
+		/// <param name="path">The path.</param>
+		/// <returns>The data item.</returns>
+		public static IDataItem GetDataItem(DataView view, string path)
 		{
-			return DataView.GetValue (ref view, path);
+			return DataView.GetDataItem (ref view, path);
 		}
-		
-		public static IDataItem GetValue(ref DataView view, string path)
+
+		/// <summary>
+		/// Gets the data item for the specified view and path.
+		/// </summary>
+		/// <param name="view">The view; returns the immediate parent view of the item.</param>
+		/// <param name="path">The path.</param>
+		/// <returns>The data item.</returns>
+		public static IDataItem GetDataItem(ref DataView view, string path)
 		{
 			if (view == null)
 			{
@@ -128,6 +146,13 @@ namespace Epsitec.Common.Reporting
 			return item;
 		}
 
+
+		/// <summary>
+		/// Creates a simple data item for a row or a value.
+		/// </summary>
+		/// <param name="context">The data view context.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>The data item.</returns>
 		private static DataItem CreateSimpleDataItem(DataViewContext context, object value)
 		{
 			AbstractEntity entity = value as AbstractEntity;
@@ -147,13 +172,22 @@ namespace Epsitec.Common.Reporting
 			return item;
 		}
 
+		#region DataItem Class
 
+		/// <summary>
+		/// The <c>DataItem</c> class implements the common base class for every
+		/// data item implementation in the <c>DataItems</c> sub-namespace.
+		/// </summary>
 		public abstract class DataItem : IDataItem
 		{
 			public DataItem()
 			{
 			}
 
+			/// <summary>
+			/// Gets or sets the containg data view.
+			/// </summary>
+			/// <value>The data view.</value>
 			public DataView DataView
 			{
 				get
@@ -179,11 +213,20 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
+			/// <summary>
+			/// Gets the raw object value.
+			/// </summary>
+			/// <value>The raw object value.</value>
 			public abstract object ObjectValue
 			{
 				get;
 			}
 
+			/// <summary>
+			/// Gets the object value cast to the <see cref="IValueStore"/>
+			/// interface.
+			/// </summary>
+			/// <value>The value store.</value>
 			public IValueStore ValueStore
 			{
 				get
@@ -236,6 +279,8 @@ namespace Epsitec.Common.Reporting
 
 			private DataView view;
 		}
+
+		#endregion
 
 
 		private readonly DataViewContext context;

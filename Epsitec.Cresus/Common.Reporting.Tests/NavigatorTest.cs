@@ -19,7 +19,7 @@ namespace Epsitec.Common.Reporting
 		{
 			GenericEntity root = new GenericEntity (Druid.Empty);
 			DataViewContext context = new DataViewContext ();
-			DataView view = new DataView (context);
+			DataView view = DataView.CreateRoot (context, root);
 			DataNavigator navigator = new DataNavigator (view);
 		}
 	}

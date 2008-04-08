@@ -21,10 +21,10 @@ namespace Epsitec.Common.Reporting
 			DataViewContext context = new DataViewContext ();
 			DataView view = DataView.CreateRoot (context, root);
 
-			Assert.IsNotNull (DataView.GetValue (view, ""));
-			Assert.IsNotNull (DataView.GetValue (view, null));
+			Assert.IsNotNull (DataView.GetDataItem (view, ""));
+			Assert.IsNotNull (DataView.GetDataItem (view, null));
 
-			DataView.DataItem item = DataView.GetValue (view, "") as DataView.DataItem;
+			DataView.DataItem item = DataView.GetDataItem (view, "") as DataView.DataItem;
 
 			Assert.IsNotNull (item);
 			Assert.AreEqual (item.DataView, view);
@@ -43,9 +43,9 @@ namespace Epsitec.Common.Reporting
 			DataViewContext context = new DataViewContext ();
 			DataView view = DataView.CreateRoot (context, root);
 
-			DataView.DataItem item1 = DataView.GetValue (view, "loop") as DataView.DataItem;
-			DataView.DataItem item2 = DataView.GetValue (view, "loop") as DataView.DataItem;
-			DataView.DataItem item3 = DataView.GetValue (view, "loop.loop") as DataView.DataItem;
+			DataView.DataItem item1 = DataView.GetDataItem (view, "loop") as DataView.DataItem;
+			DataView.DataItem item2 = DataView.GetDataItem (view, "loop") as DataView.DataItem;
+			DataView.DataItem item3 = DataView.GetDataItem (view, "loop.loop") as DataView.DataItem;
 
 			Assert.AreNotEqual (item1.DataView, view);
 
@@ -73,9 +73,9 @@ namespace Epsitec.Common.Reporting
 			DataViewContext context = new DataViewContext ();
 			DataView view = DataView.CreateRoot (context, root);
 
-			DataView.DataItem item1 = DataView.GetValue (view, "loop") as DataView.DataItem;
-			DataView.DataItem item2 = DataView.GetValue (view, "loop.text") as DataView.DataItem;
-			DataView.DataItem item3 = DataView.GetValue (view, "loop.number") as DataView.DataItem;
+			DataView.DataItem item1 = DataView.GetDataItem (view, "loop") as DataView.DataItem;
+			DataView.DataItem item2 = DataView.GetDataItem (view, "loop.text") as DataView.DataItem;
+			DataView.DataItem item3 = DataView.GetDataItem (view, "loop.number") as DataView.DataItem;
 
 			Assert.AreEqual ("hello", (string) item2.ObjectValue);
 			Assert.AreEqual (123, (int) item3.ObjectValue);
