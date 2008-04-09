@@ -1079,7 +1079,7 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static bool DoesTypeImplementGenericInterface(System.Type systemType, System.Type genericInterfaceType, out System.Type interfaceType)
 		{
-			return TypeRosetta.DoesTypeImplementGenericInterface (systemType, genericInterfaceType, t => true, out interfaceType);
+			return TypeRosetta.DoesTypeImplementGenericInterface (systemType, genericInterfaceType, null, out interfaceType);
 		}
 
 		/// <summary>
@@ -1097,7 +1097,7 @@ namespace Epsitec.Common.Types
 			if ((systemType.IsGenericType) &&
 				(systemType.IsGenericTypeDefinition == false) &&
 				(systemType.GetGenericTypeDefinition () == genericInterfaceType) &&
-				(filter (systemType)))
+				(filter == null || filter (systemType)))
 			{
 				interfaceType = systemType;
 				return true;
@@ -1109,7 +1109,7 @@ namespace Epsitec.Common.Types
 					if ((type.IsGenericType) &&
 						(type.IsGenericTypeDefinition == false) &&
 						(type.GetGenericTypeDefinition () == genericInterfaceType) &&
-						(filter (type)))
+						(filter == null || filter (type)))
 					{
 						interfaceType = type;
 						return true;
@@ -1203,19 +1203,23 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
-		/// Gets the type of the enumerable items.
+		/// Gets the type of the enumerable items, matching a specified base type.
 		/// </summary>
+		/// <typeparam name="T">Expected base type for the enumerated items.</typeparam>
 		/// <param name="systemType">Type of the enumeration (<c>IEnumerable&lt;T&gt;</c>).</param>
-		/// <param name="expectedBaseType">Expected type of the base.</param>
 		/// <returns>
 		/// The system type of <c>T</c> in <c>IEnumerable&lt;T&gt;</c> or <c>null</c>.
 		/// </returns>
-		public static System.Type GetEnumerableItemType(System.Type systemType, System.Type expectedBaseType)
+		public static System.Type GetEnumerableItemType<T>(System.Type systemType)
 		{
 			System.Type interfaceType;
 
 			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (IEnumerable<>),
-				t => { System.Type[] g = t.GetGenericArguments (); return g.Length == 1 && expectedBaseType.IsAssignableFrom (g[0]); },
+				t =>
+				{
+					System.Type[] g = t.GetGenericArguments ();
+					return (g.Length == 1) && typeof (T).IsAssignableFrom (g[0]);
+				},
 				out interfaceType))
 			{
 				System.Type[] typeArguments = interfaceType.GetGenericArguments ();

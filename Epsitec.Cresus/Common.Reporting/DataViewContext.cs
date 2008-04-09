@@ -48,17 +48,21 @@ namespace Epsitec.Common.Reporting
 			System.Type type = value.GetType ();
 			EnumerableFactory factory;
 
-			if (!this.enumerableFactories.TryGetValue (type, out factory))
+			if (this.enumerableFactories.TryGetValue (type, out factory))
+			{
+				//	OK, we already have an enumerable factory for this type. Just
+				//	re-use it.
+			}
+			else
 			{
 				//	Check if the value implements IEnumerable<T> and create the
-				//	matching enumerable factory.
+				//	matching enumerable factory if it does. <T> must be derived
+				//	from AbstractEntity !
 				
-				System.Type enumerableItemType = TypeRosetta.GetEnumerableItemType (type, typeof (AbstractEntity));
+				System.Type enumerableItemType = TypeRosetta.GetEnumerableItemType<AbstractEntity> (type);
 
 				if (enumerableItemType != null)
 				{
-					System.Diagnostics.Debug.Assert (typeof (AbstractEntity).IsAssignableFrom (enumerableItemType));
-
 					System.Type genericType  = typeof (GenericEnumerableFactory<>);
 					System.Type concreteType = genericType.MakeGenericType (new System.Type[] { enumerableItemType });
 
