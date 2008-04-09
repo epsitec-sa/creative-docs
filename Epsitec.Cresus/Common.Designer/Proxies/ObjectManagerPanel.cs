@@ -20,6 +20,36 @@ namespace Epsitec.Common.Designer.Proxies
 			List<AbstractValue> list = new List<AbstractValue>();
 
 			//	Panel.Content:
+			if (PanelEditor.ObjectModifier.HasDruid(selectedObject))
+			{
+				PanelEditor.ObjectModifier.ObjectType type = PanelEditor.ObjectModifier.GetObjectType(selectedObject);
+				if (type == PanelEditor.ObjectModifier.ObjectType.SubPanel)
+				{
+					//?this.DruidPanel = this.ObjectModifier.GetDruid(selectedObject);
+				}
+				else
+				{
+					//?this.DruidCaption = this.ObjectModifier.GetDruid(selectedObject);
+				}
+			}
+
+			if (PanelEditor.ObjectModifier.HasBinding(selectedObject))
+			{
+				//?this.Binding = this.ObjectModifier.GetBinding(selectedObject);
+				//this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBinding, Res.Captions.???, Res.Types.ObjectModifier.???);
+			}
+
+			if (PanelEditor.ObjectModifier.GetObjectType(selectedObject) == PanelEditor.ObjectModifier.ObjectType.Table)
+			{
+				//?UI.TablePlaceholder table = selectedObject as UI.TablePlaceholder;
+				//?this.TableColumns = new List<UI.ItemTableColumn>(table.Columns);
+			}
+
+			if (PanelEditor.ObjectModifier.HasStructuredType(selectedObject))
+			{
+				//?this.StructuredType = this.ObjectModifier.GetStructuredType(selectedObject);
+				//this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStructuredType, Res.Captions.???, Res.Types.ObjectModifier.???);
+			}
 
 			//	Panel.Aspect:
 			if (this.ObjectModifier.HasButtonClass(selectedObject))
@@ -185,6 +215,14 @@ namespace Epsitec.Common.Designer.Proxies
 
 			switch (value.Type)
 			{
+				case AbstractProxy.Type.PanelBinding:
+					value.Value = PanelEditor.ObjectModifier.GetBinding(selectedObject);
+					break;
+
+				case AbstractProxy.Type.PanelStructuredType:
+					value.Value = PanelEditor.ObjectModifier.GetStructuredType(selectedObject);
+					break;
+
 				case AbstractProxy.Type.PanelButtonAspect:
 					value.Value = this.ObjectModifier.GetButtonClass(selectedObject);
 					break;
@@ -393,6 +431,15 @@ namespace Epsitec.Common.Designer.Proxies
 
 				switch (value.Type)
 				{
+					case AbstractProxy.Type.PanelBinding:
+						Types.StructuredType structuredType = PanelEditor.ObjectModifier.GetStructuredType(selectedObject);
+						PanelEditor.ObjectModifier.SetBinding(selectedObject, (Types.Binding) value.Value, structuredType);
+						break;
+
+					case AbstractProxy.Type.PanelStructuredType:
+						PanelEditor.ObjectModifier.SetStructuredType(selectedObject, (Types.StructuredType) value.Value);
+						break;
+
 					case AbstractProxy.Type.PanelButtonAspect:
 						this.ObjectModifier.SetButtonClass(selectedObject, (ButtonClass) value.Value);
 						break;

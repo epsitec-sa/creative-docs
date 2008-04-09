@@ -2137,9 +2137,7 @@ namespace Epsitec.Common.Designer
 
 				foreach (string name in names)
 				{
-					builder.Append("<list type=\"fix\" width=\"1.5\"/>");
-					builder.Append(name);
-					builder.Append("<br/>");
+					builder.Append(string.Format("<list type=\"fix\" width=\"1.5\"/><a href=\"{0}.Types.{1}\">{1}</a><br/>", moduleName, name));
 				}
 
 				builder.Append(" ");  // à cause d'un bug de TextLayout !
