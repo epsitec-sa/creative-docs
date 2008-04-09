@@ -75,14 +75,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			this.widgetText.Text = this.message;
 
-			double minWidth = System.Math.Min(400, System.Math.Ceiling(this.widgetText.TextLayout.SingleLineSize.Width)+4);
-			this.widgetText.TextLayout.LayoutSize = new Size(minWidth, TextLayout.Infinite);
+			TextLayout textLayout = this.widgetText.TextLayout;
+			Size layoutSize = textLayout.LayoutSize;
+			double minWidth = System.Math.Min(400, System.Math.Ceiling(textLayout.SingleLineSize.Width)+4);
+			textLayout.LayoutSize = new Size(minWidth, TextLayout.Infinite);
 
-			double width  = this.widgetText.TextLayout.LayoutSize.Width;
-			double height = System.Math.Ceiling(this.widgetText.TextLayout.TotalRectangle.Height+4);
+			double width  = textLayout.LayoutSize.Width;
+			double height = System.Math.Ceiling(textLayout.TotalRectangle.Height+4);
+
+			textLayout.LayoutSize = layoutSize;
 			this.widgetText.PreferredSize = new Size(width, height);
-
-			this.window.ClientSize = new Size(8+48+8+width+8, 8+height+8+22+8+1);  // TODO: sans cette magouille, le texte ne se réaffiche pas lors d'une 2ème ouverture !
 			this.window.ClientSize = new Size(8+48+8+width+8, 8+height+8+22+8);
 		}
 
