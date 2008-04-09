@@ -43,6 +43,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -53,6 +54,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="CollectionSettingTest.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="VectorSettingTest.cs" />
     <Compile Include="DataViewTest.cs" />
     <Compile Include="NavigatorTest.cs" />

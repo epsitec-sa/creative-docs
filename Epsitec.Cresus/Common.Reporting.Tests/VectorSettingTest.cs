@@ -27,26 +27,96 @@ namespace Epsitec.Common.Reporting
 			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Exclude, Id = "X" });
 			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.None,    Id = "B" });
 
-			setting.DefaultValueInclusionMode = InclusionMode.None;
+			Assert.IsTrue (setting.CheckInclusion ("A"));
+			Assert.IsFalse (setting.CheckInclusion ("B"));
+			Assert.IsFalse (setting.CheckInclusion ("C"));
+			Assert.IsFalse (setting.CheckInclusion ("X"));
+
+			Assert.AreEqual ("A", setting.CreateList (new string[] { "A", "B", "C", "X", "Y" }).Join (" "));
+		}
+
+		[Test]
+		public void Check02InclusionMode()
+		{
+			VectorSetting setting = new VectorSetting ();
+
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "A" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "B" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Exclude, Id = "X" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.None,    Id = "B" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Exclude, Id = "*" });
 
 			Assert.IsTrue (setting.CheckInclusion ("A"));
 			Assert.IsFalse (setting.CheckInclusion ("B"));
 			Assert.IsFalse (setting.CheckInclusion ("C"));
 			Assert.IsFalse (setting.CheckInclusion ("X"));
 
-			setting.DefaultValueInclusionMode = InclusionMode.Exclude;
+			Assert.AreEqual ("A", setting.CreateList (new string[] { "A", "B", "C", "X", "Y" }).Join (" "));
+		}
 
-			Assert.IsTrue (setting.CheckInclusion ("A"));
-			Assert.IsFalse (setting.CheckInclusion ("B"));
-			Assert.IsFalse (setting.CheckInclusion ("C"));
-			Assert.IsFalse (setting.CheckInclusion ("X"));
+		[Test]
+		public void Check03InclusionMode()
+		{
+			VectorSetting setting = new VectorSetting ();
 
-			setting.DefaultValueInclusionMode = InclusionMode.Include;
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "A" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "B" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Exclude, Id = "X" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.None,    Id = "B" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "*" });
 
 			Assert.IsTrue (setting.CheckInclusion ("A"));
 			Assert.IsTrue (setting.CheckInclusion ("B"));
 			Assert.IsTrue (setting.CheckInclusion ("C"));
 			Assert.IsFalse (setting.CheckInclusion ("X"));
+
+			Assert.AreEqual ("A B C Y", setting.CreateList (new string[] { "A", "B", "C", "X", "Y" }).Join (" "));
+			Assert.AreEqual ("A", setting.CreateList (new string[] { "X" }).Join (" "));
+			Assert.AreEqual ("A", setting.CreateList (new string[] { }).Join (" "));
+		}
+
+		[Test]
+		public void Check04InclusionMode()
+		{
+			VectorSetting setting = new VectorSetting ();
+
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "*" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "A" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "B" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Exclude, Id = "X" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.None,    Id = "B" });
+
+			Assert.IsTrue (setting.CheckInclusion ("A"));
+			Assert.IsTrue (setting.CheckInclusion ("B"));
+			Assert.IsTrue (setting.CheckInclusion ("C"));
+			Assert.IsFalse (setting.CheckInclusion ("X"));
+
+			Assert.AreEqual ("B C Y A", setting.CreateList (new string[] { "A", "B", "C", "X", "Y" }).Join (" "));
+			Assert.AreEqual ("A", setting.CreateList (new string[] { "X" }).Join (" "));
+			Assert.AreEqual ("A", setting.CreateList (new string[] { }).Join (" "));
+		}
+
+		[Test]
+		public void Check05InclusionMode()
+		{
+			VectorSetting setting = new VectorSetting ();
+
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "*" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "A" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "B" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Exclude, Id = "X" });
+			setting.Values.Add (new VectorValueSetting () { InclusionMode = InclusionMode.Include, Id = "Y" });
+
+			Assert.IsTrue (setting.CheckInclusion ("A"));
+			Assert.IsTrue (setting.CheckInclusion ("B"));
+			Assert.IsTrue (setting.CheckInclusion ("C"));
+			Assert.IsFalse (setting.CheckInclusion ("X"));
+			Assert.IsTrue (setting.CheckInclusion ("Y"));
+
+			Assert.AreEqual ("C A B Y", setting.CreateList (new string[] { "A", "B", "C", "X", "Y" }).Join (" "));
+			Assert.AreEqual ("C D A B Y", setting.CreateList (new string[] { "Y", "X", "B", "C", "D", "A" }).Join (" "));
+			Assert.AreEqual ("A B Y", setting.CreateList (new string[] { "X" }).Join (" "));
+			Assert.AreEqual ("A B Y", setting.CreateList (new string[] { }).Join (" "));
 		}
 	}
 }

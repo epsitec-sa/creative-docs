@@ -88,25 +88,4 @@ namespace Epsitec.Common.Reporting
 			return entity;
 		}
 	}
-
-	public static class Extensions
-	{
-		public static string FlattenSamples(this IEnumerable<AbstractEntity> samples, string separator)
-		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-			foreach (var item in samples)
-			{
-				buffer.Append (item.GetField<string> ("first"));
-				buffer.Append (" ");
-				buffer.Append (item.GetField<string> ("last"));
-				buffer.Append (" ");
-				buffer.Append (item.GetField<int> ("year").ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (separator);
-			}
-
-			return buffer.ToString ();
-		}
-
-	}
 }
