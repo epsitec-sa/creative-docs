@@ -113,5 +113,46 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("text", DataView.GetPath (item5));
 			Assert.AreEqual ("text.foo.bar", DataView.GetPath (item5, "foo", "bar"));
 		}
+
+		[Test]
+		public void Check05CollectionValue()
+		{
+			GenericEntity root = new GenericEntity (Druid.Empty);
+			GenericEntity node1 = new GenericEntity (Druid.Empty);
+			GenericEntity node2 = new GenericEntity (Druid.Empty);
+
+			node1.SetField<string> ("name", "node 1");
+			node2.SetField<string> ("name", "node 2");
+			
+			ICollection<GenericEntity> nodes = root.GetFieldCollection<GenericEntity> ("nodes");
+
+			nodes.Add (node1);
+			nodes.Add (node2);
+
+			DataViewContext context = new DataViewContext ();
+			DataView view = DataView.CreateRoot (context, root);
+
+			DataView.DataItem item1 = DataView.GetDataItem (view, "nodes") as DataView.DataItem;
+			DataView.DataItem item2 = DataView.GetDataItem (view, "nodes.@0") as DataView.DataItem;
+			DataView.DataItem item3 = DataView.GetDataItem (view, "nodes.@1") as DataView.DataItem;
+			DataView.DataItem item4 = DataView.GetDataItem (view, "nodes.@1.name") as DataView.DataItem;
+
+			Assert.IsNotNull (item1);
+			Assert.IsNotNull (item2);
+			Assert.IsNotNull (item3);
+			Assert.IsNotNull (item4);
+			
+			Assert.AreEqual (DataItemType.Table, item1.ItemType);
+			Assert.AreEqual (2, item1.Count);
+			Assert.AreEqual (DataItemType.Row, item2.ItemType);
+			Assert.AreEqual (DataItemType.Row, item3.ItemType);
+			Assert.AreEqual (DataItemType.Value, item4.ItemType);
+			Assert.AreEqual ("node 2", item4.ObjectValue);
+
+			Assert.AreEqual ("nodes", DataView.GetPath (item1));
+			Assert.AreEqual ("nodes.@0", DataView.GetPath (item2));
+			Assert.AreEqual ("nodes.@1", DataView.GetPath (item3));
+			Assert.AreEqual ("nodes.@1.name", DataView.GetPath (item4));
+		}
 	}
 }

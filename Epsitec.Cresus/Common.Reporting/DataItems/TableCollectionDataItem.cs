@@ -11,8 +11,8 @@ namespace Epsitec.Common.Reporting.DataItems
 {
 	class TableCollectionDataItem : CollectionDataItem
 	{
-		public TableCollectionDataItem(System.Collections.IList collection)
-			: base (collection)
+		public TableCollectionDataItem(DataViewContext context, System.Collections.IList collection)
+			: base (context, collection)
 		{
 		}
 

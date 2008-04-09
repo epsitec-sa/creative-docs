@@ -1079,9 +1079,25 @@ namespace Epsitec.Common.Types
 		/// </returns>
 		public static bool DoesTypeImplementGenericInterface(System.Type systemType, System.Type genericInterfaceType, out System.Type interfaceType)
 		{
+			return TypeRosetta.DoesTypeImplementGenericInterface (systemType, genericInterfaceType, t => true, out interfaceType);
+		}
+
+		/// <summary>
+		/// Verifies if the type implements the specified generic interface.
+		/// </summary>
+		/// <param name="systemType">Type to analyze.</param>
+		/// <param name="genericInterfaceType">Type of the generic interface.</param>
+		/// <param name="filter">The type filter.</param>
+		/// <param name="interfaceType">Real type of the interface.</param>
+		/// <returns>
+		/// 	<c>true</c> if the interface is found; otherwise, <c>false</c>.
+		/// </returns>
+		public static bool DoesTypeImplementGenericInterface(System.Type systemType, System.Type genericInterfaceType, System.Predicate<System.Type> filter, out System.Type interfaceType)
+		{
 			if ((systemType.IsGenericType) &&
 				(systemType.IsGenericTypeDefinition == false) &&
-				(systemType.GetGenericTypeDefinition () == genericInterfaceType))
+				(systemType.GetGenericTypeDefinition () == genericInterfaceType) &&
+				(filter (systemType)))
 			{
 				interfaceType = systemType;
 				return true;
@@ -1092,7 +1108,8 @@ namespace Epsitec.Common.Types
 				{
 					if ((type.IsGenericType) &&
 						(type.IsGenericTypeDefinition == false) &&
-						(type.GetGenericTypeDefinition () == genericInterfaceType))
+						(type.GetGenericTypeDefinition () == genericInterfaceType) &&
+						(filter (type)))
 					{
 						interfaceType = type;
 						return true;
@@ -1173,6 +1190,33 @@ namespace Epsitec.Common.Types
 			System.Type interfaceType;
 
 			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (IEnumerable<>), out interfaceType))
+			{
+				System.Type[] typeArguments = interfaceType.GetGenericArguments ();
+
+				if (typeArguments.Length == 1)
+				{
+					return typeArguments[0];
+				}
+			}
+
+			return null;
+		}
+
+		/// <summary>
+		/// Gets the type of the enumerable items.
+		/// </summary>
+		/// <param name="systemType">Type of the enumeration (<c>IEnumerable&lt;T&gt;</c>).</param>
+		/// <param name="expectedBaseType">Expected type of the base.</param>
+		/// <returns>
+		/// The system type of <c>T</c> in <c>IEnumerable&lt;T&gt;</c> or <c>null</c>.
+		/// </returns>
+		public static System.Type GetEnumerableItemType(System.Type systemType, System.Type expectedBaseType)
+		{
+			System.Type interfaceType;
+
+			if (TypeRosetta.DoesTypeImplementGenericInterface (systemType, typeof (IEnumerable<>),
+				t => { System.Type[] g = t.GetGenericArguments (); return g.Length == 1 && expectedBaseType.IsAssignableFrom (g[0]); },
+				out interfaceType))
 			{
 				System.Type[] typeArguments = interfaceType.GetGenericArguments ();
 

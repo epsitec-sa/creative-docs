@@ -74,7 +74,7 @@ namespace Epsitec.Common.Reporting
 
 				System.Diagnostics.Debug.Assert (id.Length > 0);
 				System.Diagnostics.Debug.Assert (item != null);
-				System.Diagnostics.Debug.Assert (item.ValueStore != null);
+				System.Diagnostics.Debug.Assert (item.ValueStore != null || item.IsCollection);
 				System.Diagnostics.Debug.Assert (item.DataView != null);
 
 				DataItem cachedItem;
@@ -95,8 +95,33 @@ namespace Epsitec.Common.Reporting
 				//	Get the value for the specified id. If this fails, abort here and
 				//	return an empty data item.
 
-				IValueStore store = item.ValueStore;
-				object      value = store.GetValue (id);
+				object value;
+
+				if (item.IsCollection)
+				{
+					if (id[0] != '@')
+					{
+						throw new System.InvalidOperationException (string.Format ("Path {0} contains invalid index {1}", path, id));
+					}
+
+					int index;
+
+					if (int.TryParse (id.Substring (1), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out index))
+					{
+						value = item.GetValue (index);
+					}
+					else
+					{
+						throw new System.InvalidOperationException (string.Format ("Path {0} contains invalid index {1}", path, id));
+					}
+				}
+				else
+				{
+					System.Diagnostics.Debug.Assert (id[0] != '@');
+					
+					IValueStore store = item.ValueStore;
+					value = store.GetValue (id);
+				}
 
 				if ((UndefinedValue.IsUndefinedValue (value)) ||
 					(UnknownValue.IsUnknownValue (value)) ||
@@ -105,7 +130,8 @@ namespace Epsitec.Common.Reporting
 					return new DataItems.EmptyDataItem ();
 				}
 
-				//	If the item is stored as an enumerable, handle it as a collection.
+				//	If the item is stored as an enumeration of entities, handle it as a
+				//	collection, which we map to a table.
 
 				IEnumerable<AbstractEntity> collection = context.ToEntityEnumerable (value);
 
@@ -125,7 +151,7 @@ namespace Epsitec.Common.Reporting
 					else
 					{
 						List<AbstractEntity> list = setting.CreateList (collection);
-						item = new DataItems.TableCollectionDataItem (list);
+						item = new DataItems.TableCollectionDataItem (context, list);
 						item.ItemClass = DataItemClass.Table;
 					}
 				}
@@ -312,6 +338,19 @@ namespace Epsitec.Common.Reporting
 				{
 					return this.ObjectValue as IValueStore;
 				}
+			}
+
+			public virtual bool IsCollection
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			public virtual object GetValue(int index)
+			{
+				throw new System.NotImplementedException ();
 			}
 
 			#region IDataItem Members

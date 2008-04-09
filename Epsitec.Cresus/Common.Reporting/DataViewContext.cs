@@ -53,11 +53,12 @@ namespace Epsitec.Common.Reporting
 				//	Check if the value implements IEnumerable<T> and create the
 				//	matching enumerable factory.
 				
-				System.Type enumerableItemType = TypeRosetta.GetEnumerableItemType (type);
+				System.Type enumerableItemType = TypeRosetta.GetEnumerableItemType (type, typeof (AbstractEntity));
 
-				if ((enumerableItemType != null) &&
-					(typeof (AbstractEntity).IsAssignableFrom (enumerableItemType)))
+				if (enumerableItemType != null)
 				{
+					System.Diagnostics.Debug.Assert (typeof (AbstractEntity).IsAssignableFrom (enumerableItemType));
+
 					System.Type genericType  = typeof (GenericEnumerableFactory<>);
 					System.Type concreteType = genericType.MakeGenericType (new System.Type[] { enumerableItemType });
 
