@@ -19,12 +19,17 @@ namespace Epsitec.Common.Reporting.Settings
 		public VectorSetting()
 		{
 			this.values = new ObservableList<VectorValueSetting> ();
-			this.values.CollectionChanged += this.ClearCache;
-			this.modes = new Dictionary<string, InclusionMode> ();
+			this.values.CollectionChanged += (sender, e) => this.ClearCache ();
+			this.lookup = new Dictionary<string, VectorValueSetting> ();
 			this.inclusions = new List<string> ();
 		}
 
 
+		/// <summary>
+		/// Gets the default inclusion mode, based on the <see cref="InclusionMode"/>
+		/// defined for the value with the <c>"*"</c> id (if any).
+		/// </summary>
+		/// <value>The default inclusion mode.</value>
 		public InclusionMode DefaultInclusionMode
 		{
 			get
@@ -38,6 +43,11 @@ namespace Epsitec.Common.Reporting.Settings
 			}
 		}
 
+		/// <summary>
+		/// Gets the collection of value settings. Add <see cref="VectorValueSetting"/>
+		/// instances to this list. The last definition wins in case of redefinitions.
+		/// </summary>
+		/// <value>The value settings.</value>
 		public IList<VectorValueSetting> Values
 		{
 			get
@@ -47,10 +57,17 @@ namespace Epsitec.Common.Reporting.Settings
 		}
 
 
+		/// <summary>
+		/// Checks whether the specified value should be included in the output
+		/// vector.
+		/// </summary>
+		/// <param name="id">The value id.</param>
+		/// <returns><c>true</c> if the specified value should be included in the
+		/// output vector.</returns>
 		public bool CheckInclusion(string id)
 		{
 			InclusionMode def  = this.DefaultInclusionMode;
-			InclusionMode mode = this.GetInclusionMode (id);
+			InclusionMode mode = this.LookUpInclusionMode (id);
 			
 			switch (def)
 			{
@@ -73,15 +90,21 @@ namespace Epsitec.Common.Reporting.Settings
 			throw new System.NotSupportedException (string.Format ("DefaultInclusionMode set to {0}", this.DefaultInclusionMode));
 		}
 
-		public List<string> CreateList(IEnumerable<string> vectorIds)
+		/// <summary>
+		/// Creates the output list of value ids, based on the provided list
+		/// and on the expected ids, as defined by the <c>Values</c> collection.
+		/// </summary>
+		/// <param name="valueIds">The value ids.</param>
+		/// <returns>The output list of value ids.</returns>
+		public List<string> CreateList(IEnumerable<string> valueIds)
 		{
 			List<string> ids = new List<string> ();
 			
 			if (this.DefaultInclusionMode == InclusionMode.Include)
 			{
-				foreach (string id in vectorIds)
+				foreach (string id in valueIds)
 				{
-					switch (this.GetInclusionMode (id))
+					switch (this.LookUpInclusionMode (id))
 					{
 						case InclusionMode.None:
 							ids.Add (id);
@@ -116,32 +139,24 @@ namespace Epsitec.Common.Reporting.Settings
 		}
 
 
-		private void ClearCache(object sender, CollectionChangedEventArgs e)
+		/// <summary>
+		/// Clears the cache.
+		/// </summary>
+		private void ClearCache()
 		{
 			this.defaultInclusionMode = InclusionMode.None;
-			this.modes.Clear ();
+			this.lookup.Clear ();
 			this.inclusions.Clear ();
 		}
 
-		private InclusionMode GetInclusionMode(string id)
-		{
-			System.Diagnostics.Debug.Assert (this.defaultInclusionMode != InclusionMode.None);
-
-			InclusionMode mode;
-
-			if (this.modes.TryGetValue (id, out mode))
-			{
-				return mode;
-			}
-			else
-			{
-				return InclusionMode.None;
-			}
-		}
-
+		/// <summary>
+		/// Regenerates the cached information: the lookup dictionary is used
+		/// to find value settings based on their id and the inclusions list is
+		/// a simplified version of the values list (only inclusions are kept).
+		/// </summary>
 		private void RegenerateCache()
 		{
-			System.Diagnostics.Debug.Assert (this.modes.Count == 0);
+			System.Diagnostics.Debug.Assert (this.lookup.Count == 0);
 			System.Diagnostics.Debug.Assert (this.inclusions.Count == 0);
 
 			this.defaultInclusionMode = InclusionMode.Exclude;
@@ -152,6 +167,9 @@ namespace Epsitec.Common.Reporting.Settings
 			{
 				string id = item.Id;
 
+				//	The "*" value setting defines the default inclusion mode
+				//	for this vector setting:
+				
 				if (id == "*")
 				{
 					if (item.InclusionMode == InclusionMode.Include)
@@ -163,8 +181,8 @@ namespace Epsitec.Common.Reporting.Settings
 						this.defaultInclusionMode = InclusionMode.Exclude;
 					}
 				}
-				
-				if (this.modes.ContainsKey (id))
+
+				if (this.lookup.ContainsKey (id))
 				{
 					//	Don't add the item a second time into the inclusion list.
 				}
@@ -175,35 +193,52 @@ namespace Epsitec.Common.Reporting.Settings
 
 				switch (item.InclusionMode)
 				{
-					case InclusionMode.None:
-						this.modes.Remove (id);
-						break;
-					
-					case InclusionMode.Include:
-						this.modes[id] = InclusionMode.Include;
-						break;
-					
-					case InclusionMode.Exclude:
-						this.modes[id] = InclusionMode.Exclude;
-						break;
+					case InclusionMode.None:	this.lookup.Remove (id); break;
+					case InclusionMode.Include:	this.lookup[id] = item;  break;
+					case InclusionMode.Exclude:	this.lookup[id] = item;  break;
 				}
 			}
 
+			//	Produce the simplified inclusions list, which lists only the
+			//	inclusions, and at most once.
+			
 			foreach (string id in ids)
 			{
-				InclusionMode mode;
+				VectorValueSetting value;
 
-				if ((this.modes.TryGetValue (id, out mode)) &&
-					(mode == InclusionMode.Include))
+				if ((this.lookup.TryGetValue (id, out value)) &&
+					(value.InclusionMode == InclusionMode.Include))
 				{
 					this.inclusions.Add (id);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Looks up the inclusion mode for the specified value id.
+		/// </summary>
+		/// <param name="id">The value id.</param>
+		/// <returns>The inclusion mode or <c>InclusionMode.None</c> if there
+		/// is no explicit setting for this value id.</returns>
+		private InclusionMode LookUpInclusionMode(string id)
+		{
+			System.Diagnostics.Debug.Assert (this.defaultInclusionMode != InclusionMode.None);
+
+			VectorValueSetting value;
+
+			if (this.lookup.TryGetValue (id, out value))
+			{
+				return value.InclusionMode;
+			}
+			else
+			{
+				return InclusionMode.None;
+			}
+		}
+
 
 		private readonly ObservableList<VectorValueSetting> values;
-		private readonly Dictionary<string, InclusionMode> modes;
+		private readonly Dictionary<string, VectorValueSetting> lookup;
 		private readonly List<string> inclusions;
 		
 		private InclusionMode defaultInclusionMode;
