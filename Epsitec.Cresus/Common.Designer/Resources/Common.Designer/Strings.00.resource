@@ -558,4 +558,5 @@
   <data name="Undo.Action.PreferredWidth" id="K32">Largeur préférentielle</data>
   <data name="Error.CreateMissingValueItems.Title" id="K52">Les énumérations suivantes doivent être complétées :</data>
   <data name="Action.InitialMessage" id="K62">Message initial</data>
+  <data name="Dialog.InitialMessage.Title" id="K72">Message initial</data>
 </bundle>

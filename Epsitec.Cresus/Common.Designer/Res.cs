@@ -508,6 +508,8 @@ namespace Epsitec.Common.Designer
 					public static global::Epsitec.Common.Types.Caption Fill { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 361)); } }
 					//	designer:cap/3008B
 					public static global::Epsitec.Common.Types.Caption Top { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 360)); } }
+					//	designer:cap/30KB1
+					public static global::Epsitec.Common.Types.Caption Toto { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43)); } }
 				}
 				
 				public static class ChildrenPlacement
@@ -996,6 +998,12 @@ namespace Epsitec.Common.Designer
 						//	designer:str/30086
 						public static string Size { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (200)); } }
 					}
+				}
+				
+				public static class InitialMessage
+				{
+					//	designer:str/30K72
+					public static string Title { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544391)); } }
 				}
 				
 				public static class New

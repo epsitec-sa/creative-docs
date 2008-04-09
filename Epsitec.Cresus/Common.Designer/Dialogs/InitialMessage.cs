@@ -6,11 +6,11 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Designer.Dialogs
 {
 	/// <summary>
-	/// Dialogue permettant d'afficher un message contenant des liens hypertexte.
+	/// Dialogue permettant d'afficher le message initial contenant des liens hypertexte.
 	/// </summary>
-	public class Message : Abstract
+	public class InitialMessage : Abstract
 	{
-		public Message(DesignerApplication designerApplication) : base(designerApplication)
+		public InitialMessage(DesignerApplication designerApplication) : base(designerApplication)
 		{
 		}
 
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeToolWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("Message", 200, 100, true);
-				this.window.Text = Res.Strings.Application.Title;
+				this.window.Text = Res.Strings.Dialog.InitialMessage.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -34,6 +34,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				container.Dock = DockStyle.Fill;
 
 				this.widgetIcon = new StaticImage(container);
+				this.widgetIcon.ImageName = "manifest:Epsitec.Common.Dialogs.Images.Information.icon";
 				this.widgetIcon.PreferredSize = new Size(48, 48);
 				this.widgetIcon.Dock = DockStyle.Left;
 				this.widgetIcon.Margins = new Margins(0, 0, 0, 0);
@@ -65,15 +66,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void Initialise(string iconName, string message)
+		public void Initialise(string message)
 		{
-			this.iconName = iconName;
 			this.message = message;
 		}
 
 		protected void Update()
 		{
-			this.widgetIcon.ImageName = this.iconName;
 			this.widgetText.Text = this.message;
 
 			double minWidth = System.Math.Min(400, System.Math.Ceiling(this.widgetText.TextLayout.SingleLineSize.Width)+4);
@@ -112,7 +111,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected string			iconName;
 		protected string			message;
 		protected StaticImage		widgetIcon;
 		protected StaticText		widgetText;

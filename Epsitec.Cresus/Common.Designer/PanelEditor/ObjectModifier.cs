@@ -39,7 +39,6 @@ namespace Epsitec.Common.Designer.PanelEditor
 			Bottom,
 			Top,
 			Fill,
-			Toto,  // TODO: à supprimer !
 		}
 
 		[DesignerVisible]

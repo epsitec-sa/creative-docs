@@ -96,12 +96,12 @@ namespace Epsitec.Common.Designer
 				this.dlgFieldName        = new Dialogs.ResourceName(this);
 				this.dlgEntityComment    = new Dialogs.EntityComment(this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
-				this.dlgMessage          = new Dialogs.Message(this);
+				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
 
-				this.dlgGlyphs.Closed  += new EventHandler(this.HandleDlgClosed);
-				this.dlgFilter.Closed  += new EventHandler(this.HandleDlgClosed);
-				this.dlgSearch.Closed  += new EventHandler(this.HandleDlgClosed);
-				this.dlgMessage.Closed += new EventHandler(this.HandleDlgClosed);
+				this.dlgGlyphs.Closed         += new EventHandler(this.HandleDlgClosed);
+				this.dlgFilter.Closed         += new EventHandler(this.HandleDlgClosed);
+				this.dlgSearch.Closed         += new EventHandler(this.HandleDlgClosed);
+				this.dlgInitialMessage.Closed += new EventHandler(this.HandleDlgClosed);
 
 				//	Les réglages doivent être lus avant de créer l'interface graphique.
 				this.settings.Read();
@@ -1361,7 +1361,7 @@ namespace Epsitec.Common.Designer
 
 				builder.Append(" ");  // à cause d'un bug dans TextLayout !
 
-				this.DialogMessageWithHyperlink(builder.ToString());  // affiche le message initial
+				this.DialogInitialMessage(builder.ToString());  // affiche le message initial
 			}
 			else
 			{
@@ -1375,7 +1375,7 @@ namespace Epsitec.Common.Designer
 			if (this.initialMessageState.ActiveState == ActiveState.Yes)
 			{
 				this.initialMessageState.ActiveState = ActiveState.No;
-				this.dlgMessage.Hide();
+				this.dlgInitialMessage.Hide();
 			}
 		}
 
@@ -2543,11 +2543,11 @@ namespace Epsitec.Common.Designer
 			return dialog.DialogResult;
 		}
 
-		public void DialogMessageWithHyperlink(string message)
+		protected void DialogInitialMessage(string message)
 		{
-			//	Affiche le dialogue pour afficher un message pouvant contenir des liens hypertexte.
-			this.dlgMessage.Initialise("manifest:Epsitec.Common.Dialogs.Images.Information.icon", message);
-			this.dlgMessage.Show();
+			//	Affiche le dialogue pour afficher un message initial.
+			this.dlgInitialMessage.Initialise(message);
+			this.dlgInitialMessage.Show();
 		}
 
 		public Common.Dialogs.DialogResult DialogError(string error)
@@ -2597,7 +2597,7 @@ namespace Epsitec.Common.Designer
 				this.searchState.ActiveState = ActiveState.No;
 			}
 
-			if (sender == this.dlgMessage)
+			if (sender == this.dlgInitialMessage)
 			{
 				this.initialMessageState.ActiveState = ActiveState.No;
 			}
@@ -2660,7 +2660,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
-		protected Dialogs.Message				dlgMessage;
+		protected Dialogs.InitialMessage		dlgInitialMessage;
 		protected PanelsContext					context;
 		protected DisplayMode					displayMode;
 		protected Window						viewersWindow;
