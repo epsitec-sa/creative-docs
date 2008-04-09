@@ -84,7 +84,7 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual (DataItemClass.ValueItem, item2.ItemClass);
 			Assert.AreEqual (DataItemClass.ValueItem, item3.ItemClass);
 
-			Assert.AreEqual (DataItemType.Row, item1.ItemType);
+			Assert.AreEqual (DataItemType.Vector, item1.ItemType);
 			Assert.AreEqual (DataItemType.Value, item2.ItemType);
 			Assert.AreEqual (DataItemType.Value, item3.ItemType);
 		}
@@ -144,8 +144,8 @@ namespace Epsitec.Common.Reporting
 			
 			Assert.AreEqual (DataItemType.Table, item1.ItemType);
 			Assert.AreEqual (2, item1.Count);
-			Assert.AreEqual (DataItemType.Row, item2.ItemType);
-			Assert.AreEqual (DataItemType.Row, item3.ItemType);
+			Assert.AreEqual (DataItemType.Vector, item2.ItemType);
+			Assert.AreEqual (DataItemType.Vector, item3.ItemType);
 			Assert.AreEqual (DataItemType.Value, item4.ItemType);
 			Assert.AreEqual ("node 2", item4.ObjectValue);
 

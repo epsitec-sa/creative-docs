@@ -10,6 +10,15 @@ namespace Epsitec.Common.Reporting
 {
 	public interface IDataItem
 	{
+		/// <summary>
+		/// Gets the raw object value.
+		/// </summary>
+		/// <value>The raw object value.</value>
+		object ObjectValue
+		{
+			get;
+		}
+		
 		string Value
 		{
 			get;

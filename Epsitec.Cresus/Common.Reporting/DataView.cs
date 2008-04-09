@@ -17,6 +17,23 @@ namespace Epsitec.Common.Reporting
 		}
 
 
+		public string Path
+		{
+			get
+			{
+				return DataView.GetPath (this.self);
+			}
+		}
+
+		public DataItem Item
+		{
+			get
+			{
+				return this.self;
+			}
+		}
+
+
 		/// <summary>
 		/// Creates a root data view starting with the specified root entity.
 		/// </summary>
@@ -37,9 +54,10 @@ namespace Epsitec.Common.Reporting
 		/// <returns>The data item.</returns>
 		public static IDataItem GetDataItem(DataView view, string path)
 		{
-			return DataView.GetDataItem (ref view, path);
+			return DataView.GetDataItem (view, path, null);
 		}
 
+#if false
 		/// <summary>
 		/// Gets the data item for the specified view and path.
 		/// </summary>
@@ -47,6 +65,18 @@ namespace Epsitec.Common.Reporting
 		/// <param name="path">The path.</param>
 		/// <returns>The data item.</returns>
 		public static IDataItem GetDataItem(ref DataView view, string path)
+		{
+		}
+#endif
+
+		/// <summary>
+		/// Gets the data item for the specified view and path.
+		/// </summary>
+		/// <param name="view">The view.</param>
+		/// <param name="path">The path.</param>
+		/// <param name="itemSpy">The data item spy which gets called for every item found in the path, or <c>null</c>.</param>
+		/// <returns>The leaf data item.</returns>
+		public static DataItem GetDataItem(DataView view, string path, System.Action<DataItem> itemSpy)
 		{
 			if (view == null)
 			{
@@ -89,6 +119,12 @@ namespace Epsitec.Common.Reporting
 					//	read only
 
 					item = cachedItem;
+					
+					if (itemSpy != null)
+					{
+						itemSpy (item);
+					}
+
 					continue;
 				}
 
@@ -181,6 +217,11 @@ namespace Epsitec.Common.Reporting
 				item.Id = id;
 				item.ParentDataView = view;
 				view.items[id] = item;
+				
+				if (itemSpy != null)
+				{
+					itemSpy (item);
+				}
 			}
 			
 			return item;
@@ -319,15 +360,6 @@ namespace Epsitec.Common.Reporting
 			}
 
 			/// <summary>
-			/// Gets the raw object value.
-			/// </summary>
-			/// <value>The raw object value.</value>
-			public abstract object ObjectValue
-			{
-				get;
-			}
-
-			/// <summary>
 			/// Gets the object value cast to the <see cref="IValueStore"/>
 			/// interface.
 			/// </summary>
@@ -354,6 +386,15 @@ namespace Epsitec.Common.Reporting
 			}
 
 			#region IDataItem Members
+
+			/// <summary>
+			/// Gets the raw object value.
+			/// </summary>
+			/// <value>The raw object value.</value>
+			public abstract object ObjectValue
+			{
+				get;
+			}
 
 			public virtual string Value
 			{

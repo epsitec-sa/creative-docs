@@ -38,6 +38,12 @@ namespace Epsitec.Common.Reporting
 		}
 
 
+		/// <summary>
+		/// Converts the specified value to an entity enumeration, if this is
+		/// possible. An adapter will be automatically generated when needed.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The entity enumeration or <c>null</c>.</returns>
 		public IEnumerable<AbstractEntity> ToEntityEnumerable(object value)
 		{
 			if (value == null)

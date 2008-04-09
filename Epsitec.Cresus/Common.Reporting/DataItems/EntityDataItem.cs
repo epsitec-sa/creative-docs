@@ -29,7 +29,7 @@ namespace Epsitec.Common.Reporting.DataItems
 		{
 			get
 			{
-				return DataItemType.Row;
+				return DataItemType.Vector;
 			}
 		}
 

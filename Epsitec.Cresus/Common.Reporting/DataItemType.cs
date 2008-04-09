@@ -14,7 +14,7 @@ namespace Epsitec.Common.Reporting
 
 		Table,
 		Group,
-		Row,
+		Vector,
 		Value,
 
 		Break,

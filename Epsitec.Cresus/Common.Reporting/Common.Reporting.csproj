@@ -63,6 +63,9 @@
     <Compile Include="CellSplitInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\CollectionSetting.cs" />
+    <Compile Include="Settings\InclusionMode.cs" />
+    <Compile Include="Settings\VectorValueSetting.cs" />
+    <Compile Include="Settings\VectorSetting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">

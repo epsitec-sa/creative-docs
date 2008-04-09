@@ -18,13 +18,16 @@ namespace Epsitec.Common.Reporting
 			}
 
 			this.view = view;
+			this.itemStack = new Stack<ItemState> ();
+			this.itemStack.Push (new ItemState (this.view.Item));
 		}
 
 		public bool IsValid
 		{
 			get
 			{
-				return this.path != null;
+				//	TODO: ...
+				return true;
 			}
 		}
 
@@ -34,7 +37,18 @@ namespace Epsitec.Common.Reporting
 			{
 				//	TODO: ...
 
-				return null;
+				return this.itemStack.Peek ().Item;
+			}
+		}
+
+		public IEnumerable<IDataItem> CurrentViewStack
+		{
+			get
+			{
+				foreach (var item in this.itemStack)
+				{
+					yield return item.Item;
+				}
 			}
 		}
 
@@ -42,20 +56,26 @@ namespace Epsitec.Common.Reporting
 		{
 			get
 			{
-				return this.path;
+				return DataView.GetPath (this.itemStack.Peek ().Item);
 			}
 		}
 
 		
 		public void Reset()
 		{
-			throw new System.NotImplementedException ();
+			this.itemStack.Clear ();
+			this.itemStack.Push (new ItemState (this.view.Item));
+			
+			this.currentSplitIndex = 0;
+			this.currentSplitInfos = null;
 		}
 
 		
-		public bool NavigateTo(string dataPath)
+		public bool NavigateTo(string path)
 		{
-			this.path = path;
+			this.Reset ();
+
+			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (new ItemState (item)));
 
 			return this.IsValid;
 		}
@@ -92,10 +112,14 @@ namespace Epsitec.Common.Reporting
 
 		public bool NavigateToParent()
 		{
-			if (this.IsValid)
+			if (this.itemStack.Count == 1)
 			{
-				//	TODO: ...
+				return false;
 			}
+
+			System.Diagnostics.Debug.Assert (this.itemStack.Count > 1);
+
+			ItemState state = this.itemStack.Pop ();
 
 			return this.IsValid;
 		}
@@ -129,8 +153,28 @@ namespace Epsitec.Common.Reporting
 		}
 
 
+		private class ItemState
+		{
+			public ItemState(DataView.DataItem item)
+			{
+				this.item = item;
+			}
+
+			public DataView.DataItem Item
+			{
+				get
+				{
+					return this.item;
+				}
+			}
+
+			private readonly DataView.DataItem item;
+		}
+
+
 		private readonly DataView view;
-		private string path;
+		private readonly Stack<ItemState> itemStack;
+	
 		private IEnumerable<CellSplitInfo> currentSplitInfos;
 		private int currentSplitIndex;
 	}
