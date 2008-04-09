@@ -1131,6 +1131,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ClearProxies();
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
 			}
+#else
+			this.DefineProxies();
 #endif
 		}
 
@@ -1149,6 +1151,8 @@ namespace Epsitec.Common.Designer.Viewers
 				this.ClearProxies();
 				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
 			}
+#else
+			this.DefineProxies();
 #endif
 
 			this.panelEditor.RegenerateDimensions();

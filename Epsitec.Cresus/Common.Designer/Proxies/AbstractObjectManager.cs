@@ -31,45 +31,27 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
 			//	Ajoute une valeur de type numérique.
-			this.SuspendChanges();
+			ValueNumeric value = new ValueNumeric(min, max, step, resolution);
+			value.SelectedObjects.Add(selectedObject);
+			value.Type = type;
+			value.Caption = caption;
+			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.SendObjectToValue(value);
 
-			try
-			{
-				ValueNumeric value = new ValueNumeric(min, max, step, resolution);
-				value.SelectedObjects.Add(selectedObject);
-				value.Type = type;
-				value.Caption = caption;
-				value.ValueChanged += new EventHandler(this.HandleValueChanged);
-				this.SendObjectToValue(value);
-
-				list.Add(value);
-			}
-			finally
-			{
-				this.ResumeChanges();
-			}
+			list.Add(value);
 		}
 
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
 		{
 			//	Ajoute une valeur de type énumération.
-			this.SuspendChanges();
+			ValueEnum value = new ValueEnum(enumType);
+			value.SelectedObjects.Add(selectedObject);
+			value.Type = type;
+			value.Caption = caption;
+			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.SendObjectToValue(value);
 
-			try
-			{
-				ValueEnum value = new ValueEnum(enumType);
-				value.SelectedObjects.Add(selectedObject);
-				value.Type = type;
-				value.Caption = caption;
-				value.ValueChanged += new EventHandler(this.HandleValueChanged);
-				this.SendObjectToValue(value);
-
-				list.Add(value);
-			}
-			finally
-			{
-				this.ResumeChanges();
-			}
+			list.Add(value);
 		}
 
 		private void HandleValueChanged(object sender)
@@ -109,13 +91,13 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		public void SuspendChanges()
+		protected void SuspendChanges()
 		{
 			//	Suspend les changements jusqu'au prochain ResumeChanges.
 			this.suspendChanges++;
 		}
 
-		public void ResumeChanges()
+		protected void ResumeChanges()
 		{
 			//	Reprend les changements après un SuspendChanges.
 			this.suspendChanges--;

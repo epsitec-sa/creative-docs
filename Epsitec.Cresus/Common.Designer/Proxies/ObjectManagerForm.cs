@@ -117,168 +117,186 @@ namespace Epsitec.Common.Designer.Proxies
 		public override void SendObjectToValue(AbstractValue value)
 		{
 			//	Tous les objets ont la même valeur. Il suffit donc de s'occuper du premier objet.
-			Widget selectedObject = value.SelectedObjects[0];
+			this.SuspendChanges();
 
-			switch (value.Type)
+			try
 			{
-				case AbstractProxy.Type.FormColumnsRequired:
-					value.Value = this.ObjectModifier.GetColumnsRequired(selectedObject);
-					break;
+				Widget selectedObject = value.SelectedObjects[0];
 
-				case AbstractProxy.Type.FormRowsRequired:
-					value.Value = this.ObjectModifier.GetRowsRequired(selectedObject);
-					break;
+				switch (value.Type)
+				{
+					case AbstractProxy.Type.FormColumnsRequired:
+						value.Value = this.ObjectModifier.GetColumnsRequired(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormPreferredWidth:
-					value.Value = this.ObjectModifier.GetPreferredWidth(selectedObject);
-					break;
+					case AbstractProxy.Type.FormRowsRequired:
+						value.Value = this.ObjectModifier.GetRowsRequired(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormSeparatorBottom:
-					value.Value = this.ObjectModifier.GetSeparatorBottom(selectedObject);
-					break;
+					case AbstractProxy.Type.FormPreferredWidth:
+						value.Value = this.ObjectModifier.GetPreferredWidth(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormBackColor:
-					value.Value = this.ObjectModifier.GetBackColor(selectedObject);
-					break;
+					case AbstractProxy.Type.FormSeparatorBottom:
+						value.Value = this.ObjectModifier.GetSeparatorBottom(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormLabelFontColor:
-					value.Value = this.ObjectModifier.GetLabelFontColor(selectedObject);
-					break;
+					case AbstractProxy.Type.FormBackColor:
+						value.Value = this.ObjectModifier.GetBackColor(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormFieldFontColor:
-					value.Value = this.ObjectModifier.GetFieldFontColor(selectedObject);
-					break;
+					case AbstractProxy.Type.FormLabelFontColor:
+						value.Value = this.ObjectModifier.GetLabelFontColor(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormLabelFontFace:
-					value.Value = this.ObjectModifier.GetLabelFontFace(selectedObject);
-					break;
+					case AbstractProxy.Type.FormFieldFontColor:
+						value.Value = this.ObjectModifier.GetFieldFontColor(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormFieldFontFace:
-					value.Value = this.ObjectModifier.GetFieldFontFace(selectedObject);
-					break;
+					case AbstractProxy.Type.FormLabelFontFace:
+						value.Value = this.ObjectModifier.GetLabelFontFace(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormLabelFontStyle:
-					value.Value = this.ObjectModifier.GetLabelFontStyle(selectedObject);
-					break;
+					case AbstractProxy.Type.FormFieldFontFace:
+						value.Value = this.ObjectModifier.GetFieldFontFace(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormFieldFontStyle:
-					value.Value = this.ObjectModifier.GetFieldFontStyle(selectedObject);
-					break;
+					case AbstractProxy.Type.FormLabelFontStyle:
+						value.Value = this.ObjectModifier.GetLabelFontStyle(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormLabelFontSize:
-					value.Value = this.ObjectModifier.GetLabelFontSize(selectedObject);
-					break;
+					case AbstractProxy.Type.FormFieldFontStyle:
+						value.Value = this.ObjectModifier.GetFieldFontStyle(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormFieldFontSize:
-					value.Value = this.ObjectModifier.GetFieldFontSize(selectedObject);
-					break;
+					case AbstractProxy.Type.FormLabelFontSize:
+						value.Value = this.ObjectModifier.GetLabelFontSize(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormBoxLayout:
-					value.Value = this.ObjectModifier.GetBoxLayout(selectedObject);
-					break;
+					case AbstractProxy.Type.FormFieldFontSize:
+						value.Value = this.ObjectModifier.GetFieldFontSize(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormBoxPadding:
-					value.Value = this.ObjectModifier.GetBoxPadding(selectedObject);
-					break;
+					case AbstractProxy.Type.FormBoxLayout:
+						value.Value = this.ObjectModifier.GetBoxLayout(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormBoxFrameState:
-					value.Value = this.ObjectModifier.GetBoxFrameState(selectedObject);
-					break;
+					case AbstractProxy.Type.FormBoxPadding:
+						value.Value = this.ObjectModifier.GetBoxPadding(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormBoxFrameWidth:
-					value.Value = this.ObjectModifier.GetBoxFrameWidth(selectedObject);
-					break;
+					case AbstractProxy.Type.FormBoxFrameState:
+						value.Value = this.ObjectModifier.GetBoxFrameState(selectedObject);
+						break;
 
-				case AbstractProxy.Type.FormButtonClass:
-					value.Value = this.ObjectModifier.GetCommandButtonClass(selectedObject);
-					break;
+					case AbstractProxy.Type.FormBoxFrameWidth:
+						value.Value = this.ObjectModifier.GetBoxFrameWidth(selectedObject);
+						break;
+
+					case AbstractProxy.Type.FormButtonClass:
+						value.Value = this.ObjectModifier.GetCommandButtonClass(selectedObject);
+						break;
+				}
+			}
+			finally
+			{
+				this.ResumeChanges();
 			}
 		}
 
 		protected override void SendValueToObject(AbstractValue value)
 		{
 			//	Il faut envoyer la valeur à tous les objets sélectionnés.
-			foreach (Widget selectedObject in value.SelectedObjects)
+			this.SuspendChanges();
+
+			try
 			{
-				switch (value.Type)
+				foreach (Widget selectedObject in value.SelectedObjects)
 				{
-					case AbstractProxy.Type.FormColumnsRequired:
-						this.ObjectModifier.SetColumnsRequired(selectedObject, (int) value.Value);
-						break;
+					switch (value.Type)
+					{
+						case AbstractProxy.Type.FormColumnsRequired:
+							this.ObjectModifier.SetColumnsRequired(selectedObject, (int) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormRowsRequired:
-						this.ObjectModifier.SetRowsRequired(selectedObject, (int) value.Value);
-						break;
+						case AbstractProxy.Type.FormRowsRequired:
+							this.ObjectModifier.SetRowsRequired(selectedObject, (int) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormPreferredWidth:
-						this.ObjectModifier.SetPreferredWidth(selectedObject, (double) value.Value);
-						break;
+						case AbstractProxy.Type.FormPreferredWidth:
+							this.ObjectModifier.SetPreferredWidth(selectedObject, (double) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormSeparatorBottom:
-						this.ObjectModifier.SetSeparatorBottom(selectedObject, (FormEngine.FieldDescription.SeparatorType) value.Value);
-						break;
+						case AbstractProxy.Type.FormSeparatorBottom:
+							this.ObjectModifier.SetSeparatorBottom(selectedObject, (FormEngine.FieldDescription.SeparatorType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormBackColor:
-						this.ObjectModifier.SetBackColor(selectedObject, (FormEngine.FieldDescription.BackColorType) value.Value);
-						break;
+						case AbstractProxy.Type.FormBackColor:
+							this.ObjectModifier.SetBackColor(selectedObject, (FormEngine.FieldDescription.BackColorType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormLabelFontColor:
-						this.ObjectModifier.SetLabelFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
-						break;
+						case AbstractProxy.Type.FormLabelFontColor:
+							this.ObjectModifier.SetLabelFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormFieldFontColor:
-						this.ObjectModifier.SetFieldFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
-						break;
+						case AbstractProxy.Type.FormFieldFontColor:
+							this.ObjectModifier.SetFieldFontColor(selectedObject, (FormEngine.FieldDescription.FontColorType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormLabelFontFace:
-						this.ObjectModifier.SetLabelFontFace(selectedObject, (FormEngine.FieldDescription.FontFaceType) value.Value);
-						break;
+						case AbstractProxy.Type.FormLabelFontFace:
+							this.ObjectModifier.SetLabelFontFace(selectedObject, (FormEngine.FieldDescription.FontFaceType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormFieldFontFace:
-						this.ObjectModifier.SetFieldFontFace(selectedObject, (FormEngine.FieldDescription.FontFaceType) value.Value);
-						break;
+						case AbstractProxy.Type.FormFieldFontFace:
+							this.ObjectModifier.SetFieldFontFace(selectedObject, (FormEngine.FieldDescription.FontFaceType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormLabelFontStyle:
-						this.ObjectModifier.SetLabelFontStyle(selectedObject, (FormEngine.FieldDescription.FontStyleType) value.Value);
-						break;
+						case AbstractProxy.Type.FormLabelFontStyle:
+							this.ObjectModifier.SetLabelFontStyle(selectedObject, (FormEngine.FieldDescription.FontStyleType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormFieldFontStyle:
-						this.ObjectModifier.SetFieldFontStyle(selectedObject, (FormEngine.FieldDescription.FontStyleType) value.Value);
-						break;
+						case AbstractProxy.Type.FormFieldFontStyle:
+							this.ObjectModifier.SetFieldFontStyle(selectedObject, (FormEngine.FieldDescription.FontStyleType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormLabelFontSize:
-						this.ObjectModifier.SetLabelFontSize(selectedObject, (FormEngine.FieldDescription.FontSizeType) value.Value);
-						break;
+						case AbstractProxy.Type.FormLabelFontSize:
+							this.ObjectModifier.SetLabelFontSize(selectedObject, (FormEngine.FieldDescription.FontSizeType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormFieldFontSize:
-						this.ObjectModifier.SetFieldFontSize(selectedObject, (FormEngine.FieldDescription.FontSizeType) value.Value);
-						break;
+						case AbstractProxy.Type.FormFieldFontSize:
+							this.ObjectModifier.SetFieldFontSize(selectedObject, (FormEngine.FieldDescription.FontSizeType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormBoxLayout:
-						this.ObjectModifier.SetBoxLayout(selectedObject, (FormEngine.FieldDescription.BoxLayoutType) value.Value);
-						break;
+						case AbstractProxy.Type.FormBoxLayout:
+							this.ObjectModifier.SetBoxLayout(selectedObject, (FormEngine.FieldDescription.BoxLayoutType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormBoxPadding:
-						this.ObjectModifier.SetBoxPadding(selectedObject, (FormEngine.FieldDescription.BoxPaddingType) value.Value);
-						break;
+						case AbstractProxy.Type.FormBoxPadding:
+							this.ObjectModifier.SetBoxPadding(selectedObject, (FormEngine.FieldDescription.BoxPaddingType) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormBoxFrameState:
-						this.ObjectModifier.SetBoxFrameState(selectedObject, (FrameState) value.Value);
-						break;
+						case AbstractProxy.Type.FormBoxFrameState:
+							this.ObjectModifier.SetBoxFrameState(selectedObject, (FrameState) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormBoxFrameWidth:
-						this.ObjectModifier.SetBoxFrameWidth(selectedObject, (double) value.Value);
-						break;
+						case AbstractProxy.Type.FormBoxFrameWidth:
+							this.ObjectModifier.SetBoxFrameWidth(selectedObject, (double) value.Value);
+							break;
 
-					case AbstractProxy.Type.FormButtonClass:
-						this.ObjectModifier.SetCommandButtonClass(selectedObject, (FormEngine.FieldDescription.CommandButtonClass) value.Value);
-						break;
+						case AbstractProxy.Type.FormButtonClass:
+							this.ObjectModifier.SetCommandButtonClass(selectedObject, (FormEngine.FieldDescription.CommandButtonClass) value.Value);
+							break;
+					}
 				}
 			}
+			finally
+			{
+				this.Viewer.ProxyManager.UpdateInterface();
+				Application.QueueAsyncCallback(this.ObjectModifier.FormEditor.RegenerateForm);
+				this.ObjectModifier.FormEditor.Module.AccessForms.SetLocalDirty();
 
-			this.Viewer.ProxyManager.UpdateInterface();
-			Application.QueueAsyncCallback(this.ObjectModifier.FormEditor.RegenerateForm);
-			this.ObjectModifier.FormEditor.Module.AccessForms.SetLocalDirty();
+				this.ResumeChanges();
+			}
 		}
 
 
