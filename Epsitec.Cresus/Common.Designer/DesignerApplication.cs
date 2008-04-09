@@ -96,10 +96,12 @@ namespace Epsitec.Common.Designer
 				this.dlgFieldName        = new Dialogs.ResourceName(this);
 				this.dlgEntityComment    = new Dialogs.EntityComment(this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
+				this.dlgMessage          = new Dialogs.Message(this);
 
-				this.dlgGlyphs.Closed += new EventHandler(this.HandleDlgClosed);
-				this.dlgFilter.Closed += new EventHandler(this.HandleDlgClosed);
-				this.dlgSearch.Closed += new EventHandler(this.HandleDlgClosed);
+				this.dlgGlyphs.Closed  += new EventHandler(this.HandleDlgClosed);
+				this.dlgFilter.Closed  += new EventHandler(this.HandleDlgClosed);
+				this.dlgSearch.Closed  += new EventHandler(this.HandleDlgClosed);
+				this.dlgMessage.Closed += new EventHandler(this.HandleDlgClosed);
 
 				//	Les réglages doivent être lus avant de créer l'interface graphique.
 				this.settings.Read();
@@ -111,17 +113,8 @@ namespace Epsitec.Common.Designer
 			this.ReadSettings();
 			this.Window.Show();
 
-			//	Passe en revue tous les modules ouverts, pour afficher leurs éventuels messages initiaux.
-			//	Il est important de faire ceci après le this.Window.Show().
-			List<Module> modules = this.OpeningListModule;
-			foreach (Module module in modules)
-			{
-				if (module.InitialMessage != null)  // message initial existe ?
-				{
-					this.DialogError(module.InitialMessage);  // affiche le message initial
-				}
-			}
-
+			this.UpdateInitialMessage();
+			this.ShowInitialMessage();  // s'il existe, affiche le message initial
 		}
 
 		internal void Hide()
@@ -429,6 +422,8 @@ namespace Epsitec.Common.Designer
 		[Command("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.CloseInitialMessage();
+
 			if (!this.Terminate())
 			{
 				return;
@@ -450,9 +445,10 @@ namespace Epsitec.Common.Designer
 				this.bookModules.ActivePage = mi.TabPage;
 
 				//	Affiche l'éventuel message initial.
+				this.UpdateInitialMessage();
 				if (this.CurrentModule.InitialMessage != null)  // message initial existe ?
 				{
-					this.DialogError(this.CurrentModule.InitialMessage);  // affiche le message initial
+					this.ShowInitialMessage();  // affiche le message initial
 				}
 			}
 		}
@@ -460,6 +456,8 @@ namespace Epsitec.Common.Designer
 		[Command("New")]
 		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.CloseInitialMessage();
+
 			if (!this.Terminate())
 			{
 				return;
@@ -536,6 +534,8 @@ namespace Epsitec.Common.Designer
 		[Command("Recycle")]
 		void CommandRecycle(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.CloseInitialMessage();
+
 			if (!this.IsCurrentModule || !this.Terminate())
 			{
 				return;
@@ -601,6 +601,12 @@ namespace Epsitec.Common.Designer
 			this.CurrentModule.Check();
 		}
 
+		[Command("InitialMessage")]
+		void CommandInitialMessage(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ShowInitialMessage();
+		}
+
 		[Command("Save")]
 		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -615,6 +621,8 @@ namespace Epsitec.Common.Designer
 		[Command("Close")]
 		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.CloseInitialMessage();
+
 			if (!this.Terminate())
 			{
 				return;
@@ -1063,6 +1071,7 @@ namespace Epsitec.Common.Designer
 			this.openState = this.CreateCommandState("Open", KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.saveState = this.CreateCommandState("Save", KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = this.CreateCommandState("SaveAs");
+			this.initialMessageState = this.CreateCommandState("InitialMessage");
 			this.checkState = this.CreateCommandState("Check");
 			this.closeState = this.CreateCommandState("Close", KeyCode.ModifierControl|KeyCode.FuncF4);
 			this.cutState = this.CreateCommandState("Cut", KeyCode.ModifierControl|KeyCode.AlphaX);
@@ -1311,6 +1320,80 @@ namespace Epsitec.Common.Designer
 			{
 				this.viewersWindow.Root.Children.Clear();  // vide tout le contenu
 				this.viewersWindow.Text = "";  // plus de titre
+			}
+		}
+		#endregion
+
+
+		#region InitialMessage
+		protected void UpdateInitialMessage()
+		{
+			//	Met à jour la commande du message initial pour l'ensemble des modules ouverts.
+			this.initialMessageState.Enable = this.IsInitialMessageExisting;
+		}
+
+		protected void ShowInitialMessage()
+		{
+			//	Affiche le message initial pour l'ensemble des modules ouverts.
+			if (this.initialMessageState.ActiveState == ActiveState.No)
+			{
+				if (!this.IsInitialMessageExisting)
+				{
+					return;
+				}
+
+				this.initialMessageState.ActiveState = ActiveState.Yes;
+
+				System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+				builder.Append("<font size=\"120%\">");
+				builder.Append(Res.Strings.Error.CreateMissingValueItems.Title);
+				builder.Append("</font><br/>");
+
+				List<Module> modules = this.OpeningListModule;
+				foreach (Module module in modules)
+				{
+					if (module.InitialMessage != null)  // message initial existe ?
+					{
+						builder.Append(module.InitialMessage);
+					}
+				}
+
+				builder.Append(" ");  // à cause d'un bug dans TextLayout !
+
+				this.DialogMessageWithHyperlink(builder.ToString());  // affiche le message initial
+			}
+			else
+			{
+				this.CloseInitialMessage();
+			}
+		}
+
+		protected void CloseInitialMessage()
+		{
+			//	Ferme le dialogue du message initial, si nécessaire.
+			if (this.initialMessageState.ActiveState == ActiveState.Yes)
+			{
+				this.initialMessageState.ActiveState = ActiveState.No;
+				this.dlgMessage.Hide();
+			}
+		}
+
+		protected bool IsInitialMessageExisting
+		{
+			//	Indique s'il existe un message initial pour l'ensemble des modules ouverts.
+			get
+			{
+				List<Module> modules = this.OpeningListModule;
+				foreach (Module module in modules)
+				{
+					if (module.InitialMessage != null)  // message initial existe ?
+					{
+						return true;
+					}
+				}
+
+				return false;
 			}
 		}
 		#endregion
@@ -2143,6 +2226,8 @@ namespace Epsitec.Common.Designer
 				this.ribbonActive = this.ribbonMain;
 				this.ribbonBook.ActivePage = this.ribbonMain;
 			}
+
+			this.UpdateInitialMessage();
 		}
 
 		public void UpdateCommandEditLocked()
@@ -2458,6 +2543,13 @@ namespace Epsitec.Common.Designer
 			return dialog.DialogResult;
 		}
 
+		public void DialogMessageWithHyperlink(string message)
+		{
+			//	Affiche le dialogue pour afficher un message pouvant contenir des liens hypertexte.
+			this.dlgMessage.Initialise("manifest:Epsitec.Common.Dialogs.Images.Information.icon", message);
+			this.dlgMessage.Show();
+		}
+
 		public Common.Dialogs.DialogResult DialogError(string error)
 		{
 			//	Affiche le dialogue pour signaler une erreur.
@@ -2499,10 +2591,15 @@ namespace Epsitec.Common.Designer
 			{
 				this.filterState.ActiveState = ActiveState.No;
 			}
-			
+
 			if (sender == this.dlgSearch)
 			{
 				this.searchState.ActiveState = ActiveState.No;
+			}
+
+			if (sender == this.dlgMessage)
+			{
+				this.initialMessageState.ActiveState = ActiveState.No;
 			}
 		}
 		#endregion
@@ -2563,6 +2660,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
+		protected Dialogs.Message				dlgMessage;
 		protected PanelsContext					context;
 		protected DisplayMode					displayMode;
 		protected Window						viewersWindow;
@@ -2586,6 +2684,7 @@ namespace Epsitec.Common.Designer
 		protected CommandState					openState;
 		protected CommandState					saveState;
 		protected CommandState					saveAsState;
+		protected CommandState					initialMessageState;
 		protected CommandState					checkState;
 		protected CommandState					closeState;
 		protected CommandState					cutState;

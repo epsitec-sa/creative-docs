@@ -2085,7 +2085,7 @@ namespace Epsitec.Common.Designer
 			//	Passe en revue toutes les énumérations à la recherche des énumérations système à compléter.
 			//	Ceci peut se produire lorsqu'une énumération C# reflètée par une ressource a été complétée.
 			//	Retourne un éventuel message donnant les noms des énumérations complétées.
-			List<string> names = new List<string>();
+			List<CultureMap> missingList = new List<CultureMap>();
 
 			foreach (CultureMap item in this.accessor.Collection)
 			{
@@ -2112,13 +2112,13 @@ namespace Epsitec.Common.Designer
 							Support.ResourceAccessors.AnyTypeResourceAccessor accessor = this.accessor as Support.ResourceAccessors.AnyTypeResourceAccessor;
 							accessor.CreateMissingValueItems(item);
 
-							names.Add(item.FullName);
+							missingList.Add(item);
 						}
 					}
 				}
 			}
 
-			if (names.Count == 0)  // toutes les énumérations sont complètes ?
+			if (missingList.Count == 0)  // toutes les énumérations sont complètes ?
 			{
 				return null;
 			}
@@ -2128,19 +2128,12 @@ namespace Epsitec.Common.Designer
 
 				//	Construit un joli message clair.
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
-
-				builder.Append("<font size=\"120%\">");
-				builder.Append(string.Format(Res.Strings.Error.CreateMissingValueItems.Title, moduleName));
-				builder.Append("</font><br/><br/>");
-				builder.Append(Res.Strings.Error.CreateMissingValueItems.Subtitle);
 				builder.Append("<br/>");
 
-				foreach (string name in names)
+				foreach (CultureMap item in missingList)
 				{
-					builder.Append(string.Format("<list type=\"fix\" width=\"1.5\"/><a href=\"{0}.Types.{1}\">{1}</a><br/>", moduleName, name));
+					builder.Append(string.Format("<list type=\"fix\" width=\"1.5\"/>{0}/Types: <a href=\"{2}\">{1}</a><br/>", moduleName, item.FullName, item.Id.ToString()));
 				}
-
-				builder.Append(" ");  // à cause d'un bug de TextLayout !
 
 				return builder.ToString();
 			}

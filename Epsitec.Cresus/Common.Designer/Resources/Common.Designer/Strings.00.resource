@@ -556,7 +556,6 @@
   <data name="Error.Entities.ReplaceExpression" id="K12">Il n&amp;apos;est pas possible de remplacer l&amp;apos;expression par une valeur pour ce champ !</data>
   <data name="Undo.Action.BoxLayout" id="K22">Contenu</data>
   <data name="Undo.Action.PreferredWidth" id="K32">Largeur préférentielle</data>
-  <data name="Error.CreateMissingValueItems.Title" id="K42">Module &lt;b&gt;{0}&lt;/b&gt;, onglet &lt;b&gt;Types&lt;/b&gt;</data>
-  <data name="Error.CreateMissingValueItems.Subtitle" id="K52">Les énumérations suivantes ont été complétées :</data>
-  <data name="Error.CreateMissingValueItems.Subtitle1" id="K62">&lt;null/&gt;</data>
+  <data name="Error.CreateMissingValueItems.Title" id="K52">Les énumérations suivantes doivent être complétées :</data>
+  <data name="Action.InitialMessage" id="K62">Message initial</data>
 </bundle>

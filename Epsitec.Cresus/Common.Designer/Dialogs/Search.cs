@@ -402,7 +402,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			Module module = this.designerApplication.CurrentModule;
 			if ( module == null )  return;
 
-		module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode, this.FilterList);
+			module.Modifier.ActiveViewer.DoReplaceAll(this.fieldSearch.Text, this.fieldReplace.Text, this.Mode, this.FilterList);
 
 			Misc.ComboMenuAdd(this.fieldSearch);
 			Misc.ComboMenuAdd(this.fieldReplace);

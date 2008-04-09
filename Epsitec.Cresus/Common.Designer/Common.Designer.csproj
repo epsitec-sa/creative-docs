@@ -52,6 +52,7 @@
     <Compile Include="Comparers\ResourceModuleInfoToOpen.cs" />
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
+    <Compile Include="Dialogs\Message.cs" />
     <Compile Include="Dialogs\New.cs" />
     <Compile Include="FormEditor\ObjectModifier.cs" />
     <Compile Include="FormEditor\Proxies\Abstract.cs" />
@@ -704,6 +705,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\InitialMessage.icon" />
     <EmbeddedResource Include="Images\PropertyTextFont.icon" />
     <EmbeddedResource Include="Images\DisplayWindow.icon" />
     <EmbeddedResource Include="Images\FormCommand.icon" />
