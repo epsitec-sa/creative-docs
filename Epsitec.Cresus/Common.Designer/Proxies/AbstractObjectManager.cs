@@ -109,13 +109,13 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
-		protected void SuspendChanges()
+		public void SuspendChanges()
 		{
 			//	Suspend les changements jusqu'au prochain ResumeChanges.
 			this.suspendChanges++;
 		}
 
-		protected void ResumeChanges()
+		public void ResumeChanges()
 		{
 			//	Reprend les changements après un SuspendChanges.
 			this.suspendChanges--;

@@ -102,7 +102,17 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				foreach (AbstractValue value in proxy.Values)  // passe en revue toutes les valeurs d'un panneau
 				{
-					this.objectManager.SendObjectToValue(value);  // met à jour la valeur
+					this.objectManager.SuspendChanges();
+
+					try
+					{
+						this.objectManager.SendObjectToValue(value);  // met à jour la valeur
+					}
+					finally
+					{
+						this.objectManager.ResumeChanges();
+					}
+
 					value.WidgetInterface.Enable = this.objectManager.IsEnable(value);  // met à jour l'état enable/disable
 				}
 			}
