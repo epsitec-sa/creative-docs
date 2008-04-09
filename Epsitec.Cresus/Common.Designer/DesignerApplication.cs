@@ -1361,7 +1361,8 @@ namespace Epsitec.Common.Designer
 
 				builder.Append(" ");  // à cause d'un bug dans TextLayout !
 
-				this.DialogInitialMessage(builder.ToString());  // affiche le message initial
+				this.dlgInitialMessage.Initialise(builder.ToString());
+				this.dlgInitialMessage.Show();  // affiche le message initial
 			}
 			else
 			{
@@ -2541,13 +2542,6 @@ namespace Epsitec.Common.Designer
 			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
 			return dialog.DialogResult;
-		}
-
-		protected void DialogInitialMessage(string message)
-		{
-			//	Affiche le dialogue pour afficher un message initial.
-			this.dlgInitialMessage.Initialise(message);
-			this.dlgInitialMessage.Show();
 		}
 
 		public Common.Dialogs.DialogResult DialogError(string error)
