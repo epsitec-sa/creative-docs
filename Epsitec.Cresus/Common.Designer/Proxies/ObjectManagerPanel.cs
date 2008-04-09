@@ -19,6 +19,14 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Retourne la liste des valeurs nécessaires pour représenter un objet.
 			List<AbstractValue> list = new List<AbstractValue>();
 
+			//	Panel.Content:
+
+			//	Panel.Aspect:
+			if (this.ObjectModifier.HasButtonClass(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelButtonAspect, Res.Captions.Aspect.ButtonAspect, Res.Types.Widgets.ButtonClass);
+			}
+			
 			//	Panel.Geometry:
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
@@ -63,6 +71,15 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 
+			//	Panel.Padding:
+			if (this.ObjectModifier.HasPadding(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftPadding, Res.Captions.Padding.Left, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightPadding, Res.Captions.Padding.Right, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopPadding, Res.Captions.Padding.Top, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomPadding, Res.Captions.Padding.Bottom, -1, 9999, 1, 1);
+			}
+
 			//	Panel.Layout:
 			if (this.ObjectModifier.HasChildrenPlacement(selectedObject))
 			{
@@ -93,15 +110,6 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.HasStackedVerticalAlignment(selectedObject))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelStackedVerticalAlignment, Res.Captions.Layout.StackedVerticalAlignment, Res.Types.ObjectModifier.StackedVerticalAlignment);
-			}
-
-			//	Panel.Padding:
-			if (this.ObjectModifier.HasPadding(selectedObject))
-			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftPadding,   Res.Captions.Padding.Left,   -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightPadding,  Res.Captions.Padding.Right,  -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopPadding,    Res.Captions.Padding.Top,    -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomPadding, Res.Captions.Padding.Bottom, -1, 9999, 1, 1);
 			}
 
 			//	Panel.Grid:
@@ -177,6 +185,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 			switch (value.Type)
 			{
+				case AbstractProxy.Type.PanelButtonAspect:
+					value.Value = this.ObjectModifier.GetButtonClass(selectedObject);
+					break;
+
 				case AbstractProxy.Type.PanelLeftMargin:
 					value.Value = this.ObjectModifier.GetMargins(selectedObject).Left;
 					break;
@@ -381,6 +393,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 				switch (value.Type)
 				{
+					case AbstractProxy.Type.PanelButtonAspect:
+						this.ObjectModifier.SetButtonClass(selectedObject, (ButtonClass) value.Value);
+						break;
+
 					case AbstractProxy.Type.PanelLeftMargin:
 						m = this.ObjectModifier.GetMargins(selectedObject);
 						m.Left = (double) value.Value;
