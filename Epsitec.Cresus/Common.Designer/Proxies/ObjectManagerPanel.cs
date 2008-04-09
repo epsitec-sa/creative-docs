@@ -547,18 +547,24 @@ namespace Epsitec.Common.Designer.Proxies
 							break;
 
 						case AbstractProxy.Type.PanelChildrenPlacement:
+							PanelEditor.GeometryCache.FixBounds(selectedObject, this.ObjectModifier);
 							this.ObjectModifier.SetChildrenPlacement(selectedObject, (PanelEditor.ObjectModifier.ChildrenPlacement) value.Value);
+							PanelEditor.GeometryCache.AdaptBounds(selectedObject, this.ObjectModifier, (PanelEditor.ObjectModifier.ChildrenPlacement) value.Value);
 							regenerateProxies = true;
 							regenerateDimensions = true;
 							break;
 
 						case AbstractProxy.Type.PanelAnchoredHorizontalAttachment:
+							r = this.ObjectModifier.GetBounds(selectedObject);
 							this.ObjectModifier.SetAnchoredHorizontalAttachment(selectedObject, (PanelEditor.ObjectModifier.AnchoredHorizontalAttachment) value.Value);
+							this.ObjectModifier.SetBounds(selectedObject, r);
 							regenerateProxies = true;
 							break;
 
 						case AbstractProxy.Type.PanelAnchoredVerticalAttachment:
+							r = this.ObjectModifier.GetBounds(selectedObject);
 							this.ObjectModifier.SetAnchoredVerticalAttachment(selectedObject, (PanelEditor.ObjectModifier.AnchoredVerticalAttachment) value.Value);
+							this.ObjectModifier.SetBounds(selectedObject, r);
 							regenerateProxies = true;
 							break;
 
@@ -607,7 +613,10 @@ namespace Epsitec.Common.Designer.Proxies
 						case AbstractProxy.Type.PanelGridColumnMode:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridColumnMode(selectedObject, item.Index, (PanelEditor.ObjectModifier.GridMode) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+								{
+									this.ObjectModifier.SetGridColumnMode(selectedObject, item.Index, (PanelEditor.ObjectModifier.GridMode) value.Value);
+								}
 							}
 							regenerateProxies = true;
 							regenerateDimensions = true;
@@ -616,42 +625,60 @@ namespace Epsitec.Common.Designer.Proxies
 						case AbstractProxy.Type.PanelGridColumnWidth:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridColumnWidth(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+								{
+									this.ObjectModifier.SetGridColumnWidth(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridColumnMinWidth:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridColumnMinWidth(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+								{
+									this.ObjectModifier.SetGridColumnMinWidth(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridColumnMaxWidth:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridColumnMaxWidth(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+								{
+									this.ObjectModifier.SetGridColumnMaxWidth(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridLeftBorder:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridColumnLeftBorder(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+								{
+									this.ObjectModifier.SetGridColumnLeftBorder(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridRightBorder:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridColumnRightBorder(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Column)
+								{
+									this.ObjectModifier.SetGridColumnRightBorder(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridRowMode:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridRowMode(selectedObject, item.Index, (PanelEditor.ObjectModifier.GridMode) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+								{
+									this.ObjectModifier.SetGridRowMode(selectedObject, item.Index, (PanelEditor.ObjectModifier.GridMode) value.Value);
+								}
 							}
 							regenerateProxies = true;
 							regenerateDimensions = true;
@@ -660,35 +687,50 @@ namespace Epsitec.Common.Designer.Proxies
 						case AbstractProxy.Type.PanelGridRowHeight:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridRowHeight(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+								{
+									this.ObjectModifier.SetGridRowHeight(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridRowMinHeight:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridRowMinHeight(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+								{
+									this.ObjectModifier.SetGridRowMinHeight(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridRowMaxHeight:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridRowMaxHeight(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+								{
+									this.ObjectModifier.SetGridRowMaxHeight(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridTopBorder:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridRowTopBorder(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+								{
+									this.ObjectModifier.SetGridRowTopBorder(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
 						case AbstractProxy.Type.PanelGridBottomBorder:
 							foreach (PanelEditor.GridSelection.OneItem item in gs)
 							{
-								this.ObjectModifier.SetGridRowBottomBorder(selectedObject, item.Index, (double) value.Value);
+								if (item.Unit == PanelEditor.GridSelection.Unit.Row)
+								{
+									this.ObjectModifier.SetGridRowBottomBorder(selectedObject, item.Index, (double) value.Value);
+								}
 							}
 							break;
 
