@@ -145,8 +145,10 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Panel.Grid:
 			if (this.ObjectModifier.AreChildrenGrid(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnsCount, Res.Captions.Grid.ColumnsCount, 1, 100, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowsCount,    Res.Captions.Grid.RowsCount,    1, 100, 1, 1);
+				//	Utilise des boutons +/-, car la valeur ne peut pas être éditée, ni le slider utilisé, car les
+				//	proxies sont entièrement reconstruits à chaque modification !
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnsCount, Res.Captions.Grid.ColumnsCount, 1, 100);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowsCount,    Res.Captions.Grid.RowsCount,    1, 100);
 			}
 
 			if (this.ObjectModifier.AreChildrenGrid(selectedObject.Parent))

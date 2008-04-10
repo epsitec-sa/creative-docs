@@ -26,6 +26,20 @@ namespace Epsitec.Common.Designer.Proxies
 			this.resolution = resolution;
 		}
 
+		public bool IsOnlyIncDec
+		{
+			//	Indique s'il s'agit d'une valeur avec seulement des boutons +/-, et donc une
+			//	valeur qui n'est pas directement éditable.
+			get
+			{
+				return this.isOnlyIncDec;
+			}
+			set
+			{
+				this.isOnlyIncDec = value;
+			}
+		}
+
 		public double Min
 		{
 			get
@@ -88,14 +102,45 @@ namespace Epsitec.Common.Designer.Proxies
 			label.Margins = new Margins(0, 5, 0, 0);
 			label.Dock = DockStyle.Fill;
 
-			this.field = new TextFieldSlider(box);
-			this.field.MinValue = (decimal) this.min;
-			this.field.MaxValue = (decimal) this.max;
-			this.field.Step = (decimal) this.step;
-			this.field.Resolution = (decimal) this.resolution;
-			this.field.PreferredWidth = 50;
-			this.field.Dock = DockStyle.Right;
-			this.field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			if (this.isOnlyIncDec)
+			{
+				FrameBox buttons = new FrameBox(box);
+				buttons.PreferredWidth = 10;
+				buttons.Dock = DockStyle.Right;
+
+				this.buttonInc = new GlyphButton(buttons);
+				this.buttonInc.GlyphShape = GlyphShape.ArrowUp;
+				this.buttonInc.PreferredHeight = parent.PreferredHeight/2+1;
+				this.buttonInc.Dock = DockStyle.Top;
+				this.buttonInc.Margins = new Margins(0, 0, 0, -1);
+				this.buttonInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+				this.buttonDec = new GlyphButton(buttons);
+				this.buttonDec.PreferredHeight = parent.PreferredHeight/2+1;
+				this.buttonDec.GlyphShape = GlyphShape.ArrowDown;
+				this.buttonDec.Dock = DockStyle.Bottom;
+				this.buttonDec.Margins = new Margins(0, 0, -1, 0);
+				this.buttonDec.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+
+				this.field = new TextField(box);
+				this.field.IsReadOnly = true;
+				this.field.PreferredWidth = 24;
+				this.field.Dock = DockStyle.Right;
+				this.field.Margins = new Margins(0, -1, 0, 0);
+			}
+			else
+			{
+				TextFieldSlider field = new TextFieldSlider(box);
+				field.MinValue = (decimal) this.min;
+				field.MaxValue = (decimal) this.max;
+				field.Step = (decimal) this.step;
+				field.Resolution = (decimal) this.resolution;
+				field.PreferredWidth = 50;
+				field.Dock = DockStyle.Right;
+				field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+				this.field = field;
+			}
+
 			this.UpdateInterface();
 
 			this.widgetInterface = box;
@@ -110,11 +155,12 @@ namespace Epsitec.Common.Designer.Proxies
 				return;
 			}
 
+			TextFieldSlider field = sender as TextFieldSlider;
 			System.TypeCode code = System.Type.GetTypeCode(this.value.GetType());
 
 			if (code == System.TypeCode.Int32)
 			{
-				int value = (int) this.field.Value;
+				int value = (int) field.Value;
 				if ((int) this.value != value)
 				{
 					this.value = value;
@@ -123,7 +169,7 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 			else if (code == System.TypeCode.Double)
 			{
-				double value = (int) this.field.Value;
+				double value = (int) field.Value;
 				if ((double) this.value != value)
 				{
 					this.value = value;
@@ -136,22 +182,63 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		private void HandleButtonClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsqu'un bouton -/+ a été cliqué.
+			int value = (int) this.value;
+
+			if (sender == this.buttonDec)
+			{
+				if (value > (int) this.min)
+				{
+					value--;
+				}
+			}
+
+			if (sender == this.buttonInc)
+			{
+				if (value < (int) this.max)
+				{
+					value++;
+				}
+			}
+
+			if ((int) this.value != value)
+			{
+				this.value = value;
+				this.OnValueChanged();
+			}
+		}
+
 		protected override void UpdateInterface()
 		{
 			//	Met à jour la valeur dans l'interface.
 			if (this.field != null)
 			{
 				this.ignoreChange = true;
-				this.field.Value = Types.InvariantConverter.ToDecimal(this.value);
+
+				if (this.isOnlyIncDec)
+				{
+					field.Text = this.value.ToString();
+				}
+				else
+				{
+					TextFieldSlider field = this.field as TextFieldSlider;
+					field.Value = Types.InvariantConverter.ToDecimal(this.value);
+				}
+
 				this.ignoreChange = false;
 			}
 		}
 
-	
+
+		protected bool isOnlyIncDec;
 		protected double min;
 		protected double max;
 		protected double step;
 		protected double resolution;
-		protected TextFieldSlider field;
+		protected AbstractTextField field;
+		protected GlyphButton buttonDec;
+		protected GlyphButton buttonInc;
 	}
 }
