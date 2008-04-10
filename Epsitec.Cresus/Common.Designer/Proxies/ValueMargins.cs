@@ -81,7 +81,61 @@ namespace Epsitec.Common.Designer.Proxies
 			FrameBox box = new FrameBox(parent);
 			ToolTip.Default.SetToolTip(box, this.caption.Description);
 
-			this.fieldLeft = new TextFieldSlider(box);
+			FrameBox top = new FrameBox(box);
+			top.Dock = DockStyle.Top;
+			top.Margins = new Margins(0, 0, 0, -1);
+
+			FrameBox bottom = new FrameBox(box);
+			bottom.Dock = DockStyle.Top;
+
+			//	Ligne supérieure:
+			FrameBox x = new FrameBox(top);
+			x.PreferredWidth = 50;
+			x.Dock = DockStyle.Right;
+			x.Margins = new Margins(-1, 0, 0, 0);
+
+			this.fieldTop = new TextFieldSlider(top);
+			this.fieldTop.MinValue = (decimal) this.min;
+			this.fieldTop.MaxValue = (decimal) this.max;
+			this.fieldTop.Step = (decimal) this.step;
+			this.fieldTop.Resolution = (decimal) this.resolution;
+			this.fieldTop.PreferredWidth = 50;
+			this.fieldTop.Dock = DockStyle.Right;
+			this.fieldTop.Margins = new Margins(-1, 0, 0, 0);
+			this.fieldTop.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			ToolTip.Default.SetToolTip(this.fieldTop, "Marge supérieure");
+
+			StaticText label = new StaticText(top);
+			label.Text = this.label;
+			label.CaptionId = this.caption.Id;
+			label.ContentAlignment = ContentAlignment.MiddleRight;
+			label.Margins = new Margins(0, 5, 0, 5);
+			label.Dock = DockStyle.Fill;
+
+			//	Ligne inférieure:
+			this.fieldRight = new TextFieldSlider(bottom);
+			this.fieldRight.MinValue = (decimal) this.min;
+			this.fieldRight.MaxValue = (decimal) this.max;
+			this.fieldRight.Step = (decimal) this.step;
+			this.fieldRight.Resolution = (decimal) this.resolution;
+			this.fieldRight.PreferredWidth = 50;
+			this.fieldRight.Dock = DockStyle.Right;
+			this.fieldRight.Margins = new Margins(-1, 0, 0, 0);
+			this.fieldRight.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			ToolTip.Default.SetToolTip(this.fieldRight, "Marge droite");
+
+			this.fieldBottom = new TextFieldSlider(bottom);
+			this.fieldBottom.MinValue = (decimal) this.min;
+			this.fieldBottom.MaxValue = (decimal) this.max;
+			this.fieldBottom.Step = (decimal) this.step;
+			this.fieldBottom.Resolution = (decimal) this.resolution;
+			this.fieldBottom.PreferredWidth = 50;
+			this.fieldBottom.Dock = DockStyle.Right;
+			this.fieldBottom.Margins = new Margins(-1, 0, 0, 0);
+			this.fieldBottom.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			ToolTip.Default.SetToolTip(this.fieldBottom, "Marge inférieure");
+
+			this.fieldLeft = new TextFieldSlider(bottom);
 			this.fieldLeft.MinValue = (decimal) this.min;
 			this.fieldLeft.MaxValue = (decimal) this.max;
 			this.fieldLeft.Step = (decimal) this.step;
@@ -89,33 +143,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldLeft.PreferredWidth = 50;
 			this.fieldLeft.Dock = DockStyle.Right;
 			this.fieldLeft.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-
-			this.fieldRight = new TextFieldSlider(box);
-			this.fieldRight.MinValue = (decimal) this.min;
-			this.fieldRight.MaxValue = (decimal) this.max;
-			this.fieldRight.Step = (decimal) this.step;
-			this.fieldRight.Resolution = (decimal) this.resolution;
-			this.fieldRight.PreferredWidth = 50;
-			this.fieldRight.Dock = DockStyle.Right;
-			this.fieldRight.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-
-			this.fieldTop = new TextFieldSlider(box);
-			this.fieldTop.MinValue = (decimal) this.min;
-			this.fieldTop.MaxValue = (decimal) this.max;
-			this.fieldTop.Step = (decimal) this.step;
-			this.fieldTop.Resolution = (decimal) this.resolution;
-			this.fieldTop.PreferredWidth = 50;
-			this.fieldTop.Dock = DockStyle.Right;
-			this.fieldTop.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-
-			this.fieldBottom = new TextFieldSlider(box);
-			this.fieldBottom.MinValue = (decimal) this.min;
-			this.fieldBottom.MaxValue = (decimal) this.max;
-			this.fieldBottom.Step = (decimal) this.step;
-			this.fieldBottom.Resolution = (decimal) this.resolution;
-			this.fieldBottom.PreferredWidth = 50;
-			this.fieldBottom.Dock = DockStyle.Right;
-			this.fieldBottom.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			ToolTip.Default.SetToolTip(this.fieldLeft, "Marge gauche");
 
 			this.UpdateInterface();
 
@@ -131,33 +159,31 @@ namespace Epsitec.Common.Designer.Proxies
 				return;
 			}
 
-#if false
 			TextFieldSlider field = sender as TextFieldSlider;
-			System.TypeCode code = System.Type.GetTypeCode(this.value.GetType());
+			Margins m = (Margins) this.value;
 
-			if (code == System.TypeCode.Int32)
+			if (field == this.fieldLeft)
 			{
-				int value = (int) field.Value;
-				if ((int) this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged();
-				}
+				m.Left = (double) field.Value;
 			}
-			else if (code == System.TypeCode.Double)
+			else if (field == this.fieldRight)
 			{
-				double value = (int) field.Value;
-				if ((double) this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged();
-				}
+				m.Right = (double) field.Value;
 			}
-			else
+			else if (field == this.fieldTop)
 			{
-				throw new System.NotImplementedException();
+				m.Top = (double) field.Value;
 			}
-#endif
+			else if (field == this.fieldBottom)
+			{
+				m.Bottom = (double) field.Value;
+			}
+
+			if ((Margins) this.value != m)
+			{
+				this.value = m;
+				this.OnValueChanged();
+			}
 		}
 
 		protected override void UpdateInterface()

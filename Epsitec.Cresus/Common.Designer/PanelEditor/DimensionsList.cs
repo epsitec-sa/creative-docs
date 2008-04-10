@@ -158,46 +158,6 @@ namespace Epsitec.Common.Designer.PanelEditor
 				{
 					this.ChangeMode(this.dragging);
 				}
-#if false
-				else if (this.dragging.DimensionType == Dimension.Type.GridColumnAddBefore||
-						 this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter)
-				{
-					Widget obj = this.dragging.Object;
-
-					this.objectModifier.GridColumnAdd(obj, this.dragging.ColumnOrRow, (this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter));
-
-					this.editor.UpdateAfterSelectionGridChanged();
-					this.editor.Invalidate();
-				}
-				else if (this.dragging.DimensionType == Dimension.Type.GridColumnRemove)
-				{
-					Widget obj = this.dragging.Object;
-
-					this.objectModifier.GridColumnRemove(obj, this.dragging.ColumnOrRow);
-
-					this.editor.UpdateAfterSelectionGridChanged();
-					this.editor.Invalidate();
-				}
-				else if (this.dragging.DimensionType == Dimension.Type.GridRowAddBefore||
-						 this.dragging.DimensionType == Dimension.Type.GridRowAddAfter)
-				{
-					Widget obj = this.dragging.Object;
-
-					this.objectModifier.GridRowAdd(obj, this.dragging.ColumnOrRow, (this.dragging.DimensionType == Dimension.Type.GridRowAddAfter));
-
-					this.editor.UpdateAfterSelectionGridChanged();
-					this.editor.Invalidate();
-				}
-				else if (this.dragging.DimensionType == Dimension.Type.GridRowRemove)
-				{
-					Widget obj = this.dragging.Object;
-
-					this.objectModifier.GridRowRemove(obj, this.dragging.ColumnOrRow);
-
-					this.editor.UpdateAfterSelectionGridChanged();
-					this.editor.Invalidate();
-				}
-#endif
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnSpanInc)
 				{
 					Widget obj = this.dragging.Object;
