@@ -1,5 +1,3 @@
-//#define OldProxy
-
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Epsitec.Common.Widgets;
@@ -128,13 +126,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-#if OldProxy
-			this.proxyManager = new PanelEditor.ProxyManager(this);
-#else
 			Proxies.ObjectManagerPanel objectManager = new Proxies.ObjectManagerPanel(this.panelEditor.ObjectModifier);
 			Proxies.ProxyPanel proxy = new Proxies.ProxyPanel(this);
 			this.proxyManager = new Proxies.ProxyManager(objectManager, proxy);
-#endif
 
 			this.propertiesScrollable = new Scrollable(this.tabPageProperties);
 			this.propertiesScrollable.Dock = DockStyle.Fill;
@@ -247,11 +241,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			get
 			{
-#if OldProxy
-				return null;
-#else
 				return this.proxyManager;
-#endif
 			}
 		}
 
@@ -1091,33 +1081,15 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void DefineProxies()
 		{
 			//	Crée les proxies et l'interface utilisateur pour les widgets sélectionnés.
-#if OldProxy
-			this.ClearProxies();
-			this.proxyManager.SetSelection(this.panelEditor.SelectedObjects);
-			this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-#else
 			this.propertiesScrollable.Viewport.Children.Clear();  // supprime les panneaux existants
 			this.proxyManager.CreateInterface(this.propertiesScrollable.Viewport, this.panelEditor.SelectedObjects);
-#endif
-		}
-
-		protected void ClearProxies()
-		{
-			//	Supprime l'interface utilisateur pour les widgets sélectionnés.
-#if OldProxy
-			this.proxyManager.ClearUserInterface(this.propertiesScrollable.Viewport);
-#endif
 		}
 
 		protected void UpdateProxies()
 		{
 			//	Met à jour les proxies et l'interface utilisateur (panneaux), sans changer
 			//	le nombre de propriétés visibles par panneau.
-#if OldProxy
-			this.proxyManager.UpdateUserInterface();
-#else
 			this.proxyManager.UpdateInterface();
-#endif
 		}
 
 		public void RegenerateProxies()
@@ -1125,15 +1097,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Régénère la liste des proxies et met à jour les panneaux de l'interface
 			//	utilisateur s'il y a eu un changement dans le nombre de propriétés visibles
 			//	par panneau.
-#if OldProxy
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-			}
-#else
 			this.DefineProxies();
-#endif
 		}
 
 		public void RegenerateDimensions()
@@ -1145,16 +1109,7 @@ namespace Epsitec.Common.Designer.Viewers
 		public void RegenerateProxiesAndDimensions()
 		{
 			//	Régénère les proxies et les cotes.
-#if OldProxy
-			if (this.proxyManager.RegenerateProxies())
-			{
-				this.ClearProxies();
-				this.proxyManager.CreateUserInterface(this.propertiesScrollable.Viewport);
-			}
-#else
 			this.DefineProxies();
-#endif
-
 			this.panelEditor.RegenerateDimensions();
 		}
 		#endregion
@@ -1280,11 +1235,7 @@ namespace Epsitec.Common.Designer.Viewers
 		protected static string					softSerialize = null;
 		protected static bool					softDirtySerialization = false;
 
-#if OldProxy
-		protected PanelEditor.ProxyManager		proxyManager;
-#else
 		protected Proxies.ProxyManager			proxyManager;
-#endif
 		protected VSplitter						splitter2;
 		protected Widget						middle;
 		protected VToolBar						vToolBar;

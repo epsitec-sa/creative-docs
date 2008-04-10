@@ -55,10 +55,6 @@
     <Compile Include="Dialogs\InitialMessage.cs" />
     <Compile Include="Dialogs\New.cs" />
     <Compile Include="FormEditor\ObjectModifier.cs" />
-    <Compile Include="FormEditor\Proxies\Abstract.cs" />
-    <Compile Include="FormEditor\Proxies\Style.cs" />
-    <Compile Include="FormEditor\Proxies\Geometry.cs" />
-    <Compile Include="FormEditor\ProxyManager.cs" />
     <Compile Include="ModuleSupport\ModuleStore.cs" />
     <Compile Include="PanelEditor\Constrain.cs" />
     <Compile Include="PanelEditor\ConstrainsList.cs" />
@@ -114,8 +110,6 @@
     <Compile Include="MyWidgets\TypeEditorNumeric.cs" />
     <Compile Include="MyWidgets\IconArray.cs" />
     <Compile Include="MyWidgets\GlyphArray.cs" />
-    <Compile Include="PanelEditor\Proxies\Content.cs" />
-    <Compile Include="PanelEditor\Proxies\Aspect.cs" />
     <Compile Include="ResourceAccess.cs" />
     <Compile Include="PanelEditor\GridSelection.cs" />
     <Compile Include="PanelEditor\GeometryCache.cs" />
@@ -143,11 +137,6 @@
     <Compile Include="MyWidgets\TextFieldLabel.cs" />
     <Compile Include="MyWidgets\PropertyPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PanelEditor\Proxies\Abstract.cs" />
-    <Compile Include="PanelEditor\Proxies\Grid.cs" />
-    <Compile Include="PanelEditor\Proxies\Padding.cs" />
-    <Compile Include="PanelEditor\Proxies\Layout.cs" />
-    <Compile Include="PanelEditor\Proxies\Geometry.cs" />
     <Compile Include="Res.cs" />
     <Compile Include="Ribbons\Abstract.cs" />
     <Compile Include="Ribbons\Align.cs" />
@@ -165,7 +154,6 @@
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Edit.cs" />
     <Compile Include="Searcher.cs" />
-    <Compile Include="PanelEditor\ProxyManager.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
     <Compile Include="Viewers\Captions.cs" />
