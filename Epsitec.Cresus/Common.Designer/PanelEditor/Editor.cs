@@ -795,7 +795,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			if (this.isDraggingDimension)
 			{
-				this.dimensionsList.DraggingEnd();
+				this.dimensionsList.DraggingEnd(pos);
 				this.isDraggingDimension = false;
 				this.OnChildrenGeometryChanged();  // met à jour les proxies
 				this.module.DesignerApplication.UpdateInfoViewer();

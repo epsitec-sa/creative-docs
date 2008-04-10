@@ -158,6 +158,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				{
 					this.ChangeMode(this.dragging);
 				}
+#if false
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnAddBefore||
 						 this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter)
 				{
@@ -196,6 +197,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					this.editor.UpdateAfterSelectionGridChanged();
 					this.editor.Invalidate();
 				}
+#endif
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnSpanInc)
 				{
 					Widget obj = this.dragging.Object;
@@ -274,9 +276,67 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 		}
 
-		public void DraggingEnd()
+		public void DraggingEnd(Point mouse)
 		{
 			//	Fin de la modification interactive d'une cote.
+			if (this.dragging != null)
+			{
+				if (this.dragging.DimensionType == Dimension.Type.GridColumnAddBefore||
+					this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter)
+				{
+					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion("Voulez-vous ajouter une nouvelle colonne ?");
+					if (result == Common.Dialogs.DialogResult.Yes)
+					{
+						Widget obj = this.dragging.Object;
+
+						this.objectModifier.GridColumnAdd(obj, this.dragging.ColumnOrRow, (this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter));
+
+						this.editor.UpdateAfterSelectionGridChanged();
+						this.editor.Invalidate();
+					}
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridColumnRemove)
+				{
+					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion("Voulez-vous supprimer une colonne ?");
+					if (result == Common.Dialogs.DialogResult.Yes)
+					{
+						Widget obj = this.dragging.Object;
+
+						this.objectModifier.GridColumnRemove(obj, this.dragging.ColumnOrRow);
+
+						this.editor.UpdateAfterSelectionGridChanged();
+						this.editor.Invalidate();
+					}
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridRowAddBefore||
+						 this.dragging.DimensionType == Dimension.Type.GridRowAddAfter)
+				{
+					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion("Voulez-vous ajouter une nouvelle ligne ?");
+					if (result == Common.Dialogs.DialogResult.Yes)
+					{
+						Widget obj = this.dragging.Object;
+
+						this.objectModifier.GridRowAdd(obj, this.dragging.ColumnOrRow, (this.dragging.DimensionType == Dimension.Type.GridRowAddAfter));
+
+						this.editor.UpdateAfterSelectionGridChanged();
+						this.editor.Invalidate();
+					}
+				}
+				else if (this.dragging.DimensionType == Dimension.Type.GridRowRemove)
+				{
+					Common.Dialogs.DialogResult result = this.editor.Module.DesignerApplication.DialogQuestion("Voulez-vous supprimer une ligne ?");
+					if (result == Common.Dialogs.DialogResult.Yes)
+					{
+						Widget obj = this.dragging.Object;
+
+						this.objectModifier.GridRowRemove(obj, this.dragging.ColumnOrRow);
+
+						this.editor.UpdateAfterSelectionGridChanged();
+						this.editor.Invalidate();
+					}
+				}
+			}
+			
 			this.dragging = null;
 		}
 
