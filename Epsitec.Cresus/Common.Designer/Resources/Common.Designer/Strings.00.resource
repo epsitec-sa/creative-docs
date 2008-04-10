@@ -559,4 +559,8 @@
   <data name="Error.CreateMissingValueItems.Title" id="K52">Les énumérations suivantes doivent être complétées :</data>
   <data name="Action.InitialMessage" id="K62">Message initial</data>
   <data name="Dialog.InitialMessage.Title" id="K72">Message initial</data>
+  <data name="Panel.Question.GridColumnAdd" id="K82">Voulez-vous ajouter une nouvelle colonne ?</data>
+  <data name="Panel.Question.GridColumnRemove" id="K92">Voulez-vous supprimer une colonne ?</data>
+  <data name="Panel.Question.GridRowAdd" id="KA2">Voulez-vous ajouter une nouvelle ligne ?</data>
+  <data name="Panel.Question.GridRowRemove" id="KB2">Voulez-vous supprimer une ligne ?</data>
 </bundle>
