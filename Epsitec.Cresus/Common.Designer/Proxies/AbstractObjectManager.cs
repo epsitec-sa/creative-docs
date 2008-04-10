@@ -28,10 +28,10 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
+		protected void AddValueMargins(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
-			//	Ajoute une valeur de type numérique éditable.
-			ValueNumeric value = new ValueNumeric(min, max, step, resolution);
+			//	Ajoute une valeur de type marges.
+			ValueMargins value = new ValueMargins(min, max, step, resolution);
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
@@ -41,11 +41,24 @@ namespace Epsitec.Common.Designer.Proxies
 			list.Add(value);
 		}
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max)
+		protected void AddValueIncDec(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max)
 		{
 			//	Ajoute une valeur de type numérique +/-.
 			ValueNumeric value = new ValueNumeric(min, max, 1, 1);
 			value.IsOnlyIncDec = true;
+			value.SelectedObjects.Add(selectedObject);
+			value.Type = type;
+			value.Caption = caption;
+			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.SendObjectToValue(value);
+
+			list.Add(value);
+		}
+
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
+		{
+			//	Ajoute une valeur de type numérique éditable.
+			ValueNumeric value = new ValueNumeric(min, max, step, resolution);
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;

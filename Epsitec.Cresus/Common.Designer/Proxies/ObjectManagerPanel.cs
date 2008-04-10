@@ -60,10 +60,14 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Panel.Geometry:
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
+#if false
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin,   Res.Captions.Geometry.LeftMargin,   -1, 9999, 1, 1);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightMargin,  Res.Captions.Geometry.RightMargin,  -1, 9999, 1, 1);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopMargin,    Res.Captions.Geometry.TopMargin,    -1, 9999, 1, 1);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomMargin, Res.Captions.Geometry.BottomMargin, -1, 9999, 1, 1);
+#else
+				this.AddValueMargins(list, selectedObject, AbstractProxy.Type.PanelMargins, Res.Captions.Geometry.LeftMargin, -1, 9999, 1, 1);
+#endif
 			}
 
 			if (this.ObjectModifier.HasBounds(selectedObject))
@@ -147,8 +151,8 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				//	Utilise des boutons +/-, car la valeur ne peut pas être éditée, ni le slider utilisé, car les
 				//	proxies sont entièrement reconstruits à chaque modification !
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridColumnsCount, Res.Captions.Grid.ColumnsCount, 1, 100);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelGridRowsCount,    Res.Captions.Grid.RowsCount,    1, 100);
+				this.AddValueIncDec(list, selectedObject, AbstractProxy.Type.PanelGridColumnsCount, Res.Captions.Grid.ColumnsCount, 1, 100);
+				this.AddValueIncDec(list, selectedObject, AbstractProxy.Type.PanelGridRowsCount, Res.Captions.Grid.RowsCount, 1, 100);
 			}
 
 			if (this.ObjectModifier.AreChildrenGrid(selectedObject.Parent))
@@ -231,6 +235,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 					case AbstractProxy.Type.PanelButtonAspect:
 						value.Value = this.ObjectModifier.GetButtonClass(selectedObject);
+						break;
+
+					case AbstractProxy.Type.PanelMargins:
+						value.Value = this.ObjectModifier.GetMargins(selectedObject);
 						break;
 
 					case AbstractProxy.Type.PanelLeftMargin:
@@ -460,6 +468,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 						case AbstractProxy.Type.PanelButtonAspect:
 							this.ObjectModifier.SetButtonClass(selectedObject, (ButtonClass) value.Value);
+							break;
+
+						case AbstractProxy.Type.PanelMargins:
+							this.ObjectModifier.SetMargins(selectedObject, (Margins) value.Value);
 							break;
 
 						case AbstractProxy.Type.PanelLeftMargin:

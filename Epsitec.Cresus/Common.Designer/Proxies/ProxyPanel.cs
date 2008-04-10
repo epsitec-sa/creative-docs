@@ -46,6 +46,7 @@ namespace Epsitec.Common.Designer.Proxies
 					break;
 
 				case Panel.PanelGeometry:
+					yield return Type.PanelMargins;
 					yield return Type.PanelLeftMargin;
 					yield return Type.PanelRightMargin;
 					yield return Type.PanelTopMargin;

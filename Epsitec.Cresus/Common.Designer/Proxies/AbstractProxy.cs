@@ -73,6 +73,7 @@ namespace Epsitec.Common.Designer.Proxies
 			PanelButtonAspect,
 			
 			//	PanelGeometry
+			PanelMargins,
 			PanelLeftMargin,
 			PanelRightMargin,
 			PanelTopMargin,
