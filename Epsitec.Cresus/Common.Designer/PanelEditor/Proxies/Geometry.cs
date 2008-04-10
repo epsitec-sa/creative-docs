@@ -259,10 +259,10 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 			Geometry.WidthProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 			Geometry.HeightProperty.DefaultMetadata.DefineNamedType(ProxyManager.SizeNumericType);
 
-			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.LeftMargin.Id);
-			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.RightMargin.Id);
-			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.TopMargin.Id);
-			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.BottomMargin.Id);
+			Geometry.LeftMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Margins.Id);
+			Geometry.RightMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Margins.Id);
+			Geometry.TopMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Margins.Id);
+			Geometry.BottomMarginProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.Margins.Id);
 
 			Geometry.OriginXProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginX.Id);
 			Geometry.OriginYProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Geometry.OriginY.Id);

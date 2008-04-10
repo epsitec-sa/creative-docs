@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldTop.Dock = DockStyle.Right;
 			this.fieldTop.Margins = new Margins(-1, 0, 0, 0);
 			this.fieldTop.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-			ToolTip.Default.SetToolTip(this.fieldTop, "Marge supérieure");
+			ToolTip.Default.SetToolTip(this.fieldTop, Res.Strings.Panel.Margins.Top);
 
 			StaticText label = new StaticText(top);
 			label.Text = this.label;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldRight.Dock = DockStyle.Right;
 			this.fieldRight.Margins = new Margins(-1, 0, 0, 0);
 			this.fieldRight.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-			ToolTip.Default.SetToolTip(this.fieldRight, "Marge droite");
+			ToolTip.Default.SetToolTip(this.fieldRight, Res.Strings.Panel.Margins.Right);
 
 			this.fieldBottom = new TextFieldSlider(bottom);
 			this.fieldBottom.MinValue = (decimal) this.min;
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldBottom.Dock = DockStyle.Right;
 			this.fieldBottom.Margins = new Margins(-1, 0, 0, 0);
 			this.fieldBottom.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-			ToolTip.Default.SetToolTip(this.fieldBottom, "Marge inférieure");
+			ToolTip.Default.SetToolTip(this.fieldBottom, Res.Strings.Panel.Margins.Bottom);
 
 			this.fieldLeft = new TextFieldSlider(bottom);
 			this.fieldLeft.MinValue = (decimal) this.min;
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldLeft.PreferredWidth = 50;
 			this.fieldLeft.Dock = DockStyle.Right;
 			this.fieldLeft.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
-			ToolTip.Default.SetToolTip(this.fieldLeft, "Marge gauche");
+			ToolTip.Default.SetToolTip(this.fieldLeft, Res.Strings.Panel.Margins.Left);
 
 			this.UpdateInterface();
 

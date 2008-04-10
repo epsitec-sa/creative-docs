@@ -158,8 +158,8 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption BottomMargin { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 3)); } }
 				//	designer:cap/3007
 				public static global::Epsitec.Common.Types.Caption Height { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 7)); } }
-				//	designer:cap/3
-				public static global::Epsitec.Common.Types.Caption LeftMargin { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 0)); } }
+				//	designer:cap/30KA1
+				public static global::Epsitec.Common.Types.Caption Margins { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42)); } }
 				//	designer:cap/300U
 				public static global::Epsitec.Common.Types.Caption MaxHeight { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 30)); } }
 				//	designer:cap/300S
@@ -172,10 +172,6 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption OriginX { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 4)); } }
 				//	designer:cap/3005
 				public static global::Epsitec.Common.Types.Caption OriginY { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 5)); } }
-				//	designer:cap/3001
-				public static global::Epsitec.Common.Types.Caption RightMargin { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 1)); } }
-				//	designer:cap/3002
-				public static global::Epsitec.Common.Types.Caption TopMargin { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 2)); } }
 				//	designer:cap/3006
 				public static global::Epsitec.Common.Types.Caption Width { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 6)); } }
 			}
@@ -245,14 +241,8 @@ namespace Epsitec.Common.Designer
 			
 			public static class Padding
 			{
-				//	designer:cap/300B
-				public static global::Epsitec.Common.Types.Caption Bottom { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 11)); } }
-				//	designer:cap/3008
-				public static global::Epsitec.Common.Types.Caption Left { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 8)); } }
-				//	designer:cap/3009
-				public static global::Epsitec.Common.Types.Caption Right { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 9)); } }
-				//	designer:cap/300A
-				public static global::Epsitec.Common.Types.Caption Top { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 10)); } }
+				//	designer:cap/30KB1
+				public static global::Epsitec.Common.Types.Caption Margins { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43)); } }
 			}
 			
 			public static class PanelMode
@@ -1618,6 +1608,18 @@ namespace Epsitec.Common.Designer
 						//	designer:str/300D9
 						public static string ChangeStructured { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (301)); } }
 					}
+				}
+				
+				public static class Margins
+				{
+					//	designer:str/30KF2
+					public static string Bottom { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544399)); } }
+					//	designer:str/30KC2
+					public static string Left { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544396)); } }
+					//	designer:str/30KD2
+					public static string Right { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544397)); } }
+					//	designer:str/30KE2
+					public static string Top { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544398)); } }
 				}
 				
 				public static class Question

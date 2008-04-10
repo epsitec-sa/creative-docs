@@ -563,4 +563,8 @@
   <data name="Panel.Question.GridColumnRemove" id="K92">Voulez-vous supprimer une colonne ?</data>
   <data name="Panel.Question.GridRowAdd" id="KA2">Voulez-vous ajouter une nouvelle ligne ?</data>
   <data name="Panel.Question.GridRowRemove" id="KB2">Voulez-vous supprimer une ligne ?</data>
+  <data name="Panel.Margins.Left" id="KC2">Marge gauche</data>
+  <data name="Panel.Margins.Right" id="KD2">Marge droite</data>
+  <data name="Panel.Margins.Top" id="KE2">Marge supérieure</data>
+  <data name="Panel.Margins.Bottom" id="KF2">Marge inférieure</data>
 </bundle>

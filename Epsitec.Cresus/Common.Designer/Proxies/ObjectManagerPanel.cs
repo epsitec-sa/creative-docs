@@ -60,14 +60,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Panel.Geometry:
 			if (this.ObjectModifier.HasMargins(selectedObject))
 			{
-#if false
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftMargin,   Res.Captions.Geometry.LeftMargin,   -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightMargin,  Res.Captions.Geometry.RightMargin,  -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopMargin,    Res.Captions.Geometry.TopMargin,    -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomMargin, Res.Captions.Geometry.BottomMargin, -1, 9999, 1, 1);
-#else
-				this.AddValueMargins(list, selectedObject, AbstractProxy.Type.PanelMargins, Res.Captions.Geometry.LeftMargin, -1, 9999, 1, 1);
-#endif
+				this.AddValueMargins(list, selectedObject, AbstractProxy.Type.PanelMargins, Res.Captions.Geometry.Margins, -1, 9999, 1, 1);
 			}
 
 			if (this.ObjectModifier.HasBounds(selectedObject))
@@ -108,10 +101,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Panel.Padding:
 			if (this.ObjectModifier.HasPadding(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftPadding,   Res.Captions.Padding.Left,   -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightPadding,  Res.Captions.Padding.Right,  -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopPadding,    Res.Captions.Padding.Top,    -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomPadding, Res.Captions.Padding.Bottom, -1, 9999, 1, 1);
+				this.AddValueMargins(list, selectedObject, AbstractProxy.Type.PanelPadding, Res.Captions.Padding.Margins, -1, 9999, 1, 1);
 			}
 
 			//	Panel.Layout:
@@ -241,22 +231,6 @@ namespace Epsitec.Common.Designer.Proxies
 						value.Value = this.ObjectModifier.GetMargins(selectedObject);
 						break;
 
-					case AbstractProxy.Type.PanelLeftMargin:
-						value.Value = this.ObjectModifier.GetMargins(selectedObject).Left;
-						break;
-
-					case AbstractProxy.Type.PanelRightMargin:
-						value.Value = this.ObjectModifier.GetMargins(selectedObject).Right;
-						break;
-
-					case AbstractProxy.Type.PanelTopMargin:
-						value.Value = this.ObjectModifier.GetMargins(selectedObject).Top;
-						break;
-
-					case AbstractProxy.Type.PanelBottomMargin:
-						value.Value = this.ObjectModifier.GetMargins(selectedObject).Bottom;
-						break;
-
 					case AbstractProxy.Type.PanelOriginX:
 						value.Value = this.ObjectModifier.GetBounds(selectedObject).Left;
 						break;
@@ -287,20 +261,8 @@ namespace Epsitec.Common.Designer.Proxies
 						}
 						break;
 
-					case AbstractProxy.Type.PanelLeftPadding:
-						value.Value = this.ObjectModifier.GetPadding(selectedObject).Left;
-						break;
-
-					case AbstractProxy.Type.PanelRightPadding:
-						value.Value = this.ObjectModifier.GetPadding(selectedObject).Right;
-						break;
-
-					case AbstractProxy.Type.PanelTopPadding:
-						value.Value = this.ObjectModifier.GetPadding(selectedObject).Top;
-						break;
-
-					case AbstractProxy.Type.PanelBottomPadding:
-						value.Value = this.ObjectModifier.GetPadding(selectedObject).Bottom;
+					case AbstractProxy.Type.PanelPadding:
+						value.Value = this.ObjectModifier.GetPadding(selectedObject);
 						break;
 
 					case AbstractProxy.Type.PanelChildrenPlacement:
@@ -474,30 +436,6 @@ namespace Epsitec.Common.Designer.Proxies
 							this.ObjectModifier.SetMargins(selectedObject, (Margins) value.Value);
 							break;
 
-						case AbstractProxy.Type.PanelLeftMargin:
-							m = this.ObjectModifier.GetMargins(selectedObject);
-							m.Left = (double) value.Value;
-							this.ObjectModifier.SetMargins(selectedObject, m);
-							break;
-
-						case AbstractProxy.Type.PanelRightMargin:
-							m = this.ObjectModifier.GetMargins(selectedObject);
-							m.Right = (double) value.Value;
-							this.ObjectModifier.SetMargins(selectedObject, m);
-							break;
-
-						case AbstractProxy.Type.PanelTopMargin:
-							m = this.ObjectModifier.GetMargins(selectedObject);
-							m.Top = (double) value.Value;
-							this.ObjectModifier.SetMargins(selectedObject, m);
-							break;
-
-						case AbstractProxy.Type.PanelBottomMargin:
-							m = this.ObjectModifier.GetMargins(selectedObject);
-							m.Bottom = (double) value.Value;
-							this.ObjectModifier.SetMargins(selectedObject, m);
-							break;
-
 						case AbstractProxy.Type.PanelOriginX:
 							r = this.ObjectModifier.GetBounds(selectedObject);
 							r.Left = (double) value.Value;
@@ -536,28 +474,8 @@ namespace Epsitec.Common.Designer.Proxies
 							}
 							break;
 
-						case AbstractProxy.Type.PanelLeftPadding:
-							m = this.ObjectModifier.GetPadding(selectedObject);
-							m.Left = (double) value.Value;
-							this.ObjectModifier.SetPadding(selectedObject, m);
-							break;
-
-						case AbstractProxy.Type.PanelRightPadding:
-							m = this.ObjectModifier.GetPadding(selectedObject);
-							m.Right = (double) value.Value;
-							this.ObjectModifier.SetPadding(selectedObject, m);
-							break;
-
-						case AbstractProxy.Type.PanelTopPadding:
-							m = this.ObjectModifier.GetPadding(selectedObject);
-							m.Top = (double) value.Value;
-							this.ObjectModifier.SetPadding(selectedObject, m);
-							break;
-
-						case AbstractProxy.Type.PanelBottomPadding:
-							m = this.ObjectModifier.GetPadding(selectedObject);
-							m.Bottom = (double) value.Value;
-							this.ObjectModifier.SetPadding(selectedObject, m);
+						case AbstractProxy.Type.PanelPadding:
+							this.ObjectModifier.SetPadding(selectedObject, (Margins) value.Value);
 							break;
 
 						case AbstractProxy.Type.PanelChildrenPlacement:

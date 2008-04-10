@@ -162,10 +162,10 @@ namespace Epsitec.Common.Designer.PanelEditor.Proxies
 			Padding.TopPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
 			Padding.BottomPaddingProperty.DefaultMetadata.DefineNamedType(ProxyManager.MarginNumericType);
 
-			Padding.LeftPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Left.Id);
-			Padding.RightPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Right.Id);
-			Padding.TopPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Top.Id);
-			Padding.BottomPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Bottom.Id);
+			Padding.LeftPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Margins.Id);
+			Padding.RightPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Margins.Id);
+			Padding.TopPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Margins.Id);
+			Padding.BottomPaddingProperty.DefaultMetadata.DefineCaptionId(Res.Captions.Padding.Margins.Id);
 		}
 
 

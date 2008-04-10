@@ -2,9 +2,6 @@
 <bundle name="Captions" type="Caption" culture="fr">
   <data name="Cap.Aspect.ButtonAspect" id="03C">&lt;s:data id="_0" f:Name="Aspect.ButtonAspect" f:Description="Aspect des boutons" f:Labels="{Collection {Text 'Boutons'}, {Text 'Aspect des boutons'}}" /&gt;</data>
   <data name="Cap.Command.ButtonAspect" id="07C">&lt;s:data id="_0" f:Name="Command.ButtonAspect" f:Labels="{Collection {Text 'Aspect par défaut du bouton'}}" /&gt;</data>
-  <data name="Cap.Geometry.LeftMargin" id="0">&lt;s:data id="_0" f:Description="Marge gauche" f:Name="Geometry.LeftMargin" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
-  <data name="Cap.Geometry.RightMargin" id="01">&lt;s:data id="_0" f:Description="Marge droite" f:Name="Geometry.RightMargin" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
-  <data name="Cap.Geometry.TopMargin" id="02">&lt;s:data id="_0" f:Description="Marge supérieure" f:Name="Geometry.TopMargin" f:Labels="{Collection {Text 'Marge supérieure'}}" /&gt;</data>
   <data name="Cap.Geometry.BottomMargin" id="03">&lt;s:data id="_0" f:Description="Marge inférieure" f:Name="Geometry.BottomMargin" f:Labels="{Collection {Text 'Marge inférieure'}}" /&gt;</data>
   <data name="Cap.Geometry.OriginX" id="04">&lt;s:data id="_0" f:Description="Origine horizontale (X)" f:Name="Geometry.OriginX" f:Labels="{Collection {Text 'Origine X'}, {Text 'X'}}" /&gt;</data>
   <data name="Cap.Geometry.OriginY" id="05">&lt;s:data id="_0" f:Description="Origine verticale (Y)" f:Name="Geometry.OriginY" f:Labels="{Collection {Text 'Origine Y'}, {Text 'Y'}}" /&gt;</data>
@@ -14,10 +11,6 @@
   <data name="Cap.Geometry.MaxWidth" id="0S">&lt;s:data id="_0" f:Description="Largeur maximale" f:Name="Geometry.MaxWidth" f:Labels="{Collection {Text 'Largeur maximale'}}" /&gt;</data>
   <data name="Cap.Geometry.MinHeight" id="0T">&lt;s:data id="_0" f:Description="Hauteur minimale" f:Name="Geometry.MinHeight" f:Labels="{Collection {Text 'Hauteur minimale'}}" /&gt;</data>
   <data name="Cap.Geometry.MaxHeight" id="0U">&lt;s:data id="_0" f:Description="Hauteur maximale" f:Name="Geometry.MaxHeight" f:Labels="{Collection {Text 'Hauteur maximale'}}" /&gt;</data>
-  <data name="Cap.Padding.Left" id="08">&lt;s:data id="_0" f:Description="Marge intérieure gauche" f:Name="Padding.Left" f:Labels="{Collection {Text 'Marge gauche'}}" /&gt;</data>
-  <data name="Cap.Padding.Right" id="09">&lt;s:data id="_0" f:Description="Marge intérieure droite" f:Name="Padding.Right" f:Labels="{Collection {Text 'Marge droite'}}" /&gt;</data>
-  <data name="Cap.Padding.Top" id="0A">&lt;s:data id="_0" f:Description="Marge intérieure supérieure" f:Name="Padding.Top" f:Labels="{Collection {Text 'Marge supérieure'}, {Text 'Marge sup.'}}" /&gt;</data>
-  <data name="Cap.Padding.Bottom" id="0B">&lt;s:data id="_0" f:Description="Marge intérieure inférieure" f:Name="Padding.Bottom" f:Labels="{Collection {Text 'Marge inférieure'}, {Text 'Marge inf.'}}" /&gt;</data>
   <data name="Cap.Layout.ChildrenPlacement" id="0C">&lt;s:data id="_0" f:Description="Contenu" f:Name="Layout.ChildrenPlacement" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.Layout.AnchoredHorizontalAttachment" id="0D">&lt;s:data id="_0" f:Description="Position horizontale" f:Name="Layout.AnchoredHorizontalAttachment" f:Labels="{Collection {Text 'Pos. h.'}, {Text 'Position horizontale'}}" /&gt;</data>
   <data name="Cap.Layout.AnchoredVerticalAttachment" id="0E">&lt;s:data id="_0" f:Description="Position verticale" f:Name="Layout.AnchoredVerticalAttachment" f:Labels="{Collection {Text 'Pos. v.'}, {Text 'Position verticale'}}" /&gt;</data>
@@ -203,4 +196,6 @@
   <data name="Typ.FieldDescription.BoxLayoutType" id="K31">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldDescription.BoxLayoutType" f:_1.SystemType="E:Epsitec.Common.FormEngine.FieldDescription+BoxLayoutType, Common.FormEngine" f:_2.EnumValues="{Collection {Text '0 [30K41]'}, {Text '1 [30K51]'}, {Text '2 [30K61]'}, {Text '3 [30K71]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameters="Mode=Icons" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.Form.BoxLayout" id="K81">&lt;s:data id="_0" f:Name="Form.BoxLayout" f:Description="Contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.Form.PreferredWidth" id="K91">&lt;s:data id="_0" f:Name="Form.PreferredWidth" f:Description="Largeur préférentielle" f:Labels="{Collection {Text 'Largeur'}}" /&gt;</data>
+  <data name="Cap.Geometry.Margins" id="KA1">&lt;s:data id="_0" f:Name="Geometry.Margins" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges ext.'}, {Text 'Marges extérieures'}}" /&gt;</data>
+  <data name="Cap.Padding.Margins" id="KB1">&lt;s:data id="_0" f:Name="Padding.Margins" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges int.'}, {Text 'Marges intérieures'}}" /&gt;</data>
 </bundle>

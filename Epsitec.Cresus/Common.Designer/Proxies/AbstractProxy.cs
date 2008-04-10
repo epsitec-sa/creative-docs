@@ -74,20 +74,13 @@ namespace Epsitec.Common.Designer.Proxies
 			
 			//	PanelGeometry
 			PanelMargins,
-			PanelLeftMargin,
-			PanelRightMargin,
-			PanelTopMargin,
-			PanelBottomMargin,
 			PanelOriginX,
 			PanelOriginY,
 			PanelWidth,
 			PanelHeight,
 			
 			//	PanelPadding
-			PanelLeftPadding,
-			PanelRightPadding,
-			PanelTopPadding,
-			PanelBottomPadding,
+			PanelPadding,
 			
 			//	PanelLayout
 			PanelChildrenPlacement,

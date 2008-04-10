@@ -47,10 +47,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 				case Panel.PanelGeometry:
 					yield return Type.PanelMargins;
-					yield return Type.PanelLeftMargin;
-					yield return Type.PanelRightMargin;
-					yield return Type.PanelTopMargin;
-					yield return Type.PanelBottomMargin;
 					yield return Type.PanelOriginX;
 					yield return Type.PanelOriginY;
 					yield return Type.PanelWidth;
@@ -58,10 +54,7 @@ namespace Epsitec.Common.Designer.Proxies
 					break;
 
 				case Panel.PanelPadding:
-					yield return Type.PanelLeftPadding;
-					yield return Type.PanelRightPadding;
-					yield return Type.PanelTopPadding;
-					yield return Type.PanelBottomPadding;
+					yield return Type.PanelPadding;
 					break;
 
 				case Panel.PanelLayout:
@@ -115,14 +108,8 @@ namespace Epsitec.Common.Designer.Proxies
 				{
 					double space = 3;
 
-					if (valueType == Type.PanelLeftMargin ||
-						valueType == Type.PanelRightMargin ||
-						valueType == Type.PanelTopMargin ||
-						valueType == Type.PanelOriginX ||
+					if (valueType == Type.PanelOriginX ||
 						valueType == Type.PanelWidth ||
-						valueType == Type.PanelLeftPadding ||
-						valueType == Type.PanelRightPadding ||
-						valueType == Type.PanelTopPadding ||
 						valueType == Type.PanelGridColumnsCount ||
 						valueType == Type.PanelGridColumnMinWidth ||
 						valueType == Type.PanelGridLeftBorder ||
