@@ -196,6 +196,6 @@
   <data name="Typ.FieldDescription.BoxLayoutType" id="K31">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldDescription.BoxLayoutType" f:_1.SystemType="E:Epsitec.Common.FormEngine.FieldDescription+BoxLayoutType, Common.FormEngine" f:_2.EnumValues="{Collection {Text '0 [30K41]'}, {Text '1 [30K51]'}, {Text '2 [30K61]'}, {Text '3 [30K71]'}}" f:_1.DefaultController="Enum" f:_1.DefaultControllerParameters="Mode=Icons" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.Form.BoxLayout" id="K81">&lt;s:data id="_0" f:Name="Form.BoxLayout" f:Description="Contenu" f:Labels="{Collection {Text 'Contenu'}}" /&gt;</data>
   <data name="Cap.Form.PreferredWidth" id="K91">&lt;s:data id="_0" f:Name="Form.PreferredWidth" f:Description="Largeur préférentielle" f:Labels="{Collection {Text 'Largeur'}}" /&gt;</data>
-  <data name="Cap.Geometry.Margins" id="KA1">&lt;s:data id="_0" f:Name="Geometry.Margins" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges ext.'}, {Text 'Marges extérieures'}}" /&gt;</data>
-  <data name="Cap.Padding.Margins" id="KB1">&lt;s:data id="_0" f:Name="Padding.Margins" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges int.'}, {Text 'Marges intérieures'}}" /&gt;</data>
+  <data name="Cap.Geometry.Margins" id="KA1">&lt;s:data id="_0" f:Name="Geometry.Margins" f:Description="Marges extérieures" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges ext.'}, {Text 'Marges extérieures'}}" /&gt;</data>
+  <data name="Cap.Geometry.Padding" id="KB1">&lt;s:data id="_0" f:Name="Geometry.Padding" f:Description="Marges intérieures" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges int.'}, {Text 'Marges intérieures'}}" /&gt;</data>
 </bundle>

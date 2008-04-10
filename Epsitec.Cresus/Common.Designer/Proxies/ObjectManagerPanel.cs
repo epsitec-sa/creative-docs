@@ -98,10 +98,9 @@ namespace Epsitec.Common.Designer.Proxies
 				}
 			}
 
-			//	Panel.Padding:
 			if (this.ObjectModifier.HasPadding(selectedObject))
 			{
-				this.AddValueMargins(list, selectedObject, AbstractProxy.Type.PanelPadding, Res.Captions.Padding.Margins, 0, 9999, 1, 1);
+				this.AddValueMargins(list, selectedObject, AbstractProxy.Type.PanelPadding, Res.Captions.Geometry.Padding, 0, 9999, 1, 1);
 			}
 
 			//	Panel.Layout:

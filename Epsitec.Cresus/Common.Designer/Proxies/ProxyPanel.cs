@@ -22,7 +22,6 @@ namespace Epsitec.Common.Designer.Proxies
 				yield return Panel.PanelContent;
 				yield return Panel.PanelAspect;
 				yield return Panel.PanelGeometry;
-				yield return Panel.PanelPadding;
 				yield return Panel.PanelLayout;
 				yield return Panel.PanelGrid;
 			}
@@ -51,9 +50,6 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.PanelOriginY;
 					yield return Type.PanelWidth;
 					yield return Type.PanelHeight;
-					break;
-
-				case Panel.PanelPadding:
 					yield return Type.PanelPadding;
 					break;
 
@@ -142,9 +138,6 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.PanelGeometry:
 					return "PropertyGeometry";
 
-				case Panel.PanelPadding:
-					return "PropertyPadding";
-
 				case Panel.PanelLayout:
 					return "PropertyLayout";
 
@@ -167,9 +160,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 				case Panel.PanelGeometry:
 					return "Géométrie";
-
-				case Panel.PanelPadding:
-					return "Marges";
 
 				case Panel.PanelLayout:
 					return "Mise en page";

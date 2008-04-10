@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Ligne supérieure:
 			this.buttonLink = new CheckButton(top);
 			this.buttonLink.AutoToggle = false;
-			this.buttonLink.Text = "Liés";
+			this.buttonLink.Text = Res.Strings.Panel.Margins.Link;
 			this.buttonLink.PreferredWidth = 50-5-1;
 			this.buttonLink.Dock = DockStyle.Right;
 			this.buttonLink.Margins = new Margins(5, 0, 0, 0);

@@ -24,7 +24,6 @@ namespace Epsitec.Common.Designer.Proxies
 			PanelContent,
 			PanelAspect,
 			PanelGeometry,
-			PanelPadding,
 			PanelLayout,
 			PanelGrid,
 		}
@@ -78,8 +77,6 @@ namespace Epsitec.Common.Designer.Proxies
 			PanelOriginY,
 			PanelWidth,
 			PanelHeight,
-			
-			//	PanelPadding
 			PanelPadding,
 			
 			//	PanelLayout

@@ -567,4 +567,5 @@
   <data name="Panel.Margins.Right" id="KD2">Marge droite</data>
   <data name="Panel.Margins.Top" id="KE2">Marge supérieure</data>
   <data name="Panel.Margins.Bottom" id="KF2">Marge inférieure</data>
+  <data name="Panel.Margins.Link" id="KG2">Liés</data>
 </bundle>
