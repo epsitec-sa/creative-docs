@@ -104,9 +104,9 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Panel.Padding:
 			if (this.ObjectModifier.HasPadding(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftPadding, Res.Captions.Padding.Left, -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightPadding, Res.Captions.Padding.Right, -1, 9999, 1, 1);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopPadding, Res.Captions.Padding.Top, -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelLeftPadding,   Res.Captions.Padding.Left,   -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelRightPadding,  Res.Captions.Padding.Right,  -1, 9999, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelTopPadding,    Res.Captions.Padding.Top,    -1, 9999, 1, 1);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelBottomPadding, Res.Captions.Padding.Bottom, -1, 9999, 1, 1);
 			}
 
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.AreChildrenAnchored(selectedObject.Parent))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelAnchoredHorizontalAttachment, Res.Captions.Layout.AnchoredHorizontalAttachment, Res.Types.ObjectModifier.AnchoredHorizontalAttachment);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelAnchoredVerticalAttachment, Res.Captions.Layout.AnchoredVerticalAttachment, Res.Types.ObjectModifier.AnchoredVerticalAttachment);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.PanelAnchoredVerticalAttachment,   Res.Captions.Layout.AnchoredVerticalAttachment,   Res.Types.ObjectModifier.AnchoredVerticalAttachment);
 			}
 
 			if (this.ObjectModifier.HasStackedHorizontalAttachment(selectedObject))
