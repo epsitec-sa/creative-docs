@@ -89,10 +89,13 @@ namespace Epsitec.Common.Designer.Proxies
 			bottom.Dock = DockStyle.Top;
 
 			//	Ligne supérieure:
-			FrameBox x = new FrameBox(top);
-			x.PreferredWidth = 50;
-			x.Dock = DockStyle.Right;
-			x.Margins = new Margins(-1, 0, 0, 0);
+			this.buttonLink = new CheckButton(top);
+			this.buttonLink.AutoToggle = false;
+			this.buttonLink.Text = "Liés";
+			this.buttonLink.PreferredWidth = 50-5-1;
+			this.buttonLink.Dock = DockStyle.Right;
+			this.buttonLink.Margins = new Margins(5, 0, 0, 0);
+			this.buttonLink.Clicked += new MessageEventHandler(this.HandleButtonLinkClicked);
 
 			this.fieldTop = new TextFieldSlider(top);
 			this.fieldTop.MinValue = (decimal) this.min;
@@ -151,6 +154,33 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
+		private void HandleButtonLinkClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton "liés" a été cliqué.
+			if (this.buttonLink.ActiveState == ActiveState.No)
+			{
+				this.buttonLink.ActiveState = ActiveState.Yes;
+
+				Margins m = (Margins) this.value;
+				m.Left   = m.Top;
+				m.Bottom = m.Top;
+				m.Right  = m.Top;
+
+				if ((Margins) this.value != m)
+				{
+					this.value = m;
+					this.OnValueChanged();
+					this.UpdateInterface();
+				}
+			}
+			else
+			{
+				this.buttonLink.ActiveState = ActiveState.No;
+			}
+
+			this.UpdateLink(false);
+		}
+
 		private void HandleFieldValueChanged(object sender)
 		{
 			//	Appelé lorsque la valeur représentée dans l'interface a changé.
@@ -162,21 +192,43 @@ namespace Epsitec.Common.Designer.Proxies
 			TextFieldSlider field = sender as TextFieldSlider;
 			Margins m = (Margins) this.value;
 
-			if (field == this.fieldLeft)
-			{
-				m.Left = (double) field.Value;
-			}
-			else if (field == this.fieldRight)
-			{
-				m.Right = (double) field.Value;
-			}
-			else if (field == this.fieldTop)
+			if (field == this.fieldTop)
 			{
 				m.Top = (double) field.Value;
+
+				if (this.buttonLink.ActiveState == ActiveState.Yes)
+				{
+					m.Left   = (double) field.Value;
+					m.Bottom = (double) field.Value;
+					m.Right  = (double) field.Value;
+
+					this.ignoreChange = true;
+					this.fieldLeft.Value   = (decimal) m.Left;
+					this.fieldBottom.Value = (decimal) m.Left;
+					this.fieldRight.Value  = (decimal) m.Left;
+					this.ignoreChange = false;
+				}
+			}
+			else if (field == this.fieldLeft)
+			{
+				if (this.buttonLink.ActiveState == ActiveState.No)
+				{
+					m.Left = (double) field.Value;
+				}
 			}
 			else if (field == this.fieldBottom)
 			{
-				m.Bottom = (double) field.Value;
+				if (this.buttonLink.ActiveState == ActiveState.No)
+				{
+					m.Bottom = (double) field.Value;
+				}
+			}
+			else if (field == this.fieldRight)
+			{
+				if (this.buttonLink.ActiveState == ActiveState.No)
+				{
+					m.Right = (double) field.Value;
+				}
 			}
 
 			if ((Margins) this.value != m)
@@ -194,22 +246,30 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ignoreChange = true;
 
 				Margins m = (Margins) this.value;
-				TextFieldSlider field;
+				this.fieldLeft.Value   = (decimal) m.Left;
+				this.fieldRight.Value  = (decimal) m.Right;
+				this.fieldTop.Value    = (decimal) m.Top;
+				this.fieldBottom.Value = (decimal) m.Bottom;
 
-				field = this.fieldLeft as TextFieldSlider;
-				field.Value = (decimal) m.Left;
-
-				field = this.fieldRight as TextFieldSlider;
-				field.Value = (decimal) m.Right;
-
-				field = this.fieldTop as TextFieldSlider;
-				field.Value = (decimal) m.Top;
-
-				field = this.fieldBottom as TextFieldSlider;
-				field.Value = (decimal) m.Bottom;
+				this.UpdateLink(true);
 
 				this.ignoreChange = false;
 			}
+		}
+
+		protected void UpdateLink(bool changeState)
+		{
+			if (changeState)
+			{
+				Margins m = (Margins) this.value;
+				bool link = (m.Left == m.Right && m.Left == m.Top && m.Left == m.Bottom);
+
+				this.buttonLink.ActiveState = link ? ActiveState.Yes : ActiveState.No;
+			}
+
+			this.fieldLeft.Enable   = (this.buttonLink.ActiveState == ActiveState.No);
+			this.fieldBottom.Enable = (this.buttonLink.ActiveState == ActiveState.No);
+			this.fieldRight.Enable  = (this.buttonLink.ActiveState == ActiveState.No);
 		}
 
 
@@ -221,5 +281,6 @@ namespace Epsitec.Common.Designer.Proxies
 		protected TextFieldSlider fieldRight;
 		protected TextFieldSlider fieldTop;
 		protected TextFieldSlider fieldBottom;
+		protected CheckButton buttonLink;
 	}
 }
