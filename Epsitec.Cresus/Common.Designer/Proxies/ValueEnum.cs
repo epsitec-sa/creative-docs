@@ -60,6 +60,8 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonUnique.PreferredSize = new Size(22, 22);
 				this.buttonUnique.Dock = DockStyle.Fill;
 				this.buttonUnique.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
+				this.buttonUnique.Entered += new MessageEventHandler(this.HandleButtonUniqueEntered);
+				this.buttonUnique.Exited += new MessageEventHandler(this.HandleButtonUniqueExited);
 
 				this.buttonMenu = new GlyphButton(box);
 				this.buttonMenu.GlyphShape = GlyphShape.Menu;
@@ -178,6 +180,16 @@ namespace Epsitec.Common.Designer.Proxies
 					break;
 				}
 			}
+		}
+
+		private void HandleButtonUniqueEntered(object sender, MessageEventArgs e)
+		{
+			this.buttonMenu.ButtonStyle = ButtonStyle.Icon;
+		}
+
+		private void HandleButtonUniqueExited(object sender, MessageEventArgs e)
+		{
+			this.buttonMenu.ButtonStyle = ButtonStyle.ToolItem;
 		}
 		#endregion
 
