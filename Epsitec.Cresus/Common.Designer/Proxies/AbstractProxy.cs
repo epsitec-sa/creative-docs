@@ -45,13 +45,13 @@ namespace Epsitec.Common.Designer.Proxies
 			FormBoxFrameWidth,
 
 			//	FormFontLabel
-			FormLabelFontSize,
+			FormLabelFontSize,		// de droite à gauche !
 			FormLabelFontStyle,
 			FormLabelFontFace,
 			FormLabelFontColor,
 
 			//	FormFontField
-			FormFieldFontSize,
+			FormFieldFontSize,		// de droite à gauche !
 			FormFieldFontStyle,
 			FormFieldFontFace,
 			FormFieldFontColor,

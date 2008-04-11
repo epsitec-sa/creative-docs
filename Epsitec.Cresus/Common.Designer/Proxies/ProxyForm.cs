@@ -126,6 +126,9 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected string GetGroupLabel(Type type)
 		{
+			//	Retourne le texte pour l'étiquette du premier élément d'un groupe.
+			//	Attention, les groupes sont formés de droite à gauche (Size, Style, Face, Color),
+			//	à cause de mode DockStyle.Right !
 			switch (type)
 			{
 				case Type.FormLabelFontSize:
@@ -140,12 +143,14 @@ namespace Epsitec.Common.Designer.Proxies
 
 		protected bool IsBeginOfGroup(Type type)
 		{
+			//	Indique s'il s'agit du premier élément d'un groupe.
 			return type == Type.FormLabelFontSize ||
 				   type == Type.FormFieldFontSize;
 		}
 
 		protected bool IsInsideGroup(Type type)
 		{
+			//	Indique s'il s'agit du nième (2..n) élément d'un groupe.
 			return type == Type.FormLabelFontStyle || type == Type.FormLabelFontFace || type == Type.FormLabelFontColor ||
 				   type == Type.FormFieldFontStyle || type == Type.FormFieldFontFace || type == Type.FormFieldFontColor;
 		}

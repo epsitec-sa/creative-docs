@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonUnique.ButtonStyle = ButtonStyle.Icon;
 				this.buttonUnique.PreferredSize = new Size(22, 22);
 				this.buttonUnique.Dock = DockStyle.Fill;
-				this.buttonUnique.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
+				this.buttonUnique.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
 
 				this.buttonMenu = new GlyphButton(box);
 				this.buttonMenu.GlyphShape = GlyphShape.Menu;
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonMenu.PreferredSize = new Size(22, 8);
 				this.buttonMenu.Dock = DockStyle.Bottom;
 				this.buttonMenu.Margins = new Margins(0, 0, -1, 0);
-				this.buttonMenu.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
+				this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
 
 				if (this.hasHiddenLabel)
 				{
@@ -105,9 +105,82 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
-		private void HandleButtonMenuClicked(object sender, MessageEventArgs e)
+
+		#region Menu
+		protected VMenu CreateMenu()
 		{
+			//	Crée le menu permettant de choisir une valeur de l'énumération.
+			VMenu menu = new VMenu();
+
+			System.Enum e = (System.Enum) this.value;
+			Types.EnumValue selectedEnumValue = this.enumType[e];
+
+			foreach (Types.EnumValue enumValue in this.enumType.Values)
+			{
+				if (enumValue.IsHidden)
+				{
+					continue;
+				}
+
+				Types.Caption caption = enumValue.Caption;
+				bool active = (enumValue.Rank == selectedEnumValue.Rank);
+	
+				string icon = caption.Icon;
+				string text = caption.Description;
+				MenuItem item = new MenuItem("", icon, text, "", enumValue.Rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				item.ActiveState = active ? ActiveState.Yes : ActiveState.No;
+				item.Pressed += new MessageEventHandler(this.HandleMenuItemPressed);
+
+				menu.Items.Add(item);
+			}
+
+			menu.AdjustSize();
+			return menu;
 		}
+
+		private void HandleButtonMenuPressed(object sender, MessageEventArgs e)
+		{
+			//	Le bouton pour choisir la valeur de l'énumération dans un menu a été pressé.
+			VMenu menu = this.CreateMenu();
+			if (menu != null)
+			{
+				menu.Host = this;
+				menu.MinWidth = this.buttonMenu.ActualWidth;
+				TextFieldCombo.AdjustComboSize(this.buttonMenu, menu, false);
+				menu.ShowAsComboList(this.buttonMenu, Point.Zero, this.buttonMenu);
+			}
+		}
+
+		private void HandleMenuItemPressed(object sender, MessageEventArgs ea)
+		{
+			//	Une case du menu a été pressée.
+			MenuItem item = sender as MenuItem;
+			int rank = int.Parse(item.Name, System.Globalization.CultureInfo.InvariantCulture);
+
+			foreach (Types.EnumValue enumValue in this.enumType.Values)
+			{
+				if (enumValue.IsHidden)
+				{
+					continue;
+				}
+
+				if (enumValue.Rank == rank)
+				{
+					System.Enum e = enumValue.Value;
+
+					if (this.value != e)
+					{
+						this.value = e;
+						this.OnValueChanged();
+						this.UpdateInterface();
+					}
+
+					break;
+				}
+			}
+		}
+		#endregion
+
 
 		private void HandleButtonsSelectionChanged(object sender)
 		{
