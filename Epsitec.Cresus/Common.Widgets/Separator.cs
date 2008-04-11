@@ -91,17 +91,18 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
+			double w = this.DrawFrameWidth;
 
 			if (this.isHorizontalLine)
 			{
-				rect.Bottom = System.Math.Floor(rect.Center.Y);
-				rect.Height = this.DrawFrameWidth;
+				rect.Bottom = System.Math.Floor(rect.Center.Y)-(w-1)/2;
+				rect.Height = w;
 			}
 
 			if (this.isVerticalLine)
 			{
-				rect.Left = System.Math.Floor(rect.Center.X);
-				rect.Width = this.DrawFrameWidth;
+				rect.Left = System.Math.Floor(rect.Center.X)-(w-1)/2;
+				rect.Width = w;
 			}
 
 			graphics.AddFilledRectangle(rect);

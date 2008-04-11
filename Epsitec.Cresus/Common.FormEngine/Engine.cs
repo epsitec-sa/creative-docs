@@ -905,8 +905,8 @@ namespace Epsitec.Common.FormEngine
 				if (grid != null)
 				{
 					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-					grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : m+(w-1)/2;
-					grid.RowDefinitions[row].BottomBorder = m-1;
+					grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : m+1;
+					grid.RowDefinitions[row].BottomBorder = m;
 				}
 
 				Separator sep = new Separator(root);
