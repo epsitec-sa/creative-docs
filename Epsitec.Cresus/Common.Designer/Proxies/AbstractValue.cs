@@ -41,6 +41,19 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		public bool HasHiddenLabel
+		{
+			//	Permet d'occuper une place minimale, sans étiquette.
+			get
+			{
+				return this.hasHiddenLabel;
+			}
+			set
+			{
+				this.hasHiddenLabel = value;
+			}
+		}
+
 		public Types.Caption Caption
 		{
 			//	Nom visible de la valeur.
@@ -145,6 +158,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected AbstractProxy.Type type;
 		protected Widget widgetInterface;
 		protected string label;
+		protected bool hasHiddenLabel;
 		protected Types.Caption caption;
 		protected object value;
 		protected List<Widget> selectedObjects;

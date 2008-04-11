@@ -95,12 +95,15 @@ namespace Epsitec.Common.Designer.Proxies
 			FrameBox box = new FrameBox(parent);
 			ToolTip.Default.SetToolTip(box, this.caption.Description);
 
-			StaticText label = new StaticText(box);
-			label.Text = this.label;
-			label.CaptionId = this.caption.Id;
-			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Margins = new Margins(0, 5, 0, 0);
-			label.Dock = DockStyle.Fill;
+			if (!this.hasHiddenLabel)
+			{
+				StaticText label = new StaticText(box);
+				label.Text = this.label;
+				label.CaptionId = this.caption.Id;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
+				label.Margins = new Margins(0, 5, 0, 0);
+				label.Dock = DockStyle.Fill;
+			}
 
 			if (this.isOnlyIncDec)
 			{

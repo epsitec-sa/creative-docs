@@ -108,12 +108,15 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldTop.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
 			ToolTip.Default.SetToolTip(this.fieldTop, Res.Strings.Panel.Margins.Top);
 
-			StaticText label = new StaticText(top);
-			label.Text = this.label;
-			label.CaptionId = this.caption.Id;
-			label.ContentAlignment = ContentAlignment.MiddleRight;
-			label.Margins = new Margins(0, 5, 0, 5);
-			label.Dock = DockStyle.Fill;
+			if (!this.hasHiddenLabel)
+			{
+				StaticText label = new StaticText(top);
+				label.Text = this.label;
+				label.CaptionId = this.caption.Id;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
+				label.Margins = new Margins(0, 5, 0, 5);
+				label.Dock = DockStyle.Fill;
+			}
 
 			//	Ligne inférieure:
 			this.fieldRight = new TextFieldSlider(bottom);
