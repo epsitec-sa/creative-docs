@@ -652,7 +652,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public double GetLineWidth(Widget obj)
 		{
-			//	Retourne la largeur d'un séprateur
+			//	Retourne la largeur d'un séparateur.
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field == null)
 			{
@@ -666,7 +666,7 @@ namespace Epsitec.Common.Designer.FormEditor
 
 		public void SetLineWidth(Widget obj, double width)
 		{
-			//	Choix de la largeur d'un séprateur.
+			//	Choix de la largeur d'un séparateur.
 			if (this.IsReadonly)
 			{
 				return;

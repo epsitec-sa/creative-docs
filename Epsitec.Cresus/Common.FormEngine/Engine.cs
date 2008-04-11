@@ -912,8 +912,12 @@ namespace Epsitec.Common.FormEngine
 				Separator sep = new Separator(root);
 				sep.DrawFrameWidth = w;
 				sep.PreferredHeight = w;
-				sep.Color = FieldDescription.GetRealBackColor(field.BackColor);
 				sep.Name = guid.ToString();
+
+				if (type == FieldDescription.FieldType.Title)
+				{
+					sep.Color = FieldDescription.GetRealFontColor(field.LabelFontColor);
+				}
 
 				if (root is FrameBox)
 				{
