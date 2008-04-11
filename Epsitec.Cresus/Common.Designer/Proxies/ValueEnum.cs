@@ -208,7 +208,15 @@ namespace Epsitec.Common.Designer.Proxies
 				int flags = button.SelectedValue;
 				IEnumerable<Types.IEnumValue> enumValues = Types.EnumType.ConvertEnumValuesFromFlags(this.enumType, flags);
 				string valueText = Types.EnumType.ConvertToString(enumValues);
-				System.Enum e = System.Enum.Parse(this.enumType.SystemType, valueText) as System.Enum;
+				System.Enum e;
+				if (valueText == null)
+				{
+					e = System.Enum.ToObject(this.enumType.SystemType, 0) as System.Enum;
+				}
+				else
+				{
+					e = System.Enum.Parse(this.enumType.SystemType, valueText) as System.Enum;
+				}
 
 				if (this.value != e)
 				{
