@@ -1212,13 +1212,13 @@ namespace Epsitec.Common.FormEngine
 		#endregion
 
 
-		public static double GetRealSeparator(SeparatorType type)
+		public static double GetRealSeparator(SeparatorType type, bool isLastOfBox)
 		{
 			//	Retourne la valeur réelle d'une marge d'après son type.
 			switch (type)
 			{
 				case SeparatorType.Compact:
-					return -1;
+					return isLastOfBox ? 0 : -1;
 
 				case SeparatorType.Extend:
 					return 10;

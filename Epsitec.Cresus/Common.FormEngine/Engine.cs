@@ -330,11 +330,18 @@ namespace Epsitec.Common.FormEngine
 					continue;
 				}
 
-				bool isGlueAfter = false;
 				FieldDescription nextField = Engine.SearchNextElement(fields, i);
+
+				bool isGlueAfter = false;
 				if (nextField != null && nextField.Type == FieldDescription.FieldType.Glue && !nextField.DeltaHidden)
 				{
 					isGlueAfter = true;
+				}
+
+				bool isLastOfBox = false;
+				if (nextField != null && nextField.Type == FieldDescription.FieldType.BoxEnd && !nextField.DeltaHidden)
+				{
+					isLastOfBox = true;
 				}
 
 				//	Assigne l'identificateur unique, qui ira dans la propriété Index des widgets.
@@ -356,7 +363,7 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						Widget box = this.CreateBox(root, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
+						Widget box = this.CreateBox(root, grid, field, guid, labelsId, ref column, ref row, isGlueAfter, isLastOfBox);
 						this.CreateFormBox(box, entityId, fields, i+1);
 					}
 
@@ -375,14 +382,14 @@ namespace Epsitec.Common.FormEngine
 				{
 					if (level == 0)
 					{
-						this.CreateField(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
+						this.CreateField(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter, isLastOfBox);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Command)  // commande ?
 				{
 					if (level == 0)
 					{
-						this.CreateCommand(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter);
+						this.CreateCommand(root, entityId, grid, field, guid, labelsId, ref column, ref row, isGlueAfter, isLastOfBox);
 					}
 				}
 				else if (field.Type == FieldDescription.FieldType.Glue)  // colle ?
@@ -581,7 +588,7 @@ namespace Epsitec.Common.FormEngine
 		}
 
 
-		private Widget CreateBox(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private Widget CreateBox(Widget root, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
 			//	Crée les widgets pour une boîte dans la grille, lors de la deuxième passe.
 			Widget box;
@@ -637,7 +644,7 @@ namespace Epsitec.Common.FormEngine
 
 			int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
-			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+			grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom, isLastOfBox);
 
 			int i = Engine.GetColumnIndex(labelsId, column);
 			int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
@@ -658,7 +665,7 @@ namespace Epsitec.Common.FormEngine
 			return box;
 		}
 
-		private void CreateField(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateField(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = new UI.Placeholder(root);
@@ -700,7 +707,7 @@ namespace Epsitec.Common.FormEngine
 					placeholder.ControllerParameters = UI.Controllers.AbstractController.NoLabelsParameter;  // cache le label
 				}
 
-				grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+				grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom, isLastOfBox);
 
 				if (field.RowsRequired > 1)
 				{
@@ -725,7 +732,7 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
-		private void CreateCommand(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter)
+		private void CreateCommand(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
 			//	Crée les widgets pour une commande dans la grille, lors de la deuxième passe.
 			UI.MetaButton button = new UI.MetaButton();
@@ -747,7 +754,7 @@ namespace Epsitec.Common.FormEngine
 
 				int columnsRequired = System.Math.Max(field.ColumnsRequired, 1);
 
-				grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom);
+				grid.RowDefinitions[row].BottomBorder = FieldDescription.GetRealSeparator(field.SeparatorBottom, isLastOfBox);
 
 				int i = Engine.GetColumnIndex(labelsId, column);
 				int j = Engine.GetColumnIndex(labelsId, column+columnsRequired-1)+1;
