@@ -21,8 +21,7 @@ namespace Epsitec.Common.Designer.Proxies
 				//	L'ordre n'a aucune importance.
 				yield return Panel.FormGeometry;
 				yield return Panel.FormBox;
-				yield return Panel.FormFontLabel;
-				yield return Panel.FormFontField;
+				yield return Panel.FormFont;
 				yield return Panel.FormStyle;
 			}
 		}
@@ -46,14 +45,12 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormBoxFrameWidth;
 					break;
 
-				case Panel.FormFontLabel:
+				case Panel.FormFont:
 					yield return Type.FormLabelFontColor;
 					yield return Type.FormLabelFontFace;
 					yield return Type.FormLabelFontStyle;
 					yield return Type.FormLabelFontSize;
-					break;
 
-				case Panel.FormFontField:
 					yield return Type.FormFieldFontColor;
 					yield return Type.FormFieldFontFace;
 					yield return Type.FormFieldFontStyle;
@@ -80,6 +77,7 @@ namespace Epsitec.Common.Designer.Proxies
 			List<Type> list = new List<Type>(this.ValueTypes(proxyPanel));
 			list.Sort();  // trie les valeurs dans le panneau
 
+			FrameBox group = null;
 			foreach (Type valueType in list)
 			{
 				AbstractValue value = AbstractProxy.IndexOf(values, valueType);
@@ -92,13 +90,64 @@ namespace Epsitec.Common.Designer.Proxies
 						space = -1;  // la valeur suivante sera collée à celle-çi
 					}
 
-					Widget widget = value.CreateInterface(panel.Container);
-					widget.Dock = DockStyle.Top;
-					widget.Margins = new Margins(0, 0, 0, space);
+					if (this.IsBeginOfGroup(valueType))
+					{
+						group = new FrameBox(panel.Container);
+						group.Dock = DockStyle.Top;
+						group.Margins = new Margins(0, 0, 0, space);
+
+						StaticText label = new StaticText(group);
+						label.Text = this.GetGroupLabel(valueType);
+						label.ContentAlignment = ContentAlignment.MiddleRight;
+						label.Margins = new Margins(0, 5, 0, 8);
+						label.Dock = DockStyle.Fill;
+
+						Widget widget = value.CreateInterface(group);
+						widget.Dock = DockStyle.Right;
+						widget.Margins = new Margins(2, 0, 0, 0);
+					}
+					else if (this.IsInsideGroup(valueType))
+					{
+						Widget widget = value.CreateInterface(group);
+						widget.Dock = DockStyle.Right;
+						widget.Margins = new Margins(2, 0, 0, 0);
+					}
+					else
+					{
+						Widget widget = value.CreateInterface(panel.Container);
+						widget.Dock = DockStyle.Top;
+						widget.Margins = new Margins(0, 0, 0, space);
+					}
 				}
 			}
 
 			return panel;
+		}
+
+		protected string GetGroupLabel(Type type)
+		{
+			switch (type)
+			{
+				case Type.FormLabelFontSize:
+					return "Etiquette";
+
+				case Type.FormFieldFontSize:
+					return "Champ";
+			}
+
+			return null;
+		}
+
+		protected bool IsBeginOfGroup(Type type)
+		{
+			return type == Type.FormLabelFontSize ||
+				   type == Type.FormFieldFontSize;
+		}
+
+		protected bool IsInsideGroup(Type type)
+		{
+			return type == Type.FormLabelFontStyle || type == Type.FormLabelFontFace || type == Type.FormLabelFontColor ||
+				   type == Type.FormFieldFontStyle || type == Type.FormFieldFontFace || type == Type.FormFieldFontColor;
 		}
 
 
@@ -112,8 +161,7 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormBox:
 					return "PropertyPadding";
 
-				case Panel.FormFontLabel:
-				case Panel.FormFontField:
+				case Panel.FormFont:
 					return "PropertyTextFont";
 
 				case Panel.FormStyle:
@@ -133,11 +181,8 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormBox:
 					return "Groupe";
 
-				case Panel.FormFontLabel:
-					return "Police étiquette";
-
-				case Panel.FormFontField:
-					return "Police champ";
+				case Panel.FormFont:
+					return "Police";
 
 				case Panel.FormStyle:
 					return "Style";

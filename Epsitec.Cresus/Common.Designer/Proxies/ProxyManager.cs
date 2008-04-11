@@ -78,10 +78,12 @@ namespace Epsitec.Common.Designer.Proxies
 			{
 				double space = (lastPanel == AbstractProxy.Panel.None) ? 0 : 5;
 
-				if (proxyToCreate.ProxyPanel == lastPanel || proxyToCreate.ProxyPanel == AbstractProxy.Panel.FormFontField)
+#if false
+				if (proxyToCreate.ProxyPanel == lastPanel || proxyToCreate.ProxyPanel == AbstractProxy.Panel.FormFont)
 				{
 					space = -1;  // collé au panneau précédent
 				}
+#endif
 
 				Widget panel = this.proxy.CreateInterface(box, proxyToCreate.ProxyPanel, proxyToCreate.Values);
 				panel.Margins = new Margins(0, 0, space, 0);

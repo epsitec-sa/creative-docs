@@ -62,19 +62,19 @@ namespace Epsitec.Common.Designer.Proxies
 				this.ObjectModifier.IsTitle(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, Res.Captions.Form.FontColor, Res.Types.FieldDescription.FontColorType, true);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace,  Res.Captions.Form.FontFace,  Res.Types.FieldDescription.FontFaceType,  true);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, Res.Captions.Form.FontStyle, Res.Types.FieldDescription.FontStyleType, true);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize,  Res.Captions.Form.FontSize,  Res.Types.FieldDescription.FontSizeType,  true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontColor, Res.Captions.Form.FontColor, Res.Types.FieldDescription.FontColorType, true, true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontFace,  Res.Captions.Form.FontFace,  Res.Types.FieldDescription.FontFaceType,  true, true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontStyle, Res.Captions.Form.FontStyle, Res.Types.FieldDescription.FontStyleType, true, true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLabelFontSize,  Res.Captions.Form.FontSize,  Res.Types.FieldDescription.FontSizeType,  true, true);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
 			{
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, Res.Captions.Form.FontColor, Res.Types.FieldDescription.FontColorType, true);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace,  Res.Captions.Form.FontFace,  Res.Types.FieldDescription.FontFaceType,  true);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, Res.Captions.Form.FontStyle, Res.Types.FieldDescription.FontStyleType, true);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize,  Res.Captions.Form.FontSize,  Res.Types.FieldDescription.FontSizeType,  true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontColor, Res.Captions.Form.FontColor, Res.Types.FieldDescription.FontColorType, true, true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontFace,  Res.Captions.Form.FontFace,  Res.Types.FieldDescription.FontFaceType,  true, true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontStyle, Res.Captions.Form.FontStyle, Res.Types.FieldDescription.FontStyleType, true, true);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormFieldFontSize,  Res.Captions.Form.FontSize,  Res.Types.FieldDescription.FontSizeType,  true, true);
 			}
 
 			if (this.ObjectModifier.IsBox(selectedObject))

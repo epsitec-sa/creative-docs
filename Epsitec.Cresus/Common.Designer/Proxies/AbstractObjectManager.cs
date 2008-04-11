@@ -41,6 +41,11 @@ namespace Epsitec.Common.Designer.Proxies
 			list.Add(value);
 		}
 
+		protected void AddValueIncDec(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, bool hasHiddenLabel)
+		{
+			this.AddValueIncDec(list, selectedObject, type, caption, min, max, false);
+		}
+
 		protected void AddValueIncDec(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max)
 		{
 			//	Ajoute une valeur de type numérique +/-.
@@ -53,6 +58,11 @@ namespace Epsitec.Common.Designer.Proxies
 			this.SendObjectToValue(value);
 
 			list.Add(value);
+		}
+
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution, bool hasHiddenLabel)
+		{
+			this.AddValue(list, selectedObject, type, caption, min, max, step, resolution, false);
 		}
 
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
@@ -71,14 +81,15 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
 		{
 			//	Ajoute une valeur de type énumération.
-			this.AddValue(list, selectedObject, type, caption, enumType, false);
+			this.AddValue(list, selectedObject, type, caption, enumType, false, false);
 		}
 
-		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType, bool isChoiceByMenu)
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType, bool hasHiddenLabel, bool isChoiceByMenu)
 		{
 			//	Ajoute une valeur de type énumération.
 			ValueEnum value = new ValueEnum(enumType);
 			value.SelectedObjects.Add(selectedObject);
+			value.HasHiddenLabel = hasHiddenLabel;
 			value.IsChoiceByMenu = isChoiceByMenu;
 			value.Type = type;
 			value.Caption = caption;

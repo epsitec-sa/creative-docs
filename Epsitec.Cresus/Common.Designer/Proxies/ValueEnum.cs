@@ -55,14 +55,26 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (this.isChoiceByMenu)
 			{
+				this.buttonUnique = new IconButton(box);
+				this.buttonUnique.ButtonStyle = ButtonStyle.Icon;
+				this.buttonUnique.PreferredSize = new Size(22, 22);
+				this.buttonUnique.Dock = DockStyle.Fill;
+				this.buttonUnique.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
+
 				this.buttonMenu = new GlyphButton(box);
 				this.buttonMenu.GlyphShape = GlyphShape.Menu;
-				this.buttonMenu.PreferredWidth = 12;
-				this.buttonMenu.Dock = DockStyle.Right;
+				this.buttonMenu.ButtonStyle = ButtonStyle.ToolItem;
+				this.buttonMenu.PreferredSize = new Size(22, 8);
+				this.buttonMenu.Dock = DockStyle.Bottom;
+				this.buttonMenu.Margins = new Margins(0, 0, -1, 0);
+				this.buttonMenu.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
 
-				this.buttonUnique = new IconButton(box);
-				this.buttonUnique.PreferredWidth = 22;
-				this.buttonUnique.Dock = DockStyle.Right;
+				if (this.hasHiddenLabel)
+				{
+					box.PreferredWidth = 22;
+				}
+
+				box.PreferredHeight = 22+8-1;
 			}
 			else
 			{
@@ -91,6 +103,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 			this.widgetInterface = box;
 			return box;
+		}
+
+		private void HandleButtonMenuClicked(object sender, MessageEventArgs e)
+		{
 		}
 
 		private void HandleButtonsSelectionChanged(object sender)
@@ -141,6 +157,21 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Met à jour la valeur dans l'interface.
 			if (this.isChoiceByMenu)
 			{
+				if (this.buttonUnique != null)
+				{
+					if (this.enumType.IsDefinedAsFlags)
+					{
+						throw new System.NotImplementedException();
+					}
+					else
+					{
+						System.Enum e = (System.Enum) this.value;
+						Types.EnumValue enumValue = this.enumType[e];
+						Druid id = (enumValue == null) ? Druid.Empty : enumValue.CaptionId;
+
+						this.buttonUnique.CaptionId = id;
+					}
+				}
 			}
 			else
 			{
