@@ -71,8 +71,15 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType)
 		{
 			//	Ajoute une valeur de type énumération.
+			this.AddValue(list, selectedObject, type, caption, enumType, false);
+		}
+
+		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType, bool isChoiceByMenu)
+		{
+			//	Ajoute une valeur de type énumération.
 			ValueEnum value = new ValueEnum(enumType);
 			value.SelectedObjects.Add(selectedObject);
+			value.IsChoiceByMenu = isChoiceByMenu;
 			value.Type = type;
 			value.Caption = caption;
 			value.ValueChanged += new EventHandler(this.HandleValueChanged);

@@ -60,7 +60,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonMenu.PreferredWidth = 12;
 				this.buttonMenu.Dock = DockStyle.Right;
 
-				this.buttonUnique = new GlyphButton(box);
+				this.buttonUnique = new IconButton(box);
 				this.buttonUnique.PreferredWidth = 22;
 				this.buttonUnique.Dock = DockStyle.Right;
 			}
@@ -81,11 +81,11 @@ namespace Epsitec.Common.Designer.Proxies
 					this.buttons.AddRadioIcon(caption.Icon, caption.Description, value, false);
 					count++;
 				}
-			}
 
-			this.buttons.PreferredSize = this.buttons.GetBestFitSize();
-			this.buttons.Dock = DockStyle.Right;
-			this.buttons.SelectionChanged += new EventHandler(this.HandleButtonsSelectionChanged);
+				this.buttons.PreferredSize = this.buttons.GetBestFitSize();
+				this.buttons.Dock = DockStyle.Right;
+				this.buttons.SelectionChanged += new EventHandler(this.HandleButtonsSelectionChanged);
+			}
 
 			this.UpdateInterface();
 
