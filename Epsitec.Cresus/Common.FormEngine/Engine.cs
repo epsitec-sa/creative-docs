@@ -907,7 +907,8 @@ namespace Epsitec.Common.FormEngine
 				}
 
 				Separator sep = new Separator(root);
-				sep.PreferredHeight = 1;
+				sep.DrawFrameWidth = field.LineWidth;
+				sep.PreferredHeight = field.LineWidth;
 				sep.Name = guid.ToString();
 
 				if (root is FrameBox)

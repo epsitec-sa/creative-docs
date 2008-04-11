@@ -650,6 +650,38 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public double GetLineWidth(Widget obj)
+		{
+			//	Retourne la largeur d'un séprateur
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return 0.0;
+			}
+			else
+			{
+				return (field.LineWidth+1)/2;
+			}
+		}
+
+		public void SetLineWidth(Widget obj, double width)
+		{
+			//	Choix de la largeur d'un séprateur.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize(Res.Strings.Undo.Action.LineWidth);
+				field.LineWidth = 2*width-1;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
 		public double GetPreferredWidth(Widget obj)
 		{
 			//	Retourne la largeur préférentielle

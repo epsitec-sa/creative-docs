@@ -95,13 +95,13 @@ namespace Epsitec.Common.Widgets
 			if (this.isHorizontalLine)
 			{
 				rect.Bottom = System.Math.Floor(rect.Center.Y);
-				rect.Height = 1;
+				rect.Height = this.DrawFrameWidth;
 			}
 
 			if (this.isVerticalLine)
 			{
 				rect.Left = System.Math.Floor(rect.Center.X);
-				rect.Width = 1;
+				rect.Width = this.DrawFrameWidth;
 			}
 
 			graphics.AddFilledRectangle(rect);

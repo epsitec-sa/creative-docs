@@ -34,6 +34,7 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormGeometry:
 					yield return Type.FormColumnsRequired;
 					yield return Type.FormRowsRequired;
+					yield return Type.FormLineWidth;
 					yield return Type.FormPreferredWidth;
 					yield return Type.FormSeparatorBottom;
 					break;

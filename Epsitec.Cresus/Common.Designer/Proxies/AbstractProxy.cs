@@ -36,6 +36,7 @@ namespace Epsitec.Common.Designer.Proxies
 			FormSeparatorBottom,
 			FormColumnsRequired,
 			FormRowsRequired,
+			FormLineWidth,
 			FormPreferredWidth,
 
 			//	FormBox

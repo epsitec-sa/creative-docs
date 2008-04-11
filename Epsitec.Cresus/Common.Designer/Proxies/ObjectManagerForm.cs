@@ -43,6 +43,12 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormPreferredWidth, Res.Captions.Form.PreferredWidth, 1, 1000, 1, 1);
 			}
 
+			if (this.ObjectModifier.IsTitle(selectedObject) ||
+				this.ObjectModifier.IsLine(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormLineWidth, Res.Captions.Form.LineWidth, 1, 5, 1, 1);
+			}
+
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject))
@@ -137,6 +143,10 @@ namespace Epsitec.Common.Designer.Proxies
 						value.Value = this.ObjectModifier.GetPreferredWidth(selectedObject);
 						break;
 
+					case AbstractProxy.Type.FormLineWidth:
+						value.Value = this.ObjectModifier.GetLineWidth(selectedObject);
+						break;
+
 					case AbstractProxy.Type.FormSeparatorBottom:
 						value.Value = this.ObjectModifier.GetSeparatorBottom(selectedObject);
 						break;
@@ -225,6 +235,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 						case AbstractProxy.Type.FormPreferredWidth:
 							this.ObjectModifier.SetPreferredWidth(selectedObject, (double) value.Value);
+							break;
+
+						case AbstractProxy.Type.FormLineWidth:
+							this.ObjectModifier.SetLineWidth(selectedObject, (double) value.Value);
 							break;
 
 						case AbstractProxy.Type.FormSeparatorBottom:

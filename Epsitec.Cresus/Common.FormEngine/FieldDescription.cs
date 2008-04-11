@@ -155,6 +155,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = model.boxPaddingType;
 			this.boxFrameState = model.boxFrameState;
 			this.boxFrameWidth = model.boxFrameWidth;
+			this.lineWidth = model.lineWidth;
 			this.preferredWidth = model.preferredWidth;
 			this.deltaHidden = model.deltaHidden;
 			this.deltaShowed = model.deltaShowed;
@@ -193,6 +194,7 @@ namespace Epsitec.Common.FormEngine
 			this.boxPaddingType = BoxPaddingType.Normal;
 			this.boxFrameState = FrameState.None;
 			this.boxFrameWidth = 1;
+			this.lineWidth = 1;
 			this.preferredWidth = 100;
 		}
 
@@ -665,6 +667,20 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public double LineWidth
+		{
+			//	Epaisseur des traits de séparation.
+			get
+			{
+				return this.lineWidth;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.type == FieldType.Line || this.type == FieldType.Title);
+				this.lineWidth = value;
+			}
+		}
+
 		public double PreferredWidth
 		{
 			//	Largeur préférentielle, si le parent est en mode BoxLayoutType.Horizontal*.
@@ -882,6 +898,7 @@ namespace Epsitec.Common.FormEngine
 				a.boxPaddingType != b.boxPaddingType ||
 				a.boxFrameState != b.boxFrameState ||
 				a.boxFrameWidth != b.boxFrameWidth ||
+				a.lineWidth != b.lineWidth ||
 				a.preferredWidth != b.preferredWidth ||
 				a.deltaHidden != b.deltaHidden ||
 				a.deltaShowed != b.deltaShowed ||
@@ -999,6 +1016,7 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxPaddingType, this.boxPaddingType.ToString());
 			writer.WriteElementString(Xml.BoxFrameState, this.boxFrameState.ToString());
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			writer.WriteElementString(Xml.LineWidth, this.lineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.PreferredWidth, this.preferredWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 			if (this.deltaHidden)
@@ -1152,6 +1170,10 @@ namespace Epsitec.Common.FormEngine
 						{
 							this.boxFrameWidth = double.Parse(element);
 						}
+						else if (name == Xml.LineWidth)
+						{
+							this.lineWidth = double.Parse(element);
+						}
 						else if (name == Xml.PreferredWidth)
 						{
 							this.preferredWidth = double.Parse(element);
@@ -1218,6 +1240,8 @@ namespace Epsitec.Common.FormEngine
 			switch (type)
 			{
 				case SeparatorType.Compact:
+					//	Lorsqu'il s'agit du dernier élément d'une boîte, il ne faut pas
+					//	utiliser une marge négative !
 					return isLastOfBox ? 0 : -1;
 
 				case SeparatorType.Extend:
@@ -1363,6 +1387,7 @@ namespace Epsitec.Common.FormEngine
 		private BoxPaddingType				boxPaddingType;
 		private FrameState					boxFrameState;
 		private double						boxFrameWidth;
+		private double						lineWidth;
 		private double						preferredWidth;
 		private bool						deltaHidden;
 		private bool						deltaShowed;
