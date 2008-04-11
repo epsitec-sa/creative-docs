@@ -22,7 +22,7 @@ namespace Epsitec.Common.Designer.Proxies
 				yield return Panel.FormGeometry;
 				yield return Panel.FormBox;
 				yield return Panel.FormFont;
-				yield return Panel.FormStyle;
+				yield return Panel.FormAspect;
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormFieldFontSize;
 					break;
 
-				case Panel.FormStyle:
+				case Panel.FormAspect:
 					yield return Type.FormBackColor;
 					yield return Type.FormButtonClass;
 					break;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Designer.Proxies
 			switch (type)
 			{
 				case Type.FormLabelFontSize:
-					return "Etiquette";
+					return "Texte fixe";
 
 				case Type.FormFieldFontSize:
 					return "Champ";
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormFont:
 					return "PropertyTextFont";
 
-				case Panel.FormStyle:
+				case Panel.FormAspect:
 					return "PropertyAspect";
 			}
 
@@ -189,8 +189,8 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormFont:
 					return "Police";
 
-				case Panel.FormStyle:
-					return "Style";
+				case Panel.FormAspect:
+					return "Aspect";
 			}
 
 			return null;

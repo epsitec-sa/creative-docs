@@ -18,13 +18,13 @@ namespace Epsitec.Common.Designer.Proxies
 			FormGeometry,
 			FormBox,
 			FormFont,
-			FormStyle,
+			FormAspect,
 
 			PanelContent,
-			PanelAspect,
 			PanelGeometry,
 			PanelLayout,
 			PanelGrid,
+			PanelAspect,
 		}
 
 		public enum Type
@@ -67,9 +67,6 @@ namespace Epsitec.Common.Designer.Proxies
 			PanelTableColumns,
 			PanelStructuredType,
 
-			//	PanelAspect
-			PanelButtonAspect,
-			
 			//	PanelGeometry
 			PanelMargins,
 			PanelOriginX,
@@ -104,6 +101,9 @@ namespace Epsitec.Common.Designer.Proxies
 			PanelGridRowMaxHeight,
 			PanelGridTopBorder,
 			PanelGridBottomBorder,
+
+			//	PanelAspect
+			PanelButtonAspect,
 		}
 
 

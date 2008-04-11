@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Proxies
 				label.Dock = DockStyle.Fill;
 			}
 
-			if (this.isChoiceByMenu)
+			if (this.isChoiceByMenu)  // choix par un menu ?
 			{
 				this.buttonUnique = new IconButton(box);
 				this.buttonUnique.ButtonStyle = ButtonStyle.Icon;
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 				box.PreferredHeight = 22+8-1;
 			}
-			else
+			else  // choix direct ?
 			{
 				this.buttons = this.enumType.IsDefinedAsFlags ? new CheckIconGrid(box) : new RadioIconGrid(box);
 
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected override void UpdateInterface()
 		{
 			//	Met à jour la valeur dans l'interface.
-			if (this.isChoiceByMenu)
+			if (this.isChoiceByMenu)  // choix par un menu ?
 			{
 				if (this.buttonUnique != null)
 				{
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Designer.Proxies
 					}
 				}
 			}
-			else
+			else  // choix direct ?
 			{
 				if (this.buttons != null)
 				{
