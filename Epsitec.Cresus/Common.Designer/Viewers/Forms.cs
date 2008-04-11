@@ -2167,6 +2167,7 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 
 				field = new FieldDescription(FieldDescription.FieldType.Command);
+				field.CommandButtonClassValue = FieldDescription.CommandButtonClass.RichDialogButton;
 				field.SetField(druid);
 				field.DeltaInserted = true;
 				field.DeltaAttachGuid = ag;
@@ -2176,6 +2177,7 @@ namespace Epsitec.Common.Designer.Viewers
 			else  // masque normal ?
 			{
 				field = new FieldDescription(FieldDescription.FieldType.Command);
+				field.CommandButtonClassValue = FieldDescription.CommandButtonClass.RichDialogButton;
 				field.SetField(druid);
 
 				this.workingForm.Fields.Insert(index, field);
