@@ -829,6 +829,9 @@ namespace Epsitec.Common.FormEngine
 			//	Crée les widgets pour un séparateur dans la grille, lors de la deuxième passe.
 			FieldDescription.FieldType type = field.Type;
 
+			double m = FieldDescription.GetRealSeparator(field.SeparatorBottom, true)+2;
+			double w = field.LineWidth;
+
 			if (nextField == null || grid == null)
 			{
 				type = FieldDescription.FieldType.Line;
@@ -865,7 +868,7 @@ namespace Epsitec.Common.FormEngine
 					if (grid != null)
 					{
 						grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-						grid.RowDefinitions[row].TopBorder = 5;
+						grid.RowDefinitions[row].TopBorder = m;
 						grid.RowDefinitions[row].BottomBorder = 0;
 					}
 
@@ -902,13 +905,14 @@ namespace Epsitec.Common.FormEngine
 				if (grid != null)
 				{
 					grid.RowDefinitions.Add(new Widgets.Layouts.RowDefinition());
-					grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : 10;
-					grid.RowDefinitions[row].BottomBorder = 10;
+					grid.RowDefinitions[row].TopBorder = (type == FieldDescription.FieldType.Title) ? 0 : m+(w-1)/2;
+					grid.RowDefinitions[row].BottomBorder = m-1;
 				}
 
 				Separator sep = new Separator(root);
-				sep.DrawFrameWidth = field.LineWidth;
-				sep.PreferredHeight = field.LineWidth;
+				sep.DrawFrameWidth = w;
+				sep.PreferredHeight = w;
+				sep.Color = FieldDescription.GetRealBackColor(field.BackColor);
 				sep.Name = guid.ToString();
 
 				if (root is FrameBox)

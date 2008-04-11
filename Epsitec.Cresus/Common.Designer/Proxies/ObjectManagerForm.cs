@@ -51,14 +51,18 @@ namespace Epsitec.Common.Designer.Proxies
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject) ||
-				this.ObjectModifier.IsBox(selectedObject))
+				this.ObjectModifier.IsBox(selectedObject) ||
+				this.ObjectModifier.IsTitle(selectedObject) ||
+				this.ObjectModifier.IsLine(selectedObject))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormSeparatorBottom, Res.Captions.Form.SeparatorBottom, Res.Types.FieldDescription.SeparatorType);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject) ||
-				this.ObjectModifier.IsGlue(selectedObject))
+				this.ObjectModifier.IsGlue(selectedObject) ||
+				this.ObjectModifier.IsTitle(selectedObject) ||
+				this.ObjectModifier.IsLine(selectedObject))
 			{
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBackColor, Res.Captions.Form.BackColor, Res.Types.FieldDescription.BackColorType);
 			}
