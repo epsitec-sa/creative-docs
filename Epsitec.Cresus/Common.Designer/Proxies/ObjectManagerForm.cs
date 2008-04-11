@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxLayout,     Res.Captions.Form.BoxLayout,     Res.Types.FieldDescription.BoxLayoutType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxPadding,    Res.Captions.Form.BoxPadding,    Res.Types.FieldDescription.BoxPaddingType);
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameState, Res.Captions.Form.BoxFrameState, Res.Types.FieldDescription.FrameState);
-				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, Res.Captions.Form.BoxFrameWidth, 0, 5, 1, 1);
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormBoxFrameWidth, Res.Captions.Form.BoxFrameWidth, 1, 5, 1, 1);
 			}
 
 			if (this.ObjectModifier.IsCommand(selectedObject))

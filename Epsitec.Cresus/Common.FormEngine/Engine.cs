@@ -610,12 +610,25 @@ namespace Epsitec.Common.FormEngine
 				}
 			}
 
+			double mLeft   = ((field.BoxFrameState & FrameState.Left  ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mRight  = ((field.BoxFrameState & FrameState.Right ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mTop    = ((field.BoxFrameState & FrameState.Top   ) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+			double mBottom = ((field.BoxFrameState & FrameState.Bottom) == 0) ? 0 : (field.BoxFrameWidth-1)/2;
+
+			Margins padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
+			
+			padding.Left   += mLeft;
+			padding.Right  += mRight;
+			padding.Top    += mTop;
+			padding.Bottom += mBottom;
+
 			box.DrawFrameState = FrameState.All;
-			box.Padding = FieldDescription.GetRealBoxPadding(field.BoxPadding);
+			box.Padding = padding;
 			box.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			box.DrawFrameState = field.BoxFrameState;
 			box.DrawFrameWidth = field.BoxFrameWidth;
 			box.PreferredWidth = field.PreferredWidth;
+			box.Margins = new Margins(mLeft, mRight, mTop, mBottom);
 			box.TabIndex = this.tabIndex;  // pas besoin d'incrémenter, pour que le groupe ne fasse pas perdre un numéro
 			box.Name = guid.ToString();
 			this.ApplyTextStyle(box, field);
