@@ -1682,9 +1682,9 @@ namespace Epsitec.Common.Designer.Viewers
 		protected void UpdateUndoRedoCommands()
 		{
 			//	Met à jour les commandes undo/redo.
-			this.GetCommandState("Undo").Enable = this.IsUndoEnable();
-			this.GetCommandState("Redo").Enable = this.IsRedoEnable();
-			this.GetCommandState("UndoRedoList").Enable = this.IsUndoRedoListEnable();
+			this.GetCommandState("Undo").Enable = this.IsUndoEnable;
+			this.GetCommandState("Redo").Enable = this.IsRedoEnable;
+			this.GetCommandState("UndoRedoList").Enable = this.IsUndoRedoListEnable;
 		}
 
 		protected void UpdateCommandTool(string name)
@@ -1740,22 +1740,31 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Les commandes annuler/refaire ne seront plus possibles.
 		}
 
-		protected virtual bool IsUndoEnable()
+		protected virtual bool IsUndoEnable
 		{
 			//	Retourne true si la commande "Undo" doit être active.
-			return false;
+			get
+			{
+				return false;
+			}
 		}
 
-		protected virtual bool IsRedoEnable()
+		protected virtual bool IsRedoEnable
 		{
 			//	Retourne true si la commande "Redo" doit être active.
-			return false;
+			get
+			{
+				return false;
+			}
 		}
 
-		protected virtual bool IsUndoRedoListEnable()
+		protected virtual bool IsUndoRedoListEnable
 		{
 			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
-			return false;
+			get
+			{
+				return false;
+			}
 		}
 		#endregion
 

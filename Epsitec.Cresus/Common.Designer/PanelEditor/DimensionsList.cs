@@ -101,9 +101,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Modifie la cote survolée selon la molette de la souris.
 			if (this.hilited != null)
 			{
+				this.undoAction = this.editor.ViewersPanels.UndoCurrentSnapshot(null);
+				this.UndoMemorize(this.hilited, true);
+
 				double value = this.hilited.Value;
 				value += (direction < 0) ? -1 : 1;
 				this.ChangeValue(this.hilited, value);
+
 				return true;
 			}
 
@@ -120,6 +124,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 			else
 			{
+				this.undoAction = this.editor.ViewersPanels.UndoCurrentSnapshot(null);
+
 				if (this.dragging.DimensionType == Dimension.Type.GridColumn||
 					this.dragging.DimensionType == Dimension.Type.GridRow   )
 				{
@@ -163,6 +169,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					Widget obj = this.dragging.Object;
 					this.objectModifier.SetGridColumnSpan(obj, this.objectModifier.GetGridColumnSpan(obj)+1);
 					this.editor.Invalidate();
+					this.UndoMemorize(this.dragging, false);
 					this.UpdateSelection();
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnSpanDec)
@@ -170,6 +177,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					Widget obj = this.dragging.Object;
 					this.objectModifier.SetGridColumnSpan(obj, this.objectModifier.GetGridColumnSpan(obj)-1);
 					this.editor.Invalidate();
+					this.UndoMemorize(this.dragging, false);
 					this.UpdateSelection();
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowSpanInc)
@@ -177,6 +185,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					Widget obj = this.dragging.Object;
 					this.objectModifier.SetGridRowSpan(obj, this.objectModifier.GetGridRowSpan(obj)+1);
 					this.editor.Invalidate();
+					this.UndoMemorize(this.dragging, false);
 					this.UpdateSelection();
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowSpanDec)
@@ -184,6 +193,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					Widget obj = this.dragging.Object;
 					this.objectModifier.SetGridRowSpan(obj, this.objectModifier.GetGridRowSpan(obj)-1);
 					this.editor.Invalidate();
+					this.UndoMemorize(this.dragging, false);
 					this.UpdateSelection();
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.ChildrenPlacement)
@@ -195,6 +205,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 					this.objectModifier.SetChildrenPlacement(obj, cp);
 					GeometryCache.AdaptBounds(obj, this.objectModifier, cp);
 
+					this.UndoMemorize(this.dragging, false);
 					this.UpdateSelection();
 				}
 				else
@@ -218,12 +229,12 @@ namespace Epsitec.Common.Designer.PanelEditor
 					mouse = this.editor.MapClientToScreen(mouse);
 					double value = mouse.Y - this.startingPos.Y;
 
-					if (isControlPressed)  // moins sensible ?
+					if (isControlPressed)  // Ctrl = moins sensible ?
 					{
 						value = System.Math.Floor((value+0.5)*0.5);
 					}
 
-					if (isShiftPressed)  // grille magnétique ?
+					if (isShiftPressed)  // Shift = grille magnétique ?
 					{
 						double step = 5;
 						value += this.initialValue;
@@ -253,6 +264,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
+						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnRemove)
@@ -266,6 +278,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
+						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowAddBefore||
@@ -280,6 +293,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
+						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowRemove)
@@ -293,7 +307,12 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
+						this.UndoMemorize(this.dragging, false);
 					}
+				}
+				else
+				{
+					this.UndoMemorize(this.dragging, false);
 				}
 			}
 			
@@ -336,6 +355,114 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 			this.editor.UpdateAfterSelectionGridChanged();
 			this.editor.Invalidate();
+		}
+
+		protected void UndoMemorize(Dimension dim, bool merge)
+		{
+			string actionName = null;
+
+			switch (dim.DimensionType)
+			{
+				case Dimension.Type.Width:
+					actionName = Res.Captions.Geometry.Width.Description;
+					break;
+
+				case Dimension.Type.Height:
+					actionName = Res.Captions.Geometry.Height.Description;
+					break;
+
+				case Dimension.Type.MarginLeft:
+				case Dimension.Type.MarginRight:
+				case Dimension.Type.MarginBottom:
+				case Dimension.Type.MarginTop:
+					actionName = Res.Captions.Geometry.Margins.Description;
+					break;
+
+				case Dimension.Type.PaddingLeft:
+				case Dimension.Type.PaddingRight:
+				case Dimension.Type.PaddingBottom:
+				case Dimension.Type.PaddingTop:
+					actionName = Res.Captions.Geometry.Padding.Description;
+					break;
+
+				case Dimension.Type.GridColumnAddBefore:
+				case Dimension.Type.GridColumnAddAfter:
+				case Dimension.Type.GridColumnRemove:
+					actionName = Res.Captions.Grid.ColumnsCount.Description;
+					break;
+
+				case Dimension.Type.GridRowAddBefore:
+				case Dimension.Type.GridRowAddAfter:
+				case Dimension.Type.GridRowRemove:
+					actionName = Res.Captions.Grid.RowsCount.Description;
+					break;
+
+				case Dimension.Type.GridWidth:
+					actionName = Res.Captions.Grid.ColumnWidth.Description;
+					break;
+
+				case Dimension.Type.GridHeight:
+					actionName = Res.Captions.Grid.RowHeight.Description;
+					break;
+
+				case Dimension.Type.GridWidthMode:
+					actionName = Res.Captions.Grid.ColumnMode.Description;
+					break;
+
+				case Dimension.Type.GridHeightMode:
+					actionName = Res.Captions.Grid.RowMode.Description;
+					break;
+
+				case Dimension.Type.GridMarginLeft:
+					actionName = Res.Captions.Grid.LeftBorder.Description;
+					break;
+
+				case Dimension.Type.GridMarginRight:
+					actionName = Res.Captions.Grid.RightBorder.Description;
+					break;
+
+				case Dimension.Type.GridMarginBottom:
+					actionName = Res.Captions.Grid.BottomBorder.Description;
+					break;
+
+				case Dimension.Type.GridMarginTop:
+					actionName = Res.Captions.Grid.TopBorder.Description;
+					break;
+
+				case Dimension.Type.GridColumnSpanInc:
+					actionName = Res.Captions.Grid.ColumnSpan.Description;
+					break;
+
+				case Dimension.Type.GridColumnSpanDec:
+					actionName = Res.Captions.Grid.ColumnSpan.Description;
+					break;
+
+				case Dimension.Type.GridRowSpanInc:
+					actionName = Res.Captions.Grid.RowSpan.Description;
+					break;
+
+				case Dimension.Type.GridRowSpanDec:
+					actionName = Res.Captions.Grid.RowSpan.Description;
+					break;
+
+				case Dimension.Type.ChildrenPlacement:
+					actionName = Res.Captions.Layout.ChildrenPlacement.Description;
+					break;
+			}
+
+			if (actionName != null)
+			{
+				if (merge && this.editor.ViewersPanels.IsUndoSameLastSnapshot(actionName))
+				{
+					// Conserve le dernier état mémorisé.
+				}
+				else
+				{
+					this.editor.ViewersPanels.UndoMemorize(this.undoAction, actionName);
+				}
+			}
+
+			this.undoAction = null;
 		}
 
 		protected static ObjectModifier.GridMode NextGridMode(ObjectModifier.GridMode mode)
@@ -642,5 +769,6 @@ namespace Epsitec.Common.Designer.PanelEditor
 		protected Point						startingPos;
 		protected double					initialValue;
 		protected bool						isShiftPressed;
+		protected Undo.Shapshot				undoAction;
 	}
 }

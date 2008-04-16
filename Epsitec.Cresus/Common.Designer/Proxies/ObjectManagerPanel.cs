@@ -405,6 +405,8 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Il faut envoyer la valeur à tous les objets sélectionnés.
 			this.SuspendChanges();
 
+			this.UndoMemorize(value.Type);
+
 			bool regenerateProxies = false;
 			bool regenerateDimensions = false;
 
@@ -413,7 +415,6 @@ namespace Epsitec.Common.Designer.Proxies
 				foreach (Widget selectedObject in value.SelectedObjects)
 				{
 					PanelEditor.GridSelection gs = PanelEditor.GridSelection.Get(selectedObject);
-					Margins m;
 					Rectangle r;
 
 					switch (value.Type)
@@ -664,7 +665,6 @@ namespace Epsitec.Common.Designer.Proxies
 								}
 							}
 							break;
-
 					}
 				}
 			}
@@ -691,6 +691,137 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 		}
 
+		protected void UndoMemorize(AbstractProxy.Type type)
+		{
+			//	Mémorise l'état, en fonction du type de l'action qui va être effectuée.
+			switch (type)
+			{
+				case AbstractProxy.Type.PanelButtonAspect:
+					this.UndoMemorize(Res.Captions.Aspect.ButtonAspect.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelMargins:
+					this.UndoMemorize(Res.Captions.Geometry.Margins.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelOriginX:
+					this.UndoMemorize(Res.Captions.Geometry.OriginX.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelOriginY:
+					this.UndoMemorize(Res.Captions.Geometry.OriginY.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelWidth:
+					this.UndoMemorize(Res.Captions.Geometry.Width.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelHeight:
+					this.UndoMemorize(Res.Captions.Geometry.Height.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelPadding:
+					this.UndoMemorize(Res.Captions.Geometry.Padding.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelChildrenPlacement:
+					this.UndoMemorize(Res.Captions.Layout.ChildrenPlacement.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelAnchoredHorizontalAttachment:
+					this.UndoMemorize(Res.Captions.Layout.AnchoredHorizontalAttachment.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelAnchoredVerticalAttachment:
+					this.UndoMemorize(Res.Captions.Layout.AnchoredVerticalAttachment.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelStackedHorizontalAttachment:
+					this.UndoMemorize(Res.Captions.Layout.StackedHorizontalAttachment.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelStackedVerticalAttachment:
+					this.UndoMemorize(Res.Captions.Layout.StackedVerticalAttachment.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelStackedHorizontalAlignment:
+					this.UndoMemorize(Res.Captions.Layout.StackedHorizontalAlignment.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelStackedVerticalAlignment:
+					this.UndoMemorize(Res.Captions.Layout.StackedVerticalAlignment.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnsCount:
+					this.UndoMemorize(Res.Captions.Grid.ColumnsCount.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowsCount:
+					this.UndoMemorize(Res.Captions.Grid.RowsCount.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnSpan:
+					this.UndoMemorize(Res.Captions.Grid.ColumnSpan.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowSpan:
+					this.UndoMemorize(Res.Captions.Grid.RowSpan.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnMode:
+					this.UndoMemorize(Res.Captions.Grid.ColumnMode.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnWidth:
+					this.UndoMemorize(Res.Captions.Grid.ColumnWidth.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnMinWidth:
+					this.UndoMemorize(Res.Captions.Grid.MinWidth.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridColumnMaxWidth:
+					this.UndoMemorize(Res.Captions.Grid.MaxWidth.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridLeftBorder:
+					this.UndoMemorize(Res.Captions.Grid.LeftBorder.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridRightBorder:
+					this.UndoMemorize(Res.Captions.Grid.RightBorder.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowMode:
+					this.UndoMemorize(Res.Captions.Grid.RowMode.Description, false);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowHeight:
+					this.UndoMemorize(Res.Captions.Grid.RowHeight.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowMinHeight:
+					this.UndoMemorize(Res.Captions.Grid.MinHeight.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridRowMaxHeight:
+					this.UndoMemorize(Res.Captions.Grid.MaxHeight.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridTopBorder:
+					this.UndoMemorize(Res.Captions.Grid.TopBorder.Description, true);
+					break;
+
+				case AbstractProxy.Type.PanelGridBottomBorder:
+					this.UndoMemorize(Res.Captions.Grid.BottomBorder.Description, true);
+					break;
+			}
+		}
+
+		protected void UndoMemorize(string actionName, bool merge)
+		{
+			this.Viewer.UndoMemorize(actionName, merge);
+		}
 
 		protected Viewers.Panels Viewer
 		{

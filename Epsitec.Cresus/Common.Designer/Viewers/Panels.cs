@@ -17,6 +17,8 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			bool isWindow = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window);
 
+			this.undoEngine = new Undo.Engine();
+
 			this.scrollable.Visibility = false;
 
 			FrameBox surface = new FrameBox(this.lastGroup);
@@ -375,6 +377,127 @@ namespace Epsitec.Common.Designer.Viewers
 			this.ignoreChange = iic;
 		}
 
+
+		#region UndoRedo
+		public override void Undo()
+		{
+			//	Annule la dernière action.
+			Undo.Shapshot snapshot = this.undoEngine.Undo(this.UndoCurrentSnapshot(null));
+			this.UndoRestore(snapshot);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public override void Redo()
+		{
+			//	Refait la dernière action.
+			Undo.Shapshot snapshot = this.undoEngine.Redo();
+			this.UndoRestore(snapshot);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		{
+			//	Crée le menu undo/redo.
+			return this.undoEngine.CreateMenu(message);
+		}
+
+		public override void UndoRedoGoto(int index)
+		{
+			//	Annule ou refait quelques actions, selon le menu.
+			Undo.Shapshot snapshot = this.undoEngine.Goto(index, this.UndoCurrentSnapshot(null));
+			this.UndoRestore(snapshot);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public override void UndoFlush()
+		{
+			//	Les commandes annuler/refaire ne seront plus possibles.
+			this.undoEngine.Flush();
+			this.UpdateUndoRedoCommands();
+		}
+
+		protected override bool IsUndoEnable
+		{
+			//	Retourne true si la commande "Undo" doit être active.
+			get
+			{
+				return this.undoEngine.IsUndoEnable;
+			}
+		}
+
+		protected override bool IsRedoEnable
+		{
+			//	Retourne true si la commande "Redo" doit être active.
+			get
+			{
+				return this.undoEngine.IsRedoEnable;
+			}
+		}
+
+		protected override bool IsUndoRedoListEnable
+		{
+			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
+			get
+			{
+				return this.undoEngine.IsUndoRedoListEnable;
+			}
+		}
+
+		public bool IsUndoSameLastSnapshot(string snapshotName)
+		{
+			//	Indique si la dernière action mémorisée était du même type.
+			return this.undoEngine.IsSameLastShapshot(snapshotName);
+		}
+
+		public void UndoMemorize(string snapshotName, bool merge)
+		{
+			//	Mémorise l'état actuel, avant d'effectuer une modification.
+			//	Si merge = true et que la dernière photographie avait le même nom, on conserve la dernière
+			//	photographie mémorisée.
+			this.undoEngine.Memorize(this.UndoCurrentSnapshot(snapshotName), merge);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public void UndoMemorize(Undo.Shapshot snapshot, string snapshotName)
+		{
+			//	Mémorise et nomme un état donné, avant d'effectuer une modification.
+			snapshot.Name = snapshotName;
+			this.UndoMemorize(snapshot);
+		}
+
+		public void UndoMemorize(Undo.Shapshot snapshot)
+		{
+			//	Mémorise un état donné, avant d'effectuer une modification.
+			this.undoEngine.Memorize(snapshot);
+			this.UpdateUndoRedoCommands();
+		}
+
+		public Undo.Shapshot UndoCurrentSnapshot(string snapshotName)
+		{
+			//	Retourne la photographie courante, prête à être mémorisée dans this.undoEngine.
+			Undo.Shapshot snapshot = new Undo.Shapshot();
+
+			snapshot.Name = snapshotName;
+			snapshot.SerializedData = this.PanelToXml(this.GetPanel());
+			snapshot.Selection.AddRange(this.panelEditor.SelectionToList());
+
+			return snapshot;
+		}
+
+		protected void UndoRestore(Undo.Shapshot snapshot)
+		{
+			//	Remet l'éditeur de panneaux dans un état précédent.
+			UI.Panel panel = this.XmlToPanel(snapshot.SerializedData);
+			this.SetPanel(panel, this.druidToSerialize);
+
+			this.panelEditor.SelectFromList(snapshot.Selection);
+
+			this.DefineProxies();
+			this.UpdateCommands();
+		}
+		#endregion
+
+	
 		public override bool Terminate(bool soft)
 		{
 			//	Termine le travail sur une ressource, avant de passer à une autre.
@@ -1265,5 +1388,7 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected UI.PanelMode					panelMode = UI.PanelMode.Default;
 		protected Druid							druidToSerialize;
+
+		protected Undo.Engine					undoEngine;
 	}
 }

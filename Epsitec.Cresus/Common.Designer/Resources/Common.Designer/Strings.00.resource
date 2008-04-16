@@ -569,4 +569,6 @@
   <data name="Panel.Margins.Bottom" id="KF2">Marge inférieure</data>
   <data name="Panel.Margins.Link" id="KG2">Liés</data>
   <data name="Undo.Action.LineWidth" id="KH2">Epaisseur</data>
+  <data name="Action.PanelCreateObject" id="KI2">Nouvel objet</data>
+  <data name="Action.PanelMove" id="KJ2">Déplacement</data>
 </bundle>

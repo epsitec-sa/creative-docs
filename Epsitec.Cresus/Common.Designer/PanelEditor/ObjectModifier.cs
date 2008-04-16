@@ -1383,21 +1383,34 @@ namespace Epsitec.Common.Designer.PanelEditor
 			GridLayoutEngine.SetRowSpan(obj, 1);
 		}
 
-		public void SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
+		public bool SetGridParentColumnRow(Widget obj, Widget parent, int column, int row)
 		{
 			//	Détermine la cellule dans un tableau à laquelle appartient l'objet.
 			System.Diagnostics.Debug.Assert(this.AreChildrenGrid(parent));
+			bool isChanging = false;
 
 			obj.Anchor = AnchorStyles.None;
 			obj.Dock = DockStyle.None;
 
-			GridLayoutEngine.SetColumn(obj, column);
-			GridLayoutEngine.SetRow(obj, row);
+			if (GridLayoutEngine.GetColumn(obj) != column)
+			{
+				GridLayoutEngine.SetColumn(obj, column);
+				isChanging = true;
+			}
+
+			if (GridLayoutEngine.GetRow(obj) != row)
+			{
+				GridLayoutEngine.SetRow(obj, row);
+				isChanging = true;
+			}
 
 			if (obj.Parent != parent)
 			{
 				obj.SetParent(parent);
+				isChanging = true;
 			}
+
+			return isChanging;
 		}
 
 		public void SetGridColumn(Widget obj, int column)
@@ -2537,6 +2550,13 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 		}
 		#endregion
+
+
+		protected void UndoMemorize(string actionName)
+		{
+			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
+			this.panelEditor.ViewersPanels.UndoMemorize(actionName, true);
+		}
 
 
 		protected ChildrenPlacement GetParentPlacement(Widget obj)

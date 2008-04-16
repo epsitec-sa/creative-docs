@@ -154,6 +154,8 @@
     <Compile Include="Ribbons\File.cs" />
     <Compile Include="Ribbons\Edit.cs" />
     <Compile Include="Searcher.cs" />
+    <Compile Include="Undo\Shapshot.cs" />
+    <Compile Include="Undo\Engine.cs" />
     <Compile Include="UserInterface.cs" />
     <Compile Include="Viewers\Abstract.cs" />
     <Compile Include="Viewers\Captions.cs" />

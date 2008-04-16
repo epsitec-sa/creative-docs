@@ -18,10 +18,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool isWindow = (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window);
 
 			this.engine = new FormEngine.Engine(this.module.FormResourceProvider);
-
-			this.undoActions = new List<UndoAction>();
-			this.undoCount = 0;
-			this.undoIndex = 0;
+			this.undoEngine = new Undo.Engine();
 
 			this.scrollable.Visibility = false;
 
@@ -869,221 +866,96 @@ namespace Epsitec.Common.Designer.Viewers
 		public override void Undo()
 		{
 			//	Annule la dernière action.
-			System.Diagnostics.Debug.Assert(this.IsUndoEnable());
-
-			if (this.undoActions.Count == this.undoIndex)
-			{
-				this.undoActions.Add(this.UndoCurrentState(null));  // ajoute l'état actuel à la fin de la liste
-			}
-
-			UndoAction action = this.undoActions[--this.undoIndex];
-			this.UndoRestore(action);
+			Undo.Shapshot snapshot = this.undoEngine.Undo(this.UndoCurrentSnapshot(null));
+			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
 		}
 
 		public override void Redo()
 		{
 			//	Refait la dernière action.
-			System.Diagnostics.Debug.Assert(this.IsRedoEnable());
-
-			UndoAction action = this.undoActions[++this.undoIndex];
-			this.UndoRestore(action);
+			Undo.Shapshot snapshot = this.undoEngine.Redo();
+			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
 		}
 
 		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
 		{
-			//	Crée le menu undo/redo. Même si le nombre d'actions mémorisées est grand, le menu
-			//	présente toujours un nombre raisonnable de lignes. La première action (undo) et la
-			//	dernière (redo) sont toujours présentes.
-			int undoLength = this.undoIndex;
-			int redoLength = this.undoCount-this.undoIndex;
-			int all = this.undoCount;
-			int total = System.Math.Min(all, 20);
-			int start = this.undoIndex;
-			start -= total/2;  if ( start < 0     )  start = 0;
-			start += total-1;  if ( start > all-1 )  start = all-1;
-
-			List<Widget> list = new List<Widget>();
-
-			//	Met éventuellement la dernière action à refaire.
-			if (start < all-1)
-			{
-				string action = this.undoActions[all-1].ActionName;
-				action = Misc.Italic(action);
-				list.Add(this.UndoRedoCreateItem(message, 0, all, action, all-1));
-
-				if (start < all-2)
-				{
-					list.Add(new MenuSeparator());
-				}
-			}
-
-			//	Met les actions à refaire puis à celles à annuler.
-			for (int i=start; i>start-total; i--)
-			{
-				if (i >= undoLength)  // redo ?
-				{
-					string action = this.undoActions[i].ActionName;
-					action = Misc.Italic(action);
-					list.Add(this.UndoRedoCreateItem(message, 0, i+1, action, i));
-
-					if (i == undoLength && undoLength != 0)
-					{
-						list.Add(new MenuSeparator());
-					}
-				}
-				else	// undo ?
-				{
-					string action = this.undoActions[i].ActionName;
-					int active = 1;
-					if (i == undoLength-1)
-					{
-						active = 2;
-						action = Misc.Bold(action);
-					}
-					list.Add(this.UndoRedoCreateItem(message, active, i+1, action, i));
-				}
-			}
-
-			//	Met éventuellement la dernière action à annuler.
-			if (start-total >= 0)
-			{
-				if (start-total > 0)
-				{
-					list.Add(new MenuSeparator());
-				}
-
-				string action = this.undoActions[0].ActionName;
-				list.Add(this.UndoRedoCreateItem(message, 1, 1, action, 0));
-			}
-
-			//	Génère le menu à l'envers, c'est-à-dire la première action au
-			//	début du menu (en haut).
-			VMenu menu = new VMenu();
-
-			for (int i=list.Count-1; i>=0; i--)
-			{
-				menu.Items.Add(list[i]);
-			}
-
-			menu.AdjustSize();
-			return menu;
-		}
-
-		protected MenuItem UndoRedoCreateItem(MessageEventHandler message, int active, int rank, string action, int todo)
-		{
-			//	Crée une case du menu des actions à refaire/annuler.
-			string icon = "";
-			if (active == 1)  icon = Misc.Icon("ActiveNo");
-			if (active == 2)  icon = Misc.Icon("ActiveCurrent");
-
-			string name = string.Format("{0}: {1}", rank.ToString(), action);
-			string cmd = "UndoRedoListDo";
-			Misc.CreateStructuredCommandWithName(cmd);
-
-			MenuItem item = new MenuItem(cmd, icon, name, "", todo.ToString());
-
-			if (message != null)
-			{
-				item.Pressed += message;
-			}
-
-			return item;
+			//	Crée le menu undo/redo.
+			return this.undoEngine.CreateMenu(message);
 		}
 
 		public override void UndoRedoGoto(int index)
 		{
 			//	Annule ou refait quelques actions, selon le menu.
-			if (this.undoActions.Count == this.undoIndex)
-			{
-				this.undoActions.Add(this.UndoCurrentState(null));  // ajoute l'état actuel à la fin de la liste
-			}
-
-			if (index >= this.undoIndex)
-			{
-				index++;
-			}
-
-			UndoAction action = this.undoActions[index];
-			this.UndoRestore(action);
-			this.undoIndex = index;
+			Undo.Shapshot snapshot = this.undoEngine.Goto(index, this.UndoCurrentSnapshot(null));
+			this.UndoRestore(snapshot);
 			this.UpdateUndoRedoCommands();
 		}
 
 		public override void UndoFlush()
 		{
 			//	Les commandes annuler/refaire ne seront plus possibles.
-			this.undoActions.Clear();
-			this.undoCount = 0;
-			this.undoIndex = 0;
+			this.undoEngine.Flush();
 			this.UpdateUndoRedoCommands();
 		}
 
-		protected override bool IsUndoEnable()
+		protected override bool IsUndoEnable
 		{
 			//	Retourne true si la commande "Undo" doit être active.
-			return this.undoIndex > 0;
+			get
+			{
+				return this.undoEngine.IsUndoEnable;
+			}
 		}
 
-		protected override bool IsRedoEnable()
+		protected override bool IsRedoEnable
 		{
 			//	Retourne true si la commande "Redo" doit être active.
-			return this.undoIndex < this.undoCount;
+			get
+			{
+				return this.undoEngine.IsRedoEnable;
+			}
 		}
 
-		protected override bool IsUndoRedoListEnable()
+		protected override bool IsUndoRedoListEnable
 		{
 			//	Retourne true si la commande "UndoRedoList" pour le menu doit être active.
-			return this.undoCount > 0;
+			get
+			{
+				return this.undoEngine.IsUndoRedoListEnable;
+			}
 		}
 
-		public void UndoMemorize(string actionName, bool merge)
+		public void UndoMemorize(string snapshotName, bool merge)
 		{
 			//	Mémorise l'état actuel, avant d'effectuer une modification dans this.workingForm.
-			//	Si merge = true et que la dernière action avait le même nom, on conserve le dernier
-			//	état mémorisé.
-			while (this.undoActions.Count > this.undoIndex)
-			{
-				this.undoActions.RemoveAt(this.undoActions.Count-1);  // supprime la dernière action
-			}
-
-			UndoAction action = this.UndoCurrentState(actionName);
-
-			if (merge && this.undoCount > 0 && this.undoIndex > 0 && this.undoActions[this.undoIndex-1].ActionName == actionName)
-			{
-				// Conserve le dernier état mémorisé.
-			}
-			else
-			{
-				this.undoActions.Add(action);
-				this.undoIndex = this.undoActions.Count;
-				this.undoCount = this.undoIndex;
-				this.UpdateUndoRedoCommands();
-			}
+			//	Si merge = true et que la dernière photographie avait le même nom, on conserve la dernière
+			//	photographie mémorisée.
+			this.undoEngine.Memorize(this.UndoCurrentSnapshot(snapshotName), merge);
+			this.UpdateUndoRedoCommands();
 		}
 
-		protected UndoAction UndoCurrentState(string actionName)
+		protected Undo.Shapshot UndoCurrentSnapshot(string snapshotName)
 		{
-			//	Retourne l'état courant, prêt à être mémorisé dans this.undoActions.
-			UndoAction action = new UndoAction();
+			//	Retourne la photographie courante, prête à être mémorisée dans this.undoEngine.
+			Undo.Shapshot snapshot = new Undo.Shapshot();
 
-			action.ActionName = actionName;
-			action.SerializedData = this.FormToXml(this.workingForm);
+			snapshot.Name = snapshotName;
+			snapshot.SerializedData = this.FormToXml(this.workingForm);
 
-			action.FieldsSelected = new List<int>();
 			foreach (int sel in this.fieldsTable.SelectedRows)
 			{
-				action.FieldsSelected.Add(sel);
+				snapshot.Selection.Add(sel);
 			}
 
-			return action;
+			return snapshot;
 		}
 
-		protected void UndoRestore(UndoAction action)
+		protected void UndoRestore(Undo.Shapshot snapshot)
 		{
 			//	Remet l'éditeur de masques dans un état précédent.
-			FormDescription inputForm = this.XmlToForm(action.SerializedData);
+			FormDescription inputForm = this.XmlToForm(snapshot.SerializedData);
 			this.access.GetForm(this.druidToSerialize, inputForm, out this.workingForm, out this.baseFields, out this.finalFields, out this.entityId);
 			this.SetForm(false);
 
@@ -1091,7 +963,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateFieldsTable(false);
 
 			List<int> sels = new List<int>();
-			foreach (int sel in action.FieldsSelected)
+			foreach (int sel in snapshot.Selection)
 			{
 				sels.Add(sel);
 			}
@@ -1104,14 +976,6 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateRelationsTable(false);
 			this.UpdateRelationsButtons();
 			this.UpdateMiscPage();
-		}
-
-		protected class UndoAction
-		{
-			//	Cette classe mémorise l'état de l'éditeur de masques.
-			public string		ActionName;
-			public string		SerializedData;
-			public List<int>	FieldsSelected;
 		}
 		#endregion
 
@@ -2710,8 +2574,6 @@ namespace Epsitec.Common.Designer.Viewers
 		protected UI.PanelMode					panelMode = UI.PanelMode.Default;
 		protected Druid							druidToSerialize;
 
-		protected List<UndoAction>				undoActions;
-		protected int							undoCount;
-		protected int							undoIndex;
+		protected Undo.Engine					undoEngine;
 	}
 }

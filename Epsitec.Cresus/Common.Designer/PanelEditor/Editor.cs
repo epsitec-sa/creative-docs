@@ -1408,9 +1408,12 @@ namespace Epsitec.Common.Designer.PanelEditor
 			{
 				this.isInside = this.IsInside(pos);
 				Widget parent = this.DetectGroup(pos);
+				Undo.Shapshot action = null;
 
 				if (this.isInside)
 				{
+					action = this.viewersPanels.UndoCurrentSnapshot(Res.Strings.Action.PanelCreateObject);
+
 					Point initialPos = pos;
 					this.CreateObjectAdjust(ref pos, parent, out this.creatingRectangle);
 
@@ -1477,7 +1480,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.lastCreatedObject = this.creatingObject;
 				this.creatingObject = null;
 
-				if (!this.ChangeTextResource(this.lastCreatedObject))  // choix d'un Druid...
+				if (this.ChangeTextResource(this.lastCreatedObject))  // choix d'un Druid...
+				{
+					this.viewersPanels.UndoMemorize(action);
+				}
+				else
 				{
 					this.lastCreatedObject.Parent.Children.Remove(this.lastCreatedObject);
 					this.lastCreatedObject.Dispose();
@@ -1975,6 +1982,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Fin du drag pour déplacer les objets sélectionnés.
 			this.isInside = this.IsInside(pos);
 			Widget parent = this.DetectGroup(pos);
+			Undo.Shapshot action = this.viewersPanels.UndoCurrentSnapshot(null);
 
 			if (this.isInside)
 			{
@@ -1983,8 +1991,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 				if (this.objectModifier.AreChildrenAnchored(parent))
 				{
 					Rectangle initial = this.SelectBounds;
-					this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent);
-					this.OnChildrenGeometryChanged();  // met à jour les proxies
+					if (this.MoveSelection(this.draggingRectangle.BottomLeft - initial.BottomLeft, parent))
+					{
+						this.viewersPanels.UndoMemorize(action, Res.Strings.Action.PanelMove);
+						this.OnChildrenGeometryChanged();  // met à jour les proxies
+					}
 				}
 
 				if (this.objectModifier.AreChildrenStacked(parent))
@@ -1995,8 +2006,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 					ObjectModifier.StackedVerticalAttachment va;
 					Rectangle hilite;
 					this.ZOrderDetect(pos, parent, out group, out order, out ha, out va, out hilite);
-					this.ZOrderChangeSelection(group, order, ha, va);
-					this.OnChildrenGeometryChanged();  // met à jour les proxies
+					if (this.ZOrderChangeSelection(group, order, ha, va))
+					{
+						this.viewersPanels.UndoMemorize(action, Res.Strings.Action.PanelMove);
+						this.OnChildrenGeometryChanged();  // met à jour les proxies
+					}
 				}
 
 				if (this.objectModifier.AreChildrenGrid(parent))
@@ -2008,10 +2022,11 @@ namespace Epsitec.Common.Designer.PanelEditor
 					{
 						Widget select = this.selectedObjects[0];
 						Widget actual = this.objectModifier.GetGridCellWidget(parent, null, column, row);
+						bool isChanging = false;
 
 						if (select == actual)
 						{
-							this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
+							isChanging |= this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
 						}
 						else
 						{
@@ -2019,16 +2034,20 @@ namespace Epsitec.Common.Designer.PanelEditor
 							int ic = this.objectModifier.GetGridColumn(select);
 							int ir = this.objectModifier.GetGridRow(select);
 
-							this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
+							isChanging |= this.objectModifier.SetGridParentColumnRow(select, parent, column, row);
 							this.objectModifier.AdaptFromParent(select, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 
 							if (actual != null)
 							{
-								this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
+								isChanging |= this.objectModifier.SetGridParentColumnRow(actual, ip, ic, ir);
 							}
 						}
 
-						this.OnChildrenGeometryChanged();  // met à jour les proxies
+						if (isChanging)
+						{
+							this.viewersPanels.UndoMemorize(action, Res.Strings.Action.PanelMove);
+							this.OnChildrenGeometryChanged();  // met à jour les proxies
+						}
 					}
 					else
 					{
@@ -2054,6 +2073,8 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.draggingWindow.DissolveAndDisposeWindow();
 				this.draggingWindow = null;
 				this.DeleteSelection();
+
+				this.viewersPanels.UndoMemorize(action, Res.Strings.Action.Delete);
 			}
 
 			this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);
@@ -2114,6 +2135,79 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 
 		#region Selection
+		public List<int> SelectionToList()
+		{
+			//	Retourne une liste représentant tous les objets sélectionnés.
+			List<int> list = new List<int>();
+			int rank = 0;
+
+			if (this.selectedObjects.Contains(this.panel))
+			{
+				list.Add(rank);
+			}
+			rank++;
+
+			this.AddSelectionToList(this.panel, list, ref rank);
+
+			return list;
+		}
+
+		protected void AddSelectionToList(Widget root, List<int> list, ref int rank)
+		{
+			foreach (Widget widget in root.Children)
+			{
+				if (this.selectedObjects.Contains(widget))
+				{
+					list.Add(rank);
+				}
+
+				rank++;
+
+				if (widget.Children.Count > 0)
+				{
+					this.AddSelectionToList(widget, list, ref rank);
+				}
+			}
+		}
+
+		public void SelectFromList(List<int> list)
+		{
+			//	Sélectionne les objets d'après une liste.
+			this.selectedObjects.Clear();
+			int rank = 0;
+
+			if (list.Contains(rank))
+			{
+				this.selectedObjects.Add(this.panel);
+			}
+			rank++;
+
+			this.SelectFromList(this.panel, list, ref rank);
+
+			this.GridClearSelection();
+			this.UpdateAfterChanging(Viewers.Changing.Selection);
+			this.OnChildrenSelected();
+			this.Invalidate();
+		}
+
+		protected void SelectFromList(Widget root, List<int> list, ref int rank)
+		{
+			foreach (Widget widget in root.Children)
+			{
+				if (list.Contains(rank))
+				{
+					this.selectedObjects.Add(widget);
+				}
+
+				rank++;
+
+				if (widget.Children.Count > 0)
+				{
+					this.SelectFromList(widget, list, ref rank);
+				}
+			}
+		}
+
 		protected Widget Detect(Point pos, bool sameParent, bool onlyGrid)
 		{
 			//	Détecte l'objet visé par la souris, avec priorité au dernier objet
@@ -2474,6 +2568,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		protected void MoveRibbonSelection(Point direction)
 		{
 			//	Déplace tous les objets sélectionnés selon le ruban 'Move'.
+			this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelMove, false);
 			direction.X *= this.module.DesignerApplication.MoveHorizontal;
 			direction.Y *= this.module.DesignerApplication.MoveVertical;
 			this.MoveSelection(direction, null);
@@ -2481,13 +2576,18 @@ namespace Epsitec.Common.Designer.PanelEditor
 			this.SetDirty();
 		}
 
-		protected void MoveSelection(Point move, Widget parent)
+		protected bool MoveSelection(Point move, Widget parent)
 		{
 			//	Déplace et change de parent pour tous les objets sélectionnés.
+			bool isMoving = false;
+
 			foreach (Widget obj in this.selectedObjects)
 			{
 				Rectangle bounds = this.objectModifier.GetBounds(obj);
-				bounds.Offset(move);
+				if (!move.IsZero)
+				{
+					bounds.Offset(move);
+				}
 
 				if (parent != null)
 				{
@@ -2495,16 +2595,24 @@ namespace Epsitec.Common.Designer.PanelEditor
 					{
 						obj.Parent.Children.Remove(obj);
 						parent.Children.Add(obj);
+						isMoving = true;
 					}
 
 					this.objectModifier.AdaptFromParent(obj, ObjectModifier.StackedHorizontalAttachment.None, ObjectModifier.StackedVerticalAttachment.None);
 				}
 
-				bounds.Size = this.GetObjectPreferredBounds(obj).Size;
-				this.SetObjectPreferredBounds(obj, bounds);
+				Rectangle current = this.GetObjectPreferredBounds(obj);
+				bounds.Size = current.Size;
+
+				if (bounds != current)
+				{
+					this.SetObjectPreferredBounds(obj, bounds);
+					isMoving = true;
+				}
 			}
 
 			this.Invalidate();
+			return isMoving;
 		}
 
 		protected void SelectAlign(int direction, bool isVertical)
@@ -3380,12 +3488,14 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 		}
 
-		protected void ZOrderChangeSelection(Widget parent, int order, ObjectModifier.StackedHorizontalAttachment ha, ObjectModifier.StackedVerticalAttachment va)
+		protected bool ZOrderChangeSelection(Widget parent, int order, ObjectModifier.StackedHorizontalAttachment ha, ObjectModifier.StackedVerticalAttachment va)
 		{
 			//	Change le ZOrder de tous les objets sélectionnés.
+			bool isChanging = false;
+
 			if (order == -1 || this.selectedObjects.Contains(parent))
 			{
-				return;
+				return isChanging;
 			}
 
 			foreach (Widget obj in this.selectedObjects)
@@ -3399,14 +3509,20 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 				bool stacked = this.objectModifier.AreChildrenStacked(obj.Parent);
 
-				obj.SetParent(parent);
-				obj.ZOrder = newOrder;
+				if (obj.Parent != parent || obj.ZOrder != newOrder)
+				{
+					obj.SetParent(parent);
+					obj.ZOrder = newOrder;
+					isChanging = true;
+				}
 
 				if (!stacked)
 				{
 					this.objectModifier.AdaptFromParent(obj, ha, va);
 				}
 			}
+
+			return isChanging;
 		}
 		#endregion
 
