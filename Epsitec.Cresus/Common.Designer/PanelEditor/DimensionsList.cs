@@ -162,6 +162,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				else if (this.dragging.DimensionType == Dimension.Type.GridWidthMode||
 						 this.dragging.DimensionType == Dimension.Type.GridHeightMode)
 				{
+					this.UndoMemorize(this.dragging, false);
 					this.ChangeMode(this.dragging);
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnSpanInc)
