@@ -262,9 +262,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.objectModifier.GridColumnAdd(obj, this.dragging.ColumnOrRow, (this.dragging.DimensionType == Dimension.Type.GridColumnAddAfter));
 
+						this.UndoMemorize(this.dragging, false);
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
-						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridColumnRemove)
@@ -276,9 +276,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.objectModifier.GridColumnRemove(obj, this.dragging.ColumnOrRow);
 
+						this.UndoMemorize(this.dragging, false);
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
-						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowAddBefore||
@@ -291,9 +291,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.objectModifier.GridRowAdd(obj, this.dragging.ColumnOrRow, (this.dragging.DimensionType == Dimension.Type.GridRowAddAfter));
 
+						this.UndoMemorize(this.dragging, false);
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
-						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else if (this.dragging.DimensionType == Dimension.Type.GridRowRemove)
@@ -305,9 +305,9 @@ namespace Epsitec.Common.Designer.PanelEditor
 
 						this.objectModifier.GridRowRemove(obj, this.dragging.ColumnOrRow);
 
+						this.UndoMemorize(this.dragging, false);
 						this.editor.UpdateAfterSelectionGridChanged();
 						this.editor.Invalidate();
-						this.UndoMemorize(this.dragging, false);
 					}
 				}
 				else
