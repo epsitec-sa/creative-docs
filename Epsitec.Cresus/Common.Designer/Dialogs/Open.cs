@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window = new Window();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				this.WindowInit("Open", 500, 300, true);
+				this.WindowInit("Open", 600, 440, true);
 				this.window.Text = Res.Strings.Dialog.Open.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
@@ -62,8 +62,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.table.ItemPanel.CustomItemViewFactoryGetter = this.ItemViewFactoryGetter;
 				this.table.SourceType = st;
 				this.table.Items = this.moduleInfosShowed;
-				this.table.Columns.Add("Name",  305);
-				this.table.Columns.Add("Id",     30);
+				this.table.Columns.Add("Name",  400);
+				this.table.Columns.Add("Id",     35);
 				this.table.Columns.Add("State",  70);
 				this.table.Columns.Add("Icon",   30);
 				this.table.Columns.Add("Patch",  30);
