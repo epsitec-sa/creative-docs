@@ -1705,7 +1705,9 @@ namespace Epsitec.Common.Designer.Viewers
 
 		protected void UpdateCommandTool(string name)
 		{
-			if (this.designerApplication.IsReadonly)
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+
+			if (this.designerApplication.IsReadonly || item == null)
 			{
 				this.GetCommandState(name).ActiveState = ActiveState.No;
 				this.GetCommandState(name).Enable = false;
