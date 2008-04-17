@@ -571,4 +571,5 @@
   <data name="Undo.Action.LineWidth" id="KH2">Epaisseur</data>
   <data name="Action.PanelCreateObject" id="KI2">Nouvel objet</data>
   <data name="Action.PanelMove" id="KJ2">Déplacement</data>
+  <data name="Action.DeleteObject" id="KK2">Supprimer</data>
 </bundle>

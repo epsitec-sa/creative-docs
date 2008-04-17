@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			switch (name)
 			{
 				case "PanelDelete":
-					this.viewersPanels.UndoMemorize(Res.Strings.Action.Delete, false);
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.DeleteObject, false);
 					this.DeleteSelection();
 					break;
 
@@ -2095,7 +2095,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				this.draggingWindow = null;
 				this.DeleteSelection();
 
-				this.viewersPanels.UndoMemorize(action, Res.Strings.Action.Delete);
+				this.viewersPanels.UndoMemorize(action, Res.Strings.Action.DeleteObject);
 			}
 
 			this.SetHilitedParent(null, GridSelection.Invalid, GridSelection.Invalid, 0, 0);

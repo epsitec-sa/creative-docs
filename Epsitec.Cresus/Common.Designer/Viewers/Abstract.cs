@@ -199,24 +199,40 @@ namespace Epsitec.Common.Designer.Viewers
 				if (this.buttonMainExtendLeft != null)
 				{
 					this.buttonMainExtendLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonMainCompactLeft != null)
+				{
 					this.buttonMainCompactLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				}
 
 				if (this.buttonMainExtendRight != null)
 				{
 					this.buttonMainExtendRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonMainCompactRight != null)
+				{
 					this.buttonMainCompactRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				}
 
 				if (this.buttonSuiteExtendLeft != null)
 				{
 					this.buttonSuiteExtendLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteCompactLeft != null)
+				{
 					this.buttonSuiteCompactLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				}
 
 				if (this.buttonSuiteExtendRight != null)
 				{
 					this.buttonSuiteExtendRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+				}
+
+				if (this.buttonSuiteCompactRight != null)
+				{
 					this.buttonSuiteCompactRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
 				}
 
