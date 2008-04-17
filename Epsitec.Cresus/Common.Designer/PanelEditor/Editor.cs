@@ -184,6 +184,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			switch (name)
 			{
 				case "PanelDelete":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.Delete, false);
 					this.DeleteSelection();
 					break;
 
@@ -264,82 +265,102 @@ namespace Epsitec.Common.Designer.PanelEditor
 					break;
 
 				case "AlignLeft":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignLeft, false);
 					this.SelectAlign(-1, false);
 					break;
 
 				case "AlignCenterX":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignCenterX, false);
 					this.SelectAlign(0, false);
 					break;
 
 				case "AlignRight":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignRight, false);
 					this.SelectAlign(1, false);
 					break;
 
 				case "AlignTop":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignTop, false);
 					this.SelectAlign(1, true);
 					break;
 
 				case "AlignCenterY":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignCenterY, false);
 					this.SelectAlign(0, true);
 					break;
 
 				case "AlignBottom":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignBottom, false);
 					this.SelectAlign(-1, true);
 					break;
 
 				case "AlignBaseLine":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignBaseLine, false);
 					this.SelectAlignBaseLine();
 					break;
 
 				case "AdjustWidth":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AdjustWidth, false);
 					this.SelectAdjust(false);
 					break;
 
 				case "AdjustHeight":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AdjustHeight, false);
 					this.SelectAdjust(true);
 					break;
 
 				case "AlignGrid":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.AlignGrid, false);
 					this.SelectAlignGrid();
 					break;
 
 				case "PanelOrderUpAll":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelOrderUpAll, false);
 					this.SelectOrder(-10000);
 					break;
 
 				case "PanelOrderDownAll":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelOrderDownAll, false);
 					this.SelectOrder(10000);
 					break;
 
 				case "PanelOrderUpOne":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelOrderUpOne, false);
 					this.SelectOrder(-1);
 					break;
 
 				case "PanelOrderDownOne":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelOrderDownOne, false);
 					this.SelectOrder(1);
 					break;
 
 				case "TabIndexClear":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.TabIndexClear, false);
 					this.SelectTabIndex(0);
 					break;
 
 				case "TabIndexRenum":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.TabIndexRenum, false);
 					this.SelectTabIndexRenum();
 					break;
 
 				case "TabIndexFirst":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.TabIndexFirst, false);
 					this.SelectTabIndex(-10000);
 					break;
 
 				case "TabIndexPrev":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.TabIndexPrev, false);
 					this.SelectTabIndex(-1);
 					break;
 
 				case "TabIndexNext":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.TabIndexNext, false);
 					this.SelectTabIndex(1);
 					break;
 
 				case "TabIndexLast":
+					this.viewersPanels.UndoMemorize(Res.Strings.Action.TabIndexLast, false);
 					this.SelectTabIndex(10000);
 					break;
 
@@ -2569,6 +2590,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 		{
 			//	Déplace tous les objets sélectionnés selon le ruban 'Move'.
 			this.viewersPanels.UndoMemorize(Res.Strings.Action.PanelMove, false);
+
 			direction.X *= this.module.DesignerApplication.MoveHorizontal;
 			direction.Y *= this.module.DesignerApplication.MoveVertical;
 			this.MoveSelection(direction, null);
