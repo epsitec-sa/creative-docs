@@ -751,6 +751,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.StatusBarDispose();
 			this.statusBar.Children.Clear();  // supprime tous les boutons
 
+			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
+			if (item == null)  // aucune ressource ?
+			{
+				return;
+			}
+
 			List<Widget> selection = this.panelEditor.SelectedObjects;
 			Widget obj;
 

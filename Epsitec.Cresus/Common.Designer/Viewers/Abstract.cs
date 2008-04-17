@@ -741,6 +741,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.access.Delete();
 
 					this.UpdateArray();
+					this.UpdateViewer(Changing.Delete);
 					this.SelectedRow = this.access.AccessIndex;
 					this.UpdateCommands();
 				}
@@ -1707,7 +1708,7 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			CultureMap item = this.access.CollectionView.CurrentItem as CultureMap;
 
-			if (this.designerApplication.IsReadonly || item == null)
+			if (this.designerApplication.IsReadonly || item == null)  // mode bloqué ou aucune ressource ?
 			{
 				this.GetCommandState(name).ActiveState = ActiveState.No;
 				this.GetCommandState(name).Enable = false;
