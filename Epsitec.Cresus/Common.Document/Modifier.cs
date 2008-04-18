@@ -1909,6 +1909,7 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( this.ActiveViewer.IsCreating )  return;
+			if ( this.PasteBitmap() )  return;
 			this.document.IsDirtySerialize = true;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Paste) )
@@ -1924,6 +1925,58 @@ namespace Epsitec.Common.Document
 
 				this.OpletQueueValidateAction();
 			}
+		}
+
+		protected bool PasteBitmap()
+		{
+			System.Drawing.Bitmap bitmap = this.GetPastedBitmap();
+			if (bitmap == null)
+			{
+				return false;
+			}
+
+			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
+
+			this.OpletQueueBeginAction("Coller une image");
+			Objects.Image image = Objects.Abstract.CreateObject(this.document, "Image", this.objectMemory) as Objects.Image;
+
+			this.OpletQueueEnable = false;
+			Objects.Abstract layer = drawingContext.RootObject();
+			int rank = layer.Objects.Add(image);  // ajoute à la fin de la liste
+
+			image.CreateMouseDown(new Point(100, 100), drawingContext);
+			image.CreateMouseMove(new Point(1000, 1000), drawingContext);
+			image.CreateMouseUp(new Point(1000, 1000), drawingContext);
+
+			this.OpletQueueValidateAction();
+
+			return true;
+		}
+
+		protected System.Drawing.Bitmap GetPastedBitmap()
+		{
+			//	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
+			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject();
+
+			foreach (string format in ido.GetFormats(false))
+			{
+				object data = ido.GetData(format);
+				if (data != null && data is System.Drawing.Bitmap)
+				{
+					return data as System.Drawing.Bitmap;
+				}
+			}
+
+			foreach (string format in ido.GetFormats(true))
+			{
+				object data = ido.GetData(format, true);
+				if (data != null && data is System.Drawing.Bitmap)
+				{
+					return data as System.Drawing.Bitmap;
+				}
+			}
+
+			return null;
 		}
 
 		protected void Duplicate(Document srcDoc, Document dstDoc,

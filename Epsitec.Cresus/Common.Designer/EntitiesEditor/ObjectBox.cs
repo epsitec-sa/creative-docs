@@ -1885,13 +1885,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				ObjectBox dst = this.fields[rank].DstBox;
 				this.fields[rank].IsExplored = false;
 				this.fields[rank].DstBox = null;
-				this.editor.CloseBox(dst);
+				this.editor.CloseBox(dst);  // ferme les boîtes pointées
 			}
 
 			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);
 
 			Druid typeId = druid;
-			Module typeModule = this.SearchModule (typeId);
+			Module typeModule = this.SearchModule(typeId);
 			System.Diagnostics.Debug.Assert(typeId.IsValid);
 			System.Diagnostics.Debug.Assert(typeModule != null);
 			
