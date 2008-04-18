@@ -409,11 +409,11 @@ namespace Epsitec.Common.Document.Objects
 						name = string.Concat(name, " ", Misc.ExtractName(pi.FileName));
 					}
 
-					int dpi = this.GetOutputDpi ();
+					int dpi = this.GetOutputDpi();
 
 					if (dpi > 0)
 					{
-						name = string.Concat (name, " (", dpi.ToString (), " dpi)");
+						name = string.Concat(name, " (", dpi.ToString(), " dpi)");
 					}
 				}
 
@@ -436,12 +436,12 @@ namespace Epsitec.Common.Document.Objects
 					{
 						Point center;
 						double width, height, angle;
-						this.ImageGeometry (out center, out width, out height, out angle);
+						this.ImageGeometry(out center, out width, out height, out angle);
 
 						if (width > 0 && height > 0)
 						{
-							Drawing.Rectangle cropRect = new Drawing.Rectangle (0, 0, image.Width*item.Scale, image.Height*item.Scale);
-							cropRect.Deflate (pi.CropMargins);
+							Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, image.Width*item.Scale, image.Height*item.Scale);
+							cropRect.Deflate(pi.CropMargins);
 
 							if (!cropRect.IsSurfaceZero)
 							{
@@ -569,14 +569,14 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if (drawingContext.FillEmptyPlaceholders)
 					{
-						using (Path path = this.PathBuildSurface ())
+						using (Path path = this.PathBuildSurface())
 						{
 							port.Color = Color.FromAlphaRgb (1.0, 0.5, 0.5, 1);
-							port.PaintSurface (path);  // dessine une surface bleue
+							port.PaintSurface(path);  // dessine une surface bleue
 							port.Color = Color.FromAlphaRgb (1.0, 0.0, 0.0, 1);
 							port.LineWidth = 20.0;
 							port.LineJoin = JoinStyle.Miter;
-							port.PaintOutline (path);
+							port.PaintOutline(path);
 						}
 					}
 					else
@@ -585,7 +585,7 @@ namespace Epsitec.Common.Document.Objects
 						{
 							port.Color = Color.FromBrightness (0.5);
 							port.LineWidth = 1.0/drawingContext.ScaleX;
-							port.PaintOutline (path);  // dessine un rectangle avec une croix
+							port.PaintOutline(path);  // dessine un rectangle avec une croix
 						}
 					}
 				}
@@ -686,8 +686,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				return;  // oui -> forcément OK
 			}
-			if ((pi.FileName == null) ||			//  pas de nom d'image ?
-				(pi.FileName.Trim ().Length == 0))
+			if (pi.FileName == null ||			//  pas de nom d'image ?
+				pi.FileName.Trim().Length == 0)
 			{
 				return;
 			}

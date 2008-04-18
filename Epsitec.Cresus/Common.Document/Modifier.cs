@@ -1938,9 +1938,8 @@ namespace Epsitec.Common.Document
 			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
 
 			this.OpletQueueBeginAction("Coller une image");
-			Objects.Image image = Objects.Abstract.CreateObject(this.document, "Image", this.objectMemory) as Objects.Image;
+			Objects.Image image = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
 
-			this.OpletQueueEnable = false;
 			Objects.Abstract layer = drawingContext.RootObject();
 			int rank = layer.Objects.Add(image);  // ajoute à la fin de la liste
 
@@ -1956,6 +1955,7 @@ namespace Epsitec.Common.Document
 		protected System.Drawing.Bitmap GetPastedBitmap()
 		{
 			//	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
+#if false
 			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject();
 
 			foreach (string format in ido.GetFormats(false))
@@ -1975,6 +1975,23 @@ namespace Epsitec.Common.Document
 					return data as System.Drawing.Bitmap;
 				}
 			}
+#else
+			Clipboard.ReadData clipboard = Clipboard.GetData();
+
+			System.Drawing.Bitmap bitmap;
+
+			bitmap = clipboard.Read("System.Drawing.Bitmap") as System.Drawing.Bitmap;
+			if (bitmap != null)
+			{
+				return bitmap;
+			}
+
+			bitmap = clipboard.Read("Bitmap") as System.Drawing.Bitmap;
+			if (bitmap != null)
+			{
+				return bitmap;
+			}
+#endif
 
 			return null;
 		}

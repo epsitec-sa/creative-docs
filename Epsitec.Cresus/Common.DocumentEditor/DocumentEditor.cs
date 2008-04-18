@@ -4261,7 +4261,8 @@ namespace Epsitec.Common.DocumentEditor
 				{
 					this.cutState.Enable = ( totalSelected > 0 && !isCreating );
 					this.copyState.Enable = ( totalSelected > 0 && !isCreating );
-					this.pasteState.Enable = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
+					//?this.pasteState.Enable = (!this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating);
+					this.pasteState.Enable = !isCreating;
 				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();

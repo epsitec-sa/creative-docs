@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Properties
 
 		protected override void Initialize()
 		{
-			base.Initialize ();
+			base.Initialize();
 			this.filename       = "";
 			this.date           = System.DateTime.MinValue;
 			this.shortName      = "";
@@ -305,9 +305,9 @@ namespace Epsitec.Common.Document.Properties
 			else if (quality >= 0.17)  return Opac.FreeImage.LoadSaveMode.JpegQualityAverage;  // nominal = 0.25
 			else                       return Opac.FreeImage.LoadSaveMode.JpegQualityBad;      // nominal = 0.10
 #else
-			int n = (int) (quality * 100);
-			n = System.Math.Min (100, n);
-			n = System.Math.Max (10, n);
+			int n = (int) (quality*100);
+			n = System.Math.Min(100, n);
+			n = System.Math.Max(10, n);
 			return (Opac.FreeImage.LoadSaveMode) n;
 #endif
 		}
