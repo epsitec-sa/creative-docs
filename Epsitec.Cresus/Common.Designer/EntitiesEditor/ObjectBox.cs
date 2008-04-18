@@ -1868,6 +1868,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			StructuredData dataField = dataFields[fieldRank];
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
+			Druid initialDruid = druid;
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 
 			bool isNullable = (options & FieldOptions.Nullable) != 0;
@@ -1879,7 +1880,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				return;
 			}
 
-			if (this.fields[rank].Relation != FieldRelation.None && this.fields[rank].IsExplored)
+			if (this.fields[rank].Relation != FieldRelation.None && this.fields[rank].IsExplored && druid != initialDruid)
 			{
 				ObjectBox dst = this.fields[rank].DstBox;
 				this.fields[rank].IsExplored = false;
