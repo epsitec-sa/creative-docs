@@ -1896,7 +1896,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
 			{
-				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
+				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+				if (rel == FieldRelation.None)
+				{
+					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
+				}
 			}
 			else
 			{
