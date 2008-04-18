@@ -150,13 +150,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.TabIndex = 10;
 				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonIsPrivateRelation = new CheckButton(footer);
-				this.buttonIsPrivateRelation.Text = "Relation privée";
-				this.buttonIsPrivateRelation.PreferredWidth = 140;
-				this.buttonIsPrivateRelation.Dock = DockStyle.Left;
-				this.buttonIsPrivateRelation.TabIndex = 10;
-				this.buttonIsPrivateRelation.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
 				this.buttonCancel = new Button(footer);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
@@ -191,7 +184,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable, bool isPrivateRelation, List<Druid> exclude, Druid typeId)
+		public void AccessOpen(Operation operation, Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable, List<Druid> exclude, Druid typeId)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			//	Le type peut être inconnu ou la ressource inconnue, mais pas les deux.
@@ -202,7 +195,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.resourceType = type;
 			this.resource = resource;
 			this.isNullable = isNullable;
-			this.isPrivateRelation = isPrivateRelation;
 			this.exclude = exclude;
 			this.isInherit = false;
 
@@ -285,14 +277,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			get
 			{
 				return this.buttonIsNullable.ActiveState == ActiveState.Yes;
-			}
-		}
-
-		public bool IsPrivateRelation
-		{
-			get
-			{
-				return this.buttonIsPrivateRelation.ActiveState == ActiveState.Yes;
 			}
 		}
 
@@ -508,9 +492,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.Visibility = true;
 				this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
 
-				this.buttonIsPrivateRelation.Visibility = (this.resourceType == ResourceAccess.Type.Entities);
-				this.buttonIsPrivateRelation.ActiveState = this.isPrivateRelation ? ActiveState.Yes : ActiveState.No;
-
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 
 				this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
@@ -525,7 +506,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAlone.Visibility = true;
 				this.radioInherit.Visibility = true;
 				this.buttonIsNullable.Visibility = false;
-				this.buttonIsPrivateRelation.Visibility = false;
 
 				this.buttonUse.Text = Res.Strings.Dialog.Button.OK;
 			}
@@ -538,7 +518,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioAlone.Visibility = false;
 				this.radioInherit.Visibility = false;
 				this.buttonIsNullable.Visibility = false;
-				this.buttonIsPrivateRelation.Visibility = false;
 
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 			}
@@ -775,7 +754,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Druid							resource;
 		protected List<Druid>					typeIds;
 		protected bool							isNullable;
-		protected bool							isPrivateRelation;
 		protected List<Druid>					exclude;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
@@ -792,7 +770,6 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected StaticText					header2;
 		protected ScrollList					listResources;
 		protected CheckButton					buttonIsNullable;
-		protected CheckButton					buttonIsPrivateRelation;
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
 	}

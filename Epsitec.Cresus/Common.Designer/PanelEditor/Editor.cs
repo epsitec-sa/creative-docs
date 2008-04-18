@@ -1693,8 +1693,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 				StructuredTypeClass typeClass = StructuredTypeClass.None;
 				Druid druid = Druid.Parse(ObjectModifier.GetDruid(obj));
 				bool isNullable = false;
-				bool isPrivateRelation = false;
-				Common.Dialogs.DialogResult result = this.module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, exclude, Druid.Empty);
+				Common.Dialogs.DialogResult result = this.module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.module, type, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
 				ObjectModifier.SetDruid(obj, druid.ToString());
 
 				if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?

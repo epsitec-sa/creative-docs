@@ -592,10 +592,9 @@ namespace Epsitec.Common.Designer
 
 				Druid druid = Druid.Empty;
 				bool isNullable = false;
-				bool isPrivateRelation = false;
 				StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+				Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InheritEntities, this.ownerModule, Type.Entities, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 				if (result != Common.Dialogs.DialogResult.Yes)
 				{
 					return false;
@@ -627,10 +626,9 @@ namespace Epsitec.Common.Designer
 					//	On demande l'entité sur laquelle sera basée le masque.
 					Druid entityId = Druid.Empty;
 					bool isNullable = false;
-					bool isPrivateRelation = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.Entity;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;
@@ -653,10 +651,9 @@ namespace Epsitec.Common.Designer
 					//	On demande le masque sur lequel sera basé le masque delta.
 					Druid deltaBaseformId = Druid.Empty;
 					bool isNullable = false;
-					bool isPrivateRelation = false;
 					StructuredTypeClass typeClass = StructuredTypeClass.None;
 
-					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+					Common.Dialogs.DialogResult subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, this.ownerModule, Type.Forms, ref typeClass, ref deltaBaseformId, ref isNullable, null, Druid.Empty);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;
@@ -666,10 +663,9 @@ namespace Epsitec.Common.Designer
 					//	que les entités qui héritent de l'entité de base du masque choisi précédemment.
 					Druid entityId = Druid.Empty;
 					isNullable = false;
-					isPrivateRelation = false;
 					typeClass = StructuredTypeClass.Entity;
 
-					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, ref isPrivateRelation, null, deltaBaseformId);
+					subResult = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Entities, this.ownerModule, Type.Entities, ref typeClass, ref entityId, ref isNullable, null, deltaBaseformId);
 					if (subResult != Common.Dialogs.DialogResult.Yes)
 					{
 						return false;

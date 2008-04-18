@@ -1701,10 +1701,9 @@ namespace Epsitec.Common.Designer.Viewers
 			Druid druid = field.SubFormId;
 			Druid typeId = this.access.FormRelationEntity(this.entityId, field.GetPath(null));
 			bool isNullable = false;
-			bool isPrivateRelation = false;
 			Module module = this.designerApplication.SearchModule(this.druidToSerialize);
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, typeId);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Form, module, ResourceAccess.Type.Forms, ref typeClass, ref druid, ref isNullable, null, typeId);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1990,8 +1989,7 @@ namespace Epsitec.Common.Designer.Viewers
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
 			Druid druid = Druid.Empty;
 			bool isNullable = false;
-			bool isPrivateRelation = false;
-			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Epsitec.Common.Designer.Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Commands, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+			Common.Dialogs.DialogResult result = this.designerApplication.DlgResourceSelector(Epsitec.Common.Designer.Dialogs.ResourceSelector.Operation.Selection, this.module, ResourceAccess.Type.Commands, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;

@@ -1562,10 +1562,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			Druid druid = Druid.Empty;
 			bool isNullable = false;
-			bool isPrivateRelation = false;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.Interface;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, exclude, Druid.Empty);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.InterfaceEntities, module, ResourceAccess.Type.Entities, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1872,10 +1871,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 
 			bool isNullable = (options & FieldOptions.Nullable) != 0;
-			bool isPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, ref isPrivateRelation, null, Druid.Empty);
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1905,9 +1903,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
 			}
 
-			FieldOptions fieldOptions = FieldOptions.None;
-			if (isNullable)  fieldOptions |= FieldOptions.Nullable;
-			if (isPrivateRelation)  fieldOptions |= FieldOptions.PrivateRelation;
+			FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+			if (isNullable)
+			{
+				fieldOptions |= FieldOptions.Nullable;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.Nullable;
+			}
 			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank].Initialize(this, dataField);
