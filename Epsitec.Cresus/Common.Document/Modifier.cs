@@ -1935,17 +1935,26 @@ namespace Epsitec.Common.Document
 				return false;
 			}
 
+			Drawing.Image image = Bitmap.FromNativeBitmap(bitmap);
+
 			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
 
+			Size pageSize = drawingContext.PageSize;
+			double dim = System.Math.Min(pageSize.Width, pageSize.Height)*0.25;
+			double w = dim;
+			double h = dim*image.Height/image.Width;
+			Point p1 = new Point(pageSize.Width/2-w, pageSize.Height/2-h);
+			Point p2 = new Point(pageSize.Width/2+w, pageSize.Height/2+h);
+
 			this.OpletQueueBeginAction("Coller une image");
-			Objects.Image image = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
+			Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
 
 			Objects.Abstract layer = drawingContext.RootObject();
-			int rank = layer.Objects.Add(image);  // ajoute à la fin de la liste
+			int rank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 
-			image.CreateMouseDown(new Point(100, 100), drawingContext);
-			image.CreateMouseMove(new Point(1000, 1000), drawingContext);
-			image.CreateMouseUp(new Point(1000, 1000), drawingContext);
+			obj.CreateMouseDown(p1, drawingContext);
+			obj.CreateMouseMove(p2, drawingContext);
+			obj.CreateMouseUp(p2, drawingContext);
 
 			this.OpletQueueValidateAction();
 
@@ -1955,29 +1964,7 @@ namespace Epsitec.Common.Document
 		protected System.Drawing.Bitmap GetPastedBitmap()
 		{
 			//	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
-#if false
-			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject();
-
-			foreach (string format in ido.GetFormats(false))
-			{
-				object data = ido.GetData(format);
-				if (data != null && data is System.Drawing.Bitmap)
-				{
-					return data as System.Drawing.Bitmap;
-				}
-			}
-
-			foreach (string format in ido.GetFormats(true))
-			{
-				object data = ido.GetData(format, true);
-				if (data != null && data is System.Drawing.Bitmap)
-				{
-					return data as System.Drawing.Bitmap;
-				}
-			}
-#else
 			Clipboard.ReadData clipboard = Clipboard.GetData();
-
 			System.Drawing.Bitmap bitmap;
 
 			bitmap = clipboard.Read("System.Drawing.Bitmap") as System.Drawing.Bitmap;
@@ -1991,7 +1978,6 @@ namespace Epsitec.Common.Document
 			{
 				return bitmap;
 			}
-#endif
 
 			return null;
 		}

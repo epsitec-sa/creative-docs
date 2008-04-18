@@ -96,7 +96,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		protected Size PageSize
+		public Size PageSize
 		{
 			//	Taille de la page courante du document.
 			//	Il ne faut pas utiliser Document.PageSize dans DrawingContext, car les icônes
