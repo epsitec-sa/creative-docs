@@ -43,6 +43,20 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		public Drawing.Image PastedImage
+		{
+			//	Donnée de l'image, lorsqu'elles proviennent du clipboard.
+			get
+			{
+				return this.pastedImage;
+			}
+			set
+			{
+				this.pastedImage = value;
+			}
+		}
+
+
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Début du déplacement d'une poignée.
@@ -376,7 +390,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		public ImageCache.Item Item
+		protected ImageCache.Item Item
 		{
 			//	Retourne l'item de l'image cachée, s'il existe.
 			get
@@ -538,7 +552,14 @@ namespace Epsitec.Common.Document.Objects
 
 			ImageFilter filter = this.GetFilter(port, drawingContext);
 
-			if (item != null)
+			if (item == null)
+			{
+				if (this.pastedImage != null)
+				{
+					image = this.pastedImage;
+				}
+			}
+			else
 			{
 				double scale = item.Scale;
 				crop.Left   /= scale;
@@ -702,5 +723,8 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		#endregion
+
+
+		protected Drawing.Image			pastedImage;
 	}
 }

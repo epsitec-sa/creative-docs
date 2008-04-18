@@ -1948,6 +1948,7 @@ namespace Epsitec.Common.Document
 
 			this.OpletQueueBeginAction("Coller une image");
 			Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
+			obj.PastedImage = image;
 
 			Objects.Abstract layer = drawingContext.RootObject();
 			int rank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
