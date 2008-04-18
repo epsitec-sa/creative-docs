@@ -47,6 +47,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionClose,
 			ConnectionHilited,
 			ConnectionChangeRelation,
+			ConnectionChangePrivate,
 			ConnectionMove1,
 			ConnectionMove2,
 			ConnectionComment,
@@ -319,6 +320,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				case AbstractObject.ActiveElement.ConnectionChangeRelation:
 					return Res.Strings.Entities.Action.ConnectionChangeRelation;
 
+				case AbstractObject.ActiveElement.ConnectionChangePrivate:
+					return Res.Strings.Entities.Action.ConnectionChangePrivate;
+
 				case AbstractObject.ActiveElement.ConnectionMove1:
 				case AbstractObject.ActiveElement.ConnectionMove2:
 					return Res.Strings.Entities.Action.ConnectionMove;
@@ -548,7 +552,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 
 				Rectangle rect = new Rectangle(center.X-radius, center.Y-radius, radius*2, radius*2);
-				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, text, Font.GetFont(Font.DefaultFontFamily, "Bold"), 14, ContentAlignment.MiddleCenter);
+				double size = 14;
+
+				if (text == "*")  // texte étoile pour une relation privée ?
+				{
+					size = 30;  // beaucoup plus grand
+					rect.Offset(0, -4);  // légèrement plus bas
+				}
+
+				graphics.AddText(rect.Left, rect.Bottom+1, rect.Width, rect.Height, text, Font.GetFont(Font.DefaultFontFamily, "Bold"), size, ContentAlignment.MiddleCenter);
 				graphics.RenderSolid(colorShape);
 			}
 		}

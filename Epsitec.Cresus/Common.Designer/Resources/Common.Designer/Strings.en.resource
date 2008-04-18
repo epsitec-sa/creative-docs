@@ -241,4 +241,5 @@
   <data id="09A">Display</data>
   <data id="KQ1">Cultures</data>
   <data id="KR1">Properties</data>
+  <data id="KM2">*</data>
 </bundle>

@@ -572,4 +572,6 @@
   <data name="Action.PanelCreateObject" id="KI2">Nouvel objet</data>
   <data name="Action.PanelMove" id="KJ2">Déplacement</data>
   <data name="Action.DeleteObject" id="KK2">Supprimer</data>
+  <data name="Entities.Action.ConnectionChangePrivate" id="KL2">Change le mode privé de la relation</data>
+  <data name="Entities.Button.ChangePrivate" id="KM2">*</data>
 </bundle>

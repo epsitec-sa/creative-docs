@@ -303,6 +303,24 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.Invalidate();
 				this.hilitedElement = ActiveElement.None;
 			}
+
+			if (this.hilitedElement == ActiveElement.ConnectionChangePrivate)
+			{
+				ObjectBox box = this.field.SrcBox;
+
+				StructuredData data = box.CultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+				StructuredData dataField = dataFields[this.field.Rank];
+				FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+				fieldOptions ^= FieldOptions.PrivateRelation;
+				dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
+
+				this.field.IsPrivateRelation = !this.field.IsPrivateRelation;
+				this.editor.Module.AccessEntities.SetLocalDirty();
+				this.editor.Invalidate();
+				this.hilitedElement = ActiveElement.None;
+			}
 		}
 
 		protected override bool MouseDetect(Point pos, out ActiveElement element, out int fieldRank)
@@ -367,6 +385,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsReadOnly && this.DetectRoundButton(pos, this.PositionChangeRelation))
 			{
 				element = ActiveElement.ConnectionChangeRelation;
+				return true;
+			}
+
+			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsReadOnly && this.DetectRoundButton(pos, this.PositionChangePrivate))
+			{
+				element = ActiveElement.ConnectionChangePrivate;
 				return true;
 			}
 
@@ -482,7 +506,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChangeRelation)
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation ||
+					this.hilitedElement == ActiveElement.ConnectionChangePrivate)
 				{
 					color = this.GetColorMain();
 				}
@@ -502,7 +527,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				Color color = this.GetColor(0);
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
-					this.hilitedElement == ActiveElement.ConnectionChangeRelation)
+					this.hilitedElement == ActiveElement.ConnectionChangeRelation ||
+					this.hilitedElement == ActiveElement.ConnectionChangePrivate)
 				{
 					color = this.GetColorMain();
 				}
@@ -615,6 +641,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 						else
 						{
 							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.ChangeRelation, false, false);
+						}
+					}
+				}
+
+				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
+					this.hilitedElement == ActiveElement.ConnectionChangePrivate)
+				{
+					p = this.PositionChangePrivate;
+					if (!p.IsZero)
+					{
+						if (this.hilitedElement == ActiveElement.ConnectionChangePrivate)
+						{
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.ChangePrivate, true, false);
+						}
+						else
+						{
+							this.DrawRoundButton(graphics, p, AbstractObject.buttonRadius, Res.Strings.Entities.Button.ChangePrivate, false, false);
 						}
 					}
 				}
@@ -774,6 +817,25 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
 				{
 					return new Point(this.points[0].X+AbstractObject.lengthClose, this.points[0].Y);
+				}
+
+				return Point.Zero;
+			}
+		}
+
+		protected Point PositionChangePrivate
+		{
+			//	Retourne la position du bouton pour changer le mode privé de la relation (*).
+			get
+			{
+				if (this.points.Count >= 2 && this.field.IsExplored)
+				{
+					return Point.Move(this.points[this.points.Count-1], this.points[this.points.Count-2], AbstractObject.buttonRadius*1.7);
+				}
+
+				if (this.points.Count == 2 && !this.field.IsExplored && this.field.IsSourceExpanded)
+				{
+					return new Point(this.points[0].X+AbstractObject.lengthClose-AbstractObject.buttonRadius*1.7, this.points[0].Y);
 				}
 
 				return Point.Zero;
