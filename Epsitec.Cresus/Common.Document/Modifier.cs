@@ -1902,6 +1902,11 @@ namespace Epsitec.Common.Document
 		public void Paste()
 		{
 			//	Colle le contenu du press-papiers
+			if (this.PasteBitmap())
+			{
+				return;
+			}
+
 			Objects.AbstractText editObject = this.RetEditObject();
 			if ( editObject != null )
 			{
@@ -1909,7 +1914,6 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( this.ActiveViewer.IsCreating )  return;
-			if ( this.PasteBitmap() )  return;
 			this.document.IsDirtySerialize = true;
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Paste) )
@@ -1968,6 +1972,7 @@ namespace Epsitec.Common.Document
 				this.TotalSelected++;
 				this.ActiveViewer.UpdateSelector();
 
+				this.document.IsDirtySerialize = true;
 				this.OpletQueueValidateAction();
 			}
 
