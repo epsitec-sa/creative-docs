@@ -221,7 +221,7 @@ namespace Epsitec.Common.Document.Properties
 
 		public Drawing.Image PastedImage
 		{
-			//	Donnée de l'image, lorsqu'elles proviennent du clipboard.
+			//	Données de l'image, lorsqu'elles proviennent du clipboard.
 			get
 			{
 				return this.pastedImage;
@@ -230,16 +230,12 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if (this.pastedImage != value)
 				{
-					//?this.NotifyBefore();
-
 					this.pastedImage = value;
 
 					if (this.pastedImage != null)
 					{
 						this.filename = "";
 					}
-					
-					//?this.NotifyAfter();
 				}
 			}
 		}

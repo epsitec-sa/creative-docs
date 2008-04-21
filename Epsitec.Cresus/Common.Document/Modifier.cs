@@ -1936,15 +1936,19 @@ namespace Epsitec.Common.Document
 			}
 
 			Drawing.Image di = Bitmap.FromNativeBitmap(bitmap);
+			double w = di.Width*254/di.DpiX;
+			double h = di.Height*254/di.DpiY;
 
 			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
-
 			Size pageSize = drawingContext.PageSize;
-			double dim = System.Math.Min(pageSize.Width, pageSize.Height)*0.25;
-			double w = dim;
-			double h = dim*di.Height/di.Width;
-			Point p1 = new Point(pageSize.Width/2-w, pageSize.Height/2-h);
-			Point p2 = new Point(pageSize.Width/2+w, pageSize.Height/2+h);
+			while (w > pageSize.Width || h > pageSize.Height)
+			{
+				w *= 0.5;  // essaye une taille 2x plus petite, jusqu'à tenir dans la page
+				h *= 0.5;
+			}
+
+			Point p1 = new Point(pageSize.Width/2-w/2, pageSize.Height/2-h/2);
+			Point p2 = new Point(pageSize.Width/2+w/2, pageSize.Height/2+h/2);
 
 			using (this.OpletQueueBeginAction("Coller une image"))
 			{

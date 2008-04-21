@@ -688,7 +688,7 @@ namespace Epsitec.Common.Document.Objects
 
 		public Drawing.Image PastedImage
 		{
-			//	Donnée de l'image, lorsqu'elles proviennent du clipboard.
+			//	Données de l'image, lorsqu'elles proviennent du clipboard.
 			get
 			{
 				Properties.Image pi = this.PropertyImage;
