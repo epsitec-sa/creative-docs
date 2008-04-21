@@ -679,7 +679,7 @@ namespace Epsitec.Common.Support
 			//	Passe en revue les divers providers de bundles pour voir si la ressource
 			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
 			//	utilisée :
-			
+
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Support
 				if (bundle != null)
 				{
 					//	OK, on a trouvé un bundle dans le cache !
-					
+
 					bundle.DefineRecursion (recursion);
 				}
 				else
@@ -700,9 +700,9 @@ namespace Epsitec.Common.Support
 					{
 						case ResourceLevel.Merged:
 							bundle = ResourceBundle.Create (this, prefix, module, resourceId, level, culture, recursion);
-							
+
 							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Default, culture);
-							
+
 							if (defaultCulture != null)
 							{
 								this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Localized, defaultCulture);
@@ -712,7 +712,7 @@ namespace Epsitec.Common.Support
 							{
 								this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Localized, culture);
 							}
-							
+
 							this.CompileBundle (bundle, provider, resourceId, ResourceLevel.Customized, culture);
 							break;
 
@@ -730,6 +730,16 @@ namespace Epsitec.Common.Support
 					System.Diagnostics.Debug.Assert (bundle != null);
 
 					this.pool.AddBundle (key, bundle);
+				}
+			}
+			else if (recursion == 0)
+			{
+				foreach (ResourceManager manager in this.pool.Managers)
+				{
+					if (manager.DefaultModuleId == module.Id)
+					{
+						return manager.GetBundle (id, level, culture, recursion+1);
+					}
 				}
 			}
 			
