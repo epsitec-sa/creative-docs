@@ -203,6 +203,11 @@ namespace Epsitec.Common.Document.Widgets
 				Properties.Image pi = this.SelectedPropertyImage;
 				if (pi != null)
 				{
+					if (pi.PastedImage != null)
+					{
+						return pi.PastedImage.Size;
+					}
+
 					ImageCache.Item item = this.document.ImageCache.Find(pi.FileName, pi.FileDate);
 					if (item != null)
 					{
