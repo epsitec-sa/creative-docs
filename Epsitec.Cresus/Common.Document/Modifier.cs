@@ -1935,29 +1935,37 @@ namespace Epsitec.Common.Document
 				return false;
 			}
 
-			Drawing.Image image = Bitmap.FromNativeBitmap(bitmap);
+			Drawing.Image di = Bitmap.FromNativeBitmap(bitmap);
 
 			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
 
 			Size pageSize = drawingContext.PageSize;
 			double dim = System.Math.Min(pageSize.Width, pageSize.Height)*0.25;
 			double w = dim;
-			double h = dim*image.Height/image.Width;
+			double h = dim*di.Height/di.Width;
 			Point p1 = new Point(pageSize.Width/2-w, pageSize.Height/2-h);
 			Point p2 = new Point(pageSize.Width/2+w, pageSize.Height/2+h);
 
-			this.OpletQueueBeginAction("Coller une image");
-			Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
-			obj.PastedImage = image;
+			using (this.OpletQueueBeginAction("Coller une image"))
+			{
+				this.DeselectAll();
 
-			Objects.Abstract layer = drawingContext.RootObject();
-			int rank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
+				Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
+				obj.PastedImage = di;
 
-			obj.CreateMouseDown(p1, drawingContext);
-			obj.CreateMouseMove(p2, drawingContext);
-			obj.CreateMouseUp(p2, drawingContext);
+				Objects.Abstract layer = drawingContext.RootObject();
+				int rank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
 
-			this.OpletQueueValidateAction();
+				obj.CreateMouseDown(p1, drawingContext);
+				obj.CreateMouseMove(p2, drawingContext);
+				obj.CreateMouseUp(p2, drawingContext);
+
+				obj.Select();  // sélectionne l'image collée
+				this.TotalSelected++;
+				this.ActiveViewer.UpdateSelector();
+
+				this.OpletQueueValidateAction();
+			}
 
 			return true;
 		}

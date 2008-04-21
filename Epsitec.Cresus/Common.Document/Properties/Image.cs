@@ -37,6 +37,7 @@ namespace Epsitec.Common.Document.Properties
 			this.homo           = true;
 			this.filterCategory = 0;  // catégorie A
 			this.cropMargins    = Margins.Zero;
+			this.pastedImage    = null;
 		}
 
 		public string FileName
@@ -52,7 +53,14 @@ namespace Epsitec.Common.Document.Properties
 				if (this.filename != value)
 				{
 					this.NotifyBefore();
+
 					this.filename = value;
+
+					if (!string.IsNullOrEmpty(this.filename))
+					{
+						this.pastedImage = null;
+					}
+					
 					this.NotifyAfter();
 				}
 			}
@@ -211,6 +219,32 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public Drawing.Image PastedImage
+		{
+			//	Donnée de l'image, lorsqu'elles proviennent du clipboard.
+			get
+			{
+				return this.pastedImage;
+			}
+			set
+			{
+				if (this.pastedImage != value)
+				{
+					//?this.NotifyBefore();
+
+					this.pastedImage = value;
+
+					if (this.pastedImage != null)
+					{
+						this.filename = "";
+					}
+					
+					//?this.NotifyAfter();
+				}
+			}
+		}
+
+
 		public override string SampleText
 		{
 			//	Donne le petit texte pour les échantillons.
@@ -252,6 +286,7 @@ namespace Epsitec.Common.Document.Properties
 			p.homo           = this.homo;
 			p.filterCategory = this.filterCategory;
 			p.cropMargins    = this.cropMargins;
+			p.pastedImage    = this.pastedImage;
 		}
 
 		public override bool Compare(Abstract property)
@@ -270,6 +305,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.homo           != this.homo           )  return false;
 			if ( p.filterCategory != this.filterCategory )  return false;
 			if ( p.cropMargins    != this.cropMargins    )  return false;
+			if ( p.pastedImage    != this.pastedImage    )  return false;
 
 			return true;
 		}
@@ -497,5 +533,6 @@ namespace Epsitec.Common.Document.Properties
 		protected bool					homo;
 		protected int					filterCategory;
 		protected Margins				cropMargins;
+		protected Drawing.Image			pastedImage;
 	}
 }

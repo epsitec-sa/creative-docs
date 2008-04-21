@@ -43,20 +43,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public Drawing.Image PastedImage
-		{
-			//	Donnée de l'image, lorsqu'elles proviennent du clipboard.
-			get
-			{
-				return this.pastedImage;
-			}
-			set
-			{
-				this.pastedImage = value;
-			}
-		}
-
-
 		public override void MoveHandleStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
 			//	Début du déplacement d'une poignée.
@@ -335,15 +321,26 @@ namespace Epsitec.Common.Document.Objects
 				double width, height, angle;
 				this.ImageGeometry(out center, out width, out height, out angle);
 
-				ImageCache.Item item = this.Item;
+				Size imageSize = Size.Zero;
 
-				if ( width > 0 && height > 0 && item != null && item.Size != Size.Zero)
+				if (this.PastedImage != null)
+				{
+					imageSize = this.PastedImage.Size;
+				}
+
+				ImageCache.Item item = this.Item;
+				if (item != null && item.Size != Size.Zero)
+				{
+					imageSize = item.Size;
+				}
+
+				if (width > 0 && height > 0 && imageSize != Size.Zero)
 				{
 					Properties.Image property = this.PropertyImage;
 
 					if ( property.Homo )  // conserve les proportions ?
 					{
-						double rapport = item.Size.Height/item.Size.Width;
+						double rapport = imageSize.Height/imageSize.Width;
 						if ( rapport < height/width )  height = width*rapport;
 						else                           width  = height/rapport;
 					}
@@ -486,51 +483,62 @@ namespace Epsitec.Common.Document.Objects
 			//	Retourne le filtre à utiliser pour l'image. Le filtre n'est pas le même selon
 			//	les dimensions de l'objet image, car il faut utiliser un filtre 'Resampling*'
 			//	lors d'une réduction, pour éviter les moirés.
+			Size size = Size.Zero;
+			double scale = 1;
+
 			ImageCache.Item item = this.Item;
-			if (item != null)
+			if (item == null || item.Size == Size.Zero)
 			{
-				if (item.Size != Size.Zero)
+				if (this.PastedImage != null)
 				{
-					Properties.Image pi = this.PropertyImage;
-					Margins crop = pi.CropMargins;
+					size = this.PastedImage.Size;
+				}
+			}
+			else
+			{
+				size = item.Size;
+				scale = item.Scale;
+			}
 
-					double scale = item.Scale;
-					crop.Left   /= scale;
-					crop.Right  /= scale;
-					crop.Bottom /= scale;
-					crop.Top    /= scale;
+			if (size != Size.Zero)
+			{
+				Properties.Image pi = this.PropertyImage;
+				Margins crop = pi.CropMargins;
+				crop.Left   /= scale;
+				crop.Right  /= scale;
+				crop.Bottom /= scale;
+				crop.Top    /= scale;
 
-					Point center;
-					double width, height, angle;
-					this.ImageGeometry(out center, out width, out height, out angle);
+				Point center;
+				double width, height, angle;
+				this.ImageGeometry(out center, out width, out height, out angle);
 
-					double zoom = port.Transform.GetZoom();
-					width  *= zoom;
-					height *= zoom;
+				double zoom = port.Transform.GetZoom();
+				width  *= zoom;
+				height *= zoom;
 
-					if (width > 0 && height > 0)
+				if (width > 0 && height > 0)
+				{
+					Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, size.Width, size.Height);
+					cropRect.Deflate(crop);
+
+					if (!cropRect.IsSurfaceZero)
 					{
-						Drawing.Rectangle cropRect = new Drawing.Rectangle(0, 0, item.Size.Width, item.Size.Height);
-						cropRect.Deflate(crop);
-
-						if (!cropRect.IsSurfaceZero)
+						if (pi.Homo)  // conserve les proportions ?
 						{
-							if (pi.Homo)  // conserve les proportions ?
+							double rapport = cropRect.Height/cropRect.Width;
+							if (rapport < height/width)
 							{
-								double rapport = cropRect.Height/cropRect.Width;
-								if (rapport < height/width)
-								{
-									height = width*rapport;
-								}
-								else
-								{
-									width  = height/rapport;
-								}
+								height = width*rapport;
 							}
-
-							bool resampling = (width < cropRect.Width || height < cropRect.Height);
-							return Properties.Image.CategoryToFilter(drawingContext, pi.FilterCategory, resampling);
+							else
+							{
+								width  = height/rapport;
+							}
 						}
+
+						bool resampling = (width < cropRect.Width || height < cropRect.Height);
+						return Properties.Image.CategoryToFilter(drawingContext, pi.FilterCategory, resampling);
 					}
 				}
 			}
@@ -554,10 +562,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if (item == null)
 			{
-				if (this.pastedImage != null)
-				{
-					image = this.pastedImage;
-				}
+				image = this.PastedImage;  // affiche l'image collée, si elle existe
 			}
 			else
 			{
@@ -681,6 +686,29 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
+		public Drawing.Image PastedImage
+		{
+			//	Donnée de l'image, lorsqu'elles proviennent du clipboard.
+			get
+			{
+				Properties.Image pi = this.PropertyImage;
+				if (pi != null)
+				{
+					return pi.PastedImage;
+				}
+
+				return null;
+			}
+			set
+			{
+				Properties.Image pi = this.PropertyImage;
+				if (pi != null)
+				{
+					pi.PastedImage = value;
+				}
+			}
+		}
+
 
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -723,8 +751,5 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 		#endregion
-
-
-		protected Drawing.Image			pastedImage;
 	}
 }
