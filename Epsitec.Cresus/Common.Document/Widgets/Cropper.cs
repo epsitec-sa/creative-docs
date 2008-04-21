@@ -203,9 +203,9 @@ namespace Epsitec.Common.Document.Widgets
 				Properties.Image pi = this.SelectedPropertyImage;
 				if (pi != null)
 				{
-					if (pi.PastedImage != null)
+					if (pi.PastedImage != null)  // image collée directement ?
 					{
-						return pi.PastedImage.Size;
+						return pi.PastedImage.Size;  // retourne la taille des données collées
 					}
 
 					ImageCache.Item item = this.document.ImageCache.Find(pi.FileName, pi.FileDate);

@@ -204,6 +204,8 @@ namespace Epsitec.Common.Document.Panels
 
 			this.cropper.Crop = p.CropMargins;
 
+			this.UpdateWidgets();
+
 			this.ignoreChanged = false;
 		}
 
@@ -228,6 +230,13 @@ namespace Epsitec.Common.Document.Panels
 			p.FilterCategory = this.buttonFilter.SelectedIndex-1;  // -1=aucun, 0=A, 1=B
 
 			p.CropMargins = this.cropper.Crop;
+		}
+
+		protected void UpdateWidgets()
+		{
+			//	Met à jour les widgets du panneau.
+			Properties.Image p = this.property as Properties.Image;
+			this.buttonUpdate.Enable = (p != null && p.PastedImage == null);
 		}
 
 		
@@ -313,6 +322,8 @@ namespace Epsitec.Common.Document.Panels
 
 			Properties.Image p = this.property as Properties.Image;
 			p.FileDate = this.document.ImageCache.LoadFromFile(p.FileName);
+
+			this.UpdateWidgets();
 		}
 
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
@@ -395,6 +406,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.fieldFilename.Text = dlg.FileName;
 				this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
+				this.UpdateWidgets();
 			}
 #endif
 		}
@@ -448,25 +460,48 @@ namespace Epsitec.Common.Document.Panels
 
 			item.ExportImage(dialog.FileName);  // écrit le fichier sur disque
 #else
-			Properties.Image p = this.property as Properties.Image;
-			ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
-			if (item == null)
-			{
-				return;
-			}
-
 			Button button = sender as Button;
 			Dialogs.FileSaveImage dlg = new Dialogs.FileSaveImage(this.document, button.Window);
 
-			dlg.FileExtension = System.IO.Path.GetExtension(this.fieldFilename.Text);
-			dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
-			dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
+			Properties.Image p = this.property as Properties.Image;
+
+			if (p.PastedImage == null)  // image importée normalement ?
+			{
+				dlg.FileExtension = System.IO.Path.GetExtension(this.fieldFilename.Text);
+				dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
+				dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
+			}
+			else  // donnée d'une image collée directement ?
+			{
+				if (!string.IsNullOrEmpty(this.document.Filename))
+				{
+					dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.document.Filename);
+				}
+				if (string.IsNullOrEmpty(dlg.InitialDirectory))
+				{
+					dlg.InitialDirectory = this.document.GlobalSettings.InitialDirectory;
+				}
+				dlg.InitialFileName = "";
+				dlg.FileExtension = ".png";
+			}
 
 			dlg.ShowDialog();  // choix d'un fichier image...
 
 			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
 			{
-				item.ExportImage(dlg.FileName);  // écrit le fichier sur disque
+				ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
+				if (item == null)
+				{
+					if (p.PastedImage != null)
+					{
+						byte[] data = p.PastedImage.BitmapImage.Save(ImageFormat.Png);
+						System.IO.File.WriteAllBytes(dlg.FileName, data);  // écrit le fichier sur disque
+					}
+				}
+				else
+				{
+					item.ExportImage(dlg.FileName);  // écrit le fichier sur disque
+				}
 			}
 #endif
 		}
