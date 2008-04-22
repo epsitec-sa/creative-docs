@@ -104,6 +104,14 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public DesignerApplication Application
+		{
+			get
+			{
+				return this.editor.Module.DesignerApplication;
+			}
+		}
+
 		public virtual Rectangle Bounds
 		{
 			//	Retourne la boîte de l'objet.

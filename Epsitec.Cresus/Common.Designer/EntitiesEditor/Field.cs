@@ -184,7 +184,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//	- Un titre
 			//	- Un champ hérité
 			//	- Un champ d'une interface
-			//	- Un champ provenant d'un module de patch
+			//	- Un champ d'un module de patch
 			get
 			{
 				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterfaceOrInterfaceTitle || (this.IsPatch && this.cultureMapSource != CultureMapSource.PatchModule);

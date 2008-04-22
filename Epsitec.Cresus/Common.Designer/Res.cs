@@ -1463,6 +1463,18 @@ namespace Epsitec.Common.Designer
 				
 				public static class Question
 				{
+					public static class Relation
+					{
+						//	designer:str/30KN2
+						public static string Collection { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544407)); } }
+						//	designer:str/30KP2
+						public static string Private { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544409)); } }
+						//	designer:str/30KQ2
+						public static string Public { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544410)); } }
+						//	designer:str/30KO2
+						public static string Reference { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544408)); } }
+					}
+					
 					public static class RemoveField
 					{
 						//	designer:str/302Q2

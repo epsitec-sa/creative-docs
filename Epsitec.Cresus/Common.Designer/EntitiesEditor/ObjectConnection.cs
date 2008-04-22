@@ -287,21 +287,35 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				StructuredData dataField = dataFields[this.field.Rank];
 				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
+
+				string question;
 				if (rel == FieldRelation.Reference)
 				{
-					rel = FieldRelation.Collection;
-					dataField.SetValue(Support.Res.Fields.Field.Relation, rel);
+					question = Res.Strings.Entities.Question.Relation.Collection;
 				}
-				else if (rel == FieldRelation.Collection)
+				else
 				{
-					rel = FieldRelation.Reference;
-					dataField.SetValue(Support.Res.Fields.Field.Relation, rel);
+					question = Res.Strings.Entities.Question.Relation.Reference;
 				}
 
-				this.field.Relation = rel;
-				this.editor.Module.AccessEntities.SetLocalDirty();
-				this.editor.Invalidate();
-				this.hilitedElement = ActiveElement.None;
+				if (this.Application.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
+				{
+					if (rel == FieldRelation.Reference)
+					{
+						rel = FieldRelation.Collection;
+						dataField.SetValue(Support.Res.Fields.Field.Relation, rel);
+					}
+					else if (rel == FieldRelation.Collection)
+					{
+						rel = FieldRelation.Reference;
+						dataField.SetValue(Support.Res.Fields.Field.Relation, rel);
+					}
+
+					this.field.Relation = rel;
+					this.editor.Module.AccessEntities.SetLocalDirty();
+					this.editor.Invalidate();
+					this.hilitedElement = ActiveElement.None;
+				}
 			}
 
 			if (this.hilitedElement == ActiveElement.ConnectionChangePrivate)
@@ -313,13 +327,27 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				StructuredData dataField = dataFields[this.field.Rank];
 				FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
-				fieldOptions ^= FieldOptions.PrivateRelation;
-				dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
 
-				this.field.IsPrivateRelation = !this.field.IsPrivateRelation;
-				this.editor.Module.AccessEntities.SetLocalDirty();
-				this.editor.Invalidate();
-				this.hilitedElement = ActiveElement.None;
+				string question;
+				if ((fieldOptions & FieldOptions.PrivateRelation) == 0)
+				{
+					question = Res.Strings.Entities.Question.Relation.Private;
+				}
+				else
+				{
+					question = Res.Strings.Entities.Question.Relation.Public;
+				}
+
+				if (this.Application.DialogQuestion(question) == Common.Dialogs.DialogResult.Yes)
+				{
+					fieldOptions ^= FieldOptions.PrivateRelation;
+					dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
+
+					this.field.IsPrivateRelation = !this.field.IsPrivateRelation;
+					this.editor.Module.AccessEntities.SetLocalDirty();
+					this.editor.Invalidate();
+					this.hilitedElement = ActiveElement.None;
+				}
 			}
 		}
 

@@ -58,13 +58,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		public DesignerApplication Application
-		{
-			get
-			{
-				return this.editor.Module.DesignerApplication;
-			}
-		}
 
 		public string Title
 		{

@@ -574,4 +574,8 @@
   <data name="Action.DeleteObject" id="KK2">Supprimer</data>
   <data name="Entities.Action.ConnectionChangePrivate" id="KL2">Change le mode privé de la relation</data>
   <data name="Entities.Button.ChangePrivate" id="KM2">*</data>
+  <data name="Entities.Question.Relation.Collection" id="KN2">Voulez-vous vraiment changer la relation pour utiliser le type &lt;b&gt;collection&lt;/b&gt; ?</data>
+  <data name="Entities.Question.Relation.Reference" id="KO2">Voulez-vous vraiment changer la relation pour utiliser le type &lt;b&gt;référence&lt;/b&gt; ?</data>
+  <data name="Entities.Question.Relation.Private" id="KP2">Voulez-vous vraiment changer la relation pour utiliser le mode &lt;b&gt;privé&lt;/b&gt; ?</data>
+  <data name="Entities.Question.Relation.Public" id="KQ2">Voulez-vous vraiment changer la relation pour utiliser le mode &lt;b&gt;public&lt;/b&gt; ?</data>
 </bundle>
