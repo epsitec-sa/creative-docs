@@ -4641,15 +4641,24 @@ namespace Epsitec.Common.Document
 		public bool IsFreeForNewTextBox2(Drawing.Rectangle box, Objects.Abstract exclude)
 		{
 			//	Vérifie qu'une zone rectangulaire n'empiète sur aucun TextBox2 existant.
+			return this.SearchIntersectedTextBox2(box, exclude) == null;
+		}
+
+		public Objects.TextBox2 SearchIntersectedTextBox2(Drawing.Rectangle box, Objects.Abstract exclude)
+		{
+			//	Retourne l'éventuel objet TextBox2 qui intersecte une zone rectangulaire.
 			Objects.Abstract page = this.drawingContext.RootObject(1);
-			foreach ( Objects.Abstract obj in this.document.Deep(page) )
+			foreach (Objects.Abstract obj in this.document.Deep(page))
 			{
-				if ( obj is Objects.TextBox2 && obj != exclude )
+				if (obj is Objects.TextBox2 && obj != exclude)
 				{
-					if ( obj.BoundingBoxThin.IntersectsWith(box) )  return false;
+					if (obj.BoundingBoxThin.IntersectsWith(box))
+					{
+						return obj as Objects.TextBox2;
+					}
 				}
 			}
-			return true;
+			return null;
 		}
 
 		public Drawing.Rectangle GuidesSearchBox(Point pos)

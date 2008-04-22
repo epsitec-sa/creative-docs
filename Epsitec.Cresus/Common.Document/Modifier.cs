@@ -1902,20 +1902,32 @@ namespace Epsitec.Common.Document
 		public void Paste()
 		{
 			//	Colle le contenu du press-papiers
-			if (this.PasteBitmap())
+			Objects.AbstractText editObject = this.RetEditObject();
+
+			if (editObject == null && this.PasteText())  // création d'un pavé de texte possible ?
 			{
 				return;
 			}
 
-			Objects.AbstractText editObject = this.RetEditObject();
-			if ( editObject != null )
+			if (this.PasteBitmap())  // création d'une image possible ?
 			{
-				if ( editObject.EditPaste() )  return;
+				return;
 			}
 
-			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			if (editObject != null)  // texte en édition ?
+			{
+				if (editObject.EditPaste())  // collage de texte possible ?
+				{
+					return;
+				}
+			}
 
+			if (this.ActiveViewer.IsCreating)  // objet en cours de création ?
+			{
+				return;
+			}
+
+			//	Colle depuis le clipboard interne de CrDoc.
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Paste) )
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -1926,13 +1938,66 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.UpdateSelector();
 				this.ShowSelection();
 				this.document.Notifier.NotifySelectionChanged();
+				this.document.IsDirtySerialize = true;
 
 				this.OpletQueueValidateAction();
 			}
 		}
 
+		protected bool PasteText()
+		{
+			//	Essaie de coller le contenu du clipboard sous forme d'un texte.
+			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
+			Size pageSize = drawingContext.PageSize;
+			Point c = new Point(pageSize.Width/2, pageSize.Height/2);  // au milieu de la page
+			Rectangle box = this.ActiveViewer.GuidesSearchBox(c);
+			if (box.IsEmpty)
+			{
+				return false;
+			}
+
+			Objects.TextBox2 existingObj = this.ActiveViewer.SearchIntersectedTextBox2(box, null);
+
+			bool paste = false;
+			using (this.OpletQueueBeginAction("Coller un texte"))
+			{
+				Objects.TextBox2 obj = existingObj;
+				if (obj == null)
+				{
+					obj = Objects.Abstract.CreateObject(this.document, "ObjectTextBox2", this.objectMemoryText) as Objects.TextBox2;
+					Objects.Abstract layer = drawingContext.RootObject();
+					layer.Objects.Add(obj);  // ajoute à la fin de la liste
+				}
+
+				obj.CreateMouseDown(box.BottomLeft, drawingContext);
+				obj.CreateMouseMove(box.TopRight, drawingContext);
+				obj.CreateMouseUp(box.TopRight, drawingContext);
+
+				if (obj.EditPaste())
+				{
+					this.DeselectAll();
+					this.Tool = "ToolEdit";
+
+					obj.Select(true, true);  // édite le texte collé
+					this.TotalSelected++;
+					this.ActiveViewer.UpdateSelector();
+
+					this.document.IsDirtySerialize = true;
+					this.OpletQueueValidateAction();
+					paste = true;
+				}
+				else
+				{
+					this.OpletQueueCancelAction();
+				}
+			}
+
+			return paste;
+		}
+
 		protected bool PasteBitmap()
 		{
+			//	Essaie de coller le contenu du clipboard sous forme d'une image bitmap.
 			System.Drawing.Bitmap bitmap = this.GetPastedBitmap();
 			if (bitmap == null)
 			{
@@ -1957,12 +2022,13 @@ namespace Epsitec.Common.Document
 			using (this.OpletQueueBeginAction("Coller une image"))
 			{
 				this.DeselectAll();
+				this.Tool = "ToolSelect";
 
 				Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
 				obj.PastedImage = di;
 
 				Objects.Abstract layer = drawingContext.RootObject();
-				int rank = layer.Objects.Add(obj);  // ajoute à la fin de la liste
+				layer.Objects.Add(obj);  // ajoute à la fin de la liste
 
 				obj.CreateMouseDown(p1, drawingContext);
 				obj.CreateMouseMove(p2, drawingContext);
@@ -1999,6 +2065,7 @@ namespace Epsitec.Common.Document
 
 			return null;
 		}
+
 
 		protected void Duplicate(Document srcDoc, Document dstDoc,
 								 Point move, bool onlySelected)
