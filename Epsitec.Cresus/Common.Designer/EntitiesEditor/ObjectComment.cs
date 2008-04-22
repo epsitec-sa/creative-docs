@@ -592,8 +592,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Point other = this.GetAttachOther(mode);
 
 			double d = Point.Distance(himself, other) - ObjectBox.roundFrameRadius;
-			
-			other = Point.Move(other, himself, ObjectBox.roundFrameRadius);
+
+			if (this.attachObject is ObjectBox)
+			{
+				other = Point.Move(other, himself, ObjectBox.roundFrameRadius);
+			}
 			
 			Rectangle bounds = this.bounds;
 			bounds.Inflate(0.5);
