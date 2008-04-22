@@ -1959,7 +1959,7 @@ namespace Epsitec.Common.Document
 			Objects.TextBox2 existingObj = this.ActiveViewer.SearchIntersectedTextBox2(box, null);
 
 			bool paste = false;
-			using (this.OpletQueueBeginAction("Coller un texte"))
+			using (this.OpletQueueBeginAction(Res.Strings.Action.PasteText))
 			{
 				Objects.TextBox2 obj = existingObj;
 				if (obj == null)
@@ -2019,7 +2019,7 @@ namespace Epsitec.Common.Document
 			Point p1 = new Point(pageSize.Width/2-w/2, pageSize.Height/2-h/2);
 			Point p2 = new Point(pageSize.Width/2+w/2, pageSize.Height/2+h/2);
 
-			using (this.OpletQueueBeginAction("Coller une image"))
+			using (this.OpletQueueBeginAction(Res.Strings.Action.PasteImage))
 			{
 				this.DeselectAll();
 				this.Tool = "ToolSelect";

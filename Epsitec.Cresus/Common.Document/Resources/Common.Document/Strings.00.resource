@@ -1429,4 +1429,7 @@
   <data name="Error.NoText" id="00901">Le document ne contient aucun texte.</data>
   <data name="Error.NotFound" id="01901">Le texte recherché n&amp;apos;existe pas dans ce document.</data>
   <data name="Error.FileDoesNoetExist" id="03901" mod="1">Le fichier n&amp;apos;existe pas.</data>
+  <data name="Panel.Image.FromClipboard" id="K">&lt;i&gt;En provenance du bloc-notes&lt;/i&gt;</data>
+  <data name="Action.PasteText" id="K1">Coller un texte</data>
+  <data name="Action.PasteImage" id="K2">Coller une image</data>
 </bundle>

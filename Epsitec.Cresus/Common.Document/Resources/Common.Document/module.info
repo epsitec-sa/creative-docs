@@ -1,2 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ModuleInfo name="Common.Document" id="2" layer="s" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="2" name="Common.Document" layer="s">
+  <Versions>
+    <Version id="2" build="1" date="2008-04-22T09:18:59.7060000Z" />
+  </Versions>
+</ModuleInfo>

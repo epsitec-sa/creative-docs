@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldFilename, Res.Strings.Panel.Image.Tooltip.Filename);
 
 			this.fieldClipboard = new TextField(this);
-			this.fieldClipboard.Text = "<i>En provenance du bloc-notes</i>";
+			this.fieldClipboard.Text = Res.Strings.Panel.Image.FromClipboard;
 			this.fieldClipboard.IsReadOnly = true;
 
 			this.buttonOpen = new Button(this);
