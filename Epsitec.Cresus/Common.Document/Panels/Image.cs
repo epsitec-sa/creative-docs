@@ -20,6 +20,10 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFilename.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldFilename, Res.Strings.Panel.Image.Tooltip.Filename);
 
+			this.fieldClipboard = new TextField(this);
+			this.fieldClipboard.Text = "<i>En provenance du bloc-notes</i>";
+			this.fieldClipboard.IsReadOnly = true;
+
 			this.buttonOpen = new Button(this);
 			this.buttonOpen.Text = Res.Strings.Panel.Image.Button.Open;
 			this.buttonOpen.Clicked += new MessageEventHandler(this.HandleOpenClicked);
@@ -133,6 +137,7 @@ namespace Epsitec.Common.Document.Panels
 				this.buttonInside.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 
 				this.fieldFilename = null;
+				this.fieldClipboard = null;
 				this.buttonOpen = null;
 				this.buttonUpdate = null;
 				this.buttonSave = null;
@@ -236,7 +241,19 @@ namespace Epsitec.Common.Document.Panels
 		{
 			//	Met à jour les widgets du panneau.
 			Properties.Image p = this.property as Properties.Image;
-			this.buttonUpdate.Enable = (p != null && p.PastedImage == null);
+
+			if (p != null && p.PastedImage == null)
+			{
+				this.fieldFilename.Visibility = true;
+				this.fieldClipboard.Visibility = false;
+				this.buttonUpdate.Enable = true;
+			}
+			else
+			{
+				this.fieldFilename.Visibility = false;
+				this.fieldClipboard.Visibility = true;
+				this.buttonUpdate.Enable = false;
+			}
 		}
 
 		
@@ -252,6 +269,7 @@ namespace Epsitec.Common.Document.Panels
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
 			this.fieldFilename.SetManualBounds(r);
+			this.fieldClipboard.SetManualBounds(r);
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
@@ -513,6 +531,7 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected TextField					fieldFilename;
+		protected TextField					fieldClipboard;
 		protected Button					buttonOpen;
 		protected Button					buttonUpdate;
 		protected Button					buttonSave;
@@ -529,4 +548,3 @@ namespace Epsitec.Common.Document.Panels
 		protected Margins					initialCrop;
 	}
 }
-
