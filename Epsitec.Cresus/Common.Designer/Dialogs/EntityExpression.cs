@@ -31,7 +31,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
 				resize.Anchor = AnchorStyles.BottomRight;
-				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
 				FrameBox main = new FrameBox(this.window.Root);
