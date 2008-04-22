@@ -178,6 +178,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
+		public bool IsStrictlyReadOnly
+		{
+			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
+			//	- Un titre
+			//	- Un champ hérité
+			//	- Un champ d'une interface
+			//	- Un champ provenant d'un module de patch
+			get
+			{
+				return this.IsTitle || this.isSubtitle || this.IsInherited || this.IsInterfaceOrInterfaceTitle || (this.IsPatch && this.cultureMapSource != CultureMapSource.PatchModule);
+			}
+		}
+
 		public bool IsTitle
 		{
 			//	Indique si le champ est un titre d'héritage ou d'interface.

@@ -382,13 +382,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			//	Souris dans le bouton pour changer la connection ?
-			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsReadOnly && this.DetectRoundButton(pos, this.PositionChangeRelation))
+			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsStrictlyReadOnly && this.DetectRoundButton(pos, this.PositionChangeRelation))
 			{
 				element = ActiveElement.ConnectionChangeRelation;
 				return true;
 			}
 
-			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsReadOnly && this.DetectRoundButton(pos, this.PositionChangePrivate))
+			if ((this.field.IsExplored || this.field.IsSourceExpanded) && !this.field.IsStrictlyReadOnly && this.DetectRoundButton(pos, this.PositionChangePrivate))
 			{
 				element = ActiveElement.ConnectionChangePrivate;
 				return true;
@@ -625,7 +625,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				}
 			}
 
-			if (this.points.Count != 0 && !this.field.IsReadOnly)
+			if (this.points.Count != 0 && !this.field.IsStrictlyReadOnly)
 			{
 				//	Dessine le bouton pour changer la connection.
 				if (this.hilitedElement == ActiveElement.ConnectionHilited ||
