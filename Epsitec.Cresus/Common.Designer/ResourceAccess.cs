@@ -1130,6 +1130,7 @@ namespace Epsitec.Common.Designer
 			//	Supprime la ressource courante dans toutes les cultures.
 			CultureMap item = this.collectionView.CurrentItem as CultureMap;
 			this.accessor.Collection.Remove(item);
+			this.PersistChanges();
 			this.SetGlobalDirty();
 		}
 
