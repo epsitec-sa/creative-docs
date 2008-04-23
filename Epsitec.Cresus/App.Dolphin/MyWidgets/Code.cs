@@ -55,7 +55,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetInstruction.EditionAccepted += new EventHandler (this.HandleInstructionEditionAccepted);
 			this.widgetInstruction.IsFocusedChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
 
-			TextStyle.Tab tab = new TextStyle.Tab(50, TextTabType.Right, TextTabLine.None);
+			TextStyle.Tab tab = new TextStyle.Tab(50, TextTabType.Left, TextTabLine.None);
 			this.widgetInstruction.TextLayout.TabInsert(tab);
 
 			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
