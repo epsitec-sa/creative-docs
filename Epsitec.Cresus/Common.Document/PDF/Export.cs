@@ -315,7 +315,7 @@ namespace Epsitec.Common.Document.PDF
 				switch (Support.Globals.Properties.GetProperty<string> ("PDF:BleedBoxDefinition", "BleedBox"))
 				{
 					case "BleedBox":	writer.WriteString(Port.StringBBox("/BleedBox", bleedBox)); break;
-					case "MediaBox":	writer.WriteString(Port.StringBBox("/BleedBox", mediaBox)); break;
+					case "MediaBox":	writer.WriteString(Port.StringBBox("/MediaBox", mediaBox)); break;
 					case "None":		break;
 				}
 				switch (Support.Globals.Properties.GetProperty<string> ("PDF:TrimBoxDefinition", "TrimBox"))
