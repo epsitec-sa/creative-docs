@@ -472,7 +472,7 @@ namespace Epsitec.Common.Drawing
 				pos = System.Math.Ceiling((pos+1)/def)*def;
 				pos += lastPos;
 
-				Tab tab = new Tab (pos, TextTabType.Right, TextTabLine.None);
+				Tab tab = new Tab (pos, TextTabType.Left, TextTabLine.None);
 				return tab;
 			}
 			else

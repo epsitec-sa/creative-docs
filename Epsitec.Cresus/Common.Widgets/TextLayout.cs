@@ -4212,7 +4212,7 @@ noText:
 					block.Width  = tab.Pos-pos;
 					this.blocks.Add(block);
 
-					if ( tabType == Drawing.TextTabType.Left    ||
+					if ( tabType == Drawing.TextTabType.Right   ||
 						 tabType == Drawing.TextTabType.Center  ||
 						 tabType == Drawing.TextTabType.Decimal )
 					{
@@ -4264,7 +4264,7 @@ noText:
 					System.Diagnostics.Debug.Assert(block.Tab);
 					Drawing.TextBreak.Line line = lines[0] as Drawing.TextBreak.Line;
 					double dist = 0.0;
-					if ( tabType == Drawing.TextTabType.Left )
+					if ( tabType == Drawing.TextTabType.Right )
 					{
 						dist = line.Width;
 					}

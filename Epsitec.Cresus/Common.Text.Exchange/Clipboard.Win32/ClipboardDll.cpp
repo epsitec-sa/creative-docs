@@ -1,4 +1,4 @@
-//	Copyright © 2006-2007, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Michael WALZ, Maintainer: Pierre ARNAUD
 
 /*
