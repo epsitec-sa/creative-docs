@@ -242,17 +242,19 @@ namespace Epsitec.Common.Document.Panels
 			//	Met à jour les widgets du panneau.
 			Properties.Image p = this.property as Properties.Image;
 
-			if (p != null && p.PastedImage == null)
+			if (p != null && p.PastedImage == null)  // image provenant d'un fichier ?
 			{
 				this.fieldFilename.Visibility = true;
 				this.fieldClipboard.Visibility = false;
 				this.buttonUpdate.Enable = true;
+				this.buttonInside.Enable = true;
 			}
-			else
+			else  // image provenant du clipboard ?
 			{
 				this.fieldFilename.Visibility = false;
 				this.fieldClipboard.Visibility = true;
 				this.buttonUpdate.Enable = false;
+				this.buttonInside.Enable = false;
 			}
 		}
 

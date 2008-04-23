@@ -1337,7 +1337,7 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			
 			int undoCount = this.modifier.OpletQueue.UndoActionCount;
-			DocumentFileExtension ext = Document.GetDocumentFileExtension (filename);
+			DocumentFileExtension ext = Document.GetDocumentFileExtension(filename);
 			
 			try
 			{
@@ -1347,7 +1347,7 @@ namespace Epsitec.Common.Document
 
 				if (this.ioDocumentManager == null)
 				{
-					this.ioDocumentManager = new DocumentManager ();
+					this.ioDocumentManager = new DocumentManager();
 				}
 
 				if (this.type == DocumentType.Pictogram)
@@ -1358,7 +1358,7 @@ namespace Epsitec.Common.Document
 						return err;
 					}
 
-					this.ioDocumentManager.Save (filename,
+					this.ioDocumentManager.Save(filename,
 						delegate (System.IO.Stream stream)
 						{
 							Document.WriteIdentifier(stream, this.ioType);
@@ -1390,7 +1390,7 @@ namespace Epsitec.Common.Document
 					this.ImageFlushUnused();
 					if (this.imageCache != null)
 					{
-						this.imageCache.GenerateShortNames ();
+						this.imageCache.GenerateShortNames();
 					}
 					this.ImageUpdate();
 
@@ -1410,26 +1410,26 @@ namespace Epsitec.Common.Document
 					this.WriteStatistics(zip, 2);
 					if (this.imageCache != null)
 					{
-						this.imageCache.WriteData (zip, this.imageIncludeMode);
+						this.imageCache.WriteData(zip, this.imageIncludeMode);
 					}
 					this.FontWriteAll(zip);
 					zip.CompressionLevel = 6;
 
-					this.ioDocumentManager.Save (filename,
+					this.ioDocumentManager.Save(filename,
 						delegate (System.IO.Stream stream)
 						{
-							zip.SaveFile (stream);
+							zip.SaveFile(stream);
 							return true;
 						});
 				}
 			}
-			catch ( System.Exception e )
+			catch (System.Exception e)
 			{
 				return e.Message;
 			}
 			finally
 			{
-				while ( undoCount < this.modifier.OpletQueue.UndoActionCount )
+				while (undoCount < this.modifier.OpletQueue.UndoActionCount)
 				{
 					this.modifier.OpletQueue.UndoAction();
 				}
@@ -1437,8 +1437,8 @@ namespace Epsitec.Common.Document
 				this.modifier.OpletQueue.PurgeRedo();
 			}
 
-			if ( ext == DocumentFileExtension.CrDoc ||
-				 ext == DocumentFileExtension.Icon )
+			if (ext == DocumentFileExtension.CrDoc ||
+				ext == DocumentFileExtension.Icon)
 			{
 				this.Filename = filename;
 				this.IsDirtySerialize = false;
