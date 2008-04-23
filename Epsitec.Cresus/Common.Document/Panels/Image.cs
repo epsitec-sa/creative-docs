@@ -242,19 +242,19 @@ namespace Epsitec.Common.Document.Panels
 			//	Met à jour les widgets du panneau.
 			Properties.Image p = this.property as Properties.Image;
 
-			if (p != null && p.PastedImage == null)  // image provenant d'un fichier ?
-			{
-				this.fieldFilename.Visibility = true;
-				this.fieldClipboard.Visibility = false;
-				this.buttonUpdate.Enable = true;
-				this.buttonInside.Enable = true;
-			}
-			else  // image provenant du clipboard ?
+			if (p != null && p.FromClipboard)  // image provenant du clipboard ?
 			{
 				this.fieldFilename.Visibility = false;
 				this.fieldClipboard.Visibility = true;
 				this.buttonUpdate.Enable = false;
 				this.buttonInside.Enable = false;
+			}
+			else  // image provenant d'un fichier ?
+			{
+				this.fieldFilename.Visibility = true;
+				this.fieldClipboard.Visibility = false;
+				this.buttonUpdate.Enable = true;
+				this.buttonInside.Enable = true;
 			}
 		}
 
@@ -441,7 +441,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				if (item.ReloadImage())  // relit l'image sur disque
 				{
-					p.FileDate = this.document.ImageCache.LoadFromFile (p.FileName);
+					p.FileDate = this.document.ImageCache.LoadFromFile(p.FileName);
 					return;  // tout c'est bien passé
 				}
 			}
@@ -485,13 +485,7 @@ namespace Epsitec.Common.Document.Panels
 
 			Properties.Image p = this.property as Properties.Image;
 
-			if (p.PastedImage == null)  // image importée normalement ?
-			{
-				dlg.FileExtension = System.IO.Path.GetExtension(this.fieldFilename.Text);
-				dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
-				dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
-			}
-			else  // donnée d'une image collée directement ?
+			if (p.FromClipboard)  // donnée d'une image collée directement ?
 			{
 				if (!string.IsNullOrEmpty(this.document.Filename))
 				{
@@ -504,21 +498,19 @@ namespace Epsitec.Common.Document.Panels
 				dlg.InitialFileName = "";
 				dlg.FileExtension = ".png";
 			}
+			else  // image importée normalement ?
+			{
+				dlg.FileExtension = System.IO.Path.GetExtension(this.fieldFilename.Text);
+				dlg.InitialDirectory = System.IO.Path.GetDirectoryName(this.fieldFilename.Text);
+				dlg.InitialFileName = System.IO.Path.GetFileName(this.fieldFilename.Text);
+			}
 
 			dlg.ShowDialog();  // choix d'un fichier image...
 
 			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
 			{
 				ImageCache.Item item = this.document.ImageCache.Find(p.FileName, p.FileDate);
-				if (item == null)
-				{
-					if (p.PastedImage != null)
-					{
-						byte[] data = p.PastedImage.BitmapImage.Save(ImageFormat.Png);
-						System.IO.File.WriteAllBytes(dlg.FileName, data);  // écrit le fichier sur disque
-					}
-				}
-				else
+				if (item != null)
 				{
 					item.ExportImage(dlg.FileName);  // écrit le fichier sur disque
 				}

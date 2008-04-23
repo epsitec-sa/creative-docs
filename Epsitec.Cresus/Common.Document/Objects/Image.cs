@@ -322,12 +322,6 @@ namespace Epsitec.Common.Document.Objects
 				this.ImageGeometry(out center, out width, out height, out angle);
 
 				Size imageSize = Size.Zero;
-
-				if (this.PastedImage != null)
-				{
-					imageSize = this.PastedImage.Size;
-				}
-
 				ImageCache.Item item = this.Item;
 				if (item != null && item.Size != Size.Zero)
 				{
@@ -487,14 +481,7 @@ namespace Epsitec.Common.Document.Objects
 			double scale = 1;
 
 			ImageCache.Item item = this.Item;
-			if (item == null || item.Size == Size.Zero)
-			{
-				if (this.PastedImage != null)
-				{
-					size = this.PastedImage.Size;
-				}
-			}
-			else
+			if (item != null && item.Size != Size.Zero)
 			{
 				size = item.Size;
 				scale = item.Scale;
@@ -560,11 +547,7 @@ namespace Epsitec.Common.Document.Objects
 
 			ImageFilter filter = this.GetFilter(port, drawingContext);
 
-			if (item == null)
-			{
-				image = this.PastedImage;  // affiche l'image collée, si elle existe
-			}
-			else
+			if (item != null)
 			{
 				double scale = item.Scale;
 				crop.Left   /= scale;
@@ -686,26 +669,15 @@ namespace Epsitec.Common.Document.Objects
 			return path;
 		}
 
-		public Drawing.Image PastedImage
+		public void ImportClipboard(string filename)
 		{
-			//	Données de l'image, lorsqu'elles proviennent du clipboard.
-			get
+			Properties.Image pi = this.PropertyImage;
+			if (pi != null)
 			{
-				Properties.Image pi = this.PropertyImage;
-				if (pi != null)
-				{
-					return pi.PastedImage;
-				}
-
-				return null;
-			}
-			set
-			{
-				Properties.Image pi = this.PropertyImage;
-				if (pi != null)
-				{
-					pi.PastedImage = value;
-				}
+				pi.FileName = filename;
+				pi.FileDate = this.document.ImageCache.LoadFromFile(pi.FileName);
+				pi.InsideDoc = true;
+				pi.FromClipboard = true;
 			}
 		}
 

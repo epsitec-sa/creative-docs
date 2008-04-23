@@ -484,7 +484,7 @@ namespace Epsitec.Common.Document
 			{
 				if (this.imageCache == null)
 				{
-					this.imageCache = new ImageCache (this);
+					this.imageCache = new ImageCache(this);
 				}
 				
 				return this.imageCache;

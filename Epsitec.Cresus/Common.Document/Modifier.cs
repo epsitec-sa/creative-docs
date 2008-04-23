@@ -2019,13 +2019,14 @@ namespace Epsitec.Common.Document
 			Point p1 = new Point(pageSize.Width/2-w/2, pageSize.Height/2-h/2);
 			Point p2 = new Point(pageSize.Width/2+w/2, pageSize.Height/2+h/2);
 
+			string filename = this.CreateBitmapFile(di);  // crée un fichier temporaire correspondant au clipboard
+
 			using (this.OpletQueueBeginAction(Res.Strings.Action.PasteImage))
 			{
 				this.DeselectAll();
 				this.Tool = "ToolSelect";
 
 				Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
-				obj.PastedImage = di;
 
 				Objects.Abstract layer = drawingContext.RootObject();
 				layer.Objects.Add(obj);  // ajoute à la fin de la liste
@@ -2033,6 +2034,8 @@ namespace Epsitec.Common.Document
 				obj.CreateMouseDown(p1, drawingContext);
 				obj.CreateMouseMove(p2, drawingContext);
 				obj.CreateMouseUp(p2, drawingContext);
+
+				obj.ImportClipboard(filename);  // importe le fichier temporaire créé
 
 				obj.Select();  // sélectionne l'image collée
 				this.TotalSelected++;
@@ -2064,6 +2067,30 @@ namespace Epsitec.Common.Document
 			}
 
 			return null;
+		}
+
+		protected string CreateBitmapFile(Drawing.Image image)
+		{
+			//	Crée un fichier image bitmap .png dans le dossier temporaire de Windows.
+			byte[] data = image.BitmapImage.Save(ImageFormat.Png);
+
+			string filename = this.ClipboardFilename;
+			string path = System.IO.Path.GetDirectoryName(filename);
+
+			System.IO.Directory.CreateDirectory(path);
+			System.IO.File.WriteAllBytes(filename, data);  // écrit le fichier sur disque
+
+			return filename;
+		}
+
+		protected string ClipboardFilename
+		{
+			//	Retourne le nom du fichier temporaire pour l'image bitmap.
+			get
+			{
+				System.Guid guid = System.Guid.NewGuid();
+				return string.Concat(System.IO.Path.GetTempPath(), "EPSITEC SA\\crdoc\\clipboard-", guid.ToString(), ".png");
+			}
 		}
 
 

@@ -22,37 +22,35 @@ namespace Epsitec.Common.Document
 		{
 			//	Enregistre un cache local; si c'est le premier, il y a un certain
 			//	nombre d'initialisations à faire.
-
 			if (GlobalImageCache.localCache.Count == 0)
 			{
-				GlobalImageCache.Initialize ();
+				GlobalImageCache.Initialize();
 			}
 
-			GlobalImageCache.localCache.Add (imageCache);
+			GlobalImageCache.localCache.Add(imageCache);
 		}
 
 		internal static void Unregister(ImageCache imageCache)
 		{
 			//	Supprime un cache local de notre liste; si c'est le dernier, il y
 			//	a un certain nombre de nettoyages à faire.
-
-			GlobalImageCache.localCache.Remove (imageCache);
+			GlobalImageCache.localCache.Remove(imageCache);
 
 			if (GlobalImageCache.localCache.Count == 0)
 			{
-				GlobalImageCache.ShutDown ();
+				GlobalImageCache.ShutDown();
 			}
 		}
 
 		private static void Initialize()
 		{
-			GlobalImageCache.cache = ImageManager.GetDefaultCache ();
-			GlobalImageCache.cache.RegisterProtocol (GlobalImageCache.zipPrefix, GlobalImageCache.ZippedDocumentReader);
+			GlobalImageCache.cache = ImageManager.GetDefaultCache();
+			GlobalImageCache.cache.RegisterProtocol(GlobalImageCache.zipPrefix, GlobalImageCache.ZippedDocumentReader);
 		}
 
 		private static void ShutDown()
 		{
-			GlobalImageCache.cache.UnregisterProtocol (GlobalImageCache.zipPrefix);
+			GlobalImageCache.cache.UnregisterProtocol(GlobalImageCache.zipPrefix);
 			GlobalImageCache.cache = null;
 		}
 		
@@ -77,17 +75,17 @@ namespace Epsitec.Common.Document
 			string zipFileName;
 			string zipEntryName;
 
-			if (GlobalImageCache.ExtractZipPathNames (string.Concat (GlobalImageCache.zipPrefix, zipPath), out zipFileName, out zipEntryName))
+			if (GlobalImageCache.ExtractZipPathNames(string.Concat(GlobalImageCache.zipPrefix, zipPath), out zipFileName, out zipEntryName))
 			{
-				DocumentManager manager = GlobalImageCache.FindDocumentManager (zipFileName);
+				DocumentManager manager = GlobalImageCache.FindDocumentManager(zipFileName);
 
-				using (System.IO.Stream stream = manager.GetLocalFileStream (System.IO.FileAccess.Read))
+				using (System.IO.Stream stream = manager.GetLocalFileStream(System.IO.FileAccess.Read))
 				{
 					if (stream != null)
 					{
-						IO.ZipFile zip = new IO.ZipFile ();
+						IO.ZipFile zip = new IO.ZipFile();
 
-						bool ok = zip.TryLoadFile (stream,
+						bool ok = zip.TryLoadFile(stream,
 							delegate (string name)
 							{
 								return (name == zipEntryName);
@@ -106,7 +104,7 @@ namespace Epsitec.Common.Document
 
 		private static DocumentManager FindDocumentManager(string zipFileName)
 		{
-			string zipPath = zipFileName.ToLowerInvariant ();
+			string zipPath = zipFileName.ToLowerInvariant();
 
 			foreach (ImageCache cache in GlobalImageCache.localCache)
 			{
@@ -115,7 +113,7 @@ namespace Epsitec.Common.Document
 
 				if (manager != null)
 				{
-					string path = manager.GetLocalFilePath ().ToLowerInvariant ();
+					string path = manager.GetLocalFilePath().ToLowerInvariant();
 
 					if (path == zipPath)
 					{
@@ -129,22 +127,21 @@ namespace Epsitec.Common.Document
 
 		public static string CreateZipPath(string zipFileName, string zipEntryName)
 		{
-			System.Diagnostics.Debug.Assert (zipEntryName.Contains (":") == false);
-			return string.Concat (GlobalImageCache.zipPrefix, zipFileName, ":", zipEntryName);
+			System.Diagnostics.Debug.Assert(zipEntryName.Contains(":") == false);
+			return string.Concat(GlobalImageCache.zipPrefix, zipFileName, ":", zipEntryName);
 		}
 
 		public static bool ExtractZipPathNames(string zipPath, out string zipFileName, out string zipEntryName)
 		{
-			if (!string.IsNullOrEmpty (zipPath) &&
-				zipPath.StartsWith (GlobalImageCache.zipPrefix))
+			if (!string.IsNullOrEmpty(zipPath) && zipPath.StartsWith(GlobalImageCache.zipPrefix))
 			{
-				zipPath = zipPath.Substring (GlobalImageCache.zipPrefix.Length);
-				int pos = zipPath.LastIndexOf (':');
+				zipPath = zipPath.Substring(GlobalImageCache.zipPrefix.Length);
+				int pos = zipPath.LastIndexOf(':');
 
 				if (pos > 0)
 				{
-					zipFileName = zipPath.Substring (0, pos);
-					zipEntryName = zipPath.Substring (pos+1);
+					zipFileName = zipPath.Substring(0, pos);
+					zipEntryName = zipPath.Substring(pos+1);
 
 					return true;
 				}
@@ -162,10 +159,9 @@ namespace Epsitec.Common.Document
 		{
 			foreach (KeyValuePair<string, Item> pair in GlobalImageCache.items)
 			{
-				if (pair.Key.StartsWith (prefix))
+				if (pair.Key.StartsWith(prefix))
 				{
-					if (string.IsNullOrEmpty (zipFileName) ||
-						pair.Value.ZipFileName == zipFileName)
+					if (string.IsNullOrEmpty(zipFileName) || pair.Value.ZipFileName == zipFileName)
 					{
 						return pair.Value;
 					}
@@ -177,26 +173,25 @@ namespace Epsitec.Common.Document
 
 		public static void RemoveReferenceToZip(string zipFileName)
 		{
-			List<Item> list = new List<Item> ();
+			List<Item> list = new List<Item>();
 			
 			foreach (KeyValuePair<string, Item> pair in GlobalImageCache.items)
 			{
 				if (pair.Value.ZipFileName == zipFileName)
 				{
-					list.Add (pair.Value);
+					list.Add(pair.Value);
 				}
 			}
 
 			foreach (Item item in list)
 			{
-				GlobalImageCache.Remove (item);
+				GlobalImageCache.Remove(item);
 			}
 		}
 
 		public static Item Add(string key, string fileName, string zipPath, System.DateTime date)
 		{
 			//	Ajoute une nouvelle image dans le cache.
-
 			System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
 
 			Item item;
@@ -231,13 +226,12 @@ namespace Epsitec.Common.Document
 		public static void Remove(Item item)
 		{
 			//	Supprime une image dans le cache.
-
 			string key = item.GlobalKeyName;
 
-			if (GlobalImageCache.items.ContainsKey (key))
+			if (GlobalImageCache.items.ContainsKey(key))
 			{
-				GlobalImageCache.items.Remove (key);
-				item.Dispose ();
+				GlobalImageCache.items.Remove(key);
+				item.Dispose();
 			}
 		}
 
@@ -254,7 +248,6 @@ namespace Epsitec.Common.Document
 		{
 			//	Bloque l'image car elle est utilisée dans la page.
 			Item item;
-
 			key = GlobalImageCache.GetGlobalKeyName(key, zipFileName);
 			
 			if (GlobalImageCache.items.TryGetValue(key, out item))
@@ -316,8 +309,8 @@ namespace Epsitec.Common.Document
 			foreach (Item item in GlobalImageCache.items.Values)
 			{
 				long time = item.TimeStamp;
-				
-				if (!item.Locked && item.IsFreeable (part))
+
+				if (!item.Locked && item.IsFreeable(part))
 				{
 					if (min > time)
 					{
@@ -347,17 +340,16 @@ namespace Epsitec.Common.Document
 			public Item(string filename, string zipPath, System.DateTime date)
 			{
 				//	Constructeur qui met en cache les données de l'image.
-				
 				System.Diagnostics.Debug.Assert(date != System.DateTime.MinValue);
 
 				this.filename = filename;
 
-				if (string.IsNullOrEmpty (zipPath))
+				if (string.IsNullOrEmpty(zipPath))
 				{
 				}
 				else
 				{
-					GlobalImageCache.ExtractZipPathNames (zipPath, out this.zipFilename, out this.zipEntryName);
+					GlobalImageCache.ExtractZipPathNames(zipPath, out this.zipFilename, out this.zipEntryName);
 				}
 
 				this.date = date;
@@ -559,7 +551,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return ImageManager.GetKey (this.filename, this.date);
+					return ImageManager.GetKey(this.filename, this.date);
 				}
 			}
 
@@ -687,18 +679,18 @@ namespace Epsitec.Common.Document
 				//?System.Diagnostics.Debug.WriteLine(string.Format("GlobalImageCache: ReadOriginalImage {0}", this.filename));
 				try
 				{
-					this.originalImage = Bitmap.FromData (this.data);
+					this.originalImage = Bitmap.FromData(this.data);
 				}
 				catch (System.Exception ex)
 				{
-					System.Diagnostics.Debug.WriteLine ("ReadOriginalImage failed: " + ex.Message);
+					System.Diagnostics.Debug.WriteLine("ReadOriginalImage failed: " + ex.Message);
 					this.originalImage = null;
 				}
 
 				if (this.originalImage != null)
 				{
 					this.originalSize = this.originalImage.Size;
-					this.SetRecentTimeStamp ();
+					this.SetRecentTimeStamp();
 				}
 			}
 
@@ -710,18 +702,18 @@ namespace Epsitec.Common.Document
 				{
 					try
 					{
-						this.ReadImageData (read);
+						this.ReadImageData(read);
 						return;
 					}
 					catch (System.OutOfMemoryException ex)
 					{
-						System.Diagnostics.Debug.WriteLine ("TryReadOriginalImage failed: " + ex.Message);
+						System.Diagnostics.Debug.WriteLine("TryReadOriginalImage failed: " + ex.Message);
 						
 						this.data = null;
 						this.date = System.DateTime.MinValue;
-						
-						System.GC.Collect ();
-						System.Threading.Thread.Sleep (10);
+
+						System.GC.Collect();
+						System.Threading.Thread.Sleep(10);
 						
 						attemptCount++;
 					}

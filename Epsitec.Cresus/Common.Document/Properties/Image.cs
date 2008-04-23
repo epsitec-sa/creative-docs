@@ -31,13 +31,13 @@ namespace Epsitec.Common.Document.Properties
 			this.date           = System.DateTime.MinValue;
 			this.shortName      = "";
 			this.insideDoc      = true;
+			this.fromClipboard  = false;
 			this.rotation       = Rotation.Angle0;
 			this.mirrorH        = false;
 			this.mirrorV        = false;
 			this.homo           = true;
 			this.filterCategory = 0;  // catégorie A
 			this.cropMargins    = Margins.Zero;
-			this.pastedImage    = null;
 		}
 
 		public string FileName
@@ -53,14 +53,7 @@ namespace Epsitec.Common.Document.Properties
 				if (this.filename != value)
 				{
 					this.NotifyBefore();
-
 					this.filename = value;
-
-					if (!string.IsNullOrEmpty(this.filename))
-					{
-						this.pastedImage = null;
-					}
-					
 					this.NotifyAfter();
 				}
 			}
@@ -105,6 +98,20 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				this.insideDoc = value;
+			}
+		}
+
+		public bool FromClipboard
+		{
+			//	Indique si les données de l'images proviennent du clipboard.
+			get
+			{
+				return this.fromClipboard;
+			}
+
+			set
+			{
+				this.fromClipboard = value;
 			}
 		}
 
@@ -219,27 +226,6 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		public Drawing.Image PastedImage
-		{
-			//	Données de l'image, lorsqu'elles proviennent du clipboard.
-			get
-			{
-				return this.pastedImage;
-			}
-			set
-			{
-				if (this.pastedImage != value)
-				{
-					this.pastedImage = value;
-
-					if (this.pastedImage != null)
-					{
-						this.filename = "";
-					}
-				}
-			}
-		}
-
 
 		public override string SampleText
 		{
@@ -276,13 +262,13 @@ namespace Epsitec.Common.Document.Properties
 			p.date           = this.date;
 			p.shortName      = this.shortName;
 			p.insideDoc      = this.insideDoc;
+			p.fromClipboard  = this.fromClipboard;
 			p.rotation       = this.rotation;
 			p.mirrorH        = this.mirrorH;
 			p.mirrorV        = this.mirrorV;
 			p.homo           = this.homo;
 			p.filterCategory = this.filterCategory;
 			p.cropMargins    = this.cropMargins;
-			p.pastedImage    = this.pastedImage;
 		}
 
 		public override bool Compare(Abstract property)
@@ -295,13 +281,13 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.date           != this.date           )  return false;
 			if ( p.shortName      != this.shortName      )  return false;
 			if ( p.insideDoc      != this.insideDoc      )  return false;
+			if ( p.fromClipboard  != this.fromClipboard  )  return false;
 			if ( p.rotation       != this.rotation       )  return false;
 			if ( p.mirrorH        != this.mirrorH        )  return false;
 			if ( p.mirrorV        != this.mirrorV        )  return false;
 			if ( p.homo           != this.homo           )  return false;
 			if ( p.filterCategory != this.filterCategory )  return false;
 			if ( p.cropMargins    != this.cropMargins    )  return false;
-			if ( p.pastedImage    != this.pastedImage    )  return false;
 
 			return true;
 		}
@@ -446,6 +432,7 @@ namespace Epsitec.Common.Document.Properties
 			info.AddValue("ShortName", shortName);
 			info.AddValue("Date", this.date);
 			info.AddValue("InsideDoc", this.insideDoc);
+			info.AddValue("FromClipboard", this.fromClipboard);
 			info.AddValue("Rotation", this.rotation);
 			info.AddValue("MirrorH", this.mirrorH);
 			info.AddValue("MirrorV", this.mirrorV);
@@ -509,7 +496,16 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.date = (System.DateTime) info.GetValue("Date", typeof(System.DateTime));
 			}
-			
+
+			if (this.document.IsRevisionGreaterOrEqual(2, 1, 10))
+			{
+				this.fromClipboard = info.GetBoolean("FromClipboard");
+			}
+			else
+			{
+				this.fromClipboard = false;
+			}
+
 			if (this.date.Ticks == 0)
 			{
 				//	Met une date spéciale différente de System.DateTime.MinValue pour les anciens fichiers.
@@ -518,17 +514,17 @@ namespace Epsitec.Common.Document.Properties
 		}
 		#endregion
 
-	
+
 		protected string				filename;
 		protected string				shortName;
 		protected System.DateTime		date;
 		protected bool					insideDoc;
+		protected bool					fromClipboard;
 		protected Rotation				rotation;
 		protected bool					mirrorH;
 		protected bool					mirrorV;
 		protected bool					homo;
 		protected int					filterCategory;
 		protected Margins				cropMargins;
-		protected Drawing.Image			pastedImage;
 	}
 }

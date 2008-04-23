@@ -24,9 +24,9 @@ namespace Epsitec.Common.Document
 		public ImageCache(Document document)
 		{
 			this.document = document;
-			this.items = new Dictionary<string, Item> ();
+			this.items = new Dictionary<string, Item>();
 			this.resolution = ImageCacheResolution.Low;
-			GlobalImageCache.Register (this);
+			GlobalImageCache.Register(this);
 		}
 
 		public Document Document
@@ -62,22 +62,21 @@ namespace Epsitec.Common.Document
 		{
 			//	Essaie de charger une image dans le cache, à partir d'un fichier réel.
 			//	Celle méthode est appelée chaque fois que le nom édité de l'image est changé.
-			if (string.IsNullOrEmpty (fileName))
+			if (string.IsNullOrEmpty(fileName))
 			{
 				return System.DateTime.MinValue;
 			}
 			else
 			{
 				Item item;
-				System.DateTime fileDate = GlobalImageCache.GetFileDate (fileName);
+				System.DateTime fileDate = GlobalImageCache.GetFileDate(fileName);
 
 				if (fileDate.Ticks == 0)
 				{
 					//	Aucun fichier n'existe sur le disque, mais peut-être que le nom de
 					//	ce fichier est connu quand-même par le cache, parce que le fichier
 					//	fait partie du document...
-
-					item = this.Find (fileName);
+					item = this.Find(fileName);
 				}
 				else
 				{
@@ -85,12 +84,11 @@ namespace Epsitec.Common.Document
 					//	une entrée dans le cache pour ce fichier ? On vérifie en se basant
 					//	aussi sur la date du fichier, car on peut avoir un document avec
 					//	plusieurs versions du même fichier :
-
-					item = this.Find (fileName, fileDate);
+					item = this.Find(fileName, fileDate);
 
 					if (item == null)
 					{
-						item = this.Add (fileName, fileDate);
+						item = this.Add(fileName, fileDate);
 					}
 				}
 
@@ -110,8 +108,7 @@ namespace Epsitec.Common.Document
 			//	Cherche l'élément correspondant exactement au nom et à la date
 			//	spécifiée. Cherche au besoin aussi dans le cache global. Ne charge
 			//	jamais d'image si elle n'est pas trouvée dans le cache.
-
-			if (string.IsNullOrEmpty (fileName))
+			if (string.IsNullOrEmpty(fileName))
 			{
 				return null;
 			}
@@ -120,22 +117,22 @@ namespace Epsitec.Common.Document
 				return null;
 			}
 
-			return this.FindItem (ImageManager.GetKey (fileName, fileDate));
+			return this.FindItem(ImageManager.GetKey(fileName, fileDate));
 		}
 
 		public void Dispose()
 		{
 			//	Supprime toutes les images du cache.
 			DocumentManager manager = this.Document == null ? null : this.Document.DocumentManager;
-			string zipFilePath = manager == null ? null : manager.GetLocalFilePath ();
+			string zipFilePath = manager == null ? null : manager.GetLocalFilePath();
 
-			if (!string.IsNullOrEmpty (zipFilePath))
+			if (!string.IsNullOrEmpty(zipFilePath))
 			{
-				GlobalImageCache.RemoveReferenceToZip (zipFilePath);
+				GlobalImageCache.RemoveReferenceToZip(zipFilePath);
 			}
 
-			GlobalImageCache.Unregister (this);
-			this.items.Clear ();
+			GlobalImageCache.Unregister(this);
+			this.items.Clear();
 		}
 
 		public void ResetUsedFlags()
@@ -152,14 +149,14 @@ namespace Epsitec.Common.Document
 		{
 			//	Définit qu'une image est utilisée par le document auquel ce cache
 			//	est associé.
-			if (string.IsNullOrEmpty (fileName))
+			if (string.IsNullOrEmpty(fileName))
 			{
 				return;
 			}
 
-			string key = ImageManager.GetKey (fileName, fileDate);
+			string key = ImageManager.GetKey(fileName, fileDate);
 
-			if (this.items.ContainsKey (key))
+			if (this.items.ContainsKey(key))
 			{
 				this.items[key].UsedInDocument = true;
 			}
@@ -170,19 +167,19 @@ namespace Epsitec.Common.Document
 			//	Supprime toutes les images inutilisées du cache des images. Appeler
 			//	ResetUsedFlags suivi de n x SetUsedFlag pour mettre à jour les marqueurs
 			//	avant...
-			List<string> keysToDelete = new List<string> ();
+			List<string> keysToDelete = new List<string>();
 
 			foreach (KeyValuePair<string, Item> pair in this.items)
 			{
 				if (pair.Value.UsedInDocument == false)
 				{
-					keysToDelete.Add (pair.Key);
+					keysToDelete.Add(pair.Key);
 				}
 			}
 
 			foreach (string key in keysToDelete)
 			{
-				this.items.Remove (key);
+				this.items.Remove(key);
 			}
 		}
 
@@ -207,22 +204,22 @@ namespace Epsitec.Common.Document
 
 			foreach (Item item in this.items.Values)
 			{
-				string shortName = System.IO.Path.GetFileName (item.FileName);
+				string shortName = System.IO.Path.GetFileName(item.FileName);
 
-				if (this.IsShortNameUsed (shortName))  // nom déjà utilisé ?
+				if (this.IsShortNameUsed(shortName))  // nom déjà utilisé ?
 				{
-					string name = System.IO.Path.GetFileNameWithoutExtension (item.FileName);
-					string ext  = System.IO.Path.GetExtension (item.FileName);  // extension avec le "." !
+					string name = System.IO.Path.GetFileNameWithoutExtension(item.FileName);
+					string ext  = System.IO.Path.GetExtension(item.FileName);  // extension avec le "." !
 
 					int i=2;  // commence avec 'nom (2).ext'
 					do
 					{
 						//	Génère un mom du style 'nom (n).ext'.
-						shortName = string.Format ("{0} ({1}){2}", name, i.ToString (System.Globalization.CultureInfo.InvariantCulture), ext);
+						shortName = string.Format("{0} ({1}){2}", name, i.ToString(System.Globalization.CultureInfo.InvariantCulture), ext);
 						i++;
-						System.Diagnostics.Debug.Assert (i < 10000);  // faut pas pousser...
+						System.Diagnostics.Debug.Assert(i < 10000);  // faut pas pousser...
 					}
-					while (this.IsShortNameUsed (shortName));
+					while (this.IsShortNameUsed(shortName));
 				}
 
 				item.ShortName = shortName;
@@ -233,11 +230,10 @@ namespace Epsitec.Common.Document
 		{
 			//	Synchronise la propriété de l'image avec les informations contenues
 			//	dans le cache à propos de celle-ci.
-			
 			string fileName = propImage.FileName;
 			System.DateTime fileDate = propImage.FileDate;
-			
-			Item item = this.Find (fileName, fileDate);
+
+			Item item = this.Find(fileName, fileDate);
 
 			if (item != null)
 			{
@@ -258,8 +254,8 @@ namespace Epsitec.Common.Document
 			{
 				if (item.EmbeddedInDocument || imageIncludeMode == Document.ImageIncludeMode.All)
 				{
-					string name = string.Format ("images/{0}", item.ShortName);
-					zip.AddEntry (name, item.GetImageData (), false);
+					string name = string.Format("images/{0}", item.ShortName);
+					zip.AddEntry(name, item.GetImageData(), false);
 				}
 			}
 		}
@@ -269,13 +265,12 @@ namespace Epsitec.Common.Document
 			//	Lit les données d'une image : ceci se contente de créer un item
 			//	dans le cache mais ne lit aucune donnée, ni depuis le disque, ni
 			//	depuis le document ZIP.
-
-			if (string.IsNullOrEmpty (propImage.FileName))
+			if (string.IsNullOrEmpty(propImage.FileName))
 			{
 				return;
 			}
 
-			if (!this.Contains (propImage.FileName, propImage.FileDate))  // pas encore dans le cache ?
+			if (!this.Contains(propImage.FileName, propImage.FileDate))  // pas encore dans le cache ?
 			{
 				bool isZip = false;
 
@@ -291,18 +286,18 @@ namespace Epsitec.Common.Document
 
 				if (isZip)
 				{
-					string name = string.Format ("images/{0}", propImage.ShortName);
-					string path = GlobalImageCache.CreateZipPath (zip.LoadFileName, name);
-					this.Add (propImage.FileName, path, propImage.FileDate);
+					string name = string.Format("images/{0}", propImage.ShortName);
+					string path = GlobalImageCache.CreateZipPath(zip.LoadFileName, name);
+					this.Add(propImage.FileName, path, propImage.FileDate);
 				}
 				else
 				{
 					string fileName = propImage.FileName;
-					System.DateTime fileDate = GlobalImageCache.GetFileDate (propImage.FileName);
+					System.DateTime fileDate = GlobalImageCache.GetFileDate(propImage.FileName);
 					
 					if (fileDate.Ticks > 0)
 					{
-						Item item = this.Add (fileName, fileDate);  // lit le fichier image sur disque
+						Item item = this.Add(fileName, fileDate);  // lit le fichier image sur disque
 
 						if (item != null)
 						{
@@ -317,34 +312,31 @@ namespace Epsitec.Common.Document
 		{
 			//	Verrouille l'image - elle est en cours d'utilisation dans la
 			//	page courante.
-
-			if (string.IsNullOrEmpty (fileName))
+			if (string.IsNullOrEmpty(fileName))
 			{
 				return;
 			}
 
-			GlobalImageCache.Lock (ImageManager.GetKey (fileName, fileDate), null);
-			GlobalImageCache.Lock (ImageManager.GetKey (fileName, fileDate), this.GetWorkingDocumentFileName ());
+			GlobalImageCache.Lock(ImageManager.GetKey(fileName, fileDate), null);
+			GlobalImageCache.Lock(ImageManager.GetKey(fileName, fileDate), this.GetWorkingDocumentFileName());
 		}
 
 		public void UnlockAll()
 		{
 			//	Déverouille toutes les images. Elles peuvent être recyclées
 			//	s'il n'y a plus assez de mémoire.
-
-			GlobalImageCache.UnlockAll ();
+			GlobalImageCache.UnlockAll();
 		}
 
 		private string GetWorkingDocumentFileName()
 		{
-			if ((this.document == null) ||
-				(this.document.DocumentManager == null))
+			if (this.document == null || this.document.DocumentManager == null)
 			{
 				return null;
 			}
 			else
 			{
-				return this.document.DocumentManager.GetLocalFilePath ();
+				return this.document.DocumentManager.GetLocalFilePath();
 			}
 		}
 
@@ -353,25 +345,24 @@ namespace Epsitec.Common.Document
 			//	Retourne les données d'une image en se basant uniquement sur le
 			//	nom. On prend le premier qui correspond (dans le cache local ou
 			//	dans le cache global).
-
-			string key = ImageManager.GetKeyPrefix (fileName);
-			string doc = this.GetWorkingDocumentFileName ();
+			string key = ImageManager.GetKeyPrefix(fileName);
+			string doc = this.GetWorkingDocumentFileName();
 
 			foreach (KeyValuePair<string, Item> pair in this.items)
 			{
-				if (pair.Key.StartsWith (key))
+				if (pair.Key.StartsWith(key))
 				{
 					return pair.Value;
 				}
 			}
 
-			GlobalImageCache.Item global = GlobalImageCache.FindStartingWith (key, doc);
+			GlobalImageCache.Item global = GlobalImageCache.FindStartingWith(key, doc);
 
 			if (global != null)
 			{
 				key = global.LocalKeyName;
-				Item item = new Item (global, this.resolution);
-				this.items.Add (key, item);
+				Item item = new Item(global, this.resolution);
+				this.items.Add(key, item);
 				return item;
 			}
 			else
@@ -384,33 +375,32 @@ namespace Epsitec.Common.Document
 		{
 			//	Retourne les données d'une image, pour autant que celle-ci soit déjà connue
 			//	dans l'un des caches (local ou global).
-
 			Item item = null;
 
-			if (this.items.TryGetValue (key, out item))
+			if (this.items.TryGetValue(key, out item))
 			{
 				//	Image déjà dans le cache !
 			}
 			else
 			{
-				GlobalImageCache.Item global = GlobalImageCache.Find (key, this.GetWorkingDocumentFileName ());
+				GlobalImageCache.Item global = GlobalImageCache.Find(key, this.GetWorkingDocumentFileName());
 
 				if (global == null)
 				{
-					global = GlobalImageCache.Find (key, null);
+					global = GlobalImageCache.Find(key, null);
 				}
 
 				if (global != null)  // image dans le cache global ?
 				{
-					item = new Item (global, this.resolution);
-					this.items.Add (key, item);  // ajoute l'image dans le cache local
+					item = new Item(global, this.resolution);
+					this.items.Add(key, item);  // ajoute l'image dans le cache local
 				}
 			}
 
 			if (item != null)  // image trouvée ?
 			{
-				item.SetRecentTimeStamp ();  // le plus récent
-				GlobalImageCache.FreeOldest ();  // libère éventuellement des antiquités
+				item.SetRecentTimeStamp();  // le plus récent
+				GlobalImageCache.FreeOldest();  // libère éventuellement des antiquités
 			}
 
 			return item;
@@ -419,14 +409,13 @@ namespace Epsitec.Common.Document
 		private bool Contains(string fileName, System.DateTime fileDate)
 		{
 			//	Vérifie si une image est en cache.
-
-			if (string.IsNullOrEmpty (fileName))
+			if (string.IsNullOrEmpty(fileName))
 			{
 				return false;
 			}
 			else
 			{
-				return this.items.ContainsKey (ImageManager.GetKey (fileName, fileDate));
+				return this.items.ContainsKey(ImageManager.GetKey(fileName, fileDate));
 			}
 		}
 
@@ -447,31 +436,30 @@ namespace Epsitec.Common.Document
 		private Item Add(string filename, System.DateTime dateTime)
 		{
 			//	Ajoute une nouvelle image dans le cache.
-			return this.Add (filename, null, dateTime);
+			return this.Add(filename, null, dateTime);
 		}
 
 		private Item Add(string filename, string zipPath, System.DateTime date)
 		{
 			//	Ajoute une nouvelle image dans le cache.
+			System.Diagnostics.Debug.Assert(string.IsNullOrEmpty(filename) == false);
+			System.Diagnostics.Debug.Assert(date.Ticks > 0);
 
-			System.Diagnostics.Debug.Assert (string.IsNullOrEmpty (filename) == false);
-			System.Diagnostics.Debug.Assert (date.Ticks > 0);
-			
-			string key = ImageManager.GetKey (filename, date);
+			string key = ImageManager.GetKey(filename, date);
 			Item item;
 
-			if (this.items.TryGetValue (key, out item))
+			if (this.items.TryGetValue(key, out item))
 			{
 				//	OK, l'élément est déjà dans notre cache local.
 			}
 			else
 			{
-				GlobalImageCache.Item global = GlobalImageCache.Add (key, filename, zipPath, date);
+				GlobalImageCache.Item global = GlobalImageCache.Add(key, filename, zipPath, date);
 
 				if (global != null)
 				{
-					item = new Item (global, this.resolution);
-					this.items.Add (key, item);
+					item = new Item(global, this.resolution);
+					this.items.Add(key, item);
 				}
 			}
 
@@ -504,7 +492,7 @@ namespace Epsitec.Common.Document
 
 					if (size == Drawing.Size.Zero)
 					{
-						this.globalItem.GetImage (this.resolution, true);
+						this.globalItem.GetImage(this.resolution, true);
 						size = this.globalItem.Size;
 					}
 
@@ -516,9 +504,9 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					this.SetRecentTimeStamp ();
-					GlobalImageCache.FreeOldest ();
-					return this.globalItem.GetImage (this.resolution, true);
+					this.SetRecentTimeStamp();
+					GlobalImageCache.FreeOldest();
+					return this.globalItem.GetImage(this.resolution, true);
 				}
 			}
 
@@ -526,7 +514,7 @@ namespace Epsitec.Common.Document
 			{
 				get
 				{
-					return this.globalItem.GetImage (this.resolution, false);
+					return this.globalItem.GetImage(this.resolution, false);
 				}
 			}
 
@@ -543,7 +531,7 @@ namespace Epsitec.Common.Document
 							return 1.0;
 					}
 
-					throw new System.InvalidOperationException ();
+					throw new System.InvalidOperationException();
 				}
 			}
 
@@ -601,12 +589,12 @@ namespace Epsitec.Common.Document
 
 			internal byte[] GetImageData()
 			{
-				return this.globalItem.GetImageData ();
+				return this.globalItem.GetImageData();
 			}
 
 			internal bool ReloadImage()
 			{
-				return this.globalItem.Reload ();
+				return this.globalItem.Reload();
 			}
 
 			internal void FreeImage()
@@ -617,11 +605,11 @@ namespace Epsitec.Common.Document
 
 			internal void ExportImage(string path)
 			{
-				byte[] imageData = this.GetImageData ();
+				byte[] imageData = this.GetImageData();
 				
 				if (imageData != null)
 				{
-					System.IO.File.WriteAllBytes (path, imageData);
+					System.IO.File.WriteAllBytes(path, imageData);
 				}
 			}
 
@@ -632,7 +620,7 @@ namespace Epsitec.Common.Document
 
 			internal void SetRecentTimeStamp()
 			{
-				this.globalItem.SetRecentTimeStamp ();
+				this.globalItem.SetRecentTimeStamp();
 			}
 			
 			private GlobalImageCache.Item		globalItem;
