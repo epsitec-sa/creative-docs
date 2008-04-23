@@ -230,6 +230,14 @@ namespace Epsitec.Common.Support
 				return this.FieldCount == 0;
 			}
 		}
+
+		public long							FieldsChangedCount
+		{
+			get
+			{
+				return this.fieldsChangedCount;
+			}
+		}
 		
 		public int							FieldCount
 		{
@@ -335,10 +343,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				foreach (Field field in this.fields)
-				{
-					yield return field;
-				}
+				return this.fields;
 			}
 		}
 		
@@ -1221,6 +1226,8 @@ namespace Epsitec.Common.Support
 			{
 				this.FieldsChanged (this);
 			}
+
+			this.fieldsChangedCount++;
 		}
 		
 		private object CloneNewObject()
@@ -1976,5 +1983,6 @@ namespace Epsitec.Common.Support
 		private bool					refInclusion = true;
 		private bool					autoMerge    = true;
 		private bool					fieldNameRequired;
+		private long					fieldsChangedCount;
 	}
 }

@@ -2,5 +2,6 @@
 <ModuleInfo id="100" name="Common.DocumentEditor" layer="s">
   <Versions>
     <Version id="2" build="5" date="2008-04-22T10:28:24.7820000Z" />
+    <Version id="1" build="3" date="2008-04-23T02:57:54.3908896Z" />
   </Versions>
 </ModuleInfo>

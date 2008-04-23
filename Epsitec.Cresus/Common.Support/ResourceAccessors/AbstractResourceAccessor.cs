@@ -83,7 +83,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 						(candidate.Name == bundleName) &&
 						(candidate.Module.Id == bundleModuleId) &&
 						(candidate.ResourceLevel != ResourceLevel.Merged) &&
-						(candidate.IsEmpty == false))
+						((candidate.IsEmpty == false) || (candidate.FieldsChangedCount > 0)))
 					{
 						return true;
 					}
