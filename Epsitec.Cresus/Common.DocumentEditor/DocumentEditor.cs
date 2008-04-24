@@ -3508,6 +3508,7 @@ namespace Epsitec.Common.DocumentEditor
 		{
 			//	Quitte l'application.
 			this.WritedGlobalSettings();
+			this.DeleteTemporaryFiles();
 			
 			foreach (DocumentInfo di in this.documents)
 			{
@@ -5531,6 +5532,17 @@ namespace Epsitec.Common.DocumentEditor
 			}
 		}
 		#endregion
+
+
+		protected void DeleteTemporaryFiles()
+		{
+			//	Supprime toutes les images collées dans le dossier temporaire.
+			string[] list = System.IO.Directory.GetFiles(Modifier.TemporaryDirectory, "clipboard-*.png");
+			foreach (string filename in list)
+			{
+				System.IO.File.Delete(filename);
+			}
+		}
 
 
 		#region Check

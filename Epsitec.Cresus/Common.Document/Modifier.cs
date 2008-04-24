@@ -2074,7 +2074,7 @@ namespace Epsitec.Common.Document
 			//	Crée un fichier image bitmap .png dans le dossier temporaire de Windows.
 			byte[] data = image.BitmapImage.Save(ImageFormat.Png);
 
-			string filename = this.ClipboardFilename;
+			string filename = Modifier.ClipboardFilename;
 			string path = System.IO.Path.GetDirectoryName(filename);
 
 			System.IO.Directory.CreateDirectory(path);
@@ -2083,13 +2083,22 @@ namespace Epsitec.Common.Document
 			return filename;
 		}
 
-		protected string ClipboardFilename
+		protected static string ClipboardFilename
 		{
 			//	Retourne le nom du fichier temporaire pour l'image bitmap.
 			get
 			{
 				System.Guid guid = System.Guid.NewGuid();
-				return string.Concat(System.IO.Path.GetTempPath(), "EPSITEC SA\\crdoc\\clipboard-", guid.ToString(), ".png");
+				return string.Concat(Modifier.TemporaryDirectory, "clipboard-", guid.ToString(), ".png");
+			}
+		}
+
+		public static string TemporaryDirectory
+		{
+			//	Retourne le nom du dossier temporaire.
+			get
+			{
+				return string.Concat(System.IO.Path.GetTempPath(), "EPSITEC SA\\crdoc\\");
 			}
 		}
 
