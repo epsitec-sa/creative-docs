@@ -381,7 +381,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		protected ImageCache.Item Item
+		public ImageCache.Item Item
 		{
 			//	Retourne l'item de l'image cachée, s'il existe.
 			get

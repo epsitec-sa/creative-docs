@@ -1903,7 +1903,7 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					TextLayout layout = new TextLayout (original);
-					layout.Text = new string (this.PasswordReplacementCharacter, original.Text.Length);
+					layout.Text = new string (this.PasswordReplacementCharacter, Types.Converters.TextConverter.ConvertToSimpleText (original.Text).Length);
 					return layout;
 				}
 			}
