@@ -94,6 +94,7 @@ namespace Epsitec.Common.Designer
 				this.dlgResourceSelector = new Dialogs.ResourceSelector(this);
 				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
 				this.dlgFieldName        = new Dialogs.ResourceName(this);
+				this.dlgEntityField      = new Dialogs.EntityField(this);
 				this.dlgEntityComment    = new Dialogs.EntityComment(this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
@@ -2425,6 +2426,15 @@ namespace Epsitec.Common.Designer
 			return this.dlgFieldName.SelectedName;
 		}
 
+		public Common.Dialogs.DialogResult DlgEntityField(Module baseModule, ResourceAccess.Type type, ref Druid resource, ref bool isNullable)
+		{
+			//	Ouvre le dialogue pour choisir les paramètres d'un champ d'une entité.
+			this.dlgEntityField.AccessOpen(baseModule, type, resource, isNullable);
+			this.dlgEntityField.Show();  // choix dans le dialogue...
+			isNullable = this.dlgEntityField.IsNullable;
+			return this.dlgEntityField.AccessClose(out resource);
+		}
+
 		public string DlgEntityComment(string text)
 		{
 			//	Ouvre le dialogue pour choisir le texte d'un commentaire.
@@ -2651,6 +2661,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.ResourceSelector		dlgResourceSelector;
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.ResourceName			dlgFieldName;
+		protected Dialogs.EntityField			dlgEntityField;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected Dialogs.InitialMessage		dlgInitialMessage;

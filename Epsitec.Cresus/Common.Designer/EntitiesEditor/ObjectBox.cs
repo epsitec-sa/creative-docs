@@ -1864,10 +1864,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid initialDruid = druid;
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
 
+#if false
 			bool isNullable = (options & FieldOptions.Nullable) != 0;
 			Module module = this.editor.Module;
 			StructuredTypeClass typeClass = StructuredTypeClass.None;
 			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
+#else
+			bool isNullable = (options & FieldOptions.Nullable) != 0;
+			Module module = this.editor.Module;
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, ref druid, ref isNullable);
+#endif
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
