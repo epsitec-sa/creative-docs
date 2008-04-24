@@ -2089,7 +2089,8 @@ namespace Epsitec.Common.Document
 			get
 			{
 				System.Guid guid = System.Guid.NewGuid();
-				return string.Concat(Modifier.TemporaryDirectory, Modifier.ClipboardFilenamePrefix, guid.ToString(), Modifier.ClipboardFilenamePostfix);
+				string fileName = string.Concat(Modifier.ClipboardFilenamePrefix, guid.ToString(), Modifier.ClipboardFilenamePostfix);
+				return System.IO.Path.Combine(Modifier.TemporaryDirectory, fileName);
 			}
 		}
 
@@ -2101,7 +2102,8 @@ namespace Epsitec.Common.Document
 			//	Retourne le nom du dossier temporaire.
 			get
 			{
-				return string.Concat(System.IO.Path.GetTempPath(), "EPSITEC SA\\crdoc\\");
+				string tempFolder = Types.Converters.TextConverter.ConvertToSimpleText(Res.Strings.Directory.MyDocumentsRoot);
+				return System.IO.Path.Combine(System.IO.Path.GetTempPath(), string.Format("{0} {1}", tempFolder, System.Diagnostics.Process.GetCurrentProcess().Id));
 			}
 		}
 

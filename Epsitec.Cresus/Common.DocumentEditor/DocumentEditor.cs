@@ -5537,11 +5537,27 @@ namespace Epsitec.Common.DocumentEditor
 		protected void DeleteTemporaryFiles()
 		{
 			//	Supprime toutes les images dans le dossier temporaire, issue des opérations "coller".
-			string search = string.Concat(Modifier.ClipboardFilenamePrefix, "*", Modifier.ClipboardFilenamePostfix);
-			string[] list = System.IO.Directory.GetFiles(Modifier.TemporaryDirectory, search);
-			foreach (string filename in list)
+			try
 			{
-				System.IO.File.Delete(filename);
+				if (System.IO.Directory.Exists(Modifier.TemporaryDirectory))
+				{
+					string filter = string.Concat(Modifier.ClipboardFilenamePrefix, "*", Modifier.ClipboardFilenamePostfix);
+					string[] list = System.IO.Directory.GetFiles(Modifier.TemporaryDirectory, filter);
+					foreach (string filename in list)
+					{
+						try
+						{
+							System.IO.File.Delete(filename);
+						}
+						catch
+						{
+						}
+					}
+					System.IO.Directory.Delete(Modifier.TemporaryDirectory);
+				}
+			}
+			catch
+			{
 			}
 		}
 
