@@ -550,7 +550,16 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add (slideh);
 			tip.SetToolTip(slideh, "Slider horizontal");
 
-			TextFieldExList combo = new TextFieldExList();
+			TextField secret = new TextField ();
+			secret.PreferredWidth = 100;
+			secret.Text = "Password";
+			secret.IsPassword = true;
+			secret.Cursor = secret.Text.Length;
+			secret.Anchor = AnchorStyles.BottomLeft;
+			secret.Margins = new Margins (160, 0, 0, 250);
+			window.Root.Children.Add (secret);
+
+			TextFieldExList combo = new TextFieldExList ();
 			combo.PlaceHolder = "<b>&lt;autre&gt;</b>";
 			combo.PreferredWidth = 100;
 			combo.Text = "Janvier";

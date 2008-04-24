@@ -1896,9 +1896,16 @@ namespace Epsitec.Common.Widgets
 
 			if (this.isPassword)
 			{
-				TextLayout layout = new TextLayout (original);
-				layout.Text = new string (this.PasswordReplacementCharacter, original.Text.Length);
-				return layout;
+				if (original.Text.Length == 0)
+				{
+					return original;
+				}
+				else
+				{
+					TextLayout layout = new TextLayout (original);
+					layout.Text = new string (this.PasswordReplacementCharacter, original.Text.Length);
+					return layout;
+				}
 			}
 			else
 			{
