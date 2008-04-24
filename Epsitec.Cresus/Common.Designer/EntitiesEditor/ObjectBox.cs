@@ -1863,21 +1863,45 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			Druid initialDruid = druid;
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+	
+			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
+			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
+			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
+			System.Diagnostics.Debug.Assert(fieldCultureMap != null);
+			string fieldName;
+			
+			bool isNullable = (options & FieldOptions.Nullable) != 0;
+			bool isCollection = false;
+			bool isPrivate = false;
+			Module module = this.editor.Module;
 
-#if false
-			bool isNullable = (options & FieldOptions.Nullable) != 0;
-			Module module = this.editor.Module;
-			StructuredTypeClass typeClass = StructuredTypeClass.None;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgResourceSelector(Dialogs.ResourceSelector.Operation.TypesOrEntities, module, ResourceAccess.Type.Types, ref typeClass, ref druid, ref isNullable, null, Druid.Empty);
-#else
-			bool isNullable = (options & FieldOptions.Nullable) != 0;
-			Module module = this.editor.Module;
-			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, ref druid, ref isNullable);
-#endif
-			if (result != Common.Dialogs.DialogResult.Yes)
+			while (true)
 			{
-				return;
+				fieldName = fieldCultureMap.Name;
+
+				Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+				if (result != Common.Dialogs.DialogResult.Yes)
+				{
+					return;
+				}
+
+				if (fieldName == fieldCultureMap.Name)  // nom inchangé ?
+				{
+					break;
+				}
+
+				string err = this.editor.Module.AccessFields.CheckNewName(fieldCultureMap.Prefix, ref fieldName);
+				if (string.IsNullOrEmpty(err))
+				{
+					break;
+				}
+				else
+				{
+					this.Application.DialogError(err);
+				}
 			}
+
+			fieldCultureMap.Name = fieldName;
 
 			if (this.fields[rank].Relation != FieldRelation.None && this.fields[rank].IsExplored && druid != initialDruid)
 			{

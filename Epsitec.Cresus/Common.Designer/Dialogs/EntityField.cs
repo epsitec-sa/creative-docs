@@ -36,23 +36,29 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				//	Titre supérieur.
 				Widget header = new Widget(this.window.Root);
-				header.PreferredHeight = 34;
+				header.Margins = new Margins(0, 0, 0, 8);
 				header.Dock = DockStyle.Top;
 
-				this.title = new StaticText(header);
-				this.title.ContentAlignment = ContentAlignment.TopLeft;
-				this.title.Dock = DockStyle.Fill;
+				StaticText label = new StaticText(header);
+				label.Text = "Nom";
+				label.ContentAlignment = ContentAlignment.MiddleRight;
+				label.PreferredWidth = 40;
+				label.Margins = new Margins(0, 5, 0, 0);
+				label.Dock = DockStyle.Left;
+
+				this.resourceName = new TextField(header);
+				this.resourceName.Margins = new Margins(0, 50, 0, 0);
+				this.resourceName.Dock = DockStyle.Fill;
+				this.resourceName.TabIndex = 1;
 
 				this.radioEntities = new RadioButton(header);
 				this.radioEntities.Text = "Entités";
-				this.radioEntities.Name = "Entities";
 				this.radioEntities.PreferredWidth = 70;
 				this.radioEntities.Dock = DockStyle.Right;
 				this.radioEntities.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				this.radioTypes = new RadioButton(header);
 				this.radioTypes.Text = "Types";
-				this.radioTypes.Name = "Types";
 				this.radioTypes.PreferredWidth = 70;
 				this.radioTypes.Dock = DockStyle.Right;
 				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
@@ -88,7 +94,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules = new ScrollList(left);
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 8);
-				this.listModules.TabIndex = 1;
+				this.listModules.TabIndex = 2;
 				this.listModules.SelectedIndexChanged += new EventHandler(this.HandleListModulesSelected);
 
 				//	Partie droite.
@@ -100,47 +106,77 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources = new ScrollList(right);
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 8);
-				this.listResources.TabIndex = 2;
+				this.listResources.TabIndex = 3;
 				this.listResources.SelectedIndexChanged += new EventHandler(this.HandleListResourcesSelected);
 				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
 
 				//	Boutons de fermeture.
-				Widget footer = new Widget(this.window.Root);
-				footer.PreferredHeight = 22;
-				footer.Margins = new Margins(0, 0, 8, 0);
-				footer.Dock = DockStyle.Bottom;
+				Widget footer2 = new Widget(this.window.Root);
+				footer2.PreferredHeight = 22;
+				footer2.Margins = new Margins(0, 0, 0, 0);
+				footer2.Dock = DockStyle.Bottom;
 
-				this.buttonIsNullable = new CheckButton(footer);
-				this.buttonIsNullable.Text = "Accepte d'être nul";
-				this.buttonIsNullable.PreferredWidth = 140;
-				this.buttonIsNullable.Dock = DockStyle.Left;
-				this.buttonIsNullable.TabIndex = 10;
-				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsPrivate = new CheckButton(footer2);
+				this.buttonIsPrivate.Text = "Relation privée";
+				this.buttonIsPrivate.PreferredWidth = 140;
+				this.buttonIsPrivate.Margins = new Margins(0, 0, 0, 4);
+				this.buttonIsPrivate.Dock = DockStyle.Left;
+				this.buttonIsPrivate.TabIndex = 12;
+				this.buttonIsPrivate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonCancel = new Button(footer);
+				this.buttonIsCollection = new RadioButton(footer2);
+				this.buttonIsCollection.Text = "Collection";
+				this.buttonIsCollection.PreferredWidth = 100;
+				this.buttonIsCollection.Margins = new Margins(0, 0, 0, 4);
+				this.buttonIsCollection.Dock = DockStyle.Left;
+				this.buttonIsCollection.TabIndex = 13;
+				this.buttonIsCollection.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+				this.buttonCancel = new Button(footer2);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
 				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonCancel.TabIndex = 12;
+				this.buttonCancel.TabIndex = 21;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonUse = new Button(footer);
+				this.buttonUse = new Button(footer2);
 				this.buttonUse.PreferredWidth = 75;
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
-				this.buttonUse.TabIndex = 11;
+				this.buttonUse.TabIndex = 20;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				Widget footer1 = new Widget(this.window.Root);
+				footer1.Margins = new Margins(0, 0, 8, 0);
+				footer1.Dock = DockStyle.Bottom;
+
+				this.buttonIsNullable = new CheckButton(footer1);
+				this.buttonIsNullable.Text = "Accepte d'être nul";
+				this.buttonIsNullable.PreferredWidth = 140;
+				this.buttonIsNullable.Dock = DockStyle.Left;
+				this.buttonIsNullable.TabIndex = 10;
+				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonIsReference = new RadioButton(footer1);
+				this.buttonIsReference.Text = "Référence";
+				this.buttonIsReference.PreferredWidth = 100;
+				this.buttonIsReference.Dock = DockStyle.Left;
+				this.buttonIsReference.TabIndex = 11;
+				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;
 				sep.Dock = DockStyle.Bottom;
 			}
 
+			this.UpdateName();
 			this.UpdateTitle();
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -150,14 +186,17 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, Druid resource, bool isNullable)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string fieldName, Druid resource, bool isNullable, bool isCollection, bool isPrivate)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
+			this.fieldName = fieldName;
 			this.resourceType = type;
 			this.resource = resource;
 			this.isNullable = isNullable;
+			this.isCollection = isCollection;
+			this.isPrivate = isPrivate;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -192,11 +231,35 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		public string FieldName
+		{
+			get
+			{
+				return this.fieldName;
+			}
+		}
+
 		public bool IsNullable
 		{
 			get
 			{
 				return this.buttonIsNullable.ActiveState == ActiveState.Yes;
+			}
+		}
+
+		public bool IsCollection
+		{
+			get
+			{
+				return this.buttonIsCollection.ActiveState == ActiveState.Yes;
+			}
+		}
+
+		public bool IsPrivate
+		{
+			get
+			{
+				return this.buttonIsPrivate.ActiveState == ActiveState.Yes;
 			}
 		}
 
@@ -258,16 +321,20 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		protected void UpdateName()
+		{
+			this.resourceName.Text = this.fieldName;
+			this.resourceName.SelectAll();
+			this.resourceName.Focus();
+		}
+
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
-			string name = ResourceAccess.TypeDisplayName(this.resourceType);
-			string text = string.Concat("<font size=\"200%\"><b>", name, "</b></font>");
-			this.title.Text = text;
-
 			this.listModules.Items.Clear();
 
 			List<Module> list = this.designerApplication.OpeningListModule;
+			string text;
 			foreach (Module module in list)
 			{
 				text = module.ModuleId.Name;
@@ -326,14 +393,14 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateRadios()
 		{
 			//	Met à jour les boutons radio pour changer le type.
-			this.title.Visibility = true;
-			this.radioTypes.Visibility = true;
-			this.radioEntities.Visibility = true;
-
-			this.buttonIsNullable.Visibility = true;
 			this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsReference.ActiveState = this.isCollection ? ActiveState.No : ActiveState.Yes;
+			this.buttonIsCollection.ActiveState = this.isCollection ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsPrivate.ActiveState = this.isPrivate ? ActiveState.Yes : ActiveState.No;
 
-			this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+			this.buttonIsReference.Enable = (this.resourceType == ResourceAccess.Type.Entities);
+			this.buttonIsCollection.Enable = (this.resourceType == ResourceAccess.Type.Entities);
+			this.buttonIsPrivate.Enable = (this.resourceType == ResourceAccess.Type.Entities);
 
 			this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 			this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
@@ -382,7 +449,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			AbstractButton button = sender as AbstractButton;
 
-			if (button.Name == "Types")
+			if (button == this.radioTypes)
 			{
 				this.resourceType = ResourceAccess.Type.Types;
 				this.UpdateAccess();
@@ -392,9 +459,29 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateRadios();
 			}
 
-			if (button.Name == "Entities")
+			if (button == this.radioEntities)
 			{
 				this.resourceType = ResourceAccess.Type.Entities;
+				this.UpdateAccess();
+				this.UpdateTitle();
+				this.UpdateArray();
+				this.UpdateButtons();
+				this.UpdateRadios();
+			}
+
+			if (button == this.buttonIsReference)
+			{
+				this.isCollection = false;
+				this.UpdateAccess();
+				this.UpdateTitle();
+				this.UpdateArray();
+				this.UpdateButtons();
+				this.UpdateRadios();
+			}
+
+			if (button == this.buttonIsCollection)
+			{
+				this.isCollection = true;
 				this.UpdateAccess();
 				this.UpdateTitle();
 				this.UpdateArray();
@@ -481,11 +568,14 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess				access;
 		protected Druid							resource;
+		protected string						fieldName;
 		protected bool							isNullable;
+		protected bool							isCollection;
+		protected bool							isPrivate;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
 
-		protected StaticText					title;
+		protected TextField						resourceName;
 		protected RadioButton					radioTypes;
 		protected RadioButton					radioEntities;
 		protected StaticText					header1;
@@ -494,6 +584,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected StaticText					header2;
 		protected ScrollList					listResources;
 		protected CheckButton					buttonIsNullable;
+		protected RadioButton					buttonIsReference;
+		protected RadioButton					buttonIsCollection;
+		protected CheckButton					buttonIsPrivate;
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
 	}
