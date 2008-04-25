@@ -117,29 +117,58 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
 
 				//	Boutons de fermeture.
-				Widget footer2 = new Widget(this.window.Root);
-				footer2.PreferredHeight = 22;
-				footer2.Margins = new Margins(0, 0, 0, 0);
-				footer2.Dock = DockStyle.Bottom;
+				Widget footer = new Widget(this.window.Root);
+				footer.Margins = new Margins(0, 0, 8, 0);
+				footer.Dock = DockStyle.Bottom;
 
-				this.buttonIsPrivate = new CheckButton(footer2);
+				Widget leftFooter = new Widget(footer);
+				leftFooter.Margins = new Margins(0, 0, 0, 0);
+				leftFooter.Dock = DockStyle.Left;
+
+				this.buttonIsNullable = new CheckButton(leftFooter);
+				this.buttonIsNullable.Text = "Accepte d'être nul";
+				this.buttonIsNullable.PreferredWidth = 140;
+				this.buttonIsNullable.Dock = DockStyle.Top;
+				this.buttonIsNullable.TabIndex = 10;
+				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.buttonIsPrivate = new CheckButton(leftFooter);
 				this.buttonIsPrivate.Text = "Relation privée";
 				this.buttonIsPrivate.PreferredWidth = 140;
 				this.buttonIsPrivate.Margins = new Margins(0, 0, 0, 4);
-				this.buttonIsPrivate.Dock = DockStyle.Left;
-				this.buttonIsPrivate.TabIndex = 12;
+				this.buttonIsPrivate.Dock = DockStyle.Top;
+				this.buttonIsPrivate.TabIndex = 11;
 				this.buttonIsPrivate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonIsCollection = new RadioButton(footer2);
+				Widget middleFooter = new Widget(footer);
+				middleFooter.Margins = new Margins(0, 0, 0, 0);
+				middleFooter.Dock = DockStyle.Left;
+
+				this.buttonIsReference = new RadioButton(middleFooter);
+				this.buttonIsReference.Text = "Référence";
+				this.buttonIsReference.PreferredWidth = 100;
+				this.buttonIsReference.Dock = DockStyle.Top;
+				this.buttonIsReference.TabIndex = 12;
+				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsReference.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+				this.buttonIsCollection = new RadioButton(middleFooter);
 				this.buttonIsCollection.Text = "Collection";
 				this.buttonIsCollection.PreferredWidth = 100;
-				this.buttonIsCollection.Margins = new Margins(0, 0, 0, 4);
-				this.buttonIsCollection.Dock = DockStyle.Left;
+				this.buttonIsCollection.Dock = DockStyle.Top;
 				this.buttonIsCollection.TabIndex = 13;
 				this.buttonIsCollection.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsCollection.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
-				this.buttonCancel = new Button(footer2);
+				Widget rightFooter = new Widget(footer);
+				rightFooter.Margins = new Margins(0, 0, 0, 0);
+				rightFooter.Dock = DockStyle.Right;
+
+				Widget buttons = new Widget(rightFooter);
+				buttons.Margins = new Margins(0, 0, 0, 0);
+				buttons.Dock = DockStyle.Bottom;
+
+				this.buttonCancel = new Button(buttons);
 				this.buttonCancel.PreferredWidth = 75;
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
@@ -148,7 +177,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.TabIndex = 21;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-				this.buttonUse = new Button(footer2);
+				this.buttonUse = new Button(buttons);
 				this.buttonUse.PreferredWidth = 75;
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
@@ -157,25 +186,6 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
 				this.buttonUse.TabIndex = 20;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				Widget footer1 = new Widget(this.window.Root);
-				footer1.Margins = new Margins(0, 0, 8, 0);
-				footer1.Dock = DockStyle.Bottom;
-
-				this.buttonIsNullable = new CheckButton(footer1);
-				this.buttonIsNullable.Text = "Accepte d'être nul";
-				this.buttonIsNullable.PreferredWidth = 140;
-				this.buttonIsNullable.Dock = DockStyle.Left;
-				this.buttonIsNullable.TabIndex = 10;
-				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				this.buttonIsReference = new RadioButton(footer1);
-				this.buttonIsReference.Text = "Référence";
-				this.buttonIsReference.PreferredWidth = 100;
-				this.buttonIsReference.Dock = DockStyle.Left;
-				this.buttonIsReference.TabIndex = 11;
-				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.buttonIsReference.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;

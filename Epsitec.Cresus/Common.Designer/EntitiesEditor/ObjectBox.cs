@@ -1495,51 +1495,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void AddField(int rank)
 		{
 			//	Ajoute un nouveau champ.
-#if false
-			Module module = this.editor.Module;
-			string name = this.GetNewName();
-			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Field, name);
-			if (string.IsNullOrEmpty(name))
-			{
-				this.hilitedElement = ActiveElement.None;
-				return;
-			}
-			
-			if (!Misc.IsValidLabel(ref name))
-			{
-				this.Application.DialogError(Res.Strings.Error.Name.Invalid);
-				return;
-			}
-
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
-			CultureMap fieldCultureMap = accessor.CreateFieldItem(this.cultureMap);
-			fieldCultureMap.Name = name;
-
-			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
-			fieldAccessor.Collection.Add(fieldCultureMap);
-
-			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields);
-			StructuredData newField = broker.CreateData(this.cultureMap);
-
-			Druid druid = fieldCultureMap.Id;
-			newField.SetValue(Support.Res.Fields.Field.CaptionId, druid);
-
-			int fieldRank = (rank == -1) ? -1 : this.fields[rank].Rank;
-			dataFields.Insert(fieldRank+1, newField);
-
-			Field field = new Field(this.editor);
-			field.Initialize(this, newField);
-			this.fields.Insert(rank+1, field);
-
-			this.UpdateFieldsLink();
-			this.editor.Entities.UpdateReset();
-			this.editor.UpdateAfterAddOrRemoveConnection(this);
-			this.editor.Module.AccessEntities.SetLocalDirty();
-			this.hilitedElement = ActiveElement.None;
-#else
 			Module module = this.editor.Module;
 			string fieldName = this.GetNewName();
 			Druid druid = Druid.Empty;
@@ -1630,7 +1585,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
-#endif
 		}
 
 		protected void AddInterface()
