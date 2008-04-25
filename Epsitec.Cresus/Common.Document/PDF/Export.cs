@@ -191,11 +191,14 @@ namespace Epsitec.Common.Document.PDF
 
 			this.documentTitle = Support.Globals.Properties.GetProperty<string> ("PDF:Title") ?? System.IO.Path.GetFileName (filename);
 
+			string defaultProducer  = Export.GetDefaultProducerInformation();
+			string defaultCopyright = Export.GetDefaultModuleCopyright();
+
 			//	Object info
 			string titleName    = Export.EscapeString(this.documentTitle);
 			string author       = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Author"));
 			string creator      = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Creator"));
-			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer") ?? "CrDoc Engine, © 2003-2007 EPSITEC SA & OPaC bright ideas");
+			string producer     = Export.EscapeString(Support.Globals.Properties.GetProperty<string>("PDF:Producer") ?? string.Format ("{0}, {1}", defaultProducer, defaultCopyright));
 			string creationDate = Export.GetDateString(Support.Globals.Properties.GetProperty<System.DateTime>("PDF:CreationDate", System.DateTime.Now));
 
 			writer.WriteObjectDef("Info");
@@ -498,6 +501,32 @@ namespace Epsitec.Common.Document.PDF
 			this.FlushFont();
 
 			return "";  // ok
+		}
+
+		private static string GetDefaultModuleCopyright()
+		{
+			foreach (System.Reflection.AssemblyCopyrightAttribute attribute in typeof (Export).Assembly.GetCustomAttributes (typeof (System.Reflection.AssemblyCopyrightAttribute), false))
+			{
+				return attribute.Copyright;
+			}
+			
+			return "-";
+		}
+
+		private static string GetDefaultProducerInformation()
+		{
+			string moduleName = typeof (Export).Assembly.ManifestModule.Name;
+			
+			foreach (System.Diagnostics.ProcessModule module in System.Diagnostics.Process.GetCurrentProcess ().Modules)
+			{
+				if (string.Compare (module.ModuleName, moduleName, System.StringComparison.OrdinalIgnoreCase) == 0)
+				{
+					return string.Format ("{0} {1}", moduleName, module.FileVersionInfo.FileVersion);
+					break;
+				}
+			}
+			
+			return moduleName;
 		}
 
 		private static string GetDateString(System.DateTime dateTime)
