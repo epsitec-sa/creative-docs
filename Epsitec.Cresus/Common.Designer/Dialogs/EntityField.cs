@@ -24,7 +24,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
 				this.WindowInit("EntityField", 500, 300, true);
-				this.window.Text = "Définition du champ";  // Res.Strings.Dialog.EntityField.Title;
+				this.window.Text = Res.Strings.Dialog.EntityField.Title;
 				this.window.Owner = this.parentWindow;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
@@ -46,10 +46,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				label.Margins = new Margins(0, 5, 0, 0);
 				label.Dock = DockStyle.Left;
 
-				this.resourceName = new TextField(header);
-				this.resourceName.Margins = new Margins(0, 50, 0, 0);
-				this.resourceName.Dock = DockStyle.Fill;
-				this.resourceName.TabIndex = 1;
+				this.editFieldName = new TextField(header);
+				this.editFieldName.Dock = DockStyle.Fill;
+				this.editFieldName.TabIndex = 1;
+				this.editFieldName.TextChanged += new EventHandler(this.HandleFieldNameChanged);
 
 				this.radioEntities = new RadioButton(header);
 				this.radioEntities.Text = "Entités";
@@ -62,6 +62,12 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioTypes.PreferredWidth = 70;
 				this.radioTypes.Dock = DockStyle.Right;
 				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+				this.glyphFieldName = new GlyphButton(header);
+				this.glyphFieldName.ButtonStyle = ButtonStyle.ToolItem;
+				this.glyphFieldName.PreferredWidth = 22;
+				this.glyphFieldName.Margins = new Margins(-1, 50, 0, 0);
+				this.glyphFieldName.Dock = DockStyle.Right;
 
 				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;
@@ -131,7 +137,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsCollection.Dock = DockStyle.Left;
 				this.buttonIsCollection.TabIndex = 13;
 				this.buttonIsCollection.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.buttonIsCollection.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				this.buttonCancel = new Button(footer2);
 				this.buttonCancel.PreferredWidth = 75;
@@ -169,14 +175,15 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsReference.Dock = DockStyle.Left;
 				this.buttonIsReference.TabIndex = 11;
 				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.buttonIsReference.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;
 				sep.Dock = DockStyle.Bottom;
 			}
 
-			this.UpdateName();
+			this.UpdateFieldName();
+			this.UpdateGlyphFieldName();
 			this.UpdateTitle();
 			this.UpdateArray();
 			this.UpdateButtons();
@@ -186,11 +193,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string fieldName, Druid resource, bool isNullable, bool isCollection, bool isPrivate)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string prefix, string fieldName, Druid resource, bool isNullable, bool isCollection, bool isPrivate)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
+			this.prefix = prefix;
+			this.initialFieldName = fieldName;
 			this.fieldName = fieldName;
 			this.resourceType = type;
 			this.resource = resource;
@@ -235,7 +244,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return this.fieldName;
+				string name = this.fieldName;
+				string err = this.module.AccessFields.CheckNewName(this.prefix, ref name);
+				return string.IsNullOrEmpty(err) ? name : null;
 			}
 		}
 
@@ -321,11 +332,31 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		protected void UpdateName()
+		protected void UpdateFieldName()
 		{
-			this.resourceName.Text = this.fieldName;
-			this.resourceName.SelectAll();
-			this.resourceName.Focus();
+			this.editFieldName.Text = this.fieldName;
+			this.editFieldName.SelectAll();
+			this.editFieldName.Focus();
+		}
+
+		protected void UpdateGlyphFieldName()
+		{
+			bool ok = false;
+			string name = this.editFieldName.Text;
+			string err = null;
+
+			if (!string.IsNullOrEmpty(this.initialFieldName) && name == this.initialFieldName)
+			{
+				ok = true;
+			}
+			else
+			{
+				err = this.module.AccessFields.CheckNewName(this.prefix, ref name);
+				ok = string.IsNullOrEmpty(err);
+			}
+
+			this.glyphFieldName.GlyphShape = ok ? GlyphShape.Accept : GlyphShape.Reject;
+			ToolTip.Default.SetToolTip(this.glyphFieldName, err);
 		}
 
 		protected void UpdateTitle()
@@ -387,7 +418,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
-			this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+			this.buttonUse.Enable = (this.listResources.SelectedIndex != -1 && this.glyphFieldName.GlyphShape == GlyphShape.Accept);
 		}
 
 		protected void UpdateRadios()
@@ -439,6 +470,13 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
+		private void HandleFieldNameChanged(object sender)
+		{
+			this.fieldName = this.editFieldName.Text;
+			this.UpdateGlyphFieldName();
+			this.UpdateButtons();
+		}
+
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
 			//	Changement du type des ressources par un bouton radio.
@@ -472,20 +510,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (button == this.buttonIsReference)
 			{
 				this.isCollection = false;
-				this.UpdateAccess();
-				this.UpdateTitle();
-				this.UpdateArray();
-				this.UpdateButtons();
 				this.UpdateRadios();
 			}
 
 			if (button == this.buttonIsCollection)
 			{
 				this.isCollection = true;
-				this.UpdateAccess();
-				this.UpdateTitle();
-				this.UpdateArray();
-				this.UpdateButtons();
 				this.UpdateRadios();
 			}
 		}
@@ -568,6 +598,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected ResourceAccess.Type			resourceType;
 		protected ResourceAccess				access;
 		protected Druid							resource;
+		protected string						prefix;
+		protected string						initialFieldName;
 		protected string						fieldName;
 		protected bool							isNullable;
 		protected bool							isCollection;
@@ -575,7 +607,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
 
-		protected TextField						resourceName;
+		protected TextField						editFieldName;
+		protected GlyphButton					glyphFieldName;
 		protected RadioButton					radioTypes;
 		protected RadioButton					radioEntities;
 		protected StaticText					header1;

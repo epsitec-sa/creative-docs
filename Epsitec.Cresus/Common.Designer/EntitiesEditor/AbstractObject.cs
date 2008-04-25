@@ -46,8 +46,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			ConnectionOpenRight,
 			ConnectionClose,
 			ConnectionHilited,
-			ConnectionChangeRelation,
-			ConnectionChangePrivate,
 			ConnectionMove1,
 			ConnectionMove2,
 			ConnectionComment,
@@ -324,12 +322,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				case AbstractObject.ActiveElement.ConnectionClose:
 					return Res.Strings.Entities.Action.ConnectionClose;
-
-				case AbstractObject.ActiveElement.ConnectionChangeRelation:
-					return Res.Strings.Entities.Action.ConnectionChangeRelation;
-
-				case AbstractObject.ActiveElement.ConnectionChangePrivate:
-					return Res.Strings.Entities.Action.ConnectionChangePrivate;
 
 				case AbstractObject.ActiveElement.ConnectionMove1:
 				case AbstractObject.ActiveElement.ConnectionMove2:

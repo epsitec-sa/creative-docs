@@ -367,10 +367,10 @@
   <data name="Entities.Action.BoxClose" id="281">Ferme l&amp;apos;entité</data>
   <data name="Entities.Action.BoxFieldName1" id="291">Aller sur la définition du champ</data>
   <data name="Entities.Action.BoxFieldName2" id="2A1">Ctrl+clic: aller sur la définition du champ</data>
-  <data name="Entities.Action.BoxFieldName3" id="2B1">Change le nom du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du champ</data>
+  <data name="Entities.Action.BoxFieldName3" id="2B1">Change les paramètres du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du champ</data>
   <data name="Entities.Action.BoxFieldType1" id="2C1">Aller sur la définition du type</data>
   <data name="Entities.Action.BoxFieldType2" id="2D1">Ctrl+clic: aller sur la définition du type</data>
-  <data name="Entities.Action.BoxFieldType3" id="2E1">Change le type du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du type</data>
+  <data name="Entities.Action.BoxFieldType3" id="2E1">Change les paramètres du champ&lt;br/&gt;Ctrl+clic: aller sur la définition du type</data>
   <data name="Entities.Action.BoxFieldExpression" id="2F1">Expression du champ</data>
   <data name="Entities.Action.BoxFieldAdd" id="2G1">Ajoute un nouveau champ</data>
   <data name="Entities.Action.BoxFieldRemove" id="2H1">Supprime le champ</data>
@@ -384,7 +384,6 @@
   <data name="Entities.Action.ConnectionOpenLeft" id="2P1">Ouvre l&amp;apos;entité liée sur la gauche</data>
   <data name="Entities.Action.ConnectionOpenRight" id="2Q1">Ouvre l&amp;apos;entité liée sur la droite</data>
   <data name="Entities.Action.ConnectionClose" id="2R1">Ferme l&amp;apos;entité</data>
-  <data name="Entities.Action.ConnectionChangeRelation" id="2S1">Change le type de la relation</data>
   <data name="Entities.Action.ConnectionMove" id="2T1">Modifie le routage de la relation</data>
   <data name="Entities.Action.ConnectionComment" id="2U1">Montre ou cache le commentaire associé</data>
   <data name="Entities.Action.CommentEdit" id="2V1">Modifie le texte du commentaire</data>
@@ -572,10 +571,6 @@
   <data name="Action.PanelCreateObject" id="KI2">Nouvel objet</data>
   <data name="Action.PanelMove" id="KJ2">Déplacement</data>
   <data name="Action.DeleteObject" id="KK2">Supprimer</data>
-  <data name="Entities.Action.ConnectionChangePrivate" id="KL2">Change le mode privé de la relation</data>
   <data name="Entities.Button.ChangePrivate" id="KM2">*</data>
-  <data name="Entities.Question.Relation.Collection" id="KN2">Voulez-vous vraiment changer la relation pour utiliser le type &lt;b&gt;collection&lt;/b&gt; ?</data>
-  <data name="Entities.Question.Relation.Reference" id="KO2">Voulez-vous vraiment changer la relation pour utiliser le type &lt;b&gt;référence&lt;/b&gt; ?</data>
-  <data name="Entities.Question.Relation.Private" id="KP2">Voulez-vous vraiment changer la relation pour utiliser le mode &lt;b&gt;privé&lt;/b&gt; ?</data>
-  <data name="Entities.Question.Relation.Public" id="KQ2">Voulez-vous vraiment changer la relation pour utiliser le mode &lt;b&gt;public&lt;/b&gt; ?</data>
+  <data name="Dialog.EntityField.Title" id="KR2">Paramètres du champ</data>
 </bundle>

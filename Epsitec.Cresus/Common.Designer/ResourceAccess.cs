@@ -1282,6 +1282,11 @@ namespace Epsitec.Common.Designer
 			//	Le préfixe permet de distinguer les champs des ressources de type 'Field'.
 			//	Par exemple, le champ Client de l'entité Facture (donc 'Facture.Client') ne doit
 			//	pas être confondu avec les champs d'une autre entité comme 'Adresse.Client'.
+			if (string.IsNullOrEmpty(name))
+			{
+				return "Nom inexistant !";
+			}
+
 			if (!Misc.IsValidLabel(ref name))
 			{
 				return Res.Strings.Error.Name.Invalid;

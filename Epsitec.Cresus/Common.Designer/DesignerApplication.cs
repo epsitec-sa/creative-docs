@@ -2426,10 +2426,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgFieldName.SelectedName;
 		}
 
-		public Common.Dialogs.DialogResult DlgEntityField(Module baseModule, ResourceAccess.Type type, ref string fieldName, ref Druid resource, ref bool isNullable, ref bool isCollection, ref bool isPrivate)
+		public Common.Dialogs.DialogResult DlgEntityField(Module baseModule, ResourceAccess.Type type, string prefix, ref string fieldName, ref Druid resource, ref bool isNullable, ref bool isCollection, ref bool isPrivate)
 		{
 			//	Ouvre le dialogue pour choisir les paramètres d'un champ d'une entité.
-			this.dlgEntityField.AccessOpen(baseModule, type, fieldName, resource, isNullable, isCollection, isPrivate);
+			this.dlgEntityField.AccessOpen(baseModule, type, prefix, fieldName, resource, isNullable, isCollection, isPrivate);
 			this.dlgEntityField.Show();  // choix dans le dialogue...
 			fieldName = this.dlgEntityField.FieldName;
 			isNullable = this.dlgEntityField.IsNullable;

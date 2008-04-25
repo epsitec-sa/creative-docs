@@ -788,7 +788,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					{
 						if (this.IsMousePossible(this.hilitedElement, this.hilitedFieldRank))
 						{
-							this.ChangeFieldName(this.hilitedFieldRank);
+							this.ChangeFieldType(this.hilitedFieldRank);
 						}
 					}
 				}
@@ -1495,6 +1495,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		protected void AddField(int rank)
 		{
 			//	Ajoute un nouveau champ.
+#if false
 			Module module = this.editor.Module;
 			string name = this.GetNewName();
 			name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Create, Dialogs.ResourceName.Type.Field, name);
@@ -1538,6 +1539,98 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.UpdateAfterAddOrRemoveConnection(this);
 			this.editor.Module.AccessEntities.SetLocalDirty();
 			this.hilitedElement = ActiveElement.None;
+#else
+			Module module = this.editor.Module;
+			string fieldName = this.GetNewName();
+			Druid druid = Druid.Empty;
+			bool isNullable = false;
+			bool isPrivate = false;
+			bool isCollection = false;
+
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+			if (result != Common.Dialogs.DialogResult.Yes)
+			{
+				return;
+			}
+
+			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
+
+			Support.ResourceAccessors.StructuredTypeResourceAccessor accessor = this.editor.Module.AccessEntities.Accessor as Support.ResourceAccessors.StructuredTypeResourceAccessor;
+			CultureMap fieldCultureMap = accessor.CreateFieldItem(this.cultureMap);
+			fieldCultureMap.Name = fieldName;
+
+			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
+			fieldAccessor.Collection.Add(fieldCultureMap);
+
+			IDataBroker broker = accessor.GetDataBroker(data, Support.Res.Fields.ResourceStructuredType.Fields);
+			StructuredData newField = broker.CreateData(this.cultureMap);
+
+			Druid newDruid = fieldCultureMap.Id;
+			newField.SetValue(Support.Res.Fields.Field.CaptionId, newDruid);
+
+			int fieldRank = (rank == -1) ? -1 : this.fields[rank].Rank;
+			dataFields.Insert(fieldRank+1, newField);
+
+			Field field = new Field(this.editor);
+			field.Initialize(this, newField);
+			this.fields.Insert(rank+1, field);
+
+			StructuredData dataField = dataFields[fieldRank+1];
+
+			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);
+
+			Druid typeId = druid;
+			Module typeModule = this.SearchModule(typeId);
+			System.Diagnostics.Debug.Assert(typeId.IsValid);
+			System.Diagnostics.Debug.Assert(typeModule != null);
+
+			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
+			{
+				if (isCollection)
+				{
+					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Collection);
+				}
+				else
+				{
+					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
+				}
+			}
+			else
+			{
+				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
+			}
+
+			FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+
+			if (isNullable)
+			{
+				fieldOptions |= FieldOptions.Nullable;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.Nullable;
+			}
+
+			if (isPrivate)
+			{
+				fieldOptions |= FieldOptions.PrivateRelation;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.PrivateRelation;
+			}
+
+			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
+
+			this.fields[rank+1].Initialize(this, dataField);
+
+			this.UpdateFieldsLink();
+			this.editor.Entities.UpdateReset();
+			this.editor.UpdateAfterAddOrRemoveConnection(this);
+			this.editor.Module.AccessEntities.SetLocalDirty();
+			this.hilitedElement = ActiveElement.None;
+#endif
 		}
 
 		protected void AddInterface()
@@ -1794,59 +1887,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
 
-		protected void ChangeFieldName(int rank)
-		{
-			//	Choix du nom pour un champ.
-			int fieldRank = this.fields[rank].Rank;
-			if (fieldRank == -1)
-			{
-				return;
-			}
-
-			StructuredData data = this.cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-			IList<StructuredData> dataFields = data.GetValue(Support.Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-
-			StructuredData dataField = dataFields[fieldRank];
-			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
-
-			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
-			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
-			System.Diagnostics.Debug.Assert(fieldCultureMap != null);
-			string name;
-			
-			Module module = this.editor.Module;
-			while (true)
-			{
-				name = fieldCultureMap.Name;
-				name = module.DesignerApplication.DlgResourceName(Dialogs.ResourceName.Operation.Modify, Dialogs.ResourceName.Type.Field, name);
-				if (string.IsNullOrEmpty(name))
-				{
-					this.hilitedElement = ActiveElement.None;
-					return;
-				}
-
-				if (name == fieldCultureMap.Name)  // nom inchangé ?
-				{
-					return;
-				}
-
-				string err = this.editor.Module.AccessFields.CheckNewName(fieldCultureMap.Prefix, ref name);
-				if (string.IsNullOrEmpty(err))
-				{
-					break;
-				}
-				else
-				{
-					this.Application.DialogError(err);
-				}
-			}
-
-			fieldCultureMap.Name = name;
-			this.fields[rank].Initialize(this, dataField);
-			this.editor.Module.AccessEntities.SetLocalDirty();
-			this.editor.Invalidate();
-		}
-
 		protected void ChangeFieldType(int rank)
 		{
 			//	Choix du type pour un champ.
@@ -1863,42 +1903,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = (Druid) dataField.GetValue(Support.Res.Fields.Field.TypeId);
 			Druid initialDruid = druid;
 			FieldOptions options = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+			FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
 	
 			Druid fieldCaptionId = (Druid) dataField.GetValue(Support.Res.Fields.Field.CaptionId);
 			IResourceAccessor fieldAccessor = this.editor.Module.AccessFields.Accessor;
 			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
 			System.Diagnostics.Debug.Assert(fieldCultureMap != null);
-			string fieldName;
+			string fieldName = fieldCultureMap.Name;
 			
 			bool isNullable = (options & FieldOptions.Nullable) != 0;
-			bool isCollection = false;
-			bool isPrivate = false;
+			bool isPrivate = (options & FieldOptions.PrivateRelation) != 0;
+			bool isCollection = (rel == FieldRelation.Collection);
 			Module module = this.editor.Module;
 
-			while (true)
+			Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
+			if (result != Common.Dialogs.DialogResult.Yes)
 			{
-				fieldName = fieldCultureMap.Name;
-
-				Common.Dialogs.DialogResult result = module.DesignerApplication.DlgEntityField(module, ResourceAccess.Type.Types, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate);
-				if (result != Common.Dialogs.DialogResult.Yes)
-				{
-					return;
-				}
-
-				if (fieldName == fieldCultureMap.Name)  // nom inchangé ?
-				{
-					break;
-				}
-
-				string err = this.editor.Module.AccessFields.CheckNewName(fieldCultureMap.Prefix, ref fieldName);
-				if (string.IsNullOrEmpty(err))
-				{
-					break;
-				}
-				else
-				{
-					this.Application.DialogError(err);
-				}
+				return;
 			}
 
 			fieldCultureMap.Name = fieldName;
@@ -1920,8 +1941,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
 			{
-				FieldRelation rel = (FieldRelation) dataField.GetValue(Support.Res.Fields.Field.Relation);
-				if (rel == FieldRelation.None)
+				if (isCollection)
+				{
+					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Collection);
+				}
+				else
 				{
 					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
 				}
@@ -1932,6 +1956,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 
 			FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
+			
 			if (isNullable)
 			{
 				fieldOptions |= FieldOptions.Nullable;
@@ -1940,6 +1965,16 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				fieldOptions &= ~FieldOptions.Nullable;
 			}
+			
+			if (isPrivate)
+			{
+				fieldOptions |= FieldOptions.PrivateRelation;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.PrivateRelation;
+			}
+
 			dataField.SetValue(Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank].Initialize(this, dataField);
