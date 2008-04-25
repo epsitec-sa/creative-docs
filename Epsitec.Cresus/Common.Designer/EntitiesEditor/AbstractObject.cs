@@ -622,34 +622,34 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 		}
 
-		protected void DrawStartingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
+		public static void DrawStartingArrow(Graphics graphics, Point start, Point end, FieldRelation relation)
 		{
 			//	Dessine une flèche selon le type de la relation.
 //-			if (relation == FieldRelation.Inclusion)
 //-			{
-//-				this.DrawArrowBase(graphics, end, start);
+//-				AbstractObject.DrawArrowBase(graphics, end, start);
 //-			}
 		}
 
-		protected void DrawEndingArrow(Graphics graphics, Point start, Point end, FieldRelation relation, bool isPrivateRelation)
+		public static void DrawEndingArrow(Graphics graphics, Point start, Point end, FieldRelation relation, bool isPrivateRelation)
 		{
 			//	Dessine une flèche selon le type de la relation.
-			this.DrawArrowBase(graphics, start, end);
+			AbstractObject.DrawArrowBase(graphics, start, end);
 
 			if (relation == FieldRelation.Collection)
 			{
 				Point p1 = Point.Move(end, start, AbstractObject.arrowLength);
 				Point p2 = Point.Move(end, start, AbstractObject.arrowLength*0.75);
-				this.DrawArrowBase(graphics, p1, p2);
+				AbstractObject.DrawArrowBase(graphics, p1, p2);
 			}
 
 			if (!isPrivateRelation)
 			{
-				this.DrawArrowStar(graphics, start, end);
+				AbstractObject.DrawArrowStar(graphics, start, end);
 			}
 		}
 
-		protected void DrawArrowBase(Graphics graphics, Point start, Point end)
+		protected static void DrawArrowBase(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une flèche à l'extrémité 'end'.
 			Point p = Point.Move(end, start, AbstractObject.arrowLength);
@@ -661,7 +661,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.AddLine(end, e2);
 		}
 
-		protected void DrawArrowStar(Graphics graphics, Point start, Point end)
+		protected static void DrawArrowStar(Graphics graphics, Point start, Point end)
 		{
 			//	Dessine une étoile à l'extrémité 'end'.
 			Point p = Point.Move(end, start, AbstractObject.arrowLength*0.85);

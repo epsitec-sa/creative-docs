@@ -52,12 +52,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.editFieldName.TextChanged += new EventHandler(this.HandleFieldNameChanged);
 
 				this.radioEntities = new RadioButton(header);
+				this.radioEntities.AutoToggle = false;
 				this.radioEntities.Text = "Entités";
 				this.radioEntities.PreferredWidth = 70;
 				this.radioEntities.Dock = DockStyle.Right;
 				this.radioEntities.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				this.radioTypes = new RadioButton(header);
+				this.radioTypes.AutoToggle = false;
 				this.radioTypes.Text = "Types";
 				this.radioTypes.PreferredWidth = 70;
 				this.radioTypes.Dock = DockStyle.Right;
@@ -126,39 +128,50 @@ namespace Epsitec.Common.Designer.Dialogs
 				leftFooter.Dock = DockStyle.Left;
 
 				this.buttonIsNullable = new CheckButton(leftFooter);
+				this.buttonIsNullable.AutoToggle = false;
 				this.buttonIsNullable.Text = "Accepte d'être nul";
 				this.buttonIsNullable.PreferredWidth = 140;
 				this.buttonIsNullable.Dock = DockStyle.Top;
 				this.buttonIsNullable.TabIndex = 10;
 				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsNullable.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				this.buttonIsPrivate = new CheckButton(leftFooter);
+				this.buttonIsPrivate.AutoToggle = false;
 				this.buttonIsPrivate.Text = "Relation privée";
 				this.buttonIsPrivate.PreferredWidth = 140;
 				this.buttonIsPrivate.Margins = new Margins(0, 0, 0, 4);
 				this.buttonIsPrivate.Dock = DockStyle.Top;
 				this.buttonIsPrivate.TabIndex = 11;
 				this.buttonIsPrivate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsPrivate.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				Widget middleFooter = new Widget(footer);
 				middleFooter.Margins = new Margins(0, 0, 0, 0);
 				middleFooter.Dock = DockStyle.Left;
 
 				this.buttonIsReference = new RadioButton(middleFooter);
+				this.buttonIsReference.AutoToggle = false;
 				this.buttonIsReference.Text = "Référence";
-				this.buttonIsReference.PreferredWidth = 100;
+				this.buttonIsReference.PreferredWidth = 90;
 				this.buttonIsReference.Dock = DockStyle.Top;
 				this.buttonIsReference.TabIndex = 12;
 				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsReference.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
 				this.buttonIsCollection = new RadioButton(middleFooter);
+				this.buttonIsCollection.AutoToggle = false;
 				this.buttonIsCollection.Text = "Collection";
-				this.buttonIsCollection.PreferredWidth = 100;
+				this.buttonIsCollection.PreferredWidth = 90;
 				this.buttonIsCollection.Dock = DockStyle.Top;
 				this.buttonIsCollection.TabIndex = 13;
 				this.buttonIsCollection.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.buttonIsCollection.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+
+				this.relationSample = new MyWidgets.RelationSample(footer);
+				this.relationSample.PreferredWidth = 40;
+				this.relationSample.Margins = new Margins(0, 20, 0, 0);
+				this.relationSample.Dock = DockStyle.Left;
 
 				Widget rightFooter = new Widget(footer);
 				rightFooter.Margins = new Margins(0, 0, 0, 0);
@@ -198,6 +211,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateArray();
 			this.UpdateButtons();
 			this.UpdateRadios();
+			this.UpdateRelationSample();
 
 			this.window.ShowDialog();
 		}
@@ -254,9 +268,16 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				string name = this.fieldName;
-				string err = this.module.AccessFields.CheckNewName(this.prefix, ref name);
-				return string.IsNullOrEmpty(err) ? name : null;
+				if (this.fieldName == this.initialFieldName)  // nom inchangé ?
+				{
+					return this.fieldName;
+				}
+				else
+				{
+					string name = this.fieldName;
+					string err = this.module.AccessFields.CheckNewName(this.prefix, ref name);
+					return string.IsNullOrEmpty(err) ? name : null;
+				}
 			}
 		}
 
@@ -264,7 +285,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return this.buttonIsNullable.ActiveState == ActiveState.Yes;
+				return this.isNullable;
 			}
 		}
 
@@ -272,7 +293,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return this.buttonIsCollection.ActiveState == ActiveState.Yes;
+				return this.isCollection;
 			}
 		}
 
@@ -280,7 +301,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			get
 			{
-				return this.buttonIsPrivate.ActiveState == ActiveState.Yes;
+				return this.isPrivate;
 			}
 		}
 
@@ -369,6 +390,19 @@ namespace Epsitec.Common.Designer.Dialogs
 			ToolTip.Default.SetToolTip(this.glyphFieldName, err);
 		}
 
+		protected void UpdateRelationSample()
+		{
+			if (this.resourceType == ResourceAccess.Type.Entities)
+			{
+				this.relationSample.Relation = this.isCollection ? FieldRelation.Collection : FieldRelation.Reference;
+				this.relationSample.IsPrivateRelation = this.IsPrivate;
+			}
+			else
+			{
+				this.relationSample.Relation = FieldRelation.None;
+			}
+		}
+
 		protected void UpdateTitle()
 		{
 			//	Met à jour le titre qui dépend du type des ressources éditées.
@@ -434,17 +468,17 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateRadios()
 		{
 			//	Met à jour les boutons radio pour changer le type.
-			this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
-			this.buttonIsReference.ActiveState = this.isCollection ? ActiveState.No : ActiveState.Yes;
-			this.buttonIsCollection.ActiveState = this.isCollection ? ActiveState.Yes : ActiveState.No;
-			this.buttonIsPrivate.ActiveState = this.isPrivate ? ActiveState.Yes : ActiveState.No;
-
-			this.buttonIsReference.Enable = (this.resourceType == ResourceAccess.Type.Entities);
-			this.buttonIsCollection.Enable = (this.resourceType == ResourceAccess.Type.Entities);
-			this.buttonIsPrivate.Enable = (this.resourceType == ResourceAccess.Type.Entities);
-
 			this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 			this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
+
+			this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsPrivate.ActiveState = this.isPrivate ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsReference.ActiveState = this.isCollection ? ActiveState.No : ActiveState.Yes;
+			this.buttonIsCollection.ActiveState = this.isCollection ? ActiveState.Yes : ActiveState.No;
+
+			this.buttonIsPrivate.Enable = (this.resourceType == ResourceAccess.Type.Entities);
+			this.buttonIsReference.Enable = (this.resourceType == ResourceAccess.Type.Entities);
+			this.buttonIsCollection.Enable = (this.resourceType == ResourceAccess.Type.Entities);
 		}
 
 		protected Druid SelectedResource
@@ -505,6 +539,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateArray();
 				this.UpdateButtons();
 				this.UpdateRadios();
+				this.UpdateRelationSample();
 			}
 
 			if (button == this.radioEntities)
@@ -515,18 +550,34 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.UpdateArray();
 				this.UpdateButtons();
 				this.UpdateRadios();
+				this.UpdateRelationSample();
+			}
+
+			if (button == this.buttonIsNullable)
+			{
+				this.isNullable = !this.isNullable;
+				this.UpdateRadios();
+			}
+
+			if (button == this.buttonIsPrivate)
+			{
+				this.isPrivate = !this.isPrivate;
+				this.UpdateRadios();
+				this.UpdateRelationSample();
 			}
 
 			if (button == this.buttonIsReference)
 			{
 				this.isCollection = false;
 				this.UpdateRadios();
+				this.UpdateRelationSample();
 			}
 
 			if (button == this.buttonIsCollection)
 			{
 				this.isCollection = true;
 				this.UpdateRadios();
+				this.UpdateRelationSample();
 			}
 		}
 
@@ -630,6 +681,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected RadioButton					buttonIsReference;
 		protected RadioButton					buttonIsCollection;
 		protected CheckButton					buttonIsPrivate;
+		protected MyWidgets.RelationSample		relationSample;
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
 	}
