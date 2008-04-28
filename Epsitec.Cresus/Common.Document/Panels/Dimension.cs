@@ -78,7 +78,8 @@ namespace Epsitec.Common.Document.Panels
 			this.dimensionText = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextField);
 			this.dimensionText.LabelShortText = Res.Strings.Panel.Dimension.Short.Text;
 			this.dimensionText.LabelLongText  = Res.Strings.Panel.Dimension.Long.Text;
-			this.dimensionText.TextField.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			//?this.dimensionText.TextField.EditionAccepted += new EventHandler(this.HandleFieldChanged);  // TODO: événement plus généré. Pourquoi ?
+			this.dimensionText.TextField.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.dimensionText.TabIndex = 14;
 			this.dimensionText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.dimensionText, Res.Strings.Panel.Dimension.Tooltip.Text);
