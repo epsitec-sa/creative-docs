@@ -1427,4 +1427,7 @@
   <data id="0HV">Hilfspunkt ausgewählt</data>
   <data id="0OV">Hilfspunkt zur Auswahl hinzugefügt</data>
   <data id="0PV">Hilfspunkt aus der Auswahl entfernt</data>
+  <data id="K2">Bild einfügen</data>
+  <data id="K1">Text einfügen</data>
+  <data id="K">&lt;i&gt;Aus der Zwischenablage&lt;/i&gt;</data>
 </bundle>

@@ -71,19 +71,40 @@ namespace Epsitec.Common.Text.Exchange
 			this.list.Clear ();
 
 			System.Windows.Forms.IDataObject ido = System.Windows.Forms.Clipboard.GetDataObject ();
+			List<string> blackList = new List<string> () { "EnhancedMetafile" };
 			
 			foreach (string format in ido.GetFormats (false))
 			{
-				object data = ido.GetData (format);
-				this.list.Add (new Record (format, data));
+				if (!blackList.Contains (format))
+				{
+					try
+					{
+						object data = ido.GetData (format);
+						this.list.Add (new Record (format, data));
+					}
+					catch
+					{
+						//	Ignore formats which produce exceptions.
+					}
+				}
 			}
 
 			foreach (string format in ido.GetFormats (true))
 			{
-				if (!this.Contains (format))
+				if (!blackList.Contains (format))
 				{
-					object data = ido.GetData (format, true);
-					this.list.Add (new Record (format, data));
+					try
+					{
+						if (!this.Contains (format))
+						{
+							object data = ido.GetData (format, true);
+							this.list.Add (new Record (format, data));
+						}
+					}
+					catch
+					{
+						//	Ignore formats which produce exceptions.
+					}
 				}
 			}
 		}

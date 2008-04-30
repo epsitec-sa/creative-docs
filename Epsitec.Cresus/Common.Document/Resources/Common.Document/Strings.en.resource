@@ -1427,4 +1427,7 @@
   <data id="0HC01">Internal right (length and angle)</data>
   <data id="0IC01">Symetric flower</data>
   <data id="0JC01">Asymetric flower</data>
+  <data id="K2">Paste image</data>
+  <data id="K1">Paste text</data>
+  <data id="K">&lt;i&gt;From the clipboard&lt;/i&gt;</data>
 </bundle>
