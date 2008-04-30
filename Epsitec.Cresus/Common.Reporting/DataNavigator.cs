@@ -75,11 +75,18 @@ namespace Epsitec.Common.Reporting
 		{
 			this.Reset ();
 
-			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (new ItemState (item)));
+			DataView.GetDataItem (this.view, path, item => this.itemStack.Push (new ItemState (item)));
 
 			return this.IsValid;
 		}
 
+		public bool NavigateToRelative(string path)
+		{
+			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (new ItemState (item)));
+
+			return this.IsValid;
+		}
+		
 		public bool NavigateToNext()
 		{
 			if (this.IsValid)

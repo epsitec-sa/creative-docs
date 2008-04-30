@@ -64,6 +64,14 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("", navigator.CurrentDataPath);
 			Assert.AreEqual (1, Collection.Count (navigator.CurrentViewStack));
 			Assert.AreEqual (DataItemType.Vector, navigator.CurrentDataItem.ItemType);
+			
+			navigator.NavigateTo ("loop.loop");
+			navigator.NavigateToRelative ("loop.value");
+
+			Assert.AreEqual ("loop.loop.loop.value", navigator.CurrentDataPath);
+			Assert.AreEqual (5, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
+			Assert.AreEqual (123, (int) navigator.CurrentDataItem.ObjectValue);
 		}
 	}
 }
