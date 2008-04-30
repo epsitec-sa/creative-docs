@@ -19,8 +19,8 @@ namespace Epsitec.Common.Reporting
 		{
 			Settings.CollectionSetting setting = new Settings.CollectionSetting ()
 			{
-				FilterComparison = null,
-				SortComparison = null
+				Filter = null,
+				Sort = null
 			};
 
 			List<AbstractEntity> entities = setting.CreateList (CollectionSettingTest.GetSampleEntities ());
@@ -35,8 +35,8 @@ namespace Epsitec.Common.Reporting
 		{
 			Settings.CollectionSetting setting = new Settings.CollectionSetting ()
 			{
-				FilterComparison = e => e.GetField<string> ("last") == "Arnaud",
-				SortComparison = null
+				Filter = e => e.GetField<string> ("last") == "Arnaud",
+				Sort = null
 			};
 
 			List<AbstractEntity> entities = setting.CreateList (CollectionSettingTest.GetSampleEntities ());
@@ -51,8 +51,8 @@ namespace Epsitec.Common.Reporting
 		{
 			Settings.CollectionSetting setting = new Settings.CollectionSetting ()
 			{
-				FilterComparison = null,
-				SortComparison = (a, b) => string.Compare (a.GetField<string> ("last"), b.GetField<string> ("last"))*10 + string.Compare (a.GetField<string> ("first"), b.GetField<string> ("first"))
+				Filter = null,
+				Sort = (a, b) => string.Compare (a.GetField<string> ("last"), b.GetField<string> ("last"))*10 + string.Compare (a.GetField<string> ("first"), b.GetField<string> ("first"))
 			};
 
 			List<AbstractEntity> entities = setting.CreateList (CollectionSettingTest.GetSampleEntities ());

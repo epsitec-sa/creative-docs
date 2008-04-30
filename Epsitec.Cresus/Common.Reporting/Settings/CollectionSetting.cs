@@ -25,18 +25,18 @@ namespace Epsitec.Common.Reporting.Settings
 		/// Gets or sets the sort comparison used when sorting entities.
 		/// </summary>
 		/// <value>The sort comparison.</value>
-		public System.Comparison<AbstractEntity> SortComparison
+		public System.Comparison<AbstractEntity> Sort
 		{
 			get;
 			set;
 		}
 
 		/// <summary>
-		/// Gets or sets the filter comparison used when preliminarily
+		/// Gets or sets the filter predicate used when preliminarily
 		/// filtering entities.
 		/// </summary>
-		/// <value>The filter comparison.</value>
-		public System.Predicate<AbstractEntity> FilterComparison
+		/// <value>The filter predicate.</value>
+		public System.Predicate<AbstractEntity> Filter
 		{
 			get;
 			set;
@@ -61,11 +61,11 @@ namespace Epsitec.Common.Reporting.Settings
 		{
 			List<AbstractEntity> list = new List<AbstractEntity> ();
 
-			if (this.FilterComparison != null)
+			if (this.Filter != null)
 			{
 				foreach (var item in collection)
 				{
-					if (this.FilterComparison (item))
+					if (this.Filter (item))
 					{
 						list.Add (item);
 					}
@@ -76,9 +76,9 @@ namespace Epsitec.Common.Reporting.Settings
 				list.AddRange (collection);
 			}
 
-			if (this.SortComparison != null)
+			if (this.Sort != null)
 			{
-				list.Sort (this.SortComparison);
+				list.Sort (this.Sort);
 			}
 
 			return list;

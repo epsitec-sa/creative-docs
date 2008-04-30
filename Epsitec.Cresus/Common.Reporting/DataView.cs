@@ -115,7 +115,7 @@ namespace Epsitec.Common.Reporting
 					(view.items.TryGetValue (id, out cachedItem)))
 				{
 					//	We have already been asked at least once about this path; we
-					//	can reuse the existing data item, since the source graphe is
+					//	can reuse the existing data item, since the source graph is
 					//	read only
 
 					item = cachedItem;
@@ -159,6 +159,8 @@ namespace Epsitec.Common.Reporting
 					value = store.GetValue (id);
 				}
 
+				//	Now we should have a value to work with...
+
 				if ((UndefinedValue.IsUndefinedValue (value)) ||
 					(UnknownValue.IsUnknownValue (value)) ||
 					(value == null))
@@ -173,8 +175,8 @@ namespace Epsitec.Common.Reporting
 
 				if (collection != null)
 				{
-					//	The value is a collection; we will have to map it to a
-					//	(sorted/filtered/grouped) table, as required.
+					//	The value is a collection of entities; we will have to map it to
+					//	a (sorted/filtered/grouped) table, as required.
 
 					string                     fullPath = DataView.GetPath (view.self, id);
 					Settings.CollectionSetting setting  = context.GetCollectionSetting (fullPath);
