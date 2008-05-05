@@ -31,13 +31,21 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
+		private ItemState CurrentItemState
+		{
+			get
+			{
+				return this.itemStack.Peek ();
+			}
+		}
+
 		public IDataItem CurrentDataItem
 		{
 			get
 			{
 				//	TODO: ...
 
-				return this.itemStack.Peek ().Item;
+				return this.CurrentItemState.Item;
 			}
 		}
 
@@ -56,7 +64,7 @@ namespace Epsitec.Common.Reporting
 		{
 			get
 			{
-				return DataView.GetPath (this.itemStack.Peek ().Item);
+				return this.CurrentItemState.Path;
 			}
 		}
 
@@ -70,7 +78,12 @@ namespace Epsitec.Common.Reporting
 			this.currentSplitInfos = null;
 		}
 
-		
+
+		/// <summary>
+		/// Navigates to the specified absolute path.
+		/// </summary>
+		/// <param name="path">The absolute path.</param>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateTo(string path)
 		{
 			this.Reset ();
@@ -80,6 +93,12 @@ namespace Epsitec.Common.Reporting
 			return this.IsValid;
 		}
 
+		/// <summary>
+		/// Navigates to the specified relative path. This is only possible if
+		/// the current data item is not a leaf of the graph.
+		/// </summary>
+		/// <param name="path">The relative path.</param>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToRelative(string path)
 		{
 			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (new ItemState (item)));
@@ -117,6 +136,11 @@ namespace Epsitec.Common.Reporting
 			return this.IsValid;
 		}
 
+		/// <summary>
+		/// Navigates to the parent. This can be seen as a <c>Pop</c> of the last
+		/// path element.
+		/// </summary>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToParent()
 		{
 			if (this.itemStack.Count == 1)
@@ -160,6 +184,13 @@ namespace Epsitec.Common.Reporting
 		}
 
 
+		#region ItemState class
+
+		/// <summary>
+		/// The <c>ItemState</c> class wraps some logic around the data item,
+		/// in order to handle a statefull navigation (i.e. to add synthetic
+		/// items as required by the item type).
+		/// </summary>
 		private class ItemState
 		{
 			public ItemState(DataView.DataItem item)
@@ -175,14 +206,24 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
+			public string Path
+			{
+				get
+				{
+					return DataView.GetPath (this.item);
+				}
+			}
+
 			private readonly DataView.DataItem item;
 		}
 
+		#endregion
 
-		private readonly DataView view;
-		private readonly Stack<ItemState> itemStack;
+
+		private readonly DataView				view;
+		private readonly Stack<ItemState>		itemStack;
 	
-		private IEnumerable<CellSplitInfo> currentSplitInfos;
-		private int currentSplitIndex;
+		private IEnumerable<CellSplitInfo>		currentSplitInfos;
+		private int								currentSplitIndex;
 	}
 }

@@ -555,9 +555,9 @@ namespace Epsitec.Common.Drawing
 				{
 					ushort glyph = font.GetGlyphIndex (c);
 					
-					path.Append (font, glyph, size, 0, 0, size, x, y, bold_width);
+					path.Append (font, glyph, size, 0, 0, size, x, y, bold_width-8);
 					
-					x += font.GetGlyphAdvance (glyph) * size + bold_width;
+					x += font.GetGlyphAdvance (glyph) * size + bold_width-8;
 				}
 				
 				renderer.Color = Color.FromAlphaRgb (1, 0, 0, 0);
