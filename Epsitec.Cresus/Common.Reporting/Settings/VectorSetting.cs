@@ -34,10 +34,7 @@ namespace Epsitec.Common.Reporting.Settings
 		{
 			get
 			{
-				if (this.defaultInclusionMode == InclusionMode.None)
-				{
-					this.RegenerateCache ();
-				}
+				this.RegenerateCacheIfNeeded ();
 
 				return this.defaultInclusionMode;
 			}
@@ -138,6 +135,28 @@ namespace Epsitec.Common.Reporting.Settings
 			return ids;
 		}
 
+		/// <summary>
+		/// Gets the title for the specified value id (i.e. the column title).
+		/// The title is represented using formatted text.
+		/// </summary>
+		/// <param name="valueId">The value id.</param>
+		/// <value>The title, as formatted text.</value>
+		public string GetValueTitle(string valueId)
+		{
+			this.RegenerateCacheIfNeeded ();
+
+			VectorValueSetting value;
+
+			if (this.lookup.TryGetValue (valueId, out value))
+			{
+				return value.Title;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 		/// <summary>
 		/// Clears the cache.
@@ -147,6 +166,18 @@ namespace Epsitec.Common.Reporting.Settings
 			this.defaultInclusionMode = InclusionMode.None;
 			this.lookup.Clear ();
 			this.inclusions.Clear ();
+		}
+
+		/// <summary>
+		/// Regenerates the cached information, if needed.
+		/// See method <see cref="RegenerateCache"/> for the details.
+		/// </summary>
+		private void RegenerateCacheIfNeeded()
+		{
+			if (this.defaultInclusionMode == InclusionMode.None)
+			{
+				this.RegenerateCache ();
+			}
 		}
 
 		/// <summary>

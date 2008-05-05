@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Reporting
 {
-	public class DataView
+	public partial class DataView
 	{
 		internal DataView(DataViewContext context)
 		{
@@ -178,18 +178,19 @@ namespace Epsitec.Common.Reporting
 					//	The value is a collection of entities; we will have to map it to
 					//	a (sorted/filtered/grouped) table, as required.
 
-					string                     fullPath = DataView.GetPath (view.self, id);
-					Settings.CollectionSetting setting  = context.GetCollectionSetting (fullPath);
+					string                     fullPath    = DataView.GetPath (view.self, id);
+					Settings.CollectionSetting collSetting = context.GetCollectionSetting (fullPath);
+					Settings.VectorSetting     vectSetting = context.GetVectorSetting (fullPath);
 
-					if (setting.GroupDepth > 0)
+					if (collSetting.GroupDepth > 0)
 					{
 						//	TODO: grouping
 						throw new System.NotImplementedException ();
 					}
 					else
 					{
-						List<AbstractEntity> list = setting.CreateList (collection);
-						item = new DataItems.TableCollectionDataItem (context, list);
+						List<AbstractEntity> list = collSetting.CreateList (collection);
+						item = new DataItems.TableCollectionDataItem (context, list, collSetting, vectSetting);
 						item.ItemClass = DataItemClass.Table;
 					}
 				}
@@ -299,149 +300,6 @@ namespace Epsitec.Common.Reporting
 
 			return item;
 		}
-
-		#region DataItem Class
-
-		/// <summary>
-		/// The <c>DataItem</c> class implements the common base class for every
-		/// data item implementation in the <c>DataItems</c> sub-namespace.
-		/// </summary>
-		public abstract class DataItem : IDataItem
-		{
-			public DataItem()
-			{
-			}
-
-			/// <summary>
-			/// Gets or sets the id for this item.
-			/// </summary>
-			/// <value>The id.</value>
-			public string Id
-			{
-				get;
-				set;
-			}
-
-			/// <summary>
-			/// Gets or sets the parent data view.
-			/// </summary>
-			/// <value>The parent data view.</value>
-			public DataView ParentDataView
-			{
-				get;
-				set;
-			}
-
-			/// <summary>
-			/// Gets or sets the containg data view.
-			/// </summary>
-			/// <value>The data view.</value>
-			public DataView DataView
-			{
-				get
-				{
-					return this.view;
-				}
-				set
-				{
-					if (this.view != value)
-					{
-						if (this.view != null)
-						{
-							this.view.self = null;
-						}
-
-						this.view = value;
-
-						if (this.view != null)
-						{
-							this.view.self = this;
-						}
-					}
-				}
-			}
-
-			/// <summary>
-			/// Gets the object value cast to the <see cref="IValueStore"/>
-			/// interface.
-			/// </summary>
-			/// <value>The value store.</value>
-			public IValueStore ValueStore
-			{
-				get
-				{
-					return this.ObjectValue as IValueStore;
-				}
-			}
-
-			public virtual bool IsCollection
-			{
-				get
-				{
-					return false;
-				}
-			}
-
-			public virtual object GetValue(int index)
-			{
-				throw new System.NotImplementedException ();
-			}
-
-			#region IDataItem Members
-
-			/// <summary>
-			/// Gets the raw object value.
-			/// </summary>
-			/// <value>The raw object value.</value>
-			public abstract object ObjectValue
-			{
-				get;
-			}
-
-			public virtual string Value
-			{
-				get
-				{
-					throw new System.NotImplementedException ();
-				}
-			}
-
-			public virtual int Count
-			{
-				get
-				{
-					throw new System.NotImplementedException ();
-				}
-			}
-
-			public virtual DataItemClass ItemClass
-			{
-				get;
-				set;
-			}
-
-			public virtual DataItemType ItemType
-			{
-				get
-				{
-					throw new System.NotImplementedException ();
-				}
-			}
-
-			public virtual INamedType DataType
-			{
-				get
-				{
-					throw new System.NotImplementedException ();
-				}
-			}
-
-			#endregion
-
-			private DataView view;
-		}
-
-		#endregion
 
 
 		private readonly DataViewContext context;

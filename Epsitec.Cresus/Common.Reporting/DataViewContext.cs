@@ -14,6 +14,7 @@ namespace Epsitec.Common.Reporting
 		public DataViewContext()
 		{
 			this.enumerableFactories = new Dictionary<System.Type, EnumerableFactory> ();
+			this.vectorSettings = new Dictionary<string, Settings.VectorSetting> ();
 
 			this.DefaultCollectionSetting = new Settings.CollectionSetting ();
 		}
@@ -30,6 +31,29 @@ namespace Epsitec.Common.Reporting
 			Settings.CollectionSetting setting = this.FindCollectionSetting (fullPath);
 			return setting ?? this.DefaultCollectionSetting;
 		}
+
+		public Settings.VectorSetting GetVectorSetting(string fullPath)
+		{
+			Settings.VectorSetting setting;
+
+			if (this.vectorSettings.TryGetValue (fullPath, out setting))
+			{
+				return setting;
+			}
+			else
+			{
+				//	TODO: ...
+
+				return null;
+			}
+		}
+
+
+		public void DefineVectorSetting(string fullPath, Settings.VectorSetting setting)
+		{
+			this.vectorSettings[fullPath] = setting;
+		}
+
 
 		protected Settings.CollectionSetting FindCollectionSetting(string fullPath)
 		{
@@ -153,5 +177,6 @@ namespace Epsitec.Common.Reporting
 
 
 		private readonly Dictionary<System.Type, EnumerableFactory> enumerableFactories;
+		private readonly Dictionary<string, Settings.VectorSetting> vectorSettings;
 	}
 }

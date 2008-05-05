@@ -41,7 +41,17 @@ namespace Epsitec.Common.Reporting.Settings
 			get;
 			set;
 		}
-		
+
+		/// <summary>
+		/// Gets or sets the title for this collection. The title is represented
+		/// using formatted text.
+		/// </summary>
+		/// <value>The title, as formatted text.</value>
+		public string Title
+		{
+			get;
+			set;
+		}
 		
 		public int GroupDepth
 		{

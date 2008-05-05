@@ -44,7 +44,7 @@ namespace Epsitec.Common.Reporting.Settings
 		/// Gets or sets the title for this value. The title is represented
 		/// using formatted text.
 		/// </summary>
-		/// <value>The title.</value>
+		/// <value>The title, as formatted text.</value>
 		public string Title
 		{
 			get;

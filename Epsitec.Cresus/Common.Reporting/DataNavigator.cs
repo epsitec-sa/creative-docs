@@ -72,10 +72,15 @@ namespace Epsitec.Common.Reporting
 		public void Reset()
 		{
 			this.itemStack.Clear ();
-			this.itemStack.Push (new ItemState (this.view.Item));
+			this.itemStack.Push (this.CreateItemState (this.view.Item));
 			
 			this.currentSplitIndex = 0;
 			this.currentSplitInfos = null;
+		}
+
+		private ItemState CreateItemState(DataView.DataItem dataItem)
+		{
+			return new ItemState (dataItem);
 		}
 
 
@@ -88,7 +93,7 @@ namespace Epsitec.Common.Reporting
 		{
 			this.Reset ();
 
-			DataView.GetDataItem (this.view, path, item => this.itemStack.Push (new ItemState (item)));
+			DataView.GetDataItem (this.view, path, item => this.itemStack.Push (this.CreateItemState (item)));
 
 			return this.IsValid;
 		}
@@ -101,7 +106,7 @@ namespace Epsitec.Common.Reporting
 		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToRelative(string path)
 		{
-			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (new ItemState (item)));
+			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (this.CreateItemState (item)));
 
 			return this.IsValid;
 		}

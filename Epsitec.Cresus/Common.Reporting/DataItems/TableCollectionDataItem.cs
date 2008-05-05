@@ -20,9 +20,27 @@ namespace Epsitec.Common.Reporting.DataItems
 		/// </summary>
 		/// <param name="context">The data view context.</param>
 		/// <param name="collection">The collection of items.</param>
-		public TableCollectionDataItem(DataViewContext context, System.Collections.IList collection)
+		public TableCollectionDataItem(DataViewContext context, System.Collections.IList collection, Settings.CollectionSetting collectionSetting, Settings.VectorSetting vectorSetting)
 			: base (context, collection)
 		{
+			System.Diagnostics.Debug.Assert (collectionSetting != null);
+			System.Diagnostics.Debug.Assert (vectorSetting != null);
+
+			this.vectorSetting = vectorSetting;
+			this.title = collectionSetting.Title;
+		}
+
+
+		/// <summary>
+		/// Gets the columns definiton, stored as a vector setting.
+		/// </summary>
+		/// <value>The columns.</value>
+		public Settings.VectorSetting Columns
+		{
+			get
+			{
+				return this.vectorSetting;
+			}
 		}
 
 		/// <summary>
@@ -36,5 +54,21 @@ namespace Epsitec.Common.Reporting.DataItems
 				return DataItemType.Table;
 			}
 		}
+
+		/// <summary>
+		/// Gets the title for this table. The title is represented using
+		/// formatted text.
+		/// </summary>
+		/// <value>The title, as formatted text.</value>
+		public string Title
+		{
+			get
+			{
+				return this.title;
+			}
+		}
+
+		private readonly Settings.VectorSetting vectorSetting;
+		private readonly string title;
 	}
 }
