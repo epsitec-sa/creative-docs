@@ -73,5 +73,36 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
 			Assert.AreEqual (123, (int) navigator.CurrentDataItem.ObjectValue);
 		}
+
+		[Test]
+		public void Check03SimpleTable()
+		{
+			GenericEntity root = new GenericEntity (Druid.Empty);
+			GenericEntity row0 = new GenericEntity (Druid.Empty);
+			GenericEntity row1 = new GenericEntity (Druid.Empty);
+
+			IList<GenericEntity> tableRows = root.GetFieldCollection<GenericEntity> ("table");
+
+			row0.SetField<string> ("1st_name", "Pierre");
+			row0.SetField<string> ("2nd_name", "Arnaud");
+			row0.SetField<int> ("year", 1972);
+
+			row1.SetField<string> ("1st_name", "Daniel");
+			row1.SetField<string> ("2nd_name", "Roux");
+			row1.SetField<int> ("year", 1958);
+
+			tableRows.Add (row0);
+			tableRows.Add (row1);
+
+			DataViewContext context = new DataViewContext ();
+			DataView view = DataView.CreateRoot (context, root);
+			DataNavigator navigator = new DataNavigator (view);
+
+			navigator.NavigateTo ("table");
+
+			Assert.AreEqual ("table", navigator.CurrentDataPath);
+			Assert.AreEqual (2, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Table, navigator.CurrentDataItem.ItemType);
+		}
 	}
 }

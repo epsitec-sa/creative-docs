@@ -24,7 +24,7 @@ namespace Epsitec.Common.Reporting.DataItems
 			: base (context, collection)
 		{
 			System.Diagnostics.Debug.Assert (collectionSetting != null);
-			System.Diagnostics.Debug.Assert (vectorSetting != null);
+//-			System.Diagnostics.Debug.Assert (vectorSetting != null);
 
 			this.vectorSetting = vectorSetting;
 			this.title = collectionSetting.Title;
