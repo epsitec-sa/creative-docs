@@ -138,7 +138,6 @@ namespace Epsitec.Common.Reporting
 			if (this.IsValid)
 			{
 				ItemState state = this.CurrentItemState;
-				string sibling = null;
 
 				switch (state.ParentItem.ItemType)
 				{
@@ -252,7 +251,16 @@ namespace Epsitec.Common.Reporting
 			{
 				get
 				{
-					return this.item;
+					switch (this.VirtualNodeType)
+					{
+						case VirtualNodeType.Data:
+						case VirtualNodeType.BodyData:
+							return this.item;
+
+						default:
+							return this.ParentItem.GetVirtualItem (this.VirtualNodeType);
+					}
+					
 				}
 			}
 

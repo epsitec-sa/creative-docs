@@ -54,11 +54,18 @@ namespace Epsitec.Common.Reporting.DataItems
 		/// Gets the columns definiton, stored as a vector setting.
 		/// </summary>
 		/// <value>The columns.</value>
-		public Settings.VectorSetting Columns
+		public override Settings.VectorSetting Columns
 		{
 			get
 			{
-				return this.vectorSetting;
+				if (this.vectorSetting == null)
+				{
+					return this.ParentDataView.Item.Columns;
+				}
+				else
+				{
+					return this.vectorSetting;
+				}
 			}
 		}
 

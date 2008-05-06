@@ -151,8 +151,8 @@ namespace Epsitec.Common.Reporting
 
 			Settings.VectorSetting tableVectorSetting = new Settings.VectorSetting ()
 			{
+				new Settings.VectorValueSetting () { Id = "2nd_name", Title = "Nom" },
 				new Settings.VectorValueSetting () { Id = "1st_name", Title = "Prénom" },
-				new Settings.VectorValueSetting () { Id = "2nd_name", Title = "Nom" }
 			};
 
 			Settings.CollectionSetting tableCollectionSetting = new Settings.CollectionSetting () { Title = "Employés" };
@@ -167,17 +167,48 @@ namespace Epsitec.Common.Reporting
 
 			Assert.IsTrue (navigator.NavigateToFirstChild ());
 			Assert.AreEqual ("table.%Head1", navigator.CurrentDataPath);
+			Assert.AreEqual (1, navigator.CurrentDataItem.Count);
+			Assert.AreEqual ("Employés", NavigatorTest.Peek<string> (navigator, "@0"));
+
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.%Head2", navigator.CurrentDataPath);
+			Assert.AreEqual (2, navigator.CurrentDataItem.Count);
+			Assert.AreEqual ("Nom", NavigatorTest.Peek<string> (navigator, "@0"));
+			Assert.AreEqual ("Prénom", NavigatorTest.Peek<string> (navigator, "@1"));
+			
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.@0", navigator.CurrentDataPath);
+
+			//	Row 0 of table has only two columns : 2nd_name and 1st_name, because of the vector definition
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+			Assert.AreEqual ("table.@0.2nd_name", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.AreEqual ("table.@0.1st_name", navigator.CurrentDataPath);
+			Assert.IsFalse (navigator.NavigateToNext ());
+			Assert.IsTrue (navigator.NavigateToParent ());
+
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.@1", navigator.CurrentDataPath);
+			
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.%Foot2", navigator.CurrentDataPath);
+			
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.%Foot1", navigator.CurrentDataPath);
+			Assert.AreEqual (1, navigator.CurrentDataItem.Count);
+			Assert.AreEqual ("Employés", NavigatorTest.Peek<string> (navigator, "@0"));
 			Assert.IsFalse (navigator.NavigateToNext ());
+
+//-			Assert.IsTrue (navigator.NavigateToFirstChild ());
+//-			Assert.AreEqual ("table.%Foot1.title", navigator.CurrentDataPath);
+		}
+
+		private static T Peek<T>(DataNavigator navigator, string id)
+		{
+			navigator.NavigateToRelative (id);
+			T value = (T) navigator.CurrentDataItem.ObjectValue;
+			navigator.NavigateToParent ();
+			return value;
 		}
 
 

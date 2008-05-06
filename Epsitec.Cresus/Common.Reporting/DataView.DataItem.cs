@@ -83,6 +83,18 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
+			/// <summary>
+			/// Gets the columns definiton, stored as a vector setting.
+			/// </summary>
+			/// <value>The columns.</value>
+			public virtual Settings.VectorSetting Columns
+			{
+				get
+				{
+					return null;
+				}
+			}
+			
 			public virtual bool IsCollection
 			{
 				get
@@ -111,6 +123,11 @@ namespace Epsitec.Common.Reporting
 				return null;
 			}
 
+			public virtual DataItem GetVirtualItem(VirtualNodeType virtualNodeType)
+			{
+				throw new System.NotImplementedException ();
+			}
+			
 			#region IDataItem Members
 
 			/// <summary>

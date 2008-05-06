@@ -51,6 +51,6 @@ namespace Epsitec.Common.Reporting.DataItems
 			return item == EmptyDataItem.Value;
 		}
 
-		public static readonly EmptyDataItem Value = new EmptyDataItem ();
+		public static new readonly EmptyDataItem Value = new EmptyDataItem ();
 	}
 }

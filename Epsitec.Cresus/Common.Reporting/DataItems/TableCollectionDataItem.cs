@@ -35,7 +35,7 @@ namespace Epsitec.Common.Reporting.DataItems
 		/// Gets the columns definiton, stored as a vector setting.
 		/// </summary>
 		/// <value>The columns.</value>
-		public Settings.VectorSetting Columns
+		public override Settings.VectorSetting Columns
 		{
 			get
 			{
@@ -65,6 +65,34 @@ namespace Epsitec.Common.Reporting.DataItems
 			get
 			{
 				return this.title;
+			}
+		}
+
+		public override DataView.DataItem GetVirtualItem(VirtualNodeType virtualNodeType)
+		{
+			switch (virtualNodeType)
+			{
+				case VirtualNodeType.Header1:
+					return new TitleDataItem (this.DataView.Context, this.title, DataItemClass.TableHeader1);
+
+				case VirtualNodeType.Header2:
+					return new TitleDataItem (this.DataView.Context, this.GetColumnTitles (), DataItemClass.TableHeader2);
+
+				case VirtualNodeType.Footer1:
+					return new TitleDataItem (this.DataView.Context, this.title, DataItemClass.TableFooter1);
+
+				case VirtualNodeType.Footer2:
+					return new TitleDataItem (this.DataView.Context, this.GetColumnTitles (), DataItemClass.TableFooter2);
+			}
+			
+			throw new System.InvalidOperationException (string.Format ("Invalid virtual node type {0} for table", virtualNodeType));
+		}
+
+		private IEnumerable<string> GetColumnTitles()
+		{
+			foreach (var item in this.Columns.Values)
+			{
+				yield return item.Title;
 			}
 		}
 

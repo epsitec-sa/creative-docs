@@ -18,6 +18,7 @@ namespace Epsitec.Common.Reporting.Settings
 	{
 		public VectorValueSetting()
 		{
+			this.InclusionMode = InclusionMode.Include;
 		}
 
 		/// <summary>
