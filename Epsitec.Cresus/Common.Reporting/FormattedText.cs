@@ -49,7 +49,7 @@ namespace Epsitec.Common.Reporting
 
 		public static implicit operator FormattedText(string text)
 		{
-			return new FormattedText (text);
+			return new FormattedText (FormattedText.Escape (text));
 		}
 
 		public static string Escape(string text)
