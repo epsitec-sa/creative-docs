@@ -198,7 +198,37 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual (1, navigator.CurrentDataItem.Count);
 			Assert.AreEqual ("Employés", NavigatorTest.Peek<string> (navigator, "@0"));
 			Assert.IsFalse (navigator.NavigateToNext ());
+			
+			//	Get back a few nodes
+			Assert.IsTrue (navigator.NavigateToPrevious ());
+			Assert.AreEqual ("table.%Foot2", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToPrevious ());
+			Assert.AreEqual ("table.@1", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToPrevious ());
+			Assert.AreEqual ("table.@0", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToPrevious ());
+			Assert.AreEqual ("table.%Head2", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToPrevious ());
+			Assert.AreEqual ("table.%Head1", navigator.CurrentDataPath);
 
+			//	up to the start, where we cannot go any further
+			Assert.IsFalse (navigator.NavigateToPrevious ());
+
+			//	Return to the second last node
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.IsTrue (navigator.NavigateToNext ());
+
+			//	Try navigating to the child of a virtual node
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+			Assert.AreEqual ("table.%Foot2.@0", navigator.CurrentDataPath);
+			Assert.AreEqual ("Nom", navigator.CurrentDataItem.ObjectValue);
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.AreEqual ("table.%Foot2.@1", navigator.CurrentDataPath);
+			Assert.AreEqual ("Prénom", navigator.CurrentDataItem.ObjectValue);
+			Assert.IsTrue (navigator.NavigateToParent ());
+			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.IsTrue (navigator.NavigateToFirstChild ());
 			Assert.AreEqual ("table.%Foot1.@0", navigator.CurrentDataPath);
 			Assert.AreEqual ("Employés", navigator.CurrentDataItem.ObjectValue);

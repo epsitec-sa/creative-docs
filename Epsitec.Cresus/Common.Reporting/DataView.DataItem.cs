@@ -118,7 +118,7 @@ namespace Epsitec.Common.Reporting
 				return null;
 			}
 
-			public virtual string GetPrevChildId(string childId)
+			public virtual string GetPreviousChildId(string childId)
 			{
 				return null;
 			}

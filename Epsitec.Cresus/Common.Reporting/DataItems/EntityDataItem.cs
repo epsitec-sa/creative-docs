@@ -101,7 +101,7 @@ namespace Epsitec.Common.Reporting.DataItems
 			return null;
 		}
 
-		public override string GetPrevChildId(string childId)
+		public override string GetPreviousChildId(string childId)
 		{
 			if (this.GenerateColumnIds ())
 			{

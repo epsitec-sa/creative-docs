@@ -157,15 +157,15 @@ namespace Epsitec.Common.Reporting
 
 			Assert.AreEqual ("@1", item1.GetNextChildId ("@0"));
 			Assert.AreEqual (null, item1.GetNextChildId ("@1"));
-			Assert.AreEqual ("@0", item1.GetPrevChildId ("@1"));
-			Assert.AreEqual (null, item1.GetPrevChildId ("@0"));
+			Assert.AreEqual ("@0", item1.GetPreviousChildId ("@1"));
+			Assert.AreEqual (null, item1.GetPreviousChildId ("@0"));
 			Assert.AreEqual (null, item2.GetNextChildId ("name"));
-			Assert.AreEqual (null, item2.GetPrevChildId ("name"));
+			Assert.AreEqual (null, item2.GetPreviousChildId ("name"));
 			
 			Assert.AreEqual ("xyz",  item3.GetNextChildId ("name"));
-			Assert.AreEqual (null,   item3.GetPrevChildId ("name"));
+			Assert.AreEqual (null,   item3.GetPreviousChildId ("name"));
 			Assert.AreEqual (null,   item3.GetNextChildId ("xyz"));
-			Assert.AreEqual ("name", item3.GetPrevChildId ("xyz"));
+			Assert.AreEqual ("name", item3.GetPreviousChildId ("xyz"));
 		}
 	}
 }

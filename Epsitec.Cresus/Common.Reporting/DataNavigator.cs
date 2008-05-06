@@ -154,10 +154,17 @@ namespace Epsitec.Common.Reporting
 		{
 			if (this.IsValid)
 			{
-				//	TODO: ...
+				ItemState state = this.CurrentItemState;
+
+				switch (state.ParentItem.ItemType)
+				{
+					case DataItemType.Table:
+					case DataItemType.Vector:
+						return state.NavigateToPrevious (this);
+				}
 			}
 
-			return this.IsValid;
+			return false;
 		}
 
 		public bool NavigateToFirstChild()
@@ -362,6 +369,51 @@ namespace Epsitec.Common.Reporting
 					if (this.VirtualNodeType == VirtualNodeType.BodyData)
 					{
 						this.VirtualNodeType = VirtualNodeType.Footer2;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					this.item = DataView.GetDataItem (parent.DataView, id) as DataView.DataItem;
+
+					System.Diagnostics.Debug.Assert (this.item != null);
+
+					return true;
+				}
+			}
+
+			public bool NavigateToPrevious(DataNavigator dataNavigator)
+			{
+				switch (this.VirtualNodeType)
+				{
+					case VirtualNodeType.Header1:
+						return false;
+
+					case VirtualNodeType.Header2:
+						this.VirtualNodeType = VirtualNodeType.Header1;
+						return true;
+
+					case VirtualNodeType.Footer2:
+						this.VirtualNodeType = VirtualNodeType.BodyData;
+						return true;
+
+					case VirtualNodeType.Footer1:
+						this.VirtualNodeType = VirtualNodeType.Footer2;
+						return true;
+				}
+
+				DataView.DataItem parent = this.ParentItem;
+				string id = parent.GetPreviousChildId (this.Name);
+
+				if (id == null)
+				{
+					if (this.VirtualNodeType == VirtualNodeType.BodyData)
+					{
+						this.VirtualNodeType = VirtualNodeType.Header2;
 						return true;
 					}
 					else

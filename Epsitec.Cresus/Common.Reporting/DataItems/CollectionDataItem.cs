@@ -103,7 +103,7 @@ namespace Epsitec.Common.Reporting.DataItems
 			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "@{0}", index+1);
 		}
 
-		public override string GetPrevChildId(string childId)
+		public override string GetPreviousChildId(string childId)
 		{
 			int index;
 
