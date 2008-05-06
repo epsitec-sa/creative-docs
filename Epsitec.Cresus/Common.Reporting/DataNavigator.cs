@@ -31,14 +31,6 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		private ItemState						CurrentItemState
-		{
-			get
-			{
-				return this.itemStack.Peek ();
-			}
-		}
-
 		public IDataItem						CurrentDataItem
 		{
 			get
@@ -73,8 +65,19 @@ namespace Epsitec.Common.Reporting
 			get;
 			set;
 		}
-		
-		
+
+		private ItemState						CurrentItemState
+		{
+			get
+			{
+				return this.itemStack.Peek ();
+			}
+		}
+
+
+		/// <summary>
+		/// Resets this navigator and starts again at the root.
+		/// </summary>
 		public void Reset()
 		{
 			this.itemStack.Clear ();
@@ -83,12 +86,6 @@ namespace Epsitec.Common.Reporting
 			this.currentSplitIndex = 0;
 			this.currentSplitInfos = null;
 		}
-
-		private ItemState CreateItemState(DataView.DataItem dataItem)
-		{
-			return new ItemState (dataItem, this);
-		}
-
 
 		/// <summary>
 		/// Navigates to the specified absolute path.
@@ -118,8 +115,17 @@ namespace Epsitec.Common.Reporting
 			return found != null;
 		}
 
+		/// <summary>
+		/// Navigates to the specified sibling item.
+		/// </summary>
+		/// <param name="path">The path to the sibling.</param>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToSibling(string path)
 		{
+			System.Diagnostics.Debug.Assert (path != null);
+			System.Diagnostics.Debug.Assert (path.Length > 0);
+			System.Diagnostics.Debug.Assert (path.Contains (".") == false);
+
 			ItemState state = this.itemStack.Pop ();
 			DataView  view  = state.ParentItem.DataView;
 			IDataItem found = DataView.GetDataItem (view, path, item => this.itemStack.Push (this.CreateItemState (item)));
@@ -127,6 +133,12 @@ namespace Epsitec.Common.Reporting
 			return found != null;
 		}
 
+		/// <summary>
+		/// Navigates to the next item at the same level than the current one.
+		/// When the last item is reached, nothing happens and the method
+		/// returns <c>false</c>.
+		/// </summary>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToNext()
 		{
 			ItemState state = this.CurrentItemState;
@@ -135,13 +147,19 @@ namespace Epsitec.Common.Reporting
 			{
 				case DataItemType.Table:
 				case DataItemType.Vector:
-					return state.NavigateToNext (this);
+					return state.NavigateToNext ();
 
 				default:
 					return false;
 			}
 		}
 
+		/// <summary>
+		/// Navigates to the previous item at the same level than the current one.
+		/// When the first item is reached, nothing happens and the method
+		/// returns <c>false</c>.
+		/// </summary>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToPrevious()
 		{
 			ItemState state = this.CurrentItemState;
@@ -150,13 +168,17 @@ namespace Epsitec.Common.Reporting
 			{
 				case DataItemType.Table:
 				case DataItemType.Vector:
-					return state.NavigateToPrevious (this);
+					return state.NavigateToPrevious ();
 
 				default:
 					return false;
 			}
 		}
 
+		/// <summary>
+		/// Navigates to the first child item of the current item.
+		/// </summary>
+		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToFirstChild()
 		{
 			ItemState state = this.CurrentItemState;
@@ -211,6 +233,17 @@ namespace Epsitec.Common.Reporting
 		}
 
 
+		/// <summary>
+		/// Creates the item state for the specified item.
+		/// </summary>
+		/// <param name="dataItem">The data item.</param>
+		/// <returns>The item state.</returns>
+		private ItemState CreateItemState(DataView.DataItem dataItem)
+		{
+			return new ItemState (dataItem, this);
+		}
+
+
 		#region ItemState class
 
 		/// <summary>
@@ -226,7 +259,8 @@ namespace Epsitec.Common.Reporting
 				this.Reset (navigator);
 			}
 
-			public DataView.DataItem Item
+			
+			public DataView.DataItem			Item
 			{
 				get
 				{
@@ -243,7 +277,7 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
-			public DataView.DataItem ParentItem
+			public DataView.DataItem			ParentItem
 			{
 				get
 				{
@@ -260,7 +294,7 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
-			public string Path
+			public string						Path
 			{
 				get
 				{
@@ -277,7 +311,7 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
-			public string Name
+			public string						Name
 			{
 				get
 				{
@@ -285,13 +319,106 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
-			public VirtualNodeType VirtualNodeType
+			public VirtualNodeType				VirtualNodeType
 			{
 				get;
 				private set;
 			}
 
-			public void Reset(DataNavigator navigator)
+
+			/// <summary>
+			/// Navigates to the next item, while taking in account the virtual
+			/// nodes.
+			/// </summary>
+			/// <returns><c>true</c> if the navigation succeeded.</returns>
+			public bool NavigateToNext()
+			{
+				//	Natural sequence is Header1/Header2/BodyData/Footer2/Footer1
+
+				switch (this.VirtualNodeType)
+				{
+					case VirtualNodeType.Header1: this.VirtualNodeType = VirtualNodeType.Header2;	return true;
+					case VirtualNodeType.Header2: this.VirtualNodeType = VirtualNodeType.BodyData;	return true;
+					case VirtualNodeType.Footer2: this.VirtualNodeType = VirtualNodeType.Footer1;	return true;
+					case VirtualNodeType.Footer1:													return false;
+				}
+
+				DataView.DataItem parent = this.ParentItem;
+				string id = parent.GetNextChildId (this.Name);
+
+				if (id == null)
+				{
+					//	No more data children. This means we have either reached
+					//	the last child, or we have to start producing the virtual
+					//	nodes :
+
+					if (this.VirtualNodeType == VirtualNodeType.BodyData)
+					{
+						this.VirtualNodeType = VirtualNodeType.Footer2;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					this.item = DataView.GetDataItem (parent.DataView, id);
+
+					System.Diagnostics.Debug.Assert (this.item != null);
+
+					return true;
+				}
+			}
+
+			/// <summary>
+			/// Navigates to previous item, while taking in account the virtual
+			/// nodes.
+			/// </summary>
+			/// <returns><c>true</c> if the navigation succeeded.</returns>
+			public bool NavigateToPrevious()
+			{
+				//	Natural sequence is Header1/Header2/BodyData/Footer2/Footer1
+				
+				switch (this.VirtualNodeType)
+				{
+					case VirtualNodeType.Header1:					return false;
+					case VirtualNodeType.Header2: this.VirtualNodeType = VirtualNodeType.Header1;	return true;
+					case VirtualNodeType.Footer2: this.VirtualNodeType = VirtualNodeType.BodyData;	return true;
+					case VirtualNodeType.Footer1: this.VirtualNodeType = VirtualNodeType.Footer2;	return true;
+				}
+
+				DataView.DataItem parent = this.ParentItem;
+				string id = parent.GetPreviousChildId (this.Name);
+
+				if (id == null)
+				{
+					//	No more data children. This means we have either reached
+					//	the last child, or we have to start producing the virtual
+					//	nodes :
+
+					if (this.VirtualNodeType == VirtualNodeType.BodyData)
+					{
+						this.VirtualNodeType = VirtualNodeType.Header2;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					this.item = DataView.GetDataItem (parent.DataView, id);
+
+					System.Diagnostics.Debug.Assert (this.item != null);
+
+					return true;
+				}
+			}
+
+			private void Reset(DataNavigator navigator)
 			{
 				if (navigator.EnableSyntheticNodes)
 				{
@@ -311,98 +438,6 @@ namespace Epsitec.Common.Reporting
 					this.VirtualNodeType = VirtualNodeType.Data;
 				}
 			}
-			
-
-			public bool NavigateToNext(DataNavigator navigator)
-			{
-				switch (this.VirtualNodeType)
-				{
-					case VirtualNodeType.Header1:
-						this.VirtualNodeType = VirtualNodeType.Header2;
-						return true;
-
-					case VirtualNodeType.Header2:
-						this.VirtualNodeType = VirtualNodeType.BodyData;
-						return true;
-
-					case VirtualNodeType.Footer2:
-						this.VirtualNodeType = VirtualNodeType.Footer1;
-						return true;
-
-					case VirtualNodeType.Footer1:
-						return false;
-				}
-
-				DataView.DataItem parent = this.ParentItem;
-				string id = parent.GetNextChildId (this.Name);
-
-				if (id == null)
-				{
-					if (this.VirtualNodeType == VirtualNodeType.BodyData)
-					{
-						this.VirtualNodeType = VirtualNodeType.Footer2;
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				else
-				{
-					this.item = DataView.GetDataItem (parent.DataView, id) as DataView.DataItem;
-
-					System.Diagnostics.Debug.Assert (this.item != null);
-
-					return true;
-				}
-			}
-
-			public bool NavigateToPrevious(DataNavigator dataNavigator)
-			{
-				switch (this.VirtualNodeType)
-				{
-					case VirtualNodeType.Header1:
-						return false;
-
-					case VirtualNodeType.Header2:
-						this.VirtualNodeType = VirtualNodeType.Header1;
-						return true;
-
-					case VirtualNodeType.Footer2:
-						this.VirtualNodeType = VirtualNodeType.BodyData;
-						return true;
-
-					case VirtualNodeType.Footer1:
-						this.VirtualNodeType = VirtualNodeType.Footer2;
-						return true;
-				}
-
-				DataView.DataItem parent = this.ParentItem;
-				string id = parent.GetPreviousChildId (this.Name);
-
-				if (id == null)
-				{
-					if (this.VirtualNodeType == VirtualNodeType.BodyData)
-					{
-						this.VirtualNodeType = VirtualNodeType.Header2;
-						return true;
-					}
-					else
-					{
-						return false;
-					}
-				}
-				else
-				{
-					this.item = DataView.GetDataItem (parent.DataView, id) as DataView.DataItem;
-
-					System.Diagnostics.Debug.Assert (this.item != null);
-
-					return true;
-				}
-			}
-			
 			private DataView.DataItem item;
 		}
 

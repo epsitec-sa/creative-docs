@@ -60,7 +60,7 @@ namespace Epsitec.Common.Reporting
 		/// <param name="view">The view.</param>
 		/// <param name="path">The path.</param>
 		/// <returns>The data item.</returns>
-		public static IDataItem GetDataItem(DataView view, string path)
+		public static DataItem GetDataItem(DataView view, string path)
 		{
 			return DataView.GetDataItem (view, path, null);
 		}
