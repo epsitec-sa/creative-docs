@@ -76,6 +76,11 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
+		public bool EnableSyntheticNodes
+		{
+			get;
+			set;
+		}
 		
 		public void Reset()
 		{

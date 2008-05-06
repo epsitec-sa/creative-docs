@@ -132,6 +132,13 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("table", navigator.CurrentDataPath);
 			Assert.AreEqual (2, Collection.Count (navigator.CurrentViewStack));
 			Assert.AreEqual (DataItemType.Table, navigator.CurrentDataItem.ItemType);
+			
+			//	Enter table, then enter row, then fail entering value
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+			Assert.AreEqual ("table.@0", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+			Assert.AreEqual ("table.@0.1st_name", navigator.CurrentDataPath);
+			Assert.IsFalse (navigator.NavigateToFirstChild ());
 		}
 
 		[Test]
@@ -139,6 +146,8 @@ namespace Epsitec.Common.Reporting
 		{
 			DataNavigator navigator = NavigatorTest.CreateSimpleTableNavigator ();
 			DataViewContext context = navigator.Context;
+
+			navigator.EnableSyntheticNodes = true;
 
 			Settings.VectorSetting tableVectorSetting = new Settings.VectorSetting ()
 			{
@@ -186,8 +195,13 @@ namespace Epsitec.Common.Reporting
 			tableRows.Add (row1);
 
 			DataViewContext context = new DataViewContext ();
-			DataView view = DataView.CreateRoot (context, root);
-			DataNavigator navigator = new DataNavigator (view);
+			DataView        view    = DataView.CreateRoot (context, root);
+
+			DataNavigator navigator = new DataNavigator (view)
+			{
+				EnableSyntheticNodes = false
+			};
+
 			return navigator;
 		}
 	}
