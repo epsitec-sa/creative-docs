@@ -117,12 +117,34 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
 			Assert.AreEqual ("Pierre", navigator.CurrentDataItem.ObjectValue);
 
-			navigator.NavigateToNext ();
+			Assert.IsTrue (navigator.NavigateToNext ());
 			
 			Assert.AreEqual ("table.@0.2nd_name", navigator.CurrentDataPath);
 			Assert.AreEqual (4, Collection.Count (navigator.CurrentViewStack));
 			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
 			Assert.AreEqual ("Arnaud", navigator.CurrentDataItem.ObjectValue);
+
+			Assert.IsTrue (navigator.NavigateToNext ());
+
+			Assert.AreEqual ("table.@0.year", navigator.CurrentDataPath);
+			Assert.AreEqual (4, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
+			Assert.AreEqual (1972, navigator.CurrentDataItem.ObjectValue);
+
+			//	No more field in the vector after 1st_name, 2nd_name and year
+			Assert.IsFalse (navigator.NavigateToNext ());
+
+			
+			//	Move up to parent (row in table) and then to the next row
+			Assert.IsTrue (navigator.NavigateToParent ());
+			Assert.IsTrue (navigator.NavigateToNext ());
+
+			Assert.AreEqual ("table.@1", navigator.CurrentDataPath);
+			Assert.AreEqual (3, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Vector, navigator.CurrentDataItem.ItemType);
+
+			//	No more rows
+			Assert.IsFalse (navigator.NavigateToNext ());
 
 			navigator.NavigateTo ("table");
 
