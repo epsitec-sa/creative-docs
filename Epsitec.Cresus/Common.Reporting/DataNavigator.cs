@@ -22,16 +22,8 @@ namespace Epsitec.Common.Reporting
 			this.itemStack.Push (new ItemState (this.view.Item, this));
 		}
 
-		public bool IsValid
-		{
-			get
-			{
-				//	TODO: ...
-				return true;
-			}
-		}
 
-		public DataViewContext Context
+		public DataViewContext					Context
 		{
 			get
 			{
@@ -39,7 +31,7 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		private ItemState CurrentItemState
+		private ItemState						CurrentItemState
 		{
 			get
 			{
@@ -47,7 +39,7 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		public IDataItem CurrentDataItem
+		public IDataItem						CurrentDataItem
 		{
 			get
 			{
@@ -57,7 +49,7 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		public IEnumerable<IDataItem> CurrentViewStack
+		public IEnumerable<IDataItem>			CurrentViewStack
 		{
 			get
 			{
@@ -68,7 +60,7 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		public string CurrentDataPath
+		public string							CurrentDataPath
 		{
 			get
 			{
@@ -76,11 +68,12 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		public bool EnableSyntheticNodes
+		public bool								EnableSyntheticNodes
 		{
 			get;
 			set;
 		}
+		
 		
 		public void Reset()
 		{
@@ -106,9 +99,9 @@ namespace Epsitec.Common.Reporting
 		{
 			this.Reset ();
 
-			DataView.GetDataItem (this.view, path, item => this.itemStack.Push (this.CreateItemState (item)));
-
-			return this.IsValid;
+			IDataItem found = DataView.GetDataItem (this.view, path, item => this.itemStack.Push (this.CreateItemState (item)));
+			
+			return found != null;
 		}
 
 		/// <summary>
@@ -119,73 +112,67 @@ namespace Epsitec.Common.Reporting
 		/// <returns><c>true</c> if the navigation succeeded.</returns>
 		public bool NavigateToRelative(string path)
 		{
-			DataView.GetDataItem (this.itemStack.Peek ().Item.DataView, path, item => this.itemStack.Push (this.CreateItemState (item)));
-
-			return this.IsValid;
+			DataView  view  = this.CurrentItemState.Item.DataView;
+			IDataItem found = DataView.GetDataItem (view, path, item => this.itemStack.Push (this.CreateItemState (item)));
+			
+			return found != null;
 		}
 
 		public bool NavigateToSibling(string path)
 		{
 			ItemState state = this.itemStack.Pop ();
+			DataView  view  = state.ParentItem.DataView;
+			IDataItem found = DataView.GetDataItem (view, path, item => this.itemStack.Push (this.CreateItemState (item)));
 			
-			DataView.GetDataItem (state.ParentItem.DataView, path, item => this.itemStack.Push (this.CreateItemState (item)));
-
-			return this.IsValid;
+			return found != null;
 		}
 
 		public bool NavigateToNext()
 		{
-			if (this.IsValid)
+			ItemState state = this.CurrentItemState;
+
+			switch (state.ParentItem.ItemType)
 			{
-				ItemState state = this.CurrentItemState;
+				case DataItemType.Table:
+				case DataItemType.Vector:
+					return state.NavigateToNext (this);
 
-				switch (state.ParentItem.ItemType)
-				{
-					case DataItemType.Table:
-					case DataItemType.Vector:
-						return state.NavigateToNext (this);
-				}
+				default:
+					return false;
 			}
-
-			return false;
 		}
 
 		public bool NavigateToPrevious()
 		{
-			if (this.IsValid)
+			ItemState state = this.CurrentItemState;
+
+			switch (state.ParentItem.ItemType)
 			{
-				ItemState state = this.CurrentItemState;
+				case DataItemType.Table:
+				case DataItemType.Vector:
+					return state.NavigateToPrevious (this);
 
-				switch (state.ParentItem.ItemType)
-				{
-					case DataItemType.Table:
-					case DataItemType.Vector:
-						return state.NavigateToPrevious (this);
-				}
+				default:
+					return false;
 			}
-
-			return false;
 		}
 
 		public bool NavigateToFirstChild()
 		{
-			if (this.IsValid)
-			{
-				ItemState state = this.CurrentItemState;
-				string    child = null;
+			ItemState state = this.CurrentItemState;
+			string    child = null;
 
-				switch (state.Item.ItemType)
-				{
-					case DataItemType.Table:
-					case DataItemType.Vector:
-						child = state.Item.GetFirstChildId ();
-						
-						if (child != null)
-						{
-							return this.NavigateToRelative (child);
-						}
-						break;
-				}
+			switch (state.Item.ItemType)
+			{
+				case DataItemType.Table:
+				case DataItemType.Vector:
+					child = state.Item.GetFirstChildId ();
+					
+					if (child != null)
+					{
+						return this.NavigateToRelative (child);
+					}
+					break;
 			}
 
 			return false;
@@ -203,39 +190,24 @@ namespace Epsitec.Common.Reporting
 				return false;
 			}
 
-			System.Diagnostics.Debug.Assert (this.itemStack.Count > 1);
+			System.Diagnostics.Debug.Assert (this.itemStack.Count > 0);
 
-			ItemState state = this.itemStack.Pop ();
+			this.itemStack.Pop ();
 
-			return this.IsValid;
+			return true;
 		}
 
 		
 		
 		public void RequestBreak()
 		{
-			this.EnsureValid ();
-
 			throw new System.NotImplementedException ();
 		}
 
 		public void RequestBreak(IEnumerable<CellSplitInfo> collection, int index)
 		{
-			this.EnsureValid ();
-
 			this.currentSplitInfos = collection;
 			this.currentSplitIndex = index;
-		}
-
-
-		private void EnsureValid()
-		{
-			if (this.IsValid)
-			{
-				return;
-			}
-
-			throw new System.InvalidOperationException ("Invalid state for navigator");
 		}
 
 
