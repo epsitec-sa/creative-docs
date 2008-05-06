@@ -302,20 +302,7 @@ namespace Epsitec.Common.Reporting
 			{
 				get
 				{
-					switch (this.VirtualNodeType)
-					{
-						case VirtualNodeType.Data:
-						case VirtualNodeType.BodyData:
-							return this.item.Id;
-
-						case VirtualNodeType.Header1:	return "%Head1";
-						case VirtualNodeType.Header2:	return "%Head2";
-						case VirtualNodeType.Footer1:	return "%Foot1";
-						case VirtualNodeType.Footer2:	return "%Foot2";
-
-						default:
-							throw new System.InvalidOperationException (string.Format ("Invalid node type {0}", this.VirtualNodeType));
-					}
+					return DataView.GetVirtualNodeId (this.VirtualNodeType) ?? this.item.Id;
 				}
 			}
 

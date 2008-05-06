@@ -199,8 +199,9 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("Employés", NavigatorTest.Peek<string> (navigator, "@0"));
 			Assert.IsFalse (navigator.NavigateToNext ());
 
-//-			Assert.IsTrue (navigator.NavigateToFirstChild ());
-//-			Assert.AreEqual ("table.%Foot1.title", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+			Assert.AreEqual ("table.%Foot1.@0", navigator.CurrentDataPath);
+			Assert.AreEqual ("Employés", navigator.CurrentDataItem.ObjectValue);
 		}
 
 		private static T Peek<T>(DataNavigator navigator, string id)

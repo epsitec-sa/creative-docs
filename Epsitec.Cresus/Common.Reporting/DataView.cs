@@ -225,9 +225,7 @@ namespace Epsitec.Common.Reporting
 					view.items = new Dictionary<string, DataItem> ();
 				}
 
-				item.Id = id;
-				item.ParentDataView = view;
-				view.items[id] = item;
+				DataView.RegisterItem (view, item, id);
 				
 				if (itemSpy != null)
 				{
@@ -236,6 +234,35 @@ namespace Epsitec.Common.Reporting
 			}
 			
 			return item;
+		}
+
+		public static void RegisterItem(DataView view, DataItem item, string id)
+		{
+			item.Id = id;
+			item.ParentDataView = view;
+			view.items[id] = item;
+		}
+
+		public static string GetVirtualNodeId(VirtualNodeType nodeType)
+		{
+			switch (nodeType)
+			{
+				case VirtualNodeType.Data:
+				case VirtualNodeType.BodyData:
+					return null;
+
+				case VirtualNodeType.Header1:
+					return "%Head1";
+				case VirtualNodeType.Header2:
+					return "%Head2";
+				case VirtualNodeType.Footer1:
+					return "%Foot1";
+				case VirtualNodeType.Footer2:
+					return "%Foot2";
+
+				default:
+					throw new System.InvalidOperationException (string.Format ("Invalid node type {0}", nodeType));
+			}
 		}
 
 

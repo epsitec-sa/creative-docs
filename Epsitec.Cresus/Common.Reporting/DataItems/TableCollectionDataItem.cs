@@ -70,22 +70,35 @@ namespace Epsitec.Common.Reporting.DataItems
 
 		public override DataView.DataItem GetVirtualItem(VirtualNodeType virtualNodeType)
 		{
+			TitleDataItem item = null;
+
 			switch (virtualNodeType)
 			{
 				case VirtualNodeType.Header1:
-					return new TitleDataItem (this.DataView.Context, this.title, DataItemClass.TableHeader1);
+					item = new TitleDataItem (this.DataView.Context, this.title, DataItemClass.TableHeader1);
+					break;
 
 				case VirtualNodeType.Header2:
-					return new TitleDataItem (this.DataView.Context, this.GetColumnTitles (), DataItemClass.TableHeader2);
+					item = new TitleDataItem (this.DataView.Context, this.GetColumnTitles (), DataItemClass.TableHeader2);
+					break;
 
 				case VirtualNodeType.Footer1:
-					return new TitleDataItem (this.DataView.Context, this.title, DataItemClass.TableFooter1);
+					item = new TitleDataItem (this.DataView.Context, this.title, DataItemClass.TableFooter1);
+					break;
 
 				case VirtualNodeType.Footer2:
-					return new TitleDataItem (this.DataView.Context, this.GetColumnTitles (), DataItemClass.TableFooter2);
+					item = new TitleDataItem (this.DataView.Context, this.GetColumnTitles (), DataItemClass.TableFooter2);
+					break;
 			}
-			
-			throw new System.InvalidOperationException (string.Format ("Invalid virtual node type {0} for table", virtualNodeType));
+
+			if (item == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Invalid virtual node type {0} for table", virtualNodeType));
+			}
+
+			DataView.RegisterItem (this.DataView, item, DataView.GetVirtualNodeId (virtualNodeType));
+
+			return item;
 		}
 
 		private IEnumerable<string> GetColumnTitles()
