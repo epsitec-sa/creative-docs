@@ -144,13 +144,7 @@ namespace Epsitec.Common.Reporting
 				{
 					case DataItemType.Table:
 					case DataItemType.Vector:
-						sibling = state.ParentItem.GetNextChildId (state.Name);
-						
-						if (sibling != null)
-						{
-							return this.NavigateToSibling (sibling);
-						}
-						break;
+						return state.NavigateToNext (this);
 				}
 			}
 
@@ -287,7 +281,7 @@ namespace Epsitec.Common.Reporting
 
 					if (DataItems.EmptyDataItem.IsEmpty (parent))
 					{
-						return this.Name;
+						return this.Name ?? "";
 					}
 					else
 					{
@@ -345,7 +339,52 @@ namespace Epsitec.Common.Reporting
 			}
 			
 
-			private readonly DataView.DataItem item;
+			public bool NavigateToNext(DataNavigator navigator)
+			{
+				switch (this.VirtualNodeType)
+				{
+					case VirtualNodeType.Header1:
+						this.VirtualNodeType = VirtualNodeType.Header2;
+						return true;
+
+					case VirtualNodeType.Header2:
+						this.VirtualNodeType = VirtualNodeType.BodyData;
+						return true;
+
+					case VirtualNodeType.Footer2:
+						this.VirtualNodeType = VirtualNodeType.Footer1;
+						return true;
+
+					case VirtualNodeType.Footer1:
+						return false;
+				}
+
+				DataView.DataItem parent = this.ParentItem;
+				string id = parent.GetNextChildId (this.Name);
+
+				if (id == null)
+				{
+					if (this.VirtualNodeType == VirtualNodeType.BodyData)
+					{
+						this.VirtualNodeType = VirtualNodeType.Footer2;
+						return true;
+					}
+					else
+					{
+						return false;
+					}
+				}
+				else
+				{
+					this.item = DataView.GetDataItem (parent.DataView, id) as DataView.DataItem;
+
+					System.Diagnostics.Debug.Assert (this.item != null);
+
+					return true;
+				}
+			}
+			
+			private DataView.DataItem item;
 		}
 
 		#endregion

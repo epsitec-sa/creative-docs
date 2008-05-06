@@ -171,10 +171,13 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("table.%Head2", navigator.CurrentDataPath);
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.@0", navigator.CurrentDataPath);
-
-			Assert.IsTrue (navigator.NavigateToFirstChild ());
-
-			Assert.AreEqual ("table.@0.1st_name", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.AreEqual ("table.@1", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.AreEqual ("table.%Foot2", navigator.CurrentDataPath);
+			Assert.IsTrue (navigator.NavigateToNext ());
+			Assert.AreEqual ("table.%Foot1", navigator.CurrentDataPath);
+			Assert.IsFalse (navigator.NavigateToNext ());
 		}
 
 
