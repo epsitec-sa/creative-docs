@@ -67,6 +67,7 @@
     <Compile Include="Settings\InclusionMode.cs" />
     <Compile Include="Settings\VectorValueSetting.cs" />
     <Compile Include="Settings\VectorSetting.cs" />
+    <Compile Include="VirtualNodeType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">

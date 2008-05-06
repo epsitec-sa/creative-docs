@@ -19,7 +19,7 @@ namespace Epsitec.Common.Reporting
 
 			this.view = view;
 			this.itemStack = new Stack<ItemState> ();
-			this.itemStack.Push (new ItemState (this.view.Item));
+			this.itemStack.Push (new ItemState (this.view.Item, this));
 		}
 
 		public bool IsValid
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Reporting
 
 		private ItemState CreateItemState(DataView.DataItem dataItem)
 		{
-			return new ItemState (dataItem);
+			return new ItemState (dataItem, this);
 		}
 
 
@@ -248,9 +248,10 @@ namespace Epsitec.Common.Reporting
 		/// </summary>
 		private class ItemState
 		{
-			public ItemState(DataView.DataItem item)
+			public ItemState(DataView.DataItem item, DataNavigator navigator)
 			{
 				this.item = item;
+				this.Reset (navigator);
 			}
 
 			public DataView.DataItem Item
@@ -282,7 +283,16 @@ namespace Epsitec.Common.Reporting
 			{
 				get
 				{
-					return DataView.GetPath (this.item);
+					DataView.DataItem parent = this.ParentItem;
+
+					if (DataItems.EmptyDataItem.IsEmpty (parent))
+					{
+						return this.Name;
+					}
+					else
+					{
+						return DataView.GetPath (parent, this.Name);
+					}
 				}
 			}
 
@@ -290,9 +300,50 @@ namespace Epsitec.Common.Reporting
 			{
 				get
 				{
-					return this.item.Id;
+					switch (this.VirtualNodeType)
+					{
+						case VirtualNodeType.Data:
+						case VirtualNodeType.BodyData:
+							return this.item.Id;
+
+						case VirtualNodeType.Header1:	return "%Head1";
+						case VirtualNodeType.Header2:	return "%Head2";
+						case VirtualNodeType.Footer1:	return "%Foot1";
+						case VirtualNodeType.Footer2:	return "%Foot2";
+
+						default:
+							throw new System.InvalidOperationException (string.Format ("Invalid node type {0}", this.VirtualNodeType));
+					}
 				}
 			}
+
+			public VirtualNodeType VirtualNodeType
+			{
+				get;
+				private set;
+			}
+
+			public void Reset(DataNavigator navigator)
+			{
+				if (navigator.EnableSyntheticNodes)
+				{
+					switch (this.ParentItem.ItemType)
+					{
+						case DataItemType.Table:
+							this.VirtualNodeType = VirtualNodeType.Header1;
+							break;
+
+						default:
+							this.VirtualNodeType = VirtualNodeType.Data;
+							break;
+					}
+				}
+				else
+				{
+					this.VirtualNodeType = VirtualNodeType.Data;
+				}
+			}
+			
 
 			private readonly DataView.DataItem item;
 		}

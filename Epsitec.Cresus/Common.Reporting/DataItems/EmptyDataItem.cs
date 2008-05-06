@@ -34,6 +34,22 @@ namespace Epsitec.Common.Reporting.DataItems
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the item.
+		/// </summary>
+		/// <value>The type of the item.</value>
+		public override DataItemType ItemType
+		{
+			get
+			{
+				return DataItemType.None;
+			}
+		}
+
+		public static bool IsEmpty(DataView.DataItem item)
+		{
+			return item == EmptyDataItem.Value;
+		}
 
 		public static readonly EmptyDataItem Value = new EmptyDataItem ();
 	}
