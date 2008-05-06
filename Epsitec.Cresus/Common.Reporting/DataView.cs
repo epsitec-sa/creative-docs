@@ -243,25 +243,22 @@ namespace Epsitec.Common.Reporting
 			view.items[id] = item;
 		}
 
-		public static string GetVirtualNodeId(VirtualNodeType nodeType)
+		/// <summary>
+		/// Gets the virtual node id for the specified virtual node type.
+		/// </summary>
+		/// <param name="virtualNodeType">The virtual node type.</param>
+		/// <returns>The corresponding id or <c>null</c> if it maps to a data item.</returns>
+		public static string GetVirtualNodeId(VirtualNodeType virtualNodeType)
 		{
-			switch (nodeType)
+			string id;
+
+			if (DataView.virtualNodeMap.TryGetValue (virtualNodeType, out id))
 			{
-				case VirtualNodeType.Data:
-				case VirtualNodeType.BodyData:
-					return null;
-
-				case VirtualNodeType.Header1:
-					return "%Head1";
-				case VirtualNodeType.Header2:
-					return "%Head2";
-				case VirtualNodeType.Footer1:
-					return "%Foot1";
-				case VirtualNodeType.Footer2:
-					return "%Foot2";
-
-				default:
-					throw new System.InvalidOperationException (string.Format ("Invalid node type {0}", nodeType));
+				return id;
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Invalid node type {0}", virtualNodeType));
 			}
 		}
 
@@ -286,6 +283,19 @@ namespace Epsitec.Common.Reporting
 			items.AddRange (additionalPathElements);
 
 			return string.Join (".", items.ToArray ());
+		}
+
+
+		static DataView()
+		{
+			DataView.virtualNodeMap = new Dictionary<VirtualNodeType, string> ();
+
+			DataView.virtualNodeMap[VirtualNodeType.Data]     = null;
+			DataView.virtualNodeMap[VirtualNodeType.BodyData] = null;
+			DataView.virtualNodeMap[VirtualNodeType.Header1]  = "%Head1";
+			DataView.virtualNodeMap[VirtualNodeType.Header2]  = "%Head2";
+			DataView.virtualNodeMap[VirtualNodeType.Footer1]  = "%Foot1";
+			DataView.virtualNodeMap[VirtualNodeType.Footer2]  = "%Foot2";
 		}
 
 		/// <summary>
@@ -336,6 +346,7 @@ namespace Epsitec.Common.Reporting
 			return item;
 		}
 
+		private static readonly Dictionary<VirtualNodeType, string> virtualNodeMap;
 
 		private readonly DataViewContext context;
 		private Dictionary<string, DataItem> items;
