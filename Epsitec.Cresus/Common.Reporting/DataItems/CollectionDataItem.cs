@@ -75,6 +75,18 @@ namespace Epsitec.Common.Reporting.DataItems
 			return this.collection[index];
 		}
 
+		public override string GetFirstChildId()
+		{
+			if (this.Count > 0)
+			{
+				return "@0";
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public override string GetNextChildId(string childId)
 		{
 			int index;

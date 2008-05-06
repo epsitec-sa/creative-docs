@@ -77,26 +77,7 @@ namespace Epsitec.Common.Reporting
 		[Test]
 		public void Check03SimpleTable()
 		{
-			GenericEntity root = new GenericEntity (Druid.Empty);
-			GenericEntity row0 = new GenericEntity (Druid.Empty);
-			GenericEntity row1 = new GenericEntity (Druid.Empty);
-
-			IList<GenericEntity> tableRows = root.GetFieldCollection<GenericEntity> ("table");
-
-			row0.SetField<string> ("1st_name", "Pierre");
-			row0.SetField<string> ("2nd_name", "Arnaud");
-			row0.SetField<int> ("year", 1972);
-
-			row1.SetField<string> ("1st_name", "Daniel");
-			row1.SetField<string> ("2nd_name", "Roux");
-			row1.SetField<int> ("year", 1958);
-
-			tableRows.Add (row0);
-			tableRows.Add (row1);
-
-			DataViewContext context = new DataViewContext ();
-			DataView view = DataView.CreateRoot (context, root);
-			DataNavigator navigator = new DataNavigator (view);
+			DataNavigator navigator = NavigatorTest.CreateSimpleTableNavigator ();
 
 			navigator.NavigateTo ("table");
 
@@ -151,6 +132,63 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("table", navigator.CurrentDataPath);
 			Assert.AreEqual (2, Collection.Count (navigator.CurrentViewStack));
 			Assert.AreEqual (DataItemType.Table, navigator.CurrentDataItem.ItemType);
+		}
+
+		[Test]
+		public void Check04SimpleTableWithSettings()
+		{
+			DataNavigator navigator = NavigatorTest.CreateSimpleTableNavigator ();
+			DataViewContext context = navigator.Context;
+
+			Settings.VectorSetting tableVectorSetting = new Settings.VectorSetting ()
+			{
+				new Settings.VectorValueSetting () { Id = "1st_name", Title = "Prénom" },
+				new Settings.VectorValueSetting () { Id = "2nd_name", Title = "Nom" }
+			};
+
+			Settings.CollectionSetting tableCollectionSetting = new Settings.CollectionSetting () { Title = "Employés" };
+
+			context.DefineVectorSetting ("table", tableVectorSetting);
+			context.DefineCollectionSetting ("table", tableCollectionSetting);
+
+			navigator.NavigateTo ("table");
+
+			Assert.AreEqual ("table", navigator.CurrentDataPath);
+			Assert.AreEqual (DataItemType.Table, navigator.CurrentDataItem.ItemType);
+
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+
+			Assert.AreEqual ("table.@0", navigator.CurrentDataPath);
+
+			Assert.IsTrue (navigator.NavigateToFirstChild ());
+
+			Assert.AreEqual ("table.@0.1st_name", navigator.CurrentDataPath);
+		}
+
+
+		private static DataNavigator CreateSimpleTableNavigator()
+		{
+			GenericEntity root = new GenericEntity (Druid.Empty);
+			GenericEntity row0 = new GenericEntity (Druid.Empty);
+			GenericEntity row1 = new GenericEntity (Druid.Empty);
+
+			IList<GenericEntity> tableRows = root.GetFieldCollection<GenericEntity> ("table");
+
+			row0.SetField<string> ("1st_name", "Pierre");
+			row0.SetField<string> ("2nd_name", "Arnaud");
+			row0.SetField<int> ("year", 1972);
+
+			row1.SetField<string> ("1st_name", "Daniel");
+			row1.SetField<string> ("2nd_name", "Roux");
+			row1.SetField<int> ("year", 1958);
+
+			tableRows.Add (row0);
+			tableRows.Add (row1);
+
+			DataViewContext context = new DataViewContext ();
+			DataView view = DataView.CreateRoot (context, root);
+			DataNavigator navigator = new DataNavigator (view);
+			return navigator;
 		}
 	}
 }

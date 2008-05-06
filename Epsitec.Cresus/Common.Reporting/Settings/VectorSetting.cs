@@ -14,7 +14,7 @@ namespace Epsitec.Common.Reporting.Settings
 	/// The <c>VectorSetting</c> class defines how a vector will be
 	/// mapped to a row of values.
 	/// </summary>
-	public class VectorSetting
+	public class VectorSetting : System.Collections.IEnumerable
 	{
 		public VectorSetting()
 		{
@@ -53,6 +53,15 @@ namespace Epsitec.Common.Reporting.Settings
 			}
 		}
 
+
+		/// <summary>
+		/// Adds the specified value setting.
+		/// </summary>
+		/// <param name="value">The value setting.</param>
+		public void Add(VectorValueSetting value)
+		{
+			this.values.Add (value);
+		}
 
 		/// <summary>
 		/// Checks whether the specified value should be included in the output
@@ -156,6 +165,15 @@ namespace Epsitec.Common.Reporting.Settings
 				return null;
 			}
 		}
+
+		#region IEnumerable Members
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.values.GetEnumerator ();
+		}
+
+		#endregion
 
 
 		/// <summary>

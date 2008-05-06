@@ -31,6 +31,14 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
+		public DataViewContext Context
+		{
+			get
+			{
+				return this.view.Context;
+			}
+		}
+
 		private ItemState CurrentItemState
 		{
 			get
@@ -132,6 +140,7 @@ namespace Epsitec.Common.Reporting
 					case DataItemType.Table:
 					case DataItemType.Vector:
 						sibling = state.ParentItem.GetNextChildId (state.Name);
+						
 						if (sibling != null)
 						{
 							return this.NavigateToSibling (sibling);
@@ -157,10 +166,24 @@ namespace Epsitec.Common.Reporting
 		{
 			if (this.IsValid)
 			{
-				//	TODO: ...
+				ItemState state = this.CurrentItemState;
+				string    child = null;
+
+				switch (state.Item.ItemType)
+				{
+					case DataItemType.Table:
+					case DataItemType.Vector:
+						child = state.Item.GetFirstChildId ();
+						
+						if (child != null)
+						{
+							return this.NavigateToRelative (child);
+						}
+						break;
+				}
 			}
 
-			return this.IsValid;
+			return false;
 		}
 
 		/// <summary>

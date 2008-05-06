@@ -33,6 +33,14 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
+		public DataViewContext Context
+		{
+			get
+			{
+				return this.context;
+			}
+		}
+
 
 		/// <summary>
 		/// Creates a root data view starting with the specified root entity.

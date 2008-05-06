@@ -96,6 +96,11 @@ namespace Epsitec.Common.Reporting
 				throw new System.NotImplementedException ();
 			}
 
+			public virtual string GetFirstChildId()
+			{
+				return null;
+			}
+			
 			public virtual string GetNextChildId(string childId)
 			{
 				return null;

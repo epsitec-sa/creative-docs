@@ -63,6 +63,18 @@ namespace Epsitec.Common.Reporting.DataItems
 		}
 
 
+		public override string GetFirstChildId()
+		{
+			if (this.GenerateColumnIds ())
+			{
+				return this.columnIds[0];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public override string GetNextChildId(string childId)
 		{
 			if (this.GenerateColumnIds ())
@@ -121,7 +133,7 @@ namespace Epsitec.Common.Reporting.DataItems
 				}
 			}
 			
-			return true;
+			return this.columnIds.Count > 0;
 		}
 
 
