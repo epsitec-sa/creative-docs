@@ -96,6 +96,16 @@ namespace Epsitec.Common.Reporting
 				throw new System.NotImplementedException ();
 			}
 
+			public virtual string GetNextChildId(string childId)
+			{
+				return null;
+			}
+
+			public virtual string GetPrevChildId(string childId)
+			{
+				return null;
+			}
+
 			#region IDataItem Members
 
 			/// <summary>

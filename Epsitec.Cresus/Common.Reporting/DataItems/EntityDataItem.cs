@@ -50,6 +50,83 @@ namespace Epsitec.Common.Reporting.DataItems
 			}
 		}
 
+		/// <summary>
+		/// Gets the columns definiton, stored as a vector setting.
+		/// </summary>
+		/// <value>The columns.</value>
+		public Settings.VectorSetting Columns
+		{
+			get
+			{
+				return this.vectorSetting;
+			}
+		}
+
+
+		public override string GetNextChildId(string childId)
+		{
+			if (this.GenerateColumnIds ())
+			{
+				bool found = false;
+
+				foreach (string id in this.columnIds)
+				{
+					if (found)
+					{
+						return id;
+					}
+					found = (id == childId);
+				}
+			}
+
+			return null;
+		}
+
+		public override string GetPrevChildId(string childId)
+		{
+			if (this.GenerateColumnIds ())
+			{
+				string prev = null;
+
+				foreach (string id in this.columnIds)
+				{
+					if (id == childId)
+					{
+						return prev;
+					}
+					prev = id;
+				}
+			}
+
+			return null;
+		}
+
+
+		private bool GenerateColumnIds()
+		{
+			if (this.columnIds == null)
+			{
+				Settings.VectorSetting setting = this.Columns;
+
+				IStructuredData     data     = this.entity;
+				IEnumerable<string> fieldIds = data.GetValueIds ();
+
+				if (setting != null)
+				{
+					this.columnIds = setting.CreateList (fieldIds);
+				}
+				else
+				{
+					this.columnIds = new List<string> (fieldIds);
+				}
+			}
+			
+			return true;
+		}
+
+
 		private readonly AbstractEntity entity;
+		private Settings.VectorSetting vectorSetting;
+		private List<string> columnIds;
 	}
 }

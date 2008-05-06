@@ -103,6 +103,32 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("table", navigator.CurrentDataPath);
 			Assert.AreEqual (2, Collection.Count (navigator.CurrentViewStack));
 			Assert.AreEqual (DataItemType.Table, navigator.CurrentDataItem.ItemType);
+
+			navigator.NavigateTo ("table.@0");
+
+			Assert.AreEqual ("table.@0", navigator.CurrentDataPath);
+			Assert.AreEqual (3, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Vector, navigator.CurrentDataItem.ItemType);
+
+			navigator.NavigateToRelative ("1st_name");
+
+			Assert.AreEqual ("table.@0.1st_name", navigator.CurrentDataPath);
+			Assert.AreEqual (4, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
+			Assert.AreEqual ("Pierre", navigator.CurrentDataItem.ObjectValue);
+
+			navigator.NavigateToNext ();
+			
+			Assert.AreEqual ("table.@0.2nd_name", navigator.CurrentDataPath);
+			Assert.AreEqual (4, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Value, navigator.CurrentDataItem.ItemType);
+			Assert.AreEqual ("Arnaud", navigator.CurrentDataItem.ObjectValue);
+
+			navigator.NavigateTo ("table");
+
+			Assert.AreEqual ("table", navigator.CurrentDataPath);
+			Assert.AreEqual (2, Collection.Count (navigator.CurrentViewStack));
+			Assert.AreEqual (DataItemType.Table, navigator.CurrentDataItem.ItemType);
 		}
 	}
 }

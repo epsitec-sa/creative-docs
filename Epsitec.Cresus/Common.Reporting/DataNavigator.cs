@@ -110,15 +110,37 @@ namespace Epsitec.Common.Reporting
 
 			return this.IsValid;
 		}
-		
+
+		public bool NavigateToSibling(string path)
+		{
+			ItemState state = this.itemStack.Pop ();
+			
+			DataView.GetDataItem (state.ParentItem.DataView, path, item => this.itemStack.Push (this.CreateItemState (item)));
+
+			return this.IsValid;
+		}
+
 		public bool NavigateToNext()
 		{
 			if (this.IsValid)
 			{
-				//	TODO: ...
+				ItemState state = this.CurrentItemState;
+				string sibling = null;
+
+				switch (state.ParentItem.ItemType)
+				{
+					case DataItemType.Table:
+					case DataItemType.Vector:
+						sibling = state.ParentItem.GetNextChildId (state.Name);
+						if (sibling != null)
+						{
+							return this.NavigateToSibling (sibling);
+						}
+						break;
+				}
 			}
 
-			return this.IsValid;
+			return false;
 		}
 
 		public bool NavigateToPrevious()
@@ -211,11 +233,36 @@ namespace Epsitec.Common.Reporting
 				}
 			}
 
+			public DataView.DataItem ParentItem
+			{
+				get
+				{
+					DataView view = this.item.ParentDataView;
+					
+					if (view == null)
+					{
+						return DataItems.EmptyDataItem.Value;
+					}
+					else
+					{
+						return view.Item;
+					}
+				}
+			}
+
 			public string Path
 			{
 				get
 				{
 					return DataView.GetPath (this.item);
+				}
+			}
+
+			public string Name
+			{
+				get
+				{
+					return this.item.Id;
 				}
 			}
 

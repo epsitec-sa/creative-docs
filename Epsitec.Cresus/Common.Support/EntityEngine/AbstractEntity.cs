@@ -527,6 +527,28 @@ namespace Epsitec.Common.Support.EntityEngine
 			return (this.OriginalValues ?? this.ModifiedValues) as IStructuredTypeProvider;
 		}
 
+		internal IStructuredType GetSyntheticStructuredType(EntityContext context)
+		{
+			HashSet<string> ids = new HashSet<string> ();
+
+			context.FillValueStoreDataIds (this.OriginalValues, ids);
+			context.FillValueStoreDataIds (this.ModifiedValues, ids);
+
+			List<string> list = new List<string> (ids);
+			list.Sort ();
+
+			StructuredType type = new StructuredType (StructuredTypeClass.Entity);
+			int rank = 0;
+
+			foreach (string id in list)
+			{
+				StructuredTypeField field = new StructuredTypeField (id, null, Druid.Empty, rank++);
+				type.Fields.Add (field);
+			}
+
+			return type;
+		}
+
 		protected virtual object DynamicGetField(string id)
 		{
 			PropertyGetter getter = this.context.FindPropertyGetter (this, id);

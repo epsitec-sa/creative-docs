@@ -33,5 +33,8 @@ namespace Epsitec.Common.Reporting.DataItems
 				return null;
 			}
 		}
+
+
+		public static readonly EmptyDataItem Value = new EmptyDataItem ();
 	}
 }

@@ -172,6 +172,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new Data (type);
 		}
 
+		internal void FillValueStoreDataIds(IValueStore store, HashSet<string> ids)
+		{
+			Data data = store as Data;
+
+			if (data != null)
+			{
+				foreach (string id in data.GetIds ())
+				{
+					ids.Add (id);
+				}
+			}
+		}
+
 		internal IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
 		{
 			if (entity == null)
@@ -229,15 +242,23 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.EnsureCorrectThread ();
 
 			IStructuredTypeProvider provider = entity.GetStructuredTypeProvider ();
+			IStructuredType type;
 
 			if (provider == null)
 			{
-				return this.GetStructuredType (entity.GetEntityStructuredTypeId ());
+				type = this.GetStructuredType (entity.GetEntityStructuredTypeId ());
 			}
 			else
 			{
-				return provider.GetStructuredType ();
+				type = provider.GetStructuredType ();
 			}
+
+			if (type == null)
+			{
+				type = entity.GetSyntheticStructuredType (this);
+			}
+
+			return type;
 		}
 
 		internal StructuredTypeField GetStructuredTypeField(AbstractEntity entity, string fieldId)

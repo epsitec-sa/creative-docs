@@ -74,6 +74,38 @@ namespace Epsitec.Common.Reporting.DataItems
 		{
 			return this.collection[index];
 		}
+
+		public override string GetNextChildId(string childId)
+		{
+			int index;
+
+			if ((childId == null) ||
+				(childId.Length < 2) ||
+				(childId[0] != '@') ||
+				(int.TryParse (childId.Substring (1), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out index) == false) ||
+				(index+1 >= this.Count))
+			{
+				return null;
+			}
+
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "@{0}", index+1);
+		}
+
+		public override string GetPrevChildId(string childId)
+		{
+			int index;
+
+			if ((childId == null) ||
+				(childId.Length < 2) ||
+				(childId[0] != '@') ||
+				(int.TryParse (childId.Substring (1), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out index) == false) ||
+				(index < 1))
+			{
+				return null;
+			}
+
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "@{0}", index-1);
+		}
 		
 		private readonly System.Collections.IList collection;
 	}

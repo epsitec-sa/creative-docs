@@ -123,6 +123,7 @@ namespace Epsitec.Common.Reporting
 
 			node1.SetField<string> ("name", "node 1");
 			node2.SetField<string> ("name", "node 2");
+			node2.SetField<string> ("xyz", "other data");
 			
 			ICollection<GenericEntity> nodes = root.GetFieldCollection<GenericEntity> ("nodes");
 
@@ -153,6 +154,18 @@ namespace Epsitec.Common.Reporting
 			Assert.AreEqual ("nodes.@0", DataView.GetPath (item2));
 			Assert.AreEqual ("nodes.@1", DataView.GetPath (item3));
 			Assert.AreEqual ("nodes.@1.name", DataView.GetPath (item4));
+
+			Assert.AreEqual ("@1", item1.GetNextChildId ("@0"));
+			Assert.AreEqual (null, item1.GetNextChildId ("@1"));
+			Assert.AreEqual ("@0", item1.GetPrevChildId ("@1"));
+			Assert.AreEqual (null, item1.GetPrevChildId ("@0"));
+			Assert.AreEqual (null, item2.GetNextChildId ("name"));
+			Assert.AreEqual (null, item2.GetPrevChildId ("name"));
+			
+			Assert.AreEqual ("xyz",  item3.GetNextChildId ("name"));
+			Assert.AreEqual (null,   item3.GetPrevChildId ("name"));
+			Assert.AreEqual (null,   item3.GetNextChildId ("xyz"));
+			Assert.AreEqual ("name", item3.GetPrevChildId ("xyz"));
 		}
 	}
 }
