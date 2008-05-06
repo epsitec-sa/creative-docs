@@ -143,7 +143,16 @@ namespace Epsitec.Common.Reporting
 			{
 				get
 				{
-					throw new System.NotImplementedException ();
+					object value = this.ObjectValue;
+
+					if (value is FormattedText)
+					{
+						return value.ToString ();
+					}
+					else
+					{
+						return FormattedText.Escape (value.ToString ());
+					}
 				}
 			}
 

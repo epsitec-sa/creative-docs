@@ -47,7 +47,7 @@ namespace Epsitec.Common.Reporting.Settings
 		/// using formatted text.
 		/// </summary>
 		/// <value>The title, as formatted text.</value>
-		public string Title
+		public FormattedText Title
 		{
 			get;
 			set;

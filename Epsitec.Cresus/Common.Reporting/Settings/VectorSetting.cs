@@ -150,7 +150,7 @@ namespace Epsitec.Common.Reporting.Settings
 		/// </summary>
 		/// <param name="valueId">The value id.</param>
 		/// <value>The title, as formatted text.</value>
-		public string GetValueTitle(string valueId)
+		public FormattedText GetValueTitle(string valueId)
 		{
 			this.RegenerateCacheIfNeeded ();
 
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Reporting.Settings
 			}
 			else
 			{
-				return null;
+				return FormattedText.Empty;
 			}
 		}
 

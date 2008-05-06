@@ -60,7 +60,7 @@ namespace Epsitec.Common.Reporting.DataItems
 		/// formatted text.
 		/// </summary>
 		/// <value>The title, as formatted text.</value>
-		public string Title
+		public FormattedText Title
 		{
 			get
 			{
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Reporting.DataItems
 			return item;
 		}
 
-		private IEnumerable<string> GetColumnTitles()
+		private IEnumerable<FormattedText> GetColumnTitles()
 		{
 			foreach (var item in this.Columns.Values)
 			{
@@ -110,6 +110,6 @@ namespace Epsitec.Common.Reporting.DataItems
 		}
 
 		private readonly Settings.VectorSetting vectorSetting;
-		private readonly string title;
+		private readonly FormattedText title;
 	}
 }

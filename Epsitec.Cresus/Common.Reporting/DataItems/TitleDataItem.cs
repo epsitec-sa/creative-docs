@@ -21,8 +21,8 @@ namespace Epsitec.Common.Reporting.DataItems
 		/// <param name="context">The context.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="itemClass">The item class.</param>
-		public TitleDataItem(DataViewContext context, string title, DataItemClass itemClass)
-			: base (context, new List<string> () { title })
+		public TitleDataItem(DataViewContext context, FormattedText title, DataItemClass itemClass)
+			: base (context, new List<FormattedText> () { title })
 		{
 			this.ItemClass = itemClass;
 		}
@@ -33,8 +33,8 @@ namespace Epsitec.Common.Reporting.DataItems
 		/// <param name="context">The context.</param>
 		/// <param name="titles">The titles.</param>
 		/// <param name="itemClass">The item class.</param>
-		public TitleDataItem(DataViewContext context, IEnumerable<string> titles, DataItemClass itemClass)
-			: base (context, new List<string> (titles))
+		public TitleDataItem(DataViewContext context, IEnumerable<FormattedText> titles, DataItemClass itemClass)
+			: base (context, new List<FormattedText> (titles))
 		{
 			this.ItemClass = itemClass;
 		}

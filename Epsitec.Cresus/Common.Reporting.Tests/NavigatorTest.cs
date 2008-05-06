@@ -223,21 +223,66 @@ namespace Epsitec.Common.Reporting
 			//	Try navigating to the child of a virtual node
 			Assert.IsTrue (navigator.NavigateToFirstChild ());
 			Assert.AreEqual ("table.%Foot2.@0", navigator.CurrentDataPath);
-			Assert.AreEqual ("Nom", navigator.CurrentDataItem.ObjectValue);
+			Assert.AreEqual ("Nom", navigator.CurrentDataItem.Value);
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.AreEqual ("table.%Foot2.@1", navigator.CurrentDataPath);
-			Assert.AreEqual ("Prénom", navigator.CurrentDataItem.ObjectValue);
+			Assert.AreEqual ("Prénom", navigator.CurrentDataItem.Value);
 			Assert.IsTrue (navigator.NavigateToParent ());
 			Assert.IsTrue (navigator.NavigateToNext ());
 			Assert.IsTrue (navigator.NavigateToFirstChild ());
 			Assert.AreEqual ("table.%Foot1.@0", navigator.CurrentDataPath);
-			Assert.AreEqual ("Employés", navigator.CurrentDataItem.ObjectValue);
+			Assert.AreEqual ("Employés", navigator.CurrentDataItem.Value);
+		}
+
+
+		[Test]
+		public void Check05SimpleTableWithSettingsTraverse()
+		{
+			DataNavigator navigator = NavigatorTest.CreateSimpleTableNavigator ();
+			DataViewContext context = navigator.Context;
+
+			navigator.EnableSyntheticNodes = true;
+
+			Settings.VectorSetting tableVectorSetting = new Settings.VectorSetting ()
+			{
+				new Settings.VectorValueSetting () { Id = "2nd_name", Title = "Nom" },
+				new Settings.VectorValueSetting () { Id = "1st_name", Title = "Prénom" },
+			};
+
+			Settings.CollectionSetting tableCollectionSetting = new Settings.CollectionSetting ()
+			{
+				Title = "Employés"
+			};
+
+			context.DefineVectorSetting ("table", tableVectorSetting);
+			context.DefineCollectionSetting ("table", tableCollectionSetting);
+
+			navigator.NavigateTo ("table");
+
+			foreach (var item in navigator.Traverse ())
+			{
+				if (item.NodeType == DataNodeType.Value)
+				{
+					System.Console.Out.WriteLine ("{0} {1} {2} --> {3}", item.ItemType, item.ItemClass, item.NodeType, item.Value);
+				}
+				else
+				{
+					System.Console.Out.WriteLine ("{0} {1} {2}", item.ItemType, item.ItemClass, item.NodeType);
+				}
+			}
 		}
 
 		private static T Peek<T>(DataNavigator navigator, string id)
 		{
 			navigator.NavigateToRelative (id);
-			T value = (T) navigator.CurrentDataItem.ObjectValue;
+			object rawValue = navigator.CurrentDataItem.ObjectValue;
+			
+			if (typeof (T) == typeof (string))
+			{
+				rawValue = rawValue.ToString ();
+			}
+			
+			T value = (T) rawValue;
 			navigator.NavigateToParent ();
 			return value;
 		}

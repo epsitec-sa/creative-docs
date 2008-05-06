@@ -31,7 +31,7 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
-		public IDataItem						CurrentDataItem
+		public DataView.DataItem				CurrentDataItem
 		{
 			get
 			{
@@ -74,6 +74,60 @@ namespace Epsitec.Common.Reporting
 			}
 		}
 
+		public IEnumerable<DataNode> Traverse()
+		{
+			int stackLevel = this.itemStack.Count;
+
+			while (true)
+			{
+				DataView.DataItem item = this.CurrentDataItem;
+				
+				switch (item.ItemType)
+				{
+					case DataItemType.Table:
+					case DataItemType.Vector:
+						
+						yield return new DataNode ()
+						{
+							DataItem = item,
+							NodeType = DataNodeType.BlockBegin
+						};
+						
+						this.NavigateToFirstChild ();
+						break;
+
+					default:
+
+						yield return new DataNode ()
+						{
+							DataItem = item,
+							NodeType = DataNodeType.Value
+						};
+
+						while (this.NavigateToNext () == false)
+						{
+							if (this.itemStack.Count == stackLevel)
+							{
+								yield break;
+							}
+							
+							this.NavigateToParent ();
+							
+							yield return new DataNode ()
+							{
+								DataItem = item,
+								NodeType = DataNodeType.BlockEnd
+							};
+
+							if (this.itemStack.Count == stackLevel)
+							{
+								yield break;
+							}
+						}
+						break;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Resets this navigator and starts again at the root.
