@@ -176,12 +176,14 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator ==(Size a, Size b)
 		{
-			return (a.width == b.width) && (a.height == b.height);
+			return ((double.IsNaN (a.width ) && double.IsNaN (b.width )) || (a.width  == b.width )) &&
+				   ((double.IsNaN (a.height) && double.IsNaN (b.height)) || (a.height == b.height));
 		}
 		
 		public static bool operator !=(Size a, Size b)
 		{
-			return (a.width != b.width) || (a.height != b.height);
+			return ((!double.IsNaN (a.width ) || !double.IsNaN (b.width )) && (a.width  != b.width )) ||
+				   ((!double.IsNaN (a.height) || !double.IsNaN (b.height)) && (a.height != b.height));
 		}
 		
 		
