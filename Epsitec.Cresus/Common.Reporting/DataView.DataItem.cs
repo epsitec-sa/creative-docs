@@ -139,7 +139,11 @@ namespace Epsitec.Common.Reporting
 				get;
 			}
 
-			public virtual string Value
+			/// <summary>
+			/// Gets the value of the item as a formatted string.
+			/// </summary>
+			/// <value>The value represented as a formatted string.</value>
+			public string Value
 			{
 				get
 				{
@@ -147,10 +151,17 @@ namespace Epsitec.Common.Reporting
 
 					if (value is FormattedText)
 					{
+						//	This is already a formatted string; we can simply return
+						//	the text.
+						
 						return value.ToString ();
 					}
 					else
 					{
+						//	This is a raw string; returning it "as is" might lead to
+						//	trouble in the consumer, if it is expecting formatting.
+						//	Therefore, we escape the special characters.
+
 						return FormattedText.Escape (value.ToString ());
 					}
 				}

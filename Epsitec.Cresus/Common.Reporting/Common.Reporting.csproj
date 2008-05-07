@@ -61,7 +61,6 @@
     <Compile Include="DataItemType.cs" />
     <Compile Include="DataItemClass.cs" />
     <Compile Include="DataView.cs" />
-    <Compile Include="FormattedText.cs" />
     <Compile Include="IDataItem.cs" />
     <Compile Include="DataNavigator.cs" />
     <Compile Include="CellSplitInfo.cs" />

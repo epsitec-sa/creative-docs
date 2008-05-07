@@ -162,7 +162,7 @@ namespace Epsitec.Common.Reporting.Settings
 			}
 			else
 			{
-				return FormattedText.Empty;
+				return FormattedText.Null;
 			}
 		}
 
