@@ -573,4 +573,6 @@
   <data name="Action.DeleteObject" id="KK2">Supprimer</data>
   <data name="Entities.Button.ChangePrivate" id="KM2">*</data>
   <data name="Dialog.EntityField.Title" id="KR2">Paramètres du champ</data>
+  <data name="Viewers.Types.String.Formatted" id="KS2">Texte formaté</data>
+  <data name="Viewers.Types.Summary.Formatted" id="KT2">Formaté</data>
 </bundle>

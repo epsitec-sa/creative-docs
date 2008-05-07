@@ -2150,6 +2150,8 @@ namespace Epsitec.Common.Designer
 						public static string Default { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554576)); } }
 						//	designer:str/30018
 						public static string FixedLength { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (257)); } }
+						//	designer:str/30KS2
+						public static string Formatted { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544412)); } }
 						//	designer:str/30047
 						public static string Max { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (228)); } }
 						//	designer:str/30037
@@ -2190,6 +2192,8 @@ namespace Epsitec.Common.Designer
 						public static string Default { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (33554577)); } }
 						//	designer:str/300K8
 						public static string Fix { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (276)); } }
+						//	designer:str/30KT2
+						public static string Formatted { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544413)); } }
 						//	designer:str/300D8
 						public static string Max { get { return global::Epsitec.Common.Designer.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (269)); } }
 						//	designer:str/300S8

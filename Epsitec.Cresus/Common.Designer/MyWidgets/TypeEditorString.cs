@@ -38,6 +38,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.checkMultilingual.Dock = DockStyle.Fill;
 			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
 
+			this.groupFormatted = new ResetBox(this);
+			this.groupFormatted.IsPatch = this.module.IsPatch;
+			this.groupFormatted.Dock = DockStyle.StackBegin;
+			this.groupFormatted.Margins = new Margins(0, 0, 0, 0);
+			this.groupFormatted.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+
+			this.checkFormatted = new CheckButton(this.groupFormatted.GroupBox);
+			this.checkFormatted.AutoToggle = false;
+			this.checkFormatted.Text = Res.Strings.Viewers.Types.String.Formatted;
+			this.checkFormatted.Dock = DockStyle.Fill;
+			this.checkFormatted.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Default, this, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
@@ -54,11 +66,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 				this.groupMultilingual.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupFormatted.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
 
 				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
 				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
+				this.checkFormatted.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
 			}
 			
 			base.Dispose(disposing);
@@ -109,6 +123,16 @@ namespace Epsitec.Common.Designer.MyWidgets
 				if (multi)
 				{
 					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Multi);
+				}
+			}
+
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseFormattedText);
+			if (!UndefinedValue.IsUndefinedValue(value))
+			{
+				bool formatted = (bool) value;
+				if (formatted)
+				{
+					this.PutSummaryValue(builder, Res.Strings.Viewers.Types.Summary.Formatted);
 				}
 			}
 
@@ -194,6 +218,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.checkMultilingual.ActiveState = multi ? ActiveState.Yes : ActiveState.No;
 			}
 
+			value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseFormattedText, out usesOriginalData);
+			this.ColorizeResetBox(this.groupFormatted, source, usesOriginalData);
+			if (UndefinedValue.IsUndefinedValue(value))
+			{
+				this.checkFormatted.ActiveState = ActiveState.No;
+			}
+			else
+			{
+				bool formatted = (bool) value;
+				this.checkFormatted.ActiveState = formatted ? ActiveState.Yes : ActiveState.No;
+			}
+
 			this.ignoreChange = false;
 		}
 
@@ -254,6 +290,18 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.structuredData.SetValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage, !multi);
 			}
 
+			if (sender == this.checkFormatted)
+			{
+				bool formatted = false;
+				object value = this.structuredData.GetValue(Support.Res.Fields.ResourceStringType.UseFormattedText);
+				if (!UndefinedValue.IsUndefinedValue(value))
+				{
+					formatted = (bool) value;
+				}
+
+				this.structuredData.SetValue(Support.Res.Fields.ResourceStringType.UseFormattedText, !formatted);
+			}
+
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -283,6 +331,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.UseMultilingualStorage);
 			}
 
+			if (button == this.groupFormatted.ResetButton)
+			{
+				this.ResetToOriginalValue(Support.Res.Fields.ResourceStringType.UseFormattedText);
+			}
+
 			this.OnContentChanged();
 			this.UpdateContent();
 			this.module.AccessTypes.SetLocalDirty();
@@ -295,6 +348,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		protected TextFieldEx					fieldMax;
 		protected ResetBox						groupMultilingual;
 		protected CheckButton					checkMultilingual;
+		protected ResetBox						groupFormatted;
+		protected CheckButton					checkFormatted;
 		protected ResetBox						groupDefault;
 		protected TextFieldEx					fieldDefault;
 	}
