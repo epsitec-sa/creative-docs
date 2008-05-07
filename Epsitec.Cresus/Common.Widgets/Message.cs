@@ -364,8 +364,19 @@ namespace Epsitec.Common.Widgets
 		{
 			return Message.last_message;
 		}
-		
-		
+
+
+		public void CopyFrom(Message other)
+		{
+			this.type = other.type;
+			this.button = other.button;
+			this.button_down_count = other.button_down_count;
+			this.wheel = other.wheel;
+			this.modifiers = other.modifiers;
+			this.key_code = other.key_code;
+			this.key_char = other.key_char;
+		}
+
 		public override string ToString()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -532,8 +543,8 @@ namespace Epsitec.Common.Widgets
 					int w_param = (int) msg.WParam;
 					switch (w_param & 0x00ff0000)
 					{
-						case 1:	return System.Windows.Forms.MouseButtons.XButton1;
-						case 2:	return System.Windows.Forms.MouseButtons.XButton2;
+						case 0x00010000: return System.Windows.Forms.MouseButtons.XButton1;
+						case 0x00020000: return System.Windows.Forms.MouseButtons.XButton2;
 					}
 					break;
 			}

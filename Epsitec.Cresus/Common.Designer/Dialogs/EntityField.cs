@@ -387,6 +387,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.glyphFieldName.GlyphShape = ok ? GlyphShape.Accept : GlyphShape.Reject;
+			this.editFieldName.SetError(!ok);
 			ToolTip.Default.SetToolTip(this.glyphFieldName, err);
 		}
 

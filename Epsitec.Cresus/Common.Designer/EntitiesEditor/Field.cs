@@ -1193,7 +1193,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				//	Le type est un type simple, pas une entité. Cela ne peut donc
 				//	pas être une relation !
-				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
+				//	TODO: vérifier les implications; l'assertion est fausse, car dans les
+				//	ressources de Common.Support, il y a effectivement des collections de
+				//	types simples !
+//-				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
 			}
 			return (type == null) ? "" : type.Name;
 		}
