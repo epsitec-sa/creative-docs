@@ -117,6 +117,7 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseDown:
 						message.CopyFrom (Message.FromKeyEvent (MessageType.KeyDown, new System.Windows.Forms.KeyEventArgs (alt | key)));
 						break;
+					
 					case MessageType.MouseUp:
 						message.CopyFrom (Message.FromKeyEvent (MessageType.KeyUp, new System.Windows.Forms.KeyEventArgs (alt | key)));
 						break;

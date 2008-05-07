@@ -578,10 +578,12 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 					case TypeCode.String:
 						object useMultilingualStorage = data.GetValue (Res.Fields.ResourceStringType.UseMultilingualStorage);
+						object useFormattedText       = data.GetValue (Res.Fields.ResourceStringType.UseFormattedText);
 
 						if ((UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.MinimumLength))) &&
 							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.MaximumLength))) &&
 							((UndefinedValue.IsUndefinedValue (useMultilingualStorage)) || ((bool) useMultilingualStorage == false)) &&
+							((UndefinedValue.IsUndefinedValue (useFormattedText)) || ((bool) useFormattedText == false)) &&
 							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.DefaultSearchBehavior))) &&
 							(UndefinedValue.IsUndefinedValue (data.GetValue (Res.Fields.ResourceStringType.DefaultComparisonBehavior))))
 						{
@@ -685,6 +687,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 
 				case TypeCode.String:
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.UseMultilingualStorage);
+					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.UseFormattedText);
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.MinimumLength);
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.MaximumLength);
 					AbstractCaptionResourceAccessor.CopyDeltaValue (rawData, patchData, Res.Fields.ResourceStringType.DefaultSearchBehavior);
@@ -1065,6 +1068,13 @@ namespace Epsitec.Common.Support.ResourceAccessors
 				type.DefineUseMultilingualStorage ((bool) value);
 			}
 
+			value = data.GetValue (Res.Fields.ResourceStringType.UseFormattedText);
+
+			if (!UndefinedValue.IsUndefinedValue (value))
+			{
+				type.DefineUseFormattedText ((bool) value);
+			}
+
 			value = data.GetValue (Res.Fields.ResourceStringType.MinimumLength);
 
 			if (!UndefinedValue.IsUndefinedValue (value))
@@ -1306,6 +1316,10 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			if (caption.ContainsLocalValue (StringType.UseMultilingualStorageProperty))
 			{
 				data.SetValue (Res.Fields.ResourceStringType.UseMultilingualStorage, type.UseMultilingualStorage);
+			}
+			if (caption.ContainsLocalValue (StringType.UseFormattedTextProperty))
+			{
+				data.SetValue (Res.Fields.ResourceStringType.UseFormattedText, type.UseFormattedText);
 			}
 			if (caption.ContainsLocalValue (StringType.DefaultSearchBehaviorProperty))
 			{

@@ -50,6 +50,15 @@ namespace Epsitec.Common.Types
 			get;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether the strings store formatted text.
+		/// </summary>
+		/// <value><c>true</c> if the strings store formatted text; otherwise, <c>false</c>.</value>
+		bool UseFormattedText
+		{
+			get;
+		}
+
 
 		/// <summary>
 		/// Gets the default search behavior for this string type.

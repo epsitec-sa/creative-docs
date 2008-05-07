@@ -91,6 +91,14 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public bool								UseFormattedText
+		{
+			get
+			{
+				return (bool) this.Caption.GetValue (StringType.UseFormattedTextProperty);
+			}
+		}
+
 		public StringSearchBehavior				DefaultSearchBehavior
 		{
 			get
@@ -193,6 +201,18 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void DefineUseFormattedText(bool value)
+		{
+			if (value)
+			{
+				this.Caption.SetValue (StringType.UseFormattedTextProperty, value);
+			}
+			else
+			{
+				this.Caption.ClearValue (StringType.UseFormattedTextProperty);
+			}
+		}
+
 		public void DefineDefaultSearchBehavior(StringSearchBehavior value)
 		{
 			StringType.SetDefaultSearchBehavior (this.Caption, value);
@@ -257,6 +277,7 @@ namespace Epsitec.Common.Types
 		
 		public static readonly DependencyProperty UseFixedLengthStorageProperty  = DependencyProperty.RegisterAttached ("UseFixedLengthStorage",  typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty UseMultilingualStorageProperty = DependencyProperty.RegisterAttached ("UseMultilingualStorage", typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty UseFormattedTextProperty       = DependencyProperty.RegisterAttached ("UseFormattedText",       typeof (bool), typeof (StringType), new DependencyPropertyMetadata (false));
 
 		public static readonly DependencyProperty DefaultSearchBehaviorProperty     = DependencyProperty.RegisterAttached ("DefaultSearchBehavior", typeof (StringSearchBehavior), typeof (StringType), new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
 		public static readonly DependencyProperty DefaultComparisonBehaviorProperty = DependencyProperty.RegisterAttached ("DefaultComparisonBehavior", typeof (StringComparisonBehavior), typeof (StringType), new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
