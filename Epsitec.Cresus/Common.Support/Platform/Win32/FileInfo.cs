@@ -222,7 +222,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		private static IEnumerable<FolderItem> GetRecentFolderItemsHack(FolderQueryMode mode, System.Predicate<FileFilterInfo> filter)
 		{
-			string paths = System.IO.Directory.GetFiles (FileInfo.recentFolderItem.FullPath);
+			string[] paths = System.IO.Directory.GetFiles (FileInfo.recentFolderItem.FullPath);
 			
 			foreach (string path in paths)
 			{
