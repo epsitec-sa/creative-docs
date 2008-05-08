@@ -381,6 +381,10 @@ namespace Epsitec.Common.Types
 				{
 					return true;
 				}
+				else if (type == typeof (FormattedText))
+				{
+					return true;
+				}
 				else
 				{
 					return false;

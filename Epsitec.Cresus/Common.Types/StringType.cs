@@ -52,7 +52,14 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return typeof (System.String);
+				if (this.UseFormattedText)
+				{
+					return typeof (FormattedText);
+				}
+				else
+				{
+					return typeof (string);
+				}
 			}
 		}
 		#endregion

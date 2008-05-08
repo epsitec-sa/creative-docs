@@ -101,6 +101,16 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static bool operator==(FormattedText a, FormattedText b)
+		{
+			return a.text == b.text;
+		}
+
+		public static bool operator!=(FormattedText a, FormattedText b)
+		{
+			return a.text != b.text;
+		}
+
 
 		/// <summary>
 		/// Performs an implicit conversion from type <see cref="string"/> to
@@ -112,6 +122,35 @@ namespace Epsitec.Common.Types
 		public static implicit operator FormattedText(string text)
 		{
 			return new FormattedText (FormattedText.Escape (text));
+		}
+
+		/// <summary>
+		/// Casts the specified value to a string. If the value is a formatted
+		/// text, then it will be unwrapped and the corresponding string will
+		/// be returned.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <exception cref="System.InvalidCastException">Thrown if the value is neither a string nor a formatted text object.</exception>
+		/// <returns>The value cast to a string.</returns>
+		public static string CastToString(object value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+			
+			if (value is FormattedText)
+			{
+				FormattedText text = (FormattedText) value;
+				return text.ToString ();
+			}
+			
+			if (value is string)
+			{
+				return value as string;
+			}
+			
+			throw new System.InvalidCastException (string.Format ("Cannot cast value from {0} to string", value.GetType ().Name));
 		}
 
 		/// <summary>
