@@ -6,6 +6,13 @@ namespace Epsitec.Common.Support
 	[TestFixture]
 	public class FileInfoTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
+		}
+		
 		[Test]
 		public void CheckCreateFolderItem1()
 		{
@@ -176,12 +183,15 @@ namespace Epsitec.Common.Support
 				}
 			}
 
-			Assert.AreEqual (parent1, parent2);
-			Assert.AreEqual (desktop, parent1);
-			Assert.AreEqual (desktop, parent2);
+			//	There is no guarantee that there is a computer or a document folder on
+			//	the desktop of the test machine...
 
-			Assert.IsTrue (okComputer);
-			Assert.IsTrue (okDocuments);
+			if (okDocuments && okComputer)
+			{
+				Assert.AreEqual (parent1, parent2);
+				Assert.AreEqual (desktop, parent1);
+				Assert.AreEqual (desktop, parent2);
+			}
 		}
 
 		[Test]

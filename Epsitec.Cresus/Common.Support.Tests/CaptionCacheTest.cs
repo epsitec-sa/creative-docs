@@ -14,6 +14,8 @@ namespace Epsitec.Common.Support
 		[SetUp]
 		public void SetUp()
 		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+			
 			this.manager_en = new ResourceManager (@"S:\Epsitec.Cresus\Common.Support.Tests");
 			this.manager_en.DefineDefaultModuleName ("Test");
 			this.manager_en.ActivePrefix = "file";

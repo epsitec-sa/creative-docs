@@ -6,11 +6,12 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void Initialize()
 		{
-			Widgets.Widget.Initialize ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
+			Assert.AreEqual (System.Threading.ApartmentState.STA, System.Threading.Thread.CurrentThread.ApartmentState);
 		}
+
 		
 		[Test]
-		[Ignore("Clipboard access not supported in NUnit")]
 		public void CheckGetData()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
@@ -71,7 +72,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		[Test]
-		[Ignore ("Clipboard access not supported in NUnit")]
 		public void CheckReadHtmlFragment()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
@@ -89,7 +89,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		[Test]
-		[Ignore ("Clipboard access not supported in NUnit")]
 		public void CheckReadHtmlDocument()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
@@ -107,7 +106,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		[Test]
-		[Ignore ("Clipboard access not supported in NUnit")]
 		public void CheckIsCompatible()
 		{
 			Clipboard.ReadData data = Clipboard.GetData ();
@@ -120,7 +118,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		[Test]
-		[Ignore ("Clipboard access not supported in NUnit")]
 		public void CheckWriteHtmlFragment()
 		{
 			Clipboard.WriteData data = new Clipboard.WriteData ();

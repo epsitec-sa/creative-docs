@@ -5,6 +5,13 @@ namespace Epsitec.Common.Support
 	[TestFixture]
 	public class FileManagerTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
+		}
+		
 		[Test]
 		public void _AutomaticRun()
 		{
@@ -123,7 +130,9 @@ namespace Epsitec.Common.Support
 
 			bool ok = false;
 
-			foreach (FolderItem item in FileManager.GetFolderItems (FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons), FolderQueryMode.NoIcons))
+			FolderItem folderItem = FileManager.GetFolderItem (FolderId.Recent, FolderQueryMode.NoIcons);
+			
+			foreach (FolderItem item in FileManager.GetFolderItems (folderItem, FolderQueryMode.NoIcons))
 			{
 				System.Console.Out.WriteLine ("{0}", item);
 
