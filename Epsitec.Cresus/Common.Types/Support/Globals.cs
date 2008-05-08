@@ -237,6 +237,7 @@ namespace Epsitec.Common.Support
 
 					string debugSuffix   = @"\bin\Debug";
 					string releaseSuffix = @"\bin\Release";
+					string nunitSuffix   = @"\nunit";
 
 					if (path.EndsWith (debugSuffix))
 					{
@@ -245,6 +246,10 @@ namespace Epsitec.Common.Support
 					else if (path.EndsWith (releaseSuffix))
 					{
 						path = path.Substring (0, path.Length - releaseSuffix.Length);
+					}
+					else if (path.Contains (nunitSuffix))
+					{
+						path = path.Substring (0, path.IndexOf (nunitSuffix));
 					}
 
 					return path;

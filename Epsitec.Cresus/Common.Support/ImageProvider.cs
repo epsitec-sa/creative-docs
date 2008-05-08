@@ -35,7 +35,7 @@ namespace Epsitec.Common.Support
 			
 			ImageProvider.defaultProvider = new ImageProvider ();
 			ImageProvider.defaultPaths    = new string[4];
-			ImageProvider.defaultPaths[0] = System.Windows.Forms.Application.StartupPath;
+			ImageProvider.defaultPaths[0] = Globals.Directories.ExecutableRoot;
 			ImageProvider.defaultPaths[1] = path;
 			ImageProvider.defaultPaths[2] = other;
 			ImageProvider.defaultPaths[3] = "";
