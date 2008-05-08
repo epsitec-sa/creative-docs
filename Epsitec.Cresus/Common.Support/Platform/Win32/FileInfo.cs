@@ -207,7 +207,56 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 		public static IEnumerable<FolderItem> GetFolderItems(FolderItem path, FolderQueryMode mode, System.Predicate<FileFilterInfo> filter)
 		{
-			return FileInfo.GetFolderItems (path.Handle as PidlHandle, mode, false, filter);
+			//	Hack: on Vista-64, IShellFolder.EnumObjects does not return any result when
+			//	applied to CSIDL_RECENT. This is a dirty hack to get things working nevertheless.
+
+			if (path.FullPath == FileInfo.recentFolderItem.FullPath)
+			{
+				return FileInfo.GetRecentFolderItemsHack (mode, filter);
+			}
+			else
+			{
+				return FileInfo.GetFolderItems (path.Handle as PidlHandle, mode, false, filter);
+			}
+		}
+
+		private static IEnumerable<FolderItem> GetRecentFolderItemsHack(FolderQueryMode mode, System.Predicate<FileFilterInfo> filter)
+		{
+			string paths = System.IO.Directory.GetFiles (FileInfo.recentFolderItem.FullPath);
+			
+			foreach (string path in paths)
+			{
+				//	Keep only the .LNK files which are of interest here; the other files do not
+				//	belong to the list (i.e. desktop.ini has nothing to do in the recent document
+				//	list returned to the caller)
+
+				if (path.EndsWith (".lnk"))
+				{
+					if (filter == null)
+					{
+						yield return FileInfo.CreateFolderItem (path, mode);
+					}
+					else
+					{
+						FileFilterInfo filterInfo;
+
+						try
+						{
+							filterInfo = new FileFilterInfo (path, 0);
+						}
+						catch
+						{
+							filterInfo = FileFilterInfo.Empty;
+						}
+
+						if ((!filterInfo.IsEmpty) && 
+							(filter (filterInfo)))
+						{
+							yield return FileInfo.CreateFolderItem (path, mode);
+						}
+					}
+				}
+			}
 		}
 
 		private static IEnumerable<FolderItem> GetFolderItems(PidlHandle handle, FolderQueryMode mode, bool disposeHandleWhenFinished, System.Predicate<FileFilterInfo> filter)
@@ -733,6 +782,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 			string path;
 		}
 
+		private static FolderItem recentFolderItem = FileInfo.CreateFolderItem (FolderId.Recent, FolderQueryMode.NoIcons);
 		private static Dictionary<FolderKey, FolderItem> wellKnownFolders = new Dictionary<FolderKey, FolderItem> ();
 		private static bool wellKnownFoldersReady;
 		private static FileInfo instance = new FileInfo ();
