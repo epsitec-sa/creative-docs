@@ -6,6 +6,12 @@ namespace Epsitec.Common.Dialogs
 {
 	[TestFixture] public class FileDialogTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Assert.AreEqual (System.Threading.ApartmentState.STA, System.Threading.Thread.CurrentThread.ApartmentState);
+		}
+
 		[Test]
 		public void AutomatedTestEnvironment()
 		{

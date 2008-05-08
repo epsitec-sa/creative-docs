@@ -18,6 +18,13 @@ namespace Epsitec.Common.Dialogs
 	[TestFixture]
 	public class DialogDataTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookMetal");
+		}
+
 		[Test]
 		public void Check01DialogModeIsolated()
 		{
