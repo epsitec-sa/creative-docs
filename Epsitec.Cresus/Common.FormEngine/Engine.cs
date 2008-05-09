@@ -674,6 +674,7 @@ namespace Epsitec.Common.FormEngine
 			placeholder.TabIndex = this.tabIndex++;
 			placeholder.Name = guid.ToString();
 			placeholder.PreferredWidth = field.PreferredWidth;
+			placeholder.Verbosity = field.Verbosity;
 			this.ApplyTextStyle(placeholder, field);
 
 			//	Détermine si le placeholder doit être utilisé pour saisir du texte ou pour
