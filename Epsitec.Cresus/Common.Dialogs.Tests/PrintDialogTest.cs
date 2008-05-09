@@ -1,3 +1,4 @@
+
 using NUnit.Framework;
 
 namespace Epsitec.Common.Dialogs
@@ -11,7 +12,14 @@ namespace Epsitec.Common.Dialogs
 		{
 			Widgets.Widget.Initialize ();
 		}
-		
+
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+
 		
 		[Test] public void CheckPrinterSettingsInstalledPrinters()
 		{
@@ -39,6 +47,8 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.ToPage = 20;
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.FromPageToPage;
 			dialog.Document.PrinterSettings.Collate = false;
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Return);
 			
 			dialog.OpenDialog ();
 			
@@ -74,7 +84,9 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
 			dialog.Document.PrinterSettings.Collate = true;
 			dialog.Document.PrinterSettings.Copies = 3;
-			
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Return);
+
 			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Paper Source: {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSource.Name);
@@ -112,6 +124,14 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckShow3()
 		{
+			if (Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment)
+			{
+				//	Do nothing in automated test environment, since Adope PDF requires
+				//	user interaction.
+
+				return;
+			}
+
 			PrinterDocumentProperties dialog = new PrinterDocumentProperties ();
 			
 			dialog.AllowFromPageToPage = true;
@@ -127,7 +147,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.ToPage = 20;
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.FromPageToPage;
 			dialog.Document.PrinterSettings.Collate = false;
-			
+
 			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Paper Source: {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSource.Name);
@@ -137,7 +157,7 @@ namespace Epsitec.Common.Dialogs
 			System.Console.Out.WriteLine ("Output Port:  {0}", dialog.Document.PrinterSettings.OutputPort);
 			System.Console.Out.WriteLine ("Driver Name:  {0}", dialog.Document.PrinterSettings.DriverName);
 			System.Console.Out.WriteLine ("Collation:    {0}, {1} copies", dialog.Document.PrinterSettings.Collate, dialog.Document.PrinterSettings.Copies);
-			
+
 			dialog.OpenDialog ();
 		}
 		
@@ -192,6 +212,8 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.ToPage = 1;
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
 			dialog.Document.PrinterSettings.Collate = false;
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Return);
 			
 			dialog.OpenDialog ();
 			
@@ -211,7 +233,9 @@ namespace Epsitec.Common.Dialogs
 			dialog.AllowSelectedPages  = false;
 			
 			string[] printers = Printing.PrinterSettings.InstalledPrinters;
-			
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Return);
+
 			dialog.Document.PrinterSettings.MinimumPage = 1;
 			dialog.Document.PrinterSettings.MaximumPage = 1;
 			dialog.Document.PrinterSettings.FromPage = 1;

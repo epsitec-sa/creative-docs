@@ -5,7 +5,7 @@ namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	
-//	[System.Serializable]
+	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Color.Converter))]
 	
 	public struct Color

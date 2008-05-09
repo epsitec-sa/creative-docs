@@ -67,4 +67,6 @@
   <data id="AB">&lt;s:data id="_0" f:Labels="{Collection {Text 'Ordinal'}}" /&gt;</data>
   <data id="AC">&lt;s:data id="_0" f:Labels="{Collection {Text 'Ordinal, ignore case'}}" /&gt;</data>
   <data id="0K">&lt;s:data id="_0" f:Labels="{Collection {Text 'DRUID Type'}}" /&gt;</data>
+  <data id="AG">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text'}}" /&gt;</data>
+  <data id="AH">&lt;s:data id="_0" f:Labels="{Collection {Text 'Formatted text (multiline)'}}" /&gt;</data>
 </bundle>

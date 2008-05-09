@@ -213,7 +213,7 @@ namespace Epsitec.Common.Support.ResourceAccessors
 								}
 							}
 
-							System.Diagnostics.Debug.Assert (dataValue != null);
+//-							System.Diagnostics.Debug.Assert (dataValue != null);
 							
 							if (dataValue == null)
 							{

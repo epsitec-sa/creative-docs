@@ -61,6 +61,10 @@ namespace Epsitec.Common.Types
 				public static readonly global::Epsitec.Common.Types.StringType StringMultiline = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 1, 6));
 				//	designer:cap/10002
 				public static readonly global::Epsitec.Common.Types.OtherType SystemType = (global::Epsitec.Common.Types.OtherType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 64));
+				//	designer:cap/10AG
+				public static readonly global::Epsitec.Common.Types.StringType Text = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16));
+				//	designer:cap/10AH
+				public static readonly global::Epsitec.Common.Types.StringType TextMultiline = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17));
 				//	designer:cap/100I
 				public static readonly global::Epsitec.Common.Types.TimeType Time = (global::Epsitec.Common.Types.TimeType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 18));
 				//	designer:cap/100D1
@@ -102,12 +106,18 @@ namespace Epsitec.Common.Types
 				public static global::Epsitec.Common.Types.Caption Inherited { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 28)); } }
 				//	designer:cap/100R
 				public static global::Epsitec.Common.Types.Caption Local { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 27)); } }
+				//	designer:cap/10AD
+				public static global::Epsitec.Common.Types.Caption LocalOverride { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13)); } }
 			}
 			
 			public static class FieldOptions
 			{
 				//	designer:cap/100P
 				public static global::Epsitec.Common.Types.Caption None { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 25)); } }
+				//	designer:cap/10AE
+				public static global::Epsitec.Common.Types.Caption Nullable { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14)); } }
+				//	designer:cap/10AF
+				public static global::Epsitec.Common.Types.Caption PrivateRelation { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15)); } }
 			}
 			
 			public static class FieldRelation

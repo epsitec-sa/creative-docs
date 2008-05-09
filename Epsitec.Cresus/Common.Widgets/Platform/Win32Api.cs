@@ -21,7 +21,8 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static bool ReleaseCapture();
 		[DllImport ("User32.dll")]	internal extern static void SendMessage(System.IntPtr handle, uint msg, System.IntPtr w_param, System.IntPtr l_param);
 		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, uint msg, System.IntPtr w_param, System.IntPtr l_param);
-		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);		
+		[DllImport ("User32.dll")]	internal extern static bool PostThreadMessage(int threadId, uint msg, System.IntPtr w_param, System.IntPtr l_param);
+		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr FindWindow(string window_class, string window_title);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDesktopWindow();
@@ -47,6 +48,7 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRecoveryCallback(System.IntPtr pRecoveryCallback, System.IntPtr pvParameter, int dwPingInterval, int dwFlags);
 		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryInProgress(out bool pbCancelled);
 		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryFinished(bool bSuccess);
+		[DllImport ("Kernel32.dll")] internal extern static int GetCurrentThreadId();
 
 		internal static uint RegisterApplicationRecoveryCallback(ApplicationRecoveryCallback callback, System.IntPtr parameter, int pingInterval, int flags)
 		{
