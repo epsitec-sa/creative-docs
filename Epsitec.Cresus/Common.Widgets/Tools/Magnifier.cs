@@ -124,7 +124,7 @@ namespace Epsitec.Common.Widgets.Tools
 			}
 		}
 
-		internal Window							ZoomWindow
+		public Window							ZoomWindow
 		{
 			get
 			{

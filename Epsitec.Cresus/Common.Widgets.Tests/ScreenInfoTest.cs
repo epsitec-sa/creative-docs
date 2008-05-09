@@ -6,7 +6,14 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class ScreenInfoTest
 	{
-		[Test] public void CheckAllScreens()
+		[Test]
+		public void AutomatedTestEnvironment()
+		{
+			Window.RunningInAutomatedTestEnvironment = true;
+		}
+
+		[Test]
+		public void CheckAllScreens()
 		{
 			ScreenInfo[] screens = ScreenInfo.AllScreens;
 			
@@ -55,7 +62,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Test] public void CheckGrabScreen()
+		[Test]
+		[Ignore ("Broken under Vista")]
+		public void CheckGrabScreen()
 		{
 			Window window = new Window ();
 			
@@ -75,22 +84,29 @@ namespace Epsitec.Common.Widgets
 			glass.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);
 			
 			window.Show ();
+			Window.RunInTestEnvironment (window);
 		}
 		
-		[Test] public void CheckMagnifier()
+		[Test]
+		[Ignore ("Broken under Vista")]
+		public void CheckMagnifier()
 		{
 			Tools.Magnifier magnifier = new Tools.Magnifier ();
 			
 			magnifier.Show ();
+			Window.RunInTestEnvironment (magnifier.ZoomWindow);
 		}
 		
-		[Test] public void CheckColorPicker()
+		[Test]
+		[Ignore ("Broken under Vista")]
+		public void CheckColorPicker()
 		{
 			Tools.Magnifier magnifier = new Tools.Magnifier ();
 			
 			magnifier.DisplayRadius = 110;
 			magnifier.IsColorPicker = true;
 			magnifier.Show ();
+			Window.RunInTestEnvironment (magnifier.ZoomWindow);
 		}
 		
 		
