@@ -61,6 +61,7 @@ namespace Epsitec.Common.Designer.Proxies
 				case Panel.FormAspect:
 					yield return Type.FormBackColor;
 					yield return Type.FormButtonClass;
+					yield return Type.FormVerbosity;
 					break;
 			}
 		}

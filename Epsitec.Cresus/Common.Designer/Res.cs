@@ -152,6 +152,8 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption RowsRequired { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 14)); } }
 				//	designer:cap/302D1
 				public static global::Epsitec.Common.Types.Caption SeparatorBottom { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 2, 45)); } }
+				//	designer:cap/30KI1
+				public static global::Epsitec.Common.Types.Caption Verbosity { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50)); } }
 			}
 			
 			public static class Geometry

@@ -58,6 +58,11 @@ namespace Epsitec.Common.Designer.Proxies
 				this.AddValue(list, selectedObject, AbstractProxy.Type.FormSeparatorBottom, Res.Captions.Form.SeparatorBottom, Res.Types.FieldDescription.SeparatorType);
 			}
 
+			if (this.ObjectModifier.IsField(selectedObject))
+			{
+				this.AddValue(list, selectedObject, AbstractProxy.Type.FormVerbosity, Res.Captions.Form.Verbosity, Res.Types.FieldDescription.Verbosity);
+			}
+
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
@@ -153,6 +158,10 @@ namespace Epsitec.Common.Designer.Proxies
 						value.Value = this.ObjectModifier.GetSeparatorBottom(selectedObject);
 						break;
 
+					case AbstractProxy.Type.FormVerbosity:
+						value.Value = this.ObjectModifier.GetVerbosity(selectedObject);
+						break;
+
 					case AbstractProxy.Type.FormBackColor:
 						value.Value = this.ObjectModifier.GetBackColor(selectedObject);
 						break;
@@ -241,6 +250,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 						case AbstractProxy.Type.FormLineWidth:
 							this.ObjectModifier.SetLineWidth(selectedObject, (double) value.Value);
+							break;
+
+						case AbstractProxy.Type.FormVerbosity:
+							this.ObjectModifier.SetVerbosity(selectedObject, (UI.Verbosity) value.Value);
 							break;
 
 						case AbstractProxy.Type.FormSeparatorBottom:
