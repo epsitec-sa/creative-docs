@@ -63,8 +63,7 @@ namespace Epsitec.Cresus.DataLayer
 						object       fieldValue = example.InternalGetValue (id);
 
 						System.Diagnostics.Debug.Assert (fieldType != null);
-						System.Diagnostics.Debug.Assert (fieldType.SystemType != null);
-						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.SystemType.Name));
+						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.SystemType == null ? "<null>" : fieldType.SystemType.Name));
 
 						if (fieldType.TypeCode == TypeCode.String)
 						{
