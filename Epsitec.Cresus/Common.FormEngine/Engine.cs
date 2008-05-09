@@ -674,6 +674,7 @@ namespace Epsitec.Common.FormEngine
 			placeholder.TabIndex = this.tabIndex++;
 			placeholder.Name = guid.ToString();
 			placeholder.PreferredWidth = field.PreferredWidth;
+			placeholder.LabelReplacement = field.LabelReplacement;
 			placeholder.Verbosity = field.Verbosity;
 			this.ApplyTextStyle(placeholder, field);
 
@@ -742,6 +743,7 @@ namespace Epsitec.Common.FormEngine
 			button.Name = guid.ToString();
 			button.CommandId = field.FieldIds[0];
 			button.PreferredWidth = field.PreferredWidth;
+			button.CaptionId = field.LabelReplacement;
 			this.ApplyCommandButtonClass(button, field);
 			this.ApplyTextStyle(button, field);
 

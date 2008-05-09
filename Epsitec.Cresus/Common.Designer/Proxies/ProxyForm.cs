@@ -62,6 +62,7 @@ namespace Epsitec.Common.Designer.Proxies
 					yield return Type.FormBackColor;
 					yield return Type.FormButtonClass;
 					yield return Type.FormVerbosity;
+					yield return Type.FormLabelReplacement;
 					break;
 			}
 		}

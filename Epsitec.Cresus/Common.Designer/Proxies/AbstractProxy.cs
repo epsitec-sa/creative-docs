@@ -61,6 +61,7 @@ namespace Epsitec.Common.Designer.Proxies
 			FormBackColor,
 			FormButtonClass,
 			FormVerbosity,
+			FormLabelReplacement,
 
 			//	PanelContent
 			PanelDruidCaption,

@@ -64,6 +64,12 @@ namespace Epsitec.Common.Designer.Proxies
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
+				this.ObjectModifier.IsCommand(selectedObject))
+			{
+				this.AddValueDruid(list, selectedObject, AbstractProxy.Type.FormLabelReplacement, Res.Captions.Form.LabelReplacement);
+			}
+
+			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsBox(selectedObject) ||
 				this.ObjectModifier.IsGlue(selectedObject))
 			{
@@ -162,6 +168,10 @@ namespace Epsitec.Common.Designer.Proxies
 						value.Value = this.ObjectModifier.GetVerbosity(selectedObject);
 						break;
 
+					case AbstractProxy.Type.FormLabelReplacement:
+						value.Value = this.ObjectModifier.GetLabelReplacement(selectedObject);
+						break;
+
 					case AbstractProxy.Type.FormBackColor:
 						value.Value = this.ObjectModifier.GetBackColor(selectedObject);
 						break;
@@ -254,6 +264,10 @@ namespace Epsitec.Common.Designer.Proxies
 
 						case AbstractProxy.Type.FormVerbosity:
 							this.ObjectModifier.SetVerbosity(selectedObject, (UI.Verbosity) value.Value);
+							break;
+
+						case AbstractProxy.Type.FormLabelReplacement:
+							this.ObjectModifier.SetLabelReplacement(selectedObject, (Druid) value.Value);
 							break;
 
 						case AbstractProxy.Type.FormSeparatorBottom:

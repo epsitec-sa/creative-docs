@@ -28,6 +28,19 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		protected void AddValueDruid(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption)
+		{
+			//	Ajoute une valeur de type Druid.
+			ValueDruid value = new ValueDruid();
+			value.SelectedObjects.Add(selectedObject);
+			value.Type = type;
+			value.Caption = caption;
+			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.SendObjectToValue(value);
+
+			list.Add(value);
+		}
+
 		protected void AddValueMargins(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
 			//	Ajoute une valeur de type marges.

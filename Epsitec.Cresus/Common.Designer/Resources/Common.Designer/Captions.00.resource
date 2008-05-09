@@ -204,5 +204,6 @@
   <data name="Val.FieldDescription.Verbosity.Default" id="KG1">&lt;s:data id="_0" f:Name="Default" f:Description="Texte standard" f:Icon="manifest:Epsitec.Common.Designer.Images.Opened.icon" f:Labels="{Collection {Text 'Texte standard'}}" /&gt;</data>
   <data name="Val.FieldDescription.Verbosity.Verbose" id="KH1">&lt;s:data id="_0" f:Name="Verbose" f:Description="Texte long" f:Icon="manifest:Epsitec.Common.Designer.Images.MoveRight.icon" f:Labels="{Collection {Text 'Texte long'}}" /&gt;</data>
   <data name="Typ.FieldDescription.Verbosity" id="KD1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldDescription.Verbosity" f:_1.SystemType="E:Epsitec.Common.UI.Verbosity, Common.UI" f:_2.EnumValues="{Collection {Text '0 [30KE1]'}, {Text '1 [30KF1]'}, {Text '2 [30KG1]'}, {Text '3 [30KH1]'}}" f:Labels="{Collection {Text 'Mode de l&amp;amp;apos;étiquette'}}" /&gt;</data>
-  <data name="Cap.Form.Verbosity" id="KI1">&lt;s:data id="_0" f:Name="Form.Verbosity" f:Description="Mode du texte" f:Labels="{Collection {Text 'Mode'}, {Text 'Mode du texte'}}" /&gt;</data>
+  <data name="Cap.Form.Verbosity" id="KI1">&lt;s:data id="_0" f:Name="Form.Verbosity" f:Description="Mode du texte fixe" f:Labels="{Collection {Text 'Mode'}, {Text 'Mode du texte'}}" /&gt;</data>
+  <data name="Cap.Form.LabelReplacement" id="KJ1">&lt;s:data id="_0" f:Name="Form.LabelReplacement" f:Description="Légende pour remplacer le texte fixe" f:Labels="{Collection {Text 'Texte'}, {Text 'Texte de remplacement'}}" /&gt;</data>
 </bundle>
