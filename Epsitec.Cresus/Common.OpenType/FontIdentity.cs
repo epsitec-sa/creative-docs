@@ -1005,7 +1005,7 @@ namespace Epsitec.Common.OpenType
 				string[] suffixes =	new string[] 
 					{
 						"Black", "Bold", "Book", "Condensed", "Cond", "Demi", "Demibold", "Extra",
-						"Heavy", "Italic", "Light", "Medium", "Narrow", "Oblique", "Semibold",
+						"Heavy", "Italic", "Light", "Medium", "Narrow", "Oblique", "Semibold", "Slanted",
 						"Display", "Caption", "Subhead"
 					};
 

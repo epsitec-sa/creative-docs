@@ -29,18 +29,35 @@ namespace Epsitec.Common.Drawing
 		#endregion
 		
 		#region Low level initialisation
-		[System.Runtime.InteropServices.DllImport("Kernel32.dll")] private static extern System.IntPtr LoadLibrary(string fullpath);
+		
+		[System.Runtime.InteropServices.DllImport ("Kernel32.dll")]
+		private static extern System.IntPtr LoadLibrary(string fullpath);
+
+		[System.Runtime.InteropServices.DllImport ("Kernel32.dll")]
+		private static extern bool SetDllDirectory(string patnName);
 		
 		static Font()
 		{
 			//	Pour une raison étrange, la DLL Win32 doit être chargée très, très tôt, sinon
 			//	elle pourrait ne pas être trouvée (c'est probablement lié à la copie locale des
 			//	assemblies .NET qui est faite lors de l'exécution avec NUnit).
+
+			try
+			{
+				Font.SetDllDirectory (Support.Globals.Directories.ExecutableRoot);
+			}
+			catch
+			{
+				//	Never mind if we cannot set the DLL directory; this probably means that we
+				//	are running on a system older than XP SP1 or Server 2003.
+			}
 			
+#if false
 			System.IntPtr result = Font.LoadLibrary ("AntiGrain.Win32.dll");
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
 			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully", "Epsitec.Common.Drawing.Font");
+#endif
 
 			Agg.Library.Initialize ();
 
@@ -150,7 +167,8 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				return (this.StyleName.IndexOf ("Italic") > -1)
-					|| (this.StyleName.IndexOf ("Oblique") > -1);
+					|| (this.StyleName.IndexOf ("Oblique") > -1)
+					|| (this.StyleName.IndexOf ("Slanted") > -1);
 			}
 		}
 		
@@ -613,6 +631,15 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.Handle, scale, glyphs, x, y, sx, color.R, color.G, color.B, color.A, xx, yy, tx, ty);
 		}
 
+		public void DisposeFaceHandle()
+		{
+			if (this.handle != System.IntPtr.Zero)
+			{
+				AntiGrain.Font.DisposeFaceHandle (this.handle);
+				this.handle = System.IntPtr.Zero;
+			}
+		}
+		
 
 		public static void RegisterDynamicFont(byte[] data)
 		{
@@ -628,15 +655,6 @@ namespace Epsitec.Common.Drawing
 			this.DisposeFaceHandle ();
 		}
 
-		private void DisposeFaceHandle()
-		{
-			if (this.handle != System.IntPtr.Zero)
-			{
-				AntiGrain.Font.DisposeFaceHandle (this.handle);
-				this.handle = System.IntPtr.Zero;
-			}
-		}
-		
 		
 		private static void SetupFonts()
 		{
@@ -855,6 +873,13 @@ namespace Epsitec.Common.Drawing
 				if (pos >= 0)
 				{
 					return Font.GetFont (face, style.Replace ("Italic", "Oblique"), optical);
+				}
+
+				pos = style.IndexOf ("Slanted");
+
+				if (pos >= 0)
+				{
+					return Font.GetFont (face, style.Replace ("Slanted", "Oblique"), optical);
 				}
 				
 				pos = style.IndexOf ("Oblique");
