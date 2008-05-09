@@ -69,7 +69,7 @@ namespace Epsitec.Common.Types
 			target.Name = "-";
 			target.SetBinding (MyObject.NameProperty, binding);
 
-			for (int i = 0; i < 20; i++)
+			for (int i = 0; i < 50; i++)
 			{
 				string value = target.Name;
 				System.Threading.Thread.Sleep (10);

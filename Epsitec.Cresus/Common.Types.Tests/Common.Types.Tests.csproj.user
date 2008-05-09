@@ -21,10 +21,10 @@
     <RemoteDebugMachine>
     </RemoteDebugMachine>
     <StartAction>Program</StartAction>
-    <StartArguments>..\Common.Types.Tests\bin\Debug\Common.Types.Tests.dll</StartArguments>
+    <StartArguments>..\Common.Types.Tests\bin\Debug\Common.Types.Tests.dll /run</StartArguments>
     <StartPage>
     </StartPage>
-    <StartProgram>S:\Epsitec.Cresus\External\nunit-gui.exe</StartProgram>
+    <StartProgram>S:\Epsitec.Cresus\External\nunit-2.4.x\nunit.exe</StartProgram>
     <StartURL>
     </StartURL>
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>

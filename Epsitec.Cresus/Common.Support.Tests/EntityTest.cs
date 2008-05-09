@@ -162,7 +162,9 @@ namespace Epsitec.Common.Support
 
 			Assert.IsNotNull (list0);
 			Assert.IsNotNull (list1);
-			Assert.AreNotEqual (list1, list0);			//	list1 is a proxy to list0
+
+			Assert.AreNotEqual (list0.GetType (), list1.GetType ());
+			Assert.AreEqual (list1, list0);			//	list1 is a proxy to list0, but with same contents
 			
 			using (entity.DefineOriginalValues ())
 			{
@@ -220,7 +222,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (list1, cmd1.Shortcuts);
 			Assert.AreEqual (list2, cmd2.Shortcuts);
-			Assert.AreNotEqual (list3, cmd3.Shortcuts);		//	every proxy is different
+			Assert.AreEqual (list3, cmd3.Shortcuts);		//	every proxy is different, but the contents are the same
 			
 			list1.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
 			list2.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
@@ -228,7 +230,7 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (list1, cmd1.Shortcuts);
 			Assert.AreEqual (list2, cmd2.Shortcuts);
-			Assert.AreNotEqual (list3, cmd3.Shortcuts);		//	every proxy is different
+			Assert.AreEqual (list3, cmd3.Shortcuts);		//	every proxy is different, but the contents are the same
 		}
 
 		[Test]
@@ -266,9 +268,9 @@ namespace Epsitec.Common.Support
 			IList<MyShortcutEntity> list2 = cmd2.Shortcuts;
 			IList<MyShortcutEntity> list3 = cmd3.Shortcuts;
 
-			Assert.AreNotEqual (list1, cmd1.Shortcuts);		//	every proxy is different
-			Assert.AreNotEqual (list2, cmd2.Shortcuts);
-			Assert.AreNotEqual (list3, cmd3.Shortcuts);
+			Assert.AreEqual (list1, cmd1.Shortcuts);		//	every proxy is different, but the contents are the same
+			Assert.AreEqual (list2, cmd2.Shortcuts);
+			Assert.AreEqual (list3, cmd3.Shortcuts);
 
 			list1.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
 			list2.Add (context.CreateEmptyEntity<MyShortcutEntity> ());
