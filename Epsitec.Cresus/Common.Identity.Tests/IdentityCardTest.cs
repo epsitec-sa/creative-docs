@@ -51,7 +51,10 @@ namespace Epsitec.Common.Identity
 			IList<IdentityCard> cards = IdentityRepository.Default.IdentityCards;
 			UI.IdentityCardSelectorDialog dialog = new UI.IdentityCardSelectorDialog (cards);
 
-			dialog.OpenDialog ();
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Return))
+			{
+				dialog.OpenDialog ();
+			}
 		}
 
 		[Test]
