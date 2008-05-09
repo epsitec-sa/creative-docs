@@ -199,4 +199,9 @@
   <data name="Cap.Geometry.Margins" id="KA1">&lt;s:data id="_0" f:Name="Geometry.Margins" f:Description="Marges extérieures" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges ext.'}, {Text 'Marges extérieures'}}" /&gt;</data>
   <data name="Cap.Geometry.Padding" id="KB1">&lt;s:data id="_0" f:Name="Geometry.Padding" f:Description="Marges intérieures" f:Labels="{Collection {Text 'Marges'}, {Text 'Marges int.'}, {Text 'Marges intérieures'}}" /&gt;</data>
   <data name="Cap.Form.LineWidth" id="KC1">&lt;s:data id="_0" f:Name="Form.LineWidth" f:Description="Epaisseur" f:Labels="{Collection {Text 'Epaisseur'}}" /&gt;</data>
+  <data name="Val.FieldDescription.Verbosity.None" id="KE1">&lt;s:data id="_0" f:Name="None" f:Icon="manifest:Epsitec.Common.Designer.Images.Locked.icon" f:Labels="{Collection {Text 'Pas de texte'}}" /&gt;</data>
+  <data name="Val.FieldDescription.Verbosity.Compact" id="KF1">&lt;s:data id="_0" f:Name="Compact" f:Icon="manifest:Epsitec.Common.Designer.Images.MoveLeft.icon" f:Labels="{Collection {Text 'Texte compact'}}" /&gt;</data>
+  <data name="Val.FieldDescription.Verbosity.Default" id="KG1">&lt;s:data id="_0" f:Name="Default" f:Icon="manifest:Epsitec.Common.Designer.Images.Opened.icon" f:Labels="{Collection {Text 'Texte standard'}}" /&gt;</data>
+  <data name="Val.FieldDescription.Verbosity.Verbose" id="KH1">&lt;s:data id="_0" f:Name="Verbose" f:Icon="manifest:Epsitec.Common.Designer.Images.MoveRight.icon" f:Labels="{Collection {Text 'Texte long'}}" /&gt;</data>
+  <data name="Typ.FieldDescription.Verbosity" id="KD1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="FieldDescription.Verbosity" f:_1.SystemType="E:Epsitec.Common.UI.Verbosity, Common.UI" f:_2.EnumValues="{Collection {Text '0 [30KE1]'}, {Text '1 [30KF1]'}, {Text '2 [30KG1]'}, {Text '3 [30KH1]'}}" f:Labels="{Collection {Text 'Mode de l&amp;amp;apos;étiquette'}}" /&gt;</data>
 </bundle>

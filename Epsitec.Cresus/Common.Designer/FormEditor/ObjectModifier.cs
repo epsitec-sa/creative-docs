@@ -714,6 +714,69 @@ namespace Epsitec.Common.Designer.FormEditor
 		}
 
 
+		public Druid GetLabelReplacement(Widget obj)
+		{
+			//	Retourne la largeur préférentielle.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				return field.LabelReplacement;
+			}
+		}
+
+		public void SetLabelReplacement(Widget obj, Druid captionId)
+		{
+			//	Choix du Druid optionnel du caption qui remplace le texte par défaut.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize(Res.Strings.Undo.Action.LabelReplacement);
+				field.LabelReplacement = captionId;
+				this.DeltaUpdate(field);
+			}
+		}
+
+		public UI.Verbosity GetVerbosity(Widget obj)
+		{
+			//	Retourne le mode pour le label d'un placeholder.
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field == null)
+			{
+				return UI.Verbosity.Default;
+			}
+			else
+			{
+				return field.Verbosity;
+			}
+		}
+
+		public void SetVerbosity(Widget obj, UI.Verbosity verbosity)
+		{
+			//	Choix du mode pour le label d'un placeholder.
+			if (this.IsReadonly)
+			{
+				return;
+			}
+
+			FieldDescription field = this.GetFieldDescription(obj);
+			if (field != null)
+			{
+				this.UndoMemorize(Res.Strings.Undo.Action.Verbosity);
+				field.Verbosity = verbosity;
+				this.DeltaUpdate(field);
+			}
+		}
+
+
 		protected void UndoMemorize(string actionName)
 		{
 			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.

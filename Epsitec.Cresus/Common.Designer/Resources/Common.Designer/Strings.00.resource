@@ -575,4 +575,6 @@
   <data name="Dialog.EntityField.Title" id="KR2">Paramètres du champ</data>
   <data name="Viewers.Types.String.Formatted" id="KS2">Texte formaté</data>
   <data name="Viewers.Types.Summary.Formatted" id="KT2">Formaté</data>
+  <data name="Undo.Action.LabelReplacement" id="KU2">Texte de remplacement</data>
+  <data name="Undo.Action.Verbosity" id="KV2">Mode de l&amp;apos;étiquette</data>
 </bundle>

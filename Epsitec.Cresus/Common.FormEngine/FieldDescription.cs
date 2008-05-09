@@ -157,6 +157,8 @@ namespace Epsitec.Common.FormEngine
 			this.boxFrameWidth = model.boxFrameWidth;
 			this.lineWidth = model.lineWidth;
 			this.preferredWidth = model.preferredWidth;
+			this.labelReplacement = model.labelReplacement;
+			this.verbosity = model.verbosity;
 			this.deltaHidden = model.deltaHidden;
 			this.deltaShowed = model.deltaShowed;
 			this.deltaMoved = model.deltaMoved;
@@ -196,6 +198,8 @@ namespace Epsitec.Common.FormEngine
 			this.boxFrameWidth = 1;
 			this.lineWidth = 1;
 			this.preferredWidth = 100;
+			this.labelReplacement = Druid.Empty;
+			this.verbosity = UI.Verbosity.Default;
 		}
 
 
@@ -694,6 +698,32 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public Druid LabelReplacement
+		{
+			//	Druid optionnel du caption qui remplace le texte par défaut.
+			get
+			{
+				return this.labelReplacement;
+			}
+			set
+			{
+				this.labelReplacement = value;
+			}
+		}
+
+		public UI.Verbosity Verbosity
+		{
+			//	Mode pour le label d'un placeholder.
+			get
+			{
+				return this.verbosity;
+			}
+			set
+			{
+				this.verbosity = value;
+			}
+		}
+
 		public bool Delta
 		{
 			//	Retourne true si une information delta quelconque existe.
@@ -900,6 +930,8 @@ namespace Epsitec.Common.FormEngine
 				a.boxFrameWidth != b.boxFrameWidth ||
 				a.lineWidth != b.lineWidth ||
 				a.preferredWidth != b.preferredWidth ||
+				a.labelReplacement != b.labelReplacement ||
+				a.verbosity != b.verbosity ||
 				a.deltaHidden != b.deltaHidden ||
 				a.deltaShowed != b.deltaShowed ||
 				a.deltaMoved != b.deltaMoved ||
@@ -1018,6 +1050,16 @@ namespace Epsitec.Common.FormEngine
 			writer.WriteElementString(Xml.BoxFrameWidth, this.boxFrameWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.LineWidth, this.lineWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
 			writer.WriteElementString(Xml.PreferredWidth, this.preferredWidth.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+			if (this.labelReplacement.IsValid)
+			{
+				writer.WriteElementString(Xml.LabelReplacement, this.labelReplacement.ToString());
+			}
+
+			if (this.verbosity != UI.Verbosity.Default)
+			{
+				writer.WriteElementString(Xml.Verbosity, this.verbosity.ToString());
+			}
 
 			if (this.deltaHidden)
 			{
@@ -1177,6 +1219,14 @@ namespace Epsitec.Common.FormEngine
 						else if (name == Xml.PreferredWidth)
 						{
 							this.preferredWidth = double.Parse(element);
+						}
+						else if (name == Xml.LabelReplacement)
+						{
+							this.labelReplacement = Druid.Parse(element);
+						}
+						else if (name == Xml.Verbosity)
+						{
+							this.verbosity = (UI.Verbosity) System.Enum.Parse(typeof(UI.Verbosity), element);
 						}
 						else if (name == Xml.DeltaHidden)
 						{
@@ -1389,6 +1439,8 @@ namespace Epsitec.Common.FormEngine
 		private double						boxFrameWidth;
 		private double						lineWidth;
 		private double						preferredWidth;
+		private Druid						labelReplacement;
+		private UI.Verbosity				verbosity;
 		private bool						deltaHidden;
 		private bool						deltaShowed;
 		private bool						deltaMoved;

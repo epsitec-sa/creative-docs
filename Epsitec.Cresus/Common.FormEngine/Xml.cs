@@ -29,6 +29,8 @@ namespace Epsitec.Common.FormEngine
 		public const string BoxFrameWidth		= "BFW";
 		public const string LineWidth			= "LW";
 		public const string PreferredWidth		= "PW";
+		public const string LabelReplacement	= "LR";
+		public const string Verbosity			= "VB";
 		public const string DeltaBaseFormId		= "DBI";
 		public const string DeltaHidden			= "DHi";
 		public const string DeltaShowed			= "DSh";
