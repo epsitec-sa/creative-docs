@@ -50,11 +50,13 @@ namespace Epsitec.Common.Drawing
 				{
 					System.Console.Out.WriteLine ("--> FontType is {0}", font.OpenTypeFont.FontType);
 				}
-				
+
 				Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);
 				
 				Assert.IsNotNull (find);
 				Assert.AreEqual (font.Handle, find.Handle);
+
+				font.DisposeFaceHandle ();
 			}
 			
 			Assert.IsNull (Font.GetFont (n+1));
