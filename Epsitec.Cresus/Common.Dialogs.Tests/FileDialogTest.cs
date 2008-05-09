@@ -95,56 +95,59 @@ namespace Epsitec.Common.Dialogs
 		{
 			FileOpen dialog = new FileOpen ();
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Escape);
-			
-			dialog.Title = "CheckFileOpen";
-			dialog.Filters.Add ("text", "Textes", "*.txt");
-			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
-			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-			dialog.Owner = this.app_window;
-			dialog.OpenDialog ();
-			
-			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
-			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
-			System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Escape))
+			{
+				dialog.Title = "CheckFileOpen";
+				dialog.Filters.Add ("text", "Textes", "*.txt");
+				dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
+				dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+				dialog.Owner = this.app_window;
+				dialog.OpenDialog ();
+
+				System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
+				System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
+				System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
+			}
 		}
 
 		[Test] public void CheckFileSave1()
 		{
 			FileSave dialog = new FileSave ();
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Escape);
-			
-			dialog.Title = "CheckFileSave1";
-			dialog.Filters.Add ("text", "Textes", "*.txt");
-			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
-			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-			dialog.OwnerWindow = this.app_window;
-			dialog.OpenDialog ();
-			
-			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
-			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
-			System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Escape))
+			{
+				dialog.Title = "CheckFileSave1";
+				dialog.Filters.Add ("text", "Textes", "*.txt");
+				dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
+				dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+				dialog.OwnerWindow = this.app_window;
+				dialog.OpenDialog ();
+
+				System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
+				System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
+				System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
+			}
 		}
 		
 		[Test] public void CheckFileSave2()
 		{
 			FileSave dialog = new FileSave ();
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Escape);
-			
-			dialog.Title = "CheckFileSave2";
-			dialog.Filters.Add ("text", "Textes", "*.txt");
-			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
-			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
-			dialog.PromptForCreation = true;
-			dialog.PromptForOverwriting = true;
-			dialog.OwnerWindow = this.app_window;
-			dialog.OpenDialog ();
-			
-			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
-			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
-			System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Escape))
+			{
+				dialog.Title = "CheckFileSave2";
+				dialog.Filters.Add ("text", "Textes", "*.txt");
+				dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
+				dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+				dialog.PromptForCreation = true;
+				dialog.PromptForOverwriting = true;
+				dialog.OwnerWindow = this.app_window;
+				dialog.OpenDialog ();
+
+				System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
+				System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
+				System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
+			}
 		}
 
 		private Window					app_window;

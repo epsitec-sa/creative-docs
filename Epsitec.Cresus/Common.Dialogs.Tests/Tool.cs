@@ -7,13 +7,15 @@ namespace Epsitec.Common.Dialogs
 {
 	class Tool
 	{
-		public static void InjectKey(System.Windows.Forms.Keys key)
+		public static System.IDisposable InjectKey(System.Windows.Forms.Keys key)
 		{
-			Tool.InjectKey (key, 1000);
+			return Tool.InjectKey (key, 1000);
 		}
 		
-		public static void InjectKey(System.Windows.Forms.Keys key, int delay)
+		public static System.IDisposable InjectKey(System.Windows.Forms.Keys key, int delay)
 		{
+			DoneNotifier notifier = new DoneNotifier ();
+
 			if (Epsitec.Common.Widgets.Window.RunningInAutomatedTestEnvironment)
 			{
 				int pid = Win32Api.GetCurrentThreadId ();
@@ -27,6 +29,11 @@ namespace Epsitec.Common.Dialogs
 						{
 							System.Threading.Thread.Sleep (delay);
 							System.IntPtr handle = Epsitec.Common.Widgets.Platform.Win32Api.FindThreadActiveWindowHandle (pid);
+
+							if (notifier.Done)
+							{
+								break;
+							}
 
 							if (handle != System.IntPtr.Zero)
 							{
@@ -42,6 +49,9 @@ namespace Epsitec.Common.Dialogs
 								{
 									System.Diagnostics.Debug.WriteLine ("Exception : " + ex.Message);
 								}
+
+								delay = 100;
+
 								break;
 							}
 						}
@@ -49,6 +59,32 @@ namespace Epsitec.Common.Dialogs
 
 				thread.Start ();
 			}
+
+			return notifier;
+		}
+
+		private class DoneNotifier : System.IDisposable
+		{
+			public bool Done
+			{
+				get
+				{
+					return this.done;
+				}
+			}
+
+
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.done = true;
+			}
+
+			#endregion
+
+			private bool done = false;
 		}
 
 		private static class Win32Api
@@ -58,6 +94,5 @@ namespace Epsitec.Common.Dialogs
 			[DllImport ("Kernel32.dll")]
 			internal extern static int GetCurrentThreadId();
 		}
-
 	}
 }

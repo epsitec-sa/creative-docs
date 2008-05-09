@@ -30,36 +30,40 @@ namespace Epsitec.Common.Dialogs
 		{
 			IDialog dialog = MessageDialog.CreateYesNoCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Return);
-
-			dialog.OpenDialog ();
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Return))
+			{
+				dialog.OpenDialog ();
+			}
 		}
 
 		[Test] public void CheckYesNo()
 		{
 			IDialog dialog = MessageDialog.CreateYesNo ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Return);
-
-			dialog.OpenDialog ();
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Return))
+			{
+				dialog.OpenDialog ();
+			}
 		}
 
 		[Test] public void CheckOkCancel()
 		{
 			IDialog dialog = MessageDialog.CreateOkCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Return);
-			
-			dialog.OpenDialog ();
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Return))
+			{
+				dialog.OpenDialog ();
+			}
 		}
 
 		[Test] public void CheckOk()
 		{
 			IDialog dialog = MessageDialog.CreateOk ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
 
-			Tool.InjectKey (System.Windows.Forms.Keys.Return);
-			
-			dialog.OpenDialog ();
+			using (Tool.InjectKey (System.Windows.Forms.Keys.Return))
+			{
+				dialog.OpenDialog ();
+			}
 		}
 
 		
