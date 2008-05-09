@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return RestartManager.useWindowsErrorReporting;
+				return !System.Diagnostics.Debugger.IsAttached && RestartManager.useWindowsErrorReporting;
 			}
 		}
 

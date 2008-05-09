@@ -559,7 +559,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				return getter (this);
+				return getter (this.Resolve ());
 			}
 		}
 
@@ -578,7 +578,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				setter (this, newValue);
+				setter (this.Resolve (), newValue);
 			}
 		}
 

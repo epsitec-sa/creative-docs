@@ -44,7 +44,31 @@ namespace Epsitec.Common.Drawing
 
 			try
 			{
-				Font.SetDllDirectory (Support.Globals.Directories.ExecutableRoot);
+				string   dllName    = "AntiGrain.Win32.dll";
+				string   dllPath    = null;
+				string[] probePaths = new string[]
+				{
+					Support.Globals.Directories.ExecutableRoot,
+					System.IO.Directory.GetCurrentDirectory (),
+				};
+
+				foreach (string path in probePaths)
+				{
+					if (System.IO.File.Exists (System.IO.Path.Combine (path, dllName)))
+					{
+						dllPath = path;
+						break;
+					}
+				}
+
+				if (dllPath == null)
+				{
+					System.Diagnostics.Debug.Fail ("Could not locate native AntiGrain DLL");
+				}
+				else
+				{
+					Font.SetDllDirectory (dllPath);
+				}
 			}
 			catch
 			{
