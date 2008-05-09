@@ -1,3 +1,6 @@
+//	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -91,6 +94,8 @@ namespace Epsitec.Common.Dialogs
 		[Test] public void CheckFileOpen()
 		{
 			FileOpen dialog = new FileOpen ();
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Escape);
 			
 			dialog.Title = "CheckFileOpen";
 			dialog.Filters.Add ("text", "Textes", "*.txt");
@@ -103,10 +108,12 @@ namespace Epsitec.Common.Dialogs
 			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
 			System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
 		}
-		
+
 		[Test] public void CheckFileSave1()
 		{
 			FileSave dialog = new FileSave ();
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Escape);
 			
 			dialog.Title = "CheckFileSave1";
 			dialog.Filters.Add ("text", "Textes", "*.txt");
@@ -123,6 +130,8 @@ namespace Epsitec.Common.Dialogs
 		[Test] public void CheckFileSave2()
 		{
 			FileSave dialog = new FileSave ();
+
+			Tool.InjectKey (System.Windows.Forms.Keys.Escape);
 			
 			dialog.Title = "CheckFileSave2";
 			dialog.Filters.Add ("text", "Textes", "*.txt");
@@ -137,7 +146,7 @@ namespace Epsitec.Common.Dialogs
 			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
 			System.Console.Out.WriteLine ("Initial directory: {0}", dialog.InitialDirectory);
 		}
-		
+
 		private Window					app_window;
 	}
 }

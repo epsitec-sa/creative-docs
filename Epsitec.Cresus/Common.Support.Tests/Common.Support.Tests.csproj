@@ -79,9 +79,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <Name>nunit.framework</Name>
-      <HintPath>..\External\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\nunit\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -236,6 +236,9 @@
   <ItemGroup>
     <Content Include="resources\Common.Support.Patch\Strings.00.resource" />
     <Content Include="resources\Common.Support.Patch\Strings.en.resource" />
+    <None Include="Common.Support.Tests.dll.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="resources\Common.Support.Patch\Captions.00.resource" />
     <None Include="resources\LowLevelTest\ab.00.resource" />
     <None Include="resources\LowLevelTest\bitmap.00.resource" />

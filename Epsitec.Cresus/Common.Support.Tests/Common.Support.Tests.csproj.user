@@ -24,7 +24,7 @@
     <StartArguments>..\Common.Support.Tests\bin\Debug\Common.Support.Tests.dll</StartArguments>
     <StartPage>
     </StartPage>
-    <StartProgram>S:\Epsitec.Cresus\External\nunit-gui.exe</StartProgram>
+    <StartProgram>S:\Epsitec.Cresus\External\nunit\nunit.exe</StartProgram>
     <StartURL>
     </StartURL>
     <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>

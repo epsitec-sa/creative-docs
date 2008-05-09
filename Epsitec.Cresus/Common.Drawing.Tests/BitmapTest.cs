@@ -6,6 +6,12 @@ namespace Epsitec.Common.Drawing
 	[TestFixture]
 	public class BitmapTest
 	{
+		[SetUp]
+		public void Initialize()
+		{
+			Epsitec.Common.Widgets.Widget.Initialize ();
+		}
+
 		[Test]
 		public void CheckImageFormat()
 		{
@@ -128,7 +134,7 @@ namespace Epsitec.Common.Drawing
 			System.Drawing.Bitmap nativeBitmap = new System.Drawing.Bitmap (32, 32, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			Image bitmap = Bitmap.FromNativeBitmap (nativeBitmap);
 
-			for (int i = 0; i < 100*1000; i++)
+			for (int i = 0; i < 1000; i++)
 			{
 				MouseCursor cursor = MouseCursor.FromImage (bitmap, 16, 16);
 				cursor.Dispose ();
