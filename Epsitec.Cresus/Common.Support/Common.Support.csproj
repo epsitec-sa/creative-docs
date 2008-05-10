@@ -135,6 +135,7 @@
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
+    <Compile Include="IExceptionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

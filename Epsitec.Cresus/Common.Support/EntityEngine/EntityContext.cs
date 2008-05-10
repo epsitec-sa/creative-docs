@@ -76,6 +76,16 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Gets or sets the exception manager associated with this context.
+		/// </summary>
+		/// <value>The exception manager.</value>
+		public IExceptionManager				ExceptionManager
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets the current, thread specific, entity context.
 		/// </summary>
 		/// <value>The entity context for this thread.</value>
@@ -151,6 +161,20 @@ namespace Epsitec.Common.Support.EntityEngine
 		public System.IDisposable SuspendConstraintChecking()
 		{
 			return new SuspendConstraintCheckingHelper (this);
+		}
+
+		internal TResult ExecuteFunc<TResult>(System.Func<TResult> func, AbstractEntity entity, System.Type entityType, string id)
+		{
+			IExceptionManager manager = this.ExceptionManager;
+
+			if (manager == null)
+			{
+				return func ();
+			}
+			else
+			{
+				return manager.Execute (func, () => string.Format ("Entity {0} ({1}), field {2}", entityType.FullName, entity.GetEntityStructuredTypeId (), id));
+			}
 		}
 
 		internal IValueStore CreateValueStore(AbstractEntity entity)

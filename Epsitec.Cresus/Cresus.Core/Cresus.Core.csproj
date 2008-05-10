@@ -125,6 +125,10 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.CoreLibrary\Cresus.CoreLibrary.csproj">
+      <Project>{678BC79B-6AF9-4E5E-9B59-DD78DA0A06D0}</Project>
+      <Name>Cresus.CoreLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Name>Cresus.Database.Implementation</Name>

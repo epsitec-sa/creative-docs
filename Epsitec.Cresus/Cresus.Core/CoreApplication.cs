@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			this.data = new CoreData ();
+			this.exceptionManager = new CoreLibrary.ExceptionManager ();
 		}
 
 
@@ -24,6 +26,14 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.data;
+			}
+		}
+
+		public IExceptionManager ExceptionManager
+		{
+			get
+			{
+				return this.exceptionManager;
 			}
 		}
 		
@@ -73,6 +83,11 @@ namespace Epsitec.Cresus.Core
 					this.data.Dispose ();
 					this.data = null;
 				}
+				if (this.exceptionManager != null)
+				{
+					this.exceptionManager.Dispose ();
+					this.exceptionManager = null;
+				}
 			}
 
 			base.Dispose (disposing);
@@ -80,6 +95,8 @@ namespace Epsitec.Cresus.Core
 
 
 		FormWorkspace formWorkspace;
+		
 		CoreData data;
+		CoreLibrary.ExceptionManager exceptionManager;
 	}
 }

@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.FuncSearchValue);
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.FuncSearchValue, global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.ExprSearchValue);
 			}
 			set
 			{
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.FuncSearchValue);
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.FuncSearchValue, global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.ExprSearchValue);
 			}
 			set
 			{
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.FuncSearchValue);
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.FuncSearchValue, global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.ExprSearchValue);
 			}
 			set
 			{
@@ -362,7 +362,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[8V1F]", global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.FuncRésumé);
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[8V1F]", global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.FuncRésumé, global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.ExprRésumé);
 			}
 			set
 			{
@@ -493,7 +493,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.FuncSearchValue);
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.FuncSearchValue, global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.ExprSearchValue);
 			}
 			set
 			{
@@ -581,7 +581,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			get
 			{
-				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity.FuncSearchValue);
+				return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity, string> (this, "[6016]", global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity.FuncSearchValue, global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity.ExprSearchValue);
 			}
 			set
 			{
@@ -646,7 +646,7 @@ namespace Epsitec.Cresus.AddressBook.Entities
 	{
 		public static global::System.DateTime GetChamp(global::Epsitec.Cresus.AddressBook.Entities.ITest obj)
 		{
-			return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.ITest, global::System.DateTime> (obj, "[8VA3]", ITestInterfaceImplementation.FuncChamp);
+			return global::Epsitec.Common.Support.EntityEngine.AbstractEntity.GetCalculation<global::Epsitec.Cresus.AddressBook.Entities.ITest, global::System.DateTime> (obj, "[8VA3]", ITestInterfaceImplementation.FuncChamp, ITestInterfaceImplementation.ExprChamp);
 		}
 		public static void SetChamp(global::Epsitec.Cresus.AddressBook.Entities.ITest obj, global::System.DateTime value)
 		{

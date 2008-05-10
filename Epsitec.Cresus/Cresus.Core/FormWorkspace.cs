@@ -41,6 +41,8 @@ namespace Epsitec.Cresus.Core
 			this.editionPanel.Visibility = false;
 
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
+			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
+			
 			this.currentData = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
 			this.dialogData = new DialogData (this.currentData, this.searchContext, DialogDataMode.Search);
 			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;

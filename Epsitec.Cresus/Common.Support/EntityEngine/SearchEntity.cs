@@ -61,6 +61,20 @@ namespace Epsitec.Common.Support.EntityEngine
 			return AbstractEntity.Resolve<AbstractEntity> (this.target);
 		}
 
+		protected override object DynamicGetField(string id)
+		{
+			return this.GenericGetValue (id);
+		}
+
+		protected override void DynamicSetField(string id, object newValue)
+		{
+			if (UndefinedValue.IsUndefinedValue (newValue))
+			{
+				newValue = null;
+			}
+
+			this.GenericSetValue (id, this.InternalGetValue (id), newValue);
+		}
 
 		#region IFieldPropertyStore Members
 

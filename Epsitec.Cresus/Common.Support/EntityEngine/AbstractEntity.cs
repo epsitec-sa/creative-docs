@@ -215,7 +215,17 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		internal void DisableCalculations()
 		{
-			this.calculationsDisabled = true;
+			if (this.calculationsDisabled == false)
+			{
+				this.calculationsDisabled = true;
+
+				AbstractEntity that = this.Resolve ();
+
+				if (this != that)
+				{
+					that.DisableCalculations ();
+				}
+			}
 		}
 
 		/// <summary>
@@ -322,18 +332,32 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.GenericSetValue (id, oldValue, newValue);
 		}
 
-		public static TResult GetCalculation<T, TResult>(T entity, string id, System.Func<T, TResult> func)
+		public static TResult GetCalculation<T, TResult>(T entityObject, string id, System.Func<T, TResult> func, System.Linq.Expressions.LambdaExpression expr)
 		{
-			AbstractEntity e = entity as AbstractEntity;
+			//	No constraints can be specified on type T, since we can pass in an
+			//	interface, which is neither an AbstractEntity derived class in itself
+			//	nor a reference type.
 
-			if ((e != null) &&
-				(e.calculationsDisabled))
+			AbstractEntity entity = entityObject as AbstractEntity;
+
+			if (entity == null)
 			{
-				return e.GetField<TResult> (id);
+				throw new System.ArgumentException ("Invalid entity specified; cannot resolve to AbstractEntity");
+			}
+
+			if (entity.calculationsDisabled)
+			{
+				return entity.GetField<TResult> (id);
 			}
 			else
 			{
-				return func (entity);
+				//	The caller is expecting that we calculate the result based on
+				//	the provided function; let the entity context handle the details
+				//	(error handling, for instance) :
+
+				EntityContext context = entity.GetEntityContext ();
+
+				return context.ExecuteFunc (delegate { return func (entityObject); }, entity, typeof (T), id);
 			}
 		}
 
@@ -559,7 +583,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				return getter (this.Resolve ());
+				return getter (this);
 			}
 		}
 
@@ -578,7 +602,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 			else
 			{
-				setter (this.Resolve (), newValue);
+				setter (this, newValue);
 			}
 		}
 
