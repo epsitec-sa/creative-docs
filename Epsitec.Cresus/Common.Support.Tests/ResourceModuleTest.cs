@@ -149,12 +149,12 @@ namespace Epsitec.Common.Support
 		{
 			ResourceManagerPool pool = new ResourceManagerPool ("Test");
 
-			pool.AddModuleRootPath ("%program files%", @"C:\Program Files");
-			pool.AddModuleRootPath ("%sys drive%", @"C:");
-			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Internet Explorer");
-			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec");
-			pool.AddModuleRootPath ("%source drive%", @"S:");
-			pool.AddModuleRootPath ("%source drive%", @"");
+			pool.AddModuleRootPath ("%program files%", @"C:\Program Files", true);
+			pool.AddModuleRootPath ("%sys drive%", @"C:", true);
+			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Internet Explorer", true);
+			pool.AddModuleRootPath ("%app%", @"C:\Program Files\Epsitec", true);
+			pool.AddModuleRootPath ("%source drive%", @"S:", true);
+			pool.AddModuleRootPath ("%source drive%", @"", true);
 			
 			Assert.AreEqual (@"S:\abc", pool.GetRootRelativePath (@"S:\abc"));
 			Assert.AreEqual (@"%sys drive%\abc", pool.GetRootRelativePath (@"C:\abc"));

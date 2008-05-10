@@ -163,7 +163,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			return new SuspendConstraintCheckingHelper (this);
 		}
 
-		internal TResult ExecuteFunc<TResult>(System.Func<TResult> func, AbstractEntity entity, System.Type entityType, string id)
+		/// <summary>
+		/// Evaluates the specified function using the associated <see cref="IExceptionManager"/>,
+		/// if any.
+		/// </summary>
+		/// <typeparam name="TResult">The type of the result.</typeparam>
+		/// <param name="func">The function to call.</param>
+		/// <param name="entity">The entity which provides the function.</param>
+		/// <param name="entityType">The type of the entity.</param>
+		/// <param name="id">The id of the field which implements the function.</param>
+		/// <param name="expr">The original function encoded as an expression.</param>
+		/// <returns>The result of the function evaluation.</returns>
+		internal TResult EvaluateFunc<TResult>(System.Func<TResult> func, AbstractEntity entity, System.Type entityType, string id, System.Linq.Expressions.LambdaExpression expr)
 		{
 			IExceptionManager manager = this.ExceptionManager;
 

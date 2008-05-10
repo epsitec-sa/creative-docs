@@ -61,11 +61,21 @@ namespace Epsitec.Common.Support.EntityEngine
 			return AbstractEntity.Resolve<AbstractEntity> (this.target);
 		}
 
+		/// <summary>
+		/// Gets the value for the specified field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <returns>The value for the specified field.</returns>
 		protected override object DynamicGetField(string id)
 		{
 			return this.GenericGetValue (id);
 		}
 
+		/// <summary>
+		/// Set the value for the specified field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="newValue">The new value.</param>
 		protected override void DynamicSetField(string id, object newValue)
 		{
 			if (UndefinedValue.IsUndefinedValue (newValue))

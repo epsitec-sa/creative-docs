@@ -190,6 +190,22 @@ namespace Epsitec.Common.Support
 				
 				if (c == '<')
 				{
+					if (i+4 < value.Length)
+					{
+						if (value.Substring (i, 4) == "<!--")
+						{
+							int end_pos = value.IndexOf ("-->", i+4);
+							
+							if (end_pos > 0)
+							{
+								i = end_pos + 2;
+								continue;
+							}
+
+							throw new System.FormatException ("Unbalanced HTML comment found");
+						}
+					}
+
 					last_tag        = buffer.Length;
 					preserve_spaces = false;
 					delete_spaces   = false;
@@ -491,7 +507,7 @@ namespace Epsitec.Common.Support
 				int idx_end_frag   = raw_html.IndexOf ("EndFragment:");
 				int idx_start      = raw_html.IndexOf ("<!--StartFragment");
 				int idx_end        = raw_html.IndexOf ("<!--EndFragment");
-				int idx_begin      = raw_html.IndexOf (">", idx_start) + 1;
+				int idx_begin      = idx_start < 0 ? -1 : raw_html.IndexOf (">", idx_start) + 1;
 				
 				if ((idx_start      < idx_version) ||
 					(idx_end        < idx_start) ||
@@ -526,7 +542,7 @@ namespace Epsitec.Common.Support
 				int idx_end_frag   = raw_html.IndexOf ("EndFragment:");
 				int idx_start      = raw_html.IndexOf ("<!--StartFragment");
 				int idx_end        = raw_html.IndexOf ("<!--EndFragment");
-				int idx_begin      = raw_html.IndexOf (">", idx_start) + 1;
+				int idx_begin      = idx_start < 0 ? -1 : raw_html.IndexOf (">", idx_start) + 1;
 				
 				if ((idx_start      < idx_version) ||
 					(idx_end        < idx_start) ||

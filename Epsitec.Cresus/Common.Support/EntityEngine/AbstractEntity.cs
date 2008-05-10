@@ -332,6 +332,18 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.GenericSetValue (id, oldValue, newValue);
 		}
 
+		/// <summary>
+		/// Gets the result of the calculation. If calculations are disabled,
+		/// this will simply return the stored value instead.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Thrown if the entity object does not derive from <see cref="AbstractEntity"/>.</exception>
+		/// <typeparam name="T">The entity on which to apply the calculation.</typeparam>
+		/// <typeparam name="TResult">The type of the result.</typeparam>
+		/// <param name="entityObject">The source entity object.</param>
+		/// <param name="id">The field id on which we are going to compute a calculation.</param>
+		/// <param name="func">The function which implements the calculation.</param>
+		/// <param name="expr">The expression for the specified function.</param>
+		/// <returns>The result of the calculation.</returns>
 		public static TResult GetCalculation<T, TResult>(T entityObject, string id, System.Func<T, TResult> func, System.Linq.Expressions.LambdaExpression expr)
 		{
 			//	No constraints can be specified on type T, since we can pass in an
@@ -357,18 +369,34 @@ namespace Epsitec.Common.Support.EntityEngine
 
 				EntityContext context = entity.GetEntityContext ();
 
-				return context.ExecuteFunc (delegate { return func (entityObject); }, entity, typeof (T), id);
+				return context.EvaluateFunc (delegate { return func (entityObject); }, entity, typeof (T), id, expr);
 			}
 		}
 
-		public static void SetCalculation<T, TResult>(T entity, string id, TResult newValue)
+		/// <summary>
+		/// Sets the result of the calculation for the specified field. This is
+		/// only acceptable if the calculations have been disabled for the
+		/// specified entity.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Thrown if the entity object does not derive from <see cref="AbstractEntity"/>.</exception>
+		/// <exception cref="System.NotSupportedException">Thrown if the entity is not in the special "disabled calculations" mode.</exception>
+		/// <typeparam name="T">The entity on which to apply the calculation.</typeparam>
+		/// <typeparam name="TResult">The type of the result.</typeparam>
+		/// <param name="entityObject">The source entity object.</param>
+		/// <param name="id">The field id on which we are going to force a calculation result.</param>
+		/// <param name="newValue">The new value.</param>
+		public static void SetCalculation<T, TResult>(T entityObject, string id, TResult newValue)
 		{
-			AbstractEntity e = entity as AbstractEntity;
+			AbstractEntity entity = entityObject as AbstractEntity;
 
-			if ((e != null) &&
-				(e.calculationsDisabled))
+			if (entity == null)
 			{
-				e.SetField<TResult> (id, newValue);
+				throw new System.ArgumentException ("Invalid entity specified; cannot resolve to AbstractEntity");
+			}
+
+			if (entity.calculationsDisabled)
+			{
+				entity.SetField<TResult> (id, newValue);
 			}
 			else
 			{
@@ -376,6 +404,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		
 		internal void InternalDefineProxy(IEntityProxy proxy)
 		{
 			this.proxy = proxy;
@@ -573,9 +602,19 @@ namespace Epsitec.Common.Support.EntityEngine
 			return type;
 		}
 
+
+		/// <summary>
+		/// Gets the value for the specified field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <returns>The value for the specified field.</returns>
 		protected virtual object DynamicGetField(string id)
 		{
 			PropertyGetter getter = this.context.FindPropertyGetter (this, id);
+
+			//	Caution: the getter, if it exists, expects that the calling entity
+			//	is of the proper type; we cannot pass in a SearchEntity or a
+			//	GenericEntity here !
 
 			if (getter == null)
 			{
@@ -587,6 +626,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Set the value for the specified field.
+		/// </summary>
+		/// <param name="id">The field id.</param>
+		/// <param name="newValue">The new value.</param>
 		protected virtual void DynamicSetField(string id, object newValue)
 		{
 			if (UndefinedValue.IsUndefinedValue (newValue))
@@ -595,6 +639,10 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			PropertySetter setter = this.context.FindPropertySetter (this, id);
+
+			//	Caution: the setter, if it exists, expects that the calling entity
+			//	is of the proper type; we cannot pass in a SearchEntity or a
+			//	GenericEntity here !
 
 			if (setter == null)
 			{
@@ -649,6 +697,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				this.modifiedValues = that.modifiedValues;
 			}
 		}
+
 
 		/// <summary>
 		/// Resolves this instance; override this method if the entity is just
