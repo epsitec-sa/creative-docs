@@ -43,16 +43,16 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
 			
-			this.currentData = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
-			this.dialogData = new DialogData (this.currentData, this.searchContext, DialogDataMode.Search);
+			this.currentItem = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
+			this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
 			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 			this.resolver = this.Application.Data.Resolver;
 
 			this.controller = this.hintListController.SearchController;
-			this.controller.DialogData = this.dialogData;
-			this.controller.DialogPanel = this.searchPanel;
+			this.controller.DialogData   = this.dialogData;
+			this.controller.DialogPanel  = this.searchPanel;
 			this.controller.DialogWindow = this.Application.Window;
-			this.controller.Resolver = this.resolver;
+			this.controller.Resolver     = this.resolver;
 
 			this.dialogData.BindToUserInterface (this.searchPanel);
 
@@ -94,22 +94,24 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		protected override void EnableWorkspace()
 		{
-			CommandDispatcher dispatcher = this.Application.CommandDispatcher;
-
-			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand);
-			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand);
-			dispatcher.Register (Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition, this.ExecuteValidateItemEditionCommand);
+			this.Application.CommandDispatcher.RegisterRange (this.GetCommandHandlers ());
 		}
 
 		protected override void DisableWorkspace()
 		{
-			CommandDispatcher dispatcher = this.Application.CommandDispatcher;
-
-			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand);
-			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand);
-			dispatcher.Unregister (Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition, this.ExecuteValidateItemEditionCommand);
+			this.Application.CommandDispatcher.UnregisterRange (this.GetCommandHandlers ());
 		}
 
+		
+		private IEnumerable<CommandHandlerPair> GetCommandHandlers()
+		{
+			return new CommandHandlerPair[]
+			{
+				new CommandHandlerPair (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand),
+				new CommandHandlerPair (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand),
+				new CommandHandlerPair (Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition, this.ExecuteValidateItemEditionCommand)
+			};
+		}
 
 		private void ExecuteClearSearchCommand(object sender, CommandEventArgs e)
 		{
@@ -170,7 +172,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private Panel editionPanel;
 		private DialogData dialogData;
 		private DialogData editionDialogData;
-		private AbstractEntity currentData;
+		private AbstractEntity currentItem;
 		private EntityContext searchContext;
 		private DialogSearchController controller;
 		private IEntityResolver resolver;

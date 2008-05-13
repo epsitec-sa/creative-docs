@@ -208,6 +208,32 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Registers several command/handler pairs.
+		/// </summary>
+		/// <param name="commandHandlers">The command/handler pairs.</param>
+		public void RegisterRange(IEnumerable<CommandHandlerPair> commandHandlers)
+		{
+			foreach (var item in commandHandlers)
+			{
+				this.Register (item.Command, item.Handler);
+			}
+		}
+
+		/// <summary>
+		/// Unregisters several command/handler pairs.
+		/// </summary>
+		/// <param name="commandHandlers">The command/handler pairs.</param>
+		public void UnregisterRange(IEnumerable<CommandHandlerPair> commandHandlers)
+		{
+			foreach (var item in commandHandlers)
+			{
+				this.Unregister (item.Command, item.Handler);
+			}
+		}
+
+
+		
 		private void Register(Command command, AbstractHandler handler)
 		{
 			EventSlot slot;

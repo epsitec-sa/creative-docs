@@ -157,6 +157,7 @@
     <Compile Include="ButtonStyle.cs" />
     <Compile Include="ButtonClass.cs" />
     <Compile Include="CommandParameters.cs" />
+    <Compile Include="CommandHandlerPair.cs" />
     <Compile Include="FocusChangingEventArgs.cs" />
     <Compile Include="TextFieldDisplayMode.cs" />
     <Compile Include="TextFieldStyle.cs" />
