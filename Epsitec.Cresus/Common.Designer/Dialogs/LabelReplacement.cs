@@ -36,6 +36,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.tabBook = new TabBook(this.window.Root);
 				this.tabBook.Dock = DockStyle.Fill;
+				this.tabBook.ActivePageChanged += new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
 				this.tabCreate = new TabPage();
 				this.tabCreate.TabTitle = "Création d'une nouvelle légende";
@@ -130,7 +131,6 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.buttonUse = new Button(buttons);
 				this.buttonUse.PreferredWidth = 75;
-				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
@@ -252,7 +252,22 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
-			this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+			if (this.buttonUse == null)
+			{
+				return;
+			}
+
+			if (this.tabBook.ActivePage == this.tabCreate)
+			{
+				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Create;
+				this.buttonUse.Enable = true;
+			}
+
+			if (this.tabBook.ActivePage == this.tabUse)
+			{
+				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Use;
+				this.buttonUse.Enable = (this.listResources.SelectedIndex != -1);
+			}
 		}
 
 		protected Druid SelectedResource
@@ -287,6 +302,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.OnClosed();
 		}
 
+
+		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
+		{
+			this.UpdateButtons();
+		}
 
 		private void HandleListModulesSelected(object sender)
 		{
