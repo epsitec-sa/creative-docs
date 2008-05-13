@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ValueDruid : AbstractValue
 	{
-		public ValueDruid()
+		public ValueDruid(DesignerApplication application) : base(application)
 		{
 		}
 
@@ -31,10 +31,11 @@ namespace Epsitec.Common.Designer.Proxies
 				label.Dock = DockStyle.Fill;
 			}
 
-			TextFieldEx field = new TextFieldEx(box);
+			TextField field = new TextField(box);
+			field.IsReadOnly = true;
 			field.PreferredWidth = 88;
 			field.Dock = DockStyle.Right;
-			field.EditionAccepted += new EventHandler(this.HandleFieldValueChanged);
+			field.Clicked += new MessageEventHandler(this.HandleFieldClicked);
 			this.field = field;
 
 			this.UpdateInterface();
@@ -43,24 +44,24 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
-		private void HandleFieldValueChanged(object sender)
+		private void HandleFieldClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque la valeur représentée dans l'interface a changé.
-			if (this.ignoreChange)
+			//	Appelé lorsque la ligne éditable est cliquée.
+			ResourceAccess.Type type = ResourceAccess.Type.Captions;
+			List<Druid> exclude = null;
+			Types.StructuredTypeClass typeClass = Types.StructuredTypeClass.None;
+			Druid druid = (Druid) this.value;
+			bool isNullable = false;
+			Common.Dialogs.DialogResult result = this.application.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.application.CurrentModule, type, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
+
+			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
 				return;
 			}
 
-			TextFieldEx field = sender as TextFieldEx;
-			if (string.IsNullOrEmpty(field.Text))
-			{
-				this.value = Druid.Empty;
-			}
-			else
-			{
-				this.value = Druid.Parse(field.Text);
-			}
+			this.value = druid;
 			this.OnValueChanged();
+			this.UpdateInterface();
 		}
 
 		protected override void UpdateInterface()
@@ -68,23 +69,31 @@ namespace Epsitec.Common.Designer.Proxies
 			//	Met à jour la valeur dans l'interface.
 			if (this.field != null)
 			{
-				this.ignoreChange = true;
-
+				string text = null;
 				Druid druid = (Druid) this.value;
-				if (druid.IsEmpty)
+				if (druid.IsValid)
 				{
-					field.Text = "";
-				}
-				else
-				{
-					field.Text = druid.ToString();
+					Module module = this.application.SearchModule(druid);
+					if (module != null)
+					{
+						CultureMap cultureMap = module.AccessCaptions.Accessor.Collection[druid];
+						if (cultureMap != null)
+						{
+							text = cultureMap.Name;
+						}
+					}
 				}
 
+				this.ignoreChange = true;
+				this.field.Text = text;
+				this.field.SelectAll();
+				this.field.Cursor = 0;
+				ToolTip.Default.SetToolTip(this.field, text);
 				this.ignoreChange = false;
 			}
 		}
 
 
-		protected TextFieldEx field;
+		protected TextField field;
 	}
 }

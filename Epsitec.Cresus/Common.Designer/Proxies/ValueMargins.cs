@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ValueMargins : AbstractValue
 	{
-		public ValueMargins()
+		public ValueMargins(DesignerApplication application) : base(application)
 		{
 			this.min = 0.0;
 			this.max = 100.0;
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.resolution = 1.0;
 		}
 
-		public ValueMargins(double min, double max, double step, double resolution)
+		public ValueMargins(DesignerApplication application, double min, double max, double step, double resolution) : base(application)
 		{
 			this.min = min;
 			this.max = max;

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ObjectManagerPanel : AbstractObjectManager
 	{
-		public ObjectManagerPanel(object objectModifier) : base(objectModifier)
+		public ObjectManagerPanel(DesignerApplication application, object objectModifier) : base(application, objectModifier)
 		{
 		}
 

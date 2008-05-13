@@ -10,12 +10,12 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ValueEnum : AbstractValue
 	{
-		public ValueEnum()
+		public ValueEnum(DesignerApplication application) : base(application)
 		{
 			throw new System.NotImplementedException();
 		}
 
-		public ValueEnum(Types.EnumType enumType)
+		public ValueEnum(DesignerApplication application, Types.EnumType enumType) : base(application)
 		{
 			this.enumType = enumType;
 			this.enumValues = new List<Types.EnumValue>(this.enumType.Values);

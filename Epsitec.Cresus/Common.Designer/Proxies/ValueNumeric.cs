@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ValueNumeric : AbstractValue
 	{
-		public ValueNumeric()
+		public ValueNumeric(DesignerApplication application) : base(application)
 		{
 			this.min = 0.0;
 			this.max = 100.0;
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.resolution = 1.0;
 		}
 
-		public ValueNumeric(double min, double max, double step, double resolution)
+		public ValueNumeric(DesignerApplication application, double min, double max, double step, double resolution) : base(application)
 		{
 			this.min = min;
 			this.max = max;

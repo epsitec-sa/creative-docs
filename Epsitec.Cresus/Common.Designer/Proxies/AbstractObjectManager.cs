@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public abstract class AbstractObjectManager
 	{
-		public AbstractObjectManager(object objectModifier)
+		public AbstractObjectManager(DesignerApplication application, object objectModifier)
 		{
+			this.application = application;
 			this.objectModifier = objectModifier;
 		}
 
@@ -31,7 +32,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValueDruid(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption)
 		{
 			//	Ajoute une valeur de type Druid.
-			ValueDruid value = new ValueDruid();
+			ValueDruid value = new ValueDruid(this.application);
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
@@ -44,7 +45,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValueMargins(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
 			//	Ajoute une valeur de type marges.
-			ValueMargins value = new ValueMargins(min, max, step, resolution);
+			ValueMargins value = new ValueMargins(this.application, min, max, step, resolution);
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
@@ -62,7 +63,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValueIncDec(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max)
 		{
 			//	Ajoute une valeur de type numérique +/-.
-			ValueNumeric value = new ValueNumeric(min, max, 1, 1);
+			ValueNumeric value = new ValueNumeric(this.application, min, max, 1, 1);
 			value.IsOnlyIncDec = true;
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, double min, double max, double step, double resolution)
 		{
 			//	Ajoute une valeur de type numérique éditable.
-			ValueNumeric value = new ValueNumeric(min, max, step, resolution);
+			ValueNumeric value = new ValueNumeric(this.application, min, max, step, resolution);
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
@@ -100,7 +101,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected void AddValue(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, Types.EnumType enumType, bool hasHiddenLabel, bool isChoiceByMenu)
 		{
 			//	Ajoute une valeur de type énumération.
-			ValueEnum value = new ValueEnum(enumType);
+			ValueEnum value = new ValueEnum(this.application, enumType);
 			value.SelectedObjects.Add(selectedObject);
 			value.HasHiddenLabel = hasHiddenLabel;
 			value.IsChoiceByMenu = isChoiceByMenu;
@@ -163,6 +164,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		protected DesignerApplication application;
 		protected object objectModifier;
 		protected int suspendChanges;
 	}

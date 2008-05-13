@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.tabPageProperties.Padding = new Margins(4, 4, 4, 4);
 			this.tabBook.Items.Add(this.tabPageProperties);
 
-			Proxies.ObjectManagerPanel objectManager = new Proxies.ObjectManagerPanel(this.panelEditor.ObjectModifier);
+			Proxies.ObjectManagerPanel objectManager = new Proxies.ObjectManagerPanel(this.designerApplication, this.panelEditor.ObjectModifier);
 			Proxies.ProxyPanel proxy = new Proxies.ProxyPanel(this);
 			this.proxyManager = new Proxies.ProxyManager(objectManager, proxy);
 

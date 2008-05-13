@@ -223,7 +223,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			this.otherToolbar.Items.Add(this.otherButtonGlue);
 
-			Proxies.ObjectManagerForm objectManager = new Proxies.ObjectManagerForm(this.formEditor.ObjectModifier);
+			Proxies.ObjectManagerForm objectManager = new Proxies.ObjectManagerForm(this.designerApplication, this.formEditor.ObjectModifier);
 			Proxies.ProxyForm proxy = new Proxies.ProxyForm(this);
 			this.proxyManager = new Proxies.ProxyManager(objectManager, proxy);
 

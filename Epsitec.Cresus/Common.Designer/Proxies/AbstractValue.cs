@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public abstract class AbstractValue : Types.DependencyObject, System.IComparable
 	{
-		public AbstractValue()
+		public AbstractValue(DesignerApplication application)
 		{
+			this.application = application;
 			this.selectedObjects = new List<Widget>();
 		}
 
@@ -155,6 +156,7 @@ namespace Epsitec.Common.Designer.Proxies
 		#endregion
 
 
+		protected DesignerApplication application;
 		protected AbstractProxy.Type type;
 		protected Widget widgetInterface;
 		protected string label;

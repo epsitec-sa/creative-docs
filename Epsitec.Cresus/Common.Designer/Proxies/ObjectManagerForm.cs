@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Proxies
 	/// </summary>
 	public class ObjectManagerForm : AbstractObjectManager
 	{
-		public ObjectManagerForm(object objectModifier) : base(objectModifier)
+		public ObjectManagerForm(DesignerApplication application, object objectModifier) : base(application, objectModifier)
 		{
 		}
 
