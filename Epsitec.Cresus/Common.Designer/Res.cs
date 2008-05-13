@@ -146,6 +146,8 @@ namespace Epsitec.Common.Designer
 				public static global::Epsitec.Common.Types.Caption FontStyle { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18)); } }
 				//	designer:cap/30KJ1
 				public static global::Epsitec.Common.Types.Caption LabelReplacement { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51)); } }
+				//	designer:cap/30KK1
+				public static global::Epsitec.Common.Types.Caption LabelReplacementClear { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52)); } }
 				//	designer:cap/30KC1
 				public static global::Epsitec.Common.Types.Caption LineWidth { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44)); } }
 				//	designer:cap/30K91

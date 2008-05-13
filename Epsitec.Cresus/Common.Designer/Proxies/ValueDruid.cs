@@ -37,9 +37,15 @@ namespace Epsitec.Common.Designer.Proxies
 			this.buttonGoto.Dock = DockStyle.Right;
 			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonGotoClicked);
 
+			this.buttonClear = new IconButton(box);
+			this.buttonClear.CaptionId = Res.Captions.Form.LabelReplacementClear.Id;
+			this.buttonClear.AutoFocus = false;
+			this.buttonClear.Dock = DockStyle.Right;
+			this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClearClicked);
+
 			this.buttonCaption = new Button(box);
 			this.buttonCaption.Text = "Choisir";
-			this.buttonCaption.PreferredWidth = 66;
+			this.buttonCaption.PreferredWidth = 22*2;
 			this.buttonCaption.Dock = DockStyle.Right;
 			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonCaptionClicked);
 
@@ -52,23 +58,6 @@ namespace Epsitec.Common.Designer.Proxies
 		private void HandleButtonCaptionClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton caption est cliqué.
-#if false
-			ResourceAccess.Type type = ResourceAccess.Type.Captions;
-			List<Druid> exclude = null;
-			Types.StructuredTypeClass typeClass = Types.StructuredTypeClass.None;
-			Druid druid = (Druid) this.value;
-			bool isNullable = false;
-			Common.Dialogs.DialogResult result = this.application.DlgResourceSelector(Dialogs.ResourceSelector.Operation.Selection, this.application.CurrentModule, type, ref typeClass, ref druid, ref isNullable, exclude, Druid.Empty);
-
-			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
-			{
-				return;
-			}
-
-			this.value = druid;
-			this.OnValueChanged();
-			this.UpdateInterface();
-#else
 			Druid druid = (Druid) this.value;
 			Common.Dialogs.DialogResult result = this.application.DlgLabelReplacement(null, ref druid);
 
@@ -80,7 +69,14 @@ namespace Epsitec.Common.Designer.Proxies
 			this.value = druid;
 			this.OnValueChanged();
 			this.UpdateInterface();
-#endif
+		}
+
+		private void HandleButtonClearClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton clear est cliqué.
+			this.value = Druid.Empty;
+			this.OnValueChanged();
+			this.UpdateInterface();
 		}
 
 		private void HandleButtonGotoClicked(object sender, MessageEventArgs e)
@@ -119,12 +115,14 @@ namespace Epsitec.Common.Designer.Proxies
 				//?this.buttonCaption.Text = text;
 				ToolTip.Default.SetToolTip(this.buttonCaption, text);
 
+				this.buttonClear.Enable = !string.IsNullOrEmpty(text);
 				this.buttonGoto.Enable = !string.IsNullOrEmpty(text);
 			}
 		}
 
 
 		protected Button buttonCaption;
+		protected IconButton buttonClear;
 		protected IconButton buttonGoto;
 	}
 }
