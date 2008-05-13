@@ -95,6 +95,7 @@ namespace Epsitec.Common.Designer
 				this.dlgBindingSelector  = new Dialogs.BindingSelector(this);
 				this.dlgFieldName        = new Dialogs.ResourceName(this);
 				this.dlgEntityField      = new Dialogs.EntityField(this);
+				this.dlgLabelReplacement = new Dialogs.LabelReplacement(this);
 				this.dlgEntityComment    = new Dialogs.EntityComment(this);
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
@@ -2438,6 +2439,14 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityField.AccessClose(out resource);
 		}
 
+		public Common.Dialogs.DialogResult DlgLabelReplacement(string prefix, ref Druid resource)
+		{
+			//	Ouvre le dialogue pour choisir le Caption de remplacement d'une champ dans un Form.
+			this.dlgLabelReplacement.AccessOpen(prefix, resource);
+			this.dlgLabelReplacement.Show();  // choix dans le dialogue...
+			return this.dlgLabelReplacement.AccessClose(out resource);
+		}
+
 		public string DlgEntityComment(string text)
 		{
 			//	Ouvre le dialogue pour choisir le texte d'un commentaire.
@@ -2665,6 +2674,7 @@ namespace Epsitec.Common.Designer
 		protected Dialogs.BindingSelector		dlgBindingSelector;
 		protected Dialogs.ResourceName			dlgFieldName;
 		protected Dialogs.EntityField			dlgEntityField;
+		protected Dialogs.LabelReplacement		dlgLabelReplacement;
 		protected Dialogs.EntityComment			dlgEntityComment;
 		protected Dialogs.EntityExpression		dlgEntityExpression;
 		protected Dialogs.InitialMessage		dlgInitialMessage;

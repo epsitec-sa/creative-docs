@@ -52,6 +52,7 @@ namespace Epsitec.Common.Designer.Proxies
 		private void HandleButtonCaptionClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton caption est cliqué.
+#if false
 			ResourceAccess.Type type = ResourceAccess.Type.Captions;
 			List<Druid> exclude = null;
 			Types.StructuredTypeClass typeClass = Types.StructuredTypeClass.None;
@@ -67,6 +68,19 @@ namespace Epsitec.Common.Designer.Proxies
 			this.value = druid;
 			this.OnValueChanged();
 			this.UpdateInterface();
+#else
+			Druid druid = (Druid) this.value;
+			Common.Dialogs.DialogResult result = this.application.DlgLabelReplacement(null, ref druid);
+
+			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
+			{
+				return;
+			}
+
+			this.value = druid;
+			this.OnValueChanged();
+			this.UpdateInterface();
+#endif
 		}
 
 		private void HandleButtonGotoClicked(object sender, MessageEventArgs e)
