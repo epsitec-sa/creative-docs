@@ -21,8 +21,16 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		public DataBrowserRow(DataQuery query, object[] items)
 		{
-			this.query = query;
-			this.items = items;
+			this.query   = query;
+			this.items   = items;
+			this.indexes = DataBrowserRow.emptyIndexes;
+		}
+
+		public DataBrowserRow(DataQuery query, DbReader.RowData row)
+		{
+			this.query   = query;
+			this.items   = row.Values;
+			this.indexes = row.Indexes;
 		}
 
 		/// <summary>
@@ -83,6 +91,18 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		/// <summary>
+		/// Gets the column count.
+		/// </summary>
+		/// <value>The column count.</value>
+		public int ColumnCount
+		{
+			get
+			{
+				return this.items.Length;
+			}
+		}
+
+		/// <summary>
 		/// Gets the items, sorted in the same order as the columns defined by
 		/// the <see cref="Query"/> property..
 		/// </summary>
@@ -95,7 +115,11 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+
+		private static readonly object[] emptyIndexes = new object[0];
+
 		private readonly DataQuery query;
 		private readonly object[] items;
+		private readonly object[] indexes;
 	}
 }

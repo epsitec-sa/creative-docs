@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Database
 			this.longToShortTableAliasMap = new Dictionary<string, string> ();
 			this.shortAliasToTableMap = new Dictionary<string, DbTable> ();
 			this.shortAliasToColumnMap = new Dictionary<string, DbTableColumn> ();
+			this.renamedTables = new List<DbTable> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
 			this.conditions = new List<DbSelectCondition> ();
 			this.orderByTableColumns = new Dictionary<string, SqlSortOrder> ();
@@ -40,6 +41,7 @@ namespace Epsitec.Cresus.Database
 			set;
 		}
 
+		
 		public void AddQueryField(DbTableColumn queryField)
 		{
 			this.RegisterTableColumn (queryField);
@@ -105,7 +107,7 @@ namespace Epsitec.Cresus.Database
 			this.dataReaderClosed = false;
 		}
 
-		public IEnumerable<object[]> Rows
+		public IEnumerable<RowData> Rows
 		{
 			get
 			{
@@ -119,8 +121,10 @@ namespace Epsitec.Cresus.Database
 				}
 
 				int n = this.renamedTableColumns.Count;
+				int m = this.renamedTables.Count;
+
 				int[] reordering = new int[n];
-				object[] values = new object[n];
+				object[] buffer  = new object[n+m];
 
 				for (int i = 0; i < n; i++)
 				{
@@ -130,15 +134,22 @@ namespace Epsitec.Cresus.Database
 
 				while (this.dataReader.Read ())
 				{
-					object[] output = new object[n];
-					this.dataReader.GetValues (values);
+					object[] values  = new object[n];
+					object[] indexes = new object[m];
+
+					this.dataReader.GetValues (buffer);
 
 					for (int i = 0; i < n; i++)
 					{
-						output[reordering[i]] = values[i];
+						values[reordering[i]] = buffer[i];
 					}
 
-					yield return output;
+					for (int i = 0; i < m; i++)
+					{
+						indexes[i] = buffer[n+i];
+					}
+
+					yield return new RowData (values, indexes);
 				}
 
 				this.CloseDataReader ();
@@ -155,6 +166,35 @@ namespace Epsitec.Cresus.Database
 				this.dataReader.Dispose ();
 				this.dataReader = null;
 			}
+		}
+
+
+		public struct RowData
+		{
+			public RowData(object[] values, object[] indexes)
+			{
+				this.values = values;
+				this.indexes = indexes;
+			}
+
+			public object[] Values
+			{
+				get
+				{
+					return this.values;
+				}
+			}
+
+			public object[] Indexes
+			{
+				get
+				{
+					return this.indexes;
+				}
+			}
+
+			private readonly object[] values;
+			private readonly object[] indexes;
 		}
 
 
@@ -256,6 +296,7 @@ namespace Epsitec.Cresus.Database
 
 				this.longToShortTableAliasMap[longTableAlias] = shortTableAlias;
 				this.shortAliasToTableMap[shortTableAlias] = originalTableColumn.Table;
+				this.renamedTables.Add (originalTableColumn.Table);
 			}
 
 			return shortTableAlias;
@@ -278,6 +319,20 @@ namespace Epsitec.Cresus.Database
 				}
 
 				select.Fields.Add (fieldDefinition);
+			}
+
+			int index = 0;
+
+			foreach (DbTable table in this.renamedTables)
+			{
+				string alias     = string.Format (System.Globalization.CultureInfo.InvariantCulture, "I{0}", index);
+				string tableName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", index);
+
+				SqlField fieldDefinition = SqlField.CreateAliasedName (tableName, Tags.ColumnId, alias);
+
+				select.Fields.Add (fieldDefinition);
+
+				index++;
 			}
 		}
 
@@ -332,6 +387,7 @@ namespace Epsitec.Cresus.Database
 		private readonly Dictionary<string, string> longToShortTableAliasMap;
 		private readonly Dictionary<string, DbTable> shortAliasToTableMap;
 		private readonly Dictionary<string, DbTableColumn> shortAliasToColumnMap;
+		private readonly List<DbTable> renamedTables;
 		private readonly List<DbTableColumn> renamedTableColumns;
 		private readonly List<DbSelectCondition> conditions;
 		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;

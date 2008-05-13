@@ -127,9 +127,9 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				reader.CreateDataReader (transaction);
 				
-				foreach (object[] values in reader.Rows)
+				foreach (var item in reader.Rows)
 				{
-					lines.Add (string.Format ("{0}, {1}, {2}", values[0], values[1], values[2]));
+					lines.Add (string.Format ("{0}, {1}, {2}", item.Values[0], item.Values[1], item.Values[2]));
 				}
 
 				transaction.Commit ();
@@ -175,9 +175,9 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				reader.CreateDataReader (transaction);
 
-				foreach (object[] values in reader.Rows)
+				foreach (var item in reader.Rows)
 				{
-					lines.Add (string.Format ("{0}, {1}, {2}", values[0], values[1], values[2]));
+					lines.Add (string.Format ("{0}, {1}, {2}", item.Values[0], item.Values[1], item.Values[2]));
 				}
 
 				transaction.Commit ();

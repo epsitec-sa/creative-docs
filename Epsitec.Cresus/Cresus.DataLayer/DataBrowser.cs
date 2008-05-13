@@ -126,9 +126,9 @@ namespace Epsitec.Cresus.DataLayer
 
 				reader.CreateDataReader (transaction);
 
-				foreach (object[] values in reader.Rows)
+				foreach (var row in reader.Rows)
 				{
-					yield return new DataBrowserRow (query, values);
+					yield return new DataBrowserRow (query, row);
 				}
 			}
 		}
