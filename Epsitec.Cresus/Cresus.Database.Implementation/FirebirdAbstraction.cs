@@ -34,7 +34,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.dbAccess  = dbAccess;
 			this.dbFactory = dbFactory;
 
-			this.dbConnectionString = FirebirdAbstraction.MakeConnectionString (this.dbAccess, this.MakeDbFilePath (), this.serverType);
+			string path = this.GetDbFilePath ();
+
+			this.dbConnectionString = FirebirdAbstraction.MakeConnectionString (this.dbAccess, path, this.serverType);
 			
 			if (this.dbAccess.CreateDatabase)
 			{
@@ -177,14 +179,21 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier, si nécessaire.
 			//	Il faut donc que nous le créions nous-même s'il n'existe pas encore.
-			
-			string path = this.MakeDbFilePath ();
+
+			string path = this.GetDbFilePath ();
 			System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (path));
 
 			string connection = FirebirdAbstraction.MakeConnectionStringForDbCreation (this.dbAccess, path, this.serverType);
 			
 			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fbPageSize, true, false);
 		}
+
+
+		internal string GetDbFilePath()
+		{
+			return FirebirdAbstraction.MakeDbFilePath (this.dbAccess, this.engineType);
+		}
+
 		
 		public static string MakeConnectionStringForDbCreation(DbAccess dbAccess, string path, FbServerType serverType)
 		{
@@ -231,13 +240,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			return buffer.ToString ();
 		}
 		
-		public string MakeDbFilePath()
+		public static string MakeDbFilePath(DbAccess dbAccess, EngineType engineType)
 		{
-			FirebirdAbstraction.ValidateName (this.dbAccess, this.dbAccess.Database);
+			FirebirdAbstraction.ValidateName (dbAccess, dbAccess.Database);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			switch (this.engineType)
+			switch (engineType)
 			{
 				case EngineType.Embedded:
 					buffer.Append (Globals.Directories.UserAppData);
@@ -250,10 +259,10 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new Database.Exceptions.FactoryException (string.Format ("EngineType {0} not supported.", this.engineType));
+					throw new Database.Exceptions.FactoryException (string.Format ("EngineType {0} not supported.", engineType));
 			}
 
-			buffer.Append (this.dbAccess.Database);
+			buffer.Append (dbAccess.Database);
 			buffer.Append (FirebirdAbstraction.fbDbFileExtension);
 			
 			return buffer.ToString ();
@@ -387,7 +396,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			return list.ToArray ();
 		}
-		
+
 		
 		public System.Data.IDbCommand NewDbCommand()
 		{

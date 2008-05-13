@@ -5,31 +5,16 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbInfrastructureTest
 	{
+		[TestFixtureSetUp]
+		public void Setup()
+		{
+		}
+
 		[Test]
 		public void Check01CreateDatabase()
 		{
-			//	Si on n'arrive pas à détruire le fichier, c'est que le serveur Firebird a peut-être
-			//	encore conservé un handle ouvert; par expérience, cela peut prendre ~10s jusqu'à ce
-			//	que la fermeture soit effective.
-
-			try
-			{
-				System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD");
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
-				System.Threading.Thread.Sleep (5000);
-
-				try
-				{
-					System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD");
-				}
-				catch
-				{
-				}
-			}
-
+			Tool.DeleteDatabase ("fiche");
+			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
 				DbAccess db_access = DbInfrastructure.CreateDatabaseAccess ("fiche");

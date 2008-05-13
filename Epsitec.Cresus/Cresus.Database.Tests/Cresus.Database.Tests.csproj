@@ -221,6 +221,7 @@
     <Compile Include="SqlTableTest.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tool.cs" />
     <Compile Include="TypeConverterTest.cs">
       <SubType>Code</SubType>
     </Compile>

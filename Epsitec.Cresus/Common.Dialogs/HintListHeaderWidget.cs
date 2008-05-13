@@ -15,7 +15,8 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// The <c>HintListHeaderWidget</c> class ...
+	/// The <c>HintListHeaderWidget</c> class represents the header of a hint list
+	/// (see <see cref="HintListWidget"/> and <see cref="HintListController"/>).
 	/// </summary>
 	public sealed class HintListHeaderWidget : FrameBox
 	{
@@ -68,7 +69,7 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		public HintListContentType ContentType
+		public HintListContentType				ContentType
 		{
 			get
 			{
@@ -84,7 +85,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public AbstractToolBar ToolBar
+		public AbstractToolBar					ToolBar
 		{
 			get
 			{
@@ -92,6 +93,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		
 		private void OnContentTypeChanged()
 		{
 			switch (this.contentType)
@@ -114,7 +116,6 @@ namespace Epsitec.Common.Dialogs
 			this.title.Text = string.Format (this.GetTitleTextFormat (), "Adresse de facturation");
 		}
 
-		
 		private string GetTitleTextFormat()
 		{
 			switch (this.contentType)
@@ -129,12 +130,13 @@ namespace Epsitec.Common.Dialogs
 			return "{0}";
 		}
 
-		private readonly Widget topHalf;
-		private readonly Widget bottomHalf;
-		private readonly StaticImage image;
-		private readonly StaticText title;
-		private readonly HToolBar toolBar;
+		
+		private readonly Widget					topHalf;
+		private readonly Widget					bottomHalf;
+		private readonly StaticImage			image;
+		private readonly StaticText				title;
+		private readonly HToolBar				toolBar;
 
-		private HintListContentType contentType;
+		private HintListContentType				contentType;
 	}
 }

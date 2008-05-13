@@ -60,6 +60,26 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets the database file paths.
+		/// </summary>
+		/// <param name="databaseAccess">The database access.</param>
+		/// <returns>A collection of file paths which make up the database on disk
+		/// or <c>null</c>.</returns>
+		public static IEnumerable<string> GetDatabaseFilePaths(DbAccess databaseAccess)
+		{
+			IDbAbstractionFactory factory = DbFactory.FindDatabaseAbstractionFactory (databaseAccess.Provider);
+
+			if (factory != null)
+			{
+				return factory.QueryDatabaseFilePaths (databaseAccess);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Finds the database abstraction factory based on a provider name.
 		/// </summary>
 		/// <param name="provider">The provider name.</param>

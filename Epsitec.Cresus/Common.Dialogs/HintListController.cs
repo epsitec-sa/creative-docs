@@ -105,6 +105,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the hint list widget used to represent the list in the user
+		/// interface.
+		/// </summary>
+		/// <value>The hint list widget.</value>
 		public HintListWidget HintListWidget
 		{
 			get
@@ -244,7 +249,14 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		
+		#region HintListEmbedder
 
+		/// <summary>
+		/// The <c>HintListEmbedder</c> class manages the embedding of the hint
+		/// list widget in the window root; it is responsible for the resize of
+		/// the window when the list visibility changes.
+		/// </summary>
 		private class HintListEmbedder
 		{
 			public HintListEmbedder(Window window, HintListWidget widget)
@@ -326,7 +338,9 @@ namespace Epsitec.Common.Dialogs
 			private double width;
 		}
 
-		
+		#endregion
+
+
 		private void HandleGlobalSearchContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			System.Diagnostics.Debug.Write (e.ToString ());
@@ -392,6 +406,7 @@ namespace Epsitec.Common.Dialogs
 			this.hintListWidget.Items = view;
 		}
 
+		
 		private readonly DialogSearchController searchController;
 		private readonly CollectionView			emptyCollectionView;
 		private ISearchContext					activeSearchContext;

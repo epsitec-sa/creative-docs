@@ -21,7 +21,7 @@
     <RemoteDebugMachine>
     </RemoteDebugMachine>
     <StartAction>Program</StartAction>
-    <StartArguments>..\Cresus.Database.Tests\bin\Debug\Cresus.Database.Tests.dll /run</StartArguments>
+    <StartArguments>..\Cresus.Database.Tests\bin\Debug\Cresus.Database.Tests.dll</StartArguments>
     <StartPage>
     </StartPage>
     <StartProgram>S:\Epsitec.Cresus\External\nunit-2.4.x\nunit.exe</StartProgram>

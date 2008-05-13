@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Queries the database file paths and returns an array of paths for the
+		/// files which make up the database.
+		/// </summary>
+		/// <param name="dbAccess">The database access definition.</param>
+		/// <returns>The array of file paths.</returns>
+		string[] QueryDatabaseFilePaths(DbAccess dbAccess);
+
+		/// <summary>
 		/// Allocates a new database abstraction object and establishes a connection
 		/// to the specified database.
 		/// </summary>

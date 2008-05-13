@@ -16,7 +16,8 @@ namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
 	/// The <c>HintListWidget</c> class represents a hint list using a dedicated
-	/// item panel.
+	/// item panel. It is tightly bound to the <see cref="HintListController"/>
+	/// class.
 	/// </summary>
 	public sealed class HintListWidget : FrameBox
 	{
@@ -43,7 +44,8 @@ namespace Epsitec.Common.Dialogs
 			this.BackColor = Drawing.Color.FromName ("White");
 		}
 
-		public HintListHeaderWidget Header
+		
+		public HintListHeaderWidget				Header
 		{
 			get
 			{
@@ -51,7 +53,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		public ICollectionView Items
+		public ICollectionView					Items
 		{
 			get
 			{
@@ -89,10 +91,12 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		
 		public bool Navigate(Message message)
 		{
 			return this.itemTable.ItemPanel.Navigate (message);
 		}
+		
 		
 		private void HandleItemsCurrentChanged(object sender)
 		{
@@ -107,10 +111,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public event EventHandler CurrentItemChanged;
+		
+		public event EventHandler				CurrentItemChanged;
 
-		private readonly ItemTable itemTable;
-		private readonly HintListHeaderWidget header;
-		private ICollectionView items;
+		private readonly ItemTable				itemTable;
+		private readonly HintListHeaderWidget	header;
+		private ICollectionView					items;
 	}
 }

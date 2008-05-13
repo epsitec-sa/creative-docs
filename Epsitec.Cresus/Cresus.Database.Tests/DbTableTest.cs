@@ -11,24 +11,8 @@ namespace Epsitec.Cresus.Database
 		[TestFixtureSetUp]
 		public void Setup()
 		{
-			try
-			{
-				System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\TABLETEST.FIREBIRD");
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
-				System.Threading.Thread.Sleep (5000);
-
-				try
-				{
-					System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\TABLETEST.FIREBIRD");
-				}
-				catch
-				{
-				}
-			}
-
+			Tool.DeleteDatabase ("tabletest");
+			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
 				infrastructure.CreateDatabase (DbInfrastructure.CreateDatabaseAccess ("tabletest"));

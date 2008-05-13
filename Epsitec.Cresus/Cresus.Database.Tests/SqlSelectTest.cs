@@ -6,6 +6,12 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class SqlSelectTest
 	{
+		[TestFixtureSetUp]
+		public void Initialize()
+		{
+			Tool.RestoreDatabase ("employee", @"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
+		}
+
 		[Test] public void Check00NewSqlSelect()
 		{
 			//	il n'existe qu'un seul constructeur, sans paramètre

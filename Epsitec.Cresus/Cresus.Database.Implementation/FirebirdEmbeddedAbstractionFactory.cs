@@ -41,7 +41,15 @@ namespace Epsitec.Cresus.Database.Implementation
 				return this.typeConverter;
 			}
 		}
-		
+
+		public string[] QueryDatabaseFilePaths(DbAccess dbAccess)
+		{
+			return new string[]
+			{
+				FirebirdAbstraction.MakeDbFilePath (dbAccess, EngineType.Embedded)
+			};
+		}
+
 		#endregion
 		
 		private FirebirdTypeConverter			typeConverter = new FirebirdTypeConverter ();

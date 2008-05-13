@@ -5,25 +5,10 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbDictTest
 	{
-		[TestFixtureSetUp] public void Setup()
+		[TestFixtureSetUp]
+		public void Setup()
 		{
-			try
-			{
-				System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD");
-			}
-			catch (System.IO.IOException ex)
-			{
-				System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
-				System.Threading.Thread.Sleep (5000);
-				
-				try
-				{
-					System.IO.File.Delete (@"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD");
-				}
-				catch
-				{
-				}
-			}
+			Tool.DeleteDatabase ("fiche");
 
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{

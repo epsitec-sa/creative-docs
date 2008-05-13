@@ -1,5 +1,5 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using FirebirdSql.Data.FirebirdClient;
 using FirebirdSql.Data.Services;
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.fb = fb;
 		}
 		
-		#region IServiceTools Members
+		#region IDbServiceTools Members
 		
 		public void Backup(string path)
 		{
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			backup.BackupFiles.Add (new FbBackupFile (path, 2048));
 			
-			backup.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.MakeDbFilePath (), fb.ServerType);
+			backup.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.GetDbFilePath (), fb.ServerType);
 			backup.Options          = FbBackupFlags.IgnoreLimbo;
 			backup.Verbose          = false;
 			backup.ServiceOutput   += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			FbRestore restore = new FbRestore();
 			
-			restore.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.MakeDbFilePath (), fb.ServerType);
+			restore.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.GetDbFilePath (), fb.ServerType);
 			restore.BackupFiles.Add (new FbBackupFile (path, 2048));
 			
 			restore.Verbose        = false;
@@ -54,12 +54,19 @@ namespace Epsitec.Cresus.Database.Implementation
 			restore.Options        = FbRestoreFlags.Create | FbRestoreFlags.Replace;
 			restore.ServiceOutput += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
 
-			restore.Execute();
+			try
+			{
+				restore.Execute ();
+			}
+			finally
+			{
+				System.Diagnostics.Debug.WriteLine ("Restore: done.");
+			}
 		}
 		
 		public string GetDatabasePath()
 		{
-			return this.fb.MakeDbFilePath ();
+			return this.fb.GetDbFilePath ();
 		}
 		
 		#endregion
