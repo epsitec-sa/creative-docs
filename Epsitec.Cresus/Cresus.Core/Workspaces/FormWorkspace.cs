@@ -53,6 +53,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.controller.DialogPanel  = this.searchPanel;
 			this.controller.DialogWindow = this.Application.Window;
 			this.controller.Resolver     = this.resolver;
+			this.controller.AssertReady ();
 
 			this.dialogData.BindToUserInterface (this.searchPanel);
 
@@ -167,14 +168,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 		}
 
 
-		private readonly HintListController hintListController;
-		private Panel searchPanel;
-		private Panel editionPanel;
-		private DialogData dialogData;
-		private DialogData editionDialogData;
-		private AbstractEntity currentItem;
-		private EntityContext searchContext;
-		private DialogSearchController controller;
-		private IEntityResolver resolver;
+		private readonly HintListController		hintListController;
+		private Panel							searchPanel;
+		private Panel							editionPanel;
+		private DialogData						dialogData;
+		private DialogData						editionDialogData;
+		private AbstractEntity					currentItem;
+		private EntityContext					searchContext;
+		private DialogSearchController			controller;
+		private IEntityResolver					resolver;
 	}
 }

@@ -169,6 +169,17 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Asserts that the search controller is ready for use.
+		/// </summary>
+		public void AssertReady()
+		{
+			System.Diagnostics.Debug.Assert (this.DialogData != null);
+			System.Diagnostics.Debug.Assert (this.DialogWindow != null);
+			System.Diagnostics.Debug.Assert (this.DialogPanel != null);
+			System.Diagnostics.Debug.Assert (this.Resolved != null);
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -249,12 +260,15 @@ namespace Epsitec.Common.Dialogs
 		/// <param name="sender">The controller which gets activated.</param>
 		private void HandlePlaceholderContextActivated(object sender)
 		{
-			if (PlaceholderContext.Depth == 1)
-			{
-				UI.Controllers.AbstractController controller = sender as UI.Controllers.AbstractController;
-				object value = controller.GetActualValue ();
+			UI.Controllers.AbstractController controller = sender as UI.Controllers.AbstractController;
 
-				this.UpdateSearchTemplate (PlaceholderContext.InteractivePlaceholder, value);
+			if ((PlaceholderContext.Depth == 1) &&
+				(controller.Placeholder.Window == this.DialogWindow))
+			{
+				object      value       = controller.GetActualValue ();
+				Placeholder placeholder = PlaceholderContext.GetInteractivePlaceholder (this.DialogWindow);
+
+				this.UpdateSearchTemplate (placeholder, value);
 			}
 		}
 

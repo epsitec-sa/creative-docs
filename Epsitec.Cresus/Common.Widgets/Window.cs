@@ -20,15 +20,27 @@ namespace Epsitec.Common.Widgets
 	public class Window : Types.DependencyObject, Support.Data.IContainer, Support.Platform.IFileOperationWindow
 	{
 		public Window()
+			: this (null)
 		{
-			this.Initialize (new WindowRoot (this));
 		}
 		
 		internal Window(WindowRoot root)
 		{
+			this.id = System.Threading.Interlocked.Increment (ref Window.next_window_id);
+
+			if (root == null)
+			{
+				root = new WindowRoot (this);
+			}
+			
 			this.Initialize (root);
 		}
-		
+
+
+		public long GetWindowSerialId()
+		{
+			return this.id;
+		}
 		
 		private void Initialize(WindowRoot root)
 		{
@@ -2651,9 +2663,13 @@ namespace Epsitec.Common.Widgets
 			AdornerChanged,
 			CultureChanged
 		}
-		
+
+		private static long						next_window_id;
+
 		private string							name;
 		private string							text;
+
+		private readonly long					id;
 		
 		private Platform.Window					window;
 		private Window							owner;

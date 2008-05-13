@@ -1,6 +1,8 @@
 //	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.UI
@@ -12,28 +14,6 @@ namespace Epsitec.Common.UI
 	/// </summary>
 	public static class PlaceholderContext
 	{
-		/// <summary>
-		/// Gets the interactive placeholder, which is the one which started the
-		/// current chain of binding events.
-		/// </summary>
-		/// <value>The interactive placeholder.</value>
-		public static Placeholder				InteractivePlaceholder
-		{
-			get
-			{
-				PlaceholderContext.EnsureData ();
-				
-				if (PlaceholderContext.data.StackRoot == null)
-				{
-					return null;
-				}
-				else
-				{
-					return PlaceholderContext.data.StackRoot.Placeholder;
-				}
-			}
-		}
-
 		/// <summary>
 		/// Gets the active placeholder, which is the one which is currently
 		/// generating the binding event.
@@ -73,62 +53,6 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
-		/// Occurs when a context is activated.
-		/// </summary>
-		public static event Support.EventHandler ContextActivated
-		{
-			add
-			{
-				PlaceholderContext.EnsureData ();
-				PlaceholderContext.data.StackPushed += value;
-			}
-			remove
-			{
-				PlaceholderContext.EnsureData ();
-				PlaceholderContext.data.StackPushed -= value;
-			}
-		}
-
-		/// <summary>
-		/// Occurs when a context is deactivated.
-		/// </summary>
-		public static event Support.EventHandler ContextDeactivated
-		{
-			add
-			{
-				PlaceholderContext.EnsureData ();
-				PlaceholderContext.data.StackPopped += value;
-			}
-			remove
-			{
-				PlaceholderContext.EnsureData ();
-				PlaceholderContext.data.StackPopped -= value;
-			}
-		}
-
-		/// <summary>
-		/// Pushes the specified controller onto the <see cref="Placeholder"/>
-		/// stack.
-		/// </summary>
-		/// <param name="controller">The controller.</param>
-		public static void Push(Controllers.AbstractController controller)
-		{
-			PlaceholderContext.EnsureData ();
-			PlaceholderContext.data.Push (controller);
-		}
-
-		/// <summary>
-		/// Pops the specified controller from the <see cref="Placeholder"/>
-		/// stack.
-		/// </summary>
-		/// <param name="controller">The controller.</param>
-		public static void Pop(Controllers.AbstractController controller)
-		{
-			PlaceholderContext.EnsureData ();
-			PlaceholderContext.data.Pop (controller);
-		}
-
-		/// <summary>
 		/// Sets the active.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
@@ -136,6 +60,29 @@ namespace Epsitec.Common.UI
 		public static System.IDisposable SetActive(Controllers.AbstractController controller)
 		{
 			return new ActiveHelper (controller);
+		}
+
+		/// <summary>
+		/// Gets the interactive placeholder, which is the one which started the
+		/// current chain of binding events. The search is done for the specified
+		/// window.
+		/// </summary>
+		/// <param name="window">The window.</param>
+		/// <returns>The interactive placeholder.</returns>
+		public static Placeholder GetInteractivePlaceholder(Window window)
+		{
+			PlaceholderContext.EnsureData ();
+
+			Record record = PlaceholderContext.data.GetStackRoot (window.GetWindowSerialId ());
+
+			if (record == null)
+			{
+				return null;
+			}
+			else
+			{
+				return record.Placeholder;
+			}
 		}
 
 		/// <summary>
@@ -158,6 +105,28 @@ namespace Epsitec.Common.UI
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Pushes the specified controller onto the <see cref="Placeholder"/>
+		/// stack.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
+		private static void Push(Controllers.AbstractController controller)
+		{
+			PlaceholderContext.EnsureData ();
+			PlaceholderContext.data.Push (controller);
+		}
+
+		/// <summary>
+		/// Pops the specified controller from the <see cref="Placeholder"/>
+		/// stack.
+		/// </summary>
+		/// <param name="controller">The controller.</param>
+		private static void Pop(Controllers.AbstractController controller)
+		{
+			PlaceholderContext.EnsureData ();
+			PlaceholderContext.data.Pop (controller);
 		}
 
 		/// <summary>
@@ -227,6 +196,21 @@ namespace Epsitec.Common.UI
 				get;
 				private set;
 			}
+
+			public long WindowId
+			{
+				get
+				{
+					if (this.Placeholder == null)
+					{
+						return 0;
+					}
+					else
+					{
+						return this.Placeholder.Window.GetWindowSerialId ();
+					}
+				}
+			}
 		}
 
 		#endregion
@@ -238,6 +222,7 @@ namespace Epsitec.Common.UI
 			public ThreadData()
 			{
 				this.stack = new Stack<Record> ();
+				this.stackRoots = new Dictionary<long, Record> ();
 			}
 
 			public Stack<Record> Stack
@@ -248,15 +233,17 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			public Record StackRoot
+			public Record GetStackRoot(long windowId)
 			{
-				get
+				Record record;
+				
+				if (this.stackRoots.TryGetValue (windowId, out record))
 				{
-					return this.stackRoot;
+					return record;
 				}
-				set
+				else
 				{
-					this.stackRoot = value;
+					return null;
 				}
 			}
 
@@ -265,11 +252,11 @@ namespace Epsitec.Common.UI
 				Stack<Record> stack = this.stack;
 				Record record = new Record (controller);
 
-				if (this.stackRoot == null)
+				if (this.GetStackRoot (record.WindowId) == null)
 				{
 					System.Diagnostics.Debug.Assert (stack.Count == 0);
 
-					this.stackRoot = record;
+					this.stackRoots[record.WindowId] = record;
 				}
 
 				this.stack.Push (record);
@@ -291,9 +278,9 @@ namespace Epsitec.Common.UI
 
 				if (stack.Count == 0)
 				{
-					System.Diagnostics.Debug.Assert (this.stackRoot == record);
+					System.Diagnostics.Debug.Assert (this.GetStackRoot (record.WindowId) == record);
 
-					this.stackRoot = null;
+					this.stackRoots.Remove (record.WindowId);
 				}
 
 				this.OnStackPopped (controller);
@@ -318,11 +305,45 @@ namespace Epsitec.Common.UI
 			public event Support.EventHandler	StackPushed;
 			public event Support.EventHandler	StackPopped;
 			
-			private readonly Stack<Record>		stack;
-			private Record						stackRoot;
+			readonly Stack<Record>				stack;
+			readonly Dictionary<long, Record>	stackRoots;
 		}
 
 		#endregion
+
+		/// <summary>
+		/// Occurs when a context is activated.
+		/// </summary>
+		public static event Support.EventHandler ContextActivated
+		{
+			add
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPushed += value;
+			}
+			remove
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPushed -= value;
+			}
+		}
+
+		/// <summary>
+		/// Occurs when a context is deactivated.
+		/// </summary>
+		public static event Support.EventHandler ContextDeactivated
+		{
+			add
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPopped += value;
+			}
+			remove
+			{
+				PlaceholderContext.EnsureData ();
+				PlaceholderContext.data.StackPopped -= value;
+			}
+		}
 
 		[System.ThreadStatic]
 		private static ThreadData				data;
