@@ -49,21 +49,52 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.tabBook.Items.Add(this.tabUse);
 
 				this.tabBook.ActivePage = this.tabUse;
-				
-				//	Corps principal.
-				Widget body = new Widget(this.tabUse);
-				body.Dock = DockStyle.Fill;
 
-				Widget left = new Widget(body);
+				//	Onglet "créer".
+				FrameBox createBox;
+				StaticText label;
+
+				createBox = new FrameBox(this.tabCreate);
+				createBox.Dock = DockStyle.Top;
+				createBox.Margins = new Margins(0, 0, 50, 0);
+
+				label = new StaticText(createBox);
+				label.Text = "Nom de la ressource à créer";
+				label.PreferredWidth = 150;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
+				label.Dock = DockStyle.Left;
+				label.Margins = new Margins(0, 5, 0, 0);
+
+				this.nameToCreate = new TextField(createBox);
+				this.nameToCreate.IsReadOnly = true;
+				this.nameToCreate.Dock = DockStyle.Fill;
+
+				createBox = new FrameBox(this.tabCreate);
+				createBox.Dock = DockStyle.Top;
+				createBox.Margins = new Margins(0, 0, 5, 0);
+
+				label = new StaticText(createBox);
+				label.Text = "Texte de la légende à créer";
+				label.PreferredWidth = 150;
+				label.ContentAlignment = ContentAlignment.MiddleRight;
+				label.Dock = DockStyle.Left;
+				label.Margins = new Margins(0, 5, 0, 0);
+
+				this.textToCreate = new TextField(createBox);
+				this.textToCreate.Dock = DockStyle.Fill;
+				this.textToCreate.TextChanged += new EventHandler(this.HandleTextToCreateChanged);
+
+				//	Onglet "utiliser".
+				Widget left = new Widget(this.tabUse);
 				left.MinWidth = 150;
 				left.MinHeight = 100;
 				left.Padding = new Margins(8, 8, 8, 8);
 				left.Dock = DockStyle.Left;
 
-				this.splitter = new VSplitter(body);
+				this.splitter = new VSplitter(this.tabUse);
 				this.splitter.Dock = DockStyle.Left;
 
-				Widget right = new Widget(body);
+				Widget right = new Widget(this.tabUse);
 				right.MinWidth = 150;
 				right.MinHeight = 100;
 				right.Padding = new Margins(8, 8, 8, 8);
@@ -260,7 +291,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.tabBook.ActivePage == this.tabCreate)
 			{
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Create;
-				this.buttonUse.Enable = true;
+				this.buttonUse.Enable = !string.IsNullOrEmpty(this.textToCreate.Text);
 			}
 
 			if (this.tabBook.ActivePage == this.tabUse)
@@ -304,6 +335,11 @@ namespace Epsitec.Common.Designer.Dialogs
 
 
 		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
+		{
+			this.UpdateButtons();
+		}
+
+		private void HandleTextToCreateChanged(object sender)
 		{
 			this.UpdateButtons();
 		}
@@ -384,9 +420,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Common.Dialogs.DialogResult	result;
 
 		protected TabBook						tabBook;
-		protected TabPage						tabCreate;
-		protected TabPage						tabUse;
 
+		protected TabPage						tabCreate;
+		protected TextField						nameToCreate;
+		protected TextField						textToCreate;
+
+		protected TabPage						tabUse;
 		protected StaticText					header1;
 		protected ScrollList					listModules;
 		protected VSplitter						splitter;
