@@ -11,7 +11,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Workspaces
 {
 	public class FormWorkspace : CoreWorkspace
 	{

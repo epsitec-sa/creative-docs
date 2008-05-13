@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateWorkspaces()
 		{
-			this.formWorkspace = new FormWorkspace ()
+			this.formWorkspace = new Workspaces.FormWorkspace ()
 			{
 				Application = this
 			};
@@ -94,9 +94,8 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		FormWorkspace formWorkspace;
-		
-		CoreData data;
-		CoreLibrary.ExceptionManager exceptionManager;
+		Workspaces.FormWorkspace				formWorkspace;
+		CoreData								data;
+		CoreLibrary.ExceptionManager			exceptionManager;
 	}
 }
