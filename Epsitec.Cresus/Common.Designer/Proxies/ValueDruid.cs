@@ -31,12 +31,17 @@ namespace Epsitec.Common.Designer.Proxies
 				label.Dock = DockStyle.Fill;
 			}
 
-			TextField field = new TextField(box);
-			field.IsReadOnly = true;
-			field.PreferredWidth = 88;
-			field.Dock = DockStyle.Right;
-			field.Clicked += new MessageEventHandler(this.HandleFieldClicked);
-			this.field = field;
+			this.buttonGoto = new IconButton(box);
+			this.buttonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
+			this.buttonGoto.AutoFocus = false;
+			this.buttonGoto.Dock = DockStyle.Right;
+			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonGotoClicked);
+
+			this.field = new TextField(box);
+			this.field.IsReadOnly = true;
+			this.field.PreferredWidth = 88;
+			this.field.Dock = DockStyle.Right;
+			this.field.Clicked += new MessageEventHandler(this.HandleFieldClicked);
 
 			this.UpdateInterface();
 
@@ -62,6 +67,19 @@ namespace Epsitec.Common.Designer.Proxies
 			this.value = druid;
 			this.OnValueChanged();
 			this.UpdateInterface();
+		}
+
+		private void HandleButtonGotoClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton goto est cliqué.
+			Druid druid = (Druid) this.value;
+			Module module = this.application.SearchModule(druid);
+			if (module == null)
+			{
+				return;
+			}
+
+			this.application.LocatorGoto(module.ModuleId.Name, ResourceAccess.Type.Captions, -1, druid, null);
 		}
 
 		protected override void UpdateInterface()
@@ -95,5 +113,6 @@ namespace Epsitec.Common.Designer.Proxies
 
 
 		protected TextField field;
+		protected IconButton buttonGoto;
 	}
 }
