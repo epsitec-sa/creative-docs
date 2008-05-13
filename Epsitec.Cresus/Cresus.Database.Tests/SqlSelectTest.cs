@@ -1,3 +1,6 @@
+//	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using NUnit.Framework;
 using System.Data;
 
@@ -9,7 +12,12 @@ namespace Epsitec.Cresus.Database
 		[TestFixtureSetUp]
 		public void Initialize()
 		{
+			//	The tests need a valid EMPLOYEE Firebird database; we restore a fresh
+			//	copy based on a backup version.
+
 			Tool.RestoreDatabase ("employee", @"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
+
+			System.Threading.Thread.Sleep (1000);
 		}
 
 		[Test] public void Check00NewSqlSelect()
