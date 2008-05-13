@@ -34,23 +34,23 @@ namespace Epsitec.Common.Designer.Dialogs
 				resize.Margins = new Margins(0, -8, 0, -8);
 				ToolTip.Default.SetToolTip(resize, Res.Strings.Dialog.Tooltip.Resize);
 
-				this.ribbonBook = new RibbonBook(this.window.Root);
-				this.ribbonBook.Dock = DockStyle.Fill;
+				this.tabBook = new TabBook(this.window.Root);
+				this.tabBook.Dock = DockStyle.Fill;
 
-				this.ribbonCreate = new RibbonPage();
-				this.ribbonCreate.RibbonTitle = "Création d'une nouvelle légende";
-				this.ribbonCreate.Padding = new Margins(8, 8, 8, 8);
-				this.ribbonBook.Items.Add(this.ribbonCreate);
+				this.tabCreate = new TabPage();
+				this.tabCreate.TabTitle = "Création d'une nouvelle légende";
+				this.tabCreate.Padding = new Margins(8, 8, 8, 8);
+				this.tabBook.Items.Add(this.tabCreate);
 
-				this.ribbonUse = new RibbonPage();
-				this.ribbonUse.RibbonTitle = "Utilisation d'une légende existante";
-				this.ribbonUse.Padding = new Margins(1, 1, 1, 1);
-				this.ribbonBook.Items.Add(this.ribbonUse);
+				this.tabUse = new TabPage();
+				this.tabUse.TabTitle = "Utilisation d'une légende existante";
+				this.tabUse.Padding = new Margins(0, 0, 0, 0);
+				this.tabBook.Items.Add(this.tabUse);
 
-				this.ribbonBook.ActivePage = this.ribbonUse;
+				this.tabBook.ActivePage = this.tabUse;
 				
 				//	Corps principal.
-				Widget body = new Widget(this.ribbonUse);
+				Widget body = new Widget(this.tabUse);
 				body.Dock = DockStyle.Fill;
 
 				Widget left = new Widget(body);
@@ -340,9 +340,9 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
 
-		protected RibbonBook					ribbonBook;
-		protected RibbonPage					ribbonCreate;
-		protected RibbonPage					ribbonUse;
+		protected TabBook						tabBook;
+		protected TabPage						tabCreate;
+		protected TabPage						tabUse;
 
 		protected StaticText					header1;
 		protected ScrollList					listModules;
