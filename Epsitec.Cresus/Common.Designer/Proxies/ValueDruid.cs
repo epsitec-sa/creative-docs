@@ -37,11 +37,11 @@ namespace Epsitec.Common.Designer.Proxies
 			this.buttonGoto.Dock = DockStyle.Right;
 			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonGotoClicked);
 
-			this.field = new TextField(box);
-			this.field.IsReadOnly = true;
-			this.field.PreferredWidth = 88;
-			this.field.Dock = DockStyle.Right;
-			this.field.Clicked += new MessageEventHandler(this.HandleFieldClicked);
+			this.buttonCaption = new Button(box);
+			this.buttonCaption.Text = "Choisir";
+			this.buttonCaption.PreferredWidth = 66;
+			this.buttonCaption.Dock = DockStyle.Right;
+			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonCaptionClicked);
 
 			this.UpdateInterface();
 
@@ -49,9 +49,9 @@ namespace Epsitec.Common.Designer.Proxies
 			return box;
 		}
 
-		private void HandleFieldClicked(object sender, MessageEventArgs e)
+		private void HandleButtonCaptionClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque la ligne éditable est cliquée.
+			//	Appelé lorsque le bouton caption est cliqué.
 			ResourceAccess.Type type = ResourceAccess.Type.Captions;
 			List<Druid> exclude = null;
 			Types.StructuredTypeClass typeClass = Types.StructuredTypeClass.None;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Designer.Proxies
 		protected override void UpdateInterface()
 		{
 			//	Met à jour la valeur dans l'interface.
-			if (this.field != null)
+			if (this.buttonCaption != null)
 			{
 				string text = null;
 				Druid druid = (Druid) this.value;
@@ -102,17 +102,15 @@ namespace Epsitec.Common.Designer.Proxies
 					}
 				}
 
-				this.ignoreChange = true;
-				this.field.Text = text;
-				this.field.SelectAll();
-				this.field.Cursor = 0;
-				ToolTip.Default.SetToolTip(this.field, text);
-				this.ignoreChange = false;
+				//?this.buttonCaption.Text = text;
+				ToolTip.Default.SetToolTip(this.buttonCaption, text);
+
+				this.buttonGoto.Enable = !string.IsNullOrEmpty(text);
 			}
 		}
 
 
-		protected TextField field;
+		protected Button buttonCaption;
 		protected IconButton buttonGoto;
 	}
 }
