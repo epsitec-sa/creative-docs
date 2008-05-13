@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			System.Diagnostics.Debug.WriteLine ("Check11SaveEntity");
 			System.Diagnostics.Debug.WriteLine ("------------------------------------------------");
-
+			
 			ArticleEntity article = context.CreateEntity<ArticleEntity> ();
 
 			Assert.AreEqual (9, context.CountManagedEntities ());

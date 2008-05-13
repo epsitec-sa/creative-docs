@@ -202,6 +202,7 @@
     </Compile>
     <Compile Include="Res.cs" />
     <Compile Include="TestSupport\Database.cs" />
+    <Compile Include="TestSupport\Tool.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">

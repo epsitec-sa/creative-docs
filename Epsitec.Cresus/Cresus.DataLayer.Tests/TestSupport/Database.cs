@@ -63,19 +63,7 @@ namespace Epsitec.Cresus.DataLayer.TestSupport
 				System.Threading.Thread.Sleep (100);
 			}
 
-			for (int i = 0; i < 10; i++)
-			{
-				try
-				{
-					System.IO.File.Delete (Database.databasePath);
-					break;
-				}
-				catch (System.IO.IOException ex)
-				{
-					System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting...", ex.ToString ());
-					System.Threading.Thread.Sleep (1000);
-				}
-			}
+			Tool.DeleteDatabase ("FICHE");
 
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
@@ -89,6 +77,5 @@ namespace Epsitec.Cresus.DataLayer.TestSupport
 		}
 		
 		private static DbInfrastructure infrastructure;
-		private const string databasePath = @"C:\Program Files\firebird\Data\Epsitec\FICHE.FIREBIRD";
 	}
 }
