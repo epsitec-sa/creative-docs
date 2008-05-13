@@ -364,8 +364,8 @@ namespace Epsitec.Common.Dialogs
 
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
-				LocalitéEntity loc  = template as LocalitéEntity;
-				PaysEntity     pays = template as PaysEntity;
+				LocalitéEntity loc  = AbstractEntity.Resolve<LocalitéEntity> (template);
+				PaysEntity     pays = AbstractEntity.Resolve<PaysEntity> (template);
 
 				if (loc != null)
 				{
