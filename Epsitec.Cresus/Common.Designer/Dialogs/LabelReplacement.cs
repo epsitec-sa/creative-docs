@@ -93,6 +93,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.SelectedIndexChanged += new EventHandler(this.HandleListResourcesSelected);
 				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
 
+				this.textResource = new TextField(right);
+				this.textResource.IsReadOnly = true;
+				this.textResource.Dock = DockStyle.Bottom;
+				this.textResource.Margins = new Margins(0, 0, 4, 0);
+
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
 				footer.Margins = new Margins(0, 0, 8, 0);
@@ -136,6 +141,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.UpdateTitle();
 			this.UpdateArray();
+			this.UpdateText();
 			this.UpdateButtons();
 
 			this.window.ShowDialog();
@@ -228,6 +234,21 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.ignoreChanged = false;
 		}
 
+		protected void UpdateText()
+		{
+			//	Met à jour le texte de la ressource sélectionnée.
+			string text = null;
+
+			if (this.listResources.SelectedIndex != -1)
+			{
+				CultureMap cultureMap = this.collectionView.Items[this.listResources.SelectedIndex] as CultureMap;
+				StructuredData data = cultureMap.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				text = ResourceAccess.GetCaptionNiceDescription(data, 0);
+			}
+
+			this.textResource.Text = text;
+		}
+
 		protected void UpdateButtons()
 		{
 			//	Met à jour le bouton "Utiliser".
@@ -288,6 +309,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.module = module;
 				this.UpdateAccess();
 				this.UpdateArray();
+				this.UpdateText();
 			}
 		}
 
@@ -299,6 +321,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				return;
 			}
 
+			this.UpdateText();
 			this.UpdateButtons();
 		}
 
@@ -349,6 +372,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected VSplitter						splitter;
 		protected StaticText					header2;
 		protected ScrollList					listResources;
+		protected TextField						textResource;
 		protected Button						buttonUse;
 		protected Button						buttonCancel;
 	}
