@@ -845,21 +845,28 @@ namespace Epsitec.Common.FormEngine
 				List<Druid> druids = nextField.FieldIds;
 				System.Text.StringBuilder builder = new System.Text.StringBuilder();
 
-				for (int i=0; i<druids.Count-1; i++)
+				if (field.LabelReplacement.IsEmpty)
 				{
-					Druid druid = druids[i];
-
-					if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label déjà mis précédemment ?
+					for (int i=0; i<druids.Count-1; i++)
 					{
-						continue;
-					}
+						Druid druid = druids[i];
 
-					if (builder.Length > 0)
-					{
-						builder.Append(", ");
-					}
+						if (lastTitle != null && i < lastTitle.Count && lastTitle[i] == druid)  // label déjà mis précédemment ?
+						{
+							continue;
+						}
 
-					builder.Append(this.GetCaptionDefaultLabel(druid));
+						if (builder.Length > 0)
+						{
+							builder.Append(", ");
+						}
+
+						builder.Append(this.GetCaptionDefaultLabel(druid));
+					}
+				}
+				else
+				{
+					builder.Append(this.GetCaptionDefaultLabel(field.LabelReplacement));
 				}
 
 				if (builder.Length == 0)  // titre sans texte ?
