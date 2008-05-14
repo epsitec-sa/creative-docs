@@ -41,6 +41,12 @@ namespace Epsitec.Cresus.Database
 			set;
 		}
 
+		public bool								IncludeRowKeys
+		{
+			get;
+			set;
+		}
+
 		
 		public void AddQueryField(DbTableColumn queryField)
 		{
@@ -135,7 +141,7 @@ namespace Epsitec.Cresus.Database
 				while (this.dataReader.Read ())
 				{
 					object[] values = new object[n];
-					DbKey[]  keys   = new DbKey[m];
+					DbKey[]  keys;
 
 					this.dataReader.GetValues (buffer);
 
@@ -144,9 +150,18 @@ namespace Epsitec.Cresus.Database
 						values[reordering[i]] = buffer[i];
 					}
 
-					for (int i = 0; i < m; i++)
+					if (this.IncludeRowKeys)
 					{
-						keys[i] = new DbKey (new DbId ((long)buffer[n+i]));
+						keys = new DbKey[m];
+
+						for (int i = 0; i < m; i++)
+						{
+							keys[i] = new DbKey (new DbId ((long) buffer[n+i]));
+						}
+					}
+					else
+					{
+						keys = null;
 					}
 
 					yield return new RowData (values, keys);
@@ -347,18 +362,24 @@ namespace Epsitec.Cresus.Database
 				select.Fields.Add (fieldDefinition);
 			}
 
-			int index = 0;
-
-			foreach (DbTable table in this.renamedTables)
+			if (this.IncludeRowKeys)
 			{
-				string alias     = string.Format (System.Globalization.CultureInfo.InvariantCulture, "I{0}", index);
-				string tableName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", index);
+				//	The caller expects us to generate behind his back the queries to
+				//	also retrieve the ids of the table rows :
 
-				SqlField fieldDefinition = SqlField.CreateAliasedName (tableName, Tags.ColumnId, alias);
+				int index = 0;
 
-				select.Fields.Add (fieldDefinition);
+				foreach (DbTable table in this.renamedTables)
+				{
+					string alias     = string.Format (System.Globalization.CultureInfo.InvariantCulture, "I{0}", index);
+					string tableName = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", index);
 
-				index++;
+					SqlField fieldDefinition = SqlField.CreateAliasedName (tableName, Tags.ColumnId, alias);
+
+					select.Fields.Add (fieldDefinition);
+
+					index++;
+				}
 			}
 		}
 

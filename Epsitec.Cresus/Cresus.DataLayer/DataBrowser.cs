@@ -125,6 +125,7 @@ namespace Epsitec.Cresus.DataLayer
 					}
 				}
 
+				reader.IncludeRowKeys = true;
 				reader.CreateDataReader (transaction);
 
 				DataQueryResult queryResult = new DataQueryResult (query, reader.Tables.Select (table => table.CaptionId));
