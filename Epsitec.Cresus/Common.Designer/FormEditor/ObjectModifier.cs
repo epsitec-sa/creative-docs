@@ -739,7 +739,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			if (field != null)
 			{
-				this.UndoMemorize(Res.Strings.Undo.Action.LabelReplacement);
+				this.UndoMemorize(Res.Strings.Undo.Action.LabelReplacement, false);
 				field.LabelReplacement = captionId;
 				this.DeltaUpdate(field);
 			}
@@ -780,7 +780,13 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected void UndoMemorize(string actionName)
 		{
 			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
-			this.formEditor.ViewersForms.UndoMemorize(actionName, true);
+			this.UndoMemorize(actionName, true);
+		}
+
+		protected void UndoMemorize(string actionName, bool merge)
+		{
+			//	Mémorise l'état actuel, avant d'effectuer une modification dans le masque.
+			this.formEditor.ViewersForms.UndoMemorize(actionName, merge);
 		}
 
 		protected void DeltaUpdate(FieldDescription field)

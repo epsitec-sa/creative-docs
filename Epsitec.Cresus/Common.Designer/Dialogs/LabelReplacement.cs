@@ -383,7 +383,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			this.UpdateButtons();
 
-			if (this.tabBook.ActivePage == this.tabCreate)
+			if (this.fieldTextToCreate != null && this.tabBook.ActivePage == this.tabCreate)
 			{
 				this.fieldTextToCreate.Focus();
 			}
