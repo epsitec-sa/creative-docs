@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			FieldDescription field = this.GetFieldDescription(obj);
 			int index = this.GetFieldDescriptionIndex(field.Guid);
 			ObjectModifier.TableItem item = this.TableContent[index];
-			string name = this.FormEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
+			string name = this.FormEditor.Module.AccessCaptions.GetFieldNames(item.DruidsPath);
 
 			return string.Concat("Form.LabelReplacement.", cultureMap.FullName, ".", name);
 		}

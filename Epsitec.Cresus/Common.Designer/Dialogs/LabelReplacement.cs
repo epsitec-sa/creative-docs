@@ -196,6 +196,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
+			Module module = this.designerApplication.CurrentModule;
+			if (!module.AccessCaptions.IsCorrectNewName(ref nameToCreate))
+			{
+				nameToCreate = module.AccessCaptions.GetDuplicateName(nameToCreate);
+			}
+	
 			this.nameToCreate = nameToCreate;
 			this.resource = resource;
 
