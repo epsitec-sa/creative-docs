@@ -422,9 +422,11 @@ namespace Epsitec.Cresus.DataLayer
 			foreach (StructuredTypeField fieldDef in this.entityContext.GetEntityFieldDefinitions (entityId))
 			{
 				//	Only process fields which are defined locally, since inherited
-				//	fields do not belong into the same data table.
+				//	fields do not belong into the same data table. Expressions can
+				//	also be skipped.
 
-				if (fieldDef.Membership == FieldMembership.Inherited)
+				if ((fieldDef.Membership == FieldMembership.Inherited) ||
+					(fieldDef.Expression != null))
 				{
 					continue;
 				}
@@ -717,6 +719,10 @@ namespace Epsitec.Cresus.DataLayer
 		private void ReadFieldValueFromDataRow(AbstractEntity entity, StructuredTypeField fieldDef, System.Data.DataRow dataRow)
 		{
 			string columnName = this.schemaEngine.GetDataColumnName (fieldDef.Id);
+
+			System.Diagnostics.Debug.Assert (fieldDef.Expression == null);
+			System.Diagnostics.Debug.Assert (dataRow.Table.Columns.Contains (columnName));
+			
 			object value = dataRow[columnName];
 
 			if (System.DBNull.Value == value)
