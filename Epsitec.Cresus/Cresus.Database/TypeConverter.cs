@@ -26,9 +26,11 @@ namespace Epsitec.Cresus.Database
 			TypeConverter.sysTypeToSimpleType[typeof (int)]     = DbSimpleType.Decimal;
 			TypeConverter.sysTypeToSimpleType[typeof (long)]    = DbSimpleType.Decimal;
 			TypeConverter.sysTypeToSimpleType[typeof (decimal)] = DbSimpleType.Decimal;
-			TypeConverter.sysTypeToSimpleType[typeof (string)]  = DbSimpleType.String;
 			TypeConverter.sysTypeToSimpleType[typeof (byte[])]  = DbSimpleType.ByteArray;
 			
+			TypeConverter.sysTypeToSimpleType[typeof (string)]        = DbSimpleType.String;
+			TypeConverter.sysTypeToSimpleType[typeof (FormattedText)] = DbSimpleType.String;
+
 			TypeConverter.sysTypeToSimpleType[typeof (Date)]            = DbSimpleType.Date;
 			TypeConverter.sysTypeToSimpleType[typeof (Time)]            = DbSimpleType.Time;
 			TypeConverter.sysTypeToSimpleType[typeof (System.DateTime)] = DbSimpleType.DateTime;
@@ -159,7 +161,7 @@ namespace Epsitec.Cresus.Database
 						//	The numeric type has request a compact storage of the data.
 						//	Let DbNumDef decide of the best possible representation which
 						//	uses the least amount of bits.
-						
+
 						numDef = new DbNumDef (numericType.Range);
 					}
 					else
@@ -167,7 +169,7 @@ namespace Epsitec.Cresus.Database
 						//	The numeric type will be mapped to one of the standard raw
 						//	types (16-bit, 32-bit, 64-bit integer or small/large decimal)
 						//	depending on its settings.
-						
+
 						DbRawType rawType = TypeConverter.GetRawType (systemType);
 
 						if ((rawType == DbRawType.SmallDecimal) ||
@@ -197,26 +199,28 @@ namespace Epsitec.Cresus.Database
 							else
 							{
 								//	Large decimal with only 3 fractional digits
-								
+
 								rawType = DbRawType.LargeDecimal;
 							}
 
 							precision += shift;
-							
+
 							if (precision > 18)
 							{
 								throw new System.ArgumentException (string.Format ("Type {0} needs {1} digits (max. is 18)", namedType.Name, precision));
 							}
 						}
-						
+
 						numDef = DbNumDef.FromRawType (rawType);
 					}
 				}
-				
+
 				return simpleType;
 			}
-
-			return DbSimpleType.Unknown;
+			else
+			{
+				return DbSimpleType.Unknown;
+			}
 		}
 
 		/// <summary>

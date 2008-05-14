@@ -4,9 +4,9 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-[assembly: global::Epsitec.Common.Support.EntityClass ("[9VA]", typeof (Epsitec.Cresus.Entities.FactureEntity))]
-#region Epsitec.Cresus.Facture Entity
-namespace Epsitec.Cresus.Entities
+[assembly: global::Epsitec.Common.Support.EntityClass ("[9VA]", typeof (Epsitec.Cresus.Mai2008.Entities.FactureEntity))]
+#region Epsitec.Cresus.Mai2008.Facture Entity
+namespace Epsitec.Cresus.Mai2008.Entities
 {
 	///	<summary>
 	///	The <c>Facture</c> entity.
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Entities.FactureEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 0);	// [9VA]
 	}

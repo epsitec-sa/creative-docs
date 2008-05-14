@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle name="_9VA" caption="Facture" type="Form" culture="fr" rank="1">
+  <data name="Source">
+    <xml>
+      <Form>
+        <EI>[9VA]</EI>
+        <DBI>&lt;invalid&gt;</DBI>
+        <DS>*</DS>
+        <FD>
+          <Guid>52385b50-d518-4e44-a568-4baa4add4297</Guid>
+          <Type>Field</Type>
+          <FI>[9VA2]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>3</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>090d14af-ecab-4e07-b56e-90a1d6c00ca7</Guid>
+          <Type>Glue</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>0</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>940a99e6-70c7-4573-a00c-a7152dc41d10</Guid>
+          <Type>BoxBegin</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>All</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>eb830a4e-5787-4831-84e5-4de013902bf3</Guid>
+          <Type>Title</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>6f7e5d95-47f7-4cc5-94d9-059bba5dac90</Guid>
+          <Type>Field</Type>
+          <FI>[9VA1].[6016]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+          <LR>[9VA3]</LR>
+        </FD>
+        <FD>
+          <Guid>3fa261a7-b45d-42da-be13-90081ea211a6</Guid>
+          <Type>BoxEnd</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+      </Form>
+    </xml>
+  </data>
+  <data name="DefaultSize">
+  </data>
+  <data name="RootEntityId">
+  </data>
+</bundle>

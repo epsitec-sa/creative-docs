@@ -30,12 +30,16 @@ namespace Epsitec.Cresus.Core.Workspaces
 			FrameBox frame = new FrameBox ();
 
 			this.hintListController.DefineContainer (frame);
+
+			Druid formId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
+			Druid entityId = AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
+
 			
-			this.searchPanel = UI.LoadPanel (Epsitec.Cresus.AddressBook.FormIds.AdressePersonne, PanelInteractionMode.Search);
+			this.searchPanel = UI.LoadPanel (formId, PanelInteractionMode.Search);
 			this.searchPanel.Dock = DockStyle.Fill;
 			this.searchPanel.SetEmbedder (frame);
 			
-			this.editionPanel = UI.LoadPanel (Epsitec.Cresus.AddressBook.FormIds.AdressePersonne, PanelInteractionMode.Default);
+			this.editionPanel = UI.LoadPanel (formId, PanelInteractionMode.Default);
 			this.editionPanel.Dock = DockStyle.Fill;
 			this.editionPanel.SetEmbedder (frame);
 			this.editionPanel.Visibility = false;
@@ -43,7 +47,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
 			
-			this.currentItem = this.searchContext.CreateEntity<AddressBook.Entities.AdressePersonneEntity> ();
+			this.currentItem = this.searchContext.CreateEntity (entityId);
 			this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
 			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 			this.resolver = this.Application.Data.Resolver;
