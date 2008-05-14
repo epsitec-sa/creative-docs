@@ -10,10 +10,16 @@ namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
 	/// The <c>EntityResolverResult</c> class represents the result of a call
-	/// to the <see cref="M:EntityResolver.Resolve"/> method.
+	/// to the <see cref="M:EntityResolver.Resolve"/> method. It caches the
+	/// data provided by the source enumerable and provides a collection view
+	/// for it.
 	/// </summary>
 	public sealed class EntityResolverResult
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityResolverResult"/> class.
+		/// </summary>
+		/// <param name="entities">The entities.</param>
 		public EntityResolverResult(IEnumerable<AbstractEntity> entities)
 		{
 			this.entityEnumerator = entities == null ? null : entities.GetEnumerator ();
@@ -114,8 +120,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		
-
-
 		private IEnumerator<AbstractEntity>		entityEnumerator;
 		private readonly List<AbstractEntity>	cache;
 		private readonly CollectionView			view;
