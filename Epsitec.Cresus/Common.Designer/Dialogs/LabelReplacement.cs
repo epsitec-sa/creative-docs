@@ -59,11 +59,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				createBox.Margins = new Margins(0, 0, 50, 0);
 
 				label = new StaticText(createBox);
-				label.Text = "Nom de la légende à créer";
-				label.PreferredWidth = 130;
+				label.Text = "Nom";
+				label.PreferredWidth = 40;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Dock = DockStyle.Left;
-				label.Margins = new Margins(0, 5, 0, 0);
+				label.Margins = new Margins(0, 8, 0, 0);
 
 				this.fieldNameToCreate = new TextField(createBox);
 				this.fieldNameToCreate.IsReadOnly = true;
@@ -74,11 +74,11 @@ namespace Epsitec.Common.Designer.Dialogs
 				createBox.Margins = new Margins(0, 0, 5, 0);
 
 				label = new StaticText(createBox);
-				label.Text = "Texte de la légende à créer";
-				label.PreferredWidth = 130;
+				label.Text = "Texte";
+				label.PreferredWidth = 40;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Dock = DockStyle.Left;
-				label.Margins = new Margins(0, 5, 0, 0);
+				label.Margins = new Margins(0, 8, 0, 0);
 
 				this.fieldTextToCreate = new TextField(createBox);
 				this.fieldTextToCreate.Dock = DockStyle.Fill;
@@ -168,9 +168,9 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
 				this.buttonUse.TabIndex = 20;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-
-				this.fieldTextToCreate.Focus();
 			}
+
+			this.fieldTextToCreate.Text = "";
 
 			this.UpdateTitle();
 			this.UpdateArray();
@@ -181,6 +181,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.resource.IsEmpty)
 			{
 				this.tabBook.ActivePage = this.tabCreate;
+				this.fieldTextToCreate.Focus();
 			}
 			else
 			{
@@ -381,6 +382,11 @@ namespace Epsitec.Common.Designer.Dialogs
 		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
 		{
 			this.UpdateButtons();
+
+			if (this.tabBook.ActivePage == this.tabCreate)
+			{
+				this.fieldTextToCreate.Focus();
+			}
 		}
 
 		private void HandleTextToCreateChanged(object sender)
