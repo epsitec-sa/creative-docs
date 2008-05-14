@@ -385,7 +385,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (this.fieldTextToCreate != null && this.tabBook.ActivePage == this.tabCreate)
 			{
-				this.fieldTextToCreate.Focus();
+				if (this.fieldTextToCreate != null)
+				{
+					this.fieldTextToCreate.Focus();
+				}
 			}
 		}
 
