@@ -55,18 +55,22 @@
       <Link>Modules\Cresus.AddressBook\Forms.cs</Link>
     </Compile>
     <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Entities.cs">
-      <Link>Modules\Cresus.Demo2008\Entities.cs</Link>
+      <Link>Modules\Cresus.Mai2008\Entities.cs</Link>
     </Compile>
     <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Forms.cs">
-      <Link>Modules\Cresus.Demo2008\Forms.cs</Link>
+      <Link>Modules\Cresus.Mai2008\Forms.cs</Link>
     </Compile>
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="StateStackChange.cs" />
+    <Compile Include="StateStackChangedEventArgs.cs" />
     <Compile Include="CoreData.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="PanelInteractionMode.cs" />
+    <Compile Include="StateManager.cs" />
+    <Compile Include="States\AbstractState.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
