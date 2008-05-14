@@ -145,6 +145,11 @@ namespace Epsitec.Common.Types
 
 			if (value is FormattedText)
 			{
+				if (!this.UseFormattedText)
+				{
+					return false;
+				}
+
 				FormattedText formattedText = (FormattedText) value;
 				text = formattedText.ToString ();
 			}

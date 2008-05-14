@@ -7,6 +7,9 @@ namespace Epsitec.Common.Types
 	/// The <c>FormattedText</c> structure wraps a <c>string</c> which represents
 	/// formatted text.
 	/// </summary>
+	
+	[System.ComponentModel.TypeConverter (typeof (FormattedText.Converter))]
+	
 	public struct FormattedText : System.IEquatable<FormattedText>, System.IComparable<FormattedText>
 	{
 		/// <summary>
@@ -164,6 +167,24 @@ namespace Epsitec.Common.Types
 			return Converters.TextConverter.ConvertToTaggedText (text);
 		}
 		
+		#region Converter Class
+		
+		public class Converter : AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return new FormattedText (value);
+			}
+
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				FormattedText text = (FormattedText) value;
+				return text.ToString ();
+			}
+		}
+		
+		#endregion
+
 		public static readonly FormattedText Null = new FormattedText (null);
 
 		private readonly string text;

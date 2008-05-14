@@ -1,6 +1,9 @@
 //	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using NUnit.Framework;
 
 namespace Epsitec.Cresus.Database
@@ -32,6 +35,35 @@ namespace Epsitec.Cresus.Database
 			{
 				Assert.IsTrue (TypeConverter.IsCompatibleToSimpleType (objects[i].GetType (), types[i]));
 			}
+		}
+
+		[Test]
+		public void CheckTextConversions()
+		{
+			object val;
+			object obj;
+			
+			val = "Hello";
+			obj = TypeConverter.ConvertToSimpleType (val, DbRawType.String);
+
+			Assert.AreEqual ("Hello", obj);
+
+#if false
+			val = new FormattedText ("Hello &amp; bye");
+			obj = TypeConverter.ConvertToSimpleType (val, DbRawType.String);
+
+			Assert.AreEqual ("Hello &amp; bye", obj);
+#endif
+
+			val = "Hello";
+			obj = TypeConverter.ConvertFromSimpleType (val, DbSimpleType.String, null);
+
+			Assert.AreEqual ("Hello", obj);
+
+			val = new FormattedText ("Hello &amp; bye");
+			obj = TypeConverter.ConvertFromSimpleType (val, DbSimpleType.String, null);
+
+			Assert.AreEqual ("Hello &amp; bye", obj);
 		}
 		
 		[Test] public void CheckNumericConversions()

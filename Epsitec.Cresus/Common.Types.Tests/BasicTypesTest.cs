@@ -45,6 +45,38 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (DruidType.Default.IsNullable);
 			Assert.AreEqual (typeof (Support.Druid), DruidType.Default.SystemType);
 		}
+
+		[Test]
+		public void CheckStringType()
+		{
+			StringType typeString = Res.Types.Default.String;
+			StringType typeStringMulti = Res.Types.Default.StringMultiline;
+			StringType typeText = Res.Types.Default.Text;
+			StringType typeTextMulti = Res.Types.Default.TextMultiline;
+
+			Assert.AreEqual (false, typeString.UseFormattedText);
+			Assert.AreEqual (null, typeString.DefaultControllerParameters);
+
+			Assert.AreEqual (false, typeStringMulti.UseFormattedText);
+			Assert.AreEqual ("Mode=Multiline", typeStringMulti.DefaultControllerParameters);
+
+			Assert.AreEqual (true, typeText.UseFormattedText);
+			Assert.AreEqual (null, typeText.DefaultControllerParameters);
+
+			Assert.AreEqual (true, typeTextMulti.UseFormattedText);
+			Assert.AreEqual ("Mode=Multiline", typeTextMulti.DefaultControllerParameters);
+
+			Assert.AreEqual (true,  typeString.IsValidValue (null));
+			Assert.AreEqual (true,  typeString.IsValidValue (""));
+			Assert.AreEqual (true,  typeString.IsValidValue ("Abc"));
+			Assert.AreEqual (false, typeString.IsValidValue (new FormattedText ("Hello")));
+
+			Assert.AreEqual (true,  typeText.IsValidValue (null));
+			Assert.AreEqual (false, typeText.IsValidValue (""));
+			Assert.AreEqual (false, typeText.IsValidValue ("Abc"));
+			Assert.AreEqual (true, typeText.IsValidValue (new FormattedText ("Hello")));
+
+		}
 		
 		[Test]
 		public void CheckEnumType1()
@@ -173,24 +205,7 @@ namespace Epsitec.Common.Types
 		}
 
 		[Test]
-		[Ignore ("No caption defined for enum")]
 		public void CheckEnumType4()
-		{
-			System.Type type = typeof (MyEnum);
-			
-			EnumType et = new EnumType (type);
-
-			Assert.AreEqual ("[res:Enums#MyEnum.capt]", et.CaptionId);
-			
-			Assert.AreEqual ("[res:Enums#MyEnum.None.capt]",   et["None"].CaptionId);
-			Assert.AreEqual ("[res:Enums#MyEnum.First.capt]",  et["First"].CaptionId);
-			Assert.AreEqual ("[res:Enums#MyEnum.Second.capt]", et["Second"].CaptionId);
-			Assert.AreEqual ("[res:Enums#MyEnum.Third.capt]",  et["Third"].CaptionId);
-			Assert.AreEqual ("[res:Enums#MyEnum.Extra.capt]",  et["Extra"].CaptionId);
-		}
-
-		[Test]
-		public void CheckEnumType5()
 		{
 			System.ComponentModel.EnumConverter converter = new System.ComponentModel.EnumConverter (typeof (MyEnum));
 
