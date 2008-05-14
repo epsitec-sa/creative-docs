@@ -66,7 +66,14 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject))
 			{
-				this.AddValueDruid(list, selectedObject, AbstractProxy.Type.FormLabelReplacement, Res.Captions.Form.LabelReplacement);
+				CultureMap cultureMap = this.ObjectModifier.FormEditor.Module.AccessForms.CollectionView.CurrentItem as CultureMap;
+
+				FormEngine.FieldDescription field = this.ObjectModifier.GetFieldDescription(selectedObject);
+				int index = this.ObjectModifier.GetFieldDescriptionIndex(field.Guid);
+				FormEditor.ObjectModifier.TableItem item = this.ObjectModifier.TableContent[index];
+				string name = this.ObjectModifier.FormEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
+				string prefix = string.Concat("Form.LabelReplacement.", cultureMap.FullName, ".", name);
+				this.AddValueDruid(list, selectedObject, AbstractProxy.Type.FormLabelReplacement, Res.Captions.Form.LabelReplacement, prefix);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||

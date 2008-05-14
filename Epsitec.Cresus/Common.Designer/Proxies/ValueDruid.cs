@@ -15,6 +15,19 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		public string Prefix
+		{
+			get
+			{
+				return this.prefix;
+			}
+			set
+			{
+				this.prefix = value;
+			}
+		}
+
+
 		public override Widget CreateInterface(Widget parent)
 		{
 			//	Crée les widgets permettant d'éditer la valeur.
@@ -59,7 +72,7 @@ namespace Epsitec.Common.Designer.Proxies
 		{
 			//	Appelé lorsque le bouton caption est cliqué.
 			Druid druid = (Druid) this.value;
-			Common.Dialogs.DialogResult result = this.application.DlgLabelReplacement(null, ref druid);
+			Common.Dialogs.DialogResult result = this.application.DlgLabelReplacement(this.prefix, ref druid);
 
 			if (result != Common.Dialogs.DialogResult.Yes)  // annuler ?
 			{
@@ -121,6 +134,7 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
+		protected string prefix;
 		protected Button buttonCaption;
 		protected IconButton buttonClear;
 		protected IconButton buttonGoto;

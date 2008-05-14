@@ -59,7 +59,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				createBox.Margins = new Margins(0, 0, 50, 0);
 
 				label = new StaticText(createBox);
-				label.Text = "Nom de la ressource à créer";
+				label.Text = "Nom de la légende à créer";
 				label.PreferredWidth = 150;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Dock = DockStyle.Left;
@@ -173,6 +173,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateTitle();
 			this.UpdateArray();
 			this.UpdateText();
+			this.UpdateName();
 			this.UpdateButtons();
 
 			this.window.ShowDialog();
@@ -263,6 +264,12 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.listResources.SelectedIndex = sel;
 			this.listResources.ShowSelected(ScrollShowMode.Extremity);
 			this.ignoreChanged = false;
+		}
+
+		protected void UpdateName()
+		{
+			//	Met à jour le nom de la ressource à créer.
+			this.nameToCreate.Text = this.prefix;
 		}
 
 		protected void UpdateText()
