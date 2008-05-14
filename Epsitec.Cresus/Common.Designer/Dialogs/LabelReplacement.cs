@@ -178,6 +178,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateName();
 			this.UpdateButtons();
 
+			if (this.resource.IsEmpty)
+			{
+				this.tabBook.ActivePage = this.tabCreate;
+			}
+			else
+			{
+				this.tabBook.ActivePage = this.tabUse;
+			}
+
 			this.window.ShowDialog();
 		}
 
