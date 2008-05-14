@@ -1330,7 +1330,12 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			//	Met à jour tous les widgets pour la page "divers".
 			this.ignoreChange = true;
-			Size defaultSize = this.workingForm.DefaultSize;
+
+			Size defaultSize = new Size(double.NaN, double.NaN);
+			if (this.workingForm != null)
+			{
+				defaultSize = this.workingForm.DefaultSize;
+			}
 
 			if (double.IsNaN(defaultSize.Width))
 			{
