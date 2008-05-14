@@ -178,7 +178,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.UpdateName();
 			this.UpdateButtons();
 
-			if (this.resource.IsEmpty)
+			if (this.resource.IsEmpty && this.existingCaption.IsEmpty)
 			{
 				this.tabBook.ActivePage = this.tabCreate;
 				this.fieldTextToCreate.Focus();
@@ -196,6 +196,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
+
+			this.existingCaption = this.SearchCaption(nameToCreate);
 
 			Module module = this.designerApplication.CurrentModule;
 			if (!module.AccessCaptions.IsCorrectNewName(ref nameToCreate))
@@ -217,6 +219,22 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 
 			this.UpdateAccess();
+		}
+
+		protected Druid SearchCaption(string nameToCreate)
+		{
+			Module module = this.designerApplication.CurrentModule;
+			for (int i=0; i<module.AccessCaptions.CollectionView.Items.Count; i++)
+			{
+				CultureMap cultureMap = module.AccessCaptions.CollectionView.Items[i] as CultureMap;
+
+				if (cultureMap.Name == nameToCreate)
+				{
+					return cultureMap.Id;
+				}
+			}
+
+			return Druid.Empty;
 		}
 
 		protected void UpdateAccess()
@@ -272,11 +290,13 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.listResources.Items.Add(cultureMap.Name);
 
-				if (cultureMap.Id == this.resource)
+				if (cultureMap.Id == this.resource || cultureMap.Id == this.existingCaption)
 				{
 					sel = i;
 				}
 			}
+
+			this.existingCaption = Druid.Empty;
 
 			this.ignoreChanged = true;
 			this.listResources.SelectedIndex = sel;
@@ -480,6 +500,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						module;
 		protected ResourceAccess				access;
 		protected Druid							resource;
+		protected Druid							existingCaption;
 		protected string						nameToCreate;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
