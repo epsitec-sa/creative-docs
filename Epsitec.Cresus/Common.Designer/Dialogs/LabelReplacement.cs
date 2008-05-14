@@ -172,13 +172,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			this.fieldTextToCreate.Text = "";
 
+			bool notExisting = this.existingCaption.IsEmpty;
+
 			this.UpdateTitle();
 			this.UpdateArray();
 			this.UpdateText();
 			this.UpdateName();
 			this.UpdateButtons();
 
-			if (this.resource.IsEmpty && this.existingCaption.IsEmpty)
+			if (this.resource.IsEmpty && notExisting)
 			{
 				this.tabBook.ActivePage = this.tabCreate;
 				this.fieldTextToCreate.Focus();
@@ -197,6 +199,9 @@ namespace Epsitec.Common.Designer.Dialogs
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
+			//	Initialise this.existingCaption s'il existe déjà un Caption ayant le nom de celui à créer.
+			//	C'est probablement un Caption qui avait déjà été créé pour cette ressource, puis que
+			//	l'utilisateur avait abandonné, pour revenir au label par défaut.
 			this.existingCaption = this.SearchCaption(nameToCreate);
 
 			Module module = this.designerApplication.CurrentModule;
@@ -223,6 +228,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		protected Druid SearchCaption(string nameToCreate)
 		{
+			//	Cherche s'il existe déjà un Caption d'après le nom de la ressource.
 			Module module = this.designerApplication.CurrentModule;
 			for (int i=0; i<module.AccessCaptions.CollectionView.Items.Count; i++)
 			{
@@ -290,12 +296,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.listResources.Items.Add(cultureMap.Name);
 
+				//	Essaie de sélectionner la ressource actuelle, ou celle qui avait été créée puis abandonnée pour ce champ.
 				if (cultureMap.Id == this.resource || cultureMap.Id == this.existingCaption)
 				{
 					sel = i;
 				}
 			}
 
+			//	On ne cherche la ressource créée puis abandonnée pour ce champ qu'une seule fois.
 			this.existingCaption = Druid.Empty;
 
 			this.ignoreChanged = true;
