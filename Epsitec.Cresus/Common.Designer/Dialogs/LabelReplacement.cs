@@ -342,6 +342,26 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
+		protected Druid CreateCaption()
+		{
+			//	Crée une ressource Caption qui sera utilisée comme légende de remplacement.
+			//	Retourne son Druid.
+			CultureMap newItem = this.module.AccessCaptions.Accessor.CreateItem();
+			newItem.Name = this.nameToCreate;
+
+			StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+			data.SetValue(Support.Res.Fields.ResourceCaption.Description, this.fieldTextToCreate.Text);
+
+			List<string> list = new List<string>();
+			list.Add(this.fieldTextToCreate.Text);
+			ResourceAccess.SetStructuredDataValue(this.module.AccessCaptions.Accessor, newItem, data, Support.Res.Fields.ResourceCaption.Labels.ToString(), list);
+
+			this.module.AccessCaptions.Accessor.Collection.Add(newItem);
+			this.module.AccessCaptions.CollectionView.MoveCurrentTo(newItem);
+			this.module.AccessCaptions.PersistChanges();
+
+			return newItem.Id;
+		}
 
 		protected void Close()
 		{
@@ -431,20 +451,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			if (this.tabBook.ActivePage == this.tabCreate)
 			{
-				CultureMap newItem = this.module.AccessCaptions.Accessor.CreateItem();
-				newItem.Name = this.nameToCreate;
-
-				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
-				data.SetValue(Support.Res.Fields.ResourceCaption.Description, this.fieldTextToCreate.Text);
-
-				List<string> list = new List<string>();
-				list.Add(this.fieldTextToCreate.Text);
-				ResourceAccess.SetStructuredDataValue(this.module.AccessCaptions.Accessor, newItem, data, Support.Res.Fields.ResourceCaption.Labels.ToString(), list);
-
-				this.module.AccessCaptions.Accessor.Collection.Add(newItem);
-				this.module.AccessCaptions.CollectionView.MoveCurrentTo(newItem);
-
-				this.resource = newItem.Id;
+				this.resource = this.CreateCaption();
 			}
 
 			if (this.tabBook.ActivePage == this.tabUse)
