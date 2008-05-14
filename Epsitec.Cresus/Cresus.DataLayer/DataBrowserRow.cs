@@ -1,13 +1,9 @@
 ﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
 
@@ -152,10 +148,10 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		private static readonly DbKey[] emptyKeys = new DbKey[0];
+		private static readonly DbKey[]			emptyKeys = new DbKey[0];
 
-		private readonly DataQueryResult query;
-		private readonly object[] values;
-		private readonly DbKey[] keys;
+		private readonly DataQueryResult		query;
+		private readonly object[]				values;
+		private readonly DbKey[]				keys;
 	}
 }

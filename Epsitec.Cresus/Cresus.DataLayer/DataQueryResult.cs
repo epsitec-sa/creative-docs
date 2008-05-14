@@ -29,6 +29,11 @@ namespace Epsitec.Cresus.DataLayer
 			this.entityIds = new List<Druid> ();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataQueryResult"/> class.
+		/// </summary>
+		/// <param name="originalQuery">The original query.</param>
+		/// <param name="entityIds">The associated entity ids.</param>
 		public DataQueryResult(DataQuery originalQuery, IEnumerable<Druid> entityIds)
 			: this (originalQuery)
 		{

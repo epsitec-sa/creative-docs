@@ -171,9 +171,9 @@ namespace Epsitec.Cresus.Database
 			return !(a == b);
 		}
 
-		private readonly DbTable table;
-		private readonly DbColumn column;
-		private string tableAlias;
-		private string columnAlias;
+		private readonly DbTable				table;
+		private readonly DbColumn				column;
+		private string							tableAlias;
+		private string							columnAlias;
 	}
 }

@@ -17,13 +17,23 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataQueryColumn</c> class defines how a <see cref="DataBrowserRow"/>
 	/// should be populated by <see cref="DataBrowser"/>.
 	/// </summary>
-	public class DataQueryColumn : System.IEquatable<DataQueryColumn>, System.IComparable<DataQueryColumn>
+	public sealed class DataQueryColumn : System.IEquatable<DataQueryColumn>, System.IComparable<DataQueryColumn>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataQueryColumn"/> class.
+		/// The <see cref="SortOrder"/> defaults to <c>None</c>.
+		/// </summary>
+		/// <param name="fieldPath">The field path.</param>
 		public DataQueryColumn(EntityFieldPath fieldPath)
 		{
 			this.fieldPath = fieldPath;
 		}
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataQueryColumn"/> class.
+		/// </summary>
+		/// <param name="entityFieldPath">The entity field path.</param>
+		/// <param name="sortOrder">The sort order.</param>
 		public DataQueryColumn(EntityFieldPath entityFieldPath, DataQuerySortOrder sortOrder)
 		{
 			this.fieldPath = entityFieldPath;
@@ -107,7 +117,8 @@ namespace Epsitec.Cresus.DataLayer
 			return this.fieldPath.GetHashCode ();
 		}
 
-		private readonly EntityFieldPath fieldPath;
-		private readonly DataQuerySortOrder sortOrder;
+		
+		private readonly EntityFieldPath		fieldPath;
+		private readonly DataQuerySortOrder		sortOrder;
 	}
 }

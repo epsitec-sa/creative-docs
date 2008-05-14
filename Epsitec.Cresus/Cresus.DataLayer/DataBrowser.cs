@@ -6,16 +6,22 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
+	/// <summary>
+	/// The <c>DataBrowser</c> class provides sequential read access to the
+	/// database.
+	/// </summary>
 	public class DataBrowser
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataBrowser"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The database infrastructure.</param>
 		public DataBrowser(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
@@ -23,6 +29,10 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		/// <summary>
+		/// Gets the associated schema engine.
+		/// </summary>
+		/// <value>The schema engine.</value>
 		public SchemaEngine SchemaEngine
 		{
 			get
@@ -32,13 +42,14 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
-#if false
-		public IEnumerable<object[]> QueryByExample<T>(DbTransaction transaction, T example, DataQuery query) where T : AbstractEntity, new ()
-		{
-			return this.QueryByExample (transaction, (AbstractEntity) example, query);
-		}
-#endif
-
+		/// <summary>
+		/// Queries the database by example and returns a collection of data
+		/// rows.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="example">The example entity.</param>
+		/// <param name="query">The query specification.</param>
+		/// <returns>The data rows for the query.</returns>
 		public IEnumerable<DataBrowserRow> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
 		{
 			Druid rootEntityId = example.GetEntityStructuredTypeId ();
@@ -125,7 +136,9 @@ namespace Epsitec.Cresus.DataLayer
 					}
 				}
 
-				reader.IncludeRowKeys = true;
+				//	Execute the reader and gets back all (flattened) rows, including their
+				//	table row keys.
+
 				reader.CreateDataReader (transaction);
 
 				DataQueryResult queryResult = new DataQueryResult (query, reader.Tables.Select (table => table.CaptionId));
@@ -136,6 +149,7 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
+
 
 		/// <summary>
 		/// Creates the SQL LIKE compatible search pattern.
@@ -179,7 +193,12 @@ namespace Epsitec.Cresus.DataLayer
 			return pattern;
 		}
 
-
+		/// <summary>
+		/// Creates the database reader and sets it up based on the query
+		/// definition.
+		/// </summary>
+		/// <param name="query">The query definition.</param>
+		/// <returns>The database reader.</returns>
 		private DbReader CreateReader(DataQuery query)
 		{
 			DbReader reader = new DbReader (this.infrastructure);
@@ -225,10 +244,18 @@ namespace Epsitec.Cresus.DataLayer
 			}
 
 			reader.SelectPredicate = query.Distinct ? SqlSelectPredicate.Distinct : SqlSelectPredicate.All;
+			reader.IncludeRowKeys  = true;
 
 			return reader;
 		}
 
+		/// <summary>
+		/// Gets the table/column tuple for the specified field.
+		/// </summary>
+		/// <param name="fieldPath">The field path (used to get the containing table alias).</param>
+		/// <param name="dataEntityId">The data entity id (used to get the table definition).</param>
+		/// <param name="dataFieldId">The data field id (used to get the column definition).</param>
+		/// <returns>The table/column tuple.</returns>
 		private DbTableColumn GetTableColumn(EntityFieldPath fieldPath, Druid dataEntityId, string dataFieldId)
 		{
 			DbTableColumn tableColumn;
@@ -247,8 +274,6 @@ namespace Epsitec.Cresus.DataLayer
 			return tableColumn;
 		}
 
-
-		
 		
 		readonly DbInfrastructure				infrastructure;
 		readonly SchemaEngine					schemaEngine;
