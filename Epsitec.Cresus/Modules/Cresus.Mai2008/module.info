@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="1001" name="Cresus.Mai2008" layer="A" namespace="Epsitec.Cresus">
+  <Versions>
+    <Version id="1" build="1" date="2008-05-14T08:38:15.4210000Z" />
+  </Versions>
+</ModuleInfo>
