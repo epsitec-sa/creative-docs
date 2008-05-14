@@ -100,6 +100,14 @@ namespace Epsitec.Cresus.DataLayer
 			return this.InternalResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
 		}
 
+		public AbstractEntity ResolveEntity(DataBrowserRow row, int index)
+		{
+			DbKey rowKey   = row.Keys[index];
+			Druid entityId = row.Query.EntityIds[index];
+
+			return this.ResolveEntity (rowKey, entityId);
+		}
+
 		public T ResolveEntity<T>(DbKey rowKey) where T : AbstractEntity, new ()
 		{
 			T     entity   = new T ();

@@ -19,25 +19,37 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public sealed class DataBrowserRow
 	{
-		public DataBrowserRow(DataQueryResult query, object[] items)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataBrowserRow"/> class.
+		/// </summary>
+		/// <param name="query">The query.</param>
+		/// <param name="values">The values.</param>
+		public DataBrowserRow(DataQueryResult query, object[] values)
 		{
-			this.query   = query;
-			this.items   = items;
-			this.indexes = DataBrowserRow.emptyIndexes;
+			this.query  = query;
+			this.values = values;
+			this.keys   = DataBrowserRow.emptyKeys;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DataBrowserRow"/> class.
+		/// </summary>
+		/// <param name="query">The query.</param>
+		/// <param name="row">The row which contains the values and the keys.</param>
 		public DataBrowserRow(DataQueryResult query, DbReader.RowData row)
 		{
-			this.query   = query;
-			this.items   = row.Values;
-			this.indexes = row.Indexes;
+			this.query = query;
+			this.values = row.Values;
+			this.keys  = row.Keys;
+
+			System.Diagnostics.Debug.Assert (this.query.EntityIds.Count == this.keys.Length);
 		}
 
 		/// <summary>
 		/// Gets the query, which defines the various columns.
 		/// </summary>
 		/// <value>The query.</value>
-		public DataQuery Query
+		public DataQueryResult Query
 		{
 			get
 			{
@@ -55,12 +67,12 @@ namespace Epsitec.Cresus.DataLayer
 			get
 			{
 				if ((index < 0) ||
-					(index >= this.items.Length))
+					(index >= this.values.Length))
 				{
 					throw new System.ArgumentOutOfRangeException ("index", "Index out of range");
 				}
 
-				return this.items[index];
+				return this.values[index];
 			}
 		}
 
@@ -91,49 +103,59 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 		/// <summary>
-		/// Gets the column count.
+		/// Gets the value count.
 		/// </summary>
-		/// <value>The column count.</value>
-		public int ColumnCount
+		/// <value>The value count.</value>
+		public int ValueCount
 		{
 			get
 			{
-				return this.items.Length;
-			}
-		}
-
-
-		/// <summary>
-		/// Gets the entity count, i.e. the number of entities covered by the
-		/// columns.
-		/// </summary>
-		/// <value>The entity count.</value>
-		public int EntityCount
-		{
-			get
-			{
-				return this.indexes.Length;
+				return this.values.Length;
 			}
 		}
 
 		/// <summary>
-		/// Gets the items, sorted in the same order as the columns defined by
+		/// Gets the key count (number of entity keys for the data in the row).
+		/// </summary>
+		/// <value>The key count.</value>
+		public int KeyCount
+		{
+			get
+			{
+				return this.keys.Length;
+			}
+		}
+
+		/// <summary>
+		/// Gets the values, sorted in the same order as the columns defined by
 		/// the <see cref="Query"/> property..
 		/// </summary>
-		/// <value>The items.</value>
-		public IEnumerable<object> Items
+		/// <value>The values.</value>
+		public IList<object> Values
 		{
 			get
 			{
-				return this.items;
+				return this.values;
 			}
 		}
 
+		/// <summary>
+		/// Gets the keys, sorted in the same order as the entity ids in the
+		/// <see cref="Query"/> property.
+		/// </summary>
+		/// <value>The keys.</value>
+		public IList<DbKey> Keys
+		{
+			get
+			{
+				return this.keys;
+			}
+		}
 
-		private static readonly object[] emptyIndexes = new object[0];
+		private static readonly DbKey[] emptyKeys = new DbKey[0];
 
 		private readonly DataQueryResult query;
-		private readonly object[] items;
-		private readonly object[] indexes;
+		private readonly object[] values;
+		private readonly DbKey[] keys;
 	}
 }

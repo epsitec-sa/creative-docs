@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Database
 
 				while (this.dataReader.Read ())
 				{
-					object[] values  = new object[n];
-					object[] indexes = new object[m];
+					object[] values = new object[n];
+					DbKey[]  keys   = new DbKey[m];
 
 					this.dataReader.GetValues (buffer);
 
@@ -146,10 +146,10 @@ namespace Epsitec.Cresus.Database
 
 					for (int i = 0; i < m; i++)
 					{
-						indexes[i] = buffer[n+i];
+						keys[i] = new DbKey (new DbId ((long)buffer[n+i]));
 					}
 
-					yield return new RowData (values, indexes);
+					yield return new RowData (values, keys);
 				}
 
 				this.CloseDataReader ();
@@ -164,6 +164,64 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		#region RowData Structure
+
+		/// <summary>
+		/// The <c>RowData</c> structure stores both the values and the keys
+		/// for a given row.
+		/// </summary>
+		public struct RowData
+		{
+			/// <summary>
+			/// Initializes a new instance of the <see cref="RowData"/> structure.
+			/// </summary>
+			/// <param name="values">The values.</param>
+			/// <param name="keys">The keys.</param>
+			public RowData(object[] values, DbKey[] keys)
+			{
+				this.values = values;
+				this.keys = keys;
+			}
+
+			/// <summary>
+			/// Gets the values.
+			/// </summary>
+			/// <value>The values.</value>
+			public object[] Values
+			{
+				get
+				{
+					return this.values;
+				}
+			}
+
+			/// <summary>
+			/// Gets the keys.
+			/// </summary>
+			/// <value>The keys.</value>
+			public DbKey[] Keys
+			{
+				get
+				{
+					return this.keys;
+				}
+			}
+
+			private readonly object[] values;
+			private readonly DbKey[] keys;
+		}
+
+		#endregion
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.CloseDataReader ();
+		}
+
+		#endregion
+
 		private void CloseDataReader()
 		{
 			if ((this.dataReader != null) &&
@@ -175,46 +233,6 @@ namespace Epsitec.Cresus.Database
 				this.dataReader = null;
 			}
 		}
-
-
-		public struct RowData
-		{
-			public RowData(object[] values, object[] indexes)
-			{
-				this.values = values;
-				this.indexes = indexes;
-			}
-
-			public object[] Values
-			{
-				get
-				{
-					return this.values;
-				}
-			}
-
-			public object[] Indexes
-			{
-				get
-				{
-					return this.indexes;
-				}
-			}
-
-			private readonly object[] values;
-			private readonly object[] indexes;
-		}
-
-
-		#region IDisposable Members
-
-		public void Dispose()
-		{
-			this.CloseDataReader ();
-		}
-
-		#endregion
-
 
 		private DbTableColumn FindRenamedTableColumn(string shortColumnAlias)
 		{

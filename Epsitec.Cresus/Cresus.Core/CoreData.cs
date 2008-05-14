@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core
 						{
 							System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 							
-							foreach (object column in row.Items)
+							foreach (object column in row.Values)
 							{
 								if (buffer.Length > 0)
 								{
