@@ -381,6 +381,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleTabBookActivePageChanged(object sender, CancelEventArgs e)
 		{
+			//	Appelé après un changement d'onglet.
 			this.UpdateButtons();
 
 			if (this.fieldTextToCreate != null && this.tabBook.ActivePage == this.tabCreate)
@@ -394,6 +395,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleTextToCreateChanged(object sender)
 		{
+			//	Appelé lorsque le texte du Caption à créer a changé.
 			this.UpdateButtons();
 		}
 
@@ -458,14 +460,15 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
+			//	Bouton "Créer" ou "Utiliser" cliqué.
 			if (this.tabBook.ActivePage == this.tabCreate)
 			{
-				this.resource = this.CreateCaption();
+				this.resource = this.CreateCaption();  // crée la ressource Caption
 			}
 
 			if (this.tabBook.ActivePage == this.tabUse)
 			{
-				this.resource = this.SelectedResource;
+				this.resource = this.SelectedResource;  // utilise la ressource choisie
 			}
 
 			this.result = Common.Dialogs.DialogResult.Yes;

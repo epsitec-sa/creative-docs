@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 		private void HandleButtonCaptionClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque le bouton caption est cliqué.
+			//	Appelé lorsque le bouton caption "Choisir" est cliqué.
 			Druid druid = (Druid) this.value;
 			Common.Dialogs.DialogResult result = this.application.DlgLabelReplacement(this.nameToCreate, ref druid);
 
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.Proxies
 		private void HandleButtonClearClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque le bouton clear est cliqué.
-			this.value = Druid.Empty;
+			this.value = Druid.Empty;  // plus de label de remplacement, donc on réutilise le label standard
 			this.OnValueChanged();
 			this.UpdateInterface();
 		}
@@ -124,8 +124,6 @@ namespace Epsitec.Common.Designer.Proxies
 						}
 					}
 				}
-
-				//?this.buttonCaption.Text = text;
 				ToolTip.Default.SetToolTip(this.buttonCaption, text);
 
 				this.buttonClear.Enable = !string.IsNullOrEmpty(text);

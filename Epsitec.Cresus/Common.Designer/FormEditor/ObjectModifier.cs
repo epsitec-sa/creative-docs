@@ -820,14 +820,17 @@ namespace Epsitec.Common.Designer.FormEditor
 		public Widget GetWidget(System.Guid guid)
 		{
 			//	Cherche le widget correspondant à un Guid.
-			foreach (FieldDescription field in this.formEditor.FinalFields)
+			if (this.formEditor.FinalFields != null)
 			{
-				if (guid == field.Guid)
+				foreach (FieldDescription field in this.formEditor.FinalFields)
 				{
-					Widget obj = this.GetWidget(this.formEditor.Panel, field.Guid);
-					if (obj != null)
+					if (guid == field.Guid)
 					{
-						return obj;
+						Widget obj = this.GetWidget(this.formEditor.Panel, field.Guid);
+						if (obj != null)
+						{
+							return obj;
+						}
 					}
 				}
 			}
@@ -941,13 +944,16 @@ namespace Epsitec.Common.Designer.FormEditor
 		public int GetFieldDescriptionIndex(System.Guid guid)
 		{
 			//	Retourne l'index d'un champ d'après le Guid.
-			for (int i=0; i<this.formEditor.FinalFields.Count; i++)
+			if (this.formEditor.FinalFields != null)
 			{
-				FieldDescription field = this.formEditor.FinalFields[i];
-
-				if (field.Guid == guid)
+				for (int i=0; i<this.formEditor.FinalFields.Count; i++)
 				{
-					return i;
+					FieldDescription field = this.formEditor.FinalFields[i];
+
+					if (field.Guid == guid)
+					{
+						return i;
+					}
 				}
 			}
 
@@ -957,13 +963,16 @@ namespace Epsitec.Common.Designer.FormEditor
 		protected int GetFieldDescriptionIndex(string druidsPath)
 		{
 			//	Retourne l'index d'un champ d'après le chemin de Druis.
-			for (int i=0; i<this.formEditor.FinalFields.Count; i++)
+			if (this.formEditor.FinalFields != null)
 			{
-				FieldDescription field = this.formEditor.FinalFields[i];
-
-				if (field.GetPath(null) == druidsPath)
+				for (int i=0; i<this.formEditor.FinalFields.Count; i++)
 				{
-					return i;
+					FieldDescription field = this.formEditor.FinalFields[i];
+
+					if (field.GetPath(null) == druidsPath)
+					{
+						return i;
+					}
 				}
 			}
 
@@ -1338,43 +1347,46 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne le texte permettant de décrire l'opération delta d'un TableItem dans une liste.
 			string icon = null;
 
-			if (this.IsDelta)
+			if (this.formEditor.WorkingForm != null)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
-				if (index != -1)
+				if (this.IsDelta)
 				{
-					if (!this.IsTableContentInheritHidden(item))
+					int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+					if (index != -1)
+					{
+						if (!this.IsTableContentInheritHidden(item))
+						{
+							if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
+							{
+								icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
+							}
+
+							if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+							{
+								icon = Misc.Image("FormDeltaShowed");  // peu prioritaire à cause du fond rouge
+							}
+						}
+
+						if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
+						{
+							icon = Misc.Image("FormDeltaInserted");  // peu prioritaire à cause du fond vert
+						}
+
+						if (this.formEditor.WorkingForm.Fields[index].DeltaMoved)
+						{
+							icon = Misc.Image("FormDeltaMoved");  // prioritaire, car pas de fond coloré
+						}
+					}
+				}
+				else
+				{
+					int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+					if (index != -1)
 					{
 						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 						{
 							icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
 						}
-
-						if (this.formEditor.WorkingForm.Fields[index].DeltaShowed)
-						{
-							icon = Misc.Image("FormDeltaShowed");  // peu prioritaire à cause du fond rouge
-						}
-					}
-
-					if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
-					{
-						icon = Misc.Image("FormDeltaInserted");  // peu prioritaire à cause du fond vert
-					}
-
-					if (this.formEditor.WorkingForm.Fields[index].DeltaMoved)
-					{
-						icon = Misc.Image("FormDeltaMoved");  // prioritaire, car pas de fond coloré
-					}
-				}
-			}
-			else
-			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
-				if (index != -1)
-				{
-					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
-					{
-						icon = Misc.Image("FormDeltaHidden");  // peu prioritaire à cause du fond rouge
 					}
 				}
 			}
@@ -1400,45 +1412,48 @@ namespace Epsitec.Common.Designer.FormEditor
 			//	Retourne la couleur décrivant un TableItem dans une liste.
 			Color color = Color.Empty;
 
-			if (this.IsDelta)
+			if (this.formEditor.WorkingForm != null)
 			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
-				if (index != -1)
+				if (this.IsDelta)
 				{
-					if (!this.IsTableContentInheritHidden(item))
+					int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+					if (index != -1)
 					{
-						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden ||
-						this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+						if (!this.IsTableContentInheritHidden(item))
+						{
+							if (this.formEditor.WorkingForm.Fields[index].DeltaHidden ||
+								this.formEditor.WorkingForm.Fields[index].DeltaShowed)
+							{
+								color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
+							}
+						}
+
+						if (this.formEditor.WorkingForm.Fields[index].DeltaModified)
+						{
+							color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
+						}
+
+						if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
+						{
+							color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
+						}
+
+
+						if (this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach)
+						{
+							color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
+						}
+					}
+				}
+				else
+				{
+					int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
+					if (index != -1)
+					{
+						if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
 						{
 							color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 						}
-					}
-
-					if (this.formEditor.WorkingForm.Fields[index].DeltaModified)
-					{
-						color = Color.FromAlphaRgb(0.3, 1, 1, 0);  // jaune = champ modifié
-					}
-
-					if (this.formEditor.WorkingForm.Fields[index].DeltaInserted)
-					{
-						color = Color.FromAlphaRgb(0.3, 0, 1, 0);  // vert = champ inséré
-					}
-
-
-					if (this.formEditor.WorkingForm.Fields[index].DeltaBrokenAttach)
-					{
-						color = Color.FromAlphaRgb(0.8, 1, 0, 0);  // rouge foncé = lien cassé
-					}
-				}
-			}
-			else
-			{
-				int index = FormEngine.Arrange.IndexOfGuid(this.formEditor.WorkingForm.Fields, item.Guid);
-				if (index != -1)
-				{
-					if (this.formEditor.WorkingForm.Fields[index].DeltaHidden)
-					{
-						color = Color.FromAlphaRgb(0.3, 1, 0, 0);  // rouge = champ caché
 					}
 				}
 			}
@@ -1470,12 +1485,12 @@ namespace Epsitec.Common.Designer.FormEditor
 		public void UpdateTableContent()
 		{
 			//	Met à jour la liste qui reflète le contenu de la table des champs, visible en haut à droite.
+			this.tableContent.Clear();
+
 			if (this.formEditor.WorkingForm == null)
 			{
 				return;
 			}
-
-			this.tableContent.Clear();
 
 			//	Construit la liste des chemins de Druids, en commençant par ceux qui font
 			//	partie du masque de saisie.
