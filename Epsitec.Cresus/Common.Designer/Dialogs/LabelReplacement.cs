@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.tabUse.Padding = new Margins(0, 0, 0, 0);
 				this.tabBook.Items.Add(this.tabUse);
 
-				this.tabBook.ActivePage = this.tabUse;
+				this.tabBook.ActivePage = this.tabCreate;
 
 				//	Onglet "créer".
 				FrameBox createBox;
@@ -168,6 +168,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
 				this.buttonUse.TabIndex = 20;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+
+				this.fieldTextToCreate.Focus();
 			}
 
 			this.UpdateTitle();
@@ -412,7 +414,29 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleButtonUseClicked(object sender, MessageEventArgs e)
 		{
-			this.resource = this.SelectedResource;
+			if (this.tabBook.ActivePage == this.tabCreate)
+			{
+				CultureMap newItem = this.module.AccessCaptions.Accessor.CreateItem();
+				newItem.Name = this.nameToCreate;
+
+				StructuredData data = newItem.GetCultureData(Resources.DefaultTwoLetterISOLanguageName);
+				data.SetValue(Support.Res.Fields.ResourceCaption.Description, this.fieldTextToCreate.Text);
+
+				List<string> list = new List<string>();
+				list.Add(this.fieldTextToCreate.Text);
+				ResourceAccess.SetStructuredDataValue(this.module.AccessCaptions.Accessor, newItem, data, Support.Res.Fields.ResourceCaption.Labels.ToString(), list);
+
+				this.module.AccessCaptions.Accessor.Collection.Add(newItem);
+				this.module.AccessCaptions.CollectionView.MoveCurrentTo(newItem);
+
+				this.resource = newItem.Id;
+			}
+
+			if (this.tabBook.ActivePage == this.tabUse)
+			{
+				this.resource = this.SelectedResource;
+			}
+
 			this.result = Common.Dialogs.DialogResult.Yes;
 
 			this.Close();
