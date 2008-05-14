@@ -124,6 +124,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="DataQueryResult.cs" />
     <Compile Include="DataBrowserRow.cs" />
     <Compile Include="DataQuerySortOrder.cs" />
     <Compile Include="DataQueryColumn.cs" />

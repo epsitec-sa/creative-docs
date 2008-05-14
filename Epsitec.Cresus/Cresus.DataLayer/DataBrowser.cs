@@ -9,6 +9,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Helpers;
 
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
@@ -126,9 +127,11 @@ namespace Epsitec.Cresus.DataLayer
 
 				reader.CreateDataReader (transaction);
 
+				DataQueryResult queryResult = new DataQueryResult (query, reader.Tables.Select (table => table.CaptionId));
+
 				foreach (var row in reader.Rows)
 				{
-					yield return new DataBrowserRow (query, row);
+					yield return new DataBrowserRow (queryResult, row);
 				}
 			}
 		}

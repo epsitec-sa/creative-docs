@@ -156,6 +156,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		public IEnumerable<DbTable> Tables
+		{
+			get
+			{
+				return this.renamedTables;
+			}
+		}
+
 		private void CloseDataReader()
 		{
 			if ((this.dataReader != null) &&

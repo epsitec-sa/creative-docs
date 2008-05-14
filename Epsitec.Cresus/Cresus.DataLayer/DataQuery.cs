@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataQuery</c> class defines a high level query used by the
 	/// <see cref="DataBrowser"/> to define a SQL SELECT statement.
 	/// </summary>
-	public sealed class DataQuery
+	public class DataQuery
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataQuery"/> class.
@@ -25,6 +25,12 @@ namespace Epsitec.Cresus.DataLayer
 		public DataQuery()
 		{
 			this.columns = new List<DataQueryColumn> ();
+		}
+
+		protected DataQuery(DataQuery originalQuery)
+		{
+			this.columns  = originalQuery.columns;
+			this.Distinct = originalQuery.Distinct;
 		}
 
 

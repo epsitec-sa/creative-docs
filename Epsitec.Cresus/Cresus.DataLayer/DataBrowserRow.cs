@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public sealed class DataBrowserRow
 	{
-		public DataBrowserRow(DataQuery query, object[] items)
+		public DataBrowserRow(DataQueryResult query, object[] items)
 		{
 			this.query   = query;
 			this.items   = items;
 			this.indexes = DataBrowserRow.emptyIndexes;
 		}
 
-		public DataBrowserRow(DataQuery query, DbReader.RowData row)
+		public DataBrowserRow(DataQueryResult query, DbReader.RowData row)
 		{
 			this.query   = query;
 			this.items   = row.Values;
@@ -102,6 +102,20 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the entity count, i.e. the number of entities covered by the
+		/// columns.
+		/// </summary>
+		/// <value>The entity count.</value>
+		public int EntityCount
+		{
+			get
+			{
+				return this.indexes.Length;
+			}
+		}
+
 		/// <summary>
 		/// Gets the items, sorted in the same order as the columns defined by
 		/// the <see cref="Query"/> property..
@@ -118,7 +132,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		private static readonly object[] emptyIndexes = new object[0];
 
-		private readonly DataQuery query;
+		private readonly DataQueryResult query;
 		private readonly object[] items;
 		private readonly object[] indexes;
 	}
