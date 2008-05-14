@@ -353,8 +353,8 @@ namespace Epsitec.Common.Types
 						(value.GetType () != type))
 					{
 						IValueConverter converter = this.converter ?? Converters.AutomaticValueConverter.Instance;
-						CultureInfo culture   = this.converterCulture ?? CultureInfo.CurrentCulture;
-						object parameter = this.converter == null ? null : this.converterParameter;
+						CultureInfo     culture   = this.converterCulture ?? CultureInfo.CurrentCulture;
+						object          parameter = this.converter == null ? null : this.converterParameter;
 
 						value = converter.ConvertBack (value, type, parameter, culture);
 					}

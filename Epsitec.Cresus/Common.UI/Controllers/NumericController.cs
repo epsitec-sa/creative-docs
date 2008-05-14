@@ -18,7 +18,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 		}
 
-		public override object GetActualValue()
+		public override object GetUserInterfaceValue()
 		{
 			return this.field.Text;
 		}

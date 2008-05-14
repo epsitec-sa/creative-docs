@@ -137,6 +137,20 @@ namespace Epsitec.Common.Types
 
 			if (text != null)
 			{
+				if (this.UseFormattedText)
+				{
+					return false;
+				}
+			}
+
+			if (value is FormattedText)
+			{
+				FormattedText formattedText = (FormattedText) value;
+				text = formattedText.ToString ();
+			}
+
+			if (text != null)
+			{
 				int length = text.Length;
 
 				if ((length >= this.MinimumLength) &&

@@ -19,7 +19,7 @@ namespace Epsitec.Common.UI.Validators
 		public override void Validate()
 		{
 			if ((this.controller != null) &&
-				(this.controller.IsValidValue (this.controller.GetActualValue ())))
+				(this.controller.IsValidUserInterfaceValue (this.controller.GetUserInterfaceValue ())))
 			{
 				this.SetState (Widgets.ValidationState.Ok);
 			}

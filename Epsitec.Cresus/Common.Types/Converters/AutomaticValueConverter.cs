@@ -126,6 +126,11 @@ namespace Epsitec.Common.Types.Converters
 				if (sourceTypeCode == System.TypeCode.String)
 				{
 					string text = value as string;
+
+					if (expectedType == typeof (FormattedText))
+					{
+						return new FormattedText (text);
+					}
 					
 					if (text.Length == 0)
 					{

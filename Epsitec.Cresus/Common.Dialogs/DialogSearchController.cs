@@ -265,7 +265,7 @@ namespace Epsitec.Common.Dialogs
 			if ((PlaceholderContext.Depth == 1) &&
 				(controller.Placeholder.Window == this.DialogWindow))
 			{
-				object      value       = controller.GetActualValue ();
+				object      value       = controller.GetConvertedUserInterfaceValue ();
 				Placeholder placeholder = PlaceholderContext.GetInteractivePlaceholder (this.DialogWindow);
 
 				this.UpdateSearchTemplate (placeholder, value);

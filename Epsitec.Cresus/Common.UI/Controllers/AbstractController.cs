@@ -157,10 +157,28 @@ namespace Epsitec.Common.UI.Controllers
 		/// user interface.
 		/// </summary>
 		/// <returns>The actual value or <c>UndefindeValue.Value</c>.</returns>
-		public virtual object GetActualValue()
+		public virtual object GetUserInterfaceValue()
 		{
 			return UndefinedValue.Value;
 		}
+
+		public object GetConvertedUserInterfaceValue()
+		{
+			object value;
+			
+			value = this.GetUserInterfaceValue ();
+			value = this.ConvertBackValue (value);
+
+			if (this.IsValidValue (value))
+			{
+				return value;
+			}
+			else
+			{
+				return InvalidValue.Value;
+			}
+		}
+
 
 
 		protected virtual IGridPermeable GetGridPermeableLayoutHelper()
@@ -241,22 +259,19 @@ namespace Epsitec.Common.UI.Controllers
 			}
 			else
 			{
-				object value = this.GetActualValue ();
+				object value = this.GetUserInterfaceValue ();
+
+				value = this.ConvertBackValue (value);
 
 				if (this.IsValidValue (value))
 				{
-					value = this.ConvertBackValue (value);
+					//	Set the value of the placeholder in a specific context, so
+					//	that observers can get information about what is going on
+					//	in a very detailed manner, by querying PlaceholderContext.
 
-					if (value != InvalidValue.Value)
+					using (PlaceholderContext.SetActive (this))
 					{
-						//	Set the value of the placeholder in a specific context, so
-						//	that observers can get information about what is going on
-						//	in a very detailed manner, by querying PlaceholderContext.
-
-						using (PlaceholderContext.SetActive (this))
-						{
-							this.Placeholder.InternalControllerSetValue (value);
-						}
+						this.Placeholder.InternalControllerSetValue (value);
 					}
 				}
 			}
@@ -274,10 +289,13 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 
+		public bool IsValidUserInterfaceValue(object value)
+		{
+			return this.IsValidValue (this.ConvertBackValue (value));
+		}
+
 		public bool IsValidValue(object value)
 		{
-			value = this.ConvertBackValue (value);
-
 			if (InvalidValue.IsInvalidValue (value))
 			{
 				return false;

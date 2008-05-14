@@ -500,8 +500,8 @@ namespace Epsitec.Cresus.Database
 					return i64;
 				
 				case DbSimpleType.String:
-					System.Diagnostics.Debug.Assert (value is string);
-					return value;
+					System.Diagnostics.Debug.Assert (value is string || value is FormattedText);
+					return FormattedText.CastToString (value);
 				
 				case DbSimpleType.Date:
 				case DbSimpleType.Time:

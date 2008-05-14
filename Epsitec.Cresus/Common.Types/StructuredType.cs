@@ -690,7 +690,31 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return StructuredType.EqualTypes (this, provider.GetStructuredType ());
+				IStructuredType otherType = provider.GetStructuredType ();
+				
+				if (StructuredType.EqualTypes (this, otherType))
+				{
+					return true;
+				}
+
+				StructuredType type = otherType as StructuredType;
+
+				if (type != null)
+				{
+					type = type.BaseType;
+
+					while (type != null)
+					{
+						if (StructuredType.EqualTypes (this, type))
+						{
+							return true;
+						}
+
+						type = type.BaseType;
+					}
+				}
+
+				return false;
 			}
 		}
 
