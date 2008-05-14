@@ -29,14 +29,14 @@ namespace Epsitec.Common.Designer.Proxies
 		}
 
 
-		protected void AddValueDruid(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, string prefix)
+		protected void AddValueDruid(List<AbstractValue> list, Widget selectedObject, AbstractProxy.Type type, Types.Caption caption, string nameToCreate)
 		{
 			//	Ajoute une valeur de type Druid.
 			ValueDruid value = new ValueDruid(this.application);
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
-			value.Prefix = prefix;
+			value.NameToCreate = nameToCreate;
 			value.ValueChanged += new EventHandler(this.HandleValueChanged);
 			this.SendObjectToValue(value);
 

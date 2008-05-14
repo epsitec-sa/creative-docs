@@ -1240,14 +1240,14 @@ namespace Epsitec.Common.Designer.FormEditor
 			public bool IsInserted;  // true = nouvel élément, false = élément existant 
 		}
 
-		public string GetLabelReplacementPrefix(Widget obj)
+		public string GetLabelReplacementNameToCreate(Widget obj)
 		{
 			//	Retourne le préfixe à utiliser pour un Caption permettant de remplacer le label d'un champ dans un Form.
 			CultureMap cultureMap = this.formEditor.Module.AccessForms.CollectionView.CurrentItem as CultureMap;
 
-			FormEngine.FieldDescription field = this.GetFieldDescription(obj);
+			FieldDescription field = this.GetFieldDescription(obj);
 			int index = this.GetFieldDescriptionIndex(field.Guid);
-			FormEditor.ObjectModifier.TableItem item = this.TableContent[index];
+			ObjectModifier.TableItem item = this.TableContent[index];
 			string name = this.FormEditor.Module.AccessFields.GetFieldNames(item.DruidsPath);
 
 			return string.Concat("Form.LabelReplacement.", cultureMap.FullName, ".", name);

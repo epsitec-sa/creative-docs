@@ -2439,10 +2439,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgEntityField.AccessClose(out resource);
 		}
 
-		public Common.Dialogs.DialogResult DlgLabelReplacement(string prefix, ref Druid resource)
+		public Common.Dialogs.DialogResult DlgLabelReplacement(string nameToCreate, ref Druid resource)
 		{
 			//	Ouvre le dialogue pour choisir le Caption de remplacement d'une champ dans un Form.
-			this.dlgLabelReplacement.AccessOpen(prefix, resource);
+			this.dlgLabelReplacement.AccessOpen(nameToCreate, resource);
 			this.dlgLabelReplacement.Show();  // choix dans le dialogue...
 			return this.dlgLabelReplacement.AccessClose(out resource);
 		}

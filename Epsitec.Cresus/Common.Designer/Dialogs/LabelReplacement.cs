@@ -60,14 +60,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				label = new StaticText(createBox);
 				label.Text = "Nom de la légende à créer";
-				label.PreferredWidth = 150;
+				label.PreferredWidth = 130;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Dock = DockStyle.Left;
 				label.Margins = new Margins(0, 5, 0, 0);
 
-				this.nameToCreate = new TextField(createBox);
-				this.nameToCreate.IsReadOnly = true;
-				this.nameToCreate.Dock = DockStyle.Fill;
+				this.fieldNameToCreate = new TextField(createBox);
+				this.fieldNameToCreate.IsReadOnly = true;
+				this.fieldNameToCreate.Dock = DockStyle.Fill;
 
 				createBox = new FrameBox(this.tabCreate);
 				createBox.Dock = DockStyle.Top;
@@ -75,14 +75,14 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				label = new StaticText(createBox);
 				label.Text = "Texte de la légende à créer";
-				label.PreferredWidth = 150;
+				label.PreferredWidth = 130;
 				label.ContentAlignment = ContentAlignment.MiddleRight;
 				label.Dock = DockStyle.Left;
 				label.Margins = new Margins(0, 5, 0, 0);
 
-				this.textToCreate = new TextField(createBox);
-				this.textToCreate.Dock = DockStyle.Fill;
-				this.textToCreate.TextChanged += new EventHandler(this.HandleTextToCreateChanged);
+				this.fieldTextToCreate = new TextField(createBox);
+				this.fieldTextToCreate.Dock = DockStyle.Fill;
+				this.fieldTextToCreate.TextChanged += new EventHandler(this.HandleTextToCreateChanged);
 
 				//	Onglet "utiliser".
 				Widget left = new Widget(this.tabUse);
@@ -180,12 +180,12 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(string prefix, Druid resource)
+		public void AccessOpen(string nameToCreate, Druid resource)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
 
-			this.prefix = prefix;
+			this.nameToCreate = nameToCreate;
 			this.resource = resource;
 
 			//	Cherche le module contenant le Druid de la ressource.
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected void UpdateName()
 		{
 			//	Met à jour le nom de la ressource à créer.
-			this.nameToCreate.Text = this.prefix;
+			this.fieldNameToCreate.Text = this.nameToCreate;
 		}
 
 		protected void UpdateText()
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			if (this.tabBook.ActivePage == this.tabCreate)
 			{
 				this.buttonUse.Text = Res.Strings.Dialog.ResourceSelector.Button.Create;
-				this.buttonUse.Enable = !string.IsNullOrEmpty(this.textToCreate.Text);
+				this.buttonUse.Enable = !string.IsNullOrEmpty(this.fieldTextToCreate.Text);
 			}
 
 			if (this.tabBook.ActivePage == this.tabUse)
@@ -422,15 +422,15 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Module						module;
 		protected ResourceAccess				access;
 		protected Druid							resource;
-		protected string						prefix;
+		protected string						nameToCreate;
 		protected CollectionView				collectionView;
 		protected Common.Dialogs.DialogResult	result;
 
 		protected TabBook						tabBook;
 
 		protected TabPage						tabCreate;
-		protected TextField						nameToCreate;
-		protected TextField						textToCreate;
+		protected TextField						fieldNameToCreate;
+		protected TextField						fieldTextToCreate;
 
 		protected TabPage						tabUse;
 		protected StaticText					header1;

@@ -66,8 +66,8 @@ namespace Epsitec.Common.Designer.Proxies
 			if (this.ObjectModifier.IsField(selectedObject) ||
 				this.ObjectModifier.IsCommand(selectedObject))
 			{
-				string prefix = this.ObjectModifier.GetLabelReplacementPrefix(selectedObject);
-				this.AddValueDruid(list, selectedObject, AbstractProxy.Type.FormLabelReplacement, Res.Captions.Form.LabelReplacement, prefix);
+				string nameToCreate = this.ObjectModifier.GetLabelReplacementNameToCreate(selectedObject);
+				this.AddValueDruid(list, selectedObject, AbstractProxy.Type.FormLabelReplacement, Res.Captions.Form.LabelReplacement, nameToCreate);
 			}
 
 			if (this.ObjectModifier.IsField(selectedObject) ||
