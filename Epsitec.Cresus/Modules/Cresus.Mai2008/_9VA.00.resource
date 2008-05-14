@@ -7,6 +7,23 @@
         <DBI>&lt;invalid&gt;</DBI>
         <DS>*</DS>
         <FD>
+          <Guid>6bdb22f0-4314-4a45-982a-509f72b6c59b</Guid>
+          <Type>Title</Type>
+          <FI />
+          <LFC>Blue</LFC>
+          <LFS>Italic</LFS>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+          <LR>[9VA4]</LR>
+        </FD>
+        <FD>
           <Guid>52385b50-d518-4e44-a568-4baa4add4297</Guid>
           <Type>Field</Type>
           <FI>[9VA2]</FI>
@@ -52,6 +69,7 @@
           <Guid>eb830a4e-5787-4831-84e5-4de013902bf3</Guid>
           <Type>Title</Type>
           <FI />
+          <LFH>Small</LFH>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -61,6 +79,7 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
+          <LR>[9VA3]</LR>
         </FD>
         <FD>
           <Guid>6f7e5d95-47f7-4cc5-94d9-059bba5dac90</Guid>
@@ -76,6 +95,7 @@
           <LW>1</LW>
           <PW>100</PW>
           <LR>[9VA3]</LR>
+          <VB>None</VB>
         </FD>
         <FD>
           <Guid>3fa261a7-b45d-42da-be13-90081ea211a6</Guid>

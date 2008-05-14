@@ -108,6 +108,15 @@ namespace Epsitec.Cresus.Core
 
 			List<AddressBook.Entities.AdressePersonneEntity> personnes = new List<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> (this.ReadPersonnes (localités, titres));
 			this.dataContext.SaveChanges ();
+
+			List<Mai2008.Entities.FactureEntity> factures = new List<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
+			Mai2008.Entities.FactureEntity facture = this.dataContext.CreateEmptyEntity<Mai2008.Entities.FactureEntity> ();
+
+			facture.Objet = new FormattedText ("Crésus Comptabilité <i>Pro</i>");
+			facture.AdresseFacturation = personnes[100];
+			factures.Add (facture);
+			
+			this.dataContext.SaveChanges ();
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Created {0} x Localité, {1} x TitrePersonne, {2} x AdressePersonne", localités.Count, titres.Count, personnes.Count));
 		}
@@ -284,6 +293,23 @@ namespace Epsitec.Cresus.Core
 							(ResolverImplementation.Match (example.Prénom, entity.Prénom)) &&
 							(ResolverImplementation.Match (example.Rue, entity.Rue)) &&
 							(ResolverImplementation.Match (example.Localité, entity.Localité)))
+						{
+							yield return entity;
+						}
+					}
+				}
+				else if (id == Mai2008.Entities.FactureEntity.EntityStructuredTypeId)
+				{
+					Mai2008.Entities.FactureEntity example = AbstractEntity.Resolve<Mai2008.Entities.FactureEntity> (template);
+
+					if (example == null)
+					{
+						yield break;
+					}
+
+					foreach (Mai2008.Entities.FactureEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					{
+						if (ResolverImplementation.Match (example.Objet.ToString (), entity.Objet.ToString ()))
 						{
 							yield return entity;
 						}

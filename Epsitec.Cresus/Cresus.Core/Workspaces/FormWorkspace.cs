@@ -32,7 +32,10 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.hintListController.DefineContainer (frame);
 
 			Druid formId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
-			Druid entityId = AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
+			Druid entityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
+
+			formId   = Epsitec.Cresus.Mai2008.FormIds.Facture;
+			entityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId;
 
 			
 			this.searchPanel = UI.LoadPanel (formId, PanelInteractionMode.Search);
