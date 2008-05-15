@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core
 {
@@ -75,7 +77,42 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		
+
+		public static IEnumerable<States.AbstractState> Read(string path)
+		{
+			using (System.IO.StreamReader reader = System.IO.File.OpenText (path))
+			{
+				foreach (var item in StateManager.Read (reader))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		public static IEnumerable<States.AbstractState> Read(System.IO.TextReader reader)
+		{
+			XDocument doc = XDocument.Load (reader);
+
+			yield return null;
+			yield return null;
+		}
+
+		public static void Write(System.IO.TextWriter writer, IEnumerable<States.AbstractState> states)
+		{
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+			XDocument doc = new XDocument (
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XComment ("Saved on " + timeStamp),
+				new XElement ("store",
+					new XAttribute ("version", "1.0"),
+					new XElement ("states",
+						from state in states
+						select new XElement ("state"))));
+
+			doc.Save (writer);
+		}
 
 		private void OnStateStackChanged(StateStackChangedEventArgs e)
 		{
