@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 
 using System.Collections.Generic;
@@ -45,10 +46,13 @@ namespace Epsitec.Cresus.Core
 		[Test]
 		public void Check02LoadState()
 		{
-			foreach (var item in StateManager.Read (this.path))
-			{
-				System.Console.Out.WriteLine ("Element: {0}", item == null ? "<null>" : item.ToString ());
-			}
+			List<States.AbstractState> states = new List<States.AbstractState> (StateManager.Read (this.path));
+
+			Assert.AreEqual (2, states.Count);
+			Assert.AreEqual (typeof (DummyState), states[0].GetType ());
+			Assert.AreEqual (typeof (DummyState), states[1].GetType ());
+			Assert.AreEqual ("A", states[0].ToString ());
+			Assert.AreEqual ("B", states[1].ToString ());
 		}
 
 
