@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataContext</c> class provides a context in which entities can
 	/// be loaded from the database, modified and then saved back.
 	/// </summary>
-	public sealed class DataContext : System.IDisposable
+	public sealed class DataContext : System.IDisposable, IEntityPersistanceManager
 	{
 		public DataContext(DbInfrastructure infrastructure)
 		{
@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
 			this.entityContext.EntityCreated += this.HandleEntityCreated;
+			this.entityContext.PersistanceManagers.Add (this);
 		}
 
 		public SchemaEngine SchemaEngine
@@ -902,7 +903,22 @@ namespace Epsitec.Cresus.DataLayer
 			return this.GetTemporaryRows (baseTableName);
 		}
 
+		
 		internal EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
+
+			if (mapping != null)
+			{
+				return mapping;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Entity not managed by the DataContext");
+			}
+		}
+		
+		internal EntityDataMapping FindEntityDataMapping(AbstractEntity entity)
 		{
 			if (entity == null)
 			{
@@ -917,9 +933,10 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
-				throw new System.ArgumentException ("Entity not managed by the DataContext");
+				return null;
 			}
 		}
+
 
 		internal void LoadEntitySchema(Druid entityId)
 		{
@@ -1010,11 +1027,80 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
+		#region IEntityPersistanceManager Members
+
+		public string GetPersistedId(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
+
+			if ((mapping != null) &&
+				(mapping.RowKey.IsEmpty == false))
+			{
+				long  keyId     = mapping.RowKey.Id;
+				short keyStatus = DbKey.ConvertToIntStatus (mapping.RowKey.Status);
+
+				if (keyStatus == 0)
+				{
+					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}", keyId);
+				}
+				else
+				{
+					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", keyId, keyStatus);
+				}
+			}
+
+			return null;
+		}
+
+		public AbstractEntity GetPeristedEntity(string id, Druid entityId)
+		{
+			if (string.IsNullOrEmpty (id))
+			{
+				return null;
+			}
+			if (id.StartsWith ("db:"))
+			{
+				string[] args = id.Split (':');
+				DbKey    key  = DbKey.Empty;
+
+				long  keyId;
+				short keyStatus;
+
+				switch (args.Length)
+				{
+					case 2:
+						if (long.TryParse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId))
+						{
+							key = new DbKey (keyId);
+						}
+						break;
+
+					case 3:
+						if ((long.TryParse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)) &&
+							(short.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyStatus)))
+						{
+							key = new DbKey (keyId, DbKey.ConvertFromIntStatus (keyStatus));
+						}
+						break;
+				}
+
+				if (!key.IsEmpty)
+				{
+					return this.ResolveEntity (key, entityId);
+				}
+			}
+
+			return null;
+		}
+
+		#endregion
+
 		private void Dipose(bool disposing)
 		{
 			if (disposing)
 			{
 				this.entityContext.EntityCreated -= this.HandleEntityCreated;
+				this.entityContext.PersistanceManagers.Remove (this);
 			}
 		}
 

@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Workspaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Support.EntityEngine;
 
 namespace Epsitec.Cresus.Core.States
 {
@@ -117,6 +118,8 @@ namespace Epsitec.Cresus.Core.States
 					}
 					else
 					{
+						string id;
+
 						switch (field.Relation)
 						{
 							case FieldRelation.None:
@@ -126,9 +129,19 @@ namespace Epsitec.Cresus.Core.States
 								break;
 
 							case FieldRelation.Reference:
-								element.Add (new XElement ("ref",
-									new XAttribute ("path", path)));
-								//	TODO: how do we serialize the reference ?
+								
+								id = data.EntityContext.GetPersistedId (value as AbstractEntity);
+
+								if (id == null)
+								{
+									//	TODO : ...
+								}
+								else
+								{
+									element.Add (new XElement ("ref",
+										new XAttribute ("path", path),
+										new XAttribute ("id", id)));
+								}
 								break;
 
 							case FieldRelation.Collection:
@@ -148,7 +161,47 @@ namespace Epsitec.Cresus.Core.States
 			return element;
 		}
 
+		public static void RestoreDialogData(DialogData data, XElement element)
+		{
+			System.Diagnostics.Debug.Assert (element.Name == "dialogData");
+			
+			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
+			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
+			foreach (XElement dataElement in element.Descendants ())
+			{
+				EntityFieldPath     path  = EntityFieldPath.Parse ((string) dataElement.Attribute ("path"));
+				StructuredTypeField field = path.NavigateReadField (data.Data);
+				
+				object value;
+				
+				switch (dataElement.Name.LocalName)
+				{
+					case "null":
+						value = null;
+						break;
+
+					case "data":
+						value = (string) dataElement.Attribute ("value");
+						value = converter.ConvertBack (value, field.Type.SystemType, null, culture);
+						break;
+					
+					case "ref":
+						value = data.EntityContext.GetPeristedEntity ((string) dataElement.Attribute ("id"), field.TypeId);
+						break;
+					
+					case "collection":
+						//	TODO: ...
+						continue;
+					
+					default:
+						throw new System.NotSupportedException (string.Format ("Unsupported XML element {0} found", dataElement.Name));
+				}
+
+				path.NavigateWrite (data.Data, value);
+			}
+		}
+		
 		private Workspaces.FormWorkspace		workspace;
 		private XElement						serialization;
 	}

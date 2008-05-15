@@ -83,6 +83,14 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		public EntityContext					EntityContext
+		{
+			get
+			{
+				return this.defaultContext;
+			}
+		}
+
 		/// <summary>
 		/// Gets the changes. The result is sorted based on the field path of
 		/// every change set item.

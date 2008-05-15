@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityContext</c> class defines the context associated with a
 	/// set of related entities. It is responsible of the value store management.
 	/// </summary>
-	public class EntityContext
+	public class EntityContext : IEntityPersistanceManager
 	{
 		private EntityContext()
 			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
@@ -32,9 +32,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
 			this.loopHandlingMode    = loopHandlingMode;
+			this.persistanceManagers = new List<IEntityPersistanceManager> ();
 
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
+
 
 			this.dataGeneration = 1;
 		}
@@ -85,6 +87,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			set;
 		}
 
+		public IList<IEntityPersistanceManager> PersistanceManagers
+		{
+			get
+			{
+				return this.persistanceManagers;
+			}
+		}
+
 		/// <summary>
 		/// Gets the current, thread specific, entity context.
 		/// </summary>
@@ -127,6 +137,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
+		/// <summary>
+		/// Compares two entities for equality. This compares the contents of
+		/// both entities; the two entities may therefore be of differing types
+		/// and still return <c>true</c>.
+		/// </summary>
+		/// <param name="a">The first entity.</param>
+		/// <param name="b">The second entity.</param>
+		/// <returns></returns>
 		public static bool CompareEqual(AbstractEntity a, AbstractEntity b)
 		{
 			if (a == b)
@@ -147,6 +165,39 @@ namespace Epsitec.Common.Support.EntityEngine
 			return da == db;
 		}
 
+		#region IEntityPersistanceManager Members
+
+		public string GetPersistedId(AbstractEntity entity)
+		{
+			foreach (var manager in this.persistanceManagers)
+			{
+				string id = manager.GetPersistedId (entity);
+
+				if (!string.IsNullOrEmpty (id))
+				{
+					return id;
+				}
+			}
+
+			return null;
+		}
+
+		public AbstractEntity GetPeristedEntity(string id, Druid entityId)
+		{
+			foreach (var manager in this.persistanceManagers)
+			{
+				AbstractEntity entity = manager.GetPeristedEntity (id, entityId);
+
+				if (entity != null)
+				{
+					return entity;
+				}
+			}
+
+			return null;
+		}
+
+		#endregion
 
 
 		/// <summary>
@@ -902,6 +953,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;
+		private readonly List<IEntityPersistanceManager> persistanceManagers;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 
