@@ -93,8 +93,8 @@ namespace Epsitec.Cresus.Core
 		{
 			XDocument doc = XDocument.Load (reader);
 
-			yield return null;
-			yield return null;
+			return from state in doc.Descendants ("state")
+				   select StateManager.CreateState (state);
 		}
 
 		public static void Write(System.IO.TextWriter writer, IEnumerable<States.AbstractState> states)
@@ -107,11 +107,22 @@ namespace Epsitec.Cresus.Core
 				new XComment ("Saved on " + timeStamp),
 				new XElement ("store",
 					new XAttribute ("version", "1.0"),
+					new XAttribute ("content", "Epsitec.Cresus.Core.States"),
 					new XElement ("states",
 						from state in states
-						select new XElement ("state"))));
+						select state.Serialize (new XElement ("state",
+							new XAttribute ("class", state.GetType ().AssemblyQualifiedName))))));
 
 			doc.Save (writer);
+		}
+
+
+		private static States.AbstractState CreateState(XElement stateElement)
+		{
+			string className = (string) stateElement.Attribute ("class");
+			System.Type type = System.Type.GetType (className);
+			States.AbstractState state = (States.AbstractState) System.Activator.CreateInstance (type);
+			return state.Deserialize (stateElement);
 		}
 
 		private void OnStateStackChanged(StateStackChangedEventArgs e)

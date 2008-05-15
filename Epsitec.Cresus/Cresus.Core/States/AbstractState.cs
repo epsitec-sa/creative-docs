@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.States
 {
@@ -24,6 +25,11 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+
+		public abstract XElement Serialize(XElement element);
+
+		public abstract AbstractState Deserialize(XElement element);
+		
 		private int zOrder;
 	}
 }

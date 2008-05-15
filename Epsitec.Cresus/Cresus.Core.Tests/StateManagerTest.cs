@@ -1,4 +1,8 @@
+//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using System.Collections.Generic;
+using System.Xml.Linq;
 
 using NUnit.Framework;
 
@@ -10,17 +14,25 @@ namespace Epsitec.Cresus.Core
 		[TestFixtureSetUp]
 		public void Initialize()
 		{
+#if false
 			Epsitec.Common.Document.Engine.Initialize();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
 			Epsitec.Common.Widgets.Widget.Initialize ();
+#endif
 		}
 
 		[Test]
 		public void Check01SaveState()
 		{
+			System.Console.Out.WriteLine ("Using {0} for the serialization", this.path);
+
 			using (System.IO.TextWriter writer = new System.IO.StreamWriter (this.path))
 			{
-				StateManager.Write (writer, new States.AbstractState[0]);
+				StateManager.Write (writer,
+					new DummyState[] {
+						new DummyState ("A"),
+						new DummyState ("B")
+					});
 			}
 		}
 
@@ -29,11 +41,45 @@ namespace Epsitec.Cresus.Core
 		{
 			foreach (var item in StateManager.Read (this.path))
 			{
-				System.Diagnostics.Debug.WriteLine (item == null ? "<null>" : item.ToString ());
+				System.Console.Out.WriteLine ("Element: {0}", item == null ? "<null>" : item.ToString ());
 			}
 		}
 
 
-		private string path = System.IO.Path.GetTempFileName ();
+		private class DummyState : States.AbstractState
+		{
+			public DummyState()
+			{
+			}
+
+			public DummyState(string value)
+			{
+				this.value = value;
+			}
+
+			public override System.Xml.Linq.XElement Serialize(System.Xml.Linq.XElement element)
+			{
+				element.Add (
+					new XElement ("dummy",
+						new XAttribute ("value", this.value)));
+
+				return element;
+			}
+
+			public override States.AbstractState Deserialize(XElement element)
+			{
+				this.value = (string) element.Element ("dummy").Attribute ("value");
+				return this;
+			}
+
+			public override string ToString()
+			{
+				return this.value;
+			}
+
+			private string value;
+		}
+
+		private string path = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "core.tests.statemanager.xml");
 	}
 }

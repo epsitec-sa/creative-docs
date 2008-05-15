@@ -63,6 +63,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="StateAttribute.cs" />
     <Compile Include="StateStackChange.cs" />
     <Compile Include="StateStackChangedEventArgs.cs" />
     <Compile Include="CoreData.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="PanelInteractionMode.cs" />
     <Compile Include="StateManager.cs" />
     <Compile Include="States\AbstractState.cs" />
+    <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
