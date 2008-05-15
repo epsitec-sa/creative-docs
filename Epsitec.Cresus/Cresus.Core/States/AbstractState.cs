@@ -10,5 +10,20 @@ namespace Epsitec.Cresus.Core.States
 		protected AbstractState()
 		{
 		}
+
+
+		public int ZOrder
+		{
+			get
+			{
+				return this.zOrder;
+			}
+			internal set
+			{
+				this.zOrder = value;
+			}
+		}
+
+		private int zOrder;
 	}
 }

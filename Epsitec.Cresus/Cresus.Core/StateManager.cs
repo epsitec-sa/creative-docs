@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Core
 		public StateManager()
 		{
 			this.states = new List<States.AbstractState> ();
+			this.zOrder = new List<States.AbstractState> ();
 		}
 
 
@@ -24,17 +25,36 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public States.AbstractState ActiveState
+		{
+			get
+			{
+				if (this.zOrder.Count > 0)
+				{
+					return this.zOrder[0];
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 
 		public void Push(States.AbstractState state)
 		{
-			if (this.states.Remove (state))
+			if (this.states.Contains (state))
 			{
-				this.states.Add (state);
+				this.zOrder.Remove (state);
+				this.zOrder.Insert (0, state);
+
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Promotion, state));
 			}
 			else
 			{
 				this.states.Add (state);
+				this.zOrder.Insert (0, state);
+
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Push, state));
 			}
 		}
@@ -43,7 +63,10 @@ namespace Epsitec.Cresus.Core
 		{
 			if (this.states.Remove (state))
 			{
+				this.zOrder.Remove (state);
+
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Pop, state));
+				
 				return true;
 			}
 			else
@@ -52,31 +75,29 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public States.AbstractState Peek()
-		{
-			int n = this.states.Count;
-
-			if (n > 0)
-			{
-				return this.states[n-1];
-			}
-			else
-			{
-				return null;
-			}
-		}
-
+		
 
 		private void OnStateStackChanged(StateStackChangedEventArgs e)
 		{
+			this.UpdateStateZOrder ();
+
 			if (this.StackChanged != null)
 			{
 				this.StackChanged (this, e);
 			}
 		}
 
+		private void UpdateStateZOrder()
+		{
+			for (int i = 0; i < this.zOrder.Count; i++)
+			{
+				this.zOrder[i].ZOrder = i;
+			}
+		}
+
 		public event System.EventHandler<StateStackChangedEventArgs>	StackChanged;
 
 		private readonly List<States.AbstractState> states;
+		private readonly List<States.AbstractState> zOrder;
 	}
 }
