@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	
 	[System.AttributeUsage (System.AttributeTargets.Assembly, AllowMultiple=true)]
-	public sealed class EntityClassAttribute : System.Attribute
+	public sealed class EntityClassAttribute : System.Attribute, PlugIns.IPlugInAttribute<Druid>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="EntityClassAttribute"/> class.
@@ -47,6 +47,14 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
+				string name = this.entityType.Name;
+				string suffix = "Entity";
+				
+				if (!name.EndsWith (suffix))
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Type '{0}' specifies {1} but does not follow naming conventions", name, typeof (EntityClassAttribute).Name));
+				}
+
 				return this.entityType;
 			}
 		}
@@ -80,6 +88,26 @@ namespace Epsitec.Common.Support
 				}
 			}
 		}
+
+		#region IPlugInAttribute<Druid> Members
+
+		Druid Epsitec.Common.Support.PlugIns.IPlugInAttribute<Druid>.Id
+		{
+			get
+			{
+				return this.EntityId;
+			}
+		}
+
+		System.Type Epsitec.Common.Support.PlugIns.IPlugInAttribute<Druid>.Type
+		{
+			get
+			{
+				return this.EntityType;
+			}
+		}
+
+		#endregion
 		
 		private Druid entityId;
 		private System.Type entityType;

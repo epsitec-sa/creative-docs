@@ -143,7 +143,7 @@
     <Compile Include="ControllerAttribute.cs" />
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\EnumController.cs" />
-    <Compile Include="Controllers\Factory.cs" />
+    <Compile Include="Controllers\ControllerFactory.cs" />
     <Compile Include="Controllers\NumericController.cs" />
     <Compile Include="Controllers\StringController.cs" />
     <Compile Include="AbstractPlaceholder.cs" />

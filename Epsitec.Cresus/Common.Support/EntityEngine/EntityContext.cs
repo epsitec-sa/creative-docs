@@ -44,7 +44,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		static EntityContext()
 		{
-			EntityClassResolver.Setup ();
+			EntityClassFactory.Setup ();
 		}
 
 
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			try
 			{
-				entity = EntityClassResolver.CreateEmptyEntity (entityId) ?? this.CreateGenericEntity (entityId);
+				entity = EntityClassFactory.CreateEmptyEntity (entityId) ?? this.CreateGenericEntity (entityId);
 				entity = new SearchEntity (entity);
 			}
 			finally
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			try
 			{
-				entity = EntityClassResolver.CreateEmptyEntity (entityId);
+				entity = EntityClassFactory.CreateEmptyEntity (entityId);
 				
 				if (entity == null)
 				{

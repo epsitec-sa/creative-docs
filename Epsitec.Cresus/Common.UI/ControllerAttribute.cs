@@ -13,7 +13,7 @@ namespace Epsitec.Common.UI
 	/// pattern. This attribute is applied at the assembly level.
 	/// </summary>
 	[System.AttributeUsage(System.AttributeTargets.Assembly, AllowMultiple=true)]
-	public class ControllerAttribute : System.Attribute
+	public class ControllerAttribute : System.Attribute, Epsitec.Common.Support.PlugIns.IPlugInAttribute<string>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ControllerAttribute"/> class.
@@ -66,6 +66,26 @@ namespace Epsitec.Common.UI
 				}
 			}
 		}
+
+		#region IPlugInAttribute<string> Members
+
+		string Epsitec.Common.Support.PlugIns.IPlugInAttribute<string>.Id
+		{
+			get
+			{
+				return this.type.Name;
+			}
+		}
+
+		System.Type Epsitec.Common.Support.PlugIns.IPlugInAttribute<string>.Type
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
+		#endregion
 
 		private System.Type						type;
 	}

@@ -32,8 +32,8 @@ namespace Epsitec.Common.UI
 		[Test]
 		public void CheckControllerCreation()
 		{
-			IController c1 = UI.Controllers.Factory.CreateController ("Test1", new Controllers.ControllerParameters ("x"));
-			IController c2 = UI.Controllers.Factory.CreateController ("Test1", new Controllers.ControllerParameters ("y"));
+			IController c1 = UI.Controllers.ControllerFactory.CreateController ("Test1", new Controllers.ControllerParameters ("x"));
+			IController c2 = UI.Controllers.ControllerFactory.CreateController ("Test1", new Controllers.ControllerParameters ("y"));
 
 			Assert.IsNotNull (c1);
 			Assert.IsNotNull (c2);

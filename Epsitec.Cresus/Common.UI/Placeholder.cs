@@ -76,7 +76,7 @@ namespace Epsitec.Common.UI
 					(this.controllerName != null))
 				{
 					Controllers.ControllerParameters parameters = new Controllers.ControllerParameters (this.controllerParameters);
-					IController temp = Controllers.Factory.CreateController (this.controllerName, parameters);
+					IController temp = Controllers.ControllerFactory.CreateController (this.controllerName, parameters);
 
 					if (temp != null)
 					{
@@ -252,7 +252,7 @@ namespace Epsitec.Common.UI
 				
 				if (expression != null)
 				{
-					Controllers.Factory.GetDefaultController (expression, out newControllerName, out newControllerParameters);
+					Controllers.ControllerFactory.GetDefaultController (expression, out newControllerName, out newControllerParameters);
 
 					newControllerParameters = Controllers.ControllerParameters.MergeParameters (newControllerParameters, this.ControllerParameters);
 				}
@@ -314,7 +314,7 @@ namespace Epsitec.Common.UI
 				(this.controllerName != null))
 			{
 				Controllers.ControllerParameters parameters = new Controllers.ControllerParameters (this.controllerParameters);
-				this.controller = Controllers.Factory.CreateController (this.controllerName, parameters);
+				this.controller = Controllers.ControllerFactory.CreateController (this.controllerName, parameters);
 
 				if (this.controller != null)
 				{
@@ -425,7 +425,7 @@ namespace Epsitec.Common.UI
 
 		static Placeholder()
 		{
-			Controllers.Factory.Setup ();
+			Controllers.ControllerFactory.Setup ();
 		}
 
 		private static void NotifyControllerChanged(DependencyObject o, object oldValue, object newValue)

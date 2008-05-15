@@ -136,6 +136,8 @@
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
     <Compile Include="IExceptionManager.cs" />
+    <Compile Include="PlugIns\IPlugInAttribute.cs" />
+    <Compile Include="PlugIns\PlugInFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -166,7 +168,7 @@
     <Compile Include="EntityEngine\EntityExpression.cs" />
     <Compile Include="EntityEngine\EntityExpressionEncoding.cs" />
     <Compile Include="EntityEngine\EntityLoopHandlingMode.cs" />
-    <Compile Include="EntityEngine\EntityClassResolver.cs" />
+    <Compile Include="EntityEngine\EntityClassFactory.cs" />
     <Compile Include="EntityEngine\GenericEntity.cs" />
     <Compile Include="EntityEngine\IEntityProxy.cs" />
     <Compile Include="Platform\Win32\Clipboard.cs" />
