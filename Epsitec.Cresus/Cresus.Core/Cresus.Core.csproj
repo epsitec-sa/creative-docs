@@ -72,6 +72,7 @@
     <Compile Include="PanelInteractionMode.cs" />
     <Compile Include="StateManager.cs" />
     <Compile Include="States\AbstractState.cs" />
+    <Compile Include="States\FormWorkspaceState.cs" />
     <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

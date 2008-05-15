@@ -56,6 +56,8 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		#region DummyState Class
+
 		internal class DummyState : States.AbstractState
 		{
 			public DummyState()
@@ -90,6 +92,8 @@ namespace Epsitec.Cresus.Core
 			private string value;
 		}
 
-		private string path = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "core.tests.statemanager.xml");
+		#endregion
+
+		private readonly string path = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "core.tests.statemanager.xml");
 	}
 }

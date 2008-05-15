@@ -68,8 +68,14 @@ namespace Epsitec.Cresus.Core
 		{
 			this.formWorkspace = new Workspaces.FormWorkspace ()
 			{
-				Application = this
+				Application = this,
+				FormId      = Epsitec.Cresus.Mai2008.FormIds.Facture,
+				EntityId    = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
 			};
+#if false
+			Druid formId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
+			Druid entityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
+#endif
 
 			this.Window.Root.Children.Add (this.formWorkspace.Container);
 		}

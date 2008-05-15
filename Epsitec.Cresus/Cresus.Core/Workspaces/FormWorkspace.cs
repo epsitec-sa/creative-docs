@@ -24,25 +24,34 @@ namespace Epsitec.Cresus.Core.Workspaces
 			};
 		}
 
+
+		public Druid FormId
+		{
+			get;
+			set;
+		}
+
+		public Druid EntityId
+		{
+			get;
+			set;
+		}
+
 		
 		public override AbstractGroup CreateUserInterface()
 		{
+			System.Diagnostics.Debug.Assert (this.FormId.IsValid);
+			System.Diagnostics.Debug.Assert (this.EntityId.IsValid);
+
 			FrameBox frame = new FrameBox ();
 
 			this.hintListController.DefineContainer (frame);
 
-			Druid formId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
-			Druid entityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
-
-			formId   = Epsitec.Cresus.Mai2008.FormIds.Facture;
-			entityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId;
-
-			
-			this.searchPanel = UI.LoadPanel (formId, PanelInteractionMode.Search);
+			this.searchPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
 			this.searchPanel.Dock = DockStyle.Fill;
 			this.searchPanel.SetEmbedder (frame);
 			
-			this.editionPanel = UI.LoadPanel (formId, PanelInteractionMode.Default);
+			this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
 			this.editionPanel.Dock = DockStyle.Fill;
 			this.editionPanel.SetEmbedder (frame);
 			this.editionPanel.Visibility = false;
@@ -50,7 +59,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
 			
-			this.currentItem = this.searchContext.CreateEntity (entityId);
+			this.currentItem = this.searchContext.CreateEntity (this.EntityId);
 			this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
 			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 			this.resolver = this.Application.Data.Resolver;
