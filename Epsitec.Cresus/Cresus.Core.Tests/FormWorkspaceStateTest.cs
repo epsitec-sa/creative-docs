@@ -17,7 +17,7 @@ using Epsitec.Common.Dialogs;
 namespace Epsitec.Cresus.Core
 {
 	[TestFixture]
-	public class FormWorkspaceTest
+	public class FormWorkspaceStateTest
 	{
 		[TestFixtureSetUp]
 		public void Initialize()
@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Core
 
 			using (loc2.DefineOriginalValues ())
 			{
-				loc1.Nom = "Yverdon-les-Bains";
-				loc1.Numéro = "1400";
+				loc2.Nom = "Yverdon-les-Bains";
+				loc2.Numéro = "1400";
 			}
 
 			DialogData    data = new DialogData (adr, DialogDataMode.Isolated);
@@ -123,22 +123,35 @@ namespace Epsitec.Cresus.Core
 
 			using (loc2.DefineOriginalValues ())
 			{
-				loc1.Nom = "Yverdon-les-Bains";
-				loc1.Numéro = "1400";
+				loc2.Nom = "Yverdon-les-Bains";
+				loc2.Numéro = "1400";
 			}
 
 			DialogData    data = new DialogData (adr, DialogDataMode.Isolated);
 			AdresseEntity temp = data.Data as AdresseEntity;
-			XElement element = XElement.Parse (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><ref path=""[8V15]"" id=""loc2"" /></dialogData>");
+			XElement element;
 
+			Assert.AreEqual ("Case postale 16", temp.CasePostale);
+			Assert.AreEqual ("Yvonand", temp.Localité.Nom);
+
+			//	Restore CasePostale (value) and Localité (reference)
+			element = XElement.Parse (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><ref path=""[8V15]"" id=""loc2"" /></dialogData>");
 			States.FormWorkspaceState.RestoreDialogData (data, element);
 
 			Assert.AreEqual ("CP 16", temp.CasePostale);
+			Assert.AreEqual ("Yverdon-les-Bains", temp.Localité.Nom);
 			Assert.AreEqual (loc2, temp.Localité);
 
 			context.PersistanceManagers.Remove (manager);
 		}
 
+
+		#region PersistanceManager Class
+
+		/// <summary>
+		/// The <c>PersistanceManager</c> class implements a simple persistance
+		/// manager which associates entities with ids through a dictionary.
+		/// </summary>
 		private class PersistanceManager : IEntityPersistanceManager
 		{
 			#region IEntityPersistanceManager Members
@@ -174,5 +187,7 @@ namespace Epsitec.Cresus.Core
 
 			public readonly Dictionary<string, AbstractEntity> Map = new Dictionary<string, AbstractEntity> ();
 		}
+
+		#endregion
 	}
 }

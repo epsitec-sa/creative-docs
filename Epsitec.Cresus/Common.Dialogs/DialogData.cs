@@ -63,6 +63,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the external data, which is for instance in place if the root
+		/// reference got replaced through <see cref="M:SetReferenceReplacement"/>.
+		/// </summary>
+		/// <value>The external data or <c>null</c>.</value>
 		public AbstractEntity					ExternalData
 		{
 			get
@@ -83,6 +88,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets the entity context associated with this dialog.
+		/// </summary>
+		/// <value>The entity context.</value>
 		public EntityContext					EntityContext
 		{
 			get
@@ -135,13 +144,28 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified path maps to external data, reached
+		/// through a reference replacement.
+		/// </summary>
+		/// <param name="path">The path to the field.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified path maps to external data; otherwise, <c>false</c>.
+		/// </returns>
 		public bool HasReplacement(EntityFieldPath path)
 		{
-			foreach (EntityFieldPath prefix in this.replacements.Keys)
+			if (this.ExternalData != null)
 			{
-				if (path.StartsWith (prefix))
+				return true;
+			}
+			else
+			{
+				foreach (EntityFieldPath prefix in this.replacements.Keys)
 				{
-					return true;
+					if (path.StartsWith (prefix))
+					{
+						return true;
+					}
 				}
 			}
 
@@ -228,7 +252,14 @@ namespace Epsitec.Common.Dialogs
 
 			return true;
 		}
-		
+
+		/// <summary>
+		/// Sets the reference replacement for the specified path. The data
+		/// from that part of the tree will be fetched directly in the provided
+		/// suggestion entity.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <param name="suggestion">The suggestion entity.</param>
 		public void SetReferenceReplacement(EntityFieldPath path, AbstractEntity suggestion)
 		{
 			if (path.IsEmpty)
@@ -241,6 +272,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Clears the reference replacement.
+		/// </summary>
+		/// <param name="path">The path.</param>
 		public void ClearReferenceReplacement(EntityFieldPath path)
 		{
 			if (path.IsEmpty)

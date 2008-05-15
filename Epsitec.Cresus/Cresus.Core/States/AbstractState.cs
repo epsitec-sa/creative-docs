@@ -8,10 +8,19 @@ namespace Epsitec.Cresus.Core.States
 {
 	public abstract class AbstractState
 	{
-		protected AbstractState()
+		protected AbstractState(StateManager stateManager)
 		{
+			this.stateManager = stateManager;
 		}
 
+		
+		public StateManager StateManager
+		{
+			get
+			{
+				return this.stateManager;
+			}
+		}
 
 		public int ZOrder
 		{
@@ -29,7 +38,8 @@ namespace Epsitec.Cresus.Core.States
 		public abstract XElement Serialize(XElement element);
 
 		public abstract AbstractState Deserialize(XElement element);
-		
+
+		private readonly StateManager			stateManager;
 		private int zOrder;
 	}
 }

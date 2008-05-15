@@ -33,12 +33,14 @@ namespace Epsitec.Cresus.Core
 		{
 			System.Console.Out.WriteLine ("Using {0} for the serialization", this.path);
 
+			StateManager manager = new StateManager ();
+
 			using (System.IO.TextWriter writer = new System.IO.StreamWriter (this.path))
 			{
-				StateManager.Write (writer,
+				manager.Write (writer,
 					new DummyState[] {
-						new DummyState ("A"),
-						new DummyState ("B")
+						new DummyState (manager, "A"),
+						new DummyState (manager, "B")
 					});
 			}
 		}
@@ -46,13 +48,17 @@ namespace Epsitec.Cresus.Core
 		[Test]
 		public void Check02LoadState()
 		{
-			List<States.AbstractState> states = new List<States.AbstractState> (StateManager.Read (this.path));
+			StateManager manager = new StateManager ();
+
+			List<States.AbstractState> states = new List<States.AbstractState> (manager.Read (this.path));
 
 			Assert.AreEqual (2, states.Count);
 			Assert.AreEqual (typeof (DummyState), states[0].GetType ());
 			Assert.AreEqual (typeof (DummyState), states[1].GetType ());
 			Assert.AreEqual ("A", states[0].ToString ());
 			Assert.AreEqual ("B", states[1].ToString ());
+			Assert.AreEqual (manager, states[0].StateManager);
+			Assert.AreEqual (manager, states[1].StateManager);
 		}
 
 
@@ -65,11 +71,13 @@ namespace Epsitec.Cresus.Core
 
 		internal class DummyState : States.AbstractState
 		{
-			public DummyState()
+			public DummyState(StateManager manager)
+				: base (manager)
 			{
 			}
 
-			public DummyState(string value)
+			public DummyState(StateManager manager, string value)
+				: base (manager)
 			{
 				this.value = value;
 			}

@@ -19,6 +19,18 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public CoreApplication Application
+		{
+			get
+			{
+				return this.application;
+			}
+			internal set
+			{
+				this.DefineCoreApplication (value);
+			}
+		}
+
 		public int Depth
 		{
 			get
@@ -78,26 +90,34 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static IEnumerable<States.AbstractState> Read(string path)
+		public IEnumerable<States.AbstractState> Read(string path)
 		{
 			using (System.IO.StreamReader reader = System.IO.File.OpenText (path))
 			{
-				foreach (var item in StateManager.Read (reader))
+				foreach (var item in this.Read (reader))
 				{
 					yield return item;
 				}
 			}
 		}
 
-		public static IEnumerable<States.AbstractState> Read(System.IO.TextReader reader)
+		public IEnumerable<States.AbstractState> Read(System.IO.TextReader reader)
 		{
 			XDocument doc = XDocument.Load (reader);
 
 			return from state in doc.Descendants ("state")
-				   select States.StateFactory.CreateState (state);
+				   select States.StateFactory.CreateState (this, state);
 		}
 
-		public static void Write(System.IO.TextWriter writer, IEnumerable<States.AbstractState> states)
+		public void Write(string path, IEnumerable<States.AbstractState> states)
+		{
+			using (System.IO.TextWriter writer = new System.IO.StreamWriter (path))
+			{
+				this.Write (writer, states);
+			}
+		}
+		
+		public void Write(System.IO.TextWriter writer, IEnumerable<States.AbstractState> states)
 		{
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
@@ -115,6 +135,15 @@ namespace Epsitec.Cresus.Core
 
 			doc.Save (writer);
 		}
+
+		private void DefineCoreApplication(CoreApplication coreApplication)
+		{
+			System.Diagnostics.Debug.Assert (coreApplication != null);
+			System.Diagnostics.Debug.Assert (this.application == null);
+
+			this.application = coreApplication;
+		}
+
 
 		private void OnStateStackChanged(StateStackChangedEventArgs e)
 		{
@@ -138,5 +167,6 @@ namespace Epsitec.Cresus.Core
 
 		private readonly List<States.AbstractState> states;
 		private readonly List<States.AbstractState> zOrder;
+		private CoreApplication application;
 	}
 }

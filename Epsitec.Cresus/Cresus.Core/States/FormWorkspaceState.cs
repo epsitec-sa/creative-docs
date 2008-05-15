@@ -22,9 +22,9 @@ namespace Epsitec.Cresus.Core.States
 	/// </summary>
 	public abstract class FormWorkspaceState : AbstractState
 	{
-		public FormWorkspaceState()
+		public FormWorkspaceState(StateManager manager)
+			: base (manager)
 		{
-			
 		}
 
 
@@ -79,10 +79,11 @@ namespace Epsitec.Cresus.Core.States
 			{
 				element.Add (new XElement ("workspace",
 					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
-					new XAttribute ("formId", this.workspace.FormId.ToString ())));
+					new XAttribute ("formId", this.workspace.FormId.ToString ()),
+					FormWorkspaceState.SaveDialogData (this.workspace.DialogData)));
 			}
 		}
-		
+
 		protected virtual void RestoreWorkspace(XElement element)
 		{
 			System.Diagnostics.Debug.Assert (this.workspace != null);
@@ -93,10 +94,17 @@ namespace Epsitec.Cresus.Core.States
 			{
 				this.workspace.EntityId = Druid.Parse ((string) workspaceElement.Attribute ("entityId"));
 				this.workspace.FormId   = Druid.Parse ((string) workspaceElement.Attribute ("formId"));
+
+				//	TODO: recreate user interface for workspace
 			}
 		}
 
 
+		/// <summary>
+		/// Saves the dialog data as an XML chunk.
+		/// </summary>
+		/// <param name="data">The dialog data.</param>
+		/// <returns>The XML chunk of the saved dialog data.</returns>
 		public static XElement SaveDialogData(DialogData data)
 		{
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
@@ -161,6 +169,11 @@ namespace Epsitec.Cresus.Core.States
 			return element;
 		}
 
+		/// <summary>
+		/// Restores the dialog data based on an XML chunk.
+		/// </summary>
+		/// <param name="data">The dialog data.</param>
+		/// <param name="element">The XML chunk used to restore the dialog data.</param>
 		public static void RestoreDialogData(DialogData data, XElement element)
 		{
 			System.Diagnostics.Debug.Assert (element.Name == "dialogData");
@@ -201,7 +214,7 @@ namespace Epsitec.Cresus.Core.States
 				path.NavigateWrite (data.Data, value);
 			}
 		}
-		
+
 		private Workspaces.FormWorkspace		workspace;
 		private XElement						serialization;
 	}

@@ -167,6 +167,11 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#region IEntityPersistanceManager Members
 
+		/// <summary>
+		/// Gets the persisted id for the specified entity.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The persisted id or <c>null</c>.</returns>
 		public string GetPersistedId(AbstractEntity entity)
 		{
 			foreach (var manager in this.persistanceManagers)
@@ -182,6 +187,12 @@ namespace Epsitec.Common.Support.EntityEngine
 			return null;
 		}
 
+		/// <summary>
+		/// Gets the peristed entity for the specified id and entity id.
+		/// </summary>
+		/// <param name="id">The id (identifies the instance).</param>
+		/// <param name="entityId">The entity id (identifies the type).</param>
+		/// <returns>The persisted entity or <c>null</c>.</returns>
 		public AbstractEntity GetPeristedEntity(string id, Druid entityId)
 		{
 			foreach (var manager in this.persistanceManagers)

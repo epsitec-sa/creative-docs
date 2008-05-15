@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 			set;
 		}
 
+		internal DialogData						DialogData
+		{
+			get
+			{
+				return this.dialogData;
+			}
+		}
+
 		
 		public override AbstractGroup CreateUserInterface()
 		{

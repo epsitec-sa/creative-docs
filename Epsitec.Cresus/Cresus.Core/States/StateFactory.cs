@@ -20,13 +20,16 @@ namespace Epsitec.Cresus.Core.States
 		/// This will instanciate the proper class and initialize it
 		/// based on the serialized data.
 		/// </summary>
+		/// <param name="manager">The state manager.</param>
 		/// <param name="element">The XML element.</param>
-		/// <returns>The state or <c>null</c> if the element does not
-		/// map to a supported class.</returns>
-		public static AbstractState CreateState(XElement element)
+		/// <returns>
+		/// The state or <c>null</c> if the element does not
+		/// map to a supported class.
+		/// </returns>
+		public static AbstractState CreateState(StateManager manager, XElement element)
 		{
 			string className = (string) element.Attribute ("class");
-			States.AbstractState state = StateFactory.CreateInstance (className);
+			States.AbstractState state = StateFactory.CreateInstance<StateManager> (className, manager);
 			return state.Deserialize (element);
 		}
 
