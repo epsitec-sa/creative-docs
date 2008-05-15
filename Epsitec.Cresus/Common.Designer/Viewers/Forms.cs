@@ -993,10 +993,15 @@ namespace Epsitec.Common.Designer.Viewers
 				
 				if (this.druidToSerialize.IsValid)
 				{
-					Forms.softWorkingForm = new FormDescription(this.workingForm);
+					Forms.softWorkingForm = this.workingForm;  // voir (*)
 					Forms.softBaseFields  = this.baseFields;
 					Forms.softFinalFields = this.finalFields;
 					Forms.softEntityId    = this.entityId;
+
+					// (*)	Il ne faut surtout pas faire une copie comme ceci:
+					//		Forms.softWorkingForm = new FormDescription(this.workingForm);
+					//		this.finalFields est parfois la liste directement dans this.workingForm (mais pas toujours).
+					//		Une copie fait qu'une modification dans this.workingForm n'est plus reportée dans this.finalFields !
 				}
 				else
 				{
