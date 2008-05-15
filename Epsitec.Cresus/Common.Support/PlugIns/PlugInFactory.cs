@@ -27,7 +27,7 @@ namespace Epsitec.Common.Support.PlugIns
 		/// </summary>
 		/// <param name="id">The id of the class to instanciate.</param>
 		/// <returns>The instance of the specified class.</returns>
-		public static TClass CreateInstance(TId id)
+		protected static TClass CreateInstance(TId id)
 		{
 			Record record;
 
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Support.PlugIns
 		/// <param name="id">The id of the class to instanciate.</param>
 		/// <param name="parameter">The parameter.</param>
 		/// <returns>The instance of the specified class.</returns>
-		public static TClass CreateInstance<TParameter>(TId id, TParameter parameter)
+		protected static TClass CreateInstance<TParameter>(TId id, TParameter parameter)
 		{
 			Record record;
 
@@ -62,6 +62,24 @@ namespace Epsitec.Common.Support.PlugIns
 			{
 				return default (TClass);
 			}
+		}
+
+		/// <summary>
+		/// Finds the id for the specified type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns>The id for the specified type.</returns>
+		protected static TId FindId(System.Type type)
+		{
+			foreach (var item in PlugInFactory<TClass, TAttribute, TId>.types)
+			{
+				if (item.Value.Type == type)
+				{
+					return item.Key;
+				}
+			}
+
+			return default (TId);
 		}
 
 		/// <summary>
@@ -145,6 +163,14 @@ namespace Epsitec.Common.Support.PlugIns
 				this.type = type;
 			}
 
+			public System.Type Type
+			{
+				get
+				{
+					return this.type;
+				}
+			}
+
 			public TAlloc GetAllocator<TAlloc>(System.Func<System.Type, TAlloc> getAllocator)
 			{
 				if (this.allocator == null)
@@ -161,9 +187,9 @@ namespace Epsitec.Common.Support.PlugIns
 				return (TAlloc) this.allocator;
 			}
 
-			private readonly object exclusion;
-			private object allocator;
-			private System.Type type;
+			private readonly object				exclusion;
+			private readonly System.Type		type;
+			private object						allocator;
 		}
 
 		#endregion

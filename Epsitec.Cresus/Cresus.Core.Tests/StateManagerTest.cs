@@ -1,10 +1,15 @@
 //	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Cresus.Core;
+
 using System.Collections.Generic;
 using System.Xml.Linq;
 
 using NUnit.Framework;
+
+[assembly: State (Type = typeof (StateManagerTest.DummyState), Name = "Dummy")]
 
 namespace Epsitec.Cresus.Core
 {
@@ -14,6 +19,7 @@ namespace Epsitec.Cresus.Core
 		[TestFixtureSetUp]
 		public void Initialize()
 		{
+			Epsitec.Cresus.Core.States.StateFactory.Setup ();
 #if false
 			Epsitec.Common.Document.Engine.Initialize();
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive("LookMetal");
@@ -46,7 +52,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private class DummyState : States.AbstractState
+		internal class DummyState : States.AbstractState
 		{
 			public DummyState()
 			{

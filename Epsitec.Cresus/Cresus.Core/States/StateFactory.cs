@@ -17,5 +17,10 @@ namespace Epsitec.Cresus.Core.States
 			States.AbstractState state = StateFactory.CreateInstance (className);
 			return state.Deserialize (element);
 		}
+
+		public static string GetClassName(AbstractState state)
+		{
+			return StateFactory.FindId (state.GetType ());
+		}
 	}
 }
