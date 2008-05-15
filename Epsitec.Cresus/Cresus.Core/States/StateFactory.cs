@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>StateFactory</c> class manages the creation of state instances
 	/// based on their (short) class name. See <see cref="StateManager"/>.
 	/// </summary>
-	internal sealed class StateFactory : PlugInFactory<AbstractState, StateAttribute, string>
+	public sealed class StateFactory : PlugInFactory<AbstractState, StateAttribute, string>
 	{
 		/// <summary>
 		/// Creates the state instance specified by the XML element.

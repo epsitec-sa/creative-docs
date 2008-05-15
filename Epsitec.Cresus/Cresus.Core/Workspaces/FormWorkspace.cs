@@ -25,13 +25,13 @@ namespace Epsitec.Cresus.Core.Workspaces
 		}
 
 
-		public Druid FormId
+		public Druid							FormId
 		{
 			get;
 			set;
 		}
 
-		public Druid EntityId
+		public Druid							EntityId
 		{
 			get;
 			set;

@@ -56,6 +56,11 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		[Test]
+		public void Check03SaveDialogData()
+		{
+		}
+
 		#region DummyState Class
 
 		internal class DummyState : States.AbstractState

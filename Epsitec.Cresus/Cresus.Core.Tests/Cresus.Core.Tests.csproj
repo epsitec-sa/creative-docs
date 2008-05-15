@@ -53,9 +53,14 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="StateManagerTest.cs" />
+    <Compile Include="FormWorkspaceStateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Dialogs\Common.Dialogs.csproj">
+      <Project>{560DFD49-3052-4F41-A4C3-6216E6135DC9}</Project>
+      <Name>Common.Dialogs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Document\Common.Document.csproj">
       <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
       <Name>Common.Document</Name>

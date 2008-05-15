@@ -340,6 +340,28 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Navigates from the root entity to the leaf entity, then gets the
+		/// field description.
+		/// </summary>
+		/// <param name="root">The root entity.</param>
+		/// <returns>The field or <c>null</c>.</returns>
+		public StructuredTypeField NavigateReadField(AbstractEntity root)
+		{
+			AbstractEntity leaf;
+			string id;
+
+			if (this.Navigate (root, out leaf, out id))
+			{
+				EntityContext context = leaf.GetEntityContext ();
+				return context.GetStructuredTypeField (leaf, id);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		/// <summary>
 		/// Navigates from the root entity to the leaf entity, then writes the
 		/// value using the dynamic setter.
 		/// </summary>
