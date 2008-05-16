@@ -15,6 +15,12 @@ namespace Epsitec.Common.Widgets
 
 			this.Padding = new Margins(5, 5, 5, RibbonSection.LabelHeight+5);
 		}
+
+		public RibbonSection(RibbonPage page)
+			: this ()
+		{
+			page.Items.Add (this);
+		}
 		
 		protected override void Dispose(bool disposing)
 		{

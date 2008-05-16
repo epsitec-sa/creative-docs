@@ -55,13 +55,84 @@ namespace Epsitec.Cresus.Core
 
 			this.Window = window;
 
+			this.ribbonBox = new FrameBox (window.Root)
+			{
+				Dock = DockStyle.Top
+			};
+
+			this.workspaceBox = new FrameBox (window.Root)
+			{
+				Dock = DockStyle.Fill
+			};
+
+			this.CreateRibbon ();
 			this.CreateWorkspaces ();
+			
 			this.formWorkspace.SetEnable (true);
 		}
 
 		public void SetupData()
 		{
 			this.data.SetupDatabase ();
+		}
+
+		private void CreateRibbon()
+		{
+			this.ribbonBook = new RibbonBook (this.ribbonBox)
+			{
+				Dock = DockStyle.Fill
+			};
+			
+			this.ribbonPageHome = new RibbonPage (this.ribbonBook)
+			{
+				Name = "Home",
+				RibbonTitle = "Principal"
+			};
+
+
+			RibbonSection section;
+			FrameBox      frame;
+
+			section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "Edition",
+				Title = "Edition",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
+			};
+
+			frame = new FrameBox (section)
+			{
+				Dock = DockStyle.Stacked,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
+			};
+
+			section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "Bases",
+				Title = "Bases de données",
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
+			};
+
+			section = new RibbonSection (this.ribbonPageHome)
+			{
+				Name = "States",
+				Title = "Etats",
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
+			};
+
+#if false
+			subFrame = new FrameBox (frame);
+			subFrame.Dock = DockStyle.Stacked;
+			subFrame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			subFrame.Children.Add (new IconButton (ApplicationCommands.New, new Size (47, 36), DockStyle.Stacked));
+
+			Widget groupOpen = new Widget (subFrame);
+			groupOpen.Dock = DockStyle.Stacked;
+			groupOpen.PreferredSize = new Size (47, 47);
+			GlyphButton buttonLastFiles = new GlyphButton (groupOpen);
+			IconButton buttonOpen = new IconButton (ApplicationCommands.Open, new Size (47, 36), DockStyle.Top);
+#endif
 		}
 
 		private void CreateWorkspaces()
@@ -77,7 +148,7 @@ namespace Epsitec.Cresus.Core
 			this.formWorkspace.EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
 #endif
 
-			this.Window.Root.Children.Add (this.formWorkspace.Container);
+			this.workspaceBox.Children.Add (this.formWorkspace.Container);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -103,5 +174,11 @@ namespace Epsitec.Cresus.Core
 		Workspaces.FormWorkspace				formWorkspace;
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
+		
+		private FrameBox						ribbonBox;
+		private FrameBox						workspaceBox;
+
+		private RibbonBook						ribbonBook;
+		private RibbonPage						ribbonPageHome;
 	}
 }

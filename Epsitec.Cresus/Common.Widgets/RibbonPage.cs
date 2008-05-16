@@ -10,13 +10,20 @@ namespace Epsitec.Common.Widgets
 	{
 		public RibbonPage()
 		{
-			this.items = new RibbonSectionCollection(this);
-			this.ribbonButton = new RibbonButton(null);
+			this.items = new RibbonSectionCollection (this);
+			this.ribbonButton = new RibbonButton (null);
 		}
-		
-		public RibbonPage(Widget embedder) : this()
+
+		public RibbonPage(Widget embedder)
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
+		}
+
+		public RibbonPage(RibbonBook book)
+			: this ()
+		{
+			book.Items.Add (this);
 		}
 
 

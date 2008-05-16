@@ -478,6 +478,11 @@ namespace Epsitec.Common.Dialogs
 
 		private static EntityFieldPath GetPlaceholderPath(AbstractPlaceholder placeholder)
 		{
+			if (placeholder == null)
+			{
+				return null;
+			}
+
 			BindingExpression bindingExpression = placeholder.ValueBindingExpression;
 			Binding           binding           = bindingExpression.ParentBinding;
 			DataSourceType    sourceType        = bindingExpression.GetSourceType ();
