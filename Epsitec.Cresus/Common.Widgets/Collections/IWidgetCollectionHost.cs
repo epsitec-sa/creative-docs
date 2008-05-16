@@ -1,12 +1,13 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Collections
 {
 	/// <summary>
-	/// L'interface IWidgetCollectionHost permet d'offrir le support pour
-	/// la classe WidgetCollection.
+	/// The <c>IWidgetCollectionHost</c> interface provides support for the
+	/// generic <see cref="WidgetCollection"/> class.
 	/// </summary>
+	/// <typeparam name="T">Widget type.</typeparam>
 	public interface IWidgetCollectionHost<T> where T : Widget
 	{
 		void NotifyInsertion(T widget);

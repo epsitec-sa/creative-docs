@@ -8,8 +8,6 @@ namespace Epsitec.Common.Widgets
 		public StatusBar()
 		{
 			this.items = new Collections.WidgetCollection<Widget> (this);
-			this.items.AutoEmbedding = true;
-
 			this.Padding = new Drawing.Margins(1, 1, 2, 1);
 		}
 		

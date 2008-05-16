@@ -18,7 +18,6 @@ namespace Epsitec.Common.Widgets
 			this.UpdateAdornerInformation ();
 			
 			this.items = new MenuItemCollection (this);
-			this.items.AutoEmbedding = true;
 			
 			MenuItem.SetMenuBehavior (this, new Behaviors.MenuBehavior ());
 			MenuItem.SetMenuHost (this, new MenuHost (this));

@@ -373,7 +373,14 @@ namespace Epsitec.Common.Widgets
 		{
 			public RibbonPageCollection(RibbonBook book) : base(book)
 			{
-				this.AutoEmbedding = false;
+			}
+
+			public override bool AutoEmbedding
+			{
+				get
+				{
+					return false;
+				}
 			}
 		}
 		#endregion

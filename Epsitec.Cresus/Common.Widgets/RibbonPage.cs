@@ -146,7 +146,6 @@ namespace Epsitec.Common.Widgets
 		{
 			public RibbonSectionCollection(RibbonPage page) : base(page)
 			{
-				this.AutoEmbedding = true;
 			}
 		}
 		#endregion

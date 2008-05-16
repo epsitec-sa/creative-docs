@@ -22,7 +22,6 @@ namespace Epsitec.Common.Widgets
 		public PaneBook()
 		{
 			this.items = new PanePageCollection(this);
-			this.items.AutoEmbedding = true;
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
 		}

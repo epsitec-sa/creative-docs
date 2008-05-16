@@ -1,11 +1,16 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Collections
 {
-	public class WidgetCollection<T> : System.Collections.IList where T : Widget
+	/// <summary>
+	/// The <c>WidgetCollection</c> class implements a collection of specific
+	/// widgets, which provides notifications to the host when changes happen.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public class WidgetCollection<T> : IList<T>, System.Collections.IList where T : Widget
 	{
 		public WidgetCollection(IWidgetCollectionHost<T> host)
 		{
@@ -37,15 +42,11 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 		
-		public bool								AutoEmbedding
+		public virtual bool						AutoEmbedding
 		{
 			get
 			{
-				return this.auto_embedding;
-			}
-			set
-			{
-				this.auto_embedding = value;
+				return true;
 			}
 		}
 		
@@ -59,6 +60,87 @@ namespace Epsitec.Common.Widgets.Collections
 				this.HandleInsert (widget);
 			}
 		}
+
+
+		#region IList<T> Members
+
+		public int IndexOf(T item)
+		{
+			return this.list.IndexOf (item);
+		}
+
+		public void Insert(int index, T item)
+		{
+			this.list.Insert (index, item);
+			this.HandleInsert (item);
+		}
+
+		T IList<T>.this[int index]
+		{
+			get
+			{
+				return this[index];
+			}
+			set
+			{
+				throw new System.NotSupportedException ();
+			}
+		}
+
+		#endregion
+
+		#region ICollection<T> Members
+
+		public void Add(T item)
+		{
+			if (item == null)
+			{
+				throw new System.ArgumentNullException ();
+			}
+			if (this.list.Contains (item))
+			{
+				throw new System.InvalidOperationException ("Duplicate insertion");
+			}
+			
+			this.list.Add (item);
+			this.HandleInsert (item);
+		}
+
+		public bool Contains(T item)
+		{
+			return this.list.Contains (item);
+		}
+
+		public void CopyTo(T[] array, int arrayIndex)
+		{
+			this.list.CopyTo (array, arrayIndex);
+		}
+
+		public bool Remove(T item)
+		{
+			if (this.list.Contains (item))
+			{
+				this.HandleRemove (item);
+				this.list.Remove (item);
+				this.HandlePostRemove (item);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		#endregion
+
+		#region IEnumerable<T> Members
+
+		IEnumerator<T> IEnumerable<T>.GetEnumerator()
+		{
+			return this.list.GetEnumerator ();
+		}
+
+		#endregion
 		
 		#region IList Members
 		
@@ -132,20 +214,21 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public int Add(object value)
 		{
+			T item = value as T;
+			
 			if (value == null)
 			{
 				throw new System.ArgumentNullException ();
 			}
-			
-			if (value is T)
+			if (item == null)
 			{
-				int index = this.list.Count;
-				this.list.Add (value as T);
-				this.HandleInsert (value as T);
-				return index;
+				throw new System.InvalidCastException ();
 			}
 			
-			throw new System.ArgumentException (string.Format ("Expecting {0}, got {1} instead", typeof (T).Name, value.GetType ().Name));
+			int index = this.list.Count;
+			this.list.Add (item);
+			this.HandleInsert (item);
+			return index;
 		}
 
 		public bool IsFixedSize
@@ -201,7 +284,7 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		protected void HandleInsert(T item)
 		{
-			if (this.auto_embedding)
+			if (this.AutoEmbedding)
 			{
 				Widget embedder = this.host as Widget;
 				
@@ -238,6 +321,5 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		readonly List<T>						list;
 		readonly IWidgetCollectionHost<T>		host;
-		bool									auto_embedding;
 	}
 }

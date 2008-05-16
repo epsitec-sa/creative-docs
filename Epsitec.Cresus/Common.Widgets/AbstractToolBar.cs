@@ -12,7 +12,6 @@ namespace Epsitec.Common.Widgets
 			this.iconDockStyle = this.DefaultIconDockStyle;
 			
 			this.items = new Collections.WidgetCollection<Widget> (this);
-			this.items.AutoEmbedding = true;
 		}
 		
 		
