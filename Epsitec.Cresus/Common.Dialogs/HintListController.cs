@@ -122,6 +122,29 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the path of the focused field.
+		/// </summary>
+		/// <value>The path of the focused field or <c>null</c>.</value>
+		public EntityFieldPath FocusFieldPath
+		{
+			get
+			{
+				return this.focusFieldPath;
+			}
+			private set
+			{
+				if (this.focusFieldPath != value)
+				{
+					this.focusFieldPath = value;
+
+					//	TODO: generate event...
+				}
+			}
+		}
+
+
 		public void DefineContainer(Widget widget)
 		{
 			this.CreateUserInterface ();
@@ -392,6 +415,8 @@ namespace Epsitec.Common.Dialogs
 		private void HandleSearchControllerDialogFocusChanged(object sender, DialogFocusEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Focus changed : " + e.ToString ());
+
+			this.FocusFieldPath = e.NewPath;
 		}
 
 		private void HandleSearchControllerPlaceholderPostProcessing(object sender, MessageEventArgs e)
@@ -431,5 +456,6 @@ namespace Epsitec.Common.Dialogs
 		private HintListEmbedder				hintListEmbedder;
 		private HintListVisibilityMode			visiblityMode;
 		private HintListContentType				contentType;
+		private EntityFieldPath					focusFieldPath;
 	}
 }

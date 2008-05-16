@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -14,12 +16,13 @@ namespace Epsitec.Cresus.Core
 	{
 		public StateManager()
 		{
-			this.states = new List<States.AbstractState> ();
-			this.zOrder = new List<States.AbstractState> ();
+			this.states = new List<States.CoreState> ();
+			this.zOrder = new List<States.CoreState> ();
+			this.boxes = new Dictionary<int, Box> ();
 		}
 
 
-		public CoreApplication Application
+		public CoreApplication					Application
 		{
 			get
 			{
@@ -31,7 +34,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public int Depth
+		public int								Depth
 		{
 			get
 			{
@@ -39,7 +42,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public States.AbstractState ActiveState
+		public States.CoreState					ActiveState
 		{
 			get
 			{
@@ -55,7 +58,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void Push(States.AbstractState state)
+		public void Push(States.CoreState state)
 		{
 			if (this.states.Contains (state))
 			{
@@ -73,7 +76,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public bool Pop(States.AbstractState state)
+		public bool Pop(States.CoreState state)
 		{
 			if (this.states.Remove (state))
 			{
@@ -90,7 +93,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public IEnumerable<States.AbstractState> Read(string path)
+		public IEnumerable<States.CoreState> Read(string path)
 		{
 			using (System.IO.StreamReader reader = System.IO.File.OpenText (path))
 			{
@@ -101,7 +104,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public IEnumerable<States.AbstractState> Read(System.IO.TextReader reader)
+		public IEnumerable<States.CoreState> Read(System.IO.TextReader reader)
 		{
 			XDocument doc = XDocument.Load (reader);
 
@@ -109,7 +112,7 @@ namespace Epsitec.Cresus.Core
 				   select States.StateFactory.CreateState (this, state);
 		}
 
-		public void Write(string path, IEnumerable<States.AbstractState> states)
+		public void Write(string path, IEnumerable<States.CoreState> states)
 		{
 			using (System.IO.TextWriter writer = new System.IO.StreamWriter (path))
 			{
@@ -117,7 +120,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 		
-		public void Write(System.IO.TextWriter writer, IEnumerable<States.AbstractState> states)
+		public void Write(System.IO.TextWriter writer, IEnumerable<States.CoreState> states)
 		{
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
@@ -136,6 +139,64 @@ namespace Epsitec.Cresus.Core
 			doc.Save (writer);
 		}
 
+
+		internal int DefineBox(Widget container)
+		{
+			int id = 1;
+
+			foreach (var item in this.boxes)
+			{
+				//	If there are empty slots in the boxes dictionary, reuse them.
+
+				if (item.Value == null)
+				{
+					id = item.Key;
+					break;
+				}
+
+				if (item.Key >= id)
+				{
+					id = item.Key + 1;
+				}
+			}
+
+			this.boxes[id] = new Box ()
+			{
+				Container = container
+			};
+			
+			return id;
+		}
+
+		internal Widget Attach(States.CoreState state)
+		{
+			System.Diagnostics.Debug.Assert (state.BoxId != 0);
+			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
+
+			Box box = this.boxes[state.BoxId];
+
+			if ((box.State != state) &&
+				(box.State != null))
+			{
+				box.State.SoftDetach ();
+			}
+
+			box.State = state;
+
+			return box.Container;
+		}
+
+		internal void Detach(States.CoreState state)
+		{
+			System.Diagnostics.Debug.Assert (state.BoxId != 0);
+			
+			Box box = this.boxes[state.BoxId];
+			
+			if (box.State == state)
+			{
+				box.State = null;
+			}
+		}
 		
 		private void DefineCoreApplication(CoreApplication coreApplication)
 		{
@@ -163,12 +224,33 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		private class Box
+		{
+			public Box()
+			{
+			}
+
+			public Widget Container
+			{
+				get;
+				set;
+			}
+
+			public States.CoreState State
+			{
+				get;
+				set;
+			}
+		}
+
 		
 		public event System.EventHandler<StateStackChangedEventArgs>	StackChanged;
 
 		
-		private readonly List<States.AbstractState> states;
-		private readonly List<States.AbstractState> zOrder;
+		private readonly List<States.CoreState> states;
+		private readonly List<States.CoreState> zOrder;
+		private readonly Dictionary<int, Box> boxes;
 		private CoreApplication application;
 	}
 }

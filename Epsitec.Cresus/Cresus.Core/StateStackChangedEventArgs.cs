@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Core
 {
 	public sealed class StateStackChangedEventArgs : System.EventArgs
 	{
-		public StateStackChangedEventArgs(StateStackChange change, States.AbstractState state)
+		public StateStackChangedEventArgs(StateStackChange change, States.CoreState state)
 		{
 			this.change = change;
 			this.state  = state;
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public States.AbstractState State
+		public States.CoreState State
 		{
 			get
 			{
@@ -32,6 +32,6 @@ namespace Epsitec.Cresus.Core
 
 		
 		private readonly StateStackChange change;
-		private readonly States.AbstractState state;
+		private readonly States.CoreState state;
 	}
 }

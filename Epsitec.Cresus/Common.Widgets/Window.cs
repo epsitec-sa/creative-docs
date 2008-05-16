@@ -2243,12 +2243,12 @@ namespace Epsitec.Common.Widgets
 			this.ReleaseCapturingWidget ();
 		}
 
-		public void FocusWidget(Widget widget)
+		public bool FocusWidget(Widget widget)
 		{
-			this.FocusWidget (widget, TabNavigationDir.None, TabNavigationMode.None);
+			return this.FocusWidget (widget, TabNavigationDir.None, TabNavigationMode.None);
 		}
 
-		public void FocusWidget(Widget widget, TabNavigationDir dir, TabNavigationMode mode)
+		public bool FocusWidget(Widget widget, TabNavigationDir dir, TabNavigationMode mode)
 		{
 			if ((widget != null) &&
 				(widget.IsFocused == false) &&
@@ -2277,10 +2277,13 @@ namespace Epsitec.Common.Widgets
 						else
 						{
 							this.FocusedWidget = focus;
+							return true;
 						}
 					}
 				}
 			}
+			
+			return false;
 		}
 
 		public void ClearFocusedWidget()

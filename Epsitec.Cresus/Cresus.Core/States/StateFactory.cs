@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>StateFactory</c> class manages the creation of state instances
 	/// based on their (short) class name. See <see cref="StateManager"/>.
 	/// </summary>
-	public sealed class StateFactory : PlugInFactory<AbstractState, StateAttribute, string>
+	public sealed class StateFactory : PlugInFactory<CoreState, StateAttribute, string>
 	{
 		/// <summary>
 		/// Creates the state instance specified by the XML element. This will
@@ -25,10 +25,10 @@ namespace Epsitec.Cresus.Core.States
 		/// <returns>
 		/// The state or <c>null</c> if the element does not map to a supported class.
 		/// </returns>
-		public static AbstractState CreateState(StateManager manager, XElement element)
+		public static CoreState CreateState(StateManager manager, XElement element)
 		{
 			string className = (string) element.Attribute ("class");
-			States.AbstractState state = StateFactory.CreateInstance<StateManager> (className, manager);
+			States.CoreState state = StateFactory.CreateInstance<StateManager> (className, manager);
 			return state.Deserialize (element);
 		}
 
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		/// <param name="state">The state instance.</param>
 		/// <returns>The class name.</returns>
-		public static string GetClassName(AbstractState state)
+		public static string GetClassName(CoreState state)
 		{
 			return StateFactory.FindId (state.GetType ());
 		}

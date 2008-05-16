@@ -45,6 +45,18 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
+		internal string							FocusPath
+		{
+			get
+			{
+				return this.hintListController.FocusFieldPath.ToString ();
+			}
+			set
+			{
+				this.controller.SetFocus (EntityFieldPath.Parse (value));
+			}
+		}
+
 		
 		public override AbstractGroup CreateUserInterface()
 		{
@@ -58,11 +70,13 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.searchPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
 			this.searchPanel.Dock = DockStyle.Fill;
 			this.searchPanel.SetEmbedder (frame);
+			this.searchPanel.Margins = new Margins (4);
 			
 			this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
 			this.editionPanel.Dock = DockStyle.Fill;
 			this.editionPanel.SetEmbedder (frame);
 			this.editionPanel.Visibility = false;
+			this.editionPanel.Margins = new Margins (4);
 
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
@@ -119,6 +133,9 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		protected override void EnableWorkspace()
 		{
+			System.Diagnostics.Debug.Assert (this.Container != null);
+			System.Diagnostics.Debug.Assert (this.Container.Window != null);
+
 			this.Application.CommandDispatcher.RegisterRange (this.GetCommandHandlers ());
 		}
 

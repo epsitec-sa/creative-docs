@@ -180,6 +180,27 @@ namespace Epsitec.Common.Dialogs
 			System.Diagnostics.Debug.Assert (this.Resolved != null);
 		}
 
+		/// <summary>
+		/// Sets the focus on the placeholder associated with the specified
+		/// field, if it can be found.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		/// <returns><c>true</c> if the focus was successfully set.</returns>
+		public bool SetFocus(EntityFieldPath path)
+		{
+			AbstractPlaceholder placeholder = DialogSearchController.FindPlaceholder (this.dialogData.Panel, path);
+
+			if (placeholder != null)
+			{
+				return placeholder.Focus ();
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -474,6 +495,19 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 			}
+		}
+
+		private static AbstractPlaceholder FindPlaceholder(Widgets.Widget root, EntityFieldPath path)
+		{
+			foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
+			{
+				if (DialogSearchController.GetPlaceholderPath (placeholder) == path)
+				{
+					return placeholder;
+				}
+			}
+
+			return null;
 		}
 
 		private static EntityFieldPath GetPlaceholderPath(AbstractPlaceholder placeholder)

@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>FormWorkspaceState</c> class manages the state associated with a
 	/// form workspace, as implemented by the <see cref="FormWorkspace"/> class.
 	/// </summary>
-	public abstract class FormWorkspaceState : AbstractState
+	public class FormWorkspaceState : CoreState
 	{
 		public FormWorkspaceState(StateManager manager)
 			: base (manager)
@@ -34,19 +34,18 @@ namespace Epsitec.Cresus.Core.States
 			{
 				return this.workspace;
 			}
-			set
+			internal set
 			{
 				if (this.workspace != value)
 				{
-					this.workspace = value;
+					System.Diagnostics.Debug.Assert (this.workspace == null);
 					
-					if ((this.serialization != null) &&
-						(this.workspace != null))
-					{
-						XElement data = this.serialization;
+					this.workspace = value;
+					this.workspace.StateManager = this.StateManager;
 
-						this.serialization = null;
-						this.RestoreWorkspace (data);
+					if (this.BoxId != 0)
+					{
+						this.SoftAttachState ();
 					}
 				}
 			}
@@ -55,19 +54,23 @@ namespace Epsitec.Cresus.Core.States
 		
 		public override XElement Serialize(XElement element)
 		{
+			this.StoreCoreState (element);
+			this.StoreWorkspace (element);
+
 			return element;
 		}
 
-		public override AbstractState Deserialize(XElement element)
+		public override CoreState Deserialize(XElement element)
 		{
-			if (this.workspace != null)
+			System.Diagnostics.Debug.Assert (this.workspace == null);
+
+			this.workspace = new FormWorkspace ()
 			{
-				this.RestoreWorkspace (element);
-			}
-			else
-			{
-				this.serialization = element;
-			}
+				StateManager = this.StateManager
+			};
+
+			this.RestoreWorkspace (element);
+			this.RestoreCoreState (element);
 
 			return this;
 		}
@@ -80,6 +83,7 @@ namespace Epsitec.Cresus.Core.States
 				element.Add (new XElement ("workspace",
 					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
 					new XAttribute ("formId", this.workspace.FormId.ToString ()),
+					new XAttribute ("focusPath", this.workspace.FocusPath ?? ""),
 					FormWorkspaceState.SaveDialogData (this.workspace.DialogData)));
 			}
 		}
@@ -95,7 +99,28 @@ namespace Epsitec.Cresus.Core.States
 				this.workspace.EntityId = Druid.Parse ((string) workspaceElement.Attribute ("entityId"));
 				this.workspace.FormId   = Druid.Parse ((string) workspaceElement.Attribute ("formId"));
 
+				string focusPath = (string) workspaceElement.Attribute ("focusPath");
+
 				//	TODO: recreate user interface for workspace
+			}
+		}
+
+
+		protected override void SoftAttachState()
+		{
+			if (this.workspace != null)
+			{
+				this.workspace.Container.SetParent (this.Container);
+				this.workspace.SetEnable (true);
+			}
+		}
+
+		protected override void SoftDetachState()
+		{
+			if (this.workspace != null)
+			{
+				this.workspace.SetEnable (false);
+				this.workspace.Container.SetParent (null);
 			}
 		}
 
@@ -216,6 +241,5 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 		private Workspaces.FormWorkspace		workspace;
-		private XElement						serialization;
 	}
 }

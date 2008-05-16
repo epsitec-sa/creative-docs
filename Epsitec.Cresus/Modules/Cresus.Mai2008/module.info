@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1001" name="Cresus.Mai2008" layer="A" namespace="Epsitec.Cresus.Mai2008">
   <Versions>
-    <Version id="1" build="8" date="2008-05-14T13:00:38.2790000Z" />
+    <Version id="1" build="10" date="2008-05-16T14:08:13.5100000Z" />
   </Versions>
 </ModuleInfo>

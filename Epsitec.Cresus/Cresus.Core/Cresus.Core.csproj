@@ -71,7 +71,7 @@
     <Compile Include="CoreApplication.cs" />
     <Compile Include="PanelInteractionMode.cs" />
     <Compile Include="StateManager.cs" />
-    <Compile Include="States\AbstractState.cs" />
+    <Compile Include="States\CoreState.cs" />
     <Compile Include="States\FormWorkspaceState.cs" />
     <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
@@ -159,6 +159,15 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Edition.Cancel.icon" />
+    <EmbeddedResource Include="Images\Edition.Accept.icon" />
+    <EmbeddedResource Include="Images\History.NavigateNext.icon" />
+    <EmbeddedResource Include="Images\History.NavigatePrev.icon" />
+    <EmbeddedResource Include="Images\Base.BillIn.icon" />
+    <EmbeddedResource Include="Images\Base.BillOut.icon" />
+    <EmbeddedResource Include="Images\Base.Customers.icon" />
+    <EmbeddedResource Include="Images\Base.Items.icon" />
+    <EmbeddedResource Include="Images\Base.Suppliers.icon" />
     <Content Include="..\External\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -173,9 +182,6 @@
     <Content Include="Resources\Cresus.Core\Strings.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
+			this.stateManager = new StateManager ()
+			{
+				Application = this
+			};
+
 			this.data = new CoreData ();
 			this.exceptionManager = new CoreLibrary.ExceptionManager ();
 		}
@@ -60,15 +65,15 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Top
 			};
 
-			this.workspaceBox = new FrameBox (window.Root)
+			this.defaultBox = new FrameBox (window.Root)
 			{
 				Dock = DockStyle.Fill
 			};
 
+			this.defaultBoxId = this.stateManager.DefineBox (this.defaultBox);
+
 			this.CreateRibbon ();
-			this.CreateWorkspaces ();
-			
-			this.formWorkspace.SetEnable (true);
+			this.CreateWorkspace ();
 		}
 
 		public void SetupData()
@@ -97,7 +102,8 @@ namespace Epsitec.Cresus.Core
 			{
 				Name = "Edition",
 				Title = "Edition",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				PreferredWidth = 200,
 			};
 
 			frame = new FrameBox (section)
@@ -113,6 +119,12 @@ namespace Epsitec.Cresus.Core
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA5]"))));
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA9]"))));
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA8]"))));
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA7]"))));
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA6]"))));
+
 			section = new RibbonSection (this.ribbonPageHome)
 			{
 				Name = "States",
@@ -120,6 +132,12 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
+
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAD]"))));
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAC]"))));
+			section.Children.Add (new Widget () { Dock = DockStyle.StackFill });
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAA]")), DockStyle.StackEnd));
+			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAB]")), DockStyle.StackEnd));
 
 #if false
 			subFrame = new FrameBox (frame);
@@ -135,20 +153,21 @@ namespace Epsitec.Cresus.Core
 #endif
 		}
 
-		private void CreateWorkspaces()
+		private void CreateWorkspace()
 		{
-			this.formWorkspace = new Workspaces.FormWorkspace ()
+			States.FormWorkspaceState state = new States.FormWorkspaceState (this.stateManager)
 			{
-				Application = this,
-				FormId      = Epsitec.Cresus.Mai2008.FormIds.Facture,
-				EntityId    = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
+				BoxId = this.defaultBoxId,
+				Workspace = new Workspaces.FormWorkspace ()
+				{
+					FormId       = Epsitec.Cresus.Mai2008.FormIds.Facture,
+					EntityId     = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
+				}
 			};
 #if true
-			this.formWorkspace.FormId = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
-			this.formWorkspace.EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
+			state.Workspace.FormId = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
+			state.Workspace.EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
 #endif
-
-			this.workspaceBox.Children.Add (this.formWorkspace.Container);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -170,15 +189,32 @@ namespace Epsitec.Cresus.Core
 			base.Dispose (disposing);
 		}
 
+		private static IconButton CreateButton(Command command)
+		{
+			return CoreApplication.CreateButton (command, DockStyle.StackBegin);
+		}
 
-		Workspaces.FormWorkspace				formWorkspace;
+		private static IconButton CreateButton(Command command, DockStyle dockStyle)
+		{
+			return new IconButton (command, new Epsitec.Common.Drawing.Size (31, 31), dockStyle)
+			{
+				VerticalAlignment = VerticalAlignment.Center,
+				HorizontalAlignment = HorizontalAlignment.Center
+			};
+		}
+
+
+
+		StateManager							stateManager;
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
 		
 		private FrameBox						ribbonBox;
-		private FrameBox						workspaceBox;
+		private FrameBox						defaultBox;
 
 		private RibbonBook						ribbonBook;
 		private RibbonPage						ribbonPageHome;
+
+		private int								defaultBoxId;
 	}
 }

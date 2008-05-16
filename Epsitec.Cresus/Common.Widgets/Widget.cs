@@ -1152,13 +1152,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void Focus()
+		public bool Focus()
 		{
 			Window window = this.Window;
-			
+
 			if (window != null)
 			{
-				window.FocusWidget (this);
+				return window.FocusWidget (this);
+			}
+			else
+			{
+				return false;
 			}
 		}
 

@@ -18,15 +18,24 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 		}
 
+
 		public CoreApplication Application
 		{
 			get
 			{
-				return this.application;
+				return this.stateManager == null ? null : this.stateManager.Application;
+			}
+		}
+
+		public StateManager StateManager
+		{
+			get
+			{
+				return this.stateManager;
 			}
 			internal set
 			{
-				this.DefineCoreApplication (value);
+				this.DefineStateManager (value);
 			}
 		}
 
@@ -54,6 +63,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
+		
 		public void SetEnable(bool enable)
 		{
 			if (this.enabled != enable)
@@ -83,17 +93,18 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.container.Dock = DockStyle.Fill;
 			this.container.Name = this.GetType ().Name;
 		}
-		
-		private void DefineCoreApplication(CoreApplication coreApplication)
-		{
-			System.Diagnostics.Debug.Assert (coreApplication != null);
-			System.Diagnostics.Debug.Assert (this.application == null);
 
-			this.application = coreApplication;
+		private void DefineStateManager(StateManager stateManager)
+		{
+			System.Diagnostics.Debug.Assert (stateManager != null);
+			System.Diagnostics.Debug.Assert (this.stateManager == null);
+
+			this.stateManager = stateManager;
 		}
 
 
 
+		private StateManager stateManager;
 		private CoreApplication application;
 		private AbstractGroup container;
 		private bool enabled;

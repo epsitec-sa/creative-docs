@@ -145,6 +145,18 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets the user interface panel at the root of the dialog.
+		/// </summary>
+		/// <value>The user interface panel or <c>null</c>.</value>
+		public UI.Panel							Panel
+		{
+			get
+			{
+				return this.panel;
+			}
+		}
+
+		/// <summary>
 		/// Determines whether the specified path maps to external data, reached
 		/// through a reference replacement.
 		/// </summary>

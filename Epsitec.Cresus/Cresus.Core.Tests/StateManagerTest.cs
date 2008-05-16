@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core
 		{
 			StateManager manager = new StateManager ();
 
-			List<States.AbstractState> states = new List<States.AbstractState> (manager.Read (this.path));
+			List<States.CoreState> states = new List<States.CoreState> (manager.Read (this.path));
 
 			Assert.AreEqual (2, states.Count);
 			Assert.AreEqual (typeof (DummyState), states[0].GetType ());
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core
 
 		#region DummyState Class
 
-		internal class DummyState : States.AbstractState
+		internal class DummyState : States.CoreState
 		{
 			public DummyState(StateManager manager)
 				: base (manager)
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core
 				return element;
 			}
 
-			public override States.AbstractState Deserialize(XElement element)
+			public override States.CoreState Deserialize(XElement element)
 			{
 				this.value = (string) element.Element ("dummy").Attribute ("value");
 				return this;
