@@ -296,6 +296,11 @@ namespace Epsitec.Common.Dialogs
 
 			System.Diagnostics.Debug.WriteLine (e.ToString ());
 
+			EntityFieldPath oldPath = DialogSearchController.GetPlaceholderPath (oldPlaceholder);
+			EntityFieldPath newPath = DialogSearchController.GetPlaceholderPath (newPlaceholder);
+
+			this.OnDialogFocusChanged (new DialogFocusEventArgs (oldPath, newPath));
+
 			if ((this.activeSearchContext != null) &&
 				(this.activeSearchContext.ContainsNode (newPlaceholder)))
 			{
@@ -451,18 +456,10 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
-				BindingExpression bindingExpression = placeholder.ValueBindingExpression;
-				Binding           binding           = bindingExpression.ParentBinding;
-				DataSourceType    sourceType        = bindingExpression.GetSourceType ();
-
-				string path       = binding.Path;
-				string pathPrefix = string.Concat (UI.DataSource.DataName, ".");
-
-				if ((sourceType == DataSourceType.StructuredData) &&
-				(path.StartsWith (pathPrefix)))
+				EntityFieldPath fieldPath = DialogSearchController.GetPlaceholderPath (placeholder);
+				
+				if (fieldPath != null)
 				{
-					EntityFieldPath fieldPath = EntityFieldPath.Parse (path.Substring (pathPrefix.Length));
-
 					object oldValue = fieldPath.NavigateRead (this.dialogData.Data);
 					object newValue = value;
 
@@ -476,10 +473,27 @@ namespace Epsitec.Common.Dialogs
 						this.OnDialogDataChanging (new DialogDataEventArgs (fieldPath, placeholder, oldValue, newValue));
 					}
 				}
-				else
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Unexpected binding: source type={0}, path={1}", sourceType, path));
-				}
+			}
+		}
+
+		private static EntityFieldPath GetPlaceholderPath(AbstractPlaceholder placeholder)
+		{
+			BindingExpression bindingExpression = placeholder.ValueBindingExpression;
+			Binding           binding           = bindingExpression.ParentBinding;
+			DataSourceType    sourceType        = bindingExpression.GetSourceType ();
+
+			string path       = binding.Path;
+			string pathPrefix = string.Concat (UI.DataSource.DataName, ".");
+
+			if ((sourceType == DataSourceType.StructuredData) &&
+				(path.StartsWith (pathPrefix)))
+			{
+				return EntityFieldPath.Parse (path.Substring (pathPrefix.Length));
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Unexpected binding: source type={0}, path={1}", sourceType, path));
+				return null;
 			}
 		}
 
@@ -663,8 +677,6 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.dialogDataEventArgsCache = e;
 
-			System.Diagnostics.Debug.WriteLine ("DialogDataChanging: " + e.ToString ());
-			
 			if (this.DialogDataChanging != null)
 			{
 				this.DialogDataChanging (this, e);
@@ -675,11 +687,17 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.dialogDataEventArgsCache = null;
 
-			System.Diagnostics.Debug.WriteLine ("DialogDataChanged: " + e.ToString ());
-			
 			if (this.DialogDataChanged != null)
 			{
 				this.DialogDataChanged (this, e);
+			}
+		}
+
+		private void OnDialogFocusChanged(DialogFocusEventArgs e)
+		{
+			if (this.DialogFocusChanged != null)
+			{
+				this.DialogFocusChanged (this, e);
 			}
 		}
 
@@ -1324,23 +1342,24 @@ namespace Epsitec.Common.Dialogs
 		/// search context into a suggestion. The event can be cancelled,
 		/// which aborts the resolution.
 		/// </summary>
-		public event EventHandler<CancelEventArgs> Resolving;
+		public event EventHandler<CancelEventArgs>			Resolving;
 
 		/// <summary>
 		/// Occurs when a template from the active search context was
 		/// resolved into a suggestion.
 		/// </summary>
-		public event EventHandler				Resolved;
+		public event EventHandler							Resolved;
 
 		/// <summary>
 		/// Occurs when the suggestion for the active search context changed.
 		/// </summary>
-		public event EventHandler<DialogDataEventArgs> SuggestionChanged;
+		public event EventHandler<DialogDataEventArgs>		SuggestionChanged;
 
 		public event EventHandler<Widgets.MessageEventArgs> PlaceholderPostProcessing;
 
-		public event EventHandler<DialogDataEventArgs> DialogDataChanging;
-		public event EventHandler<DialogDataEventArgs> DialogDataChanged;
+		public event EventHandler<DialogDataEventArgs>		DialogDataChanging;
+		public event EventHandler<DialogDataEventArgs>		DialogDataChanged;
+		public event EventHandler<DialogFocusEventArgs>		DialogFocusChanged;
 
 		/// <summary>
 		/// Occurs when the search context changed, globally. This is signalled

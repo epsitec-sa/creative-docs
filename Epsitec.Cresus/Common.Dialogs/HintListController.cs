@@ -23,6 +23,8 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.searchController = new DialogSearchController ();
 			this.searchController.SuggestionChanged += this.HandleSearchControllerSuggestionChanged;
+			this.searchController.DialogDataChanged += this.HandleSearchControllerDialogDataChanged;
+			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
 			this.searchController.PlaceholderPostProcessing += this.HandleSearchControllerPlaceholderPostProcessing;
 			this.searchController.Resolved += this.HandleSearchControllerResolved;
 
@@ -135,6 +137,8 @@ namespace Epsitec.Common.Dialogs
 			if (disposing)
 			{
 				this.searchController.SuggestionChanged -= this.HandleSearchControllerSuggestionChanged;
+				this.searchController.DialogDataChanged -= this.HandleSearchControllerDialogDataChanged;
+				this.searchController.DialogFocusChanged -= this.HandleSearchControllerDialogFocusChanged;
 				this.searchController.PlaceholderPostProcessing -= this.HandleSearchControllerPlaceholderPostProcessing;
 				this.searchController.Resolved -= this.HandleSearchControllerResolved;
 				DialogSearchController.GlobalSearchContextChanged -= this.HandleGlobalSearchContextChanged;
@@ -360,7 +364,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleSearchControllerSuggestionChanged(object sender, DialogDataEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("SuggestionChanged : " + e.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Suggestion changed : " + e.ToString ());
 
 			AbstractEntity suggestion = e.NewValue as AbstractEntity;
 
@@ -378,6 +382,16 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 #endif
+		}
+
+		private void HandleSearchControllerDialogDataChanged(object sender, DialogDataEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Data changed : " + e.ToString ());
+		}
+
+		private void HandleSearchControllerDialogFocusChanged(object sender, DialogFocusEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Focus changed : " + e.ToString ());
 		}
 
 		private void HandleSearchControllerPlaceholderPostProcessing(object sender, MessageEventArgs e)

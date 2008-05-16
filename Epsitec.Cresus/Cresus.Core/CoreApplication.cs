@@ -72,9 +72,9 @@ namespace Epsitec.Cresus.Core
 				FormId      = Epsitec.Cresus.Mai2008.FormIds.Facture,
 				EntityId    = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
 			};
-#if false
-			Druid formId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
-			Druid entityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
+#if true
+			this.formWorkspace.FormId = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
+			this.formWorkspace.EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
 #endif
 
 			this.Window.Root.Children.Add (this.formWorkspace.Container);
