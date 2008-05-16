@@ -361,8 +361,13 @@ namespace Epsitec.Common.Document
 				double limit   = stroke.Limit;
 
 				Path realPath = new Path();
-				realPath.Append(shape.Path, width, cap, join, limit, 0.1);
+				realPath.Append(shape.Path, width, cap, join, limit, 0.5);  // (*)
 				return Geometry.ComputeBoundingBox(realPath);
+
+				// (*)	Si approximation_zoom vaut 0.1, certaines bboxGeom sont calculées de façon imprécises.
+				//		Ceci est surtout visible lors de forts grossissements, ce qui est très marqué avec
+				//		Pictogram, mais également visible avec CrDoc. Avec 0.5, le calcul semble plus précis,
+				//		mais je ne comprends pas la signification de ce paramètre !
 			}
 
 			if ( shape.Type == Type.Surface && surface != null && shape.IsVisible )

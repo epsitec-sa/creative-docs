@@ -75,8 +75,8 @@ namespace Epsitec.Common.DocumentEditor
 
 			if (Epsitec.Common.Support.Globals.IsDebugBuild)
 			{
-				//?this.debugMode = DebugMode.DebugCommands;
-				this.debugMode = DebugMode.Release;
+				this.debugMode = DebugMode.DebugCommands;
+				//?this.debugMode = DebugMode.Release;
 			}
 			else
 			{
