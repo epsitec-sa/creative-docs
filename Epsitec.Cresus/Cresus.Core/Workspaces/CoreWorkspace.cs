@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
-				return this.stateManager == null ? null : this.stateManager.Application;
+				return this.StateManager == null ? null : this.StateManager.Application;
 			}
 		}
 
@@ -31,11 +31,19 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
-				return this.stateManager;
+				return this.state == null ? null : this.state.StateManager;
+			}
+		}
+
+		public States.CoreState State
+		{
+			get
+			{
+				return this.state;
 			}
 			internal set
 			{
-				this.DefineStateManager (value);
+				this.DefineState (value);
 			}
 		}
 
@@ -94,17 +102,17 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.container.Name = this.GetType ().Name;
 		}
 
-		private void DefineStateManager(StateManager stateManager)
+		private void DefineState(States.CoreState state)
 		{
-			System.Diagnostics.Debug.Assert (stateManager != null);
-			System.Diagnostics.Debug.Assert (this.stateManager == null);
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (this.state == null);
 
-			this.stateManager = stateManager;
+			this.state = state;
 		}
 
 
 
-		private StateManager stateManager;
+		private States.CoreState state;
 		private CoreApplication application;
 		private AbstractGroup container;
 		private bool enabled;

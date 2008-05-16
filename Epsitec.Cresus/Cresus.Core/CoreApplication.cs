@@ -160,14 +160,15 @@ namespace Epsitec.Cresus.Core
 				BoxId = this.defaultBoxId,
 				Workspace = new Workspaces.FormWorkspace ()
 				{
-					FormId       = Epsitec.Cresus.Mai2008.FormIds.Facture,
-					EntityId     = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
+#if true
+					FormId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne,
+					EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId
+#else
+					FormId   = Epsitec.Cresus.Mai2008.FormIds.Facture,
+					EntityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
+#endif
 				}
 			};
-#if true
-			state.Workspace.FormId = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne;
-			state.Workspace.EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
-#endif
 		}
 
 		protected override void Dispose(bool disposing)

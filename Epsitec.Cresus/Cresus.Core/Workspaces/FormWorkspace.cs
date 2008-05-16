@@ -41,21 +41,31 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
-				return this.dialogData;
+				return this.controller.DialogData;
 			}
 		}
 
-		internal string							FocusPath
+		/// <summary>
+		/// Gets the path of the focused field.
+		/// </summary>
+		/// <value>The path of the focused field or <c>null</c>.</value>
+		internal EntityFieldPath FocusPath
 		{
 			get
 			{
-				return this.hintListController.FocusFieldPath.ToString ();
+				return this.focusFieldPath;
 			}
 			set
 			{
-				this.controller.SetFocus (EntityFieldPath.Parse (value));
+				if (this.focusFieldPath != value)
+				{
+					this.focusFieldPath = value;
+
+					//	TODO: generate event...
+				}
 			}
 		}
+
 
 		
 		public override AbstractGroup CreateUserInterface()
@@ -80,6 +90,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
+			this.searchContext.PersistanceManagers.Add (this.Application.Data.DataContext);
 			
 			this.currentItem = this.searchContext.CreateEntity (this.EntityId);
 			this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
@@ -92,6 +103,10 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.controller.DialogWindow = this.Application.Window;
 			this.controller.Resolver     = this.resolver;
 			this.controller.AssertReady ();
+
+			this.controller.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
+			this.controller.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
+			this.controller.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
 
 			this.dialogData.BindToUserInterface (this.searchPanel);
 
@@ -207,6 +222,35 @@ namespace Epsitec.Cresus.Core.Workspaces
 				System.Diagnostics.Debug.WriteLine (value.Dump ());
 			}
 		}
+		
+		private void HandleSearchControllerDialogFocusChanged(object sender, DialogFocusEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Focus changed : " + e.ToString ());
+
+			this.FocusPath = e.NewPath;
+			this.SaveState ();
+		}
+		
+		private void HandleSearchControllerSuggestionChanged(object sender, DialogDataEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Suggestion changed : " + e.ToString ());
+
+			AbstractEntity suggestion = e.NewValue as AbstractEntity;
+			this.SaveState ();
+		}
+
+		private void HandleSearchControllerDialogDataChanged(object sender, DialogDataEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Data changed : " + e.ToString ());
+			this.SaveState ();
+		}
+
+		private void SaveState()
+		{
+			this.StateManager.Write (@"S:\state.xml", new States.CoreState[] { this.State });
+		}
+
+
 
 
 		private readonly HintListController		hintListController;
@@ -218,5 +262,6 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private EntityContext					searchContext;
 		private DialogSearchController			controller;
 		private IEntityResolver					resolver;
+		private EntityFieldPath					focusFieldPath;
 	}
 }

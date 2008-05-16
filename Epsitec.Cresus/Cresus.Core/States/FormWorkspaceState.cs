@@ -14,6 +14,8 @@ using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Common.Support.EntityEngine;
 
+[assembly: State (typeof (FormWorkspaceState))]
+
 namespace Epsitec.Cresus.Core.States
 {
 	/// <summary>
@@ -41,7 +43,7 @@ namespace Epsitec.Cresus.Core.States
 					System.Diagnostics.Debug.Assert (this.workspace == null);
 					
 					this.workspace = value;
-					this.workspace.StateManager = this.StateManager;
+					this.workspace.State = this;
 
 					if (this.BoxId != 0)
 					{
@@ -66,7 +68,7 @@ namespace Epsitec.Cresus.Core.States
 
 			this.workspace = new FormWorkspace ()
 			{
-				StateManager = this.StateManager
+				State = this
 			};
 
 			this.RestoreWorkspace (element);
@@ -83,7 +85,7 @@ namespace Epsitec.Cresus.Core.States
 				element.Add (new XElement ("workspace",
 					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
 					new XAttribute ("formId", this.workspace.FormId.ToString ()),
-					new XAttribute ("focusPath", this.workspace.FocusPath ?? ""),
+					new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()),
 					FormWorkspaceState.SaveDialogData (this.workspace.DialogData)));
 			}
 		}
@@ -101,7 +103,10 @@ namespace Epsitec.Cresus.Core.States
 
 				string focusPath = (string) workspaceElement.Attribute ("focusPath");
 
-				//	TODO: recreate user interface for workspace
+				if (focusPath.Length > 0)
+				{
+					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
+				}
 			}
 		}
 
