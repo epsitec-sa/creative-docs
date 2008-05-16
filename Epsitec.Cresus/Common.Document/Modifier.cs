@@ -1872,6 +1872,8 @@ namespace Epsitec.Common.Document
 
 				this.OpletQueueValidateAction();
 			}
+
+			this.CopyFoo();
 		}
 
 		public void CopySelection()
@@ -1897,11 +1899,28 @@ namespace Epsitec.Common.Document
 
 				this.OpletQueueValidateAction();
 			}
+
+			this.CopyFoo();
+		}
+
+		protected void CopyFoo()
+		{
+			//	Met un objet quelconque dans le presse-papiers, lorsque CrDoc a coupé/copié un objet
+			//	interne. Ainsi, l'éventuel texte ou image standard contenu dans le presse-papiers
+			//	est "effacé".
+			Clipboard.WriteData data = new Clipboard.WriteData();
+			data.WriteObject("Epsitec.Crdoc", new FooObject());
+			Clipboard.SetData(data);
+		}
+
+		protected class FooObject
+		{
+			public string text = "CrDoc";
 		}
 
 		public void Paste()
 		{
-			//	Colle le contenu du press-papiers
+			//	Colle le contenu du presse-papiers.
 			Objects.AbstractText editObject = this.RetEditObject();
 
 			if (editObject == null && this.PasteText())  // création d'un pavé de texte possible ?
@@ -1967,11 +1986,11 @@ namespace Epsitec.Common.Document
 					obj = Objects.Abstract.CreateObject(this.document, "ObjectTextBox2", this.objectMemoryText) as Objects.TextBox2;
 					Objects.Abstract layer = drawingContext.RootObject();
 					layer.Objects.Add(obj);  // ajoute à la fin de la liste
-				}
 
-				obj.CreateMouseDown(box.BottomLeft, drawingContext);
-				obj.CreateMouseMove(box.TopRight, drawingContext);
-				obj.CreateMouseUp(box.TopRight, drawingContext);
+					obj.CreateMouseDown(box.BottomLeft, drawingContext);
+					obj.CreateMouseMove(box.TopRight, drawingContext);
+					obj.CreateMouseUp(box.TopRight, drawingContext);
+				}
 
 				if (obj.EditPaste())
 				{

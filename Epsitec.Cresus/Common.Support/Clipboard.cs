@@ -625,8 +625,13 @@ namespace Epsitec.Common.Support
 					return this.data;
 				}
 			}
-			
-			
+
+
+			public void WriteObject(string format, object value)
+			{
+				this.data.SetData(format, false, value);
+			}
+
 			public void WriteText(string value)
 			{
 				value = value.Replace ("\r\n", "\n");
