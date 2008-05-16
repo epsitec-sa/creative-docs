@@ -16,15 +16,14 @@ namespace Epsitec.Cresus.Core.States
 	public sealed class StateFactory : PlugInFactory<AbstractState, StateAttribute, string>
 	{
 		/// <summary>
-		/// Creates the state instance specified by the XML element.
-		/// This will instanciate the proper class and initialize it
-		/// based on the serialized data.
+		/// Creates the state instance specified by the XML element. This will
+		/// instanciate the proper class and initialize it based on the serialized
+		/// data.
 		/// </summary>
 		/// <param name="manager">The state manager.</param>
 		/// <param name="element">The XML element.</param>
 		/// <returns>
-		/// The state or <c>null</c> if the element does not
-		/// map to a supported class.
+		/// The state or <c>null</c> if the element does not map to a supported class.
 		/// </returns>
 		public static AbstractState CreateState(StateManager manager, XElement element)
 		{

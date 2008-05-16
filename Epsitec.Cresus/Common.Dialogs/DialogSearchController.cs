@@ -212,6 +212,7 @@ namespace Epsitec.Common.Dialogs
 			if (this.dialogData != null)
 			{
 				PlaceholderContext.ContextActivated += this.HandlePlaceholderContextActivated;
+				PlaceholderContext.ContextDeactivated += this.HandlePlaceholderContextDeactivated;
 			}
 		}
 
@@ -227,6 +228,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			PlaceholderContext.ContextActivated -= this.HandlePlaceholderContextActivated;
+			PlaceholderContext.ContextDeactivated -= this.HandlePlaceholderContextDeactivated;
 		}
 
 		/// <summary>
@@ -269,6 +271,15 @@ namespace Epsitec.Common.Dialogs
 				Placeholder placeholder = PlaceholderContext.GetInteractivePlaceholder (this.DialogWindow);
 
 				this.UpdateSearchTemplate (placeholder, value);
+			}
+		}
+
+		private void HandlePlaceholderContextDeactivated(object sender)
+		{
+			if ((PlaceholderContext.Depth == 0) &&
+				(this.dialogDataEventArgsCache != null))
+			{
+				this.OnDialogDataChanged (this.dialogDataEventArgsCache);
 			}
 		}
 
@@ -388,6 +399,8 @@ namespace Epsitec.Common.Dialogs
 						{
 							//	There is no proxy backing the current placeholder, assume that
 							//	it does not belong to a search field...
+
+							this.HandleDialogDataChanged (placeholder, value);
 						}
 						else
 						{
@@ -422,11 +435,59 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void NotifySuggestionChanged(AbstractEntity oldSuggestion, AbstractEntity newSuggestion)
+		/// <summary>
+		/// Handle changes of the dialog data based on the placeholder and the
+		/// associated value. This will call <see cref="M:OnDialogDataChanged"/>
+		/// if the data did indeed change.
+		/// </summary>
+		/// <param name="placeholder">The placeholder.</param>
+		/// <param name="value">The value.</param>
+		private void HandleDialogDataChanged(AbstractPlaceholder placeholder, object value)
+		{
+			if (value == UndefinedValue.Value)
+			{
+				//	Do nothing; this is not a real dialog data change event, but
+				//	a fake event provoked through a focus change, for instance.
+			}
+			else
+			{
+				BindingExpression bindingExpression = placeholder.ValueBindingExpression;
+				Binding           binding           = bindingExpression.ParentBinding;
+				DataSourceType    sourceType        = bindingExpression.GetSourceType ();
+
+				string path       = binding.Path;
+				string pathPrefix = string.Concat (UI.DataSource.DataName, ".");
+
+				if ((sourceType == DataSourceType.StructuredData) &&
+				(path.StartsWith (pathPrefix)))
+				{
+					EntityFieldPath fieldPath = EntityFieldPath.Parse (path.Substring (pathPrefix.Length));
+
+					object oldValue = fieldPath.NavigateRead (this.dialogData.Data);
+					object newValue = value;
+
+					if (DependencyObject.EqualObjectValues (oldValue, newValue))
+					{
+						//	Nothing to do -- exactly the same value before and after
+						//	the change (!)
+					}
+					else
+					{
+						this.OnDialogDataChanging (new DialogDataEventArgs (fieldPath, placeholder, oldValue, newValue));
+					}
+				}
+				else
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Unexpected binding: source type={0}, path={1}", sourceType, path));
+				}
+			}
+		}
+
+		private void NotifySuggestionChanged(EntityFieldPath path, AbstractEntity oldSuggestion, AbstractEntity newSuggestion)
 		{
 			if (oldSuggestion != newSuggestion)
 			{
-				this.OnSuggestionChanged (new DependencyPropertyChangedEventArgs ("Suggestion", oldSuggestion, newSuggestion));
+				this.OnSuggestionChanged (new DialogDataEventArgs (path, null, oldSuggestion, newSuggestion));
 			}
 		}
 
@@ -560,7 +621,7 @@ namespace Epsitec.Common.Dialogs
 		/// Raises the <see cref="E:SuggestionChanged"/> event.
 		/// </summary>
 		/// <param name="dependencyPropertyChangedEventArgs">The <see cref="DependencyPropertyChangedEventArgs"/> instance containing the event data.</param>
-		private void OnSuggestionChanged(DependencyPropertyChangedEventArgs e)
+		private void OnSuggestionChanged(DialogDataEventArgs e)
 		{
 			if (this.SuggestionChanged != null)
 			{
@@ -597,6 +658,32 @@ namespace Epsitec.Common.Dialogs
 				this.PlaceholderPostProcessing (sender, e);
 			}
 		}
+
+		private void OnDialogDataChanging(DialogDataEventArgs e)
+		{
+			this.dialogDataEventArgsCache = e;
+
+			System.Diagnostics.Debug.WriteLine ("DialogDataChanging: " + e.ToString ());
+			
+			if (this.DialogDataChanging != null)
+			{
+				this.DialogDataChanging (this, e);
+			}
+		}
+
+		private void OnDialogDataChanged(DialogDataEventArgs e)
+		{
+			this.dialogDataEventArgsCache = null;
+
+			System.Diagnostics.Debug.WriteLine ("DialogDataChanged: " + e.ToString ());
+			
+			if (this.DialogDataChanged != null)
+			{
+				this.DialogDataChanged (this, e);
+			}
+		}
+
+
 
 		/// <summary>
 		/// Temporarily disables the search handler.
@@ -821,6 +908,58 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			public IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root)
+			{
+				foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
+				{
+					EntityField info = DialogSearchController.GetEntityDataAndField (placeholder);
+
+					AbstractEntity entity = info.Entity;
+					string         field  = info.Field;
+
+					if ((entity == null) ||
+						(field == null))
+					{
+						continue;
+					}
+
+					IEntityProxyProvider  proxyProvider = entity;
+					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
+
+					if (proxy == null)
+					{
+						//	Are we currently working with a special full-search dialog? If so,
+						//	there won't be a proxy for the root.
+
+						if ((this.searchController.DialogData.Mode == DialogDataMode.Search) &&
+							(this.searchRootData == entity) &&
+							(this.searchRootPath.IsEmpty))
+						{
+							yield return new Node ()
+							{
+								Placeholder = placeholder,
+								Path = EntityFieldPath.CreateRelativePath (field),
+								Context = this
+							};
+						}
+					}
+					else
+					{
+						EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
+
+						if (fieldPath.StartsWith (this.searchRootPath))
+						{
+							yield return new Node ()
+							{
+								Placeholder = placeholder,
+								Path = fieldPath,
+								Context = this
+							};
+						}
+					}
+				}
+			}
+
 			public void Clear()
 			{
 				foreach (Node node in this.nodes)
@@ -1023,7 +1162,7 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.activeSuggestion = suggestion;
 
-					this.searchController.NotifySuggestionChanged (oldSuggestion, newSuggestion);
+					this.searchController.NotifySuggestionChanged (this.searchRootPath, oldSuggestion, newSuggestion);
 				}
 			}
 
@@ -1078,58 +1217,6 @@ namespace Epsitec.Common.Dialogs
 				else
 				{
 					return this.resolverResult.AllResults[pos];
-				}
-			}
-
-			private IEnumerable<Node> GetPlaceholderGraph(Widgets.Widget root)
-			{
-				foreach (AbstractPlaceholder placeholder in root.FindAllChildren (child => child is AbstractPlaceholder))
-				{
-					EntityField info = DialogSearchController.GetEntityDataAndField (placeholder);
-
-					AbstractEntity entity = info.Entity;
-					string         field  = info.Field;
-
-					if ((entity == null) ||
-						(field == null))
-					{
-						continue;
-					}
-
-					IEntityProxyProvider  proxyProvider = entity;
-					DialogData.FieldProxy proxy = proxyProvider.GetEntityProxy () as DialogData.FieldProxy;
-
-					if (proxy == null)
-					{
-						//	Are we currently working with a special full-search dialog? If so,
-						//	there won't be a proxy for the root.
-
-						if ((this.searchController.DialogData.Mode == DialogDataMode.Search) &&
-							(this.searchRootData == entity) &&
-							(this.searchRootPath.IsEmpty))
-						{
-							yield return new Node ()
-							{
-								Placeholder = placeholder,
-								Path = EntityFieldPath.CreateRelativePath (field),
-								Context = this
-							};
-						}
-					}
-					else
-					{
-						EntityFieldPath fieldPath = EntityFieldPath.CreateRelativePath (proxy.GetFieldPath (), field);
-
-						if (fieldPath.StartsWith (this.searchRootPath))
-						{
-							yield return new Node ()
-							{
-								Placeholder = placeholder,
-								Path = fieldPath,
-								Context = this
-							};
-						}
-					}
 				}
 			}
 
@@ -1248,9 +1335,12 @@ namespace Epsitec.Common.Dialogs
 		/// <summary>
 		/// Occurs when the suggestion for the active search context changed.
 		/// </summary>
-		public event EventHandler<DependencyPropertyChangedEventArgs> SuggestionChanged;
+		public event EventHandler<DialogDataEventArgs> SuggestionChanged;
 
 		public event EventHandler<Widgets.MessageEventArgs> PlaceholderPostProcessing;
+
+		public event EventHandler<DialogDataEventArgs> DialogDataChanging;
+		public event EventHandler<DialogDataEventArgs> DialogDataChanged;
 
 		/// <summary>
 		/// Occurs when the search context changed, globally. This is signalled
@@ -1279,5 +1369,6 @@ namespace Epsitec.Common.Dialogs
 		private DialogData						dialogData;
 		private Widgets.Window					dialogWindow;
 		private UI.Panel						dialogPanel;
+		private DialogDataEventArgs				dialogDataEventArgsCache;
 	}
 }

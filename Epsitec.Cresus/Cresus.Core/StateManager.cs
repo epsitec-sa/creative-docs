@@ -136,6 +136,7 @@ namespace Epsitec.Cresus.Core
 			doc.Save (writer);
 		}
 
+		
 		private void DefineCoreApplication(CoreApplication coreApplication)
 		{
 			System.Diagnostics.Debug.Assert (coreApplication != null);
@@ -143,7 +144,6 @@ namespace Epsitec.Cresus.Core
 
 			this.application = coreApplication;
 		}
-
 
 		private void OnStateStackChanged(StateStackChangedEventArgs e)
 		{
@@ -163,8 +163,10 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		
 		public event System.EventHandler<StateStackChangedEventArgs>	StackChanged;
 
+		
 		private readonly List<States.AbstractState> states;
 		private readonly List<States.AbstractState> zOrder;
 		private CoreApplication application;

@@ -358,8 +358,10 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		private void HandleSearchControllerSuggestionChanged(object sender, DependencyPropertyChangedEventArgs e)
+		private void HandleSearchControllerSuggestionChanged(object sender, DialogDataEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine ("SuggestionChanged : " + e.ToString ());
+
 			AbstractEntity suggestion = e.NewValue as AbstractEntity;
 
 #if false
