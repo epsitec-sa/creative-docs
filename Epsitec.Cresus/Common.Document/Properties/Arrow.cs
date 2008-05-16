@@ -38,6 +38,7 @@ namespace Epsitec.Common.Document.Properties
 			this.length    = new double[2];
 			this.effect1   = new double[2];
 			this.effect2   = new double[2];
+			this.initialLength = new double[2];
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -777,6 +778,32 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		public override void MoveGlobalStarting()
+		{
+			//	Début du déplacement global de la propriété.
+			if (this.document.Modifier.ActiveViewer.SelectorAdaptLine)
+			{
+				this.InsertOpletProperty();
+
+				this.initialLength[0] = this.length[0];
+				this.initialLength[1] = this.length[1];
+			}
+		}
+
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			//	Effectue le déplacement global de la propriété.
+			if (this.document.Modifier.ActiveViewer.SelectorAdaptLine)
+			{
+				double scale = selector.GetTransformScale;
+				this.length[0] = this.initialLength[0]*scale;
+				this.length[1] = this.initialLength[1]*scale;
+
+				this.document.Notifier.NotifyPropertyChanged(this);
+			}
+		}
+
+
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -812,5 +839,6 @@ namespace Epsitec.Common.Document.Properties
 		protected double[]				length;
 		protected double[]				effect1;
 		protected double[]				effect2;
+		protected double[]				initialLength;
 	}
 }

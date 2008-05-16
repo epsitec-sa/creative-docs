@@ -153,12 +153,14 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
 			this.selectorAdaptLine.CommandObject = Command.Get("SelectorAdaptLine");
 			ToolTip.Default.SetToolTip(this.selectorAdaptLine, Res.Strings.Container.Principal.Button.AdaptLine);
-			
+
+#if false	//	Les nouveaux objets texte n'y sont plus sensible !
 			this.selectorAdaptText = new IconButton(Misc.Icon("SelectorAdaptText"));
 			this.selectorAdaptText.AutoFocus = false;
 			this.selectorToolBar.Items.Add(this.selectorAdaptText);
 			this.selectorAdaptText.CommandObject = Command.Get("SelectorAdaptText");
 			ToolTip.Default.SetToolTip(this.selectorAdaptText, Res.Strings.Container.Principal.Button.AdaptText);
+#endif
 		}
 
 		protected void CreateAggregateToolBar()

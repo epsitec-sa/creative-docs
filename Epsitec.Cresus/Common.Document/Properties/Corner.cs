@@ -588,6 +588,30 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		public override void MoveGlobalStarting()
+		{
+			//	Début du déplacement global de la propriété.
+			if (this.document.Modifier.ActiveViewer.SelectorAdaptLine)
+			{
+				this.InsertOpletProperty();
+
+				this.initialRadius = this.radius;
+			}
+		}
+
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			//	Effectue le déplacement global de la propriété.
+			if (this.document.Modifier.ActiveViewer.SelectorAdaptLine)
+			{
+				double scale = selector.GetTransformScale;
+				this.radius = this.initialRadius*scale;
+
+				this.document.Notifier.NotifyPropertyChanged(this);
+			}
+		}
+
+
 		#region Serialization
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
@@ -621,6 +645,7 @@ namespace Epsitec.Common.Document.Properties
 		protected double				radius;
 		protected double				effect1;
 		protected double				effect2;
+		protected double				initialRadius;
 
 		protected Point					p1;
 		protected Point					c;
