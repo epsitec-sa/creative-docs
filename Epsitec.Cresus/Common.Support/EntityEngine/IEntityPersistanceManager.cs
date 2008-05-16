@@ -17,11 +17,10 @@ namespace Epsitec.Common.Support.EntityEngine
 		string GetPersistedId(AbstractEntity entity);
 
 		/// <summary>
-		/// Gets the peristed entity for the specified id and entity id.
+		/// Gets the peristed entity for the specified id.
 		/// </summary>
 		/// <param name="id">The id (identifies the instance).</param>
-		/// <param name="entityId">The entity id (identifies the type).</param>
 		/// <returns>The persisted entity or <c>null</c>.</returns>
-		AbstractEntity GetPeristedEntity(string id, Druid entityId);
+		AbstractEntity GetPeristedEntity(string id);
 	}
 }

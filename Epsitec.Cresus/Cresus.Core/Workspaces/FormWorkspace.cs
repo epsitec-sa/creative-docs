@@ -248,6 +248,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private void SaveState()
 		{
 			this.StateManager.Write (@"S:\state.xml", new States.CoreState[] { this.State });
+			System.Diagnostics.Debug.WriteLine ("Save done.");
 		}
 
 

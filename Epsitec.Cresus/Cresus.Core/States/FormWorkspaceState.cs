@@ -213,8 +213,8 @@ namespace Epsitec.Cresus.Core.States
 
 			foreach (XElement dataElement in element.Descendants ())
 			{
-				EntityFieldPath     path  = EntityFieldPath.Parse ((string) dataElement.Attribute ("path"));
-				StructuredTypeField field = path.NavigateReadField (data.Data);
+				EntityFieldPath     path = EntityFieldPath.Parse ((string) dataElement.Attribute ("path"));
+				StructuredTypeField field;
 				
 				object value;
 				
@@ -225,12 +225,13 @@ namespace Epsitec.Cresus.Core.States
 						break;
 
 					case "data":
+						field = path.NavigateReadField (data.Data);
 						value = (string) dataElement.Attribute ("value");
 						value = converter.ConvertBack (value, field.Type.SystemType, null, culture);
 						break;
 					
 					case "ref":
-						value = data.EntityContext.GetPeristedEntity ((string) dataElement.Attribute ("id"), field.TypeId);
+						value = data.EntityContext.GetPeristedEntity ((string) dataElement.Attribute ("id"));
 						break;
 					
 					case "collection":

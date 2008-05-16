@@ -1036,23 +1036,24 @@ namespace Epsitec.Cresus.DataLayer
 			if ((mapping != null) &&
 				(mapping.RowKey.IsEmpty == false))
 			{
+				Druid entityId  = entity.GetEntityStructuredTypeId ();
 				long  keyId     = mapping.RowKey.Id;
 				short keyStatus = DbKey.ConvertToIntStatus (mapping.RowKey.Status);
 
 				if (keyStatus == 0)
 				{
-					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}", keyId);
+					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", entityId, keyId);
 				}
 				else
 				{
-					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}", keyId, keyStatus);
+					return string.Format (System.Globalization.CultureInfo.InvariantCulture, "db:{0}:{1}:{2}", entityId, keyId, keyStatus);
 				}
 			}
 
 			return null;
 		}
 
-		public AbstractEntity GetPeristedEntity(string id, Druid entityId)
+		public AbstractEntity GetPeristedEntity(string id)
 		{
 			if (string.IsNullOrEmpty (id))
 			{
@@ -1063,21 +1064,28 @@ namespace Epsitec.Cresus.DataLayer
 				string[] args = id.Split (':');
 				DbKey    key  = DbKey.Empty;
 
+				Druid entityId = Druid.Empty;
 				long  keyId;
 				short keyStatus;
 
 				switch (args.Length)
 				{
-					case 2:
-						if (long.TryParse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId))
+					case 3:
+						entityId = Druid.Parse (args[1]);
+						
+						if ((entityId.IsValid) &&
+							(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)))
 						{
 							key = new DbKey (keyId);
 						}
 						break;
 
-					case 3:
-						if ((long.TryParse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)) &&
-							(short.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyStatus)))
+					case 4:
+						entityId = Druid.Parse (args[1]);
+
+						if ((entityId.IsValid) &&
+							(long.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyId)) &&
+							(short.TryParse (args[3], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out keyStatus)))
 						{
 							key = new DbKey (keyId, DbKey.ConvertFromIntStatus (keyStatus));
 						}

@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Core
 				return null;
 			}
 
-			public AbstractEntity GetPeristedEntity(string id, Druid entityId)
+			public AbstractEntity GetPeristedEntity(string id)
 			{
 				AbstractEntity entity;
 

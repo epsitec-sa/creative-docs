@@ -193,11 +193,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="id">The id (identifies the instance).</param>
 		/// <param name="entityId">The entity id (identifies the type).</param>
 		/// <returns>The persisted entity or <c>null</c>.</returns>
-		public AbstractEntity GetPeristedEntity(string id, Druid entityId)
+		public AbstractEntity GetPeristedEntity(string id)
 		{
 			foreach (var manager in this.persistanceManagers)
 			{
-				AbstractEntity entity = manager.GetPeristedEntity (id, entityId);
+				AbstractEntity entity = manager.GetPeristedEntity (id);
 
 				if (entity != null)
 				{
