@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 		public RibbonPage(RibbonBook book)
 			: this ()
 		{
-			book.Items.Add (this);
+			book.Pages.Add (this);
 		}
 
 

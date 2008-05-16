@@ -6,11 +6,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for RibbonBook.
 	/// </summary>
-	public class RibbonBook : AbstractGroup, Collections.IWidgetCollectionHost<RibbonPage>
+	public class RibbonBook : AbstractGroup, Collections.IWidgetCollectionHost<RibbonPage>, Collections.IWidgetCollectionHost<Button>
 	{
 		public RibbonBook()
 		{
-			this.items = new RibbonPageCollection(this);
+			this.pageItems = new RibbonPageCollection(this);
+			this.buttonItems = new ButtonCollection (this);
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
 
@@ -48,26 +49,39 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				Widget[] pages = new Widget[this.items.Count];
-				this.items.CopyTo(pages, 0);
+				RibbonPage[] pages = this.Pages.ToArray ();
+				Button[] buttons = this.Buttons.ToArray ();
 				
-				for (int i=0; i<pages.Length; i++)
+				foreach (RibbonPage page in pages)
 				{
-					pages[i].Dispose();
+					page.Dispose();
+				}
+				foreach (Button button in buttons)
+				{
+					button.Dispose ();
 				}
 				
-				this.items = null;
+				this.pageItems = null;
+				this.buttonItems = null;
 			}
 			
 			base.Dispose(disposing);
 		}
 
-		
-		public RibbonPageCollection			Items
+
+		public ButtonCollection				Buttons
 		{
 			get
 			{
-				return this.items;
+				return this.buttonItems;
+			}
+		}
+		
+		public RibbonPageCollection			Pages
+		{
+			get
+			{
+				return this.pageItems;
 			}
 		}
 
@@ -80,7 +94,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				RibbonPage page = ((value >= 0) && (value < this.PageCount)) ? this.Items[value] : null;
+				RibbonPage page = ((value >= 0) && (value < this.PageCount)) ? this.Pages[value] : null;
 				this.ActivePage = page;
 			}
 		}
@@ -108,25 +122,25 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.items.Count;
+				return this.pageItems.Count;
 			}
 		}
 		
 		
 		public void Clear()
 		{
-			this.items.Clear();
+			this.pageItems.Clear();
 		}
 
 
 		public RibbonPage FindPage(int index)
 		{
-			return this.items[index] as RibbonPage;
+			return this.pageItems[index] as RibbonPage;
 		}
 
 		public int FindPage(RibbonPage page)
 		{
-			return this.items.IndexOf(page);
+			return this.pageItems.IndexOf(page);
 		}
 
 
@@ -136,7 +150,7 @@ namespace Epsitec.Common.Widgets
 			if ( !(sender is RibbonButton) )  return;
 			RibbonButton button = sender as RibbonButton;
 
-			foreach (Widget widget in this.items)
+			foreach (Widget widget in this.pageItems)
 			{
 				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
@@ -166,7 +180,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateVisiblePages()
 		{
 			//	Met à jour la page visible. Toutes les autres sont cachées.
-			foreach (Widget widget in this.items)
+			foreach (Widget widget in this.pageItems)
 			{
 				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
@@ -296,20 +310,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		#region IWidgetCollectionHost Members
-		
-		Collections.WidgetCollection<RibbonPage> Collections.IWidgetCollectionHost<RibbonPage>.GetWidgetCollection()
-		{
-			return this.Items;
-		}
-		
-		public void NotifyInsertion(RibbonPage item)
+		#region IWidgetCollectionHost<RibbonPage> Members
+
+		void Collections.IWidgetCollectionHost<RibbonPage>.NotifyInsertion(RibbonPage item)
 		{
 			//	Si la page à insérer est dans un autre book, on l'y enlève.
 			RibbonBook oldBook = item.Book;
 			if (oldBook != null && oldBook != this)
 			{
-				oldBook.items.Remove(item);
+				oldBook.pageItems.Remove(item);
 			}
 
 			item.SetEmbedder(this.pages);
@@ -320,11 +329,23 @@ namespace Epsitec.Common.Widgets
 			item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
 			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
 
+			if (this.buttonItems.Count > 0)
+			{
+				//	Make sure that all button items are inserted after the last
+				//	ribbon header button :
+
+				foreach (Button button in this.buttonItems)
+				{
+					button.SetEmbedder (null);
+					button.SetEmbedder (this.buttons);
+				}
+			}
+
 			this.UpdateVisiblePages();
 			this.OnPageCountChanged();
 		}
 
-		public void NotifyRemoval(RibbonPage item)
+		void Collections.IWidgetCollectionHost<RibbonPage>.NotifyRemoval(RibbonPage item)
 		{
 			int index = item.Index;
 
@@ -347,10 +368,40 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void NotifyPostRemoval(RibbonPage item)
+		void Collections.IWidgetCollectionHost<RibbonPage>.NotifyPostRemoval(RibbonPage item)
 		{
 			this.UpdateVisiblePages ();
 			this.OnPageCountChanged ();
+		}
+
+		Collections.WidgetCollection<RibbonPage> Collections.IWidgetCollectionHost<RibbonPage>.GetWidgetCollection()
+		{
+			return this.Pages;
+		}
+
+		#endregion
+
+		#region IWidgetCollectionHost<Button> Members
+
+		void Collections.IWidgetCollectionHost<Button>.NotifyInsertion(Button widget)
+		{
+			widget.SetEmbedder (this.buttons);
+			widget.Margins = new Margins (0, 0, 2, 2);
+			widget.Dock = DockStyle.Left;
+		}
+
+		void Collections.IWidgetCollectionHost<Button>.NotifyRemoval(Button widget)
+		{
+			this.buttons.Children.Remove (widget);
+		}
+
+		void Collections.IWidgetCollectionHost<Button>.NotifyPostRemoval(Button widget)
+		{
+		}
+
+		Collections.WidgetCollection<Button> Collections.IWidgetCollectionHost<Button>.GetWidgetCollection()
+		{
+			return this.buttonItems;
 		}
 
 		#endregion
@@ -372,6 +423,24 @@ namespace Epsitec.Common.Widgets
 		public class RibbonPageCollection : Collections.WidgetCollection<RibbonPage>
 		{
 			public RibbonPageCollection(RibbonBook book) : base(book)
+			{
+			}
+
+			public override bool AutoEmbedding
+			{
+				get
+				{
+					return false;
+				}
+			}
+		}
+		#endregion
+
+		#region ButtonCollection Class
+		public class ButtonCollection : Collections.WidgetCollection<Button>
+		{
+			public ButtonCollection(RibbonBook book)
+				: base (book)
 			{
 			}
 
@@ -415,7 +484,8 @@ namespace Epsitec.Common.Widgets
 
 		protected Widget					buttons;
 		protected Widget					pages;
-		protected RibbonPageCollection		items;
+		protected RibbonPageCollection		pageItems;
+		protected ButtonCollection			buttonItems;
 		protected RibbonPage				activePage;
 	}
 }

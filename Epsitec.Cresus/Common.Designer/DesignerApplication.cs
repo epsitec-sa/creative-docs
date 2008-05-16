@@ -216,7 +216,7 @@ namespace Epsitec.Common.Designer
 			//	Crée le ruban principal.
 			this.ribbonMain = new RibbonPage();
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
-			this.ribbonBook.Items.Add(this.ribbonMain);
+			this.ribbonBook.Pages.Add(this.ribbonMain);
 
 			this.ribbonMain.Items.Add(new Ribbons.Identity(this));
 			this.ribbonMain.Items.Add(new Ribbons.File(this));
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Designer
 			//	Crée le ruban des opérations.
 			this.ribbonOper = new RibbonPage();
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
-			this.ribbonBook.Items.Add(this.ribbonOper);
+			this.ribbonBook.Pages.Add(this.ribbonOper);
 
 			this.ribbonOper.Items.Add(new Ribbons.Culture(this));
 			this.ribbonOper.Items.Add(new Ribbons.Character(this));
@@ -1564,7 +1564,7 @@ namespace Epsitec.Common.Designer
 			start += total/2;  if ( start > all-1 )  start = all-1;
 			start -= total-1;  if ( start < 0     )  start = 0;
 
-			List<Widget> list = new List<Widget>();
+			List<MenuItem> list = new List<MenuItem>();
 
 			//	Met éventuellement la première localisation où aller.
 			if (start > 0)
@@ -1620,15 +1620,12 @@ namespace Epsitec.Common.Designer
 
 			//	Génère le menu.
 			VMenu menu = new VMenu();
-			for (int i=0; i<list.Count; i++)
-			{
-				menu.Items.Add(list[i]);
-			}
+			menu.Items.AddRange (list);
 			menu.AdjustSize();
 			return menu;
 		}
 
-		protected void LocatorCreateMenu(List<Widget> list, MessageEventHandler message, string icon, int rank, string action)
+		protected void LocatorCreateMenu(List<MenuItem> list, MessageEventHandler message, string icon, int rank, string action)
 		{
 			//	Crée une case du menu des localisations.
 			if (icon != "")

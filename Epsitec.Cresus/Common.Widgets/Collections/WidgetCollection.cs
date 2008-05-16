@@ -61,6 +61,10 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
+		public T[] ToArray()
+		{
+			return this.list.ToArray ();
+		}
 
 		#region IList<T> Members
 
@@ -143,7 +147,7 @@ namespace Epsitec.Common.Widgets.Collections
 		#endregion
 		
 		#region IList Members
-		
+
 		public bool IsReadOnly
 		{
 			get
@@ -172,20 +176,20 @@ namespace Epsitec.Common.Widgets.Collections
 			this.HandlePostRemove (item);
 		}
 
-		public void Insert(int index, object value)
+		void System.Collections.IList.Insert(int index, object value)
 		{
 			this.list.Insert (index, value as T);
 			this.HandleInsert (value as T);
 		}
 
-		public void Remove(object value)
+		void System.Collections.IList.Remove(object value)
 		{
 			this.HandleRemove (value as T);
 			this.list.Remove (value as T);
 			this.HandlePostRemove (value as T);
 		}
 
-		public bool Contains(object value)
+		bool System.Collections.IList.Contains(object value)
 		{
 			return this.list.Contains (value as T);
 		}
@@ -207,12 +211,12 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		public int IndexOf(object value)
+		int System.Collections.IList.IndexOf(object value)
 		{
 			return this.list.IndexOf (value as T);
 		}
 
-		public int Add(object value)
+		int System.Collections.IList.Add(object value)
 		{
 			T item = value as T;
 			
@@ -231,7 +235,7 @@ namespace Epsitec.Common.Widgets.Collections
 			return index;
 		}
 
-		public bool IsFixedSize
+		bool System.Collections.IList.IsFixedSize
 		{
 			get
 			{
@@ -242,7 +246,8 @@ namespace Epsitec.Common.Widgets.Collections
 		#endregion
 		
 		#region ICollection Members
-		public bool IsSynchronized
+
+		bool System.Collections.ICollection.IsSynchronized
 		{
 			get
 			{
@@ -258,13 +263,13 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		public void CopyTo(System.Array array, int index)
+		void System.Collections.ICollection.CopyTo(System.Array array, int index)
 		{
 			System.Collections.IList list = this.list;
 			list.CopyTo (array, index);
 		}
 
-		public object SyncRoot
+		object System.Collections.ICollection.SyncRoot
 		{
 			get
 			{
@@ -276,10 +281,12 @@ namespace Epsitec.Common.Widgets.Collections
 		#endregion
 		
 		#region IEnumerable Members
-		public System.Collections.IEnumerator GetEnumerator()
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.list.GetEnumerator ();
 		}
+		
 		#endregion
 		
 		protected void HandleInsert(T item)

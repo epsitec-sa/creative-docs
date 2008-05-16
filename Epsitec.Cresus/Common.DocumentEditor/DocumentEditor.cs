@@ -374,22 +374,22 @@ namespace Epsitec.Common.DocumentEditor
 			this.ribbonMain = new RibbonPage();
 			this.ribbonMain.Name = "Main";
 			this.ribbonMain.RibbonTitle = Res.Strings.Ribbon.Main;
-			this.ribbonBook.Items.Add(this.ribbonMain);
+			this.ribbonBook.Pages.Add(this.ribbonMain);
 
 			this.ribbonGeom = new RibbonPage();
 			this.ribbonGeom.Name = "Geom";
 			this.ribbonGeom.RibbonTitle = Res.Strings.Ribbon.Geom;
-			this.ribbonBook.Items.Add(this.ribbonGeom);
+			this.ribbonBook.Pages.Add(this.ribbonGeom);
 
 			this.ribbonOper = new RibbonPage();
 			this.ribbonOper.Name = "Oper";
 			this.ribbonOper.RibbonTitle = Res.Strings.Ribbon.Oper;
-			this.ribbonBook.Items.Add(this.ribbonOper);
+			this.ribbonBook.Pages.Add(this.ribbonOper);
 
 			this.ribbonText = new RibbonPage();
 			this.ribbonText.Name = "Text";
 			this.ribbonText.RibbonTitle = Res.Strings.Ribbon.Text;
-			this.ribbonBook.Items.Add(this.ribbonText);
+			this.ribbonBook.Pages.Add(this.ribbonText);
 
 			//	Peuble les pages des rubans par les sections.
 			this.ribbonMain.Items.Add(new Ribbons.File());
@@ -549,7 +549,7 @@ namespace Epsitec.Common.DocumentEditor
 		{
 			//	Met à jour toutes les icônes de la partie rapide, à droite des choix du ruban actif.
 			//	Supprime tous les IconButtons.
-			foreach ( Widget widget in this.ribbonBook.Items )
+			foreach ( Widget widget in this.ribbonBook.Pages )
 			{
 				if ( widget is RibbonPage )  continue;
 				widget.Dispose();
@@ -1071,7 +1071,7 @@ namespace Epsitec.Common.DocumentEditor
 		protected void RibbonsNotifyChanged(string changed)
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (Widget widget in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Pages)
 			{
 				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
@@ -1086,7 +1086,7 @@ namespace Epsitec.Common.DocumentEditor
 		protected void RibbonsNotifyTextStylesChanged(System.Collections.ArrayList textStyleList)
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (Widget widget in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Pages)
 			{
 				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
@@ -1101,7 +1101,7 @@ namespace Epsitec.Common.DocumentEditor
 		protected void RibbonsNotifyTextStylesChanged()
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (Widget widget in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Pages)
 			{
 				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
@@ -1116,7 +1116,7 @@ namespace Epsitec.Common.DocumentEditor
 		protected void RibbonsSetDocument(DocumentType type, InstallType install, DebugMode debugMode, Settings.GlobalSettings gs, Document document)
 		{
 			//	Passe en revue toutes les sections de toutes les pages.
-			foreach (Widget widget in this.ribbonBook.Items)
+			foreach (Widget widget in this.ribbonBook.Pages)
 			{
 				RibbonPage page = widget as RibbonPage;
 				if (page == null)  continue;
@@ -1135,13 +1135,13 @@ namespace Epsitec.Common.DocumentEditor
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = true;
-				this.ribbonBook.Items.Add(sep);
+				this.ribbonBook.Buttons.Add(sep);
 				return sep;
 			}
 			else
 			{
 				IconButton button = new IconButton(command);
-				this.ribbonBook.Items.Add(button);
+				this.ribbonBook.Buttons.Add(button);
 				ToolTip.Default.SetToolTip(button, command.GetDescriptionWithShortcut());
 				return button;
 			}

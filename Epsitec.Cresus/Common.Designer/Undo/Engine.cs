@@ -142,7 +142,7 @@ namespace Epsitec.Common.Designer.Undo
 			start += total-1;
 			if (start > all-1)  start = all-1;
 
-			List<Widget> list = new List<Widget>();
+			List<MenuItem> list = new List<MenuItem>();
 
 			//	Met éventuellement la dernière photographie à refaire.
 			if (start < all-1)
@@ -199,12 +199,7 @@ namespace Epsitec.Common.Designer.Undo
 			//	Génère le menu à l'envers, c'est-à-dire la première photographie au
 			//	début du menu (en haut).
 			VMenu menu = new VMenu();
-
-			for (int i=list.Count-1; i>=0; i--)
-			{
-				menu.Items.Add(list[i]);
-			}
-
+			menu.Items.AddRange (list);
 			menu.AdjustSize();
 			return menu;
 		}

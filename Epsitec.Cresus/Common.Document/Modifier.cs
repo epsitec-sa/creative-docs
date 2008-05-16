@@ -2368,7 +2368,7 @@ namespace Epsitec.Common.Document
 			start -= total/2;  if ( start < 0     )  start = 0;
 			start += total-1;  if ( start > all-1 )  start = all-1;
 
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			List<MenuItem> list = new List<MenuItem> ();
 
 			//	Met éventuellement la dernière action à refaire.
 			if ( start < all-1 )
@@ -2437,7 +2437,7 @@ namespace Epsitec.Common.Document
 			return menu;
 		}
 
-		protected void CreateUndoRedoMenu(System.Collections.ArrayList list, MessageEventHandler message,
+		protected void CreateUndoRedoMenu(List<MenuItem> list, MessageEventHandler message,
 										  int active, int rank, string action, int todo)
 		{
 			//	Crée une case du menu des actions à refaire/annuler.

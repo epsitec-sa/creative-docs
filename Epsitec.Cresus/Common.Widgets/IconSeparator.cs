@@ -4,7 +4,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe IconSeparator permet de dessiner des séparations utiles
 	/// pour remplir une ToolBar.
 	/// </summary>
-	public class IconSeparator : Widget
+	public class IconSeparator : Button
 	{
 		public IconSeparator()
 		{

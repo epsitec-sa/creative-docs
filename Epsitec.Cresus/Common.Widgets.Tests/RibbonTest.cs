@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets
 			page1.RibbonTitle = "Principal";
 			page1.TabIndex = 1;
 			page1.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
-			book.Items.Add(page1);
+			book.Pages.Add(page1);
 
 			RibbonSection p1s1 = new RibbonSection();
 			p1s1.Title = "Rouge";
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Widgets
 			page2.RibbonTitle = "Edition";
 			page2.TabIndex = 2;
 			page2.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
-			book.Items.Add(page2);
+			book.Pages.Add(page2);
 
 			RibbonSection p2s1 = new RibbonSection();
 			p2s1.Title = "Lausanne";
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Widgets
 			page3.RibbonTitle = "Edition";
 			page3.TabIndex = 2;
 			page3.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
-			book.Items.Add(page3);
+			book.Pages.Add(page3);
 
 			RibbonSection p3s1 = new RibbonSection();
 			p3s1.Title = "Lundi";
