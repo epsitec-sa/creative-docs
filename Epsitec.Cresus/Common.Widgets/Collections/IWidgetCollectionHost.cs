@@ -7,12 +7,12 @@ namespace Epsitec.Common.Widgets.Collections
 	/// L'interface IWidgetCollectionHost permet d'offrir le support pour
 	/// la classe WidgetCollection.
 	/// </summary>
-	public interface IWidgetCollectionHost
+	public interface IWidgetCollectionHost<T> where T : Widget
 	{
-		void NotifyInsertion(Widget widget);
-		void NotifyRemoval(Widget widget);
-		void NotifyPostRemoval(Widget widget);
+		void NotifyInsertion(T widget);
+		void NotifyRemoval(T widget);
+		void NotifyPostRemoval(T widget);
 		
-		WidgetCollection GetWidgetCollection();
+		WidgetCollection<T> GetWidgetCollection();
 	}
 }

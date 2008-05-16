@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for TabBook.
 	/// </summary>
-	public class TabBook : AbstractGroup, Collections.IWidgetCollectionHost
+	public class TabBook : AbstractGroup, Collections.IWidgetCollectionHost<TabPage>
 	{
 		public TabBook()
 		{
@@ -816,14 +816,13 @@ namespace Epsitec.Common.Widgets
 
 		
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection<TabPage> Collections.IWidgetCollectionHost<TabPage>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
 		
-		public void NotifyInsertion(Widget widget)
+		public void NotifyInsertion(TabPage item)
 		{
-			TabPage item    = widget as TabPage;
 			TabBook oldBook = item.Book;
 			
 			if ((oldBook != null) &&
@@ -847,10 +846,9 @@ namespace Epsitec.Common.Widgets
 			this.OnPageCountChanged();
 		}
 
-		public void NotifyRemoval(Widget widget)
+		public void NotifyRemoval(TabPage item)
 		{
-			TabPage item  = widget as TabPage;
-			int     index = item.Index;
+			int index = item.Index;
 
 			item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
@@ -872,7 +870,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void NotifyPostRemoval(Widget widget)
+		public void NotifyPostRemoval(TabPage item)
 		{
 			this.UpdateVisiblePages();
 			this.UpdateButtons();
@@ -894,26 +892,10 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region TabPageCollection Class
-		public class TabPageCollection : Collections.WidgetCollection
+		public class TabPageCollection : Collections.WidgetCollection<TabPage>
 		{
 			public TabPageCollection(TabBook book) : base(book)
 			{
-			}
-			
-			public new TabPage this[int index]
-			{
-				get
-				{
-					return base[index] as TabPage;
-				}
-			}
-			
-			public new TabPage this[string name]
-			{
-				get
-				{
-					return base[name] as TabPage;
-				}
 			}
 		}
 		#endregion

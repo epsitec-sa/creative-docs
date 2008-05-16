@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe RibbonPage représente une page du RibbonBook.
 	/// </summary>
-	public class RibbonPage : AbstractGroup, Collections.IWidgetCollectionHost
+	public class RibbonPage : AbstractGroup, Collections.IWidgetCollectionHost<RibbonSection>
 	{
 		public RibbonPage()
 		{
@@ -119,54 +119,34 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection<RibbonSection> Collections.IWidgetCollectionHost<RibbonSection>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
 
-		public void NotifyInsertion(Widget widget)
+		public void NotifyInsertion(RibbonSection item)
 		{
-			RibbonSection item = widget as RibbonSection;
-
 			item.SetEmbedder(this);
 			item.Margins = new Margins(0, 2, 0, 0);
 			item.Dock = DockStyle.Left;
 		}
 
-		public void NotifyRemoval(Widget widget)
+		public void NotifyRemoval(RibbonSection item)
 		{
-			RibbonSection item = widget as RibbonSection;
-
 			this.Children.Remove(item);
 		}
 
-		public void NotifyPostRemoval(Widget widget)
+		public void NotifyPostRemoval(RibbonSection item)
 		{
 		}
 		#endregion
 
 		#region RibbonSectionCollection Class
-		public class RibbonSectionCollection : Collections.WidgetCollection
+		public class RibbonSectionCollection : Collections.WidgetCollection<RibbonSection>
 		{
 			public RibbonSectionCollection(RibbonPage page) : base(page)
 			{
 				this.AutoEmbedding = true;
-			}
-
-			public new RibbonSection this[int index]
-			{
-				get
-				{
-					return base[index] as RibbonSection;
-				}
-			}
-
-			public new RibbonSection this[string name]
-			{
-				get
-				{
-					return base[name] as RibbonSection;
-				}
 			}
 		}
 		#endregion

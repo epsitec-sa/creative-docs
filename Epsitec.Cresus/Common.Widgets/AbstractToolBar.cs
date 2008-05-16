@@ -5,18 +5,18 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe AbstractToolBar implémente ce qui est commun à HToolBar et à VToolBar.
 	/// </summary>
-	public abstract class AbstractToolBar : Widget, Collections.IWidgetCollectionHost
+	public abstract class AbstractToolBar : Widget, Collections.IWidgetCollectionHost<Widget>
 	{
 		public AbstractToolBar()
 		{
 			this.iconDockStyle = this.DefaultIconDockStyle;
 			
-			this.items = new Collections.WidgetCollection (this);
+			this.items = new Collections.WidgetCollection<Widget> (this);
 			this.items.AutoEmbedding = true;
 		}
 		
 		
-		public Collections.WidgetCollection	Items
+		public Collections.WidgetCollection<Widget>	Items
 		{
 			get { return this.items; }
 		}
@@ -63,7 +63,6 @@ namespace Epsitec.Common.Widgets
 					items[i].Dispose();
 				}
 				
-				this.items.Dispose ();
 				this.items = null;
 			}
 			
@@ -81,7 +80,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection<Widget> Collections.IWidgetCollectionHost<Widget>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -133,6 +132,6 @@ namespace Epsitec.Common.Widgets
 		
 		private DockStyle					iconDockStyle;
 		protected Direction					direction;
-		protected Collections.WidgetCollection	items;
+		protected Collections.WidgetCollection<Widget>	items;
 	}
 }

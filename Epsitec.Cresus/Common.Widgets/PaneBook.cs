@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for PaneBook.
 	/// </summary>
-	public class PaneBook : AbstractGroup, Collections.IWidgetCollectionHost
+	public class PaneBook : AbstractGroup, Collections.IWidgetCollectionHost<PanePage>
 	{
 		public PaneBook()
 		{
@@ -780,15 +780,13 @@ namespace Epsitec.Common.Widgets
 
 
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection<PanePage> Collections.IWidgetCollectionHost<PanePage>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
 		
-		public void NotifyInsertion(Widget widget)
+		public void NotifyInsertion(PanePage item)
 		{
-			PanePage item = widget as PanePage;
-
 			PaneBook oldBook = item.Book;
 			
 			if ((oldBook != null) &&
@@ -817,10 +815,8 @@ namespace Epsitec.Common.Widgets
 			this.UpdatePaneButtons();
 		}
 
-		public void NotifyRemoval(Widget widget)
+		public void NotifyRemoval(PanePage item)
 		{
-			PanePage item = widget as PanePage;
-
 			item.PaneButton.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
@@ -833,32 +829,16 @@ namespace Epsitec.Common.Widgets
 			this.UpdatePaneButtons();
 		}
 		
-		public void NotifyPostRemoval(Widget widget)
+		public void NotifyPostRemoval(PanePage item)
 		{
 		}
 		#endregion
 
 		#region PanePageCollection Class
-		public class PanePageCollection : Collections.WidgetCollection
+		public class PanePageCollection : Collections.WidgetCollection<PanePage>
 		{
 			public PanePageCollection(PaneBook book) : base(book)
 			{
-			}
-			
-			public new PanePage this[int index]
-			{
-				get
-				{
-					return base[index] as PanePage;
-				}
-			}
-			
-			public new PanePage this[string name]
-			{
-				get
-				{
-					return base[name] as PanePage;
-				}
 			}
 		}
 		#endregion

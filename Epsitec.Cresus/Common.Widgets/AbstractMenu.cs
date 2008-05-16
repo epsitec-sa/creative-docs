@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Menu représente un menu (horizontal ou vertical).
 	/// </summary>
-	public abstract class AbstractMenu : Widget, Collections.IWidgetCollectionHost
+	public abstract class AbstractMenu : Widget, Collections.IWidgetCollectionHost<MenuItem>
 	{
 		protected AbstractMenu()
 		{
@@ -307,8 +307,6 @@ namespace Epsitec.Common.Widgets
 					{
 						item.Dispose();
 					}
-					
-					this.items.Dispose();
 				}
 				
 				this.DisconnectEventHandlers ();
@@ -510,15 +508,13 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection<MenuItem> Collections.IWidgetCollectionHost<MenuItem>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
 		
-		public void NotifyInsertion(Widget widget)
+		public void NotifyInsertion(MenuItem item)
 		{
-			MenuItem item = widget as MenuItem;
-			
 			item.PreferredSize = item.GetBestFitSize ();
 			item.DefineMenuOrientation (this.MenuOrientation);
 			
@@ -537,43 +533,25 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 		}
-		
-		public void NotifyRemoval(Widget widget)
+
+		public void NotifyRemoval(MenuItem item)
 		{
-			MenuItem item = widget as MenuItem;
-			
 			item.DefineMenuOrientation (MenuOrientation.Undefined);
 			
 			this.Children.Remove (item);
 		}
-		
-		public void NotifyPostRemoval(Widget widget)
+
+		public void NotifyPostRemoval(MenuItem item)
 		{
 		}
 		#endregion
 		
 		#region MenuItemCollection Class
 		
-		public class MenuItemCollection : Collections.WidgetCollection
+		public class MenuItemCollection : Collections.WidgetCollection<MenuItem>
 		{
 			public MenuItemCollection(AbstractMenu menu) : base (menu)
 			{
-			}
-			
-			public new MenuItem this[int index]
-			{
-				get
-				{
-					return base[index] as MenuItem;
-				}
-			}
-			
-			public new MenuItem this[string name]
-			{
-				get
-				{
-					return base[name] as MenuItem;
-				}
 			}
 
 			public void AddItem(Command commandObject)

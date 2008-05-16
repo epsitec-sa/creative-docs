@@ -3,11 +3,11 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe StatusBar représente une barre de statuts en bas d'une fenêtre.
 	/// </summary>
-	public class StatusBar : Widget, Collections.IWidgetCollectionHost
+	public class StatusBar : Widget, Collections.IWidgetCollectionHost<Widget>
 	{
 		public StatusBar()
 		{
-			this.items = new Collections.WidgetCollection(this);
+			this.items = new Collections.WidgetCollection<Widget> (this);
 			this.items.AutoEmbedding = true;
 
 			this.Padding = new Drawing.Margins(1, 1, 2, 1);
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 			Visual.PreferredHeightProperty.OverrideMetadata (typeof (StatusBar), metadataDy);
 		}
 
-		public Collections.WidgetCollection		Items
+		public Collections.WidgetCollection<Widget>		Items
 		{
 			get { return this.items; }
 		}
@@ -46,7 +46,6 @@ namespace Epsitec.Common.Widgets
 					item.Dispose();
 				}
 				
-				this.items.Dispose();
 				this.items = null;
 			}
 			
@@ -64,7 +63,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		Collections.WidgetCollection<Widget> Collections.IWidgetCollectionHost<Widget>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
@@ -86,6 +85,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected Collections.WidgetCollection	items;
+		protected Collections.WidgetCollection<Widget>	items;
 	}
 }

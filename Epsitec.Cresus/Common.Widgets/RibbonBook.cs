@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for RibbonBook.
 	/// </summary>
-	public class RibbonBook : AbstractGroup, Collections.IWidgetCollectionHost
+	public class RibbonBook : AbstractGroup, Collections.IWidgetCollectionHost<RibbonPage>
 	{
 		public RibbonBook()
 		{
@@ -297,82 +297,62 @@ namespace Epsitec.Common.Widgets
 
 
 		#region IWidgetCollectionHost Members
-		Collections.WidgetCollection Collections.IWidgetCollectionHost.GetWidgetCollection()
+		
+		Collections.WidgetCollection<RibbonPage> Collections.IWidgetCollectionHost<RibbonPage>.GetWidgetCollection()
 		{
 			return this.Items;
 		}
 		
-		public void NotifyInsertion(Widget widget)
+		public void NotifyInsertion(RibbonPage item)
 		{
-			RibbonPage item = widget as RibbonPage;
-			if (item == null)
+			//	Si la page à insérer est dans un autre book, on l'y enlève.
+			RibbonBook oldBook = item.Book;
+			if (oldBook != null && oldBook != this)
 			{
-				widget.SetEmbedder(this.buttons);
-				widget.Margins = new Margins(0, 0, 2, 2);
-				widget.Dock = DockStyle.Left;
+				oldBook.items.Remove(item);
 			}
-			else
+
+			item.SetEmbedder(this.pages);
+			item.Dock = DockStyle.Fill;
+
+			item.RibbonButton.SetEmbedder(this.buttons);
+			item.RibbonButton.Dock = DockStyle.Left;
+			item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
+			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
+
+			this.UpdateVisiblePages();
+			this.OnPageCountChanged();
+		}
+
+		public void NotifyRemoval(RibbonPage item)
+		{
+			int index = item.Index;
+
+			item.RibbonButton.Pressed -= new MessageEventHandler(this.HandleRibbonButton);
+			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
+
+			this.pages.Children.Remove(item);
+			this.buttons.Children.Remove(item.RibbonButton);
+
+			if (this.ActivePage == item)
 			{
-				//	Si la page à insérer est dans un autre book, on l'y enlève.
-				RibbonBook oldBook = item.Book;
-				if (oldBook != null && oldBook != this)
+				int n = this.PageCount - 1;
+
+				if (index >= n)
 				{
-					oldBook.items.Remove(item);
+					index = n - 1;
 				}
 
-				item.SetEmbedder(this.pages);
-				item.Dock = DockStyle.Fill;
-
-				item.RibbonButton.SetEmbedder(this.buttons);
-				item.RibbonButton.Dock = DockStyle.Left;
-				item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
-				item.RankChanged += new EventHandler(this.HandlePageRankChanged);
-
-				this.UpdateVisiblePages();
-				this.OnPageCountChanged();
+				this.ActivePageIndex = index;
 			}
 		}
 
-		public void NotifyRemoval(Widget widget)
+		public void NotifyPostRemoval(RibbonPage item)
 		{
-			RibbonPage item = widget as RibbonPage;
-			if (item == null)
-			{
-				this.buttons.Children.Remove(widget);
-			}
-			else
-			{
-				int index = item.Index;
-
-				item.RibbonButton.Pressed -= new MessageEventHandler(this.HandleRibbonButton);
-				item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
-
-				this.pages.Children.Remove(item);
-				this.buttons.Children.Remove(item.RibbonButton);
-
-				if (this.ActivePage == item)
-				{
-					int n = this.PageCount - 1;
-
-					if (index >= n)
-					{
-						index = n - 1;
-					}
-
-					this.ActivePageIndex = index;
-				}
-			}
+			this.UpdateVisiblePages ();
+			this.OnPageCountChanged ();
 		}
-		
-		public void NotifyPostRemoval(Widget widget)
-		{
-			RibbonPage item = widget as RibbonPage;
-			if (item != null)
-			{
-				this.UpdateVisiblePages();
-				this.OnPageCountChanged();
-			}
-		}
+
 		#endregion
 
 		#region RibbonComparer class
@@ -389,27 +369,11 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		#region RibbonPageCollection Class
-		public class RibbonPageCollection : Collections.WidgetCollection
+		public class RibbonPageCollection : Collections.WidgetCollection<RibbonPage>
 		{
 			public RibbonPageCollection(RibbonBook book) : base(book)
 			{
 				this.AutoEmbedding = false;
-			}
-
-			public new RibbonPage this[int index]
-			{
-				get
-				{
-					return base[index] as RibbonPage;
-				}
-			}
-
-			public new RibbonPage this[string name]
-			{
-				get
-				{
-					return base[name] as RibbonPage;
-				}
 			}
 		}
 		#endregion

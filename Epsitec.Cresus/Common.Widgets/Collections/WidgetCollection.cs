@@ -1,30 +1,32 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Widgets.Collections
 {
-	public class WidgetCollection : System.Collections.IList, System.IDisposable
+	public class WidgetCollection<T> : System.Collections.IList where T : Widget
 	{
-		public WidgetCollection(IWidgetCollectionHost host)
+		public WidgetCollection(IWidgetCollectionHost<T> host)
 		{
 			this.host = host;
-			this.list = new System.Collections.ArrayList ();
+			this.list = new List<T> ();
 		}
 		
 		
-		public Widget							this[int index]
+		public T								this[int index]
 		{
 			get
 			{
-				return this.list[index] as Widget;
+				return this.list[index];
 			}
 		}
 		
-		public Widget							this[string name]
+		public T								this[string name]
 		{
 			get
 			{
-				foreach (Widget item in this.list)
+				foreach (T item in this.list)
 				{
 					if (item.Name == name)
 					{
@@ -48,26 +50,18 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		
 		
-		public void AddRange(Widget[] widgets)
+		public void AddRange(IEnumerable<T> widgets)
 		{
 			this.list.AddRange (widgets);
 			
-			foreach (Widget widget in widgets)
+			foreach (T widget in widgets)
 			{
 				this.HandleInsert (widget);
 			}
 		}
 		
-		public void Dispose()
-		{
-			System.Diagnostics.Debug.Assert (this.list.Count == 0);
-			
-			this.host = null;
-			this.list = null;
-		}
-		
-		
 		#region IList Members
+		
 		public bool IsReadOnly
 		{
 			get
@@ -84,13 +78,13 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			set
 			{
-				this.list[index] = value;
+				this.list[index] = value as T;
 			}
 		}
 
 		public void RemoveAt(int index)
 		{
-			Widget item = this.list[index] as Widget;
+			T item = this.list[index] as T;
 			this.HandleRemove (item);
 			this.list.RemoveAt (index);
 			this.HandlePostRemove (item);
@@ -98,26 +92,25 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void Insert(int index, object value)
 		{
-			this.list.Insert (index, value);
-			this.HandleInsert (value as Widget);
+			this.list.Insert (index, value as T);
+			this.HandleInsert (value as T);
 		}
 
 		public void Remove(object value)
 		{
-			this.HandleRemove (value as Widget);
-			this.list.Remove (value);
-			this.HandlePostRemove (value as Widget);
+			this.HandleRemove (value as T);
+			this.list.Remove (value as T);
+			this.HandlePostRemove (value as T);
 		}
 
 		public bool Contains(object value)
 		{
-			return this.list.Contains (value);
+			return this.list.Contains (value as T);
 		}
 
 		public void Clear()
 		{
-			Widget[] widgets = new Widget[this.list.Count];
-			this.list.CopyTo (widgets, 0);
+			T[] widgets = this.list.ToArray ();
 			
 			for (int i = 0; i < widgets.Length; i++)
 			{
@@ -134,28 +127,35 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public int IndexOf(object value)
 		{
-			return this.list.IndexOf (value);
+			return this.list.IndexOf (value as T);
 		}
 
 		public int Add(object value)
 		{
-			if (value is Widget)
+			if (value == null)
 			{
-				int index = this.list.Add (value);
-				this.HandleInsert (value as Widget);
+				throw new System.ArgumentNullException ();
+			}
+			
+			if (value is T)
+			{
+				int index = this.list.Count;
+				this.list.Add (value as T);
+				this.HandleInsert (value as T);
 				return index;
 			}
 			
-			throw new System.ArgumentException ("Expecting Widget, got " + value.GetType ().Name);
+			throw new System.ArgumentException (string.Format ("Expecting {0}, got {1} instead", typeof (T).Name, value.GetType ().Name));
 		}
 
 		public bool IsFixedSize
 		{
 			get
 			{
-				return this.list.IsFixedSize;
+				return false;
 			}
 		}
+
 		#endregion
 		
 		#region ICollection Members
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.IsSynchronized;
+				return false;
 			}
 		}
 
@@ -177,14 +177,16 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public void CopyTo(System.Array array, int index)
 		{
-			this.list.CopyTo (array, index);
+			System.Collections.IList list = this.list;
+			list.CopyTo (array, index);
 		}
 
 		public object SyncRoot
 		{
 			get
 			{
-				return this.list.SyncRoot;
+				System.Collections.IList list = this.list;
+				return list.SyncRoot;
 			}
 		}
 
@@ -197,7 +199,7 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 		#endregion
 		
-		protected void HandleInsert(Widget item)
+		protected void HandleInsert(T item)
 		{
 			if (this.auto_embedding)
 			{
@@ -213,13 +215,13 @@ namespace Epsitec.Common.Widgets.Collections
 			this.host.NotifyInsertion (item);
 		}
 		
-		protected void HandleRemove(Widget item)
+		protected void HandleRemove(T item)
 		{
 			this.host.NotifyRemoval (item);
 			this.RenumberItems ();
 		}
 		
-		protected void HandlePostRemove(Widget item)
+		protected void HandlePostRemove(T item)
 		{
 			item.Index = -1;
 			this.host.NotifyPostRemoval (item);
@@ -229,14 +231,13 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			for (int i = 0; i < this.list.Count; i++)
 			{
-				Widget item = this.list[i] as Widget;
-				item.Index = i;
+				this.list[i].Index = i;
 			}
 		}
 		
 		
-		private System.Collections.ArrayList	list;
-		private IWidgetCollectionHost			host;
-		private bool							auto_embedding;
+		readonly List<T>						list;
+		readonly IWidgetCollectionHost<T>		host;
+		bool									auto_embedding;
 	}
 }
