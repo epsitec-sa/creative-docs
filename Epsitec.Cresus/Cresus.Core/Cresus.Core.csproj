@@ -71,12 +71,14 @@
     <Compile Include="CoreApplication.cs" />
     <Compile Include="PanelInteractionMode.cs" />
     <Compile Include="StateManager.cs" />
+    <Compile Include="States\StateDeck.cs" />
     <Compile Include="States\CoreState.cs" />
     <Compile Include="States\FormWorkspaceState.cs" />
     <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
+    <Compile Include="Widgets\StateStackWidget.cs" />
     <Compile Include="Workspaces\CoreWorkspace.cs" />
     <Compile Include="Workspaces\FormWorkspace.cs" />
   </ItemGroup>

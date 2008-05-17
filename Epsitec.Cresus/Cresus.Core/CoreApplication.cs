@@ -135,7 +135,25 @@ namespace Epsitec.Cresus.Core
 
 			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAD]"))));
 			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAC]"))));
-			section.Children.Add (new Widget () { Dock = DockStyle.StackFill });
+
+			section.Children.Add (
+				new Widgets.StateStackWidget ()
+				{
+					Dock = DockStyle.Stacked,
+					StateManager = this.stateManager,
+					StateDeck = States.StateDeck.History,
+					PreferredWidth = 48
+				});
+
+			section.Children.Add (
+				new Widgets.StateStackWidget ()
+				{
+					Dock = DockStyle.StackFill,
+					StateManager = this.stateManager,
+					StateDeck = States.StateDeck.StandAlone,
+					PreferredWidth = 48
+				});
+
 			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAA]")), DockStyle.StackEnd));
 			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAB]")), DockStyle.StackEnd));
 
@@ -158,6 +176,7 @@ namespace Epsitec.Cresus.Core
 			States.FormWorkspaceState state = new States.FormWorkspaceState (this.stateManager)
 			{
 				BoxId = this.defaultBoxId,
+				StateDeck = States.StateDeck.History,
 				Workspace = new Workspaces.FormWorkspace ()
 				{
 #if true
@@ -169,6 +188,25 @@ namespace Epsitec.Cresus.Core
 #endif
 				}
 			};
+
+			this.stateManager.Push (state);
+			this.stateManager.Push (
+				new States.FormWorkspaceState (this.stateManager)
+				{
+					StateDeck = States.StateDeck.History,
+					Workspace = new Workspaces.FormWorkspace ()
+				});
+
+			for (int i = 0; i < 3; i++)
+			{
+				this.stateManager.Push (
+					new States.FormWorkspaceState (this.stateManager)
+					{
+						StateDeck = States.StateDeck.StandAlone,
+						Workspace = new Workspaces.FormWorkspace (),
+						Title = string.Format ("{0}", (char)('A'+i))
+					});
+			}
 		}
 
 		protected override void Dispose(bool disposing)

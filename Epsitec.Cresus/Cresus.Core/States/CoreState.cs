@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -22,6 +23,12 @@ namespace Epsitec.Cresus.Core.States
 			{
 				return this.stateManager;
 			}
+		}
+
+		public StateDeck StateDeck
+		{
+			get;
+			set;
 		}
 
 		public int ZOrder
@@ -65,6 +72,12 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		public string Title
+		{
+			get;
+			set;
+		}
+
 		protected Widget Container
 		{
 			get
@@ -77,6 +90,22 @@ namespace Epsitec.Cresus.Core.States
 		public abstract XElement Serialize(XElement element);
 
 		public abstract CoreState Deserialize(XElement element);
+
+		public void PaintMiniature(Graphics graphics)
+		{
+			graphics.AddFilledRectangle (0, 0, 100, 100);
+			graphics.RenderSolid (Color.FromAlphaRgb (0.9, 1, 1, 1));
+
+			if (!string.IsNullOrEmpty (this.Title))
+			{
+				graphics.AddText (5, 60, 90, 20, this.Title, Font.DefaultFont, 30.0, ContentAlignment.MiddleCenter);
+			}
+			
+			graphics.LineWidth = 0.5;
+			graphics.AddRectangle (0.25, 0.25, 99.75, 99.75);
+			graphics.RenderSolid (Color.FromRgb (0, 0, 0.4));
+		}
+
 
 
 		#region IDisposable Members

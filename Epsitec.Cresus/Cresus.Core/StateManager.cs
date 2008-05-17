@@ -96,6 +96,51 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public bool NavigateHistoryPrev()
+		{
+			if (this.history.Count > 0)
+			{
+				this.history.Rotate (1);
+
+				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public bool NavigateHistoryNext()
+		{
+			if (this.history.Count > 0)
+			{
+				this.history.Rotate (-1);
+
+				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public IEnumerable<States.CoreState> GetAllStates(States.StateDeck deck)
+		{
+			return from state in this.states
+				   where state.StateDeck == deck
+				   select state;
+		}
+
+		public IEnumerable<States.CoreState> GetDeckStates(States.StateDeck deck)
+		{
+			return from state in CircularList<States.CoreState>.Reverse (this.history)
+				   where state.StateDeck == deck
+				   select state;
+		}
 
 		public IEnumerable<States.CoreState> Read(string path)
 		{

@@ -99,6 +99,29 @@ namespace Epsitec.Common.Types.Collections
 		}
 
 
+		/// <summary>
+		/// Gets the collection in reverse order.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		/// <returns>The collection in reverse order.</returns>
+		public static IEnumerable<T> Reverse(CircularList<T> collection)
+		{
+			int n    = collection.list.Count;
+			int head = collection.headIndex;
+
+			if (collection.reverseDirection)
+			{
+				head = head >= n-1 ? 0 : head+1;
+				return new Enumerator (collection.list, head, false);
+			}
+			else
+			{
+				head = (head == 0) ? System.Math.Max (n-1, 0) : head-1;
+				return new Enumerator (collection.list, head, true);
+			}
+		}
+
+
 		#region IList<T> Members
 
 		public int IndexOf(T item)
@@ -276,7 +299,7 @@ namespace Epsitec.Common.Types.Collections
 		/// The <c>Enumerator</c> class implements the enumerator for the
 		/// circular list.
 		/// </summary>
-		private class Enumerator : IEnumerator<T>, System.Collections.IEnumerator
+		private class Enumerator : IEnumerator<T>, System.Collections.IEnumerator, IEnumerable<T>
 		{
 			public Enumerator(IList<T> list, int headIndex, bool reverseDirection)
 			{
@@ -364,6 +387,24 @@ namespace Epsitec.Common.Types.Collections
 			void System.Collections.IEnumerator.Reset()
 			{
 				this.Reset ();
+			}
+
+			#endregion
+
+			#region IEnumerable<T> Members
+
+			public IEnumerator<T> GetEnumerator()
+			{
+				return this;
+			}
+
+			#endregion
+
+			#region IEnumerable Members
+
+			System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+			{
+				return this;
 			}
 
 			#endregion
