@@ -5,14 +5,36 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Types.Collections
 {
+	/// <summary>
+	/// The <c>CircularList</c> class implements a circular list where the
+	/// index wraps around at the end and the beginning of the list.
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
 	public class CircularList<T> : IList<T>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CircularList&lt;T&gt;"/> class.
+		/// </summary>
 		public CircularList()
 		{
 			this.list = new List<T> ();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CircularList&lt;T&gt;"/> class.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
+		public CircularList(IEnumerable<T> collection)
+			: this ()
+		{
+			this.list.AddRange (collection);
+		}
 
+
+		/// <summary>
+		/// Adds the collection to the list.
+		/// </summary>
+		/// <param name="collection">The collection.</param>
 		public void AddRange(IEnumerable<T> collection)
 		{
 			foreach (T item in collection)
@@ -21,16 +43,32 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
-		public void Rotate(int distance)
+		/// <summary>
+		/// Rotates the list by the specified amplitude. A positive distance
+		/// moves the origin to the right in the list, a negative distance
+		/// moves the origin to the list in the list.
+		/// </summary>
+		/// <remarks>This is an O(1) operation.</remarks>
+		/// <param name="amplitude">The amplitude of the rotation.</param>
+		public void Rotate(int amplitude)
 		{
-			if (this.reverseDirection)
+			
+			if ((amplitude != 0) &&
+				(this.list.Count > 0))
 			{
-				distance = -distance;
-			}
+				if (this.reverseDirection)
+				{
+					amplitude = -amplitude;
+				}
 
-			this.headIndex = this.ClipInternalIndex (this.headIndex + distance);
+				this.headIndex = this.ClipInternalIndex (this.headIndex + amplitude);
+			}
 		}
 
+		/// <summary>
+		/// Reverses the list.
+		/// </summary>
+		/// <remarks>This is an O(1) operation.</remarks>
 		public void Reverse()
 		{
 			int n = this.list.Count;
@@ -232,7 +270,12 @@ namespace Epsitec.Common.Types.Collections
 
 		#endregion
 
+		#region Enumerator Class
 
+		/// <summary>
+		/// The <c>Enumerator</c> class implements the enumerator for the
+		/// circular list.
+		/// </summary>
 		private class Enumerator : IEnumerator<T>, System.Collections.IEnumerator
 		{
 			public Enumerator(IList<T> list, int headIndex, bool reverseDirection)
@@ -331,6 +374,8 @@ namespace Epsitec.Common.Types.Collections
 			private int index;
 			private int count;
 		}
+
+		#endregion
 
 		private int ToInternalIndex(int index)
 		{

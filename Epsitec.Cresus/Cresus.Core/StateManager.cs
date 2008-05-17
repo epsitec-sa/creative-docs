@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace Epsitec.Cresus.Core
 		public StateManager()
 		{
 			this.states = new List<States.CoreState> ();
-			this.zOrder = new List<States.CoreState> ();
+			this.history = new CircularList<States.CoreState> ();
 			this.boxes = new Dictionary<int, Box> ();
 		}
 
@@ -46,9 +48,9 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				if (this.zOrder.Count > 0)
+				if (this.history.Count > 0)
 				{
-					return this.zOrder[0];
+					return this.history[0];
 				}
 				else
 				{
@@ -62,15 +64,17 @@ namespace Epsitec.Cresus.Core
 		{
 			if (this.states.Contains (state))
 			{
-				this.zOrder.Remove (state);
-				this.zOrder.Insert (0, state);
+				this.history.Remove (state);
+				this.history.Rotate (1);
+				this.history.Reverse ();
+				this.history.Insert (0, state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Promotion, state));
 			}
 			else
 			{
 				this.states.Add (state);
-				this.zOrder.Insert (0, state);
+				this.history.Insert (0, state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Push, state));
 			}
@@ -80,7 +84,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (this.states.Remove (state))
 			{
-				this.zOrder.Remove (state);
+				this.history.Remove (state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Pop, state));
 				
@@ -218,9 +222,9 @@ namespace Epsitec.Cresus.Core
 
 		private void UpdateStateZOrder()
 		{
-			for (int i = 0; i < this.zOrder.Count; i++)
+			for (int i = 0; i < this.history.Count; i++)
 			{
-				this.zOrder[i].ZOrder = i;
+				this.history[i].ZOrder = i;
 			}
 		}
 
@@ -249,7 +253,7 @@ namespace Epsitec.Cresus.Core
 
 		
 		private readonly List<States.CoreState> states;
-		private readonly List<States.CoreState> zOrder;
+		private readonly CircularList<States.CoreState> history;
 		private readonly Dictionary<int, Box> boxes;
 		private CoreApplication application;
 	}
