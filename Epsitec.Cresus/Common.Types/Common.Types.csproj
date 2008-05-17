@@ -101,6 +101,7 @@
     <Compile Include="BindingBreadcrumbs.cs" />
     <Compile Include="Caption.cs" />
     <Compile Include="Collections\AbstractObservableList.cs" />
+    <Compile Include="Collections\CircularList.cs" />
     <Compile Include="Collections\WeakList.cs" />
     <Compile Include="CollectionType.cs" />
     <Compile Include="AbstractDateTimeType.cs" />

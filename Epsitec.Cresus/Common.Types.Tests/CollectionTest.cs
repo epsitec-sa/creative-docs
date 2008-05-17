@@ -866,6 +866,273 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (sort2, conv.ConvertFromString ("D;y", null));
 		}
 
+		[Test]
+		public void CheckCircularList1()
+		{
+			CircularList<int> list = new CircularList<int> ()
+			{
+				1, 2, 3, 4, 5
+			};
+
+			Assert.AreEqual (1, list[0]);
+			Assert.AreEqual (2, list[1]);
+			Assert.AreEqual (3, list[2]);
+			Assert.AreEqual (4, list[3]);
+			Assert.AreEqual (5, list[4]);
+			Assert.AreEqual (1, list[5]);
+			Assert.AreEqual (2, list[6]);
+			Assert.AreEqual (5, list[-1]);
+			Assert.AreEqual (4, list[-2]);
+
+			Assert.AreEqual (5, list.Count);
+
+			int[] array = new int[3];
+			list.CopyTo (array, 2);
+			Assert.AreEqual (3, array[0]);
+			Assert.AreEqual (4, array[1]);
+			Assert.AreEqual (5, array[2]);
+
+			list.Rotate (2);				//	3 4 5 1 2
+
+			Assert.AreEqual (3, list[0]);
+			Assert.AreEqual (4, list[1]);
+			Assert.AreEqual (5, list[2]);
+			Assert.AreEqual (1, list[3]);
+			Assert.AreEqual (2, list[4]);
+			Assert.AreEqual (3, list[5]);
+			Assert.AreEqual (4, list[6]);
+			Assert.AreEqual (2, list[-1]);
+			Assert.AreEqual (1, list[-2]);
+
+			list.CopyTo (array, 2);
+			Assert.AreEqual (5, array[0]);
+			Assert.AreEqual (1, array[1]);
+			Assert.AreEqual (2, array[2]);
+
+			list.Rotate (3);				//	back to 1 2 3 4 5
+			
+			Assert.AreEqual (1, list[0]);
+			Assert.AreEqual (2, list[1]);
+			Assert.AreEqual (3, list[2]);
+			Assert.AreEqual (4, list[3]);
+			Assert.AreEqual (5, list[4]);
+			Assert.AreEqual (1, list[5]);
+			Assert.AreEqual (2, list[6]);
+			Assert.AreEqual (5, list[-1]);
+			Assert.AreEqual (4, list[-2]);
+
+			list.Rotate (1);				//	2 3 4 5 1
+			list.Reverse ();				//	1 5 4 3 2
+
+			Assert.AreEqual (1, list[0]);
+			Assert.AreEqual (5, list[1]);
+			Assert.AreEqual (4, list[2]);
+			Assert.AreEqual (3, list[3]);
+			Assert.AreEqual (2, list[4]);
+			Assert.AreEqual (1, list[5]);
+			Assert.AreEqual (5, list[6]);
+			Assert.AreEqual (2, list[-1]);
+			Assert.AreEqual (3, list[-2]);
+
+			list.Rotate (-1);				//	2 1 5 4 3
+			
+			list.CopyTo (array, 2);
+			Assert.AreEqual (5, array[0]);
+			Assert.AreEqual (4, array[1]);
+			Assert.AreEqual (3, array[2]);
+
+			array = Collection.ToArray (list);
+
+			Assert.AreEqual (5, array.Length);
+			Assert.AreEqual (2, array[0]);
+			Assert.AreEqual (1, array[1]);
+			Assert.AreEqual (5, array[2]);
+			Assert.AreEqual (4, array[3]);
+			Assert.AreEqual (3, array[4]);
+
+			Assert.AreEqual (0, list.IndexOf (2));
+			Assert.AreEqual (1, list.IndexOf (1));
+			Assert.AreEqual (2, list.IndexOf (5));
+			Assert.AreEqual (3, list.IndexOf (4));
+			Assert.AreEqual (4, list.IndexOf (3));
+			Assert.AreEqual (-1, list.IndexOf (100));
+
+			list.Insert (0, 100);	//	100 2 1 5 4 3
+
+			Assert.AreEqual (6, list.Count);
+			Assert.AreEqual (100, list[0]);
+			Assert.AreEqual (2, list[1]);
+			Assert.AreEqual (3, list[-1]);
+			
+			list.Insert (2, 101);	//	100 2 101 5 4 3
+
+			Assert.AreEqual (7, list.Count);
+			Assert.AreEqual (100, list[0]);
+			Assert.AreEqual (2, list[1]);
+			Assert.AreEqual (101, list[2]);
+			Assert.AreEqual (3, list[-1]);
+		}
+
+		[Test]
+		public void CheckCircularList2()
+		{
+			CircularList<string> list = new CircularList<string> ();
+
+			Assert.AreEqual ("", list.Concat ());
+
+			list.Insert (0, "A");
+			Assert.AreEqual ("A", list.Concat ());
+
+			list.Insert (0, "B");
+			Assert.AreEqual ("BA", list.Concat ());
+			
+			list.Insert (2, "C");
+			Assert.AreEqual ("BAC", list.Concat ());
+
+			list.Clear ();
+			list.Insert (0, "A");
+			list.Insert (1, "B");
+			list.Add ("C");
+			Assert.AreEqual ("ABC", list.Concat ());
+
+			list.Clear ();
+			list.Reverse ();
+			list.Insert (0, "A");
+			list.Insert (1, "B");
+			list.Add ("C");
+			Assert.AreEqual ("ABC", list.Concat ());
+
+			list.Clear ();
+			list.Insert (0, "A");
+			list.Reverse ();
+			list.Insert (1, "B");
+			list.Add ("C");
+			list.Insert (0, "X");
+			Assert.AreEqual ("XABC", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Reverse ();
+			Assert.AreEqual ("CBA", list.Concat ());
+
+			list.Add ("_");
+			list.Reverse ();
+			Assert.AreEqual ("_ABC", list.Concat ());
+
+			list.Remove ("_");
+			Assert.AreEqual ("ABC", list.Concat ());
+
+			list.Insert (0, "_");
+			Assert.AreEqual ("_ABC", list.Concat ());
+			list.Remove ("B");
+			Assert.AreEqual ("_AC", list.Concat ());
+			list.Insert (2, "B");
+			Assert.AreEqual ("_ABC", list.Concat ());
+			list.Remove ("C");
+			Assert.AreEqual ("_AB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			list.Rotate (3);
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (1);
+			Assert.AreEqual ("BCA", list.Concat ());
+			list.Insert (0, "X");
+			Assert.AreEqual ("XBCA", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (0, "X");
+			Assert.AreEqual ("XCAB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (1, "X");
+			Assert.AreEqual ("CXAB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (2, "X");
+			Assert.AreEqual ("CAXB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (3, "X");
+			Assert.AreEqual ("CABX", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "A", "B", "C" });
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (4, "X");
+			Assert.AreEqual ("CXAB", list.Concat ());
+
+			//	C B A reversed to A B C, then rotated :
+			list.Clear ();
+			list.AddRange (new string[] { "C", "B", "A" });
+			list.Reverse ();
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (0, "X");
+			Assert.AreEqual ("XCAB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "C", "B", "A" });
+			list.Reverse ();
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (1, "X");
+			Assert.AreEqual ("CXAB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "C", "B", "A" });
+			list.Reverse ();
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (2, "X");
+			Assert.AreEqual ("CAXB", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "C", "B", "A" });
+			list.Reverse ();
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (3, "X");
+			Assert.AreEqual ("CABX", list.Concat ());
+
+			list.Clear ();
+			list.AddRange (new string[] { "C", "B", "A" });
+			list.Reverse ();
+			Assert.AreEqual ("ABC", list.Concat ());
+			list.Rotate (2);
+			Assert.AreEqual ("CAB", list.Concat ());
+			list.Insert (4, "X");
+			Assert.AreEqual ("CXAB", list.Concat ());
+		}
+
+
+
+
+		#region Support Code
+
 		private static void AddRecords(IList<Record> source)
 		{
 			source.Add (new Record ("Vis M3", 10, 0.15M, Category.Part));
@@ -1103,5 +1370,20 @@ namespace Epsitec.Common.Types
 		}
 
 		#endregion
+
+		#endregion
+	}
+
+	public static class Extensions
+	{
+		public static string Concat(this IEnumerable<string> items)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			foreach (string item in items)
+			{
+				buffer.Append (item);
+			}
+			return buffer.ToString ();
+		}
 	}
 }
