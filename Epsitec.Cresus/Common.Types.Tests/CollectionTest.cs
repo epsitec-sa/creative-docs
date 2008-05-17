@@ -1122,10 +1122,13 @@ namespace Epsitec.Common.Types
 			list.AddRange (new string[] { "C", "B", "A" });
 			list.Reverse ();
 			Assert.AreEqual ("ABC", list.Concat ());
+			Assert.AreEqual ("CBA", CircularList<string>.Reverse (list).Concat ());
 			list.Rotate (2);
 			Assert.AreEqual ("CAB", list.Concat ());
+			Assert.AreEqual ("BAC", CircularList<string>.Reverse (list).Concat ());
 			list.Insert (4, "X");
 			Assert.AreEqual ("CXAB", list.Concat ());
+			Assert.AreEqual ("BAXC", CircularList<string>.Reverse (list).Concat ());
 		}
 
 

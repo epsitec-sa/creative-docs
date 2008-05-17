@@ -132,6 +132,11 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public IEnumerable<States.CoreState> GetAllStates()
+		{
+			return this.states;
+		}
+
 		public IEnumerable<States.CoreState> GetAllStates(States.StateDeck deck)
 		{
 			return from state in this.states
@@ -139,11 +144,34 @@ namespace Epsitec.Cresus.Core
 				   select state;
 		}
 
-		public IEnumerable<States.CoreState> GetDeckStates(States.StateDeck deck)
+		public IEnumerable<States.CoreState> GetHistoryStates(ListSortDirection direction)
 		{
-			return from state in CircularList<States.CoreState>.Reverse (this.history)
-				   where state.StateDeck == deck
-				   select state;
+			switch (direction)
+			{
+				case ListSortDirection.Ascending:
+					return this.history;
+				case ListSortDirection.Descending:
+					return CircularList<States.CoreState>.Reverse (this.history);
+			}
+
+			throw new System.ArgumentException ();
+		}
+
+		public IEnumerable<States.CoreState> GetHistoryStates(States.StateDeck deck, ListSortDirection direction)
+		{
+			switch (direction)
+			{
+				case ListSortDirection.Ascending:
+					return from state in this.history
+						   where state.StateDeck == deck
+						   select state;
+				case ListSortDirection.Descending:
+					return from state in CircularList<States.CoreState>.Reverse (this.history)
+						   where state.StateDeck == deck
+						   select state;
+			}
+
+			throw new System.ArgumentException ();
 		}
 
 		public IEnumerable<States.CoreState> Read(string path)

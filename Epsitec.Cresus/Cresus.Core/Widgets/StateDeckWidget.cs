@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
@@ -97,6 +98,24 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (e.State.StateDeck == this.StateDeck)
 			{
 				this.Invalidate ();
+
+				int i = 0;
+
+				foreach (string title in from state in this.StateManager.GetAllStates ()
+										 select state.Title)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Stack {0}: {1}", i++, title));
+				}
+
+				i = 0;
+				
+				foreach (string title in from state in this.StateManager.GetHistoryStates (ListSortDirection.Descending)
+										 select state.Title)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("History {0}: {1}", i++, title));
+				}
+
+				System.Diagnostics.Debug.WriteLine ("");
 			}
 		}
 
@@ -116,7 +135,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			double center = 80;
 			double scale  = dim / (2*center);
 			
-			foreach (CoreState state in this.StateManager.GetDeckStates (StateDeck.History))
+			foreach (CoreState state in this.StateManager.GetHistoryStates (StateDeck.History, ListSortDirection.Descending))
 			{
 				Record record;
 
@@ -178,7 +197,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				offset += distance;
 			}
 
-			foreach (CoreState state in this.StateManager.GetDeckStates (StateDeck.StandAlone))
+			foreach (CoreState state in this.StateManager.GetHistoryStates (StateDeck.StandAlone, ListSortDirection.Descending))
 			{
 				Record record;
 
