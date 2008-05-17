@@ -78,7 +78,7 @@
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Res.cs" />
-    <Compile Include="Widgets\StateStackWidget.cs" />
+    <Compile Include="Widgets\StateDeckWidget.cs" />
     <Compile Include="Workspaces\CoreWorkspace.cs" />
     <Compile Include="Workspaces\FormWorkspace.cs" />
   </ItemGroup>

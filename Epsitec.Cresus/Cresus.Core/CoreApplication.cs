@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core
 			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAC]"))));
 
 			section.Children.Add (
-				new Widgets.StateStackWidget ()
+				new Widgets.StateDeckWidget ()
 				{
 					Dock = DockStyle.Stacked,
 					StateManager = this.stateManager,
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Core
 				});
 
 			section.Children.Add (
-				new Widgets.StateStackWidget ()
+				new Widgets.StateDeckWidget ()
 				{
 					Dock = DockStyle.StackFill,
 					StateManager = this.stateManager,

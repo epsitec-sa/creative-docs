@@ -12,27 +12,42 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class StateStackWidget : FrameBox
+	/// <summary>
+	/// The <c>StateDeckWidget</c> class represents a deck of states; every state
+	/// looks like a card. The cards can be represented as a pile or as a spread.
+	/// </summary>
+	public class StateDeckWidget : FrameBox
 	{
-		public StateStackWidget()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StateDeckWidget"/> class.
+		/// </summary>
+		public StateDeckWidget()
 		{
 			this.stateRecords = new Dictionary<CoreState, Record> ();
 			this.randomizer = new System.Random (0);
 		}
 
 
-
-		public StateDeck StateDeck
+		/// <summary>
+		/// Gets or sets the deck type.
+		/// </summary>
+		/// <value>The deck type.</value>
+		public StateDeck						StateDeck
 		{
 			get;
 			set;
 		}
 
-		public StateManager StateManager
+		/// <summary>
+		/// Gets or sets the state manager.
+		/// </summary>
+		/// <value>The state manager.</value>
+		public StateManager						StateManager
 		{
 			get;
 			set;
 		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -48,6 +63,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+
+		/// <summary>
+		/// Paints the deck for the history pile. The cards will be piled one
+		/// on top of the other, with variations in their orientation and
+		/// offset.
+		/// </summary>
+		/// <param name="graphics">The graphics context.</param>
 		private void PaintHistoryDeck(Graphics graphics)
 		{
 			Transform transform = new Transform (graphics.Transform);
@@ -67,7 +89,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 
 				graphics.ScaleTransform (scale, scale, 0, 0);
-				graphics.TranslateTransform (center - 50 + record.JitterX, center - 50 + record.JitterY);
+				graphics.TranslateTransform (center - 50 + record.OffsetX, center - 50 + record.OffsetY);
 				graphics.RotateTransformDeg (record.Angle, 50, 50);
 
 				state.PaintMiniature (graphics);
@@ -76,6 +98,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		/// <summary>
+		/// Paints the deck for a spread. The cards will be spread side by side
+		/// if there is enough room, with variations in their orientation.
+		/// </summary>
+		/// <param name="graphics">The graphics context.</param>
 		private void PaintStandAloneDeck(Graphics graphics)
 		{
 			Transform transform = new Transform (graphics.Transform);
@@ -109,12 +136,9 @@ namespace Epsitec.Cresus.Core.Widgets
 					record = new Record (state, this.randomizer);
 				}
 
-				record.JitterY = 0.0;
-				record.JitterX = offset / scale;
+				this.stateRecords[state] = new Record (record, offset / scale, 0.0);
 				
 				offset += distance;
-
-				this.stateRecords[state] = record;
 			}
 
 			foreach (CoreState state in this.StateManager.GetDeckStates (StateDeck.StandAlone))
@@ -123,15 +147,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (this.stateRecords.TryGetValue (state, out record))
 				{
-#if false
-					if (--i == 0)
-					{
-						graphics.ScaleTransform (1.1, 1.1, 0, 0);
-					}
-#endif
-
 					graphics.ScaleTransform (scale, scale, 0, 0);
-					graphics.TranslateTransform (center - 100/2 + record.JitterX, center - 100/2);
+					graphics.TranslateTransform (center - 100/2 + record.OffsetX, center - 100/2);
 					graphics.RotateTransformDeg (record.Angle, 50, 50);
 				}
 
@@ -141,44 +158,102 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		struct Record
+		
+		#region Record Structure
+
+		/// <summary>
+		/// The <c>Record</c> structure defines how a state's card gets laid out
+		/// in the deck (angle and offset).
+		/// </summary>
+		struct Record : System.IEquatable<Record>
 		{
 			public Record(CoreState state, System.Random randomizer)
-				: this ()
 			{
-				this.State   = state;
-				this.Angle   = (randomizer.NextDouble () - 0.5) * 30;
-				this.JitterX = (randomizer.NextDouble () - 0.5) * 40;
-				this.JitterY = (randomizer.NextDouble () - 0.5) * 20;
+				this.state   = state;
+				this.angle   = (randomizer.NextDouble () - 0.5) * 30;
+				this.offsetX = (randomizer.NextDouble () - 0.5) * 40;
+				this.offsetY = (randomizer.NextDouble () - 0.5) * 20;
+			}
+
+			public Record(Record model, double offsetX, double offsetY)
+			{
+				this.state = model.State;
+				this.angle = model.Angle;
+				this.offsetX = offsetX;
+				this.offsetY = offsetY;
 			}
 
 			public CoreState State
 			{
-				get;
-				set;
+				get
+				{
+					return this.state;
+				}
 			}
 
 			public double Angle
 			{
-				get;
-				set;
+				get
+				{
+					return this.angle;
+				}
 			}
 
-			public double JitterX
+			public double OffsetX
 			{
-				get;
-				set;
+				get
+				{
+					return this.offsetX;
+				}
 			}
 
-			public double JitterY
+			public double OffsetY
 			{
-				get;
-				set;
+				get
+				{
+					return this.offsetY;
+				}
 			}
+
+			#region IEquatable<Record> Members
+
+			public bool Equals(Record other)
+			{
+				return this.state == other.state
+					&& this.angle == other.angle
+					&& this.offsetX == other.offsetX
+					&& this.offsetY == other.offsetY;
+			}
+
+			#endregion
+
+			public override bool Equals(object obj)
+			{
+				if (obj is Record)
+				{
+					return this.Equals ((Record) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public override int GetHashCode()
+			{
+				return this.state == null ? 0 : this.state.GetHashCode ();
+			}
+
+			private readonly CoreState state;
+			private readonly double angle;
+			private readonly double offsetX;
+			private readonly double offsetY;
 		}
 
+		#endregion
 
-		private Dictionary<CoreState, Record> stateRecords;
+
+		private readonly Dictionary<CoreState, Record> stateRecords;
 		private readonly System.Random randomizer;
 	}
 }
