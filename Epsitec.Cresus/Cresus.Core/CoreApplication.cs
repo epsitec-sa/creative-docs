@@ -119,11 +119,11 @@ namespace Epsitec.Cresus.Core
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA5]"))));
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA9]"))));
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA8]"))));
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA7]"))));
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VA6]"))));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA5]"))));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA9]"))));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA8]"))));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA7]"))));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA6]"))));
 
 			section = new RibbonSection (this.ribbonPageHome)
 			{
@@ -133,8 +133,8 @@ namespace Epsitec.Cresus.Core
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAD]"))));
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAC]"))));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAD]")), (s, e) => this.stateManager.NavigateHistoryPrev ()));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAC]")), (s, e) => this.stateManager.NavigateHistoryNext ()));
 
 			section.Children.Add (
 				new Widgets.StateDeckWidget ()
@@ -154,47 +154,36 @@ namespace Epsitec.Cresus.Core
 					PreferredWidth = 48
 				});
 
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAA]")), DockStyle.StackEnd));
-			section.Children.Add (CoreApplication.CreateButton (Command.Get (Druid.Parse ("[9VAB]")), DockStyle.StackEnd));
-
-#if false
-			subFrame = new FrameBox (frame);
-			subFrame.Dock = DockStyle.Stacked;
-			subFrame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
-			subFrame.Children.Add (new IconButton (ApplicationCommands.New, new Size (47, 36), DockStyle.Stacked));
-
-			Widget groupOpen = new Widget (subFrame);
-			groupOpen.Dock = DockStyle.Stacked;
-			groupOpen.PreferredSize = new Size (47, 47);
-			GlyphButton buttonLastFiles = new GlyphButton (groupOpen);
-			IconButton buttonOpen = new IconButton (ApplicationCommands.Open, new Size (47, 36), DockStyle.Top);
-#endif
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAA]")), DockStyle.StackEnd, null));
+			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAB]")), DockStyle.StackEnd, null));
 		}
 
 		private void CreateWorkspace()
 		{
-			States.FormWorkspaceState state = new States.FormWorkspaceState (this.stateManager)
-			{
-				BoxId = this.defaultBoxId,
-				StateDeck = States.StateDeck.History,
-				Workspace = new Workspaces.FormWorkspace ()
-				{
-#if true
-					FormId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne,
-					EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId
-#else
-					FormId   = Epsitec.Cresus.Mai2008.FormIds.Facture,
-					EntityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
-#endif
-				}
-			};
-
-			this.stateManager.Push (state);
 			this.stateManager.Push (
 				new States.FormWorkspaceState (this.stateManager)
 				{
+					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.History,
+					Title = "Clients",
 					Workspace = new Workspaces.FormWorkspace ()
+					{
+						FormId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne,
+						EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId
+					}
+				});
+			
+			this.stateManager.Push (
+				new States.FormWorkspaceState (this.stateManager)
+				{
+					BoxId = this.defaultBoxId,
+					StateDeck = States.StateDeck.History,
+					Title = "Factures",
+					Workspace = new Workspaces.FormWorkspace ()
+					{
+						FormId   = Epsitec.Cresus.Mai2008.FormIds.Facture,
+						EntityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
+					}
 				});
 
 			for (int i = 0; i < 3; i++)
@@ -202,6 +191,7 @@ namespace Epsitec.Cresus.Core
 				this.stateManager.Push (
 					new States.FormWorkspaceState (this.stateManager)
 					{
+						BoxId = this.defaultBoxId,
 						StateDeck = States.StateDeck.StandAlone,
 						Workspace = new Workspaces.FormWorkspace (),
 						Title = string.Format ("{0}", (char)('A'+i))
@@ -228,13 +218,23 @@ namespace Epsitec.Cresus.Core
 			base.Dispose (disposing);
 		}
 
-		private static IconButton CreateButton(Command command)
+		private IconButton CreateButton(Command command)
 		{
-			return CoreApplication.CreateButton (command, DockStyle.StackBegin);
+			return this.CreateButton (command, DockStyle.StackBegin, null);
 		}
 
-		private static IconButton CreateButton(Command command, DockStyle dockStyle)
+		private IconButton CreateButton(Command command, CommandEventHandler handler)
 		{
+			return this.CreateButton (command, DockStyle.StackBegin, handler);
+		}
+
+		private IconButton CreateButton(Command command, DockStyle dockStyle, CommandEventHandler handler)
+		{
+			if (handler != null)
+			{
+				this.CommandDispatcher.Register (command, handler);
+			}
+
 			return new IconButton (command, new Epsitec.Common.Drawing.Size (31, 31), dockStyle)
 			{
 				VerticalAlignment = VerticalAlignment.Center,

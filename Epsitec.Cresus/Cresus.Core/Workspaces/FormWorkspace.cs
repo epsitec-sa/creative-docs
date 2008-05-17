@@ -70,10 +70,30 @@ namespace Epsitec.Cresus.Core.Workspaces
 		
 		public override AbstractGroup CreateUserInterface()
 		{
+			FrameBox frame = new FrameBox ();
+
+			if ((this.FormId.IsEmpty) ||
+				(this.EntityId.IsEmpty))
+			{
+				string title = string.Concat (
+					@"<font size=""141%"">",
+					"« ", Epsitec.Common.Types.Converters.TextConverter.ConvertToTaggedText (this.State.Title ?? "<null>"), " »",
+					@"</font><br/>",
+					@"<i>Invalid form workspace</i>");
+
+				frame.Children.Add (
+					new StaticText ()
+					{
+						Text = title,
+						ContentAlignment = ContentAlignment.MiddleCenter,
+						Dock = DockStyle.Fill
+					});
+
+				return frame;
+			}
+
 			System.Diagnostics.Debug.Assert (this.FormId.IsValid);
 			System.Diagnostics.Debug.Assert (this.EntityId.IsValid);
-
-			FrameBox frame = new FrameBox ();
 
 			this.hintListController.DefineContainer (frame);
 

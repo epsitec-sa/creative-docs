@@ -44,11 +44,40 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <value>The state manager.</value>
 		public StateManager						StateManager
 		{
-			get;
-			set;
+			get
+			{
+				return this.manager;
+			}
+			set
+			{
+				if (this.manager != value)
+				{
+					if (this.manager != null)
+					{
+						this.manager.StackChanged -= this.HandleManagerStackChanged;
+					}
+
+					this.manager = value;
+
+					if (this.manager != null)
+					{
+						this.manager.StackChanged += this.HandleManagerStackChanged;
+					}
+				}
+			}
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.StateManager = null;
+			}
+
+			base.Dispose (disposing);
+		}
+		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			switch (this.StateDeck)
@@ -60,6 +89,14 @@ namespace Epsitec.Cresus.Core.Widgets
 				case StateDeck.StandAlone:
 					this.PaintStandAloneDeck (graphics);
 					break;
+			}
+		}
+
+		private void HandleManagerStackChanged(object sender, StateStackChangedEventArgs e)
+		{
+			if (e.State.StateDeck == this.StateDeck)
+			{
+				this.Invalidate ();
 			}
 		}
 
@@ -255,5 +292,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private readonly Dictionary<CoreState, Record> stateRecords;
 		private readonly System.Random randomizer;
+		private StateManager manager;
 	}
 }

@@ -31,6 +31,14 @@ namespace Epsitec.Cresus.Core.States
 			set;
 		}
 
+		public bool IsBound
+		{
+			get
+			{
+				return this.stateManager.IsBound (this);
+			}
+		}
+
 		public int ZOrder
 		{
 			get
@@ -49,25 +57,21 @@ namespace Epsitec.Cresus.Core.States
 			{
 				return this.boxId;
 			}
-			internal set
+			set
 			{
 				if (this.boxId != value)
 				{
-					if (this.boxId != 0)
+					int oldValue = this.boxId;
+					int newValue = value;
+
+					if (this.IsBound)
 					{
-						this.DetachState ();
-						this.boxId = 0;
+						throw new System.InvalidOperationException ();
 					}
-
-					int oldBoxId = this.boxId;
-					int newBoxId = value;
-
+					
 					this.boxId = value;
 
-					if (this.boxId != 0)
-					{
-						this.AttachState ();
-					}
+					//	TODO: notify about the box ID change
 				}
 			}
 		}
@@ -91,6 +95,7 @@ namespace Epsitec.Cresus.Core.States
 
 		public abstract CoreState Deserialize(XElement element);
 
+		
 		public void PaintMiniature(Graphics graphics)
 		{
 			graphics.AddFilledRectangle (0, 0, 100, 100);
@@ -117,11 +122,22 @@ namespace Epsitec.Cresus.Core.States
 
 		#endregion
 
-		internal void SoftDetach()
+		internal void Unbind()
 		{
 			System.Diagnostics.Debug.Assert (this.boxId != 0);
+			System.Diagnostics.Debug.Assert (this.IsBound);
 			
 			this.SoftDetachState ();
+			this.container = null;
+		}
+
+		internal void Bind(Widget container)
+		{
+			System.Diagnostics.Debug.Assert (this.boxId != 0);
+			System.Diagnostics.Debug.Assert (this.IsBound);
+
+			this.container = container;
+			this.SoftAttachState ();
 		}
 
 		protected virtual void SoftAttachState()
@@ -132,31 +148,12 @@ namespace Epsitec.Cresus.Core.States
 		{
 		}
 		
-		protected void AttachState()
-		{
-			System.Diagnostics.Debug.Assert (this.boxId != 0);
-			this.container = this.stateManager.Attach (this);
-			this.SoftAttachState ();
-		}
-
-		protected void DetachState()
-		{
-			System.Diagnostics.Debug.Assert (this.boxId != 0);
-			
-			this.SoftDetachState ();
-			this.stateManager.Detach (this);
-			this.container = null;
-		}
-
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (this.boxId != 0)
-				{
-					this.DetachState ();
-					this.boxId = 0;
-				}
+				this.stateManager.Pop (this);
+				this.BoxId = 0;
 			}
 		}
 

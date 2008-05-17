@@ -44,11 +44,6 @@ namespace Epsitec.Cresus.Core.States
 					
 					this.workspace = value;
 					this.workspace.State = this;
-
-					if (this.BoxId != 0)
-					{
-						this.SoftAttachState ();
-					}
 				}
 			}
 		}

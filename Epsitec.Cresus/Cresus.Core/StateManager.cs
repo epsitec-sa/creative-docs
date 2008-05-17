@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Core
 			{
 				this.states.Add (state);
 				this.history.Insert (0, state);
+				this.Attach (state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Push, state));
 			}
@@ -86,6 +87,7 @@ namespace Epsitec.Cresus.Core
 			{
 				this.history.Remove (state);
 
+				this.Detach (state);
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Pop, state));
 				
 				return true;
@@ -101,6 +103,7 @@ namespace Epsitec.Cresus.Core
 			if (this.history.Count > 0)
 			{
 				this.history.Rotate (1);
+				this.Attach (this.history[0]);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
 
@@ -117,6 +120,7 @@ namespace Epsitec.Cresus.Core
 			if (this.history.Count > 0)
 			{
 				this.history.Rotate (-1);
+				this.Attach (this.history[0]);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
 
@@ -217,32 +221,58 @@ namespace Epsitec.Cresus.Core
 			return id;
 		}
 
-		internal Widget Attach(States.CoreState state)
+		private void Attach(States.CoreState state)
 		{
 			System.Diagnostics.Debug.Assert (state.BoxId != 0);
 			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
 
 			Box box = this.boxes[state.BoxId];
 
+			//	If there was another active state bound to the specified box, then we
+			//	first unbind it :
+			
 			if ((box.State != state) &&
 				(box.State != null))
 			{
-				box.State.SoftDetach ();
+				box.State.Unbind ();
+				box.State = null;
 			}
 
 			box.State = state;
-
-			return box.Container;
+			box.State.Bind (box.Container);
 		}
 
-		internal void Detach(States.CoreState state)
+		/// <summary>
+		/// Determines whether the specified state is bound with a box.
+		/// </summary>
+		/// <param name="state">The state.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified state is bound with a box; otherwise, <c>false</c>.
+		/// </returns>
+		internal bool IsBound(States.CoreState state)
+		{
+			if (state.BoxId == 0)
+			{
+				return false;
+			}
+
+			System.Diagnostics.Debug.Assert (state.BoxId != 0);
+			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
+
+			return this.boxes[state.BoxId].State == state;
+		}
+
+
+		private void Detach(States.CoreState state)
 		{
 			System.Diagnostics.Debug.Assert (state.BoxId != 0);
+			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
 			
 			Box box = this.boxes[state.BoxId];
 			
 			if (box.State == state)
 			{
+				box.State.Unbind ();
 				box.State = null;
 			}
 		}
