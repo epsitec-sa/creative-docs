@@ -119,11 +119,11 @@ namespace Epsitec.Cresus.Core
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA5]"))));
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA9]"))));
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA8]"))));
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA7]"))));
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VA6]"))));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
 
 			section = new RibbonSection (this.ribbonPageHome)
 			{
@@ -133,8 +133,8 @@ namespace Epsitec.Cresus.Core
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAD]")), (s, e) => this.stateManager.NavigateHistoryPrev ()));
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAC]")), (s, e) => this.stateManager.NavigateHistoryNext ()));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev, (s, e) => this.stateManager.NavigateHistoryPrev ()));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext, (s, e) => this.stateManager.NavigateHistoryNext ()));
 
 			section.Children.Add (
 				new Widgets.StateDeckWidget ()
@@ -154,8 +154,8 @@ namespace Epsitec.Cresus.Core
 					PreferredWidth = 48
 				});
 
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAA]")), DockStyle.StackEnd, null));
-			section.Children.Add (this.CreateButton (Command.Get (Druid.Parse ("[9VAB]")), DockStyle.StackEnd, null));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
 		}
 
 		private void CreateWorkspace()
