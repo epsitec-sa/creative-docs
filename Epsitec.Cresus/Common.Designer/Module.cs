@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Identity;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.CodeCompilation;
+using Epsitec.Common.Support.CodeGeneration;
 
 namespace Epsitec.Common.Designer
 {
@@ -906,6 +907,8 @@ namespace Epsitec.Common.Designer
 			if (bundle.Type == Resources.CaptionTypeName &&
 				!string.IsNullOrEmpty(this.moduleInfo.SourceNamespace))
 			{
+				this.RegenerateResSourceCode (this.mergedManager ?? manager, bundle);
+				
 				foreach (ResourceBundle.Field field in bundle.Fields)
 				{
 					if (field.Name == null)
@@ -928,6 +931,22 @@ namespace Epsitec.Common.Designer
 					}
 				}
 			}
+		}
+
+		private void RegenerateResSourceCode(ResourceManager resourceManager, ResourceBundle bundle)
+		{
+			CodeFormatter formatter = ModuleSupport.ResGenerator.GenerateResFile (resourceManager, this.moduleInfo);
+
+			string modulePath = this.moduleId.Path;
+			string sourceCodeRoot = System.IO.Path.Combine (modulePath, "SourceCode");
+			string sourceCodePath = System.IO.Path.Combine (sourceCodeRoot, "Res.cs");
+
+			if (!System.IO.Directory.Exists (sourceCodeRoot))
+			{
+				System.IO.Directory.CreateDirectory (sourceCodeRoot);
+			}
+
+			formatter.SaveCodeToTextFile (sourceCodePath, System.Text.Encoding.UTF8);
 		}
 
 		/// <summary>

@@ -20,6 +20,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.accessibility = attributes.accessibility;
 			this.visibility = attributes.visibility;
 			this.isReadonly = attributes.isReadonly;
+			this.isConst = attributes.isConst;
 			this.isNew = attributes.isNew;
 			this.isPartial = attributes.isPartial;
 			this.isPartialDefinition = attributes.isPartialDefinition;
@@ -34,6 +35,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.accessibility = accessibility;
 			this.visibility = CodeVisibility.Public;
 			this.isReadonly = false;
+			this.isConst = false;
 			this.isNew = false;
 			this.isPartial = false;
 			this.isPartialDefinition = false;
@@ -48,6 +50,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.accessibility = CodeAccessibility.Default;
 			this.visibility = visibility;
 			this.isReadonly = false;
+			this.isConst = false;
 			this.isNew = false;
 			this.isPartial = false;
 			this.isPartialDefinition = false;
@@ -63,6 +66,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.accessibility = accessibility;
 			this.visibility = visibility;
 			this.isReadonly = false;
+			this.isConst = false;
 			this.isNew = false;
 			this.isPartial = false;
 			this.isPartialDefinition = false;
@@ -89,6 +93,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 			this.accessibility = accessibility;
 			this.visibility = visibility;
 			this.isReadonly = false;
+			this.isConst = false;
 			this.isNew = false;
 			this.isPartial = false;
 			this.isPartialDefinition = false;
@@ -98,6 +103,10 @@ namespace Epsitec.Common.Support.CodeGeneration
 				if (attribute == CodeAttributes.ReadOnlyAttribute)
 				{
 					this.isReadonly = true;
+				}
+				else if (attribute == CodeAttributes.ConstAttribute)
+				{
+					this.isConst = true;
 				}
 				else if (attribute == CodeAttributes.NewAttribute)
 				{
@@ -149,6 +158,19 @@ namespace Epsitec.Common.Support.CodeGeneration
 			get
 			{
 				return this.isReadonly;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether the access is constant and should specify
+		/// the <c>const</c> keyword.
+		/// </summary>
+		/// <value><c>true</c> if the access is const; otherwise, <c>false</c>.</value>
+		public bool IsConst
+		{
+			get
+			{
+				return this.isConst;
 			}
 		}
 
@@ -208,6 +230,10 @@ namespace Epsitec.Common.Support.CodeGeneration
 				{
 					attributes.Add (CodeAttributes.ReadOnlyAttribute);
 				}
+				if (this.IsConst)
+				{
+					attributes.Add (CodeAttributes.ConstAttribute);
+				}
 				if (this.IsNew)
 				{
 					attributes.Add (CodeAttributes.NewAttribute);
@@ -232,6 +258,12 @@ namespace Epsitec.Common.Support.CodeGeneration
 		/// <see cref="CodeAttributes"/> constructor.
 		/// </summary>
 		public static readonly object			ReadOnlyAttribute = new object ();
+
+		/// <summary>
+		/// Gets the <c>const</c> attribute constant which can be passed to the
+		/// <see cref="CodeAttributes"/> constructor.
+		/// </summary>
+		public static readonly object			ConstAttribute = new object ();
 
 		/// <summary>
 		/// Gets the <c>new</c> attribute constant which can be passed to the
@@ -353,6 +385,10 @@ namespace Epsitec.Common.Support.CodeGeneration
 			{
 				tokens.Add (CodeFormatter.Strings.Keywords.Readonly);
 			}
+			if (this.isConst)
+			{
+				tokens.Add (CodeFormatter.Strings.Keywords.Const);
+			}
 
 			if (this.isNew)
 			{
@@ -371,6 +407,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 		private CodeVisibility					visibility;
 		
 		private bool							isReadonly;
+		private bool							isConst;
 		private bool							isNew;
 		private bool							isPartial;
 		private bool							isPartialDefinition;

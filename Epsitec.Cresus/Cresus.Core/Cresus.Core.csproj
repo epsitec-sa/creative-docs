@@ -60,6 +60,9 @@
     <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Forms.cs">
       <Link>Modules\Cresus.Mai2008\Forms.cs</Link>
     </Compile>
+    <Compile Include="..\Modules\Cresus.Mai2008\SourceCode\Res.cs">
+      <Link>Modules\Cresus.Mai2008\Res.cs</Link>
+    </Compile>
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>

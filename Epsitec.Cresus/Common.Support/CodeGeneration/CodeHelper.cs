@@ -40,6 +40,7 @@ namespace Epsitec.Common.Support.CodeGeneration
 		public static readonly CodeAttributes PublicOverrideMethodAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Override);
 		public static readonly CodeAttributes PublicStaticPartialClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.PartialAttribute);
 		public static readonly CodeAttributes PublicStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
+		public static readonly CodeAttributes PublicConstFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAttributes.ConstAttribute);
 		public static readonly CodeAttributes PublicStaticNewReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute, CodeAttributes.NewAttribute);
 		public static readonly CodeAttributes PublicInterfaceAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Default);
 		public static readonly CodeAttributes PublicStaticPropertyAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
@@ -52,11 +53,14 @@ namespace Epsitec.Common.Support.CodeGeneration
 		public static readonly CodeAttributes FormIdsClassAttributes = new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static);
 
 		public static readonly CodeAttributes PrivateStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Private, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
+		public static readonly CodeAttributes PrivateConstFieldAttributes = new CodeAttributes (CodeVisibility.Private, CodeAttributes.ConstAttribute);
 		public static readonly CodeAttributes InternalStaticReadOnlyFieldAttributes = new CodeAttributes (CodeVisibility.Internal, CodeAccessibility.Static, CodeAttributes.ReadOnlyAttribute);
 		public static readonly CodeAttributes InternalStaticMethodAttributes = new CodeAttributes (CodeVisibility.Internal, CodeAccessibility.Static);
 
 		public static readonly CodeAttributes PartialMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Default, CodeAttributes.PartialDefinitionAttribute);
 		public static readonly CodeAttributes PartialStaticMethodAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Static, CodeAttributes.PartialDefinitionAttribute);
+
+		public static readonly CodeAttributes StaticClassConstructorAttributes = new CodeAttributes (CodeVisibility.None, CodeAccessibility.Static);
 
 		#endregion
 
