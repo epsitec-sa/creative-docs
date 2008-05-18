@@ -70,19 +70,10 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			}
 
 			formatter.WriteCodeLine ();
-			formatter.WriteBeginMethod (CodeHelper.StaticClassConstructorAttributes, "Res()");
-			formatter.WriteCodeLine (@"Res.Initialize (typeof (Res), """, moduleName, @""");");
-			formatter.WriteEndMethod ();
-			formatter.WriteCodeLine ();
 
-			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static), "void Initialize()");
-			formatter.WriteEndMethod ();
-			formatter.WriteCodeLine ();
-			
-			formatter.WriteBeginMethod (new CodeAttributes (CodeVisibility.Public, CodeAccessibility.Static), "void Initialize(System.Type type, string name)");
-			formatter.WriteCodeLine (@"Res._manager = new global::Epsitec.Common.Support.ResourceManager (type);");
-			formatter.WriteCodeLine (@"Res._manager.DefineDefaultModuleName (name);");
-			
+			formatter.WriteBeginMethod (CodeHelper.StaticClassConstructorAttributes, "Res()");
+			formatter.WriteCodeLine (@"Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));");
+			formatter.WriteCodeLine (@"Res._manager.DefineDefaultModuleName (""", moduleName, @""");");
 			if (ResGenerator.commandsGenerated)
 			{
 				formatter.WriteCodeLine (@"Commands._Initialize ();");
@@ -90,9 +81,13 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			formatter.WriteEndMethod ();
 			formatter.WriteCodeLine ();
 
+			formatter.WriteBeginMethod (CodeHelper.PublicStaticMethodAttributes, "void Initialize()");
+			formatter.WriteEndMethod ();
+			formatter.WriteCodeLine ();
+
 			formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, "global::Epsitec.Common.Support.ResourceManager Manager");
 			formatter.WriteBeginGetter (CodeAttributes.Default);
-			formatter.WriteCodeLine ("return Res._Manager;");
+			formatter.WriteCodeLine ("return Res._manager;");
 			formatter.WriteEndGetter ();
 			formatter.WriteEndProperty ();
 			formatter.WriteCode ();
@@ -105,7 +100,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			formatter.WriteCode ();
 			
 			formatter.WriteField (CodeHelper.PrivateStaticReadOnlyFieldAttributes,
-				"global::Epsitec.Common.Support.ResourceManager _manager = global::Epsitec.Common.Support.Resources.DefaultManager;");
+				"global::Epsitec.Common.Support.ResourceManager _manager;");
 
 			formatter.WriteField (CodeHelper.PrivateConstFieldAttributes,
 				"int _moduleId = ",

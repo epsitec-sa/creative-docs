@@ -106,25 +106,20 @@ namespace Epsitec.Cresus.Mai2008
 		
 		static Res()
 		{
-			Res.Initialize (typeof (Res), "Cresus.Mai2008");
+			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
+			Res._manager.DefineDefaultModuleName ("Cresus.Mai2008");
+			Commands._Initialize ();
 		}
 		
 		public static void Initialize()
 		{
 		}
 		
-		public static void Initialize(System.Type type, string name)
-		{
-			Res._manager = new global::Epsitec.Common.Support.ResourceManager (type);
-			Res._manager.DefineDefaultModuleName (name);
-			Commands._Initialize ();
-		}
-		
 		public static global::Epsitec.Common.Support.ResourceManager Manager
 		{
 			get
 			{
-				return Res._Manager;
+				return Res._manager;
 			}
 		}
 		public static int ModuleId
@@ -134,7 +129,7 @@ namespace Epsitec.Cresus.Mai2008
 				return Res._moduleId;
 			}
 		}
-		private static readonly global::Epsitec.Common.Support.ResourceManager _manager = global::Epsitec.Common.Support.Resources.DefaultManager;
+		private static readonly global::Epsitec.Common.Support.ResourceManager _manager;
 		private const int _moduleId = 1001;
 	}
 }
