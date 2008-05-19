@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			double center = 80;
 			double scale  = dim / (2*center);
 			
-			foreach (CoreState state in this.StateManager.GetHistoryStates (StateDeck.History, ListSortDirection.Descending))
+			foreach (CoreState state in this.StateManager.GetZOrderStates (StateDeck.History))
 			{
 				Record record;
 
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				offset += distance;
 			}
 
-			foreach (CoreState state in this.StateManager.GetHistoryStates (StateDeck.StandAlone, ListSortDirection.Descending))
+			foreach (CoreState state in this.StateManager.GetZOrderStates (StateDeck.StandAlone))
 			{
 				Record record;
 

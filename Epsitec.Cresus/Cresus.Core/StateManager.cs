@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Core
 		public StateManager()
 		{
 			this.states = new List<States.CoreState> ();
+			this.zOrder = new List<States.CoreState> ();
 			this.history = new CircularList<States.CoreState> ();
 			this.boxes = new Dictionary<int, Box> ();
 		}
@@ -69,12 +70,16 @@ namespace Epsitec.Cresus.Core
 				this.history.Reverse ();
 				this.history.Insert (0, state);
 
+				this.zOrder.Remove (state);
+				this.zOrder.Add (state);
+
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Promotion, state));
 			}
 			else
 			{
 				this.states.Add (state);
 				this.history.Insert (0, state);
+				this.zOrder.Add (state);
 				this.Attach (state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Push, state));
@@ -86,6 +91,7 @@ namespace Epsitec.Cresus.Core
 			if (this.states.Remove (state))
 			{
 				this.history.Remove (state);
+				this.zOrder.Remove (state);
 
 				this.Detach (state);
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Pop, state));
@@ -104,6 +110,8 @@ namespace Epsitec.Cresus.Core
 			{
 				this.history.Rotate (1);
 				this.Attach (this.history[0]);
+				this.zOrder.Remove (this.history[0]);
+				this.zOrder.Add (this.history[0]);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
 
@@ -121,6 +129,8 @@ namespace Epsitec.Cresus.Core
 			{
 				this.history.Rotate (-1);
 				this.Attach (this.history[0]);
+				this.zOrder.Remove (this.history[0]);
+				this.zOrder.Add (this.history[0]);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
 
@@ -140,6 +150,13 @@ namespace Epsitec.Cresus.Core
 		public IEnumerable<States.CoreState> GetAllStates(States.StateDeck deck)
 		{
 			return from state in this.states
+				   where state.StateDeck == deck
+				   select state;
+		}
+
+		public IEnumerable<States.CoreState> GetZOrderStates(States.StateDeck deck)
+		{
+			return from state in this.zOrder
 				   where state.StateDeck == deck
 				   select state;
 		}
@@ -356,6 +373,7 @@ namespace Epsitec.Cresus.Core
 
 		
 		private readonly List<States.CoreState> states;
+		private readonly List<States.CoreState> zOrder;
 		private readonly CircularList<States.CoreState> history;
 		private readonly Dictionary<int, Box> boxes;
 		private CoreApplication application;
