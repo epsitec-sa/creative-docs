@@ -95,7 +95,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleManagerStackChanged(object sender, StateStackChangedEventArgs e)
 		{
-			if (e.State.StateDeck == this.StateDeck)
+			if ((e.State == null) ||
+				(e.State.StateDeck == this.StateDeck))
 			{
 				this.Invalidate ();
 

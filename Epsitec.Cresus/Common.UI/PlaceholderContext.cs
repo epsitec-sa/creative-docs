@@ -201,7 +201,8 @@ namespace Epsitec.Common.UI
 			{
 				get
 				{
-					if (this.Placeholder == null)
+					if ((this.Placeholder == null) ||
+						(this.Placeholder.Window == null))
 					{
 						return 0;
 					}

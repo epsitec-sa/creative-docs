@@ -175,7 +175,7 @@ namespace Epsitec.Common.Dialogs
 		public void AssertReady()
 		{
 			System.Diagnostics.Debug.Assert (this.DialogData != null);
-			System.Diagnostics.Debug.Assert (this.DialogWindow != null);
+//			System.Diagnostics.Debug.Assert (this.DialogWindow != null);
 			System.Diagnostics.Debug.Assert (this.DialogPanel != null);
 			System.Diagnostics.Debug.Assert (this.Resolved != null);
 		}
@@ -192,7 +192,8 @@ namespace Epsitec.Common.Dialogs
 
 			if (placeholder != null)
 			{
-				return placeholder.Focus ();
+				placeholder.SetFocusOnTabWidget ();
+				return placeholder.ContainsKeyboardFocus;
 			}
 			else
 			{
@@ -286,6 +287,7 @@ namespace Epsitec.Common.Dialogs
 			UI.Controllers.AbstractController controller = sender as UI.Controllers.AbstractController;
 
 			if ((PlaceholderContext.Depth == 1) &&
+				(this.DialogWindow != null) &&
 				(controller.Placeholder.Window == this.DialogWindow))
 			{
 				object      value       = controller.GetConvertedUserInterfaceValue ();
@@ -412,7 +414,7 @@ namespace Epsitec.Common.Dialogs
 					if (this.dialogData.Mode == DialogDataMode.Search)
 					{
 						newContext = new SearchContext (this, this.dialogData.Data, EntityFieldPath.CreateRelativePath ());
-						newContext.AnalysePlaceholderGraph (Panel.GetParentPanel (placeholder));
+						newContext.AnalysePlaceholderGraph (Panel.GetParentPanel (placeholder), true);
 
 						this.searchContexts.Add (newContext);
 					}
@@ -440,7 +442,7 @@ namespace Epsitec.Common.Dialogs
 							System.Diagnostics.Debug.Assert (rootWidget != null);
 
 							newContext = new SearchContext (this, rootData, rootPath);
-							newContext.AnalysePlaceholderGraph (rootWidget);
+							newContext.AnalysePlaceholderGraph (rootWidget, false);
 
 							this.searchContexts.Add (newContext);
 						}
@@ -946,22 +948,23 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
-			public void AnalysePlaceholderGraph(Widgets.Widget root)
+			public void AnalysePlaceholderGraph(Widgets.Widget root, bool initialSearchValues)
 			{
-				foreach (Node node in this.GetPlaceholderGraph (root))
-				{
-					this.nodes.Add (node);
-				}
-
 				AbstractEntity entityData = this.searchRootPath.IsEmpty ? this.searchRootData : this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
 				EntityContext  context = this.searchController.DialogData.Data.GetEntityContext ();
 
 				this.searchTemplate = context.CreateSearchEntity (entityData.GetEntityStructuredTypeId ());
 				this.searchTemplate.DisableCalculations ();
 
-				foreach (Node node in this.nodes)
+				foreach (Node node in this.GetPlaceholderGraph (root))
 				{
+					this.nodes.Add (node);
 					node.Placeholder.PostProcessing += this.HandlePlaceholderPostProcessing;
+
+					if (initialSearchValues)
+					{
+						node.Path.NavigateWrite (this.searchTemplate, node.Path.NavigateRead (entityData));
+					}
 				}
 			}
 

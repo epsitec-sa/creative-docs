@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
-				return this.controller.DialogData;
+				return this.dialogData;
 			}
 		}
 
@@ -87,6 +87,22 @@ namespace Epsitec.Cresus.Core.Workspaces
 		}
 
 
+		internal void Initialize()
+		{
+			if ((this.searchContext == null) &&
+				(this.FormId.IsValid) &&
+				(this.EntityId.IsValid))
+			{
+				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
+				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
+				this.searchContext.PersistanceManagers.Add (this.Application.Data.DataContext);
+
+				this.currentItem = this.searchContext.CreateEntity (this.EntityId);
+				this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
+				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
+				this.resolver = this.Application.Data.Resolver;
+			}
+		}
 		
 		public override AbstractGroup CreateUserInterface()
 		{
@@ -112,6 +128,8 @@ namespace Epsitec.Cresus.Core.Workspaces
 				return frame;
 			}
 
+			this.Initialize ();
+
 			System.Diagnostics.Debug.Assert (this.FormId.IsValid);
 			System.Diagnostics.Debug.Assert (this.EntityId.IsValid);
 
@@ -128,19 +146,10 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.editionPanel.Visibility = false;
 			this.editionPanel.Margins = new Margins (4);
 
-			this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
-			this.searchContext.ExceptionManager = this.Application.ExceptionManager;
-			this.searchContext.PersistanceManagers.Add (this.Application.Data.DataContext);
-			
-			this.currentItem = this.searchContext.CreateEntity (this.EntityId);
-			this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
-			this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
-			this.resolver = this.Application.Data.Resolver;
-
 			this.controller = this.hintListController.SearchController;
 			this.controller.DialogData   = this.dialogData;
 			this.controller.DialogPanel  = this.searchPanel;
-			this.controller.DialogWindow = this.Application.Window;
+//-			this.controller.DialogWindow = this.Application.Window;
 			this.controller.Resolver     = this.resolver;
 			this.controller.AssertReady ();
 
@@ -192,11 +201,32 @@ namespace Epsitec.Cresus.Core.Workspaces
 			System.Diagnostics.Debug.Assert (this.Container.Window != null);
 
 			this.Application.CommandDispatcher.RegisterRange (this.GetCommandHandlers ());
+
+			if ((this.controller != null) &&
+				(this.controller.DialogPanel != null))
+			{
+				this.controller.DialogWindow = this.Container.Window;
+
+				if ((this.focusFieldPath == null) ||
+					(this.focusFieldPath.IsEmpty))
+				{
+					this.controller.DialogPanel.SetFocusOnTabWidget ();
+				}
+				else
+				{
+					this.controller.SetFocus (this.focusFieldPath);
+				}
+			}
 		}
 
 		protected override void DisableWorkspace()
 		{
 			this.Application.CommandDispatcher.UnregisterRange (this.GetCommandHandlers ());
+
+			if (this.controller != null)
+			{
+				this.controller.DialogWindow = null;
+			}
 		}
 
 		
@@ -212,7 +242,10 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		private void ExecuteClearSearchCommand(object sender, CommandEventArgs e)
 		{
-			this.controller.ClearActiveSuggestion ();
+			if (this.controller != null)
+			{
+				this.controller.ClearActiveSuggestion ();
+			}
 		}
 
 		private void ExecuteStartItemEditionCommand(object sender, CommandEventArgs e)
@@ -267,8 +300,11 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			System.Diagnostics.Debug.WriteLine ("Focus changed : " + e.ToString ());
 
-			this.FocusPath = e.NewPath;
-			this.SaveState ();
+			if (e.NewPath != null)
+			{
+				this.FocusPath = e.NewPath;
+				this.SaveState ();
+			}
 		}
 		
 		private void HandleSearchControllerSuggestionChanged(object sender, DialogDataEventArgs e)
@@ -287,7 +323,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		private void SaveState()
 		{
-			this.StateManager.WriteStates (@"S:\state.xml", new States.CoreState[] { this.State });
+			this.StateManager.WriteStates (@"S:\states.xml");
 			System.Diagnostics.Debug.WriteLine ("Save done.");
 		}
 

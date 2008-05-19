@@ -201,6 +201,11 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateWorkspace()
 		{
+			if (System.IO.File.Exists (@"S:\states.xml"))
+			{
+				this.stateManager.ReloadStates (@"S:\states.xml");
+				return;
+			}
 #if false
 			this.stateManager.Push (
 				new States.FormWorkspaceState (this.stateManager)

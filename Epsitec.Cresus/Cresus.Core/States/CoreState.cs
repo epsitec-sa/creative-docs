@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -78,6 +79,11 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		internal string							Tag
+		{
+			get;
+			set;
+		}
 
 		public abstract XElement Serialize(XElement element);
 
@@ -145,7 +151,9 @@ namespace Epsitec.Cresus.Core.States
 		protected void StoreCoreState(XElement element)
 		{
 			element.Add (new XElement ("core",
-				new XAttribute ("boxId", this.BoxId)));
+				new XAttribute ("boxId", this.BoxId),
+				new XAttribute ("deck", this.StateDeck.ToString ()),
+				new XAttribute ("title", this.Title)));
 		}
 
 		protected void RestoreCoreState(XElement element)
@@ -153,6 +161,8 @@ namespace Epsitec.Cresus.Core.States
 			XElement core = element.Element ("core");
 			
 			this.BoxId = (int) core.Attribute ("boxId");
+			this.StateDeck = ((string) core.Attribute ("deck")).ToEnum<StateDeck> ();
+			this.Title = (string) core.Attribute ("title");
 		}
 
 		

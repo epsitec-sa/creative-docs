@@ -36,6 +36,12 @@ namespace Epsitec.Cresus.Core
 		/// A state in the navigation history got promoted to the top of
 		/// the stack. Similar to <see cref="Promotion"/>.
 		/// </summary>
-		Navigation
+		Navigation,
+
+		/// <summary>
+		/// One or more states have been added as the result of a load
+		/// operation.
+		/// </summary>
+		Load,
 	}
 }

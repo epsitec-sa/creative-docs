@@ -313,6 +313,15 @@ namespace Epsitec.Common.Dialogs
 				IStructuredData data = this.Data;
 				UI.DataSource source = panel.DataSource;
 
+				//	Put all placeholders into the hint reset mode; the values which will be set
+				//	through the initial data binding will be handled as if they had been typed in
+				//	by the user :
+
+				foreach (UI.AbstractPlaceholder placeholder in panel.FindAllChildren (child => child is UI.AbstractPlaceholder))
+				{
+					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.DisplayHintResetText;
+				}
+
 				source.SetDataSource (UI.DataSource.DataName, data);
 
 				this.panel = panel;

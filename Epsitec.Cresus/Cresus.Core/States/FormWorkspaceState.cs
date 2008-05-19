@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Core.States
 			{
 				this.workspace.EntityId = Druid.Parse ((string) workspaceElement.Attribute ("entityId"));
 				this.workspace.FormId   = Druid.Parse ((string) workspaceElement.Attribute ("formId"));
+				this.workspace.Initialize ();
 
 				string focusPath = (string) workspaceElement.Attribute ("focusPath");
 
@@ -119,6 +120,8 @@ namespace Epsitec.Cresus.Core.States
 				{
 					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
 				}
+
+				FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, workspaceElement.Element ("dialogData"));
 			}
 		}
 
@@ -151,7 +154,12 @@ namespace Epsitec.Cresus.Core.States
 		{
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
 			XElement        element   = new XElement ("dialogData");
-			
+
+			if (data == null)
+			{
+				return element;
+			}
+
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
 			data.ForEachChange (
@@ -219,6 +227,11 @@ namespace Epsitec.Cresus.Core.States
 		public static void RestoreDialogData(DialogData data, XElement element)
 		{
 			System.Diagnostics.Debug.Assert (element.Name == "dialogData");
+
+			if (data == null)
+			{
+				return;
+			}
 			
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
