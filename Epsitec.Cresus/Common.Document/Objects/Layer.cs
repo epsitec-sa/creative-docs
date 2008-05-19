@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		#region Menu
-		public static VMenu CreateMenu(UndoableList layers, int currentLayer, MessageEventHandler message)
+		public static VMenu CreateMenu(UndoableList layers, int currentLayer, string cmd, MessageEventHandler message)
 		{
 			//	Construit le menu pour choisir un calque.
 			int total = layers.Count;
@@ -176,8 +176,10 @@ namespace Epsitec.Common.Document.Objects
 					name = Misc.Bold(name);
 				}
 
-				string cmd = "LayerSelect";
-				Misc.CreateStructuredCommandWithName (cmd);
+				if (!string.IsNullOrEmpty(cmd))
+				{
+					Misc.CreateStructuredCommandWithName(cmd);
+				}
 
 				MenuItem item = new MenuItem(cmd, icon, name, "", ii.ToString());
 

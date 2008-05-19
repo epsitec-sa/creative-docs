@@ -306,7 +306,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			//	Construit le menu pour choisir une page.
 			UndoableList pages = this.editor.CurrentDocument.DocumentObjects;  // liste des pages
 			MessageEventHandler message = new MessageEventHandler(this.HandleMenuPressed);
-			return Objects.Page.CreateMenu(pages, this.showedPage, message);
+			return Objects.Page.CreateMenu(pages, this.showedPage, null, message);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

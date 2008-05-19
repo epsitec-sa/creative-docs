@@ -390,10 +390,10 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.showOnlyPanels )
 			{
-				this.aggregateToolBar.Hide ();
-				this.selectorToolBar.Hide ();
-				this.selectorPanel.Hide ();
-				this.textToolBar.Hide ();
+				this.aggregateToolBar.Hide();
+				this.selectorToolBar.Hide();
+				this.selectorPanel.Hide();
+				this.textToolBar.Hide();
 			}
 			else
 			{
@@ -937,7 +937,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton					selectorPartial;
 		protected IconButton					selectorAdaptLine;
 		protected IconButton					selectorAdaptText;
-		protected Viewport							selectorPanel;
+		protected Viewport						selectorPanel;
 		protected TextFieldCombo				selectorName;
 		protected Button						selectorGo;
 

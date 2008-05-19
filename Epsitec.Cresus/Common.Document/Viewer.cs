@@ -133,8 +133,22 @@ namespace Epsitec.Common.Document
 			get { return this.selector; }
 		}
 
+		public bool IsDocumentPreview
+		{
+			//	Miniature pour CrDoc.
+			get
+			{
+				return this.isDocumentPreview;
+			}
+			set
+			{
+				this.isDocumentPreview = value;
+			}
+		}
+
 		public bool IsPictogramPreview
 		{
+			//	Miniature pour CrPicto.
 			get
 			{
 				return this.isPictogramPreview;
@@ -4406,10 +4420,10 @@ namespace Epsitec.Common.Document
 				//	Peint le fond de la surface de travail.
 				if (this.document.Type == DocumentType.Pictogram)
 				{
-					if (this.isPictogramPreview)
+					if (this.isDocumentPreview || this.isPictogramPreview)
 					{
 						graphics.AddFilledRectangle(clipRect);
-						graphics.RenderSolid(Color.FromBrightness(1));
+						graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
 					}
 					else if (!this.BackColor.IsTransparent && this.drawingContext.PreviewActive)
 					{
@@ -4900,6 +4914,7 @@ namespace Epsitec.Common.Document
 		protected DrawingContext				drawingContext;
 		protected Selector						selector;
 		protected Selector						zoomer;
+		protected bool							isDocumentPreview;
 		protected bool							isPictogramPreview;
 		protected double						pictogramMagnifierZoom = 1;
 		protected bool							partialSelect;

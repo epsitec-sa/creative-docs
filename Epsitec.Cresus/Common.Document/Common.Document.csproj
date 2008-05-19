@@ -645,6 +645,7 @@
     <Compile Include="Widgets\ButtonFontFace.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Widgets\FlowPanel.cs" />
     <Compile Include="Widgets\TextFieldPolar.cs" />
     <Compile Include="Widgets\Cropper.cs" />
     <Compile Include="Widgets\DummyTextFieldCombo.cs">

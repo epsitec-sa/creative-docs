@@ -306,7 +306,7 @@ namespace Epsitec.Common.Document
 					double zx = cs.Width/size.Width;
 					double zy = cs.Height/size.Height;
 					double dpi = this.document.GlobalSettings.ScreenDpi;
-					return System.Math.Min (zx, zy)*2.54*100/dpi*this.fitScale;
+					return System.Math.Min(zx, zy)*2.54*100/dpi*this.fitScale;
 				}
 			}
 		}

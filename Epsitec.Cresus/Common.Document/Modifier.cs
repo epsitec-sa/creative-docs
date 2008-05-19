@@ -768,7 +768,7 @@ namespace Epsitec.Common.Document
 			this.viewers.Remove(viewer);
 		}
 
-		public IEnumerable<Viewer>	Viewers
+		public IEnumerable<Viewer> Viewers
 		{
 			//	Liste des visualisateurs attachés au document.
 			get { return this.viewers; }

@@ -479,9 +479,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Menu
-		public static VMenu CreateMenu(UndoableList pages, int currentPage, MessageEventHandler message)
+		public static VMenu CreateMenu(UndoableList pages, int currentPage, string cmd, MessageEventHandler message)
 		{
-			//	Construit le menu pour choisir une page.
+			//	Construit le menu pour choisir une page exclusivement.
 			int total = pages.Count;
 			bool slave = true;
 			VMenu menu = new VMenu();
@@ -503,12 +503,58 @@ namespace Epsitec.Common.Document.Objects
 					name = Misc.Bold(name);
 				}
 
-				string cmd = "PageSelect";
-				Misc.CreateStructuredCommandWithName (cmd);
+				if (!string.IsNullOrEmpty(cmd))
+				{
+					Misc.CreateStructuredCommandWithName(cmd);
+				}
 
 				MenuItem item = new MenuItem(cmd, icon, name, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
 
 				if ( message != null )
+				{
+					item.Pressed += message;
+				}
+
+				menu.Items.Add(item);
+
+				slave = (page.MasterType == MasterType.Slave);
+			}
+			menu.AdjustSize();
+			return menu;
+		}
+
+		public static VMenu CreateMenu(UndoableList pages, List<int> currentsPage, string cmd, MessageEventHandler message)
+		{
+			//	Construit le menu pour choisir une page parmi plusieurs.
+			int total = pages.Count;
+			bool slave = true;
+			VMenu menu = new VMenu();
+			for (int i=0; i<total; i++)
+			{
+				Objects.Page page = pages[i] as Objects.Page;
+
+				if (i > 0 && slave != (page.MasterType == MasterType.Slave))
+				{
+					menu.Items.Add(new MenuSeparator());
+				}
+
+				string name = string.Format("{0}: {1}", page.ShortName, page.LongName);
+
+				string icon = Misc.Icon("ActiveNo");
+				if (currentsPage.Contains(i))
+				{
+					icon = Misc.Icon("ActiveYes");
+					name = Misc.Bold(name);
+				}
+
+				if (!string.IsNullOrEmpty(cmd))
+				{
+					Misc.CreateStructuredCommandWithName(cmd);
+				}
+
+				MenuItem item = new MenuItem(cmd, icon, name, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+				if (message != null)
 				{
 					item.Pressed += message;
 				}
