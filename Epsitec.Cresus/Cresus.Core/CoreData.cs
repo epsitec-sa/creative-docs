@@ -260,6 +260,7 @@ namespace Epsitec.Cresus.Core
 						propertyStore.SetValue ("[8V17]", StringType.DefaultSearchBehaviorProperty, StringSearchBehavior.MatchStart);
 					}
 
+#if false
 					using (DbTransaction transaction = this.data.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 					{
 						foreach (DataBrowserRow row in this.data.dataBrowser.QueryByExample (transaction, template, query))
@@ -280,6 +281,7 @@ namespace Epsitec.Cresus.Core
 						
 						transaction.Commit ();
 					}
+#endif
 
 					if (example == null)
 					{

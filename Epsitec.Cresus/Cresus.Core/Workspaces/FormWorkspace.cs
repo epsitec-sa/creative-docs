@@ -6,6 +6,7 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Types.Collections;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
@@ -35,6 +36,25 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get;
 			set;
+		}
+
+		public IEnumerable<AbstractEntity>		SelectedEntities
+		{
+			get
+			{
+				AbstractEntity data = this.dialogData.ExternalData;
+
+				if (data == null)
+				{
+					return EmptyEnumerable<AbstractEntity>.Instance;
+				}
+				else
+				{
+					//	TODO: handle multiple selection
+
+					return new AbstractEntity[] { data };
+				}
+			}
 		}
 
 		internal DialogData						DialogData
@@ -267,7 +287,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		private void SaveState()
 		{
-			this.StateManager.Write (@"S:\state.xml", new States.CoreState[] { this.State });
+			this.StateManager.WriteStates (@"S:\state.xml", new States.CoreState[] { this.State });
 			System.Diagnostics.Debug.WriteLine ("Save done.");
 		}
 

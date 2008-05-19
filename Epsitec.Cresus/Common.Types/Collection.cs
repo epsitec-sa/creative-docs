@@ -484,6 +484,7 @@ namespace Epsitec.Common.Types
 			return Collection.CompareEqualNotChecked (a, b, predicate);
 		}
 
+		
 		private static bool CompareEqualNotChecked<T>(IEnumerable<T> a, IEnumerable<T> b) where T : System.IEquatable<T>
 		{
 			return Collection.CompareEqualNotChecked (a, b,
@@ -562,6 +563,7 @@ namespace Epsitec.Common.Types
 			
 			return false;
 		}
+
 
 		public delegate bool Predicate<T>(T a, T b);
 	}

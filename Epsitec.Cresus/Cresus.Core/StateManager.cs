@@ -16,8 +16,9 @@ namespace Epsitec.Cresus.Core
 	/// </summary>
 	public sealed class StateManager
 	{
-		public StateManager()
+		public StateManager(CoreApplication application)
 		{
+			this.application = application;
 			this.states = new List<States.CoreState> ();
 			this.zOrder = new List<States.CoreState> ();
 			this.history = new CircularList<States.CoreState> ();
@@ -30,10 +31,6 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.application;
-			}
-			internal set
-			{
-				this.DefineCoreApplication (value);
 			}
 		}
 
@@ -63,6 +60,9 @@ namespace Epsitec.Cresus.Core
 
 		public void Push(States.CoreState state)
 		{
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (state.StateManager == this);
+
 			if (this.states.Contains (state))
 			{
 				this.history.Remove (state);
@@ -88,6 +88,9 @@ namespace Epsitec.Cresus.Core
 
 		public bool Pop(States.CoreState state)
 		{
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (state.StateManager == this);
+
 			if (this.states.Remove (state))
 			{
 				this.history.Remove (state);
@@ -109,11 +112,14 @@ namespace Epsitec.Cresus.Core
 			if (this.history.Count > 0)
 			{
 				this.history.Rotate (1);
-				this.Attach (this.history[0]);
-				this.zOrder.Remove (this.history[0]);
-				this.zOrder.Add (this.history[0]);
 
-				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
+				States.CoreState state = this.history[0];
+
+				this.Attach (state);
+				this.zOrder.Remove (state);
+				this.zOrder.Add (state);
+
+				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, state));
 
 				return true;
 			}
@@ -128,11 +134,14 @@ namespace Epsitec.Cresus.Core
 			if (this.history.Count > 0)
 			{
 				this.history.Rotate (-1);
-				this.Attach (this.history[0]);
-				this.zOrder.Remove (this.history[0]);
-				this.zOrder.Add (this.history[0]);
 
-				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, this.history[0]));
+				States.CoreState state = this.history[0];
+
+				this.Attach (state);
+				this.zOrder.Remove (state);
+				this.zOrder.Add (state);
+
+				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, state));
 
 				return true;
 			}
@@ -141,6 +150,7 @@ namespace Epsitec.Cresus.Core
 				return false;
 			}
 		}
+
 
 		public IEnumerable<States.CoreState> GetAllStates()
 		{
@@ -191,18 +201,19 @@ namespace Epsitec.Cresus.Core
 			throw new System.ArgumentException ();
 		}
 
-		public IEnumerable<States.CoreState> Read(string path)
+		
+		public IEnumerable<States.CoreState> ReadStates(string path)
 		{
 			using (System.IO.StreamReader reader = System.IO.File.OpenText (path))
 			{
-				foreach (var item in this.Read (reader))
+				foreach (var item in this.ReadStates (reader))
 				{
 					yield return item;
 				}
 			}
 		}
 
-		public IEnumerable<States.CoreState> Read(System.IO.TextReader reader)
+		public IEnumerable<States.CoreState> ReadStates(System.IO.TextReader reader)
 		{
 			XDocument doc = XDocument.Load (reader);
 
@@ -210,15 +221,15 @@ namespace Epsitec.Cresus.Core
 				   select States.StateFactory.CreateState (this, state);
 		}
 
-		public void Write(string path, IEnumerable<States.CoreState> states)
+		public void WriteStates(string path, IEnumerable<States.CoreState> states)
 		{
 			using (System.IO.TextWriter writer = new System.IO.StreamWriter (path))
 			{
-				this.Write (writer, states);
+				this.WriteStates (writer, states);
 			}
 		}
 		
-		public void Write(System.IO.TextWriter writer, IEnumerable<States.CoreState> states)
+		public void WriteStates(System.IO.TextWriter writer, IEnumerable<States.CoreState> states)
 		{
 			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
@@ -238,14 +249,15 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		internal int DefineBox(Widget container)
+		public int RegisterBox(Widget container)
 		{
 			int id = 1;
 
+			//	If there are empty slots in the boxes dictionary, reuse them,
+			//	otherwise allocate a slot with a new id.
+			
 			foreach (var item in this.boxes)
 			{
-				//	If there are empty slots in the boxes dictionary, reuse them.
-
 				if (item.Value == null)
 				{
 					id = item.Key;
@@ -258,13 +270,14 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
-			this.boxes[id] = new Box ()
+			this.boxes[id] = new Box (id)
 			{
 				Container = container
 			};
 			
 			return id;
 		}
+
 
 		private void Attach(States.CoreState state)
 		{
@@ -287,6 +300,21 @@ namespace Epsitec.Cresus.Core
 			box.State.Bind (box.Container);
 		}
 
+		private void Detach(States.CoreState state)
+		{
+			System.Diagnostics.Debug.Assert (state.BoxId != 0);
+			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
+
+			Box box = this.boxes[state.BoxId];
+
+			if (box.State == state)
+			{
+				box.State.Unbind ();
+				box.State = null;
+			}
+		}
+		
+
 		/// <summary>
 		/// Determines whether the specified state is bound with a box.
 		/// </summary>
@@ -308,51 +336,25 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private void Detach(States.CoreState state)
-		{
-			System.Diagnostics.Debug.Assert (state.BoxId != 0);
-			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
-			
-			Box box = this.boxes[state.BoxId];
-			
-			if (box.State == state)
-			{
-				box.State.Unbind ();
-				box.State = null;
-			}
-		}
-		
-		private void DefineCoreApplication(CoreApplication coreApplication)
-		{
-			System.Diagnostics.Debug.Assert (coreApplication != null);
-			System.Diagnostics.Debug.Assert (this.application == null);
-
-			this.application = coreApplication;
-		}
-
 		private void OnStateStackChanged(StateStackChangedEventArgs e)
 		{
-			this.UpdateStateZOrder ();
-
 			if (this.StackChanged != null)
 			{
 				this.StackChanged (this, e);
 			}
 		}
 
-		private void UpdateStateZOrder()
-		{
-			for (int i = 0; i < this.history.Count; i++)
-			{
-				this.history[i].ZOrder = i;
-			}
-		}
 
+		#region Box Class
 
+		/// <summary>
+		/// The <c>Box</c> class associates a state with a UI container.
+		/// </summary>
 		private class Box
 		{
-			public Box()
+			public Box(int id)
 			{
+				this.id = id;
 			}
 
 			public Widget Container
@@ -366,16 +368,28 @@ namespace Epsitec.Cresus.Core
 				get;
 				set;
 			}
+
+			public int Id
+			{
+				get
+				{
+					return this.Id;
+				}
+			}
+
+			private readonly int id;
 		}
 
-		
+		#endregion
+
+
 		public event System.EventHandler<StateStackChangedEventArgs>	StackChanged;
 
-		
+
+		private readonly CoreApplication application;
 		private readonly List<States.CoreState> states;
 		private readonly List<States.CoreState> zOrder;
 		private readonly CircularList<States.CoreState> history;
 		private readonly Dictionary<int, Box> boxes;
-		private CoreApplication application;
 	}
 }

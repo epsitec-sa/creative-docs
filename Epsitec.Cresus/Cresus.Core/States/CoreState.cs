@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 		
-		public StateManager StateManager
+		public StateManager						StateManager
 		{
 			get
 			{
@@ -25,13 +25,13 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public StateDeck StateDeck
+		public StateDeck						StateDeck
 		{
 			get;
 			set;
 		}
 
-		public bool IsBound
+		public bool								IsBound
 		{
 			get
 			{
@@ -39,19 +39,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public int ZOrder
-		{
-			get
-			{
-				return this.zOrder;
-			}
-			internal set
-			{
-				this.zOrder = value;
-			}
-		}
-
-		public int BoxId
+		public int								BoxId
 		{
 			get
 			{
@@ -76,13 +64,13 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public string Title
+		public string							Title
 		{
 			get;
 			set;
 		}
 
-		protected Widget Container
+		protected Widget						Container
 		{
 			get
 			{
@@ -140,13 +128,9 @@ namespace Epsitec.Cresus.Core.States
 			this.SoftAttachState ();
 		}
 
-		protected virtual void SoftAttachState()
-		{
-		}
+		protected abstract void SoftAttachState();
 
-		protected virtual void SoftDetachState()
-		{
-		}
+		protected abstract void SoftDetachState();
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -174,7 +158,6 @@ namespace Epsitec.Cresus.Core.States
 		
 		private readonly StateManager			stateManager;
 		private Widget							container;
-		private int								zOrder;
 		private int								boxId;
 	}
 }

@@ -16,13 +16,11 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
-			this.stateManager = new StateManager ()
-			{
-				Application = this
-			};
+			this.stateManager = new StateManager (this);
 
 			this.data = new CoreData ();
 			this.exceptionManager = new CoreLibrary.ExceptionManager ();
+			this.commands = new CoreCommands (this);
 		}
 
 
@@ -70,7 +68,7 @@ namespace Epsitec.Cresus.Core
 				Dock = DockStyle.Fill
 			};
 
-			this.defaultBoxId = this.stateManager.DefineBox (this.defaultBox);
+			this.defaultBoxId = this.stateManager.RegisterBox (this.defaultBox);
 
 			this.CreateRibbon ();
 			this.CreateWorkspace ();
@@ -81,6 +79,49 @@ namespace Epsitec.Cresus.Core
 			this.data.SetupDatabase ();
 		}
 
+
+		public void StartNewSearch(Druid entitiyId, Druid formId)
+		{
+			Workspaces.FormWorkspace workspace =
+				new Workspaces.FormWorkspace ()
+				{
+					EntityId = entitiyId,
+					FormId = formId
+				};
+
+			States.FormWorkspaceState state =
+				new States.FormWorkspaceState (this.stateManager)
+				{
+					BoxId = this.defaultBoxId,
+					StateDeck = States.StateDeck.History,
+					Title = "Recherche",
+					Workspace = workspace
+				};
+
+			this.stateManager.Push (state);
+		}
+		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.data != null)
+				{
+					this.data.Dispose ();
+					this.data = null;
+				}
+				if (this.exceptionManager != null)
+				{
+					this.exceptionManager.Dispose ();
+					this.exceptionManager = null;
+				}
+			}
+
+			base.Dispose (disposing);
+		}
+
+
+		
 		private void CreateRibbon()
 		{
 			this.ribbonBook = new RibbonBook (this.ribbonBox)
@@ -160,6 +201,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateWorkspace()
 		{
+#if false
 			this.stateManager.Push (
 				new States.FormWorkspaceState (this.stateManager)
 				{
@@ -185,6 +227,7 @@ namespace Epsitec.Cresus.Core
 						EntityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
 					}
 				});
+#endif
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -197,25 +240,6 @@ namespace Epsitec.Cresus.Core
 						Title = string.Format ("{0}", (char)('A'+i))
 					});
 			}
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.data != null)
-				{
-					this.data.Dispose ();
-					this.data = null;
-				}
-				if (this.exceptionManager != null)
-				{
-					this.exceptionManager.Dispose ();
-					this.exceptionManager = null;
-				}
-			}
-
-			base.Dispose (disposing);
 		}
 
 		private IconButton CreateButton(Command command)
@@ -247,6 +271,7 @@ namespace Epsitec.Cresus.Core
 		StateManager							stateManager;
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
+		CoreCommands							commands;
 		
 		private FrameBox						ribbonBox;
 		private FrameBox						defaultBox;

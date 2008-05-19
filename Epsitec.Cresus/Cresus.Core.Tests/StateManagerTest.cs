@@ -33,11 +33,11 @@ namespace Epsitec.Cresus.Core
 		{
 			System.Console.Out.WriteLine ("Using {0} for the serialization", this.path);
 
-			StateManager manager = new StateManager ();
+			StateManager manager = new StateManager (null);
 
 			using (System.IO.TextWriter writer = new System.IO.StreamWriter (this.path))
 			{
-				manager.Write (writer,
+				manager.WriteStates (writer,
 					new DummyState[] {
 						new DummyState (manager, "A"),
 						new DummyState (manager, "B")
@@ -48,9 +48,9 @@ namespace Epsitec.Cresus.Core
 		[Test]
 		public void Check02LoadState()
 		{
-			StateManager manager = new StateManager ();
+			StateManager manager = new StateManager (null);
 
-			List<States.CoreState> states = new List<States.CoreState> (manager.Read (this.path));
+			List<States.CoreState> states = new List<States.CoreState> (manager.ReadStates (this.path));
 
 			Assert.AreEqual (2, states.Count);
 			Assert.AreEqual (typeof (DummyState), states[0].GetType ());
@@ -100,6 +100,14 @@ namespace Epsitec.Cresus.Core
 			public override string ToString()
 			{
 				return this.value;
+			}
+
+			protected override void SoftAttachState()
+			{
+			}
+
+			protected override void SoftDetachState()
+			{
 			}
 
 			private string value;

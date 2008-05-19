@@ -48,6 +48,23 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		public AbstractEntity					CurrentEntity
+		{
+			get
+			{
+				Workspaces.FormWorkspace workspace = this.Workspace;
+				
+				if (workspace == null)
+				{
+					return null;
+				}
+				else
+				{
+					return Collection.GetFirst (workspace.SelectedEntities, null);
+				}
+			}
+		}
+
 		
 		public override XElement Serialize(XElement element)
 		{
@@ -241,6 +258,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		
 		private Workspaces.FormWorkspace		workspace;
 	}
 }
