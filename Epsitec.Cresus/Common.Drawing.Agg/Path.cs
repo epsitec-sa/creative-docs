@@ -252,7 +252,14 @@ namespace Epsitec.Common.Drawing
 		{
 			this.Append (path, 1, 0, 0, 1, 0, 0, this.default_zoom);
 		}
-		
+
+		//	approximation_zoom :
+		//	Pour un dessin à l'échelle 1:1, utiliser 1.0 comme valeur pour approximation_zoom.
+		//	Si un zoom x10 est appliqué au chemin avant de le transformer en pixels, il faut utiliser un approximation_zoom de 10.
+		//	1.0 = dessin avec l'unité égale au pixel
+		//	0.1 = dessin avec l'unité égale à 0.1 pixel
+		//	0.0 = division par zéro dans le code interne !
+
 		public void Append(Path path, double approximation_zoom)
 		{
 			this.Append (path, 1, 0, 0, 1, 0, 0, approximation_zoom);
