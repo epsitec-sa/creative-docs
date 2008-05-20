@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="100" name="Common.DocumentEditor" layer="s">
   <Versions>
-    <Version id="2" build="5" date="2008-04-22T10:28:24.7820000Z" />
     <Version id="1" build="4" date="2008-04-30T07:30:47.3206000Z" />
+    <Version id="2" build="6" date="2008-05-20T06:55:36.8620000Z" />
   </Versions>
 </ModuleInfo>
