@@ -323,6 +323,13 @@ namespace Epsitec.Common.Document
 			set { this.initializationInProgress = value; }
 		}
 
+		public Miniatures Miniatures
+		{
+			//	Gestionnaire de miniatures associé.
+			get { return this.miniatures; }
+			set { this.miniatures = value; }
+		}
+
 		protected void MainWindowSetFrozen()
 		{
 			//	Gèle la fenêtre principale.
@@ -3190,5 +3197,6 @@ namespace Epsitec.Common.Document
 		protected Widgets.HRuler				hRuler;
 		protected Widgets.VRuler				vRuler;
 		protected bool							containOldText;
+		protected Miniatures					miniatures;
 	}
 }
