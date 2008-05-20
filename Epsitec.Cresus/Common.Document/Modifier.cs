@@ -4888,7 +4888,6 @@ namespace Epsitec.Common.Document
 			//	nouvelle page, suppression d'une page, etc.).
 			this.UpdatePageShortNames();
 			this.UpdatePageNumbers();
-			this.UpdateMiniatures();
 		}
 
 		public void UpdatePageShortNames()
@@ -4928,15 +4927,6 @@ namespace Epsitec.Common.Document
 				{
 					obj.PageNumber = i;
 				}
-			}
-		}
-
-		public void UpdateMiniatures()
-		{
-			//	Met à jour les éventuelles pages miniatures associées au document.
-			if (this.document.Miniatures != null)
-			{
-				this.document.Miniatures.UpdatePageAfterChanging();
 			}
 		}
 
