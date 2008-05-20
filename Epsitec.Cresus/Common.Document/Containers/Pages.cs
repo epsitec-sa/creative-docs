@@ -354,9 +354,10 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGroupRight.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.specificSlavePage = new TextFieldCombo(this.radioGroupRight);
+			this.specificSlavePage.PreferredWidth = 50;
 			this.specificSlavePage.IsReadOnly = true;
-			this.specificSlavePage.Dock = DockStyle.Bottom;
-			this.specificSlavePage.Margins = new Margins(0, 0, 0, 61);
+			this.specificSlavePage.Dock = DockStyle.Top;
+			this.specificSlavePage.Margins = new Margins(0, 0, 30, 0);
 			this.specificSlavePage.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleComboOpening);
 			this.specificSlavePage.ComboClosed += new EventHandler(this.HandleComboClosed);
 			this.specificSlavePage.TabIndex = 1;
