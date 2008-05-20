@@ -819,44 +819,6 @@ namespace Epsitec.Common.DocumentEditor
 				}
 			}
 			
-			public static class Miniatures
-			{
-				//	designer:str/43K
-				public static string Title { get { return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544320)); } }
-				public static class Button
-				{
-					public static class AllHide
-					{
-						//	designer:str/43K5
-						public static string Tooltip { get { return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544325)); } }
-					}
-					
-					public static class AllShow
-					{
-						//	designer:str/43K4
-						public static string Tooltip { get { return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544324)); } }
-					}
-					
-					public static class Expand
-					{
-						//	designer:str/43K3
-						public static string Tooltip { get { return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544323)); } }
-					}
-					
-					public static class Menu
-					{
-						//	designer:str/43K1
-						public static string Tooltip { get { return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544321)); } }
-					}
-				}
-				
-				public static class Slider
-				{
-					//	designer:str/43K2
-					public static string Tooltip { get { return global::Epsitec.Common.DocumentEditor.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544322)); } }
-				}
-			}
-			
 			public static class Ribbon
 			{
 				//	designer:str/4308

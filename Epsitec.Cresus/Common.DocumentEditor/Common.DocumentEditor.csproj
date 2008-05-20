@@ -242,7 +242,6 @@
     <Compile Include="Application.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Miniatures.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

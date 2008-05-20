@@ -285,10 +285,4 @@
   <data name="Dialog.Update.Address2" id="0G6">Epsitec SA, Ch. du Fontenay 6, 1400 Yverdon-les-Bains, Suisse</data>
   <data name="Dialog.Update.Phone1" id="0H6">Tél:</data>
   <data name="Dialog.Update.Phone2" id="0I6">0848 27 37 87</data>
-  <data name="Miniatures.Title" id="K">● Pages miniatures</data>
-  <data name="Miniatures.Button.Menu.Tooltip" id="K1">Choix des pages miniatures visibles</data>
-  <data name="Miniatures.Slider.Tooltip" id="K2">Taille des pages miniatures</data>
-  <data name="Miniatures.Button.Expand.Tooltip" id="K3">Montre ou cache le panneau des pages miniatures</data>
-  <data name="Miniatures.Button.AllShow.Tooltip" id="K4">Montre toutes les pages miniatures</data>
-  <data name="Miniatures.Button.AllHide.Tooltip" id="K5">Cache toutes les pages miniatures</data>
 </bundle>
