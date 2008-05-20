@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour les sélections.
 			this.selectorToolBar = new HToolBar(this);
 			this.selectorToolBar.Dock = DockStyle.Top;
-			this.selectorToolBar.Margins = new Margins(0, 0, 0, 5);
+			this.selectorToolBar.Margins = new Margins(0, 0, 0, -1);
 
 //-			System.Diagnostics.Debug.Assert(this.selectorToolBar.CommandDispatcher != null);
 			
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour les agrégats.
 			this.aggregateToolBar = new HToolBar(this);
 			this.aggregateToolBar.Dock = DockStyle.Top;
-			this.aggregateToolBar.Margins = new Margins(0, 0, 0, 5);
+			this.aggregateToolBar.Margins = new Margins(0, 0, 0, -1);
 
 //-			System.Diagnostics.Debug.Assert(this.aggregateToolBar.CommandDispatcher != null);
 
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Document.Containers
 			//	Crée la toolbar pour le texte.
 			this.textToolBar = new HToolBar(this);
 			this.textToolBar.Dock = DockStyle.Top;
-			this.textToolBar.Margins = new Margins(0, 0, 0, 5);
+			this.textToolBar.Margins = new Margins(0, 0, 0, -1);
 
 			StaticText st = new StaticText(this.textToolBar);
 			st.Text = Res.Strings.TextPanel.Filter.Title;
