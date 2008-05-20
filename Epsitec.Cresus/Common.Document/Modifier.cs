@@ -4769,7 +4769,7 @@ namespace Epsitec.Common.Document
 
 			public override IOplet Redo()
 			{
-				if (this.updateOnUndo)
+				if (this.updateOnRedo)
 				{
 					this.Update();
 				}
