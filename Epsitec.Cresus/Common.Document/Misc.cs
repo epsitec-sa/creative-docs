@@ -718,6 +718,12 @@ namespace Epsitec.Common.Document
 			return string.Format("<i>{0}</i>", text);
 		}
 
+		static public string FontSize(string text, double size)
+		{
+			//	Retourne le texte dans une autre taille.
+			return string.Format("<font size=\"{1}%\">{0}</font>", text, (size*100).ToString(System.Globalization.CultureInfo.InvariantCulture));
+		}
+
 
 		static public string Image(string icon)
 		{

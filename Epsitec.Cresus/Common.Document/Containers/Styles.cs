@@ -704,7 +704,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( overflow > 0 )
 			{
 				double size = System.Math.Max((1-((double)overflow/(30*2)))*100, 60);  // zoom 60..100
-				builder.Insert(0, string.Format("<font size=\"{0}%\">", size.ToString()));
+				builder.Insert(0, string.Format("<font size=\"{0}%\">", size.ToString(System.Globalization.CultureInfo.InvariantCulture)));
 				builder.Append("</font>");
 			}
 

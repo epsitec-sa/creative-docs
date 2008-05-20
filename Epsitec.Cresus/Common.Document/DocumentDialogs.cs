@@ -787,7 +787,7 @@ namespace Epsitec.Common.Document
 
 				text = new StaticText(container);
 				text.Name = sDouble.Name;
-				text.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
+				text.Text = Misc.FontSize(sDouble.GetInfo(), 0.8);
 				text.PreferredWidth = 150;
 				text.Dock = DockStyle.Left;
 				text.Margins = new Margins(120, 0, 0, 0);
@@ -898,7 +898,7 @@ namespace Epsitec.Common.Document
 			if ( sDouble.Info )
 			{
 				StaticText info = this.WidgetsTableSearch(sDouble.Name, ".Info") as StaticText;
-				info.Text = "<font size=\"80%\">" + sDouble.GetInfo() + "</font>";
+				info.Text = Misc.FontSize(sDouble.GetInfo(), 0.8);
 			}
 
 			if (name == "ImageDpi")
@@ -1105,7 +1105,7 @@ namespace Epsitec.Common.Document
 				button.PreferredWidth = 17;
 				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
+				button.Text = Misc.FontSize("\u00F72", 0.8);  // /2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -1119,7 +1119,7 @@ namespace Epsitec.Common.Document
 				button.PreferredWidth = 17;
 				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
+				button.Text = Misc.FontSize("\u00D72", 0.8);  // x2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -1140,7 +1140,7 @@ namespace Epsitec.Common.Document
 				button.PreferredWidth = 17;
 				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">" + "\u00F72</font>";  // /2
+				button.Text = Misc.FontSize("\u00F72", 0.8);  // /2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -1154,7 +1154,7 @@ namespace Epsitec.Common.Document
 				button.PreferredWidth = 17;
 				button.PreferredHeight = 22-2-2;
 				button.Name = sPoint.Name;
-				button.Text = @"<font size=""80%"">" + "\u00D72</font>";  // x2
+				button.Text = Misc.FontSize("\u00D72", 0.8);  // x2
 //-				button.SetClientZoom(0.8);
 				button.TabIndex = this.tabIndex++;
 				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
