@@ -139,6 +139,66 @@ namespace Epsitec.Common.Support.EntityEngine
 			return buffer.ToString ();
 		}
 
+		public void ForEachField(EntityDataVersion version, System.Action<EntityFieldPath, StructuredTypeField, object> action)
+		{
+			this.ForEachField (version, "", action);
+		}
+
+		private void ForEachField(EntityDataVersion version, string root, System.Action<EntityFieldPath, StructuredTypeField, object> action)
+		{
+			IValueStore store;
+			
+			switch (version)
+			{
+				case EntityDataVersion.Modified:
+					store = this.ModifiedValues;
+					break;
+				
+				case EntityDataVersion.Original:
+					store = this.OriginalValues;
+					break;
+				
+				default:
+					throw new System.NotImplementedException ();
+			}
+			
+			if (store == null)
+			{
+				return;
+			}
+
+			foreach (string id in this.context.GetEntityFieldIds (this))
+			{
+				StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+				object              value = store.GetValue (field.Id);
+				EntityFieldPath     path  = string.IsNullOrEmpty (root) ? EntityFieldPath.CreateRelativePath (field.Id) : EntityFieldPath.CreateRelativePath (root, field.Id);
+
+				if ((UndefinedValue.IsUndefinedValue (value)) ||
+					(value == null))
+				{
+					continue;
+				}
+
+				action (path, field, value);
+
+				switch (field.Relation)
+				{
+					case FieldRelation.Reference:
+						AbstractEntity entity = value as AbstractEntity;
+						if (entity != null)
+						{
+							entity.ForEachField (version, path.ToString (), action);
+						}
+						break;
+
+					case FieldRelation.Collection:
+						//	TODO: implement...
+						break;
+				}
+			}
+		}
+
+
 		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history)
 		{
 			string indent = new string (' ', level*2);

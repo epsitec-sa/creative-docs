@@ -94,11 +94,25 @@ namespace Epsitec.Cresus.Core.States
 		{
 			if (this.workspace != null)
 			{
+				string currentEntityId = null;
+				XElement savedDialogData = null;
+				XElement[] emptyElement = new XElement[0];
+
+				if ((this.workspace.DialogData != null) &&
+					(this.workspace.DialogData.EntityContext != null))
+				{
+					AbstractEntity template = this.workspace.SearchTemplate;
+					
+					currentEntityId = this.workspace.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
+					savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (this.workspace.DialogData) : FormWorkspaceState.SaveTemplate (template);
+				}
+
 				element.Add (new XElement ("workspace",
 					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
 					new XAttribute ("formId", this.workspace.FormId.ToString ()),
+					new XAttribute ("currentEntityId", currentEntityId ?? ""),
 					new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()),
-					FormWorkspaceState.SaveDialogData (this.workspace.DialogData)));
+					(object)savedDialogData ?? (object)emptyElement));
 			}
 		}
 
@@ -121,7 +135,12 @@ namespace Epsitec.Cresus.Core.States
 					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
 				}
 
-				FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, workspaceElement.Element ("dialogData"));
+				XElement dialogDataElement = workspaceElement.Element ("dialogData");
+
+				if (dialogDataElement != null)
+				{
+					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataElement);
+				}
 			}
 		}
 
@@ -161,7 +180,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
-
+			
 			data.ForEachChange (
 				change =>
 				{
@@ -214,6 +233,66 @@ namespace Epsitec.Cresus.Core.States
 					}
 					
 					return true;
+				});
+
+			return element;
+		}
+
+		/// <summary>
+		/// Saves the search template as an XML chunk.
+		/// </summary>
+		/// <param name="template">The template.</param>
+		/// <returns>The XML chunk of the saved search template.</returns>
+		public static XElement SaveTemplate(AbstractEntity template)
+		{
+			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
+			XElement        element   = new XElement ("dialogData");
+
+			if (template == null)
+			{
+				return element;
+			}
+
+			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
+
+			template.ForEachField (EntityDataVersion.Modified,
+				(fieldPath, field, value) =>
+				{
+					string path = fieldPath.ToString ();
+					
+					if (value == null)
+					{
+						element.Add (new XElement ("null",
+							new XAttribute ("path", path)));
+					}
+					else
+					{
+						string id;
+
+						switch (field.Relation)
+						{
+							case FieldRelation.None:
+								element.Add (new XElement ("data",
+									new XAttribute ("path", path),
+									new XAttribute ("value", converter.Convert (value, typeof (string), null, culture))));
+								break;
+
+							case FieldRelation.Reference:
+
+								//	skip references; a template has just data in its fields
+
+								break;
+
+							case FieldRelation.Collection:
+								
+								//	TODO: how do we serialize the collection ?
+								
+								break;
+
+							default:
+								throw new System.NotSupportedException (string.Format ("Relation {0} not supported for field {1}", field.Relation, field.Id));
+						}
+					}
 				});
 
 			return element;

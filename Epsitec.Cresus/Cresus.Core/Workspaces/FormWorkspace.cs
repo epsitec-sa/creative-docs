@@ -65,6 +65,31 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
+		internal AbstractEntity					SearchTemplate
+		{
+			get
+			{
+				if ((this.editionDialogData != null) ||
+					(this.controller == null))
+				{
+					return null;
+				}
+				else
+				{
+					ISearchContext context = this.controller.ActiveSearchContext;
+
+					if (context == null)
+					{
+						return null;
+					}
+					else
+					{
+						return context.SearchTemplate;
+					}
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets the path of the focused field.
 		/// </summary>
