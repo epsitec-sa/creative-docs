@@ -19,6 +19,9 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public sealed class HintListController : DependencyObject
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HintListController"/> class.
+		/// </summary>
 		public HintListController()
 		{
 			this.searchController = new DialogSearchController ();
@@ -122,15 +125,51 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
-		public void DefineContainer(Widget widget)
+		/// <summary>
+		/// Defines the parent container used by the hint list widget.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		public void DefineContainer(Widget container)
 		{
 			this.CreateUserInterface ();
 			
-			this.hintListWidget.SetParent (widget);
+			this.hintListWidget.SetParent (container);
 			this.hintListWidget.Anchor = AnchorStyles.None;
 			this.hintListWidget.Dock = DockStyle.Left;
 		}
+
+		/// <summary>
+		/// Refreshes the contents of the hint list, based on the latest search
+		/// result (if any).
+		/// </summary>
+		public void RefreshHintList()
+		{
+			if ((this.hintListWidget != null) &&
+				(this.searchResult != null) &&
+				(this.searchController.ActiveSearchContext != null))
+			{
+				ICollectionView view = this.searchResult.CollectionView;
+				AbstractEntity suggestion = this.searchController.ActiveSearchContext.ActiveSuggestion;
+
+				view.Refresh ();
+				view.MoveCurrentTo (suggestion);
+
+				this.hintListWidget.Items = view;
+			}
+		}
+
+		/// <summary>
+		/// Sets an empty hint list.
+		/// </summary>
+		public void SetEmptyHintList()
+		{
+			if (this.hintListWidget != null)
+			{
+				this.hintListWidget.Items = this.emptyCollectionView;
+			}
+		}
 		
+
 
 		protected override void Dispose(bool disposing)
 		{
@@ -163,10 +202,10 @@ namespace Epsitec.Common.Dialogs
 			
 			if (this.activeSearchContext == null)
 			{
-				this.hintListWidget.Items = this.emptyCollectionView;
+				this.SetEmptyHintList ();
 			}
 		}
-		
+
 		
 		private void UpdateContentHeader()
 		{
@@ -388,23 +427,9 @@ namespace Epsitec.Common.Dialogs
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", this.searchResult.AllResults.Count));
 
-			this.RefreshHintListWidget ();
+			this.RefreshHintList ();
 		}
 
-		public void RefreshHintListWidget()
-		{
-			if ((this.searchResult != null) &&
-				(this.searchController.ActiveSearchContext != null))
-			{
-				ICollectionView view = this.searchResult.CollectionView;
-				AbstractEntity suggestion = this.searchController.ActiveSearchContext.ActiveSuggestion;
-
-				view.Refresh ();
-				view.MoveCurrentTo (suggestion);
-
-				this.hintListWidget.Items = view;
-			}
-		}
 
 		
 		private readonly DialogSearchController searchController;

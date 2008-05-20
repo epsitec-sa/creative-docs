@@ -215,16 +215,25 @@ namespace Epsitec.Common.Dialogs
 		/// <returns><c>true</c> if the focus was successfully set.</returns>
 		public bool SetFocus(EntityFieldPath path)
 		{
-			AbstractPlaceholder placeholder = DialogSearchController.FindPlaceholder (this.dialogData.Panel, path);
-
-			if (placeholder != null)
+			if ((path == null) ||
+				(path.IsEmpty))
 			{
-				placeholder.SetFocusOnTabWidget ();
-				return placeholder.ContainsKeyboardFocus;
+				this.dialogPanel.SetFocusOnTabWidget ();
+				return this.dialogPanel.ContainsKeyboardFocus;
 			}
 			else
 			{
-				return false;
+				AbstractPlaceholder placeholder = DialogSearchController.FindPlaceholder (this.dialogData.Panel, path);
+
+				if (placeholder != null)
+				{
+					placeholder.SetFocusOnTabWidget ();
+					return placeholder.ContainsKeyboardFocus;
+				}
+				else
+				{
+					return false;
+				}
 			}
 		}
 

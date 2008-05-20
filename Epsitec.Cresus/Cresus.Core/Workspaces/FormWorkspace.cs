@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Core.Workspaces
 				Visibility = HintListVisibilityMode.Visible,
 				ContentType = HintListContentType.Catalog
 			};
+			
+			this.searchController = this.hintListController.SearchController;
 		}
 
 
@@ -47,10 +49,10 @@ namespace Epsitec.Cresus.Core.Workspaces
 				//	will simply return it as the only selected entity : the
 				//	controller has never had a chance to update the list...
 
-				if ((this.controller != null) &&
-					(this.controller.DefaultSuggestion != null))
+				if ((this.searchController != null) &&
+					(this.searchController.DefaultSuggestion != null))
 				{
-					return new AbstractEntity[] { this.controller.DefaultSuggestion };
+					return new AbstractEntity[] { this.searchController.DefaultSuggestion };
 				}
 
 				AbstractEntity data = this.dialogData.ExternalData;
@@ -68,7 +70,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
-		internal DialogData						DialogData
+		public DialogData						DialogData
 		{
 			get
 			{
@@ -76,18 +78,17 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
-		internal AbstractEntity					SearchTemplate
+		public AbstractEntity					SearchTemplate
 		{
 			get
 			{
-				if ((this.editionDialogData != null) ||
-					(this.controller == null))
+				if (this.editionDialogData != null)
 				{
 					return null;
 				}
 				else
 				{
-					ISearchContext context = this.controller.ActiveSearchContext;
+					ISearchContext context = this.searchController.ActiveSearchContext;
 
 					if (context == null)
 					{
@@ -105,7 +106,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		/// Gets the path of the focused field.
 		/// </summary>
 		/// <value>The path of the focused field or <c>null</c>.</value>
-		internal EntityFieldPath FocusPath
+		public EntityFieldPath					FocusPath
 		{
 			get
 			{
@@ -137,17 +138,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 				this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
 				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 				this.resolver = this.Application.Data.Resolver;
-
-				this.controller = this.hintListController.SearchController;
 			}
 		}
 
 		public void SelectEntity(AbstractEntity entity)
 		{
-			if (this.controller != null)
-			{
-				this.controller.DefaultSuggestion = entity;
-			}
+			this.searchController.DefaultSuggestion = entity;
 		}
 		
 		public override AbstractGroup CreateUserInterface()
@@ -192,15 +188,15 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.editionPanel.Visibility = false;
 			this.editionPanel.Margins = new Margins (4);
 
-			this.controller.DialogData   = this.dialogData;
-			this.controller.DialogPanel  = this.searchPanel;
+			this.searchController.DialogData   = this.dialogData;
+			this.searchController.DialogPanel  = this.searchPanel;
 //-			this.controller.DialogWindow = this.Application.Window;
-			this.controller.Resolver     = this.resolver;
-			this.controller.AssertReady ();
+			this.searchController.Resolver     = this.resolver;
+			this.searchController.AssertReady ();
 
-			this.controller.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
-			this.controller.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
-			this.controller.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
+			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
+			this.searchController.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
+			this.searchController.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
 
 			this.dialogData.BindToUserInterface (this.searchPanel);
 
@@ -247,22 +243,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 			this.Application.CommandDispatcher.RegisterRange (this.GetCommandHandlers ());
 
-			if ((this.controller != null) &&
-				(this.controller.DialogPanel != null))
+			if (this.searchController.DialogPanel != null)
 			{
-				this.controller.DialogWindow = this.Container.Window;
+				this.searchController.DialogWindow = this.Container.Window;
+				this.searchController.SetFocus (this.focusFieldPath);
 
-				if ((this.focusFieldPath == null) ||
-					(this.focusFieldPath.IsEmpty))
-				{
-					this.controller.DialogPanel.SetFocusOnTabWidget ();
-				}
-				else
-				{
-					this.controller.SetFocus (this.focusFieldPath);
-				}
-
-				this.hintListController.RefreshHintListWidget ();
+				this.hintListController.RefreshHintList ();
 			}
 		}
 
@@ -270,10 +256,8 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			this.Application.CommandDispatcher.UnregisterRange (this.GetCommandHandlers ());
 
-			if (this.controller != null)
-			{
-				this.controller.DialogWindow = null;
-			}
+			this.searchController.DialogWindow = null;
+			this.hintListController.SetEmptyHintList ();
 		}
 
 		
@@ -289,10 +273,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		private void ExecuteClearSearchCommand(object sender, CommandEventArgs e)
 		{
-			if (this.controller != null)
-			{
-				this.controller.ClearActiveSuggestion ();
-			}
+			this.searchController.ClearActiveSuggestion ();
 		}
 
 		private void ExecuteStartItemEditionCommand(object sender, CommandEventArgs e)
@@ -302,11 +283,11 @@ namespace Epsitec.Cresus.Core.Workspaces
 			if ((data != null) &&
 				(this.editionDialogData == null))
 			{
-				this.controller.ResetSuggestions ();
+				this.searchController.ResetSuggestions ();
 				this.searchPanel.Visibility = false;
 				this.editionPanel.Visibility = true;
 				this.editionDialogData = new DialogData (data, this.searchContext, DialogDataMode.Isolated);
-				this.controller.DialogData = this.editionDialogData;
+				this.searchController.DialogData = this.editionDialogData;
 				this.editionDialogData.BindToUserInterface (this.editionPanel);
 				this.dialogData.UnbindFromUserInterface (this.searchPanel);
 				this.editionPanel.SetFocusOnTabWidget ();
@@ -321,12 +302,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 				(this.editionDialogData != null))
 			{
 				this.editionDialogData.ApplyChanges ();
-				this.controller.ResetSuggestions ();
+				this.searchController.ResetSuggestions ();
 				this.editionPanel.Visibility = false;
 				this.editionDialogData.UnbindFromUserInterface (this.editionPanel);
 				this.editionDialogData = null;
 				this.searchPanel.Visibility = true;
-				this.controller.DialogData = this.dialogData;
+				this.searchController.DialogData = this.dialogData;
 				this.dialogData.BindToUserInterface (this.searchPanel);
 				this.searchPanel.SetFocusOnTabWidget ();
 			}
@@ -378,13 +359,13 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 
 		private readonly HintListController		hintListController;
+		private readonly DialogSearchController	searchController;
 		private Panel							searchPanel;
 		private Panel							editionPanel;
 		private DialogData						dialogData;
 		private DialogData						editionDialogData;
 		private AbstractEntity					currentItem;
 		private EntityContext					searchContext;
-		private DialogSearchController			controller;
 		private IEntityResolver					resolver;
 		private EntityFieldPath					focusFieldPath;
 	}
