@@ -180,6 +180,8 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <None Include="App.ico" />
+    <EmbeddedResource Include="Images\SamplesAllHide.icon" />
+    <EmbeddedResource Include="Images\SamplesAllShow.icon" />
     <EmbeddedResource Include="Images\RegularFlower2.icon" />
     <EmbeddedResource Include="Images\RegularStar.icon" />
     <EmbeddedResource Include="Images\RegularFlower1.icon" />
