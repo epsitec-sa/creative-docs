@@ -19,7 +19,8 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override Margins GetInternalPadding()
 		{
-			return new Drawing.Margins(3, 3, 3, 3);
+			//?return new Drawing.Margins(3, 3, 3, 3);
+			return new Drawing.Margins(2, 2, 2, 2);
 		}
 
 		protected override void MeasureMinMax(ref Size min, ref Size max)
@@ -135,6 +136,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.lastWidth = this.ActualWidth;
 		}
 
+#if false
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -144,6 +146,7 @@ namespace Epsitec.Common.Document.Widgets
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
+#endif
 
 		protected override void OnChildrenChanged()
 		{
