@@ -160,9 +160,9 @@ namespace Epsitec.Cresus.Core.States
 		{
 			XElement core = element.Element ("core");
 			
-			this.BoxId = (int) core.Attribute ("boxId");
-			this.StateDeck = ((string) core.Attribute ("deck")).ToEnum<StateDeck> ();
-			this.Title = (string) core.Attribute ("title");
+			this.BoxId     = ((int)    core.Attribute ("boxId"));
+			this.StateDeck = ((string) core.Attribute ("deck")).ToEnum<StateDeck> (StateDeck.None);
+			this.Title     = ((string) core.Attribute ("title"));
 		}
 
 		

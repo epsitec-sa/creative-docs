@@ -755,6 +755,18 @@ namespace Epsitec.Common.Types
 			return (T) System.Enum.Parse (typeof (T), text);
 		}
 
+		public static T ToEnum<T>(this string text, T defaultValue)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return defaultValue;
+			}
+			else
+			{
+				return (T) System.Enum.Parse (typeof (T), text);
+			}
+		}
+
 		
 		internal static bool ParseEnum(System.Type type, string name, out System.Enum value)
 		{

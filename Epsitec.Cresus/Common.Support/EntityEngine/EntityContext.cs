@@ -430,6 +430,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		public static bool IsSearchEntity(AbstractEntity entity)
+		{
+			return entity is SearchEntity;
+		}
+
 		public AbstractEntity CreateEmptyEntity(Druid entityId)
 		{
 			AbstractEntity entity;

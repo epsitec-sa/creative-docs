@@ -85,6 +85,7 @@
     <Compile Include="Widgets\StateDeckWidget.cs" />
     <Compile Include="Workspaces\CoreWorkspace.cs" />
     <Compile Include="Workspaces\FormWorkspace.cs" />
+    <Compile Include="FormWorkspaceMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cresus.Core\module.info">

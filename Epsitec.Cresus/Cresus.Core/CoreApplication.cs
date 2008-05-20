@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -37,6 +38,14 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.exceptionManager;
+			}
+		}
+
+		public StateManager StateManager
+		{
+			get
+			{
+				return this.stateManager;
 			}
 		}
 		
@@ -80,13 +89,14 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void StartNewSearch(Druid entitiyId, Druid formId)
+		public void StartNewSearch(Druid entityId, Druid formId)
 		{
 			Workspaces.FormWorkspace workspace =
 				new Workspaces.FormWorkspace ()
 				{
-					EntityId = entitiyId,
-					FormId = formId
+					EntityId = entityId,
+					FormId = formId,
+					Mode = FormWorkspaceMode.Search
 				};
 
 			States.FormWorkspaceState state =
@@ -95,6 +105,31 @@ namespace Epsitec.Cresus.Core
 					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.History,
 					Title = "Recherche",
+					Workspace = workspace
+				};
+
+			this.stateManager.Push (state);
+		}
+
+		public void StartEdit(AbstractEntity entity, Druid formId)
+		{
+			Druid entityId = entity.GetEntityStructuredTypeId ();
+
+			Workspaces.FormWorkspace workspace =
+				new Workspaces.FormWorkspace ()
+				{
+					EntityId = entityId,
+					FormId = formId,
+					Mode = FormWorkspaceMode.Edition,
+					CurrentItem = entity
+				};
+
+			States.FormWorkspaceState state =
+				new States.FormWorkspaceState (this.stateManager)
+				{
+					BoxId = this.defaultBoxId,
+					StateDeck = States.StateDeck.History,
+					Title = "Edition",
 					Workspace = workspace
 				};
 

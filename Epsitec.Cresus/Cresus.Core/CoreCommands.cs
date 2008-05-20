@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -38,6 +39,29 @@ namespace Epsitec.Cresus.Core
 		public void SwitchToBaseCustomers()
 		{
 			this.application.StartNewSearch (AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId, AddressBook.FormIds.AdressePersonne);
+		}
+
+
+
+		[Command (Epsitec.Common.Dialogs.Res.CommandIds.HintList.StartItemEdition)]
+		public void HintListStartItemEdition()
+		{
+			States.CoreState          state     = this.application.StateManager.ActiveState;
+			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
+
+			if (formState != null)
+			{
+				AbstractEntity entity = formState.CurrentEntity;
+
+				if (entity != null)
+				{
+					System.Diagnostics.Debug.Assert (EntityContext.IsSearchEntity (entity) == false);
+
+					Druid formId = formState.Workspace.FormId;
+
+					this.application.StartEdit (entity, formId);
+				}
+			}
 		}
 
 		private readonly CoreApplication application;

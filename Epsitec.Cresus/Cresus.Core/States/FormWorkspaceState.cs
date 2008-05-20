@@ -110,6 +110,7 @@ namespace Epsitec.Cresus.Core.States
 				element.Add (new XElement ("workspace",
 					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
 					new XAttribute ("formId", this.workspace.FormId.ToString ()),
+					new XAttribute ("mode", this.workspace.Mode.ToString ()),
 					new XAttribute ("currentEntityId", currentEntityId ?? ""),
 					new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()),
 					(object)savedDialogData ?? (object)emptyElement));
@@ -126,6 +127,7 @@ namespace Epsitec.Cresus.Core.States
 			{
 				this.workspace.EntityId = Druid.Parse ((string) workspaceElement.Attribute ("entityId"));
 				this.workspace.FormId   = Druid.Parse ((string) workspaceElement.Attribute ("formId"));
+				this.workspace.Mode     = ((string) workspaceElement.Attribute ("mode")).ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
 				string currentEntityId  = (string) workspaceElement.Attribute ("currentEntityId");
 
 				this.workspace.Initialize ();

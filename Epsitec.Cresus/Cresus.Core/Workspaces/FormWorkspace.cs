@@ -40,6 +40,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 			set;
 		}
 
+		public FormWorkspaceMode				Mode
+		{
+			get;
+			set;
+		}
+
 		public IEnumerable<AbstractEntity>		SelectedEntities
 		{
 			get
@@ -82,7 +88,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
-				if (this.editionDialogData != null)
+				if (this.Mode != FormWorkspaceMode.Search)
 				{
 					return null;
 				}
@@ -99,6 +105,18 @@ namespace Epsitec.Cresus.Core.Workspaces
 						return context.SearchTemplate;
 					}
 				}
+			}
+		}
+
+		public AbstractEntity CurrentItem
+		{
+			get
+			{
+				return this.currentItem;
+			}
+			set
+			{
+				this.currentItem = value;
 			}
 		}
 
@@ -177,28 +195,44 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 			this.hintListController.DefineContainer (frame);
 
-			this.searchPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
-			this.searchPanel.Dock = DockStyle.Fill;
-			this.searchPanel.SetEmbedder (frame);
-			this.searchPanel.Margins = new Margins (4);
-			
-			this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
-			this.editionPanel.Dock = DockStyle.Fill;
-			this.editionPanel.SetEmbedder (frame);
-			this.editionPanel.Visibility = false;
-			this.editionPanel.Margins = new Margins (4);
-
-			this.searchController.DialogData   = this.dialogData;
-			this.searchController.DialogPanel  = this.searchPanel;
-//-			this.controller.DialogWindow = this.Application.Window;
-			this.searchController.Resolver     = this.resolver;
-			this.searchController.AssertReady ();
-
 			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
 			this.searchController.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
 			this.searchController.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
+			
+			switch (this.Mode)
+			{
+				case FormWorkspaceMode.Search:
+					this.searchPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
+					this.searchPanel.Dock = DockStyle.Fill;
+					this.searchPanel.SetEmbedder (frame);
+					this.searchPanel.Margins = new Margins (4);
+					
+					this.searchController.DialogData   = this.dialogData;
+					this.searchController.DialogPanel  = this.searchPanel;
+					this.searchController.Resolver     = this.resolver;
+					this.searchController.AssertReady ();
 
-			this.dialogData.BindToUserInterface (this.searchPanel);
+					this.dialogData.BindToUserInterface (this.searchPanel);
+					break;
+
+				case FormWorkspaceMode.Edition:
+					this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
+					this.editionPanel.Dock = DockStyle.Fill;
+					this.editionPanel.SetEmbedder (frame);
+					this.editionPanel.Visibility = false;
+					this.editionPanel.Margins = new Margins (4);
+					
+					this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
+					this.searchController.Resolver     = this.resolver;
+					this.searchController.DialogData = this.dialogData;
+					this.dialogData.BindToUserInterface (this.editionPanel);
+					this.editionPanel.SetFocusOnTabWidget ();
+					break;
+
+				default:
+					throw new System.ArgumentException ();
+			}
+
 
 #if false
 			if (this.dialogSearchController != null)
@@ -278,6 +312,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		private void ExecuteStartItemEditionCommand(object sender, CommandEventArgs e)
 		{
+#if false
 			AbstractEntity data = this.dialogData.ExternalData;
 
 			if ((data != null) &&
@@ -292,10 +327,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 				this.dialogData.UnbindFromUserInterface (this.searchPanel);
 				this.editionPanel.SetFocusOnTabWidget ();
 			}
+#endif
 		}
 
 		private void ExecuteValidateItemEditionCommand(object sender, CommandEventArgs e)
 		{
+#if false
 			AbstractEntity data = this.dialogData.ExternalData;
 
 			if ((data != null) &&
@@ -311,6 +348,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 				this.dialogData.BindToUserInterface (this.searchPanel);
 				this.searchPanel.SetFocusOnTabWidget ();
 			}
+#endif
 		}
 
 
@@ -363,7 +401,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private Panel							searchPanel;
 		private Panel							editionPanel;
 		private DialogData						dialogData;
-		private DialogData						editionDialogData;
+//-		private DialogData						editionDialogData;
 		private AbstractEntity					currentItem;
 		private EntityContext					searchContext;
 		private IEntityResolver					resolver;
