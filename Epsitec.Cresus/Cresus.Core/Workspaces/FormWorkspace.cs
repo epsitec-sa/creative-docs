@@ -42,6 +42,17 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
+				//	If somebody defined a default suggestion, which has still
+				//	not been taken into account by the controller, then we
+				//	will simply return it as the only selected entity : the
+				//	controller has never had a chance to update the list...
+
+				if ((this.controller != null) &&
+					(this.controller.DefaultSuggestion != null))
+				{
+					return new AbstractEntity[] { this.controller.DefaultSuggestion };
+				}
+
 				AbstractEntity data = this.dialogData.ExternalData;
 
 				if (data == null)
@@ -126,6 +137,16 @@ namespace Epsitec.Cresus.Core.Workspaces
 				this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
 				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 				this.resolver = this.Application.Data.Resolver;
+
+				this.controller = this.hintListController.SearchController;
+			}
+		}
+
+		public void SelectEntity(AbstractEntity entity)
+		{
+			if (this.controller != null)
+			{
+				this.controller.DefaultSuggestion = entity;
 			}
 		}
 		
@@ -171,7 +192,6 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.editionPanel.Visibility = false;
 			this.editionPanel.Margins = new Margins (4);
 
-			this.controller = this.hintListController.SearchController;
 			this.controller.DialogData   = this.dialogData;
 			this.controller.DialogPanel  = this.searchPanel;
 //-			this.controller.DialogWindow = this.Application.Window;
@@ -241,6 +261,8 @@ namespace Epsitec.Cresus.Core.Workspaces
 				{
 					this.controller.SetFocus (this.focusFieldPath);
 				}
+
+				this.hintListController.RefreshHintListWidget ();
 			}
 		}
 

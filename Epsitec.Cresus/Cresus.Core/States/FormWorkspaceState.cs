@@ -126,6 +126,8 @@ namespace Epsitec.Cresus.Core.States
 			{
 				this.workspace.EntityId = Druid.Parse ((string) workspaceElement.Attribute ("entityId"));
 				this.workspace.FormId   = Druid.Parse ((string) workspaceElement.Attribute ("formId"));
+				string currentEntityId  = (string) workspaceElement.Attribute ("currentEntityId");
+
 				this.workspace.Initialize ();
 
 				string focusPath = (string) workspaceElement.Attribute ("focusPath");
@@ -140,6 +142,11 @@ namespace Epsitec.Cresus.Core.States
 				if (dialogDataElement != null)
 				{
 					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataElement);
+				}
+
+				if (!string.IsNullOrEmpty (currentEntityId))
+				{
+					this.workspace.SelectEntity (this.workspace.DialogData.EntityContext.GetPeristedEntity (currentEntityId));
 				}
 			}
 		}

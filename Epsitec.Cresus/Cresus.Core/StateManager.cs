@@ -227,9 +227,8 @@ namespace Epsitec.Cresus.Core
 				this.zOrder.Add (taggedStates[tag]);
 			}
 
-			for (int i = this.states.Count-1; i >= 0; i--)
+			foreach (var state in this.history)
 			{
-				States.CoreState state = this.states[i];
 				Box box = this.boxes[state.BoxId];
 
 				if (box.State == null)

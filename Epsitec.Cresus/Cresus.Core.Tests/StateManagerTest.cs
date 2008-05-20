@@ -41,7 +41,8 @@ namespace Epsitec.Cresus.Core
 					new DummyState[] {
 						new DummyState (manager, "A"),
 						new DummyState (manager, "B")
-					});
+					},
+					new XElement[0]);
 			}
 		}
 

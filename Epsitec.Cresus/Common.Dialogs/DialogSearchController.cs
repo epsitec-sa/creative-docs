@@ -117,6 +117,33 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets or sets the default suggestion for the initial search. This
+		/// is used by the <c>Cresus.Core</c> project to make sure that after
+		/// a deserialization, the proper suggestion will be hilited in the
+		/// list.
+		/// </summary>
+		/// <value>The default suggestion.</value>
+		public AbstractEntity					DefaultSuggestion
+		{
+			get
+			{
+				return this.defaultSuggestion;
+			}
+			set
+			{
+				if (this.defaultSuggestion != value)
+				{
+					this.defaultSuggestion = value;
+
+					if (this.activeSearchContext != null)
+					{
+						this.activeSearchContext.SetSuggestion (value);
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Resets the suggestions and the text typed in by the user in the
 		/// associated <see cref="Placeholder"/> widgets.
 		/// </summary>
@@ -1120,10 +1147,14 @@ namespace Epsitec.Common.Dialogs
 
 			public void Resolve(IEntityResolver entityResolver)
 			{
-				this.resolverResult = EntityResolver.Resolve (entityResolver, this.searchTemplate);
+				AbstractEntity template = this.searchTemplate;
+				
+				this.resolverResult = EntityResolver.Resolve (entityResolver, template);
 
-				AbstractEntity suggestion = this.activeSuggestion ?? this.GetDefaultSuggestion ();
+				AbstractEntity suggestion = this.searchController.defaultSuggestion ?? this.activeSuggestion ?? this.GetDefaultSuggestion ();
 
+				this.searchController.defaultSuggestion = null;
+				
 				if ((suggestion != null) &&
 					(this.resolverResult.AllResults.Contains (suggestion)))
 				{
@@ -1431,5 +1462,6 @@ namespace Epsitec.Common.Dialogs
 		private Widgets.Window					dialogWindow;
 		private UI.Panel						dialogPanel;
 		private DialogDataEventArgs				dialogDataEventArgsCache;
+		private AbstractEntity					defaultSuggestion;
 	}
 }

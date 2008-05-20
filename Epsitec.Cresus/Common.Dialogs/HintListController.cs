@@ -388,13 +388,22 @@ namespace Epsitec.Common.Dialogs
 
 			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} results", this.searchResult.AllResults.Count));
 
-			ICollectionView view = this.searchResult.CollectionView;
-			AbstractEntity suggestion = this.searchController.ActiveSearchContext.ActiveSuggestion;
+			this.RefreshHintListWidget ();
+		}
 
-			view.Refresh ();
-			view.MoveCurrentTo (suggestion);
+		public void RefreshHintListWidget()
+		{
+			if ((this.searchResult != null) &&
+				(this.searchController.ActiveSearchContext != null))
+			{
+				ICollectionView view = this.searchResult.CollectionView;
+				AbstractEntity suggestion = this.searchController.ActiveSearchContext.ActiveSuggestion;
 
-			this.hintListWidget.Items = view;
+				view.Refresh ();
+				view.MoveCurrentTo (suggestion);
+
+				this.hintListWidget.Items = view;
+			}
 		}
 
 		
