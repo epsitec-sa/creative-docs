@@ -424,7 +424,7 @@ namespace Epsitec.Common.Document.Panels
 
 			if (dlg.Result == Common.Dialogs.DialogResult.Accept)
 			{
-				this.fieldFilename.Text = dlg.FileName;
+				this.fieldFilename.Text = TextLayout.ConvertToTaggedText(dlg.FileName);
 				this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
 				this.UpdateWidgets();
 			}
