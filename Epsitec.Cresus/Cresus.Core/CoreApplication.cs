@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core
 				new States.FormWorkspaceState (this.stateManager)
 				{
 					BoxId = this.defaultBoxId,
-					StateDeck = States.StateDeck.History,
+					StateDeck = States.StateDeck.StandAlone,
 					Title = "Edition",
 					Workspace = workspace
 				};
