@@ -369,8 +369,8 @@ namespace Epsitec.Cresus.AddressBook.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> (this, "[8V1F]", value);
 			}
 		}
-		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncRésumé = loc => string.Concat (loc.Pays.Code, "-", loc.Numéro, " ", loc.Nom); // λ [8V18] [8V1F]
-		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprRésumé = loc => string.Concat (loc.Pays.Code, "-", loc.Numéro, " ", loc.Nom); // λ [8V18] [8V1F]
+		private static readonly global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string> FuncRésumé = loc => string.Concat (loc.Pays.Code, " ", loc.Numéro, " ", loc.Nom).Trim (); // λ [8V18] [8V1F]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity, string>> ExprRésumé = loc => string.Concat (loc.Pays.Code, " ", loc.Numéro, " ", loc.Nom).Trim (); // λ [8V18] [8V1F]
 		
 		partial void OnNuméroChanging(string oldValue, string newValue);
 		partial void OnNuméroChanged(string oldValue, string newValue);
