@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.Core
 				this.zOrder.Add (state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, state));
+				this.OnNavigated ();
 
 				return true;
 			}
@@ -142,6 +143,7 @@ namespace Epsitec.Cresus.Core
 				this.zOrder.Add (state);
 
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, state));
+				this.OnNavigated ();
 
 				return true;
 			}
@@ -426,6 +428,11 @@ namespace Epsitec.Cresus.Core
 			{
 				this.StackChanged (this, e);
 			}
+		}
+
+		private void OnNavigated()
+		{
+			this.application.SaveApplicationState ();
 		}
 
 

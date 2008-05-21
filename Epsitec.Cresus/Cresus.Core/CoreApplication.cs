@@ -89,6 +89,12 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public void SaveApplicationState()
+		{
+			this.StateManager.WriteStates (@"S:\states.xml");
+			System.Diagnostics.Debug.WriteLine ("Save done.");
+		}
+
 		public void StartNewSearch(Druid entityId, Druid formId)
 		{
 			Workspaces.FormWorkspace workspace =

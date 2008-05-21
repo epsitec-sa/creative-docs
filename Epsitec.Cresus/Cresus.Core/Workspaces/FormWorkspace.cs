@@ -108,6 +108,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
+		public EntityContext					SearchContext
+		{
+			get
+			{
+				return this.searchContext;
+			}
+		}
+
 		public AbstractEntity CurrentItem
 		{
 			get
@@ -146,14 +154,30 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			if ((this.searchContext == null) &&
 				(this.FormId.IsValid) &&
-				(this.EntityId.IsValid))
+				(this.EntityId.IsValid) &&
+				(this.Mode != FormWorkspaceMode.None))
 			{
 				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
 				this.searchContext.PersistanceManagers.Add (this.Application.Data.DataContext);
 
-				this.currentItem = this.searchContext.CreateEntity (this.EntityId);
-				this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
+				if (this.currentItem == null)
+				{
+					this.currentItem = this.searchContext.CreateEntity (this.EntityId);
+				}
+
+				switch (this.Mode)
+				{
+					case FormWorkspaceMode.Edition:
+						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
+						break;
+					
+					case FormWorkspaceMode.Search:
+						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
+						break;
+				}
+
+				
 				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
 				this.resolver = this.Application.Data.Resolver;
 			}
@@ -219,14 +243,13 @@ namespace Epsitec.Cresus.Core.Workspaces
 					this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
 					this.editionPanel.Dock = DockStyle.Fill;
 					this.editionPanel.SetEmbedder (frame);
-					this.editionPanel.Visibility = false;
 					this.editionPanel.Margins = new Margins (4);
 					
-					this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
+					this.searchController.DialogData   = this.dialogData;
+					this.searchController.DialogPanel  = this.editionPanel;
 					this.searchController.Resolver     = this.resolver;
-					this.searchController.DialogData = this.dialogData;
+					
 					this.dialogData.BindToUserInterface (this.editionPanel);
-					this.editionPanel.SetFocusOnTabWidget ();
 					break;
 
 				default:
@@ -369,7 +392,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			if (e.NewPath != null)
 			{
 				this.FocusPath = e.NewPath;
-				this.SaveState ();
+				this.Application.SaveApplicationState ();
 			}
 		}
 		
@@ -378,19 +401,13 @@ namespace Epsitec.Cresus.Core.Workspaces
 			System.Diagnostics.Debug.WriteLine ("Suggestion changed : " + e.ToString ());
 
 			AbstractEntity suggestion = e.NewValue as AbstractEntity;
-			this.SaveState ();
+			this.Application.SaveApplicationState ();
 		}
 
 		private void HandleSearchControllerDialogDataChanged(object sender, DialogDataEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Data changed : " + e.ToString ());
-			this.SaveState ();
-		}
-
-		private void SaveState()
-		{
-			this.StateManager.WriteStates (@"S:\states.xml");
-			System.Diagnostics.Debug.WriteLine ("Save done.");
+			this.Application.SaveApplicationState ();
 		}
 
 

@@ -125,32 +125,47 @@ namespace Epsitec.Cresus.Core.States
 
 			if (workspaceElement != null)
 			{
-				this.workspace.EntityId = Druid.Parse ((string) workspaceElement.Attribute ("entityId"));
-				this.workspace.FormId   = Druid.Parse ((string) workspaceElement.Attribute ("formId"));
-				this.workspace.Mode     = ((string) workspaceElement.Attribute ("mode")).ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
-				string currentEntityId  = (string) workspaceElement.Attribute ("currentEntityId");
+				string entityId        = (string) workspaceElement.Attribute ("entityId");
+				string formId          = (string) workspaceElement.Attribute ("formId");
+				string mode            = (string) workspaceElement.Attribute ("mode");
+				string focusPath       = (string) workspaceElement.Attribute ("focusPath");
+				string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
 
-				this.workspace.Initialize ();
+				XElement dialogDataXml = workspaceElement.Element ("dialogData");
+				
+				this.workspace.EntityId = Druid.Parse (entityId);
+				this.workspace.FormId   = Druid.Parse (formId);
+				this.workspace.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
 
-				string focusPath = (string) workspaceElement.Attribute ("focusPath");
+				AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
+
+				if (this.workspace.Mode == FormWorkspaceMode.Edition)
+				{
+					this.workspace.CurrentItem = item;
+				}
 
 				if (focusPath.Length > 0)
 				{
 					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
 				}
 
-				XElement dialogDataElement = workspaceElement.Element ("dialogData");
+				this.workspace.Initialize ();
 
-				if (dialogDataElement != null)
+				if (dialogDataXml != null)
 				{
-					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataElement);
+					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataXml);
 				}
 
-				if (!string.IsNullOrEmpty (currentEntityId))
+				if (this.workspace.Mode == FormWorkspaceMode.Search)
 				{
-					this.workspace.SelectEntity (this.workspace.DialogData.EntityContext.GetPeristedEntity (currentEntityId));
+					this.workspace.SelectEntity (item);
 				}
 			}
+		}
+
+		private AbstractEntity ResolvePersistedEntity(string id)
+		{
+			return this.StateManager.Application.Data.DataContext.GetPeristedEntity (id);
 		}
 
 

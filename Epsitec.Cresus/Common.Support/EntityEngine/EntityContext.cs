@@ -195,6 +195,11 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The persisted entity or <c>null</c>.</returns>
 		public AbstractEntity GetPeristedEntity(string id)
 		{
+			if (string.IsNullOrEmpty (id))
+			{
+				return null;
+			}
+
 			foreach (var manager in this.persistanceManagers)
 			{
 				AbstractEntity entity = manager.GetPeristedEntity (id);
