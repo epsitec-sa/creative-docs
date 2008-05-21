@@ -23,6 +23,7 @@ namespace Epsitec.Common.Document.Widgets
 			return new Drawing.Margins(2, 2, 2, 2);
 		}
 
+#if false
 		protected override void MeasureMinMax(ref Size min, ref Size max)
 		{
 			Common.Widgets.Layouts.LayoutMeasure measureHeight = Common.Widgets.Layouts.LayoutMeasure.GetHeight(this);
@@ -59,6 +60,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			min.Height = System.Math.Max(min.Height, height + this.Padding.Height + this.GetInternalPadding().Height);
 		}
+#endif
 
 		protected override void ManualArrange()
 		{
@@ -141,6 +143,8 @@ namespace Epsitec.Common.Document.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.Padding);
 			rect.Deflate(this.GetInternalPadding());
+
+			Common.Widgets.Layouts.LayoutContext.AddToMeasureQueue(this);
 
 			double x = 0;
 			double y = 0;

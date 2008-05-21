@@ -124,9 +124,9 @@ namespace Epsitec.Common.Document.Containers
 			GlyphButton selectorStretchType = new GlyphButton("SelectorStretchType");
 			selectorStretchType.AutoFocus = false;
 			selectorStretchType.Name = "SelectorStretchType";
-			selectorStretchType.GlyphShape = GlyphShape.ArrowDown;
-			selectorStretchType.ButtonStyle = ButtonStyle.ToolItem;
-			selectorStretchType.PreferredWidth = 14;
+			selectorStretchType.GlyphShape = GlyphShape.Menu;
+			selectorStretchType.ButtonStyle = ButtonStyle.ComboItem;
+			selectorStretchType.PreferredWidth = 12;
 			selectorStretchType.Margins = new Margins(-1, 0, 0, 0);
 			selectorStretchType.ExecuteCommandOnPressed = true;
 			ToolTip.Default.SetToolTip(selectorStretchType, Res.Strings.Container.Principal.Button.StretchType);

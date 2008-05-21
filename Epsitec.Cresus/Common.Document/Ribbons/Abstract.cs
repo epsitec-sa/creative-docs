@@ -193,7 +193,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
-			button.CommandObject = Epsitec.Common.Widgets.Command.Get (command);
+			button.CommandObject = Epsitec.Common.Widgets.Command.Get(command);
 			button.ButtonStyle = ButtonStyle.ComboItem;
 			button.GlyphShape = GlyphShape.Menu;
 			button.AutoFocus = false;
