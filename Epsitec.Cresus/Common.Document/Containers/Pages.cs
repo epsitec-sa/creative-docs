@@ -220,7 +220,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioMasterGroup = new GroupBox(this.panelMisc);
 			this.radioMasterGroup.Dock = DockStyle.Bottom;
 			this.radioMasterGroup.Margins = new Margins(0, 0, 0, 4);
-			this.radioMasterGroup.PreferredHeight = 130;
+			this.radioMasterGroup.PreferredHeight = 138;
 			this.radioMasterGroup.Text = Res.Strings.Container.Pages.Button.MasterGroup;
 			this.radioMasterGroup.TabIndex = 2;
 			this.radioMasterGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioSlaveGroup = new GroupBox(this.panelMisc);
 			this.radioSlaveGroup.Dock = DockStyle.Bottom;
 			this.radioSlaveGroup.Margins = new Margins(0, 0, 0, 4);
-			this.radioSlaveGroup.PreferredHeight = 130;
+			this.radioSlaveGroup.PreferredHeight = 138;
 			this.radioSlaveGroup.Text = Res.Strings.Container.Pages.Button.SlaveGroup;
 			this.radioSlaveGroup.TabIndex = 3;
 			this.radioSlaveGroup.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
