@@ -62,6 +62,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		protected override void ManualArrange()
 		{
+#if false
 			base.ManualArrange();
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -134,6 +135,54 @@ namespace Epsitec.Common.Document.Widgets
 			}
 
 			this.lastWidth = this.ActualWidth;
+#else
+			base.ManualArrange();
+
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Deflate(this.Padding);
+			rect.Deflate(this.GetInternalPadding());
+
+			double x = 0;
+			double y = 0;
+			double dy = 0;
+			int first = 0;
+			int i = 0;
+			while (i < this.Children.Count)
+			{
+				Widget child = this.Children[i] as Widget;
+
+				double childWidth = child.PreferredWidth + child.Margins.Left + child.Margins.Right;
+				double childHeight = child.PreferredHeight + child.Margins.Top + child.Margins.Bottom;
+
+				if (x+childWidth <= rect.Width)  // assez de place ?
+				{
+					x += childWidth;
+					dy = System.Math.Max(dy, childHeight);
+					i++;
+				}
+
+				if (x+childWidth > rect.Width || i == this.Children.Count)  // dépasse à droite, ou dernier ?
+				{
+					if (i == first)  // aucune place ?
+					{
+						dy = childHeight;
+						i++;
+					}
+
+					x = 0;
+					for (int j=first; j<i; j++)
+					{
+						child = this.Children[j] as Widget;
+						child.SetManualBounds(new Drawing.Rectangle(rect.Left+x, rect.Top-y-child.PreferredHeight, child.PreferredWidth, child.PreferredHeight));
+						x += child.PreferredWidth + child.Margins.Left + child.Margins.Right;
+					}
+
+					first = i;
+					x = 0;
+					y += dy;
+				}
+			}
+#endif
 		}
 
 #if false
