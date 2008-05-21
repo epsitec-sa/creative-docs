@@ -183,6 +183,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
+		internal void AcceptEdition()
+		{
+			if (this.Mode == FormWorkspaceMode.Edition)
+			{
+				this.dialogData.ApplyChanges ();
+			}
+		}
+
 		public void SelectEntity(AbstractEntity entity)
 		{
 			this.searchController.DefaultSuggestion = entity;

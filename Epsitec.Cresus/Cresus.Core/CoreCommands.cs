@@ -22,11 +22,19 @@ namespace Epsitec.Cresus.Core
 		[Command (Mai2008.Res.CommandIds.Edition.Accept)]
 		public void EditionAccept()
 		{
+			if (this.application.EndEdit (true))
+			{
+				return;
+			}
 		}
 
 		[Command (Mai2008.Res.CommandIds.Edition.Cancel)]
 		public void EditionCancel()
 		{
+			if (this.application.EndEdit (false))
+			{
+				return;
+			}
 		}
 
 		[Command (Mai2008.Res.CommandIds.SwitchToBase.BillOut)]

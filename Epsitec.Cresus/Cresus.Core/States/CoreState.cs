@@ -111,7 +111,8 @@ namespace Epsitec.Cresus.Core.States
 
 		public void Dispose()
 		{
-			throw new System.NotImplementedException ();
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
 		}
 
 		#endregion

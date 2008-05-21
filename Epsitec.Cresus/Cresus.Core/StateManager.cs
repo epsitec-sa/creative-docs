@@ -97,6 +97,12 @@ namespace Epsitec.Cresus.Core
 				this.zOrder.Remove (state);
 
 				this.Detach (state);
+				
+				if (this.history.Count > 0)
+				{
+					this.Attach (this.history[0]);
+				}
+
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Pop, state));
 				
 				return true;
@@ -173,28 +179,30 @@ namespace Epsitec.Cresus.Core
 				   select state;
 		}
 
-		public IEnumerable<States.CoreState> GetHistoryStates(ListSortDirection direction)
+		public IEnumerable<States.CoreState> GetHistoryStates(HistorySortMode sortMode)
 		{
-			switch (direction)
+			switch (sortMode)
 			{
-				case ListSortDirection.Ascending:
+				case HistorySortMode.NewestFirst:
 					return this.history;
-				case ListSortDirection.Descending:
+				
+				case HistorySortMode.NewestLast:
 					return CircularList<States.CoreState>.Reverse (this.history);
 			}
 
 			throw new System.ArgumentException ();
 		}
 
-		public IEnumerable<States.CoreState> GetHistoryStates(States.StateDeck deck, ListSortDirection direction)
+		public IEnumerable<States.CoreState> GetHistoryStates(States.StateDeck deck, HistorySortMode sortMode)
 		{
-			switch (direction)
+			switch (sortMode)
 			{
-				case ListSortDirection.Ascending:
+				case HistorySortMode.NewestFirst:
 					return from state in this.history
 						   where state.StateDeck == deck
 						   select state;
-				case ListSortDirection.Descending:
+				
+				case HistorySortMode.NewestLast:
 					return from state in CircularList<States.CoreState>.Reverse (this.history)
 						   where state.StateDeck == deck
 						   select state;

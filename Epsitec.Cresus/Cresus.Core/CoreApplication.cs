@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -140,6 +141,28 @@ namespace Epsitec.Cresus.Core
 				};
 
 			this.stateManager.Push (state);
+		}
+
+		public bool EndEdit(bool accept)
+		{
+			States.CoreState state = Collection.GetFirst (this.stateManager.GetHistoryStates (HistorySortMode.NewestFirst));
+			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
+
+			if ((formState != null) &&
+				(formState.Workspace.Mode == FormWorkspaceMode.Edition))
+			{
+				if (accept)
+				{
+					formState.Workspace.AcceptEdition ();
+					this.data.DataContext.SaveChanges ();
+				}
+
+				this.stateManager.Pop (formState);
+				formState.Dispose ();
+				return true;
+			}
+
+			return false;
 		}
 		
 		protected override void Dispose(bool disposing)

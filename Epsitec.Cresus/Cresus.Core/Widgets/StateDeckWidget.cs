@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				i = 0;
 				
-				foreach (string title in from state in this.StateManager.GetHistoryStates (ListSortDirection.Descending)
+				foreach (string title in from state in this.StateManager.GetHistoryStates (HistorySortMode.NewestLast)
 										 select state.Title)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("History {0}: {1}", i++, title));
