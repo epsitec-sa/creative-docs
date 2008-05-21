@@ -1816,7 +1816,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		[Test]
-		public void CheckInteractiveFlow()
+		public void CheckInteractiveFlow1()
 		{
 			Window window = new Window ();
 
@@ -1826,7 +1826,7 @@ namespace Epsitec.Common.Widgets
 
 			Button button;
 			FlowPanel panel;
-			
+
 			panel = new FlowPanel ();
 			panel.Dock = DockStyle.Top;
 			window.Root.Children.Add (panel);
@@ -1862,10 +1862,115 @@ namespace Epsitec.Common.Widgets
 			button.Dock = DockStyle.Top;
 			button.Margins = new Drawing.Margins (0, 0, 2, 0);
 			window.Root.Children.Add (button);
-			
+
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
+		
+		[Test]
+		public void CheckInteractiveFlow2()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveFlow";
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			Button button;
+			FlowPanel panel;
+
+			panel = new FlowPanel ();
+			panel.Dock = DockStyle.Top;
+			window.Root.Children.Add (panel);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "A";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "B";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (90, 40);
+			button.Text = "C";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "D";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "E";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredHeight = 24;
+			button.Text = "Below flow panel";
+			button.Dock = DockStyle.Top;
+			button.Margins = new Drawing.Margins (0, 0, 2, 0);
+			window.Root.Children.Add (button);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckInteractiveFlow3()
+		{
+			Window window = new Window ();
+
+			window.ClientSize = new Size (400, 300);
+			window.Text = "CheckInteractiveFlow";
+			window.Root.Padding = new Margins (8, 8, 5, 5);
+
+			Button button;
+			FlowPanel panel;
+
+			panel = new FlowPanel ();
+			panel.Dock = DockStyle.Top;
+			window.Root.Children.Add (panel);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "A";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "B";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 50);
+			button.Text = "C";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "D";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredSize = new Size (40, 40);
+			button.Text = "E";
+			panel.Children.Add (button);
+
+			button = new Button ();
+			button.PreferredHeight = 24;
+			button.Text = "Below flow panel";
+			button.Dock = DockStyle.Top;
+			button.Margins = new Drawing.Margins (0, 0, 2, 0);
+			window.Root.Children.Add (button);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
 		[Test]
 		public void CheckAliveWidgets()
 		{
