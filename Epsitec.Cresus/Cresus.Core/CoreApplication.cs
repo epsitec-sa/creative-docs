@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core
 	/// The <c>CoreApplication</c> class implements the central application
 	/// logic.
 	/// </summary>
-	public class CoreApplication : Application
+	public partial class CoreApplication : Application
 	{
 		public CoreApplication()
 		{
@@ -90,10 +90,7 @@ namespace Epsitec.Cresus.Core
 			this.defaultBoxId = this.stateManager.RegisterBox (this.defaultBox);
 
 			this.CreateRibbon ();
-			this.CreateWorkspace ();
-
-			this.persistanceManager.DiscardChanges ();
-			this.persistanceManager.SettingsChanged += sender => this.SaveApplicationState ();
+			this.RestoreApplicationState ();
 
 			this.IsReady = true;
 		}
@@ -120,7 +117,7 @@ namespace Epsitec.Cresus.Core
 						UI.SaveWindowPositions ("windowPositions"),
 						this.persistanceManager.Save ("uiSettings")));
 
-				doc.Save (@"S:\cresus.core.xml");
+				doc.Save (CoreApplication.Paths.SettingsPath);
 				System.Diagnostics.Debug.WriteLine ("Save done.");
 			}
 		}
@@ -295,62 +292,23 @@ namespace Epsitec.Cresus.Core
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
 		}
 
-		private void CreateWorkspace()
+		private void RestoreApplicationState()
 		{
-			string path = @"S:\cresus.core.xml";
-
-			if (System.IO.File.Exists (path))
+			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
 			{
-				XDocument doc = XDocument.Load (path);
+				XDocument doc = XDocument.Load (CoreApplication.Paths.SettingsPath);
 				XElement store = doc.Element ("store");
 
 				this.stateManager.RestoreStates (store.Element ("stateManager"));
 				UI.RestoreWindowPositions (store.Element ("windowPositions"));
 				this.persistanceManager.Restore (store.Element ("uiSettings"));
 			}
-#if false
-			this.stateManager.Push (
-				new States.FormWorkspaceState (this.stateManager)
-				{
-					BoxId = this.defaultBoxId,
-					StateDeck = States.StateDeck.History,
-					Title = "Clients",
-					Workspace = new Workspaces.FormWorkspace ()
-					{
-						FormId   = Epsitec.Cresus.AddressBook.FormIds.AdressePersonne,
-						EntityId = Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId
-					}
-				});
 			
-			this.stateManager.Push (
-				new States.FormWorkspaceState (this.stateManager)
-				{
-					BoxId = this.defaultBoxId,
-					StateDeck = States.StateDeck.History,
-					Title = "Factures",
-					Workspace = new Workspaces.FormWorkspace ()
-					{
-						FormId   = Epsitec.Cresus.Mai2008.FormIds.Facture,
-						EntityId = Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId
-					}
-				});
-#endif
-
-#if false
-			for (int i = 0; i < 3; i++)
-			{
-				this.stateManager.Push (
-					new States.FormWorkspaceState (this.stateManager)
-					{
-						BoxId = this.defaultBoxId,
-						StateDeck = States.StateDeck.StandAlone,
-						Workspace = new Workspaces.FormWorkspace (),
-						Title = string.Format ("{0}", (char)('A'+i))
-					});
-			}
-#endif
+			this.persistanceManager.DiscardChanges ();
+			this.persistanceManager.SettingsChanged += sender => this.SaveApplicationState ();
 		}
 
+		
 		private IconButton CreateButton(Command command)
 		{
 			return this.CreateButton (command, DockStyle.StackBegin, null);
@@ -376,6 +334,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		
 
 		StateManager							stateManager;
 		UI.PersistanceManager					persistanceManager;

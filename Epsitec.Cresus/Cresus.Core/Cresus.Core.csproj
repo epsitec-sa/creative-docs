@@ -66,6 +66,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="UI.PersistanceManager.cs" />
     <Compile Include="HistorySortMode.cs" />
     <Compile Include="CoreCommands.cs" />
