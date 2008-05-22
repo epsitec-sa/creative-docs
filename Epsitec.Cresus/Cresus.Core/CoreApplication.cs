@@ -171,7 +171,7 @@ namespace Epsitec.Cresus.Core
 
 		public bool EndEdit(bool accept)
 		{
-			States.CoreState state = Collection.GetFirst (this.stateManager.GetHistoryStates (HistorySortMode.NewestFirst));
+			States.CoreState state = this.stateManager.ActiveState;
 			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
 
 			if ((formState != null) &&
@@ -290,6 +290,7 @@ namespace Epsitec.Cresus.Core
 
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Edit, DockStyle.StackEnd, null, 63));
 		}
 
 		private void RestoreApplicationState()
@@ -306,9 +307,43 @@ namespace Epsitec.Cresus.Core
 			
 			this.persistanceManager.DiscardChanges ();
 			this.persistanceManager.SettingsChanged += sender => this.SaveApplicationState ();
+
+			this.stateManager.StackChanged += (sender, e) => this.UpdateCommandsAfterStateChange ();
+
+			this.UpdateCommandsAfterStateChange ();
 		}
 
-		
+		private void UpdateCommandsAfterStateChange()
+		{
+			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
+
+			if (formState != null)
+			{
+				switch (formState.Workspace.Mode)
+				{
+					case FormWorkspaceMode.Edition:
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = false;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = true;
+
+						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = false;
+						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = true;
+						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = true;
+						break;
+
+					case FormWorkspaceMode.Search:
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = true;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = false;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = false;
+
+						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = true;
+						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = false;
+						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = false;
+						break;
+				}
+			}
+		}
+
 		private IconButton CreateButton(Command command)
 		{
 			return this.CreateButton (command, DockStyle.StackBegin, null);
@@ -321,13 +356,19 @@ namespace Epsitec.Cresus.Core
 
 		private IconButton CreateButton(Command command, DockStyle dockStyle, CommandEventHandler handler)
 		{
+			return this.CreateButton (command, dockStyle, handler, 31);
+		}
+
+		private IconButton CreateButton(Command command, DockStyle dockStyle, CommandEventHandler handler, double dx)
+		{
 			if (handler != null)
 			{
 				this.CommandDispatcher.Register (command, handler);
 			}
 
-			return new IconButton (command, new Epsitec.Common.Drawing.Size (31, 31), dockStyle)
+			return new IconButton (command, new Epsitec.Common.Drawing.Size (dx, 31), dockStyle)
 			{
+				Name = command.Name,
 				VerticalAlignment = VerticalAlignment.Center,
 				HorizontalAlignment = HorizontalAlignment.Center
 			};

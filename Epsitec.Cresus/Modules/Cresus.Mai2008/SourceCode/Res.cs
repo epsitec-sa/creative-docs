@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Mai2008
 				public static readonly global::Epsitec.Common.Widgets.Command Accept = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
 				//	designer:cap/9VAA
 				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+				//	designer:cap/9VAE
+				public static readonly global::Epsitec.Common.Widgets.Command Edit = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
 			}
 			
 			public static class History
@@ -71,6 +73,8 @@ namespace Epsitec.Cresus.Mai2008
 				public const long Accept = 0x3E90000A00000BL;
 				//	designer:cap/9VAA
 				public const long Cancel = 0x3E90000A00000AL;
+				//	designer:cap/9VAE
+				public const long Edit = 0x3E90000A00000EL;
 			}
 			
 			public static class History

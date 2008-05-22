@@ -279,6 +279,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			this.validationContext.Refresh (this.panel);
 #endif
 
+#if false
 			this.hintListController.HintListWidget.Header.ToolBar.Items.Add (new Button ()
 			{
 				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition,
@@ -296,7 +297,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 				CommandObject = Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition,
 				PreferredWidth = 40
 			});
-
+#endif
 			
 			return frame;
 		}

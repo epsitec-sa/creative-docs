@@ -296,9 +296,14 @@ namespace Epsitec.Cresus.Core.States
 						switch (field.Relation)
 						{
 							case FieldRelation.None:
-								element.Add (new XElement ("data",
-									new XAttribute ("path", path),
-									new XAttribute ("value", converter.Convert (value, typeof (string), null, culture))));
+								value = converter.Convert (value, typeof (string), null, culture);
+
+								if (value != null)
+								{
+									element.Add (new XElement ("data",
+										new XAttribute ("path", path),
+										new XAttribute ("value", value)));
+								}
 								break;
 
 							case FieldRelation.Reference:
@@ -353,12 +358,14 @@ namespace Epsitec.Cresus.Core.States
 						break;
 
 					case "data":
+						path.CreateMissingNodes (data.Data);
 						field = path.NavigateReadField (data.Data);
 						value = (string) dataElement.Attribute ("value");
 						value = converter.ConvertBack (value, field.Type.SystemType, null, culture);
 						break;
 					
 					case "ref":
+						path.CreateMissingNodes (data.Data);
 						value = data.EntityContext.GetPeristedEntity ((string) dataElement.Attribute ("id"));
 						break;
 					

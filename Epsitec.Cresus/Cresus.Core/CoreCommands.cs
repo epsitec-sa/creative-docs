@@ -37,22 +37,8 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		[Command (Mai2008.Res.CommandIds.SwitchToBase.BillOut)]
-		public void SwitchToBaseBillOut()
-		{
-			this.application.StartNewSearch (Mai2008.Entities.FactureEntity.EntityStructuredTypeId, Mai2008.FormIds.Facture);
-		}
-
-		[Command (Mai2008.Res.CommandIds.SwitchToBase.Customers)]
-		public void SwitchToBaseCustomers()
-		{
-			this.application.StartNewSearch (AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId, AddressBook.FormIds.AdressePersonne);
-		}
-
-
-
-		[Command (Epsitec.Common.Dialogs.Res.CommandIds.HintList.StartItemEdition)]
-		public void HintListStartItemEdition()
+		[Command (Mai2008.Res.CommandIds.Edition.Edit)]
+		public void EditionEdit()
 		{
 			States.CoreState          state     = this.application.StateManager.ActiveState;
 			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
@@ -71,6 +57,20 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 		}
+
+		[Command (Mai2008.Res.CommandIds.SwitchToBase.BillOut)]
+		public void SwitchToBaseBillOut()
+		{
+			this.application.StartNewSearch (Mai2008.Entities.FactureEntity.EntityStructuredTypeId, Mai2008.FormIds.Facture);
+		}
+
+		[Command (Mai2008.Res.CommandIds.SwitchToBase.Customers)]
+		public void SwitchToBaseCustomers()
+		{
+			this.application.StartNewSearch (AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId, AddressBook.FormIds.AdressePersonne);
+		}
+
+
 
 		private readonly CoreApplication application;
 	}
