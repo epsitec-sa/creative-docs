@@ -110,33 +110,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		private void HandleManagerStackChanged(object sender, StateStackChangedEventArgs e)
-		{
-			if ((e.State == null) ||
-				(e.State.StateDeck == this.StateDeck))
-			{
-				this.Invalidate ();
-
-				int i = 0;
-
-				foreach (string title in from state in this.StateManager.GetAllStates ()
-										 select state.Title)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Stack {0}: {1}", i++, title));
-				}
-
-				i = 0;
-				
-				foreach (string title in from state in this.StateManager.GetHistoryStates (HistorySortMode.NewestLast)
-										 select state.Title)
-				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("History {0}: {1}", i++, title));
-				}
-
-				System.Diagnostics.Debug.WriteLine ("");
-			}
-		}
-
 		protected override void DispatchMessage(Message message, Point pos)
 		{
 			base.DispatchMessage (message, pos);
@@ -169,6 +142,15 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private void HandleManagerStackChanged(object sender, StateStackChangedEventArgs e)
+		{
+			if ((e.State == null) ||
+				(e.State.StateDeck == this.StateDeck))
+			{
+				this.Invalidate ();
+			}
+		}
+		
 		private States.CoreState FindState(double x)
 		{
 			return (from item in this.centers
@@ -426,6 +408,12 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		#endregion
 
+		#region Center Structure
+
+		/// <summary>
+		/// The <c>Center</c> structure stores just the center position of the
+		/// states used in the stand alone deck.
+		/// </summary>
 		private struct Center
 		{
 			public Center(States.CoreState state, double x, double y)
@@ -463,6 +451,8 @@ namespace Epsitec.Cresus.Core.Widgets
 			private readonly double x;
 			private readonly double y;
 		}
+
+		#endregion
 
 
 		private readonly Dictionary<CoreState, Record> stateRecords;

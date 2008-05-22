@@ -29,13 +29,13 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public bool IsReady
+		public bool								IsReady
 		{
 			get;
 			private set;
 		}
 
-		public CoreData Data
+		public CoreData							Data
 		{
 			get
 			{
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public IExceptionManager ExceptionManager
+		public IExceptionManager				ExceptionManager
 		{
 			get
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public StateManager StateManager
+		public StateManager						StateManager
 		{
 			get
 			{
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 		
-		public override string ShortWindowTitle
+		public override string					ShortWindowTitle
 		{
 			get
 			{
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-		public void SetupInterface()
+		internal void SetupInterface()
 		{
 			Window window = new Window ();
 
@@ -95,18 +95,19 @@ namespace Epsitec.Cresus.Core
 			this.IsReady = true;
 		}
 
-		public void SetupData()
+		internal void SetupData()
 		{
 			this.data.SetupDatabase ();
 		}
 
 
-		public void AsyncSaveApplicationState()
+		internal void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (this.SaveApplicationState);
 		}
 
-		public void StartNewSearch(Druid entityId, Druid formId)
+
+		internal void StartNewSearch(Druid entityId, Druid formId)
 		{
 			Workspaces.FormWorkspace workspace =
 				new Workspaces.FormWorkspace ()
@@ -128,7 +129,7 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.Push (state);
 		}
 
-		public void StartEdit()
+		internal void StartEdit()
 		{
 			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
 
@@ -185,7 +186,7 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.Hide (formState);
 		}
 
-		public bool EndEdit(bool accept)
+		internal bool EndEdit(bool accept)
 		{
 			States.CoreState state = this.stateManager.ActiveState;
 			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
@@ -227,7 +228,6 @@ namespace Epsitec.Cresus.Core
 
 			base.Dispose (disposing);
 		}
-
 
 
 		private void CreateRibbon()
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Core
 				{
 					case FormWorkspaceMode.Edition:
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = false;
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;	//	TODO: use validity check
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = true;
 
 						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = false;
