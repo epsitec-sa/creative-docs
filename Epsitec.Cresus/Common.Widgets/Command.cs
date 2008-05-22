@@ -802,6 +802,23 @@ namespace Epsitec.Common.Widgets
 			return (string) obj.GetValue (Command.DefaultParameterProperty);
 		}
 
+		public static bool GetHideWhenDisabled(Visual obj)
+		{
+			return (bool) obj.GetValue (Command.HideWhenDisabledProperty);
+		}
+
+		public static void SetHideWhenDisabled(Visual obj, bool hideWhenDisabled)
+		{
+			if (hideWhenDisabled)
+			{
+				obj.SetValue (Command.HideWhenDisabledProperty, true);
+			}
+			else
+			{
+				obj.ClearValue (Command.HideWhenDisabledProperty);
+			}
+		}
+
 
 		private static object GetCaptionValue(DependencyObject obj)
 		{
@@ -823,6 +840,8 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty GroupProperty			= DependencyProperty.RegisterAttached ("Group", typeof (string), typeof (Command));
 		public static readonly DependencyProperty StatefullProperty		= DependencyProperty.RegisterAttached ("Statefull", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty CommandTypeProperty	= DependencyProperty.RegisterAttached ("CommandType", typeof (CommandType), typeof (Command), new DependencyPropertyMetadata (CommandType.Standard));
+		
+		public static readonly DependencyProperty HideWhenDisabledProperty = DependencyProperty.RegisterAttached ("HideWhenDisabled", typeof (bool), typeof (Command), new DependencyPropertyMetadata (false));
 		
 		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty.RegisterAttached ("DefaultParameter", typeof (string), typeof (Command));
 		

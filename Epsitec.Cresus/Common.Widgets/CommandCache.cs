@@ -519,6 +519,11 @@ namespace Epsitec.Common.Widgets
 						visual.Enable      = enable;
 						visual.ActiveState = active;
 
+						if (Command.GetHideWhenDisabled (visual))
+						{
+							visual.Visibility = enable;
+						}
+
 						CommandState.SetAdvancedState (visual, advanced);
 					}
 				}
