@@ -925,17 +925,29 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		public string							Text
+
+		public string Text
 		{
-			get { return this.text; }
-			set { this.window.Text = this.text = value; }
+			get
+			{
+				return this.text ?? "";
+			}
+			set
+			{
+				this.window.Text = this.text = value;
+			}
 		}
 
-		public string							Name
+		public string Name
 		{
-			get { return this.name; }
-			set { this.window.Name = this.name = value; }
+			get
+			{
+				return this.name ?? "";
+			}
+			set
+			{
+				this.window.Name = this.name = value;
+			}
 		}
 
 		public static bool						RunningInAutomatedTestEnvironment

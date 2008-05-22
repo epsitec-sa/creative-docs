@@ -14,13 +14,12 @@ using System.Xml.Linq;
 namespace Epsitec.Cresus.Core
 {
 	using FormResourceAccessor=Epsitec.Common.Support.ResourceAccessors.FormResourceAccessor;
-using System.Xml.Linq;
 
 	/// <summary>
 	/// The <c>UI</c> static class provides central support for user interface
 	/// related tasks.
 	/// </summary>
-	public static class UI
+	public static partial class UI
 	{
 		/// <summary>
 		/// Initializes everything on application startup so that the user
@@ -72,16 +71,26 @@ using System.Xml.Linq;
 			}
 		}
 
+		/// <summary>
+		/// Saves the window positions as an XML tree.
+		/// </summary>
+		/// <param name="xmlNodeName">Name of the XML root node.</param>
+		/// <returns>The XML tree.</returns>
 		public static XElement SaveWindowPositions(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
 				from window in Window.GetAllLiveWindows ()
+				where window.Name.StartsWith ("$") == false
 				select new XElement ("window",
 					new XAttribute ("name", window.Name ?? ""),
 					new XAttribute ("title", window.Text ?? ""),
 					new XAttribute ("placement", window.WindowPlacement.ToString ())));
 		}
 
+		/// <summary>
+		/// Restores the window positions from an XML tree.
+		/// </summary>
+		/// <param name="xml">The XML tree.</param>
 		public static void RestoreWindowPositions(XElement xml)
 		{
 			List<Window> windows = new List<Window> (Window.GetAllLiveWindows ());
@@ -108,6 +117,7 @@ using System.Xml.Linq;
 			}
 		}
 
+		
 		private static Window FindBestWindowMatch(IEnumerable<Window> windows, string name, string title)
 		{
 			foreach (Window window in windows)
