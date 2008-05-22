@@ -19,16 +19,29 @@ namespace Epsitec.Cresus.Core
 		/// <summary>
 		/// The <c>PersistanceManager</c> class handles UI persistance.
 		/// </summary>
-		public class PersistanceManager
+		public sealed class PersistanceManager : System.IDisposable
 		{
 			public PersistanceManager()
 			{
 				this.bindings = new Dictionary<string, Binding> ();
+				this.timer = new Timer ()
+				{
+					Delay = 2.0,
+				};
+				this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
 			}
 
 
+			/// <summary>
+			/// Saves the UI settings in an XML tree with the specified root
+			/// node name.
+			/// </summary>
+			/// <param name="xmlNodeName">Name of the root node.</param>
+			/// <returns>The XML tree.</returns>
 			public XElement Save(string xmlNodeName)
 			{
+				this.DiscardChanges ();
+
 				return new XElement (xmlNodeName,
 					from path in this.bindings.Keys
 					orderby path ascending
@@ -36,6 +49,10 @@ namespace Epsitec.Cresus.Core
 					select binding.ExecuteSave (new XElement ("w", new XAttribute ("id", path))));
 			}
 
+			/// <summary>
+			/// Restores the UI settings based on the XML tree.
+			/// </summary>
+			/// <param name="xml">The XML tree.</param>
 			public void Restore(XElement xml)
 			{
 				if (xml == null)
@@ -56,17 +73,30 @@ namespace Epsitec.Cresus.Core
 					}
 				}
 			}
-			
-			
+
+			/// <summary>
+			/// Discards all the changes which happened since the last save.
+			/// </summary>
+			public void DiscardChanges()
+			{
+				this.timer.Stop ();
+				this.changeCount = 0;
+			}
+
+
+			/// <summary>
+			/// Registers the specified widget.
+			/// </summary>
+			/// <param name="widget">The widget.</param>
 			public void Register(RibbonBook widget)
 			{
 				this.AddBinding (
 					new Binding<RibbonBook> (widget)
 					{
-						Register    = w => w.ActivePageChanged += this.HandleRibbonActivePageChanged,
-						Unregister  = w => w.ActivePageChanged -= this.HandleRibbonActivePageChanged,
-						Save = this.HandleRibbonSave,
-						Restore = this.HandleRibbonRestore
+						Register   = w => w.ActivePageChanged += this.HandleRibbonActivePageChanged,
+						Unregister = w => w.ActivePageChanged -= this.HandleRibbonActivePageChanged,
+						SaveXml    = (w, xml) => xml.Add (new XAttribute ("book", InvariantConverter.ToString (w.ActivePageIndex))),
+						RestoreXml = (w, xml) => w.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value),
 					});
 			}
 
@@ -74,6 +104,23 @@ namespace Epsitec.Cresus.Core
 
 
 
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.timer.Dispose ();
+
+				foreach (Binding binding in this.bindings.Values)
+				{
+					binding.ExecuteUnregister ();
+				}
+
+				this.bindings.Clear ();
+			}
+
+			#endregion
+
+			
 			private void AddBinding(Binding binding)
 			{
 				string path = binding.GetWidget ().FullPathName;
@@ -87,30 +134,38 @@ namespace Epsitec.Cresus.Core
 				this.bindings[path] = binding;
 			}
 
-			private void NotifyChange(object sender)
+			private void NotifyChange()
 			{
+				if (this.changeCount == 0)
+				{
+					this.timer.Start ();
+				}
+
 				this.changeCount++;
 			}
 
 
 
+			private void HandleTimerTimeElapsed(object sender)
+			{
+				if (this.SettingsChanged != null)
+				{
+					this.SettingsChanged (this);
+				}
+			}
 			
 			private void HandleRibbonActivePageChanged(object sender)
 			{
-				this.NotifyChange (sender);
-			}
-
-			private void HandleRibbonSave(RibbonBook widget, XElement xml)
-			{
-				xml.Add (new XAttribute ("book", InvariantConverter.ToString (widget.ActivePageIndex)));
-			}
-
-			private void HandleRibbonRestore(RibbonBook widget, XElement xml)
-			{
-				widget.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value);
+				this.NotifyChange ();
 			}
 
 
+			#region Binding Classes
+
+			/// <summary>
+			/// The <c>Binding</c> class is used as a common base class for
+			/// the generic <c>Binding&lt;T&gt;</c> class.
+			/// </summary>
 			abstract class Binding
 			{
 				protected Binding()
@@ -118,7 +173,6 @@ namespace Epsitec.Cresus.Core
 				}
 
 				public abstract Widget GetWidget();
-
 				public abstract void ExecuteUnregister();
 				public abstract XElement ExecuteSave(XElement xml);
 				public abstract void ExecuteRestore(XElement xml);
@@ -131,7 +185,7 @@ namespace Epsitec.Cresus.Core
 					this.widget = new Weak<T> (widget);
 				}
 
-				public T Widget
+				private T Widget
 				{
 					get
 					{
@@ -143,12 +197,17 @@ namespace Epsitec.Cresus.Core
 				{
 					set
 					{
-						value (this.Widget);
+						T widget = this.Widget;
+						
+						if (widget != null)
+						{
+							value (widget);
+						}
 					}
 				}
 				public System.Action<T> Unregister;
-				public System.Action<T, XElement> Save;
-				public System.Action<T, XElement> Restore;
+				public System.Action<T, XElement> SaveXml;
+				public System.Action<T, XElement> RestoreXml;
 
 				public override Widget GetWidget()
 				{
@@ -157,24 +216,48 @@ namespace Epsitec.Cresus.Core
 
 				public override void ExecuteUnregister()
 				{
-					this.Unregister (this.Widget);
+					T widget = this.Widget;
+
+					if (widget != null)
+					{
+						this.Unregister (widget);
+					}
 				}
 
 				public override XElement ExecuteSave(XElement xml)
 				{
-					this.Save (this.Widget, xml);
+					T widget = this.Widget;
+
+					if (widget != null)
+					{
+
+						this.SaveXml (widget, xml);
+					}
 					return xml;
 				}
 
 				public override void ExecuteRestore(XElement xml)
 				{
-					this.Restore (this.Widget, xml);
+					T widget = this.Widget;
+
+					if (widget != null)
+					{
+						this.RestoreXml (widget, xml);
+					}
 				}
 
 				private readonly Weak<T> widget;
 			}
 
+			#endregion
+
+
+			public event EventHandler SettingsChanged;
+
+			private static object w = new object ();		//	to keep VS.NET Intellisense happy when typing ... = w =>
+			
 			private readonly Dictionary<string, Binding> bindings;
+			private readonly Timer timer;
 			private int changeCount;
 		}
 	}

@@ -92,6 +92,9 @@ namespace Epsitec.Cresus.Core
 			this.CreateRibbon ();
 			this.CreateWorkspace ();
 
+			this.persistanceManager.DiscardChanges ();
+			this.persistanceManager.SettingsChanged += sender => this.SaveApplicationState ();
+
 			this.IsReady = true;
 		}
 
