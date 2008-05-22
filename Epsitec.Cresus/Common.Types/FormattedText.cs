@@ -156,6 +156,26 @@ namespace Epsitec.Common.Types
 			throw new System.InvalidCastException (string.Format ("Cannot cast value from {0} to string", value.GetType ().Name));
 		}
 
+		public static FormattedText CastToFormattedText(object value)
+		{
+			if (value == null)
+			{
+				return new FormattedText ();
+			}
+
+			if (value is FormattedText)
+			{
+				return (FormattedText) value;
+			}
+
+			if (value is string)
+			{
+				return new FormattedText (value as string);
+			}
+
+			throw new System.InvalidCastException (string.Format ("Cannot cast value from {0} to string", value.GetType ().Name));
+		}
+
 		/// <summary>
 		/// Escapes the specified text, i.e. converts special characters found
 		/// in the source text to their equivalent formatted encoding.

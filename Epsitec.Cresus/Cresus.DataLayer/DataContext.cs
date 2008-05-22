@@ -740,6 +740,14 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
+				IStringType stringType = fieldDef.Type as IStringType;
+
+				if ((stringType != null) &&
+					(stringType.UseFormattedText))
+				{
+					value = FormattedText.CastToFormattedText (value);
+				}
+
 				entity.InternalSetValue (fieldDef.Id, value);
 			}
 		}

@@ -170,6 +170,22 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		public override bool IsNullValue(object value)
+		{
+			if (base.IsNullValue (value))
+			{
+				return true;
+			}
+
+			if (value is FormattedText)
+			{
+				FormattedText text = (FormattedText) value;
+				return text.IsNull;
+			}
+
+			return false;
+		}
+
 		public override object DefaultValue
 		{
 			get
