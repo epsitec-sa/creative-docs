@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Core
 				};
 
 			this.stateManager.Push (state);
-//-			this.stateManager.Pop (formState);
+			this.stateManager.Hide (formState);
 		}
 
 		public bool EndEdit(bool accept)
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Core
 					this.data.DataContext.SaveChanges ();
 				}
 
-				this.stateManager.Push (formState.LinkedState);
+				this.stateManager.Show (formState.LinkedState);
 				this.stateManager.Pop (formState);
 				formState.Dispose ();
 				return true;

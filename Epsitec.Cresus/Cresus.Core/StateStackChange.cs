@@ -39,6 +39,11 @@ namespace Epsitec.Cresus.Core
 		Navigation,
 
 		/// <summary>
+		/// A state was either hidden or shown.
+		/// </summary>
+		Visibility,
+
+		/// <summary>
 		/// One or more states have been added as the result of a load
 		/// operation.
 		/// </summary>

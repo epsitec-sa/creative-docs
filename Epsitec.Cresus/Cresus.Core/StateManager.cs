@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core
 			this.application = application;
 			this.states = new List<States.CoreState> ();
 			this.zOrder = new List<States.CoreState> ();
+			this.hidden = new List<States.CoreState> ();
 			this.history = new CircularList<States.CoreState> ();
 			this.boxes = new Dictionary<int, Box> ();
 		}
@@ -106,6 +107,7 @@ namespace Epsitec.Cresus.Core
 			{
 				this.history.Remove (state);
 				this.zOrder.Remove (state);
+				this.hidden.Remove (state);
 
 				this.Detach (state);
 
@@ -121,13 +123,47 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public void Show(States.CoreState state)
+		{
+			if (state == null)
+			{
+				return;
+			}
+
+			if (this.hidden.Remove (state))
+			{
+				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Visibility, state));
+			}
+		}
+
+		public void Hide(States.CoreState state)
+		{
+			if (state == null)
+			{
+				return;
+			}
+
+			if (this.hidden.Contains (state))
+			{
+				throw new System.InvalidOperationException ();
+			}
+
+			this.hidden.Add (state);
+			this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Visibility, state));
+		}
+
 		public bool NavigateHistoryPrev()
 		{
-			if (this.history.Count > 0)
+			if (this.history.Count > this.hidden.Count)
 			{
-				this.history.Rotate (1);
+				States.CoreState state;
 
-				States.CoreState state = this.history[0];
+				do
+				{
+					this.history.Rotate (1);
+					state = this.history[0];
+				}
+				while (this.hidden.Contains (state));
 
 				this.zOrder.Remove (state);
 				this.zOrder.Add (state);
@@ -146,11 +182,16 @@ namespace Epsitec.Cresus.Core
 
 		public bool NavigateHistoryNext()
 		{
-			if (this.history.Count > 0)
+			if (this.history.Count > this.hidden.Count)
 			{
-				this.history.Rotate (-1);
+				States.CoreState state;
 
-				States.CoreState state = this.history[0];
+				do
+				{
+					this.history.Rotate (-1);
+					state = this.history[0];
+				}
+				while (this.hidden.Contains (state));
 
 				this.zOrder.Remove (state);
 				this.zOrder.Add (state);
@@ -183,7 +224,7 @@ namespace Epsitec.Cresus.Core
 		public IEnumerable<States.CoreState> GetZOrderStates(States.StateDeck deck)
 		{
 			return from state in this.zOrder
-				   where state.StateDeck == deck
+				   where state.StateDeck == deck && this.hidden.Contains (state) == false
 				   select state;
 		}
 
@@ -205,7 +246,9 @@ namespace Epsitec.Cresus.Core
 					throw new System.ArgumentException ();
 			}
 
-			return history;
+			return from state in history
+				   where this.hidden.Contains (state) == false
+				   select state;
 		}
 
 		public IEnumerable<States.CoreState> GetHistoryStates(States.StateDeck deck, HistorySortMode sortMode)
@@ -214,12 +257,12 @@ namespace Epsitec.Cresus.Core
 			{
 				case HistorySortMode.NewestFirst:
 					return from state in this.history
-						   where state.StateDeck == deck
+						   where state.StateDeck == deck && this.hidden.Contains (state) == false
 						   select state;
 				
 				case HistorySortMode.NewestLast:
 					return from state in CircularList<States.CoreState>.Reverse (this.history)
-						   where state.StateDeck == deck
+						   where state.StateDeck == deck && this.hidden.Contains (state) == false
 						   select state;
 
 				default:
@@ -239,6 +282,7 @@ namespace Epsitec.Cresus.Core
 			}
 
 			System.Text.StringBuilder historyTags = new System.Text.StringBuilder ();
+			System.Text.StringBuilder hiddenTags  = new System.Text.StringBuilder ();
 			System.Text.StringBuilder zOrderTags  = new System.Text.StringBuilder ();
 
 			foreach (var state in this.history)
@@ -259,13 +303,23 @@ namespace Epsitec.Cresus.Core
 				zOrderTags.AppendFormat (state.Tag);
 			}
 
+			foreach (var state in this.hidden)
+			{
+				if (hiddenTags.Length > 0)
+				{
+					hiddenTags.Append (" ");
+				}
+				hiddenTags.AppendFormat (state.Tag);
+			}
+
 			return new XElement (xmlNodeName,
 				new XElement ("states",
 					from state in this.states
 					select state.Serialize (new XElement ("state",
 						new XAttribute ("class", States.StateFactory.GetClassName (state))))),
 				new XElement ("history", historyTags.ToString ()),
-				new XElement ("z_order", zOrderTags.ToString ()));
+				new XElement ("z_order", zOrderTags.ToString ()),
+				new XElement ("hidden", hiddenTags.ToString ()));
 		}
 
 		public void RestoreStates(XElement xml)
@@ -285,19 +339,27 @@ namespace Epsitec.Cresus.Core
 
 			string history = xml.Element ("history").Value;
 			string zOrder  = xml.Element ("z_order").Value;
+			string hidden  = xml.Element ("hidden").Value;
 
-			if (history.Length > 0)
+			if (string.IsNullOrEmpty (history) == false)
 			{
 				foreach (string tag in history.Split (' '))
 				{
 					this.history.Add (taggedStates[tag]);
 				}
 			}
-			if (zOrder.Length > 0)
+			if (string.IsNullOrEmpty (zOrder) == false)
 			{
 				foreach (string tag in zOrder.Split (' '))
 				{
 					this.zOrder.Add (taggedStates[tag]);
+				}
+			}
+			if (string.IsNullOrEmpty (hidden) == false)
+			{
+				foreach (string tag in hidden.Split (' '))
+				{
+					this.hidden.Add (taggedStates[tag]);
 				}
 			}
 
@@ -487,6 +549,7 @@ namespace Epsitec.Cresus.Core
 		private readonly CoreApplication application;
 		private readonly List<States.CoreState> states;
 		private readonly List<States.CoreState> zOrder;
+		private readonly List<States.CoreState> hidden;
 		private readonly CircularList<States.CoreState> history;
 		private readonly Dictionary<int, Box> boxes;
 	}
