@@ -79,6 +79,11 @@ namespace Epsitec.Common.Widgets
 		{
 			foreach (Window target in Window.windows)
 			{
+				if (target.IsDisposed)
+				{
+					continue;
+				}
+				
 				WindowRoot root = target.Root;
 				
 				switch (reason)
