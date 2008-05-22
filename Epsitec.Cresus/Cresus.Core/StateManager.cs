@@ -47,9 +47,19 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				if (this.history.Count > 0)
+				if (this.history.Count > this.hidden.Count)
 				{
-					return this.history[0];
+					States.CoreState state;
+					
+					int i = 0;
+					
+					do
+					{
+						state = this.history[i++];
+					}
+					while (this.hidden.Contains (state));
+					
+					return state;
 				}
 				else
 				{
@@ -132,6 +142,15 @@ namespace Epsitec.Cresus.Core
 
 			if (this.hidden.Remove (state))
 			{
+				this.history.Remove (state);
+				this.history.Rotate (1);
+				this.history.Reverse ();
+				this.history.Insert (0, state);
+
+				this.zOrder.Remove (state);
+				this.zOrder.Add (state);
+
+				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Visibility, state));
 			}
 		}
@@ -501,7 +520,7 @@ namespace Epsitec.Cresus.Core
 
 		private void OnNavigated()
 		{
-			this.application.SaveApplicationState ();
+			this.application.AsyncSaveApplicationState ();
 		}
 
 

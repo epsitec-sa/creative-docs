@@ -401,7 +401,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			if (e.NewPath != null)
 			{
 				this.FocusPath = e.NewPath;
-				this.Application.SaveApplicationState ();
+				this.Application.AsyncSaveApplicationState ();
 			}
 		}
 		
@@ -410,13 +410,13 @@ namespace Epsitec.Cresus.Core.Workspaces
 			System.Diagnostics.Debug.WriteLine ("Suggestion changed : " + e.ToString ());
 
 			AbstractEntity suggestion = e.NewValue as AbstractEntity;
-			this.Application.SaveApplicationState ();
+			this.Application.AsyncSaveApplicationState ();
 		}
 
 		private void HandleSearchControllerDialogDataChanged(object sender, DialogDataEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Data changed : " + e.ToString ());
-			this.Application.SaveApplicationState ();
+			this.Application.AsyncSaveApplicationState ();
 		}
 
 

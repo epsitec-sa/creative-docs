@@ -93,18 +93,20 @@ namespace Epsitec.Cresus.Core.States
 		{
 		}
 		
-		public void PaintMiniature(Graphics graphics)
+		public void PaintMiniature(Graphics graphics, Rectangle frame)
 		{
-			graphics.AddFilledRectangle (0, 0, 100, 100);
-			graphics.RenderSolid (Color.FromAlphaRgb (0.9, 1, 1, 1));
+			graphics.AddFilledRectangle (frame);
+			graphics.RenderSolid (Color.FromRgb (1, 1, 1));
 
 			if (!string.IsNullOrEmpty (this.Title))
 			{
 				graphics.AddText (5, 60, 90, 20, this.Title, Font.DefaultFont, 30.0, ContentAlignment.MiddleCenter);
 			}
+
+			frame.Deflate (0.5);
 			
-			graphics.LineWidth = 0.5;
-			graphics.AddRectangle (0.25, 0.25, 99.75, 99.75);
+			graphics.LineWidth = 1;
+			graphics.AddRectangle (frame);
 			graphics.RenderSolid (Color.FromRgb (0, 0, 0.4));
 		}
 

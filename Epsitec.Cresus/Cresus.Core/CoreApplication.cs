@@ -101,25 +101,9 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public void SaveApplicationState()
+		public void AsyncSaveApplicationState()
 		{
-			if (this.IsReady)
-			{
-				System.Diagnostics.Debug.WriteLine ("Saving application state.");
-				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
-				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
-
-				XDocument doc = new XDocument (
-					new XDeclaration ("1.0", "utf-8", "yes"),
-					new XComment ("Saved on " + timeStamp),
-					new XElement ("store",
-						this.StateManager.SaveStates ("stateManager"),
-						UI.SaveWindowPositions ("windowPositions"),
-						this.persistanceManager.Save ("uiSettings")));
-
-				doc.Save (CoreApplication.Paths.SettingsPath);
-				System.Diagnostics.Debug.WriteLine ("Save done.");
-			}
+			Application.QueueAsyncCallback (this.SaveApplicationState);
 		}
 
 		public void StartNewSearch(Druid entityId, Druid formId)
@@ -137,7 +121,7 @@ namespace Epsitec.Cresus.Core
 				{
 					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.History,
-					Title = "Recherche",
+					Title = "Rech.",
 					Workspace = workspace
 				};
 
@@ -340,9 +324,10 @@ namespace Epsitec.Cresus.Core
 			}
 			
 			this.persistanceManager.DiscardChanges ();
-			this.persistanceManager.SettingsChanged += sender => this.SaveApplicationState ();
+			this.persistanceManager.SettingsChanged += (sender) => Application.QueueAsyncCallback (this.SaveApplicationState);
 
 			this.stateManager.StackChanged += (sender, e) => this.UpdateCommandsAfterStateChange ();
+			this.stateManager.StackChanged += (sender, e) => Application.QueueAsyncCallback (this.SaveApplicationState);
 
 			this.UpdateCommandsAfterStateChange ();
 		}
@@ -377,6 +362,28 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 		}
+
+		private void SaveApplicationState()
+		{
+			if (this.IsReady)
+			{
+				System.Diagnostics.Debug.WriteLine ("Saving application state.");
+				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+				XDocument doc = new XDocument (
+					new XDeclaration ("1.0", "utf-8", "yes"),
+					new XComment ("Saved on " + timeStamp),
+					new XElement ("store",
+						this.StateManager.SaveStates ("stateManager"),
+						UI.SaveWindowPositions ("windowPositions"),
+						this.persistanceManager.Save ("uiSettings")));
+
+				doc.Save (CoreApplication.Paths.SettingsPath);
+				System.Diagnostics.Debug.WriteLine ("Save done.");
+			}
+		}
+
 
 		
 		private IconButton CreateButton(Command command)
