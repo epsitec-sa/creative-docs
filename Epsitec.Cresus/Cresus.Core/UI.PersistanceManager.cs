@@ -38,6 +38,11 @@ namespace Epsitec.Cresus.Core
 
 			public void Restore(XElement xml)
 			{
+				if (xml == null)
+				{
+					return;
+				}
+
 				foreach (XElement node in xml.Descendants ())
 				{
 					System.Diagnostics.Debug.Assert (node.Name == "w");
@@ -102,7 +107,7 @@ namespace Epsitec.Cresus.Core
 
 			private void HandleRibbonRestore(RibbonBook widget, XElement xml)
 			{
-				widget.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book"));
+				widget.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value);
 			}
 
 
