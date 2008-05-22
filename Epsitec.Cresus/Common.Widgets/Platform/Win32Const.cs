@@ -142,6 +142,8 @@ namespace Epsitec.Common.Widgets.Platform
 		public const uint SWP_NOCOPYBITS = 0x0100;
 		public const uint SWP_NOOWNERZORDER = 0x0200;  /* Don't do owner Z ordering */
 		public const uint SWP_NOSENDCHANGING = 0x0400;  /* Don't send WM_WINDOWPOSCHANGING */
+
+		public const int WPF_RESTORETOMAXIMIZED = 0x0002;
 		
 		public const int WMSZ_LEFT = 1;
 		public const int WMSZ_RIGHT = 2;

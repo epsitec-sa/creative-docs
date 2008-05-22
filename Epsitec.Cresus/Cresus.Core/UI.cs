@@ -8,10 +8,13 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core
 {
 	using FormResourceAccessor=Epsitec.Common.Support.ResourceAccessors.FormResourceAccessor;
+using System.Xml.Linq;
 
 	/// <summary>
 	/// The <c>UI</c> static class provides central support for user interface
@@ -69,6 +72,71 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static XElement SaveWindowPositions(string xmlNodeName)
+		{
+			return new XElement (xmlNodeName,
+				from window in Window.GetAllLiveWindows ()
+				select new XElement ("window",
+					new XAttribute ("name", window.Name ?? ""),
+					new XAttribute ("title", window.Text ?? ""),
+					new XAttribute ("placement", window.WindowPlacement.ToString ())));
+		}
+
+		public static void RestoreWindowPositions(XElement xml)
+		{
+			List<Window> windows = new List<Window> (Window.GetAllLiveWindows ());
+
+			foreach (XElement element in xml.Elements ("window"))
+			{
+				string name      = (string) element.Attribute ("name");
+				string title     = (string) element.Attribute ("title");
+				string placement = (string) element.Attribute ("placement");
+
+				WindowPlacement wp = WindowPlacement.Parse (placement);
+
+				Window window = UI.FindBestWindowMatch (windows, name, title);
+
+				if (window == null)
+				{
+					//	Should never happen
+				}
+				else
+				{
+					window.WindowPlacement = wp;
+					windows.Remove (window);
+				}
+			}
+		}
+
+		private static Window FindBestWindowMatch(IEnumerable<Window> windows, string name, string title)
+		{
+			foreach (Window window in windows)
+			{
+				string windowName = window.Name ?? "";
+				string windowTitle = window.Text ?? "";
+
+				if ((windowName == name) &&
+					(windowTitle == title))
+				{
+					return window;
+				}
+			}
+			
+			foreach (Window window in windows)
+			{
+				string windowName = window.Name ?? "";
+				string windowTitle = window.Text ?? "";
+
+				if (windowName == name)
+				{
+					return window;
+				}
+			}
+
+			return null;
+		}
+
+		
 		private static Panel CreateUserInterfaceFromForm(ResourceBundle bundle, PanelInteractionMode mode)
 		{
 			string xmlSource = bundle[FormResourceAccessor.Strings.XmlSource].AsString;

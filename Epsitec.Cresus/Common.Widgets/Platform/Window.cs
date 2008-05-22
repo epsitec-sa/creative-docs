@@ -781,9 +781,12 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ();
-				placement.Length = 4+4+4+8+8+16;
-				Win32Api.GetWindowPlacement (this.Handle, out placement);
+				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ()
+				{
+					Length = 4+4+4+2*4+2*4+4*4
+				};
+
+				Win32Api.GetWindowPlacement (this.Handle, ref placement);
 				
 				double ox = this.MapFromWinFormsX (placement.NormalPosition.Left);
 				double oy = this.MapFromWinFormsY (placement.NormalPosition.Bottom);
@@ -813,7 +816,7 @@ namespace Epsitec.Common.Widgets.Platform
 						f.Hide ();
 						f.Location = new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Bottom);
 					
-						Win32Api.GetWindowPlacement (f.Handle, out placement);
+						Win32Api.GetWindowPlacement (f.Handle, ref placement);
 					
 						ox -= placement.NormalPosition.Left - f.Location.X;
 						oy += placement.NormalPosition.Top - f.Location.Y;
@@ -826,6 +829,57 @@ namespace Epsitec.Common.Widgets.Platform
 				return new Drawing.Rectangle (ox, oy, dx, dy);
 			}
 		}
+
+		internal WindowPlacement NativeWindowPlacement
+		{
+			get
+			{
+				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ()
+				{
+					Length = 4+4+4+2*4+2*4+4*4
+				};
+				
+				Win32Api.GetWindowPlacement (this.Handle, ref placement);
+
+				bool isMaximized = (placement.Flags & Win32Const.WPF_RESTORETOMAXIMIZED) != 0;
+				bool isMinimized = (placement.ShowCmd == Win32Const.SW_SHOWMINIMIZED);
+				
+				return new WindowPlacement (new Drawing.Rectangle (placement.NormalPosition.Left, placement.NormalPosition.Top, placement.NormalPosition.Right - placement.NormalPosition.Left, placement.NormalPosition.Bottom - placement.NormalPosition.Top), isMaximized, isMinimized);
+			}
+			set
+			{
+				int show  = Win32Const.SW_SHOWNORMAL;
+				int flags = 0;
+
+				if (value.IsFullScreen)
+				{
+					show   = Win32Const.SW_SHOWMAXIMIZED;
+					flags |= Win32Const.WPF_RESTORETOMAXIMIZED;
+				}
+				if (value.IsMinimized)
+				{
+					show = Win32Const.SW_SHOWMINIMIZED;
+				}
+
+
+				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ()
+				{
+					Length = 4+4+4+2*4+2*4+4*4,
+					NormalPosition = new Win32Api.Rect ()
+					{
+						Left = (int) value.Bounds.Left,
+						Right = (int) value.Bounds.Right,
+						Top = (int) value.Bounds.Bottom,
+						Bottom = (int) value.Bounds.Top
+					},
+					ShowCmd = show,
+					Flags = flags
+				};
+
+				Win32Api.SetWindowPlacement (this.Handle, ref placement);
+			}
+		}
+
 		
 		internal Drawing.Point					WindowLocation
 		{

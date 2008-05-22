@@ -200,6 +200,23 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}
+
+		[Test]
+		public void CheckWindowPlacement()
+		{
+			Window window = new Window ();
+			Timer timer = new Timer ();
+			
+			timer.AutoRepeat = 1.0;
+			timer.Delay      = 1.0;
+			timer.TimeElapsed += (s) => System.Diagnostics.Debug.WriteLine (window.WindowPlacement.ToString ());
+			timer.Start ();
+
+			window.Text = "CheckWindowPlacement";
+			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
 		
 		[Test]
 		public void CheckTabNavigation()

@@ -36,7 +36,8 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static bool ShowWindow(System.IntPtr handle, int cmd_show);
 		[DllImport ("User32.dll")]	internal extern static bool MoveWindow(System.IntPtr handle, int x, int y, int width, int height, bool repaint);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetActiveWindow();
-		[DllImport ("User32.dll")]	internal extern static bool GetWindowPlacement(System.IntPtr handle, out WindowPlacement placement);
+		[DllImport ("User32.dll")]	internal extern static bool GetWindowPlacement(System.IntPtr handle, ref WindowPlacement placement);
+		[DllImport ("User32.dll")]	internal extern static bool SetWindowPlacement(System.IntPtr handle, ref WindowPlacement placement);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr SetParent(System.IntPtr child, System.IntPtr parent);
 		[DllImport ("User32.dll")]	internal extern static bool IsIconic(System.IntPtr window);
 		[DllImport ("User32.dll")]  internal extern static int GetKeyNameText(int param, [System.Runtime.InteropServices.Out] System.Text.StringBuilder buffer, int size);

@@ -212,6 +212,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+#if false
 		public void ReloadStates(string path)
 		{
 			XDocument doc = XDocument.Load (path);
@@ -269,8 +270,86 @@ namespace Epsitec.Cresus.Core
 			return from state in doc.Descendants ("state")
 				   select States.StateFactory.CreateState (this, state);
 		}
+#endif
 
-		
+		public XElement SaveStates(string xmlNodeName)
+		{
+			int tag = 0;
+
+			foreach (States.CoreState state in this.states)
+			{
+				state.Tag = tag.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				tag++;
+			}
+
+			System.Text.StringBuilder historyTags = new System.Text.StringBuilder ();
+			System.Text.StringBuilder zOrderTags  = new System.Text.StringBuilder ();
+
+			foreach (var state in this.history)
+			{
+				if (historyTags.Length > 0)
+				{
+					historyTags.Append (" ");
+				}
+				historyTags.Append (state.Tag);
+			}
+
+			foreach (var state in this.zOrder)
+			{
+				if (zOrderTags.Length > 0)
+				{
+					zOrderTags.Append (" ");
+				}
+				zOrderTags.AppendFormat (state.Tag);
+			}
+
+			return new XElement (xmlNodeName,
+				new XElement ("states",
+					from state in this.states
+					select state.Serialize (new XElement ("state",
+						new XAttribute ("class", States.StateFactory.GetClassName (state))))),
+				new XElement ("history", historyTags.ToString ()),
+				new XElement ("z_order", zOrderTags.ToString ()));
+		}
+
+		public void RestoreStates(XElement xml)
+		{
+			var states = from state in xml.Descendants ("state")
+						 select States.StateFactory.CreateState (this, state);
+
+			Dictionary<string, States.CoreState> taggedStates = new Dictionary<string, States.CoreState> ();
+
+			foreach (var state in states)
+			{
+				string tag = this.states.Count.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				taggedStates[tag] = state;
+				this.states.Add (state);
+			}
+			foreach (string tag in xml.Element ("history").Value.Split (' '))
+			{
+				this.history.Add (taggedStates[tag]);
+			}
+			foreach (string tag in xml.Element ("z_order").Value.Split (' '))
+			{
+				this.zOrder.Add (taggedStates[tag]);
+			}
+
+			foreach (var state in this.history)
+			{
+				Box box = this.boxes[state.BoxId];
+
+				if (box.State == null)
+				{
+					box.State = state;
+					box.State.Bind (box.Container);
+				}
+			}
+
+			this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Load, null));
+		}
+
+
+#if false
 		public void WriteStates(string path)
 		{
 			int tag = 0;
@@ -341,7 +420,7 @@ namespace Epsitec.Cresus.Core
 
 			doc.Save (writer);
 		}
-
+#endif
 
 		public int RegisterBox(Widget container)
 		{

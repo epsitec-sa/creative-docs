@@ -7,6 +7,8 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core
 {
@@ -25,6 +27,12 @@ namespace Epsitec.Cresus.Core
 			this.commands = new CoreCommands (this);
 		}
 
+
+		public bool IsReady
+		{
+			get;
+			private set;
+		}
 
 		public CoreData Data
 		{
@@ -82,6 +90,8 @@ namespace Epsitec.Cresus.Core
 
 			this.CreateRibbon ();
 			this.CreateWorkspace ();
+
+			this.IsReady = true;
 		}
 
 		public void SetupData()
@@ -92,8 +102,22 @@ namespace Epsitec.Cresus.Core
 
 		public void SaveApplicationState()
 		{
-			this.StateManager.WriteStates (@"S:\states.xml");
-			System.Diagnostics.Debug.WriteLine ("Save done.");
+			if (this.IsReady)
+			{
+				System.Diagnostics.Debug.WriteLine ("Saving application state.");
+				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+				XDocument doc = new XDocument (
+					new XDeclaration ("1.0", "utf-8", "yes"),
+					new XComment ("Saved on " + timeStamp),
+					new XElement ("store",
+						this.StateManager.SaveStates ("stateManager"),
+						UI.SaveWindowPositions ("windowPositions")));
+
+				doc.Save (@"S:\cresus.core.xml");
+				System.Diagnostics.Debug.WriteLine ("Save done.");
+			}
 		}
 
 		public void StartNewSearch(Druid entityId, Druid formId)
@@ -265,10 +289,15 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateWorkspace()
 		{
-			if (System.IO.File.Exists (@"S:\states.xml"))
+			string path = @"S:\cresus.core.xml";
+
+			if (System.IO.File.Exists (path))
 			{
-				this.stateManager.ReloadStates (@"S:\states.xml");
-				return;
+				XDocument doc = XDocument.Load (path);
+				XElement store = doc.Element ("store");
+
+				this.stateManager.RestoreStates (store.Element ("stateManager"));
+				UI.RestoreWindowPositions (store.Element ("windowPositions"));
 			}
 #if false
 			this.stateManager.Push (
@@ -298,6 +327,7 @@ namespace Epsitec.Cresus.Core
 				});
 #endif
 
+#if false
 			for (int i = 0; i < 3; i++)
 			{
 				this.stateManager.Push (
@@ -309,6 +339,7 @@ namespace Epsitec.Cresus.Core
 						Title = string.Format ("{0}", (char)('A'+i))
 					});
 			}
+#endif
 		}
 
 		private IconButton CreateButton(Command command)

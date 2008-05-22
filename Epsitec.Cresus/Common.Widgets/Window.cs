@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 	using PropertyChangedEventHandler = Epsitec.Common.Support.EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>;
 	
 	using Win32Api = Epsitec.Common.Widgets.Platform.Win32Api;
+	using Epsitec.Common.Types.Collections;
 	
 	/// <summary>
 	/// La classe Window représente une fenêtre du système d'exploitation. Ce
@@ -59,7 +60,7 @@ namespace Epsitec.Common.Widgets
 			this.timer.TimeElapsed += this.HandleTimeElapsed;
 			this.timer.AutoRepeat = 0.050;
 			
-			Window.windows.Add (new Weak<Window> (this));
+			Window.windows.Add (this);
 		}
 		
 		
@@ -76,41 +77,32 @@ namespace Epsitec.Common.Widgets
 		
 		public static void InvalidateAll(Window.InvalidateReason reason)
 		{
-			for (int i = 0; i < Window.windows.Count; )
+			foreach (Window target in Window.windows)
 			{
-				Weak<Window> weak_ref = Window.windows[i];
+				WindowRoot root = target.Root;
 				
-				Window target = weak_ref.Target;
-				
-				if ((target == null) || (target.IsDisposed))
+				switch (reason)
 				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					WindowRoot root = target.Root;
+					case InvalidateReason.Generic:
+						root.Invalidate ();
+						break;
 					
-					switch (reason)
-					{
-						case InvalidateReason.Generic:
-							root.Invalidate ();
-							break;
-						
-						case InvalidateReason.AdornerChanged:
-							root.NotifyAdornerChanged ();
-							root.Invalidate ();
-							break;
-						
-						case InvalidateReason.CultureChanged:
-							root.NotifyCultureChanged ();
-							break;
-					}
+					case InvalidateReason.AdornerChanged:
+						root.NotifyAdornerChanged ();
+						root.Invalidate ();
+						break;
 					
-					i++;
+					case InvalidateReason.CultureChanged:
+						root.NotifyCultureChanged ();
+						break;
 				}
 			}
 		}
-		
+
+		public static IEnumerable<Window> GetAllLiveWindows()
+		{
+			return Window.windows.FindAll (window => !window.IsDisposed);
+		}
 		
 		public static void GrabScreen(Drawing.Image bitmap, int x, int y)
 		{
@@ -119,156 +111,34 @@ namespace Epsitec.Common.Widgets
 		
 		public static Window FindFirstLiveWindow()
 		{
-			for (int i = 0; i < Window.windows.Count; )
-			{
-				Weak<Window> weak_ref = Window.windows[i];
-				
-				Window target = weak_ref.Target;
-				
-				if ((target == null) || (target.IsDisposed))
-				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					return target;
-				}
-			}
-			
-			return null;
+			return Window.windows.FindFirst (window => !window.IsDisposed);
 		}
 		
 		public static Window[] FindFromPosition(Drawing.Point pos)
 		{
 			List<Window> list = new List<Window> ();
-			
-			for (int i = 0; i < Window.windows.Count; )
-			{
-				Weak<Window> weak_ref = Window.windows[i];
-				
-				Window target = weak_ref.Target;
-				
-				if ((target == null) || (target.IsDisposed))
-				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					if ((target.WindowBounds.Contains (pos)) &&
-						(target.IsVisible))
-					{
-						list.Add (target);
-					}
-					
-					i++;
-				}
-			}
-
+			list.AddRange (Window.windows.FindAll (window => !window.IsDisposed && window.WindowBounds.Contains (pos) && window.IsVisible));
 			return list.ToArray ();
 		}
 		
 		public static Window FindFromText(string text)
 		{
-			for (int i = 0; i < Window.windows.Count; )
-			{
-				Weak<Window> weak_ref = Window.windows[i];
-				
-				Window target = weak_ref.Target;
-				
-				if ((target == null) || (target.IsDisposed))
-				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					if (target.Text == text)
-					{
-						return target;
-					}
-					
-					i++;
-				}
-			}
-			
-			return null;
+			return Window.windows.FindFirst (window => !window.IsDisposed && window.Text == text);
 		}
 		
 		public static Window FindFromHandle(System.IntPtr handle)
 		{
-			for (int i = 0; i < Window.windows.Count; )
-			{
-				Weak<Window> weak_ref = Window.windows[i];
-				
-				Window target = weak_ref.Target;
-				
-				if ((target == null) || (target.IsDisposed))
-				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					if (target.window.Handle == handle)
-					{
-						return target;
-					}
-					
-					i++;
-				}
-			}
-			
-			return null;
+			return Window.windows.FindFirst (window => !window.IsDisposed && window.window.Handle == handle);
 		}
 		
 		public static Window FindFromName(string name)
 		{
-			for (int i = 0; i < Window.windows.Count; )
-			{
-				Weak<Window> weak_ref = Window.windows[i];
-				
-				Window target = weak_ref.Target;
-				
-				if ((target == null) || (target.IsDisposed))
-				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					if (target.Name == name)
-					{
-						return target;
-					}
-					
-					i++;
-				}
-			}
-			
-			return null;
+			return Window.windows.FindFirst (window => !window.IsDisposed && window.Name == name);
 		}
 
 		public static Window FindCapturing()
 		{
-			for (int i = 0; i < Window.windows.Count; )
-			{
-				Weak<Window> weak_ref = Window.windows[i];
-
-				Window target = weak_ref.Target;
-
-				if ((target == null) || (target.IsDisposed))
-				{
-					Window.windows.RemoveAt (i);
-				}
-				else
-				{
-					if (target.CapturingWidget != null)
-					{
-						return target;
-					}
-
-					i++;
-				}
-			}
-
-			return null;
+			return Window.windows.FindFirst (window => !window.IsDisposed && window.CapturingWidget != null);
 		}
 		
 		
@@ -755,6 +625,13 @@ namespace Epsitec.Common.Widgets
 			{
 				return (this.window != null) && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
 			}
+			set
+			{
+				if (this.window != null)
+				{
+					this.window.WindowState = value ? System.Windows.Forms.FormWindowState.Minimized : System.Windows.Forms.FormWindowState.Normal;
+				}
+			}
 		}
 		
 		public bool								IsToolWindow
@@ -901,17 +778,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int n = 0;
-				
-				foreach (Weak<Window> weak_ref in Window.windows)
-				{
-					if (weak_ref.IsAlive)
-					{
-						n++;
-					}
-				}
-				
-				return n;
+				return Window.windows.Count;
 			}
 		}
 		
@@ -919,17 +786,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				List<Window> windows = new List<Window> ();
-				
-				foreach (Weak<Window> weak_ref in Window.windows)
-				{
-					if (weak_ref.IsAlive)
-					{
-						windows.Add (weak_ref.Target);
-					}
-				}
-				
-				return windows.ToArray ();
+				return Window.windows.ToArray ();
 			}
 		}
 		
@@ -1025,7 +882,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Rectangle				WindowPlacementNormalBounds
+		public Drawing.Rectangle				WindowPlacementBounds
 		{
 			get
 			{
@@ -1035,6 +892,18 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return this.window.WindowPlacementNormalBounds;
+			}
+		}
+
+		public WindowPlacement					WindowPlacement
+		{
+			get
+			{
+				return this.window.NativeWindowPlacement;
+			}
+			set
+			{
+				this.window.NativeWindowPlacement = value;
 			}
 		}
 
@@ -2712,8 +2581,8 @@ namespace Epsitec.Common.Widgets
 		private Queue<PostPaintRecord>			post_paint_queue = new Queue<PostPaintRecord> ();
 		
 		private Support.Data.ComponentCollection components;
-		
-		static List<Weak<Window>>				windows = new List<Weak<Window>> ();
+
+		static WeakList<Window>					windows = new WeakList<Window> ();
 		static bool								is_running_in_automated_test_environment;
 	}
 }

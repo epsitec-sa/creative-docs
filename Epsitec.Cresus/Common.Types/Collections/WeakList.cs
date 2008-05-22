@@ -39,6 +39,40 @@ namespace Epsitec.Common.Types.Collections
 			return this.GetList ();
 		}
 
+		/// <summary>
+		/// Finds the first occurrence matching the specified predicate.
+		/// </summary>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns>The first element or a default value.</returns>
+		public T FindFirst(System.Predicate<T> predicate)
+		{
+			foreach (T item in this)
+			{
+				if (predicate (item))
+				{
+					return item;
+				}
+			}
+
+			return default (T);
+		}
+
+		/// <summary>
+		/// Find all occurrences matching the specified predicate.
+		/// </summary>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns>The elements.</returns>
+		public IEnumerable<T> FindAll(System.Predicate<T> predicate)
+		{
+			foreach (T item in this)
+			{
+				if (predicate (item))
+				{
+					yield return item;
+				}
+			}
+		}
+
 		#region ICollection<T> Members
 
 		public void Add(T item)

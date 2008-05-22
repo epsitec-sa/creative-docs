@@ -136,7 +136,7 @@ namespace Epsitec.Common.Designer
 
 			window.ShowDialog();  // affiche le dialogue modal...
 			
-			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
+			UserInterface.runPanelCenter = window.WindowPlacementBounds.Center;
 		}
 		
 		public static void RunForm(UI.Panel panel, Widgets.Window mainWindow, Size size, string name)
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Designer
 
 			window.ShowDialog();  // affiche le dialogue modal...
 			
-			UserInterface.runPanelCenter = window.WindowPlacementNormalBounds.Center;
+			UserInterface.runPanelCenter = window.WindowPlacementBounds.Center;
 		}
 		
 		private class CustomerRecord : Types.DependencyObject
