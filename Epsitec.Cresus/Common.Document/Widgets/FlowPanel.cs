@@ -103,10 +103,10 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			Rectangle initialClipping = graphics.SaveClippingRectangle();
 
-			//?Drawing.Rectangle rect = this.Client.Bounds;
-			Drawing.Rectangle rect = initialClipping;
+			Drawing.Rectangle rect = this.MapClientToRoot(this.Client.Bounds);
 			rect.Deflate(this.Padding);
 			rect.Deflate(this.GetInternalPadding());
+
 			graphics.SetClippingRectangle(rect);
 
 			base.PaintHandler(graphics, repaint, paintFilter);
