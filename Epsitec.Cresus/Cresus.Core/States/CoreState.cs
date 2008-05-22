@@ -89,6 +89,9 @@ namespace Epsitec.Cresus.Core.States
 
 		public abstract CoreState Deserialize(XElement element);
 
+		public virtual void NotifyDeserialized(Dictionary<string, CoreState> taggedStates)
+		{
+		}
 		
 		public void PaintMiniature(Graphics graphics)
 		{

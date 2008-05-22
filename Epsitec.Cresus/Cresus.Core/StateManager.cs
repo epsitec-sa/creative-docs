@@ -60,7 +60,11 @@ namespace Epsitec.Cresus.Core
 
 		public void Push(States.CoreState state)
 		{
-			System.Diagnostics.Debug.Assert (state != null);
+			if (state == null)
+			{
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (state.StateManager == this);
 
 			if (this.states.Contains (state))
@@ -73,22 +77,29 @@ namespace Epsitec.Cresus.Core
 				this.zOrder.Remove (state);
 				this.zOrder.Add (state);
 
+				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Promotion, state));
+				this.OnNavigated ();
 			}
 			else
 			{
 				this.states.Add (state);
 				this.history.Insert (0, state);
 				this.zOrder.Add (state);
-				this.Attach (state);
 
+				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Push, state));
+				this.OnNavigated ();
 			}
 		}
 
 		public bool Pop(States.CoreState state)
 		{
-			System.Diagnostics.Debug.Assert (state != null);
+			if (state == null)
+			{
+				return false;
+			}
+
 			System.Diagnostics.Debug.Assert (state.StateManager == this);
 
 			if (this.states.Remove (state))
@@ -97,13 +108,10 @@ namespace Epsitec.Cresus.Core
 				this.zOrder.Remove (state);
 
 				this.Detach (state);
-				
-				if (this.history.Count > 0)
-				{
-					this.Attach (this.history[0]);
-				}
 
+				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Pop, state));
+				this.OnNavigated ();
 				
 				return true;
 			}
@@ -121,10 +129,10 @@ namespace Epsitec.Cresus.Core
 
 				States.CoreState state = this.history[0];
 
-				this.Attach (state);
 				this.zOrder.Remove (state);
 				this.zOrder.Add (state);
 
+				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, state));
 				this.OnNavigated ();
 
@@ -144,10 +152,10 @@ namespace Epsitec.Cresus.Core
 
 				States.CoreState state = this.history[0];
 
-				this.Attach (state);
 				this.zOrder.Remove (state);
 				this.zOrder.Add (state);
 
+				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Navigation, state));
 				this.OnNavigated ();
 
@@ -181,16 +189,23 @@ namespace Epsitec.Cresus.Core
 
 		public IEnumerable<States.CoreState> GetHistoryStates(HistorySortMode sortMode)
 		{
+			IEnumerable<States.CoreState> history;
+
 			switch (sortMode)
 			{
 				case HistorySortMode.NewestFirst:
-					return this.history;
+					history = this.history;
+					break;
 				
 				case HistorySortMode.NewestLast:
-					return CircularList<States.CoreState>.Reverse (this.history);
+					history = CircularList<States.CoreState>.Reverse (this.history);
+					break;
+
+				default:
+					throw new System.ArgumentException ();
 			}
 
-			throw new System.ArgumentException ();
+			return history;
 		}
 
 		public IEnumerable<States.CoreState> GetHistoryStates(States.StateDeck deck, HistorySortMode sortMode)
@@ -206,9 +221,10 @@ namespace Epsitec.Cresus.Core
 					return from state in CircularList<States.CoreState>.Reverse (this.history)
 						   where state.StateDeck == deck
 						   select state;
-			}
 
-			throw new System.ArgumentException ();
+				default:
+					throw new System.ArgumentException ();
+			}
 		}
 
 
@@ -264,6 +280,7 @@ namespace Epsitec.Cresus.Core
 				string tag = this.states.Count.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				taggedStates[tag] = state;
 				this.states.Add (state);
+				state.Tag = tag;
 			}
 
 			string history = xml.Element ("history").Value;
@@ -282,6 +299,11 @@ namespace Epsitec.Cresus.Core
 				{
 					this.zOrder.Add (taggedStates[tag]);
 				}
+			}
+
+			foreach (var state in states)
+			{
+				state.NotifyDeserialized (taggedStates);
 			}
 
 			if (this.boxes.Count > 0)
@@ -331,6 +353,14 @@ namespace Epsitec.Cresus.Core
 			return id;
 		}
 
+
+		private void ActivateCurrentState()
+		{
+			if (this.history.Count > 0)
+			{
+				this.Attach (this.history[0]);
+			}
+		}
 
 		private void Attach(States.CoreState state)
 		{

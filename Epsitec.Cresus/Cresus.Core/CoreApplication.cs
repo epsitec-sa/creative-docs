@@ -144,9 +144,39 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.Push (state);
 		}
 
-		public void StartEdit(AbstractEntity entity, Druid formId)
+		public void StartEdit()
 		{
+			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
+
+			if (formState == null)
+			{
+				return;
+			}
+			
+			AbstractEntity entity = formState.CurrentEntity;
+
+			if (entity == null)
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (EntityContext.IsSearchEntity (entity) == false);
+			
+			Druid formId   = formState.Workspace.FormId;
 			Druid entityId = entity.GetEntityStructuredTypeId ();
+			
+			//	Recycle existing edition form, if there is one :
+
+			foreach (var item in States.FormWorkspaceState.FindAll (this.StateManager, s => s.Workspace.Mode == FormWorkspaceMode.Edition))
+			{
+				if (item.Workspace.CurrentItem == entity)
+				{
+					this.StateManager.Push (item);
+					return;
+				}
+			}
+			
+			//	Create new workspace for the edition :
 
 			Workspaces.FormWorkspace workspace =
 				new Workspaces.FormWorkspace ()
@@ -163,10 +193,12 @@ namespace Epsitec.Cresus.Core
 					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.StandAlone,
 					Title = "Edition",
-					Workspace = workspace
+					Workspace = workspace,
+					LinkedState = formState
 				};
 
 			this.stateManager.Push (state);
+//-			this.stateManager.Pop (formState);
 		}
 
 		public bool EndEdit(bool accept)
@@ -183,6 +215,7 @@ namespace Epsitec.Cresus.Core
 					this.data.DataContext.SaveChanges ();
 				}
 
+				this.stateManager.Push (formState.LinkedState);
 				this.stateManager.Pop (formState);
 				formState.Dispose ();
 				return true;
@@ -190,6 +223,7 @@ namespace Epsitec.Cresus.Core
 
 			return false;
 		}
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -211,7 +245,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		
+
 		private void CreateRibbon()
 		{
 			this.ribbonBook = new RibbonBook (this.ribbonBox)
@@ -344,6 +378,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		
 		private IconButton CreateButton(Command command)
 		{
 			return this.CreateButton (command, DockStyle.StackBegin, null);

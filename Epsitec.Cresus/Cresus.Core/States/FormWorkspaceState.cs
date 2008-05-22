@@ -65,6 +65,11 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		public CoreState						LinkedState
+		{
+			get;
+			set;
+		}
 		
 		public override XElement Serialize(XElement element)
 		{
@@ -87,6 +92,32 @@ namespace Epsitec.Cresus.Core.States
 			this.RestoreCoreState (element);
 
 			return this;
+		}
+
+		public override void NotifyDeserialized(Dictionary<string, CoreState> taggedStates)
+		{
+			if (this.deserializationLinkTag != null)
+			{
+				this.LinkedState = taggedStates[this.deserializationLinkTag];
+			}
+		}
+
+
+
+		public static IEnumerable<FormWorkspaceState> FindAll(StateManager manager, System.Predicate<FormWorkspaceState> filter)
+		{
+			foreach (CoreState state in manager.GetAllStates ())
+			{
+				FormWorkspaceState formState = state as FormWorkspaceState;
+
+				if (formState != null)
+				{
+					if (filter (formState))
+					{
+						yield return formState;
+					}
+				}
+			}
 		}
 
 
@@ -113,6 +144,7 @@ namespace Epsitec.Cresus.Core.States
 					new XAttribute ("mode", this.workspace.Mode.ToString ()),
 					new XAttribute ("currentEntityId", currentEntityId ?? ""),
 					new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()),
+					new XAttribute ("link", this.LinkedState == null ? "" : this.LinkedState.Tag),
 					(object)savedDialogData ?? (object)emptyElement));
 			}
 		}
@@ -128,8 +160,9 @@ namespace Epsitec.Cresus.Core.States
 				string entityId        = (string) workspaceElement.Attribute ("entityId");
 				string formId          = (string) workspaceElement.Attribute ("formId");
 				string mode            = (string) workspaceElement.Attribute ("mode");
-				string focusPath       = (string) workspaceElement.Attribute ("focusPath");
 				string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
+				string focusPath       = (string) workspaceElement.Attribute ("focusPath");
+				string link            = (string) workspaceElement.Attribute ("link");
 
 				XElement dialogDataXml = workspaceElement.Element ("dialogData");
 				
@@ -144,9 +177,13 @@ namespace Epsitec.Cresus.Core.States
 					this.workspace.CurrentItem = item;
 				}
 
-				if (focusPath.Length > 0)
+				if (string.IsNullOrEmpty (focusPath) == false)
 				{
 					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
+				}
+				if (string.IsNullOrEmpty (link) == false)
+				{
+					this.deserializationLinkTag = link;
 				}
 
 				this.workspace.Initialize ();
@@ -383,5 +420,6 @@ namespace Epsitec.Cresus.Core.States
 
 		
 		private Workspaces.FormWorkspace		workspace;
+		private string							deserializationLinkTag;
 	}
 }
