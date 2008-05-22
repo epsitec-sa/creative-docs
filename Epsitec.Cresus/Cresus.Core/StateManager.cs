@@ -325,23 +325,36 @@ namespace Epsitec.Cresus.Core
 				taggedStates[tag] = state;
 				this.states.Add (state);
 			}
-			foreach (string tag in xml.Element ("history").Value.Split (' '))
-			{
-				this.history.Add (taggedStates[tag]);
-			}
-			foreach (string tag in xml.Element ("z_order").Value.Split (' '))
-			{
-				this.zOrder.Add (taggedStates[tag]);
-			}
 
-			foreach (var state in this.history)
-			{
-				Box box = this.boxes[state.BoxId];
+			string history = xml.Element ("history").Value;
+			string zOrder  = xml.Element ("z_order").Value;
 
-				if (box.State == null)
+			if (history.Length > 0)
+			{
+				foreach (string tag in history.Split (' '))
 				{
-					box.State = state;
-					box.State.Bind (box.Container);
+					this.history.Add (taggedStates[tag]);
+				}
+			}
+			if (zOrder.Length > 0)
+			{
+				foreach (string tag in zOrder.Split (' '))
+				{
+					this.zOrder.Add (taggedStates[tag]);
+				}
+			}
+
+			if (this.boxes.Count > 0)
+			{
+				foreach (var state in this.history)
+				{
+					Box box = this.boxes[state.BoxId];
+
+					if (box.State == null)
+					{
+						box.State = state;
+						box.State.Bind (box.Container);
+					}
 				}
 			}
 
@@ -454,6 +467,11 @@ namespace Epsitec.Cresus.Core
 
 		private void Attach(States.CoreState state)
 		{
+			if (this.boxes.Count == 0)
+			{
+				return;
+			}
+
 			System.Diagnostics.Debug.Assert (state.BoxId != 0);
 			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
 
@@ -475,6 +493,11 @@ namespace Epsitec.Cresus.Core
 
 		private void Detach(States.CoreState state)
 		{
+			if (this.boxes.Count == 0)
+			{
+				return;
+			}
+
 			System.Diagnostics.Debug.Assert (state.BoxId != 0);
 			System.Diagnostics.Debug.Assert (this.boxes.ContainsKey (state.BoxId));
 

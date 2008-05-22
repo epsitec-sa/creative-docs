@@ -35,15 +35,15 @@ namespace Epsitec.Cresus.Core
 
 			StateManager manager = new StateManager (null);
 
-			using (System.IO.TextWriter writer = new System.IO.StreamWriter (this.path))
-			{
-				manager.WriteStates (writer,
-					new DummyState[] {
-						new DummyState (manager, "A"),
-						new DummyState (manager, "B")
-					},
-					new XElement[0]);
-			}
+			manager.Push (new DummyState (manager, "A"));
+			manager.Push (new DummyState (manager, "B"));
+
+			XDocument doc = new XDocument (
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XElement ("store",
+					manager.SaveStates ("stateManager")));
+
+			doc.Save (this.path);
 		}
 
 		[Test]
@@ -51,7 +51,12 @@ namespace Epsitec.Cresus.Core
 		{
 			StateManager manager = new StateManager (null);
 
-			List<States.CoreState> states = new List<States.CoreState> (manager.ReadStates (this.path));
+			XDocument doc = XDocument.Load (path);
+			XElement store = doc.Element ("store");
+
+			manager.RestoreStates (store.Element ("stateManager"));
+
+			List<States.CoreState> states = new List<States.CoreState> (manager.GetAllStates ());
 
 			Assert.AreEqual (2, states.Count);
 			Assert.AreEqual (typeof (DummyState), states[0].GetType ());
@@ -62,11 +67,37 @@ namespace Epsitec.Cresus.Core
 			Assert.AreEqual (manager, states[1].StateManager);
 		}
 
+		[Test]
+		public void Check03SaveEmptyState()
+		{
+			System.Console.Out.WriteLine ("Using {0} for the serialization", this.path);
+
+			StateManager manager = new StateManager (null);
+
+			XDocument doc = new XDocument (
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XElement ("store",
+					manager.SaveStates ("stateManager")));
+
+			doc.Save (this.path);
+		}
 
 		[Test]
-		public void Check03SaveDialogData()
+		public void Check04LoadEmptyState()
 		{
+			StateManager manager = new StateManager (null);
+
+			XDocument doc = XDocument.Load (path);
+			XElement store = doc.Element ("store");
+
+			manager.RestoreStates (store.Element ("stateManager"));
+
+			List<States.CoreState> states = new List<States.CoreState> (manager.GetAllStates ());
+
+			Assert.AreEqual (0, states.Count);
 		}
+
+
 
 		#region DummyState Class
 
