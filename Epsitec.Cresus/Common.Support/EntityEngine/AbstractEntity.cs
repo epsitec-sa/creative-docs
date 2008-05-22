@@ -793,7 +793,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
 
-			if (field == null)
+			if ((field == null) ||
+				(field.Type == null))
 			{
 				throw new System.ArithmeticException (string.Format ("Invalid field '{0}' specified", id));
 			}
@@ -801,7 +802,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			System.Diagnostics.Debug.Assert (field != null);
 			System.Diagnostics.Debug.Assert (field.Relation != FieldRelation.Collection);
 
-			if ((newValue == null) &&
+			bool isNullValue = field.IsNullValue (newValue);
+
+			if (isNullValue &&
 				((field.IsNullable) || (context.SkipConstraintChecking)))
 			{
 				//	The value is null and the field is nullable; this operation
@@ -821,7 +824,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				{
 					object value;
 
-					if (newValue == null)
+					if (isNullValue)
 					{
 						value = UndefinedValue.Value;
 					}

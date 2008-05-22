@@ -960,6 +960,8 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		private sealed class SearchContext : System.IDisposable, ISearchContext
 		{
+			static int next = 0;
+			private int id = SearchContext.next++;
 			public SearchContext(DialogSearchController searchController, AbstractEntity rootData, EntityFieldPath rootPath)
 			{
 				this.searchController = searchController;

@@ -348,6 +348,28 @@ namespace Epsitec.Common.Types
 		}
 
 		/// <summary>
+		/// Determines whether the specified value is the null value. This calls
+		/// the type's unerlying <see cref="INullableType"/> interface.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is the null value; otherwise, <c>false</c>.
+		/// </returns>
+		public bool IsNullValue(object value)
+		{
+			INullableType nullable = this.Type as INullableType;
+
+			if (nullable == null)
+			{
+				return value == null;
+			}
+			else
+			{
+				return nullable.IsNullValue (value);
+			}
+		}
+
+		/// <summary>
 		/// Clones this instance.
 		/// </summary>
 		/// <returns>A copy of this instance.</returns>
