@@ -19,8 +19,7 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override Margins GetInternalPadding()
 		{
-			//?return new Drawing.Margins(2, 2, 2, 2);
-			return new Drawing.Margins(20, 20, 20, 20);
+			return new Drawing.Margins(2, 2, 2, 2);
 		}
 
 		protected override void MeasureMinMax(ref Size min, ref Size max)
@@ -101,39 +100,20 @@ namespace Epsitec.Common.Document.Widgets
 
 		public override void PaintHandler(Graphics graphics, Rectangle repaint, IPaintFilter paintFilter)
 		{
+			//	PaintHandler exécute dans l'ordre:
+			//	1.	PaintBackgroundImplementation
+			//	2.	PaintHandler de tous les enfants
+			//	3.	PaintForegroundImplementation
 			Rectangle initialClipping = graphics.SaveClippingRectangle();
 
 			Drawing.Rectangle rect = this.MapClientToRoot(this.Client.Bounds);
 			rect.Deflate(this.Padding);
 			rect.Deflate(this.GetInternalPadding());
-
 			graphics.SetClippingRectangle(rect);
 
 			base.PaintHandler(graphics, repaint, paintFilter);
 
 			graphics.RestoreClippingRectangle(initialClipping);
 		}
-
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			base.PaintBackgroundImplementation(graphics, clipRect);
-		}
-
-		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			base.PaintForegroundImplementation(graphics, clipRect);
-		}
-
-#if false
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
-		{
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
-			Rectangle rect  = this.Client.Bounds;
-			rect.Deflate(0.5);
-			graphics.AddRectangle(rect);
-			graphics.RenderSolid(adorner.ColorBorder);
-		}
-#endif
 	}
 }
