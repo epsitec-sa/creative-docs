@@ -330,6 +330,13 @@ namespace Epsitec.Common.Document
 			set { this.pageMiniatures = value; }
 		}
 
+		public Containers.LayerMiniatures LayerMiniatures
+		{
+			//	Gestionnaire des calques miniatures associé.
+			get { return this.layerMiniatures; }
+			set { this.layerMiniatures = value; }
+		}
+
 		protected void MainWindowSetFrozen()
 		{
 			//	Gèle la fenêtre principale.
@@ -3198,5 +3205,6 @@ namespace Epsitec.Common.Document
 		protected Widgets.VRuler				vRuler;
 		protected bool							containOldText;
 		protected Containers.PageMiniatures		pageMiniatures;
+		protected Containers.LayerMiniatures	layerMiniatures;
 	}
 }
