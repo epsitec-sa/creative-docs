@@ -2179,13 +2179,13 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void PaintPage(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect,
-								 Objects.Abstract page, int firstLayer, int lastLayer)
+		protected void PaintPage(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect, Objects.Abstract page, int firstLayer, int lastLayer)
 		{
 			if ( drawingContext.PreviewActive )
 			{
+				Objects.Page p = page as Objects.Page;
 				Rectangle initialClip = Rectangle.Empty;
-				if ( this.Modifier != null )
+				if (this.Modifier != null && !drawingContext.Viewer.IsDocumentPreview && !drawingContext.Viewer.IsPictogramPreview)
 				{
 					initialClip = graphics.SaveClippingRectangle();
 					clipRect = Rectangle.Intersection(clipRect, this.Modifier.PageArea);
@@ -2218,7 +2218,7 @@ namespace Epsitec.Common.Document
 					graphics.PopColorModifier();
 				}
 
-				if ( this.Modifier != null )
+				if (this.Modifier != null && !drawingContext.Viewer.IsDocumentPreview && !drawingContext.Viewer.IsPictogramPreview)
 				{
 					graphics.RestoreClippingRectangle(initialClip);
 				}

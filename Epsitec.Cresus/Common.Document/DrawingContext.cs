@@ -389,6 +389,7 @@ namespace Epsitec.Common.Document
 				this.document.Notifier.NotifyZoomChanged();
 				this.document.Notifier.NotifyOriginChanged();
 			}
+			//?System.Diagnostics.Debug.WriteLine(string.Format("z={0} cx={1} cy={2} ox={3} oy={4}", zoom, centerX, centerY, this.originX, this.originY));
 		}
 
 		public double Zoom
