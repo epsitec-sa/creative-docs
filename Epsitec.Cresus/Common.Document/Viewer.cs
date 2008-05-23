@@ -4026,18 +4026,18 @@ namespace Epsitec.Common.Document
 					{
 						//	Dessine la "page".
 						Rectangle rect = this.document.Modifier.PageArea;
-						graphics.Align (ref rect);
-						rect.Offset (ix, iy);
+						graphics.Align(ref rect);
+						rect.Offset(ix, iy);
 
-						graphics.AddRectangle (rect);
-						graphics.RenderSolid (Color.FromAlphaRgb (0.4, 0.5, 0.5, 0.5));
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5, 0.5, 0.5));
 					}
 
 					Rectangle area = this.document.Modifier.RectangleArea;
-					graphics.Align (ref area);
-					area.Offset (ix, iy);
-					graphics.AddRectangle (area);
-					graphics.RenderSolid (Color.FromAlphaRgb (0.4, 0.5, 0.5, 0.5));
+					graphics.Align(ref area);
+					area.Offset(ix, iy);
+					graphics.AddRectangle(area);
+					graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5, 0.5, 0.5));
 				}
 			}
 
@@ -4050,11 +4050,11 @@ namespace Epsitec.Common.Document
 
 						//	Dessine la "page".
 						Rectangle rect = this.document.Modifier.PageArea;
-						graphics.Align (ref rect);
-						rect.Offset (ix, iy);
+						graphics.Align(ref rect);
+						rect.Offset(ix, iy);
 
-						graphics.AddRectangle (rect);
-						graphics.RenderSolid (Color.FromBrightness (0));
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(Color.FromBrightness(0));
 					}
 
 					if ( this.document.Settings.PrintInfo.Target   &&
@@ -4373,8 +4373,8 @@ namespace Epsitec.Common.Document
 
 				Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
 				rect.Deflate(0.5);
-				graphics.AddRectangle (rect);
-				graphics.RenderSolid (adorner.ColorBorder);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(adorner.ColorBorder);
 				return;
 			}
 			
