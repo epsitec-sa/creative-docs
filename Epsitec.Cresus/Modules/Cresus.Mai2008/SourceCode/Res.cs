@@ -104,6 +104,7 @@ namespace Epsitec.Cresus.Mai2008
 		
 		
 		
+		
 		//	Code mapping for 'String' resources
 		
 		//	Code mapping for 'Form' resources
