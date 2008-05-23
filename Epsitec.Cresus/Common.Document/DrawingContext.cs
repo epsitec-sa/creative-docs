@@ -611,7 +611,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -636,7 +640,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -661,7 +669,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -686,7 +698,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -711,7 +727,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -810,7 +830,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -836,7 +860,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea();
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -861,7 +889,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -887,7 +919,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea();
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -928,7 +964,11 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea();
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -951,7 +991,11 @@ namespace Epsitec.Common.Document
 					if ( this.document.Notifier != null )
 					{
 						this.document.Notifier.NotifyFontsSettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -974,7 +1018,11 @@ namespace Epsitec.Common.Document
 					if ( this.document.Notifier != null )
 					{
 						this.document.Notifier.NotifyFontsSettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -994,7 +1042,7 @@ namespace Epsitec.Common.Document
 				{
 					this.textFontSampleHeight = value;
 
-					if ( this.document.Notifier != null )
+					if (this.document.Notifier != null && !this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
 					{
 						this.document.IsDirtySerialize = true;
 					}
@@ -1023,7 +1071,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -1050,7 +1102,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -1077,7 +1133,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -1103,7 +1163,11 @@ namespace Epsitec.Common.Document
 					if ( this.document.Notifier != null )
 					{
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -1127,7 +1191,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -1147,7 +1215,7 @@ namespace Epsitec.Common.Document
 				{
 					this.guidesMouse = value;
 
-					if ( this.document.Notifier != null )
+					if (this.document.Notifier != null && !this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
 					{
 						this.document.IsDirtySerialize = true;
 					}
@@ -1608,7 +1676,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyMagnetChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
@@ -1897,7 +1969,11 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyConstrainChanged();
 						this.document.Notifier.NotifySettingsChanged();
-						this.document.IsDirtySerialize = true;
+
+						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						{
+							this.document.IsDirtySerialize = true;
+						}
 					}
 				}
 			}
