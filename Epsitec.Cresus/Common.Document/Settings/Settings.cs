@@ -316,7 +316,7 @@ namespace Epsitec.Common.Document.Settings
 			this.guides.Clear();
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 		}
 
 		public Guide GuidesGet(int index)
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Document.Settings
 			int index = this.GuidesList.Add(guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 			return index;
 		}
 
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Document.Settings
 			int index = this.GuidesListOther.Add(guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 			return index;
 		}
 
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Document.Settings
 			this.GuidesList.Insert(index, guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 		}
 
 		public void GuidesRemoveAt(int index)
@@ -360,7 +360,7 @@ namespace Epsitec.Common.Document.Settings
 			this.GuidesList.RemoveAt(index);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 		}
 
 		protected UndoableList GuidesList

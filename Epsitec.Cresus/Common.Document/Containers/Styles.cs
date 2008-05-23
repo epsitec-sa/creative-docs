@@ -1010,7 +1010,7 @@ namespace Epsitec.Common.Document.Containers
 				
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.Notifier.NotifyTextStyleListChanged();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.All);
 
 				this.oneShootSelectName = true;
 
@@ -1079,7 +1079,7 @@ namespace Epsitec.Common.Document.Containers
 				
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.Notifier.NotifyTextStyleListChanged();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.All);
 
 				this.oneShootSelectName = true;
 				this.SetDirtyContent();
@@ -1113,7 +1113,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.SetSelectedTextStyle(this.category, sel-1);
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.Notifier.NotifyTextStyleListChanged();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.All);
 				this.SetDirtyContent();
 			}
 		}
@@ -1145,7 +1145,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.SetSelectedTextStyle(this.category, sel+1);
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.Notifier.NotifyTextStyleListChanged();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.All);
 				this.SetDirtyContent();
 			}
 		}
@@ -1178,7 +1178,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.SetSelectedTextStyle(this.category, sel);
 				this.document.Modifier.OpletQueueValidateAction();
 				this.document.Notifier.NotifyTextStyleListChanged();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.All);
 				this.SetDirtyContent();
 			}
 		}
@@ -1326,7 +1326,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
 				agg.AggregateName = name;
 				this.document.Modifier.OpletQueueValidateAction();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.None);
 				this.document.Notifier.NotifyAggregateChanged(agg);
 			}
 
@@ -1351,7 +1351,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Modifier.OpletQueueBeginAction(Res.Strings.Action.AggregateChange, "ChangeAggregateName", sel);
 				this.document.TextContext.StyleList.StyleMap.SetCaption(this.document.Modifier.OpletQueue, style, name);
 				this.document.Modifier.OpletQueueValidateAction();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.None);
 				this.document.Notifier.NotifyTextStyleChanged(style);
 			}
 		}
@@ -1673,7 +1673,7 @@ namespace Epsitec.Common.Document.Containers
 				this.document.TextContext.StyleList.RedefineTextStyle(this.document.Modifier.OpletQueue, currentStyle, currentStyle.StyleProperties, parents);
 				this.document.Modifier.OpletQueueValidateAction();
 
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.All);
 				this.SetDirtyContent();
 			}
 		}

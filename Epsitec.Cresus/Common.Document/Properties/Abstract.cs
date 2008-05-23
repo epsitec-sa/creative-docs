@@ -705,7 +705,7 @@ namespace Epsitec.Common.Document.Properties
 				}
 			}
 
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 		}
 		#endregion
 

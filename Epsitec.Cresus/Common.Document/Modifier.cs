@@ -437,7 +437,7 @@ namespace Epsitec.Common.Document
 					this.dimensionScale = value;
 					this.document.Notifier.NotifySettingsChanged();
 					this.document.Notifier.NotifyArea(this.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -457,7 +457,7 @@ namespace Epsitec.Common.Document
 					this.dimensionDecimal = value;
 					this.document.Notifier.NotifySettingsChanged();
 					this.document.Notifier.NotifyArea(this.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Document
 			this.zoomHistory.Clear();
 			this.document.HotSpot = new Point(0, 0);
 			this.document.Filename = "";
-			this.document.IsDirtySerialize = false;
+			this.document.ClearDirtySerialize();
 			this.ActiveViewer.SelectorType = SelectorType.Auto;
 			this.IsObjectJustCreated = false;
 
@@ -1614,7 +1614,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime tous les objets sélectionnés.
 			//	Si onlyMark=true, on ne détruit que les objets marqués.
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			if ( this.ActiveViewer.IsCreating )
 			{
@@ -1715,7 +1715,7 @@ namespace Epsitec.Common.Document
 					this.duplicateMove = value;
 					this.FlushMoveAfterDuplicate();
 					this.document.Notifier.NotifySettingsChanged();
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.None);
 				}
 			}
 		}
@@ -1734,7 +1734,7 @@ namespace Epsitec.Common.Document
 				{
 					this.arrowMove = value;
 					this.document.Notifier.NotifySettingsChanged();
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.None);
 				}
 			}
 		}
@@ -1753,7 +1753,7 @@ namespace Epsitec.Common.Document
 				{
 					this.arrowMoveMul = value;
 					this.document.Notifier.NotifySettingsChanged();
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.None);
 				}
 			}
 		}
@@ -1772,7 +1772,7 @@ namespace Epsitec.Common.Document
 				{
 					this.arrowMoveDiv = value;
 					this.document.Notifier.NotifySettingsChanged();
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.None);
 				}
 			}
 		}
@@ -1827,7 +1827,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Duplique tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Duplicate) )
 			{
@@ -1857,7 +1857,7 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Cut) )
 			{
@@ -1957,7 +1957,7 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.UpdateSelector();
 				this.ShowSelection();
 				this.document.Notifier.NotifySelectionChanged();
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.Local);
 
 				this.OpletQueueValidateAction();
 			}
@@ -2001,7 +2001,7 @@ namespace Epsitec.Common.Document
 					this.TotalSelected++;
 					this.ActiveViewer.UpdateSelector();
 
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.Local);
 					this.OpletQueueValidateAction();
 					paste = true;
 				}
@@ -2060,7 +2060,7 @@ namespace Epsitec.Common.Document
 				this.TotalSelected++;
 				this.ActiveViewer.UpdateSelector();
 
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.Local);
 				this.OpletQueueValidateAction();
 			}
 
@@ -2297,7 +2297,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Annule les dernières actions.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 			this.ActiveViewer.CreateEnding(false, false);
 
 			this.isUndoRedoInProgress = true;
@@ -2324,7 +2324,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Refait les dernières actions.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 			this.ActiveViewer.CreateEnding(false, false);
 
 			this.isUndoRedoInProgress = true;
@@ -2495,7 +2495,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Met dessus tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderUpOne) )
 			{
@@ -2510,7 +2510,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Met dessous tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderDownOne) )
 			{
@@ -2525,7 +2525,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Met au premier plan tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderUpAll) )
 			{
@@ -2540,7 +2540,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Met à l'arrière plan tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.OrderDownAll) )
 			{
@@ -2800,7 +2800,7 @@ namespace Epsitec.Common.Document
 		protected void PrepareOper(string name)
 		{
 			//	Prépare pour l'opération.
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 			this.OpletQueueBeginAction(name);
 
 			this.document.Notifier.EnableSelectionChanged = false;
@@ -3179,7 +3179,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Fusionne tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Merge) )
 			{
@@ -3195,7 +3195,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Extrait tous les objets sélectionnés du groupe.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Extract) )
 			{
@@ -3210,7 +3210,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Groupe tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Group) )
 			{
@@ -3225,7 +3225,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Sépare tous les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.Local);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.Ungroup) )
 			{
@@ -3453,7 +3453,7 @@ namespace Epsitec.Common.Document
 				{
 					this.toLinePrecision = value;
 					this.document.Notifier.NotifySettingsChanged();
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.Local);
 				}
 			}
 		}
@@ -4469,7 +4469,7 @@ namespace Epsitec.Common.Document
 				textFlow.TextNavigator.MoveTo(pos, 1);
 				textFlow.TextNavigator.EndSelection();
 
-				this.document.IsDirtySerialize = true;
+				this.document.SetDirtySerialize(DirtyMode.Local);
 			}
 
 			this.OpletQueueValidateAction();
@@ -4599,7 +4599,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée une nouvelle page.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageNew) )
 			{
@@ -4633,7 +4633,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Duplique une nouvelle page.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDuplicate) )
 			{
@@ -4678,7 +4678,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime une page.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageDelete) )
 			{
@@ -4713,7 +4713,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Permute deux pages.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			System.Diagnostics.Debug.Assert(this.document.Modifier.OpletQueueEnable);
 
@@ -4815,7 +4815,7 @@ namespace Epsitec.Common.Document
 		public void PageName(int rank, string name)
 		{
 			//	Change le nom d'une page.
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.PageName, "ChangePageName") )
 			{
 				UndoableList pages = this.document.DocumentObjects;
@@ -5168,7 +5168,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un nouveau calque.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerNew) )
 			{
@@ -5196,7 +5196,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un nouveau calque contenant les objets sélectionnés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerNewSel) )
 			{
@@ -5240,7 +5240,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Duplique un calque.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerDuplicate) )
 			{
@@ -5281,7 +5281,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime un calque.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerDelete) )
 			{
@@ -5313,7 +5313,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Fusionne deux calques.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerMerge) )
 			{
@@ -5362,7 +5362,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Permute deux calques.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerSwap) )
 			{
@@ -5399,7 +5399,7 @@ namespace Epsitec.Common.Document
 		public void LayerName(int rank, string name)
 		{
 			//	Change le nom d'un calque.
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerName, "ChangeLayerName") )
 			{
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -5432,7 +5432,7 @@ namespace Epsitec.Common.Document
 		public void MagnetLayerInvert(int rank)
 		{
 			//	Change l'état "objets magnétiques" d'un calque.
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.LayerChangeMagnet) )
 			{
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
@@ -5970,7 +5970,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un nouvel agrégat vide.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 
 			Properties.Aggregate agg = this.AggregateCreate(name, false);
 
@@ -5996,7 +5996,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un nouvel agrégat avec seulement 3 propriétés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 
 			Properties.Aggregate agg = this.AggregateCreate(name, true);
 
@@ -6022,7 +6022,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un nouvel agrégat avec toutes les propriétés.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 
 			Objects.Abstract model = null;
 			if ( this.IsTool )  // objets sélectionnés ?
@@ -6159,7 +6159,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Utilise un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			if ( this.IsTool )  // objets sélectionnés ?
 			{
@@ -6223,7 +6223,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Libère les objets sélectionnés des agrégats.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			if ( this.IsTool )  // objets sélectionnés ?
 			{
@@ -6273,7 +6273,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Duplique un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateDuplicate) )
 			{
@@ -6297,7 +6297,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateDelete) )
 			{
@@ -6340,7 +6340,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Permute deux agrégats.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateSwap) )
 			{
@@ -6365,7 +6365,7 @@ namespace Epsitec.Common.Document
 			//	Change le nom d'un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
 			if ( name == "..." )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.None);
 
 			if ( this.IsTool )  // objets sélectionnés ?
 			{
@@ -6395,7 +6395,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Crée un nouveau style dans un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateStyleNew) )
 			{
@@ -6432,8 +6432,8 @@ namespace Epsitec.Common.Document
 			if ( property == null )  return;
 			int rank = agg.Styles.IndexOf(property);
 			if ( rank == -1 )  return;
-			
-			this.document.IsDirtySerialize = true;
+
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using ( this.OpletQueueBeginAction(Res.Strings.Action.AggregateStyleDelete) )
 			{
@@ -6462,7 +6462,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Ajoute un enfant à un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using (this.OpletQueueBeginAction (Res.Strings.Action.AggregateChildrenNew))
 			{
@@ -6499,7 +6499,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Supprime un enfant à un agrégat.
 			if ( this.ActiveViewer.IsCreating )  return;
-			this.document.IsDirtySerialize = true;
+			this.document.SetDirtySerialize(DirtyMode.All);
 
 			using (this.OpletQueueBeginAction (Res.Strings.Action.AggregateChildrenDelete))
 			{

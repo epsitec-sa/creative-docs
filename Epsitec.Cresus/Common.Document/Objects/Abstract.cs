@@ -2983,6 +2983,47 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		#region CacheBitmap
+		public Bitmap CacheBitmap
+		{
+			//	Retourne le bitmap caché.
+			get
+			{
+				if (this.cacheBitmap == null && !this.cacheBitmapSize.IsEmpty)
+				{
+					this.CacheBitmapCreate();
+				}
+
+				return this.cacheBitmap;
+			}
+		}
+
+		public Drawing.Size CacheBitmapSize
+		{
+			//	Dimensions souhaitées pour le bitmap caché.
+			get
+			{
+				return this.cacheBitmapSize;
+			}
+			set
+			{
+				this.cacheBitmapSize = value;
+			}
+		}
+
+		public void CacheBitmapDirty()
+		{
+			//	Le bitmap caché n'est plus valide.
+			this.cacheBitmap = null;
+		}
+
+		public virtual void CacheBitmapCreate()
+		{
+			//	Crée le bitmap caché.
+		}
+		#endregion
+
+
 		#region CreateFromPath
 		public bool CreatePolyFromPath(Path path, int subPath)
 		{
@@ -3692,6 +3733,9 @@ namespace Epsitec.Common.Document.Objects
 		protected bool							isDirtyPageNumber = true;
 		protected int							pageNumber = -1;
 		protected int							debugId;
+
+		protected Bitmap						cacheBitmap;
+		protected Drawing.Size					cacheBitmapSize;
 		
 		private static int						nextDebugId = 1;
 	}

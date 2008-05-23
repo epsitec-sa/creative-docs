@@ -55,6 +55,13 @@ namespace Epsitec.Common.Document
 		Count				// nombre d'éléments dans l'énumération (3)
 	}
 
+	public enum DirtyMode
+	{
+		None,
+		Local,
+		All,
+	}
+
 
 	/// <summary>
 	/// Summary description for Document.
@@ -593,7 +600,7 @@ namespace Epsitec.Common.Document
 						this.modifier.OpletQueueBeginAction(Res.Strings.Action.DocumentSize, "ChangeDocSize");
 						this.modifier.InsertOpletSize();
 						this.size = value;
-						this.IsDirtySerialize = true;
+						this.SetDirtySerialize(DirtyMode.All);
 						this.modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 						this.notifier.NotifyAllChanged();
 						this.modifier.OpletQueueValidateAction();
@@ -601,7 +608,7 @@ namespace Epsitec.Common.Document
 					else
 					{
 						this.size = value;
-						this.IsDirtySerialize = true;
+						this.SetDirtySerialize(DirtyMode.All);
 					}
 				}
 			}
@@ -693,7 +700,7 @@ namespace Epsitec.Common.Document
 				if ( this.hotSpot != value )
 				{
 					this.hotSpot = value;
-					this.IsDirtySerialize = true;
+					this.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -769,7 +776,7 @@ namespace Epsitec.Common.Document
 			{
 				return this.isDirtySerialize;
 			}
-
+#if false
 			set
 			{
 				if ( this.isDirtySerialize != value )
@@ -787,6 +794,73 @@ namespace Epsitec.Common.Document
 					foreach ( TextFlow flow in this.textFlows )
 					{
 						flow.NotifyAboutToExecuteCommand();
+					}
+				}
+			}
+#endif
+		}
+
+		public void ClearDirtySerialize()
+		{
+			//	Considère le document comme propre, c'est-à-dire à jour.
+			if (this.isDirtySerialize)
+			{
+				this.isDirtySerialize = false;
+
+				if (this.Notifier != null)
+				{
+					this.Notifier.NotifySaveChanged();
+				}
+			}
+		}
+
+		public void SetDirtySerialize(DirtyMode mode)
+		{
+			//	Considère le document comme sale, c'est-à-dire devant être mis à jour.
+			if (!this.isDirtySerialize)
+			{
+				this.isDirtySerialize = true;
+
+				if (this.Notifier != null)
+				{
+					this.Notifier.NotifySaveChanged();
+				}
+			}
+
+			foreach (TextFlow flow in this.textFlows)
+			{
+				flow.NotifyAboutToExecuteCommand();
+			}
+
+			this.SetDirtyCacheBitmap(mode);
+		}
+
+		protected void SetDirtyCacheBitmap(DirtyMode mode)
+		{
+			if (mode == DirtyMode.None)
+			{
+				return;
+			}
+
+			int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+			int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
+
+			for (int pageRank=0; pageRank<this.objects.Count; pageRank++)
+			{
+				Objects.Abstract page = this.objects[pageRank] as Objects.Abstract;
+
+				if (mode == DirtyMode.All || pageRank ==currentPage)
+				{
+					page.CacheBitmapDirty();
+				}
+
+				for (int layerRank=0; layerRank<page.Objects.Count; layerRank++)
+				{
+					Objects.Abstract layer = this.objects[layerRank] as Objects.Abstract;
+
+					if (mode == DirtyMode.All || layerRank == currentLayer)
+					{
+						layer.CacheBitmapDirty();
 					}
 				}
 			}
@@ -839,7 +913,7 @@ namespace Epsitec.Common.Document
 					{
 						this.Filename = filename;
 						this.globalSettings.LastFilenameAdd(filename);
-						this.IsDirtySerialize = false;
+						this.ClearDirtySerialize();
 					}
 					if (ext == DocumentFileExtension.CrMod)
 					{
@@ -848,14 +922,14 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.IsDirtySerialize = false;
+					this.ClearDirtySerialize();
 				}
 				return err;
 			}
 			catch ( System.Exception e )
 			{
 				this.ioDocumentManager.Close ();
-				this.IsDirtySerialize = false;
+				this.ClearDirtySerialize();
 				return e.Message;
 			}
 		}
@@ -1455,7 +1529,7 @@ namespace Epsitec.Common.Document
 				ext == DocumentFileExtension.Icon)
 			{
 				this.Filename = filename;
-				this.IsDirtySerialize = false;
+				this.ClearDirtySerialize();
 			}
 			DocumentCache.Remove(filename);
 			return "";
@@ -1629,7 +1703,7 @@ namespace Epsitec.Common.Document
 				info.AddValue("ObjectMemory", this.modifier.ObjectMemory);
 				info.AddValue("ObjectMemoryText", this.modifier.ObjectMemoryText);
 
-				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.GetRootStack ());
+				info.AddValue("RootStack", this.modifier.ActiveViewer.DrawingContext.GetRootStack());
 
 				byte[] textContextData = this.textContext == null ? null : this.textContext.Serialize();
 				info.AddValue("TextContextData", textContextData);
@@ -2157,6 +2231,16 @@ namespace Epsitec.Common.Document
 				clipRect = drawingContext.Viewer.ScreenToInternal(clipRect);
 			}
 
+			Objects.Abstract page = drawingContext.RootObject(1);
+
+#if false
+			if (drawingContext.Viewer != null && (drawingContext.Viewer.IsDocumentPreview || drawingContext.Viewer.IsPictogramPreview) && page.CacheBitmap != null)
+			{
+				graphics.PaintImage(page.CacheBitmap, new Rectangle(Point.Zero, drawingContext.ContainerSize));
+				return;
+			}
+#endif
+
 			if ( drawingContext.MasterPageList.Count > 0 )
 			{
 				foreach ( Objects.Page masterPage in drawingContext.MasterPageList )
@@ -2166,7 +2250,6 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			Objects.Abstract page = drawingContext.RootObject(1);
 			this.PaintPage(graphics, drawingContext, clipRect, page, 0, 10000);
 
 			if ( drawingContext.MasterPageList.Count > 0 )

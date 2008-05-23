@@ -186,7 +186,7 @@ namespace Epsitec.Common.Document.Objects
 					this.document.Modifier.UpdatePageShortNames();
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Document.Objects
 					this.masterUse = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Document.Objects
 					this.masterPageToUse = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document.Objects
 					this.masterGuides = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.None);
 				}
 			}
 		}
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Document.Objects
 					this.masterAutoStop = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Document.Objects
 					this.masterSpecific = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Document.Objects
 					this.pageSize = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea();
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Document.Objects
 					this.hotSpot = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Document.Objects
 					this.glyphOrigin = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Document.Objects
 					this.glyphSize = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletType();
 					this.language = value;
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletType();
 					this.pageStyle = value;
-					this.document.IsDirtySerialize = true;
+					this.document.SetDirtySerialize(DirtyMode.All);
 				}
 			}
 		}
@@ -568,7 +568,24 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		
+
+		#region CacheBitmap
+		public override void CacheBitmapCreate()
+		{
+			//	Crée le bitmap caché.
+			if (this.cacheBitmapSize.IsEmpty)
+			{
+				this.cacheBitmap = null;
+			}
+			else
+			{
+				//?this.cacheBitmap = this.document.Printer.CreateMiniatureBitmap(this.cacheBitmapSize, false, this.PageNumber);
+				this.cacheBitmap = this.document.Printer.CreateMiniatureBitmap(this.cacheBitmapSize, false, 0);
+			}
+		}
+		#endregion
+
+	
 		#region OpletType
 		protected void InsertOpletType()
 		{

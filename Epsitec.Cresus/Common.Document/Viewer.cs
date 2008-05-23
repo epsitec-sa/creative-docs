@@ -354,7 +354,7 @@ namespace Epsitec.Common.Document
 				case MessageType.MouseDown:
 					if ( !this.mouseDragging )
 					{
-						this.document.IsDirtySerialize = true;
+						this.document.SetDirtySerialize(DirtyMode.Local);
 						this.AutoScrollTimerStart(message);
 						this.RestartMiniBar();
 						this.ProcessMouseDown(message, pos);
