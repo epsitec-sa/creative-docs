@@ -880,15 +880,13 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 		static void GenerateStrings(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle)
 		{
-#if false
-			buffer.Append (generator.Tabs);
-			buffer.Append ("\n");
+			formatter.WriteCodeLine ();
 
 			string prefix   = "";
 			bool addNewline = false;
 
-			generator.BeginBlock ("public static class", bundleId);
-
+			formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, bundleId);
+			
 			string[] fields   = bundle.FieldNames;
 			string[] sortKeys = new string[fields.Length];
 
@@ -919,7 +917,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = prefix.Split ('.');
 					string last = args[args.Length-1];
 
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 
 					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length - last.Length - 1));
 					addNewline = true;
@@ -929,8 +927,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				if (addNewline)
 				{
-					buffer.Append (generator.Tabs);
-					buffer.Append ("\n");
+					formatter.WriteCodeLine ();
 					addNewline = false;
 				}
 
@@ -941,7 +938,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = delta.Split ('.');
 					string elem = args[0];
 
-					generator.BeginBlock ("public static class", elem);
+					formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
 
 					if (prefix.Length == 0)
 					{
@@ -960,40 +957,36 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				Druid localDruid = bundle[field].Id;
 				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:str/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
-				buffer.Append (generator.Tabs);
-
-				buffer.Append ("public static string ");
-				buffer.Append (delta);
-				buffer.Append (@" { get { return global::");
-				buffer.Append (defaultNamespace);
-				buffer.Append (@".Res.");
-				buffer.Append (bundleId);
-				buffer.Append (@".GetText (");
+				System.Text.StringBuilder id = new System.Text.StringBuilder ();
 
 				if (localDruid.Type == Support.DruidType.ModuleRelative)
 				{
-					buffer.Append (@"global::Epsitec.Common.Support.Druid.FromFieldId (");
-					buffer.Append (localDruid.ToFieldId ());
-					buffer.Append (@")");
+					id.Append (@"global::Epsitec.Common.Support.Druid.FromFieldId (");
+					id.Append (localDruid.ToFieldId ());
+					id.Append (@")");
 				}
 				else
 				{
-					buffer.Append (@"""");
-					buffer.Append (bundleId);
-					buffer.Append (@"""");
+					id.Append (@"""");
+					id.Append (bundleId);
+					id.Append (@"""");
 
 					string[] elems = field.Split ('.');
 
 					for (int k = 0; k < elems.Length; k++)
 					{
-						buffer.Append (@", """);
-						buffer.Append (elems[k]);
-						buffer.Append (@"""");
+						id.Append (@", """);
+						id.Append (elems[k]);
+						id.Append (@"""");
 					}
 				}
-
-				buffer.Append ("); } }\n");
+				
+				formatter.WriteCodeLine ("//\tdesigner:str/", moduleDruid.ToString ().Trim ('[', ']'));
+				formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat ("global::Epsitec.Common.Types.FormattedText ", delta));
+				formatter.WriteBeginGetter (CodeAttributes.Default);
+				formatter.WriteCodeLine ("return global::", defaultNamespace, ".Res.", bundleId, ".GetText (", id.ToString (), ");");
+				formatter.WriteEndGetter ();
+				formatter.WriteEndProperty ();
 			}
 
 			//	Referme les classes ouvertes :
@@ -1004,59 +997,37 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				for (int j = 0; j < args.Length; j++)
 				{
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 				}
 			}
-			buffer.Append (generator.Tabs);
-			buffer.Append ("\n");
 
-			generator.BeginBlock ("public static string", "GetString(params string[] path)");
+			formatter.WriteCodeLine ();
 
-			buffer.Append (generator.Tabs);
-			buffer.Append (@"string field = string.Join (""."", path);");
-			buffer.Append ("\n");
-			buffer.Append (generator.Tabs);
-			buffer.Append (@"return _stringsBundle[field].AsString;");
-			buffer.Append ("\n");
+			formatter.WriteBeginMethod (CodeHelper.PublicStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(params string[] path)");
+			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
+			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);");
+			formatter.WriteEndMethod ();
+			
+			formatter.WriteCodeLine ();
 
-			generator.EndBlock ();
-
-			buffer.Append (generator.Tabs);
-			buffer.Append ("\n");
-
-			buffer.Append (generator.Tabs);
-			buffer.Append ("#region Internal Support Code\n");
-
-			generator.BeginBlock ("private static string", "GetText(string bundle, params string[] path)");
-
-			buffer.Append (generator.Tabs);
-			buffer.Append (@"string field = string.Join (""."", path);");
-			buffer.Append ("\n");
-			buffer.Append (generator.Tabs);
-			buffer.Append (@"return _stringsBundle[field].AsString;");
-			buffer.Append ("\n");
-
-			generator.EndBlock ();
-
-			generator.BeginBlock ("private static string", "GetText(global::Epsitec.Common.Support.Druid druid)");
-
-			buffer.Append (generator.Tabs);
-			buffer.Append (@"return _stringsBundle[druid].AsString;");
-			buffer.Append ("\n");
-
-			generator.EndBlock ();
-
-			buffer.Append (generator.Tabs);
-			buffer.Append (@"private static global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""");
-			buffer.Append (bundleId);
-			buffer.Append (@""");");
-			buffer.Append ("\n");
-
-			buffer.Append (generator.Tabs);
-			buffer.Append ("#endregion\n");
-
-			generator.EndBlock ();
-#endif
+			formatter.WriteCodeLine ("#region Internal Support Code");
+			formatter.WriteCodeLine ();
+			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)");
+			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
+			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);");
+			formatter.WriteEndMethod ();
+			formatter.WriteCodeLine ();
+			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)");
+			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);");
+			formatter.WriteEndMethod ();
+			formatter.WriteCodeLine ();
+			formatter.WriteField (CodeHelper.PrivateStaticReadOnlyFieldAttributes,
+				@"global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle (""",
+				bundleId, @""");");
+			formatter.WriteCodeLine ();
+			formatter.WriteCodeLine ("#endregion");
+			
+			formatter.WriteEndClass ();
 		}
 
 		private static bool commandsGenerated;

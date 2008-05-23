@@ -791,6 +791,7 @@ namespace Epsitec.Common.Designer
 			}
 
 			this.batchSaver.Execute();
+			this.RegenerateResSourceCode (this.mergedManager ?? this.ResourceManager);
 			
 			if ((this.AccessForms.AccessCount > 0) && (this.IsPatch == false))
 			{
@@ -907,8 +908,6 @@ namespace Epsitec.Common.Designer
 			if (bundle.Type == Resources.CaptionTypeName &&
 				!string.IsNullOrEmpty(this.moduleInfo.SourceNamespace))
 			{
-				this.RegenerateResSourceCode (this.mergedManager ?? manager, bundle);
-				
 				foreach (ResourceBundle.Field field in bundle.Fields)
 				{
 					if (field.Name == null)
@@ -933,7 +932,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
-		private void RegenerateResSourceCode(ResourceManager resourceManager, ResourceBundle bundle)
+		private void RegenerateResSourceCode(ResourceManager resourceManager)
 		{
 			CodeFormatter formatter = ModuleSupport.ResGenerator.GenerateResFile (resourceManager, this.moduleInfo);
 
