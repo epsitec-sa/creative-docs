@@ -133,6 +133,19 @@ namespace Epsitec.Common.Document
 			get { return this.selector; }
 		}
 
+		public bool IsLayerPreview
+		{
+			//	Miniature d'un calque (si false, c'est une page).
+			get
+			{
+				return this.isLayerPreview;
+			}
+			set
+			{
+				this.isLayerPreview = value;
+			}
+		}
+
 		public bool IsDocumentPreview
 		{
 			//	Miniature pour CrDoc.
@@ -4922,6 +4935,7 @@ namespace Epsitec.Common.Document
 		protected DrawingContext				drawingContext;
 		protected Selector						selector;
 		protected Selector						zoomer;
+		protected bool							isLayerPreview;
 		protected bool							isDocumentPreview;
 		protected bool							isPictogramPreview;
 		protected double						pictogramMagnifierZoom = 1;
