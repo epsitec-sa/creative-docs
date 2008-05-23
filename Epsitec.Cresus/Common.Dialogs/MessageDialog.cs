@@ -144,12 +144,17 @@ namespace Epsitec.Common.Dialogs
 
 		public static DialogResult ShowError(string formattedErrorMessage, Window owner)
 		{
+			return MessageDialog.ShowError (formattedErrorMessage, null, owner);
+		}
+
+		public static DialogResult ShowError(string formattedErrorMessage, string title, Window owner)
+		{
 			if (string.IsNullOrEmpty (formattedErrorMessage))
 			{
 				return DialogResult.None;
 			}
 
-			IDialog dialog = MessageDialog.CreateOk (MessageDialog.GetDialogTitle (owner), DialogIcon.Warning, formattedErrorMessage);
+			IDialog dialog = MessageDialog.CreateOk (title ?? MessageDialog.GetDialogTitle (owner), DialogIcon.Warning, formattedErrorMessage);
 
 			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
@@ -159,12 +164,17 @@ namespace Epsitec.Common.Dialogs
 
 		public static DialogResult ShowMessage(string formattedMessage, Window owner)
 		{
+			return MessageDialog.ShowMessage (formattedMessage, null, owner);
+		}
+		
+		public static DialogResult ShowMessage(string formattedMessage, string title, Window owner)
+		{
 			if (string.IsNullOrEmpty (formattedMessage))
 			{
 				return DialogResult.None;
 			}
 
-			IDialog dialog = MessageDialog.CreateOk (MessageDialog.GetDialogTitle (owner), DialogIcon.None, formattedMessage);
+			IDialog dialog = MessageDialog.CreateOk (title ?? MessageDialog.GetDialogTitle (owner), DialogIcon.None, formattedMessage);
 
 			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();

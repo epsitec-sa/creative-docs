@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return Res.Strings.ProductName;
+				return (string) Res.Strings.ProductName;
 			}
 		}
 

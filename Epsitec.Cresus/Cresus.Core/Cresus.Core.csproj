@@ -67,6 +67,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="CoreApplication.Paths.cs" />
+    <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
     <Compile Include="UI.PersistanceManager.cs" />
     <Compile Include="HistorySortMode.cs" />
     <Compile Include="CoreCommands.cs" />
@@ -84,7 +85,6 @@
     <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Res.cs" />
     <Compile Include="Widgets\StateDeckWidget.cs" />
     <Compile Include="Workspaces\CoreWorkspace.cs" />
     <Compile Include="Workspaces\FormWorkspace.cs" />

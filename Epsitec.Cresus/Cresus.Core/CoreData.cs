@@ -55,7 +55,20 @@ namespace Epsitec.Cresus.Core
 			else
 			{
 				System.Diagnostics.Debug.WriteLine ("Cannot connect to database");
-				this.infrastructure.CreateDatabase (access);
+				
+				try
+				{
+					this.infrastructure.CreateDatabase (access);
+				}
+				catch (System.Exception ex)
+				{
+					UI.ShowErrorMessage (
+						Res.Strings.Error.CannotConnectToLocalDatabase,
+						Res.Strings.Hint.Error.CannotConnectToLocalDatabase, ex);
+
+					System.Environment.Exit (0);
+				}
+
 				System.Diagnostics.Debug.WriteLine ("Created new database");
 				empty = true;
 			}

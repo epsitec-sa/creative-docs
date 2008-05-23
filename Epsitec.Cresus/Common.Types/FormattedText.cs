@@ -75,6 +75,13 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
+		/// <summary>
+		/// Returns the raw (encoded) text, as it is stored by this formatted
+		/// text object. Use <c>(string)</c> to cast with conversion.
+		/// </summary>
+		/// <returns>
+		/// The raw (encoded) text.
+		/// </returns>
 		public override string ToString()
 		{
 			return this.text;
@@ -125,6 +132,25 @@ namespace Epsitec.Common.Types
 		public static implicit operator FormattedText(string text)
 		{
 			return new FormattedText (FormattedText.Escape (text));
+		}
+
+		/// <summary>
+		/// Performs an explicit conversion from type <see cref="FormattedText"/>
+		/// to type <see cref="string"/>. The source text will be un-escaped
+		/// to produce a compatible simple text.
+		/// </summary>
+		/// <param name="text">The source text.</param>
+		/// <returns>The result of the conversion.</returns>
+		public static explicit operator string(FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
+			{
+				return text.text;
+			}
+			else
+			{
+				return FormattedText.Unescape (text.text);
+			}
 		}
 
 		/// <summary>
@@ -185,6 +211,17 @@ namespace Epsitec.Common.Types
 		public static string Escape(string text)
 		{
 			return Converters.TextConverter.ConvertToTaggedText (text);
+		}
+
+		/// <summary>
+		/// Un-escapes the specified text, i.e. converts formatted encoding
+		/// to their equivalent characters.
+		/// </summary>
+		/// <param name="text">The escaped text.</param>
+		/// <returns>The source text.</returns>
+		public static string Unescape(string text)
+		{
+			return Converters.TextConverter.ConvertToSimpleText (text);
 		}
 		
 		#region Converter Class

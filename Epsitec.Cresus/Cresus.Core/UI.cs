@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -175,6 +176,28 @@ namespace Epsitec.Cresus.Core
 		private static Panel CreateUserInterfaceFromPanel(ResourceBundle bundle, PanelInteractionMode mode)
 		{
 			throw new System.NotImplementedException ();
+		}
+
+		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
+		{
+			string fullMessage = string.Format (message.ToString (), CoreProgram.Application.ShortWindowTitle, ex.Message);
+
+			if (hint.IsNullOrEmpty)
+			{
+				fullMessage = string.Concat (@"<font size=""125%"">", fullMessage, "</font>");
+			}
+			else
+			{
+				fullMessage = string.Concat (
+					@"<font size=""125%"">",
+					fullMessage,
+					@"</font>",
+					@"<br/><br/>",
+					string.Format (hint.ToString (), CoreProgram.Application.ShortWindowTitle, ex.Message),
+					@"<br/>&#160;");
+			}
+			
+			MessageDialog.ShowError (fullMessage, CoreProgram.Application.ShortWindowTitle, null);
 		}
 	}
 }
