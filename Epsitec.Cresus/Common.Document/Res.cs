@@ -983,27 +983,6 @@ namespace Epsitec.Common.Document
 				
 				public static class PageMiniatures
 				{
-					public static class Button
-					{
-						public static class AllHide
-						{
-							//	designer:str/20K3
-							public static string Tooltip { get { return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544323)); } }
-						}
-						
-						public static class AllShow
-						{
-							//	designer:str/20K4
-							public static string Tooltip { get { return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544324)); } }
-						}
-						
-						public static class Menu
-						{
-							//	designer:str/20K6
-							public static string Tooltip { get { return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (335544326)); } }
-						}
-					}
-					
 					public static class Slider
 					{
 						//	designer:str/20K7
