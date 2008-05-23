@@ -4438,8 +4438,16 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					graphics.AddFilledRectangle(clipRect);
-					graphics.RenderSolid(Color.FromBrightness(0.95));
+					if (this.isDocumentPreview || this.isPictogramPreview)
+					{
+						graphics.AddFilledRectangle(clipRect);
+						graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
+					}
+					else
+					{
+						graphics.AddFilledRectangle(clipRect);
+						graphics.RenderSolid(Color.FromBrightness(0.95));
+					}
 				}
 			}
 
