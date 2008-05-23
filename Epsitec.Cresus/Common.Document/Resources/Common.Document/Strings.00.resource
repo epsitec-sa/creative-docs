@@ -1432,10 +1432,11 @@
   <data name="Panel.Image.FromClipboard" id="K">&lt;i&gt;En provenance du bloc-notes&lt;/i&gt;</data>
   <data name="Action.PasteText" id="K1">Coller un texte</data>
   <data name="Action.PasteImage" id="K2">Coller une image</data>
-  <data name="Miniatures.Button.AllHide.Tooltip" id="K3">Cache toutes les pages miniatures</data>
-  <data name="Miniatures.Button.AllShow.Tooltip" id="K4">Montre toutes les pages miniatures</data>
-  <data name="Miniatures.Button.Expand.Tooltip" id="K5">Montre ou cache le panneau des pages miniatures</data>
-  <data name="Miniatures.Button.Menu.Tooltip" id="K6">Choix des pages miniatures visibles</data>
-  <data name="Miniatures.Slider.Tooltip" id="K7">Taille des pages miniatures</data>
-  <data name="Miniatures.Title" id="K8">● Pages miniatures</data>
+  <data name="Container.PageMiniatures.Button.AllHide.Tooltip" id="K3">Cache toutes les pages miniatures</data>
+  <data name="Container.PageMiniatures.Button.AllShow.Tooltip" id="K4">Montre toutes les pages miniatures</data>
+  <data name="Action.PageMiniatures" id="K5">Montre ou cache le panneau des pages miniatures</data>
+  <data name="Container.PageMiniatures.Button.Menu.Tooltip" id="K6">Choix des pages miniatures visibles</data>
+  <data name="Container.PageMiniatures.Slider.Tooltip" id="K7">Taille des pages miniatures</data>
+  <data name="Action.LayerMiniatures" id="K8">Montre ou cache le panneau des calques miniatures</data>
+  <data name="Container.LayerMiniatures.Slider.Tooltip" id="K9">Taille des calques miniatures</data>
 </bundle>
