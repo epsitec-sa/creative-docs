@@ -323,11 +323,11 @@ namespace Epsitec.Common.Document
 			set { this.initializationInProgress = value; }
 		}
 
-		public Miniatures Miniatures
+		public Containers.PageMiniatures PageMiniatures
 		{
-			//	Gestionnaire de miniatures associé.
-			get { return this.miniatures; }
-			set { this.miniatures = value; }
+			//	Gestionnaire des pages miniatures associé.
+			get { return this.pageMiniatures; }
+			set { this.pageMiniatures = value; }
 		}
 
 		protected void MainWindowSetFrozen()
@@ -3197,6 +3197,6 @@ namespace Epsitec.Common.Document
 		protected Widgets.HRuler				hRuler;
 		protected Widgets.VRuler				vRuler;
 		protected bool							containOldText;
-		protected Miniatures					miniatures;
+		protected Containers.PageMiniatures		pageMiniatures;
 	}
 }
