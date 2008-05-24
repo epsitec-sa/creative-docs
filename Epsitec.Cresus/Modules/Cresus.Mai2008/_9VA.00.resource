@@ -28,7 +28,7 @@
           <Type>Field</Type>
           <FI>[9VA2]</FI>
           <SB>Normal</SB>
-          <CR>10</CR>
+          <CR>5</CR>
           <RR>3</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -56,7 +56,7 @@
           <Type>BoxBegin</Type>
           <FI />
           <SB>Normal</SB>
-          <CR>10</CR>
+          <CR>5</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -107,6 +107,36 @@
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>c727633b-15d5-4c0b-8508-0c1aec6401e0</Guid>
+          <Type>Title</Type>
+          <FI />
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+          <LR>[9VAO]</LR>
+        </FD>
+        <FD>
+          <Guid>1e970b07-ffb8-489a-90c1-0a23f7a5c7d4</Guid>
+          <Type>SubForm</Type>
+          <FI>[9VAN]</FI>
+          <SFI>[9VA1]</SFI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>All</BFS>
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>

@@ -124,9 +124,28 @@ namespace Epsitec.Cresus.Core
 
 			List<Mai2008.Entities.FactureEntity> factures = new List<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
 			Mai2008.Entities.FactureEntity facture = this.dataContext.CreateEmptyEntity<Mai2008.Entities.FactureEntity> ();
+			Mai2008.Entities.LigneFactureEntity ligne =	this.dataContext.CreateEmptyEntity<Mai2008.Entities.LigneFactureEntity> ();
+			Mai2008.Entities.ArticleEntity article1 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ArticleEntity> ();
+			Mai2008.Entities.ArticleEntity article2 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ArticleEntity> ();
+			Mai2008.Entities.ArticleEntity article3 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ArticleEntity> ();
+
+			ligne.Article = article1;
+			ligne.Quantité = 2;
+			article1.Désignation = "Crésus Comptabilité Pro";
+			article1.Numéro = "CCPRO";
+			article1.Prix = 480.00M;
+
+			article2.Désignation = "Crésus Facturation Largo";
+			article2.Numéro = "CFLGO";
+			article2.Prix = 960.00M;
+
+			article3.Désignation = "Blupi à la Maison";
+			article3.Numéro = "B.HOME";
+			article3.Prix = 39.00M;
 
 			facture.Objet = new FormattedText ("Crésus Comptabilité <i>Pro</i>");
 			facture.AdresseFacturation = personnes[100];
+			facture.Lignes = ligne;
 			factures.Add (facture);
 			
 			this.dataContext.SaveChanges ();
@@ -308,6 +327,23 @@ namespace Epsitec.Cresus.Core
 							(ResolverImplementation.Match (example.Prénom, entity.Prénom)) &&
 							(ResolverImplementation.Match (example.Rue, entity.Rue)) &&
 							(ResolverImplementation.Match (example.Localité, entity.Localité)))
+						{
+							yield return entity;
+						}
+					}
+				}
+				else if (id == Mai2008.Entities.ArticleEntity.EntityStructuredTypeId)
+				{
+					Mai2008.Entities.ArticleEntity example = AbstractEntity.Resolve<Mai2008.Entities.ArticleEntity> (template);
+
+					if (example == null)
+					{
+						yield break;
+					}
+
+					foreach (Mai2008.Entities.ArticleEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					{
+						if (ResolverImplementation.Match (example.Désignation, entity.Désignation))
 						{
 							yield return entity;
 						}

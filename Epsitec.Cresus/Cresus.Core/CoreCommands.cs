@@ -55,6 +55,12 @@ namespace Epsitec.Cresus.Core
 			this.application.StartNewSearch (AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId, AddressBook.FormIds.AdressePersonne);
 		}
 
+		[Command (Mai2008.Res.CommandIds.SwitchToBase.Items)]
+		public void SwitchToBaseItems()
+		{
+			this.application.StartNewSearch (Mai2008.Entities.ArticleEntity.EntityStructuredTypeId, Mai2008.FormIds.Article);
+		}
+
 
 
 		private readonly CoreApplication application;
