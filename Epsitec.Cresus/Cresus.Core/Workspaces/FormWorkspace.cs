@@ -176,6 +176,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 				switch (this.Mode)
 				{
+					case FormWorkspaceMode.Creation:
 					case FormWorkspaceMode.Edition:
 						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
 						break;
@@ -193,9 +194,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		internal void AcceptEdition()
 		{
-			if (this.Mode == FormWorkspaceMode.Edition)
+			switch (this.Mode)
 			{
-				this.dialogData.ApplyChanges ();
+				case FormWorkspaceMode.Creation:
+				case FormWorkspaceMode.Edition:
+					this.dialogData.ApplyChanges ();
+					break;
 			}
 		}
 
@@ -255,6 +259,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 					this.dialogData.BindToUserInterface (this.searchPanel);
 					break;
 
+				case FormWorkspaceMode.Creation:
 				case FormWorkspaceMode.Edition:
 					this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
 					this.editionPanel.Dock = DockStyle.Fill;

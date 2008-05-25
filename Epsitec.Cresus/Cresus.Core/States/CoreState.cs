@@ -91,6 +91,15 @@ namespace Epsitec.Cresus.Core.States
 
 		public virtual void NotifyDeserialized(Dictionary<string, CoreState> taggedStates)
 		{
+			if (this.fixups != null)
+			{
+				foreach (var action in this.fixups)
+				{
+					action (taggedStates);
+				}
+
+				this.fixups = null;
+			}
 		}
 		
 		public void PaintMiniature(Graphics graphics, Rectangle frame)
@@ -171,9 +180,26 @@ namespace Epsitec.Cresus.Core.States
 			this.Title     = ((string) core.Attribute ("title"));
 		}
 
+		protected void AddFixup(System.Action action)
+		{
+			this.AddFixup ((map) => action ());
+		}
+
+		protected void AddFixup(System.Action<Dictionary<string, CoreState>> action)
+		{
+			if (this.fixups == null)
+			{
+				this.fixups = new List<System.Action<Dictionary<string, CoreState>>> ();
+			}
+			
+			this.fixups.Add (action);
+		}
+
 		
 		private readonly StateManager			stateManager;
 		private Widget							container;
 		private int								boxId;
+		
+		private List<System.Action<Dictionary<string, CoreState>>>	fixups;
 	}
 }

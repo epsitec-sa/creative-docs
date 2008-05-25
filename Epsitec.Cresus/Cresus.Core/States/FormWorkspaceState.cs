@@ -94,13 +94,6 @@ namespace Epsitec.Cresus.Core.States
 			return this;
 		}
 
-		public override void NotifyDeserialized(Dictionary<string, CoreState> taggedStates)
-		{
-			if (this.deserializationLinkTag != null)
-			{
-				this.LinkedState = taggedStates[this.deserializationLinkTag];
-			}
-		}
 
 
 
@@ -172,18 +165,28 @@ namespace Epsitec.Cresus.Core.States
 
 				AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
 
-				if (this.workspace.Mode == FormWorkspaceMode.Edition)
+				switch (this.workspace.Mode)
 				{
-					this.workspace.CurrentItem = item;
-				}
+					case FormWorkspaceMode.Edition:
+						this.workspace.CurrentItem = item;
+						break;
 
+					case FormWorkspaceMode.Creation:
+						this.workspace.CurrentItem = this.StateManager.Application.Data.DataContext.CreateEntity (this.workspace.EntityId);
+						break;
+
+					case FormWorkspaceMode.Search:
+						this.AddFixup (() => this.workspace.SelectEntity (item));
+						break;
+				}
+				
 				if (string.IsNullOrEmpty (focusPath) == false)
 				{
 					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
 				}
 				if (string.IsNullOrEmpty (link) == false)
 				{
-					this.deserializationLinkTag = link;
+					this.AddFixup (map => this.LinkedState = map[link]);
 				}
 
 				this.workspace.Initialize ();
@@ -191,11 +194,6 @@ namespace Epsitec.Cresus.Core.States
 				if (dialogDataXml != null)
 				{
 					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataXml);
-				}
-
-				if (this.workspace.Mode == FormWorkspaceMode.Search)
-				{
-					this.workspace.SelectEntity (item);
 				}
 			}
 		}

@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		public AbstractEntity CreateEntity(Druid entityId)
 		{
+			System.Diagnostics.Debug.WriteLine ("Create Entity : " + entityId.ToString ());
 			return this.entityContext.CreateEntity (entityId);
 		}
 		

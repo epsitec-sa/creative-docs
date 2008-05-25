@@ -199,13 +199,15 @@ namespace Epsitec.Cresus.Core
 			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
 
 			if ((formState != null) &&
-				(formState.Workspace.Mode == FormWorkspaceMode.Edition))
+				(formState.Workspace.Mode != FormWorkspaceMode.Search))
 			{
 				if (accept)
 				{
 					formState.Workspace.AcceptEdition ();
 					this.data.DataContext.SaveChanges ();
 				}
+
+				//	TODO: reselect edited entity
 
 				this.stateManager.Show (formState.LinkedState);
 				this.stateManager.Pop (formState);
@@ -261,7 +263,7 @@ namespace Epsitec.Cresus.Core
 				{
 					EntityId = entityId,
 					FormId = formId,
-					Mode = FormWorkspaceMode.Edition,
+					Mode = FormWorkspaceMode.Creation,
 					CurrentItem = entity
 				};
 
@@ -279,7 +281,6 @@ namespace Epsitec.Cresus.Core
 			//	element...
 
 			this.stateManager.Push (state);
-			this.stateManager.Hide (formState);
 
 			return true;
 		}
@@ -439,6 +440,7 @@ namespace Epsitec.Cresus.Core
 			{
 				switch (formState.Workspace.Mode)
 				{
+					case FormWorkspaceMode.Creation:
 					case FormWorkspaceMode.Edition:
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = false;
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;	//	TODO: use validity check

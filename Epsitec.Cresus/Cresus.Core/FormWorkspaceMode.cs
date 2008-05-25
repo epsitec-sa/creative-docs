@@ -8,5 +8,6 @@ namespace Epsitec.Cresus.Core
 		None,
 		Search,
 		Edition,
+		Creation,
 	}
 }

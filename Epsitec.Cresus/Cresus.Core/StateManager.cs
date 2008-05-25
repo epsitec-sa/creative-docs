@@ -153,6 +153,10 @@ namespace Epsitec.Cresus.Core
 				this.ActivateCurrentState ();
 				this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Visibility, state));
 			}
+			else
+			{
+				this.Push (state);
+			}
 		}
 
 		public void Hide(States.CoreState state)
@@ -343,8 +347,9 @@ namespace Epsitec.Cresus.Core
 
 		public void RestoreStates(XElement xml)
 		{
-			var states = from state in xml.Descendants ("state")
-						 select States.StateFactory.CreateState (this, state);
+			List<States.CoreState> states = new	List<States.CoreState> (
+				from state in xml.Descendants ("state")
+				select States.StateFactory.CreateState (this, state));
 
 			Dictionary<string, States.CoreState> taggedStates = new Dictionary<string, States.CoreState> ();
 
