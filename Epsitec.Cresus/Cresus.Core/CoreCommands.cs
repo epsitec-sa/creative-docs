@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core
 		[Command (Mai2008.Res.CommandIds.SwitchToBase.Customers)]
 		public void SwitchToBaseCustomers()
 		{
-			this.application.StartNewSearch (AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId, AddressBook.FormIds.AdressePersonne);
+			this.application.StartNewSearch (AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId, Mai2008.FormIds.Client);
 		}
 
 		[Command (Mai2008.Res.CommandIds.SwitchToBase.Items)]
@@ -77,6 +77,24 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+
+		[Command (Mai2008.Res.CommandIds.Quick.CreateBillForCustomer)]
+		public void QuickCreateBillForCustomer()
+		{
+			States.FormWorkspaceState formState = this.application.GetCurrentFormWorkspaceState ();
+			
+			if ((formState != null) &&
+				(formState.Workspace.CurrentItem != null))
+			{
+				AddressBook.Entities.AdressePersonneEntity address = formState.Workspace.CurrentItem as AddressBook.Entities.AdressePersonneEntity;
+
+				if (address != null)
+				{
+					this.application.CreateRecord (Mai2008.Entities.FactureEntity.EntityStructuredTypeId,
+						(e) => (e as Mai2008.Entities.FactureEntity).AdresseFacturation = address);
+				}
+			}
+		}
 
 		private readonly CoreApplication application;
 	}

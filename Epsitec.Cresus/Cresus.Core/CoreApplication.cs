@@ -148,8 +148,8 @@ namespace Epsitec.Cresus.Core
 			
 			System.Diagnostics.Debug.Assert (EntityContext.IsSearchEntity (entity) == false);
 			
-			Druid formId   = formState.Workspace.FormId;
 			Druid entityId = entity.GetEntityStructuredTypeId ();
+			Druid formId   = this.FindCreationFormId (entityId);
 			
 			//	Recycle existing edition form, if there is one :
 
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.Hide (formState);
 		}
 
-		private States.FormWorkspaceState GetCurrentFormWorkspaceState()
+		internal States.FormWorkspaceState GetCurrentFormWorkspaceState()
 		{
 			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
 			return formState;
@@ -234,10 +234,10 @@ namespace Epsitec.Cresus.Core
 
 			System.Diagnostics.Debug.Assert (entityIds.Count == 1);
 
-			return this.CreateRecord (entityIds[0]);
+			return this.CreateRecord (entityIds[0], null);
 		}
 
-		internal bool CreateRecord(Druid entityId)
+		internal bool CreateRecord(Druid entityId, System.Action<AbstractEntity> initializer)
 		{
 			Druid formId = this.FindCreationFormId (entityId);
 
@@ -248,6 +248,11 @@ namespace Epsitec.Cresus.Core
 
 			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
 			AbstractEntity entity = this.data.DataContext.CreateEntity (entityId);
+
+			if (initializer != null)
+			{
+				initializer (entity);
+			}
 			
 			//	Create new workspace for the edition :
 
@@ -294,6 +299,10 @@ namespace Epsitec.Cresus.Core
 			if (entityId == Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeId)
 			{
 				return Mai2008.FormIds.TableLigneFacture;
+			}
+			if (entityId == AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId)
+			{
+				return Mai2008.FormIds.Client;
 			}
 
 			return Druid.Empty;

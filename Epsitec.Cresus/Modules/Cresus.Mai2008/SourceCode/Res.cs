@@ -42,6 +42,16 @@ namespace Epsitec.Cresus.Mai2008
 				public static readonly global::Epsitec.Common.Widgets.Command NavigatePrev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
 			}
 			
+			public static class Quick
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/9VAS
+				public static readonly global::Epsitec.Common.Widgets.Command CreateBillForCustomer = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
+			}
+			
 			public static class SwitchToBase
 			{
 				internal static void _Initialize()
@@ -64,6 +74,7 @@ namespace Epsitec.Cresus.Mai2008
 			{
 				Edition._Initialize ();
 				History._Initialize ();
+				Quick._Initialize ();
 				SwitchToBase._Initialize ();
 			}
 		}
@@ -92,6 +103,13 @@ namespace Epsitec.Cresus.Mai2008
 				public const long NavigateNext = 0x3E90000A00000CL;
 				//	designer:cap/9VAD
 				public const long NavigatePrev = 0x3E90000A00000DL;
+			}
+			
+			public static class Quick
+			{
+				
+				//	designer:cap/9VAS
+				public const long CreateBillForCustomer = 0x3E90000A00001CL;
 			}
 			
 			public static class SwitchToBase
@@ -141,6 +159,8 @@ namespace Epsitec.Cresus.Mai2008
 			
 			#endregion
 		}
+		
+		//	Code mapping for 'Form' resources
 		
 		//	Code mapping for 'Form' resources
 		
