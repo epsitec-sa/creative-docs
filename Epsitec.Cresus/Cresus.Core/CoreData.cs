@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Core
 						yield break;
 					}
 
-					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.GetEntities (id))
 					{
 						if ((ResolverImplementation.Match (example.Titre, entity.Titre)) &&
 							(ResolverImplementation.Match (example.Nom, entity.Nom)) &&
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core
 						yield break;
 					}
 
-					foreach (Mai2008.Entities.ArticleEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					foreach (Mai2008.Entities.ArticleEntity entity in this.GetEntities (id))
 					{
 						if ((ResolverImplementation.Match (example.Désignation, entity.Désignation)) &&
 							(ResolverImplementation.Match (example.Numéro, entity.Numéro)))
@@ -359,7 +359,7 @@ namespace Epsitec.Cresus.Core
 						yield break;
 					}
 
-					foreach (Mai2008.Entities.FactureEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					foreach (Mai2008.Entities.FactureEntity entity in this.GetEntities (id))
 					{
 						if (ResolverImplementation.Match (example.Objet.ToString (), entity.Objet.ToString ()))
 						{
@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.Core
 						yield break;
 					}
 
-					foreach (AddressBook.Entities.LocalitéEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					foreach (AddressBook.Entities.LocalitéEntity entity in this.GetEntities (id))
 					{
 						if (ResolverImplementation.Match (example.Résumé, entity.SearchValue))
 						{
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Core
 						yield break;
 					}
 
-					foreach (AddressBook.Entities.TitrePersonneEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
+					foreach (AddressBook.Entities.TitrePersonneEntity entity in this.GetEntities (id))
 					{
 						if ((ResolverImplementation.Match (example.IntituléLong, entity.IntituléLong)) ||
 							(ResolverImplementation.Match (example.IntituléLong, entity.IntituléCourt)))
@@ -413,6 +413,14 @@ namespace Epsitec.Cresus.Core
 			}
 
 			#endregion
+
+			private IEnumerable<AbstractEntity> GetEntities(Druid id)
+			{
+				DataContext context = this.data.DataContext;
+
+				return context.GetManagedEntities (
+					e => e.GetEntityStructuredTypeId () == id && context.IsPersistant (e));
+			}
 
 			private static bool Match(string a, string b)
 			{

@@ -1041,6 +1041,21 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
+		public bool IsPersistant(AbstractEntity entity)
+		{
+			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
+
+			if ((mapping != null) &&
+				(mapping.RowKey.IsEmpty == false))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
 		#region IEntityPersistanceManager Members
 
 		public string GetPersistedId(AbstractEntity entity)
