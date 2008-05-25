@@ -49,7 +49,7 @@ namespace Epsitec.Common.Drawing
 				string[] probePaths = new string[]
 				{
 					Support.Globals.Directories.ExecutableRoot,
-					System.IO.Directory.GetCurrentDirectory (),
+					Support.Globals.Directories.InitialDirectory,
 				};
 
 				foreach (string path in probePaths)

@@ -256,6 +256,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 
+			public static string				InitialDirectory
+			{
+				get
+				{
+					return Directories.initialDirectory;
+				}
+			}
+
 			public static string				ProgramFiles
 			{
 				get
@@ -271,6 +279,9 @@ namespace Epsitec.Common.Support
 					return System.IO.Path.GetDirectoryName (System.Environment.GetFolderPath (System.Environment.SpecialFolder.System));
 				}
 			}
+
+
+			private static readonly string initialDirectory = System.IO.Directory.GetCurrentDirectory ();
 		}
 		
 		#endregion
