@@ -37,6 +37,21 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		[Command (Mai2008.Res.CommandIds.Edition.New)]
+		public void EditionNew()
+		{
+			if (this.application.CreateRecord ())
+			{
+				return;
+			}
+		}
+
+		[Command (Mai2008.Res.CommandIds.Edition.Delete)]
+		public void EditionDelete()
+		{
+			//	TODO: implement delete
+		}
+
 		[Command (Mai2008.Res.CommandIds.Edition.Edit)]
 		public void EditionEdit()
 		{

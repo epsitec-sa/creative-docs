@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<bundle name="_9VA2" caption="Article" type="Form" culture="fr" rank="3">
+  <data name="Source">
+    <xml>
+      <Form>
+        <EI>[9VAF]</EI>
+        <DBI>&lt;invalid&gt;</DBI>
+        <DS>*</DS>
+        <FD>
+          <Guid>93d2f41f-75ed-4807-bfbf-cfdbe5732106</Guid>
+          <Type>Title</Type>
+          <FI />
+          <LFC>Green</LFC>
+          <LFS>Italic</LFS>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+          <LR>[9VAP]</LR>
+        </FD>
+        <FD>
+          <Guid>79941bb8-ba73-4866-8563-977d61f66d4b</Guid>
+          <Type>Field</Type>
+          <FI>[9VAK]</FI>
+          <SB>Normal</SB>
+          <CR>3</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>15d9785e-48ab-4b10-b34b-038f10ca4645</Guid>
+          <Type>Field</Type>
+          <FI>[9VAL]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>57193e9b-ae71-468a-a723-a42948381af3</Guid>
+          <Type>Field</Type>
+          <FI>[9VAM]</FI>
+          <SB>Normal</SB>
+          <CR>2</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+      </Form>
+    </xml>
+  </data>
+  <data name="DefaultSize">
+  </data>
+  <data name="RootEntityId">
+  </data>
+</bundle>

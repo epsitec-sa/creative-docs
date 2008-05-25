@@ -1268,6 +1268,23 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 
+			/// <summary>
+			/// Gets the ids of the entity types which are currently targeted by
+			/// the search context.
+			/// </summary>
+			/// <returns>A collection of entity ids.</returns>
+			public IEnumerable<Druid> GetEntityIds()
+			{
+				if (this.searchRootPath.IsEmpty)
+				{
+					return new Druid[] { this.searchRootData.GetEntityStructuredTypeId () };
+				}
+				else
+				{
+					return new Druid[] { this.searchRootPath.NavigateReadField (this.searchRootData).TypeId };
+				}
+			}
+
 			#endregion
 
 			/// <summary>
@@ -1459,6 +1476,11 @@ namespace Epsitec.Common.Dialogs
 			{
 				DialogSearchController.globalContext.ContextChanged -= value;
 			}
+		}
+
+		public static ISearchContext GetGlobalSearchContext()
+		{
+			return DialogSearchController.globalContext.ActiveContext;
 		}
 
 

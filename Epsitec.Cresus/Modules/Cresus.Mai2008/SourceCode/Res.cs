@@ -22,8 +22,12 @@ namespace Epsitec.Cresus.Mai2008
 				public static readonly global::Epsitec.Common.Widgets.Command Accept = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
 				//	designer:cap/9VAA
 				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+				//	designer:cap/9VAR
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 				//	designer:cap/9VAE
 				public static readonly global::Epsitec.Common.Widgets.Command Edit = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+				//	designer:cap/9VAQ
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
 			}
 			
 			public static class History
@@ -73,8 +77,12 @@ namespace Epsitec.Cresus.Mai2008
 				public const long Accept = 0x3E90000A00000BL;
 				//	designer:cap/9VAA
 				public const long Cancel = 0x3E90000A00000AL;
+				//	designer:cap/9VAR
+				public const long Delete = 0x3E90000A00001BL;
 				//	designer:cap/9VAE
 				public const long Edit = 0x3E90000A00000EL;
+				//	designer:cap/9VAQ
+				public const long New = 0x3E90000A00001AL;
 			}
 			
 			public static class History

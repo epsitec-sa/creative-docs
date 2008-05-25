@@ -52,5 +52,12 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		/// <param name="suggestion">The suggestion.</param>
 		void SetSuggestion(AbstractEntity suggestion);
+
+		/// <summary>
+		/// Gets the ids of the entity types which are currently targeted by
+		/// the search context.
+		/// </summary>
+		/// <returns>A collection of entity ids.</returns>
+		IEnumerable<Support.Druid> GetEntityIds();
 	}
 }

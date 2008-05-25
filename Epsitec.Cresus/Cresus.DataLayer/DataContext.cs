@@ -86,6 +86,11 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public AbstractEntity CreateEntity(Druid entityId)
+		{
+			return this.entityContext.CreateEntity (entityId);
+		}
+		
 		public T CreateEntity<T>() where T : AbstractEntity, new ()
 		{
 			return this.entityContext.CreateEntity<T> ();

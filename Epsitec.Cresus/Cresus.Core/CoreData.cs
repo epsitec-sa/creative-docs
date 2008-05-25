@@ -343,7 +343,8 @@ namespace Epsitec.Cresus.Core
 
 					foreach (Mai2008.Entities.ArticleEntity entity in this.data.DataContext.GetManagedEntities (e => e.GetEntityStructuredTypeId () == id))
 					{
-						if (ResolverImplementation.Match (example.Désignation, entity.Désignation))
+						if ((ResolverImplementation.Match (example.Désignation, entity.Désignation)) &&
+							(ResolverImplementation.Match (example.Numéro, entity.Numéro)))
 						{
 							yield return entity;
 						}

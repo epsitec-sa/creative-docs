@@ -9,6 +9,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Cresus.Core
 {
@@ -131,7 +132,7 @@ namespace Epsitec.Cresus.Core
 
 		internal void StartEdit()
 		{
-			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
+			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
 
 			if (formState == null)
 			{
@@ -186,6 +187,12 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.Hide (formState);
 		}
 
+		private States.FormWorkspaceState GetCurrentFormWorkspaceState()
+		{
+			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
+			return formState;
+		}
+
 		internal bool EndEdit(bool accept)
 		{
 			States.CoreState state = this.stateManager.ActiveState;
@@ -207,6 +214,89 @@ namespace Epsitec.Cresus.Core
 			}
 
 			return false;
+		}
+
+		internal bool CreateRecord()
+		{
+			ISearchContext context = DialogSearchController.GetGlobalSearchContext ();
+			
+			if (context == null)
+			{
+				return false;
+			}
+
+			List<Druid> entityIds = new List<Druid> (context.GetEntityIds ());
+
+			if (entityIds.Count == 0)
+			{
+				return false;
+			}
+
+			System.Diagnostics.Debug.Assert (entityIds.Count == 1);
+
+			return this.CreateRecord (entityIds[0]);
+		}
+
+		internal bool CreateRecord(Druid entityId)
+		{
+			Druid formId = this.FindCreationFormId (entityId);
+
+			if (formId.IsEmpty)
+			{
+				return false;
+			}
+
+			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
+			AbstractEntity entity = this.data.DataContext.CreateEntity (entityId);
+			
+			//	Create new workspace for the edition :
+
+			Workspaces.FormWorkspace workspace =
+				new Workspaces.FormWorkspace ()
+				{
+					EntityId = entityId,
+					FormId = formId,
+					Mode = FormWorkspaceMode.Edition,
+					CurrentItem = entity
+				};
+
+			States.FormWorkspaceState state =
+				new States.FormWorkspaceState (this.stateManager)
+				{
+					BoxId = this.defaultBoxId,
+					StateDeck = States.StateDeck.StandAlone,
+					Title = "Création",
+					Workspace = workspace,
+					LinkedState = formState
+				};
+
+			//	TODO: better linking -- when exiting with validation, should fill in the missing
+			//	element...
+
+			this.stateManager.Push (state);
+			this.stateManager.Hide (formState);
+
+			return true;
+		}
+
+		private Druid FindCreationFormId(Druid entityId)
+		{
+			//	TODO: find dynamically FormId based on EntityId...
+
+			if (entityId == Mai2008.Entities.ArticleEntity.EntityStructuredTypeId)
+			{
+				return Mai2008.FormIds.Article;
+			}
+			if (entityId == Mai2008.Entities.FactureEntity.EntityStructuredTypeId)
+			{
+				return Mai2008.FormIds.Facture;
+			}
+			if (entityId == Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeId)
+			{
+				return Mai2008.FormIds.TableLigneFacture;
+			}
+
+			return Druid.Empty;
 		}
 		
 		

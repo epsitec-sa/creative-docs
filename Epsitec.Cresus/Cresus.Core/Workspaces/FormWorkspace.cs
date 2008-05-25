@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
-		public AbstractEntity CurrentItem
+		public AbstractEntity					CurrentItem
 		{
 			get
 			{
@@ -125,6 +125,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 			set
 			{
 				this.currentItem = value;
+			}
+		}
+
+		public HintListController				HintListController
+		{
+			get
+			{
+				return this.hintListController;
 			}
 		}
 
