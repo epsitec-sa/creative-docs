@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
@@ -24,7 +25,10 @@ namespace Epsitec.Common.UI
 			set;
 		}
 
-
-
+		public EntityFieldPath EntityFieldPath
+		{
+			get;
+			set;
+		}
 	}
 }

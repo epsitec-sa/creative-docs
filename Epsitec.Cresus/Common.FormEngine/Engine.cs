@@ -759,7 +759,8 @@ namespace Epsitec.Common.FormEngine
 					placeholder = new UI.ReferencePlaceholder ()
 					{
 						Embedder = root,
-						EntityType = fieldDef.Type as StructuredType
+						EntityType = fieldDef.Type as StructuredType,
+						EntityFieldPath = EntityFieldPath.CreateRelativePath (fieldPath.ToString ())
 					};
 					break;
 			}

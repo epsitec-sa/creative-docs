@@ -454,6 +454,24 @@ namespace Epsitec.Common.Dialogs
 
 						this.searchContexts.Add (newContext);
 					}
+					else if (placeholder is ReferencePlaceholder)
+					{
+						ReferencePlaceholder reference = placeholder as ReferencePlaceholder;
+
+						EntityFieldPath rootPath   = reference.EntityFieldPath;
+						AbstractEntity  rootData   = this.DialogData.Data;
+						Widgets.Widget  rootWidget = Panel.GetParentPanel (placeholder);
+
+						System.Diagnostics.Debug.Assert (rootPath != null);
+						System.Diagnostics.Debug.Assert (rootPath.Count == 1);
+						System.Diagnostics.Debug.Assert (rootData != null);
+						System.Diagnostics.Debug.Assert (rootWidget != null);
+
+						newContext = new SearchContext (this, rootData, rootPath);
+						newContext.AnalysePlaceholderGraph (rootWidget, false);
+
+						this.searchContexts.Add (newContext);
+					}
 					else
 					{
 						IEntityProxyProvider  proxyProvider = DialogSearchController.GetEntityDataAndField (placeholder).Entity;
