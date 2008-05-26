@@ -25,10 +25,24 @@ namespace Epsitec.Common.UI
 			set;
 		}
 
+		public Druid EntityId
+		{
+			get
+			{
+				return this.EntityType == null ? Druid.Empty : this.EntityType.CaptionId;
+			}
+		}
+
 		public EntityFieldPath EntityFieldPath
 		{
 			get;
 			set;
+		}
+
+		protected override void GetAssociatedController(out string newControllerName, out string newControllerParameters)
+		{
+			newControllerName = "Reference";
+			newControllerParameters = Controllers.ControllerParameters.MergeParameters (string.Concat ("EntityId=", this.EntityId.ToString ()), this.ControllerParameters);
 		}
 	}
 }

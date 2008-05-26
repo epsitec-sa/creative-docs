@@ -125,6 +125,7 @@
     <Compile Include="ColumnWidthChangeEventArgs.cs" />
     <Compile Include="AbstractItemViewFactory.cs" />
     <Compile Include="Controllers\ControllerParameters.cs" />
+    <Compile Include="Controllers\ReferenceController.cs" />
     <Compile Include="Controllers\WidgetRecord.cs" />
     <Compile Include="Controllers\WidgetType.cs" />
     <Compile Include="MetaButton.cs" />

@@ -242,20 +242,13 @@ namespace Epsitec.Common.UI
 		private void UpdateController()
 		{
 			string oldControllerName = this.controllerName;
-			string newControllerName = null;
+			string newControllerName;
 			string oldControllerParameters = this.controllerParameters;
-			string newControllerParameters = null;
+			string newControllerParameters;
 			
 			if (this.Controller == "*")
 			{
-				BindingExpression expression = this.ValueBindingExpression;
-				
-				if (expression != null)
-				{
-					Controllers.ControllerFactory.GetDefaultController (expression, out newControllerName, out newControllerParameters);
-
-					newControllerParameters = Controllers.ControllerParameters.MergeParameters (newControllerParameters, this.ControllerParameters);
-				}
+				this.GetAssociatedController (out newControllerName, out newControllerParameters);
 			}
 			else
 			{
@@ -280,6 +273,22 @@ namespace Epsitec.Common.UI
 				{
 					Application.QueueAsyncCallback (this.RecreateUserInterface);
 				}
+			}
+		}
+
+		protected virtual void GetAssociatedController(out string newControllerName, out string newControllerParameters)
+		{
+			BindingExpression expression = this.ValueBindingExpression;
+
+			if (expression == null)
+			{
+				newControllerName = null;
+				newControllerParameters = null;
+			}
+			else
+			{
+				Controllers.ControllerFactory.GetDefaultController (expression, out newControllerName, out newControllerParameters);
+				newControllerParameters = Controllers.ControllerParameters.MergeParameters (newControllerParameters, this.ControllerParameters);
 			}
 		}
 
