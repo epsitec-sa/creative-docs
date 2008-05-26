@@ -169,6 +169,7 @@
     <Compile Include="DialogFocusEventArgs.cs" />
     <Compile Include="DialogDataEventArgs.cs" />
     <Compile Include="HintListHeaderWidget.cs" />
+    <Compile Include="HintListSearchWidget.cs" />
     <Compile Include="HintListVisibilityMode.cs" />
     <Compile Include="HintListContentType.cs" />
     <Compile Include="HintListWidget.cs" />

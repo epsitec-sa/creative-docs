@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			System.Diagnostics.Debug.Assert (this.EntityId.IsValid);
 
 			this.hintListController.DefineContainer (frame);
-
+			
 			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
 			this.searchController.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
 			this.searchController.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
@@ -440,7 +440,6 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private Panel							searchPanel;
 		private Panel							editionPanel;
 		private DialogData						dialogData;
-//-		private DialogData						editionDialogData;
 		private AbstractEntity					currentItem;
 		private EntityContext					searchContext;
 		private IEntityResolver					resolver;

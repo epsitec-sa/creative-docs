@@ -22,6 +22,15 @@ namespace Epsitec.Common.Dialogs
 	{
 		public HintListHeaderWidget()
 		{
+			this.searchWidget = new HintListSearchWidget ()
+			{
+				Embedder = this,
+				Dock = DockStyle.Top,
+				PreferredHeight = 26,
+				Margins = new Drawing.Margins (2, 2, 1, 1),
+				Name = "Search"
+			};
+
 			this.topHalf = new FrameBox ()
 			{
 				Embedder = this,
@@ -136,6 +145,7 @@ namespace Epsitec.Common.Dialogs
 		private readonly StaticImage			image;
 		private readonly StaticText				title;
 		private readonly HToolBar				toolBar;
+		private readonly HintListSearchWidget	searchWidget;
 
 		private HintListContentType				contentType;
 	}
