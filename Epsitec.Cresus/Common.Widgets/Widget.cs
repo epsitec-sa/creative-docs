@@ -688,6 +688,18 @@ namespace Epsitec.Common.Widgets
 				return buffer.ToString ();
 			}
 		}
+
+		public FormattedText						FormattedText
+		{
+			get
+			{
+				return new FormattedText (this.Text);
+			}
+			set
+			{
+				this.Text = value == null ? null : value.ToString ();
+			}
+		}
 		
 		public string								Text
 		{

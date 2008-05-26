@@ -11,6 +11,10 @@ using System.Linq;
 
 namespace Epsitec.Common.Dialogs
 {
+	/// <summary>
+	/// The <c>HintListSearchWidget</c> class implements a search widget where the
+	/// user can type text to narrow a search in the hint list.
+	/// </summary>
 	public class HintListSearchWidget : FrameBox
 	{
 		public HintListSearchWidget()
@@ -22,6 +26,27 @@ namespace Epsitec.Common.Dialogs
 				Margins = new Margins (5, 5, 1, 1),
 				VerticalAlignment = VerticalAlignment.Center
 			};
+
+			this.cachedValue = "";
+			this.textField.TextChanged += this.HandleTextFieldTextChanged;
+		}
+
+
+		/// <summary>
+		/// Gets or sets the search value, which is a simple string, without any
+		/// formatting.
+		/// </summary>
+		/// <value>The value.</value>
+		public string Value
+		{
+			get
+			{
+				return this.cachedValue;
+			}
+			set
+			{
+				this.textField.FormattedText = (FormattedText) value;
+			}
 		}
 
 
@@ -115,8 +140,39 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+
+		private void HandleTextFieldTextChanged(object sender)
+		{
+			string oldValue = this.cachedValue;
+			string newValue = ((string) this.textField.FormattedText) ?? "";
+
+			if (oldValue != newValue)
+			{
+				this.cachedValue = newValue;
+				this.InvalidateProperty (HintListSearchWidget.ValueProperty, oldValue, newValue);
+			}
+		}
+
+		
+		private static object GetValue(DependencyObject obj)
+		{
+			HintListSearchWidget that = (HintListSearchWidget) obj;
+
+			return that.Value;
+		}
+
+		private static void SetValue(DependencyObject obj, object value)
+		{
+			HintListSearchWidget that = (HintListSearchWidget) obj;
+
+			that.Value = (string) value;
+		}
+
+
+		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register ("Value", typeof (string), typeof (HintListSearchWidget), new DependencyPropertyMetadata (HintListSearchWidget.GetValue, HintListSearchWidget.SetValue));
 		
 		private readonly FlatTextField textField;
 		private Widget sourceWidget;
+		private string cachedValue;
 	}
 }
