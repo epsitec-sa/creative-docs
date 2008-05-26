@@ -17,6 +17,9 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public class HintListSearchWidget : FrameBox
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="HintListSearchWidget"/> class.
+		/// </summary>
 		public HintListSearchWidget()
 		{
 			this.textField = new FlatTextField ()
@@ -159,6 +162,9 @@ namespace Epsitec.Common.Dialogs
 				switch (message.MessageType)
 				{
 					case MessageType.KeyDown:
+						
+						//	Handle keyboard events such as up and down, in order to scroll
+						//	the contents of the hint list.
 						if (this.HintListWidget.Navigate (message))
 						{
 							message.Handled = true;
@@ -178,6 +184,8 @@ namespace Epsitec.Common.Dialogs
 			
 			using (Path path = new Path ())
 			{
+				//	Paint the rounded frame for the search box
+
 				path.AppendRoundedRectangle (frame, 6);
 				graphics.Rasterizer.AddSurface (path);
 				graphics.RenderSolid (Color.FromBrightness (1));
@@ -188,6 +196,8 @@ namespace Epsitec.Common.Dialogs
 
 			using (Path path = new Path ())
 			{
+				//	Paint a stylized magnifying glass
+
 				double cx = frame.Right - 10;
 				double cy = frame.Top - 10;
 				double r  = 5;
@@ -215,6 +225,9 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
+		/// <summary>
+		/// Occurs when the search box value changed.
+		/// </summary>
 		public event EventHandler<DependencyPropertyChangedEventArgs> ValueChanged
 		{
 			add
