@@ -3018,14 +3018,18 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
-		
+
+		/// <summary>
+		/// Processes the exit of the first or last child when navigating with the
+		/// TAB key. A class which would like to handle TAB navigation in a custom
+		/// manner can override this method.
+		/// </summary>
+		/// <param name="dir">The tab navigation direction.</param>
+		/// <param name="mode">The tab navigation mode.</param>
+		/// <param name="focus">The widget with should get the focus.</param>
+		/// <returns><c>true</c> if the method has a focus suggestion; otherwise, <c>false</c>.</returns>
 		protected virtual bool ProcessTabChildrenExit(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
-			//	Une classe qui désire gérer l'événement de déplacement lorsque le focus quitte
-			//	le dernier (ou le premier) des enfants peut le faire ici. Si cette méthode
-			//	retourne 'true', c'est le widget retourné par 'focus' qui sera activé; dans
-			//	le cas contraire, un algorithme de navigation par défaut sera utilisé.
-			
 			focus = null;
 			
 			return false;

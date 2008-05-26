@@ -392,6 +392,10 @@ namespace Epsitec.Common.Dialogs
 					e.Cancel = true;
 					break;
 				}
+				if (focus is HintListSearchWidget)
+				{
+					break;
+				}
 
 				focus = focus.Parent;
 			}
@@ -503,6 +507,7 @@ namespace Epsitec.Common.Dialogs
 					}
 				}
 
+				this.ActivatePlaceholder (placeholder);
 				this.ActivateSearchContext (newContext);
 				
 				if (this.activeSearchContext != null)
@@ -674,6 +679,19 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		private void ActivatePlaceholder(AbstractPlaceholder placeholder)
+		{
+			AbstractPlaceholder newPlaceholder = placeholder;
+			AbstractPlaceholder oldPlaceholder = this.activePlaceholder;
+
+			if (oldPlaceholder != newPlaceholder)
+			{
+				this.activePlaceholder = placeholder;
+
+				this.OnActivePlaceholderChanged (new DependencyPropertyChangedEventArgs ("Placeholder", oldPlaceholder, newPlaceholder));
+			}
+		}
+
 		/// <summary>
 		/// Activates the specified search context.
 		/// </summary>
@@ -702,6 +720,14 @@ namespace Epsitec.Common.Dialogs
 				}
 
 				this.OnSearchContextChanged (new DependencyPropertyChangedEventArgs ("SearchContext", oldContext, newContext));
+			}
+		}
+
+		private void OnActivePlaceholderChanged(DependencyPropertyChangedEventArgs e)
+		{
+			if (this.ActivePlaceholderChanged != null)
+			{
+				this.ActivePlaceholderChanged (this, e);
 			}
 		}
 
@@ -1450,6 +1476,8 @@ namespace Epsitec.Common.Dialogs
 
 		#endregion
 
+		public event EventHandler<DependencyPropertyChangedEventArgs> ActivePlaceholderChanged;
+		
 		/// <summary>
 		/// Occurs when the search context changed within this instance of
 		/// <see cref="DialogSearchController"/>.
@@ -1509,6 +1537,7 @@ namespace Epsitec.Common.Dialogs
 
 		private readonly List<SearchContext>	searchContexts;
 		private SearchContext					activeSearchContext;
+		private AbstractPlaceholder				activePlaceholder;
 		private DialogData						dialogData;
 		private Widgets.Window					dialogWindow;
 		private UI.Panel						dialogPanel;

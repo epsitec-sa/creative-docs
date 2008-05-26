@@ -5,6 +5,7 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace Epsitec.Common.Dialogs
 			this.searchController.DialogDataChanged += this.HandleSearchControllerDialogDataChanged;
 			this.searchController.PlaceholderPostProcessing += this.HandleSearchControllerPlaceholderPostProcessing;
 			this.searchController.Resolved += this.HandleSearchControllerResolved;
+			this.searchController.SearchContextChanged += this.HandleSearchControllerSearchContextChanged;
+			this.searchController.ActivePlaceholderChanged += this.HandleSearchControllerActivePlaceholderChanged;
 
 			this.emptyCollectionView = new CollectionView (new System.Collections.ArrayList ());
 
@@ -383,6 +386,21 @@ namespace Epsitec.Common.Dialogs
 		#endregion
 
 
+		private void HandleSearchControllerSearchContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+		}
+
+		private void HandleSearchControllerActivePlaceholderChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			ReferencePlaceholder placeholder = e.NewValue as ReferencePlaceholder;
+
+			if (placeholder != null)
+			{
+				this.hintListWidget.SearchWidget.DefineSourceWidget (placeholder);
+				this.hintListWidget.SearchWidget.StealFocus ();
+			}
+		}
+		
 		private void HandleGlobalSearchContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			System.Diagnostics.Debug.Write (e.ToString ());

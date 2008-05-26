@@ -78,6 +78,14 @@ namespace Epsitec.Common.Dialogs
 		}
 
 
+		public HintListSearchWidget				SearchWidget
+		{
+			get
+			{
+				return this.searchWidget;
+			}
+		}
+
 		public HintListContentType				ContentType
 		{
 			get

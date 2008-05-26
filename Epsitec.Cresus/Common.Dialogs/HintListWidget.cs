@@ -44,6 +44,14 @@ namespace Epsitec.Common.Dialogs
 			this.BackColor = Drawing.Color.FromName ("White");
 		}
 
+
+		public HintListSearchWidget				SearchWidget
+		{
+			get
+			{
+				return this.header.SearchWidget;
+			}
+		}
 		
 		public HintListHeaderWidget				Header
 		{
