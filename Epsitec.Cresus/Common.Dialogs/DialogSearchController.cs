@@ -385,6 +385,8 @@ namespace Epsitec.Common.Dialogs
 			{
 				//	Nothing to do : the currently active search context still has
 				//	the focus.
+
+				this.ActivatePlaceholder (newPlaceholder);
 			}
 			else
 			{
@@ -1309,12 +1311,15 @@ namespace Epsitec.Common.Dialogs
 				if (oldSuggestion != newSuggestion)
 				{
 					this.activeSuggestion = suggestion;
-					
-					ReferencePlaceholder reference = this.searchController.activePlaceholder as ReferencePlaceholder;
 
-					if (reference != null)
+					if (this.searchController.DialogData.Mode != DialogDataMode.Search)
 					{
-						reference.Value = suggestion;
+						ReferencePlaceholder reference = this.searchController.activePlaceholder as ReferencePlaceholder;
+
+						if (reference != null)
+						{
+							reference.Value = suggestion;
+						}
 					}
 
 					this.searchController.NotifySuggestionChanged (this.searchRootPath, oldSuggestion, newSuggestion);

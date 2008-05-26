@@ -736,10 +736,14 @@ namespace Epsitec.Common.FormEngine
 
 		private UI.Placeholder CreatePlaceholder(Widget root, Druid entityId, FieldDescription field)
 		{
-			EntityFieldPath fieldPath = field.GetAbsoluteFieldPath (entityId);
+			//	Crée le bon type de placeholder, en fonction du champ qui doit être
+			//	représenté. Les champs normaux sont gérés par la classe Placeholder
+			//	alors que les références sont gérées par la classe ReferencPlaceholder.
+
+			EntityFieldPath fieldPath = field.GetFieldPath ();
 			Druid  leafEntityId;
 			string leafFieldId;
-			fieldPath.Navigate (this.entityContext, out leafEntityId, out leafFieldId);
+			fieldPath.Navigate (this.entityContext, entityId, out leafEntityId, out leafFieldId);
 
 			StructuredType entityDef = this.GetEntityDefinition (leafEntityId);
 			StructuredTypeField fieldDef = entityDef.GetField (leafFieldId);
@@ -760,7 +764,7 @@ namespace Epsitec.Common.FormEngine
 					{
 						Embedder = root,
 						EntityType = fieldDef.Type as StructuredType,
-						EntityFieldPath = EntityFieldPath.CreateRelativePath (fieldPath.ToString ())
+						EntityFieldPath = fieldPath
 					};
 					break;
 			}

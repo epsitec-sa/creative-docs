@@ -454,7 +454,12 @@ namespace Epsitec.Common.Dialogs
 		{
 			ReferencePlaceholder placeholder = this.searchController.ActivePlaceholder as ReferencePlaceholder;
 
-			if (placeholder != null)
+			//	Don't steal the focus if the dialog is in global search mode, since
+			//	every placeholder already plays the role of a dedicated search widget;
+			//	activating the search widget would wreak havoc.
+			
+			if ((placeholder != null) &&
+				(this.searchController.DialogData.Mode != DialogDataMode.Search))
 			{
 				this.hintListWidget.SearchWidget.AttachSourceWidget (placeholder);
 				this.hintListWidget.SearchWidget.StealFocus ();
