@@ -26,7 +26,7 @@
           <Type>Field</Type>
           <FI>[9VAK]</FI>
           <SB>Normal</SB>
-          <CR>10</CR>
+          <CR>3</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -54,7 +54,7 @@
           <Type>Field</Type>
           <FI>[9VAM]</FI>
           <SB>Normal</SB>
-          <CR>10</CR>
+          <CR>2</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>

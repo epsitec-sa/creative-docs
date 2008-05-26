@@ -27,7 +27,7 @@
           <FI>[9VA2]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
-          <RR>1</RR>
+          <RR>2</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
           <BFS>None</BFS>
@@ -41,7 +41,7 @@
           <FI>[9VA1]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
-          <RR>1</RR>
+          <RR>3</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
           <BFS>None</BFS>

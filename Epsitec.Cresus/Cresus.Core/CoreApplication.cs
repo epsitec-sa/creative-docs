@@ -205,13 +205,13 @@ namespace Epsitec.Cresus.Core
 				{
 					formState.Workspace.AcceptEdition ();
 					this.data.DataContext.SaveChanges ();
-				}
 
-				if ((formState.Workspace.Mode == FormWorkspaceMode.Creation) &&
+					if ((formState.Workspace.Mode == FormWorkspaceMode.Creation) &&
 					(formState.LinkedFieldPath != null))
-				{
-					States.FormWorkspaceState linkedFormState = formState.LinkedState as States.FormWorkspaceState;
-					formState.LinkedFieldPath.NavigateWrite (linkedFormState.Workspace.DialogData.Data, formState.Workspace.CurrentItem);
+					{
+						States.FormWorkspaceState linkedFormState = formState.LinkedState as States.FormWorkspaceState;
+						formState.LinkedFieldPath.NavigateWrite (linkedFormState.Workspace.DialogData.Data, formState.Workspace.CurrentItem);
+					}
 				}
 
 				//	TODO: reselect edited entity
@@ -227,31 +227,52 @@ namespace Epsitec.Cresus.Core
 
 		internal bool CreateRecord()
 		{
-			ISearchContext context = DialogSearchController.GetGlobalSearchContext ();
-			
-			if (context == null)
-			{
-				return false;
-			}
-
-			List<Druid> entityIds = new List<Druid> (context.GetEntityIds ());
-
-			if (entityIds.Count == 0)
-			{
-				return false;
-			}
-
-			System.Diagnostics.Debug.Assert (entityIds.Count == 1);
-
 			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
+
+			if (formState == null)
+			{
+				return false;
+			}
+
+			DialogDataMode  dialogMode    = formState.Workspace.DialogData.Mode;
+			Druid           entityId      = Druid.Empty;
 			EntityFieldPath linkFieldPath = null;
 
-			if (formState != null)
+			if (dialogMode == DialogDataMode.Search)
 			{
+				//	The form is in the general search mode. We will create a fresh record
+				//	matching the data being currently visualized.
+
+				entityId = formState.Workspace.EntityId;
+			}
+			else
+			{
+				//	The form is in edition (or creation) mode and we want to create a new
+				//	item for the currently active reference placeholder.
+
+				ISearchContext context = DialogSearchController.GetGlobalSearchContext ();
+
+				if (context == null)
+				{
+					return false;
+				}
+
+				List<Druid> entityIds = new List<Druid> (context.GetEntityIds ());
+
+				if (entityIds.Count == 0)
+				{
+					return false;
+				}
+
+				System.Diagnostics.Debug.Assert (entityIds.Count == 1);
+
+				entityId      = entityIds[0];
 				linkFieldPath = formState.Workspace.FocusPath;
 			}
 
-			return this.CreateRecord (entityIds[0], linkFieldPath, null);
+			System.Diagnostics.Debug.Assert (entityId.IsValid);
+
+			return this.CreateRecord (entityId, linkFieldPath, null);
 		}
 
 		internal bool CreateRecord(Druid entityId, EntityFieldPath linkFieldPath, System.Action<AbstractEntity> initializer)

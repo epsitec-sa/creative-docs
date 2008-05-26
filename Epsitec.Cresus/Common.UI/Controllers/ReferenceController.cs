@@ -24,6 +24,7 @@ namespace Epsitec.Common.UI.Controllers
 		{
 			this.label = new StaticText ();
 			this.field = new TextFieldMulti ();
+			this.field.PreferredHeight = this.Placeholder.PreferredHeight;
 
 			this.AddWidget (this.label, WidgetType.Label);
 			this.AddWidget (this.field, WidgetType.Input);
@@ -60,7 +61,20 @@ namespace Epsitec.Common.UI.Controllers
 			}
 			else
 			{
-				this.field.FormattedText = entity.DumpFlatData (field => field.Source == FieldSource.Value).Trim ().Replace ("\n", ", ");
+				string data = entity.DumpFlatData (field => field.Source == FieldSource.Value);
+
+				data = data.Replace ("<UndefinedValue>", "");
+				data = data.Replace ("<null>", "");
+
+				while (data.Contains ("\n\n"))
+				{
+					data = data.Replace ("\n\n", "\n");
+				}
+
+				data = data.Trim ();
+				data = data.Replace ("\n", ", ");
+
+				this.field.FormattedText = data;
 			}
 		}
 

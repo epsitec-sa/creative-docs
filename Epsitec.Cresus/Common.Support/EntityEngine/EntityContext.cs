@@ -95,6 +95,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		public ICaptionResolver					CaptionResolver
+		{
+			get
+			{
+				return this.resourceManager as ICaptionResolver ?? Resources.DefaultManager;
+			}
+		}
+
 		/// <summary>
 		/// Gets the current, thread specific, entity context.
 		/// </summary>

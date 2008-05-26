@@ -212,8 +212,9 @@ namespace Epsitec.Common.Support.EntityEngine
 			
 			if (history.Add (this))
 			{
-				ResourceManager manager = Resources.DefaultManager;
-
+				ICaptionResolver manager = this.context.CaptionResolver;
+				string nullValue = "<null>";
+				
 				foreach (string id in this.context.GetEntityFieldIds (this))
 				{
 					StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
@@ -232,13 +233,13 @@ namespace Epsitec.Common.Support.EntityEngine
 					switch (this.InternalGetFieldRelation (id))
 					{
 						case FieldRelation.None:
-							buffer.AppendFormat (includeLabels ? "{0}{1}: {2}\n" : "{2}\n", indent, name, value == null ? "null" : value.ToString ());
+							buffer.AppendFormat (includeLabels ? "{0}{1}: {2}\n" : "{2}\n", indent, name, value == null ? nullValue : value.ToString ());
 							break;
 
 						case FieldRelation.Reference:
 							if (child == null)
 							{
-								buffer.AppendFormat (includeLabels ? "{0}{1}: null\n" : "\n", indent, name);
+								buffer.AppendFormat (includeLabels ? "{0}{1}: {2}\n" : "\n", indent, name, nullValue);
 							}
 							else
 							{
@@ -264,7 +265,7 @@ namespace Epsitec.Common.Support.EntityEngine
 								{
 									if (includeLabels)
 									{
-										buffer.AppendFormat ("{0}  {1}: null\n", indent, index);
+										buffer.AppendFormat ("{0}  {1}: {2}\n", indent, index, nullValue);
 									}
 								}
 								else
