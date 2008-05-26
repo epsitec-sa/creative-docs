@@ -496,6 +496,7 @@ namespace Epsitec.Common.Dialogs
 						newContext = new SearchContext (this, rootData, rootPath);
 						newContext.AnalysePlaceholderGraph (rootWidget, false);
 
+						this.defaultSuggestion = reference.Value as AbstractEntity;
 						this.searchContexts.Add (newContext);
 					}
 					else
@@ -1308,6 +1309,13 @@ namespace Epsitec.Common.Dialogs
 				if (oldSuggestion != newSuggestion)
 				{
 					this.activeSuggestion = suggestion;
+					
+					ReferencePlaceholder reference = this.searchController.activePlaceholder as ReferencePlaceholder;
+
+					if (reference != null)
+					{
+						reference.Value = suggestion;
+					}
 
 					this.searchController.NotifySuggestionChanged (this.searchRootPath, oldSuggestion, newSuggestion);
 				}
