@@ -23,7 +23,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				Embedder = this,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (5, 5, 1, 1),
+				Margins = new Margins (5, 5, 2, 2),
 				VerticalAlignment = VerticalAlignment.Center
 			};
 
@@ -183,7 +183,21 @@ namespace Epsitec.Common.Dialogs
 				graphics.RenderSolid (Color.FromBrightness (1));
 
 				graphics.Rasterizer.AddOutline (path, 1, CapStyle.Round, JoinStyle.Round);
-				graphics.RenderSolid (Color.FromBrightness (0));
+				graphics.RenderSolid (Color.FromBrightness (0.3));
+			}
+
+			using (Path path = new Path ())
+			{
+				double cx = frame.Right - 10;
+				double cy = frame.Top - 10;
+				double r  = 5;
+
+				path.AppendCircle (cx, cy, r);
+				path.MoveTo (cx - 0.707*r, cy - 0.707*r);
+				path.LineTo (cx - 1.707*r, cy - 1.707*r);
+
+				graphics.Rasterizer.AddOutline (path, 2.5, CapStyle.Round, JoinStyle.Round);
+				graphics.RenderSolid (Color.FromBrightness (0.4));
 			}
 		}
 

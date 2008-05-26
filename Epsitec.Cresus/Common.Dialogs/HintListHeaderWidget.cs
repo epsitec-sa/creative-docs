@@ -26,8 +26,8 @@ namespace Epsitec.Common.Dialogs
 			{
 				Embedder = this,
 				Dock = DockStyle.Top,
-				PreferredHeight = 26,
-				Margins = new Drawing.Margins (2, 2, 1, 1),
+				PreferredHeight = 24,
+				Margins = new Drawing.Margins (2, 2, 2, 1),
 				Name = "Search"
 			};
 
