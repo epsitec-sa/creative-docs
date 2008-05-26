@@ -207,6 +207,13 @@ namespace Epsitec.Cresus.Core
 					this.data.DataContext.SaveChanges ();
 				}
 
+				if ((formState.Workspace.Mode == FormWorkspaceMode.Creation) &&
+					(formState.LinkedFieldPath != null))
+				{
+					States.FormWorkspaceState linkedFormState = formState.LinkedState as States.FormWorkspaceState;
+					formState.LinkedFieldPath.NavigateWrite (linkedFormState.Workspace.DialogData.Data, formState.Workspace.CurrentItem);
+				}
+
 				//	TODO: reselect edited entity
 
 				this.stateManager.Show (formState.LinkedState);
@@ -236,10 +243,18 @@ namespace Epsitec.Cresus.Core
 
 			System.Diagnostics.Debug.Assert (entityIds.Count == 1);
 
-			return this.CreateRecord (entityIds[0], null);
+			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
+			EntityFieldPath linkFieldPath = null;
+
+			if (formState != null)
+			{
+				linkFieldPath = formState.Workspace.FocusPath;
+			}
+
+			return this.CreateRecord (entityIds[0], linkFieldPath, null);
 		}
 
-		internal bool CreateRecord(Druid entityId, System.Action<AbstractEntity> initializer)
+		internal bool CreateRecord(Druid entityId, EntityFieldPath linkFieldPath, System.Action<AbstractEntity> initializer)
 		{
 			Druid formId = this.FindCreationFormId (entityId);
 
@@ -274,7 +289,8 @@ namespace Epsitec.Cresus.Core
 					StateDeck = States.StateDeck.StandAlone,
 					Title = "Création",
 					Workspace = workspace,
-					LinkedState = formState
+					LinkedState = formState,
+					LinkedFieldPath = linkFieldPath
 				};
 
 			//	TODO: better linking -- when exiting with validation, should fill in the missing
@@ -297,11 +313,11 @@ namespace Epsitec.Cresus.Core
 			{
 				return Mai2008.FormIds.Facture;
 			}
-			if (entityId == Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeId)
-			{
-				return Mai2008.FormIds.TableLigneFacture;
-			}
-			if (entityId == AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId)
+//			if (entityId == Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeId)
+//			{
+//				return Mai2008.FormIds.TableLigneFacture;
+//			}
+			if (entityId == Mai2008.Entities.ClientEntity.EntityStructuredTypeId)
 			{
 				return Mai2008.FormIds.Client;
 			}

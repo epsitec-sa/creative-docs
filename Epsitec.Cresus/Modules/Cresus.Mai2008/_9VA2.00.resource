@@ -1,17 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_9VA2" caption="Article" type="Form" culture="fr" rank="3">
+<bundle name="_9VA2" caption="Facture" type="Form" culture="fr" rank="3">
   <data name="Source">
     <xml>
       <Form>
-        <EI>[9VAF]</EI>
+        <EI>[9VA]</EI>
         <DBI>&lt;invalid&gt;</DBI>
         <DS>*</DS>
         <FD>
-          <Guid>93d2f41f-75ed-4807-bfbf-cfdbe5732106</Guid>
+          <Guid>a54a7345-64ac-45b2-991e-0a9ac8fc160c</Guid>
           <Type>Title</Type>
           <FI />
-          <LFC>Green</LFC>
-          <LFS>Italic</LFS>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -21,26 +19,12 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
-          <LR>[9VAP]</LR>
+          <LR>[9VA4]</LR>
         </FD>
         <FD>
-          <Guid>79941bb8-ba73-4866-8563-977d61f66d4b</Guid>
+          <Guid>2a3796d6-ae14-40ce-809c-3d890418323b</Guid>
           <Type>Field</Type>
-          <FI>[9VAK]</FI>
-          <SB>Normal</SB>
-          <CR>3</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-        </FD>
-        <FD>
-          <Guid>15d9785e-48ab-4b10-b34b-038f10ca4645</Guid>
-          <Type>Field</Type>
-          <FI>[9VAL]</FI>
+          <FI>[9VA2]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -52,11 +36,25 @@
           <PW>100</PW>
         </FD>
         <FD>
-          <Guid>57193e9b-ae71-468a-a723-a42948381af3</Guid>
+          <Guid>9b055fb2-3242-42d8-8d8b-48f4176a6dcc</Guid>
           <Type>Field</Type>
-          <FI>[9VAM]</FI>
+          <FI>[9VA1]</FI>
           <SB>Normal</SB>
-          <CR>2</CR>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>14ce2bbe-c681-4dc1-958e-cb7f2521a9f2</Guid>
+          <Type>Field</Type>
+          <FI>[9VAN]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>

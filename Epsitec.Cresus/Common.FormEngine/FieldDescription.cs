@@ -361,6 +361,12 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		public Support.EntityEngine.EntityFieldPath GetAbsoluteFieldPath(Druid entityId)
+		{
+			//	Retourne le chemin encodé pour le champ correspondant.
+			return Support.EntityEngine.EntityFieldPath.CreateAbsolutePath(entityId, this.GetPath(null));
+		}
+
 		public string GetPath(string prefix)
 		{
 			//	Retourne le chemin permettant d'accéder au champ.

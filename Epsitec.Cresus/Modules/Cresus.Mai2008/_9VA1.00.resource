@@ -1,32 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_9VA1" caption="TableLigneFacture" type="Form" culture="fr" rank="2">
+<bundle name="_9VA1" caption="Article" type="Form" culture="fr" rank="2">
   <data name="Source">
     <xml>
       <Form>
-        <EI>[9VAG]</EI>
+        <EI>[9VAF]</EI>
         <DBI>&lt;invalid&gt;</DBI>
         <DS>*</DS>
         <FD>
-          <Guid>ba624c13-5fe0-4afb-874d-ebc13a6864c0</Guid>
-          <Type>Field</Type>
-          <FI>[9VAI]</FI>
-          <SB>Normal</SB>
-          <CR>1</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-          <VB>None</VB>
-        </FD>
-        <FD>
-          <Guid>7b8c3021-f985-49b6-8071-54407d299cbc</Guid>
-          <Type>Glue</Type>
+          <Guid>73e93aed-97ef-4047-b0d2-aef768b280d1</Guid>
+          <Type>Title</Type>
           <FI />
           <SB>Normal</SB>
-          <CR>0</CR>
+          <CR>10</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -34,28 +19,14 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
+          <LR>[9VAP]</LR>
         </FD>
         <FD>
-          <Guid>0e227e0c-7d05-44ba-97d7-4fe1292aa91c</Guid>
+          <Guid>79cc7d0e-53d1-49a8-a8b2-b753fe621933</Guid>
           <Type>Field</Type>
-          <FI>[9VAH].[9VAL]</FI>
+          <FI>[9VAK]</FI>
           <SB>Normal</SB>
-          <CR>7</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-          <VB>None</VB>
-        </FD>
-        <FD>
-          <Guid>5783f319-890b-4821-9337-cb4a19fa760d</Guid>
-          <Type>Glue</Type>
-          <FI />
-          <SB>Normal</SB>
-          <CR>0</CR>
+          <CR>10</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -65,26 +36,11 @@
           <PW>100</PW>
         </FD>
         <FD>
-          <Guid>0a9fc5c6-da98-4a51-9edb-7fc4e5e3e9d8</Guid>
+          <Guid>913efe27-c356-4d04-a311-2a7fb9c87ef1</Guid>
           <Type>Field</Type>
-          <FI>[9VAJ]</FI>
+          <FI>[9VAL]</FI>
           <SB>Normal</SB>
-          <CR>1</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-          <VB>None</VB>
-        </FD>
-        <FD>
-          <Guid>92806063-1fa8-418c-867f-2ddaa8bf2762</Guid>
-          <Type>Glue</Type>
-          <FI />
-          <SB>Normal</SB>
-          <CR>0</CR>
+          <CR>10</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -94,11 +50,11 @@
           <PW>100</PW>
         </FD>
         <FD>
-          <Guid>baf5d2cb-e8d5-49f3-801a-b1ed9a0196da</Guid>
+          <Guid>3c9b57ac-3d9f-4371-81ec-02921ca50b55</Guid>
           <Type>Field</Type>
-          <FI>[9VAH].[9VAM]</FI>
+          <FI>[9VAM]</FI>
           <SB>Normal</SB>
-          <CR>1</CR>
+          <CR>10</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
@@ -106,7 +62,6 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
-          <VB>None</VB>
         </FD>
       </Form>
     </xml>

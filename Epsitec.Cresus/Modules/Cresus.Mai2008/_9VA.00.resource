@@ -1,17 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<bundle name="_9VA" caption="Facture" type="Form" culture="fr" rank="1">
+<bundle name="_9VA" caption="Client" type="Form" culture="fr" rank="1">
   <data name="Source">
     <xml>
       <Form>
-        <EI>[9VA]</EI>
+        <EI>[9VAU]</EI>
         <DBI>&lt;invalid&gt;</DBI>
         <DS>*</DS>
         <FD>
-          <Guid>6bdb22f0-4314-4a45-982a-509f72b6c59b</Guid>
+          <Guid>bf0ee670-0095-4fe0-bb53-56090a711d29</Guid>
           <Type>Title</Type>
           <FI />
-          <LFC>Blue</LFC>
-          <LFS>Italic</LFS>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -21,55 +19,12 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
-          <LR>[9VA4]</LR>
+          <LR>[9VAT]</LR>
         </FD>
         <FD>
-          <Guid>52385b50-d518-4e44-a568-4baa4add4297</Guid>
+          <Guid>f4b85c1d-d7d1-4c34-939d-29f981894fc1</Guid>
           <Type>Field</Type>
-          <FI>[9VA2]</FI>
-          <SB>Normal</SB>
-          <CR>5</CR>
-          <RR>3</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-        </FD>
-        <FD>
-          <Guid>090d14af-ecab-4e07-b56e-90a1d6c00ca7</Guid>
-          <Type>Glue</Type>
-          <FI />
-          <SB>Normal</SB>
-          <CR>0</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-        </FD>
-        <FD>
-          <Guid>940a99e6-70c7-4573-a00c-a7152dc41d10</Guid>
-          <Type>BoxBegin</Type>
-          <FI />
-          <SB>Normal</SB>
-          <CR>5</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>All</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-        </FD>
-        <FD>
-          <Guid>eb830a4e-5787-4831-84e5-4de013902bf3</Guid>
-          <Type>Title</Type>
-          <FI />
-          <LFH>Small</LFH>
+          <FI>[8V1J]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -79,28 +34,11 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
-          <LR>[9VA3]</LR>
         </FD>
         <FD>
-          <Guid>6f7e5d95-47f7-4cc5-94d9-059bba5dac90</Guid>
+          <Guid>2b6f5111-fa08-4e80-8777-6d4f8d663db5</Guid>
           <Type>Field</Type>
-          <FI>[9VA1].[6016]</FI>
-          <SB>Normal</SB>
-          <CR>10</CR>
-          <RR>1</RR>
-          <BLT>Grid</BLT>
-          <BPT>Normal</BPT>
-          <BFS>None</BFS>
-          <BFW>1</BFW>
-          <LW>1</LW>
-          <PW>100</PW>
-          <LR>[9VA3]</LR>
-          <VB>None</VB>
-        </FD>
-        <FD>
-          <Guid>3fa261a7-b45d-42da-be13-90081ea211a6</Guid>
-          <Type>BoxEnd</Type>
-          <FI />
+          <FI>[8V16]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -112,9 +50,9 @@
           <PW>100</PW>
         </FD>
         <FD>
-          <Guid>c727633b-15d5-4c0b-8508-0c1aec6401e0</Guid>
-          <Type>Title</Type>
-          <FI />
+          <Guid>c02b9360-cf97-426d-8697-ee6f79153738</Guid>
+          <Type>Field</Type>
+          <FI>[8V17]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
@@ -124,19 +62,60 @@
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>
-          <LR>[9VAO]</LR>
         </FD>
         <FD>
-          <Guid>1e970b07-ffb8-489a-90c1-0a23f7a5c7d4</Guid>
-          <Type>SubForm</Type>
-          <FI>[9VAN]</FI>
-          <SFI>[9VA1]</SFI>
+          <Guid>5c1eff4f-a7d6-4b3a-84b3-f673b31c0086</Guid>
+          <Type>Field</Type>
+          <FI>[6016]</FI>
           <SB>Normal</SB>
           <CR>10</CR>
           <RR>1</RR>
           <BLT>Grid</BLT>
           <BPT>Normal</BPT>
-          <BFS>All</BFS>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+          <DHi>True</DHi>
+        </FD>
+        <FD>
+          <Guid>c0d843be-f1ae-457e-814a-569ebd695629</Guid>
+          <Type>Field</Type>
+          <FI>[8V13]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>31fa60d5-3b00-4fbe-a35b-018708378fd0</Guid>
+          <Type>Field</Type>
+          <FI>[8V14]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
+          <BFW>1</BFW>
+          <LW>1</LW>
+          <PW>100</PW>
+        </FD>
+        <FD>
+          <Guid>17b41013-cc20-458c-82e2-2bb79fbdabdf</Guid>
+          <Type>Field</Type>
+          <FI>[8V15]</FI>
+          <SB>Normal</SB>
+          <CR>10</CR>
+          <RR>1</RR>
+          <BLT>Grid</BLT>
+          <BPT>Normal</BPT>
+          <BFS>None</BFS>
           <BFW>1</BFW>
           <LW>1</LW>
           <PW>100</PW>

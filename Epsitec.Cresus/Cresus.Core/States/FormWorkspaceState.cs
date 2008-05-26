@@ -70,6 +70,14 @@ namespace Epsitec.Cresus.Core.States
 			get;
 			set;
 		}
+
+		public EntityFieldPath					LinkedFieldPath
+		{
+			get;
+			set;
+		}
+		
+		
 		
 		public override XElement Serialize(XElement element)
 		{
@@ -131,13 +139,27 @@ namespace Epsitec.Cresus.Core.States
 					savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (this.workspace.DialogData) : FormWorkspaceState.SaveTemplate (template);
 				}
 
+				string link = "";
+
+				if (this.LinkedState != null)
+				{
+					if (this.LinkedFieldPath == null)
+					{
+						link = this.LinkedState.Tag;
+					}
+					else
+					{
+						link = string.Concat (this.LinkedState.Tag, " ", this.LinkedFieldPath.ToString ());
+					}
+				}
+
 				element.Add (new XElement ("workspace",
 					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
 					new XAttribute ("formId", this.workspace.FormId.ToString ()),
 					new XAttribute ("mode", this.workspace.Mode.ToString ()),
 					new XAttribute ("currentEntityId", currentEntityId ?? ""),
 					new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()),
-					new XAttribute ("link", this.LinkedState == null ? "" : this.LinkedState.Tag),
+					new XAttribute ("link", link),
 					(object)savedDialogData ?? (object)emptyElement));
 			}
 		}
@@ -186,7 +208,17 @@ namespace Epsitec.Cresus.Core.States
 				}
 				if (string.IsNullOrEmpty (link) == false)
 				{
-					this.AddFixup (map => this.LinkedState = map[link]);
+					//	The link is expressed either as "tag" or "tag path", which have
+					//	to be restored as LinkedState and LinkedFieldPath.
+					
+					string[] args = link.Split (' ');
+
+					if (args.Length > 1)
+					{
+						this.LinkedFieldPath = EntityFieldPath.Parse (args[1]);
+					}
+
+					this.AddFixup (map => this.LinkedState = map[args[0]]);
 				}
 
 				this.workspace.Initialize ();

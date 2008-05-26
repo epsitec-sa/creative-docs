@@ -7,6 +7,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[9VA]", typeof (Epsitec.Cresus.Mai2008.Entities.FactureEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[9VAF]", typeof (Epsitec.Cresus.Mai2008.Entities.ArticleEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[9VAG]", typeof (Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[9VAU]", typeof (Epsitec.Cresus.Mai2008.Entities.ClientEntity))]
 #region Epsitec.Cresus.Mai2008.Facture Entity
 namespace Epsitec.Cresus.Mai2008.Entities
 {
@@ -43,19 +44,19 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		///	designer:fld/9VA/9VA1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[9VA1]")]
-		public global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity AdresseFacturation
+		public global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity AdresseFacturation
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ("[9VA1]");
+				return this.GetField<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ("[9VA1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity oldValue = this.AdresseFacturation;
+				global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity oldValue = this.AdresseFacturation;
 				if (oldValue != value)
 				{
 					this.OnAdresseFacturationChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ("[9VA1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ("[9VA1]", oldValue, value);
 					this.OnAdresseFacturationChanged (oldValue, value);
 				}
 			}
@@ -85,8 +86,8 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		
 		partial void OnObjetChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnObjetChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnAdresseFacturationChanging(global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity newValue);
-		partial void OnAdresseFacturationChanged(global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity newValue);
+		partial void OnAdresseFacturationChanging(global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity newValue);
+		partial void OnAdresseFacturationChanged(global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity newValue);
 		partial void OnLignesChanging(global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity newValue);
 		partial void OnLignesChanged(global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity newValue);
 		
@@ -260,8 +261,8 @@ namespace Epsitec.Cresus.Mai2008.Entities
 				global::Epsitec.Common.Support.EntityEngine.AbstractEntity.SetCalculation<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity, global::System.Decimal> (this, "[9VAJ]", value);
 			}
 		}
-		private static readonly global::System.Func<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity, global::System.Decimal> FuncPrix = ligne => ligne.Quantité * ligne.Article.Prix; // λ [9VAG] [9VAJ]
-		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity, global::System.Decimal>> ExprPrix = ligne => ligne.Quantité * ligne.Article.Prix; // λ [9VAG] [9VAJ]
+		private static readonly global::System.Func<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity, global::System.Decimal> FuncPrix = ligne => ligne.Quantité * (ligne.Article == null ? 0 : ligne.Article.Prix); // λ [9VAG] [9VAJ]
+		private static readonly global::System.Linq.Expressions.Expression<global::System.Func<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity, global::System.Decimal>> ExprPrix = ligne => ligne.Quantité * (ligne.Article == null ? 0 : ligne.Article.Prix); // λ [9VAG] [9VAJ]
 		
 		partial void OnQuantitéChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnQuantitéChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -273,6 +274,26 @@ namespace Epsitec.Cresus.Mai2008.Entities
 			return global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeId;
 		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 16);	// [9VAG]
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Mai2008.Client Entity
+namespace Epsitec.Cresus.Mai2008.Entities
+{
+	///	<summary>
+	///	The <c>Client</c> entity.
+	///	designer:cap/9VAU
+	///	</summary>
+	public partial class ClientEntity : global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity
+	{
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Mai2008.Entities.ClientEntity.EntityStructuredTypeId;
+		}
+		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 30);	// [9VAU]
 	}
 }
 #endregion

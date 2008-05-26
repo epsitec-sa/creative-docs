@@ -1920,6 +1920,13 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 			else  // masque normal ?
 			{
+#if true
+				//	Tous les champs, quels que soient leur type, sont traités comme
+				//	tels; c'est en aval, dans FormEngine, que se prennent le bonnes
+				//	décisions.
+				field = new FieldDescription (FieldDescription.FieldType.Field);
+				field.SetFields (item.DruidsPath);
+#else
 				if (item.Relation == FieldRelation.None)  // champ normal ?
 				{
 					field = new FieldDescription(FieldDescription.FieldType.Field);
@@ -1940,6 +1947,7 @@ namespace Epsitec.Common.Designer.Viewers
 					field.SetFields(item.DruidsPath);
 					field.SubFormId = formId;
 				}
+#endif
 
 				this.workingForm.Fields.Add(field);
 			}

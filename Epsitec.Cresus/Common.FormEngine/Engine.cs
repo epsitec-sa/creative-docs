@@ -668,7 +668,7 @@ namespace Epsitec.Common.FormEngine
 		private void CreateField(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
-			UI.Placeholder placeholder = new UI.Placeholder(root);
+			UI.Placeholder placeholder = this.CreatePlaceholder(root, entityId, field);
 			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, field.GetPath(UI.DataSource.DataName)));
 			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			placeholder.TabIndex = this.tabIndex++;
@@ -732,6 +732,39 @@ namespace Epsitec.Common.FormEngine
 					column = 0;
 				}
 			}
+		}
+
+		private UI.Placeholder CreatePlaceholder(Widget root, Druid entityId, FieldDescription field)
+		{
+			EntityFieldPath fieldPath = field.GetAbsoluteFieldPath (entityId);
+			Druid  leafEntityId;
+			string leafFieldId;
+			fieldPath.Navigate (this.entityContext, out leafEntityId, out leafFieldId);
+
+			StructuredType entityDef = this.GetEntityDefinition (leafEntityId);
+			StructuredTypeField fieldDef = entityDef.GetField (leafFieldId);
+
+			UI.Placeholder placeholder = null;
+
+			switch (fieldDef.Relation)
+			{
+				case FieldRelation.None:
+					placeholder = new UI.Placeholder ()
+					{
+						Embedder = root
+					};
+					break;
+
+				case FieldRelation.Reference:
+					placeholder = new UI.ReferencePlaceholder ()
+					{
+						Embedder = root,
+						EntityType = fieldDef.Type as StructuredType
+					};
+					break;
+			}
+
+			return placeholder;
 		}
 
 		private void CreateCommand(Widget root, Druid entityId, Widgets.Layouts.GridLayoutEngine grid, FieldDescription field, System.Guid guid, List<int> labelsId, ref int column, ref int row, bool isGlueAfter, bool isLastOfBox)

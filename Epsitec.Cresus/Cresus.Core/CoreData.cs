@@ -98,8 +98,7 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateSchemas()
 		{
-			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdresseEntity> ();
-			this.dataContext.CreateSchema<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ();
+			this.dataContext.CreateSchema<Epsitec.Cresus.Mai2008.Entities.ClientEntity> ();
 			this.dataContext.CreateSchema<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
 		}
 
@@ -119,7 +118,7 @@ namespace Epsitec.Cresus.Core
 			List<AddressBook.Entities.TitrePersonneEntity> titres = new List<Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity> (this.ReadTitres ());
 			this.dataContext.SaveChanges ();
 
-			List<AddressBook.Entities.AdressePersonneEntity> personnes = new List<Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> (this.ReadPersonnes (localités, titres));
+			List<Mai2008.Entities.ClientEntity> personnes = new List<Epsitec.Cresus.Mai2008.Entities.ClientEntity> (this.ReadPersonnes (localités, titres));
 			this.dataContext.SaveChanges ();
 
 			List<Mai2008.Entities.FactureEntity> factures = new List<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
@@ -193,7 +192,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public IEnumerable<AddressBook.Entities.AdressePersonneEntity> ReadPersonnes(List<AddressBook.Entities.LocalitéEntity> localités, List<AddressBook.Entities.TitrePersonneEntity> titres)
+		public IEnumerable<Mai2008.Entities.ClientEntity> ReadPersonnes(List<AddressBook.Entities.LocalitéEntity> localités, List<AddressBook.Entities.TitrePersonneEntity> titres)
 		{
 			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\EPSITEC.CSV", System.Text.Encoding.Default))
 			{
@@ -224,7 +223,7 @@ namespace Epsitec.Cresus.Core
 				}
 
 
-				AddressBook.Entities.AdressePersonneEntity personne = this.dataContext.CreateEmptyEntity<AddressBook.Entities.AdressePersonneEntity> ();
+				Mai2008.Entities.ClientEntity personne = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ClientEntity> ();
 
 				personne.Titre = titres.Find (x => string.Compare (x.IntituléLong, values[1], true) == 0) ?? titres.Find (x => x.IntituléCourt == "M.");
 				personne.Nom = values[2];
@@ -275,9 +274,9 @@ namespace Epsitec.Cresus.Core
 			{
 				Druid id = template.GetEntityStructuredTypeId ();
 
-				if (id == AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId)
+				if (id == Mai2008.Entities.ClientEntity.EntityStructuredTypeId)
 				{
-					AddressBook.Entities.AdressePersonneEntity example = AbstractEntity.Resolve<AddressBook.Entities.AdressePersonneEntity> (template);
+					Mai2008.Entities.ClientEntity example = AbstractEntity.Resolve<Mai2008.Entities.ClientEntity> (template);
 
 					DataQuery query = new DataQuery ();
 					
@@ -320,7 +319,7 @@ namespace Epsitec.Cresus.Core
 						yield break;
 					}
 
-					foreach (AddressBook.Entities.AdressePersonneEntity entity in this.GetEntities (id))
+					foreach (Mai2008.Entities.ClientEntity entity in this.GetEntities (id))
 					{
 						if ((ResolverImplementation.Match (example.Titre, entity.Titre)) &&
 							(ResolverImplementation.Match (example.Nom, entity.Nom)) &&
