@@ -254,8 +254,7 @@ namespace Epsitec.Common.Support.EntityEngine
 						case FieldRelation.Collection:
 							if (includeLabels)
 							{
-								buffer.AppendFormat ("{0}{1}:\n", indent, name);
-								buffer.AppendFormat ("{0}{\n", indent, name);
+								buffer.AppendFormat ("{0}{1}{2}:\n", indent, name, "{");
 							}
 							int index = 0;
 							foreach (object item in (System.Collections.IList) value)
@@ -279,7 +278,7 @@ namespace Epsitec.Common.Support.EntityEngine
 							}
 							if (includeLabels)
 							{
-								buffer.AppendFormat ("{0}}\n", indent, name);
+								buffer.AppendFormat ("{0}{1}\n", indent, "}");
 							}
 							break;
 					}

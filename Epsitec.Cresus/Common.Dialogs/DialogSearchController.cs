@@ -867,7 +867,7 @@ namespace Epsitec.Common.Dialogs
 		private static EntityField GetEntityDataAndField(AbstractPlaceholder placeholder)
 		{
 			BindingExpression   binding     = placeholder.ValueBindingExpression;
-			DataSourceType      sourceType  = binding.GetSourceType ();
+			DataSourceType      sourceType  = binding == null ? DataSourceType.None : binding.GetSourceType ();
 
 			if (sourceType == DataSourceType.StructuredData)
 			{

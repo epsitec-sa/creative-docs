@@ -198,7 +198,7 @@ namespace Epsitec.Common.Support
 				generator.EmitCall (OpCodes.Callvirt, method, null);
 			}
 
-			if (propType.IsClass)
+			if (propType.IsClass || propType.IsInterface)
 			{
 				//	No conversion needed.
 			}

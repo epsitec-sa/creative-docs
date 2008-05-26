@@ -66,21 +66,11 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		///	designer:fld/9VA/9VAN
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[9VAN]")]
-		public global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity Lignes
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity> Lignes
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity> ("[9VAN]");
-			}
-			set
-			{
-				global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue = this.Lignes;
-				if (oldValue != value)
-				{
-					this.OnLignesChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity> ("[9VAN]", oldValue, value);
-					this.OnLignesChanged (oldValue, value);
-				}
+				return this.GetFieldCollection<global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity> ("[9VAN]");
 			}
 		}
 		
@@ -88,8 +78,6 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		partial void OnObjetChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnAdresseFacturationChanging(global::Epsitec.Cresus.Mai2008.Entities.ClientEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.ClientEntity newValue);
 		partial void OnAdresseFacturationChanged(global::Epsitec.Cresus.Mai2008.Entities.ClientEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.ClientEntity newValue);
-		partial void OnLignesChanging(global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity newValue);
-		partial void OnLignesChanged(global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

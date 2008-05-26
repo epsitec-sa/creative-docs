@@ -747,7 +747,10 @@ namespace Epsitec.Common.Dialogs
 
 			private object ResolveCollection()
 			{
-				throw new System.NotImplementedException ();
+				IValueStore store = this.externalData;
+
+				return store.GetValue (this.nodeId);
+	//			throw new System.NotImplementedException ();
 			}
 
 			private void SaveOriginalValue(System.Func<object> valueGetter)

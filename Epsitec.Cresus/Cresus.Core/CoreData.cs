@@ -123,13 +123,18 @@ namespace Epsitec.Cresus.Core
 
 			List<Mai2008.Entities.FactureEntity> factures = new List<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
 			Mai2008.Entities.FactureEntity facture = this.dataContext.CreateEmptyEntity<Mai2008.Entities.FactureEntity> ();
-			Mai2008.Entities.LigneFactureEntity ligne =	this.dataContext.CreateEmptyEntity<Mai2008.Entities.LigneFactureEntity> ();
+			Mai2008.Entities.LigneFactureEntity ligne1 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.LigneFactureEntity> ();
+			Mai2008.Entities.LigneFactureEntity ligne2 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.LigneFactureEntity> ();
 			Mai2008.Entities.ArticleEntity article1 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ArticleEntity> ();
 			Mai2008.Entities.ArticleEntity article2 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ArticleEntity> ();
 			Mai2008.Entities.ArticleEntity article3 = this.dataContext.CreateEmptyEntity<Mai2008.Entities.ArticleEntity> ();
 
-			ligne.Article = article1;
-			ligne.Quantité = 2;
+			ligne1.Article = article1;
+			ligne1.Quantité = 2;
+
+			ligne2.Article = article2;
+			ligne2.Quantité = 1;
+
 			article1.Désignation = "Crésus Comptabilité Pro";
 			article1.Numéro = "CCPRO";
 			article1.Prix = 480.00M;
@@ -144,7 +149,8 @@ namespace Epsitec.Cresus.Core
 
 			facture.Objet = new FormattedText ("Crésus Comptabilité <i>Pro</i>");
 			facture.AdresseFacturation = personnes[100];
-			facture.Lignes = ligne;
+			facture.Lignes.Add (ligne1);
+			facture.Lignes.Add (ligne2);
 			factures.Add (facture);
 			
 			this.dataContext.SaveChanges ();

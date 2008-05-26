@@ -103,7 +103,7 @@ namespace Epsitec.Common.UI
 		/// Gets or sets the value of the data-bound value.
 		/// </summary>
 		/// <value>The value.</value>
-		public object							Value
+		public virtual object					Value
 		{
 			get
 			{
@@ -246,7 +246,7 @@ namespace Epsitec.Common.UI
 		{
 		}
 
-		private void HandleValueChanged(object oldValue, object newValue)
+		protected void HandleValueChanged(object oldValue, object newValue)
 		{
 			this.UpdateValueType ();
 			this.UpdateValue (oldValue, newValue);

@@ -669,7 +669,6 @@ namespace Epsitec.Common.FormEngine
 		{
 			//	Crée les widgets pour un champ dans la grille, lors de la deuxième passe.
 			UI.Placeholder placeholder = this.CreatePlaceholder(root, entityId, field);
-			placeholder.SetBinding(UI.Placeholder.ValueProperty, new Binding(BindingMode.TwoWay, field.GetPath(UI.DataSource.DataName)));
 			placeholder.BackColor = FieldDescription.GetRealBackColor(field.BackColor);
 			placeholder.TabIndex = this.tabIndex++;
 			placeholder.Name = guid.ToString();
@@ -757,6 +756,7 @@ namespace Epsitec.Common.FormEngine
 					{
 						Embedder = root
 					};
+					placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, field.GetPath (UI.DataSource.DataName)));
 					break;
 
 				case FieldRelation.Reference:
@@ -766,8 +766,20 @@ namespace Epsitec.Common.FormEngine
 						EntityType = fieldDef.Type as StructuredType,
 						EntityFieldPath = fieldPath
 					};
+					placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, field.GetPath (UI.DataSource.DataName)));
+					break;
+
+				case FieldRelation.Collection:
+					placeholder = new UI.CollectionPlaceholder ()
+					{
+						Embedder = root,
+						EntityType = fieldDef.Type as StructuredType,
+						EntityFieldPath = fieldPath
+					};
+					placeholder.SetBinding (UI.CollectionPlaceholder.CollectionProperty, new Binding (BindingMode.TwoWay, field.GetPath (UI.DataSource.DataName)));
 					break;
 			}
+
 
 			return placeholder;
 		}
