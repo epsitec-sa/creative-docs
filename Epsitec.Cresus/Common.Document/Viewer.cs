@@ -354,7 +354,7 @@ namespace Epsitec.Common.Document
 				case MessageType.MouseDown:
 					if ( !this.mouseDragging )
 					{
-						this.document.SetDirtySerialize(DirtyMode.Local);
+						//?this.document.SetDirtySerialize(DirtyMode.Local);
 						this.AutoScrollTimerStart(message);
 						this.RestartMiniBar();
 						this.ProcessMouseDown(message, pos);
@@ -373,6 +373,7 @@ namespace Epsitec.Common.Document
 						this.ProcessMouseUp(message, pos);
 						this.mouseDragging = false;
 						this.ProcessMouseMove(message, pos);
+						this.document.SetDirtySerialize(DirtyMode.Local);
 					}
 					break;
 
@@ -4377,7 +4378,7 @@ namespace Epsitec.Common.Document
 
 			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
 			{
-				Bitmap bitmap = this.document.Printer.CreateMiniatureBitmap(this.Client.Size/this.pictogramMagnifierZoom, false, this.drawingContext.CurrentPage);
+				Bitmap bitmap = this.document.Printer.CreateMiniatureBitmap(this.Client.Size/this.pictogramMagnifierZoom, false, this.drawingContext.CurrentPage, -1);
 				Transform it = graphics.Transform;
 				graphics.ScaleTransform(this.pictogramMagnifierZoom, this.pictogramMagnifierZoom, 0, 0);
 				graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
@@ -4464,12 +4465,52 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			if (this.drawingContext.Viewer != null && (this.isDocumentPreview || this.isPictogramPreview))  // dessin d'une miniature ?
+			{
+				Rectangle rect = this.drawingContext.Viewer.Client.Bounds;
+				rect.Deflate(1);  // laisse un cadre d'un pixel
+
+				if (this.isLayerPreview)
+				{
+					Objects.Abstract layer = this.drawingContext.RootObject(2);
+					if (layer.CacheBitmap == null)
+					{
+						graphics.AddLine(rect.BottomLeft, rect.TopRight);
+						graphics.AddLine(rect.BottomRight, rect.TopLeft);
+						graphics.RenderSolid(Color.FromBrightness(0));  // desssine un 'X' s'il n'y a pas de bitmap caché
+					}
+					else
+					{
+						graphics.PaintImage(layer.CacheBitmap, rect);  // dessine le bitmap caché
+					}
+				}
+				else
+				{
+					Objects.Abstract page = this.drawingContext.RootObject(1);
+					if (page.CacheBitmap == null)
+					{
+						graphics.AddLine(rect.BottomLeft, rect.TopRight);
+						graphics.AddLine(rect.BottomRight, rect.TopLeft);
+						graphics.RenderSolid(Color.FromBrightness(0));  // desssine un 'X' s'il n'y a pas de bitmap caché
+					}
+					else
+					{
+						graphics.PaintImage(page.CacheBitmap, rect);  // dessine le bitmap caché
+					}
+				}
+
+				rect.Inflate(0.5);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(Color.FromBrightness(0.3));  // dessine le cadre de la page
+				return;
+			}
+
 			double initialWidth = graphics.LineWidth;
 			Transform save = graphics.Transform;
 			Point scale = this.drawingContext.Scale;
 			graphics.ScaleTransform(scale.X, scale.Y, 0, 0);
 			graphics.TranslateTransform(this.drawingContext.OriginX, this.drawingContext.OriginY);
-
+			
 			//	Dessine la grille magnétique dessous.
 			this.DrawGridBackground(graphics, clipRect);
 

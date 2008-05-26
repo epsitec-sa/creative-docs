@@ -4887,7 +4887,7 @@ namespace Epsitec.Common.Document
 			//	Met à jour tout ce qu'il faut après un changement de page (création d'une
 			//	nouvelle page, suppression d'une page, etc.).
 			this.UpdatePageShortNames();
-			this.UpdatePageNumbers();
+			this.UpdatePageAndLayerNumbers();
 		}
 
 		public void UpdatePageShortNames()
@@ -4916,16 +4916,27 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void UpdatePageNumbers()
+		public void UpdatePageAndLayerNumbers()
 		{
-			//	Met à jour les numéros de page de tous les objets du document.
-			int total = this.document.DocumentObjects.Count;
-			for ( int i=0 ; i<total ; i++ )
+			//	Met à jour les numéros de page et de calque de tous les objets du document.
+			int pTotal = this.document.DocumentObjects.Count;
+			for (int p=0; p<pTotal; p++)
 			{
-				Objects.Page page = this.document.DocumentObjects[i] as Objects.Page;
-				foreach ( Objects.Abstract obj in this.document.Deep(page) )
+				Objects.Page page = this.document.DocumentObjects[p] as Objects.Page;
+				page.PageNumber = p;
+
+				int lTotal = page.Objects.Count;
+				for (int l=0; l<lTotal; l++)
 				{
-					obj.PageNumber = i;
+					Objects.Layer layer = page.Objects[l] as Objects.Layer;
+					layer.PageNumber = p;
+					layer.LayerNumber = l;
+
+					foreach (Objects.Abstract obj in this.document.Deep(layer))
+					{
+						obj.PageNumber = p;
+						obj.LayerNumber = l;
+					}
 				}
 			}
 		}
@@ -5185,6 +5196,7 @@ namespace Epsitec.Common.Document
 
 				this.TerminateChangingLayer(rank);
 
+				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyLayersChanged();
@@ -5229,6 +5241,7 @@ namespace Epsitec.Common.Document
 				this.TerminateChangingLayer(rank+1);
 				this.ActiveViewer.UpdateSelector();
 
+				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyLayersChanged();
@@ -5270,6 +5283,7 @@ namespace Epsitec.Common.Document
 
 				this.TerminateChangingLayer(rank+1);
 
+				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyLayersChanged();
@@ -5302,6 +5316,7 @@ namespace Epsitec.Common.Document
 				rank = System.Math.Min(rank, list.Count-1);
 				this.TerminateChangingLayer(rank);
 
+				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
 				this.document.Notifier.NotifyLayersChanged();
@@ -5352,6 +5367,7 @@ namespace Epsitec.Common.Document
 
 				this.TerminateChangingLayer(rankDst);
 
+				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifyLayersChanged();
 				this.OpletQueueValidateAction();
@@ -5382,6 +5398,7 @@ namespace Epsitec.Common.Document
 
 				this.TerminateChangingLayer(rank2);
 
+				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifyLayersChanged();
 				this.OpletQueueValidateAction();
@@ -5410,6 +5427,13 @@ namespace Epsitec.Common.Document
 				this.document.Notifier.NotifyLayerChanged(layer);
 				this.OpletQueueValidateAction();
 			}
+		}
+
+		protected void UpdateLayerAfterChanging()
+		{
+			//	Met à jour tout ce qu'il faut après un changement de calque (création d'un
+			//	nouveau calque, suppression d'un calque, etc.).
+			this.UpdatePageAndLayerNumbers();
 		}
 
 		protected int GetLayerRank(Objects.Abstract search)

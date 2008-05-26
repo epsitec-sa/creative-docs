@@ -277,7 +277,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Construit les formes de l'objet.
 			Path path = this.PathBuild();
 
-			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles;
+			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles && !drawingContext.IsBitmap;
 			bool fillEmpty   = drawingContext != null && drawingContext.FillEmptyPlaceholders;
 
 			int totalShapes = 4;
@@ -506,13 +506,13 @@ namespace Epsitec.Common.Document.Objects
 
 				if (drawingContext != null && drawingContext.FillEmptyPlaceholders)
 				{
-					using (Path path = this.PathBuild ())
+					using (Path path = this.PathBuild())
 					{
-						port.Color = Color.FromAlphaRgb (1.0, 1, 0, 0);
+						port.Color = Color.FromAlphaRgb(1.0, 1, 0, 0);
 						port.LineWidth = 20.0;
 						port.LineJoin = JoinStyle.Miter;
-//						port.PaintSurface (path);  // dessine une surface rouge
-						port.PaintOutline (path);
+//						port.PaintSurface(path);  // dessine une surface rouge
+						port.PaintOutline(path);
 					}
 				}
 			}
@@ -574,13 +574,13 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender;
-				this.textFlow.TextNavigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+				this.textFlow.TextNavigator.GetCursorGeometry(out frame, out cx, out cy, out ascender, out descender, out angle);
 
 				if (frame == this.textFrame)
 				{
-					double tan = System.Math.Tan (System.Math.PI/2.0 - angle);
-					Point c1 = new Point (cx+tan*descender, cy+descender);
-					Point c2 = new Point (cx+tan*ascender, cy+ascender);
+					double tan = System.Math.Tan(System.Math.PI/2.0 - angle);
+					Point c1 = new Point(cx+tan*descender, cy+descender);
+					Point c2 = new Point(cx+tan*ascender, cy+ascender);
 
 					if (!this.textFlow.TextNavigator.HasRealSelection)
 					{
@@ -877,7 +877,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			if (this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null)
+			if (this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null && !this.drawingContext.IsBitmap)
 			{
 				//	Dessine les rectangles correspondant à la sélection.
 				foreach (Drawing.Rectangle rect in selRectList)
@@ -893,7 +893,6 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			//	Dessine le texte.
-
 			if (color != this.cachedColorString)
 			{
 				this.cachedColor = RichColor.Parse(color);

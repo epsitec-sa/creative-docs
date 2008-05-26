@@ -1275,7 +1275,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Constuit les formes de l'objet.
 			Path path = this.PathBuild();
 
-			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles;
+			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles && !drawingContext.IsBitmap;
 
 			int totalShapes = 3;
 			if ( flowHandles )  totalShapes += 2;
@@ -2012,7 +2012,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 
-				if ( this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null )
+				if (this.textFlow.HasActiveTextBox && selRectList != null && this.graphics != null && !this.drawingContext.IsBitmap)
 				{
 					//	Dessine les rectangles correspondant à la sélection (un par caractère).
 					foreach ( Drawing.Rectangle rect in selRectList )

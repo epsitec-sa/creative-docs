@@ -849,18 +849,20 @@ namespace Epsitec.Common.Document
 			{
 				Objects.Abstract page = this.objects[pageRank] as Objects.Abstract;
 
-				if (mode == DirtyMode.All || pageRank ==currentPage)
+				if (mode == DirtyMode.All || pageRank == currentPage)
 				{
 					page.CacheBitmapDirty();
+					this.pageMiniatures.Redraw(pageRank);
 				}
 
 				for (int layerRank=0; layerRank<page.Objects.Count; layerRank++)
 				{
-					Objects.Abstract layer = this.objects[layerRank] as Objects.Abstract;
+					Objects.Abstract layer = page.Objects[layerRank] as Objects.Abstract;
 
 					if (mode == DirtyMode.All || layerRank == currentLayer)
 					{
 						layer.CacheBitmapDirty();
+						this.layerMiniatures.Redraw(layerRank);
 					}
 				}
 			}
@@ -2232,14 +2234,6 @@ namespace Epsitec.Common.Document
 			}
 
 			Objects.Abstract page = drawingContext.RootObject(1);
-
-#if false
-			if (drawingContext.Viewer != null && (drawingContext.Viewer.IsDocumentPreview || drawingContext.Viewer.IsPictogramPreview) && page.CacheBitmap != null)
-			{
-				graphics.PaintImage(page.CacheBitmap, new Rectangle(Point.Zero, drawingContext.ContainerSize));
-				return;
-			}
-#endif
 
 			if ( drawingContext.MasterPageList.Count > 0 )
 			{

@@ -573,14 +573,16 @@ namespace Epsitec.Common.Document.Objects
 		public override void CacheBitmapCreate()
 		{
 			//	Crée le bitmap caché.
+			System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate page #{0}", this.PageNumber));
 			if (this.cacheBitmapSize.IsEmpty)
 			{
 				this.cacheBitmap = null;
 			}
 			else
 			{
-				//?this.cacheBitmap = this.document.Printer.CreateMiniatureBitmap(this.cacheBitmapSize, false, this.PageNumber);
-				this.cacheBitmap = this.document.Printer.CreateMiniatureBitmap(this.cacheBitmapSize, false, 0);
+				Size size = this.cacheBitmapSize;
+				size -= new Size(2, 2);  // laisse un cadre d'un pixel
+				this.cacheBitmap = this.document.Printer.CreateMiniatureBitmap(size, false, this.PageNumber, -1);
 			}
 		}
 		#endregion

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
@@ -195,7 +196,26 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
-		
+
+		#region CacheBitmap
+		public override void CacheBitmapCreate()
+		{
+			//	Crée le bitmap caché.
+			System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate layer #{0}", this.LayerNumber));
+			if (this.cacheBitmapSize.IsEmpty)
+			{
+				this.cacheBitmap = null;
+			}
+			else
+			{
+				Size size = this.cacheBitmapSize;
+				size -= new Size(2, 2);  // laisse un cadre d'un pixel
+				this.cacheBitmap = this.document.Printer.CreateMiniatureBitmap(size, false, this.PageNumber, this.LayerNumber);
+			}
+		}
+		#endregion
+
+	
 		#region OpletType
 		protected void InsertOpletType()
 		{

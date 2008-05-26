@@ -111,23 +111,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public Bitmap CreateMiniatureBitmap(Size sizeHope, bool isModel, int page)
+		public Bitmap CreateMiniatureBitmap(Size sizeHope, bool isModel, int page, int layer)
 		{
-			//	Retourne les données pour l'image bitmap miniature de la première page.
+			//	Retourne les données pour l'image bitmap d'une miniature.
+			//	Si layer == -1, on dessine tous les calques.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = false;
 			drawingContext.IsBitmap = true;
 			drawingContext.GridShow = isModel;
 
-			int pageNumber = this.document.Modifier.PrintablePageRank(page);
-
-			Size pageSize = this.document.GetPageSize(pageNumber);
+			Size pageSize = this.document.GetPageSize(page);
 			double dpix = sizeHope.Width*254/pageSize.Width;
 			double dpiy = sizeHope.Height*254/pageSize.Height;
 			double dpi = System.Math.Min(dpix, dpiy);
 
-			return this.ExportBitmap(drawingContext, pageNumber, dpi, 24, 1, false, false, ExportImageCrop.Page);
+			return this.ExportBitmap(drawingContext, page, layer, dpi, 24, 1, false, false, ExportImageCrop.Page);
 		}
 
 
@@ -1299,7 +1298,7 @@ namespace Epsitec.Common.Document
 				return Res.Strings.Error.BadImage;
 			}
 
-			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, dpi, depth, AA, paintMark, onlySelected, crop);
+			Bitmap bitmap = this.ExportBitmap(drawingContext, pageNumber, -1, dpi, depth, AA, paintMark, onlySelected, crop);
 			
 			if (bitmap == null)
 			{
@@ -1319,7 +1318,7 @@ namespace Epsitec.Common.Document
 			return "";  // ok
 		}
 
-		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop)
+		protected Bitmap ExportBitmap(DrawingContext drawingContext, int pageNumber, int layerNumber, double dpi, int depth, double AA, bool paintMark, bool onlySelected, ExportImageCrop crop)
 		{
 			//	Retourne le bitmap contenant le dessin des objets à exporter.
 			Rectangle pageBox;
@@ -1360,8 +1359,15 @@ namespace Epsitec.Common.Document
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);
 
 			System.Collections.ArrayList layers = this.ComputeLayers(pageNumber);
-			foreach (Objects.Layer layer in layers)
+			for (int l=0; l<layers.Count; l++)
 			{
+				Objects.Layer layer = layers[l] as Objects.Layer;
+
+				if (layerNumber != -1 && l != layerNumber)
+				{
+					continue;
+				}
+
 				Properties.ModColor modColor = layer.PropertyModColor;
 				gfx.PushColorModifier (new ColorModifierCallback(modColor.ModifyColor));
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);

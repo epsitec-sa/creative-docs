@@ -2542,8 +2542,9 @@ namespace Epsitec.Common.Document.Objects
 			this.totalPropertyHandle = src.totalPropertyHandle;
 			this.mark                = src.mark;
 			this.direction           = src.direction;
-			this.isDirtyPageNumber   = src.isDirtyPageNumber;
+			this.isDirtyPageAndLayerNumbers = src.isDirtyPageAndLayerNumbers;
 			this.pageNumber          = src.pageNumber;
+			this.layerNumber         = src.layerNumber;
 
 			this.surfaceAnchor.SetDirty();
 			this.SplitProperties();
@@ -3007,13 +3008,25 @@ namespace Epsitec.Common.Document.Objects
 			}
 			set
 			{
-				this.cacheBitmapSize = value;
+				if (this.cacheBitmapSize != value)
+				{
+					this.cacheBitmapSize = value;
+					this.CacheBitmapDirty();
+				}
 			}
 		}
 
 		public void CacheBitmapDirty()
 		{
 			//	Le bitmap caché n'est plus valide.
+			if (this is Page)
+			{
+				System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapDirty page #{0}", this.PageNumber));
+			}
+			if (this is Layer)
+			{
+				System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapDirty layer #{0}", this.LayerNumber));
+			}
 			this.cacheBitmap = null;
 		}
 
@@ -3335,7 +3348,7 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 
-		#region PageNumber
+		#region PageAndLayerNumbers
 		public int PageNumber
 		{
 			//	Donne le numéro de la page à laquelle appartient l'objet.
@@ -3343,11 +3356,10 @@ namespace Epsitec.Common.Document.Objects
 			//	en comptant les pages maîtres comme les autres.
 			get
 			{
-				if ( this.isDirtyPageNumber )
+				if ( this.isDirtyPageAndLayerNumbers )
 				{
-					this.document.Modifier.UpdatePageNumbers();
-					//?if ( this.isDirtyPageNumber )  return -1;
-					System.Diagnostics.Debug.Assert(this.isDirtyPageNumber == false);
+					this.document.Modifier.UpdatePageAndLayerNumbers();
+					System.Diagnostics.Debug.Assert(this.isDirtyPageAndLayerNumbers == false);
 				}
 
 				return this.pageNumber;
@@ -3356,20 +3368,37 @@ namespace Epsitec.Common.Document.Objects
 			set
 			{
 				this.pageNumber = value;
-				this.isDirtyPageNumber = false;
-				this.UpdatePageNumber();
+				this.isDirtyPageAndLayerNumbers = false;
+				this.UpdatePageAndLayerNumbers();
 			}
 		}
 
-		protected virtual void UpdatePageNumber()
+		public int LayerNumber
 		{
-			//	Met à jour d'autres éléments de l'objet dépendants du numéro de page.
+			//	Donne le numéro du calque auquel appartient l'objet.
+			//	Le numéro de calque est toujours ici l'index 0..n du calque.
+			get
+			{
+				if (this.isDirtyPageAndLayerNumbers)
+				{
+					this.document.Modifier.UpdatePageAndLayerNumbers();
+					System.Diagnostics.Debug.Assert(this.isDirtyPageAndLayerNumbers == false);
+				}
+
+				return this.layerNumber;
+			}
+
+			set
+			{
+				this.layerNumber = value;
+				this.isDirtyPageAndLayerNumbers = false;
+				this.UpdatePageAndLayerNumbers();
+			}
 		}
 
-		public void SetDirtyPageNumber()
+		protected virtual void UpdatePageAndLayerNumbers()
 		{
-			//	Indique que le numéro de page n'est probablement plus valable.
-			this.isDirtyPageNumber = true;
+			//	Met à jour d'autres éléments de l'objet dépendants du numéro de page.
 		}
 		#endregion
 
@@ -3730,8 +3759,9 @@ namespace Epsitec.Common.Document.Objects
 		protected SurfaceAnchor					surfaceAnchor;
 		protected UndoableList					aggregates = null;
 
-		protected bool							isDirtyPageNumber = true;
+		protected bool							isDirtyPageAndLayerNumbers = true;
 		protected int							pageNumber = -1;
+		protected int							layerNumber = -1;
 		protected int							debugId;
 
 		protected Bitmap						cacheBitmap;
