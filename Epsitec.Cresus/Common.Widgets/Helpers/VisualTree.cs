@@ -629,6 +629,11 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static bool IsAncestor(Visual visual, Visual ancestor)
 		{
+			if (visual == null)
+			{
+				return false;
+			}
+
 			for (;;)
 			{
 				Visual parent = visual.Parent;

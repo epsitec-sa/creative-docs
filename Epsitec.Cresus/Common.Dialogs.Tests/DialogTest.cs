@@ -362,6 +362,11 @@ namespace Epsitec.Common.Dialogs
 
 			#region IEntityResolver Members
 
+			public IEnumerable<AbstractEntity> Resolve(Druid entityId, string criteria)
+			{
+				yield break;
+			}
+			
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
 				LocalitéEntity loc  = AbstractEntity.Resolve<LocalitéEntity> (template);

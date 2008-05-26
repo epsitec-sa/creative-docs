@@ -117,6 +117,18 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets the active placeholder.
+		/// </summary>
+		/// <value>The active placeholder.</value>
+		public AbstractPlaceholder				ActivePlaceholder
+		{
+			get
+			{
+				return this.activePlaceholder;
+			}
+		}
+
+		/// <summary>
 		/// Gets or sets the default suggestion for the initial search. This
 		/// is used by the <c>Cresus.Core</c> project to make sure that after
 		/// a deserialization, the proper suggestion will be hilited in the
@@ -151,16 +163,26 @@ namespace Epsitec.Common.Dialogs
 		{
 			using (this.SuspendSearchHandler ())
 			{
+				this.searchCriteria = null;
+				this.searchEntityId = Druid.Empty;
+
 				foreach (SearchContext context in this.searchContexts)
 				{
 					context.Clear ();
-					context.Resolve (this.entityResolver);
+					context.Resolve (this.entityResolver, Druid.Empty, null);
 					context.Dispose ();
 				}
 
 				this.searchContexts.Clear ();
 				this.ActivateSearchContext (null);
 			}
+		}
+
+		public void SetSearchCriteria(Druid searchEntityId, string searchCriteria)
+		{
+			this.searchEntityId = searchEntityId;
+			this.searchCriteria = searchCriteria;
+			this.ClearActiveSuggestion ();
 		}
 
 		public void ClearActiveSuggestion()
@@ -649,7 +671,7 @@ namespace Epsitec.Common.Dialogs
 				if ((this.activeSearchContext != null) &&
 					(this.entityResolver != null))
 				{
-					this.activeSearchContext.Resolve (this.entityResolver);
+					this.activeSearchContext.Resolve (this.entityResolver, this.searchEntityId, this.searchCriteria);
 				}
 
 				this.OnResolved ();
@@ -1200,27 +1222,6 @@ namespace Epsitec.Common.Dialogs
 				return this.FindNodeIndex (placeholder) < 0 ? false : true;
 			}
 
-			public void Resolve(IEntityResolver entityResolver)
-			{
-				AbstractEntity template = this.searchTemplate;
-				
-				this.resolverResult = EntityResolver.Resolve (entityResolver, template);
-
-				AbstractEntity suggestion = this.searchController.defaultSuggestion ?? this.activeSuggestion ?? this.GetDefaultSuggestion ();
-
-				this.searchController.defaultSuggestion = null;
-				
-				if ((suggestion != null) &&
-					(this.resolverResult.AllResults.Contains (suggestion)))
-				{
-					this.SetSuggestion (suggestion);
-				}
-				else
-				{
-					this.SetSuggestion (this.resolverResult.FirstResult);
-				}
-			}
-
 			#region IDisposable Members
 
 			public void Dispose()
@@ -1330,6 +1331,40 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			#endregion
+
+			/// <summary>
+			/// Searches the associated collection using the specified resolver.
+			/// </summary>
+			/// <param name="entityResolver">The resolver.</param>
+			/// <param name="searchEntityId">The search entity id.</param>
+			/// <param name="searchCriteria">The search criteria.</param>
+			public void Resolve(IEntityResolver entityResolver, Druid searchEntityId, string searchCriteria)
+			{
+				AbstractEntity template = this.searchTemplate;
+
+				if (string.IsNullOrEmpty (searchCriteria))
+				{
+					this.resolverResult = EntityResolver.Resolve (entityResolver, template);
+				}
+				else
+				{
+					this.resolverResult = EntityResolver.Resolve (entityResolver, searchEntityId, searchCriteria);
+				}
+
+				AbstractEntity suggestion = this.searchController.defaultSuggestion ?? this.activeSuggestion ?? this.GetDefaultSuggestion ();
+
+				this.searchController.defaultSuggestion = null;
+
+				if ((suggestion != null) &&
+					(this.resolverResult.AllResults.Contains (suggestion)))
+				{
+					this.SetSuggestion (suggestion);
+				}
+				else
+				{
+					this.SetSuggestion (this.resolverResult.FirstResult);
+				}
+			}
 
 			/// <summary>
 			/// Activates the specified context by making all its placeholders
@@ -1543,5 +1578,7 @@ namespace Epsitec.Common.Dialogs
 		private UI.Panel						dialogPanel;
 		private DialogDataEventArgs				dialogDataEventArgsCache;
 		private AbstractEntity					defaultSuggestion;
+		private Druid							searchEntityId;
+		private string							searchCriteria;
 	}
 }

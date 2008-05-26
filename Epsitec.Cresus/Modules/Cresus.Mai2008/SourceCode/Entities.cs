@@ -44,19 +44,19 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		///	designer:fld/9VA/9VA1
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[9VA1]")]
-		public global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity AdresseFacturation
+		public global::Epsitec.Cresus.Mai2008.Entities.ClientEntity AdresseFacturation
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ("[9VA1]");
+				return this.GetField<global::Epsitec.Cresus.Mai2008.Entities.ClientEntity> ("[9VA1]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity oldValue = this.AdresseFacturation;
+				global::Epsitec.Cresus.Mai2008.Entities.ClientEntity oldValue = this.AdresseFacturation;
 				if (oldValue != value)
 				{
 					this.OnAdresseFacturationChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity> ("[9VA1]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Mai2008.Entities.ClientEntity> ("[9VA1]", oldValue, value);
 					this.OnAdresseFacturationChanged (oldValue, value);
 				}
 			}
@@ -86,8 +86,8 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		
 		partial void OnObjetChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnObjetChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnAdresseFacturationChanging(global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity newValue);
-		partial void OnAdresseFacturationChanged(global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity oldValue, global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity newValue);
+		partial void OnAdresseFacturationChanging(global::Epsitec.Cresus.Mai2008.Entities.ClientEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.ClientEntity newValue);
+		partial void OnAdresseFacturationChanged(global::Epsitec.Cresus.Mai2008.Entities.ClientEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.ClientEntity newValue);
 		partial void OnLignesChanging(global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity newValue);
 		partial void OnLignesChanged(global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity oldValue, global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity newValue);
 		

@@ -270,6 +270,41 @@ namespace Epsitec.Cresus.Core
 
 			#region IEntityResolver Members
 
+			public IEnumerable<AbstractEntity> Resolve(Druid entityId, string criteria)
+			{
+				string[] keywords = criteria.Split (' ');
+
+				foreach (var item in this.GetEntities (entityId))
+				{
+					string[] set = item.DumpFlatData ().Split (' ', '\n', '\t');
+					bool hit = false;
+
+					foreach (string keyword in keywords)
+					{
+						hit = false;
+
+						foreach (string word in set)
+						{
+							if (word.Contains (keyword))
+							{
+								hit = true;
+								break;
+							}
+						}
+
+						if (hit == false)
+						{
+							break;
+						}
+					}
+
+					if (hit)
+					{
+						yield return item;
+					}
+				}
+			}
+
 			public IEnumerable<AbstractEntity> Resolve(AbstractEntity template)
 			{
 				Druid id = template.GetEntityStructuredTypeId ();

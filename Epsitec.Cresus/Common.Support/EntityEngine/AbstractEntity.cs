@@ -135,7 +135,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		public string Dump()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, 0, new HashSet<AbstractEntity> ());
+			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), true);
+			return buffer.ToString ();
+		}
+
+		public string DumpFlatData()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), false);
 			return buffer.ToString ();
 		}
 
@@ -199,7 +206,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history)
+		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history, bool includeLabels)
 		{
 			string indent = new string (' ', level*2);
 			
@@ -218,46 +225,64 @@ namespace Epsitec.Common.Support.EntityEngine
 					switch (this.InternalGetFieldRelation (id))
 					{
 						case FieldRelation.None:
-							buffer.AppendFormat ("{0}{1}: {2}\n", indent, name, value == null ? "null" : value.ToString ());
+							buffer.AppendFormat (includeLabels ? "{0}{1}: {2}\n" : "{2}\n", indent, name, value == null ? "null" : value.ToString ());
 							break;
 
 						case FieldRelation.Reference:
 							if (child == null)
 							{
-								buffer.AppendFormat ("{0}{1}: null\n", indent, name);
+								buffer.AppendFormat (includeLabels ? "{0}{1}: null\n" : "\n", indent, name);
 							}
 							else
 							{
-								buffer.AppendFormat ("{0}{1}:\n", indent, name);
-								child.Dump (buffer, level+1, history);
+								if (includeLabels)
+								{
+									buffer.AppendFormat ("{0}{1}:\n", indent, name);
+								}
+								child.Dump (buffer, level+1, history, includeLabels);
 							}
 							break;
 
 						case FieldRelation.Collection:
-							buffer.AppendFormat ("{0}{1}:\n", indent, name);
-							buffer.AppendFormat ("{0}{\n", indent, name);
+							if (includeLabels)
+							{
+								buffer.AppendFormat ("{0}{1}:\n", indent, name);
+								buffer.AppendFormat ("{0}{\n", indent, name);
+							}
 							int index = 0;
 							foreach (object item in (System.Collections.IList) value)
 							{
 								child = item as AbstractEntity;
 								if (child == null)
 								{
-									buffer.AppendFormat ("{0}  {1}: null\n", indent, index);
+									if (includeLabels)
+									{
+										buffer.AppendFormat ("{0}  {1}: null\n", indent, index);
+									}
 								}
 								else
 								{
-									buffer.AppendFormat ("{0}  {1}:\n", indent, index);
-									child.Dump (buffer, level+2, history);
+									if (includeLabels)
+									{
+										buffer.AppendFormat ("{0}  {1}:\n", indent, index);
+									}
+									child.Dump (buffer, level+2, history, includeLabels);
 								}
 							}
-							buffer.AppendFormat ("{0}}\n", indent, name);
+							if (includeLabels)
+							{
+								buffer.AppendFormat ("{0}}\n", indent, name);
+							}
 							break;
 					}
 				}
 			}
 			else
 			{
-				buffer.AppendFormat ("{0}--> ...", indent);
+				if (includeLabels)
+				{
+					buffer.AppendFormat ("{0}--> ...", indent);
+				}
 			}
 		}
 

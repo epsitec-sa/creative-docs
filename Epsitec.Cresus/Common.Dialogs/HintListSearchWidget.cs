@@ -49,6 +49,16 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the associated hint list widget.
+		/// </summary>
+		/// <value>The hint list widget.</value>
+		public HintListWidget HintListWidget
+		{
+			get;
+			internal set;
+		}
+
 
 		/// <summary>
 		/// Defines the source widget which has delegated this search widget to
@@ -123,6 +133,24 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+		protected override bool PostProcessMessage(Message message, Point pos)
+		{
+			if (this.HintListWidget != null)
+			{
+				switch (message.MessageType)
+				{
+					case MessageType.KeyDown:
+						if (this.HintListWidget.Navigate (message))
+						{
+							message.Handled = true;
+						}
+						break;
+				}
+			}
+			
+			return base.PostProcessMessage (message, pos);
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			Rectangle frame = this.Client.Bounds;
@@ -153,6 +181,19 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
+
+		public event EventHandler<DependencyPropertyChangedEventArgs> ValueChanged
+		{
+			add
+			{
+				this.AddEventHandler (HintListSearchWidget.ValueProperty, value);
+			}
+			remove
+			{
+				this.RemoveEventHandler (HintListSearchWidget.ValueProperty, value);
+			}
+		}
+		
 		
 		private static object GetValue(DependencyObject obj)
 		{

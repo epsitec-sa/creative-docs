@@ -30,5 +30,23 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return null;
 		}
+
+		/// <summary>
+		/// Finds the most appropriate entity based on the specified resolver
+		/// and search criteria.
+		/// </summary>
+		/// <param name="resolver">The entity resolver.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="criteria">The search criteria.</param>
+		/// <returns>The most appropriate entity or <c>null</c>.</returns>
+		public static EntityResolverResult Resolve(IEntityResolver resolver, Druid entityId, string criteria)
+		{
+			if (resolver != null)
+			{
+				return new EntityResolverResult (resolver.Resolve (entityId, criteria));
+			}
+
+			return null;
+		}
 	}
 }

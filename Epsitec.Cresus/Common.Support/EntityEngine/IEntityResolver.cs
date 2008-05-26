@@ -17,5 +17,13 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="template">The template.</param>
 		/// <returns>The collection of entities.</returns>
 		IEnumerable<AbstractEntity> Resolve(AbstractEntity template);
+
+		/// <summary>
+		/// Gets a collection of entities matching the specified criteria.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="criteria">The search criteria.</param>
+		/// <returns>The collection of entities.</returns>
+		IEnumerable<AbstractEntity> Resolve(Druid entityId, string criteria);
 	}
 }

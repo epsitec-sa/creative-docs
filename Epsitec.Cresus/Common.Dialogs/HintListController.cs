@@ -264,6 +264,8 @@ namespace Epsitec.Common.Dialogs
 				this.hintListWidget = new HintListWidget ();
 				this.hintListWidget.PreferredWidth = 200;
 				this.hintListWidget.Header.ContentType = this.contentType;
+				this.hintListWidget.Header.SearchWidget.HintListWidget = this.hintListWidget;
+				this.hintListWidget.Header.SearchWidget.ValueChanged += this.HandleHintListSearchWidgetValueChanged;
 				this.hintListWidget.CurrentItemChanged += this.HandleHintListWidgetCurrentItemChanged;
 			}
 
@@ -291,6 +293,17 @@ namespace Epsitec.Common.Dialogs
 			if (context != null)
 			{
 				context.SetSuggestion (item);
+			}
+		}
+
+		private void HandleHintListSearchWidgetValueChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			UI.ReferencePlaceholder reference = this.searchController.ActivePlaceholder as UI.ReferencePlaceholder;
+
+			if ((reference != null) &&
+				(reference.EntityType.CaptionId.IsValid))
+			{
+				this.searchController.SetSearchCriteria (reference.EntityType.CaptionId, e.NewValue as string);
 			}
 		}
 
