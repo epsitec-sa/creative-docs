@@ -412,16 +412,16 @@ namespace Epsitec.Common.Dialogs
 		{
 			ReferencePlaceholder placeholder = e.NewValue as ReferencePlaceholder;
 
-			if (placeholder != null)
+			if (placeholder == null)
 			{
-#if false
-				this.hintListWidget.SearchWidget.AttachSourceWidget (placeholder);
-				this.hintListWidget.SearchWidget.StealFocus ();
-#endif
-			}
-			else
-			{
-				this.hintListWidget.SearchWidget.DetachSourceWidget ();
+				if (this.hintListWidget.SearchWidget.DetachSourceWidget ())
+				{
+					//	Remove the search criteria, since the keyboard focus left the
+					//	reference placeholder; omitting to do so would produce incorrect
+					//	matches the next time DialogSearchController called the resolver.
+
+					this.searchController.SetSearchCriteria (Druid.Empty, null);
+				}
 			}
 		}
 		

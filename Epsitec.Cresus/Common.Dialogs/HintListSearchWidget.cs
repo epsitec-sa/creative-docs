@@ -87,9 +87,18 @@ namespace Epsitec.Common.Dialogs
 		/// <summary>
 		/// Detaches the source widget.
 		/// </summary>
-		public void DetachSourceWidget()
+		/// <returns><c>true</c> if a source widget was detached; otherwise, <c>false</c>.</returns>
+		public bool DetachSourceWidget()
 		{
-			this.AttachSourceWidget (null);
+			if (this.sourceWidget == null)
+			{
+				return false;
+			}
+			else
+			{
+				this.AttachSourceWidget (null);
+				return true;
+			}
 		}
 
 		/// <summary>

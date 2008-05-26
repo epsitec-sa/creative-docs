@@ -14,6 +14,33 @@ namespace Epsitec.Cresus.AddressBook
 		
 		//	Code mapping for 'String' resources
 		
+		public static class Strings
+		{
+			
+			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
+			{
+				string field = string.Join (".", path);
+				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
+			}
+			
+			#region Internal Support Code
+			
+			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
+			{
+				string field = string.Join (".", path);
+				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
+			}
+			
+			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
+			{
+				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);
+			}
+			
+			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
+			
+			#endregion
+		}
+		
 		//	Code mapping for 'Form' resources
 		
 		//	Code mapping for 'Form' resources

@@ -1057,10 +1057,21 @@ namespace Epsitec.Common.Dialogs
 
 			public void AnalysePlaceholderGraph(Widgets.Widget root, bool initialSearchValues)
 			{
-				AbstractEntity entityData = this.searchRootPath.IsEmpty ? this.searchRootData : this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
+				Druid entityId = this.searchRootData.GetEntityStructuredTypeId ();
 				EntityContext  context = this.searchController.DialogData.Data.GetEntityContext ();
+				AbstractEntity entityData;
+				
+				if (this.searchRootPath.IsEmpty)
+				{
+					entityData = this.searchRootData;
+				}
+				else
+				{
+					entityId   = this.searchRootPath.NavigateReadField (this.searchRootData).TypeId;
+					entityData = this.searchRootPath.NavigateRead (this.searchRootData) as AbstractEntity;
+				}
 
-				this.searchTemplate = context.CreateSearchEntity (entityData.GetEntityStructuredTypeId ());
+				this.searchTemplate = context.CreateSearchEntity (entityId);
 				this.searchTemplate.DisableCalculations ();
 
 				foreach (Node node in this.GetPlaceholderGraph (root))
@@ -1068,7 +1079,8 @@ namespace Epsitec.Common.Dialogs
 					this.nodes.Add (node);
 					node.Placeholder.PostProcessing += this.HandlePlaceholderPostProcessing;
 
-					if (initialSearchValues)
+					if ((initialSearchValues) &&
+						(entityData != null))
 					{
 						node.Path.NavigateWrite (this.searchTemplate, node.Path.NavigateRead (entityData));
 					}
@@ -1318,7 +1330,19 @@ namespace Epsitec.Common.Dialogs
 
 						if (reference != null)
 						{
-							reference.Value = suggestion;
+							if (suggestion == null)
+							{
+								EntityContext context = this.searchController.DialogData.EntityContext;
+
+								using (context.SuspendConstraintChecking ())
+								{
+									reference.Value = null;
+								}
+							}
+							else
+							{
+								reference.Value = suggestion;
+							}
 						}
 					}
 
