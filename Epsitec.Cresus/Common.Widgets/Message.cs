@@ -137,6 +137,12 @@ namespace Epsitec.Common.Widgets
 			get { return this.force_capture; }
 			set { this.force_capture = value; }
 		}
+
+		public bool							CancelFocus
+		{
+			get;
+			set;
+		}
 		
 		
 		public MessageType					MessageType

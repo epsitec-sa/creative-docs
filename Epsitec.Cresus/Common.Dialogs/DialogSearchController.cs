@@ -380,8 +380,6 @@ namespace Epsitec.Common.Dialogs
 			EntityFieldPath oldPath = DialogSearchController.GetPlaceholderPath (oldPlaceholder);
 			EntityFieldPath newPath = DialogSearchController.GetPlaceholderPath (newPlaceholder);
 
-			this.OnDialogFocusChanged (new DialogFocusEventArgs (oldPath, newPath));
-
 			if ((this.activeSearchContext != null) &&
 				(this.activeSearchContext.ContainsNode (newPlaceholder)))
 			{
@@ -392,6 +390,8 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.UpdateSearchTemplate (newPlaceholder, UndefinedValue.Value);
 			}
+
+			this.OnDialogFocusChanged (new DialogFocusEventArgs (oldPath, newPath));
 		}
 
 		/// <summary>

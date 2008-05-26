@@ -135,14 +135,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		public string Dump()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), true);
+			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), null, true);
 			return buffer.ToString ();
 		}
 
-		public string DumpFlatData()
+		public string DumpFlatData(System.Predicate<StructuredTypeField> filter)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), false);
+			this.Dump (buffer, 0, new HashSet<AbstractEntity> (), filter, false);
 			return buffer.ToString ();
 		}
 
@@ -206,7 +206,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 
-		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history, bool includeLabels)
+		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history, System.Predicate<StructuredTypeField> filter, bool includeLabels)
 		{
 			string indent = new string (' ', level*2);
 			
@@ -217,6 +217,13 @@ namespace Epsitec.Common.Support.EntityEngine
 				foreach (string id in this.context.GetEntityFieldIds (this))
 				{
 					StructuredTypeField field = this.context.GetStructuredTypeField (this, id);
+
+					if ((filter != null) &&
+						(filter (field) == false))
+					{
+						continue;
+					}
+
 					Caption caption = manager.GetCaption (field.CaptionId);
 					string name = caption.Name;
 					object value = this.DynamicGetField (id);
@@ -239,7 +246,7 @@ namespace Epsitec.Common.Support.EntityEngine
 								{
 									buffer.AppendFormat ("{0}{1}:\n", indent, name);
 								}
-								child.Dump (buffer, level+1, history, includeLabels);
+								child.Dump (buffer, level+1, history, filter, includeLabels);
 							}
 							break;
 
@@ -266,7 +273,7 @@ namespace Epsitec.Common.Support.EntityEngine
 									{
 										buffer.AppendFormat ("{0}  {1}:\n", indent, index);
 									}
-									child.Dump (buffer, level+2, history, includeLabels);
+									child.Dump (buffer, level+2, history, filter, includeLabels);
 								}
 							}
 							if (includeLabels)

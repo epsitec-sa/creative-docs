@@ -436,7 +436,7 @@ namespace Epsitec.Common.Widgets
 			}
 			private set
 			{
-				if (this.focused_widget != value)
+				 if (this.focused_widget != value)
 				{
 					Widget old_focus = this.focused_widget;
 					Widget new_focus = value;
@@ -2245,7 +2245,8 @@ namespace Epsitec.Common.Widgets
 							this.window.Capture = false;
 						}
 						
-						if (consumer.AutoFocus)
+						if ((consumer.AutoFocus) &&
+							(message.CancelFocus == false))
 						{
 							this.FocusWidget (consumer);
 						}

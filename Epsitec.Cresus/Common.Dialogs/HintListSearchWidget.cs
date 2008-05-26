@@ -61,11 +61,11 @@ namespace Epsitec.Common.Dialogs
 
 
 		/// <summary>
-		/// Defines the source widget which has delegated this search widget to
-		/// interact with the user instead of itself.
+		/// Attaches a source widget, which has delegated us to interact with
+		/// the user instead of itself. This clears the text field.
 		/// </summary>
 		/// <param name="widget">The source widget.</param>
-		public void DefineSourceWidget(Widget widget)
+		public void AttachSourceWidget(Widget widget)
 		{
 			if (this.sourceWidget != widget)
 			{
@@ -79,7 +79,17 @@ namespace Epsitec.Common.Dialogs
 				{
 					this.InternalState |= InternalState.Focusable;
 				}
+
+				this.Value = "";
 			}
+		}
+
+		/// <summary>
+		/// Detaches the source widget.
+		/// </summary>
+		public void DetachSourceWidget()
+		{
+			this.AttachSourceWidget (null);
 		}
 
 		/// <summary>

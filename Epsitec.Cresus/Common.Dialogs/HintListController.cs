@@ -28,6 +28,7 @@ namespace Epsitec.Common.Dialogs
 			this.searchController = new DialogSearchController ();
 			this.searchController.SuggestionChanged += this.HandleSearchControllerSuggestionChanged;
 			this.searchController.DialogDataChanged += this.HandleSearchControllerDialogDataChanged;
+			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
 			this.searchController.PlaceholderPostProcessing += this.HandleSearchControllerPlaceholderPostProcessing;
 			this.searchController.Resolved += this.HandleSearchControllerResolved;
 			this.searchController.SearchContextChanged += this.HandleSearchControllerSearchContextChanged;
@@ -180,8 +181,12 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.searchController.SuggestionChanged -= this.HandleSearchControllerSuggestionChanged;
 				this.searchController.DialogDataChanged -= this.HandleSearchControllerDialogDataChanged;
+				this.searchController.DialogFocusChanged -= this.HandleSearchControllerDialogFocusChanged;
 				this.searchController.PlaceholderPostProcessing -= this.HandleSearchControllerPlaceholderPostProcessing;
 				this.searchController.Resolved -= this.HandleSearchControllerResolved;
+				this.searchController.SearchContextChanged -= this.HandleSearchControllerSearchContextChanged;
+				this.searchController.ActivePlaceholderChanged -= this.HandleSearchControllerActivePlaceholderChanged;
+				
 				DialogSearchController.GlobalSearchContextChanged -= this.HandleGlobalSearchContextChanged;
 			}
 
@@ -409,8 +414,14 @@ namespace Epsitec.Common.Dialogs
 
 			if (placeholder != null)
 			{
-				this.hintListWidget.SearchWidget.DefineSourceWidget (placeholder);
+#if false
+				this.hintListWidget.SearchWidget.AttachSourceWidget (placeholder);
 				this.hintListWidget.SearchWidget.StealFocus ();
+#endif
+			}
+			else
+			{
+				this.hintListWidget.SearchWidget.DetachSourceWidget ();
 			}
 		}
 		
@@ -437,6 +448,17 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleSearchControllerDialogDataChanged(object sender, DialogDataEventArgs e)
 		{
+		}
+
+		private void HandleSearchControllerDialogFocusChanged(object sender, DialogFocusEventArgs e)
+		{
+			ReferencePlaceholder placeholder = this.searchController.ActivePlaceholder as ReferencePlaceholder;
+
+			if (placeholder != null)
+			{
+				this.hintListWidget.SearchWidget.AttachSourceWidget (placeholder);
+				this.hintListWidget.SearchWidget.StealFocus ();
+			}
 		}
 
 		private void HandleSearchControllerPlaceholderPostProcessing(object sender, MessageEventArgs e)

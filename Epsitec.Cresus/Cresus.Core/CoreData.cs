@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Core
 
 				foreach (var item in this.GetEntities (entityId))
 				{
-					string[] set = item.DumpFlatData ().Split (' ', '\n', '\t');
+					string[] set = item.DumpFlatData (field => field.Source == FieldSource.Value).Split (' ', '\n', '\t');
 					bool hit = false;
 
 					foreach (string keyword in keywords)

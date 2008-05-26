@@ -1150,6 +1150,7 @@ namespace Epsitec.Common.Widgets
 				//	soit le type de gestion de focus actif (AutoFocus, etc.).
 
 				this.Focus ();
+				message.CancelFocus = true;
 			}
 
 			if (this.IsModal)

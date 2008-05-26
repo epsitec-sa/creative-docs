@@ -210,7 +210,14 @@ namespace Epsitec.Common.Types
 		/// <returns>The escaped text.</returns>
 		public static string Escape(string text)
 		{
-			return Converters.TextConverter.ConvertToTaggedText (text);
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			else
+			{
+				return Converters.TextConverter.ConvertToTaggedText (text);
+			}
 		}
 
 		/// <summary>
@@ -221,7 +228,14 @@ namespace Epsitec.Common.Types
 		/// <returns>The source text.</returns>
 		public static string Unescape(string text)
 		{
-			return Converters.TextConverter.ConvertToSimpleText (text);
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			else
+			{
+				return Converters.TextConverter.ConvertToSimpleText (text);
+			}
 		}
 		
 		#region Converter Class
