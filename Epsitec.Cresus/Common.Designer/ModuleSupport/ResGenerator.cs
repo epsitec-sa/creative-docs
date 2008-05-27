@@ -1005,7 +1005,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 			formatter.WriteBeginMethod (CodeHelper.PublicStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(params string[] path)");
 			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
-			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);");
+			formatter.WriteCodeLine (@"return global::Epsitec.Common.Types.FormattedText.Parse (_stringsBundle[field].AsString);");
 			formatter.WriteEndMethod ();
 			
 			formatter.WriteCodeLine ();
@@ -1014,11 +1014,11 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			formatter.WriteCodeLine ();
 			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)");
 			formatter.WriteCodeLine (@"string field = string.Join (""."", path);");
-			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);");
+			formatter.WriteCodeLine (@"return global::Epsitec.Common.Types.FormattedText.Parse (_stringsBundle[field].AsString);");
 			formatter.WriteEndMethod ();
 			formatter.WriteCodeLine ();
 			formatter.WriteBeginMethod (CodeHelper.PrivateStaticMethodAttributes, "global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)");
-			formatter.WriteCodeLine (@"return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);");
+			formatter.WriteCodeLine (@"return global::Epsitec.Common.Types.FormattedText.Parse (_stringsBundle[druid].AsString);");
 			formatter.WriteEndMethod ();
 			formatter.WriteCodeLine ();
 			formatter.WriteField (CodeHelper.PrivateStaticReadOnlyFieldAttributes,

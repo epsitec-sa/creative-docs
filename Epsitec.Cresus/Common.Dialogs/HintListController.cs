@@ -209,7 +209,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			this.hintListWidget.Header.Enable = (this.searchController.ActiveSearchContext == null) ? false : true;
-			this.hintListWidget.Header.FormattedText = new FormattedText (title);
+			this.hintListWidget.Header.FormattedText = FormattedText.Parse (title);
 		}
 
 		/// <summary>

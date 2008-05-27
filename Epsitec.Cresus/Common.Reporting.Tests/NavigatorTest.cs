@@ -151,11 +151,11 @@ namespace Epsitec.Common.Reporting
 
 			Settings.VectorSetting tableVectorSetting = new Settings.VectorSetting ()
 			{
-				new Settings.VectorValueSetting () { Id = "2nd_name", Title = "Nom" },
-				new Settings.VectorValueSetting () { Id = "1st_name", Title = "Prénom" },
+				new Settings.VectorValueSetting () { Id = "2nd_name", Title = (FormattedText) "Nom" },
+				new Settings.VectorValueSetting () { Id = "1st_name", Title = (FormattedText) "Prénom" },
 			};
 
-			Settings.CollectionSetting tableCollectionSetting = new Settings.CollectionSetting () { Title = "Employés" };
+			Settings.CollectionSetting tableCollectionSetting = new Settings.CollectionSetting () { Title = (FormattedText) "Employés" };
 
 			context.DefineVectorSetting ("table", tableVectorSetting);
 			context.DefineCollectionSetting ("table", tableCollectionSetting);
@@ -245,13 +245,13 @@ namespace Epsitec.Common.Reporting
 
 			Settings.VectorSetting tableVectorSetting = new Settings.VectorSetting ()
 			{
-				new Settings.VectorValueSetting () { Id = "2nd_name", Title = "Nom" },
-				new Settings.VectorValueSetting () { Id = "1st_name", Title = "Prénom" },
+				new Settings.VectorValueSetting () { Id = "2nd_name", Title = (FormattedText) "Nom" },
+				new Settings.VectorValueSetting () { Id = "1st_name", Title = (FormattedText) "Prénom" },
 			};
 
 			Settings.CollectionSetting tableCollectionSetting = new Settings.CollectionSetting ()
 			{
-				Title = "Employés"
+				Title = (FormattedText) "Employés"
 			};
 
 			context.DefineVectorSetting ("table", tableVectorSetting);

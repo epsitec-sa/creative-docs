@@ -228,8 +228,8 @@ namespace Epsitec.Common.Types
 		{
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
-			Assert.AreEqual ("Abc", Converters.AutomaticValueConverter.Instance.Convert (new FormattedText ("Abc"), typeof (string), null, culture));
-			Assert.AreEqual (new FormattedText ("B&amp;B"), Converters.AutomaticValueConverter.Instance.Convert ("B&amp;B", typeof (FormattedText), null, culture));
+			Assert.AreEqual ("Abc", Converters.AutomaticValueConverter.Instance.Convert (FormattedText.Parse ("Abc"), typeof (string), null, culture));
+			Assert.AreEqual (FormattedText.Parse ("B&amp;B"), Converters.AutomaticValueConverter.Instance.Convert ("B&amp;B", typeof (FormattedText), null, culture));
 			
 			Assert.AreEqual (InvalidValue.Value, Converters.AutomaticValueConverter.Instance.Convert ("abc", typeof (int), null, culture));
 			Assert.AreEqual (10, Converters.AutomaticValueConverter.Instance.Convert ("10", typeof (int), null, culture));

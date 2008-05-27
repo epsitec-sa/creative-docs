@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Database
 
 			Assert.AreEqual ("Hello", obj);
 
-			val = new FormattedText ("Hello &amp; bye");
+			val = FormattedText.Parse ("Hello &amp; bye");
 			obj = TypeConverter.ConvertFromSimpleType (val, DbSimpleType.String, null);
 
 			Assert.AreEqual ("Hello &amp; bye", obj);

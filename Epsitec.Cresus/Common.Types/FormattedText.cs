@@ -16,7 +16,7 @@ namespace Epsitec.Common.Types
 		/// Initializes a new instance of the <see cref="FormattedText"/> structure.
 		/// </summary>
 		/// <param name="text">The formatted text.</param>
-		public FormattedText(string text)
+		private FormattedText(string text)
 		{
 			this.text = text;
 		}
@@ -126,6 +126,8 @@ namespace Epsitec.Common.Types
 			return new FormattedText (text);
 		}
 
+		public static readonly FormattedText Empty = new FormattedText ("");
+
 		/// <summary>
 		/// Performs an implicit conversion from type <see cref="string"/> to
 		/// type <see cref="FormattedText"/>. The source text will be escaped
@@ -133,7 +135,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="text">The source text.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static implicit operator FormattedText(string text)
+		public static explicit operator FormattedText(string text)
 		{
 			return new FormattedText (FormattedText.Escape (text));
 		}

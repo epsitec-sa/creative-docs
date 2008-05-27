@@ -157,7 +157,7 @@ namespace Epsitec.Common.Dialogs
 					return FormattedText.Parse (@"Liste des fiches<br/><font size=""120%""><b>«{0}»</b></font>");
 			}
 
-			return "{0}";
+			return FormattedText.Parse ("{0}");
 		}
 
 		

@@ -57,7 +57,7 @@ namespace Epsitec.Common.UI.Controllers
 
 			if (entity == null)
 			{
-				this.field.FormattedText = "";
+				this.field.FormattedText = FormattedText.Empty;
 			}
 			else
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.UI.Controllers
 				data = data.Trim ();
 				data = data.Replace ("\n", ", ");
 
-				this.field.FormattedText = data;
+				this.field.FormattedText = (FormattedText) data;
 			}
 		}
 

@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core
 			article3.Numéro = "B.HOME";
 			article3.Prix = 39.00M;
 
-			facture.Objet = new FormattedText ("Crésus Comptabilité <i>Pro</i>");
+			facture.Objet = FormattedText.Parse ("Crésus Comptabilité <i>Pro</i>");
 			facture.AdresseFacturation = personnes[100];
 			facture.Lignes.Add (ligne1);
 			facture.Lignes.Add (ligne2);
