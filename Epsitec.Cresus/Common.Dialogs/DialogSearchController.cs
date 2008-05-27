@@ -180,6 +180,12 @@ namespace Epsitec.Common.Dialogs
 
 		public void SetSearchCriteria(Druid searchEntityId, string searchCriteria)
 		{
+			if ((this.searchEntityId == searchEntityId) &&
+				(this.searchCriteria == searchCriteria))
+			{
+				return;
+			}
+
 			this.searchEntityId = searchEntityId;
 			this.searchCriteria = searchCriteria;
 			this.ClearActiveSuggestion ();
@@ -345,12 +351,14 @@ namespace Epsitec.Common.Dialogs
 			UI.Controllers.AbstractController controller = sender as UI.Controllers.AbstractController;
 
 			if ((PlaceholderContext.Depth == 1) &&
+				(this.suspendSearchHandler == 0) &&
 				(this.DialogWindow != null) &&
 				(controller.Placeholder.Window == this.DialogWindow))
 			{
 				object      value       = controller.GetConvertedUserInterfaceValue ();
 				Placeholder placeholder = PlaceholderContext.GetInteractivePlaceholder (this.DialogWindow);
 
+				this.OnUserInteraction ();
 				this.UpdateSearchTemplate (placeholder, value);
 			}
 		}
@@ -701,6 +709,14 @@ namespace Epsitec.Common.Dialogs
 			if (this.Resolved != null)
 			{
 				this.Resolved (this);
+			}
+		}
+
+		private void OnUserInteraction()
+		{
+			if (this.UserInteraction != null)
+			{
+				this.UserInteraction (this);
 			}
 		}
 
@@ -1568,6 +1584,8 @@ namespace Epsitec.Common.Dialogs
 		/// resolved into a suggestion.
 		/// </summary>
 		public event EventHandler							Resolved;
+
+		public event EventHandler							UserInteraction;
 
 		/// <summary>
 		/// Occurs when the suggestion for the active search context changed.

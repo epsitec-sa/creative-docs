@@ -139,6 +139,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public override IController				ControllerInstance
+		{
+			get
+			{
+				return this.controller;
+			}
+		}
+
 		public bool GetMinSpan(Widget parent, int column, int row, out int minColumnSpan, out int minRowSpan)
 		{
 			minColumnSpan = 0;

@@ -53,13 +53,23 @@ namespace Epsitec.Common.UI
 		}
 
 		/// <summary>
-		/// Sets the active.
+		/// Sets the active controller.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
-		/// <returns></returns>
-		public static System.IDisposable SetActive(Controllers.AbstractController controller)
+		/// <returns>A disposable object to use in a <c>using</c> block.</returns>
+		public static System.IDisposable SetActive(IController controller)
 		{
 			return new ActiveHelper (controller);
+		}
+
+		/// <summary>
+		/// Sets the active controller.
+		/// </summary>
+		/// <param name="placeholder">The placeholder.</param>
+		/// <returns>A disposable object to use in a <c>using</c> block.</returns>
+		public static System.IDisposable SetActive(AbstractPlaceholder placeholder)
+		{
+			return new ActiveHelper (placeholder.ControllerInstance);
 		}
 
 		/// <summary>
@@ -92,7 +102,7 @@ namespace Epsitec.Common.UI
 		/// <returns>
 		/// 	<c>true</c> if the context contains the specified controller; otherwise, <c>false</c>.
 		/// </returns>
-		internal static bool Contains(Controllers.AbstractController controller)
+		internal static bool Contains(IController controller)
 		{
 			PlaceholderContext.EnsureData ();
 
@@ -112,7 +122,7 @@ namespace Epsitec.Common.UI
 		/// stack.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
-		private static void Push(Controllers.AbstractController controller)
+		private static void Push(IController controller)
 		{
 			PlaceholderContext.EnsureData ();
 			PlaceholderContext.data.Push (controller);
@@ -123,7 +133,7 @@ namespace Epsitec.Common.UI
 		/// stack.
 		/// </summary>
 		/// <param name="controller">The controller.</param>
-		private static void Pop(Controllers.AbstractController controller)
+		private static void Pop(IController controller)
 		{
 			PlaceholderContext.EnsureData ();
 			PlaceholderContext.data.Pop (controller);
@@ -148,7 +158,7 @@ namespace Epsitec.Common.UI
 		/// </summary>
 		private sealed class ActiveHelper : System.IDisposable
 		{
-			public ActiveHelper(Controllers.AbstractController controller)
+			public ActiveHelper(IController controller)
 			{
 				this.controller = controller;
 
@@ -170,7 +180,7 @@ namespace Epsitec.Common.UI
 
 			#endregion
 
-			private readonly Controllers.AbstractController controller;
+			private readonly IController controller;
 		}
 
 		#endregion
@@ -179,13 +189,13 @@ namespace Epsitec.Common.UI
 
 		private class Record
 		{
-			public Record(Controllers.AbstractController controller)
+			public Record(IController controller)
 			{
 				this.Controller = controller;
 				this.Placeholder = controller.Placeholder;
 			}
 
-			public Controllers.AbstractController Controller
+			public IController Controller
 			{
 				get;
 				private set;
@@ -248,7 +258,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			public void Push(Controllers.AbstractController controller)
+			public void Push(IController controller)
 			{
 				Stack<Record> stack = this.stack;
 				Record record = new Record (controller);
@@ -265,7 +275,7 @@ namespace Epsitec.Common.UI
 				this.OnStackPushed (controller);
 			}
 
-			public void Pop(Controllers.AbstractController controller)
+			public void Pop(IController controller)
 			{
 				Stack<Record> stack = this.stack;
 
@@ -287,7 +297,7 @@ namespace Epsitec.Common.UI
 				this.OnStackPopped (controller);
 			}
 
-			private void OnStackPushed(Controllers.AbstractController controller)
+			private void OnStackPushed(IController controller)
 			{
 				if (this.StackPushed != null)
 				{
@@ -295,7 +305,7 @@ namespace Epsitec.Common.UI
 				}
 			}
 
-			private void OnStackPopped(Controllers.AbstractController controller)
+			private void OnStackPopped(IController controller)
 			{
 				if (this.StackPopped != null)
 				{

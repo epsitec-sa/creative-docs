@@ -138,6 +138,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets the controller instance associated with this placeholder.
+		/// </summary>
+		/// <value>The controller instance.</value>
+		public abstract IController				ControllerInstance
+		{
+			get;
+		}
 
 		public virtual DependencyProperty GetValueProperty()
 		{

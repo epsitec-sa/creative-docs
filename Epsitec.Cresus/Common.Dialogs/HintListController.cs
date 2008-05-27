@@ -31,6 +31,7 @@ namespace Epsitec.Common.Dialogs
 			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
 			this.searchController.PlaceholderPostProcessing += this.HandleSearchControllerPlaceholderPostProcessing;
 			this.searchController.Resolved += this.HandleSearchControllerResolved;
+			this.searchController.UserInteraction += this.HandleSearchControllerUserInteraction;
 			this.searchController.SearchContextChanged += this.HandleSearchControllerSearchContextChanged;
 			this.searchController.ActivePlaceholderChanged += this.HandleSearchControllerActivePlaceholderChanged;
 
@@ -184,6 +185,7 @@ namespace Epsitec.Common.Dialogs
 				this.searchController.DialogFocusChanged -= this.HandleSearchControllerDialogFocusChanged;
 				this.searchController.PlaceholderPostProcessing -= this.HandleSearchControllerPlaceholderPostProcessing;
 				this.searchController.Resolved -= this.HandleSearchControllerResolved;
+				this.searchController.UserInteraction -= this.HandleSearchControllerUserInteraction;
 				this.searchController.SearchContextChanged -= this.HandleSearchControllerSearchContextChanged;
 				this.searchController.ActivePlaceholderChanged -= this.HandleSearchControllerActivePlaceholderChanged;
 				
@@ -303,12 +305,21 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleHintListSearchWidgetValueChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			UI.ReferencePlaceholder reference = this.searchController.ActivePlaceholder as UI.ReferencePlaceholder;
-
-			if ((reference != null) &&
-				(reference.EntityType.CaptionId.IsValid))
+			if (this.searchController.DialogData.Mode == DialogDataMode.Search)
 			{
-				this.searchController.SetSearchCriteria (reference.EntityType.CaptionId, e.NewValue as string);
+				Druid entityId = this.searchController.DialogData.Data.GetEntityStructuredTypeId ();
+
+				this.searchController.SetSearchCriteria (entityId, e.NewValue as string);
+			}
+			else
+			{
+				UI.ReferencePlaceholder reference = this.searchController.ActivePlaceholder as UI.ReferencePlaceholder;
+
+				if ((reference != null) &&
+					(reference.EntityType.CaptionId.IsValid))
+				{
+					this.searchController.SetSearchCriteria (reference.EntityType.CaptionId, e.NewValue as string);
+				}
 			}
 		}
 
@@ -488,6 +499,14 @@ namespace Epsitec.Common.Dialogs
 			this.RefreshHintList ();
 		}
 
+		private void HandleSearchControllerUserInteraction(object sender)
+		{
+			if (this.searchController.DialogData.Mode == DialogDataMode.Search)
+			{
+				this.searchController.SetSearchCriteria (Druid.Empty, null);
+				this.hintListWidget.SearchWidget.Value = "";
+			}
+		}
 
 		
 		private readonly DialogSearchController searchController;

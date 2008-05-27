@@ -70,6 +70,13 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public override IController				ControllerInstance
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
 
 		public override DependencyProperty GetValueProperty()
 		{

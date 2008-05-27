@@ -264,14 +264,14 @@ namespace Epsitec.Common.Support.EntityEngine
 								{
 									if (includeLabels)
 									{
-										buffer.AppendFormat ("{0}  {1}: {2}\n", indent, index, nullValue);
+										buffer.AppendFormat ("{0}  {1}: {2}\n", indent, index++, nullValue);
 									}
 								}
 								else
 								{
 									if (includeLabels)
 									{
-										buffer.AppendFormat ("{0}  {1}:\n", indent, index);
+										buffer.AppendFormat ("{0}  {1}:\n", indent, index++);
 									}
 									child.Dump (buffer, level+2, history, filter, includeLabels);
 								}

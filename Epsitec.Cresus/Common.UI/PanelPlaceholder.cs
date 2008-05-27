@@ -70,6 +70,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public override IController ControllerInstance
+		{
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
+		}
+
 		/// <summary>
 		/// Gets all panel ids within the specified widget hierarchy.
 		/// </summary>

@@ -78,12 +78,20 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <param name="newValue">The new value.</param>
 		protected override void DynamicSetField(string id, object newValue)
 		{
+			object oldValue = this.InternalGetValue (id);
+
+#if false
 			if (UndefinedValue.IsUndefinedValue (newValue))
 			{
 				newValue = null;
 			}
 
-			this.GenericSetValue (id, this.InternalGetValue (id), newValue);
+			this.GenericSetValue (id, oldValue, newValue);
+#else
+			this.InternalSetValue (id, newValue);
+			this.UpdateDataGeneration ();
+			this.NotifyEventHandlers (id, oldValue, newValue);
+#endif
 		}
 
 		#region IFieldPropertyStore Members
