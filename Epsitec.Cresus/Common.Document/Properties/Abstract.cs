@@ -705,7 +705,7 @@ namespace Epsitec.Common.Document.Properties
 				}
 			}
 
-			this.document.SetDirtySerialize(this.isStyle ? DirtyMode.All : DirtyMode.Local);
+			this.document.SetDirtySerialize(this.isStyle ? CacheBitmapChanging.All : CacheBitmapChanging.Local);
 		}
 		#endregion
 

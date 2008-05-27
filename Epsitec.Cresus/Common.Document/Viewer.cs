@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document
 						this.ProcessMouseUp(message, pos);
 						this.mouseDragging = false;
 						this.ProcessMouseMove(message, pos);
-						this.document.SetDirtySerialize(DirtyMode.Local);
+						this.document.SetDirtySerialize(CacheBitmapChanging.Local);
 					}
 					break;
 

@@ -276,7 +276,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Indique qu'une action a été effectuée.
 			this.document.Notifier.NotifyUndoRedoChanged();
-			this.document.SetDirtySerialize(DirtyMode.All);
+			this.document.SetDirtySerialize(CacheBitmapChanging.All);
 		}
 
 

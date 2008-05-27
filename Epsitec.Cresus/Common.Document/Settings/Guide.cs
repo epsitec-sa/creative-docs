@@ -43,7 +43,7 @@ namespace Epsitec.Common.Document.Settings
 					this.OpletQueueInsert();
 					this.type = value;
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.SetDirtySerialize(DirtyMode.None);
+					this.document.SetDirtySerialize(CacheBitmapChanging.None);
 				}
 			}
 		}
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Settings
 					this.OpletQueueInsert();
 					this.position = value;
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					this.document.SetDirtySerialize(DirtyMode.None);
+					this.document.SetDirtySerialize(CacheBitmapChanging.None);
 				}
 			}
 		}

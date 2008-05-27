@@ -779,7 +779,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			document.Modifier.OpletQueueValidateAction();
-			document.SetDirtySerialize(DirtyMode.All);
+			document.SetDirtySerialize(CacheBitmapChanging.All);
 		}
 
 		public static void DeleteTextTab(Document document, TextFlow textFlow, string tag, bool isStyle)
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			document.Modifier.OpletQueueValidateAction();
-			document.SetDirtySerialize(DirtyMode.All);
+			document.SetDirtySerialize(CacheBitmapChanging.All);
 		}
 
 		public bool RenameTextTabs(string[] oldTags, string newTag)
@@ -891,7 +891,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			
 			document.Modifier.OpletQueueChangeLastNameAction(Res.Strings.Action.Text.Tab.Modify);
-			document.SetDirtySerialize(DirtyMode.All);
+			document.SetDirtySerialize(CacheBitmapChanging.All);
 		}
 
 

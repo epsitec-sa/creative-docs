@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document
 		Count				// nombre d'éléments dans l'énumération (3)
 	}
 
-	public enum DirtyMode
+	public enum CacheBitmapChanging
 	{
 		None,
 		Local,
@@ -600,7 +600,7 @@ namespace Epsitec.Common.Document
 						this.modifier.OpletQueueBeginAction(Res.Strings.Action.DocumentSize, "ChangeDocSize");
 						this.modifier.InsertOpletSize();
 						this.size = value;
-						this.SetDirtySerialize(DirtyMode.All);
+						this.SetDirtySerialize(CacheBitmapChanging.All);
 						this.modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 						this.notifier.NotifyAllChanged();
 						this.modifier.OpletQueueValidateAction();
@@ -608,7 +608,7 @@ namespace Epsitec.Common.Document
 					else
 					{
 						this.size = value;
-						this.SetDirtySerialize(DirtyMode.All);
+						this.SetDirtySerialize(CacheBitmapChanging.All);
 					}
 				}
 			}
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Document
 				if ( this.hotSpot != value )
 				{
 					this.hotSpot = value;
-					this.SetDirtySerialize(DirtyMode.All);
+					this.SetDirtySerialize(CacheBitmapChanging.All);
 				}
 			}
 		}
@@ -769,6 +769,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+
 		public bool IsDirtySerialize
 		{
 			//	Indique si la sérialisation est nécessaire.
@@ -776,28 +777,6 @@ namespace Epsitec.Common.Document
 			{
 				return this.isDirtySerialize;
 			}
-#if false
-			set
-			{
-				if ( this.isDirtySerialize != value )
-				{
-					this.isDirtySerialize = value;
-
-					if ( this.Notifier != null )
-					{
-						this.Notifier.NotifySaveChanged();
-					}
-				}
-				
-				if ( value )
-				{
-					foreach ( TextFlow flow in this.textFlows )
-					{
-						flow.NotifyAboutToExecuteCommand();
-					}
-				}
-			}
-#endif
 		}
 
 		public void ClearDirtySerialize()
@@ -814,7 +793,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void SetDirtySerialize(DirtyMode mode)
+		public void SetDirtySerialize(CacheBitmapChanging changing)
 		{
 			//	Considère le document comme sale, c'est-à-dire devant être mis à jour.
 			if (!this.isDirtySerialize)
@@ -832,12 +811,17 @@ namespace Epsitec.Common.Document
 				flow.NotifyAboutToExecuteCommand();
 			}
 
-			this.SetDirtyCacheBitmap(mode);
+			this.SetDirtyCacheBitmap(changing);
 		}
 
-		protected void SetDirtyCacheBitmap(DirtyMode mode)
+		protected void SetDirtyCacheBitmap(CacheBitmapChanging changing)
 		{
-			if (mode == DirtyMode.None)
+			//	Parcourt toutes les pages/calques du document pour invalider les images des miniatures
+			//	du cache bitmap.
+			//	CacheBitmapChanging.None	->	n'invalide rien
+			//	CacheBitmapChanging.Local	->	invalide la page et le calque courant
+			//	CacheBitmapChanging.All		->	invalide toutes les pages et tous les calques
+			if (changing == CacheBitmapChanging.None)
 			{
 				return;
 			}
@@ -849,7 +833,7 @@ namespace Epsitec.Common.Document
 			{
 				Objects.Abstract page = this.objects[pageRank] as Objects.Abstract;
 
-				if (mode == DirtyMode.All || pageRank == currentPage)
+				if (changing == CacheBitmapChanging.All || pageRank == currentPage)
 				{
 					page.CacheBitmapDirty();
 					this.pageMiniatures.Redraw(pageRank);
@@ -859,7 +843,7 @@ namespace Epsitec.Common.Document
 				{
 					Objects.Abstract layer = page.Objects[layerRank] as Objects.Abstract;
 
-					if (mode == DirtyMode.All || layerRank == currentLayer)
+					if (changing == CacheBitmapChanging.All || layerRank == currentLayer)
 					{
 						layer.CacheBitmapDirty();
 						this.layerMiniatures.Redraw(layerRank);
@@ -867,6 +851,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+
 
 		public string Read(string filename)
 		{

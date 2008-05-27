@@ -178,7 +178,7 @@ namespace Epsitec.Common.Document.Properties
 			Objects.Abstract obj = this.owners[0] as Objects.Abstract;  // objet calque
 			this.document.Notifier.NotifyLayerChanged(obj);
 			this.document.Notifier.NotifyArea();
-			this.document.SetDirtySerialize(DirtyMode.Local);
+			this.document.SetDirtySerialize(CacheBitmapChanging.Local);
 		}
 
 		public override bool IsComplexPrinting

@@ -64,7 +64,7 @@ namespace Epsitec.Common.Document.Objects
 					this.InsertOpletType();
 					this.layerType = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterLayerChanged();
-					this.document.SetDirtySerialize(DirtyMode.All);
+					this.document.SetDirtySerialize(CacheBitmapChanging.All);
 				}
 			}
 		}
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletType();
 					this.layerPrint = value;
-					this.document.SetDirtySerialize(DirtyMode.All);
+					this.document.SetDirtySerialize(CacheBitmapChanging.All);
 				}
 			}
 		}
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.Objects
 					this.InsertOpletType();
 					this.magnet = value;
 					this.document.Modifier.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
-					this.document.SetDirtySerialize(DirtyMode.None);
+					this.document.SetDirtySerialize(CacheBitmapChanging.None);
 				}
 			}
 		}
