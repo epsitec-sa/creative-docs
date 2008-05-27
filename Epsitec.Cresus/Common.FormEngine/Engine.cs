@@ -776,7 +776,7 @@ namespace Epsitec.Common.FormEngine
 						EntityType = fieldDef.Type as StructuredType,
 						EntityFieldPath = fieldPath
 					};
-					placeholder.SetBinding (UI.CollectionPlaceholder.CollectionProperty, new Binding (BindingMode.TwoWay, field.GetPath (UI.DataSource.DataName)));
+					placeholder.SetBinding (UI.CollectionPlaceholder.CollectionProperty, new Binding (BindingMode.OneWay, field.GetPath (UI.DataSource.DataName)));
 					break;
 			}
 

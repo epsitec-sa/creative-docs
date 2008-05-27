@@ -342,6 +342,10 @@ namespace Epsitec.Cresus.Core
 			{
 				return Mai2008.FormIds.Client;
 			}
+			if (entityId == AddressBook.Entities.TitrePersonneEntity.EntityStructuredTypeId)
+			{
+				return Mai2008.FormIds.TitrePersonne;
+			}
 
 			return Druid.Empty;
 		}

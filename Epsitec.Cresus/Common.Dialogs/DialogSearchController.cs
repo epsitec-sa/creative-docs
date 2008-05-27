@@ -243,6 +243,11 @@ namespace Epsitec.Common.Dialogs
 		/// <returns><c>true</c> if the focus was successfully set.</returns>
 		public bool SetFocus(EntityFieldPath path)
 		{
+			//	Make sure that the placeholders had the opportunity to create their
+			//	user interface, or else we won't set the focus on the proper widget :
+
+			Application.ExecuteAsyncCallbacks ();
+
 			if ((path == null) ||
 				(path.IsEmpty))
 			{
@@ -917,14 +922,16 @@ namespace Epsitec.Common.Dialogs
 			{
 				if (Widgets.Helpers.VisualTree.IsAncestor (this.dialogPanel, sender))
 				{
+#if false
 					foreach (Node node in this.activeSearchContext.Nodes)
 					{
 						AbstractPlaceholder placeholder = node.Placeholder;
 						Drawing.Rectangle rootRect  = placeholder.MapClientToRoot (placeholder.Client.Bounds);
 						Drawing.Rectangle localRect = Drawing.Rectangle.Inflate (sender.MapRootToClient (rootRect), 1, 1);
 						e.Graphics.AddFilledRectangle (localRect);
-						e.Graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.8, 1, 0, 0));
+						e.Graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.2, 0.5, 0.5, 1));
 					}
+#endif
 				}
 			}
 		}
@@ -1225,7 +1232,16 @@ namespace Epsitec.Common.Dialogs
 					//	Update the value displayed by the placeholder. This will
 					//	use the "hint" display mode.
 
-					node.Placeholder.Value = newValue;
+					BindingExpression expression = node.Placeholder.ValueBindingExpression;
+
+					if (expression != null)
+					{
+						expression.SetSourceValue (newValue);
+					}
+					else
+					{
+						node.Placeholder.Value = newValue;
+					}
 				}
 			}
 

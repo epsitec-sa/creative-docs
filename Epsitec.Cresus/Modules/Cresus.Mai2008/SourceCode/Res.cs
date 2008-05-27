@@ -166,6 +166,8 @@ namespace Epsitec.Cresus.Mai2008
 		
 		//	Code mapping for 'Form' resources
 		
+		//	Code mapping for 'Form' resources
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));

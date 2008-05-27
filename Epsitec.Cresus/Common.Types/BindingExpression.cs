@@ -248,6 +248,22 @@ namespace Epsitec.Common.Types
 			return this.binding.ConvertBackValue (value, type);
 		}
 
+		public void SetSourceValue(object value)
+		{
+			switch (this.binding.Mode)
+			{
+				case BindingMode.OneWayToSource:
+				case BindingMode.TwoWay:
+					this.InternalUpdateSource (value);
+					this.InternalUpdateTarget ();
+					break;
+
+				case BindingMode.OneWay:
+					this.InternalUpdateTarget ();
+					break;
+			}
+		}
+
 		#region Internal Methods
 
 		internal void RefreshSourceBinding()

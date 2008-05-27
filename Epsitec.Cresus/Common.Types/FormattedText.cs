@@ -121,6 +121,10 @@ namespace Epsitec.Common.Types
 			return a.text != b.text;
 		}
 
+		public static FormattedText Parse(string text)
+		{
+			return new FormattedText (text);
+		}
 
 		/// <summary>
 		/// Performs an implicit conversion from type <see cref="string"/> to

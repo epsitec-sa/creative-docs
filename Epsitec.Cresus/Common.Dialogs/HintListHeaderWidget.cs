@@ -75,6 +75,9 @@ namespace Epsitec.Common.Dialogs
 				HorizontalAlignment = HorizontalAlignment.Center,
 				PreferredHeight = 20
 			};
+
+			this.IsEnabledChanged += (s, e) => this.RefreshContents ();
+			this.TextChanged      += (s)    => this.RefreshContents ();
 		}
 
 
@@ -113,35 +116,45 @@ namespace Epsitec.Common.Dialogs
 		
 		private void OnContentTypeChanged()
 		{
+			this.RefreshContents ();
+		}
+
+		private void RefreshContents()
+		{
+			bool enable = this.IsEnabled;
+
 			switch (this.contentType)
 			{
 				case HintListContentType.Default:
 					this.image.Visibility =	false;
+					this.title.Visibility = enable;
 					break;
 
 				case HintListContentType.Catalog:
-					this.image.Visibility =	true;
+					this.image.Visibility =	enable;
+					this.title.Visibility = enable;
 					this.image.ImageName = @"manifest:Epsitec.Common.Dialogs.Images.box-64x48.png";
 					break;
 
 				case HintListContentType.Suggestions:
-					this.image.Visibility = true;
+					this.image.Visibility = enable;
+					this.title.Visibility = enable;
 					this.image.ImageName = @"manifest:Epsitec.Common.Dialogs.Images.binocular-64x48.png";
 					break;
 			}
-			
-			this.title.Text = string.Format (this.GetTitleTextFormat (), "Adresse de facturation");
+
+			this.title.Text = string.Format (this.GetTitleTextFormat ().ToString (), this.FormattedText.ToString ());
 		}
 
-		private string GetTitleTextFormat()
+		private FormattedText GetTitleTextFormat()
 		{
 			switch (this.contentType)
 			{
 				case HintListContentType.Suggestions:
-					return @"Suggestions pour<br/><font size=""120%""><b>«{0}»</b></font>";
+					return FormattedText.Parse (@"Suggestions pour<br/><font size=""120%""><b>«{0}»</b></font>");
 
 				case HintListContentType.Catalog:
-					return @"Liste des fiches<br/><font size=""120%""><b>«{0}»</b></font>";
+					return FormattedText.Parse (@"Liste des fiches<br/><font size=""120%""><b>«{0}»</b></font>");
 			}
 
 			return "{0}";

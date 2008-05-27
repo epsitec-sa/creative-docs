@@ -149,8 +149,12 @@ namespace Epsitec.Common.Dialogs
 		/// </summary>
 		public void RefreshHintList()
 		{
-			if ((this.hintListWidget != null) &&
-				(this.searchResult != null) &&
+			if (this.hintListWidget == null)
+			{
+				return;
+			}
+
+			if ((this.searchResult != null) &&
 				(this.searchController.ActiveSearchContext != null))
 			{
 				ICollectionView view = this.searchResult.CollectionView;
@@ -161,6 +165,51 @@ namespace Epsitec.Common.Dialogs
 
 				this.hintListWidget.Items = view;
 			}
+
+			this.RefreshHintListHeader ();
+		}
+
+		private void RefreshHintListHeader()
+		{
+			string title = null;
+			Druid  entityId = Druid.Empty;
+
+			if (this.searchController.DialogData.Mode == DialogDataMode.Search)
+			{
+				entityId = this.searchController.DialogData.Data.GetEntityStructuredTypeId ();
+			}
+			else if (this.searchController.ActiveSearchContext != null)
+			{
+				foreach (Druid id in this.searchController.ActiveSearchContext.GetEntityIds ())
+				{
+					entityId = id;
+					break;
+				}
+			}
+
+			if (entityId.IsValid)
+			{
+				ResourceManager manager = Epsitec.Common.Widgets.Helpers.VisualTree.GetResourceManager (this.hintListWidget);
+				Caption         caption = manager.GetCaption (entityId);
+
+				if (caption != null)
+				{
+					title = caption.DefaultLabel;
+					
+					if (string.IsNullOrEmpty (title))
+					{
+						title = caption.Description;
+						
+						if (string.IsNullOrEmpty (title))
+						{
+							title = caption.Name;
+						}
+					}
+				}
+			}
+
+			this.hintListWidget.Header.Enable = (this.searchController.ActiveSearchContext == null) ? false : true;
+			this.hintListWidget.Header.FormattedText = new FormattedText (title);
 		}
 
 		/// <summary>
@@ -417,6 +466,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void HandleSearchControllerSearchContextChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			this.RefreshHintListHeader ();
 		}
 
 		private void HandleSearchControllerActivePlaceholderChanged(object sender, DependencyPropertyChangedEventArgs e)

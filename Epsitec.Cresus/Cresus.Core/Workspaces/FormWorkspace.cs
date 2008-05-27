@@ -250,6 +250,8 @@ namespace Epsitec.Cresus.Core.Workspaces
 					this.searchPanel.Dock = DockStyle.Fill;
 					this.searchPanel.SetEmbedder (frame);
 					this.searchPanel.Margins = new Margins (4);
+
+					this.hintListController.HintListWidget.Header.ContentType = HintListContentType.Catalog;
 					
 					this.searchController.DialogData   = this.dialogData;
 					this.searchController.DialogPanel  = this.searchPanel;
@@ -265,6 +267,8 @@ namespace Epsitec.Cresus.Core.Workspaces
 					this.editionPanel.Dock = DockStyle.Fill;
 					this.editionPanel.SetEmbedder (frame);
 					this.editionPanel.Margins = new Margins (4);
+
+					this.hintListController.HintListWidget.Header.ContentType = HintListContentType.Suggestions;
 					
 					this.searchController.DialogData   = this.dialogData;
 					this.searchController.DialogPanel  = this.editionPanel;

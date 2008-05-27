@@ -205,10 +205,10 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			int index = 0;
-			foreach (T item in this)
+			object[] items = this.ToArray ();
+			for (int i = 0; i < items.Length; i++)
 			{
-				yield return this.Promote (index++, item);
+				yield return this.Promote (i, items[i]);
 			}
 		}
 
@@ -324,10 +324,10 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			int index = 0;
-			foreach (T item in this)
+			object[] items = this.ToArray ();
+			for (int i = 0; i < items.Length; i++)
 			{
-				yield return this.Promote (index++, item);
+				yield return this.Promote (i, items[i]);
 			}
 		}
 

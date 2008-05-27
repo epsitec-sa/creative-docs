@@ -179,6 +179,7 @@ namespace Epsitec.Common.Dialogs
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			Rectangle frame = this.Client.Bounds;
+			Color     color = Color.FromBrightness (this.IsEnabled ? 0.4 : 0.8);
 			
 			frame.Deflate (0.5);
 			
@@ -191,7 +192,7 @@ namespace Epsitec.Common.Dialogs
 				graphics.RenderSolid (Color.FromBrightness (1));
 
 				graphics.Rasterizer.AddOutline (path, 1, CapStyle.Round, JoinStyle.Round);
-				graphics.RenderSolid (Color.FromBrightness (0.3));
+				graphics.RenderSolid (color);
 			}
 
 			using (Path path = new Path ())
@@ -207,7 +208,7 @@ namespace Epsitec.Common.Dialogs
 				path.LineTo (cx - 1.707*r, cy - 1.707*r);
 
 				graphics.Rasterizer.AddOutline (path, 2.5, CapStyle.Round, JoinStyle.Round);
-				graphics.RenderSolid (Color.FromBrightness (0.4));
+				graphics.RenderSolid (color);
 			}
 		}
 
