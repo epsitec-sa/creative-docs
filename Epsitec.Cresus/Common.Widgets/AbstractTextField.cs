@@ -1486,7 +1486,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextDeleted()
 		{
-			this.OnTextChanged ();
+//-			this.OnTextChanged ();
 
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextDeleted");
 			if (handler != null)
@@ -1497,7 +1497,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextInserted()
 		{
-			this.OnTextChanged ();
+//-			this.OnTextChanged ();
 
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextInserted");
 			if (handler != null)
