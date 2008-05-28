@@ -16,6 +16,7 @@ namespace Epsitec.Common.Document
 			Unknown,
 			Arrow,
 			ArrowPlus,
+			ArrowMinus,
 			ArrowDup,
 			ArrowGlobal,
 			ShaperNorm,
@@ -3567,7 +3568,7 @@ namespace Epsitec.Common.Document
 
 			if ( this.mouseCursorType == MouseCursorType.Finger     ||
 				 this.mouseCursorType == MouseCursorType.FingerDup  ||
-				 this.mouseCursorType == MouseCursorType.FingerPlus )
+				 this.mouseCursorType == MouseCursorType.ArrowMinus )
 			{
 				if ( message.IsControlPressed && !this.mouseDragging )
 				{
@@ -3575,7 +3576,7 @@ namespace Epsitec.Common.Document
 				}
 				else if ( message.IsShiftPressed && !this.mouseDragging )
 				{
-					this.ChangeMouseCursor(MouseCursorType.FingerPlus);
+					this.ChangeMouseCursor(MouseCursorType.ArrowMinus);
 				}
 				else
 				{
@@ -3635,6 +3636,10 @@ namespace Epsitec.Common.Document
 
 				case MouseCursorType.ArrowPlus:
 					this.MouseCursorImage(ref this.mouseCursorArrowPlus, Misc.Icon("ArrowPlus"));
+					break;
+
+				case MouseCursorType.ArrowMinus:
+					this.MouseCursorImage(ref this.mouseCursorArrowMinus, Misc.Icon("ArrowMinus"));
 					break;
 
 				case MouseCursorType.ArrowDup:
@@ -5055,6 +5060,7 @@ namespace Epsitec.Common.Document
 		protected MouseCursorType				mouseCursorTypeUse = MouseCursorType.Unknown;
 		protected Image							mouseCursorArrow;
 		protected Image							mouseCursorArrowPlus;
+		protected Image							mouseCursorArrowMinus;
 		protected Image							mouseCursorArrowDup;
 		protected Image							mouseCursorArrowGlobal;
 		protected Image							mouseCursorShaperNorm;

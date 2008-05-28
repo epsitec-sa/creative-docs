@@ -821,7 +821,7 @@ namespace Epsitec.Common.Document
 			//	CacheBitmapChanging.None	->	n'invalide rien
 			//	CacheBitmapChanging.Local	->	invalide la page et le calque courant
 			//	CacheBitmapChanging.All		->	invalide toutes les pages et tous les calques
-			if (changing == CacheBitmapChanging.None)
+			if (changing == CacheBitmapChanging.None || this.pageMiniatures == null || this.layerMiniatures == null)
 			{
 				return;
 			}
