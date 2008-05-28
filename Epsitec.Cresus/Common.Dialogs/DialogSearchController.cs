@@ -918,20 +918,24 @@ namespace Epsitec.Common.Dialogs
 
 		void IPaintFilter.NotifyAboutToProcessChildren(Widget sender, PaintEventArgs e)
 		{
-			if (this.activeSearchContext != null)
+			if ((this.activeSearchContext != null) &&
+				(this.dialogData.Mode != DialogDataMode.Search))
 			{
 				if (Widgets.Helpers.VisualTree.IsAncestor (this.dialogPanel, sender))
 				{
-#if false
-					foreach (Node node in this.activeSearchContext.Nodes)
+					AbstractPlaceholder placeholder = this.activePlaceholder;
+					
+					Drawing.Rectangle rootRect  = placeholder.MapClientToRoot (placeholder.Client.Bounds);
+					Drawing.Rectangle localRect = Drawing.Rectangle.Deflate (sender.MapRootToClient (rootRect), 0.5, 0.5);
+					
+					using (Drawing.Path path = new Drawing.Path ())
 					{
-						AbstractPlaceholder placeholder = node.Placeholder;
-						Drawing.Rectangle rootRect  = placeholder.MapClientToRoot (placeholder.Client.Bounds);
-						Drawing.Rectangle localRect = Drawing.Rectangle.Inflate (sender.MapRootToClient (rootRect), 1, 1);
-						e.Graphics.AddFilledRectangle (localRect);
-						e.Graphics.RenderSolid (Drawing.Color.FromAlphaRgb (0.2, 0.5, 0.5, 1));
+						path.AppendRoundedRectangle (localRect, 6);
+						e.Graphics.Rasterizer.AddSurface (path);
+						e.Graphics.RenderSolid (Drawing.Color.FromRgb (255.0/255.0, 186.0/255.0, 1.0/255.0));
+						e.Graphics.Rasterizer.AddOutline (path, 1, Drawing.CapStyle.Round, Drawing.JoinStyle.Round);
+						e.Graphics.RenderSolid (Drawing.Color.FromBrightness (0.4));
 					}
-#endif
 				}
 			}
 		}

@@ -107,6 +107,11 @@ namespace Epsitec.Cresus.DataLayer
 			return this.InternalResolveEntity (rowKey, entityId, EntityResolutionMode.Load) as AbstractEntity;
 		}
 
+		public AbstractEntity ResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
+		{
+			return this.InternalResolveEntity (rowKey, entityId, mode) as AbstractEntity;
+		}
+
 		public AbstractEntity ResolveEntity(DataBrowserRow row, int index)
 		{
 			DbKey rowKey   = row.Keys[index];
@@ -361,29 +366,47 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
-			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
-
-			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+			watch.Start ();
+			string op = "";
+			try
 			{
-				if (mapping.Equals (rowKey, baseEntityId))
+				Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
+
+				foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
 				{
-					return mapping.Entity;
+					if (mapping.Equals (rowKey, baseEntityId))
+					{
+						op = ", from cache";
+						return mapping.Entity;
+					}
+				}
+
+				switch (mode)
+				{
+					case EntityResolutionMode.Find:
+						return null;
+
+					case EntityResolutionMode.Load:
+						op = ", loaded";
+						return this.DeserializeEntity (rowKey, entityId);
+
+					case EntityResolutionMode.DelayLoad:
+						op = ", delayed";
+						return new Helpers.EntityDataProxy (this, rowKey, entityId);
+
+					default:
+						throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
 				}
 			}
-
-			switch (mode)
+			finally
 			{
-				case EntityResolutionMode.Find:
-					return null;
-
-				case EntityResolutionMode.Load:
-					return this.DeserializeEntity (rowKey, entityId);
-
-				case EntityResolutionMode.DelayLoad:
-					return new Helpers.EntityDataProxy (this, rowKey, entityId);
-
-				default:
-					throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
+				watch.Stop ();
+				System.Diagnostics.Debug.WriteLine (string.Format ("Resolved {0}:{1} in {2}ms{3}", rowKey.ToString (), entityId.ToString (), watch.ElapsedMilliseconds, op));
+				if (watch.ElapsedMilliseconds > 100)
+				{
+					System.Diagnostics.Debug.WriteLine ("---------");
+				}
 			}
 		}
 

@@ -264,13 +264,24 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The table/column tuple.</returns>
 		private DbTableColumn GetTableColumn(EntityFieldPath fieldPath, Druid dataEntityId, string dataFieldId)
 		{
+			Druid id = dataEntityId;
+		again:
 			DbTableColumn tableColumn;
-			DbTable  tableDef   = this.schemaEngine.FindTableDefinition (dataEntityId);
+			DbTable  tableDef   = this.schemaEngine.FindTableDefinition (id);
 			string   columnName = this.schemaEngine.GetDataColumnName (dataFieldId);
 			DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
 
 			if (columnDef == null)
 			{
+				StructuredType entityType = EntityContext.Current.GetStructuredType (id) as StructuredType;
+				Druid baseTypeId = entityType.BaseTypeId;
+
+				if (baseTypeId.IsValid)
+				{
+					id = baseTypeId;
+					goto again;
+				}
+				
 				return null;
 			}
 			

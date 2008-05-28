@@ -10,6 +10,7 @@ using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
@@ -85,6 +86,7 @@ namespace Epsitec.Cresus.Core
 			else
 			{
 				this.VerifySchemas ();
+				this.ReloadDatabase ();
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Database ready");
@@ -118,7 +120,7 @@ namespace Epsitec.Cresus.Core
 			List<AddressBook.Entities.TitrePersonneEntity> titres = new List<Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity> (this.ReadTitres ());
 			this.dataContext.SaveChanges ();
 
-			List<Mai2008.Entities.ClientEntity> personnes = new List<Epsitec.Cresus.Mai2008.Entities.ClientEntity> (this.ReadPersonnes (localités, titres));
+			List<Mai2008.Entities.ClientEntity> personnes = new List<Epsitec.Cresus.Mai2008.Entities.ClientEntity> (this.ReadPersonnes (localités, titres).Take (50));
 			this.dataContext.SaveChanges ();
 
 			List<Mai2008.Entities.FactureEntity> factures = new List<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
@@ -148,7 +150,7 @@ namespace Epsitec.Cresus.Core
 			article3.Prix = 39.00M;
 
 			facture.Objet = FormattedText.Parse ("Crésus Comptabilité <i>Pro</i>");
-			facture.AdresseFacturation = personnes[100];
+			facture.AdresseFacturation = personnes[personnes.Count-1];
 			facture.Lignes.Add (ligne1);
 			facture.Lignes.Add (ligne2);
 			factures.Add (facture);
@@ -158,7 +160,51 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.WriteLine (string.Format ("Created {0} x Localité, {1} x TitrePersonne, {2} x AdressePersonne", localités.Count, titres.Count, personnes.Count));
 		}
 
-		public IEnumerable<AddressBook.Entities.LocalitéEntity> ReadNuPost(AddressBook.Entities.PaysEntity paysCh)
+		private void ReloadDatabase()
+		{
+			DataBrowser browser = new DataBrowser (this.infrastructure);
+			KeyValuePair<string, AbstractEntity>[] entities = new KeyValuePair<string, AbstractEntity>[]
+			{
+				new KeyValuePair<string, AbstractEntity> ("[8V17]", new Mai2008.Entities.ClientEntity ()),
+				new KeyValuePair<string, AbstractEntity> ("[9VA2]", new Mai2008.Entities.FactureEntity ()),
+				new KeyValuePair<string, AbstractEntity> ("[9VAK]", new Mai2008.Entities.ArticleEntity ()),
+//-				new KeyValuePair<string, AbstractEntity> ("[8V19]", new AddressBook.Entities.LocalitéEntity ())
+			};
+
+			
+
+			foreach (var item in entities)
+			{
+				AbstractEntity entity = item.Value;
+
+				System.Diagnostics.Debug.WriteLine ("Loading " + entity.GetType ().Name);
+				System.Diagnostics.Debug.WriteLine ("=============================================");
+
+				DataQuery query = new DataQuery ();
+
+				query.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse (item.Key)));
+
+				using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
+					{
+						for (int i = 0; i < row.Keys.Count; i++)
+						{
+							DbKey key = row.Keys[i];
+							Druid entityId = row.Query.EntityIds[i];
+							this.dataContext.ResolveEntity (key, entityId);
+						}
+					}
+
+					transaction.Commit ();
+				}
+
+				System.Diagnostics.Debug.WriteLine ("=============================================");
+			}
+		}
+
+
+		private IEnumerable<AddressBook.Entities.LocalitéEntity> ReadNuPost(AddressBook.Entities.PaysEntity paysCh)
 		{
 			foreach (string line in System.IO.File.ReadAllLines (@"S:\Epsitec.Cresus\External\NUPOST.TXT", System.Text.Encoding.Default))
 			{
@@ -362,11 +408,11 @@ namespace Epsitec.Cresus.Core
 
 					foreach (Mai2008.Entities.ClientEntity entity in this.GetEntities (id))
 					{
-						if ((ResolverImplementation.Match (example.Titre, entity.Titre)) &&
+						if (/*(ResolverImplementation.Match (example.Titre, entity.Titre)) &&*/
 							(ResolverImplementation.Match (example.Nom, entity.Nom)) &&
 							(ResolverImplementation.Match (example.Prénom, entity.Prénom)) &&
-							(ResolverImplementation.Match (example.Rue, entity.Rue)) &&
-							(ResolverImplementation.Match (example.Localité, entity.Localité)))
+							(ResolverImplementation.Match (example.Rue, entity.Rue)) /*&&
+							(ResolverImplementation.Match (example.Localité, entity.Localité))*/)
 						{
 							yield return entity;
 						}
