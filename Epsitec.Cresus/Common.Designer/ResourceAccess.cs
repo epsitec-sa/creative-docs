@@ -584,7 +584,7 @@ namespace Epsitec.Common.Designer
 					return false;
 				}
 
-				if (!Misc.IsValidName(ref newName))
+				if (!Misc.IsValidLabel(ref newName, true))
 				{
 					this.designerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 					return false;
@@ -1287,7 +1287,7 @@ namespace Epsitec.Common.Designer
 				return "Nom inexistant !";
 			}
 
-			if (!Misc.IsValidLabel(ref name))
+			if (!Misc.IsValidLabel(ref name, this.type == Type.Entities || this.type == Type.Forms))
 			{
 				return Res.Strings.Error.Name.Invalid;
 			}

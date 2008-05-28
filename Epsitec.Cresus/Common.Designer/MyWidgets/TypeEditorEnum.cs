@@ -278,7 +278,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 				return;
 			}
 			
-			if (!Misc.IsValidLabel(ref name))
+			if (!Misc.IsValidLabel(ref name, false))
 			{
 				this.module.DesignerApplication.DialogError(Res.Strings.Error.Name.Invalid);
 				return;

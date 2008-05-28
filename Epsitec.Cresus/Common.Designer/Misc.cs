@@ -394,27 +394,37 @@ namespace Epsitec.Common.Designer
 		}
 
 
-		static public bool IsValidLabel(ref string label)
+		static public bool IsValidLabel(ref string label, bool isEntityOrForm)
 		{
 			//	Vérifie si un nom de label est correct.
-			string[] list = label.Split('.');
-			System.Text.StringBuilder builder = new System.Text.StringBuilder(label.Length);
-			for (int i=0; i<list.Length; i++)
+			if (isEntityOrForm)
 			{
-				if (!IsValidName(ref list[i]))
+				return Misc.IsValidName(ref label, isEntityOrForm);
+			}
+			else
+			{
+				string[] list = label.Split('.');
+				System.Text.StringBuilder builder = new System.Text.StringBuilder(label.Length);
+				for (int i=0; i<list.Length; i++)
 				{
-					return false;
+					if (!Misc.IsValidName(ref list[i], isEntityOrForm))
+					{
+						return false;
+					}
+
+					if (i > 0)
+					{
+						builder.Append('.');
+					}
+					builder.Append(list[i]);
 				}
 
-				if (i > 0)  builder.Append('.');
-				builder.Append(list[i]);
+				label = builder.ToString();
+				return true;
 			}
-
-			label = builder.ToString();
-			return true;
 		}
 
-		static public bool IsValidName(ref string name)
+		static protected bool IsValidName(ref string name, bool isEntityOrForm)
 		{
 			//	Vérifie si un nom commence par une lettre puis est suivi de lettres ou de chiffres.
 			//	Le nom retourné commence par une majuscule suivie de minuscules.
@@ -455,6 +465,10 @@ namespace Epsitec.Common.Designer
 						builder.Append(c);
 					}
 					else if (Misc.IsLowerLetter(c))
+					{
+						builder.Append(c);
+					}
+					else if (c == '_' && isEntityOrForm)
 					{
 						builder.Append(c);
 					}
