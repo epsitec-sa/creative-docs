@@ -4386,6 +4386,7 @@ namespace Epsitec.Common.Document
 
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
+#if false
 			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
 			{
 				Bitmap bitmap = this.document.Printer.CreateMiniatureBitmap(this.Client.Size/this.pictogramMagnifierZoom, false, this.drawingContext.CurrentPage, -1);
@@ -4401,6 +4402,7 @@ namespace Epsitec.Common.Document
 				graphics.RenderSolid(adorner.ColorBorder);
 				return;
 			}
+#endif
 			
 			//	Ignore une zone de repeinture d'un pixel à gauche ou en haut,
 			//	à cause des règles qui chevauchent Viewer.
@@ -4479,6 +4481,16 @@ namespace Epsitec.Common.Document
 			{
 				Rectangle rect = this.drawingContext.Viewer.Client.Bounds;
 				rect.Deflate(1);  // laisse un cadre d'un pixel
+				Transform it = null;
+
+				if (this.pictogramMagnifierZoom != 1)
+				{
+					it = graphics.Transform;
+					graphics.ScaleTransform(this.pictogramMagnifierZoom, this.pictogramMagnifierZoom, rect.Left, rect.Bottom);
+					graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
+					rect.Width /= this.pictogramMagnifierZoom;
+					rect.Height /= this.pictogramMagnifierZoom;
+				}
 
 				if (this.isLayerPreview)
 				{
@@ -4507,6 +4519,13 @@ namespace Epsitec.Common.Document
 					{
 						graphics.PaintImage(page.CacheBitmap, rect);  // dessine le bitmap caché
 					}
+				}
+
+				if (this.pictogramMagnifierZoom != 1)
+				{
+					graphics.Transform = it;
+					rect.Width *= this.pictogramMagnifierZoom;
+					rect.Height *= this.pictogramMagnifierZoom;
 				}
 
 				rect.Inflate(0.5);
