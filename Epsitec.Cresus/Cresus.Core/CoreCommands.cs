@@ -97,6 +97,13 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		[Command (Core.Res.CommandIds.Test.Crash)]
+		public void TestCrash()
+		{
+			throw new System.Exception ("Crashing the application on purpose");
+		}
+
 		private readonly CoreApplication application;
 	}
 }

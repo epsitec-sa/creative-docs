@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				}
 			}
 
-			if (cmdFields.Count > 1)
+			if (cmdFields.Count > 0)
 			{
 				formatter.WriteCodeLine ();
 				ResGenerator.GenerateCommands (manager, formatter, defaultNamespace, bundleId, bundle, cmdFields);
@@ -159,25 +159,25 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				ResGenerator.GenerateCommandIds (manager, formatter, defaultNamespace, bundleId, bundle, cmdFields);
 			}
 
-			if (capFields.Count > 1)
+			if (capFields.Count > 0)
 			{
 				formatter.WriteCodeLine ();
 				ResGenerator.GenerateCaptions (manager, formatter, defaultNamespace, bundleId, bundle, capFields);
 			}
 
-			if (typFields.Count > 1)
+			if (typFields.Count > 0)
 			{
 				formatter.WriteCodeLine ();
 				ResGenerator.GenerateTypes (manager, formatter, defaultNamespace, bundleId, bundle, typFields);
 			}
 
-			if (valFields.Count > 1)
+			if (valFields.Count > 0)
 			{
 				formatter.WriteCodeLine ();
 				ResGenerator.GenerateValues (manager, formatter, defaultNamespace, bundleId, bundle, valFields);
 			}
 
-			if (fldFields.Count > 1)
+			if (fldFields.Count > 0)
 			{
 				formatter.WriteCodeLine ();
 				ResGenerator.GenerateFields (manager, formatter, defaultNamespace, bundleId, bundle, fldFields);

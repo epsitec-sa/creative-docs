@@ -10,6 +10,34 @@ namespace Epsitec.Cresus.Core
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Commands
+		{
+			public static class Test
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/L0A
+				public static readonly global::Epsitec.Common.Widgets.Command Crash = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+			}
+			
+			internal static void _Initialize()
+			{
+				Test._Initialize ();
+			}
+		}
+		
+		public static class CommandIds
+		{
+			public static class Test
+			{
+				
+				//	designer:cap/L0A
+				public const long Crash = 0x150000A000000L;
+			}
+		}
+		
 		//	Code mapping for 'String' resources
 		
 		public static class Strings
@@ -78,6 +106,7 @@ namespace Epsitec.Cresus.Core
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Core");
+			Commands._Initialize ();
 		}
 		
 		public static void Initialize()

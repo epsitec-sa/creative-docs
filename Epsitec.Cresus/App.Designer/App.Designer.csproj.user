@@ -16,4 +16,8 @@
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartArguments>-command-file "S:\Epsitec.Cresus\App.Designer\no-merge-settings.ini"</StartArguments>
+  </PropertyGroup>
 </Project>
