@@ -1287,7 +1287,7 @@ namespace Epsitec.Common.Designer
 				return "Nom inexistant !";
 			}
 
-			if (!Misc.IsValidLabel(ref name, this.type == Type.Entities || this.type == Type.Forms))
+			if (!Misc.IsValidLabel(ref name, this.type == Type.Entities || this.type == Type.Forms || this.type == Type.Fields))
 			{
 				return Res.Strings.Error.Name.Invalid;
 			}
