@@ -1788,6 +1788,8 @@ namespace Epsitec.Common.Designer
 				this.UseModule(rank);
 				this.locatorIgnore = false;
 
+				this.UpdateAfterTypeChanged();
+
 				mi = this.CurrentModuleInfo;
 			}
 
