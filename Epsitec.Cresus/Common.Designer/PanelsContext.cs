@@ -10,8 +10,9 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class PanelsContext
 	{
-		public PanelsContext()
+		public PanelsContext(DesignerApplication designerApplication)
 		{
+			this.designerApplication = designerApplication;
 			this.extendedProxies = new Dictionary<string, bool>();
 		}
 
@@ -247,9 +248,21 @@ namespace Epsitec.Common.Designer
 		public bool IsExtendedProxies(string name)
 		{
 			//	Indique si un panneau pour un proxy est étendu ou non.
+			bool defaultState;
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window)
+			{
+				name = string.Concat("W.", name);
+				defaultState = true;
+			}
+			else
+			{
+				name = string.Concat("N.", name);
+				defaultState = false;
+			}
+
 			if (!this.extendedProxies.ContainsKey(name))
 			{
-				this.extendedProxies.Add(name, false);
+				this.extendedProxies.Add(name, defaultState);
 			}
 
 			return this.extendedProxies[name];
@@ -258,6 +271,15 @@ namespace Epsitec.Common.Designer
 		public void SetExtendedProxies(string name, bool extended)
 		{
 			//	Modifie l'état étendu ou non d'un panneau pour un proxy.
+			if (this.designerApplication.DisplayModeState == DesignerApplication.DisplayMode.Window)
+			{
+				name = string.Concat("W.", name);
+			}
+			else
+			{
+				name = string.Concat("N.", name);
+			}
+
 			if (!this.extendedProxies.ContainsKey(name))
 			{
 				this.extendedProxies.Add(name, false);
@@ -431,6 +453,7 @@ namespace Epsitec.Common.Designer
 		#endregion
 
 
+		protected DesignerApplication		designerApplication;
 		protected string					tool = "ToolSelect";
 		protected bool						showGrid = false;
 		protected bool						showConstrain = true;

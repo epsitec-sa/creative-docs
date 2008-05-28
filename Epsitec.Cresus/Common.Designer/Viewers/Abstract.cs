@@ -368,6 +368,14 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 		}
 
+		public DesignerApplication DesignerApplication
+		{
+			get
+			{
+				return this.designerApplication;
+			}
+		}
+
 
 		public virtual bool HasUsefulViewerWindow
 		{

@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorInit();
 			this.moduleInfoList = new List<ModuleInfo>();
 			this.settings = Epsitec.Common.Designer.Settings.Default;
-			this.context = new PanelsContext();
+			this.context = new PanelsContext(this);
 			this.CommandDispatcher.CommandDispatching += this.HandleCommandDispatcherCommandDispatching;
 		}
 
