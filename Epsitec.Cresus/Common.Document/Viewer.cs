@@ -1130,7 +1130,12 @@ namespace Epsitec.Common.Document
 				else
 				{
 					obj = hiliteObj;
-					if ( !global )
+					if (this.drawingContext.IsShift)
+					{
+						obj = this.Detect(mouse, false);
+					}
+
+					if (!global)
 					{
 						this.Hilite(obj);
 					}
