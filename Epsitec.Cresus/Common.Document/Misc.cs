@@ -209,6 +209,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Conversion d'un nom de famille en filtrant en plus d'éventuels
 			//	"Black" qui traineraient derrière un "Arial Black".
+#if false
 			if (face == null || style == null)
 			{
 				return null;
@@ -223,6 +224,9 @@ namespace Epsitec.Common.Document
 			}
 
 			return id.InvariantFaceName;
+#else
+			return face;
+#endif
 		}
 
 		static public string FaceInvariantToLocale(string face, string style)

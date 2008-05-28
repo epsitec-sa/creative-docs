@@ -260,6 +260,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fontFace.Text  = TextLayout.ConvertToTaggedText(Misc.FaceInvariantToInvariant(face, style));
 			this.fontStyle.Text = TextLayout.ConvertToTaggedText(Misc.StyleInvariantToLocale(face, style));
+			this.fontStyle.Enable = !string.IsNullOrEmpty(face);
 			this.ProposalFontFaceCombo(this.fontFace, !isFace);
 			this.ProposalTextFieldCombo(this.fontStyle, !isStyle);
 
@@ -285,12 +286,12 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			//	Met à jour la liste d'un champ éditable pour le style de la police.
 			this.fontStyle.Items.Clear();  // vide la liste
-			face = Misc.FaceInvariantToInvariant (face, style);
+			face = Misc.FaceInvariantToInvariant(face, style);
 			
 			if ( face != null && style != null )
 			{
 				OpenType.FontIdentity[] list = TextContext.GetAvailableFontIdentities(face);
-				this.stylesInvariant = new List<OpenType.FontIdentity> ();
+				this.stylesInvariant = new List<OpenType.FontIdentity>();
 				this.stylesLocal = new List<string>();
 
 				foreach ( OpenType.FontIdentity id in list )
@@ -569,7 +570,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.TextWrapper.SuspendSynchronizations();
 
-			if ( face == "" )
+			if (string.IsNullOrEmpty(face))
 			{
 				this.TextWrapper.Defined.ClearFontFace();
 				this.TextWrapper.Defined.ClearFontStyle();
@@ -609,14 +610,14 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.TextWrapper.SuspendSynchronizations();
 
-			if ( style != "" )
+			if (string.IsNullOrEmpty(style))
 			{
-				this.TextWrapper.Defined.FontFace = face;
-				this.TextWrapper.Defined.FontStyle = style;
+				this.TextWrapper.Defined.ClearFontStyle();
 			}
 			else
 			{
-				this.TextWrapper.Defined.ClearFontStyle();
+				this.TextWrapper.Defined.FontFace = face;
+				this.TextWrapper.Defined.FontStyle = style;
 			}
 
 			this.TextWrapper.DefineOperationName("FontStyle", Res.Strings.Action.FontStyle);
@@ -832,7 +833,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double size;
 			Common.Text.Properties.SizeUnits units;
 
-			if ( text == "" )
+			if (string.IsNullOrEmpty(text))
 			{
 				size = double.NaN;
 				units = Common.Text.Properties.SizeUnits.Points;

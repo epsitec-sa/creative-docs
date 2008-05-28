@@ -3019,6 +3019,7 @@ namespace Epsitec.Common.Document.Objects
 		public void CacheBitmapDirty()
 		{
 			//	Le bitmap caché n'est plus valide.
+#if true
 			if (this is Page)
 			{
 				System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapDirty page #{0}", this.PageNumber));
@@ -3027,6 +3028,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapDirty layer #{0}", this.LayerNumber));
 			}
+#endif
 			this.cacheBitmap = null;
 		}
 

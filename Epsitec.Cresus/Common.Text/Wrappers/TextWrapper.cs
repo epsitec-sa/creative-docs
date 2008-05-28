@@ -18,6 +18,11 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public State								Active
 		{
+			//	Etat réellement utilisé dans le contexte courant, qui dépend de l'état défini
+			//	directement (Defined) et des wrappers sous-jacents.
+			//	On peut ainsi avoir un Defined="Arial/Regular/120%" et un Active="Arial/Bold/14.4pt"
+			//	par exemple, si le style sous-jacent du paragraphe disait qu'il faut inverser le gras
+			//	et que la taille est de 12pt.
 			get
 			{
 				return this.active_state;
@@ -26,6 +31,7 @@ namespace Epsitec.Common.Text.Wrappers
 		
 		public State								Defined
 		{
+			//	Etat défini directement dans le wrapper courant.
 			get
 			{
 				return this.defined_state;
@@ -630,7 +636,7 @@ namespace Epsitec.Common.Text.Wrappers
 					style_name = buffer.ToString ();
 					style_name = OpenType.FontCollection.GetStyleHash (style_name);
 					
-					if ((style_name.Length == 0) &&
+					if ((buffer.Length == 0) &&
 						(this.AttachedTextStyleClass == TextStyleClass.Text))
 					{
 						state.DefineValue (State.FontStyleProperty);
