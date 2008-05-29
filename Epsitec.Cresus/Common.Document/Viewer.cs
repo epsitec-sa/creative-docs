@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document
 
 		public bool IsLayerMiniature
 		{
-			//	Miniature d'un calque (si false, c'est une page).
+			//	Miniature d'un calque (si false, c'est une miniature d'une page).
 			get
 			{
 				return this.isLayerMiniature;
@@ -160,15 +160,16 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public double PictogramMagnifierZoom
+		public double PictogramMiniatureZoom
 		{
+			//	Zoom spécial pour CrPicto permettant de voir les pixels lorsque le zoom est plus grand que 1.
 			get
 			{
-				return this.pictogramMagnifierZoom;
+				return this.pictogramMiniatureZoom;
 			}
 			set
 			{
-				this.pictogramMagnifierZoom = value;
+				this.pictogramMiniatureZoom = value;
 			}
 		}
 
@@ -4452,13 +4453,13 @@ namespace Epsitec.Common.Document
 				rect.Deflate(1);  // laisse un cadre d'un pixel
 				Transform it = null;
 
-				if (this.pictogramMagnifierZoom != 1)
+				if (this.pictogramMiniatureZoom != 1)
 				{
 					it = graphics.Transform;
-					graphics.ScaleTransform(this.pictogramMagnifierZoom, this.pictogramMagnifierZoom, rect.Left, rect.Bottom);
+					graphics.ScaleTransform(this.pictogramMiniatureZoom, this.pictogramMiniatureZoom, rect.Left, rect.Bottom);
 					graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
-					rect.Width /= this.pictogramMagnifierZoom;
-					rect.Height /= this.pictogramMagnifierZoom;
+					rect.Width /= this.pictogramMiniatureZoom;
+					rect.Height /= this.pictogramMiniatureZoom;
 				}
 
 				if (this.isLayerMiniature)
@@ -4490,11 +4491,11 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				if (this.pictogramMagnifierZoom != 1)
+				if (this.pictogramMiniatureZoom != 1)
 				{
 					graphics.Transform = it;
-					rect.Width *= this.pictogramMagnifierZoom;
-					rect.Height *= this.pictogramMagnifierZoom;
+					rect.Width *= this.pictogramMiniatureZoom;
+					rect.Height *= this.pictogramMiniatureZoom;
 				}
 
 				rect.Inflate(0.5);
@@ -4967,7 +4968,7 @@ namespace Epsitec.Common.Document
 		protected Selector						zoomer;
 		protected bool							isMiniature;
 		protected bool							isLayerMiniature;
-		protected double						pictogramMagnifierZoom = 1;
+		protected double						pictogramMiniatureZoom = 1;
 		protected bool							partialSelect;
 		protected bool							selectorAdaptLine = true;
 		protected bool							selectorAdaptText = true;
