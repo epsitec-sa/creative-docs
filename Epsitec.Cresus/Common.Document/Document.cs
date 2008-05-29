@@ -2247,7 +2247,7 @@ namespace Epsitec.Common.Document
 			{
 				Objects.Page p = page as Objects.Page;
 				Rectangle initialClip = Rectangle.Empty;
-				if (this.Modifier != null && !drawingContext.Viewer.IsDocumentPreview && !drawingContext.Viewer.IsPictogramPreview)
+				if (this.Modifier != null && !drawingContext.Viewer.IsMiniature)
 				{
 					initialClip = graphics.SaveClippingRectangle();
 					clipRect = Rectangle.Intersection(clipRect, this.Modifier.PageArea);
@@ -2280,7 +2280,7 @@ namespace Epsitec.Common.Document
 					graphics.PopColorModifier();
 				}
 
-				if (this.Modifier != null && !drawingContext.Viewer.IsDocumentPreview && !drawingContext.Viewer.IsPictogramPreview)
+				if (this.Modifier != null && !drawingContext.Viewer.IsMiniature)
 				{
 					graphics.RestoreClippingRectangle(initialClip);
 				}

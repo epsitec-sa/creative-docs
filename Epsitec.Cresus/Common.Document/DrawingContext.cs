@@ -613,7 +613,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -729,7 +729,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -862,7 +862,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -891,7 +891,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -921,7 +921,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -966,7 +966,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -993,7 +993,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyFontsSettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1020,7 +1020,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyFontsSettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1043,7 +1043,7 @@ namespace Epsitec.Common.Document
 				{
 					this.textFontSampleHeight = value;
 
-					if (this.document.Notifier != null && !this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+					if (this.document.Notifier != null && !this.viewer.IsMiniature)
 					{
 						this.document.SetDirtySerialize(CacheBitmapChanging.None);
 					}
@@ -1073,7 +1073,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1104,7 +1104,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1135,7 +1135,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1165,7 +1165,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1193,7 +1193,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1216,7 +1216,7 @@ namespace Epsitec.Common.Document
 				{
 					this.guidesMouse = value;
 
-					if (this.document.Notifier != null && !this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+					if (this.document.Notifier != null && !this.viewer.IsMiniature)
 					{
 						this.document.SetDirtySerialize(CacheBitmapChanging.None);
 					}
@@ -1678,7 +1678,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyMagnetChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1971,7 +1971,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyConstrainChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsDocumentPreview && !this.viewer.IsPictogramPreview)
+						if (!this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -2590,24 +2590,6 @@ namespace Epsitec.Common.Document
 			this.RootStackPush(layer);
 			this.UpdateAfterPageChanged();
 			this.document.Modifier.OpletQueueEnable = ie;
-			this.AdaptPictogramViewer();
-		}
-
-		public void AdaptPictogramViewer()
-		{
-			//	Adapte les vues miniatures de CrPicto en fonction de la page courante.
-			if (!this.viewer.IsPictogramPreview)
-			{
-				foreach (Viewer viewer in this.document.Modifier.Viewers)
-				{
-					if (viewer.IsPictogramPreview)
-					{
-						viewer.PreferredSize = this.PageSize*viewer.PictogramMagnifierZoom;
-						viewer.DrawingContext.InternalPageLayer(this.CurrentPage, this.CurrentLayer);
-						this.document.Notifier.NotifyArea(viewer);
-					}
-				}
-			}
 		}
 
 		public int TotalPages()

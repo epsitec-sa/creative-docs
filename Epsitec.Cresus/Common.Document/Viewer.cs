@@ -134,42 +134,29 @@ namespace Epsitec.Common.Document
 			get { return this.selector; }
 		}
 
-		public bool IsLayerPreview
+		public bool IsMiniature
+		{
+			//	Miniature d'une page ou d'un calque.
+			get
+			{
+				return this.isMiniature;
+			}
+			set
+			{
+				this.isMiniature = value;
+			}
+		}
+
+		public bool IsLayerMiniature
 		{
 			//	Miniature d'un calque (si false, c'est une page).
 			get
 			{
-				return this.isLayerPreview;
+				return this.isLayerMiniature;
 			}
 			set
 			{
-				this.isLayerPreview = value;
-			}
-		}
-
-		public bool IsDocumentPreview
-		{
-			//	Miniature pour CrDoc.
-			get
-			{
-				return this.isDocumentPreview;
-			}
-			set
-			{
-				this.isDocumentPreview = value;
-			}
-		}
-
-		public bool IsPictogramPreview
-		{
-			//	Miniature pour CrPicto.
-			get
-			{
-				return this.isPictogramPreview;
-			}
-			set
-			{
-				this.isPictogramPreview = value;
+				this.isLayerMiniature = value;
 			}
 		}
 
@@ -4386,24 +4373,6 @@ namespace Epsitec.Common.Document
 
 			IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
-#if false
-			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
-			{
-				Bitmap bitmap = this.document.Printer.CreateMiniatureBitmap(this.Client.Size/this.pictogramMagnifierZoom, false, this.drawingContext.CurrentPage, -1);
-				Transform it = graphics.Transform;
-				graphics.ScaleTransform(this.pictogramMagnifierZoom, this.pictogramMagnifierZoom, 0, 0);
-				graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
-				graphics.PaintImage(bitmap, new Rectangle(this.Client.Bounds.BottomLeft, this.Client.Bounds.Size/this.pictogramMagnifierZoom));
-				graphics.Transform = it;
-
-				Rectangle rect = new Rectangle(0, 0, this.Client.Size.Width, this.Client.Size.Height);
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(adorner.ColorBorder);
-				return;
-			}
-#endif
-			
 			//	Ignore une zone de repeinture d'un pixel à gauche ou en haut,
 			//	à cause des règles qui chevauchent Viewer.
 			if ( clipRect.Right == 1                    ||  // un pixel à gauche ?
@@ -4446,7 +4415,7 @@ namespace Epsitec.Common.Document
 				//	Peint le fond de la surface de travail.
 				if (this.document.Type == DocumentType.Pictogram)
 				{
-					if (this.isDocumentPreview || this.isPictogramPreview)
+					if (this.isMiniature)
 					{
 						graphics.AddFilledRectangle(clipRect);
 						graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
@@ -4464,7 +4433,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					if (this.isDocumentPreview || this.isPictogramPreview)
+					if (this.isMiniature)
 					{
 						graphics.AddFilledRectangle(clipRect);
 						graphics.RenderSolid(Color.FromBrightness(1));  // fond blanc
@@ -4477,7 +4446,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if (this.drawingContext.Viewer != null && (this.isDocumentPreview || this.isPictogramPreview))  // dessin d'une miniature ?
+			if (this.drawingContext.Viewer != null && this.isMiniature)  // dessin d'une miniature ?
 			{
 				Rectangle rect = this.drawingContext.Viewer.Client.Bounds;
 				rect.Deflate(1);  // laisse un cadre d'un pixel
@@ -4492,7 +4461,7 @@ namespace Epsitec.Common.Document
 					rect.Height /= this.pictogramMagnifierZoom;
 				}
 
-				if (this.isLayerPreview)
+				if (this.isLayerMiniature)
 				{
 					Objects.Abstract layer = this.drawingContext.RootObject(2);
 					if (layer.CacheBitmap == null)
@@ -4609,15 +4578,6 @@ namespace Epsitec.Common.Document
 
 		public override void InvalidateRectangle(Rectangle rect, bool sync)
 		{
-			if (this.isPictogramPreview && this.pictogramMagnifierZoom != 1)
-			{
-				double left   = System.Math.Floor(rect.Left/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
-				double bottom = System.Math.Floor(rect.Bottom/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
-				double right  = System.Math.Ceiling(rect.Right/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
-				double top    = System.Math.Ceiling(rect.Top/this.pictogramMagnifierZoom)*this.pictogramMagnifierZoom;
-				rect = new Rectangle(left, bottom, right-left, top-bottom);
-			}
-
 			base.InvalidateRectangle(rect, sync);
 		}
 
@@ -5005,9 +4965,8 @@ namespace Epsitec.Common.Document
 		protected DrawingContext				drawingContext;
 		protected Selector						selector;
 		protected Selector						zoomer;
-		protected bool							isLayerPreview;
-		protected bool							isDocumentPreview;
-		protected bool							isPictogramPreview;
+		protected bool							isMiniature;
+		protected bool							isLayerMiniature;
 		protected double						pictogramMagnifierZoom = 1;
 		protected bool							partialSelect;
 		protected bool							selectorAdaptLine = true;
