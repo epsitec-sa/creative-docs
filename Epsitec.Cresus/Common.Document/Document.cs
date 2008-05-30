@@ -2205,8 +2205,8 @@ namespace Epsitec.Common.Document
 		#region AdjustOutsideArea
 		protected void AdjustOutsideArea()
 		{
-			//	Ajuste les marges autour de la page physique pour que tous les objets du document
-			//	puisse être vus.
+			//	Ajuste la marge autour de la page physique pour que tous les objets du document
+			//	puisse être vus. Cette marge est éventuellement augmentée, mais jamais réduite.
 			Rectangle bbox = this.GetGlobalObjectsBoundingBox();
 			if (bbox.IsEmpty)
 			{
@@ -2215,7 +2215,7 @@ namespace Epsitec.Common.Document
 
 			Rectangle page = new Rectangle(Point.Zero, this.DocumentSize);
 			page.Inflate(this.modifier.OutsideArea);
-			if (page.Contains(bbox))
+			if (page.Contains(bbox))  // zone hors page assez grande ?
 			{
 				return;
 			}

@@ -643,7 +643,9 @@ namespace Epsitec.Common.Document
 			{
 				double zoom = this.document.GlobalSettings.DefaultZoom;
 				double factor = (wheel > 0) ? zoom : 1.0/zoom;
-				this.document.Modifier.ZoomChange(factor, pos);
+				//	TODO: La roulette de la souris ne zoom plus en fonction de la position visée, mais en gardant le document centré (à essayer).
+				//?this.document.Modifier.ZoomChange(factor, pos);
+				this.document.Modifier.ZoomChange(factor);
 			}
 
 			if ( this.document.GlobalSettings.MouseWheelAction == Settings.MouseWheelAction.VScroll )
