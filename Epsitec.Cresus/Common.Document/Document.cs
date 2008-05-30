@@ -604,6 +604,8 @@ namespace Epsitec.Common.Document
 						this.modifier.ActiveViewer.DrawingContext.ZoomPageAndCenter();
 						this.notifier.NotifyAllChanged();
 						this.modifier.OpletQueueValidateAction();
+
+						this.AdjustOutsideArea();
 					}
 					else
 					{
@@ -1855,7 +1857,6 @@ namespace Epsitec.Common.Document
 
 
 		#region DocumentInfo
-
 		public static IDocumentInfo GetDocumentInfo(string path)
 		{
 			//	Extrait des informations pour le document spécifié.
@@ -1940,11 +1941,9 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
-
 		#endregion
 
 		#region Statistics
-
 		[System.Serializable]
 		public class Statistics : DocumentInfo
 		{
@@ -2202,6 +2201,55 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+
+		#region AdjustOutsideArea
+		protected void AdjustOutsideArea()
+		{
+			//	Ajuste les marges autour de la page physique pour que tous les objets du document
+			//	puisse être vus.
+			Rectangle bbox = this.GetGlobalObjectsBoundingBox();
+			if (bbox.IsEmpty)
+			{
+				return;
+			}
+
+			Rectangle page = new Rectangle(Point.Zero, this.DocumentSize);
+			page.Inflate(this.modifier.OutsideArea);
+			if (page.Contains(bbox))
+			{
+				return;
+			}
+
+			page = new Rectangle(Point.Zero, this.DocumentSize);
+			double left   = -System.Math.Min(page.Left, bbox.Left);
+			double right  =  System.Math.Max(page.Right,  bbox.Right ) - page.Right;
+			double bottom = -System.Math.Min(page.Bottom, bbox.Bottom);
+			double top    =  System.Math.Max(page.Top,    bbox.Top   ) - page.Top;
+
+			double m = System.Math.Max(System.Math.Max(left, right), System.Math.Max(bottom, top));
+			m = System.Math.Ceiling(m/10)*10;
+			this.modifier.OutsideArea = m;
+		}
+
+		protected Rectangle GetGlobalObjectsBoundingBox()
+		{
+			//	Retourne la bbox qui englobe tous les objets du document.
+			Rectangle bbox = Rectangle.Empty;
+
+			foreach (Objects.Page page in this.objects)
+			{
+				foreach (Objects.Layer layer in page.Objects)
+				{
+					foreach (Objects.Abstract obj in this.Deep(layer))
+					{
+						bbox = Rectangle.Union(bbox, obj.BoundingBoxGeom);
+					}
+				}
+			}
+
+			return bbox;
+		}
+		#endregion
 
 		public void Paint(Graphics graphics, DrawingContext drawingContext, Rectangle clipRect)
 		{
