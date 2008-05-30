@@ -550,7 +550,7 @@ namespace Epsitec.Common.Document.Objects
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Path path = this.GetShaperPath();
 			double width = this.SelectedSegmentWidth(context, true);
-			return Geometry.DetectOutlineRank(path, width, mouse);
+			return Geometry.DetectOutlineRank(path, width/2, mouse);
 		}
 
 		public void ShaperHiliteSegment(bool hilite, Point mouse)
