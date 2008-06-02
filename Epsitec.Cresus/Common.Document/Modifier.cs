@@ -5760,7 +5760,7 @@ namespace Epsitec.Common.Document
 			if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
 			{
 				this.ZoomMemorize();
-				context.ZoomAndCenter(context.Zoom, box.Center);
+				context.ZoomAndCenter(context.Zoom, box.Center, false);
 
 				box = this.SelectedBbox;
 				if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
@@ -5783,7 +5783,7 @@ namespace Epsitec.Common.Document
 			{
 				bbox.Inflate(20);
 			}
-			this.ZoomChange(bbox.BottomLeft, bbox.TopRight);
+			this.ZoomChange(bbox.BottomLeft, bbox.TopRight, false);
 		}
 
 		public void ZoomSelWidth()
@@ -5802,7 +5802,7 @@ namespace Epsitec.Common.Document
 			this.ZoomChangeWidth(bbox.BottomLeft, bbox.TopRight);
 		}
 
-		public void ZoomChange(Point p1, Point p2)
+		public void ZoomChange(Point p1, Point p2, bool motionless)
 		{
 			//	Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 			Viewer viewer = this.ActiveViewer;
@@ -5812,10 +5812,10 @@ namespace Epsitec.Common.Document
 			double fx = viewer.ActualWidth/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
 			double fy = viewer.ActualHeight/(System.Math.Abs(p1.Y-p2.Y)*context.ScaleY);
 			double factor = System.Math.Min(fx, fy);
-			this.ZoomChange(factor, (p1+p2)/2);
+			this.ZoomChange(factor, (p1+p2)/2, motionless);
 		}
 
-		public void ZoomChangeWidth(Point p1, Point p2)
+		protected void ZoomChangeWidth(Point p1, Point p2)
 		{
 			//	Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
 			Viewer viewer = this.ActiveViewer;
@@ -5823,17 +5823,17 @@ namespace Epsitec.Common.Document
 
 			if ( p1.X == p2.X )  return;
 			double factor = viewer.ActualWidth/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
-			this.ZoomChange(factor, (p1+p2)/2);
+			this.ZoomChange(factor, (p1+p2)/2, false);
 		}
 
 		public void ZoomChange(double factor)
 		{
 			//	Change le zoom d'un certain facteur, avec centrage au milieu du dessin.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-			this.ZoomChange(factor, context.Center);
+			this.ZoomChange(factor, context.Center, false);
 		}
 
-		public void ZoomChange(double factor, Point center)
+		public void ZoomChange(double factor, Point center, bool motionless)
 		{
 			//	Change le zoom d'un certain facteur, avec centrage quelconque.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -5844,7 +5844,7 @@ namespace Epsitec.Common.Document
 			if ( newZoom == context.Zoom )  return;
 
 			this.ZoomMemorize();
-			context.ZoomAndCenter(newZoom, center);
+			context.ZoomAndCenter(newZoom, center, motionless);
 		}
 
 		public void ZoomValue(double value)
@@ -5867,7 +5867,7 @@ namespace Epsitec.Common.Document
 				this.ZoomMemorize();
 			}
 
-			context.ZoomAndCenter(value, context.Center);
+			context.ZoomAndCenter(value, context.Center, false);
 		}
 
 		public int ZoomMemorizeCount
@@ -5894,7 +5894,7 @@ namespace Epsitec.Common.Document
 
 			ZoomHistory.ZoomElement item = this.zoomHistory.Remove();
 			if ( item == null )  return;
-			context.ZoomAndCenter(item.Zoom, item.Center);
+			context.ZoomAndCenter(item.Zoom, item.Center, false);
 		}
 
 		public double ZoomMin

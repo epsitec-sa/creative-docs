@@ -335,29 +335,31 @@ namespace Epsitec.Common.Document
 		public void ZoomPageAndCenter()
 		{
 			//	Remet le zoom pleine page et le centre par défaut.
-			this.ZoomAndCenter(this.ZoomPage, this.PageSize.Width/2, this.PageSize.Height/2);
+			this.ZoomAndCenter(this.ZoomPage, this.PageSize.Width/2, this.PageSize.Height/2, false);
 		}
 
 		public void ZoomPageWidthAndCenter()
 		{
 			//	Remet le zoom largeur page et le centre par défaut.
-			this.ZoomAndCenter(this.ZoomPageWidth, this.PageSize.Width/2, this.PageSize.Height/2);
+			this.ZoomAndCenter(this.ZoomPageWidth, this.PageSize.Width/2, this.PageSize.Height/2, false);
 		}
 
 		public void ZoomDefaultAndCenter()
 		{
 			//	Remet le zoom 100% et le centre par défaut.
-			this.ZoomAndCenter(1.0, this.PageSize.Width/2, this.PageSize.Height/2);
+			this.ZoomAndCenter(1.0, this.PageSize.Width/2, this.PageSize.Height/2, false);
 		}
 
-		public void ZoomAndCenter(double zoom, Point center)
+		public void ZoomAndCenter(double zoom, Point center, bool motionless)
 		{
 			//	Spécifie le zoom et le centre de la zone visible.
-			this.ZoomAndCenter(zoom, center.X, center.Y);
+			this.ZoomAndCenter(zoom, center.X, center.Y, motionless);
 		}
 
-		public void ZoomAndCenter(double zoom, double centerX, double centerY)
+		protected void ZoomAndCenter(double zoom, double centerX, double centerY, bool motionless)
 		{
+			//	Avec le mode motionless = true, on cherche à conserver la position visée dans l'écran.
+			//	Avec le mode motionless = false, on cherche à centrer la position visée.
 			Point iPos = this.viewer.InternalToScreen(new Point(centerX, centerY));
 
 			bool changed = false;
@@ -367,12 +369,29 @@ namespace Epsitec.Common.Document
 				changed = true;
 			}
 
-			Point iOffset = this.viewer.InternalToScreen(new Point(centerX, centerY))-iPos;
-			iOffset.X /= this.ScaleX;
-			iOffset.Y /= this.ScaleY;
+			double originX, originY;
 
-			double originX = this.originX-iOffset.X;
-			double originY = this.originY-iOffset.Y;
+			if (motionless)
+			{
+				Point iOffset = this.viewer.InternalToScreen(new Point(centerX, centerY))-iPos;
+				iOffset.X /= this.ScaleX;
+				iOffset.Y /= this.ScaleY;
+
+				originX = this.originX-iOffset.X;
+				originY = this.originY-iOffset.Y;
+			}
+			else
+			{
+				Size container = this.ContainerSize;
+
+				originX = (container.Width/this.ScaleX)/2-centerX;
+				originX = -System.Math.Max(-originX, this.MinOriginX);
+				originX = -System.Math.Min(-originX, this.MaxOriginX);
+
+				originY = (container.Height/this.ScaleY)/2-centerY;
+				originY = -System.Math.Max(-originY, this.MinOriginY);
+				originY = -System.Math.Min(-originY, this.MaxOriginY);
+			}
 
 			if ( this.originX != originX ||
 				 this.originY != originY )
@@ -2639,7 +2658,7 @@ namespace Epsitec.Common.Document
 						Size newSize = this.PageSize;
 						if ( oldSize != newSize )
 						{
-							this.ZoomAndCenter(this.zoom, newSize.Width/2, newSize.Height/2);
+							this.ZoomAndCenter(this.zoom, newSize.Width/2, newSize.Height/2, false);
 						}
 					}
 

@@ -643,7 +643,7 @@ namespace Epsitec.Common.Document
 			{
 				double zoom = this.document.GlobalSettings.DefaultZoom;
 				double factor = (wheel > 0) ? zoom : 1.0/zoom;
-				this.document.Modifier.ZoomChange(factor, pos);
+				this.document.Modifier.ZoomChange(factor, pos, true);
 			}
 
 			if ( this.document.GlobalSettings.MouseWheelAction == Settings.MouseWheelAction.VScroll )
@@ -1863,11 +1863,11 @@ namespace Epsitec.Common.Document
 
 					if ( this.zoomCtrl )
 					{
-						this.drawingContext.ZoomAndCenter(zoom, this.moveStart);
+						this.drawingContext.ZoomAndCenter(zoom, this.moveStart, true);
 					}
 					else
 					{
-						this.drawingContext.ZoomAndCenter(zoom, this.moveStart-this.zoomOffset);
+						this.drawingContext.ZoomAndCenter(zoom, this.moveStart-this.zoomOffset, true);
 					}
 				}
 				else
@@ -1890,18 +1890,18 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.drawingContext.IsCtrl || isRight )
 				{
-					this.document.Modifier.ZoomChange(0.5, rect.Center);
+					this.document.Modifier.ZoomChange(0.5, rect.Center, true);
 				}
 				else
 				{
 					double len = Point.Distance(mouse, this.moveStart);
 					if ( len <= this.drawingContext.MinimalSize )
 					{
-						this.document.Modifier.ZoomChange(2.0, rect.Center);
+						this.document.Modifier.ZoomChange(2.0, rect.Center, true);
 					}
 					else
 					{
-						this.document.Modifier.ZoomChange(rect.BottomLeft, rect.TopRight);
+						this.document.Modifier.ZoomChange(rect.BottomLeft, rect.TopRight, false);
 					}
 				}
 			}
@@ -3509,7 +3509,7 @@ namespace Epsitec.Common.Document
 			{
 				Point center = this.drawingContext.Center;
 				base.UpdateClientGeometry();
-				this.drawingContext.ZoomAndCenter(this.drawingContext.Zoom, center);
+				this.drawingContext.ZoomAndCenter(this.drawingContext.Zoom, center, false);
 			}
 		}
 
