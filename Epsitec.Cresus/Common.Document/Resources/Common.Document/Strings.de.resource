@@ -1430,4 +1430,10 @@
   <data id="K2">Bild einfügen</data>
   <data id="K1">Text einfügen</data>
   <data id="K">&lt;i&gt;Aus der Zwischenablage&lt;/i&gt;</data>
+  <data id="K8">Miniaturansichten der Ebenen zeigen oder verstecken</data>
+  <data id="K5">Miniaturansichten der Seiten zeigen oder verstecken</data>
+  <data id="KA">Ebene &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data id="K9">Grösse der Miniaturansichten</data>
+  <data id="KB">Seite &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data id="K7">Grösse der Miniaturansichten</data>
 </bundle>

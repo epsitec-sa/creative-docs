@@ -1430,4 +1430,10 @@
   <data id="K2">Paste image</data>
   <data id="K1">Paste text</data>
   <data id="K">&lt;i&gt;From the clipboard&lt;/i&gt;</data>
+  <data id="K8">Show or hide the layer thumbnails</data>
+  <data id="K5">Show or hide the page thumbnails</data>
+  <data id="KA">Layer &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data id="K9">Size of layer thumbnails</data>
+  <data id="KB">Page &lt;b&gt;{0}&lt;/b&gt;</data>
+  <data id="K7">Size of page thumbnails</data>
 </bundle>

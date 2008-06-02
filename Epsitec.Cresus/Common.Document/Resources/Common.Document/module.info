@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="2" name="Common.Document" layer="s">
   <Versions>
-    <Version id="1" build="1" date="2008-04-30T07:29:43.9106000Z" />
     <Version id="2" build="5" date="2008-05-27T10:05:47.7820000Z" />
+    <Version id="1" build="2" date="2008-06-02T19:37:49.3530000Z" />
   </Versions>
 </ModuleInfo>
