@@ -358,6 +358,8 @@ namespace Epsitec.Common.Document
 
 		public void ZoomAndCenter(double zoom, double centerX, double centerY)
 		{
+			Point iPos = this.viewer.InternalToScreen(new Point(centerX, centerY));
+
 			bool changed = false;
 			if ( this.zoom != zoom )
 			{
@@ -365,15 +367,12 @@ namespace Epsitec.Common.Document
 				changed = true;
 			}
 
-			Size container = this.ContainerSize;
+			Point iOffset = this.viewer.InternalToScreen(new Point(centerX, centerY))-iPos;
+			iOffset.X /= this.ScaleX;
+			iOffset.Y /= this.ScaleY;
 
-			double originX = (container.Width/this.ScaleX)/2-centerX;
-			originX = -System.Math.Max(-originX, this.MinOriginX);
-			originX = -System.Math.Min(-originX, this.MaxOriginX);
-
-			double originY = (container.Height/this.ScaleY)/2-centerY;
-			originY = -System.Math.Max(-originY, this.MinOriginY);
-			originY = -System.Math.Min(-originY, this.MaxOriginY);
+			double originX = this.originX-iOffset.X;
+			double originY = this.originY-iOffset.Y;
 
 			if ( this.originX != originX ||
 				 this.originY != originY )
@@ -383,7 +382,7 @@ namespace Epsitec.Common.Document
 				changed = true;
 			}
 
-			if ( changed && this.document.Notifier != null )
+			if (changed && this.document.Notifier != null)
 			{
 				this.document.Notifier.NotifyArea(this.viewer);
 				this.document.Notifier.NotifyZoomChanged();
