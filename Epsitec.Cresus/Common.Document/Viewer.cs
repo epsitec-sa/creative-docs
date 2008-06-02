@@ -1411,29 +1411,33 @@ namespace Epsitec.Common.Document
 
 			if ( this.mouseDragging )  // bouton souris pressé ?
 			{
-				if ( this.selector.Visible && !this.selector.Handles )
+				double len = Point.Distance(mouse, this.moveStart);
+				if (len > this.drawingContext.MinimalSize)
 				{
-					this.selector.FixEnding(mouse);
-				}
-				else if ( this.moveObject != null && !this.drawingContext.IsShift )
-				{
-					if ( this.moveHandle != -1 )  // déplace une poignée ?
+					if (this.selector.Visible && !this.selector.Handles)
 					{
-						mouse -= this.moveOffset;
-						this.moveObject.MoveHandleProcess(this.moveHandle, mouse, this.drawingContext);
-						this.HiliteHandle(this.moveObject, this.moveHandle);
-						this.document.Modifier.FlushMoveAfterDuplicate();
+						this.selector.FixEnding(mouse);
 					}
-
-					if ( this.moveSelectedSegment != -1 )  // déplace un segment sélectionné ?
+					else if (this.moveObject != null && !this.drawingContext.IsShift)
 					{
-						mouse -= this.moveOffset;
-						this.moveObject.MoveSelectedSegmentProcess(this.moveSelectedSegment, mouse, this.drawingContext);
-					}
+						if (this.moveHandle != -1)  // déplace une poignée ?
+						{
+							mouse -= this.moveOffset;
+							this.moveObject.MoveHandleProcess(this.moveHandle, mouse, this.drawingContext);
+							this.HiliteHandle(this.moveObject, this.moveHandle);
+							this.document.Modifier.FlushMoveAfterDuplicate();
+						}
 
-					if ( this.moveSelectedHandle )  // déplace plusieurs poignées ?
-					{
-						this.moveObject.MoveSelectedHandlesProcess(mouse, this.drawingContext);
+						if (this.moveSelectedSegment != -1)  // déplace un segment sélectionné ?
+						{
+							mouse -= this.moveOffset;
+							this.moveObject.MoveSelectedSegmentProcess(this.moveSelectedSegment, mouse, this.drawingContext);
+						}
+
+						if (this.moveSelectedHandle)  // déplace plusieurs poignées ?
+						{
+							this.moveObject.MoveSelectedHandlesProcess(mouse, this.drawingContext);
+						}
 					}
 				}
 			}

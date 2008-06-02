@@ -33,6 +33,7 @@ namespace Epsitec.Common.Document
 
 		public void Add(ZoomElement item)
 		{
+			//	Ajoute un élément à la fin de la liste.
 			int total = this.list.Count;
 			if ( total > 0 )
 			{
@@ -47,6 +48,8 @@ namespace Epsitec.Common.Document
 
 		public ZoomElement Remove()
 		{
+			//	Enlève et retourne le dernier élément de la liste.
+			//	Retourne null s'il n'y en a plus.
 			int total = this.list.Count;
 			if (total == 0)
 			{
@@ -58,8 +61,10 @@ namespace Epsitec.Common.Document
 			return item;
 		}
 
+
 		static public bool IsNearlyEqual(ZoomElement a, ZoomElement b)
 		{
+			//	Retourne true si deux éléments sont presque égaux.
 			if (System.Math.Abs(a.Zoom-b.Zoom) > 0.001)
 			{
 				return false;
