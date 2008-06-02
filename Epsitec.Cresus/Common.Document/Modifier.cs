@@ -5892,9 +5892,24 @@ namespace Epsitec.Common.Document
 			//	Revient au niveau de zoom précédent.
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 
-			ZoomHistory.ZoomElement item = this.zoomHistory.Remove();
-			if ( item == null )  return;
-			context.ZoomAndCenter(item.Zoom, item.Center, false);
+			ZoomHistory.ZoomElement current = new ZoomHistory.ZoomElement();
+			current.Zoom = context.Zoom;
+			current.Center = context.Center;
+
+			while (true)
+			{
+				ZoomHistory.ZoomElement item = this.zoomHistory.Remove();
+				if (item == null)
+				{
+					return;
+				}
+
+				if (!ZoomHistory.IsNearlyEqual(item, current))
+				{
+					context.ZoomAndCenter(item.Zoom, item.Center, false);
+					break;
+				}
+			}
 		}
 
 		public double ZoomMin
