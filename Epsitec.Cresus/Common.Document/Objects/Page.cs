@@ -570,10 +570,10 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region CacheBitmap
-		public override void CacheBitmapCreate()
+		protected override void CacheBitmapCreate()
 		{
 			//	Crée le bitmap caché.
-			System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate page #{0}", this.PageNumber));
+			//?System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate page #{0}", this.PageNumber));
 			if (this.cacheBitmapSize.IsEmpty)
 			{
 				this.cacheBitmap = null;

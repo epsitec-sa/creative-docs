@@ -198,10 +198,10 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region CacheBitmap
-		public override void CacheBitmapCreate()
+		protected override void CacheBitmapCreate()
 		{
 			//	Crée le bitmap caché.
-			System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate layer #{0}", this.LayerNumber));
+			//?System.Diagnostics.Debug.WriteLine(string.Format("CacheBitmapCreate layer #{0}", this.LayerNumber));
 			if (this.cacheBitmapSize.IsEmpty)
 			{
 				this.cacheBitmap = null;

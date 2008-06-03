@@ -87,6 +87,11 @@ namespace Epsitec.Common.Document
 				this.dimensionScale = 1.0;
 				this.dimensionDecimal = 2.0;
 			}
+
+			this.miniaturesTimer = new Timer();
+			this.miniaturesTimer.TimeElapsed += new EventHandler(this.HandleMiniaturesTimerTimeElapsed);
+			this.miniaturesTimer.Delay = 1.0;
+			this.miniaturesTimer.Start();
 		}
 
 		public void Dispose()
@@ -6906,6 +6911,30 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region MiniaturesTimer
+		public void MiniaturesTimerRestart()
+		{
+			this.miniaturesTimer.Restart();
+		}
+
+		private void HandleMiniaturesTimerTimeElapsed(object sender)
+		{
+			if (this.document.PageMiniatures == null)
+			{
+				return;
+			}
+			
+			this.miniaturesTimer.Stop();
+
+			this.document.PageMiniatures.TimeElapsed();
+			this.document.LayerMiniatures.TimeElapsed();
+
+			this.miniaturesTimer.Start();
+		}
+
+		#endregion
+
+
 		protected Document						document;
 		protected Viewer						activeViewer;
 		protected List<Viewer>					viewers;
@@ -6957,6 +6986,7 @@ namespace Epsitec.Common.Document
 		protected double						dimensionDecimal;
 		protected int							aggregateUsed;
 		protected System.Collections.Hashtable	accumulateObjects;
+		protected Timer							miniaturesTimer;
 
 		public static readonly double			FontSizeScale = 254.0 / 72.0;	//	1pt = 1/72 de pouce (unités internes, 0.1mm)
 	}

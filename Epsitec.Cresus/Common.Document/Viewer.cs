@@ -4457,12 +4457,12 @@ namespace Epsitec.Common.Document
 				rect.Deflate(1);  // laisse un cadre d'un pixel
 				Transform it = null;
 
-				if (this.pictogramMiniatureZoom != 1)
+				if (this.pictogramMiniatureZoom != 1)  // gros pixels ?
 				{
 					it = graphics.Transform;
 					graphics.ScaleTransform(this.pictogramMiniatureZoom, this.pictogramMiniatureZoom, rect.Left, rect.Bottom);
-					graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);
-					rect.Width /= this.pictogramMiniatureZoom;
+					graphics.ImageFilter = new ImageFilter(ImageFilteringMode.None);  // ne surtout pas lisser
+					rect.Width  /= this.pictogramMiniatureZoom;
 					rect.Height /= this.pictogramMiniatureZoom;
 				}
 
@@ -4495,10 +4495,10 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				if (this.pictogramMiniatureZoom != 1)
+				if (this.pictogramMiniatureZoom != 1)  // gros pixels ?
 				{
 					graphics.Transform = it;
-					rect.Width *= this.pictogramMiniatureZoom;
+					rect.Width  *= this.pictogramMiniatureZoom;
 					rect.Height *= this.pictogramMiniatureZoom;
 				}
 

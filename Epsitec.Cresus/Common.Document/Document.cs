@@ -831,6 +831,7 @@ namespace Epsitec.Common.Document
 			int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
 			int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
 
+#if false
 			for (int pageRank=0; pageRank<this.objects.Count; pageRank++)
 			{
 				Objects.Abstract page = this.objects[pageRank] as Objects.Abstract;
@@ -852,6 +853,21 @@ namespace Epsitec.Common.Document
 					}
 				}
 			}
+#else
+			if (changing == CacheBitmapChanging.Local)
+			{
+				this.pageMiniatures.AddPageToRegenerate(currentPage);
+				this.layerMiniatures.AddLayerToRegenerate(currentLayer);
+			}
+
+			if (changing == CacheBitmapChanging.All)
+			{
+				this.pageMiniatures.RegenerateAll();
+				this.layerMiniatures.RegenerateAll();
+			}
+
+			this.modifier.MiniaturesTimerRestart();
+#endif
 		}
 
 
