@@ -363,6 +363,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public void Close()
+		{
+			//	Appelé juste avant le fermeture du document.
+			if (this.modifier != null)
+			{
+				this.modifier.MiniaturesTimerStop();
+			}
+		}
+
 		#region ForSamples
 		public Document DocumentForSamples
 		{
@@ -828,37 +837,7 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-			int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
-
-#if false
-			for (int pageRank=0; pageRank<this.objects.Count; pageRank++)
-			{
-				Objects.Abstract page = this.objects[pageRank] as Objects.Abstract;
-
-				if (changing == CacheBitmapChanging.All || pageRank == currentPage)
-				{
-					page.CacheBitmapDirty();
-					this.pageMiniatures.Redraw(pageRank);
-				}
-
-				for (int layerRank=0; layerRank<page.Objects.Count; layerRank++)
-				{
-					Objects.Abstract layer = page.Objects[layerRank] as Objects.Abstract;
-
-					if (changing == CacheBitmapChanging.All || layerRank == currentLayer)
-					{
-						layer.CacheBitmapDirty();
-						this.layerMiniatures.Redraw(layerRank);
-					}
-				}
-			}
-#else
-			if (changing == CacheBitmapChanging.Local)
-			{
-				this.pageMiniatures.AddPageToRegenerate(currentPage);
-				this.layerMiniatures.AddLayerToRegenerate(currentLayer);
-			}
+			this.modifier.MiniaturesTimerStop();
 
 			if (changing == CacheBitmapChanging.All)
 			{
@@ -866,8 +845,16 @@ namespace Epsitec.Common.Document
 				this.layerMiniatures.RegenerateAll();
 			}
 
-			this.modifier.MiniaturesTimerRestart();
-#endif
+			if (changing == CacheBitmapChanging.Local)
+			{
+				int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+				int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
+
+				this.pageMiniatures.AddPageToRegenerate(currentPage);
+				this.layerMiniatures.AddLayerToRegenerate(currentLayer);
+			}
+
+			this.modifier.MiniaturesTimerStart(false);
 		}
 
 
@@ -909,7 +896,7 @@ namespace Epsitec.Common.Document
 					err = this.Read(sourceStream, System.IO.Path.GetDirectoryName(filename), null, isCrDoc);
 				}
 
-				sourceStream.Close ();
+				sourceStream.Close();
 
 				if (err == "")
 				{
@@ -933,7 +920,7 @@ namespace Epsitec.Common.Document
 			}
 			catch ( System.Exception e )
 			{
-				this.ioDocumentManager.Close ();
+				this.ioDocumentManager.Close();
 				this.ClearDirtySerialize();
 				return e.Message;
 			}

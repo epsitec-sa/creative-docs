@@ -92,8 +92,6 @@ namespace Epsitec.Common.Document
 			{
 				this.miniaturesTimer = new Timer();
 				this.miniaturesTimer.TimeElapsed += new EventHandler(this.HandleMiniaturesTimerTimeElapsed);
-				this.miniaturesTimer.Delay = 1.0;
-				this.miniaturesTimer.Start();
 			}
 		}
 
@@ -6915,10 +6913,18 @@ namespace Epsitec.Common.Document
 
 
 		#region MiniaturesTimer
-		public void MiniaturesTimerRestart()
+		public void MiniaturesTimerStop()
 		{
-			//	Redémarre le délai du timer des miniatures.
-			this.miniaturesTimer.Restart();
+			//	Stoppe le timer des miniatures.
+			this.miniaturesTimer.Stop();
+		}
+
+		public void MiniaturesTimerStart(bool quick)
+		{
+			//	Démarre le timer des miniatures.
+			this.miniaturesTimer.Delay = quick ? 0.05 : 0.10;
+			//?this.miniaturesTimer.Delay = quick ? 0.50 : 1.00;
+			this.miniaturesTimer.Start();
 		}
 
 		private void HandleMiniaturesTimerTimeElapsed(object sender)
@@ -6928,13 +6934,20 @@ namespace Epsitec.Common.Document
 			{
 				return;
 			}
-			
-			this.miniaturesTimer.Stop();
 
-			this.document.PageMiniatures.TimeElapsed();
-			this.document.LayerMiniatures.TimeElapsed();
+			this.MiniaturesTimerStop();
 
-			this.miniaturesTimer.Start();
+			if (this.document.PageMiniatures.TimeElapsed())
+			{
+				this.MiniaturesTimerStart(true);
+				return;
+			}
+
+			if (this.document.LayerMiniatures.TimeElapsed())
+			{
+				this.MiniaturesTimerStart(true);
+				return;
+			}
 		}
 
 		#endregion
