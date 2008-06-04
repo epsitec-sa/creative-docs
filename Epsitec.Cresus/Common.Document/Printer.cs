@@ -116,9 +116,10 @@ namespace Epsitec.Common.Document
 			//	Retourne les données pour l'image bitmap d'une miniature.
 			//	Si layer == -1, on dessine tous les calques.
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
+			drawingContext.IsBitmap = true;
 			drawingContext.ContainerSize = this.document.PageSize;
 			drawingContext.PreviewActive = false;
-			drawingContext.IsBitmap = true;
+			drawingContext.TextShowControlCharacters = false;
 			drawingContext.GridShow = isModel;
 
 			Size pageSize = this.document.GetPageSize(page);

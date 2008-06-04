@@ -88,10 +88,13 @@ namespace Epsitec.Common.Document
 				this.dimensionDecimal = 2.0;
 			}
 
-			this.miniaturesTimer = new Timer();
-			this.miniaturesTimer.TimeElapsed += new EventHandler(this.HandleMiniaturesTimerTimeElapsed);
-			this.miniaturesTimer.Delay = 1.0;
-			this.miniaturesTimer.Start();
+			if (this.document.Mode == DocumentMode.Modify)
+			{
+				this.miniaturesTimer = new Timer();
+				this.miniaturesTimer.TimeElapsed += new EventHandler(this.HandleMiniaturesTimerTimeElapsed);
+				this.miniaturesTimer.Delay = 1.0;
+				this.miniaturesTimer.Start();
+			}
 		}
 
 		public void Dispose()
@@ -6914,11 +6917,13 @@ namespace Epsitec.Common.Document
 		#region MiniaturesTimer
 		public void MiniaturesTimerRestart()
 		{
+			//	Redémarre le délai du timer des miniatures.
 			this.miniaturesTimer.Restart();
 		}
 
 		private void HandleMiniaturesTimerTimeElapsed(object sender)
 		{
+			//	Appelé lorsque le timer des miniatures arrive à échéance.
 			if (this.document.PageMiniatures == null)
 			{
 				return;

@@ -631,7 +631,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -660,7 +660,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -689,7 +689,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -747,7 +747,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -850,7 +850,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -880,7 +880,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -909,7 +909,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -939,7 +939,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -984,7 +984,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1011,7 +1011,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyFontsSettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1038,7 +1038,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyFontsSettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1061,7 +1061,7 @@ namespace Epsitec.Common.Document
 				{
 					this.textFontSampleHeight = value;
 
-					if (this.document.Notifier != null && !this.viewer.IsMiniature)
+					if (this.document.Notifier != null && this.viewer != null && !this.viewer.IsMiniature)
 					{
 						this.document.SetDirtySerialize(CacheBitmapChanging.None);
 					}
@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1122,7 +1122,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1153,7 +1153,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1183,7 +1183,7 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1211,7 +1211,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Document
 				{
 					this.guidesMouse = value;
 
-					if (this.document.Notifier != null && !this.viewer.IsMiniature)
+					if (this.document.Notifier != null && this.viewer != null && !this.viewer.IsMiniature)
 					{
 						this.document.SetDirtySerialize(CacheBitmapChanging.None);
 					}
@@ -1696,7 +1696,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyMagnetChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
@@ -1989,7 +1989,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyConstrainChanged();
 						this.document.Notifier.NotifySettingsChanged();
 
-						if (!this.viewer.IsMiniature)
+						if (this.viewer != null && !this.viewer.IsMiniature)
 						{
 							this.document.SetDirtySerialize(CacheBitmapChanging.None);
 						}
