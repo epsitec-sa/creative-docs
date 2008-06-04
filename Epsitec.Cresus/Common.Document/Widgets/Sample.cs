@@ -264,10 +264,14 @@ namespace Epsitec.Common.Document.Widgets
 				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shape);
 			}
 
-			if ( lineColor != null && lineMode != null )
+			if (lineColor != null)
 			{
 				Shape shape = new Shape();
 				shape.Path = path;
+				if (lineMode == null)
+				{
+					lineMode = new Properties.Line(this.document, Properties.Type.LineMode);
+				}
 				shape.SetPropertyStroke(graphics, lineMode, lineColor);
 				drawer.DrawShapes(graphics, null, obj, Drawer.DrawShapesMode.All, shape);
 			}
