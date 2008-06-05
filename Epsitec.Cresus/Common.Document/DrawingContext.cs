@@ -2727,14 +2727,14 @@ namespace Epsitec.Common.Document
 		public void UpdateAfterPageChanged()
 		{
 			//	Met à jour masterPageList et magnetLayerList après un changement de page.
-			this.masterPageList = this.document.Modifier.ComputeMasterPageList (this.CurrentPage);
-			this.magnetLayerList = this.document.Modifier.ComputeMagnetLayerList (this.CurrentPage);
+			this.masterPageList = this.document.Modifier.ComputeMasterPageList(this.CurrentPage);
+			this.magnetLayerList = this.document.Modifier.ComputeMagnetLayerList(this.CurrentPage);
 		}
 
 		public void UpdateAfterLayerChanged()
 		{
 			//	Met à jour magnetLayerList après un changement de page.
-			this.magnetLayerList = this.document.Modifier.ComputeMagnetLayerList (this.CurrentPage);
+			this.magnetLayerList = this.document.Modifier.ComputeMagnetLayerList(this.CurrentPage);
 		}
 		#endregion
 

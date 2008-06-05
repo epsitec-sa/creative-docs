@@ -2318,6 +2318,7 @@ namespace Epsitec.Common.Document
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
 			this.IsObjectJustCreated = false;
+			this.UpdatePageAndLayerNumbers();
 			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyTextChanged();
@@ -2345,6 +2346,7 @@ namespace Epsitec.Common.Document
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
 			this.IsObjectJustCreated = false;
+			this.UpdatePageAndLayerNumbers();
 			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyTextChanged();

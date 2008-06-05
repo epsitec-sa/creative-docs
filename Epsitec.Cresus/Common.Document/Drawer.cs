@@ -131,14 +131,24 @@ namespace Epsitec.Common.Document
 										double width, double dash, double gap, Drawing.Color color)
 		{
 			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
-			if ( path.IsEmpty )  return;
+			Drawer.DrawPathDash(graphics, drawingContext.ScaleX, path, width, dash, gap, color);
+		}
+
+		public static void DrawPathDash(Graphics graphics, double scale, Path path,
+										double width, double dash, double gap, Drawing.Color color)
+		{
+			//	Dessine un traitillé simple (dash/gap) le long d'un chemin.
+			if (path.IsEmpty)
+			{
+				return;
+			}
 
 			DashedPath dp = new DashedPath();
-			dp.DefaultZoom = drawingContext.ScaleX;
+			dp.DefaultZoom = scale;
 			dp.Append(path);
 
-			dash /= drawingContext.ScaleX;
-			gap  /= drawingContext.ScaleX;
+			dash /= scale;
+			gap  /= scale;
 			if ( dash == 0.0 )  // juste un point ?
 			{
 				dash = 0.00001;
@@ -148,7 +158,7 @@ namespace Epsitec.Common.Document
 
 			using ( Path temp = dp.GenerateDashedPath() )
 			{
-				graphics.Rasterizer.AddOutline(temp, width/drawingContext.ScaleX, CapStyle.Square, JoinStyle.Round, 5.0);
+				graphics.Rasterizer.AddOutline(temp, width/scale, CapStyle.Square, JoinStyle.Round, 5.0);
 				graphics.RenderSolid(color);
 			}
 		}
