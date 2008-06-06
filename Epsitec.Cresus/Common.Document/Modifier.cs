@@ -4637,7 +4637,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void PageDuplicate(int rank, string name)
+		public void PageDuplicate(int original, int rank, string name)
 		{
 			//	Duplique une nouvelle page.
 			if ( this.ActiveViewer.IsCreating )  return;
@@ -4649,10 +4649,12 @@ namespace Epsitec.Common.Document
 				this.InitiateChangingPage();
 
 				UndoableList list = this.document.DocumentObjects;  // liste des pages
+				original = System.Math.Max(original, 0);
+				original = System.Math.Min(original, list.Count-1);
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				Objects.Page srcPage = list[rank] as Objects.Page;
+				Objects.Page srcPage = list[original] as Objects.Page;
 
 				Objects.Page page = new Objects.Page(this.document, srcPage);
 				page.CloneObject(srcPage);
@@ -4664,13 +4666,13 @@ namespace Epsitec.Common.Document
 				{
 					page.Name = name;
 				}
-				list.Insert(rank+1, page);
+				list.Insert(rank, page);
 
 				UndoableList src = srcPage.Objects;
 				UndoableList dst = page.Objects;
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
 
-				this.TerminateChangingPage(rank+1);
+				this.TerminateChangingPage(rank);
 				this.OpletQueue.Insert(new OpletPageUpdate(this, false, true));
 
 				this.UpdatePageAfterChanging();
@@ -5257,7 +5259,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void LayerDuplicate(int rank, string name)
+		public void LayerDuplicate(int original, int rank, string name)
 		{
 			//	Duplique un calque.
 			if ( this.ActiveViewer.IsCreating )  return;
@@ -5269,10 +5271,12 @@ namespace Epsitec.Common.Document
 
 				//	Liste des calques:
 				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+				original = System.Math.Max(original, 0);
+				original = System.Math.Min(original, list.Count-1);
 				rank = System.Math.Max(rank, 0);
 				rank = System.Math.Min(rank, list.Count-1);
 
-				Objects.Layer srcLayer = list[rank] as Objects.Layer;
+				Objects.Layer srcLayer = list[original] as Objects.Layer;
 
 				Objects.Layer layer = new Objects.Layer(this.document, srcLayer);
 				if ( name == "" )
@@ -5283,13 +5287,13 @@ namespace Epsitec.Common.Document
 				{
 					layer.Name = name;
 				}
-				list.Insert(rank+1, layer);
+				list.Insert(rank, layer);
 
 				UndoableList src = srcLayer.Objects;
 				UndoableList dst = layer.Objects;
 				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
 
-				this.TerminateChangingLayer(rank+1);
+				this.TerminateChangingLayer(rank);
 
 				this.UpdateLayerAfterChanging();
 				this.document.Notifier.NotifyArea(this.ActiveViewer);

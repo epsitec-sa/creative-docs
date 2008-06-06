@@ -96,18 +96,42 @@ namespace Epsitec.Common.Document.Widgets
 			}
 		}
 
-		private bool IsSource
+		public bool IsDuplicate
 		{
-			//	Indique si le widget doit être dessiné comme la source du drag & drop.
+			//	Indique si le widget doit être dupliqué.
 			get
 			{
-				return this.isSource;
+				return this.isDuplicate;
 			}
 			set
 			{
-				if (this.isSource != value)
+				if (this.isDuplicate != value)
 				{
-					this.isSource = value;
+					this.isDuplicate = value;
+					this.Invalidate();
+				}
+			}
+		}
+
+		protected enum ArrowHilite
+		{
+			None,
+			Before,
+			After,
+		}
+
+		private ArrowHilite SourceHilite
+		{
+			//	Indique comment le widget doit être dessiné comme source du drag & drop.
+			get
+			{
+				return this.sourceHilite;
+			}
+			set
+			{
+				if (this.sourceHilite != value)
+				{
+					this.sourceHilite = value;
 					this.Invalidate();
 				}
 			}
@@ -225,6 +249,35 @@ namespace Epsitec.Common.Document.Widgets
 			}
 			else
 			{
+				switch (message.MessageType)
+				{
+					case MessageType.KeyDown:
+						if (message.KeyCode == KeyCode.ShiftKey ||
+							message.KeyCode == KeyCode.ControlKey)
+						{
+							if (this.dragInfo != null)
+							{
+								this.IsDuplicate = true;
+								message.Consumer = this;
+								return;
+							}
+						}
+						break;
+
+					case MessageType.KeyUp:
+						if (message.KeyCode == KeyCode.ShiftKey ||
+							message.KeyCode == KeyCode.ControlKey)
+						{
+							if (this.dragInfo != null)
+							{
+								this.IsDuplicate = false;
+								message.Consumer = this;
+								return;
+							}
+						}
+						break;
+				}
+
 				if (this.DragSourceEnable == false || !this.dragBehavior.ProcessMessage(message, pos))
 				{
 					base.ProcessMessage(message, pos);
@@ -238,10 +291,74 @@ namespace Epsitec.Common.Document.Widgets
 
 			Rectangle rect = this.Client.Bounds;
 
-			if (this.isSource)  // source du drag & drop ?
+			if (this.sourceHilite != ArrowHilite.None)  // source du drag & drop ?
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(0.7));
+				graphics.RenderSolid(Color.FromBrightness(0.9));  // dessine le fond gris très clair
+
+				double dim = System.Math.Min(rect.Width, rect.Height);
+				Rectangle square = new Rectangle(rect.Center.X-dim/2, rect.Center.Y-dim/2, dim, dim);
+				Point goal;
+
+				graphics.LineWidth = dim*0.15;  // trait très épais...
+				graphics.LineCap = CapStyle.Round;  // ...à bords ronds
+
+				if (this.isLeftRightPlacement)
+				{
+					Point p1 = new Point(square.Left+square.Width*0.2, square.Center.Y);
+					Point p2 = new Point(square.Left+square.Width*0.8, square.Center.Y);
+					double len = square.Width*0.2;
+
+					if (this.sourceHilite == ArrowHilite.Before)  // flèche <- ?
+					{
+						graphics.AddLine(p1, p2);
+						graphics.AddLine(p1, new Point(p1.X+len, p1.Y-len));
+						graphics.AddLine(p1, new Point(p1.X+len, p1.Y+len));
+						goal = p1;
+					}
+					else  // flèche -> ?
+					{
+						graphics.AddLine(p2, p1);
+						graphics.AddLine(p2, new Point(p2.X-len, p2.Y-len));
+						graphics.AddLine(p2, new Point(p2.X-len, p2.Y+len));
+						goal = p2;
+					}
+				}
+				else
+				{
+					Point p1 = new Point(square.Center.X, square.Bottom+square.Height*0.2);
+					Point p2 = new Point(square.Center.X, square.Bottom+square.Height*0.8);
+					double len = square.Height*0.2;
+
+					if (this.sourceHilite == ArrowHilite.Before)  // flèche v ?
+					{
+						graphics.AddLine(p1, p2);
+						graphics.AddLine(p1, new Point(p1.X-len, p1.Y+len));
+						graphics.AddLine(p1, new Point(p1.X+len, p1.Y+len));
+						goal = p1;
+					}
+					else  // flèche ^ ?
+					{
+						graphics.AddLine(p2, p1);
+						graphics.AddLine(p2, new Point(p2.X-len, p2.Y-len));
+						graphics.AddLine(p2, new Point(p2.X+len, p2.Y-len));
+						goal = p2;
+					}
+				}
+
+				graphics.RenderSolid(Color.FromBrightness(1.0));  // dessine la grosse flèche blanche
+				graphics.LineWidth = 1;
+				graphics.LineCap = CapStyle.Square;
+
+				if (this.isDuplicate)
+				{
+					double d = square.Width*0.14;
+					graphics.LineWidth = dim*0.10;  // trait épais
+					graphics.AddLine(new Point(goal.X-d, goal.Y), new Point(goal.X+d, goal.Y));
+					graphics.AddLine(new Point(goal.X, goal.Y-d), new Point(goal.X, goal.Y+d));
+					graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // dessine le gros "+" rouge à l'extrémité de la flèche
+					graphics.LineWidth = 1;
+				}
 			}
 
 			if (this.targetHilite != PartialHilite.None)  // destination du drag & drop ?
@@ -267,19 +384,29 @@ namespace Epsitec.Common.Document.Widgets
 						break;
 				}
 
-				graphics.AddFilledRectangle(r);
-				graphics.RenderSolid(Color.FromRgb(1, 0, 0));  // dessine une bande latérale rouge
+				Path path = new Path();
+				if (r.Width > r.Height)  // bande horizontale ?
+				{
+					path.MoveTo(r.Left, r.Center.Y);
+					path.LineTo(r.Right, r.Center.Y);
+				}
+				else  // bande verticale ?
+				{
+					path.MoveTo(r.Center.X, r.Bottom);
+					path.LineTo(r.Center.X, r.Top);
+				}
+				Drawer.DrawPathDash(graphics, 1.0, path, 2.0, 4.0, 5.0, Color.FromRgb(1, 0, 0));  // dessine une bande latérale traitillée rouge
+				path.Dispose();
 			}
 
 			if (this.IsEnabled && this.DragHost != null)  // contenu de la fenêtre flottante ?
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(Color.FromBrightness(0.95));  // fond gris très clair
+				graphics.RenderSolid(Color.FromBrightness(0.8));  // fond gris clair
 
 				rect.Deflate(0.5, 0.5);
-				Path path = new Path(rect);
-				Drawer.DrawPathDash(graphics, 1.0, path, 1.0, 4.0, 5.0, Color.FromBrightness(0.0));  // cadre traitillé
-				path.Dispose();
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(Color.FromBrightness(0.3));  // cadre gris foncé
 			}
 		}
 
@@ -301,15 +428,21 @@ namespace Epsitec.Common.Document.Widgets
 				return false;
 			}
 
-			this.IsSource = true;
+			this.isDuplicate = false;
 
 			//	Crée un échantillon utilisable pour l'opération de drag & drop (il
 			//	va représenter visuellement l'échantillon de couleur). On le place
 			//	dans un DragWindow et hop.
-			MiniatureFrame widget = new MiniatureFrame();
-			widget.DragHost = this;
+			MiniatureFrame box = new MiniatureFrame();
+			box.Padding = this.Padding;
+			box.DragHost = this;
 
-			this.dragInfo = new DragInfo(cursor, widget, this.ActualSize);
+			this.originalViewer = Containers.PageMiniatures.GetViewer(this);
+			this.originalLabel  = Containers.PageMiniatures.GetLabel(this);
+			this.originalViewer.SetParent(box);
+			this.originalLabel.SetParent(box);
+
+			this.dragInfo = new DragInfo(cursor, box, this.ActualSize);
 
 			return true;
 		}
@@ -321,21 +454,33 @@ namespace Epsitec.Common.Document.Widgets
 			Point mouse = e.ToPoint;
 			MiniatureFrame cs = this.FindDropTarget(mouse);
 
+			ArrowHilite arrow = ArrowHilite.None;
 			PartialHilite hilite = PartialHilite.None;
+
 			if (cs != null)
 			{
 				Point m = this.MapClientToScreen(mouse);
 				Rectangle b = cs.MapClientToScreen(cs.Client.Bounds);
+				Rectangle s = this.MapClientToScreen(this.Client.Bounds);
 
 				if (this.isLeftRightPlacement)
 				{
+					arrow  = (m.X < s.Center.X) ? ArrowHilite.Before : ArrowHilite.After;
 					hilite = (m.X < b.Center.X) ? PartialHilite.Left : PartialHilite.Right;
 				}
 				else
 				{
+					arrow  = (m.Y < s.Center.Y) ? ArrowHilite.Before : ArrowHilite.After;
 					hilite = (m.Y < b.Center.Y) ? PartialHilite.Bottom : PartialHilite.Top;
 				}
 			}
+
+			if (cs == this)
+			{
+				arrow = ArrowHilite.None;
+			}
+
+			this.SourceHilite = arrow;
 
 			if (cs != this.dragInfo.Target || this.DragTargetHilite != hilite)
 			{
@@ -347,7 +492,10 @@ namespace Epsitec.Common.Document.Widgets
 
 		public void OnDragEnd()
 		{
-			this.IsSource = false;
+			this.originalViewer.SetParent(this);
+			this.originalLabel.SetParent(this);
+
+			this.SourceHilite = ArrowHilite.None;
 			this.DragHilite(PartialHilite.None);
 
 			if (this.dragInfo.Target == null)
@@ -375,11 +523,6 @@ namespace Epsitec.Common.Document.Widgets
 		/// </summary>
 		private class DragInfo
 		{
-			public DragInfo(MiniatureFrame host)
-			{
-				this.host = host;
-			}
-
 			public DragInfo(Point cursor, MiniatureFrame widget, Size size)
 			{
 				System.Diagnostics.Debug.Assert(widget.DragHost != null);
@@ -391,7 +534,7 @@ namespace Epsitec.Common.Document.Widgets
 				this.origin = widget.DragHost.MapClientToScreen(new Point(-System.Math.Floor(size.Width/2), -System.Math.Floor(size.Height/2)));
 
 				this.window = new DragWindow();
-				this.window.Alpha = 0.5;
+				this.window.Alpha = 0.6;
 				this.window.DefineWidget(widget, size, Margins.Zero);
 				this.window.WindowLocation = this.Origin + cursor;
 				this.window.Owner = widget.DragHost.Window;
@@ -484,10 +627,13 @@ namespace Epsitec.Common.Document.Widgets
 		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register("DragSourceEnable", typeof(bool), typeof(MiniatureFrame), new DependencyPropertyMetadata(true));
 
 		private bool									isLeftRightPlacement;
-		private bool									isSource;
+		private ArrowHilite								sourceHilite;
 		private PartialHilite							targetHilite;
 		private bool									isBefore;
+		private bool									isDuplicate;
 		private Common.Widgets.Behaviors.DragBehavior	dragBehavior;
 		private DragInfo								dragInfo;
+		private Viewer									originalViewer;
+		private StaticText								originalLabel;
 	}
 }
