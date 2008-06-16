@@ -59,7 +59,7 @@ namespace Epsitec.Common.Document
 			this.selectionChanged = true;
 			this.geometryChanged = true;
 			this.shaperChanged = true;
-			this.textChanged = true;
+			//this.textChanged = true;  // (*REM1*)
 			this.textCursorChanged = true;
 			this.styleChanged = true;
 			this.pagesChanged = true;
@@ -77,6 +77,9 @@ namespace Epsitec.Common.Document
 			this.debugChanged = true;
 			this.textStyleListChanged = true;
 			this.selNamesChanged = true;
+
+			// (*REM1*)	Il ne faut surtout pas dire que le texte a changé, car DocumentEditor appelle
+			//			document.SetDirtySerialize lorsque cet événement arrive.
 
 			this.NotifyArea();
 		}

@@ -312,11 +312,14 @@ namespace Epsitec.Common.Document.Settings
 		public void GuidesReset()
 		{
 			//	Supprime tous les guides.
-			this.globalGuides = true;
-			this.guides.Clear();
-			this.document.Notifier.NotifyGuidesChanged();
-			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-			this.document.SetDirtySerialize(CacheBitmapChanging.None);
+			if (!this.globalGuides  || this.guides.Count > 0)
+			{
+				this.globalGuides = true;
+				this.guides.Clear();
+				this.document.Notifier.NotifyGuidesChanged();
+				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+				this.document.SetDirtySerialize(CacheBitmapChanging.None);
+			}
 		}
 
 		public Guide GuidesGet(int index)
