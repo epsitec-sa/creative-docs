@@ -260,11 +260,6 @@ namespace Epsitec.Common.Support.Platform.Win32
 		[DllImport ("user32.dll")]
 		public static extern System.IntPtr GetDesktopWindow();
 		
-		// Retrieves a pointer to the Shell's IMalloc interface.
-		[DllImport ("shell32.dll")]
-		public static extern int SHGetMalloc(
-			out System.IntPtr hObject);	// Address of a pointer that receives the Shell's IMalloc interface pointer. 
-
 		[System.Flags]
 		public enum SHGFI
 		{
@@ -316,19 +311,127 @@ namespace Epsitec.Common.Support.Platform.Win32
 			// relative to the root of the namespace (the desktop). 
 			System.Text.StringBuilder pszPath);	// Address of a buffer to receive the file system path.
 
-		[DllImport ("shell32.dll")]
-		public static extern System.IntPtr ILCombine(
-			System.IntPtr pidlAbsolute,
-			System.IntPtr pidlRelative);
+		#region IL... functions usually found in SHELL32.DLL
 
-		[DllImport ("shell32.dll")]
-		public static extern bool ILIsEqual(
-			System.IntPtr pidlA,
-			System.IntPtr pidlB);
+		//	The following IL functions are documented to exist in SHELL32 starting with
+		//	version 5.0, but I have found that on my Windows 2000 test environment, this
+		//	is not the case; even trying to import the entry points through their ordinal
+		//	does not work on Windows 2000. I therefore reimplemented the code myself.
 
-		[DllImport ("shell32.dll")]
-		public static extern bool ILRemoveLastID(
-			System.IntPtr pidl);
+		public static bool ILRemoveLastID(System.IntPtr pidl)
+		{
+			int len = ShellApi.ILGetSize (pidl);
+
+			if (len > 2)
+			{
+				unsafe
+				{
+					byte* ptr  = (byte*) pidl.ToPointer ();
+					byte* tail = ptr;
+					
+					while (((ushort*) (ptr))[0] != 0)
+					{
+						tail = ptr;
+						ptr += ((ushort*) (ptr))[0];
+					}
+
+					tail[0] = 0;
+					tail[1] = 0;
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public static System.IntPtr ILCombine(System.IntPtr pidlAbsolute, System.IntPtr pidlRelative)
+		{
+			int l1 = ShellApi.ILGetSize (pidlAbsolute);
+			int l2 = ShellApi.ILGetSize (pidlRelative);
+
+			if (l1 >= 2)
+			{
+				l1 -= 2;
+			}
+			if (l2 >= 2)
+			{
+				l2 -= 2;
+			}
+
+			System.IntPtr p = Marshal.AllocCoTaskMem (l1+l2+2);
+			byte[]   buffer = new byte[l1+l2];
+
+			if (p == System.IntPtr.Zero)
+			{
+				return p;
+			}
+
+			Marshal.WriteInt16 (p, l1+l2, 0);
+
+			if (l1 > 0) Marshal.Copy (pidlAbsolute, buffer, 0, l1);
+			if (l2 > 0) Marshal.Copy (pidlRelative, buffer, l1, l2);
+			if (l1+l2 > 0) Marshal.Copy (buffer, 0, p, l1+l2);
+
+			return p;
+		}
+
+		public static bool ILIsEqual(System.IntPtr pidlA, System.IntPtr pidlB)
+		{
+			int l1 = ShellApi.ILGetSize (pidlA);
+			int l2 = ShellApi.ILGetSize (pidlB);
+
+			if (l1 == l2)
+			{
+				if (l1 == 0)
+				{
+					return true;
+				}
+
+				byte[] b1 = new byte[l1];
+				byte[] b2 = new byte[l2];
+
+				Marshal.Copy (pidlA, b1, 0, l1);
+				Marshal.Copy (pidlB, b2, 0, l2);
+
+				for (int i = 0; i < l1; i++)
+				{
+					if (b1[i] != b2[i])
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public static int ILGetSize(System.IntPtr pidl)
+		{
+			if (pidl == System.IntPtr.Zero)
+			{
+				return 0;
+			}
+
+			unsafe
+			{
+				byte* ptr = (byte*) pidl.ToPointer ();
+				int   len = 2;
+
+				while (((ushort*) (ptr))[0] != 0)
+				{
+					len += ((ushort*) (ptr))[0];
+					ptr += ((ushort*) (ptr))[0];
+				}
+
+				return len;
+			}
+		}
+
+		#endregion
+
 
 		// Takes the CSIDL of a folder and returns the pathname.
 		[DllImport ("shell32.dll", CharSet=CharSet.Unicode, EntryPoint="SHGetFolderPathW")]
