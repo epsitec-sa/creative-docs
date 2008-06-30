@@ -10,6 +10,6 @@ S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative
 
 S:\Epsitec.Cresus\External\iexpress /N Installer.sed
 
-S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "CrDoc-Installer.exe"
+S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "CrDoc-2.x.x-installer.exe"
 
 del Sleep.exe 2>NUL
