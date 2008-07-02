@@ -294,6 +294,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static void Invoke(Support.SimpleCallback callback)
+		{
+			Drawing.Platform.Dispatcher.Invoke (callback);
+		}
+
 		public static void SetApplication(DependencyObject obj, Application application)
 		{
 			obj.SetValue (Application.ApplicationProperty, application);

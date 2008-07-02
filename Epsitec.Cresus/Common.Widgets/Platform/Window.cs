@@ -2292,6 +2292,11 @@ namespace Epsitec.Common.Widgets.Platform
 			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement
 			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
 			//	contenu du pixmap servant de cache.
+
+			if (this.widget_window.Root.IsFrozen)
+			{
+				return;
+			}
 			
 			if ((this.UpdateLayeredWindow ()) &&
 				(this.graphics != null))

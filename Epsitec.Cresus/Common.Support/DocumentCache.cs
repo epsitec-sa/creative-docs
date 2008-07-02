@@ -113,7 +113,7 @@ namespace Epsitec.Common.Support
 
 		private static IDocumentInfo GetImageDocumentInfo(string path)
 		{
-			ImageManager imageManager = ImageManager.GetDefaultCache ();
+			ImageManager imageManager = ImageManager.Instance;
 
 			if (imageManager == null)
 			{

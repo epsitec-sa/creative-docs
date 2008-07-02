@@ -19,7 +19,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 		/// <summary>
-		/// Defines the memory limit which specified when to much memory is used.
+		/// Defines the memory limit which specified when too much memory is used.
 		/// </summary>
 		/// <param name="limit">The limit.</param>
 		public void DefineMemoryLimit(long limit)

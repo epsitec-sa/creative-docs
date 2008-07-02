@@ -483,10 +483,17 @@ namespace Epsitec.Common.Drawing
 				return null;
 			}
 
-			Pixmap pixmap = new Pixmap ();
-			pixmap.AllocatePixmap (image, true);
-			
-			return Bitmap.FromPixmap (pixmap);
+			try
+			{
+				Pixmap pixmap = new Pixmap ();
+				pixmap.AllocatePixmap (image, true);
+
+				return Bitmap.FromPixmap (pixmap);
+			}
+			catch (System.NullReferenceException)
+			{
+				return null;
+			}
 		}
 		
 		public static Image FromPixmap(Pixmap pixmap)

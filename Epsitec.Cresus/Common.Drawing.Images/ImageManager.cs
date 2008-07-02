@@ -428,18 +428,21 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public static ImageManager GetDefaultCache()
+		public static ImageManager Instance
 		{
-			return ImageManager.defaultCache;
+			get
+			{
+				return ImageManager.instance;
+			}
 		}
 
 		public static void InitializeDefaultCache()
 		{
 			lock (ImageManager.globalExclusion)
 			{
-				if (ImageManager.defaultCache == null)
+				if (ImageManager.instance == null)
 				{
-					ImageManager.defaultCache = new ImageManager ();
+					ImageManager.instance = new ImageManager ();
 				}
 			}
 		}
@@ -450,10 +453,10 @@ namespace Epsitec.Common.Drawing
 
 			lock (ImageManager.globalExclusion)
 			{
-				if (ImageManager.defaultCache != null)
+				if (ImageManager.instance != null)
 				{
-					cache = ImageManager.defaultCache;
-					ImageManager.defaultCache = null;
+					cache = ImageManager.instance;
+					ImageManager.instance = null;
 				}
 			}
 
@@ -674,7 +677,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 
-		private static ImageManager defaultCache;
+		private static ImageManager instance;
 		private static object globalExclusion = new object ();
 		private static List<ImageManager> runningEngines = new List<ImageManager> ();
 		private static CallbackQueue callbackQueue;

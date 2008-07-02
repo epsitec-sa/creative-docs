@@ -1,5 +1,5 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
@@ -9,13 +9,18 @@ namespace Epsitec.Common.Drawing
 	public abstract class Image : System.IDisposable
 	{
 		public Image()
+			: this (0L)
+		{
+		}
+
+		public Image(long uniqueId)
 		{
 			this.size   = Size.Empty;
 			this.origin = new Point ();
 			this.dpi_x  = 96;
 			this.dpi_y  = 96;
 			
-			this.unique_id = System.Threading.Interlocked.Increment (ref Image.unique_id_seed);
+			this.unique_id = uniqueId == 0 ? System.Threading.Interlocked.Increment (ref Image.unique_id_seed) : uniqueId;
 		}
 		
 		
@@ -116,6 +121,14 @@ namespace Epsitec.Common.Drawing
 			System.GC.SuppressFinalize (this);
 		}
 		#endregion
+
+		public void AssigneUniqueId(long uniqueId)
+		{
+			if (uniqueId != 0)
+			{
+				this.unique_id = uniqueId;
+			}
+		}
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -138,7 +151,7 @@ namespace Epsitec.Common.Drawing
 		
 		protected Size							size;
 		protected Point							origin;
-		protected long							unique_id;
+		private long							unique_id;
 		
 		private static long						unique_id_seed = 1;
 	}

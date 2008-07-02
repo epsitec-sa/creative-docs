@@ -197,6 +197,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Containers\PageMiniatures.cs" />
+    <Compile Include="GlobalImageCache.Item.cs" />
     <Compile Include="Polar.cs" />
     <Compile Include="Dialogs\AbstractFile.cs" />
     <Compile Include="Dialogs\FileSaveImage.cs" />
