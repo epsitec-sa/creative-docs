@@ -361,8 +361,12 @@ namespace Epsitec.Common.Document
 						this.AutoScrollTimerStop();
 						this.ProcessMouseUp(message, pos);
 						this.mouseDragging = false;
-						this.ProcessMouseMove(message, pos);
-						this.document.SetDirtySerialize(CacheBitmapChanging.Local);
+
+						if (!message.IsMiddleButton)
+						{
+							this.ProcessMouseMove(message, pos);
+							this.document.SetDirtySerialize(CacheBitmapChanging.Local);
+						}
 					}
 					break;
 
@@ -615,6 +619,43 @@ namespace Epsitec.Common.Document
 			if (message.IsMiddleButton)
 			{
 				this.HandMouseUp(pos);
+
+				if (modifier.Tool == "ToolSelect")
+				{
+					this.ChangeMouseCursor(MouseCursorType.Arrow);
+				}
+				else if (modifier.Tool == "ToolGlobal")
+				{
+					this.ChangeMouseCursor(MouseCursorType.ArrowGlobal);
+				}
+				else if (modifier.Tool == "ToolShaper")
+				{
+					this.ChangeMouseCursor(MouseCursorType.ShaperNorm);
+				}
+				else if (modifier.Tool == "ToolEdit")
+				{
+					this.ChangeMouseCursor(MouseCursorType.IBeam);
+				}
+				else if (modifier.Tool == "ToolZoom")
+				{
+					this.ChangeMouseCursor(MouseCursorType.Zoom);
+				}
+				else if (modifier.Tool == "ToolHand")
+				{
+					this.ChangeMouseCursor(MouseCursorType.Hand);
+				}
+				else if (modifier.Tool == "ToolPicker")
+				{
+					this.ChangeMouseCursor(MouseCursorType.PickerEmpty);
+				}
+				else if (modifier.Tool == "ToolHotSpot")
+				{
+					this.ChangeMouseCursor(MouseCursorType.Arrow);
+				}
+				else
+				{
+					this.ChangeMouseCursor(MouseCursorType.Pen);
+				}
 			}
 			else
 			{
