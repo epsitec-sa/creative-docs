@@ -498,41 +498,48 @@ namespace Epsitec.Common.Document
 			//	Gestion d'un bouton de la souris pressé.
 			Modifier modifier = this.document.Modifier;
 
-			if ( modifier.Tool == "ToolSelect" )
-			{
-				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, false);
-			}
-			else if ( modifier.Tool == "ToolGlobal" )
-			{
-				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, true);
-			}
-			else if ( modifier.Tool == "ToolShaper" )
-			{
-				this.ShaperMouseDown(pos, message.ButtonDownCount, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolEdit" )
-			{
-				this.EditMouseDown(message, pos, message.ButtonDownCount);
-			}
-			else if ( modifier.Tool == "ToolZoom" )
-			{
-				this.ZoomMouseDown(pos, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolHand" )
+			if (message.IsMiddleButton)
 			{
 				this.HandMouseDown(pos);
 			}
-			else if ( modifier.Tool == "ToolPicker" )
-			{
-				this.PickerMouseDown(pos);
-			}
-			else if ( modifier.Tool == "ToolHotSpot" )
-			{
-				this.HotSpotMouseDown(pos);
-			}
 			else
 			{
-				this.CreateMouseDown(pos);
+				if (modifier.Tool == "ToolSelect")
+				{
+					this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, false);
+				}
+				else if (modifier.Tool == "ToolGlobal")
+				{
+					this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, true);
+				}
+				else if (modifier.Tool == "ToolShaper")
+				{
+					this.ShaperMouseDown(pos, message.ButtonDownCount, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolEdit")
+				{
+					this.EditMouseDown(message, pos, message.ButtonDownCount);
+				}
+				else if (modifier.Tool == "ToolZoom")
+				{
+					this.ZoomMouseDown(pos, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolHand")
+				{
+					this.HandMouseDown(pos);
+				}
+				else if (modifier.Tool == "ToolPicker")
+				{
+					this.PickerMouseDown(pos);
+				}
+				else if (modifier.Tool == "ToolHotSpot")
+				{
+					this.HotSpotMouseDown(pos);
+				}
+				else
+				{
+					this.CreateMouseDown(pos);
+				}
 			}
 		}
 
@@ -547,41 +554,48 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			if ( modifier.Tool == "ToolSelect" )
-			{
-				this.SelectMouseMove(pos, message.IsRightButton, false);
-			}
-			else if ( modifier.Tool == "ToolGlobal" )
-			{
-				this.SelectMouseMove(pos, message.IsRightButton, true);
-			}
-			else if ( modifier.Tool == "ToolShaper" )
-			{
-				this.ShaperMouseMove(pos, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolEdit" )
-			{
-				this.EditMouseMove(message, pos);
-			}
-			else if ( modifier.Tool == "ToolZoom" )
-			{
-				this.ZoomMouseMove(pos, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolHand" )
+			if (message.IsMiddleButton)
 			{
 				this.HandMouseMove(pos);
 			}
-			else if ( modifier.Tool == "ToolPicker" )
-			{
-				this.PickerMouseMove(pos);
-			}
-			else if ( modifier.Tool == "ToolHotSpot" )
-			{
-				this.HotSpotMouseMove(pos);
-			}
 			else
 			{
-				this.CreateMouseMove(pos);
+				if (modifier.Tool == "ToolSelect")
+				{
+					this.SelectMouseMove(pos, message.IsRightButton, false);
+				}
+				else if (modifier.Tool == "ToolGlobal")
+				{
+					this.SelectMouseMove(pos, message.IsRightButton, true);
+				}
+				else if (modifier.Tool == "ToolShaper")
+				{
+					this.ShaperMouseMove(pos, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolEdit")
+				{
+					this.EditMouseMove(message, pos);
+				}
+				else if (modifier.Tool == "ToolZoom")
+				{
+					this.ZoomMouseMove(pos, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolHand")
+				{
+					this.HandMouseMove(pos);
+				}
+				else if (modifier.Tool == "ToolPicker")
+				{
+					this.PickerMouseMove(pos);
+				}
+				else if (modifier.Tool == "ToolHotSpot")
+				{
+					this.HotSpotMouseMove(pos);
+				}
+				else
+				{
+					this.CreateMouseMove(pos);
+				}
 			}
 
 			this.UpdateMouseCursor(message);
@@ -598,41 +612,48 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			if ( modifier.Tool == "ToolSelect" )
-			{
-				this.SelectMouseUp(pos, message.IsRightButton, false);
-			}
-			else if ( modifier.Tool == "ToolGlobal" )
-			{
-				this.SelectMouseUp(pos, message.IsRightButton, true);
-			}
-			else if ( modifier.Tool == "ToolShaper" )
-			{
-				this.ShaperMouseUp(pos, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolEdit" )
-			{
-				this.EditMouseUp(message, pos, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolZoom" )
-			{
-				this.ZoomMouseUp(pos, message.IsRightButton);
-			}
-			else if ( modifier.Tool == "ToolHand" )
+			if (message.IsMiddleButton)
 			{
 				this.HandMouseUp(pos);
 			}
-			else if ( modifier.Tool == "ToolPicker" )
-			{
-				this.PickerMouseUp(pos);
-			}
-			else if ( modifier.Tool == "ToolHotSpot" )
-			{
-				this.HotSpotMouseUp(pos);
-			}
 			else
 			{
-				this.CreateMouseUp(pos);
+				if (modifier.Tool == "ToolSelect")
+				{
+					this.SelectMouseUp(pos, message.IsRightButton, false);
+				}
+				else if (modifier.Tool == "ToolGlobal")
+				{
+					this.SelectMouseUp(pos, message.IsRightButton, true);
+				}
+				else if (modifier.Tool == "ToolShaper")
+				{
+					this.ShaperMouseUp(pos, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolEdit")
+				{
+					this.EditMouseUp(message, pos, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolZoom")
+				{
+					this.ZoomMouseUp(pos, message.IsRightButton);
+				}
+				else if (modifier.Tool == "ToolHand")
+				{
+					this.HandMouseUp(pos);
+				}
+				else if (modifier.Tool == "ToolPicker")
+				{
+					this.PickerMouseUp(pos);
+				}
+				else if (modifier.Tool == "ToolHotSpot")
+				{
+					this.HotSpotMouseUp(pos);
+				}
+				else
+				{
+					this.CreateMouseUp(pos);
+				}
 			}
 		}
 
