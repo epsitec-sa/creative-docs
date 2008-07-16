@@ -598,12 +598,15 @@ namespace Epsitec.Common.Document.TextPanels
 
 			string style = TextLayout.ConvertToSimpleText(this.fontStyle.Text);
 			string face = this.TextWrapper.Active.FontFace;
+
 			for (int i=0; i<this.stylesLocal.Count; i++)
 			{
 				if (this.stylesLocal[i] == style)
 				{
-					style = this.stylesInvariant[i].InvariantSimpleStyleName;
-					face  = this.stylesInvariant[i].InvariantSimpleFaceName;
+					//?style = this.stylesInvariant[i].InvariantSimpleStyleName;
+					//?face  = this.stylesInvariant[i].InvariantSimpleFaceName;
+					style = this.stylesInvariant[i].InvariantStyleName;
+					face  = this.stylesInvariant[i].InvariantFaceName;
 					break;
 				}
 			}

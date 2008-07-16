@@ -355,7 +355,7 @@ namespace Epsitec.Common.Document
 				OpenType.FontIdentity did = Misc.DefaultFontIdentityStyle(fontName.FaceName);
 				if (did != null)
 				{
-					fontName = new OpenType.FontName (did.InvariantFaceName, did.InvariantStyleName);
+					fontName = new OpenType.FontName(did.InvariantFaceName, did.InvariantStyleName);
 				}
 			}
 
