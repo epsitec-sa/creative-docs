@@ -837,6 +837,19 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
+			int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+			int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
+
+			//	Si on effectue un changement local dans une page modèle, il faut invalider toutes les miniatures.
+			if (changing == CacheBitmapChanging.Local)
+			{
+				Objects.Page page = this.DocumentObjects[currentPage] as Objects.Page;
+				if (page.MasterType != Objects.MasterType.Slave)  // page modèle ?
+				{
+					changing = CacheBitmapChanging.All;
+				}
+			}
+
 			this.modifier.MiniaturesTimerStop();
 
 			if (changing == CacheBitmapChanging.All)
@@ -847,9 +860,6 @@ namespace Epsitec.Common.Document
 
 			if (changing == CacheBitmapChanging.Local)
 			{
-				int currentPage = this.Modifier.ActiveViewer.DrawingContext.CurrentPage;
-				int currentLayer = this.Modifier.ActiveViewer.DrawingContext.CurrentLayer;
-
 				this.pageMiniatures.AddPageToRegenerate(currentPage);
 				this.layerMiniatures.AddLayerToRegenerate(currentLayer);
 			}
