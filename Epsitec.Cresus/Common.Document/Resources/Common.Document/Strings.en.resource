@@ -197,7 +197,7 @@
   <data id="026">Apply to all pages</data>
   <data id="036">Apply to odd pages</data>
   <data id="046">Apply to even pages</data>
-  <data id="056">Apply as required</data>
+  <data id="056">Apply manually (explicit include)</data>
   <data id="066">Stop at next template</data>
   <data id="076">Include this template</data>
   <data id="086">#</data>
