@@ -1,5 +1,5 @@
 //	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -215,7 +215,8 @@ namespace Epsitec.Common.OpenType
 
 		/// <summary>
 		/// Gets the invariant font face name. This name is independent
-		/// of the current culture.
+		/// of the current culture. This will return a name like "Arial"
+		/// for "Arial Narrow Bold Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							InvariantFaceName
@@ -241,7 +242,8 @@ namespace Epsitec.Common.OpenType
 
 		/// <summary>
 		/// Gets the invariant font style name. This name is independent
-		/// of the current culture.
+		/// of the current culture. This will return a name like "Narrow
+		/// Bold Italic" for "Arial Narrow Bold Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							InvariantStyleName
@@ -279,7 +281,8 @@ namespace Epsitec.Common.OpenType
 
 		/// <summary>
 		/// Gets the invariant font face name. This name is independent
-		/// of the current culture.
+		/// of the current culture. This will return a name like "Arial
+		/// Narrow" for "Arial Narrow Bold Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							InvariantSimpleFaceName
@@ -303,7 +306,8 @@ namespace Epsitec.Common.OpenType
 
 		/// <summary>
 		/// Gets the invariant font style name. This name is independent
-		/// of the current culture.
+		/// of the current culture. This will return a name like "Bold
+		/// Italic" for "Arial Narrow Bold Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							InvariantSimpleStyleName
