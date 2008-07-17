@@ -44,6 +44,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the font face name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return a name like "Franklin Gothic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							LocaleFaceName
@@ -73,6 +75,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the font style name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return a name like "FHeavy Italique" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							LocaleStyleName
@@ -125,6 +129,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the font face name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return a name like "Franklin Gothic Heavy" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							LocaleSimpleFaceName
@@ -149,6 +155,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the font style name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return a name like "Italique" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							LocaleSimpleStyleName
@@ -165,6 +173,7 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the Adobe font style name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return null for "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The Adobe font style name.</value>
 		public string							LocaleAdobeStyleName
@@ -183,6 +192,7 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the preferred font face name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return null for "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The preferred font face name or <c>null</c>.</value>
 		public string							LocalePreferredFaceName
@@ -199,6 +209,7 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the preferred font style name for the current locale, using
 		/// <c>CultureInfo.CurrentCulture</c>.
+		/// This will return null for "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font style name or <c>null</c>.</value>
 		public string							LocalePreferredStyleName
@@ -217,6 +228,8 @@ namespace Epsitec.Common.OpenType
 		/// Gets the invariant font face name. This name is independent
 		/// of the current culture. This will return a name like "Arial"
 		/// for "Arial Narrow Bold Italic".
+		/// This will return a name like "Franklin Gothic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							InvariantFaceName
@@ -244,6 +257,8 @@ namespace Epsitec.Common.OpenType
 		/// Gets the invariant font style name. This name is independent
 		/// of the current culture. This will return a name like "Narrow
 		/// Bold Italic" for "Arial Narrow Bold Italic".
+		/// This will return a name like "Heavy Italic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							InvariantStyleName
@@ -267,7 +282,14 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
-		public string							InvariantFullName
+		/// <summary>
+		/// Gets the invariant font full name. This name is independent
+		/// of the current culture.
+		/// This will return a name like "Franklin Gothic Heavy Italic"
+		/// for "Franklin Gothic Heavy Italic".
+		/// </summary>
+		/// <value>The font full name.</value>
+		public string InvariantFullName
 		{
 			get
 			{
@@ -283,6 +305,8 @@ namespace Epsitec.Common.OpenType
 		/// Gets the invariant font face name. This name is independent
 		/// of the current culture. This will return a name like "Arial
 		/// Narrow" for "Arial Narrow Bold Italic".
+		/// This will return a name like "Franklin Gothic Heavy" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							InvariantSimpleFaceName
@@ -308,6 +332,8 @@ namespace Epsitec.Common.OpenType
 		/// Gets the invariant font style name. This name is independent
 		/// of the current culture. This will return a name like "Bold
 		/// Italic" for "Arial Narrow Bold Italic".
+		/// This will return a name like "Italic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							InvariantSimpleStyleName
@@ -324,6 +350,7 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the invariant Adobe font style name. This name is independent
 		/// of the current culture.
+		/// This will return null for "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The Adobe font style name.</value>
 		public string							InvariantAdobeStyleName
@@ -340,6 +367,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the Macintosh font face name. This name is independent
 		/// of the current culture.
+		/// This will return a name like "Franklin Gothic Heavy" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font face name.</value>
 		public string							MacintoshFaceName
@@ -365,6 +394,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the Macintosh font style name. This name is independent
 		/// of the current culture.
+		/// This will return a name like "Italic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The font style name.</value>
 		public string							MacintoshStyleName
@@ -382,6 +413,7 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the invariant preferred font face name. This name is independent
 		/// of the current culture.
+		/// This will return null for "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The preferred font face name or <c>null</c> if there is no
 		/// preferred font face associated with this font.</value>
@@ -399,6 +431,7 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets the invariant preferred font style name. This name is independent
 		/// of the current culture.
+		/// This will return null for "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The preferred font style name or <c>null</c> if there is no
 		/// preferred font style associated with this font.</value>
@@ -416,6 +449,8 @@ namespace Epsitec.Common.OpenType
 		/// <summary>
 		/// Gets a simplified version of the invariant font style name. The
 		/// names <c>"Regular"</c> and <c>"Normal"</c> are mapped to <c>""</c>.
+		/// This will return a name like "Heavy Italic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The simplified font style name.</value>
 		public string							InvariantStyleHash
@@ -441,6 +476,8 @@ namespace Epsitec.Common.OpenType
 		/// Gets a simplified version of the full font name. The names <c>"Regular"</c>
 		/// and <c>"Normal"</c> are mapped to <c>""</c> and all elements are sorted
 		/// alphabetically.
+		/// This will return a name like "Franklin Gothic Heavy Italic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		/// <value>The simplified version of the full font name.</value>
 		public string							FullHash
@@ -477,6 +514,8 @@ namespace Epsitec.Common.OpenType
 		
 		/// <summary>
 		/// Gets the full name of the font. This is the OpenType
+		/// This will return a name like "Franklin Gothic Heavy Italic" for
+		/// "Franklin Gothic Heavy Italic".
 		/// </summary>
 		public string							FullName
 		{
@@ -488,8 +527,15 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 		}
-		
-		public string							UniqueFontId
+
+		/// <summary>
+		/// Gets the font unique id. This name is independent
+		/// of the current culture.
+		/// This will return a name like "Monotype - Franklin Gothic Heavy Italic"
+		/// for "Franklin Gothic Heavy Italic".
+		/// </summary>
+		/// <value>The font unique id.</value>
+		public string UniqueFontId
 		{
 			get
 			{
