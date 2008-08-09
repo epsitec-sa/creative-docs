@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-  <assemblyIdentity type="win32" processorArchitecture="x86" version="2.3.4.0" name="Creative Docs.exe" />
+  <assemblyIdentity type="win32" processorArchitecture="x86" version="2.4.0.0832" name="Creative Docs.exe" />
   <description>Creative Docs .NET</description>
   <dependency>
     <dependentAssembly>

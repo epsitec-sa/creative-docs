@@ -1022,8 +1022,15 @@ namespace Epsitec.Common.Dialogs
 
 			if (item.IsEmpty && !System.IO.Directory.Exists (path))
 			{
-				System.IO.Directory.CreateDirectory (path);
-				item = FileManager.GetFolderItem (path, FolderQueryMode.LargeIcons);
+				try
+				{
+					System.IO.Directory.CreateDirectory (path);
+					item = FileManager.GetFolderItem (path, FolderQueryMode.LargeIcons);
+				}
+				catch
+				{
+					return;
+				}
 			}
 
 			FileButton f = new FileButton ();

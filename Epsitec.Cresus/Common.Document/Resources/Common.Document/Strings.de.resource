@@ -1168,11 +1168,11 @@
   <data id="05">Seitengröße</data>
   <data id="06">Piktogrammgröße</data>
   <data id="08">Magnetische Textzeilen</data>
-  <data id="0D">Als Linie konvertiert Boolsch kombinieren</data>
+  <data id="0D">In Linien umwandeln und Boolisch kombinieren</data>
   <data id="0">CreativeDocs</data>
-  <data id="0FA01">Creative Docs .NET</data>
-  <data id="02A01" mod="2">Beispiele (geändert)</data>
-  <data id="01A01" mod="1">Beispiele (original)</data>
+  <data id="01A01" mod="1" about="DO NOT TRANSLATE (folder name)">Original Samples</data>
+  <data id="02A01" mod="2" about="DO NOT TRANSLATE (folder name)">Working Samples</data>
+  <data id="0FA01" about="DO NOT TRANSLATE (folder name)">Creative Docs .NET</data>
   <data id="0M801">Falscher Dateityp.</data>
   <data id="0N801">Unbekannter Dateityp.</data>
   <data id="0V801">Operation nicht möglich.</data>
