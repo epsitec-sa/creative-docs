@@ -10,7 +10,7 @@ namespace Epsitec.Common.OpenType
 	/// discrete font size. The information is gathered through calls to
 	/// the operating system.
 	/// </summary>
-	internal class FontSizeInfo
+	internal sealed class FontSizeInfo : System.IDisposable
 	{
 		public FontSizeInfo(int pointSize, Platform.IFontHandle handle)
 		{
@@ -101,6 +101,21 @@ namespace Epsitec.Common.OpenType
 			return this.glyphWidths[block][index];
 		}
 
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (this.fontHandle != null)
+			{
+				this.fontHandle.Dispose ();
+				this.fontHandle = null;
+			}
+		}
+
+		#endregion
+		
+		
 		private const int BlockSize = 64;
 
 		private int								pointSize;

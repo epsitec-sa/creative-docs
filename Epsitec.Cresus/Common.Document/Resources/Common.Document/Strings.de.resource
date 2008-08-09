@@ -927,7 +927,7 @@
   <data id="042">Text als Kurven exportieren</data>
   <data id="0C1">Raster aktivieren</data>
   <data id="0D1">Raster anzeigen</data>
-  <data id="0I1">Hilfslinien akitvieren</data>
+  <data id="0I1">Hilfslinien aktivieren</data>
   <data id="0K1">Hilfslinien verschiebbar</data>
   <data id="0J1">Hilfslinien anzeigen</data>
   <data id="0PB01">Nur ausgewählte Objekte exportieren</data>

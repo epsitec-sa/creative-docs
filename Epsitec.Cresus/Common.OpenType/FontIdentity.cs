@@ -772,6 +772,15 @@ namespace Epsitec.Common.OpenType
 		public void InternalClearFontData()
 		{
 			this.fontData = null;
+
+			List<FontSizeInfo> sizeInfos = new List<FontSizeInfo> (this.fontSizes.Values);
+
+			foreach (FontSizeInfo sizeInfo in sizeInfos)
+			{
+				sizeInfo.Dispose ();
+			}
+
+			this.fontSizes.Clear ();
 		}
 
 #if false
