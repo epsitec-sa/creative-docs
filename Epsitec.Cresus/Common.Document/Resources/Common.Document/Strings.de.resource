@@ -877,7 +877,7 @@
   <data id="0K5">Position</data>
   <data id="0N5">A</data>
   <data id="0O5">Sichtbarkeit der Ebene</data>
-  <data id="0Q5">Seitenvorlage</data>
+  <data id="0Q5">Vorlage</data>
   <data id="026">Auf alle Seiten anwenden</data>
   <data id="046">Auf geradzahlige Seiten anwenden</data>
   <data id="016">Ziel:</data>
@@ -886,7 +886,7 @@
   <data id="076">Diese Vorlage einbinden</data>
   <data id="066">Bei nächster Vorlage aufhören</data>
   <data id="0R5">Seitenstruktur...</data>
-  <data id="0P5">Dokumentenseite</data>
+  <data id="0P5">Standard</data>
   <data id="0U5">Ja</data>
   <data id="0T5">Nein</data>
   <data id="0S5">Vorlagenseiten einbinden</data>
