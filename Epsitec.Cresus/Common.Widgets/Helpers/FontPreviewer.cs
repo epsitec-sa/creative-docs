@@ -27,7 +27,14 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				if (fid.AssociatedBlob1.Length == 0)
 				{
-					FontPreviewer.RefreshBlob1 (fid);
+					try
+					{
+						FontPreviewer.RefreshBlob1 (fid);
+					}
+					catch (System.Exception ex)
+					{
+						System.Diagnostics.Debug.WriteLine ("RefreshBlob1 failed : " + ex.Message);
+					}
 				}
 				if (fid.AssociatedBlob1.Length > 0)
 				{
@@ -52,7 +59,14 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				if (fid.AssociatedBlob2.Length == 0)
 				{
-					FontPreviewer.RefreshBlob2 (fid);
+					try
+					{
+						FontPreviewer.RefreshBlob2 (fid);
+					}
+					catch (System.Exception ex)
+					{
+						System.Diagnostics.Debug.WriteLine ("RefreshBlob2 failed : " + ex.Message);
+					}
 				}
 				if (fid.AssociatedBlob2.Length > 0)
 				{
