@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core
 			List<AddressBook.Entities.TitrePersonneEntity> titres = new List<Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity> (this.ReadTitres ());
 			this.dataContext.SaveChanges ();
 
-			List<Mai2008.Entities.ClientEntity> personnes = new List<Epsitec.Cresus.Mai2008.Entities.ClientEntity> (this.ReadPersonnes (localités, titres).Take (50));
+			List<Mai2008.Entities.ClientEntity> personnes = new List<Epsitec.Cresus.Mai2008.Entities.ClientEntity> (this.ReadPersonnes (localités, titres));
 			this.dataContext.SaveChanges ();
 
 			List<Mai2008.Entities.FactureEntity> factures = new List<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();

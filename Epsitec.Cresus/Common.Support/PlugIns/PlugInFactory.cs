@@ -154,7 +154,7 @@ namespace Epsitec.Common.Support.PlugIns
 
 		#region Private Record Structure
 
-		private struct Record
+		private class Record
 		{
 			public Record(System.Type type)
 			{
