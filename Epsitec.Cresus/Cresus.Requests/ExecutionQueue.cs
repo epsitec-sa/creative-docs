@@ -77,6 +77,14 @@ namespace Epsitec.Cresus.Requests
 				return this.exstate_event;
 			}
 		}
+
+		internal System.Data.DataTable			QueueDataTable
+		{
+			get
+			{
+				return this.queue_data_table;
+			}
+		}
 		
 		
 		public bool								IsRunningAsServer

@@ -684,12 +684,13 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 
-			return DbRichCommand.FindRow (table.Rows, rowId);
+			return DbRichCommand.FindRow (table, table.Rows, rowId);
 		}
 
 		public IEnumerable<System.Data.DataRow> FindRelationRows(string tableName, DbId sourceRowId)
 		{
 			System.Data.DataTable table = this.DataSet.Tables[tableName];
+			int columnRefSourceIdIndex = table.Columns.IndexOf (Tags.ColumnRefSourceId);
 
 			if (table == null)
 			{
@@ -700,17 +701,18 @@ namespace Epsitec.Cresus.Database
 			{
 				long rowIdValue;
 
-				if (row.RowState == System.Data.DataRowState.Deleted)
+				switch (row.RowState)
 				{
-					rowIdValue = (long) row[Tags.ColumnRefSourceId, System.Data.DataRowVersion.Original];
-				}
-				else if (row.RowState == System.Data.DataRowState.Detached)
-				{
-					continue;
-				}
-				else
-				{
-					rowIdValue = (long) row[Tags.ColumnRefSourceId];
+					case System.Data.DataRowState.Deleted:
+						rowIdValue = (long) row[columnRefSourceIdIndex, System.Data.DataRowVersion.Original];
+						break;
+				
+					case System.Data.DataRowState.Detached:
+						continue;
+
+					default:
+						rowIdValue = (long) row[columnRefSourceIdIndex];
+						break;
 				}
 
 				if (sourceRowId.Value == rowIdValue)
@@ -1417,34 +1419,38 @@ namespace Epsitec.Cresus.Database
 		/// </returns>
 		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId rowId)
 		{
-			return DbRichCommand.FindRow (table.Rows, rowId);
+			return DbRichCommand.FindRow (table, table.Rows, rowId);
 		}
 
 		/// <summary>
 		/// Finds the row in a collection of rows based on a row id.
 		/// </summary>
+		/// <param name="table">The table which defines the schema for the rows.</param>
 		/// <param name="rows">The rows.</param>
 		/// <param name="rowId">The row id.</param>
 		/// <returns>
 		/// The row or <c>null</c> if it cannot be found in the collection.
 		/// </returns>
-		public static System.Data.DataRow FindRow(System.Collections.IEnumerable rows, DbId rowId)
+		public static System.Data.DataRow FindRow(System.Data.DataTable table, System.Collections.IEnumerable rows, DbId rowId)
 		{
+			int columnIdIndex = table.Columns.IndexOf (Tags.ColumnId);
+
 			foreach (System.Data.DataRow row in rows)
 			{
 				long rowIdValue;
 				
-				if (row.RowState == System.Data.DataRowState.Deleted)
+				switch (row.RowState)
 				{
-					rowIdValue = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
-				}
-				else if (row.RowState == System.Data.DataRowState.Detached)
-				{
-					continue;
-				}
-				else
-				{
-					rowIdValue = (long) row[Tags.ColumnId];
+					case System.Data.DataRowState.Deleted:
+						rowIdValue = (long) row[columnIdIndex, System.Data.DataRowVersion.Original];
+						break;
+					
+					case System.Data.DataRowState.Detached:
+						continue;
+
+					default:
+						rowIdValue = (long) row[columnIdIndex];
+						break;
 				}
 				
 				if (rowId.Value == rowIdValue)
@@ -1772,80 +1778,19 @@ namespace Epsitec.Cresus.Database
 				
 				foreach (System.Data.DataRow row in dataTable.Rows)
 				{
-					if ((row.RowState != System.Data.DataRowState.Added) &&
-						(row.RowState != System.Data.DataRowState.Modified) &&
-						(row.RowState != System.Data.DataRowState.Deleted))
+					switch (row.RowState)
 					{
-						continue;
-					}
-					
-					if (row.RowState == System.Data.DataRowState.Deleted)
-					{
-						//	Delete the row from the database. This will use a DELETE
-						//	command with the specified row id as the WHERE condition :
-
-						object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Original], sqlColumns[0].Type);
+						case System.Data.DataRowState.Added:
+						case System.Data.DataRowState.Modified:
+							this.UpdateOrInsertRowIntoTable (builder, row, sqlTableName, sqlColumns, insertDefault, index, updateParamIndex, insertParamIndex, whereParamIndex, updateCommand, insertCommand);
+							break;
 						
-						builder.SetCommandParameterValue (deleteCommand, 0, valueId);
-						
-						this.statReplaceDeleteCount += deleteCommand.ExecuteNonQuery ();
-					}
-					else
-					{
-						//	Update the row in the database. Try an UPDATE command and
-						//	if it does not modify the table, use INSERT instead.
+						case System.Data.DataRowState.Deleted:
+							this.DeleteRowFromTable (builder, row, sqlTableName, sqlColumns, deleteCommand);
+							break;
 
-						object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Current], sqlColumns[0].Type);
-
-						builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
-
-						for (int i = 0; i < colCount; i++)
-						{
-							if (updateParamIndex[i] < 0)
-							{
-								//	The column should be ignored when updating and used
-								//	only when inserting a new row, and then, we must use
-								//	a specific default value :
-								
-								builder.SetCommandParameterValue (insertCommand, i, insertDefault[index]);
-							}
-							else
-							{
-								//	The column has a value and will be updated or inserted
-								//	normally :
-
-								object value = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[i], sqlColumns[i].Type);
-
-								builder.SetCommandParameterValue (updateCommand, updateParamIndex[i], value);
-								builder.SetCommandParameterValue (insertCommand, insertParamIndex[i], value);
-							}
-						}
-						
-						//	Execute the UPDATE command. If no row was modified, then we
-						//	must execute the INSERT command to make sure our data gets
-						//	persisted in the database :
-						
-						int count = updateCommand.ExecuteNonQuery ();
-						
-						if (count == 0)
-						{
-							count = insertCommand.ExecuteNonQuery ();
-							
-							if (count != 1)
-							{
-								throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}); 1 was expected", sqlTableName, count, insertCommand.Parameters[0]));
-							}
-							
-							this.statReplaceInsertCount++;
-						}
-						else if (count == 1)
-						{
-							this.statReplaceUpdateCount++;
-						}
-						else
-						{
-							throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}); 0 or 1 expected", sqlTableName, count, updateCommand.Parameters[0]));
-						}
+						default:
+							continue;
 					}
 				}
 			}
@@ -1854,6 +1799,79 @@ namespace Epsitec.Cresus.Database
 				deleteCommand.Dispose ();
 				updateCommand.Dispose ();
 				insertCommand.Dispose ();
+			}
+		}
+
+		private void DeleteRowFromTable(ISqlBuilder builder, System.Data.DataRow row, string sqlTableName, SqlColumn[] sqlColumns, System.Data.IDbCommand deleteCommand)
+		{
+			//	Delete the row from the database. This will use a DELETE
+			//	command with the specified row id as the WHERE condition :
+
+			object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[0, System.Data.DataRowVersion.Original], sqlColumns[0].Type);
+
+			builder.SetCommandParameterValue (deleteCommand, 0, valueId);
+
+			this.statReplaceDeleteCount += deleteCommand.ExecuteNonQuery ();
+		}
+
+		private void UpdateOrInsertRowIntoTable(ISqlBuilder builder, System.Data.DataRow row, string sqlTableName, SqlColumn[] sqlColumns, object[] insertDefault, int index, int[] updateParamIndex, int[] insertParamIndex, int whereParamIndex, System.Data.IDbCommand updateCommand, System.Data.IDbCommand insertCommand)
+		{
+			//	Update the row in the database. Try an UPDATE command and
+			//	if it does not modify the table, use INSERT instead.
+
+			int colCount = sqlColumns.Length;
+
+			object rowId   = row[0, System.Data.DataRowVersion.Current];
+			object valueId = TypeConverter.ConvertToInternal (this.infrastructure.Converter, rowId, sqlColumns[0].Type);
+
+			builder.SetCommandParameterValue (updateCommand, whereParamIndex, valueId);
+
+			for (int i = 0; i < colCount; i++)
+			{
+				if (updateParamIndex[i] < 0)
+				{
+					//	The column should be ignored when updating and used
+					//	only when inserting a new row, and then, we must use
+					//	a specific default value :
+
+					builder.SetCommandParameterValue (insertCommand, i, insertDefault[index]);
+				}
+				else
+				{
+					//	The column has a value and will be updated or inserted
+					//	normally :
+
+					object value = TypeConverter.ConvertToInternal (this.infrastructure.Converter, row[i], sqlColumns[i].Type);
+
+					builder.SetCommandParameterValue (updateCommand, updateParamIndex[i], value);
+					builder.SetCommandParameterValue (insertCommand, insertParamIndex[i], value);
+				}
+			}
+
+			//	Execute the UPDATE command. If no row was modified, then we
+			//	must execute the INSERT command to make sure our data gets
+			//	persisted in the database :
+
+			int count = updateCommand.ExecuteNonQuery ();
+
+			if (count == 0)
+			{
+				count = insertCommand.ExecuteNonQuery ();
+
+				if (count != 1)
+				{
+					throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}); 1 was expected", sqlTableName, count, insertCommand.Parameters[0]));
+				}
+
+				this.statReplaceInsertCount++;
+			}
+			else if (count == 1)
+			{
+				this.statReplaceUpdateCount++;
+			}
+			else
+			{
+				throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}); 0 or 1 expected", sqlTableName, count, updateCommand.Parameters[0]));
 			}
 		}
 

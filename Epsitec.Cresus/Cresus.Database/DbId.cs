@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this;
+				return this.value;
 			}
 		}
 

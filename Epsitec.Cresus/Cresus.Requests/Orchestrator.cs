@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < states.Length; i++)
 			{
-				System.Data.DataRow row = DbRichCommand.FindRow (rows, states[i].Identifier);
+				System.Data.DataRow row = DbRichCommand.FindRow (this.execution_queue.QueueDataTable, rows, states[i].Identifier);
 				
 				if (row == null)
 				{
