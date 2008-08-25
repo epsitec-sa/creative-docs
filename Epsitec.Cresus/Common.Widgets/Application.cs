@@ -254,7 +254,7 @@ namespace Epsitec.Common.Widgets
 						Application.pendingCallbacks = new Queue<Support.SimpleCallback> ();
 					}
 
-					System.Diagnostics.Debug.WriteLine ("Executing async callbacks, started.");
+					System.Diagnostics.Trace.WriteLine ("Executing async callbacks, started.");
 
 					while (Application.runningCallbacks.Count > 0)
 					{
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Widgets
 						callback ();
 					}
 
-					System.Diagnostics.Debug.WriteLine ("Executing async callbacks, done.");
+					System.Diagnostics.Trace.WriteLine ("Executing async callbacks, done.");
 				}
 				finally
 				{

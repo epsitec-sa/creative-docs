@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Database
 			this.commands = new Collections.DbCommandList ();
 			this.tables   = new Collections.DbTableList ();
 			this.adapters = new List<System.Data.IDataAdapter> ();
+			this.rowCache = new Dictionary<string, TableCache> ();
 		}
 
 		/// <summary>
@@ -677,14 +678,56 @@ namespace Epsitec.Cresus.Database
 		/// </returns>
 		public System.Data.DataRow FindRow(string tableName, DbId rowId)
 		{
-			System.Data.DataTable table = this.DataSet.Tables[tableName];
+			long       rowIdValue = rowId.Value;
+			
+			TableCache tableCache;
+			System.Data.DataRow row;
 
-			if (table == null)
+			if (this.rowCache.TryGetValue (tableName, out tableCache))
 			{
-				return null;
+				//	Table has already been analyzed and pre-cached.
+			}
+			else
+			{
+				System.Data.DataTable table = this.DataSet.Tables[tableName];
+
+				if (table == null)
+				{
+					return null;
+				}
+
+				tableCache = new TableCache (table);
+				int count = 0;
+
+				DbRichCommand.IterateRows (table, table.Rows,
+					(r, id) =>
+					{
+						tableCache.RowCache[id] = r;
+						count++;
+						return false;
+					});
+
+				if (count == 0)
+				{
+					return null;
+				}
+				
+				this.rowCache[tableName] = tableCache;
+			}
+			
+			if (tableCache.RowCache.TryGetValue (rowIdValue, out row))
+			{
+				return row;
 			}
 
-			return DbRichCommand.FindRow (table, table.Rows, rowId);
+			row = DbRichCommand.FindRow (tableCache.Table, tableCache.Table.Rows, rowId);
+
+			if (row != null)
+			{
+				tableCache.RowCache[rowIdValue] = row;
+			}
+
+			return row;
 		}
 
 		public IEnumerable<System.Data.DataRow> FindRelationRows(string tableName, DbId sourceRowId)
@@ -1433,18 +1476,24 @@ namespace Epsitec.Cresus.Database
 		/// </returns>
 		public static System.Data.DataRow FindRow(System.Data.DataTable table, System.Collections.IEnumerable rows, DbId rowId)
 		{
+			long rowIdValue = rowId.Value;
+			return DbRichCommand.IterateRows (table, rows, (row, id) => rowIdValue == id);
+		}
+
+		private static System.Data.DataRow IterateRows(System.Data.DataTable table, System.Collections.IEnumerable rows, System.Func<System.Data.DataRow, long, bool> action)
+		{
 			int columnIdIndex = table.Columns.IndexOf (Tags.ColumnId);
 
 			foreach (System.Data.DataRow row in rows)
 			{
 				long rowIdValue;
-				
+
 				switch (row.RowState)
 				{
 					case System.Data.DataRowState.Deleted:
 						rowIdValue = (long) row[columnIdIndex, System.Data.DataRowVersion.Original];
 						break;
-					
+
 					case System.Data.DataRowState.Detached:
 						continue;
 
@@ -1452,8 +1501,8 @@ namespace Epsitec.Cresus.Database
 						rowIdValue = (long) row[columnIdIndex];
 						break;
 				}
-				
-				if (rowId.Value == rowIdValue)
+
+				if (action (row, rowIdValue))
 				{
 					return row;
 				}
@@ -1461,6 +1510,7 @@ namespace Epsitec.Cresus.Database
 			
 			return null;
 		}
+
 
 		/// <summary>
 		/// Finds the temporary rows in the collection.
@@ -1876,12 +1926,92 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		class TableCache
+		{
+			public TableCache(System.Data.DataTable table)
+			{
+				this.Table = table;
+				this.RowCache = new Dictionary<long, System.Data.DataRow> ();
+			}
+
+			public System.Data.DataTable Table
+			{
+				get;
+				private set;
+			}
+
+			public Dictionary<long, System.Data.DataRow> RowCache
+			{
+				get;
+				private set;
+			}
+		}
+
+		struct TableRowId : System.IEquatable<TableRowId>
+		{
+			public TableRowId(string tableName, long rowId)
+			{
+				this.tableName = tableName;
+				this.rowId     = rowId;
+			}
+
+			public string TableName
+			{
+				get
+				{
+					return this.tableName;
+				}
+			}
+
+			public long RowId
+			{
+				get
+				{
+					return this.rowId;
+				}
+			}
+
+			#region IEquatable<TableRowId> Members
+
+			public bool Equals(TableRowId other)
+			{
+				return this.tableName == other.tableName
+					&& this.rowId == other.rowId;
+			}
+
+			#endregion
+
+			public override bool Equals(object obj)
+			{
+				if (obj is TableRowId)
+				{
+					return this.Equals ((TableRowId) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public override int GetHashCode()
+			{
+				return this.tableName.GetHashCode ()
+					 ^ this.rowId.GetHashCode ();
+			}
+
+			private readonly string tableName;
+			private readonly long rowId;
+		}
+
+
 		private DbInfrastructure				infrastructure;
 		private Collections.DbCommandList		commands;
 		private Collections.DbTableList			tables;
 		private System.Data.DataSet				dataSet;
 		private DbAccess						access;
 		private List<System.Data.IDataAdapter>	adapters;
+
+		private readonly Dictionary<string, TableCache> rowCache;
 
 		private Stack<DbTransaction>			activeTransactions = new Stack<DbTransaction> ();
 		

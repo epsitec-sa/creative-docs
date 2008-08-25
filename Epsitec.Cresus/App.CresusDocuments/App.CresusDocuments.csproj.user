@@ -50,7 +50,7 @@
     </StartProgram>
     <StartURL>
     </StartURL>
-    <StartWorkingDirectory>s:\Epsitec.Cresus\External</StartWorkingDirectory>
+    <StartWorkingDirectory>S:\Epsitec.Cresus\External</StartWorkingDirectory>
     <StartWithIE>true</StartWithIE>
   </PropertyGroup>
 </Project>

@@ -51,11 +51,11 @@ namespace Epsitec.Cresus.Core
 
 			if (this.infrastructure.AttachToDatabase (access))
 			{
-				System.Diagnostics.Debug.WriteLine ("Connected to database");
+				System.Diagnostics.Trace.WriteLine ("Connected to database");
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("Cannot connect to database");
+				System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
 				
 				try
 				{
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core
 					System.Environment.Exit (0);
 				}
 
-				System.Diagnostics.Debug.WriteLine ("Created new database");
+				System.Diagnostics.Trace.WriteLine ("Created new database");
 				empty = true;
 			}
 

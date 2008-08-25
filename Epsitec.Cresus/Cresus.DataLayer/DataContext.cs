@@ -366,47 +366,29 @@ namespace Epsitec.Cresus.DataLayer
 
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
-			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
-			watch.Start ();
-			string op = "";
-			try
+			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
+
+			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
 			{
-				Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
-
-				foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+				if (mapping.Equals (rowKey, baseEntityId))
 				{
-					if (mapping.Equals (rowKey, baseEntityId))
-					{
-						op = ", from cache";
-						return mapping.Entity;
-					}
-				}
-
-				switch (mode)
-				{
-					case EntityResolutionMode.Find:
-						return null;
-
-					case EntityResolutionMode.Load:
-						op = ", loaded";
-						return this.DeserializeEntity (rowKey, entityId);
-
-					case EntityResolutionMode.DelayLoad:
-						op = ", delayed";
-						return new Helpers.EntityDataProxy (this, rowKey, entityId);
-
-					default:
-						throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
+					return mapping.Entity;
 				}
 			}
-			finally
+
+			switch (mode)
 			{
-				watch.Stop ();
-				System.Diagnostics.Debug.WriteLine (string.Format ("Resolved {0}:{1} in {2}ms{3}", rowKey.ToString (), entityId.ToString (), watch.ElapsedMilliseconds, op));
-				if (watch.ElapsedMilliseconds > 100)
-				{
-					System.Diagnostics.Debug.WriteLine ("---------");
-				}
+				case EntityResolutionMode.Find:
+					return null;
+
+				case EntityResolutionMode.Load:
+					return this.DeserializeEntity (rowKey, entityId);
+
+				case EntityResolutionMode.DelayLoad:
+					return new Helpers.EntityDataProxy (this, rowKey, entityId);
+
+				default:
+					throw new System.NotImplementedException (string.Format ("Resolution mode {0} not implemented", mode));
 			}
 		}
 
