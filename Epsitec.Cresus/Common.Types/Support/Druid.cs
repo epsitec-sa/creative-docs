@@ -230,7 +230,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a resource id", type));
 			}
 
-			return string.Concat ("[", Druid.ToFullString (Druid.FromIds (this.Module, this.DeveloperAndPatchLevel, this.Local)), "]");
+			return string.Concat ("[", Druid.ToFullString (this.Module, this.DeveloperAndPatchLevel, this.Local), "]");
 		}
 
 		/// <summary>
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a resource id", type));
 			}
 
-			return string.Concat ("_", Druid.ToFullString (Druid.FromIds (this.Module, this.DeveloperAndPatchLevel, this.Local)));
+			return string.Concat ("_", Druid.ToFullString (this.Module, this.DeveloperAndPatchLevel, this.Local));
 		}
 
 		/// <summary>
@@ -263,7 +263,10 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException (string.Format ("Cannot convert {0} DRUID to a field id name", type));
 			}
 
-			return string.Concat (Resources.FieldIdPrefix, Druid.ToModuleString (Druid.FromIds (this.DeveloperAndPatchLevel, this.Local)));
+			int dev   = this.DeveloperAndPatchLevel;
+			int local = this.Local;
+			
+			return Druid.ToPrefixedModuleString (Resources.FieldIdPrefix, dev, local);
 		}
 
 		/// <summary>
@@ -352,10 +355,13 @@ namespace Epsitec.Common.Support
 			{
 				case DruidType.Invalid:
 					return "<invalid>";
+				
 				case DruidType.ModuleRelative:
-					return this.ToFieldName ();
+					return Druid.ToPrefixedModuleString (Resources.FieldIdPrefix, this.DeveloperAndPatchLevel, this.Local);
+
 				case DruidType.Full:
-					return this.ToResourceId ();
+					return string.Concat ("[", Druid.ToFullString (this.Module, this.DeveloperAndPatchLevel, this.Local), "]");
+				
 				default:
 					return "<not supported>";
 			}
@@ -639,6 +645,11 @@ namespace Epsitec.Common.Support
 			int dev = (int) (druid >> 24) & 0xfffff;
 			int local = (int) (druid >> 0) & 0xffffff;
 
+			return Druid.ToFullString (module, dev, local);
+		}
+
+		private static string ToFullString(int module, int dev, int local)
+		{
 			char[] buffer = new char[13];
 
 			buffer[0]  = Druid.OutputDigit (ref module);
@@ -680,6 +691,24 @@ namespace Epsitec.Common.Support
 			buffer[6] = Druid.OutputDigit (ref dev);
 			buffer[7] = Druid.OutputDigit (ref local);
 			buffer[8] = Druid.OutputDigit (ref dev);
+
+			return Druid.StripEndZeroes (buffer);
+		}
+
+		private static string ToPrefixedModuleString(char prefix, int dev, int local)
+		{
+			char[] buffer = new char[10];
+
+			buffer[0] = prefix;
+			buffer[1] = Druid.OutputDigit (ref dev);
+			buffer[2] = Druid.OutputDigit (ref local);
+			buffer[3] = Druid.OutputDigit (ref local);
+			buffer[4] = Druid.OutputDigit (ref dev);
+			buffer[5] = Druid.OutputDigit (ref local);
+			buffer[6] = Druid.OutputDigit (ref local);
+			buffer[7] = Druid.OutputDigit (ref dev);
+			buffer[8] = Druid.OutputDigit (ref local);
+			buffer[9] = Druid.OutputDigit (ref dev);
 
 			return Druid.StripEndZeroes (buffer);
 		}

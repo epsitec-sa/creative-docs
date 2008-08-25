@@ -961,44 +961,33 @@ namespace Epsitec.Common.Support
 		{
 			culture = culture ?? this.culture;
 
-			string resource = Resources.ResolveCaptionsIdReference (druid.ToResourceId ());
-			string bundleName;
-			string fieldName;
+			string fieldName  = druid.ToFieldName ();
+			string bundleName = Resources.ResolveCaptionsIdReference (this.ActivePrefix, druid);
 			
-			resource = this.NormalizeFullId (resource);
+			bool removed = false;
 
-			if (Resources.SplitFieldIdWithoutIdResolution (resource, out bundleName, out fieldName))
+			switch (level)
 			{
-				bool removed = false;
+				case ResourceLevel.Localized:
+				case ResourceLevel.Customized:
+				case ResourceLevel.Default:
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Merged, culture));
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, level, culture));
+					break;
 
-				switch (level)
-				{
-					case ResourceLevel.Localized:
-					case ResourceLevel.Customized:
-					case ResourceLevel.Default:
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Merged, culture));
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, level, culture));
-						break;
+				case ResourceLevel.All:
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Default, culture));
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Localized, culture));
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Customized, culture));
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Merged, culture));
+					break;
 
-					case ResourceLevel.All:
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Default, culture));
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Localized, culture));
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Customized, culture));
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, ResourceLevel.Merged, culture));
-						break;
-
-					default:
-						removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, level, culture));
-						break;
-				}
-				
-
-				return removed;
+				default:
+					removed |= this.captionCache.Remove (Resources.CreateCaptionKey (druid, level, culture));
+					break;
 			}
-			else
-			{
-				return false;
-			}
+
+			return removed;
 		}
 		
 		
@@ -1015,71 +1004,72 @@ namespace Epsitec.Common.Support
 
 			culture = culture ?? this.culture;
 
-			string resource = Resources.ResolveCaptionsIdReference (druid.ToResourceId ());
-			string bundleName;
-			string fieldName;
-			
-			resource = this.NormalizeFullId (resource);
+			string prefix = this.ActivePrefix;
+
+			if (string.IsNullOrEmpty (prefix))
+			{
+				throw new ResourceException ("Cannot normalize resource name; no prefix available");
+			}
+
+			string fieldName  = druid.ToFieldName ();
+			string bundleName = Resources.ResolveCaptionsIdReference (prefix, druid);
 
 			Caption caption = null;
 			
-			if (Resources.SplitFieldIdWithoutIdResolution (resource, out bundleName, out fieldName))
-			{
-				string key = Resources.CreateCaptionKey (druid, level, culture);
-				Weak<Caption> weakCaption;
+			string key = Resources.CreateCaptionKey (druid, level, culture);
+			Weak<Caption> weakCaption;
 
-				if ((cache) &&
-					(this.captionCache.TryGetValue (key, out weakCaption)))
+			if ((cache) &&
+				(this.captionCache.TryGetValue (key, out weakCaption)))
+			{
+				caption = weakCaption.Target;
+			}
+			
+			if (caption == null)
+			{
+				CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
+
+				switch (level)
 				{
-					caption = weakCaption.Target;
+					case ResourceLevel.Merged:
+						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
+
+						if (defaultCulture != null)
+						{
+							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, defaultCulture), druid, ref caption);
+						}
+
+						if (defaultCulture != culture)
+						{
+							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
+						}
+						
+						this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
+
+						if (caption != null)
+						{
+							this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
+						}
+						break;
+
+					case ResourceLevel.Default:
+					case ResourceLevel.Localized:
+					case ResourceLevel.Customized:
+						this.MergeWithCaption (this.GetBundle (bundleName, level, culture), druid, ref caption);
+						break;
+
+					default:
+						throw new ResourceException ("Invalid resource level");
 				}
 				
-				if (caption == null)
+				if (caption != null)
 				{
-					CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
+					caption.DefineId (druid);
 
-					switch (level)
+					if (cache)
 					{
-						case ResourceLevel.Merged:
-							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Default, culture), druid, ref caption);
-
-							if (defaultCulture != null)
-							{
-								this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, defaultCulture), druid, ref caption);
-							}
-
-							if (defaultCulture != culture)
-							{
-								this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Localized, culture), druid, ref caption);
-							}
-							
-							this.MergeWithCaption (this.GetBundle (bundleName, ResourceLevel.Customized, culture), druid, ref caption);
-
-							if (caption != null)
-							{
-								this.ResolveDruidReferencesInCaption (caption, ResourceLevel.Merged, culture);
-							}
-							break;
-
-						case ResourceLevel.Default:
-						case ResourceLevel.Localized:
-						case ResourceLevel.Customized:
-							this.MergeWithCaption (this.GetBundle (bundleName, level, culture), druid, ref caption);
-							break;
-
-						default:
-							throw new ResourceException ("Invalid resource level");
-					}
-					
-					if (caption != null)
-					{
-						caption.DefineId (druid);
-
-						if (cache)
-						{
-							this.captionCache[key] = new Weak<Caption> (caption);
-							this.GetBundleRelatedCache (bundleName, level, culture).AddCaption (caption);
-						}
+						this.captionCache[key] = new Weak<Caption> (caption);
+						this.GetBundleRelatedCache (bundleName, level, culture).AddCaption (caption);
 					}
 				}
 			}

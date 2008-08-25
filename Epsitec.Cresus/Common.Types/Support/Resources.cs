@@ -235,17 +235,6 @@ namespace Epsitec.Common.Support
 			return string.Concat (bundle, Resources.FieldSeparator, field);
 		}
 
-		public static string ResolveCaptionsIdReference(string fullId)
-		{
-			string prefix;
-			string localId;
-
-			Resources.SplitFullId (fullId, out prefix, out localId);
-			Resources.ResolveCaptionsDruidReference (ref prefix, ref localId);
-
-			return Resources.JoinFullId (prefix, localId);
-		}
-		
 		public static string ResolveStringsIdReference(string fullId)
 		{
 			string prefix;
@@ -257,18 +246,14 @@ namespace Epsitec.Common.Support
 			return Resources.JoinFullId (prefix, localId);
 		}
 
-		public static void ResolveCaptionsDruidReference(ref string prefix, ref string localId)
+		public static string ResolveCaptionsIdReference(string prefix, Druid druid)
 		{
-			if (Druid.IsValidResourceId (localId))
-			{
-				//	The local ID is not a standard resource bundle identifier; it
-				//	looks like a DRUID : "[mmDLLDLLDmLDm]"
-
-				Druid druid = Druid.Parse (localId);
-
-				prefix  = string.Format (CultureInfo.InvariantCulture, "{0}/{1}", prefix, druid.Module);
-				localId = Resources.JoinFieldId (Resources.CaptionsBundleName, druid.ToFieldName ());
-			}
+			return string.Concat (
+				prefix,
+				Resources.ModuleSeparatorText,
+				druid.Module.ToString (CultureInfo.InvariantCulture),
+				Resources.PrefixSeparatorText,
+				Resources.CaptionsBundleName);
 		}
 
 		public static void ResolveStringsIdReference(ref string prefix, ref string localId)
@@ -510,15 +495,12 @@ namespace Epsitec.Common.Support
 		
 		internal static string CreateCaptionKey(Druid druid, ResourceLevel level, CultureInfo culture)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			buffer.Append (druid.ToString ());
-			buffer.Append ("~");
-			buffer.Append ((int) level);
-			buffer.Append ("~");
-			buffer.Append (level == ResourceLevel.Default ? Resources.DefaultTwoLetterISOLanguageName : culture.TwoLetterISOLanguageName);
-
-			return buffer.ToString ();
+			return string.Concat (
+				druid.ToString (),
+				"~",
+				level.ToString (CultureInfo.InvariantCulture),
+				"~",
+				level == ResourceLevel.Default ? Resources.DefaultTwoLetterISOLanguageName : culture.TwoLetterISOLanguageName);
 		}
 
 		private static void Rebinder(object resourceManager, Types.ResourceBinding binding)
@@ -572,6 +554,11 @@ namespace Epsitec.Common.Support
 
 		public static readonly char				FieldIdPrefix = '$';
 		public static readonly char				FieldSeparator = '#';
+		
+		public static readonly string			PrefixSeparatorText = ":";
+		public static readonly string			ModuleSeparatorText = "/";
+		public static readonly string			FieldSeparatorText = "#";
+		
 		public static readonly int				MaxRecursionCount = 50;
 		
 		private static ResourceProviderFactory	factory;
