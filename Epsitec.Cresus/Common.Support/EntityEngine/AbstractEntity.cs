@@ -209,6 +209,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private void Dump(System.Text.StringBuilder buffer, int level, HashSet<AbstractEntity> history, System.Predicate<StructuredTypeField> filter, bool includeLabels)
 		{
 			string indent = new string (' ', level*2);
+			string name   = "";
 			
 			if (history.Add (this))
 			{
@@ -225,8 +226,12 @@ namespace Epsitec.Common.Support.EntityEngine
 						continue;
 					}
 
-					Caption caption = manager.GetCaption (field.CaptionId);
-					string name = caption.Name;
+					if (includeLabels)
+					{
+						Caption caption = manager.GetCaption (field.CaptionId);
+						name = caption.Name;
+					}
+
 					object value = this.DynamicGetField (id);
 					AbstractEntity child = value as AbstractEntity;
 
