@@ -35,6 +35,19 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="EntityDataMapping"/> class.
+		/// </summary>
+		/// <param name="rowKey">The row key.</param>
+		/// <param name="entityId">The entity id.</param>
+		/// <param name="baseEntityId">The base entity id.</param>
+		public EntityDataMapping(DbKey rowKey, Druid entityId, Druid baseEntityId)
+		{
+			this.entityId = entityId;
+			this.baseEntityId = baseEntityId;
+			this.rowKey = rowKey;
+		}
+
+		/// <summary>
 		/// Gets the associated entity.
 		/// </summary>
 		/// <value>The entity.</value>
@@ -112,7 +125,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		/// <value>
 		/// 	<c>true</c> if this instance is read only; otherwise, <c>false</c>.
 		/// </value>
-		private bool IsReadOnly
+		public bool IsReadOnly
 		{
 			get
 			{
@@ -125,6 +138,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		public bool Equals(EntityDataMapping other)
 		{
 			return this.entityId == other.entityId
+				&& this.baseEntityId == other.baseEntityId
 				&& this.rowKey == other.rowKey;
 		}
 
@@ -173,7 +187,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			if (this.IsReadOnly)
 			{
-				return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode ();
+				return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode () ^ this.baseEntityId.GetHashCode ();
 			}
 			else
 			{

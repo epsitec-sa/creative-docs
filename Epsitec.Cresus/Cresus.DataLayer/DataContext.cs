@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataContext</c> class provides a context in which entities can
 	/// be loaded from the database, modified and then saved back.
 	/// </summary>
-	public sealed class DataContext : System.IDisposable, IEntityPersistanceManager
+	public sealed partial class DataContext : System.IDisposable, IEntityPersistanceManager
 	{
 		public DataContext(DbInfrastructure infrastructure)
 		{
@@ -25,8 +25,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.richCommand = new DbRichCommand (this.infrastructure);
 			this.schemaEngine = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
 			this.entityContext = EntityContext.Current;
-			this.entityDataMapping = new Dictionary<long, EntityDataMapping> ();
-			this.entities = new List<AbstractEntity> ();
+			this.entityDataCache = new EntityDataCache ();
 			this.entityTableDefinitions = new Dictionary<Druid, DbTable> ();
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
@@ -159,23 +158,12 @@ namespace Epsitec.Cresus.DataLayer
 
 		public IEnumerable<AbstractEntity> GetManagedEntities()
 		{
-			for (int i = 0; i < this.entities.Count; i++)
-			{
-				yield return this.entities[i];
-			}
+			return this.entityDataCache.GetEntities ();
 		}
 
 		public IEnumerable<AbstractEntity> GetManagedEntities(System.Predicate<AbstractEntity> predicate)
 		{
-			for (int i = 0; i < this.entities.Count; i++)
-			{
-				AbstractEntity entity = this.entities[i];
-
-				if (predicate (entity))
-				{
-					yield return entity;
-				}
-			}
+			return this.entityDataCache.GetEntities (predicate);
 		}
 
 		public IEnumerable<AbstractEntity> GetModifiedEntities()
@@ -192,7 +180,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The number of entities associated to this data context.</returns>
 		public int CountManagedEntities()
 		{
-			return this.entities.Count;
+			return this.entityDataCache.Count;
 		}
 
 		/// <summary>
@@ -367,15 +355,13 @@ namespace Epsitec.Cresus.DataLayer
 		internal object InternalResolveEntity(DbKey rowKey, Druid entityId, EntityResolutionMode mode)
 		{
 			Druid baseEntityId = this.entityContext.GetBaseEntityId (entityId);
+			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, entityId, baseEntityId);
 
-			foreach (EntityDataMapping mapping in this.entityDataMapping.Values)
+			if (entity != null)
 			{
-				if (mapping.Equals (rowKey, baseEntityId))
-				{
-					return mapping.Entity;
-				}
+				return entity;
 			}
-
+			
 			switch (mode)
 			{
 				case EntityResolutionMode.Find:
@@ -417,7 +403,7 @@ namespace Epsitec.Cresus.DataLayer
 			System.Diagnostics.Debug.Assert (mapping.EntityId == entityId);
 			System.Diagnostics.Debug.Assert (mapping.RowKey.IsEmpty);
 
-			mapping.RowKey = entityKey;
+			this.entityDataCache.DefineRowKey (mapping, entityKey);
 
 			Druid id = entityId;
 
@@ -943,16 +929,9 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				return null;
 			}
-
-			EntityDataMapping mapping;
-
-			if (this.entityDataMapping.TryGetValue (entity.GetEntitySerialId (), out mapping))
-			{
-				return mapping;
-			}
 			else
 			{
-				return null;
+				return this.entityDataCache.GetMapping (entity.GetEntitySerialId ());
 			}
 		}
 
@@ -1155,8 +1134,7 @@ namespace Epsitec.Cresus.DataLayer
 
 			EntityDataMapping mapping = new EntityDataMapping (entity, entityId, baseEntityId);
 
-			this.entities.Add (entity);
-			this.entityDataMapping[entitySerialId] = mapping;
+			this.entityDataCache.Add (entitySerialId, mapping);
 
 			try
 			{
@@ -1164,8 +1142,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			catch
 			{
-				this.entities.Remove (entity);
-				this.entityDataMapping.Remove (entitySerialId);
+				this.entityDataCache.Remove (entitySerialId);
 				throw;
 			}
 		}
@@ -1174,8 +1151,7 @@ namespace Epsitec.Cresus.DataLayer
 		readonly DbRichCommand richCommand;
 		readonly SchemaEngine schemaEngine;
 		readonly EntityContext entityContext;
-		readonly Dictionary<long, EntityDataMapping> entityDataMapping;
-		readonly List<AbstractEntity> entities;
+		readonly EntityDataCache entityDataCache;
 		readonly Dictionary<Druid, DbTable> entityTableDefinitions;
 		readonly Dictionary<string, TemporaryRowCollection> temporaryRows;
 	}
