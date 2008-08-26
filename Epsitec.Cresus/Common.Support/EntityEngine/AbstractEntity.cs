@@ -68,6 +68,12 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The id of the <see cref="StructuredType"/>.</returns>
 		public abstract Druid GetEntityStructuredTypeId();
 
+		/// <summary>
+		/// Gets the key of the <see cref="StructuredType"/> which describes
+		/// this entity. This is a textual representation of the underlying
+		/// DRUID.
+		/// </summary>
+		/// <returns>The key of the <see cref="StructuredType"/>.</returns>
 		public abstract string GetEntityStructuredTypeKey();
 
 		/// <summary>

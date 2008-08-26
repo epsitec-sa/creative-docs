@@ -33,6 +33,14 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.entityId;
 		}
 
+		/// <summary>
+		/// Gets the key of the <see cref="StructuredType"/> which describes
+		/// this entity. This is a textual representation of the underlying
+		/// DRUID.
+		/// </summary>
+		/// <returns>
+		/// The key of the <see cref="StructuredType"/>.
+		/// </returns>
 		public override string GetEntityStructuredTypeKey()
 		{
 			return this.entityId.ToString ();
