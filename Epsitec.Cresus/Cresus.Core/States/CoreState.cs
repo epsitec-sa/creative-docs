@@ -70,29 +70,29 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the title for this state (used by the state deck to
+		/// identify the state).
+		/// </summary>
+		/// <value>The title.</value>
 		public string							Title
 		{
 			get;
 			set;
 		}
 
-		internal string							Tag
-		{
-			get;
-			set;
-		}
-
-		public abstract XElement Serialize(XElement element);
+		
+		public abstract XElement Serialize(StateManagerSerializationContext context, XElement element);
 
 		public abstract CoreState Deserialize(XElement element);
 
-		public virtual void NotifyDeserialized(Dictionary<string, CoreState> taggedStates)
+		public virtual void NotifyDeserialized(StateManagerSerializationContext context)
 		{
 			if (this.fixups != null)
 			{
 				foreach (var action in this.fixups)
 				{
-					action (taggedStates);
+					action (context);
 				}
 
 				this.fixups = null;
@@ -180,11 +180,11 @@ namespace Epsitec.Cresus.Core.States
 			this.AddFixup ((map) => action ());
 		}
 
-		protected void AddFixup(System.Action<Dictionary<string, CoreState>> action)
+		protected void AddFixup(System.Action<StateManagerSerializationContext> action)
 		{
 			if (this.fixups == null)
 			{
-				this.fixups = new List<System.Action<Dictionary<string, CoreState>>> ();
+				this.fixups = new List<System.Action<StateManagerSerializationContext>> ();
 			}
 			
 			this.fixups.Add (action);
@@ -194,6 +194,6 @@ namespace Epsitec.Cresus.Core.States
 		private readonly StateManager			stateManager;
 		private int								boxId;
 		
-		private List<System.Action<Dictionary<string, CoreState>>>	fixups;
+		private List<System.Action<StateManagerSerializationContext>>	fixups;
 	}
 }

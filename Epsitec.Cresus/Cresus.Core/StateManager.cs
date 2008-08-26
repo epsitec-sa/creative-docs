@@ -296,7 +296,7 @@ namespace Epsitec.Cresus.Core
 
 		public XElement SaveStates(string xmlNodeName)
 		{
-			this.ResetStateTags ();
+			StateManagerSerializationContext context = new StateManagerSerializationContext (this.states);
 
 			System.Text.StringBuilder historyTags = new System.Text.StringBuilder ();
 			System.Text.StringBuilder hiddenTags  = new System.Text.StringBuilder ();
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core
 				{
 					historyTags.Append (" ");
 				}
-				historyTags.Append (state.Tag);
+				historyTags.Append (context.GetTag (state));
 			}
 
 			foreach (var state in this.zOrder)
@@ -317,7 +317,7 @@ namespace Epsitec.Cresus.Core
 				{
 					zOrderTags.Append (" ");
 				}
-				zOrderTags.AppendFormat (state.Tag);
+				zOrderTags.AppendFormat (context.GetTag (state));
 			}
 
 			foreach (var state in this.hidden)
@@ -326,28 +326,16 @@ namespace Epsitec.Cresus.Core
 				{
 					hiddenTags.Append (" ");
 				}
-				hiddenTags.AppendFormat (state.Tag);
+				hiddenTags.AppendFormat (context.GetTag (state));
 			}
 
 			return new XElement (xmlNodeName,
 				new XElement ("states",
 					from state in this.states
-					select state.Serialize (new XElement ("state",
-						new XAttribute ("class", States.StateFactory.GetClassName (state))))),
+					select state.Serialize (context, new XElement ("state", new XAttribute ("class", States.StateFactory.GetClassName (state))))),
 				new XElement ("history", historyTags.ToString ()),
 				new XElement ("z_order", zOrderTags.ToString ()),
 				new XElement ("hidden", hiddenTags.ToString ()));
-		}
-
-		private void ResetStateTags()
-		{
-			int tag = 0;
-
-			foreach (States.CoreState state in this.states)
-			{
-				state.Tag = tag.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				tag++;
-			}
 		}
 
 		public void RestoreStates(XElement xml)
@@ -357,9 +345,8 @@ namespace Epsitec.Cresus.Core
 				select States.StateFactory.CreateState (this, state));
 
 			this.states.AddRange (states);
-			this.ResetStateTags ();
 			
-			Dictionary<string, States.CoreState> taggedStates = StateManager.CreateStateTagDictionary (this.states);
+			StateManagerSerializationContext context = new StateManagerSerializationContext (this.states);
 
 			string history = xml.Element ("history").Value;
 			string zOrder  = xml.Element ("z_order").Value;
@@ -369,27 +356,27 @@ namespace Epsitec.Cresus.Core
 			{
 				foreach (string tag in history.Split (' '))
 				{
-					this.history.Add (taggedStates[tag]);
+					this.history.Add (context.GetState (tag));
 				}
 			}
 			if (string.IsNullOrEmpty (zOrder) == false)
 			{
 				foreach (string tag in zOrder.Split (' '))
 				{
-					this.zOrder.Add (taggedStates[tag]);
+					this.zOrder.Add (context.GetState (tag));
 				}
 			}
 			if (string.IsNullOrEmpty (hidden) == false)
 			{
 				foreach (string tag in hidden.Split (' '))
 				{
-					this.hidden.Add (taggedStates[tag]);
+					this.hidden.Add (context.GetState (tag));
 				}
 			}
 
 			foreach (var state in states)
 			{
-				state.NotifyDeserialized (taggedStates);
+				state.NotifyDeserialized (context);
 			}
 
 			if (this.boxes.Count > 0)
@@ -409,22 +396,7 @@ namespace Epsitec.Cresus.Core
 			this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Load, null));
 		}
 
-		private static Dictionary<string, States.CoreState> CreateStateTagDictionary(IEnumerable<States.CoreState> states)
-		{
-			Dictionary<string, States.CoreState> taggedStates = new Dictionary<string, States.CoreState> ();
-
-			int tag = 0;
-
-			foreach (var state in states)
-			{
-				state.Tag = tag.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				tag++;
-
-				taggedStates[state.Tag] = state;
-			}
-			
-			return taggedStates;
-		}
+		
 
 
 		/// <summary>

@@ -79,10 +79,10 @@ namespace Epsitec.Cresus.Core.States
 		
 		
 		
-		public override XElement Serialize(XElement element)
+		public override XElement Serialize(StateManagerSerializationContext context, XElement element)
 		{
 			this.StoreCoreState (element);
-			this.StoreWorkspace (element);
+			this.StoreWorkspace (context, element);
 
 			return element;
 		}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		protected virtual void StoreWorkspace(XElement element)
+		protected virtual void StoreWorkspace(StateManagerSerializationContext context, XElement element)
 		{
 			if (this.workspace != null)
 			{
@@ -145,11 +145,11 @@ namespace Epsitec.Cresus.Core.States
 				{
 					if (this.LinkedFieldPath == null)
 					{
-						link = this.LinkedState.Tag;
+						link = context.GetTag (this.LinkedState);
 					}
 					else
 					{
-						link = string.Concat (this.LinkedState.Tag, " ", this.LinkedFieldPath.ToString ());
+						link = string.Concat (context.GetTag (this.LinkedState), " ", this.LinkedFieldPath.ToString ());
 					}
 				}
 
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Core.States
 						this.LinkedFieldPath = EntityFieldPath.Parse (args[1]);
 					}
 
-					this.AddFixup (map => this.LinkedState = map[args[0]]);
+					this.AddFixup (context => this.LinkedState = context.GetState (args[0]));
 				}
 
 				this.workspace.Initialize ();
