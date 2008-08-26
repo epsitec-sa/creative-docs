@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			{
 				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
-				this.searchContext.PersistanceManagers.Add (this.Application.Data.DataContext);
+				this.searchContext.PersistenceManagers.Add (this.Application.Data.DataContext);
 
 				if (this.currentItem == null)
 				{

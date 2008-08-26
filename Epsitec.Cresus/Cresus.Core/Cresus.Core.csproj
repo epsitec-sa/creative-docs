@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -68,7 +68,7 @@
     </Compile>
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
-    <Compile Include="UI.PersistanceManager.cs" />
+    <Compile Include="UI.PersistenceManager.cs" />
     <Compile Include="HistorySortMode.cs" />
     <Compile Include="CoreCommands.cs" />
     <Compile Include="StateAttribute.cs" />

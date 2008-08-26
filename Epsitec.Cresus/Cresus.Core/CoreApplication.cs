@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			this.stateManager = new StateManager (this);
-			this.persistanceManager = new UI.PersistanceManager ();
+			this.persistenceManager = new UI.PersistenceManager ();
 
 			this.data = new CoreData ();
 			this.exceptionManager = new CoreLibrary.ExceptionManager ();
@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.Core
 				Name = "Ribbon"
 			};
 
-			this.persistanceManager.Register (this.ribbonBook);
+			this.persistenceManager.Register (this.ribbonBook);
 			
 			this.ribbonPageHome = new RibbonPage (this.ribbonBook)
 			{
@@ -461,11 +461,11 @@ namespace Epsitec.Cresus.Core
 
 				this.stateManager.RestoreStates (store.Element ("stateManager"));
 				UI.RestoreWindowPositions (store.Element ("windowPositions"));
-				this.persistanceManager.Restore (store.Element ("uiSettings"));
+				this.persistenceManager.Restore (store.Element ("uiSettings"));
 			}
 			
-			this.persistanceManager.DiscardChanges ();
-			this.persistanceManager.SettingsChanged += (sender) => Application.QueueAsyncCallback (this.SaveApplicationState);
+			this.persistenceManager.DiscardChanges ();
+			this.persistenceManager.SettingsChanged += (sender) => Application.QueueAsyncCallback (this.SaveApplicationState);
 
 			this.stateManager.StackChanged += (sender, e) => this.UpdateCommandsAfterStateChange ();
 			this.stateManager.StackChanged += (sender, e) => Application.QueueAsyncCallback (this.SaveApplicationState);
@@ -519,7 +519,7 @@ namespace Epsitec.Cresus.Core
 					new XElement ("store",
 						this.StateManager.SaveStates ("stateManager"),
 						UI.SaveWindowPositions ("windowPositions"),
-						this.persistanceManager.Save ("uiSettings")));
+						this.persistenceManager.Save ("uiSettings")));
 
 				doc.Save (CoreApplication.Paths.SettingsPath);
 				System.Diagnostics.Debug.WriteLine ("Save done.");
@@ -562,7 +562,7 @@ namespace Epsitec.Cresus.Core
 		
 
 		StateManager							stateManager;
-		UI.PersistanceManager					persistanceManager;
+		UI.PersistenceManager					persistenceManager;
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
 		CoreCommands							commands;

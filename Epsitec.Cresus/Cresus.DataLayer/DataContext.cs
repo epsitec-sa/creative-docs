@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// The <c>DataContext</c> class provides a context in which entities can
 	/// be loaded from the database, modified and then saved back.
 	/// </summary>
-	public sealed partial class DataContext : System.IDisposable, IEntityPersistanceManager
+	public sealed partial class DataContext : System.IDisposable, IEntityPersistenceManager
 	{
 		public DataContext(DbInfrastructure infrastructure)
 		{
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.temporaryRows = new Dictionary<string, TemporaryRowCollection> ();
 
 			this.entityContext.EntityCreated += this.HandleEntityCreated;
-			this.entityContext.PersistanceManagers.Add (this);
+			this.entityContext.PersistenceManagers.Add (this);
 		}
 
 		public SchemaEngine SchemaEngine
@@ -1040,7 +1040,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
-		#region IEntityPersistanceManager Members
+		#region IEntityPersistenceManager Members
 
 		public string GetPersistedId(AbstractEntity entity)
 		{
@@ -1121,7 +1121,7 @@ namespace Epsitec.Cresus.DataLayer
 			if (disposing)
 			{
 				this.entityContext.EntityCreated -= this.HandleEntityCreated;
-				this.entityContext.PersistanceManagers.Remove (this);
+				this.entityContext.PersistenceManagers.Remove (this);
 			}
 		}
 

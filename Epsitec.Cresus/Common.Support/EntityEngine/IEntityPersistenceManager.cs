@@ -4,10 +4,10 @@
 namespace Epsitec.Common.Support.EntityEngine
 {
 	/// <summary>
-	/// The <c>IEntityPersistanceManager</c> interface is used to map between
+	/// The <c>IEntityPersistenceManager</c> interface is used to map between
 	/// entities and their persisted id (which could be a database key).
 	/// </summary>
-	public interface IEntityPersistanceManager
+	public interface IEntityPersistenceManager
 	{
 		/// <summary>
 		/// Gets the persisted id for the specified entity.

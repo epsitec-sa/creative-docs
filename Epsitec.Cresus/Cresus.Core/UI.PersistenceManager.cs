@@ -17,11 +17,11 @@ namespace Epsitec.Cresus.Core
 	public static partial class UI
 	{
 		/// <summary>
-		/// The <c>PersistanceManager</c> class handles UI persistance.
+		/// The <c>PersistenceManager</c> class handles UI persistence.
 		/// </summary>
-		public sealed class PersistanceManager : System.IDisposable
+		public sealed class PersistenceManager : System.IDisposable
 		{
-			public PersistanceManager()
+			public PersistenceManager()
 			{
 				this.bindings = new Dictionary<string, Binding> ();
 				this.timer = new Timer ()

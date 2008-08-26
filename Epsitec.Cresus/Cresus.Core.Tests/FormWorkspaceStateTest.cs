@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core
 		public void Check01SaveDialogData()
 		{
 			EntityContext      context = EntityContext.Current;
-			PersistanceManager manager = new PersistanceManager ();
+			PersistenceManager manager = new PersistenceManager ();
 
 			AdresseEntity   adr  = context.CreateEmptyEntity<AdresseEntity> ();
 			Localité1Entity loc1 = context.CreateEmptyEntity<Localité1Entity> ();
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core
 			manager.Map["loc1"] = loc1;
 			manager.Map["loc2"] = loc2;
 
-			context.PersistanceManagers.Add (manager);
+			context.PersistenceManagers.Add (manager);
 
 			using (adr.DefineOriginalValues ())
 			{
@@ -90,14 +90,14 @@ namespace Epsitec.Cresus.Core
 			element = States.FormWorkspaceState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData />", element.ToString (SaveOptions.DisableFormatting));
 
-			context.PersistanceManagers.Remove (manager);
+			context.PersistenceManagers.Remove (manager);
 		}
 
 		[Test]
 		public void Check02RestoreDialogData()
 		{
 			EntityContext      context = EntityContext.Current;
-			PersistanceManager manager = new PersistanceManager ();
+			PersistenceManager manager = new PersistenceManager ();
 
 			AdresseEntity   adr  = context.CreateEmptyEntity<AdresseEntity> ();
 			Localité1Entity loc1 = context.CreateEmptyEntity<Localité1Entity> ();
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core
 			manager.Map["loc1"] = loc1;
 			manager.Map["loc2"] = loc2;
 
-			context.PersistanceManagers.Add (manager);
+			context.PersistenceManagers.Add (manager);
 
 			using (adr.DefineOriginalValues ())
 			{
@@ -142,19 +142,19 @@ namespace Epsitec.Cresus.Core
 			Assert.AreEqual ("Yverdon-les-Bains", temp.Localité.Nom);
 			Assert.AreEqual (loc2, temp.Localité);
 
-			context.PersistanceManagers.Remove (manager);
+			context.PersistenceManagers.Remove (manager);
 		}
 
 
-		#region PersistanceManager Class
+		#region PersistenceManager Class
 
 		/// <summary>
-		/// The <c>PersistanceManager</c> class implements a simple persistance
+		/// The <c>PersistenceManager</c> class implements a simple persistence
 		/// manager which associates entities with ids through a dictionary.
 		/// </summary>
-		private class PersistanceManager : IEntityPersistanceManager
+		private class PersistenceManager : IEntityPersistenceManager
 		{
-			#region IEntityPersistanceManager Members
+			#region IEntityPersistenceManager Members
 
 			public string GetPersistedId(AbstractEntity entity)
 			{

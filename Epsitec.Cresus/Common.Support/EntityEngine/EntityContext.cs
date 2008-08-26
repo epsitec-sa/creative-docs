@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// The <c>EntityContext</c> class defines the context associated with a
 	/// set of related entities. It is responsible of the value store management.
 	/// </summary>
-	public class EntityContext : IEntityPersistanceManager
+	public class EntityContext : IEntityPersistenceManager
 	{
 		private EntityContext()
 			: this (Resources.DefaultManager, EntityLoopHandlingMode.Throw)
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			this.associatedThread    = System.Threading.Thread.CurrentThread;
 			this.structuredTypeMap   = new Dictionary<Druid, IStructuredType> ();
 			this.loopHandlingMode    = loopHandlingMode;
-			this.persistanceManagers = new List<IEntityPersistanceManager> ();
+			this.persistenceManagers = new List<IEntityPersistenceManager> ();
 
 			this.propertyGetters = new Dictionary<string, PropertyGetter> ();
 			this.propertySetters = new Dictionary<string, PropertySetter> ();
@@ -87,11 +87,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			set;
 		}
 
-		public IList<IEntityPersistanceManager> PersistanceManagers
+		public IList<IEntityPersistenceManager> PersistenceManagers
 		{
 			get
 			{
-				return this.persistanceManagers;
+				return this.persistenceManagers;
 			}
 		}
 
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return da == db;
 		}
 
-		#region IEntityPersistanceManager Members
+		#region IEntityPersistenceManager Members
 
 		/// <summary>
 		/// Gets the persisted id for the specified entity.
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The persisted id or <c>null</c>.</returns>
 		public string GetPersistedId(AbstractEntity entity)
 		{
-			foreach (var manager in this.persistanceManagers)
+			foreach (var manager in this.persistenceManagers)
 			{
 				string id = manager.GetPersistedId (entity);
 
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Support.EntityEngine
 				return null;
 			}
 
-			foreach (var manager in this.persistanceManagers)
+			foreach (var manager in this.persistenceManagers)
 			{
 				AbstractEntity entity = manager.GetPeristedEntity (id);
 
@@ -984,7 +984,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		private readonly System.Threading.Thread associatedThread;
 		private readonly Dictionary<Druid, IStructuredType> structuredTypeMap;
 		private readonly EntityLoopHandlingMode loopHandlingMode;
-		private readonly List<IEntityPersistanceManager> persistanceManagers;
+		private readonly List<IEntityPersistenceManager> persistenceManagers;
 		private readonly Dictionary<string, PropertyGetter> propertyGetters;
 		private readonly Dictionary<string, PropertySetter> propertySetters;
 
