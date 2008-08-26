@@ -236,11 +236,11 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		protected override void SoftAttachState()
+		protected override void SoftAttachState(Epsitec.Common.Widgets.Widget container)
 		{
 			if (this.workspace != null)
 			{
-				this.workspace.Container.SetParent (this.Container);
+				this.workspace.Container.SetParent (container);
 				this.workspace.SetEnable (true);
 			}
 		}

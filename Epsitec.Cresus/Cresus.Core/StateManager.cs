@@ -296,13 +296,7 @@ namespace Epsitec.Cresus.Core
 
 		public XElement SaveStates(string xmlNodeName)
 		{
-			int tag = 0;
-
-			foreach (States.CoreState state in this.states)
-			{
-				state.Tag = tag.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				tag++;
-			}
+			this.ResetStateTags ();
 
 			System.Text.StringBuilder historyTags = new System.Text.StringBuilder ();
 			System.Text.StringBuilder hiddenTags  = new System.Text.StringBuilder ();
@@ -345,21 +339,27 @@ namespace Epsitec.Cresus.Core
 				new XElement ("hidden", hiddenTags.ToString ()));
 		}
 
+		private void ResetStateTags()
+		{
+			int tag = 0;
+
+			foreach (States.CoreState state in this.states)
+			{
+				state.Tag = tag.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				tag++;
+			}
+		}
+
 		public void RestoreStates(XElement xml)
 		{
 			List<States.CoreState> states = new	List<States.CoreState> (
 				from state in xml.Descendants ("state")
 				select States.StateFactory.CreateState (this, state));
 
-			Dictionary<string, States.CoreState> taggedStates = new Dictionary<string, States.CoreState> ();
-
-			foreach (var state in states)
-			{
-				string tag = this.states.Count.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				taggedStates[tag] = state;
-				this.states.Add (state);
-				state.Tag = tag;
-			}
+			this.states.AddRange (states);
+			this.ResetStateTags ();
+			
+			Dictionary<string, States.CoreState> taggedStates = StateManager.CreateStateTagDictionary (this.states);
 
 			string history = xml.Element ("history").Value;
 			string zOrder  = xml.Element ("z_order").Value;
@@ -409,7 +409,30 @@ namespace Epsitec.Cresus.Core
 			this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Load, null));
 		}
 
+		private static Dictionary<string, States.CoreState> CreateStateTagDictionary(IEnumerable<States.CoreState> states)
+		{
+			Dictionary<string, States.CoreState> taggedStates = new Dictionary<string, States.CoreState> ();
 
+			int tag = 0;
+
+			foreach (var state in states)
+			{
+				state.Tag = tag.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				tag++;
+
+				taggedStates[state.Tag] = state;
+			}
+			
+			return taggedStates;
+		}
+
+
+		/// <summary>
+		/// Registers a box for the specified container, assigning it a numeric
+		/// identifier, which uniquely identifies it.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <returns>Identifier for the box.</returns>
 		public int RegisterBox(Widget container)
 		{
 			int id = 1;
@@ -525,7 +548,10 @@ namespace Epsitec.Cresus.Core
 
 		private void OnNavigated()
 		{
-			this.application.AsyncSaveApplicationState ();
+			if (this.application != null)
+			{
+				this.application.AsyncSaveApplicationState ();
+			}
 		}
 
 

@@ -32,6 +32,11 @@ namespace Epsitec.Cresus.Core.States
 			set;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this state is bound with a box,
+		/// i.e. whether it is currently being displayed.
+		/// </summary>
+		/// <value><c>true</c> if this state is bound; otherwise, <c>false</c>.</value>
 		public bool								IsBound
 		{
 			get
@@ -69,14 +74,6 @@ namespace Epsitec.Cresus.Core.States
 		{
 			get;
 			set;
-		}
-
-		protected Widget						Container
-		{
-			get
-			{
-				return this.container;
-			}
 		}
 
 		internal string							Tag
@@ -137,7 +134,6 @@ namespace Epsitec.Cresus.Core.States
 			System.Diagnostics.Debug.Assert (this.IsBound);
 			
 			this.SoftDetachState ();
-			this.container = null;
 		}
 
 		internal void Bind(Widget container)
@@ -145,11 +141,10 @@ namespace Epsitec.Cresus.Core.States
 			System.Diagnostics.Debug.Assert (this.boxId != 0);
 			System.Diagnostics.Debug.Assert (this.IsBound);
 
-			this.container = container;
-			this.SoftAttachState ();
+			this.SoftAttachState (container);
 		}
 
-		protected abstract void SoftAttachState();
+		protected abstract void SoftAttachState(Widget container);
 
 		protected abstract void SoftDetachState();
 		
@@ -197,7 +192,6 @@ namespace Epsitec.Cresus.Core.States
 
 		
 		private readonly StateManager			stateManager;
-		private Widget							container;
 		private int								boxId;
 		
 		private List<System.Action<Dictionary<string, CoreState>>>	fixups;

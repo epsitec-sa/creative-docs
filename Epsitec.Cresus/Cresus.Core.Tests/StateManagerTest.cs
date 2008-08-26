@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core
 				return this.value;
 			}
 
-			protected override void SoftAttachState()
+			protected override void SoftAttachState(Epsitec.Common.Widgets.Widget container)
 			{
 			}
 

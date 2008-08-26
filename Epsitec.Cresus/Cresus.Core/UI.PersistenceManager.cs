@@ -254,8 +254,6 @@ namespace Epsitec.Cresus.Core
 
 			public event EventHandler SettingsChanged;
 
-			private static object w = new object ();		//	to keep VS.NET Intellisense happy when typing ... = w =>
-			
 			private readonly Dictionary<string, Binding> bindings;
 			private readonly Timer timer;
 			private int changeCount;
