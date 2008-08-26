@@ -600,7 +600,8 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The <see cref="PropertySetter"/> delegate or <c>null</c>.</returns>
 		internal PropertySetter FindPropertySetter(AbstractEntity entity, string id)
 		{
-			string key = string.Concat (entity.GetEntityStructuredTypeId (), ".", id);
+			string entityId = entity.GetEntityStructuredTypeKey ();
+			string key = string.Concat (entityId, id);
 			PropertySetter setter;
 			
 			if (this.propertySetters.TryGetValue (key, out setter))
@@ -623,7 +624,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		internal PropertyGetter FindPropertyGetter(AbstractEntity entity, string id)
 		{
 			string entityId = entity.GetEntityStructuredTypeKey ();
-			string key = string.Concat (entityId, ".", id);
+			string key = string.Concat (entityId, id);
 			PropertyGetter getter;
 			
 			if (this.propertyGetters.TryGetValue (key, out getter))
