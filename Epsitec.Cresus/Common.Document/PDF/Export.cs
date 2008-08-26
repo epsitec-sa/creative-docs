@@ -522,7 +522,6 @@ namespace Epsitec.Common.Document.PDF
 				if (string.Compare (module.ModuleName, moduleName, System.StringComparison.OrdinalIgnoreCase) == 0)
 				{
 					return string.Format ("{0} {1}", moduleName, module.FileVersionInfo.FileVersion);
-					break;
 				}
 			}
 			
