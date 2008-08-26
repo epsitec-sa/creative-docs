@@ -622,7 +622,7 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// <returns>The <see cref="PropertyGetter"/> delegate or <c>null</c>.</returns>
 		internal PropertyGetter FindPropertyGetter(AbstractEntity entity, string id)
 		{
-			string entityId = entity.GetEntityStructuredTypeId ().ToString ();
+			string entityId = entity.GetEntityStructuredTypeKey ();
 			string key = string.Concat (entityId, ".", id);
 			PropertyGetter getter;
 			

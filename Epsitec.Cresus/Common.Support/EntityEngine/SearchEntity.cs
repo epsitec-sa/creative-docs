@@ -55,6 +55,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.entityId;
 		}
 
+		public override string GetEntityStructuredTypeKey()
+		{
+			return this.entityId.ToString ();
+		}
+
 		
 		protected override AbstractEntity Resolve()
 		{

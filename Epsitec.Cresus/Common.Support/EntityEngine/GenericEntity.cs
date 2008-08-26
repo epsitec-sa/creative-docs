@@ -33,6 +33,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return this.entityId;
 		}
 
+		public override string GetEntityStructuredTypeKey()
+		{
+			return this.entityId.ToString ();
+		}
+
 
 		/// <summary>
 		/// Sets the value for the specified field, without any casting. Calls

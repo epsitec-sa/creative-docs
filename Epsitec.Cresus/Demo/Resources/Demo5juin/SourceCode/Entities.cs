@@ -112,7 +112,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.MonnaieEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.MonnaieEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 5);	// [6305]
+		public static readonly new string EntityStructuredTypeKey = "[6305]";
 	}
 }
 #endregion
@@ -204,7 +209,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.CodeTvaEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.CodeTvaEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 7);	// [6307]
+		public static readonly new string EntityStructuredTypeKey = "[6307]";
 	}
 }
 #endregion
@@ -368,7 +378,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PrixEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.PrixEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 8);	// [6308]
+		public static readonly new string EntityStructuredTypeKey = "[6308]";
 	}
 }
 #endregion
@@ -472,7 +487,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PrixComposeEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.PrixComposeEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 9);	// [6309]
+		public static readonly new string EntityStructuredTypeKey = "[6309]";
 	}
 }
 #endregion
@@ -672,7 +692,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.ArticleEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.ArticleEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 26);	// [630Q]
+		public static readonly new string EntityStructuredTypeKey = "[630Q]";
 	}
 }
 #endregion
@@ -728,7 +753,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.StockEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.StockEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 27);	// [630R]
+		public static readonly new string EntityStructuredTypeKey = "[630R]";
 	}
 }
 #endregion
@@ -892,7 +922,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.ArticleStockEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.ArticleStockEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 28);	// [630S]
+		public static readonly new string EntityStructuredTypeKey = "[630S]";
 	}
 }
 #endregion
@@ -1008,7 +1043,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.MouvementStockEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.MouvementStockEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 29);	// [630T]
+		public static readonly new string EntityStructuredTypeKey = "[630T]";
 	}
 }
 #endregion
@@ -1124,7 +1164,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.EmplacementStockEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.EmplacementStockEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 30);	// [630U]
+		public static readonly new string EntityStructuredTypeKey = "[630U]";
 	}
 }
 #endregion
@@ -1240,7 +1285,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.UniteEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.UniteEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 31);	// [630V]
+		public static readonly new string EntityStructuredTypeKey = "[630V]";
 	}
 }
 #endregion
@@ -1344,7 +1394,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PositionEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.PositionEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 32);	// [63001]
+		public static readonly new string EntityStructuredTypeKey = "[63001]";
 	}
 }
 #endregion
@@ -1412,7 +1467,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.RabaisSurArticleEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.RabaisSurArticleEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 33);	// [63011]
+		public static readonly new string EntityStructuredTypeKey = "[63011]";
 	}
 }
 #endregion
@@ -1708,7 +1768,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.FactureEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.FactureEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 34);	// [63021]
+		public static readonly new string EntityStructuredTypeKey = "[63021]";
 	}
 }
 #endregion
@@ -1848,7 +1913,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.RappelEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.RappelEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 35);	// [63031]
+		public static readonly new string EntityStructuredTypeKey = "[63031]";
 	}
 }
 #endregion
@@ -1892,7 +1962,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.MoyenDePaiementEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.MoyenDePaiementEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 36);	// [63041]
+		public static readonly new string EntityStructuredTypeKey = "[63041]";
 	}
 }
 #endregion
@@ -2032,7 +2107,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.AffaireEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.AffaireEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 37);	// [63051]
+		public static readonly new string EntityStructuredTypeKey = "[63051]";
 	}
 }
 #endregion
@@ -2100,7 +2180,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PaiementEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.PaiementEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 38);	// [63061]
+		public static readonly new string EntityStructuredTypeKey = "[63061]";
 	}
 }
 #endregion
@@ -2168,7 +2253,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.PrixSimpleEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.PrixSimpleEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 39);	// [63071]
+		public static readonly new string EntityStructuredTypeKey = "[63071]";
 	}
 }
 #endregion
@@ -2380,7 +2470,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.AdresseEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.AdresseEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 0, 40);	// [63081]
+		public static readonly new string EntityStructuredTypeKey = "[63081]";
 	}
 }
 #endregion
@@ -2448,7 +2543,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.ArticleVisserieEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.ArticleVisserieEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 1, 0);	// [631]
+		public static readonly new string EntityStructuredTypeKey = "[631]";
 	}
 }
 #endregion
@@ -2492,7 +2592,12 @@ namespace Demo.Demo5juin.Entities
 		{
 			return global::Demo.Demo5juin.Entities.AdressePlusEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Demo.Demo5juin.Entities.AdressePlusEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (102, 2, 1);	// [6321]
+		public static readonly new string EntityStructuredTypeKey = "[6321]";
 	}
 }
 #endregion

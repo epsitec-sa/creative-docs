@@ -83,7 +83,12 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		{
 			return global::Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Mai2008.Entities.FactureEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 0);	// [9VA]
+		public static readonly new string EntityStructuredTypeKey = "[9VA]";
 	}
 }
 #endregion
@@ -175,7 +180,12 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		{
 			return global::Epsitec.Cresus.Mai2008.Entities.ArticleEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Mai2008.Entities.ArticleEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 15);	// [9VAF]
+		public static readonly new string EntityStructuredTypeKey = "[9VAF]";
 	}
 }
 #endregion
@@ -261,7 +271,12 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		{
 			return global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Mai2008.Entities.LigneFactureEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 16);	// [9VAG]
+		public static readonly new string EntityStructuredTypeKey = "[9VAG]";
 	}
 }
 #endregion
@@ -281,7 +296,12 @@ namespace Epsitec.Cresus.Mai2008.Entities
 		{
 			return global::Epsitec.Cresus.Mai2008.Entities.ClientEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Mai2008.Entities.ClientEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1001, 10, 30);	// [9VAU]
+		public static readonly new string EntityStructuredTypeKey = "[9VAU]";
 	}
 }
 #endregion

@@ -4,7 +4,7 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-namespace Epsitec.Cresus.AddressBook
+namespace Demo.Demo5juin
 {
 	public static class Res
 	{
@@ -47,10 +47,12 @@ namespace Epsitec.Cresus.AddressBook
 		
 		//	Code mapping for 'Form' resources
 		
+		//	Code mapping for 'Form' resources
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
-			Res._manager.DefineDefaultModuleName ("Cresus.AddressBook");
+			Res._manager.DefineDefaultModuleName ("Demo5juin");
 		}
 		
 		public static void Initialize()
@@ -72,6 +74,6 @@ namespace Epsitec.Cresus.AddressBook
 			}
 		}
 		private static readonly global::Epsitec.Common.Support.ResourceManager _manager;
-		private const int _moduleId = 1000;
+		private const int _moduleId = 102;
 	}
 }

@@ -931,7 +931,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			else
 			{
-				return this.entityDataCache.GetMapping (entity.GetEntitySerialId ());
+				return this.entityDataCache.FindMapping (entity.GetEntitySerialId ());
 			}
 		}
 
@@ -1025,7 +1025,7 @@ namespace Epsitec.Cresus.DataLayer
 
 		#endregion
 
-		public bool IsPersistant(AbstractEntity entity)
+		public bool IsPersistent(AbstractEntity entity)
 		{
 			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
 

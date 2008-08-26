@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Core
 				DataContext context = this.data.DataContext;
 
 				return context.GetManagedEntities (
-					e => e.GetEntityStructuredTypeId () == id && context.IsPersistant (e));
+					e => e.GetEntityStructuredTypeId () == id && context.IsPersistent (e));
 			}
 
 			private static bool Match(string a, string b)

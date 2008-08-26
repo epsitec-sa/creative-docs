@@ -19,8 +19,16 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public partial class DataContext
 	{
+		/// <summary>
+		/// The <c>EntityDataCache</c> class provides a centralized cache for
+		/// mainting relations between entity instances in memory and in the
+		/// database.
+		/// </summary>
 		class EntityDataCache
 		{
+			/// <summary>
+			/// Initializes a new instance of the <see cref="EntityDataCache"/> class.
+			/// </summary>
 			public EntityDataCache()
 			{
 				this.idToEntityMapping = new Dictionary<long, EntityDataMapping> ();
@@ -28,7 +36,13 @@ namespace Epsitec.Cresus.DataLayer
 				this.list = new List<EntityDataMapping> ();
 			}
 
-			public EntityDataMapping GetMapping(long entitySerialId)
+			/// <summary>
+			/// Finds the entity mapping for the specified entity serial id.
+			/// </summary>
+			/// <param name="entitySerialId">The entity serial id.</param>
+			/// <returns>The entity mapping or <c>null</c> if the entity is not
+			/// known.</returns>
+			public EntityDataMapping FindMapping(long entitySerialId)
 			{
 				EntityDataMapping mapping;
 
@@ -42,10 +56,19 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
+			/// <summary>
+			/// Adds the specified entity into the cache.
+			/// </summary>
+			/// <param name="entitySerialId">The entity serial id.</param>
+			/// <param name="mapping">The entity mapping.</param>
 			public void Add(long entitySerialId, EntityDataMapping mapping)
 			{
 				this.idToEntityMapping.Add (entitySerialId, mapping);
 				this.list.Add (mapping);
+
+				//	If the mapping is read only, then this means that the row key
+				//	is already defined and that the mapping's hash value won't
+				//	change; we can safely add it to our internal lookup table :
 
 				if (mapping.IsReadOnly)
 				{
@@ -53,12 +76,21 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
+			/// <summary>
+			/// Removes the specified entity from the cache.
+			/// </summary>
+			/// <param name="entitySerialId">The entity serial id.</param>
 			public void Remove(long entitySerialId)
 			{
 				EntityDataMapping mapping;
 
 				if (this.idToEntityMapping.TryGetValue (entitySerialId, out mapping))
 				{
+					if (this.isIteratingList > 0)
+					{
+						throw new System.InvalidOperationException ("Cannot remove item while an iteration is executing");
+					}
+
 					this.idToEntityMapping.Remove (entitySerialId);
 					this.list.Remove (mapping);
 
@@ -69,6 +101,11 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
+			/// <summary>
+			/// Defines the database row key for the specified entity mapping.
+			/// </summary>
+			/// <param name="mapping">The entity mapping.</param>
+			/// <param name="key">The row key.</param>
 			public void DefineRowKey(EntityDataMapping mapping, DbKey key)
 			{
 				System.Diagnostics.Debug.Assert (mapping.IsReadOnly == false);
@@ -81,6 +118,10 @@ namespace Epsitec.Cresus.DataLayer
 				this.lookup.Add (mapping, mapping);
 			}
 
+			/// <summary>
+			/// Gets the number of entities currently stored in the cache.
+			/// </summary>
+			/// <value>The number of entities in the cache.</value>
 			public int Count
 			{
 				get
@@ -89,6 +130,13 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
+			/// <summary>
+			/// Finds the entity, based on its database identity.
+			/// </summary>
+			/// <param name="rowKey">The database row key.</param>
+			/// <param name="entityId">The entity id.</param>
+			/// <param name="baseEntityId">The base entity id.</param>
+			/// <returns>The entity or <c>null</c> if the entity is not known.</returns>
 			public AbstractEntity FindEntity(DbKey rowKey, Druid entityId, Druid baseEntityId)
 			{
 				EntityDataMapping search = new EntityDataMapping (rowKey, entityId, baseEntityId);
@@ -98,33 +146,44 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					return item.Entity;
 				}
-
-				item = this.list.Find (x => x.Equals (search));
-
-				if (item == null)
+				else
 				{
 					return null;
 				}
-
-				if (item.IsReadOnly)
-				{
-					this.lookup.Add (item, item);
-				}
-
-				return item.Entity;
 			}
 
+			/// <summary>
+			/// Gets the entities stored in the cache.
+			/// </summary>
+			/// <returns>The collection of entities.</returns>
 			public IEnumerable<AbstractEntity> GetEntities()
 			{
+				//	We cannot use an iterator here, since the list might grow while we
+				//	are enumerating it ...
+
+				this.isIteratingList++;
+
 				for (int i = 0; i < this.list.Count; i++)
 				{
 					AbstractEntity entity = this.list[i].Entity;
 					yield return entity;
 				}
+
+				this.isIteratingList--;
 			}
 
+			/// <summary>
+			/// Gets the entities stored in the cache.
+			/// </summary>
+			/// <param name="predicate">The filtering predicate.</param>
+			/// <returns>The collection of entities.</returns>
 			public IEnumerable<AbstractEntity> GetEntities(System.Predicate<AbstractEntity> predicate)
 			{
+				//	We cannot use an iterator here, since the list might grow while we
+				//	are enumerating it ...
+
+				this.isIteratingList++;
+
 				for (int i = 0; i < this.list.Count; i++)
 				{
 					AbstractEntity entity = this.list[i].Entity;
@@ -134,11 +193,14 @@ namespace Epsitec.Cresus.DataLayer
 						yield return entity;
 					}
 				}
+
+				this.isIteratingList--;
 			}
 
 			readonly Dictionary<long, EntityDataMapping> idToEntityMapping;
 			readonly Dictionary<EntityDataMapping, EntityDataMapping> lookup;
 			readonly List<EntityDataMapping> list;
+			int isIteratingList;
 		}
 	}
 }

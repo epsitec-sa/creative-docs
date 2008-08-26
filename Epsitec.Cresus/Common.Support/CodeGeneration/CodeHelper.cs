@@ -125,7 +125,9 @@ namespace Epsitec.Common.Support.CodeGeneration
 			public const string SetCalculationMethod = "SetCalculation";
 			public const string GetFieldCollectionMethod = "GetFieldCollection";
 			public const string GetEntityStructuredTypeIdMethod = "GetEntityStructuredTypeId";
+			public const string GetEntityStructuredTypeKeyMethod = "GetEntityStructuredTypeKey";
 			public const string EntityStructuredTypeIdProperty = "EntityStructuredTypeId";
+			public const string EntityStructuredTypeKeyProperty = "EntityStructuredTypeKey";
 			public const string OnPrefix = "On";
 			public const string ChangedSuffix = "Changed";
 			public const string ChangingSuffix = "Changing";

@@ -121,7 +121,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.AdresseEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 0);	// [8V1]
+		public static readonly new string EntityStructuredTypeKey = "[8V1]";
 	}
 }
 #endregion
@@ -233,7 +238,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.AdressePersonneEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 1);	// [8V11]
+		public static readonly new string EntityStructuredTypeKey = "[8V11]";
 	}
 }
 #endregion
@@ -253,7 +263,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.AdresseEntrepriseEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.AdresseEntrepriseEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 2);	// [8V12]
+		public static readonly new string EntityStructuredTypeKey = "[8V12]";
 	}
 }
 #endregion
@@ -383,7 +398,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.LocalitéEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 8);	// [8V18]
+		public static readonly new string EntityStructuredTypeKey = "[8V18]";
 	}
 }
 #endregion
@@ -469,7 +489,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.PaysEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.PaysEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 12);	// [8V1C]
+		public static readonly new string EntityStructuredTypeKey = "[8V1C]";
 	}
 }
 #endregion
@@ -557,7 +582,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.TitrePersonneEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 1, 16);	// [8V1G]
+		public static readonly new string EntityStructuredTypeKey = "[8V1G]";
 	}
 }
 #endregion
@@ -597,7 +627,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.Localité1Entity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 0);	// [8VA]
+		public static readonly new string EntityStructuredTypeKey = "[8VA]";
 	}
 }
 #endregion
@@ -617,7 +652,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.Localité2Entity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.Localité2Entity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 1);	// [8VA1]
+		public static readonly new string EntityStructuredTypeKey = "[8VA1]";
 	}
 }
 #endregion
@@ -691,7 +731,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.TestEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.TestEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 4);	// [8VA4]
+		public static readonly new string EntityStructuredTypeKey = "[8VA4]";
 	}
 }
 #endregion
@@ -759,7 +804,12 @@ namespace Epsitec.Cresus.AddressBook.Entities
 		{
 			return global::Epsitec.Cresus.AddressBook.Entities.TexteTestEntity.EntityStructuredTypeId;
 		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.AddressBook.Entities.TexteTestEntity.EntityStructuredTypeKey;
+		}
 		public static readonly new global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1000, 10, 5);	// [8VA5]
+		public static readonly new string EntityStructuredTypeKey = "[8VA5]";
 	}
 }
 #endregion
