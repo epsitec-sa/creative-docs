@@ -48,98 +48,117 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		protected override void StoreWorkspace(XElement element, StateSerializationContext context)
+		protected override void StoreWorkspace(XElement workspaceElement, StateSerializationContext context)
 		{
-			base.StoreWorkspace (element, context);
-			
 			Workspaces.FormWorkspace workspace = this.Workspace;
 
-			if (workspace != null)
+			System.Diagnostics.Debug.Assert (workspaceElement != null);
+			System.Diagnostics.Debug.Assert (workspace != null);
+
+			string currentEntityId = null;
+			XElement savedDialogData = null;
+			XElement[] emptyElement = new XElement[0];
+
+			if ((workspace.DialogData != null) &&
+				(workspace.DialogData.EntityContext != null))
 			{
-				string currentEntityId = null;
-				XElement savedDialogData = null;
-				XElement[] emptyElement = new XElement[0];
+				AbstractEntity template = workspace.SearchTemplate;
 
-				if ((workspace.DialogData != null) &&
-					(workspace.DialogData.EntityContext != null))
-				{
-					AbstractEntity template = workspace.SearchTemplate;
+				currentEntityId = workspace.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
+				savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (workspace.DialogData) : FormWorkspaceState.SaveTemplate (template);
+			}
 
-					currentEntityId = workspace.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
-					savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (workspace.DialogData) : FormWorkspaceState.SaveTemplate (template);
-				}
+			workspaceElement.Add (new XAttribute ("entityId", workspace.EntityId.ToString ()));
+			workspaceElement.Add (new XAttribute ("formId", workspace.FormId.ToString ()));
+			workspaceElement.Add (new XAttribute ("mode", workspace.Mode.ToString ()));
+			workspaceElement.Add (new XAttribute ("focusPath", workspace.FocusPath == null ? "" : workspace.FocusPath.ToString ()));
+			
+			if (currentEntityId != null)
+			{
+				workspaceElement.Add (new XAttribute ("currentEntityId", currentEntityId));
+			}
 
-				element.Add (new XAttribute ("entityId", workspace.EntityId.ToString ()));
-				element.Add (new XAttribute ("formId", workspace.FormId.ToString ()));
-				element.Add (new XAttribute ("mode", workspace.Mode.ToString ()));
-				element.Add (new XAttribute ("focusPath", workspace.FocusPath == null ? "" : workspace.FocusPath.ToString ()));
-				
-				if (currentEntityId != null)
-				{
-					element.Add (new XAttribute ("currentEntityId", currentEntityId));
-				}
-
-				if (savedDialogData != null)
-				{
-					element.Add (savedDialogData);
-				}
+			if (savedDialogData != null)
+			{
+				workspaceElement.Add (savedDialogData);
 			}
 		}
 
 		protected override void RestoreWorkspace(XElement workspaceElement)
 		{
-			base.RestoreWorkspace (workspaceElement);
-
 			Workspaces.FormWorkspace workspace = this.Workspace;
+
+			System.Diagnostics.Debug.Assert (workspaceElement != null);
+			System.Diagnostics.Debug.Assert (workspace != null);
+
+			string entityId        = (string) workspaceElement.Attribute ("entityId");
+			string formId          = (string) workspaceElement.Attribute ("formId");
+			string mode            = (string) workspaceElement.Attribute ("mode");
+			string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
+			string focusPath       = (string) workspaceElement.Attribute ("focusPath");
 			
-			if (workspaceElement != null)
+			XElement dialogDataXml = workspaceElement.Element ("dialogData");
+			
+			workspace.EntityId = Druid.Parse (entityId);
+			workspace.FormId   = Druid.Parse (formId);
+			workspace.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
+
+			AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
+
+			switch (workspace.Mode)
 			{
-				string entityId        = (string) workspaceElement.Attribute ("entityId");
-				string formId          = (string) workspaceElement.Attribute ("formId");
-				string mode            = (string) workspaceElement.Attribute ("mode");
-				string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
-				string focusPath       = (string) workspaceElement.Attribute ("focusPath");
-				
-				XElement dialogDataXml = workspaceElement.Element ("dialogData");
-				
-				workspace.EntityId = Druid.Parse (entityId);
-				workspace.FormId   = Druid.Parse (formId);
-				workspace.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
+				case FormWorkspaceMode.Edition:
+					workspace.CurrentItem = item;
+					break;
 
-				AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
+				case FormWorkspaceMode.Creation:
+					workspace.CurrentItem = this.CreateEntity (workspace.EntityId);
+					break;
 
-				switch (workspace.Mode)
-				{
-					case FormWorkspaceMode.Edition:
-						workspace.CurrentItem = item;
-						break;
+				case FormWorkspaceMode.Search:
+					this.RegisterFixup (() => workspace.SelectEntity (item));
+					break;
+			}
+			
+			if (string.IsNullOrEmpty (focusPath) == false)
+			{
+				workspace.FocusPath = EntityFieldPath.Parse (focusPath);
+			}
 
-					case FormWorkspaceMode.Creation:
-						workspace.CurrentItem = this.StateManager.Application.Data.DataContext.CreateEntity (workspace.EntityId);
-						break;
+			workspace.Initialize ();
 
-					case FormWorkspaceMode.Search:
-						this.RegisterFixup (() => workspace.SelectEntity (item));
-						break;
-				}
-				
-				if (string.IsNullOrEmpty (focusPath) == false)
-				{
-					workspace.FocusPath = EntityFieldPath.Parse (focusPath);
-				}
-
-				workspace.Initialize ();
-
-				if (dialogDataXml != null)
-				{
-					FormWorkspaceState.RestoreDialogData (workspace.DialogData, dialogDataXml);
-				}
+			if (dialogDataXml != null)
+			{
+				FormWorkspaceState.RestoreDialogData (workspace.DialogData, dialogDataXml);
 			}
 		}
+		
+		#region Private Strings
+
+		/// <summary>
+		/// The <c>Strings</c> class defines the constants used for XML serialization
+		/// of the state.
+		/// </summary>
+		private static class Strings
+		{
+			public static readonly string XmlEntityId = "entityId";
+			public static readonly string XmlFormId = "formId";
+			public static readonly string XmlMode = "mode";
+			public static readonly string XmlCurrentEntityId = "currentEntityId";
+			public static readonly string XmlFocusPath = "focusPath";
+			public static readonly string XmlDialogData = "dialogData";
+		}
+
+		#endregion
 
 		private AbstractEntity ResolvePersistedEntity(string id)
 		{
 			return this.StateManager.Application.Data.DataContext.GetPeristedEntity (id);
+		}
+
+		private AbstractEntity CreateEntity(Druid id)
+		{
+			return this.StateManager.Application.Data.DataContext.CreateEntity (id);
 		}
 
 		/// <summary>
@@ -245,8 +264,6 @@ namespace Epsitec.Cresus.Core.States
 					}
 					else
 					{
-						string id;
-
 						switch (field.Relation)
 						{
 							case FieldRelation.None:

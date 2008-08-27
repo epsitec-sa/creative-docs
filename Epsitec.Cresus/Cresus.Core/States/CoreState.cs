@@ -101,6 +101,32 @@ namespace Epsitec.Cresus.Core.States
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the linked state. The linked state is a logical parent in
+		/// an edition sequence: when the user opens a new state to edit or create
+		/// a specific field, the new state is linked with the previously active
+		/// state.
+		/// </summary>
+		/// <value>The linked state.</value>
+		public CoreState						LinkedState
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the field path of the linked state. See <see cref="LinkedState"/>;
+		/// the field path specifies which field was active in the linked state, so
+		/// that the system can update it when this state is closed.
+		/// </summary>
+		/// <value>The linked state field path.</value>
+		public string							LinkedStateFieldPath
+		{
+			get;
+			set;
+		}
+
+
 
 		/// <summary>
 		/// Serializes the state by creating child nodes into the &lt;state&gt;
@@ -235,10 +261,24 @@ namespace Epsitec.Cresus.Core.States
 		/// <param name="context">The serialization context.</param>
 		protected void StoreCoreState(XElement element, StateSerializationContext context)
 		{
-			element.Add (new XElement (Strings.XmlCore,
+			XElement coreElement = new XElement (Strings.XmlCore,
 				new XAttribute (Strings.XmlBoxId, this.BoxId),
 				new XAttribute (Strings.XmlDeck, this.StateDeck.ToString ()),
-				new XAttribute (Strings.XmlTitle, this.Title)));
+				new XAttribute (Strings.XmlTitle, this.Title));
+
+			if (this.LinkedState != null)
+			{
+				string link = context.GetTag (this.LinkedState);
+
+				if (this.LinkedStateFieldPath != null)
+				{
+					link = string.Concat (link, " ", this.LinkedStateFieldPath);
+				}
+
+				coreElement.Add (new XAttribute (Strings.XmlLink, link));
+			}
+
+			element.Add (coreElement);
 		}
 
 		/// <summary>
@@ -252,6 +292,23 @@ namespace Epsitec.Cresus.Core.States
 			this.BoxId     = ((int)    core.Attribute (Strings.XmlBoxId));
 			this.StateDeck = ((string) core.Attribute (Strings.XmlDeck)).ToEnum<StateDeck> (StateDeck.None);
 			this.Title     = ((string) core.Attribute (Strings.XmlTitle));
+			string link    = ((string) core.Attribute ("link"));
+
+			if (!string.IsNullOrEmpty (link))
+			{
+				//	The link is expressed either as "tag" or "tag path", which have
+				//	to be restored as LinkedState and LinkedFieldPath.
+
+				int pos = link.IndexOf (' ');
+
+				if (pos >= 0)
+				{
+					this.LinkedStateFieldPath = link.Substring (pos+1);
+					link = link.Substring (0, pos);
+				}
+
+				this.RegisterFixup (context => this.LinkedState = context.GetState (link));
+			}
 		}
 
 
@@ -285,7 +342,7 @@ namespace Epsitec.Cresus.Core.States
 
 		/// <summary>
 		/// The <c>Strings</c> class defines the constants used for XML serialization
-		/// of the states.
+		/// of the state.
 		/// </summary>
 		private static class Strings
 		{
@@ -293,6 +350,7 @@ namespace Epsitec.Cresus.Core.States
 			public static readonly string XmlBoxId = "boxId";
 			public static readonly string XmlDeck = "deck";
 			public static readonly string XmlTitle = "title";
+			public static readonly string XmlLink = "link";
 		}
 
 		#endregion

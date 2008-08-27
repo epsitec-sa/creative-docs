@@ -46,18 +46,6 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public CoreState						LinkedState
-		{
-			get;
-			set;
-		}
-
-		public string							LinkedStateFieldPath
-		{
-			get;
-			set;
-		}
-
 
 		public override XElement Serialize(XElement element, StateSerializationContext context)
 		{
@@ -106,99 +94,11 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		protected virtual void StoreWorkspace(XElement element, StateSerializationContext context)
-		{
-			if (this.workspace != null)
-			{
-				if (this.LinkedState != null)
-				{
-					string link = context.GetTag (this.LinkedState);
+		protected abstract void StoreWorkspace(XElement workspaceElement, StateSerializationContext context);
+		
+		protected abstract void RestoreWorkspace(XElement workspaceElement);
 
-					if (this.LinkedStateFieldPath != null)
-					{
-						link = string.Concat (link, " ", this.LinkedStateFieldPath);
-					}
-					
-					element.Add (new XAttribute ("link", link));
-				}
-
-//				element.Add (new XAttribute ("entityId", this.workspace.EntityId.ToString ()));
-//				element.Add (new XAttribute ("formId", this.workspace.FormId.ToString ()));
-//				element.Add (new XAttribute ("mode", this.workspace.Mode.ToString ()));
-//				element.Add (new XAttribute ("currentEntityId", currentEntityId ?? ""));
-//				element.Add (new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()));
-			}
-		}
-
-		protected virtual void RestoreWorkspace(XElement workspaceElement)
-		{
-			System.Diagnostics.Debug.Assert (this.workspace != null);
-
-			if (workspaceElement != null)
-			{
-				string entityId        = (string) workspaceElement.Attribute ("entityId");
-				string formId          = (string) workspaceElement.Attribute ("formId");
-				string mode            = (string) workspaceElement.Attribute ("mode");
-				string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
-				string focusPath       = (string) workspaceElement.Attribute ("focusPath");
-				string link            = (string) workspaceElement.Attribute ("link");
-
-#if false
-				XElement dialogDataXml = workspaceElement.Element ("dialogData");
-				
-				this.workspace.EntityId = Druid.Parse (entityId);
-				this.workspace.FormId   = Druid.Parse (formId);
-				this.workspace.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
-
-				AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
-
-				switch (this.workspace.Mode)
-				{
-					case FormWorkspaceMode.Edition:
-						this.workspace.CurrentItem = item;
-						break;
-
-					case FormWorkspaceMode.Creation:
-						this.workspace.CurrentItem = this.StateManager.Application.Data.DataContext.CreateEntity (this.workspace.EntityId);
-						break;
-
-					case FormWorkspaceMode.Search:
-						this.RegisterFixup (() => this.workspace.SelectEntity (item));
-						break;
-				}
-				
-				if (string.IsNullOrEmpty (focusPath) == false)
-				{
-					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
-				}
-#endif
-				
-				if (!string.IsNullOrEmpty (link))
-				{
-					//	The link is expressed either as "tag" or "tag path", which have
-					//	to be restored as LinkedState and LinkedFieldPath.
-					
-					string[] args = link.Split (' ');
-
-					if (args.Length > 1)
-					{
-						this.LinkedStateFieldPath = args[1];
-					}
-
-					this.RegisterFixup (context => this.LinkedState = context.GetState (args[0]));
-				}
-
-#if false
-				this.workspace.Initialize ();
-
-				if (dialogDataXml != null)
-				{
-					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataXml);
-				}
-#endif
-			}
-		}
-
+		
 		protected override void AttachState(Epsitec.Common.Widgets.Widget container)
 		{
 			if (this.workspace != null)
