@@ -1,14 +1,7 @@
 ﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Dialogs;
-using Epsitec.Common.Support;
-using Epsitec.Common.Types;
-using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-
-using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Workspaces
 {
@@ -23,17 +16,10 @@ namespace Epsitec.Cresus.Core.Workspaces
 		{
 			get
 			{
-				return this.StateManager == null ? null : this.StateManager.Application;
+				return this.application;
 			}
 		}
 
-		public StateManager StateManager
-		{
-			get
-			{
-				return this.state == null ? null : this.state.StateManager;
-			}
-		}
 
 		public States.CoreState State
 		{
@@ -47,11 +33,11 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
-		public AbstractGroup Container
+		public AbstractGroup RootWidget
 		{
 			get
 			{
-				if (this.container == null)
+				if (this.rootWidget == null)
 				{
 					System.Diagnostics.Debug.Assert (this.Application != null);
 					System.Diagnostics.Debug.Assert (this.Application.Window != null);
@@ -59,7 +45,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 					this.SetupUserInterface (this.CreateUserInterface ());
 				}
 
-				return this.container;
+				return this.rootWidget;
 			}
 		}
 
@@ -95,11 +81,12 @@ namespace Epsitec.Cresus.Core.Workspaces
 		
 		protected abstract void DisableWorkspace();
 		
+		
 		private void SetupUserInterface(AbstractGroup container)
 		{
-			this.container = container;
-			this.container.Dock = DockStyle.Fill;
-			this.container.Name = this.GetType ().Name;
+			this.rootWidget = container;
+			this.rootWidget.Dock = DockStyle.Fill;
+			this.rootWidget.Name = this.GetType ().Name;
 		}
 
 		private void DefineState(States.CoreState state)
@@ -108,13 +95,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 			System.Diagnostics.Debug.Assert (this.state == null);
 
 			this.state = state;
+			this.application = state.StateManager.Application;
 		}
 
 
 
-		private States.CoreState state;
-		private CoreApplication application;
-		private AbstractGroup container;
-		private bool enabled;
+		private States.CoreState				state;
+		private CoreApplication					application;
+		private AbstractGroup					rootWidget;
+		private bool							enabled;
 	}
 }

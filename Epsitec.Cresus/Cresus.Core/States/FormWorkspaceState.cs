@@ -22,31 +22,13 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>FormWorkspaceState</c> class manages the state associated with a
 	/// form workspace, as implemented by the <see cref="FormWorkspace"/> class.
 	/// </summary>
-	public class FormWorkspaceState : CoreState
+	public class FormWorkspaceState : CoreWorkspaceState<Workspaces.FormWorkspace>
 	{
 		public FormWorkspaceState(StateManager manager)
 			: base (manager)
 		{
 		}
 
-
-		public Workspaces.FormWorkspace			Workspace
-		{
-			get
-			{
-				return this.workspace;
-			}
-			internal set
-			{
-				if (this.workspace != value)
-				{
-					System.Diagnostics.Debug.Assert (this.workspace == null);
-					
-					this.workspace = value;
-					this.workspace.State = this;
-				}
-			}
-		}
 
 		public AbstractEntity					CurrentEntity
 		{
@@ -65,111 +47,51 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public CoreState						LinkedState
+
+		protected override void StoreWorkspace(XElement element, StateSerializationContext context)
 		{
-			get;
-			set;
-		}
+			base.StoreWorkspace (element, context);
+			
+			Workspaces.FormWorkspace workspace = this.Workspace;
 
-		public EntityFieldPath					LinkedFieldPath
-		{
-			get;
-			set;
-		}
-
-
-
-		public override XElement Serialize(XElement element, StateSerializationContext context)
-		{
-			this.StoreCoreState (element);
-			this.StoreWorkspace (element, context);
-
-			return element;
-		}
-
-		public override CoreState Deserialize(XElement element)
-		{
-			System.Diagnostics.Debug.Assert (this.workspace == null);
-
-			this.workspace = new FormWorkspace ()
-			{
-				State = this
-			};
-
-			this.RestoreWorkspace (element);
-			this.RestoreCoreState (element);
-
-			return this;
-		}
-
-
-
-
-		public static IEnumerable<FormWorkspaceState> FindAll(StateManager manager, System.Predicate<FormWorkspaceState> filter)
-		{
-			foreach (CoreState state in manager.GetAllStates ())
-			{
-				FormWorkspaceState formState = state as FormWorkspaceState;
-
-				if (formState != null)
-				{
-					if (filter (formState))
-					{
-						yield return formState;
-					}
-				}
-			}
-		}
-
-
-		protected virtual void StoreWorkspace(XElement element, StateSerializationContext context)
-		{
-			if (this.workspace != null)
+			if (workspace != null)
 			{
 				string currentEntityId = null;
 				XElement savedDialogData = null;
 				XElement[] emptyElement = new XElement[0];
 
-				if ((this.workspace.DialogData != null) &&
-					(this.workspace.DialogData.EntityContext != null))
+				if ((workspace.DialogData != null) &&
+					(workspace.DialogData.EntityContext != null))
 				{
-					AbstractEntity template = this.workspace.SearchTemplate;
-					
-					currentEntityId = this.workspace.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
-					savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (this.workspace.DialogData) : FormWorkspaceState.SaveTemplate (template);
+					AbstractEntity template = workspace.SearchTemplate;
+
+					currentEntityId = workspace.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
+					savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (workspace.DialogData) : FormWorkspaceState.SaveTemplate (template);
 				}
 
-				string link = "";
-
-				if (this.LinkedState != null)
+				element.Add (new XAttribute ("entityId", workspace.EntityId.ToString ()));
+				element.Add (new XAttribute ("formId", workspace.FormId.ToString ()));
+				element.Add (new XAttribute ("mode", workspace.Mode.ToString ()));
+				element.Add (new XAttribute ("focusPath", workspace.FocusPath == null ? "" : workspace.FocusPath.ToString ()));
+				
+				if (currentEntityId != null)
 				{
-					if (this.LinkedFieldPath == null)
-					{
-						link = context.GetTag (this.LinkedState);
-					}
-					else
-					{
-						link = string.Concat (context.GetTag (this.LinkedState), " ", this.LinkedFieldPath.ToString ());
-					}
+					element.Add (new XAttribute ("currentEntityId", currentEntityId));
 				}
 
-				element.Add (new XElement ("workspace",
-					new XAttribute ("entityId", this.workspace.EntityId.ToString ()),
-					new XAttribute ("formId", this.workspace.FormId.ToString ()),
-					new XAttribute ("mode", this.workspace.Mode.ToString ()),
-					new XAttribute ("currentEntityId", currentEntityId ?? ""),
-					new XAttribute ("focusPath", this.workspace.FocusPath == null ? "" : this.workspace.FocusPath.ToString ()),
-					new XAttribute ("link", link),
-					(object)savedDialogData ?? (object)emptyElement));
+				if (savedDialogData != null)
+				{
+					element.Add (savedDialogData);
+				}
 			}
 		}
 
-		protected virtual void RestoreWorkspace(XElement element)
+		protected override void RestoreWorkspace(XElement workspaceElement)
 		{
-			System.Diagnostics.Debug.Assert (this.workspace != null);
+			base.RestoreWorkspace (workspaceElement);
 
-			XElement workspaceElement = element.Element ("workspace");
-
+			Workspaces.FormWorkspace workspace = this.Workspace;
+			
 			if (workspaceElement != null)
 			{
 				string entityId        = (string) workspaceElement.Attribute ("entityId");
@@ -177,55 +99,40 @@ namespace Epsitec.Cresus.Core.States
 				string mode            = (string) workspaceElement.Attribute ("mode");
 				string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
 				string focusPath       = (string) workspaceElement.Attribute ("focusPath");
-				string link            = (string) workspaceElement.Attribute ("link");
-
+				
 				XElement dialogDataXml = workspaceElement.Element ("dialogData");
 				
-				this.workspace.EntityId = Druid.Parse (entityId);
-				this.workspace.FormId   = Druid.Parse (formId);
-				this.workspace.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
+				workspace.EntityId = Druid.Parse (entityId);
+				workspace.FormId   = Druid.Parse (formId);
+				workspace.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
 
 				AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
 
-				switch (this.workspace.Mode)
+				switch (workspace.Mode)
 				{
 					case FormWorkspaceMode.Edition:
-						this.workspace.CurrentItem = item;
+						workspace.CurrentItem = item;
 						break;
 
 					case FormWorkspaceMode.Creation:
-						this.workspace.CurrentItem = this.StateManager.Application.Data.DataContext.CreateEntity (this.workspace.EntityId);
+						workspace.CurrentItem = this.StateManager.Application.Data.DataContext.CreateEntity (workspace.EntityId);
 						break;
 
 					case FormWorkspaceMode.Search:
-						this.AddFixup (() => this.workspace.SelectEntity (item));
+						this.RegisterFixup (() => workspace.SelectEntity (item));
 						break;
 				}
 				
 				if (string.IsNullOrEmpty (focusPath) == false)
 				{
-					this.workspace.FocusPath = EntityFieldPath.Parse (focusPath);
-				}
-				if (string.IsNullOrEmpty (link) == false)
-				{
-					//	The link is expressed either as "tag" or "tag path", which have
-					//	to be restored as LinkedState and LinkedFieldPath.
-					
-					string[] args = link.Split (' ');
-
-					if (args.Length > 1)
-					{
-						this.LinkedFieldPath = EntityFieldPath.Parse (args[1]);
-					}
-
-					this.AddFixup (context => this.LinkedState = context.GetState (args[0]));
+					workspace.FocusPath = EntityFieldPath.Parse (focusPath);
 				}
 
-				this.workspace.Initialize ();
+				workspace.Initialize ();
 
 				if (dialogDataXml != null)
 				{
-					FormWorkspaceState.RestoreDialogData (this.workspace.DialogData, dialogDataXml);
+					FormWorkspaceState.RestoreDialogData (workspace.DialogData, dialogDataXml);
 				}
 			}
 		}
@@ -234,26 +141,6 @@ namespace Epsitec.Cresus.Core.States
 		{
 			return this.StateManager.Application.Data.DataContext.GetPeristedEntity (id);
 		}
-
-
-		protected override void AttachState(Epsitec.Common.Widgets.Widget container)
-		{
-			if (this.workspace != null)
-			{
-				this.workspace.Container.SetParent (container);
-				this.workspace.SetEnable (true);
-			}
-		}
-
-		protected override void DetachState()
-		{
-			if (this.workspace != null)
-			{
-				this.workspace.SetEnable (false);
-				this.workspace.Container.SetParent (null);
-			}
-		}
-
 
 		/// <summary>
 		/// Saves the dialog data as an XML chunk.
@@ -447,9 +334,5 @@ namespace Epsitec.Cresus.Core.States
 				path.NavigateWrite (data.Data, value);
 			}
 		}
-
-		
-		private Workspaces.FormWorkspace		workspace;
-		private string							deserializationLinkTag;
 	}
 }

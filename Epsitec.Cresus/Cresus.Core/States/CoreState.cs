@@ -10,14 +10,28 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.States
 {
+	/// <summary>
+	/// The <c>CoreState</c> class implements the common code needed by all state
+	/// classes. A state class represents the state of a logical element of the
+	/// application's user interface; the user interface itself is handled by a
+	/// workspace class.
+	/// </summary>
 	public abstract class CoreState : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CoreState"/> class.
+		/// </summary>
+		/// <param name="stateManager">The state manager.</param>
 		protected CoreState(StateManager stateManager)
 		{
 			this.stateManager = stateManager;
 		}
 
-		
+
+		/// <summary>
+		/// Gets the state manager associated with this state.
+		/// </summary>
+		/// <value>The state manager.</value>
 		public StateManager						StateManager
 		{
 			get
@@ -26,6 +40,10 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the state deck to which this state belongs.
+		/// </summary>
+		/// <value>The state deck.</value>
 		public StateDeck						StateDeck
 		{
 			get;
@@ -118,8 +136,14 @@ namespace Epsitec.Cresus.Core.States
 				this.fixups = null;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Paints a miniature representation of the state, to be used in the
+		/// state deck, for instance..
+		/// </summary>
+		/// <param name="graphics">The graphics context.</param>
+		/// <param name="frame">The frame.</param>
 		public void PaintMiniature(Graphics graphics, Rectangle frame)
 		{
 			graphics.AddFilledRectangle (frame);
@@ -149,7 +173,12 @@ namespace Epsitec.Cresus.Core.States
 
 		#endregion
 
-		
+
+		/// <summary>
+		/// Binds the state to the user interface. This method is used only by the
+		/// <see cref="StateManager"/> when attaching a state.
+		/// </summary>
+		/// <param name="container">The container.</param>
 		internal void Bind(Widget container)
 		{
 			//	Note: the box has already been bound to this state, this is why
@@ -161,6 +190,10 @@ namespace Epsitec.Cresus.Core.States
 			this.AttachState (container);
 		}
 
+		/// <summary>
+		/// Unbinds the state from the user interface. This method is used only
+		/// by the <see cref="StateManager"/> when detaching a state.
+		/// </summary>
 		internal void Unbind()
 		{
 			System.Diagnostics.Debug.Assert (this.boxId != 0);
@@ -169,11 +202,22 @@ namespace Epsitec.Cresus.Core.States
 			this.DetachState ();
 		}
 
-		
+
+		/// <summary>
+		/// Attaches the state to the user interface.
+		/// </summary>
+		/// <param name="container">The container.</param>
 		protected abstract void AttachState(Widget container);
 
+		/// <summary>
+		/// Detaches the state from the user interface.
+		/// </summary>
 		protected abstract void DetachState();
-		
+
+		/// <summary>
+		/// Releases unmanaged and - optionally - managed resources.
+		/// </summary>
+		/// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -183,30 +227,50 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		
-		protected void StoreCoreState(XElement element)
+
+		/// <summary>
+		/// Stores the core information of the current state.
+		/// </summary>
+		/// <param name="element">The &lt;state&gt; XML element.</param>
+		/// <param name="context">The serialization context.</param>
+		protected void StoreCoreState(XElement element, StateSerializationContext context)
 		{
-			element.Add (new XElement ("core",
-				new XAttribute ("boxId", this.BoxId),
-				new XAttribute ("deck", this.StateDeck.ToString ()),
-				new XAttribute ("title", this.Title)));
+			element.Add (new XElement (Strings.XmlCore,
+				new XAttribute (Strings.XmlBoxId, this.BoxId),
+				new XAttribute (Strings.XmlDeck, this.StateDeck.ToString ()),
+				new XAttribute (Strings.XmlTitle, this.Title)));
 		}
 
+		/// <summary>
+		/// Restores the core information of the current state.
+		/// </summary>
+		/// <param name="element">The &lt;state&gt; XML element.</param>
 		protected void RestoreCoreState(XElement element)
 		{
-			XElement core = element.Element ("core");
+			XElement core = element.Element (Strings.XmlCore);
 			
-			this.BoxId     = ((int)    core.Attribute ("boxId"));
-			this.StateDeck = ((string) core.Attribute ("deck")).ToEnum<StateDeck> (StateDeck.None);
-			this.Title     = ((string) core.Attribute ("title"));
+			this.BoxId     = ((int)    core.Attribute (Strings.XmlBoxId));
+			this.StateDeck = ((string) core.Attribute (Strings.XmlDeck)).ToEnum<StateDeck> (StateDeck.None);
+			this.Title     = ((string) core.Attribute (Strings.XmlTitle));
 		}
 
-		protected void AddFixup(System.Action action)
+
+		/// <summary>
+		/// Registers a fixup function which will be executed at the end of the
+		/// state deserialization.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		protected void RegisterFixup(System.Action action)
 		{
-			this.AddFixup ((map) => action ());
+			this.RegisterFixup ((map) => action ());
 		}
 
-		protected void AddFixup(System.Action<StateSerializationContext> action)
+		/// <summary>
+		/// Registers a fixup function which will be executed at the end of the
+		/// state deserialization.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		protected void RegisterFixup(System.Action<StateSerializationContext> action)
 		{
 			if (this.fixups == null)
 			{
@@ -216,7 +280,24 @@ namespace Epsitec.Cresus.Core.States
 			this.fixups.Add (action);
 		}
 
-		
+
+		#region Private Strings
+
+		/// <summary>
+		/// The <c>Strings</c> class defines the constants used for XML serialization
+		/// of the states.
+		/// </summary>
+		private static class Strings
+		{
+			public static readonly string XmlCore = "core";
+			public static readonly string XmlBoxId = "boxId";
+			public static readonly string XmlDeck = "deck";
+			public static readonly string XmlTitle = "title";
+		}
+
+		#endregion
+
+
 		private readonly StateManager			stateManager;
 		private int								boxId;
 		

@@ -321,14 +321,14 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 		protected override void EnableWorkspace()
 		{
-			System.Diagnostics.Debug.Assert (this.Container != null);
-			System.Diagnostics.Debug.Assert (this.Container.Window != null);
+			System.Diagnostics.Debug.Assert (this.RootWidget != null);
+			System.Diagnostics.Debug.Assert (this.RootWidget.Window != null);
 
 			this.Application.CommandDispatcher.RegisterRange (this.GetCommandHandlers ());
 
 			if (this.searchController.DialogPanel != null)
 			{
-				this.searchController.DialogWindow = this.Container.Window;
+				this.searchController.DialogWindow = this.RootWidget.Window;
 				this.searchController.SetFocus (this.focusFieldPath);
 
 				this.hintListController.RefreshHintList ();
