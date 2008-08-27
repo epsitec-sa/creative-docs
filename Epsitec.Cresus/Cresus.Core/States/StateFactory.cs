@@ -1,10 +1,8 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.PlugIns;
 
-using System.Collections.Generic;
 using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Core.States
@@ -22,12 +20,12 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		/// <param name="manager">The state manager.</param>
 		/// <param name="element">The XML element.</param>
+		/// <param name="className">Name of the class.</param>
 		/// <returns>
 		/// The state or <c>null</c> if the element does not map to a supported class.
 		/// </returns>
-		public static CoreState CreateState(StateManager manager, XElement element)
+		public static CoreState CreateState(StateManager manager, XElement element, string className)
 		{
-			string className = (string) element.Attribute ("class");
 			States.CoreState state = StateFactory.CreateInstance<StateManager> (className, manager);
 			return state.Deserialize (element);
 		}

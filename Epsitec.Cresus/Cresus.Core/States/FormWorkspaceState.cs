@@ -76,13 +76,13 @@ namespace Epsitec.Cresus.Core.States
 			get;
 			set;
 		}
-		
-		
-		
-		public override XElement Serialize(StateManagerSerializationContext context, XElement element)
+
+
+
+		public override XElement Serialize(XElement element, StateSerializationContext context)
 		{
 			this.StoreCoreState (element);
-			this.StoreWorkspace (context, element);
+			this.StoreWorkspace (element, context);
 
 			return element;
 		}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		protected virtual void StoreWorkspace(StateManagerSerializationContext context, XElement element)
+		protected virtual void StoreWorkspace(XElement element, StateSerializationContext context)
 		{
 			if (this.workspace != null)
 			{
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		protected override void SoftAttachState(Epsitec.Common.Widgets.Widget container)
+		protected override void AttachState(Epsitec.Common.Widgets.Widget container)
 		{
 			if (this.workspace != null)
 			{
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		protected override void SoftDetachState()
+		protected override void DetachState()
 		{
 			if (this.workspace != null)
 			{

@@ -45,6 +45,10 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the box id associated with this state.
+		/// </summary>
+		/// <value>The box id.</value>
 		public int								BoxId
 		{
 			get
@@ -60,12 +64,10 @@ namespace Epsitec.Cresus.Core.States
 
 					if (this.IsBound)
 					{
-						throw new System.InvalidOperationException ();
+						throw new System.InvalidOperationException ("Cannot change box id of a bound state");
 					}
 					
 					this.boxId = value;
-
-					//	TODO: notify about the box ID change
 				}
 			}
 		}
@@ -81,12 +83,30 @@ namespace Epsitec.Cresus.Core.States
 			set;
 		}
 
-		
-		public abstract XElement Serialize(StateManagerSerializationContext context, XElement element);
 
+		/// <summary>
+		/// Serializes the state by creating child nodes into the &lt;state&gt;
+		/// XML element.
+		/// </summary>
+		/// <param name="element">The &lt;state&gt; XML element.</param>
+		/// <param name="context">The serialization context.</param>
+		/// <returns>The populated &lt;state&gt; XML element.</returns>
+		public abstract XElement Serialize(XElement element, StateSerializationContext context);
+
+		/// <summary>
+		/// Deserializes the state based on the specified &lt;state&gt; XML
+		/// element.
+		/// </summary>
+		/// <param name="element">The &lt;state&gt; XML element.</param>
+		/// <returns>The deserialized state (usually simply this state).</returns>
 		public abstract CoreState Deserialize(XElement element);
 
-		public virtual void NotifyDeserialized(StateManagerSerializationContext context)
+		/// <summary>
+		/// Notifies the state that all states have been deserialized; this is
+		/// the moment to execute any pending fix-ups.
+		/// </summary>
+		/// <param name="context">The serialization context.</param>
+		public virtual void NotifyDeserialized(StateSerializationContext context)
 		{
 			if (this.fixups != null)
 			{
@@ -98,6 +118,7 @@ namespace Epsitec.Cresus.Core.States
 				this.fixups = null;
 			}
 		}
+		
 		
 		public void PaintMiniature(Graphics graphics, Rectangle frame)
 		{
@@ -128,25 +149,30 @@ namespace Epsitec.Cresus.Core.States
 
 		#endregion
 
+		
+		internal void Bind(Widget container)
+		{
+			//	Note: the box has already been bound to this state, this is why
+			//	'IsBound' should be true in this context :
+
+			System.Diagnostics.Debug.Assert (this.boxId != 0);
+			System.Diagnostics.Debug.Assert (this.IsBound);
+
+			this.AttachState (container);
+		}
+
 		internal void Unbind()
 		{
 			System.Diagnostics.Debug.Assert (this.boxId != 0);
 			System.Diagnostics.Debug.Assert (this.IsBound);
-			
-			this.SoftDetachState ();
+
+			this.DetachState ();
 		}
 
-		internal void Bind(Widget container)
-		{
-			System.Diagnostics.Debug.Assert (this.boxId != 0);
-			System.Diagnostics.Debug.Assert (this.IsBound);
+		
+		protected abstract void AttachState(Widget container);
 
-			this.SoftAttachState (container);
-		}
-
-		protected abstract void SoftAttachState(Widget container);
-
-		protected abstract void SoftDetachState();
+		protected abstract void DetachState();
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -180,11 +206,11 @@ namespace Epsitec.Cresus.Core.States
 			this.AddFixup ((map) => action ());
 		}
 
-		protected void AddFixup(System.Action<StateManagerSerializationContext> action)
+		protected void AddFixup(System.Action<StateSerializationContext> action)
 		{
 			if (this.fixups == null)
 			{
-				this.fixups = new List<System.Action<StateManagerSerializationContext>> ();
+				this.fixups = new List<System.Action<StateSerializationContext>> ();
 			}
 			
 			this.fixups.Add (action);
@@ -194,6 +220,6 @@ namespace Epsitec.Cresus.Core.States
 		private readonly StateManager			stateManager;
 		private int								boxId;
 		
-		private List<System.Action<StateManagerSerializationContext>>	fixups;
+		private List<System.Action<StateSerializationContext>>	fixups;
 	}
 }

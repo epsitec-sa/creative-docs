@@ -294,9 +294,15 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+
+		/// <summary>
+		/// Saves all the states as an XML tree.
+		/// </summary>
+		/// <param name="xmlNodeName">Name of the root XML element.</param>
+		/// <returns>The root XML element.</returns>
 		public XElement SaveStates(string xmlNodeName)
 		{
-			StateManagerSerializationContext context = new StateManagerSerializationContext (this.states);
+			StateSerializationContext context = new StateSerializationContext (this.states);
 
 			System.Text.StringBuilder historyTags = new System.Text.StringBuilder ();
 			System.Text.StringBuilder hiddenTags  = new System.Text.StringBuilder ();
@@ -329,28 +335,36 @@ namespace Epsitec.Cresus.Core
 				hiddenTags.AppendFormat (context.GetTag (state));
 			}
 
+			var xmlStateElements =
+				from state in this.states
+				select state.Serialize (new XElement (Strings.XmlState, new XAttribute (Strings.XmlClass, States.StateFactory.GetClassName (state))), context);
+
 			return new XElement (xmlNodeName,
-				new XElement ("states",
-					from state in this.states
-					select state.Serialize (context, new XElement ("state", new XAttribute ("class", States.StateFactory.GetClassName (state))))),
-				new XElement ("history", historyTags.ToString ()),
-				new XElement ("z_order", zOrderTags.ToString ()),
-				new XElement ("hidden", hiddenTags.ToString ()));
+				new XElement (Strings.XmlStates,  xmlStateElements),
+				new XElement (Strings.XmlHistory, historyTags.ToString ()),
+				new XElement (Strings.XmlZOrder,  zOrderTags.ToString ()),
+				new XElement (Strings.XmlHidden,  hiddenTags.ToString ()));
 		}
 
+		/// <summary>
+		/// Restores all the states from the XML tree.
+		/// </summary>
+		/// <param name="xml">The root XML element.</param>
 		public void RestoreStates(XElement xml)
 		{
 			List<States.CoreState> states = new	List<States.CoreState> (
-				from state in xml.Descendants ("state")
-				select States.StateFactory.CreateState (this, state));
+				from state in xml.Descendants (Strings.XmlState)
+				select States.StateFactory.CreateState (this, state, (string) state.Attribute (Strings.XmlClass)));
+
+			System.Diagnostics.Debug.Assert (this.states.Count == 0);
 
 			this.states.AddRange (states);
 			
-			StateManagerSerializationContext context = new StateManagerSerializationContext (this.states);
+			StateSerializationContext context = new StateSerializationContext (this.states);
 
-			string history = xml.Element ("history").Value;
-			string zOrder  = xml.Element ("z_order").Value;
-			string hidden  = xml.Element ("hidden").Value;
+			string history = xml.Element (Strings.XmlHistory).Value;
+			string zOrder  = xml.Element (Strings.XmlZOrder).Value;
+			string hidden  = xml.Element (Strings.XmlHidden).Value;
 
 			if (string.IsNullOrEmpty (history) == false)
 			{
@@ -359,6 +373,7 @@ namespace Epsitec.Cresus.Core
 					this.history.Add (context.GetState (tag));
 				}
 			}
+			
 			if (string.IsNullOrEmpty (zOrder) == false)
 			{
 				foreach (string tag in zOrder.Split (' '))
@@ -366,6 +381,7 @@ namespace Epsitec.Cresus.Core
 					this.zOrder.Add (context.GetState (tag));
 				}
 			}
+			
 			if (string.IsNullOrEmpty (hidden) == false)
 			{
 				foreach (string tag in hidden.Split (' '))
@@ -374,29 +390,18 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
+			//	Now that the states have been deserialized and that the history, z-order and
+			//	hidden lists are up to date, let the states handle any post-deserialization
+			//	logic :
+
 			foreach (var state in states)
 			{
 				state.NotifyDeserialized (context);
 			}
 
-			if (this.boxes.Count > 0)
-			{
-				foreach (var state in this.history)
-				{
-					Box box = this.boxes[state.BoxId];
-
-					if (box.State == null)
-					{
-						box.State = state;
-						box.State.Bind (box.Container);
-					}
-				}
-			}
-
+			this.ActivateCurrentState ();
 			this.OnStateStackChanged (new StateStackChangedEventArgs (StateStackChange.Load, null));
 		}
-
-		
 
 
 		/// <summary>
@@ -435,17 +440,38 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		/// <summary>
+		/// Activates the state found on the top of the history stack.
+		/// </summary>
 		private void ActivateCurrentState()
 		{
-			if (this.history.Count > 0)
+			if ((this.boxes.Count > 0) &&
+				(this.history.Count > 0))
 			{
 				this.Attach (this.history[0]);
+
+				//	If there are any free boxes, attach the next available states to them.
+				
+				foreach (var state in this.history)
+				{
+					Box box = this.boxes[state.BoxId];
+
+					if (box.State == null)
+					{
+						this.Attach (state);
+					}
+				}
 			}
 		}
 
+		/// <summary>
+		/// Attaches the specified state to the user interface.
+		/// </summary>
+		/// <param name="state">The state.</param>
 		private void Attach(States.CoreState state)
 		{
-			if (this.boxes.Count == 0)
+			if ((this.boxes.Count == 0) ||
+				(state == null))
 			{
 				return;
 			}
@@ -455,23 +481,30 @@ namespace Epsitec.Cresus.Core
 
 			Box box = this.boxes[state.BoxId];
 
-			//	If there was another active state bound to the specified box, then we
-			//	first unbind it :
-			
-			if ((box.State != state) &&
-				(box.State != null))
+			if (box.State == state)
 			{
-				box.State.Unbind ();
-				box.State = null;
+				return;
 			}
+			
+			//	If there was another active state bound to the specified box, then we
+			//	first unbind it.
+
+			this.Detach (box.State);
+
+			System.Diagnostics.Debug.Assert (box.State == null);
 
 			box.State = state;
 			box.State.Bind (box.Container);
 		}
 
+		/// <summary>
+		/// Detaches the specified state from the user interface.
+		/// </summary>
+		/// <param name="state">The state.</param>
 		private void Detach(States.CoreState state)
 		{
-			if (this.boxes.Count == 0)
+			if ((this.boxes.Count == 0) ||
+				(state == null))
 			{
 				return;
 			}
@@ -490,7 +523,8 @@ namespace Epsitec.Cresus.Core
 		
 
 		/// <summary>
-		/// Determines whether the specified state is bound with a box.
+		/// Determines whether the specified state is bound with a box, i.e.
+		/// whether it has a visible user interface.
 		/// </summary>
 		/// <param name="state">The state.</param>
 		/// <returns>
@@ -539,19 +573,19 @@ namespace Epsitec.Cresus.Core
 				this.id = id;
 			}
 
-			public Widget Container
+			public Widget						Container
 			{
 				get;
 				set;
 			}
 
-			public States.CoreState State
+			public States.CoreState				State
 			{
 				get;
 				set;
 			}
 
-			public int Id
+			public int							Id
 			{
 				get
 				{
@@ -560,6 +594,24 @@ namespace Epsitec.Cresus.Core
 			}
 
 			private readonly int id;
+		}
+
+		#endregion
+
+		#region Private Strings
+
+		/// <summary>
+		/// The <c>Strings</c> class defines the constants used for XML serialization
+		/// of the states.
+		/// </summary>
+		private static class Strings
+		{
+			public static readonly string XmlStates = "states";
+			public static readonly string XmlState = "state";
+			public static readonly string XmlHistory = "history";
+			public static readonly string XmlZOrder = "z_order";
+			public static readonly string XmlHidden = "hidden";
+			public static readonly string XmlClass = "class";
 		}
 
 		#endregion
