@@ -84,9 +84,9 @@ namespace Epsitec.Cresus.Core
 			States.FormWorkspaceState formState = this.application.GetCurrentFormWorkspaceState ();
 			
 			if ((formState != null) &&
-				(formState.Workspace.CurrentItem != null))
+				(formState.CurrentItem != null))
 			{
-				Mai2008.Entities.ClientEntity address = formState.Workspace.CurrentItem as Mai2008.Entities.ClientEntity;
+				Mai2008.Entities.ClientEntity address = formState.CurrentItem as Mai2008.Entities.ClientEntity;
 
 				if (address != null)
 				{

@@ -49,13 +49,6 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
-		public bool Enabled
-		{
-			get
-			{
-				return this.enabled;
-			}
-		}
 
 		/// <summary>
 		/// Gets the path of the focused field.

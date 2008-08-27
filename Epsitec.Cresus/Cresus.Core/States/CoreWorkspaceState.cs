@@ -3,7 +3,9 @@
 
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.States;
@@ -12,7 +14,7 @@ using Epsitec.Cresus.Core.Workspaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Epsitec.Common.Support.EntityEngine;
+
 
 namespace Epsitec.Cresus.Core.States
 {
@@ -20,7 +22,7 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>CoreWorkspaceState</c> class manages the state associated with a
 	/// workspace, as implemented by a class derived from <see cref="CoreWorkspace"/>.
 	/// </summary>
-	public abstract class CoreWorkspaceState<T> : CoreState where T : Workspaces.CoreWorkspace, new ()
+	public abstract class CoreWorkspaceState : CoreState
 	{
 		protected CoreWorkspaceState(StateManager manager)
 			: base (manager)
@@ -28,23 +30,102 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		public T								Workspace
+		public CoreApplication Application
 		{
 			get
 			{
-				return this.workspace;
+				return this.StateManager.Application;
 			}
-			internal set
+		}
+
+		public AbstractGroup RootWidget
+		{
+			get
 			{
-				if (this.workspace != value)
+				if (this.rootWidget == null)
 				{
-					System.Diagnostics.Debug.Assert (this.workspace == null);
-					
-					this.workspace = value;
-					this.workspace.State = this;
+					System.Diagnostics.Debug.Assert (this.Application != null);
+					System.Diagnostics.Debug.Assert (this.Application.Window != null);
+
+					this.SetupUserInterface (this.CreateUserInterface ());
+				}
+
+				return this.rootWidget;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the path of the focused field.
+		/// </summary>
+		/// <value>The path of the focused field or <c>null</c>.</value>
+		public string FocusPath
+		{
+			get
+			{
+				return this.focusFieldPath;
+			}
+			set
+			{
+				if (this.focusFieldPath != value)
+				{
+					this.focusFieldPath = value;
+
+					//	TODO: generate event...
 				}
 			}
 		}
+
+
+
+		public void SetEnable(bool enable)
+		{
+			if (this.enabled != enable)
+			{
+				if (enable)
+				{
+					this.EnableWorkspace ();
+					this.enabled = true;
+				}
+				else
+				{
+					this.DisableWorkspace ();
+					this.enabled = false;
+				}
+			}
+		}
+
+		public abstract AbstractGroup CreateUserInterface();
+
+		protected abstract void EnableWorkspace();
+
+		protected abstract void DisableWorkspace();
+
+
+		private void SetupUserInterface(AbstractGroup container)
+		{
+			this.rootWidget = container;
+			this.rootWidget.Dock = DockStyle.Fill;
+			this.rootWidget.Name = this.GetType ().Name;
+		}
+
+		private void DefineState(States.CoreState state)
+		{
+			System.Diagnostics.Debug.Assert (state != null);
+			System.Diagnostics.Debug.Assert (this.state == null);
+
+			this.state = state;
+			this.application = state.StateManager.Application;
+		}
+
+
+
+		private States.CoreState				state;
+		private CoreApplication					application;
+		private AbstractGroup					rootWidget;
+		private bool							enabled;
+		private string							focusFieldPath;
+
 
 
 		public override XElement Serialize(XElement element, StateSerializationContext context)
@@ -61,13 +142,6 @@ namespace Epsitec.Cresus.Core.States
 
 		public override CoreState Deserialize(XElement element)
 		{
-			System.Diagnostics.Debug.Assert (this.workspace == null);
-
-			this.workspace = new T ()
-			{
-				State = this
-			};
-
 			this.RestoreWorkspace (element.Element ("workspace"));
 			this.RestoreCoreState (element);
 
@@ -77,11 +151,11 @@ namespace Epsitec.Cresus.Core.States
 
 
 
-		public static IEnumerable<CoreWorkspaceState<T>> FindAll(StateManager manager, System.Predicate<CoreWorkspaceState<T>> filter)
+		public static IEnumerable<T> FindAll<T>(StateManager manager, System.Predicate<T> filter) where T : CoreWorkspaceState
 		{
 			foreach (CoreState state in manager.GetAllStates ())
 			{
-				CoreWorkspaceState<T> workspaceState = state as CoreWorkspaceState<T>;
+				T workspaceState = state as T;
 
 				if (workspaceState != null)
 				{
@@ -101,23 +175,14 @@ namespace Epsitec.Cresus.Core.States
 		
 		protected override void AttachState(Epsitec.Common.Widgets.Widget container)
 		{
-			if (this.workspace != null)
-			{
-				this.workspace.RootWidget.SetParent (container);
-				this.workspace.SetEnable (true);
-			}
+			this.RootWidget.SetParent (container);
+			this.SetEnable (true);
 		}
 
 		protected override void DetachState()
 		{
-			if (this.workspace != null)
-			{
-				this.workspace.SetEnable (false);
-				this.workspace.RootWidget.SetParent (null);
-			}
+			this.SetEnable (false);
+			this.RootWidget.SetParent (null);
 		}
-
-
-		private T								workspace;
 	}
 }
