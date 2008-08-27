@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Core
 
 			DialogDataMode  dialogMode    = formState.Workspace.DialogData.Mode;
 			Druid           entityId      = Druid.Empty;
-			EntityFieldPath linkFieldPath = null;
+			string          linkFieldPath = null;
 
 			if (dialogMode == DialogDataMode.Search)
 			{
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Core
 			return this.CreateRecord (entityId, linkFieldPath, null);
 		}
 
-		internal bool CreateRecord(Druid entityId, EntityFieldPath linkFieldPath, System.Action<AbstractEntity> initializer)
+		internal bool CreateRecord(Druid entityId, string linkFieldPath, System.Action<AbstractEntity> initializer)
 		{
 			Druid formId = this.FindCreationFormId (entityId);
 
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Core
 					Title = "Création",
 					Workspace = workspace,
 					LinkedState = formState,
-					LinkedStateFieldPath = linkFieldPath.ToString ()
+					LinkedStateFieldPath = linkFieldPath
 				};
 
 			//	TODO: better linking -- when exiting with validation, should fill in the missing

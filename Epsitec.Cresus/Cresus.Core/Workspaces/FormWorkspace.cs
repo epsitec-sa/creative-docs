@@ -136,28 +136,6 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
-		/// <summary>
-		/// Gets the path of the focused field.
-		/// </summary>
-		/// <value>The path of the focused field or <c>null</c>.</value>
-		public EntityFieldPath					FocusPath
-		{
-			get
-			{
-				return this.focusFieldPath;
-			}
-			set
-			{
-				if (this.focusFieldPath != value)
-				{
-					this.focusFieldPath = value;
-
-					//	TODO: generate event...
-				}
-			}
-		}
-
-
 		internal void Initialize()
 		{
 			if ((this.searchContext == null) &&
@@ -329,7 +307,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 			if (this.searchController.DialogPanel != null)
 			{
 				this.searchController.DialogWindow = this.RootWidget.Window;
-				this.searchController.SetFocus (this.focusFieldPath);
+				this.searchController.SetFocus (EntityFieldPath.Parse (this.FocusPath));
 
 				this.hintListController.RefreshHintList ();
 			}
@@ -417,7 +395,7 @@ namespace Epsitec.Cresus.Core.Workspaces
 
 			if (e.NewPath != null)
 			{
-				this.FocusPath = e.NewPath;
+				this.FocusPath = e.NewPath.ToString ();
 				this.Application.AsyncSaveApplicationState ();
 			}
 		}
@@ -447,6 +425,5 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private AbstractEntity					currentItem;
 		private EntityContext					searchContext;
 		private IEntityResolver					resolver;
-		private EntityFieldPath					focusFieldPath;
 	}
 }

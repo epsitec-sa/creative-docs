@@ -57,6 +57,28 @@ namespace Epsitec.Cresus.Core.Workspaces
 			}
 		}
 
+		/// <summary>
+		/// Gets the path of the focused field.
+		/// </summary>
+		/// <value>The path of the focused field or <c>null</c>.</value>
+		public string FocusPath
+		{
+			get
+			{
+				return this.focusFieldPath;
+			}
+			set
+			{
+				if (this.focusFieldPath != value)
+				{
+					this.focusFieldPath = value;
+
+					//	TODO: generate event...
+				}
+			}
+		}
+
+
 		
 		public void SetEnable(bool enable)
 		{
@@ -104,5 +126,6 @@ namespace Epsitec.Cresus.Core.Workspaces
 		private CoreApplication					application;
 		private AbstractGroup					rootWidget;
 		private bool							enabled;
+		private string							focusFieldPath;
 	}
 }

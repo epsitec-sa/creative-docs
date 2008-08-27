@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.States
 			
 			if (string.IsNullOrEmpty (focusPath) == false)
 			{
-				workspace.FocusPath = EntityFieldPath.Parse (focusPath);
+				workspace.FocusPath = focusPath;
 			}
 
 			workspace.Initialize ();
