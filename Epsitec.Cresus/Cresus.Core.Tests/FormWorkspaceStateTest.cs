@@ -69,25 +69,25 @@ namespace Epsitec.Cresus.Core
 			XElement element;
 
 			//	No changes :
-			element = States.FormWorkspaceState.SaveDialogData (data);
+			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData />", element.ToString (SaveOptions.DisableFormatting));
 			
 			//	Single text change :
 			temp.CasePostale = "CP 16";
-			element = States.FormWorkspaceState.SaveDialogData (data);
+			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
 
 			//	Cascaded text change :
 			temp.Localité.Numéro = "CH-1462";
-			element = States.FormWorkspaceState.SaveDialogData (data);
+			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><data path=""[8V15].[8V19]"" value=""CH-1462"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
 
 			temp.Localité = loc2;
-			element = States.FormWorkspaceState.SaveDialogData (data);
+			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><ref path=""[8V15]"" id=""loc2"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
 
 			data.RevertChanges ();
-			element = States.FormWorkspaceState.SaveDialogData (data);
+			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData />", element.ToString (SaveOptions.DisableFormatting));
 
 			context.PersistenceManagers.Remove (manager);
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core
 
 			//	Restore CasePostale (value) and Localité (reference)
 			element = XElement.Parse (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><ref path=""[8V15]"" id=""loc2"" /></dialogData>");
-			States.FormWorkspaceState.RestoreDialogData (data, element);
+			States.FormState.RestoreDialogData (data, element);
 
 			Assert.AreEqual ("CP 16", temp.CasePostale);
 			Assert.AreEqual ("Yverdon-les-Bains", temp.Localité.Nom);

@@ -110,8 +110,8 @@ namespace Epsitec.Cresus.Core
 
 		internal void StartNewSearch(Druid entityId, Druid formId)
 		{
-			States.FormWorkspaceState state =
-				new States.FormWorkspaceState (this.stateManager)
+			States.FormState state =
+				new States.FormState (this.stateManager)
 				{
 					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.History,
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Core
 
 		internal void StartEdit()
 		{
-			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
+			States.FormState formState = this.GetCurrentFormWorkspaceState ();
 
 			if (formState == null)
 			{
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core
 			
 			//	Recycle existing edition form, if there is one :
 
-			foreach (var item in States.CoreState.FindAll<States.FormWorkspaceState> (this.StateManager, s => s.Mode == FormWorkspaceMode.Edition))
+			foreach (var item in States.CoreState.FindAll<States.FormState> (this.StateManager, s => s.Mode == FormWorkspaceMode.Edition))
 			{
 				if (item.CurrentItem == entity)
 				{
@@ -158,8 +158,8 @@ namespace Epsitec.Cresus.Core
 			
 			//	Create new workspace for the edition :
 
-			States.FormWorkspaceState state =
-				new States.FormWorkspaceState (this.stateManager)
+			States.FormState state =
+				new States.FormState (this.stateManager)
 				{
 					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.StandAlone,
@@ -175,16 +175,16 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.Hide (formState);
 		}
 
-		internal States.FormWorkspaceState GetCurrentFormWorkspaceState()
+		internal States.FormState GetCurrentFormWorkspaceState()
 		{
-			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
+			States.FormState formState = this.StateManager.ActiveState as States.FormState;
 			return formState;
 		}
 
 		internal bool EndEdit(bool accept)
 		{
 			States.CoreState state = this.stateManager.ActiveState;
-			States.FormWorkspaceState formState = state as States.FormWorkspaceState;
+			States.FormState formState = state as States.FormState;
 
 			if ((formState != null) &&
 				(formState.Mode != FormWorkspaceMode.Search))
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core
 					if ((formState.Mode == FormWorkspaceMode.Creation) &&
 						(formState.LinkedStateFieldPath != null))
 					{
-						States.FormWorkspaceState linkedFormState = formState.LinkedState as States.FormWorkspaceState;
+						States.FormState linkedFormState = formState.LinkedState as States.FormState;
 						EntityFieldPath           linkedFieldPath = EntityFieldPath.Parse (formState.LinkedStateFieldPath);
 						linkedFieldPath.NavigateWrite (linkedFormState.DialogData.Data, formState.CurrentItem);
 					}
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Core
 
 		internal bool CreateRecord()
 		{
-			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
+			States.FormState formState = this.GetCurrentFormWorkspaceState ();
 
 			if (formState == null)
 			{
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Core
 				return false;
 			}
 
-			States.FormWorkspaceState formState = this.GetCurrentFormWorkspaceState ();
+			States.FormState formState = this.GetCurrentFormWorkspaceState ();
 			AbstractEntity entity = this.data.DataContext.CreateEntity (entityId);
 
 			if (initializer != null)
@@ -283,8 +283,8 @@ namespace Epsitec.Cresus.Core
 			
 			//	Create new workspace for the edition :
 
-			States.FormWorkspaceState state =
-				new States.FormWorkspaceState (this.stateManager)
+			States.FormState state =
+				new States.FormState (this.stateManager)
 				{
 					BoxId = this.defaultBoxId,
 					StateDeck = States.StateDeck.StandAlone,
@@ -458,7 +458,7 @@ namespace Epsitec.Cresus.Core
 
 		private void UpdateCommandsAfterStateChange()
 		{
-			States.FormWorkspaceState formState = this.StateManager.ActiveState as States.FormWorkspaceState;
+			States.FormState formState = this.StateManager.ActiveState as States.FormState;
 
 			if (formState != null)
 			{

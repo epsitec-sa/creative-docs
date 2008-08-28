@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core
 		[Command (Mai2008.Res.CommandIds.Quick.CreateBillForCustomer)]
 		public void QuickCreateBillForCustomer()
 		{
-			States.FormWorkspaceState formState = this.application.GetCurrentFormWorkspaceState ();
+			States.FormState formState = this.application.GetCurrentFormWorkspaceState ();
 			
 			if ((formState != null) &&
 				(formState.CurrentItem != null))

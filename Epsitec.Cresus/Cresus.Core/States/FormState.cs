@@ -17,7 +17,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Common.Support.EntityEngine;
 
-[assembly: State (typeof (FormWorkspaceState))]
+[assembly: State (typeof (FormState))]
 
 namespace Epsitec.Cresus.Core.States
 {
@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>FormWorkspaceState</c> class manages the state associated with a
 	/// form workspace, as implemented by the <see cref="FormWorkspace"/> class.
 	/// </summary>
-	public class FormWorkspaceState : CoreState
+	public class FormState : CoreState
 	{
-		public FormWorkspaceState(StateManager manager)
+		public FormState(StateManager manager)
 			: base (manager)
 		{
 			this.hintListController = new HintListController ()
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Core.States
 				AbstractEntity template = this.GetSearchTemplate ();
 
 				currentEntityId = this.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
-				savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (this.DialogData) : FormWorkspaceState.SaveTemplate (template);
+				savedDialogData = template == null ? FormState.SaveDialogData (this.DialogData) : FormState.SaveTemplate (template);
 			}
 
 			workspaceElement.Add (new XAttribute ("entityId", this.EntityId.ToString ()));
@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Core.States
 
 			if (dialogDataXml != null)
 			{
-				FormWorkspaceState.RestoreDialogData (this.DialogData, dialogDataXml);
+				FormState.RestoreDialogData (this.DialogData, dialogDataXml);
 			}
 		}
 		
