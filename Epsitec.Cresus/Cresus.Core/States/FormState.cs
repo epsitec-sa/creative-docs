@@ -40,14 +40,6 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		public AbstractEntity					CurrentEntity
-		{
-			get
-			{
-				return Collection.GetFirst (this.GetSelectedEntities (), null);
-			}
-		}
-
 		public Druid							FormId
 		{
 			get;
@@ -67,11 +59,11 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 		
-		public DialogData						DialogData
+		public AbstractEntity					CurrentEntity
 		{
 			get
 			{
-				return this.dialogData;
+				return Collection.GetFirst (this.GetSelectedEntities (), null);
 			}
 		}
 
@@ -84,6 +76,15 @@ namespace Epsitec.Cresus.Core.States
 			set
 			{
 				this.currentItem = value;
+			}
+		}
+
+		
+		public DialogData						DialogData
+		{
+			get
+			{
+				return this.dialogData;
 			}
 		}
 
@@ -105,6 +106,12 @@ namespace Epsitec.Cresus.Core.States
 			this.searchController.DefaultSuggestion = entity;
 		}
 
+
+		public void SetFieldValue(string path, AbstractEntity value)
+		{
+			EntityFieldPath fieldPath = EntityFieldPath.Parse (path);
+			fieldPath.NavigateWrite (this.DialogData.Data, value);
+		}
 		
 		protected override AbstractGroup CreateUserInterface()
 		{

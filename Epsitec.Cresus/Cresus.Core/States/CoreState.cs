@@ -127,12 +127,12 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 		/// <summary>
-		/// Gets or sets the field path of the linked state. See <see cref="LinkedState"/>;
-		/// the field path specifies which field was active in the linked state, so
+		/// Gets or sets the focus path of the linked state. See <see cref="LinkedState"/>;
+		/// the focus path specifies which field was active in the linked state, so
 		/// that the system can update it when this state is closed.
 		/// </summary>
-		/// <value>The linked state field path.</value>
-		public string							LinkedStateFieldPath
+		/// <value>The linked state focus path.</value>
+		public string							LinkedStateFocusPath
 		{
 			get;
 			set;
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Core.States
 		/// be currently visible (it might have no parent defined).
 		/// </summary>
 		/// <value>The root widget or <c>null</c>.</value>
-		public AbstractGroup					RootWidget
+		protected AbstractGroup					RootWidget
 		{
 			get
 			{
@@ -376,9 +376,9 @@ namespace Epsitec.Cresus.Core.States
 			{
 				string link = context.GetTag (this.LinkedState);
 
-				if (this.LinkedStateFieldPath != null)
+				if (this.LinkedStateFocusPath != null)
 				{
-					link = string.Concat (link, " ", this.LinkedStateFieldPath);
+					link = string.Concat (link, " ", this.LinkedStateFocusPath);
 				}
 
 				coreElement.Add (new XAttribute (Strings.XmlLink, link));
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Core.States
 
 				if (pos >= 0)
 				{
-					this.LinkedStateFieldPath = link.Substring (pos+1);
+					this.LinkedStateFocusPath = link.Substring (pos+1);
 					link = link.Substring (0, pos);
 				}
 

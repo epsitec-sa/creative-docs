@@ -195,11 +195,11 @@ namespace Epsitec.Cresus.Core
 					this.data.DataContext.SaveChanges ();
 
 					if ((formState.Mode == FormWorkspaceMode.Creation) &&
-						(formState.LinkedStateFieldPath != null))
+						(formState.LinkedStateFocusPath != null))
 					{
 						States.FormState linkedFormState = formState.LinkedState as States.FormState;
-						EntityFieldPath           linkedFieldPath = EntityFieldPath.Parse (formState.LinkedStateFieldPath);
-						linkedFieldPath.NavigateWrite (linkedFormState.DialogData.Data, formState.CurrentItem);
+						linkedFormState.SetFieldValue (formState.LinkedStateFocusPath, formState.CurrentItem);
+
 					}
 				}
 
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Core
 					Mode = FormWorkspaceMode.Creation,
 					CurrentItem = entity,
 					LinkedState = formState,
-					LinkedStateFieldPath = linkFieldPath
+					LinkedStateFocusPath = linkFieldPath
 				};
 
 			//	TODO: better linking -- when exiting with validation, should fill in the missing
