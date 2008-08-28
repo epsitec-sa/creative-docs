@@ -82,7 +82,7 @@
     <Compile Include="StateManager.cs" />
     <Compile Include="States\StateDeck.cs" />
     <Compile Include="States\CoreState.cs" />
-    <Compile Include="States\FormWorkspaceState.cs" />
+    <Compile Include="States\FormState.cs" />
     <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

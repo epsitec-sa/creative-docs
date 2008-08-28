@@ -89,90 +89,7 @@ namespace Epsitec.Cresus.Core.States
 
 
 		
-		private IEnumerable<AbstractEntity> GetSelectedEntities()
-		{
-			//	If somebody defined a default suggestion, which has still
-			//	not been taken into account by the controller, then we
-			//	will simply return it as the only selected entity : the
-			//	controller has never had a chance to update the list...
-
-			if ((this.searchController != null) &&
-				(this.searchController.DefaultSuggestion != null))
-			{
-				return new AbstractEntity[] { this.searchController.DefaultSuggestion };
-			}
-
-			AbstractEntity data = this.dialogData.ExternalData;
-
-			if (data == null)
-			{
-				return EmptyEnumerable<AbstractEntity>.Instance;
-			}
-			else
-			{
-				//	TODO: handle multiple selection
-
-				return new AbstractEntity[] { data };
-			}
-		}
-
-		private AbstractEntity GetSearchTemplate()
-		{
-			if (this.Mode != FormWorkspaceMode.Search)
-			{
-				return null;
-			}
-			else
-			{
-				ISearchContext context = this.searchController.ActiveSearchContext;
-
-				if (context == null)
-				{
-					return null;
-				}
-				else
-				{
-					return context.SearchTemplate;
-				}
-			}
-		}
-
-		
-		internal void Initialize()
-		{
-			if ((this.searchContext == null) &&
-				(this.FormId.IsValid) &&
-				(this.EntityId.IsValid) &&
-				(this.Mode != FormWorkspaceMode.None))
-			{
-				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
-				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
-				this.searchContext.PersistenceManagers.Add (this.Application.Data.DataContext);
-
-				if (this.currentItem == null)
-				{
-					this.currentItem = this.searchContext.CreateEntity (this.EntityId);
-				}
-
-				switch (this.Mode)
-				{
-					case FormWorkspaceMode.Creation:
-					case FormWorkspaceMode.Edition:
-						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
-						break;
-
-					case FormWorkspaceMode.Search:
-						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
-						break;
-				}
-
-
-				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
-				this.resolver = this.Application.Data.Resolver;
-			}
-		}
-
-		internal void AcceptEdition()
+		public void AcceptEdition()
 		{
 			switch (this.Mode)
 			{
@@ -183,7 +100,6 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		
 		public void SelectEntity(AbstractEntity entity)
 		{
 			this.searchController.DefaultSuggestion = entity;
@@ -326,6 +242,89 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
+		private void Initialize()
+		{
+			if ((this.searchContext == null) &&
+				(this.FormId.IsValid) &&
+				(this.EntityId.IsValid) &&
+				(this.Mode != FormWorkspaceMode.None))
+			{
+				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
+				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
+				this.searchContext.PersistenceManagers.Add (this.Application.Data.DataContext);
+
+				if (this.currentItem == null)
+				{
+					this.currentItem = this.searchContext.CreateEntity (this.EntityId);
+				}
+
+				switch (this.Mode)
+				{
+					case FormWorkspaceMode.Creation:
+					case FormWorkspaceMode.Edition:
+						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
+						break;
+
+					case FormWorkspaceMode.Search:
+						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
+						break;
+				}
+
+
+				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
+				this.resolver = this.Application.Data.Resolver;
+			}
+		}
+		
+		
+		private AbstractEntity GetSearchTemplate()
+		{
+			if (this.Mode != FormWorkspaceMode.Search)
+			{
+				return null;
+			}
+			else
+			{
+				ISearchContext context = this.searchController.ActiveSearchContext;
+
+				if (context == null)
+				{
+					return null;
+				}
+				else
+				{
+					return context.SearchTemplate;
+				}
+			}
+		}
+
+		private IEnumerable<AbstractEntity> GetSelectedEntities()
+		{
+			//	If somebody defined a default suggestion, which has still
+			//	not been taken into account by the controller, then we
+			//	will simply return it as the only selected entity : the
+			//	controller has never had a chance to update the list...
+
+			if ((this.searchController != null) &&
+				(this.searchController.DefaultSuggestion != null))
+			{
+				return new AbstractEntity[] { this.searchController.DefaultSuggestion };
+			}
+
+			AbstractEntity data = this.dialogData.ExternalData;
+
+			if (data == null)
+			{
+				return EmptyEnumerable<AbstractEntity>.Instance;
+			}
+			else
+			{
+				//	TODO: handle multiple selection
+
+				return new AbstractEntity[] { data };
+			}
+		}
+
 		private IEnumerable<CommandHandlerPair> GetCommandHandlers()
 		{
 			return new CommandHandlerPair[]
@@ -336,6 +335,7 @@ namespace Epsitec.Cresus.Core.States
 			};
 		}
 
+		
 		private void ExecuteClearSearchCommand(object sender, CommandEventArgs e)
 		{
 			this.searchController.ClearActiveSuggestion ();
@@ -439,14 +439,14 @@ namespace Epsitec.Cresus.Core.States
 				savedDialogData = template == null ? FormState.SaveDialogData (this.DialogData) : FormState.SaveTemplate (template);
 			}
 
-			workspaceElement.Add (new XAttribute ("entityId", this.EntityId.ToString ()));
-			workspaceElement.Add (new XAttribute ("formId", this.FormId.ToString ()));
-			workspaceElement.Add (new XAttribute ("mode", this.Mode.ToString ()));
-			workspaceElement.Add (new XAttribute ("focusPath", this.FocusPath == null ? "" : this.FocusPath.ToString ()));
+			workspaceElement.Add (new XAttribute (Strings.XmlEntityId, this.EntityId.ToString ()));
+			workspaceElement.Add (new XAttribute (Strings.XmlFormId, this.FormId.ToString ()));
+			workspaceElement.Add (new XAttribute (Strings.XmlMode, this.Mode.ToString ()));
+			workspaceElement.Add (new XAttribute (Strings.XmlFocusPath, this.FocusPath ?? ""));
 			
 			if (currentEntityId != null)
 			{
-				workspaceElement.Add (new XAttribute ("currentEntityId", currentEntityId));
+				workspaceElement.Add (new XAttribute (Strings.XmlCurrentEntityId, currentEntityId));
 			}
 
 			if (savedDialogData != null)
@@ -459,13 +459,13 @@ namespace Epsitec.Cresus.Core.States
 		{
 			System.Diagnostics.Debug.Assert (workspaceElement != null);
 
-			string entityId        = (string) workspaceElement.Attribute ("entityId");
-			string formId          = (string) workspaceElement.Attribute ("formId");
-			string mode            = (string) workspaceElement.Attribute ("mode");
-			string currentEntityId = (string) workspaceElement.Attribute ("currentEntityId");
-			string focusPath       = (string) workspaceElement.Attribute ("focusPath");
+			string entityId        = (string) workspaceElement.Attribute (Strings.XmlEntityId);
+			string formId          = (string) workspaceElement.Attribute (Strings.XmlFormId);
+			string mode            = (string) workspaceElement.Attribute (Strings.XmlMode);
+			string currentEntityId = (string) workspaceElement.Attribute (Strings.XmlCurrentEntityId);
+			string focusPath       = (string) workspaceElement.Attribute (Strings.XmlFocusPath);
 			
-			XElement dialogDataXml = workspaceElement.Element ("dialogData");
+			XElement dialogDataXml = workspaceElement.Element (Strings.XmlDialogData);
 
 			this.EntityId = Druid.Parse (entityId);
 			this.FormId   = Druid.Parse (formId);
@@ -488,11 +488,8 @@ namespace Epsitec.Cresus.Core.States
 					break;
 			}
 			
-			if (string.IsNullOrEmpty (focusPath) == false)
-			{
-				this.FocusPath = focusPath;
-			}
-
+			this.FocusPath = focusPath;
+			
 			this.Initialize ();
 
 			if (dialogDataXml != null)
@@ -509,12 +506,19 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		private static class Strings
 		{
-			public static readonly string XmlEntityId = "entityId";
-			public static readonly string XmlFormId = "formId";
-			public static readonly string XmlMode = "mode";
-			public static readonly string XmlCurrentEntityId = "currentEntityId";
-			public static readonly string XmlFocusPath = "focusPath";
-			public static readonly string XmlDialogData = "dialogData";
+			public const string XmlEntityId = "entityId";
+			public const string XmlFormId = "formId";
+			public const string XmlMode = "mode";
+			public const string XmlCurrentEntityId = "currentEntityId";
+			public const string XmlFocusPath = "focusPath";
+			public const string XmlDialogData = "dialogData";
+			public const string XmlNull = "null";
+			public const string XmlData = "data";
+			public const string XmlValue = "value";
+			public const string XmlRef = "ref";
+			public const string XmlId = "id";
+			public const string XmlPath = "path";
+			public const string XmlCollection = "collection";
 		}
 
 		#endregion
@@ -534,10 +538,10 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		/// <param name="data">The dialog data.</param>
 		/// <returns>The XML chunk of the saved dialog data.</returns>
-		public static XElement SaveDialogData(DialogData data)
+		private static XElement SaveDialogData(DialogData data)
 		{
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
-			XElement        element   = new XElement ("dialogData");
+			XElement        element   = new XElement (Strings.XmlDialogData);
 
 			if (data == null)
 			{
@@ -555,8 +559,7 @@ namespace Epsitec.Cresus.Core.States
 
 					if (value == null)
 					{
-						element.Add (new XElement ("null",
-							new XAttribute ("path", path)));
+						element.Add (new XElement (Strings.XmlNull, new XAttribute (Strings.XmlPath, path)));
 					}
 					else
 					{
@@ -565,9 +568,10 @@ namespace Epsitec.Cresus.Core.States
 						switch (field.Relation)
 						{
 							case FieldRelation.None:
-								element.Add (new XElement ("data",
-									new XAttribute ("path", path),
-									new XAttribute ("value", converter.Convert (value, typeof (string), null, culture))));
+								element.Add (
+									new XElement (Strings.XmlData,
+										new XAttribute (Strings.XmlPath, path),
+										new XAttribute (Strings.XmlValue, converter.Convert (value, typeof (string), null, culture))));
 								break;
 
 							case FieldRelation.Reference:
@@ -580,16 +584,20 @@ namespace Epsitec.Cresus.Core.States
 								}
 								else
 								{
-									element.Add (new XElement ("ref",
-										new XAttribute ("path", path),
-										new XAttribute ("id", id)));
+									element.Add (
+										new XElement (Strings.XmlRef,
+											new XAttribute (Strings.XmlPath, path),
+											new XAttribute (Strings.XmlId, id)));
 								}
 								break;
 
 							case FieldRelation.Collection:
-								element.Add (new XElement ("collection",
-									new XAttribute ("path", path)));
+								element.Add (
+									new XElement (Strings.XmlCollection,
+										new XAttribute (Strings.XmlPath, path)));
+
 								//	TODO: how do we serialize the collection ?
+								
 								break;
 
 							default:
@@ -608,10 +616,10 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		/// <param name="template">The template.</param>
 		/// <returns>The XML chunk of the saved search template.</returns>
-		public static XElement SaveTemplate(AbstractEntity template)
+		private static XElement SaveTemplate(AbstractEntity template)
 		{
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
-			XElement        element   = new XElement ("dialogData");
+			XElement        element   = new XElement (Strings.XmlDialogData);
 
 			if (template == null)
 			{
@@ -627,8 +635,7 @@ namespace Epsitec.Cresus.Core.States
 					
 					if (value == null)
 					{
-						element.Add (new XElement ("null",
-							new XAttribute ("path", path)));
+						element.Add (new XElement (Strings.XmlNull, new XAttribute (Strings.XmlPath, path)));
 					}
 					else
 					{
@@ -639,9 +646,10 @@ namespace Epsitec.Cresus.Core.States
 
 								if (value != null)
 								{
-									element.Add (new XElement ("data",
-										new XAttribute ("path", path),
-										new XAttribute ("value", value)));
+									element.Add (
+										new XElement (Strings.XmlData,
+											new XAttribute (Strings.XmlPath, path),
+											new XAttribute (Strings.XmlValue, value)));
 								}
 								break;
 
@@ -671,7 +679,7 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		/// <param name="data">The dialog data.</param>
 		/// <param name="element">The XML chunk used to restore the dialog data.</param>
-		public static void RestoreDialogData(DialogData data, XElement element)
+		private static void RestoreDialogData(DialogData data, XElement element)
 		{
 			System.Diagnostics.Debug.Assert (element.Name == "dialogData");
 
@@ -685,30 +693,30 @@ namespace Epsitec.Cresus.Core.States
 
 			foreach (XElement dataElement in element.Descendants ())
 			{
-				EntityFieldPath     path = EntityFieldPath.Parse ((string) dataElement.Attribute ("path"));
+				EntityFieldPath     path = EntityFieldPath.Parse ((string) dataElement.Attribute (Strings.XmlPath));
 				StructuredTypeField field;
 				
 				object value;
 				
 				switch (dataElement.Name.LocalName)
 				{
-					case "null":
+					case Strings.XmlNull:
 						value = null;
 						break;
 
-					case "data":
+					case Strings.XmlData:
 						path.CreateMissingNodes (data.Data);
 						field = path.NavigateReadField (data.Data);
-						value = (string) dataElement.Attribute ("value");
+						value = (string) dataElement.Attribute (Strings.XmlValue);
 						value = converter.ConvertBack (value, field.Type.SystemType, null, culture);
 						break;
 					
-					case "ref":
+					case Strings.XmlRef:
 						path.CreateMissingNodes (data.Data);
-						value = data.EntityContext.GetPeristedEntity ((string) dataElement.Attribute ("id"));
+						value = data.EntityContext.GetPeristedEntity ((string) dataElement.Attribute (Strings.XmlId));
 						break;
 					
-					case "collection":
+					case Strings.XmlCollection:
 						//	TODO: ...
 						continue;
 					
