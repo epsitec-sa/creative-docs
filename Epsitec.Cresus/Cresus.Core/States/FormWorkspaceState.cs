@@ -11,7 +11,6 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.States;
-using Epsitec.Cresus.Core.Workspaces;
 
 using System.Collections.Generic;
 using System.Linq;
