@@ -161,13 +161,13 @@ namespace Epsitec.Cresus.Core.States
 		{
 			get
 			{
-				return this.focusFieldPath;
+				return this.focusPath;
 			}
 			set
 			{
-				if (this.focusFieldPath != value)
+				if (this.focusPath != value)
 				{
-					this.focusFieldPath = value;
+					this.focusPath = value;
 
 					//	TODO: generate event...
 				}
@@ -216,15 +216,7 @@ namespace Epsitec.Cresus.Core.States
 		/// <param name="context">The serialization context.</param>
 		public virtual void NotifyDeserialized(StateSerializationContext context)
 		{
-			if (this.fixups != null)
-			{
-				foreach (var action in this.fixups)
-				{
-					action (context);
-				}
-
-				this.fixups = null;
-			}
+			this.ExecuteFixups (context);
 		}
 
 
@@ -318,10 +310,20 @@ namespace Epsitec.Cresus.Core.States
 
 
 
+		/// <summary>
+		/// Creates the user interface.
+		/// </summary>
+		/// <returns>The group which contains the UI for this state.</returns>
 		protected abstract AbstractGroup CreateUserInterface();
 
+		/// <summary>
+		/// Enables the workspace.
+		/// </summary>
 		protected abstract void EnableWorkspace();
 
+		/// <summary>
+		/// Disables the workspace.
+		/// </summary>
 		protected abstract void DisableWorkspace();
 
 
@@ -333,7 +335,7 @@ namespace Epsitec.Cresus.Core.States
 		{
 			this.SetupUserInterface ();
 			this.RootWidget.SetParent (container);
-			this.SetEnable (true);
+			this.SetWorkspaceEnable (true);
 		}
 
 		/// <summary>
@@ -341,7 +343,7 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		protected virtual void DetachState()
 		{
-			this.SetEnable (false);
+			this.SetWorkspaceEnable (false);
 			this.RootWidget.SetParent (null);
 		}
 
@@ -411,9 +413,20 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Serializes the workspace by storing data into the specified
+		/// &lt;workspace&gt; XML element.
+		/// </summary>
+		/// <param name="workspaceElement">The &lt;workspace&gt; XML element.</param>
+		/// <param name="context">The serialization context.</param>
 		protected abstract void StoreWorkspace(XElement workspaceElement, StateSerializationContext context);
 
+		/// <summary>
+		/// Deserializes the workspace based on the specified &lt;workspace&gt;
+		/// XML element.
+		/// </summary>
+		/// <param name="workspaceElement">The &lt;workspace&gt; XML element.</param>
 		protected abstract void RestoreWorkspace(XElement workspaceElement);
 
 
@@ -443,24 +456,48 @@ namespace Epsitec.Cresus.Core.States
 			this.fixups.Add (action);
 		}
 
-		
-		private void SetEnable(bool enable)
+		/// <summary>
+		/// Executes the fixups.
+		/// </summary>
+		/// <param name="context">The serialization context.</param>
+		private void ExecuteFixups(StateSerializationContext context)
 		{
-			if (this.enabled != enable)
+			if (this.fixups != null)
+			{
+				foreach (var action in this.fixups)
+				{
+					action (context);
+				}
+
+				this.fixups = null;
+			}
+		}
+
+
+		/// <summary>
+		/// Enable or disable the workspace user interface.
+		/// </summary>
+		/// <param name="enable">If set to <c>true</c>, enable the workspace user interface.</param>
+		private void SetWorkspaceEnable(bool enable)
+		{
+			if (this.isWorkspaceEnabled != enable)
 			{
 				if (enable)
 				{
 					this.EnableWorkspace ();
-					this.enabled = true;
+					this.isWorkspaceEnabled = true;
 				}
 				else
 				{
 					this.DisableWorkspace ();
-					this.enabled = false;
+					this.isWorkspaceEnabled = false;
 				}
 			}
 		}
 
+		/// <summary>
+		/// Sets the user interface up, if it does not exist yet.
+		/// </summary>
 		private void SetupUserInterface()
 		{
 			if (this.rootWidget == null)
@@ -500,9 +537,9 @@ namespace Epsitec.Cresus.Core.States
 		private int								boxId;
 		
 		private List<System.Action<StateSerializationContext>>	fixups;
-		
+
+		private bool							isWorkspaceEnabled;
 		private AbstractGroup					rootWidget;
-		private bool							enabled;
-		private string							focusFieldPath;
+		private string							focusPath;
 	}
 }
