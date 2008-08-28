@@ -17,7 +17,7 @@ using Epsitec.Common.Dialogs;
 namespace Epsitec.Cresus.Core
 {
 	[TestFixture]
-	public class FormWorkspaceStateTest
+	public class FormStateTest
 	{
 		[TestFixtureSetUp]
 		public void Initialize()
