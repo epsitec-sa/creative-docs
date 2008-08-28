@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.States
 	/// The <c>FormWorkspaceState</c> class manages the state associated with a
 	/// form workspace, as implemented by the <see cref="FormWorkspace"/> class.
 	/// </summary>
-	public class FormWorkspaceState : CoreWorkspaceState
+	public class FormWorkspaceState : CoreState
 	{
 		public FormWorkspaceState(StateManager manager)
 			: base (manager)
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Core.States
 			this.searchController.DefaultSuggestion = entity;
 		}
 
-		public override AbstractGroup CreateUserInterface()
+		protected override AbstractGroup CreateUserInterface()
 		{
 			FrameBox frame = new FrameBox ();
 

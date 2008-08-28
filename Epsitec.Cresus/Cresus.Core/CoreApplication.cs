@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core
 			
 			//	Recycle existing edition form, if there is one :
 
-			foreach (var item in States.CoreWorkspaceState.FindAll<States.FormWorkspaceState> (this.StateManager, s => s.Mode == FormWorkspaceMode.Edition))
+			foreach (var item in States.CoreState.FindAll<States.FormWorkspaceState> (this.StateManager, s => s.Mode == FormWorkspaceMode.Edition))
 			{
 				if (item.CurrentItem == entity)
 				{

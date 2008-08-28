@@ -69,7 +69,6 @@
     <Compile Include="StateSerializationContext.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
-    <Compile Include="States\CoreWorkspaceState.cs" />
     <Compile Include="UI.PersistenceManager.cs" />
     <Compile Include="HistorySortMode.cs" />
     <Compile Include="CoreCommands.cs" />

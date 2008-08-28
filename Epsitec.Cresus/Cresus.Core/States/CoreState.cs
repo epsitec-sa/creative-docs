@@ -12,9 +12,8 @@ namespace Epsitec.Cresus.Core.States
 {
 	/// <summary>
 	/// The <c>CoreState</c> class implements the common code needed by all state
-	/// classes. A state class represents the state of a logical element of the
-	/// application's user interface; the user interface itself is handled by a
-	/// workspace class.
+	/// classes. A state class represents the state and the UI logic of an element
+	/// of the application's user interface.
 	/// </summary>
 	public abstract class CoreState : System.IDisposable
 	{
@@ -39,6 +38,19 @@ namespace Epsitec.Cresus.Core.States
 				return this.stateManager;
 			}
 		}
+
+		/// <summary>
+		/// Gets the application object associated with this state.
+		/// </summary>
+		/// <value>The application object.</value>
+		public CoreApplication					Application
+		{
+			get
+			{
+				return this.StateManager.Application;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets or sets the state deck to which this state belongs.
@@ -127,6 +139,41 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
+		/// <summary>
+		/// Gets the root widget for the user interface, if any. It may or may not
+		/// be currently visible (it might have no parent defined).
+		/// </summary>
+		/// <value>The root widget or <c>null</c>.</value>
+		public AbstractGroup					RootWidget
+		{
+			get
+			{
+				return this.rootWidget;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets or sets the path of the focused field.
+		/// </summary>
+		/// <value>The path of the focused field or <c>null</c>.</value>
+		public string							FocusPath
+		{
+			get
+			{
+				return this.focusFieldPath;
+			}
+			set
+			{
+				if (this.focusFieldPath != value)
+				{
+					this.focusFieldPath = value;
+
+					//	TODO: generate event...
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Serializes the state by creating child nodes into the &lt;state&gt;
@@ -135,7 +182,18 @@ namespace Epsitec.Cresus.Core.States
 		/// <param name="element">The &lt;state&gt; XML element.</param>
 		/// <param name="context">The serialization context.</param>
 		/// <returns>The populated &lt;state&gt; XML element.</returns>
-		public abstract XElement Serialize(XElement element, StateSerializationContext context);
+		public virtual XElement Serialize(XElement element, StateSerializationContext context)
+		{
+			XElement workspaceElement = new XElement (Strings.XmlWorkspace);
+			XElement coreElement      = new XElement (Strings.XmlCore);
+
+			this.StoreCoreState (coreElement, context);
+			this.StoreWorkspace (workspaceElement, context);
+
+			element.Add (workspaceElement);
+
+			return element;
+		}
 
 		/// <summary>
 		/// Deserializes the state based on the specified &lt;state&gt; XML
@@ -143,7 +201,13 @@ namespace Epsitec.Cresus.Core.States
 		/// </summary>
 		/// <param name="element">The &lt;state&gt; XML element.</param>
 		/// <returns>The deserialized state (usually simply this state).</returns>
-		public abstract CoreState Deserialize(XElement element);
+		public virtual CoreState Deserialize(XElement element)
+		{
+			this.RestoreWorkspace (element.Element (Strings.XmlWorkspace));
+			this.RestoreCoreState (element.Element (Strings.XmlCore));
+
+			return this;
+		}
 
 		/// <summary>
 		/// Notifies the state that all states have been deserialized; this is
@@ -188,6 +252,30 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
+		/// <summary>
+		/// Finds all states which match the specified filter.
+		/// </summary>
+		/// <typeparam name="T">The expected state type.</typeparam>
+		/// <param name="manager">The state manager.</param>
+		/// <param name="filter">The state filter.</param>
+		/// <returns>The collection of all matching states.</returns>
+		public static IEnumerable<T> FindAll<T>(StateManager manager, System.Predicate<T> filter) where T : CoreState
+		{
+			foreach (CoreState state in manager.GetAllStates ())
+			{
+				T workspaceState = state as T;
+
+				if (workspaceState != null)
+				{
+					if (filter (workspaceState))
+					{
+						yield return workspaceState;
+					}
+				}
+			}
+		}
+
+
 
 		#region IDisposable Members
 
@@ -229,16 +317,33 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
+
+		protected abstract AbstractGroup CreateUserInterface();
+
+		protected abstract void EnableWorkspace();
+
+		protected abstract void DisableWorkspace();
+
+
 		/// <summary>
 		/// Attaches the state to the user interface.
 		/// </summary>
 		/// <param name="container">The container.</param>
-		protected abstract void AttachState(Widget container);
+		protected virtual void AttachState(Widget container)
+		{
+			this.SetupUserInterface ();
+			this.RootWidget.SetParent (container);
+			this.SetEnable (true);
+		}
 
 		/// <summary>
 		/// Detaches the state from the user interface.
 		/// </summary>
-		protected abstract void DetachState();
+		protected virtual void DetachState()
+		{
+			this.SetEnable (false);
+			this.RootWidget.SetParent (null);
+		}
 
 		/// <summary>
 		/// Releases unmanaged and - optionally - managed resources.
@@ -257,14 +362,13 @@ namespace Epsitec.Cresus.Core.States
 		/// <summary>
 		/// Stores the core information of the current state.
 		/// </summary>
-		/// <param name="element">The &lt;state&gt; XML element.</param>
+		/// <param name="coreElement">The core element.</param>
 		/// <param name="context">The serialization context.</param>
-		protected void StoreCoreState(XElement element, StateSerializationContext context)
+		protected void StoreCoreState(XElement coreElement, StateSerializationContext context)
 		{
-			XElement coreElement = new XElement (Strings.XmlCore,
-				new XAttribute (Strings.XmlBoxId, this.BoxId),
-				new XAttribute (Strings.XmlDeck, this.StateDeck.ToString ()),
-				new XAttribute (Strings.XmlTitle, this.Title));
+			coreElement.Add (new XAttribute (Strings.XmlBoxId, this.BoxId));
+			coreElement.Add (new XAttribute (Strings.XmlDeck, this.StateDeck.ToString ()));
+			coreElement.Add (new XAttribute (Strings.XmlTitle, this.Title));
 
 			if (this.LinkedState != null)
 			{
@@ -277,22 +381,18 @@ namespace Epsitec.Cresus.Core.States
 
 				coreElement.Add (new XAttribute (Strings.XmlLink, link));
 			}
-
-			element.Add (coreElement);
 		}
 
 		/// <summary>
 		/// Restores the core information of the current state.
 		/// </summary>
-		/// <param name="element">The &lt;state&gt; XML element.</param>
-		protected void RestoreCoreState(XElement element)
+		/// <param name="coreElement">The core element.</param>
+		protected void RestoreCoreState(XElement coreElement)
 		{
-			XElement core = element.Element (Strings.XmlCore);
-			
-			this.BoxId     = ((int)    core.Attribute (Strings.XmlBoxId));
-			this.StateDeck = ((string) core.Attribute (Strings.XmlDeck)).ToEnum<StateDeck> (StateDeck.None);
-			this.Title     = ((string) core.Attribute (Strings.XmlTitle));
-			string link    = ((string) core.Attribute ("link"));
+			this.BoxId     = ((int)    coreElement.Attribute (Strings.XmlBoxId));
+			this.StateDeck = ((string) coreElement.Attribute (Strings.XmlDeck)).ToEnum<StateDeck> (StateDeck.None);
+			this.Title     = ((string) coreElement.Attribute (Strings.XmlTitle));
+			string link    = ((string) coreElement.Attribute ("link"));
 
 			if (!string.IsNullOrEmpty (link))
 			{
@@ -310,6 +410,12 @@ namespace Epsitec.Cresus.Core.States
 				this.RegisterFixup (context => this.LinkedState = context.GetState (link));
 			}
 		}
+
+		
+		protected abstract void StoreWorkspace(XElement workspaceElement, StateSerializationContext context);
+
+		protected abstract void RestoreWorkspace(XElement workspaceElement);
+
 
 
 		/// <summary>
@@ -337,6 +443,39 @@ namespace Epsitec.Cresus.Core.States
 			this.fixups.Add (action);
 		}
 
+		
+		private void SetEnable(bool enable)
+		{
+			if (this.enabled != enable)
+			{
+				if (enable)
+				{
+					this.EnableWorkspace ();
+					this.enabled = true;
+				}
+				else
+				{
+					this.DisableWorkspace ();
+					this.enabled = false;
+				}
+			}
+		}
+
+		private void SetupUserInterface()
+		{
+			if (this.rootWidget == null)
+			{
+				CoreApplication application = this.Application;
+
+				System.Diagnostics.Debug.Assert (application != null);
+				System.Diagnostics.Debug.Assert (application.Window != null);
+
+				this.rootWidget = this.CreateUserInterface ();
+				this.rootWidget.Dock = DockStyle.Fill;
+				this.rootWidget.Name = this.GetType ().Name;
+			}
+		}
+
 
 		#region Private Strings
 
@@ -351,6 +490,7 @@ namespace Epsitec.Cresus.Core.States
 			public static readonly string XmlDeck = "deck";
 			public static readonly string XmlTitle = "title";
 			public static readonly string XmlLink = "link";
+			public static readonly string XmlWorkspace = "workspace";
 		}
 
 		#endregion
@@ -360,5 +500,9 @@ namespace Epsitec.Cresus.Core.States
 		private int								boxId;
 		
 		private List<System.Action<StateSerializationContext>>	fixups;
+		
+		private AbstractGroup					rootWidget;
+		private bool							enabled;
+		private string							focusFieldPath;
 	}
 }
