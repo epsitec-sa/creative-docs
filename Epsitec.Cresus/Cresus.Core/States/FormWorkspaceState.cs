@@ -44,59 +44,30 @@ namespace Epsitec.Cresus.Core.States
 		{
 			get
 			{
-				return Collection.GetFirst (this.SelectedEntities, null);
+				return Collection.GetFirst (this.GetSelectedEntities (), null);
 			}
 		}
 
-		public Druid FormId
+		public Druid							FormId
 		{
 			get;
 			set;
 		}
 
-		public Druid EntityId
+		public Druid							EntityId
 		{
 			get;
 			set;
 		}
 
-		public FormWorkspaceMode Mode
+		public FormWorkspaceMode				Mode
 		{
 			get;
 			set;
 		}
 
-		public IEnumerable<AbstractEntity> SelectedEntities
-		{
-			get
-			{
-				//	If somebody defined a default suggestion, which has still
-				//	not been taken into account by the controller, then we
-				//	will simply return it as the only selected entity : the
-				//	controller has never had a chance to update the list...
-
-				if ((this.searchController != null) &&
-					(this.searchController.DefaultSuggestion != null))
-				{
-					return new AbstractEntity[] { this.searchController.DefaultSuggestion };
-				}
-
-				AbstractEntity data = this.dialogData.ExternalData;
-
-				if (data == null)
-				{
-					return EmptyEnumerable<AbstractEntity>.Instance;
-				}
-				else
-				{
-					//	TODO: handle multiple selection
-
-					return new AbstractEntity[] { data };
-				}
-			}
-		}
-
-		public DialogData DialogData
+		
+		public DialogData						DialogData
 		{
 			get
 			{
@@ -104,39 +75,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public AbstractEntity SearchTemplate
-		{
-			get
-			{
-				if (this.Mode != FormWorkspaceMode.Search)
-				{
-					return null;
-				}
-				else
-				{
-					ISearchContext context = this.searchController.ActiveSearchContext;
-
-					if (context == null)
-					{
-						return null;
-					}
-					else
-					{
-						return context.SearchTemplate;
-					}
-				}
-			}
-		}
-
-		public EntityContext SearchContext
-		{
-			get
-			{
-				return this.searchContext;
-			}
-		}
-
-		public AbstractEntity CurrentItem
+		public AbstractEntity					CurrentItem
 		{
 			get
 			{
@@ -148,14 +87,57 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public HintListController HintListController
+
+		
+		private IEnumerable<AbstractEntity> GetSelectedEntities()
 		{
-			get
+			//	If somebody defined a default suggestion, which has still
+			//	not been taken into account by the controller, then we
+			//	will simply return it as the only selected entity : the
+			//	controller has never had a chance to update the list...
+
+			if ((this.searchController != null) &&
+				(this.searchController.DefaultSuggestion != null))
 			{
-				return this.hintListController;
+				return new AbstractEntity[] { this.searchController.DefaultSuggestion };
+			}
+
+			AbstractEntity data = this.dialogData.ExternalData;
+
+			if (data == null)
+			{
+				return EmptyEnumerable<AbstractEntity>.Instance;
+			}
+			else
+			{
+				//	TODO: handle multiple selection
+
+				return new AbstractEntity[] { data };
 			}
 		}
 
+		private AbstractEntity GetSearchTemplate()
+		{
+			if (this.Mode != FormWorkspaceMode.Search)
+			{
+				return null;
+			}
+			else
+			{
+				ISearchContext context = this.searchController.ActiveSearchContext;
+
+				if (context == null)
+				{
+					return null;
+				}
+				else
+				{
+					return context.SearchTemplate;
+				}
+			}
+		}
+
+		
 		internal void Initialize()
 		{
 			if ((this.searchContext == null) &&
@@ -201,11 +183,13 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
+		
 		public void SelectEntity(AbstractEntity entity)
 		{
 			this.searchController.DefaultSuggestion = entity;
 		}
 
+		
 		protected override AbstractGroup CreateUserInterface()
 		{
 			FrameBox frame = new FrameBox ();
@@ -449,7 +433,7 @@ namespace Epsitec.Cresus.Core.States
 			if ((this.DialogData != null) &&
 				(this.DialogData.EntityContext != null))
 			{
-				AbstractEntity template = this.SearchTemplate;
+				AbstractEntity template = this.GetSearchTemplate ();
 
 				currentEntityId = this.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
 				savedDialogData = template == null ? FormWorkspaceState.SaveDialogData (this.DialogData) : FormWorkspaceState.SaveTemplate (template);
