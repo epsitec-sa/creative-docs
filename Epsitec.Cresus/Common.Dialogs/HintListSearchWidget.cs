@@ -48,7 +48,13 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				this.textField.FormattedText = (FormattedText) value;
+				FormattedText text = (FormattedText) value;
+
+				if (this.textField.FormattedText != text)
+				{
+					this.textField.FormattedText = text;
+					this.textField.SelectAll ();
+				}
 			}
 		}
 

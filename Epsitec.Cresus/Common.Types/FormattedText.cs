@@ -129,7 +129,7 @@ namespace Epsitec.Common.Types
 		public static readonly FormattedText Empty = new FormattedText ("");
 
 		/// <summary>
-		/// Performs an implicit conversion from type <see cref="string"/> to
+		/// Performs an explicit conversion from type <see cref="string"/> to
 		/// type <see cref="FormattedText"/>. The source text will be escaped
 		/// to produce a compatible formatted text.
 		/// </summary>

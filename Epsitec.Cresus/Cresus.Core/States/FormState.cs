@@ -162,6 +162,7 @@ namespace Epsitec.Cresus.Core.States
 					this.searchController.AssertReady ();
 
 					this.dialogData.BindToUserInterface (this.searchPanel);
+
 					break;
 
 				case FormStateMode.Creation:
@@ -184,7 +185,7 @@ namespace Epsitec.Cresus.Core.States
 					throw new System.ArgumentException ();
 			}
 
-
+			this.hintListController.HintListWidget.SearchWidget.Value = this.initialSearchFilter ?? "";
 #if false
 			if (this.dialogSearchController != null)
 			{
@@ -231,8 +232,10 @@ namespace Epsitec.Cresus.Core.States
 
 			if (this.searchController.DialogPanel != null)
 			{
+				string path = this.FocusPath;
+
 				this.searchController.DialogWindow = this.RootWidget.Window;
-				this.searchController.SetFocus (EntityFieldPath.Parse (this.FocusPath));
+				this.searchController.SetFocus (EntityFieldPath.Parse (path));
 
 				this.hintListController.RefreshHintList ();
 			}
@@ -382,11 +385,17 @@ namespace Epsitec.Cresus.Core.States
 
 		private void HandleSearchControllerDialogFocusChanged(object sender, DialogFocusEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("Focus changed : " + e.ToString ());
+			EntityFieldPath newPath = e.NewPath;
 
-			if (e.NewPath != null)
+			if (newPath == null)
 			{
-				this.FocusPath = e.NewPath.ToString ();
+				//	The focus left the form... We do not update the focus information, as
+				//	this is most probably a temporary change (i.e. the user clicked on some
+				//	icon or button outside of the form).
+			}
+			else
+			{
+				this.FocusPath = newPath.ToString ();
 				this.Application.AsyncSaveApplicationState ();
 			}
 		}
@@ -413,7 +422,8 @@ namespace Epsitec.Cresus.Core.States
 		{
 			System.Diagnostics.Debug.Assert (workspaceElement != null);
 
-			string currentEntityId = null;
+			string   currentEntityId = null;
+			string   currentSearch   = null;
 			XElement savedDialogData = null;
 			XElement[] emptyElement = new XElement[0];
 
@@ -422,6 +432,12 @@ namespace Epsitec.Cresus.Core.States
 			{
 				currentEntityId = this.dialogData.EntityContext.GetPersistedId (this.CurrentEntity);
 				savedDialogData = FormState.SaveDialogData (this.dialogData);
+				currentSearch   = this.hintListController.HintListWidget.SearchWidget.Value;
+
+				if (this.searchController.ActiveSearchContext != null)
+				{
+					savedDialogData = FormState.SaveTemplate (this.searchController.ActiveSearchContext.SearchTemplate);
+				}
 			}
 
 			workspaceElement.Add (new XAttribute (Strings.XmlEntityId, this.EntityId.ToString ()));
@@ -432,6 +448,13 @@ namespace Epsitec.Cresus.Core.States
 			if (currentEntityId != null)
 			{
 				workspaceElement.Add (new XAttribute (Strings.XmlCurrentEntityId, currentEntityId));
+			}
+			
+			if (!string.IsNullOrEmpty (currentSearch))
+			{
+				workspaceElement.Add (
+					new XElement (Strings.XmlSearchData,
+						new XAttribute (Strings.XmlValue, currentSearch)));
 			}
 
 			if (savedDialogData != null)
@@ -451,6 +474,7 @@ namespace Epsitec.Cresus.Core.States
 			string focusPath       = (string) workspaceElement.Attribute (Strings.XmlFocusPath);
 			
 			XElement dialogDataXml = workspaceElement.Element (Strings.XmlDialogData);
+			XElement searchDataXml = workspaceElement.Element (Strings.XmlSearchData);
 
 			this.EntityId = Druid.Parse (entityId);
 			this.FormId   = Druid.Parse (formId);
@@ -481,6 +505,10 @@ namespace Epsitec.Cresus.Core.States
 			{
 				FormState.RestoreDialogData (this.dialogData, dialogDataXml);
 			}
+			if (searchDataXml != null)
+			{
+				this.initialSearchFilter = (string) searchDataXml.Attribute (Strings.XmlValue);
+			}
 		}
 		
 		#region Private Strings
@@ -497,6 +525,7 @@ namespace Epsitec.Cresus.Core.States
 			public const string XmlCurrentEntityId = "currentEntityId";
 			public const string XmlFocusPath = "focusPath";
 			public const string XmlDialogData = "dialogData";
+			public const string XmlSearchData = "searchData";
 			public const string XmlNull = "null";
 			public const string XmlData = "data";
 			public const string XmlValue = "value";
@@ -624,17 +653,19 @@ namespace Epsitec.Cresus.Core.States
 					}
 					else
 					{
+						string text;
+
 						switch (field.Relation)
 						{
 							case FieldRelation.None:
-								value = converter.Convert (value, typeof (string), null, culture);
+								text = (string) converter.Convert (value, typeof (string), null, culture);
 
-								if (value != null)
+								if (!string.IsNullOrEmpty (text))
 								{
 									element.Add (
 										new XElement (Strings.XmlData,
 											new XAttribute (Strings.XmlPath, path),
-											new XAttribute (Strings.XmlValue, value)));
+											new XAttribute (Strings.XmlValue, text)));
 								}
 								break;
 
@@ -721,5 +752,6 @@ namespace Epsitec.Cresus.Core.States
 		private AbstractEntity					currentItem;
 		private EntityContext					searchContext;
 		private IEntityResolver					resolver;
+		private string							initialSearchFilter;
 	}
 }
