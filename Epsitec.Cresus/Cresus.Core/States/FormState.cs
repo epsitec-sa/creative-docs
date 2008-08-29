@@ -282,27 +282,6 @@ namespace Epsitec.Cresus.Core.States
 		}
 		
 		
-		private AbstractEntity GetSearchTemplate()
-		{
-			if (this.Mode != FormStateMode.Search)
-			{
-				return null;
-			}
-			else
-			{
-				ISearchContext context = this.searchController.ActiveSearchContext;
-
-				if (context == null)
-				{
-					return null;
-				}
-				else
-				{
-					return context.SearchTemplate;
-				}
-			}
-		}
-
 		private IEnumerable<AbstractEntity> GetSelectedEntities()
 		{
 			//	If somebody defined a default suggestion, which has still
@@ -441,10 +420,8 @@ namespace Epsitec.Cresus.Core.States
 			if ((this.dialogData != null) &&
 				(this.dialogData.EntityContext != null))
 			{
-				AbstractEntity template = this.GetSearchTemplate ();
-
 				currentEntityId = this.dialogData.EntityContext.GetPersistedId (this.CurrentEntity);
-				savedDialogData = template == null ? FormState.SaveDialogData (this.dialogData) : FormState.SaveTemplate (template);
+				savedDialogData = FormState.SaveDialogData (this.dialogData);
 			}
 
 			workspaceElement.Add (new XAttribute (Strings.XmlEntityId, this.EntityId.ToString ()));
