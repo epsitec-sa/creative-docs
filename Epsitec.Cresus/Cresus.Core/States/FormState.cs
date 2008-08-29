@@ -79,17 +79,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		
-		public DialogData						DialogData
-		{
-			get
-			{
-				return this.dialogData;
-			}
-		}
 
-
-		
 		public void AcceptEdition()
 		{
 			switch (this.Mode)
@@ -110,7 +100,7 @@ namespace Epsitec.Cresus.Core.States
 		public void SetFieldValue(string path, AbstractEntity value)
 		{
 			EntityFieldPath fieldPath = EntityFieldPath.Parse (path);
-			fieldPath.NavigateWrite (this.DialogData.Data, value);
+			fieldPath.NavigateWrite (this.dialogData.Data, value);
 		}
 		
 		protected override AbstractGroup CreateUserInterface()
@@ -437,13 +427,13 @@ namespace Epsitec.Cresus.Core.States
 			XElement savedDialogData = null;
 			XElement[] emptyElement = new XElement[0];
 
-			if ((this.DialogData != null) &&
-				(this.DialogData.EntityContext != null))
+			if ((this.dialogData != null) &&
+				(this.dialogData.EntityContext != null))
 			{
 				AbstractEntity template = this.GetSearchTemplate ();
 
-				currentEntityId = this.DialogData.EntityContext.GetPersistedId (this.CurrentEntity);
-				savedDialogData = template == null ? FormState.SaveDialogData (this.DialogData) : FormState.SaveTemplate (template);
+				currentEntityId = this.dialogData.EntityContext.GetPersistedId (this.CurrentEntity);
+				savedDialogData = template == null ? FormState.SaveDialogData (this.dialogData) : FormState.SaveTemplate (template);
 			}
 
 			workspaceElement.Add (new XAttribute (Strings.XmlEntityId, this.EntityId.ToString ()));
@@ -501,7 +491,7 @@ namespace Epsitec.Cresus.Core.States
 
 			if (dialogDataXml != null)
 			{
-				FormState.RestoreDialogData (this.DialogData, dialogDataXml);
+				FormState.RestoreDialogData (this.dialogData, dialogDataXml);
 			}
 		}
 		

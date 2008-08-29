@@ -223,11 +223,10 @@ namespace Epsitec.Cresus.Core
 				return false;
 			}
 
-			DialogDataMode  dialogMode    = formState.DialogData.Mode;
-			Druid           entityId      = Druid.Empty;
-			string          linkFieldPath = null;
+			Druid  entityId      = Druid.Empty;
+			string linkFieldPath = null;
 
-			if (dialogMode == DialogDataMode.Search)
+			if (formState.Mode == FormWorkspaceMode.Search)
 			{
 				//	The form is in the general search mode. We will create a fresh record
 				//	matching the data being currently visualized.
