@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (var item in States.CoreState.FindAll<States.FormState> (this.StateManager, s => s.Mode == FormStateMode.Edition))
 			{
-				if (item.CurrentItem == entity)
+				if (item.Item == entity)
 				{
 					this.StateManager.Push (item);
 					return;
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Core
 					EntityId = entityId,
 					FormId = formId,
 					Mode = FormStateMode.Edition,
-					CurrentItem = entity,
+					Item = entity,
 					LinkedState = formState
 				};
 
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Core
 						(formState.LinkedStateFocusPath != null))
 					{
 						States.FormState linkedFormState = formState.LinkedState as States.FormState;
-						linkedFormState.SetFieldValue (formState.LinkedStateFocusPath, formState.CurrentItem);
+						linkedFormState.SetFieldValue (formState.LinkedStateFocusPath, formState.Item);
 
 					}
 				}
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Core
 					EntityId = entityId,
 					FormId = formId,
 					Mode = FormStateMode.Creation,
-					CurrentItem = entity,
+					Item = entity,
 					LinkedState = formState,
 					LinkedStateFocusPath = linkFieldPath
 				};

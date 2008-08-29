@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.States
 			}
 		}
 
-		public AbstractEntity					CurrentItem
+		public AbstractEntity					Item
 		{
 			get
 			{
@@ -310,13 +310,16 @@ namespace Epsitec.Cresus.Core.States
 			//	will simply return it as the only selected entity : the
 			//	controller has never had a chance to update the list...
 
+			AbstractEntity data;
+
 			if ((this.searchController != null) &&
 				(this.searchController.DefaultSuggestion != null))
 			{
-				return new AbstractEntity[] { this.searchController.DefaultSuggestion };
+				data = this.searchController.DefaultSuggestion;
+				return new AbstractEntity[] { data };
 			}
 
-			AbstractEntity data = this.dialogData.ExternalData;
+			data = this.dialogData.ExternalData;
 
 			if (data == null)
 			{
@@ -481,11 +484,11 @@ namespace Epsitec.Cresus.Core.States
 			switch (this.Mode)
 			{
 				case FormStateMode.Edition:
-					this.CurrentItem = item;
+					this.Item = item;
 					break;
 
 				case FormStateMode.Creation:
-					this.CurrentItem = this.CreateEntity (this.EntityId);
+					this.Item = this.CreateEntity (this.EntityId);
 					break;
 
 				case FormStateMode.Search:

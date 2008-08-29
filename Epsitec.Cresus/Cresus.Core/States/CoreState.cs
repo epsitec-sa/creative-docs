@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Core.States
 			this.BoxId     = ((int)    coreElement.Attribute (Strings.XmlBoxId));
 			this.StateDeck = ((string) coreElement.Attribute (Strings.XmlDeck)).ToEnum<StateDeck> (StateDeck.None);
 			this.Title     = ((string) coreElement.Attribute (Strings.XmlTitle));
-			string link    = ((string) coreElement.Attribute ("link"));
+			string link    = ((string) coreElement.Attribute (Strings.XmlLink));
 
 			if (!string.IsNullOrEmpty (link))
 			{
