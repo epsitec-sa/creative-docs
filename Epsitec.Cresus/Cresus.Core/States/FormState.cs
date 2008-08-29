@@ -263,6 +263,10 @@ namespace Epsitec.Cresus.Core.States
 
 				if (this.currentItem == null)
 				{
+					//	No item was set up, but we need to attach the dialog data to an item in
+					//	order for it to work; create an empty, dummy entity which will be used
+					//	as "the" item :
+
 					this.currentItem = this.searchContext.CreateEntity (this.EntityId);
 				}
 
