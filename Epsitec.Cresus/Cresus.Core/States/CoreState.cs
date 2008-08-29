@@ -190,6 +190,7 @@ namespace Epsitec.Cresus.Core.States
 			this.StoreCoreState (coreElement, context);
 			this.StoreWorkspace (workspaceElement, context);
 
+			element.Add (coreElement);
 			element.Add (workspaceElement);
 
 			return element;

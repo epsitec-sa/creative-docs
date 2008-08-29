@@ -87,7 +87,7 @@
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Widgets\StateDeckWidget.cs" />
-    <Compile Include="FormWorkspaceMode.cs" />
+    <Compile Include="FormStateMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cresus.Core\module.info">

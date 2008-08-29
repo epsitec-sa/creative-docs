@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Core
 {
-	public enum FormWorkspaceMode
+	public enum FormStateMode
 	{
 		None,
 		Search,

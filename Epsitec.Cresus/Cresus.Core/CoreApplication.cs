@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core
 					Title = "Rech.",
 					EntityId = entityId,
 					FormId = formId,
-					Mode = FormWorkspaceMode.Search
+					Mode = FormStateMode.Search
 				};
 
 			this.stateManager.Push (state);
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Core
 			
 			//	Recycle existing edition form, if there is one :
 
-			foreach (var item in States.CoreState.FindAll<States.FormState> (this.StateManager, s => s.Mode == FormWorkspaceMode.Edition))
+			foreach (var item in States.CoreState.FindAll<States.FormState> (this.StateManager, s => s.Mode == FormStateMode.Edition))
 			{
 				if (item.CurrentItem == entity)
 				{
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core
 					Title = "Edition",
 					EntityId = entityId,
 					FormId = formId,
-					Mode = FormWorkspaceMode.Edition,
+					Mode = FormStateMode.Edition,
 					CurrentItem = entity,
 					LinkedState = formState
 				};
@@ -187,14 +187,14 @@ namespace Epsitec.Cresus.Core
 			States.FormState formState = state as States.FormState;
 
 			if ((formState != null) &&
-				(formState.Mode != FormWorkspaceMode.Search))
+				(formState.Mode != FormStateMode.Search))
 			{
 				if (accept)
 				{
 					formState.AcceptEdition ();
 					this.data.DataContext.SaveChanges ();
 
-					if ((formState.Mode == FormWorkspaceMode.Creation) &&
+					if ((formState.Mode == FormStateMode.Creation) &&
 						(formState.LinkedStateFocusPath != null))
 					{
 						States.FormState linkedFormState = formState.LinkedState as States.FormState;
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Core
 			Druid  entityId      = Druid.Empty;
 			string linkFieldPath = null;
 
-			if (formState.Mode == FormWorkspaceMode.Search)
+			if (formState.Mode == FormStateMode.Search)
 			{
 				//	The form is in the general search mode. We will create a fresh record
 				//	matching the data being currently visualized.
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.Core
 					Title = "Création",
 					EntityId = entityId,
 					FormId = formId,
-					Mode = FormWorkspaceMode.Creation,
+					Mode = FormStateMode.Creation,
 					CurrentItem = entity,
 					LinkedState = formState,
 					LinkedStateFocusPath = linkFieldPath
@@ -463,8 +463,8 @@ namespace Epsitec.Cresus.Core
 			{
 				switch (formState.Mode)
 				{
-					case FormWorkspaceMode.Creation:
-					case FormWorkspaceMode.Edition:
+					case FormStateMode.Creation:
+					case FormStateMode.Edition:
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = false;
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;	//	TODO: use validity check
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = true;
@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Core
 						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = true;
 						break;
 
-					case FormWorkspaceMode.Search:
+					case FormStateMode.Search:
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = true;
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = false;
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = false;

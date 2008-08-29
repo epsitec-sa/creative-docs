@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.States
 			set;
 		}
 
-		public FormWorkspaceMode				Mode
+		public FormStateMode					Mode
 		{
 			get;
 			set;
@@ -63,7 +63,9 @@ namespace Epsitec.Cresus.Core.States
 		{
 			get
 			{
-				return Collection.GetFirst (this.GetSelectedEntities (), null);
+				AbstractEntity value = Collection.GetFirst (this.GetSelectedEntities (), null);
+
+				return value;
 			}
 		}
 
@@ -75,6 +77,12 @@ namespace Epsitec.Cresus.Core.States
 			}
 			set
 			{
+				if ((this.currentItem != null) &&
+					(this.currentItem != value))
+				{
+					throw new System.InvalidOperationException ("Cannot change item once it has been assigned");
+				}
+
 				this.currentItem = value;
 			}
 		}
@@ -84,8 +92,8 @@ namespace Epsitec.Cresus.Core.States
 		{
 			switch (this.Mode)
 			{
-				case FormWorkspaceMode.Creation:
-				case FormWorkspaceMode.Edition:
+				case FormStateMode.Creation:
+				case FormStateMode.Edition:
 					this.dialogData.ApplyChanges ();
 					break;
 			}
@@ -140,7 +148,7 @@ namespace Epsitec.Cresus.Core.States
 
 			switch (this.Mode)
 			{
-				case FormWorkspaceMode.Search:
+				case FormStateMode.Search:
 					this.searchPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
 					this.searchPanel.Dock = DockStyle.Fill;
 					this.searchPanel.SetEmbedder (frame);
@@ -156,8 +164,8 @@ namespace Epsitec.Cresus.Core.States
 					this.dialogData.BindToUserInterface (this.searchPanel);
 					break;
 
-				case FormWorkspaceMode.Creation:
-				case FormWorkspaceMode.Edition:
+				case FormStateMode.Creation:
+				case FormStateMode.Edition:
 					this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
 					this.editionPanel.Dock = DockStyle.Fill;
 					this.editionPanel.SetEmbedder (frame);
@@ -244,7 +252,7 @@ namespace Epsitec.Cresus.Core.States
 			if ((this.searchContext == null) &&
 				(this.FormId.IsValid) &&
 				(this.EntityId.IsValid) &&
-				(this.Mode != FormWorkspaceMode.None))
+				(this.Mode != FormStateMode.None))
 			{
 				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
 				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
@@ -257,12 +265,12 @@ namespace Epsitec.Cresus.Core.States
 
 				switch (this.Mode)
 				{
-					case FormWorkspaceMode.Creation:
-					case FormWorkspaceMode.Edition:
+					case FormStateMode.Creation:
+					case FormStateMode.Edition:
 						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
 						break;
 
-					case FormWorkspaceMode.Search:
+					case FormStateMode.Search:
 						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
 						break;
 				}
@@ -276,7 +284,7 @@ namespace Epsitec.Cresus.Core.States
 		
 		private AbstractEntity GetSearchTemplate()
 		{
-			if (this.Mode != FormWorkspaceMode.Search)
+			if (this.Mode != FormStateMode.Search)
 			{
 				return null;
 			}
@@ -466,21 +474,21 @@ namespace Epsitec.Cresus.Core.States
 
 			this.EntityId = Druid.Parse (entityId);
 			this.FormId   = Druid.Parse (formId);
-			this.Mode     = mode.ToEnum<FormWorkspaceMode> (FormWorkspaceMode.None);
+			this.Mode     = mode.ToEnum<FormStateMode> (FormStateMode.None);
 
 			AbstractEntity item = this.ResolvePersistedEntity (currentEntityId);
 
 			switch (this.Mode)
 			{
-				case FormWorkspaceMode.Edition:
+				case FormStateMode.Edition:
 					this.CurrentItem = item;
 					break;
 
-				case FormWorkspaceMode.Creation:
+				case FormStateMode.Creation:
 					this.CurrentItem = this.CreateEntity (this.EntityId);
 					break;
 
-				case FormWorkspaceMode.Search:
+				case FormStateMode.Search:
 					this.RegisterFixup (() => this.SelectEntity (item));
 					break;
 			}
