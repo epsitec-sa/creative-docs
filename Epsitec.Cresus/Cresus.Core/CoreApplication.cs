@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Core
 				return;
 			}
 			
-			AbstractEntity entity = formState.CurrentEntity;
+			AbstractEntity entity = formState.Item;
 
 			if (entity == null)
 			{

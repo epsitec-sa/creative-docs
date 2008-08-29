@@ -59,31 +59,21 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 		
-		public AbstractEntity					CurrentEntity
-		{
-			get
-			{
-				AbstractEntity value = Collection.GetFirst (this.GetSelectedEntities (), null);
-
-				return value;
-			}
-		}
-
 		public AbstractEntity					Item
 		{
 			get
 			{
-				return this.currentItem;
+				return Collection.GetFirst (this.GetSelectedEntities (), null);
 			}
 			set
 			{
-				if ((this.currentItem != null) &&
-					(this.currentItem != value))
+				if ((this.defaultItem != null) &&
+					(this.defaultItem != value))
 				{
 					throw new System.InvalidOperationException ("Cannot change item once it has been assigned");
 				}
 
-				this.currentItem = value;
+				this.defaultItem = value;
 			}
 		}
 
@@ -261,24 +251,20 @@ namespace Epsitec.Cresus.Core.States
 				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
 				this.searchContext.PersistenceManagers.Add (this.Application.Data.DataContext);
 
-				if (this.currentItem == null)
-				{
-					//	No item was set up, but we need to attach the dialog data to an item in
-					//	order for it to work; create an empty, dummy entity which will be used
-					//	as "the" item :
+				//	If no item was set up, create an empty, dummy entity which will be used
+				//	as the root item by the DialogData class.
 
-					this.currentItem = this.searchContext.CreateEntity (this.EntityId);
-				}
-
+				AbstractEntity item = this.defaultItem ?? this.searchContext.CreateEntity (this.EntityId);
+				
 				switch (this.Mode)
 				{
 					case FormStateMode.Creation:
 					case FormStateMode.Edition:
-						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Isolated);
+						this.dialogData = new DialogData (item, this.searchContext, DialogDataMode.Isolated);
 						break;
 
 					case FormStateMode.Search:
-						this.dialogData = new DialogData (this.currentItem, this.searchContext, DialogDataMode.Search);
+						this.dialogData = new DialogData (item, this.searchContext, DialogDataMode.Search);
 						break;
 				}
 
@@ -291,19 +277,22 @@ namespace Epsitec.Cresus.Core.States
 		
 		private IEnumerable<AbstractEntity> GetSelectedEntities()
 		{
-			//	If somebody defined a default suggestion, which has still
-			//	not been taken into account by the controller, then we
-			//	will simply return it as the only selected entity : the
-			//	controller has never had a chance to update the list...
-
 			AbstractEntity data;
 
 			if ((this.searchController != null) &&
 				(this.searchController.DefaultSuggestion != null))
 			{
+				//	If somebody defined a default suggestion, it might not have
+				//	been taken into account by the controller: we simply return
+				//	it as the only selected entity.
+
 				data = this.searchController.DefaultSuggestion;
 				return new AbstractEntity[] { data };
 			}
+
+			//	The selected entity might either be equal to the current item, if
+			//	it was initially defined, or be stored inside of the dialog data,
+			//	as the external data (or replacement data)...
 
 			data = this.dialogData.ExternalData;
 
@@ -434,7 +423,7 @@ namespace Epsitec.Cresus.Core.States
 			if ((this.dialogData != null) &&
 				(this.dialogData.EntityContext != null))
 			{
-				currentEntityId = this.dialogData.EntityContext.GetPersistedId (this.CurrentEntity);
+				currentEntityId = this.dialogData.EntityContext.GetPersistedId (this.Item);
 				savedDialogData = FormState.SaveDialogData (this.dialogData);
 				currentSearch   = this.hintListController.HintListWidget.SearchWidget.Value;
 
@@ -753,7 +742,7 @@ namespace Epsitec.Cresus.Core.States
 		private Panel							searchPanel;
 		private Panel							editionPanel;
 		private DialogData						dialogData;
-		private AbstractEntity					currentItem;
+		private AbstractEntity					defaultItem;
 		private EntityContext					searchContext;
 		private IEntityResolver					resolver;
 		private string							initialSearchFilter;
