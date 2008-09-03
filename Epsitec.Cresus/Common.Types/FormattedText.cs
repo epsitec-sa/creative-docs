@@ -121,13 +121,6 @@ namespace Epsitec.Common.Types
 			return a.text != b.text;
 		}
 
-		public static FormattedText ParseFormattedText(string text)
-		{
-			return new FormattedText (text);
-		}
-
-		public static readonly FormattedText Empty = new FormattedText ("");
-
 		/// <summary>
 		/// Converts a <see cref="FormattedText"/> to a simple <see cref="string"/>.
 		/// The source text will be un-escaped to produce a compatible simple text.
@@ -259,6 +252,8 @@ namespace Epsitec.Common.Types
 		}
 		
 		#endregion
+
+		public static readonly FormattedText Empty = new FormattedText ("");
 
 		public static readonly FormattedText Null = new FormattedText (null);
 
