@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Core.States
 			fieldPath.NavigateWrite (this.dialogData.Data, value);
 		}
 		
+		
 		protected override AbstractGroup CreateUserInterface()
 		{
 			FrameBox frame = new FrameBox ();
@@ -108,6 +109,9 @@ namespace Epsitec.Cresus.Core.States
 			if ((this.FormId.IsEmpty) ||
 				(this.EntityId.IsEmpty))
 			{
+				//	If the form was not properly set up, simply show an error message in place
+				//	of the workspace itself :
+
 				string title = string.Concat (
 					@"<font size=""141%"">",
 					"« ", Epsitec.Common.Types.Converters.TextConverter.ConvertToTaggedText (this.Title ?? "<null>"), " »",
@@ -121,61 +125,53 @@ namespace Epsitec.Cresus.Core.States
 						ContentAlignment = ContentAlignment.MiddleCenter,
 						Dock = DockStyle.Fill
 					});
-
-				return frame;
 			}
-
-			this.Initialize ();
-
-			System.Diagnostics.Debug.Assert (this.FormId.IsValid);
-			System.Diagnostics.Debug.Assert (this.EntityId.IsValid);
-
-			this.hintListController.DefineContainer (frame);
-
-			this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
-			this.searchController.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
-			this.searchController.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
-
-			switch (this.Mode)
+			else
 			{
-				case FormStateMode.Search:
-					this.searchPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
-					this.searchPanel.Dock = DockStyle.Fill;
-					this.searchPanel.SetEmbedder (frame);
-					this.searchPanel.Margins = new Margins (4);
+				System.Diagnostics.Debug.Assert (this.FormId.IsValid);
+				System.Diagnostics.Debug.Assert (this.EntityId.IsValid);
 
-					this.hintListController.HintListWidget.Header.ContentType = HintListContentType.Catalog;
+				//	First, make sure the search context is properly initialized, so that we can
+				//	bind the user interface to it and to the underlying dialog data :
+				
+				this.InitializeSearchContext ();
 
-					this.searchController.DialogData   = this.dialogData;
-					this.searchController.DialogPanel  = this.searchPanel;
-					this.searchController.Resolver     = this.resolver;
-					this.searchController.AssertReady ();
+				this.hintListController.DefineContainer (frame);
 
-					this.dialogData.BindToUserInterface (this.searchPanel);
+				this.searchController.DialogFocusChanged += this.HandleSearchControllerDialogFocusChanged;
+				this.searchController.SuggestionChanged  += this.HandleSearchControllerSuggestionChanged;
+				this.searchController.DialogDataChanged  += this.HandleSearchControllerDialogDataChanged;
 
-					break;
+				switch (this.Mode)
+				{
+					case FormStateMode.Search:
+						this.panel = UI.LoadPanel (this.FormId, PanelInteractionMode.Search);
+						this.hintListController.HintListWidget.Header.ContentType = HintListContentType.Catalog;
+						break;
 
-				case FormStateMode.Creation:
-				case FormStateMode.Edition:
-					this.editionPanel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
-					this.editionPanel.Dock = DockStyle.Fill;
-					this.editionPanel.SetEmbedder (frame);
-					this.editionPanel.Margins = new Margins (4);
+					case FormStateMode.Creation:
+					case FormStateMode.Edition:
+						this.panel = UI.LoadPanel (this.FormId, PanelInteractionMode.Default);
+						this.hintListController.HintListWidget.Header.ContentType = HintListContentType.Suggestions;
+						break;
 
-					this.hintListController.HintListWidget.Header.ContentType = HintListContentType.Suggestions;
+					default:
+						throw new System.ArgumentException ();
+				}
 
-					this.searchController.DialogData   = this.dialogData;
-					this.searchController.DialogPanel  = this.editionPanel;
-					this.searchController.Resolver     = this.resolver;
 
-					this.dialogData.BindToUserInterface (this.editionPanel);
-					break;
+				this.panel.Dock = DockStyle.Fill;
+				this.panel.SetEmbedder (frame);
+				this.panel.Margins = new Margins (4);
 
-				default:
-					throw new System.ArgumentException ();
-			}
+				this.searchController.DialogData   = this.dialogData;
+				this.searchController.DialogPanel  = this.panel;
+				this.searchController.Resolver     = this.resolver;
+				this.searchController.AssertReady ();
 
-			this.hintListController.HintListWidget.SearchWidget.Value = this.initialSearchFilter ?? "";
+				this.dialogData.BindToUserInterface (this.panel);
+
+				this.hintListController.HintListWidget.SearchWidget.Value = this.initialSearchFilter ?? "";
 #if false
 			if (this.dialogSearchController != null)
 			{
@@ -209,6 +205,7 @@ namespace Epsitec.Cresus.Core.States
 				PreferredWidth = 40
 			});
 #endif
+			}
 
 			return frame;
 		}
@@ -240,16 +237,19 @@ namespace Epsitec.Cresus.Core.States
 		}
 
 
-		private void Initialize()
+		private void InitializeSearchContext()
 		{
 			if ((this.searchContext == null) &&
 				(this.FormId.IsValid) &&
 				(this.EntityId.IsValid) &&
 				(this.Mode != FormStateMode.None))
 			{
-				this.searchContext = new EntityContext (this.Application.ResourceManager, EntityLoopHandlingMode.Skip);
-				this.searchContext.ExceptionManager = this.Application.ExceptionManager;
-				this.searchContext.PersistenceManagers.Add (this.Application.Data.DataContext);
+				CoreApplication application = this.Application;
+
+
+				this.searchContext = new EntityContext (application.ResourceManager, EntityLoopHandlingMode.Skip);
+				this.searchContext.ExceptionManager = application.ExceptionManager;
+				this.searchContext.PersistenceManagers.Add (application.Data.DataContext);
 
 				//	If no item was set up, create an empty, dummy entity which will be used
 				//	as the root item by the DialogData class.
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Core.States
 
 
 				this.dialogData.ExternalDataChanged += this.HandleDialogDataExternalDataChanged;
-				this.resolver = this.Application.Data.Resolver;
+				this.resolver = application.Data.Resolver;
 			}
 		}
 		
@@ -313,8 +313,6 @@ namespace Epsitec.Cresus.Core.States
 			return new CommandHandlerPair[]
 			{
 				new CommandHandlerPair (Epsitec.Common.Dialogs.Res.Commands.HintList.ClearSearch, this.ExecuteClearSearchCommand),
-				new CommandHandlerPair (Epsitec.Common.Dialogs.Res.Commands.HintList.StartItemEdition, this.ExecuteStartItemEditionCommand),
-				new CommandHandlerPair (Epsitec.Common.Dialogs.Res.Commands.HintList.ValidateItemEdition, this.ExecuteValidateItemEditionCommand)
 			};
 		}
 
@@ -323,48 +321,6 @@ namespace Epsitec.Cresus.Core.States
 		{
 			this.searchController.ClearActiveSuggestion ();
 		}
-
-		private void ExecuteStartItemEditionCommand(object sender, CommandEventArgs e)
-		{
-#if false
-			AbstractEntity data = this.dialogData.ExternalData;
-
-			if ((data != null) &&
-				(this.editionDialogData == null))
-			{
-				this.searchController.ResetSuggestions ();
-				this.searchPanel.Visibility = false;
-				this.editionPanel.Visibility = true;
-				this.editionDialogData = new DialogData (data, this.searchContext, DialogDataMode.Isolated);
-				this.searchController.DialogData = this.editionDialogData;
-				this.editionDialogData.BindToUserInterface (this.editionPanel);
-				this.dialogData.UnbindFromUserInterface (this.searchPanel);
-				this.editionPanel.SetFocusOnTabWidget ();
-			}
-#endif
-		}
-
-		private void ExecuteValidateItemEditionCommand(object sender, CommandEventArgs e)
-		{
-#if false
-			AbstractEntity data = this.dialogData.ExternalData;
-
-			if ((data != null) &&
-				(this.editionDialogData != null))
-			{
-				this.editionDialogData.ApplyChanges ();
-				this.searchController.ResetSuggestions ();
-				this.editionPanel.Visibility = false;
-				this.editionDialogData.UnbindFromUserInterface (this.editionPanel);
-				this.editionDialogData = null;
-				this.searchPanel.Visibility = true;
-				this.searchController.DialogData = this.dialogData;
-				this.dialogData.BindToUserInterface (this.searchPanel);
-				this.searchPanel.SetFocusOnTabWidget ();
-			}
-#endif
-		}
-
 
 		private void HandleDialogDataExternalDataChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
@@ -420,10 +376,9 @@ namespace Epsitec.Cresus.Core.States
 			XElement savedDialogData = null;
 			XElement[] emptyElement = new XElement[0];
 
-			if ((this.dialogData != null) &&
-				(this.dialogData.EntityContext != null))
+			if (this.dialogData != null)
 			{
-				currentEntityId = this.dialogData.EntityContext.GetPersistedId (this.Item);
+				currentEntityId = this.searchContext.GetPersistedId (this.Item);
 				savedDialogData = FormState.SaveDialogData (this.dialogData);
 				currentSearch   = this.hintListController.HintListWidget.SearchWidget.Value;
 
@@ -492,7 +447,7 @@ namespace Epsitec.Cresus.Core.States
 			
 			this.FocusPath = focusPath;
 			
-			this.Initialize ();
+			this.InitializeSearchContext ();
 
 			if (dialogDataXml != null)
 			{
@@ -748,8 +703,7 @@ namespace Epsitec.Cresus.Core.States
 		
 		private readonly HintListController		hintListController;
 		private readonly DialogSearchController	searchController;
-		private Panel							searchPanel;
-		private Panel							editionPanel;
+		private Panel							panel;
 		private DialogData						dialogData;
 		private AbstractEntity					defaultItem;
 		private EntityContext					searchContext;
