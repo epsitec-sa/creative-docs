@@ -547,6 +547,9 @@ namespace Epsitec.Cresus.Core.States
 		/// <returns>The XML chunk of the saved dialog data.</returns>
 		internal static XElement SaveDialogData(DialogData data)
 		{
+			//	Declared internal because it must be visible to the Cresus.Core.Tests
+			//	friend project.
+
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
 			XElement        element   = new XElement (Strings.XmlDialogData);
 
@@ -625,6 +628,9 @@ namespace Epsitec.Cresus.Core.States
 		/// <returns>The XML chunk of the saved search template.</returns>
 		internal static XElement SaveTemplate(AbstractEntity template)
 		{
+			//	Declared internal because it must be visible to the Cresus.Core.Tests
+			//	friend project.
+			
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
 			XElement        element   = new XElement (Strings.XmlDialogData);
 
@@ -690,6 +696,9 @@ namespace Epsitec.Cresus.Core.States
 		/// <param name="element">The XML chunk used to restore the dialog data.</param>
 		internal static void RestoreDialogData(DialogData data, XElement element)
 		{
+			//	Declared internal because it must be visible to the Cresus.Core.Tests
+			//	friend project.
+			
 			System.Diagnostics.Debug.Assert (element.Name == "dialogData");
 
 			if (data == null)

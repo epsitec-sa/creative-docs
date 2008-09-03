@@ -20,7 +20,7 @@ namespace Demo.Demo5juin
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);
-				return global::Epsitec.Common.Types.FormattedText.Parse (_stringsBundle[field].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
 			}
 			
 			#region Internal Support Code
@@ -28,12 +28,12 @@ namespace Demo.Demo5juin
 			private static global::Epsitec.Common.Types.FormattedText GetText(string bundle, params string[] path)
 			{
 				string field = string.Join (".", path);
-				return global::Epsitec.Common.Types.FormattedText.Parse (_stringsBundle[field].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[field].AsString);
 			}
 			
 			private static global::Epsitec.Common.Types.FormattedText GetText(global::Epsitec.Common.Support.Druid druid)
 			{
-				return global::Epsitec.Common.Types.FormattedText.Parse (_stringsBundle[druid].AsString);
+				return new global::Epsitec.Common.Types.FormattedText (_stringsBundle[druid].AsString);
 			}
 			
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");

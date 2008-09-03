@@ -129,7 +129,7 @@ namespace Epsitec.Common.Types.Converters
 
 					if (expectedType == typeof (FormattedText))
 					{
-						return FormattedText.Parse (text);
+						return new FormattedText (text);
 					}
 					
 					if (text.Length == 0)

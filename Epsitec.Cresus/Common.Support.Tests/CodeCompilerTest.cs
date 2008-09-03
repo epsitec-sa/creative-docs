@@ -85,7 +85,8 @@ namespace Epsitec.Common.Support
 
 			Assert.AreEqual (@"<Reference Include=""System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL"" />", r1.ToString ());
 			
-			string value = r2.ToString ().Remove (145);
+			string value = r2.ToString ();
+			value = value.Remove (value.IndexOf ("<HintPath>") + 10);
 
 			Assert.IsTrue (value.StartsWith ("<Reference Include=\"Common.Support, Version="));
 			Assert.IsTrue (value.EndsWith (", Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL\">\r\n  <HintPath>"));

@@ -141,7 +141,7 @@ namespace Epsitec.Common.Text.Tests
 			CursorInfo[] infos = story.TextTable.FindCursors (0, story.TextLength, Cursors.FitterCursor.Filter);
 			count = 0;
 			
-			System.IO.StreamWriter writer = new System.IO.StreamWriter (@"c:\text.txt", false, System.Text.Encoding.UTF8);
+			System.IO.StreamWriter writer = new System.IO.StreamWriter (@"S:\text.txt", false, System.Text.Encoding.UTF8);
 			story.MoveCursor (cursor, -story.TextLength);
 			
 			int last_page = 0;

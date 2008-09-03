@@ -69,12 +69,12 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (true,  typeString.IsValidValue (null));
 			Assert.AreEqual (true,  typeString.IsValidValue (""));
 			Assert.AreEqual (true,  typeString.IsValidValue ("Abc"));
-			Assert.AreEqual (false, typeString.IsValidValue (FormattedText.Parse ("Hello")));
+			Assert.AreEqual (false, typeString.IsValidValue (new FormattedText ("Hello")));
 
 			Assert.AreEqual (true,  typeText.IsValidValue (null));
 			Assert.AreEqual (false, typeText.IsValidValue (""));
 			Assert.AreEqual (false, typeText.IsValidValue ("Abc"));
-			Assert.AreEqual (true, typeText.IsValidValue (FormattedText.Parse ("Hello")));
+			Assert.AreEqual (true, typeText.IsValidValue (new FormattedText ("Hello")));
 
 		}
 		

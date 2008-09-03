@@ -77,7 +77,7 @@ namespace Epsitec.Common.UI.Controllers
 
 				this.field.FormattedText = data;
 #else
-				this.field.FormattedText = (FormattedText) string.Format ("Collection has {0} items", cv.Count);
+				this.field.FormattedText = FormattedText.ParseSimpleText (string.Format ("Collection has {0} items", cv.Count));
 #endif
 			}
 		}

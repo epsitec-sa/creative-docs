@@ -48,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				FormattedText text = (FormattedText) value;
+				FormattedText text = FormattedText.ParseSimpleText (value);
 
 				if (this.textField.FormattedText != text)
 				{
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Dialogs
 		private void HandleTextFieldTextChanged(object sender)
 		{
 			string oldValue = this.cachedValue;
-			string newValue = ((string) this.textField.FormattedText) ?? "";
+			string newValue = this.textField.FormattedText.ToSimpleText () ?? "";
 
 			if (oldValue != newValue)
 			{

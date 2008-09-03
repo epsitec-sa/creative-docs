@@ -15,8 +15,8 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormattedText"/> structure.
 		/// </summary>
-		/// <param name="text">The formatted text.</param>
-		private FormattedText(string text)
+		/// <param name="text">The formatted text source.</param>
+		public FormattedText(string text)
 		{
 			this.text = text;
 		}
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Types
 			return a.text != b.text;
 		}
 
-		public static FormattedText Parse(string text)
+		public static FormattedText ParseFormattedText(string text)
 		{
 			return new FormattedText (text);
 		}
@@ -129,34 +129,32 @@ namespace Epsitec.Common.Types
 		public static readonly FormattedText Empty = new FormattedText ("");
 
 		/// <summary>
-		/// Performs an explicit conversion from type <see cref="string"/> to
-		/// type <see cref="FormattedText"/>. The source text will be escaped
-		/// to produce a compatible formatted text.
+		/// Converts a <see cref="FormattedText"/> to a simple <see cref="string"/>.
+		/// The source text will be un-escaped to produce a compatible simple text.
 		/// </summary>
-		/// <param name="text">The source text.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static explicit operator FormattedText(string text)
+		public string ToSimpleText()
 		{
-			return new FormattedText (FormattedText.Escape (text));
-		}
-
-		/// <summary>
-		/// Performs an explicit conversion from type <see cref="FormattedText"/>
-		/// to type <see cref="string"/>. The source text will be un-escaped
-		/// to produce a compatible simple text.
-		/// </summary>
-		/// <param name="text">The source text.</param>
-		/// <returns>The result of the conversion.</returns>
-		public static explicit operator string(FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
+			if (this.IsNullOrEmpty)
 			{
-				return text.text;
+				return this.text;
 			}
 			else
 			{
-				return FormattedText.Unescape (text.text);
+				return FormattedText.Unescape (this.text);
 			}
+		}
+
+		/// <summary>
+		/// Converts a text represented as a simple <see cref="string"/> to
+		/// a <see cref="FormattedText"/> object. The source text will be properly
+		/// escaped to produce a compatible formatted text.
+		/// </summary>
+		/// <param name="value">The source text.</param>
+		/// <returns>The result of the conversion.</returns>
+		public static FormattedText ParseSimpleText(string value)
+		{
+			return new FormattedText (FormattedText.Escape (value));
 		}
 
 		/// <summary>

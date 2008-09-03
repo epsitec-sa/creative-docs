@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="6" name="Common.Dialogs" layer="s" namespace="Epsitec.Common.Dialogs">
   <Versions>
-    <Version id="1" build="14" date="2008-02-07T08:16:05.6373750Z" />
+    <Version id="1" build="15" date="2008-09-03T12:40:00.8710000Z" />
   </Versions>
 </ModuleInfo>

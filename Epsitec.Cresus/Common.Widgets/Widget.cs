@@ -693,7 +693,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return FormattedText.Parse (this.Text);
+				return new FormattedText (this.Text);
 			}
 			set
 			{

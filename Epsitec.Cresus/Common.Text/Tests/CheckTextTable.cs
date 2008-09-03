@@ -236,7 +236,7 @@ namespace Epsitec.Common.Text.Tests
 			}
 			
 			System.Diagnostics.Trace.WriteLine ("Saving file.");
-			using (System.IO.FileStream file = new System.IO.FileStream (@"c:\test.text", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+			using (System.IO.FileStream file = new System.IO.FileStream (@"S:\test.text", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 			{
 				table1.WriteRawText (file);
 			}
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			System.Diagnostics.Trace.WriteLine ("Loading file.");
-			using (System.IO.FileStream file = new System.IO.FileStream (@"c:\test.text", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream file = new System.IO.FileStream (@"S:\test.text", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
 				table2.ReadRawText (file);
 			}
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			System.Diagnostics.Trace.WriteLine ("Saving compressed file.");
-			using (System.IO.FileStream file = new System.IO.FileStream (@"c:\test.compressed", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+			using (System.IO.FileStream file = new System.IO.FileStream (@"S:\test.compressed", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 			{
 				using (System.IO.Stream stream = Common.IO.Compression.CreateDeflateStream (file, 3))
 				{
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Saving compressed file, done.");
 			
 			System.Diagnostics.Trace.WriteLine ("Loading compressed file.");
-			using (System.IO.FileStream file = new System.IO.FileStream (@"c:\test.compressed", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream file = new System.IO.FileStream (@"S:\test.compressed", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
 				using (System.IO.Stream stream = Common.IO.Decompression.CreateStream (file))
 				{
@@ -362,9 +362,9 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (info_3_c.Length == 1); Debug.Assert.IsTrue (info_3_c[0].Position == 25000);
 			Debug.Assert.IsTrue (info_3_d.Length == 2); Debug.Assert.IsTrue (info_3_d[0].Position == 8000);  Debug.Assert.IsTrue (info_3_d[1].Position == 25000);
 #if false
-			using (System.IO.FileStream input = new System.IO.FileStream (@"c:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream input = new System.IO.FileStream (@"S:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (@"c:\deflate-1.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+				using (System.IO.FileStream file = new System.IO.FileStream (@"S:\deflate-1.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 				{
 					using (System.IO.Stream stream = Common.IO.Compression.CreateDeflateStream (file, 1))
 					{
@@ -379,9 +379,9 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			using (System.IO.FileStream input = new System.IO.FileStream (@"c:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream input = new System.IO.FileStream (@"S:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (@"c:\deflate-9.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+				using (System.IO.FileStream file = new System.IO.FileStream (@"S:\deflate-9.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 				{
 					using (System.IO.Stream stream = Common.IO.Compression.CreateDeflateStream (file, 9))
 					{
@@ -396,9 +396,9 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			using (System.IO.FileStream input = new System.IO.FileStream (@"c:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream input = new System.IO.FileStream (@"S:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (@"c:\bzip2.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+				using (System.IO.FileStream file = new System.IO.FileStream (@"S:\bzip2.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 				{
 					using (System.IO.Stream stream = Common.IO.Compression.CreateBZip2Stream (file))
 					{
@@ -413,9 +413,9 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			using (System.IO.FileStream input = new System.IO.FileStream (@"c:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream input = new System.IO.FileStream (@"S:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (@"c:\gzip.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+				using (System.IO.FileStream file = new System.IO.FileStream (@"S:\gzip.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 				{
 					using (System.IO.Stream stream = Common.IO.Compression.CreateGZipStream (file))
 					{
@@ -430,9 +430,9 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			using (System.IO.FileStream input = new System.IO.FileStream (@"c:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream input = new System.IO.FileStream (@"S:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
-				using (System.IO.FileStream file = new System.IO.FileStream (@"c:\zip.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
+				using (System.IO.FileStream file = new System.IO.FileStream (@"S:\zip.bin", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 				{
 					using (System.IO.Stream stream = Common.IO.Compression.CreateZipStream (file, "Z"))
 					{

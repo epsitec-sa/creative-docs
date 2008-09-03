@@ -74,7 +74,7 @@ namespace Epsitec.Common.UI.Controllers
 				data = data.Trim ();
 				data = data.Replace ("\n", ", ");
 
-				this.field.FormattedText = (FormattedText) data;
+				this.field.FormattedText = FormattedText.ParseSimpleText (data);
 			}
 		}
 

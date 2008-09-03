@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return (string) Res.Strings.ProductName;
+				return Res.Strings.ProductName.ToSimpleText ();
 			}
 		}
 

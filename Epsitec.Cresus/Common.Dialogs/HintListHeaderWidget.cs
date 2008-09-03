@@ -151,13 +151,14 @@ namespace Epsitec.Common.Dialogs
 			switch (this.contentType)
 			{
 				case HintListContentType.Suggestions:
-					return FormattedText.Parse (@"Suggestions pour<br/><font size=""120%""><b>«{0}»</b></font>");
+					return new FormattedText (@"Suggestions pour<br/><font size=""120%""><b>«{0}»</b></font>");
 
 				case HintListContentType.Catalog:
-					return FormattedText.Parse (@"Liste des fiches<br/><font size=""120%""><b>«{0}»</b></font>");
-			}
+					return new FormattedText (@"Liste des fiches<br/><font size=""120%""><b>«{0}»</b></font>");
 
-			return FormattedText.Parse ("{0}");
+				default:
+					return new FormattedText ("{0}");
+			}
 		}
 
 		

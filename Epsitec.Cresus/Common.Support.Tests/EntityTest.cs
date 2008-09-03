@@ -536,6 +536,11 @@ namespace Epsitec.Common.Support
 			{
 				return Res.Types.ResourceEnumType.CaptionId;
 			}
+
+			public override string GetEntityStructuredTypeKey()
+			{
+				return this.GetEntityStructuredTypeId ().ToString ();
+			}
 		}
 
 		#endregion
@@ -547,6 +552,11 @@ namespace Epsitec.Common.Support
 			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.EnumValue.CaptionId;
+			}
+
+			public override string GetEntityStructuredTypeKey()
+			{
+				return this.GetEntityStructuredTypeId ().ToString ();
 			}
 		}
 
@@ -576,6 +586,11 @@ namespace Epsitec.Common.Support
 				return Res.Types.TestInterfaceUser.CaptionId;
 			}
 
+			public override string GetEntityStructuredTypeKey()
+			{
+				return this.GetEntityStructuredTypeId ().ToString ();
+			}
+			
 			public int getNameCounter;
 			public int setNameCounter;
 		}
@@ -590,6 +605,11 @@ namespace Epsitec.Common.Support
 			{
 				return Res.Types.ResourceString.CaptionId;
 			}
+
+			public override string GetEntityStructuredTypeKey()
+			{
+				return this.GetEntityStructuredTypeId ().ToString ();
+			}
 		}
 
 		#endregion
@@ -603,6 +623,11 @@ namespace Epsitec.Common.Support
 				return Res.Types.ResourceCommand.CaptionId;
 			}
 
+			public override string GetEntityStructuredTypeKey()
+			{
+				return this.GetEntityStructuredTypeId ().ToString ();
+			}
+			
 			public IList<MyShortcutEntity> Shortcuts
 			{
 				get
@@ -621,6 +646,11 @@ namespace Epsitec.Common.Support
 			public override Druid GetEntityStructuredTypeId()
 			{
 				return Res.Types.Shortcut.CaptionId;
+			}
+			
+			public override string GetEntityStructuredTypeKey()
+			{
+				return this.GetEntityStructuredTypeId ().ToString ();
 			}
 		}
 
