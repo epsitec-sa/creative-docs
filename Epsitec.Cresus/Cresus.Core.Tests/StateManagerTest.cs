@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core
 				this.value = value;
 			}
 
-			public override System.Xml.Linq.XElement Serialize(System.Xml.Linq.XElement element)
+			public override System.Xml.Linq.XElement Serialize(System.Xml.Linq.XElement element, StateSerializationContext context)
 			{
 				element.Add (
 					new XElement ("dummy",
@@ -140,6 +140,31 @@ namespace Epsitec.Cresus.Core
 
 			protected override void DetachState()
 			{
+			}
+
+			protected override Epsitec.Common.Widgets.AbstractGroup CreateUserInterface()
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			protected override void EnableWorkspace()
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			protected override void DisableWorkspace()
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			protected override void StoreWorkspace(XElement workspaceElement, StateSerializationContext context)
+			{
+				throw new System.NotImplementedException ();
+			}
+
+			protected override void RestoreWorkspace(XElement workspaceElement)
+			{
+				throw new System.NotImplementedException ();
 			}
 
 			private string value;
