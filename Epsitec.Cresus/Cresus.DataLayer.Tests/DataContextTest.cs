@@ -100,8 +100,8 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				context.RichCommand.ImportTable (transaction, table1, condition);
-				context.RichCommand.ImportTable (transaction, table2, condition);
+		//		context.RichCommand.ImportTable (transaction, table1, condition);
+		//		context.RichCommand.ImportTable (transaction, table2, condition);
 				transaction.Commit ();
 			}
 
@@ -152,9 +152,9 @@ namespace Epsitec.Cresus.DataLayer
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				context.RichCommand.ImportTable (transaction, table1, condition1);
-				context.RichCommand.ImportTable (transaction, table2, condition2);
-				context.RichCommand.ImportTable (transaction, table1, condition3);
+		//		context.RichCommand.ImportTable (transaction, table1, condition1);
+		//		context.RichCommand.ImportTable (transaction, table2, condition2);
+		//		context.RichCommand.ImportTable (transaction, table1, condition3);
 				transaction.Commit ();
 			}
 

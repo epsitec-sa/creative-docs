@@ -137,8 +137,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 		public bool Equals(EntityDataMapping other)
 		{
-			return this.entityId == other.entityId
-				&& this.baseEntityId == other.baseEntityId
+			return this.baseEntityId == other.baseEntityId
 				&& this.rowKey == other.rowKey;
 		}
 
@@ -187,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			if (this.IsReadOnly)
 			{
-				return this.rowKey.GetHashCode () ^ this.entityId.GetHashCode () ^ this.baseEntityId.GetHashCode ();
+				return this.rowKey.GetHashCode () ^ this.baseEntityId.GetHashCode ();
 			}
 			else
 			{

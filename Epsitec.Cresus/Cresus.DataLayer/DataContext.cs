@@ -911,6 +911,11 @@ namespace Epsitec.Cresus.DataLayer
 		
 		internal EntityDataMapping GetEntityDataMapping(AbstractEntity entity)
 		{
+			if (entity == null)
+			{
+				return null;
+			}
+
 			EntityDataMapping mapping = this.FindEntityDataMapping (entity);
 
 			if (mapping != null)
