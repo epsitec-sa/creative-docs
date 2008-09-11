@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{07E9B808-4ED7-4DAF-A550-CC69F03626B1}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -162,6 +162,14 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="ServiceResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServiceResources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceStartupInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -171,16 +179,12 @@
     <Compile Include="GlobalNames.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InitialDatabase.cs">
+    <Compile Include="DatabaseTools.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WindowsService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <EmbeddedResource Include="CustomInstaller.resx">
-      <DependentUpon>CustomInstaller.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <Content Include="Resources\Common.Types\module.info" />
     <Content Include="Resources\Common.Types\Captions.00.resource" />
     <Content Include="Resources\Common.Types\Captions.en.resource" />
@@ -192,6 +196,14 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <None Include="App.config" />
+    <None Include="bin\Debug\Cresus.Server.exe.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ServiceResources.fr.resx" />
+    <EmbeddedResource Include="ServiceResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ServiceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

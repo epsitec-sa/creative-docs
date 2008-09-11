@@ -1,13 +1,15 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Server
 {
 	/// <summary>
-	/// Summary description for GlobalNames.
+	/// The <c>GlobalNames</c> class defines the strings used by the Crésus
+	/// Server application/service.
 	/// </summary>
-	public sealed class GlobalNames
+	public static class GlobalNames
 	{
-		public const string						ServiceName = "CresusServer";
+		public const string ServiceName			= "CresusServer";
+		public const string FirebirdInstance	= "Firebird Server - DefaultInstance";
 	}
 }

@@ -1,5 +1,5 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Server
 {
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Server
 		{
 			System.Diagnostics.Debug.WriteLine ("Cresus Server: starting.");
 			
-			this.infrastructure = this.GetDatabaseInfrastructure ();
+			this.infrastructure = DatabaseTools.GetDatabase (this.EventLog);
 			
 			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.IsServer);
 			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.ClientId == 1);
@@ -107,53 +107,6 @@ namespace Epsitec.Cresus.Server
 				this.engine         = null;
 				this.infrastructure = null;
 			}
-		}
-		
-		
-		private Database.DbInfrastructure GetDatabaseInfrastructure()
-		{
-			Database.DbInfrastructure infrastructure = new Database.DbInfrastructure ();
-			Database.DbAccess         access         = WindowsService.CreateAccess ();
-			
-			try
-			{
-				System.Diagnostics.Debug.WriteLine ("Trying to open database.");
-				infrastructure.AttachToDatabase (access);
-			}
-			catch
-			{
-				infrastructure.Dispose ();
-				infrastructure = new Database.DbInfrastructure ();
-				
-				try
-				{
-					System.Diagnostics.Debug.WriteLine ("Creating database.");
-					InitialDatabase.Create (this);
-					System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
-					infrastructure.AttachToDatabase (access);
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine ("Database could not be opened.");
-					System.Diagnostics.Debug.WriteLine (ex.Message);
-					System.Diagnostics.Debug.WriteLine (ex.StackTrace);
-					infrastructure.Dispose ();
-					infrastructure = null;
-				}
-			}
-			
-			return infrastructure;
-		}
-		
-		internal static Database.DbAccess CreateAccess()
-		{
-			string provider		 = System.Configuration.ConfigurationManager.AppSettings["DatabaseProvider"];
-			string database		 = System.Configuration.ConfigurationManager.AppSettings["DatabaseSource"];
-			string server		 = System.Configuration.ConfigurationManager.AppSettings["DatabaseServer"];
-			string loginName	 = System.Configuration.ConfigurationManager.AppSettings["DatabaseUserName"];
-			string loginPassword = System.Configuration.ConfigurationManager.AppSettings["DatabaseUserPass"];
-			
-			return new Database.DbAccess (provider, database, server, loginName, loginPassword, false);
 		}
 		
 		

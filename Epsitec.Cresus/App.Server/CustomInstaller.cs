@@ -1,120 +1,50 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.ServiceProcess;
 
 namespace Epsitec.Cresus.Server
 {
-	using ServiceProcessInstaller = System.ServiceProcess.ServiceProcessInstaller;
-	using ServiceInstaller        = System.ServiceProcess.ServiceInstaller;
-	using ServiceController       = System.ServiceProcess.ServiceController;
-	using ServiceControllerStatus = System.ServiceProcess.ServiceControllerStatus;
-	
 	/// <summary>
-	/// Summary description for CustomInstaller.
+	/// The <c>CustomInstaller</c> class registers the Firebird-based Crésus service,
+	/// which runs as a Windows Service.
 	/// </summary>
 	[System.ComponentModel.RunInstaller(true)]
 	public sealed class CustomInstaller : System.Configuration.Install.Installer
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomInstaller"/> class.
+		/// </summary>
 		public CustomInstaller()
 		{
-			this.service_process_installer = new System.ServiceProcess.ServiceProcessInstaller ();
-			this.service_installer         = new System.ServiceProcess.ServiceInstaller ();
-			this.service_startup_installer = new ServiceStartupInstaller (GlobalNames.ServiceName);
+			this.serviceProcessInstaller = new ServiceProcessInstaller ()
+			{
+				Account = ServiceAccount.LocalService,
+				Password = null,
+				Username = null
+			};
+
+			this.serviceInstaller = new ServiceInstaller ()
+			{
+				DisplayName = ServiceResources.ServiceDisplayName,
+				ServiceName = GlobalNames.ServiceName,
+				StartType   = ServiceStartMode.Automatic
+			};
+
+			this.serviceStartupInstaller = new ServiceStartupInstaller (GlobalNames.ServiceName);
 			
-			this.service_process_installer.Account  = System.ServiceProcess.ServiceAccount.LocalService;
-			this.service_process_installer.Password = null;
-			this.service_process_installer.Username = null;
+//			this.serviceInstaller.ServicesDependedOn = new string[] { GlobalNames.FirebirdInstance };
+
+			//	Installation consists of the following steps :
 			
-			this.service_installer.DisplayName = "Crésus Serveur";
-			this.service_installer.ServiceName = GlobalNames.ServiceName;
-			this.service_installer.StartType   = System.ServiceProcess.ServiceStartMode.Automatic;
-			
-			this.service_installer.ServicesDependedOn = new string[] { "Firebird Server - DefaultInstance" };
-			
-			this.Installers.Add (this.service_process_installer);
-			this.Installers.Add (this.service_installer);
-			this.Installers.Add (this.service_startup_installer);
+			this.Installers.Add (this.serviceProcessInstaller);		//	register the executable containing the service(s)
+			this.Installers.Add (this.serviceInstaller);			//	register the service itself
+			this.Installers.Add (this.serviceStartupInstaller);		//	start the registered service
 		}
 		
 		
-		#region ServiceStartupInstaller Class
-		public class ServiceStartupInstaller : System.Configuration.Install.Installer
-		{
-			public ServiceStartupInstaller(string name)
-			{
-				this.service_controller = new System.ServiceProcess.ServiceController (name);
-			}
-			
-			
-			public override void Install(System.Collections.IDictionary state)
-			{
-				base.Install (state);
-				
-				try
-				{
-					this.service_controller.Start ();
-					this.service_controller.WaitForStatus (ServiceControllerStatus.Running, this.timeout);
-				}
-				catch (System.ServiceProcess.TimeoutException)
-				{
-					System.Diagnostics.Debug.WriteLine ("Cannot start service within allotted time.");
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine (ex.Message);
-				}
-			}
-			
-			public override void Uninstall(System.Collections.IDictionary state)
-			{
-				base.Uninstall (state);
-				
-				try
-				{
-					this.service_controller.Stop ();
-					this.service_controller.WaitForStatus (ServiceControllerStatus.Stopped, this.timeout);
-				}
-				catch (System.ServiceProcess.TimeoutException)
-				{
-					System.Diagnostics.Debug.WriteLine ("Cannot stop service within allotted time.");
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine (ex.Message);
-				}
-			}
-			
-			public override void Commit(System.Collections.IDictionary state)
-			{
-				base.Commit (state);
-			}
-			
-			public override void Rollback(System.Collections.IDictionary state)
-			{
-				base.Rollback (state);
-				
-				try
-				{
-					this.service_controller.Stop ();
-					this.service_controller.WaitForStatus (ServiceControllerStatus.Stopped, this.timeout);
-				}
-				catch (System.ServiceProcess.TimeoutException)
-				{
-					System.Diagnostics.Debug.WriteLine ("Cannot stop service within allotted time.");
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine (ex.Message);
-				}
-			}
-			
-			
-			private ServiceController			service_controller;
-			private System.TimeSpan				timeout = new System.TimeSpan (0, 0, 0, 0, 5000);
-		}
-		#endregion
-		
-		private ServiceProcessInstaller			service_process_installer;
-		private ServiceInstaller				service_installer;
-		private ServiceStartupInstaller			service_startup_installer;
+		private ServiceProcessInstaller			serviceProcessInstaller;
+		private ServiceInstaller				serviceInstaller;
+		private ServiceStartupInstaller			serviceStartupInstaller;
 	}
 }
