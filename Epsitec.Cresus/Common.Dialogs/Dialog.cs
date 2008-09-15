@@ -260,10 +260,12 @@ namespace Epsitec.Common.Dialogs
 			Drawing.Size size = FormResourceAccessor.GetFormDefaultSize (bundle);
 
 			FormEngine.FormDescription formDescription = new FormEngine.FormDescription ();
-			FormEngine.Engine formEngine = new FormEngine.Engine (new FormEngine.DefaultResourceProvider (this.resourceManager))
+			FormEngine.Engine formEngine = new FormEngine.Engine (new FormEngine.DefaultResourceProvider (this.resourceManager));
+
+			if (this.dialogData != null)
 			{
-				Data = this.dialogData.Data
-			};
+				formEngine.Data = this.dialogData.Data;
+			}
 			
 			formDescription.Deserialize (xmlSource);
 

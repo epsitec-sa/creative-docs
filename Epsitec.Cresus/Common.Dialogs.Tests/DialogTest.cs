@@ -103,12 +103,14 @@ namespace Epsitec.Common.Dialogs
 
 			foreach (LocalitéEntity loc in resolver.LocalitéSuggestions)
 			{
-				if (loc.Résumé == "CH-1400 Yverdon-les-Bains")
+				if (loc.Résumé == "CH 1400 Yverdon-les-Bains")
 				{
 					yverdon = loc;
 					break;
 				}
 			}
+
+			Assert.IsNotNull (yverdon, "Could not resolve YVERDON-LES-BAINS");
 
 			dialog.DialogWindowCreated +=
 				delegate

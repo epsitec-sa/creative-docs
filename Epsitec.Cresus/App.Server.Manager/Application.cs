@@ -46,6 +46,8 @@ namespace Epsitec.Cresus.ServerManager
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerTimeElapsed);
 			
 			this.timer.Start ();
+
+			this.dialog.OpenDialog ();
 		}
 		
 		
