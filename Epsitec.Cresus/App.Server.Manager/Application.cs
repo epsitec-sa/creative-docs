@@ -16,8 +16,14 @@ namespace Epsitec.Cresus.ServerManager
 		private Application()
 		{
 			this.service_controller = new WindowsServiceController ();
+			this.serviceSettings = new Entities.ServiceSettingsEntity ();
 			
-			Dialog dialog = new Dialog (Epsitec.Common.Support.Resources.DefaultManager);
+			Dialog dialog = Dialog.Load (Res.Manager, FormIds.ServiceSettings);
+
+			dialog.CommandDispatcher.RegisterController (this);
+			dialog.IsModal = false;
+			dialog.Data = new DialogData (this.serviceSettings, DialogDataMode.Transparent);
+
 //-			ObsoleteRecord record = new ObsoleteRecord ("Rec");
 			
 //-			record.AddField ("IsRunning", false);
@@ -54,6 +60,7 @@ namespace Epsitec.Cresus.ServerManager
 		
 		private void HandleTimerTimeElapsed(object sender)
 		{
+			this.serviceSettings.IsServiceRunning = this.service_controller.IsRunning;
 #if false
 			ObsoleteField field = this.record["IsRunning"];
 			field.Value = this.service_controller.IsRunning;
@@ -82,13 +89,13 @@ namespace Epsitec.Cresus.ServerManager
 			this.main_window.Quit ();
 		}
 		
-		[Command ("StartService")]
+		[Command (Res.CommandIds.StartService)]
 		void CommandStartService()
 		{
 			this.service_controller.Start ();
 		}
-		
-		[Command ("StopService")]
+
+		[Command (Res.CommandIds.StopService)]
 		void CommandStopService()
 		{
 			this.service_controller.Stop ();
@@ -98,7 +105,7 @@ namespace Epsitec.Cresus.ServerManager
 		private static Application				application;
 		private Window							main_window;
 		private WindowsServiceController		service_controller;
-//-		private ObsoleteRecord					record;
+		private Entities.ServiceSettingsEntity	serviceSettings;
 		private Dialog							dialog;
 		private Timer							timer;
 	}
