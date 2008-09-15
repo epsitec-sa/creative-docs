@@ -37,6 +37,30 @@ namespace Epsitec.Common.FormEngine
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the data to which the engine should bind the user
+		/// interface to.
+		/// </summary>
+		/// <value>The entity data.</value>
+		public AbstractEntity Data
+		{
+			get
+			{
+				return this.entityData;
+			}
+			set
+			{
+				if (this.entityData == null)
+				{
+					this.entityData = value;
+				}
+				else
+				{
+					throw new System.InvalidOperationException ();
+				}
+			}
+		}
+
 		public void EnableSearchMode()
 		{
 			this.defaultMode = FieldEditionMode.Search;
@@ -114,15 +138,29 @@ namespace Epsitec.Common.FormEngine
 
 			AbstractEntity entityData = null;
 
-			EntityContext.Push(this.entityContext);
-			
-			try
+			if (this.entityData == null)
 			{
-				entityData = entityContext.CreateEntity(entityId);
+				//	Personne n'a défini de données à associer avec l'interface utilisateur
+				//	que nous allons créer, alors on crée nous-même une entité vide pour
+				//	permettre d'utiliser correctement le binding par la suite.
+
+				EntityContext.Push (this.entityContext);
+
+				try
+				{
+					entityData = this.entityContext.CreateEntity (entityId);
+				}
+				finally
+				{
+					EntityContext.Pop ();
+				}
 			}
-			finally
+			else
 			{
-				EntityContext.Pop();
+				//	Utilise les données de l'entité fournies par l'appelant pour réaliser
+				//	le binding par la suite.
+
+				entityData = this.entityData;
 			}
 
 			//	Crée le panneau racine, le seul à définir DataSource. Les autres panneaux
@@ -1244,6 +1282,7 @@ namespace Epsitec.Common.FormEngine
 
 		private readonly IFormResourceProvider resourceProvider;
 		private readonly EntityContext entityContext;
+		private AbstractEntity entityData;
 		private Arrange arrange;
 		private bool forDesigner;
 		private FieldEditionMode defaultMode;
