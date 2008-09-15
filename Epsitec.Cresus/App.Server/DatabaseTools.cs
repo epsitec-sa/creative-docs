@@ -3,6 +3,9 @@
 
 using System.Configuration;
 
+using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Exceptions;
+
 namespace Epsitec.Cresus.Server
 {
 	/// <summary>
@@ -16,38 +19,51 @@ namespace Epsitec.Cresus.Server
 		/// </summary>
 		/// <param name="eventLog">The event log.</param>
 		/// <returns>The database infrastructure, or <c>null</c> in case of failure.</returns>
-		public static Database.DbInfrastructure GetDatabase(System.Diagnostics.EventLog eventLog)
+		public static DbInfrastructure GetDatabase(System.Diagnostics.EventLog eventLog)
 		{
-			Database.DbInfrastructure infrastructure = new Database.DbInfrastructure ();
-			Database.DbAccess         access         = DatabaseTools.GetAccess ();
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			DbAccess         access         = DatabaseTools.GetAccess ();
 
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Trying to open database.");
 				infrastructure.AttachToDatabase (access);
 			}
+			catch (EmptyDatabaseException ex)
+			{
+				infrastructure.Dispose ();
+				DbTools.DeleteDatabase (access);
+				infrastructure = DatabaseTools.GetDatabaseAttempt2 (eventLog, infrastructure, access);
+			}
 			catch
 			{
 				infrastructure.Dispose ();
-				infrastructure = new Database.DbInfrastructure ();
-
-				try
-				{
-					System.Diagnostics.Debug.WriteLine ("Creating database.");
-					DatabaseTools.CreateEmptyDatabase (eventLog);
-					System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
-					infrastructure.AttachToDatabase (access);
-				}
-				catch (System.Exception ex)
-				{
-					System.Diagnostics.Debug.WriteLine ("Database could not be opened.");
-					System.Diagnostics.Debug.WriteLine (ex.Message);
-					System.Diagnostics.Debug.WriteLine (ex.StackTrace);
-					infrastructure.Dispose ();
-					infrastructure = null;
-				}
+				infrastructure = DatabaseTools.GetDatabaseAttempt2 (eventLog, infrastructure, access);
 			}
 
+			return infrastructure;
+		}
+
+		private static DbInfrastructure GetDatabaseAttempt2(System.Diagnostics.EventLog eventLog, DbInfrastructure infrastructure, DbAccess access)
+		{
+			infrastructure = new DbInfrastructure ();
+
+			try
+			{
+				System.Diagnostics.Debug.WriteLine ("Creating database.");
+				DatabaseTools.CreateEmptyDatabase (eventLog);
+				System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
+				infrastructure.AttachToDatabase (access);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Database could not be opened.");
+				System.Diagnostics.Debug.WriteLine (ex.Message);
+				System.Diagnostics.Debug.WriteLine (ex.StackTrace);
+				infrastructure.Dispose ();
+				infrastructure = null;
+			}
+			
 			return infrastructure;
 		}
 
@@ -57,22 +73,47 @@ namespace Epsitec.Cresus.Server
 		/// <param name="eventLog">The event log.</param>
 		public static void CreateEmptyDatabase(System.Diagnostics.EventLog eventLog)
 		{
-			Database.DbInfrastructure infrastructure = new Database.DbInfrastructure ();
-			Database.DbAccess         access         = DatabaseTools.GetAccess ();
-			
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			DbAccess         access         = DatabaseTools.GetAccess ();
+
 			infrastructure.CreateDatabase (access);
-			
+
 			eventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
-			
+
 			infrastructure.LocalSettings.IsServer = true;
 			infrastructure.LocalSettings.ClientId = 1;
-			
-			using (Database.DbTransaction transaction = infrastructure.BeginTransaction (Database.DbTransactionMode.ReadWrite))
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				infrastructure.LocalSettings.PersistToBase (transaction);
 				transaction.Commit ();
 			}
-			
+
+			infrastructure.Dispose ();
+		}
+
+		/// <summary>
+		/// Deletes the database.
+		/// </summary>
+		/// <param name="eventLog">The event log.</param>
+		public static void DeleteDatabase(System.Diagnostics.EventLog eventLog)
+		{
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			DbAccess         access         = DatabaseTools.GetAccess ();
+
+			infrastructure.CreateDatabase (access);
+
+			eventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
+
+			infrastructure.LocalSettings.IsServer = true;
+			infrastructure.LocalSettings.ClientId = 1;
+
+			using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				infrastructure.LocalSettings.PersistToBase (transaction);
+				transaction.Commit ();
+			}
+
 			infrastructure.Dispose ();
 		}
 
@@ -80,7 +121,7 @@ namespace Epsitec.Cresus.Server
 		/// Gets the database access.
 		/// </summary>
 		/// <returns>The database access.</returns>
-		public static Database.DbAccess GetAccess()
+		public static DbAccess GetAccess()
 		{
 			string provider		 = ConfigurationManager.AppSettings["DatabaseProvider"];
 			string database		 = ConfigurationManager.AppSettings["DatabaseSource"];
@@ -88,7 +129,7 @@ namespace Epsitec.Cresus.Server
 			string loginName	 = ConfigurationManager.AppSettings["DatabaseUserName"];
 			string loginPassword = ConfigurationManager.AppSettings["DatabaseUserPass"];
 
-			return new Database.DbAccess (provider, database, server, loginName, loginPassword, false);
+			return new DbAccess (provider, database, server, loginName, loginPassword, false);
 		}
 	}
 }

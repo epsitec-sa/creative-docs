@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{065F982F-9739-426E-99C3-D7C1ED2E791C}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -221,7 +221,6 @@
     <Compile Include="SqlTableTest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tool.cs" />
     <Compile Include="TypeConverterTest.cs">
       <SubType>Code</SubType>
     </Compile>

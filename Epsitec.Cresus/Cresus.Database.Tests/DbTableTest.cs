@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database
 		[TestFixtureSetUp]
 		public void Setup()
 		{
-			Tool.DeleteDatabase ("tabletest");
+			DbTools.DeleteDatabase ("tabletest");
 			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{

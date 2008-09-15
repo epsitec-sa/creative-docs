@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Database
 		[Test]
 		public void Check01FindDbAbstractionAndOpenClose()
 		{
-			Tool.DeleteDatabase ("test");
+			DbTools.DeleteDatabase ("test");
 			
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 

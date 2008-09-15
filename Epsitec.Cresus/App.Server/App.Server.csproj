@@ -197,6 +197,9 @@
     </None>
     <None Include="App.config" />
     <None Include="bin\Debug\Cresus.Server.exe.config" />
+    <Content Include="Resources\Cresus.Database\Captions.00.resource" />
+    <Content Include="Resources\Cresus.Database\module.info" />
+    <Content Include="Resources\Cresus.Database\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ServiceResources.fr.resx" />
@@ -208,6 +211,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Cresus.Database\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 </PreBuildEvent>
     <PostBuildEvent>
     </PostBuildEvent>

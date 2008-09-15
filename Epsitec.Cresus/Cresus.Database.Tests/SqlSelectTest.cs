@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Database
 			//	The tests need a valid EMPLOYEE Firebird database; we restore a fresh
 			//	copy based on a backup version.
 
-			Tool.RestoreDatabase ("employee", @"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
+			DbTools.RestoreDatabase ("employee", @"S:\Epsitec.Cresus\External\EMPLOYEE.GBAK");
 
 			System.Threading.Thread.Sleep (1000);
 		}

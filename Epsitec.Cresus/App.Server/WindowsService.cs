@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Server
 {
 	using PowerBroadcastStatus = System.ServiceProcess.PowerBroadcastStatus;
-	
+
 	/// <summary>
 	/// Summary description for WindowsService.
 	/// </summary>
@@ -25,11 +25,20 @@ namespace Epsitec.Cresus.Server
 		
 		private static void Main()
 		{
+#if false
+			Database.DbInfrastructure infrastructure = DatabaseTools.GetDatabase (null);
+
+			System.Diagnostics.Debug.Assert (infrastructure.LocalSettings.IsServer);
+			System.Diagnostics.Debug.Assert (infrastructure.LocalSettings.ClientId == 1);
+
+			Epsitec.Cresus.Services.Engine engine = new Epsitec.Cresus.Services.Engine (infrastructure, 1234);
+#else
 			System.ServiceProcess.ServiceBase[] services_to_run;
 			
 			services_to_run = new System.ServiceProcess.ServiceBase[] { new WindowsService () };
 			
 			System.ServiceProcess.ServiceBase.Run (services_to_run);
+#endif
 		}
 		
 		
@@ -80,6 +89,7 @@ namespace Epsitec.Cresus.Server
 		private void StartServices()
 		{
 			System.Diagnostics.Debug.WriteLine ("Cresus Server: starting.");
+//			System.Diagnostics.Debugger.Break ();
 			
 			this.infrastructure = DatabaseTools.GetDatabase (this.EventLog);
 			

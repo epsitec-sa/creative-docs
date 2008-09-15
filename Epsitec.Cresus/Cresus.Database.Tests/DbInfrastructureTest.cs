@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Database
 		[Test]
 		public void Check01CreateDatabase()
 		{
-			Tool.DeleteDatabase ("fiche");
+			DbTools.DeleteDatabase ("fiche");
 			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{

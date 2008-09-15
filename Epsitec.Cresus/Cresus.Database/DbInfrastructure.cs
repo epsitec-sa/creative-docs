@@ -292,12 +292,12 @@ namespace Epsitec.Cresus.Database
 				return false;
 			}
 			
-			//	The database must have user tables (at least, it has our metadata
+			//	The database must have user tables (at least, it should have our metadata
 			//	tables)...
 
 			if (this.abstraction.QueryUserTableNames ().Length == 0)
 			{
-				throw new Exceptions.GenericException (this.access, "No user tables found in database");
+				throw new Exceptions.EmptyDatabaseException (this.access);
 			}
 			
 			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
