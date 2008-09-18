@@ -379,7 +379,10 @@ namespace Epsitec.Common.Document.Objects
 		{
 			//	Modifie l'état "survollé" d'une poignée.
 			Handle handle = this.Handle(rank);
-			handle.IsHilited = hilite;
+			if (handle != null)
+			{
+				handle.IsHilited = hilite;
+			}
 		}
 
 		public Handle Handle(int rank)
