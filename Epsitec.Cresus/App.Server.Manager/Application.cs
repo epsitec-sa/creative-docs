@@ -9,13 +9,14 @@ using Epsitec.Common.UI;
 namespace Epsitec.Cresus.ServerManager
 {
 	/// <summary>
-	/// La classe Application démarre le gestionnaire du serveur.
+	/// The <c>Application</c> class monitors the service and provides the user
+	/// interface to start and stop it.
 	/// </summary>
 	public class Application : Epsitec.Common.Widgets.Application
 	{
 		private Application()
 		{
-			this.service_controller = new WindowsServiceController ();
+			this.serviceController = new WindowsServiceController ();
 			this.serviceSettings = new Entities.ServiceSettingsEntity ();
 
 			Dialog dialog = Dialog.Load (Res.Manager, FormIds.ServiceSettings);
@@ -31,44 +32,46 @@ namespace Epsitec.Cresus.ServerManager
 //-			this.Window.Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (Epsitec.Common.Support.Platform.StockIcons.ShieldIcon);
 
 			this.DispatchCommandLineCommands ();
-			
+
 			this.timer = new Timer ();
-			
+
 			this.timer.AutoRepeat = 0.5;
 			this.timer.Delay = 0.5;
 			this.timer.HigherAccuracy = false;
 			this.timer.TimeElapsed += new EventHandler (this.HandleTimerTimeElapsed);
-			
+
 			this.timer.Start ();
 
 			this.dialog.OpenDialog ();
 		}
 
 
-		public override string					ShortWindowTitle
+		public override string ShortWindowTitle
 		{
 			get
 			{
 				return Res.Strings.ApplicationTitle.ToSimpleText ();
 			}
 		}
-		
+
 		private void HandleTimerTimeElapsed(object sender)
 		{
-			this.serviceSettings.IsServiceRunning = this.service_controller.IsRunning;
+			this.serviceSettings.IsServiceRunning = this.serviceController.IsRunning;
 		}
-		
-		
+
+
 		#region Application Startup
-		[System.STAThread] static void Main() 
+
+		[System.STAThread]
+		static void Main()
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
-			Epsitec.Common.Support.Resources.DefaultManager.DefineDefaultModuleName ("ServerManager");
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
-			
+
 			Application.application = new Application ();
 			Application.application.RunMessageLoop ();
 		}
+
 		#endregion
 
 
@@ -77,7 +80,7 @@ namespace Epsitec.Cresus.ServerManager
 		{
 			try
 			{
-				this.service_controller.Start ();
+				this.serviceController.Start ();
 			}
 			catch
 			{
@@ -89,16 +92,16 @@ namespace Epsitec.Cresus.ServerManager
 		{
 			try
 			{
-				this.service_controller.Stop ();
+				this.serviceController.Stop ();
 			}
 			catch
 			{
 			}
 		}
-		
-		
+
+
 		private static Application				application;
-		private WindowsServiceController		service_controller;
+		private WindowsServiceController		serviceController;
 		private Entities.ServiceSettingsEntity	serviceSettings;
 		private Dialog							dialog;
 		private Timer							timer;

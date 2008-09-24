@@ -88,33 +88,47 @@ namespace Epsitec.Common.Support
 		}
 
 
+		/// <summary>
+		/// Launches a copy of the current executable using an elevated user
+		/// account; this is intended for Windows and UAC.
+		/// </summary>
+		/// <param name="applicationWindowHandle">The handle of the main window.</param>
+		/// <param name="arguments">The arguments for the elevated process.</param>
+		/// <returns><c>true</c> if the elevation worked; otherwise, <c>false</c>.</returns>
 		public bool LaunchElevated(System.IntPtr applicationWindowHandle, string arguments)
 		{
 			System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo ();
-			
+
+			//	Force execution 'as' an administrator, using the same initial directory
+			//	and application path as the currently executing process, but with specific
+			//	command line arguments.
+
 			startInfo.UseShellExecute  = true;
 			startInfo.WorkingDirectory = Globals.Directories.InitialDirectory;
 			startInfo.FileName         = Globals.ExecutablePath;
 			startInfo.Arguments        = arguments;
 			startInfo.Verb             = "runas";
 
-			if (applicationWindowHandle != null)
-			{
-				startInfo.ErrorDialog             = true;
-				startInfo.ErrorDialogParentHandle = applicationWindowHandle;
-			}
+			startInfo.ErrorDialog             = true;
+			startInfo.ErrorDialogParentHandle = applicationWindowHandle;
 
 			try
 			{
 				System.Diagnostics.Process process = System.Diagnostics.Process.Start (startInfo);
+				
 				process.WaitForExit ();
-			}
-			catch (System.Exception)
-			{
-				return false;
-			}
 
-			return true;
+				if (process.ExitCode == 0)
+				{
+					return true;
+				}
+			}
+			catch
+			{
+				//	Swallow all exceptions.
+			}
+			
+			return false;
 		}
 
 

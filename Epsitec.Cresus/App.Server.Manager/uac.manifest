@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- See http://msdn.microsoft.com/en-us/library/bb756929.aspx -->
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity type="win32" processorArchitecture="x86" version="2.4.1.0838" name="App.Server.Manager.exe" />
   <description>Creative Docs .NET</description>
