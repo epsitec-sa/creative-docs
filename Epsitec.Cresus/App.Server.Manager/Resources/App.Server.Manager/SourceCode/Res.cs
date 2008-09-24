@@ -36,6 +36,14 @@ namespace Epsitec.Cresus.ServerManager
 		
 		public static class Strings
 		{
+			//	designer:str/AVA
+			public static global::Epsitec.Common.Types.FormattedText ApplicationTitle
+			{
+				get
+				{
+					return global::Epsitec.Cresus.ServerManager.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772160));
+				}
+			}
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{

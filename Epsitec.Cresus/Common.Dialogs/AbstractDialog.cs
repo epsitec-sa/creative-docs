@@ -165,6 +165,25 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this dialog is in fact a
+		/// real application window.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the dialog is a real application window; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsApplicationWindow
+		{
+			get
+			{
+				return this.isApplicationWindow;
+			}
+			set
+			{
+				this.isApplicationWindow = value;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this dialog has an associated
 		/// window.
 		/// </summary>
@@ -370,16 +389,30 @@ namespace Epsitec.Common.Dialogs
 			{
 				this.OnDialogWindowCreated ();
 
-				this.dialogWindow.MakeSecondaryWindow ();
 				this.dialogWindow.PreventAutoClose = true;
 
-				if (this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+				if (this.IsApplicationWindow)
 				{
 					this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
+					this.dialogWindow.Root.WindowType = WindowType.Document;
 				}
 				else
 				{
-					this.dialogWindow.MakeButtonlessWindow ();
+					this.dialogWindow.MakeSecondaryWindow ();
+					this.dialogWindow.Root.WindowType = WindowType.Dialog;
+
+					if (this.ContainsCommand (Res.Commands.Dialog.Generic.Cancel))
+					{
+						this.dialogWindow.WindowCloseClicked += this.HandleWindowCloseClicked;
+					}
+					else
+					{
+						WindowStyles styles = this.dialogWindow.Root.WindowStyles;
+
+						styles &= ~WindowStyles.HasCloseButton;
+
+						this.dialogWindow.Root.WindowStyles = styles;
+					}
 				}
 
 				this.dialogWindow.Root.ValidationGroups = "Accept";
@@ -432,5 +465,6 @@ namespace Epsitec.Common.Dialogs
 		private readonly CommandContext			commandContext;
 
 		private bool							isModalDialog;
+		private bool							isApplicationWindow;
 	}
 }

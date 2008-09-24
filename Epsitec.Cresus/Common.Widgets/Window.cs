@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Application.Run (this.window);
 		}
 		
-		public void Quit()
+		public static void Quit()
 		{
 			System.Windows.Forms.Application.Exit ();
 		}
@@ -697,26 +697,36 @@ namespace Epsitec.Common.Widgets
 				this.window.ShowIcon = value;
 			}
 		}
-		
-		internal WindowStyles					WindowStyles
+
+		/// <summary>
+		/// Gets or sets the window styles. See <see cref="WindowRoot.WindowStyles"/>
+		/// if you need to set this value.
+		/// </summary>
+		/// <value>The window styles.</value>
+		public WindowStyles						WindowStyles
 		{
 			get
 			{
 				return this.window.WindowStyles;
 			}
-			set
+			internal set
 			{
 				this.window.WindowStyles = value;
 			}
 		}
-		
-		internal WindowType						WindowType
+
+		/// <summary>
+		/// Gets or sets the type of the window. See <see cref="WindowRoot.WindowType"/>
+		/// if you need to set this value.
+		/// </summary>
+		/// <value>The type of the window.</value>
+		public WindowType						WindowType
 		{
 			get
 			{
 				return this.window.WindowType;
 			}
-			set
+			internal set
 			{
 				this.window.WindowType = value;
 			}
@@ -1950,6 +1960,39 @@ namespace Epsitec.Common.Widgets
 			this.window.Capture = false;
 		}
 
+
+		/// <summary>
+		/// Dispatches the command line commands.
+		/// </summary>
+		/// <returns><c>true</c> if one or several commands were dispatched; otherwise, <c>false</c>.</returns>
+		public bool DispatchCommandLineCommands()
+		{
+			string commandLine = System.Environment.CommandLine;
+			bool   dispatched  = false;
+
+			//	See also DispatchQueuedCommands to understand how we get here, after
+			//	an UAC elevation, for instance.
+
+			while (commandLine.Contains (Window.DispatchCommandIdOption))
+			{
+				string commandArgs = commandLine.Substring (commandLine.IndexOf (Window.DispatchCommandIdOption));
+				string commandId   = commandArgs.Substring (Window.DispatchCommandIdOption.Length).Split (' ')[0];
+
+				CommandDispatcherChain dispatcherChain = CommandDispatcherChain.BuildChain (this);
+				CommandContextChain    contextChain    = CommandContextChain.BuildChain (this);
+
+				Command command = Command.Get (commandId);
+
+				CommandDispatcher.Dispatch (dispatcherChain, contextChain, command, null);
+				
+				commandLine = commandArgs.Substring (commandId.Length);
+				dispatched  = true;
+			}
+
+			return dispatched;
+		}
+
+
 		internal void DispatchQueuedCommands()
 		{
 			while (this.cmd_queue.Count > 0)
@@ -1965,8 +2008,29 @@ namespace Epsitec.Common.Widgets
 				}
 
 				System.Diagnostics.Debug.Assert (item.DispatcherChain.IsEmpty == false);
-				
-				CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, source);
+
+				if ((commandObject.IsAdminLevelRequired) &&
+					(Support.PrivilegeManager.Current.IsUserAnAdministrator == false))
+				{
+					//	Ooooops. Cannot execute this command without prompting for a user
+					//	account elevation. The command won't be executed on the current
+					//	thread or process, but forwarded to an elevated version of the
+					//	same executable as ours.
+					
+					//	See also DispatchCommandLineCommands.
+
+					string args = string.Concat (Window.DispatchCommandIdOption, commandObject.CommandId);
+
+					Support.PrivilegeManager.Current.LaunchElevated (this.window.Handle, args);
+				}
+				else
+				{
+					//	Fine, either this is a non privileged command, or the admin level is
+					//	required for this command and user happens to be an administrator; go
+					//	ahead, dispatch the command locally :
+
+					CommandDispatcher.Dispatch (item.DispatcherChain, item.ContextChain, commandObject, source);
+				}
 			}
 			
 			if (this.is_dispose_queued)
@@ -2553,6 +2617,8 @@ namespace Epsitec.Common.Widgets
 			AdornerChanged,
 			CultureChanged
 		}
+
+		private static readonly string			DispatchCommandIdOption = "-dispatch-command-id:";
 
 		private static long						next_window_id;
 

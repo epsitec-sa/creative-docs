@@ -131,6 +131,8 @@ namespace Epsitec.Common.Widgets
 		/// <param name="source">The source of the command.</param>
 		public static void Dispatch(CommandDispatcherChain dispatcherChain, CommandContextChain contextChain, Command commandObject, object source)
 		{
+			System.Diagnostics.Debug.Assert (commandObject != null);
+
 			if (dispatcherChain != null)
 			{
 				foreach (CommandDispatcher dispatcher in dispatcherChain.Dispatchers)

@@ -32,13 +32,22 @@ namespace Epsitec.Common.Support
 				return Globals.properties;
 			}
 		}
-		
-		public static string					ExecutableName
+
+		public static string ExecutableName
 		{
 			get
 			{
 				string name = System.Windows.Forms.Application.ExecutablePath;
 				return System.IO.Path.GetFileName (name);
+			}
+		}
+		
+		public static string ExecutablePath
+		{
+			get
+			{
+				string name = System.Windows.Forms.Application.ExecutablePath;
+				return name;
 			}
 		}
 		
@@ -221,10 +230,6 @@ namespace Epsitec.Common.Support
 			{
 				get
 				{
-					string name = System.Windows.Forms.Application.ExecutablePath;
-					string root = System.IO.Path.GetPathRoot (name);
-					string dir  = System.IO.Path.GetDirectoryName (name);
-					string path = System.IO.Path.Combine (root, dir);
 					return System.Windows.Forms.Application.StartupPath;
 				}
 			}

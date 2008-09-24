@@ -137,8 +137,13 @@
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
     <Compile Include="IExceptionManager.cs" />
+    <Compile Include="Platform\StockIcons.cs" />
+    <Compile Include="Platform\UserAccountApi.cs" />
+    <Compile Include="Platform\Win32\StockIcons.cs" />
+    <Compile Include="Platform\Win32\UserAccountApi.cs" />
     <Compile Include="PlugIns\IPlugInAttribute.cs" />
     <Compile Include="PlugIns\PlugInFactory.cs" />
+    <Compile Include="PrivilegeManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

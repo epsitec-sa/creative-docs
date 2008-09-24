@@ -1,3 +1,6 @@
+//	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -45,7 +48,45 @@ namespace Epsitec.Common.Widgets
 			return size;
 		}
 
-		
+
+		protected override void OnCommandObjectChanged(Types.DependencyPropertyChangedEventArgs e)
+		{
+			//	If the command requires a special user level (administrator privilege)
+			//	to execute, take notice of it, so that we can decorate the button with
+			//	a special icon (i.e. under Windows, this is a small shield).
+
+			Command command = e.NewValue as Command;
+
+			if ((command != null) &&
+				(command.IsAdminLevelRequired))
+			{
+				this.isAdminLevelRequired = true;
+			}
+			else
+			{
+				this.isAdminLevelRequired = false;
+			}
+			
+			base.OnCommandObjectChanged (e);
+		}
+
+		protected override void DefineTextFromCaption(string text)
+		{
+			if ((this.isAdminLevelRequired) &&
+				(!Support.PrivilegeManager.Current.IsUserAnAdministrator) &&
+				(Support.PrivilegeManager.Current.GetShieldIcon (Epsitec.Common.Drawing.IconSize.Small) != null))
+			{
+				//	The button starts an action which requires administrative privileges
+				//	to be launched : add a special shield "stock icon" (this is related
+				//	to Windows UAC).
+				//	See http://msdn.microsoft.com/en-us/library/bb756973.aspx for UAC.
+
+				text = string.Concat (@"<img src=""stockicon:shield.small"" /> ", text);
+			}
+
+			base.DefineTextFromCaption (text);
+		}
+
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.MessageType )
@@ -122,6 +163,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		
-		protected bool								isKeyboardPressed;
+		private bool								isKeyboardPressed;
+		private bool								isAdminLevelRequired;
 	}
 }

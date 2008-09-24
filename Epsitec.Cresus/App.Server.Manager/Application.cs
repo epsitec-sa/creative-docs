@@ -11,33 +11,27 @@ namespace Epsitec.Cresus.ServerManager
 	/// <summary>
 	/// La classe Application démarre le gestionnaire du serveur.
 	/// </summary>
-	public class Application
+	public class Application : Epsitec.Common.Widgets.Application
 	{
 		private Application()
 		{
 			this.service_controller = new WindowsServiceController ();
 			this.serviceSettings = new Entities.ServiceSettingsEntity ();
-			
+
 			Dialog dialog = Dialog.Load (Res.Manager, FormIds.ServiceSettings);
 
 			dialog.CommandDispatcher.RegisterController (this);
 			dialog.IsModal = false;
 			dialog.Data = new DialogData (this.serviceSettings, DialogDataMode.Transparent);
+			dialog.IsApplicationWindow = true;
 
-//-			ObsoleteRecord record = new ObsoleteRecord ("Rec");
-			
-//-			record.AddField ("IsRunning", false);
-			
-#if false
-			dialog.Load ("ServerManager.MainWindow");
-			dialog.AddController (this);
-			dialog.IsModal = false;
-			dialog.Data = record;
-#endif
-			
-			this.main_window = dialog.DialogWindow;
 			this.dialog = dialog;
-//-			this.record = record;
+			this.Window = dialog.DialogWindow;
+			this.Window.Text = this.ShortWindowTitle;
+//-			this.Window.Icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (Epsitec.Common.Support.Platform.StockIcons.ShieldIcon);
+
+			this.DispatchCommandLineCommands ();
+			
 			this.timer = new Timer ();
 			
 			this.timer.AutoRepeat = 0.5;
@@ -49,25 +43,19 @@ namespace Epsitec.Cresus.ServerManager
 
 			this.dialog.OpenDialog ();
 		}
-		
-		
-		public Window							MainWindow
+
+
+		public override string					ShortWindowTitle
 		{
 			get
 			{
-				return this.main_window;
+				return Res.Strings.ApplicationTitle.ToSimpleText ();
 			}
 		}
-		
 		
 		private void HandleTimerTimeElapsed(object sender)
 		{
 			this.serviceSettings.IsServiceRunning = this.service_controller.IsRunning;
-#if false
-			ObsoleteField field = this.record["IsRunning"];
-			field.Value = this.service_controller.IsRunning;
-			System.Diagnostics.Debug.WriteLine ("field set to " + field.Value);
-#endif
 		}
 		
 		
@@ -79,33 +67,37 @@ namespace Epsitec.Cresus.ServerManager
 			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
 			
 			Application.application = new Application ();
-			Application.application.MainWindow.Run ();
+			Application.application.RunMessageLoop ();
 		}
 		#endregion
 
 
-		[Command ("QuitApplication")]
-		[Command (ApplicationCommands.Id.Quit)]
-		void CommandQuitApplication()
-		{
-			this.main_window.Quit ();
-		}
-		
 		[Command (Res.CommandIds.StartService)]
 		void CommandStartService()
 		{
-			this.service_controller.Start ();
+			try
+			{
+				this.service_controller.Start ();
+			}
+			catch
+			{
+			}
 		}
 
 		[Command (Res.CommandIds.StopService)]
 		void CommandStopService()
 		{
-			this.service_controller.Stop ();
+			try
+			{
+				this.service_controller.Stop ();
+			}
+			catch
+			{
+			}
 		}
 		
 		
 		private static Application				application;
-		private Window							main_window;
 		private WindowsServiceController		service_controller;
 		private Entities.ServiceSettingsEntity	serviceSettings;
 		private Dialog							dialog;

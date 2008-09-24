@@ -125,6 +125,29 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Application.DoEvents ();
 		}
 
+		public void DispatchCommandLineCommands()
+		{
+			this.DispatchCommandLineCommands (null);
+		}
+
+		public void DispatchCommandLineCommands(System.Action cleanupAction)
+		{
+			if (this.Window.DispatchCommandLineCommands ())
+			{
+				try
+				{
+					if (cleanupAction != null)
+					{
+						cleanupAction ();
+					}
+				}
+				finally
+				{
+					System.Environment.Exit (0);
+				}
+			}
+		}
+
 		protected override void Dispose(bool disposing)
 		{
 			base.Dispose (disposing);

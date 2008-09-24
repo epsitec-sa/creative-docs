@@ -345,7 +345,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override void QueueCommandForExecution(Window window, Command command, CommandState state)
+		protected override void QueueCommandForExecution(Command command, CommandState state)
 		{
 			if (command.CommandType == CommandType.Structured)
 			{
@@ -357,7 +357,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			base.QueueCommandForExecution (window, command, state);
+			base.QueueCommandForExecution (command, state);
 		}
 		
 		protected override void OnTextChanged()

@@ -101,6 +101,22 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 
+			if (name.StartsWith ("stockicon:"))
+			{
+				switch (name)
+				{
+					case "stockicon:shield":
+						return PrivilegeManager.Current.GetShieldIcon (Epsitec.Common.Drawing.IconSize.Normal);
+					case "stockicon:shield.small":
+						return PrivilegeManager.Current.GetShieldIcon (Epsitec.Common.Drawing.IconSize.Small);
+
+					default:
+						break;
+				}
+
+				return null;
+			}
+
 			if (name.StartsWith ("foldericon:"))
 			{
 				long id = long.Parse (name.Substring (11), System.Globalization.CultureInfo.InvariantCulture);

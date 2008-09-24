@@ -1,5 +1,5 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using Epsitec.Common.Types;
@@ -3154,7 +3154,7 @@ namespace Epsitec.Common.Widgets
 
 						if (chain.GetLocalEnable (command))
 						{
-							this.QueueCommandForExecution (window, command, state);
+							this.QueueCommandForExecution (command, state);
 							return true;
 						}
 					}
@@ -3164,9 +3164,14 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
-		protected virtual void QueueCommandForExecution(Window window, Command command, CommandState state)
+		protected virtual void QueueCommandForExecution(Command command, CommandState state)
 		{
-			window.QueueCommand (this, command);
+			Window window = this.Window;
+
+			if (window != null)
+			{
+				window.QueueCommand (this, command);
+			}
 		}
 
 		internal void ExecuteCommand(string command)

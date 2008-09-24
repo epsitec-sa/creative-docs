@@ -229,6 +229,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsAdminLevelRequired
+		{
+			get
+			{
+				return this.CommandParameters["Level"] == "Admin";
+			}
+		}
+
 
 		public void ManuallyDefineCommand(string description, string icon, string group, bool statefull)
 		{
