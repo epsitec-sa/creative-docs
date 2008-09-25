@@ -663,7 +663,7 @@ namespace Epsitec.Common.Designer
 
 			if (this.standalone)
 			{
-				this.Window.Quit();
+				Window.Quit();
 			}
 			else
 			{
