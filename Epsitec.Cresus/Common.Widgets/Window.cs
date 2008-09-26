@@ -2009,7 +2009,8 @@ namespace Epsitec.Common.Widgets
 
 				System.Diagnostics.Debug.Assert (item.DispatcherChain.IsEmpty == false);
 
-				if ((commandObject.IsAdminLevelRequired) &&
+				if ((commandObject != null) &&
+					(commandObject.IsAdminLevelRequired) &&
 					(Support.PrivilegeManager.Current.IsUserAnAdministrator == false))
 				{
 					//	Ooooops. Cannot execute this command without prompting for a user

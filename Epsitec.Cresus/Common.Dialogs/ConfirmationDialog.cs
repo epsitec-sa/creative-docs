@@ -43,14 +43,25 @@ namespace Epsitec.Common.Dialogs
 			header.Margins = new Drawing.Margins(0, 0, 0, 10);
 
 			int index = 1;
+			
 			foreach (string question in this.questions)
 			{
-				Button button = new ConfirmationButton(container);
-				button.Text = question;
-				button.Index = index-1;
-				button.TabIndex = index++;
-				button.Dock = DockStyle.Top;
-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				if (question.StartsWith ("#TEXT#"))
+				{
+					header = new ConfirmationStaticText (container);
+					header.Text = question.Substring (6);
+					header.Dock = DockStyle.Top;
+					header.Margins = new Drawing.Margins (0, 0, 5, 5);
+				}
+				else
+				{
+					Button button = new ConfirmationButton (container);
+					button.Text = question;
+					button.Index = index-1;
+					button.TabIndex = index++;
+					button.Dock = DockStyle.Top;
+					button.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				}
 			}
 
 			if (this.hasCancel)  // bouton Cancel dans une bande grise en bas ?
