@@ -91,6 +91,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		protected bool							DisableAsyncCallbackExecution
+		{
+			get
+			{
+				return Application.disableAsyncCallbackExecution;
+			}
+			set
+			{
+				Application.disableAsyncCallbackExecution = value;
+			}
+		}
 
 		public abstract string					ShortWindowTitle
 		{
@@ -257,7 +269,8 @@ namespace Epsitec.Common.Widgets
 
 		public static void ExecuteAsyncCallbacks()
 		{
-			if (Application.executingAsyncCallbacks)
+			if ((Application.executingAsyncCallbacks) ||
+				(Application.disableAsyncCallbackExecution))
 			{
 				return;
 			}
@@ -339,6 +352,7 @@ namespace Epsitec.Common.Widgets
 		private static Queue<Support.SimpleCallback> pendingCallbacks = new Queue<Support.SimpleCallback> ();
 		private static Queue<Support.SimpleCallback> runningCallbacks = new Queue<Support.SimpleCallback> ();
 		private static bool executingAsyncCallbacks;
+		private static bool disableAsyncCallbackExecution;
 		private static int waitCursorCount;
 
 		private readonly CommandDispatcher commandDispatcher;
