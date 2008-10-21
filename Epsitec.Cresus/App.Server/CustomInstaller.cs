@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Server
 
 			this.serviceInstaller = new ServiceInstaller ()
 			{
-				DisplayName = ServiceResources.ServiceDisplayName,
+				DisplayName = Properties.ServiceResources.ServiceDisplayName,
 				ServiceName = GlobalNames.ServiceName,
 				StartType   = ServiceStartMode.Automatic
 			};

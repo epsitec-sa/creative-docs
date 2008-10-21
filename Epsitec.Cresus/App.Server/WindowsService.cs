@@ -6,9 +6,10 @@ namespace Epsitec.Cresus.Server
 	using PowerBroadcastStatus = System.ServiceProcess.PowerBroadcastStatus;
 
 	/// <summary>
-	/// Summary description for WindowsService.
+	/// The <c>WindowsService</c> class implements the Crésus Server as a Windows
+	/// Service, running in the background.
 	/// </summary>
-	public class WindowsService : System.ServiceProcess.ServiceBase
+	public partial class WindowsService : System.ServiceProcess.ServiceBase
 	{
 		public WindowsService()
 		{
@@ -44,19 +45,21 @@ namespace Epsitec.Cresus.Server
 		
 		protected override void OnStart(string[] args)
 		{
-			System.Diagnostics.Debug.WriteLine ("OnStart called: " + string.Join ("; ", args));
+//-			System.Diagnostics.Debug.WriteLine ("OnStart called: " + string.Join ("; ", args));
 			base.OnStart (args);
-			this.StartServices ();
-			System.Diagnostics.Debug.WriteLine ("OnStart done");
+			this.StartDatabaseEngine ();
+//-			System.Diagnostics.Debug.WriteLine ("OnStart done");
+			
 			EventLog.WriteEntry ("Service started successfully.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
 		protected override void OnStop()
 		{
-			System.Diagnostics.Debug.WriteLine ("OnStop called");
+//-			System.Diagnostics.Debug.WriteLine ("OnStop called");
 			base.OnStop ();
-			this.StopServices ();
-			System.Diagnostics.Debug.WriteLine ("OnStop done");
+			this.StopDatabaseEngine ();
+//-			System.Diagnostics.Debug.WriteLine ("OnStop done");
+			
 			EventLog.WriteEntry ("Service stopped.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
@@ -65,6 +68,7 @@ namespace Epsitec.Cresus.Server
 			base.OnShutdown ();
 //-			this.StopServices ();
 			this.Stop ();
+			
 			EventLog.WriteEntry ("Shutting down.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
@@ -85,42 +89,5 @@ namespace Epsitec.Cresus.Server
 			
 			return base.OnPowerEvent (status);
 		}
-		
-		private void StartServices()
-		{
-			System.Diagnostics.Debug.WriteLine ("Cresus Server: starting.");
-//			System.Diagnostics.Debugger.Break ();
-			
-			this.infrastructure = DatabaseTools.GetDatabase (this.EventLog);
-			
-			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.IsServer);
-			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.ClientId == 1);
-			
-			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, 1234);
-			
-			System.Diagnostics.Debug.WriteLine ("Cresus Server: running.");
-		}
-		
-		private void StopServices()
-		{
-			if (this.infrastructure != null)
-			{
-				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopping.");
-				
-				Common.Support.Globals.SignalAbort ();
-				
-				this.engine.Dispose ();
-				this.infrastructure.Dispose ();
-				
-				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopped.");
-				
-				this.engine         = null;
-				this.infrastructure = null;
-			}
-		}
-		
-		
-		private Database.DbInfrastructure		infrastructure;
-		private Services.Engine					engine;
 	}
 }

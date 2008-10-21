@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Epsitec.Cresus.Server {
+namespace Epsitec.Cresus.Server.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Server {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Epsitec.Cresus.Server.ServiceResources", typeof(ServiceResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Epsitec.Cresus.Server.Properties.ServiceResources", typeof(ServiceResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

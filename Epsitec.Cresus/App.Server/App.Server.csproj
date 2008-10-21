@@ -162,7 +162,10 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="ServiceResources.Designer.cs">
+    <Compile Include="WindowsService.Database.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Properties\ServiceResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ServiceResources.resx</DependentUpon>
@@ -202,8 +205,8 @@
     <Content Include="Resources\Cresus.Database\Strings.00.resource" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ServiceResources.fr.resx" />
-    <EmbeddedResource Include="ServiceResources.resx">
+    <EmbeddedResource Include="Properties\ServiceResources.fr.resx" />
+    <EmbeddedResource Include="Properties\ServiceResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ServiceResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
