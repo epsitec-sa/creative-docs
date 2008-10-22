@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			backup.Verbose          = false;
 			backup.ServiceOutput   += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
 			
-			System.Diagnostics.Debug.WriteLine ("Backup: running.");
+			System.Diagnostics.Debug.WriteLine ("Backup: running; saving to " + path);
 			
 			try
 			{

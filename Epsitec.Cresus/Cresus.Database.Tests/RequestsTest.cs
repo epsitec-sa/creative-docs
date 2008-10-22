@@ -489,7 +489,8 @@ namespace Epsitec.Cresus.Database
 				RequestsTest.CreateTestTable (infrastructure, "ServiceTest");
 			}
 		}
-		
+#endif
+
 		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
 		{
 			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
@@ -510,7 +511,7 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("-- " + name);
 			}
 		}
-		
+
 		[Test] /*[Ignore ("Temporary")]*/ public void Check14OperatorClientWaiting()
 		{
 			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
@@ -589,7 +590,8 @@ namespace Epsitec.Cresus.Database
 				if (status == Remoting.ProgressStatus.Succeeded) break;
 			}
 		}
-		
+
+#if false
 		[Test] /*[Ignore ("Temporary")]*/ public void Check16RequestExecutionClient()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -677,6 +679,7 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 		}
+#endif
 		
 		[Test] [Ignore ("Temporary")] public void Check17OperatorClientLoop()
 		{
@@ -708,6 +711,7 @@ namespace Epsitec.Cresus.Database
 			Services.RoamingClientTool.CreateDatabase (service, operation, "roaming");
 		}
 		
+#if false
 		[Test] /*[Ignore ("Temporary")]*/ public void Check19ReplicationAndSynchronization()
 		{
 			Remoting.IRequestExecutionService service = Services.Engine.GetRemoteRequestExecutionService ("localhost", 1234);
@@ -757,7 +761,6 @@ namespace Epsitec.Cresus.Database
 				data_row[3] = "Toto";
 				data_row.EndEdit ();
 				
-#if true
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					command.UpdateRealIds (transaction);
@@ -772,7 +775,6 @@ namespace Epsitec.Cresus.Database
 				{
 					orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
 				}
-#endif
 				
 				System.Diagnostics.Debug.WriteLine ("Waiting for requests to be executed.");
 				
@@ -781,7 +783,8 @@ namespace Epsitec.Cresus.Database
 				orchestrator.Dispose ();
 			}
 		}
-		
+#endif
+
 		[Test] /*[Ignore ("Temporary")]*/ public void Check21RealReplication()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("roaming", false))
@@ -831,7 +834,6 @@ namespace Epsitec.Cresus.Database
 				RequestsTest.DeleteTestTable (infrastructure, "ServiceTest");
 			}
 		}
-#endif
 
 #if false
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)

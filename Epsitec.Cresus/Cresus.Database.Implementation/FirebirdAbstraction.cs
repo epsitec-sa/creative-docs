@@ -236,8 +236,63 @@ namespace Epsitec.Cresus.Database.Implementation
 			buffer.Append ("Role=;");
 			buffer.Append ("Pooling=true;");
 			buffer.Append ("Connection Lifetime=2;");
+
+			if (serverType == FbServerType.Embedded)
+			{
+				FirebirdAbstraction.LoadFirebirdEmbedded ();
+			}
 			
 			return buffer.ToString ();
+		}
+
+		[System.Runtime.InteropServices.DllImport ("Kernel32.dll")]
+		private static extern System.IntPtr LoadLibrary(string fullpath);
+		
+		[System.Runtime.InteropServices.DllImport ("Kernel32.dll")]
+		private static extern bool SetDllDirectory(string pathName);
+		
+		private static void LoadFirebirdEmbedded()
+		{
+			if (FirebirdAbstraction.fbEmbeddedLoaded)
+			{
+				return;
+			}
+			
+			try
+			{
+				string   dllName    = "fbembed.dll";
+				string   dllPath    = null;
+				string[] probePaths = new string[]
+				{
+					Epsitec.Common.Support.Globals.Directories.ExecutableRoot,
+					Epsitec.Common.Support.Globals.Directories.InitialDirectory,
+				};
+
+				foreach (string path in probePaths)
+				{
+					if (System.IO.File.Exists (System.IO.Path.Combine (path, dllName)))
+					{
+						dllPath = path;
+						break;
+					}
+				}
+
+				if (dllPath == null)
+				{
+					System.Diagnostics.Debug.Fail ("Could not locate fbembed.dll");
+				}
+				else
+				{
+					FirebirdAbstraction.SetDllDirectory (dllPath);
+				}
+
+				FirebirdAbstraction.fbEmbeddedLoaded = true;
+			}
+			catch
+			{
+				//	Never mind if we cannot set the DLL directory; this probably means that we
+				//	are running on a system older than XP SP1 or Server 2003.
+			}
 		}
 		
 		public static string MakeDbFilePath(DbAccess dbAccess, EngineType engineType)
@@ -426,22 +481,42 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.EnsureConnection ();
 			
+#if false
 			FbTransactionOptions options = FbTransactionOptions.Concurrency |
 				/**/					   FbTransactionOptions.Wait |
 				/**/					   FbTransactionOptions.Read;
 			
 			return this.dbConnection.BeginTransaction (options);
+#else
+			return this.dbConnection.BeginTransaction (
+				new FbTransactionOptions ()
+				{
+					TransactionBehavior = FbTransactionBehavior.Concurrency | FbTransactionBehavior.Wait | FbTransactionBehavior.Read
+				});
+#endif
 		}
-		
+
+		/// <summary>
+		/// Begins a read-write transaction.
+		/// </summary>
+		/// <returns>The database transaction object.</returns>
 		public System.Data.IDbTransaction BeginReadWriteTransaction()
 		{
 			this.EnsureConnection ();
 			
+#if false
 			FbTransactionOptions options = FbTransactionOptions.Concurrency |
 				/**/					   FbTransactionOptions.Wait |
 				/**/					   FbTransactionOptions.Write;
 			
 			return this.dbConnection.BeginTransaction (options);
+#else
+			return this.dbConnection.BeginTransaction (
+				new FbTransactionOptions ()
+				{
+					TransactionBehavior = FbTransactionBehavior.Concurrency | FbTransactionBehavior.Wait | FbTransactionBehavior.Write
+				});
+#endif
 		}
 		
 		public void ReleaseConnection()
@@ -489,5 +564,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private static readonly string			fbCharset			= "UTF8";
 		private static readonly string			fbRootDbPath;
 		private static readonly string			fbDbFileExtension	= ".firebird";
+
+		private static bool						fbEmbeddedLoaded;
 	}
 }

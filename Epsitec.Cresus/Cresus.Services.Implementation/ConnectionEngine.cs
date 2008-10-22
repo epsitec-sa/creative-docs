@@ -1,6 +1,8 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Services
 {
 	/// <summary>
@@ -23,11 +25,10 @@ namespace Epsitec.Cresus.Services
 		public void QueryAvailableServices(Remoting.ClientIdentity client, out string[] service_names)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' asked for available services.", client));
-			
-			System.Collections.Hashtable hash = this.engine.Services;
-			service_names = new string[hash.Count];
-			hash.Keys.CopyTo (service_names, 0);
-			System.Array.Sort (service_names);
+
+			List<string> serviceNames = new List<string> (this.engine.ServiceNames);
+			serviceNames.Sort ();
+			service_names = serviceNames.ToArray ();
 		}
 		#endregion
 	}

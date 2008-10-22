@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Services
 		{
 			//	Démarre, de manière asynchrone, la création d'une copie comprimée de la base
 			//	de données du serveur.
-			
+
 			operation = new CreateRoamingClientOperation (this, name);
 		}
 		
@@ -63,6 +63,7 @@ namespace Epsitec.Cresus.Services
 		{
 			public CreateRoamingClientOperation(OperatorEngine oper, string name)
 			{
+//-				System.Diagnostics.Debugger.Break ();
 				this.oper = oper;
 				this.client_name = name;
 				this.Start ();
@@ -98,7 +99,9 @@ namespace Epsitec.Cresus.Services
 			{
 				try
 				{
-					this.temp = new Epsitec.Common.IO.TemporaryFile ();
+					string path = Epsitec.Common.Support.Globals.Directories.CommonAppDataRevision;
+
+					this.temp = new Epsitec.Common.IO.TemporaryFile (path);
 					
 					this.Add (new Step (this.Step_CreateClient));
 					this.Add (new Step (this.Step_CopyDatabase));

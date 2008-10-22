@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Services
 			//	simplement supprimée.
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			Database.DbAccess         access = Database.DbInfrastructure.CreateDatabaseAccess ("FirebirdEmbedded", database_name);
+			Database.DbAccess         access = Database.DbInfrastructure.CreateDatabaseAccess ("Firebird" /*"FirebirdEmbedded"*/, database_name);
 			
 			access.CheckConnection = false;
 			

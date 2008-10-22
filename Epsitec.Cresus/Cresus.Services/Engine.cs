@@ -1,10 +1,12 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Lifetime;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Services
 {
@@ -19,7 +21,7 @@ namespace Epsitec.Cresus.Services
 			this.infrastructure = infrastructure;
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
 			this.port_number    = port_number;
-			this.services       = new System.Collections.ArrayList ();
+			this.services       = new List<AbstractServiceEngine> ();
 			
 			this.LoadServices ();
 			this.StartServices ();
@@ -42,18 +44,29 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 		
-		public System.Collections.Hashtable		Services
+		public Dictionary<string, AbstractServiceEngine> Services
 		{
 			get
 			{
-				System.Collections.Hashtable hash = new System.Collections.Hashtable ();
+				Dictionary<string, AbstractServiceEngine> dict = new Dictionary<string, AbstractServiceEngine> ();
 				
 				foreach (AbstractServiceEngine service in this.services)
 				{
-					hash[service.ServiceName] = service;
+					dict[service.ServiceName] = service;
 				}
 				
-				return hash;
+				return dict;
+			}
+		}
+
+		public IEnumerable<string> ServiceNames
+		{
+			get
+			{
+				foreach (AbstractServiceEngine service in this.services)
+				{
+					yield return service.ServiceName;
+				}
 			}
 		}
 		
@@ -178,6 +191,6 @@ namespace Epsitec.Cresus.Services
 		private Database.DbInfrastructure		infrastructure;
 		private int								port_number;
 		private Requests.Orchestrator			orchestrator;
-		private System.Collections.ArrayList	services;
+		private List<AbstractServiceEngine>		services;
 	}
 }

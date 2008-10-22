@@ -13,7 +13,10 @@ namespace Epsitec.Cresus.Replication
 		public ServerEngine(DbInfrastructure infrastructure)
 		{
 			this.infrastructure = infrastructure;
-			this.database       = this.infrastructure.CreateDatabaseAbstraction ();
+			
+			this.database                      = this.infrastructure.CreateDatabaseAbstraction ();
+			this.database.SqlBuilder.AutoClear = true;
+			
 			this.queue          = new System.Collections.Queue ();
 			
 			this.abort_event    = new System.Threading.ManualResetEvent (false);
