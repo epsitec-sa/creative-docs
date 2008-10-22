@@ -144,6 +144,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+
+		public DbAccess							Access
+		{
+			get
+			{
+				return this.access;
+			}
+		}
 		
 		public bool								IsInGlobalLock
 		{

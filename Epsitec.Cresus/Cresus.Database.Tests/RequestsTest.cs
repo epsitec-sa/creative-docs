@@ -449,25 +449,24 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-#if false
-		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
+		[Test] [Ignore ("Slow")] public void Check12ServiceServer()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
 			infrastructure.LocalSettings.IsServer = true;
 			
-			Services.Engine engine = new Services.Engine (infrastructure, 1234);
+			Services.Engine engine = new Services.Engine (infrastructure, 12345);
 			
 			infrastructure.LocalSettings.IsServer = false;
 			
 			infrastructure.Logger.CreateTemporaryEntry (null);
-			RequestsTest.CreateTestTable (infrastructure, "ServiceTest");
+			RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
 			
-			System.Diagnostics.Debug.WriteLine ("Server ready. Running for 60 seconds.");
+			System.Diagnostics.Debug.WriteLine ("Server ready. Running for 5 seconds.");
 			
-			System.Threading.Thread.Sleep (1000*60);
-			
-			RequestsTest.DeleteTestTable (infrastructure, "ServiceTest");
+			System.Threading.Thread.Sleep (1000*5);
+
+			RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
 			
 			System.Diagnostics.Debug.WriteLine ("Aborting server...");
 			Common.Support.Globals.SignalAbort ();
@@ -481,15 +480,14 @@ namespace Epsitec.Cresus.Database
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				infrastructure.Logger.CreateTemporaryEntry (null);
-				RequestsTest.CreateTestTable (infrastructure, "ServiceTest");
+				RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
 			}
 			
-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
-			{
-				RequestsTest.CreateTestTable (infrastructure, "ServiceTest");
-			}
+//-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
+//-			{
+//-				RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
+//-			}
 		}
-#endif
 
 		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
 		{
@@ -595,7 +593,7 @@ namespace Epsitec.Cresus.Database
 		[Test] /*[Ignore ("Temporary")]*/ public void Check16RequestExecutionClient()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
-			System.Data.DataTable table = RequestsTest.GetDataTableFromTable (infrastructure, "ServiceTest");
+			System.Data.DataTable table = RequestsTest.GetDataTableFromTable (infrastructure, RequestsTest.TestTableName);
 			
 			Remoting.ClientIdentity.DefineDefaultClientId (1);
 			Remoting.ClientIdentity client = new Remoting.ClientIdentity ("NUnit Test Client", 1000);
@@ -680,7 +678,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 #endif
-		
+
 		[Test] [Ignore ("Temporary")] public void Check17OperatorClientLoop()
 		{
 			for (int i = 0; i < 1000; i++)
@@ -725,7 +723,7 @@ namespace Epsitec.Cresus.Database
 				
 				orchestrator.DefineRemotingService (service, client);
 				
-				DbTable       db_table = infrastructure.ResolveDbTable ("ServiceTest");
+				DbTable       db_table = infrastructure.ResolveDbTable (RequestsTest.TestTableName);
 				DbRichCommand command  = DbRichCommand.CreateFromTable (infrastructure, null, db_table, DbSelectRevision.LiveActive);
 				
 				System.Data.DataTable    table   = command.DataSet.Tables[0];
@@ -734,21 +732,21 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} rows in table {1}.", table.Rows.Count, table.TableName));
 				
 				System.Data.DataRow data_row;
-				command.CreateNewRow ("ServiceTest", out data_row);
+				command.CreateNewRow (RequestsTest.TestTableName, out data_row);
 				
 				data_row.BeginEdit ();
 				data_row[3] = "Albert Einstein";
 				data_row[4] = new System.DateTime (1904, 5, 14);
 				data_row.EndEdit ();
 				
-				command.CreateNewRow ("ServiceTest", out data_row);
+				command.CreateNewRow (RequestsTest.TestTableName, out data_row);
 				
 				data_row.BeginEdit ();
 				data_row[3] = "Max Planck";
 				data_row[4] = new System.DateTime (1858, 4, 23);
 				data_row.EndEdit ();
 				
-				command.CreateNewRow ("ServiceTest", out data_row);
+				command.CreateNewRow (RequestsTest.TestTableName, out data_row);
 				
 				data_row.BeginEdit ();
 				data_row[3] = "Niels Bohr";
@@ -827,45 +825,50 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				RequestsTest.DeleteTestTable (infrastructure, "ServiceTest");
+				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
 			}
-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
-			{
-				RequestsTest.DeleteTestTable (infrastructure, "ServiceTest");
-			}
+//-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
+//-			{
+//-				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
+//-			}
 		}
 
-#if false
+
+		private static readonly string TestTableName = "ST";
+
+
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)
 		{
-			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
+			System.Diagnostics.Debug.WriteLine (string.Format ("Creating test table {0} in database {1}", name, infrastructure.Access.Database));
+
+			DbTypeDef db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbTypeDef db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			if (db_type_name == null)
 			{
-				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
+				db_type_name = new DbTypeDef ("Customer Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				infrastructure.RegisterNewDbType (db_type_name);
 			}
 			
 			if (db_type_date == null)
 			{
-				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
+				db_type_date = new DbTypeDef ("Birth Date", DbSimpleType.Date, null, 0, false, DbNullability.Yes);
 				infrastructure.RegisterNewDbType (db_type_date);
 			}
 			
 			Assert.IsNotNull (db_type_name);
 			Assert.IsNotNull (db_type_date);
 			
-			DbTable db_table = infrastructure.CreateDbTable (name, DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			DbTable db_table = infrastructure.CreateDbTable (name, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 			
-			DbColumn db_col_1 = DbColumn.CreateUserDataColumn ("Name",       db_type_name, Nullable.No);
-			DbColumn db_col_2 = DbColumn.CreateUserDataColumn ("Birth Date", db_type_date, Nullable.Yes);
+			DbColumn db_col_1 = new DbColumn ("Name", db_type_name, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+			DbColumn db_col_2 = new DbColumn ("Birth Date", db_type_date, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
 			infrastructure.RegisterNewDbTable (db_table);
 		}
-#endif
+
 		private static System.Data.DataTable GetDataTableFromTable(DbInfrastructure infrastructure, string name)
 		{
 			DbTable db_table = infrastructure.ResolveDbTable (name);
