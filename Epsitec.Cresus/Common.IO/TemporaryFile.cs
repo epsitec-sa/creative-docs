@@ -13,6 +13,19 @@ namespace Epsitec.Common.IO
 		{
 			this.name = System.IO.Path.GetTempFileName ();
 		}
+
+		public TemporaryFile(string rootPath)
+		{
+			while (true)
+			{
+				this.name = System.IO.Path.Combine (rootPath, System.IO.Path.GetRandomFileName ());
+				
+				if (!System.IO.File.Exists (this.name))
+				{
+					break;
+				}
+			}
+		}
 		
 		~ TemporaryFile()
 		{

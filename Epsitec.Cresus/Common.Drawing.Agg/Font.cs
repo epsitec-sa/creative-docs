@@ -34,7 +34,7 @@ namespace Epsitec.Common.Drawing
 		private static extern System.IntPtr LoadLibrary(string fullpath);
 
 		[System.Runtime.InteropServices.DllImport ("Kernel32.dll")]
-		private static extern bool SetDllDirectory(string patnName);
+		private static extern bool SetDllDirectory(string pathName);
 		
 		static Font()
 		{
