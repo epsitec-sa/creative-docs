@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Server
 
 			try
 			{
-				System.Diagnostics.Debug.WriteLine ("Trying to open database.");
+				System.Diagnostics.Debug.WriteLine ("Trying to open database " + access.Database);
 				infrastructure.AttachToDatabase (access);
 			}
 			catch (EmptyDatabaseException ex)
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Server
 
 			try
 			{
-				System.Diagnostics.Debug.WriteLine ("Creating database.");
+				System.Diagnostics.Debug.WriteLine ("Creating database " + access.Database);
 				DatabaseTools.CreateEmptyDatabase (eventLog);
 				System.Diagnostics.Debug.WriteLine ("Trying to open database (2).");
 				infrastructure.AttachToDatabase (access);
@@ -76,9 +76,12 @@ namespace Epsitec.Cresus.Server
 			DbInfrastructure infrastructure = new DbInfrastructure ();
 			DbAccess         access         = DatabaseTools.GetAccess ();
 
-			infrastructure.CreateDatabase (access);
+			infrastructure.CreateDatabase (access, true);
 
-			eventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
+			if (eventLog != null)
+			{
+				eventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
+			}
 
 			infrastructure.LocalSettings.IsServer = true;
 			infrastructure.LocalSettings.ClientId = 1;
@@ -101,9 +104,12 @@ namespace Epsitec.Cresus.Server
 			DbInfrastructure infrastructure = new DbInfrastructure ();
 			DbAccess         access         = DatabaseTools.GetAccess ();
 
-			infrastructure.CreateDatabase (access);
+			infrastructure.CreateDatabase (access, true);
 
-			eventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
+			if (eventLog != null)
+			{
+				eventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
+			}
 
 			infrastructure.LocalSettings.IsServer = true;
 			infrastructure.LocalSettings.ClientId = 1;
@@ -124,10 +130,18 @@ namespace Epsitec.Cresus.Server
 		public static DbAccess GetAccess()
 		{
 			string provider		 = ConfigurationManager.AppSettings["DatabaseProvider"];
-			string database		 = ConfigurationManager.AppSettings["DatabaseSource"];
+			string database		 = ConfigurationManager.AppSettings["DatabaseSource"].ToUpperInvariant ();
 			string server		 = ConfigurationManager.AppSettings["DatabaseServer"];
 			string loginName	 = ConfigurationManager.AppSettings["DatabaseUserName"];
 			string loginPassword = ConfigurationManager.AppSettings["DatabaseUserPass"];
+
+			string appDomainName = System.AppDomain.CurrentDomain.FriendlyName;
+
+			if ((appDomainName != null) &&
+				(appDomainName.Contains ("/")))
+			{
+				database = string.Concat (database, "", appDomainName.Substring (appDomainName.IndexOf ('/') + 1));
+			}
 
 			return new DbAccess (provider, database, server, loginName, loginPassword, false);
 		}

@@ -1,0 +1,46 @@
+﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Cresus.Remoting;
+
+namespace Epsitec.Cresus.Services.Adapters
+{
+	class RequestExecutionServiceAdapter : AbstractServiceAdapter, IRequestExecutionService
+	{
+		public RequestExecutionServiceAdapter(IRequestExecutionService target)
+		{
+			this.target = target;
+		}
+
+		private readonly IRequestExecutionService target;
+
+		#region IRequestExecutionService Members
+
+		public void EnqueueRequest(ClientIdentity client, SerializedRequest[] requests)
+		{
+			this.target.EnqueueRequest (client, requests);
+		}
+
+		public void QueryRequestStates(ClientIdentity client, out RequestState[] states)
+		{
+			this.target.QueryRequestStates (client, out states);
+		}
+
+		public void QueryRequestStates(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
+		{
+			this.target.QueryRequestStates (client, ref change_id, timeout, out states);
+		}
+
+		public void RemoveRequestStates(ClientIdentity client, RequestState[] states)
+		{
+			this.target.RemoveRequestStates (client, states);
+		}
+
+		public void RemoveAllRequestStates(ClientIdentity client)
+		{
+			this.target.RemoveAllRequestStates (client);
+		}
+
+		#endregion
+	}
+}

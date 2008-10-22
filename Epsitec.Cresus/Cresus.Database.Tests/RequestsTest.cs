@@ -454,8 +454,9 @@ namespace Epsitec.Cresus.Database
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
 			infrastructure.LocalSettings.IsServer = true;
-			
-			Services.Engine engine = new Services.Engine (infrastructure, 12345);
+
+			Services.EngineHost host = new Epsitec.Cresus.Services.EngineHost (12345);
+			Services.Engine engine = new Services.Engine (infrastructure, host);
 			
 			infrastructure.LocalSettings.IsServer = false;
 			

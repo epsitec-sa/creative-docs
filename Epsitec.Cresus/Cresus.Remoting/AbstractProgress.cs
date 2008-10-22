@@ -11,7 +11,16 @@ namespace Epsitec.Cresus.Remoting
 		public AbstractProgress()
 		{
 		}
-		
+
+		public override object InitializeLifetimeService()
+		{
+			//	En retournant null ici, on garantit que le service ne sera jamais
+			//	recyclé (sinon, après un temps défini par ILease, l'objet est retiré
+			//	de la table des objets joignables par "remoting").
+
+			return null;
+		}
+
 		
 		#region IProgressInformation Members
 		public virtual int						ProgressPercent

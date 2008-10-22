@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{76A75F71-6965-458C-B0D1-C2741241EDEB}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -127,9 +127,15 @@
     <Compile Include="AbstractServiceEngine.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Adapters\AbstractServiceAdapter.cs" />
+    <Compile Include="Adapters\ConnectionServiceAdapter.cs" />
+    <Compile Include="Adapters\OperatorServiceAdapter.cs" />
+    <Compile Include="Adapters\ReplicationServiceAdapter.cs" />
+    <Compile Include="Adapters\RequestExecutionServiceAdapter.cs" />
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="EngineHost.cs" />
     <Compile Include="Engine.cs">
       <SubType>Code</SubType>
     </Compile>

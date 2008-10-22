@@ -16,11 +16,11 @@ namespace Epsitec.Cresus.Services
 	/// </summary>
 	public class Engine : System.IDisposable
 	{
-		public Engine(Database.DbInfrastructure infrastructure, int port_number)
+		public Engine(Database.DbInfrastructure infrastructure, EngineHost engineHost)
 		{
 			this.infrastructure = infrastructure;
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
-			this.port_number    = port_number;
+			this.engineHost     = engineHost;
 			this.services       = new List<AbstractServiceEngine> ();
 			
 			this.LoadServices ();
@@ -91,32 +91,16 @@ namespace Epsitec.Cresus.Services
 					AbstractServiceEngine engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine;
 					
 					this.services.Add (engine);
+					this.engineHost.AddService (engine);
 				}
 			}
 		}
 		
 		private void StartServices()
 		{
-#if true
-			System.Collections.Hashtable setup = new System.Collections.Hashtable ();
-			
-			setup["port"] = this.port_number;
-			
-			SoapServerFormatterSinkProvider sink_provider = new SoapServerFormatterSinkProvider ();
-			sink_provider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
-			
-			HttpChannel channel = new HttpChannel (setup, null, sink_provider);
-#else
-			HttpChannel channel = new HttpChannel (this.port_number);
-#endif
-			ChannelServices.RegisterChannel (channel);
-			
 			foreach (AbstractServiceEngine service in this.services)
 			{
-				string int_name = service.ServiceName;
-				string pub_name = string.Concat (int_name, "Service", ".soap");
-				
-				RemotingServices.Marshal (service, pub_name);
+				this.engineHost.RegisterService (service);
 			}
 		}
 		
@@ -127,13 +111,7 @@ namespace Epsitec.Cresus.Services
 			{
 				if (this.services.Count > 0)
 				{
-					AbstractServiceEngine[] array = new AbstractServiceEngine[this.services.Count];
-					this.services.CopyTo (array);
-					
-					for (int i = 0; i < array.Length; i++)
-					{
-						array[i].Dispose ();
-					}
+					//	TODO: unregister services from engine host
 					
 					this.services.Clear ();
 				}
@@ -189,7 +167,7 @@ namespace Epsitec.Cresus.Services
 		
 		
 		private Database.DbInfrastructure		infrastructure;
-		private int								port_number;
+		private EngineHost						engineHost;
 		private Requests.Orchestrator			orchestrator;
 		private List<AbstractServiceEngine>		services;
 	}

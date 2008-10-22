@@ -24,25 +24,6 @@ namespace Epsitec.Cresus.Server
 		}
 		
 		
-		private static void Main()
-		{
-#if false
-			Database.DbInfrastructure infrastructure = DatabaseTools.GetDatabase (null);
-
-			System.Diagnostics.Debug.Assert (infrastructure.LocalSettings.IsServer);
-			System.Diagnostics.Debug.Assert (infrastructure.LocalSettings.ClientId == 1);
-
-			Epsitec.Cresus.Services.Engine engine = new Epsitec.Cresus.Services.Engine (infrastructure, 1234);
-#else
-			System.ServiceProcess.ServiceBase[] services_to_run;
-			
-			services_to_run = new System.ServiceProcess.ServiceBase[] { new WindowsService () };
-			
-			System.ServiceProcess.ServiceBase.Run (services_to_run);
-#endif
-		}
-		
-		
 		protected override void OnStart(string[] args)
 		{
 //-			System.Diagnostics.Debug.WriteLine ("OnStart called: " + string.Join ("; ", args));

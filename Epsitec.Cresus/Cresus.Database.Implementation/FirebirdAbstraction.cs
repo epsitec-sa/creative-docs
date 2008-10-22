@@ -539,9 +539,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			path = Globals.Directories.CommonAppData;
 			path = System.IO.Path.GetDirectoryName (path);
+			path = System.IO.Path.GetDirectoryName (path);
+			path = System.IO.Path.Combine (path, "Epsitec");
 			path = System.IO.Path.Combine (path, "Firebird Databases");
 
 			FirebirdAbstraction.fbRootDbPath = path;
+
+			System.Diagnostics.Debug.WriteLine ("Database path : " + path);
 		}
 		
 		
