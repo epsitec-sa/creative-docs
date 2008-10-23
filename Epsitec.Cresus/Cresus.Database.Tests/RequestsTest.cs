@@ -456,7 +456,10 @@ namespace Epsitec.Cresus.Database
 			infrastructure.LocalSettings.IsServer = true;
 
 			Services.EngineHost host = new Epsitec.Cresus.Services.EngineHost (12345);
-			Services.Engine engine = new Services.Engine (infrastructure, host);
+			Services.Kernel kernel = new Epsitec.Cresus.Services.Kernel (host);
+			Services.Engine engine = new Services.Engine (infrastructure, System.Guid.Empty);
+			
+			kernel.AddEngine (engine);
 			
 			infrastructure.LocalSettings.IsServer = false;
 			
@@ -492,7 +495,8 @@ namespace Epsitec.Cresus.Database
 
 		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
 		{
-			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
+			Remoting.IKernel kernel = Services.Engine.GetRemoteKernel ("localhost", 1234);
+			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService (System.Guid.Empty, kernel);
 			Remoting.ClientIdentity client = new Remoting.ClientIdentity ("NUnit Test Client", 1000);
 			
 			Assert.IsNotNull (service);
@@ -513,7 +517,8 @@ namespace Epsitec.Cresus.Database
 
 		[Test] /*[Ignore ("Temporary")]*/ public void Check14OperatorClientWaiting()
 		{
-			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
+			Remoting.IKernel kernel = Services.Engine.GetRemoteKernel ("localhost", 1234);
+			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService (System.Guid.Empty, kernel);
 			Remoting.IOperation operation;
 			
 			Assert.IsNotNull (service);
@@ -540,7 +545,8 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClientPolling()
 		{
-			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
+			Remoting.IKernel kernel = Services.Engine.GetRemoteKernel ("localhost", 1234);
+			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService (System.Guid.Empty, kernel);
 			Remoting.IOperation operation;
 			Remoting.IProgressInformation progress;
 			
@@ -698,7 +704,8 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] /*[Ignore ("Temporary")]*/ public void Check18RoamingClientTool()
 		{
-			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
+			Remoting.IKernel kernel = Services.Engine.GetRemoteKernel ("localhost", 1234);
+			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService (System.Guid.Empty, kernel);
 			Remoting.IOperation operation;
 			
 			Assert.IsNotNull (service);
@@ -788,8 +795,9 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("roaming", false))
 			{
+				Remoting.IKernel             kernel  = Services.Engine.GetRemoteKernel ("localhost", 1234);
 				Remoting.ClientIdentity      client  = new Remoting.ClientIdentity ("NUnit Test Client", infrastructure.LocalSettings.ClientId);
-				Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+				Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService (System.Guid.Empty, kernel);
 				
 				Assert.IsNotNull (service);
 				

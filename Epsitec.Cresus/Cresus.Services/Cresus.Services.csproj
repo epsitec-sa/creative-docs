@@ -136,6 +136,7 @@
     <Compile Include="Adapters\OperatorServiceAdapter.cs" />
     <Compile Include="Adapters\ReplicationServiceAdapter.cs" />
     <Compile Include="Adapters\RequestExecutionServiceAdapter.cs" />
+    <Compile Include="Kernel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

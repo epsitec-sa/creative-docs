@@ -7,6 +7,7 @@ using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Lifetime;
 
 using System.Collections.Generic;
+using Epsitec.Cresus.Remoting;
 
 namespace Epsitec.Cresus.Services
 {
@@ -14,17 +15,32 @@ namespace Epsitec.Cresus.Services
 	/// La classe Engine démarre les divers services (en mode serveur) ou donne
 	/// accès aux services distants via les mécanismes ".NET Remoting".
 	/// </summary>
-	public class Engine : System.IDisposable
+	public class Engine : System.MarshalByRefObject, System.IDisposable
 	{
-		public Engine(Database.DbInfrastructure infrastructure, EngineHost engineHost)
+		public Engine(Database.DbInfrastructure infrastructure, System.Guid databaseId)
 		{
 			this.infrastructure = infrastructure;
+			this.databaseId     = databaseId;
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
-			this.engineHost     = engineHost;
 			this.services       = new List<AbstractServiceEngine> ();
-			
-			this.LoadServices ();
-			this.StartServices ();
+
+			this.InstanciateServices ();
+		}
+
+		private void InstanciateServices()
+		{
+			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Services.Implementation");
+			System.Type[] types_in_assembly = assembly.GetTypes ();
+
+			foreach (System.Type type in types_in_assembly)
+			{
+				if (type.IsSubclassOf (typeof (AbstractServiceEngine)))
+				{
+					AbstractServiceEngine engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine;
+
+					this.services.Add (engine);
+				}
+			}
 		}
 		
 		
@@ -41,6 +57,14 @@ namespace Epsitec.Cresus.Services
 			get
 			{
 				return this.orchestrator;
+			}
+		}
+
+		public System.Guid DatabaseId
+		{
+			get
+			{
+				return this.databaseId;
 			}
 		}
 		
@@ -69,6 +93,19 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 		}
+
+		public IRemotingService GetService(System.Guid serviceId)
+		{
+			foreach (var service in this.services)
+			{
+				if (service.GetServiceId () == serviceId)
+				{
+					return service;
+				}
+			}
+
+			return null;
+		}
 		
 		
 		#region IDisposable Members
@@ -78,31 +115,6 @@ namespace Epsitec.Cresus.Services
 			System.GC.SuppressFinalize (true);
 		}
 		#endregion
-		
-		private void LoadServices()
-		{
-			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Services.Implementation");
-			System.Type[] types_in_assembly = assembly.GetTypes ();
-			
-			foreach (System.Type type in types_in_assembly)
-			{
-				if (type.IsSubclassOf (typeof (AbstractServiceEngine)))
-				{
-					AbstractServiceEngine engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine;
-					
-					this.services.Add (engine);
-					this.engineHost.AddService (engine);
-				}
-			}
-		}
-		
-		private void StartServices()
-		{
-			foreach (AbstractServiceEngine service in this.services)
-			{
-				this.engineHost.RegisterService (service);
-			}
-		}
 		
 		
 		protected virtual void Dispose(bool disposing)
@@ -123,50 +135,40 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 		}
-		
-		
-		public static Remoting.IRequestExecutionService GetRemoteRequestExecutionService(string machine, int port)
+
+		public static Remoting.IKernel GetRemoteKernel(string machine, int port)
 		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/RequestExecutionService.soap", machine, port);
-			System.Type type = typeof (Remoting.IRequestExecutionService);
-			
-			Remoting.IRequestExecutionService service = (Remoting.IRequestExecutionService) System.Activator.GetObject (type, url);
-			
+			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/kernel.soap", machine, port);
+			System.Type type = typeof (Remoting.IKernel);
+
+			Remoting.IKernel service = (Remoting.IKernel) System.Activator.GetObject (type, url);
+
 			return service;
 		}
 		
-		public static Remoting.IConnectionService GetRemoteConnectionService(string machine, int port)
+		public static Remoting.IRequestExecutionService GetRemoteRequestExecutionService(System.Guid databaseId, IKernel kernel)
 		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/ConnectionService.soap", machine, port);
-			System.Type type = typeof (Remoting.IConnectionService);
-			
-			Remoting.IConnectionService service = (Remoting.IConnectionService) System.Activator.GetObject (type, url);
-			
-			return service;
+			return (Remoting.IRequestExecutionService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.RequestExecutionServiceId);
 		}
 		
-		public static Remoting.IOperatorService GetRemoteOperatorService(string machine, int port)
+		public static Remoting.IConnectionService GetRemoteConnectionService(System.Guid databaseId, IKernel kernel)
 		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/OperatorService.soap", machine, port);
-			System.Type type = typeof (Remoting.IOperatorService);
-			
-			Remoting.IOperatorService service = (Remoting.IOperatorService) System.Activator.GetObject (type, url);
-			
-			return service;
+			return (Remoting.IConnectionService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
 		}
-		
-		public static Remoting.IReplicationService GetRemoteReplicationService(string machine, int port)
+
+		public static Remoting.IOperatorService GetRemoteOperatorService(System.Guid databaseId, IKernel kernel)
 		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/ReplicationService.soap", machine, port);
-			System.Type type = typeof (Remoting.IReplicationService);
-			
-			Remoting.IReplicationService service = (Remoting.IReplicationService) System.Activator.GetObject (type, url);
-			
-			return service;
+			return (Remoting.IOperatorService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.OperatorServiceId);
+		}
+
+		public static Remoting.IReplicationService GetRemoteReplicationService(System.Guid databaseId, IKernel kernel)
+		{
+			return (Remoting.IReplicationService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ReplicationServiceId);
 		}
 		
 		
 		private Database.DbInfrastructure		infrastructure;
+		private System.Guid						databaseId;
 		private EngineHost						engineHost;
 		private Requests.Orchestrator			orchestrator;
 		private List<AbstractServiceEngine>		services;

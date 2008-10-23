@@ -14,14 +14,18 @@ namespace Epsitec.Cresus.Server
 			System.Diagnostics.Debug.Assert (infrastructure.LocalSettings.ClientId == 1);
 
 			Epsitec.Cresus.Services.EngineHost host = new Epsitec.Cresus.Services.EngineHost (1234);
+			Epsitec.Cresus.Services.Kernel kernel = new Epsitec.Cresus.Services.Kernel (host);
+
 //			Epsitec.Cresus.Services.Engine engine = new Epsitec.Cresus.Services.Engine (infrastructure, host);
 
 			System.AppDomain domain = System.AppDomain.CreateDomain ("TestDomain/A");
 
 			TestEngine te = (TestEngine) domain.CreateInstanceAndUnwrap ("Cresus.Server", "Epsitec.Cresus.Server.TestEngine");
 
-			te.SetEngine (host);
+			te.SetEngine (kernel);
 			te.CreateEngine ();
+
+			Epsitec.Cresus.Remoting.IRemotingService s = kernel.GetRemotingService (System.Guid.Empty, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
 
 			System.Threading.Thread.Sleep (-1);
 
@@ -41,19 +45,21 @@ namespace Epsitec.Cresus.Server
 		{
 		}
 
-		public void SetEngine(Epsitec.Cresus.Services.EngineHost engineHost)
+		public void SetEngine(Epsitec.Cresus.Services.Kernel kernel)
 		{
-			this.engineHost = engineHost;
+			this.kernel = kernel;
 		}
 
 		public void CreateEngine()
 		{
 			this.infrastructure = DatabaseTools.GetDatabase (null);
-			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, this.engineHost);
+			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, System.Guid.Empty);
+			this.kernel.AddEngine (this.engine);
 		}
 
 		private Database.DbInfrastructure infrastructure;
-		private Epsitec.Cresus.Services.EngineHost engineHost;
+		private Epsitec.Cresus.Services.Kernel kernel;
+		
 		private Epsitec.Cresus.Services.Engine engine;
 	}
 }

@@ -17,9 +17,10 @@ namespace Epsitec.Cresus.Server
 			
 			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.IsServer);
 			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.ClientId == 1);
-			
+
 			this.host = new Epsitec.Cresus.Services.EngineHost (1234);
-			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, this.host);
+			this.kernel = new Epsitec.Cresus.Services.Kernel (this.host);
+			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, System.Guid.Empty);
 			
 //-			System.Diagnostics.Debug.WriteLine ("Cresus Server: running.");
 		}
@@ -34,12 +35,15 @@ namespace Epsitec.Cresus.Server
 //-				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopping.");
 				
 				Common.Support.Globals.SignalAbort ();
-				
+
 				this.engine.Dispose ();
+				this.host.Dispose ();
 				this.infrastructure.Dispose ();
 				
 //-				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopped.");
-				
+
+				this.host           = null;
+				this.kernel         = null;
 				this.engine         = null;
 				this.infrastructure = null;
 			}
@@ -49,5 +53,6 @@ namespace Epsitec.Cresus.Server
 		private Database.DbInfrastructure		infrastructure;
 		private Services.Engine					engine;
 		private Services.EngineHost				host;
+		private Services.Kernel					kernel;
 	}
 }

@@ -10,43 +10,12 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Services
 {
-	/// <summary>
-	/// La classe Engine démarre les divers services (en mode serveur) ou donne
-	/// accès aux services distants via les mécanismes ".NET Remoting".
-	/// </summary>
 	public class EngineHost : System.MarshalByRefObject, System.IDisposable
 	{
 		public EngineHost(int port_number)
 		{
 			this.port_number    = port_number;
-			this.services       = new List<AbstractServiceEngine> ();
-		}
-		
-		
-		public Dictionary<string, AbstractServiceEngine> Services
-		{
-			get
-			{
-				Dictionary<string, AbstractServiceEngine> dict = new Dictionary<string, AbstractServiceEngine> ();
-				
-				foreach (AbstractServiceEngine service in this.services)
-				{
-					dict[service.ServiceName] = service;
-				}
-				
-				return dict;
-			}
-		}
-
-		public IEnumerable<string> ServiceNames
-		{
-			get
-			{
-				foreach (AbstractServiceEngine service in this.services)
-				{
-					yield return service.ServiceName;
-				}
-			}
+			this.services       = new List<System.MarshalByRefObject> ();
 		}
 		
 		
@@ -57,11 +26,6 @@ namespace Epsitec.Cresus.Services
 			System.GC.SuppressFinalize (true);
 		}
 		#endregion
-		
-		public void AddService(AbstractServiceEngine engine)
-		{
-			this.services.Add (engine);
-		}
 		
 		public void RegisterChannel()
 		{
@@ -77,48 +41,16 @@ namespace Epsitec.Cresus.Services
 			this.isChannelRegistered = true;
 		}
 
-		public void RegisterService(AbstractServiceEngine service)
+		public void RegisterService(string name, System.MarshalByRefObject service)
 		{
 			if (this.isChannelRegistered == false)
 			{
 				this.RegisterChannel ();
 			}
 
-			string int_name = service.ServiceName;
-			string pub_name = string.Concat (int_name, "Service", ".soap");
+			RemotingServices.Marshal (service, name);
 
-			if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy (service))
-			{
-				Remoting.IConnectionService asConnectionService = service as Remoting.IConnectionService;
-				Remoting.IOperatorService asOperatorService = service as Remoting.IOperatorService;
-				Remoting.IReplicationService asReplicationService = service as Remoting.IReplicationService;
-				Remoting.IRequestExecutionService asRequestExecutionService = service as Remoting.IRequestExecutionService;
-
-				if (asConnectionService != null)
-				{
-					RemotingServices.Marshal (new Adapters.ConnectionServiceAdapter (asConnectionService), pub_name);
-				}
-				else if (asOperatorService != null)
-				{
-					RemotingServices.Marshal (new Adapters.OperatorServiceAdapter (asOperatorService), pub_name);
-				}
-				else if (asReplicationService != null)
-				{
-					RemotingServices.Marshal (new Adapters.ReplicationServiceAdapter (asReplicationService), pub_name);
-				}
-				else if (asRequestExecutionService != null)
-				{
-					RemotingServices.Marshal (new Adapters.RequestExecutionServiceAdapter (asRequestExecutionService), pub_name);
-				}
-				else
-				{
-					throw new System.InvalidOperationException ();
-				}
-			}
-			else
-			{
-				RemotingServices.Marshal (service, pub_name);
-			}
+			this.services.Add (service);
 		}
 		
 		
@@ -128,11 +60,18 @@ namespace Epsitec.Cresus.Services
 			{
 				if (this.services.Count > 0)
 				{
-					AbstractServiceEngine[] array = this.services.ToArray ();
-					
-					for (int i = 0; i < array.Length; i++)
+					System.MarshalByRefObject[] array = this.services.ToArray ();
+
+					foreach (var item in array)
 					{
-						array[i].Dispose ();
+						RemotingServices.Disconnect (item);
+
+						System.IDisposable disposable = item as System.IDisposable;
+						
+						if (disposable != null)
+						{
+							disposable.Dispose ();
+						}
 					}
 					
 					this.services.Clear ();
@@ -141,7 +80,7 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		private int								port_number;
-		private List<AbstractServiceEngine>		services;
+		private List<System.MarshalByRefObject>	services;
 		private bool							isChannelRegistered;
 	}
 }
