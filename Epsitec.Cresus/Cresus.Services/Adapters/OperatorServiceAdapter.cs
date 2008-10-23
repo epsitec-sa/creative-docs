@@ -30,6 +30,20 @@ namespace Epsitec.Cresus.Services.Adapters
 		}
 
 		#endregion
+
+		#region IRemotingService Members
+
+		public System.Guid GetServiceId()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		public string GetServiceName()
+		{
+			throw new System.NotImplementedException ();
+		}
+
+		#endregion
 	}
 
 	class OperationWrapper : System.MarshalByRefObject, IOperation

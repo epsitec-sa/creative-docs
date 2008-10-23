@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using Epsitec.Cresus.Remoting;
 
 namespace Epsitec.Cresus.Services
 {
@@ -31,5 +32,10 @@ namespace Epsitec.Cresus.Services
 			service_names = serviceNames.ToArray ();
 		}
 		#endregion
+
+		public override System.Guid GetServiceId()
+		{
+			return RemotingServices.ConnectionServiceId;
+		}
 	}
 }

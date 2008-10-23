@@ -1,19 +1,37 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// Summary description for ProgressStatus.
+	/// The <c>ProgressStatus</c> enumeration defines the possible states of
+	/// an <see cref="IProgressOperation"/>.
 	/// </summary>
 	public enum ProgressStatus
 	{
+		/// <summary>
+		/// The operation did not start yet.
+		/// </summary>
 		None,
+
+		/// <summary>
+		/// The operation is running.
+		/// </summary>
+		Running		= 1,
+
+		/// <summary>
+		/// The operation is no longer running; it finished successfully.
+		/// </summary>
+		Succeeded	= 2,
 		
-		Running		= 1,		//	en cours d'exécution
+		/// <summary>
+		/// The operation is no longer running; it was cancelled.
+		/// </summary>
+		Cancelled	= 3,
 		
-		Succeeded	= 2,		//	terminé, l'opération a été couronnée de succès
-		Cancelled	= 3,		//	terminé, l'opération a été annulée
-		Failed		= 4,		//	terminé, l'opération a échoué
+		/// <summary>
+		/// The operation is no longer running; it failed.
+		/// </summary>
+		Failed		= 4,
 	}
 }

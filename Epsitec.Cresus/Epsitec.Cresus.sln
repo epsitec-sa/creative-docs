@@ -168,6 +168,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.CoreLibrary", "Cresu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Tests", "Cresus.Core.Tests\Cresus.Core.Tests.csproj", "{8987D19D-ED47-4D5F-AF50-D8DB9DDE0B74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Remoting.KernelInterfaces", "Cresus.Remoting.KernelInterfaces\Cresus.Remoting.KernelInterfaces.csproj", "{3F7AF584-156E-4805-9CE7-9440C9F225D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -844,6 +846,16 @@ Global
 		{8987D19D-ED47-4D5F-AF50-D8DB9DDE0B74}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8987D19D-ED47-4D5F-AF50-D8DB9DDE0B74}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8987D19D-ED47-4D5F-AF50-D8DB9DDE0B74}.Release|Win32.ActiveCfg = Release|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3F7AF584-156E-4805-9CE7-9440C9F225D0}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

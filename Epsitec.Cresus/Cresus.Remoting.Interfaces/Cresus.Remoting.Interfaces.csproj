@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5C2BEC8F-849C-41EB-993A-2536E466B538}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -11,8 +11,7 @@
     <AssemblyKeyContainerName>
     </AssemblyKeyContainerName>
     <AssemblyName>Cresus.Remoting.Interfaces</AssemblyName>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
     <DefaultClientScript>JScript</DefaultClientScript>
     <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
     <DefaultTargetSchema>IE50</DefaultTargetSchema>
@@ -27,6 +26,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -86,7 +86,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs">
+    <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ClientIdentity.cs">
@@ -110,22 +110,23 @@
     <Compile Include="Exceptions\PendingException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IConnectionService.cs">
+    <Compile Include="RemotingServices.cs" />
+    <Compile Include="Services\IConnectionService.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IOperation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IOperatorService.cs">
+    <Compile Include="Services\IOperatorService.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IProgressInformation.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IReplicationService.cs">
+    <Compile Include="Services\IReplicationService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IRequestExecutionService.cs">
+    <Compile Include="Services\IRequestExecutionService.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ProgressStatus.cs">
@@ -140,6 +141,17 @@
     <Compile Include="SerializedRequest.cs">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Cresus.Remoting.KernelInterfaces\Cresus.Remoting.KernelInterfaces.csproj">
+      <Project>{3F7AF584-156E-4805-9CE7-9440C9F225D0}</Project>
+      <Name>Cresus.Remoting.KernelInterfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.IO.IsolatedStorage;
+using Epsitec.Cresus.Remoting;
 
 namespace Epsitec.Cresus.Services
 {
@@ -14,7 +15,12 @@ namespace Epsitec.Cresus.Services
 		public OperatorEngine(Engine engine) : base (engine, "Operator")
 		{
 		}
-		
+
+
+		public override System.Guid GetServiceId()
+		{
+			return RemotingServices.OperatorServiceId;
+		}
 		
 		#region IOperatorService Members
 		public void CreateRoamingClient(string name, out Remoting.IOperation operation)

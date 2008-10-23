@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Replication
 							return args[i];
 						}
 					}
-					
-					return null;
+
+					return Remoting.PullReplicationArgs.Empty;
 				}
 			}
 			

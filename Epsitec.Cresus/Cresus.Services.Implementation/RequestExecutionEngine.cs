@@ -22,7 +22,12 @@ namespace Epsitec.Cresus.Services
 			
 			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
 		}
-		
+
+
+		public override System.Guid GetServiceId()
+		{
+			return RemotingServices.RequestExecutionServiceId;
+		}
 		
 		#region IRequestExecutionService Members
 		void IRequestExecutionService.EnqueueRequest(ClientIdentity client, SerializedRequest[] requests)
@@ -73,7 +78,7 @@ namespace Epsitec.Cresus.Services
 			//	chaque client avec lequel il a été en contact et le compteur de changement
 			//	associé :
 			
-			ClientChangeInfo info = this.GetClientChangeInfo (client.ClientId);
+			ClientChangeInfo info = this.GetClientChangeInfo (client.Id);
 			
 			//	Attend jusqu'à ce que l'état soit différent de 'change_id' (ou que le temps
 			//	imparti soit écoulé) :
@@ -176,7 +181,7 @@ namespace Epsitec.Cresus.Services
 					Database.DbKey row_key   = new Database.DbKey (rows[i]);
 					ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
 					
-					if (row_key.Id.ClientId == client.ClientId)
+					if (row_key.Id.ClientId == client.Id)
 					{
 						System.Diagnostics.Debug.WriteLine (string.Format (" - {0} in state {1}", row_key.Id.Value, row_state));
 						list.Add (rows[i]);
@@ -205,7 +210,7 @@ namespace Epsitec.Cresus.Services
 				{
 					Database.DbKey row_key = new Database.DbKey (rows[i]);
 					
-					if (row_key.Id.ClientId == client.ClientId)
+					if (row_key.Id.ClientId == client.Id)
 					{
 						Requests.ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
 						

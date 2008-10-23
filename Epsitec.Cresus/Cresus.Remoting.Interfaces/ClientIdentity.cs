@@ -1,11 +1,11 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// La structure ClientIdentity décrit l'identité d'un client. Elle
-	/// est utilisée lors de dialogues entre un client et son serveur.
+	/// The <c>ClientIdentity</c> structure defines the client identity used by
+	/// the remoting infrastructure.
 	/// </summary>
 	
 	[System.Serializable]
@@ -14,14 +14,14 @@ namespace Epsitec.Cresus.Remoting
 	{
 		public ClientIdentity(string name)
 		{
-			this.name      = name;
-			this.client_id = ClientIdentity.DefaultClientId;
+			this.name = name;
+			this.id   = ClientIdentity.DefaultId;
 		}
 		
-		public ClientIdentity(string name, int client_id)
+		public ClientIdentity(string name, int id)
 		{
-			this.name      = name;
-			this.client_id = client_id;
+			this.name = name;
+			this.id   = id;
 		}
 		
 		
@@ -33,51 +33,51 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 		
-		public int								ClientId
+		public int								Id
 		{
 			get
 			{
-				return this.client_id;
+				return this.id;
 			}
 		}
 		
 		
-		public static int						DefaultClientId
+		public static int						DefaultId
 		{
 			get
 			{
-				return ClientIdentity.default_client_id;
+				return ClientIdentity.defaultClientId;
 			}
 		}
 		
 		
-		public static void DefineDefaultClientId(int client_id)
+		public static void DefineDefaultClientId(int clientId)
 		{
-			if (ClientIdentity.default_client_id == client_id)
+			if (ClientIdentity.defaultClientId == clientId)
 			{
 				return;
 			}
 			
-			if (ClientIdentity.default_client_id == 0)
+			if (ClientIdentity.defaultClientId == 0)
 			{
-				ClientIdentity.default_client_id = client_id;
+				ClientIdentity.defaultClientId = clientId;
 			}
 			else
 			{
-				throw new System.InvalidOperationException ("Client ID may only be defined once.");
+				throw new System.InvalidOperationException ("The default client ID may only be defined once.");
 			}
 		}
 		
 		
 		public override string ToString()
 		{
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0}:{1}]", this.ClientId, this.Name);
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "[{0}:{1}]", this.Id, this.Name);
 		}
 		
 		
 		private string							name;
-		private int								client_id;
+		private int								id;
 		
-		private static int						default_client_id;
+		private static int						defaultClientId;
 	}
 }

@@ -101,6 +101,11 @@ namespace Epsitec.Cresus.Services
 			
 			base.Dispose (disposing);
 		}
+
+		public override System.Guid GetServiceId()
+		{
+			return RemotingServices.ReplicationServiceId;
+		}
 		
 		
 		private Replication.ServerEngine		replicator;

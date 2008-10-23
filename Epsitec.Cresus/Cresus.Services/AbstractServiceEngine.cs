@@ -1,13 +1,15 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Cresus.Remoting;
+
 namespace Epsitec.Cresus.Services
 {
 	/// <summary>
 	/// La classe AbstractService sert de base à toutes les classes implémentant des
 	/// services dans Crésus Réseau.
 	/// </summary>
-	public abstract class AbstractServiceEngine : System.MarshalByRefObject, System.IDisposable
+	public abstract class AbstractServiceEngine : System.MarshalByRefObject, System.IDisposable, IRemotingService
 	{
 		protected AbstractServiceEngine(Engine engine, string service_name)
 		{
@@ -41,7 +43,17 @@ namespace Epsitec.Cresus.Services
 			
 			return null;
 		}
-		
+
+		#region IRemotingService Members
+
+		public abstract System.Guid GetServiceId();
+
+		public virtual string GetServiceName()
+		{
+			return this.GetType ().FullName;
+		}
+
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{

@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Replication
 		
 		protected virtual void ProcessQueueEntry(Job job)
 		{
-			int client_id = job.Client.ClientId;
+			int client_id = job.Client.Id;
 			
 			DbId sync_start = job.SyncStartId;
 			DbId sync_end   = job.SyncEndId;

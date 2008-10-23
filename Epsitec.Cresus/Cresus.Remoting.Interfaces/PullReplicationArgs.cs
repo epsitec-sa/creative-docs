@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Remoting
 	
 	[System.Serializable]
 	
-	public sealed class PullReplicationArgs
+	public struct PullReplicationArgs
 	{
 		public PullReplicationArgs(long table_id, System.Collections.ICollection list)
 		{
@@ -35,7 +35,24 @@ namespace Epsitec.Cresus.Remoting
 				return this.row_ids;
 			}
 		}
-		
+
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.row_ids == null;
+			}
+		}
+
+
+		public static PullReplicationArgs		Empty
+		{
+			get
+			{
+				PullReplicationArgs args = new PullReplicationArgs ();
+				return args;
+			}
+		}
 		
 		private long							table_id;
 		private long[]							row_ids;

@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Services
 			using (Database.DbInfrastructure infrastructure = new Database.DbInfrastructure ())
 			{
 				infrastructure.AttachToDatabase (access);
-				infrastructure.SetupRoamingDatabase (client.ClientId);
+				infrastructure.SetupRoamingDatabase (client.Id);
 			}
 		}
 	}

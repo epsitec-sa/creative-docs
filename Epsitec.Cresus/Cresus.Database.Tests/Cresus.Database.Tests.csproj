@@ -136,6 +136,10 @@
       <Project>{5C2BEC8F-849C-41EB-993A-2536E466B538}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Remoting.KernelInterfaces\Cresus.Remoting.KernelInterfaces.csproj">
+      <Project>{3F7AF584-156E-4805-9CE7-9440C9F225D0}</Project>
+      <Name>Cresus.Remoting.KernelInterfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Replication\Cresus.Replication.csproj">
       <Name>Cresus.Replication</Name>
       <Project>{431A7EAC-87E4-489E-901D-FE3FE182700B}</Project>

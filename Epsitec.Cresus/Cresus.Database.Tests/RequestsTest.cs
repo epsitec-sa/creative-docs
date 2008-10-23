@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Database
 			if ((data != null) &&
 				(data.Length > 0))
 			{
-				System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes for client ID " + client.ClientId + ".");
+				System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes for client ID " + client.Id + ".");
 			}
 			else
 			{
@@ -565,7 +565,7 @@ namespace Epsitec.Cresus.Database
 					if ((data != null) &&
 						(data.Length > 0))
 					{
-						System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes for client ID " + client.ClientId + ".");
+						System.Diagnostics.Debug.WriteLine ("Returned data, " + data.Length + " bytes for client ID " + client.Id + ".");
 					}
 					else
 					{
