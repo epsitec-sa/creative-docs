@@ -456,10 +456,9 @@ namespace Epsitec.Cresus.Database
 			infrastructure.LocalSettings.IsServer = true;
 
 			Services.EngineHost host = new Epsitec.Cresus.Services.EngineHost (12345);
-			Services.Kernel kernel = new Epsitec.Cresus.Services.Kernel (host);
 			Services.Engine engine = new Services.Engine (infrastructure, System.Guid.Empty);
 			
-			kernel.AddEngine (engine);
+			host.AddEngine (engine);
 			
 			infrastructure.LocalSettings.IsServer = false;
 			

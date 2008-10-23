@@ -12,10 +12,13 @@ namespace Epsitec.Cresus.Services
 {
 	public class EngineHost : System.MarshalByRefObject, System.IDisposable
 	{
-		public EngineHost(int port_number)
+		public EngineHost(int portNumber)
 		{
-			this.port_number    = port_number;
-			this.services       = new List<System.MarshalByRefObject> ();
+			this.portNumber = portNumber;
+			this.services   = new List<System.MarshalByRefObject> ();
+			this.kernel     = new Kernel ();
+
+			this.RegisterService ("kernel.soap", this.kernel);
 		}
 		
 		
@@ -26,12 +29,18 @@ namespace Epsitec.Cresus.Services
 			System.GC.SuppressFinalize (true);
 		}
 		#endregion
+
+		public void AddEngine(Engine engine)
+		{
+			this.kernel.AddEngine (engine);
+		}
+
 		
 		public void RegisterChannel()
 		{
 			System.Collections.Hashtable setup = new System.Collections.Hashtable ();
 			
-			setup["port"] = this.port_number;
+			setup["port"] = this.portNumber;
 			
 			SoapServerFormatterSinkProvider sink_provider = new SoapServerFormatterSinkProvider ();
 			sink_provider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
@@ -79,8 +88,10 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 		
-		private int								port_number;
-		private List<System.MarshalByRefObject>	services;
+		readonly int								portNumber;
+		readonly List<System.MarshalByRefObject>	services;
+		readonly Kernel								kernel;
+		
 		private bool							isChannelRegistered;
 	}
 }

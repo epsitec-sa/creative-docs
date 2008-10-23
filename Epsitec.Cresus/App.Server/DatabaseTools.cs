@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Server
 				System.Diagnostics.Debug.WriteLine ("Trying to open database " + access.Database);
 				infrastructure.AttachToDatabase (access);
 			}
-			catch (EmptyDatabaseException ex)
+			catch (EmptyDatabaseException)
 			{
 				infrastructure.Dispose ();
 				DbTools.DeleteDatabase (access);
