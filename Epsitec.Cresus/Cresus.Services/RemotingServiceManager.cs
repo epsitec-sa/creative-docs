@@ -7,9 +7,9 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Services
 {
-	internal sealed class Kernel : System.MarshalByRefObject, IKernel, System.IDisposable
+	internal sealed class RemotingServiceManager : System.MarshalByRefObject, IRemoteServiceManager, System.IDisposable
 	{
-		public Kernel()
+		public RemotingServiceManager()
 		{
 			this.engines = new Dictionary<System.Guid, Engine> ();
 		}
@@ -32,23 +32,30 @@ namespace Epsitec.Cresus.Services
 
 		public KernelDatabaseInfo[] GetDatabaseInfos()
 		{
+			List<KernelDatabaseInfo> infos = new List<KernelDatabaseInfo> ();
+
+			foreach (var engine in this.engines)
+			{
+				infos.Add (new KernelDatabaseInfo (engine.Key, engine.Value.DatabaseName));
+			}
+
 			return new KernelDatabaseInfo[0];
 		}
 
-		public IRemotingService GetRemotingService(System.Guid databaseId, System.Guid serviceId)
+		public IRemoteService GetRemoteService(System.Guid databaseId, System.Guid serviceId)
 		{
 			foreach (var engine in this.engines)
 			{
 				if (engine.Key == databaseId)
 				{
-					return Kernel.WrapRemotingService (engine.Value.GetService (serviceId));
+					return RemotingServiceManager.WrapRemotingService (engine.Value.GetService (serviceId));
 				}
 			}
 
 			return null;
 		}
 
-		private static IRemotingService WrapRemotingService(IRemotingService service)
+		private static IRemoteService WrapRemotingService(IRemoteService service)
 		{
 			if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy (service))
 			{

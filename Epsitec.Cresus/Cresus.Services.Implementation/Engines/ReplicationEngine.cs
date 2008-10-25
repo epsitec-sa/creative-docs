@@ -1,5 +1,5 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
 using Epsitec.Cresus.Requests;
@@ -12,7 +12,8 @@ namespace Epsitec.Cresus.Services
 	/// </summary>
 	internal sealed class ReplicationEngine : AbstractServiceEngine, IReplicationService
 	{
-		public ReplicationEngine(Engine engine) : base (engine, "Replication")
+		public ReplicationEngine(Engine engine)
+			: base (engine)
 		{
 			this.replicator = new Replication.ServerEngine (engine.Infrastructure);
 		}
@@ -80,7 +81,7 @@ namespace Epsitec.Cresus.Services
 			
 			job.WaitForProgress (100);
 			
-			this.ThrowExceptionBasedOnStatus (job.ProgressStatus);
+			Engine.ThrowExceptionBasedOnStatus (job.ProgressStatus);
 			
 			if (job.Error != null)
 			{

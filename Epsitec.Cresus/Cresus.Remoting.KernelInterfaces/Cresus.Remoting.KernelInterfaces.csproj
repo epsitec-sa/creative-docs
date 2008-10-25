@@ -38,8 +38,8 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRemotingService.cs" />
-    <Compile Include="IKernel.cs" />
+    <Compile Include="IRemoteService.cs" />
+    <Compile Include="IRemoteServiceManager.cs" />
     <Compile Include="KernelDatabaseInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

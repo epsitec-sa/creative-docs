@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Remoting
 	/// <summary>
 	/// L'interface IReplicationService donne accès au service de réplication.
 	/// </summary>
-	public interface IReplicationService : IRemotingService
+	public interface IReplicationService : IRemoteService
 	{
 		void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out IOperation operation);
 		void PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args, out IOperation operation);

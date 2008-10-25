@@ -9,21 +9,11 @@ namespace Epsitec.Cresus.Services
 	/// La classe AbstractService sert de base à toutes les classes implémentant des
 	/// services dans Crésus Réseau.
 	/// </summary>
-	public abstract class AbstractServiceEngine : System.MarshalByRefObject, System.IDisposable, IRemotingService
+	public abstract class AbstractServiceEngine : System.MarshalByRefObject, System.IDisposable, IRemoteService
 	{
-		protected AbstractServiceEngine(Engine engine, string service_name)
+		protected AbstractServiceEngine(Engine engine)
 		{
 			this.engine = engine;
-			this.service_name = service_name;
-		}
-		
-		
-		public string							ServiceName
-		{
-			get
-			{
-				return this.service_name;
-			}
 		}
 		
 		
@@ -48,7 +38,7 @@ namespace Epsitec.Cresus.Services
 
 		public abstract System.Guid GetServiceId();
 
-		public virtual string GetServiceName()
+		public string GetServiceName()
 		{
 			return this.GetType ().FullName;
 		}
@@ -59,25 +49,7 @@ namespace Epsitec.Cresus.Services
 		{
 		}
 		
-		protected void ThrowExceptionBasedOnStatus(Remoting.ProgressStatus status)
-		{
-			switch (status)
-			{
-				case Remoting.ProgressStatus.None:		throw new Remoting.Exceptions.InvalidOperationException ();
-				case Remoting.ProgressStatus.Running:	throw new Remoting.Exceptions.PendingException ();
-				case Remoting.ProgressStatus.Cancelled:	throw new Remoting.Exceptions.CancelledException ();
-				case Remoting.ProgressStatus.Failed:	throw new Remoting.Exceptions.FailedException ();
-				
-				case Remoting.ProgressStatus.Succeeded:
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("status", status, "Unsupported status value.");
-			}
-		}
 		
-		
-		protected Engine						engine;
-		private string							service_name;
+		protected readonly Engine				engine;
 	}
 }

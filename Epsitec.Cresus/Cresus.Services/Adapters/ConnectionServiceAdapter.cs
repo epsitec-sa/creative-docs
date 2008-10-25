@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.Services.Adapters
 			this.target.CheckConnectivity (client);
 		}
 
-		public void QueryAvailableServices(ClientIdentity client, out string[] service_names)
+		public System.Guid[] QueryAvailableServices(ClientIdentity client)
 		{
-			this.target.QueryAvailableServices (client, out service_names);
+			return this.target.QueryAvailableServices (client);
 		}
 
 		#endregion

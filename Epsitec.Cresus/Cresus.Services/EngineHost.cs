@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Services
 		{
 			this.portNumber = portNumber;
 			this.services   = new List<System.MarshalByRefObject> ();
-			this.kernel     = new Kernel ();
+			this.serviceManager = new RemotingServiceManager ();
 
-			this.RegisterService ("kernel.soap", this.kernel);
+			this.RegisterService (Engine.RemoteServiceManagerServiceName, this.serviceManager);
 		}
 		
 		
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Services
 
 		public void AddEngine(Engine engine)
 		{
-			this.kernel.AddEngine (engine);
+			this.serviceManager.AddEngine (engine);
 		}
 
 		
@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.Services
 		
 		readonly int								portNumber;
 		readonly List<System.MarshalByRefObject>	services;
-		readonly Kernel								kernel;
+		readonly RemotingServiceManager				serviceManager;
 		
-		private bool							isChannelRegistered;
+		private bool								isChannelRegistered;
 	}
 }

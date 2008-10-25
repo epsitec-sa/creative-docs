@@ -1,5 +1,5 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
 using Epsitec.Cresus.Requests;
@@ -12,14 +12,15 @@ namespace Epsitec.Cresus.Services
 	/// </summary>
 	internal sealed class RequestExecutionEngine : AbstractServiceEngine, IRequestExecutionService
 	{
-		public RequestExecutionEngine(Engine engine) : base (engine, "RequestExecution")
+		public RequestExecutionEngine(Engine engine)
+			: base (engine)
 		{
 			this.orchestrator    = this.engine.Orchestrator;
 			this.execution_queue = this.orchestrator.ExecutionQueue;
 			this.client_changes  = new System.Collections.Hashtable ();
-			
+
 			this.orchestrator.RequestExecuted += new RequestExecutedCallback (this.HandleOrchestratorRequestExecuted);
-			
+
 			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
 		}
 

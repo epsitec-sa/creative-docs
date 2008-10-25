@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Services
 		{
 			this.infrastructure = infrastructure;
 			this.databaseId     = databaseId;
+			this.databaseName   = infrastructure.Access.Database;
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
 			this.services       = new List<AbstractServiceEngine> ();
 
@@ -67,34 +68,24 @@ namespace Epsitec.Cresus.Services
 				return this.databaseId;
 			}
 		}
+
+		public string DatabaseName
+		{
+			get
+			{
+				return this.databaseName;
+			}
+		}
 		
-		public Dictionary<string, AbstractServiceEngine> Services
+		public IEnumerable<System.Guid> GetServiceIds()
 		{
-			get
+			foreach (var service in this.services)
 			{
-				Dictionary<string, AbstractServiceEngine> dict = new Dictionary<string, AbstractServiceEngine> ();
-				
-				foreach (AbstractServiceEngine service in this.services)
-				{
-					dict[service.ServiceName] = service;
-				}
-				
-				return dict;
+				yield return service.GetServiceId ();
 			}
 		}
 
-		public IEnumerable<string> ServiceNames
-		{
-			get
-			{
-				foreach (AbstractServiceEngine service in this.services)
-				{
-					yield return service.ServiceName;
-				}
-			}
-		}
-
-		public IRemotingService GetService(System.Guid serviceId)
+		public IRemoteService GetService(System.Guid serviceId)
 		{
 			foreach (var service in this.services)
 			{
@@ -136,41 +127,65 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 
-		public static Remoting.IKernel GetRemoteKernel(string machine, int port)
-		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/kernel.soap", machine, port);
-			System.Type type = typeof (Remoting.IKernel);
 
-			Remoting.IKernel service = (Remoting.IKernel) System.Activator.GetObject (type, url);
+		public static void ThrowExceptionBasedOnStatus(Remoting.ProgressStatus status)
+		{
+			switch (status)
+			{
+				case Remoting.ProgressStatus.None:
+					throw new Remoting.Exceptions.InvalidOperationException ();
+				case Remoting.ProgressStatus.Running:
+					throw new Remoting.Exceptions.PendingException ();
+				case Remoting.ProgressStatus.Cancelled:
+					throw new Remoting.Exceptions.CancelledException ();
+				case Remoting.ProgressStatus.Failed:
+					throw new Remoting.Exceptions.FailedException ();
+
+				case Remoting.ProgressStatus.Succeeded:
+					break;
+
+				default:
+					throw new System.ArgumentOutOfRangeException ("status", status, "Unsupported status value.");
+			}
+		}
+		
+		public static Remoting.IRemoteServiceManager GetRemoteKernel(string machine, int port)
+		{
+			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/{2}", machine, port, Engine.RemoteServiceManagerServiceName);
+			System.Type type = typeof (Remoting.IRemoteServiceManager);
+
+			Remoting.IRemoteServiceManager service = (Remoting.IRemoteServiceManager) System.Activator.GetObject (type, url);
 
 			return service;
 		}
 		
-		public static Remoting.IRequestExecutionService GetRemoteRequestExecutionService(System.Guid databaseId, IKernel kernel)
+		public static Remoting.IRequestExecutionService GetRemoteRequestExecutionService(System.Guid databaseId, IRemoteServiceManager kernel)
 		{
-			return (Remoting.IRequestExecutionService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.RequestExecutionServiceId);
+			return (Remoting.IRequestExecutionService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.RequestExecutionServiceId);
 		}
 		
-		public static Remoting.IConnectionService GetRemoteConnectionService(System.Guid databaseId, IKernel kernel)
+		public static Remoting.IConnectionService GetRemoteConnectionService(System.Guid databaseId, IRemoteServiceManager kernel)
 		{
-			return (Remoting.IConnectionService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
+			return (Remoting.IConnectionService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
 		}
 
-		public static Remoting.IOperatorService GetRemoteOperatorService(System.Guid databaseId, IKernel kernel)
+		public static Remoting.IOperatorService GetRemoteOperatorService(System.Guid databaseId, IRemoteServiceManager kernel)
 		{
-			return (Remoting.IOperatorService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.OperatorServiceId);
+			return (Remoting.IOperatorService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.OperatorServiceId);
 		}
 
-		public static Remoting.IReplicationService GetRemoteReplicationService(System.Guid databaseId, IKernel kernel)
+		public static Remoting.IReplicationService GetRemoteReplicationService(System.Guid databaseId, IRemoteServiceManager kernel)
 		{
-			return (Remoting.IReplicationService) kernel.GetRemotingService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ReplicationServiceId);
+			return (Remoting.IReplicationService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ReplicationServiceId);
 		}
+
+
+		public static readonly string RemoteServiceManagerServiceName = "RemoteServiceManager.soap";
 		
-		
-		private Database.DbInfrastructure		infrastructure;
-		private System.Guid						databaseId;
-		private EngineHost						engineHost;
-		private Requests.Orchestrator			orchestrator;
-		private List<AbstractServiceEngine>		services;
+		readonly Database.DbInfrastructure		infrastructure;
+		readonly System.Guid					databaseId;
+		readonly string							databaseName;
+		readonly List<AbstractServiceEngine>	services;
+		Requests.Orchestrator					orchestrator;
 	}
 }

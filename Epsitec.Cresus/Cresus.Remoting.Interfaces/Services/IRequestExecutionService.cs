@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Remoting
 	/// L'interface IRequestExecutionService donne accès au service d'exécution
 	/// des requêtes, comme son nom l'indique.
 	/// </summary>
-	public interface IRequestExecutionService : IRemotingService
+	public interface IRequestExecutionService : IRemoteService
 	{
 		void EnqueueRequest(ClientIdentity client, SerializedRequest[] requests);
 		

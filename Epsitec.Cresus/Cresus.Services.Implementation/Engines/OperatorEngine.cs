@@ -1,7 +1,6 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.IO.IsolatedStorage;
 using Epsitec.Cresus.Remoting;
 
 namespace Epsitec.Cresus.Services
@@ -12,7 +11,8 @@ namespace Epsitec.Cresus.Services
 	/// </summary>
 	internal sealed class OperatorEngine : AbstractServiceEngine, Remoting.IOperatorService
 	{
-		public OperatorEngine(Engine engine) : base (engine, "Operator")
+		public OperatorEngine(Engine engine)
+			: base (engine)
 		{
 		}
 
@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		#region IOperatorService Members
+
 		public void CreateRoamingClient(string name, out Remoting.IOperation operation)
 		{
 			//	Démarre, de manière asynchrone, la création d'une copie comprimée de la base
@@ -49,7 +50,7 @@ namespace Epsitec.Cresus.Services
 			
 			op.WaitForProgress (100);
 			
-			this.ThrowExceptionBasedOnStatus (op.ProgressStatus);
+			Engine.ThrowExceptionBasedOnStatus (op.ProgressStatus);
 			
 			
 			//	Récupère les données qui attendent le client :

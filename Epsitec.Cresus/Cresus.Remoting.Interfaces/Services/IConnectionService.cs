@@ -7,10 +7,10 @@ namespace Epsitec.Cresus.Remoting
 	/// L'interface IConnectionService donne accès aux informations sur les
 	/// divers services disponibles pour une connexion par le client.
 	/// </summary>
-	public interface IConnectionService : IRemotingService
+	public interface IConnectionService : IRemoteService
 	{
 		void CheckConnectivity(ClientIdentity client);
 		
-		void QueryAvailableServices(ClientIdentity client, out string[] service_names);
+		System.Guid[] QueryAvailableServices(ClientIdentity client);
 	}
 }

@@ -3,9 +3,10 @@
 
 namespace Epsitec.Cresus.Remoting
 {
-	public interface IRemotingService
+	public interface IRemoteServiceManager
 	{
-		System.Guid GetServiceId();
-		string GetServiceName();
+		KernelDatabaseInfo[] GetDatabaseInfos();
+
+		IRemoteService GetRemoteService(System.Guid databaseId, System.Guid serviceId);
 	}
 }

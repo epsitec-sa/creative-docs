@@ -143,16 +143,16 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ConnectionEngine.cs">
+    <Compile Include="Engines\ConnectionEngine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OperatorEngine.cs">
+    <Compile Include="Engines\OperatorEngine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ReplicationEngine.cs">
+    <Compile Include="Engines\ReplicationEngine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RequestExecutionEngine.cs">
+    <Compile Include="Engines\RequestExecutionEngine.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

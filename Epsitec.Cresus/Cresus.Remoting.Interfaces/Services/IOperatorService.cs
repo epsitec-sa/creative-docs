@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Remoting
 	/// L'interface IOperatorService gère la création de bases de données
 	/// "client" et leur durée de vie.
 	/// </summary>
-	public interface IOperatorService : IRemotingService
+	public interface IOperatorService : IRemoteService
 	{
 		void CreateRoamingClient(string clientName, out IOperation operation);
 		
