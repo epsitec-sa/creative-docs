@@ -15,12 +15,12 @@ namespace Epsitec.Cresus.Services
 		public EngineHost(int portNumber)
 		{
 			this.portNumber = portNumber;
-			this.services   = new List<System.MarshalByRefObject> ();
 			this.serviceManager = new RemotingServiceManager ();
 
-			this.RegisterService (Engine.RemoteServiceManagerServiceName, this.serviceManager);
+			this.RegisterChannel ();
+			this.RegisterService ();
 		}
-		
+
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -36,62 +36,36 @@ namespace Epsitec.Cresus.Services
 		}
 
 		
-		public void RegisterChannel()
+		private void RegisterChannel()
 		{
 			System.Collections.Hashtable setup = new System.Collections.Hashtable ();
 			
 			setup["port"] = this.portNumber;
 			
-			SoapServerFormatterSinkProvider sink_provider = new SoapServerFormatterSinkProvider ();
-			sink_provider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
+			SoapServerFormatterSinkProvider sinkProvider = new SoapServerFormatterSinkProvider ();
+			sinkProvider.TypeFilterLevel = System.Runtime.Serialization.Formatters.TypeFilterLevel.Full;
 			
-			HttpChannel channel = new HttpChannel (setup, null, sink_provider);
+			HttpChannel channel = new HttpChannel (setup, null, sinkProvider);
 			ChannelServices.RegisterChannel (channel);
-			this.isChannelRegistered = true;
 		}
 
-		public void RegisterService(string name, System.MarshalByRefObject service)
+		private void RegisterService()
 		{
-			if (this.isChannelRegistered == false)
-			{
-				this.RegisterChannel ();
-			}
-
-			RemotingServices.Marshal (service, name);
-
-			this.services.Add (service);
+			RemotingServices.Marshal (this.serviceManager, EngineHost.RemoteServiceManagerServiceName);
 		}
-		
 		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				if (this.services.Count > 0)
-				{
-					System.MarshalByRefObject[] array = this.services.ToArray ();
-
-					foreach (var item in array)
-					{
-						RemotingServices.Disconnect (item);
-
-						System.IDisposable disposable = item as System.IDisposable;
-						
-						if (disposable != null)
-						{
-							disposable.Dispose ();
-						}
-					}
-					
-					this.services.Clear ();
-				}
+				RemotingServices.Disconnect (this.serviceManager);
+				this.serviceManager.Dispose ();
 			}
 		}
-		
+
+		public static readonly string				RemoteServiceManagerServiceName = "RemoteServiceManager.soap";
+
 		readonly int								portNumber;
-		readonly List<System.MarshalByRefObject>	services;
 		readonly RemotingServiceManager				serviceManager;
-		
-		private bool								isChannelRegistered;
 	}
 }

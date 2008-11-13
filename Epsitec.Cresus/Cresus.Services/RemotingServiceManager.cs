@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Services
 			return null;
 		}
 
-		#region IKernel Members
+		#region IRemoteServiceManager Members
 
 		public KernelDatabaseInfo[] GetDatabaseInfos()
 		{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Services
 				infos.Add (new KernelDatabaseInfo (engine.Key, engine.Value.DatabaseName));
 			}
 
-			return new KernelDatabaseInfo[0];
+			return infos.ToArray ();
 		}
 
 		public IRemoteService GetRemoteService(System.Guid databaseId, System.Guid serviceId)

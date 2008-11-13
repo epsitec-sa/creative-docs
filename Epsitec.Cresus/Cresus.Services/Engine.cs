@@ -149,39 +149,17 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 		
-		public static Remoting.IRemoteServiceManager GetRemoteKernel(string machine, int port)
+		public static Remoting.IRemoteServiceManager GetRemoteServiceManager(string machine, int port)
 		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/{2}", machine, port, Engine.RemoteServiceManagerServiceName);
+			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/{2}", machine, port, EngineHost.RemoteServiceManagerServiceName);
 			System.Type type = typeof (Remoting.IRemoteServiceManager);
 
 			Remoting.IRemoteServiceManager service = (Remoting.IRemoteServiceManager) System.Activator.GetObject (type, url);
 
 			return service;
 		}
-		
-		public static Remoting.IRequestExecutionService GetRemoteRequestExecutionService(System.Guid databaseId, IRemoteServiceManager kernel)
-		{
-			return (Remoting.IRequestExecutionService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.RequestExecutionServiceId);
-		}
-		
-		public static Remoting.IConnectionService GetRemoteConnectionService(System.Guid databaseId, IRemoteServiceManager kernel)
-		{
-			return (Remoting.IConnectionService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
-		}
-
-		public static Remoting.IOperatorService GetRemoteOperatorService(System.Guid databaseId, IRemoteServiceManager kernel)
-		{
-			return (Remoting.IOperatorService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.OperatorServiceId);
-		}
-
-		public static Remoting.IReplicationService GetRemoteReplicationService(System.Guid databaseId, IRemoteServiceManager kernel)
-		{
-			return (Remoting.IReplicationService) kernel.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ReplicationServiceId);
-		}
 
 
-		public static readonly string RemoteServiceManagerServiceName = "RemoteServiceManager.soap";
-		
 		readonly Database.DbInfrastructure		infrastructure;
 		readonly System.Guid					databaseId;
 		readonly string							databaseName;

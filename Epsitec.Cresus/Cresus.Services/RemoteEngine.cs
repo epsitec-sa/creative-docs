@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Services
 		{
 			if (this.remoteServiceManager == null)
 			{
-				string      url  = string.Concat ("http://", this.remoteHost, ":", this.remotePort.ToString (System.Globalization.CultureInfo.InvariantCulture), "/", Engine.RemoteServiceManagerServiceName);
+				string      url  = string.Concat ("http://", this.remoteHost, ":", this.remotePort.ToString (System.Globalization.CultureInfo.InvariantCulture), "/", EngineHost.RemoteServiceManagerServiceName);
 				System.Type type = typeof (Remoting.IRemoteServiceManager);
 
 				this.remoteServiceManager = (Remoting.IRemoteServiceManager) System.Activator.GetObject (type, url);
