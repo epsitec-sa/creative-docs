@@ -8,6 +8,7 @@ using System.Runtime.Remoting.Lifetime;
 
 using System.Collections.Generic;
 using Epsitec.Cresus.Remoting;
+using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services
 {
@@ -23,7 +24,7 @@ namespace Epsitec.Cresus.Services
 			this.databaseId     = databaseId;
 			this.databaseName   = infrastructure.Access.Database;
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
-			this.services       = new List<AbstractServiceEngine> ();
+			this.services       = new List<ServiceRecord> ();
 
 			this.InstanciateServices ();
 		}
@@ -39,7 +40,13 @@ namespace Epsitec.Cresus.Services
 				{
 					AbstractServiceEngine engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine;
 
-					this.services.Add (engine);
+					foreach (var interfaceType in type.GetInterfaces ())
+					{
+						if (interfaceType.GetCustomAttributes (typeof (System.ServiceModel.ServiceContractAttribute), false).Length > 0)
+						{
+							this.services.Add (new ServiceRecord (engine, interfaceType));
+						}
+					}
 				}
 			}
 		}
@@ -81,17 +88,35 @@ namespace Epsitec.Cresus.Services
 		{
 			foreach (var service in this.services)
 			{
-				yield return service.GetServiceId ();
+				yield return service.ServiceId;
 			}
+		}
+
+		public IEnumerable<ServiceRecord> GetServiceRecords()
+		{
+			return this.services;
 		}
 
 		public IRemoteService GetService(System.Guid serviceId)
 		{
 			foreach (var service in this.services)
 			{
-				if (service.GetServiceId () == serviceId)
+				if (service.ServiceId == serviceId)
 				{
-					return service;
+					return service.ServiceInstance as IRemoteService;
+				}
+			}
+
+			return null;
+		}
+		
+		public string GetServiceUniqueName(System.Guid serviceId)
+		{
+			foreach (var service in this.services)
+			{
+				if (service.ServiceId == serviceId)
+				{
+					return service.UniqueName;
 				}
 			}
 
@@ -128,42 +153,174 @@ namespace Epsitec.Cresus.Services
 		}
 
 
-		public static void ThrowExceptionBasedOnStatus(Remoting.ProgressStatus status)
+		public static void ThrowExceptionBasedOnStatus(ProgressStatus status)
 		{
 			switch (status)
 			{
-				case Remoting.ProgressStatus.None:
+				case ProgressStatus.None:
 					throw new Remoting.Exceptions.InvalidOperationException ();
-				case Remoting.ProgressStatus.Running:
+				case ProgressStatus.Running:
 					throw new Remoting.Exceptions.PendingException ();
-				case Remoting.ProgressStatus.Cancelled:
+				case ProgressStatus.Cancelled:
 					throw new Remoting.Exceptions.CancelledException ();
-				case Remoting.ProgressStatus.Failed:
+				case ProgressStatus.Failed:
 					throw new Remoting.Exceptions.FailedException ();
 
-				case Remoting.ProgressStatus.Succeeded:
+				case ProgressStatus.Succeeded:
 					break;
 
 				default:
 					throw new System.ArgumentOutOfRangeException ("status", status, "Unsupported status value.");
 			}
 		}
-		
-		public static Remoting.IRemoteServiceManager GetRemoteServiceManager(string machine, int port)
-		{
-			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/{2}", machine, port, EngineHost.RemoteServiceManagerServiceName);
-			System.Type type = typeof (Remoting.IRemoteServiceManager);
 
-			Remoting.IRemoteServiceManager service = (Remoting.IRemoteServiceManager) System.Activator.GetObject (type, url);
+		
+		public static IRemoteServiceManager GetRemoteServiceManager(string machine, int port)
+		{
+			System.Uri uri = EngineHost.GetAddress (machine, port, EngineHost.RemoteServiceManagerName);
+			return Engine.GetService<IRemoteServiceManager> (uri);
+		}
+
+		public static T GetService<T>(IRemoteServiceManager remoteServiceManager, string endpointAddress) where T : class
+		{
+			System.Uri baseUri = Cache<IRemoteServiceManager>.Resolve (remoteServiceManager);
+			System.Uri fullUri;
+
+			System.Uri.TryCreate (baseUri, endpointAddress, out fullUri);
+
+			return Engine.GetService<T> (fullUri);
+		}
+		
+		private static T GetService<T>(System.Uri uri) where T : class
+		{
+			T service = Cache<T>.Resolve (uri);
+
+			if (service == null)
+			{
+				NetTcpBinding tcpBinding = new NetTcpBinding (SecurityMode.None, false);
+
+				tcpBinding.Security.Transport.ClientCredentialType = TcpClientCredentialType.None;
+				tcpBinding.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.None;
+
+				EndpointAddress address = new EndpointAddress (uri);
+				ChannelFactory<T> factory = new ChannelFactory<T> (tcpBinding, address);
+				service = factory.CreateChannel ();
+				System.ServiceModel.Channels.IChannel channel = service as System.ServiceModel.Channels.IChannel;
+				channel.Open ();
+
+				Cache<T>.Add (uri, service);
+			}
 
 			return service;
+		}
+
+
+		[System.Serializable]
+		public struct ServiceRecord
+		{
+			public ServiceRecord(AbstractServiceEngine service, System.Type type)
+			{
+				this.serviceInstance = service;
+				this.serviceType = type;
+				this.serviceId = service.GetServiceId ();
+				this.uniqueName = string.Format ("{0}-{1}", type.Name, System.Threading.Interlocked.Increment (ref ServiceRecord.id));
+			}
+
+			public System.MarshalByRefObject ServiceInstance
+			{
+				get
+				{
+					return this.serviceInstance;
+				}
+			}
+
+			public System.Type ServiceType
+			{
+				get
+				{
+					return this.serviceType;
+				}
+			}
+
+			public System.Guid ServiceId
+			{
+				get
+				{
+					return this.serviceId;
+				}
+			}
+
+			public string UniqueName
+			{
+				get
+				{
+					return this.uniqueName;
+				}
+			}
+
+			static int id;
+
+			private System.MarshalByRefObject serviceInstance;
+			private System.Type serviceType;
+			private System.Guid serviceId;
+			private string uniqueName;
+		}
+		
+		private static class Cache<T> where T : class
+		{
+			public static System.Uri Resolve(T instance)
+			{
+				if (Cache<T>.cache == null)
+				{
+					return null;
+				}
+
+				foreach (var item in Cache<T>.cache)
+				{
+					if (item.Value == instance)
+					{
+						return new System.Uri (item.Key);
+					}
+				}
+
+				return null;
+			}
+
+			public static T Resolve(System.Uri uri)
+			{
+				if (Cache<T>.cache == null)
+				{
+					return null;
+				}
+
+				T instance;
+
+				Cache<T>.cache.TryGetValue (uri.OriginalString, out instance);
+
+				return instance;
+			}
+
+			public static void Add(System.Uri uri, T instance)
+			{
+				if (Cache<T>.cache == null)
+				{
+					Cache<T>.cache = new Dictionary<string, T> ();
+				}
+
+				Cache<T>.cache[uri.OriginalString] = instance;
+			}
+
+			[System.ThreadStatic]
+			static Dictionary<string, T> cache;
 		}
 
 
 		readonly Database.DbInfrastructure		infrastructure;
 		readonly System.Guid					databaseId;
 		readonly string							databaseName;
-		readonly List<AbstractServiceEngine>	services;
+		readonly List<ServiceRecord>			services;
+
+
 		Requests.Orchestrator					orchestrator;
 	}
 }

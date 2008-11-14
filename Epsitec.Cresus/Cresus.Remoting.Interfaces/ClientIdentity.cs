@@ -1,6 +1,9 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.ServiceModel;
+using System.Runtime.Serialization;
+
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
@@ -9,6 +12,7 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	
 	[System.Serializable]
+	[DataContract]
 	
 	public struct ClientIdentity
 	{

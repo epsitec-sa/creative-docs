@@ -4,9 +4,11 @@
 using Epsitec.Cresus.Remoting;
 
 using System.Collections.Generic;
+using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services
 {
+	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
 	internal sealed class RemotingServiceManager : System.MarshalByRefObject, IRemoteServiceManager, System.IDisposable
 	{
 		public RemotingServiceManager()
@@ -42,53 +44,17 @@ namespace Epsitec.Cresus.Services
 			return infos.ToArray ();
 		}
 
-		public IRemoteService GetRemoteService(System.Guid databaseId, System.Guid serviceId)
+		public string GetRemoteServiceEndpointAddress(System.Guid databaseId, System.Guid serviceId)
 		{
 			foreach (var engine in this.engines)
 			{
 				if (engine.Key == databaseId)
 				{
-					return RemotingServiceManager.WrapRemotingService (engine.Value.GetService (serviceId));
+					return engine.Value.GetServiceUniqueName (serviceId);
 				}
 			}
 
 			return null;
-		}
-
-		private static IRemoteService WrapRemotingService(IRemoteService service)
-		{
-			if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy (service))
-			{
-				Remoting.IConnectionService asConnectionService = service as Remoting.IConnectionService;
-				Remoting.IOperatorService asOperatorService = service as Remoting.IOperatorService;
-				Remoting.IReplicationService asReplicationService = service as Remoting.IReplicationService;
-				Remoting.IRequestExecutionService asRequestExecutionService = service as Remoting.IRequestExecutionService;
-
-				if (asConnectionService != null)
-				{
-					return new Adapters.ConnectionServiceAdapter (asConnectionService);
-				}
-				else if (asOperatorService != null)
-				{
-					return new Adapters.OperatorServiceAdapter (asOperatorService);
-				}
-				else if (asReplicationService != null)
-				{
-					return new Adapters.ReplicationServiceAdapter (asReplicationService);
-				}
-				else if (asRequestExecutionService != null)
-				{
-					return new Adapters.RequestExecutionServiceAdapter (asRequestExecutionService);
-				}
-				else
-				{
-					throw new System.InvalidOperationException ();
-				}
-			}
-			else
-			{
-				return service;
-			}
 		}
 
 		#endregion

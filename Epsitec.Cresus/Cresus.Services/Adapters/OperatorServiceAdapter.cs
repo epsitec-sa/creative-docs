@@ -3,8 +3,11 @@
 
 using Epsitec.Cresus.Remoting;
 
+using System.ServiceModel;
+
 namespace Epsitec.Cresus.Services.Adapters
 {
+	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
 	class OperatorServiceAdapter : AbstractServiceAdapter, IOperatorService
 	{
 		public OperatorServiceAdapter(IOperatorService target)

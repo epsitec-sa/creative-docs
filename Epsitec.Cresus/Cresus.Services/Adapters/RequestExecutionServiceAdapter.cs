@@ -3,8 +3,11 @@
 
 using Epsitec.Cresus.Remoting;
 
+using System.ServiceModel;
+
 namespace Epsitec.Cresus.Services.Adapters
 {
+	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
 	class RequestExecutionServiceAdapter : AbstractServiceAdapter, IRequestExecutionService
 	{
 		public RequestExecutionServiceAdapter(IRequestExecutionService target)

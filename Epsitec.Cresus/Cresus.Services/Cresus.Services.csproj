@@ -88,6 +88,9 @@
     <Reference Include="System.Runtime.Remoting">
       <Name>System.Runtime.Remoting</Name>
     </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -149,7 +152,6 @@
     <Compile Include="Engine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RemoteEngine.cs" />
     <Compile Include="RoamingClientTool.cs">
       <SubType>Code</SubType>
     </Compile>

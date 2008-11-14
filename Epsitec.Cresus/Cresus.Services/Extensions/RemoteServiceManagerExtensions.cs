@@ -11,22 +11,26 @@ namespace Epsitec.Cresus.Services.Extensions
 	{
 		public static Remoting.IRequestExecutionService GetRequestExecutionService(this IRemoteServiceManager remoteServiceManager, System.Guid databaseId)
 		{
-			return (Remoting.IRequestExecutionService) remoteServiceManager.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.RequestExecutionServiceId);
+			string endpointAddress = remoteServiceManager.GetRemoteServiceEndpointAddress (databaseId, Epsitec.Cresus.Remoting.RemotingServices.RequestExecutionServiceId);
+			return Engine.GetService<IRequestExecutionService> (remoteServiceManager, endpointAddress);
 		}
 
 		public static Remoting.IConnectionService GetConnectionService(this IRemoteServiceManager remoteServiceManager, System.Guid databaseId)
 		{
-			return (Remoting.IConnectionService) remoteServiceManager.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
+			string endpointAddress = remoteServiceManager.GetRemoteServiceEndpointAddress (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ConnectionServiceId);
+			return Engine.GetService<IConnectionService> (remoteServiceManager, endpointAddress);
 		}
 
 		public static Remoting.IOperatorService GetOperatorService(this IRemoteServiceManager remoteServiceManager, System.Guid databaseId)
 		{
-			return (Remoting.IOperatorService) remoteServiceManager.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.OperatorServiceId);
+			string endpointAddress = remoteServiceManager.GetRemoteServiceEndpointAddress (databaseId, Epsitec.Cresus.Remoting.RemotingServices.OperatorServiceId);
+			return Engine.GetService<IOperatorService> (remoteServiceManager, endpointAddress);
 		}
 
 		public static Remoting.IReplicationService GetReplicationService(this IRemoteServiceManager remoteServiceManager, System.Guid databaseId)
 		{
-			return (Remoting.IReplicationService) remoteServiceManager.GetRemoteService (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ReplicationServiceId);
+			string endpointAddress = remoteServiceManager.GetRemoteServiceEndpointAddress (databaseId, Epsitec.Cresus.Remoting.RemotingServices.ReplicationServiceId);
+			return Engine.GetService<IReplicationService> (remoteServiceManager, endpointAddress);
 		}
 	}
 }
