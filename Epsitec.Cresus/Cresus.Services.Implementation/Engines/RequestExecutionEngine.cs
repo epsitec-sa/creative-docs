@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Services
 			this.InternalQueryRequestStates (client, out states);
 		}
 		
-		void IRequestExecutionService.QueryRequestStates(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
+		void IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
 		{
 			//	Retourne les informations sur les états uniquement en cas de changement
 			//	ou si le temps imparti est écoulé.

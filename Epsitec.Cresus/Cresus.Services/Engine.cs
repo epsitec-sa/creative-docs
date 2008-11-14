@@ -1,14 +1,17 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Remoting;
+using Epsitec.Cresus.Services.Extensions;
+
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Http;
 using System.Runtime.Remoting.Lifetime;
 
 using System.Collections.Generic;
-using Epsitec.Cresus.Remoting;
 using System.ServiceModel;
+using System.Linq;
 
 namespace Epsitec.Cresus.Services
 {
@@ -32,22 +35,17 @@ namespace Epsitec.Cresus.Services
 		private void InstanciateServices()
 		{
 			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Services.Implementation");
-			System.Type[] types_in_assembly = assembly.GetTypes ();
 
-			foreach (System.Type type in types_in_assembly)
+			var records = from type in assembly.GetTypes ()
+						  where type.IsSubclassOf (typeof (AbstractServiceEngine))
+						  let engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine
+						  from interfaceType in type.GetInterfaces ()
+						  where interfaceType.HasServiceContractAttribute ()
+						  select new ServiceRecord (engine, interfaceType);
+
+			foreach (var item in records)
 			{
-				if (type.IsSubclassOf (typeof (AbstractServiceEngine)))
-				{
-					AbstractServiceEngine engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine;
-
-					foreach (var interfaceType in type.GetInterfaces ())
-					{
-						if (interfaceType.GetCustomAttributes (typeof (System.ServiceModel.ServiceContractAttribute), false).Length > 0)
-						{
-							this.services.Add (new ServiceRecord (engine, interfaceType));
-						}
-					}
-				}
+				this.services.Add (item);
 			}
 		}
 		
@@ -86,10 +84,8 @@ namespace Epsitec.Cresus.Services
 		
 		public IEnumerable<System.Guid> GetServiceIds()
 		{
-			foreach (var service in this.services)
-			{
-				yield return service.ServiceId;
-			}
+			return from service in this.services
+				   select service.ServiceId;
 		}
 
 		public IEnumerable<ServiceRecord> GetServiceRecords()
@@ -99,37 +95,31 @@ namespace Epsitec.Cresus.Services
 
 		public IRemoteService GetService(System.Guid serviceId)
 		{
-			foreach (var service in this.services)
-			{
-				if (service.ServiceId == serviceId)
-				{
-					return service.ServiceInstance as IRemoteService;
-				}
-			}
+			var result = from service in this.services
+						 where service.ServiceId == serviceId
+						 select service.ServiceInstance as IRemoteService;
 
-			return null;
+			return result.FirstOrDefault ();
 		}
 		
 		public string GetServiceUniqueName(System.Guid serviceId)
 		{
-			foreach (var service in this.services)
-			{
-				if (service.ServiceId == serviceId)
-				{
-					return service.UniqueName;
-				}
-			}
+			var result = from service in this.services
+						 where service.ServiceId == serviceId
+						 select service.UniqueName;
 
-			return null;
+			return result.FirstOrDefault ();
 		}
 		
 		
 		#region IDisposable Members
+		
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (true);
 		}
+		
 		#endregion
 		
 		
@@ -275,15 +265,11 @@ namespace Epsitec.Cresus.Services
 					return null;
 				}
 
-				foreach (var item in Cache<T>.cache)
-				{
-					if (item.Value == instance)
-					{
-						return new System.Uri (item.Key);
-					}
-				}
+				var result = from item in Cache<T>.cache
+							 where item.Value == instance
+							 select new System.Uri (item.Key);
 
-				return null;
+				return result.FirstOrDefault ();
 			}
 
 			public static T Resolve(System.Uri uri)

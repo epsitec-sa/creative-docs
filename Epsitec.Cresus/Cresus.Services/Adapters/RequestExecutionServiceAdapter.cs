@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Services.Adapters
 			this.target.QueryRequestStates (client, out states);
 		}
 
-		public void QueryRequestStates(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
+		public void QueryRequestStatesUsingFilter(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
 		{
-			this.target.QueryRequestStates (client, ref change_id, timeout, out states);
+			this.target.QueryRequestStatesUsingFilter (client, ref change_id, timeout, out states);
 		}
 
 		public void RemoveRequestStates(ClientIdentity client, RequestState[] states)

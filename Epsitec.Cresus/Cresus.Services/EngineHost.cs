@@ -2,10 +2,12 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
+using Epsitec.Cresus.Services.Extensions;
 
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Net.Security;
+using System.Linq;
 
 namespace Epsitec.Cresus.Services
 {
@@ -39,45 +41,26 @@ namespace Epsitec.Cresus.Services
 
 			foreach (var item in engine.GetServiceRecords ())
 			{
-				object instance = EngineHost.WrapRemotingService (item.ServiceInstance);
+				object instance = EngineHost.WrapRemotingService (item.ServiceInstance, item.ServiceType);
+
+				System.Diagnostics.Debug.Assert (instance.GetType ().HasServiceBehaviorAttribute ());
+				
 				this.RegisterServiceHost (item.UniqueName, instance, item.ServiceType);
 			}
 		}
 
-		private static object WrapRemotingService(System.MarshalByRefObject service)
+		private static object WrapRemotingService(System.MarshalByRefObject service, System.Type serviceType)
 		{
-			if (System.Runtime.Remoting.RemotingServices.IsTransparentProxy (service))
-			{
-				Remoting.IConnectionService asConnectionService = service as Remoting.IConnectionService;
-				Remoting.IOperatorService asOperatorService = service as Remoting.IOperatorService;
-				Remoting.IReplicationService asReplicationService = service as Remoting.IReplicationService;
-				Remoting.IRequestExecutionService asRequestExecutionService = service as Remoting.IRequestExecutionService;
+			System.Diagnostics.Debug.Assert (System.Runtime.Remoting.RemotingServices.IsTransparentProxy (service));
+			System.Diagnostics.Debug.Assert (serviceType.IsInterface);
 
-				if (asConnectionService != null)
-				{
-					return new Adapters.ConnectionServiceAdapter (asConnectionService);
-				}
-				else if (asOperatorService != null)
-				{
-					return new Adapters.OperatorServiceAdapter (asOperatorService);
-				}
-				else if (asReplicationService != null)
-				{
-					return new Adapters.ReplicationServiceAdapter (asReplicationService);
-				}
-				else if (asRequestExecutionService != null)
-				{
-					return new Adapters.RequestExecutionServiceAdapter (asRequestExecutionService);
-				}
-				else
-				{
-					throw new System.InvalidOperationException ();
-				}
-			}
-			else
-			{
-				return service;
-			}
+			System.Type baseType = typeof (Adapters.AbstractServiceAdapter);
+
+			var wrapper = from t in baseType.Assembly.GetTypes ()
+						  where t.IsSubclassOf (baseType) && t.GetInterfaces ().Contains (serviceType)
+						  select System.Activator.CreateInstance (t, new object[] { service });
+
+			return wrapper.FirstOrDefault ();
 		}
 
 		public static System.Uri GetAddress(string machine, int portNumber, string serviceName)

@@ -144,6 +144,7 @@
     <Compile Include="Adapters\ReplicationServiceAdapter.cs" />
     <Compile Include="Adapters\RequestExecutionServiceAdapter.cs" />
     <Compile Include="Extensions\RemoteServiceManagerExtensions.cs" />
+    <Compile Include="Extensions\SystemTypeExtensions.cs" />
     <Compile Include="RemotingServiceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
