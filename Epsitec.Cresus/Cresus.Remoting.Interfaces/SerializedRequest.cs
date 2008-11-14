@@ -1,10 +1,12 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.ServiceModel;
+using System.Runtime.Serialization;
 
 namespace Epsitec.Cresus.Remoting
 {
 	[System.Serializable]
-	
 	public struct SerializedRequest
 	{
 		public SerializedRequest(long id, byte[] data)

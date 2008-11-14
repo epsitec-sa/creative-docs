@@ -12,8 +12,6 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	
 	[System.Serializable]
-	[DataContract]
-	
 	public struct ClientIdentity
 	{
 		public ClientIdentity(string name)
