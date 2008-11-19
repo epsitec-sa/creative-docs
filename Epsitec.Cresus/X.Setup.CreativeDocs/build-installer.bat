@@ -45,13 +45,14 @@ set IEXPRESS="%CD%\External\iexpress.exe"
 set SIGNTOOL="%CD%\External\CodeSigning\signtool.exe"
 
 echo Building version %version% of Creative Docs .NET (%BUILD%)
-%DEVENV% "%CD%\Epsitec.Cresus.sln" /Rebuild "%BUILD%" /Project "App.CreativeDocs"
+%DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "App.CreativeDocs"
 
 echo Building version %version% of Creative Docs .NET installer (%BUILD%)
 %DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "X.Setup.CreativeDocs"
 
 del "%CD%\X.Setup.CreativeDocs\Sleep.exe" 2>NUL
 del %EXEPATH% 2>NUL
+del "%CD%\X.Setup.CreativeDocs\CrDoc-2.x.x-installer.exe" 2>NUL
 
 copy "%CD%\External\Sleep.exe" "%CD%\X.Setup.CreativeDocs\Sleep.exe"
 copy "%CD%\X.Setup.CreativeDocs\%BUILD%\Setup.exe" "%CD%\X.Setup.CreativeDocs\Setup.exe"
