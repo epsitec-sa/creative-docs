@@ -1,15 +1,78 @@
-del Sleep.exe 2>NUL
+@echo off
 
-copy "S:\Epsitec.Cresus\External\Sleep.exe" Sleep.exe
+rem ---------------------------------------------------------------
+rem --
+rem -- Build script for Creative Docs .NET
+rem -- Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains
+rem -- Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+rem --
+rem ---------------------------------------------------------------
 
 
-S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "Sleep.exe"
+rem -- Set directory and drive to path of executing batch script
 
-S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "Debug\Setup.exe"
-S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "Debug\CreativeDocs.msi"
+cd /d %~dp0
+cd ..
 
-S:\Epsitec.Cresus\External\iexpress /N Installer.sed
+echo Root directory is %CD%
 
-S:\Epsitec.Cresus\External\CodeSigning\signtool.exe sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "CrDoc-2.x.x-installer.exe"
 
-del Sleep.exe 2>NUL
+rem -- Find on what kind of system we are running, in order to use
+rem -- the correct Visual Studio folder
+
+IF "%ProgramFiles(x86)%"=="" (
+  echo Running on a 32-bit System
+  set DEVENV="%ProgramFiles%\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe"
+) ELSE (
+  echo Running on a 64-bit System
+  set DEVENV="%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\Common7\IDE\devenv.exe"
+)
+
+
+rem -- Extract the text found in the AssemblyInfo file, which specifies the assembly version
+rem -- such as : [assembly: AssemblyVersion ("3.1.0832.0")] by first getting the second token
+rem -- of the line, using "(" and ")" as separators, and stripping the quotes thanks to %%~a
+rem -- Then, tokenize once more by splitting at the "." and create a "3.1.0832" version
+rem -- number, which will be used in the output file name.
+
+for /f "tokens=2 delims=()" %%a in ('type Properties\AssemblyInfo.CrDocVer.cs ^| find "AssemblyVersion"') do set version=%%~a
+for /f "tokens=1-3 delims=." %%a in ('echo %version%') do set version=%%a.%%b.%%c
+
+set EXE=CrDoc-%version%-installer.exe
+set EXEPATH="%CD%\X.Setup.CreativeDocs\%EXE%"
+set BUILD=Release
+set IEXPRESS="%CD%\External\iexpress.exe"
+set SIGNTOOL="%CD%\External\CodeSigning\signtool.exe"
+
+echo Building version %version% of Creative Docs .NET (%BUILD%)
+%DEVENV% "%CD%\Epsitec.Cresus.sln" /Rebuild "%BUILD%" /Project "App.CreativeDocs"
+
+echo Building version %version% of Creative Docs .NET installer (%BUILD%)
+%DEVENV% "%CD%\Epsitec.Cresus.sln" /Build "%BUILD%" /Project "X.Setup.CreativeDocs"
+
+del "%CD%\X.Setup.CreativeDocs\Sleep.exe" 2>NUL
+del %EXEPATH% 2>NUL
+
+copy "%CD%\External\Sleep.exe" "%CD%\X.Setup.CreativeDocs\Sleep.exe"
+copy "%CD%\X.Setup.CreativeDocs\%BUILD%\Setup.exe" "%CD%\X.Setup.CreativeDocs\Setup.exe"
+copy "%CD%\X.Setup.CreativeDocs\%BUILD%\CreativeDocs.msi" "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
+
+
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Sleep.exe"
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\Setup.exe"
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi"
+
+echo Packaging installer into %EXE%
+
+cd X.Setup.CreativeDocs
+
+"%IEXPRESS%" /N Installer.sed
+rename CrDoc-2.x.x-installer.exe %EXE%
+
+cd ..
+
+%SIGNTOOL% sign /a /n OPaC /d "Creative Docs .NET Installer" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
+
+del "%CD%\X.Setup.CreativeDocs\Sleep.exe" 2>NUL
+del "%CD%\X.Setup.CreativeDocs\Setup.exe" 2>NUL
+del "%CD%\X.Setup.CreativeDocs\CreativeDocs.msi" 2>NUL

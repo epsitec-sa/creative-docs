@@ -1,6 +1,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document
 {
@@ -1678,7 +1679,7 @@ namespace Epsitec.Common.Document
 			TextFieldCombo field = new TextFieldCombo(container);
 			field.Name = sString.Name;
 			field.IsReadOnly = true;
-			field.Text = this.document.Settings.PrintInfo.PrintName;
+			field.Text = Types.FormattedText.Escape(this.document.Settings.PrintInfo.PrintName);
 			field.PreferredWidth = 177;
 			field.Dock = DockStyle.Left;
 			field.Margins = new Margins(0, 0, 0, 0);
@@ -1701,24 +1702,19 @@ namespace Epsitec.Common.Document
 			TextFieldCombo field = sender as TextFieldCombo;
 			field.Items.Clear();
 
-			string[] installed = Common.Printing.PrinterSettings.InstalledPrinters;
-			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			foreach ( string name in installed )
-			{
-				list.Add(name);
-			}
+			List<string> list = new List<string> (Common.Printing.PrinterSettings.InstalledPrinters);
 			list.Sort();
 
-			foreach ( string name in list )
+			foreach (string name in list)
 			{
-				field.Items.Add(name);
+				field.Items.Add(Types.FormattedText.Escape(name));
 			}
 		}
 
 		private void HandlePrinterComboClosed(object sender)
 		{
 			TextFieldCombo field = sender as TextFieldCombo;
-			this.document.Settings.PrintInfo.PrintName = field.Text;
+			this.document.Settings.PrintInfo.PrintName = Types.FormattedText.Unescape(field.Text);
 		}
 
 		private void HandlePrinterButtonClicked(object sender, MessageEventArgs e)
@@ -1751,7 +1747,7 @@ namespace Epsitec.Common.Document
 
 			Common.Dialogs.Print dialog = this.document.PrintDialog;
 			TextFieldCombo field = this.WidgetsTableSearch(name, "") as TextFieldCombo;
-			field.Text = this.document.Settings.PrintInfo.PrintName;
+			field.Text = Types.FormattedText.Escape(this.document.Settings.PrintInfo.PrintName);
 		}
 		#endregion
 
