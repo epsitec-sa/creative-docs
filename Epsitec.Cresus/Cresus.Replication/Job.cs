@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Replication
 	{
 		public Job()
 		{
-			this.SetLastStep (1);
+			this.SetLastExpectedStep (1);
 		}
 		
 		

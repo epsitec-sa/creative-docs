@@ -558,11 +558,11 @@ namespace Epsitec.Cresus.Database
 			for (int i = 0; i < 10; i++)
 			{
 				System.Threading.Thread.Sleep (100);
-				Remoting.ProgressStatus status = operation.ProgressStatus;
+				Remoting.ProgressState status = operation.ProgressState;
 				
 				System.Diagnostics.Debug.WriteLine ("Operation: " + status + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
 				
-				if (status == Remoting.ProgressStatus.Succeeded)
+				if (status == Remoting.ProgressState.Succeeded)
 				{
 					Remoting.ClientIdentity client;
 					byte[]                  data;
@@ -590,10 +590,10 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Threading.Thread.Sleep (10);
 				
-				Remoting.ProgressStatus status = progress.ProgressStatus;
+				Remoting.ProgressState status = progress.ProgressState;
 				
 				System.Diagnostics.Debug.WriteLine ("Cancellation: " + status + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
-				if (status == Remoting.ProgressStatus.Succeeded) break;
+				if (status == Remoting.ProgressState.Succeeded) break;
 			}
 		}
 

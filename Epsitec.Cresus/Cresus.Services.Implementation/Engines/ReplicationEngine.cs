@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Services
 			
 			job.WaitForProgress (100);
 			
-			Engine.ThrowExceptionBasedOnStatus (job.ProgressStatus);
+			Engine.ThrowExceptionBasedOnStatus (job.ProgressState);
 			
 			if (job.Error != null)
 			{

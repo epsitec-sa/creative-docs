@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Replication
 					break;
 				}
 				
-				if (job.ProgressStatus == Remoting.ProgressStatus.Cancelled)
+				if (job.ProgressState == Remoting.ProgressState.Cancelled)
 				{
 					//	Saute un éventuel job qui aurait été marqué comme annulé.
 					
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Replication
 				}
 				finally
 				{
-					System.Diagnostics.Debug.Assert (job.ProgressStatus != Remoting.ProgressStatus.Running);
+					System.Diagnostics.Debug.Assert (job.ProgressState != Remoting.ProgressState.Running);
 				}
 			}
 		}

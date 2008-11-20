@@ -159,20 +159,20 @@ namespace Epsitec.Cresus.Services
 		}
 
 
-		public static void ThrowExceptionBasedOnStatus(ProgressStatus status)
+		public static void ThrowExceptionBasedOnStatus(ProgressState status)
 		{
 			switch (status)
 			{
-				case ProgressStatus.None:
+				case ProgressState.None:
 					throw new Remoting.Exceptions.InvalidOperationException ();
-				case ProgressStatus.Running:
+				case ProgressState.Running:
 					throw new Remoting.Exceptions.PendingException ();
-				case ProgressStatus.Cancelled:
+				case ProgressState.Cancelled:
 					throw new Remoting.Exceptions.CancelledException ();
-				case ProgressStatus.Failed:
+				case ProgressState.Failed:
 					throw new Remoting.Exceptions.FailedException ();
 
-				case ProgressStatus.Succeeded:
+				case ProgressState.Succeeded:
 					break;
 
 				default:

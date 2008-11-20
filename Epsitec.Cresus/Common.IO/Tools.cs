@@ -1,45 +1,66 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
 	/// <summary>
-	/// La classe Tools contient des routines utilitaires liées aux fichiers.
+	/// The <c>Tools</c> class contains several file related utility functions.
 	/// </summary>
-	public sealed class Tools
+	public static class Tools
 	{
-		public delegate void Callback();
-		
-		public static bool WaitForFileReadable(string name, int max_wait)
+		/// <summary>
+		/// The <c>ShouldInterruptCallback</c> delegate should return <c>true</c>
+		/// to interrupt whatever the caller was doing and return immediately.
+		/// </summary>
+		public delegate bool ShouldInterruptCallback();
+
+
+		/// <summary>
+		/// Waits for a file to become readable.
+		/// </summary>
+		/// <param name="path">The file path.</param>
+		/// <param name="timeout">The timeout.</param>
+		/// <returns>Returns <c>true</c> if the file is readable; otherwise, return <c>false</c>.</returns>
+		public static bool WaitForFileReadable(string path, int timeout)
 		{
-			return Tools.WaitForFileReadable (name, max_wait, null);
+			return Tools.WaitForFileReadable (path, timeout, null);
 		}
-		
-		public static bool WaitForFileReadable(string name, int max_wait, Callback interrupt)
+
+		/// <summary>
+		/// Waits for a file to become readable.
+		/// </summary>
+		/// <param name="path">The file path.</param>
+		/// <param name="timeout">The timeout.</param>
+		/// <param name="interrupt">The interrupt callback.</param>
+		/// <returns>
+		/// Returns <c>true</c> if the file is readable; otherwise, return <c>false</c>.
+		/// </returns>
+		public static bool WaitForFileReadable(string path, int timeout, ShouldInterruptCallback shouldInterruptCallback)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
 			bool ok   = false;
 			int  wait = 0;
-			
-			for (int i = 5; wait < max_wait; i += 5)
+			int  increment = 5;
+
+			for (int i = increment; wait < timeout; i = System.Math.Min (i+increment, 100*increment))
 			{
-				if (interrupt != null)
+				if (shouldInterruptCallback != null)
 				{
-					interrupt ();
+					if (shouldInterruptCallback ())
+					{
+						break;
+					}
 				}
 				
 				System.IO.FileStream stream;
 				
 				try
 				{
-					stream = System.IO.File.OpenRead (name);
+					stream = System.IO.File.OpenRead (path);
 				}
 				catch
 				{
 					System.Threading.Thread.Sleep (i);
 					wait += i;
-					buffer.Append ('.');
 					continue;
 				}
 				
@@ -48,15 +69,15 @@ namespace Epsitec.Common.IO
 				break;
 			}
 			
-			if (buffer.Length > 0)
+			if (wait > 0)
 			{
-				if (wait > max_wait)
+				if (wait > timeout)
 				{
 					System.Diagnostics.Debug.WriteLine ("Timed out waiting for file.");
 				}
 				else
 				{
-					System.Diagnostics.Debug.WriteLine ("Waited for file for " + wait + " ms " + buffer.ToString ());
+					System.Diagnostics.Debug.WriteLine (string.Format ("Waited for file for {0} ms.", wait));
 				}
 			}
 			

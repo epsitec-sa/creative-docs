@@ -1,89 +1,125 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// Summary description for AbstractThreadedOperation.
+	/// The <c>AbstractThreadedOperation</c> class provides the basic support to run
+	/// an operation in a separate thread.
 	/// </summary>
 	public abstract class AbstractThreadedOperation : AbstractOperation
 	{
-		public AbstractThreadedOperation()
+		protected AbstractThreadedOperation()
 		{
 		}
-		
-		
-		protected System.Threading.Thread		Thread
+
+
+		/// <summary>
+		/// Gets the thread cancel event. If it does not yet exist, create it.
+		/// </summary>
+		/// <value>The thread cancel event.</value>
+		System.Threading.AutoResetEvent ThreadCancelEvent
 		{
 			get
 			{
-				return this.thread;
+				lock (this.exclusion)
+				{
+					if (this.threadCancelEvent == null)
+					{
+						this.threadCancelEvent = new System.Threading.AutoResetEvent (false);
+					}
+
+					return this.threadCancelEvent;
+				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets a value indicating whether to cancel the current thread.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if the current thread should be cancelled; otherwise, <c>false</c>.
+		/// </value>
 		protected bool							IsCancelRequested
 		{
 			get
 			{
-				return this.is_thread_cancel_requested;
+				lock (this.exclusion)
+				{
+					return this.isThreadCancelRequested;
+				}
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Starts the associated thread.
+		/// </summary>
 		public void Start()
 		{
-			if (this.thread != null)
+			lock (this.exclusion)
 			{
-				new System.InvalidOperationException ("Thread cannot be started twice.");
+				if (this.thread != null)
+				{
+					new System.InvalidOperationException ("Thread cannot be started twice.");
+				}
+
+				this.thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.ProcessOperation));
+				this.thread.Start ();
+			}
+		}
+
+		/// <summary>
+		/// Cancels the operation asynchronously.
+		/// </summary>
+		/// <returns>
+		/// Returns the operation which is cancelling or <c>null</c> if the cancellation was immediate.
+		/// </returns>
+		public override AbstractOperation CancelOperationAsync()
+		{
+			System.Threading.Thread thread;
+
+			lock (this.exclusion)
+			{
+				this.isThreadCancelRequested = true;
+				thread = this.thread;
 			}
 			
-			this.thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.ProcessOperation));
-			this.thread.Start ();
-		}
-		
-		
-		public override void CancelOperation(out ProgressInformation progress_information)
-		{
-			this.is_thread_cancel_requested = true;
-			
-			if ((this.thread != null) &&
-				(this.thread.IsAlive))
+			if ((thread != null) &&
+				(thread.IsAlive))
 			{
-				//	Il y a un processus en cours d'exécution pour cette opération; on va par
-				//	conséquent demander "poliment" au processus de bien vouloir se terminer,
-				//	via un événement plutôt que via un Thread.Abort (trop brutal).
+				//	The thread is currently running and executing this operation; ask it to
+				//	stop execution by signalling an event :
 				
-				this.GetThreadCancelEvent (true).Set ();
+				this.ThreadCancelEvent.Set ();
 				
-				//	Signale l'état de l'avancement de l'opération en surveillant simplement
-				//	la fin du processus :
-				
-				progress_information = new ThreadJoinProgress (this.Thread).GetProgressInformation ();
+				return new ThreadJoinOperation (thread);
 			}
 			else
 			{
-				progress_information = ProgressInformation.Immediate;
+				return null;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Does the real work for this operation; override this method to do something
+		/// useful.
+		/// </summary>
 		protected abstract void ProcessOperation();
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
 				if (this.thread != null)
 				{
-					//	Demande la fin de l'exécution du processus; poliment, d'abord, puis
-					//	en cas d'échec après la durée de sursis, brutalement...
+					//	First, ask politely to cancel the opration, then be rude if this
+					//	fails, by interrupting the thread.
 					
-					ProgressInformation info;
-					
-					this.CancelOperation (out info);
-					
-					if (OperationManager.WaitForProgress (info.OperationId, 100, System.TimeSpan.FromMilliseconds (this.wait_before_abort)) == false)
+					if (this.CancelOperation (this.waitBeforeAbort) == false)
 					{
-						this.thread.Abort ();
+						this.thread.Interrupt ();
 					}
 					
 					this.thread.Join ();
@@ -95,34 +131,12 @@ namespace Epsitec.Cresus.Remoting
 		}
 		
 		
-		System.Threading.AutoResetEvent GetThreadCancelEvent(bool create)
-		{
-			lock (this)
-			{
-				if ((this.thread_cancel == null) &&
-					(create))
-				{
-					this.thread_cancel = new System.Threading.AutoResetEvent (false);
-				}
-				
-				return this.thread_cancel;
-			}
-		}
-		
-		
-		protected void InterruptIfCancelRequested()
-		{
-			if (this.IsCancelRequested)
-			{
-				throw new Exceptions.InterruptedException ();
-			}
-		}
-		
+		protected readonly object				exclusion = new object ();
 		
 		private System.Threading.Thread			thread;
-		private System.Threading.AutoResetEvent	thread_cancel;
-		private volatile bool					is_thread_cancel_requested;
+		private System.Threading.AutoResetEvent	threadCancelEvent;
+		private bool							isThreadCancelRequested;
 		
-		protected int							wait_before_abort = 100;
+		protected int							waitBeforeAbort = 100;
 	}
 }

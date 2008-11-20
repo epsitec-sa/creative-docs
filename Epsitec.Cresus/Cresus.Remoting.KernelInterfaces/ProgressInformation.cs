@@ -1,83 +1,130 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// 
+	/// The <c>ProgressInformation</c> structure stores the progress information
+	/// about an operation, including the operation ID of the running operation.
 	/// </summary>
 	[System.Serializable]
 	public struct ProgressInformation
 	{
-		public ProgressInformation(int progressPercent, ProgressStatus progressStatus, int currentStep, int lastStep, System.TimeSpan runningDuration, System.TimeSpan expectedDuration, long operationId)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ProgressInformation"/> structure.
+		/// </summary>
+		/// <param name="progressPercent">The progress percent.</param>
+		/// <param name="progressState">The progress state.</param>
+		/// <param name="currentStep">The current step.</param>
+		/// <param name="expectedLastStep">The expected last step.</param>
+		/// <param name="runningDuration">The running duration.</param>
+		/// <param name="expectedDuration">The expected duration.</param>
+		/// <param name="operationId">The operation id.</param>
+		public ProgressInformation(int progressPercent, ProgressState progressState, int currentStep, int expectedLastStep, System.TimeSpan runningDuration, System.TimeSpan expectedDuration, long operationId)
 		{
 			this.progressPercent = progressPercent;
-			this.progressStatus = progressStatus;
+			this.progressState = progressState;
 			this.currentStep = currentStep;
-			this.lastStep = lastStep;
+			this.expectedLastStep = expectedLastStep;
 			this.runningDuration = runningDuration;
 			this.expectedDuration = expectedDuration;
 			this.operationId = operationId;
 		}
 
-		private ProgressInformation(ImmediateResult flag)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ProgressInformation"/> structure.
+		/// The instance is used only for the <c>Immediate</c> value.
+		/// </summary>
+		/// <param name="flag">Dummy.</param>
+		private ProgressInformation(DummyImmediateResult flag)
 		{
 			this.progressPercent = 100;
-			this.progressStatus = ProgressStatus.Succeeded;
+			this.progressState = ProgressState.Succeeded;
 			this.currentStep = 0;
-			this.lastStep = 0;
+			this.expectedLastStep = 0;
 			this.runningDuration = System.TimeSpan.Zero;
 			this.expectedDuration = System.TimeSpan.Zero;
 			this.operationId = 0;
 		}
 
-		public int ProgressPercent
+
+		/// <summary>
+		/// Gets the progress in percent (0...100; -1 means undefined).
+		/// </summary>
+		/// <value>The progress in percent.</value>
+		public int								ProgressPercent
 		{
 			get
 			{
 				return this.progressPercent;
 			}
-		}	//	avancement 0..100, -1 = indéterminé
+		}
 
-		public ProgressStatus ProgressStatus
+		/// <summary>
+		/// Gets the progress state.
+		/// </summary>
+		/// <value>The progress state.</value>
+		public ProgressState					ProgressState
 		{
 			get
 			{
-				return this.progressStatus;
+				return this.progressState;
 			}
-		}	//	état (en cours d'exécution, terminé, annulé, échoué)
-		public int CurrentStep
+		}
+
+		/// <summary>
+		/// Gets the index of the current step (0...n).
+		/// </summary>
+		/// <value>The current step.</value>
+		public int								CurrentStep
 		{
 			get
 			{
 				return this.currentStep;
 			}
-		}	//	# de l'étape en cours (0..n)
-		public int LastStep
+		}
+
+		/// <summary>
+		/// Gets the index of the expected last step (-1 means undefined).
+		/// </summary>
+		/// <value>The last step.</value>
+		public int								ExpectedLastStep
 		{
 			get
 			{
-				return this.lastStep;
+				return this.expectedLastStep;
 			}
-		}	//	# de la dernière étape, -1 = indéterminé
+		}
 
-		public System.TimeSpan RunningDuration
+		/// <summary>
+		/// Gets the total running duration.
+		/// </summary>
+		/// <value>The total running duration.</value>
+		public System.TimeSpan					RunningDuration
 		{
 			get
 			{
 				return this.runningDuration;
 			}
-		}	//	durée d'exécution actuelle
+		}
 
-		public System.TimeSpan ExpectedDuration
+		/// <summary>
+		/// Gets the expected duration (if negative, means undefined).
+		/// </summary>
+		/// <value>The expected duration.</value>
+		public System.TimeSpan					ExpectedDuration
 		{
 			get
 			{
 				return this.expectedDuration;
 			}
-		}	//	durée totale estimée, indéterminée si < 0
+		}
 
-		public long OperationId
+		/// <summary>
+		/// Gets the associated operation id.
+		/// </summary>
+		/// <value>The operation id.</value>
+		public long								OperationId
 		{
 			get
 			{
@@ -85,21 +132,24 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 
+		#region Dummy enum for specific Immediate constructor
 
-		private enum ImmediateResult
+		private enum DummyImmediateResult
 		{
 			Flag
 		};
 
-		public static readonly ProgressInformation Empty = new ProgressInformation ();
-		public static readonly ProgressInformation Immediate = new ProgressInformation (ImmediateResult.Flag);
+		#endregion
 
-		readonly int progressPercent;
-		readonly ProgressStatus progressStatus;
-		readonly int currentStep;
-		readonly int lastStep;
-		readonly System.TimeSpan runningDuration;
-		readonly System.TimeSpan expectedDuration;
-		readonly long operationId;
+		public static readonly ProgressInformation Empty = new ProgressInformation ();
+		public static readonly ProgressInformation Immediate = new ProgressInformation (DummyImmediateResult.Flag);
+
+		readonly int							progressPercent;
+		readonly ProgressState					progressState;
+		readonly int							currentStep;
+		readonly int							expectedLastStep;
+		readonly System.TimeSpan				runningDuration;
+		readonly System.TimeSpan				expectedDuration;
+		readonly long							operationId;
 	}
 }

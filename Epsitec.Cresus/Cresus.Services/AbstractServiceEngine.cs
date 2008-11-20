@@ -38,11 +38,6 @@ namespace Epsitec.Cresus.Services
 
 		public abstract System.Guid GetServiceId();
 
-		public string GetServiceName()
-		{
-			return this.GetType ().FullName;
-		}
-
 		#endregion
 		
 		protected virtual void Dispose(bool disposing)

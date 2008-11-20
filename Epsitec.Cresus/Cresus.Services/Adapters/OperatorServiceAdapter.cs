@@ -7,40 +7,28 @@ using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services.Adapters
 {
+	/// <summary>
+	/// The <c>OperatorServiceAdapter</c> class implements an adapter for the
+	/// <see cref="IOperatorService"/>. See also <see cref="AbstractServiceAdapter"/>.
+	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class OperatorServiceAdapter : AbstractServiceAdapter, IOperatorService
+	class OperatorServiceAdapter : AbstractServiceAdapter<IOperatorService>, IOperatorService
 	{
 		public OperatorServiceAdapter(IOperatorService target)
+			: base (target)
 		{
-			this.target = target;
 		}
-
-		private readonly IOperatorService target;
 
 		#region IOperatorService Members
 
-		public void CreateRoamingClient(string client_name, out ProgressInformation operation)
+		public void CreateRoamingClient(string clientName, out ProgressInformation operation)
 		{
-			this.target.CreateRoamingClient (client_name, out operation);
+			this.target.CreateRoamingClient (clientName, out operation);
 		}
 
-		public void GetRoamingClientData(long operationId, out ClientIdentity client, out byte[] compressed_data)
+		public void GetRoamingClientData(long operationId, out ClientIdentity client, out byte[] compressedData)
 		{
-			this.target.GetRoamingClientData (operationId, out client, out compressed_data);
-		}
-
-		#endregion
-
-		#region IRemotingService Members
-
-		public System.Guid GetServiceId()
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public string GetServiceName()
-		{
-			throw new System.NotImplementedException ();
+			this.target.GetRoamingClientData (operationId, out client, out compressedData);
 		}
 
 		#endregion

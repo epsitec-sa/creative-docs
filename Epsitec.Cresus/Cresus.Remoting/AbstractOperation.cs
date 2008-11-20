@@ -1,135 +1,186 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// Summary description for AbstractOperation.
+	/// The <c>AbstractOperation</c> class implements the foundations for all
+	/// operation classes, providing means to query for its progress, cancel
+	/// the it, etc.
 	/// </summary>
-	public abstract class AbstractOperation : System.MarshalByRefObject, IOperation, System.IDisposable
+	public abstract class AbstractOperation : System.MarshalByRefObject, System.IDisposable
 	{
 		protected AbstractOperation()
 		{
-			this.operationId = OperationManager.Register (this);
+			//	Tell the OperationManager about this new operation and assign it a
+			//	unique ID. This ID will be unique, even across multiple app domains,
+			//	if the OperationManager was properly set up.
+			
+			OperationManager.Register (this, operationId => this.operationId = operationId);
 		}
 		
 		public override object InitializeLifetimeService()
 		{
-			//	En retournant null ici, on garantit que le service ne sera jamais
-			//	recyclé (sinon, après un temps défini par ILease, l'objet est retiré
-			//	de la table des objets joignables par "remoting").
+			//	By returning null, we explicitely state that we do not want to have
+			//	automatic object recycling (see ILease and remoting).
 
 			return null;
 		}
 
-		public ProgressInformation GetProgressInformation()
-		{
-			this.RefreshProgressInformation ();
 
-			return new ProgressInformation (
-				this.progress_percent,
-				this.progress_status,
-				this.current_step,
-				this.last_step, 
-				System.DateTime.Now - this.start_time,
-				this.ExpectedDuration,
-				this.operationId);
-		}
-
-
-		public ProgressStatus ProgressStatus
+		/// <summary>
+		/// Gets the progress state of this operation.
+		/// </summary>
+		/// <value>The progress state.</value>
+		public ProgressState ProgressState
 		{
 			get
 			{
 				this.RefreshProgressInformation ();
-				return this.progress_status;
+
+				lock (this.monitor)
+				{
+					return this.progressState;
+				}
 			}
 		}
 
-		protected virtual void RefreshProgressInformation()
-		{
-		}
 
-
-		protected virtual System.TimeSpan ExpectedDuration
-		{
-			get
-			{
-				return System.TimeSpan.FromMilliseconds (-1);
-			}
-		}
-		
-		#region IOperation Members
-		
-		public void CancelOperation()
-		{
-			ProgressInformation progress;
-			this.CancelOperation (out progress);
-			this.WaitForProgress (100);
-		}
-		
-		public virtual void CancelOperation(out ProgressInformation progress_information)
-		{
-			progress_information = ProgressInformation.Immediate;
-		}
-
-		public bool WaitForProgress(int minimum_progress)
-		{
-			return this.WaitForProgress (minimum_progress, System.TimeSpan.FromMilliseconds (-1));
-		}
-		
-		public virtual bool WaitForProgress(int minimum_progress, System.TimeSpan timeout)
+		/// <summary>
+		/// Gets the progress information for the current operation.
+		/// </summary>
+		/// <returns>The progress information.</returns>
+		public ProgressInformation GetProgressInformation()
 		{
 			this.RefreshProgressInformation ();
 
-			if (this.progress_percent >= minimum_progress)
+			lock (this.monitor)
+			{
+				System.TimeSpan duration = (this.stopTime.Ticks == 0 ? System.DateTime.Now : this.stopTime) - this.startTime;
+
+				return new ProgressInformation (
+					this.progressPercent,
+					this.progressState,
+					this.currentStep,
+					this.expectedLastStep,
+					duration,
+					this.expectedDuration,
+					this.operationId);
+			}
+		}
+
+
+
+		/// <summary>
+		/// Cancels the operation, using an infinite timeout.
+		/// </summary>
+		/// <returns>Returns <c>true</c> if the cancel operation was successfull.</returns>
+		public bool CancelOperation()
+		{
+			return this.CancelOperation (-1);
+		}
+
+		/// <summary>
+		/// Cancels the operation, using the specified timeout.
+		/// </summary>
+		/// <param name="timeout">The timeout, in milliseconds.</param>
+		/// <returns>Returns <c>true</c> if the cancel operation was successfull.</returns>
+		public bool CancelOperation(int timeout)
+		{
+			AbstractOperation op = this.CancelOperationAsync ();
+
+			if (op == null)
 			{
 				return true;
 			}
-			
+			else
+			{
+				return op.WaitForProgress (100, System.TimeSpan.FromMilliseconds (timeout));
+			}
+		}
+
+		/// <summary>
+		/// Cancels the operation asynchronously.
+		/// </summary>
+		/// <returns>Returns the operation which is cancelling or <c>null</c> if the cancellation was immediate.</returns>
+		public virtual AbstractOperation CancelOperationAsync()
+		{
+			return null;
+		}
+
+		/// <summary>
+		/// Waits for progress, using an infinite timeout.
+		/// </summary>
+		/// <param name="progress">The expected progress.</param>
+		/// <returns>Returns <c>true</c> if the specified progress percentage was reached.</returns>
+		public bool WaitForProgress(int progress)
+		{
+			return this.WaitForProgress (progress, System.TimeSpan.FromMilliseconds (-1));
+		}
+
+		/// <summary>
+		/// Waits for progress, using the specified timeout.
+		/// </summary>
+		/// <param name="progress">The progress.</param>
+		/// <param name="timeout">The timeout.</param>
+		/// <returns>Returns <c>true</c> if the specified progress percentage was reached.</returns>
+		public virtual bool WaitForProgress(int progress, System.TimeSpan timeout)
+		{
+			this.RefreshProgressInformation ();
+
+			lock (this.monitor)
+			{
+				if (this.progressPercent >= progress)
+				{
+					return true;
+				}
+			}
+
 			bool infinite = (timeout.Ticks < 0);
 			
-			System.DateTime start_time = System.DateTime.Now;
-			System.DateTime stop_time  = start_time.Add (timeout);
+			System.DateTime startTime = System.DateTime.Now;
+			System.DateTime stopTime  = startTime.Add (timeout);
 			
 			for (;;)
 			{
-				bool      got_event = false;
-				const int max_wait  = 30*1000;
+				bool      gotEvent = false;
+				const int maxWait  = 30*1000;
 
 				this.RefreshProgressInformation ();
 				
 				lock (this.monitor)
 				{
-					if (this.progress_percent >= minimum_progress)
+					if (this.progressPercent >= progress)
 					{
 						return true;
 					}
 					if (infinite)
 					{
-						got_event = System.Threading.Monitor.Wait (this.monitor, max_wait);
+						gotEvent = System.Threading.Monitor.Wait (this.monitor, maxWait);
 					}
 					else
 					{
-						timeout = System.TimeSpan.FromTicks (System.Math.Min (stop_time.Ticks - System.DateTime.Now.Ticks, max_wait*10*1000L));
-					
+						timeout = System.TimeSpan.FromTicks (System.Math.Min (stopTime.Ticks - System.DateTime.Now.Ticks, maxWait*10*1000L));
+
 						if (timeout.Ticks > 0)
 						{
-							got_event = System.Threading.Monitor.Wait (this.monitor, timeout);
+							gotEvent = System.Threading.Monitor.Wait (this.monitor, timeout);
 						}
 					}
 				}
 				
-				if (got_event == false)
+				if (gotEvent == false)
 				{
 					break;
 				}
 			}
-			
-			return (this.progress_percent >= minimum_progress);
+
+			lock (this.monitor)
+			{
+				return (this.progressPercent >= progress);
+			}
 		}
-		#endregion
-		
+
 		#region IDisposable Members
 		
 		public void Dispose()
@@ -150,49 +201,81 @@ namespace Epsitec.Cresus.Remoting
 					System.Threading.Monitor.Exit (this.monitor);
 				}
 
-				if (this.progressManager != null)
+				long operationId = this.operationId;
+				this.operationId = 0;
+
+				OperationManager.Unregister (this, operationId);
+			}
+		}
+
+
+		/// <summary>
+		/// Refreshes the progress information.
+		/// </summary>
+		protected virtual void RefreshProgressInformation()
+		{
+		}
+
+
+		/// <summary>
+		/// Sets the current progress (in percent).
+		/// </summary>
+		/// <param name="progress">The progress.</param>
+		protected void SetProgress(int progress)
+		{
+			lock (this.monitor)
+			{
+				if (this.progressPercent == progress)
 				{
-					this.progressManager.Unregister (this.operationId, this);
+					return;
 				}
-			}
-		}
-		
-		
-		
-		protected virtual void SetProgress(int progress)
-		{
-			if (this.progress_percent == progress)
-			{
-				return;
-			}
-			
-			lock (this.monitor)
-			{
-				this.progress_status  = (progress < 100) ? Remoting.ProgressStatus.Running : Remoting.ProgressStatus.Succeeded;
-				this.progress_percent = progress;
+				
+				this.progressState   = (progress < 100) ? ProgressState.Running : ProgressState.Succeeded;
+				this.progressPercent = progress;
+				this.stopTime        = (progress < 100) ? new System.DateTime (0) : System.DateTime.Now;
 				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
-		
-		protected virtual void SetCancelled()
+
+		/// <summary>
+		/// Sets the cancelled state.
+		/// </summary>
+		protected void SetCancelled()
 		{
 			lock (this.monitor)
 			{
-				this.progress_status  = Remoting.ProgressStatus.Cancelled;
-				this.progress_percent = 100;
+				if (this.progressState == ProgressState.Cancelled)
+				{
+					return;
+				}
+				
+				this.progressState   = ProgressState.Cancelled;
+				this.progressPercent = 100;
+				this.stopTime        = System.DateTime.Now;
 				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
-		
-		protected virtual void SetFailed(string message)
+
+		/// <summary>
+		/// Sets the failed state.
+		/// </summary>
+		/// <param name="message">The message.</param>
+		protected void SetFailed(string message)
 		{
 			lock (this.monitor)
 			{
-				this.failure_message  = message;
-				this.progress_status  = Remoting.ProgressStatus.Failed;
-				this.progress_percent = 100;
+				if (this.progressState == ProgressState.Failed)
+				{
+					this.failureMessage = message;
+					return;
+				}
+				
+				this.failureMessage  = message;
+				this.progressState   = ProgressState.Failed;
+				this.progressPercent = 100;
+				this.stopTime        = System.DateTime.Now;
 				
 				System.Diagnostics.Debug.WriteLine ("*** failure ***\nReason:");
 				System.Diagnostics.Debug.WriteLine (message);
@@ -200,61 +283,69 @@ namespace Epsitec.Cresus.Remoting
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
-		
-		protected virtual void SetCurrentStep(int step)
+
+		/// <summary>
+		/// Sets the current step index.
+		/// </summary>
+		/// <param name="step">The step.</param>
+		protected void SetCurrentStep(int step)
 		{
-			if ((this.current_step == step) &&
-				((step != 0) || (this.progress_status == Remoting.ProgressStatus.Running)))
-			{
-				return;
-			}
-			
+			this.SetCurrentStep (step, -1);
+		}
+
+		/// <summary>
+		/// Sets the current step index and progress.
+		/// </summary>
+		/// <param name="step">The step.</param>
+		/// <param name="progress">The progress.</param>
+		protected void SetCurrentStep(int step, int progress)
+		{
 			lock (this.monitor)
 			{
-				this.current_step    = step;
-				this.progress_status = (this.progress_percent < 100) ? Remoting.ProgressStatus.Running : Remoting.ProgressStatus.Succeeded;
+				if (progress < 0)
+				{
+					progress = this.progressPercent;
+				}
+
+				if ((this.currentStep == step) &&
+					(this.progressPercent == progress) &&
+					((step != 0) || (this.progressState == ProgressState.Running)))
+				{
+					return;
+				}
+				
+				this.currentStep     = step;
+				this.progressPercent = progress;
+				this.progressState   = (progress < 100) ? ProgressState.Running : ProgressState.Succeeded;
+				this.stopTime        = (progress < 100) ? new System.DateTime (0) : System.DateTime.Now;
 				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
-		
-		protected virtual void SetLastStep(int step)
+
+		/// <summary>
+		/// Sets the last expected step.
+		/// </summary>
+		/// <param name="step">The step.</param>
+		protected void SetLastExpectedStep(int step)
 		{
-			if (this.last_step == step)
-			{
-				return;
-			}
-			
 			lock (this.monitor)
 			{
-				this.last_step = step;
+				this.expectedLastStep = step;
 			}
 		}
-		
-		
-		object									monitor          = new object ();
-		System.DateTime							start_time       = System.DateTime.Now;
-		volatile int							progress_percent = -1;
-		volatile Remoting.ProgressStatus		progress_status  = Remoting.ProgressStatus.None;
-		volatile string							failure_message  = null;
-		
-		protected volatile int					current_step     = 0;
-		protected volatile int					last_step	     = -1;
 
+
+		readonly object							monitor         = new object ();
 		long									operationId;
-		OperationManager							progressManager;
-
-		internal void SetOperationId(long operationId, OperationManager progressManager)
-		{
-			if (this.operationId == 0)
-			{
-				this.operationId = operationId;
-				this.progressManager = progressManager;
-			}
-			else
-			{
-				throw new System.InvalidOperationException ("Operation already associated with an ID");
-			}
-		}
+		
+		readonly System.DateTime				startTime       = System.DateTime.Now;
+		System.DateTime							stopTime;
+		int										progressPercent = -1;
+		ProgressState							progressState;
+		int										currentStep;
+		int										expectedLastStep = -1;
+		System.TimeSpan							expectedDuration = System.TimeSpan.FromMilliseconds (-1);
+		string									failureMessage;
 	}
 }

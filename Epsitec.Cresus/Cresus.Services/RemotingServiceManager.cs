@@ -80,7 +80,17 @@ namespace Epsitec.Cresus.Services
 
 				if (operation != null)
 				{
-					operation.CancelOperation (out cancelProgressInformation);
+					AbstractOperation cancelOp = operation.CancelOperationAsync ();
+
+					if (cancelOp == null)
+					{
+						cancelProgressInformation = ProgressInformation.Immediate;
+					}
+					else
+					{
+						cancelProgressInformation = cancelOp.GetProgressInformation ();
+					}
+
 					return;
 				}
 			}

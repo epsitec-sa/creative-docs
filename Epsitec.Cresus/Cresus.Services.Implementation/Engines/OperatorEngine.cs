@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Services
 			
 			op.WaitForProgress (100);
 			
-			Engine.ThrowExceptionBasedOnStatus (op.ProgressStatus);
+			Engine.ThrowExceptionBasedOnStatus (op.ProgressState);
 			
 			
 			//	Récupère les données qui attendent le client :
@@ -105,10 +105,10 @@ namespace Epsitec.Cresus.Services
 
 					this.temp = new Epsitec.Common.IO.TemporaryFile (path);
 					
-					this.Add (new Step (this.Step_CreateClient));
-					this.Add (new Step (this.Step_CopyDatabase));
-					this.Add (new Step (this.Step_CompressDatabase));
-					this.Add (new Step (this.Step_Finished));
+					this.Add (this.Step_CreateClient);
+					this.Add (this.Step_CopyDatabase);
+					this.Add (this.Step_CompressDatabase);
+					this.Add (this.Step_Finished);
 					
 					base.ProcessOperation ();
 				}
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Services
 				
 				tools.Backup (this.temp.Path);
 				
-				if (! Common.IO.Tools.WaitForFileReadable (this.temp.Path, 10*1000, new Common.IO.Tools.Callback (this.InterruptIfCancelRequested)))
+				if (! Common.IO.Tools.WaitForFileReadable (this.temp.Path, 10*1000, () => this.IsCancelRequested))
 				{
 					throw new System.IO.IOException ("File cannot be opened in read mode within specified delay.");
 				}

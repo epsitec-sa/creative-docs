@@ -7,15 +7,17 @@ using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services.Adapters
 {
+	/// <summary>
+	/// The <c>RequestExecutionServiceAdapter</c> class implements an adapter for the
+	/// <see cref="IRequestExecutionService"/>. See also <see cref="AbstractServiceAdapter"/>..
+	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class RequestExecutionServiceAdapter : AbstractServiceAdapter, IRequestExecutionService
+	class RequestExecutionServiceAdapter : AbstractServiceAdapter<IRequestExecutionService>, IRequestExecutionService
 	{
 		public RequestExecutionServiceAdapter(IRequestExecutionService target)
+			: base (target)
 		{
-			this.target = target;
 		}
-
-		private readonly IRequestExecutionService target;
 
 		#region IRequestExecutionService Members
 
@@ -29,9 +31,9 @@ namespace Epsitec.Cresus.Services.Adapters
 			this.target.QueryRequestStates (client, out states);
 		}
 
-		public void QueryRequestStatesUsingFilter(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
+		public void QueryRequestStatesUsingFilter(ClientIdentity client, ref int changeId, System.TimeSpan timeout, out RequestState[] states)
 		{
-			this.target.QueryRequestStatesUsingFilter (client, ref change_id, timeout, out states);
+			this.target.QueryRequestStatesUsingFilter (client, ref changeId, timeout, out states);
 		}
 
 		public void RemoveRequestStates(ClientIdentity client, RequestState[] states)
@@ -42,20 +44,6 @@ namespace Epsitec.Cresus.Services.Adapters
 		public void RemoveAllRequestStates(ClientIdentity client)
 		{
 			this.target.RemoveAllRequestStates (client);
-		}
-
-		#endregion
-
-		#region IRemotingService Members
-
-		public System.Guid GetServiceId()
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public string GetServiceName()
-		{
-			throw new System.NotImplementedException ();
 		}
 
 		#endregion

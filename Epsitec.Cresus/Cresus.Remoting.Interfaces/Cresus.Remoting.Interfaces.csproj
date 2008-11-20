@@ -111,9 +111,6 @@
     <Compile Include="Exceptions\GenericException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions\InterruptedException.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Exceptions\InvalidOperationException.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,9 +119,6 @@
     </Compile>
     <Compile Include="RemotingServices.cs" />
     <Compile Include="Services\IConnectionService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="IOperation.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\IOperatorService.cs">

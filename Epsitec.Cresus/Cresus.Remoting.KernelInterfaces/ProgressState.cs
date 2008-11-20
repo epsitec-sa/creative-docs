@@ -4,10 +4,10 @@
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// The <c>ProgressStatus</c> enumeration defines the possible states of
-	/// an <see cref="IProgressOperation"/>.
+	/// The <c>ProgressState</c> enumeration defines the possible states of
+	/// a <see cref="ProgressOperation"/>.
 	/// </summary>
-	public enum ProgressStatus
+	public enum ProgressState
 	{
 		/// <summary>
 		/// The operation did not start yet.

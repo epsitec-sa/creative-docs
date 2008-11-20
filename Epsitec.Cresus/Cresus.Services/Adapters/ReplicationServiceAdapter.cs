@@ -7,15 +7,17 @@ using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services.Adapters
 {
+	/// <summary>
+	/// The <c>ReplicationServiceAdapter</c> class implements an adapter for the
+	/// <see cref="IReplicationService"/>. See also <see cref="AbstractServiceAdapter"/>..
+	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class ReplicationServiceAdapter : AbstractServiceAdapter, IReplicationService
+	class ReplicationServiceAdapter : AbstractServiceAdapter<IReplicationService>, IReplicationService
 	{
 		public ReplicationServiceAdapter(IReplicationService target)
+			: base (target)
 		{
-			this.target = target;
 		}
-
-		private readonly IReplicationService target;
 
 		#region IReplicationService Members
 
@@ -32,20 +34,6 @@ namespace Epsitec.Cresus.Services.Adapters
 		public void GetReplicationData(long operationId, out byte[] data)
 		{
 			this.target.GetReplicationData (operationId, out data);
-		}
-
-		#endregion
-
-		#region IRemotingService Members
-
-		public System.Guid GetServiceId()
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public string GetServiceName()
-		{
-			throw new System.NotImplementedException ();
 		}
 
 		#endregion

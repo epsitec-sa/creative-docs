@@ -34,22 +34,26 @@ namespace Epsitec.Cresus.Remoting
 			return operation as T;
 		}
 
-		internal static long Register(AbstractOperation operation)
+		internal static void Register(AbstractOperation operation, System.Action<long> setOperationId)
 		{
-			return OperationManager.instance.RegisterOperation (operation);
+			OperationManager.instance.RegisterOperation (operation, setOperationId);
 		}
 
-		private long RegisterOperation(AbstractOperation operation)
+		internal static void Unregister(AbstractOperation operation, long operationId)
+		{
+			OperationManager.instance.UnregisterOperation (operation, operationId);
+		}
+
+		private void RegisterOperation(AbstractOperation operation, System.Action<long> setOperationId)
 		{
 			long operationId;
 
 			lock (this.exclusion)
 			{
 				operationId = ++this.nextOperationId;
+				setOperationId (operationId);
 				this.operations[operationId] = operation;
 			}
-			
-			return operationId;
 		}
 
 
@@ -59,7 +63,7 @@ namespace Epsitec.Cresus.Remoting
 		private readonly Dictionary<long, AbstractOperation> operations;
 		private long nextOperationId;
 
-		internal void Unregister(long operationId, AbstractOperation operation)
+		private void UnregisterOperation(AbstractOperation operation, long operationId)
 		{
 			lock (this.exclusion)
 			{

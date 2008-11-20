@@ -7,12 +7,16 @@ using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services.Adapters
 {
+	/// <summary>
+	/// The <c>ConnectionServiceAdapter</c> class implements an adapter for the
+	/// <see cref="IConnectionService"/>. See also <see cref="AbstractServiceAdapter"/>..
+	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class ConnectionServiceAdapter : AbstractServiceAdapter, IConnectionService
+	class ConnectionServiceAdapter : AbstractServiceAdapter<IConnectionService>, IConnectionService
 	{
 		public ConnectionServiceAdapter(IConnectionService target)
+			: base (target)
 		{
-			this.target = target;
 		}
 
 		#region IConnectionService Members
@@ -25,22 +29,6 @@ namespace Epsitec.Cresus.Services.Adapters
 		public System.Guid[] QueryAvailableServices(ClientIdentity client)
 		{
 			return this.target.QueryAvailableServices (client);
-		}
-
-		#endregion
-
-		private readonly IConnectionService target;
-
-		#region IRemotingService Members
-
-		public System.Guid GetServiceId()
-		{
-			throw new System.NotImplementedException ();
-		}
-
-		public string GetServiceName()
-		{
-			throw new System.NotImplementedException ();
 		}
 
 		#endregion
