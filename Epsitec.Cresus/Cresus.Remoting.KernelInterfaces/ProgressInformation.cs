@@ -6,6 +6,7 @@ namespace Epsitec.Cresus.Remoting
 	/// <summary>
 	/// 
 	/// </summary>
+	[System.Serializable]
 	public struct ProgressInformation
 	{
 		public ProgressInformation(int progressPercent, ProgressStatus progressStatus, int currentStep, int lastStep, System.TimeSpan runningDuration, System.TimeSpan expectedDuration, long operationId)
