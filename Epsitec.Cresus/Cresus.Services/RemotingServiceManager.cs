@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Services
 		public void AddEngine(Engine engine)
 		{
 			this.engines.Add (engine.DatabaseId, engine);
+			engine.SetAppDomainId (this.engines.Count);
 		}
 
 		public override object InitializeLifetimeService()
@@ -57,6 +58,51 @@ namespace Epsitec.Cresus.Services
 			return null;
 		}
 
+		public void CancelOperation(long operationId)
+		{
+			foreach (var engine in this.engines)
+			{
+				AbstractOperation operation = engine.Value.GetOperation (operationId);
+				
+				if (operation != null)
+				{
+					operation.CancelOperation ();
+					break;
+				}
+			}
+		}
+
+		public void CancelOperationAsync(long operationId, out ProgressInformation cancelProgressInformation)
+		{
+			foreach (var engine in this.engines)
+			{
+				AbstractOperation operation = engine.Value.GetOperation (operationId);
+
+				if (operation != null)
+				{
+					operation.CancelOperation (out cancelProgressInformation);
+					return;
+				}
+			}
+
+			cancelProgressInformation = ProgressInformation.Immediate;
+		}
+
+		public bool WaitForProgress(long operationId, int minimumProgress, System.TimeSpan timeout)
+		{
+			foreach (var engine in this.engines)
+			{
+				AbstractOperation operation = engine.Value.GetOperation (operationId);
+
+				if (operation != null)
+				{
+					return operation.WaitForProgress (minimumProgress, timeout);
+				}
+			}
+
+			return true;
+		}
+		
 		#endregion
 
 		#region IDisposable Members

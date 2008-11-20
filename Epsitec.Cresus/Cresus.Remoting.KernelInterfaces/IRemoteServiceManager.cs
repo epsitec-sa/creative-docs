@@ -13,5 +13,15 @@ namespace Epsitec.Cresus.Remoting
 
 		[OperationContract]
 		string GetRemoteServiceEndpointAddress(System.Guid databaseId, System.Guid serviceId);
+
+		[OperationContract]
+		void CancelOperation(long operationId);
+		
+		[OperationContract]
+		void CancelOperationAsync(long operationId, out ProgressInformation cancelProgressInformation);
+
+		[OperationContract]
+		bool WaitForProgress(long operationId, int minimumProgress, System.TimeSpan timeout);
+
 	}
 }

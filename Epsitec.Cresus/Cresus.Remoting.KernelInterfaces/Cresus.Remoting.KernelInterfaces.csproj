@@ -47,6 +47,8 @@
     <Compile Include="IRemoteService.cs" />
     <Compile Include="IRemoteServiceManager.cs" />
     <Compile Include="KernelDatabaseInfo.cs" />
+    <Compile Include="ProgressInformation.cs" />
+    <Compile Include="ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

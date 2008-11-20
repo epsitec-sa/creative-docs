@@ -24,24 +24,19 @@ namespace Epsitec.Cresus.Services
 		
 		#region IOperatorService Members
 
-		public void CreateRoamingClient(string name, out Remoting.IOperation operation)
+		public void CreateRoamingClient(string name, out Remoting.ProgressInformation operation)
 		{
 			//	Démarre, de manière asynchrone, la création d'une copie comprimée de la base
 			//	de données du serveur.
 
-			operation = new CreateRoamingClientOperation (this, name);
+			operation = new CreateRoamingClientOperation (this, name).GetProgressInformation ();
 		}
 		
-		public void GetRoamingClientData(Remoting.IOperation operation, out Remoting.ClientIdentity client, out byte[] compressed_data)
+		public void GetRoamingClientData(long operationId, out Remoting.ClientIdentity client, out byte[] compressed_data)
 		{
 			//	Récupère la base de données sous sa forme comprimée.
 			
-			if (operation == null)
-			{
-				throw new System.ArgumentNullException ("operation");
-			}
-			
-			CreateRoamingClientOperation op = operation as CreateRoamingClientOperation;
+			CreateRoamingClientOperation op = OperationManager.Resolve<CreateRoamingClientOperation> (operationId);
 			
 			if (op == null)
 			{

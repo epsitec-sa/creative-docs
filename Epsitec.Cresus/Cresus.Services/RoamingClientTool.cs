@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Services
 	/// </summary>
 	public sealed class RoamingClientTool
 	{
-		public static void CreateDatabase(Remoting.IOperatorService service, Remoting.IOperation operation, string database_name)
+		public static void CreateDatabase(Remoting.IOperatorService service, long operationId, string database_name)
 		{
 			//	Crée une base de données locale à partir de la version comprimée personnalisée
 			//	générée par le serveur. Si une base existait déjà avec ce nom-là, elle sera tout
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Services
 			Remoting.ClientIdentity client;
 			byte[] compressed_data;
 			
-			service.GetRoamingClientData (operation, out client, out compressed_data);
+			service.GetRoamingClientData (operationId, out client, out compressed_data);
 			
 			System.IO.MemoryStream source       = new System.IO.MemoryStream (compressed_data);
 			System.IO.FileStream   target       = System.IO.File.OpenWrite (backup_path);

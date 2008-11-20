@@ -81,6 +81,11 @@ namespace Epsitec.Cresus.Services
 				return this.databaseName;
 			}
 		}
+
+		public AbstractOperation GetOperation(long operationId)
+		{
+			return OperationManager.Resolve<AbstractOperation> (operationId);
+		}
 		
 		public IEnumerable<System.Guid> GetServiceIds()
 		{
@@ -110,7 +115,18 @@ namespace Epsitec.Cresus.Services
 
 			return result.FirstOrDefault ();
 		}
-		
+
+		internal void SetAppDomainId(int id)
+		{
+			if (this.appDomainId != 0)
+			{
+				throw new System.InvalidOperationException ("AppDomain ID already assigned");
+			}
+			
+			this.appDomainId = id;
+
+			OperationManager.SetAppDomainId (id);
+		}
 		
 		#region IDisposable Members
 		
@@ -308,5 +324,6 @@ namespace Epsitec.Cresus.Services
 
 
 		Requests.Orchestrator					orchestrator;
+		int appDomainId;
 	}
 }

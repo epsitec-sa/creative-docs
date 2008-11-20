@@ -7,23 +7,20 @@ namespace Epsitec.Cresus.Remoting
 	/// La classe ThreadJoinProgress permet d'attendre la fin de l'exécution
 	/// d'un processus.
 	/// </summary>
-	public sealed class ThreadJoinProgress : AbstractProgress
+	public sealed class ThreadJoinProgress : AbstractOperation
 	{
 		public ThreadJoinProgress(System.Threading.Thread thread)
 		{
 			this.thread = thread;
 		}
-		
-		
-		public override int						ProgressPercent
+
+
+		protected override void RefreshProgressInformation()
 		{
-			get
-			{
-				this.PollState ();
-				
-				return base.ProgressPercent;
-			}
+			this.PollState ();
+			base.RefreshProgressInformation ();
 		}
+		
 
 		
 		

@@ -123,6 +123,10 @@
       <Project>{3F7AF584-156E-4805-9CE7-9440C9F225D0}</Project>
       <Name>Cresus.Remoting.KernelInterfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Remoting\Cresus.Remoting.csproj">
+      <Project>{C3C59295-14DD-4AF7-B22A-0F8045DA671C}</Project>
+      <Name>Cresus.Remoting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Replication\Cresus.Replication.csproj">
       <Name>Cresus.Replication</Name>
       <Project>{431A7EAC-87E4-489E-901D-FE3FE182700B}</Project>

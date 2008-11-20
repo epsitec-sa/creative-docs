@@ -130,16 +130,10 @@
     <Compile Include="Services\IOperatorService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="IProgressInformation.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Services\IReplicationService.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\IRequestExecutionService.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ProgressStatus.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PullReplicationArgs.cs">

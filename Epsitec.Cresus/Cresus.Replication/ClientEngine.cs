@@ -28,16 +28,16 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public void ApplyChanges(IDbAbstraction database, Remoting.IOperation operation)
+		public void ApplyChanges(IDbAbstraction database, long operationId)
 		{
-			this.ApplyChanges (database, operation, null);
+			this.ApplyChanges (database, operationId, null);
 		}
-		
-		public void ApplyChanges(IDbAbstraction database, Remoting.IOperation operation, Callback before_commit_callback)
+
+		public void ApplyChanges(IDbAbstraction database, long operationId, Callback before_commit_callback)
 		{
 			byte[] data;
 			
-			this.replication_service.GetReplicationData (operation, out data);
+			this.replication_service.GetReplicationData (operationId, out data);
 			
 			lock (this)
 			{

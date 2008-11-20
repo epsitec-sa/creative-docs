@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Remoting
 		}
 		
 		
-		public override void CancelOperation(out IProgressInformation progress_information)
+		public override void CancelOperation(out ProgressInformation progress_information)
 		{
 			this.is_thread_cancel_requested = true;
 			
@@ -58,11 +58,11 @@ namespace Epsitec.Cresus.Remoting
 				//	Signale l'état de l'avancement de l'opération en surveillant simplement
 				//	la fin du processus :
 				
-				progress_information = new ThreadJoinProgress (this.Thread);
+				progress_information = new ThreadJoinProgress (this.Thread).GetProgressInformation ();
 			}
 			else
 			{
-				progress_information = new ImmediateProgress ();
+				progress_information = ProgressInformation.Immediate;
 			}
 		}
 		
@@ -77,11 +77,11 @@ namespace Epsitec.Cresus.Remoting
 					//	Demande la fin de l'exécution du processus; poliment, d'abord, puis
 					//	en cas d'échec après la durée de sursis, brutalement...
 					
-					IProgressInformation info;
+					ProgressInformation info;
 					
 					this.CancelOperation (out info);
 					
-					if (info.WaitForProgress (100, new System.TimeSpan (0, 0, 0, 0, this.wait_before_abort)) == false)
+					if (OperationManager.WaitForProgress (info.OperationId, 100, System.TimeSpan.FromMilliseconds (this.wait_before_abort)) == false)
 					{
 						this.thread.Abort ();
 					}

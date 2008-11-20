@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.Database
 		{
 			Remoting.IRemoteServiceManager manager = Services.Engine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IOperatorService service = manager.GetOperatorService (System.Guid.Empty);
-			Remoting.IOperation operation;
+			Remoting.ProgressInformation operation;
 			
 			Assert.IsNotNull (service);
 			
@@ -531,7 +531,7 @@ namespace Epsitec.Cresus.Database
 			Remoting.ClientIdentity client;
 			byte[]                  data;
 			
-			service.GetRoamingClientData (operation, out client, out data);
+			service.GetRoamingClientData (operation.OperationId, out client, out data);
 			
 			if ((data != null) &&
 				(data.Length > 0))
@@ -548,8 +548,8 @@ namespace Epsitec.Cresus.Database
 		{
 			Remoting.IRemoteServiceManager manager = Services.Engine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IOperatorService service = manager.GetOperatorService (System.Guid.Empty);
-			Remoting.IOperation operation;
-			Remoting.IProgressInformation progress;
+			Remoting.ProgressInformation operation;
+			Remoting.ProgressInformation progress;
 			
 			Assert.IsNotNull (service);
 			
@@ -566,8 +566,8 @@ namespace Epsitec.Cresus.Database
 				{
 					Remoting.ClientIdentity client;
 					byte[]                  data;
-					
-					service.GetRoamingClientData (operation, out client, out data);
+
+					service.GetRoamingClientData (operation.OperationId, out client, out data);
 					
 					if ((data != null) &&
 						(data.Length > 0))
@@ -584,7 +584,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Cancelling...");
-			operation.CancelOperation (out progress);
+			manager.CancelOperationAsync (operation.OperationId, out progress);
 			
 			for (int i = 0; i < 100; i++)
 			{
@@ -707,15 +707,15 @@ namespace Epsitec.Cresus.Database
 		{
 			Remoting.IRemoteServiceManager manager = Services.Engine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IOperatorService service = manager.GetOperatorService (System.Guid.Empty);
-			Remoting.IOperation operation;
+			Remoting.ProgressInformation operation;
 			
 			Assert.IsNotNull (service);
 			
 			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
 			
 			service.CreateRoamingClient ("test", out operation);
-			
-			Services.RoamingClientTool.CreateDatabase (service, operation, "roaming");
+
+			Services.RoamingClientTool.CreateDatabase (service, operation.OperationId, "roaming");
 		}
 		
 #if false
@@ -808,12 +808,12 @@ namespace Epsitec.Cresus.Database
 				
 				DbId from_id = DbId.CreateId (last_sync_id.LocalId + 1, last_sync_id.ClientId);
 				DbId to_id   = DbId.CreateId (DbId.LocalRange - 1, last_sync_id.ClientId);
-				
-				Remoting.IOperation operation;
+
+				Remoting.ProgressInformation operation;
 				System.Diagnostics.Debug.WriteLine (string.Format ("Asking server for replication data (starting at {0}).", from_id));
 				service.AcceptReplication (client, from_id, to_id, out operation);
 				System.Diagnostics.Debug.WriteLine ("Waiting...");
-				service.GetReplicationData (operation, out buffer);
+				service.GetReplicationData (operation.OperationId, out buffer);
 				System.Diagnostics.Debug.WriteLine ("Server reply received.");
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Replication produced {0} byte(s) of data.", (buffer == null ? 0 : buffer.Length)));
@@ -821,10 +821,10 @@ namespace Epsitec.Cresus.Database
 				if (buffer != null)
 				{
 					Replication.ClientEngine engine = new Replication.ClientEngine (infrastructure, service);
+
+					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
 					
-					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation);
-					
-					operation.WaitForProgress (100, System.TimeSpan.FromSeconds (10.0));
+					manager.WaitForProgress (operation.OperationId, 100, System.TimeSpan.FromSeconds (10.0));
 				}
 				
 				System.Diagnostics.Debug.WriteLine ("Done.");

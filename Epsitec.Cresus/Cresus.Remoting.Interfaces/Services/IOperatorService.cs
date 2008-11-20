@@ -13,9 +13,9 @@ namespace Epsitec.Cresus.Remoting
 	public interface IOperatorService : IRemoteService
 	{
 		[OperationContract]
-		void CreateRoamingClient(string clientName, out IOperation operation);
+		void CreateRoamingClient(string clientName, out ProgressInformation operation);
 
 		[OperationContract]
-		void GetRoamingClientData(IOperation operation, out ClientIdentity client, out byte[] data);
+		void GetRoamingClientData(long operationId, out ClientIdentity client, out byte[] data);
 	}
 }
