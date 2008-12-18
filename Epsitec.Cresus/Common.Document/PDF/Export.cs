@@ -2092,8 +2092,27 @@ namespace Epsitec.Common.Document.PDF
 
 		protected byte[] CreateImageSurfaceChannel(Opac.FreeImage.Image fi, Opac.FreeImage.ColorChannel channel, ImageFilter filter)
 		{
-			Opac.FreeImage.Image plan = fi.GetChannel(channel);
-			return plan.GetRawImageSource8Bits(true);
+			Opac.FreeImage.Image plan = fi.GetChannel (channel);
+			bool invert = false;
+
+			if ((plan == null) &&
+				(channel == Opac.FreeImage.ColorChannel.Alpha))
+			{
+				plan = fi.GetChannel (Opac.FreeImage.ColorChannel.Red);
+				invert = true;
+			}
+
+			byte[] data = plan.GetRawImageSource8Bits(true);
+
+			if (invert)
+			{
+				for (int i = 0; i < data.Length; i++)
+				{
+					data[i] = (byte)(0xff ^ data[i]);
+				}
+			}
+
+			return data;
 		}
 
 		protected void FlushImageSurface()

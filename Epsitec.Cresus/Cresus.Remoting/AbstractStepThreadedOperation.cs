@@ -15,8 +15,13 @@ namespace Epsitec.Cresus.Remoting
 		{
 			this.steps = new List<Step> ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Adds the specified step to the list of steps executed by this
+		/// operation.
+		/// </summary>
+		/// <param name="step">The step.</param>
 		protected void Add(Step step)
 		{
 			lock (this.exclusion)

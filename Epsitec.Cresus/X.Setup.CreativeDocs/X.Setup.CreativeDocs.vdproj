@@ -1775,7 +1775,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Common.Drawing.Agg, Version=2.4.4.847, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Common.Drawing.Agg, Version=2.4.4.847, Culture=neutral, PublicKeyToken=7344997cc606b490, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_EEB651D98E48D3D42E9BC500AA9AB887"
@@ -1958,14 +1958,14 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Creative Docs .NET"
-        "ProductCode" = "8:{45775CDE-5D76-45D3-8A15-DD4663FAA757}"
-        "PackageCode" = "8:{AEABAD22-9085-4544-8ED9-032288544D6C}"
+        "ProductCode" = "8:{24D49595-1DC0-4C25-8B77-6E92E0CA095E}"
+        "PackageCode" = "8:{533F7026-5843-4603-902F-D4F8F419936B}"
         "UpgradeCode" = "8:{925CE84A-106F-439D-B0AA-6222B871FB71}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:2.4.4"
+        "ProductVersion" = "8:2.4.5"
         "Manufacturer" = "8:OPaC bright ideas"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:http://www.creativedocs.net/"
