@@ -498,7 +498,7 @@ namespace Epsitec.Common.Support
 			return string.Concat (
 				druid.ToString (),
 				"~",
-				level.ToString (CultureInfo.InvariantCulture),
+				level.ToString (),
 				"~",
 				level == ResourceLevel.Default ? Resources.DefaultTwoLetterISOLanguageName : culture.TwoLetterISOLanguageName);
 		}

@@ -27,6 +27,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <SignAssembly>true</SignAssembly>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -83,6 +84,9 @@
     <Reference Include="System.Configuration.Install">
       <Name>System.Configuration.Install</Name>
     </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -123,9 +127,8 @@
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
-      <Name>Cresus.DataLayer</Name>
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
-      <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
+      <Name>Cresus.DataLayer</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj">
       <Name>Cresus.Remoting.Interfaces</Name>

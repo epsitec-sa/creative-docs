@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 		[SetUp] public void Initialize()
 		{
 			Epsitec.Common.Widgets.Widget.Initialize ();
-			Assert.AreEqual (System.Threading.ApartmentState.STA, System.Threading.Thread.CurrentThread.ApartmentState);
+			Assert.AreEqual (System.Threading.ApartmentState.STA, System.Threading.Thread.CurrentThread.GetApartmentState ());
 		}
 
 		

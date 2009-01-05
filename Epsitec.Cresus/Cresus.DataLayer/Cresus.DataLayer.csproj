@@ -87,10 +87,6 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
-    <ProjectReference Include="..\Common.DynamicData\Common.DynamicData.csproj">
-      <Project>{380B6C79-26C5-4274-8F40-BA21DEE4354F}</Project>
-      <Name>Common.DynamicData</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Name>Common.Support.Events</Name>
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>

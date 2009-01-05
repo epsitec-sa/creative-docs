@@ -12,7 +12,7 @@ namespace Epsitec.Common.Dialogs
 		[SetUp]
 		public void Initialize()
 		{
-			Assert.AreEqual (System.Threading.ApartmentState.STA, System.Threading.Thread.CurrentThread.ApartmentState);
+			Assert.AreEqual (System.Threading.ApartmentState.STA, System.Threading.Thread.CurrentThread.GetApartmentState ());
 		}
 
 		[Test]

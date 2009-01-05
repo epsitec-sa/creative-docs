@@ -91,6 +91,8 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
+#pragma warning disable 414
+
 		private static System.Windows.Forms.Form form;
 		private static object exclusion = new object ();
 		private static bool isInvoking;

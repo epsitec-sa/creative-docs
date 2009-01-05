@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -24,7 +24,6 @@ namespace Epsitec.ModuleRepository
 		public static IEnumerable<ModuleRecord> Read(string path)
 		{
 			XDocument doc = XDocument.Load (path);
-			IGrouping<int, string> x;
 
 			return from c in doc.Descendants ("module")
 				   select new ModuleRecord ()
