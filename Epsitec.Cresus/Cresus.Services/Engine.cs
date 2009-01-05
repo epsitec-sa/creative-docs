@@ -29,10 +29,15 @@ namespace Epsitec.Cresus.Services
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
 			this.services       = new List<ServiceRecord> ();
 
-			this.InstanciateServices ();
+			this.CreateServices ();
 		}
 
-		private void InstanciateServices()
+		/// <summary>
+		/// Creates all the services defined in the implementation assemblies;
+		/// this will instanciate the services and populate the services list
+		/// with the corresponding service records.
+		/// </summary>
+		private void CreateServices()
 		{
 			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Services.Implementation");
 
@@ -43,10 +48,7 @@ namespace Epsitec.Cresus.Services
 						  where interfaceType.HasServiceContractAttribute ()
 						  select new ServiceRecord (engine, interfaceType);
 
-			foreach (var item in records)
-			{
-				this.services.Add (item);
-			}
+			this.services.AddRange (records);
 		}
 		
 		
@@ -66,7 +68,7 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 
-		public System.Guid DatabaseId
+		public System.Guid						DatabaseId
 		{
 			get
 			{
@@ -74,7 +76,7 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 
-		public string DatabaseName
+		public string							DatabaseName
 		{
 			get
 			{
@@ -82,22 +84,31 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 
-		public AbstractOperation GetOperation(long operationId)
-		{
-			return OperationManager.Resolve<AbstractOperation> (operationId);
-		}
-		
+
+		/// <summary>
+		/// Gets the IDs for the running services.
+		/// </summary>
+		/// <returns>The IDs for the running services.</returns>
 		public IEnumerable<System.Guid> GetServiceIds()
 		{
 			return from service in this.services
 				   select service.ServiceId;
 		}
 
+		/// <summary>
+		/// Gets the records for the running services.
+		/// </summary>
+		/// <returns>The records for the running services.</returns>
 		public IEnumerable<ServiceRecord> GetServiceRecords()
 		{
 			return this.services;
 		}
 
+		/// <summary>
+		/// Gets the service identified by its service ID.
+		/// </summary>
+		/// <param name="serviceId">The service ID.</param>
+		/// <returns>The service instance, if any.</returns>
 		public IRemoteService GetService(System.Guid serviceId)
 		{
 			var result = from service in this.services
@@ -106,7 +117,12 @@ namespace Epsitec.Cresus.Services
 
 			return result.FirstOrDefault ();
 		}
-		
+
+		/// <summary>
+		/// Gets the unique name of the service identified by its service ID.
+		/// </summary>
+		/// <param name="serviceId">The service ID.</param>
+		/// <returns>The unique name, if any.</returns>
 		public string GetServiceUniqueName(System.Guid serviceId)
 		{
 			var result = from service in this.services
@@ -114,6 +130,12 @@ namespace Epsitec.Cresus.Services
 						 select service.UniqueName;
 
 			return result.FirstOrDefault ();
+		}
+
+		
+		internal AbstractOperation GetOperation(long operationId)
+		{
+			return OperationManager.Resolve<AbstractOperation> (operationId);
 		}
 
 		internal void SetAppDomainId(int id)
@@ -127,6 +149,7 @@ namespace Epsitec.Cresus.Services
 
 			OperationManager.SetAppDomainId (id);
 		}
+		
 		
 		#region IDisposable Members
 		
@@ -153,12 +176,11 @@ namespace Epsitec.Cresus.Services
 				if (this.orchestrator != null)
 				{
 					this.orchestrator.Dispose ();
-					this.orchestrator = null;
 				}
 			}
 		}
 
-
+		
 		public static void ThrowExceptionBasedOnStatus(ProgressState status)
 		{
 			switch (status)
@@ -181,15 +203,9 @@ namespace Epsitec.Cresus.Services
 		}
 
 		
-		public static IRemoteServiceManager GetRemoteServiceManager(string machine, int port)
+		internal static T GetService<T>(IRemoteServiceManager remoteServiceManager, string endpointAddress) where T : class
 		{
-			System.Uri uri = EngineHost.GetAddress (machine, port, EngineHost.RemoteServiceManagerName);
-			return Engine.GetService<IRemoteServiceManager> (uri);
-		}
-
-		public static T GetService<T>(IRemoteServiceManager remoteServiceManager, string endpointAddress) where T : class
-		{
-			System.Uri baseUri = Cache<IRemoteServiceManager>.Resolve (remoteServiceManager);
+			System.Uri baseUri = UriCache<IRemoteServiceManager>.Resolve (remoteServiceManager);
 			System.Uri fullUri;
 
 			System.Uri.TryCreate (baseUri, endpointAddress, out fullUri);
@@ -197,9 +213,9 @@ namespace Epsitec.Cresus.Services
 			return Engine.GetService<T> (fullUri);
 		}
 		
-		private static T GetService<T>(System.Uri uri) where T : class
+		internal static T GetService<T>(System.Uri uri) where T : class
 		{
-			T service = Cache<T>.Resolve (uri);
+			T service = UriCache<T>.Resolve (uri);
 
 			if (service == null)
 			{
@@ -214,106 +230,10 @@ namespace Epsitec.Cresus.Services
 				System.ServiceModel.Channels.IChannel channel = service as System.ServiceModel.Channels.IChannel;
 				channel.Open ();
 
-				Cache<T>.Add (uri, service);
+				UriCache<T>.Add (uri, service);
 			}
 
 			return service;
-		}
-
-
-		[System.Serializable]
-		public struct ServiceRecord
-		{
-			public ServiceRecord(AbstractServiceEngine service, System.Type type)
-			{
-				this.serviceInstance = service;
-				this.serviceType = type;
-				this.serviceId = service.GetServiceId ();
-				this.uniqueName = string.Format ("{0}-{1}", type.Name, System.Threading.Interlocked.Increment (ref ServiceRecord.id));
-			}
-
-			public System.MarshalByRefObject ServiceInstance
-			{
-				get
-				{
-					return this.serviceInstance;
-				}
-			}
-
-			public System.Type ServiceType
-			{
-				get
-				{
-					return this.serviceType;
-				}
-			}
-
-			public System.Guid ServiceId
-			{
-				get
-				{
-					return this.serviceId;
-				}
-			}
-
-			public string UniqueName
-			{
-				get
-				{
-					return this.uniqueName;
-				}
-			}
-
-			static int id;
-
-			private System.MarshalByRefObject serviceInstance;
-			private System.Type serviceType;
-			private System.Guid serviceId;
-			private string uniqueName;
-		}
-		
-		private static class Cache<T> where T : class
-		{
-			public static System.Uri Resolve(T instance)
-			{
-				if (Cache<T>.cache == null)
-				{
-					return null;
-				}
-
-				var result = from item in Cache<T>.cache
-							 where item.Value == instance
-							 select new System.Uri (item.Key);
-
-				return result.FirstOrDefault ();
-			}
-
-			public static T Resolve(System.Uri uri)
-			{
-				if (Cache<T>.cache == null)
-				{
-					return null;
-				}
-
-				T instance;
-
-				Cache<T>.cache.TryGetValue (uri.OriginalString, out instance);
-
-				return instance;
-			}
-
-			public static void Add(System.Uri uri, T instance)
-			{
-				if (Cache<T>.cache == null)
-				{
-					Cache<T>.cache = new Dictionary<string, T> ();
-				}
-
-				Cache<T>.cache[uri.OriginalString] = instance;
-			}
-
-			[System.ThreadStatic]
-			static Dictionary<string, T> cache;
 		}
 
 
@@ -321,9 +241,8 @@ namespace Epsitec.Cresus.Services
 		readonly System.Guid					databaseId;
 		readonly string							databaseName;
 		readonly List<ServiceRecord>			services;
+		readonly Requests.Orchestrator			orchestrator;
 
-
-		Requests.Orchestrator					orchestrator;
 		int appDomainId;
 	}
 }

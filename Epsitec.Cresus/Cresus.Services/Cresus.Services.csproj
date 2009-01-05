@@ -147,6 +147,7 @@
     <Compile Include="Adapters\OperatorServiceAdapter.cs" />
     <Compile Include="Adapters\ReplicationServiceAdapter.cs" />
     <Compile Include="Adapters\RequestExecutionServiceAdapter.cs" />
+    <Compile Include="ClientEngine.cs" />
     <Compile Include="Extensions\RemoteServiceManagerExtensions.cs" />
     <Compile Include="Extensions\SystemTypeExtensions.cs" />
     <Compile Include="RemotingServiceManager.cs" />
@@ -160,6 +161,8 @@
     <Compile Include="RoamingClientTool.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ServiceRecord.cs" />
+    <Compile Include="UriCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">

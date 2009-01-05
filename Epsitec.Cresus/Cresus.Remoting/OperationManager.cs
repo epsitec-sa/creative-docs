@@ -105,6 +105,9 @@ namespace Epsitec.Cresus.Remoting
 
 		public static void SetAppDomainId(int id)
 		{
+			System.Diagnostics.Debug.Assert (id > 0);
+			System.Diagnostics.Debug.Assert (id < 250);
+
 			OperationManager manager = OperationManager.instance;
 
 			long highOrderMask = 0xff << 56;

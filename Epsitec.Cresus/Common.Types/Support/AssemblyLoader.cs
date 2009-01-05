@@ -1,5 +1,7 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
@@ -8,48 +10,97 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class AssemblyLoader
 	{
+		/// <summary>
+		/// Loads the specified assembly. The assembly is searched in the same directory
+		/// as the Common.Support assembly.
+		/// </summary>
+		/// <param name="name">The assembly name (without the file path nor the file extension).</param>
+		/// <returns>The assembly if it could be found; otherwise, <c>null</c>.</returns>
 		public static System.Reflection.Assembly Load(string name)
 		{
-			//	Charge l'assembly spécifiée par son nom court, sans extension. Le fichier DLL va être
-			//	recherché dans le même dossier que "Common.Support" qui n'est pas nécessairement celui
-			//	de l'exécutable (en tout cas quand NUnit est utilisé pour les tests).
+			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
 			
-			System.Reflection.Assembly current = System.Reflection.Assembly.GetAssembly (typeof (AssemblyLoader));
-			
-			string file_name = string.Concat (name, ".dll");
-			string path_name = Globals.Directories.Executable;
-			
-			string load_name = current.CodeBase;
-			
-			if (load_name.StartsWith ("file:///"))
+			foreach (string ext in new string[] { ".dll", ".exe" })
 			{
-				load_name = load_name.Substring (8);
-				load_name = load_name.Replace ('/', System.IO.Path.DirectorySeparatorChar);
-				load_name = System.IO.Path.GetDirectoryName (load_name);
-				
-				if (path_name != load_name)
+				string fileName = string.Concat (name, ext);
+				string fullName = System.IO.Path.Combine (loadPath, fileName);
+
+				if (System.IO.File.Exists (fullName))
 				{
-					if (AssemblyLoader.load_path_differences++ == 0)
+					return System.Reflection.Assembly.LoadFrom (fullName);
+				}
+			}
+
+			return null;
+		}
+
+
+		/// <summary>
+		/// Loads all assemblies which match the specified pattern.
+		/// </summary>
+		/// <param name="pattern">The assembly name pattern.</param>
+		/// <param name="searchOption">The search option.</param>
+		/// <returns>The assemblies which could be found.</returns>
+		public static IList<System.Reflection.Assembly> LoadMatching(string pattern, System.IO.SearchOption searchOption)
+		{
+			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
+
+			List<System.Reflection.Assembly> assemblies = new List<System.Reflection.Assembly> ();
+
+			foreach (string ext in new string[] { ".dll", ".exe" })
+			{
+				string filePattern = string.Concat (pattern, ext);
+
+				foreach (string path in System.IO.Directory.GetFiles (loadPath, filePattern, searchOption))
+				{
+					assemblies.Add (System.Reflection.Assembly.LoadFrom (path));
+				}
+			}
+			
+			return assemblies;
+		}
+
+
+		/// <summary>
+		/// Gets the assembly load path based on the Common.Support assembly path.
+		/// </summary>
+		/// <returns>The assembly load path.</returns>
+		private static string GetAssemblyLoadPath()
+		{
+			string loadPath = Globals.Directories.Executable;
+
+			System.Reflection.Assembly current = System.Reflection.Assembly.GetAssembly (typeof (AssemblyLoader));
+
+			string loadName = current.CodeBase;
+			string filePrefix = "file:///";
+
+			if (loadName.StartsWith (filePrefix))
+			{
+				loadName = loadName.Substring (8);
+				loadName = loadName.Replace ('/', System.IO.Path.DirectorySeparatorChar);
+				loadName = System.IO.Path.GetDirectoryName (loadName);
+
+				if (loadPath != loadName)
+				{
+					if (AssemblyLoader.loadPathDifferences++ == 0)
 					{
 						System.Diagnostics.Debug.WriteLine (string.Format ("Assembly load path different from executable path\n" +
 							/* */										   "  DLL load path: '{0}'\n" +
-							/* */										   "  EXE load path: '{1}'", load_name, path_name));
+							/* */										   "  EXE load path: '{1}'", loadName, loadPath));
 					}
-					
-					path_name = load_name;
+
+					loadPath = loadName;
 				}
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Support assembly not loaded from a file ? CodeBase = '{0}'", load_name));
+				throw new System.Exception (string.Format ("Support assembly not loaded from a file: CodeBase = '{0}'", loadName));
 			}
-			
-			string full_name = System.IO.Path.Combine (path_name, file_name);
-			
-			return System.Reflection.Assembly.LoadFrom (full_name);
+
+			return loadPath;
 		}
+
 		
-		
-		private static int						load_path_differences = 0;
+		private static int						loadPathDifferences;
 	}
 }

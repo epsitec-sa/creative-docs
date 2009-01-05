@@ -9,14 +9,14 @@ using System.ServiceModel;
 namespace Epsitec.Cresus.Services
 {
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	internal sealed class RemotingServiceManager : System.MarshalByRefObject, IRemoteServiceManager, System.IDisposable
+	sealed class RemotingServiceManager : System.MarshalByRefObject, IRemoteServiceManager, System.IDisposable
 	{
-		public RemotingServiceManager()
+		internal RemotingServiceManager()
 		{
 			this.engines = new Dictionary<System.Guid, Engine> ();
 		}
 
-		public void AddEngine(Engine engine)
+		internal void AddEngine(Engine engine)
 		{
 			this.engines.Add (engine.DatabaseId, engine);
 			engine.SetAppDomainId (this.engines.Count);
