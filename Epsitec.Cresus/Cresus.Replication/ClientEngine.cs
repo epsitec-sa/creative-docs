@@ -35,9 +35,7 @@ namespace Epsitec.Cresus.Replication
 
 		public void ApplyChanges(IDbAbstraction database, long operationId, Callback before_commit_callback)
 		{
-			byte[] data;
-			
-			this.replication_service.GetReplicationData (operationId, out data);
+			byte[] data = this.replication_service.GetReplicationData (operationId);
 			
 			lock (this)
 			{

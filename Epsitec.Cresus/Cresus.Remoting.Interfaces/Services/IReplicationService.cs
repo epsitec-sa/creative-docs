@@ -6,18 +6,19 @@ using System.ServiceModel;
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// L'interface IReplicationService donne accès au service de réplication.
+	/// The <c>IReplicationService</c> interface allows a client to get
+	/// replication data from the server.
 	/// </summary>
 	[ServiceContract]
 	public interface IReplicationService : IRemoteService
 	{
 		[OperationContract]
-		void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out ProgressInformation operation);
+		ProgressInformation AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id);
 
 		[OperationContract]
-		void PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args, out ProgressInformation operation);
+		ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args);
 
 		[OperationContract]
-		void GetReplicationData(long operationId, out byte[] data);
+		byte[] GetReplicationData(long operationId);
 	}
 }

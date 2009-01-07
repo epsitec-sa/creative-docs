@@ -526,7 +526,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
 			
-			service.CreateRoamingClient ("test", out operation);
+			operation = service.CreateRoamingClient ("test");
 			
 			Remoting.ClientIdentity client;
 			byte[]                  data;
@@ -553,7 +553,7 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.IsNotNull (service);
 			
-			service.CreateRoamingClient ("test", out operation);
+			operation = service.CreateRoamingClient ("test");
 			
 			for (int i = 0; i < 10; i++)
 			{
@@ -584,7 +584,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Cancelling...");
-			manager.CancelOperationAsync (operation.OperationId, out progress);
+			progress = manager.CancelOperationAsync (operation.OperationId);
 			
 			for (int i = 0; i < 100; i++)
 			{
@@ -713,7 +713,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
 			
-			service.CreateRoamingClient ("test", out operation);
+			operation = service.CreateRoamingClient ("test");
 
 			Services.RoamingClientTool.CreateDatabase (service, operation.OperationId, "roaming");
 		}
@@ -811,9 +811,9 @@ namespace Epsitec.Cresus.Database
 
 				Remoting.ProgressInformation operation;
 				System.Diagnostics.Debug.WriteLine (string.Format ("Asking server for replication data (starting at {0}).", from_id));
-				service.AcceptReplication (client, from_id, to_id, out operation);
+				operation = service.AcceptReplication (client, from_id, to_id);
 				System.Diagnostics.Debug.WriteLine ("Waiting...");
-				service.GetReplicationData (operation.OperationId, out buffer);
+				buffer = service.GetReplicationData (operation.OperationId);
 				System.Diagnostics.Debug.WriteLine ("Server reply received.");
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Replication produced {0} byte(s) of data.", (buffer == null ? 0 : buffer.Length)));

@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Services
 		
 		
 		#region IReplicationService Members
-		public void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out ProgressInformation operation)
+		public ProgressInformation AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id)
 		{
 			//	Signale au serveur que le client accepte des données relatives à une réplication.
 			
@@ -38,10 +38,10 @@ namespace Epsitec.Cresus.Services
 			//	Maintenant que le système de réplication a reçu notre requête, il n'y a plus
 			//	qu'à attendre que le travail soit fait...
 			
-			operation = job.GetProgressInformation ();
+			return job.GetProgressInformation ();
 		}
 
-		public void PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args, out ProgressInformation operation)
+		public ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args)
 		{
 			//	Signale au serveur que le client demande une réplication explicite.
 			
@@ -60,10 +60,10 @@ namespace Epsitec.Cresus.Services
 			//	Maintenant que le système de réplication a reçu notre requête, il n'y a plus
 			//	qu'à attendre que le travail soit fait...
 			
-			operation = job.GetProgressInformation ();
+			return job.GetProgressInformation ();
 		}
 		
-		public void GetReplicationData(long operationId, out byte[] data)
+		public byte[] GetReplicationData(long operationId)
 		{
 			//	Récupère le résultat de l'opération de réplication.
 
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Services
 				System.Diagnostics.Debug.WriteLine (job.Error);
 			}
 			
-			data = job.Data;
+			return job.Data;
 		}
 		#endregion
 		

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Remoting
 	public interface IRemoteService
 	{
 		/// <summary>
-		/// Gets the service id which uniquely defines this service.
+		/// Gets the service id which uniquely identifies this service.
 		/// </summary>
 		/// <returns>The unique id for this service.</returns>
 		System.Guid GetServiceId();

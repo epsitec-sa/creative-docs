@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
 	/// The <c>ProgressState</c> enumeration defines the possible states of
-	/// a <see cref="ProgressOperation"/>.
+	/// a <see cref="ProgressInformation"/>.
 	/// </summary>
 	public enum ProgressState
 	{

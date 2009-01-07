@@ -21,14 +21,14 @@ namespace Epsitec.Cresus.Services.Adapters
 
 		#region IOperatorService Members
 
-		public void CreateRoamingClient(string clientName, out ProgressInformation operation)
+		public ProgressInformation CreateRoamingClient(string clientName)
 		{
-			this.target.CreateRoamingClient (clientName, out operation);
+			return this.target.CreateRoamingClient (clientName);
 		}
 
-		public void GetRoamingClientData(long operationId, out ClientIdentity client, out byte[] compressedData)
+		public bool GetRoamingClientData(long operationId, out ClientIdentity client, out byte[] compressedData)
 		{
-			this.target.GetRoamingClientData (operationId, out client, out compressedData);
+			return this.target.GetRoamingClientData (operationId, out client, out compressedData);
 		}
 
 		#endregion

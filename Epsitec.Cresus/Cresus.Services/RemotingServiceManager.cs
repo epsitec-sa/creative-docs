@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 
-		public void CancelOperationAsync(long operationId, out ProgressInformation cancelProgressInformation)
+		public ProgressInformation CancelOperationAsync(long operationId)
 		{
 			foreach (var engine in this.engines)
 			{
@@ -114,18 +114,16 @@ namespace Epsitec.Cresus.Services
 
 					if (cancelOp == null)
 					{
-						cancelProgressInformation = ProgressInformation.Immediate;
+						return ProgressInformation.Immediate;
 					}
 					else
 					{
-						cancelProgressInformation = cancelOp.GetProgressInformation ();
+						return cancelOp.GetProgressInformation ();
 					}
-
-					return;
 				}
 			}
 
-			cancelProgressInformation = ProgressInformation.Immediate;
+			return ProgressInformation.Immediate;
 		}
 
 		public bool WaitForProgress(long operationId, int minimumProgress, System.TimeSpan timeout)

@@ -21,19 +21,19 @@ namespace Epsitec.Cresus.Services.Adapters
 
 		#region IReplicationService Members
 
-		public void AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id, out ProgressInformation operation)
+		public ProgressInformation AcceptReplication(ClientIdentity client, long sync_start_id, long sync_end_id)
 		{
-			this.target.AcceptReplication (client, sync_start_id, sync_end_id, out operation);
+			return this.target.AcceptReplication (client, sync_start_id, sync_end_id);
 		}
 
-		public void PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args, out ProgressInformation operation)
+		public ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args)
 		{
-			this.target.PullReplication (client, sync_start_id, sync_end_id, args, out operation);
+			return this.target.PullReplication (client, sync_start_id, sync_end_id, args);
 		}
 
-		public void GetReplicationData(long operationId, out byte[] data)
+		public byte[] GetReplicationData(long operationId)
 		{
-			this.target.GetReplicationData (operationId, out data);
+			return this.target.GetReplicationData (operationId);
 		}
 
 		#endregion

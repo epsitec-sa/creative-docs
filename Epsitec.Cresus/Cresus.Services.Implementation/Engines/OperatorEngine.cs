@@ -24,15 +24,15 @@ namespace Epsitec.Cresus.Services
 		
 		#region IOperatorService Members
 
-		public void CreateRoamingClient(string name, out Remoting.ProgressInformation operation)
+		public ProgressInformation CreateRoamingClient(string name)
 		{
 			//	Démarre, de manière asynchrone, la création d'une copie comprimée de la base
 			//	de données du serveur.
 
-			operation = new CreateRoamingClientOperation (this, name).GetProgressInformation ();
+			return new CreateRoamingClientOperation (this, name).GetProgressInformation ();
 		}
 		
-		public void GetRoamingClientData(long operationId, out Remoting.ClientIdentity client, out byte[] compressed_data)
+		public bool GetRoamingClientData(long operationId, out Remoting.ClientIdentity client, out byte[] compressed_data)
 		{
 			//	Récupère la base de données sous sa forme comprimée.
 			
@@ -40,7 +40,9 @@ namespace Epsitec.Cresus.Services
 			
 			if (op == null)
 			{
-				throw new System.ArgumentException ("Operation mismatch.");
+				client = Remoting.ClientIdentity.Empty;
+				compressed_data = null;
+				return false;
 			}
 			
 			op.WaitForProgress (100);
@@ -52,6 +54,8 @@ namespace Epsitec.Cresus.Services
 			
 			client          = new Remoting.ClientIdentity (op.ClientName, op.ClientId);
 			compressed_data = op.CompressedData;
+
+			return true;
 		}
 		#endregion
 		
