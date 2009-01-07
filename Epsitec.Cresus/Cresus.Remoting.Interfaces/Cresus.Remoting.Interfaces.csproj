@@ -130,7 +130,7 @@
     <Compile Include="Services\IRequestExecutionService.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PullReplicationArgs.cs">
+    <Compile Include="PullReplicationChunk.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RequestState.cs">

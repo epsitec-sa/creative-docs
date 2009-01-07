@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Requests
 {
@@ -321,11 +322,11 @@ namespace Epsitec.Cresus.Requests
 			this.enqueue_event.Set ();
 		}
 		
-		public void RemoveRequests(System.Collections.IEnumerable rows)
+		public void RemoveRequests(IEnumerable<System.Data.DataRow> rows)
 		{
 			lock (this)
 			{
-				foreach (System.Data.DataRow row in rows)
+				foreach (var row in rows)
 				{
 					Database.DbRichCommand.KillRow (row);
 				}

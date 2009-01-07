@@ -16,10 +16,10 @@ namespace Epsitec.Cresus.Remoting
 		void EnqueueRequest(ClientIdentity client, SerializedRequest[] requests);
 
 		[OperationContract]
-		void QueryRequestStates(ClientIdentity client, out RequestState[] states);
+		RequestState[] QueryRequestStates(ClientIdentity client);
 
 		[OperationContract]
-		void QueryRequestStatesUsingFilter(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states);
+		int QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, System.TimeSpan timeout, out RequestState[] states);
 
 		[OperationContract]
 		void RemoveRequestStates(ClientIdentity client, RequestState[] states);

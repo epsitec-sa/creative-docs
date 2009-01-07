@@ -3,6 +3,7 @@
 
 using Epsitec.Cresus.Remoting;
 using Epsitec.Cresus.Requests;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Services
 {
@@ -65,12 +66,12 @@ namespace Epsitec.Cresus.Services
 			this.execution_queue.Enqueue (null, data, ids);
 		}
 		
-		void IRequestExecutionService.QueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
+		RequestState[] IRequestExecutionService.QueryRequestStates(Remoting.ClientIdentity client)
 		{
-			this.InternalQueryRequestStates (client, out states);
+			return this.InternalQueryRequestStates (client);
 		}
 		
-		void IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
+		int IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, int change_id, System.TimeSpan timeout, out RequestState[] states)
 		{
 			//	Retourne les informations sur les états uniquement en cas de changement
 			//	ou si le temps imparti est écoulé.
@@ -92,7 +93,9 @@ namespace Epsitec.Cresus.Services
 			
 			change_id = info.ChangeId;
 			
-			this.InternalQueryRequestStates (client, out states);
+			states = this.InternalQueryRequestStates (client);
+			
+			return change_id;
 		}
 		
 		void IRequestExecutionService.RemoveRequestStates(ClientIdentity client, RequestState[] states)
@@ -102,8 +105,8 @@ namespace Epsitec.Cresus.Services
 			
 			lock (this.execution_queue)
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
+				List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
+				System.Data.DataRow[]     rows = this.execution_queue.DateTimeSortedRows;
 				
 				System.Diagnostics.Debug.WriteLine ("RemoveRequestStates: ");
 				
@@ -172,8 +175,8 @@ namespace Epsitec.Cresus.Services
 		{
 			lock (this.execution_queue)
 			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
+				List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
+				System.Data.DataRow[]     rows = this.execution_queue.DateTimeSortedRows;
 				
 				System.Diagnostics.Debug.WriteLine ("RemoveAllRequestStates for client " + client.ToString ());
 				
@@ -195,13 +198,13 @@ namespace Epsitec.Cresus.Services
 			}
 		}
 		#endregion
-		
-		private void InternalQueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
+
+		private RequestState[] InternalQueryRequestStates(Remoting.ClientIdentity client)
 		{
 			//	Détermine l'état de toutes les requêtes soumises par le client
 			//	spécifié.
-			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+
+			List<RequestState> list = new List<RequestState> ();
 			
 			lock (this.execution_queue)
 			{
@@ -233,9 +236,8 @@ namespace Epsitec.Cresus.Services
 					}
 				}
 			}
-			
-			states = new RequestState[list.Count];
-			list.CopyTo (states);
+
+			return list.ToArray ();
 		}
 		
 		private ClientChangeInfo GetClientChangeInfo(int client_id)

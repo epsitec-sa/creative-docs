@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Services
 			return job.GetProgressInformation ();
 		}
 
-		public ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args)
+		public ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationChunk[] args)
 		{
 			//	Signale au serveur que le client demande une réplication explicite.
 			

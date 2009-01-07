@@ -131,8 +131,8 @@ namespace Epsitec.Cresus.Requests
 					
 					//	Charge l'état de nos requêtes sur le serveur. Cet appel est bloquant
 					//	si rien n'a changé depuis le dernier appel :
-					
-					this.service.QueryRequestStatesUsingFilter (this.client, ref change_id, System.TimeSpan.FromSeconds (60.0), out states);
+
+					change_id = this.service.QueryRequestStatesUsingFilter (this.client, change_id, System.TimeSpan.FromSeconds (60.0), out states);
 					
 					lock (this)
 					{

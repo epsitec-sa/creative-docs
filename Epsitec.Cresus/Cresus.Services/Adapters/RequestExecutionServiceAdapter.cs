@@ -26,14 +26,14 @@ namespace Epsitec.Cresus.Services.Adapters
 			this.target.EnqueueRequest (client, requests);
 		}
 
-		public void QueryRequestStates(ClientIdentity client, out RequestState[] states)
+		public RequestState[] QueryRequestStates(ClientIdentity client)
 		{
-			this.target.QueryRequestStates (client, out states);
+			return this.target.QueryRequestStates (client);
 		}
 
-		public void QueryRequestStatesUsingFilter(ClientIdentity client, ref int changeId, System.TimeSpan timeout, out RequestState[] states)
+		public int QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, System.TimeSpan timeout, out RequestState[] states)
 		{
-			this.target.QueryRequestStatesUsingFilter (client, ref changeId, timeout, out states);
+			return this.target.QueryRequestStatesUsingFilter (client, changeId, timeout, out states);
 		}
 
 		public void RemoveRequestStates(ClientIdentity client, RequestState[] states)

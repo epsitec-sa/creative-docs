@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Services.Adapters
 			return this.target.AcceptReplication (client, sync_start_id, sync_end_id);
 		}
 
-		public ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationArgs[] args)
+		public ProgressInformation PullReplication(ClientIdentity client, long sync_start_id, long sync_end_id, PullReplicationChunk[] args)
 		{
 			return this.target.PullReplication (client, sync_start_id, sync_end_id, args);
 		}

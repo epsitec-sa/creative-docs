@@ -114,13 +114,13 @@ namespace Epsitec.Cresus.Replication
 		#region PullArgsCollection Class
 		public sealed class PullArgsCollection
 		{
-			public PullArgsCollection(Remoting.PullReplicationArgs[] args)
+			public PullArgsCollection(Remoting.PullReplicationChunk[] args)
 			{
 				this.args = args;
 			}
 			
 			
-			public Remoting.PullReplicationArgs	this[Database.DbId id]
+			public Remoting.PullReplicationChunk	this[Database.DbId id]
 			{
 				get
 				{
@@ -132,11 +132,11 @@ namespace Epsitec.Cresus.Replication
 						}
 					}
 
-					return Remoting.PullReplicationArgs.Empty;
+					return Remoting.PullReplicationChunk.Empty;
 				}
 			}
 			
-			public Remoting.PullReplicationArgs	this[Database.DbTable table]
+			public Remoting.PullReplicationChunk	this[Database.DbTable table]
 			{
 				get
 				{
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Replication
 			}
 			
 			
-			Remoting.PullReplicationArgs[]		args;
+			Remoting.PullReplicationChunk[]		args;
 		}
 		#endregion
 		
