@@ -27,28 +27,32 @@ namespace Epsitec.Cresus.Services
 			this.databaseId     = databaseId;
 			this.databaseName   = infrastructure.Access.Database;
 			this.orchestrator   = new Requests.Orchestrator (infrastructure);
-			this.services       = new List<ServiceRecord> ();
+			this.serviceRecords = new List<ServiceRecord> ();
 
-			this.CreateServices ();
+			this.CreateServiceRecords ();
 		}
 
 		/// <summary>
-		/// Creates all the services defined in the implementation assemblies;
-		/// this will instanciate the services and populate the services list
-		/// with the corresponding service records.
+		/// Creates the records for all the service interfaces defined by the
+		/// implementation assemblies; this will instanciate the service engines
+		/// and create the records.
+		/// We consider any subclass of <see cref="AbstractServiceEngine"/> to
+		/// be a valid service implementation; every interface of such a class
+		/// which has a contract attribute will be registered, once for every
+		/// calid interface.
 		/// </summary>
-		private void CreateServices()
+		private void CreateServiceRecords()
 		{
 			System.Reflection.Assembly assembly = Common.Support.AssemblyLoader.Load ("Cresus.Services.Implementation");
 
 			var records = from type in assembly.GetTypes ()
 						  where type.IsSubclassOf (typeof (AbstractServiceEngine))
-						  let engine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine
+						  let serviceEngine = System.Activator.CreateInstance (type, new object[] { this }) as AbstractServiceEngine
 						  from interfaceType in type.GetInterfaces ()
 						  where interfaceType.HasServiceContractAttribute ()
-						  select new ServiceRecord (engine, interfaceType);
+						  select new ServiceRecord (serviceEngine, interfaceType);
 
-			this.services.AddRange (records);
+			this.serviceRecords.AddRange (records);
 		}
 		
 		
@@ -91,7 +95,7 @@ namespace Epsitec.Cresus.Services
 		/// <returns>The IDs for the running services.</returns>
 		public IEnumerable<System.Guid> GetServiceIds()
 		{
-			return from service in this.services
+			return from service in this.serviceRecords
 				   select service.ServiceId;
 		}
 
@@ -101,7 +105,7 @@ namespace Epsitec.Cresus.Services
 		/// <returns>The records for the running services.</returns>
 		public IEnumerable<ServiceRecord> GetServiceRecords()
 		{
-			return this.services;
+			return this.serviceRecords;
 		}
 
 		/// <summary>
@@ -111,7 +115,7 @@ namespace Epsitec.Cresus.Services
 		/// <returns>The service instance, if any.</returns>
 		public IRemoteService GetService(System.Guid serviceId)
 		{
-			var result = from service in this.services
+			var result = from service in this.serviceRecords
 						 where service.ServiceId == serviceId
 						 select service.ServiceInstance as IRemoteService;
 
@@ -125,7 +129,7 @@ namespace Epsitec.Cresus.Services
 		/// <returns>The unique name, if any.</returns>
 		public string GetServiceUniqueName(System.Guid serviceId)
 		{
-			var result = from service in this.services
+			var result = from service in this.serviceRecords
 						 where service.ServiceId == serviceId
 						 select service.UniqueName;
 
@@ -166,11 +170,11 @@ namespace Epsitec.Cresus.Services
 		{
 			if (disposing)
 			{
-				if (this.services.Count > 0)
+				if (this.serviceRecords.Count > 0)
 				{
 					//	TODO: unregister services from engine host
 					
-					this.services.Clear ();
+					this.serviceRecords.Clear ();
 				}
 				
 				if (this.orchestrator != null)
@@ -240,7 +244,7 @@ namespace Epsitec.Cresus.Services
 		readonly Database.DbInfrastructure		infrastructure;
 		readonly System.Guid					databaseId;
 		readonly string							databaseName;
-		readonly List<ServiceRecord>			services;
+		readonly List<ServiceRecord>			serviceRecords;
 		readonly Requests.Orchestrator			orchestrator;
 
 		int appDomainId;

@@ -16,10 +16,22 @@ namespace Epsitec.Cresus.Services
 			this.engines = new Dictionary<System.Guid, Engine> ();
 		}
 
+		/// <summary>
+		/// Adds the engine to the list of known engines. Every engine is
+		/// associated with a unique ID which is used to identify the app
+		/// domain in which the engine is running.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
 		internal void AddEngine(Engine engine)
 		{
 			this.engines.Add (engine.DatabaseId, engine);
-			engine.SetAppDomainId (this.engines.Count);
+
+			int appDomainId = this.engines.Count;
+			
+			//	The engine gets associated with an app domain ID; this is required
+			//	to identify operations on a per engine basis (see OperationManager).
+			
+			engine.SetAppDomainId (appDomainId);
 		}
 
 		public override object InitializeLifetimeService()
