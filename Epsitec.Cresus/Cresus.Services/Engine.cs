@@ -16,11 +16,17 @@ using System.Linq;
 namespace Epsitec.Cresus.Services
 {
 	/// <summary>
-	/// La classe Engine démarre les divers services (en mode serveur) ou donne
-	/// accès aux services distants via les mécanismes ".NET Remoting".
+	/// The <c>Engine</c> class maintains the relationship between the database,
+	/// the dedicated service instances and the request orchestrator. An engine
+	/// usually runs in an isolated application domain.
 	/// </summary>
 	public class Engine : System.MarshalByRefObject, System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Engine"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The database infrastructure.</param>
+		/// <param name="databaseId">The database id.</param>
 		public Engine(Database.DbInfrastructure infrastructure, System.Guid databaseId)
 		{
 			this.infrastructure = infrastructure;
@@ -30,6 +36,16 @@ namespace Epsitec.Cresus.Services
 			this.serviceRecords = new List<ServiceRecord> ();
 
 			this.CreateServiceRecords ();
+
+			IRemoteService           remoteService           = this.GetService (Remoting.RemotingServices.RequestExecutionServiceId);
+			IRequestExecutionService requestExecutionService = remoteService as IRequestExecutionService;
+
+			System.Diagnostics.Debug.Assert (remoteService != null);
+			System.Diagnostics.Debug.Assert (requestExecutionService != null);
+
+			Remoting.ClientIdentity clientIdentity = new Remoting.ClientIdentity ("Engine Orchestrator", this.infrastructure.LocalSettings.ClientId);
+
+			this.orchestrator.DefineRemotingService (requestExecutionService, clientIdentity);
 		}
 
 		/// <summary>
@@ -136,12 +152,22 @@ namespace Epsitec.Cresus.Services
 			return result.FirstOrDefault ();
 		}
 
-		
+
+		/// <summary>
+		/// Gets the operation associated with the specified id.
+		/// </summary>
+		/// <param name="operationId">The operation id.</param>
+		/// <returns>The operation or <c>null</c>.</returns>
 		internal AbstractOperation GetOperation(long operationId)
 		{
 			return OperationManager.Resolve<AbstractOperation> (operationId);
 		}
 
+		/// <summary>
+		/// Sets the application domain id. This method is used exclusively by the
+		/// <see cref="RemotingServiceManager"/>.
+		/// </summary>
+		/// <param name="id">An application-wide unique id.</param>
 		internal void SetAppDomainId(int id)
 		{
 			if (this.appDomainId != 0)

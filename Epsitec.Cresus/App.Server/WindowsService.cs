@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Server
@@ -26,20 +26,16 @@ namespace Epsitec.Cresus.Server
 		
 		protected override void OnStart(string[] args)
 		{
-//-			System.Diagnostics.Debug.WriteLine ("OnStart called: " + string.Join ("; ", args));
 			base.OnStart (args);
 			this.StartDatabaseEngine ();
-//-			System.Diagnostics.Debug.WriteLine ("OnStart done");
 			
 			EventLog.WriteEntry ("Service started successfully.", System.Diagnostics.EventLogEntryType.Information);
 		}
 		
 		protected override void OnStop()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("OnStop called");
 			base.OnStop ();
 			this.StopDatabaseEngine ();
-//-			System.Diagnostics.Debug.WriteLine ("OnStop done");
 			
 			EventLog.WriteEntry ("Service stopped.", System.Diagnostics.EventLogEntryType.Information);
 		}
@@ -47,7 +43,6 @@ namespace Epsitec.Cresus.Server
 		protected override void OnShutdown()
 		{
 			base.OnShutdown ();
-//-			this.StopServices ();
 			this.Stop ();
 			
 			EventLog.WriteEntry ("Shutting down.", System.Diagnostics.EventLogEntryType.Information);

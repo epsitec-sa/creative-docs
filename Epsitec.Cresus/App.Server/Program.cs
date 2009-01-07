@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Server
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Server
 
 			TestEngine te = (TestEngine) domain.CreateInstanceAndUnwrap ("Cresus.Server", "Epsitec.Cresus.Server.TestEngine");
 
-			te.SetEngine (host);
+			te.SetEngineHost (host);
 			te.CreateEngine ();
 
 			System.Threading.Thread.Sleep (-1);
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Server
 		{
 		}
 
-		public void SetEngine(Epsitec.Cresus.Services.EngineHost host)
+		public void SetEngineHost(Epsitec.Cresus.Services.EngineHost host)
 		{
 			this.host = host;
 		}

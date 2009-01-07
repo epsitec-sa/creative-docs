@@ -1,4 +1,4 @@
-//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Server
@@ -10,9 +10,6 @@ namespace Epsitec.Cresus.Server
 		/// </summary>
 		private void StartDatabaseEngine()
 		{
-//-			System.Diagnostics.Debug.WriteLine ("Cresus Server: starting.");
-//-			System.Diagnostics.Debugger.Break ();
-			
 			this.infrastructure = DatabaseTools.GetDatabase (this.EventLog);
 			
 			System.Diagnostics.Debug.Assert (this.infrastructure.LocalSettings.IsServer);
@@ -21,8 +18,6 @@ namespace Epsitec.Cresus.Server
 			this.host = new Epsitec.Cresus.Services.EngineHost (1234);
 			this.engine = new Epsitec.Cresus.Services.Engine (this.infrastructure, System.Guid.Empty);
 			this.host.AddEngine (this.engine);
-			
-//-			System.Diagnostics.Debug.WriteLine ("Cresus Server: running.");
 		}
 
 		/// <summary>
@@ -32,15 +27,11 @@ namespace Epsitec.Cresus.Server
 		{
 			if (this.infrastructure != null)
 			{
-//-				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopping.");
-				
 				Common.Support.Globals.SignalAbort ();
 
 				this.engine.Dispose ();
 				this.host.Dispose ();
 				this.infrastructure.Dispose ();
-				
-//-				System.Diagnostics.Debug.WriteLine ("Cresus Server: stopped.");
 
 				this.host           = null;
 				this.engine         = null;

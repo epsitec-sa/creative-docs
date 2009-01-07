@@ -4,6 +4,7 @@
 using Epsitec.Cresus.Remoting;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.ServiceModel;
 
 namespace Epsitec.Cresus.Services
@@ -32,6 +33,23 @@ namespace Epsitec.Cresus.Services
 			//	to identify operations on a per engine basis (see OperationManager).
 			
 			engine.SetAppDomainId (appDomainId);
+		}
+
+		/// <summary>
+		/// Gets the engines hosted by this remoting service manager. The engines
+		/// are sorted alphabetically using the database name.
+		/// </summary>
+		/// <value>The engines.</value>
+		public IEnumerable<Engine> Engines
+		{
+			get
+			{
+				var engines = from engine in this.engines.Values
+							  orderby engine.DatabaseName, engine.DatabaseId
+							  select engine;
+
+				return engines;
+			}
 		}
 
 		public override object InitializeLifetimeService()

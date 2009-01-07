@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
@@ -108,10 +108,16 @@ namespace Epsitec.Cresus.Services
 			return new System.Uri (string.Format (System.Globalization.CultureInfo.InvariantCulture, EngineHost.RemoteServiceManagerBaseUrl, machine, portNumber));
 		}
 
+		/// <summary>
+		/// Registers the service instance with the WCF service host.
+		/// </summary>
+		/// <param name="serviceName">The service name.</param>
+		/// <param name="instance">The service instance.</param>
+		/// <param name="type">The service type (interface).</param>
 		void RegisterServiceHost(string serviceName, object instance, System.Type type)
 		{
-			//	Make sure that the instance we unwrapped is really a service (i.e.
-			//	it is tagged with the [ServiceBehavior] attribute).
+			//	Make sure that the instance we try to register is really a WCF compatible service
+			//	(i.e. that it is tagged with the [ServiceBehavior] attribute).
 
 			System.Diagnostics.Debug.Assert (instance.GetType ().HasServiceBehaviorAttribute ());
 
