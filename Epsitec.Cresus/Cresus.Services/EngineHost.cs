@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Services
 		public void Dispose()
 		{
 			this.Dispose (true);
-			System.GC.SuppressFinalize (true);
+			System.GC.SuppressFinalize (this);
 		}
 		
 		#endregion
@@ -151,6 +151,7 @@ namespace Epsitec.Cresus.Services
 					}
 				}
 
+				this.serviceManager.Dispose ();
 				this.serviceHosts.Clear ();
 			}
 		}

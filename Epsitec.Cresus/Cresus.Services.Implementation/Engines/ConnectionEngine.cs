@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Services.Engines
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' asked for available services.", client));
 
-			List<System.Guid> serviceIds = new List<System.Guid> (this.engine.GetServiceIds ());
+			List<System.Guid> serviceIds = new List<System.Guid> (this.Engine.GetServiceIds ());
 			serviceIds.Sort ();
 			return serviceIds.ToArray ();
 		}

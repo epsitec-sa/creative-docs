@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Services.Adapters
 	/// <see cref="IRequestExecutionService"/>. See also <see cref="AbstractServiceAdapter"/>..
 	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class RequestExecutionServiceAdapter : AbstractServiceAdapter<IRequestExecutionService>, IRequestExecutionService
+	sealed class RequestExecutionServiceAdapter : AbstractServiceAdapter<IRequestExecutionService>, IRequestExecutionService
 	{
 		public RequestExecutionServiceAdapter(IRequestExecutionService target)
 			: base (target)

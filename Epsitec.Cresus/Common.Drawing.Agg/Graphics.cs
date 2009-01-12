@@ -1034,7 +1034,7 @@ namespace Epsitec.Common.Drawing
 		public void Dispose()
 		{
 			this.Dispose (true);
-			System.GC.SuppressFinalize (true);
+			System.GC.SuppressFinalize (this);
 		}
 		#endregion
 		

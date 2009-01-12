@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Services
 		public RequestExecutionEngine(Engine engine)
 			: base (engine)
 		{
-			this.orchestrator    = this.engine.Orchestrator;
+			this.orchestrator    = this.Engine.Orchestrator;
 			this.execution_queue = this.orchestrator.ExecutionQueue;
 			this.client_changes  = new System.Collections.Hashtable ();
 

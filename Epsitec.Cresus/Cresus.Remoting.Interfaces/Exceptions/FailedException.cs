@@ -4,7 +4,8 @@
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// La classe FailedException permet de signaler qu'une opération a échoué.
+	/// The <c>FailedException</c> class is thrown when an operation failed
+	/// to execute.
 	/// </summary>
 	
 	[System.Serializable]

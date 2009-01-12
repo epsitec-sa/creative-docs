@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Services.Adapters
 	/// <see cref="IOperatorService"/>. See also <see cref="AbstractServiceAdapter"/>.
 	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class OperatorServiceAdapter : AbstractServiceAdapter<IOperatorService>, IOperatorService
+	sealed class OperatorServiceAdapter : AbstractServiceAdapter<IOperatorService>, IOperatorService
 	{
 		public OperatorServiceAdapter(IOperatorService target)
 			: base (target)

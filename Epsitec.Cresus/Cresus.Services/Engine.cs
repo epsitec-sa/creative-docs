@@ -1,13 +1,8 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
 using Epsitec.Cresus.Services.Extensions;
-
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Http;
-using System.Runtime.Remoting.Lifetime;
 
 using System.Collections.Generic;
 using System.ServiceModel;
@@ -152,7 +147,6 @@ namespace Epsitec.Cresus.Services
 			return result.FirstOrDefault ();
 		}
 
-
 		/// <summary>
 		/// Gets the operation associated with the specified id.
 		/// </summary>
@@ -160,6 +154,9 @@ namespace Epsitec.Cresus.Services
 		/// <returns>The operation or <c>null</c>.</returns>
 		internal AbstractOperation GetOperation(long operationId)
 		{
+			//	DO NOT change this method to a static member; we require this to be a
+			//	plain method call, since it might cross an appdomain boundary !
+
 			return OperationManager.Resolve<AbstractOperation> (operationId);
 		}
 
@@ -186,7 +183,7 @@ namespace Epsitec.Cresus.Services
 		public void Dispose()
 		{
 			this.Dispose (true);
-			System.GC.SuppressFinalize (true);
+			System.GC.SuppressFinalize (this);
 		}
 		
 		#endregion

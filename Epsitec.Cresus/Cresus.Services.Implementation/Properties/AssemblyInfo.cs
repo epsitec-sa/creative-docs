@@ -1,16 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle("Crésus Services Engine / Implementations")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EPSITEC SA")]
-[assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyTitle ("Epsitec.Cresus.Services.Implementation")]
+[assembly: AssemblyDescription ("")]
+[assembly: AssemblyProduct ("Crésus")]
+[assembly: AssemblyCopyright ("Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

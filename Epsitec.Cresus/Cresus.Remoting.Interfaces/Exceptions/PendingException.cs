@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// The <c>PendingException</c> exception is raised when an operation is
+	/// The <c>PendingException</c> exception is thrown when an operation is
 	/// still executing.
 	/// </summary>
 	

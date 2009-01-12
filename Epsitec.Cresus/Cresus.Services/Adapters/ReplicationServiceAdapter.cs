@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Services.Adapters
 	/// <see cref="IReplicationService"/>. See also <see cref="AbstractServiceAdapter"/>..
 	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class ReplicationServiceAdapter : AbstractServiceAdapter<IReplicationService>, IReplicationService
+	sealed class ReplicationServiceAdapter : AbstractServiceAdapter<IReplicationService>, IReplicationService
 	{
 		public ReplicationServiceAdapter(IReplicationService target)
 			: base (target)

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -8,19 +8,30 @@ namespace Epsitec.Cresus.Remoting
 	/// <summary>
 	/// The <c>OperationManager</c> class should only be used on the server side.
 	/// It provides the bidirectionnal mapping between operations and their IDs.
+	/// There is one <c>OperationManager</c> in every AppDomain.
 	/// <remarks>
 	/// Operations don't travel across the network as objects, but just as IDs,
 	/// and on the server side, the <c>OperationManager</c> resolves them back
 	/// to the original objects, if they are still alive.
 	/// </remarks>
 	/// </summary>
-	public class OperationManager
+	public sealed class OperationManager
 	{
-		public OperationManager()
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OperationManager"/> class.
+		/// </summary>
+		private OperationManager()
 		{
 			this.operations = new Dictionary<long, AbstractOperation> ();
 		}
 
+
+		/// <summary>
+		/// Resolves the specified operation id to an operation.
+		/// </summary>
+		/// <typeparam name="T">The expected operation type.</typeparam>
+		/// <param name="operationId">The operation id.</param>
+		/// <returns>The operation or <c>null</c>.</returns>
 		public static T Resolve<T>(long operationId) where T : AbstractOperation
 		{
 			OperationManager manager = OperationManager.instance;
@@ -34,34 +45,48 @@ namespace Epsitec.Cresus.Remoting
 			return operation as T;
 		}
 
+
+		/// <summary>
+		/// Registers the specified operation with the operation manager. This gets
+		/// called by the <see cref="AbstractOperation"/> constructor.
+		/// </summary>
+		/// <param name="operation">The operation.</param>
+		/// <param name="setOperationId">The callback used to set the caller's operation id.</param>
 		internal static void Register(AbstractOperation operation, System.Action<long> setOperationId)
 		{
 			OperationManager.instance.RegisterOperation (operation, setOperationId);
 		}
 
+		/// <summary>
+		/// Unregisters the specified operation from the operation manager. This gets
+		/// called by <see cref="AbstractOperation.Dispose"/>.
+		/// </summary>
+		/// <param name="operation">The operation.</param>
+		/// <param name="operationId">The operation id.</param>
 		internal static void Unregister(AbstractOperation operation, long operationId)
 		{
 			OperationManager.instance.UnregisterOperation (operation, operationId);
 		}
 
-		private void RegisterOperation(AbstractOperation operation, System.Action<long> setOperationId)
+		
+		private void RegisterOperation(AbstractOperation operation, System.Action<long> setOperationIdCallback)
 		{
 			long operationId;
 
 			lock (this.exclusion)
 			{
 				operationId = ++this.nextOperationId;
-				setOperationId (operationId);
+				
+				//	The operation id must be set on the caller, but this can only be done
+				//	by code executing in the constructor, as it initializses a read-only
+				//	member variable; that's why we use an action callback rather than a
+				//	setter property :
+				
+				setOperationIdCallback (operationId);
+				
 				this.operations[operationId] = operation;
 			}
 		}
-
-
-		private static readonly OperationManager instance = new OperationManager ();
-
-		private readonly object exclusion = new object ();
-		private readonly Dictionary<long, AbstractOperation> operations;
-		private long nextOperationId;
 
 		private void UnregisterOperation(AbstractOperation operation, long operationId)
 		{
@@ -73,6 +98,7 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 
+#if false
 		internal static bool WaitForProgress(long operationId, int percent, System.TimeSpan timeout)
 		{
 			if (operationId == 0)
@@ -102,7 +128,13 @@ namespace Epsitec.Cresus.Remoting
 
 			return operation.WaitForProgress (percent, timeout);
 		}
+#endif
 
+		/// <summary>
+		/// Sets the AppDomain specific id. This gets called by the <c>Engine</c> class in
+		/// the <c>Epsitec.Cresus.Services</c> assembly.
+		/// </summary>
+		/// <param name="id">The AppDomain id.</param>
 		public static void SetAppDomainId(int id)
 		{
 			System.Diagnostics.Debug.Assert (id > 0);
@@ -129,5 +161,11 @@ namespace Epsitec.Cresus.Remoting
 				}
 			}
 		}
+		
+		private static readonly OperationManager instance = new OperationManager ();
+
+		private readonly object exclusion = new object ();
+		private readonly Dictionary<long, AbstractOperation> operations;
+		private long nextOperationId;
 	}
 }

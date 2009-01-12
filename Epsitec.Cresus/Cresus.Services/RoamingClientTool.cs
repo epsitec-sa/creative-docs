@@ -8,26 +8,25 @@ namespace Epsitec.Cresus.Services
 	/// </summary>
 	public sealed class RoamingClientTool
 	{
-		public static void CreateDatabase(Remoting.IOperatorService service, long operationId, string database_name)
+		public static void CreateDatabase(Remoting.IOperatorService service, long operationId, string databaseName)
 		{
 			//	Crée une base de données locale à partir de la version comprimée personnalisée
 			//	générée par le serveur. Si une base existait déjà avec ce nom-là, elle sera tout
 			//	simplement supprimée.
 			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			Database.DbAccess         access = Database.DbInfrastructure.CreateDatabaseAccess ("Firebird" /*"FirebirdEmbedded"*/, database_name);
+			Database.DbAccess         access = Database.DbInfrastructure.CreateDatabaseAccess ("Firebird" /*"FirebirdEmbedded"*/, databaseName);
 			
 			access.CheckConnection = false;
 			
 			Database.IDbServiceTools  tools  = Database.DbFactory.CreateDatabaseAbstraction (access).ServiceTools;
 			Common.IO.TemporaryFile   temp   = new Common.IO.TemporaryFile ();
 			
-			string database_path = tools.GetDatabasePath ();
-			string backup_path   = temp.Path;
+			string databasePath = tools.GetDatabasePath ();
+			string backupPath   = temp.Path;
 			
 			try
 			{
-				System.IO.File.Delete (database_path);
+				System.IO.File.Delete (databasePath);
 			}
 			catch (System.IO.FileNotFoundException ex)
 			{
@@ -35,41 +34,41 @@ namespace Epsitec.Cresus.Services
 			}
 			
 			Remoting.ClientIdentity client;
-			byte[] compressed_data;
+			byte[] compressedData;
 			
-			service.GetRoamingClientData (operationId, out client, out compressed_data);
+			service.GetRoamingClientData (operationId, out client, out compressedData);
 			
-			System.IO.MemoryStream source       = new System.IO.MemoryStream (compressed_data);
-			System.IO.FileStream   target       = System.IO.File.OpenWrite (backup_path);
+			System.IO.MemoryStream source       = new System.IO.MemoryStream (compressedData);
+			System.IO.FileStream   target       = System.IO.File.OpenWrite (backupPath);
 			System.IO.Stream       decompressed = Common.IO.Decompression.CreateStream (source);
 			
-			int total_read = 0;
+			int totalRead = 0;
 			
 			for (;;)
 			{
-				byte[] read_buffer = new byte[1000];
-				int    read_length = decompressed.Read (read_buffer, 0, read_buffer.Length);
+				byte[] readBuffer = new byte[1000];
+				int    readLength = decompressed.Read (readBuffer, 0, readBuffer.Length);
 				
-				if (read_length == 0)
+				if (readLength == 0)
 				{
 					break;
 				}
 				
-				target.Write (read_buffer, 0, read_length);
-				total_read += read_length;
+				target.Write (readBuffer, 0, readLength);
+				totalRead += readLength;
 			}
 			
 			target.Close ();
 			decompressed.Close ();
 			source.Close ();
 			
-			System.Diagnostics.Debug.WriteLine ("Retrieved backup as " + backup_path);
+			System.Diagnostics.Debug.WriteLine ("Retrieved backup as " + backupPath);
 			
-			tools.Restore (backup_path);
+			tools.Restore (backupPath);
 			
 			System.Diagnostics.Debug.WriteLine ("Restored backup.");
 			
-			Common.IO.Tools.WaitForFileReadable (database_path, 20000);
+			Common.IO.Tools.WaitForFileReadable (databasePath, 20000);
 			
 			temp.Dispose ();
 			temp = null;

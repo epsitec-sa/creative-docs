@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Services
 			this.serviceInstance = service;
 			this.serviceType     = type;
 			this.serviceId       = service.GetServiceId ();
-			this.uniqueName      = string.Format ("{0}-{1}", type.Name, uniqueId);
+			this.uniqueName      = string.Concat (type.Name, "-", uniqueId.ToString ());
 		}
 
 		

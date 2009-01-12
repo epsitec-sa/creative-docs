@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Services.Adapters
 	/// <see cref="IConnectionService"/>. See also <see cref="AbstractServiceAdapter"/>..
 	/// </summary>
 	[ServiceBehavior (InstanceContextMode=InstanceContextMode.Single, IncludeExceptionDetailInFaults=true)]
-	class ConnectionServiceAdapter : AbstractServiceAdapter<IConnectionService>, IConnectionService
+	sealed class ConnectionServiceAdapter : AbstractServiceAdapter<IConnectionService>, IConnectionService
 	{
 		public ConnectionServiceAdapter(IConnectionService target)
 			: base (target)

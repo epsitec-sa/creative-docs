@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// The <c>CancelledException</c> class is used when an operation has been
+	/// The <c>CancelledException</c> class is thrown when an operation has been
 	/// cancelled.
 	/// </summary>
 	

@@ -1,4 +1,4 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Services
 			
 			private void Step_CreateClient()
 			{
-				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
+				Database.DbInfrastructure infrastructure = this.oper.Engine.Orchestrator.Infrastructure;
 				Database.DbClientManager  client_manager = infrastructure.ClientManager;
 				
 				using (Database.DbTransaction transaction = infrastructure.BeginTransaction (Database.DbTransactionMode.ReadWrite))
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Services
 			
 			private void Step_CopyDatabase()
 			{
-				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
+				Database.DbInfrastructure infrastructure = this.oper.Engine.Orchestrator.Infrastructure;
 				Database.IDbServiceTools  tools          = infrastructure.DefaultDbAbstraction.ServiceTools;
 				
 				tools.Backup (this.temp.Path);

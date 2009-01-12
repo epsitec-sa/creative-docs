@@ -34,6 +34,16 @@ namespace Epsitec.Cresus.Services
 			return null;
 		}
 
+
+		public Engine Engine
+		{
+			get
+			{
+				return this.engine;
+			}
+		}
+
+
 		#region IRemotingService Members
 
 		public abstract System.Guid GetServiceId();
@@ -45,6 +55,6 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
-		protected readonly Engine				engine;
+		readonly Engine				engine;
 	}
 }
