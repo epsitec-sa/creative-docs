@@ -27,6 +27,7 @@
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
     <SignAssembly>true</SignAssembly>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -78,6 +79,9 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
@@ -120,6 +124,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -129,7 +136,8 @@
     <Compile Include="DataCruncher.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Job.cs">
+    <Compile Include="PullArguments.cs" />
+    <Compile Include="ReplicationJob.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PackedTableData.cs">
@@ -138,7 +146,7 @@
     <Compile Include="ReplicationData.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ServerEngine.cs">
+    <Compile Include="ServerReplicationEngine.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

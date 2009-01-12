@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// Summary description for DataCruncher.
+	/// The <c>DataCruncher</c> class TODO.
 	/// </summary>
 	public sealed class DataCruncher
 	{

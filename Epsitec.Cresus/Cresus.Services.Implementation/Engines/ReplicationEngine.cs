@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.Services
 		public ReplicationEngine(Engine engine)
 			: base (engine)
 		{
-			this.replicator = new Replication.ServerEngine (engine.Infrastructure);
+			this.replicator = new Replication.ServerReplicationEngine (engine.Infrastructure);
 		}
 		
 		
@@ -26,12 +26,13 @@ namespace Epsitec.Cresus.Services
 			
 			//	Crée un "job" pour Repliaction.ServerEngine; c'est là que tout le travail
 			//	se fera, par un processus séparé.
-			
-			Replication.Job job = new Replication.Job ();
-			
-			job.Client      = client;
-			job.SyncStartId = sync_start_id;
-			job.SyncEndId   = sync_end_id;
+
+			Replication.ReplicationJob job = new Replication.ReplicationJob ()
+			{
+				Client      = client,
+				SyncStartId = sync_start_id,
+				SyncEndId   = sync_end_id
+			};
 			
 			this.replicator.Enqueue (job);
 			
@@ -47,13 +48,14 @@ namespace Epsitec.Cresus.Services
 			
 			//	Crée un "job" pour Repliaction.ServerEngine; c'est là que tout le travail
 			//	se fera, par un processus séparé.
-			
-			Replication.Job job = new Replication.Job ();
-			
-			job.Client      = client;
-			job.SyncStartId = sync_start_id;
-			job.SyncEndId   = sync_end_id;
-			job.PullArgs    = new Replication.Job.PullArgsCollection (args);
+
+			Replication.ReplicationJob job = new Replication.ReplicationJob ()
+			{
+				Client        = client,
+				SyncStartId   = sync_start_id,
+				SyncEndId     = sync_end_id,
+				PullArguments = new Replication.PullArguments (args)
+			};
 			
 			this.replicator.Enqueue (job);
 			
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.Services
 		{
 			//	Récupère le résultat de l'opération de réplication.
 
-			Replication.Job job = OperationManager.Resolve<Replication.Job> (operationId);
+			Replication.ReplicationJob job = OperationManager.Resolve<Replication.ReplicationJob> (operationId);
 			
 			if (job == null)
 			{
@@ -104,6 +106,6 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
-		private Replication.ServerEngine		replicator;
+		private Replication.ServerReplicationEngine		replicator;
 	}
 }
