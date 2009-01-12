@@ -64,7 +64,7 @@ namespace Epsitec.Common.Dialogs
 						report.DefineProgress ((5-i)/5.0, string.Format ("{0} seconds remaining", i));
 						System.Threading.Thread.Sleep (1*1000);
 
-						if (report.Cancelled)
+						if (report.Canceled)
 						{
 							return;
 						}
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						System.Threading.Thread.Sleep (100);
 
-						if (report.Cancelled)
+						if (report.Canceled)
 						{
 							return;
 						}

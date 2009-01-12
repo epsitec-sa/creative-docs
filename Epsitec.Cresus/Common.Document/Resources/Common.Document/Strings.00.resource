@@ -84,7 +84,7 @@
   <data name="Export.PDF.Progress.Init" id="00B01">Initialisation</data>
   <data name="Export.PDF.Progress.Ressource" id="01B01">Génération des ressource {0}</data>
   <data name="Export.PDF.Progress.Content" id="02B01">Génération du contenu {0}</data>
-  <data name="Export.PDF.Progress.Cancelled" id="05B01">Exportation annulée.</data>
+  <data name="Export.PDF.Progress.Canceled" id="05B01">Exportation annulée.</data>
   <data name="Export.PDF.Progress.Image" id="03B01">Génération des images {0}</data>
   <data name="Export.PDF.Progress.Surface" id="04B01">Génération des surfaces {0}.{1}</data>
   <data name="Dialog.Bool.ExportPDFTextCurve" id="042">Textes en courbes</data>

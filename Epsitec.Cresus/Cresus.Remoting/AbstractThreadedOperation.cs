@@ -9,16 +9,22 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	public abstract class AbstractThreadedOperation : AbstractOperation
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractThreadedOperation"/> class.
+		/// </summary>
 		protected AbstractThreadedOperation()
 		{
+			this.waitBeforeAbortInMilliseconds = 100;
 		}
 
 
 		/// <summary>
 		/// Gets the thread cancel event. If it does not yet exist, create it.
+		/// Signalling the cancel event will cancel the threaded operation, as
+		/// soon as the thread has the opportunity to do so.
 		/// </summary>
 		/// <value>The thread cancel event.</value>
-		System.Threading.AutoResetEvent ThreadCancelEvent
+		System.Threading.AutoResetEvent			ThreadCancelEvent
 		{
 			get
 			{
@@ -38,7 +44,7 @@ namespace Epsitec.Cresus.Remoting
 		/// Gets a value indicating whether to cancel the current thread.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if the current thread should be cancelled; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the current thread should be canceled; otherwise, <c>false</c>.
 		/// </value>
 		protected bool							IsCancelRequested
 		{
@@ -117,7 +123,7 @@ namespace Epsitec.Cresus.Remoting
 					//	First, ask politely to cancel the opration, then be rude if this
 					//	fails, by interrupting the thread.
 					
-					if (this.CancelOperation (this.waitBeforeAbort) == false)
+					if (this.CancelOperation (this.waitBeforeAbortInMilliseconds) == false)
 					{
 						this.thread.Interrupt ();
 					}
@@ -137,6 +143,6 @@ namespace Epsitec.Cresus.Remoting
 		private System.Threading.AutoResetEvent	threadCancelEvent;
 		private bool							isThreadCancelRequested;
 		
-		protected int							waitBeforeAbort = 100;
+		protected int							waitBeforeAbortInMilliseconds;
 	}
 }

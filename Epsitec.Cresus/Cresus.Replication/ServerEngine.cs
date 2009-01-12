@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Replication
 					break;
 				}
 				
-				if (job.ProgressState == Remoting.ProgressState.Cancelled)
+				if (job.ProgressState == Remoting.ProgressState.Canceled)
 				{
 					//	Saute un éventuel job qui aurait été marqué comme annulé.
 					

@@ -607,7 +607,7 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (this.fence_id == 0);
 				System.Diagnostics.Debug.Assert (this.temp_queue.Count == 0);
 				
-				this.OnActionCancelled ();
+				this.OnActionCanceled ();
 			}
 		}
 		
@@ -1116,11 +1116,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		protected virtual void OnActionCancelled()
+		protected virtual void OnActionCanceled()
 		{
-			if (this.ActionCancelled != null)
+			if (this.ActionCanceled != null)
 			{
-				this.ActionCancelled (this);
+				this.ActionCanceled (this);
 			}
 		}
 
@@ -1141,7 +1141,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		public event EventHandler				ActionValidated;
-		public event EventHandler				ActionCancelled;
+		public event EventHandler				ActionCanceled;
 		public event EventHandler				UndoExecuted;
 		public event EventHandler				RedoExecuted;
 		

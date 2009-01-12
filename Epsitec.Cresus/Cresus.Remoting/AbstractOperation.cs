@@ -15,9 +15,15 @@ namespace Epsitec.Cresus.Remoting
 			//	Tell the OperationManager about this new operation and assign it a
 			//	unique ID. This ID will be unique, even across multiple app domains,
 			//	if the OperationManager was properly set up.
+
+			this.startTime        = AbstractOperation.GetNowUtc ();
+			this.progressPercent  = -1;
+			this.expectedLastStep = -1;
+			this.expectedDuration = System.TimeSpan.FromMilliseconds (-1);
 			
 			OperationManager.Register (this, operationId => this.operationId = operationId);
 		}
+		
 		
 		public override object InitializeLifetimeService()
 		{
@@ -32,7 +38,7 @@ namespace Epsitec.Cresus.Remoting
 		/// Gets the progress state of this operation.
 		/// </summary>
 		/// <value>The progress state.</value>
-		public ProgressState ProgressState
+		public ProgressState					ProgressState
 		{
 			get
 			{
@@ -45,6 +51,17 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 
+		/// <summary>
+		/// Gets the failure message.
+		/// </summary>
+		/// <value>The failure message or <c>null</c>.</value>
+		public string							FailureMessage
+		{
+			get
+			{
+				return this.failureMessage;
+			}
+		}
 
 		/// <summary>
 		/// Gets the progress information for the current operation.
@@ -56,7 +73,7 @@ namespace Epsitec.Cresus.Remoting
 
 			lock (this.monitor)
 			{
-				System.TimeSpan duration = (this.stopTime.Ticks == 0 ? System.DateTime.Now : this.stopTime) - this.startTime;
+				System.TimeSpan duration = (this.stopTime.Ticks == 0 ? AbstractOperation.GetNowUtc () : this.stopTime) - this.startTime;
 
 				return new ProgressInformation (
 					this.progressPercent,
@@ -137,8 +154,8 @@ namespace Epsitec.Cresus.Remoting
 			}
 
 			bool infinite = (timeout.Ticks < 0);
-			
-			System.DateTime startTime = System.DateTime.Now;
+
+			System.DateTime startTime = AbstractOperation.GetNowUtc ();
 			System.DateTime stopTime  = startTime.Add (timeout);
 			
 			for (;;)
@@ -160,7 +177,7 @@ namespace Epsitec.Cresus.Remoting
 					}
 					else
 					{
-						timeout = System.TimeSpan.FromTicks (System.Math.Min (stopTime.Ticks - System.DateTime.Now.Ticks, maxWait*10*1000L));
+						timeout = System.TimeSpan.FromTicks (System.Math.Min (stopTime.Ticks - AbstractOperation.GetNowUtc ().Ticks, maxWait*10*1000L));
 
 						if (timeout.Ticks > 0)
 						{
@@ -202,7 +219,6 @@ namespace Epsitec.Cresus.Remoting
 				}
 
 				long operationId = this.operationId;
-				this.operationId = 0;
 
 				OperationManager.Unregister (this, operationId);
 			}
@@ -232,27 +248,27 @@ namespace Epsitec.Cresus.Remoting
 				
 				this.progressState   = (progress < 100) ? ProgressState.Running : ProgressState.Succeeded;
 				this.progressPercent = progress;
-				this.stopTime        = (progress < 100) ? new System.DateTime (0) : System.DateTime.Now;
+				this.stopTime        = (progress < 100) ? new System.DateTime (0) : AbstractOperation.GetNowUtc ();
 				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
 		}
 
 		/// <summary>
-		/// Sets the cancelled state.
+		/// Sets the canceled state.
 		/// </summary>
-		protected void SetCancelled()
+		protected void SetCanceled()
 		{
 			lock (this.monitor)
 			{
-				if (this.progressState == ProgressState.Cancelled)
+				if (this.progressState == ProgressState.Canceled)
 				{
 					return;
 				}
 				
-				this.progressState   = ProgressState.Cancelled;
+				this.progressState   = ProgressState.Canceled;
 				this.progressPercent = 100;
-				this.stopTime        = System.DateTime.Now;
+				this.stopTime        = AbstractOperation.GetNowUtc ();
 				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
@@ -275,7 +291,7 @@ namespace Epsitec.Cresus.Remoting
 				this.failureMessage  = message;
 				this.progressState   = ProgressState.Failed;
 				this.progressPercent = 100;
-				this.stopTime        = System.DateTime.Now;
+				this.stopTime        = AbstractOperation.GetNowUtc ();
 				
 				System.Diagnostics.Debug.WriteLine ("*** failure ***\nReason:");
 				System.Diagnostics.Debug.WriteLine (message);
@@ -317,10 +333,19 @@ namespace Epsitec.Cresus.Remoting
 				this.currentStep     = step;
 				this.progressPercent = progress;
 				this.progressState   = (progress < 100) ? ProgressState.Running : ProgressState.Succeeded;
-				this.stopTime        = (progress < 100) ? new System.DateTime (0) : System.DateTime.Now;
+				this.stopTime        = (progress < 100) ? new System.DateTime (0) : AbstractOperation.GetNowUtc ();
 				
 				System.Threading.Monitor.PulseAll (this.monitor);
 			}
+		}
+
+		/// <summary>
+		/// Gets the current time, as UTC.
+		/// </summary>
+		/// <returns>The current time, as UTC.</returns>
+		private static System.DateTime GetNowUtc()
+		{
+			return System.DateTime.Now.ToUniversalTime ();
 		}
 
 		/// <summary>
@@ -336,16 +361,16 @@ namespace Epsitec.Cresus.Remoting
 		}
 
 
-		readonly object							monitor         = new object ();
-		long									operationId;
+		readonly object							monitor = new object ();
+		/*readonly*/ long						operationId;
 		
-		readonly System.DateTime				startTime       = System.DateTime.Now;
+		readonly System.DateTime				startTime;
 		System.DateTime							stopTime;
-		int										progressPercent = -1;
+		int										progressPercent;
 		ProgressState							progressState;
 		int										currentStep;
-		int										expectedLastStep = -1;
-		System.TimeSpan							expectedDuration = System.TimeSpan.FromMilliseconds (-1);
+		int										expectedLastStep;
+		System.TimeSpan							expectedDuration;
 		string									failureMessage;
 	}
 }

@@ -4,21 +4,21 @@
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// The <c>CancelledException</c> class is thrown when an operation has been
-	/// cancelled.
+	/// The <c>CanceledException</c> class is thrown when an operation has been
+	/// canceled.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class CancelledException : AbstractException
+	public class CanceledException : AbstractException
 	{
-		public CancelledException()
+		public CanceledException()
 		{
 		}
 		
 		
 		#region ISerializable Members
-		protected CancelledException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected CanceledException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 		}
 		

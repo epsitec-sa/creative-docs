@@ -9,7 +9,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// The <c>WorkInProgressDialog</c> class implements a dialog which displays
 	/// a progress message to the user, while some background thread is working.
-	/// The background thread can be cancelled.
+	/// The background thread can be canceled.
 	/// </summary>
 	public class WorkInProgressDialog : AbstractMessageDialog, IWorkInProgressReport
 	{
@@ -71,14 +71,14 @@ namespace Epsitec.Common.Dialogs
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the operation was cancelled.
+		/// Gets a value indicating whether the operation was canceled.
 		/// </summary>
-		/// <value><c>true</c> if the operation was cancelled; otherwise, <c>false</c>.</value>
-		public bool Cancelled
+		/// <value><c>true</c> if the operation was canceled; otherwise, <c>false</c>.</value>
+		public bool Canceled
 		{
 			get
 			{
-				return this.cancelled;
+				return this.canceled;
 			}
 		}
 
@@ -159,13 +159,13 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		bool IWorkInProgressReport.Cancelled
+		bool IWorkInProgressReport.Canceled
 		{
 			get
 			{
 				lock (this.exclusion)
 				{
-					return this.cancelled;
+					return this.canceled;
 				}
 			}
 		}
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Dialogs
 
 		protected void CancelOperation()
 		{
-			this.cancelled = true;
+			this.canceled = true;
 
 			if (this.cancelButton != null)
 			{
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Dialogs
 			try
 			{
 				this.operation (this);
-				this.operationResult = this.cancelled ? OperationResult.Cancelled : OperationResult.Done;
+				this.operationResult = this.canceled ? OperationResult.Canceled : OperationResult.Done;
 			}
 			catch (System.Exception ex)
 			{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Dialogs
 		private string							operationMessage;
 		private string							progressMessage;
 		private double							progressValue;
-		private bool							cancelled;
+		private bool							canceled;
 		private bool							cancellable;
 		private ProgressIndicatorStyle			progressIndicatorStyle;
 		private OperationResult					operationResult;

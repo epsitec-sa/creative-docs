@@ -24,11 +24,11 @@ namespace Epsitec.Common.Dialogs
 		void DefineProgress(double value, string formattedText);
 
 		/// <summary>
-		/// Gets a value indicating whether the operation should be cancelled.
+		/// Gets a value indicating whether the operation should be canceled.
 		/// This will be true if the user pressed the cancel button.
 		/// </summary>
-		/// <value><c>true</c> if cancelled; otherwise, <c>false</c>.</value>
-		bool Cancelled
+		/// <value><c>true</c> if canceled; otherwise, <c>false</c>.</value>
+		bool Canceled
 		{
 			get;
 		}

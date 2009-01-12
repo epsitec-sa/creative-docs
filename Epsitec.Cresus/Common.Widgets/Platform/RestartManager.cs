@@ -84,9 +84,9 @@ namespace Epsitec.Common.Widgets.Platform
 
 		internal static bool ShouldCancelRecovery()
 		{
-			bool cancelled;
-			Win32Api.ApplicationRecoveryInProgress (out cancelled);
-			return cancelled;
+			bool canceled;
+			Win32Api.ApplicationRecoveryInProgress (out canceled);
+			return canceled;
 		}
 		
 		internal static bool HandleWndProc(ref System.Windows.Forms.Message msg)

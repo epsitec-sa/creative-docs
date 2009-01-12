@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Remoting
 		Succeeded	= 2,
 		
 		/// <summary>
-		/// The operation is no longer running; it was cancelled.
+		/// The operation is no longer running; it was canceled.
 		/// </summary>
-		Cancelled	= 3,
+		Canceled	= 3,
 		
 		/// <summary>
 		/// The operation is no longer running; it failed.

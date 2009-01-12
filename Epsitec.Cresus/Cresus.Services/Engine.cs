@@ -216,8 +216,8 @@ namespace Epsitec.Cresus.Services
 					throw new Remoting.Exceptions.InvalidOperationException ();
 				case ProgressState.Running:
 					throw new Remoting.Exceptions.PendingException ();
-				case ProgressState.Cancelled:
-					throw new Remoting.Exceptions.CancelledException ();
+				case ProgressState.Canceled:
+					throw new Remoting.Exceptions.CanceledException ();
 				case ProgressState.Failed:
 					throw new Remoting.Exceptions.FailedException ();
 

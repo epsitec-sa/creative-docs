@@ -4,11 +4,15 @@
 namespace Epsitec.Cresus.Remoting
 {
 	/// <summary>
-	/// La classe ThreadJoinProgress permet d'attendre la fin de l'exécution
-	/// d'un processus.
+	/// The <c>ThreadJoinOperation</c> class implements an operation which waits on
+	/// a (single) thread join.
 	/// </summary>
 	public sealed class ThreadJoinOperation : AbstractOperation
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ThreadJoinOperation"/> class.
+		/// </summary>
+		/// <param name="thread">The thread.</param>
 		public ThreadJoinOperation(System.Threading.Thread thread)
 		{
 			this.thread = thread;
@@ -24,29 +28,28 @@ namespace Epsitec.Cresus.Remoting
 
 		
 		
-		public override bool WaitForProgress(int minimum_progress, System.TimeSpan timeout)
+		public override bool WaitForProgress(int minimumProgress, System.TimeSpan timeout)
 		{
-			if (minimum_progress <= 0)
+			if (minimumProgress <= 0)
 			{
 				return true;
 			}
-			if (minimum_progress > 100)
+			if (minimumProgress > 100)
 			{
 				System.Threading.Thread.Sleep (timeout);
 				return false;
 			}
 			
-			//	En attendant directement sur l'événement de fin d'exécution du processus, on
-			//	se simplifie énormément la vie par rapport à l'implémentation par défaut :
-			
+			//	Simply wait on the join, using the specified timeout value.
+
 			if (this.thread.Join (timeout))
 			{
-				//	Le processus a fini de s'exécuter, donc c'est OK.
-				
 				return true;
 			}
-			
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 
 		
@@ -60,6 +63,6 @@ namespace Epsitec.Cresus.Remoting
 		}
 		
 		
-		private System.Threading.Thread			thread;
+		readonly System.Threading.Thread			thread;
 	}
 }

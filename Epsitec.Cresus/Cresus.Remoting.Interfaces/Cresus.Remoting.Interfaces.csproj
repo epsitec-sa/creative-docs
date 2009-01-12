@@ -102,7 +102,7 @@
     <Compile Include="ClientIdentity.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions\CancelledException.cs">
+    <Compile Include="Exceptions\CanceledException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\FailedException.cs">

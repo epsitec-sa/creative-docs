@@ -680,7 +680,7 @@ namespace Epsitec.Common.Dialogs
 
 			if (e.Cancel)
 			{
-				//	Do nothing more - the event was cancelled.
+				//	Do nothing more - the event was canceled.
 			}
 			else
 			{
@@ -1594,7 +1594,7 @@ namespace Epsitec.Common.Dialogs
 
 		/// <summary>
 		/// Occurs immediately before resolving a template from the active
-		/// search context into a suggestion. The event can be cancelled,
+		/// search context into a suggestion. The event can be canceled,
 		/// which aborts the resolution.
 		/// </summary>
 		public event EventHandler<CancelEventArgs>			Resolving;

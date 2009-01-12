@@ -1681,7 +1681,7 @@ namespace Epsitec.Common.Document
 					public static class Progress
 					{
 						//	designer:str/2005B001
-						public static string Cancelled { get { return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1381)); } }
+						public static string Canceled { get { return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1381)); } }
 						//	designer:str/2002B001
 						public static string Content { get { return global::Epsitec.Common.Document.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (1378)); } }
 						//	designer:str/2003B001

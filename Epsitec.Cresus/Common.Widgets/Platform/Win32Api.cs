@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets.Platform
 
 		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRestart(string pszCommandLine, int dwFlags);
 		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRecoveryCallback(System.IntPtr pRecoveryCallback, System.IntPtr pvParameter, int dwPingInterval, int dwFlags);
-		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryInProgress(out bool pbCancelled);
+		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryInProgress(out bool pbCanceled);
 		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryFinished(bool bSuccess);
 		[DllImport ("Kernel32.dll")] internal extern static int GetCurrentThreadId();
 

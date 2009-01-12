@@ -1372,7 +1372,7 @@
   <data id="0NB01">Smooth</data>
   <data id="0MB01">Edge</data>
   <data id="06B01">Freehand curve</data>
-  <data id="05B01">Export was cancelled.</data>
+  <data id="05B01">Export was canceled.</data>
   <data id="0AB01">Tension</data>
   <data id="09B01">T</data>
   <data id="0BB01">Tension of the curve</data>

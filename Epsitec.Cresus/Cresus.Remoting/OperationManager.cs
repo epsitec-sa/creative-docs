@@ -77,10 +77,8 @@ namespace Epsitec.Cresus.Remoting
 			{
 				operationId = ++this.nextOperationId;
 				
-				//	The operation id must be set on the caller, but this can only be done
-				//	by code executing in the constructor, as it initializses a read-only
-				//	member variable; that's why we use an action callback rather than a
-				//	setter property :
+				//	The operation id must be set on the caller before we store it into
+				//	our dictionary; we could have used a setter property...
 				
 				setOperationIdCallback (operationId);
 				

@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 			{
 			}
 			
-			System.Diagnostics.Debug.WriteLine ("Action B cancelled automatically");
+			System.Diagnostics.Debug.WriteLine ("Action B canceled automatically");
 			
 			Assert.AreEqual (1, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
@@ -83,8 +83,8 @@ namespace Epsitec.Common.Support
 				queue.Insert (this.CreateOplet ("B'1"));
 				queue.CancelAction ();
 			}
-			
-			System.Diagnostics.Debug.WriteLine ("Action B' cancelled manually");
+
+			System.Diagnostics.Debug.WriteLine ("Action B' canceled manually");
 			
 			Assert.AreEqual (1, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);
@@ -102,8 +102,8 @@ namespace Epsitec.Common.Support
 				queue.Insert (this.CreateOplet ("C2"));
 				queue.ValidateAction ();
 			}
-			
-			System.Diagnostics.Debug.WriteLine ("Action C inserted / C1 cancelled");
+
+			System.Diagnostics.Debug.WriteLine ("Action C inserted / C1 canceled");
 			
 			Assert.AreEqual (2, queue.UndoActionCount);
 			Assert.AreEqual (0, queue.RedoActionCount);

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		None,
 		Pending,
-		Cancelled,
+		Canceled,
 		Error,
 		Done
 	}

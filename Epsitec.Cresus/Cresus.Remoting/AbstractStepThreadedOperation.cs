@@ -11,9 +11,12 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	public abstract class AbstractStepThreadedOperation : AbstractThreadedOperation
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractStepThreadedOperation"/> class.
+		/// </summary>
 		protected AbstractStepThreadedOperation()
 		{
-			this.steps = new List<Step> ();
+			this.steps = new List<System.Action> ();
 		}
 
 
@@ -22,7 +25,7 @@ namespace Epsitec.Cresus.Remoting
 		/// operation.
 		/// </summary>
 		/// <param name="step">The step.</param>
-		protected void Add(Step step)
+		protected void Add(System.Action step)
 		{
 			lock (this.exclusion)
 			{
@@ -43,7 +46,7 @@ namespace Epsitec.Cresus.Remoting
 
 				for (;;)
 				{
-					Step step;
+					System.Action step;
 
 					lock (this.exclusion)
 					{
@@ -61,7 +64,7 @@ namespace Epsitec.Cresus.Remoting
 					
 					if (this.IsCancelRequested)
 					{
-						this.SetCancelled ();
+						this.SetCanceled ();
 						return;
 					}
 					
@@ -115,10 +118,7 @@ namespace Epsitec.Cresus.Remoting
 			this.SetCurrentStep (n, progress);
 		}
 		
-		protected delegate void Step();
-			
-		
 		private int								stepIndex;
-		private List<Step>						steps;
+		private List<System.Action>				steps;
 	}
 }

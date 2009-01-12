@@ -340,9 +340,9 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( int page in this.pageList )
 			{
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Ressource, page+1));
-				if (report.Cancelled)
+				if (report.Canceled)
 				{
-					return Res.Strings.Export.PDF.Progress.Cancelled;
+					return Res.Strings.Export.PDF.Progress.Canceled;
 				}
 
 				writer.WriteObjectDef(Export.NameResources(page));
@@ -448,9 +448,9 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( int page in this.pageList )
 			{
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Content, page+1));
-				if (report.Cancelled)
+				if (report.Canceled)
 				{
-					return Res.Strings.Export.PDF.Progress.Cancelled;
+					return Res.Strings.Export.PDF.Progress.Canceled;
 				}
 
 				port.Reset();
@@ -778,9 +778,9 @@ namespace Epsitec.Common.Document.PDF
 						if ( obj.IsHide )  continue;  // objet caché ?
 
 						report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Surface, page+1, objIndex++));
-						if (report.Cancelled)
+						if (report.Canceled)
 						{
-							return Res.Strings.Export.PDF.Progress.Cancelled;
+							return Res.Strings.Export.PDF.Progress.Canceled;
 						}
 
 						System.Collections.ArrayList list = obj.GetComplexSurfacesPDF(port);
@@ -1768,9 +1768,9 @@ namespace Epsitec.Common.Document.PDF
 				if ( image.DrawingImage == null )  continue;
 
 				report.DefineProgress(0, string.Format(Res.Strings.Export.PDF.Progress.Image, image.Id));
-				if (report.Cancelled)
+				if (report.Canceled)
 				{
-					return Res.Strings.Export.PDF.Progress.Cancelled;
+					return Res.Strings.Export.PDF.Progress.Canceled;
 				}
 
 				if ( this.CreateImageSurface(writer, port, image, TypeComplexSurface.XObject, TypeComplexSurface.XObjectMask) )
