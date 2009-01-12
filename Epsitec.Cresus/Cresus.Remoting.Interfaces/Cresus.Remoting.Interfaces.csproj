@@ -108,7 +108,7 @@
     <Compile Include="Exceptions\FailedException.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Exceptions\GenericException.cs">
+    <Compile Include="Exceptions\AbstractException.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Exceptions\InvalidOperationException.cs">

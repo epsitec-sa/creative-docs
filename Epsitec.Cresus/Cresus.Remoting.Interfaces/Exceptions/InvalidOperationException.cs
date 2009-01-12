@@ -1,16 +1,16 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// La classe InvalidOperationException permet de signaler qu'une opération
-	/// spécifiée n'est pas valide.
+	/// The <c>InvalidOperationException</c> exception is thrown when an invalid
+	/// operation is attempted.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class InvalidOperationException : GenericException
+	public class InvalidOperationException : AbstractException
 	{
 		public InvalidOperationException()
 		{

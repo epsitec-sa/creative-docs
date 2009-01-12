@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Services
 			for (int i = 0; i < requests.Length; i++)
 			{
 				data[i] = requests[i].Data;
-				ids[i]  = new Database.DbId (requests[i].Identifier);
+				ids[i]  = new Database.DbId (requests[i].RequestId);
 			}
 			
 			//	Vérifie que tous les IDs proviennent bien du même client. C'est un test
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Services
 				
 				for (int i = 0; i < states.Length; i++)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("  {0}: {1} in state {2}", i, states[i].Identifier, (Requests.ExecutionState)states[i].State));
+					System.Diagnostics.Debug.WriteLine (string.Format ("  {0}: {1} in state {2}", i, states[i].RequestId, (Requests.ExecutionState)states[i].State));
 				}
 				
 				for (int i = 0; i < rows.Length; i++)
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Services
 					
 					for (int j = 0; j < states.Length; j++)
 					{
-						if ((states[j].Identifier == row_key.Id.Value) &&
+						if ((states[j].RequestId == row_key.Id.Value) &&
 							(states[j].State == (int)row_state))
 						{
 							list.Add (rows[i]);

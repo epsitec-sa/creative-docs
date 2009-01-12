@@ -432,14 +432,14 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < states.Length; i++)
 			{
-				System.Data.DataRow row = DbRichCommand.FindRow (this.execution_queue.QueueDataTable, rows, states[i].Identifier);
+				System.Data.DataRow row = DbRichCommand.FindRow (this.execution_queue.QueueDataTable, rows, states[i].RequestId);
 				
 				if (row == null)
 				{
 					//	La requête n'existe plus dans la queue locale; ceci implique que
 					//	celle stockée sur le serveur est caduque et peut être supprimée :
 					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: server still knows request {0} !", states[i].Identifier));
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: server still knows request {0} !", states[i].RequestId));
 					
 					list.Add (states[i]);
 					continue;
@@ -475,7 +475,7 @@ namespace Epsitec.Cresus.Requests
 					//		la suppression de la requête de la queue du serveur et son
 					//		passage en local à l'état Conflicting.
 					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: request {0} local state is {1}; should be SentToServer.", states[i].Identifier, local_state));
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: request {0} local state is {1}; should be SentToServer.", states[i].RequestId, local_state));
 				}
 				
 				switch (remote_state)

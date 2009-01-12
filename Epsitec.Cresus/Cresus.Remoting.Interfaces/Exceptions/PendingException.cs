@@ -1,16 +1,16 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// La classe PendingException permet de signaler qu'une opération est
-	/// toujours en cours d'exécution.
+	/// The <c>PendingException</c> exception is raised when an operation is
+	/// still executing.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class PendingException : GenericException
+	public class PendingException : AbstractException
 	{
 		public PendingException()
 		{

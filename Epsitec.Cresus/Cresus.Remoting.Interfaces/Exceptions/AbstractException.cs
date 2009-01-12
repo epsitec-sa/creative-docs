@@ -4,21 +4,21 @@
 namespace Epsitec.Cresus.Remoting.Exceptions
 {
 	/// <summary>
-	/// The <c>CancelledException</c> class is used when an operation has been
-	/// cancelled.
+	/// The <c>GenericException</c> exception is the base class for the various
+	/// remoting exceptions.
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class CancelledException : AbstractException
+	public abstract class AbstractException : System.Exception
 	{
-		public CancelledException()
+		public AbstractException()
 		{
 		}
 		
 		
 		#region ISerializable Members
-		protected CancelledException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected AbstractException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 		}
 		
