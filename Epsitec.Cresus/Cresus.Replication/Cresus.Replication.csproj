@@ -133,7 +133,7 @@
     <Compile Include="ClientEngine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataCruncher.cs">
+    <Compile Include="DataExtractor.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PullArguments.cs" />

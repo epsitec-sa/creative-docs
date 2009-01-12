@@ -116,8 +116,8 @@ namespace Epsitec.Cresus.Database
 			
 			//	First, make sure that we don't create a duplicate client
 			//	record :
-			
-			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+
+			System.Data.DataTable table = this.richCommand.DataTable;
 			
 			foreach (System.Data.DataRow row in table.Rows)
 			{
@@ -149,8 +149,8 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new Exceptions.InvalidIdException ("Cannot update client: call LoadFromBase first");
 			}
-			
-			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+
+			System.Data.DataTable table = this.richCommand.DataTable;
 			
 			foreach (System.Data.DataRow row in table.Rows)
 			{
@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new Exceptions.InvalidIdException ("Cannot remove client: call LoadFromBase first");
 			}
-			
-			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+
+			System.Data.DataTable table = this.richCommand.DataTable;
 			
 			foreach (System.Data.DataRow row in table.Rows)
 			{
@@ -213,8 +213,8 @@ namespace Epsitec.Cresus.Database
 			{
 				throw new Exceptions.InvalidIdException ("Cannot find clients: call LoadFromBase first");
 			}
-			
-			System.Data.DataTable table = this.richCommand.DataSet.Tables[0];
+
+			System.Data.DataTable table = this.richCommand.DataTable;
 			List<DbClientRecord>  list  = new List<DbClientRecord> ();
 			
 			foreach (System.Data.DataRow row in table.Rows)

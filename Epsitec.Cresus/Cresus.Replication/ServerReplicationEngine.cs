@@ -33,8 +33,12 @@ namespace Epsitec.Cresus.Replication
 			this.workerThread.Name = "Replication Engine";
 			this.workerThread.Start ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the database infrastructure.
+		/// </summary>
+		/// <value>The database infrastructure.</value>
 		public DbInfrastructure					Infrastructure
 		{
 			get
@@ -43,15 +47,6 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		public IDbAbstraction					Database
-		{
-			get
-			{
-				return this.database;
-			}
-		}
-
-
 		/// <summary>
 		/// Enqueues a new replication job.
 		/// </summary>
@@ -187,7 +182,7 @@ namespace Epsitec.Cresus.Replication
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
-				DataCruncher cruncher = new DataCruncher (this.infrastructure, transaction);
+				DataExtractor cruncher = new DataExtractor (this.infrastructure, transaction);
 				List<DbTable> tables = new List<DbTable> ();
 				
 				tables.AddRange (this.infrastructure.FindDbTables (transaction, DbElementCat.Any));
@@ -218,7 +213,7 @@ namespace Epsitec.Cresus.Replication
 				
 				this.ProcessLogTable (cruncher, syncStart, syncEnd, logTable, data);
 				
-				ServerReplicationEngine.RemoveTables (tables, DbReplicationMode.None);
+				ServerReplicationEngine.RemoveAllMatchingTables (tables, DbReplicationMode.None);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Scrubbed, remaining {0} tables.", tables.Count));
 				
@@ -239,16 +234,16 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 
-		void ProcessTable(DataCruncher cruncher, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
+		void ProcessTable(DataExtractor cruncher, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
 		{
 			System.Data.DataTable dataTable = cruncher.ExtractDataUsingLogIds (table, syncStart, syncEnd);
 					
 			if ((pull != null) &&
 				(pull.Contains (table)))
 			{
-				long[] ids = DataCruncher.FindUnknownRowIds (dataTable, pull[table].RowIds);
+				List<long> ids = ServerReplicationEngine.FindUnknownRowIds (dataTable, pull[table].RowIds);
 				
-				if (ids.Length > 0)
+				if (ids.Count > 0)
 				{
 					//	L'auteur de la demande de réplication aimerait aussi obtenir les lignes
 					//	spécifiées par 'ids'.
@@ -274,7 +269,7 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		void ProcessLogTable(DataCruncher cruncher, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
+		void ProcessLogTable(DataExtractor cruncher, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
 		{
 			System.Data.DataTable dataTable = cruncher.ExtractDataUsingIds (table, syncStart, syncEnd);
 					
@@ -290,9 +285,35 @@ namespace Epsitec.Cresus.Replication
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("Processing shutdown."));
 		}
+
 		
 		
-		private static DbTable FindTable(System.Collections.IEnumerable tables, string name)
+		static List<long> FindUnknownRowIds(System.Data.DataTable table, IEnumerable<long> ids)
+		{
+			List<long> list = new List<long> (ids);
+
+			if (list.Count > 0)
+			{
+				foreach (System.Data.DataRow row in table.Rows)
+				{
+					long id = (long) row[0];
+
+					if (list.Contains (id))
+					{
+						list.Remove (id);
+						
+						if (list.Count == 0)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			return list;
+		}
+		
+		static DbTable FindTable(IEnumerable<DbTable> tables, string name)
 		{
 			foreach (DbTable table in tables)
 			{
@@ -305,7 +326,7 @@ namespace Epsitec.Cresus.Replication
 			return null;
 		}
 		
-		private static void RemoveTables(List<DbTable> tables, DbReplicationMode mode)
+		static void RemoveAllMatchingTables(List<DbTable> tables, DbReplicationMode mode)
 		{
 			int i = 0;
 			

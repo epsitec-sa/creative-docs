@@ -62,6 +62,38 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets the data table. This works only if there is exactly one data table.
+		/// </summary>
+		/// <exception cref="System.InvalidOperationException">Throws an invalid exception if there is more than one data table.</exception>
+		/// <value>The data table or <c>null</c>.</value>
+		public System.Data.DataTable			DataTable
+		{
+			get
+			{
+				System.Data.DataSet set = this.DataSet;
+				
+				if (set == null)
+				{
+					return null;
+				}
+
+				int count = set.Tables.Count;
+
+				switch (count)
+				{
+					case 0:
+						return null;
+
+					case 1:
+						return set.Tables[0];
+
+					default:
+						throw new System.InvalidOperationException ("Cannot return table - ambiguous data set");
+				}
+			}
+		}
+
+		/// <summary>
 		/// Gets the infrastructure associated with this rich command.
 		/// </summary>
 		/// <value>The infrastructure.</value>

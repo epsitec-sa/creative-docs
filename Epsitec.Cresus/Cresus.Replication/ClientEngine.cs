@@ -173,8 +173,8 @@ namespace Epsitec.Cresus.Replication
 			{
 				System.Diagnostics.Debug.Assert (command.DataSet != null);
 				System.Diagnostics.Debug.Assert (command.DataSet.Tables.Count == 1);
-				
-				System.Data.DataTable data_table = command.DataSet.Tables[0];
+
+				System.Data.DataTable data_table = command.DataTable;
 				
 				data.FillTable (data_table);
 				
@@ -216,8 +216,8 @@ namespace Epsitec.Cresus.Replication
 			{
 				System.Diagnostics.Debug.Assert (command.DataSet != null);
 				System.Diagnostics.Debug.Assert (command.DataSet.Tables.Count == 1);
-				
-				System.Data.DataTable data_table = command.DataSet.Tables[0];
+
+				System.Data.DataTable data_table = command.DataTable;
 				
 				data.FillTable (data_table);
 				
