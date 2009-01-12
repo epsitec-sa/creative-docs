@@ -1,7 +1,8 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Replication
 {
@@ -15,6 +16,8 @@ namespace Epsitec.Cresus.Replication
 	{
 		public PackedTableData()
 		{
+			this.columnDataRows = new List<System.Array> ();
+			this.columnNullFlags = new List<System.Array> ();
 		}
 		
 		
@@ -22,7 +25,7 @@ namespace Epsitec.Cresus.Replication
 		{
 			get
 			{
-				return this.table_name;
+				return this.tableName;
 			}
 		}
 		
@@ -30,7 +33,7 @@ namespace Epsitec.Cresus.Replication
 		{
 			get
 			{
-				return this.table_key;
+				return this.tableKey;
 			}
 		}
 		
@@ -38,7 +41,7 @@ namespace Epsitec.Cresus.Replication
 		{
 			get
 			{
-				return this.row_count;
+				return this.rowCount;
 			}
 		}
 		
@@ -46,7 +49,7 @@ namespace Epsitec.Cresus.Replication
 		{
 			get
 			{
-				return this.column_data_rows.Count;
+				return this.columnDataRows.Count;
 			}
 		}
 		
@@ -57,11 +60,11 @@ namespace Epsitec.Cresus.Replication
 			
 			this.UnpackNullFlags ();
 			
-			if (this.column_data_rows[column] == null)	//	pas de données => colonne DBNull
+			if (this.columnDataRows[column] == null)	//	pas de données => colonne DBNull
 			{
 				return true;
 			}
-			if (this.column_null_flags[column] != null)	//	flags => colonne contient au moins un DBNull
+			if (this.columnNullFlags[column] != null)	//	flags => colonne contient au moins un DBNull
 			{
 				return true;
 			}
@@ -76,7 +79,7 @@ namespace Epsitec.Cresus.Replication
 			
 			this.UnpackNullFlags ();
 			
-			if (this.column_data_rows[column] == null)	//	pas de données => colonne DBNull
+			if (this.columnDataRows[column] == null)	//	pas de données => colonne DBNull
 			{
 				return false;
 			}
@@ -113,8 +116,8 @@ namespace Epsitec.Cresus.Replication
 			
 			for (int i = 0; i < n; i++)
 			{
-				System.Array data = this.column_data_rows[i] as System.Array;
-				bool[] null_flags = this.column_null_flags[i] as bool[];
+				System.Array data = this.columnDataRows[i];
+				bool[] null_flags = this.columnNullFlags[i] as bool[];
 
 				PackedTableData.UnpackColumnFromNativeArray (values, i, n, data, null_flags);
 			}
@@ -134,280 +137,121 @@ namespace Epsitec.Cresus.Replication
 			
 			for (int i = 0; i < n; i++)
 			{
-				System.Array data = this.column_data_rows[i] as System.Array;
-				bool[] null_flags = this.column_null_flags[i] as bool[];
+				System.Array data = this.columnDataRows[i];
+				bool[] null_flags = this.columnNullFlags[i] as bool[];
 
 				PackedTableData.UnpackValueFromNativeArray (row, data, null_flags, out values[i]);
 			}
 			
 			return values;
 		}
-		
-		
-		public static PackedTableData CreateFromTable(DbTable table, System.Data.DataTable data_table)
+
+
+		/// <summary>
+		/// Creates a <c>PackedTableData</c> from table the specified data table. The
+		/// data will be stored column by column and <c>DBNull</c> values are optimized
+		/// using a bitmap.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="dataTable">The data table.</param>
+		/// <returns>The <c>PackedTableData</c>.</returns>
+		public static PackedTableData CreateFromTable(DbTable table, System.Data.DataTable dataTable)
 		{
-			//	Crée une représentation compacte de la table passée en entrée. Les
-			//	données sont stockées colonne par colonne, ce qui simplifie la
-			//	compression. Les valeurs DBNull sont stockées sous la forme d'un
-			//	tableau de bool (ou bitmap).
-			
 			PackedTableData data = new PackedTableData ();
 			
-			int row_count = data_table.Rows.Count;
-			int col_count = data_table.Columns.Count;
+			int rowCount = dataTable.Rows.Count;
+			int colCount = dataTable.Columns.Count;
 			
-			data.row_count  = row_count;
-			data.table_name = table.Name;
-			data.table_key  = table.Key.Id;
+			data.rowCount  = rowCount;
+			data.tableName = table.Name;
+			data.tableKey  = table.Key.Id;
 			
-			for (int i = 0; i < col_count; i++)
+			for (int i = 0; i < colCount; i++)
 			{
-				System.Array array;
+				bool[] nullFlags;
+				int    nullCount;
 				
-				bool[] null_flags;
-				int    null_count;
+				System.Array array = PackedTableData.PackColumnToNativeArray (dataTable, i, out nullFlags, out nullCount);
 				
-				//	Chaque colonne est stockée dans un tableau de son type respectif.
-				//	Ainsi, si la colonne contient des 'int', les données seront stockées
-				//	dans un 'int[]', ce qui est nettement plus compact qu'un tableau
-				//	générique 'object[]' (pas de boxing) :
-
-				PackedTableData.PackColumnToNativeArray (data_table, i, out array, out null_flags, out null_count);
-				
-				if (null_count == 0)
+				if (nullCount == 0)
 				{
-					null_flags = null;
+					nullFlags = null;
 				}
-				else if (null_count == row_count)
+				else if (nullCount == rowCount)
 				{
-					array      = null;
-					null_flags = null;
+					array     = null;
+					nullFlags = null;
 				}
 				else
 				{
-					System.Diagnostics.Debug.Assert (null_count > 0);
-					System.Diagnostics.Debug.Assert (null_count < row_count);
+					System.Diagnostics.Debug.Assert (nullCount > 0);
+					System.Diagnostics.Debug.Assert (nullCount < rowCount);
 				}
 				
-				data.column_data_rows.Add (array);
-				data.column_null_flags.Add (null_flags);
+				data.columnDataRows.Add (array);
+				data.columnNullFlags.Add (nullFlags);
 			}
 			
 			return data;
 		}
 
-		public static void PackColumnToNativeArray(System.Data.DataTable table, int column, out System.Array array, out bool[] null_values, out int null_count)
+
+		/// <summary>
+		/// Packs the column data into a native array.
+		/// </summary>
+		/// <param name="table">The table data.</param>
+		/// <param name="column">The column to pack.</param>
+		/// <param name="nullValues">An array of flags; one flag for every null values.</param>
+		/// <param name="nullCount">The number of null values.</param>
+		/// <returns>A native array containing the column data.</returns>
+		public static System.Array PackColumnToNativeArray(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
 		{
-			//	Passe en revue une colonne de la table et remplit un tableau avec les
-			//	valeurs trouvées; le tableau utilise le type natif sous-jacent s'il fait
-			//	partie de la liste des types reconnus :
-			//	
+			//	Handles following native types :
+			//
 			//	- bool, short, int, long, decimal
 			//	- string, DateTime, byte[]
-			//
-			//	En plus, les lignes contenant DBNull sont marquées comme telles dans le
-			//	tableau null_values et comptées avec null_count.
 
 			System.Type type = table.Columns[column].DataType;
 
-			int n = table.Rows.Count;
-
-			null_values = new bool[n];
-			null_count  = 0;
-
 			if (type == typeof (bool))
 			{
-				bool[] data = new bool[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = false;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (bool) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<bool> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (short))
 			{
-				short[] data = new short[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = 0;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (short) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<short> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (int))
 			{
-				int[] data = new int[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = 0;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (int) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<int> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (long))
 			{
-				long[] data = new long[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = 0;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (long) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<long> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (decimal))
 			{
-				decimal[] data = new decimal[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = 0;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (decimal) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<decimal> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (string))
 			{
-				string[] data = new string[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = null;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (string) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<string> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (System.DateTime))
 			{
-				System.DateTime[] data = new System.DateTime[n];
-				System.DateTime   zero = new System.DateTime (0);
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = zero;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (System.DateTime) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<System.DateTime> (table, column, out nullValues, out nullCount);
 			}
 			else if (type == typeof (byte[]))
 			{
-				byte[][] data = new byte[n][];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = null;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = (byte[]) table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<byte[]> (table, column, out nullValues, out nullCount);
 			}
 			else
 			{
-				object[] data = new object[n];
-
-				for (int i = 0; i < n; i++)
-				{
-					if (table.Rows[i][column] == System.DBNull.Value)
-					{
-						null_values[i] = true;
-						data[i]        = null;
-						null_count++;
-					}
-					else
-					{
-						null_values[i] = false;
-						data[i]        = table.Rows[i][column];
-					}
-				}
-
-				array = data;
+				return PackColumnToArray<object> (table, column, out nullValues, out nullCount);
 			}
 		}
 
-		public static void UnpackColumnFromNativeArray(object[][] values, int column, int column_count, System.Array array, bool[] null_values)
+		public static void UnpackColumnFromNativeArray(object[][] values, int column, int columnCount, System.Array array, bool[] nullValues)
 		{
 			//	A partir de la représentation sous forme de tableau d'une colonne, produit
 			//	les valeurs correspondantes (ou DBNull) dans le tableau de valeurs.
@@ -422,8 +266,8 @@ namespace Epsitec.Cresus.Replication
 
 			int n = values.Length;
 
-			if ((null_values != null) &&
-				(null_values.Length > 0))
+			if ((nullValues != null) &&
+				(nullValues.Length > 0))
 			{
 				//	Il existe des indications pour savoir si une cellule contient un DBNull
 				//	ou non; utilise les informations disponibles :
@@ -434,10 +278,10 @@ namespace Epsitec.Cresus.Replication
 				{
 					if (values[i] == null)
 					{
-						values[i] = new object[column_count];
+						values[i] = new object[columnCount];
 					}
 
-					if (null_values[i])
+					if (nullValues[i])
 					{
 						values[i][column] = System.DBNull.Value;
 					}
@@ -459,7 +303,7 @@ namespace Epsitec.Cresus.Replication
 					{
 						if (values[i] == null)
 						{
-							values[i] = new object[column_count];
+							values[i] = new object[columnCount];
 						}
 
 						values[i][column] = System.DBNull.Value;
@@ -473,7 +317,7 @@ namespace Epsitec.Cresus.Replication
 					{
 						if (values[i] == null)
 						{
-							values[i] = new object[column_count];
+							values[i] = new object[columnCount];
 						}
 
 						values[i][column] = array.GetValue (i);
@@ -482,19 +326,19 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 
-		public static void UnpackValueFromNativeArray(int row, System.Array array, bool[] null_values, out object value)
+		public static void UnpackValueFromNativeArray(int row, System.Array array, bool[] nullValues, out object value)
 		{
 			//	Extrait la valeur d'une cellule précise du tableau (l'appelant sélectionne
 			//	la colonne adéquate en passant 'array' et 'null_values' correspondants; la
 			//	ligne est passée explicitement).
 
-			if ((null_values != null) &&
-				(null_values.Length > 0))
+			if ((nullValues != null) &&
+				(nullValues.Length > 0))
 			{
 				//	Il existe des indications pour savoir si une cellule contient un DBNull
 				//	ou non; utilise les informations disponibles :
 
-				if (null_values[row])
+				if (nullValues[row])
 				{
 					value = System.DBNull.Value;
 				}
@@ -599,66 +443,114 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 		}
-		
-		
+
+
+		static System.Array PackColumnToArray<T>(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
+		{
+			int n = table.Rows.Count;
+
+			nullValues = new bool[n];
+			nullCount  = 0;
+
+			T[] data = new T[n];
+			var rows = table.Rows;
+
+			for (int i = 0; i < n; i++)
+			{
+				object value = rows[i][column];
+
+				if ((value == System.DBNull.Value) ||
+					(value == null))
+				{
+					nullValues[i] = true;
+					data[i]       = default (T);
+					nullCount++;
+				}
+				else
+				{
+					nullValues[i] = false;
+					data[i]       = (T) value;
+				}
+			}
+
+			return data;
+		}
+
 		
 		#region ISerializable Members
+		
 		public PackedTableData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+			: this ()
 		{
-			int col_count = info.GetInt32 ("Col#");
-			int row_count = info.GetInt32 ("Row#");
+			int colCount = info.GetInt32 (Strings.ColumnCount);
+			int rowCount = info.GetInt32 (Strings.RowCount);
 			
-			for (int i = 0; i < col_count; i++)
+			for (int i = 0; i < colCount; i++)
 			{
-				this.column_data_rows.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "D.{0}", i), typeof (System.Array)));
-				this.column_null_flags.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "N.{0}", i), typeof (byte[])));
+				string dataName = string.Format (System.Globalization.CultureInfo.InvariantCulture, Strings.DataName, i);
+				string nullName = string.Format (System.Globalization.CultureInfo.InvariantCulture, Strings.NullName, i);
+				
+				this.columnDataRows.Add ((System.Array) info.GetValue (dataName, typeof (System.Array)));
+				this.columnNullFlags.Add ((byte[]) info.GetValue (nullName, typeof (byte[])));
 			}
 			
-			this.table_name = info.GetString ("Name");
-			this.table_key  = info.GetInt64 ("Id");
-			this.row_count  = row_count;
-			this.is_null_flags_array_packed = true;
+			this.tableName = info.GetString (Strings.TableName);
+			this.tableKey  = info.GetInt64 (Strings.TableKey);
+			this.rowCount  = rowCount;
+			
+			this.isNullFlagsArrayPacked = true;
 		}
 		
 		public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			System.Diagnostics.Debug.Assert (this.column_data_rows.Count == this.column_null_flags.Count);
+			System.Diagnostics.Debug.Assert (this.columnDataRows.Count == this.columnNullFlags.Count);
 			
 			int col_count = this.ColumnCount;
 			int row_count = this.RowCount;
 			
-			info.AddValue ("Col#", col_count);
-			info.AddValue ("Row#", row_count);
+			info.AddValue (Strings.ColumnCount, col_count);
+			info.AddValue (Strings.RowCount, row_count);
 			
 			for (int i = 0; i < col_count; i++)
 			{
-				System.Array data_rows   = this.column_data_rows[i] as System.Array;
-				System.Array null_flags  = this.column_null_flags[i] as System.Array;
-				byte[]       null_packed = null;
+				System.Array dataRows   = this.columnDataRows[i];
+				System.Array nullFlags  = this.columnNullFlags[i];
+				byte[]       nullPacked = null;
 				
 				//	S'il y a un tableau de bool pour représenter les valeurs DBNull dans la
 				//	colonne, on le comprime au préalable (si ça n'a pas encore été fait) :
 				
-				if (null_flags != null)
+				if (nullFlags != null)
 				{
-					if (this.is_null_flags_array_packed)
+					if (this.isNullFlagsArrayPacked)
 					{
-						null_packed = (byte[]) null_flags;
+						nullPacked = (byte[]) nullFlags;
 					}
 					else
 					{
-						bool[] values = (bool[]) null_flags;
-						PackedTableData.PackBooleanArray (values, out null_packed);
+						bool[] values = (bool[]) nullFlags;
+						PackedTableData.PackBooleanArray (values, out nullPacked);
 					}
 				}
 				
-				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "D.{0}", i), data_rows);
-				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "N.{0}", i), null_packed);
+				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, Strings.DataName, i), dataRows);
+				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, Strings.NullName, i), nullPacked);
 			}
 			
-			info.AddValue ("Name", this.table_name);
-			info.AddValue ("Id", this.table_key.Value);
+			info.AddValue (Strings.TableName, this.tableName);
+			info.AddValue (Strings.TableKey, this.tableKey.Value);
 		}
+
+		private static class Strings
+		{
+			public const string ColumnCount = "Col#";
+			public const string RowCount = "Row#";
+			public const string TableName = "Name";
+			public const string TableKey = "Id";
+			public const string DataName = "D.{0}";
+			public const string NullName = "N.{0}";
+		}
+		
 		#endregion
 		
 		private void UnpackNullFlags()
@@ -666,15 +558,15 @@ namespace Epsitec.Cresus.Replication
 			//	A partir des bitmaps, génère les bool[] correspondant aux informations
 			//	de null-ité des diverses lignes dans les colonnes de la table.
 			
-			if (this.is_null_flags_array_packed)
+			if (this.isNullFlagsArrayPacked)
 			{
-				int n = this.column_null_flags.Count;
+				int n = this.columnNullFlags.Count;
 				
 				for (int i = 0; i < n; i++)
 				{
-					System.Array data = this.column_data_rows[i] as System.Array;
+					System.Array data = this.columnDataRows[i];
 					
-					byte[] packed_column = this.column_null_flags[i] as byte[];
+					byte[] packed_column = this.columnNullFlags[i] as byte[];
 					bool[] values;
 					
 					if (data == null)
@@ -705,19 +597,19 @@ namespace Epsitec.Cresus.Replication
 						PackedTableData.UnpackBooleanArray (packed_column, values);
 					}
 					
-					this.column_null_flags[i] = values;
+					this.columnNullFlags[i] = values;
 				}
+				
+				this.isNullFlagsArrayPacked = false;
 			}
-			
-			this.is_null_flags_array_packed = false;
 		}
-		
-		
-		private string							table_name;
-		private DbId							table_key;
-		private int								row_count;
-		private System.Collections.ArrayList	column_data_rows  = new System.Collections.ArrayList ();
-		private System.Collections.ArrayList	column_null_flags = new System.Collections.ArrayList ();
-		private bool							is_null_flags_array_packed = false;
+
+
+		readonly List<System.Array>				columnDataRows;
+		readonly List<System.Array>				columnNullFlags;
+		private string							tableName;
+		private DbId							tableKey;
+		private int								rowCount;
+		private bool							isNullFlagsArrayPacked;
 	}
 }

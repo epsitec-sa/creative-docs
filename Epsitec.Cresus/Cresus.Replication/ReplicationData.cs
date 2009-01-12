@@ -1,86 +1,65 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// La classe ReplicationData représente les données à répliquer dans
-	/// un format facilement sérialisable.
+	/// The <c>ReplicationData</c> class stores bulk replication data in an easily
+	/// serializable format.
 	/// </summary>
 	
 	[System.Serializable]
-	public class ReplicationData : System.Runtime.Serialization.ISerializable
+	public sealed class ReplicationData : System.Runtime.Serialization.ISerializable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ReplicationData"/> class.
+		/// </summary>
 		public ReplicationData()
 		{
-			this.packed_table_array = null;
-			this.packed_table_list  = null;
+			this.packedTableList = new List<PackedTableData> ();
 		}
-		
-		
-		public PackedTableData[]				TableData
+
+
+		/// <summary>
+		/// Gets the collection of packed table data.
+		/// </summary>
+		/// <value>The collection of packed table data.</value>
+		public IEnumerable<PackedTableData>		PackedTableData
 		{
 			get
 			{
-				this.GeneratePackedTableArray ();
-				return (PackedTableData[]) this.packed_table_array.Clone ();
+				return this.packedTableList;
 			}
 		}
-		
-		
-		public void Add(PackedTableData table_data)
+
+
+		/// <summary>
+		/// Adds the specified packed table data.
+		/// </summary>
+		/// <param name="tableData">The packed table data.</param>
+		public void Add(PackedTableData tableData)
 		{
-			this.GeneratePackedTableList ();
-			this.packed_table_list.Add (table_data);
+			this.packedTableList.Add (tableData);
 		}
 		
 		
 		#region ISerializable Members
+		
 		public ReplicationData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			this.packed_table_list  = null;
-			this.packed_table_array = (PackedTableData[]) info.GetValue ("Tables", typeof (PackedTableData[]));
+			this.packedTableList = new List<PackedTableData> ((PackedTableData[]) info.GetValue ("Tables", typeof (PackedTableData[])));
 		}
 		
 		public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			this.GeneratePackedTableArray ();
-			info.AddValue ("Tables", this.packed_table_array);
+			info.AddValue ("Tables", this.PackedTableData);
 		}
+		
 		#endregion
 		
-		private void GeneratePackedTableArray()
-		{
-			if (this.packed_table_array == null)
-			{
-				int n = (this.packed_table_list == null) ? 0 : this.packed_table_list.Count;
-				this.packed_table_array = new PackedTableData[n];
-				
-				if (n > 0)
-				{
-					this.packed_table_list.CopyTo (this.packed_table_array);
-				}
-			}
-		}
-		
-		private void GeneratePackedTableList()
-		{
-			if (this.packed_table_list == null)
-			{
-				this.packed_table_list = new System.Collections.ArrayList ();
-				
-				if (this.packed_table_array != null)
-				{
-					this.packed_table_list.AddRange (this.packed_table_array);
-					this.packed_table_array = null;
-				}
-			}
-		}
-		
-		
-		private PackedTableData[]				packed_table_array;
-		private System.Collections.ArrayList	packed_table_list;
+		readonly List<PackedTableData>			packedTableList;
 	}
 }

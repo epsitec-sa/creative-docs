@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Replication
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
-				DataExtractor cruncher = new DataExtractor (this.infrastructure, transaction);
+				DataExtractor extractor = new DataExtractor (this.infrastructure, transaction);
 				List<DbTable> tables = new List<DbTable> ();
 				
 				tables.AddRange (this.infrastructure.FindDbTables (transaction, DbElementCat.Any));
@@ -207,11 +207,11 @@ namespace Epsitec.Cresus.Replication
 				//	Process the special schema information tables first, before we process the real
 				//	data tables :
 				
-				this.ProcessTable (cruncher, pull, syncStart, syncEnd, defTableTable, data);
-				this.ProcessTable (cruncher, pull, syncStart, syncEnd, defColumnTable, data);
-				this.ProcessTable (cruncher, pull, syncStart, syncEnd, defTypeTable, data);
+				this.ProcessTable (extractor, pull, syncStart, syncEnd, defTableTable, data);
+				this.ProcessTable (extractor, pull, syncStart, syncEnd, defColumnTable, data);
+				this.ProcessTable (extractor, pull, syncStart, syncEnd, defTypeTable, data);
 				
-				this.ProcessLogTable (cruncher, syncStart, syncEnd, logTable, data);
+				this.ProcessLogTable (extractor, syncStart, syncEnd, logTable, data);
 				
 				ServerReplicationEngine.RemoveAllMatchingTables (tables, DbReplicationMode.None);
 				
@@ -221,22 +221,24 @@ namespace Epsitec.Cresus.Replication
 				{
 					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Automatic);
 					
-					this.ProcessTable (cruncher, pull, syncStart, syncEnd, table, data);
+					this.ProcessTable (extractor, pull, syncStart, syncEnd, table, data);
 				}
 				
 				//	Serialize and manually compress the delta produced by the calls to
 				//	method ProcessTable; we want to minimize the amount of data which
 				//	goes down the wire :
-				
-				job.NotifyDoneProcessing (Common.IO.Serialization.SerializeAndCompressToMemory (data, Common.IO.Compressor.DeflateCompact));
+
+				byte[] compressedData = Common.IO.Serialization.SerializeAndCompressToMemory (data, Common.IO.Compressor.DeflateCompact);
+
+				job.NotifyDoneProcessing (compressedData);
 				
 				transaction.Commit ();
 			}
 		}
 
-		void ProcessTable(DataExtractor cruncher, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
+		void ProcessTable(DataExtractor extractor, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
 		{
-			System.Data.DataTable dataTable = cruncher.ExtractDataUsingLogIds (table, syncStart, syncEnd);
+			System.Data.DataTable dataTable = extractor.ExtractDataUsingLogIds (table, syncStart, syncEnd);
 					
 			if ((pull != null) &&
 				(pull.Contains (table)))
@@ -248,7 +250,7 @@ namespace Epsitec.Cresus.Replication
 					//	L'auteur de la demande de réplication aimerait aussi obtenir les lignes
 					//	spécifiées par 'ids'.
 					
-					System.Data.DataTable dataMerge = cruncher.ExtractDataUsingIds (table, ids);
+					System.Data.DataTable dataMerge = extractor.ExtractDataUsingIds (table, ids);
 					
 					dataTable.BeginLoadData ();
 					
@@ -269,9 +271,9 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		void ProcessLogTable(DataExtractor cruncher, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
+		void ProcessLogTable(DataExtractor extractor, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
 		{
-			System.Data.DataTable dataTable = cruncher.ExtractDataUsingIds (table, syncStart, syncEnd);
+			System.Data.DataTable dataTable = extractor.ExtractDataUsingIds (table, syncStart, syncEnd);
 					
 			if (dataTable.Rows.Count > 0)
 			{

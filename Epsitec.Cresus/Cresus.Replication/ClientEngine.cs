@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Replication
 {
@@ -72,9 +73,9 @@ namespace Epsitec.Cresus.Replication
 		
 		private void ApplyChanges(IDbAbstraction database, ReplicationData data)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			List<PackedTableData> list = new List<PackedTableData> ();
 			
-			list.AddRange (data.TableData);
+			list.AddRange (data.PackedTableData);
 			
 			PackedTableData def_table   = ClientEngine.FindPackedTable (list, Tags.TableTableDef);
 			PackedTableData def_column  = ClientEngine.FindPackedTable (list, Tags.TableColumnDef);
@@ -151,7 +152,7 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		private void ApplyChanges(DbTransaction transaction, System.Collections.ArrayList list)
+		private void ApplyChanges(DbTransaction transaction, List<PackedTableData> list)
 		{
 			//	Applique les modifications pour toutes les tables de la liste :
 			
@@ -324,7 +325,7 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-		private static PackedTableData FindPackedTable(System.Collections.ArrayList list, string name)
+		private static PackedTableData FindPackedTable(List<PackedTableData> list, string name)
 		{
 			foreach (PackedTableData packed_table in list)
 			{
