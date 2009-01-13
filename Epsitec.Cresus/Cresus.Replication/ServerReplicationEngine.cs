@@ -165,7 +165,14 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 		}
-
+		
+		/// <summary>
+		/// Cleanup before the thread shuts down.
+		/// </summary>
+		void ProcessShutdown()
+		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Processing shutdown."));
+		}
 
 		/// <summary>
 		/// Processes the replication job.
@@ -202,16 +209,16 @@ namespace Epsitec.Cresus.Replication
 				tables.Remove (defTypeTable);
 				tables.Remove (logTable);
 				
-				ReplicationData data = new ReplicationData ();
+				ReplicationData buffer = new ReplicationData ();
 
 				//	Process the special schema information tables first, before we process the real
 				//	data tables :
 				
-				this.ProcessTable (extractor, pull, syncStart, syncEnd, defTableTable, data);
-				this.ProcessTable (extractor, pull, syncStart, syncEnd, defColumnTable, data);
-				this.ProcessTable (extractor, pull, syncStart, syncEnd, defTypeTable, data);
+				this.ReplicateTable (extractor, pull, syncStart, syncEnd, defTableTable, buffer);
+				this.ReplicateTable (extractor, pull, syncStart, syncEnd, defColumnTable, buffer);
+				this.ReplicateTable (extractor, pull, syncStart, syncEnd, defTypeTable, buffer);
 				
-				this.ProcessLogTable (extractor, syncStart, syncEnd, logTable, data);
+				this.ReplicateLogTable (extractor, syncStart, syncEnd, logTable, buffer);
 				
 				ServerReplicationEngine.RemoveAllMatchingTables (tables, DbReplicationMode.None);
 				
@@ -221,14 +228,14 @@ namespace Epsitec.Cresus.Replication
 				{
 					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Automatic);
 					
-					this.ProcessTable (extractor, pull, syncStart, syncEnd, table, data);
+					this.ReplicateTable (extractor, pull, syncStart, syncEnd, table, buffer);
 				}
 				
 				//	Serialize and manually compress the delta produced by the calls to
 				//	method ProcessTable; we want to minimize the amount of data which
 				//	goes down the wire :
 
-				byte[] compressedData = Common.IO.Serialization.SerializeAndCompressToMemory (data, Common.IO.Compressor.DeflateCompact);
+				byte[] compressedData = Common.IO.Serialization.SerializeAndCompressToMemory (buffer, Common.IO.Compressor.DeflateCompact);
 
 				job.NotifyDoneProcessing (compressedData);
 				
@@ -236,10 +243,24 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 
-		void ProcessTable(DataExtractor extractor, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
+		/// <summary>
+		/// Replicates the specified table.
+		/// </summary>
+		/// <param name="extractor">The data extractor.</param>
+		/// <param name="pull">The pull arguments.</param>
+		/// <param name="syncStart">The sync start id.</param>
+		/// <param name="syncEnd">The sync end id.</param>
+		/// <param name="table">The table definition.</param>
+		/// <param name="buffer">The buffer for the replication data.</param>
+		void ReplicateTable(DataExtractor extractor, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
 		{
+			//	Get all the data which changed between the two sync ids :
+
 			System.Data.DataTable dataTable = extractor.ExtractDataUsingLogIds (table, syncStart, syncEnd);
 					
+			
+			//	Is more data required ?
+			
 			if ((pull != null) &&
 				(pull.Contains (table)))
 			{
@@ -247,8 +268,8 @@ namespace Epsitec.Cresus.Replication
 				
 				if (ids.Count > 0)
 				{
-					//	L'auteur de la demande de réplication aimerait aussi obtenir les lignes
-					//	spécifiées par 'ids'.
+					//	The author of the replication job also wants some explicit rows of this table to
+					//	be included in the replication; include them in the data table :
 					
 					System.Data.DataTable dataMerge = extractor.ExtractDataUsingIds (table, ids);
 					
@@ -263,33 +284,43 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 			
+			//	If the table contains any data, pack it into the replication buffer :
+			
 			if (dataTable.Rows.Count > 0)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", dataTable.TableName, dataTable.Rows.Count));
-				
-				data.Add (PackedTableData.CreateFromTable (table, dataTable));
+				buffer.Add (PackedTableData.CreateFromTable (table, dataTable));
 			}
 		}
-		
-		void ProcessLogTable(DataExtractor extractor, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData data)
+
+		/// <summary>
+		/// Replicates the log table. This is a special case of the <see cref="ReplicateTable"/>
+		/// method.
+		/// </summary>
+		/// <param name="extractor">The data extractor.</param>
+		/// <param name="syncStart">The sync start id.</param>
+		/// <param name="syncEnd">The sync end id.</param>
+		/// <param name="table">The table definition.</param>
+		/// <param name="buffer">The buffer for the replication data.</param>
+		void ReplicateLogTable(DataExtractor extractor, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
 		{
 			System.Data.DataTable dataTable = extractor.ExtractDataUsingIds (table, syncStart, syncEnd);
 					
 			if (dataTable.Rows.Count > 0)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", dataTable.TableName, dataTable.Rows.Count));
-				
-				data.Add (PackedTableData.CreateFromTable (table, dataTable));
+				buffer.Add (PackedTableData.CreateFromTable (table, dataTable));
 			}
 		}
-		
-		void ProcessShutdown()
-		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Processing shutdown."));
-		}
 
-		
-		
+
+
+		/// <summary>
+		/// Finds the rows which don't match the collection of ids.
+		/// </summary>
+		/// <param name="table">The source data table.</param>
+		/// <param name="ids">The collection of ids.</param>
+		/// <returns>The collection of ids of the rows found in the table which are not found in the collection.</returns>
 		static List<long> FindUnknownRowIds(System.Data.DataTable table, IEnumerable<long> ids)
 		{
 			List<long> list = new List<long> (ids);
@@ -314,7 +345,13 @@ namespace Epsitec.Cresus.Replication
 
 			return list;
 		}
-		
+
+		/// <summary>
+		/// Finds the specified table.
+		/// </summary>
+		/// <param name="tables">A collection of tables.</param>
+		/// <param name="name">The table name.</param>
+		/// <returns>The table or <c>null</c>.</returns>
 		static DbTable FindTable(IEnumerable<DbTable> tables, string name)
 		{
 			foreach (DbTable table in tables)
@@ -327,7 +364,12 @@ namespace Epsitec.Cresus.Replication
 			
 			return null;
 		}
-		
+
+		/// <summary>
+		/// Removes all tables which match the specified replication mode.
+		/// </summary>
+		/// <param name="tables">The tables.</param>
+		/// <param name="mode">The replication mode.</param>
 		static void RemoveAllMatchingTables(List<DbTable> tables, DbReplicationMode mode)
 		{
 			int i = 0;

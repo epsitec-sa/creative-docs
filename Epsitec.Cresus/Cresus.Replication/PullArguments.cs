@@ -7,7 +7,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// The <c>PullArguments</c> class stores a collection of tables and columns
+	/// The <c>PullArguments</c> class stores a collection of tables and rows
 	/// which should be replicated.
 	/// </summary>
 	public sealed class PullArguments

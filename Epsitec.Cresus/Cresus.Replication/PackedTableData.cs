@@ -7,20 +7,32 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// La classe PackedTableData représente les données d'une DataTable sous une forme
-	/// facilement comprimable et sérialisable.
+	/// The <c>PackedTableData</c> class stores a data table as a series of compact
+	/// arrays, which is easily and efficiently serializable.
 	/// </summary>
 	
 	[System.Serializable]
 	public sealed class PackedTableData : System.Runtime.Serialization.ISerializable
 	{
-		public PackedTableData()
+		private PackedTableData()
 		{
 			this.columnDataRows = new List<System.Array> ();
 			this.columnNullFlags = new List<System.Array> ();
 		}
-		
-		
+
+		private PackedTableData(string tableName, DbId tableKey, int rowCount)
+			: this ()
+		{
+			this.tableName = tableName;
+			this.tableKey  = tableKey;
+			this.rowCount  = rowCount;
+		}
+
+
+		/// <summary>
+		/// Gets the table name.
+		/// </summary>
+		/// <value>The table name.</value>
 		public string							Name
 		{
 			get
@@ -28,7 +40,11 @@ namespace Epsitec.Cresus.Replication
 				return this.tableName;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the table key.
+		/// </summary>
+		/// <value>The table key.</value>
 		public DbId								Key
 		{
 			get
@@ -36,7 +52,11 @@ namespace Epsitec.Cresus.Replication
 				return this.tableKey;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the row count.
+		/// </summary>
+		/// <value>The row count.</value>
 		public int								RowCount
 		{
 			get
@@ -44,7 +64,11 @@ namespace Epsitec.Cresus.Replication
 				return this.rowCount;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the column count.
+		/// </summary>
+		/// <value>The column count.</value>
 		public int								ColumnCount
 		{
 			get
@@ -52,62 +76,77 @@ namespace Epsitec.Cresus.Replication
 				return this.columnDataRows.Count;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Determines whether the specified column has at least one null value.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified column has null values; otherwise, <c>false</c>.
+		/// </returns>
 		public bool HasNullValues(int column)
 		{
-			//	Return 'true' si la colonne contient au moins 1 valeur DBNull.
-			
 			this.UnpackNullFlags ();
 			
-			if (this.columnDataRows[column] == null)	//	pas de données => colonne DBNull
+			if (this.columnDataRows[column] == null)
 			{
+				//	No data => everything is null
 				return true;
 			}
-			if (this.columnNullFlags[column] != null)	//	flags => colonne contient au moins un DBNull
+			else if (this.columnNullFlags[column] != null)
 			{
+				//	There are null flags => there is at least one null value
 				return true;
 			}
-			
-			return false;
-		}
-		
-		public bool HasNonNullValues(int column)
-		{
-			//	Return 'true' si la colonne contient au moins 1 valeur qui ne soit
-			//	pas DBNull.
-			
-			this.UnpackNullFlags ();
-			
-			if (this.columnDataRows[column] == null)	//	pas de données => colonne DBNull
+			else
 			{
 				return false;
 			}
-			
-			return true;
 		}
-		
-		
-		public void FillTable(System.Data.DataTable table)
+
+		/// <summary>
+		/// Determines whether the specified column has at least one non null value.
+		/// </summary>
+		/// <param name="column">The column.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified column has non null values; otherwise, <c>false</c>.
+		/// </returns>
+		public bool HasNonNullValues(int column)
 		{
-			//	Ajoute les lignes stockées dans notre objet à la table passée en entrée.
-			//	Le schéma de la table doit être correct, mais aucune vérification n'est
-			//	faite ici.
-			
-			object[][] values = this.GetAllValues ();
-			
-			for (int i = 0; i < this.RowCount; i++)
+			if (this.columnDataRows[column] == null)
 			{
-				table.Rows.Add (values[i]);
+				return false;
+			}
+			else
+			{
+				return true;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Fills the table with the data stored in this instance. The schema of the
+		/// table must match, but no explicit check is done here.
+		/// </summary>
+		/// <param name="table">The data table which will be filled.</param>
+		public void FillTable(System.Data.DataTable table)
+		{
+			object[][] values = this.GetAllValues ();
+			
+			foreach (object[] row in values)
+			{
+				table.Rows.Add (row);
+			}
+		}
+
+
+		/// <summary>
+		/// Gets all values stored in this instance.
+		/// </summary>
+		/// <returns>An array of rows, where each row is an array of values.</returns>
 		public object[][] GetAllValues()
 		{
-			//	Retourne un tableau de valeurs correspondant à la table stockée dans
-			//	notre objet; le tableau a n lignes de m colonnes.
-			
 			this.UnpackNullFlags ();
 			
 			object[][] values = new object[this.RowCount][];
@@ -117,18 +156,21 @@ namespace Epsitec.Cresus.Replication
 			for (int i = 0; i < n; i++)
 			{
 				System.Array data = this.columnDataRows[i];
-				bool[] null_flags = this.columnNullFlags[i] as bool[];
+				bool[]  nullFlags = this.columnNullFlags[i] as bool[];
 
-				PackedTableData.UnpackColumnFromNativeArray (values, i, n, data, null_flags);
+				PackedTableData.UnpackColumnFromNativeArray (values, i, n, data, nullFlags);
 			}
 			
 			return values;
 		}
-		
+
+		/// <summary>
+		/// Gets the values for the specified row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The values.</returns>
 		public object[]   GetRowValues(int row)
 		{
-			//	Retourne un tableau de valeurs pour la ligne spécifiée : 1 ligne de m colonnes.
-			
 			this.UnpackNullFlags ();
 			
 			int n = this.ColumnCount;
@@ -138,9 +180,9 @@ namespace Epsitec.Cresus.Replication
 			for (int i = 0; i < n; i++)
 			{
 				System.Array data = this.columnDataRows[i];
-				bool[] null_flags = this.columnNullFlags[i] as bool[];
+				bool[]  nullFlags = this.columnNullFlags[i] as bool[];
 
-				PackedTableData.UnpackValueFromNativeArray (row, data, null_flags, out values[i]);
+				values[i] = PackedTableData.UnpackValueFromNativeArray (row, data, nullFlags);
 			}
 			
 			return values;
@@ -157,14 +199,10 @@ namespace Epsitec.Cresus.Replication
 		/// <returns>The <c>PackedTableData</c>.</returns>
 		public static PackedTableData CreateFromTable(DbTable table, System.Data.DataTable dataTable)
 		{
-			PackedTableData data = new PackedTableData ();
-			
 			int rowCount = dataTable.Rows.Count;
 			int colCount = dataTable.Columns.Count;
-			
-			data.rowCount  = rowCount;
-			data.tableName = table.Name;
-			data.tableKey  = table.Key.Id;
+
+			PackedTableData data = new PackedTableData (table.Name, table.Key.Id, rowCount);
 			
 			for (int i = 0; i < colCount; i++)
 			{
@@ -197,14 +235,14 @@ namespace Epsitec.Cresus.Replication
 
 
 		/// <summary>
-		/// Packs the column data into a native array.
+		/// Packs the specified column data into a native array.
 		/// </summary>
 		/// <param name="table">The table data.</param>
 		/// <param name="column">The column to pack.</param>
 		/// <param name="nullValues">An array of flags; one flag for every null values.</param>
 		/// <param name="nullCount">The number of null values.</param>
 		/// <returns>A native array containing the column data.</returns>
-		public static System.Array PackColumnToNativeArray(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
+		static System.Array PackColumnToNativeArray(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
 		{
 			//	Handles following native types :
 			//
@@ -251,26 +289,27 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 
-		public static void UnpackColumnFromNativeArray(object[][] values, int column, int columnCount, System.Array array, bool[] nullValues)
+		/// <summary>
+		/// Unpacks the specified column from the native array into an array of rows.
+		/// </summary>
+		/// <param name="values">The resulting values (array of rows; each row is an array of values or <c>null</c>).</param>
+		/// <param name="column">The column to unpack.</param>
+		/// <param name="columnCount">The total number of columns.</param>
+		/// <param name="array">The native array.</param>
+		/// <param name="nullValues">The null values.</param>
+		static void UnpackColumnFromNativeArray(object[][] values, int column, int columnCount, System.Array array, bool[] nullValues)
 		{
-			//	A partir de la représentation sous forme de tableau d'une colonne, produit
-			//	les valeurs correspondantes (ou DBNull) dans le tableau de valeurs.
-			//
-			//	Le tableau de valeurs (object[][] values) contient n lignes de m colonnes.
-			//	Ainsi, pour accéder à une cellule, il faut utiliser values[row][column].
-			//
-			//	Si une ligne n'existe pas encore dans le tableau values, cette méthode
-			//	allouera une ligne vide (remplie de "null" -- ainsi "null" signifie que
-			//	la cellule n'a pas encore été remplie et "DBNull" que la cellule a été
-			//	remplie avec une source nulle).
+			//	Access the values through values[row][column]
+
+			//	A row might not yet exist in the values array; this is identified by the
+			//	fact that values[row] == null.
 
 			int n = values.Length;
 
 			if ((nullValues != null) &&
 				(nullValues.Length > 0))
 			{
-				//	Il existe des indications pour savoir si une cellule contient un DBNull
-				//	ou non; utilise les informations disponibles :
+				//	Some values are null, but not all.
 
 				System.Diagnostics.Debug.Assert (array.Length == n);
 
@@ -296,8 +335,7 @@ namespace Epsitec.Cresus.Replication
 				if ((array == null) ||
 					(array.Length == 0))
 				{
-					//	Il n'y a ni indications au sujet des valeurs, ni au sujet de leur null-ité.
-					//	Cela signifie que toutes les lignes sont à initialiser à DBNull !
+					//	All values are null.
 
 					for (int i = 0; i < n; i++)
 					{
@@ -311,6 +349,8 @@ namespace Epsitec.Cresus.Replication
 				}
 				else
 				{
+					//	No values are null.
+
 					System.Diagnostics.Debug.Assert (array.Length == n);
 
 					for (int i = 0; i < n; i++)
@@ -326,25 +366,27 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 
-		public static void UnpackValueFromNativeArray(int row, System.Array array, bool[] nullValues, out object value)
+		/// <summary>
+		/// Unpacks a value from the native array of a given column.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <param name="array">The column array.</param>
+		/// <param name="nullValues">The null values for the column.</param>
+		/// <returns>The value.</returns>
+		static object UnpackValueFromNativeArray(int row, System.Array array, bool[] nullValues)
 		{
-			//	Extrait la valeur d'une cellule précise du tableau (l'appelant sélectionne
-			//	la colonne adéquate en passant 'array' et 'null_values' correspondants; la
-			//	ligne est passée explicitement).
-
 			if ((nullValues != null) &&
 				(nullValues.Length > 0))
 			{
-				//	Il existe des indications pour savoir si une cellule contient un DBNull
-				//	ou non; utilise les informations disponibles :
+				//	Some values might be null.
 
 				if (nullValues[row])
 				{
-					value = System.DBNull.Value;
+					return System.DBNull.Value;
 				}
 				else
 				{
-					value = array.GetValue (row);
+					return array.GetValue (row);
 				}
 			}
 			else
@@ -352,34 +394,34 @@ namespace Epsitec.Cresus.Replication
 				if ((array == null) ||
 					(array.Length == 0))
 				{
-					//	Il n'y a ni indications au sujet des valeurs, ni au sujet de leur null-ité.
-					//	Cela signifie que toutes les lignes contiennent DBNull !
+					//	All values are null.
 
-					value = System.DBNull.Value;
+					return System.DBNull.Value;
 				}
 				else
 				{
-					value = array.GetValue (row);
+					return array.GetValue (row);
 				}
 			}
 		}
 
 
-		public static void PackBooleanArray(bool[] values, out byte[] packed)
+		/// <summary>
+		/// Packs the boolean array into a bitmap. The exact size of the array cannot be
+		/// inferred from the bitmap (the caller will have to remember it).
+		/// </summary>
+		/// <param name="values">The boolean array.</param>
+		static byte[] PackBooleanArray(bool[] values)
 		{
-			//	Stocke un tableau de bool sous la forme d'un bitmap compact. La taille exacte
-			//	du tableau de bool n'est pas conservée (l'appelant devra s'en souvenir lui-
-			//	même pour pouvoir appeler UnpackBooleanArray).
-
 			int n = values.Length;
 
-			int n_full_bytes = n / 8;
-			int n_part_bits  = n - 8 * n_full_bytes;
-			int n_bytes      = (n_part_bits == 0) ? (n_full_bytes) : (n_full_bytes + 1);
+			int nFullBytes = n / 8;
+			int nPartBits  = n - 8 * nFullBytes;
+			int nBytes     = (nPartBits == 0) ? (nFullBytes) : (nFullBytes + 1);
 
-			packed = new byte[n_bytes];
+			byte[] packed = new byte[nBytes];
 
-			for (int i = 0; i < n_full_bytes; i++)
+			for (int i = 0; i < nFullBytes; i++)
 			{
 				byte value = 0;
 
@@ -394,36 +436,40 @@ namespace Epsitec.Cresus.Replication
 				packed[i] = value;
 			}
 
-			if (n_part_bits > 0)
+			if (nPartBits > 0)
 			{
 				byte value = 0;
 
-				for (int bit = 0; bit < n_part_bits; bit++)
+				for (int bit = 0; bit < nPartBits; bit++)
 				{
-					if (values[n_full_bytes*8 + bit])
+					if (values[nFullBytes*8 + bit])
 					{
 						value |= (byte) (1 << bit);
 					}
 				}
 
-				packed[n_full_bytes] = value;
+				packed[nFullBytes] = value;
 			}
+
+			return packed;
 		}
 
+		/// <summary>
+		/// Unpacks the bitmap into an already allocated boolean array.
+		/// </summary>
+		/// <param name="packed">The packed bitmap.</param>
+		/// <param name="values">The boolean array.</param>
 		public static void UnpackBooleanArray(byte[] packed, bool[] values)
 		{
-			//	Initialise un tableau de bool (déjà alloué) à partir de le représentation
-			//	compacte sous forme de bitmap :
-
 			int n = values.Length;
 
-			int n_full_bytes = n / 8;
-			int n_part_bits  = n - 8 * n_full_bytes;
-			int n_bytes      = (n_part_bits == 0) ? (n_full_bytes) : (n_full_bytes + 1);
+			int nFullBytes = n / 8;
+			int nPartBits  = n - 8 * nFullBytes;
+			int nBytes     = (nPartBits == 0) ? (nFullBytes) : (nFullBytes + 1);
 
-			System.Diagnostics.Debug.Assert (n_bytes == packed.Length);
+			System.Diagnostics.Debug.Assert (nBytes == packed.Length);
 
-			for (int i = 0; i < n_full_bytes; i++)
+			for (int i = 0; i < nFullBytes; i++)
 			{
 				byte value = packed[i];
 
@@ -433,18 +479,27 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 
-			if (n_part_bits > 0)
+			if (nPartBits > 0)
 			{
-				byte value = packed[n_full_bytes];
+				byte value = packed[nFullBytes];
 
-				for (int bit = 0; bit < n_part_bits; bit++)
+				for (int bit = 0; bit < nPartBits; bit++)
 				{
-					values[n_full_bytes*8 + bit] = ((value & (1 << bit)) == 0) ? false : true;
+					values[nFullBytes*8 + bit] = ((value & (1 << bit)) == 0) ? false : true;
 				}
 			}
 		}
 
 
+		/// <summary>
+		/// Packs the specified column into a native array.
+		/// </summary>
+		/// <typeparam name="T">The native type.</typeparam>
+		/// <param name="table">The table containing the data to pack into the native array.</param>
+		/// <param name="column">The column.</param>
+		/// <param name="nullValues">The null values (or <c>null</c> if all values are non-null).</param>
+		/// <param name="nullCount">The number of null values.</param>
+		/// <returns>The native array.</returns>
 		static System.Array PackColumnToArray<T>(System.Data.DataTable table, int column, out bool[] nullValues, out int nullCount)
 		{
 			int n = table.Rows.Count;
@@ -505,13 +560,13 @@ namespace Epsitec.Cresus.Replication
 		{
 			System.Diagnostics.Debug.Assert (this.columnDataRows.Count == this.columnNullFlags.Count);
 			
-			int col_count = this.ColumnCount;
-			int row_count = this.RowCount;
+			int colCount = this.ColumnCount;
+			int rowCount = this.RowCount;
 			
-			info.AddValue (Strings.ColumnCount, col_count);
-			info.AddValue (Strings.RowCount, row_count);
+			info.AddValue (Strings.ColumnCount, colCount);
+			info.AddValue (Strings.RowCount, rowCount);
 			
-			for (int i = 0; i < col_count; i++)
+			for (int i = 0; i < colCount; i++)
 			{
 				System.Array dataRows   = this.columnDataRows[i];
 				System.Array nullFlags  = this.columnNullFlags[i];
@@ -529,7 +584,7 @@ namespace Epsitec.Cresus.Replication
 					else
 					{
 						bool[] values = (bool[]) nullFlags;
-						PackedTableData.PackBooleanArray (values, out nullPacked);
+						nullPacked = PackedTableData.PackBooleanArray (values);
 					}
 				}
 				
@@ -552,12 +607,12 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		#endregion
-		
+
+		/// <summary>
+		/// Unpacks the null flags, if they are still stored as a packed bitmap.
+		/// </summary>
 		private void UnpackNullFlags()
 		{
-			//	A partir des bitmaps, génère les bool[] correspondant aux informations
-			//	de null-ité des diverses lignes dans les colonnes de la table.
-			
 			if (this.isNullFlagsArrayPacked)
 			{
 				int n = this.columnNullFlags.Count;
@@ -566,35 +621,31 @@ namespace Epsitec.Cresus.Replication
 				{
 					System.Array data = this.columnDataRows[i];
 					
-					byte[] packed_column = this.columnNullFlags[i] as byte[];
+					byte[] packedColumn = this.columnNullFlags[i] as byte[];
 					bool[] values;
 					
 					if (data == null)
 					{
-						//	Cas particulier: il n'y a aucune donnée dans cette colonne, donc on part du principe
-						//	que ça revient à dire que toute la colonne est remplie de DBNull. Donc il n'y a pas
-						//	besoin d'allouer de tableau d'infos sur la nullabilité non plus...
-						
+						//	No data at all, we don't need to provide null flags (all values are null).
+
 						values = null;
 					}
-					else if (packed_column == null)
+					else if (packedColumn == null)
 					{
-						//	Autre cas particulier: il n'y a aucune information sur la nullabilité, mais il y a
-						//	des données; ça veut dire qu'aucune ligne n'est nulle; on peut donc aussi se passer
-						//	d'allouer le tableau d'infos sur la nullabilité...
+						//	No null values at all; we need not allocate the null flags.
 						
 						values = null;
 					}
 					else
 					{
-						//	Il y a des lignes et nous avons une représentation sous forme de bitset des divers
-						//	fanions de nullabilité. On va décomprimer le bitset en un tableau de booléens :
+						//	Some values are null; the information is stored in the bits of the
+						//	packed bitmap :
 						
-						int data_row_count = data.GetLength (0);
+						int dataRowCount = data.GetLength (0);
 						
-						values = new bool[data_row_count];
+						values = new bool[dataRowCount];
 
-						PackedTableData.UnpackBooleanArray (packed_column, values);
+						PackedTableData.UnpackBooleanArray (packedColumn, values);
 					}
 					
 					this.columnNullFlags[i] = values;
@@ -607,9 +658,9 @@ namespace Epsitec.Cresus.Replication
 
 		readonly List<System.Array>				columnDataRows;
 		readonly List<System.Array>				columnNullFlags;
-		private string							tableName;
-		private DbId							tableKey;
-		private int								rowCount;
+		readonly string							tableName;
+		readonly DbId							tableKey;
+		readonly int							rowCount;
 		private bool							isNullFlagsArrayPacked;
 	}
 }
