@@ -820,7 +820,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (buffer != null)
 				{
-					Replication.ClientEngine engine = new Replication.ClientEngine (infrastructure, service);
+					Replication.ClientReplicationEngine engine = new Replication.ClientReplicationEngine (infrastructure, service);
 
 					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
 					

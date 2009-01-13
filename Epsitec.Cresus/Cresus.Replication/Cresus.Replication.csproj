@@ -130,7 +130,7 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ClientEngine.cs">
+    <Compile Include="ClientReplicationEngine.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DataExtractor.cs">

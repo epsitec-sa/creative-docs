@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
 using System.Collections.Generic;
@@ -7,13 +7,12 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Replication
 {
 	/// <summary>
-	/// La classe ClientEngine s'exécute sur le client et permet de traiter les
-	/// données de réplication reçues du serveur pour reproduire les modifications
-	/// en local.
+	/// The <c>ClientReplicationEngine</c> class runs on the client side and knows how
+	/// to apply changes received from the server to replicate a data set.
 	/// </summary>
-	public sealed class ClientEngine
+	public sealed class ClientReplicationEngine
 	{
-		public ClientEngine(DbInfrastructure infrastructure, Remoting.IReplicationService service)
+		public ClientReplicationEngine(DbInfrastructure infrastructure, Remoting.IReplicationService service)
 		{
 			this.infrastructure = infrastructure;
 			this.replication_service = service;
@@ -55,7 +54,7 @@ namespace Epsitec.Cresus.Replication
 		
 		
 		#region Delegates
-		public delegate void Callback(ClientEngine engine, DbTransaction transaction);
+		public delegate void Callback(ClientReplicationEngine engine, DbTransaction transaction);
 		#endregion
 		
 		private void ApplyChanges(IDbAbstraction database, byte[] compressed_data)
@@ -77,10 +76,10 @@ namespace Epsitec.Cresus.Replication
 			
 			list.AddRange (data.PackedTableData);
 			
-			PackedTableData def_table   = ClientEngine.FindPackedTable (list, Tags.TableTableDef);
-			PackedTableData def_column  = ClientEngine.FindPackedTable (list, Tags.TableColumnDef);
-			PackedTableData def_type    = ClientEngine.FindPackedTable (list, Tags.TableTypeDef);
-			PackedTableData log_table   = ClientEngine.FindPackedTable (list, Tags.TableLog);
+			PackedTableData def_table   = ClientReplicationEngine.FindPackedTable (list, Tags.TableTableDef);
+			PackedTableData def_column  = ClientReplicationEngine.FindPackedTable (list, Tags.TableColumnDef);
+			PackedTableData def_type    = ClientReplicationEngine.FindPackedTable (list, Tags.TableTypeDef);
+			PackedTableData log_table   = ClientReplicationEngine.FindPackedTable (list, Tags.TableLog);
 			
 			if (log_table != null)
 			{
@@ -348,8 +347,8 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		private DbInfrastructure				infrastructure;
-		private Remoting.IReplicationService	replication_service;
+		readonly DbInfrastructure				infrastructure;
+		readonly Remoting.IReplicationService	replication_service;
 		private DbId							largest_log_id = DbId.Invalid;
 		
 		private Callback						before_commit_callback;
