@@ -534,7 +534,7 @@ namespace Epsitec.Cresus.Replication
 		
 		#region ISerializable Members
 		
-		public PackedTableData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		private PackedTableData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 			: this ()
 		{
 			int colCount = info.GetInt32 (Strings.ColumnCount);

@@ -180,8 +180,6 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="job">The replication job.</param>
 		void ProcessReplicationJob(ReplicationJob job)
 		{
-			int clientId = job.Client.Id;
-			
 			DbId syncStart = job.SyncStartId;
 			DbId syncEnd   = job.SyncEndId;
 
@@ -214,11 +212,11 @@ namespace Epsitec.Cresus.Replication
 				//	Process the special schema information tables first, before we process the real
 				//	data tables :
 				
-				this.ReplicateTable (extractor, pull, syncStart, syncEnd, defTableTable, buffer);
-				this.ReplicateTable (extractor, pull, syncStart, syncEnd, defColumnTable, buffer);
-				this.ReplicateTable (extractor, pull, syncStart, syncEnd, defTypeTable, buffer);
-				
-				this.ReplicateLogTable (extractor, syncStart, syncEnd, logTable, buffer);
+				ServerReplicationEngine.ReplicateTable (extractor, pull, syncStart, syncEnd, defTableTable, buffer);
+				ServerReplicationEngine.ReplicateTable (extractor, pull, syncStart, syncEnd, defColumnTable, buffer);
+				ServerReplicationEngine.ReplicateTable (extractor, pull, syncStart, syncEnd, defTypeTable, buffer);
+
+				ServerReplicationEngine.ReplicateLogTable (extractor, syncStart, syncEnd, logTable, buffer);
 				
 				ServerReplicationEngine.RemoveAllMatchingTables (tables, DbReplicationMode.None);
 				
@@ -227,8 +225,8 @@ namespace Epsitec.Cresus.Replication
 				foreach  (DbTable table in tables)
 				{
 					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Automatic);
-					
-					this.ReplicateTable (extractor, pull, syncStart, syncEnd, table, buffer);
+
+					ServerReplicationEngine.ReplicateTable (extractor, pull, syncStart, syncEnd, table, buffer);
 				}
 				
 				//	Serialize and manually compress the delta produced by the calls to
@@ -252,7 +250,7 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="syncEnd">The sync end id.</param>
 		/// <param name="table">The table definition.</param>
 		/// <param name="buffer">The buffer for the replication data.</param>
-		void ReplicateTable(DataExtractor extractor, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
+		static void ReplicateTable(DataExtractor extractor, PullArguments pull, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
 		{
 			//	Get all the data which changed between the two sync ids :
 
@@ -302,7 +300,7 @@ namespace Epsitec.Cresus.Replication
 		/// <param name="syncEnd">The sync end id.</param>
 		/// <param name="table">The table definition.</param>
 		/// <param name="buffer">The buffer for the replication data.</param>
-		void ReplicateLogTable(DataExtractor extractor, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
+		static void ReplicateLogTable(DataExtractor extractor, DbId syncStart, DbId syncEnd, DbTable table, ReplicationData buffer)
 		{
 			System.Data.DataTable dataTable = extractor.ExtractDataUsingIds (table, syncStart, syncEnd);
 					
@@ -397,7 +395,9 @@ namespace Epsitec.Cresus.Replication
 				this.isShutdownPending = true;
 				this.shutdownEvent.Set ();
 				this.workerThread.Join ();
-				
+
+				this.shutdownEvent.Close ();
+				this.queueEvent.Close ();
 				this.database.Dispose ();
 			}
 		}

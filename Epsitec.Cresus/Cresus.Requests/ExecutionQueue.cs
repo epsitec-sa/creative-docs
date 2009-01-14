@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
 using System.Collections.Generic;
@@ -7,8 +7,8 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// La classe ExecutionQueue permet de représenter la queue des requêtes
-	/// en attente d'exécution.
+	/// The <c>ExecutionQueue</c> class manages the queue of requests waiting for
+	/// execution.
 	/// </summary>
 	public class ExecutionQueue : IAttachable, IPersistable
 	{

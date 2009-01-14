@@ -8,10 +8,10 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Services.Engines
 {
 	/// <summary>
-	/// La classe ConnectionEngine permet de s'enquérir au sujet des services
-	/// présents sur un serveur et de vérifier l'état de la connexion.
+	/// The <c>ConnectionEngine</c> class implements the <see cref="IConnectionService"/>
+	/// interface.
 	/// </summary>
-	internal sealed class ConnectionEngine : AbstractServiceEngine, Remoting.IConnectionService
+	internal sealed class ConnectionEngine : AbstractServiceEngine, IConnectionService
 	{
 		public ConnectionEngine(Engine engine)
 			: base (engine)
@@ -21,12 +21,12 @@ namespace Epsitec.Cresus.Services.Engines
 		
 		#region IConnectionService Members
 		
-		public void CheckConnectivity(Remoting.ClientIdentity client)
+		public void CheckConnectivity(ClientIdentity client)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' checked for connectivity.", client));
 		}
 
-		public System.Guid[] QueryAvailableServices(Remoting.ClientIdentity client)
+		public System.Guid[] QueryAvailableServices(ClientIdentity client)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("ConnectionEngine: Client '{0}' asked for available services.", client));
 

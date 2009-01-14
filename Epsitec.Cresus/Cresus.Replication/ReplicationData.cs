@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Replication
 		
 		#region ISerializable Members
 		
-		public ReplicationData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		private ReplicationData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
 			this.packedTableList = new List<PackedTableData> ((PackedTableData[]) info.GetValue ("Tables", typeof (PackedTableData[])));
 		}

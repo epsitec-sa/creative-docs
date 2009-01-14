@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -40,6 +40,13 @@ namespace Epsitec.Common.IO
 			return o;
 		}
 
+		/// <summary>
+		/// Deserializes the instance and decompress it from a byte array already
+		/// loaded in memory.
+		/// </summary>
+		/// <typeparam name="T">The expected type (or base type).</typeparam>
+		/// <param name="buffer">The buffer.</param>
+		/// <returns>The deserialized instance or <c>null</c>.</returns>
 		public static T DeserializeAndDecompressFromMemory<T>(byte[] buffer) where T : class
 		{
 			if (buffer == null)
