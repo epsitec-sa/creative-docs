@@ -39,6 +39,18 @@ namespace Epsitec.Common.IO
 			
 			return o;
 		}
+
+		public static T DeserializeAndDecompressFromMemory<T>(byte[] buffer) where T : class
+		{
+			if (buffer == null)
+			{
+				return null;
+			}
+			else
+			{
+				return Serialization.DeserializeAndDecompressFromMemory (buffer) as T;
+			}
+		}
 		
 		public static byte[] SerializeToMemory(object o)
 		{

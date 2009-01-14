@@ -12,157 +12,173 @@ namespace Epsitec.Cresus.Replication
 	/// </summary>
 	public sealed class ClientReplicationEngine
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ClientReplicationEngine"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="service">The service.</param>
 		public ClientReplicationEngine(DbInfrastructure infrastructure, Remoting.IReplicationService service)
 		{
 			this.infrastructure = infrastructure;
-			this.replication_service = service;
+			this.replicationService = service;
+			this.largestLogId = DbId.Invalid;
 		}
-		
-		
-		public DbId								LargestLogId
+
+
+		/// <summary>
+		/// Gets the largest server log id.
+		/// </summary>
+		/// <value>The largest server log id.</value>
+		public DbId								LargestServerLogId
 		{
 			get
 			{
-				return this.largest_log_id;
+				return this.largestLogId;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Applies the changes associated with a given operation.
+		/// </summary>
+		/// <param name="database">The database.</param>
+		/// <param name="operationId">The operation id.</param>
 		public void ApplyChanges(IDbAbstraction database, long operationId)
 		{
 			this.ApplyChanges (database, operationId, null);
 		}
 
-		public void ApplyChanges(IDbAbstraction database, long operationId, Callback before_commit_callback)
+		/// <summary>
+		/// Applies the changes associated with a given operation.
+		/// </summary>
+		/// <param name="database">The database.</param>
+		/// <param name="operationId">The operation id.</param>
+		/// <param name="beforeCommitCallback">The callback to call before commit.</param>
+		public void ApplyChanges(IDbAbstraction database, long operationId, System.Action<ClientReplicationEngine, DbTransaction> beforeCommitCallback)
 		{
-			byte[] data = this.replication_service.GetReplicationData (operationId);
-			
-			lock (this)
-			{
-				try
+			byte[] compressedData = this.replicationService.GetReplicationData (operationId);
+
+			this.ApplyChanges (database, Common.IO.Serialization.DeserializeAndDecompressFromMemory<ReplicationData> (compressedData),
+				delegate (DbTransaction transaction)
 				{
-					this.before_commit_callback = before_commit_callback;
-					
-					this.ApplyChanges (database, data);
-				}
-				finally
-				{
-					this.before_commit_callback = null;
-				}
-			}
+					if (beforeCommitCallback != null)
+					{
+						beforeCommitCallback (this, transaction);
+					}
+				});
 		}
-		
-		
-		#region Delegates
-		public delegate void Callback(ClientReplicationEngine engine, DbTransaction transaction);
-		#endregion
-		
-		private void ApplyChanges(IDbAbstraction database, byte[] compressed_data)
+
+
+
+		/// <summary>
+		/// Applies the changes.
+		/// </summary>
+		/// <param name="database">The database.</param>
+		/// <param name="data">The replication data.</param>
+		/// <param name="notifyBeforeCommitCallback">The callback to notify before commit.</param>
+		private void ApplyChanges(IDbAbstraction database, ReplicationData data, System.Action<DbTransaction> notifyBeforeCommitCallback)
 		{
-			if (compressed_data != null)
+			if (data == null)
 			{
-				ReplicationData data = Common.IO.Serialization.DeserializeAndDecompressFromMemory (compressed_data) as ReplicationData;
-				
-				if (data != null)
-				{
-					this.ApplyChanges (database, data);
-				}
+				return;
 			}
-		}
-		
-		private void ApplyChanges(IDbAbstraction database, ReplicationData data)
-		{
+
 			List<PackedTableData> list = new List<PackedTableData> ();
 			
 			list.AddRange (data.PackedTableData);
 			
-			PackedTableData def_table   = ClientReplicationEngine.FindPackedTable (list, Tags.TableTableDef);
-			PackedTableData def_column  = ClientReplicationEngine.FindPackedTable (list, Tags.TableColumnDef);
-			PackedTableData def_type    = ClientReplicationEngine.FindPackedTable (list, Tags.TableTypeDef);
-			PackedTableData log_table   = ClientReplicationEngine.FindPackedTable (list, Tags.TableLog);
+			PackedTableData defTable   = ClientReplicationEngine.FindPackedTable (list, Tags.TableTableDef);
+			PackedTableData defColumn  = ClientReplicationEngine.FindPackedTable (list, Tags.TableColumnDef);
+			PackedTableData defType    = ClientReplicationEngine.FindPackedTable (list, Tags.TableTypeDef);
+			PackedTableData logTable   = ClientReplicationEngine.FindPackedTable (list, Tags.TableLog);
 			
-			if (log_table != null)
+			if (logTable != null)
 			{
-				list.Remove (log_table);
+				list.Remove (logTable);
 			}
 			
-			//	Il faut appliquer les changements concernant les tables de gestion internes
-			//	(s'il y en a) avant de pouvoir appliquer les autres changements :
+			//	First apply the changes to the internal schema tables (if any), before we try to apply
+			//	any other changes :
 			
-			if ((def_table != null) ||
-				(def_column != null) ||
-				(def_type != null))
+			if ((defTable != null) ||
+				(defColumn != null) ||
+				(defType != null))
 			{
-				//	Ces opérations ne sont possibles qu'au sein d'un bloc d'exclusion global au
-				//	niveau des accès à la base de données :
+				//	We need to globally lock the database to be able to do these changes...
 				
-				this.infrastructure.GlobalLock ();
-				
-				try
+				using (this.infrastructure.GlobalLock ())
 				{
 					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 					{
-						if (def_table  != null)  this.ApplyChanges (transaction, def_table);
-						if (def_column != null)  this.ApplyChanges (transaction, def_column);
-						if (def_type   != null)  this.ApplyChanges (transaction, def_type);
+						this.ApplyChanges (transaction, defTable);
+						this.ApplyChanges (transaction, defColumn);
+						this.ApplyChanges (transaction, defType);
 						
-						//	Il est indispensable de valider la transaction à ce stade, car on va peut-être
-						//	modifier la structure interne de la base de données, et cela ne sera visible
-						//	qu'après validation :
+						//	Make sure we validate the transaction since the changes we have just applied
+						//	might really change the schema of the database !
 						
 						this.infrastructure.ClearCaches ();
 						
 						transaction.Commit ();
 					}
 					
-					list.Remove (def_table);
-					list.Remove (def_column);
-					list.Remove (def_type);
+					list.Remove (defTable);
+					list.Remove (defColumn);
+					list.Remove (defType);
 					
-					//	Met à jour la structure de la base de données selon les nouvelles descriptions de
-					//	tables/colonnes/types :
+					//	Now, do the low level structural changes in the database. This will modify the
+					//	underlying tables.
 					
-					this.ApplyStructuralChanges (database, def_table, def_column, def_type);
+					this.ApplyStructuralChanges (database, defTable, defColumn, defType);
 					
 					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 					{
-						this.ApplyLogChanges (transaction, log_table);
+						this.ApplyLogChanges (transaction, logTable);
 						this.ApplyChanges (transaction, list);
 						this.UpdateSyncLogId (transaction);
-						this.NotifyBeforeCommit (transaction);
+						notifyBeforeCommitCallback (transaction);
 						transaction.Commit ();
 					}
-				}
-				finally
-				{
-					this.infrastructure.GlobalUnlock ();
 				}
 			}
 			else
 			{
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 				{
-					this.ApplyLogChanges (transaction, log_table);
+					this.ApplyLogChanges (transaction, logTable);
 					this.ApplyChanges (transaction, list);
 					this.UpdateSyncLogId (transaction);
-					this.NotifyBeforeCommit (transaction);
+					notifyBeforeCommitCallback (transaction);
 					transaction.Commit ();
 				}
 			}
 		}
-		
-		private void ApplyChanges(DbTransaction transaction, List<PackedTableData> list)
+
+		/// <summary>
+		/// Applies the changes.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="list">The list of changed table data.</param>
+		private void ApplyChanges(DbTransaction transaction, IEnumerable<PackedTableData> list)
 		{
-			//	Applique les modifications pour toutes les tables de la liste :
-			
 			foreach (PackedTableData data in list)
 			{
 				this.ApplyChanges (transaction, data);
 			}
 		}
-		
+
+		/// <summary>
+		/// Applies the changes.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="data">The changed table data.</param>
 		private void ApplyChanges(DbTransaction transaction, PackedTableData data)
 		{
+			if (data == null)
+			{
+				return;
+			}
+
 			//	Applique les modifications décrites pour la table spécifiée. Pour ce faire,
 			//	on remplit une table avec les lignes à répliquer et on utilise un 'REPLACE'
 			//	de toutes celles-ci :
@@ -174,21 +190,24 @@ namespace Epsitec.Cresus.Replication
 				System.Diagnostics.Debug.Assert (command.DataSet != null);
 				System.Diagnostics.Debug.Assert (command.DataSet.Tables.Count == 1);
 
-				System.Data.DataTable data_table = command.DataTable;
+				System.Data.DataTable dataTable = command.DataTable;
 				
-				data.FillTable (data_table);
+				//	The data from the replication engine will be written to the local table;
+				//	duplicate rows will be overwritten and new rows will be added.
 				
-				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
+				data.FillTable (dataTable);
 				
-				if (data_table.TableName == Tags.TableTableDef)
+				System.Diagnostics.Debug.Assert (dataTable.Rows.Count > 0);
+				
+				if (dataTable.TableName == Tags.TableTableDef)
 				{
-					//	Cas particulier: la table de définition des tables ne doit pas
-					//	être répliquée dans son entier. La colonne CR_NEXT_ID doit être
-					//	sautée (ou initialisée avec des valeurs par défaut) :
+					//	Beware : we may not simply replicate the CR_TABLE_DEF table; its CR_NEXT_ID
+					//	column must be reset to a proper local value :
 					
 					Database.Options.ReplaceIgnoreColumns options = new Database.Options.ReplaceIgnoreColumns ();
+					DbId nextId = DbId.CreateId (1, this.infrastructure.LocalSettings.ClientId);
 					
-					options.AddIgnoreColumn (Tags.ColumnNextId, DbId.CreateId (1, this.infrastructure.LocalSettings.ClientId).Value);
+					options.AddIgnoreColumn (Tags.ColumnNextId, nextId.Value);
 					
 					command.ReplaceTables (transaction, options);
 				}
@@ -198,17 +217,18 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Applies the log changes.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="data">The changed table data.</param>
 		private void ApplyLogChanges(DbTransaction transaction, PackedTableData data)
 		{
 			if (data == null)
 			{
 				return;
 			}
-			
-			//	Applique les modifications décrites pour la table de LOG. Pour ce faire,
-			//	on remplit une table avec les lignes à répliquer et on utilise un 'REPLACE'
-			//	de toutes celles-ci :
 			
 			DbTable table = this.infrastructure.ResolveDbTable (transaction, new DbKey (data.Key));
 			
@@ -217,70 +237,81 @@ namespace Epsitec.Cresus.Replication
 				System.Diagnostics.Debug.Assert (command.DataSet != null);
 				System.Diagnostics.Debug.Assert (command.DataSet.Tables.Count == 1);
 
-				System.Data.DataTable data_table = command.DataTable;
+				System.Data.DataTable dataTable = command.DataTable;
 				
-				data.FillTable (data_table);
-				
-				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
+				data.FillTable (dataTable);
+
+				//	The data from the replication engine will be written to the local table;
+				//	duplicate rows will be overwritten and new rows will be added.
+
+				System.Diagnostics.Debug.Assert (dataTable.Rows.Count > 0);
 				
 				command.ReplaceTablesWithoutValidityChecking (transaction, null);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Replicated {0} lines from CR_LOG.", data_table.Rows.Count));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Replicated {0} lines from CR_LOG.", dataTable.Rows.Count));
+
+				//	Find the largest server log id and remember it; we can start from there the
+				//	next time we need to replicate.
 				
-				for (int i = 0; i < data_table.Rows.Count; i++)
+				foreach (System.Data.DataRow row in dataTable.Rows)
 				{
-					System.Data.DataRow row = data_table.Rows[i];
-					
 					DbId id = new DbId ((long) row[0]);
 					
 					if ((id.IsServer) &&
-						(id.LocalId > this.largest_log_id.LocalId))
+						(id.LocalId > this.largestLogId.LocalId))
 					{
-						this.largest_log_id = id;
+						this.largestLogId = id;
 					}
 				}
 			}
 		}
-		
-		private void ApplyStructuralChanges(IDbAbstraction database, PackedTableData def_table, PackedTableData def_column, PackedTableData def_type)
+
+		/// <summary>
+		/// Applies structural changes to the underlying database : adding tables, columns,
+		/// changing their type, etc.
+		/// </summary>
+		/// <param name="database">The database.</param>
+		/// <param name="defTable">The table definitions.</param>
+		/// <param name="defColumn">The column definitions.</param>
+		/// <param name="defType">The type definitions.</param>
+		private void ApplyStructuralChanges(IDbAbstraction database, PackedTableData defTable, PackedTableData defColumn, PackedTableData defType)
 		{
-			//	Applique des modifications structurelles (tables, colonnes, types...)
-			//	Pour l'instant, seule la création d'une nouvelle table est gérée.
+			//	Currently, only the creation of new tables is handled here.
+
+			//	TODO: handle changes to existing tables
 			
-			//	TODO: gérer les mises à jour de tables existantes (modification des types et colonnes).
-			
-			if (def_table != null)
+			if (defTable != null)
 			{
-				object[][] def_table_rows = def_table.GetAllValues ();
+				object[][] defTableRows = defTable.GetAllValues ();
 				
-				//	Passe en revue toutes les lignes qui ont changé dans CR_TABLE :
+				//	Let's see what changed in CR_TABLE_DEF :
 				
-				for (int i = 0; i < def_table_rows.Length; i++)
+				foreach (var defTableRow in defTableRows)
 				{
-					DbKey   def_table_row_key = new DbKey (def_table_rows[i]);
-					DbTable def_table_runtime = this.infrastructure.ResolveDbTable (def_table_row_key);
+					DbKey   defTableRowKey  = new DbKey (defTableRow);
+					DbTable defTableRuntime = this.infrastructure.ResolveDbTable (defTableRowKey);
 					
-					System.Diagnostics.Debug.Assert (def_table_runtime != null);
+					System.Diagnostics.Debug.Assert (defTableRuntime != null);
 					
-					if (def_table_row_key.Status == DbRowStatus.Deleted)
+					if (defTableRowKey.Status == DbRowStatus.Deleted)
 					{
-						//	La table a été supprimée. Dans les faits, on ne la supprime jamais
-						//	de table dans la base de données. Il n'y a donc rien à faire...
+						//	The table was deleted; since we never really delete anything in the database,
+						//	there is nothing more to do here.
 						
-						System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was deleted.", def_table_runtime.Name));
+						System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was deleted.", defTableRuntime.Name));
 					}
 					else
 					{
-						//	La table a été modifiée (peut-être créée).
+						//	The table was modified, maybe created.
 						
-						string   find_sql_name    = def_table_runtime.GetSqlName ();
-						string[] known_sql_tables = database.QueryUserTableNames ();
+						string   findSqlName    = defTableRuntime.GetSqlName ();
+						string[] knownSqlTables = database.QueryUserTableNames ();
 						
 						bool found = false;
 						
-						for (int j = 0; j < known_sql_tables.Length; j++)
+						foreach (string name in knownSqlTables)
 						{
-							if (known_sql_tables[j] == find_sql_name)
+							if (name == findSqlName)
 							{
 								found = true;
 								break;
@@ -289,21 +320,23 @@ namespace Epsitec.Cresus.Replication
 						
 						if (found)
 						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was modified. SQL Name is {1}.", def_table_runtime.Name, find_sql_name));
+							System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was modified. SQL Name is {1}.", defTableRuntime.Name, findSqlName));
 							
-							//	TODO: gérer la mise à jour de la table...
+							//	TODO: handle updating a table
+
+							throw new System.NotImplementedException ();
 						}
 						else
 						{
-							System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was created. SQL Name is {1}.", def_table_runtime.Name, find_sql_name));
+							System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was created. SQL Name is {1}.", defTableRuntime.Name, findSqlName));
 							
-							//	La table doit être créée. On va simplement créer la table dans la base
-							//	de données, sans créer les informations dans CR_TABLE/CR_COLUMN, car
-							//	celles-ci sont déjà présentes :
+							//	The table has to be created; we need not create/update the schema definitions
+							//	at our level, since the corresponding tables will be automatically updated in
+							//	the replication process :
 							
 							using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 							{
-								this.infrastructure.RegisterKnownDbTable (transaction, def_table_runtime);
+								this.infrastructure.RegisterKnownDbTable (transaction, defTableRuntime);
 								
 								transaction.Commit ();
 							}
@@ -312,25 +345,35 @@ namespace Epsitec.Cresus.Replication
 				}
 			}
 		}
-		
+
+		/// <summary>
+		/// Updates the sync log id in the local settings of the database.
+		/// </summary>
+		/// <param name="transaction">The active transaction.</param>
 		private void UpdateSyncLogId(DbTransaction transaction)
 		{
-			if (this.LargestLogId.IsValid)
+			if (this.LargestServerLogId.IsValid)
 			{
-				this.infrastructure.LocalSettings.SyncLogId = this.LargestLogId;
+				this.infrastructure.LocalSettings.SyncLogId = this.LargestServerLogId;
 				this.infrastructure.LocalSettings.PersistToBase (transaction);
 				
 				System.Diagnostics.Debug.WriteLine ("Persisted SyncLogId.");
 			}
 		}
-		
-		private static PackedTableData FindPackedTable(List<PackedTableData> list, string name)
+
+		/// <summary>
+		/// Finds the matching packed table.
+		/// </summary>
+		/// <param name="list">The collection of packed tables.</param>
+		/// <param name="name">The name.</param>
+		/// <returns></returns>
+		private static PackedTableData FindPackedTable(IEnumerable<PackedTableData> list, string name)
 		{
-			foreach (PackedTableData packed_table in list)
+			foreach (PackedTableData packedTable in list)
 			{
-				if (packed_table.Name == name)
+				if (packedTable.Name == name)
 				{
-					return packed_table;
+					return packedTable;
 				}
 			}
 			
@@ -338,19 +381,9 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		private void NotifyBeforeCommit(DbTransaction transaction)
-		{
-			if (this.before_commit_callback != null)
-			{
-				this.before_commit_callback (this, transaction);
-			}
-		}
-		
-		
 		readonly DbInfrastructure				infrastructure;
-		readonly Remoting.IReplicationService	replication_service;
-		private DbId							largest_log_id = DbId.Invalid;
+		readonly Remoting.IReplicationService	replicationService;
 		
-		private Callback						before_commit_callback;
+		private DbId							largestLogId;
 	}
 }

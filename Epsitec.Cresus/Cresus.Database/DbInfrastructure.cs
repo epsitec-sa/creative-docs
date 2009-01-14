@@ -1458,18 +1458,53 @@ namespace Epsitec.Cresus.Database
 		/// Neither <c>GlobalLock</c> nor <c>DatabaseLock</c> is allowed
 		/// until <c>GlobalUnlcok</c> is called.
 		/// </summary>
-		public void GlobalLock()
+		/// <returns>An object which should be used in a <c>using</c> block.</returns>
+		public System.IDisposable GlobalLock()
 		{
 			this.globalLock.AcquireWriterLock (this.lockTimeout);
+
+			return new GlobalLockHelper (this);
 		}
 
 		/// <summary>
 		/// Releases the global lock from the database. See <see cref="GlobalLock"/>.
 		/// </summary>
-		public void GlobalUnlock()
+		private void GlobalUnlock()
 		{
 			this.globalLock.ReleaseWriterLock ();
 		}
+
+
+		private class GlobalLockHelper : System.IDisposable
+		{
+			public GlobalLockHelper(DbInfrastructure infrastructure)
+			{
+				this.infrastructure = infrastructure;
+			}
+
+			~GlobalLockHelper()
+			{
+				throw new System.InvalidOperationException ("Caller of GlobalLock forgot to call Dispose");
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.Dispose (true);
+				System.GC.SuppressFinalize (this);
+			}
+
+			#endregion
+
+			private void Dispose(bool disposing)
+			{
+				this.infrastructure.GlobalUnlock ();
+			}
+
+			readonly DbInfrastructure infrastructure;
+		}
+
 
 		/// <summary>
 		/// Locks a specific database connection. This prevents that the global
