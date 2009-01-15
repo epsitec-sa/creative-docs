@@ -42,30 +42,6 @@ namespace Epsitec.Cresus.Requests
 		}
 		#endregion
 		
-		public static byte[] SerializeToMemory(AbstractRequest request)
-		{
-			BinaryFormatter        formatter = new BinaryFormatter ();
-			System.IO.MemoryStream stream    = new System.IO.MemoryStream ();
-			
-			formatter.Serialize (stream, request);
-			stream.Close ();
-			
-			return stream.ToArray ();
-		}
-		
-		public static AbstractRequest DeserializeFromMemory(byte[] buffer)
-		{
-			BinaryFormatter        formatter = new BinaryFormatter ();
-			System.IO.MemoryStream stream    = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false);
-			
-			AbstractRequest request = formatter.Deserialize (stream) as AbstractRequest;
-			
-			stream.Close ();
-			
-			return request;
-		}
-		
-		
 		protected void SetupRequestType(RequestType type)
 		{
 			this.type = type;

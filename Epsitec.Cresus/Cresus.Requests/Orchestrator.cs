@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Requests
 				
 				System.Threading.WaitHandle[] wait_events = new System.Threading.WaitHandle[4];
 				
-				wait_events[0] = this.executionQueue.EnqueueWaitEvent;
+				wait_events[0] = this.executionQueue.QueueChangedWaitEvent;
 				wait_events[1] = this.executionQueue.ExecutionStateWaitEvent;
 				wait_events[2] = this.serverEvent;
 				wait_events[3] = this.abortEvent;
@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Requests
 			
 			DbKey  request_key = new DbKey (row);
 			DbId   request_id  = request_key.Id;
-			byte[] serialized  = Requests.AbstractRequest.SerializeToMemory (request);
+			byte[] serialized  = Epsitec.Common.IO.Serialization.SerializeToMemory (request);
 			
 			requests[0] = new Remoting.SerializedRequest (request_id, serialized);
 			
@@ -562,7 +562,7 @@ namespace Epsitec.Cresus.Requests
 				{
 					if (this.executionQueue.GetRequestExecutionState (row) == ExecutionState.ExecutedByServer)
 					{
-						this.executionQueue.RemoveRequest (row);
+						this.executionQueue.RemoveRequestRow (row);
 					}
 				}
 				

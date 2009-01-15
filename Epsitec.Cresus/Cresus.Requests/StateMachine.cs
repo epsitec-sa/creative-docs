@@ -1,14 +1,20 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// La classe StateMachine permet de vérifier que les transitions d'état sont
-	/// conformes à ce qui est prévu par la machine d'état.
+	/// The <c>StateMachine</c> class checks that the state transitions for a
+	/// given state machine are valid.
 	/// </summary>
-	public class StateMachine
+	internal class StateMachine
 	{
+		/// <summary>
+		/// Checks that the transition from one state to another is allowed.
+		/// </summary>
+		/// <param name="before">The state before transition.</param>
+		/// <param name="after">The state after transition.</param>
+		/// <returns><c>true</c> if the transition is allowed; otherwise, <c>false</c>.</returns>
 		public static bool Check(ExecutionState before, ExecutionState after)
 		{
 			if (before == after)

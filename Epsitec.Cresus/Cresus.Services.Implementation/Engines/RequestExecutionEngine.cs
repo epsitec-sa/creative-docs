@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Services
 			end:
 				if (list.Count > 0)
 				{
-					this.execution_queue.RemoveRequests (list);
+					this.execution_queue.RemoveRequestRows (list);
 				}
 			}
 		}
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Services
 				}
 				if (list.Count > 0)
 				{
-					this.execution_queue.RemoveRequests (list);
+					this.execution_queue.RemoveRequestRows (list);
 				}
 			}
 		}

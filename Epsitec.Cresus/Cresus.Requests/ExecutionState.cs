@@ -1,28 +1,56 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// L'énumération ExecutionState décrit l'état d'une requête dans la queue
-	/// d'exécution des requêtes (voir ExecutionQueue/ExecutionEngine); utilisé
-	/// dans une machine d'état.
+	/// The <c>ExecutionState</c> enumeration defines the possible states for
+	/// a request stored in the <see cref="ExecutionQueue"/>.
 	/// </summary>
 	public enum ExecutionState : short
 	{
-		Pending				= 0,				//	en attente, exécution locale
-		Conflicting			= 1,				//	en attente, conflit à résoudre
-		ConflictResolved	= 2,				//	en attente, conflit résolu
-		ExecutedByClient	= 3,				//	exécution par le client OK
-		SentToServer		= 4,				//	envoi au serveur OK
-		ExecutedByServer	= 5,				//	exécution par le serveur OK
-		
-		ConflictingOnServer	= 6,				//	transitoire, conflit sur le serveur
-		
+		/// <summary>
+		/// Pending, local execution.
+		/// </summary>
+		Pending				= 0,
+
+		/// <summary>
+		/// Pending, a conflict needs to be resolved.
+		/// </summary>
+		Conflicting			= 1,
+
+		/// <summary>
+		/// Pending, a conflict has been resolved.
+		/// </summary>
+		ConflictResolved	= 2,
+
+		/// <summary>
+		/// Successfully executed by the client.
+		/// </summary>
+		ExecutedByClient	= 3,
+
+		/// <summary>
+		/// Successfully sent to the server.
+		/// </summary>
+		SentToServer		= 4,
+
+		/// <summary>
+		/// Successfully executed by the server.
+		/// </summary>
+		ExecutedByServer	= 5,
+
+		/// <summary>
+		/// Transient, a conflict has been identified on the server.
+		/// </summary>
+		ConflictingOnServer	= 6,
+
+		/// <summary>
+		/// The number of states is currently 7.
+		/// </summary>
 		Count
 	}
 	
-	//	Les transitions suivantes sont possibles :
+	//	The following transitions are currently supported :
 	//
 	//		Pending ----------> | -> ExecutedByClient -> SentToServer -> | -> ExecutedByServer
 	//		                    |                                        |

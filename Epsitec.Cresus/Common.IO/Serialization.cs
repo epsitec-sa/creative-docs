@@ -82,5 +82,17 @@ namespace Epsitec.Common.IO
 
 			return o;
 		}
+
+		public static T DeserializeFromMemory<T>(byte[] buffer) where T : class
+		{
+			if (buffer == null)
+			{
+				return null;
+			}
+			else
+			{
+				return Serialization.DeserializeFromMemory (buffer) as T;
+			}
+		}
 	}
 }

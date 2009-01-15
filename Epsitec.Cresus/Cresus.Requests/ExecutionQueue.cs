@@ -16,16 +16,21 @@ namespace Epsitec.Cresus.Requests
 	/// </summary>
 	public sealed class ExecutionQueue : IPersistable, System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExecutionQueue"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="database">The database.</param>
 		public ExecutionQueue(DbInfrastructure infrastructure, IDbAbstraction database)
 		{
 			this.infrastructure      = infrastructure;
 			this.database            = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
-			this.enqueueEvent        = new AutoResetEvent (false);
-			this.executionStateEvent = new AutoResetEvent (false);
+			this.queueChangedEvent   = new AutoResetEvent (false);
+			this.stateChangedEvent   = new AutoResetEvent (false);
 			this.isServer            = this.infrastructure.LocalSettings.IsServer;
 			
 			int n = (int) ExecutionState.Count;
-			this.stateCount = new int[n];
+			this.stateCountCache = new int[n];
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
@@ -37,8 +42,13 @@ namespace Epsitec.Cresus.Requests
 				transaction.Commit ();
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the rows currently defined in the database, which hold the requests
+		/// of the execution queue.
+		/// </summary>
+		/// <value>The rows.</value>
 		public System.Data.DataRow[]			Rows
 		{
 			get
@@ -50,11 +60,12 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		internal AutoResetEvent					EnqueueWaitEvent
+		
+		internal AutoResetEvent					QueueChangedWaitEvent
 		{
 			get
 			{
-				return this.enqueueEvent;
+				return this.queueChangedEvent;
 			}
 		}
 		
@@ -62,7 +73,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				return this.executionStateEvent;
+				return this.stateChangedEvent;
 			}
 		}
 		
@@ -90,7 +101,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.Pending] > 0;
+					return this.stateCountCache[(int) ExecutionState.Pending] > 0;
 				}
 			}
 		}
@@ -101,7 +112,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.Conflicting] > 0;
+					return this.stateCountCache[(int) ExecutionState.Conflicting] > 0;
 				}
 			}
 		}
@@ -112,7 +123,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.ConflictResolved] > 0;
+					return this.stateCountCache[(int) ExecutionState.ConflictResolved] > 0;
 				}
 			}
 		}
@@ -123,7 +134,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.ExecutedByClient] > 0;
+					return this.stateCountCache[(int) ExecutionState.ExecutedByClient] > 0;
 				}
 			}
 		}
@@ -134,7 +145,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.SentToServer] > 0;
+					return this.stateCountCache[(int) ExecutionState.SentToServer] > 0;
 				}
 			}
 		}
@@ -145,7 +156,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.ExecutedByServer] > 0;
+					return this.stateCountCache[(int) ExecutionState.ExecutedByServer] > 0;
 				}
 			}
 		}
@@ -156,7 +167,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				lock (this.exclusion)
 				{
-					return this.stateCount[(int) ExecutionState.ConflictingOnServer] > 0;
+					return this.stateCountCache[(int) ExecutionState.ConflictingOnServer] > 0;
 				}
 			}
 		}
@@ -196,8 +207,9 @@ namespace Epsitec.Cresus.Requests
 					return;
 				}
 			}
-			
-			System.Data.DataRow row = this.AddRequest (transaction, request);
+
+			DbId logId = this.CreateLogId (transaction);
+			System.Data.DataRow row = this.CreateRequestRow (transaction, request, logId);
 
 			lock (this.exclusion)
 			{
@@ -205,7 +217,7 @@ namespace Epsitec.Cresus.Requests
 				this.UpdateCounts ();
 			}
 			
-			this.enqueueEvent.Set ();
+			this.queueChangedEvent.Set ();
 		}
 
 		/// <summary>
@@ -231,12 +243,14 @@ namespace Epsitec.Cresus.Requests
 
 			lock (this.exclusion)
 			{
+				DbId logId = this.CreateLogId (transaction);
+
 				for (int i = 0; i < serializedRequests.Length; i++)
 				{
 					//	Create one row for every serialized request; its timestamp is set using the
 					//	local time :
 					
-					System.Data.DataRow row  = this.AddRequest (transaction, serializedRequests[i]);
+					System.Data.DataRow row  = this.CreateRequestRow (transaction, serializedRequests[i], logId);
 					System.Data.DataRow find = DbRichCommand.FindRow (this.queueDataTable, ids[i]);
 
 					//	The caller assigned the IDs for the requests, we have to use them instead
@@ -277,7 +291,7 @@ namespace Epsitec.Cresus.Requests
 			
 			System.Diagnostics.Debug.WriteLine ("Enqueued " + serializedRequests.Length + " serialized requests.");
 			
-			this.enqueueEvent.Set ();
+			this.queueChangedEvent.Set ();
 		}
 
 
@@ -298,48 +312,30 @@ namespace Epsitec.Cresus.Requests
 				this.UpdateCounts ();
 			}
 			
-			this.enqueueEvent.Set ();
+			this.queueChangedEvent.Set ();
 		}
-		
-		
-		private System.Data.DataRow AddRequest(Database.DbTransaction transaction, AbstractRequest request)
-		{
-			return this.AddRequest (transaction, AbstractRequest.SerializeToMemory (request));
-		}
-		
-		private System.Data.DataRow AddRequest(Database.DbTransaction transaction, byte[] data)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			System.Diagnostics.Debug.Assert (data != null);
 
-			int length = data.Length;
-			
-			System.Diagnostics.Debug.Assert (length > 0);
 
-			System.Data.DataRow row = DbRichCommand.CreateRow (this.queueDataTable, this.CreateLogId (transaction));
-			
-			row.BeginEdit ();
-			row[Tags.ColumnReqData]    = data;
-			row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (ExecutionState.Pending);
-			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
-			row.EndEdit ();
-			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} added, initial state {1}.", row[0], (ExecutionState)row[Tags.ColumnReqExState]));
-			
-			return row;
-		}
-		
-		public void RemoveRequest(System.Data.DataRow row)
+		/// <summary>
+		/// Removes the request row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		public void RemoveRequestRow(System.Data.DataRow row)
 		{
 			lock (this.exclusion)
 			{
 				Database.DbRichCommand.KillRow (row);
 				this.UpdateCounts ();
 			}
-			this.enqueueEvent.Set ();
+			
+			this.queueChangedEvent.Set ();
 		}
-		
-		public void RemoveRequests(IEnumerable<System.Data.DataRow> rows)
+
+		/// <summary>
+		/// Removes the request rows.
+		/// </summary>
+		/// <param name="rows">The rows.</param>
+		public void RemoveRequestRows(IEnumerable<System.Data.DataRow> rows)
 		{
 			lock (this.exclusion)
 			{
@@ -350,24 +346,37 @@ namespace Epsitec.Cresus.Requests
 				
 				this.UpdateCounts ();
 			}
-			this.enqueueEvent.Set ();
+			
+			this.queueChangedEvent.Set ();
 		}
-		
+
+		/// <summary>
+		/// Gets the request from a row. The request gets deserialized from the row
+		/// data.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The request or <c>null</c>.</returns>
 		public AbstractRequest GetRequest(System.Data.DataRow row)
 		{
+			byte[] buffer = null;
+
 			lock (this.exclusion)
 			{
 				if ((row != null) &&
 					(DbRichCommand.IsRowDeleted (row) == false))
 				{
-					byte[] buffer = row[Tags.ColumnReqData] as byte[];
-					return AbstractRequest.DeserializeFromMemory (buffer);
+					buffer = row[Tags.ColumnReqData] as byte[];
 				}
 			}
-			
-			return null;
+
+			return Epsitec.Common.IO.Serialization.DeserializeFromMemory<AbstractRequest> (buffer);
 		}
-		
+
+		/// <summary>
+		/// Gets the execution state of the request, based on a row.
+		/// </summary>
+		/// <param name="row">The row.</param>
+		/// <returns>The execution state.</returns>
 		public ExecutionState GetRequestExecutionState(System.Data.DataRow row)
 		{
 			lock (this.exclusion)
@@ -376,32 +385,37 @@ namespace Epsitec.Cresus.Requests
 				return ExecutionQueue.ConvertToExecutionState (row[Tags.ColumnReqExState]);
 			}
 		}
-		
-		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState new_state)
+
+		/// <summary>
+		/// Sets the execution state of the request, based on a row.
+		/// </summary>
+		/// <param name="row">The row for the request.</param>
+		/// <param name="newState">The new state.</param>
+		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState newState)
 		{
 			lock (this.exclusion)
 			{
-				ExecutionState old_state = this.GetRequestExecutionState (row);
+				ExecutionState oldState = this.GetRequestExecutionState (row);
 				
-				if (old_state == new_state)
+				if (oldState == newState)
 				{
 					return;
 				}
 				
-				if (StateMachine.Check (old_state, new_state) == false)
+				if (StateMachine.Check (oldState, newState) == false)
 				{
-					throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", old_state, new_state));
+					throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", oldState, newState));
 				}
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} changed from {1} to {2}.", row[0], old_state, new_state));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} changed from {1} to {2}.", row[0], oldState, newState));
 				
-				row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (new_state);
+				row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (newState);
 				
-				this.stateCount[(int) old_state]--;
-				this.stateCount[(int) new_state]++;
+				this.stateCountCache[(int) oldState]--;
+				this.stateCountCache[(int) newState]++;
 			}
 			
-			this.executionStateEvent.Set ();
+			this.stateChangedEvent.Set ();
 		}
 
 
@@ -419,13 +433,17 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (disposing)
 			{
-				this.enqueueEvent.Close ();
-				this.executionStateEvent.Close ();
+				this.queueChangedEvent.Close ();
+				this.stateChangedEvent.Close ();
 			}
 		}
 
 		#region IPersistable Members
-		
+
+		/// <summary>
+		/// Loads the instance data from the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void LoadFromBase(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -440,7 +458,11 @@ namespace Epsitec.Cresus.Requests
 				this.UpdateCounts ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Persists the instance data to the database.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
 		public void PersistToBase(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
@@ -478,8 +500,54 @@ namespace Epsitec.Cresus.Requests
 		{
 			return (short) value;
 		}
-		
-		
+
+
+		/// <summary>
+		/// Creates the request row.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="request">The request.</param>
+		/// <returns>The new data row.</returns>
+		System.Data.DataRow CreateRequestRow(Database.DbTransaction transaction, AbstractRequest request, DbId logId)
+		{
+			return this.CreateRequestRow (transaction, Epsitec.Common.IO.Serialization.SerializeToMemory (request), logId);
+		}
+
+		/// <summary>
+		/// Creates the request row.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="data">The serialized data of the request.</param>
+		/// <returns>The new data row.</returns>
+		System.Data.DataRow CreateRequestRow(Database.DbTransaction transaction, byte[] data, DbId logId)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (data != null);
+
+			int length = data.Length;
+
+			System.Diagnostics.Debug.Assert (length > 0);
+
+			System.Data.DataRow row = DbRichCommand.CreateRow (this.queueDataTable, logId);
+
+			row.BeginEdit ();
+			row[Tags.ColumnReqData]    = data;
+			row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (ExecutionState.Pending);
+			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
+			row.EndEdit ();
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} added, initial state {1}.", row[0], (ExecutionState) row[Tags.ColumnReqExState]));
+
+			return row;
+		}
+
+
+		/// <summary>
+		/// Creates a new log id. If we are running on the server, create a permanent
+		/// entry, otherwise create only a temporary entry.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <returns>The new log id.</returns>
 		DbId CreateLogId(Database.DbTransaction transaction)
 		{
 			if (this.isServer)
@@ -491,7 +559,11 @@ namespace Epsitec.Cresus.Requests
 				return this.infrastructure.Logger.CreateTemporaryEntry (transaction);
 			}
 		}
-		
+
+		/// <summary>
+		/// Checks that the row is valid.
+		/// </summary>
+		/// <param name="row">The row.</param>
 		void CheckRow(System.Data.DataRow row)
 		{
 			if (row == null)
@@ -508,7 +580,10 @@ namespace Epsitec.Cresus.Requests
 				throw new System.ArgumentException ("Invalid row specified.");
 			}
 		}
-		
+
+		/// <summary>
+		/// Updates the counts for each state.
+		/// </summary>
 		void UpdateCounts()
 		{
 			int   n     = (int) ExecutionState.Count;
@@ -522,8 +597,14 @@ namespace Epsitec.Cresus.Requests
 					count[state]++;
 				}
 			}
+
+			if (Epsitec.Common.Types.Comparer.EqualValues (this.stateCountCache, count))
+			{
+				return;
+			}
 			
-			this.stateCount = count;
+			this.stateCountCache = count;
+			this.stateChangedEvent.Set ();
 		}
 
 
@@ -532,13 +613,15 @@ namespace Epsitec.Cresus.Requests
 		readonly DbInfrastructure				infrastructure;
 		readonly IDbAbstraction					database;
 		readonly DbTable						queueDbTable;
+
+		readonly AutoResetEvent					queueChangedEvent;
+		readonly AutoResetEvent					stateChangedEvent;
+		readonly bool							isServer;
+		
 		private DbRichCommand					queueCommand;
 		private System.Data.DataSet				queueDataSet;
 		private System.Data.DataTable			queueDataTable;
-
-		readonly AutoResetEvent					enqueueEvent;
-		readonly AutoResetEvent					executionStateEvent;
-		readonly bool							isServer;
-		private int[]							stateCount;
+		
+		private int[]							stateCountCache;
 	}
 }
