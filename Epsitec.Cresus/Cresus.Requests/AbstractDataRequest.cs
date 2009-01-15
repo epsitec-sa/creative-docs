@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public abstract class AbstractData : AbstractRequest, System.Runtime.Serialization.ISerializable
+	public abstract class AbstractDataRequest : AbstractRequest, System.Runtime.Serialization.ISerializable
 	{
-		public AbstractData(RequestType type) : base (type)
+		public AbstractDataRequest(RequestType type) : base (type)
 		{
 		}
 		
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		protected AbstractData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected AbstractDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 			this.table_name = info.GetValue ("TableName", typeof (string)) as string;
 		}

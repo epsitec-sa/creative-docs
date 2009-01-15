@@ -10,13 +10,13 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public class InsertStaticData : AbstractData, System.Runtime.Serialization.ISerializable
+	public class InsertStaticDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
 	{
-		public InsertStaticData() : base (RequestType.InsertStaticData)
+		public InsertStaticDataRequest() : base (RequestType.InsertStaticData)
 		{
 		}
 		
-		public InsertStaticData(System.Data.DataRow row) : this ()
+		public InsertStaticDataRequest(System.Data.DataRow row) : this ()
 		{
 			this.DefineRow (row);
 		}
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		protected InsertStaticData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected InsertStaticDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 			this.SetupRequestType (RequestType.InsertStaticData);
 			

@@ -71,9 +71,9 @@ namespace Epsitec.Cresus.Database
 		public void Check04Types()
 		{
 			Requests.AbstractRequest req1 = new Requests.Group ();
-			Requests.AbstractRequest req2 = new Requests.InsertStaticData ();
-			Requests.AbstractRequest req3 = new Requests.UpdateStaticData ();
-			Requests.AbstractRequest req4 = new Requests.UpdateDynamicData ();
+			Requests.AbstractRequest req2 = new Requests.InsertStaticDataRequest ();
+			Requests.AbstractRequest req3 = new Requests.UpdateStaticDataRequest ();
+			Requests.AbstractRequest req4 = new Requests.UpdateDynamicDataRequest ();
 
 			Assert.AreEqual (Requests.RequestType.Group, req1.RequestType);
 			Assert.AreEqual (Requests.RequestType.InsertStaticData, req2.RequestType);
@@ -100,14 +100,14 @@ namespace Epsitec.Cresus.Database
 
 				Requests.Group group = new Requests.Group ();
 
-				Requests.InsertStaticData req_1 = new Requests.InsertStaticData (table.Rows[0]);
-				Requests.InsertStaticData req_2 = new Requests.InsertStaticData (table.Rows[1]);
+				Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
+				Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
 
 				table.Rows[0].BeginEdit ();
 				table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
 				table.Rows[0].EndEdit ();
 
-				Requests.UpdateStaticData req_3 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+				Requests.UpdateStaticDataRequest req_3 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
 
 				group.Add (req_1);
 				group.Add (req_2);
@@ -131,9 +131,9 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (Requests.RequestType.InsertStaticData, group[1].RequestType);
 				Assert.AreEqual (Requests.RequestType.UpdateStaticData, group[2].RequestType);
 
-				Requests.InsertStaticData req_1 = group[0] as Requests.InsertStaticData;
-				Requests.InsertStaticData req_2 = group[1] as Requests.InsertStaticData;
-				Requests.UpdateStaticData req_3 = group[2] as Requests.UpdateStaticData;
+				Requests.InsertStaticDataRequest req_1 = group[0] as Requests.InsertStaticDataRequest;
+				Requests.InsertStaticDataRequest req_2 = group[1] as Requests.InsertStaticDataRequest;
+				Requests.UpdateStaticDataRequest req_3 = group[2] as Requests.UpdateStaticDataRequest;
 
 				Assert.AreEqual ("DemoTable", req_1.TableName);
 				Assert.AreEqual ("DemoTable", req_2.TableName);
@@ -160,14 +160,14 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 
-			Requests.UpdateStaticData req_1 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+			Requests.UpdateStaticDataRequest req_1 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
 
 			table.Rows[0].BeginEdit ();
 			table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
 			table.Rows[0].EndEdit ();
 
-			Requests.UpdateStaticData req_2 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
-			Requests.UpdateStaticData req_3 = new Requests.UpdateStaticData (table.Rows[1], Requests.UpdateMode.Full);
+			Requests.UpdateStaticDataRequest req_2 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
+			Requests.UpdateStaticDataRequest req_3 = new Requests.UpdateStaticDataRequest (table.Rows[1], Requests.UpdateMode.Full);
 
 			Assert.IsTrue (req_1.ContainsData == false);
 			Assert.IsTrue (req_2.ContainsData == true);
@@ -206,14 +206,14 @@ namespace Epsitec.Cresus.Database
 
 					Requests.Group group = new Requests.Group ();
 
-					Requests.InsertStaticData req_1 = new Requests.InsertStaticData (table.Rows[0]);
-					Requests.InsertStaticData req_2 = new Requests.InsertStaticData (table.Rows[1]);
+					Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
+					Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
 
 					table.Rows[0].BeginEdit ();
 					table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
 					table.Rows[0].EndEdit ();
 
-					Requests.UpdateStaticData req_3 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+					Requests.UpdateStaticDataRequest req_3 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
 
 					group.Add (req_1);
 					group.Add (req_2);

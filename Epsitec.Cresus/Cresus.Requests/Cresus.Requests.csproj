@@ -126,7 +126,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AbstractData.cs">
+    <Compile Include="AbstractDataRequest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AbstractRequest.cs">
@@ -147,7 +147,7 @@
     <Compile Include="Group.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InsertStaticData.cs">
+    <Compile Include="InsertStaticDataRequest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Orchestrator.cs">
@@ -162,13 +162,13 @@
     <Compile Include="StateMachine.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UpdateDynamicData.cs">
+    <Compile Include="UpdateDynamicDataRequest.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UpdateMode.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="UpdateStaticData.cs">
+    <Compile Include="UpdateStaticDataRequest.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

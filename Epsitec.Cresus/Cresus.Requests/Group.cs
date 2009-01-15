@@ -74,6 +74,7 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
+		
 		protected Group(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 			this.SetupRequestType (RequestType.Group);
@@ -104,6 +105,7 @@ namespace Epsitec.Cresus.Requests
 			
 			info.AddValue ("RequestArray", array);
 		}
+		
 		#endregion
 		
 		#region IDeserializationCallback Members

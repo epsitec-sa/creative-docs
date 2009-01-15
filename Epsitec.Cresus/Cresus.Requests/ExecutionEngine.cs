@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				return this.current_log_id;
+				return this.currentLogId;
 			}
 		}
 		
@@ -62,11 +62,6 @@ namespace Epsitec.Cresus.Requests
 				this.expected_rows_changed = 0;
 				
 				request.Execute (this);
-				
-#if false
-				System.Threading.Thread.Sleep (100);
-				DbRichCommand.DebugDumpCommand (this.CurrentSqlBuilder.Command);
-#endif
 				
 				int rows_changed = this.infrastructure.ExecuteSilent (transaction, this.CurrentSqlBuilder);
 				
@@ -188,9 +183,9 @@ namespace Epsitec.Cresus.Requests
 		
 		private void DefineCurrentLogId()
 		{
-			System.Diagnostics.Debug.Assert (this.current_log_id.Value == 0);
+			System.Diagnostics.Debug.Assert (this.currentLogId.Value == 0);
 			
-			this.current_log_id = this.infrastructure.Logger.CurrentId;
+			this.currentLogId = this.infrastructure.Logger.CurrentId;
 		}
 		
 		private void DefineCurrentTransaction(DbTransaction transaction)
@@ -275,14 +270,14 @@ namespace Epsitec.Cresus.Requests
 				this.current_builder.Dispose ();
 			}
 			
-			this.current_log_id      = DbId.Zero;
+			this.currentLogId      = DbId.Zero;
 			this.current_transaction = null;
 			this.current_builder     = null;
 		}
 		
 		
-		private DbInfrastructure				infrastructure;
-		private DbId							current_log_id;
+		readonly DbInfrastructure				infrastructure;
+		private DbId							currentLogId;
 		private DbTransaction					current_transaction;
 		private ISqlBuilder						current_builder;
 		private int								pending_commands;

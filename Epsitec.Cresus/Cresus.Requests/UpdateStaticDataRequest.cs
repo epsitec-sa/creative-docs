@@ -10,13 +10,13 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public class UpdateStaticData : AbstractData, System.Runtime.Serialization.ISerializable
+	public class UpdateStaticDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
 	{
-		public UpdateStaticData() : base (RequestType.UpdateStaticData)
+		public UpdateStaticDataRequest() : base (RequestType.UpdateStaticData)
 		{
 		}
 		
-		public UpdateStaticData(System.Data.DataRow row, UpdateMode mode) : this ()
+		public UpdateStaticDataRequest(System.Data.DataRow row, UpdateMode mode) : this ()
 		{
 			this.DefineRow (row, mode);
 		}
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Requests
 		
 		
 		#region ISerializable Members
-		protected UpdateStaticData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected UpdateStaticDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 			this.SetupRequestType (RequestType.UpdateStaticData);
 			
