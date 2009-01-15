@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Requests
 {
 	using EventHandler = Common.Support.EventHandler;
 	using System.Threading;
+	using System.Collections.Generic;
 	
 	public delegate void RequestExecutedCallback(Orchestrator sender, DbId request_id);
 	
@@ -263,13 +264,13 @@ namespace Epsitec.Cresus.Requests
 		{
 			//	Passe en revue la queue à la recherche de requêtes en attente d'exécution.
 			
-			System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.executionQueue.DateTimeSortedRows);
+			List<System.Data.DataRow> rows = new List<System.Data.DataRow> (DbRichCommand.GetLiveRows (this.executionQueue.GetDateTimeSortedRows ()));
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
 			//	prochain tour.
 			
-			int n = rows.Length;
+			int n = rows.Count;
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Queue contains {0} {1}.", n, (n == 1) ? "request" : "requests"));
 			
@@ -366,13 +367,13 @@ namespace Epsitec.Cresus.Requests
 			//	au serveur. Dans l'implémentation actuelle, on envoie une requête à la
 			//	fois pour simplifier la détection des conflits.
 			
-			System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.executionQueue.DateTimeSortedRows);
+			List<System.Data.DataRow> rows = new List<System.Data.DataRow> (DbRichCommand.GetLiveRows (this.executionQueue.GetDateTimeSortedRows ()));
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
 			//	prochain tour.
 			
-			int n = rows.Length;
+			int n = rows.Count;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -437,7 +438,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			System.Data.DataRow[]        rows = this.executionQueue.DateTimeSortedRows;
+			System.Data.DataRow[]        rows = this.executionQueue.GetDateTimeSortedRows ();
 			
 			for (int i = 0; i < states.Length; i++)
 			{

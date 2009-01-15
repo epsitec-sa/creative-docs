@@ -2,7 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Extensions;
+
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace Epsitec.Cresus.Requests
 {
@@ -10,29 +14,28 @@ namespace Epsitec.Cresus.Requests
 	/// The <c>ExecutionQueue</c> class manages the queue of requests waiting for
 	/// execution.
 	/// </summary>
-	public class ExecutionQueue : IAttachable, IPersistable
+	public sealed class ExecutionQueue : IPersistable, System.IDisposable
 	{
 		public ExecutionQueue(DbInfrastructure infrastructure, IDbAbstraction database)
 		{
-			this.infrastructure = infrastructure;
-			this.database       = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
-			this.enqueue_event  = new System.Threading.AutoResetEvent (false);
-			this.exstate_event  = new System.Threading.AutoResetEvent (false);
-			this.is_server      = this.infrastructure.LocalSettings.IsServer;
+			this.infrastructure      = infrastructure;
+			this.database            = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
+			this.enqueueEvent        = new AutoResetEvent (false);
+			this.executionStateEvent = new AutoResetEvent (false);
+			this.isServer            = this.infrastructure.LocalSettings.IsServer;
 			
 			int n = (int) ExecutionState.Count;
-			this.state_count = new int[n];
+			this.stateCount = new int[n];
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
 				DbTable table = this.infrastructure.ResolveDbTable (transaction, Tags.TableRequestQueue);
-				
-				this.Attach (infrastructure, table);
+
+				this.queueDbTable = table;
 				this.LoadFromBase (transaction);
 				
 				transaction.Commit ();
 			}
-
 		}
 		
 		
@@ -40,50 +43,34 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					System.Data.DataRow[] rows = new System.Data.DataRow[this.queue_data_table.Rows.Count];
-					this.queue_data_table.Rows.CopyTo (rows, 0);
-					return rows;
+					return this.queueDataTable.Rows.ToArray ();
 				}
 			}
 		}
 		
-		public System.Data.DataRow[]			DateTimeSortedRows
+		internal AutoResetEvent					EnqueueWaitEvent
 		{
 			get
 			{
-				lock (this)
-				{
-					System.Data.DataRow[] rows = DbRichCommand.GetLiveRows (this.Rows);
-					System.Array.Sort (rows, new DateTimeRowComparer ());
-					return rows;
-				}
+				return this.enqueueEvent;
 			}
 		}
 		
-		
-		public System.Threading.AutoResetEvent	EnqueueWaitEvent
+		internal AutoResetEvent					ExecutionStateWaitEvent
 		{
 			get
 			{
-				return this.enqueue_event;
+				return this.executionStateEvent;
 			}
 		}
 		
-		public System.Threading.AutoResetEvent	ExecutionStateWaitEvent
-		{
-			get
-			{
-				return this.exstate_event;
-			}
-		}
-
 		internal System.Data.DataTable			QueueDataTable
 		{
 			get
 			{
-				return this.queue_data_table;
+				return this.queueDataTable;
 			}
 		}
 		
@@ -92,7 +79,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				return this.is_server;
+				return this.isServer;
 			}
 		}
 		
@@ -101,9 +88,9 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.Pending] > 0;
+					return this.stateCount[(int) ExecutionState.Pending] > 0;
 				}
 			}
 		}
@@ -112,9 +99,9 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.Conflicting] > 0;
+					return this.stateCount[(int) ExecutionState.Conflicting] > 0;
 				}
 			}
 		}
@@ -123,9 +110,9 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.ConflictResolved] > 0;
+					return this.stateCount[(int) ExecutionState.ConflictResolved] > 0;
 				}
 			}
 		}
@@ -134,9 +121,9 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.ExecutedByClient] > 0;
+					return this.stateCount[(int) ExecutionState.ExecutedByClient] > 0;
 				}
 			}
 		}
@@ -145,9 +132,9 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.SentToServer] > 0;
+					return this.stateCount[(int) ExecutionState.SentToServer] > 0;
 				}
 			}
 		}
@@ -156,9 +143,9 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.ExecutedByServer] > 0;
+					return this.stateCount[(int) ExecutionState.ExecutedByServer] > 0;
 				}
 			}
 		}
@@ -167,87 +154,111 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				lock (this)
+				lock (this.exclusion)
 				{
-					return this.state_count[(int) ExecutionState.ConflictingOnServer] > 0;
+					return this.stateCount[(int) ExecutionState.ConflictingOnServer] > 0;
 				}
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the data rows in the queue, sorted by their date and time.
+		/// </summary>
+		/// <returns>The sorted data rows.</returns>
+		public System.Data.DataRow[] GetDateTimeSortedRows()
+		{
+			lock (this.exclusion)
+			{
+				var rows = from row in DbRichCommand.GetLiveRows (this.queueDataTable.Rows)
+						   let dateX = (System.DateTime) row[Tags.ColumnDateTime]
+						   orderby dateX
+						   select row;
+
+				return rows.ToArray ();
+			}
+		}
+
+
+		/// <summary>
+		/// Adds the specified request into the queue.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="request">The request.</param>
 		public void Enqueue(Database.DbTransaction transaction, AbstractRequest request)
 		{
-			//	Ajoute une requête dans la queue.
-			
 			if (transaction == null)
 			{
-				try
+				using (transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
-					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
 					this.Enqueue (transaction, request);
-				}
-				finally
-				{
 					transaction.Commit ();
-					transaction.Dispose ();
+					return;
 				}
 			}
-			else
+			
+			System.Data.DataRow row = this.AddRequest (transaction, request);
+
+			lock (this.exclusion)
 			{
-				System.Data.DataRow row = this.AddRequest (transaction, request);
-				
-				lock (this)
-				{
-					this.queue_data_table.Rows.Add (row);
-					this.UpdateCounts ();
-				}
-				
-				this.enqueue_event.Set ();
+				this.queueDataTable.Rows.Add (row);
+				this.UpdateCounts ();
 			}
+			
+			this.enqueueEvent.Set ();
 		}
-		
-		public void Enqueue(Database.DbTransaction transaction, byte[][] serialized_requests, DbId[] ids)
+
+		/// <summary>
+		/// Adds the specified requests into the queue. The requests are provided in a serialized
+		/// format.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="serializedRequests">The serialized requests.</param>
+		/// <param name="ids">The client ids of the requests.</param>
+		public void Enqueue(Database.DbTransaction transaction, byte[][] serializedRequests, DbId[] ids)
 		{
-			//	Ajoute une série de requêtes qui sont déjà sous forme sérialisée,
-			//	en leur attribuant un ID particulier (cet ID dépend du client et
-			//	doit être associé à la requête pour permettre un dialogue correct
-			//	avec le client).
-			
-			System.Diagnostics.Debug.Assert (serialized_requests.Length == ids.Length);
-			
-			lock (this)
+			if (transaction == null)
 			{
-				for (int i = 0; i < serialized_requests.Length; i++)
+				using (transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
-					//	Crée la ligne décrivant la requête sérialisée. La date
-					//	courante (locale au processus) est affectée à la ligne :
+					this.Enqueue (transaction, serializedRequests, ids);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (serializedRequests.Length == ids.Length);
+
+			lock (this.exclusion)
+			{
+				for (int i = 0; i < serializedRequests.Length; i++)
+				{
+					//	Create one row for every serialized request; its timestamp is set using the
+					//	local time :
 					
-					System.Data.DataRow row  = this.AddRequest (transaction, serialized_requests[i]);
-					System.Data.DataRow find = DbRichCommand.FindRow (this.queue_data_table, ids[i]);
-					
-					//	L'appelant force des IDs pour les diverses requêtes (parce
-					//	qu'elles proviennent d'un client distant qui a déjà attribué
-					//	des IDs aux requêtes).
+					System.Data.DataRow row  = this.AddRequest (transaction, serializedRequests[i]);
+					System.Data.DataRow find = DbRichCommand.FindRow (this.queueDataTable, ids[i]);
+
+					//	The caller assigned the IDs for the requests, we have to use them instead
+					//	of the IDs provided by the AddRequest method.
 					
 					DbKey.SetRowId (row, ids[i]);
 					
 					if ((find != null) &&
 						(find.RowState != System.Data.DataRowState.Deleted))
 					{
-						//	La table contient déjà une requête avec cet ID, ce qui est
-						//	une indication qu'il y a eu un problème, manifestement.
+						//	If the table already contains a row with the same ID, this obviously
+						//	means that we have a problem, maybe a conflict which might have been
+						//	resolved since the last attempt.
 						
-						ExecutionState old_state = this.GetRequestExecutionState (find);
+						ExecutionState oldState = this.GetRequestExecutionState (find);
 						
-						System.Diagnostics.Debug.WriteLine (string.Format ("Overwrite request {0}, old state was {1}.", ids[i].Value, old_state));
+						System.Diagnostics.Debug.WriteLine (string.Format ("Overwrite request {0}, old state was {1}.", ids[i].Value, oldState));
 						
-						if (old_state == ExecutionState.Conflicting)
+						if (oldState == ExecutionState.Conflicting)
 						{
-							//	L'ancienne requête était en conflit. Elle est remplacée
-							//	par une requête fraîche -- le conflit va disparaître :
-							
 							find.BeginEdit ();
-							find.ItemArray = row.ItemArray;
+							find.ItemArray = row.ItemArray;		//	replace the conflicting request
 							find.EndEdit ();
 						}
 						else
@@ -257,22 +268,25 @@ namespace Epsitec.Cresus.Requests
 					}
 					else
 					{
-						this.queue_data_table.Rows.Add (row);
+						this.queueDataTable.Rows.Add (row);
 					}
 				}
 				
 				this.UpdateCounts ();
 			}
 			
-			System.Diagnostics.Debug.WriteLine ("Enqueued " + serialized_requests.Length + " serialized requests.");
+			System.Diagnostics.Debug.WriteLine ("Enqueued " + serializedRequests.Length + " serialized requests.");
 			
-			this.enqueue_event.Set ();
+			this.enqueueEvent.Set ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Clears the queue.
+		/// </summary>
 		public void ClearQueue()
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
 				System.Data.DataRow[] rows = this.Rows;
 				
@@ -284,22 +298,25 @@ namespace Epsitec.Cresus.Requests
 				this.UpdateCounts ();
 			}
 			
-			this.enqueue_event.Set ();
+			this.enqueueEvent.Set ();
 		}
 		
 		
-		public System.Data.DataRow AddRequest(Database.DbTransaction transaction, AbstractRequest request)
+		private System.Data.DataRow AddRequest(Database.DbTransaction transaction, AbstractRequest request)
 		{
 			return this.AddRequest (transaction, AbstractRequest.SerializeToMemory (request));
 		}
 		
-		public System.Data.DataRow AddRequest(Database.DbTransaction transaction, byte[] data)
+		private System.Data.DataRow AddRequest(Database.DbTransaction transaction, byte[] data)
 		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (data != null);
+
 			int length = data.Length;
 			
 			System.Diagnostics.Debug.Assert (length > 0);
 
-			System.Data.DataRow row = DbRichCommand.CreateRow (this.queue_data_table, this.CreateLogId (transaction));
+			System.Data.DataRow row = DbRichCommand.CreateRow (this.queueDataTable, this.CreateLogId (transaction));
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
@@ -314,17 +331,17 @@ namespace Epsitec.Cresus.Requests
 		
 		public void RemoveRequest(System.Data.DataRow row)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
 				Database.DbRichCommand.KillRow (row);
 				this.UpdateCounts ();
 			}
-			this.enqueue_event.Set ();
+			this.enqueueEvent.Set ();
 		}
 		
 		public void RemoveRequests(IEnumerable<System.Data.DataRow> rows)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
 				foreach (var row in rows)
 				{
@@ -333,12 +350,12 @@ namespace Epsitec.Cresus.Requests
 				
 				this.UpdateCounts ();
 			}
-			this.enqueue_event.Set ();
+			this.enqueueEvent.Set ();
 		}
 		
 		public AbstractRequest GetRequest(System.Data.DataRow row)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
 				if ((row != null) &&
 					(DbRichCommand.IsRowDeleted (row) == false))
@@ -353,7 +370,7 @@ namespace Epsitec.Cresus.Requests
 		
 		public ExecutionState GetRequestExecutionState(System.Data.DataRow row)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
 				this.CheckRow (row);
 				return ExecutionQueue.ConvertToExecutionState (row[Tags.ColumnReqExState]);
@@ -362,7 +379,7 @@ namespace Epsitec.Cresus.Requests
 		
 		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState new_state)
 		{
-			lock (this)
+			lock (this.exclusion)
 			{
 				ExecutionState old_state = this.GetRequestExecutionState (row);
 				
@@ -380,51 +397,45 @@ namespace Epsitec.Cresus.Requests
 				
 				row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (new_state);
 				
-				this.state_count[(int) old_state]--;
-				this.state_count[(int) new_state]++;
+				this.stateCount[(int) old_state]--;
+				this.stateCount[(int) new_state]++;
 			}
 			
-			this.exstate_event.Set ();
+			this.executionStateEvent.Set ();
 		}
-		
-		
-		#region IAttachable Members
-		public void Attach(DbInfrastructure infrastructure, DbTable table)
+
+
+		#region IDisposable Members
+
+		public void Dispose()
 		{
-			if (this.infrastructure == infrastructure)
-			{
-				System.Diagnostics.Debug.Assert (this.database != null);
-				
-				this.queue_db_table = table;
-			}
-			else
-			{
-				this.infrastructure = infrastructure;
-				this.database       = this.infrastructure.DefaultDbAbstraction;
-				this.queue_db_table = table;
-			}
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
 		}
-		
-		public void Detach()
-		{
-			this.infrastructure = null;
-			this.database       = null;
-			this.queue_db_table = null;
-		}
+
 		#endregion
-		
+
+		private void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.enqueueEvent.Close ();
+				this.executionStateEvent.Close ();
+			}
+		}
+
 		#region IPersistable Members
 		
 		public void LoadFromBase(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
-			
-			lock (this)
+
+			lock (this.exclusion)
 			{
-				this.queue_command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queue_db_table, DbSelectRevision.LiveActive);
-				this.queue_data_set   = this.queue_command.DataSet;
-				this.queue_data_table = this.queue_data_set.Tables[Tags.TableRequestQueue];
+				this.queueCommand   = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queueDbTable, DbSelectRevision.LiveActive);
+				this.queueDataSet   = this.queueCommand.DataSet;
+				this.queueDataTable = this.queueDataSet.Tables[Tags.TableRequestQueue];
 				
 				this.UpdateCounts ();
 			}
@@ -433,38 +444,18 @@ namespace Epsitec.Cresus.Requests
 		public void PersistToBase(DbTransaction transaction)
 		{
 			System.Diagnostics.Debug.Assert (transaction != null);
-			System.Diagnostics.Debug.Assert (this.queue_command != null);
-			
-			lock (this)
+			System.Diagnostics.Debug.Assert (this.queueCommand != null);
+
+			lock (this.exclusion)
 			{
-				this.queue_command.AssignRealRowIds (transaction);
-				this.queue_command.UpdateTables (transaction);
-				this.queue_command.AcceptChanges (transaction);
+				this.queueCommand.AssignRealRowIds (transaction);
+				this.queueCommand.UpdateTables (transaction);
+				this.queueCommand.AcceptChanges (transaction);
 			}
 		}
 		
 		#endregion
 		
-		#region DateTimeRowComparer Class
-		protected class DateTimeRowComparer : System.Collections.IComparer
-		{
-			#region IComparer Members
-			public int Compare(object x, object y)
-			{
-				System.Data.DataRow row_x = x as System.Data.DataRow;
-				System.Data.DataRow row_y = y as System.Data.DataRow;
-				
-				System.Diagnostics.Debug.Assert (row_x.RowState != System.Data.DataRowState.Deleted);
-				System.Diagnostics.Debug.Assert (row_y.RowState != System.Data.DataRowState.Deleted);
-				
-				System.DateTime date_x = (System.DateTime) row_x[Tags.ColumnDateTime];
-				System.DateTime date_y = (System.DateTime) row_y[Tags.ColumnDateTime];
-				
-				return date_x.CompareTo (date_y);
-			}
-			#endregion
-		}
-		#endregion
 		
 		internal static ExecutionState ConvertToExecutionState(short value)
 		{
@@ -489,9 +480,9 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		protected DbId CreateLogId(Database.DbTransaction transaction)
+		DbId CreateLogId(Database.DbTransaction transaction)
 		{
-			if (this.is_server)
+			if (this.isServer)
 			{
 				return this.infrastructure.Logger.CreatePermanentEntry (transaction);
 			}
@@ -501,7 +492,7 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		protected void CheckRow(System.Data.DataRow row)
+		void CheckRow(System.Data.DataRow row)
 		{
 			if (row == null)
 			{
@@ -512,18 +503,18 @@ namespace Epsitec.Cresus.Requests
 				throw new System.ArgumentException ("Row has been deleted.");
 			}
 			
-			if (row.Table.DataSet != this.queue_data_set)
+			if (row.Table.DataSet != this.queueDataSet)
 			{
 				throw new System.ArgumentException ("Invalid row specified.");
 			}
 		}
 		
-		protected void UpdateCounts()
+		void UpdateCounts()
 		{
 			int   n     = (int) ExecutionState.Count;
 			int[] count = new int[n];
 			
-			foreach (System.Data.DataRow row in this.queue_data_table.Rows)
+			foreach (System.Data.DataRow row in this.queueDataTable.Rows)
 			{
 				if (DbRichCommand.IsRowDeleted (row) == false)
 				{
@@ -532,21 +523,22 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 			
-			this.state_count = count;
+			this.stateCount = count;
 		}
+
+
+		readonly object							exclusion = new object ();
 		
-		
-		
-		private DbInfrastructure				infrastructure;
-		private IDbAbstraction					database;
-		private DbTable							queue_db_table;
-		private DbRichCommand					queue_command;
-		private System.Data.DataSet				queue_data_set;
-		private System.Data.DataTable			queue_data_table;
-		
-		private System.Threading.AutoResetEvent	enqueue_event;
-		private System.Threading.AutoResetEvent	exstate_event;
-		private bool							is_server;
-		private int[]							state_count;
+		readonly DbInfrastructure				infrastructure;
+		readonly IDbAbstraction					database;
+		readonly DbTable						queueDbTable;
+		private DbRichCommand					queueCommand;
+		private System.Data.DataSet				queueDataSet;
+		private System.Data.DataTable			queueDataTable;
+
+		readonly AutoResetEvent					enqueueEvent;
+		readonly AutoResetEvent					executionStateEvent;
+		readonly bool							isServer;
+		private int[]							stateCount;
 	}
 }

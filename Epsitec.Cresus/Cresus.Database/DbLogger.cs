@@ -308,15 +308,11 @@ namespace Epsitec.Cresus.Database
 		{
 			if (transaction == null)
 			{
-				try
+				using (transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
-					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-					return this.Insert (transaction, entry);
-				}
-				finally
-				{
+					DbId result = this.Insert (transaction, entry);
 					transaction.Commit ();
-					transaction.Dispose ();
+					return result;
 				}
 			}
 			else

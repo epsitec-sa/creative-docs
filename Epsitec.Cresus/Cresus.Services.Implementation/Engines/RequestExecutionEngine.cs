@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Services
 			lock (this.execution_queue)
 			{
 				List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
-				System.Data.DataRow[]     rows = this.execution_queue.DateTimeSortedRows;
+				System.Data.DataRow[]     rows = this.execution_queue.GetDateTimeSortedRows ();
 				
 				System.Diagnostics.Debug.WriteLine ("RemoveRequestStates: ");
 				
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Services
 			lock (this.execution_queue)
 			{
 				List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
-				System.Data.DataRow[]     rows = this.execution_queue.DateTimeSortedRows;
+				System.Data.DataRow[]     rows = this.execution_queue.GetDateTimeSortedRows ();
 				
 				System.Diagnostics.Debug.WriteLine ("RemoveAllRequestStates for client " + client.ToString ());
 				
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Services
 			
 			lock (this.execution_queue)
 			{
-				System.Data.DataRow[] rows = this.execution_queue.DateTimeSortedRows;
+				System.Data.DataRow[] rows = this.execution_queue.GetDateTimeSortedRows ();
 				
 				for (int i = 0; i < rows.Length; i++)
 				{

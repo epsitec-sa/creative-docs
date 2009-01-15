@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Database
 					transaction.Commit ();
 				}
 
-				queue.Detach ();
+				queue.Dispose ();
 
 				queue = new Requests.ExecutionQueue (infrastructure, null);
 				rows  = queue.Rows;

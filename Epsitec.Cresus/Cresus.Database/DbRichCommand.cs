@@ -1142,19 +1142,15 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="rows">A collection of rows.</param>
 		/// <returns>The live rows.</returns>
-		public static System.Data.DataRow[] GetLiveRows(System.Collections.IEnumerable rows)
+		public static IEnumerable<System.Data.DataRow> GetLiveRows(System.Collections.IEnumerable rows)
 		{
-			List<System.Data.DataRow> list = new List<System.Data.DataRow> ();
-			
 			foreach (System.Data.DataRow row in rows)
 			{
 				if (DbRichCommand.IsRowLive (row))
 				{
-					list.Add (row);
+					yield return row;
 				}
 			}
-			
-			return list.ToArray ();
 		}
 
 		/// <summary>

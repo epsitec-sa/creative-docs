@@ -138,6 +138,7 @@
     <Compile Include="DbTableColumn.cs" />
     <Compile Include="DbReader.cs" />
     <Compile Include="Exceptions\EmptyDatabaseException.cs" />
+    <Compile Include="Extensions\DataTableExtensions.cs" />
     <Compile Include="SqlIndex.cs" />
     <Compile Include="DbIndex.cs" />
     <Compile Include="DbCardinality.cs" />
