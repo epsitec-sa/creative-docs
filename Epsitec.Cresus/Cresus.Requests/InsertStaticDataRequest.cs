@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	public class InsertStaticDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
 	{
-		public InsertStaticDataRequest() : base (RequestType.InsertStaticData)
+		public InsertStaticDataRequest()
 		{
 		}
 		

@@ -11,11 +11,18 @@ namespace Epsitec.Cresus.Requests
 	
 	public abstract class AbstractRequest : System.Runtime.Serialization.ISerializable
 	{
-		protected AbstractRequest(RequestType type)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AbstractRequest"/> class.
+		/// </summary>
+		protected AbstractRequest()
 		{
 		}
-		
-		
+
+
+		/// <summary>
+		/// Executes the request using the specified execution engine.
+		/// </summary>
+		/// <param name="engine">The execution engine.</param>
 		public abstract void Execute(ExecutionEngine engine);
 		
 		
@@ -30,6 +37,5 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		#endregion
-		
 	}
 }

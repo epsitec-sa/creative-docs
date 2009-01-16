@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	public class GroupRequest : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, System.Collections.IEnumerable, System.Collections.ICollection
 	{
-		public GroupRequest() : base (RequestType.Group)
+		public GroupRequest()
 		{
 		}
 		

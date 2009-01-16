@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	public class UpdateDynamicDataRequest : AbstractDataRequest, System.Runtime.Serialization.ISerializable
 	{
-		public UpdateDynamicDataRequest() : base (RequestType.UpdateDynamicData)
+		public UpdateDynamicDataRequest()
 		{
 		}
 		

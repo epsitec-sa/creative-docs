@@ -156,9 +156,6 @@
     <Compile Include="OrchestratorState.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="RequestType.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="StateMachine.cs">
       <SubType>Code</SubType>
     </Compile>
