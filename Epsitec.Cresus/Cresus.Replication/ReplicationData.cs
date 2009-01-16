@@ -2,7 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Replication
 {
@@ -55,7 +57,7 @@ namespace Epsitec.Cresus.Replication
 		
 		public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			info.AddValue ("Tables", this.PackedTableData);
+			info.AddValue ("Tables", this.PackedTableData.ToArray ());
 		}
 		
 		#endregion

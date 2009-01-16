@@ -153,8 +153,6 @@ namespace Epsitec.Cresus.Requests
 		#region ISerializable Members
 		protected UpdateStaticDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupRequestType (RequestType.UpdateStaticData);
-			
 			System.Diagnostics.Debug.Assert (Epsitec.Common.Support.Serialization.Helper.FindElement (info, "ColNames"));
 			
 			this.col_names  = info.GetValue ("ColNames", typeof (string[])) as string[];

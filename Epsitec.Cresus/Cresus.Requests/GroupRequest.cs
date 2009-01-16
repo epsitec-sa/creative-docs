@@ -10,9 +10,9 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public class Group : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, System.Collections.IEnumerable, System.Collections.ICollection
+	public class GroupRequest : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, System.Collections.IEnumerable, System.Collections.ICollection
 	{
-		public Group() : base (RequestType.Group)
+		public GroupRequest() : base (RequestType.Group)
 		{
 		}
 		
@@ -75,10 +75,8 @@ namespace Epsitec.Cresus.Requests
 		
 		#region ISerializable Members
 		
-		protected Group(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		protected GroupRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupRequestType (RequestType.Group);
-			
 			object[] array = info.GetValue ("RequestArray", typeof (object[])) as object[];
 			
 			System.Diagnostics.Debug.Assert ((array == null) || (array.Length > 0));

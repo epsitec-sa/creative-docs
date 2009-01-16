@@ -13,16 +13,6 @@ namespace Epsitec.Cresus.Requests
 	{
 		protected AbstractRequest(RequestType type)
 		{
-			this.SetupRequestType (type);
-		}
-		
-		
-		public RequestType						RequestType
-		{
-			get
-			{
-				return this.type;
-			}
 		}
 		
 		
@@ -41,13 +31,5 @@ namespace Epsitec.Cresus.Requests
 		
 		#endregion
 		
-		
-		protected void SetupRequestType(RequestType type)
-		{
-			this.type = type;
-		}
-		
-		
-		private RequestType						type;
 	}
 }

@@ -43,6 +43,14 @@ namespace Epsitec.Cresus.Services
 			this.orchestrator.DefineRemotingService (requestExecutionService, clientIdentity);
 		}
 
+		public override object InitializeLifetimeService()
+		{
+			//	By returning null, we explicitely state that we do not want to have
+			//	automatic object recycling (see ILease and remoting).
+
+			return null;
+		}
+		
 		/// <summary>
 		/// Creates the records for all the service interfaces defined by the
 		/// implementation assemblies; this will instanciate the service engines

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Requests
 		/// 
 		/// </summary>
 		UpdateStaticData,							//	requête UPDATE, données statiques
+		
 		/// <summary>
 		/// 
 		/// </summary>

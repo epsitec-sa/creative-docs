@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Requests
 			
 			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Processing request ({0}).", request.RequestType));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Processing request ({0}).", request.GetType ().Name));
 			
 			bool conflict_detected = false;
 			

@@ -45,7 +45,6 @@ namespace Epsitec.Cresus.Requests
 		#region ISerializable Members
 		protected UpdateDynamicDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			this.SetupRequestType (RequestType.UpdateDynamicData);
 		}
 		
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)

@@ -27,17 +27,17 @@ namespace Epsitec.Cresus.Database
 		[Test]
 		public void Check01Group()
 		{
-			Requests.Group group = new Requests.Group ();
+			Requests.GroupRequest group = new Requests.GroupRequest ();
 
 			Assert.AreEqual (0, group.Count);
-			Assert.AreEqual (Requests.RequestType.Group, group.RequestType);
+			Assert.AreEqual ("GroupRequest", group.GetType ().Name);
 
 			group.AddRange (null);
 			group.AddRange (new object[] { });
 
 			Assert.AreEqual (0, group.Count);
 
-			Requests.AbstractRequest req = new Requests.Group ();
+			Requests.AbstractRequest req = new Requests.GroupRequest ();
 
 			group.Add (req);
 
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Database
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void Check02GroupEx()
 		{
-			Requests.Group group = new Requests.Group ();
+			Requests.GroupRequest group = new Requests.GroupRequest ();
 
 			Assert.AreEqual (0, group.Count);
 
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Database
 		[ExpectedException (typeof (System.IndexOutOfRangeException))]
 		public void Check03GroupEx()
 		{
-			Requests.Group group = new Requests.Group ();
+			Requests.GroupRequest group = new Requests.GroupRequest ();
 
 			Assert.AreEqual (0, group.Count);
 
@@ -70,15 +70,15 @@ namespace Epsitec.Cresus.Database
 		[Test]
 		public void Check04Types()
 		{
-			Requests.AbstractRequest req1 = new Requests.Group ();
+			Requests.AbstractRequest req1 = new Requests.GroupRequest ();
 			Requests.AbstractRequest req2 = new Requests.InsertStaticDataRequest ();
 			Requests.AbstractRequest req3 = new Requests.UpdateStaticDataRequest ();
 			Requests.AbstractRequest req4 = new Requests.UpdateDynamicDataRequest ();
 
-			Assert.AreEqual (Requests.RequestType.Group, req1.RequestType);
-			Assert.AreEqual (Requests.RequestType.InsertStaticData, req2.RequestType);
-			Assert.AreEqual (Requests.RequestType.UpdateStaticData, req3.RequestType);
-			Assert.AreEqual (Requests.RequestType.UpdateDynamicData, req4.RequestType);
+			Assert.AreEqual ("GroupRequest", req1.GetType ().Name);
+			Assert.AreEqual ("InsertStaticDataRequest", req2.GetType ().Name);
+			Assert.AreEqual ("UpdateStaticDataRequest", req3.GetType ().Name);
+			Assert.AreEqual ("UpdateDynamicDataRequest", req4.GetType ().Name);
 		}
 
 		[Test]
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Database
 
 				System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 
-				Requests.Group group = new Requests.Group ();
+				Requests.GroupRequest group = new Requests.GroupRequest ();
 
 				Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
 				Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
@@ -123,13 +123,13 @@ namespace Epsitec.Cresus.Database
 			using (System.IO.Stream stream = System.IO.File.Open ("test-requests.bin", System.IO.FileMode.Open))
 			{
 				BinaryFormatter formatter = new BinaryFormatter ();
-				Requests.Group group = formatter.Deserialize (stream) as Requests.Group;
+				Requests.GroupRequest group = formatter.Deserialize (stream) as Requests.GroupRequest;
 
 				Assert.AreEqual (3, group.Count);
 
-				Assert.AreEqual (Requests.RequestType.InsertStaticData, group[0].RequestType);
-				Assert.AreEqual (Requests.RequestType.InsertStaticData, group[1].RequestType);
-				Assert.AreEqual (Requests.RequestType.UpdateStaticData, group[2].RequestType);
+				Assert.AreEqual ("InsertStaticDataRequest", group[0].GetType ().Name);
+				Assert.AreEqual ("InsertStaticDataRequest", group[1].GetType ().Name);
+				Assert.AreEqual ("UpdateStaticDataRequest", group[2].GetType ().Name);
 
 				Requests.InsertStaticDataRequest req_1 = group[0] as Requests.InsertStaticDataRequest;
 				Requests.InsertStaticDataRequest req_2 = group[1] as Requests.InsertStaticDataRequest;
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Database
 				{
 					System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 
-					Requests.Group group = new Requests.Group ();
+					Requests.GroupRequest group = new Requests.GroupRequest ();
 
 					Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
 					Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
