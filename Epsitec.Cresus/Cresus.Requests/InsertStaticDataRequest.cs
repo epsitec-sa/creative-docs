@@ -1,6 +1,7 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using Epsitec.Common.Types.Collections;
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
@@ -20,21 +21,21 @@ namespace Epsitec.Cresus.Requests
 		{
 			this.DefineRow (row);
 		}
-		
-		
-		public override string[]				ColumnNames
+
+
+		public override ReadOnlyList<string> ColumnNames
 		{
 			get
 			{
-				return this.col_names;
+				return new ReadOnlyList<string> (this.col_names);
 			}
 		}
 		
-		public override object[]				ColumnValues
+		public override ReadOnlyList<object>	ColumnValues
 		{
 			get
 			{
-				return this.col_values;
+				return new ReadOnlyList<object> (this.col_values);
 			}
 		}
 		
