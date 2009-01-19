@@ -126,6 +126,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
+      <Link>Properties\AssemblyInfo.Solution.cs</Link>
+    </Compile>
     <Compile Include="AbstractDataRequest.cs">
       <SubType>Code</SubType>
     </Compile>

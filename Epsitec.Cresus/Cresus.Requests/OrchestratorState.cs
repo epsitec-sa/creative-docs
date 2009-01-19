@@ -1,15 +1,27 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// L'énumération OrchestratorState décrit l'état de l'Orchestrator.
+	/// The <c>OrchestratorState</c> enumeration describes the possible states of
+	/// the <see cref="Orchestrator"/> class.
 	/// </summary>
 	public enum OrchestratorState
 	{
-		Ready				= 0,				//	prêt, rien à faire pour le moment
-		Conflicting			= 1,				//	prêt, en attente de la résolution d'un conflit
-		Processing			= 2,				//	en exécution
+		/// <summary>
+		/// Orchestrator ready, waiting for something to do.
+		/// </summary>
+		Ready				= 0,
+		
+		/// <summary>
+		/// Orchestrator ready, waiting for a conflict to be resolved.
+		/// </summary>
+		Conflicting			= 1,
+		
+		/// <summary>
+		/// Orchestrator processing requestes.
+		/// </summary>
+		Processing			= 2,
 	}
 }

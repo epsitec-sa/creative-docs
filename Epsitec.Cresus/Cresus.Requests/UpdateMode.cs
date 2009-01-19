@@ -1,14 +1,22 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// Le mode de mise à jour est défini par UpdateMode.
+	/// The <c>UpdateMode</c> enumeration defines the update modes for the
+	/// update requests such as <see cref="UpdateStaticDataRequest"/>.
 	/// </summary>
 	public enum UpdateMode
 	{
-		Full,						//	met à jour toutes les colonnes
-		Changed						//	met à jour uniquement les colonnes modifiées
+		/// <summary>
+		/// Updates all columns in a given row.
+		/// </summary>
+		Full,
+		
+		/// <summary>
+		/// Updates only columns which have changed in a given row.
+		/// </summary>
+		Changed
 	}
 }
