@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Services.Extensions;
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("GroupRequest", group.GetType ().Name);
 
 			group.AddRange (null);
-			group.AddRange (new object[] { });
+			group.AddRange (new Epsitec.Cresus.Requests.AbstractRequest[] { });
 
 			Assert.AreEqual (0, group.Count);
 
