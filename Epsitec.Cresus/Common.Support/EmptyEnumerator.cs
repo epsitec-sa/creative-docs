@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
 {
@@ -7,30 +7,54 @@ namespace Epsitec.Common.Support
 	/// La classe EmptyEnumerator implémente un énumérateur par défaut pour
 	/// toutes les collections vides.
 	/// </summary>
-	public sealed class EmptyEnumerator : System.Collections.IEnumerator
+	/// <typeparam name="T">The type of the expected items.</typeparam>
+	public sealed class EmptyEnumerator<T> : System.Collections.Generic.IEnumerator<T>
 	{
-		public EmptyEnumerator()
+		private EmptyEnumerator()
 		{
 		}
-		
-		
+
 		#region IEnumerator Members
+
 		public void Reset()
 		{
 		}
+
+		public T Current
+		{
+			get
+			{
+				return default (T);
+			}
+		}
+
+		public bool MoveNext()
+		{
+			return false;
+		}
 		
-		public object Current
+		#endregion
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+		}
+
+		#endregion
+
+		#region IEnumerator Members
+
+		object System.Collections.IEnumerator.Current
 		{
 			get
 			{
 				return null;
 			}
 		}
-		
-		public bool MoveNext()
-		{
-			return false;
-		}
+
 		#endregion
+
+		public static readonly EmptyEnumerator<T> Instance = new EmptyEnumerator<T> ();
 	}
 }

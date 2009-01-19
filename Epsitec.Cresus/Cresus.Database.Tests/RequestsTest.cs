@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Database
 		[Test]
 		public void Check01Group()
 		{
-			Requests.GroupRequest group = new Requests.GroupRequest ();
+			Requests.RequestCollection group = new Requests.RequestCollection ();
 
 			Assert.AreEqual (0, group.Count);
 			Assert.AreEqual ("GroupRequest", group.GetType ().Name);
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Database
 
 			Assert.AreEqual (0, group.Count);
 
-			Requests.AbstractRequest req = new Requests.GroupRequest ();
+			Requests.AbstractRequest req = new Requests.RequestCollection ();
 
 			group.Add (req);
 
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Database
 		[ExpectedException (typeof (System.ArgumentNullException))]
 		public void Check02GroupEx()
 		{
-			Requests.GroupRequest group = new Requests.GroupRequest ();
+			Requests.RequestCollection group = new Requests.RequestCollection ();
 
 			Assert.AreEqual (0, group.Count);
 
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Database
 		[ExpectedException (typeof (System.IndexOutOfRangeException))]
 		public void Check03GroupEx()
 		{
-			Requests.GroupRequest group = new Requests.GroupRequest ();
+			Requests.RequestCollection group = new Requests.RequestCollection ();
 
 			Assert.AreEqual (0, group.Count);
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Database
 		[Test]
 		public void Check04Types()
 		{
-			Requests.AbstractRequest req1 = new Requests.GroupRequest ();
+			Requests.AbstractRequest req1 = new Requests.RequestCollection ();
 			Requests.AbstractRequest req2 = new Requests.InsertStaticDataRequest ();
 			Requests.AbstractRequest req3 = new Requests.UpdateStaticDataRequest ();
 			Requests.AbstractRequest req4 = new Requests.UpdateDynamicDataRequest ();
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Database
 
 				System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 
-				Requests.GroupRequest group = new Requests.GroupRequest ();
+				Requests.RequestCollection group = new Requests.RequestCollection ();
 
 				Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
 				Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 				group.Add (req_2);
 				group.Add (req_3);
 
-				Assert.AreEqual (2, req_3.ColumnNames.Length);
+				Assert.AreEqual (2, req_3.ColumnNames.Count);
 				Assert.AreEqual ("ID", req_3.ColumnNames[0]);
 				Assert.AreEqual ("Name", req_3.ColumnNames[1]);
 
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Database
 			using (System.IO.Stream stream = System.IO.File.Open ("test-requests.bin", System.IO.FileMode.Open))
 			{
 				BinaryFormatter formatter = new BinaryFormatter ();
-				Requests.GroupRequest group = formatter.Deserialize (stream) as Requests.GroupRequest;
+				Requests.RequestCollection group = formatter.Deserialize (stream) as Requests.RequestCollection;
 
 				Assert.AreEqual (3, group.Count);
 
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (1972, req_1.ColumnValues[2]);
 				Assert.AreEqual (1994, req_2.ColumnValues[2]);
 
-				Assert.AreEqual (2, req_3.ColumnNames.Length);
+				Assert.AreEqual (2, req_3.ColumnNames.Count);
 				Assert.AreEqual ("ID", req_3.ColumnNames[0]);
 				Assert.AreEqual ("Name", req_3.ColumnNames[1]);
 				Assert.AreEqual (1L, req_3.ColumnValues[0]);
@@ -173,14 +173,14 @@ namespace Epsitec.Cresus.Database
 			Assert.IsTrue (req_2.ContainsData == true);
 			Assert.IsTrue (req_3.ContainsData == true);
 
-			Assert.AreEqual (2, req_2.ColumnNames.Length);
+			Assert.AreEqual (2, req_2.ColumnNames.Count);
 			Assert.AreEqual ("ID", req_2.ColumnNames[0]);
 			Assert.AreEqual ("Name", req_2.ColumnNames[1]);
 			Assert.AreEqual (1L, req_2.ColumnValues[0]);
 			Assert.AreEqual ("Pierre Arnaud-Bühlmann", req_2.ColumnValues[1]);
 			Assert.AreEqual ("Pierre Arnaud", req_2.ColumnOriginalValues[1]);
 
-			Assert.AreEqual (3, req_3.ColumnNames.Length);
+			Assert.AreEqual (3, req_3.ColumnNames.Count);
 			Assert.AreEqual ("ID", req_3.ColumnNames[0]);
 			Assert.AreEqual ("Name", req_3.ColumnNames[1]);
 			Assert.AreEqual ("Birth Year", req_3.ColumnNames[2]);
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Database
 				{
 					System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 
-					Requests.GroupRequest group = new Requests.GroupRequest ();
+					Requests.RequestCollection group = new Requests.RequestCollection ();
 
 					Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
 					Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);

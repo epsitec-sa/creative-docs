@@ -1,12 +1,13 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Collections;
+
 namespace Epsitec.Cresus.Requests
 {
 	/// <summary>
-	/// La classe UpdateDynamicData définit une mise à jour dynamique (par
-	/// calcul) d'une ligne dans une table.
+	/// The <c>UpdateDynamicDataRequest</c> class describes a dynamic data update.
+	/// The data is computed on the fly.
 	/// </summary>
 	
 	[System.Serializable]
@@ -18,7 +19,7 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
-		public override ReadOnlyList<string> ColumnNames
+		public override ReadOnlyList<string>	ColumnNames
 		{
 			get
 			{
@@ -38,12 +39,13 @@ namespace Epsitec.Cresus.Requests
 		public override void Execute(ExecutionEngine engine)
 		{
 			//	TODO: à compléter...
-			
-			//	TODO: Exécute...
+
+			throw new System.NotImplementedException ();
 		}
 		
 		
 		#region ISerializable Members
+		
 		protected UpdateDynamicDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 		}
@@ -52,6 +54,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			base.GetObjectData (info, context);
 		}
+		
 		#endregion
 	}
 }

@@ -52,16 +52,25 @@ namespace Epsitec.Cresus.Replication
 		
 		private ReplicationData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			this.packedTableList = new List<PackedTableData> ((PackedTableData[]) info.GetValue ("Tables", typeof (PackedTableData[])));
+			this.packedTableList = new List<PackedTableData> ((PackedTableData[]) info.GetValue (Strings.Tables, typeof (PackedTableData[])));
 		}
 		
 		public void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
 		{
-			info.AddValue ("Tables", this.PackedTableData.ToArray ());
+			info.AddValue (Strings.Tables, this.PackedTableData.ToArray ());
 		}
 		
 		#endregion
-		
+
+		#region Strings Class
+
+		static class Strings
+		{
+			public const string Tables = "Tables";
+		}
+
+		#endregion
+
 		readonly List<PackedTableData>			packedTableList;
 	}
 }

@@ -81,9 +81,12 @@ namespace Epsitec.Cresus.Requests
 
 		#region Strings Class
 
-		private class Strings
+		protected class Strings
 		{
-			public const string TableName = "TableName";
+			public const string TableName		= "T.Name";
+			public const string ColumnNames		= "C.Names";
+			public const string ColumnValues	= "C.Values";
+			public const string ColumnOriginals	= "C.Origs";
 		}
 
 		#endregion
