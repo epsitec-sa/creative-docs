@@ -1947,17 +1947,17 @@ namespace Epsitec.Common.Document
 			field = this.WidgetsTableSearch(name, ".From") as TextFieldReal;
 			if ( field != null )
 			{
-				this.UpdateRangeField(field, sRange, sRange.From);
+				sRange.From = this.UpdateRangeField (field, sRange, sRange.From);
 			}
 
 			field = this.WidgetsTableSearch(name, ".To") as TextFieldReal;
 			if ( field != null )
 			{
-				this.UpdateRangeField(field, sRange, sRange.To);
+				sRange.To = this.UpdateRangeField (field, sRange, sRange.To);
 			}
 		}
 
-		protected void UpdateRangeField(TextFieldReal field, Settings.Range sRange, int value)
+		protected int UpdateRangeField(TextFieldReal field, Settings.Range sRange, int value)
 		{
 			field.MinValue = (decimal) sRange.Min;
 			field.MaxValue = (decimal) sRange.Max;
@@ -1967,6 +1967,8 @@ namespace Epsitec.Common.Document
 			this.ignoreChanged = true;
 			field.InternalValue = (decimal) value;
 			this.ignoreChanged = false;
+
+			return value;
 		}
 		#endregion
 

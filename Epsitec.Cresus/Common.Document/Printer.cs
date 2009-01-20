@@ -436,11 +436,14 @@ namespace Epsitec.Common.Document
 				//?System.Diagnostics.Debug.WriteLine("PrepareNewPage");
 				settings.Margins = new Margins(0, 0, 0, 0);
 
-				if ( this.printer.PrintInfo.AutoLandscape )
+				if ( this.pageCounter < this.pageList.Count )
 				{
-					int page = (int) this.pageList[this.pageCounter];
-					Size pageSize = this.document.GetPageSize(page);
-					settings.Landscape = (pageSize.Width > pageSize.Height);
+					if ( this.printer.PrintInfo.AutoLandscape )
+					{
+						int page = (int) this.pageList[this.pageCounter];
+						Size pageSize = this.document.GetPageSize(page);
+						settings.Landscape = (pageSize.Width > pageSize.Height);
+					}
 				}
 			}
 			
