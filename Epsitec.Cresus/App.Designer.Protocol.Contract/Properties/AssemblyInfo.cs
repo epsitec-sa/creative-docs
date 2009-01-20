@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyCompany ("OPaC bright ideas")]
 [assembly: AssemblyProduct ("CrDesigner")]
-[assembly: AssemblyCopyright ("Copyright © 2007-2008, OPaC bright ideas & Pierre ARNAUD")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2009, OPaC bright ideas & Pierre ARNAUD")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2007-2008, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2007-2009, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
@@ -6,4 +6,4 @@ using System.Reflection;
 [assembly: AssemblyTitle ("Epsitec.Common.Drawing.Images")]
 [assembly: AssemblyDescription ("Manager for Bitmap Images")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2007-2008, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]

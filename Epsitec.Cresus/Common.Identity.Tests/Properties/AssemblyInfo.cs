@@ -1,4 +1,4 @@
-﻿//	Copyright © 2007-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2007-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("EPSITEC SA & OPaC bright ideas")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2007-2008, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

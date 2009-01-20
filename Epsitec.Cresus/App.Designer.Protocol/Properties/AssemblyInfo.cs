@@ -7,4 +7,4 @@ using System.Reflection;
 [assembly: AssemblyDescription ("Crésus Designer Protocol Handler")]
 [assembly: AssemblyCompany ("EPSITEC SA")]
 [assembly: AssemblyProduct ("CrDesigner")]
-[assembly: AssemblyCopyright ("Copyright © 2007-2008, Pierre ARNAUD & EPSITEC SA")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2009, Pierre ARNAUD & EPSITEC SA")]

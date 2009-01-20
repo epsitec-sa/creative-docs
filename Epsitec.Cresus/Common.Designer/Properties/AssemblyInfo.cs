@@ -1,4 +1,4 @@
-﻿//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2006-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Reflection;
@@ -9,4 +9,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyCompany ("EPSITEC SA")]
 [assembly: AssemblyProduct ("CrDesigner")]
-[assembly: AssemblyCopyright ("Copyright © 2006-2008, Pierre Arnaud, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2006-2009, Pierre Arnaud, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

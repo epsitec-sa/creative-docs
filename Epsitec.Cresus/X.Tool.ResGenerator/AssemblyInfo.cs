@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPSITEC SA")]
 [assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright("Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

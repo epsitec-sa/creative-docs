@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Reflection;
@@ -6,4 +6,4 @@ using System.Reflection;
 [assembly: AssemblyTitle ("Epsitec.Common.OpenType")]
 [assembly: AssemblyDescription ("OpenType Library")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2005-2008, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2005-2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
