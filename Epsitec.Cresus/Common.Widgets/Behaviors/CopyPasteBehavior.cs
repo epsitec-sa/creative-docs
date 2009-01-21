@@ -1,12 +1,16 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+
+[assembly: DependencyClass (typeof (Epsitec.Common.Widgets.Behaviors.CopyPasteBehavior))]
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
 	/// <summary>
 	/// La classe CopyPasteBehavior gère le copier & coller.
 	/// </summary>
-	public class CopyPasteBehavior
+	public sealed class CopyPasteBehavior : DependencyObject
 	{
 		public CopyPasteBehavior(Widget host)
 		{
@@ -21,7 +25,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return this.host;
 			}
 		}
-		
+
+		public bool								IsRichTextEnabled
+		{
+			get
+			{
+				//	To enable rich text pasting, the widget must have the RichTextEnabled
+				//	property attached to it and set to true !
+
+				return (bool) this.host.GetValue (CopyPasteBehavior.RichTextEnabledProperty);
+			}
+		}
 		
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -102,25 +116,33 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
 				
-				string text_layout = data.ReadTextLayout ();
-				string html        = null;
-				
-				if (text_layout != null)
+				string html = null;
+
+				if (this.IsRichTextEnabled)
 				{
-					html = text_layout;
-				}
-				else
-				{
-					html = data.ReadHtmlFragment ();
-					
-					if (html != null)
+					string text_layout = data.ReadTextLayout ();
+
+					if (text_layout != null)
 					{
-						html = Support.Clipboard.ConvertHtmlToSimpleXml (html);
+						html = text_layout;
 					}
 					else
 					{
-						html = TextLayout.ConvertToTaggedText (data.ReadText ());
+						html = data.ReadHtmlFragment ();
+
+						if (html != null)
+						{
+							html = Support.Clipboard.ConvertHtmlToSimpleXml (html);
+						}
+						else
+						{
+							html = TextLayout.ConvertToTaggedText (data.ReadText ());
+						}
 					}
+				}
+				else
+				{
+					html = TextLayout.ConvertToTaggedText (data.ReadText ());
 				}
 				
 				if (html != null)
@@ -173,8 +195,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			return false;
 		}
+
+
+		public static readonly DependencyProperty RichTextEnabledProperty = DependencyProperty.RegisterAttached ("RichTextEnabled", typeof (bool), typeof (CopyPasteBehavior), new DependencyPropertyMetadata (false));
+
 		
-		
-		protected Widget						host;
+		readonly Widget							host;
 	}
 }

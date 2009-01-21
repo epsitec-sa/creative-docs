@@ -85,6 +85,35 @@ namespace Epsitec.Common.Text
 
 			if (cursor != null)
 			{
+				cursor = this.frame_list.FindLastCursor (this.frame_list.Count - 1);
+				
+				if (cursor != null)
+				{
+					int len = 0;
+
+					foreach (var element in cursor.Elements)
+					{
+						if (element.FrameIndex == -1)
+						{
+							break;
+						}
+						len += element.Length;
+					}
+
+					string text = this.story.GetDebugText ().Substring (len);
+
+					foreach (char c in text)
+					{
+						if (!char.IsWhiteSpace (c) &&
+							(c != (char) Unicode.Code.EndOfText))
+						{
+							return true;
+						}
+					}
+
+					return false;
+				}
+
 				return true;
 			}
 			else
