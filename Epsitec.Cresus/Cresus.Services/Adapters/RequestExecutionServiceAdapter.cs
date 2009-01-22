@@ -31,9 +31,16 @@ namespace Epsitec.Cresus.Services.Adapters
 			return this.target.QueryRequestStates (client);
 		}
 
-		public int QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, System.TimeSpan timeout, out RequestState[] states)
+		public int QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, out RequestState[] states)
 		{
-			return this.target.QueryRequestStatesUsingFilter (client, changeId, timeout, out states);
+			//	This is not intended to be called through WCF !
+			throw new System.NotImplementedException ();
+		}
+
+		public void WakeUpQueryRequestStatesUsingFilter(ClientIdentity client)
+		{
+			//	This is not intended to be called through WCF !
+			throw new System.NotImplementedException ();
 		}
 
 		public void RemoveRequestStates(ClientIdentity client, RequestState[] states)

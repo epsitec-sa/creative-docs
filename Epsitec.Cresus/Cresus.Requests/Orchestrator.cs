@@ -1,23 +1,28 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.Remoting;
 
+using System.Threading;
+using System.Collections.Generic;
+
 namespace Epsitec.Cresus.Requests
 {
-	using EventHandler = Common.Support.EventHandler;
-	using System.Threading;
-	using System.Collections.Generic;
-	
-	public delegate void RequestExecutedCallback(Orchestrator sender, DbId request_id);
-	
+
 	/// <summary>
-	/// La classe Orchestrator gère l'arrivée de requêtes, leur mise en queue et
-	/// leur traitement.
+	/// The <c>Orchestrator</c> class receives requests, puts them into an execution queue
+	/// and then processes them sequentially.
 	/// </summary>
 	public sealed class Orchestrator : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Orchestrator"/> class.
+		/// </summary>
+		/// <param name="infrastructure">The database infrastructure.</param>
 		public Orchestrator(DbInfrastructure infrastructure)
 		{
 			this.infrastructure   = infrastructure;
@@ -95,8 +100,14 @@ namespace Epsitec.Cresus.Requests
 				return this.state;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Defines the remoting service; this method gets called by the <see cref="Epsitec.Cresus.Services.Engine"/>
+		/// class.
+		/// </summary>
+		/// <param name="service">The request execution service.</param>
+		/// <param name="client">The client identity.</param>
 		public void DefineRemotingService(IRequestExecutionService service, ClientIdentity client)
 		{
 			this.service = service;
@@ -105,9 +116,6 @@ namespace Epsitec.Cresus.Requests
 			if ((this.service != null) &&
 				(this.waiterThread.IsAlive == false))
 			{
-				//	Démarre le processus de synchronisation entre le serveur et le
-				//	client.
-				
 				this.waiterThread.Start ();
 			}
 		}
@@ -124,34 +132,40 @@ namespace Epsitec.Cresus.Requests
 		#endregion
 		
 		#region WaiterThread Implementation
-		
+
+		/// <summary>
+		/// The waiter thread waits for the arrival of requests on the request execution
+		/// service; whenever requests arrive, the worker thread will be awoken.
+		/// </summary>
 		void WaiterThread()
 		{
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Waiter Thread launched.");
-				
+
 				int changeId = -1;
 				
-				for (;;)
+				while (!this.isThreadAbortRequested)
 				{
 					RequestState[] states;
 					
-					//	Charge l'état de nos requêtes sur le serveur. Cet appel est bloquant
-					//	si rien n'a changé depuis le dernier appel :
+					//	Load the states of the requests on our server instance; block until something
+					//	changes or we time out.
+					
+					int newChangeId = this.service.QueryRequestStatesUsingFilter (this.client, changeId, out states);
 
-					changeId = this.service.QueryRequestStatesUsingFilter (this.client, changeId, System.TimeSpan.FromSeconds (60.0), out states);
-					
-					lock (this.exclusion)
+					if (changeId != newChangeId)
 					{
-						this.serverRequestStates = states;
+						changeId = newChangeId;
+						
+						lock (this.exclusion)
+						{
+							this.serverRequestStates = states;
+						}
+
+						this.serverEvent.Set ();
 					}
-					
-					this.serverEvent.Set ();
 				}
-			}
-			catch (System.Threading.ThreadInterruptedException)
-			{
 			}
 			catch (System.Exception exception)
 			{
@@ -660,12 +674,14 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		void ChangeToState(OrchestratorState state)
+		void ChangeToState(OrchestratorState newState)
 		{
-			if (this.state != state)
+			if (this.state != newState)
 			{
-				this.state = state;
-				this.OnStateChanged ();
+				OrchestratorState oldState = this.state;
+				
+				this.state = newState;
+				this.OnStateChanged (new DependencyPropertyChangedEventArgs ("State", oldState, newState));
 			}
 		}
 		
@@ -674,14 +690,11 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (disposing)
 			{
+				this.isThreadAbortRequested = true;
+
 				this.abortEvent.Set ();
 				this.workerThread.Join ();
-				
-				if (this.waiterThread.IsAlive)
-				{
-					this.waiterThread.Interrupt ();
-					this.waiterThread.Join ();
-				}
+				this.waiterThread.Join ();
 
 				this.abortEvent.Close ();
 				this.serverEvent.Close ();
@@ -693,11 +706,11 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		void OnStateChanged()
+		void OnStateChanged(DependencyPropertyChangedEventArgs e)
 		{
 			if (this.StateChanged != null)
 			{
-				this.StateChanged (this);
+				this.StateChanged (this, e);
 			}
 		}
 		
@@ -710,8 +723,8 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public event EventHandler				StateChanged;
-		public event RequestExecutedCallback	RequestExecuted;
+		public event EventHandler<DependencyPropertyChangedEventArgs>	StateChanged;
+		public event System.Action<Orchestrator, DbId>					RequestExecuted;
 
 		readonly object							exclusion = new object ();
 		
@@ -722,6 +735,7 @@ namespace Epsitec.Cresus.Requests
 
 		OrchestratorState						state;
 		volatile RequestState[]					serverRequestStates;
+		volatile bool							isThreadAbortRequested;
 		
 		readonly Thread							workerThread;
 		readonly Thread							waiterThread;

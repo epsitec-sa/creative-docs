@@ -33,11 +33,17 @@ namespace Epsitec.Cresus.Remoting
 		/// </summary>
 		/// <param name="client">The client.</param>
 		/// <param name="changeId">The change id.</param>
-		/// <param name="timeout">The timeout for the query.</param>
 		/// <param name="states">The states.</param>
 		/// <returns>The current change id.</returns>
 		[OperationContract]
-		int QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, System.TimeSpan timeout, out RequestState[] states);
+		int QueryRequestStatesUsingFilter(ClientIdentity client, int changeId, out RequestState[] states);
+
+		/// <summary>
+		/// Wakes up the threads waiting in method <see cref="QueryRequestStatesUsingFiler"/>.
+		/// </summary>
+		/// <param name="client">The client.</param>
+		[OperationContract]
+		void WakeUpQueryRequestStatesUsingFilter(ClientIdentity client);
 
 		/// <summary>
 		/// Removes the specified request states.

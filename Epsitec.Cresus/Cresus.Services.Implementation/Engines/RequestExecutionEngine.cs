@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Services
 			this.execution_queue = this.orchestrator.ExecutionQueue;
 			this.client_changes  = new System.Collections.Hashtable ();
 
-			this.orchestrator.RequestExecuted += new RequestExecutedCallback (this.HandleOrchestratorRequestExecuted);
+			this.orchestrator.RequestExecuted += this.HandleOrchestratorRequestExecuted;
 
 			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
 		}
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Services
 			return this.InternalQueryRequestStates (client);
 		}
 		
-		int IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, int change_id, System.TimeSpan timeout, out RequestState[] states)
+		int IRequestExecutionService.QueryRequestStatesUsingFilter(ClientIdentity client, int change_id, out RequestState[] states)
 		{
 			//	Retourne les informations sur les états uniquement en cas de changement
 			//	ou si le temps imparti est écoulé.
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Services
 			//	Attend jusqu'à ce que l'état soit différent de 'change_id' (ou que le temps
 			//	imparti soit écoulé) :
 			
-			info.WaitChange (change_id, timeout);
+			info.WaitChange (change_id);
 			
 			//	L'appelant va être informé de la nouvelle valeur du compteur de changements.
 			//	Il faut considérer ce compteur comme une valeur "opaque"; il n'a pas de sens
@@ -96,6 +96,13 @@ namespace Epsitec.Cresus.Services
 			states = this.InternalQueryRequestStates (client);
 			
 			return change_id;
+		}
+
+		void IRequestExecutionService.WakeUpQueryRequestStatesUsingFilter(ClientIdentity client)
+		{
+			ClientChangeInfo info = this.GetClientChangeInfo (client.Id);
+
+			info.WakeUp ();
 		}
 		
 		void IRequestExecutionService.RemoveRequestStates(ClientIdentity client, RequestState[] states)
@@ -276,11 +283,11 @@ namespace Epsitec.Cresus.Services
 		#region ClientChangeInfo Class
 		private class ClientChangeInfo
 		{
-			public ClientChangeInfo(int client_id)
+			public ClientChangeInfo(int clientId)
 			{
-				this.client_id = client_id;
-				this.change_id = 0;
-				this.monitor   = new object ();
+				this.clientId = clientId;
+				this.changeId = 0;
+				this.monitor  = new object ();
 			}
 			
 			
@@ -288,7 +295,7 @@ namespace Epsitec.Cresus.Services
 			{
 				get
 				{
-					return this.client_id;
+					return this.clientId;
 				}
 			}
 			
@@ -296,7 +303,7 @@ namespace Epsitec.Cresus.Services
 			{
 				get
 				{
-					return this.change_id;
+					return this.changeId;
 				}
 			}
 			
@@ -305,68 +312,47 @@ namespace Epsitec.Cresus.Services
 			{
 				lock (this.monitor)
 				{
-					int change = this.change_id + 1;
+					int change = this.changeId + 1;
 					
 					if (change > 999999999)
 					{
 						change = 1;
 					}
 					
-					this.change_id = change;
-					
+					this.changeId = change;
 					System.Threading.Monitor.PulseAll (this.monitor);
 				}
 			}
-			
-			public void WaitChange(int change_id, System.TimeSpan timeout)
+
+			public void WaitChange(int changeId)
 			{
-				if (change_id != this.change_id)
+				if (changeId != this.changeId)
 				{
 					return;
 				}
 				
-				bool infinite = (timeout.Ticks < 0);
-				
-				System.DateTime start_time = System.DateTime.Now;
-				System.DateTime stop_time  = start_time.Add (timeout);
-				
-				for (;;)
+				lock (this.monitor)
 				{
-					bool      got_event = false;
-					const int max_wait  = 30*1000;
-					
-					lock (this.monitor)
+					if (changeId != this.changeId)
 					{
-						if (change_id != this.change_id)
-						{
-							return;
-						}
-						if (infinite)
-						{
-							got_event = System.Threading.Monitor.Wait (this.monitor, max_wait);
-						}
-						else
-						{
-							timeout = System.TimeSpan.FromTicks (System.Math.Min (stop_time.Ticks - System.DateTime.Now.Ticks, max_wait*10*1000L));
-							
-							if (timeout.Ticks > 0)
-							{
-								got_event = System.Threading.Monitor.Wait (this.monitor, timeout);
-							}
-						}
+						return;
 					}
 					
-					if (got_event == false)
-					{
-						break;
-					}
+					System.Threading.Monitor.Wait (this.monitor);
 				}
 			}
-			
-			
-			private int							client_id;
-			private int							change_id;
-			private object						monitor;
+
+			public void WakeUp()
+			{
+				lock (this.monitor)
+				{
+					System.Threading.Monitor.PulseAll (this.monitor);
+				}
+			}
+
+			readonly object						monitor;
+			readonly int						clientId;
+			int									changeId;
 		}
 		#endregion
 		

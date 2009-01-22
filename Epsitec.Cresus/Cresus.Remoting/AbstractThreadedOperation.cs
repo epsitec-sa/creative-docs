@@ -139,9 +139,9 @@ namespace Epsitec.Cresus.Remoting
 		
 		protected readonly object				exclusion = new object ();
 		
-		private System.Threading.Thread			thread;
-		private System.Threading.AutoResetEvent	threadCancelEvent;
-		private bool							isThreadCancelRequested;
+		System.Threading.Thread					thread;
+		System.Threading.AutoResetEvent			threadCancelEvent;
+		volatile bool							isThreadCancelRequested;
 		
 		protected int							waitBeforeAbortInMilliseconds;
 	}
