@@ -1,15 +1,15 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.Requests
 {
-	using SqlFields = Database.Collections.SqlFieldList;
-	
+	using SqlFieldList = Epsitec.Cresus.Database.Collections.SqlFieldList;
+
 	/// <summary>
-	/// La classe ExecutionEngine exécute les requêtes qui modifient la base de
-	/// données.
+	/// The <c>ExecutionEngine</c> class executes requests which modify the
+	/// database.
 	/// </summary>
 	public class ExecutionEngine
 	{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				return this.current_transaction;
+				return this.currentTransaction;
 			}
 		}
 		
@@ -47,11 +47,16 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				return this.current_builder;
+				return this.currentSqlBuilder;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Executes the specified request within the active transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		/// <param name="request">The request.</param>
 		public void Execute(DbTransaction transaction, AbstractRequest request)
 		{
 			try
@@ -59,15 +64,15 @@ namespace Epsitec.Cresus.Requests
 				this.DefineCurrentLogId ();
 				this.DefineCurrentTransaction (transaction);
 				
-				this.expected_rows_changed = 0;
+				this.expectedRowsChanged = 0;
 				
 				request.Execute (this);
 				
-				int rows_changed = this.infrastructure.ExecuteSilent (transaction, this.CurrentSqlBuilder);
+				int rowsChanged = this.infrastructure.ExecuteSilent (transaction, this.currentSqlBuilder);
 				
-				if (rows_changed != this.expected_rows_changed)
+				if (rowsChanged != this.expectedRowsChanged)
 				{
-					throw new Database.Exceptions.ConflictingException (string.Format ("Request execution expected to update {0} rows; updated {1} instead.", this.expected_rows_changed, rows_changed));
+					throw new Database.Exceptions.ConflictingException (string.Format ("Request execution expected to update {0} rows; updated {1} instead.", this.expectedRowsChanged, rowsChanged));
 				}
 			}
 			finally
@@ -75,212 +80,276 @@ namespace Epsitec.Cresus.Requests
 				this.CleanUp ();
 			}
 		}
-		
-		
-		public void GenerateInsertDataCommand(string table_name, string[] columns, object[] values)
+
+
+		/// <summary>
+		/// Generates an insert data command. The data is converted to a format compatible
+		/// with the underlying database. The command inserts a single row.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="columns">The data columns.</param>
+		/// <param name="values">The data values.</param>
+		public void GenerateInsertDataCommand(string tableName, string[] columns, object[] values)
 		{
-			//	Génère une commande SqlBuilder.InsertData avec les paramètres spécifiés. Les données
-			//	sont converties au préalable dans le format propre à la base sous-jacente.
-			
 			if (columns.Length != values.Length)
 			{
 				throw new System.ArgumentException ("Columns/values mismatch.");
 			}
 			
-			DbTable     table       = this.FindTable (table_name);
-			SqlColumn[] sql_columns = this.CreateSqlColumns (table, columns);
-			SqlFields   sql_fields  = this.CreateSqlValues (table, sql_columns, values);
+			DbTable      table      = this.FindTable (tableName);
+			SqlColumn[]  sqlColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, columns);
+			SqlFieldList sqlFields  = ExecutionEngine.CreateSqlValues (this.infrastructure, table, sqlColumns, values);
 			
-			if (this.IsLogIdNeededForTable (table))
+			if (ExecutionEngine.IsLogIdNeededForTable (table))
 			{
-				this.PatchLogId (table, columns, sql_fields);
+				ExecutionEngine.FixLogId (table, columns, sqlFields, this.currentLogId);
 			}
 			
-			this.PrepareNewCommand ();
-			this.CurrentSqlBuilder.InsertData (table.GetSqlName (), sql_fields);
+			this.PrepareCommand ();
+			this.currentSqlBuilder.InsertData (table.GetSqlName (), sqlFields);
 			
-			this.expected_rows_changed++;
+			this.expectedRowsChanged++;
 		}
-		
-		public void GenerateUpdateDataCommand(string table_name, string[] cond_columns, object[] cond_values, string[] data_columns, object[] data_values)
+
+		/// <summary>
+		/// Generates an update data command. The data is converted to a format compatible
+		/// with the underlying database. The command updates a single row.
+		/// </summary>
+		/// <param name="tableName">Name of the table.</param>
+		/// <param name="condColumns">The condition columns.</param>
+		/// <param name="condValues">The condition values.</param>
+		/// <param name="dataColumns">The data columns.</param>
+		/// <param name="dataValues">The data values.</param>
+		public void GenerateUpdateDataCommand(string tableName, string[] condColumns, object[] condValues, string[] dataColumns, object[] dataValues)
 		{
-			//	Génère une commande SqlBuilder.UpdateData avec les paramètres spécifiés. Les données
-			//	sont converties au préalable dans le format propre à la base sous-jacente.
-			
-			if (cond_columns.Length != cond_values.Length)
+			if (condColumns.Length != condValues.Length)
 			{
 				throw new System.ArgumentException ("Condition columns/values mismatch.");
 			}
-			if (data_columns.Length != data_values.Length)
+			if (dataColumns.Length != dataValues.Length)
 			{
 				throw new System.ArgumentException ("Data columns/values mismatch.");
 			}
 			
-			DbTable table = this.FindTable (table_name);
-			
-			SqlColumn[] sql_cond_columns = this.CreateSqlColumns (table, cond_columns);
-			SqlColumn[] sql_data_columns = this.CreateSqlColumns (table, data_columns);
-			SqlFields   sql_cond_values  = this.CreateSqlValues (table, sql_cond_columns, cond_values);
-			SqlFields   sql_data_fields  = this.CreateSqlValues (table, sql_data_columns, data_values);
-			
-			if (this.IsLogIdNeededForTable (table))
+			DbTable table = this.FindTable (tableName);
+
+			SqlColumn[]  sqlCondColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, condColumns);
+			SqlColumn[]  sqlDataColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, dataColumns);
+			SqlFieldList sqlCondValues  = ExecutionEngine.CreateSqlValues (this.infrastructure, table, sqlCondColumns, condValues);
+			SqlFieldList sqlDataFields  = ExecutionEngine.CreateSqlValues (this.infrastructure, table, sqlDataColumns, dataValues);
+
+			if (ExecutionEngine.IsLogIdNeededForTable (table))
 			{
-				this.PatchLogId (table, data_columns, sql_data_fields);
+				ExecutionEngine.FixLogId (table, dataColumns, sqlDataFields, this.currentLogId);
 			}
+
+			SqlFieldList sqlCondFields = new SqlFieldList ();
 			
-			SqlFields sql_cond_fields = new Database.Collections.SqlFieldList ();
-			
-			for (int i = 0; i < sql_cond_values.Count; i++)
+			for (int i = 0; i < sqlCondValues.Count; i++)
 			{
-				SqlField name  = SqlField.CreateName (sql_cond_columns[i].Name);
-				SqlField value = sql_cond_values[i];
+				SqlField name  = SqlField.CreateName (sqlCondColumns[i].Name);
+				SqlField value = sqlCondValues[i];
 				
-				sql_cond_fields.Add (new SqlFunction (SqlFunctionCode.CompareEqual, name, value));
+				sqlCondFields.Add (new SqlFunction (SqlFunctionCode.CompareEqual, name, value));
 			}
 			
-			this.PrepareNewCommand ();
-			this.CurrentSqlBuilder.UpdateData (table.GetSqlName (), sql_data_fields, sql_cond_fields);
+			this.PrepareCommand ();
+			this.currentSqlBuilder.UpdateData (table.GetSqlName (), sqlDataFields, sqlCondFields);
 			
-			this.expected_rows_changed++;
+			this.expectedRowsChanged++;
+		}
+
+
+		/// <summary>
+		/// Defines the current log id by using the active one, provided by the logger.
+		/// </summary>
+		void DefineCurrentLogId()
+		{
+			System.Diagnostics.Debug.Assert (this.currentLogId.Value == 0);
+
+			this.currentLogId = this.infrastructure.Logger.CurrentId;
+		}
+
+		/// <summary>
+		/// Defines the current transaction.
+		/// </summary>
+		/// <param name="transaction">The transaction.</param>
+		void DefineCurrentTransaction(DbTransaction transaction)
+		{
+			System.Diagnostics.Debug.Assert (this.currentTransaction == null);
+
+			this.currentTransaction = transaction;
+			this.currentSqlBuilder  = transaction.SqlBuilder.NewSqlBuilder ();
+		}
+
+		/// <summary>
+		/// Finds the specified table definition.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Thrown if the table cannot be found.</exception>
+		/// <param name="tableName">Name of the table.</param>
+		/// <returns>The table definition.</returns>
+		DbTable FindTable(string tableName)
+		{
+			DbTable table = this.infrastructure.ResolveDbTable (this.currentTransaction, tableName);
+
+			if (table == null)
+			{
+				throw new System.ArgumentException (string.Format ("Cannot find table {0}.", tableName));
+			}
+			else
+			{
+				return table;
+			}
+		}
+
+		
+		/// <summary>
+		/// Prepares the context for a new command.
+		/// </summary>
+		void PrepareCommand()
+		{
+			System.Diagnostics.Debug.Assert (this.currentTransaction != null);
+			System.Diagnostics.Debug.Assert (this.currentSqlBuilder != null);
+
+			if (this.pendingCommands > 0)
+			{
+				this.currentSqlBuilder.AppendMore ();
+			}
+			else
+			{
+				this.currentSqlBuilder.Clear ();
+			}
+
+			this.pendingCommands++;
+		}
+
+		/// <summary>
+		/// Cleans up after execution of a request.
+		/// </summary>
+		void CleanUp()
+		{
+			System.Diagnostics.Debug.Assert (this.currentTransaction != null);
+
+			if (this.pendingCommands > 0)
+			{
+				this.currentSqlBuilder.Clear ();
+				this.pendingCommands = 0;
+			}
+
+			if (this.currentSqlBuilder != null)
+			{
+				this.currentSqlBuilder.Dispose ();
+			}
+
+			this.currentLogId       = DbId.Zero;
+			this.currentTransaction = null;
+			this.currentSqlBuilder  = null;
 		}
 		
 		
-		protected bool IsLogIdNeededForTable(DbTable table)
+		/// <summary>
+		/// Determines whether a log id is needed for the specified table.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <returns>
+		/// 	<c>true</c> if a log id is needed for the specified table; otherwise, <c>false</c>.
+		/// </returns>
+		static bool IsLogIdNeededForTable(DbTable table)
 		{
 			return table.Columns.Contains (Tags.ColumnRefLog);
 		}
-		
-		protected void PatchLogId(DbTable table, string[] db_column_names, SqlFields fields)
+
+		/// <summary>
+		/// Fixes the log id in the incoming fields by using the current log id instead
+		/// of the one provided by the caller.
+		/// </summary>
+		/// <param name="table">The table.</param>
+		/// <param name="columnNames">The column names.</param>
+		/// <param name="fields">The fields.</param>
+		/// <param name="currentLogId">The current log id.</param>
+		static void FixLogId(DbTable table, string[] columnNames, SqlFieldList fields, DbId currentLogId)
 		{
-			for (int i = 0; i < db_column_names.Length; i++)
+			for (int i = 0; i < columnNames.Length; i++)
 			{
-				if (db_column_names[i] == Tags.ColumnRefLog)
+				if (columnNames[i] == Tags.ColumnRefLog)
 				{
-					//	L'appelant spécifiait déjà une colonne pour le LOG ID, alors on met à jour
-					//	le champ correspondant :
+					//	Found the CREF_LOG column; replace the value with the current log id.
 					
 					System.Diagnostics.Debug.Assert (fields[i].RawType == DbKey.RawTypeForId);
 					System.Diagnostics.Debug.Assert (fields[i].Alias == table.Columns[Tags.ColumnRefLog].GetSqlName ());
 					
-					fields[i].Overwrite (SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId));
+					fields[i].Overwrite (SqlField.CreateConstant (currentLogId.Value, DbKey.RawTypeForId));
 					fields[i].Alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
 					
 					return;
 				}
 			}
 			
-			//	Aucun champ ne définissait de LOG ID; on doit donc ajouter un champ supplémentaire
-			//	avec cette valeur :
+			//	We did not find any field defining the log id; add one more field to store
+			//	the specified information :
 			
-			SqlField field = SqlField.CreateConstant (this.CurrentLogId.Value, DbKey.RawTypeForId);
+			SqlField field = SqlField.CreateConstant (currentLogId.Value, DbKey.RawTypeForId);
 			string   alias = table.Columns[Tags.ColumnRefLog].GetSqlName ();
 			
 			fields.Add (alias, field);
 		}
-		
-		
-		
-		
-		private void DefineCurrentLogId()
+
+		/// <summary>
+		/// Creates the SQL column definitions.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="columnNames">The column names.</param>
+		/// <returns>An array of SQL column definitions.</returns>
+		static SqlColumn[] CreateSqlColumns(DbInfrastructure infrastructure, DbTable table, string[] columnNames)
 		{
-			System.Diagnostics.Debug.Assert (this.currentLogId.Value == 0);
-			
-			this.currentLogId = this.infrastructure.Logger.CurrentId;
-		}
-		
-		private void DefineCurrentTransaction(DbTransaction transaction)
-		{
-			System.Diagnostics.Debug.Assert (this.current_transaction == null);
-			
-			this.current_transaction = transaction;
-			this.current_builder     = transaction.SqlBuilder.NewSqlBuilder ();
-		}
-		
-		
-		private DbTable FindTable(string table_name)
-		{
-			DbTable table = this.infrastructure.ResolveDbTable (this.CurrentTransaction, table_name);
-			
-			if (table == null)
-			{
-				throw new System.ArgumentException (string.Format ("Cannot find table {0}.", table_name));
-			}
-			
-			return table;
-		}
-		
-		private SqlColumn[] CreateSqlColumns(DbTable table, string[] column_names)
-		{
-			SqlColumn[]    columns   = new SqlColumn[column_names.Length];
-			ITypeConverter converter = this.infrastructure.Converter;
+			SqlColumn[]    columns   = new SqlColumn[columnNames.Length];
+			ITypeConverter converter = infrastructure.Converter;
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
 				//	TODO: handle multiple cultures...
-				columns[i] = table.Columns[column_names[i]].CreateSqlColumn (converter, null);
+				
+				columns[i] = table.Columns[columnNames[i]].CreateSqlColumn (converter, null);
 			}
 			
 			return columns;
 		}
-		
-		private SqlFields CreateSqlValues(DbTable table, SqlColumn[] columns, object[] values)
+
+		/// <summary>
+		/// Creates the SQL values and returns them as a field list.
+		/// </summary>
+		/// <param name="infrastructure">The infrastructure.</param>
+		/// <param name="table">The table.</param>
+		/// <param name="columns">The columns.</param>
+		/// <param name="values">The raw values.</param>
+		/// <returns>The field list of the converted SQL values.</returns>
+		static SqlFieldList CreateSqlValues(DbInfrastructure infrastructure, DbTable table, SqlColumn[] columns, object[] values)
 		{
-			SqlFields sql_fields = new Database.Collections.SqlFieldList ();
+			SqlFieldList fields = new SqlFieldList ();
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
-				SqlField field = this.infrastructure.CreateSqlField (columns[i], values[i]);
+				SqlField field = infrastructure.CreateSqlField (columns[i], values[i]);
 				string   alias = columns[i].Name;
-				sql_fields.Add (alias, field);
+				
+				fields.Add (alias, field);
 			}
 			
-			System.Diagnostics.Debug.Assert (sql_fields.Count == columns.Length);
-			System.Diagnostics.Debug.Assert (sql_fields.Count == values.Length);
+			System.Diagnostics.Debug.Assert (fields.Count == columns.Length);
+			System.Diagnostics.Debug.Assert (fields.Count == values.Length);
 			
-			return sql_fields;
+			return fields;
 		}
-		
-		
-		private void PrepareNewCommand()
-		{
-			if (this.pending_commands > 0)
-			{
-				this.CurrentSqlBuilder.AppendMore ();
-			}
-			else
-			{
-				this.CurrentSqlBuilder.Clear ();
-			}
-			
-			this.pending_commands++;
-		}
-		
-		private void CleanUp()
-		{
-			System.Diagnostics.Debug.Assert (this.current_transaction != null);
-			
-			if (this.pending_commands > 0)
-			{
-				this.CurrentSqlBuilder.Clear ();
-				this.pending_commands = 0;
-			}
-			
-			if (this.current_builder != null)
-			{
-				this.current_builder.Dispose ();
-			}
-			
-			this.currentLogId      = DbId.Zero;
-			this.current_transaction = null;
-			this.current_builder     = null;
-		}
-		
+
+
 		
 		readonly DbInfrastructure				infrastructure;
-		private DbId							currentLogId;
-		private DbTransaction					current_transaction;
-		private ISqlBuilder						current_builder;
-		private int								pending_commands;
-		private int								expected_rows_changed;
+		
+		DbId									currentLogId;
+		DbTransaction							currentTransaction;
+		ISqlBuilder								currentSqlBuilder;
+		int										pendingCommands;
+		int										expectedRowsChanged;
 	}
 }
