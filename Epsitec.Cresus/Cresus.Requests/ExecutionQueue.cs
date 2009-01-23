@@ -93,6 +93,14 @@ namespace Epsitec.Cresus.Requests
 				return this.isServer;
 			}
 		}
+
+		public bool								IsRunningAsClient
+		{
+			get
+			{
+				return !this.isServer;
+			}
+		}
 		
 		
 		public bool								HasPending

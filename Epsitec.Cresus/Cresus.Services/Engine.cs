@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Services
 	/// <summary>
 	/// The <c>Engine</c> class maintains the relationship between the database,
 	/// the dedicated service instances and the request orchestrator. An engine
-	/// usually runs in an isolated application domain.
+	/// usually runs in an isolated application domain on the server.
 	/// </summary>
 	public class Engine : System.MarshalByRefObject, System.IDisposable
 	{
