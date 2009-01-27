@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Requests
 	/// The <c>ExecutionState</c> enumeration defines the possible states for
 	/// a request stored in the <see cref="ExecutionQueue"/>.
 	/// </summary>
-	public enum ExecutionState : short
+	public enum ExecutionState
 	{
 		/// <summary>
 		/// Pending, local execution.

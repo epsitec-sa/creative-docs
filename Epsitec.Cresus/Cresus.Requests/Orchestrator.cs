@@ -814,6 +814,9 @@ namespace Epsitec.Cresus.Requests
 
 				this.abortEvent.Close ();
 				this.serverEvent.Close ();
+
+				this.executionQueue.Dispose ();
+				this.executionEngine.Dispose ();
 				
 				this.database.Dispose ();
 				

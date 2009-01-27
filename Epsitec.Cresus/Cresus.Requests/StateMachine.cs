@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Requests
 	/// The <c>StateMachine</c> class checks that the state transitions for a
 	/// given state machine are valid.
 	/// </summary>
-	internal class StateMachine
+	internal static class StateMachine
 	{
 		/// <summary>
 		/// Checks that the transition from one state to another is allowed.

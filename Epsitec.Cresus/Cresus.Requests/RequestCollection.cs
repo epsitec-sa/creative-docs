@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Requests
 	
 	[System.Serializable]
 	
-	public class RequestCollection : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, IEnumerable<AbstractRequest>, ICollection<AbstractRequest>
+	public sealed class RequestCollection : AbstractRequest, System.Runtime.Serialization.ISerializable, System.Runtime.Serialization.IDeserializationCallback, IEnumerable<AbstractRequest>, ICollection<AbstractRequest>
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="RequestCollection"/> class.
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Requests
 					return this.requests[index];
 				}
 				
-				throw new System.IndexOutOfRangeException ("Index invalid.");
+				throw new System.ArgumentException ("Index invalid.");
 			}
 		}
 
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Requests
 		
 		#region ISerializable Members
 		
-		protected RequestCollection(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		RequestCollection(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
 			AbstractRequest[] array = (AbstractRequest[]) info.GetValue (Strings.Array, typeof (AbstractRequest[]));
 			

@@ -44,23 +44,6 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
-		/// <summary>
-		/// Gets the rows currently defined in the database, which hold the requests
-		/// of the execution queue.
-		/// </summary>
-		/// <value>The rows.</value>
-		public System.Data.DataRow[]			Rows
-		{
-			get
-			{
-				lock (this.exclusion)
-				{
-					return this.queueDataTable.Rows.ToArray ();
-				}
-			}
-		}
-		
-		
 		internal AutoResetEvent					QueueChangedWaitEvent
 		{
 			get
@@ -181,6 +164,19 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
+		/// <summary>
+		/// Gets the rows currently defined in the database, which hold the requests
+		/// of the execution queue.
+		/// </summary>
+		/// <value>The rows.</value>
+		public System.Data.DataRow[] GetRows()
+		{
+			lock (this.exclusion)
+			{
+				return this.queueDataTable.Rows.ToArray ();
+			}
+		}
+		
 		/// <summary>
 		/// Gets the data rows in the queue, sorted by their date and time.
 		/// </summary>
@@ -310,7 +306,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			lock (this.exclusion)
 			{
-				System.Data.DataRow[] rows = this.Rows;
+				System.Data.DataRow[] rows = this.GetRows ();
 				
 				for (int i = 0; i < rows.Length; i++)
 				{
@@ -501,7 +497,7 @@ namespace Epsitec.Cresus.Requests
 		#endregion
 		
 		
-		internal static ExecutionState ConvertToExecutionState(short value)
+		internal static ExecutionState ConvertToExecutionState(int value)
 		{
 			return (ExecutionState) value;
 		}
@@ -590,16 +586,16 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (row == null)
 			{
-				throw new System.ArgumentNullException ("Row is null.");
+				throw new System.ArgumentNullException ("row", "Row is null.");
 			}
 			if (DbRichCommand.IsRowDeleted (row))
 			{
-				throw new System.ArgumentException ("Row has been deleted.");
+				throw new System.ArgumentException ("Row has been deleted.", "row");
 			}
 			
 			if (row.Table.DataSet != this.queueDataSet)
 			{
-				throw new System.ArgumentException ("Invalid row specified.");
+				throw new System.ArgumentException ("Invalid row specified.", "row");
 			}
 		}
 

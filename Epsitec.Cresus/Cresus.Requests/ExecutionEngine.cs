@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Requests
 	/// The <c>ExecutionEngine</c> class executes requests which modify the
 	/// database.
 	/// </summary>
-	public class ExecutionEngine
+	public sealed class ExecutionEngine : System.IDisposable
 	{
 		public ExecutionEngine(DbInfrastructure infrastructure)
 		{
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Requests
 			
 			DbTable      table      = this.FindTable (tableName);
 			SqlColumn[]  sqlColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, columns);
-			SqlFieldList sqlFields  = ExecutionEngine.CreateSqlValues (this.infrastructure, table, sqlColumns, values);
+			SqlFieldList sqlFields  = ExecutionEngine.CreateSqlValues (this.infrastructure, sqlColumns, values);
 			
 			if (ExecutionEngine.IsLogIdNeededForTable (table))
 			{
@@ -135,8 +135,8 @@ namespace Epsitec.Cresus.Requests
 
 			SqlColumn[]  sqlCondColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, condColumns);
 			SqlColumn[]  sqlDataColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, dataColumns);
-			SqlFieldList sqlCondValues  = ExecutionEngine.CreateSqlValues (this.infrastructure, table, sqlCondColumns, condValues);
-			SqlFieldList sqlDataFields  = ExecutionEngine.CreateSqlValues (this.infrastructure, table, sqlDataColumns, dataValues);
+			SqlFieldList sqlCondValues  = ExecutionEngine.CreateSqlValues (this.infrastructure, sqlCondColumns, condValues);
+			SqlFieldList sqlDataFields  = ExecutionEngine.CreateSqlValues (this.infrastructure, sqlDataColumns, dataValues);
 
 			if (ExecutionEngine.IsLogIdNeededForTable (table))
 			{
@@ -158,6 +158,20 @@ namespace Epsitec.Cresus.Requests
 			
 			this.expectedRowsChanged++;
 		}
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		private void Dispose(bool disposing)
+		{
+		}
+
+		#endregion
 
 
 		/// <summary>
@@ -194,7 +208,7 @@ namespace Epsitec.Cresus.Requests
 
 			if (table == null)
 			{
-				throw new System.ArgumentException (string.Format ("Cannot find table {0}.", tableName));
+				throw new System.ArgumentException (string.Concat ("Cannot find table ", tableName, "."));
 			}
 			else
 			{
@@ -320,11 +334,12 @@ namespace Epsitec.Cresus.Requests
 		/// Creates the SQL values and returns them as a field list.
 		/// </summary>
 		/// <param name="infrastructure">The infrastructure.</param>
-		/// <param name="table">The table.</param>
 		/// <param name="columns">The columns.</param>
 		/// <param name="values">The raw values.</param>
-		/// <returns>The field list of the converted SQL values.</returns>
-		static SqlFieldList CreateSqlValues(DbInfrastructure infrastructure, DbTable table, SqlColumn[] columns, object[] values)
+		/// <returns>
+		/// The field list of the converted SQL values.
+		/// </returns>
+		static SqlFieldList CreateSqlValues(DbInfrastructure infrastructure, SqlColumn[] columns, object[] values)
 		{
 			SqlFieldList fields = new SqlFieldList ();
 			

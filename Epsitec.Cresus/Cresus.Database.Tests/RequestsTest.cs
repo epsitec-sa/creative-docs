@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Database
 					group.Add (req_2);
 					group.Add (req_3);
 
-					rows = queue.Rows;
+					rows = queue.GetRows ();
 
 					int n = rows.Length;
 
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Database
 
 					Assert.AreEqual (n, rows.Length);
 
-					rows = queue.Rows;
+					rows = queue.GetRows ();
 
 					System.Data.DataRow row = rows[n];
 
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Database
 				queue.Dispose ();
 
 				queue = new Requests.ExecutionQueue (infrastructure, null);
-				rows  = queue.Rows;
+				rows  = queue.GetRows ();
 
 				foreach (System.Data.DataRow row in rows)
 				{
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Database
 				System.Data.DataRow[] rows;
 
 				queue = new Requests.ExecutionQueue (infrastructure, null);
-				rows  = queue.Rows;
+				rows  = queue.GetRows ();
 
 				foreach (System.Data.DataRow row in rows)
 				{
@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Database
 				System.Data.DataRow[] rows;
 
 				queue = new Requests.ExecutionQueue (infrastructure, null);
-				rows  = queue.Rows;
+				rows  = queue.GetRows ();
 
 				foreach (System.Data.DataRow row in rows)
 				{
