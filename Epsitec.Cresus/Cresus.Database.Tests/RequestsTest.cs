@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Database
 			Requests.RequestCollection group = new Requests.RequestCollection ();
 
 			Assert.AreEqual (0, group.Count);
-			Assert.AreEqual ("GroupRequest", group.GetType ().Name);
+			Assert.AreEqual ("RequestCollection", group.GetType ().Name);
 
 			group.AddRange (null);
 			group.AddRange (new Epsitec.Cresus.Requests.AbstractRequest[] { });
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		[Test]
-		[ExpectedException (typeof (System.IndexOutOfRangeException))]
+		[ExpectedException (typeof (System.ArgumentException))]
 		public void Check03GroupEx()
 		{
 			Requests.RequestCollection group = new Requests.RequestCollection ();
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Database
 			Requests.AbstractRequest req3 = new Requests.UpdateStaticDataRequest ();
 			Requests.AbstractRequest req4 = new Requests.UpdateDynamicDataRequest ();
 
-			Assert.AreEqual ("GroupRequest", req1.GetType ().Name);
+			Assert.AreEqual ("RequestCollection", req1.GetType ().Name);
 			Assert.AreEqual ("InsertStaticDataRequest", req2.GetType ().Name);
 			Assert.AreEqual ("UpdateStaticDataRequest", req3.GetType ().Name);
 			Assert.AreEqual ("UpdateDynamicDataRequest", req4.GetType ().Name);
@@ -100,22 +100,22 @@ namespace Epsitec.Cresus.Database
 
 				Requests.RequestCollection group = new Requests.RequestCollection ();
 
-				Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
-				Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
+				Requests.InsertStaticDataRequest req1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
+				Requests.InsertStaticDataRequest req2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
 
 				table.Rows[0].BeginEdit ();
 				table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
 				table.Rows[0].EndEdit ();
 
-				Requests.UpdateStaticDataRequest req_3 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
+				Requests.UpdateStaticDataRequest req3 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
 
-				group.Add (req_1);
-				group.Add (req_2);
-				group.Add (req_3);
+				group.Add (req1);
+				group.Add (req2);
+				group.Add (req3);
 
-				Assert.AreEqual (2, req_3.ColumnNames.Count);
-				Assert.AreEqual ("ID", req_3.ColumnNames[0]);
-				Assert.AreEqual ("Name", req_3.ColumnNames[1]);
+				Assert.AreEqual (2, req3.ColumnNames.Count);
+				Assert.AreEqual ("ID", req3.ColumnNames[0]);
+				Assert.AreEqual ("Name", req3.ColumnNames[1]);
 
 				formatter.Serialize (stream, group);
 			}
@@ -131,27 +131,27 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual ("InsertStaticDataRequest", group[1].GetType ().Name);
 				Assert.AreEqual ("UpdateStaticDataRequest", group[2].GetType ().Name);
 
-				Requests.InsertStaticDataRequest req_1 = group[0] as Requests.InsertStaticDataRequest;
-				Requests.InsertStaticDataRequest req_2 = group[1] as Requests.InsertStaticDataRequest;
-				Requests.UpdateStaticDataRequest req_3 = group[2] as Requests.UpdateStaticDataRequest;
+				Requests.InsertStaticDataRequest req1 = group[0] as Requests.InsertStaticDataRequest;
+				Requests.InsertStaticDataRequest req2 = group[1] as Requests.InsertStaticDataRequest;
+				Requests.UpdateStaticDataRequest req3 = group[2] as Requests.UpdateStaticDataRequest;
 
-				Assert.AreEqual ("DemoTable", req_1.TableName);
-				Assert.AreEqual ("DemoTable", req_2.TableName);
+				Assert.AreEqual ("DemoTable", req1.TableName);
+				Assert.AreEqual ("DemoTable", req2.TableName);
 
-				Assert.AreEqual (1L, req_1.ColumnValues[0]);
-				Assert.AreEqual (2L, req_2.ColumnValues[0]);
+				Assert.AreEqual (1L, req1.ColumnValues[0]);
+				Assert.AreEqual (2L, req2.ColumnValues[0]);
 
-				Assert.AreEqual ("Pierre Arnaud", req_1.ColumnValues[1]);
-				Assert.AreEqual ("Jérôme André", req_2.ColumnValues[1]);
+				Assert.AreEqual ("Pierre Arnaud", req1.ColumnValues[1]);
+				Assert.AreEqual ("Jérôme André", req2.ColumnValues[1]);
 
-				Assert.AreEqual (1972, req_1.ColumnValues[2]);
-				Assert.AreEqual (1994, req_2.ColumnValues[2]);
+				Assert.AreEqual (1972, req1.ColumnValues[2]);
+				Assert.AreEqual (1994, req2.ColumnValues[2]);
 
-				Assert.AreEqual (2, req_3.ColumnNames.Count);
-				Assert.AreEqual ("ID", req_3.ColumnNames[0]);
-				Assert.AreEqual ("Name", req_3.ColumnNames[1]);
-				Assert.AreEqual (1L, req_3.ColumnValues[0]);
-				Assert.AreEqual ("Pierre Arnaud-Bühlmann", req_3.ColumnValues[1]);
+				Assert.AreEqual (2, req3.ColumnNames.Count);
+				Assert.AreEqual ("ID", req3.ColumnNames[0]);
+				Assert.AreEqual ("Name", req3.ColumnNames[1]);
+				Assert.AreEqual (1L, req3.ColumnValues[0]);
+				Assert.AreEqual ("Pierre Arnaud-Bühlmann", req3.ColumnValues[1]);
 			}
 		}
 
@@ -160,33 +160,33 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 
-			Requests.UpdateStaticDataRequest req_1 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
+			Requests.UpdateStaticDataRequest req1 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
 
 			table.Rows[0].BeginEdit ();
 			table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
 			table.Rows[0].EndEdit ();
 
-			Requests.UpdateStaticDataRequest req_2 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
-			Requests.UpdateStaticDataRequest req_3 = new Requests.UpdateStaticDataRequest (table.Rows[1], Requests.UpdateMode.Full);
+			Requests.UpdateStaticDataRequest req2 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
+			Requests.UpdateStaticDataRequest req3 = new Requests.UpdateStaticDataRequest (table.Rows[1], Requests.UpdateMode.Full);
 
-			Assert.IsTrue (req_1.ContainsData == false);
-			Assert.IsTrue (req_2.ContainsData == true);
-			Assert.IsTrue (req_3.ContainsData == true);
+			Assert.IsTrue (req1.ContainsData == false);
+			Assert.IsTrue (req2.ContainsData == true);
+			Assert.IsTrue (req3.ContainsData == true);
 
-			Assert.AreEqual (2, req_2.ColumnNames.Count);
-			Assert.AreEqual ("ID", req_2.ColumnNames[0]);
-			Assert.AreEqual ("Name", req_2.ColumnNames[1]);
-			Assert.AreEqual (1L, req_2.ColumnValues[0]);
-			Assert.AreEqual ("Pierre Arnaud-Bühlmann", req_2.ColumnValues[1]);
-			Assert.AreEqual ("Pierre Arnaud", req_2.ColumnOriginalValues[1]);
+			Assert.AreEqual (2, req2.ColumnNames.Count);
+			Assert.AreEqual ("ID", req2.ColumnNames[0]);
+			Assert.AreEqual ("Name", req2.ColumnNames[1]);
+			Assert.AreEqual (1L, req2.ColumnValues[0]);
+			Assert.AreEqual ("Pierre Arnaud-Bühlmann", req2.ColumnValues[1]);
+			Assert.AreEqual ("Pierre Arnaud", req2.ColumnOriginalValues[1]);
 
-			Assert.AreEqual (3, req_3.ColumnNames.Count);
-			Assert.AreEqual ("ID", req_3.ColumnNames[0]);
-			Assert.AreEqual ("Name", req_3.ColumnNames[1]);
-			Assert.AreEqual ("Birth Year", req_3.ColumnNames[2]);
-			Assert.AreEqual (2L, req_3.ColumnValues[0]);
-			Assert.AreEqual ("Jérôme André", req_3.ColumnValues[1]);
-			Assert.AreEqual (1994, req_3.ColumnValues[2]);
+			Assert.AreEqual (3, req3.ColumnNames.Count);
+			Assert.AreEqual ("ID", req3.ColumnNames[0]);
+			Assert.AreEqual ("Name", req3.ColumnNames[1]);
+			Assert.AreEqual ("Birth Year", req3.ColumnNames[2]);
+			Assert.AreEqual (2L, req3.ColumnValues[0]);
+			Assert.AreEqual ("Jérôme André", req3.ColumnValues[1]);
+			Assert.AreEqual (1994, req3.ColumnValues[2]);
 		}
 
 		[Test]

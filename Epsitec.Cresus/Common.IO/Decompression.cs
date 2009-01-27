@@ -23,19 +23,22 @@ namespace Epsitec.Common.IO
 		
 		public static System.IO.Stream CreateStream(System.IO.Stream stream, out string name)
 		{
-			byte[] header = new byte[8];
 			name = null;
 			
-			try
+			if (stream != null)
 			{
-				stream.Read (header, 0, 8);
-				
-				return Decompression.CreateStreamFromHeader (stream, header, out name);
+				byte[] header = new byte[8];
+
+				try
+				{
+					stream.Read (header, 0, 8);
+					return Decompression.CreateStreamFromHeader (stream, header, out name);
+				}
+				catch (System.IO.IOException)
+				{
+				}
 			}
-			catch (System.IO.IOException)
-			{
-			}
-			
+
 			return null;
 		}
 		

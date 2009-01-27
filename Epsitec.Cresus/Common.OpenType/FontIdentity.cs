@@ -772,25 +772,19 @@ namespace Epsitec.Common.OpenType
 		public void InternalClearFontData()
 		{
 			this.fontData = null;
-
-			List<FontSizeInfo> sizeInfos = new List<FontSizeInfo> (this.fontSizes.Values);
-
-			foreach (FontSizeInfo sizeInfo in sizeInfos)
+			
+			if (this.fontSizes != null)
 			{
-				sizeInfo.Dispose ();
+				List<FontSizeInfo> sizeInfos = new List<FontSizeInfo> (this.fontSizes.Values);
+
+				foreach (FontSizeInfo sizeInfo in sizeInfos)
+				{
+					sizeInfo.Dispose ();
+				}
+
+				this.fontSizes.Clear ();
 			}
-
-			this.fontSizes.Clear ();
 		}
-
-#if false
-		public Platform.IFontHandle GetPlatformFontHandle(int size)
-		{
-			FontSizeInfo info = this.GetSizeInfo (size);
-
-			return info == null ? null : info.Handle;
-		}
-#endif
 		
 		internal static void Serialize(System.IO.Stream stream, FontIdentity fid)
 		{

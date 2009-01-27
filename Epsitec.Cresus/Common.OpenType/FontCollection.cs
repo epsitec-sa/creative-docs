@@ -714,12 +714,15 @@ namespace Epsitec.Common.OpenType
 						string name;
 						using (System.IO.Stream decompressor = Epsitec.Common.IO.Decompression.CreateStream (file, out name))
 						{
-							FontIdentity fid = FontIdentity.Deserialize (decompressor);
-
-							while (fid != null)
+							if (decompressor != null)
 							{
-								this.Add (fid.FullName, fid.UniqueFontId, fid);
-								fid = FontIdentity.Deserialize (decompressor);
+								FontIdentity fid = FontIdentity.Deserialize (decompressor);
+
+								while (fid != null)
+								{
+									this.Add (fid.FullName, fid.UniqueFontId, fid);
+									fid = FontIdentity.Deserialize (decompressor);
+								}
 							}
 						}
 					}

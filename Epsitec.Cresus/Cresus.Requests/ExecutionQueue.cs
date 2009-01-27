@@ -554,7 +554,7 @@ namespace Epsitec.Cresus.Requests
 			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
 			row.EndEdit ();
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} added, initial state {1}.", row[0], (ExecutionState) row[Tags.ColumnReqExState]));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} added, initial state {1}.", row[0], ExecutionQueue.ConvertToExecutionState (row[Tags.ColumnReqExState])));
 
 			return row;
 		}

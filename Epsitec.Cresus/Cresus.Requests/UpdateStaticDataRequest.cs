@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Requests
 		
 		protected UpdateStaticDataRequest(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{
-			System.Diagnostics.Debug.Assert (Epsitec.Common.Support.Serialization.Helper.FindElement (info, "ColNames"));
+			System.Diagnostics.Debug.Assert (Epsitec.Common.Support.Serialization.Helper.FindElement (info, Strings.ColumnNames));
 			
 			this.columnNames  = info.GetValue (Strings.ColumnNames, typeof (string[])) as string[];
 			this.columnCurrentValues = info.GetValue (Strings.ColumnValues, typeof (object[])) as object[];
