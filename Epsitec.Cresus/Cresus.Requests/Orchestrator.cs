@@ -43,8 +43,12 @@ namespace Epsitec.Cresus.Requests
 			
 			this.workerThread.Start ();
 		}
-		
-		
+
+
+		/// <summary>
+		/// Gets the execution queue.
+		/// </summary>
+		/// <value>The execution queue.</value>
 		public ExecutionQueue					ExecutionQueue
 		{
 			get
@@ -52,7 +56,11 @@ namespace Epsitec.Cresus.Requests
 				return this.executionQueue;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the execution engine.
+		/// </summary>
+		/// <value>The execution engine.</value>
 		public ExecutionEngine					ExecutionEngine
 		{
 			get
@@ -60,7 +68,11 @@ namespace Epsitec.Cresus.Requests
 				return this.executionEngine;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the database infrastructure.
+		/// </summary>
+		/// <value>The database infrastructure.</value>
 		public DbInfrastructure					Infrastructure
 		{
 			get
@@ -68,7 +80,11 @@ namespace Epsitec.Cresus.Requests
 				return this.infrastructure;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the database abstraction.
+		/// </summary>
+		/// <value>The database abstraction.</value>
 		public IDbAbstraction					Database
 		{
 			get
@@ -76,7 +92,11 @@ namespace Epsitec.Cresus.Requests
 				return this.database;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the remoting service.
+		/// </summary>
+		/// <value>The remoting service.</value>
 		public IRequestExecutionService			RemotingService
 		{
 			get
@@ -84,7 +104,11 @@ namespace Epsitec.Cresus.Requests
 				return this.service;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the client identity.
+		/// </summary>
+		/// <value>The client identity.</value>
 		public ClientIdentity					ClientIdentity
 		{
 			get
@@ -92,7 +116,11 @@ namespace Epsitec.Cresus.Requests
 				return this.client;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the orchestrator state.
+		/// </summary>
+		/// <value>The orchestrator state.</value>
 		public OrchestratorState				State
 		{
 			get
@@ -104,22 +132,31 @@ namespace Epsitec.Cresus.Requests
 
 		/// <summary>
 		/// Defines the remoting service; this method gets called by the
-		/// <see cref="Epsitec.Cresus.Services.Engine"/> class. When it is
-		/// running on the client, the orchestrator does not start the waiter
-		/// thread.
+		/// <see cref="Epsitec.Cresus.Services.Engine"/> class.
 		/// </summary>
 		/// <param name="service">The request execution service.</param>
 		/// <param name="client">The client identity.</param>
 		public void DefineRemotingService(IRequestExecutionService service, ClientIdentity client)
 		{
+			//	The service can be of two types :
+			//
+			//	(1) local, accessed through an AppDomain crossing .NET remoting proxy;
+			//		this is the case when the orchestrator is running inside the server,
+			//		where the remoting service is locally available.
+			//	
+			//	(2) remote, accessed through a WCF proxy; this is the case when the
+			//		orchestrator is running inside a client and needs to access the
+			//		server through a network interface.
+
+			System.Diagnostics.Debug.Assert (this.waiterThread.IsAlive == false);
+			System.Diagnostics.Debug.Assert (this.service == null);
+			
 			this.service = service;
 			this.client  = client;
-			
-			if ((this.service != null) &&
-				(this.waiterThread.IsAlive == false))
-			{
-				this.waiterThread.Start ();
-			}
+
+			System.Diagnostics.Debug.Assert (this.service != null);
+
+			this.waiterThread.Start ();
 		}
 		
 		
@@ -137,8 +174,8 @@ namespace Epsitec.Cresus.Requests
 
 		/// <summary>
 		/// The waiter thread waits for the arrival of requests on the request execution
-		/// service; whenever requests arrive, their state gets recorded and the worker
-		/// thread is started.
+		/// service, i.e. on the server request queue; whenever requests arrive, their
+		/// state gets recorded and the worker thread is started.
 		/// </summary>
 		void WaiterThread()
 		{
@@ -152,7 +189,7 @@ namespace Epsitec.Cresus.Requests
 				{
 					RequestState[] states;
 					
-					//	Load the states of the requests on our server instance; block until something
+					//	Load the states of the requests on the server queue; block until something
 					//	changes or we time out.
 					
 					int newChangeId = this.service.QueryRequestStatesUsingFilter (this.client, changeId, out states);
@@ -203,6 +240,8 @@ namespace Epsitec.Cresus.Requests
 			try
 			{
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread launched.");
+
+				this.executionQueue.SetOrchestratorWorkerThread (Thread.CurrentThread);
 				
 				WaitHandle[] waitEvents = new WaitHandle[4];
 				
@@ -229,10 +268,10 @@ namespace Epsitec.Cresus.Requests
 					if (handleIndex == WaitEvents.ServerChanged)
 					{
 						//	The states of the requests on the server have changed; process all
-						//	changes found on the server.
+						//	changes found on the server and copies them into the local queue.
 						
 						this.ChangeToState (OrchestratorState.Processing);
-						this.ProcessServerChanges ();
+						this.UpdateLocalRequestsBasedOnServerStates ();
 					}
 					
 					//	Process the contents of the local queue too :
@@ -241,8 +280,8 @@ namespace Epsitec.Cresus.Requests
 					{
 						//	As long as there is a conflict in the local queue, we cannot make any
 						//	kind of progress; we have to wait until the conflict has been resolved.
-						
-						this.ChangeToState (OrchestratorState.Conflicting);
+
+						continue;
 					}
 					else
 					{
@@ -253,7 +292,7 @@ namespace Epsitec.Cresus.Requests
 						if ((this.executionQueue.HasConflictResolved) ||
 							(this.executionQueue.HasPending))
 						{
-							this.ProcessReadyInQueue ();
+							this.ProcessRequestsReadyInLocalQueue ();
 						}
 						else
 						{
@@ -265,7 +304,7 @@ namespace Epsitec.Cresus.Requests
 								(this.executionQueue.IsRunningAsClient) &&
 								(this.executionQueue.HasExecutedByClient))
 							{
-								this.ProcessSendToServer ();
+								this.SendLocalRequestsToServer ();
 							}
 						}
 					}
@@ -290,12 +329,9 @@ namespace Epsitec.Cresus.Requests
 		/// <summary>
 		/// Processes the requests which are ready in the local queue.
 		/// </summary>
-		void ProcessReadyInQueue()
+		void ProcessRequestsReadyInLocalQueue()
 		{
 			List<System.Data.DataRow> rows = new List<System.Data.DataRow> (DbRichCommand.GetLiveRows (this.executionQueue.GetDateTimeSortedRows ()));
-			
-			//	Process the requests which are ready, but don't grow the list as we are processing
-			//	them; new arrivals will be handled in a furure iteration.
 			
 			int n = rows.Count;
 			
@@ -305,8 +341,8 @@ namespace Epsitec.Cresus.Requests
 			{
 				if (this.executionQueue.HasConflicting)
 				{
-					//	Stop as soon as there is a conflict.
-
+					//	Stop as soon as we detect a conflict in the request queue !
+					
 					break;
 				}
 				
@@ -331,7 +367,7 @@ namespace Epsitec.Cresus.Requests
 				{
 					case ExecutionState.Pending:
 					case ExecutionState.ConflictResolved:
-						this.ProcessPendingRequest (row);
+						this.ProcessLocalRequest (row);
 						break;
 					
 					default:
@@ -342,97 +378,87 @@ namespace Epsitec.Cresus.Requests
 
 
 		/// <summary>
-		/// Processes one pending request, based on its serialized representation.
+		/// Processes one local request, based on its serialized representation.
 		/// </summary>
-		/// <param name="row">The row containing the serialized request.</param>
-		void ProcessPendingRequest(System.Data.DataRow row)
+		/// <param name="row">The row containing the local request.</param>
+		void ProcessLocalRequest(System.Data.DataRow row)
 		{
 			AbstractRequest request = this.executionQueue.GetRequest (row);
 
-			//	The request has either the ExecuctionState.Pending or ConflictResolved state.
+			//	The request has either the Pending or ConflictResolved state.
 			//	Its execution will change its state to either ExecutedByClient or Conflicting.
 			
 			DbKey requestKey = new DbKey (row);
 			DbId  requestId  = requestKey.Id;
-			
-			DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database);
-			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Processing request ({0}).", request.GetType ().Name));
-			
+
 			bool conflictDetected = false;
-			
-			try
+
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
-				this.executionEngine.Execute (transaction, request);
-				this.executionQueue.SetRequestExecutionState (row, ExecutionState.ExecutedByClient);
-				this.executionQueue.PersistToBase (transaction);
-				
-				transaction.Commit ();
-			}
-			catch (System.Exception exception)
-			{
-				System.Diagnostics.Debug.WriteLine (exception.Message);
-				
-				conflictDetected = true;
-			}
-			finally
-			{
-				transaction.Dispose ();
+				System.Diagnostics.Debug.WriteLine (string.Format ("Processing request ({0}).", request.GetType ().Name));
+
+				try
+				{
+					this.executionEngine.Execute (transaction, request);
+
+					this.SwitchToExecutedByClient (row, transaction);
+
+					transaction.Commit ();
+				}
+				catch (System.Exception exception)
+				{
+					//	TODO: don't swallow all exceptions here, but just the conflicting !
+					
+					System.Diagnostics.Debug.WriteLine (exception.Message);
+					conflictDetected = true;
+				}
 			}
 			
 			this.OnRequestExecuted (requestId);
 			
 			if (conflictDetected)
 			{
-				this.ProcessDetectedConflict (row, request);
+				this.HandleLocalConflictDetected (row, request);
 			}
 		}
-		
-		void ProcessDetectedConflict(System.Data.DataRow row, AbstractRequest request)
+
+		/// <summary>
+		/// Handle a conflict detected while executing the specified request.
+		/// </summary>
+		/// <param name="row">The row containing the local request.</param>
+		/// <param name="request">The request.</param>
+		void HandleLocalConflictDetected(System.Data.DataRow row, AbstractRequest request)
 		{
-			//	Un conflit a été détecté lors de la tentative de mise à jour de la
-			//	requête. Passe l'état à 'Conflicting' et persiste la queue dans la
-			//	base de données.
-			
 			this.SwitchToConflictingLocally (row);
 		}
+
 		
-		void ProcessSendToServer()
+		/// <summary>
+		/// Sends the local requests to server and mark them all as <c>SentToServer</c>.
+		/// If some requests are in conflict, doesn't do anything.
+		/// </summary>
+		void SendLocalRequestsToServer()
 		{
-			//	Passe en revue la queue à la recherche de requêtes prêtes à être envoyées
-			//	au serveur. Dans l'implémentation actuelle, on envoie une requête à la
-			//	fois pour simplifier la détection des conflits.
-			
 			List<System.Data.DataRow> rows = new List<System.Data.DataRow> (DbRichCommand.GetLiveRows (this.executionQueue.GetDateTimeSortedRows ()));
 			
-			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
-			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
-			//	prochain tour.
-			
-			int n = rows.Count;
-			
-			for (int i = 0; i < n; i++)
+			foreach (var row in rows)
 			{
 				if (this.executionQueue.HasConflicting)
 				{
 					break;
 				}
 				
-				System.Data.DataRow row = rows[i];
-				
 				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}
 				
-				ExecutionState  state   = this.executionQueue.GetRequestExecutionState (row);
-				AbstractRequest request = null;;
+				ExecutionState state = this.executionQueue.GetRequestExecutionState (row);
 				
 				switch (state)
 				{
 					case ExecutionState.ExecutedByClient:
-						request = this.executionQueue.GetRequest (row);
-						this.ProcessSendToServer (row, request);
+						this.SendLocalRequestToServer (row);
 						break;
 					
 					default:
@@ -440,139 +466,154 @@ namespace Epsitec.Cresus.Requests
 				}
 			}
 		}
-		
-		void ProcessSendToServer(System.Data.DataRow row, AbstractRequest request)
+
+		/// <summary>
+		/// Sends the local request to the server and mark the request as <c>SentToServer</c>.
+		/// </summary>
+		/// <param name="row">The row for the specified request.</param>
+		void SendLocalRequestToServer(System.Data.DataRow row)
 		{
-			SerializedRequest[] requests = new SerializedRequest[1];
+			AbstractRequest request = this.executionQueue.GetRequest (row);
 			
-			DbKey  request_key = new DbKey (row);
-			DbId   request_id  = request_key.Id;
-			byte[] serialized  = Epsitec.Common.IO.Serialization.SerializeToMemory (request);
+			DbKey  requestKey = new DbKey (row);
+			DbId   requestId  = requestKey.Id;
+			byte[] serialized = Epsitec.Common.IO.Serialization.SerializeToMemory (request);
 			
-			requests[0] = new Remoting.SerializedRequest (request_id, serialized);
+			//	Send the request to the server :
+
+			this.service.EnqueueRequest (this.client, new SerializedRequest[] { new Remoting.SerializedRequest (requestId, serialized) });
 			
-			this.service.EnqueueRequest (this.client, requests);
-			
-			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
-			{
-				this.executionQueue.SetRequestExecutionState (row, ExecutionState.SentToServer);
-				this.executionQueue.PersistToBase (transaction);
-				transaction.Commit ();
-			}
+			//	Remember that this request was sent to the server; if we happen to crash
+			//	before we commit the transaction, we will send the request twice to the
+			//	server, but this is taken care of on the server queue :
+
+			this.SwitchToSentToServer (row);
 		}
-		
-		void ProcessServerChanges()
+
+
+
+		/// <summary>
+		/// Updates the local requests based on the server states. The request
+		/// states in the execution queue will be changed.
+		/// </summary>
+		void UpdateLocalRequestsBasedOnServerStates()
 		{
-			//	Met à jour la queue locale en fonction de l'état des requêtes dans la
-			//	queue du serveur (dont nous avons une copie, grâce à WaiterThread).
-			
 			RequestState[] states;
 
 			lock (this.exclusion)
 			{
 				states = (RequestState[]) this.serverRequestStates.Clone ();
 			}
+
+			List<RequestState>    deadRequests = new List<RequestState> ();
+			System.Data.DataRow[] rows         = this.executionQueue.GetDateTimeSortedRows ();
 			
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			System.Data.DataRow[]        rows = this.executionQueue.GetDateTimeSortedRows ();
-			
-			for (int i = 0; i < states.Length; i++)
+			foreach (RequestState requestState in states)
 			{
-				System.Data.DataRow row = DbRichCommand.FindRow (this.executionQueue.QueueDataTable, rows, states[i].RequestId);
+				System.Data.DataRow row = DbRichCommand.FindRow (this.executionQueue.QueueDataTable, rows, requestState.RequestId);
 				
 				if (row == null)
 				{
-					//	La requête n'existe plus dans la queue locale; ceci implique que
-					//	celle stockée sur le serveur est caduque et peut être supprimée :
-					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: server still knows request {0} !", states[i].RequestId));
-					
-					list.Add (states[i]);
+					//	The request cannot be found in our local execution queue; this means that
+					//	the server still references a dead request :
+
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: server references dead request {0} !", requestState.RequestId));
+
+					deadRequests.Add (requestState);
 					continue;
 				}
 				
-				//	La requête existe dans la queue d'exécution locale. Détermine s'il faut
-				//	modifier son état :
+				//	The request exists in our local execution queue.
+
+				ExecutionState remoteState = ExecutionQueue.ConvertToExecutionState (requestState.State);
+				ExecutionState localState  = this.executionQueue.GetRequestExecutionState (row);
 				
-				ExecutionState remote_state = ExecutionQueue.ConvertToExecutionState (states[i].State);
-				ExecutionState local_state  = this.executionQueue.GetRequestExecutionState (row);
-				
-				if (local_state == ExecutionState.ExecutedByClient)
+				if (localState == ExecutionState.ExecutedByClient)
 				{
-					//	La requête ne "peut" pas encore avoir été envoyée au serveur (en fait,
-					//	elle a certainement été envoyée juste avant un crash du client); il
-					//	faut donc ignorer celle-ci en attendant qu'elle passe à l'état "envoyée".
-					
+					//	We never sent the request to the server (yet, there it is, which most probably
+					//	means that we crashed in SendLocalRequestToServer, before being able to mark
+					//	the request as sent); skip the request -- it will be sent again later.
+
 					continue;
 				}
 				
-				if ((local_state != ExecutionState.SentToServer) &&
-					(local_state != ExecutionState.ExecutedByServer) &&
-					(local_state != ExecutionState.ConflictingOnServer))
+				if ((localState != ExecutionState.SentToServer) &&
+					(localState != ExecutionState.ExecutedByServer) &&
+					(localState != ExecutionState.ConflictingOnServer))
 				{
-					//	La requête doit être dans l'un des états suivants :
+					//	The state of the request in the local queue is not valide; we support only
+					//	one of the following valid states :
+					//	
+					//	(1) SentToServeur, the request was successfully sent to the server.
 					//
-					//	(1) SentToServeur, cas normal d'une requête envoyée au serveur.
+					//	(2) ExecutedByServer, the client was restarted before the request
+					//		could be removed from the server and client queues.
 					//
-					//	(2) ExecutedByServer, au cas où le client aurait redémarré avant la
-					//		suppression de la requête des queues du serveur et du client.
-					//
-					//	(3) ConflictingOnServer, au cas où le client aurait redémarré avant
-					//		la suppression de la requête de la queue du serveur et son
-					//		passage en local à l'état Conflicting.
-					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: request {0} local state is {1}; should be SentToServer.", states[i].RequestId, local_state));
+					//	(3) ConflictingOnServer, the client was restarted before the request
+					//		could be removed from the server and before the local queue could
+					//		be updated to Conflicting.
+
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: request {0} local state is {1}; should be SentToServer.", requestState.RequestId, localState));
 				}
 				
-				switch (remote_state)
+				switch (remoteState)
 				{
 					case ExecutionState.Pending:
+						//	Server has not processed the request yet.
 						break;
 					
 					case ExecutionState.ExecutedByServer:
-						
-						//	La requête a été exécutée sur le serveur. Il faut mettre à jour
-						//	l'état dans la queue locale :
-						
-						this.SwitchToExecutedByServer (states[i], row);
+						//	Server has successfully processed the request. Remove the request
+						//	from the server and mark the local request as executed.
+
+						this.SwitchToExecutedByServer (requestState, row);
 						break;
 					
 					case ExecutionState.ConflictingOnServer:
-						
-						//	La requête a été rejetée par le serveur (elle génère un conflit).
-						//	Il faut mettre à jour l'état dans la queue locale :
-						
+						//	Server has detected a conflict on the request. Remove all requests
+						//	still known on the server and mark the local request as conflicting
+						//	on the server.
+
 						this.SwitchToConflictingOnServer (row);
 						break;
 					
 					default:
-						throw new System.InvalidOperationException (string.Format ("Request ExecutionState set to {0} on server.", remote_state));
+						throw new System.InvalidOperationException (string.Format ("Request ExecutionState set to {0} on server.", remoteState));
 				}
 			}
-			
-			if (list.Count > 0)
+
+			this.CleanUpDeadRequests (deadRequests);
+			this.CleanUpConflictingOnServer (rows);
+			this.CleanUpExecutedByServer (rows);
+		}
+
+		/// <summary>
+		/// Cleans up dead requests.
+		/// </summary>
+		/// <param name="deadRequests">The dead requests.</param>
+		void CleanUpDeadRequests(List<RequestState> deadRequests)
+		{
+			if (deadRequests.Count > 0)
 			{
-				//	Il y a des requêtes "mortes" qui peuvent être supprimées de la queue
-				//	du serveur :
-				
-				states = new RequestState[list.Count];
-				list.CopyTo (states);
-				this.service.RemoveRequestStates (this.client, states);
+				this.service.RemoveRequestStates (this.client, deadRequests.ToArray ());
 			}
-			
+
+		}
+
+		/// <summary>
+		/// Cleans up requests locally marked as conflicting on server.
+		/// </summary>
+		/// <param name="rows">The rows for the local requests.</param>
+		void CleanUpConflictingOnServer(System.Data.DataRow[] rows)
+		{
 			if (this.executionQueue.HasConflictingOnServer)
 			{
-				//	La queue locale contient des requêtes marquées comme étant en
-				//	conflit sur le serveur; ceci n'est pas possible dans un fonc-
-				//	tionnement normal.
-				//
-				//	C'est un état transitoire possible ici uniquement si la méthode
-				//	SwitchToConflictingOnServer a été quittée prématurément par une
-				//	exception, causée par une perte de connexion avec le serveur,
-				//	par exemple.
-				
+				//	We should never reach the HasConflictingOnServer state here,
+				//	unless there was a problem while executing method SwitchTo-
+				//	ConflictingOnServer.
+
 				System.Diagnostics.Debug.WriteLine ("Warning: found requests said to be conflicting on server, but there are none.");
-				
+
 				foreach (System.Data.DataRow row in rows)
 				{
 					if (this.executionQueue.GetRequestExecutionState (row) == ExecutionState.ConflictingOnServer)
@@ -580,20 +621,24 @@ namespace Epsitec.Cresus.Requests
 						this.SwitchToConflictingOnServer (row);
 					}
 				}
-				
+
 				System.Diagnostics.Debug.Assert (this.executionQueue.HasConflictingOnServer == false);
 			}
-			
+		}
+
+		/// <summary>
+		/// Cleans up requests locally marked as executed by server.
+		/// </summary>
+		/// <param name="rows">The rows for the local requests.</param>
+		void CleanUpExecutedByServer(System.Data.DataRow[] rows)
+		{
 			if (this.executionQueue.HasExecutedByServer)
 			{
-				//	La queue locale contient des requêtes marquées comme ayant été
-				//	exécutées sur le serveur.
-				//	
-				//	Ces requêtes n'ont plus aucun intérêt maintenant, car elles ont
-				//	déjà été supprimées de la queue du serveur à ce point.
-				
+				//	The local queue contains requests marked as executed on the server;
+				//	we no longer need to keep track of them.
+
 				System.Diagnostics.Debug.WriteLine ("Removing ExecutedByServer local states.");
-				
+
 				foreach (System.Data.DataRow row in rows)
 				{
 					if (this.executionQueue.GetRequestExecutionState (row) == ExecutionState.ExecutedByServer)
@@ -601,18 +646,19 @@ namespace Epsitec.Cresus.Requests
 						this.executionQueue.RemoveRequestRow (row);
 					}
 				}
-				
+
 				System.Diagnostics.Debug.Assert (this.executionQueue.HasExecutedByServer == false);
 			}
 		}
-		
+
+
+		/// <summary>
+		/// Prepares for shutdown by persisting the contents of the execution queue
+		/// to the database.
+		/// </summary>
 		void ProcessShutdown()
 		{
-			//	Avant l'arrêt planifié du processus, on s'empresse encore de mettre à jour
-			//	l'état de la queue dans la base de données (la queue possède un cache en
-			//	mémoire).
-			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Processing shutdown."));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Preparing Orchestrator for shutdown."));
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
@@ -620,9 +666,15 @@ namespace Epsitec.Cresus.Requests
 				transaction.Commit ();
 			}
 		}
-		
-		
-		void SwitchToExecutedByServer(RequestState server_state, System.Data.DataRow row)
+
+
+		/// <summary>
+		/// Switches the local request state to <c>ExecutedByServer</c> and removes the
+		/// matching state from the server.
+		/// </summary>
+		/// <param name="serverState">The server state of the request.</param>
+		/// <param name="row">The row containg the local request.</param>
+		void SwitchToExecutedByServer(RequestState serverState, System.Data.DataRow row)
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
@@ -631,16 +683,21 @@ namespace Epsitec.Cresus.Requests
 				transaction.Commit ();
 			}
 			
-			//	Supprime la requête de la queue du serveur. En cas de perte de connexion
-			//	ici, ce n'est pas autrement catastrophique : la requête locale est dans
-			//	l'état ExecutedByServer et on va recevoir une nouvelle notification de
-			//	la part du serveur (-> ExecutedByServer) et repasser par ici...
+			//	Remove the request from the server queue; if we crash here, this is not
+			//	catastrophic, as we will handle a future ExecutedByServer notification
+			//	and be called again.
 			
-			RequestState[] states = new RequestState[] { server_state };
+			RequestState[] states = new RequestState[] { serverState };
 			
 			this.service.RemoveRequestStates (this.client, states);
 		}
-		
+
+		/// <summary>
+		/// Switches the local request state to <c>ConflictingOnServer</c>, removes
+		/// all requests from this client on the server and the finally switch to
+		/// the final <c>Conflicting</c> state.
+		/// </summary>
+		/// <param name="row">The row containing the local request.</param>
 		void SwitchToConflictingOnServer(System.Data.DataRow row)
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
@@ -649,16 +706,14 @@ namespace Epsitec.Cresus.Requests
 				this.executionQueue.PersistToBase (transaction);
 				transaction.Commit ();
 			}
-			
-			//	Supprime la requête de la queue du serveur. En cas de perte de connexion
-			//	ici, ce n'est pas autrement catastrophique : la requête locale est dans
-			//	l'état ConflictingOnServer et on va recevoir une nouvelle notification
-			//	de la part du serveur (-> ConflictingOnServer) et repasser par ici...
+
+			//	Remove the requests from the server queue; if we crash here, this is not
+			//	catastrophic, as we will handle a future ConflictingOnServer notification
+			//	and be called again.
 			
 			this.service.RemoveAllRequestStates (this.client);
 			
-			//	Maintenant que le serveur n'a plus aucune trace de nos requêtes, on peut
-			//	marquer la requête actuelle comme Conflicting.
+			//	The local request can now be marked as Conflicting...
 			
 			//	-------------------------------------------------------------------------
 			//	TODO: demander une réplication "Pull" pour se remettre dans l'état avant
@@ -678,13 +733,16 @@ namespace Epsitec.Cresus.Requests
 			//	
 			//	-------------------------------------------------------------------------
 			
-			//	Si cette opération échoue, on se retrouve avec une requête dans l'état
-			//	ConflictingOnServer et aucune requêtes sur le serveur; ça peut être
-			//	une indication qu'il faut passer à Conflicting.
+			//	If we here, we will still have a ConflictingOnServer state which will
+			//	just cause a new call to SwitchToConflictingOnServer.
 			
 			this.SwitchToConflictingLocally (row);
 		}
-		
+
+		/// <summary>
+		/// Switches the local request state to <c>Conflicting</c>.
+		/// </summary>
+		/// <param name="row">The row containing the local request.</param>
 		void SwitchToConflictingLocally(System.Data.DataRow row)
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
@@ -694,8 +752,38 @@ namespace Epsitec.Cresus.Requests
 				transaction.Commit ();
 			}
 		}
+
+		/// <summary>
+		/// Switches the local request state to <c>SentToServer</c>.
+		/// </summary>
+		/// <param name="row">The row containing the local request.</param>
+		void SwitchToSentToServer(System.Data.DataRow row)
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
+			{
+				this.executionQueue.SetRequestExecutionState (row, ExecutionState.SentToServer);
+				this.executionQueue.PersistToBase (transaction);
+				transaction.Commit ();
+			}
+		}
+
+		/// <summary>
+		/// Switches the local request state to <c>ExecutedByClient</c>.
+		/// </summary>
+		/// <param name="row">The row containing the local request.</param>
+		/// <param name="transaction">The active transaction.</param>
+		void SwitchToExecutedByClient(System.Data.DataRow row, DbTransaction transaction)
+		{
+			this.executionQueue.SetRequestExecutionState (row, ExecutionState.ExecutedByClient);
+			this.executionQueue.PersistToBase (transaction);
+		}
 		
-		
+
+
+		/// <summary>
+		/// Changes the orchestrator to the specified state.
+		/// </summary>
+		/// <param name="newState">The new state.</param>
 		void ChangeToState(OrchestratorState newState)
 		{
 			if (this.state != newState)
@@ -710,7 +798,8 @@ namespace Epsitec.Cresus.Requests
 		
 		void Dispose(bool disposing)
 		{
-			if (disposing)
+			if ((disposing) &&
+				(!this.isThreadAbortRequested))
 			{
 				this.isThreadAbortRequested = true;
 				this.abortEvent.Set ();

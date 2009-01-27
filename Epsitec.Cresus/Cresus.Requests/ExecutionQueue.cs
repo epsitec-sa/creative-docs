@@ -395,12 +395,15 @@ namespace Epsitec.Cresus.Requests
 		}
 
 		/// <summary>
-		/// Sets the execution state of the request, based on a row.
+		/// Sets the execution state of the request, based on a row. This method
+		/// may only be called by the <see cref="Orchestrator"/> worker thread.
 		/// </summary>
 		/// <param name="row">The row for the request.</param>
 		/// <param name="newState">The new state.</param>
-		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState newState)
+		internal void SetRequestExecutionState(System.Data.DataRow row, ExecutionState newState)
 		{
+			System.Diagnostics.Debug.Assert (this.orchestratorWorkerThread == Thread.CurrentThread);
+
 			lock (this.exclusion)
 			{
 				ExecutionState oldState = this.GetRequestExecutionState (row);
@@ -424,6 +427,17 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.stateChangedEvent.Set ();
+		}
+
+		/// <summary>
+		/// Sets the orchestrator worker thread; this is used to make sure that the
+		/// <see cref="SetRequestExecutionState"/> method only gets called by the
+		/// correct thread.
+		/// </summary>
+		/// <param name="thread">The thread.</param>
+		internal void SetOrchestratorWorkerThread(Thread thread)
+		{
+			this.orchestratorWorkerThread = thread;
 		}
 
 
@@ -629,6 +643,8 @@ namespace Epsitec.Cresus.Requests
 		private DbRichCommand					queueCommand;
 		private System.Data.DataSet				queueDataSet;
 		private System.Data.DataTable			queueDataTable;
+
+		private Thread							orchestratorWorkerThread;
 		
 		private int[]							stateCountCache;
 	}
