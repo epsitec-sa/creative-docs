@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Database
 			//	- A quoted text which can contain all possible characters; quotes must be
 			//	  doubled if they are part of the SQL name.
 
-			DbSqlStandard.regexName = new Regex (@"^([a-zA-Z][a-zA-Z0-9_]*|""([^""]|"""")*"")$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+			DbSqlStandard.regexName = new Regex (@"^([a-zA-Z][a-zA-Z0-9_\$@]*|""([^""]|"""")*"")$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 			
 			//	A valid SQL string is enclosed within single quotes; single quotes must be
 			//	doubled if they are part of the SQL string.
@@ -400,19 +400,63 @@ namespace Epsitec.Cresus.Database
 
 			if (includeKey)
 			{
-				//	Limit table name to at most 48 characters. As we add a maximum of 18 digits
-				//	long suffix, only 30 characters are usable for the name itself :
+				//	Limit table name to at most 30 characters. As we add a maximum of 18 digits
+				//	long suffix, only 12 characters could be usable for the name itself :
 
-				if (buffer.Length > 48-18)
+				string suffix = key.Id.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+				if (buffer.Length > DbSqlStandard.MaximumNameLength-suffix.Length-1)
 				{
-					buffer.Length = 48-18;
+					buffer.Length = DbSqlStandard.MaximumNameLength-suffix.Length-1;
 				}
 
-				buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id.Value);
+				buffer.AppendFormat ("$");
+				buffer.AppendFormat (suffix);
+			}
+
+			if (buffer.Length > DbSqlStandard.MaximumNameLength)
+			{
+				throw new Exceptions.FormatException (DbAccess.Empty, string.Format ("SQL table name '{0}' too long", buffer.ToString ()));
 			}
 			
 			return buffer.ToString ();
 		}
+
+		/// <summary>
+		/// Fits the name to the maximum allowed length. Strips the end or remove some
+		/// characters before the suffix to shorten the name, when needed.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns>The fitted name.</returns>
+		public static string FitNameToMaximumLength(string name)
+		{
+			if (name.Length > DbSqlStandard.MaximumNameLength)
+			{
+				int index = name.LastIndexOf ('$');
+
+				if (index < 0)
+				{
+					//	There is no suffix, simply truncate the name
+
+					return name.Substring (0, DbSqlStandard.MaximumNameLength);
+				}
+				else
+				{
+					string suffix = name.Substring (index);
+
+					System.Diagnostics.Debug.Assert (suffix.Length < DbSqlStandard.MaximumNameLength);
+					
+					return string.Concat (name.Substring (0, DbSqlStandard.MaximumNameLength - suffix.Length), suffix);
+				}
+			}
+			else
+			{
+				return name;
+			}
+		}
+
+		public static readonly int MaximumNameLength = 30;
+		public static readonly int MaximumSuffixLength = 18;
 
 		/// <summary>
 		/// Creates a simple SQL name by stripping or replacing invalid characters

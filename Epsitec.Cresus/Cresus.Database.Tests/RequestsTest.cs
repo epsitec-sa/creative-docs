@@ -289,10 +289,10 @@ namespace Epsitec.Cresus.Database
 
 			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 
-			DbColumn db_col_1 = new DbColumn ("Name", db_type_name, DbColumnClass.Data);
-			DbColumn db_col_2 = new DbColumn ("Birth Date", db_type_date, DbColumnClass.Data);
+			DbColumn db_col_1 = new DbColumn ("Name", db_type_name, DbColumnClass.Data, DbElementCat.ManagedUserData);
+			DbColumn db_col_2 = new DbColumn ("Birth Date", db_type_date, DbColumnClass.Data, DbElementCat.ManagedUserData);
 
-			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
+			db_table.Columns.AddRange (db_col_1, db_col_2);
 
 			infrastructure.RegisterNewDbTable (db_table);
 

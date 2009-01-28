@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append ("ALTER TABLE ");
 				this.Append (table.Name);
 				this.Append (" ADD CONSTRAINT ");
-				this.Append (DbSqlStandard.ConcatNames ("PK_", table.Name));
+				this.Append (DbSqlStandard.FitNameToMaximumLength (DbSqlStandard.ConcatNames ("PK_", table.Name)));
 				this.Append (" PRIMARY KEY ");
 				this.Append ("(");
 				

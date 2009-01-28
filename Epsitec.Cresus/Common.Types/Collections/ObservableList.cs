@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -13,6 +13,9 @@ namespace Epsitec.Common.Types.Collections
 	/// <typeparam name="T">The manipulated data type.</typeparam>
 	public class ObservableList<T> : AbstractObservableList, IList<T>, INotifyCollectionChanged, System.Collections.ICollection, System.Collections.IList, IReadOnly, IReadOnlyLock
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ObservableList&lt;T&gt;"/> class.
+		/// </summary>
 		public ObservableList()
 		{
 		}
@@ -32,6 +35,15 @@ namespace Epsitec.Common.Types.Collections
 				that.list.AddRange (collection);
 				that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, items));
 			}
+		}
+
+		/// <summary>
+		/// Adds the collection of items to the list.
+		/// </summary>
+		/// <param name="collection">Items to add.</param>
+		public void AddRange(params T[] collection)
+		{
+			this.AddRange ((IEnumerable<T>) collection);
 		}
 
 		/// <summary>
