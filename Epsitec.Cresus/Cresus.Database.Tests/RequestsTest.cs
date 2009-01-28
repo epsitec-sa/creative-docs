@@ -206,18 +206,18 @@ namespace Epsitec.Cresus.Database
 
 					Requests.RequestCollection group = new Requests.RequestCollection ();
 
-					Requests.InsertStaticDataRequest req_1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
-					Requests.InsertStaticDataRequest req_2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
+					Requests.InsertStaticDataRequest req1 = new Requests.InsertStaticDataRequest (table.Rows[0]);
+					Requests.InsertStaticDataRequest req2 = new Requests.InsertStaticDataRequest (table.Rows[1]);
 
 					table.Rows[0].BeginEdit ();
 					table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
 					table.Rows[0].EndEdit ();
 
-					Requests.UpdateStaticDataRequest req_3 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
+					Requests.UpdateStaticDataRequest req3 = new Requests.UpdateStaticDataRequest (table.Rows[0], Requests.UpdateMode.Changed);
 
-					group.Add (req_1);
-					group.Add (req_2);
-					group.Add (req_3);
+					group.Add (req1);
+					group.Add (req2);
+					group.Add (req3);
 
 					rows = queue.GetRows ();
 
@@ -260,85 +260,88 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-#if false
-		[Test] public void Check08ExecutionEngine()
+
+		[Test]
+		public void Check08ExecutionEngine()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			Requests.ExecutionEngine engine = new Epsitec.Cresus.Requests.ExecutionEngine (infrastructure);
-			
+
 			Assert.AreEqual (0L, engine.CurrentLogId.Value);
 			Assert.AreEqual (null, engine.CurrentTransaction);
-			
+
 			infrastructure.Logger.CreateTemporaryEntry (null);
-			
-			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
-			
+
+			DbTypeDef db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbTypeDef db_type_date = infrastructure.ResolveDbType ("Birth Date");
+
 			if (db_type_name == null)
 			{
-				db_type_name = infrastructure.CreateDbType ("Customer Name", 80, false);
+				db_type_name = new DbTypeDef ("Customer Name", DbSimpleType.String, null, 80, false, DbNullability.Yes);
 				infrastructure.RegisterNewDbType (db_type_name);
 			}
-			
+
 			if (db_type_date == null)
 			{
-				db_type_date = infrastructure.CreateDbTypeDateTime ("Birth Date");
+				db_type_name = new DbTypeDef ("Birth Date", DbSimpleType.Date, null, 0, false, DbNullability.Yes);
 				infrastructure.RegisterNewDbType (db_type_date);
 			}
-			
-			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
-			
-			DbColumn db_col_1 = DbColumn.CreateUserDataColumn ("Name",       db_type_name, Nullable.No);
-			DbColumn db_col_2 = DbColumn.CreateUserDataColumn ("Birth Date", db_type_date, Nullable.Yes);
-			
+
+			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
+
+			DbColumn db_col_1 = new DbColumn ("Name", db_type_name, DbColumnClass.Data);
+			DbColumn db_col_2 = new DbColumn ("Birth Date", db_type_date, DbColumnClass.Data);
+
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
-			
+
 			infrastructure.RegisterNewDbTable (db_table);
-			
+
 			DbColumn db_col_id   = db_table.Columns[0];
 			DbColumn db_col_stat = db_table.Columns[1];
-			
+
 			System.Data.DataSet   set   = new System.Data.DataSet ();
 			System.Data.DataTable table = new System.Data.DataTable (db_table.Name);
-			
+
 			set.Tables.Add (table);
-			
+
 			System.Data.DataColumn col_1 = new System.Data.DataColumn (db_col_id.Name, typeof (long));
 			System.Data.DataColumn col_2 = new System.Data.DataColumn (db_col_stat.Name, typeof (int));
 			System.Data.DataColumn col_3 = new System.Data.DataColumn (db_col_1.Name, typeof (string));
 			System.Data.DataColumn col_4 = new System.Data.DataColumn (db_col_2.Name, typeof (System.DateTime));
-			
+
 			col_1.Unique = true;
-			
+
 			table.Columns.Add (col_1);
 			table.Columns.Add (col_2);
 			table.Columns.Add (col_3);
 			table.Columns.Add (col_4);
-			
+
+#if false
 			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
-			
+
 			table.Rows.Add (new object[] { DbId.CreateId (1, 1000).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
-			
+
 			factory.GenerateRequests (table);
-			
+
 			DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-			
+
 			engine.Execute (transaction, factory.CreateGroup ());
-			
+
 			table.AcceptChanges ();
 			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
 			table.Rows[0][col_4.ColumnName] = new System.DateTime (1940, 5, 20);
-			
+
 			factory.Clear ();
 			factory.GenerateRequests (table);
-			
+
 			engine.Execute (transaction, factory.CreateGroup ());
-			
+
 			transaction.Commit ();
-			
-			infrastructure.UnregisterDbTable (, db_table);
-		}
 #endif
+
+			infrastructure.UnregisterDbTable (db_table);
+		}
+
 #if false
 		[Test] public void Check09Orchestrator()
 		{
@@ -451,64 +454,68 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		[Test] [Ignore ("Slow")] public void Check12ServiceServer()
+		[Test]
+		[Ignore ("Slow")]
+		public void Check12ServiceServer()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
-			
+
 			infrastructure.LocalSettings.IsServer = true;
 
 			Services.EngineHost host = new Epsitec.Cresus.Services.EngineHost (12345);
 			Services.Engine engine = new Services.Engine (infrastructure, System.Guid.Empty);
-			
+
 			host.AddEngine (engine);
-			
+
 			infrastructure.LocalSettings.IsServer = false;
-			
+
 			infrastructure.Logger.CreateTemporaryEntry (null);
 			RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
-			
+
 			System.Diagnostics.Debug.WriteLine ("Server ready. Running for 5 seconds.");
-			
+
 			System.Threading.Thread.Sleep (1000*5);
 
 			RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
-			
+
 			System.Diagnostics.Debug.WriteLine ("Aborting server...");
 			Common.Support.Globals.SignalAbort ();
 		}
-		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check12ServiceServer_Create()
+
+		[Test] /*[Ignore ("Temporary")]*/
+		public void Check12ServiceServer_Create()
 		{
 			//	Le service doit tourner (installer & lancer avec "installutil Cresus.Server.exe" depuis
 			//	le dossier "App.Server/bin/Debug"). Ou alors, utiliser l'installateur X.Setup.Server.
-			
+
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				infrastructure.Logger.CreateTemporaryEntry (null);
 				RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
 			}
-			
-//-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
-//-			{
-//-				RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
-//-			}
+
+			//-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
+			//-			{
+			//-				RequestsTest.CreateTestTable (infrastructure, RequestsTest.TestTableName);
+			//-			}
 		}
 
-		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
+		[Test] /*[Ignore ("Temporary")]*/
+		public void Check13ConnectionClient()
 		{
 			Remoting.IRemoteServiceManager manager = Services.ClientEngine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IConnectionService service = manager.GetConnectionService (System.Guid.Empty);
 			Remoting.ClientIdentity client = new Remoting.ClientIdentity ("NUnit Test Client", 1000);
-			
+
 			Assert.IsNotNull (service);
-			
+
 			System.Guid[] serviceIds;
-			
+
 			Remoting.ClientIdentity.DefineDefaultClientId (1);
-			
+
 			service.CheckConnectivity (client);
 			serviceIds = service.QueryAvailableServices (client);
-			
+
 			System.Diagnostics.Debug.WriteLine ("Found " + serviceIds.Length + " services:");
 			foreach (var id in serviceIds)
 			{
@@ -516,23 +523,24 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		[Test] /*[Ignore ("Temporary")]*/ public void Check14OperatorClientWaiting()
+		[Test] /*[Ignore ("Temporary")]*/
+		public void Check14OperatorClientWaiting()
 		{
 			Remoting.IRemoteServiceManager manager = Services.ClientEngine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IOperatorService service = manager.GetOperatorService (System.Guid.Empty);
 			Remoting.ProgressInformation operation;
-			
+
 			Assert.IsNotNull (service);
-			
+
 			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
-			
+
 			operation = service.CreateRoamingClient ("test");
-			
+
 			Remoting.ClientIdentity client;
 			byte[]                  data;
-			
+
 			service.GetRoamingClientData (operation.OperationId, out client, out data);
-			
+
 			if ((data != null) &&
 				(data.Length > 0))
 			{
@@ -543,32 +551,33 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("No data returned.");
 			}
 		}
-		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check15OperatorClientPolling()
+
+		[Test] /*[Ignore ("Temporary")]*/
+		public void Check15OperatorClientPolling()
 		{
 			Remoting.IRemoteServiceManager manager = Services.ClientEngine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IOperatorService service = manager.GetOperatorService (System.Guid.Empty);
 			Remoting.ProgressInformation operation;
 			Remoting.ProgressInformation progress;
-			
+
 			Assert.IsNotNull (service);
-			
+
 			operation = service.CreateRoamingClient ("test");
-			
+
 			for (int i = 0; i < 10; i++)
 			{
 				System.Threading.Thread.Sleep (100);
 				Remoting.ProgressState status = operation.ProgressState;
-				
+
 				System.Diagnostics.Debug.WriteLine ("Operation: " + status + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
-				
+
 				if (status == Remoting.ProgressState.Succeeded)
 				{
 					Remoting.ClientIdentity client;
 					byte[]                  data;
 
 					service.GetRoamingClientData (operation.OperationId, out client, out data);
-					
+
 					if ((data != null) &&
 						(data.Length > 0))
 					{
@@ -578,22 +587,23 @@ namespace Epsitec.Cresus.Database
 					{
 						System.Diagnostics.Debug.WriteLine ("No data returned.");
 					}
-					
+
 					return;
 				}
 			}
-			
+
 			System.Diagnostics.Debug.WriteLine ("Cancelling...");
 			progress = manager.CancelOperationAsync (operation.OperationId);
-			
+
 			for (int i = 0; i < 100; i++)
 			{
 				System.Threading.Thread.Sleep (10);
-				
+
 				Remoting.ProgressState status = progress.ProgressState;
-				
+
 				System.Diagnostics.Debug.WriteLine ("Cancellation: " + status + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
-				if (status == Remoting.ProgressState.Succeeded) break;
+				if (status == Remoting.ProgressState.Succeeded)
+					break;
 			}
 		}
 
@@ -687,7 +697,9 @@ namespace Epsitec.Cresus.Database
 		}
 #endif
 
-		[Test] [Ignore ("Temporary")] public void Check17OperatorClientLoop()
+		[Test]
+		[Ignore ("Temporary")]
+		public void Check17OperatorClientLoop()
 		{
 			for (int i = 0; i < 1000; i++)
 			{
@@ -702,22 +714,23 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check18RoamingClientTool()
+
+		[Test] /*[Ignore ("Temporary")]*/
+		public void Check18RoamingClientTool()
 		{
 			Remoting.IRemoteServiceManager manager = Services.ClientEngine.GetRemoteServiceManager ("localhost", 1234);
 			Remoting.IOperatorService service = manager.GetOperatorService (System.Guid.Empty);
 			Remoting.ProgressInformation operation;
-			
+
 			Assert.IsNotNull (service);
-			
+
 			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
-			
+
 			operation = service.CreateRoamingClient ("test");
 
 			Services.RoamingClientTool.CreateDatabase (service, operation.OperationId, "roaming");
 		}
-		
+
 #if false
 		[Test] /*[Ignore ("Temporary")]*/ public void Check19ReplicationAndSynchronization()
 		{
@@ -792,20 +805,21 @@ namespace Epsitec.Cresus.Database
 		}
 #endif
 
-		[Test] /*[Ignore ("Temporary")]*/ public void Check21RealReplication()
+		[Test] /*[Ignore ("Temporary")]*/
+		public void Check21RealReplication()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("roaming", false))
 			{
 				Remoting.IRemoteServiceManager manager = Services.ClientEngine.GetRemoteServiceManager ("localhost", 1234);
 				Remoting.ClientIdentity        client  = new Remoting.ClientIdentity ("NUnit Test Client", infrastructure.LocalSettings.ClientId);
 				Remoting.IReplicationService   service = manager.GetReplicationService (System.Guid.Empty);
-				
+
 				Assert.IsNotNull (service);
-				
+
 				byte[] buffer;
-				
+
 				DbId last_sync_id = infrastructure.LocalSettings.SyncLogId;
-				
+
 				DbId from_id = DbId.CreateId (last_sync_id.LocalId + 1, last_sync_id.ClientId);
 				DbId to_id   = DbId.CreateId (DbId.LocalRange - 1, last_sync_id.ClientId);
 
@@ -815,32 +829,33 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("Waiting...");
 				buffer = service.GetReplicationData (operation.OperationId);
 				System.Diagnostics.Debug.WriteLine ("Server reply received.");
-				
+
 				System.Diagnostics.Debug.WriteLine (string.Format ("Replication produced {0} byte(s) of data.", (buffer == null ? 0 : buffer.Length)));
-				
+
 				if (buffer != null)
 				{
 					Replication.ClientReplicationEngine engine = new Replication.ClientReplicationEngine (infrastructure, service);
 
 					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation.OperationId);
-					
+
 					manager.WaitForProgress (operation.OperationId, 100, System.TimeSpan.FromSeconds (10.0));
 				}
-				
+
 				System.Diagnostics.Debug.WriteLine ("Done.");
 			}
 		}
-		
-		[Test] public void Check99ServiceServer_Kill()
+
+		[Test]
+		public void Check99ServiceServer_Kill()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
 			}
-//-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
-//-			{
-//-				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
-//-			}
+			//-			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("cresus", false))
+			//-			{
+			//-				RequestsTest.DeleteTestTable (infrastructure, RequestsTest.TestTableName);
+			//-			}
 		}
 
 
@@ -853,29 +868,29 @@ namespace Epsitec.Cresus.Database
 
 			DbTypeDef db_type_name = infrastructure.ResolveDbType ("Customer Name");
 			DbTypeDef db_type_date = infrastructure.ResolveDbType ("Birth Date");
-			
+
 			if (db_type_name == null)
 			{
 				db_type_name = new DbTypeDef ("Customer Name", DbSimpleType.String, null, 80, false, DbNullability.No);
 				infrastructure.RegisterNewDbType (db_type_name);
 			}
-			
+
 			if (db_type_date == null)
 			{
 				db_type_date = new DbTypeDef ("Birth Date", DbSimpleType.Date, null, 0, false, DbNullability.Yes);
 				infrastructure.RegisterNewDbType (db_type_date);
 			}
-			
+
 			Assert.IsNotNull (db_type_name);
 			Assert.IsNotNull (db_type_date);
-			
+
 			DbTable db_table = infrastructure.CreateDbTable (name, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
-			
+
 			DbColumn db_col_1 = new DbColumn ("Name", db_type_name, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 			DbColumn db_col_2 = new DbColumn ("Birth Date", db_type_date, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
-			
+
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
-			
+
 			infrastructure.RegisterNewDbTable (db_table);
 		}
 
