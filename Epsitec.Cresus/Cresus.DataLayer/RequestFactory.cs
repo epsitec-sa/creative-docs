@@ -1,8 +1,9 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-#if false
-using Epsitec.Common.DynamicData;
+using Epsitec.Cresus.Requests;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.DataLayer
 {
@@ -14,11 +15,11 @@ namespace Epsitec.Cresus.DataLayer
 	{
 		public RequestFactory()
 		{
-			this.requests = new System.Collections.ArrayList ();
+			this.requests = new List<AbstractRequest> ();
 		}
 		
 		
-		public System.Collections.ArrayList		PendingRequests
+		public IEnumerable<AbstractRequest>	PendingRequests
 		{
 			get
 			{
@@ -42,8 +43,8 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public void GenerateRequests(System.Data.DataTable data_table)
 		{
-			DynamicFieldCollection dynamic = DynamicFieldCollection.GetDynamicFiels (data_table);
-			FieldMatchResult[]     matches = (dynamic == null) ? null : dynamic.AnalyseRows (data_table);
+//-			DynamicFieldCollection dynamic = DynamicFieldCollection.GetDynamicFiels (data_table);
+//-			FieldMatchResult[]     matches = (dynamic == null) ? null : dynamic.AnalyseRows (data_table);
 			
 			for (int r = 0; r < data_table.Rows.Count; r++)
 			{
@@ -62,23 +63,31 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					continue;
 				}
-				
+
 				switch (state)
 				{
-					case System.Data.DataRowState.Added:	this.GenerateInsertRowRequest (row, r, dynamic, matches); break;
-					case System.Data.DataRowState.Modified:	this.GenerateUpdateRowRequest (row, r, dynamic, matches); break;
-					case System.Data.DataRowState.Deleted:	this.GenerateRemoveRowRequest (row);					  break;
+					case System.Data.DataRowState.Added:
+						this.GenerateInsertRowRequest (row, r/*, dynamic, matches*/);
+						break;
+					
+					case System.Data.DataRowState.Modified:
+						this.GenerateUpdateRowRequest (row, r/*, dynamic, matches*/);
+						break;
+					
+					case System.Data.DataRowState.Deleted:
+						this.GenerateRemoveRowRequest (row);
+						break;
 				}
 			}
 		}
 		
 		
-		public Requests.Group CreateGroup()
+		public RequestCollection CreateGroup()
 		{
 			//	Crée un objet "groupe de requêtes" contenant toutes les requêtes individuelles
 			//	générées au moyen d'appels à GenerateRequests.
-			
-			Requests.Group group = new Requests.Group ();
+
+			RequestCollection group = new RequestCollection ();
 			
 			group.AddRange (this.requests);
 			
@@ -93,17 +102,17 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		#endregion
 		
-		protected void GenerateInsertRowRequest(System.Data.DataRow row, int row_index, DynamicFieldCollection dynamic, FieldMatchResult[] matches)
+		protected void GenerateInsertRowRequest(System.Data.DataRow row, int row_index /*, DynamicFieldCollection dynamic, FieldMatchResult[] matches */)
 		{
 			//	Crée une requête d'insertion pour la ligne spécifiée.
 			
-			if ((dynamic == null) ||
-				(matches[row_index] == FieldMatchResult.Zero))
+			if (true /*(dynamic == null) ||
+				(matches[row_index] == FieldMatchResult.Zero)*/)
 			{
 				//	La ligne ne contient aucun champ dynamique. On crée par conséquent une
 				//	requête de création de ligne statique :
 				
-				this.requests.Add (new Requests.InsertStaticData (row));
+				this.requests.Add (new InsertStaticDataRequest (row));
 			}
 			else
 			{
@@ -113,17 +122,17 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 		
-		protected void GenerateUpdateRowRequest(System.Data.DataRow row, int row_index, DynamicFieldCollection dynamic, FieldMatchResult[] matches)
+		protected void GenerateUpdateRowRequest(System.Data.DataRow row, int row_index /*, DynamicFieldCollection dynamic, FieldMatchResult[] matches */)
 		{
 			//	Crée une requête de mise à jour pour la ligne spécifiée.
 			
-			if ((dynamic == null) ||
-				(matches[row_index] == FieldMatchResult.Zero))
+			if (true /*(dynamic == null) ||
+				(matches[row_index] == FieldMatchResult.Zero)*/)
 			{
 				//	La ligne ne contient aucun champ dynamique. On crée par conséquent une
 				//	requête de mise à jour de ligne statique :
 				
-				this.requests.Add (new Requests.UpdateStaticData (row, Requests.UpdateMode.Changed));
+				this.requests.Add (new UpdateStaticDataRequest (row, UpdateMode.Changed));
 			}
 			else
 			{
@@ -151,7 +160,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		private System.Collections.ArrayList	requests;
+		private List<AbstractRequest>	requests;
 	}
 }
-#endif

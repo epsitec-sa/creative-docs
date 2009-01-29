@@ -316,7 +316,6 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (col_3);
 			table.Columns.Add (col_4);
 
-#if false
 			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
 
 			table.Rows.Add (new object[] { DbId.CreateId (1, 1000).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
@@ -337,7 +336,6 @@ namespace Epsitec.Cresus.Database
 			engine.Execute (transaction, factory.CreateGroup ());
 
 			transaction.Commit ();
-#endif
 
 			infrastructure.UnregisterDbTable (db_table);
 		}
@@ -386,7 +384,6 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (col_3);
 			table.Columns.Add (col_4);
 			
-#if false
 			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
 			
 			table.Rows.Add (new object[] { DbId.CreateId (1, 1000).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
@@ -404,7 +401,6 @@ namespace Epsitec.Cresus.Database
 			
 			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
 			orchestrator.Dispose ();
-#endif
 			
 			infrastructure.UnregisterDbTable (db_table);
 		}
