@@ -447,6 +447,23 @@ namespace Epsitec.Cresus.Database
 		/// This can produce important changes to the data (e.g. map a <c>decimal</c> to a <c>long</c>).
 		/// </summary>
 		/// <param name="value">The raw value.</param>
+		/// <param name="rawType">The raw type.</param>
+		/// <returns>
+		/// The converted value, compatible with ADO.NET.
+		/// </returns>
+		public static object ConvertFromSimpleType(object value, DbRawType rawType)
+		{
+			DbNumDef     numDef;
+			DbSimpleType simpleType = TypeConverter.GetSimpleType (rawType, out numDef);
+
+			return TypeConverter.ConvertFromSimpleType (value, simpleType, numDef);
+		}
+		
+		/// <summary>
+		/// Converts a value from the specified simple type to an ADO.NET compatible value.
+		/// This can produce important changes to the data (e.g. map a <c>decimal</c> to a <c>long</c>).
+		/// </summary>
+		/// <param name="value">The raw value.</param>
 		/// <param name="simpleType">The simple type.</param>
 		/// <param name="numDef">The numeric definition.</param>
 		/// <returns>The converted value, compatible with ADO.NET.</returns>

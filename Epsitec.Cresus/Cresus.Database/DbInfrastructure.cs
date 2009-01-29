@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn              column = table.Columns[columnName];
 			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 			
-			fields.Add (column.GetSqlName (), this.CreateSqlField (column, data));
+			fields.Add (column.GetSqlName (), this.CreateSqlFieldFromAdoValue (column, data));
 			
 			transaction.SqlBuilder.UpdateData (table.GetSqlName (), fields, null);
 			
@@ -1151,16 +1151,17 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Creates an SQL field definining a constant value for a given column.
-		/// The value is automatically converted to the internal data type.
+		/// The value is automatically converted from an ADO.NET representation
+		/// to the internal data type.
 		/// </summary>
 		/// <param name="column">The column.</param>
-		/// <param name="value">The high level value.</param>
+		/// <param name="value">The ADO.NET compatible value.</param>
 		/// <returns>The SQL field.</returns>
-		public SqlField CreateSqlField(DbColumn column, object value)
+		public SqlField CreateSqlFieldFromAdoValue(DbColumn column, object value)
 		{
-			DbRawType rawType = column.Type.RawType;
+			DbTypeDef type    = column.Type;
+			DbRawType rawType = type.RawType;
 
-			value = TypeConverter.ConvertToSimpleType (value, column.Type);
 			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
 			
 			SqlField field = SqlField.CreateConstant (value, rawType);
@@ -1170,16 +1171,16 @@ namespace Epsitec.Cresus.Database
 
 		/// <summary>
 		/// Creates an SQL field definining a constant value for a given column.
-		/// The value is automatically converted to the internal data type.
+		/// The value is automatically converted from an ADO.NET representation
+		/// to the internal data type.
 		/// </summary>
 		/// <param name="column">The column.</param>
-		/// <param name="value">The value.</param>
+		/// <param name="value">The ADO.NET compatible value.</param>
 		/// <returns>The SQL field.</returns>
-		public SqlField CreateSqlField(SqlColumn column, object value)
+		public SqlField CreateSqlFieldFromAdoValue(SqlColumn column, object value)
 		{
 			DbRawType rawType = column.Type;
 
-			value = TypeConverter.ConvertToSimpleType (value, rawType);
 			value = TypeConverter.ConvertToInternal (this.converter, value, rawType);
 
 			SqlField field = SqlField.CreateConstant (value, rawType);
@@ -2497,12 +2498,12 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnId],          typeDef.Key.Id));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName));
-			fields.Add (this.CreateSqlField (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)));
+			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnId],          typeDef.Key.Id));
+			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnStatus],      typeDef.Key.IntStatus));
+			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
+			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnName],        typeDef.Name));
+			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnDisplayName], typeDef.DisplayName));
+			fields.Add (this.CreateSqlFieldFromAdoValue (typeDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (typeDef)));
 			
 			transaction.SqlBuilder.InsertData (typeDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -2522,13 +2523,13 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnId],		    table.Key.Id));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnName],        table.Name));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)));
-			fields.Add (this.CreateSqlField (tableDefTable.Columns[Tags.ColumnNextId],      DbId.CreateId (1, this.clientId)));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnId],		    table.Key.Id));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnStatus],      table.Key.IntStatus));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnName],        table.Name));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnDisplayName], table.DisplayName));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (table)));
+			fields.Add (this.CreateSqlFieldFromAdoValue (tableDefTable.Columns[Tags.ColumnNextId],      DbId.CreateId (1, this.clientId)));
 			
 			transaction.SqlBuilder.InsertData (tableDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);
@@ -2551,14 +2552,14 @@ namespace Epsitec.Cresus.Database
 			
 			Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnId],          column.Key.Id));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnName],        column.Name));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id));
-			fields.Add (this.CreateSqlField (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnId],          column.Key.Id));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnStatus],      column.Key.IntStatus));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefLog],      this.logger.CurrentId));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnName],        column.Name));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnDisplayName], column.DisplayName));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnInfoXml],     DbTools.GetCompactXml (column)));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefTable],    table.Key.Id));
+			fields.Add (this.CreateSqlFieldFromAdoValue (columnDefTable.Columns[Tags.ColumnRefType],     column.Type == null ? 0 : column.Type.Key.Id));
 			
 			transaction.SqlBuilder.InsertData (columnDefTable.GetSqlName (), fields);
 			this.ExecuteSilent (transaction);

@@ -809,8 +809,15 @@ namespace Epsitec.Cresus.Requests
 					this.service.WakeUpQueryRequestStatesUsingFilter (this.client);
 				}
 
-				this.workerThread.Join ();
-				this.waiterThread.Join ();
+				if (this.workerThread.IsAlive)
+				{
+					this.workerThread.Join ();
+				}
+				
+				if (this.waiterThread.IsAlive)
+				{
+					this.waiterThread.Join ();
+				}
 
 				this.abortEvent.Close ();
 				this.serverEvent.Close ();

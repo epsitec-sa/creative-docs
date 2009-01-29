@@ -319,8 +319,8 @@ namespace Epsitec.Cresus.Database
 			{
 				Collections.SqlFieldList fields = new Collections.SqlFieldList ();
 
-				fields.Add (this.infrastructure.CreateSqlField (this.table.Columns[Tags.ColumnId], entry.Id));
-				fields.Add (this.infrastructure.CreateSqlField (this.table.Columns[Tags.ColumnDateTime], entry.DateTime));
+				fields.Add (this.infrastructure.CreateSqlFieldFromAdoValue (this.table.Columns[Tags.ColumnId], entry.Id));
+				fields.Add (this.infrastructure.CreateSqlFieldFromAdoValue (this.table.Columns[Tags.ColumnDateTime], entry.DateTime));
 
 				long nextId = entry.Id.LocalId + 1;
 

@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < columns.Length; i++)
 			{
-				SqlField field = infrastructure.CreateSqlField (columns[i], values[i]);
+				SqlField field = infrastructure.CreateSqlFieldFromAdoValue (columns[i], values[i]);
 				string   alias = columns[i].Name;
 				
 				fields.Add (alias, field);
