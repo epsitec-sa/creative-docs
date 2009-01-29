@@ -342,24 +342,25 @@ namespace Epsitec.Cresus.Database
 			infrastructure.UnregisterDbTable (db_table);
 		}
 
-#if false
-		[Test] public void Check09Orchestrator()
+
+		[Test]
+		public void Check09Orchestrator()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			Requests.Orchestrator orchestrator = new Requests.Orchestrator (infrastructure);
 			
 			infrastructure.Logger.CreateTemporaryEntry (null);
 			
-			DbType db_type_name = infrastructure.ResolveDbType ("Customer Name");
-			DbType db_type_date = infrastructure.ResolveDbType ("Birth Date");
+			DbTypeDef db_type_name = infrastructure.ResolveDbType ("Customer Name");
+			DbTypeDef db_type_date = infrastructure.ResolveDbType ("Birth Date");
 			
 			Assert.IsNotNull (db_type_name);
 			Assert.IsNotNull (db_type_date);
 			
-			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+			DbTable db_table = infrastructure.CreateDbTable ("Simple Exec Table Test", DbElementCat.ManagedUserData, DbRevisionMode.IgnoreChanges);
 			
-			DbColumn db_col_1 = DbColumn.CreateUserDataColumn ("Name",       db_type_name, Nullable.No);
-			DbColumn db_col_2 = DbColumn.CreateUserDataColumn ("Birth Date", db_type_date, Nullable.Yes);
+			DbColumn db_col_1 = new DbColumn ("Name",       db_type_name, DbColumnClass.Data, DbElementCat.ManagedUserData);
+			DbColumn db_col_2 = new DbColumn ("Birth Date", db_type_date, DbColumnClass.Data, DbElementCat.ManagedUserData);
 			
 			db_table.Columns.AddRange (new DbColumn[] { db_col_1, db_col_2 });
 			
@@ -385,6 +386,7 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (col_3);
 			table.Columns.Add (col_4);
 			
+#if false
 			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
 			
 			table.Rows.Add (new object[] { DbId.CreateId (1, 1000).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
@@ -402,10 +404,11 @@ namespace Epsitec.Cresus.Database
 			
 			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
 			orchestrator.Dispose ();
-			
-			infrastructure.UnregisterDbTable (, db_table);
-		}
 #endif
+			
+			infrastructure.UnregisterDbTable (db_table);
+		}
+
 		[Test]
 		public void Check10ExecutionQueueDump()
 		{
