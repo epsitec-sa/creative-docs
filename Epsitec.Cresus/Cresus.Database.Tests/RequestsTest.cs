@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Database
 
 			if (db_type_date == null)
 			{
-				db_type_name = new DbTypeDef ("Birth Date", DbSimpleType.Date, null, 0, false, DbNullability.Yes);
+				db_type_date = new DbTypeDef ("Birth Date", DbSimpleType.Date, null, 0, false, DbNullability.Yes);
 				infrastructure.RegisterNewDbType (db_type_date);
 			}
 
