@@ -44,6 +44,11 @@ namespace Epsitec.Cresus.Requests
 		}
 
 
+		/// <summary>
+		/// Gets the queue changed wait event. This must be used by a single thread,
+		/// or else, events will be lost.
+		/// </summary>
+		/// <value>The queue changed wait event.</value>
 		internal AutoResetEvent					QueueChangedWaitEvent
 		{
 			get
@@ -51,7 +56,12 @@ namespace Epsitec.Cresus.Requests
 				return this.queueChangedEvent;
 			}
 		}
-		
+
+		/// <summary>
+		/// Gets the execution state wait event. This must be used by a single thread,
+		/// or else, events will be lost.
+		/// </summary>
+		/// <value>The execution state wait event.</value>
 		internal AutoResetEvent					ExecutionStateWaitEvent
 		{
 			get
@@ -163,6 +173,17 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+		public int								QueueChangeCounter
+		{
+			get
+			{
+				lock (this.queueChangeMonitor)
+				{
+					return this.queueChangeCounter;
+				}
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the rows currently defined in the database, which hold the requests
@@ -194,6 +215,19 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 
+		/// <summary>
+		/// Allows the caller to execute an atomic check on the queue.
+		/// </summary>
+		/// <param name="predicate">The predicate.</param>
+		/// <returns>The value returned by the predicate.</returns>
+		public bool AtomicCheck(System.Predicate<ExecutionQueue> predicate)
+		{
+			lock (this.queueChangeMonitor)
+			{
+				return predicate (this);
+			}
+		}
+
 
 		/// <summary>
 		/// Adds the specified request into the queue.
@@ -220,8 +254,8 @@ namespace Epsitec.Cresus.Requests
 				this.queueDataTable.Rows.Add (row);
 				this.UpdateCounts ();
 			}
-			
-			this.queueChangedEvent.Set ();
+
+			this.SignalQueueChanged ();
 		}
 
 		/// <summary>
@@ -294,8 +328,8 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Enqueued " + serializedRequests.Length + " serialized requests.");
-			
-			this.queueChangedEvent.Set ();
+
+			this.SignalQueueChanged ();
 		}
 
 
@@ -315,8 +349,41 @@ namespace Epsitec.Cresus.Requests
 				
 				this.UpdateCounts ();
 			}
-			
-			this.queueChangedEvent.Set ();
+
+			this.SignalQueueChanged ();
+		}
+
+
+		/// <summary>
+		/// Waits for the queue to change.
+		/// </summary>
+		/// <param name="waitPredicate">The wait predicate which must return <c>true</c> to block on the internal monitor.</param>
+		/// <param name="timeout">The timeout.</param>
+		/// <returns><c>true</c> if the wait succeeded or if the predicate returned <c>false</c>.</returns>
+		public bool WaitForQueueChange(System.Predicate<ExecutionQueue> waitPredicate)
+		{
+			return this.WaitForQueueChange (waitPredicate, System.TimeSpan.FromMilliseconds (-1));
+		}
+
+		/// <summary>
+		/// Waits for the queue to change.
+		/// </summary>
+		/// <param name="waitPredicate">The wait predicate which must return <c>true</c> to block on the internal monitor.</param>
+		/// <param name="timeout">The timeout.</param>
+		/// <returns><c>true</c> if the wait succeeded or if the predicate returned <c>false</c>.</returns>
+		public bool WaitForQueueChange(System.Predicate<ExecutionQueue> waitPredicate, System.TimeSpan timeout)
+		{
+			lock (this.queueChangeMonitor)
+			{
+				if (waitPredicate (this))
+				{
+					return Monitor.Wait (this.queueChangeMonitor, timeout);
+				}
+				else
+				{
+					return true;
+				}
+			}
 		}
 
 
@@ -331,8 +398,8 @@ namespace Epsitec.Cresus.Requests
 				Database.DbRichCommand.KillRow (row);
 				this.UpdateCounts ();
 			}
-			
-			this.queueChangedEvent.Set ();
+
+			this.SignalQueueChanged ();
 		}
 
 		/// <summary>
@@ -350,8 +417,8 @@ namespace Epsitec.Cresus.Requests
 				
 				this.UpdateCounts ();
 			}
-			
-			this.queueChangedEvent.Set ();
+
+			this.SignalQueueChanged ();
 		}
 
 		/// <summary>
@@ -421,8 +488,8 @@ namespace Epsitec.Cresus.Requests
 				this.stateCountCache[(int) oldState]--;
 				this.stateCountCache[(int) newState]++;
 			}
-			
-			this.stateChangedEvent.Set ();
+
+			this.SignalStateChanged ();
 		}
 
 		/// <summary>
@@ -446,6 +513,29 @@ namespace Epsitec.Cresus.Requests
 		}
 
 		#endregion
+
+		private void SignalQueueChanged()
+		{
+			this.queueChangedEvent.Set ();
+
+			lock (this.queueChangeMonitor)
+			{
+				this.queueChangeCounter++;
+				Monitor.PulseAll (this.queueChangeMonitor);
+			}
+		}
+
+		private void SignalStateChanged()
+		{
+			this.stateChangedEvent.Set ();
+
+			lock (this.queueChangeMonitor)
+			{
+				this.queueChangeCounter++;
+				Monitor.PulseAll (this.queueChangeMonitor);
+			}
+		}
+
 
 		private void Dispose(bool disposing)
 		{
@@ -622,11 +712,12 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.stateCountCache = count;
-			this.stateChangedEvent.Set ();
+			this.SignalStateChanged ();
 		}
 
 
 		readonly object							exclusion = new object ();
+		readonly object							queueChangeMonitor = new object ();
 		
 		readonly DbInfrastructure				infrastructure;
 		readonly IDbAbstraction					database;
@@ -639,6 +730,7 @@ namespace Epsitec.Cresus.Requests
 		private DbRichCommand					queueCommand;
 		private System.Data.DataSet				queueDataSet;
 		private System.Data.DataTable			queueDataTable;
+		private int								queueChangeCounter;
 
 		private Thread							orchestratorWorkerThread;
 		

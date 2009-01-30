@@ -489,7 +489,7 @@ namespace Epsitec.Common.Types
 
 			if (name == null)
 			{
-				string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
+				name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
 			}
 			
 			if (InvariantConverter.ParseEnum (type, name, out value))

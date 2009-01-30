@@ -385,12 +385,15 @@ namespace Epsitec.Cresus.Database
 			table.Columns.Add (col_4);
 			
 			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
+			Requests.ExecutionQueue  queue   = orchestrator.ExecutionQueue;
 			
 			table.Rows.Add (new object[] { DbId.CreateId (1, 1000).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
 			
 			factory.GenerateRequests (table);
+
+			int counter = queue.QueueChangeCounter;
 			
-			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
+			queue.Enqueue (null, factory.CreateGroup ());
 			
 			table.AcceptChanges ();
 			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
@@ -399,7 +402,21 @@ namespace Epsitec.Cresus.Database
 			factory.Clear ();
 			factory.GenerateRequests (table);
 			
-			orchestrator.ExecutionQueue.Enqueue (null, factory.CreateGroup ());
+			queue.Enqueue (null, factory.CreateGroup ());
+
+			while (queue.AtomicCheck (
+				q =>
+				{
+					counter = q.QueueChangeCounter;
+					return q.HasPending;
+				}))
+			{
+				System.Diagnostics.Debug.WriteLine (queue.HasPending ? "Queue has pending requests" : queue.HasConflicting ? "Queue has conflicting requests" : "Queue ready ?");
+				queue.WaitForQueueChange (q => q.QueueChangeCounter == counter);
+			}
+
+			System.Diagnostics.Debug.WriteLine ("Queue is now empty");
+			
 			orchestrator.Dispose ();
 			
 			infrastructure.UnregisterDbTable (db_table);
