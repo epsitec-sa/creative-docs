@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -372,7 +372,7 @@ namespace Epsitec.Common.IO
 			System.Diagnostics.Debug.Assert (name.StartsWith ("/") == false);
 			System.Diagnostics.Debug.Assert (name.EndsWith ("/") == false);
 
-			this.AddDirectory (System.IO.Path.GetDirectoryName (name));
+			this.AddDirectory (System.IO.Path.GetDirectoryName (name).Replace ('\\', '/'));
 			
 			this.entries.RemoveAll (delegate (Entry entry) { return (entry.Name == name); });
 			this.entries.Add (new Entry (name, data, dateTime, priority, compress));
