@@ -391,8 +391,6 @@ namespace Epsitec.Cresus.Database
 			
 			factory.GenerateRequests (table);
 
-			int counter = queue.QueueChangeCounter;
-			
 			queue.Enqueue (null, factory.CreateGroup ());
 			
 			table.AcceptChanges ();
@@ -403,6 +401,16 @@ namespace Epsitec.Cresus.Database
 			factory.GenerateRequests (table);
 			
 			queue.Enqueue (null, factory.CreateGroup ());
+
+			RequestsTest.WaitUntilQueueFullyProcessed (queue);
+			orchestrator.Dispose ();
+			
+			infrastructure.UnregisterDbTable (db_table);
+		}
+
+		private static void WaitUntilQueueFullyProcessed(Requests.ExecutionQueue queue)
+		{
+			int counter = queue.QueueChangeCounter;
 
 			while (queue.AtomicCheck (
 				q =>
@@ -415,11 +423,8 @@ namespace Epsitec.Cresus.Database
 				queue.WaitForQueueChange (q => q.QueueChangeCounter == counter);
 			}
 
-			System.Diagnostics.Debug.WriteLine ("Queue is now empty");
-			
-			orchestrator.Dispose ();
-			
-			infrastructure.UnregisterDbTable (db_table);
+			System.Diagnostics.Debug.WriteLine ("Queue has been fully processed");
+
 		}
 
 		[Test]

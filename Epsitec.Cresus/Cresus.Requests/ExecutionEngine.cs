@@ -95,6 +95,8 @@ namespace Epsitec.Cresus.Requests
 			{
 				throw new System.ArgumentException ("Columns/values mismatch.");
 			}
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Inserting row in table {0}; columns: {1}", tableName, string.Join (", ", columns)));
 			
 			DbTable      table      = this.FindTable (tableName);
 			SqlColumn[]  sqlColumns = ExecutionEngine.CreateSqlColumns (this.infrastructure, table, columns);
@@ -130,6 +132,8 @@ namespace Epsitec.Cresus.Requests
 			{
 				throw new System.ArgumentException ("Data columns/values mismatch.");
 			}
+
+			System.Diagnostics.Debug.WriteLine (string.Format ("Updating row in table {0}; columns: {1}; conditions: {2}", tableName, string.Join (", ", dataColumns), string.Join (", ", condColumns)));
 			
 			DbTable table = this.FindTable (tableName);
 
