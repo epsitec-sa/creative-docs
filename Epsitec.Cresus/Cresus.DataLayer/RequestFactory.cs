@@ -8,49 +8,65 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.DataLayer
 {
 	/// <summary>
-	/// La classe RequestFactory permet de construire les requêtes correspondant
-	/// aux modifications stockées dans un DataSet.
+	/// The <c>RequestFactory</c> class produces the requests based on modifications
+	/// found in a data set.
 	/// </summary>
-	public class RequestFactory : System.IDisposable
+	public sealed class RequestFactory : System.IDisposable
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="RequestFactory"/> class.
+		/// </summary>
 		public RequestFactory()
 		{
 			this.requests = new List<AbstractRequest> ();
 		}
-		
-		
-		public IEnumerable<AbstractRequest>	PendingRequests
+
+
+		/// <summary>
+		/// Gets the pending requests.
+		/// </summary>
+		/// <value>The pending requests.</value>
+		public IEnumerable<AbstractRequest>		PendingRequests
 		{
 			get
 			{
 				return this.requests;
 			}
 		}
-		
-		
+
+
+		/// <summary>
+		/// Clears all pending requests produced by the factory.
+		/// </summary>
 		public void Clear()
 		{
 			this.requests.Clear ();
 		}
-		
-		public void GenerateRequests(System.Data.DataSet data_set)
+
+
+		/// <summary>
+		/// Generates the requests for the changes found in the data set. This
+		/// simply walks through all the tables.
+		/// </summary>
+		/// <param name="dataSet">The data set.</param>
+		public void GenerateRequests(System.Data.DataSet dataSet)
 		{
-			foreach (System.Data.DataTable data_table in data_set.Tables)
+			foreach (System.Data.DataTable data_table in dataSet.Tables)
 			{
 				this.GenerateRequests (data_table);
 			}
 		}
-		
-		public void GenerateRequests(System.Data.DataTable data_table)
+
+		/// <summary>
+		/// Generates the requests for the changes found in the data table.
+		/// </summary>
+		/// <param name="dataTable">The data table.</param>
+		public void GenerateRequests(System.Data.DataTable dataTable)
 		{
-//-			DynamicFieldCollection dynamic = DynamicFieldCollection.GetDynamicFiels (data_table);
-//-			FieldMatchResult[]     matches = (dynamic == null) ? null : dynamic.AnalyseRows (data_table);
+			//	TODO: handle dynamic row contents
 			
-			for (int r = 0; r < data_table.Rows.Count; r++)
+			foreach (System.Data.DataRow row in dataTable.Rows)
 			{
-				System.Data.DataRow      row   = data_table.Rows[r];
-				System.Data.DataRowState state = row.RowState;
-				
 				Database.DbKey key = new Database.DbKey (row);
 				
 				if ((key.IsTemporary) ||
@@ -58,20 +74,18 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					throw new Database.Exceptions.InvalidIdException (string.Format ("Invalid key {0}.", key));
 				}
-				
-				if (state == System.Data.DataRowState.Unchanged)
-				{
-					continue;
-				}
 
-				switch (state)
+				switch (row.RowState)
 				{
+					case System.Data.DataRowState.Unchanged:
+						break;
+
 					case System.Data.DataRowState.Added:
-						this.GenerateInsertRowRequest (row, r/*, dynamic, matches*/);
+						this.GenerateInsertRowRequest (row);
 						break;
 					
 					case System.Data.DataRowState.Modified:
-						this.GenerateUpdateRowRequest (row, r/*, dynamic, matches*/);
+						this.GenerateUpdateRowRequest (row);
 						break;
 					
 					case System.Data.DataRowState.Deleted:
@@ -80,77 +94,50 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 		}
-		
-		
-		public RequestCollection CreateGroup()
-		{
-			//	Crée un objet "groupe de requêtes" contenant toutes les requêtes individuelles
-			//	générées au moyen d'appels à GenerateRequests.
 
-			RequestCollection group = new RequestCollection ();
+
+		/// <summary>
+		/// Creates the request collection containing all inidividual requests.
+		/// </summary>
+		/// <returns></returns>
+		public RequestCollection CreateRequestCollection()
+		{
+			RequestCollection collection = new RequestCollection ();
 			
-			group.AddRange (this.requests);
+			collection.AddRange (this.requests);
 			
-			return group;
+			return collection;
 		}
 		
 		
 		#region IDisposable Members
+		
 		public void Dispose()
 		{
 			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
 		}
+		
 		#endregion
 		
-		protected void GenerateInsertRowRequest(System.Data.DataRow row, int row_index /*, DynamicFieldCollection dynamic, FieldMatchResult[] matches */)
+		
+		void GenerateInsertRowRequest(System.Data.DataRow row)
 		{
-			//	Crée une requête d'insertion pour la ligne spécifiée.
-			
-			if (true /*(dynamic == null) ||
-				(matches[row_index] == FieldMatchResult.Zero)*/)
-			{
-				//	La ligne ne contient aucun champ dynamique. On crée par conséquent une
-				//	requête de création de ligne statique :
-				
-				this.requests.Add (new InsertStaticDataRequest (row));
-			}
-			else
-			{
-				//	TODO: créer une ligne comprenant des données dynamiques
-				
-				throw new System.NotImplementedException ("Dynamic fields not supported.");
-			}
+			this.requests.Add (new InsertStaticDataRequest (row));
 		}
 		
-		protected void GenerateUpdateRowRequest(System.Data.DataRow row, int row_index /*, DynamicFieldCollection dynamic, FieldMatchResult[] matches */)
+		void GenerateUpdateRowRequest(System.Data.DataRow row)
 		{
-			//	Crée une requête de mise à jour pour la ligne spécifiée.
-			
-			if (true /*(dynamic == null) ||
-				(matches[row_index] == FieldMatchResult.Zero)*/)
-			{
-				//	La ligne ne contient aucun champ dynamique. On crée par conséquent une
-				//	requête de mise à jour de ligne statique :
-				
-				this.requests.Add (new UpdateStaticDataRequest (row, UpdateMode.Changed));
-			}
-			else
-			{
-				//	TODO: mettre à jour une ligne comprenant des données dynamiques
-				
-				throw new System.NotImplementedException ("Dynamic fields not supported.");
-			}
+			this.requests.Add (new UpdateStaticDataRequest (row, UpdateMode.Changed));
 		}
 		
-		protected void GenerateRemoveRowRequest(System.Data.DataRow row)
+		void GenerateRemoveRowRequest(System.Data.DataRow row)
 		{
-			//	Crée une requête de suppression pour la ligne spécifiée.
-			
 			throw new System.NotImplementedException ("Row removal not supported.");
 		}
 		
 		
-		protected virtual void Dispose(bool disposing)
+		void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
@@ -160,6 +147,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		private List<AbstractRequest>	requests;
+		private List<AbstractRequest>			requests;
 	}
 }

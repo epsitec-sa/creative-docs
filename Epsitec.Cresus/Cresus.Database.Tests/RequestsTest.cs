@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Database
 
 			DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
 
-			engine.Execute (transaction, factory.CreateGroup ());
+			engine.Execute (transaction, factory.CreateRequestCollection ());
 
 			table.AcceptChanges ();
 			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Database
 			factory.Clear ();
 			factory.GenerateRequests (table);
 
-			engine.Execute (transaction, factory.CreateGroup ());
+			engine.Execute (transaction, factory.CreateRequestCollection ());
 
 			transaction.Commit ();
 
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Database
 			
 			factory.GenerateRequests (table);
 
-			queue.Enqueue (null, factory.CreateGroup ());
+			queue.Enqueue (null, factory.CreateRequestCollection ());
 			
 			table.AcceptChanges ();
 			table.Rows[0][col_3.ColumnName] = "Pierre Arnaud-Roost";
@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Database
 			factory.Clear ();
 			factory.GenerateRequests (table);
 			
-			queue.Enqueue (null, factory.CreateGroup ());
+			queue.Enqueue (null, factory.CreateRequestCollection ());
 
 			RequestsTest.WaitUntilQueueFullyProcessed (queue);
 			orchestrator.Dispose ();
