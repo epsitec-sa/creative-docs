@@ -66,10 +66,16 @@ namespace Epsitec.Common.Document.PDF
 		public Export(Document document)
 		{
 			this.document = document;
+			this.zoom = 1.0;
 		}
 
 		public void Dispose()
 		{
+		}
+
+		public void SetZoom(double zoom)
+		{
+			this.zoom = zoom;
 		}
 
 		public string FileExport(string filename, Common.Dialogs.IWorkInProgressReport report)
@@ -244,6 +250,9 @@ namespace Epsitec.Common.Document.PDF
 			foreach ( int page in this.pageList )
 			{
 				Rectangle trimBox = new Rectangle(Point.Zero, this.document.GetPageSize(page));
+
+				trimBox.Scale (this.zoom);
+
 				Rectangle bleedBox = trimBox;
 				Rectangle mediaBox = trimBox;
 
@@ -462,6 +471,8 @@ namespace Epsitec.Common.Document.PDF
 				Transform gt = port.Transform;
 				gt.Translate(currentPageOffset);  // translation si débord et/ou traits de coupe
 				gt.Scale(Export.mm2in);  // unité = 0.1mm
+				Transform gtBeforeZoom = new Transform (gt);
+				gt.Scale (this.zoom, this.zoom, gt.TX, gt.TY);
 				port.Transform = gt;
 
 				System.Collections.ArrayList layers = this.ComputeLayers(page);
@@ -482,6 +493,8 @@ namespace Epsitec.Common.Document.PDF
 					port.PopColorModifier();
 					port.PopColorModifier();
 				}
+
+				port.Transform = gtBeforeZoom;
 
 				this.CropToBleedBox(port, info, page);  // efface ce qui dépasse de la BleedBox
 				this.DrawCropMarks(port, info, page);  // traits de coupe
@@ -623,8 +636,8 @@ namespace Epsitec.Common.Document.PDF
 			//	du BleedBox (à savoir la taille de la page avec ses débords).
 			Size pageSize = this.document.GetPageSize (page);
 			
-			double width  = pageSize.Width;
-			double height = pageSize.Height;
+			double width  = pageSize.Width * this.zoom;
+			double height = pageSize.Height * this.zoom;
 			
 			double left, right, top, bottom;
 			int rank = this.document.Modifier.PageLocalRank (page);
@@ -680,9 +693,9 @@ namespace Epsitec.Common.Document.PDF
 			if ( !info.PrintCropMarks )  return;
 
 			Size pageSize = this.document.GetPageSize(page);
-			
-			double width  = pageSize.Width;
-			double height = pageSize.Height;
+
+			double width  = pageSize.Width * this.zoom;
+			double height = pageSize.Height * this.zoom;
 			double offsetX = info.CropMarksOffsetX;
 			double offsetY = info.CropMarksOffsetY;
 			double lengthX = info.CropMarksLengthX;
@@ -2402,5 +2415,6 @@ namespace Epsitec.Common.Document.PDF
 		protected double						imageMaxDpi;
 		protected System.Collections.ArrayList	pageList;
 		protected string						documentTitle;
+		protected double						zoom;
 	}
 }

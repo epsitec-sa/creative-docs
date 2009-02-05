@@ -263,6 +263,11 @@ namespace Epsitec.Common.Document
 			get { return this.mode; }
 		}
 
+		public PDF.Export GetExportPDF()
+		{
+			return this.exportPDF;
+		}
+
 		public InstallType InstallType
 		{
 			//	Type d'installation du logiciel.
