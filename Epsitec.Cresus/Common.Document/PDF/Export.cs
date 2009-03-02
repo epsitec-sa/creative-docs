@@ -105,6 +105,7 @@ namespace Epsitec.Common.Document.PDF
 			drawingContext = new DrawingContext(this.document, null);
 			drawingContext.ContainerSize = this.document.DocumentSize;
 			drawingContext.PreviewActive = true;
+			drawingContext.TextShowControlCharacters = false;
 			drawingContext.SetImageNameFilter(0, info.GetImageNameFilter(0));  // filtre A
 			drawingContext.SetImageNameFilter(1, info.GetImageNameFilter(1));  // filtre B
 
