@@ -278,16 +278,20 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void Accept()
 		{
-			this.HideAll ();
-			
-			this.OnAccepted ();
+			if (this.is_open)
+			{
+				this.HideAll ();
+				this.OnAccepted ();
+			}
 		}
 		
 		public void Reject()
 		{
-			this.HideAll ();
-			
-			this.OnRejected ();
+			if (this.is_open)
+			{
+				this.HideAll ();
+				this.OnRejected ();
+			}
 		}
 		
 		
