@@ -47,8 +47,10 @@ namespace Epsitec.Common.Document
 			//	Imprime le document selon les choix faits dans le dialogue Window (dp)
 			//	ainsi que dans le dialogue des réglages (PrintInfo).
 			PrintEngine printEngine = new PrintEngine();
-			printEngine.Initialize(this, dp);
-			dp.Document.Print(printEngine);
+			if (printEngine.Initialize(this, dp))
+			{
+				dp.Document.Print(printEngine);
+			}
 		}
 
 		public string Export(string filename)
@@ -276,12 +278,12 @@ namespace Epsitec.Common.Document
 
 		protected class PrintEngine : Printing.IPrintEngine
 		{
-			public void Initialize(Printer printer, Epsitec.Common.Dialogs.Print dp)
+			public bool Initialize(Printer printer, Epsitec.Common.Dialogs.Print dp)
 			{
 				this.printer = printer;
 				this.document = printer.document;
 
-				this.pageList = new System.Collections.ArrayList();
+				this.pageList = new List<int>();
 				this.pageCounter = 0;
 
 				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
@@ -417,6 +419,8 @@ namespace Epsitec.Common.Document
 				{
 					this.pageList.Reverse();
 				}
+
+				return this.pageList.Count > 0;
 			}
 
 			public Size PaperSize
@@ -440,7 +444,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.printer.PrintInfo.AutoLandscape )
 					{
-						int page = (int) this.pageList[this.pageCounter];
+						int page = this.pageList[this.pageCounter];
 						Size pageSize = this.document.GetPageSize(page);
 						settings.Landscape = (pageSize.Width > pageSize.Height);
 					}
@@ -464,7 +468,7 @@ namespace Epsitec.Common.Document
 					return Printing.PrintEngineStatus.FinishJob;
 				}
 
-				int page = (int) this.pageList[this.pageCounter++];
+				int page = this.pageList[this.pageCounter++];
 				//?System.Diagnostics.Debug.WriteLine("PrintPage "+page.ToString());
 				this.printer.PrintGeometry(port, this, this.drawingContext, page);
 
@@ -481,7 +485,7 @@ namespace Epsitec.Common.Document
 			protected DrawingContext				drawingContext;
 			protected Size							paperSize;
 			protected bool							landscape;
-			protected System.Collections.ArrayList	pageList;
+			protected List<int>						pageList;
 			protected int							pageCounter;
 		}
 
