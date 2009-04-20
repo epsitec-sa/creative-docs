@@ -539,7 +539,11 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.Text = info.GetString("Text");
 
 			Drawing.TextStyle.Tab[] tabs = (Drawing.TextStyle.Tab[]) info.GetValue("TabArray", typeof(Drawing.TextStyle.Tab[]));
-			this.textLayout.Style.SetTabs(tabs);
+
+			foreach (var tab in tabs)
+			{
+				this.textLayout.TabInsert (tab);
+			}
 		}
 
 		public override void ReadCheckWarnings(System.Collections.ArrayList warnings)
