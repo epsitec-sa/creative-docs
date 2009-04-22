@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i] = new Shape();
 			shapes[i].Path = pathOutline;
 			shapes[i].Type = Type.Stroke;
-			if (drawingContext != null && drawingContext.FillEmptyPlaceholders)
+			if (drawingContext != null && (drawingContext.FillEmptyPlaceholders || drawingContext.PreviewActive || (drawingContext.DrawImageFilter != null && drawingContext.DrawImageFilter (this) == false)))
 			{
 				shapes[i].Aspect = Aspect.InvisibleBox;  // n'affiche pas le pourtour pointillé
 			}

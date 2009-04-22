@@ -89,7 +89,8 @@ namespace Epsitec.Common.Document.Widgets
 			ToolTip.Default.SetToolTip(this.sliderZoom, Res.Strings.Panel.Image.Crop.Tooltip.Zoom);
 		}
 
-		public Cropper(Widget embedder) : this()
+		public Cropper(Widget embedder)
+			: this()
 		{
 			this.SetEmbedder(embedder);
 		}
@@ -445,13 +446,13 @@ namespace Epsitec.Common.Document.Widgets
 				crop.Right  -= move.X;
 				crop.Bottom += move.Y;
 				crop.Top    -= move.Y;
-				crop = this.CropAdjust(crop);
+				crop = Cropper.CropAdjust (crop);
 			}
 
 			this.Crop = this.CropRotate(crop, -1);
 		}
 
-		protected Margins CropAdjust(Margins crop)
+		static Margins CropAdjust(Margins crop)
 		{
 			//	Ajuste le recadrage pour n'avoir jamais de marges négatives.
 			if (crop.Left < 0)
@@ -484,10 +485,12 @@ namespace Epsitec.Common.Document.Widgets
 		protected Margins CropFillObject(Margins crop)
 		{
 			//	Ajuste le recadrage pour remplir tout l'objet.
-			Size objectSize = this.ObjectSize;
+			return Cropper.CropFillObject (crop, this.ObjectSize, this.ImageSize);
+		}
 
-			Size size = this.ImageSize;
-			Rectangle rect = new Rectangle(Point.Zero, size);
+		public static Margins CropFillObject(Margins crop, Size objectSize, Size imageSize)
+		{
+			Rectangle rect = new Rectangle(Point.Zero, imageSize);
 			rect.Deflate(crop);
 			double w = rect.Width;
 			double h = rect.Height;
@@ -496,28 +499,28 @@ namespace Epsitec.Common.Document.Widgets
 			{
 				h = w/(objectSize.Width/objectSize.Height);
 
-				if (h > size.Height)
+				if (h > imageSize.Height)
 				{
-					w /= h/size.Height;
-					h = size.Height;
+					w /= h/imageSize.Height;
+					h = imageSize.Height;
 				}
 			}
 			else if (rect.Width/rect.Height < objectSize.Width/objectSize.Height)
 			{
 				w = h*(objectSize.Width/objectSize.Height);
 
-				if (w > size.Width)
+				if (w > imageSize.Width)
 				{
-					h /= w/size.Width;
-					w = size.Width;
+					h /= w/imageSize.Width;
+					w = imageSize.Width;
 				}
 			}
 
 			crop.Left   = rect.Center.X-w/2;
-			crop.Right  = size.Width-(rect.Center.X+w/2);
+			crop.Right  = imageSize.Width-(rect.Center.X+w/2);
 			crop.Bottom = rect.Center.Y-h/2;
-			crop.Top    = size.Height-(rect.Center.Y+h/2);
-			crop = this.CropAdjust(crop);
+			crop.Top    = imageSize.Height-(rect.Center.Y+h/2);
+			crop = Cropper.CropAdjust(crop);
 
 			return crop;
 		}
@@ -953,15 +956,13 @@ namespace Epsitec.Common.Document.Widgets
 			newCrop.Right  = size.Width-(rect.Center.X+w/2);
 			newCrop.Bottom = rect.Center.Y-h/2;
 			newCrop.Top    = size.Height-(rect.Center.Y+h/2);
-			newCrop = this.CropAdjust(newCrop);
+			newCrop = Cropper.CropAdjust (newCrop);
 
 			Margins cbz = this.cropBeforeZoom;
 			this.Crop = newCrop;
 			this.cropBeforeZoom = cbz;  // conserve le crop avant de commencer à zoomer
 		}
 
-
-		#region Events handler
 		protected virtual void OnCropChanged()
 		{
 			//	Génère un événement pour dire que l'offset a changé.
@@ -983,11 +984,10 @@ namespace Epsitec.Common.Document.Widgets
 				this.RemoveUserEventHandler("CropChanged", value);
 			}
 		}
-		#endregion
-
-
+		
+		
 		protected Document					document;
-		protected Margins					crop = new Margins(double.NaN, double.NaN, double.NaN, double.NaN);
+		protected Margins					crop = Margins.NaN;
 
 		protected StaticText				title;
 		protected Button					buttonReset;
@@ -998,9 +998,9 @@ namespace Epsitec.Common.Document.Widgets
 		protected TextFieldReal				fieldCropTop;
 		protected VSlider					sliderZoom;
 
-		protected bool						ignoreChanged = false;
-		protected bool						mouseDown = false;
-		protected Part						hilited = Part.None;
+		protected bool						ignoreChanged;
+		protected bool						mouseDown;
+		protected Part						hilited;
 		protected Point						initialPos;
 		protected Margins					initialCrop;
 		protected Margins					cropBeforeZoom;

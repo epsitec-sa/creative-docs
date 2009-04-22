@@ -193,8 +193,10 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(p.FileName);
-			this.fieldFilename.Cursor = p.FileName.Length;
+			string fileName = p.FileName ?? "";
+
+			this.fieldFilename.Text = TextLayout.ConvertToTaggedText(fileName);
+			this.fieldFilename.Cursor = this.fieldFilename.Text.Length;
 
 			this.buttonRotation90.ActiveState  = p.RotationMode == Properties.Image.Rotation.Angle90  ? ActiveState.Yes : ActiveState.No;
 			this.buttonRotation180.ActiveState = p.RotationMode == Properties.Image.Rotation.Angle180 ? ActiveState.Yes : ActiveState.No;

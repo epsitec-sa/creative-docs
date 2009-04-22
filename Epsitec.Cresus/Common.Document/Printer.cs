@@ -120,7 +120,7 @@ namespace Epsitec.Common.Document
 			DrawingContext drawingContext = new DrawingContext(this.document, null);
 			drawingContext.IsBitmap = true;
 			drawingContext.ContainerSize = this.document.PageSize;
-			drawingContext.PreviewActive = false;
+			drawingContext.PreviewActive = true;
 			drawingContext.TextShowControlCharacters = false;
 			drawingContext.GridShow = isModel;
 

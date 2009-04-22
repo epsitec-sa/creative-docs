@@ -117,7 +117,16 @@ namespace Epsitec.Common.Document
 
 				if ( shape.Type == Type.Image && mode != DrawShapesMode.OnlyText )
 				{
-					if ( !shape.IsVisible )  continue;
+					if (!shape.IsVisible)
+					{
+						continue;
+					}
+
+					if ((drawingContext.DrawImageFilter != null) &&
+						(!drawingContext.DrawImageFilter (shape.Object)))
+					{
+						continue;
+					}
 
 					shape.Object.DrawImage(port, drawingContext);
 				}

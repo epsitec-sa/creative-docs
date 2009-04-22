@@ -589,6 +589,12 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public System.Predicate<Objects.Abstract> DrawImageFilter
+		{
+			get;
+			set;
+		}
+
 		public bool FillEmptyPlaceholders
 		{
 			get

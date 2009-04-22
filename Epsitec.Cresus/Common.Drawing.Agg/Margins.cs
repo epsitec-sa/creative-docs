@@ -90,7 +90,9 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public static readonly Margins			Zero = new Margins(0, 0, 0, 0);
+		public static readonly Margins			Zero = new Margins (0, 0, 0, 0);
+
+		public static readonly Margins			NaN = new Margins (double.NaN, double.NaN, double.NaN, double.NaN);
 		
 		public override string ToString()
 		{
