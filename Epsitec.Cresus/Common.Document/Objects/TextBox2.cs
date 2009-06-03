@@ -279,6 +279,7 @@ namespace Epsitec.Common.Document.Objects
 
 			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles && !drawingContext.IsBitmap;
 			bool fillEmpty   = drawingContext != null && drawingContext.FillEmptyPlaceholders;
+			bool hideFrame   = drawingContext != null && !drawingContext.VisibleHandles;
 
 			int totalShapes = 4;
 			if ( flowHandles )  totalShapes += 2;
@@ -289,7 +290,7 @@ namespace Epsitec.Common.Document.Objects
 			//	Forme de la surface.
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
-			if (fillEmpty)
+			if (fillEmpty || hideFrame)
 			{
 				shapes[i].Aspect = Aspect.InvisibleBox;
 			}
@@ -303,7 +304,7 @@ namespace Epsitec.Common.Document.Objects
 			shapes[i] = new Shape();
 			shapes[i].Path = path;
 			shapes[i].SetPropertyStroke(port, this.PropertyLineMode, this.PropertyLineColor);
-			if (fillEmpty)
+			if (fillEmpty || hideFrame)
 			{
 				shapes[i].Aspect = Aspect.InvisibleBox;
 			}

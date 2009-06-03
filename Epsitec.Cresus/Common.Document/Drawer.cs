@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document
 					}
 
 					if ((drawingContext.DrawImageFilter != null) &&
-						(!drawingContext.DrawImageFilter (shape.Object)))
+						(!drawingContext.DrawImageFilter (new DrawingContext.DrawImageFilterInfo (shape.Object, "image"))))
 					{
 						continue;
 					}

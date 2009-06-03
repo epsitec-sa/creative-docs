@@ -589,10 +589,38 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public System.Predicate<Objects.Abstract> DrawImageFilter
+		public System.Predicate<DrawImageFilterInfo> DrawImageFilter
 		{
 			get;
 			set;
+		}
+
+		public struct DrawImageFilterInfo
+		{
+			public DrawImageFilterInfo(Objects.Abstract obj, string arg)
+			{
+				this.obj = obj;
+				this.arg = arg;
+			}
+
+			public Objects.Abstract Object
+			{
+				get
+				{
+					return this.obj;
+				}
+			}
+
+			public string Argument
+			{
+				get
+				{
+					return this.arg;
+				}
+			}
+
+			readonly Objects.Abstract obj;
+			readonly string arg;
 		}
 
 		public bool FillEmptyPlaceholders
