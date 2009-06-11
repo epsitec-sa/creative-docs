@@ -279,7 +279,7 @@ namespace Epsitec.Common.Document.Objects
 
 			bool flowHandles = this.edited && drawingContext != null && drawingContext.VisibleHandles && !drawingContext.IsBitmap;
 			bool fillEmpty   = drawingContext != null && drawingContext.FillEmptyPlaceholders;
-			bool hideFrame   = drawingContext != null && !drawingContext.VisibleHandles;
+			bool hideFrame   = drawingContext != null && drawingContext.PreviewActive;
 
 			int totalShapes = 4;
 			if ( flowHandles )  totalShapes += 2;
