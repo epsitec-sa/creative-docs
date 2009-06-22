@@ -80,11 +80,12 @@ namespace Epsitec.Common.Dialogs
 				footer.TabIndex = 2;
 
 				Button button = new Button(footer);
-				button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
+				button.CommandId = Druid.FromLong (Dialogs.Res.CommandIds.Dialog.Generic.Cancel);
+//-				button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
 				button.Name = ConfirmationDialog.cancelButtonName;
 				button.Dock = DockStyle.Right;
 				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+//-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 				button.TabIndex = 1;
 				button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
 			}

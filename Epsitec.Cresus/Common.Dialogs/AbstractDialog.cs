@@ -89,6 +89,11 @@ namespace Epsitec.Common.Dialogs
 				if ((window != null) &&
 					(window.Owner != value))
 				{
+					if (value != null) 
+					{
+						window.Icon = value.Icon;
+					}
+
 					window.Owner = value;
 					this.OnWindowOwnerChanged ();
 				}
