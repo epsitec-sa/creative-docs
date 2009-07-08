@@ -38,7 +38,7 @@ FILE2="Sleep.exe"
 
 
 [SourceFiles]
-SourceFiles0=Debug\
+SourceFiles0=Release\
 SourceFiles1=.\
 [SourceFiles0]
 %FILE0%=

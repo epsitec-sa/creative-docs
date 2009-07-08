@@ -567,6 +567,11 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 
+		public static Image FromNativeIcon(string path, int dx, int dy)
+		{
+			return Bitmap.FromNativeIcon (IconLoader.LoadIcon (path, dx, dy));
+		}
+
 		public static Image FromNativeIcon(PlatformSystemIcon systemIcon)
 		{
 			System.Drawing.Icon icon = null;
@@ -626,6 +631,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static Image FromNativeIcon(System.Drawing.Icon native)
 		{
+			if (native == null)
+			{
+				return null;
+			}
+
 			System.Drawing.Bitmap src_bitmap = native.ToBitmap ();
 			System.Drawing.Bitmap dst_bitmap;
 
@@ -1154,6 +1164,24 @@ namespace Epsitec.Common.Drawing
 
 			return bitmap;
 		}
+
+		private static class IconLoader
+		{
+			public static System.Drawing.Icon LoadIcon(string path, int dx, int dy)
+			{
+				System.IntPtr hIcon = IconLoader.LoadImage (System.IntPtr.Zero, path, IconLoader.IMAGE_ICON, dx, dy, IconLoader.LR_LOADFROMFILE);
+				string errorMessage = new System.ComponentModel.Win32Exception (Marshal.GetLastWin32Error ()).Message;
+				return hIcon == System.IntPtr.Zero ? null : System.Drawing.Icon.FromHandle (hIcon);
+			}
+
+			const int IMAGE_ICON = 1;
+			const int LR_LOADFROMFILE = 0x0010;
+
+			[DllImport ("user32.dll", SetLastError=true, CharSet=CharSet.Auto)]
+			static extern System.IntPtr LoadImage(System.IntPtr hinst, string lpszName, uint uType,
+			   int cxDesired, int cyDesired, uint fuLoad);
+		}
+
 
 		#region Private Interop Definitions
 

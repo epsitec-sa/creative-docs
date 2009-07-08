@@ -38,6 +38,18 @@ rem -- number, which will be used in the output file name.
 for /f "tokens=2 delims=()" %%a in ('type Properties\AssemblyInfo.CrDocVer.cs ^| find "AssemblyVersion"') do set version=%%~a
 for /f "tokens=1-3 delims=." %%a in ('echo %version%') do set version=%%a.%%b.%%c
 
+for /f "tokens=2 delims==" %%a in ('type X.Setup.CreativeDocs\X.Setup.CreativeDocs.vdproj ^| find """ProductVersion"""') do set setupversion=%%~a
+for /f "tokens=1-2 delims=:" %%a in ('echo %setupversion%') do set setupversion="%%b
+
+IF %setupversion%=="%version%" (
+  echo OK: setup and product versions match.
+) ELSE (
+  echo Update Setup version! %setupversion% / "%version%"
+  pause
+  exit
+)
+
+
 set EXE=CrDoc-%version%-installer.exe
 set EXEPATH="%CD%\X.Setup.CreativeDocs\%EXE%"
 set BUILD=Release

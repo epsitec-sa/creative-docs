@@ -115,16 +115,16 @@ namespace Epsitec.Common.Support
 			string schecksum = snum.Substring (13, 4); 
 			string scompl    = snum.Substring (18, 6);
 			
-			int prodid   = System.Int32.Parse (sprodid);
-			int numero   = System.Int32.Parse (snumero);
-			int checksum = System.Int32.Parse (schecksum);
+			int prodid   = System.Int32.Parse (sprodid, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+			int numero   = System.Int32.Parse (snumero, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+			int checksum = System.Int32.Parse (schecksum, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 			
 			if (!SerialAlgorithm.TestSerial0 (prodid, numero, checksum))
 			{
 				return false;
 			}
 			
-			int complement = System.Int32.Parse (scompl);
+			int complement = System.Int32.Parse (scompl, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 			int limite     = (complement/100)%1000;			//	extrait la date limite
 			complement     = complement/100000 + 10 * ((complement/10)%10) + 100 * (complement%10);
 			
@@ -184,17 +184,17 @@ namespace Epsitec.Common.Support
 			string snumero   = snum.Substring ( 6, 6);
 			string schecksum = snum.Substring (13, 4); 
 			string scompl    = snum.Substring (18, 6);
-			
-			int prodid   = System.Int32.Parse (sprodid);
-			int numero   = System.Int32.Parse (snumero);
-			int checksum = System.Int32.Parse (schecksum);
+
+			int prodid   = System.Int32.Parse (sprodid, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+			int numero   = System.Int32.Parse (snumero, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+			int checksum = System.Int32.Parse (schecksum, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 			
 			if (!SerialAlgorithm.TestSerial0 (prodid, numero, checksum))
 			{
 				return past;
 			}
-			
-			int complement = System.Int32.Parse (scompl);
+
+			int complement = System.Int32.Parse (scompl, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 			int limite     = (complement/100)%1000;			//	extrait la date limite
 			
 			int year  = 2000+limite/12;
