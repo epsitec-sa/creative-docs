@@ -26,8 +26,8 @@ namespace Epsitec.Common.DocumentEditor
 			
 			//	Il faut indiquer ci-après la date de diffusion du logiciel, qui doit
 			//	être mise à jour chaque fois que l'on génère un nouveau CD :
-			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2009, 07, 07));
-			Common.Support.SerialAlgorithm.SetProductGenerationNumber(73, 1);	// Accepte CDID = 73 et 72
+			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 12, 31));
+			Common.Support.SerialAlgorithm.SetProductGenerationNumber(73, 6);	// Accepte CDID = 73 et 72
 			
 			Epsitec.Common.Document.Engine.Initialize();
 			
