@@ -1755,7 +1755,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 
-		public override void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
+		public override Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
 			if ( paintStyle == Drawing.GlyphPaintStyle.Normal )
 			{
@@ -1772,6 +1772,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
 				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity, intensity);
 			}
+
+			return color;
 		}
 
 		public override Drawing.Color ColorCaption

@@ -238,17 +238,20 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
-		public void ModifyColor(ref Drawing.RichColor color)
+		public Drawing.RichColor ModifyColor(Drawing.RichColor color)
 		{
 			//	Modifie une couleur.
-			if ( this.h == 0.0 &&
+			if (this.h == 0.0 &&
 				 this.s == 0.0 &&
 				 this.v == 0.0 &&
 				 this.r == 0.0 &&
 				 this.g == 0.0 &&
 				 this.b == 0.0 &&
 				 this.a == 0.0 &&
-				 this.n == false )  return;
+				 this.n == false)
+			{
+				return color;
+			}
 
 			Drawing.Color basic = color.Basic;
 
@@ -284,11 +287,12 @@ namespace Epsitec.Common.Document.Properties
 				if ( basic.R != basic.G || basic.G != basic.B || basic.B != basic.R )
 				{
 					color = RichColor.FromColor(basic);
-					return;
+					return color;
 				}
 			}
 
 			color.Basic = basic;
+			return color;
 		}
 
 

@@ -2110,7 +2110,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 
-		public override void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
+		public override Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
@@ -2120,6 +2120,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				intensity = System.Math.Min(intensity+0.2, 1.0);  // augmente l'intensité
 				color = Drawing.Color.FromAlphaRgb(alpha, intensity, System.Math.Min (intensity*1.4, 1.0), System.Math.Min (intensity*1.4, 1.0));  // bleuté
 			}
+			return color;
 		}
 
 		public override Drawing.Color ColorDisabled

@@ -454,7 +454,7 @@ namespace Epsitec.Common.Dialogs
 					if (i == 0)
 					{
 						port.TranslateTransform (0, 60);
-						port.SetClippingRectangle (40, 80, 160, 25);
+						port.SetClippingRectangle (new Drawing.Rectangle (40, 80, 160, 25));
 					}
 				}
 #else

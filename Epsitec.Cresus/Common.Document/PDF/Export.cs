@@ -614,7 +614,7 @@ namespace Epsitec.Common.Document.PDF
 		}
 
 
-		protected void FinalOutputColorModifier(ref RichColor color)
+		protected RichColor FinalOutputColorModifier(RichColor color)
 		{
 			//	Modification finale d'une couleur en fonction du mode de sortie.
 			if ( this.colorConversion == PDF.ColorConversion.ToRgb )
@@ -629,6 +629,8 @@ namespace Epsitec.Common.Document.PDF
 			{
 				color.ColorSpace = ColorSpace.Gray;
 			}
+
+			return color;
 		}
 
 

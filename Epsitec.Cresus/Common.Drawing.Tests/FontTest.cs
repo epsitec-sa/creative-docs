@@ -438,7 +438,7 @@ namespace Epsitec.Common.Drawing
 			
 			Rasterizer rasterizer = new Epsitec.Common.Drawing.Rasterizer ();
 			rasterizer.Gamma = 1.2;
-			rasterizer.Transform = Transform.FromScale (0.8, 0.8);
+			rasterizer.Transform = Transform.CreateScaleTransform (0.8, 0.8);
 			
 			Font font  = Font.GetFont ("Tahoma", "Italic");
 			Font font2 = Font.GetFont ("Tahoma", "Regular");
@@ -535,7 +535,7 @@ namespace Epsitec.Common.Drawing
 			
 			Rasterizer rasterizer = new Epsitec.Common.Drawing.Rasterizer ();
 			rasterizer.Gamma = 1.2;
-			rasterizer.Transform = Transform.FromScale (0.25, 0.25);
+			rasterizer.Transform = Transform.CreateScaleTransform (0.25, 0.25);
 			
 			Font font = Font.GetFont ("Times New Roman", "Regular");
 			Path path = new Path ();

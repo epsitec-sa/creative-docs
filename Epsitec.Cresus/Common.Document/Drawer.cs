@@ -571,7 +571,7 @@ namespace Epsitec.Common.Document
 					t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
 					t.Translate(center);
 					t.RotateDeg(sa.Direction+surface.Angle, center);
-					t.MultiplyByPostfix(Transform.FromRotationDeg(-90.0));
+					t.MultiplyByPostfix(Transform.CreateRotationDegTransform(-90.0));
 				}
 
 				if ( !shape.IsLinkWithNext )

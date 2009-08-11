@@ -242,7 +242,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract void PaintTextSelectionBackground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode);
 		public abstract void PaintTextSelectionForeground(Drawing.Graphics graphics, Widgets.TextLayout.SelectedArea[] areas, Widgets.WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode);
 		public abstract void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, Widgets.WidgetPaintState state, Widgets.PaintTextStyle style, TextFieldDisplayMode mode, Drawing.Color backColor);
-		public abstract void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
+		public abstract Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 		
 		public virtual Drawing.Color ColorCaption
 		{

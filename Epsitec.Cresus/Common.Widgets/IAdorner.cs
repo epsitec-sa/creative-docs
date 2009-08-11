@@ -114,7 +114,7 @@ namespace Epsitec.Common.Widgets
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Point pos, TextLayout text, WidgetPaintState state, PaintTextStyle style, TextFieldDisplayMode mode, Drawing.Color backColor);
 
-		void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
+		Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 
 		Drawing.Color ColorCaption { get; }
 		Drawing.Color ColorControl { get; }

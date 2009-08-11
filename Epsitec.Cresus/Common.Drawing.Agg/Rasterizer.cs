@@ -105,16 +105,15 @@ namespace Epsitec.Common.Drawing
 			
 			if (font.IsSynthetic)
 			{
-				Transform font_transform = font.SyntheticTransform;
-				
-				font_transform.TX = x;
-				font_transform.TY = y;
+				Transform ft = font.SyntheticTransform;
+
+				ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, x, y);
 				
 				switch (font.SyntheticFontMode)
 				{
 					case SyntheticFontMode.Oblique:
-						font_transform.MultiplyBy (this.transform);
-						AntiGrain.Rasterizer.SetTransform (this.handle, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+						ft.MultiplyBy (this.transform);
+						AntiGrain.Rasterizer.SetTransform (this.handle, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 						AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
 						AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 						return;
@@ -148,15 +147,15 @@ namespace Epsitec.Common.Drawing
 			else
 			{
 				this.CreateOnTheFly ();
+
+				Transform ft = font.SyntheticTransform;
+					
+				ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, x, y);
 				
-				Transform fontTransform = font.SyntheticTransform;
-				
-				fontTransform.TX = x;
-				fontTransform.TY = y;
-				fontTransform.MultiplyBy (this.transform);
-				fontTransform.MultiplyByPostfix (Transform.FromScale (sx, sy));
-				
-				AntiGrain.Rasterizer.SetTransform (this.handle, fontTransform.XX, fontTransform.XY, fontTransform.YX, fontTransform.YY, fontTransform.TX, fontTransform.TY);
+				ft.MultiplyBy (this.transform);
+				ft.MultiplyByPostfix (Transform.CreateScaleTransform (sx, sy));
+
+				AntiGrain.Rasterizer.SetTransform (this.handle, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 				AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
 				AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 			}

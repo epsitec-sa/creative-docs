@@ -3387,11 +3387,11 @@ namespace Epsitec.Common.Widgets
 				
 				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
 				Drawing.Transform original_transform = graphics.Transform;
-				Drawing.Transform graphics_transform = Drawing.Transform.FromTranslation (this.ActualLocation);
+				Drawing.Transform graphics_transform = Drawing.Transform.CreateTranslationTransform (this.ActualLocation);
 				
 				graphics.SetClippingRectangle (bounds);
 				
-				if (graphics.TestForEmptyClippingRectangle ())
+				if (graphics.HasEmptyClippingRectangle)
 				{
 					//	Optimisation du cas où la région de clipping devient vide: on restaure
 					//	la région précédente et on ne fait rien de plus.

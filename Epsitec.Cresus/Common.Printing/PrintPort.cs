@@ -1,14 +1,16 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Printing
 {
 	/// <summary>
 	/// La classe PrintPort permet d'imprimer des éléments graphiques simples.
 	/// </summary>
-	public class PrintPort : Drawing.IPaintPort
+	public sealed class PrintPort : Drawing.IPaintPort
 	{
-		public PrintPort(System.Drawing.Graphics graphics, PageSettings settings, System.Drawing.Printing.PrintPageEventArgs e)
+		internal PrintPort(System.Drawing.Graphics graphics, PageSettings settings, System.Drawing.Printing.PrintPageEventArgs e)
 		{
 			this.graphics = graphics;
 			this.settings = settings;
@@ -17,10 +19,6 @@ namespace Epsitec.Common.Printing
 			
 			if (this.settings != null)
 			{
-#if false
-				this.offsetX = (float) (- graphics.VisibleClipBounds.Left);
-				this.offsetY = (float) (graphics.VisibleClipBounds.Top + graphics.VisibleClipBounds.Height);
-#endif
 				System.Drawing.Rectangle bounds = PrintPort.GetRealMarginsBounds (e);
 
 				//	1 display unit = 0.01 in = 0.254 mm
@@ -31,7 +29,7 @@ namespace Epsitec.Common.Printing
 			}
 			
 			this.transform = new Drawing.Transform ();
-			this.stackColorModifier = new System.Collections.Stack();
+			this.stackColorModifier = new Stack<Drawing.ColorModifierCallback> ();
 			
 			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 			this.graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -324,38 +322,27 @@ namespace Epsitec.Common.Printing
 
 		public Drawing.ColorModifierCallback PopColorModifier()
 		{
-			return this.stackColorModifier.Pop() as Drawing.ColorModifierCallback;
-		}
-
-		public System.Collections.Stack			StackColorModifier
-		{
-			get
-			{
-				return this.stackColorModifier;
-			}
-			set
-			{
-				this.stackColorModifier = value;
-			}
+			return this.stackColorModifier.Pop();
 		}
 
 		public Drawing.RichColor GetFinalColor(Drawing.RichColor color)
 		{
-			foreach ( Drawing.ColorModifierCallback method in this.stackColorModifier )
+			foreach (Drawing.ColorModifierCallback method in this.stackColorModifier)
 			{
-				method(ref color);
+				color = method (color);
 			}
 			return color;
 		}
-		
+
 		public Drawing.Color GetFinalColor(Drawing.Color color)
 		{
-			if ( this.stackColorModifier.Count == 0 )  return color;
+			if (this.stackColorModifier.Count == 0)
+				return color;
 
-			Drawing.RichColor rich = Drawing.RichColor.FromColor(color);
-			foreach ( Drawing.ColorModifierCallback method in this.stackColorModifier )
+			Drawing.RichColor rich = Drawing.RichColor.FromColor (color);
+			foreach (Drawing.ColorModifierCallback method in this.stackColorModifier)
 			{
-				method(ref rich);
+				rich = method (rich);
 			}
 			return rich.Basic;
 		}
@@ -410,17 +397,12 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
-		public void SetClippingRectangle(Drawing.Point p, Drawing.Size s)
-		{
-			this.SetClippingRectangle (p.X, p.Y, s.Width, s.Height);
-		}
-		
 		public void SetClippingRectangle(Drawing.Rectangle rect)
 		{
 			this.SetClippingRectangle (rect.X, rect.Y, rect.Width, rect.Height);
 		}
 
-		public void SetClippingRectangle(double x, double y, double width, double height)
+		private void SetClippingRectangle(double x, double y, double width, double height)
 		{
 			//	Le rectangle de clipping est passé en coordonnées brutes (sans aucune
 			//	transformation), c'est pourquoi on supprime temporairement la transformation
@@ -471,9 +453,12 @@ namespace Epsitec.Common.Printing
 			this.graphics.ResetClip ();
 		}
 		
-		public bool TestForEmptyClippingRectangle()
+		public bool HasEmptyClippingRectangle
 		{
-			return this.clip.IsSurfaceZero;
+			get
+			{
+				return this.clip.IsSurfaceZero;
+			}
 		}
 		
 		
@@ -485,7 +470,7 @@ namespace Epsitec.Common.Printing
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
 			Drawing.Transform current = new Drawing.Transform (this.transform);
-			Drawing.Transform scale   = Drawing.Transform.FromScale (sx, sy, cx, cy);
+			Drawing.Transform scale   = Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy);
 			
 			scale.MultiplyBy (current);
 			
@@ -495,7 +480,7 @@ namespace Epsitec.Common.Printing
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
 			Drawing.Transform current  = new Drawing.Transform (this.transform);
-			Drawing.Transform rotation = Drawing.Transform.FromRotationDeg (angle, cx, cy);
+			Drawing.Transform rotation = Drawing.Transform.CreateRotationDegTransform (angle, cx, cy);
 			
 			rotation.MultiplyBy (current);
 			
@@ -505,7 +490,7 @@ namespace Epsitec.Common.Printing
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
 			Drawing.Transform current  = new Drawing.Transform (this.transform);
-			Drawing.Transform rotation = Drawing.Transform.FromRotationRad (angle, cx, cy);
+			Drawing.Transform rotation = Drawing.Transform.CreateRotationRadTransform (angle, cx, cy);
 			
 			rotation.MultiplyBy (current);
 			
@@ -515,7 +500,7 @@ namespace Epsitec.Common.Printing
 		public void TranslateTransform(double ox, double oy)
 		{
 			Drawing.Transform current     = new Drawing.Transform (this.transform);
-			Drawing.Transform translation = Drawing.Transform.FromTranslation (ox, oy);
+			Drawing.Transform translation = Drawing.Transform.CreateTranslationTransform (ox, oy);
 			
 			translation.MultiplyBy (current);
 			
@@ -835,25 +820,25 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
-		protected void ResetTransform()
+		private void ResetTransform()
 		{
 			this.graphics.ResetTransform ();
 			this.graphics.TranslateTransform (this.offsetX, this.offsetY);
 			this.graphics.ScaleTransform (this.scale, -this.scale);
 		}
-		
-		
-		protected void InvalidatePen()
+
+
+		private void InvalidatePen()
 		{
 			this.is_pen_dirty = true;
 		}
-		
-		protected void InvalidateBrush()
+
+		private void InvalidateBrush()
 		{
 			this.is_brush_dirty = true;
 		}
-		
-		protected void UpdatePen()
+
+		private void UpdatePen()
 		{
 			if (this.is_pen_dirty)
 			{
@@ -896,8 +881,8 @@ namespace Epsitec.Common.Printing
 				this.is_pen_dirty = false;
 			}
 		}
-		
-		protected void UpdateBrush()
+
+		private void UpdateBrush()
 		{
 			if (this.is_brush_dirty)
 			{
@@ -913,34 +898,34 @@ namespace Epsitec.Common.Printing
 				this.is_brush_dirty = false;
 			}
 		}
-		
-		
-		
-		protected PageSettings					settings;
-		
-		protected System.Drawing.Graphics		graphics;
-		protected System.Drawing.Brush			brush;
-		protected System.Drawing.Pen			pen;
-		
-		protected bool							is_pen_dirty;
-		protected bool							is_brush_dirty;
-		
-		protected double						line_width       = 1.0;
-		protected Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
-		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
-		protected double						line_miter_limit = 4.0;
-		protected Drawing.ImageFilter			image_filter;
-		protected Drawing.Margins				image_crop;
-		protected Drawing.Size					image_final_size;
-		
-		protected float							offsetX, offsetY;
-		protected float							scale;
-		
-		protected Drawing.Color					originalColor = Drawing.Color.FromRgb (0, 0, 0);
-		protected Drawing.Color					color = Drawing.Color.FromRgb (0, 0, 0);
-		protected System.Collections.Stack		stackColorModifier;
-		protected Drawing.Rectangle				clip = Drawing.Rectangle.MaxValue;
-		protected Drawing.Transform				transform = new Drawing.Transform ();
-		protected Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
+
+
+
+		private PageSettings					settings;
+
+		private System.Drawing.Graphics			graphics;
+		private System.Drawing.Brush			brush;
+		private System.Drawing.Pen				pen;
+
+		private bool							is_pen_dirty;
+		private bool							is_brush_dirty;
+
+		private double							line_width       = 1.0;
+		private Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
+		private Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
+		private double							line_miter_limit = 4.0;
+		private Drawing.ImageFilter				image_filter;
+		private Drawing.Margins					image_crop;
+		private Drawing.Size					image_final_size;
+
+		private float							offsetX, offsetY;
+		private float							scale;
+
+		private Drawing.Color					originalColor = Drawing.Color.FromRgb (0, 0, 0);
+		private Drawing.Color					color = Drawing.Color.FromRgb (0, 0, 0);
+		private Stack<Drawing.ColorModifierCallback>		stackColorModifier;
+		private Drawing.Rectangle				clip = Drawing.Rectangle.MaxValue;
+		private Drawing.Transform				transform = new Drawing.Transform ();
+		private Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
 	}
 }

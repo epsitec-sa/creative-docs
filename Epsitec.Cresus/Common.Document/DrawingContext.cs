@@ -1617,18 +1617,18 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public void DimmedColor(ref RichColor color)
+		public RichColor DimmedColor(RichColor color)
 		{
 			//	Estompe une couleur.
-			if ( this.isDimmed )
+			if (this.isDimmed)
 			{
 				double alpha = color.A;
-				double intensity = color.Basic.GetBrightness();
+				double intensity = color.Basic.GetBrightness ();
 				intensity = 0.5+(intensity-0.5)*0.05;  // diminue le contraste
-				intensity = System.Math.Min(intensity+0.1, 1.0);  // augmente l'intensité
-				color = RichColor.FromBrightness(intensity);
-				color.A = alpha*0.2;  // très transparent
+				intensity = System.Math.Min (intensity+0.1, 1.0);  // augmente l'intensité
+				color = RichColor.FromAGray (alpha*0.2, intensity);  // très transparent
 			}
+			return color;
 		}
 
 

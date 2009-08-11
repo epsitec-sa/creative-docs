@@ -104,15 +104,17 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void ColorModifier(ref RichColor color)
+		protected RichColor ColorModifier(RichColor color)
 		{
 			//	Adapte une couleur.
 			if ( this.adorner != null )
 			{
 				Color basic = color.Basic;
-				this.adorner.AdaptPictogramColor(ref basic, this.glyphPaintStyle, this.uniqueColor);
+				color.Basic = this.adorner.AdaptPictogramColor(color.Basic, this.glyphPaintStyle, this.uniqueColor);
 				color.Basic = basic;
 			}
+			
+			return color;
 		}
 		#endregion
 		

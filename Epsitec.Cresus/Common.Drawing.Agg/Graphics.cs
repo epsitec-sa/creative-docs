@@ -1,6 +1,8 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
@@ -21,8 +23,8 @@ namespace Epsitec.Common.Drawing
 			this.pixmap     = new Pixmap ();
 			this.rasterizer = new Common.Drawing.Rasterizer ();
 			this.transform  = new Transform ();
-			
-			this.color_modifier_stack = new System.Collections.Stack();
+
+			this.color_modifier_stack = new Stack<ColorModifierCallback> ();
 			
 			this.solid_renderer    = new Common.Drawing.Renderers.Solid ();
 			this.image_renderer    = new Common.Drawing.Renderers.Image ();
@@ -306,7 +308,7 @@ namespace Epsitec.Common.Drawing
 		{
 			foreach (ColorModifierCallback method in this.color_modifier_stack)
 			{
-				method (ref color);
+				color = method (color);
 			}
 			
 			return color;
@@ -323,7 +325,7 @@ namespace Epsitec.Common.Drawing
 			
 			foreach (ColorModifierCallback method in this.color_modifier_stack)
 			{
-				method (ref rich);
+				rich = method (rich);
 			}
 			
 			return rich.Basic;
@@ -793,25 +795,25 @@ namespace Epsitec.Common.Drawing
 		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			this.transform.MultiplyByPostfix (Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy));
 			this.UpdateTransform ();
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotationDeg (angle, cx, cy));
+			this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationDegTransform (angle, cx, cy));
 			this.UpdateTransform ();
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotationRad (angle, cx, cy));
+			this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationRadTransform (angle, cx, cy));
 			this.UpdateTransform ();
 		}
 		
 		public void TranslateTransform(double ox, double oy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
+			this.transform.MultiplyByPostfix (Drawing.Transform.CreateTranslationTransform (ox, oy));
 			this.UpdateTransform ();
 		}
 		
@@ -856,7 +858,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void SetClippingRectangle(double x, double y, double width, double height)
+		private void SetClippingRectangle(double x, double y, double width, double height)
 		{
 			double x1 = x + this.clip_ox;
 			double y1 = y + this.clip_oy;
@@ -980,25 +982,23 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public bool TestForEmptyClippingRectangle()
+		public bool HasEmptyClippingRectangle
 		{
-			if (this.has_clip_rect)
+			get
 			{
-				if ((this.clip_x1 >= this.clip_x2) ||
-					(this.clip_y1 >= this.clip_y2))
+				if (this.has_clip_rect)
 				{
-					return true;
+					if ((this.clip_x1 >= this.clip_x2) ||
+					(this.clip_y1 >= this.clip_y2))
+					{
+						return true;
+					}
 				}
+
+				return false;
 			}
-			
-			return false;
 		}
 		
-		
-		public void SetClippingRectangle(Point p, Size s)
-		{
-			this.SetClippingRectangle (p.X, p.Y, s.Width, s.Height);
-		}
 		
 		public void SetClippingRectangle(Rectangle rect)
 		{
@@ -1105,6 +1105,6 @@ namespace Epsitec.Common.Drawing
 		private bool						has_clip_rect;
 
 		private Color						original_color;
-		private System.Collections.Stack	color_modifier_stack;
+		private Stack<ColorModifierCallback>	color_modifier_stack;
 	}
 }

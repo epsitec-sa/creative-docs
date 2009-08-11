@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Drawing
 {
-	public delegate void ColorModifierCallback(ref RichColor color);
+	public delegate RichColor ColorModifierCallback(RichColor color);
 
 	/// <summary>
 	/// The IPaintPort interface is used for the Graphics class, but also for
@@ -25,6 +25,8 @@ namespace Epsitec.Common.Drawing
 		Margins		ImageCrop			{ get; set; }
 		Size		ImageFinalSize		{ get; set; }
 		
+		bool		HasEmptyClippingRectangle { get; }
+		
 		void PushColorModifier(ColorModifierCallback method);
 		ColorModifierCallback PopColorModifier();
 
@@ -32,12 +34,9 @@ namespace Epsitec.Common.Drawing
 		Color GetFinalColor(Color color);
 
 		void SetClippingRectangle(Rectangle rect);
-		void SetClippingRectangle(Point p, Size s);
-		void SetClippingRectangle(double x, double y, double width, double height);
 		Rectangle SaveClippingRectangle();
 		void RestoreClippingRectangle(Rectangle rect);
 		void ResetClippingRectangle();
-		bool TestForEmptyClippingRectangle();
 		
 		void Align(ref double x, ref double y);
 		

@@ -995,7 +995,7 @@ namespace Epsitec.Common.Drawing
 			path2.Close ();
 			
 			e.Graphics.FillMode = FillMode.NonZero;
-			e.Graphics.SetClippingRectangle (50, 50, root.Client.Size.Width - 100, 50);
+			e.Graphics.SetClippingRectangle (new Drawing.Rectangle (50, 50, root.Client.Size.Width - 100, 50));
 			
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.Rasterizer.AddSurface (path2);

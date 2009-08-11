@@ -89,10 +89,8 @@ namespace Epsitec.Common.Drawing
 				{
 					Transform ft = font.SyntheticTransform;
 					
-					ft.TX = x;
-					ft.TY = y;
-					
-					ft.MultiplyByPostfix (Transform.FromScale (sx * scale, sy * scale));
+					ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, x, y);
+					ft.MultiplyByPostfix (Transform.CreateScaleTransform (sx * scale, sy * scale));
 					
 					Path temp = new Path ();
 					temp.Append (font, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);

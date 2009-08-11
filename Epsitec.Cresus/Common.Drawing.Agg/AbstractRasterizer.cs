@@ -224,17 +224,14 @@ namespace Epsitec.Common.Drawing
 		{
 			if (font.IsSynthetic)
 			{
-				Transform font_transform = font.SyntheticTransform;
+				Transform ft = font.SyntheticTransform;
 
-				font_transform.Scale (scale);
-
-				font_transform.TX = x;
-				font_transform.TY = y;
+				ft = new Transform (ft.XX * scale, ft.XY * scale, ft.YX * scale, ft.YY * scale, x, y);
 
 				switch (font.SyntheticFontMode)
 				{
 					case SyntheticFontMode.Oblique:
-						return this.AddPlainText (font, text, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+						return this.AddPlainText (font, text, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 
 					default:
 						break;

@@ -2427,7 +2427,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 
-		public override void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
+		public override Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
@@ -2438,6 +2438,8 @@ namespace Epsitec.Common.Widgets.Adorners
 				color = Drawing.Color.FromAlphaRgb(alpha, intensity, intensity*1.02, intensity*1.05);  // bleuté
 				color = color.ClipToRange();
 			}
+
+			return color;
 		}
 
 		public override Drawing.Color ColorCaption

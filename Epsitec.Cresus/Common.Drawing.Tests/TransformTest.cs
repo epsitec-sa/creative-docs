@@ -16,8 +16,8 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckCreation()
 		{
 			Transform t1 = new Transform ();
-			Transform t2 = Transform.FromTranslation (20, 10);
-			Transform t3 = Transform.FromRotationDeg (60);
+			Transform t2 = Transform.CreateTranslationTransform (20, 10);
+			Transform t3 = Transform.CreateRotationDegTransform (60);
 			
 			Assert.IsTrue ((t1.XX == 1) && (t1.XY == 0) && (t1.YX == 0) && (t1.YY == 1) && (t1.TX == 0)  && (t1.TY == 0));
 			Assert.IsTrue ((t2.XX == 1) && (t2.XY == 0) && (t2.YX == 0) && (t2.YY == 1) && (t2.TX == 20) && (t2.TY == 10));
@@ -54,14 +54,14 @@ namespace Epsitec.Common.Drawing
 		{
 			Transform identity = new Transform ();
 			
-			Transform t1 = Transform.FromTranslation (20, 10);
-			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotationDeg (60);
-			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
-			Transform t5 = Transform.FromRotationDeg (- 60);
-			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
-			Transform t7 = Transform.FromRotationDeg (90);
-			Transform t8 = Transform.FromRotationDeg (- 90);
+			Transform t1 = Transform.CreateTranslationTransform (20, 10);
+			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
+			Transform t3 = Transform.CreateRotationDegTransform (60);
+			Transform t4 = Transform.CreateRotationDegTransform (60, new Point (20, 10));
+			Transform t5 = Transform.CreateRotationDegTransform (- 60);
+			Transform t6 = Transform.CreateRotationDegTransform (- 60, new Point (20, 10));
+			Transform t7 = Transform.CreateRotationDegTransform (90);
+			Transform t8 = Transform.CreateRotationDegTransform (- 90);
 			
 			Transform t;
 			
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Drawing
 			t.Round ();
 			Assert.IsTrue (t.EqualsStrictly (identity));
 			
-			t3 = Transform.FromRotationDeg (-30);
+			t3 = Transform.CreateRotationDegTransform (-30);
 			Point pt = t3.TransformDirect (new Point (1, 3));
 			
 			Assert.IsTrue (Transform.Equal (pt, new Point (2.366025f, 2.098076f)));
@@ -94,8 +94,8 @@ namespace Epsitec.Common.Drawing
 		{
 			Transform identity = new Transform ();
 			
-			Transform t1 = Transform.FromScale (5, 8);
-			Transform t2 = Transform.FromScale (1/5.0f, 1/8.0f);
+			Transform t1 = Transform.CreateScaleTransform (5, 8);
+			Transform t2 = Transform.CreateScaleTransform (1/5.0f, 1/8.0f);
 			
 			Transform t;
 			
@@ -107,12 +107,12 @@ namespace Epsitec.Common.Drawing
 		{
 			Transform identity = new Transform ();
 			
-			Transform t1 = Transform.FromTranslation (20, 10);
-			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotationDeg (60);
-			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
-			Transform t5 = Transform.FromRotationDeg (- 60);
-			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
+			Transform t1 = Transform.CreateTranslationTransform (20, 10);
+			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
+			Transform t3 = Transform.CreateRotationDegTransform (60);
+			Transform t4 = Transform.CreateRotationDegTransform (60, new Point (20, 10));
+			Transform t5 = Transform.CreateRotationDegTransform (- 60);
+			Transform t6 = Transform.CreateRotationDegTransform (- 60, new Point (20, 10));
 			
 			Transform t;
 			
@@ -134,12 +134,12 @@ namespace Epsitec.Common.Drawing
 			Transform identity = new Transform ();
 			Point pt = new Point (30, 40);
 			
-			Transform t1 = Transform.FromTranslation (20, 10);
-			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotationDeg (60);
-			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
-			Transform t5 = Transform.FromRotationDeg (- 60);
-			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
+			Transform t1 = Transform.CreateTranslationTransform (20, 10);
+			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
+			Transform t3 = Transform.CreateRotationDegTransform (60);
+			Transform t4 = Transform.CreateRotationDegTransform (60, new Point (20, 10));
+			Transform t5 = Transform.CreateRotationDegTransform (- 60);
+			Transform t6 = Transform.CreateRotationDegTransform (- 60, new Point (20, 10));
 			
 			Point result;
 			
@@ -176,10 +176,10 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckOps()
 		{
-			Transform t1 = Transform.FromTranslation (20, 10);
-			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotationDeg (60);
-			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
+			Transform t1 = Transform.CreateTranslationTransform (20, 10);
+			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
+			Transform t3 = Transform.CreateRotationDegTransform (60);
+			Transform t4 = Transform.CreateRotationDegTransform (60, new Point (20, 10));
 			
 			Transform t = new Transform ();
 			

@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Point pos = this.MapClientToRoot (Drawing.Point.Zero);
 			Drawing.Point originalClipOffset = graphics.ClipOffset;
 			Drawing.Transform originalTransform = graphics.Transform;
-			Drawing.Transform graphicsTransform = Drawing.Transform.FromTranslation (-offset);
+			Drawing.Transform graphicsTransform = Drawing.Transform.CreateTranslationTransform (-offset);
 
 			Drawing.Point clipOffset = pos - this.model.MapClientToRoot (this.model.GetClipBounds ()).Location;
 

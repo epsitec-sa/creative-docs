@@ -1,4 +1,5 @@
 using Epsitec.Common.Drawing;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Document.PDF
 {
@@ -23,7 +24,7 @@ namespace Epsitec.Common.Document.PDF
 			this.imageSurfaceList   = null;
 			this.fontList           = null;
 
-			this.stackColorModifier = new System.Collections.Stack();
+			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 			this.Reset();
 		}
 
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Document.PDF
 			this.imageSurfaceList   = imageSurfaceList;
 			this.fontList           = fontList;
 
-			this.stackColorModifier = new System.Collections.Stack();
+			this.stackColorModifier = new Stack<ColorModifierCallback> ();
 			this.Reset();
 		}
 
@@ -251,23 +252,11 @@ namespace Epsitec.Common.Document.PDF
 			return this.stackColorModifier.Pop() as ColorModifierCallback;
 		}
 
-		public System.Collections.Stack StackColorModifier
-		{
-			get
-			{
-				return this.stackColorModifier;
-			}
-			set
-			{
-				this.stackColorModifier = value;
-			}
-		}
-
 		public RichColor GetFinalColor(RichColor color)
 		{
 			foreach ( ColorModifierCallback method in this.stackColorModifier )
 			{
-				method(ref color);
+				color = method(color);
 			}
 			return color;
 		}
@@ -279,7 +268,7 @@ namespace Epsitec.Common.Document.PDF
 			RichColor rich = RichColor.FromColor(color);
 			foreach ( ColorModifierCallback method in this.stackColorModifier )
 			{
-				method(ref rich);
+				rich = method(rich);
 			}
 			return rich.Basic;
 		}
@@ -319,18 +308,10 @@ namespace Epsitec.Common.Document.PDF
 
 
 		#region Clipping
-		public void SetClippingRectangle(Point p, Size s)
-		{
-		}
-		
 		public void SetClippingRectangle(Rectangle rect)
 		{
 		}
 
-		public void SetClippingRectangle(double x, double y, double width, double height)
-		{
-		}
-		
 		public Rectangle SaveClippingRectangle()
 		{
 			return Rectangle.Empty;
@@ -344,9 +325,12 @@ namespace Epsitec.Common.Document.PDF
 		{
 		}
 		
-		public bool TestForEmptyClippingRectangle()
+		public bool HasEmptyClippingRectangle
 		{
-			return true;
+			get
+			{
+				return false;
+			}
 		}
 		#endregion
 		
@@ -358,22 +342,22 @@ namespace Epsitec.Common.Document.PDF
 		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.FromScale(sx, sy, cx, cy));
+			this.transform.MultiplyByPostfix(Drawing.Transform.CreateScaleTransform(sx, sy, cx, cy));
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.FromRotationDeg(angle, cx, cy));
+			this.transform.MultiplyByPostfix(Drawing.Transform.CreateRotationDegTransform(angle, cx, cy));
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.FromRotationRad(angle, cx, cy));
+			this.transform.MultiplyByPostfix(Drawing.Transform.CreateRotationRadTransform(angle, cx, cy));
 		}
 		
 		public void TranslateTransform(double ox, double oy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.FromTranslation(ox, oy));
+			this.transform.MultiplyByPostfix(Drawing.Transform.CreateTranslationTransform(ox, oy));
 		}
 		
 		public void MergeTransform(Transform transform)
@@ -1383,7 +1367,7 @@ namespace Epsitec.Common.Document.PDF
 		protected double						lineMiterLimit;
 		protected RichColor						originalColor;
 		protected RichColor						color;
-		protected System.Collections.Stack		stackColorModifier;
+		readonly Stack<ColorModifierCallback>	stackColorModifier;
 		protected int							complexSurfaceId;
 		protected TypeComplexSurface			complexType;
 		protected Transform						transform;

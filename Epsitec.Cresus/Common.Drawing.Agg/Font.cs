@@ -424,13 +424,15 @@ namespace Epsitec.Common.Drawing
 			if (this.synthetic_mode == SyntheticFontMode.Oblique)
 			{
 				Path path = new Path ();
-				Transform transform = this.SyntheticTransform;
+				Transform ft = this.SyntheticTransform;
+				
+				ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, 0, 0);
 				
 				foreach (char unicode in text)
 				{
 					ushort glyph = this.GetGlyphIndex (unicode);
-					path.Append (this, glyph, transform);
-					transform.TX = transform.TX + this.GetGlyphAdvance (glyph);
+					path.Append (this, glyph, ft);
+					ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, ft.TX + this.GetGlyphAdvance (glyph), ft.TY);
 				}
 				
 				return path.ComputeBounds ();

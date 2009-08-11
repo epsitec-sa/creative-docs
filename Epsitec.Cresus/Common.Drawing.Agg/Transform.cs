@@ -76,14 +76,6 @@ namespace Epsitec.Common.Drawing
 			{
 				return this.xx;
 			}
-			set
-			{
-				if (this.xx != value)
-				{
-					this.xx = value;
-					this.OnChanged ();
-				}
-			}
 		}
 		
 		public double							XY
@@ -91,14 +83,6 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				return this.xy;
-			}
-			set
-			{
-				if (this.xy != value)
-				{
-					this.xy = value;
-					this.OnChanged ();
-				}
 			}
 		}
 		
@@ -108,14 +92,6 @@ namespace Epsitec.Common.Drawing
 			{
 				return this.yx;
 			}
-			set
-			{
-				if (this.yx != value)
-				{
-					this.yx = value;
-					this.OnChanged ();
-				}
-			}
 		}
 		
 		public double							YY
@@ -123,14 +99,6 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				return this.yy;
-			}
-			set
-			{
-				if (this.yy != value)
-				{
-					this.yy = value;
-					this.OnChanged ();
-				}
 			}
 		}
 		
@@ -140,14 +108,6 @@ namespace Epsitec.Common.Drawing
 			{
 				return this.tx;
 			}
-			set
-			{
-				if (this.tx != value)
-				{
-					this.tx = value;
-					this.OnChanged ();
-				}
-			}
 		}
 		
 		public double							TY
@@ -155,14 +115,6 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				return this.ty;
-			}
-			set
-			{
-				if (this.ty != value)
-				{
-					this.ty = value;
-					this.OnChanged ();
-				}
 			}
 		}
 		
@@ -257,8 +209,6 @@ namespace Epsitec.Common.Drawing
 			this.yx = 0;
 			this.yy = 1;
 			this.ty = 0;
-			
-			this.OnChanged ();
 		}
 		
 		public void Reset(Transform model)
@@ -269,8 +219,6 @@ namespace Epsitec.Common.Drawing
 			this.yx = model.yx;
 			this.yy = model.yy;
 			this.ty = model.ty;
-			
-			this.OnChanged ();
 		}
 		
 		public void MultiplyBy(Transform t)
@@ -285,8 +233,6 @@ namespace Epsitec.Common.Drawing
 				this.yx = c.yx;
 				this.yy = c.yy;
 				this.ty = c.ty;
-				
-				this.OnChanged ();
 			}
 		}
 		
@@ -302,8 +248,6 @@ namespace Epsitec.Common.Drawing
 				this.yx = c.yx;
 				this.yy = c.yy;
 				this.ty = c.ty;
-				
-				this.OnChanged ();
 			}
 		}
 		
@@ -315,31 +259,25 @@ namespace Epsitec.Common.Drawing
 			Transform.Round (ref this.yy);
 			Transform.Round (ref this.tx);
 			Transform.Round (ref this.ty);
-			
-			this.OnChanged ();
 		}
 		
 		public void Translate(double tx, double ty)
 		{
 			this.tx += tx;
 			this.ty += ty;
-			
-			this.OnChanged ();
 		}
 		
 		public void Translate(Point offset)
 		{
 			this.tx += offset.X;
 			this.ty += offset.Y;
-			
-			this.OnChanged ();
 		}
 		
 		public void RotateDeg(double angle)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotationDeg (angle));
+				this.MultiplyBy (Transform.CreateRotationDegTransform (angle));
 			}
 		}
 		
@@ -347,7 +285,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotationDeg (angle, center.X, center.Y));
+				this.MultiplyBy (Transform.CreateRotationDegTransform (angle, center.X, center.Y));
 			}
 		}
 		
@@ -355,7 +293,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotationDeg (angle, x, y));
+				this.MultiplyBy (Transform.CreateRotationDegTransform (angle, x, y));
 			}
 		}
 		
@@ -363,7 +301,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotationRad (angle));
+				this.MultiplyBy (Transform.CreateRotationRadTransform (angle));
 			}
 		}
 		
@@ -371,7 +309,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotationRad (angle, center.X, center.Y));
+				this.MultiplyBy (Transform.CreateRotationRadTransform (angle, center.X, center.Y));
 			}
 		}
 		
@@ -379,7 +317,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotationRad (angle, x, y));
+				this.MultiplyBy (Transform.CreateRotationRadTransform (angle, x, y));
 			}
 		}
 		
@@ -399,8 +337,6 @@ namespace Epsitec.Common.Drawing
 			this.yy *= sy;
 			this.tx *= sx;
 			this.ty *= sy;
-			
-			this.OnChanged ();
 		}
 		
 		public void Scale(double sx, double sy, double cx, double cy)
@@ -408,32 +344,30 @@ namespace Epsitec.Common.Drawing
 			this.Translate (-cx, -cy);
 			this.Scale (sx, sy);
 			this.Translate (cx, cy);
-			
-			this.OnChanged ();
 		}
 		
 		
-		public static Transform FromScale(double sx, double sy)
+		public static Transform CreateScaleTransform(double sx, double sy)
 		{
 			return new Transform (sx, 0, 0, sy, 0, 0);
 		}
 		
-		public static Transform FromScale(double sx, double sy, double cx, double cy)
+		public static Transform CreateScaleTransform(double sx, double sy, double cx, double cy)
 		{
 			return new Transform (sx, 0, 0, sy, cx-sx*cx, cy-sy*cy);
 		}
 		
-		public static Transform FromTranslation(double tx, double ty)
+		public static Transform CreateTranslationTransform(double tx, double ty)
 		{
 			return new Transform (1, 0, 0, 1, tx, ty);
 		}
 		
-		public static Transform FromTranslation(Point offset)
+		public static Transform CreateTranslationTransform(Point offset)
 		{
 			return new Transform (1, 0, 0, 1, offset.X, offset.Y);
 		}
 		
-		public static Transform FromRotationDeg(double angle)
+		public static Transform CreateRotationDegTransform(double angle)
 		{
 			double alpha = Math.DegToRad (angle);
 			
@@ -443,14 +377,14 @@ namespace Epsitec.Common.Drawing
 			return new Transform (cos, -sin, sin, cos, 0, 0);
 		}
 		
-		public static Transform FromRotationDeg(double angle, Point center)
+		public static Transform CreateRotationDegTransform(double angle, Point center)
 		{
-			return Transform.FromRotationDeg (angle, center.X, center.Y);
+			return Transform.CreateRotationDegTransform (angle, center.X, center.Y);
 		}
 		
-		public static Transform FromRotationDeg(double angle, double cx, double cy)
+		public static Transform CreateRotationDegTransform(double angle, double cx, double cy)
 		{
-			Transform m = Transform.FromRotationDeg (angle);
+			Transform m = Transform.CreateRotationDegTransform (angle);
 			
 			m.tx = cx - m.xx * cx - m.xy * cy;
 			m.ty = cy - m.yx * cx - m.yy * cy;
@@ -458,7 +392,7 @@ namespace Epsitec.Common.Drawing
 			return m;
 		}
 		
-		public static Transform FromRotationRad(double angle)
+		public static Transform CreateRotationRadTransform(double angle)
 		{
 			double sin = System.Math.Sin (angle);
 			double cos = System.Math.Cos (angle);
@@ -466,14 +400,14 @@ namespace Epsitec.Common.Drawing
 			return new Transform (cos, -sin, sin, cos, 0, 0);
 		}
 		
-		public static Transform FromRotationRad(double angle, Point center)
+		public static Transform CreateRotationRadTransform(double angle, Point center)
 		{
-			return Transform.FromRotationRad (angle, center.X, center.Y);
+			return Transform.CreateRotationRadTransform (angle, center.X, center.Y);
 		}
 		
-		public static Transform FromRotationRad(double angle, double cx, double cy)
+		public static Transform CreateRotationRadTransform(double angle, double cx, double cy)
 		{
-			Transform m = Transform.FromRotationRad (angle);
+			Transform m = Transform.CreateRotationRadTransform (angle);
 			
 			m.tx = cx - m.xx * cx - m.xy * cy;
 			m.ty = cy - m.yx * cx - m.yy * cy;
@@ -782,17 +716,6 @@ namespace Epsitec.Common.Drawing
 			return buffer.ToString ();
 		}
 					
-		protected virtual void OnChanged()
-		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
-		}
-		
-		
-		public event Support.EventHandler		Changed;
-		
 		private static readonly double			ε = 0.00001;
 		
 		private double							xx, xy, yx, yy;

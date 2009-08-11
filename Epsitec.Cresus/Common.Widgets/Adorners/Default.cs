@@ -1980,15 +1980,17 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			return Direction.Up;
 		}
-		
 
-		public override void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
+
+		public override Drawing.Color AdaptPictogramColor(Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled ||
 				 paintStyle == Drawing.GlyphPaintStyle.Shadow   )
 			{
 				color = Drawing.Color.FromAlphaRgb(color.A, uniqueColor.R, uniqueColor.G, uniqueColor.B);
 			}
+
+			return color;
 		}
 
 		public override Drawing.Color ColorDisabled
