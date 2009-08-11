@@ -48,28 +48,32 @@ namespace Epsitec.Common.Drawing
 		[Test] [ExpectedException (typeof (System.NullReferenceException))]
 		public void CheckRendererGradientEx1()
 		{
-			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient ();
+			Common.Drawing.Graphics graphics = new Graphics ();
+			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
 			gradient.SetColors (0, 0, 0, 0, 1, 1, 1, 1);
 		}
 		
 		[Test] [ExpectedException (typeof (System.NullReferenceException))]
 		public void CheckRendererGradientEx2()
 		{
-			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient ();
+			Common.Drawing.Graphics graphics = new Graphics ();
+			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
 			gradient.SetParameters (0, 100);
 		}
 		
 		[Test] [ExpectedException (typeof (System.NullReferenceException))]
 		public void CheckRendererGradientEx3()
 		{
-			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient ();
+			Common.Drawing.Graphics graphics = new Graphics ();
+			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
 			gradient.Fill = Common.Drawing.GradientFill.Conic;
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))]
 		public void CheckRendererGradientEx4()
 		{
-			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient ();
+			Common.Drawing.Graphics graphics = new Graphics ();
+			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
 			gradient.SetColors (new double[100], new double[256], new double[256], new double[256]);
 		}
 		
@@ -77,7 +81,8 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckRendererGradient()
 		{
 			Pixmap pixmap = new Pixmap ();
-			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient ();
+			Common.Drawing.Graphics graphics = new Graphics ();
+			Common.Drawing.Renderers.Gradient gradient = new Common.Drawing.Renderers.Gradient (graphics);
 			
 			pixmap.Size = new System.Drawing.Size (200, 200);
 			gradient.Pixmap = pixmap;

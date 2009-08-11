@@ -133,6 +133,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Agg\SafeRasterizerHandle.cs" />
+    <Compile Include="GradientFill.cs" />
     <Compile Include="IconSize.cs" />
     <Compile Include="MaskComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -222,9 +223,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Renderers\Image.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Renderers\ITransformProvider.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Renderers\Smooth.cs">

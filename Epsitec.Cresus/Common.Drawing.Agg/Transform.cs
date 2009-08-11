@@ -8,7 +8,7 @@ namespace Epsitec.Common.Drawing
 	/// translation). Elle supporte les opérations telles que la translation simple, la
 	/// rotation, le changement d'échelle, ainsi que leur combinaison.
 	/// </summary>
-	public class Transform : System.IComparable
+	public sealed class Transform : System.IComparable
 	{
 		public Transform() : this (1, 0, 0, 1, 0, 0)
 		{
@@ -200,26 +200,6 @@ namespace Epsitec.Common.Drawing
 			py = (- this.yx * x + this.xx * y) / det;
 		}
 		
-		
-		public void Reset()
-		{
-			this.xx = 1;
-			this.xy = 0;
-			this.tx = 0;
-			this.yx = 0;
-			this.yy = 1;
-			this.ty = 0;
-		}
-		
-		public void Reset(Transform model)
-		{
-			this.xx = model.xx;
-			this.xy = model.xy;
-			this.tx = model.tx;
-			this.yx = model.yx;
-			this.yy = model.yy;
-			this.ty = model.ty;
-		}
 		
 		public void MultiplyBy(Transform t)
 		{

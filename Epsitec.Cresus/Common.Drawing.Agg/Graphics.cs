@@ -27,12 +27,9 @@ namespace Epsitec.Common.Drawing
 			this.color_modifier_stack = new Stack<ColorModifierCallback> ();
 			
 			this.solid_renderer    = new Common.Drawing.Renderers.Solid ();
-			this.image_renderer    = new Common.Drawing.Renderers.Image ();
-			this.gradient_renderer = new Common.Drawing.Renderers.Gradient ();
+			this.image_renderer    = new Common.Drawing.Renderers.Image (this);
+			this.gradient_renderer = new Common.Drawing.Renderers.Gradient (this);
 			this.smooth_renderer   = new Common.Drawing.Renderers.Smooth (this);
-			
-			this.image_renderer.TransformUpdating    += new Support.EventHandler (this.HandleTransformUpdating);
-			this.gradient_renderer.TransformUpdating += new Support.EventHandler (this.HandleTransformUpdating);
 			
 			this.rasterizer.Gamma = 1.2;
 		}
@@ -197,7 +194,7 @@ namespace Epsitec.Common.Drawing
 			}
 			set
 			{
-				this.transform.Reset (value);
+				this.transform = new Transform (value);
 				this.rasterizer.Transform = this.transform;
 			}
 		}
@@ -845,16 +842,6 @@ namespace Epsitec.Common.Drawing
 			
 			this.image_renderer.Transform    = t_image;
 			this.gradient_renderer.Transform = t_gradient;
-		}
-		
-		protected void HandleTransformUpdating(object sender)
-		{
-			Renderers.ITransformProvider provider = sender as Renderers.ITransformProvider;
-			
-			if (provider != null)
-			{
-				provider.InternalTransform.MultiplyBy (this.transform);
-			}
 		}
 		
 		

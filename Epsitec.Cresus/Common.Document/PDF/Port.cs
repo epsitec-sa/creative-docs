@@ -299,10 +299,9 @@ namespace Epsitec.Common.Document.PDF
 			{
 			   return new Transform(this.transform);
 			}
-
 			set
 			{
-				this.transform.Reset(value);
+				this.transform = new Transform (value);
 			}
 		}
 
@@ -985,7 +984,7 @@ namespace Epsitec.Common.Document.PDF
 				this.PutValue(t.TY, -1);
 				this.PutCommand("cm ");  // current transform, voir [*] page 189
 
-				this.currentTransform.Reset(transform);
+				this.currentTransform = new	Transform (transform);
 			}
 		}
 

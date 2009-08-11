@@ -3,14 +3,46 @@
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-	public sealed class Image : IRenderer, System.IDisposable, ITransformProvider
+	public sealed class Image : IRenderer, System.IDisposable
 	{
-		public Image()
+		public Image(Graphics graphics)
 		{
-			this.handle = new Agg.SafeImageRendererHandle ();
+			this.graphics = graphics;
+			this.handle   = new Agg.SafeImageRendererHandle ();
 		}
-		
-		
+
+
+		public Transform						Transform
+		{
+			get
+			{
+				return this.transform;
+			}
+			set
+			{
+				if (value == null)
+				{
+					throw new System.NullReferenceException ("Rasterizer.Transform");
+				}
+
+				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
+				//	Graphics.UpdateTransform...
+
+				if (this.handle.IsInvalid)
+				{
+					return;
+				}
+
+				this.transform         = new Transform (value);
+				this.internalTransform = new Transform (value);
+				this.internalTransform.MultiplyBy (this.graphics.Transform);
+
+				Transform inverse = Transform.Inverse (this.internalTransform);
+
+				AntiGrain.Renderer.Image.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
+			}
+		}
+
 		public Pixmap							Pixmap
 		{
 			set
@@ -21,7 +53,7 @@ namespace Epsitec.Common.Drawing.Renderers
 					{
 						this.BitmapImage = null;
 						this.Detach ();
-						this.transform.Reset ();
+						this.transform = new Transform ();
 					}
 					else
 					{
@@ -87,47 +119,6 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public Transform						Transform
-		{
-			get
-			{
-				return this.transform;
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new System.NullReferenceException ("Rasterizer.Transform");
-				}
-				
-				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
-				//	Graphics.UpdateTransform...
-				
-				if (this.handle.IsInvalid)
-				{
-					return;
-				}
-				
-				this.transform     = new Transform (value);
-				this.internalTransform = new Transform (value);
-				this.OnTransformUpdating ();
-				
-				Transform inverse = Transform.Inverse (this.internalTransform);
-				
-				AntiGrain.Renderer.Image.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
-			}
-		}
-		
-		public Transform						InternalTransform
-		{
-			get
-			{
-				return this.internalTransform;
-			}
-		}
-		
-		public event Support.EventHandler		TransformUpdating;
-		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
@@ -139,8 +130,8 @@ namespace Epsitec.Common.Drawing.Renderers
 			this.AssertAttached ();
 			AntiGrain.Renderer.Image.SetStretchMode (this.handle, (int) mode, radius);
 		}
-		
-		
+
+
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -161,7 +152,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			this.Detach ();
 			
-			this.transform.Reset ();
+			this.transform = new Transform ();
 			this.handle.Create (pixmap.Handle);
 			this.pixmap = pixmap;
 		}
@@ -174,19 +165,11 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.pixmap = null;
 			}
 		}
-		
-		
-		private void OnTransformUpdating()
-		{
-			if (this.TransformUpdating != null)
-			{
-				this.TransformUpdating (this);
-			}
-		}
-		
-		
-		
-		private readonly Agg.SafeImageRendererHandle handle;
+
+
+
+		readonly Graphics						graphics;
+		readonly Agg.SafeImageRendererHandle	handle;
 		private Pixmap							pixmap;
 		private Drawing.Image					image;
 		private Drawing.Bitmap					bitmap;

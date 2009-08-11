@@ -1,28 +1,46 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
-namespace Epsitec.Common.Drawing
-{
-	public enum GradientFill
-	{
-		None,
-		X, Y, XY,
-		Circle,
-		Diamond,
-		SqrtXY,
-		Conic
-	}
-}
 
 namespace Epsitec.Common.Drawing.Renderers
 {
-	public sealed class Gradient : IRenderer, System.IDisposable, ITransformProvider
+	public sealed class Gradient : IRenderer, System.IDisposable
 	{
-		public Gradient()
+		public Gradient(Graphics graphics)
 		{
-			this.handle = new Agg.SafeGradientRendererHandle ();
+			this.graphics = graphics;
+			this.handle   = new Agg.SafeGradientRendererHandle ();
 		}
 		
+		
+		public Transform						Transform
+		{
+			get
+			{
+				return this.transform;
+			}
+			set
+			{
+				if (value == null)
+				{
+					throw new System.NullReferenceException ("Rasterizer.Transform");
+				}
+				
+				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
+				//	Graphics.UpdateTransform...
+				
+				if (this.handle.IsInvalid)
+				{
+					return;
+				}
+				
+				this.transform         = new Transform (value);
+				this.internalTransform = new Transform (value);
+				this.internalTransform.MultiplyBy (this.graphics.Transform);
+
+				Transform inverse = Transform.Inverse (this.internalTransform);
+				AntiGrain.Renderer.Gradient.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
+			}
+		}
 
 		public Pixmap							Pixmap
 		{
@@ -63,43 +81,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 			get { return this.handle; }
 		}
-		
-		public Transform						Transform
-		{
-			get
-			{
-				return this.transform;
-			}
-			set
-			{
-				if (value == null)
-				{
-					throw new System.NullReferenceException ("Rasterizer.Transform");
-				}
-				
-				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
-				//	Graphics.UpdateTransform...
-				
-				if (this.handle.IsInvalid)
-				{
-					return;
-				}
-				
-				this.transform     = new Transform (value);
-				this.int_transform = new Transform (value);
-				this.OnTransformUpdating ();
-				Transform inverse = Transform.Inverse (this.int_transform);
-				AntiGrain.Renderer.Gradient.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
-			}
-		}
-		
-		public Transform						InternalTransform
-		{
-			get { return this.int_transform; }
-		}
-		
-		public event Support.EventHandler		TransformUpdating;
-		
+
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
@@ -160,13 +142,16 @@ namespace Epsitec.Common.Drawing.Renderers
 			this.AssertAttached ();
 			AntiGrain.Renderer.Gradient.Range (this.handle, r1, r2);
 		}
-		
-		
+
+		#region IDisposable Members
+
 		public void Dispose()
 		{
 			this.Detach ();
 		}
-		
+
+		#endregion
+
 		private void AssertAttached()
 		{
 			if (this.handle.IsInvalid)
@@ -191,25 +176,17 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.handle.Delete ();
 				this.pixmap  = null;
 				this.fill    = GradientFill.None;
-				this.transform.Reset ();
-				this.int_transform.Reset ();
+				this.transform = new Transform ();
+				this.internalTransform = new Transform ();
 			}
 		}
 		
-		private void OnTransformUpdating()
-		{
-			if (this.TransformUpdating != null)
-			{
-				this.TransformUpdating (this);
-			}
-		}
-		
-		
-		
-		private readonly Agg.SafeGradientRendererHandle	handle;
+
+		readonly Graphics						graphics;
+		readonly Agg.SafeGradientRendererHandle	handle;
 		private Pixmap							pixmap;
-		private GradientFill					fill			= GradientFill.None;
-		private Transform						transform		= new Transform ();
-		private Transform						int_transform	= new Transform ();
+		private GradientFill					fill;
+		private Transform						transform		  = new Transform ();
+		private Transform						internalTransform = new Transform ();
 	}
 }

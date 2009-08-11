@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
@@ -10,6 +10,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			this.graphics = graphics;
 			this.handle = new Agg.SafeSmoothRendererHandle ();
 		}
+		
 		
 		public Pixmap							Pixmap
 		{
@@ -29,8 +30,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 
-
-		public System.IntPtr Handle
+		public System.IntPtr					Handle
 		{
 			get
 			{
@@ -38,25 +38,20 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 
-		public Color Color
+		public Color							Color
 		{
 			set
 			{
-				this.SetColor (value);
+				if (this.handle.IsInvalid)
+				{
+					return;
+				}
+
+				AntiGrain.Renderer.Smooth.Color (this.handle, value.R, value.G, value.B, value.A);
 			}
 		}
 
 
-		public void SetColor(Color color)
-		{
-			if (this.handle.IsInvalid)
-			{
-				return;
-			}
-
-			AntiGrain.Renderer.Smooth.Color (this.handle, color.R, color.G, color.B, color.A);
-		}
-		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
 			this.AssertAttached ();
@@ -81,7 +76,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void AddPath(Drawing.Path path)
 		{
-			this.SetTransform (graphics.Transform);
+			this.SetTransform (this.graphics.Transform);
 			
 			AntiGrain.Renderer.Smooth.Setup (this.handle, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 			AntiGrain.Renderer.Smooth.AddPath (this.handle, path.Handle);
@@ -130,12 +125,12 @@ namespace Epsitec.Common.Drawing.Renderers
 			{
 				this.handle.Delete ();
 				this.pixmap = null;
-				this.transform.Reset ();
+				this.transform = new Transform ();
 			}
 		}
 		
 		
-		private Graphics						graphics;
+		readonly Graphics						graphics;
 		private readonly Agg.SafeSmoothRendererHandle handle;
 		private Pixmap							pixmap;
 		private Transform						transform = new Transform ();

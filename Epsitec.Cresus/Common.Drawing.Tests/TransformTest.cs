@@ -185,16 +185,16 @@ namespace Epsitec.Common.Drawing
 			
 			t.Translate (20, 10);
 			Assert.IsTrue (t.Equals (t1));
-			
-			t.Reset ();
+
+			t = new Transform ();
 			t.Translate (-20, -10);
 			Assert.IsTrue (t.Equals (t2));
-			
-			t.Reset ();
+
+			t = new Transform ();
 			t.RotateDeg (60);
 			Assert.IsTrue (t.Equals (t3));
-			
-			t.Reset ();
+
+			t = new Transform ();
 			t.Translate (-20, -10);
 			t.RotateDeg (60);
 			t.Translate (20, 10);

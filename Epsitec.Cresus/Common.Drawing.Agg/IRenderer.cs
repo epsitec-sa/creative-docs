@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -13,7 +13,7 @@ namespace Epsitec.Common.Drawing
 		/// the specified pixmap. Setting it to <c>null</c> detaches the pixmap.
 		/// </summary>
 		/// <value>The pixmap.</value>
-		Pixmap									Pixmap
+		Pixmap Pixmap
 		{
 			set;
 		}
@@ -22,11 +22,10 @@ namespace Epsitec.Common.Drawing
 		/// Gets the internal AGG handle.
 		/// </summary>
 		/// <value>The AGG handle.</value>
-		System.IntPtr							Handle
+		System.IntPtr Handle
 		{
 			get;
 		}
-
 
 		/// <summary>
 		/// Sets the alpha mask using the specified 8-bit component of the
