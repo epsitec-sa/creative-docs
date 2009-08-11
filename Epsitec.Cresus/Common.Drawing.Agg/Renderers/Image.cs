@@ -35,7 +35,7 @@ namespace Epsitec.Common.Drawing.Renderers
 
 				this.transform         = new Transform (value);
 				this.internalTransform = new Transform (value);
-				this.internalTransform.MultiplyBy (this.graphics.Transform);
+				this.internalTransform = this.internalTransform.MultiplyBy (this.graphics.Transform);
 
 				Transform inverse = Transform.Inverse (this.internalTransform);
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Drawing.Renderers
 					{
 						this.BitmapImage = null;
 						this.Detach ();
-						this.transform = new Transform ();
+						this.transform = Transform.Identity;
 					}
 					else
 					{
@@ -151,8 +151,8 @@ namespace Epsitec.Common.Drawing.Renderers
 		private void Attach(Pixmap pixmap)
 		{
 			this.Detach ();
-			
-			this.transform = new Transform ();
+
+			this.transform = Transform.Identity;
 			this.handle.Create (pixmap.Handle);
 			this.pixmap = pixmap;
 		}
@@ -174,8 +174,8 @@ namespace Epsitec.Common.Drawing.Renderers
 		private Drawing.Image					image;
 		private Drawing.Bitmap					bitmap;
 		private bool							bitmapNeedsUnlock;
-		
-		private Transform						transform		  = new Transform ();
-		private Transform						internalTransform = new Transform ();
+
+		private Transform						transform		  = Transform.Identity;
+		private Transform						internalTransform = Transform.Identity;
 	}
 }

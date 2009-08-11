@@ -27,8 +27,8 @@ namespace Epsitec.Common.Printing
 				this.offsetY = (float) (bounds.Top + bounds.Height);
 				this.scale   = (float) (100.0 / 25.4);
 			}
-			
-			this.transform = new Drawing.Transform ();
+
+			this.transform = Drawing.Transform.Identity;
 			this.stackColorModifier = new Stack<Drawing.ColorModifierCallback> ();
 			
 			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
@@ -86,8 +86,8 @@ namespace Epsitec.Common.Printing
 			this.offsetX = 0;
 			this.offsetY = (float) (dy);
 			this.scale   = 1.0f;
-			
-			this.transform = new Drawing.Transform ();
+
+			this.transform = Drawing.Transform.Identity;
 			
 			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 			this.graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
@@ -472,9 +472,7 @@ namespace Epsitec.Common.Printing
 			Drawing.Transform current = new Drawing.Transform (this.transform);
 			Drawing.Transform scale   = Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy);
 			
-			scale.MultiplyBy (current);
-			
-			this.Transform = scale;
+			this.Transform = scale.MultiplyBy (current);
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
@@ -482,9 +480,7 @@ namespace Epsitec.Common.Printing
 			Drawing.Transform current  = new Drawing.Transform (this.transform);
 			Drawing.Transform rotation = Drawing.Transform.CreateRotationDegTransform (angle, cx, cy);
 			
-			rotation.MultiplyBy (current);
-			
-			this.Transform = rotation;
+			this.Transform = rotation.MultiplyBy (current);
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
@@ -511,9 +507,7 @@ namespace Epsitec.Common.Printing
 		{
 			Drawing.Transform current = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyBy (current);
-			
-			this.Transform = transform;
+			this.Transform = transform.MultiplyBy (current);
 		}
 		
 		
@@ -560,7 +554,7 @@ namespace Epsitec.Common.Printing
 			Drawing.Path path = new Drawing.Path ();
 			Drawing.Transform ft = font.SyntheticTransform;
 			
-			ft.Scale (size);
+			ft = ft.Scale (size);
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -633,7 +627,7 @@ namespace Epsitec.Common.Printing
 				
 				Drawing.Transform ft = font.SyntheticTransform;
 				
-				ft.Scale (size);
+				ft = ft.Scale (size);
 				
 				for (int i = 0; i < n; i++)
 				{
@@ -925,7 +919,7 @@ namespace Epsitec.Common.Printing
 		private Drawing.Color					color = Drawing.Color.FromRgb (0, 0, 0);
 		private Stack<Drawing.ColorModifierCallback>		stackColorModifier;
 		private Drawing.Rectangle				clip = Drawing.Rectangle.MaxValue;
-		private Drawing.Transform				transform = new Drawing.Transform ();
+		private Drawing.Transform				transform = Drawing.Transform.Identity;
 		private Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
 	}
 }

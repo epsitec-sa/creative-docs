@@ -1159,10 +1159,10 @@ namespace Epsitec.Common.Document.Objects
 
 			for ( int i=0 ; i<text.Length ; i++ )
 			{
-				Transform transform = new Transform();
-				transform.Scale(fontSize);
-				transform.RotateDeg(angle);
-				transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+				Transform transform = Transform.Identity;
+				transform = transform.Scale (fontSize);
+				transform = transform.RotateDeg (angle);
+				transform = transform.Translate (center+Transform.RotatePointDeg (angle, new Point (advance, offset)));
 
 				int glyph = font.GetGlyphIndex(text[i]);
 				path.Append(font, glyph, transform);

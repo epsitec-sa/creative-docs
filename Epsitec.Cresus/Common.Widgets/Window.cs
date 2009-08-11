@@ -2423,7 +2423,7 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < strips.Length; i++)
 				{
-					graphics.Transform = new Drawing.Transform ();
+					graphics.Transform = Drawing.Transform.Identity;
 					graphics.ResetClippingRectangle ();
 					graphics.SetClippingRectangle (strips[i]);
 					
@@ -2433,14 +2433,14 @@ namespace Epsitec.Common.Widgets
 				}
 				
 //-				System.Diagnostics.Debug.WriteLine ("Done");
-				
-				graphics.Transform = new Drawing.Transform ();
+
+				graphics.Transform = Drawing.Transform.Identity;
 				graphics.ResetClippingRectangle ();
 				graphics.SetClippingRectangle (repaint);
 			}
 			else
 			{
-				graphics.Transform = new Drawing.Transform ();
+				graphics.Transform = Drawing.Transform.Identity;
 				graphics.ResetClippingRectangle ();
 				graphics.SetClippingRectangle (repaint);
 				

@@ -163,29 +163,6 @@ namespace Epsitec.Common.Drawing
 		{
 		}
 		
-		public override void MergeTransform(Transform transform)
-		{
-			//	Fusionne la transformation spécifiée avec la transformation propre à l'image
-			//	(changement d'échelle pour que la taille logique soit respectée).
-			
-			if (this.bitmap != null)
-			{
-				//	Il se peut que le bitmap définisse une échelle interne (la taille logique ne
-				//	correspond pas à la taille exprimée en pixels). Dans ce cas, il faut modifier
-				//	la matrice de transformation pour que le dessin ait la taille logique, et pas
-				//	la taille physique :
-					
-				double sx = this.PixelWidth / this.Width;
-				double sy = this.PixelHeight / this.Height;
-					
-				if ((sx != 1) &&
-					(sy != 1))
-				{
-					transform.Scale (1/sx, 1/sy);
-				}
-			}
-		}
-
 		static System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> lockedBitmapDataCache = new System.Collections.Generic.Dictionary<System.Drawing.Bitmap, System.Drawing.Imaging.BitmapData> ();
 		
 		public bool LockBits()

@@ -1624,10 +1624,10 @@ namespace Epsitec.Common.Document.Objects
 				{
 					int glyph = font.GetGlyphIndex(character[0]);
 
-					Transform transform = new Transform();
-					transform.Scale(fontSize);
-					transform.RotateDeg(angle);
-					transform.Translate(pos);
+					Transform transform = Transform.Identity;
+					transform = transform.Scale (fontSize);
+					transform = transform.RotateDeg (angle);
+					transform = transform.Translate (pos);
 
 					Path path = new Path();
 					path.Append(font, glyph, transform);

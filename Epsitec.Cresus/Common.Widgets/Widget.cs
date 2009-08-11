@@ -3400,9 +3400,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 				
-				graphics_transform.MultiplyBy (original_transform);
-				
-				graphics.Transform = graphics_transform;
+				graphics.Transform = graphics_transform.MultiplyBy (original_transform);
 			
 				try
 				{

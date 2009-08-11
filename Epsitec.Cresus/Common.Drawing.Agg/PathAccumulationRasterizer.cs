@@ -90,7 +90,7 @@ namespace Epsitec.Common.Drawing
 					Transform ft = font.SyntheticTransform;
 					
 					ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, x, y);
-					ft.MultiplyByPostfix (Transform.CreateScaleTransform (sx * scale, sy * scale));
+					ft = ft.MultiplyByPostfix (Transform.CreateScaleTransform (sx * scale, sy * scale));
 					
 					Path temp = new Path ();
 					temp.Append (font, glyph, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Drawing
 		{
 			Transform transform = new Transform (xx, xy, yx, yy, tx, ty);
 
-			transform.MultiplyBy (this.transform);
+			transform = transform.MultiplyBy (this.transform);
 
 			for (int i = 0; i < glyphs.Length; i++)
 			{

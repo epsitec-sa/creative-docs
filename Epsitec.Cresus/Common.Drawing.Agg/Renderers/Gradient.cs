@@ -35,7 +35,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				
 				this.transform         = new Transform (value);
 				this.internalTransform = new Transform (value);
-				this.internalTransform.MultiplyBy (this.graphics.Transform);
+				this.internalTransform = this.internalTransform.MultiplyBy (this.graphics.Transform);
 
 				Transform inverse = Transform.Inverse (this.internalTransform);
 				AntiGrain.Renderer.Gradient.Matrix (this.handle, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
@@ -176,8 +176,8 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.handle.Delete ();
 				this.pixmap  = null;
 				this.fill    = GradientFill.None;
-				this.transform = new Transform ();
-				this.internalTransform = new Transform ();
+				this.transform = Transform.Identity;
+				this.internalTransform = Transform.Identity;
 			}
 		}
 		
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		readonly Agg.SafeGradientRendererHandle	handle;
 		private Pixmap							pixmap;
 		private GradientFill					fill;
-		private Transform						transform		  = new Transform ();
-		private Transform						internalTransform = new Transform ();
+		private Transform						transform		  = Transform.Identity;
+		private Transform						internalTransform = Transform.Identity;
 	}
 }

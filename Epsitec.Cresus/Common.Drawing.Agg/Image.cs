@@ -28,12 +28,6 @@ namespace Epsitec.Common.Drawing
 		public abstract void DefineColor(Drawing.Color color);
 		public abstract void DefineAdorner(object adorner);
 		
-		public virtual void MergeTransform(Transform transform)
-		{
-			//	Fusionne la transformation spécifiée avec la transformation propre à l'image
-			//	(changement d'échelle pour que la taille logique soit respectée).
-		}
-		
 		public virtual Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
 			if (style == GlyphPaintStyle.Normal)

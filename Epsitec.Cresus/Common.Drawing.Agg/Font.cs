@@ -320,7 +320,7 @@ namespace Epsitec.Common.Drawing
 					case SyntheticFontMode.Oblique:
 						return new Transform (1, System.Math.Sin (Font.DefaultObliqueAngle * System.Math.PI / 180.0), 0, 1, 0, 0);
 					default:
-						return new Transform ();
+						return Transform.Identity;
 				}
 			}
 		}

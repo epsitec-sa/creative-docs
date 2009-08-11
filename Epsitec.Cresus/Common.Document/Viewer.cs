@@ -4517,7 +4517,7 @@ namespace Epsitec.Common.Document
 			{
 				Rectangle rect = this.drawingContext.Viewer.Client.Bounds;
 				rect.Deflate(1);  // laisse un cadre d'un pixel
-				Transform it = null;
+				Transform it = Transform.Identity;
 
 				if (this.pictogramMiniatureZoom != 1)  // gros pixels ?
 				{

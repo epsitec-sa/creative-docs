@@ -533,7 +533,7 @@ namespace Epsitec.Common.Document
 				}
 
 				Transform ot = port.GradientRenderer.Transform;
-				Transform t = new Transform();
+				Transform t = Transform.Identity;
 
 				Point center = sa.ToAbs(new Point(surface.Cx, surface.Cy));
 				Point corner = sa.ToAbs(new Point(surface.Cx+surface.Sx, surface.Cy+surface.Sy));
@@ -544,34 +544,34 @@ namespace Epsitec.Common.Document
 					double d = Point.Distance(center, corner);
 					port.GradientRenderer.Fill = GradientFill.Y;
 					port.GradientRenderer.SetParameters(-255, 255);
-					t.RotateDeg(a);
-					t.Scale(1.0, d/255);
-					t.Translate(center);
+					t = t.RotateDeg(a);
+					t = t.Scale(1.0, d/255);
+					t = t.Translate(center);
 				}
 				else if ( surface.FillType == Properties.GradientFillType.Circle )
 				{
 					port.GradientRenderer.Fill = GradientFill.Circle;
 					port.GradientRenderer.SetParameters(0, 255);
-					t.RotateDeg(sa.Direction);
-					t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
-					t.Translate(center);
+					t = t.RotateDeg(sa.Direction);
+					t = t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
+					t = t.Translate(center);
 				}
 				else if ( surface.FillType == Properties.GradientFillType.Diamond )
 				{
 					port.GradientRenderer.Fill = GradientFill.Diamond;
 					port.GradientRenderer.SetParameters(0, 255);
-					t.RotateDeg(sa.Direction);
-					t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
-					t.Translate(center);
+					t = t.RotateDeg(sa.Direction);
+					t = t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
+					t = t.Translate(center);
 				}
 				else if ( surface.FillType == Properties.GradientFillType.Conic )
 				{
 					port.GradientRenderer.Fill = GradientFill.Conic;
 					port.GradientRenderer.SetParameters(0, 250);
-					t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
-					t.Translate(center);
-					t.RotateDeg(sa.Direction+surface.Angle, center);
-					t.MultiplyByPostfix(Transform.CreateRotationDegTransform(-90.0));
+					t = t.Scale(sa.Width/255*surface.Sx, sa.Height/255*surface.Sy);
+					t = t.Translate(center);
+					t = t.RotateDeg(sa.Direction+surface.Angle, center);
+					t = t.MultiplyByPostfix(Transform.CreateRotationDegTransform(-90.0));
 				}
 
 				if ( !shape.IsLinkWithNext )

@@ -778,10 +778,10 @@ namespace Epsitec.Common.Document.Objects
 
 				for ( int i=0 ; i<text.Length ; i++ )
 				{
-					Transform transform = new Transform();
-					transform.Scale(fontSize);
-					transform.RotateDeg(angle);
-					transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+					Transform transform = Transform.Identity;
+					transform = transform.Scale (fontSize);
+					transform = transform.RotateDeg (angle);
+					transform = transform.Translate (center+Transform.RotatePointDeg (angle, new Point (advance, offset)));
 
 					int glyph = font.GetGlyphIndex(text[i]);
 					pathText.Append(font, glyph, transform);
@@ -966,10 +966,10 @@ namespace Epsitec.Common.Document.Objects
 
 			Transform ot = port.Transform;
 
-			Transform transform = new Transform();
-			transform.Scale(fontSize);
-			transform.RotateDeg(angle);
-			transform.Translate(center+Transform.RotatePointDeg(angle, new Point(advance, offset)));
+			Transform transform = Transform.Identity;
+			transform = transform.Scale (fontSize);
+			transform = transform.RotateDeg (angle);
+			transform = transform.Translate (center+Transform.RotatePointDeg (angle, new Point (advance, offset)));
 			port.MergeTransform(transform);
 
 			port.RichColor = propFont.FontColor;

@@ -753,8 +753,8 @@ namespace Epsitec.Common.Widgets
 			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
-			
-			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
+
+			Drawing.Transform transform = Drawing.Transform.Identity;
 			
 //			double ox = 1.0;
 //			double oy = 2.0;
@@ -968,8 +968,8 @@ namespace Epsitec.Common.Widgets
 			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
-			
-			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
+
+			Drawing.Transform transform = Drawing.Transform.Identity;
 			
 //			double ox = 1.0;
 //			double oy = 2.0;
@@ -1020,9 +1020,9 @@ namespace Epsitec.Common.Widgets
 			widget.SetManualBounds(new Rectangle (30, 20, 50, 40));
 			
 			root.Children.Add (widget);
-			
-			Epsitec.Common.Drawing.Transform identity  = new Epsitec.Common.Drawing.Transform ();
-			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
+
+			Drawing.Transform identity  = Drawing.Transform.Identity;
+			Drawing.Transform transform = Drawing.Transform.Identity;
 			
 //			widget.SetClientZoom (3);
 //			widget.SetClientAngle (90);

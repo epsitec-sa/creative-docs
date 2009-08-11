@@ -8,12 +8,8 @@ namespace Epsitec.Common.Drawing
 	/// translation). Elle supporte les opérations telles que la translation simple, la
 	/// rotation, le changement d'échelle, ainsi que leur combinaison.
 	/// </summary>
-	public sealed class Transform : System.IComparable
+	public struct Transform : System.IComparable
 	{
-		public Transform() : this (1, 0, 0, 1, 0, 0)
-		{
-		}
-		
 		public Transform(double xx, double xy, double yx, double yy, double tx, double ty)
 		{
 			this.xx = xx;
@@ -117,6 +113,9 @@ namespace Epsitec.Common.Drawing
 				return this.ty;
 			}
 		}
+
+
+		public static readonly Transform		Identity = new Transform (1, 0, 0, 1, 0, 0);
 		
 		
 		public double GetZoom()
@@ -201,129 +200,82 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void MultiplyBy(Transform t)
+		public Transform MultiplyBy(Transform t)
 		{
-			if (t != null)
-			{
-				Transform c = Transform.Multiply (t, this);
-				
-				this.xx = c.xx;
-				this.xy = c.xy;
-				this.tx = c.tx;
-				this.yx = c.yx;
-				this.yy = c.yy;
-				this.ty = c.ty;
-			}
+			return Transform.Multiply (t, this);
 		}
 		
-		public void MultiplyByPostfix(Transform t)
+		public Transform MultiplyByPostfix(Transform t)
 		{
-			if (t != null)
-			{
-				Transform c = Transform.Multiply (this, t);
-				
-				this.xx = c.xx;
-				this.xy = c.xy;
-				this.tx = c.tx;
-				this.yx = c.yx;
-				this.yy = c.yy;
-				this.ty = c.ty;
-			}
+			return Transform.Multiply (this, t);
 		}
 		
-		public void Round()
+		public Transform Translate(double tx, double ty)
 		{
-			Transform.Round (ref this.xx);
-			Transform.Round (ref this.xy);
-			Transform.Round (ref this.yx);
-			Transform.Round (ref this.yy);
-			Transform.Round (ref this.tx);
-			Transform.Round (ref this.ty);
+			return new Transform (this.xx, this.xy, this.yx, this.yy, this.tx + tx, this.ty + ty);
 		}
 		
-		public void Translate(double tx, double ty)
+		public Transform Translate(Point offset)
 		{
-			this.tx += tx;
-			this.ty += ty;
+			return new Transform (this.xx, this.xy, this.yx, this.yy, this.tx + offset.X, this.ty + offset.Y);
 		}
 		
-		public void Translate(Point offset)
-		{
-			this.tx += offset.X;
-			this.ty += offset.Y;
-		}
-		
-		public void RotateDeg(double angle)
+		public Transform RotateDeg(double angle)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.CreateRotationDegTransform (angle));
+				return this.MultiplyBy (Transform.CreateRotationDegTransform (angle));
+			}
+			else
+			{
+				return this;
 			}
 		}
 		
-		public void RotateDeg(double angle, Point center)
+		public Transform RotateDeg(double angle, Point center)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.CreateRotationDegTransform (angle, center.X, center.Y));
+				return this.MultiplyBy (Transform.CreateRotationDegTransform (angle, center.X, center.Y));
+			}
+			else
+			{
+				return this;
 			}
 		}
 		
-		public void RotateDeg(double angle, double x, double y)
+		public Transform RotateDeg(double angle, double x, double y)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.CreateRotationDegTransform (angle, x, y));
+				return this.MultiplyBy (Transform.CreateRotationDegTransform (angle, x, y));
 			}
-		}
-		
-		public void RotateRad(double angle)
-		{
-			if (angle != 0)
+			else
 			{
-				this.MultiplyBy (Transform.CreateRotationRadTransform (angle));
+				return this;
 			}
 		}
 		
-		public void RotateRad(double angle, Point center)
-		{
-			if (angle != 0)
-			{
-				this.MultiplyBy (Transform.CreateRotationRadTransform (angle, center.X, center.Y));
-			}
-		}
-		
-		public void RotateRad(double angle, double x, double y)
-		{
-			if (angle != 0)
-			{
-				this.MultiplyBy (Transform.CreateRotationRadTransform (angle, x, y));
-			}
-		}
-		
-		public void Scale(double s)
+		public Transform Scale(double s)
 		{
 			if (s != 1.0f)
 			{
-				this.Scale (s, s);
+				return this.Scale (s, s);
+			}
+			else
+			{
+				return this;
 			}
 		}
 		
-		public void Scale(double sx, double sy)
+		public Transform Scale(double sx, double sy)
 		{
-			this.xx *= sx;
-			this.xy *= sy;
-			this.yx *= sx;
-			this.yy *= sy;
-			this.tx *= sx;
-			this.ty *= sy;
+			return new Transform (this.xx * sx, this.xy * sy, this.yx * sx, this.yy * sy, this.tx * sx, this.ty * sy);
 		}
 		
-		public void Scale(double sx, double sy, double cx, double cy)
+		public Transform Scale(double sx, double sy, double cx, double cy)
 		{
-			this.Translate (-cx, -cy);
-			this.Scale (sx, sy);
-			this.Translate (cx, cy);
+			return new Transform (this.xx * sx, this.xy * sy, this.yx * sx, this.yy * sy, (this.tx-cx) * sx + cx, (this.ty-cy) * sy + cy);
 		}
 		
 		
@@ -365,11 +317,7 @@ namespace Epsitec.Common.Drawing
 		public static Transform CreateRotationDegTransform(double angle, double cx, double cy)
 		{
 			Transform m = Transform.CreateRotationDegTransform (angle);
-			
-			m.tx = cx - m.xx * cx - m.xy * cy;
-			m.ty = cy - m.yx * cx - m.yy * cy;
-			
-			return m;
+			return new Transform (m.xx, m.xy, m.yx, m.yy, cx - m.xx * cx - m.xy * cy, cy - m.yx * cx - m.yy * cy);
 		}
 		
 		public static Transform CreateRotationRadTransform(double angle)
@@ -388,18 +336,13 @@ namespace Epsitec.Common.Drawing
 		public static Transform CreateRotationRadTransform(double angle, double cx, double cy)
 		{
 			Transform m = Transform.CreateRotationRadTransform (angle);
-			
-			m.tx = cx - m.xx * cx - m.xy * cy;
-			m.ty = cy - m.yx * cx - m.yy * cy;
-			
-			return m;
+			return new Transform (m.xx, m.xy, m.yx, m.yy, cx - m.xx * cx - m.xy * cy, cy - m.yx * cx - m.yy * cy);
 		}
 		
 		
 		public static Transform Inverse(Transform m)
 		{
-			double det   = m.xx * m.yy - m.xy * m.yx;
-			Transform c = new Transform ();
+			double det = m.xx * m.yy - m.xy * m.yx;
 			
 			if (det == 0)
 			{
@@ -410,39 +353,31 @@ namespace Epsitec.Common.Drawing
 			
 			double det_1 = 1.0f / det;
 			
-			c.xx =   m.yy * det_1;
-			c.xy = - m.xy * det_1;
-			c.yx = - m.yx * det_1;
-			c.yy =   m.xx * det_1;
+			double xx =   m.yy * det_1;
+			double xy = - m.xy * det_1;
+			double yx = - m.yx * det_1;
+			double yy =   m.xx * det_1;
 			
-			c.tx = - c.xx * m.tx - c.xy * m.ty;
-			c.ty = - c.yx * m.tx - c.yy * m.ty;
+			double tx = - xx * m.tx - xy * m.ty;
+			double ty = - yx * m.tx - yy * m.ty;
 			
-			return c;
+			return new Transform (xx, xy, yx, yy, tx, ty);
 		}
 		
 		public static Transform Multiply(Transform a, Transform b)
 		{
-			Transform c = new Transform ();
-			
-			c.xx = a.xx * b.xx + a.xy * b.yx;
-			c.xy = a.xx * b.xy + a.xy * b.yy;
-			c.tx = a.xx * b.tx + a.xy * b.ty + a.tx;
-			c.yx = a.yx * b.xx + a.yy * b.yx;
-			c.yy = a.yx * b.xy + a.yy * b.yy;
-			c.ty = a.yx * b.tx + a.yy * b.ty + a.ty;
-			
-			return c;
+			return new Transform (a.xx * b.xx + a.xy * b.yx,
+								  a.xx * b.xy + a.xy * b.yy,
+								  a.yx * b.xx + a.yy * b.yx,
+								  a.yx * b.xy + a.yy * b.yy,
+								  a.xx * b.tx + a.xy * b.ty + a.tx,
+								  a.yx * b.tx + a.yy * b.ty + a.ty);
 		}
 		
 		public static Point Multiply(Transform a, Point b)
 		{
-			Point c = new Point ();
-			
-			c.X = a.xx * b.X + a.xy * b.Y + a.tx;
-			c.Y = a.yx * b.X + a.yy * b.Y + a.ty;
-			
-			return c;
+			return new Point (a.xx * b.X + a.xy * b.Y + a.tx,
+							  a.yx * b.X + a.yy * b.Y + a.ty);
 		}
 		
 		
@@ -548,12 +483,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (obj is Transform)
 			{
-				Transform t = obj as Transform;
-				
-				if (t == null)
-				{
-					return 1;
-				}
+				Transform t = (Transform) obj;
 				
 				if (Transform.Equal (this.XX, t.XX) &&
 					Transform.Equal (this.XY, t.XY) &&
@@ -591,72 +521,57 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator ==(Transform a, Transform b)
 		{
-			object oa = a;
-			object ob = b;
-			
-			if (oa == ob)
+			if (Transform.Equal (a.XX, b.XX) &&
+				Transform.Equal (a.XY, b.XY) &&
+				Transform.Equal (a.YX, b.YX) &&
+				Transform.Equal (a.YY, b.YY) &&
+				Transform.Equal (a.TX, b.TX) &&
+				Transform.Equal (a.TY, b.TY))
 			{
 				return true;
 			}
-			
-			if ((oa != null) && (ob != null))
+			else
 			{
-				if (Transform.Equal (a.XX, b.XX) &&
-					Transform.Equal (a.XY, b.XY) &&
-					Transform.Equal (a.YX, b.YX) &&
-					Transform.Equal (a.YY, b.YY) &&
-					Transform.Equal (a.TX, b.TX) &&
-					Transform.Equal (a.TY, b.TY))
-				{
-					return true;
-				}
+				return false;
 			}
-			
-			return false;
 		}
 		
 		public static bool operator !=(Transform a, Transform b)
 		{
-			object oa = a;
-			object ob = b;
-			
-			if (oa == ob)
+			if (Transform.Equal (a.XX, b.XX) &&
+				Transform.Equal (a.XY, b.XY) &&
+				Transform.Equal (a.YX, b.YX) &&
+				Transform.Equal (a.YY, b.YY) &&
+				Transform.Equal (a.TX, b.TX) &&
+				Transform.Equal (a.TY, b.TY))
 			{
 				return false;
 			}
-			
-			if ((oa != null) && (ob != null))
+			else
 			{
-				if (Transform.Equal (a.XX, b.XX) &&
-					Transform.Equal (a.XY, b.XY) &&
-					Transform.Equal (a.YX, b.YX) &&
-					Transform.Equal (a.YY, b.YY) &&
-					Transform.Equal (a.TX, b.TX) &&
-					Transform.Equal (a.TY, b.TY))
-				{
-					return false;
-				}
+				return true;
 			}
-			
-			return true;
 		}
 		
 		
 		public override bool Equals(object obj)
 		{
-			return this == (obj as Transform);
+			if (obj is Transform)
+			{
+				return this == (Transform) obj;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		
 		public bool EqualsStrictly(object obj)
 		{
 			if (obj is Transform)
 			{
-				Transform t = obj as Transform;
+				Transform t = (Transform) obj;
 				
-				if (t == null)
-				{
-					return false;
-				}
 				if ((this.XX == t.XX) &&
 					(this.XY == t.XY) &&
 					(this.YX == t.YX) &&
@@ -698,7 +613,7 @@ namespace Epsitec.Common.Drawing
 					
 		private static readonly double			ε = 0.00001;
 		
-		private double							xx, xy, yx, yy;
-		private double							tx, ty;
+		private readonly double					xx, xy, yx, yy;
+		private readonly double					tx, ty;
 	}
 }

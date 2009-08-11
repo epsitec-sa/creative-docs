@@ -963,10 +963,10 @@ namespace Epsitec.Common.Document.Properties
 				if ( this.fillType == GradientFillType.Circle )
 				{
 					Transform ot = graphics.Transform;
-					Transform t = new Transform();
-					t.RotateDeg(sa.Direction);
-					t.Translate(center);
-					t.MultiplyBy(graphics.Transform);
+					Transform t = Transform.Identity;
+					t = t.RotateDeg(sa.Direction);
+					t = t.Translate (center);
+					t = t.MultiplyBy(graphics.Transform);
 					graphics.Transform = t;
 					graphics.AddCircle(0.0, 0.0, System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
 					graphics.Transform = ot;

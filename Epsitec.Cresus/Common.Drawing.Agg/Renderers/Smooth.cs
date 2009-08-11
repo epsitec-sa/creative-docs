@@ -125,7 +125,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			{
 				this.handle.Delete ();
 				this.pixmap = null;
-				this.transform = new Transform ();
+				this.transform = Transform.Identity;
 			}
 		}
 		
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		readonly Graphics						graphics;
 		private readonly Agg.SafeSmoothRendererHandle handle;
 		private Pixmap							pixmap;
-		private Transform						transform = new Transform ();
+		private Transform						transform = Transform.Identity;
 		private	double							r1;
 		private double							r2;
 	}

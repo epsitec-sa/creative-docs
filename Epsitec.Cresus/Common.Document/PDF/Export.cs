@@ -471,10 +471,10 @@ namespace Epsitec.Common.Document.PDF
 
 				//	Matrice de transformation globale:
 				Transform gt = port.Transform;
-				gt.Translate(currentPageOffset);  // translation si débord et/ou traits de coupe
-				gt.Scale(Export.mm2in);  // unité = 0.1mm
+				gt = gt.Translate(currentPageOffset);  // translation si débord et/ou traits de coupe
+				gt = gt.Scale (Export.mm2in);  // unité = 0.1mm
 				Transform gtBeforeZoom = new Transform (gt);
-				gt.Scale (this.zoom, this.zoom, gt.TX, gt.TY);
+				gt = gt.Scale (this.zoom, this.zoom, gt.TX, gt.TY);
 				port.Transform = gt;
 
 				System.Collections.ArrayList layers = this.ComputeLayers(page);
@@ -775,7 +775,7 @@ namespace Epsitec.Common.Document.PDF
 
 			//	Il faut utiliser la bonne échelle à cause du filtre des images.
 			Transform gt = port.Transform;
-			gt.Scale(Export.mm2in);  // unité = 0.1mm
+			gt = gt.Scale(Export.mm2in);  // unité = 0.1mm
 			port.Transform = gt;
 
 			int id = 1;
@@ -1218,9 +1218,9 @@ namespace Epsitec.Common.Document.PDF
 				double angle = Point.ComputeAngleDeg(sx, sy)-90.0;
 				double length = System.Math.Sqrt(sx*sx + sy*sy);
 
-				cs.Matrix.RotateDeg(obj.Direction+angle);
-				cs.Matrix.Scale(length, length);
-				cs.Matrix.Translate(center);
+				cs.Matrix = cs.Matrix.RotateDeg (obj.Direction+angle);
+				cs.Matrix = cs.Matrix.Scale (length, length);
+				cs.Matrix = cs.Matrix.Translate (center);
 			}
 
 			if ( gradient.FillType == Properties.GradientFillType.Circle )
@@ -1228,9 +1228,9 @@ namespace Epsitec.Common.Document.PDF
 				double dx = System.Math.Abs(sa.Width *gradient.Sx);
 				double dy = System.Math.Abs(sa.Height*gradient.Sy);
 
-				cs.Matrix.RotateDeg(obj.Direction);
-				cs.Matrix.Scale(dx, dy);
-				cs.Matrix.Translate(center);
+				cs.Matrix = cs.Matrix.RotateDeg (obj.Direction);
+				cs.Matrix = cs.Matrix.Scale (dx, dy);
+				cs.Matrix = cs.Matrix.Translate (center);
 			}
 
 			if ( gradient.FillType == Properties.GradientFillType.Diamond ||
@@ -1239,9 +1239,9 @@ namespace Epsitec.Common.Document.PDF
 				double dx = System.Math.Abs(sa.Width *gradient.Sx);
 				double dy = System.Math.Abs(sa.Height*gradient.Sy);
 
-				cs.Matrix.Scale(dx, dy);
-				cs.Matrix.Translate(center);
-				cs.Matrix.RotateDeg(sa.Direction+gradient.Angle, center);
+				cs.Matrix = cs.Matrix.Scale (dx, dy);
+				cs.Matrix = cs.Matrix.Translate (center);
+				cs.Matrix = cs.Matrix.RotateDeg (sa.Direction+gradient.Angle, center);
 			}
 		}
 

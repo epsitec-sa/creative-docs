@@ -22,7 +22,7 @@ namespace Epsitec.Common.Drawing
 			
 			this.pixmap     = new Pixmap ();
 			this.rasterizer = new Common.Drawing.Rasterizer ();
-			this.transform  = new Transform ();
+			this.transform  = Transform.Identity;
 
 			this.color_modifier_stack = new Stack<ColorModifierCallback> ();
 			
@@ -538,8 +538,8 @@ namespace Epsitec.Common.Drawing
 				fill_height -= iy2 - idy;
 				iy2 = idy;
 			}
-			
-			Transform transform = new Transform ();
+
+			Transform transform = Transform.Identity;
 			
 #if true
 			Point vector_oo = new Point (0, 0); vector_oo = this.ApplyTransformDirect (vector_oo);
@@ -563,9 +563,9 @@ namespace Epsitec.Common.Drawing
 			sx *= bitmap.Width  / bmi.PixelWidth;
 			sy *= bitmap.Height / bmi.PixelHeight;
 			
-			transform.Translate (-ix1, -iy1);
-			transform.Scale (sx, sy);
-			transform.Translate (fill_x, fill_y);
+			transform = transform.Translate (-ix1, -iy1);
+			transform = transform.Scale (sx, sy);
+			transform = transform.Translate (fill_x, fill_y);
 			
 			this.AddFilledRectangle (fill_x, fill_y, fill_width, fill_height);
 			this.ImageRenderer.BitmapImage = bitmap;
@@ -792,31 +792,31 @@ namespace Epsitec.Common.Drawing
 		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy));
 			this.UpdateTransform ();
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationDegTransform (angle, cx, cy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationDegTransform (angle, cx, cy));
 			this.UpdateTransform ();
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationRadTransform (angle, cx, cy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationRadTransform (angle, cx, cy));
 			this.UpdateTransform ();
 		}
 		
 		public void TranslateTransform(double ox, double oy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.CreateTranslationTransform (ox, oy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateTranslationTransform (ox, oy));
 			this.UpdateTransform ();
 		}
 		
 		public void MergeTransform(Transform transform)
 		{
-			this.transform.MultiplyByPostfix (transform);
+			this.transform = this.transform.MultiplyByPostfix (transform);
 			this.UpdateTransform ();
 		}
 

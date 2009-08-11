@@ -454,9 +454,9 @@ namespace Epsitec.Common.Document.Objects
 			Transform ot = port.Transform;
 
 			double angle = Point.ComputeAngleDeg(p1, p2);
-			this.transform = new Transform();
-			this.transform.Translate(p1);
-			this.transform.RotateDeg(angle, p1);
+			this.transform = this.transform = Transform.Identity;
+			this.transform = this.transform.Translate (p1);
+			this.transform = this.transform.RotateDeg (angle, p1);
 			port.MergeTransform(transform);
 
 			bool active = true;

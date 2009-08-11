@@ -61,7 +61,7 @@ namespace Epsitec.Common.Document.PDF
 			this.color = RichColor.FromBrightness(0.0);
 			this.complexSurfaceId = -1;
 			this.complexType = TypeComplexSurface.ExtGState;
-			this.transform = new Transform();
+			this.transform = Transform.Identity;
 			this.fillMode = FillMode.NonZero;
 
 			this.Init();
@@ -341,27 +341,27 @@ namespace Epsitec.Common.Document.PDF
 		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.CreateScaleTransform(sx, sy, cx, cy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy));
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.CreateRotationDegTransform(angle, cx, cy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationDegTransform (angle, cx, cy));
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.CreateRotationRadTransform(angle, cx, cy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateRotationRadTransform (angle, cx, cy));
 		}
 		
 		public void TranslateTransform(double ox, double oy)
 		{
-			this.transform.MultiplyByPostfix(Drawing.Transform.CreateTranslationTransform(ox, oy));
+			this.transform = this.transform.MultiplyByPostfix (Drawing.Transform.CreateTranslationTransform (ox, oy));
 		}
 		
 		public void MergeTransform(Transform transform)
 		{
-			this.transform.MultiplyByPostfix(transform);
+			this.transform = this.transform.MultiplyByPostfix (transform);
 		}
 		
 		
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Document.PDF
 			{
 				Drawing.Path path = new Drawing.Path();
 				Drawing.Transform ft = font.SyntheticTransform;
-				ft.Scale(size);
+				ft = ft.Scale(size);
 			
 				for ( int i=0 ; i<n ; i++ )
 				{
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Document.PDF
 				System.Diagnostics.Debug.Assert(glyphN.Length == n);
 
 				Drawing.Transform ft = font.SyntheticTransform;
-				ft.Scale(size);
+				ft = ft.Scale(size);
 
 				for ( int i=0 ; i<n ; i++ )
 				{
@@ -684,7 +684,7 @@ namespace Epsitec.Common.Document.PDF
 			this.currentStrokeColor = RichColor.Empty;
 			this.currentFillColor = RichColor.Empty;
 			this.currentComplexSurfaceId = -1;
-			this.currentTransform = new Transform();
+			this.currentTransform = Transform.Identity;
 		}
 
 		protected void SetStrokeColor(RichColor color)
@@ -973,7 +973,7 @@ namespace Epsitec.Common.Document.PDF
 			if ( this.currentTransform != transform )
 			{
 				Transform t = Transform.Inverse(this.currentTransform);
-				t.MultiplyByPostfix(transform);
+				t = t.MultiplyByPostfix(transform);
 
 				//	Attention: inversion de XY et YX !
 				this.PutValue(t.XX, -1);

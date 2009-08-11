@@ -112,7 +112,7 @@ namespace Epsitec.Common.Drawing
 				switch (font.SyntheticFontMode)
 				{
 					case SyntheticFontMode.Oblique:
-						ft.MultiplyBy (this.transform);
+						ft = ft.MultiplyBy (this.transform);
 						AntiGrain.Rasterizer.SetTransform (this.handle, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 						AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
 						AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
@@ -152,8 +152,8 @@ namespace Epsitec.Common.Drawing
 					
 				ft = new Transform (ft.XX, ft.XY, ft.YX, ft.YY, x, y);
 				
-				ft.MultiplyBy (this.transform);
-				ft.MultiplyByPostfix (Transform.CreateScaleTransform (sx, sy));
+				ft = ft.MultiplyBy (this.transform);
+				ft = ft.MultiplyByPostfix (Transform.CreateScaleTransform (sx, sy));
 
 				AntiGrain.Rasterizer.SetTransform (this.handle, ft.XX, ft.XY, ft.YX, ft.YY, ft.TX, ft.TY);
 				AntiGrain.Rasterizer.AddGlyph(this.handle, font.Handle, glyph, 0, 0, scale);
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Drawing
 
 			Transform transform = new Transform (xx, xy, yx, yy, tx, ty);
 
-			transform.MultiplyBy (this.transform);
+			transform = transform.MultiplyBy (this.transform);
 			AntiGrain.Rasterizer.SetTransform (this.handle, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
 			AntiGrain.Rasterizer.AddGlyphs (this.handle, font.Handle, 1.0, glyphs, x, null, null);
 			AntiGrain.Rasterizer.SetTransform (this.handle, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);

@@ -353,7 +353,7 @@ namespace Epsitec.Common.Drawing
 			{
 				Transform ft = font.SyntheticTransform;
 				
-				ft.MultiplyBy (new Transform (xx, xy, yx, yy, tx, ty));
+				ft = ft.MultiplyBy (new Transform (xx, xy, yx, yy, tx, ty));
 				
 				xx = ft.XX;
 				xy = ft.XY;
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Drawing
 			{
 				Transform ft = font.SyntheticTransform;
 				
-				ft.MultiplyBy (new Transform (xx, xy, yx, yy, tx, ty));
+				ft = ft.MultiplyBy (new Transform (xx, xy, yx, yy, tx, ty));
 				
 				xx = ft.XX;
 				xy = ft.XY;

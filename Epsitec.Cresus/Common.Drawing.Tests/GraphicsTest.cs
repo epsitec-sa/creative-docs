@@ -1183,11 +1183,11 @@ namespace Epsitec.Common.Drawing
 //			e.Graphics.GradientRenderer.SetParameters (0, root.Client.Size.Width);
 			e.Graphics.GradientRenderer.SetParameters (0, 100);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
-			
-			Transform t = new Transform ();
-			t.Translate (-50, 0);
-			t.RotateDeg (45, 0, 0);
-			t.Translate (cx, cy);
+
+			Transform t = Transform.Identity;
+			t = t.Translate (-50, 0);
+			t = t.RotateDeg (45, 0, 0);
+			t = t.Translate (cx, cy);
 			e.Graphics.GradientRenderer.Transform = t;
 			
 			e.Graphics.RenderGradient ();
@@ -1230,9 +1230,9 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.GradientRenderer.SetParameters (0, 200);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
 			//e.Graphics.GradientRenderer.SetColors (Color.FromRgb(1,0,0), Color.FromRgb(0,0,1));
-			
-			Transform t = new Transform ();
-			t.Translate (cx, cy);
+
+			Transform t = Transform.Identity;
+			t = t.Translate (cx, cy);
 			//t.Rotate (30, cx, cy);
 			e.Graphics.GradientRenderer.Transform = t;
 			
@@ -1262,14 +1262,14 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.GradientRenderer.SetColors(Color.FromRgb(1,0,0), Color.FromRgb(0,0,1));
 
 			Transform ot = e.Graphics.GradientRenderer.Transform;
-			Transform t = new Transform();
+			Transform t = Transform.Identity;
 
 			e.Graphics.GradientRenderer.Fill = GradientFill.Y;
 			Point center = rect.Center;
 			e.Graphics.GradientRenderer.SetParameters(-100, 100);
-			t.Scale(rect.Width/100/2, rect.Height/100/2);
-			t.Translate(center);
-			t.RotateDeg(0, center);
+			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate (center);
+			t = t.RotateDeg (0, center);
 
 			e.Graphics.GradientRenderer.Transform = t;
 			e.Graphics.RenderGradient();
@@ -1322,9 +1322,9 @@ namespace Epsitec.Common.Drawing
 				e.Graphics.AddText (x, y, width, height, new string (c, 1), font, size,  ContentAlignment.MiddleCenter);
 				e.Graphics.ImageRenderer.BitmapImage = bitmap;
 
-				Transform t = new Transform ();
-				t.Scale (width / bitmap.Width, height / bitmap.Height);
-				t.Translate (x, y);
+				Transform t = Transform.Identity;
+				t = t.Scale (width / bitmap.Width, height / bitmap.Height);
+				t = t.Translate (x, y);
 				
 				e.Graphics.ImageRenderer.Transform = t;
 				e.Graphics.RenderImage ();

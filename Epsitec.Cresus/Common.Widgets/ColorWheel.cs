@@ -378,10 +378,10 @@ namespace Epsitec.Common.Widgets
 					graphics.GradientRenderer.Fill = Drawing.GradientFill.Conic;
 					graphics.GradientRenderer.SetParameters(0, 250);
 					graphics.GradientRenderer.SetColors(r, g, b, a);
-			
-					Drawing.Transform t = new Drawing.Transform();
-					t.Translate(cx, cy);
-					t.RotateDeg(-90, cx, cy);  // rouge en haut
+
+					Drawing.Transform t = Drawing.Transform.Identity;
+					t = t.Translate (cx, cy);
+					t = t.RotateDeg (-90, cx, cy);  // rouge en haut
 					graphics.GradientRenderer.Transform = t;
 			
 					graphics.RenderGradient();

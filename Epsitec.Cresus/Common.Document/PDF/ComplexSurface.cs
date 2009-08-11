@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.PDF
 			this.isSmooth = fill.IsSmoothSurfacePDF(port);
 			this.rank     = rank;
 			this.id       = id;
-			this.matrix   = new Transform();  // matrice identité
+			this.matrix   = Transform.Identity;
 		}
 
 		public void Dispose()
@@ -46,7 +46,6 @@ namespace Epsitec.Common.Document.PDF
 			this.obj      = null;
 			this.fill     = null;
 			this.stroke   = null;
-			this.matrix   = null;
 		}
 
 		public int Page

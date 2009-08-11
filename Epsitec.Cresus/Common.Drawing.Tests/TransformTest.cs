@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckCreation()
 		{
-			Transform t1 = new Transform ();
+			Transform t1 = Transform.Identity;
 			Transform t2 = Transform.CreateTranslationTransform (20, 10);
 			Transform t3 = Transform.CreateRotationDegTransform (60);
 			
@@ -26,8 +26,8 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckCompare()
 		{
-			Transform t1 = new Transform ();
-			Transform t2 = new Transform ();
+			Transform t1 = Transform.Identity;
+			Transform t2 = Transform.Identity;
 			Transform t3 = t1;
 			
 //-			Assert.IsTrue (t1 == t1);
@@ -37,14 +37,14 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual ((t1 == null), false);
 			Assert.AreEqual ((t1 != null), true);
 			
-			t2.RotateDeg (10);
+			t2 = t2.RotateDeg (10);
 			
 			Assert.IsTrue (t1 != t2);
 			Assert.AreEqual (t1.Equals (t2), false);
 			Assert.AreEqual (t1.EqualsStrictly (t2), false);
 			Assert.AreEqual (t1.EqualsStrictly (null), false);
 			
-			t2.RotateDeg (-10);
+			t2 = t2.RotateDeg (-10);
 			
 			Assert.IsTrue (t1 == t2);
 			Assert.AreEqual (t1.Equals (t2), true);
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckRotation()
 		{
-			Transform identity = new Transform ();
+			Transform identity = Transform.Identity;
 			
 			Transform t1 = Transform.CreateTranslationTransform (20, 10);
 			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
@@ -75,9 +75,6 @@ namespace Epsitec.Common.Drawing
 			t = Transform.Multiply (t4, t6);
 			Assert.IsTrue (t.Equals (identity));
 			
-			t.Round ();
-			Assert.IsTrue (t.EqualsStrictly (identity));
-			
 			t3 = Transform.CreateRotationDegTransform (-30);
 			Point pt = t3.TransformDirect (new Point (1, 3));
 			
@@ -92,7 +89,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckScale()
 		{
-			Transform identity = new Transform ();
+			Transform identity = Transform.Identity;
 			
 			Transform t1 = Transform.CreateScaleTransform (5, 8);
 			Transform t2 = Transform.CreateScaleTransform (1/5.0f, 1/8.0f);
@@ -105,7 +102,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckInversion()
 		{
-			Transform identity = new Transform ();
+			Transform identity = Transform.Identity;
 			
 			Transform t1 = Transform.CreateTranslationTransform (20, 10);
 			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
@@ -131,7 +128,7 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckPointTransform()
 		{
-			Transform identity = new Transform ();
+			Transform identity = Transform.Identity;
 			Point pt = new Point (30, 40);
 			
 			Transform t1 = Transform.CreateTranslationTransform (20, 10);
@@ -180,24 +177,24 @@ namespace Epsitec.Common.Drawing
 			Transform t2 = Transform.CreateTranslationTransform (-20, -10);
 			Transform t3 = Transform.CreateRotationDegTransform (60);
 			Transform t4 = Transform.CreateRotationDegTransform (60, new Point (20, 10));
-			
-			Transform t = new Transform ();
-			
-			t.Translate (20, 10);
+
+			Transform t = Transform.Identity;
+
+			t = t.Translate (20, 10);
 			Assert.IsTrue (t.Equals (t1));
 
-			t = new Transform ();
-			t.Translate (-20, -10);
+			t = Transform.Identity;
+			t = t.Translate (-20, -10);
 			Assert.IsTrue (t.Equals (t2));
 
-			t = new Transform ();
-			t.RotateDeg (60);
+			t = Transform.Identity;
+			t = t.RotateDeg (60);
 			Assert.IsTrue (t.Equals (t3));
 
-			t = new Transform ();
-			t.Translate (-20, -10);
-			t.RotateDeg (60);
-			t.Translate (20, 10);
+			t = Transform.Identity;
+			t = t.Translate (-20, -10);
+			t = t.RotateDeg (60);
+			t = t.Translate (20, 10);
 			Assert.IsTrue (t.Equals (t4));
 		}	
 	}

@@ -521,11 +521,7 @@ namespace Epsitec.Common.Document.Objects
 			Point p1, p2, p3, p4;
 			this.Corners(out p1, out p2, out p3, out p4);
 
-			Transform ot = null;
-			if ( port != null )
-			{
-				ot = port.Transform;
-			}
+			Transform ot = port == null ? Transform.Identity : port.Transform;
 
 			//?angle = Point.ComputeAngleDeg(p1, p2);
 			angle = this.direction;
@@ -537,10 +533,10 @@ namespace Epsitec.Common.Document.Objects
 			double sx = (pp1.X <= pp2.X) ? 1.0 : -1.0;
 			double sy = (pp1.Y <= pp3.Y) ? 1.0 : -1.0;
 
-			this.transform = new Transform();
-			this.transform.Translate(p1);
-			this.transform.Scale(sx, sy, p1.X, p1.Y);
-			this.transform.RotateDeg(angle, p1);
+			this.transform = Transform.Identity;
+			this.transform = this.transform.Translate (p1);
+			this.transform = this.transform.Scale (sx, sy, p1.X, p1.Y);
+			this.transform = this.transform.RotateDeg (angle, p1);
 			if ( port != null )
 			{
 				port.MergeTransform(transform);

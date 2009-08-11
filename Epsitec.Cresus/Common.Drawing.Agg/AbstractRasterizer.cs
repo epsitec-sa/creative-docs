@@ -342,6 +342,6 @@ namespace Epsitec.Common.Drawing
 
 		protected FillMode						fillMode  = FillMode.NonZero;
 		protected double						gamma     = 1.0;
-		protected Transform						transform = new Transform ();
+		protected Transform						transform = Transform.Identity;
 	}
 }

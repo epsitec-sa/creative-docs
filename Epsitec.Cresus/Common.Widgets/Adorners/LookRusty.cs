@@ -2437,11 +2437,11 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.GradientRenderer.SetParameters(-100, 100);
 			
 			Drawing.Transform ot = graphics.GradientRenderer.Transform;
-			Drawing.Transform t = new Drawing.Transform();
+			Drawing.Transform t = Drawing.Transform.Identity;
 			Drawing.Point center = rect.Center;
-			t.Scale(rect.Width/100/2, rect.Height/100/2);
-			t.Translate(center);
-//-			t.RotateDeg(0, center);
+			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate (center);
+//-			t = t.RotateDeg(0, center);
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;

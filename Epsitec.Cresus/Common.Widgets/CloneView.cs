@@ -103,8 +103,7 @@ namespace Epsitec.Common.Widgets
 
 			repaint.Offset (offset);
 
-			graphicsTransform.MultiplyBy (originalTransform);
-			graphics.Transform = graphicsTransform;
+			graphics.Transform = graphicsTransform.MultiplyBy (originalTransform);
 			graphics.ClipOffset = clipOffset;
 
 			this.model.PaintHandler (graphics, repaint, paintFilter);

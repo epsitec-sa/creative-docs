@@ -803,10 +803,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.GradientRenderer.SetParameters(-100, 100);
 			
 			Transform ot = graphics.GradientRenderer.Transform;
-			Transform t = new Transform();
+			Transform t = Transform.Identity;
 			Point center = rect.Center;
-			t.Scale(rect.Width/100/2, rect.Height/100/2);
-			t.Translate(center);
+			t = t.Scale(rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate(center);
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;
@@ -821,10 +821,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			graphics.GradientRenderer.SetParameters(-100, 100);
 			
 			Transform ot = graphics.GradientRenderer.Transform;
-			Transform t = new Transform();
+			Transform t = Transform.Identity;
 			Point center = rect.Center;
-			t.Scale(rect.Width/100/2, rect.Height/100/2);
-			t.Translate(center);
+			t = t.Scale(rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate(center);
 			graphics.GradientRenderer.Transform = t;
 			graphics.RenderGradient();
 			graphics.GradientRenderer.Transform = ot;
