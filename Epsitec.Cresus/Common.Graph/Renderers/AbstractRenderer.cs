@@ -48,6 +48,14 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
+		public Drawing.Rectangle Bounds
+		{
+			get
+			{
+				return this.bounds;
+			}
+		}
+
 		public void ClipRange(double minValue, double maxValue)
 		{
 			this.minValue = minValue;
@@ -63,9 +71,10 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesValuesLabelsList.Clear ();
 		}
 
-		public virtual void BeginRender()
+		public virtual void BeginRender(Drawing.Rectangle bounds)
 		{
 			this.seriesRendered = -1;
+			this.bounds = bounds;
 		}
 
 		public virtual void EndRender()
@@ -120,6 +129,7 @@ namespace Epsitec.Common.Graph.Renderers
 		private int seriesRendered;
 		private double minValue;
 		private double maxValue;
+		private Drawing.Rectangle bounds;
 		
 		private readonly HashSet<string> seriesValuesLabelsSet;
 		private readonly List<string> seriesValuesLabelsList;

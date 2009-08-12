@@ -34,14 +34,12 @@ namespace Epsitec.Common.Graph.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			base.PaintBackgroundImplementation (graphics, clipRect);
-
-			Transform transform = graphics.Transform;
-			graphics.ScaleTransform (1 / this.ActualWidth, 1 / this.ActualHeight, 0, 0);
+			graphics.AddFilledRectangle (this.Client.Bounds);
+			graphics.SolidRenderer.Clear (Color.FromBrightness (1));
 
 			if (this.renderer != null)
 			{
-				this.renderer.BeginRender ();
+				this.renderer.BeginRender (Rectangle.Deflate (this.Client.Bounds, 4, 4));
 
 				foreach (var item in this.items)
 				{
@@ -50,8 +48,6 @@ namespace Epsitec.Common.Graph.Widgets
 
 				this.renderer.EndRender ();
 			}
-			
-			graphics.Transform	= transform;
 		}
 
 
