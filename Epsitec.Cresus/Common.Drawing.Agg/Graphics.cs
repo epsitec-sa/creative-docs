@@ -190,12 +190,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return new Transform (this.transform);
+				return this.transform;
 			}
 			set
 			{
-				this.transform = new Transform (value);
-				this.rasterizer.Transform = this.transform;
+				this.transform = value;
+				this.UpdateTransform ();
 			}
 		}
 		

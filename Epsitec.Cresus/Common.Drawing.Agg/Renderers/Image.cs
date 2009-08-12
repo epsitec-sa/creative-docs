@@ -33,9 +33,8 @@ namespace Epsitec.Common.Drawing.Renderers
 					return;
 				}
 
-				this.transform         = new Transform (value);
-				this.internalTransform = new Transform (value);
-				this.internalTransform = this.internalTransform.MultiplyBy (this.graphics.Transform);
+				this.transform         = value;
+				this.internalTransform = value.MultiplyBy (this.graphics.Transform);
 
 				Transform inverse = Transform.Inverse (this.internalTransform);
 

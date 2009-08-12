@@ -20,16 +20,6 @@ namespace Epsitec.Common.Drawing
 			this.ty = ty;
 		}
 		
-		public Transform(Transform transform)
-		{
-			this.xx = transform.xx;
-			this.xy = transform.xy;
-			this.yx = transform.yx;
-			this.yy = transform.yy;
-			this.tx = transform.tx;
-			this.ty = transform.ty;
-		}
-		
 		
 		public bool								OnlyTranslate
 		{

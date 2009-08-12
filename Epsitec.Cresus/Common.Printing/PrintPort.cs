@@ -364,7 +364,7 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-			   return new Drawing.Transform (this.transform);
+			   return this.transform;
 			}
 			set
 			{
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Printing
 				{
 					this.ResetTransform ();
 					
-					this.transform = new Drawing.Transform (value);
+					this.transform = value;
 					
 					float m11 = (float)(transform.XX);
 					float m12 = (float)(transform.YX);
@@ -469,45 +469,31 @@ namespace Epsitec.Common.Printing
 		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
-			Drawing.Transform current = new Drawing.Transform (this.transform);
-			Drawing.Transform scale   = Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy);
-			
-			this.Transform = scale.MultiplyBy (current);
+			Drawing.Transform scale = Drawing.Transform.CreateScaleTransform (sx, sy, cx, cy);
+			this.Transform = scale.MultiplyBy (this.transform);
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			Drawing.Transform current  = new Drawing.Transform (this.transform);
 			Drawing.Transform rotation = Drawing.Transform.CreateRotationDegTransform (angle, cx, cy);
-			
-			this.Transform = rotation.MultiplyBy (current);
+			this.Transform = rotation.MultiplyBy (this.transform);
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
-			Drawing.Transform current  = new Drawing.Transform (this.transform);
 			Drawing.Transform rotation = Drawing.Transform.CreateRotationRadTransform (angle, cx, cy);
-			
-			rotation.MultiplyBy (current);
-			
-			this.Transform = rotation;
+			this.Transform = rotation.MultiplyBy (this.transform);
 		}
 		
 		public void TranslateTransform(double ox, double oy)
 		{
-			Drawing.Transform current     = new Drawing.Transform (this.transform);
 			Drawing.Transform translation = Drawing.Transform.CreateTranslationTransform (ox, oy);
-			
-			translation.MultiplyBy (current);
-			
-			this.Transform = translation;
+			this.Transform = translation.MultiplyBy (this.transform);
 		}
 		
 		public void MergeTransform(Drawing.Transform transform)
 		{
-			Drawing.Transform current = new Drawing.Transform (this.transform);
-			
-			this.Transform = transform.MultiplyBy (current);
+			this.Transform = transform.MultiplyBy (this.transform);
 		}
 		
 		

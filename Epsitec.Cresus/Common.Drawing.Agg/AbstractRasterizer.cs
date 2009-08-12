@@ -72,7 +72,7 @@ namespace Epsitec.Common.Drawing
 				
 				if (this.transform != value)
 				{
-					this.transform = new Transform (value);
+					this.transform = value;
 					this.SyncTransform ();
 				}
 			}

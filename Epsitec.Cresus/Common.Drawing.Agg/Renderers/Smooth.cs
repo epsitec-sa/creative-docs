@@ -98,7 +98,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				return;
 			}
 			
-			this.transform = new Transform (value);
+			this.transform = value;
 			AntiGrain.Renderer.Smooth.Setup (this.handle, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 		}
 

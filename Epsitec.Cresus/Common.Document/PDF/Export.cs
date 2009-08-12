@@ -473,7 +473,7 @@ namespace Epsitec.Common.Document.PDF
 				Transform gt = port.Transform;
 				gt = gt.Translate(currentPageOffset);  // translation si débord et/ou traits de coupe
 				gt = gt.Scale (Export.mm2in);  // unité = 0.1mm
-				Transform gtBeforeZoom = new Transform (gt);
+				Transform gtBeforeZoom = gt;
 				gt = gt.Scale (this.zoom, this.zoom, gt.TX, gt.TY);
 				port.Transform = gt;
 

@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <param name="graphics">The graphics context.</param>
 		private void PaintHistoryDeck(Graphics graphics)
 		{
-			Transform transform = new Transform (graphics.Transform);
+			Transform transform = graphics.Transform;
 			
 			Size   size   = this.Client.Size;
 			double dim    = System.Math.Min (size.Width, size.Height);
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <param name="graphics">The graphics context.</param>
 		private void PaintStandAloneDeck(Graphics graphics)
 		{
-			Transform transform = new Transform (graphics.Transform);
+			Transform transform = graphics.Transform;
 
 			Size   size   = this.Client.Size;
 			double dim    = System.Math.Min (size.Width, size.Height);
