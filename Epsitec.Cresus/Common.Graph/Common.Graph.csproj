@@ -51,6 +51,8 @@
     <Compile Include="Data\ChartSeries.cs" />
     <Compile Include="Data\ChartValue.cs" />
     <Compile Include="Data\Cube.cs" />
+    <Compile Include="Data\Dimension.cs" />
+    <Compile Include="Data\DimensionVector.cs" />
     <Compile Include="Data\Table.cs" />
     <Compile Include="PaintLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

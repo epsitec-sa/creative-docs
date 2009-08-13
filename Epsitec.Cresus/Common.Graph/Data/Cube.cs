@@ -8,8 +8,27 @@ namespace Epsitec.Common.Graph.Data
 {
 	public class Cube
 	{
-		public void LoadTable()
+		public void AddTable(Table table)
 		{
+			string colKey = table.ColumnDimensionKey;
+			string rowKey = table.RowDimensionKey;
+
+			foreach (var row in table.RowSeries)
+			{
+				string rowLabel = row.Label;
+
+				foreach (var cell in row.Values)
+				{
+					DimensionVector vector = new DimensionVector (table.DimensionVector);
+
+					vector.Add (new Dimension (rowKey, rowLabel));
+					vector.Add (new Dimension (colKey, cell.Label));
+
+					this.values.Add (vector.Compile (), cell.Value);
+				}
+			}
 		}
+
+		Dictionary<string, double> values;
 	}
 }

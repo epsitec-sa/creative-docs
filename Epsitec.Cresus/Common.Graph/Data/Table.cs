@@ -13,8 +13,42 @@ namespace Epsitec.Common.Graph.Data
 			this.columnLabels = new List<string> ();
 			this.rowLabels = new List<string> ();
 			this.rows = new List<double?[]> ();
+			this.dimensionVector = new DimensionVector ();
 		}
 
+		
+		public string ColumnDimensionKey
+		{
+			get
+			{
+				return this.columnDimensionKey ?? "";
+			}
+			set
+			{
+				this.columnDimensionKey = value;
+			}
+		}
+
+		public string RowDimensionKey
+		{
+			get
+			{
+				return this.rowDimensionKey ?? "";
+			}
+			set
+			{
+				this.rowDimensionKey = value;
+			}
+		}
+
+		public DimensionVector DimensionVector
+		{
+			get
+			{
+				return this.dimensionVector;
+			}
+		}
+		
 		public IList<string> ColumnLabels
 		{
 			get
@@ -30,6 +64,18 @@ namespace Epsitec.Common.Graph.Data
 				return this.rowLabels;
 			}
 		}
+
+		public IEnumerable<ChartSeries> RowSeries
+		{
+			get
+			{
+				for (int i = 0; i < this.rows.Count; i++)
+				{
+					yield return this.GetRowSeries (i);
+				}
+			}
+		}
+
 
 		public void Add(string label, IEnumerable<double?> row)
 		{
@@ -93,5 +139,8 @@ namespace Epsitec.Common.Graph.Data
 		private readonly List<string> rowLabels;
 
 		private readonly List<double?[]> rows;
+		private readonly DimensionVector dimensionVector;
+		private string columnDimensionKey;
+		private string rowDimensionKey;
 	}
 }
