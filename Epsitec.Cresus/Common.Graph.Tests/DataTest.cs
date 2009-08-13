@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 using System.Linq;
 
 using NUnit.Framework;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Printing;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Graph
 {
@@ -73,45 +73,83 @@ namespace Epsitec.Common.Graph
 			table.DimensionVector.Add ("Année", "2008");
 			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
 
-			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
 			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
 			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
+			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
 
-			table.ColumnLabels.Add ("Janvier");
-			table.ColumnLabels.Add ("Février");
-			table.ColumnLabels.Add ("Mars");
-			table.ColumnLabels.Add ("Avril");
-			table.ColumnLabels.Add ("Mai");
-			table.ColumnLabels.Add ("Juin");
-			table.ColumnLabels.Add ("Juillet");
-			table.ColumnLabels.Add ("Août");
-			table.ColumnLabels.Add ("Septembre");
-			table.ColumnLabels.Add ("Octobre");
-			table.ColumnLabels.Add ("Novembre");
-			table.ColumnLabels.Add ("Décembre");
+			table.ColumnLabels.Add ("01/Janvier");
+			table.ColumnLabels.Add ("02/Février");
+			table.ColumnLabels.Add ("03/Mars");
+			table.ColumnLabels.Add ("04/Avril");
+			table.ColumnLabels.Add ("05/Mai");
+			table.ColumnLabels.Add ("06/Juin");
+			table.ColumnLabels.Add ("07/Juillet");
+			table.ColumnLabels.Add ("08/Août");
+			table.ColumnLabels.Add ("09/Septembre");
+			table.ColumnLabels.Add ("10/Octobre");
+			table.ColumnLabels.Add ("11/Novembre");
+			table.ColumnLabels.Add ("12/Décembre");
 
-			var series1 = table.GetRowSeries (1);
+			var series1 = table.GetRowSeries (0);
 
 			Assert.AreEqual ("Facturation", series1.Label);
 			Assert.AreEqual (12, series1.Values.Count);
-			Assert.AreEqual ("Septembre", series1.Values[8].Label);
+			Assert.AreEqual ("09/Septembre", series1.Values[8].Label);
 			Assert.AreEqual (35.0, series1.Values[8].Value);
 
 			//	Verify that missing values are indeed stripped from the produced chart series :
 			
-			var series2 = table.GetRowSeries (2);
+			var series2 = table.GetRowSeries (1);
 
 			Assert.AreEqual ("Salaires", series2.Label);
 			Assert.AreEqual (11, series2.Values.Count);
-			Assert.AreEqual ("Octobre", series2.Values[8].Label);
+			Assert.AreEqual ("10/Octobre", series2.Values[8].Label);
 			Assert.AreEqual (3, series2.Values[8].Value);
+		}
 
+		[Test]
+		public void CheckCube()
+		{
+			Data.Table table = new Data.Table ()
+			{
+				RowDimensionKey = "Produit",
+				ColumnDimensionKey = "Mois"
+			};
+
+			table.DimensionVector.Add ("Année", "2008");
+			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
+
+			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
+			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
+			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
+
+			table.ColumnLabels.Add ("01/Janvier");
+			table.ColumnLabels.Add ("02/Février");
+			table.ColumnLabels.Add ("03/Mars");
+			table.ColumnLabels.Add ("04/Avril");
+			table.ColumnLabels.Add ("05/Mai");
+			table.ColumnLabels.Add ("06/Juin");
+			table.ColumnLabels.Add ("07/Juillet");
+			table.ColumnLabels.Add ("08/Août");
+			table.ColumnLabels.Add ("09/Septembre");
+			table.ColumnLabels.Add ("10/Octobre");
+			table.ColumnLabels.Add ("11/Novembre");
+			table.ColumnLabels.Add ("12/Décembre");
+			
 			Data.Cube cube = new Data.Cube ();
 
 			cube.AddTable (table);
 
-			System.Console.Out.WriteLine ("Dimensions: {0}", string.Join ("/", cube.DimensionNames.ToArray ()));
-			Assert.AreEqual ("Année/Mois/Produit/Vendeur", string.Join ("/", cube.DimensionNames.ToArray ()));
+			Assert.AreEqual ("Année|Mois|Produit|Vendeur", string.Join ("|", cube.DimensionNames.ToArray ()));
+
+			Assert.AreEqual ("2008", string.Join ("|", cube.GetDimensionValues ("Année").ToArray ()));
+			Assert.AreEqual ("01/Janvier|02/Février|03/Mars|04/Avril|05/Mai|06/Juin|07/Juillet|08/Août|09/Septembre|10/Octobre|11/Novembre|12/Décembre", string.Join ("|", cube.GetDimensionValues ("Mois").ToArray ()));
+			Assert.AreEqual ("Compta|Facturation|Salaires", string.Join ("|", cube.GetDimensionValues ("Produit").ToArray ()));
+			Assert.AreEqual ("Jean Dupont", string.Join ("|", cube.GetDimensionValues ("Vendeur").ToArray ()));
+
+			var series1 = cube.ExtractSeries ("Produit=Facturation", "Mois");
+			var series2 = cube.ExtractSeries ("Mois=01/Janvier", "Produit");
+			var series3 = cube.ExtractSeries ("Mois=01/Janvier", "Vendeur");
 		}
 	}
 }

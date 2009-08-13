@@ -92,9 +92,91 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+		public ChartSeries ExtractSeries(params string[] dimensions)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ("^");
+			List<string> dims = new List<string> (dimensions);
+
+			foreach (string name in this.dimensionNames)
+			{
+				string prefix = name + "=";
+
+				int pos = dims.FindIndex (x => x == name);
+
+				if (pos >= 0)
+				{
+					//	Found an exact match, which means that we have found the dimension
+					//	which we will enumerate to produce our sequence.
+
+					if (buffer.Length > 1)
+					{
+						buffer.Append (':');
+					}
+
+					buffer.Append (prefix);
+					buffer.Append ("(?<dim>[^:]*)");
+					
+					dims.RemoveAt (pos);
+					
+					continue;
+				}
+
+				pos = dims.FindIndex (x => x.StartsWith (prefix));
+
+				if (pos >= 0)
+				{
+					//	Found an extraction match; just use it as is.
+
+					if (buffer.Length > 1)
+					{
+						buffer.Append (':');
+					}
+
+					buffer.Append (dims[pos]);
+					dims.RemoveAt (pos);
+					
+					continue;
+				}
+
+				if (buffer.Length > 1)
+				{
+					buffer.Append (':');
+				}
+
+				buffer.Append (prefix);
+				buffer.Append ("[^:]*");
+			}
+
+			buffer.Append ('$');
+
+			System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex (buffer.ToString (), System.Text.RegularExpressions.RegexOptions.Compiled);
+
+			foreach (var pairs in this.values)
+			{
+				var match = regex.Match (pairs.Key);
+
+				if (match.Success)
+				{
+					int num = match.Groups.Count;
+					
+					if (num > 1)
+					{
+						System.Console.Out.WriteLine ("{0} : {1}", match.Groups[1].Value, pairs.Value);
+					}
+				}
+			}
+
+			return null;
+		}
+
+		#region DimensionValues Class
+
 		private sealed class DimensionValues : HashSet<string>
 		{
 		}
+
+		#endregion
+
 
 		readonly Dictionary<string, double> values;
 		readonly Dictionary<string, DimensionValues> dimensions;
