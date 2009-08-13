@@ -1,0 +1,117 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using NUnit.Framework;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Printing;
+using Epsitec.Common.Widgets;
+
+namespace Epsitec.Common.Graph
+{
+	[TestFixture]
+	public class DataTest
+	{
+		[Test]
+		public void CheckDimension()
+		{
+			Data.Dimension ax = new Data.Dimension ("A", "x");
+			Data.Dimension bx = new Data.Dimension ("B", "x");
+			Data.Dimension by = new Data.Dimension ("B", "y");
+
+			Assert.AreEqual (true, ax.Equals (ax));
+			Assert.AreEqual (false, ax.Equals (bx));
+
+			Assert.AreEqual (0, ax.CompareTo (ax));
+			Assert.AreEqual (-1, ax.CompareTo (bx));
+			Assert.AreEqual (1, bx.CompareTo (ax));
+			
+			Assert.AreEqual (0, bx.CompareTo (bx));
+			Assert.AreEqual (-1, bx.CompareTo (by));
+			Assert.AreEqual (1, by.CompareTo (bx));
+		}
+
+		[Test]
+		public void CheckDimensionVector()
+		{
+			Data.DimensionVector vector = new Data.DimensionVector ();
+
+			Assert.AreEqual ("", vector.Compile ());
+
+			vector.Add ("B", "1-b");
+			vector.Add ("C", "2-c");
+			vector.Add ("A", "3-a");
+
+			Assert.AreEqual ("A=3-a:B=1-b:C=2-c", vector.Compile ());
+
+			var vector1 = new Data.DimensionVector ("A=3-a:B=1-b:C=2-c");
+			var vector2 = new Data.DimensionVector (vector);
+
+			Assert.IsTrue (vector.Equals (vector1));
+			Assert.IsTrue (vector.Equals (vector2));
+		}
+
+		[Test]
+		[ExpectedException (typeof (System.ArgumentException))]
+		public void CheckDimensionVectorEx1()
+		{
+			Data.DimensionVector vector = new Data.DimensionVector ();
+
+			vector.Add ("B", "1-b");
+			vector.Add ("A", "2-a");
+			vector.Add ("B", "3-b");
+		}
+
+		[Test]
+		public void CheckTable()
+		{
+			Data.Table table = new Data.Table ()
+			{
+				RowDimensionKey = "Produit",
+				ColumnDimensionKey = "Mois"
+			};
+
+			table.DimensionVector.Add ("Année", "2008");
+			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
+
+			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
+			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
+			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
+
+			table.ColumnLabels.Add ("Janvier");
+			table.ColumnLabels.Add ("Février");
+			table.ColumnLabels.Add ("Mars");
+			table.ColumnLabels.Add ("Avril");
+			table.ColumnLabels.Add ("Mai");
+			table.ColumnLabels.Add ("Juin");
+			table.ColumnLabels.Add ("Juillet");
+			table.ColumnLabels.Add ("Août");
+			table.ColumnLabels.Add ("Septembre");
+			table.ColumnLabels.Add ("Octobre");
+			table.ColumnLabels.Add ("Novembre");
+			table.ColumnLabels.Add ("Décembre");
+
+			var series1 = table.GetRowSeries (1);
+
+			Assert.AreEqual ("Facturation", series1.Label);
+			Assert.AreEqual (12, series1.Values.Count);
+			Assert.AreEqual ("Septembre", series1.Values[8].Label);
+			Assert.AreEqual (35.0, series1.Values[8].Value);
+
+			//	Verify that missing values are indeed stripped from the produced chart series :
+			
+			var series2 = table.GetRowSeries (2);
+
+			Assert.AreEqual ("Salaires", series2.Label);
+			Assert.AreEqual (11, series2.Values.Count);
+			Assert.AreEqual ("Octobre", series2.Values[8].Label);
+			Assert.AreEqual (3, series2.Values[8].Value);
+
+			Data.Cube cube = new Data.Cube ();
+
+			cube.AddTable (table);
+
+			System.Console.Out.WriteLine ("Dimensions: {0}", string.Join ("/", cube.DimensionNames.ToArray ()));
+			Assert.AreEqual ("Année/Mois/Produit/Vendeur", string.Join ("/", cube.DimensionNames.ToArray ()));
+		}
+	}
+}

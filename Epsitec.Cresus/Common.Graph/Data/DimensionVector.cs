@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Graph.Data
 {
-	public sealed class DimensionVector : System.Collections.IEnumerable, IEnumerable<Dimension>
+	public sealed class DimensionVector : System.Collections.IEnumerable, IEnumerable<Dimension>, System.IEquatable<DimensionVector>
 	{
 		public DimensionVector()
 		{
@@ -32,6 +32,7 @@ namespace Epsitec.Common.Graph.Data
 			this.dimensions.AddRange (vector.dimensions);
 		}
 
+		
 		public IEnumerable<string> Keys
 		{
 			get
@@ -56,14 +57,27 @@ namespace Epsitec.Common.Graph.Data
 				}
 			}
 		}
+
 		
+		public void Add(string key, string value)
+		{
+			this.Add (new Dimension (key, value));
+		}
 		
 		public void Add(Dimension item)
 		{
 			//	Find the last item in the list which is smaller than the one to be
 			//	inserted and insert after it.
 			
-			int index = this.dimensions.FindLastIndex (x => item.CompareTo (x) < 0) + 1;
+			int index = this.dimensions.FindLastIndex (x => item.CompareTo (x) > 0) + 1;
+
+			if (index > 0)
+			{
+				if (this.dimensions[index-1].Key == item.Key)
+				{
+					throw new System.ArgumentException ("Duplicate dimension");
+				}
+			}
 
 			this.dimensions.Insert (index, item);
 		}
@@ -116,6 +130,15 @@ namespace Epsitec.Common.Graph.Data
 		IEnumerator<Dimension> IEnumerable<Dimension>.GetEnumerator()
 		{
 			return this.dimensions.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IEquatable<DimensionVector> Members
+
+		public bool Equals(DimensionVector other)
+		{
+			return this.Compile () == other.Compile ();
 		}
 
 		#endregion

@@ -20,6 +20,18 @@ namespace Epsitec.Common.Graph.Data
 				throw new System.ArgumentNullException ("value");
 			}
 
+			if (key.Contains ('=') ||
+				key.Contains (':'))
+			{
+				throw new System.ArgumentException ("Dimension key contains illegal character");
+			}
+
+			if (value.Contains ('=') ||
+				value.Contains (':'))
+			{
+				throw new System.ArgumentException ("Dimension value contains illegal character");
+			}
+
 			this.key   = key;
 			this.value = value;
 		}
