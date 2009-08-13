@@ -42,6 +42,8 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Adorners\AbstractAdorner.cs" />
+    <Compile Include="Adorners\CoordinateAxisAdorner.cs" />
     <Compile Include="Data\ChartSeries.cs" />
     <Compile Include="Data\ChartValue.cs" />
     <Compile Include="Data\Cube.cs" />

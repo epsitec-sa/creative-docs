@@ -15,9 +15,9 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesValuesLabelsSet = new HashSet<string> ();
 			this.seriesValuesLabelsList = new List<string> ();
 			this.styles = new Dictionary<string, Styles.AbstractStyle> ();
+			this.adorners = new List<Adorners.AbstractAdorner> ();
 			this.Clear ();
 		}
-
 
 		public int SeriesCount
 		{
@@ -73,6 +73,11 @@ namespace Epsitec.Common.Graph.Renderers
 			this.styles.Add (style.Name, style);
 		}
 
+		public void AddAdorner(Adorners.AbstractAdorner adorner)
+		{
+			this.adorners.Add (adorner);
+		}
+
 
 		public Styles.AbstractStyle FindStyle(string name)
 		{
@@ -101,14 +106,23 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesValuesLabelsList.Clear ();
 		}
 
-		public virtual void BeginRender(Rectangle bounds)
+		public virtual void BeginRender(IPaintPort port, Rectangle bounds)
 		{
 			this.seriesRendered = -1;
 			this.bounds = bounds;
+
+			foreach (var adorner in this.adorners)
+			{
+				adorner.PaintBackground (port, this);
+			}
 		}
 
-		public virtual void EndRender()
+		public virtual void EndRender(IPaintPort port)
 		{
+			foreach (var adorner in this.adorners)
+			{
+				adorner.PaintForeground (port, this);
+			}
 		}
 
 		public virtual void Collect(Data.ChartSeries series)
@@ -151,6 +165,9 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
 
+		public abstract Point GetPoint(int index, double value);
+
+
 		protected int GetLabelIndex(string label)
 		{
 			return this.seriesValuesLabelsList.IndexOf (label);
@@ -165,5 +182,6 @@ namespace Epsitec.Common.Graph.Renderers
 		private readonly HashSet<string> seriesValuesLabelsSet;
 		private readonly List<string> seriesValuesLabelsList;
 		private readonly Dictionary<string, Styles.AbstractStyle> styles;
+		private readonly List<Adorners.AbstractAdorner> adorners;
 	}
 }

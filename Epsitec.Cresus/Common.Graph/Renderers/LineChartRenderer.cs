@@ -10,17 +10,12 @@ namespace Epsitec.Common.Graph.Renderers
 {
 	public class LineChartRenderer : AbstractRenderer
 	{
-		public override void BeginRender(Rectangle bounds)
+		public override void BeginRender(IPaintPort port, Rectangle bounds)
 		{
-			base.BeginRender (bounds);
+			base.BeginRender (port, bounds);
 
 			this.verticalScale = bounds.Height / (this.MaxValue - this.MinValue);
 			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValuesCount - 1); 
-		}
-
-		public override void EndRender()
-		{
-			base.EndRender ();
 		}
 
 		public override void Render(IPaintPort port, Data.ChartSeries series)
@@ -38,7 +33,7 @@ namespace Epsitec.Common.Graph.Renderers
 					System.Diagnostics.Debug.Assert (index >= 0);
 					System.Diagnostics.Debug.Assert (index < this.ValuesCount);
 
-					Point pos = this.GetLocation (index, item.Value);
+					Point pos = this.GetPoint (index, item.Value);
 
 					if (path.IsEmpty)
 					{
@@ -61,7 +56,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		private Point GetLocation(int index, double value)
+		public override Point GetPoint(int index, double value)
 		{
 			double offset = value - this.MinValue;
 			Point  origin = this.Bounds.Location;
