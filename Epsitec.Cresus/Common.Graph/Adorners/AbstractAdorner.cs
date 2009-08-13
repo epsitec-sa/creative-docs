@@ -14,12 +14,6 @@ namespace Epsitec.Common.Graph.Adorners
 		}
 
 
-		public virtual void PaintBackground(IPaintPort port, Renderers.AbstractRenderer renderer)
-		{
-		}
-
-		public virtual void PaintForeground(IPaintPort port, Renderers.AbstractRenderer renderer)
-		{
-		}
+		public abstract void Paint(IPaintPort port, Renderers.AbstractRenderer renderer, PaintLayer layer);
 	}
 }

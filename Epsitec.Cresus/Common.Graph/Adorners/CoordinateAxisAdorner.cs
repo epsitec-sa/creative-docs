@@ -14,8 +14,13 @@ namespace Epsitec.Common.Graph.Adorners
 			this.verticalLabelFont = Font.GetFont ("Arial", "Regular");
 		}
 
-		public override void PaintBackground(IPaintPort port, Renderers.AbstractRenderer renderer)
+		public override void Paint(IPaintPort port, Renderers.AbstractRenderer renderer, PaintLayer layer)
 		{
+			if (layer != PaintLayer.Intermediate)
+			{
+				return;
+			}
+
 			Rectangle bounds = renderer.Bounds;
 			Point     origin = renderer.GetPoint (0, 0.0);
 

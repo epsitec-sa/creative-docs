@@ -10,6 +10,11 @@ namespace Epsitec.Common.Graph.Renderers
 {
 	public class LineChartRenderer : AbstractRenderer
 	{
+		public LineChartRenderer()
+		{
+			this.AdditionalRenderingPasses = 1;
+		}
+
 		public override void BeginRender(IPaintPort port, Rectangle bounds)
 		{
 			this.verticalScale = bounds.Height / (this.MaxValue - this.MinValue);
@@ -18,11 +23,29 @@ namespace Epsitec.Common.Graph.Renderers
 			base.BeginRender (port, bounds);
 		}
 
-		public override void Render(IPaintPort port, Data.ChartSeries series)
+		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass)
 		{
-			base.Render (port, series);
+			base.Render (port, series, pass);
 
-			int valuesCount = this.ValuesCount;
+			switch (pass)
+			{
+				case 0:
+					this.PaintSurface (port, series);
+					break;
+				case 1:
+					this.PaintLine (port, series);
+					break;
+			}
+
+			this.PaintLine (port, series);
+		}
+
+		private void PaintLine(IPaintPort port, Data.ChartSeries series)
+		{
+			if (this.CurrentSeriesIndex == 0)
+			{
+				this.BeginLayer (port, PaintLayer.Intermediate);
+			}
 
 			using (Path path = new Path ())
 			{
@@ -53,6 +76,35 @@ namespace Epsitec.Common.Graph.Renderers
 				this.FindStyle ("line-color").ApplyStyle (this.CurrentSeriesIndex, port);
 				port.LineWidth = 2;
 				port.PaintOutline (path);
+			}
+		}
+
+		private void PaintSurface(IPaintPort port, Data.ChartSeries series)
+		{
+			if (series.Values.Count > 1)
+			{
+				using (Path path = new Path ())
+				{
+					path.MoveTo (this.GetPoint (0, 0.0));
+
+					foreach (var item in series.Values)
+					{
+						int index = this.GetLabelIndex (item.Label);
+
+						System.Diagnostics.Debug.Assert (index >= 0);
+						System.Diagnostics.Debug.Assert (index < this.ValuesCount);
+
+						path.LineTo (this.GetPoint (index, item.Value));
+					}
+
+					path.LineTo (path.CurrentPoint.X, this.GetPoint (0, 0.0).Y);
+					path.Close ();
+
+					this.FindStyle ("line-color").ApplyStyle (this.CurrentSeriesIndex, port);
+
+					port.Color = Color.FromAlphaColor (0.5, port.Color);
+					port.PaintSurface (path);
+				}
 			}
 		}
 

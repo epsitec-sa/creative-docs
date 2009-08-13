@@ -67,6 +67,11 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
+		protected int AdditionalRenderingPasses
+		{
+			get;
+			set;
+		}
 
 		public void AddStyle(Styles.AbstractStyle style)
 		{
@@ -108,21 +113,13 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public virtual void BeginRender(IPaintPort port, Rectangle bounds)
 		{
-			this.seriesRendered = -1;
 			this.bounds = bounds;
-
-			foreach (var adorner in this.adorners)
-			{
-				adorner.PaintBackground (port, this);
-			}
+			this.BeginLayer (port, PaintLayer.Background);
 		}
 
 		public virtual void EndRender(IPaintPort port)
 		{
-			foreach (var adorner in this.adorners)
-			{
-				adorner.PaintForeground (port, this);
-			}
+			this.BeginLayer (port, PaintLayer.Foreground);
 		}
 
 		public virtual void Collect(Data.ChartSeries series)
@@ -159,7 +156,7 @@ namespace Epsitec.Common.Graph.Renderers
 			System.Diagnostics.Debug.Assert (this.seriesValuesLabelsList.Count == this.seriesValuesLabelsSet.Count);
 		}
 
-		public virtual void Render(IPaintPort port, Data.ChartSeries series)
+		protected virtual void Render(IPaintPort port, Data.ChartSeries series, int pass)
 		{
 			this.seriesRendered++;
 		}
@@ -168,9 +165,14 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			this.BeginRender (port, bounds);
 
-			foreach (var item in series)
+			for (int pass = 0; pass < this.AdditionalRenderingPasses+1; pass++)
 			{
-				this.Render (port, item);
+				this.seriesRendered = -1;
+
+				foreach (var item in series)
+				{
+					this.Render (port, item, pass);
+				}
 			}
 
 			this.EndRender (port);
@@ -178,6 +180,14 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public abstract Point GetPoint(int index, double value);
 
+
+		protected void BeginLayer(IPaintPort port, PaintLayer layer)
+		{
+			foreach (var adorner in this.adorners)
+			{
+				adorner.Paint (port, this, layer);
+			}
+		}
 
 		protected int GetLabelIndex(string label)
 		{
