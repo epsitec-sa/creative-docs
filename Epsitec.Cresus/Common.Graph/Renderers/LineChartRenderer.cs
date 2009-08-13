@@ -15,10 +15,18 @@ namespace Epsitec.Common.Graph.Renderers
 			this.AdditionalRenderingPasses = 1;
 		}
 
+		
+		public double SurfaceAlpha
+		{
+			get;
+			set;
+		}
+
+		
 		public override void BeginRender(IPaintPort port, Rectangle bounds)
 		{
 			this.verticalScale = bounds.Height / (this.MaxValue - this.MinValue);
-			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValuesCount - 1);
+			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValueCount - 1);
 			
 			base.BeginRender (port, bounds);
 		}
@@ -30,8 +38,12 @@ namespace Epsitec.Common.Graph.Renderers
 			switch (pass)
 			{
 				case 0:
-					this.PaintSurface (port, series);
+					if (this.SurfaceAlpha > 0)
+					{
+						this.PaintSurface (port, series);
+					}
 					break;
+				
 				case 1:
 					this.PaintLine (port, series);
 					break;
@@ -54,7 +66,7 @@ namespace Epsitec.Common.Graph.Renderers
 					int index = this.GetLabelIndex (item.Label);
 
 					System.Diagnostics.Debug.Assert (index >= 0);
-					System.Diagnostics.Debug.Assert (index < this.ValuesCount);
+					System.Diagnostics.Debug.Assert (index < this.ValueCount);
 
 					Point pos = this.GetPoint (index, item.Value);
 
@@ -92,7 +104,7 @@ namespace Epsitec.Common.Graph.Renderers
 						int index = this.GetLabelIndex (item.Label);
 
 						System.Diagnostics.Debug.Assert (index >= 0);
-						System.Diagnostics.Debug.Assert (index < this.ValuesCount);
+						System.Diagnostics.Debug.Assert (index < this.ValueCount);
 
 						path.LineTo (this.GetPoint (index, item.Value));
 					}
@@ -102,7 +114,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 					this.FindStyle ("line-color").ApplyStyle (this.CurrentSeriesIndex, port);
 
-					port.Color = Color.FromAlphaColor (0.5, port.Color);
+					port.Color = Color.FromAlphaColor (this.SurfaceAlpha, port.Color);
 					port.PaintSurface (path);
 				}
 			}

@@ -39,7 +39,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (this.renderer != null)
 			{
-				this.renderer.Render (this.items, graphics, Rectangle.Deflate (this.Client.Bounds, 24, 24));
+				this.renderer.Render (this.items, graphics, Rectangle.Deflate (this.Client.Bounds, 32, 32));
 			}
 		}
 

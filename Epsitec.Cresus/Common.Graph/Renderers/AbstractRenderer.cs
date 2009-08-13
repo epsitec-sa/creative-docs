@@ -12,8 +12,8 @@ namespace Epsitec.Common.Graph.Renderers
 	{
 		protected AbstractRenderer()
 		{
-			this.seriesValuesLabelsSet = new HashSet<string> ();
-			this.seriesValuesLabelsList = new List<string> ();
+			this.seriesValueLabelsSet = new HashSet<string> ();
+			this.seriesValueLabelsList = new List<string> ();
 			this.styles = new Dictionary<string, Styles.AbstractStyle> ();
 			this.adorners = new List<Adorners.AbstractAdorner> ();
 			this.Clear ();
@@ -27,11 +27,11 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public int ValuesCount
+		public int ValueCount
 		{
 			get
 			{
-				return this.seriesValuesLabelsList.Count;
+				return this.seriesValueLabelsList.Count;
 			}
 		}
 
@@ -67,12 +67,21 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		protected int AdditionalRenderingPasses
+		public int AdditionalRenderingPasses
 		{
 			get;
-			set;
+			protected set;
 		}
 
+		public IEnumerable<string> ValueLabels
+		{
+			get
+			{
+				return this.seriesValueLabelsList;
+			}
+		}
+
+		
 		public void AddStyle(Styles.AbstractStyle style)
 		{
 			this.styles.Add (style.Name, style);
@@ -83,7 +92,6 @@ namespace Epsitec.Common.Graph.Renderers
 			this.adorners.Add (adorner);
 		}
 
-
 		public Styles.AbstractStyle FindStyle(string name)
 		{
 			Styles.AbstractStyle style;
@@ -92,7 +100,6 @@ namespace Epsitec.Common.Graph.Renderers
 
 			return style;
 		}
-
 
 		public void ClipRange(double minValue, double maxValue)
 		{
@@ -107,8 +114,8 @@ namespace Epsitec.Common.Graph.Renderers
 
 			this.minValue = double.MaxValue;
 			this.maxValue = double.MinValue;
-			this.seriesValuesLabelsSet.Clear ();
-			this.seriesValuesLabelsList.Clear ();
+			this.seriesValueLabelsSet.Clear ();
+			this.seriesValueLabelsList.Clear ();
 		}
 
 		public virtual void BeginRender(IPaintPort port, Rectangle bounds)
@@ -133,14 +140,14 @@ namespace Epsitec.Common.Graph.Renderers
 				string label = item.Label;
 				double value = item.Value;
 
-				if (this.seriesValuesLabelsSet.Contains (label))
+				if (this.seriesValueLabelsSet.Contains (label))
 				{
 					index = this.GetLabelIndex (label) + 1;
 				}
 				else
 				{
-					this.seriesValuesLabelsList.Insert (index++, label);
-					this.seriesValuesLabelsSet.Add (label);
+					this.seriesValueLabelsList.Insert (index++, label);
+					this.seriesValueLabelsSet.Add (label);
 				}
 
 				if (value < this.minValue)
@@ -153,7 +160,7 @@ namespace Epsitec.Common.Graph.Renderers
 				}
 			}
 
-			System.Diagnostics.Debug.Assert (this.seriesValuesLabelsList.Count == this.seriesValuesLabelsSet.Count);
+			System.Diagnostics.Debug.Assert (this.seriesValueLabelsList.Count == this.seriesValueLabelsSet.Count);
 		}
 
 		protected virtual void Render(IPaintPort port, Data.ChartSeries series, int pass)
@@ -191,7 +198,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		protected int GetLabelIndex(string label)
 		{
-			return this.seriesValuesLabelsList.IndexOf (label);
+			return this.seriesValueLabelsList.IndexOf (label);
 		}
 
 		private int seriesCount;
@@ -200,8 +207,8 @@ namespace Epsitec.Common.Graph.Renderers
 		private double maxValue;
 		private Rectangle bounds;
 		
-		private readonly HashSet<string> seriesValuesLabelsSet;
-		private readonly List<string> seriesValuesLabelsList;
+		private readonly HashSet<string> seriesValueLabelsSet;
+		private readonly List<string> seriesValueLabelsList;
 		private readonly Dictionary<string, Styles.AbstractStyle> styles;
 		private readonly List<Adorners.AbstractAdorner> adorners;
 	}
