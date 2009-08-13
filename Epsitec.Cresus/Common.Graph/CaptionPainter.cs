@@ -16,6 +16,7 @@ namespace Epsitec.Common.Graph
 
 			this.Font = Font.GetFont ("Calibri", "Regular");
 			this.FontSize = 12;
+			this.FontColor = Color.FromBrightness (0);
 		}
 
 
@@ -39,6 +40,12 @@ namespace Epsitec.Common.Graph
 			set;
 		}
 
+		public Color FontColor
+		{
+			get;
+			set;
+		}
+
 		
 		public void AddSample(string label, System.Action<IPaintPort, Rectangle> painter)
 		{
@@ -49,7 +56,6 @@ namespace Epsitec.Common.Graph
 					Painter = painter
 				});
 		}
-
 
 		public void Render(IPaintPort port, Rectangle bounds)
 		{
@@ -74,7 +80,14 @@ namespace Epsitec.Common.Graph
 				foreach (var sample in this.samples)
 				{
 					oy -= ht;
+					
 					sample.Painter (port, new Rectangle (ox, oy, 2*ht, ht));
+					
+					if (!this.FontColor.IsEmpty)
+					{
+						port.Color = this.FontColor;
+					}
+					
 					port.PaintText (ox + 2.5*ht, oy + h1, sample.Label, this.Font, this.FontSize);
 				}
 			}
