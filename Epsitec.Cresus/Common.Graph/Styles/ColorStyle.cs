@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Graph.Styles
 {
-	public class ColorStyle : AbstractStyle, System.Collections.IEnumerable
+	public class ColorStyle : AbstractStyle, IEnumerable<Color>
 	{
 		public ColorStyle(string name)
 		{
@@ -35,10 +35,7 @@ namespace Epsitec.Common.Graph.Styles
 			port.Color = color;
 		}
 
-
-		private readonly List<Color> colors;
-
-
+		
 		#region IEnumerable Members
 
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
@@ -47,5 +44,17 @@ namespace Epsitec.Common.Graph.Styles
 		}
 
 		#endregion
+
+		#region IEnumerable<Color> Members
+
+		IEnumerator<Color> IEnumerable<Color>.GetEnumerator()
+		{
+			return this.colors.GetEnumerator ();
+		}
+
+		#endregion
+
+		
+		private readonly List<Color> colors;
 	}
 }

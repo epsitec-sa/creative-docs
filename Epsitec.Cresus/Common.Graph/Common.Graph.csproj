@@ -12,6 +12,8 @@
     <AssemblyName>Common.Graph</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +38,6 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +46,7 @@
     </Compile>
     <Compile Include="Adorners\AbstractAdorner.cs" />
     <Compile Include="Adorners\CoordinateAxisAdorner.cs" />
+    <Compile Include="CaptionPainter.cs" />
     <Compile Include="Data\ChartSeries.cs" />
     <Compile Include="Data\ChartValue.cs" />
     <Compile Include="Data\Cube.cs" />
@@ -92,6 +95,11 @@
       <Project>{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}</Project>
       <Name>Common.Widgets</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Epsitec.Cresus.snk">
+      <Link>Epsitec.Cresus.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

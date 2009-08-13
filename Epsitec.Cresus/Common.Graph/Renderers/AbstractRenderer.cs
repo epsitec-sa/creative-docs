@@ -19,6 +19,7 @@ namespace Epsitec.Common.Graph.Renderers
 			this.Clear ();
 		}
 
+
 		public int SeriesCount
 		{
 			get
@@ -163,21 +164,20 @@ namespace Epsitec.Common.Graph.Renderers
 			System.Diagnostics.Debug.Assert (this.seriesValueLabelsList.Count == this.seriesValueLabelsSet.Count);
 		}
 
-		protected virtual void Render(IPaintPort port, Data.ChartSeries series, int pass)
-		{
-			this.seriesRendered++;
-		}
-
 		public void Render(IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle bounds)
 		{
 			this.BeginRender (port, bounds);
 
+			//	The rendering might take several passes, for instance to paint several layers
+			//	and maybe insert a grid between them, or other graphic adornments.
+			
 			for (int pass = 0; pass < this.AdditionalRenderingPasses+1; pass++)
 			{
 				this.seriesRendered = -1;
 
 				foreach (var item in series)
 				{
+					this.seriesRendered++;
 					this.Render (port, item, pass);
 				}
 			}
@@ -185,8 +185,14 @@ namespace Epsitec.Common.Graph.Renderers
 			this.EndRender (port);
 		}
 
+		public virtual void RenderCaptions(IPaintPort port, Rectangle bounds)
+		{
+		}
+
 		public abstract Point GetPoint(int index, double value);
 
+
+		protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass);
 
 		protected void BeginLayer(IPaintPort port, PaintLayer layer)
 		{
@@ -201,6 +207,7 @@ namespace Epsitec.Common.Graph.Renderers
 			return this.seriesValueLabelsList.IndexOf (label);
 		}
 
+		
 		private int seriesCount;
 		private int seriesRendered;
 		private double minValue;

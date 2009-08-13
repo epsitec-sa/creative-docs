@@ -32,28 +32,38 @@ namespace Epsitec.Common.Graph
 		{
 			Window window = new Window ();
 
-			double width = 400;
-			double height = 600;
+			double width = 550;
+			double height = 500;
 
 			window.ClientSize = new Size (width, height);
 			window.Text = string.Concat ("CheckRenderer");
 			window.Root.Padding = new Margins (10, 10, 10, 10);
 
-			Data.ChartSeries chartSeries1 = new Data.ChartSeries ();
+			Data.ChartSeries chartSeries1 = new Data.ChartSeries ()
+			{
+				Label = "Ventes 2008"
+			};
 
 			chartSeries1.Values.Add (new Data.ChartValue ("Jan", 120));
 			//			chartSeries1.Values.Add (new Data.ChartValue ("Fév", 160));
 			chartSeries1.Values.Add (new Data.ChartValue ("Mar", 80));
 			chartSeries1.Values.Add (new Data.ChartValue ("Apr", 70));
 
-			Data.ChartSeries chartSeries2 = new Data.ChartSeries ();
+			Data.ChartSeries chartSeries2 = new Data.ChartSeries ()
+			{
+				Label = "Ventes 2009"
+			};
+
 
 			chartSeries2.Values.Add (new Data.ChartValue ("Jan", 70));
 			chartSeries2.Values.Add (new Data.ChartValue ("Fév", 50));
 			chartSeries2.Values.Add (new Data.ChartValue ("Mar", 40));
 			chartSeries2.Values.Add (new Data.ChartValue ("Apr", 130));
 
-			Data.ChartSeries chartSeries3 = new Data.ChartSeries ();
+			Data.ChartSeries chartSeries3 = new Data.ChartSeries ()
+			{
+				Label = "Budget 2010"
+			};
 
 			chartSeries3.Values.Add (new Data.ChartValue ("Jan", 20));
 			chartSeries3.Values.Add (new Data.ChartValue ("Fév", 50));
