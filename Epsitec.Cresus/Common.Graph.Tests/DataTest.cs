@@ -149,7 +149,17 @@ namespace Epsitec.Common.Graph
 
 			var series1 = cube.ExtractSeries ("Produit=Facturation", "Mois");
 			var series2 = cube.ExtractSeries ("Mois=01/Janvier", "Produit");
-			var series3 = cube.ExtractSeries ("Mois=01/Janvier", "Vendeur");
+			var series3 = cube.ExtractSeries ("Mois=01/Janvier", "Année=2008", "Vendeur");
+			var series4 = cube.ExtractSeries ("Produit");
+			var series5 = cube.ExtractSeries ("Année=2008", "Mois");
+			var series6 = cube.ExtractSeries ("Année=2008", "Mois", "Produit");
+
+			System.Console.Out.WriteLine (series1);
+			System.Console.Out.WriteLine (series2);
+			System.Console.Out.WriteLine (series3);
+			System.Console.Out.WriteLine (series4);
+			System.Console.Out.WriteLine (series5);
+			System.Console.Out.WriteLine (series6);
 		}
 	}
 }

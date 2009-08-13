@@ -95,7 +95,9 @@ namespace Epsitec.Common.Graph.Data
 		public ChartSeries ExtractSeries(params string[] dimensions)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ("^");
+			
 			List<string> dims = new List<string> (dimensions);
+			List<string> axes = new List<string> ();
 
 			foreach (string name in this.dimensionNames)
 			{
@@ -114,9 +116,10 @@ namespace Epsitec.Common.Graph.Data
 					}
 
 					buffer.Append (prefix);
-					buffer.Append ("(?<dim>[^:]*)");
+					buffer.Append ("([^:]*)");
 					
 					dims.RemoveAt (pos);
+					axes.Add (name);
 					
 					continue;
 				}
@@ -150,10 +153,12 @@ namespace Epsitec.Common.Graph.Data
 			buffer.Append ('$');
 
 			System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex (buffer.ToString (), System.Text.RegularExpressions.RegexOptions.Compiled);
+			
+			Accumulator accumulator = new Accumulator ();
 
-			foreach (var pairs in this.values)
+			foreach (var item in this.values)
 			{
-				var match = regex.Match (pairs.Key);
+				var match = regex.Match (item.Key);
 
 				if (match.Success)
 				{
@@ -161,12 +166,21 @@ namespace Epsitec.Common.Graph.Data
 					
 					if (num > 1)
 					{
-						System.Console.Out.WriteLine ("{0} : {1}", match.Groups[1].Value, pairs.Value);
+						string key = "";
+						for (int i = 1; i < num; i++)
+						{
+							if (key.Length > 0)
+							{
+								key = key + "+";
+							}
+							key = key + match.Groups[i].Value;
+						}
+						accumulator.Accumulate (key, item.Value);
 					}
 				}
 			}
 
-			return null;
+			return new ChartSeries (accumulator.Values);
 		}
 
 		#region DimensionValues Class

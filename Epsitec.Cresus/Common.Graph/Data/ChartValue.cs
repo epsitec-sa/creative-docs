@@ -51,7 +51,7 @@ namespace Epsitec.Common.Graph.Data
 
 		public override string ToString()
 		{
-			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}: {1}", this.Label, this.value);
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}={1}", this.Label, this.value);
 		}
 
 

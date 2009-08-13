@@ -13,6 +13,12 @@ namespace Epsitec.Common.Graph.Data
 			this.values = new List<ChartValue> ();
 		}
 
+		public ChartSeries(IEnumerable<ChartValue> collection)
+			: this ()
+		{
+			this.values.AddRange (collection);
+		}
+
 		
 		public string Label
 		{
@@ -26,6 +32,33 @@ namespace Epsitec.Common.Graph.Data
 			{
 				return this.values;
 			}
+		}
+
+
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.Append (this.Label);
+			buffer.Append (">");
+
+			bool first = true;
+
+			foreach (var value in this.values)
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					buffer.Append (":");
+				}
+
+				buffer.Append (value.ToString ());
+			}
+
+			return buffer.ToString ();
 		}
 
 
