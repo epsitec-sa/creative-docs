@@ -55,8 +55,8 @@ namespace Epsitec.Common.Graph.Renderers
 					path.LineTo (path.CurrentPoint.X + port.LineWidth, path.CurrentPoint.Y);
 				}
 
+				this.FindStyle ("line-color").ApplyStyle (this.CurrentSeriesIndex, port);
 				port.LineWidth = 2;
-				port.Color = Color.FromName ("Red");
 				port.PaintOutline (path);
 			}
 		}

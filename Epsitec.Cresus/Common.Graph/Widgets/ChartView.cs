@@ -35,7 +35,7 @@ namespace Epsitec.Common.Graph.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			graphics.AddFilledRectangle (this.Client.Bounds);
-			graphics.SolidRenderer.Clear (Color.FromBrightness (1));
+			graphics.RenderSolid (Color.FromBrightness (1));
 
 			if (this.renderer != null)
 			{

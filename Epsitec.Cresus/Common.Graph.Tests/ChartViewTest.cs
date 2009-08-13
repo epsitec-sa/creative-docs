@@ -45,12 +45,23 @@ namespace Epsitec.Common.Graph
 			chartSeries1.Values.Add (new Data.ChartValue ("Jan", 120));
 			chartSeries1.Values.Add (new Data.ChartValue ("Fév", 160));
 			chartSeries1.Values.Add (new Data.ChartValue ("Mar",  80));
+			chartSeries1.Values.Add (new Data.ChartValue ("Apr",  60));
+
+			Data.ChartSeries chartSeries2 = new Data.ChartSeries ();
+
+			chartSeries2.Values.Add (new Data.ChartValue ("Jan", 70));
+			chartSeries2.Values.Add (new Data.ChartValue ("Fév", 50));
+			chartSeries2.Values.Add (new Data.ChartValue ("Mar", 40));
+			chartSeries2.Values.Add (new Data.ChartValue ("Apr", 130));
+
 
 			Renderers.LineChartRenderer lineChartRenderer = new Renderers.LineChartRenderer ();
 
 			lineChartRenderer.Clear ();
 			lineChartRenderer.Collect (chartSeries1);
+			lineChartRenderer.Collect (chartSeries2);
 			lineChartRenderer.ClipRange (System.Math.Min (0, lineChartRenderer.MinValue), System.Math.Max (0, lineChartRenderer.MaxValue));
+			lineChartRenderer.AddStyle (new Styles.ColorStyle ("line-color") { "Red", "Green", "Blue" });
 
 			Widgets.ChartView chartView = new Widgets.ChartView ()
 			{
@@ -59,6 +70,7 @@ namespace Epsitec.Common.Graph
 
 			chartView.DefineRenderer (lineChartRenderer);
 			chartView.Items.Add (chartSeries1);
+			chartView.Items.Add (chartSeries2);
 
 			window.Root.Children.Add (chartView);
 			

@@ -48,6 +48,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderers\AbstractRenderer.cs" />
     <Compile Include="Renderers\LineChartRenderer.cs" />
+    <Compile Include="Styles\AbstractStyle.cs" />
+    <Compile Include="Styles\ColorStyle.cs" />
     <Compile Include="Widgets\ChartView.cs" />
   </ItemGroup>
   <ItemGroup>

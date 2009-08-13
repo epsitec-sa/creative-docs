@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +14,7 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			this.seriesValuesLabelsSet = new HashSet<string> ();
 			this.seriesValuesLabelsList = new List<string> ();
+			this.styles = new Dictionary<string, Styles.AbstractStyle> ();
 			this.Clear ();
 		}
 
@@ -48,13 +51,38 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public Drawing.Rectangle Bounds
+		public Rectangle Bounds
 		{
 			get
 			{
 				return this.bounds;
 			}
 		}
+
+		public int CurrentSeriesIndex
+		{
+			get
+			{
+				return this.seriesRendered;
+			}
+		}
+
+
+		public void AddStyle(Styles.AbstractStyle style)
+		{
+			this.styles.Add (style.Name, style);
+		}
+
+
+		public Styles.AbstractStyle FindStyle(string name)
+		{
+			Styles.AbstractStyle style;
+
+			this.styles.TryGetValue (name, out style);
+
+			return style;
+		}
+
 
 		public void ClipRange(double minValue, double maxValue)
 		{
@@ -65,13 +93,15 @@ namespace Epsitec.Common.Graph.Renderers
 		public virtual void Clear()
 		{
 			this.seriesCount = 0;
+			this.seriesRendered = -1;
+
 			this.minValue = double.MaxValue;
 			this.maxValue = double.MinValue;
 			this.seriesValuesLabelsSet.Clear ();
 			this.seriesValuesLabelsList.Clear ();
 		}
 
-		public virtual void BeginRender(Drawing.Rectangle bounds)
+		public virtual void BeginRender(Rectangle bounds)
 		{
 			this.seriesRendered = -1;
 			this.bounds = bounds;
@@ -115,8 +145,9 @@ namespace Epsitec.Common.Graph.Renderers
 			System.Diagnostics.Debug.Assert (this.seriesValuesLabelsList.Count == this.seriesValuesLabelsSet.Count);
 		}
 
-		public virtual void Render(Drawing.IPaintPort port, Data.ChartSeries series)
+		public virtual void Render(IPaintPort port, Data.ChartSeries series)
 		{
+			this.seriesRendered++;
 		}
 
 
@@ -129,9 +160,10 @@ namespace Epsitec.Common.Graph.Renderers
 		private int seriesRendered;
 		private double minValue;
 		private double maxValue;
-		private Drawing.Rectangle bounds;
+		private Rectangle bounds;
 		
 		private readonly HashSet<string> seriesValuesLabelsSet;
 		private readonly List<string> seriesValuesLabelsList;
+		private readonly Dictionary<string, Styles.AbstractStyle> styles;
 	}
 }
