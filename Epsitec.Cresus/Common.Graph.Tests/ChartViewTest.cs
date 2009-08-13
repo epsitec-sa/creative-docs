@@ -2,9 +2,8 @@
 
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
+using Epsitec.Common.Printing;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Graph
 {
@@ -27,7 +26,7 @@ namespace Epsitec.Common.Graph
 
 			Window.RunningInAutomatedTestEnvironment = true;
 		}
-		
+
 		[Test]
 		public void CheckRenderer()
 		{
@@ -43,9 +42,9 @@ namespace Epsitec.Common.Graph
 			Data.ChartSeries chartSeries1 = new Data.ChartSeries ();
 
 			chartSeries1.Values.Add (new Data.ChartValue ("Jan", 120));
-//			chartSeries1.Values.Add (new Data.ChartValue ("Fév", 160));
-			chartSeries1.Values.Add (new Data.ChartValue ("Mar",  80));
-			chartSeries1.Values.Add (new Data.ChartValue ("Apr",  70));
+			//			chartSeries1.Values.Add (new Data.ChartValue ("Fév", 160));
+			chartSeries1.Values.Add (new Data.ChartValue ("Mar", 80));
+			chartSeries1.Values.Add (new Data.ChartValue ("Apr", 70));
 
 			Data.ChartSeries chartSeries2 = new Data.ChartSeries ();
 
@@ -74,9 +73,80 @@ namespace Epsitec.Common.Graph
 			chartView.Items.Add (chartSeries2);
 
 			window.Root.Children.Add (chartView);
-			
+
 			window.Show ();
 			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckPrint()
+		{
+			Data.ChartSeries chartSeries1 = new Data.ChartSeries ();
+
+			chartSeries1.Values.Add (new Data.ChartValue ("Jan", 120));
+			//			chartSeries1.Values.Add (new Data.ChartValue ("Fév", 160));
+			chartSeries1.Values.Add (new Data.ChartValue ("Mar", 80));
+			chartSeries1.Values.Add (new Data.ChartValue ("Apr", 70));
+
+			Data.ChartSeries chartSeries2 = new Data.ChartSeries ();
+
+			chartSeries2.Values.Add (new Data.ChartValue ("Jan", 70));
+			chartSeries2.Values.Add (new Data.ChartValue ("Fév", 50));
+			chartSeries2.Values.Add (new Data.ChartValue ("Mar", 40));
+			chartSeries2.Values.Add (new Data.ChartValue ("Apr", 130));
+
+
+			Renderers.LineChartRenderer lineChartRenderer = new Renderers.LineChartRenderer ();
+
+			lineChartRenderer.Clear ();
+			lineChartRenderer.Collect (chartSeries1);
+			lineChartRenderer.Collect (chartSeries2);
+			lineChartRenderer.ClipRange (System.Math.Min (0, lineChartRenderer.MinValue), System.Math.Max (0, lineChartRenderer.MaxValue));
+			lineChartRenderer.AddStyle (new Styles.ColorStyle ("line-color") { "Red", "Green", "Blue" });
+			lineChartRenderer.AddAdorner (new Adorners.CoordinateAxisAdorner ());
+
+			PrintDocument document = new PrintDocument ();
+			document.SelectPrinter ("Adobe PDF");
+
+			document.Print (new PrintEngine (
+				port =>
+				{
+					lineChartRenderer.Render (new List<Data.ChartSeries> () { chartSeries1, chartSeries2 }, port, Rectangle.Deflate (document.DefaultPageSettings.Bounds, 24, 24));
+				}));
+		}
+		
+		class PrintEngine : IPrintEngine
+		{
+			public PrintEngine(System.Action<PrintPort> print)
+			{
+				this.print = print;
+			}
+
+			#region IPrintEngine Members
+			
+			public void PrepareNewPage(PageSettings settings)
+			{
+				settings.Margins = new Margins (0, 0, 0, 0);
+			}
+
+			public void FinishingPrintJob()
+			{
+			}
+
+			public void StartingPrintJob()
+			{
+			}
+
+			public PrintEngineStatus PrintPage(PrintPort port)
+			{
+				this.print (port);
+
+				return PrintEngineStatus.FinishJob;
+			}
+			
+			#endregion
+
+			readonly System.Action<PrintPort> print;
 		}
 	}
 }

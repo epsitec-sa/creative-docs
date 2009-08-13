@@ -59,6 +59,10 @@
       <Project>{76C4BB36-308A-483E-9D6C-3401C96D2AD6}</Project>
       <Name>Common.Graph</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Common.Printing\Common.Printing.csproj">
+      <Project>{21655556-2BC3-46A4-931A-1295AD971737}</Project>
+      <Name>Common.Printing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Support.Events\Common.Support.Events.csproj">
       <Project>{EAF258A4-E107-4466-A3E1-9FC072557940}</Project>
       <Name>Common.Support.Events</Name>

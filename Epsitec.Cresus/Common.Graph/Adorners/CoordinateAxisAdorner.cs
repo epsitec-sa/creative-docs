@@ -99,9 +99,10 @@ namespace Epsitec.Common.Graph.Adorners
 			foreach (var value in CoordinateAxisAdorner.GetLog10Values (renderer.MinValue, renderer.MaxValue))
 			{
 				Point pos = renderer.GetPoint (0, value);
-				string text = string.Format (System.Globalization.CultureInfo.CurrentCulture, "{0}", value);
+				string text = string.Format (System.Globalization.CultureInfo.CurrentCulture, "{0}  ", value);
+				double len  = this.verticalLabelFont.GetTextAdvance (text) * this.verticalLabelFontSize;
 
-				port.PaintText (pos.X, pos.Y, text, this.verticalLabelFont, this.verticalLabelFontSize);
+				port.PaintText (pos.X - len, pos.Y, text, this.verticalLabelFont, this.verticalLabelFontSize);
 			}
 		}
 
@@ -152,9 +153,9 @@ namespace Epsitec.Common.Graph.Adorners
 			{
 				path.MoveTo (x1, y);
 				path.LineTo (x2, y);
-				path.MoveTo (x2 - this.arrowLength, y - this.arrowBreadth);
+				path.MoveTo (x2 - this.arrowLength, y - this.arrowBreadth/2);
 				path.LineTo (x2, y);
-				path.LineTo (x2 - this.arrowLength, y + this.arrowBreadth);
+				path.LineTo (x2 - this.arrowLength, y + this.arrowBreadth/2);
 
 				if (this.tickLength > 0)
 				{
@@ -196,6 +197,6 @@ namespace Epsitec.Common.Graph.Adorners
 		private readonly double arrowBreadth = 3;
 		private readonly double tickLength = 4;
 		private readonly Font verticalLabelFont;
-		private readonly double verticalLabelFontSize = 8;
+		private readonly double verticalLabelFontSize = 9;
 	}
 }

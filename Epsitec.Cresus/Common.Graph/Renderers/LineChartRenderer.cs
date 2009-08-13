@@ -12,10 +12,10 @@ namespace Epsitec.Common.Graph.Renderers
 	{
 		public override void BeginRender(IPaintPort port, Rectangle bounds)
 		{
-			base.BeginRender (port, bounds);
-
 			this.verticalScale = bounds.Height / (this.MaxValue - this.MinValue);
-			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValuesCount - 1); 
+			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValuesCount - 1);
+			
+			base.BeginRender (port, bounds);
 		}
 
 		public override void Render(IPaintPort port, Data.ChartSeries series)

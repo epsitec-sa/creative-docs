@@ -164,6 +164,17 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesRendered++;
 		}
 
+		public void Render(IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle bounds)
+		{
+			this.BeginRender (port, bounds);
+
+			foreach (var item in series)
+			{
+				this.Render (port, item);
+			}
+
+			this.EndRender (port);
+		}
 
 		public abstract Point GetPoint(int index, double value);
 
