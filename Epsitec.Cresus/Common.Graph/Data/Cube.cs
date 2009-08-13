@@ -8,5 +8,8 @@ namespace Epsitec.Common.Graph.Data
 {
 	public class Cube
 	{
+		public void LoadTable()
+		{
+		}
 	}
 }
