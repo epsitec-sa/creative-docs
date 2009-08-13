@@ -94,10 +94,62 @@ namespace Epsitec.Common.Graph.Data
 
 		public ChartSeries ExtractSeries(params string[] dimensions)
 		{
+			List<string> axes;
+			
+			var series = new ChartSeries (this.ExtractAccumulations (dimensions, out axes).Values);
+
+			System.Console.Out.WriteLine ("Axes : {0}", string.Join (", ", axes.ToArray ()));
+			
+			return series;
+		}
+
+		public Table ExtractTable(params string[] dimensions)
+		{
+			List<string> axes;
+
+			var accumulator = this.ExtractAccumulations (dimensions, out axes);
+
+			System.Console.Out.WriteLine ("Axes : {0}", string.Join (", ", axes.ToArray ()));
+
+			if (axes.Count == 2)
+			{
+				Table table = new Table ();
+
+				table.RowDimensionKey    = axes[0];
+				table.ColumnDimensionKey = axes[1];
+
+				HashSet<string> rowLabels = new HashSet<string> ();
+				HashSet<string> colLabels = new HashSet<string> ();
+
+				foreach (var item in accumulator.Values)
+				{
+					string[] keys = item.Label.Split ('+');
+
+					rowLabels.Add (keys[0]);
+					colLabels.Add (keys[1]);
+				}
+
+				table.DefineRowLabels (rowLabels.OrderBy (x => x));
+				table.DefineColumnLabels (colLabels.OrderBy (x => x));
+
+				//	TODO: populate the table with the data
+
+				return table;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		
+		private Accumulator ExtractAccumulations(string[] dimensions, out List<string> axes)
+		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ("^");
 			
 			List<string> dims = new List<string> (dimensions);
-			List<string> axes = new List<string> ();
+			
+			axes = new List<string> ();
 
 			foreach (string name in this.dimensionNames)
 			{
@@ -180,7 +232,7 @@ namespace Epsitec.Common.Graph.Data
 				}
 			}
 
-			return new ChartSeries (accumulator.Values);
+			return accumulator;
 		}
 
 		#region DimensionValues Class

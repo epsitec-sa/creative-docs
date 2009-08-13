@@ -160,6 +160,8 @@ namespace Epsitec.Common.Graph
 			System.Console.Out.WriteLine (series4);
 			System.Console.Out.WriteLine (series5);
 			System.Console.Out.WriteLine (series6);
+
+			var table1 = cube.ExtractTable ("Année=2008", "Mois", "Produit");
 		}
 	}
 }

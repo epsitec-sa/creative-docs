@@ -77,6 +77,28 @@ namespace Epsitec.Common.Graph.Data
 		}
 
 
+		public void DefineColumnLabels(IEnumerable<string> labels)
+		{
+			this.columnLabels.Clear ();
+			this.columnLabels.AddRange (labels);
+		}
+
+		public void DefineRowLabels(IEnumerable<string> labels)
+		{
+			this.rowLabels.Clear ();
+			this.rowLabels.AddRange (labels);
+		}
+
+		public int FindRowIndex(string label)
+		{
+			return this.rowLabels.IndexOf (label);
+		}
+
+		public int FindColumnIndex(string label)
+		{
+			return this.columnLabels.IndexOf (label);
+		}
+
 		public void Add(string label, IEnumerable<double?> row)
 		{
 			this.rowLabels.Add (label);
