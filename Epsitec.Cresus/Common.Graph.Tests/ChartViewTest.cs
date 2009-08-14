@@ -101,29 +101,11 @@ namespace Epsitec.Common.Graph
 		[Test]
 		public void CheckViewComptaData()
 		{
-			IO.CsvFormat format = new Epsitec.Common.IO.CsvFormat ()
-			{
-				Encoding = System.Text.Encoding.Default,
-				FieldSeparator = "\t",
-				MultilineSeparator = "\n",
-				ColumnNames = new string[] { "Numéro", "Titre du compte", "01/Jan.", "02/Fév.", "03/Mar.", "04/Avr.", "05/Mai", "06/Juin", "07/Juil.", "08/Août", "09/Sep.", "10/Oct.", "11/Nov.", "12/Déc." }
-			};
-
-			var dataTable = IO.CsvReader.ReadCsv ("Compta - Résumé périodique mensuel.txt", format);
-			var table = Data.DataTable.LoadFromData (dataTable,
-					columns => columns.Skip (2),
-					row =>
-					{
-						string name = (string) row[0] + " " + (string) row[1];
-						IEnumerable<double?> values = row.ItemArray.Skip (2).Select (x => DataTest.GetNumericValue (x));
-						return new KeyValuePair<string, IEnumerable<double?>> (name, values);
-					});
-
-			DataTest.DumpTable (table);
+			var table = DataTest.LoadComptaData ();
 
 			Window window = new Window ();
 
-			double width = 550;
+			double width = 850;
 			double height = 500;
 
 			window.ClientSize = new Size (width, height);
@@ -137,10 +119,10 @@ namespace Epsitec.Common.Graph
 				System.Console.Out.WriteLine (series.ToString ());
 			}
 
-			lineChartRenderer.Clear ();
+			lineChartRenderer.DefineValueLabels (table.ColumnLabels);
 			lineChartRenderer.CollectRange (table.GetRowSeries ());
 			lineChartRenderer.ClipRange (System.Math.Min (0, lineChartRenderer.MinValue), System.Math.Max (0, lineChartRenderer.MaxValue));
-			lineChartRenderer.AddStyle (new Styles.ColorStyle ("line-color") { "Red", "Green", "Blue", "Yellow" });
+			lineChartRenderer.AddStyle (new Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
 			lineChartRenderer.AddAdorner (new Adorners.CoordinateAxisAdorner ());
 
 			System.Console.Out.WriteLine (string.Join ("\t", lineChartRenderer.ValueLabels.ToArray ()));
@@ -153,7 +135,7 @@ namespace Epsitec.Common.Graph
 			chartView.DefineRenderer (lineChartRenderer);
 
 			window.Root.Children.Add (chartView);
-
+			
 			window.Show ();
 			Window.RunInTestEnvironment (window);
 		}

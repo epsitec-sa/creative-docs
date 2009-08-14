@@ -87,10 +87,24 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			get
 			{
-				return this.seriesValueLabelsList;
+				return this.seriesValueLabelsList.Select (x => AbstractRenderer.CleanUpLabel (x));
 			}
 		}
 
+
+		public void DefineValueLabels(IEnumerable<string> collection)
+		{
+			if (this.seriesValueLabelsList.Count > 0)
+			{
+				throw new System.InvalidOperationException ("Cannot define value labels, there are already some defined");
+			}
+
+			foreach (var item in collection)
+			{
+				this.seriesValueLabelsList.Add (item);
+				this.seriesValueLabelsSet.Add (item);
+			}
+		}
 		
 		public void AddStyle(Styles.AbstractStyle style)
 		{
@@ -222,6 +236,20 @@ namespace Epsitec.Common.Graph.Renderers
 		protected int GetLabelIndex(string label)
 		{
 			return this.seriesValueLabelsList.IndexOf (label);
+		}
+
+		protected static string CleanUpLabel(string label)
+		{
+			int pos = label.LastIndexOf ("¦");
+
+			if (pos < 0)
+			{
+				return label;
+			}
+			else
+			{
+				return label.Substring (pos+1);
+			}
 		}
 
 		

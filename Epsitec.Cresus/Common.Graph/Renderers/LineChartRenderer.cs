@@ -106,7 +106,7 @@ namespace Epsitec.Common.Graph.Renderers
 				port.LineWidth = 2;
 				port.PaintOutline (path);
 
-				this.captions.AddSample (series.Label,
+				this.captions.AddSample (AbstractRenderer.CleanUpLabel (series.Label),
 					(p, r) =>
 					{
 						using (Path line = new Path ())

@@ -29,7 +29,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (this.renderer != null)
 			{
-				Rectangle graphBounds = Rectangle.Deflate (this.Client.Bounds, new Margins (40, 160, 25, 40));
+				Rectangle graphBounds = Rectangle.Deflate (this.Client.Bounds, new Margins (40, 260, 25, 40));
 				Rectangle captionsBounds = new Rectangle (graphBounds.Right + 10, graphBounds.Bottom, this.Client.Bounds.Right - graphBounds.Right - 20, graphBounds.Height);
 				
 				this.renderer.Render (this.renderer.SeriesItems, graphics, graphBounds);

@@ -171,23 +171,7 @@ namespace Epsitec.Common.Graph
 		[Test]
 		public void CheckDataTable_LoadFromData()
 		{
-			IO.CsvFormat format = new Epsitec.Common.IO.CsvFormat ()
-			{
-				Encoding = System.Text.Encoding.Default,
-				FieldSeparator = "\t",
-				MultilineSeparator = "\n",
-				ColumnNames = new string[] { "Numéro", "Titre du compte", "01/Jan.", "02/Fév.", "03/Mar.", "04/Avr.", "05/Mai", "06/Juin", "07/Juil.", "08/Août", "09/Sep.", "10/Oct.", "11/Nov.", "12/Déc." }
-			};
-
-			var dataTable = IO.CsvReader.ReadCsv ("Compta - Résumé périodique mensuel.txt", format);
-			var table = Data.DataTable.LoadFromData (dataTable,
-				columns => columns.Skip (2),
-				row =>
-				{
-					string name = (string) row[0] + " " + (string) row[1];
-					IEnumerable<double?> values = row.ItemArray.Skip (2).Select (x => DataTest.GetNumericValue (x));
-					return new KeyValuePair<string, IEnumerable<double?>> (name, values);
-				});
+			var table = DataTest.LoadComptaData ();
 
 			DataTest.DumpTable (table);
 		}
@@ -262,7 +246,7 @@ namespace Epsitec.Common.Graph
 			vector.Add ("B", "3-b");
 		}
 
-		public static void DumpTable(Epsitec.Common.Graph.Data.DataTable table)
+		internal static void DumpTable(Epsitec.Common.Graph.Data.DataTable table)
 		{
 			System.Console.Out.WriteLine ("Lignes: {0}, colonnes: {1}", table.RowDimensionKey, table.ColumnDimensionKey);
 
@@ -292,5 +276,29 @@ namespace Epsitec.Common.Graph
 				buffer.Length = 0;
 			}
 		}
+		
+		internal static Epsitec.Common.Graph.Data.DataTable LoadComptaData()
+		{
+			IO.CsvFormat format = new Epsitec.Common.IO.CsvFormat ()
+			{
+				Encoding = System.Text.Encoding.Default,
+				FieldSeparator = "\t",
+				MultilineSeparator = "\n",
+				ColumnNames = new string[] { "Numéro", "Titre du compte", "01¦Jan.", "02¦Fév.", "03¦Mar.", "04¦Avr.", "05¦Mai", "06¦Juin", "07¦Juil.", "08¦Août", "09¦Sep.", "10¦Oct.", "11¦Nov.", "12¦Déc." }
+			};
+
+			var dataTable = IO.CsvReader.ReadCsv (@"..\..\DataSamples\Compta - Résumé périodique mensuel.txt", format);
+			var table = Data.DataTable.LoadFromData (dataTable,
+					columns => columns.Skip (2),
+					row =>
+					{
+						string name = (string) row[0] + " " + (string) row[1];
+						IEnumerable<double?> values = row.ItemArray.Skip (2).Select (x => DataTest.GetNumericValue (x));
+						return new KeyValuePair<string, IEnumerable<double?>> (name, values);
+					});
+
+			return table;
+		}
+
 	}
 }
