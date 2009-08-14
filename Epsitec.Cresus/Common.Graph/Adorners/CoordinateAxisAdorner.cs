@@ -229,7 +229,11 @@ namespace Epsitec.Common.Graph.Adorners
 			double lineHeight = this.Font.LineHeight * this.FontSize * 1.2;
 			double ratio = height / lineHeight;
 
-			if (ratio > 10)
+			if (ratio > 25)
+			{
+				return 20;
+			}
+			else if (ratio > 10)
 			{
 				return 10;
 			}
@@ -272,6 +276,22 @@ namespace Epsitec.Common.Graph.Adorners
 			double adjRange  = System.Math.Pow (10, logRange);
 			double increment = adjRange / optimalVerticalValueCount;
 			double value     = 0;
+
+			int tickRatio = (int)(range / increment / optimalVerticalValueCount);
+
+			if (tickRatio >= 4)
+			{
+				increment *= 5;
+			}
+			else if (tickRatio > 2)
+			{
+				increment *= 2.5;
+			}
+
+			while (value > min)
+			{
+				value -= increment;
+			}
 
 			while (value <= max)
 			{
