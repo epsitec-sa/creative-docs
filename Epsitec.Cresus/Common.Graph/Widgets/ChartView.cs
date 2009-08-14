@@ -13,16 +13,6 @@ namespace Epsitec.Common.Graph.Widgets
 	{
 		public ChartView()
 		{
-			this.items = new List<Data.ChartSeries> ();
-		}
-
-
-		public IList<Data.ChartSeries> Items
-		{
-			get
-			{
-				return this.items;
-			}
 		}
 
 
@@ -42,13 +32,12 @@ namespace Epsitec.Common.Graph.Widgets
 				Rectangle graphBounds = Rectangle.Deflate (this.Client.Bounds, new Margins (40, 160, 25, 40));
 				Rectangle captionsBounds = new Rectangle (graphBounds.Right + 10, graphBounds.Bottom, this.Client.Bounds.Right - graphBounds.Right - 20, graphBounds.Height);
 				
-				this.renderer.Render (this.items, graphics, graphBounds);
+				this.renderer.Render (this.renderer.SeriesItems, graphics, graphBounds);
 				this.renderer.RenderCaptions (graphics, captionsBounds);
 			}
 		}
 
 
 		private Renderers.AbstractRenderer renderer;
-		private readonly List<Data.ChartSeries> items;
 	}
 }

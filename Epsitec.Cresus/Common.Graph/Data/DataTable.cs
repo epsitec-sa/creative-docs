@@ -171,7 +171,17 @@ namespace Epsitec.Common.Graph.Data
 			this.rows.Add (row.ToArray ());
 		}
 
-		
+
+
+		public IEnumerable<ChartSeries> GetRowSeries()
+		{
+			for (int i = 0; i < this.RowCount; i++)
+			{
+				yield return this.GetRowSeries (i);
+			}
+		}
+
+
 		public ChartSeries GetRowSeries(int index)
 		{
 			ChartSeries series = new ChartSeries ()
@@ -276,6 +286,34 @@ namespace Epsitec.Common.Graph.Data
 		#endregion
 
 
+		public static DataTable LoadFromData(System.Data.DataTable table, System.Converter<List<string>, IEnumerable<string>> columnMapper, System.Func<System.Data.DataRow, KeyValuePair<string, IEnumerable<double?>>> converter)
+		{
+			DataTable output = new DataTable ();
+
+			List<string> columns = new List<string> ();
+
+			foreach (System.Data.DataColumn column in table.Columns)
+			{
+				columns.Add (column.ColumnName);
+			}
+
+			output.DefineColumnLabels (columnMapper (columns));
+
+			foreach (System.Data.DataRow row in table.Rows)
+			{
+				var data = converter (row);
+
+				if ((data.Key != null) &&
+					(data.Value != null))
+				{
+					output.Add (data.Key, data.Value);
+				}
+			}
+
+			return output;
+		}
+
+		
 		private readonly List<string> columnLabels;
 		private readonly List<string> rowLabels;
 

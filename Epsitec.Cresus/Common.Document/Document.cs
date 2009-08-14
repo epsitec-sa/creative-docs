@@ -1562,7 +1562,7 @@ namespace Epsitec.Common.Document
 		{
 			//	Lit les 8 bytes d'en-tête et vérifie qu'ils contiennent bien "<?icon?>".
 			byte[] buffer = new byte[8];
-			Common.IO.Reader.Read(stream, buffer, 0, 8);
+			Common.IO.ReaderHelper.Read(stream, buffer, 0, 8);
 			if ( buffer[0] != (byte) '<' )  return IOType.Unknown;
 			if ( buffer[1] != (byte) '?' )  return IOType.Unknown;
 			if ( buffer[2] != (byte) 'i' )  return IOType.Unknown;

@@ -1099,7 +1099,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			byte[] header = new byte[16];
 			
-			IO.Reader.Read (stream, header, 0, header.Length);
+			IO.ReaderHelper.Read (stream, header, 0, header.Length);
 			
 			if ((header[0] == (byte) ('T')) &&
 				(header[1] == (byte) ('X')) &&
@@ -1125,7 +1125,7 @@ namespace Epsitec.Common.Text.Internal
 					
 					for (int i = 0; i < n; i++)
 					{
-						int read = IO.Reader.Read (stream, buffer, 0, count);
+						int read = IO.ReaderHelper.Read (stream, buffer, 0, count);
 						
 						if (read < count)
 						{

@@ -99,6 +99,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ascii85.cs" />
+    <Compile Include="SettingsReader.cs" />
+    <Compile Include="CsvFormat.cs" />
+    <Compile Include="CsvReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -123,7 +126,7 @@
     <Compile Include="IChecksum.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Reader.cs">
+    <Compile Include="ReaderHelper.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Serialization.cs">

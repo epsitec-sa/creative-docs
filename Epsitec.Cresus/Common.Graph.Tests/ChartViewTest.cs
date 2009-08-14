@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
@@ -90,9 +91,66 @@ namespace Epsitec.Common.Graph
 			};
 
 			chartView.DefineRenderer (lineChartRenderer);
-			chartView.Items.Add (chartSeries1);
-			chartView.Items.Add (chartSeries2);
-			chartView.Items.Add (chartSeries3);
+
+			window.Root.Children.Add (chartView);
+
+			window.Show ();
+			Window.RunInTestEnvironment (window);
+		}
+
+		[Test]
+		public void CheckViewComptaData()
+		{
+			IO.CsvFormat format = new Epsitec.Common.IO.CsvFormat ()
+			{
+				Encoding = System.Text.Encoding.Default,
+				FieldSeparator = "\t",
+				MultilineSeparator = "\n",
+				ColumnNames = new string[] { "Numéro", "Titre du compte", "01/Jan.", "02/Fév.", "03/Mar.", "04/Avr.", "05/Mai", "06/Juin", "07/Juil.", "08/Août", "09/Sep.", "10/Oct.", "11/Nov.", "12/Déc." }
+			};
+
+			var dataTable = IO.CsvReader.ReadCsv ("Compta - Résumé périodique mensuel.txt", format);
+			var table = Data.DataTable.LoadFromData (dataTable,
+					columns => columns.Skip (2),
+					row =>
+					{
+						string name = (string) row[0] + " " + (string) row[1];
+						IEnumerable<double?> values = row.ItemArray.Skip (2).Select (x => DataTest.GetNumericValue (x));
+						return new KeyValuePair<string, IEnumerable<double?>> (name, values);
+					});
+
+			DataTest.DumpTable (table);
+
+			Window window = new Window ();
+
+			double width = 550;
+			double height = 500;
+
+			window.ClientSize = new Size (width, height);
+			window.Text = string.Concat ("CheckViewComptaData");
+			window.Root.Padding = new Margins (0, 0, 0, 0);
+
+			Renderers.LineChartRenderer lineChartRenderer = new Renderers.LineChartRenderer ();
+
+			foreach (var series in table.GetRowSeries ())
+			{
+				System.Console.Out.WriteLine (series.ToString ());
+			}
+
+			lineChartRenderer.Clear ();
+			lineChartRenderer.CollectRange (table.GetRowSeries ());
+			lineChartRenderer.ClipRange (System.Math.Min (0, lineChartRenderer.MinValue), System.Math.Max (0, lineChartRenderer.MaxValue));
+			lineChartRenderer.AddStyle (new Styles.ColorStyle ("line-color") { "Red", "Green", "Blue", "Yellow" });
+			lineChartRenderer.AddAdorner (new Adorners.CoordinateAxisAdorner ());
+
+			System.Console.Out.WriteLine (string.Join ("\t", lineChartRenderer.ValueLabels.ToArray ()));
+
+			Widgets.ChartView chartView = new Widgets.ChartView ()
+			{
+				Dock = DockStyle.Fill
+			};
+
+			chartView.DefineRenderer (lineChartRenderer);
 
 			window.Root.Children.Add (chartView);
 

@@ -169,6 +169,50 @@ namespace Epsitec.Common.Graph
 		}
 
 		[Test]
+		public void CheckDataTable_LoadFromData()
+		{
+			IO.CsvFormat format = new Epsitec.Common.IO.CsvFormat ()
+			{
+				Encoding = System.Text.Encoding.Default,
+				FieldSeparator = "\t",
+				MultilineSeparator = "\n",
+				ColumnNames = new string[] { "Numéro", "Titre du compte", "01/Jan.", "02/Fév.", "03/Mar.", "04/Avr.", "05/Mai", "06/Juin", "07/Juil.", "08/Août", "09/Sep.", "10/Oct.", "11/Nov.", "12/Déc." }
+			};
+
+			var dataTable = IO.CsvReader.ReadCsv ("Compta - Résumé périodique mensuel.txt", format);
+			var table = Data.DataTable.LoadFromData (dataTable,
+				columns => columns.Skip (2),
+				row =>
+				{
+					string name = (string) row[0] + " " + (string) row[1];
+					IEnumerable<double?> values = row.ItemArray.Skip (2).Select (x => DataTest.GetNumericValue (x));
+					return new KeyValuePair<string, IEnumerable<double?>> (name, values);
+				});
+
+			DataTest.DumpTable (table);
+		}
+
+		internal static double? GetNumericValue(object x)
+		{
+			double value;
+			string text = x as string;
+
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+
+			text = text.Replace ("'", "");
+
+			if (double.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out value))
+			{
+				return value;
+			}
+
+			return null;
+		}
+
+		[Test]
 		public void CheckDimension()
 		{
 			Data.Dimension ax = new Data.Dimension ("A", "x");
@@ -218,10 +262,21 @@ namespace Epsitec.Common.Graph
 			vector.Add ("B", "3-b");
 		}
 
-		private static void DumpTable(Epsitec.Common.Graph.Data.DataTable table)
+		public static void DumpTable(Epsitec.Common.Graph.Data.DataTable table)
 		{
 			System.Console.Out.WriteLine ("Lignes: {0}, colonnes: {1}", table.RowDimensionKey, table.ColumnDimensionKey);
+
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			buffer.AppendFormat ("{0,-20}", table.RowDimensionKey);
+
+			foreach (var col in table.ColumnLabels)
+			{
+				buffer.AppendFormat ("\t{0}", col);
+			}
+
+			System.Console.Out.WriteLine (buffer.ToString ());
+			buffer.Length = 0;
 
 			foreach (var row in table.RowLabels)
 			{

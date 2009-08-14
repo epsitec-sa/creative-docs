@@ -848,7 +848,7 @@ namespace Epsitec.Common.OpenType
 		{
 			byte[] data_0 = new byte[10];
 
-			int read = IO.Reader.Read (stream, data_0, 0, 10);
+			int read = IO.ReaderHelper.Read (stream, data_0, 0, 10);
 
 			if (read == 0)
 			{
@@ -868,10 +868,10 @@ namespace Epsitec.Common.OpenType
 			byte[] data_3 = new byte[length_3];
 			byte[] data_4 = new byte[length_4];
 
-			IO.Reader.Read (stream, data_1, 0, length_1);
-			IO.Reader.Read (stream, data_2, 0, length_2);
-			IO.Reader.Read (stream, data_3, 0, length_3);
-			IO.Reader.Read (stream, data_4, 0, length_4);
+			IO.ReaderHelper.Read (stream, data_1, 0, length_1);
+			IO.ReaderHelper.Read (stream, data_2, 0, length_2);
+			IO.ReaderHelper.Read (stream, data_3, 0, length_3);
+			IO.ReaderHelper.Read (stream, data_4, 0, length_4);
 
 			string text = System.Text.Encoding.UTF8.GetString (data_1);
 			string[] args = text.Split ('\0');

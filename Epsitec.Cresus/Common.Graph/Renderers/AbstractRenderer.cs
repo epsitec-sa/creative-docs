@@ -16,6 +16,7 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesValueLabelsList = new List<string> ();
 			this.styles = new Dictionary<string, Styles.AbstractStyle> ();
 			this.adorners = new List<Adorners.AbstractAdorner> ();
+			this.seriesList = new List<Epsitec.Common.Graph.Data.ChartSeries> ();
 			this.Clear ();
 		}
 
@@ -24,7 +25,15 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			get
 			{
-				return this.seriesCount;
+				return this.seriesList.Count;
+			}
+		}
+
+		public IList<Data.ChartSeries> SeriesItems
+		{
+			get
+			{
+				return this.seriesList.AsReadOnly ();
 			}
 		}
 
@@ -110,7 +119,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public virtual void Clear()
 		{
-			this.seriesCount = 0;
+			this.seriesList.Clear ();
 			this.seriesRendered = -1;
 
 			this.minValue = double.MaxValue;
@@ -132,7 +141,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public virtual void Collect(Data.ChartSeries series)
 		{
-			this.seriesCount++;
+			this.seriesList.Add (series);
 
 			int index = 0;
 
@@ -162,6 +171,14 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 
 			System.Diagnostics.Debug.Assert (this.seriesValueLabelsList.Count == this.seriesValueLabelsSet.Count);
+		}
+
+		public void CollectRange(IEnumerable<Data.ChartSeries> collection)
+		{
+			foreach (var item in collection)
+			{
+				this.Collect (item);
+			}
 		}
 
 		public void Render(IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle bounds)
@@ -218,5 +235,6 @@ namespace Epsitec.Common.Graph.Renderers
 		private readonly List<string> seriesValueLabelsList;
 		private readonly Dictionary<string, Styles.AbstractStyle> styles;
 		private readonly List<Adorners.AbstractAdorner> adorners;
+		private readonly List<Data.ChartSeries> seriesList;
 	}
 }
