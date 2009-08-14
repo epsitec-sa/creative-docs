@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.Graph.Data
 {
-	public class Table
+	public class DataTable
 	{
-		public Table()
+		public DataTable()
 		{
 			this.columnLabels = new List<string> ();
 			this.rowLabels = new List<string> ();

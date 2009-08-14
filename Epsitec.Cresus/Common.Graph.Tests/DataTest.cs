@@ -12,6 +12,118 @@ namespace Epsitec.Common.Graph
 	public class DataTest
 	{
 		[Test]
+		public void CheckDataCube()
+		{
+			Data.DataTable table = new Data.DataTable ()
+			{
+				RowDimensionKey = "Produit",
+				ColumnDimensionKey = "Mois"
+			};
+
+			table.DimensionVector.Add ("Année", "2008");
+			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
+
+			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
+			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
+			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
+
+			table.ColumnLabels.Add ("01/Janvier");
+			table.ColumnLabels.Add ("02/Février");
+			table.ColumnLabels.Add ("03/Mars");
+			table.ColumnLabels.Add ("04/Avril");
+			table.ColumnLabels.Add ("05/Mai");
+			table.ColumnLabels.Add ("06/Juin");
+			table.ColumnLabels.Add ("07/Juillet");
+			table.ColumnLabels.Add ("08/Août");
+			table.ColumnLabels.Add ("09/Septembre");
+			table.ColumnLabels.Add ("10/Octobre");
+			table.ColumnLabels.Add ("11/Novembre");
+			table.ColumnLabels.Add ("12/Décembre");
+			
+			Data.DataCube cube = new Data.DataCube ();
+
+			cube.AddTable (table);
+
+			Assert.AreEqual ("Année|Mois|Produit|Vendeur", string.Join ("|", cube.DimensionNames.ToArray ()));
+
+			Assert.AreEqual ("2008", string.Join ("|", cube.GetDimensionValues ("Année").ToArray ()));
+			Assert.AreEqual ("01/Janvier|02/Février|03/Mars|04/Avril|05/Mai|06/Juin|07/Juillet|08/Août|09/Septembre|10/Octobre|11/Novembre|12/Décembre", string.Join ("|", cube.GetDimensionValues ("Mois").ToArray ()));
+			Assert.AreEqual ("Compta|Facturation|Salaires", string.Join ("|", cube.GetDimensionValues ("Produit").ToArray ()));
+			Assert.AreEqual ("Jean Dupont", string.Join ("|", cube.GetDimensionValues ("Vendeur").ToArray ()));
+
+			var series1 = cube.ExtractSeries ("Produit=Facturation", "Mois");
+			var series2 = cube.ExtractSeries ("Mois=01/Janvier", "Produit");
+			var series3 = cube.ExtractSeries ("Mois=01/Janvier", "Année=2008", "Vendeur");
+			var series4 = cube.ExtractSeries ("Produit");
+			var series5 = cube.ExtractSeries ("Année=2008", "Mois");
+			var series6 = cube.ExtractSeries ("Année=2008", "Mois", "Produit");
+
+			System.Console.Out.WriteLine (series1);
+			System.Console.Out.WriteLine (series2);
+			System.Console.Out.WriteLine (series3);
+			System.Console.Out.WriteLine (series4);
+			System.Console.Out.WriteLine (series5);
+			System.Console.Out.WriteLine (series6);
+
+			var table1 = cube.ExtractTable ("Année=2008", "Mois", "Produit");	// 12 lignes,  3 colonnes
+			var table2 = cube.ExtractTable ("Année=2008", "Produit", "Mois");	//  3 lignes, 12 colonnes
+
+			Assert.AreEqual ( 3, table1.ColumnLabels.Count);
+			Assert.AreEqual (12, table1.RowLabels.Count);
+			Assert.AreEqual (12, table2.ColumnLabels.Count);
+			Assert.AreEqual ( 3, table2.RowLabels.Count);
+
+			DataTest.DumpTable (table1);
+			DataTest.DumpTable (table2);
+		}
+
+		[Test]
+		public void CheckDataTable()
+		{
+			Data.DataTable table = new Data.DataTable ()
+			{
+				RowDimensionKey = "Produit",
+				ColumnDimensionKey = "Mois"
+			};
+
+			table.DimensionVector.Add ("Année", "2008");
+			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
+
+			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
+			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
+			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
+
+			table.ColumnLabels.Add ("01/Janvier");
+			table.ColumnLabels.Add ("02/Février");
+			table.ColumnLabels.Add ("03/Mars");
+			table.ColumnLabels.Add ("04/Avril");
+			table.ColumnLabels.Add ("05/Mai");
+			table.ColumnLabels.Add ("06/Juin");
+			table.ColumnLabels.Add ("07/Juillet");
+			table.ColumnLabels.Add ("08/Août");
+			table.ColumnLabels.Add ("09/Septembre");
+			table.ColumnLabels.Add ("10/Octobre");
+			table.ColumnLabels.Add ("11/Novembre");
+			table.ColumnLabels.Add ("12/Décembre");
+
+			var series1 = table.GetRowSeries (0);
+
+			Assert.AreEqual ("Facturation", series1.Label);
+			Assert.AreEqual (12, series1.Values.Count);
+			Assert.AreEqual ("09/Septembre", series1.Values[8].Label);
+			Assert.AreEqual (35.0, series1.Values[8].Value);
+
+			//	Verify that missing values are indeed stripped from the produced chart series :
+			
+			var series2 = table.GetRowSeries (1);
+
+			Assert.AreEqual ("Salaires", series2.Label);
+			Assert.AreEqual (11, series2.Values.Count);
+			Assert.AreEqual ("10/Octobre", series2.Values[8].Label);
+			Assert.AreEqual (3, series2.Values[8].Value);
+		}
+
+		[Test]
 		public void CheckDimension()
 		{
 			Data.Dimension ax = new Data.Dimension ("A", "x");
@@ -61,119 +173,7 @@ namespace Epsitec.Common.Graph
 			vector.Add ("B", "3-b");
 		}
 
-		[Test]
-		public void CheckTable()
-		{
-			Data.Table table = new Data.Table ()
-			{
-				RowDimensionKey = "Produit",
-				ColumnDimensionKey = "Mois"
-			};
-
-			table.DimensionVector.Add ("Année", "2008");
-			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
-
-			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
-			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
-			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
-
-			table.ColumnLabels.Add ("01/Janvier");
-			table.ColumnLabels.Add ("02/Février");
-			table.ColumnLabels.Add ("03/Mars");
-			table.ColumnLabels.Add ("04/Avril");
-			table.ColumnLabels.Add ("05/Mai");
-			table.ColumnLabels.Add ("06/Juin");
-			table.ColumnLabels.Add ("07/Juillet");
-			table.ColumnLabels.Add ("08/Août");
-			table.ColumnLabels.Add ("09/Septembre");
-			table.ColumnLabels.Add ("10/Octobre");
-			table.ColumnLabels.Add ("11/Novembre");
-			table.ColumnLabels.Add ("12/Décembre");
-
-			var series1 = table.GetRowSeries (0);
-
-			Assert.AreEqual ("Facturation", series1.Label);
-			Assert.AreEqual (12, series1.Values.Count);
-			Assert.AreEqual ("09/Septembre", series1.Values[8].Label);
-			Assert.AreEqual (35.0, series1.Values[8].Value);
-
-			//	Verify that missing values are indeed stripped from the produced chart series :
-			
-			var series2 = table.GetRowSeries (1);
-
-			Assert.AreEqual ("Salaires", series2.Label);
-			Assert.AreEqual (11, series2.Values.Count);
-			Assert.AreEqual ("10/Octobre", series2.Values[8].Label);
-			Assert.AreEqual (3, series2.Values[8].Value);
-		}
-
-		[Test]
-		public void CheckCube()
-		{
-			Data.Table table = new Data.Table ()
-			{
-				RowDimensionKey = "Produit",
-				ColumnDimensionKey = "Mois"
-			};
-
-			table.DimensionVector.Add ("Année", "2008");
-			table.DimensionVector.Add ("Vendeur", "Jean Dupont");
-
-			table.Add ("Facturation", new double?[] { 123,  99, 57, 41, 12,  4,  3, 15,    35, 56, 78, 41 });
-			table.Add ("Salaires",    new double?[] { 221, 102, 56, 49, 38, 27, 23, 19,  null,  3,  0, 25 });
-			table.Add ("Compta",      new double?[] { 151,  87, 69, 72, 56, 32, 19, 55,    61, 48, 44, 37 });
-
-			table.ColumnLabels.Add ("01/Janvier");
-			table.ColumnLabels.Add ("02/Février");
-			table.ColumnLabels.Add ("03/Mars");
-			table.ColumnLabels.Add ("04/Avril");
-			table.ColumnLabels.Add ("05/Mai");
-			table.ColumnLabels.Add ("06/Juin");
-			table.ColumnLabels.Add ("07/Juillet");
-			table.ColumnLabels.Add ("08/Août");
-			table.ColumnLabels.Add ("09/Septembre");
-			table.ColumnLabels.Add ("10/Octobre");
-			table.ColumnLabels.Add ("11/Novembre");
-			table.ColumnLabels.Add ("12/Décembre");
-			
-			Data.Cube cube = new Data.Cube ();
-
-			cube.AddTable (table);
-
-			Assert.AreEqual ("Année|Mois|Produit|Vendeur", string.Join ("|", cube.DimensionNames.ToArray ()));
-
-			Assert.AreEqual ("2008", string.Join ("|", cube.GetDimensionValues ("Année").ToArray ()));
-			Assert.AreEqual ("01/Janvier|02/Février|03/Mars|04/Avril|05/Mai|06/Juin|07/Juillet|08/Août|09/Septembre|10/Octobre|11/Novembre|12/Décembre", string.Join ("|", cube.GetDimensionValues ("Mois").ToArray ()));
-			Assert.AreEqual ("Compta|Facturation|Salaires", string.Join ("|", cube.GetDimensionValues ("Produit").ToArray ()));
-			Assert.AreEqual ("Jean Dupont", string.Join ("|", cube.GetDimensionValues ("Vendeur").ToArray ()));
-
-			var series1 = cube.ExtractSeries ("Produit=Facturation", "Mois");
-			var series2 = cube.ExtractSeries ("Mois=01/Janvier", "Produit");
-			var series3 = cube.ExtractSeries ("Mois=01/Janvier", "Année=2008", "Vendeur");
-			var series4 = cube.ExtractSeries ("Produit");
-			var series5 = cube.ExtractSeries ("Année=2008", "Mois");
-			var series6 = cube.ExtractSeries ("Année=2008", "Mois", "Produit");
-
-			System.Console.Out.WriteLine (series1);
-			System.Console.Out.WriteLine (series2);
-			System.Console.Out.WriteLine (series3);
-			System.Console.Out.WriteLine (series4);
-			System.Console.Out.WriteLine (series5);
-			System.Console.Out.WriteLine (series6);
-
-			var table1 = cube.ExtractTable ("Année=2008", "Mois", "Produit");	// 12 lignes,  3 colonnes
-			var table2 = cube.ExtractTable ("Année=2008", "Produit", "Mois");	//  3 lignes, 12 colonnes
-
-			Assert.AreEqual ( 3, table1.ColumnLabels.Count);
-			Assert.AreEqual (12, table1.RowLabels.Count);
-			Assert.AreEqual (12, table2.ColumnLabels.Count);
-			Assert.AreEqual ( 3, table2.RowLabels.Count);
-
-			DataTest.DumpTable (table1);
-			DataTest.DumpTable (table2);
-		}
-
-		private static void DumpTable(Epsitec.Common.Graph.Data.Table table)
+		private static void DumpTable(Epsitec.Common.Graph.Data.DataTable table)
 		{
 			foreach (var row in table.RowLabels)
 			{

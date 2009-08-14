@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace Epsitec.Common.Graph.Data
 {
-	public class Cube
+	public class DataCube
 	{
-		public Cube()
+		public DataCube()
 		{
 			this.values = new Dictionary<string, double> ();
 			this.dimensions = new Dictionary<string, DimensionValues> ();
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Graph.Data
 		}
 
 
-		public void AddTable(Table table)
+		public void AddTable(DataTable table)
 		{
 			string colKey = table.ColumnDimensionKey;
 			string rowKey = table.RowDimensionKey;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Graph.Data
 			return series;
 		}
 
-		public Table ExtractTable(params string[] dimensions)
+		public DataTable ExtractTable(params string[] dimensions)
 		{
 			List<string> axes;
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Graph.Data
 
 			if (axes.Count == 2)
 			{
-				Table table = new Table ();
+				DataTable table = new DataTable ();
 
 				table.RowDimensionKey    = axes[0];
 				table.ColumnDimensionKey = axes[1];
