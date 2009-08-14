@@ -150,12 +150,52 @@ namespace Epsitec.Common.Graph.Data
 		
 		private Accumulator ExtractAccumulations(string[] dimensions, out List<string> axes)
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ("^");
+			List<string> dims;
 			
-			List<string> dims = new List<string> (dimensions);
-			
+			System.Text.RegularExpressions.Regex regex = this.GetExtractionRegexAndAxes (dimensions, out dims, out axes);
+
+			int[] groupIndexMap = DataCube.GetGroupIndexMapAndUpdateAxes (dims, axes);
+
+			Accumulator accumulator = new Accumulator ();
+			System.Text.StringBuilder key = new System.Text.StringBuilder ();
+
+			foreach (var item in this.values)
+			{
+				var match = regex.Match (item.Key);
+
+				if (match.Success)
+				{
+					int num = match.Groups.Count;
+					
+					if (num > 1)
+					{
+						key.Length = 0;
+
+						foreach (int groupIndex in groupIndexMap)
+						{
+							if (key.Length > 0)
+							{
+								key.Append ('+');
+							}
+
+							key.Append (match.Groups[groupIndex].Value);
+						}
+						
+						accumulator.Accumulate (key.ToString (), item.Value);
+					}
+				}
+			}
+
+			return accumulator;
+		}
+
+		private System.Text.RegularExpressions.Regex GetExtractionRegexAndAxes(string[] dimensions, out List<string> dims, out List<string> axes)
+		{
+			dims = new List<string> (dimensions);
 			axes = new List<string> ();
 
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ("^");
+			
 			foreach (string name in this.dimensionNames)
 			{
 				string prefix = name + "=";
@@ -174,9 +214,9 @@ namespace Epsitec.Common.Graph.Data
 
 					buffer.Append (prefix);
 					buffer.Append ("([^:]*)");
-					
+
 					axes.Add (name);
-					
+
 					continue;
 				}
 
@@ -193,7 +233,7 @@ namespace Epsitec.Common.Graph.Data
 
 					buffer.Append (dims[pos]);
 					dims.RemoveAt (pos);
-					
+
 					continue;
 				}
 
@@ -209,43 +249,22 @@ namespace Epsitec.Common.Graph.Data
 			buffer.Append ('$');
 
 			System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex (buffer.ToString (), System.Text.RegularExpressions.RegexOptions.Compiled);
-			
-			Accumulator accumulator = new Accumulator ();
+			return regex;
+		}
 
+		private static int[] GetGroupIndexMapAndUpdateAxes(List<string> dims, List<string> axes)
+		{
 			int[] groupIndexes = new int[axes.Count];
 
 			for (int i = 0; i < groupIndexes.Length; i++)
 			{
-				groupIndexes[i] = dims.IndexOf (axes[i]);
+				groupIndexes[i] = dims.IndexOf (axes[i]) + 1;
 			}
 
-			foreach (var item in this.values)
-			{
-				var match = regex.Match (item.Key);
-
-				if (match.Success)
-				{
-					int num = match.Groups.Count;
-					
-					if (num > 1)
-					{
-						string key = "";
-						
-						for (int i = 0; i < groupIndexes.Length; i++)
-						{
-							if (key.Length > 0)
-							{
-								key = key + "+";
-							}
-							key = key + match.Groups[groupIndexes[i]+1].Value;
-						}
-						
-						accumulator.Accumulate (key, item.Value);
-					}
-				}
-			}
-
-			return accumulator;
+			axes.Clear ();
+			axes.AddRange (dims);
+			
+			return groupIndexes;
 		}
 
 		#region DimensionValues Class

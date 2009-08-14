@@ -16,7 +16,23 @@ namespace Epsitec.Common.Graph.Data
 			this.dimensionVector = new DimensionVector ();
 		}
 
-		
+
+		public int ColumnCount
+		{
+			get
+			{
+				return this.columnLabels.Count;
+			}
+		}
+
+		public int RowCount
+		{
+			get
+			{
+				return this.rowLabels.Count;
+			}
+		}
+
 		public string ColumnDimensionKey
 		{
 			get
@@ -126,6 +142,7 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+		
 		public void DefineColumnLabels(IEnumerable<string> labels)
 		{
 			this.columnLabels.Clear ();

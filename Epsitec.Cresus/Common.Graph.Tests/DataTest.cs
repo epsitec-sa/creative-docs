@@ -175,17 +175,21 @@ namespace Epsitec.Common.Graph
 
 		private static void DumpTable(Epsitec.Common.Graph.Data.DataTable table)
 		{
+			System.Console.Out.WriteLine ("Lignes: {0}, colonnes: {1}", table.RowDimensionKey, table.ColumnDimensionKey);
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
 			foreach (var row in table.RowLabels)
 			{
-				System.Console.Out.Write ("{0,-20}", row);
+				buffer.AppendFormat ("{0,-20}", row);
 
 				foreach (var col in table.ColumnLabels)
 				{
 					double? value = table[row, col];
-					System.Console.Out.Write ("\t{0}", value.HasValue ? value.Value.ToString () : "---");
+					buffer.AppendFormat ("\t{0}", value.HasValue ? value.Value.ToString () : "---");
 				}
 
-				System.Console.WriteLine ();
+				System.Console.Out.WriteLine (buffer.ToString ());
+				buffer.Length = 0;
 			}
 		}
 	}
