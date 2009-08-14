@@ -92,72 +92,70 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
-		public ChartSeries ExtractSeries(params string[] dimensions)
+		public ChartSeries ExtractChartSeries(params string[] dimensions)
 		{
-			List<string> axes;
-			
-			var series = new ChartSeries (this.ExtractAccumulations (dimensions, out axes).Values);
-
-			System.Console.Out.WriteLine ("Axes : {0}", string.Join (", ", axes.ToArray ()));
-			
-			return series;
+			return new ChartSeries (this.Accumulate (dimensions).Values);
 		}
 
-		public DataTable ExtractTable(params string[] dimensions)
+		public DataTable ExtractDataTable(params string[] dimensions)
 		{
 			List<string> axes;
 
-			var accumulator = this.ExtractAccumulations (dimensions, out axes);
+			var accumulator = this.Accumulate (dimensions, out axes);
 
-			System.Console.Out.WriteLine ("Axes : {0}", string.Join (", ", axes.ToArray ()));
-
-			if (axes.Count == 2)
+			if (axes.Count != 2)
 			{
-				DataTable table = new DataTable ();
-
-				table.RowDimensionKey    = axes[0];
-				table.ColumnDimensionKey = axes[1];
-
-				HashSet<string> rowLabels = new HashSet<string> ();
-				HashSet<string> colLabels = new HashSet<string> ();
-
-				foreach (var item in accumulator.Values)
-				{
-					string[] keys = item.Label.Split ('+');
-
-					rowLabels.Add (keys[0]);
-					colLabels.Add (keys[1]);
-				}
-
-				table.DefineRowLabels (rowLabels.OrderBy (x => x));
-				table.DefineColumnLabels (colLabels.OrderBy (x => x));
-
-				foreach (var item in accumulator.Values)
-				{
-					string[] keys = item.Label.Split ('+');
-
-					table[keys[0], keys[1]] = item.Value;
-				}
-
-				return table;
+				throw new System.ArgumentException ("Invalid number of axes for table extraction");
 			}
-			else
+
+			DataTable table = new DataTable ();
+
+			table.RowDimensionKey    = axes[0];
+			table.ColumnDimensionKey = axes[1];
+
+			HashSet<string> rowLabels = new HashSet<string> ();
+			HashSet<string> colLabels = new HashSet<string> ();
+
+			foreach (var item in accumulator.Values)
 			{
-				return null;
+				string[] keys = item.Label.Split ('+');
+
+				rowLabels.Add (keys[0]);
+				colLabels.Add (keys[1]);
 			}
+
+			table.DefineRowLabels (rowLabels.OrderBy (x => x));
+			table.DefineColumnLabels (colLabels.OrderBy (x => x));
+
+			foreach (var item in accumulator.Values)
+			{
+				string[] keys = item.Label.Split ('+');
+
+				table[keys[0], keys[1]] = item.Value;
+			}
+
+			return table;
 		}
 
 		
-		private Accumulator ExtractAccumulations(string[] dimensions, out List<string> axes)
+		private Accumulator Accumulate(string[] dimensions)
+		{
+			List<string> axes;
+			return this.Accumulate (dimensions, out axes);
+		}
+		
+		private Accumulator Accumulate(string[] dimensions, out List<string> axes)
 		{
 			List<string> dims;
 			
-			System.Text.RegularExpressions.Regex regex = this.GetExtractionRegexAndAxes (dimensions, out dims, out axes);
+			System.Text.RegularExpressions.Regex regex = this.GetExtractionRegex (dimensions, out dims, out axes);
 
 			int[] groupIndexMap = DataCube.GetGroupIndexMapAndUpdateAxes (dims, axes);
 
 			Accumulator accumulator = new Accumulator ();
 			System.Text.StringBuilder key = new System.Text.StringBuilder ();
+
+			int expectedGroupsInRegexMatch = groupIndexMap.Length + 1;
 
 			foreach (var item in this.values)
 			{
@@ -166,8 +164,10 @@ namespace Epsitec.Common.Graph.Data
 				if (match.Success)
 				{
 					int num = match.Groups.Count;
-					
-					if (num > 1)
+
+					System.Diagnostics.Debug.Assert (num == expectedGroupsInRegexMatch);
+
+					if (num == expectedGroupsInRegexMatch)
 					{
 						key.Length = 0;
 
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Graph.Data
 			return accumulator;
 		}
 
-		private System.Text.RegularExpressions.Regex GetExtractionRegexAndAxes(string[] dimensions, out List<string> dims, out List<string> axes)
+		private System.Text.RegularExpressions.Regex GetExtractionRegex(string[] dimensions, out List<string> dims, out List<string> axes)
 		{
 			dims = new List<string> (dimensions);
 			axes = new List<string> ();
@@ -266,6 +266,7 @@ namespace Epsitec.Common.Graph.Data
 			
 			return groupIndexes;
 		}
+
 
 		#region DimensionValues Class
 

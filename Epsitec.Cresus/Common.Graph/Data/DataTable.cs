@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Graph.Data
 {
-	public class DataTable
+	public class DataTable : System.IEquatable<DataTable>
 	{
 		public DataTable()
 		{
@@ -221,6 +221,59 @@ namespace Epsitec.Common.Graph.Data
 
 			return series;
 		}
+
+		#region IEquatable<DataTable> Members
+
+		public bool Equals(DataTable other)
+		{
+			if ((this.ColumnCount != other.ColumnCount) ||
+				(this.RowCount != other.RowCount) ||
+				(this.ColumnDimensionKey != other.ColumnDimensionKey) ||
+				(this.RowDimensionKey != other.RowDimensionKey))
+			{
+				return false;
+			}
+
+			//	TODO: verify label & dimension equality
+
+			for (int i = 0; i < this.rows.Count; i++)
+			{
+				if (DataTable.EqualRows (this.rows[i], other.rows[i]) == false)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private static bool EqualRows(double?[] a, double?[] b)
+		{
+			if (a.Length != b.Length)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i] != b[i])
+				{
+					if ((a[i].HasValue) &&
+						(b[i].HasValue) &&
+						(double.IsNaN (a[i].Value)) &&
+						(double.IsNaN (b[i].Value)))
+					{
+						continue;
+					}
+
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		#endregion
 
 
 		private readonly List<string> columnLabels;
