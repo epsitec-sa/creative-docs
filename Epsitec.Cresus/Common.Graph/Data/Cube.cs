@@ -175,7 +175,6 @@ namespace Epsitec.Common.Graph.Data
 					buffer.Append (prefix);
 					buffer.Append ("([^:]*)");
 					
-					dims.RemoveAt (pos);
 					axes.Add (name);
 					
 					continue;
@@ -213,6 +212,13 @@ namespace Epsitec.Common.Graph.Data
 			
 			Accumulator accumulator = new Accumulator ();
 
+			int[] groupIndexes = new int[axes.Count];
+
+			for (int i = 0; i < groupIndexes.Length; i++)
+			{
+				groupIndexes[i] = dims.IndexOf (axes[i]);
+			}
+
 			foreach (var item in this.values)
 			{
 				var match = regex.Match (item.Key);
@@ -224,14 +230,16 @@ namespace Epsitec.Common.Graph.Data
 					if (num > 1)
 					{
 						string key = "";
-						for (int i = 1; i < num; i++)
+						
+						for (int i = 0; i < groupIndexes.Length; i++)
 						{
 							if (key.Length > 0)
 							{
 								key = key + "+";
 							}
-							key = key + match.Groups[i].Value;
+							key = key + match.Groups[groupIndexes[i]+1].Value;
 						}
+						
 						accumulator.Accumulate (key, item.Value);
 					}
 				}

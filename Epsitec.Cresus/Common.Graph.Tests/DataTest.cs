@@ -161,15 +161,27 @@ namespace Epsitec.Common.Graph
 			System.Console.Out.WriteLine (series5);
 			System.Console.Out.WriteLine (series6);
 
-			var table1 = cube.ExtractTable ("Année=2008", "Mois", "Produit");
+			var table1 = cube.ExtractTable ("Année=2008", "Mois", "Produit");	// 12 lignes,  3 colonnes
+			var table2 = cube.ExtractTable ("Année=2008", "Produit", "Mois");	//  3 lignes, 12 colonnes
 
-			foreach (var row in table1.RowLabels)
+			Assert.AreEqual ( 3, table1.ColumnLabels.Count);
+			Assert.AreEqual (12, table1.RowLabels.Count);
+			Assert.AreEqual (12, table2.ColumnLabels.Count);
+			Assert.AreEqual ( 3, table2.RowLabels.Count);
+
+			DataTest.DumpTable (table1);
+			DataTest.DumpTable (table2);
+		}
+
+		private static void DumpTable(Epsitec.Common.Graph.Data.Table table)
+		{
+			foreach (var row in table.RowLabels)
 			{
 				System.Console.Out.Write ("{0,-20}", row);
 
-				foreach (var col in table1.ColumnLabels)
+				foreach (var col in table.ColumnLabels)
 				{
-					double? value = table1[row, col];
+					double? value = table[row, col];
 					System.Console.Out.Write ("\t{0}", value.HasValue ? value.Value.ToString () : "---");
 				}
 
