@@ -76,6 +76,55 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+		public double? this[string row, string col]
+		{
+			get
+			{
+				int rowIndex = this.FindRowIndex (row);
+				int colIndex = this.FindColumnIndex (col);
+
+				if ((rowIndex < 0) ||
+					(colIndex < 0))
+				{
+					throw new System.ArgumentOutOfRangeException ();
+				}
+
+				if ((rowIndex < this.rows.Count) &&
+					(colIndex < this.rows[rowIndex].Length))
+				{
+					return this.rows[rowIndex][colIndex];
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				int rowIndex = this.FindRowIndex (row);
+				int colIndex = this.FindColumnIndex (col);
+
+				if ((rowIndex < 0) ||
+					(colIndex < 0))
+				{
+					throw new System.ArgumentOutOfRangeException ();
+				}
+				
+				while (this.rows.Count <= rowIndex)
+				{
+					this.rows.Add (new double?[this.columnLabels.Count]);
+				}
+
+				if (colIndex >= this.rows[rowIndex].Length)
+				{
+					double?[] copy = new double?[this.columnLabels.Count];
+					this.rows[rowIndex].CopyTo (copy, 0);
+					this.rows[rowIndex] = copy;
+				}
+				
+				this.rows[rowIndex][colIndex] = value;
+			}
+		}
 
 		public void DefineColumnLabels(IEnumerable<string> labels)
 		{

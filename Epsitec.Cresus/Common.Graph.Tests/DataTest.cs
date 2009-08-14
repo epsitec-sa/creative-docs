@@ -162,6 +162,19 @@ namespace Epsitec.Common.Graph
 			System.Console.Out.WriteLine (series6);
 
 			var table1 = cube.ExtractTable ("Année=2008", "Mois", "Produit");
+
+			foreach (var row in table1.RowLabels)
+			{
+				System.Console.Out.Write ("{0,-20}", row);
+
+				foreach (var col in table1.ColumnLabels)
+				{
+					double? value = table1[row, col];
+					System.Console.Out.Write ("\t{0}", value.HasValue ? value.Value.ToString () : "---");
+				}
+
+				System.Console.WriteLine ();
+			}
 		}
 	}
 }

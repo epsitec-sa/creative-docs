@@ -132,7 +132,12 @@ namespace Epsitec.Common.Graph.Data
 				table.DefineRowLabels (rowLabels.OrderBy (x => x));
 				table.DefineColumnLabels (colLabels.OrderBy (x => x));
 
-				//	TODO: populate the table with the data
+				foreach (var item in accumulator.Values)
+				{
+					string[] keys = item.Label.Split ('+');
+
+					table[keys[0], keys[1]] = item.Value;
+				}
 
 				return table;
 			}
