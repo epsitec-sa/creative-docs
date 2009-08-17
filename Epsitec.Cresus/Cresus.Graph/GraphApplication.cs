@@ -58,7 +58,9 @@ namespace Epsitec.Cresus.Graph
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 300,
-				Parent = frame
+				Parent = frame,
+				LineHeight = 24,
+				ScrollListStyle = ScrollListStyle.AlternatingLines
 			};
 
 			VSplitter splitter = new VSplitter ()
@@ -76,8 +78,29 @@ namespace Epsitec.Cresus.Graph
 			};
 
 			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
-			this.scrollList.DragMultiSelectionStarted += (sender, e) => this.scrollList.ClearSelection ();
-			this.scrollList.DragMultiSelectionEnded   += (sender, e) => this.scrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
+			
+			this.scrollList.DragMultiSelectionStarted +=
+				delegate (object sender, MultiSelectEventArgs e)
+				{
+					if (Message.CurrentState.IsControlPressed == false)
+					{
+						this.scrollList.ClearSelection ();
+					}
+				};
+
+			this.scrollList.DragMultiSelectionEnded +=
+				delegate (object sender, MultiSelectEventArgs e)
+				{
+					if ((e.Count == 1) &&
+						(this.scrollList.IsItemSelected (e.BeginIndex)))
+					{
+						this.scrollList.RemoveSelection (Enumerable.Range (e.BeginIndex, e.Count));
+					}
+					else
+					{
+						this.scrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
+					}
+				};
 
 			this.Window = window;
 			this.IsReady = true;

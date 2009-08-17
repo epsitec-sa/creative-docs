@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -73,6 +74,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public ICollection<int> GetSortedSelection()
+		{
+			return this.selection.OrderBy (x => x).ToList ().AsReadOnly ();
+		}
 
 		public override bool IsItemSelected(int index)
 		{
@@ -92,8 +97,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return true;
 			}
-
-			return base.IsItemSelected (index);
+			else
+			{
+				return false;
+			}
 		}
 
 		protected override void MouseSelectBegin()
@@ -108,7 +115,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.MouseSelectEnd ();
 			
-			if (this.dragSelectionStartIndex != this.SelectedIndex)
+			if (this.dragSelectionStartIndex >= 0)
 			{
 				//	The user dragged a multiline selection, which will trigger an appropriate
 				//	notification event.

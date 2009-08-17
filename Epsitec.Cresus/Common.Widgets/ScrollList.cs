@@ -59,7 +59,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public ScrollListStyle ScrollListStyle
+		public ScrollListStyle					ScrollListStyle
 		{
 			get
 			{
@@ -75,15 +75,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
-		public bool DrawFrame
+		public bool								DrawFrame
 		{
-			//	Détermine s'il faut dessiner un cadre autour de chaque ligne de la liste.
 			get
 			{
 				return this.drawFrame;
 			}
-
 			set
 			{
 				if (this.drawFrame != value)
@@ -109,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public AbstractScroller Scroller
+		public AbstractScroller					Scroller
 		{
 			get
 			{
@@ -162,7 +159,23 @@ namespace Epsitec.Common.Widgets
 				return this.Items.Count;
 			}
 		}
-		
+
+		public double							LineHeight
+		{
+			get
+			{
+				return this.lineHeight;
+			}
+			set
+			{
+				if (this.lineHeight != value)
+				{
+					this.lineHeight = value;
+					this.SetDirty ();
+				}
+			}
+		}
+
 		
 		public void ShowSelected(ScrollShowMode mode)
 		{
@@ -194,24 +207,6 @@ namespace Epsitec.Common.Widgets
 			this.FirstVisibleRow = fl;
 		}
 
-		
-		public double LineHeight
-		{
-			//	Hauteur d'une ligne.
-
-			get
-			{
-				return this.lineHeight;
-			}
-
-			set
-			{
-				if ( this.lineHeight != value )
-				{
-					this.lineHeight = value;
-				}
-			}
-		}
 
 		public override Size GetBestFitSize()
 		{
@@ -242,12 +237,7 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 
-			TextLayout layout = new TextLayout ()
-			{
-				BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine
-			};
-
-			layout.SetEmbedder (this);
+			TextLayout layout = this.CreateLineTextLayout ();
 			
 			int max = this.allLinesHaveSameWidth ? (this.items.Count == 0 ? 0 : 1) : this.items.Count;
 			
@@ -269,6 +259,19 @@ namespace Epsitec.Common.Widgets
 			dy = System.Math.Ceiling(dy);
 
 			return new Size(dx, dy);
+		}
+
+		private TextLayout CreateLineTextLayout()
+		{
+			TextLayout layout = new TextLayout ()
+			{
+				BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Alignment = ContentAlignment.MiddleLeft
+			};
+
+			layout.SetEmbedder (this);
+			
+			return layout;
 		}
 
 #if false
@@ -572,7 +575,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void UpdatetextLayouts()
+		protected void UpdateTextLayouts()
 		{
 			//	Met à jour les textes.
 			
@@ -585,12 +588,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.textLayouts[i] == null )
 					{
-						this.textLayouts[i] = new TextLayout ()
-						{
-							BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine
-						};
-
-						this.textLayouts[i].SetEmbedder (this);
+						this.textLayouts[i] = this.CreateLineTextLayout ();
 					}
 					
 					string text = (i+this.firstLine < this.items.Count) ? this.items[i+this.firstLine] : "";
@@ -727,7 +725,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			this.UpdatetextLayouts ();
+			this.UpdateTextLayouts ();
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
@@ -755,21 +753,14 @@ namespace Epsitec.Common.Widgets
 					break;
 				}
 
+				Rectangle frame = new Rectangle (this.margins.Left, pos.Y, this.GetTextWidth (), this.lineHeight);
+
 				if ((this.IsItemSelected (this.firstLine + i)) &&
 					((state & WidgetPaintState.Enabled) != 0))
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1]
 					{
-						new TextLayout.SelectedArea ()
-						{
-							Rect = new Rectangle ()
-							{
-								Left   = this.margins.Left,
-								Width  = this.GetTextWidth (),
-								Bottom = pos.Y,
-								Height = this.lineHeight
-							}
-						}
+						new TextLayout.SelectedArea (frame)
 					};
 
 					adorner.PaintTextSelectionBackground (graphics, areas, state, PaintTextStyle.TextField, TextFieldDisplayMode.Default);
@@ -778,6 +769,17 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
+					if (this.scrollListStyle == ScrollListStyle.AlternatingLines)
+					{
+						int lineIndex = this.firstLine + i;
+
+						if (lineIndex % 2 == 1)
+						{
+							graphics.AddFilledRectangle (frame);
+							graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0, 0, 0));
+						}
+					}
+
 					state &= ~WidgetPaintState.Selected;
 				}
 
@@ -785,8 +787,6 @@ namespace Epsitec.Common.Widgets
 
 				if (this.drawFrame)  // dessine les cadres ?
 				{
-					Rectangle frame = new Rectangle (this.margins.Left, pos.Y, this.GetTextWidth (), this.lineHeight);
-
 					if (i < max-1)
 					{
 						frame.Bottom -= 1;

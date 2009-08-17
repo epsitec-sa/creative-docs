@@ -5,7 +5,8 @@ namespace Epsitec.Common.Widgets
 {
 	public enum ScrollListStyle
 	{
-		Normal,			// liste fixe normale
-		Menu,			// menu d'un TextFieldCombo
+		Normal,				// liste fixe normale
+		Menu,				// menu d'un TextFieldCombo
+		AlternatingLines,
 	}
 }
