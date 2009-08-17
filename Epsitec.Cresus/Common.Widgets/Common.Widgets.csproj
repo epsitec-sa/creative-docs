@@ -159,6 +159,7 @@
     <Compile Include="ButtonClass.cs" />
     <Compile Include="CommandParameters.cs" />
     <Compile Include="CommandHandlerPair.cs" />
+    <Compile Include="ScrollListMultiselect.cs" />
     <Compile Include="FlatTextField.cs" />
     <Compile Include="WindowPlacement.cs" />
     <Compile Include="FocusChangingEventArgs.cs" />

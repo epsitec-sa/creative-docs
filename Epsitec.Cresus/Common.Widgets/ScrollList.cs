@@ -52,6 +52,7 @@ namespace Epsitec.Common.Widgets
 			if (disposing)
 			{
 				this.scroller.ValueChanged -= this.HandleScrollerValueChanged;
+				this.autoScrollBehavior.Dispose ();
 			}
 
 			base.Dispose (disposing);
@@ -370,7 +371,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseDown:
-					this.mouseDown = true;
+					this.MouseSelectBegin ();
 					this.MouseSelect (pos);
 					break;
 
@@ -387,7 +388,7 @@ namespace Epsitec.Common.Widgets
 						this.MouseSelect (pos);
 						this.autoScrollBehavior.ProcessEvent (Point.Zero);
 						this.OnSelectionActivated ();
-						this.mouseDown = false;
+						this.MouseSelectEnd ();
 					}
 					break;
 
@@ -421,6 +422,18 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
+		protected virtual void MouseSelectBegin()
+		{
+			this.mouseDown = true;
+			this.Invalidate ();
+		}
+
+		protected virtual void MouseSelectEnd()
+		{
+			this.mouseDown = false;
+			this.Invalidate ();
+		}
+
 		protected virtual bool MouseSelect(Point pos)
 		{
 			if (this.lineHeight <= 0)
@@ -452,9 +465,15 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (line >= 0.0);
 			System.Diagnostics.Debug.Assert (line < this.visibleLines);
 
-			this.SelectedIndex = this.firstLine+line;
-
+			this.MouseSelectLine (this.firstLine+line);
+			
 			return true;
+		}
+
+		protected virtual void MouseSelectLine(int index)
+		{
+			this.SelectedIndex = index;
+			this.ShowSelected (ScrollShowMode.Extremity);
 		}
 
 		
@@ -637,14 +656,14 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void AutomaticItemSelection(string search, bool continued)
 		{
-			int index = this.items.FindStartMatch(search, this.SelectedIndex + (continued ? 0 : 1));
-			
-			if ( index < 0 )
+			int index = this.items.FindStartMatch (search, this.SelectedIndex + (continued ? 0 : 1));
+
+			if (index < 0)
 			{
-				index = this.items.FindStartMatch(search);
+				index = this.items.FindStartMatch (search);
 			}
-			
-			if ( index >= 0 )
+
+			if (index >= 0)
 			{
 				this.SelectedIndex = index;
 				this.ShowSelected (ScrollShowMode.Extremity);
@@ -671,9 +690,8 @@ namespace Epsitec.Common.Widgets
 						index++;
 					}
 				}
-				
-				this.SelectedIndex = index;
-				this.ShowSelected (ScrollShowMode.Extremity);
+
+				this.MouseSelectLine (index);
 			}
 		}
 		
@@ -775,8 +793,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
-		protected bool IsLineSelected(int index)
+		protected virtual bool IsLineSelected(int index)
 		{
 			return index == this.selectedLine;
 		}
@@ -922,9 +939,9 @@ namespace Epsitec.Common.Widgets
 
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isDirty;
-		protected bool							drawFrame = false;
-		protected bool							mouseDown = false;
-		protected Collections.StringCollection	items;
+		protected bool							drawFrame;
+		protected bool							mouseDown;
+		readonly Collections.StringCollection	items;
 		protected TextLayout[]					textLayouts;
 		protected bool							allLinesHaveSameWidth;
 		

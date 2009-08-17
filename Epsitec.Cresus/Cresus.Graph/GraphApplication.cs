@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Graph
 				Parent = window.Root
 			};
 
-			this.scrollList = new ScrollList ()
+			this.scrollList = new ScrollListMultiSelect ()
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 300,
