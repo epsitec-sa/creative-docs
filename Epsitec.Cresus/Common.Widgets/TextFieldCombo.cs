@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ButtonShowCondition = ButtonShowCondition.Always;
 			
-			this.select_item_behavior = new Behaviors.SelectItemBehavior (new Behaviors.SelectItemCallback (this.AutomaticItemSelection));
+			this.select_item_behavior = new Behaviors.SelectItemBehavior (this.AutomaticItemSelection);
 
 			this.items = new Collections.StringCollection (this);
 			this.items.AcceptsRichText = true;

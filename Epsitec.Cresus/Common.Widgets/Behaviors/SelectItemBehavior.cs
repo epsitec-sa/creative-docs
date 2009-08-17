@@ -1,22 +1,29 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
-	public delegate void SelectItemCallback(string search, bool continued);
-	
 	/// <summary>
 	/// La classe SelectItemBehavior gère la sélection automatique d'éléments
 	/// dans une liste lors de frappe de texte (par ex. "A" --> sélectionne le
 	/// premier élément commençant par "A", puis "b" --> sélectionne le premier
 	/// élément commençant par "Ab", etc.).
 	/// </summary>
-	public class SelectItemBehavior
+	public sealed class SelectItemBehavior
 	{
-		public SelectItemBehavior(SelectItemCallback callback)
+		public SelectItemBehavior(System.Action<string, bool> callback)
 		{
+			this.TimeoutMilliseconds = 500;
+			
 			this.callback = callback;
 			this.text     = "";
+		}
+
+
+		public int TimeoutMilliseconds
+		{
+			get;
+			set;
 		}
 		
 		
@@ -27,9 +34,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 				char key = (char) message.KeyChar;
 				long now = Types.Time.Now.Ticks;
 				
-				long delta = now - this.last_event_ticks;
+				long delta = now - this.lastEventTicks;
+				long timeout = Types.Time.TicksPerSecond * this.TimeoutMilliseconds / 1000;
 				
-				if ((delta > Types.Time.TicksPerSecond * this.timeout_ms / 1000) ||
+				if ((delta > timeout) ||
 					(this.text.Length == 0))
 				{
 					this.ResetSearch (key.ToString ());
@@ -39,7 +47,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					this.ExpandSearch (key.ToString ());
 				}
 				
-				this.last_event_ticks = now;
+				this.lastEventTicks = now;
 				
 				return true;
 			}
@@ -57,20 +65,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.text = "";
 		}
 		
-		public void ResetSearch(string value)
+		private void ResetSearch(string value)
 		{
 			this.text = value;
 			this.Search (false);
 		}
 		
-		public void ExpandSearch(string value)
+		private void ExpandSearch(string value)
 		{
 			this.text = string.Concat (this.text, value);
 			this.Search (true);
 		}
 		
-		
-		public void Search(bool continued)
+		private void Search(bool continued)
 		{
 			if (this.callback != null)
 			{
@@ -79,10 +86,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
-		protected int							timeout_ms = 500;
-		
-		protected SelectItemCallback			callback;
-		protected string						text;
-		protected long							last_event_ticks;
+		private readonly System.Action<string, bool> callback;
+		private string							text;
+		private long							lastEventTicks;
 	}
 }

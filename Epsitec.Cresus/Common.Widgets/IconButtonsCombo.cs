@@ -601,7 +601,7 @@ namespace Epsitec.Common.Widgets
 			this.scrollList = new ScrollList();
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
 			this.scrollList.DrawFrame = this.menuDrawFrame;
-			this.scrollList.AllLinesWidthSameWidth = this.allLinesWidthSameWidth;
+			this.scrollList.AllLinesHaveSameWidth = this.allLinesWidthSameWidth;
 			
 			menu.Contents = this.scrollList;
 			
