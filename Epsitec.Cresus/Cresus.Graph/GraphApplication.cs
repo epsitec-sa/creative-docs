@@ -76,13 +76,15 @@ namespace Epsitec.Cresus.Graph
 			};
 
 			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
+			this.scrollList.DragMultiSelectionStarted += (sender, e) => this.scrollList.ClearSelection ();
+			this.scrollList.DragMultiSelectionEnded   += (sender, e) => this.scrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
 
 			this.Window = window;
 			this.IsReady = true;
 		}
 
 
-		private ScrollList scrollList;
+		private ScrollListMultiSelect scrollList;
 		private ChartView chartView;
 
 		private GraphDataSet graphDataSet;

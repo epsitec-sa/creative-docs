@@ -3,6 +3,9 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -15,6 +18,7 @@ namespace Epsitec.Common.Widgets
 		public ScrollListMultiSelect()
 		{
 			this.dragSelectionStartIndex = NoSelection;
+			this.selection = new HashSet<int> ();
 		}
 
 		public ScrollListMultiSelect(Widget embedder)
@@ -23,8 +27,54 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 
-		
-		protected override bool IsLineSelected(int index)
+
+		public void AddSelection(IEnumerable<int> selection)
+		{
+			bool dirty = false;
+
+			foreach (var index in selection)
+			{
+				if (this.selection.Add (index))
+				{
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public void RemoveSelection(IEnumerable<int> selection)
+		{
+			bool dirty = false;
+
+			foreach (var index in selection)
+			{
+				if (this.selection.Remove (index))
+				{
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public void ClearSelection()
+		{
+			if (this.selection.Count > 0)
+			{
+				this.selection.Clear ();
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+
+		public override bool IsItemSelected(int index)
 		{
 			if (this.dragSelectionStartIndex >= 0)
 			{
@@ -38,13 +88,20 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			return base.IsLineSelected (index);
+			if (this.selection.Contains (index))
+			{
+				return true;
+			}
+
+			return base.IsItemSelected (index);
 		}
 
 		protected override void MouseSelectBegin()
 		{
 			base.MouseSelectBegin ();
 			this.dragSelectionStartIndex = EmptySelection;
+
+			this.OnDragMultiSelectionStarted (new MultiSelectEventArgs ());
 		}
 
 		protected override void MouseSelectEnd()
@@ -56,7 +113,10 @@ namespace Epsitec.Common.Widgets
 				//	The user dragged a multiline selection, which will trigger an appropriate
 				//	notification event.
 
-				//	TODO: ...
+				int begin = System.Math.Min (this.SelectedIndex, this.dragSelectionStartIndex);
+				int end   = System.Math.Max (this.SelectedIndex, this.dragSelectionStartIndex);
+
+				this.OnDragMultiSelectionEnded (new MultiSelectEventArgs (begin, end));
 			}
 
 			this.dragSelectionStartIndex = NoSelection;
@@ -73,9 +133,85 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private const int NoSelection = -2;
+		protected void OnMultiSelectionChanged()
+		{
+			this.Invalidate ();
+
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (ScrollListMultiSelect.MultiSelectionChangedEvent);
+			var e = new DependencyPropertyChangedEventArgs ("MultiSelection");
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		protected void OnDragMultiSelectionStarted(MultiSelectEventArgs e)
+		{
+			var handler = this.GetUserEventHandler<MultiSelectEventArgs> (ScrollListMultiSelect.DragMultiSelectionStartedEvent);
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		protected void OnDragMultiSelectionEnded(MultiSelectEventArgs e)
+		{
+			var handler = this.GetUserEventHandler<MultiSelectEventArgs> (ScrollListMultiSelect.DragMultiSelectionEndedEvent);
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+
+		public event Support.EventHandler<DependencyPropertyChangedEventArgs> MultiSelectionChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (ScrollListMultiSelect.MultiSelectionChangedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ScrollListMultiSelect.MultiSelectionChangedEvent, value);
+			}
+		}
+
+		public event Support.EventHandler<MultiSelectEventArgs> DragMultiSelectionStarted
+		{
+			add
+			{
+				this.AddUserEventHandler (ScrollListMultiSelect.DragMultiSelectionStartedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ScrollListMultiSelect.DragMultiSelectionStartedEvent, value);
+			}
+		}
+
+		public event Support.EventHandler<MultiSelectEventArgs> DragMultiSelectionEnded
+		{
+			add
+			{
+				this.AddUserEventHandler (ScrollListMultiSelect.DragMultiSelectionEndedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (ScrollListMultiSelect.DragMultiSelectionEndedEvent, value);
+			}
+		}
+
+
+		private const string DragMultiSelectionEndedEvent	= "DragMultiSelectionEnded";
+		private const string DragMultiSelectionStartedEvent = "DragMultiSelectionStarted";
+		private const string MultiSelectionChangedEvent		= "MultiSelectionChanged";
+		
+		private const int NoSelection    = -2;
 		private const int EmptySelection = -1;
 
 		private int dragSelectionStartIndex;
+		private readonly HashSet<int> selection;
 	}
 }

@@ -923,8 +923,8 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			DependencyPropertyChangedEventArgs e = new DependencyPropertyChangedEventArgs ("Color", this.colorBeforeChange, this.color);
-			EventHandler<DependencyPropertyChangedEventArgs> handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (ColorSelector.ColorChangedEvent);
+			var e = new DependencyPropertyChangedEventArgs ("Color", this.colorBeforeChange, this.color);
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (ColorSelector.ColorChangedEvent);
 
 			this.colorBeforeChange = this.color;
 			

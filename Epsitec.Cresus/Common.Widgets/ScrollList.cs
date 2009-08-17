@@ -746,7 +746,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				}
 
-				if ((this.IsLineSelected (this.firstLine + i)) &&
+				if ((this.IsItemSelected (this.firstLine + i)) &&
 					((state & WidgetPaintState.Enabled) != 0))
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1]
@@ -793,7 +793,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected virtual bool IsLineSelected(int index)
+		public virtual bool IsItemSelected(int index)
 		{
 			return index == this.selectedLine;
 		}
