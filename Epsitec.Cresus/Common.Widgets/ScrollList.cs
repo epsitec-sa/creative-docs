@@ -242,16 +242,21 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 
-			TextLayout layout = new TextLayout();
+			TextLayout layout = new TextLayout ()
+			{
+				BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine
+			};
+
 			layout.SetEmbedder (this);
 			
 			int max = this.allLinesHaveSameWidth ? (this.items.Count == 0 ? 0 : 1) : this.items.Count;
-			for ( int i=0 ; i<max ; i++ )
+			
+			for (int i = 0; i < max; i++)
 			{
 				layout.Text = this.items[i];
 				Size size = layout.SingleLineSize;
-				dx = System.Math.Max(dx, size.Width);
-				dy = System.Math.Max(dy, size.Height);
+				dx = System.Math.Max (dx, size.Width);
+				dy = System.Math.Max (dy, size.Height);
 			}
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
@@ -580,7 +585,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.textLayouts[i] == null )
 					{
-						this.textLayouts[i] = new TextLayout();
+						this.textLayouts[i] = new TextLayout ()
+						{
+							BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine
+						};
+
 						this.textLayouts[i].SetEmbedder (this);
 					}
 					
