@@ -95,15 +95,12 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			return index_0;
 		}
-		
-		public void AddRange(System.Collections.ICollection values)
+
+		public void AddRange(System.Collections.Generic.IEnumerable<string> values)
 		{
-			if (values != null)
+			foreach (var value in values)
 			{
-				foreach (object o in values)
-				{
-					this.Add (o);
-				}
+				this.Add (value);
 			}
 		}
 		

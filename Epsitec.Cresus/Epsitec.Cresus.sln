@@ -175,6 +175,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph", "Common.Grap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Graph.Tests", "Common.Graph.Tests\Common.Graph.Tests.csproj", "{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Graph", "Cresus.Graph\Cresus.Graph.csproj", "{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -881,6 +883,16 @@ Global
 		{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{D9CEEF86-6273-46CC-94FF-DD0C92EBFA68}.Release|Win32.ActiveCfg = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

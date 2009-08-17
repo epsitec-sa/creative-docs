@@ -601,6 +601,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return base.Parent as Widget;
 			}
+			set
+			{
+				this.SetParent (value);
+			}
 		}
 		
 		public Support.OpletQueue					OpletQueue
