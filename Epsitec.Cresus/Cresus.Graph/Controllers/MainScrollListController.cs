@@ -29,6 +29,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.ScrollList.PaintForeground += this.HandlePaintForeground;
 
 			this.hotRowIndex = -1;
+
+			this.quickButton1 = new Button ()
+			{
+				PreferredWidth = 22,
+				PreferredHeight = 22,
+				ButtonStyle = ButtonStyle.Icon,
+				Text = "―",
+				Parent = this.ScrollList.Parent,
+				Anchor = AnchorStyles.BottomLeft
+			};
+			
+			this.quickButton2 = new Button ()
+			{
+				PreferredWidth = 22,
+				PreferredHeight = 22,
+				ButtonStyle = ButtonStyle.Icon,
+				Text = "Σ",
+				Parent = this.ScrollList.Parent,
+				Anchor = AnchorStyles.BottomLeft
+			};
 		}
 
 		public ScrollListMultiSelect ScrollList
@@ -101,54 +121,99 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				var graphics  = e.Graphics;
 				var bounds    = this.ScrollList.GetRowBounds (index);
-				var rectangle = this.selection == null ? bounds : this.ScrollList.GetRowBounds (this.selection.BeginIndex, this.selection.Count);
 
-				double zoneWidth = 56;
-
-				using (Path path = new Path ())
+				if (bounds.IsEmpty)
 				{
-					double ox = bounds.Right - zoneWidth + 1;
-					double oy = rectangle.Bottom;
-					double cy = bounds.Center.Y;
-
-					path.MoveTo (ox, oy);
-					path.LineTo (ox, cy-6);
-					path.LineTo (ox+6, cy);
-					path.LineTo (ox, cy+6);
-					path.LineTo (ox, rectangle.Top);
-					path.LineTo (rectangle.TopRight);
-					path.LineTo (rectangle.BottomRight);
-					path.Close ();
-
-					Color background = Color.FromName ("ActiveCaption");
-
-					graphics.Color = Color.Mix (background, Color.FromBrightness (1), 0.3333);
-
-					graphics.PaintSurface (path);
-					graphics.RenderSolid ();
+					this.HideQuickButtons ();
 				}
-
-				using (Path path = new Path ())
+				else
 				{
-					double ox = bounds.Right - zoneWidth + 0.5;
-					double oy = rectangle.Bottom;
-					double cy = bounds.Center.Y;
+					var rectangle = this.selection == null ? bounds : this.ScrollList.GetRowBounds (this.selection.BeginIndex, this.selection.Count);
 
-					path.MoveTo (ox, oy);
-					path.LineTo (ox, cy-6);
-					path.LineTo (ox+6, cy);
-					path.LineTo (ox, cy+6);
-					path.LineTo (ox, rectangle.Top);
+					double zoneWidth = 56;
+					double arrowLength = 6;
 
-					graphics.LineWidth = 1.0;
-					graphics.LineCap = CapStyle.Butt;
-					graphics.LineJoin = JoinStyle.Miter;
-					graphics.Color = Color.FromBrightness (1);
+					using (Path path = new Path ())
+					{
+						double ox = bounds.Right - zoneWidth + 1;
+						double oy = rectangle.Bottom;
+						double cy = bounds.Center.Y;
 
-					graphics.PaintOutline (path);
-					graphics.RenderSolid ();
+						path.MoveTo (ox, oy);
+						path.LineTo (ox, cy-arrowLength);
+						path.LineTo (ox+arrowLength, cy);
+						path.LineTo (ox, cy+arrowLength);
+						path.LineTo (ox, rectangle.Top);
+						path.LineTo (rectangle.TopRight);
+						path.LineTo (rectangle.BottomRight);
+						path.Close ();
+
+						Color background = Color.FromName ("ActiveCaption");
+
+						graphics.Color = Color.Mix (background, Color.FromBrightness (1), 0.20);
+
+						graphics.PaintSurface (path);
+						graphics.RenderSolid ();
+					}
+
+					using (Path path = new Path ())
+					{
+						double ox = bounds.Right - zoneWidth + 0.5;
+						double oy = rectangle.Bottom;
+						double cy = bounds.Center.Y;
+
+						path.MoveTo (ox, oy);
+						path.LineTo (ox, cy-arrowLength);
+						path.LineTo (ox+arrowLength, cy);
+						path.LineTo (ox, cy+arrowLength);
+						path.LineTo (ox, rectangle.Top);
+
+						graphics.LineWidth = 1.0;
+						graphics.LineCap = CapStyle.Butt;
+						graphics.LineJoin = JoinStyle.Miter;
+						graphics.Color = Color.FromBrightness (1);
+
+						graphics.PaintOutline (path);
+						graphics.RenderSolid ();
+					}
+
+					this.ShowQuickButtons (new Rectangle (bounds.Right - zoneWidth + arrowLength, bounds.Bottom, zoneWidth - arrowLength, bounds.Height));
 				}
 			}
+			else
+			{
+				this.HideQuickButtons ();
+			}
+		}
+
+		private void ShowQuickButtons(Rectangle frame)
+		{
+			if (this.quickButtonsFrame == frame)
+			{
+				return;
+			}
+
+			this.quickButtonsFrame = frame;
+
+			if (frame.IsEmpty)
+			{
+				this.quickButton1.Hide ();
+				this.quickButton2.Hide ();
+			}
+			else
+			{
+				frame = Rectangle.Offset (frame, this.ScrollList.ActualLocation);
+
+				this.quickButton1.Show ();
+				this.quickButton2.Show ();
+				this.quickButton1.Margins = new Margins (frame.Left +  0, 0, 0, frame.Bottom);
+				this.quickButton2.Margins = new Margins (frame.Left + 24, 0, 0, frame.Bottom);
+			}
+		}
+
+		private void HideQuickButtons()
+		{
+			this.ShowQuickButtons (Rectangle.Empty);
 		}
 
 		
@@ -177,5 +242,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private int hotRowIndex;
 		private MultiSelectEventArgs selection;
+		private Rectangle quickButtonsFrame;
+		private Button quickButton1;
+		private Button quickButton2;
 	}
 }
