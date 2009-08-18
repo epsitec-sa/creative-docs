@@ -11,6 +11,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Graph.Renderers;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -45,7 +46,7 @@ namespace Epsitec.Cresus.Graph
 			Window window = new Window ();
 
 			window.Text = this.ShortWindowTitle;
-			window.ClientSize = new Epsitec.Common.Drawing.Size (624, 400);
+			window.ClientSize = new Epsitec.Common.Drawing.Size (824, 400);
 
 			FrameBox frame = new FrameBox ()
 			{
@@ -59,8 +60,8 @@ namespace Epsitec.Cresus.Graph
 				Dock = DockStyle.Left,
 				PreferredWidth = 300,
 				Parent = frame,
-				LineHeight = 24,
-				ScrollListStyle = ScrollListStyle.AlternatingLines
+				RowHeight = 24,
+				ScrollListStyle = ScrollListStyle.AlternatingRows
 			};
 
 			VSplitter splitter = new VSplitter ()
@@ -72,10 +73,19 @@ namespace Epsitec.Cresus.Graph
 
 			this.chartView = new ChartView ()
 			{
-				Dock = DockStyle.Left,
+				Dock = DockStyle.Fill,
 				PreferredWidth = 300,
 				Parent = frame
 			};
+
+			var lineChartRenderer = new LineChartRenderer ();
+
+			lineChartRenderer.DefineValueLabels (this.graphDataSet.DataTable.ColumnLabels);
+			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
+			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
+
+			this.chartView.DefineRenderer (lineChartRenderer);
+
 
 			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
 			
@@ -102,8 +112,21 @@ namespace Epsitec.Cresus.Graph
 					}
 				};
 
+			this.scrollList.MultiSelectionChanged += (sender, e) => this.UpdateChartView ();
+
 			this.Window = window;
 			this.IsReady = true;
+		}
+
+		private void UpdateChartView()
+		{
+			var renderer = this.chartView.Renderer;
+			
+			renderer.Clear ();
+			renderer.CollectRange (this.scrollList.GetSortedSelection ().Select (x => this.graphDataSet.DataTable.GetRowSeries (x)));
+			renderer.ClipRange (System.Math.Min (0, renderer.MinValue), System.Math.Max (0, renderer.MaxValue));
+			
+			this.chartView.Invalidate ();
 		}
 
 

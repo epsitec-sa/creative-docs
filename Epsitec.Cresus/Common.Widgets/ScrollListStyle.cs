@@ -7,6 +7,6 @@ namespace Epsitec.Common.Widgets
 	{
 		Normal,				// liste fixe normale
 		Menu,				// menu d'un TextFieldCombo
-		AlternatingLines,
+		AlternatingRows,
 	}
 }

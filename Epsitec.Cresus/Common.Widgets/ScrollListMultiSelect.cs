@@ -123,20 +123,23 @@ namespace Epsitec.Common.Widgets
 				int begin = System.Math.Min (this.SelectedIndex, this.dragSelectionStartIndex);
 				int end   = System.Math.Max (this.SelectedIndex, this.dragSelectionStartIndex);
 
+				this.dragSelectionStartIndex = NoSelection;
+
+				//	Notify after having reset the selection start index, or else we would have
+				//	false matches in the IsItemSelected method...
+				
 				this.OnDragMultiSelectionEnded (new MultiSelectEventArgs (begin, end));
 			}
-
-			this.dragSelectionStartIndex = NoSelection;
 		}
 
-		protected override void MouseSelectLine(int index)
+		protected override void MouseSelectRow(int index)
 		{
 			if (this.dragSelectionStartIndex == EmptySelection)
 			{
 				this.dragSelectionStartIndex = index;
 			}
 
-			base.MouseSelectLine (index);
+			base.MouseSelectRow (index);
 		}
 
 

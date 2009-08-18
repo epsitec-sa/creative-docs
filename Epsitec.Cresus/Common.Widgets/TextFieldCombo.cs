@@ -567,9 +567,9 @@ namespace Epsitec.Common.Widgets
 
 		public static void AdjustScrollListWidth(ScrollList scrollList)
 		{
-			Size size = scrollList.GetBestLineSize ();
+			Size size = scrollList.GetBestFitSizeBasedOnContent ();
 			
-			scrollList.LineHeight     = size.Height;
+			scrollList.RowHeight     = size.Height;
 			scrollList.PreferredWidth = size.Width;
 		}
 		

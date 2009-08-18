@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (string.IsNullOrEmpty (text))
 			{
-				return null;
+				return 0;
 			}
 
 			text = text.Replace ("'", "");
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Graph
 				return value;
 			}
 
-			return null;
+			return 0;
 		}
 
 

@@ -22,6 +22,15 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 
+		public Renderers.AbstractRenderer Renderer
+		{
+			get
+			{
+				return this.renderer;
+			}
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			graphics.AddFilledRectangle (this.Client.Bounds);
