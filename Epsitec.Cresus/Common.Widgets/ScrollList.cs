@@ -223,6 +223,29 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Rectangle GetRowBounds(int index, int count)
+		{
+			int beginIndex = index - this.firstRow;
+			int endIndex   = index + count-1 - this.firstRow;
+
+			if ((endIndex < 0) ||
+				(beginIndex >= this.textFrames.Length))
+			{
+				return Rectangle.Empty;
+			}
+
+			if (beginIndex < 0)
+			{
+				beginIndex = 0;
+			}
+			if (endIndex >= this.textFrames.Length)
+			{
+				endIndex = this.textFrames.Length-1;
+			}
+
+			return Rectangle.Union (this.textFrames[beginIndex], this.textFrames[endIndex]);
+		}
+
 		public override Size GetBestFitSize()
 		{
 			double margin = ScrollList.TextOffsetY * 2;

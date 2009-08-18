@@ -130,6 +130,17 @@ namespace Epsitec.Common.Drawing
 				return c;
 			}
 		}
+
+
+		public static Color Mix(Color colorA, Color colorB, double mix)
+		{
+			double r = colorA.R * (1 - mix) + colorB.R * mix;
+			double g = colorA.G * (1 - mix) + colorB.G * mix;
+			double b = colorA.B * (1 - mix) + colorB.B * mix;
+			double a = colorA.A * (1 - mix) + colorB.A * mix;
+
+			return new Color (a, r, g, b);
+		}
 		
 		
 		public Color ClipToRange()
