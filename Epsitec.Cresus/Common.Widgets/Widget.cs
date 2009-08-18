@@ -8,8 +8,6 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	using MessageEventHandler=Support.EventHandler<MessageEventArgs>;
-	
 	public delegate bool WidgetWalkChildrenCallback(Widget widget);
 	
 	#region InternalState enum
@@ -4010,7 +4008,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
-			PaintEventHandler handler = this.GetUserEventHandler ("PaintBackground") as PaintEventHandler;
+			var handler = this.GetUserEventHandler<PaintEventArgs> ("PaintBackground");
 			
 			if (handler != null)
 			{
@@ -4029,7 +4027,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnPaintForeground(PaintEventArgs e)
 		{
-			PaintEventHandler handler = this.GetUserEventHandler ("PaintForeground") as PaintEventHandler;
+			var handler = this.GetUserEventHandler<PaintEventArgs> ("PaintForeground");
 			
 			if (handler != null)
 			{
@@ -4364,7 +4362,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event PaintEventHandler				PaintBackground
+		public event Support.EventHandler<PaintEventArgs> PaintBackground
 		{
 			add
 			{
@@ -4375,8 +4373,8 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler ("PaintBackground", value);
 			}
 		}
-		
-		public event PaintEventHandler				PaintForeground
+
+		public event Support.EventHandler<PaintEventArgs> PaintForeground
 		{
 			add
 			{
@@ -4394,7 +4392,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			AdornerChanged;
 		public event Support.EventHandler			CultureChanged;
 
-		public event MessageEventHandler			MouseMove
+		public event Support.EventHandler<MessageEventArgs> MouseMove
 		{
 			add
 			{
@@ -4406,20 +4404,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event MessageEventHandler			Pressed;
-		public event MessageEventHandler			Released;
-		public event MessageEventHandler			Clicked;
-		public event MessageEventHandler			DoubleClicked;
-		public event MessageEventHandler			Entered;
-		public event MessageEventHandler			Exited;
+		public event Support.EventHandler<MessageEventArgs>			Pressed;
+		public event Support.EventHandler<MessageEventArgs>			Released;
+		public event Support.EventHandler<MessageEventArgs>			Clicked;
+		public event Support.EventHandler<MessageEventArgs>			DoubleClicked;
+		public event Support.EventHandler<MessageEventArgs>			Entered;
+		public event Support.EventHandler<MessageEventArgs>			Exited;
 		public event Support.EventHandler			ShortcutPressed;
 		public event Support.EventHandler			ShortcutChanged;
 		public event Support.EventHandler			HypertextHot;
-		public event MessageEventHandler			HypertextClicked;
+		public event Support.EventHandler<MessageEventArgs>			HypertextClicked;
 		public event Support.EventHandler			ValidatorChanged;
-		
-		public event MessageEventHandler			PreProcessing;
-		public event MessageEventHandler			PostProcessing;
+
+		public event Support.EventHandler<MessageEventArgs>			PreProcessing;
+		public event Support.EventHandler<MessageEventArgs>			PostProcessing;
 		
 		public event Support.EventHandler			Selected;
 		public event Support.EventHandler			Deselected;

@@ -2,8 +2,6 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
-	using MessageEventHandler=Support.EventHandler<MessageEventArgs>;
-
 	public enum PaneButtonStyle
 	{
 		Vertical,			// bouton |
@@ -94,7 +92,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnDragStarted(MessageEventArgs e)
 		{
 			//	Le slider va être déplacé.
-			MessageEventHandler handler = (MessageEventHandler) this.GetUserEventHandler("DragStarted");
+			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragStarted");
 			if (handler != null)
 			{
 				if (e != null)
@@ -109,7 +107,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnDragMoved(MessageEventArgs e)
 		{
 			//	Le slider est déplacé.
-			MessageEventHandler handler = (MessageEventHandler) this.GetUserEventHandler ("DragMoved");
+			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragMoved");
 			if (handler != null)
 			{
 				if (e != null)
@@ -124,7 +122,7 @@ namespace Epsitec.Common.Widgets
 		protected virtual void OnDragEnded(MessageEventArgs e)
 		{
 			//	Le slider est fini de déplacer.
-			MessageEventHandler handler = (MessageEventHandler) this.GetUserEventHandler ("DragEnded");
+			var handler = this.GetUserEventHandler<MessageEventArgs> ("DragEnded");
 			if (handler != null)
 			{
 				if (e != null)
@@ -147,8 +145,8 @@ namespace Epsitec.Common.Widgets
 
 			adorner.PaintPaneButtonBackground(graphics, rect, state, dir);
 		}
-		
-		public event MessageEventHandler	DragStarted
+
+		public event Support.EventHandler<MessageEventArgs> DragStarted
 		{
 			add
 			{
@@ -160,7 +158,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event MessageEventHandler	DragMoved
+		public event Support.EventHandler<MessageEventArgs> DragMoved
 		{
 			add
 			{
@@ -172,7 +170,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event MessageEventHandler	DragEnded
+		public event Support.EventHandler<MessageEventArgs> DragEnded
 		{
 			add
 			{

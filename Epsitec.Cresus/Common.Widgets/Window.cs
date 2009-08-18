@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using System.Collections.Generic;
@@ -2604,9 +2604,9 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				AboutToShowWindow;
 		public event EventHandler				AboutToHideWindow;
 		
-		public event WindowDragEventHandler		WindowDragEntered;
+		public event EventHandler<WindowDragEventArgs>		WindowDragEntered;
 		public event EventHandler				WindowDragLeft;
-		public event WindowDragEventHandler		WindowDragDropped;
+		public event EventHandler<WindowDragEventArgs>		WindowDragDropped;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;
