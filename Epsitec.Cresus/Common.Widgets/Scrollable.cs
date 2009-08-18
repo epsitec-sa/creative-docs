@@ -42,8 +42,8 @@ namespace Epsitec.Common.Widgets
 			this.vScroller.VisibleRangeRatio = 1;
 			this.vScroller.IsInverted        = true;
 			
-			this.hScroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
-			this.vScroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
+			this.hScroller.ValueChanged += this.HandleHScrollerValueChanged;
+			this.vScroller.ValueChanged += this.HandleVScrollerValueChanged;
 
 			this.Viewport = new Viewport ();
 		}
@@ -165,8 +165,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Viewport = null;
 				
-				this.hScroller.ValueChanged -= new Support.EventHandler (this.HandleHScrollerValueChanged);
-				this.vScroller.ValueChanged -= new Support.EventHandler (this.HandleVScrollerValueChanged);
+				this.hScroller.ValueChanged -= this.HandleHScrollerValueChanged;
+				this.vScroller.ValueChanged -= this.HandleVScrollerValueChanged;
 				
 				this.hScroller.Dispose ();
 				this.vScroller.Dispose ();
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Widgets
 				viewport.SetEmbedder (this);
 				viewport.Aperture = Drawing.Rectangle.Empty;
 
-				viewport.SurfaceSizeChanged += new Support.EventHandler (this.HandleViewportSurfaceSizeChanged);
+				viewport.SurfaceSizeChanged += this.HandleViewportSurfaceSizeChanged;
 			}
 		}
 
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (viewport != null)
 			{
-				viewport.SurfaceSizeChanged -= new Support.EventHandler (this.HandleViewportSurfaceSizeChanged);
+				viewport.SurfaceSizeChanged -= this.HandleViewportSurfaceSizeChanged;
 
 				viewport.SetEmbedder (null);
 				viewport.Aperture = Drawing.Rectangle.MaxValue;

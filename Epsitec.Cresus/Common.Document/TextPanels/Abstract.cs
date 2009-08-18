@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
 			this.extendedButton.AutoFocus = false;
-			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
+			this.extendedButton.Clicked += this.ExtendedButtonClicked;
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
+				this.extendedButton.Clicked -= this.ExtendedButtonClicked;
 			}
 			
 			base.Dispose(disposing);
@@ -355,14 +355,14 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
-		
-		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler)
+
+		protected IconButton CreateIconButton(string icon, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
 			//	Crée un bouton.
 			return this.CreateIconButton(icon, tooltip, handler, true);
 		}
-		
-		protected IconButton CreateIconButton(string icon, string tooltip, MessageEventHandler handler, bool activable)
+
+		protected IconButton CreateIconButton(string icon, string tooltip, Support.EventHandler<MessageEventArgs> handler, bool activable)
 		{
 			IconButton button = new IconButton(this);
 
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Document.TextPanels
 			}
 		}
 
-		protected IconButton CreateClearButton(MessageEventHandler handler)
+		protected IconButton CreateClearButton(Support.EventHandler<MessageEventArgs> handler)
 		{
 			//	Crée un bouton "x" pour effacer une propriété.
 			IconButton button = new IconButton(this);
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Document.TextPanels
 			return button;
 		}
 
-		protected GlyphButton CreateComboButton(string command, string tooltip, MessageEventHandler handler)
+		protected GlyphButton CreateComboButton(string command, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);
@@ -592,7 +592,7 @@ namespace Epsitec.Common.Document.TextPanels
 		}
 
 
-		protected ColorSample CreateColorSample(string tooltip, MessageEventHandler handlerClicked, EventHandler handlerChanged)
+		protected ColorSample CreateColorSample(string tooltip, Support.EventHandler<MessageEventArgs> handlerClicked, EventHandler handlerChanged)
 		{
 			//	Crée un échantilon de couleur.
 			ColorSample sample = new ColorSample(this);

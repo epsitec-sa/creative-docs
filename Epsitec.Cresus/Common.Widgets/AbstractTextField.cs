@@ -28,12 +28,12 @@ namespace Epsitec.Common.Widgets
 			this.CreateTextLayout ();
 
 			this.navigator = new TextNavigator (this, base.TextLayout);
-			this.navigator.AboutToChange += new EventHandler (this.HandleNavigatorAboutToChange);
-			this.navigator.TextDeleted += new EventHandler (this.HandleNavigatorTextDeleted);
-			this.navigator.TextInserted += new EventHandler (this.HandleNavigatorTextInserted);
-			this.navigator.CursorScrolled += new EventHandler (this.HandleNavigatorCursorScrolled);
-			this.navigator.CursorChanged += new EventHandler (this.HandleNavigatorCursorChanged);
-			this.navigator.StyleChanged += new EventHandler (this.HandleNavigatorStyleChanged);
+			this.navigator.AboutToChange += this.HandleNavigatorAboutToChange;
+			this.navigator.TextDeleted += this.HandleNavigatorTextDeleted;
+			this.navigator.TextInserted += this.HandleNavigatorTextInserted;
+			this.navigator.CursorScrolled += this.HandleNavigatorCursorScrolled;
+			this.navigator.CursorChanged += this.HandleNavigatorCursorChanged;
+			this.navigator.StyleChanged += this.HandleNavigatorStyleChanged;
 
 			this.copyPasteBehavior = new Behaviors.CopyPasteBehavior (this);
 			this.OnCursorChanged (true);
@@ -675,12 +675,12 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.navigator != null)
 					{
-						this.navigator.AboutToChange -= new EventHandler (this.HandleNavigatorAboutToChange);
-						this.navigator.TextDeleted -= new EventHandler (this.HandleNavigatorTextDeleted);
-						this.navigator.TextInserted -= new EventHandler (this.HandleNavigatorTextInserted);
-						this.navigator.CursorScrolled -= new EventHandler (this.HandleNavigatorCursorScrolled);
-						this.navigator.CursorChanged -= new EventHandler (this.HandleNavigatorCursorChanged);
-						this.navigator.StyleChanged -= new EventHandler (this.HandleNavigatorStyleChanged);
+						this.navigator.AboutToChange -= this.HandleNavigatorAboutToChange;
+						this.navigator.TextDeleted -= this.HandleNavigatorTextDeleted;
+						this.navigator.TextInserted -= this.HandleNavigatorTextInserted;
+						this.navigator.CursorScrolled -= this.HandleNavigatorCursorScrolled;
+						this.navigator.CursorChanged -= this.HandleNavigatorCursorChanged;
+						this.navigator.StyleChanged -= this.HandleNavigatorStyleChanged;
 					}
 
 					TextField.blinking = null;
@@ -1738,7 +1738,7 @@ namespace Epsitec.Common.Widgets
 				//	mélanger les pinceaux :
 
 				TextField.flashTimer = new Timer ();
-				TextField.flashTimer.TimeElapsed += new EventHandler (TextField.HandleFlashTimer);
+				TextField.flashTimer.TimeElapsed += TextField.HandleFlashTimer;
 				TextField.flashTimerStarted = true;
 
 				this.ResetCursor ();

@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void DissolveAndDisposeWindow()
 		{
-			this.WindowAnimationEnded += new Support.EventHandler (this.HandleWindowAnimationEnded);
+			this.WindowAnimationEnded += this.HandleWindowAnimationEnded;
 			this.AnimateHide (Animation.FadeOut);
 		}
 		

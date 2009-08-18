@@ -80,7 +80,7 @@ namespace Epsitec.Common.Dialogs
 			this.list.Items.AddRange (this.data);
 			this.list.TabIndex       = 1;
 			this.list.TabNavigationMode  = TabNavigationMode.ActivateOnTab;
-			this.list.DoubleClicked += new MessageEventHandler (this.HandleListDoubleClicked);
+			this.list.DoubleClicked += this.HandleListDoubleClicked;
 			
 			this.AddExtraWidgets (body);
 			

@@ -37,7 +37,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 			this.browser.IsReadOnly = true;
 			
 			this.browser.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleBrowserComboOpening);
-			this.browser.ComboClosed  += new EventHandler (this.HandleBrowserComboClosed);
+			this.browser.ComboClosed  += this.HandleBrowserComboClosed;
 			
 			this.browser.ItemTextConverter =
 				delegate (string itemText)

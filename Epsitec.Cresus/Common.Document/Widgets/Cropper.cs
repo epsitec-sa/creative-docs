@@ -39,40 +39,40 @@ namespace Epsitec.Common.Document.Widgets
 			this.buttonReset.Text = Res.Strings.Panel.Image.Crop.Button.Reset;
 			this.buttonReset.TabIndex = tabIndex++;
 			this.buttonReset.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.buttonReset.Clicked += new MessageEventHandler(this.HandleButtonReset);
+			this.buttonReset.Clicked += this.HandleButtonReset;
 			ToolTip.Default.SetToolTip(this.buttonReset, Res.Strings.Panel.Image.Crop.Tooltip.Reset);
 
 			this.buttonFill = new Button(this);
 			this.buttonFill.Text = Res.Strings.Panel.Image.Crop.Button.Fill;
 			this.buttonFill.TabIndex = tabIndex++;
 			this.buttonFill.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.buttonFill.Clicked += new MessageEventHandler(this.HandleButtonFill);
+			this.buttonFill.Clicked += this.HandleButtonFill;
 			ToolTip.Default.SetToolTip(this.buttonFill, Res.Strings.Panel.Image.Crop.Tooltip.Fill);
 
 			this.fieldCropTop = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropTop);
-			this.fieldCropTop.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropTop.EditionAccepted += this.HandleFieldChanged;
 			this.fieldCropTop.TabIndex = tabIndex++;
 			this.fieldCropTop.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropTop, Res.Strings.Panel.Image.Crop.Tooltip.CropTop);
 
 			this.fieldCropLeft = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropLeft);
-			this.fieldCropLeft.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropLeft.EditionAccepted += this.HandleFieldChanged;
 			this.fieldCropLeft.TabIndex = tabIndex++;
 			this.fieldCropLeft.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropLeft, Res.Strings.Panel.Image.Crop.Tooltip.CropLeft);
 
 			this.fieldCropRight = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropRight);
-			this.fieldCropRight.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropRight.EditionAccepted += this.HandleFieldChanged;
 			this.fieldCropRight.TabIndex = tabIndex++;
 			this.fieldCropRight.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropRight, Res.Strings.Panel.Image.Crop.Tooltip.CropRight);
 
 			this.fieldCropBottom = new TextFieldReal(this);
 			Cropper.InitTextFieldReal(this.fieldCropBottom);
-			this.fieldCropBottom.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldCropBottom.EditionAccepted += this.HandleFieldChanged;
 			this.fieldCropBottom.TabIndex = tabIndex++;
 			this.fieldCropBottom.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldCropBottom, Res.Strings.Panel.Image.Crop.Tooltip.CropBottom);
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Document.Widgets
 			this.sliderZoom.SmallChange = 0.1M;
 			this.sliderZoom.LargeChange = 0.5M;
 			this.sliderZoom.Resolution = 0.000000001M;
-			this.sliderZoom.ValueChanged += new EventHandler(this.HandleSliderZoomChanged);
+			this.sliderZoom.ValueChanged += this.HandleSliderZoomChanged;
 			this.sliderZoom.TabIndex = tabIndex++;
 			this.sliderZoom.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.sliderZoom, Res.Strings.Panel.Image.Crop.Tooltip.Zoom);
@@ -99,14 +99,14 @@ namespace Epsitec.Common.Document.Widgets
 		{
 			if (disposing)
 			{
-				this.fieldCropLeft.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldCropRight.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldCropBottom.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldCropTop.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldCropLeft.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldCropRight.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldCropBottom.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldCropTop.EditionAccepted -= this.HandleFieldChanged;
 
-				this.buttonReset.Clicked -= new MessageEventHandler(this.HandleButtonReset);
-				this.buttonFill.Clicked -= new MessageEventHandler(this.HandleButtonFill);
-				this.sliderZoom.ValueChanged -= new EventHandler(this.HandleSliderZoomChanged);
+				this.buttonReset.Clicked -= this.HandleButtonReset;
+				this.buttonFill.Clicked -= this.HandleButtonFill;
+				this.sliderZoom.ValueChanged -= this.HandleSliderZoomChanged;
 
 				this.fieldCropLeft = null;
 				this.fieldCropRight = null;

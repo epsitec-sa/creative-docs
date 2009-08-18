@@ -12,10 +12,10 @@ namespace Epsitec.Common.Printing
 		{
 			this.pd = new System.Drawing.Printing.PrintDocument ();
 			
-			this.pd.BeginPrint        += new System.Drawing.Printing.PrintEventHandler (this.HandleBeginPrint);
-			this.pd.EndPrint          += new System.Drawing.Printing.PrintEventHandler (this.HandleEndPrint);
-			this.pd.PrintPage         += new System.Drawing.Printing.PrintPageEventHandler (this.HandlePrintPage);
-			this.pd.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler (this.HandleQueryPageSettings);
+			this.pd.BeginPrint        += this.HandleBeginPrint;
+			this.pd.EndPrint          += this.HandleEndPrint;
+			this.pd.PrintPage         += this.HandlePrintPage;
+			this.pd.QueryPageSettings += this.HandleQueryPageSettings;
 			
 			this.pd.OriginAtMargins = true;
 		}

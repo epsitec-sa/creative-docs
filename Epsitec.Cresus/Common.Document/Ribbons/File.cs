@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Ribbons
 			double dy = this.buttonSave.PreferredHeight;
 
 			this.groupNew = new Widget(this);
-			this.buttonLastModels = this.CreateMenuButton("", Res.Strings.Action.LastModels, new MessageEventHandler(this.HandleLastModelsPressed));
+			this.buttonLastModels = this.CreateMenuButton("", Res.Strings.Action.LastModels, this.HandleLastModelsPressed);
 			this.buttonLastModels.ContentAlignment = ContentAlignment.BottomCenter;
 			this.buttonLastModels.GlyphSize = new Size(dx*1.5, dy*0.5);
 			this.buttonLastModels.Anchor = AnchorStyles.All;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonNew.SetParent(this.groupNew);
 
 			this.groupOpen = new Widget(this);
-			this.buttonLastFiles  = this.CreateMenuButton("", Res.Strings.Action.LastFiles, new MessageEventHandler(this.HandleLastFilesPressed));
+			this.buttonLastFiles  = this.CreateMenuButton("", Res.Strings.Action.LastFiles, this.HandleLastFilesPressed);
 			this.buttonLastFiles.ContentAlignment = ContentAlignment.BottomCenter;
 			this.buttonLastFiles.GlyphSize = new Size(dx*1.5, dy*0.5);
 			this.buttonLastFiles.Anchor = AnchorStyles.All;

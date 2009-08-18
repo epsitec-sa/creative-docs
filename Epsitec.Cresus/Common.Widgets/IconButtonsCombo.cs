@@ -23,25 +23,25 @@ namespace Epsitec.Common.Widgets
 			this.buttonPrev.GlyphShape = GlyphShape.ArrowUp;
 			this.buttonPrev.ButtonStyle = ButtonStyle.Combo;
 			this.buttonPrev.Name = "Prev";
-			this.buttonPrev.Pressed += new MessageEventHandler(this.HandleButtonPrevPressed);
+			this.buttonPrev.Pressed += this.HandleButtonPrevPressed;
 			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.IconButtonsCombo.Prev);
 			
 			this.buttonNext = new GlyphButton(this);
 			this.buttonNext.GlyphShape = GlyphShape.ArrowDown;
 			this.buttonNext.ButtonStyle = ButtonStyle.Combo;
 			this.buttonNext.Name = "Next";
-			this.buttonNext.Pressed += new MessageEventHandler(this.HandleButtonNextPressed);
+			this.buttonNext.Pressed += this.HandleButtonNextPressed;
 			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.IconButtonsCombo.Next);
 			
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
 			this.buttonMenu.Name = "Menu";
-			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
+			this.buttonMenu.Pressed += this.HandleButtonMenuPressed;
 			ToolTip.Default.SetToolTip(this.buttonMenu, Res.Strings.IconButtonsCombo.Menu);
 			
-			this.AddEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler(this.HandleAdvancedStatePropertyChanged));
-			this.AddEventHandler (Visual.AutoFocusProperty, new PropertyChangedEventHandler (this.HandleAutoFocusChanged));
+			this.AddEventHandler (Widgets.CommandState.AdvancedStateProperty, this.HandleAdvancedStatePropertyChanged);
+			this.AddEventHandler (Visual.AutoFocusProperty, this.HandleAutoFocusChanged);
 		}
 		
 		public IconButtonsCombo(Widget embedder) : this()
@@ -280,7 +280,7 @@ namespace Epsitec.Common.Widgets
 				{
 					for ( int i=0 ; i<this.buttonMain.Length ; i++ )
 					{
-						this.buttonMain[i].Pressed -= new MessageEventHandler(this.HandleButtonMainPressed);
+						this.buttonMain[i].Pressed -= this.HandleButtonMainPressed;
 						this.buttonMain[i].Dispose();
 						this.buttonMain[i] = null;
 					}
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Widgets
 					this.buttonMain[i] = new IconButton(this);
 					this.buttonMain[i].ButtonStyle = ButtonStyle.ActivableIcon;
 					this.buttonMain[i].AutoFocus = this.AutoFocus;
-					this.buttonMain[i].Pressed += new MessageEventHandler(this.HandleButtonMainPressed);
+					this.buttonMain[i].Pressed += this.HandleButtonMainPressed;
 				}
 			}
 		}
@@ -332,25 +332,25 @@ namespace Epsitec.Common.Widgets
 				
 				for ( int i=0 ; i<this.buttonMain.Length ; i++ )
 				{
-					this.buttonMain[i].Pressed -= new MessageEventHandler(this.HandleButtonMainPressed);
+					this.buttonMain[i].Pressed -= this.HandleButtonMainPressed;
 					this.buttonMain[i].Dispose();
 					this.buttonMain[i] = null;
 				}
 
-				this.buttonPrev.Pressed -= new MessageEventHandler(this.HandleButtonPrevPressed);
+				this.buttonPrev.Pressed -= this.HandleButtonPrevPressed;
 				this.buttonPrev.Dispose();
 				this.buttonPrev = null;
 				
-				this.buttonNext.Pressed -= new MessageEventHandler(this.HandleButtonNextPressed);
+				this.buttonNext.Pressed -= this.HandleButtonNextPressed;
 				this.buttonNext.Dispose();
 				this.buttonNext = null;
 				
-				this.buttonMenu.Pressed -= new MessageEventHandler(this.HandleButtonMenuPressed);
+				this.buttonMenu.Pressed -= this.HandleButtonMenuPressed;
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
 
-				this.RemoveEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
-				this.RemoveEventHandler(Visual.AutoFocusProperty, new PropertyChangedEventHandler(this.HandleAutoFocusChanged));
+				this.RemoveEventHandler (Widgets.CommandState.AdvancedStateProperty, this.HandleAdvancedStatePropertyChanged);
+				this.RemoveEventHandler(Visual.AutoFocusProperty, this.HandleAutoFocusChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -537,13 +537,13 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected += new EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted += this.HandleMenuAccepted;
+			this.menu.Rejected += this.HandleMenuRejected;
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
-				this.scrollList.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
 			this.OnComboOpened();
@@ -567,13 +567,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted -= this.HandleMenuAccepted;
+			this.menu.Rejected -= this.HandleMenuRejected;
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
-				this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
+				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;

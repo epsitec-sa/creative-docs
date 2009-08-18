@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGlobal.Text = Res.Strings.Container.Guides.RadioGlobal;
 			this.radioGlobal.Dock = DockStyle.Left;
 			this.radioGlobal.Margins = new Margins(0, 10, 0, 0);
-			this.radioGlobal.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
+			this.radioGlobal.ActiveStateChanged += this.HandleRadioChanged;
 			this.radioGlobal.Index = 1;
 			this.radioGlobal.TabIndex = 1;
 			this.radioGlobal.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioPage.Text = Res.Strings.Container.Guides.RadioPage;
 			this.radioPage.Dock = DockStyle.Left;
 			this.radioPage.Margins = new Margins(0, 0, 0, 0);
-			this.radioPage.ActiveStateChanged += new EventHandler(this.HandleRadioChanged);
+			this.radioPage.ActiveStateChanged += this.HandleRadioChanged;
 			this.radioPage.Index = 2;
 			this.radioPage.TabIndex = 2;
 			this.radioPage.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -47,28 +47,28 @@ namespace Epsitec.Common.Document.Containers
 			int index = 0;
 
 			this.buttonNewH = new IconButton(Misc.Icon("GuideNewH"));
-			this.buttonNewH.Clicked += new MessageEventHandler(this.HandleButtonNewH);
+			this.buttonNewH.Clicked += this.HandleButtonNewH;
 			this.buttonNewH.TabIndex = index++;
 			this.buttonNewH.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonNewH);
 			ToolTip.Default.SetToolTip(this.buttonNewH, Res.Strings.Action.GuideNewH);
 
 			this.buttonNewV = new IconButton(Misc.Icon("GuideNewV"));
-			this.buttonNewV.Clicked += new MessageEventHandler(this.HandleButtonNewV);
+			this.buttonNewV.Clicked += this.HandleButtonNewV;
 			this.buttonNewV.TabIndex = index++;
 			this.buttonNewV.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonNewV);
 			ToolTip.Default.SetToolTip(this.buttonNewV, Res.Strings.Action.GuideNewV);
 
 			this.buttonDuplicate = new IconButton(Misc.Icon("DuplicateItem"));
-			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
+			this.buttonDuplicate.Clicked += this.HandleButtonDuplicate;
 			this.buttonDuplicate.TabIndex = index++;
 			this.buttonDuplicate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.Action.GuideDuplicate);
 
 			this.buttonXfer = new IconButton(Misc.Icon("GuideXfer"));
-			this.buttonXfer.Clicked += new MessageEventHandler(this.HandleButtonXfer);
+			this.buttonXfer.Clicked += this.HandleButtonXfer;
 			this.buttonXfer.TabIndex = index++;
 			this.buttonXfer.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonXfer);
@@ -77,14 +77,14 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton(Misc.Icon("Up"));
-			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
+			this.buttonUp.Clicked += this.HandleButtonUp;
 			this.buttonUp.TabIndex = index++;
 			this.buttonUp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, Res.Strings.Action.GuideUp);
 
 			this.buttonDown = new IconButton(Misc.Icon("Down"));
-			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
+			this.buttonDown.Clicked += this.HandleButtonDown;
 			this.buttonDown.TabIndex = index++;
 			this.buttonDown.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonDown);
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton(Misc.Icon("DeleteItem"));
-			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
+			this.buttonDelete.Clicked += this.HandleButtonDelete;
 			this.buttonDelete.TabIndex = index++;
 			this.buttonDelete.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonDelete);
@@ -101,8 +101,8 @@ namespace Epsitec.Common.Document.Containers
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
-			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
-			this.table.FlyOverChanged += new EventHandler(this.HandleTableFlyOverChanged);
+			this.table.SelectionChanged += this.HandleTableSelectionChanged;
+			this.table.FlyOverChanged += this.HandleTableFlyOverChanged;
 			this.table.StyleH  = CellArrayStyles.ScrollNorm;
 			this.table.StyleH |= CellArrayStyles.Header;
 			this.table.StyleH |= CellArrayStyles.Separator;
@@ -133,8 +133,8 @@ namespace Epsitec.Common.Document.Containers
 			}
 			this.editType.Dock = DockStyle.Left;
 			this.editType.Margins = new Margins(3, 1, 0, 0);
-			this.editType.TextChanged += new EventHandler(this.HandleEditTypeChanged);
-			this.editType.ComboClosed += new EventHandler(this.HandleEditTypeClosed);
+			this.editType.TextChanged += this.HandleEditTypeChanged;
+			this.editType.ComboClosed += this.HandleEditTypeClosed;
 			this.editType.TabIndex = 1;
 			this.editType.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Document.Containers
 			this.editPosition.PreferredWidth = 60+10;
 			this.editPosition.Dock = DockStyle.Left;
 			this.editPosition.Margins = new Margins(1, 0, 0, 0);
-			this.editPosition.ValueChanged += new EventHandler(this.HandleEditPositionChanged);
+			this.editPosition.ValueChanged += this.HandleEditPositionChanged;
 			this.editPosition.TabIndex = 2;
 			this.editPosition.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 

@@ -479,7 +479,7 @@ namespace Epsitec.Common.Document.Objects
 
 
 		#region Menu
-		public static VMenu CreateMenu(UndoableList pages, int currentPage, string cmd, MessageEventHandler message)
+		public static VMenu CreateMenu(UndoableList pages, int currentPage, string cmd, Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu pour choisir une page exclusivement.
 			int total = pages.Count;
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Document.Objects
 			return menu;
 		}
 
-		public static VMenu CreateMenu(UndoableList pages, List<int> currentsPage, string cmd, MessageEventHandler message)
+		public static VMenu CreateMenu(UndoableList pages, List<int> currentsPage, string cmd, Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu pour choisir une page parmi plusieurs.
 			int total = pages.Count;

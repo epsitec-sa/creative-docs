@@ -29,7 +29,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.About.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowAboutCloseClicked;
 
 				About.CreateWidgetSplash(this.window.Root, this.editor.InstallType, this.editor.DocumentType);
 
@@ -40,7 +40,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
+				buttonClose.Clicked += this.HandleAboutButtonCloseClicked;
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				www.PreferredWidth = 400-280;
 				www.Text = string.Format("<a href=\"{0}\">{1}</a><br/>", Res.Strings.Dialog.About.Link, Res.Strings.Dialog.About.Web);
 				www.ContentAlignment = ContentAlignment.MiddleLeft;
-				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
+				www.HypertextClicked += HandleLinkHypertextClicked;
 				www.Anchor = AnchorStyles.BottomLeft;
 				www.Margins = new Margins(6, 0, 0, 12);
 			}

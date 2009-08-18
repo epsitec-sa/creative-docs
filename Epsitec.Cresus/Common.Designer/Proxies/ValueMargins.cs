@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.buttonLink.PreferredWidth = 50-5-1;
 			this.buttonLink.Dock = DockStyle.Right;
 			this.buttonLink.Margins = new Margins(5, 0, 0, 0);
-			this.buttonLink.Clicked += new MessageEventHandler(this.HandleButtonLinkClicked);
+			this.buttonLink.Clicked += this.HandleButtonLinkClicked;
 
 			this.fieldTop = new TextFieldSlider(top);
 			this.fieldTop.MinValue = (decimal) this.min;
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldTop.PreferredWidth = 50;
 			this.fieldTop.Dock = DockStyle.Right;
 			this.fieldTop.Margins = new Margins(-1, 0, 0, 0);
-			this.fieldTop.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			this.fieldTop.ValueChanged += this.HandleFieldValueChanged;
 			ToolTip.Default.SetToolTip(this.fieldTop, Res.Strings.Panel.Margins.Top);
 
 			if (!this.hasHiddenLabel)
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldRight.PreferredWidth = 50;
 			this.fieldRight.Dock = DockStyle.Right;
 			this.fieldRight.Margins = new Margins(-1, 0, 0, 0);
-			this.fieldRight.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			this.fieldRight.ValueChanged += this.HandleFieldValueChanged;
 			ToolTip.Default.SetToolTip(this.fieldRight, Res.Strings.Panel.Margins.Right);
 
 			this.fieldBottom = new TextFieldSlider(bottom);
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldBottom.PreferredWidth = 50;
 			this.fieldBottom.Dock = DockStyle.Right;
 			this.fieldBottom.Margins = new Margins(-1, 0, 0, 0);
-			this.fieldBottom.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			this.fieldBottom.ValueChanged += this.HandleFieldValueChanged;
 			ToolTip.Default.SetToolTip(this.fieldBottom, Res.Strings.Panel.Margins.Bottom);
 
 			this.fieldLeft = new TextFieldSlider(bottom);
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Designer.Proxies
 			this.fieldLeft.Resolution = (decimal) this.resolution;
 			this.fieldLeft.PreferredWidth = 50;
 			this.fieldLeft.Dock = DockStyle.Right;
-			this.fieldLeft.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			this.fieldLeft.ValueChanged += this.HandleFieldValueChanged;
 			ToolTip.Default.SetToolTip(this.fieldLeft, Res.Strings.Panel.Margins.Left);
 
 			this.UpdateInterface();

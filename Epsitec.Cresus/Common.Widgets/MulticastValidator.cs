@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 			IValidator[] validators = new IValidator[list.Count];
 			list.CopyTo (validators);
 
-			validator.BecameDirty += new Support.EventHandler (this.HandleBecameDirty);
+			validator.BecameDirty += this.HandleBecameDirty;
 			this.validators = validators;
 
 			this.OnValidatorsChanged ();
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Widgets
 			IValidator[] validators = new IValidator[list.Count];
 			list.CopyTo (validators);
 
-			validator.BecameDirty -= new Support.EventHandler (this.HandleBecameDirty);
+			validator.BecameDirty -= this.HandleBecameDirty;
 			this.validators = validators;
 
 			this.OnValidatorsChanged ();

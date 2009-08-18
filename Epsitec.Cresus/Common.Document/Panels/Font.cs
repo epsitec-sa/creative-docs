@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontFace = new Widgets.FontFaceCombo(this);
 			this.fontFace.IsReadOnly = true;
 			this.fontFace.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
-			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
+			this.fontFace.ComboClosed += this.HandleFontFaceTextChanged;
 			this.fontFace.TabIndex = 1;
 			this.fontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
@@ -36,15 +36,15 @@ namespace Epsitec.Common.Document.Panels
 			this.fontSize.LabelShortText = Res.Strings.Panel.Font.Short.Size;
 			this.fontSize.LabelLongText  = Res.Strings.Panel.Font.Long.Size;
 			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize.TextFieldReal);
-			this.fontSize.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fontSize.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fontSize.TabIndex = 3;
 			this.fontSize.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontSize, Res.Strings.Panel.Font.Tooltip.Size);
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.DragSourceFrame = true;
-			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fontColor.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
+			this.fontColor.Clicked += this.HandleFieldColorClicked;
+			this.fontColor.ColorChanged += this.HandleFieldColorChanged;
 			this.fontColor.TabIndex = 4;
 			this.fontColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, Res.Strings.Panel.Font.Tooltip.Color);
@@ -60,10 +60,10 @@ namespace Epsitec.Common.Document.Panels
 			if ( disposing )
 			{
 				this.fontFace.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
-				this.fontFace.ComboClosed -= new EventHandler(this.HandleFontFaceTextChanged);
-				this.fontSize.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fontColor.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
+				this.fontFace.ComboClosed -= this.HandleFontFaceTextChanged;
+				this.fontSize.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fontColor.Clicked -= this.HandleFieldColorClicked;
+				this.fontColor.ColorChanged -= this.HandleFieldColorChanged;
 
 				this.labelColor = null;
 				this.fontFace = null;

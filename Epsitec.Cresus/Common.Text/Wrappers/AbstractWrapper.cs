@@ -120,8 +120,8 @@ namespace Epsitec.Common.Text.Wrappers
 			this.style_list  = this.context.StyleList;
 			this.oplet_queue = this.story.OpletQueue;
 			
-			this.navigator.TextChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
-			this.navigator.CursorMoved += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
+			this.navigator.TextChanged += this.HandleNavigatorTextChanged;
+			this.navigator.CursorMoved += this.HandleNavigatorCursorMoved;
 			
 			this.attachment = Attachment.Text;
 			
@@ -154,9 +154,9 @@ namespace Epsitec.Common.Text.Wrappers
 			this.style_list  = this.context.StyleList;
 			this.oplet_queue = this.story.OpletQueue;
 			
-			this.style_list.StyleAdded += new Common.Support.EventHandler (this.HandleStyleListStyleAdded);
-			this.style_list.StyleRemoved += new Common.Support.EventHandler (this.HandleStyleListStyleRemoved);
-			this.style_list.StyleRedefined += new Common.Support.EventHandler (this.HandleStyleListStyleRedefined);
+			this.style_list.StyleAdded += this.HandleStyleListStyleAdded;
+			this.style_list.StyleRemoved += this.HandleStyleListStyleRemoved;
+			this.style_list.StyleRedefined += this.HandleStyleListStyleRedefined;
 			
 			this.attachment = Attachment.Style;
 			this.style.NotifyAttach (this);
@@ -321,14 +321,14 @@ namespace Epsitec.Common.Text.Wrappers
 			}
 			if (this.navigator != null)
 			{
-				this.navigator.CursorMoved -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorMoved);
-				this.navigator.TextChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextChanged);
+				this.navigator.CursorMoved -= this.HandleNavigatorCursorMoved;
+				this.navigator.TextChanged -= this.HandleNavigatorTextChanged;
 			}
 			if (this.style_list != null)
 			{
-				this.style_list.StyleAdded -= new Common.Support.EventHandler (this.HandleStyleListStyleAdded);
-				this.style_list.StyleRemoved -= new Common.Support.EventHandler (this.HandleStyleListStyleRemoved);
-				this.style_list.StyleRedefined -= new Common.Support.EventHandler (this.HandleStyleListStyleRedefined);
+				this.style_list.StyleAdded -= this.HandleStyleListStyleAdded;
+				this.style_list.StyleRemoved -= this.HandleStyleListStyleRemoved;
+				this.style_list.StyleRedefined -= this.HandleStyleListStyleRedefined;
 			}
 			
 			this.story       = null;

@@ -22,8 +22,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.container.TabIndex = 1;
 			this.container.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
-			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
-			this.Exited += new MessageEventHandler(this.HandleMouseExited);
+			this.Entered += this.HandleMouseEntered;
+			this.Exited += this.HandleMouseExited;
 		}
 		
 		public StackedPanel(Widget embedder) : this()
@@ -35,8 +35,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.Entered -= new MessageEventHandler(this.HandleMouseEntered);
-				this.Exited -= new MessageEventHandler(this.HandleMouseExited);
+				this.Entered -= this.HandleMouseEntered;
+				this.Exited -= this.HandleMouseExited;
 			}
 			
 			base.Dispose(disposing);

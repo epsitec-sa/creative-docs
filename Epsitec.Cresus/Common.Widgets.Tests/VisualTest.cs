@@ -107,10 +107,10 @@ namespace Epsitec.Common.Widgets
 			b.Children.Add (c1);
 			b.Children.Add (c2);
 
-			a.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.A_IsEnabledChanged);
-			b.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.B_IsEnabledChanged);
-			c1.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.C1_IsEnabledChanged);
-			c2.IsEnabledChanged += new PropertyChangedEventHandler (VisualTest.C2_IsEnabledChanged);
+			a.IsEnabledChanged += VisualTest.A_IsEnabledChanged;
+			b.IsEnabledChanged += VisualTest.B_IsEnabledChanged;
+			c1.IsEnabledChanged += VisualTest.C1_IsEnabledChanged;
+			c2.IsEnabledChanged += VisualTest.C2_IsEnabledChanged;
 
 			Assert.IsTrue (a.Enable);
 			Assert.IsTrue (a.IsEnabled);

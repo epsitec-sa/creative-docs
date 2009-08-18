@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("BindingSelector", 500, 400, true);
 				this.window.Text = Res.Strings.Dialog.BindingSelector.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -88,10 +88,10 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.LineHeight = BindingSelector.arrayLineHeight;
 				this.array.Dock = DockStyle.Fill;
 				this.array.Margins = new Margins(0, 0, 0, 4);
-				this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
-				this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
-				this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-				this.array.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
+				this.array.ColumnsWidthChanged += this.HandleArrayColumnsWidthChanged;
+				this.array.CellCountChanged += this.HandleArrayCellCountChanged;
+				this.array.SelectedRowChanged += this.HandleArraySelectedRowChanged;
+				this.array.SelectedRowDoubleClicked += this.HandleArraySelectedRowDoubleClicked;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.Text = Res.Strings.Dialog.BindingSelector.Button.Use;
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
-				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
+				this.buttonUse.Clicked += this.HandleButtonUseClicked;
 				this.buttonUse.TabIndex = 10;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.LargeChange = 10.0M;
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) BindingSelector.arrayLineHeight;
-				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				this.slider.ValueChanged += this.HandleSliderChanged;
 				//?ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 
 				//	Crée le bouton pour le mode.
@@ -137,14 +137,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkReadonly.Text = Res.Strings.Dialog.BindingSelector.Button.Readonly;
 				this.checkReadonly.Dock = DockStyle.Bottom;
 				this.checkReadonly.Margins = new Margins(0, 0, 2, 4);
-				this.checkReadonly.ActiveStateChanged += new EventHandler(this.HandleCheckReadonlyActiveStateChanged);
+				this.checkReadonly.ActiveStateChanged += this.HandleCheckReadonlyActiveStateChanged;
 
 				//	Crée le bouton pour l'héritage.
 				this.checkInherit = new CheckButton(this.window.Root);
 				this.checkInherit.Text = Res.Strings.Dialog.BindingSelector.Button.Inherit;
 				this.checkInherit.Dock = DockStyle.Bottom;
 				this.checkInherit.Margins = new Margins(0, 0, 2, 4);
-				this.checkInherit.ActiveStateChanged += new EventHandler(this.HandleCheckInheritActiveStateChanged);
+				this.checkInherit.ActiveStateChanged += this.HandleCheckInheritActiveStateChanged;
 			}
 
 			this.UpdateTitle();

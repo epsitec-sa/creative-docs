@@ -29,7 +29,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Key.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowKeyCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowKeyCloseClicked;
 
 				this.tabIndex = 0;
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.radio1.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioDemo + "</font>";
 				this.radio1.Dock = DockStyle.Top;
 				this.radio1.Margins = new Margins (6, 6, 0, 0);
-				this.radio1.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
+				this.radio1.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 				this.radio1.TabIndex = this.tabIndex++;
 				this.radio1.Index = 1;
 				this.radio1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -55,7 +55,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.radio2.Text = @"<font size=""120%"">" + Res.Strings.Dialog.Key.RadioFull + "</font>";
 				this.radio2.Dock = DockStyle.Top;
 				this.radio2.Margins = new Margins (6, 6, 0, 0);
-				this.radio2.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
+				this.radio2.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 				this.radio2.TabIndex = this.tabIndex++;
 				this.radio2.Index = 2;
 				this.radio2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.key1 = new TextField(keys);
 				this.key1.PreferredWidth = 50;
 				this.key1.Dock = DockStyle.Left;
-				this.key1.TextChanged += new EventHandler(this.HandleKeyTextChanged);
+				this.key1.TextChanged += this.HandleKeyTextChanged;
 				this.key1.TabIndex = this.tabIndex++;
 				this.key1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -87,7 +87,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.key2 = new TextField(keys);
 				this.key2.PreferredWidth = 60;
 				this.key2.Dock = DockStyle.Left;
-				this.key2.TextChanged += new EventHandler(this.HandleKeyTextChanged);
+				this.key2.TextChanged += this.HandleKeyTextChanged;
 				this.key2.TabIndex = this.tabIndex++;
 				this.key2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -100,7 +100,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.key3 = new TextField(keys);
 				this.key3.PreferredWidth = 40;
 				this.key3.Dock = DockStyle.Left;
-				this.key3.TextChanged += new EventHandler(this.HandleKeyTextChanged);
+				this.key3.TextChanged += this.HandleKeyTextChanged;
 				this.key3.TabIndex = this.tabIndex++;
 				this.key3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -113,7 +113,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.key4 = new TextField(keys);
 				this.key4.PreferredWidth = 60;
 				this.key4.Dock = DockStyle.Left;
-				this.key4.TextChanged += new EventHandler(this.HandleKeyTextChanged);
+				this.key4.TextChanged += this.HandleKeyTextChanged;
 				this.key4.TabIndex = this.tabIndex++;
 				this.key4.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -124,7 +124,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.buttonOK.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOK.Anchor = AnchorStyles.BottomRight;
 				this.buttonOK.Margins = new Margins(0, 6+75+6, 0, 6);
-				this.buttonOK.Clicked += new MessageEventHandler(this.HandleKeyButtonOKClicked);
+				this.buttonOK.Clicked += this.HandleKeyButtonOKClicked;
 				this.buttonOK.TabIndex = this.tabIndex++;
 				this.buttonOK.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -135,7 +135,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Anchor = AnchorStyles.BottomRight;
 				this.buttonCancel.Margins = new Margins(0, 6, 0, 6);
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleKeyButtonCancelClicked);
+				this.buttonCancel.Clicked += this.HandleKeyButtonCancelClicked;
 				this.buttonCancel.TabIndex = this.tabIndex++;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

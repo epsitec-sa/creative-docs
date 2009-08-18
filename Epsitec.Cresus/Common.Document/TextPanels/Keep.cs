@@ -17,11 +17,11 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextKeep");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Keep.Title);
 
-			this.buttonKeepNext = this.CreateIconButton(Misc.Icon("ParagraphKeepNext"), Res.Strings.TextPanel.Keep.Tooltip.KeepNext, new MessageEventHandler(this.HandleButtonKeepNextClicked));
-			this.buttonKeepPrev = this.CreateIconButton(Misc.Icon("ParagraphKeepPrev"), Res.Strings.TextPanel.Keep.Tooltip.KeepPrev, new MessageEventHandler(this.HandleButtonKeepPrevClicked));
+			this.buttonKeepNext = this.CreateIconButton(Misc.Icon("ParagraphKeepNext"), Res.Strings.TextPanel.Keep.Tooltip.KeepNext, this.HandleButtonKeepNextClicked);
+			this.buttonKeepPrev = this.CreateIconButton(Misc.Icon("ParagraphKeepPrev"), Res.Strings.TextPanel.Keep.Tooltip.KeepPrev, this.HandleButtonKeepPrevClicked);
 
-			this.fieldKeepStart = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepStart, Res.Strings.TextPanel.Keep.Short.KeepStart, Res.Strings.TextPanel.Keep.Long.KeepStart, 0.0, 100.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleKeepStartChanged));
-			this.fieldKeepEnd   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepEnd,   Res.Strings.TextPanel.Keep.Short.KeepEnd,   Res.Strings.TextPanel.Keep.Long.KeepEnd,   0.0, 100.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleKeepEndChanged));
+			this.fieldKeepStart = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepStart, Res.Strings.TextPanel.Keep.Short.KeepStart, Res.Strings.TextPanel.Keep.Long.KeepStart, 0.0, 100.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleKeepStartChanged);
+			this.fieldKeepEnd   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Keep.Tooltip.KeepEnd,   Res.Strings.TextPanel.Keep.Short.KeepEnd,   Res.Strings.TextPanel.Keep.Long.KeepEnd,   0.0, 100.0, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleKeepEndChanged);
 			
 			this.fieldKeepStart.TextFieldReal.Resolution = 1.0M;
 			this.fieldKeepStart.TextFieldReal.Scale      = 1.0M;
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldKeepEnd.TextFieldReal.MinValue   = 1M;
 			this.fieldKeepEnd.TextFieldReal.MaxValue   = 5M;
 
-			this.fieldStartMode = CreateComboStartMode(new EventHandler(this.HandleStartModeChanged));
+			this.fieldStartMode = CreateComboStartMode(this.HandleStartModeChanged);
 
 			this.labelNextStyle = new StaticText(this);
 			this.labelNextStyle.ContentAlignment = ContentAlignment.MiddleRight;
@@ -50,13 +50,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldNextStyle.AutoFocus = false;
 			this.fieldNextStyle.TabIndex = this.tabIndex++;
 			this.fieldNextStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.fieldNextStyle.ComboClosed += new EventHandler(this.HandleStyleComboClosed);
+			this.fieldNextStyle.ComboClosed += this.HandleStyleComboClosed;
 			ToolTip.Default.SetToolTip(this.fieldNextStyle, Res.Strings.TextPanel.Keep.Tooltip.NextStyle);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.ParagraphWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -66,10 +66,10 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fieldNextStyle.ComboClosed -= new EventHandler(this.HandleStyleComboClosed);
+				this.fieldNextStyle.ComboClosed -= this.HandleStyleComboClosed;
 
-				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.ParagraphWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);

@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 			glass.SetParent (window.Root);
 			glass.Focus();
 			
-			glass.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);
+			glass.HotColorChanged += this.HandleMagnifierHotColorChanged;
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Widgets
 					this.timer = new Timer ();
 					this.timer.AutoRepeat = 0.1;
 					this.timer.Delay = 0.1;
-					this.timer.TimeElapsed += new Epsitec.Common.Support.EventHandler(HandleTimerTimeElapsed);
+					this.timer.TimeElapsed += HandleTimerTimeElapsed;
 					this.timer.Start ();
 				}
 				

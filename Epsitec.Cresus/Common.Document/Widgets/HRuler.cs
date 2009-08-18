@@ -45,17 +45,17 @@ namespace Epsitec.Common.Document.Widgets
 		public override void WrappersAttach()
 		{
 			//	Attache la règle aux wrappers.
-			this.document.Wrappers.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.document.Wrappers.ParagraphWrapper.Active.Changed += new EventHandler(this.HandleWrapperChanged);
-//-			this.document.Wrappers.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.document.Wrappers.TextWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.document.Wrappers.ParagraphWrapper.Active.Changed += this.HandleWrapperChanged;
+//-			this.document.Wrappers.TextWrapper.Defined.Changed += this.HandleWrapperChanged;
 		}
 
 		public override void WrappersDetach()
 		{
 			//	Détache la règle des wrappers.
-			this.document.Wrappers.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-			this.document.Wrappers.ParagraphWrapper.Active.Changed -= new EventHandler(this.HandleWrapperChanged);
-//-			this.document.Wrappers.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+			this.document.Wrappers.TextWrapper.Active.Changed  -= this.HandleWrapperChanged;
+			this.document.Wrappers.ParagraphWrapper.Active.Changed -= this.HandleWrapperChanged;
+//-			this.document.Wrappers.TextWrapper.Defined.Changed -= this.HandleWrapperChanged;
 		}
 
 		protected void HandleWrapperChanged(object sender)
@@ -544,7 +544,7 @@ namespace Epsitec.Common.Document.Widgets
 				if ( rect.Contains(pos) )  // change le type de tabulateur à insérer ?
 				{
 					Point posMenu = this.MapClientToScreen(new Point(0, 1));
-					VMenu menu = HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), this.tabToCreate);
+					VMenu menu = HRuler.CreateMenu(this.HandleMenuPressed, this.tabToCreate);
 					if ( menu == null )  return;
 					menu.Host = this;
 					menu.ShowAsContextMenu(this.Window, posMenu);
@@ -1025,7 +1025,7 @@ namespace Epsitec.Common.Document.Widgets
 
 
 		#region Menu
-		public static VMenu CreateMenu(MessageEventHandler message, Drawing.TextTabType currentType)
+		public static VMenu CreateMenu(Support.EventHandler<MessageEventArgs> message, Drawing.TextTabType currentType)
 		{
 			//	Crée le menu pour choisir un tabulateur.
 			VMenu menuMath = new VMenu();
@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Document.Widgets
 			return menu;
 		}
 
-		protected static void CreateMenu(VMenu menu, TextTabType type, MessageEventHandler message, Drawing.TextTabType currentType)
+		protected static void CreateMenu(VMenu menu, TextTabType type, Support.EventHandler<MessageEventArgs> message, Drawing.TextTabType currentType)
 		{
 			//	Crée une case du menu pour choisir un tabulateur.
 			string text = HRuler.ConvType2String(type);

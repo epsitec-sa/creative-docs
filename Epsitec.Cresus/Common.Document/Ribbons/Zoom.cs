@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonZoomPrev      = this.CreateIconButton("ZoomPrev");
 			this.separator           = new IconSeparator(this);
 			this.CreateFieldZoom(ref this.fieldZoom, Res.Strings.Action.ZoomValue);
-			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, new MessageEventHandler(this.HandleOthersPressed));
+			this.buttonOthers = this.CreateMenuButton("", Res.Strings.Action.ZoomMenu, this.HandleOthersPressed);
 			
 //			this.UpdateClientGeometry();
 		}
@@ -41,14 +41,14 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			if ( this.document != null )
 			{
-				this.document.Notifier.ZoomChanged -= new SimpleEventHandler(this.HandleZoomChanged);
+				this.document.Notifier.ZoomChanged -= this.HandleZoomChanged;
 			}
 
 			base.SetDocument(type, install, debug, gs, document);
 
 			if ( this.document != null )
 			{
-				this.document.Notifier.ZoomChanged += new SimpleEventHandler(this.HandleZoomChanged);
+				this.document.Notifier.ZoomChanged += this.HandleZoomChanged;
 			}
 
 			this.AdaptFieldZoom(this.fieldZoom);
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.Ribbons
 			field.PreferredWidth = 50;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			field.ValueChanged += this.HandleFieldValueChanged;
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 

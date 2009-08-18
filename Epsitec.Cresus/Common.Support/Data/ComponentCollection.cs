@@ -32,7 +32,7 @@ namespace Epsitec.Common.Support.Data
 		
 		public void Add(IComponent component)
 		{
-			component.Disposed += new EventHandler (this.HandleComponentDisposed);
+			component.Disposed += this.HandleComponentDisposed;
 			
 			this.list.Add (component);
 			this.container.NotifyComponentInsertion (this, component);
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Support.Data
 				throw new System.ArgumentException ("Component not found in collection");
 			}
 			
-			component.Disposed -= new EventHandler (this.HandleComponentDisposed);
+			component.Disposed -= this.HandleComponentDisposed;
 			
 			this.list.RemoveAt (index);
 			this.container.NotifyComponentRemoval (this, component);

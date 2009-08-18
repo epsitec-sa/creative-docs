@@ -302,7 +302,7 @@ namespace Epsitec.Common.Drawing
 			
 			form.ClientSize = new System.Drawing.Size (460, 320);
 			form.Text = "CheckGlyphPaint";
-			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint1);
+			form.Paint +=form_Paint1;
 			
 			this.global_pixmap_1 = new Pixmap ();
 			this.global_pixmap_1.Size = form.ClientSize;
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Drawing
 			
 			form.ClientSize = new System.Drawing.Size (460, 320);
 			form.Text = "CheckSyntheticGlyphPaint";
-			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint2);
+			form.Paint +=form_Paint2;
 			
 			this.global_pixmap_2 = new Pixmap ();
 			this.global_pixmap_2.Size = form.ClientSize;
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Drawing
 			
 			form.ClientSize = new System.Drawing.Size (160, 480);
 			form.Text = "CheckGlyphDynamicBold";
-			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint3);
+			form.Paint +=form_Paint3;
 			
 			this.global_pixmap_3 = new Pixmap ();
 			this.global_pixmap_3.Size = form.ClientSize;
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Drawing
 			
 			form.ClientSize = new System.Drawing.Size (1000, 400);
 			form.Text = "CheckFillPixelCache";
-			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint4);
+			form.Paint +=form_Paint4;
 			
 			this.global_pixmap_4 = gra.Pixmap;
 			

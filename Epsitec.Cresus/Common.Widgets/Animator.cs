@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 				this.timer = new Timer ();
 				this.timer.Delay = 0.010;
 				this.timer.AutoRepeat = 0.010;
-				this.timer.TimeElapsed += new Support.EventHandler (HandleTimerTimeElapsed);
+				this.timer.TimeElapsed += HandleTimerTimeElapsed;
 			}
 			
 			this.tick_begin  = System.DateTime.Now.Ticks;
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.timer != null)
 				{
-					this.timer.TimeElapsed -= new Support.EventHandler (HandleTimerTimeElapsed);
+					this.timer.TimeElapsed -= HandleTimerTimeElapsed;
 					this.timer.Dispose ();
 					this.timer = null;
 				}

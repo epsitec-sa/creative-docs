@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("TypeCode", ResourceTypeCode.windowWidthExtended, ResourceTypeCode.windowHeight, true);
 				this.window.Text = Res.Strings.Dialog.TypeCode.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(ResourceTypeCode.windowWidthCompacted, ResourceTypeCode.windowHeight);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
@@ -71,19 +71,19 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkNative.Text = Res.Strings.Dialog.TypeCode.EnumNative;
 				this.checkNative.Margins = new Margins(0, 0, 0, 8);
 				this.checkNative.Dock = DockStyle.Top;
-				this.checkNative.ActiveStateChanged += new EventHandler(this.HandleCheckNativeActiveStateChanged);
+				this.checkNative.ActiveStateChanged += this.HandleCheckNativeActiveStateChanged;
 
 				this.fieldFilter = new TextFieldCombo(this.rightPanel);
 				this.fieldFilter.Text = Res.Strings.Dialog.Icon.Filter.All;
 				this.fieldFilter.IsReadOnly = true;
 				this.fieldFilter.Margins = new Margins(0, 0, 0, 8);
 				this.fieldFilter.Dock = DockStyle.Top;
-				this.fieldFilter.ComboClosed += new EventHandler(this.HandleFieldFilterComboClosed);
+				this.fieldFilter.ComboClosed += this.HandleFieldFilterComboClosed;
 				this.UpdateFilter();
 
 				this.enumList = new ScrollList(this.rightPanel);
 				this.enumList.Dock = DockStyle.Fill;
-				this.enumList.SelectionActivated += new EventHandler(this.HandleEnumListSelectionActivated);
+				this.enumList.SelectionActivated += this.HandleEnumListSelectionActivated;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCancelClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCancelClicked;
 				this.buttonCancel.TabIndex = 101;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOKClicked);
+				this.buttonOk.Clicked += this.HandleButtonOKClicked;
 				this.buttonOk.TabIndex = 100;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonExtend.TabNavigationMode = TabNavigationMode.None;
 				this.buttonExtend.Dock = DockStyle.Left;
 				this.buttonExtend.Margins = new Margins(0, 0, 3, 3);
-				this.buttonExtend.Clicked += new MessageEventHandler(this.HandleButtonExtendClicked);
+				this.buttonExtend.Clicked += this.HandleButtonExtendClicked;
 				ToolTip.Default.SetToolTip(this.buttonExtend, Res.Strings.Dialog.TypeCode.Tooltip.Options);
 
 				this.UpdateExtended();
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			button.Index = this.index++;
 			button.TabIndex = this.tabIndex;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			button.ActiveStateChanged += new EventHandler(this.HandleRadioButtonActiveStateChanged);
+			button.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
 
 			this.radioButtons.Add(button);
 		}

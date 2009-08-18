@@ -80,17 +80,17 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			this.optionsFontNone = new RadioButton (groupFont);
 			this.optionsFontNone.Text = Res.Strings.Dialog.Save.Include.Font.None;
 			this.optionsFontNone.Dock = DockStyle.Top;
-			this.optionsFontNone.Clicked += new MessageEventHandler (this.HandleOptionsFontClicked);
+			this.optionsFontNone.Clicked += this.HandleOptionsFontClicked;
 
 			this.optionsFontUsed = new RadioButton (groupFont);
 			this.optionsFontUsed.Text = Res.Strings.Dialog.Save.Include.Font.Used;
 			this.optionsFontUsed.Dock = DockStyle.Top;
-			this.optionsFontUsed.Clicked += new MessageEventHandler (this.HandleOptionsFontClicked);
+			this.optionsFontUsed.Clicked += this.HandleOptionsFontClicked;
 
 			this.optionsFontAll = new RadioButton (groupFont);
 			this.optionsFontAll.Text = Res.Strings.Dialog.Save.Include.Font.All;
 			this.optionsFontAll.Dock = DockStyle.Top;
-			this.optionsFontAll.Clicked += new MessageEventHandler (this.HandleOptionsFontClicked);
+			this.optionsFontAll.Clicked += this.HandleOptionsFontClicked;
 
 			//	Options pour les images.
 			GroupBox groupImage = new GroupBox (this.optionsContainer);
@@ -104,17 +104,17 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			this.optionsImageNone = new RadioButton (groupImage);
 			this.optionsImageNone.Text = Res.Strings.Dialog.Save.Include.Image.None;
 			this.optionsImageNone.Dock = DockStyle.Top;
-			this.optionsImageNone.Clicked += new MessageEventHandler (this.HandleOptionsImageClicked);
+			this.optionsImageNone.Clicked += this.HandleOptionsImageClicked;
 
 			this.optionsImageDefined = new RadioButton (groupImage);
 			this.optionsImageDefined.Text = Res.Strings.Dialog.Save.Include.Image.Defined;
 			this.optionsImageDefined.Dock = DockStyle.Top;
-			this.optionsImageDefined.Clicked += new MessageEventHandler (this.HandleOptionsImageClicked);
+			this.optionsImageDefined.Clicked += this.HandleOptionsImageClicked;
 
 			this.optionsImageAll = new RadioButton (groupImage);
 			this.optionsImageAll.Text = Res.Strings.Dialog.Save.Include.Image.All;
 			this.optionsImageAll.Dock = DockStyle.Top;
-			this.optionsImageAll.Clicked += new MessageEventHandler (this.HandleOptionsImageClicked);
+			this.optionsImageAll.Clicked += this.HandleOptionsImageClicked;
 		}
 
 		protected override void CreateFooterOptions(Widget footer)
@@ -126,7 +126,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			this.optionsExtend.TabNavigationMode = TabNavigationMode.None;
 			this.optionsExtend.Dock = DockStyle.Left;
 			this.optionsExtend.Margins = new Margins (0, 8, 3, 3);
-			this.optionsExtend.Clicked += new MessageEventHandler (this.HandleOptionsExtendClicked);
+			this.optionsExtend.Clicked += this.HandleOptionsExtendClicked;
 			ToolTip.Default.SetToolTip (this.optionsExtend, Res.Strings.Dialog.File.Tooltip.ExtendInclude);
 		}
 

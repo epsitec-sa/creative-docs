@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("New", 500, 230, true);
 				this.window.Text = Res.Strings.Dialog.New.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -42,13 +42,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioTypeReference.Text = Res.Strings.Dialog.New.Type.Reference;
 				this.radioTypeReference.PreferredWidth = 150;
 				this.radioTypeReference.Dock = DockStyle.Left;
-				this.radioTypeReference.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
+				this.radioTypeReference.Clicked += this.HandleRadioTypeClicked;
 
 				this.radioTypePatch = new RadioButton(box);
 				this.radioTypePatch.Text = Res.Strings.Dialog.New.Type.Patch0;
 				this.radioTypePatch.PreferredWidth = 300;
 				this.radioTypePatch.Dock = DockStyle.Left;
-				this.radioTypePatch.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
+				this.radioTypePatch.Clicked += this.HandleRadioTypeClicked;
 
 				Separator sep = new Separator(this.window.Root);
 				sep.PreferredHeight = 1;
@@ -66,17 +66,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioLayerSystem = new RadioButton(this.radioLayerBox);
 				this.radioLayerSystem.Text = Res.Strings.Dialog.New.Layer.System;
 				this.radioLayerSystem.Dock = DockStyle.Top;
-				this.radioLayerSystem.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
+				this.radioLayerSystem.Clicked += this.HandleRadioLayerClicked;
 
 				this.radioLayerApplication = new RadioButton(this.radioLayerBox);
 				this.radioLayerApplication.Text = Res.Strings.Dialog.New.Layer.Application;
 				this.radioLayerApplication.Dock = DockStyle.Top;
-				this.radioLayerApplication.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
+				this.radioLayerApplication.Clicked += this.HandleRadioLayerClicked;
 
 				this.radioLayerUser = new RadioButton(this.radioLayerBox);
 				this.radioLayerUser.Text = Res.Strings.Dialog.New.Layer.User;
 				this.radioLayerUser.Dock = DockStyle.Top;
-				this.radioLayerUser.Clicked += new MessageEventHandler(this.HandleRadioLayerClicked);
+				this.radioLayerUser.Clicked += this.HandleRadioLayerClicked;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonNew.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonNew.Dock = DockStyle.Right;
 				this.buttonNew.Margins = new Margins(0, 6, 0, 0);
-				this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNewClicked);
+				this.buttonNew.Clicked += this.HandleButtonNewClicked;
 				this.buttonNew.TabIndex = 10;
 				this.buttonNew.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			field.Dock = DockStyle.Fill;
 			field.TabIndex = tabIndex;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			field.TextChanged += new EventHandler(this.HandleFieldTextChanged);
+			field.TextChanged += this.HandleFieldTextChanged;
 
 			return field;
 		}

@@ -24,7 +24,7 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldModifier = new TextFieldCombo(this);
 			this.fieldModifier.IsReadOnly = true;
-			this.fieldModifier.TextChanged += new EventHandler(this.HandleFieldModifierTextChanged);
+			this.fieldModifier.TextChanged += this.HandleFieldModifierTextChanged;
 			this.fieldModifier.IsLiveUpdateEnabled = false;
 			this.fieldModifier.PreferredWidth = 100;
 			this.fieldModifier.Dock = DockStyle.Left;
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldCode = new TextFieldCombo(this);
 			this.fieldCode.IsReadOnly = true;
-			this.fieldCode.TextChanged += new EventHandler(this.HandleFieldCodeTextChanged);
+			this.fieldCode.TextChanged += this.HandleFieldCodeTextChanged;
 			this.fieldCode.IsLiveUpdateEnabled = false;
 			this.fieldCode.PreferredWidth = 100;
 			this.fieldCode.Dock = DockStyle.Left;
@@ -97,11 +97,11 @@ namespace Epsitec.Common.Widgets
 				this.label.Dispose();
 				this.label = null;
 
-				this.fieldModifier.TextChanged -= new EventHandler(this.HandleFieldModifierTextChanged);
+				this.fieldModifier.TextChanged -= this.HandleFieldModifierTextChanged;
 				this.fieldModifier.Dispose();
 				this.fieldModifier = null;
 
-				this.fieldCode.TextChanged -= new EventHandler(this.HandleFieldCodeTextChanged);
+				this.fieldCode.TextChanged -= this.HandleFieldCodeTextChanged;
 				this.fieldCode.Dispose();
 				this.fieldCode = null;
 			}

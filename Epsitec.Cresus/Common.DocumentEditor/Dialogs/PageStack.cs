@@ -33,7 +33,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.PageStack.Title;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", this.GetType ().Assembly);
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(240, 200);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -86,7 +86,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6+75+6, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = this.tabIndex++;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
@@ -97,7 +97,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonHelp.Text = Res.Strings.Dialog.Button.Help;
 				buttonHelp.Anchor = AnchorStyles.BottomRight;
 				buttonHelp.Margins = new Margins(0, 6, 0, 6);
-				buttonHelp.Clicked += new MessageEventHandler(this.HandleButtonHelpClicked);
+				buttonHelp.Clicked += this.HandleButtonHelpClicked;
 				buttonHelp.TabIndex = this.tabIndex++;
 				buttonHelp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonHelp, Res.Strings.Dialog.Tooltip.Help);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.pagePrev.PreferredHeight = dim;
 				this.pagePrev.Anchor = AnchorStyles.BottomLeft;
 				this.pagePrev.Margins = new Margins(posx, 0, 0, 6);
-				this.pagePrev.Clicked += new MessageEventHandler(this.HandlePagePrevClicked);
+				this.pagePrev.Clicked += this.HandlePagePrevClicked;
 				this.pagePrev.TabIndex = this.tabIndex++;
 				this.pagePrev.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pagePrev, DocumentEditor.GetRes("Action.PagePrev"));
@@ -122,7 +122,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.pageMenu.PreferredHeight = dim;
 				this.pageMenu.Anchor = AnchorStyles.BottomLeft;
 				this.pageMenu.Margins = new Margins(posx, 0, 0, 6);
-				this.pageMenu.Clicked += new MessageEventHandler(this.HandlePageMenuClicked);
+				this.pageMenu.Clicked += this.HandlePageMenuClicked;
 				this.pageMenu.TabIndex = this.tabIndex++;
 				this.pageMenu.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pageMenu, DocumentEditor.GetRes("Action.PageMenu"));
@@ -134,7 +134,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.pageNext.PreferredHeight = dim;
 				this.pageNext.Anchor = AnchorStyles.BottomLeft;
 				this.pageNext.Margins = new Margins(posx, 0, 0, 6);
-				this.pageNext.Clicked += new MessageEventHandler(this.HandlePageNextClicked);
+				this.pageNext.Clicked += this.HandlePageNextClicked;
 				this.pageNext.TabIndex = this.tabIndex++;
 				this.pageNext.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.pageNext, DocumentEditor.GetRes("Action.PageNext"));
@@ -146,7 +146,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.buttonCurrent.Text = Res.Strings.Dialog.PageStack.Button.Current;
 				this.buttonCurrent.Anchor = AnchorStyles.BottomLeft;
 				this.buttonCurrent.Margins = new Margins(posx, 0, 0, 6);
-				this.buttonCurrent.Clicked += new MessageEventHandler(this.HandleButtonCurrentClicked);
+				this.buttonCurrent.Clicked += this.HandleButtonCurrentClicked;
 				this.buttonCurrent.TabIndex = this.tabIndex++;
 				this.buttonCurrent.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.buttonCurrent, Res.Strings.Dialog.PageStack.Tooltip.Current);
@@ -305,8 +305,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		{
 			//	Construit le menu pour choisir une page.
 			UndoableList pages = this.editor.CurrentDocument.DocumentObjects;  // liste des pages
-			MessageEventHandler message = new MessageEventHandler(this.HandleMenuPressed);
-			return Objects.Page.CreateMenu(pages, this.showedPage, null, message);
+			return Objects.Page.CreateMenu (pages, this.showedPage, null, this.HandleMenuPressed);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

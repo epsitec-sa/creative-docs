@@ -363,12 +363,12 @@ namespace Epsitec.Common.Support
 		
 		protected virtual void Attach(ResourceBundle bundle)
 		{
-			bundle.FieldsChanged += new EventHandler (this.HandleBundleFieldsChanged);
+			bundle.FieldsChanged += this.HandleBundleFieldsChanged;
 			this.ClearMergedBundles ();
 		}
 		protected virtual void Detach(ResourceBundle bundle)
 		{
-			bundle.FieldsChanged -= new EventHandler (this.HandleBundleFieldsChanged);
+			bundle.FieldsChanged -= this.HandleBundleFieldsChanged;
 			this.ClearMergedBundles ();
 		}
 

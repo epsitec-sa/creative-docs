@@ -391,7 +391,7 @@ namespace Epsitec.Common.Widgets
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.BottomRight;
 			link.Margins = new Margins(0, 600-360-120+100, 0, 36);
-			link.HypertextClicked += new MessageEventHandler (AdornerTest.link_HypertextClicked);
+			link.HypertextClicked += AdornerTest.link_HypertextClicked;
 			window.Root.Children.Add(link);
 			
 			SpecialWidget spec = new SpecialWidget();
@@ -462,7 +462,7 @@ namespace Epsitec.Common.Widgets
 			radio1.TabIndex = 1;
 			radio1.Index = 1;
 			radio1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			radio1.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
+			radio1.Clicked += AdornerTest.HandleRadio;
 			box.Children.Add(radio1);
 			tip.SetToolTip(radio1, "Couleur rouge");
 
@@ -473,7 +473,7 @@ namespace Epsitec.Common.Widgets
 			radio2.TabIndex = 1;
 			radio2.Index = 2;
 			radio2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			radio2.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
+			radio2.Clicked += AdornerTest.HandleRadio;
 			box.Children.Add(radio2);
 			tip.SetToolTip(radio2, "Couleur verte");
 
@@ -484,7 +484,7 @@ namespace Epsitec.Common.Widgets
 			radio3.TabIndex = 1;
 			radio3.Index = 3;
 			radio3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			radio3.Clicked += new MessageEventHandler (AdornerTest.HandleRadio);
+			radio3.Clicked += AdornerTest.HandleRadio;
 			box.Children.Add(radio3);
 			tip.SetToolTip(radio3, "Couleur bleue");
 			
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Widgets
 			check.Margins = new Margins(10, 0, 0, 70);
 			check.TabIndex = 3;
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.Clicked += new MessageEventHandler (AdornerTest.HandleCheck);
+			check.Clicked += AdornerTest.HandleCheck;
 			window.Root.Children.Add(check);
 			tip.SetToolTip(check, "Juste pour voir");
 
@@ -787,8 +787,8 @@ namespace Epsitec.Common.Widgets
 			text_ex_1.SetParent (page3);
 			text_ex_1.SetManualBounds(new Drawing.Rectangle(10, page3.ActualHeight-30, 120, text_ex_1.PreferredHeight));
 			text_ex_1.TabIndex = 1;
-			text_ex_1.EditionAccepted += new EventHandler (AdornerTest.HandleTextExEditionAccepted);
-			text_ex_1.EditionRejected += new EventHandler (AdornerTest.HandleTextExEditionRejected);
+			text_ex_1.EditionAccepted += AdornerTest.HandleTextExEditionAccepted;
+			text_ex_1.EditionRejected += AdornerTest.HandleTextExEditionRejected;
 			
 			TextFieldEx text_ex_2 = new TextFieldEx();
 			text_ex_2.SetParent (page3);
@@ -856,7 +856,7 @@ namespace Epsitec.Common.Widgets
 			text_up_down.MaxValue   =  1000000000000000M;
 			text_up_down.Resolution = 0.0000000000000001M;
 			text_up_down.SetManualBounds(new Drawing.Rectangle(10, 10, 200, text_up_down.PreferredHeight));
-			text_up_down.TextChanged += new EventHandler (AdornerTest.HandleTextUpDownTextChanged);
+			text_up_down.TextChanged += AdornerTest.HandleTextUpDownTextChanged;
 			
 
 			//	Crée l'onglet 5.
@@ -974,9 +974,9 @@ namespace Epsitec.Common.Widgets
 			multi.Margins = new Margins(10, 10, 40, 30);
 			multi.Margins = new Margins(60, 60, 40, 30);
 			multi.SetParent (window.Root);
-			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
-			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
-			multi.TextChanged      += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
+			multi.SelectionChanged += this.HandleMultiSelectionOrCursorChanged1;
+			multi.CursorChanged    += this.HandleMultiSelectionOrCursorChanged1;
+			multi.TextChanged      += this.HandleMultiSelectionOrCursorChanged1;
 			this.bigText = multi;
 			
 //			stats.SetManualBounds(new Rectangle(10, 2, 380, 26));
@@ -992,7 +992,7 @@ namespace Epsitec.Common.Widgets
 			buttonBold.Anchor = AnchorStyles.TopLeft;
 			buttonBold.Margins = new Margins(10, 0, 10, 0);
 			buttonBold.SetParent (window.Root);
-			buttonBold.Clicked += new MessageEventHandler(this.HandleMultiBold);
+			buttonBold.Clicked += this.HandleMultiBold;
 			
 			Button buttonItalic = new Button();
 			buttonItalic.Text = "<i>I</i>";
@@ -1001,7 +1001,7 @@ namespace Epsitec.Common.Widgets
 			buttonItalic.Anchor = AnchorStyles.TopLeft;
 			buttonItalic.Margins = new Margins(40, 0, 10, 0);
 			buttonItalic.SetParent (window.Root);
-			buttonItalic.Clicked += new MessageEventHandler(this.HandleMultiItalic);
+			buttonItalic.Clicked += this.HandleMultiItalic;
 			
 			Button buttonUnderline = new Button();
 			buttonUnderline.Text = "<u>U</u>";
@@ -1010,7 +1010,7 @@ namespace Epsitec.Common.Widgets
 			buttonUnderline.Anchor = AnchorStyles.TopLeft;
 			buttonUnderline.Margins = new Margins(70, 0, 10, 0);
 			buttonUnderline.SetParent (window.Root);
-			buttonUnderline.Clicked += new MessageEventHandler(this.HandleMultiUnderline);
+			buttonUnderline.Clicked += this.HandleMultiUnderline;
 			
 			Button buttonFace1 = new Button();
 			buttonFace1.Text = "<font face=\"Tahoma\">A</font>";
@@ -1019,7 +1019,7 @@ namespace Epsitec.Common.Widgets
 			buttonFace1.Anchor = AnchorStyles.TopLeft;
 			buttonFace1.Margins = new Margins(110, 0, 10, 0);
 			buttonFace1.SetParent (window.Root);
-			buttonFace1.Clicked += new MessageEventHandler(this.HandleMultiFace1);
+			buttonFace1.Clicked += this.HandleMultiFace1;
 			
 			Button buttonFace2 = new Button();
 			buttonFace2.Text = "<font face=\"Courier New\">A</font>";
@@ -1028,7 +1028,7 @@ namespace Epsitec.Common.Widgets
 			buttonFace2.Anchor = AnchorStyles.TopLeft;
 			buttonFace2.Margins = new Margins(140, 0, 10, 0);
 			buttonFace2.SetParent (window.Root);
-			buttonFace2.Clicked += new MessageEventHandler(this.HandleMultiFace2);
+			buttonFace2.Clicked += this.HandleMultiFace2;
 			
 			Button buttonFace3 = new Button();
 			buttonFace3.Text = "<font face=\"Times New Roman\">A</font>";
@@ -1037,7 +1037,7 @@ namespace Epsitec.Common.Widgets
 			buttonFace3.Anchor = AnchorStyles.TopLeft;
 			buttonFace3.Margins = new Margins(170, 0, 10, 0);
 			buttonFace3.SetParent (window.Root);
-			buttonFace3.Clicked += new MessageEventHandler(this.HandleMultiFace3);
+			buttonFace3.Clicked += this.HandleMultiFace3;
 			
 			Button buttonSize1 = new Button();
 			buttonSize1.Text = "10";
@@ -1046,7 +1046,7 @@ namespace Epsitec.Common.Widgets
 			buttonSize1.Anchor = AnchorStyles.TopLeft;
 			buttonSize1.Margins = new Margins(210, 0, 10, 0);
 			buttonSize1.SetParent (window.Root);
-			buttonSize1.Clicked += new MessageEventHandler(this.HandleMultiSize1);
+			buttonSize1.Clicked += this.HandleMultiSize1;
 			
 			Button buttonSize2 = new Button();
 			buttonSize2.Text = "20";
@@ -1055,7 +1055,7 @@ namespace Epsitec.Common.Widgets
 			buttonSize2.Anchor = AnchorStyles.TopLeft;
 			buttonSize2.Margins = new Margins(240, 0, 10, 0);
 			buttonSize2.SetParent (window.Root);
-			buttonSize2.Clicked += new MessageEventHandler(this.HandleMultiSize2);
+			buttonSize2.Clicked += this.HandleMultiSize2;
 			
 			Button buttonColor1 = new Button();
 			buttonColor1.Text = "<b><font color=\"#000000\">o</font></b>";
@@ -1064,7 +1064,7 @@ namespace Epsitec.Common.Widgets
 			buttonColor1.Anchor = AnchorStyles.TopLeft;
 			buttonColor1.Margins = new Margins(280, 0, 10, 0);
 			buttonColor1.SetParent (window.Root);
-			buttonColor1.Clicked += new MessageEventHandler(this.HandleMultiColor1);
+			buttonColor1.Clicked += this.HandleMultiColor1;
 			
 			Button buttonColor2 = new Button();
 			buttonColor2.Text = "<b><font color=\"#FF0000\">o</font></b>";
@@ -1073,7 +1073,7 @@ namespace Epsitec.Common.Widgets
 			buttonColor2.Anchor = AnchorStyles.TopLeft;
 			buttonColor2.Margins = new Margins(310, 0, 10, 0);
 			buttonColor2.SetParent (window.Root);
-			buttonColor2.Clicked += new MessageEventHandler(this.HandleMultiColor2);
+			buttonColor2.Clicked += this.HandleMultiColor2;
 			
 			Button buttonUndo = new Button();
 			buttonUndo.Text = "U";
@@ -1082,7 +1082,7 @@ namespace Epsitec.Common.Widgets
 			buttonUndo.Anchor = AnchorStyles.TopLeft;
 			buttonUndo.Margins = new Margins(350, 0, 10, 0);
 			buttonUndo.SetParent (window.Root);
-			buttonUndo.Clicked += new MessageEventHandler(this.HandleMultiUndo);
+			buttonUndo.Clicked += this.HandleMultiUndo;
 			
 			Button buttonRedo = new Button();
 			buttonRedo.Text = "R";
@@ -1091,7 +1091,7 @@ namespace Epsitec.Common.Widgets
 			buttonRedo.Anchor = AnchorStyles.TopLeft;
 			buttonRedo.Margins = new Margins(380, 0, 10, 0);
 			buttonRedo.SetParent (window.Root);
-			buttonRedo.Clicked += new MessageEventHandler(this.HandleMultiRedo);
+			buttonRedo.Clicked += this.HandleMultiRedo;
 //			window.Root.DebugActive = true;
 			window.FocusWidget (multi);
 
@@ -1208,7 +1208,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerTab1";
-			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
+			window.WindowClosed += this.HandleWindowClosed;
 			window.Root.Padding = new Margins(10, 10, 10, 10);
 
 			TabBook tb = new TabBook();
@@ -1299,7 +1299,7 @@ namespace Epsitec.Common.Widgets
 			add.SetManualBounds(new Rectangle (100, 100, 140, 24));
 			add.Text = "<m>A</m>jouter un onglet";
 			add.ButtonStyle = ButtonStyle.DefaultAccept;
-			add.Clicked += new MessageEventHandler(this.HandleAdd);
+			add.Clicked += this.HandleAdd;
 			page5.Children.Add(add);
 
 #if true
@@ -1672,7 +1672,7 @@ namespace Epsitec.Common.Widgets
 			
 			sl.SelectedIndex = sel;
 			sl.ShowSelected(ScrollShowMode.Center);
-			sl.SelectedIndexChanged += new EventHandler (AdornerTest.HandleLook);
+			sl.SelectedIndexChanged += AdornerTest.HandleLook;
 
 			if ( tooltip != null )
 			{

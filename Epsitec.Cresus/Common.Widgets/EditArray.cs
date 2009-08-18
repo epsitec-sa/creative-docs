@@ -1036,8 +1036,8 @@ namespace Epsitec.Common.Widgets
 				widget.TabIndex      = i;
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
 				
-				widget.KeyboardFocusChanged += new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
-				widget.TextChanged              += new Support.EventHandler (this.HandleTextChanged);
+				widget.KeyboardFocusChanged += this.HandleEditArrayIsKeyboardFocusedChanged;
+				widget.TextChanged              += this.HandleTextChanged;
 				
 				widget.AutoSelectOnFocus = true;
 				widget.Hide ();
@@ -1049,8 +1049,8 @@ namespace Epsitec.Common.Widgets
 				{
 					widget.SetParent (null);
 					
-					widget.KeyboardFocusChanged -= new PropertyChangedEventHandler (this.HandleEditArrayIsKeyboardFocusedChanged);
-					widget.TextChanged              -= new Support.EventHandler (this.HandleTextChanged);
+					widget.KeyboardFocusChanged -= this.HandleEditArrayIsKeyboardFocusedChanged;
+					widget.TextChanged              -= this.HandleTextChanged;
 					
 					widget.Dispose ();
 					widget = null;
@@ -1115,8 +1115,8 @@ namespace Epsitec.Common.Widgets
 				
 				this.toolbar.Dock = DockStyle.Bottom;
 				this.toolbar.Hide ();
-				this.toolbar.ClientGeometryUpdated += new Support.EventHandler (this.HandleToolBarGeometryChanged);
-				this.toolbar.ItemsChanged += new Support.EventHandler (this.HandleToolBarItemsChanged);
+				this.toolbar.ClientGeometryUpdated += this.HandleToolBarGeometryChanged;
+				this.toolbar.ItemsChanged += this.HandleToolBarItemsChanged;
 				
 				this.UpdateHeaderHeight ();
 				
@@ -1236,10 +1236,10 @@ namespace Epsitec.Common.Widgets
 				this.name = name;
 				this.host.controller = this;
 				
-				this.host.InteractionModeChanged += new Support.EventHandler (this.HandleHostInteractionModeChanged);
-				this.host.SelectedIndexChanged   += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
-				this.host.TextArrayStoreContentsChanged  += new Support.EventHandler (this.HandleHostTextArrayStoreContentsChanged);
-				this.host.ContentsInvalidated    += new Support.EventHandler (this.HandleHostContentsInvalidated);
+				this.host.InteractionModeChanged += this.HandleHostInteractionModeChanged;
+				this.host.SelectedIndexChanged   += this.HandleHostSelectedIndexChanged;
+				this.host.TextArrayStoreContentsChanged  += this.HandleHostTextArrayStoreContentsChanged;
+				this.host.ContentsInvalidated    += this.HandleHostContentsInvalidated;
 				
 				this.UpdateStore ();
 			}
@@ -1258,14 +1258,14 @@ namespace Epsitec.Common.Widgets
 			{
 				CommandDispatcher dispatcher = this.host.CommandDispatchers[0];
 				
-				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new CommandEventHandler (this.CommandStartReadOnly));
-				dispatcher.Register (this.GetCommandName ("StartEdition"),  new CommandEventHandler (this.CommandStartEdition));
-				dispatcher.Register (this.GetCommandName ("StartSearch"),   new CommandEventHandler (this.CommandStartSearch));
-				dispatcher.Register (this.GetCommandName ("InsertBefore"),  new CommandEventHandler (this.CommandInsertBefore));
-				dispatcher.Register (this.GetCommandName ("InsertAfter"),   new CommandEventHandler (this.CommandInsertAfter));
-				dispatcher.Register (this.GetCommandName ("Delete"),        new CommandEventHandler (this.CommandDelete));
-				dispatcher.Register (this.GetCommandName ("MoveUp"),        new CommandEventHandler (this.CommandMoveUp));
-				dispatcher.Register (this.GetCommandName ("MoveDown"),      new CommandEventHandler (this.CommandMoveDown));
+				dispatcher.Register (this.GetCommandName ("StartReadOnly"), this.CommandStartReadOnly);
+				dispatcher.Register (this.GetCommandName ("StartEdition"),  this.CommandStartEdition);
+				dispatcher.Register (this.GetCommandName ("StartSearch"),   this.CommandStartSearch);
+				dispatcher.Register (this.GetCommandName ("InsertBefore"),  this.CommandInsertBefore);
+				dispatcher.Register (this.GetCommandName ("InsertAfter"),   this.CommandInsertAfter);
+				dispatcher.Register (this.GetCommandName ("Delete"),        this.CommandDelete);
+				dispatcher.Register (this.GetCommandName ("MoveUp"),        this.CommandMoveUp);
+				dispatcher.Register (this.GetCommandName ("MoveDown"),      this.CommandMoveDown);
 			}
 			
 			public void CreateToolBarButtons()
@@ -1474,10 +1474,10 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.host != null)
 					{
-						this.host.InteractionModeChanged -= new Support.EventHandler (this.HandleHostInteractionModeChanged);
-						this.host.SelectedIndexChanged   -= new Support.EventHandler (this.HandleHostSelectedIndexChanged);
-						this.host.TextArrayStoreContentsChanged  -= new Support.EventHandler (this.HandleHostTextArrayStoreContentsChanged);
-						this.host.ContentsInvalidated    -= new Support.EventHandler (this.HandleHostContentsInvalidated);
+						this.host.InteractionModeChanged -= this.HandleHostInteractionModeChanged;
+						this.host.SelectedIndexChanged   -= this.HandleHostSelectedIndexChanged;
+						this.host.TextArrayStoreContentsChanged  -= this.HandleHostTextArrayStoreContentsChanged;
+						this.host.ContentsInvalidated    -= this.HandleHostContentsInvalidated;
 						
 						this.host = null;
 					}

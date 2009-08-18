@@ -75,9 +75,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.formEditor.MinWidth = 100;
 			this.formEditor.MinHeight = 100;
 			this.formEditor.Anchor = AnchorStyles.All;
-			this.formEditor.ChildrenAdded += new EventHandler(this.HandleFormEditorChildrenAdded);
-			this.formEditor.ChildrenSelected += new EventHandler(this.HandleFormEditorChildrenSelected);
-			this.formEditor.UpdateCommands += new EventHandler(this.HandleFormEditorUpdateCommands);
+			this.formEditor.ChildrenAdded += this.HandleFormEditorChildrenAdded;
+			this.formEditor.ChildrenSelected += this.HandleFormEditorChildrenSelected;
+			this.formEditor.UpdateCommands += this.HandleFormEditorUpdateCommands;
 
 			this.InitializePanel();
 
@@ -113,13 +113,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonRemove = new IconButton();
 			this.fieldsButtonRemove.AutoFocus = false;
 			this.fieldsButtonRemove.CaptionId = Res.Captions.Editor.Forms.Remove.Id;
-			this.fieldsButtonRemove.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonRemove.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonRemove);
 
 			this.fieldsButtonReset = new IconButton();
 			this.fieldsButtonReset.AutoFocus = false;
 			this.fieldsButtonReset.CaptionId = Res.Captions.Editor.Forms.Reset.Id;
-			this.fieldsButtonReset.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonReset.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonReset);
 
 			this.fieldsToolbar.Items.Add(new IconSeparator());
@@ -127,13 +127,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonBox = new IconButton();
 			this.fieldsButtonBox.AutoFocus = false;
 			this.fieldsButtonBox.CaptionId = Res.Captions.Editor.Forms.Box.Id;
-			this.fieldsButtonBox.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonBox.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonBox);
 
 			this.fieldsButtonForm = new IconButton();
 			this.fieldsButtonForm.AutoFocus = false;
 			this.fieldsButtonForm.CaptionId = Res.Captions.Editor.Forms.Form.Id;
-			this.fieldsButtonForm.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonForm.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonForm);
 
 			this.fieldsToolbar.Items.Add(new IconSeparator());
@@ -141,13 +141,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonPrev = new IconButton();
 			this.fieldsButtonPrev.AutoFocus = false;
 			this.fieldsButtonPrev.CaptionId = Res.Captions.Editor.Forms.Prev.Id;
-			this.fieldsButtonPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonPrev.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonPrev);
 
 			this.fieldsButtonNext = new IconButton();
 			this.fieldsButtonNext.AutoFocus = false;
 			this.fieldsButtonNext.CaptionId = Res.Captions.Editor.Forms.Next.Id;
-			this.fieldsButtonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonNext.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonNext);
 
 			this.fieldsToolbar.Items.Add(new IconSeparator());
@@ -155,14 +155,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsButtonGoto = new IconButton();
 			this.fieldsButtonGoto.AutoFocus = false;
 			this.fieldsButtonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
-			this.fieldsButtonGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonGoto.Clicked += this.HandleButtonClicked;
 			this.fieldsToolbar.Items.Add(this.fieldsButtonGoto);
 
 			this.fieldsButtonMenu = new GlyphButton(topToolBar);
 			this.fieldsButtonMenu.GlyphShape = GlyphShape.Menu;
 			this.fieldsButtonMenu.ButtonStyle = ButtonStyle.ToolItem;
 			this.fieldsButtonMenu.AutoFocus = false;
-			this.fieldsButtonMenu.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.fieldsButtonMenu.Clicked += this.HandleButtonClicked;
 			this.fieldsButtonMenu.Margins = new Margins(0, 0, 3, 3);
 			this.fieldsButtonMenu.Dock = DockStyle.Right;
 
@@ -175,9 +175,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldsTable.AllowMultipleSelection = true;
 			this.fieldsTable.LineHeight = 16;
 			this.fieldsTable.Dock = DockStyle.Fill;
-			this.fieldsTable.CellCountChanged += new EventHandler(this.HandleFieldTableCellCountChanged);
-			this.fieldsTable.CellsContentChanged += new EventHandler(this.HandleFieldTableCellsContentChanged);
-			this.fieldsTable.SelectedRowChanged += new EventHandler(this.HandleFieldTableSelectedRowChanged);
+			this.fieldsTable.CellCountChanged += this.HandleFieldTableCellCountChanged;
+			this.fieldsTable.CellsContentChanged += this.HandleFieldTableCellsContentChanged;
+			this.fieldsTable.SelectedRowChanged += this.HandleFieldTableSelectedRowChanged;
 			this.UpdateFieldsTableColumns();
 
 			//	Crée l'onglet 'propriétés'.
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonCommand = new IconButton();
 			this.otherButtonCommand.AutoFocus = false;
 			this.otherButtonCommand.CaptionId = Res.Captions.Editor.Forms.Command.Id;
-			this.otherButtonCommand.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherButtonCommand.Clicked += this.HandleButtonClicked;
 			this.otherToolbar.Items.Add(this.otherButtonCommand);
 
 			this.otherToolbar.Items.Add(new IconSeparator());
@@ -206,13 +206,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonLine = new IconButton();
 			this.otherButtonLine.AutoFocus = false;
 			this.otherButtonLine.CaptionId = Res.Captions.Editor.Forms.Line.Id;
-			this.otherButtonLine.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherButtonLine.Clicked += this.HandleButtonClicked;
 			this.otherToolbar.Items.Add(this.otherButtonLine);
 
 			this.otherButtonTitle = new IconButton();
 			this.otherButtonTitle.AutoFocus = false;
 			this.otherButtonTitle.CaptionId = Res.Captions.Editor.Forms.Title.Id;
-			this.otherButtonTitle.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherButtonTitle.Clicked += this.HandleButtonClicked;
 			this.otherToolbar.Items.Add(this.otherButtonTitle);
 
 			this.otherToolbar.Items.Add(new IconSeparator());
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonGlue = new IconButton();
 			this.otherButtonGlue.AutoFocus = false;
 			this.otherButtonGlue.CaptionId = Res.Captions.Editor.Forms.Glue.Id;
-			this.otherButtonGlue.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.otherButtonGlue.Clicked += this.HandleButtonClicked;
 			this.otherToolbar.Items.Add(this.otherButtonGlue);
 
 			Proxies.ObjectManagerForm objectManager = new Proxies.ObjectManagerForm(this.designerApplication, this.formEditor.ObjectModifier);
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonUse = new IconButton();
 			this.relationsButtonUse.AutoFocus = false;
 			this.relationsButtonUse.CaptionId = Res.Captions.Editor.Forms.Use.Id;
-			this.relationsButtonUse.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.relationsButtonUse.Clicked += this.HandleButtonClicked;
 			this.relationsToolbar.Items.Add(this.relationsButtonUse);
 
 			this.relationsToolbar.Items.Add(new IconSeparator());
@@ -256,13 +256,13 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonExpand = new IconButton();
 			this.relationsButtonExpand.AutoFocus = false;
 			this.relationsButtonExpand.CaptionId = Res.Captions.Editor.Forms.Expand.Id;
-			this.relationsButtonExpand.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.relationsButtonExpand.Clicked += this.HandleButtonClicked;
 			this.relationsToolbar.Items.Add(this.relationsButtonExpand);
 
 			this.relationsButtonCompact = new IconButton();
 			this.relationsButtonCompact.AutoFocus = false;
 			this.relationsButtonCompact.CaptionId = Res.Captions.Editor.Forms.Compact.Id;
-			this.relationsButtonCompact.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.relationsButtonCompact.Clicked += this.HandleButtonClicked;
 			this.relationsToolbar.Items.Add(this.relationsButtonCompact);
 
 			this.relationsToolbar.Items.Add(new IconSeparator());
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsButtonAuto = new IconButton();
 			this.relationsButtonAuto.AutoFocus = false;
 			this.relationsButtonAuto.CaptionId = Res.Captions.Editor.Forms.Auto.Id;
-			this.relationsButtonAuto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.relationsButtonAuto.Clicked += this.HandleButtonClicked;
 			this.relationsToolbar.Items.Add(this.relationsButtonAuto);
 
 			this.relationsTable = new MyWidgets.StringArray(this.tabPageSource);
@@ -285,10 +285,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.relationsTable.AllowMultipleSelection = false;
 			this.relationsTable.LineHeight = 16;
 			this.relationsTable.Dock = DockStyle.Fill;
-			this.relationsTable.CellCountChanged += new EventHandler(this.HandleRelationsTableCellCountChanged);
-			this.relationsTable.CellsContentChanged += new EventHandler(this.HandleRelationsTableCellsContentChanged);
-			this.relationsTable.SelectedRowChanged += new EventHandler(this.HandleRelationsTableSelectedRowChanged);
-			this.relationsTable.SelectedRowDoubleClicked += new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
+			this.relationsTable.CellCountChanged += this.HandleRelationsTableCellCountChanged;
+			this.relationsTable.CellsContentChanged += this.HandleRelationsTableCellsContentChanged;
+			this.relationsTable.SelectedRowChanged += this.HandleRelationsTableSelectedRowChanged;
+			this.relationsTable.SelectedRowDoubleClicked += this.HandleRelationsTableSelectedRowDoubleClicked;
 
 			//	Crée l'onglet 'divers'.
 			this.tabPageMisc = new TabPage();
@@ -311,12 +311,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.splitter2 = new VSplitter(surface);
 			this.splitter2.Dock = DockStyle.Right;
 			this.splitter2.Margins = new Margins(0, 0, 1, 1);
-			this.splitter2.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
+			this.splitter2.SplitterDragged += this.HandleSplitterDragged;
 
 			this.splitter3 = new HSplitter(this.right);
 			this.splitter3.Dock = DockStyle.Bottom;
 			this.splitter3.Margins = new Margins(0, 1, 0, 0);
-			this.splitter3.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
+			this.splitter3.SplitterDragged += this.HandleSplitterDragged;
 
 			this.UpdateAll();
 			this.UpdateViewer(Viewers.Changing.Show);
@@ -326,34 +326,34 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.fieldsButtonRemove.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonReset.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonBox.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonForm.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.fieldsButtonMenu.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.relationsButtonUse.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.relationsButtonExpand.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.relationsButtonCompact.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.relationsButtonAuto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.otherButtonCommand.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.otherButtonLine.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.otherButtonTitle.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.otherButtonGlue.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.fieldsButtonRemove.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonReset.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonBox.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonForm.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonPrev.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonNext.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonGoto.Clicked -= this.HandleButtonClicked;
+				this.fieldsButtonMenu.Clicked -= this.HandleButtonClicked;
+				this.relationsButtonUse.Clicked -= this.HandleButtonClicked;
+				this.relationsButtonExpand.Clicked -= this.HandleButtonClicked;
+				this.relationsButtonCompact.Clicked -= this.HandleButtonClicked;
+				this.relationsButtonAuto.Clicked -= this.HandleButtonClicked;
+				this.otherButtonCommand.Clicked -= this.HandleButtonClicked;
+				this.otherButtonLine.Clicked -= this.HandleButtonClicked;
+				this.otherButtonTitle.Clicked -= this.HandleButtonClicked;
+				this.otherButtonGlue.Clicked -= this.HandleButtonClicked;
 
-				this.fieldsTable.CellCountChanged -= new EventHandler(this.HandleFieldTableCellCountChanged);
-				this.fieldsTable.CellsContentChanged -= new EventHandler(this.HandleFieldTableCellsContentChanged);
-				this.fieldsTable.SelectedRowChanged -= new EventHandler(this.HandleFieldTableSelectedRowChanged);
+				this.fieldsTable.CellCountChanged -= this.HandleFieldTableCellCountChanged;
+				this.fieldsTable.CellsContentChanged -= this.HandleFieldTableCellsContentChanged;
+				this.fieldsTable.SelectedRowChanged -= this.HandleFieldTableSelectedRowChanged;
 
-				this.relationsTable.CellCountChanged -= new EventHandler(this.HandleRelationsTableCellCountChanged);
-				this.relationsTable.CellsContentChanged -= new EventHandler(this.HandleRelationsTableCellsContentChanged);
-				this.relationsTable.SelectedRowChanged -= new EventHandler(this.HandleRelationsTableSelectedRowChanged);
-				this.relationsTable.SelectedRowDoubleClicked -= new EventHandler(this.HandleRelationsTableSelectedRowDoubleClicked);
+				this.relationsTable.CellCountChanged -= this.HandleRelationsTableCellCountChanged;
+				this.relationsTable.CellsContentChanged -= this.HandleRelationsTableCellsContentChanged;
+				this.relationsTable.SelectedRowChanged -= this.HandleRelationsTableSelectedRowChanged;
+				this.relationsTable.SelectedRowDoubleClicked -= this.HandleRelationsTableSelectedRowDoubleClicked;
 
-				this.splitter2.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
-				this.splitter3.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
+				this.splitter2.SplitterDragged -= this.HandleSplitterDragged;
+				this.splitter3.SplitterDragged -= this.HandleSplitterDragged;
 			}
 
 			base.Dispose(disposing);
@@ -879,7 +879,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateUndoRedoCommands();
 		}
 
-		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		public override VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Crée le menu undo/redo.
 			return this.undoEngine.CreateMenu(message);
@@ -1204,7 +1204,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscWidthButton.TabIndex = index++;
 			this.miscWidthButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.miscWidthButton.Dock = DockStyle.Left;
-			this.miscWidthButton.Clicked += new MessageEventHandler(this.HandleMiscButtonClicked);
+			this.miscWidthButton.Clicked += this.HandleMiscButtonClicked;
 
 			this.miscWidthField = new TextFieldUpDown(widthBox);
 			this.miscWidthField.Resolution = 1.0M;
@@ -1215,7 +1215,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscWidthField.TabIndex = index++;
 			this.miscWidthField.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.miscWidthField.Dock = DockStyle.Left;
-			this.miscWidthField.TextChanged += new EventHandler(this.HandleMiscFieldTextChanged);
+			this.miscWidthField.TextChanged += this.HandleMiscFieldTextChanged;
 
 			FrameBox heightBox = new FrameBox(this.tabPageMisc);
 			heightBox.TabIndex = index++;
@@ -1230,7 +1230,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscHeightButton.TabIndex = index++;
 			this.miscHeightButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.miscHeightButton.Dock = DockStyle.Left;
-			this.miscHeightButton.Clicked += new MessageEventHandler(this.HandleMiscButtonClicked);
+			this.miscHeightButton.Clicked += this.HandleMiscButtonClicked;
 
 			this.miscHeightField = new TextFieldUpDown(heightBox);
 			this.miscHeightField.Resolution = 1.0M;
@@ -1241,7 +1241,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.miscHeightField.TabIndex = index++;
 			this.miscHeightField.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.miscHeightField.Dock = DockStyle.Left;
-			this.miscHeightField.TextChanged += new EventHandler(this.HandleMiscFieldTextChanged);
+			this.miscHeightField.TextChanged += this.HandleMiscFieldTextChanged;
 		}
 
 		private void HandleMiscButtonClicked(object sender, MessageEventArgs e)
@@ -1430,7 +1430,7 @@ namespace Epsitec.Common.Designer.Viewers
 				button.Margins = new Margins(0, 0, 0, 2);
 				button.TabIndex = tabIndex++;
 				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				button.Clicked += new MessageEventHandler(this.HandleCultureButtonClicked);
+				button.Clicked += this.HandleCultureButtonClicked;
 				ToolTip.Default.SetToolTip(button, Misc.CultureLongName(culture));
 
 				this.cultureButtonList.Add(button);

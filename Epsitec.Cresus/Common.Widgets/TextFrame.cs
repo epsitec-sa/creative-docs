@@ -32,8 +32,8 @@ namespace Epsitec.Common.Widgets
 			this.text_fitter.ClearAllMarks ();
 			this.text_fitter.GenerateAllMarks ();
 			
-			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
-			this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+			this.navigator.TextChanged += this.HandleTextChanged;
+			this.navigator.CursorMoved += this.HandleCursorMoved;
 
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary);
 
@@ -72,8 +72,8 @@ namespace Epsitec.Common.Widgets
 			this.text_fitter.ClearAllMarks ();
 			this.text_fitter.GenerateAllMarks ();
 			
-			this.navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
-			this.navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
+			this.navigator.TextChanged += this.HandleTextChanged;
+			this.navigator.CursorMoved += this.HandleCursorMoved;
 
 			CommandDispatcher dispatcher = new CommandDispatcher ("TextFrame", CommandDispatcherLevel.Secondary);
 			

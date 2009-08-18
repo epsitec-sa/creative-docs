@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("EntityExpression", 400, 250, true);
 				this.window.Text = "Expression";  // Res.Strings.Dialog.EntityExpression.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(400, 150);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonRedefine.PreferredWidth = 200;
 				this.buttonRedefine.AutoToggle = false;
 				this.buttonRedefine.Dock = DockStyle.Top;
-				this.buttonRedefine.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonRedefine.Clicked += this.HandleButtonClicked;
 
 				//	Crée le grand pavé de texte éditable.
 				this.fieldExpression = new TextFieldMulti(top);
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
+				this.buttonOk.Clicked += this.HandleButtonOkClicked;
 				this.buttonOk.TabIndex = 10;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

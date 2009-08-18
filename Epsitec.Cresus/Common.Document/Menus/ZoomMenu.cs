@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(new ZoomMenu(zoom, comment));
 		}
 
-		public static VMenu CreateZoomMenu(double currentZoom, double zoomPage, MessageEventHandler message)
+		public static VMenu CreateZoomMenu(double currentZoom, double zoomPage, Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu pour changer de zoom.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();

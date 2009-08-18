@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int j=0 ; j<2 ; j++ )
 			{
 				this.grid[j] = new RadioIconGrid(this);
-				this.grid[j].SelectionChanged += new EventHandler(HandleTypeChanged);
+				this.grid[j].SelectionChanged += HandleTypeChanged;
 				this.grid[j].TabIndex = index++;
 				this.grid[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldLength[j].TextFieldReal.FactorMaxRange = 0.1M;
 				this.fieldLength[j].TextFieldReal.FactorStep = 1.0M;
 				this.document.Modifier.AdaptTextFieldRealDimension(this.fieldLength[j].TextFieldReal);
-				this.fieldLength[j].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+				this.fieldLength[j].TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 				this.fieldLength[j].TabIndex = index++;
 				this.fieldLength[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldLength[j], Res.Strings.Panel.Arrow.Tooltip.Length);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect1[j].TextFieldReal.InternalMinValue = -100;
 				this.fieldEffect1[j].TextFieldReal.InternalMaxValue = 200;
 				this.fieldEffect1[j].TextFieldReal.TextSuffix = "%";
-				this.fieldEffect1[j].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect1[j].TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 				this.fieldEffect1[j].TabIndex = index++;
 				this.fieldEffect1[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect1[j], Res.Strings.Panel.Arrow.Tooltip.Effect1);
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldEffect2[j].TextFieldReal.InternalMinValue = -100;
 				this.fieldEffect2[j].TextFieldReal.InternalMaxValue = 200;
 				this.fieldEffect2[j].TextFieldReal.TextSuffix = "%";
-				this.fieldEffect2[j].TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+				this.fieldEffect2[j].TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 				this.fieldEffect2[j].TabIndex = index++;
 				this.fieldEffect2[j].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect2[j], Res.Strings.Panel.Arrow.Tooltip.Effect2);
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.swapArrow = new IconButton(this);
 			this.swapArrow.IconName = Misc.Icon("SwapData");
-			this.swapArrow.Clicked += new MessageEventHandler(this.HandleSwapArrowClicked);
+			this.swapArrow.Clicked += this.HandleSwapArrowClicked;
 			ToolTip.Default.SetToolTip(this.swapArrow, Res.Strings.Panel.Arrow.Tooltip.Swap);
 
 			this.isNormalAndExtended = true;
@@ -96,16 +96,16 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int j=0 ; j<2 ; j++ )
 				{
-					this.grid[j].SelectionChanged -= new EventHandler(HandleTypeChanged);
-					this.fieldLength[j].TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-					this.fieldEffect1[j].TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-					this.fieldEffect2[j].TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+					this.grid[j].SelectionChanged -= HandleTypeChanged;
+					this.fieldLength[j].TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+					this.fieldEffect1[j].TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+					this.fieldEffect2[j].TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 					this.grid[j] = null;
 					this.fieldLength[j] = null;
 					this.fieldEffect1[j] = null;
 					this.fieldEffect2[j] = null;
 				}
-				this.swapArrow.Clicked -= new MessageEventHandler(this.HandleSwapArrowClicked);
+				this.swapArrow.Clicked -= this.HandleSwapArrowClicked;
 
 				this.separator1 = null;
 				this.separator2 = null;

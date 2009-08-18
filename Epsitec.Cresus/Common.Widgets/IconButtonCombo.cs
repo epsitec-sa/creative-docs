@@ -20,15 +20,15 @@ namespace Epsitec.Common.Widgets
 			
 			this.buttonMain = new IconButton(this);
 			this.buttonMain.ButtonStyle = ButtonStyle.ActivableIcon;
-			this.buttonMain.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonMain.Pressed += this.HandleButtonPressed;
 
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Combo;
 			this.buttonMenu.Name = "Open";
-			this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonPressed);
+			this.buttonMenu.Pressed += this.HandleButtonPressed;
 
-			this.AddEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
+			this.AddEventHandler (Widgets.CommandState.AdvancedStateProperty, this.HandleAdvancedStatePropertyChanged);
 		}
 		
 		public IconButtonCombo(Widget embedder) : this()
@@ -174,15 +174,15 @@ namespace Epsitec.Common.Widgets
 					this.CloseCombo(CloseMode.Reject);
 				}
 				
-				this.buttonMain.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonMain.Pressed -= this.HandleButtonPressed;
 				this.buttonMain.Dispose();
 				this.buttonMain = null;
 
-				this.buttonMenu.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.buttonMenu.Pressed -= this.HandleButtonPressed;
 				this.buttonMenu.Dispose();
 				this.buttonMenu = null;
 
-				this.RemoveEventHandler (Widgets.CommandState.AdvancedStateProperty, new PropertyChangedEventHandler (this.HandleAdvancedStatePropertyChanged));
+				this.RemoveEventHandler (Widgets.CommandState.AdvancedStateProperty, this.HandleAdvancedStatePropertyChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -364,13 +364,13 @@ namespace Epsitec.Common.Widgets
 				this.scrollList.ShowSelected(ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected += new EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted += this.HandleMenuAccepted;
+			this.menu.Rejected += this.HandleMenuRejected;
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
-				this.scrollList.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
 			this.OnComboOpened();
@@ -394,13 +394,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted -= this.HandleMenuAccepted;
+			this.menu.Rejected -= this.HandleMenuRejected;
 			
 			if ( this.scrollList != null )
 			{
-				this.scrollList.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
-				this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
+				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
 				
 				this.scrollList.Dispose();
 				this.scrollList = null;

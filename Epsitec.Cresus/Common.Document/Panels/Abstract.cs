@@ -13,8 +13,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.document = document;
 
-			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
-			this.Exited += new MessageEventHandler(this.HandleMouseExited);
+			this.Entered += this.HandleMouseEntered;
+			this.Exited += this.HandleMouseExited;
 
 			this.PreferredHeight = this.DefaultHeight;
 			
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document.Panels
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
 			this.extendedButton.AutoFocus = false;
-			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
+			this.extendedButton.Clicked += this.ExtendedButtonClicked;
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.extendedButton, Res.Strings.Panel.Abstract.Extend);
@@ -43,9 +43,9 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.Entered -= new MessageEventHandler(this.HandleMouseEntered);
-				this.Exited -= new MessageEventHandler(this.HandleMouseExited);
-				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
+				this.Entered -= this.HandleMouseEntered;
+				this.Exited -= this.HandleMouseExited;
+				this.extendedButton.Clicked -= this.ExtendedButtonClicked;
 			}
 			
 			base.Dispose(disposing);

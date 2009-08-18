@@ -30,10 +30,10 @@ namespace Epsitec.Common.Text
 			this.story.NewCursor (this.cursor);
 			this.story.NewCursor (this.temp_cursor);
 			
-			this.story.OpletExecuted += new OpletEventHandler (this.HandleStoryOpletExecuted);
-			this.story.TextChanged   += new EventHandler (this.HandleStoryTextChanged);
+			this.story.OpletExecuted += this.HandleStoryOpletExecuted;
+			this.story.TextChanged   += this.HandleStoryTextChanged;
 			
-			this.story.TextContext.TabList.Changed += new EventHandler (this.HandleTabListChanged);
+			this.story.TextContext.TabList.Changed += this.HandleTabListChanged;
 		}
 		
 		
@@ -3053,10 +3053,10 @@ process_ranges:
 					this.InternalClearSelection ();
 					this.UpdateSelectionMarkers ();
 					
-					this.story.OpletExecuted -= new OpletEventHandler (this.HandleStoryOpletExecuted);
-					this.story.TextChanged   -= new EventHandler (this.HandleStoryTextChanged);
+					this.story.OpletExecuted -= this.HandleStoryOpletExecuted;
+					this.story.TextChanged   -= this.HandleStoryTextChanged;
 
-					this.story.TextContext.TabList.Changed -= new EventHandler (this.HandleTabListChanged);
+					this.story.TextContext.TabList.Changed -= this.HandleTabListChanged;
 					
 					this.story.RecycleCursor (this.cursor);
 					this.story.RecycleCursor (this.temp_cursor);

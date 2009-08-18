@@ -52,8 +52,8 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller = new VScroller (this);
 			this.h_scroller = new HScroller (this);
 			this.v_scroller.IsInverted = true;
-			this.v_scroller.ValueChanged += new EventHandler (this.HandleVScrollerChanged);
-			this.h_scroller.ValueChanged += new EventHandler (this.HandleHScrollerChanged);
+			this.v_scroller.ValueChanged += this.HandleVScrollerChanged;
+			this.h_scroller.ValueChanged += this.HandleHScrollerChanged;
 
 			this.is_dirty = true;
 		}
@@ -111,14 +111,14 @@ namespace Epsitec.Common.Widgets
 
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreContentsChanged -= new EventHandler (this.HandleStoreContentsChanged);
+						this.text_array_store.StoreContentsChanged -= this.HandleStoreContentsChanged;
 					}
 
 					this.text_array_store = value;
 
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreContentsChanged += new EventHandler (this.HandleStoreContentsChanged);
+						this.text_array_store.StoreContentsChanged += this.HandleStoreContentsChanged;
 					}
 
 					this.OnTextArrayStoreContentsChanged ();
@@ -2460,16 +2460,16 @@ namespace Epsitec.Common.Widgets
 				this.header_button.Style     = HeaderButtonStyle.Top;
 				this.header_button.IsDynamic = false;
 				this.header_button.Index     = this.column;
-				this.header_button.Clicked  += new MessageEventHandler (this.host.HandleHeaderButtonClicked);
+				this.header_button.Clicked  += this.host.HandleHeaderButtonClicked;
 				this.header_button.SetEmbedder (this.host.header);
 
 				this.header_slider = new HeaderSlider ();
 
 				this.header_slider.Style        = HeaderSliderStyle.Top;
 				this.header_slider.Index        = this.column;
-				this.header_slider.DragStarted += new MessageEventHandler (this.host.HandleSliderDragStarted);
-				this.header_slider.DragMoved   += new MessageEventHandler (this.host.HandleSliderDragMoved);
-				this.header_slider.DragEnded   += new MessageEventHandler (this.host.HandleSliderDragEnded);
+				this.header_slider.DragStarted += this.host.HandleSliderDragStarted;
+				this.header_slider.DragMoved   += this.host.HandleSliderDragMoved;
+				this.header_slider.DragEnded   += this.host.HandleSliderDragEnded;
 				this.header_slider.SetEmbedder (this.host.header);
 
 				this.edition_widget_type = typeof (TextField);
@@ -2665,15 +2665,15 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.header_button != null)
 					{
-						this.header_button.Clicked -= new MessageEventHandler (this.host.HandleHeaderButtonClicked);
+						this.header_button.Clicked -= this.host.HandleHeaderButtonClicked;
 						this.header_button.SetParent (null);
 						this.header_button = null;
 					}
 					if (this.header_slider != null)
 					{
-						this.header_slider.DragStarted -= new MessageEventHandler (this.host.HandleSliderDragStarted);
-						this.header_slider.DragMoved   -= new MessageEventHandler (this.host.HandleSliderDragMoved);
-						this.header_slider.DragEnded   -= new MessageEventHandler (this.host.HandleSliderDragEnded);
+						this.header_slider.DragStarted -= this.host.HandleSliderDragStarted;
+						this.header_slider.DragMoved   -= this.host.HandleSliderDragMoved;
+						this.header_slider.DragEnded   -= this.host.HandleSliderDragEnded;
 						this.header_slider.SetParent (null);
 						this.header_slider = null;
 					}

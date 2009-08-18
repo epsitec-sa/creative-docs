@@ -13,8 +13,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.field = new ColorSample(this);
 			this.field.DragSourceFrame = true;
-			this.field.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.field.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
+			this.field.Clicked += this.HandleFieldColorClicked;
+			this.field.ColorChanged += this.HandleFieldColorChanged;
 			this.field.TabIndex = 1;
 			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Color.Tooltip.Main);
@@ -24,8 +24,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.field.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.field.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
+				this.field.Clicked -= this.HandleFieldColorClicked;
+				this.field.ColorChanged -= this.HandleFieldColorChanged;
 				this.field = null;
 			}
 

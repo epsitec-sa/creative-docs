@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 			this.button = this.CreateButton ();
 			
 			this.button.Name     = "Open";
-			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
+			this.button.Pressed += this.HandleButtonPressed;
 			
 			this.default_button_width = this.button.PreferredWidth;
 			this.margins.Right        = this.button.PreferredWidth;
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Widgets
 					this.CloseCombo (CloseMode.Reject);
 				}
 				
-				this.button.Pressed -= new MessageEventHandler (this.HandleButtonPressed);
+				this.button.Pressed -= this.HandleButtonPressed;
 				this.button.Dispose ();
 				this.button = null;
 			}
@@ -484,13 +484,13 @@ namespace Epsitec.Common.Widgets
 				this.scroll_list.ShowSelected (ScrollShowMode.Center);
 			}
 			
-			this.menu.Accepted += new EventHandler (this.HandleMenuAccepted);
-			this.menu.Rejected += new EventHandler (this.HandleMenuRejected);
+			this.menu.Accepted += this.HandleMenuAccepted;
+			this.menu.Rejected += this.HandleMenuRejected;
 			
 			if (this.scroll_list != null)
 			{
-				this.scroll_list.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
-				this.scroll_list.SelectionActivated   += new EventHandler(this.HandleScrollListSelectionActivated);
+				this.scroll_list.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scroll_list.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
 			this.StartEdition ();
@@ -515,13 +515,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			this.menu.Accepted -= new EventHandler(this.HandleMenuAccepted);
-			this.menu.Rejected -= new EventHandler(this.HandleMenuRejected);
+			this.menu.Accepted -= this.HandleMenuAccepted;
+			this.menu.Rejected -= this.HandleMenuRejected;
 			
 			if (this.scroll_list != null)
 			{
-				this.scroll_list.SelectionActivated   -= new EventHandler(this.HandleScrollListSelectionActivated);
-				this.scroll_list.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
+				this.scroll_list.SelectionActivated   -= this.HandleScrollListSelectionActivated;
+				this.scroll_list.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
 				
 				this.scroll_list.Dispose();
 				this.scroll_list = null;

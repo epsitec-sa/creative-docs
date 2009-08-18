@@ -75,7 +75,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, bool isPercent, bool isDefault, MessageEventHandler message)
+		public static VMenu CreateFontSizeMenu(double currentValue, string currentUnits, double factor, bool isPercent, bool isDefault, Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu pour choisir une taille.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();

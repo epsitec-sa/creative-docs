@@ -31,7 +31,7 @@ namespace Epsitec.Common.Widgets
 			this.window.Root.SyncPaint = true;
 			
 			this.timer = new Timer ();
-			this.timer.TimeElapsed += new Support.EventHandler (this.HandleTimerTimeElapsed);
+			this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
 		}
 
 		
@@ -212,9 +212,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.hash.Contains (widget) == false)
 			{
-				widget.Entered   += new MessageEventHandler (this.HandleWidgetEntered);
-				widget.Exited    += new MessageEventHandler (this.HandleWidgetExited);
-				widget.Disposed  += new Support.EventHandler (this.HandleWidgetDisposed);
+				widget.Entered   += this.HandleWidgetEntered;
+				widget.Exited    += this.HandleWidgetExited;
+				widget.Disposed  += this.HandleWidgetDisposed;
 
 				this.hash[widget] = null;
 			}
@@ -229,9 +229,9 @@ namespace Epsitec.Common.Widgets
 
 			this.hash.Remove (widget);
 
-			widget.Entered  -= new MessageEventHandler (this.HandleWidgetEntered);
-			widget.Exited   -= new MessageEventHandler (this.HandleWidgetExited);
-			widget.Disposed -= new Support.EventHandler (this.HandleWidgetDisposed);
+			widget.Entered  -= this.HandleWidgetEntered;
+			widget.Exited   -= this.HandleWidgetExited;
+			widget.Disposed -= this.HandleWidgetDisposed;
 		}
 		
 		private void AttachToWidget(Widget widget)
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Widgets
 			this.caption = this.hash[this.widget];
 			this.host_provided_caption = null;
 			
-			this.widget.PreProcessing += new MessageEventHandler (this.HandleWidgetPreProcessing);
+			this.widget.PreProcessing += this.HandleWidgetPreProcessing;
 		}
 		
 		private void DetachFromWidget(Widget widget)
@@ -256,7 +256,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.widget == widget);
 			System.Diagnostics.Debug.Assert (this.widget != null);
 			
-			this.widget.PreProcessing -= new MessageEventHandler (this.HandleWidgetPreProcessing);
+			this.widget.PreProcessing -= this.HandleWidgetPreProcessing;
 			
 			this.widget  = null;
 			this.caption = null;

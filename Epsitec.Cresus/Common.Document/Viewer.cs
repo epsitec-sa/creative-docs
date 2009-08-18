@@ -84,10 +84,10 @@ namespace Epsitec.Common.Document
 
 			this.autoScrollTimer = new Timer();
 			this.autoScrollTimer.AutoRepeat = 0.1;
-			this.autoScrollTimer.TimeElapsed += new EventHandler(this.HandleAutoScrollTimeElapsed);
+			this.autoScrollTimer.TimeElapsed += this.HandleAutoScrollTimeElapsed;
 
 			this.miniBarTimer = new Timer();
-			this.miniBarTimer.TimeElapsed += new Support.EventHandler(this.HandleMiniBarTimeElapsed);
+			this.miniBarTimer.TimeElapsed += this.HandleMiniBarTimeElapsed;
 			
 			this.IsVisibleChanged += this.HandleIsVisibleChanged;
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
@@ -97,11 +97,11 @@ namespace Epsitec.Common.Document
 		{
 			if ( disposing )
 			{
-				this.autoScrollTimer.TimeElapsed -= new EventHandler(this.HandleAutoScrollTimeElapsed);
+				this.autoScrollTimer.TimeElapsed -= this.HandleAutoScrollTimeElapsed;
 				this.autoScrollTimer.Dispose();
 				this.autoScrollTimer = null;
 
-				this.miniBarTimer.TimeElapsed -= new EventHandler(this.HandleMiniBarTimeElapsed);
+				this.miniBarTimer.TimeElapsed -= this.HandleMiniBarTimeElapsed;
 				this.miniBarTimer.Dispose();
 				this.miniBarTimer = null;
 
@@ -2867,7 +2867,7 @@ namespace Epsitec.Common.Document
 			this.miniBarBalloon.Distance = this.miniBarDistance;
 			this.miniBarBalloon.SetParent(this.miniBar.Root);
 			this.miniBarBalloon.Anchor = AnchorStyles.All;
-			this.miniBarBalloon.CloseNeeded += new EventHandler(this.HandleMiniBarCloseNeeded);
+			this.miniBarBalloon.CloseNeeded += this.HandleMiniBarCloseNeeded;
 			this.miniBarBalloon.Attach();
 
 			this.miniBar.Show();  // nécessaire pour que IsAway fonctionne !
@@ -2923,7 +2923,7 @@ namespace Epsitec.Common.Document
 					button.PreferredWidth = this.MiniBarCommandWidth(cmd);
 					button.Dock = DockStyle.Left;
 					button.SetParent(line);
-					button.Clicked += new MessageEventHandler(this.HandleMiniBarButtonClicked);
+					button.Clicked += this.HandleMiniBarButtonClicked;
 
 					ToolTip.Default.SetToolTip(button, c.GetDescriptionWithShortcut());
 				}
@@ -2998,7 +2998,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( fadeout )
 				{
-					this.miniBar.WindowAnimationEnded += new EventHandler(this.HandleMiniBarWindowAnimationEnded);
+					this.miniBar.WindowAnimationEnded += this.HandleMiniBarWindowAnimationEnded;
 					this.miniBar.AnimateShow(Animation.FadeOut);
 				}
 				else
@@ -3007,7 +3007,7 @@ namespace Epsitec.Common.Document
 					this.miniBar.AsyncDispose();
 				}
 
-				this.miniBarBalloon.CloseNeeded -= new EventHandler(this.HandleMiniBarCloseNeeded);
+				this.miniBarBalloon.CloseNeeded -= this.HandleMiniBarCloseNeeded;
 				this.miniBarBalloon.Detach();
 
 				this.miniBarBalloon = null;

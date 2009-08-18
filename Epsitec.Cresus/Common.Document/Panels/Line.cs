@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Line(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.SelectionChanged += HandleTypeChanged;
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.StandardDashType.Custom);
 
 			this.gridCap = new RadioIconGrid(this);
-			this.gridCap.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridCap.SelectionChanged += HandleTypeChanged;
 			this.gridCap.TabIndex = 100;
 			this.gridCap.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(CapStyle.Butt);
 
 			this.gridJoin = new RadioIconGrid(this);
-			this.gridJoin.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridJoin.SelectionChanged += HandleTypeChanged;
 			this.gridJoin.TabIndex = 101;
 			this.gridJoin.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(JoinStyle.Bevel);
 
 			this.nothingButton = new IconButton(this);
-			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
+			this.nothingButton.Clicked += this.HandleNothingClicked;
 			this.nothingButton.TabIndex = 2;
 			this.nothingButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.nothingButton.IconName = Misc.Icon("Nothing");
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.TextFieldReal.FactorStep = 0.1M;
 			this.field.TextFieldReal.LogarithmicDivisor = 3.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.field.TextFieldReal);
-			this.field.TextFieldReal.EditionAccepted += new EventHandler(this.HandleTextChanged);
+			this.field.TextFieldReal.EditionAccepted += this.HandleTextChanged;
 			this.field.TabIndex = 2;
 			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Line.Tooltip.Width);
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 			{
 				this.radioDashRank[i] = new RadioButton(this);
-				this.radioDashRank[i].ActiveStateChanged += new EventHandler(this.HandleDashRankChanged);
+				this.radioDashRank[i].ActiveStateChanged += this.HandleDashRankChanged;
 				this.radioDashRank[i].Index = i;
 				this.radioDashRank[i].TabIndex = 10+i;
 				this.radioDashRank[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStandardLength.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldStandardLength.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength.TextFieldReal);
-			this.fieldStandardLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
+			this.fieldStandardLength.TextFieldReal.EditionAccepted += this.HandleDashChanged;
 			this.fieldStandardLength.TabIndex = 20;
 			this.fieldStandardLength.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStandardLength, Res.Strings.Panel.Line.Tooltip.DashLength);
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashPen.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldDashPen.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen.TextFieldReal);
-			this.fieldDashPen.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
+			this.fieldDashPen.TextFieldReal.EditionAccepted += this.HandleDashChanged;
 			this.fieldDashPen.TabIndex = 21;
 			this.fieldDashPen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, Res.Strings.Panel.Line.Tooltip.DashPen);
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashGap.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldDashGap.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap.TextFieldReal);
-			this.fieldDashGap.TextFieldReal.EditionAccepted += new EventHandler(this.HandleDashChanged);
+			this.fieldDashGap.TextFieldReal.EditionAccepted += this.HandleDashChanged;
 			this.fieldDashGap.TabIndex = 22;
 			this.fieldDashGap.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashGap, Res.Strings.Panel.Line.Tooltip.DashGap);
@@ -136,20 +136,20 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.gridCap.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.gridJoin.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
-				this.field.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleTextChanged);
+				this.grid.SelectionChanged -= HandleTypeChanged;
+				this.gridCap.SelectionChanged -= HandleTypeChanged;
+				this.gridJoin.SelectionChanged -= HandleTypeChanged;
+				this.nothingButton.Clicked -= this.HandleNothingClicked;
+				this.field.TextFieldReal.EditionAccepted -= this.HandleTextChanged;
 
 				for ( int i=0 ; i<Properties.Line.DashMax ; i++ )
 				{
-					this.radioDashRank[i].ActiveStateChanged -= new EventHandler(this.HandleDashRankChanged);
+					this.radioDashRank[i].ActiveStateChanged -= this.HandleDashRankChanged;
 					this.radioDashRank[i] = null;
 				}
-				this.fieldStandardLength.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashPen.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleDashChanged);
-				this.fieldDashGap.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleDashChanged);
+				this.fieldStandardLength.TextFieldReal.EditionAccepted -= this.HandleDashChanged;
+				this.fieldDashPen.TextFieldReal.EditionAccepted -= this.HandleDashChanged;
+				this.fieldDashGap.TextFieldReal.EditionAccepted -= this.HandleDashChanged;
 
 				this.grid = null;
 				this.field = null;

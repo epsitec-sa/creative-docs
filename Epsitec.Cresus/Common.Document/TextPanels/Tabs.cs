@@ -23,24 +23,24 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyles.ScrollNorm;
 			this.table.StyleV |= CellArrayStyles.Separator;
 			this.table.StyleV |= CellArrayStyles.SelectLine;
-			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+			this.table.FinalSelectionChanged += this.HandleTableSelectionChanged;
 			this.UpdateTable();  // pour afficher les noms des colonnes
 
-			this.buttonNew    = this.CreateIconButton(Misc.Icon("TabNew"), Res.Strings.TextPanel.Tabs.Tooltip.New,    new MessageEventHandler(this.HandleNewClicked),    false);
-			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, new MessageEventHandler(this.HandleDeleteClicked), false);
+			this.buttonNew    = this.CreateIconButton(Misc.Icon("TabNew"), Res.Strings.TextPanel.Tabs.Tooltip.New,    this.HandleNewClicked,    false);
+			this.buttonDelete = this.CreateIconButton(Misc.Icon("Delete"), Res.Strings.TextPanel.Tabs.Tooltip.Delete, this.HandleDeleteClicked, false);
 
 			this.fieldPos = new Epsitec.Common.Document.Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
 			this.fieldPos.SetRangeDimension(this.document, 0.0, 1.0, 0.0, 1.0);
-			this.fieldPos.TextFieldReal.TextChanged += new EventHandler(this.HandlePosValueChanged);
+			this.fieldPos.TextFieldReal.TextChanged += this.HandlePosValueChanged;
 			this.fieldPos.TabIndex = this.tabIndex++;
 			this.fieldPos.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldPos, Res.Strings.TextPanel.Tabs.Tooltip.Pos);
 			this.ProposalTextFieldLabel(this.fieldPos, false);  // toujours défini
 
-			this.buttonType = this.CreateIconButton(Misc.Icon("TabLeft"), Res.Strings.Action.Text.Ruler.TabChoice, new MessageEventHandler(this.HandleTypeClicked), true);
+			this.buttonType = this.CreateIconButton(Misc.Icon("TabLeft"), Res.Strings.Action.Text.Ruler.TabChoice, this.HandleTypeClicked, true);
 
-			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.ParagraphWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -50,9 +50,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.table.FinalSelectionChanged -= new EventHandler(this.HandleTableSelectionChanged);
-				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.table.FinalSelectionChanged -= this.HandleTableSelectionChanged;
+				this.ParagraphWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.ParagraphWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);
@@ -443,7 +443,7 @@ namespace Epsitec.Common.Document.TextPanels
 			TextTabType type;
 			Objects.AbstractText.GetTextTab(this.document, this.tabSelected, out tabPos, out type);
 
-			VMenu menu = Widgets.HRuler.CreateMenu(new MessageEventHandler(this.HandleMenuPressed), type);
+			VMenu menu = Widgets.HRuler.CreateMenu(this.HandleMenuPressed, type);
 			if ( menu == null )  return;
 			menu.Host = this;
 			menu.MinWidth = button.ActualWidth;

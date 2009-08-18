@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			backup.ConnectionString = FirebirdAbstraction.MakeConnectionString (fb.DbAccess, fb.GetDbFilePath (), fb.ServerType);
 			backup.Options          = FbBackupFlags.IgnoreLimbo;
 			backup.Verbose          = false;
-			backup.ServiceOutput   += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
+			backup.ServiceOutput   += FirebirdServiceTools.ServiceOutput;
 			
 			System.Diagnostics.Debug.WriteLine ("Backup: running; saving to " + path);
 			
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			restore.Verbose        = false;
 			restore.PageSize       = 4096;
 			restore.Options        = FbRestoreFlags.Create | FbRestoreFlags.Replace;
-			restore.ServiceOutput += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
+			restore.ServiceOutput += FirebirdServiceTools.ServiceOutput;
 
 			try
 			{

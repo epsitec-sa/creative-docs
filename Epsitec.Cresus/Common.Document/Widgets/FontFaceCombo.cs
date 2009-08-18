@@ -101,7 +101,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	risque d'avoir un offset incorrect pour le début...
 			this.fontSelector.UpdateContents();
 			this.fontSelector.SelectedFontFace = this.Text;
-			this.fontSelector.SelectionChanged += new Support.EventHandler(this.HandleSelectorSelectionChanged);
+			this.fontSelector.SelectionChanged += this.HandleSelectorSelectionChanged;
 			
 			MenuItem.SetMenuHost(this, new ScrollableMenuHost(menu));
 			
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.Widgets
 			
 			if ( this.fontSelector != null )
 			{
-				this.fontSelector.SelectionChanged -= new Support.EventHandler(this.HandleSelectorSelectionChanged);
+				this.fontSelector.SelectionChanged -= this.HandleSelectorSelectionChanged;
 				this.fontSelector.Dispose();
 				this.fontSelector = null;
 			}

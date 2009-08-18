@@ -140,28 +140,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonAdd.IconName = Misc.Icon("StringAdd");
 			this.buttonAdd.Dock = DockStyle.Left;
 			this.buttonAdd.AutoFocus = false;
-			this.buttonAdd.Clicked += new MessageEventHandler(this.HandleButtonAddClicked);
+			this.buttonAdd.Clicked += this.HandleButtonAddClicked;
 			ToolTip.Default.SetToolTip(this.buttonAdd, Res.Strings.StringCollection.Add);
 
 			this.buttonDuplicate = new IconButton(toolbar);
 			this.buttonDuplicate.IconName = Misc.Icon("StringDuplicate");
 			this.buttonDuplicate.Dock = DockStyle.Left;
 			this.buttonDuplicate.AutoFocus = false;
-			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicateClicked);
+			this.buttonDuplicate.Clicked += this.HandleButtonDuplicateClicked;
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.StringCollection.Duplicate);
 
 			this.buttonRemove = new IconButton(toolbar);
 			this.buttonRemove.IconName = Misc.Icon("StringRemove");
 			this.buttonRemove.Dock = DockStyle.Left;
 			this.buttonRemove.AutoFocus = false;
-			this.buttonRemove.Clicked += new MessageEventHandler(this.HandleButtonRemoveClicked);
+			this.buttonRemove.Clicked += this.HandleButtonRemoveClicked;
 			ToolTip.Default.SetToolTip(this.buttonRemove, Res.Strings.StringCollection.Remove);
 
 			this.buttonDefault = new IconButton(toolbar);
 			this.buttonDefault.IconName = Misc.Icon("StringDefault");
 			this.buttonDefault.Dock = DockStyle.Left;
 			this.buttonDefault.AutoFocus = false;
-			this.buttonDefault.Clicked += new MessageEventHandler(this.HandleButtonDefaultClicked);
+			this.buttonDefault.Clicked += this.HandleButtonDefaultClicked;
 			ToolTip.Default.SetToolTip(this.buttonDefault, Res.Strings.StringCollection.Default);
 
 			IconSeparator sep = new IconSeparator(toolbar);
@@ -172,14 +172,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPrev.IconName = Misc.Icon("StringPrev");
 			this.buttonPrev.Dock = DockStyle.Left;
 			this.buttonPrev.AutoFocus = false;
-			this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonPrevClicked);
+			this.buttonPrev.Clicked += this.HandleButtonPrevClicked;
 			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.StringCollection.Prev);
 
 			this.buttonNext = new IconButton(toolbar);
 			this.buttonNext.IconName = Misc.Icon("StringNext");
 			this.buttonNext.Dock = DockStyle.Left;
 			this.buttonNext.AutoFocus = false;
-			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonNextClicked);
+			this.buttonNext.Clicked += this.HandleButtonNextClicked;
 			ToolTip.Default.SetToolTip(this.buttonNext, Res.Strings.StringCollection.Next);
 
 			HSlider slider = new HSlider(toolbar);
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			slider.SmallChange = 1.0M;
 			slider.LargeChange = 2.0M;
 			slider.Resolution = 1.0M;
-			slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			slider.ValueChanged += this.HandleSliderChanged;
 			slider.Value = 1.0M;
 			slider.Dock = DockStyle.Right;
 		}
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					GlyphButton button = new GlyphButton();
 					button.GlyphShape = GlyphShape.None;
-					button.Clicked += new MessageEventHandler(this.HandleButtonTextClicked);
+					button.Clicked += this.HandleButtonTextClicked;
 					GridLayoutEngine.SetColumn(button, 1);
 					GridLayoutEngine.SetRow(button, count);
 					this.Children.Add(button);
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 					TextFieldMulti field = new TextFieldMulti();
 					//?field.AcceptsNullValue = true;
-					field.TextChanged += new EventHandler(this.HandleTextChanged);
+					field.TextChanged += this.HandleTextChanged;
 					field.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 					//	TODO: bug pour Pierre avec ce mode !
 					//?field.VerticalAlignment = VerticalAlignment.BaseLine;
@@ -245,8 +245,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 				}
 				else  // supprime une ligne ?
 				{
-					this.glyphButtons[count-2].Clicked -= new MessageEventHandler(this.HandleButtonTextClicked);
-					this.textFields[count-2].TextChanged -= new EventHandler(this.HandleTextChanged);
+					this.glyphButtons[count-2].Clicked -= this.HandleButtonTextClicked;
+					this.textFields[count-2].TextChanged -= this.HandleTextChanged;
 					this.textFields[count-2].KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleTextFocusChanged);
 
 					this.Children.Remove(this.staticTexts[count-2]);

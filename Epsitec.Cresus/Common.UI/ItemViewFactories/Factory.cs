@@ -86,7 +86,7 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 			Assembly[] assemblies = Factory.domain.GetAssemblies ();
 
-			Factory.domain.AssemblyLoad += new System.AssemblyLoadEventHandler (Factory.HandleDomainAssemblyLoad);
+			Factory.domain.AssemblyLoad += Factory.HandleDomainAssemblyLoad;
 
 			foreach (Assembly assembly in assemblies)
 			{

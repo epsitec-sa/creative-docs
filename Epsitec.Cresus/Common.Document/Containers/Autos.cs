@@ -18,7 +18,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
-			this.table.FlyOverChanged += new EventHandler(this.HandleTableFlyOverChanged);
+			this.table.FlyOverChanged += this.HandleTableFlyOverChanged;
 			this.table.StyleH  = CellArrayStyles.ScrollNorm;
 			this.table.StyleH |= CellArrayStyles.Header;
 			this.table.StyleH |= CellArrayStyles.Separator;

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Containers
 			int tabIndex = 0;
 
 			this.buttonDefault = new IconButton(Misc.Icon("QuickDefault"));
-			this.buttonDefault.Clicked += new MessageEventHandler(this.HandleButtonDefault);
+			this.buttonDefault.Clicked += this.HandleButtonDefault;
 			this.buttonDefault.TabIndex = tabIndex++;
 			this.buttonDefault.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonDefault);
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Containers
 			toolBar.Items.Add(new IconSeparator());
 
 			this.buttonClear = new IconButton(Misc.Icon("QuickClear"));
-			this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClear);
+			this.buttonClear.Clicked += this.HandleButtonClear;
 			this.buttonClear.TabIndex = tabIndex++;
 			this.buttonClear.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBar.Items.Add(this.buttonClear);
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Containers
 			this.slider.SmallChange = 1.0M;
 			this.slider.LargeChange = 10.0M;
 			this.slider.Resolution = 1.0M;
-			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			this.slider.ValueChanged += this.HandleSliderChanged;
 			this.toolBar.Items.Add(this.slider);
 			ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Double.TextFontSampleHeight);
 
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Document.Containers
 			this.fontSelector = new Widgets.FontSelector(this);
 			this.fontSelector.Dock = DockStyle.Fill;
 			this.fontSelector.FontList = Misc.GetFontList(false);
-			this.fontSelector.SelectionChanged += new EventHandler(this.HandleFontSelectorSelectionChanged);
+			this.fontSelector.SelectionChanged += this.HandleFontSelectorSelectionChanged;
 		
 			this.UpdateList();
 			this.UpdateFontsButtons();

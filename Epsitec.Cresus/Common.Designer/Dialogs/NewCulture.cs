@@ -51,7 +51,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Cancel;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = 11;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Dock = DockStyle.Right;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
+				buttonOk.Clicked += this.HandleButtonFilterClicked;
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

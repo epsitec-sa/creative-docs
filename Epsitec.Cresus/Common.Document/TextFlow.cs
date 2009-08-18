@@ -55,13 +55,13 @@ namespace Epsitec.Common.Document
 			
 			this.metaNavigator.TextNavigator = this.textNavigator;
 			
-			this.textStory.OpletExecuted += new OpletEventHandler(this.HandleTextStoryOpletExecuted);
+			this.textStory.OpletExecuted += this.HandleTextStoryOpletExecuted;
 			this.textStory.RenamingOplet += new Text.TextStory.RenamingCallback(this.HandleTextStoryRenamingOplet);
 			
-			this.textNavigator.CursorMoved += new EventHandler(this.HandleTextNavigatorCursorMoved);
-			this.textNavigator.TextChanged += new Support.EventHandler(this.HandleTextNavigatorTextChanged);
-			this.textNavigator.TabsChanged += new Support.EventHandler(this.HandleTextNavigatorTabsChanged);
-			this.textNavigator.ActiveStyleChanged += new Support.EventHandler(this.HandleTextNavigatorActiveStyleChanged);
+			this.textNavigator.CursorMoved += this.HandleTextNavigatorCursorMoved;
+			this.textNavigator.TextChanged += this.HandleTextNavigatorTextChanged;
+			this.textNavigator.TabsChanged += this.HandleTextNavigatorTabsChanged;
+			this.textNavigator.ActiveStyleChanged += this.HandleTextNavigatorActiveStyleChanged;
 			
 			this.textStory.EnableOpletQueue();
 		}

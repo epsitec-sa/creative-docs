@@ -17,44 +17,44 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Min, this, out this.groupMin, out this.fieldMin);
 			this.groupMin.Dock = DockStyle.StackBegin;
 			this.groupMin.Margins = new Margins(0, 0, 0, 2);
-			this.groupMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMin.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMin.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Max, this, out this.groupMax, out this.fieldMax);
 			this.groupMax.Dock = DockStyle.StackBegin;
 			this.groupMax.Margins = new Margins(0, 0, 0, 10);
-			this.groupMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMax.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMax.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.groupMultilingual = new ResetBox(this);
 			this.groupMultilingual.IsPatch = this.module.IsPatch;
 			this.groupMultilingual.Dock = DockStyle.StackBegin;
 			this.groupMultilingual.Margins = new Margins(0, 0, 0, 0);
-			this.groupMultilingual.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupMultilingual.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.checkMultilingual = new CheckButton(this.groupMultilingual.GroupBox);
 			this.checkMultilingual.AutoToggle = false;
 			this.checkMultilingual.Text = Res.Strings.Viewers.Types.String.Multilingual;
 			this.checkMultilingual.Dock = DockStyle.Fill;
-			this.checkMultilingual.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+			this.checkMultilingual.Clicked += this.HandleCheckClicked;
 
 			this.groupFormatted = new ResetBox(this);
 			this.groupFormatted.IsPatch = this.module.IsPatch;
 			this.groupFormatted.Dock = DockStyle.StackBegin;
 			this.groupFormatted.Margins = new Margins(0, 0, 0, 0);
-			this.groupFormatted.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupFormatted.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.checkFormatted = new CheckButton(this.groupFormatted.GroupBox);
 			this.checkFormatted.AutoToggle = false;
 			this.checkFormatted.Text = Res.Strings.Viewers.Types.String.Formatted;
 			this.checkFormatted.Dock = DockStyle.Fill;
-			this.checkFormatted.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+			this.checkFormatted.Clicked += this.HandleCheckClicked;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.String.Default, this, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
-			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupDefault.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldDefault.EditionAccepted += this.HandleTextFieldChanged;
 		}
 
 		
@@ -62,17 +62,17 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.groupMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupMultilingual.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupFormatted.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMin.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupMax.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupDefault.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupMultilingual.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupFormatted.ResetButton.Clicked -= this.HandleResetButtonClicked;
 
-				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.checkMultilingual.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
-				this.checkFormatted.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
+				this.fieldMin.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldMax.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldDefault.EditionAccepted -= this.HandleTextFieldChanged;
+				this.checkMultilingual.Clicked -= this.HandleCheckClicked;
+				this.checkFormatted.Clicked -= this.HandleCheckClicked;
 			}
 			
 			base.Dispose(disposing);

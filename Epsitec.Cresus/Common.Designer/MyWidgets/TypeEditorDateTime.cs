@@ -30,8 +30,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateComboLabeled(Res.Strings.Viewers.Types.DateTime.Resolution, left, out this.groupResol, out this.fieldResol);
 			this.groupResol.Dock = DockStyle.StackBegin;
 			this.groupResol.Margins = new Margins(0, 0, 0, 10);
-			this.groupResol.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldResol.TextChanged += new EventHandler(this.HandleTextFieldChanged);
+			this.groupResol.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldResol.TextChanged += this.HandleTextFieldChanged;
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Milliseconds);
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Seconds);
 			this.fieldResol.Items.Add(Res.Strings.Viewers.Types.DateTime.Res.Minutes);
@@ -45,46 +45,46 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.DateTime.Default, right, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 0, 10);
-			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupDefault.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldDefault.EditionAccepted += this.HandleTextFieldChanged;
 
 			//	Date, à gauche.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMin, left, out this.groupMinDate, out this.fieldMinDate);
 			this.groupMinDate.Dock = DockStyle.StackBegin;
 			this.groupMinDate.Margins = new Margins(0, 0, 0, 2);
-			this.groupMinDate.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMinDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMinDate.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMinDate.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateMax, left, out this.groupMaxDate, out this.fieldMaxDate);
 			this.groupMaxDate.Dock = DockStyle.StackBegin;
 			this.groupMaxDate.Margins = new Margins(0, 0, 0, 10);
-			this.groupMaxDate.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMaxDate.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMaxDate.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMaxDate.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.DateStep, left, out this.groupDateStep, out this.fieldDateStep);
 			this.groupDateStep.Dock = DockStyle.StackBegin;
 			this.groupDateStep.Margins = new Margins(0, 0, 0, 10);
-			this.groupDateStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldDateStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupDateStep.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldDateStep.EditionAccepted += this.HandleTextFieldChanged;
 
 			//	Heure, à droite.
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMin, right, out this.groupMinTime, out this.fieldMinTime);
 			this.groupMinTime.Dock = DockStyle.StackBegin;
 			this.groupMinTime.Margins = new Margins(0, 0, 20+10, 2);
-			this.groupMinTime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMinTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMinTime.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMinTime.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeMax, right, out this.groupMaxTime, out this.fieldMaxTime);
 			this.groupMaxTime.Dock = DockStyle.StackBegin;
 			this.groupMaxTime.Margins = new Margins(0, 0, 0, 10);
-			this.groupMaxTime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMaxTime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMaxTime.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMaxTime.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.DateTime.TimeStep, right, out this.groupTimeStep, out this.fieldTimeStep);
 			this.groupTimeStep.Dock = DockStyle.StackBegin;
 			this.groupTimeStep.Margins = new Margins(0, 0, 0, 10);
-			this.groupTimeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldTimeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupTimeStep.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldTimeStep.EditionAccepted += this.HandleTextFieldChanged;
 		}
 
 		
@@ -92,23 +92,23 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.fieldResol.TextChanged -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldResol.TextChanged -= this.HandleTextFieldChanged;
 
-				this.groupMinDate.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupMaxDate.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupDateStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupMinTime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupMaxTime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupTimeStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMinDate.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupMaxDate.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupDateStep.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupMinTime.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupMaxTime.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupTimeStep.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupDefault.ResetButton.Clicked -= this.HandleResetButtonClicked;
 
-				this.fieldMinDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMaxDate.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldDateStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMinTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMaxTime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldTimeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMinDate.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldMaxDate.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldDateStep.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldMinTime.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldMaxTime.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldTimeStep.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldDefault.EditionAccepted -= this.HandleTextFieldChanged;
 			}
 			
 			base.Dispose(disposing);

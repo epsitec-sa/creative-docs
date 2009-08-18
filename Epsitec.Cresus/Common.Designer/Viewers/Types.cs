@@ -22,12 +22,12 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Choix du contrôleur.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Types.Controller.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompactLeft = leftContainer.ExtendButton;
-			this.buttonSuiteCompactLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonSuiteCompactLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			this.groupController = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupController.IsPatch = this.module.IsPatch;
 			this.groupController.Dock = DockStyle.Fill;
-			this.groupController.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupController.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			StaticText label = new StaticText(this.groupController.GroupBox);
 			label.Text = Res.Strings.Viewers.Types.Controller.Title;
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldController.PreferredWidth = 120;
 			this.fieldController.HorizontalAlignment = HorizontalAlignment.Left;
 			this.fieldController.Dock = DockStyle.Left;
-			this.fieldController.TextChanged += new EventHandler(this.HandleControllerTextChanged);
+			this.fieldController.TextChanged += this.HandleControllerTextChanged;
 			this.fieldController.TabIndex = this.tabIndex++;
 			this.fieldController.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.fieldControllerParameter.HorizontalAlignment = HorizontalAlignment.Left;
 			this.fieldControllerParameter.Dock = DockStyle.Left;
 			this.fieldControllerParameter.Margins = new Margins(10, 0, 0, 0);
-			this.fieldControllerParameter.TextChanged += new EventHandler(this.HandleControllerTextChanged);
+			this.fieldControllerParameter.TextChanged += this.HandleControllerTextChanged;
 			this.fieldControllerParameter.TabIndex = this.tabIndex++;
 			this.fieldControllerParameter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -63,12 +63,12 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupNullable = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupNullable.IsPatch = this.module.IsPatch;
 			this.groupNullable.Dock = DockStyle.Fill;
-			this.groupNullable.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupNullable.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.primaryNullable = new CheckButton(this.groupNullable.GroupBox);
 			this.primaryNullable.Text = Res.Strings.Viewers.Types.Nullable.CheckButton;
 			this.primaryNullable.Dock = DockStyle.StackBegin;
-			this.primaryNullable.Clicked += new MessageEventHandler(this.HandleNullableClicked);
+			this.primaryNullable.Clicked += this.HandleNullableClicked;
 			this.primaryNullable.TabIndex = this.tabIndex++;
 			this.primaryNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Résumé des paramètres.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtendLeft = leftContainer.ExtendButton;
-			this.buttonSuiteExtendLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonSuiteExtendLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);
 			this.primarySuiteSummary.MinHeight = 30;
@@ -91,9 +91,9 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.fieldController.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
-				this.fieldControllerParameter.TextChanged -= new EventHandler(this.HandleControllerTextChanged);
-				this.primaryNullable.Clicked -= new MessageEventHandler(this.HandleNullableClicked);
+				this.fieldController.TextChanged -= this.HandleControllerTextChanged;
+				this.fieldControllerParameter.TextChanged -= this.HandleControllerTextChanged;
+				this.primaryNullable.Clicked -= this.HandleNullableClicked;
 			}
 
 			base.Dispose(disposing);
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.Viewers
 					//	Supprime l'éditeur actuel.
 					this.container.Container.Children.Clear();
 
-					this.editor.ContentChanged -= new EventHandler(this.HandleEditorContentChanged);
+					this.editor.ContentChanged -= this.HandleEditorContentChanged;
 					this.editor = null;
 				}
 
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.editor.DesignerApplication = this.designerApplication;
 					this.editor.ResourceAccess = this.access;
 					this.editor.Dock = DockStyle.StackBegin;
-					this.editor.ContentChanged += new EventHandler(this.HandleEditorContentChanged);
+					this.editor.ContentChanged += this.HandleEditorContentChanged;
 				}
 			}
 

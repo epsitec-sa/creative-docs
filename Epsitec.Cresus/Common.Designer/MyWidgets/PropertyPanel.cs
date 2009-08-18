@@ -33,7 +33,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
 			this.extendedButton.AutoFocus = false;
-			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
+			this.extendedButton.Clicked += this.ExtendedButtonClicked;
 			this.extendedButton.TabIndex = 1;
 			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.extendedButton.PreferredSize = new Size(this.extendedZoneWidth-4, this.extendedZoneWidth-4);
@@ -51,8 +51,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.grid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(50, GridUnitType.Absolute)));
 			LayoutEngine.SetLayoutEngine(this.container, this.grid);
 
-			this.Entered += new MessageEventHandler(this.HandleMouseEntered);
-			this.Exited += new MessageEventHandler(this.HandleMouseExited);
+			this.Entered += this.HandleMouseEntered;
+			this.Exited += this.HandleMouseExited;
 		}
 		
 		public PropertyPanel(Widget embedder) : this()
@@ -64,9 +64,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
-				this.Entered -= new MessageEventHandler(this.HandleMouseEntered);
-				this.Exited -= new MessageEventHandler(this.HandleMouseExited);
+				this.extendedButton.Clicked -= this.ExtendedButtonClicked;
+				this.Entered -= this.HandleMouseEntered;
+				this.Exited -= this.HandleMouseExited;
 			}
 			
 			base.Dispose(disposing);

@@ -22,8 +22,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboFont.AutoFocus = false;
 			this.comboFont.TabIndex = this.tabIndex++;
 			this.comboFont.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.comboFont.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
-			this.comboFont.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
+			this.comboFont.SelectedIndexChanged += this.HandleSelectedIndexChanged;
+			this.comboFont.FirstIconChanged += this.HandleFirstIconChanged;
 
 			this.buttonBold          = this.CreateIconButton(Res.Commands.FontBold.CommandId);
 			this.buttonItalic        = this.CreateIconButton(Res.Commands.FontItalic.CommandId);
@@ -39,11 +39,11 @@ namespace Epsitec.Common.Document.Ribbons
 
 			this.buttonStyle = new Button(this);
 			this.buttonStyle.Text = "S";
-			this.buttonStyle.Clicked += new MessageEventHandler(this.HandleButtonStyleClicked);
+			this.buttonStyle.Clicked += this.HandleButtonStyleClicked;
 
 			this.buttonMW = new Button(this);
 			this.buttonMW.Text = "MW";
-			this.buttonMW.Clicked += new MessageEventHandler(this.HandleButtonMWClicked);
+			this.buttonMW.Clicked += this.HandleButtonMWClicked;
 
 //			this.UpdateClientGeometry();
 		}

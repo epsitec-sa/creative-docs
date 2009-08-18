@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Name(Document document) : base(document)
 		{
 			this.field = new TextField(this);
-			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.field.TextChanged += this.HandleTextChanged;
 			this.field.TabIndex = 1;
 			this.field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, Res.Strings.Panel.Name.Tooltip.Title);
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.field.TextChanged -= this.HandleTextChanged;
 				this.field = null;
 			}
 			

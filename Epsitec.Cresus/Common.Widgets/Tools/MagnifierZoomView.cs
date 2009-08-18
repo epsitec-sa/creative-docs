@@ -323,7 +323,7 @@ namespace Epsitec.Common.Widgets.Tools
 				this.timer = new Timer ();
 				this.timer.AutoRepeat = 0.1;
 				this.timer.Delay = 0.1;
-				this.timer.TimeElapsed += new EventHandler(HandleTimerTimeElapsed);
+				this.timer.TimeElapsed += HandleTimerTimeElapsed;
 				this.timer.Start ();
 			}
 		}

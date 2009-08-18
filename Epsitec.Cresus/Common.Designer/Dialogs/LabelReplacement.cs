@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("LabelReplacement", 500, 300, true);
 				this.window.Text = "Légende de remplacement"; //Res.Strings.Dialog.LabelReplacement.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.Dialogs
 
 				this.fieldTextToCreate = new TextField(createBox);
 				this.fieldTextToCreate.Dock = DockStyle.Fill;
-				this.fieldTextToCreate.TextChanged += new EventHandler(this.HandleTextToCreateChanged);
+				this.fieldTextToCreate.TextChanged += this.HandleTextToCreateChanged;
 
 				//	Onglet "utiliser".
 				Widget left = new Widget(this.tabUse);
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 0);
 				this.listModules.TabIndex = 2;
-				this.listModules.SelectedIndexChanged += new EventHandler(this.HandleListModulesSelected);
+				this.listModules.SelectedIndexChanged += this.HandleListModulesSelected;
 
 				//	Partie droite.
 				this.header2 = new StaticText(right);
@@ -122,8 +122,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 0);
 				this.listResources.TabIndex = 3;
-				this.listResources.SelectedIndexChanged += new EventHandler(this.HandleListResourcesSelected);
-				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
+				this.listResources.SelectedIndexChanged += this.HandleListResourcesSelected;
+				this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
 
 				this.textResource = new TextField(right);
 				this.textResource.IsReadOnly = true;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 21;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
-				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
+				this.buttonUse.Clicked += this.HandleButtonUseClicked;
 				this.buttonUse.TabIndex = 20;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

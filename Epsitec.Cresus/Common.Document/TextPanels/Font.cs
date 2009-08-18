@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontFace.IsReadOnly = true;
 			this.fontFace.AutoFocus = false;
 			this.fontFace.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
-			this.fontFace.ComboClosed += new EventHandler(this.HandleFontFaceTextChanged);
+			this.fontFace.ComboClosed += this.HandleFontFaceTextChanged;
 			this.fontFace.TabIndex = this.tabIndex++;
 			this.fontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontFace, Res.Strings.TextPanel.Font.Tooltip.Face);
@@ -35,49 +35,49 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fontStyle = new TextFieldCombo(this);
 			this.fontStyle.IsReadOnly = true;
 			this.fontStyle.AutoFocus = false;
-			this.fontStyle.ComboClosed += new EventHandler(this.HandleFontStyleTextChanged);
+			this.fontStyle.ComboClosed += this.HandleFontStyleTextChanged;
 			this.fontStyle.TabIndex = this.tabIndex++;
 			this.fontStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontStyle, Res.Strings.TextPanel.Font.Tooltip.Style);
 
-			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, new MessageEventHandler(this.HandleFeaturesClicked));
+			this.fontFeatures = this.CreateIconButton(Misc.Icon("FontFeatures"), Res.Strings.TextPanel.Font.Tooltip.Features, this.HandleFeaturesClicked);
 
 			if (Command.IsDefined ("Settings"))
 			{
-				this.buttonSettings = this.CreateIconButton (Misc.Icon ("Settings"), Res.Strings.Action.Settings, new MessageEventHandler (this.HandleButtonSettingsClicked), false);
+				this.buttonSettings = this.CreateIconButton (Misc.Icon ("Settings"), Res.Strings.Action.Settings, this.HandleButtonSettingsClicked, false);
 			}
 
-			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleSizeChanged));
+			this.fontSize = this.CreateTextFieldLabel(Res.Strings.TextPanel.Font.Tooltip.Size, Res.Strings.TextPanel.Font.Short.Size, Res.Strings.TextPanel.Font.Long.Size, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, this.HandleSizeChanged);
 			this.fontSize.SetRangeFontSize(this.document);
 			this.fontSize.SetRangePercents(this.document, 25.0, 400.0, 100.0, 10.0);
 			this.fontSize.IsUnitPercent = true;
-			this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
+			this.fontSize.ButtonUnit.Clicked += this.HandleButtonUnitClicked;
 			this.fontSize.Name = "FontSize Field";
 
-			this.buttonSizeMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Font.Tooltip.Size, new MessageEventHandler(this.HandleButtonSizeMenuClicked));
+			this.buttonSizeMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Font.Tooltip.Size, this.HandleButtonSizeMenuClicked);
 			this.buttonSizeMenu.Name = "FontSize Menu";
 
-			this.fontColor = this.CreateColorSample(Res.Strings.Action.FontColor, new MessageEventHandler(this.HandleFieldColorClicked), new EventHandler(this.HandleFieldColorChanged));
+			this.fontColor = this.CreateColorSample(Res.Strings.Action.FontColor, this.HandleFieldColorClicked, this.HandleFieldColorChanged);
 
-			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 0.0, 5.0, new EventHandler(this.HandleGlueValueChanged));
+			this.fontGlue = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Font.Tooltip.Glue, Res.Strings.TextPanel.Font.Short.Glue, Res.Strings.TextPanel.Font.Long.Glue, -50.0, 200.0, 0.0, 5.0, this.HandleGlueValueChanged);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 			this.buttonClear.Name = "Clear";
 
 			this.checkBold = new CheckButton(this);
 			this.checkBold.Text = Res.Strings.Action.FontInvertBold;
 			this.checkBold.TabIndex = this.tabIndex++;
 			this.checkBold.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.checkBold.ActiveStateChanged += new EventHandler(this.HandleCheckBoldActiveStateChanged);
+			this.checkBold.ActiveStateChanged += this.HandleCheckBoldActiveStateChanged;
 
 			this.checkItalic = new CheckButton(this);
 			this.checkItalic.Text = Res.Strings.Action.FontInvertItalic;
 			this.checkItalic.TabIndex = this.tabIndex++;
 			this.checkItalic.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.checkItalic.ActiveStateChanged += new EventHandler(this.HandleCheckItalicActiveStateChanged);
+			this.checkItalic.ActiveStateChanged += this.HandleCheckItalicActiveStateChanged;
 
-			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.TextWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -88,14 +88,14 @@ namespace Epsitec.Common.Document.TextPanels
 			if ( disposing )
 			{
 				this.fontFace.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleFontFaceComboOpening);
-				this.fontFace.ComboClosed -= new EventHandler(this.HandleFontFaceTextChanged);
-				this.fontStyle.ComboClosed -= new EventHandler(this.HandleFontStyleTextChanged);
-				this.fontSize.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
-				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fontColor.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
+				this.fontFace.ComboClosed -= this.HandleFontFaceTextChanged;
+				this.fontStyle.ComboClosed -= this.HandleFontStyleTextChanged;
+				this.fontSize.ButtonUnit.Clicked += this.HandleButtonUnitClicked;
+				this.fontColor.Clicked -= this.HandleFieldColorClicked;
+				this.fontColor.ColorChanged -= this.HandleFieldColorChanged;
 
-				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.TextWrapper.Defined.Changed -= this.HandleWrapperChanged;
 
 				this.fontFace = null;
 				this.fontSize = null;
@@ -457,15 +457,14 @@ namespace Epsitec.Common.Document.TextPanels
 			string[] supported = font.GetSupportedFeatures();
 
 			VMenu menu = new VMenu();
-			MessageEventHandler message = new MessageEventHandler(this.HandleFeaturesMenu);
-
+			
 			string[] defs = Misc.DefaultFeatures();
 			for ( int i=0 ; i<defs.Length ; i++ )
 			{
 				string text = Misc.GetFeatureText(defs[i]);
 				bool active = Misc.IsInsideList(features,  defs[i]);
 				bool valid  = Misc.IsInsideList(supported, defs[i]);
-				this.BuildFeaturesMenu(menu, font, text, defs[i], active, valid, message);
+				this.BuildFeaturesMenu(menu, font, text, defs[i], active, valid, this.HandleFeaturesMenu);
 			}
 
 			for ( int i=0 ; i<supported.Length ; i++ )
@@ -474,14 +473,14 @@ namespace Epsitec.Common.Document.TextPanels
 				string text = Misc.GetFeatureText(supported[i]);
 				bool active = Misc.IsInsideList(features, supported[i]);
 				bool valid  = true;
-				this.BuildFeaturesMenu(menu, font, text, supported[i], active, valid, message);
+				this.BuildFeaturesMenu(menu, font, text, supported[i], active, valid, this.HandleFeaturesMenu);
 			}
 
 			menu.AdjustSize();
 			return menu;
 		}
 
-		protected void BuildFeaturesMenu(VMenu menu, OpenType.Font font, string text, string feature, bool active, bool valid, MessageEventHandler message)
+		protected void BuildFeaturesMenu(VMenu menu, OpenType.Font font, string text, string feature, bool active, bool valid, Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Crée une case du menu des variantes OpenType (features).
 			OpenType.LookupTable[] tables = font.GetLookupTables(feature);
@@ -825,7 +824,7 @@ namespace Epsitec.Common.Document.TextPanels
 			double factor = (this.document.Type == DocumentType.Pictogram) ? 0.1 : 1.0;
 			bool isPercent = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
 			bool isDefault = !this.TextWrapper.IsAttachedToDefaultParagraphStyle;
-			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", factor, isPercent, isDefault, new MessageEventHandler(this.HandleMenuPressed));
+			return Menus.FontSizeMenu.CreateFontSizeMenu(size, percent?"%":"", factor, isPercent, isDefault, this.HandleMenuPressed);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

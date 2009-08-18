@@ -188,14 +188,14 @@ namespace Epsitec.Common.Dialogs
 			form.BackColor = System.Drawing.Color.FromArgb (255, 255, 255);
 			form.Text = "CheckPort/GDI+/Smooth";
 			form.ClientSize = new System.Drawing.Size (250, 120);
-			form.Paint += new System.Windows.Forms.PaintEventHandler (PrintDialogTest.Helper.HandleFormPaintSmooth);
+			form.Paint += PrintDialogTest.Helper.HandleFormPaintSmooth;
 			form.Show ();
 			
 			form = new System.Windows.Forms.Form ();
 			form.BackColor = System.Drawing.Color.FromArgb (255, 255, 255);
 			form.Text = "CheckPort/GDI+/Default";
 			form.ClientSize = new System.Drawing.Size (250, 120);
-			form.Paint += new System.Windows.Forms.PaintEventHandler (PrintDialogTest.Helper.HandleFormPaintDefault);
+			form.Paint += PrintDialogTest.Helper.HandleFormPaintDefault;
 			form.Show ();
 		}
 		
@@ -254,8 +254,8 @@ namespace Epsitec.Common.Dialogs
 			{
 				Adobe.AcrobatDistiller.PdfDistiller distiller = new Adobe.AcrobatDistiller.PdfDistillerClass ();
 				distiller.bShowWindow = 0;
-				distiller.OnJobStart += new Adobe.AcrobatDistiller._PdfEvents_OnJobStartEventHandler (PrintDialogTest.HandleDistillerOnJobStart);
-				distiller.OnJobDone  += new Adobe.AcrobatDistiller._PdfEvents_OnJobDoneEventHandler (PrintDialogTest.HandleDistillerOnJobDone);
+				distiller.OnJobStart += PrintDialogTest.HandleDistillerOnJobStart;
+				distiller.OnJobDone  += PrintDialogTest.HandleDistillerOnJobDone;
 				distiller.FileToPDF (@"c:\test.ps", @"c:\auto-generated-test.pdf", @"");
 				System.Diagnostics.Debug.WriteLine ("Done.");
 			}

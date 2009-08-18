@@ -116,14 +116,14 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonInc.PreferredHeight = parent.PreferredHeight/2+1;
 				this.buttonInc.Dock = DockStyle.Top;
 				this.buttonInc.Margins = new Margins(0, 0, 0, -1);
-				this.buttonInc.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonInc.Clicked += this.HandleButtonClicked;
 
 				this.buttonDec = new GlyphButton(buttons);
 				this.buttonDec.PreferredHeight = parent.PreferredHeight/2+1;
 				this.buttonDec.GlyphShape = GlyphShape.ArrowDown;
 				this.buttonDec.Dock = DockStyle.Bottom;
 				this.buttonDec.Margins = new Margins(0, 0, -1, 0);
-				this.buttonDec.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonDec.Clicked += this.HandleButtonClicked;
 
 				this.field = new TextField(box);
 				this.field.IsReadOnly = true;
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Designer.Proxies
 				field.Resolution = (decimal) this.resolution;
 				field.PreferredWidth = 50;
 				field.Dock = DockStyle.Right;
-				field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+				field.ValueChanged += this.HandleFieldValueChanged;
 				this.field = field;
 			}
 

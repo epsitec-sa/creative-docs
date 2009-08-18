@@ -3,6 +3,10 @@
 
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>MultiSelectEventArgs</c> class represents a selection in the
+	/// <see cref="ScrollListMultiSelect"/>, which is defined by two indexes.
+	/// </summary>
 	public class MultiSelectEventArgs : Support.EventArgs
 	{
 		public MultiSelectEventArgs()

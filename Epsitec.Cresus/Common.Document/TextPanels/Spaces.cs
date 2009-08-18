@@ -17,13 +17,13 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextSpaces");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Spaces.Title);
 
-			this.fieldBefore = this.CreateTextFieldLabel(Res.Strings.TextPanel.Spaces.Tooltip.Before, Res.Strings.TextPanel.Spaces.Short.Before, Res.Strings.TextPanel.Spaces.Long.Before, 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleBeforeChanged));
-			this.fieldAfter  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Spaces.Tooltip.After,  Res.Strings.TextPanel.Spaces.Short.After,  Res.Strings.TextPanel.Spaces.Long.After,  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleAfterChanged));
+			this.fieldBefore = this.CreateTextFieldLabel(Res.Strings.TextPanel.Spaces.Tooltip.Before, Res.Strings.TextPanel.Spaces.Short.Before, Res.Strings.TextPanel.Spaces.Long.Before, 0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleBeforeChanged);
+			this.fieldAfter  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Spaces.Tooltip.After,  Res.Strings.TextPanel.Spaces.Short.After,  Res.Strings.TextPanel.Spaces.Long.After,  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleAfterChanged);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.ParagraphWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -33,8 +33,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.ParagraphWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);

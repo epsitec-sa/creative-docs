@@ -20,13 +20,13 @@ namespace Epsitec.Common.Document
 			this.styleTextWrapper      = new Text.Wrappers.TextWrapper();
 			this.styleParagraphWrapper = new Text.Wrappers.ParagraphWrapper();
 
-			this.textWrapper.Active.Changed  += new EventHandler(this.HandleTextWrapperChanged);
-			this.textWrapper.Defined.Changed += new EventHandler(this.HandleTextWrapperChanged);
+			this.textWrapper.Active.Changed  += this.HandleTextWrapperChanged;
+			this.textWrapper.Defined.Changed += this.HandleTextWrapperChanged;
 
-			this.paragraphWrapper.Active.Changed  += new EventHandler(this.HandleParagraphWrapperChanged);
-			this.paragraphWrapper.Defined.Changed += new EventHandler(this.HandleParagraphWrapperChanged);
+			this.paragraphWrapper.Active.Changed  += this.HandleParagraphWrapperChanged;
+			this.paragraphWrapper.Defined.Changed += this.HandleParagraphWrapperChanged;
 
-			this.document.TextContext.StyleList.StyleRedefined += new EventHandler(this.HandleStyleWrapperChanged);
+			this.document.TextContext.StyleList.StyleRedefined += this.HandleStyleWrapperChanged;
 
 			if ( this.document.Mode == DocumentMode.Modify )
 			{
@@ -74,13 +74,13 @@ namespace Epsitec.Common.Document
 				Epsitec.Common.Support.ImageProvider.Default.RemoveDynamicImage(tag);
 			}
 
-			this.textWrapper.Active.Changed  -= new EventHandler(this.HandleTextWrapperChanged);
-			this.textWrapper.Defined.Changed -= new EventHandler(this.HandleTextWrapperChanged);
+			this.textWrapper.Active.Changed  -= this.HandleTextWrapperChanged;
+			this.textWrapper.Defined.Changed -= this.HandleTextWrapperChanged;
 
-			this.paragraphWrapper.Active.Changed  -= new EventHandler(this.HandleParagraphWrapperChanged);
-			this.paragraphWrapper.Defined.Changed -= new EventHandler(this.HandleParagraphWrapperChanged);
+			this.paragraphWrapper.Active.Changed  -= this.HandleParagraphWrapperChanged;
+			this.paragraphWrapper.Defined.Changed -= this.HandleParagraphWrapperChanged;
 
-			this.document.TextContext.StyleList.StyleRedefined -= new EventHandler(this.HandleStyleWrapperChanged);
+			this.document.TextContext.StyleList.StyleRedefined -= this.HandleStyleWrapperChanged;
 		}
 
 		public void ClearDynamicImageStyle()
@@ -97,12 +97,12 @@ namespace Epsitec.Common.Document
 
 		public void TextContextChangedDisconnect()
 		{
-			this.document.TextContext.StyleList.StyleRedefined -= new EventHandler(this.HandleStyleWrapperChanged);
+			this.document.TextContext.StyleList.StyleRedefined -= this.HandleStyleWrapperChanged;
 		}
 
 		public void TextContextChangedConnect()
 		{
-			this.document.TextContext.StyleList.StyleRedefined += new EventHandler(this.HandleStyleWrapperChanged);
+			this.document.TextContext.StyleList.StyleRedefined += this.HandleStyleWrapperChanged;
 		}
 
 

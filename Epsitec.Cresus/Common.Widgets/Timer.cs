@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			if (this.timer == null)
 			{
 				this.timer = new System.Windows.Forms.Timer ();
-				this.timer.Tick += new System.EventHandler (this.HandleTimerTick);
+				this.timer.Tick += this.HandleTimerTick;
 			}
 		}
 
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 			if (timer != null)
 			{
 				timer.Stop ();
-				timer.Tick -= new System.EventHandler (this.HandleTimerTick);
+				timer.Tick -= this.HandleTimerTick;
 				timer.Dispose ();
 			}
 		}

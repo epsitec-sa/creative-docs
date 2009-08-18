@@ -125,7 +125,7 @@ namespace Epsitec.Common.Drawing
 			
 			window.ClientSize = new Size (870, 360);
 			window.Text = "CheckNamedColors";
-			window.Root.PaintForeground += new PaintEventHandler(NamedColors_PaintForeground);
+			window.Root.PaintForeground += NamedColors_PaintForeground;
 			window.Root.Invalidate ();
 			window.Show ();
 			Window.RunInTestEnvironment (window);

@@ -35,18 +35,18 @@ namespace Epsitec.Common.Widgets
 			a.Name = "A"; a.Margins = new Margins (0, 10, 0, 40); a.PreferredSize = new Size (80, 20); a.Text = "OK";     a.Anchor = AnchorStyles.BottomRight;
 			b.Name = "B"; b.Margins = new Margins (0, 10, 0, 10); b.PreferredSize = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.BottomRight;
 			
-			a.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
-			b.Clicked += new MessageEventHandler(this.HandleWidgetClicked);
-			a.Pressed += new MessageEventHandler(this.HandleWidgetPressed);
-			b.Pressed += new MessageEventHandler(this.HandleWidgetPressed);
-			a.Released += new MessageEventHandler(this.HandleWidgetReleased);
-			b.Released += new MessageEventHandler(this.HandleWidgetReleased);
-			a.Engaged += new EventHandler(this.HandleWidgetEngaged);
-			b.Engaged += new EventHandler(this.HandleWidgetEngaged);
-			a.Disengaged += new EventHandler(this.HandleWidgetDisengaged);
-			b.Disengaged += new EventHandler(this.HandleWidgetDisengaged);
-			a.StillEngaged += new EventHandler(this.HandleWidgetStillEngaged);
-			b.StillEngaged += new EventHandler(this.HandleWidgetStillEngaged);
+			a.Clicked += this.HandleWidgetClicked;
+			b.Clicked += this.HandleWidgetClicked;
+			a.Pressed += this.HandleWidgetPressed;
+			b.Pressed += this.HandleWidgetPressed;
+			a.Released += this.HandleWidgetReleased;
+			b.Released += this.HandleWidgetReleased;
+			a.Engaged += this.HandleWidgetEngaged;
+			b.Engaged += this.HandleWidgetEngaged;
+			a.Disengaged += this.HandleWidgetDisengaged;
+			b.Disengaged += this.HandleWidgetDisengaged;
+			a.StillEngaged += this.HandleWidgetStillEngaged;
+			b.StillEngaged += this.HandleWidgetStillEngaged;
 			
 			a.AutoRepeat = true;
 			b.AutoRepeat = false;

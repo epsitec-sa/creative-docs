@@ -74,7 +74,7 @@ namespace Epsitec.Common.Document.Menus
 			list.Add(fs);
 		}
 
-		public static VMenu CreateLeadingMenu(Document document, double currentValue, string currentUnits, bool isDefault, MessageEventHandler message)
+		public static VMenu CreateLeadingMenu(Document document, double currentValue, string currentUnits, bool isDefault, Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu pour choisir un interligne.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();

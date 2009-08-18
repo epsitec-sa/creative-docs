@@ -189,7 +189,7 @@ namespace Epsitec.Common.Document.Ribbons
 			combo.Items.Add(item);
 		}
 
-		protected GlyphButton CreateMenuButton(string command, string tooltip, MessageEventHandler handler)
+		protected GlyphButton CreateMenuButton(string command, string tooltip, Support.EventHandler<MessageEventArgs> handler)
 		{
 			//	Crée un bouton "v" pour un menu.
 			GlyphButton button = new GlyphButton(this);

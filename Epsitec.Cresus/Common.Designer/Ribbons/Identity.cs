@@ -21,14 +21,14 @@ namespace Epsitec.Common.Designer.Ribbons
 			this.widget = new IdentityCardWidget(this);
 			this.widget.Dock = DockStyle.Fill;
 			this.widget.IdentityCard = this.designerApplication.Settings.IdentityCard;
-			this.widget.Clicked += new MessageEventHandler(this.HandleIdentityClicked);
+			this.widget.Clicked += this.HandleIdentityClicked;
 		}
 
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				this.widget.Clicked -= new MessageEventHandler(this.HandleIdentityClicked);
+				this.widget.Clicked -= this.HandleIdentityClicked;
 			}
 			
 			base.Dispose(disposing);

@@ -100,7 +100,7 @@ namespace Epsitec.Common.Support.PlugIns
 
 			Assembly[] assemblies = PlugInFactory<TClass, TAttribute, TId>.domain.GetAssemblies ();
 
-			PlugInFactory<TClass, TAttribute, TId>.domain.AssemblyLoad += new System.AssemblyLoadEventHandler (PlugInFactory<TClass, TAttribute, TId>.HandleDomainAssemblyLoad);
+			PlugInFactory<TClass, TAttribute, TId>.domain.AssemblyLoad += PlugInFactory<TClass, TAttribute, TId>.HandleDomainAssemblyLoad;
 
 			foreach (Assembly assembly in assemblies)
 			{

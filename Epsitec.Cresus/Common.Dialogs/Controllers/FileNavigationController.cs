@@ -233,7 +233,7 @@ namespace Epsitec.Common.Dialogs.Controllers
 				string name = index.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
 				MenuItem item = new MenuItem ("ChangeVisitedDirectory", icon, text, null, name);
-				item.Pressed += new MessageEventHandler (this.HandleHistoryMenuItemPressed);
+				item.Pressed += this.HandleHistoryMenuItemPressed;
 				ToolTip.Default.SetToolTip (item, tooltip);
 
 				return item;

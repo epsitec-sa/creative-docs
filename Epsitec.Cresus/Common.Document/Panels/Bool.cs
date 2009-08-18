@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Bool(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.SelectionChanged += HandleTypeChanged;
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
+				this.grid.SelectionChanged -= HandleTypeChanged;
 				this.grid = null;
 			}
 			

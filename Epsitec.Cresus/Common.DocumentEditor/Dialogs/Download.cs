@@ -39,7 +39,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Download.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowDownloadCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowDownloadCloseClicked;
 
 				StaticText title = new StaticText(this.window.Root);
 				if (string.IsNullOrEmpty (this.url))
@@ -52,7 +52,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				}
 				title.Dock = DockStyle.Top;
 				title.Margins = new Margins (6, 6, 6, 0);
-				title.HypertextClicked += new MessageEventHandler (this.HandleLinkHypertextClicked);
+				title.HypertextClicked += this.HandleLinkHypertextClicked;
 
 				string chip = "<list type=\"fix\" width=\"1.5\"/>";
 
@@ -76,7 +76,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				url.Text = chip+text;
 				url.Dock = DockStyle.Top;
 				url.Margins = new Margins (6, 6, 0, 0);
-				url.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
+				url.HypertextClicked += HandleLinkHypertextClicked;
 
 				//	Bouton de fermeture.
 				Button buttonClose = new Button(this.window.Root);
@@ -85,7 +85,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleDownloadButtonCloseClicked);
+				buttonClose.Clicked += this.HandleDownloadButtonCloseClicked;
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);

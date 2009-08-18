@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets.Validators
 			
 			Support.Data.INumValue num = this.Widget as Support.Data.INumValue;
 			
-			num.ValueChanged += new Support.EventHandler (this.HandleValueChanged);
+			num.ValueChanged += this.HandleValueChanged;
 		}
 		
 		protected override void DetachWidget(Widget widget)
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets.Validators
 			
 			Support.Data.INumValue num = this.Widget as Support.Data.INumValue;
 			
-			num.ValueChanged -= new Support.EventHandler (this.HandleValueChanged);
+			num.ValueChanged -= this.HandleValueChanged;
 		}
 		
 		

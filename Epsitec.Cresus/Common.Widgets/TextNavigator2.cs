@@ -35,20 +35,20 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.text_navigator != null)
 					{
-						this.text_navigator.ActiveStyleChanged -= new Support.EventHandler (this.HandleActiveStyleChanged);
-						this.text_navigator.TabsChanged -= new Support.EventHandler (this.HandleTabsChanged);
-						this.text_navigator.TextChanged -= new Support.EventHandler (this.HandleTextChanged);
-						this.text_navigator.CursorMoved -= new Support.EventHandler (this.HandleCursorMoved);
+						this.text_navigator.ActiveStyleChanged -= this.HandleActiveStyleChanged;
+						this.text_navigator.TabsChanged -= this.HandleTabsChanged;
+						this.text_navigator.TextChanged -= this.HandleTextChanged;
+						this.text_navigator.CursorMoved -= this.HandleCursorMoved;
 					}
 					
 					this.text_navigator = value;
 					
 					if (this.text_navigator != null)
 					{
-						this.text_navigator.CursorMoved += new Support.EventHandler (this.HandleCursorMoved);
-						this.text_navigator.TextChanged += new Support.EventHandler (this.HandleTextChanged);
-						this.text_navigator.TabsChanged += new Support.EventHandler (this.HandleTabsChanged);
-						this.text_navigator.ActiveStyleChanged += new Support.EventHandler (this.HandleActiveStyleChanged);
+						this.text_navigator.CursorMoved += this.HandleCursorMoved;
+						this.text_navigator.TextChanged += this.HandleTextChanged;
+						this.text_navigator.TabsChanged += this.HandleTabsChanged;
+						this.text_navigator.ActiveStyleChanged += this.HandleActiveStyleChanged;
 					}
 				}
 			}

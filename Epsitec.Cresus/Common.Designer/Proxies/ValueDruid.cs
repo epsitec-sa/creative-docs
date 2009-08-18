@@ -48,19 +48,19 @@ namespace Epsitec.Common.Designer.Proxies
 			this.buttonGoto.CaptionId = Res.Captions.Editor.LocatorGoto.Id;
 			this.buttonGoto.AutoFocus = false;
 			this.buttonGoto.Dock = DockStyle.Right;
-			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonGotoClicked);
+			this.buttonGoto.Clicked += this.HandleButtonGotoClicked;
 
 			this.buttonClear = new IconButton(box);
 			this.buttonClear.CaptionId = Res.Captions.Form.LabelReplacementClear.Id;
 			this.buttonClear.AutoFocus = false;
 			this.buttonClear.Dock = DockStyle.Right;
-			this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClearClicked);
+			this.buttonClear.Clicked += this.HandleButtonClearClicked;
 
 			this.buttonCaption = new Button(box);
 			this.buttonCaption.Text = "Choisir";
 			this.buttonCaption.PreferredWidth = 22*2;
 			this.buttonCaption.Dock = DockStyle.Right;
-			this.buttonCaption.Clicked += new MessageEventHandler(this.HandleButtonCaptionClicked);
+			this.buttonCaption.Clicked += this.HandleButtonCaptionClicked;
 
 			this.UpdateInterface();
 

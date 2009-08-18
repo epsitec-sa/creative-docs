@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("ResourceName", 300, 150, true);
 				this.window.Text = "Choix d'un nom";  // Res.Strings.Dialog.ResourceName.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				//	Titre supérieur.
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
+				this.buttonOk.Clicked += this.HandleButtonOkClicked;
 				this.buttonOk.TabIndex = 10;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

@@ -17,16 +17,16 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextXscript");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Xscript.Title);
 
-			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.FontSubscript,   new MessageEventHandler(this.HandleButtonSubscriptClicked));
-			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.FontSuperscript, new MessageEventHandler(this.HandleButtonSuperscriptClicked));
+			this.buttonSubscript   = this.CreateIconButton(Misc.Icon("FontSubscript"),   Res.Strings.Action.FontSubscript,   this.HandleButtonSubscriptClicked);
+			this.buttonSuperscript = this.CreateIconButton(Misc.Icon("FontSuperscript"), Res.Strings.Action.FontSuperscript, this.HandleButtonSuperscriptClicked);
 
-			this.fieldScale  = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Xscript.Tooltip.Scale,  Res.Strings.TextPanel.Xscript.Short.Scale,  Res.Strings.TextPanel.Xscript.Long.Scale,  25.0, 100.0, 50.0, 5.0, new EventHandler(this.HandleScaleOffsetChanged));
-			this.fieldOffset = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Xscript.Tooltip.Offset, Res.Strings.TextPanel.Xscript.Short.Offset, Res.Strings.TextPanel.Xscript.Long.Offset, 10.0, 100.0, 50.0, 5.0, new EventHandler(this.HandleScaleOffsetChanged));
+			this.fieldScale  = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Xscript.Tooltip.Scale,  Res.Strings.TextPanel.Xscript.Short.Scale,  Res.Strings.TextPanel.Xscript.Long.Scale,  25.0, 100.0, 50.0, 5.0, this.HandleScaleOffsetChanged);
+			this.fieldOffset = this.CreateTextFieldLabelPercent(Res.Strings.TextPanel.Xscript.Tooltip.Offset, Res.Strings.TextPanel.Xscript.Short.Offset, Res.Strings.TextPanel.Xscript.Long.Offset, 10.0, 100.0, 50.0, 5.0, this.HandleScaleOffsetChanged);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.TextWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -36,8 +36,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.TextWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);

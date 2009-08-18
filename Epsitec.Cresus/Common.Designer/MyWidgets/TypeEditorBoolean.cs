@@ -18,13 +18,13 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupDefault.IsPatch = this.module.IsPatch;
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 0, 0);
-			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupDefault.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.checkDefault = new CheckButton(this.groupDefault.GroupBox);
 			this.checkDefault.AutoToggle = false;
 			this.checkDefault.Text = Res.Strings.Viewers.Types.Boolean.Default;
 			this.checkDefault.Dock = DockStyle.Fill;
-			this.checkDefault.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+			this.checkDefault.Clicked += this.HandleCheckClicked;
 			this.checkDefault.AcceptThreeState = true;
 		}
 
@@ -33,8 +33,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.checkDefault.Clicked -= new MessageEventHandler(this.HandleCheckClicked);
+				this.groupDefault.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.checkDefault.Clicked -= this.HandleCheckClicked;
 			}
 			
 			base.Dispose(disposing);

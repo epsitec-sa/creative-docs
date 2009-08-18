@@ -457,17 +457,17 @@ namespace Epsitec.Common.Drawing
 				
 				st1.Text = "Réglages pour le rendu du pavé de texte :";
 				
-				cb1.Name = "liga";			cb1.Text = "ligatures simples";		cb1.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
-				cb2.Name = "dlig";			cb2.Text = "ligatures avancées";	cb2.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
-				cb3.Name = "kern";			cb3.Text = "crénage";				cb3.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
-				cb4.Name = "Mgr=System";	cb4.Text = "utilise GDI";			cb4.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButtonActiveStateChanged);
+				cb1.Name = "liga";			cb1.Text = "ligatures simples";		cb1.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
+				cb2.Name = "dlig";			cb2.Text = "ligatures avancées";	cb2.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
+				cb3.Name = "kern";			cb3.Text = "crénage";				cb3.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
+				cb4.Name = "Mgr=System";	cb4.Text = "utilise GDI";			cb4.ActiveStateChanged += this.HandleCheckButtonActiveStateChanged;
 				
-				rb1.Text = "paragraphes avec diverses justifications";			rb1.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
-				rb2.Text = "paragraphes avec tabulateurs";						rb2.ActiveStateChanged += new Support.EventHandler (this.HandleRadioButtonActiveStateChanged);
+				rb1.Text = "paragraphes avec diverses justifications";			rb1.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
+				rb2.Text = "paragraphes avec tabulateurs";						rb2.ActiveStateChanged += this.HandleRadioButtonActiveStateChanged;
 				
-				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";				cb5.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton5ActiveStateChanged);
-				cb6.Name = "condition true";cb6.Text = "affiche texte conditionnel";	cb6.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton6ActiveStateChanged);
-				cb7.Name = "cursors";		cb7.Text = "affiche la pos. des curseurs";	cb7.ActiveStateChanged += new Support.EventHandler (this.HandleCheckButton7ActiveStateChanged);
+				cb5.Name = "equal frames";	cb5.Text = "2 colonnes égales";				cb5.ActiveStateChanged += this.HandleCheckButton5ActiveStateChanged;
+				cb6.Name = "condition true";cb6.Text = "affiche texte conditionnel";	cb6.ActiveStateChanged += this.HandleCheckButton6ActiveStateChanged;
+				cb7.Name = "cursors";		cb7.Text = "affiche la pos. des curseurs";	cb7.ActiveStateChanged += this.HandleCheckButton7ActiveStateChanged;
 				
 				this.window.ClientSize = new Size (260, 180);
 				this.window.Owner      = owner;

@@ -92,7 +92,7 @@ namespace Epsitec.Common.Designer.Proxies
 			panel.Icon = this.GetIcon(proxyPanel);
 			panel.Title = this.GetTitle(proxyPanel);
 			panel.IsExtendedSize = this.viewer.PanelsContext.IsExtendedProxies(panel.Name);
-			panel.ExtendedSize += new EventHandler(this.HandlePanelExtendedSize);
+			panel.ExtendedSize += this.HandlePanelExtendedSize;
 
 			List<Type> list = new List<Type>(this.ValueTypes(proxyPanel));
 			list.Sort();  // trie les valeurs dans le panneau

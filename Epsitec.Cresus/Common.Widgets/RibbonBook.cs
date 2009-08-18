@@ -326,8 +326,8 @@ namespace Epsitec.Common.Widgets
 
 			item.RibbonButton.SetEmbedder(this.buttons);
 			item.RibbonButton.Dock = DockStyle.Left;
-			item.RibbonButton.Pressed += new MessageEventHandler(this.HandleRibbonButton);
-			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
+			item.RibbonButton.Pressed += this.HandleRibbonButton;
+			item.RankChanged += this.HandlePageRankChanged;
 
 			if (this.buttonItems.Count > 0)
 			{
@@ -349,8 +349,8 @@ namespace Epsitec.Common.Widgets
 		{
 			int index = item.Index;
 
-			item.RibbonButton.Pressed -= new MessageEventHandler(this.HandleRibbonButton);
-			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
+			item.RibbonButton.Pressed -= this.HandleRibbonButton;
+			item.RankChanged -= this.HandlePageRankChanged;
 
 			this.pages.Children.Remove(item);
 			this.buttons.Children.Remove(item.RibbonButton);

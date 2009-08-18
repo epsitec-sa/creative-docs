@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("Filter", 270, 130, true);
 				this.window.Text = Res.Strings.Dialog.Filter.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				int tabIndex = 1;
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioJoker.Margins = new Margins(0, 0, 0, 3);
 				this.radioJoker.TabIndex = tabIndex++;
 				this.radioJoker.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.radioJoker.ActiveStateChanged += new EventHandler(this.HandleRadioJokerActiveStateChanged);
+				this.radioJoker.ActiveStateChanged += this.HandleRadioJokerActiveStateChanged;
 
 				//	Boutons à cocher de droite.
 				Widget right = new Widget(main);
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Dock = DockStyle.Left;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonFilterClicked);
+				buttonOk.Clicked += this.HandleButtonFilterClicked;
 				buttonOk.TabIndex = tabIndex++;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonAll.Text = Res.Strings.Dialog.Filter.Button.All;
 				buttonAll.Dock = DockStyle.Left;
 				buttonAll.Margins = new Margins(0, 6, 0, 0);
-				buttonAll.Clicked += new MessageEventHandler(this.HandleButtonAllClicked);
+				buttonAll.Clicked += this.HandleButtonAllClicked;
 				buttonAll.TabIndex = tabIndex++;
 				buttonAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

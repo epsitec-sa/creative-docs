@@ -53,21 +53,21 @@ namespace Epsitec.Common.Widgets
 			radio.Group = "h";
 			radio.Index = (int) ScrollableScrollerMode.Auto;
 			radio.ActiveState = ActiveState.Yes;
-			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
+			radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 			
 			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Hide";
 			radio.Group = "h";
 			radio.Index = (int) ScrollableScrollerMode.HideAlways;
-			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
+			radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 			
 			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Show";
 			radio.Group = "h";
 			radio.Index = (int) ScrollableScrollerMode.ShowAlways;
-			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
+			radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 			
 			text  = new StaticText (surface.Viewport);
 			text.Dock = DockStyle.Top;
@@ -80,21 +80,21 @@ namespace Epsitec.Common.Widgets
 			radio.Group = "v";
 			radio.Index = (int) ScrollableScrollerMode.Auto;
 			radio.ActiveState = ActiveState.Yes;
-			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
+			radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 			
 			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Hide";
 			radio.Group = "v";
 			radio.Index = (int) ScrollableScrollerMode.HideAlways;
-			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
+			radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 			
 			radio = new RadioButton (surface.Viewport);
 			radio.Dock = DockStyle.Top;
 			radio.Text = "Show";
 			radio.Group = "v";
 			radio.Index = (int) ScrollableScrollerMode.ShowAlways;
-			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
+			radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
 			
 			Assert.IsTrue (b1.Parent == surface.Viewport);
 			Assert.IsTrue (b2.Parent == surface.Viewport);
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.ActualBounds, b2.ActualBounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 
-			surface.Viewport.Clicked += new MessageEventHandler (this.HandleViewportClicked);
+			surface.Viewport.Clicked += this.HandleViewportClicked;
 
 			Window.RunInTestEnvironment (window);
 		}

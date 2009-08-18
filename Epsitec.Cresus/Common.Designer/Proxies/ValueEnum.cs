@@ -59,9 +59,9 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonUnique.ButtonStyle = ButtonStyle.Icon;
 				this.buttonUnique.PreferredSize = new Size(22, 22);
 				this.buttonUnique.Dock = DockStyle.Fill;
-				this.buttonUnique.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
-				this.buttonUnique.Entered += new MessageEventHandler(this.HandleButtonUniqueEntered);
-				this.buttonUnique.Exited += new MessageEventHandler(this.HandleButtonUniqueExited);
+				this.buttonUnique.Pressed += this.HandleButtonMenuPressed;
+				this.buttonUnique.Entered += this.HandleButtonUniqueEntered;
+				this.buttonUnique.Exited += this.HandleButtonUniqueExited;
 
 				this.buttonMenu = new GlyphButton(box);
 				this.buttonMenu.GlyphShape = GlyphShape.Menu;
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Proxies
 				this.buttonMenu.PreferredSize = new Size(22, 8);
 				this.buttonMenu.Dock = DockStyle.Bottom;
 				this.buttonMenu.Margins = new Margins(0, 0, -1, 0);
-				this.buttonMenu.Pressed += new MessageEventHandler(this.HandleButtonMenuPressed);
+				this.buttonMenu.Pressed += this.HandleButtonMenuPressed;
 
 				if (this.hasHiddenLabel)
 				{
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.Proxies
 
 				this.buttons.PreferredSize = this.buttons.GetBestFitSize();
 				this.buttons.Dock = DockStyle.Right;
-				this.buttons.SelectionChanged += new EventHandler(this.HandleButtonsSelectionChanged);
+				this.buttons.SelectionChanged += this.HandleButtonsSelectionChanged;
 			}
 
 			this.UpdateInterface();
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Designer.Proxies
 				string text = caption.Description;
 				MenuItem item = new MenuItem("", icon, text, "", enumValue.Rank.ToString(System.Globalization.CultureInfo.InvariantCulture));
 				item.ActiveState = active ? ActiveState.Yes : ActiveState.No;
-				item.Pressed += new MessageEventHandler(this.HandleMenuItemPressed);
+				item.Pressed += this.HandleMenuItemPressed;
 
 				menu.Items.Add(item);
 			}

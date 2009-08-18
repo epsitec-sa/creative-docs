@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("EntityField", 500, 300, true);
 				this.window.Text = Res.Strings.Dialog.EntityField.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -49,21 +49,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.editFieldName = new TextField(header);
 				this.editFieldName.Dock = DockStyle.Fill;
 				this.editFieldName.TabIndex = 1;
-				this.editFieldName.TextChanged += new EventHandler(this.HandleFieldNameChanged);
+				this.editFieldName.TextChanged += this.HandleFieldNameChanged;
 
 				this.radioEntities = new RadioButton(header);
 				this.radioEntities.AutoToggle = false;
 				this.radioEntities.Text = "Entités";
 				this.radioEntities.PreferredWidth = 70;
 				this.radioEntities.Dock = DockStyle.Right;
-				this.radioEntities.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioEntities.Clicked += this.HandleRadioClicked;
 
 				this.radioTypes = new RadioButton(header);
 				this.radioTypes.AutoToggle = false;
 				this.radioTypes.Text = "Types";
 				this.radioTypes.PreferredWidth = 70;
 				this.radioTypes.Dock = DockStyle.Right;
-				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioTypes.Clicked += this.HandleRadioClicked;
 
 				this.glyphFieldName = new GlyphButton(header);
 				this.glyphFieldName.ButtonStyle = ButtonStyle.ToolItem;
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 8);
 				this.listModules.TabIndex = 2;
-				this.listModules.SelectedIndexChanged += new EventHandler(this.HandleListModulesSelected);
+				this.listModules.SelectedIndexChanged += this.HandleListModulesSelected;
 
 				//	Partie droite.
 				this.header2 = new StaticText(right);
@@ -115,8 +115,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 8);
 				this.listResources.TabIndex = 3;
-				this.listResources.SelectedIndexChanged += new EventHandler(this.HandleListResourcesSelected);
-				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
+				this.listResources.SelectedIndexChanged += this.HandleListResourcesSelected;
+				this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsNullable.Dock = DockStyle.Top;
 				this.buttonIsNullable.TabIndex = 10;
 				this.buttonIsNullable.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.buttonIsNullable.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.buttonIsNullable.Clicked += this.HandleRadioClicked;
 
 				this.buttonIsPrivate = new CheckButton(leftFooter);
 				this.buttonIsPrivate.AutoToggle = false;
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsPrivate.Dock = DockStyle.Top;
 				this.buttonIsPrivate.TabIndex = 11;
 				this.buttonIsPrivate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.buttonIsPrivate.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.buttonIsPrivate.Clicked += this.HandleRadioClicked;
 
 				Widget middleFooter = new Widget(footer);
 				middleFooter.Margins = new Margins(0, 0, 0, 0);
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsReference.Dock = DockStyle.Top;
 				this.buttonIsReference.TabIndex = 12;
 				this.buttonIsReference.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.buttonIsReference.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.buttonIsReference.Clicked += this.HandleRadioClicked;
 
 				this.buttonIsCollection = new RadioButton(middleFooter);
 				this.buttonIsCollection.AutoToggle = false;
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsCollection.Dock = DockStyle.Top;
 				this.buttonIsCollection.TabIndex = 13;
 				this.buttonIsCollection.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.buttonIsCollection.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.buttonIsCollection.Clicked += this.HandleRadioClicked;
 
 				this.relationSample = new MyWidgets.RelationSample(footer);
 				this.relationSample.PreferredWidth = 40;
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 21;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
-				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
+				this.buttonUse.Clicked += this.HandleButtonUseClicked;
 				this.buttonUse.TabIndex = 20;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 

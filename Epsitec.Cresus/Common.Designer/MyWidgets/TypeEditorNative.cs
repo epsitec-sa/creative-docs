@@ -17,9 +17,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Native.Type, this, out this.groupSystemType, out this.fieldSystemType);
 			this.groupSystemType.Dock = DockStyle.StackBegin;
 			this.groupSystemType.Margins = new Margins(0, 0, 0, 0);
-			this.groupSystemType.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupSystemType.ResetButton.Clicked += this.HandleResetButtonClicked;
 			this.fieldSystemType.PreferredWidth = 400;
-			this.fieldSystemType.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldSystemType.EditionAccepted += this.HandleTextFieldChanged;
 		}
 
 		
@@ -27,8 +27,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.groupSystemType.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.fieldSystemType.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.groupSystemType.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.fieldSystemType.EditionAccepted -= this.HandleTextFieldChanged;
 			}
 			
 			base.Dispose(disposing);

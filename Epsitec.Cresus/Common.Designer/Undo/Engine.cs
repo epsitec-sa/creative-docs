@@ -127,7 +127,7 @@ namespace Epsitec.Common.Designer.Undo
 		}
 
 
-		public VMenu CreateMenu(MessageEventHandler message)
+		public VMenu CreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Crée le menu undo/redo. Même si le nombre de photographies mémorisées est grand, le menu
 			//	présente toujours un nombre raisonnable de lignes. La première photographie (undo) et la
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Designer.Undo
 			return menu;
 		}
 
-		protected MenuItem CreateItem(MessageEventHandler message, int active, int rank, string snapshot, int todo)
+		protected MenuItem CreateItem(Support.EventHandler<MessageEventArgs> message, int active, int rank, string snapshot, int todo)
 		{
 			//	Crée une case du menu des photographies à refaire/annuler.
 			string icon = "";

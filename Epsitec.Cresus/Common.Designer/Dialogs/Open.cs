@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("Open", 600, 440, true);
 				this.window.Text = Res.Strings.Dialog.Open.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkOpened.PreferredWidth = 110;
 				this.checkOpened.Dock = DockStyle.Left;
 				this.checkOpened.Margins = new Margins(0, 0, 0, 0);
-				this.checkOpened.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+				this.checkOpened.Clicked += this.HandleCheckClicked;
 				this.checkOpened.TabIndex = 8;
 				this.checkOpened.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkLocked.PreferredWidth = 110;
 				this.checkLocked.Dock = DockStyle.Left;
 				this.checkLocked.Margins = new Margins(0, 0, 0, 0);
-				this.checkLocked.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+				this.checkLocked.Clicked += this.HandleCheckClicked;
 				this.checkLocked.TabIndex = 9;
 				this.checkLocked.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOpen.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOpen.Dock = DockStyle.Right;
 				this.buttonOpen.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOpen.Clicked += new MessageEventHandler(this.HandleButtonOpenClicked);
+				this.buttonOpen.Clicked += this.HandleButtonOpenClicked;
 				this.buttonOpen.TabIndex = 10;
 				this.buttonOpen.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

@@ -33,10 +33,10 @@ namespace Epsitec.Common.Widgets
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
 			table.TitleHeight       = 32;
-			table.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
-			table.Clicked              += new MessageEventHandler(this.HandleClicked);
-			table.DoubleClicked        += new MessageEventHandler(this.HandleDoubleClicked);
-			table.PaintForeground      += new PaintEventHandler(this.HandlePaintForeground);
+			table.SelectedIndexChanged += this.HandleSelectedIndexChanged;
+			table.Clicked              += this.HandleClicked;
+			table.DoubleClicked        += this.HandleDoubleClicked;
+			table.PaintForeground      += this.HandlePaintForeground;
 			table.TitleWidget       = new StaticText (@"<font size=""160%"">ScrollArray test.</font> Double-click to start edition.");
 			table.TagWidget			= new Tag ();
 			
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
-			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
+			table.DoubleClicked    += this.HandleEditDoubleClicked;
 			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition (h x 1).");
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 4;
 			table.TitleHeight       = 32;
-			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
+			table.DoubleClicked    += this.HandleEditDoubleClicked;
 			table.TextArrayStore    = store;
 			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition (h x 4).");
 			
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Widgets
 				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
 			}
 			
-			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			table.EditTextChanged += HandleTableEditTextChanged;
 			table.StartSearch ();
 			
 			window.Show();
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Widgets
 				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
 			}
 			
-			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			table.EditTextChanged += HandleTableEditTextChanged;
 			table.StartSearch ();
 			
 			window.Show();
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Widgets
 			model_field_1.DefocusAction       = DefocusAction.Modal;
 			
 			table.Columns[0].EditionWidgetModel = model_field_1;
-			table.EditWidgetsCreated += new EventHandler(this.HandleTableEditWidgetsCreated);
+			table.EditWidgetsCreated += this.HandleTableEditWidgetsCreated;
 			
 			header.Caption = @"<font size=""120%"">Search Test.</font>";
 			
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Widgets
 				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
 			}
 			
-			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			table.EditTextChanged += HandleTableEditTextChanged;
 			table.StartSearch ();
 			
 			window.Show();
@@ -398,8 +398,8 @@ namespace Epsitec.Common.Widgets
 			{
 				TextFieldEx col_0_text = edit.Columns[0].EditionWidget as TextFieldEx;
 				IValidator validator = new Validators.RegexValidator (col_0_text, Support.RegexFactory.ResourceBundleName);
-				col_0_text.EditionAccepted += new EventHandler(this.HandleColumnZeroEditionAccepted);
-				col_0_text.EditionRejected += new EventHandler(this.HandleColumnZeroEditionRejected);
+				col_0_text.EditionAccepted += this.HandleColumnZeroEditionAccepted;
+				col_0_text.EditionRejected += this.HandleColumnZeroEditionRejected;
 			}
 		}
 #endif

@@ -114,7 +114,7 @@ namespace Epsitec.Common.Widgets.Tools
 			{
 				this.magnifier = new Magnifier ();
 				this.magnifier.IsColorPicker = true;
-				this.magnifier.HotColorChanged += new EventHandler (this.HandleMagnifierHotColorChanged);
+				this.magnifier.HotColorChanged += this.HandleMagnifierHotColorChanged;
 			}
 			
 			MouseCursor.Hide ();

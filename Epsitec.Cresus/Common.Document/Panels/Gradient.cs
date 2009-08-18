@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Gradient(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.SelectionChanged += HandleTypeChanged;
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.GradientFillType.Squares, false);
 
 			this.nothingButton = new IconButton(this);
-			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
+			this.nothingButton.Clicked += this.HandleNothingClicked;
 			this.nothingButton.TabIndex = 2;
 			this.nothingButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.nothingButton.IconName = Misc.Icon("Nothing");
@@ -35,16 +35,16 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldColor1 = new ColorSample(this);
 			this.fieldColor1.DragSourceFrame = true;
-			this.fieldColor1.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fieldColor1.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
+			this.fieldColor1.Clicked += this.HandleFieldColorClicked;
+			this.fieldColor1.ColorChanged += this.HandleFieldColorChanged;
 			this.fieldColor1.TabIndex = 3;
 			this.fieldColor1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor1, Res.Strings.Panel.Gradient.Tooltip.Color1);
 
 			this.fieldColor2 = new ColorSample(this);
 			this.fieldColor2.DragSourceFrame = true;
-			this.fieldColor2.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
-			this.fieldColor2.ColorChanged += new EventHandler(this.HandleFieldColorChanged);
+			this.fieldColor2.Clicked += this.HandleFieldColorClicked;
+			this.fieldColor2.ColorChanged += this.HandleFieldColorChanged;
 			this.fieldColor2.TabIndex = 4;
 			this.fieldColor2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor2, Res.Strings.Panel.Gradient.Tooltip.Color2);
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Document.Panels
 			this.reset.Text = Res.Strings.Panel.Gradient.Button.Reset;
 			this.reset.TabIndex = 5;
 			this.reset.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
+			this.reset.Clicked += this.HandleReset;
 			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.Gradient.Tooltip.Reset);
 
 			this.fieldAngle = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle.TextFieldReal);
 			this.fieldAngle.TextFieldReal.InternalMinValue = -360.0M;
 			this.fieldAngle.TextFieldReal.InternalMaxValue =  360.0M;
-			this.fieldAngle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldAngle.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldAngle.TabIndex = 6;
 			this.fieldAngle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAngle, Res.Strings.Panel.Gradient.Tooltip.Angle);
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 			{
 				this.radioHatchRank[i] = new RadioButton(this);
-				this.radioHatchRank[i].ActiveStateChanged += new EventHandler(this.HandleHatchRankChanged);
+				this.radioHatchRank[i].ActiveStateChanged += this.HandleHatchRankChanged;
 				this.radioHatchRank[i].TabIndex = 10+i;
 				this.radioHatchRank[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.radioHatchRank[i].Index = i;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat.TextFieldReal);
 			this.fieldRepeat.TextFieldReal.InternalMinValue = 1;
 			this.fieldRepeat.TextFieldReal.InternalMaxValue = 8;
-			this.fieldRepeat.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldRepeat.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldRepeat.TabIndex = 20;
 			this.fieldRepeat.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, Res.Strings.Panel.Gradient.Tooltip.Repeat);
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMiddle.TextFieldReal.InternalMaxValue =  500;
 			this.fieldMiddle.TextFieldReal.Step = 10;
 			this.fieldMiddle.TextFieldReal.TextSuffix = "%";
-			this.fieldMiddle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldMiddle.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldMiddle.TabIndex = 21;
 			this.fieldMiddle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, Res.Strings.Panel.Gradient.Tooltip.Middle);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldSmooth.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth.TextFieldReal);
-			this.fieldSmooth.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldSmooth.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldSmooth.TabIndex = 22;
 			this.fieldSmooth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, Res.Strings.Panel.Gradient.Tooltip.Smooth);
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Document.Panels
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle.TextFieldReal);
 			this.fieldHatchAngle.TextFieldReal.InternalMinValue = -360.0M;
 			this.fieldHatchAngle.TextFieldReal.InternalMaxValue =  360.0M;
-			this.fieldHatchAngle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchAngle.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldHatchAngle.TabIndex = 23;
 			this.fieldHatchAngle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchAngle, Res.Strings.Panel.Gradient.Tooltip.HatchAngle);
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchWidth.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldHatchWidth.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchWidth.TextFieldReal);
-			this.fieldHatchWidth.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchWidth.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldHatchWidth.TabIndex = 24;
 			this.fieldHatchWidth.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchWidth, Res.Strings.Panel.Gradient.Tooltip.HatchWidth);
@@ -146,14 +146,14 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldHatchDistance.TextFieldReal.FactorMaxRange = 0.1M;
 			this.fieldHatchDistance.TextFieldReal.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchDistance.TextFieldReal);
-			this.fieldHatchDistance.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+			this.fieldHatchDistance.TextFieldReal.EditionAccepted += this.HandleValueChanged;
 			this.fieldHatchDistance.TabIndex = 25;
 			this.fieldHatchDistance.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldHatchDistance, Res.Strings.Panel.Gradient.Tooltip.HatchDistance);
 			
 			this.swapColor = new IconButton(this);
 			this.swapColor.IconName = Misc.Icon("SwapDataV");
-			this.swapColor.Clicked += new MessageEventHandler(this.HandleSwapColorClicked);
+			this.swapColor.Clicked += this.HandleSwapColorClicked;
 			ToolTip.Default.SetToolTip(this.swapColor, Res.Strings.Panel.Gradient.Tooltip.Swap);
 
 			this.isNormalAndExtended = true;
@@ -168,25 +168,25 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
-				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
-				this.fieldColor1.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fieldColor1.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
-				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fieldColor2.ColorChanged -= new EventHandler(this.HandleFieldColorChanged);
-				this.fieldAngle.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
-				this.fieldRepeat.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
-				this.fieldMiddle.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
-				this.fieldSmooth.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
-				this.fieldHatchAngle.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
-				this.fieldHatchWidth.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
-				this.fieldHatchDistance.TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
-				this.swapColor.Clicked -= new MessageEventHandler(this.HandleSwapColorClicked);
+				this.grid.SelectionChanged -= HandleTypeChanged;
+				this.nothingButton.Clicked -= this.HandleNothingClicked;
+				this.reset.Clicked -= this.HandleReset;
+				this.fieldColor1.Clicked -= this.HandleFieldColorClicked;
+				this.fieldColor1.ColorChanged -= this.HandleFieldColorChanged;
+				this.fieldColor2.Clicked -= this.HandleFieldColorClicked;
+				this.fieldColor2.ColorChanged -= this.HandleFieldColorChanged;
+				this.fieldAngle.TextFieldReal.EditionAccepted -= this.HandleValueChanged;
+				this.fieldRepeat.TextFieldReal.EditionAccepted -= this.HandleValueChanged;
+				this.fieldMiddle.TextFieldReal.EditionAccepted -= this.HandleValueChanged;
+				this.fieldSmooth.TextFieldReal.EditionAccepted -= this.HandleValueChanged;
+				this.fieldHatchAngle.TextFieldReal.EditionAccepted += this.HandleValueChanged;
+				this.fieldHatchWidth.TextFieldReal.EditionAccepted += this.HandleValueChanged;
+				this.fieldHatchDistance.TextFieldReal.EditionAccepted += this.HandleValueChanged;
+				this.swapColor.Clicked -= this.HandleSwapColorClicked;
 
 				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
 				{
-					this.radioHatchRank[i].ActiveStateChanged -= new EventHandler(this.HandleHatchRankChanged);
+					this.radioHatchRank[i].ActiveStateChanged -= this.HandleHatchRankChanged;
 					this.radioHatchRank[i] = null;
 				}
 

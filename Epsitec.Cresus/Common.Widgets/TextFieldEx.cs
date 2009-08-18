@@ -14,8 +14,8 @@ namespace Epsitec.Common.Widgets
 			this.accept_reject_behavior = new Behaviors.AcceptRejectBehavior (this);
 			this.accept_reject_behavior.CreateButtons ();
 			
-			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
-			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
+			this.accept_reject_behavior.RejectClicked += this.HandleAcceptRejectRejectClicked;
+			this.accept_reject_behavior.AcceptClicked += this.HandleAcceptRejectAcceptClicked;
 			
 			this.DefocusAction       = DefocusAction.None;
 			this.ButtonShowCondition = ButtonShowCondition.WhenModified;
@@ -77,8 +77,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.accept_reject_behavior.RejectClicked -= new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
-				this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
+				this.accept_reject_behavior.RejectClicked -= this.HandleAcceptRejectRejectClicked;
+				this.accept_reject_behavior.AcceptClicked -= this.HandleAcceptRejectAcceptClicked;
 				
 				this.accept_reject_behavior = null;
 			}

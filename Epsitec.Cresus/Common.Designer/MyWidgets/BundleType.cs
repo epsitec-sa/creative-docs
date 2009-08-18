@@ -30,7 +30,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonStrings.AutoFocus = false;
 			this.buttonStrings.Margins = new Margins(2, 0, 10, 0);
 			this.buttonStrings.Dock = DockStyle.Left;
-			this.buttonStrings.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonStrings.Clicked += this.HandleButtonClicked;
 
 			this.buttonCaptions = new IconButtonMark(this);
 			this.buttonCaptions.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Captions);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCaptions.AutoFocus = false;
 			this.buttonCaptions.Margins = new Margins(2, 0, 10, 0);
 			this.buttonCaptions.Dock = DockStyle.Left;
-			this.buttonCaptions.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonCaptions.Clicked += this.HandleButtonClicked;
 
 			this.buttonCommands = new IconButtonMark(this);
 			this.buttonCommands.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Commands);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonCommands.AutoFocus = false;
 			this.buttonCommands.Margins = new Margins(2, 0, 10, 0);
 			this.buttonCommands.Dock = DockStyle.Left;
-			this.buttonCommands.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonCommands.Clicked += this.HandleButtonClicked;
 
 			this.buttonTypes = new IconButtonMark(this);
 			this.buttonTypes.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Types);
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonTypes.AutoFocus = false;
 			this.buttonTypes.Margins = new Margins(2, 0, 10, 0);
 			this.buttonTypes.Dock = DockStyle.Left;
-			this.buttonTypes.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonTypes.Clicked += this.HandleButtonClicked;
 
 			this.buttonValues = new IconButtonMark(this);
 			this.buttonValues.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Values);
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonValues.AutoFocus = false;
 			this.buttonValues.Margins = new Margins(2, 0, 10, 0);
 			this.buttonValues.Dock = DockStyle.Left;
-			this.buttonValues.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonValues.Clicked += this.HandleButtonClicked;
 
 			this.buttonFields = new IconButtonMark(this);
 			this.buttonFields.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Fields);
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonFields.AutoFocus = false;
 			this.buttonFields.Margins = new Margins(2, 0, 10, 0);
 			this.buttonFields.Dock = DockStyle.Left;
-			this.buttonFields.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonFields.Clicked += this.HandleButtonClicked;
 
 			this.buttonEntities = new IconButtonMark(this);
 			this.buttonEntities.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Entities);
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonEntities.AutoFocus = false;
 			this.buttonEntities.Margins = new Margins(2, 0, 10, 0);
 			this.buttonEntities.Dock = DockStyle.Left;
-			this.buttonEntities.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonEntities.Clicked += this.HandleButtonClicked;
 
 			this.buttonForms = new IconButtonMark(this);
 			this.buttonForms.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Forms);
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonForms.AutoFocus = false;
 			this.buttonForms.Margins = new Margins(2, 0, 10, 0);
 			this.buttonForms.Dock = DockStyle.Left;
-			this.buttonForms.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonForms.Clicked += this.HandleButtonClicked;
 
 			this.buttonPanels = new IconButtonMark(this);
 			this.buttonPanels.Text = ResourceAccess.TypeDisplayName(ResourceAccess.Type.Panels);
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.buttonPanels.AutoFocus = false;
 			this.buttonPanels.Margins = new Margins(2, 0, 10, 0);
 			this.buttonPanels.Dock = DockStyle.Left;
-			this.buttonPanels.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonPanels.Clicked += this.HandleButtonClicked;
 
 			this.UpdateButtons();
 		}

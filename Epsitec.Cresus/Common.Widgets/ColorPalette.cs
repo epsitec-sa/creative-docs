@@ -187,14 +187,14 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.colorCollection != null)
 					{
-						this.colorCollection.Changed -= new EventHandler (this.HandleColorCollectionChanged);
+						this.colorCollection.Changed -= this.HandleColorCollectionChanged;
 					}
 
 					this.colorCollection = value;
 
 					if (this.colorCollection != null)
 					{
-						this.colorCollection.Changed += new EventHandler (this.HandleColorCollectionChanged);
+						this.colorCollection.Changed += this.HandleColorCollectionChanged;
 						this.HandleColorCollectionChanged (this);
 					}
 				}

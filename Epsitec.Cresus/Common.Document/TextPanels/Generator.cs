@@ -51,20 +51,20 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fieldType.Text = Res.Strings.TextPanel.Generator.Type.None;
 			this.fieldType.IsReadOnly = true;
 			this.fieldType.AutoFocus = false;
-			this.fieldType.ComboClosed += new EventHandler(this.HandleTypeChanged);
+			this.fieldType.ComboClosed += this.HandleTypeChanged;
 			this.fieldType.TabIndex = this.tabIndex++;
 			this.fieldType.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			Generator.InitComboType(this.fieldType);
 
-			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, new MessageEventHandler(this.HandleAddClicked));
-			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub, new MessageEventHandler(this.HandleSubClicked));
+			this.buttonAdd = this.CreateIconButton(Misc.Icon("ShaperHandleAdd"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Add, this.HandleAddClicked);
+			this.buttonSub = this.CreateIconButton(Misc.Icon("ShaperHandleSub"), Res.Strings.TextPanel.Generator.Tooltip.Generator.Sub, this.HandleSubClicked);
 
-			this.buttonNone   = this.CreateIconButton(Misc.Icon("BulletJustifNone"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.None,   new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.Left,   new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.TextPanel.Generator.Tooltip.Justif.Center, new MessageEventHandler(this.HandleJustifClicked));
-			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.TextPanel.Generator.Tooltip.Justif.Right,  new MessageEventHandler(this.HandleJustifClicked));
+			this.buttonNone   = this.CreateIconButton(Misc.Icon("BulletJustifNone"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.None,   this.HandleJustifClicked);
+			this.buttonLeft   = this.CreateIconButton(Misc.Icon("BulletJustifLeft"),   Res.Strings.TextPanel.Generator.Tooltip.Justif.Left,   this.HandleJustifClicked);
+			this.buttonCenter = this.CreateIconButton(Misc.Icon("BulletJustifCenter"), Res.Strings.TextPanel.Generator.Tooltip.Justif.Center, this.HandleJustifClicked);
+			this.buttonRight  = this.CreateIconButton(Misc.Icon("BulletJustifRight"),  Res.Strings.TextPanel.Generator.Tooltip.Justif.Right,  this.HandleJustifClicked);
 
-			this.buttonContinue = this.CreateIconButton(Misc.Icon("BulletContinue"), Res.Strings.TextPanel.Generator.Tooltip.Continue, new MessageEventHandler(this.HandleContinueClicked));
+			this.buttonContinue = this.CreateIconButton(Misc.Icon("BulletContinue"), Res.Strings.TextPanel.Generator.Tooltip.Continue, this.HandleContinueClicked);
 
 			this.table = new CellTable(this);
 			this.table.StyleH |= CellArrayStyles.Header;
@@ -72,38 +72,38 @@ namespace Epsitec.Common.Document.TextPanels
 			this.table.StyleV |= CellArrayStyles.ScrollNorm;
 			this.table.StyleV |= CellArrayStyles.Separator;
 			this.table.StyleV |= CellArrayStyles.SelectCell;
-			this.table.FinalSelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
+			this.table.FinalSelectionChanged += this.HandleTableSelectionChanged;
 
 			this.buttonPerso = new Button(this);
 			this.buttonPerso.Text = Res.Strings.TextPanel.Generator.Button.Perso;
-			this.buttonPerso.Clicked += new MessageEventHandler(this.HandlePersoClicked);
+			this.buttonPerso.Clicked += this.HandlePersoClicked;
 			ToolTip.Default.SetToolTip(this.buttonPerso, Res.Strings.TextPanel.Generator.Tooltip.Perso);
 
-			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, new MessageEventHandler(this.HandleSuppressBeforeClicked));
+			this.buttonSuppressBefore = this.CreateIconButton(Misc.Icon("SuppressBefore"), Res.Strings.TextPanel.Generator.Tooltip.SuppressBefore, this.HandleSuppressBeforeClicked);
 
 			this.labelText = new StaticText(this);
 			this.labelText.ContentAlignment = ContentAlignment.MiddleRight;
 
 			this.fieldText = new TextFieldCombo(this);
 			this.fieldText.AutoFocus = false;
-			this.fieldText.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldText.TextChanged += this.HandleTextChanged;
 			this.fieldText.TabIndex = this.tabIndex++;
 			this.fieldText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
-			this.colorText = this.CreateColorSample(Res.Strings.TextPanel.Generator.Tooltip.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.colorText = this.CreateColorSample(Res.Strings.TextPanel.Generator.Tooltip.Color, this.HandleSampleColorClicked, this.HandleSampleColorChanged);
 
 			this.labelTabs = new StaticText(this);
 			this.labelTabs.Text = Res.Strings.TextPanel.Generator.Label.Tabs;
 
-			this.fieldTab        = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Tab,    Res.Strings.TextPanel.Generator.Short.Tab,    "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleTabChanged));
-			this.fieldIndent     = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Indent, Res.Strings.TextPanel.Generator.Short.Indent, "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleIndentChanged));
-			this.fieldFontSize   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Size,   Res.Strings.TextPanel.Generator.Short.Size,   "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontSizeChanged));
-			this.fieldFontOffset = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Offset, Res.Strings.TextPanel.Generator.Short.Offset, "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleFontOffsetChanged));
+			this.fieldTab        = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Tab,    Res.Strings.TextPanel.Generator.Short.Tab,    "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleTabChanged);
+			this.fieldIndent     = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Indent, Res.Strings.TextPanel.Generator.Short.Indent, "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleIndentChanged);
+			this.fieldFontSize   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Size,   Res.Strings.TextPanel.Generator.Short.Size,   "",  0.0, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleFontSizeChanged);
+			this.fieldFontOffset = this.CreateTextFieldLabel(Res.Strings.TextPanel.Generator.Tooltip.Offset, Res.Strings.TextPanel.Generator.Short.Offset, "", -0.1, 0.1, 0.0, 1.0, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleFontOffsetChanged);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.ParagraphWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.Type = "None";
 			this.UpdateTable();
@@ -117,12 +117,12 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fieldType.ComboClosed -= new EventHandler(this.HandleTypeChanged);
-				this.table.FinalSelectionChanged -= new EventHandler(this.HandleTableSelectionChanged);
-				this.fieldText.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldType.ComboClosed -= this.HandleTypeChanged;
+				this.table.FinalSelectionChanged -= this.HandleTableSelectionChanged;
+				this.fieldText.TextChanged -= this.HandleTextChanged;
 
-				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.ParagraphWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.ParagraphWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);

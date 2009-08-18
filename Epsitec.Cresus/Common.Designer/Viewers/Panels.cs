@@ -88,10 +88,10 @@ namespace Epsitec.Common.Designer.Viewers
 			this.panelEditor.MinWidth = 100;
 			this.panelEditor.MinHeight = 100;
 			this.panelEditor.Anchor = AnchorStyles.All;
-			this.panelEditor.ChildrenAdded += new EventHandler(this.HandlePanelEditorChildrenAdded);
-			this.panelEditor.ChildrenSelected += new EventHandler(this.HandlePanelEditorChildrenSelected);
-			this.panelEditor.ChildrenGeometryChanged += new EventHandler(this.HandlePanelEditorChildrenGeometryChanged);
-			this.panelEditor.UpdateCommands += new EventHandler(this.HandlePanelEditorUpdateCommands);
+			this.panelEditor.ChildrenAdded += this.HandlePanelEditorChildrenAdded;
+			this.panelEditor.ChildrenSelected += this.HandlePanelEditorChildrenSelected;
+			this.panelEditor.ChildrenGeometryChanged += this.HandlePanelEditorChildrenGeometryChanged;
+			this.panelEditor.UpdateCommands += this.HandlePanelEditorUpdateCommands;
 
 			//	Crée le groupe droite.
 			this.right = new FrameBox(surface);
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.objectsSlider.LargeChange = 10.0M;
 			this.objectsSlider.Resolution = 1.0M;
 			this.objectsSlider.Value = (decimal) Panels.treeBranchesHeight;
-			this.objectsSlider.ValueChanged += new EventHandler(this.HandleObjectsSliderChanged);
+			this.objectsSlider.ValueChanged += this.HandleObjectsSliderChanged;
 
 			this.objectsScrollable = new Scrollable(this.tabPageObjects);
 			this.objectsScrollable.Dock = DockStyle.Fill;
@@ -197,11 +197,11 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.hButtonDefault.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
-				this.hButtonEdition.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
-				this.hButtonSearch.Clicked -= new MessageEventHandler(HandleHbuttonClicked);
+				this.hButtonDefault.Clicked -= HandleHbuttonClicked;
+				this.hButtonEdition.Clicked -= HandleHbuttonClicked;
+				this.hButtonSearch.Clicked -= HandleHbuttonClicked;
 
-				this.objectsSlider.ValueChanged -= new EventHandler(this.HandleObjectsSliderChanged);
+				this.objectsSlider.ValueChanged -= this.HandleObjectsSliderChanged;
 
 				this.tabBook.ActivePageChanged -= new EventHandler<CancelEventArgs>(this.HandleTabBookActivePageChanged);
 
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.UpdateUndoRedoCommands();
 		}
 
-		public override VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		public override VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Crée le menu undo/redo.
 			return this.undoEngine.CreateMenu(message);
@@ -665,7 +665,7 @@ namespace Epsitec.Common.Designer.Viewers
 				button.Margins = new Margins(0, 0, 0, 2);
 				button.TabIndex = tabIndex++;
 				button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				button.Clicked += new MessageEventHandler(this.HandleCultureButtonClicked);
+				button.Clicked += this.HandleCultureButtonClicked;
 				ToolTip.Default.SetToolTip(button, Misc.CultureLongName(culture));
 
 				this.cultureButtonList.Add(button);
@@ -724,7 +724,7 @@ namespace Epsitec.Common.Designer.Viewers
 			IconButton button = new IconButton();
 			button.CaptionId = caption;
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
-			button.Clicked += new MessageEventHandler(HandleHbuttonClicked);
+			button.Clicked += HandleHbuttonClicked;
 
 			this.hToolBar.Items.Add(button);
 			
@@ -871,9 +871,9 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			button.Dock = DockStyle.Left;
-			button.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
-			button.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
-			button.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
+			button.Clicked += this.HandleStatusBarButtonClicked;
+			button.Entered += this.HandleStatusBarButtonEntered;
+			button.Exited += this.HandleStatusBarButtonExited;
 			ToolTip.Default.SetToolTip(button, tooltip);
 		}
 
@@ -888,9 +888,9 @@ namespace Epsitec.Common.Designer.Viewers
 			arrow.ButtonStyle = ButtonStyle.ToolItem;
 			arrow.Dock = DockStyle.Left;
 			arrow.Margins = new Margins((type == "All") ? 10:0, 0, 0, 0);
-			arrow.Clicked += new MessageEventHandler(this.HandleStatusBarButtonClicked);
-			arrow.Entered += new MessageEventHandler(this.HandleStatusBarButtonEntered);
-			arrow.Exited += new MessageEventHandler(this.HandleStatusBarButtonExited);
+			arrow.Clicked += this.HandleStatusBarButtonClicked;
+			arrow.Entered += this.HandleStatusBarButtonEntered;
+			arrow.Exited += this.HandleStatusBarButtonExited;
 			ToolTip.Default.SetToolTip(arrow, tooltip);
 		}
 
@@ -911,9 +911,9 @@ namespace Epsitec.Common.Designer.Viewers
 				if (children is IconButton)
 				{
 					AbstractButton button = children as AbstractButton;
-					button.Clicked -= new MessageEventHandler(this.HandleStatusBarButtonClicked);
-					button.Entered -= new MessageEventHandler(this.HandleStatusBarButtonEntered);
-					button.Exited -= new MessageEventHandler(this.HandleStatusBarButtonExited);
+					button.Clicked -= this.HandleStatusBarButtonClicked;
+					button.Entered -= this.HandleStatusBarButtonEntered;
+					button.Exited -= this.HandleStatusBarButtonExited;
 				}
 			}
 		}
@@ -1135,9 +1135,9 @@ namespace Epsitec.Common.Designer.Viewers
 			button.ActiveState = sel ? ActiveState.Yes : ActiveState.No;
 			button.PreferredWidth = Panels.treeButtonWidth;
 			button.Dock = DockStyle.Left;
-			button.Clicked += new MessageEventHandler(this.HandleTreeButtonClicked);
-			button.Entered += new MessageEventHandler(this.HandleTreeButtonEntered);
-			button.Exited += new MessageEventHandler(this.HandleTreeButtonExited);
+			button.Clicked += this.HandleTreeButtonClicked;
+			button.Entered += this.HandleTreeButtonEntered;
+			button.Exited += this.HandleTreeButtonExited;
 			button.SetValue(Panels.TreeObjectProperty, obj);
 		}
 
@@ -1192,9 +1192,9 @@ namespace Epsitec.Common.Designer.Viewers
 				if (children is IconButton)
 				{
 					AbstractButton button = children as AbstractButton;
-					button.Clicked -= new MessageEventHandler(this.HandleTreeButtonClicked);
-					button.Entered -= new MessageEventHandler(this.HandleTreeButtonEntered);
-					button.Exited -= new MessageEventHandler(this.HandleTreeButtonExited);
+					button.Clicked -= this.HandleTreeButtonClicked;
+					button.Entered -= this.HandleTreeButtonEntered;
+					button.Exited -= this.HandleTreeButtonExited;
 					button.ClearValue(Panels.TreeObjectProperty);
 				}
 

@@ -188,7 +188,7 @@ namespace Epsitec.Common.Document.Widgets
 			//	cette mise à jour du contenu avec la nouvelle taille ajustée, sinon on
 			//	risque d'avoir un offset incorrect pour le début...
 			this.list.UpdateContents();
-			this.list.FinalSelectionChanged += new EventHandler(this.HandleListSelectionActivated);
+			this.list.FinalSelectionChanged += this.HandleListSelectionActivated;
 			
 			MenuItem.SetMenuHost(this, new StyleMenuHost(menu, this.list));
 
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Document.Widgets
 			
 			if ( this.list != null )
 			{
-				this.list.FinalSelectionChanged -= new EventHandler(this.HandleListSelectionActivated);
+				this.list.FinalSelectionChanged -= this.HandleListSelectionActivated;
 				this.list.Dispose();
 				this.list = null;
 			}

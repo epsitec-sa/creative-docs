@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("EntityComment", 350, 250, true);
 				this.window.Text = "Commentaire";  // Res.Strings.Dialog.EntityComment.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 150);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 11;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonOk.Dock = DockStyle.Right;
 				this.buttonOk.Margins = new Margins(0, 6, 0, 0);
-				this.buttonOk.Clicked += new MessageEventHandler(this.HandleButtonOkClicked);
+				this.buttonOk.Clicked += this.HandleButtonOkClicked;
 				this.buttonOk.TabIndex = 10;
 				this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			button.Name = name;
 			button.IconName = Misc.Icon(name);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
-			button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			button.Clicked += this.HandleButtonClicked;
 
 			this.toolbar.Items.Add(button);
 		}

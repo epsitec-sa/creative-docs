@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Regular(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.SelectionChanged += HandleTypeChanged;
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldNbFaces.TextFieldReal.InternalMinValue = 3;
 			this.fieldNbFaces.TextFieldReal.InternalMaxValue = 24;
 			this.fieldNbFaces.TextFieldReal.Step = 1;
-			this.fieldNbFaces.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldNbFaces.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldNbFaces.TabIndex = 1;
 			this.fieldNbFaces.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldNbFaces, Res.Strings.Panel.Regular.Tooltip.Faces);
@@ -36,40 +36,40 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDeep = new Widgets.TextFieldPolar(this);
 			this.fieldDeep.LabelText = Res.Strings.Panel.Regular.Label.Deep;
 			this.fieldDeep.TextFieldR.InternalMinValue = 0.0M;
-			this.fieldDeep.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldDeep.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldDeep.TextFieldR.EditionAccepted += this.HandleFieldChanged;
+			this.fieldDeep.TextFieldA.EditionAccepted += this.HandleFieldChanged;
 			this.fieldDeep.TabIndex = 2;
 			this.fieldDeep.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDeep, Res.Strings.Panel.Regular.Tooltip.Deep);
 
 			this.fieldE1 = new Widgets.TextFieldPolar(this);
 			this.fieldE1.LabelText = Res.Strings.Panel.Regular.Label.E1;
-			this.fieldE1.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldE1.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldE1.TextFieldR.EditionAccepted += this.HandleFieldChanged;
+			this.fieldE1.TextFieldA.EditionAccepted += this.HandleFieldChanged;
 			this.fieldE1.TabIndex = 3;
 			this.fieldE1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldE1, Res.Strings.Panel.Regular.Tooltip.E1);
 
 			this.fieldE2 = new Widgets.TextFieldPolar(this);
 			this.fieldE2.LabelText = Res.Strings.Panel.Regular.Label.E2;
-			this.fieldE2.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldE2.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldE2.TextFieldR.EditionAccepted += this.HandleFieldChanged;
+			this.fieldE2.TextFieldA.EditionAccepted += this.HandleFieldChanged;
 			this.fieldE2.TabIndex = 4;
 			this.fieldE2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldE2, Res.Strings.Panel.Regular.Tooltip.E2);
 
 			this.fieldI1 = new Widgets.TextFieldPolar(this);
 			this.fieldI1.LabelText = Res.Strings.Panel.Regular.Label.I1;
-			this.fieldI1.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldI1.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldI1.TextFieldR.EditionAccepted += this.HandleFieldChanged;
+			this.fieldI1.TextFieldA.EditionAccepted += this.HandleFieldChanged;
 			this.fieldI1.TabIndex = 5;
 			this.fieldI1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldI1, Res.Strings.Panel.Regular.Tooltip.I1);
 
 			this.fieldI2 = new Widgets.TextFieldPolar(this);
 			this.fieldI2.LabelText = Res.Strings.Panel.Regular.Label.I2;
-			this.fieldI2.TextFieldR.EditionAccepted += new EventHandler(this.HandleFieldChanged);
-			this.fieldI2.TextFieldA.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldI2.TextFieldR.EditionAccepted += this.HandleFieldChanged;
+			this.fieldI2.TextFieldA.EditionAccepted += this.HandleFieldChanged;
 			this.fieldI2.TabIndex = 6;
 			this.fieldI2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldI2, Res.Strings.Panel.Regular.Tooltip.I2);
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.fieldSamples.Items.Add(sample.Text);
 			}
-			this.fieldSamples.TextChanged += new EventHandler(this.HandleFieldSamplesTextChanged);
+			this.fieldSamples.TextChanged += this.HandleFieldSamplesTextChanged;
 			this.fieldSamples.TabIndex = 7;
 
 			this.isNormalAndExtended = true;
@@ -95,18 +95,18 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.fieldNbFaces.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldDeep.TextFieldR.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldDeep.TextFieldA.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldE1.TextFieldR.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldE1.TextFieldA.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldE2.TextFieldR.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldE2.TextFieldA.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldI1.TextFieldR.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldI1.TextFieldA.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldI2.TextFieldR.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldI2.TextFieldA.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.grid.SelectionChanged -= HandleTypeChanged;
+				this.fieldNbFaces.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldDeep.TextFieldR.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldDeep.TextFieldA.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldE1.TextFieldR.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldE1.TextFieldA.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldE2.TextFieldR.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldE2.TextFieldA.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldI1.TextFieldR.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldI1.TextFieldA.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldI2.TextFieldR.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldI2.TextFieldA.EditionAccepted -= this.HandleFieldChanged;
 
 				this.grid = null;
 				this.fieldNbFaces = null;

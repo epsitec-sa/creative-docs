@@ -13,7 +13,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.fieldColor = new ColorSample(this);
 			this.fieldColor.DragSourceFrame = true;
-			this.fieldColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
+			this.fieldColor.Clicked += this.HandleFieldColorClicked;
 			this.fieldColor.TabIndex = 1;
 			this.fieldColor.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -22,7 +22,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRadius.FactorMaxRange = 0.1M;
 			this.fieldRadius.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius);
-			this.fieldRadius.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldRadius.ValueChanged += this.HandleValueChanged;
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOx.FactorMaxRange = 0.1M;
 			this.fieldOx.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOx);
-			this.fieldOx.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldOx.ValueChanged += this.HandleValueChanged;
 			this.fieldOx.TabIndex = 3;
 			this.fieldOx.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldOy.FactorMaxRange = 0.1M;
 			this.fieldOy.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOy);
-			this.fieldOy.ValueChanged += new EventHandler(this.HandleValueChanged);
+			this.fieldOy.ValueChanged += this.HandleValueChanged;
 			this.fieldOy.TabIndex = 4;
 			this.fieldOy.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -63,10 +63,10 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.fieldColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
-				this.fieldRadius.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldOx.ValueChanged -= new EventHandler(this.HandleValueChanged);
-				this.fieldOy.ValueChanged -= new EventHandler(this.HandleValueChanged);
+				this.fieldColor.Clicked -= this.HandleFieldColorClicked;
+				this.fieldRadius.ValueChanged -= this.HandleValueChanged;
+				this.fieldOx.ValueChanged -= this.HandleValueChanged;
+				this.fieldOy.ValueChanged -= this.HandleValueChanged;
 
 				this.fieldColor = null;
 				this.fieldRadius = null;

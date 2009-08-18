@@ -258,7 +258,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter disabled temporarily");
 				
 				this.filter_disabled   = true;
-				this.IsVisibleChanged += new PropertyChangedEventHandler (this.HandleIsVisibleChanged);
+				this.IsVisibleChanged += this.HandleIsVisibleChanged;
 			}
 		}
 		
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter re-enabled");
 				
 				this.filter_disabled   = false;
-				this.IsVisibleChanged -= new PropertyChangedEventHandler (this.HandleIsVisibleChanged);
+				this.IsVisibleChanged -= this.HandleIsVisibleChanged;
 			}
 		}
 		

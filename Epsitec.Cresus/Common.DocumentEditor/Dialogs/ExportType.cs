@@ -64,7 +64,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.Text = Res.Strings.Dialog.Export.Type.Title;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowExportCloseClicked;
 
 				Viewport panel = new Viewport(this.window.Root);
 				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
@@ -76,9 +76,9 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 					RadioButton radio = new RadioButton(panel);
 					radio.Name = this.extensions[i];
 					radio.Text = string.Format(Res.Strings.Dialog.Export.FormatDescription, this.formatDescriptions[i], this.shortDescriptions[i]);
-					radio.ActiveStateChanged += new EventHandler(this.HandleRadioActiveStateChanged);
-					radio.Entered += new MessageEventHandler(this.HandleRadioEntered);
-					radio.Exited += new MessageEventHandler(this.HandleRadioExited);
+					radio.ActiveStateChanged += this.HandleRadioActiveStateChanged;
+					radio.Entered += this.HandleRadioEntered;
+					radio.Exited += this.HandleRadioExited;
 					radio.Dock = DockStyle.Top;
 					this.radioButtons.Add(radio);
 				}
@@ -96,7 +96,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomRight;
 				buttonOk.Margins = new Margins(0, 6+75+6, 0, 6);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
+				buttonOk.Clicked += this.HandleExportButtonOkClicked;
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Export.Tooltip.OK);
@@ -107,7 +107,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomRight;
 				buttonCancel.Margins = new Margins(0, 6, 0, 6);
-				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
+				buttonCancel.Clicked += this.HandleExportButtonCancelClicked;
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.Export.Tooltip.Cancel);

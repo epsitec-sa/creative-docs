@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("Search", 375, 216, true);
 				this.window.Text = Res.Strings.Dialog.Search.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				int tabIndex = 1;
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldSearch.Dock = DockStyle.Fill;
 				this.fieldSearch.TabIndex = tabIndex++;
 				this.fieldSearch.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.fieldSearch.TextChanged += new EventHandler(this.HandleFieldSearchTextChanged);
+				this.fieldSearch.TextChanged += this.HandleFieldSearchTextChanged;
 
 				Widget header2 = new Widget(this.window.Root);
 				header2.PreferredHeight = 20;
@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchNext.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonSearchNext.Dock = DockStyle.Left;
 				this.buttonSearchNext.Margins = new Margins(0, 6, 0, 0);
-				this.buttonSearchNext.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
+				this.buttonSearchNext.Clicked += this.HandleButtonSearchClicked;
 				this.buttonSearchNext.TabIndex = tabIndex++;
 				this.buttonSearchNext.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplaceNext.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchNextButton"));
 				this.buttonReplaceNext.Dock = DockStyle.Left;
 				this.buttonReplaceNext.Margins = new Margins(0, 6, 0, 0);
-				this.buttonReplaceNext.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
+				this.buttonReplaceNext.Clicked += this.HandleButtonReplaceClicked;
 				this.buttonReplaceNext.TabIndex = tabIndex++;
 				this.buttonReplaceNext.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplaceAll.Text = Res.Strings.Dialog.Search.Button.ReplaceAll;
 				this.buttonReplaceAll.Dock = DockStyle.Left;
 				this.buttonReplaceAll.Margins = new Margins(0, 6, 0, 0);
-				this.buttonReplaceAll.Clicked += new MessageEventHandler(this.HandleButtonReplaceAllClicked);
+				this.buttonReplaceAll.Clicked += this.HandleButtonReplaceAllClicked;
 				this.buttonReplaceAll.TabIndex = tabIndex++;
 				this.buttonReplaceAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = tabIndex++;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonSearchPrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Search, " ", Misc.Image("SearchPrevButton"));
 				this.buttonSearchPrev.Dock = DockStyle.Left;
 				this.buttonSearchPrev.Margins = new Margins(0, 6, 0, 0);
-				this.buttonSearchPrev.Clicked += new MessageEventHandler(this.HandleButtonSearchClicked);
+				this.buttonSearchPrev.Clicked += this.HandleButtonSearchClicked;
 				this.buttonSearchPrev.TabIndex = tabIndex++;
 				this.buttonSearchPrev.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonReplacePrev.Text = string.Concat(Res.Strings.Dialog.Search.Button.Replace, " ", Misc.Image("SearchPrevButton"));
 				this.buttonReplacePrev.Dock = DockStyle.Left;
 				this.buttonReplacePrev.Margins = new Margins(0, 6, 0, 0);
-				this.buttonReplacePrev.Clicked += new MessageEventHandler(this.HandleButtonReplaceClicked);
+				this.buttonReplacePrev.Clicked += this.HandleButtonReplaceClicked;
 				this.buttonReplacePrev.TabIndex = tabIndex++;
 				this.buttonReplacePrev.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCount.Text = Res.Strings.Dialog.Search.Button.Count;
 				this.buttonCount.Dock = DockStyle.Left;
 				this.buttonCount.Margins = new Margins(0, 6, 0, 0);
-				this.buttonCount.Clicked += new MessageEventHandler(this.HandleButtonCountClicked);
+				this.buttonCount.Clicked += this.HandleButtonCountClicked;
 				this.buttonCount.TabIndex = tabIndex++;
 				this.buttonCount.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 

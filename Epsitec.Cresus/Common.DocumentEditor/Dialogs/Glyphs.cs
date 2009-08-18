@@ -41,7 +41,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Glyphs.Title;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", this.GetType ().Assembly);
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 200);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -98,15 +98,15 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.family.Items.Add(Res.Strings.Dialog.Glyphs.Family.Substitute);
 				System.Diagnostics.Debug.Assert(this.family.Items.Count < this.maxFamiliy);
 				this.family.SelectedIndex = 0;
-				this.family.SelectedIndexChanged += new EventHandler(this.HandleFamilyChanged);
+				this.family.SelectedIndexChanged += this.HandleFamilyChanged;
 
 				this.list = new ScrollList(bookList);
 				this.list.Dock = DockStyle.Fill;
 				this.list.Margins = new Margins (6, 6, 6+20+4, 6);
 				this.list.TabIndex = tabIndex++;
 				this.list.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.list.SelectedIndexChanged += new EventHandler(this.HandleGlyphSelected);
-				this.list.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
+				this.list.SelectedIndexChanged += this.HandleGlyphSelected;
+				this.list.DoubleClicked += this.HandleDoubleClicked;
 
 				this.UpdateList();
 
@@ -127,7 +127,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.fieldFontFace.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.fieldFontFace.Text = TextLayout.ConvertToTaggedText(this.fontFace);
 				this.fieldFontFace.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleFontFaceComboOpening);
-				this.fieldFontFace.TextChanged += new EventHandler(this.HandleFontFaceChanged);
+				this.fieldFontFace.TextChanged += this.HandleFontFaceChanged;
 
 				this.buttonFilter = new IconButton(bookArray);
 				this.buttonFilter.PreferredWidth = 21;
@@ -157,7 +157,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.fieldFontStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.UpdateFontStyle();
 				this.fieldFontStyle.Text = this.fontStyle;
-				this.fieldFontStyle.SelectedIndexChanged += new EventHandler(this.HandleFontStyleChanged);
+				this.fieldFontStyle.SelectedIndexChanged += this.HandleFontStyleChanged;
 
 				this.currentFont = new GlyphButton(bookArray);
 				this.currentFont.GlyphShape = GlyphShape.ArrowLeft;
@@ -167,7 +167,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.currentFont.Margins = new Margins(0, 6, 6, 0);
 				this.currentFont.TabIndex = tabIndex++;
 				this.currentFont.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-				this.currentFont.Clicked += new MessageEventHandler(this.HandleCurrentFontClicked);
+				this.currentFont.Clicked += this.HandleCurrentFontClicked;
 				ToolTip.Default.SetToolTip(this.currentFont, Res.Strings.Dialog.Glyphs.Tooltip.CurrentFont);
 
 				this.array = new Widgets.GlyphArray(bookArray);
@@ -177,8 +177,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.SetFont(this.fontFace, this.fontStyle);
 				this.array.SelectedIndex = -1;
-				this.array.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
-				this.array.ChangeSelected += new EventHandler(this.HandleArraySelected);
+				this.array.DoubleClicked += this.HandleDoubleClicked;
+				this.array.ChangeSelected += this.HandleArraySelected;
 				ToolTip.Default.SetToolTip(this.array, "*");
 
 				this.status = new TextField(bookArray);
@@ -199,7 +199,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.slider.LargeChange = 10.0M;
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.array.CellSize;
-				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				this.slider.ValueChanged += this.HandleSliderChanged;
 				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
 
 				//	Onglet Alternates.
@@ -217,8 +217,8 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.alternatesArray.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.alternatesArray.SelectedIndex = -1;
 				this.alternatesArray.CellSize = 50;  // taille max
-				this.alternatesArray.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
-				this.alternatesArray.ChangeSelected += new EventHandler(this.HandleArraySelected);
+				this.alternatesArray.DoubleClicked += this.HandleDoubleClicked;
+				this.alternatesArray.ChangeSelected += this.HandleArraySelected;
 
 				this.alternatesStatus = new TextField(bookAlternates);
 				this.alternatesStatus.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
@@ -238,7 +238,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.alternatesSlider.LargeChange = 10.0M;
 				this.alternatesSlider.Resolution = 1.0M;
 				this.alternatesSlider.Value = (decimal) this.alternatesArray.CellSize;
-				this.alternatesSlider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				this.alternatesSlider.ValueChanged += this.HandleSliderChanged;
 				ToolTip.Default.SetToolTip(this.alternatesSlider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
 
 				//	Boutons de fermeture.
@@ -249,7 +249,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomRight;
 				buttonOk.Margins = new Margins(0, 6+75+6, 0, 6);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
+				buttonOk.Clicked += this.HandleButtonInsertClicked;
 				buttonOk.TabIndex = 1000;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.Glyphs.Tooltip.Insert);
@@ -260,7 +260,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = 1001;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);

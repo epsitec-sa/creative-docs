@@ -27,7 +27,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.WindowInit("ExportPDF", 300, 440);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowExportCloseClicked;
 
 				//	Crée les onglets.
 				TabBook bookDoc = new TabBook(this.window.Root);
@@ -65,7 +65,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Anchor = AnchorStyles.BottomRight;
 				buttonOk.Margins = new Margins(0, 6+75+6, 0, 6);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
+				buttonOk.Clicked += this.HandleExportButtonOkClicked;
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonOk, Res.Strings.Dialog.ExportPDF.Tooltip.OK);
@@ -76,7 +76,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonCancel.Anchor = AnchorStyles.BottomRight;
 				buttonCancel.Margins = new Margins(0, 6, 0, 6);
-				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
+				buttonCancel.Clicked += this.HandleExportButtonCancelClicked;
 				buttonCancel.TabIndex = 11;
 				buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonCancel, Res.Strings.Dialog.ExportPDF.Tooltip.Cancel);

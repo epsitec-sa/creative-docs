@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Volume(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.SelectionChanged += HandleTypeChanged;
 			this.grid.TabIndex = 0;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRapport.LabelShortText = Res.Strings.Panel.Volume.Short.Rapport;
 			this.fieldRapport.LabelLongText  = Res.Strings.Panel.Volume.Long.Rapport;
 			this.document.Modifier.AdaptTextFieldRealPercent(this.fieldRapport.TextFieldReal);
-			this.fieldRapport.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldRapport.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldRapport.TabIndex = 2;
 			this.fieldRapport.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRapport, Res.Strings.Panel.Volume.Tooltip.Rapport);
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldLeft.LabelLongText  = Res.Strings.Panel.Volume.Long.Left;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldLeft.TextFieldReal);
 			this.fieldLeft.TextFieldReal.InternalMaxValue = 90.0M;
-			this.fieldLeft.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldLeft.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldLeft.TabIndex = 3;
 			this.fieldLeft.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldLeft, Res.Strings.Panel.Volume.Tooltip.Left);
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRight.LabelLongText  = Res.Strings.Panel.Volume.Long.Right;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRight.TextFieldReal);
 			this.fieldRight.TextFieldReal.InternalMaxValue = 90.0M;
-			this.fieldRight.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldRight.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldRight.TabIndex = 4;
 			this.fieldRight.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRight, Res.Strings.Panel.Volume.Tooltip.Right);
@@ -62,10 +62,10 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.fieldRapport.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldLeft.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldRight.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.grid.SelectionChanged -= HandleTypeChanged;
+				this.fieldRapport.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldLeft.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldRight.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 
 				this.grid = null;
 				this.fieldRapport = null;

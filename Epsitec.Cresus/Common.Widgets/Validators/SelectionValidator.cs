@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets.Validators
 			
 			Support.Data.INamedStringSelection sel = this.Widget as Support.Data.INamedStringSelection;
 			
-			sel.SelectedIndexChanged += new Epsitec.Common.Support.EventHandler (this.HandleSelectionSelectedIndexChanged);
+			sel.SelectedIndexChanged += this.HandleSelectionSelectedIndexChanged;
 		}
 		
 		protected override void DetachWidget(Widget widget)
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets.Validators
 			
 			Support.Data.INamedStringSelection sel = this.Widget as Support.Data.INamedStringSelection;
 			
-			sel.SelectedIndexChanged -= new Epsitec.Common.Support.EventHandler (this.HandleSelectionSelectedIndexChanged);
+			sel.SelectedIndexChanged -= this.HandleSelectionSelectedIndexChanged;
 		}
 		
 		

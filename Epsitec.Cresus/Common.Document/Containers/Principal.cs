@@ -28,7 +28,7 @@ namespace Epsitec.Common.Document.Containers
 			this.detailButton.Margins = new Margins(0, 0, 5, 5);
 			this.detailButton.TabIndex = 1;
 			this.detailButton.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
-			this.detailButton.Clicked +=new MessageEventHandler(this.HandleDetailButtonClicked);
+			this.detailButton.Clicked += this.HandleDetailButtonClicked;
 
 			this.scrollable = new Scrollable();
 			this.scrollable.Dock = DockStyle.Fill;
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.Margins = new Margins(0, 0, 10, 0);
 			this.colorSelector.ColorChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleColorSelectorChanged);
-			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
+			this.colorSelector.CloseClicked += this.HandleColorSelectorClosed;
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			this.colorSelector.SetParent(this);
@@ -57,12 +57,12 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( disposing )
 			{
-				this.aggregateCombo.TextChanged -= new EventHandler(this.HandleAggregateComboChanged);
-				this.aggregateCombo.ComboClosed -= new EventHandler(this.HandleAggregateComboClosed);
-				this.selectorName.TextChanged -= new EventHandler(this.HandleSelectorNameChanged);
+				this.aggregateCombo.TextChanged -= this.HandleAggregateComboChanged;
+				this.aggregateCombo.ComboClosed -= this.HandleAggregateComboClosed;
+				this.selectorName.TextChanged -= this.HandleSelectorNameChanged;
 				this.selectorName.ComboOpening -= new EventHandler<CancelEventArgs> (this.HandleSelectorNameComboOpening);
-				this.selectorName.ComboClosed -= new EventHandler(this.HandleSelectorNameComboClosed);
-				this.selectorGo.Clicked -= new MessageEventHandler(this.HandleSelectorGo);
+				this.selectorName.ComboClosed -= this.HandleSelectorNameComboClosed;
+				this.selectorGo.Clicked -= this.HandleSelectorGo;
 			}
 
 			base.Dispose(disposing);
@@ -184,25 +184,25 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateCombo.PreferredWidth = 130;
 			this.aggregateCombo.Dock = DockStyle.Left;
 			this.aggregateCombo.Margins = new Margins(0, 0, 1, 1);
-			this.aggregateCombo.TextChanged += new EventHandler(this.HandleAggregateComboChanged);
-			this.aggregateCombo.ComboClosed += new EventHandler(this.HandleAggregateComboClosed);
+			this.aggregateCombo.TextChanged += this.HandleAggregateComboChanged;
+			this.aggregateCombo.ComboClosed += this.HandleAggregateComboClosed;
 			ToolTip.Default.SetToolTip(this.aggregateCombo, Res.Strings.Container.Principal.Button.AggregateCombo);
 			
 			this.aggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
 			this.aggregateNew3.AutoFocus = false;
-			this.aggregateNew3.Clicked += new MessageEventHandler(this.HandleAggregateNew3);
+			this.aggregateNew3.Clicked += this.HandleAggregateNew3;
 			this.aggregateToolBar.Items.Add(this.aggregateNew3);
 			ToolTip.Default.SetToolTip(this.aggregateNew3, Res.Strings.Action.AggregateNew3);
 			
 			this.aggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
 			this.aggregateNewAll.AutoFocus = false;
-			this.aggregateNewAll.Clicked += new MessageEventHandler (this.HandleAggregateNewAll);
+			this.aggregateNewAll.Clicked += this.HandleAggregateNewAll;
 			this.aggregateToolBar.Items.Add(this.aggregateNewAll);
 			ToolTip.Default.SetToolTip(this.aggregateNewAll, Res.Strings.Action.AggregateNewAll);
 			
 			this.aggregateFree = new IconButton(Misc.Icon("AggregateFree"));
 			this.aggregateFree.AutoFocus = false;
-			this.aggregateFree.Clicked += new MessageEventHandler (this.HandleAggregateFree);
+			this.aggregateFree.Clicked += this.HandleAggregateFree;
 			this.aggregateToolBar.Items.Add(this.aggregateFree);
 			ToolTip.Default.SetToolTip(this.aggregateFree, Res.Strings.Action.AggregateFree);
 		}
@@ -240,7 +240,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textUsual.Name = "Usual";
 			this.textUsual.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textUsual.Dock = DockStyle.Left;
-			this.textUsual.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
+			this.textUsual.Clicked += this.HandleFilterTextClicked;
 			ToolTip.Default.SetToolTip(this.textUsual, Res.Strings.TextPanel.Filter.Tooltip.Usual);
 
 			this.textFrequently = new IconButton(this.textToolBar);
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textFrequently.Name = "Frequently";
 			this.textFrequently.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textFrequently.Dock = DockStyle.Left;
-			this.textFrequently.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
+			this.textFrequently.Clicked += this.HandleFilterTextClicked;
 			ToolTip.Default.SetToolTip(this.textFrequently, Res.Strings.TextPanel.Filter.Tooltip.Frequently);
 
 			this.textAll = new IconButton(this.textToolBar);
@@ -258,7 +258,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textAll.Name = "All";
 			this.textAll.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textAll.Dock = DockStyle.Left;
-			this.textAll.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
+			this.textAll.Clicked += this.HandleFilterTextClicked;
 			ToolTip.Default.SetToolTip(this.textAll, Res.Strings.TextPanel.Filter.Tooltip.All);
 
 			this.textToolBar.Items.Add(new IconSeparator());
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textParagraph.Name = "Paragraph";
 			this.textParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textParagraph.Dock = DockStyle.Left;
-			this.textParagraph.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
+			this.textParagraph.Clicked += this.HandleFilterTextClicked;
 			ToolTip.Default.SetToolTip(this.textParagraph, Res.Strings.TextPanel.Filter.Tooltip.Paragraph);
 
 			this.textCharacter = new IconButton(this.textToolBar);
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.Containers
 			this.textCharacter.Name = "Character";
 			this.textCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textCharacter.Dock = DockStyle.Left;
-			this.textCharacter.Clicked += new MessageEventHandler(this.HandleFilterTextClicked);
+			this.textCharacter.Clicked += this.HandleFilterTextClicked;
 			ToolTip.Default.SetToolTip(this.textCharacter, Res.Strings.TextPanel.Filter.Tooltip.Character);
 
 			this.UpdateText();
@@ -305,9 +305,9 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorName = new TextFieldCombo(this.selectorPanel);
 			this.selectorName.PreferredWidth = 150;
 			this.selectorName.Dock = DockStyle.Left;
-			this.selectorName.TextChanged += new EventHandler(this.HandleSelectorNameChanged);
+			this.selectorName.TextChanged += this.HandleSelectorNameChanged;
 			this.selectorName.ComboOpening += new EventHandler<CancelEventArgs> (this.HandleSelectorNameComboOpening);
-			this.selectorName.ComboClosed += new EventHandler(this.HandleSelectorNameComboClosed);
+			this.selectorName.ComboClosed += this.HandleSelectorNameComboClosed;
 			ToolTip.Default.SetToolTip(this.selectorName, Res.Strings.Container.Principal.Button.SelName);
 
 			this.selectorGo = new Button(this.selectorPanel);
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorGo.PreferredWidth = 80;
 			this.selectorGo.Dock = DockStyle.Left;
 			this.selectorGo.Margins = new Margins(3, 0, 0, 0);
-			this.selectorGo.Clicked += new MessageEventHandler(this.HandleSelectorGo);
+			this.selectorGo.Clicked += this.HandleSelectorGo;
 			ToolTip.Default.SetToolTip(this.selectorGo, Res.Strings.Container.Principal.Button.SelGoHelp);
 
 			this.UpdateSelectorGo();
@@ -448,13 +448,13 @@ namespace Epsitec.Common.Document.Containers
 				if ( widget is Panels.Abstract )
 				{
 					Panels.Abstract panel = widget as Panels.Abstract;
-					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+					panel.OriginColorChanged -= this.HandleOriginColorChanged;
 				}
 
 				if ( widget is TextPanels.Abstract )
 				{
 					TextPanels.Abstract panel = widget as TextPanels.Abstract;
-					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+					panel.OriginColorChanged -= this.HandleOriginColorChanged;
 				}
 
 				widget.Dispose();
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Document.Containers
 							panel.Dock = DockStyle.Top;
 							panel.Margins = new Margins(0, 1, tm, -1);
 							panel.IsExtendedSize = this.document.Modifier.IsTextPanelExtended(panel);
-							panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+							panel.OriginColorChanged += this.HandleOriginColorChanged;
 							panel.SetParent(this.scrollable.Viewport);
 						}
 					}
@@ -544,7 +544,7 @@ namespace Epsitec.Common.Document.Containers
 					panel.IsExtendedSize = this.document.Modifier.IsPropertiesExtended(property.Type);
 					panel.IsLayoutDirect = (property.Type == Properties.Type.Name);
 
-					panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+					panel.OriginColorChanged += this.HandleOriginColorChanged;
 
 					panel.TabIndex = index++;
 					panel.TabNavigationMode = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
@@ -876,7 +876,7 @@ namespace Epsitec.Common.Document.Containers
 
 
 		#region StretchMenu
-		public VMenu CreateStretchTypeMenu(MessageEventHandler message)
+		public VMenu CreateStretchTypeMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu des types de stretch.
 			VMenu menu = new VMenu();
@@ -893,7 +893,7 @@ namespace Epsitec.Common.Document.Containers
 			return menu;
 		}
 
-		protected void CreateStretchTypeMenu(VMenu menu, MessageEventHandler message,
+		protected void CreateStretchTypeMenu(VMenu menu, Support.EventHandler<MessageEventArgs> message,
 											 SelectorTypeStretch type, string text)
 		{
 			//	Crée une case du menu des actions à refaire/annuler.

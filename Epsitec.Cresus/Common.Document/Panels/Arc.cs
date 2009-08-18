@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Arc(Document document) : base(document)
 		{
 			this.grid = new RadioIconGrid(this);
-			this.grid.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.grid.SelectionChanged += HandleTypeChanged;
 			this.grid.TabIndex = 1;
 			this.grid.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStarting.LabelShortText = Res.Strings.Panel.Arc.Short.Initial;
 			this.fieldStarting.LabelLongText  = Res.Strings.Panel.Arc.Long.Initial;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting.TextFieldReal);
-			this.fieldStarting.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldStarting.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldStarting.TabIndex = 2;
 			this.fieldStarting.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStarting, Res.Strings.Panel.Arc.Tooltip.Initial);
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldEnding.LabelShortText = Res.Strings.Panel.Arc.Short.Final;
 			this.fieldEnding.LabelLongText  = Res.Strings.Panel.Arc.Long.Final;
 			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding.TextFieldReal);
-			this.fieldEnding.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldEnding.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldEnding.TabIndex = 3;
 			this.fieldEnding.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEnding, Res.Strings.Panel.Arc.Tooltip.Final);
@@ -51,9 +51,9 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.grid.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.fieldStarting.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fieldEnding.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.grid.SelectionChanged -= HandleTypeChanged;
+				this.fieldStarting.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fieldEnding.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 
 				this.grid = null;
 				this.fieldStarting = null;

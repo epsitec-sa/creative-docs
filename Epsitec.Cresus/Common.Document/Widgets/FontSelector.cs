@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;  // zéro en haut
-			this.scroller.ValueChanged += new EventHandler(this.ScrollerValueChanged);
+			this.scroller.ValueChanged += this.ScrollerValueChanged;
 			
 			this.samples = new Common.Document.Widgets.FontSample[0];
 		}

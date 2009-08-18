@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckPaint";
-			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_Paint1);
+			window.Root.PaintForeground += CheckPaint_Paint1;
 			window.Root.Invalidate();
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckPaintJustif";
-			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintJustif1);
+			window.Root.PaintForeground += CheckPaint_PaintJustif1;
 			window.Root.Invalidate();
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckPaintUnderline";
-			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintUnderline1);
+			window.Root.PaintForeground += CheckPaint_PaintUnderline1;
 			window.Root.Invalidate();
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckPaintCourier";
-			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintCourier);
+			window.Root.PaintForeground += CheckPaint_PaintCourier;
 			window.Root.Invalidate();
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckPaintWave";
-			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintWave1);
+			window.Root.PaintForeground += CheckPaint_PaintWave1;
 			window.Root.Invalidate();
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckRectangle";
-			window.Root.PaintForeground += new PaintEventHandler(CheckRectangle_Paint1);
+			window.Root.PaintForeground += CheckRectangle_Paint1;
 			window.Root.Invalidate();
 			window.Show();
 			Window.RunInTestEnvironment (window);
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckImage";
-			window.Root.PaintForeground += new PaintEventHandler(CheckImage_Paint1);
+			window.Root.PaintForeground += CheckImage_Paint1;
 			window.Root.Invalidate ();
 			window.Show();
 			Window.RunInTestEnvironment (window);

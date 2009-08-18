@@ -36,7 +36,7 @@ namespace Epsitec.Common.Dialogs
 			button1.Margins = new Margins (50, 0, 0, 50);
 			button1.Anchor = AnchorStyles.BottomLeft;
 			button1.PreferredWidth = 100;
-			button1.Clicked += new MessageEventHandler(this.button1_Clicked);
+			button1.Clicked += this.button1_Clicked;
 			window.Root.Children.Add(button1);
 
 			Button button2 = new Button();
@@ -44,21 +44,21 @@ namespace Epsitec.Common.Dialogs
 			button2.Margins = new Margins (160, 0, 0, 50);
 			button2.Anchor = AnchorStyles.BottomLeft;
 			button2.PreferredWidth = 100;
-			button2.Clicked += new MessageEventHandler(this.button2_Clicked);
+			button2.Clicked += this.button2_Clicked;
 			window.Root.Children.Add(button2);
 
 			IconButton button3 = new IconButton();
 			button3.IconName = @"file:images/open.icon";
 			button3.Margins = new Margins (50, 0, 0, 100);
 			button3.Anchor = AnchorStyles.BottomLeft;
-			button3.Clicked += new MessageEventHandler(this.button1_Clicked);
+			button3.Clicked += this.button1_Clicked;
 			window.Root.Children.Add(button3);
 
 			IconButton button4 = new IconButton();
 			button4.IconName = @"file:images/save.icon";
 			button4.Margins = new Margins (80, 0, 0, 100);
 			button4.Anchor = AnchorStyles.BottomLeft;
-			button4.Clicked += new MessageEventHandler(this.button2_Clicked);
+			button4.Clicked += this.button2_Clicked;
 			window.Root.Children.Add(button4);
 
 			window.Show();

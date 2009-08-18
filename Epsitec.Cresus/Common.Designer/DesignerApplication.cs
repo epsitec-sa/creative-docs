@@ -100,10 +100,10 @@ namespace Epsitec.Common.Designer
 				this.dlgEntityExpression = new Dialogs.EntityExpression(this);
 				this.dlgInitialMessage   = new Dialogs.InitialMessage(this);
 
-				this.dlgGlyphs.Closed         += new EventHandler(this.HandleDlgClosed);
-				this.dlgFilter.Closed         += new EventHandler(this.HandleDlgClosed);
-				this.dlgSearch.Closed         += new EventHandler(this.HandleDlgClosed);
-				this.dlgInitialMessage.Closed += new EventHandler(this.HandleDlgClosed);
+				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
+				this.dlgFilter.Closed         += this.HandleDlgClosed;
+				this.dlgSearch.Closed         += this.HandleDlgClosed;
+				this.dlgInitialMessage.Closed += this.HandleDlgClosed;
 
 				//	Les réglages doivent être lus avant de créer l'interface graphique.
 				this.settings.Read();
@@ -1259,7 +1259,7 @@ namespace Epsitec.Common.Designer
 							this.viewersWindow.Root.MinSize = new Size(400, 300);
 							this.viewersWindow.Root.WindowStyles = WindowStyles.HasCloseButton | WindowStyles.CanResize | WindowStyles.CanMaximize;
 							this.viewersWindow.PreventAutoClose = true;
-							this.viewersWindow.WindowCloseClicked += new EventHandler(this.HandleViewersWindowCloseClicked);
+							this.viewersWindow.WindowCloseClicked += this.HandleViewersWindowCloseClicked;
 						}
 					}
 					else  // mode normal (sans fenêtre supplémentaire) ?
@@ -1471,7 +1471,7 @@ namespace Epsitec.Common.Designer
 			this.CurrentModuleInfo.Module.Modifier.ActiveViewer.Redo();
 		}
 
-		public VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		public VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			return this.CurrentModuleInfo.Module.Modifier.ActiveViewer.UndoRedoCreateMenu(message);
 		}
@@ -1555,7 +1555,7 @@ namespace Epsitec.Common.Designer
 			this.LocatorUpdateCommand();
 		}
 
-		public VMenu LocatorCreateMenu(MessageEventHandler message)
+		public VMenu LocatorCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu des localisations visitées.
 			int all = this.locators.Count;
@@ -1625,7 +1625,7 @@ namespace Epsitec.Common.Designer
 			return menu;
 		}
 
-		protected void LocatorCreateMenu(List<MenuItem> list, MessageEventHandler message, string icon, int rank, string action)
+		protected void LocatorCreateMenu(List<MenuItem> list, Support.EventHandler<MessageEventArgs> message, string icon, int rank, string action)
 		{
 			//	Crée une case du menu des localisations.
 			if (icon != "")

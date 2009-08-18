@@ -24,7 +24,7 @@ namespace Epsitec.Common.Document.Panels
 				if ( i == 5 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.B;
 				if ( i == 6 )  this.fieldArray[i].LabelShortText = Res.Strings.Panel.ModColor.Short.A;
 				
-				this.fieldArray[i].TextFieldReal.EditionAccepted += new EventHandler(this.HandleValueChanged);
+				this.fieldArray[i].TextFieldReal.EditionAccepted += this.HandleValueChanged;
 				this.fieldArray[i].TabIndex = 1+i;
 				this.fieldArray[i].TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				if ( i == 0 )
@@ -62,21 +62,21 @@ namespace Epsitec.Common.Document.Panels
 			this.negativ.Text = Res.Strings.Panel.ModColor.Short.Negativ;
 			this.negativ.TabIndex = 10;
 			this.negativ.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
+			this.negativ.ActiveStateChanged += this.HandleNegativChanged;
 			ToolTip.Default.SetToolTip(this.negativ, Res.Strings.Panel.ModColor.Tooltip.Negativ);
 
 			this.draft = new Button(this);
 			this.draft.Text = Res.Strings.Panel.ModColor.Short.Draft;
 			this.draft.TabIndex = 11;
 			this.draft.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.draft.Clicked += new MessageEventHandler(this.HandleDraft);
+			this.draft.Clicked += this.HandleDraft;
 			ToolTip.Default.SetToolTip(this.draft, Res.Strings.Panel.ModColor.Tooltip.Draft);
 
 			this.reset = new Button(this);
 			this.reset.Text = Res.Strings.Panel.ModColor.Button.Reset;
 			this.reset.TabIndex = 12;
 			this.reset.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
+			this.reset.Clicked += this.HandleReset;
 			ToolTip.Default.SetToolTip(this.reset, Res.Strings.Panel.ModColor.Tooltip.Reset);
 
 			this.isNormalAndExtended = true;
@@ -88,12 +88,12 @@ namespace Epsitec.Common.Document.Panels
 			{
 				for ( int i=0 ; i<7 ; i++ )
 				{
-					this.fieldArray[i].TextFieldReal.EditionAccepted -= new EventHandler(this.HandleValueChanged);
+					this.fieldArray[i].TextFieldReal.EditionAccepted -= this.HandleValueChanged;
 					this.fieldArray[i] = null;
 				}
-				this.negativ.ActiveStateChanged -= new EventHandler(this.HandleNegativChanged);
-				this.draft.Clicked -= new MessageEventHandler(this.HandleDraft);
-				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
+				this.negativ.ActiveStateChanged -= this.HandleNegativChanged;
+				this.draft.Clicked -= this.HandleDraft;
+				this.reset.Clicked -= this.HandleReset;
 
 				this.negativ = null;
 				this.draft = null;

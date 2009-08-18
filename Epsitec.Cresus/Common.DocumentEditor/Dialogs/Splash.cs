@@ -40,11 +40,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.ClientSize = wrect.Size;
 				this.window.WindowLocation = wrect.Location;
 				this.window.PreventAutoClose = true;
-				this.window.Root.PaintForeground += new PaintEventHandler(this.HandleSplashPaintForeground);
+				this.window.Root.PaintForeground += this.HandleSplashPaintForeground;
 				this.window.Owner = this.editor.Window;
 
 				StaticText image = About.CreateWidgetSplash(this.window.Root, this.editor.InstallType, this.editor.DocumentType);
-				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
+				image.Clicked += this.HandleSplashImageClicked;
 
 				this.workInProgress = new StaticText(image);
 				if ( this.editor.InstallType == InstallType.Freeware )
@@ -67,7 +67,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Root.Invalidate();
 				
 				this.splashTimer = new Timer();
-				this.splashTimer.TimeElapsed += new EventHandler(this.HandleSplashTimerTimeElapsed);
+				this.splashTimer.TimeElapsed += this.HandleSplashTimerTimeElapsed;
 				this.splashTimer.Delay = 10.0;
 				
 				this.window.MakeLayeredWindow();
@@ -122,11 +122,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			if ( this.window == null )  return;
 
 #if true
-			this.window.WindowAnimationEnded += new Common.Support.EventHandler(this.HandleWindowAnimationEnded);
+			this.window.WindowAnimationEnded += this.HandleWindowAnimationEnded;
 			this.window.AnimateHide(Common.Widgets.Animation.FadeOut);
 
 			this.splashTimer.Stop();
-			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
+			this.splashTimer.TimeElapsed -= this.HandleSplashTimerTimeElapsed;
 			this.splashTimer.Dispose();
 			this.splashTimer = null;
 #else
@@ -136,7 +136,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			this.OnClosed();
 
 			this.splashTimer.Stop();
-			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
+			this.splashTimer.TimeElapsed -= this.HandleSplashTimerTimeElapsed;
 			this.splashTimer.Dispose();
 			this.splashTimer = null;
 #endif

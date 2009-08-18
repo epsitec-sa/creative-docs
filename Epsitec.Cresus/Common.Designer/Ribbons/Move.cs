@@ -79,7 +79,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			field.InternalValue = field.InternalDefaultValue;
 			field.TabIndex = this.tabIndex++;
 			field.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			field.ValueChanged += new EventHandler(this.HandleFieldValueChanged);
+			field.ValueChanged += this.HandleFieldValueChanged;
 			ToolTip.Default.SetToolTip(field, tooltip);
 		}
 

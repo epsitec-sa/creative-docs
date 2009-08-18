@@ -91,7 +91,7 @@ namespace Epsitec.Common.Document
 			if (this.document.Mode == DocumentMode.Modify)
 			{
 				this.miniaturesTimer = new Timer();
-				this.miniaturesTimer.TimeElapsed += new EventHandler(this.HandleMiniaturesTimerTimeElapsed);
+				this.miniaturesTimer.TimeElapsed += this.HandleMiniaturesTimerTimeElapsed;
 			}
 		}
 
@@ -2355,7 +2355,7 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea();
 		}
 
-		public VMenu CreateUndoRedoMenu(MessageEventHandler message)
+		public VMenu CreateUndoRedoMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Construit le menu des actions à refaire/annuler.
 			string[] undoNames = this.opletQueue.UndoActionNames;
@@ -2445,7 +2445,7 @@ namespace Epsitec.Common.Document
 			return menu;
 		}
 
-		protected void CreateUndoRedoMenu(List<MenuItem> list, MessageEventHandler message,
+		protected void CreateUndoRedoMenu(List<MenuItem> list, Support.EventHandler<MessageEventArgs> message,
 										  int active, int rank, string action, int todo)
 		{
 			//	Crée une case du menu des actions à refaire/annuler.

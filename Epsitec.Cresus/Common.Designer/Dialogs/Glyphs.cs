@@ -28,7 +28,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("Glyphs", 300, 260, true);
 				this.window.Text = Res.Strings.Dialog.Glyphs.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 150);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
@@ -43,8 +43,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.array.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				this.array.SetFont(this.fontFace, this.fontStyle);
 				this.array.SelectedIndex = -1;
-				this.array.DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
-				this.array.ChangeSelected += new EventHandler(this.HandleArraySelected);
+				this.array.DoubleClicked += this.HandleDoubleClicked;
+				this.array.ChangeSelected += this.HandleArraySelected;
 				ToolTip.Default.SetToolTip(this.array, "*");
 
 				//	Boutons de fermeture.
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = 11;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Dock = DockStyle.Right;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
+				buttonOk.Clicked += this.HandleButtonInsertClicked;
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.LargeChange = 10.0M;
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.array.CellSize;
-				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				this.slider.ValueChanged += this.HandleSliderChanged;
 				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Glyphs.Tooltip.ArraySize);
 			}
 

@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("Icon", 400, 400, true);
 				this.window.Text = Res.Strings.Dialog.Icon.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.MinSize = new Size(200, 150);
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
@@ -52,13 +52,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.searchNext = new IconButton(header);
 				this.searchNext.IconName = Misc.Icon("SearchNext");
 				this.searchNext.Dock = DockStyle.Right;
-				this.searchNext.Clicked += new MessageEventHandler(this.HandleSearchNextClicked);
+				this.searchNext.Clicked += this.HandleSearchNextClicked;
 				ToolTip.Default.SetToolTip(this.searchNext, Res.Strings.Action.SearchNext);
 
 				this.searchPrev = new IconButton(header);
 				this.searchPrev.IconName = Misc.Icon("SearchPrev");
 				this.searchPrev.Dock = DockStyle.Right;
-				this.searchPrev.Clicked += new MessageEventHandler(this.HandleSearchPrevClicked);
+				this.searchPrev.Clicked += this.HandleSearchPrevClicked;
 				ToolTip.Default.SetToolTip(this.searchPrev, Res.Strings.Action.SearchPrev);
 
 				//	Bande horizontale pour le filtre.
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldFilter.IsReadOnly = true;
 				this.fieldFilter.Margins = new Margins(5, 5+22+22, 0, 0);
 				this.fieldFilter.Dock = DockStyle.Fill;
-				this.fieldFilter.ComboClosed += new EventHandler(this.HandleFieldFilterComboClosed);
+				this.fieldFilter.ComboClosed += this.HandleFieldFilterComboClosed;
 
 				//	Tableau principal.
 				this.arrayDetail = new MyWidgets.StringArray(this.window.Root);
@@ -90,17 +90,17 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.arrayDetail.SetColumnBreakMode(2, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
 				this.arrayDetail.LineHeight = 25;
 				this.arrayDetail.Dock = DockStyle.Fill;
-				this.arrayDetail.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
-				this.arrayDetail.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
-				this.arrayDetail.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
-				this.arrayDetail.SelectedRowDoubleClicked += new EventHandler(this.HandleArraySelectedRowDoubleClicked);
+				this.arrayDetail.CellCountChanged += this.HandleArrayCellCountChanged;
+				this.arrayDetail.CellsContentChanged += this.HandleArrayCellsContentChanged;
+				this.arrayDetail.SelectedRowChanged += this.HandleArraySelectedRowChanged;
+				this.arrayDetail.SelectedRowDoubleClicked += this.HandleArraySelectedRowDoubleClicked;
 				this.arrayDetail.TabIndex = 1;
 				this.arrayDetail.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.arrayCompact = new MyWidgets.IconArray(this.window.Root);
 				this.arrayCompact.CellSize = this.arrayDetail.LineHeight;
 				this.arrayCompact.Dock = DockStyle.Fill;
-				this.arrayCompact.ChangeSelected += new EventHandler(this.HandleArrayCompactChangeSelected);
+				this.arrayCompact.ChangeSelected += this.HandleArrayCompactChangeSelected;
 				this.arrayCompact.TabIndex = 2;
 				this.arrayCompact.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.arrayCompact, "*");
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonClose.Text = Res.Strings.Dialog.Icon.Button.Cancel;
 				buttonClose.ButtonStyle = ButtonStyle.DefaultCancel;
 				buttonClose.Dock = DockStyle.Right;
-				buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				buttonClose.Clicked += this.HandleButtonCloseClicked;
 				buttonClose.TabIndex = 11;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 				buttonOk.Dock = DockStyle.Right;
 				buttonOk.Margins = new Margins(0, 6, 0, 0);
-				buttonOk.Clicked += new MessageEventHandler(this.HandleButtonInsertClicked);
+				buttonOk.Clicked += this.HandleButtonInsertClicked;
 				buttonOk.TabIndex = 10;
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
 				this.buttonMode.Dock = DockStyle.Left;
 				this.buttonMode.Margins = new Margins(0, 6, 0, 0);
-				this.buttonMode.Clicked += new MessageEventHandler(this.HandleButtonModeClicked);
+				this.buttonMode.Clicked += this.HandleButtonModeClicked;
 				ToolTip.Default.SetToolTip(this.buttonMode, Res.Strings.Dialog.Icon.Tooltip.Mode);
 
 				this.slider = new HSlider(footer);
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.slider.LargeChange = 5.0M;
 				this.slider.Resolution = 1.0M;
 				this.slider.Value = (decimal) this.arrayDetail.LineHeight;
-				this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+				this.slider.ValueChanged += this.HandleSliderChanged;
 				ToolTip.Default.SetToolTip(this.slider, Res.Strings.Dialog.Icon.Tooltip.Size);
 			}
 

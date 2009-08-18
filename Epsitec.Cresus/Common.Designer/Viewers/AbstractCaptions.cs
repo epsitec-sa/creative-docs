@@ -20,8 +20,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.MainSummary, GlyphShape.ArrowDown, false, 0.3);
 			this.buttonMainExtendLeft = leftContainer.ExtendButton;
 			this.buttonMainExtendRight = rightContainer.ExtendButton;
-			this.buttonMainExtendLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-			this.buttonMainExtendRight.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonMainExtendLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
+			this.buttonMainExtendRight.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			this.primarySummary = new StaticText(leftContainer.Container);
 			this.primarySummary.MinHeight = 30;
@@ -43,30 +43,30 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Labels.Title, BandMode.MainView, GlyphShape.ArrowUp, false, 0.3);
 			this.buttonMainCompactLeft = leftContainer.ExtendButton;
 			this.buttonMainCompactRight = rightContainer.ExtendButton;
-			this.buttonMainCompactLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-			this.buttonMainCompactRight.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonMainCompactLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
+			this.buttonMainCompactRight.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			this.groupPrimaryLabels = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupPrimaryLabels.IsPatch = this.module.IsPatch;
 			this.groupPrimaryLabels.Dock = DockStyle.Fill;
-			this.groupPrimaryLabels.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupPrimaryLabels.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.groupSecondaryLabels = new MyWidgets.ResetBox(rightContainer.Container);
 			this.groupSecondaryLabels.IsPatch = this.module.IsPatch;
 			this.groupSecondaryLabels.Dock = DockStyle.Fill;
-			this.groupSecondaryLabels.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupSecondaryLabels.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.primaryLabels = new MyWidgets.StringCollection(this.groupPrimaryLabels.GroupBox);
 			this.primaryLabels.Dock = DockStyle.StackBegin;
-			this.primaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
-			this.primaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
+			this.primaryLabels.StringTextChanged += this.HandleStringTextCollectionChanged;
+			this.primaryLabels.StringFocusChanged += this.HandleStringFocusCollectionChanged;
 			this.primaryLabels.TabIndex = this.tabIndex++;
 			this.primaryLabels.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryLabels = new MyWidgets.StringCollection(this.groupSecondaryLabels.GroupBox);
 			this.secondaryLabels.Dock = DockStyle.StackBegin;
-			this.secondaryLabels.StringTextChanged += new EventHandler(this.HandleStringTextCollectionChanged);
-			this.secondaryLabels.StringFocusChanged += new EventHandler(this.HandleStringFocusCollectionChanged);
+			this.secondaryLabels.StringTextChanged += this.HandleStringTextCollectionChanged;
+			this.secondaryLabels.StringFocusChanged += this.HandleStringFocusCollectionChanged;
 			this.secondaryLabels.TabIndex = this.tabIndex++;
 			this.secondaryLabels.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
@@ -76,19 +76,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupPrimaryDescription = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupPrimaryDescription.IsPatch = this.module.IsPatch;
 			this.groupPrimaryDescription.Dock = DockStyle.Fill;
-			this.groupPrimaryDescription.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupPrimaryDescription.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.groupSecondaryDescription = new MyWidgets.ResetBox(rightContainer.Container);
 			this.groupSecondaryDescription.IsPatch = this.module.IsPatch;
 			this.groupSecondaryDescription.Dock = DockStyle.Fill;
-			this.groupSecondaryDescription.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupSecondaryDescription.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.primaryDescription = new TextFieldMulti(this.groupPrimaryDescription.GroupBox);
 			this.primaryDescription.AcceptsNullValue = true;
 			this.primaryDescription.PreferredHeight = 10+14*4;
 			this.primaryDescription.Dock = DockStyle.StackBegin;
-			this.primaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.primaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.primaryDescription.TextChanged += this.HandleTextChanged;
+			this.primaryDescription.CursorChanged += this.HandleCursorChanged;
 			this.primaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryDescription.TabIndex = this.tabIndex++;
 			this.primaryDescription.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -97,8 +97,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryDescription.AcceptsNullValue = true;
 			this.secondaryDescription.PreferredHeight = 10+14*4;
 			this.secondaryDescription.Dock = DockStyle.StackBegin;
-			this.secondaryDescription.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.secondaryDescription.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.secondaryDescription.TextChanged += this.HandleTextChanged;
+			this.secondaryDescription.CursorChanged += this.HandleCursorChanged;
 			this.secondaryDescription.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryDescription.TabIndex = this.tabIndex++;
 			this.secondaryDescription.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupPrimaryIcon = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupPrimaryIcon.IsPatch = this.module.IsPatch;
 			this.groupPrimaryIcon.Dock = DockStyle.Fill;
-			this.groupPrimaryIcon.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupPrimaryIcon.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			StaticText label = new StaticText(this.groupPrimaryIcon.GroupBox);
 			label.Text = Res.Strings.Viewers.Captions.Icon.Title;
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryIcon.Dock = DockStyle.Left;
 			this.primaryIcon.TabIndex = this.tabIndex++;
 			this.primaryIcon.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.primaryIcon.Clicked += new MessageEventHandler(this.HandlePrimaryIconClicked);
+			this.primaryIcon.Clicked += this.HandlePrimaryIconClicked;
 
 			this.primaryIconInfo = new StaticText(this.groupPrimaryIcon.GroupBox);
 			this.primaryIconInfo.PreferredHeight = 30;
@@ -142,19 +142,19 @@ namespace Epsitec.Common.Designer.Viewers
 			this.groupPrimaryComment = new MyWidgets.ResetBox(leftContainer.Container);
 			this.groupPrimaryComment.IsPatch = this.module.IsPatch;
 			this.groupPrimaryComment.Dock = DockStyle.Fill;
-			this.groupPrimaryComment.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupPrimaryComment.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.groupSecondaryComment = new MyWidgets.ResetBox(rightContainer.Container);
 			this.groupSecondaryComment.IsPatch = this.module.IsPatch;
 			this.groupSecondaryComment.Dock = DockStyle.Fill;
-			this.groupSecondaryComment.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupSecondaryComment.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.primaryComment = new TextFieldMulti(this.groupPrimaryComment.GroupBox);
 			this.primaryComment.AcceptsNullValue = true;
 			this.primaryComment.PreferredHeight = 10+14*4;
 			this.primaryComment.Dock = DockStyle.StackBegin;
-			this.primaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.primaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.primaryComment.TextChanged += this.HandleTextChanged;
+			this.primaryComment.CursorChanged += this.HandleCursorChanged;
 			this.primaryComment.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryComment.TabIndex = this.tabIndex++;
 			this.primaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -163,8 +163,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryComment.AcceptsNullValue = true;
 			this.secondaryComment.PreferredHeight = 10+14*4;
 			this.secondaryComment.Dock = DockStyle.StackBegin;
-			this.secondaryComment.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.secondaryComment.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.secondaryComment.TextChanged += this.HandleTextChanged;
+			this.secondaryComment.CursorChanged += this.HandleCursorChanged;
 			this.secondaryComment.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.secondaryComment.TabIndex = this.tabIndex++;
 			this.secondaryComment.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -180,36 +180,36 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.groupPrimaryLabels.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupSecondaryLabels.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupPrimaryDescription.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupSecondaryDescription.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupPrimaryIcon.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupPrimaryComment.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupSecondaryComment.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupPrimaryLabels.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupSecondaryLabels.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupPrimaryDescription.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupSecondaryDescription.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupPrimaryIcon.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupPrimaryComment.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupSecondaryComment.ResetButton.Clicked -= this.HandleResetButtonClicked;
 				
-				this.primaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
-				this.primaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
+				this.primaryLabels.StringTextChanged -= this.HandleStringTextCollectionChanged;
+				this.primaryLabels.StringFocusChanged -= this.HandleStringFocusCollectionChanged;
 
-				this.secondaryLabels.StringTextChanged -= new EventHandler(this.HandleStringTextCollectionChanged);
-				this.secondaryLabels.StringFocusChanged -= new EventHandler(this.HandleStringFocusCollectionChanged);
+				this.secondaryLabels.StringTextChanged -= this.HandleStringTextCollectionChanged;
+				this.secondaryLabels.StringFocusChanged -= this.HandleStringFocusCollectionChanged;
 
-				this.primaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.primaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.primaryDescription.TextChanged -= this.HandleTextChanged;
+				this.primaryDescription.CursorChanged -= this.HandleCursorChanged;
 				this.primaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.secondaryDescription.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.secondaryDescription.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.secondaryDescription.TextChanged -= this.HandleTextChanged;
+				this.secondaryDescription.CursorChanged -= this.HandleCursorChanged;
 				this.secondaryDescription.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.primaryIcon.Clicked -= new MessageEventHandler(this.HandlePrimaryIconClicked);
+				this.primaryIcon.Clicked -= this.HandlePrimaryIconClicked;
 
-				this.primaryComment.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.primaryComment.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.primaryComment.TextChanged -= this.HandleTextChanged;
+				this.primaryComment.CursorChanged -= this.HandleCursorChanged;
 				this.primaryComment.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 
-				this.secondaryComment.TextChanged -= new EventHandler(this.HandleTextChanged);
-				this.secondaryComment.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.secondaryComment.TextChanged -= this.HandleTextChanged;
+				this.secondaryComment.CursorChanged -= this.HandleCursorChanged;
 				this.secondaryComment.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			}
 
@@ -409,7 +409,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*0, 0, 0, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.Label);
 
 			check = new CheckButton(parent);
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 0, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryLabels);
 
 			check = new CheckButton(parent);
@@ -429,7 +429,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 0, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryLabels);
 
 			check = new CheckButton(parent);
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 16, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryDescription);
 
 			check = new CheckButton(parent);
@@ -447,7 +447,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 16, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryDescription);
 
 			check = new CheckButton(parent);
@@ -456,7 +456,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*1, 0, 32, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.PrimaryAbout);
 
 			check = new CheckButton(parent);
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Designer.Viewers
 			check.PreferredWidth = check.PreferredHeight;
 			check.Margins = new Margins(90+20*2, 0, 32, 0);
 			check.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			check.ActiveStateChanged += new EventHandler(handler);
+			check.ActiveStateChanged += handler;
 			ToolTip.Default.SetToolTip(check, Res.Strings.Dialog.Search.Check.SecondaryAbout);
 
 			// (*)	Ce numéro correspond à field dans ResourceAccess.SearcherIndexToAccess !

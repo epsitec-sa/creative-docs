@@ -305,8 +305,8 @@ namespace Epsitec.Common.Widgets
 			System.Console.WriteLine ("Getting 5 managed properties: {0} cycles.", c2 / runs);
 			
 			
-			widget.AnchorChanged += new EventHandler(this.HandleAnchorChanged);
-			widget.ManagedAnchorChanged += new Types.PropertyChangedEventHandler(this.HandleManagedAnchorChanged);
+			widget.AnchorChanged += this.HandleAnchorChanged;
+			widget.ManagedAnchorChanged += this.HandleManagedAnchorChanged;
 			
 			widget.Anchor        = AnchorStyles.None;
 			widget.ManagedAnchor = AnchorStyles.None;
@@ -502,7 +502,7 @@ namespace Epsitec.Common.Widgets
 				button.Dock   = DockStyle.Top;
 				button.SetParent (pane);
 				button.Name   = name;
-				button.Clicked += new MessageEventHandler(this.CheckTextFrameButtonClicked);
+				button.Clicked += this.CheckTextFrameButtonClicked;
 				button.AutoFocus = false;
 			}
 			
@@ -627,7 +627,7 @@ namespace Epsitec.Common.Widgets
 			Widget w1 = new Widget ();
 			Widget w2 = new Widget ();
 			
-			w2.ParentChanged += new PropertyChangedEventHandler (this.HandleCheckParentChangedParentChanged);
+			w2.ParentChanged += this.HandleCheckParentChangedParentChanged;
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
@@ -705,7 +705,7 @@ namespace Epsitec.Common.Widgets
 			text.Anchor = AnchorStyles.TopLeft;
 			text.Margins = new Drawing.Margins (10, 0, 10, 0);
 			text.SetParent (window.Root);
-			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
+			text.PaintForeground += this.CheckTextLayoutInfoPaintForeground;
 			
 			window.Show ();
 			Window.RunInTestEnvironment (window);

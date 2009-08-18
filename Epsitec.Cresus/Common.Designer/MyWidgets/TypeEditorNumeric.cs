@@ -31,59 +31,59 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Min, left, out this.groupMin, out this.fieldMin);
 			this.groupMin.Dock = DockStyle.StackBegin;
 			this.groupMin.Margins = new Margins(0, 0, 0, 2);
-			this.groupMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMin.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMin.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Max, left, out this.groupMax, out this.fieldMax);
 			this.groupMax.Dock = DockStyle.StackBegin;
 			this.groupMax.Margins = new Margins(0, 0, 0, 2);
-			this.groupMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupMax.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldMax.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Resol, left, out this.groupRes, out this.fieldRes);
 			this.groupRes.Dock = DockStyle.StackBegin;
 			this.groupRes.Margins = new Margins(0, 0, 0, 0);
-			this.groupRes.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldRes.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupRes.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldRes.EditionAccepted += this.HandleTextFieldChanged;
 
 			//	PreferredRange.
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMin, right, out this.groupPreferredMin, out this.fieldPreferredMin);
 			this.groupPreferredMin.Dock = DockStyle.StackBegin;
 			this.groupPreferredMin.Margins = new Margins(0, 0, 0, 2);
-			this.groupPreferredMin.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldPreferredMin.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupPreferredMin.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldPreferredMin.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredMax, right, out this.groupPreferredMax, out this.fieldPreferredMax);
 			this.groupPreferredMax.Dock = DockStyle.StackBegin;
 			this.groupPreferredMax.Margins = new Margins(0, 0, 0, 2);
-			this.groupPreferredMax.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldPreferredMax.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupPreferredMax.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldPreferredMax.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.PreferredResol, right, out this.groupPreferredRes, out this.fieldPreferredRes);
 			this.groupPreferredRes.Dock = DockStyle.StackBegin;
 			this.groupPreferredRes.Margins = new Margins(0, 0, 0, 0);
-			this.groupPreferredRes.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldPreferredRes.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupPreferredRes.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldPreferredRes.EditionAccepted += this.HandleTextFieldChanged;
 
 			//	Steps.
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.SmallStep, left, out this.groupSmallStep, out this.fieldSmallStep);
 			this.groupSmallStep.Dock = DockStyle.StackBegin;
 			this.groupSmallStep.Margins = new Margins(0, 0, 10, 2);
-			this.groupSmallStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldSmallStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupSmallStep.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldSmallStep.EditionAccepted += this.HandleTextFieldChanged;
 
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.LargeStep, left, out this.groupLargeStep, out this.fieldLargeStep);
 			this.groupLargeStep.Dock = DockStyle.StackBegin;
 			this.groupLargeStep.Margins = new Margins(0, 0, 0, 0);
-			this.groupLargeStep.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldLargeStep.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupLargeStep.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldLargeStep.EditionAccepted += this.HandleTextFieldChanged;
 
 			//	Valeur par défaut.
 			this.CreateDecimalLabeled(Res.Strings.Viewers.Types.Numeric.Default, left, out this.groupDefault, out this.fieldDefault);
 			this.groupDefault.Dock = DockStyle.StackBegin;
 			this.groupDefault.Margins = new Margins(0, 0, 10, 0);
-			this.groupDefault.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
-			this.fieldDefault.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.groupDefault.ResetButton.Clicked += this.HandleResetButtonClicked;
+			this.fieldDefault.EditionAccepted += this.HandleTextFieldChanged;
 		}
 		
 		
@@ -91,25 +91,25 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.groupMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupRes.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupPreferredMin.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupPreferredMax.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupPreferredRes.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupSmallStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupLargeStep.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.groupDefault.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupMin.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupMax.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupRes.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupPreferredMin.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupPreferredMax.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupPreferredRes.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupSmallStep.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupLargeStep.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.groupDefault.ResetButton.Clicked -= this.HandleResetButtonClicked;
 				
-				this.fieldMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldRes.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldPreferredMin.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldPreferredMax.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldPreferredRes.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldSmallStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldLargeStep.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
-				this.fieldDefault.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.fieldMin.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldMax.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldRes.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldPreferredMin.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldPreferredMax.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldPreferredRes.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldSmallStep.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldLargeStep.EditionAccepted -= this.HandleTextFieldChanged;
+				this.fieldDefault.EditionAccepted -= this.HandleTextFieldChanged;
 			}
 			
 			base.Dispose(disposing);

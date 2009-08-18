@@ -28,7 +28,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Update.Title;
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowUpdateCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowUpdateCloseClicked;
 
 				this.version = new StaticText(this.window.Root);
 				this.version.PreferredHeight = this.version.PreferredHeight*1.2;
@@ -54,7 +54,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 10, 0, 10);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleUpdateButtonCloseClicked);
+				buttonClose.Clicked += this.HandleUpdateButtonCloseClicked;
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);
@@ -106,7 +106,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 //-			b.Append(chip);
 //-			b.Append(string.Format("{0}<tab/>{1}", Res.Strings.Dialog.Update.Fax1, Res.Strings.Dialog.Update.Fax2));
 			this.buy.Text = b.ToString();
-			this.buy.HypertextClicked += new MessageEventHandler(this.HandleLinkHypertextClicked);
+			this.buy.HypertextClicked += this.HandleLinkHypertextClicked;
 
 			TextStyle.Tab tab = new TextStyle.Tab(70, TextTabType.Left, TextTabLine.None);
 			this.buy.TextLayout.TabInsert(tab);

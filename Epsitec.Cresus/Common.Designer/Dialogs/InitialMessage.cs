@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("Message", 200, 100, true);
 				this.window.Text = Res.Strings.Dialog.InitialMessage.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				Widget container = new Widget(this.window.Root);
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.widgetText.TextBreakMode = TextBreakMode.Hyphenate;
 				this.widgetText.Dock = DockStyle.Fill;
 				this.widgetText.Margins = new Margins(8, 0, 0, 0);
-				this.widgetText.HypertextClicked += new MessageEventHandler(this.HandleHypertextClicked);
+				this.widgetText.HypertextClicked += this.HandleHypertextClicked;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonClose.Text = Res.Strings.Dialog.Button.Close;
 				this.buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonClose.Dock = DockStyle.Right;
-				this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonClose.Clicked += this.HandleButtonCloseClicked;
 				this.buttonClose.TabIndex = 1;
 				this.buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}

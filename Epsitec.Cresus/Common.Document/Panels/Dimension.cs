@@ -12,7 +12,7 @@ namespace Epsitec.Common.Document.Panels
 		public Dimension(Document document) : base(document)
 		{
 			this.gridForm = new RadioIconGrid(this);
-			this.gridForm.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridForm.SelectionChanged += HandleTypeChanged;
 			this.gridForm.TabIndex = 0;
 			this.gridForm.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Panels
 			this.AddRadioIcon(Properties.DimensionForm.Outside);
 
 			this.gridJustif = new RadioIconGrid(this);
-			this.gridJustif.SelectionChanged += new EventHandler(HandleTypeChanged);
+			this.gridJustif.SelectionChanged += HandleTypeChanged;
 			this.gridJustif.TabIndex = 1;
 			this.gridJustif.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Document.Panels
 			this.addLength.TextFieldReal.FactorMaxRange = 0.1M;
 			this.addLength.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.addLength.TextFieldReal);
-			this.addLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.addLength.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.addLength.TabIndex = 10;
 			this.addLength.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.addLength, Res.Strings.Panel.Dimension.Tooltip.AddLength);
@@ -49,13 +49,13 @@ namespace Epsitec.Common.Document.Panels
 			this.outLength.TextFieldReal.FactorMaxRange = 0.1M;
 			this.outLength.TextFieldReal.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.outLength.TextFieldReal);
-			this.outLength.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.outLength.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.outLength.TabIndex = 11;
 			this.outLength.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.outLength, Res.Strings.Panel.Dimension.Tooltip.OutLength);
 
 			this.rotateText = new IconButton(this);
-			this.rotateText.Clicked += new MessageEventHandler(this.HandleRotateTextClicked);
+			this.rotateText.Clicked += this.HandleRotateTextClicked;
 			this.rotateText.TabIndex = 12;
 			this.rotateText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.rotateText.IconName = Misc.Icon("DimensionRotateText");
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fontOffset.TextFieldReal.InternalMaxValue =  100;
 			this.fontOffset.TextFieldReal.Step = 5;
 			this.fontOffset.TextFieldReal.TextSuffix = "%";
-			this.fontOffset.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fontOffset.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fontOffset.TabIndex = 13;
 			this.fontOffset.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontOffset, Res.Strings.Panel.Dimension.Tooltip.FontOffset);
@@ -78,8 +78,8 @@ namespace Epsitec.Common.Document.Panels
 			this.dimensionText = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextField);
 			this.dimensionText.LabelShortText = Res.Strings.Panel.Dimension.Short.Text;
 			this.dimensionText.LabelLongText  = Res.Strings.Panel.Dimension.Long.Text;
-			//?this.dimensionText.TextField.EditionAccepted += new EventHandler(this.HandleFieldChanged);  // TODO: événement plus généré. Pourquoi ?
-			this.dimensionText.TextField.TextChanged += new EventHandler(this.HandleFieldChanged);
+			//?this.dimensionText.TextField.EditionAccepted += this.HandleFieldChanged;  // TODO: événement plus généré. Pourquoi ?
+			this.dimensionText.TextField.TextChanged += this.HandleFieldChanged;
 			this.dimensionText.TabIndex = 14;
 			this.dimensionText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.dimensionText, Res.Strings.Panel.Dimension.Tooltip.Text);
@@ -101,13 +101,13 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.gridForm.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.gridJustif.SelectionChanged -= new EventHandler(HandleTypeChanged);
-				this.addLength.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.outLength.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.fontOffset.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.dimensionText.TextField.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
-				this.rotateText.Clicked -= new MessageEventHandler(this.HandleRotateTextClicked);
+				this.gridForm.SelectionChanged -= HandleTypeChanged;
+				this.gridJustif.SelectionChanged -= HandleTypeChanged;
+				this.addLength.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.outLength.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.fontOffset.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
+				this.dimensionText.TextField.EditionAccepted -= this.HandleFieldChanged;
+				this.rotateText.Clicked -= this.HandleRotateTextClicked;
 
 				this.gridForm = null;
 				this.gridJustif = null;

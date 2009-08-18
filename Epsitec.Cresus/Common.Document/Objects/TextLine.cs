@@ -23,9 +23,9 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(null, this.textLayout);
-			this.textNavigator.StyleChanged += new EventHandler(this.HandleTextChanged);
-			this.textNavigator.TextInserted += new EventHandler(this.HandleTextChanged);
-			this.textNavigator.TextDeleted  += new EventHandler(this.HandleTextChanged);
+			this.textNavigator.StyleChanged += this.HandleTextChanged;
+			this.textNavigator.TextInserted += this.HandleTextChanged;
+			this.textNavigator.TextDeleted  += this.HandleTextChanged;
 			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
 			this.textLayout.LayoutSize = new Size(1000000, 1000000);
 			this.textLayout.Alignment = ContentAlignment.BottomLeft;
@@ -54,9 +54,9 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.document != null )
 			{
-				this.textNavigator.StyleChanged -= new EventHandler(this.HandleTextChanged);
-				this.textNavigator.TextInserted -= new EventHandler(this.HandleTextChanged);
-				this.textNavigator.TextDeleted  -= new EventHandler(this.HandleTextChanged);
+				this.textNavigator.StyleChanged -= this.HandleTextChanged;
+				this.textNavigator.TextInserted -= this.HandleTextChanged;
+				this.textNavigator.TextDeleted  -= this.HandleTextChanged;
 			}
 
 			base.Dispose();

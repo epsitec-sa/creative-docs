@@ -29,27 +29,27 @@ namespace Epsitec.Common.Widgets
 			{
 				this.arrowMax = new GlyphButton (this);
 				this.arrowMax.ButtonStyle = ButtonStyle.Icon;
-				this.arrowMax.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				this.arrowMax.Clicked += this.HandleButtonClicked;
 				this.arrowMax.Dock = this.isVertical ? DockStyle.Top : DockStyle.Right;
 
 				this.arrowMin = new GlyphButton (this);
 				this.arrowMin.ButtonStyle = ButtonStyle.Icon;
-				this.arrowMin.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				this.arrowMin.Clicked += this.HandleButtonClicked;
 				this.arrowMin.Dock = this.isVertical ? DockStyle.Bottom : DockStyle.Left;
 				
 				this.arrowUp = new GlyphButton (this);
 				this.arrowUp.GlyphShape = GlyphShape.Plus;
 				this.arrowUp.ButtonStyle = ButtonStyle.Slider;
-				this.arrowUp.Engaged += new EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
+				this.arrowUp.Engaged += this.HandleButton;
+				this.arrowUp.StillEngaged += this.HandleButton;
 				this.arrowUp.AutoRepeat = true;
 				this.arrowUp.Dock = this.isVertical ? DockStyle.Top : DockStyle.Right;
 
 				this.arrowDown = new GlyphButton(this);
 				this.arrowDown.GlyphShape = GlyphShape.Minus;
 				this.arrowDown.ButtonStyle = ButtonStyle.Slider;
-				this.arrowDown.Engaged += new EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
+				this.arrowDown.Engaged += this.HandleButton;
+				this.arrowDown.StillEngaged += this.HandleButton;
 				this.arrowDown.AutoRepeat = true;
 				this.arrowDown.Dock = this.isVertical ? DockStyle.Bottom : DockStyle.Left;
 			}
@@ -73,24 +73,24 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.arrowUp != null)
 				{
-					this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
-					this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
+					this.arrowUp.Engaged -= this.HandleButton;
+					this.arrowUp.StillEngaged -= this.HandleButton;
 				}
 
 				if (this.arrowDown != null)
 				{
-					this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
-					this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+					this.arrowDown.Engaged -= this.HandleButton;
+					this.arrowDown.StillEngaged -= this.HandleButton;
 				}
 
 				if (this.arrowMax != null)
 				{
-					this.arrowMax.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+					this.arrowMax.Clicked -= this.HandleButtonClicked;
 				}
 
 				if (this.arrowMin != null)
 				{
-					this.arrowMin.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+					this.arrowMin.Clicked -= this.HandleButtonClicked;
 				}
 			}
 			

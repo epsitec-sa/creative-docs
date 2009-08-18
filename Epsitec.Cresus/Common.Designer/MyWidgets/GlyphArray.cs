@@ -27,7 +27,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.scroller.MaxValue          = 1.0M;
 			this.scroller.VisibleRangeRatio = 0.1M;
 			this.scroller.IsInverted        = true;
-			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
+			this.scroller.ValueChanged += this.HandleScrollerValueChanged;
 		}
 		
 		public GlyphArray(Widget embedder) : this()
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
+				this.scroller.ValueChanged -= this.HandleScrollerValueChanged;
 				this.scroller.Dispose();
 				this.scroller = null;
 			}

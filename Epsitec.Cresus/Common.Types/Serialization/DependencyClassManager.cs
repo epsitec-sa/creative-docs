@@ -18,7 +18,7 @@ namespace Epsitec.Common.Types.Serialization
 
 			Assembly[] assemblies = this.domain.GetAssemblies ();
 			
-			this.domain.AssemblyLoad += new System.AssemblyLoadEventHandler (this.HandleDomainAssemblyLoad);
+			this.domain.AssemblyLoad += this.HandleDomainAssemblyLoad;
 
 			foreach (Assembly assembly in assemblies)
 			{

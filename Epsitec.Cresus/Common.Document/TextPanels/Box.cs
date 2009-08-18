@@ -17,12 +17,12 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextBox");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Box.Title);
 
-			this.buttonFrame = this.CreateIconButton(Misc.Icon("FontFrame"), Res.Strings.Action.FontFrame, new MessageEventHandler(this.HandleButtonClicked));
+			this.buttonFrame = this.CreateIconButton(Misc.Icon("FontFrame"), Res.Strings.Action.FontFrame, this.HandleButtonClicked);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.TextWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -32,8 +32,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.TextWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);

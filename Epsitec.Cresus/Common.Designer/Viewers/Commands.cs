@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Aspect (pour DefaultParameter).
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.ArrowUp, true, 0.1);
 			this.buttonSuiteCompactLeft = leftContainer.ExtendButton;
-			this.buttonSuiteCompactLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonSuiteCompactLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			leftResetBox = new MyWidgets.ResetBox(leftContainer.Container);
 			leftResetBox.IsPatch = this.module.IsPatch;
@@ -44,21 +44,21 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryAspectFlat.CommandId = Res.Values.Widgets.ButtonClass.FlatButton.Id;
 			this.primaryAspectFlat.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectFlat.Dock = DockStyle.Left;
-			this.primaryAspectFlat.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+			this.primaryAspectFlat.Clicked += this.HandlePrimaryAspectClicked;
 
 			this.primaryAspectDialog = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectDialog.MinSize = this.primaryAspectDialog.PreferredSize;  // attention, très important !
 			this.primaryAspectDialog.CommandId = Res.Values.Widgets.ButtonClass.DialogButton.Id;
 			this.primaryAspectDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectDialog.Dock = DockStyle.Left;
-			this.primaryAspectDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+			this.primaryAspectDialog.Clicked += this.HandlePrimaryAspectClicked;
 
 			this.primaryAspectRichDialog = new IconButton(leftResetBox.GroupBox);
 			this.primaryAspectRichDialog.MinSize = this.primaryAspectRichDialog.PreferredSize;  // attention, très important !
 			this.primaryAspectRichDialog.CommandId = Res.Values.Widgets.ButtonClass.RichDialogButton.Id;
 			this.primaryAspectRichDialog.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			this.primaryAspectRichDialog.Dock = DockStyle.Left;
-			this.primaryAspectRichDialog.Clicked += new MessageEventHandler(this.HandlePrimaryAspectClicked);
+			this.primaryAspectRichDialog.Clicked += this.HandlePrimaryAspectClicked;
 
 			//	Statefull.
 			this.CreateBand(out leftContainer, Res.Strings.Viewers.Commands.Statefull.Title, BandMode.SuiteView, GlyphShape.None, true, 0.1);
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryStatefull.PreferredWidth = 250;
 			this.primaryStatefull.Margins = new Margins(40, 0, 0, 0);
 			this.primaryStatefull.Dock = DockStyle.Left;
-			this.primaryStatefull.Pressed += new MessageEventHandler(this.HandleStatefullPressed);
+			this.primaryStatefull.Pressed += this.HandleStatefullPressed;
 			this.primaryStatefull.TabIndex = this.tabIndex++;
 			this.primaryStatefull.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -91,14 +91,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
 			this.primaryShortcut1.Margins = new Margins(0, 0, 0, 2);
 			this.primaryShortcut1.Dock = DockStyle.StackBegin;
-			this.primaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.primaryShortcut1.EditedShortcutChanged += this.HandleShortcutEditedShortcutChanged;
 			this.primaryShortcut1.TabIndex = this.tabIndex++;
 			this.primaryShortcut1.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.primaryShortcut2 = new ShortcutEditor(leftResetBox.GroupBox);
 			this.primaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.primaryShortcut2.Dock = DockStyle.StackBegin;
-			this.primaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.primaryShortcut2.EditedShortcutChanged += this.HandleShortcutEditedShortcutChanged;
 			this.primaryShortcut2.TabIndex = this.tabIndex++;
 			this.primaryShortcut2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
@@ -106,14 +106,14 @@ namespace Epsitec.Common.Designer.Viewers
 			this.secondaryShortcut1.Title = Res.Strings.Viewers.Commands.Shortcut.Main;
 			this.secondaryShortcut1.Margins = new Margins(0, 0, 0, 2);
 			this.secondaryShortcut1.Dock = DockStyle.StackBegin;
-			this.secondaryShortcut1.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.secondaryShortcut1.EditedShortcutChanged += this.HandleShortcutEditedShortcutChanged;
 			this.secondaryShortcut1.TabIndex = this.tabIndex++;
 			this.secondaryShortcut1.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.secondaryShortcut2 = new ShortcutEditor(rightResetBox.GroupBox);
 			this.secondaryShortcut2.Title = Res.Strings.Viewers.Commands.Shortcut.Suppl;
 			this.secondaryShortcut2.Dock = DockStyle.StackBegin;
-			this.secondaryShortcut2.EditedShortcutChanged += new EventHandler(this.HandleShortcutEditedShortcutChanged);
+			this.secondaryShortcut2.EditedShortcutChanged += this.HandleShortcutEditedShortcutChanged;
 			this.secondaryShortcut2.TabIndex = this.tabIndex++;
 			this.secondaryShortcut2.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.primaryGroup.PreferredWidth = 216;  // calqué sur ShortcutEditor
 			this.primaryGroup.HorizontalAlignment = HorizontalAlignment.Left;
 			this.primaryGroup.Dock = DockStyle.Left;
-			this.primaryGroup.TextChanged += new EventHandler(this.HandleGroupTextChanged);
+			this.primaryGroup.TextChanged += this.HandleGroupTextChanged;
 			this.primaryGroup.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 			this.primaryGroup.ComboOpening += new EventHandler<CancelEventArgs>(this.HandleGroupComboOpening);
 			this.primaryGroup.TabIndex = this.tabIndex++;
@@ -148,8 +148,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.CreateBand(out leftContainer, out rightContainer, Res.Strings.Viewers.Captions.Brief, BandMode.SuiteSummary, GlyphShape.ArrowDown, true, 0.1);
 			this.buttonSuiteExtendLeft = leftContainer.ExtendButton;
 			this.buttonSuiteExtendRight = rightContainer.ExtendButton;
-			this.buttonSuiteExtendLeft.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
-			this.buttonSuiteExtendRight.Clicked += new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+			this.buttonSuiteExtendLeft.Clicked += this.HandleButtonCompactOrExtendClicked;
+			this.buttonSuiteExtendRight.Clicked += this.HandleButtonCompactOrExtendClicked;
 
 			this.primarySuiteSummary = new StaticText(leftContainer.Container);
 			this.primarySuiteSummary.MinHeight = 30;
@@ -174,17 +174,17 @@ namespace Epsitec.Common.Designer.Viewers
 		{
 			if (disposing)
 			{
-				this.primaryAspectRichDialog.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
-				this.primaryAspectDialog.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
-				this.primaryAspectFlat.Clicked -= new MessageEventHandler(this.HandlePrimaryAspectClicked);
-				this.primaryStatefull.Pressed -= new MessageEventHandler(this.HandleStatefullPressed);
+				this.primaryAspectRichDialog.Clicked -= this.HandlePrimaryAspectClicked;
+				this.primaryAspectDialog.Clicked -= this.HandlePrimaryAspectClicked;
+				this.primaryAspectFlat.Clicked -= this.HandlePrimaryAspectClicked;
+				this.primaryStatefull.Pressed -= this.HandleStatefullPressed;
 
-				this.primaryShortcut1.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
-				this.primaryShortcut2.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
-				this.secondaryShortcut1.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
-				this.secondaryShortcut2.EditedShortcutChanged -= new EventHandler(this.HandleShortcutEditedShortcutChanged);
+				this.primaryShortcut1.EditedShortcutChanged -= this.HandleShortcutEditedShortcutChanged;
+				this.primaryShortcut2.EditedShortcutChanged -= this.HandleShortcutEditedShortcutChanged;
+				this.secondaryShortcut1.EditedShortcutChanged -= this.HandleShortcutEditedShortcutChanged;
+				this.secondaryShortcut2.EditedShortcutChanged -= this.HandleShortcutEditedShortcutChanged;
 
-				this.primaryGroup.TextChanged -= new EventHandler(this.HandleGroupTextChanged);
+				this.primaryGroup.TextChanged -= this.HandleGroupTextChanged;
 				this.primaryGroup.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleEditKeyboardFocusChanged);
 				this.primaryGroup.ComboOpening -= new EventHandler<CancelEventArgs>(this.HandleGroupComboOpening);
 			}

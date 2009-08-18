@@ -2,6 +2,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
+	using MessageEventHandler=Support.EventHandler<MessageEventArgs>;
+
 	public enum PaneButtonStyle
 	{
 		Vertical,			// bouton |

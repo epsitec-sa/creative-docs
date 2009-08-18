@@ -25,10 +25,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
+			this.arrowUp.Engaged += this.HandleButton;
+			this.arrowDown.Engaged += this.HandleButton;
+			this.arrowUp.StillEngaged += this.HandleButton;
+			this.arrowDown.StillEngaged += this.HandleButton;
 			this.arrowUp.AutoRepeat = true;
 			this.arrowDown.AutoRepeat = true;
 		}
@@ -52,10 +52,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
+				this.arrowUp.Engaged -= this.HandleButton;
+				this.arrowDown.Engaged -= this.HandleButton;
+				this.arrowUp.StillEngaged -= this.HandleButton;
+				this.arrowDown.StillEngaged -= this.HandleButton;
 			}
 			
 			base.Dispose(disposing);

@@ -236,11 +236,11 @@ namespace Epsitec.Common.Drawing
 		[Test] public void CheckSystemInterop()
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
-			form.Paint += new System.Windows.Forms.PaintEventHandler(this.HandleFormPaint);
+			form.Paint += this.HandleFormPaint;
 			form.Width  = 800;
 			form.Height = 400;
 			form.Text   = "CheckSystemInterop";
-			form.SizeChanged += new System.EventHandler(this.HandleFormSizeChanged);
+			form.SizeChanged += this.HandleFormSizeChanged;
 			
 			form.Show ();
 		}

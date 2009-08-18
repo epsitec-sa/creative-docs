@@ -114,23 +114,23 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.fields[0].EditionAccepted   -= new EventHandler (this.HandleTextRgbChanged);
-				this.fields[1].EditionAccepted   -= new EventHandler (this.HandleTextRgbChanged);
-				this.fields[2].EditionAccepted   -= new EventHandler (this.HandleTextRgbChanged);
-				this.fields[3].EditionAccepted   -= new EventHandler (this.HandleTextAlphaChanged);
-				this.fields[4].EditionAccepted   -= new EventHandler (this.HandleTextHsvChanged);
-				this.fields[5].EditionAccepted   -= new EventHandler (this.HandleTextHsvChanged);
-				this.fields[6].EditionAccepted   -= new EventHandler (this.HandleTextHsvChanged);
-				this.fields[7].EditionAccepted   -= new EventHandler (this.HandleTextCmykChanged);
-				this.fields[8].EditionAccepted   -= new EventHandler (this.HandleTextCmykChanged);
-				this.fields[9].EditionAccepted   -= new EventHandler (this.HandleTextCmykChanged);
-				this.fields[10].EditionAccepted  -= new EventHandler (this.HandleTextCmykChanged);
-				this.fields[11].EditionAccepted  -= new EventHandler (this.HandleTextGrayChanged);
-				this.fieldHexa.EditionAccepted   -= new EventHandler (this.HandleTextHexaChanged);
-				this.wheel.Changed               -= new EventHandler (this.HandleWheelChanged);
-				this.palette.ExportSelectedColor -= new EventHandler (this.HandlePaletteExport);
-				this.palette.ImportSelectedColor -= new EventHandler (this.HandlePaletteImport);
-				this.picker.HotColorChanged      -= new EventHandler (this.HandlePickerHotColorChanged);
+				this.fields[0].EditionAccepted   -= this.HandleTextRgbChanged;
+				this.fields[1].EditionAccepted   -= this.HandleTextRgbChanged;
+				this.fields[2].EditionAccepted   -= this.HandleTextRgbChanged;
+				this.fields[3].EditionAccepted   -= this.HandleTextAlphaChanged;
+				this.fields[4].EditionAccepted   -= this.HandleTextHsvChanged;
+				this.fields[5].EditionAccepted   -= this.HandleTextHsvChanged;
+				this.fields[6].EditionAccepted   -= this.HandleTextHsvChanged;
+				this.fields[7].EditionAccepted   -= this.HandleTextCmykChanged;
+				this.fields[8].EditionAccepted   -= this.HandleTextCmykChanged;
+				this.fields[9].EditionAccepted   -= this.HandleTextCmykChanged;
+				this.fields[10].EditionAccepted  -= this.HandleTextCmykChanged;
+				this.fields[11].EditionAccepted  -= this.HandleTextGrayChanged;
+				this.fieldHexa.EditionAccepted   -= this.HandleTextHexaChanged;
+				this.wheel.Changed               -= this.HandleWheelChanged;
+				this.palette.ExportSelectedColor -= this.HandlePaletteExport;
+				this.palette.ImportSelectedColor -= this.HandlePaletteImport;
+				this.picker.HotColorChanged      -= this.HandlePickerHotColorChanged;
 			}
 
 			base.Dispose (disposing);
@@ -158,42 +158,42 @@ namespace Epsitec.Common.Widgets
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new EventHandler (this.HandleTextRgbChanged);
+					this.fields[i].EditionAccepted += this.HandleTextRgbChanged;
 				}
 				else if (i == 3)  // a ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new EventHandler (this.HandleTextAlphaChanged);
+					this.fields[i].EditionAccepted += this.HandleTextAlphaChanged;
 				}
 				else if (i == 4)  // t ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 360;
 					this.fields[i].Step = 10;
-					this.fields[i].EditionAccepted += new EventHandler (this.HandleTextHsvChanged);
+					this.fields[i].EditionAccepted += this.HandleTextHsvChanged;
 				}
 				else if (i < 7)  // s,i ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new EventHandler (this.HandleTextHsvChanged);
+					this.fields[i].EditionAccepted += this.HandleTextHsvChanged;
 				}
 				else if (i< 11)  // c,m,y,k ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new EventHandler (this.HandleTextCmykChanged);
+					this.fields[i].EditionAccepted += this.HandleTextCmykChanged;
 				}
 				else	// g ?
 				{
 					this.fields[i].MinValue = 0;
 					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].EditionAccepted += new EventHandler (this.HandleTextGrayChanged);
+					this.fields[i].EditionAccepted += this.HandleTextGrayChanged;
 				}
 			}
 
@@ -269,35 +269,35 @@ namespace Epsitec.Common.Widgets
 			this.fieldHexa.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
 			this.fieldHexa.AutoSelectOnFocus = true;
 			this.fieldHexa.SwallowEscape = true;
-			this.fieldHexa.EditionAccepted += new EventHandler (this.HandleTextHexaChanged);
+			this.fieldHexa.EditionAccepted += this.HandleTextHexaChanged;
 			this.fieldHexa.TabIndex = 200;
 			this.fieldHexa.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.fieldHexa, Res.Strings.ColorSelector.LongHexa);
 
 			this.wheel = new ColorWheel (this);
-			this.wheel.Changed += new EventHandler (this.HandleWheelChanged);
+			this.wheel.Changed += this.HandleWheelChanged;
 
 			this.palette = new ColorPalette (this);
 			this.palette.OptionButtonVisibility = true;
-			this.palette.ExportSelectedColor += new EventHandler (this.HandlePaletteExport);
-			this.palette.ImportSelectedColor += new EventHandler (this.HandlePaletteImport);
+			this.palette.ExportSelectedColor += this.HandlePaletteExport;
+			this.palette.ImportSelectedColor += this.HandlePaletteImport;
 			this.palette.TabIndex = 10;
 			this.palette.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.picker = new Tools.MagnifierDragSource (this);
-			this.picker.HotColorChanged += new EventHandler (this.HandlePickerHotColorChanged);
+			this.picker.HotColorChanged += this.HandlePickerHotColorChanged;
 			ToolTip.Default.SetToolTip (this.picker, Res.Strings.ColorSelector.Picker);
 
 			this.closeButton = new GlyphButton (this);
 			this.closeButton.GlyphShape = GlyphShape.Close;
 			this.closeButton.ButtonStyle = ButtonStyle.Normal;
-			this.closeButton.Clicked += new MessageEventHandler (this.HandleButtonCloseClicked);
+			this.closeButton.Clicked += this.HandleButtonCloseClicked;
 			this.closeButton.TabIndex = 1;
 			this.closeButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip (this.closeButton, Res.Strings.ColorSelector.Close);
 
 			this.colorSpaceController = Helpers.GroupController.GetGroupController (this, "ColorSpace");
-			this.colorSpaceController.Changed += new EventHandler (this.HandleColorSpaceChanged);
+			this.colorSpaceController.Changed += this.HandleColorSpaceChanged;
 
 			this.buttonRgb = new IconButton (this);
 			this.buttonRgb.AutoRadio = true;

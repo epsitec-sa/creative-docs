@@ -48,9 +48,9 @@ namespace Epsitec.Common.Document.Containers
 			this.graphicList.MinSize = new Size(10, 87);
 			this.graphicList.Dock = DockStyle.Fill;
 			this.graphicList.Margins = new Margins(0, 0, 0, 0);
-			this.graphicList.FinalSelectionChanged += new EventHandler(this.HandleAggregatesTableSelectionChanged);
-			this.graphicList.FlyOverChanged += new EventHandler(this.HandleAggregatesTableFlyOverChanged);
-			this.graphicList.DoubleClicked += new MessageEventHandler(this.HandleAggregatesTableDoubleClicked);
+			this.graphicList.FinalSelectionChanged += this.HandleAggregatesTableSelectionChanged;
+			this.graphicList.FlyOverChanged += this.HandleAggregatesTableFlyOverChanged;
+			this.graphicList.DoubleClicked += this.HandleAggregatesTableDoubleClicked;
 			this.graphicList.TabIndex = 2;
 			this.graphicList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -64,8 +64,8 @@ namespace Epsitec.Common.Document.Containers
 			this.paragraphList.MinSize = new Size(10, 87);
 			this.paragraphList.Dock = DockStyle.Fill;
 			this.paragraphList.Margins = new Margins(0, 0, 0, 0);
-			this.paragraphList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
-			this.paragraphList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
+			this.paragraphList.FinalSelectionChanged += this.HandleStylesTableSelectionChanged;
+			this.paragraphList.DoubleClicked += this.HandleStylesTableDoubleClicked;
 			this.paragraphList.TabIndex = 2;
 			this.paragraphList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Document.Containers
 			this.characterList.MinSize = new Size(10, 87);
 			this.characterList.Dock = DockStyle.Fill;
 			this.characterList.Margins = new Margins(0, 0, 0, 0);
-			this.characterList.FinalSelectionChanged += new EventHandler(this.HandleStylesTableSelectionChanged);
-			this.characterList.DoubleClicked += new MessageEventHandler(this.HandleStylesTableDoubleClicked);
+			this.characterList.FinalSelectionChanged += this.HandleStylesTableSelectionChanged;
+			this.characterList.DoubleClicked += this.HandleStylesTableDoubleClicked;
 			this.characterList.TabIndex = 2;
 			this.characterList.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
 			this.colorSelector.CloseButtonVisibility = true;
 			this.colorSelector.ColorChanged += new EventHandler<DependencyPropertyChangedEventArgs>(this.HandleColorSelectorChanged);
-			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
+			this.colorSelector.CloseClicked += this.HandleColorSelectorClosed;
 			this.colorSelector.SetParent(this.bottomScrollable.Viewport);
 			this.colorSelector.Dock = DockStyle.Top;
 			this.colorSelector.Margins = new Margins(1, 3, 5, 2);
@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryGraphic.Margins = new Margins(0, 0, 0, 0);
 			this.categoryGraphic.TabIndex = this.index++;
 			this.categoryGraphic.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-			this.categoryGraphic.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
+			this.categoryGraphic.Clicked += this.HandleCategoryChanged;
 
 			this.categoryParagraph = new IconButtonMark(this.categoryContainer);
 			this.categoryParagraph.Name = "Paragraph";
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryParagraph.Margins = new Margins(0, 0, 0, 0);
 			this.categoryParagraph.TabIndex = this.index++;
 			this.categoryParagraph.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-			this.categoryParagraph.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
+			this.categoryParagraph.Clicked += this.HandleCategoryChanged;
 
 			this.categoryCharacter = new IconButtonMark(this.categoryContainer);
 			this.categoryCharacter.Name = "Character";
@@ -170,7 +170,7 @@ namespace Epsitec.Common.Document.Containers
 			this.categoryCharacter.Margins = new Margins(0, 0, 0, 0);
 			this.categoryCharacter.TabIndex = this.index++;
 			this.categoryCharacter.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
-			this.categoryCharacter.Clicked += new MessageEventHandler(this.HandleCategoryChanged);
+			this.categoryCharacter.Clicked += this.HandleCategoryChanged;
 
 			this.SetCategory("Graphic");
 		}
@@ -187,28 +187,28 @@ namespace Epsitec.Common.Document.Containers
 			this.index = 0;
 
 			this.buttonAggregateNewEmpty = new IconButton(Misc.Icon("AggregateNewEmpty"));
-			this.buttonAggregateNewEmpty.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewEmpty);
+			this.buttonAggregateNewEmpty.Clicked += this.HandleButtonAggregateNewEmpty;
 			this.buttonAggregateNewEmpty.TabIndex = this.index++;
 			this.buttonAggregateNewEmpty.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateNewEmpty);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNewEmpty, Res.Strings.Action.AggregateNewEmpty);
 
 			this.buttonAggregateNew3 = new IconButton(Misc.Icon("AggregateNew3"));
-			this.buttonAggregateNew3.Clicked += new MessageEventHandler(this.HandleButtonAggregateNew3);
+			this.buttonAggregateNew3.Clicked += this.HandleButtonAggregateNew3;
 			this.buttonAggregateNew3.TabIndex = this.index++;
 			this.buttonAggregateNew3.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateNew3);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNew3, Res.Strings.Action.AggregateNew3);
 
 			this.buttonAggregateNewAll = new IconButton(Misc.Icon("AggregateNewAll"));
-			this.buttonAggregateNewAll.Clicked += new MessageEventHandler(this.HandleButtonAggregateNewAll);
+			this.buttonAggregateNewAll.Clicked += this.HandleButtonAggregateNewAll;
 			this.buttonAggregateNewAll.TabIndex = this.index++;
 			this.buttonAggregateNewAll.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateNewAll);
 			ToolTip.Default.SetToolTip(this.buttonAggregateNewAll, Res.Strings.Action.AggregateNewAll);
 
 			this.buttonAggregateDuplicate = new IconButton(Misc.Icon("AggregateDuplicate"));
-			this.buttonAggregateDuplicate.Clicked += new MessageEventHandler(this.HandleButtonAggregateDuplicate);
+			this.buttonAggregateDuplicate.Clicked += this.HandleButtonAggregateDuplicate;
 			this.buttonAggregateDuplicate.TabIndex = this.index++;
 			this.buttonAggregateDuplicate.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDuplicate);
@@ -217,14 +217,14 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateToolBar.Items.Add(new IconSeparator());
 
 			this.buttonAggregateUp = new IconButton(Misc.Icon("AggregateUp"));
-			this.buttonAggregateUp.Clicked += new MessageEventHandler(this.HandleButtonAggregateUp);
+			this.buttonAggregateUp.Clicked += this.HandleButtonAggregateUp;
 			this.buttonAggregateUp.TabIndex = this.index++;
 			this.buttonAggregateUp.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateUp);
 			ToolTip.Default.SetToolTip(this.buttonAggregateUp, Res.Strings.Action.AggregateUp);
 
 			this.buttonAggregateDown = new IconButton(Misc.Icon("AggregateDown"));
-			this.buttonAggregateDown.Clicked += new MessageEventHandler(this.HandleButtonAggregateDown);
+			this.buttonAggregateDown.Clicked += this.HandleButtonAggregateDown;
 			this.buttonAggregateDown.TabIndex = this.index++;
 			this.buttonAggregateDown.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDown);
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Document.Containers
 			this.aggregateToolBar.Items.Add(new IconSeparator());
 
 			this.buttonAggregateDelete = new IconButton(Misc.Icon("AggregateDelete"));
-			this.buttonAggregateDelete.Clicked += new MessageEventHandler(this.HandleButtonAggregateDelete);
+			this.buttonAggregateDelete.Clicked += this.HandleButtonAggregateDelete;
 			this.buttonAggregateDelete.TabIndex = this.index++;
 			this.buttonAggregateDelete.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.aggregateToolBar.Items.Add(this.buttonAggregateDelete);
@@ -260,7 +260,7 @@ namespace Epsitec.Common.Document.Containers
 			this.dummyChildren.IsReadOnly = true;
 			this.dummyChildren.PreferredWidth = 185;
 			this.dummyChildren.Margins = new Margins(0, 0, 1, 1);
-			this.dummyChildren.ComboOpenPressed += new EventHandler(this.HandleMenuChildrenOpenPressed);
+			this.dummyChildren.ComboOpenPressed += this.HandleMenuChildrenOpenPressed;
 			this.childrenToolBar.Items.Add(this.dummyChildren);
 			ToolTip.Default.SetToolTip(this.dummyChildren, Res.Strings.Panel.AggregateChildren.Tooltip.Name);
 
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name = new TextField();
 			this.name.PreferredWidth = 110;
 			this.name.Margins = new Margins(0, 0, 1, 1);
-			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.name.TextChanged += this.HandleNameTextChanged;
 			this.name.AutoSelectOnFocus = true;
 			this.name.TabIndex = 1;
 			this.name.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleDelete = new IconButton(this.selectorContainer);
 			this.buttonStyleDelete.IconName = Misc.Icon("AggregateStyleDelete");
 			this.buttonStyleDelete.AutoFocus = false;
-			this.buttonStyleDelete.Clicked += new MessageEventHandler(this.HandleButtonStyleDelete);
+			this.buttonStyleDelete.Clicked += this.HandleButtonStyleDelete;
 			this.buttonStyleDelete.Dock = DockStyle.Right;
 			this.buttonStyleDelete.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleDelete.TabIndex = 3;
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonStyleNew = new IconButton(this.selectorContainer);
 			this.buttonStyleNew.IconName = Misc.Icon("AggregateStyleNew");
 			this.buttonStyleNew.AutoFocus = false;
-			this.buttonStyleNew.Pressed += new MessageEventHandler(this.HandleButtonStyleNew);
+			this.buttonStyleNew.Pressed += this.HandleButtonStyleNew;
 			this.buttonStyleNew.Dock = DockStyle.Right;
 			this.buttonStyleNew.Margins = new Margins(0, 0, 0, 6);
 			this.buttonStyleNew.TabIndex = 2;
@@ -613,7 +613,7 @@ namespace Epsitec.Common.Document.Containers
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Dock = DockStyle.Left;
 			button.ActiveState = (name == this.SelectorName) ? ActiveState.Yes : ActiveState.No;
-			button.Clicked += new MessageEventHandler(this.HandleSelectorClicked);
+			button.Clicked += this.HandleSelectorClicked;
 			ToolTip.Default.SetToolTip(button, text);
 			return button;
 		}
@@ -764,8 +764,8 @@ namespace Epsitec.Common.Document.Containers
 					this.panel.Property = property;
 					this.panel.IsExtendedSize = true;
 					this.panel.IsLayoutDirect = true;
-					this.panel.Changed += new EventHandler(this.HandlePanelChanged);
-					this.panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+					this.panel.Changed += this.HandlePanelChanged;
+					this.panel.OriginColorChanged += this.HandleOriginColorChanged;
 					this.panel.SetParent(this.panelContainer);
 					this.panel.Dock = DockStyle.Fill;
 					this.panel.TabIndex = 1;
@@ -809,8 +809,8 @@ namespace Epsitec.Common.Document.Containers
 				{
 					this.textPanel = panel;
 					this.textPanel.IsExtendedSize = true;
-					this.textPanel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-					this.textPanel.OriginColorClosed += new EventHandler(this.HandleOriginColorClosed);
+					this.textPanel.OriginColorChanged += this.HandleOriginColorChanged;
+					this.textPanel.OriginColorClosed += this.HandleOriginColorClosed;
 					this.textPanel.SetParent(this.panelContainer);
 					this.textPanel.Dock = DockStyle.Fill;
 					this.textPanel.TabIndex = 1;
@@ -843,8 +843,8 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.panel != null )
 			{
-				this.panel.Changed -= new EventHandler(this.HandlePanelChanged);
-				this.panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+				this.panel.Changed -= this.HandlePanelChanged;
+				this.panel.OriginColorChanged -= this.HandleOriginColorChanged;
 				this.panel.Dispose();
 				this.panel = null;
 			}
@@ -854,8 +854,8 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Wrappers.StyleTextWrapper.Detach();
 				this.document.Wrappers.StyleParagraphWrapper.Detach();
 
-				this.textPanel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
-				this.textPanel.OriginColorClosed -= new EventHandler(this.HandleOriginColorClosed);
+				this.textPanel.OriginColorChanged -= this.HandleOriginColorChanged;
+				this.textPanel.OriginColorClosed -= this.HandleOriginColorClosed;
 				this.textPanel.Dispose();
 				this.textPanel = null;
 			}
@@ -1460,7 +1460,7 @@ namespace Epsitec.Common.Document.Containers
 				string line = string.Format("{0}   {1}",icon, text);
 				MenuItem item = new MenuItem("", "", line, "", Properties.Abstract.TypeName(type));
 				item.Enable = enable;
-				item.Pressed += new MessageEventHandler(this.HandleMenuTypesPressed);
+				item.Pressed += this.HandleMenuTypesPressed;
 				menu.Items.Add(item);
 			}
 			menu.AdjustSize();
@@ -1508,7 +1508,7 @@ namespace Epsitec.Common.Document.Containers
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = agg.AggregateName;
 					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
+					item.Pressed += this.HandleMenuChildrenPressed;
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1533,7 +1533,7 @@ namespace Epsitec.Common.Document.Containers
 					string icon = Misc.Icon(active ? "RadioYes" : "RadioNo");
 					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", i.ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
+					item.Pressed += this.HandleMenuChildrenPressed;
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1556,7 +1556,7 @@ namespace Epsitec.Common.Document.Containers
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
+					item.Pressed += this.HandleMenuChildrenPressed;
 					menu.Items.Add(item);
 					used ++;
 				}
@@ -1580,7 +1580,7 @@ namespace Epsitec.Common.Document.Containers
 					string icon = Misc.Icon(active ? "ActiveYes" : "ActiveNo");
 					string line = Misc.UserTextStyleName(this.document.TextContext.StyleList.StyleMap.GetCaption(style));
 					MenuItem item = new MenuItem("ChildrenNew", icon, line, "", (i+10000).ToString(System.Globalization.CultureInfo.InvariantCulture));
-					item.Pressed += new MessageEventHandler(this.HandleMenuChildrenPressed);
+					item.Pressed += this.HandleMenuChildrenPressed;
 					menu.Items.Add(item);
 					used ++;
 				}

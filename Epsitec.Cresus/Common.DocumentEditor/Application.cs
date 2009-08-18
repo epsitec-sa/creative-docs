@@ -60,9 +60,9 @@ namespace Epsitec.Common.DocumentEditor
 
 			window.IsValidDropTarget = true;
 			window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", typeof (Application).Assembly);
-			window.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
-			window.WindowDragEntered += new WindowDragEventHandler(this.HandleMainWindowWindowDragEntered);
-			window.WindowDragDropped += new WindowDragEventHandler(this.HandleMainWindowWindowDragDropped);
+			window.AsyncNotification += this.HandleWindowAsyncNotification;
+			window.WindowDragEntered += this.HandleMainWindowWindowDragEntered;
+			window.WindowDragDropped += this.HandleMainWindowWindowDragDropped;
 			
 			if ( type == DocumentType.Graphic )
 			{

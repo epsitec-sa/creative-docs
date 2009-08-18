@@ -73,7 +73,7 @@ namespace Epsitec.Common.Designer
 
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				access.DirtyChanged += new EventHandler(this.HandleAccessDirtyChanged);
+				access.DirtyChanged += this.HandleAccessDirtyChanged;
 			}
 		}
 
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer
 		{
 			foreach (ResourceAccess access in this.Accesses)
 			{
-				access.DirtyChanged -= new EventHandler(this.HandleAccessDirtyChanged);
+				access.DirtyChanged -= this.HandleAccessDirtyChanged;
 			}
 
 			this.modifier.Dispose();

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;
-			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
+			this.scroller.ValueChanged += this.HandleScrollerValueChanged;
 		}
 
 		public StringArray(Widget embedder) : this()
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if (disposing)
 			{
-				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.scroller.ValueChanged -= this.HandleScrollerValueChanged;
 			}
 
 			base.Dispose(disposing);
@@ -58,11 +58,11 @@ namespace Epsitec.Common.Designer.MyWidgets
 				{
 					for (int i=0; i<this.columns.Length; i++)
 					{
-						this.columns[i].DraggingCellSelectionChanged -= new EventHandler(this.HandleDraggingCellSelectionChanged);
-						this.columns[i].FinalCellSelectionChanged -= new EventHandler(this.HandleFinalCellSelectionChanged);
-						this.columns[i].DoubleClicked -= new MessageEventHandler(this.HandleDoubleClicked);
+						this.columns[i].DraggingCellSelectionChanged -= this.HandleDraggingCellSelectionChanged;
+						this.columns[i].FinalCellSelectionChanged -= this.HandleFinalCellSelectionChanged;
+						this.columns[i].DoubleClicked -= this.HandleDoubleClicked;
 					}
-					this.columns[this.columns.Length-1].CellCountChanged -= new EventHandler(this.HandleCellCountChanged);
+					this.columns[this.columns.Length-1].CellCountChanged -= this.HandleCellCountChanged;
 
 					for (int i=0; i<this.columns.Length; i++)
 					{
@@ -77,12 +77,12 @@ namespace Epsitec.Common.Designer.MyWidgets
 				for (int i=0; i<this.columns.Length; i++)
 				{
 					this.columns[i] = new StringList(this);
-					this.columns[i].DraggingCellSelectionChanged += new EventHandler(this.HandleDraggingCellSelectionChanged);
-					this.columns[i].FinalCellSelectionChanged += new EventHandler(this.HandleFinalCellSelectionChanged);
-					this.columns[i].DoubleClicked += new MessageEventHandler(this.HandleDoubleClicked);
+					this.columns[i].DraggingCellSelectionChanged += this.HandleDraggingCellSelectionChanged;
+					this.columns[i].FinalCellSelectionChanged += this.HandleFinalCellSelectionChanged;
+					this.columns[i].DoubleClicked += this.HandleDoubleClicked;
 					ToolTip.Default.SetToolTip(this.columns[i], "*");
 				}
-				this.columns[this.columns.Length-1].CellCountChanged += new EventHandler(this.HandleCellCountChanged);
+				this.columns[this.columns.Length-1].CellCountChanged += this.HandleCellCountChanged;
 			}
 		}
 

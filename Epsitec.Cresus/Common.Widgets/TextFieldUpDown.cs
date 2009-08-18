@@ -21,10 +21,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.UpDown;
 			this.arrowDown.ButtonStyle = ButtonStyle.UpDown;
-			this.arrowUp.Engaged += new EventHandler (this.HandleButton);
-			this.arrowDown.Engaged += new EventHandler (this.HandleButton);
-			this.arrowUp.StillEngaged += new EventHandler (this.HandleButton);
-			this.arrowDown.StillEngaged += new EventHandler (this.HandleButton);
+			this.arrowUp.Engaged += this.HandleButton;
+			this.arrowDown.Engaged += this.HandleButton;
+			this.arrowUp.StillEngaged += this.HandleButton;
+			this.arrowDown.StillEngaged += this.HandleButton;
 			this.arrowUp.AutoRepeat = true;
 			this.arrowDown.AutoRepeat = true;
 
@@ -278,14 +278,14 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.arrowUp != null)
 				{
-					this.arrowUp.Engaged -= new EventHandler (this.HandleButton);
-					this.arrowUp.StillEngaged -= new EventHandler (this.HandleButton);
+					this.arrowUp.Engaged -= this.HandleButton;
+					this.arrowUp.StillEngaged -= this.HandleButton;
 					this.arrowUp.Dispose ();
 				}
 				if (this.arrowDown != null)
 				{
-					this.arrowDown.Engaged -= new EventHandler (this.HandleButton);
-					this.arrowDown.StillEngaged -= new EventHandler (this.HandleButton);
+					this.arrowDown.Engaged -= this.HandleButton;
+					this.arrowDown.StillEngaged -= this.HandleButton;
 					this.arrowDown.Dispose ();
 				}
 

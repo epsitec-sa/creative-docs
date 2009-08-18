@@ -29,7 +29,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.window.Text = Res.Strings.Dialog.Infos.Title;
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", this.GetType ().Assembly);
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowInfosCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowInfosCloseClicked;
 				this.window.Root.MinSize = new Size(160, 100);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -51,7 +51,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				buttonClose.ButtonStyle = ButtonStyle.DefaultAcceptAndCancel;
 				buttonClose.Anchor = AnchorStyles.BottomRight;
 				buttonClose.Margins = new Margins(0, 6, 0, 6);
-				buttonClose.Clicked += new MessageEventHandler(this.HandleInfosButtonCloseClicked);
+				buttonClose.Clicked += this.HandleInfosButtonCloseClicked;
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, Res.Strings.Dialog.Tooltip.Close);

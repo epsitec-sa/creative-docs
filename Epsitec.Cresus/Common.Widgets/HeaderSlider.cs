@@ -2,6 +2,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
+	using MessageEventHandler=Support.EventHandler<MessageEventArgs>;
+
 	public enum HeaderSliderStyle
 	{
 		Top,			// bouton dans en-tête supérieure

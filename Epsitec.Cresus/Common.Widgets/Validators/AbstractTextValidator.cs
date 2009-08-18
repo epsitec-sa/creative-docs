@@ -29,14 +29,14 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			base.AttachWidget (widget);
 			
-			widget.TextChanged += new Support.EventHandler (this.HandleWidgetTextChanged);
+			widget.TextChanged += this.HandleWidgetTextChanged;
 		}
 		
 		protected override void DetachWidget(Widget widget)
 		{
 			base.DetachWidget (widget);
 			
-			widget.TextChanged -= new Support.EventHandler (this.HandleWidgetTextChanged);
+			widget.TextChanged -= this.HandleWidgetTextChanged;
 		}
 		
 		

@@ -27,22 +27,22 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.GlyphShape = GlyphShape.ArrowRight;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowRight.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowLeft.Engaged += new EventHandler(this.HandleScrollButton);
-			this.arrowRight.Engaged += new EventHandler(this.HandleScrollButton);
-			this.arrowLeft.StillEngaged += new EventHandler(this.HandleScrollButton);
-			this.arrowRight.StillEngaged += new EventHandler(this.HandleScrollButton);
+			this.arrowLeft.Engaged       += this.HandleScrollButton;
+			this.arrowRight.Engaged      += this.HandleScrollButton;
+			this.arrowLeft.StillEngaged  += this.HandleScrollButton;
+			this.arrowRight.StillEngaged += this.HandleScrollButton;
 			this.arrowLeft.AutoRepeat = true;
 			this.arrowRight.AutoRepeat = true;
 
 			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Scroller;
-			this.buttonMenu.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
+			this.buttonMenu.Clicked += this.HandleButtonMenuClicked;
 
 			this.buttonClose = new GlyphButton(this);
 			this.buttonClose.GlyphShape = GlyphShape.Close;
 			this.buttonClose.ButtonStyle = ButtonStyle.Scroller;
-			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+			this.buttonClose.Clicked += this.HandleButtonCloseClicked;
 			
 			this.TabNavigationMode = TabNavigationMode.ForwardTabActive;
 		}
@@ -57,12 +57,12 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowLeft.Engaged -= new EventHandler(this.HandleScrollButton);
-				this.arrowRight.Engaged -= new EventHandler(this.HandleScrollButton);
-				this.arrowLeft.StillEngaged -= new EventHandler(this.HandleScrollButton);
-				this.arrowRight.StillEngaged -= new EventHandler(this.HandleScrollButton);
-				this.buttonClose.Clicked -= new MessageEventHandler(this.HandleButtonCloseClicked);
-				this.buttonMenu.Clicked -= new MessageEventHandler(this.HandleButtonMenuClicked);
+				this.arrowLeft.Engaged       -= this.HandleScrollButton;
+				this.arrowRight.Engaged      -= this.HandleScrollButton;
+				this.arrowLeft.StillEngaged  -= this.HandleScrollButton;
+				this.arrowRight.StillEngaged -= this.HandleScrollButton;
+				this.buttonClose.Clicked     -= this.HandleButtonCloseClicked;
+				this.buttonMenu.Clicked      -= this.HandleButtonMenuClicked;
 				
 				TabPage[] pages = new TabPage[this.items.Count];
 				this.items.CopyTo (pages, 0);
@@ -836,8 +836,8 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (oldBook == this);
 			
 			item.TabButton.SetParent (this);
-			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
+			item.TabButton.Pressed += this.HandleTabButton;
+			item.RankChanged += this.HandlePageRankChanged;
 			this.isRefreshNeeded = true;
 			
 			this.UpdateVisiblePages();
@@ -849,8 +849,8 @@ namespace Epsitec.Common.Widgets
 		{
 			int index = item.Index;
 
-			item.TabButton.Pressed -= new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
+			item.TabButton.Pressed -= this.HandleTabButton;
+			item.RankChanged -= this.HandlePageRankChanged;
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.TabButton);

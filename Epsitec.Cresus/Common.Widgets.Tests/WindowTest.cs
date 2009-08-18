@@ -21,10 +21,10 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = new Window ();
 			
-			window.Root.Clicked += new MessageEventHandler(Root_Clicked);
-			window.Root.DoubleClicked += new MessageEventHandler(Root_DoubleClicked);
+			window.Root.Clicked += Root_Clicked;
+			window.Root.DoubleClicked += Root_DoubleClicked;
 			window.Root.Text = "Hel<m>l</m>o";
-			window.Root.ShortcutPressed += new EventHandler(Root_ShortcutPressed);
+			window.Root.ShortcutPressed += Root_ShortcutPressed;
 			
 			window.Text = "CheckFrameCreation";
 			window.Show ();
@@ -81,8 +81,8 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = new Window ();
 			window.MakeFramelessWindow ();
-			window.WindowActivated += new EventHandler(window_Activated);
-			window.WindowDeactivated += new EventHandler(window_Deactivated);
+			window.WindowActivated += window_Activated;
+			window.WindowDeactivated += window_Deactivated;
 			window.WindowBounds = new Rectangle (ox+10, oy+30, 50, 10);
 			window.Root.BackColor = Color.FromRgb (1, 0, 0);
 			window.Show ();
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Widgets
 			button.SetManualBounds(new Rectangle (10, 10, 60, 24));
 			button.Text = "Test";
 			button.SetParent (back);
-			button.Clicked += new MessageEventHandler(button_Clicked);
+			button.Clicked += button_Clicked;
 			
 			scroller.SetManualBounds(new Rectangle (80, 10, 17, 180));
 			scroller.MaxValue = 1.0M;
@@ -168,7 +168,7 @@ namespace Epsitec.Common.Widgets
 			scroller.SmallChange = 0.01M;
 			scroller.LargeChange = 0.10M;
 			scroller.SetParent (back);
-			scroller.ValueChanged += new EventHandler(scroller_ValueChanged);
+			scroller.ValueChanged += scroller_ValueChanged;
 			
 			window.Show ();
 			window.Root.Invalidate ();
@@ -176,8 +176,8 @@ namespace Epsitec.Common.Widgets
 
 		[Test] public void CheckAppActivation()
 		{
-			Window.ApplicationActivated   += new EventHandler(Window_ApplicationActivated);
-			Window.ApplicationDeactivated += new EventHandler(Window_ApplicationDeactivated);
+			Window.ApplicationActivated   += Window_ApplicationActivated;
+			Window.ApplicationDeactivated += Window_ApplicationDeactivated;
 		}
 
 		[Test] public void CheckWindowList()
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Widgets
 			button.SetParent (window.Root);
 			button.SetManualBounds(new Rectangle (10, 10, 80, 24));
 			button.Text   = "Test";
-			button.Clicked += new MessageEventHandler(AlphaTestButtonClicked);
+			button.Clicked += AlphaTestButtonClicked;
 			
 			window.WindowLocation = new Point (3840 + 20, 1000);
 			

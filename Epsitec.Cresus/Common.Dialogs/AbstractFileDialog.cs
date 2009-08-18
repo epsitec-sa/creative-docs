@@ -301,7 +301,7 @@ namespace Epsitec.Common.Dialogs
 
 			this.SetWindowGeometry (windowSize.Width, windowSize.Height, true);
 
-			this.window.WindowCloseClicked += new EventHandler (this.HandleWindowCloseClicked);
+			this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 
 			this.timer = new Timer ();
 			this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
@@ -676,8 +676,8 @@ namespace Epsitec.Common.Dialogs
 			this.fieldRename = new TextFieldEx (this.window.Root);
 			this.fieldRename.Visibility = false;
 			this.fieldRename.ButtonShowCondition = ButtonShowCondition.Always;
-			this.fieldRename.EditionAccepted += new EventHandler (this.HandleRenameAccepted);
-			this.fieldRename.EditionRejected += new EventHandler (this.HandleRenameRejected);
+			this.fieldRename.EditionAccepted += this.HandleRenameAccepted;
+			this.fieldRename.EditionRejected += this.HandleRenameRejected;
 			this.fieldRename.SwallowEscape = true;
 			this.fieldRename.SwallowReturn = true;
 			this.fieldRename.IsModal = true;
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Dialogs
 			this.toolbarExtend.TabNavigationMode = TabNavigationMode.None;
 			this.toolbarExtend.Dock = DockStyle.Left;
 			this.toolbarExtend.Margins = new Margins (0, 0, 2, 2);
-			this.toolbarExtend.Clicked += new MessageEventHandler (this.HandleToolbarExtendClicked);
+			this.toolbarExtend.Clicked += this.HandleToolbarExtendClicked;
 			ToolTip.Default.SetToolTip (this.toolbarExtend, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.ExtendToolbar);
 
 			StaticText label = new StaticText (group);
@@ -802,7 +802,7 @@ namespace Epsitec.Common.Dialogs
 			this.slider.SmallChange = 1.0M;
 			this.slider.LargeChange = 10.0M;
 			this.slider.Resolution = 1.0M;
-			this.slider.ValueChanged += new EventHandler (this.HandleSliderChanged);
+			this.slider.ValueChanged += this.HandleSliderChanged;
 			ToolTip.Default.SetToolTip (this.slider, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.PreviewSize);
 			this.toolbar.Items.Add (this.slider);
 
@@ -878,7 +878,7 @@ namespace Epsitec.Common.Dialogs
 			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 			this.buttonCancel.Dock = DockStyle.Right;
 			this.buttonCancel.Margins = new Margins (6, 0, 0, 0);
-			this.buttonCancel.Clicked += new MessageEventHandler (this.HandleButtonCancelClicked);
+			this.buttonCancel.Clicked += this.HandleButtonCancelClicked;
 			this.buttonCancel.TabIndex = 2;
 			this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Dialogs
 			this.buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
 			this.buttonOk.Dock = DockStyle.Right;
 			this.buttonOk.Margins = new Margins (6, 0, 0, 0);
-			this.buttonOk.Clicked += new MessageEventHandler (this.HandleButtonOkClicked);
+			this.buttonOk.Clicked += this.HandleButtonOkClicked;
 			this.buttonOk.TabIndex = 1;
 			this.buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.buttonOk.Enable = false;
@@ -988,7 +988,7 @@ namespace Epsitec.Common.Dialogs
 				if (widget is FileButton)
 				{
 					FileButton f = widget as FileButton;
-					f.Clicked -= new MessageEventHandler (this.HandleFavoriteClicked);
+					f.Clicked -= this.HandleFavoriteClicked;
 				}
 
 				widget.Dispose ();
@@ -1064,7 +1064,7 @@ namespace Epsitec.Common.Dialogs
 			f.PreferredHeight = (this.favoritesBigState.ActiveState == ActiveState.Yes) ? Common.Widgets.FileButton.ExtendedHeight : Common.Widgets.FileButton.CompactHeight;
 			f.Name = this.favoritesList.Count.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			f.Dock = DockStyle.Top;
-			f.Clicked += new MessageEventHandler (this.HandleFavoriteClicked);
+			f.Clicked += this.HandleFavoriteClicked;
 
 			if (string.IsNullOrEmpty (item.FullPath))
 			{

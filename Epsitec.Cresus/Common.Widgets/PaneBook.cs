@@ -803,25 +803,25 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
 			
 			item.PaneButton.SetParent (this);
-			item.PaneButton.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
-			item.PaneButton.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
-			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged += new EventHandler(this.HandlePageRankChanged);
+			item.PaneButton.DragStarted += this.HandleSliderDragStarted;
+			item.PaneButton.DragMoved   += this.HandleSliderDragMoved;
+			item.PaneButton.DragEnded   += this.HandleSliderDragEnded;
+			item.RankChanged += this.HandlePageRankChanged;
 			
 			item.GlyphButton.SetParent (this);
-			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
+			item.GlyphButton.Clicked += this.HandleGlyphButtonClicked;
 
 			this.UpdatePaneButtons();
 		}
 
 		public void NotifyRemoval(PanePage item)
 		{
-			item.PaneButton.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
-			item.PaneButton.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
-			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged -= new EventHandler(this.HandlePageRankChanged);
+			item.PaneButton.DragStarted -= this.HandleSliderDragStarted;
+			item.PaneButton.DragMoved   -= this.HandleSliderDragMoved;
+			item.PaneButton.DragEnded   -= this.HandleSliderDragEnded;
+			item.RankChanged -= this.HandlePageRankChanged;
 
-			item.GlyphButton.Clicked -= new MessageEventHandler(this.HandleGlyphButtonClicked);
+			item.GlyphButton.Clicked -= this.HandleGlyphButtonClicked;
 
 			this.Children.Remove(item);
 

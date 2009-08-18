@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Proxies
 			value.Type = type;
 			value.Caption = caption;
 			value.NameToCreate = nameToCreate;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			value.ValueChanged += this.HandleValueChanged;
 			this.SendObjectToValue(value);
 
 			list.Add(value);
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Designer.Proxies
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			value.ValueChanged += this.HandleValueChanged;
 			this.SendObjectToValue(value);
 
 			list.Add(value);
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Designer.Proxies
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			value.ValueChanged += this.HandleValueChanged;
 			this.SendObjectToValue(value);
 
 			list.Add(value);
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Designer.Proxies
 			value.SelectedObjects.Add(selectedObject);
 			value.Type = type;
 			value.Caption = caption;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			value.ValueChanged += this.HandleValueChanged;
 			this.SendObjectToValue(value);
 
 			list.Add(value);
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Designer.Proxies
 			value.IsChoiceByMenu = isChoiceByMenu;
 			value.Type = type;
 			value.Caption = caption;
-			value.ValueChanged += new EventHandler(this.HandleValueChanged);
+			value.ValueChanged += this.HandleValueChanged;
 			this.SendObjectToValue(value);
 
 			list.Add(value);

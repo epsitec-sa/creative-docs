@@ -19,37 +19,37 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupToolbar = new ResetBox(this);
 			this.groupToolbar.IsPatch = this.module.IsPatch;
 			this.groupToolbar.Dock = DockStyle.StackBegin;
-			this.groupToolbar.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupToolbar.ResetButton.Clicked += this.HandleResetButtonClicked;
 
 			this.toolbar = new HToolBar(this.groupToolbar.GroupBox);
 			this.toolbar.Dock = DockStyle.Fill;
 
 			this.buttonCreate = new IconButton();
 			this.buttonCreate.CaptionId = Res.Captions.Editor.Type.Create.Id;
-			this.buttonCreate.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonCreate.Clicked += this.HandleButtonClicked;
 			this.toolbar.Items.Add(this.buttonCreate);
 
 			this.buttonDelete = new IconButton();
 			this.buttonDelete.CaptionId = Res.Captions.Editor.Type.Delete.Id;
-			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonDelete.Clicked += this.HandleButtonClicked;
 			this.toolbar.Items.Add(this.buttonDelete);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonPrev = new IconButton();
 			this.buttonPrev.CaptionId = Res.Captions.Editor.Type.Prev.Id;
-			this.buttonPrev.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonPrev.Clicked += this.HandleButtonClicked;
 			this.toolbar.Items.Add(this.buttonPrev);
 
 			this.buttonNext = new IconButton();
 			this.buttonNext.CaptionId = Res.Captions.Editor.Type.Next.Id;
-			this.buttonNext.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonNext.Clicked += this.HandleButtonClicked;
 			this.toolbar.Items.Add(this.buttonNext);
 
 			this.toolbar.Items.Add(new IconSeparator());
 
 			this.buttonGoto = this.CreateLocatorGotoButton(null);
-			this.buttonGoto.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonGoto.Clicked += this.HandleButtonClicked;
 			this.toolbar.Items.Add(this.buttonGoto);
 
 			this.slider = new HSlider(toolbar);
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.slider.SmallChange = 5.0M;
 			this.slider.LargeChange = 10.0M;
 			this.slider.Resolution = 1.0M;
-			this.slider.ValueChanged += new EventHandler(this.HandleSliderChanged);
+			this.slider.ValueChanged += this.HandleSliderChanged;
 			this.slider.Value = (decimal) TypeEditorEnum.arrayLineHeight;
 			this.slider.Dock = DockStyle.Right;
 
@@ -97,10 +97,10 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.array.LineHeight = TypeEditorEnum.arrayLineHeight;
 			this.array.Dock = DockStyle.StackBegin;
 			this.array.PreferredHeight = 220;
-			this.array.ColumnsWidthChanged += new EventHandler(this.HandleArrayColumnsWidthChanged);
-			this.array.CellCountChanged += new EventHandler(this.HandleArrayCellCountChanged);
-			this.array.CellsContentChanged += new EventHandler(this.HandleArrayCellsContentChanged);
-			this.array.SelectedRowChanged += new EventHandler(this.HandleArraySelectedRowChanged);
+			this.array.ColumnsWidthChanged += this.HandleArrayColumnsWidthChanged;
+			this.array.CellCountChanged += this.HandleArrayCellCountChanged;
+			this.array.CellsContentChanged += this.HandleArrayCellsContentChanged;
+			this.array.SelectedRowChanged += this.HandleArraySelectedRowChanged;
 		}
 
 		
@@ -108,20 +108,20 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.groupToolbar.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
+				this.groupToolbar.ResetButton.Clicked -= this.HandleResetButtonClicked;
 
-				this.buttonCreate.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonDelete.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonPrev.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonNext.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonGoto.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonCreate.Clicked -= this.HandleButtonClicked;
+				this.buttonDelete.Clicked -= this.HandleButtonClicked;
+				this.buttonPrev.Clicked -= this.HandleButtonClicked;
+				this.buttonNext.Clicked -= this.HandleButtonClicked;
+				this.buttonGoto.Clicked -= this.HandleButtonClicked;
 
-				this.slider.ValueChanged -= new EventHandler(this.HandleSliderChanged);
+				this.slider.ValueChanged -= this.HandleSliderChanged;
 
-				this.array.ColumnsWidthChanged -= new EventHandler(this.HandleArrayColumnsWidthChanged);
-				this.array.CellCountChanged -= new EventHandler(this.HandleArrayCellCountChanged);
-				this.array.CellsContentChanged -= new EventHandler(this.HandleArrayCellsContentChanged);
-				this.array.SelectedRowChanged -= new EventHandler(this.HandleArraySelectedRowChanged);
+				this.array.ColumnsWidthChanged -= this.HandleArrayColumnsWidthChanged;
+				this.array.CellCountChanged -= this.HandleArrayCellCountChanged;
+				this.array.CellsContentChanged -= this.HandleArrayCellsContentChanged;
+				this.array.SelectedRowChanged -= this.HandleArraySelectedRowChanged;
 			}
 			
 			base.Dispose(disposing);

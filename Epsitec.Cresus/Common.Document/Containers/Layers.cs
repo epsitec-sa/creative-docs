@@ -88,8 +88,8 @@ namespace Epsitec.Common.Document.Containers
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
-			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
-			this.table.DoubleClicked += new MessageEventHandler(this.HandleTableDoubleClicked);
+			this.table.SelectionChanged += this.HandleTableSelectionChanged;
+			this.table.DoubleClicked += this.HandleTableDoubleClicked;
 			this.table.StyleH  = CellArrayStyles.ScrollNorm;
 			this.table.StyleH |= CellArrayStyles.Header;
 			this.table.StyleH |= CellArrayStyles.Separator;
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonShow.Dock = DockStyle.Top;
 			this.buttonShow.Margins = new Margins(0, 0, 0, 0);
 			this.buttonShow.Text = Res.Strings.Container.Layers.Button.Show;
-			this.buttonShow.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonShow.Clicked += this.HandleButtonClicked;
 			this.buttonShow.TabIndex = 1;
 			this.buttonShow.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonShow, Res.Strings.Container.Layers.Button.HelpShow);
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonDimmed.Dock = DockStyle.Top;
 			this.buttonDimmed.Margins = new Margins(0, 0, 0, 0);
 			this.buttonDimmed.Text = Res.Strings.Container.Layers.Button.Dimmed;
-			this.buttonDimmed.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonDimmed.Clicked += this.HandleButtonClicked;
 			this.buttonDimmed.TabIndex = 2;
 			this.buttonDimmed.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonDimmed, Res.Strings.Container.Layers.Button.HelpDimmed);
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonHide.Dock = DockStyle.Top;
 			this.buttonHide.Margins = new Margins(0, 0, 0, 0);
 			this.buttonHide.Text = Res.Strings.Container.Layers.Button.Hide;
-			this.buttonHide.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonHide.Clicked += this.HandleButtonClicked;
 			this.buttonHide.TabIndex = 3;
 			this.buttonHide.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.buttonHide, Res.Strings.Container.Layers.Button.HelpHide);
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioShowPrint.Dock = DockStyle.Top;
 			this.radioShowPrint.Margins = new Margins(10, 10, 0, 2);
 			this.radioShowPrint.Text = Res.Strings.Container.Layers.Button.PrintShow;
-			this.radioShowPrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
+			this.radioShowPrint.ActiveStateChanged += this.HandleRadioPrintChanged;
 			this.radioShowPrint.Index = 1;
 			this.radioShowPrint.TabIndex = 1;
 			this.radioShowPrint.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioDimmedPrint.Dock = DockStyle.Top;
 			this.radioDimmedPrint.Margins = new Margins(10, 10, 0, 2);
 			this.radioDimmedPrint.Text = Res.Strings.Container.Layers.Button.PrintDimmed;
-			this.radioDimmedPrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
+			this.radioDimmedPrint.ActiveStateChanged += this.HandleRadioPrintChanged;
 			this.radioDimmedPrint.Index = 2;
 			this.radioDimmedPrint.TabIndex = 2;
 			this.radioDimmedPrint.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Document.Containers
 			this.radioHidePrint.Dock = DockStyle.Top;
 			this.radioHidePrint.Margins = new Margins(10, 10, 0, 2);
 			this.radioHidePrint.Text = Res.Strings.Container.Layers.Button.PrintHide;
-			this.radioHidePrint.ActiveStateChanged += new EventHandler(this.HandleRadioPrintChanged);
+			this.radioHidePrint.ActiveStateChanged += this.HandleRadioPrintChanged;
 			this.radioHidePrint.Index = 3;
 			this.radioHidePrint.TabIndex = 3;
 			this.radioHidePrint.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.Dock = DockStyle.Bottom;
 			this.extendedButton.Margins = new Margins(0, 0, 5, 0);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
-			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
+			this.extendedButton.Clicked += this.ExtendedButtonClicked;
 			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.extendedButton.TabIndex = 97;
 			this.extendedButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Document.Containers
 			this.name = new TextField();
 			this.name.PreferredWidth = 140;
 			this.name.Margins = new Margins(0, 0, 1, 1);
-			this.name.TextChanged += new EventHandler(this.HandleNameTextChanged);
+			this.name.TextChanged += this.HandleNameTextChanged;
 			this.name.TabIndex = 1;
 			this.name.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			this.toolBarName.Items.Add(this.name);
@@ -312,7 +312,7 @@ namespace Epsitec.Common.Document.Containers
 						ib.ButtonStyle = ButtonStyle.ActivableIcon;
 						ib.Dock = DockStyle.Fill;
 						ib.Margins = new Margins(-1, -1, -1, -1);
-						ib.Clicked += new MessageEventHandler(this.HandleButtonMagnetLayerClicked);
+						ib.Clicked += this.HandleButtonMagnetLayerClicked;
 						ToolTip.Default.SetToolTip(ib, Res.Strings.Action.MagnetLayer);
 						this.table[column, row].Insert(ib);
 					}
@@ -323,7 +323,7 @@ namespace Epsitec.Common.Document.Containers
 						bt.AcceptThreeState = true;
 						bt.Dock = DockStyle.Fill;
 						bt.Margins = new Margins(2, 0, 0, 0);
-						bt.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+						bt.ActiveStateChanged += this.HandleCheckActiveStateChanged;
 						ToolTip.Default.SetToolTip(bt, Res.Strings.Container.Layers.Tooltip.Show);
 						this.table[column, row].Insert(bt);
 					}

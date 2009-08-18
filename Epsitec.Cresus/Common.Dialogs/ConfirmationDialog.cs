@@ -60,7 +60,7 @@ namespace Epsitec.Common.Dialogs
 					button.Index = index-1;
 					button.TabIndex = index++;
 					button.Dock = DockStyle.Top;
-					button.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+					button.Clicked += this.HandleButtonClicked;
 				}
 			}
 
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Dialogs
 				button.Name = ConfirmationDialog.cancelButtonName;
 				button.Dock = DockStyle.Right;
 				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				button.Clicked += this.HandleButtonClicked;
 				button.TabIndex = 1;
 				button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
 			}

@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Viewers
 				this.splitter = new HSplitter(this);
 				this.splitter.Dock = DockStyle.Top;
 			}
-			this.splitter.SplitterDragged += new EventHandler(this.HandleSplitterDragged);
+			this.splitter.SplitterDragged += this.HandleSplitterDragged;
 			this.splitter.Visibility = (this.designerApplication.DisplayModeState != DesignerApplication.DisplayMode.FullScreen);
 			AbstractSplitter.SetAutoCollapseEnable(this.firstPane, true);
 
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Designer.Viewers
 			this.labelEdit.Dock = DockStyle.Bottom;
 			this.labelEdit.ButtonShowCondition = ButtonShowCondition.WhenModified;
 			this.labelEdit.DefocusAction = DefocusAction.AutoAcceptOrRejectEdition;
-			this.labelEdit.EditionAccepted += new EventHandler(this.HandleTextChanged);
-			this.labelEdit.EditionRejected += new EventHandler(this.HandleTextRejected);
-			this.labelEdit.CursorChanged += new EventHandler(this.HandleCursorChanged);
+			this.labelEdit.EditionAccepted += this.HandleTextChanged;
+			this.labelEdit.EditionRejected += this.HandleTextRejected;
+			this.labelEdit.CursorChanged += this.HandleCursorChanged;
 			this.labelEdit.KeyboardFocusChanged += new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 			this.labelEdit.TabIndex = this.tabIndex++;
 			this.labelEdit.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Designer.Viewers
 			this.cultureMenuButton.GlyphShape = GlyphShape.Menu;
 			this.cultureMenuButton.ButtonStyle = ButtonStyle.ToolItem;
 			this.cultureMenuButton.AutoFocus = false;
-			this.cultureMenuButton.Clicked += new MessageEventHandler(this.HandleCultureMenuButtonClicked);
+			this.cultureMenuButton.Clicked += this.HandleCultureMenuButtonClicked;
 			this.cultureMenuButton.Margins = new Margins(1, 0, 2, 7);
 			this.cultureMenuButton.Dock = DockStyle.Right;
 
@@ -198,56 +198,56 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				if (this.buttonMainExtendLeft != null)
 				{
-					this.buttonMainExtendLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainExtendLeft.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonMainCompactLeft != null)
 				{
-					this.buttonMainCompactLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainCompactLeft.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonMainExtendRight != null)
 				{
-					this.buttonMainExtendRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainExtendRight.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonMainCompactRight != null)
 				{
-					this.buttonMainCompactRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonMainCompactRight.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonSuiteExtendLeft != null)
 				{
-					this.buttonSuiteExtendLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteExtendLeft.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonSuiteCompactLeft != null)
 				{
-					this.buttonSuiteCompactLeft.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteCompactLeft.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonSuiteExtendRight != null)
 				{
-					this.buttonSuiteExtendRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteExtendRight.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
 				if (this.buttonSuiteCompactRight != null)
 				{
-					this.buttonSuiteCompactRight.Clicked -= new MessageEventHandler(this.HandleButtonCompactOrExtendClicked);
+					this.buttonSuiteCompactRight.Clicked -= this.HandleButtonCompactOrExtendClicked;
 				}
 
-				this.splitter.SplitterDragged -= new EventHandler(this.HandleSplitterDragged);
+				this.splitter.SplitterDragged -= this.HandleSplitterDragged;
 
-				this.labelEdit.EditionAccepted -= new EventHandler(this.HandleTextChanged);
-				this.labelEdit.EditionRejected -= new EventHandler(this.HandleTextRejected);
-				this.labelEdit.CursorChanged -= new EventHandler(this.HandleCursorChanged);
+				this.labelEdit.EditionAccepted -= this.HandleTextChanged;
+				this.labelEdit.EditionRejected -= this.HandleTextRejected;
+				this.labelEdit.CursorChanged -= this.HandleCursorChanged;
 				this.labelEdit.KeyboardFocusChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleLabelKeyboardFocusChanged);
 
 				this.table.ItemPanel.SelectionChanged -= new EventHandler<UI.ItemPanelSelectionChangedEventArgs>(this.HandleTableSelectionChanged);
 				this.table.SizeChanged -= this.HandleTableSizeChanged;
 				this.table.ColumnHeader.ColumnWidthChanged -= this.HandleColumnHeaderColumnWidthChanged;
 
-				this.cultureMenuButton.Clicked -= new MessageEventHandler(this.HandleCultureMenuButtonClicked);
+				this.cultureMenuButton.Clicked -= this.HandleCultureMenuButtonClicked;
 			}
 
 			base.Dispose(disposing);
@@ -1313,7 +1313,7 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				foreach (IconButtonMark button in this.secondaryButtonsCulture)
 				{
-					button.Clicked -= new MessageEventHandler(this.HandleButtonSecondaryCultureClicked);
+					button.Clicked -= this.HandleButtonSecondaryCultureClicked;
 					button.Dispose();
 				}
 				this.secondaryButtonsCulture = null;
@@ -1336,7 +1336,7 @@ namespace Epsitec.Common.Designer.Viewers
 					this.secondaryButtonsCulture[i].AutoFocus = false;
 					this.secondaryButtonsCulture[i].Dock = DockStyle.Fill;
 					this.secondaryButtonsCulture[i].Margins = new Margins(0, (i==list.Count-1)?1:0, 0, 0);
-					this.secondaryButtonsCulture[i].Clicked += new MessageEventHandler(this.HandleButtonSecondaryCultureClicked);
+					this.secondaryButtonsCulture[i].Clicked += this.HandleButtonSecondaryCultureClicked;
 				}
 
 				this.TwoLettersSecondaryCulture = list[0];
@@ -1751,7 +1751,7 @@ namespace Epsitec.Common.Designer.Viewers
 			//	Refait la dernière action.
 		}
 
-		public virtual VMenu UndoRedoCreateMenu(MessageEventHandler message)
+		public virtual VMenu UndoRedoCreateMenu(Support.EventHandler<MessageEventArgs> message)
 		{
 			//	Crée le menu undo/redo.
 			return null;

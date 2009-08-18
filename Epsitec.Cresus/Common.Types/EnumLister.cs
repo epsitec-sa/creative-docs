@@ -72,7 +72,7 @@ namespace Epsitec.Common.Types
 
 			Assembly[] assemblies = EnumLister.domain.GetAssemblies ();
 
-			EnumLister.domain.AssemblyLoad += new System.AssemblyLoadEventHandler (EnumLister.HandleDomainAssemblyLoad);
+			EnumLister.domain.AssemblyLoad += EnumLister.HandleDomainAssemblyLoad;
 
 			foreach (Assembly assembly in assemblies)
 			{

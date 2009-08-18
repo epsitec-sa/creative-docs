@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 			this.selectItemBehavior = new Behaviors.SelectItemBehavior (this.AutomaticItemSelection);
 			this.autoScrollBehavior = new Behaviors.AutoScrollBehavior (this, this.AutomaticScroll);
 
-			this.scrollListStyle = ScrollListStyle.Normal;
+			this.scrollListStyle = ScrollListStyle.Standard;
 			this.rowHeight = Widget.DefaultFontHeight+1;
 			this.selectedRow = -1;
 
@@ -289,6 +289,13 @@ namespace Epsitec.Common.Widgets
 			return margins;
 		}
 
+
+		public virtual bool IsItemSelected(int index)
+		{
+			return index == this.selectedRow;
+		}
+		
+		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			switch (message.MessageType)
@@ -402,7 +409,6 @@ namespace Epsitec.Common.Widgets
 			this.SelectedIndex = index;
 			this.ShowSelected (ScrollShowMode.Extremity);
 		}
-
 		
 		protected virtual bool ProcessKeyPress(Message message)
 		{
@@ -456,7 +462,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void UpdateScroller()
+		private void UpdateScroller()
 		{
 			//	Met à jour l'ascenseur en fonction de la liste.
 			
@@ -484,8 +490,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		protected void SetDirty()
+
+		private void SetDirty()
 		{
 			if ( this.isDirty == false )
 			{
@@ -494,7 +500,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void UpdateTextLayouts()
+		private void UpdateTextLayouts()
 		{
 			//	Met à jour les textes.
 
@@ -538,7 +544,14 @@ namespace Epsitec.Common.Widgets
 			this.UpdateGeometry ();
 		}
 
-		protected void UpdateGeometry()
+		protected override void OnAdornerChanged()
+		{
+			this.UpdateGeometry ();
+			this.UpdateMargins ();
+			base.OnAdornerChanged ();
+		}
+
+		private void UpdateGeometry()
 		{
 			//	Met à jour la géométrie de l'ascenseur de la liste.
 
@@ -572,14 +585,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnAdornerChanged()
-		{
-			this.UpdateGeometry ();
-			this.UpdateMargins();
-			base.OnAdornerChanged();
-		}
-		
-		protected void UpdateMargins()
+		private void UpdateMargins()
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
@@ -592,8 +598,8 @@ namespace Epsitec.Common.Widgets
 				this.margins.Right = this.Client.Size.Width - this.scroller.ActualLocation.X;
 			}
 		}
-		
-		protected double GetTextWidth()
+
+		private double GetTextWidth()
 		{
 			//	Calcule la largeur utile pour le texte.
 			
@@ -739,11 +745,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public virtual bool IsItemSelected(int index)
-		{
-			return index == this.selectedRow;
-		}
-		
 		
 		#region IStringCollectionHost Members
 		public void NotifyStringCollectionChanged()

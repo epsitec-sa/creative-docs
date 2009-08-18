@@ -17,26 +17,26 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextLeading");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Leading.Title);
 
-			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, new EventHandler(this.HandleLeadingChanged));
+			this.fieldLeading = this.CreateTextFieldLabel(Res.Strings.TextPanel.Leading.Tooltip.Leading, Res.Strings.TextPanel.Leading.Short.Leading, Res.Strings.TextPanel.Leading.Long.Leading, 0,0,0,0, Widgets.TextFieldLabel.Type.TextFieldUnit, this.HandleLeadingChanged);
 			this.fieldLeading.SetRangeDimension(this.document, 0.0, 0.1, 0.0, 1.0);
 			this.fieldLeading.SetRangePercents(this.document, 50.0, 300.0, 100.0, 10.0);
 			this.fieldLeading.IsUnitPercent = true;
-			this.fieldLeading.ButtonUnit.Clicked += new MessageEventHandler(this.HandleButtonUnitClicked);
+			this.fieldLeading.ButtonUnit.Clicked += this.HandleButtonUnitClicked;
 
-			this.buttonLeadingMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Leading.Tooltip.Leading, new MessageEventHandler(this.HandleButtonLeadingMenuClicked));
+			this.buttonLeadingMenu = this.CreateComboButton(null, Res.Strings.TextPanel.Leading.Tooltip.Leading, this.HandleButtonLeadingMenuClicked);
 
-			this.buttonAlignFirst = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, new MessageEventHandler(this.HandleButtonAlignFirstClicked));
-			this.buttonAlignAll   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,   new MessageEventHandler(this.HandleButtonAlignAllClicked));
+			this.buttonAlignFirst = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignFirst"), Res.Strings.TextPanel.Leading.Tooltip.AlignFirst, this.HandleButtonAlignFirstClicked);
+			this.buttonAlignAll   = this.CreateIconButton(Misc.Icon("ParagraphLeadingAlignAll"),   Res.Strings.TextPanel.Leading.Tooltip.AlignAll,   this.HandleButtonAlignAllClicked);
 
 			if (Command.IsDefined ("Settings"))
 			{
-				this.buttonSettings = this.CreateIconButton (Misc.Icon ("Settings"), Res.Strings.Action.Settings, new MessageEventHandler (this.HandleButtonSettingsClicked), false);
+				this.buttonSettings = this.CreateIconButton (Misc.Icon ("Settings"), Res.Strings.Action.Settings, this.HandleButtonSettingsClicked, false);
 			}
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.ParagraphWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.ParagraphWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.ParagraphWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.ParagraphWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -46,9 +46,9 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fieldLeading.ButtonUnit.Clicked -= new MessageEventHandler(this.HandleButtonUnitClicked);
-				this.ParagraphWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.ParagraphWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.fieldLeading.ButtonUnit.Clicked -= this.HandleButtonUnitClicked;
+				this.ParagraphWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.ParagraphWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Document.TextPanels
 			bool isPercent = (units == Common.Text.Properties.SizeUnits.Percent);
 			bool isDefault = !this.ParagraphWrapper.IsAttachedToDefaultParagraphStyle;
 
-			return Menus.LeadingMenu.CreateLeadingMenu(this.document, leading, isPercent?"%":"", isDefault, new MessageEventHandler(this.HandleMenuPressed));
+			return Menus.LeadingMenu.CreateLeadingMenu(this.document, leading, isPercent?"%":"", isDefault, this.HandleMenuPressed);
 		}
 
 		private void HandleMenuPressed(object sender, MessageEventArgs e)

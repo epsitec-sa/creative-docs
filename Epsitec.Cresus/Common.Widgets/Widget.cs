@@ -8,7 +8,7 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
-	
+	using MessageEventHandler=Support.EventHandler<MessageEventArgs>;
 	
 	public delegate bool WidgetWalkChildrenCallback(Widget widget);
 	
@@ -3634,7 +3634,6 @@ namespace Epsitec.Common.Widgets
 				switch (message.MessageType)
 				{
 					case MessageType.MouseUp:
-						
 						if (Message.CurrentState.IsSameWindowAsButtonDown == false)
 						{
 							return;
@@ -3666,6 +3665,10 @@ namespace Epsitec.Common.Widgets
 					
 					case MessageType.MouseDown:
 						this.OnPressed (new MessageEventArgs (message, pos));
+						break;
+
+					case MessageType.MouseMove:
+						this.OnMouseMove (new MessageEventArgs (message, pos));
 						break;
 				}
 				
@@ -4058,7 +4061,17 @@ namespace Epsitec.Common.Widgets
 				this.CultureChanged (this);
 			}
 		}
-		
+
+		protected virtual void OnMouseMove(MessageEventArgs e)
+		{
+			var handler = this.GetUserEventHandler<MessageEventArgs> (Widget.MouseMoveEvent);
+
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
 		protected virtual void OnPressed(MessageEventArgs e)
 		{
 			if (this.Pressed != null)
@@ -4380,7 +4393,19 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			PreparePaint;
 		public event Support.EventHandler			AdornerChanged;
 		public event Support.EventHandler			CultureChanged;
-		
+
+		public event MessageEventHandler			MouseMove
+		{
+			add
+			{
+				this.AddUserEventHandler (Widget.MouseMoveEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (Widget.MouseMoveEvent, value);
+			}
+		}
+
 		public event MessageEventHandler			Pressed;
 		public event MessageEventHandler			Released;
 		public event MessageEventHandler			Clicked;
@@ -4406,6 +4431,10 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
+
+
+		private const string MouseMoveEvent = "MouseMove";
+		
 		#endregion
 		
 		#region Various enums

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			RestartManager.Setup ();
 			
-			Microsoft.Win32.SystemEvents.UserPreferenceChanged += new Microsoft.Win32.UserPreferenceChangedEventHandler (Window.HandleSystemEventsUserPreferenceChanged);
+			Microsoft.Win32.SystemEvents.UserPreferenceChanged += Window.HandleSystemEventsUserPreferenceChanged;
 			
 			Window.dispatch_window = new Window ();
 			Window.dispatch_window.CreateControl ();

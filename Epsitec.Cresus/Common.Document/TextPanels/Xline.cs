@@ -17,26 +17,26 @@ namespace Epsitec.Common.Document.TextPanels
 			this.fixIcon.Text = Misc.Image("TextXline");
 			ToolTip.Default.SetToolTip(this.fixIcon, Res.Strings.TextPanel.Xline.Title);
 
-			this.buttonUnderline = this.CreateIconButton(Misc.Icon("FontUnderline"), Res.Strings.Action.FontUnderline, new MessageEventHandler(this.HandleButtonUnderlineClicked));
-			this.buttonOverline  = this.CreateIconButton(Misc.Icon("FontOverline"),  Res.Strings.Action.FontOverline,  new MessageEventHandler(this.HandleButtonOverlineClicked));
-			this.buttonStrikeout = this.CreateIconButton(Misc.Icon("FontStrikeout"), Res.Strings.Action.FontStrikeout, new MessageEventHandler(this.HandleButtonStrikeoutClicked));
+			this.buttonUnderline = this.CreateIconButton(Misc.Icon("FontUnderline"), Res.Strings.Action.FontUnderline, this.HandleButtonUnderlineClicked);
+			this.buttonOverline  = this.CreateIconButton(Misc.Icon("FontOverline"),  Res.Strings.Action.FontOverline,  this.HandleButtonOverlineClicked);
+			this.buttonStrikeout = this.CreateIconButton(Misc.Icon("FontStrikeout"), Res.Strings.Action.FontStrikeout, this.HandleButtonStrikeoutClicked);
 
-			this.fieldUnderlineThickness = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underline.Thickness, Res.Strings.TextPanel.Xline.Short.Underline.Thickness, Res.Strings.TextPanel.Xline.Long.Underline.Thickness, 0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlineValueChanged));
-			this.fieldUnderlinePosition  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underline.Position,  Res.Strings.TextPanel.Xline.Short.Underline.Position,  Res.Strings.TextPanel.Xline.Long.Underline.Position,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleUnderlineValueChanged));
-			this.underlineColor          = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Underline.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.fieldUnderlineThickness = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underline.Thickness, Res.Strings.TextPanel.Xline.Short.Underline.Thickness, Res.Strings.TextPanel.Xline.Long.Underline.Thickness, 0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleUnderlineValueChanged);
+			this.fieldUnderlinePosition  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Underline.Position,  Res.Strings.TextPanel.Xline.Short.Underline.Position,  Res.Strings.TextPanel.Xline.Long.Underline.Position,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleUnderlineValueChanged);
+			this.underlineColor          = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Underline.Color, this.HandleSampleColorClicked, this.HandleSampleColorChanged);
 
-			this.fieldOverlineThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overline.Thickness,  Res.Strings.TextPanel.Xline.Short.Overline.Thickness,  Res.Strings.TextPanel.Xline.Long.Overline.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleOverlineValueChanged));
-			this.fieldOverlinePosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overline.Position,   Res.Strings.TextPanel.Xline.Short.Overline.Position,   Res.Strings.TextPanel.Xline.Long.Overline.Position,  -0.01, 0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleOverlineValueChanged));
-			this.overlineColor           = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Overline.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.fieldOverlineThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overline.Thickness,  Res.Strings.TextPanel.Xline.Short.Overline.Thickness,  Res.Strings.TextPanel.Xline.Long.Overline.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleOverlineValueChanged);
+			this.fieldOverlinePosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Overline.Position,   Res.Strings.TextPanel.Xline.Short.Overline.Position,   Res.Strings.TextPanel.Xline.Long.Overline.Position,  -0.01, 0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleOverlineValueChanged);
+			this.overlineColor           = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Overline.Color, this.HandleSampleColorClicked, this.HandleSampleColorChanged);
 
-			this.fieldStrikeoutThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Thickness,  Res.Strings.TextPanel.Xline.Short.Strikeout.Thickness,  Res.Strings.TextPanel.Xline.Long.Strikeout.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleStrikeoutValueChanged));
-			this.fieldStrikeoutPosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Position,   Res.Strings.TextPanel.Xline.Short.Strikeout.Position,   Res.Strings.TextPanel.Xline.Long.Strikeout.Position,   0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, new EventHandler(this.HandleStrikeoutValueChanged));
-			this.strikeoutColor           = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Color, new MessageEventHandler(this.HandleSampleColorClicked), new EventHandler(this.HandleSampleColorChanged));
+			this.fieldStrikeoutThickness  = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Thickness,  Res.Strings.TextPanel.Xline.Short.Strikeout.Thickness,  Res.Strings.TextPanel.Xline.Long.Strikeout.Thickness,  0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleStrikeoutValueChanged);
+			this.fieldStrikeoutPosition   = this.CreateTextFieldLabel(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Position,   Res.Strings.TextPanel.Xline.Short.Strikeout.Position,   Res.Strings.TextPanel.Xline.Long.Strikeout.Position,   0.0,  0.01, 0.0, 0.1, Widgets.TextFieldLabel.Type.TextFieldReal, this.HandleStrikeoutValueChanged);
+			this.strikeoutColor           = this.CreateColorSample(Res.Strings.TextPanel.Xline.Tooltip.Strikeout.Color, this.HandleSampleColorClicked, this.HandleSampleColorChanged);
 			
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.TextWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.isNormalAndExtended = true;
 			this.UpdateAfterChanging();
@@ -46,8 +46,8 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.TextWrapper.Defined.Changed -= this.HandleWrapperChanged;
 			}
 			
 			base.Dispose(disposing);

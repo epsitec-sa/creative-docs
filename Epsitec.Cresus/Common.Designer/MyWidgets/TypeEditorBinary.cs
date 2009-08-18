@@ -17,9 +17,9 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.CreateStringLabeled(Res.Strings.Viewers.Types.Binary.Mime, this, out this.groupMime, out this.fieldMime);
 			this.groupMime.Dock = DockStyle.StackBegin;
 			this.groupMime.Margins = new Margins(0, 0, 0, 0);
-			this.groupMime.ResetButton.Clicked += new MessageEventHandler(this.HandleResetButtonClicked);
+			this.groupMime.ResetButton.Clicked += this.HandleResetButtonClicked;
 			this.fieldMime.PreferredWidth = 400;
-			this.fieldMime.EditionAccepted += new EventHandler(this.HandleTextFieldChanged);
+			this.fieldMime.EditionAccepted += this.HandleTextFieldChanged;
 		}
 
 		
@@ -27,8 +27,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 		{
 			if ( disposing )
 			{
-				this.groupMime.ResetButton.Clicked -= new MessageEventHandler(this.HandleResetButtonClicked);
-				this.fieldMime.EditionAccepted -= new EventHandler(this.HandleTextFieldChanged);
+				this.groupMime.ResetButton.Clicked -= this.HandleResetButtonClicked;
+				this.fieldMime.EditionAccepted -= this.HandleTextFieldChanged;
 			}
 			
 			base.Dispose(disposing);

@@ -19,17 +19,17 @@ namespace Epsitec.Common.Document.TextPanels
 
 			this.fieldLanguage = new TextFieldCombo(this);
 			this.fieldLanguage.IsReadOnly = true;
-			this.fieldLanguage.TextChanged += new EventHandler(this.HandleLanguageChanged);
+			this.fieldLanguage.TextChanged += this.HandleLanguageChanged;
 			this.fieldLanguage.TabIndex = this.tabIndex++;
 			this.fieldLanguage.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldLanguage, Res.Strings.TextPanel.Language.Tooltip.Language);
 
-			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.ParagraphHyphen, new MessageEventHandler(this.HandleHyphenClicked));
+			this.buttonHyphen = this.CreateIconButton(Misc.Icon("TextHyphen"), Res.Strings.Action.ParagraphHyphen, this.HandleHyphenClicked);
 
-			this.buttonClear = this.CreateClearButton(new MessageEventHandler(this.HandleClearClicked));
+			this.buttonClear = this.CreateClearButton(this.HandleClearClicked);
 
-			this.TextWrapper.Active.Changed  += new EventHandler(this.HandleWrapperChanged);
-			this.TextWrapper.Defined.Changed += new EventHandler(this.HandleWrapperChanged);
+			this.TextWrapper.Active.Changed  += this.HandleWrapperChanged;
+			this.TextWrapper.Defined.Changed += this.HandleWrapperChanged;
 
 			this.UpdateAfterChanging();
 		}
@@ -38,10 +38,10 @@ namespace Epsitec.Common.Document.TextPanels
 		{
 			if ( disposing )
 			{
-				this.fieldLanguage.TextChanged -= new EventHandler(this.HandleLanguageChanged);
+				this.fieldLanguage.TextChanged -= this.HandleLanguageChanged;
 
-				this.TextWrapper.Active.Changed  -= new EventHandler(this.HandleWrapperChanged);
-				this.TextWrapper.Defined.Changed -= new EventHandler(this.HandleWrapperChanged);
+				this.TextWrapper.Active.Changed  -= this.HandleWrapperChanged;
+				this.TextWrapper.Defined.Changed -= this.HandleWrapperChanged;
 
 				this.fieldLanguage = null;
 			}

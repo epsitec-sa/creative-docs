@@ -6,7 +6,6 @@ namespace Epsitec.Common.Widgets
 	using Epsitec.Common.Drawing;
 
 	public delegate void PaintEventHandler(object sender, PaintEventArgs e);
-	public delegate void MessageEventHandler(object sender, MessageEventArgs e);
 	public delegate void DragEventHandler(object sender, DragEventArgs e);
 	public delegate void SelectionEventHandler(object sender, object o);
 	public delegate void WindowDragEventHandler(object sender, WindowDragEventArgs e);

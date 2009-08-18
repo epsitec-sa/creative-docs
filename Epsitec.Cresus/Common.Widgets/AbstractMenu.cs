@@ -329,8 +329,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.is_connected == false)
 			{
-				this.Behavior.Accepted += new EventHandler (this.HandleBehaviorAccepted);
-				this.Behavior.Rejected += new EventHandler (this.HandleBehaviorRejected);
+				this.Behavior.Accepted += this.HandleBehaviorAccepted;
+				this.Behavior.Rejected += this.HandleBehaviorRejected;
 				
 				this.is_connected = true;
 			}
@@ -347,8 +347,8 @@ namespace Epsitec.Common.Widgets
 					this.open_button = null;
 				}
 				
-				this.Behavior.Accepted -= new EventHandler (this.HandleBehaviorAccepted);
-				this.Behavior.Rejected -= new EventHandler (this.HandleBehaviorRejected);
+				this.Behavior.Accepted -= this.HandleBehaviorAccepted;
+				this.Behavior.Rejected -= this.HandleBehaviorRejected;
 				
 				this.is_connected = false;
 			}

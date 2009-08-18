@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Widgets;
+using Epsitec.Common.Graph.Renderers;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -11,7 +12,6 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Graph.Renderers;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -86,34 +86,10 @@ namespace Epsitec.Cresus.Graph
 
 			this.chartView.DefineRenderer (lineChartRenderer);
 
-
 			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
+			this.scrollListController = new Controllers.MainScrollListController (this.scrollList);
+			this.scrollListController.Changed += sender => this.UpdateChartView ();
 			
-			this.scrollList.DragMultiSelectionStarted +=
-				delegate (object sender, MultiSelectEventArgs e)
-				{
-					if (Message.CurrentState.IsControlPressed == false)
-					{
-						this.scrollList.ClearSelection ();
-					}
-				};
-
-			this.scrollList.DragMultiSelectionEnded +=
-				delegate (object sender, MultiSelectEventArgs e)
-				{
-					if ((e.Count == 1) &&
-						(this.scrollList.IsItemSelected (e.BeginIndex)))
-					{
-						this.scrollList.RemoveSelection (Enumerable.Range (e.BeginIndex, e.Count));
-					}
-					else
-					{
-						this.scrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
-					}
-				};
-
-			this.scrollList.MultiSelectionChanged += (sender, e) => this.UpdateChartView ();
-
 			this.Window = window;
 			this.IsReady = true;
 		}
@@ -131,6 +107,7 @@ namespace Epsitec.Cresus.Graph
 
 
 		private ScrollListMultiSelect scrollList;
+		private Controllers.MainScrollListController scrollListController;
 		private ChartView chartView;
 
 		private GraphDataSet graphDataSet;

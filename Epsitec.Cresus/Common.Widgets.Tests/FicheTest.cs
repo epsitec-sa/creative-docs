@@ -19,11 +19,11 @@ namespace Epsitec.Common.Widgets
 			Widgets.Adorners.Factory.SetActive("LookRoyale");
 			
 			this.window = new Window();
-//@			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
+//@			this.window.Root.LayoutChanged += this.Root_LayoutChanged;
 			
 			this.window.ClientSize = new Size(1024, 768);
 			this.window.Text = "Crésus-fiche";
-			this.window.WindowClosed += new EventHandler(this.HandleWindowClosed);
+			this.window.WindowClosed += this.HandleWindowClosed;
 
 			this.db = new TinyDataBase();
 			this.db.Title = "Adresses";
@@ -496,7 +496,7 @@ namespace Epsitec.Common.Widgets
 			this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.pane.Dock = DockStyle.Fill;
-			this.pane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
+			this.pane.PaneSizeChanged += this.pane_SizeChanged;
 			this.pane.SetParent (root);
 
 			this.leftPane = new PanePage();
@@ -517,7 +517,7 @@ namespace Epsitec.Common.Widgets
 			this.subPane.PaneBehaviour = PaneBookBehaviour.Draft;
 			//this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			this.subPane.Anchor = AnchorStyles.All;
-			this.subPane.PaneSizeChanged += new EventHandler(this.pane_SizeChanged);
+			this.subPane.PaneSizeChanged += this.pane_SizeChanged;
 			this.subPane.SetParent (this.leftPane);
 
 			this.topPane = new PanePage();
@@ -540,13 +540,13 @@ namespace Epsitec.Common.Widgets
 
 			this.editCrit = new TextField();
 			this.editCrit.Text = "";
-			this.editCrit.TextInserted += new EventHandler(this.editCrit_TextInserted);
+			this.editCrit.TextInserted += this.editCrit_TextInserted;
 			this.topPane.Children.Add(this.editCrit);
 			this.tip.SetToolTip(this.editCrit, "Elément cherché n'importe où");
 
 			this.buttonSearch = new Button();
 			this.buttonSearch.Text = "Chercher";
-			this.buttonSearch.Clicked += new MessageEventHandler(this.buttonSearch_Clicked);
+			this.buttonSearch.Clicked += this.buttonSearch_Clicked;
 			this.topPane.Children.Add(this.buttonSearch);
 			this.tip.SetToolTip(this.buttonSearch, "Cherche la prochaine fiche");
 
@@ -566,31 +566,31 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.listLook.SelectedIndex = sel;
-			this.listLook.SelectedIndexChanged += new EventHandler(this.HandleLook);
+			this.listLook.SelectedIndexChanged += this.HandleLook;
 			this.topPane.Children.Add(this.listLook);
 
 			this.table = new ScrollArray();
-			this.table.SelectedIndexChanged += new EventHandler(this.table_SelectedIndexChanged);
-			this.table.SortChanged += new EventHandler(this.table_SortChanged);
+			this.table.SelectedIndexChanged += this.table_SelectedIndexChanged;
+			this.table.SortChanged += this.table_SortChanged;
 			this.InitTable();
 			this.UpdateTable();
 			this.bottomPane.Children.Add(this.table);
 
 			this.buttonCreate = new Button();
 			this.buttonCreate.Text = "Creer";
-			this.buttonCreate.Clicked += new MessageEventHandler(this.buttonCreate_Clicked);
+			this.buttonCreate.Clicked += this.buttonCreate_Clicked;
 			this.rightPane.Children.Add(this.buttonCreate);
 			this.tip.SetToolTip(this.buttonCreate, "Crée une nouvelle fiche");
 
 			this.buttonDuplicate = new Button();
 			this.buttonDuplicate.Text = "Dupliquer";
-			this.buttonDuplicate.Clicked += new MessageEventHandler(this.buttonDuplicate_Clicked);
+			this.buttonDuplicate.Clicked += this.buttonDuplicate_Clicked;
 			this.rightPane.Children.Add(this.buttonDuplicate);
 			this.tip.SetToolTip(this.buttonDuplicate, "Duplique une fiche existante");
 
 			this.buttonDelete = new Button();
 			this.buttonDelete.Text = "Supprimer";
-			this.buttonDelete.Clicked += new MessageEventHandler(this.buttonDelete_Clicked);
+			this.buttonDelete.Clicked += this.buttonDelete_Clicked;
 			this.rightPane.Children.Add(this.buttonDelete);
 			this.tip.SetToolTip(this.buttonDelete, "Supprime une fiche");
 
@@ -623,20 +623,20 @@ namespace Epsitec.Common.Widgets
 				tf.ContentAlignment = fd.alignment;
 				tf.MaxLength = fd.max;
 				if ( fd.combo != "" )  this.InitCombo(tf, fd.combo);
-				tf.TextChanged += new EventHandler(this.tf_TextChanged);
+				tf.TextChanged += this.tf_TextChanged;
 				this.rightPane.Children.Add(tf);
 				this.textFields.Add(tf);
 			}
 
 			this.buttonValidate = new Button();
 			this.buttonValidate.Text = "Valider";
-			this.buttonValidate.Clicked += new MessageEventHandler(this.buttonValidate_Clicked);
+			this.buttonValidate.Clicked += this.buttonValidate_Clicked;
 			this.rightPane.Children.Add(this.buttonValidate);
 			this.tip.SetToolTip(this.buttonValidate, "Valide la fiche en édition");
 
 			this.buttonCancel = new Button();
 			this.buttonCancel.Text = "Annuler";
-			this.buttonCancel.Clicked += new MessageEventHandler(this.buttonCancel_Clicked);
+			this.buttonCancel.Clicked += this.buttonCancel_Clicked;
 			this.rightPane.Children.Add(this.buttonCancel);
 			this.tip.SetToolTip(this.buttonCancel, "Annule les modifications dans la fiche");
 

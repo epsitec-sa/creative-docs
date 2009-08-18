@@ -49,8 +49,8 @@ namespace Epsitec.Common.Widgets
 			this.container.InheritsParentFocus = true;
 			
 			this.scrollerV.IsInverted = true;  // de haut en bas
-			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
-			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
+			this.scrollerV.ValueChanged += this.HandleScrollerV;
+			this.scrollerH.ValueChanged += this.HandleScrollerH;
 		}
 		
 		
@@ -60,11 +60,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.scrollerV != null )
 				{
-					this.scrollerV.ValueChanged -= new EventHandler(this.HandleScrollerV);
+					this.scrollerV.ValueChanged -= this.HandleScrollerV;
 				}
 				if ( this.scrollerH != null )
 				{
-					this.scrollerH.ValueChanged -= new EventHandler(this.HandleScrollerH);
+					this.scrollerH.ValueChanged -= this.HandleScrollerH;
 				}
 				
 				this.SetFocusedCell(null);
@@ -1743,8 +1743,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.focusedWidget != null )
 				{
-					this.focusedWidget.KeyboardFocusChanged -= new PropertyChangedEventHandler(this.HandleFocusedWidgetKeyboardFocusChanged);
-					this.focusedWidget.PreProcessing -= new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
+					this.focusedWidget.KeyboardFocusChanged -= this.HandleFocusedWidgetKeyboardFocusChanged;
+					this.focusedWidget.PreProcessing -= this.HandleFocusedWidgetPreProcessing;
 					this.focusedWidget = null;
 				}
 				
@@ -1756,8 +1756,8 @@ namespace Epsitec.Common.Widgets
 					
 					System.Diagnostics.Debug.Assert( this.focusedWidget != null );
 					
-					this.focusedWidget.KeyboardFocusChanged += new PropertyChangedEventHandler(this.HandleFocusedWidgetKeyboardFocusChanged);
-					this.focusedWidget.PreProcessing += new MessageEventHandler(this.HandleFocusedWidgetPreProcessing);
+					this.focusedWidget.KeyboardFocusChanged += this.HandleFocusedWidgetKeyboardFocusChanged;
+					this.focusedWidget.PreProcessing += this.HandleFocusedWidgetPreProcessing;
 				}
 			}
 		}
@@ -1883,7 +1883,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int i = this.headerButtonV.Count-1;
 				HeaderButton button = this.FindButtonV(i);
-				button.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				button.Clicked -= this.HandleButtonClicked;
 				this.headerButtonV.RemoveAt(i);
 			}
 			for ( int i=0 ; i<this.maxRows ; i++ )
@@ -1891,7 +1891,7 @@ namespace Epsitec.Common.Widgets
 				HeaderButton button = new HeaderButton(null);
 				button.Style = HeaderButtonStyle.Left;
 				button.Index = i;
-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				button.Clicked += this.HandleButtonClicked;
 				this.headerButtonV.Add(button);
 			}
 
@@ -1899,7 +1899,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int i = this.headerButtonH.Count-1;
 				HeaderButton button = this.FindButtonH(i);
-				button.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				button.Clicked -= this.HandleButtonClicked;
 				this.headerButtonH.RemoveAt(i);
 			}
 			for ( int i=0 ; i<this.maxColumns ; i++ )
@@ -1907,7 +1907,7 @@ namespace Epsitec.Common.Widgets
 				HeaderButton button = new HeaderButton(null);
 				button.Style = HeaderButtonStyle.Top;
 				button.Index = i;
-				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+				button.Clicked += this.HandleButtonClicked;
 				this.headerButtonH.Add(button);
 			}
 
@@ -1916,9 +1916,9 @@ namespace Epsitec.Common.Widgets
 			{
 				int i = this.headerSliderV.Count-1;
 				HeaderSlider slider = this.FindSliderV(i);
-				slider.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
-				slider.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
-				slider.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
+				slider.DragStarted -= this.HandleSliderDragStarted;
+				slider.DragMoved   -= this.HandleSliderDragMoved;
+				slider.DragEnded   -= this.HandleSliderDragEnded;
 				this.headerSliderV.RemoveAt(i);
 			}
 			for ( int i=0 ; i<this.maxRows ; i++ )
@@ -1926,9 +1926,9 @@ namespace Epsitec.Common.Widgets
 				HeaderSlider slider = new HeaderSlider(null);
 				slider.Style = HeaderSliderStyle.Left;
 				slider.Index = i;
-				slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
-				slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
-				slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
+				slider.DragStarted += this.HandleSliderDragStarted;
+				slider.DragMoved   += this.HandleSliderDragMoved;
+				slider.DragEnded   += this.HandleSliderDragEnded;
 				this.headerSliderV.Add(slider);
 			}
 
@@ -1936,9 +1936,9 @@ namespace Epsitec.Common.Widgets
 			{
 				int i = this.headerSliderH.Count-1;
 				HeaderSlider slider = this.FindSliderH(i);
-				slider.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
-				slider.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
-				slider.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
+				slider.DragStarted -= this.HandleSliderDragStarted;
+				slider.DragMoved   -= this.HandleSliderDragMoved;
+				slider.DragEnded   -= this.HandleSliderDragEnded;
 				this.headerSliderH.RemoveAt(i);
 			}
 			for ( int i=0 ; i<this.maxColumns ; i++ )
@@ -1946,9 +1946,9 @@ namespace Epsitec.Common.Widgets
 				HeaderSlider slider = new HeaderSlider(null);
 				slider.Style = HeaderSliderStyle.Top;
 				slider.Index = i;
-				slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
-				slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
-				slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
+				slider.DragStarted += this.HandleSliderDragStarted;
+				slider.DragMoved   += this.HandleSliderDragMoved;
+				slider.DragEnded   += this.HandleSliderDragEnded;
 				this.headerSliderH.Add(slider);
 			}
 

@@ -1035,7 +1035,7 @@ namespace Epsitec.Common.Document
 
 			if ( doc.textContext != null )
 			{
-				doc.textContext.StyleList.StyleRedefined -= new Support.EventHandler(doc.HandleStyleListStyleRedefined);
+				doc.textContext.StyleList.StyleRedefined -= doc.HandleStyleListStyleRedefined;
 
 				if ( doc.wrappers != null )
 				{
@@ -1081,7 +1081,7 @@ namespace Epsitec.Common.Document
 			
 			if ( this.textContext != null )
 			{
-				this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
+				this.textContext.StyleList.StyleRedefined += this.HandleStyleListStyleRedefined;
 
 				if ( this.wrappers != null )
 				{
@@ -2628,7 +2628,7 @@ namespace Epsitec.Common.Document
 			this.textContext.StyleList.StyleMap.SetRank(null, charStyle, 0);
 			this.textContext.StyleList.StyleMap.SetCaption(null, charStyle, Res.Strings.Style.Character.Base);
 
-			this.textContext.StyleList.StyleRedefined += new Support.EventHandler(this.HandleStyleListStyleRedefined);
+			this.textContext.StyleList.StyleRedefined += this.HandleStyleListStyleRedefined;
 		}
 
 		

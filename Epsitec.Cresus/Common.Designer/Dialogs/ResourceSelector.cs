@@ -37,7 +37,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.WindowInit("ResourceSelector", 500, 300, true);
 				this.window.Text = Res.Strings.Dialog.ResourceSelector.Title;
 				this.window.Owner = this.parentWindow;
-				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowCloseClicked);
+				this.window.WindowCloseClicked += this.HandleWindowCloseClicked;
 				this.window.Root.Padding = new Margins(8, 8, 8, 8);
 
 				ResizeKnob resize = new ResizeKnob(this.window.Root);
@@ -59,14 +59,14 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.radioEntities.Name = "Entities";
 				this.radioEntities.PreferredWidth = 70;
 				this.radioEntities.Dock = DockStyle.Right;
-				this.radioEntities.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioEntities.Clicked += this.HandleRadioClicked;
 
 				this.radioTypes = new RadioButton(header);
 				this.radioTypes.Text = "Types";
 				this.radioTypes.Name = "Types";
 				this.radioTypes.PreferredWidth = 70;
 				this.radioTypes.Dock = DockStyle.Right;
-				this.radioTypes.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioTypes.Clicked += this.HandleRadioClicked;
 
 				this.checkInterface = new CheckButton(header);
 				this.checkInterface.AutoToggle = false;
@@ -74,21 +74,21 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.checkInterface.Name = "Interface";
 				this.checkInterface.PreferredWidth = 110;
 				this.checkInterface.Dock = DockStyle.Left;
-				this.checkInterface.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.checkInterface.Clicked += this.HandleRadioClicked;
 
 				this.radioAlone = new RadioButton(header);
 				this.radioAlone.Text = "<font size=\"130%\"><b>Pas d'héritage</b></font>";
 				this.radioAlone.Name = "Alone";
 				this.radioAlone.PreferredWidth = 130;
 				this.radioAlone.Dock = DockStyle.Left;
-				this.radioAlone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioAlone.Clicked += this.HandleRadioClicked;
 
 				this.radioInherit = new RadioButton(header);
 				this.radioInherit.Text = "<font size=\"130%\"><b>Hérite de l'entité ci-dessous :</b></font>";
 				this.radioInherit.Name = "Inherit";
 				this.radioInherit.PreferredWidth = 240;
 				this.radioInherit.Dock = DockStyle.Left;
-				this.radioInherit.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+				this.radioInherit.Clicked += this.HandleRadioClicked;
 
 				Separator sep = new Separator(this.window.Root);  // trait horizontal de séparation
 				sep.PreferredHeight = 1;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listModules.Dock = DockStyle.Fill;
 				this.listModules.Margins = new Margins(0, 0, 0, 8);
 				this.listModules.TabIndex = 1;
-				this.listModules.SelectedIndexChanged += new EventHandler(this.HandleListModulesSelected);
+				this.listModules.SelectedIndexChanged += this.HandleListModulesSelected;
 
 				//	Partie droite.
 				this.header2 = new StaticText(right);
@@ -134,8 +134,8 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.listResources.Dock = DockStyle.Fill;
 				this.listResources.Margins = new Margins(0, 0, 0, 8);
 				this.listResources.TabIndex = 2;
-				this.listResources.SelectedIndexChanged += new EventHandler(this.HandleListResourcesSelected);
-				this.listResources.DoubleClicked += new MessageEventHandler(this.HandleListResourcesDoubleClicked);
+				this.listResources.SelectedIndexChanged += this.HandleListResourcesSelected;
+				this.listResources.DoubleClicked += this.HandleListResourcesDoubleClicked;
 
 				//	Boutons de fermeture.
 				Widget footer = new Widget(this.window.Root);
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonCancel.Text = Res.Strings.Dialog.Button.Cancel;
 				this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 				this.buttonCancel.Dock = DockStyle.Right;
-				this.buttonCancel.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonCancel.Clicked += this.HandleButtonCloseClicked;
 				this.buttonCancel.TabIndex = 12;
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
@@ -165,7 +165,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonUse.ButtonStyle = ButtonStyle.DefaultAccept;
 				this.buttonUse.Dock = DockStyle.Right;
 				this.buttonUse.Margins = new Margins(0, 6, 0, 0);
-				this.buttonUse.Clicked += new MessageEventHandler(this.HandleButtonUseClicked);
+				this.buttonUse.Clicked += this.HandleButtonUseClicked;
 				this.buttonUse.TabIndex = 11;
 				this.buttonUse.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 

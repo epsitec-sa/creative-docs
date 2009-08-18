@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.slider = new Slider (this);
 			this.slider.HasFrame = false;
-			this.slider.ValueChanged += new Support.EventHandler (this.HandleSliderValueChanged);
+			this.slider.ValueChanged += this.HandleSliderValueChanged;
 
 			this.UpdateSliderRange ();
 		}
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.slider != null)
 				{
-					this.slider.ValueChanged -= new Support.EventHandler (this.HandleSliderValueChanged);
+					this.slider.ValueChanged -= this.HandleSliderValueChanged;
 					this.slider.Dispose ();
 				}
 				this.slider = null;

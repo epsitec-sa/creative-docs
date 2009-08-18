@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldTension.TextFieldReal.InternalMaxValue = 100;
 			this.fieldTension.TextFieldReal.Step = 5;
 			this.fieldTension.TextFieldReal.TextSuffix = "%";
-			this.fieldTension.TextFieldReal.EditionAccepted += new EventHandler(this.HandleFieldChanged);
+			this.fieldTension.TextFieldReal.EditionAccepted += this.HandleFieldChanged;
 			this.fieldTension.TabIndex = 3;
 			this.fieldTension.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldTension, Res.Strings.Panel.Tension.Tooltip.Value);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.fieldTension.TextFieldReal.EditionAccepted -= new EventHandler(this.HandleFieldChanged);
+				this.fieldTension.TextFieldReal.EditionAccepted -= this.HandleFieldChanged;
 				this.fieldTension = null;
 			}
 			

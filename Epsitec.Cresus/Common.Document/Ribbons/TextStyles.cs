@@ -25,7 +25,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonParagraph.AutoFocus = false;
 			this.buttonParagraph.TabIndex = this.tabIndex++;
 			this.buttonParagraph.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.buttonParagraph.Clicked += new MessageEventHandler(this.HandleParagraphClicked);
+			this.buttonParagraph.Clicked += this.HandleParagraphClicked;
 			ToolTip.Default.SetToolTip(this.buttonParagraph, Res.Strings.Panel.Style.ParagraphDefinition);
 
 			this.buttonCharacter = new IconButtonMark(this);
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Document.Ribbons
 			this.buttonCharacter.AutoFocus = false;
 			this.buttonCharacter.TabIndex = this.tabIndex++;
 			this.buttonCharacter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.buttonCharacter.Clicked += new MessageEventHandler(this.HandleCharacterClicked);
+			this.buttonCharacter.Clicked += this.HandleCharacterClicked;
 			ToolTip.Default.SetToolTip(this.buttonCharacter, Res.Strings.Panel.Style.CharacterDefinition);
 
 			this.comboStyle = this.CreateIconButtonsCombo("TextEditing");  // (*)
@@ -49,8 +49,8 @@ namespace Epsitec.Common.Document.Ribbons
 			this.comboStyle.AutoFocus = false;
 			this.comboStyle.TabIndex = this.tabIndex++;
 			this.comboStyle.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.comboStyle.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
-			this.comboStyle.FirstIconChanged += new EventHandler(this.HandleFirstIconChanged);
+			this.comboStyle.SelectedIndexChanged += this.HandleSelectedIndexChanged;
+			this.comboStyle.FirstIconChanged += this.HandleFirstIconChanged;
 
 			// (*)	Ce nom permet de griser automatiquement les widgets lorsqu'il n'y a
 			//		pas de texte en édition.

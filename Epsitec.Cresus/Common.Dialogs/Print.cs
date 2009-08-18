@@ -144,7 +144,7 @@ namespace Epsitec.Common.Dialogs
 			this.dialog.Document        = document.Object as System.Drawing.Printing.PrintDocument;
 			this.dialog.PrinterSettings = document.PrinterSettings.Object as System.Drawing.Printing.PrinterSettings;
 			
-			document.PrinterChanged += new Support.EventHandler (this.HandleDocumentPrinterChanged);
+			document.PrinterChanged += this.HandleDocumentPrinterChanged;
 		}
 		
 		protected virtual void Detach(Printing.PrintDocument document)
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Dialogs
 			this.dialog.Document = null;
 			this.dialog.PrinterSettings = null;
 			
-			document.PrinterChanged -= new Support.EventHandler (this.HandleDocumentPrinterChanged);
+			document.PrinterChanged -= this.HandleDocumentPrinterChanged;
 		}
 		
 		
