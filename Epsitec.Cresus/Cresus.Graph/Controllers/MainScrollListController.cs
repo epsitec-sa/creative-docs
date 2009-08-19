@@ -80,15 +80,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 			else
 			{
 				this.ScrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
+				this.selection = e;
 			}
-
-			this.selection = e;
 		}
 
 		private void HandleMultiSelectionChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			this.OnChanged ();
-			this.selection = new MultiSelectEventArgs (this.ScrollList.SelectedIndex, this.ScrollList.SelectedIndex);
+
+			int index = this.ScrollList.SelectedIndex;
+
+			if (this.ScrollList.IsItemSelected (index))
+			{
+				this.selection = new MultiSelectEventArgs (index, index);
+			}
+			else
+			{
+				this.selection = null;
+			}
 		}
 
 		private void HandleMouseExited(object sender, MessageEventArgs e)
@@ -119,7 +128,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			int index = this.ScrollList.SelectedIndex;
 
 			if ((index >= 0) &&
-				(this.selection != null))
+				(this.selection != null) &&
+				(this.selection.Count > 0))
 			{
 				var graphics  = e.Graphics;
 				var bounds    = this.ScrollList.GetRowBounds (index);
