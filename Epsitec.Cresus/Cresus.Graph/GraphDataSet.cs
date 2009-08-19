@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphDataSet()
 		{
-			this.dataTable = GraphDataSet.LoadComptaData ();
+			Actions.Factory.New (this.LoadDataTable).Invoke ();
 		}
 
 
@@ -26,6 +26,10 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		public void LoadDataTable()
+		{
+			this.dataTable = GraphDataSet.LoadComptaData ();
+		}
 		
 		internal static DataTable LoadComptaData()
 		{

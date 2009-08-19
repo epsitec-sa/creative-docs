@@ -90,7 +90,8 @@ namespace Epsitec.Cresus.Graph
 
 			this.scrollListController = new Controllers.MainScrollListController (this.scrollList);
 			this.scrollListController.Changed += sender => this.UpdateChartView ();
-			this.scrollListController.SumSeries = selection => this.SumRows (selection);
+			this.scrollListController.SumSeries = Actions.Factory.New (this.SumRows);
+
 			
 			this.Window = window;
 			this.IsReady = true;

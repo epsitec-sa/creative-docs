@@ -114,6 +114,8 @@ namespace Epsitec.Common.Widgets
 		protected override void MouseSelectEnd()
 		{
 			base.MouseSelectEnd ();
+
+			System.Diagnostics.Debug.WriteLine ("MouseSelectEnd, SelectedIndex : " + this.SelectedIndex.ToString ());
 			
 			if (this.dragSelectionStartIndex >= 0)
 			{
@@ -142,6 +144,31 @@ namespace Epsitec.Common.Widgets
 			base.MouseSelectRow (index);
 		}
 
+		protected override void OnSelectedIndexChanged()
+		{
+			if (this.dragSelectionStartIndex >= 0)
+			{
+				//	Currently dragging, don't consider the changes to be useful for any
+				//	other modifications
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("SelectedIndexChanged : " + this.SelectedIndex.ToString ());
+
+				int index = this.SelectedIndex;
+
+				if (index < 0)
+				{
+				}
+				else
+				{
+					this.selection.Clear ();
+					this.AddSelection (Enumerable.Range (index, 1));
+				}
+			}
+
+			base.OnSelectedIndexChanged ();
+		}
 
 		protected void OnMultiSelectionChanged()
 		{

@@ -207,25 +207,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.quickButtonsFrame = frame;
 
-			if (frame.IsEmpty)
-			{
-				this.quickButton1.Hide ();
-				this.quickButton2.Hide ();
-			}
-			else
-			{
-				frame = Rectangle.Offset (frame, this.ScrollList.ActualLocation);
+			System.Diagnostics.Debug.Assert (frame.IsEmpty == false);
+			
+			frame = Rectangle.Offset (frame, this.ScrollList.ActualLocation);
 
-				this.quickButton1.Show ();
-				this.quickButton2.Show ();
-				this.quickButton1.Margins = new Margins (frame.Left +  0, 0, 0, frame.Bottom);
-				this.quickButton2.Margins = new Margins (frame.Left + 24, 0, 0, frame.Bottom);
-			}
+			this.quickButton1.Enable = true;
+			this.quickButton2.Enable = true;
+			this.quickButton1.Show ();
+			this.quickButton2.Show ();
+			this.quickButton1.Margins = new Margins (frame.Left +  0, 0, 0, frame.Bottom);
+			this.quickButton2.Margins = new Margins (frame.Left + 24, 0, 0, frame.Bottom);
 		}
 
 		private void HideQuickButtons()
 		{
-			this.ShowQuickButtons (Rectangle.Empty);
+			this.quickButtonsFrame = Rectangle.Empty;
+
+			if ((this.quickButton1.IsFocused) ||
+				(this.quickButton2.IsFocused))
+			{
+				this.ScrollList.Focus ();
+			}
+
+			this.quickButton1.Hide ();
+			this.quickButton2.Hide ();
+			this.quickButton1.Enable = false;
+			this.quickButton2.Enable = false;
 		}
 
 		private void HandleButton2Clicked(object sender, MessageEventArgs e)
