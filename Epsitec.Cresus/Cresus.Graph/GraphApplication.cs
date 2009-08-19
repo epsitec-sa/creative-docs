@@ -86,12 +86,36 @@ namespace Epsitec.Cresus.Graph
 
 			this.chartView.DefineRenderer (lineChartRenderer);
 
-			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
+			this.UpdateScrollListItems ();
+
 			this.scrollListController = new Controllers.MainScrollListController (this.scrollList);
 			this.scrollListController.Changed += sender => this.UpdateChartView ();
+			this.scrollListController.SumSeries = selection => this.SumRows (selection);
 			
 			this.Window = window;
 			this.IsReady = true;
+		}
+
+		private void SumRows(IEnumerable<int> rows)
+		{
+			var sum = this.graphDataSet.DataTable.SumRows (rows);
+
+			if (sum == null)
+			{
+				return;
+			}
+
+			this.graphDataSet.DataTable.RemoveRows (rows);
+			this.graphDataSet.DataTable.Insert (rows.First (), sum.Label, sum.Values);
+
+			this.UpdateScrollListItems ();
+		}
+
+		private void UpdateScrollListItems()
+		{
+			this.scrollList.ClearSelection ();
+			this.scrollList.Items.Clear ();
+			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
 		}
 
 		private void UpdateChartView()

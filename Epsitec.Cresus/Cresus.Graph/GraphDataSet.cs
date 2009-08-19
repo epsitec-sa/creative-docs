@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+
+		
 		internal static DataTable LoadComptaData()
 		{
 			CsvFormat format = new CsvFormat ()

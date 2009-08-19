@@ -772,13 +772,19 @@ namespace Epsitec.Common.Widgets
 		#region IStringCollectionHost Members
 		public void NotifyStringCollectionChanged()
 		{
-			if ( this.items.Count == 0 )
+			int count = this.items.Count;
+
+			if (this.firstRow + this.visibleRows > count)
 			{
-				this.FirstVisibleRow = 0;
-				this.SelectedIndex   = -1;
+				this.FirstVisibleRow = System.Math.Max (0, count - this.visibleRows);
+			}
+
+			if (this.selectedRow >= count)
+			{
+				this.SelectedIndex = count - 1;
 			}
 			
-			this.SetDirty();
+			this.SetDirty ();
 		}
 		
 		

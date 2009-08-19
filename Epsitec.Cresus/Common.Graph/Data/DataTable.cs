@@ -167,10 +167,93 @@ namespace Epsitec.Common.Graph.Data
 
 		public void Add(string label, IEnumerable<double?> row)
 		{
-			this.rowLabels.Add (label);
-			this.rows.Add (row.ToArray ());
+			this.Insert (this.rows.Count, label, row);
 		}
 
+		public void Add(string label, IEnumerable<ChartValue> collection)
+		{
+			this.Insert (this.rows.Count, label, collection);
+		}
+
+
+
+		public ChartSeries SumRows(IEnumerable<int> rows)
+		{
+			Accumulator accumulator = new Accumulator ();
+			List<string> labels = new List<string> ();
+
+			foreach (int row in rows)
+			{
+				var series = this.GetRowSeries (row);
+
+				accumulator.Accumulate (series.Values);
+				labels.Add (series.Label);
+			}
+
+			if (labels.Count > 0)
+			{
+				var result = new ChartSeries (accumulator.Values)
+				{
+					Label = string.Join (DataCube.LabelSeparator.ToString (), labels.ToArray ())
+				};
+
+				return result;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public void Insert(int index, string label, IEnumerable<double?> row)
+		{
+			double?[] rowValues = row.ToArray ();
+
+			if (rowValues.Length != this.columnLabels.Count)
+			{
+				throw new System.ArgumentException ("Size mismatch", "row");
+			}
+
+			this.rowLabels.Insert (index, label);
+			this.rows.Insert (index, rowValues);
+		}
+
+		public void Insert(int index, string label, IEnumerable<ChartValue> collection)
+		{
+			double?[] rowValues = new double?[this.columnLabels.Count];
+
+			this.rowLabels.Insert (index, label);
+			this.rows.Insert (index, rowValues);
+
+			foreach (var item in collection)
+			{
+				this[label, item.Label] = item.Value;
+			}
+		}
+
+		public void RemoveRows(IEnumerable<int> rows)
+		{
+			int count = 0;
+			int last  = -1;
+
+			foreach (int row in rows)
+			{
+				if (row <= last)
+				{
+					throw new System.ArgumentException ("Invalid rows : must be sorted in ascending order");
+				}
+				last = row;
+			}
+
+			foreach (int row in rows)
+			{
+				int index = row - count;
+				count += 1;
+				
+				this.rowLabels.RemoveAt (index);
+				this.rows.RemoveAt (index);
+			}
+		}
 
 
 		public IEnumerable<ChartSeries> GetRowSeries()

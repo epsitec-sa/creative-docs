@@ -49,6 +49,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = this.ScrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
+
+			this.quickButton2.Clicked += this.HandleButton2Clicked;
 		}
 
 		public ScrollListMultiSelect ScrollList
@@ -216,6 +218,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.ShowQuickButtons (Rectangle.Empty);
 		}
 
+		private void HandleButton2Clicked(object sender, MessageEventArgs e)
+		{
+			this.HideQuickButtons ();
+			this.selection = null;
+
+			IEnumerable<int> selection = this.ScrollList.GetSortedSelection ();
+
+			if (this.SumSeries != null)
+			{
+				this.SumSeries (selection);
+			}
+			
+			this.ScrollList.Invalidate ();
+		}
+
 		
 		private void NotifyHotRow(int index)
 		{
@@ -238,7 +255,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
+
+		
 		public event EventHandler Changed;
+		public System.Action<IEnumerable<int>> SumSeries;
 
 		private int hotRowIndex;
 		private MultiSelectEventArgs selection;

@@ -118,7 +118,7 @@ namespace Epsitec.Common.Graph.Data
 
 			foreach (var item in accumulator.Values)
 			{
-				string[] keys = item.Label.Split ('+');
+				string[] keys = item.Label.Split (DataCube.LabelSeparator);
 
 				rowLabels.Add (keys[0]);
 				colLabels.Add (keys[1]);
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Graph.Data
 
 			foreach (var item in accumulator.Values)
 			{
-				string[] keys = item.Label.Split ('+');
+				string[] keys = item.Label.Split (DataCube.LabelSeparator);
 
 				table[keys[0], keys[1]] = item.Value;
 			}
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Graph.Data
 						{
 							if (key.Length > 0)
 							{
-								key.Append ('+');
+								key.Append (DataCube.LabelSeparator);
 							}
 
 							key.Append (match.Groups[groupIndex].Value);
@@ -276,6 +276,8 @@ namespace Epsitec.Common.Graph.Data
 
 		#endregion
 
+
+		public const char LabelSeparator = '+';
 
 		readonly Dictionary<string, double> values;
 		readonly Dictionary<string, DimensionValues> dimensions;
