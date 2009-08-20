@@ -132,9 +132,14 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		public override bool					HasTextLabel
+		{
+			get
+			{
+				return this.textVisibility;
+			}
+		}
 
-
-		#region Overridden Methods
 
 		protected override Drawing.Size GetTextLayoutSize()
 		{
@@ -142,9 +147,34 @@ namespace Epsitec.Common.UI
 			return bounds.Size;
 		}
 
+		protected override string GetCaptionDescription(Caption caption)
+		{
+			if (this.textVisibility)
+			{
+				return base.GetCaptionDescription (caption);
+			}
+			else
+			{
+				if (caption.HasDescription)
+				{
+					return caption.Description;
+				}
+				else if (caption.HasLabels)
+				{
+					var labels = caption.Labels;
+					return labels[labels.Count-1];
+				}
+				else
+				{
+					return null;
+				}
+			}
+		}
+
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
+			this.UpdateTextVisibility ();
 			this.UpdateIcon ();
 		}
 
@@ -264,7 +294,29 @@ namespace Epsitec.Common.UI
 			}
 		}
 
-		#endregion
+
+		private void UpdateTextVisibility()
+		{
+			Drawing.Rectangle rect = this.GetInnerBounds ();
+
+			bool oldVisibility = this.textVisibility;
+
+			if (rect.Width < rect.Height*2)
+			{
+				//	Not enough room for the text, but only for the icon.
+
+				this.textVisibility = false;
+			}
+			else
+			{
+				this.textVisibility = true;
+			}
+
+			if (oldVisibility != this.textVisibility)
+			{
+				this.UpdateCaption ();
+			}
+		}
 
 		private void UpdateIcon()
 		{
@@ -328,6 +380,7 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		
 		private Drawing.Rectangle GetIconBounds()
 		{
 			//	Donne le rectangle carré à utiliser pour l'icône du bouton.
@@ -339,8 +392,10 @@ namespace Epsitec.Common.UI
 			{
 				Drawing.Rectangle rect = this.GetInnerBounds ();
 
-				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+				if (this.textVisibility == false)
 				{
+					//	Center the icon in the available space; else just left align it.
+
 					rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
 				}
 
@@ -358,7 +413,7 @@ namespace Epsitec.Common.UI
 			if ((buttonClass == ButtonClass.FlatButton) ||
 				(buttonClass == ButtonClass.RichDialogButton))
 			{
-				if (rect.Width < rect.Height*2)  // place seulement pour l'icône ?
+				if (this.textVisibility == false)
 				{
 					return Drawing.Rectangle.Empty;
 				}
@@ -451,5 +506,6 @@ namespace Epsitec.Common.UI
 
 		private TextLayout			iconLayout;
 		private ButtonClass			cachedButtonClass;
+		private bool				textVisibility;
 	}
 }

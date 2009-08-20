@@ -77,7 +77,7 @@ namespace Epsitec.Common.Types
 		/// Gets the label collection.
 		/// </summary>
 		/// <value>The labels.</value>
-		public ICollection<string>				Labels
+		public IList<string>					Labels
 		{
 			get
 			{

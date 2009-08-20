@@ -3269,10 +3269,12 @@ namespace Epsitec.Common.Widgets
 						this.DefineTextFromCaption (textLabel);
 					}
 
-					if (caption.HasDescription)
+					string description = this.GetCaptionDescription (caption);
+
+					if (!string.IsNullOrEmpty (description))
 					{
 						Collections.ShortcutCollection shortcuts = Shortcut.GetShortcuts (caption);
-						string tip = Shortcut.AppendShortcutText (caption.Description, shortcuts);
+						string tip = Shortcut.AppendShortcutText (description, shortcuts);
 
 						//	If the widget does not display a text label or if the tool tip
 						//	is different from the label, define which tool tip to use.
@@ -3287,12 +3289,28 @@ namespace Epsitec.Common.Widgets
 							this.DefineToolTipFromCaption (null);
 						}
 					}
+					else
+					{
+						this.DefineToolTipFromCaption (null);
+					}
 
 					if (caption.HasIcon)
 					{
 						this.DefineIconFromCaption (caption.Icon);
 					}
 				}
+			}
+		}
+
+		protected virtual string GetCaptionDescription(Caption caption)
+		{
+			if (caption.HasDescription)
+			{
+				return caption.Description;
+			}
+			else
+			{
+				return null;
 			}
 		}
 
