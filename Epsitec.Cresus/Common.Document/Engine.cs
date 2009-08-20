@@ -109,9 +109,7 @@ namespace Epsitec.Common.Document
 			//	Adapte une couleur.
 			if ( this.adorner != null )
 			{
-				Color basic = color.Basic;
 				color.Basic = this.adorner.AdaptPictogramColor(color.Basic, this.glyphPaintStyle, this.uniqueColor);
-				color.Basic = basic;
 			}
 			
 			return color;

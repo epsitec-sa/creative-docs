@@ -125,7 +125,16 @@ namespace Epsitec.Common.Widgets
 			
 			Platform.Window.UseWaitCursor = (Application.waitCursorCount > 0);
 		}
-		
+
+
+		public void SetEnable(Command command, bool enable)
+		{
+			if (this.commandContext != null)
+			{
+				this.commandContext.GetCommandState (command).Enable = enable;
+			}
+		}
+
 		
 		public void RunMessageLoop()
 		{
