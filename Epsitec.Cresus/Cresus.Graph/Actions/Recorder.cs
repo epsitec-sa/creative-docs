@@ -1,12 +1,14 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Actions
 {
-	public class Recorder
+	public class Recorder : IEnumerable<ActionRecord>
 	{
 		public Recorder()
 		{
@@ -44,14 +46,19 @@ namespace Epsitec.Cresus.Graph.Actions
 					break;
 				}
 
-				this.Push (ActionRecord.Parse (line));
+				this.actionRecords.Add (ActionRecord.Parse (line));
 			}
+
+			this.OnChanged ();
 		}
 
 
 		public ActionRecord Push(ActionRecord record)
 		{
 			this.actionRecords.Add (record);
+			
+			this.OnRecordPushed ();
+			this.OnChanged ();
 
 			System.Diagnostics.Debug.WriteLine (record.ToString ());
 			
@@ -70,11 +77,38 @@ namespace Epsitec.Cresus.Graph.Actions
 			{
 				var record = this.actionRecords[index];
 				this.actionRecords.RemoveAt (index);
+				
+				this.OnRecordPopped ();
+				this.OnChanged ();
+
 				return record;
 			}
 		}
 
-		
+		public void Clear()
+		{
+			this.actionRecords.Clear ();
+			this.OnChanged ();
+		}
+
+
+		#region IEnumerable<ActionRecord> Members
+
+		public IEnumerator<ActionRecord> GetEnumerator()
+		{
+			return this.actionRecords.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.actionRecords.GetEnumerator ();
+		}
+
+		#endregion
 		
 		
 		public static Recorder Current
@@ -130,11 +164,44 @@ namespace Epsitec.Cresus.Graph.Actions
 			result = arg.Length == 0 ? Enumerable.Empty<int> () : arg.Split (' ').Select (x => int.Parse (x, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture)).ToArray ();
 		}
 
-		
+
+		private void OnRecordPushed()
+		{
+			var handler = this.RecordPushed;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		private void OnRecordPopped()
+		{
+			var handler = this.RecordPopped;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		private void OnChanged()
+		{
+			var handler = this.Changed;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler				RecordPushed;
+		public event EventHandler				RecordPopped;
+		public event EventHandler				Changed;
 		
 		private static Recorder current = new Recorder ();
 		
 		private readonly List<ActionRecord> actionRecords;
-		
+
 	}
 }

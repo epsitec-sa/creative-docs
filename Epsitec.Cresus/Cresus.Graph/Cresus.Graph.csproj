@@ -54,6 +54,7 @@
     <Compile Include="Actions\GenericAction.cs" />
     <Compile Include="Controllers\MainScrollListController.cs" />
     <Compile Include="GraphApplication.cs" />
+    <Compile Include="GraphCommands.cs" />
     <Compile Include="GraphDataSet.cs" />
     <Compile Include="GraphProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

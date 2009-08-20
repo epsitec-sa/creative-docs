@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.Graph.Renderers;
+using Epsitec.Common.UI;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -19,6 +20,8 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphApplication()
 		{
+			this.graphCommands = new GraphCommands (this);
+			this.graphDataSet = new GraphDataSet ();
 		}
 
 		public bool IsReady
@@ -37,7 +40,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void SetupDataSet()
 		{
-			this.graphDataSet = new GraphDataSet ();
+			Actions.Factory.New (this.LoadDataSet).Invoke ();
 		}
 		
 
@@ -47,10 +50,39 @@ namespace Epsitec.Cresus.Graph
 
 			window.Text = this.ShortWindowTitle;
 			window.ClientSize = new Epsitec.Common.Drawing.Size (824, 400);
+			window.Root.Padding = new Margins (4, 8, 8, 4);
+
+			FrameBox bar = new FrameBox ()
+			{
+				Dock = DockStyle.Top,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Margins = new Margins (0, 0, 0, 4),
+				Parent = window.Root
+			};
+
+			MetaButton mb;
+
+			mb = new MetaButton ()
+			{
+				ButtonClass = ButtonClass.FlatButton,
+				Dock = DockStyle.Stacked,
+				CommandObject = ApplicationCommands.Undo,
+				PreferredWidth = 32,
+				Embedder = bar
+			};
+
+			mb = new MetaButton ()
+			{
+				ButtonClass = ButtonClass.FlatButton,
+				Dock = DockStyle.Stacked,
+				CommandObject = ApplicationCommands.Redo,
+				PreferredWidth = 32,
+				Embedder = bar
+			};
+			
 
 			FrameBox frame = new FrameBox ()
 			{
-				Margins = new Margins (8, 8, 8, 8),
 				Dock = DockStyle.Fill,
 				Parent = window.Root
 			};
@@ -112,11 +144,20 @@ namespace Epsitec.Cresus.Graph
 			this.UpdateScrollListItems ();
 		}
 
+		private void LoadDataSet()
+		{
+			this.graphDataSet.LoadDataTable ();
+			this.UpdateScrollListItems ();
+		}
+
 		private void UpdateScrollListItems()
 		{
-			this.scrollList.ClearSelection ();
-			this.scrollList.Items.Clear ();
-			this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
+			if (this.scrollList != null)
+			{
+				this.scrollList.ClearSelection ();
+				this.scrollList.Items.Clear ();
+				this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
+			}
 		}
 
 		private void UpdateChartView()
@@ -136,5 +177,6 @@ namespace Epsitec.Cresus.Graph
 		private ChartView chartView;
 
 		private GraphDataSet graphDataSet;
+		private GraphCommands graphCommands;
 	}
 }

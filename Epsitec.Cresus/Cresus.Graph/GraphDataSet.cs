@@ -13,7 +13,6 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphDataSet()
 		{
-			Actions.Factory.New (this.LoadDataTable).Invoke ();
 		}
 
 
