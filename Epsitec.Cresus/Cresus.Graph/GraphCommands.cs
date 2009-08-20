@@ -17,7 +17,8 @@ namespace Epsitec.Cresus.Graph
 			this.undoRecorder = Actions.Recorder.Current;
 			this.redoRecorder = new Actions.Recorder ();
 
-			this.undoRecorder.RecordPushed += sender => this.redoRecorder.Clear ();
+			this.undoRecorder.ActionCreated += sender => this.redoRecorder.Clear ();
+
 			this.undoRecorder.Changed += sender => this.UpdateUndoRedo ();
 			this.redoRecorder.Changed += sender => this.UpdateUndoRedo ();
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Graph
 
 		private void UpdateUndoRedo()
 		{
-			this.application.CommandContext.GetCommandState (ApplicationCommands.Undo).Enable = this.undoRecorder.Count > 1;
-			this.application.CommandContext.GetCommandState (ApplicationCommands.Redo).Enable = this.redoRecorder.Count > 0;
+			this.application.SetEnable (ApplicationCommands.Undo, this.undoRecorder.Count > 1);
+			this.application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
 		}
 
 

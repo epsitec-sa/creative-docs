@@ -56,15 +56,24 @@ namespace Epsitec.Cresus.Graph.Actions
 		public ActionRecord Push(ActionRecord record)
 		{
 			this.actionRecords.Add (record);
-			
+
 			this.OnRecordPushed ();
 			this.OnChanged ();
 
 			System.Diagnostics.Debug.WriteLine (record.ToString ());
-			
+
 			return record;
 		}
-		
+
+		private ActionRecord PushNewAction(ActionRecord record)
+		{
+			this.Push (record);
+			
+			this.OnActionCreated ();
+
+			return record;
+		}
+
 		public ActionRecord Pop()
 		{
 			int index = this.actionRecords.Count - 1;
@@ -122,12 +131,12 @@ namespace Epsitec.Cresus.Graph.Actions
 
 		public static ActionRecord Push(Action userAction)
 		{
-			return Recorder.Current.Push (new ActionRecord (userAction.Tag, ""));
+			return Recorder.Current.PushNewAction (new ActionRecord (userAction.Tag, ""));
 		}
 
 		public static ActionRecord Push<T>(Action userAction, T arg)
 		{
-			return Recorder.Current.Push (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
+			return Recorder.Current.PushNewAction (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
 		}
 		
 		
@@ -195,9 +204,20 @@ namespace Epsitec.Cresus.Graph.Actions
 			}
 		}
 
+		private void OnActionCreated()
+		{
+			var handler = this.ActionCreated;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
 		public event EventHandler				RecordPushed;
 		public event EventHandler				RecordPopped;
 		public event EventHandler				Changed;
+		public event EventHandler				ActionCreated;
 		
 		private static Recorder current = new Recorder ();
 		

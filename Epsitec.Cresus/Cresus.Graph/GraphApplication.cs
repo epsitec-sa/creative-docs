@@ -60,9 +60,7 @@ namespace Epsitec.Cresus.Graph
 				Parent = window.Root
 			};
 
-			MetaButton mb;
-
-			mb = new MetaButton ()
+			new MetaButton ()
 			{
 				ButtonClass = ButtonClass.FlatButton,
 				Dock = DockStyle.Stacked,
@@ -71,7 +69,7 @@ namespace Epsitec.Cresus.Graph
 				Embedder = bar
 			};
 
-			mb = new MetaButton ()
+			new MetaButton ()
 			{
 				ButtonClass = ButtonClass.FlatButton,
 				Dock = DockStyle.Stacked,
@@ -79,6 +77,16 @@ namespace Epsitec.Cresus.Graph
 				PreferredWidth = 32,
 				Embedder = bar
 			};
+
+			new IconButton ()
+			{
+				Dock = DockStyle.Stacked,
+				CommandObject = ApplicationCommands.Save,
+				PreferredWidth = 32,
+				Embedder = bar
+			};
+
+			this.SetEnable (ApplicationCommands.Save, false);
 			
 
 			FrameBox frame = new FrameBox ()
