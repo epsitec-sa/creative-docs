@@ -27,6 +27,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = root,
 				Renderer = lineChartRenderer
 			};
+
+			this.captionView = new CaptionView ()
+			{
+				Dock = DockStyle.Right,
+				Parent = root,
+				Captions = lineChartRenderer.Captions
+			};
 		}
 
 
@@ -36,15 +43,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 				(this.document.DataSet != null) &&
 				(this.document.DataSet.DataTable != null))
 			{
-				this.chartView.Renderer.Clear ();
-				this.chartView.Renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
-				this.chartView.Renderer.CollectRange (this.document.ChartSeries);
+				var renderer = this.chartView.Renderer;
+				
+				renderer.Clear ();
+				renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
+				renderer.CollectRange (this.document.ChartSeries);
+				renderer.UpdateCaptions (this.document.ChartSeries);
+				
 				this.chartView.Invalidate ();
+				this.captionView.Invalidate ();
 			}
 		}
 
 
 		private readonly GraphDocument document;
 		private readonly ChartView chartView;
+		private readonly CaptionView captionView;
 	}
 }

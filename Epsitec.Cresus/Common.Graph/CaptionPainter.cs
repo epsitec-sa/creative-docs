@@ -43,7 +43,15 @@ namespace Epsitec.Common.Graph
 				this.style = value;
 			}
 		}
-		
+
+		public void Clear()
+		{
+			this.samples.Clear ();
+			this.sampleSizeCache.Clear ();
+			this.sampleWidth = 0;
+			this.sampleSizeCacheAvailableSize = Size.Empty;
+			this.captionLayoutSize = Size.Empty;
+		}
 		
 		public void AddSample(string label, System.Action<IPaintPort, Rectangle> painter)
 		{

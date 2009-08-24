@@ -17,6 +17,7 @@ namespace Epsitec.Common.Graph.Renderers
 			this.styles = new Dictionary<string, Styles.AbstractStyle> ();
 			this.adorners = new List<Adorners.AbstractAdorner> ();
 			this.seriesList = new List<Epsitec.Common.Graph.Data.ChartSeries> ();
+			this.captions = new CaptionPainter ();
 			this.Clear ();
 		}
 
@@ -88,6 +89,14 @@ namespace Epsitec.Common.Graph.Renderers
 			get
 			{
 				return this.seriesValueLabelsList.Select (x => AbstractRenderer.CleanUpLabel (x));
+			}
+		}
+
+		public CaptionPainter Captions
+		{
+			get
+			{
+				return this.captions;
 			}
 		}
 
@@ -200,6 +209,8 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public void Render(IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle bounds)
 		{
+			this.UpdateCaptions (series);
+
 			this.BeginRender (port, bounds);
 
 			//	The rendering might take several passes, for instance to paint several layers
@@ -219,9 +230,7 @@ namespace Epsitec.Common.Graph.Renderers
 			this.EndRender (port);
 		}
 
-		public virtual void RenderCaptions(IPaintPort port, Rectangle bounds)
-		{
-		}
+		public abstract void UpdateCaptions(IEnumerable<Data.ChartSeries> series);
 
 		public abstract Point GetPoint(int index, double value);
 
@@ -267,5 +276,6 @@ namespace Epsitec.Common.Graph.Renderers
 		private readonly Dictionary<string, Styles.AbstractStyle> styles;
 		private readonly List<Adorners.AbstractAdorner> adorners;
 		private readonly List<Data.ChartSeries> seriesList;
+		private readonly CaptionPainter captions;
 	}
 }
