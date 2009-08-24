@@ -48,6 +48,7 @@
     <Compile Include="Adorners\AbstractAdorner.cs" />
     <Compile Include="Adorners\CoordinateAxisAdorner.cs" />
     <Compile Include="CaptionPainter.cs" />
+    <Compile Include="ChartCaption.cs" />
     <Compile Include="Data\Accumulator.cs" />
     <Compile Include="Data\ChartSeries.cs" />
     <Compile Include="Data\ChartValue.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Renderers\AbstractRenderer.cs" />
     <Compile Include="Renderers\LineChartRenderer.cs" />
     <Compile Include="Styles\AbstractStyle.cs" />
+    <Compile Include="Styles\CaptionStyle.cs" />
     <Compile Include="Styles\ColorStyle.cs" />
     <Compile Include="Widgets\ChartView.cs" />
   </ItemGroup>

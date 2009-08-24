@@ -12,11 +12,8 @@ namespace Epsitec.Common.Graph
 	{
 		public CaptionPainter()
 		{
-			this.samples = new List<Sample> ();
-
-			this.Font = Font.GetFont ("Calibri", "Regular");
-			this.FontSize = 12;
-			this.FontColor = Color.FromBrightness (0);
+			this.samples = new List<ChartCaption> ();
+			this.sampleSizeCache = new List<Size> ();
 		}
 
 
@@ -28,93 +25,125 @@ namespace Epsitec.Common.Graph
 			}
 		}
 
-		public Font Font
+		public Styles.CaptionStyle Style
 		{
-			get;
-			set;
+			get
+			{
+				return this.style ?? CaptionPainter.defaultStyle;
+			}
+			set
+			{
+				this.style = value;
+			}
 		}
-
-		public double FontSize
-		{
-			get;
-			set;
-		}
-
-		public Color FontColor
-		{
-			get;
-			set;
-		}
-
 		
 		public void AddSample(string label, System.Action<IPaintPort, Rectangle> painter)
 		{
-			this.samples.Add (
-				new Sample ()
+			var sample =
+				new ChartCaption ()
 				{
 					Label = label,
-					Painter = painter
-				});
+					SamplePainter = painter,
+					SampleWidth = CaptionPainter.defaultSampleWidth
+				};
+			
+			this.samples.Add (sample);
+
+			this.sampleWidth = System.Math.Max (this.sampleWidth, sample.SampleWidth);
+			this.sampleSizeCache.Clear ();
 		}
 
+
+		/// <summary>
+		/// Gets the size of the complete caption layout. The size is cached from one
+		/// call to the next.
+		/// </summary>
+		/// <param name="availableWidth">Available width for the layout.</param>
+		/// <returns>The size of the complete caption layout.</returns>
+		public Size GetCaptionLayoutSize(double availableWidth)
+		{
+			this.UpdateCaptionLayoutSize (availableWidth);
+			
+			return this.captionLayoutSize;
+		}
+
+		private void UpdateCaptionLayoutSize(double availableWidth)
+		{
+			if ((this.sampleSizeCacheAvailableWidth != availableWidth) ||
+				(this.sampleSizeCache.Count != this.samples.Count))
+			{
+				int count = this.SampleCount;
+				var style = this.Style;
+
+				this.captionLayoutSize = Size.Empty;
+				this.sampleSizeCacheAvailableWidth = availableWidth;
+				this.sampleSizeCache.Clear ();
+
+				if (count > 0)
+				{
+					var height = style.GetTextLineHeight ();
+
+					var sampleWidth = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
+					var labelRoom   = availableWidth - sampleWidth;
+
+					double dx = 0;
+					double dy = 0;
+
+					foreach (var sample in this.samples)
+					{
+						var sampleSize = sample.GetLabelSize (style, labelRoom);
+
+						dx  = System.Math.Max (dx, sampleWidth + sampleSize.Width);
+						dy += sampleSize.Height;
+
+						this.sampleSizeCache.Add (sampleSize);
+					}
+
+					this.captionLayoutSize = new Size (dx, dy);
+				}
+			}
+		}
+
+		
 		public void Render(IPaintPort port, Rectangle bounds)
 		{
 			int count = this.SampleCount;
+			var style = this.Style;
 
 			if (count > 0)
 			{
+				this.UpdateCaptionLayoutSize (bounds.Width);
+
+				double ox = bounds.Left;
+				double oy = bounds.Top;
+				double dx = bounds.Width;
+
+				double textOffset = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
+				
+				int i = 0;
+
 				foreach (var sample in this.samples)
 				{
-					sample.Width = this.Font.GetTextAdvance (sample.Label) * this.FontSize;
-				}
+					var size = this.sampleSizeCache[i++];
+					
+					oy -= size.Height;
 
-				double ht = System.Math.Ceiling (this.Font.LineHeight * this.FontSize * 1.2);
-				double h1 = ht/10 - this.Font.Descender * this.FontSize;
-
-				double dx = this.samples.Max (x => x.Width) + 2.5*ht;
-				double dy = ht * count;
-				
-				double ox = bounds.Left + (bounds.Width-dx) / 2;
-				double oy = bounds.Top  - (bounds.Height-dy) / 2;
-				
-				foreach (var sample in this.samples)
-				{
-					oy -= ht;
-					
-					sample.Painter (port, new Rectangle (ox, oy, 2*ht, ht));
-					
-					if (!this.FontColor.IsEmpty)
-					{
-						port.Color = this.FontColor;
-					}
-					
-					port.PaintText (ox + 2.5*ht, oy + h1, sample.Label, this.Font, this.FontSize);
+					sample.Render (port, new Rectangle (ox, oy, dx, size.Height), style, textOffset);
 				}
 			}
 		}
 		
 
-		class Sample
-		{
-			public string Label
-			{
-				get;
-				set;
-			}
-			
-			public System.Action<IPaintPort, Rectangle> Painter
-			{
-				get;
-				set;
-			}
-
-			public double Width
-			{
-				get;
-				set;
-			}
-		}
-
-		private readonly List<Sample> samples;
+		private readonly List<ChartCaption> samples;
+		private readonly List<Size> sampleSizeCache;
+		
+		private Styles.CaptionStyle style;
+		private double sampleWidth;
+		private double sampleSizeCacheAvailableWidth;
+		private Size captionLayoutSize;
+		
+		private static readonly Styles.CaptionStyle	defaultStyle		= new Styles.CaptionStyle ();
+		private static readonly double				defaultSampleWidth	= CaptionPainter.defaultStyle.GetTextLineHeight () * 2;
+		private static readonly double				defaultSpaceWidth   = CaptionPainter.defaultSampleWidth / 4;
 	}
 }
