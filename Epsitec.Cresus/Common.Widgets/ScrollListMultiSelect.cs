@@ -29,6 +29,25 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public int SelectionCount
+		{
+			get
+			{
+				if (this.dragSelectionStartIndex >= 0)
+				{
+					int begin = System.Math.Min (this.dragSelectionStartIndex, this.SelectedIndex);
+					int end   = System.Math.Max (this.dragSelectionStartIndex, this.SelectedIndex);
+
+					return end - begin + 1;
+				}
+				else
+				{
+					return this.selection.Count;
+				}
+			}
+		}
+
+		
 		public void AddSelection(IEnumerable<int> selection)
 		{
 			bool dirty = false;

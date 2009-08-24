@@ -29,18 +29,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.ScrollList.PaintForeground += this.HandlePaintForeground;
 
 			this.hotRowIndex = -1;
+			this.visibleQuickButtons = new List<Button> ();
 
-			this.quickButton1 = new Button ()
+			this.quickButtonAddNegative = new GlyphButton ()
 			{
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				Text = "―",
+				GlyphShape = GlyphShape.Minus,
 				Parent = this.ScrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
-			
-			this.quickButton2 = new Button ()
+
+			this.quickButtonAddPositive = new GlyphButton ()
+			{
+				PreferredWidth = 22,
+				PreferredHeight = 22,
+				ButtonStyle = ButtonStyle.Icon,
+				GlyphShape = GlyphShape.Plus,
+				Parent = this.ScrollList.Parent,
+				Anchor = AnchorStyles.BottomLeft
+			};
+
+			this.quickButtonSum = new Button ()
 			{
 				PreferredWidth = 22,
 				PreferredHeight = 22,
@@ -50,7 +61,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.BottomLeft
 			};
 
-			this.quickButton2.Clicked += this.HandleButton2Clicked;
+			this.quickButtonSum.Clicked += this.HandleButton2Clicked;
 		}
 
 		public ScrollListMultiSelect ScrollList
@@ -68,6 +79,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.selection = null;
+			this.UpdateVisibleButtons ();
 		}
 
 		private void HandleDragMultiSelectionEnded(object sender, MultiSelectEventArgs e)
@@ -81,6 +93,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.ScrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
 				this.selection = e;
+				this.UpdateVisibleButtons ();
 			}
 		}
 
@@ -90,7 +103,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			int index = this.ScrollList.SelectedIndex;
 
-			if (this.ScrollList.IsItemSelected (index))
+			if ((this.ScrollList.IsItemSelected (index)) &&
+				(this.ScrollList.SelectionCount == 1))
 			{
 				this.selection = new MultiSelectEventArgs (index, index);
 			}
@@ -98,6 +112,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.selection = null;
 			}
+
+			this.UpdateVisibleButtons ();
 		}
 
 		private void HandleMouseExited(object sender, MessageEventArgs e)
@@ -134,7 +150,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var graphics  = e.Graphics;
 				var bounds    = this.ScrollList.GetRowBounds (index);
 
-				if (bounds.IsEmpty)
+				if ((bounds.IsEmpty) ||
+					(this.visibleQuickButtons.Count == 0))
 				{
 					this.HideQuickButtons ();
 				}
@@ -142,8 +159,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					var rectangle = this.selection == null ? bounds : this.ScrollList.GetRowBounds (this.selection.BeginIndex, this.selection.Count);
 
-					double zoneWidth = 56;
 					double arrowLength = 6;
+					double zoneWidth = arrowLength + (this.visibleQuickButtons.Count * 24) + 2;
 
 					using (Path path = new Path ())
 					{
@@ -189,7 +206,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						graphics.RenderSolid ();
 					}
 
-					this.ShowQuickButtons (new Rectangle (bounds.Right - zoneWidth + arrowLength, bounds.Bottom, zoneWidth - arrowLength, bounds.Height));
+					this.UpdateQuickButtons (new Rectangle (bounds.Right - zoneWidth + arrowLength, bounds.Bottom, zoneWidth - arrowLength, bounds.Height));
 				}
 			}
 			else
@@ -198,41 +215,73 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void ShowQuickButtons(Rectangle frame)
+		private void UpdateQuickButtons(Rectangle frame)
 		{
+			System.Diagnostics.Debug.Assert (frame.IsEmpty == false);
+
 			if (this.quickButtonsFrame == frame)
 			{
 				return;
 			}
 
 			this.quickButtonsFrame = frame;
-
-			System.Diagnostics.Debug.Assert (frame.IsEmpty == false);
-			
-			frame = Rectangle.Offset (frame, this.ScrollList.ActualLocation);
-
-			this.quickButton1.Enable = true;
-			this.quickButton2.Enable = true;
-			this.quickButton1.Show ();
-			this.quickButton2.Show ();
-			this.quickButton1.Margins = new Margins (frame.Left +  0, 0, 0, frame.Bottom);
-			this.quickButton2.Margins = new Margins (frame.Left + 24, 0, 0, frame.Bottom);
+			this.UpdateQuickButtons ();
 		}
 
 		private void HideQuickButtons()
 		{
 			this.quickButtonsFrame = Rectangle.Empty;
+			this.visibleQuickButtons.Clear ();
+			this.UpdateQuickButtons ();
+		}
 
-			if ((this.quickButton1.IsFocused) ||
-				(this.quickButton2.IsFocused))
+		private void UpdateQuickButtons()
+		{
+			double x = this.quickButtonsFrame.Left;
+			double y = this.quickButtonsFrame.Bottom + this.ScrollList.ActualLocation.Y;
+
+			foreach (var button in this.QuickButtons)
 			{
-				this.ScrollList.Focus ();
-			}
+				if (this.visibleQuickButtons.Contains (button))
+				{
+					button.Enable = true;
+					button.Show ();
+					button.Margins = new Margins (x, 0, 0, y);
 
-			this.quickButton1.Hide ();
-			this.quickButton2.Hide ();
-			this.quickButton1.Enable = false;
-			this.quickButton2.Enable = false;
+					x += button.PreferredWidth + 2;
+				}
+				else
+				{
+					if (button.IsFocused)
+					{
+						this.ScrollList.Focus ();
+					}
+
+					button.Enable = false;
+					button.Hide ();
+				}
+			}
+		}
+
+		private void UpdateVisibleButtons()
+		{
+			int selectionCount = (this.selection == null) ? 0 : this.selection.Count;
+
+			if (this.selectionCount != selectionCount)
+			{
+				this.selectionCount = selectionCount;
+				this.visibleQuickButtons.Clear ();
+
+				if (selectionCount == 1)
+				{
+					this.visibleQuickButtons.Add (this.quickButtonAddNegative);
+					this.visibleQuickButtons.Add (this.quickButtonAddPositive);
+				}
+				else if (selectionCount > 1)
+				{
+					this.visibleQuickButtons.Add (this.quickButtonSum);
+				}
+			}
 		}
 
 		private void HandleButton2Clicked(object sender, MessageEventArgs e)
@@ -271,7 +320,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		
+
+		private IEnumerable<Button> QuickButtons
+		{
+			get
+			{
+				yield return this.quickButtonAddNegative;
+				yield return this.quickButtonAddPositive;
+				yield return this.quickButtonSum;
+			}
+		}
 
 		
 		public event EventHandler Changed;
@@ -280,7 +338,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private int hotRowIndex;
 		private MultiSelectEventArgs selection;
 		private Rectangle quickButtonsFrame;
-		private Button quickButton1;
-		private Button quickButton2;
+		private int selectionCount;
+
+		readonly private Button quickButtonAddNegative;
+		readonly private Button quickButtonAddPositive;
+		readonly private Button quickButtonSum;
+		readonly private List<Button> visibleQuickButtons;
 	}
 }
