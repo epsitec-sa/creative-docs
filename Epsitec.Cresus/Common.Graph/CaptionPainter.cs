@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,12 @@ namespace Epsitec.Common.Graph
 			this.sampleSizeCache = new List<Size> ();
 		}
 
+
+		public ContainerLayoutMode LayoutMode
+		{
+			get;
+			set;	//	TODO: implement layout mode
+		}
 
 		public int SampleCount
 		{
@@ -36,6 +43,7 @@ namespace Epsitec.Common.Graph
 				this.style = value;
 			}
 		}
+		
 		
 		public void AddSample(string label, System.Action<IPaintPort, Rectangle> painter)
 		{
@@ -60,51 +68,13 @@ namespace Epsitec.Common.Graph
 		/// </summary>
 		/// <param name="availableWidth">Available width for the layout.</param>
 		/// <returns>The size of the complete caption layout.</returns>
-		public Size GetCaptionLayoutSize(double availableWidth)
+		public Size GetCaptionLayoutSize(Size availableSize)
 		{
-			this.UpdateCaptionLayoutSize (availableWidth);
+			this.UpdateCaptionLayoutSize (availableSize);
 			
 			return this.captionLayoutSize;
 		}
 
-		private void UpdateCaptionLayoutSize(double availableWidth)
-		{
-			if ((this.sampleSizeCacheAvailableWidth != availableWidth) ||
-				(this.sampleSizeCache.Count != this.samples.Count))
-			{
-				int count = this.SampleCount;
-				var style = this.Style;
-
-				this.captionLayoutSize = Size.Empty;
-				this.sampleSizeCacheAvailableWidth = availableWidth;
-				this.sampleSizeCache.Clear ();
-
-				if (count > 0)
-				{
-					var height = style.GetTextLineHeight ();
-
-					var sampleWidth = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
-					var labelRoom   = availableWidth - sampleWidth;
-
-					double dx = 0;
-					double dy = 0;
-
-					foreach (var sample in this.samples)
-					{
-						var sampleSize = sample.GetLabelSize (style, labelRoom);
-
-						dx  = System.Math.Max (dx, sampleWidth + sampleSize.Width);
-						dy += sampleSize.Height;
-
-						this.sampleSizeCache.Add (sampleSize);
-					}
-
-					this.captionLayoutSize = new Size (dx, dy);
-				}
-			}
-		}
-
-		
 		public void Render(IPaintPort port, Rectangle bounds)
 		{
 			int count = this.SampleCount;
@@ -112,7 +82,7 @@ namespace Epsitec.Common.Graph
 
 			if (count > 0)
 			{
-				this.UpdateCaptionLayoutSize (bounds.Width);
+				this.UpdateCaptionLayoutSize (bounds.Size);
 
 				double ox = bounds.Left;
 				double oy = bounds.Top;
@@ -132,15 +102,57 @@ namespace Epsitec.Common.Graph
 				}
 			}
 		}
-		
+
+
+		/// <summary>
+		/// Updates the size of the caption layout, based on the available space.
+		/// </summary>
+		/// <param name="availableSize">Available size for the layout.</param>
+		private void UpdateCaptionLayoutSize(Size availableSize)
+		{
+			if ((this.sampleSizeCacheAvailableSize != availableSize) ||
+				(this.sampleSizeCache.Count != this.samples.Count))
+			{
+				int count = this.SampleCount;
+				var style = this.Style;
+
+				this.captionLayoutSize = Size.Empty;
+				this.sampleSizeCacheAvailableSize = availableSize;
+				this.sampleSizeCache.Clear ();
+
+				if (count > 0)
+				{
+					var height = style.GetTextLineHeight ();
+
+					var sampleWidth = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
+					var labelRoom   = availableSize.Width - sampleWidth;
+
+					double dx = 0;
+					double dy = 0;
+
+					foreach (var sample in this.samples)
+					{
+						var sampleSize = sample.GetLabelSize (style, labelRoom);
+
+						dx  = System.Math.Max (dx, sampleWidth + sampleSize.Width);
+						dy += sampleSize.Height;
+
+						this.sampleSizeCache.Add (sampleSize);
+					}
+
+					this.captionLayoutSize = new Size (dx, dy);
+				}
+			}
+		}
+
 
 		private readonly List<ChartCaption> samples;
-		private readonly List<Size> sampleSizeCache;
+		private readonly List<Size>			sampleSizeCache;
 		
-		private Styles.CaptionStyle style;
-		private double sampleWidth;
-		private double sampleSizeCacheAvailableWidth;
-		private Size captionLayoutSize;
+		private Styles.CaptionStyle			style;
+		private double						sampleWidth;
+		private Size						sampleSizeCacheAvailableSize;
+		private Size						captionLayoutSize;
 		
 		private static readonly Styles.CaptionStyle	defaultStyle		= new Styles.CaptionStyle ();
 		private static readonly double				defaultSampleWidth	= CaptionPainter.defaultStyle.GetTextLineHeight () * 2;
