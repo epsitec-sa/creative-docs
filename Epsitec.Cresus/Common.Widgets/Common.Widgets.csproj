@@ -159,6 +159,7 @@
     <Compile Include="ButtonClass.cs" />
     <Compile Include="CommandParameters.cs" />
     <Compile Include="CommandHandlerPair.cs" />
+    <Compile Include="AutoSplitter.cs" />
     <Compile Include="MultiSelectEventArgs.cs" />
     <Compile Include="ScrollListMultiSelect.cs" />
     <Compile Include="FlatTextField.cs" />

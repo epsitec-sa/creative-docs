@@ -32,7 +32,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Right,
 				Parent = root,
+				PreferredWidth = 100,
 				Captions = lineChartRenderer.Captions
+			};
+			
+			var splitter = new AutoSplitter ()
+			{
+				Dock = DockStyle.Right,
+				Parent = root
 			};
 		}
 

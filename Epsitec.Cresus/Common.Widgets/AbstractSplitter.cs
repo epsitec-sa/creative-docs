@@ -230,6 +230,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			this.MouseCursor = this.IsVertical ? MouseCursor.AsVSplit : MouseCursor.AsHSplit;
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
