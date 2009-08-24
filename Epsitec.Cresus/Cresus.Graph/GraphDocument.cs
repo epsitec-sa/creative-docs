@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Graph
 			this.graphPanels = new List<GraphPanelController> ();
 			this.chartSeries = new List<ChartSeries> ();
 			this.dataSet = dataSet;
-			this.dataSet.Changed += x => this.ProcessDocumentChanged ();
+			this.dataSet.Changed += x => this.Clear ();
 
 			this.CreateUI ();
 			this.ProcessDocumentChanged ();
@@ -45,6 +45,12 @@ namespace Epsitec.Cresus.Graph
 		public void Add(ChartSeries series)
 		{
 			this.chartSeries.Add (series);
+			this.ProcessDocumentChanged ();
+		}
+
+		public void Clear()
+		{
+			this.chartSeries.Clear ();
 			this.ProcessDocumentChanged ();
 		}
 
