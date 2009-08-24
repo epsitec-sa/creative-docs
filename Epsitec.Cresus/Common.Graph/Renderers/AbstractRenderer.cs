@@ -70,14 +70,6 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public int CurrentSeriesIndex
-		{
-			get
-			{
-				return this.seriesRendered;
-			}
-		}
-
 		public int AdditionalRenderingPasses
 		{
 			get;
@@ -146,8 +138,7 @@ namespace Epsitec.Common.Graph.Renderers
 		public virtual void Clear()
 		{
 			this.seriesList.Clear ();
-			this.seriesRendered = -1;
-
+			
 			this.minValue = double.MaxValue;
 			this.maxValue = double.MinValue;
 			this.seriesValueLabelsSet.Clear ();
@@ -216,14 +207,13 @@ namespace Epsitec.Common.Graph.Renderers
 			//	The rendering might take several passes, for instance to paint several layers
 			//	and maybe insert a grid between them, or other graphic adornments.
 			
-			for (int pass = 0; pass < this.AdditionalRenderingPasses+1; pass++)
+			for (int pass = 0; pass < 1+this.AdditionalRenderingPasses; pass++)
 			{
-				this.seriesRendered = -1;
+				int seriesIndex = 0;
 
 				foreach (var item in series)
 				{
-					this.seriesRendered++;
-					this.Render (port, item, pass);
+					this.Render (port, item, pass, seriesIndex++);
 				}
 			}
 
@@ -234,8 +224,10 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public abstract Point GetPoint(int index, double value);
 
+		public abstract Path GetDetectionPath(Data.ChartSeries series, double detectionRadius);
 
-		protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass);
+
+		protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex);
 
 		protected void BeginLayer(IPaintPort port, PaintLayer layer)
 		{
@@ -265,8 +257,6 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
 		
-		private int seriesCount;
-		private int seriesRendered;
 		private double minValue;
 		private double maxValue;
 		private Rectangle bounds;

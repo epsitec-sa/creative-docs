@@ -13,6 +13,7 @@ namespace Epsitec.Common.Graph.Widgets
 	{
 		public ChartView()
 		{
+			this.Padding = new Margins (60, 30, 30, 30);
 		}
 
 
@@ -40,11 +41,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (this.renderer != null)
 			{
-				Rectangle bounds = this.Client.Bounds;
-				bounds = Rectangle.Deflate (bounds, new Margins (60, 30, 30, 30));
-				this.renderer.Render (this.renderer.SeriesItems, graphics, bounds);
-//-				Rectangle captionsBounds = new Rectangle (graphBounds.Right + 10, graphBounds.Bottom, this.Client.Bounds.Right - graphBounds.Right - 20, graphBounds.Height);
-//-				this.renderer.RenderCaptions (graphics, captionsBounds);
+				this.renderer.Render (this.renderer.SeriesItems, graphics, Rectangle.Deflate (this.Client.Bounds, this.Padding));
 			}
 		}
 

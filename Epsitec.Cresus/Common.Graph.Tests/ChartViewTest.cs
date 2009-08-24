@@ -90,7 +90,7 @@ namespace Epsitec.Common.Graph
 				Dock = DockStyle.Fill
 			};
 
-			chartView.DefineRenderer (lineChartRenderer);
+			chartView.Renderer = lineChartRenderer;
 
 			window.Root.Children.Add (chartView);
 
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Graph
 				Dock = DockStyle.Fill
 			};
 
-			chartView.DefineRenderer (lineChartRenderer);
+			chartView.Renderer = lineChartRenderer;
 
 			window.Root.Children.Add (chartView);
 			

@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			foreach (var panel in this.graphPanels)
 			{
-				panel.ProcessDocumentChanged ();
+				panel.Refresh ();
 			}
 		}
 

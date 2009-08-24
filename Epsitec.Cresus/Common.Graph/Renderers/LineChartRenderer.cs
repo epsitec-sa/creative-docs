@@ -56,55 +56,50 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		
-		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass)
+		public override Path GetDetectionPath(Data.ChartSeries series, double detectionRadius)
+		{
+			using (Path outline = this.CreateOutlinePath (series))
+			{
+				Path path = new Path ();
+
+				path.Append (outline, detectionRadius * 2, CapStyle.Round, JoinStyle.Round, 5.0, 1.0);
+
+				return path;
+			}
+		}
+
+
+		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
 		{
 			switch (pass)
 			{
 				case 0:
-					this.PaintSurface (port, series);
+					this.PaintSurface (port, series, seriesIndex);
 					break;
 				
 				case 1:
-					this.PaintLine (port, series);
+					this.PaintLine (port, series, seriesIndex);
 					break;
 			}
 		}
 
-		private void PaintLine(IPaintPort port, Data.ChartSeries series)
+		
+		private void PaintLine(IPaintPort port, Data.ChartSeries series, int seriesIndex)
 		{
-			if (this.CurrentSeriesIndex == 0)
+			if (seriesIndex == 0)
 			{
 				this.BeginLayer (port, PaintLayer.Intermediate);
 			}
 
-			using (Path path = new Path ())
+			using (Path path = this.CreateOutlinePath (series))
 			{
-				foreach (var item in series.Values)
-				{
-					int index = this.GetLabelIndex (item.Label);
-
-					System.Diagnostics.Debug.Assert (index >= 0);
-					System.Diagnostics.Debug.Assert (index < this.ValueCount);
-
-					Point pos = this.GetPoint (index, item.Value);
-
-					if (path.IsEmpty)
-					{
-						path.MoveTo (pos);
-					}
-					else
-					{
-						path.LineTo (pos);
-					}
-				}
-
 				if (series.Values.Count == 1)
 				{
 					path.LineTo (path.CurrentPoint.X + port.LineWidth, path.CurrentPoint.Y);
 				}
 
-				this.FindStyle ("line-color").ApplyStyle (this.CurrentSeriesIndex, port);
+				this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
+				
 				port.LineWidth = 2;
 				port.PaintOutline (path);
 			}
@@ -129,34 +124,67 @@ namespace Epsitec.Common.Graph.Renderers
 				});
 		}
 
-		private void PaintSurface(IPaintPort port, Data.ChartSeries series)
+		private void PaintSurface(IPaintPort port, Data.ChartSeries series, int seriesIndex)
 		{
 			if ((series.Values.Count > 1) &&
 				(this.SurfaceAlpha > 0))
 			{
-				using (Path path = new Path ())
+				using (Path path = this.CreateSurfacePath (series))
 				{
-					path.MoveTo (this.GetPoint (0, 0.0));
-
-					foreach (var item in series.Values)
-					{
-						int index = this.GetLabelIndex (item.Label);
-
-						System.Diagnostics.Debug.Assert (index >= 0);
-						System.Diagnostics.Debug.Assert (index < this.ValueCount);
-
-						path.LineTo (this.GetPoint (index, item.Value));
-					}
-
-					path.LineTo (path.CurrentPoint.X, this.GetPoint (0, 0.0).Y);
-					path.Close ();
-
-					this.FindStyle ("line-color").ApplyStyle (this.CurrentSeriesIndex, port);
+					this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
 
 					port.Color = Color.FromAlphaColor (this.SurfaceAlpha, port.Color);
 					port.PaintSurface (path);
 				}
 			}
+		}
+
+		private Path CreateOutlinePath(Data.ChartSeries series)
+		{
+			Path path = new Path ();
+
+			foreach (var item in series.Values)
+			{
+				int index = this.GetLabelIndex (item.Label);
+
+				System.Diagnostics.Debug.Assert (index >= 0);
+				System.Diagnostics.Debug.Assert (index < this.ValueCount);
+
+				Point pos = this.GetPoint (index, item.Value);
+
+				if (path.IsEmpty)
+				{
+					path.MoveTo (pos);
+				}
+				else
+				{
+					path.LineTo (pos);
+				}
+			}
+
+			return path;
+		}
+		
+		private Path CreateSurfacePath(Data.ChartSeries series)
+		{
+			Path path = new Path ();
+
+			path.MoveTo (this.GetPoint (0, 0.0));
+
+			foreach (var item in series.Values)
+			{
+				int index = this.GetLabelIndex (item.Label);
+
+				System.Diagnostics.Debug.Assert (index >= 0);
+				System.Diagnostics.Debug.Assert (index < this.ValueCount);
+
+				path.LineTo (this.GetPoint (index, item.Value));
+			}
+
+			path.LineTo (path.CurrentPoint.X, this.GetPoint (0, 0.0).Y);
+			path.Close ();
+
+			return path;
 		}
 
 		

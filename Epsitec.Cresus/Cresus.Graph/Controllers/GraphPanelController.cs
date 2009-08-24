@@ -69,25 +69,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		public void ProcessDocumentChanged()
-		{
-			if ((this.document != null) &&
-				(this.document.DataSet != null) &&
-				(this.document.DataSet.DataTable != null))
-			{
-				var renderer = this.chartView.Renderer;
-				
-				renderer.Clear ();
-				renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
-				renderer.CollectRange (this.document.ChartSeries);
-				renderer.UpdateCaptions (this.document.ChartSeries);
-				
-				this.chartView.Invalidate ();
-				this.captionView.Invalidate ();
-			}
-		}
-
-
 		public ContainerLayoutMode LayoutMode
 		{
 			get
@@ -106,7 +87,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 							this.splitter.Dock = DockStyle.Right;
 							this.captionView.Dock = DockStyle.Right;
 							break;
-						
+
 						case ContainerLayoutMode.VerticalFlow:
 							this.splitter.Dock = DockStyle.Bottom;
 							this.captionView.Dock = DockStyle.Bottom;
@@ -115,6 +96,27 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 			}
 		}
+		
+		
+		public void Refresh()
+		{
+			if ((this.document != null) &&
+				(this.document.DataSet != null) &&
+				(this.document.DataSet.DataTable != null))
+			{
+				var renderer = this.chartView.Renderer;
+				
+				renderer.Clear ();
+				renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
+				renderer.CollectRange (this.document.ChartSeries);
+				renderer.UpdateCaptions (this.document.ChartSeries);
+				
+				this.chartView.Invalidate ();
+				this.captionView.Invalidate ();
+			}
+		}
+
+
 
 
 		private readonly GraphDocument document;
