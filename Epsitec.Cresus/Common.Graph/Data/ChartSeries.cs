@@ -19,6 +19,12 @@ namespace Epsitec.Common.Graph.Data
 			this.values.AddRange (collection);
 		}
 
+		public ChartSeries(string label, IEnumerable<ChartValue> collection)
+			: this (collection)
+		{
+			this.Label = label;
+		}
+
 		
 		public string Label
 		{

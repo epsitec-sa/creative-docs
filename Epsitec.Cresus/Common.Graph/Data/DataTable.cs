@@ -177,14 +177,14 @@ namespace Epsitec.Common.Graph.Data
 
 
 
-		public ChartSeries SumRows(IEnumerable<int> rows)
+		public ChartSeries SumRows(IEnumerable<int> rows, System.Func<int, ChartSeries> map)
 		{
 			Accumulator accumulator = new Accumulator ();
 			List<string> labels = new List<string> ();
 
 			foreach (int row in rows)
 			{
-				var series = this.GetRowSeries (row);
+				var series = (map == null) ? this.GetRowSeries (row) : map (row);
 
 				accumulator.Accumulate (series.Values);
 				labels.Add (series.Label);

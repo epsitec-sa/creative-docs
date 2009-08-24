@@ -52,7 +52,8 @@
     <Compile Include="Actions\Factory.cs" />
     <Compile Include="Actions\Recorder.cs" />
     <Compile Include="Actions\GenericAction.cs" />
-    <Compile Include="Controllers\MainScrollListController.cs" />
+    <Compile Include="Controllers\GraphPanelController.cs" />
+    <Compile Include="Controllers\SeriesPickerController.cs" />
     <Compile Include="GraphApplication.cs" />
     <Compile Include="GraphCommands.cs" />
     <Compile Include="GraphDataSet.cs" />

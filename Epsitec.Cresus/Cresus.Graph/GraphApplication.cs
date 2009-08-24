@@ -24,12 +24,14 @@ namespace Epsitec.Cresus.Graph
 			this.graphDataSet = new GraphDataSet ();
 		}
 
+		
 		public bool IsReady
 		{
 			get;
 			private set;
 		}
 
+		
 		public override string ShortWindowTitle
 		{
 			get
@@ -38,11 +40,11 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		
 		internal void SetupDataSet()
 		{
 			Actions.Factory.New (this.LoadDataSet).Invoke ();
 		}
-		
 
 		internal void SetupInterface()
 		{
@@ -95,53 +97,20 @@ namespace Epsitec.Cresus.Graph
 				Parent = window.Root
 			};
 
-			this.scrollList = new ScrollListMultiSelect ()
-			{
-				Dock = DockStyle.Left,
-				PreferredWidth = 300,
-				Parent = frame,
-				RowHeight = 24,
-				ScrollListStyle = ScrollListStyle.AlternatingRows
-			};
-
-			VSplitter splitter = new VSplitter ()
-			{
-				Dock = DockStyle.Left,
-				PreferredWidth = 8,
-				Parent = frame
-			};
-
-			this.chartView = new ChartView ()
-			{
-				Dock = DockStyle.Fill,
-				PreferredWidth = 300,
-				Parent = frame
-			};
-
-			var lineChartRenderer = new LineChartRenderer ();
-
-			lineChartRenderer.DefineValueLabels (this.graphDataSet.DataTable.ColumnLabels);
-			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
-			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
-
-			this.chartView.DefineRenderer (lineChartRenderer);
-
-			this.UpdateScrollListItems ();
-
-			this.scrollListController = new Controllers.MainScrollListController (this.scrollList);
-			this.scrollListController.Changed += sender => this.UpdateChartView ();
-			this.scrollListController.SumSeries = Actions.Factory.New (this.SumRows);
-			this.scrollListController.AddNegativeSeries = Actions.Factory.New (this.AddNegativeRows);
-			this.scrollListController.AddPositiveSeries = Actions.Factory.New (this.AddPositiveRows);
+			this.seriesPickerController = new Controllers.SeriesPickerController (frame, this.graphDataSet);
+			this.seriesPickerController.SumSeriesAction = Actions.Factory.New (this.SumRows);
+			this.seriesPickerController.NegateSeriesAction = Actions.Factory.New (this.NegateRows);
+			this.seriesPickerController.AddSeriesToGraphAction = Actions.Factory.New (this.AddToChart);
 
 			
 			this.Window = window;
 			this.IsReady = true;
 		}
 
+		
 		private void SumRows(IEnumerable<int> rows)
 		{
-			var sum = this.graphDataSet.DataTable.SumRows (rows);
+			var sum = this.graphDataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
 
 			if (sum == null)
 			{
@@ -149,55 +118,40 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			this.graphDataSet.DataTable.RemoveRows (rows);
-			this.graphDataSet.DataTable.Insert (rows.First (), sum.Label, sum.Values);
+			this.graphDataSet.DataTable.Insert (rows.First (), sum.Label.Replace ("+-", "-"), sum.Values);
 
-			this.UpdateScrollListItems ();
+			this.seriesPickerController.UpdateScrollListItems ();
+			this.seriesPickerController.UpdateChartView ();
 		}
 
-		private void AddNegativeRows(IEnumerable<int> rows)
+		private void NegateRows(IEnumerable<int> rows)
 		{
+			foreach (int row in rows)
+			{
+				var series = this.graphDataSet.DataTable.GetRowSeries (row);
+				this.seriesPickerController.NegateSeries (series.Label);
+			}
+
+			this.seriesPickerController.UpdateScrollListItems ();
+			this.seriesPickerController.UpdateChartView ();
 		}
 
-		private void AddPositiveRows(IEnumerable<int> rows)
+		private void AddToChart(IEnumerable<int> rows)
 		{
 		}
 
 		private void LoadDataSet()
 		{
 			this.graphDataSet.LoadDataTable ();
-			this.UpdateScrollListItems ();
-		}
 
-		private void UpdateScrollListItems()
-		{
-			if (this.scrollList != null)
+			if (this.seriesPickerController != null)
 			{
-				List<string> labels = new List<string> (this.graphDataSet.DataTable.RowLabels);
-				
-				var selection = this.scrollList.GetSortedSelection ();
-
-				this.scrollList.ClearSelection ();
-				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (labels);
-				this.scrollList.SelectedIndex = selection.Count == 0 ? -1 : selection.First ();
+				this.seriesPickerController.UpdateScrollListItems ();
 			}
 		}
 
-		private void UpdateChartView()
-		{
-			var renderer = this.chartView.Renderer;
-			
-			renderer.Clear ();
-			renderer.CollectRange (this.scrollList.GetSortedSelection ().Select (x => this.graphDataSet.DataTable.GetRowSeries (x)));
-			renderer.ClipRange (System.Math.Min (0, renderer.MinValue), System.Math.Max (0, renderer.MaxValue));
-			
-			this.chartView.Invalidate ();
-		}
 
-
-		private ScrollListMultiSelect scrollList;
-		private Controllers.MainScrollListController scrollListController;
-		private ChartView chartView;
+		private Controllers.SeriesPickerController seriesPickerController;
 
 		private GraphDataSet graphDataSet;
 		private GraphCommands graphCommands;
