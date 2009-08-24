@@ -60,8 +60,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = this.ScrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
-
-			this.quickButtonSum.Clicked += this.HandleButton2Clicked;
+			
+			this.quickButtonAddNegative.Clicked += (sender, e) => this.HandleQuickButtonClicked (this.AddNegativeSeries);
+			this.quickButtonAddPositive.Clicked += (sender, e) => this.HandleQuickButtonClicked (this.AddPositiveSeries);
+			this.quickButtonSum.Clicked         += (sender, e) => this.HandleQuickButtonClicked (this.SumSeries);
 		}
 
 		public ScrollListMultiSelect ScrollList
@@ -284,19 +286,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void HandleButton2Clicked(object sender, MessageEventArgs e)
+
+		private void HandleQuickButtonClicked(System.Action<IEnumerable<int>> action)
 		{
-			this.HideQuickButtons ();
 			this.selection = null;
+			this.UpdateVisibleButtons ();
 
-			IEnumerable<int> selection = this.ScrollList.GetSortedSelection ();
-
-			if (this.SumSeries != null)
+			if (action != null)
 			{
-				this.SumSeries (selection);
+				action (this.ScrollList.GetSortedSelection ());
+				this.ScrollList.Invalidate ();
 			}
-			
-			this.ScrollList.Invalidate ();
 		}
 
 		
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		private IEnumerable<Button> QuickButtons
+		private IEnumerable<Button>				QuickButtons
 		{
 			get
 			{
@@ -332,8 +332,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		public event EventHandler Changed;
-		public System.Action<IEnumerable<int>> SumSeries;
+		public event EventHandler				Changed;
+		public System.Action<IEnumerable<int>>	SumSeries;
+		public System.Action<IEnumerable<int>>	AddPositiveSeries;
+		public System.Action<IEnumerable<int>>	AddNegativeSeries;
 
 		private int hotRowIndex;
 		private MultiSelectEventArgs selection;

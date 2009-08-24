@@ -131,6 +131,8 @@ namespace Epsitec.Cresus.Graph
 			this.scrollListController = new Controllers.MainScrollListController (this.scrollList);
 			this.scrollListController.Changed += sender => this.UpdateChartView ();
 			this.scrollListController.SumSeries = Actions.Factory.New (this.SumRows);
+			this.scrollListController.AddNegativeSeries = Actions.Factory.New (this.AddNegativeRows);
+			this.scrollListController.AddPositiveSeries = Actions.Factory.New (this.AddPositiveRows);
 
 			
 			this.Window = window;
@@ -152,6 +154,14 @@ namespace Epsitec.Cresus.Graph
 			this.UpdateScrollListItems ();
 		}
 
+		private void AddNegativeRows(IEnumerable<int> rows)
+		{
+		}
+
+		private void AddPositiveRows(IEnumerable<int> rows)
+		{
+		}
+
 		private void LoadDataSet()
 		{
 			this.graphDataSet.LoadDataTable ();
@@ -162,9 +172,14 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.scrollList != null)
 			{
+				List<string> labels = new List<string> (this.graphDataSet.DataTable.RowLabels);
+				
+				var selection = this.scrollList.GetSortedSelection ();
+
 				this.scrollList.ClearSelection ();
 				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (graphDataSet.DataTable.RowLabels);
+				this.scrollList.Items.AddRange (labels);
+				this.scrollList.SelectedIndex = selection.Count == 0 ? -1 : selection.First ();
 			}
 		}
 
