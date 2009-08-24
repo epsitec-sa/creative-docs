@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.Widgets;
@@ -30,17 +31,41 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.captionView = new CaptionView ()
 			{
-				Dock = DockStyle.Right,
 				Parent = root,
-				PreferredWidth = 100,
+				PreferredWidth = 160,
+				PreferredHeight = 80,
 				Captions = lineChartRenderer.Captions
 			};
 			
-			var splitter = new AutoSplitter ()
+			this.splitter = new AutoSplitter ()
 			{
-				Dock = DockStyle.Right,
 				Parent = root
 			};
+
+			this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
+
+			var button = new Button ()
+			{
+				Anchor = AnchorStyles.TopRight,
+				Margins = new Margins (0, 4, 4, 0),
+				Text = "/",
+				PreferredWidth = 20,
+				PreferredHeight = 20,
+				Parent = root
+			};
+
+			button.Clicked +=
+				delegate
+				{
+					if (this.LayoutMode == ContainerLayoutMode.VerticalFlow)
+					{
+						this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
+					}
+					else
+					{
+						this.LayoutMode = ContainerLayoutMode.VerticalFlow;
+					}
+				};
 		}
 
 
@@ -63,8 +88,39 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
+		public ContainerLayoutMode LayoutMode
+		{
+			get
+			{
+				return this.layoutMode;
+			}
+			set
+			{
+				if (this.layoutMode != value)
+				{
+					this.layoutMode = value;
+
+					switch (this.layoutMode)
+					{
+						case ContainerLayoutMode.HorizontalFlow:
+							this.splitter.Dock = DockStyle.Right;
+							this.captionView.Dock = DockStyle.Right;
+							break;
+						
+						case ContainerLayoutMode.VerticalFlow:
+							this.splitter.Dock = DockStyle.Bottom;
+							this.captionView.Dock = DockStyle.Bottom;
+							break;
+					}
+				}
+			}
+		}
+
+
 		private readonly GraphDocument document;
 		private readonly ChartView chartView;
+		private readonly AutoSplitter splitter;
 		private readonly CaptionView captionView;
+		private ContainerLayoutMode layoutMode;
 	}
 }
