@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Graph.Data;
 using Epsitec.Common.IO;
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,19 @@ namespace Epsitec.Cresus.Graph
 		public void LoadDataTable()
 		{
 			this.dataTable = GraphDataSet.LoadComptaData ();
+			this.OnChanged ();
 		}
+
+		private void OnChanged()
+		{
+			var handler = this.Changed;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
 		
 		internal static DataTable LoadComptaData()
 		{
@@ -73,6 +86,8 @@ namespace Epsitec.Cresus.Graph
 			return 0;
 		}
 
+
+		public event EventHandler Changed;
 
 		private DataTable dataTable;
 	}

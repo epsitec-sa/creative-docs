@@ -21,7 +21,6 @@ namespace Epsitec.Cresus.Graph
 		public GraphApplication()
 		{
 			this.graphCommands = new GraphCommands (this);
-			this.graphDataSet = new GraphDataSet ();
 		}
 
 		
@@ -40,6 +39,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+
+		public GraphDocument Document
+		{
+			get
+			{
+				return this.graphDocument;
+			}
+		}
 		
 		internal void SetupDataSet()
 		{
@@ -97,7 +104,7 @@ namespace Epsitec.Cresus.Graph
 				Parent = window.Root
 			};
 
-			this.seriesPickerController = new Controllers.SeriesPickerController (frame, this.graphDataSet);
+			this.seriesPickerController = new Controllers.SeriesPickerController (frame, this.graphDocument.DataSet);
 			this.seriesPickerController.SumSeriesAction = Actions.Factory.New (this.SumRows);
 			this.seriesPickerController.NegateSeriesAction = Actions.Factory.New (this.NegateRows);
 			this.seriesPickerController.AddSeriesToGraphAction = Actions.Factory.New (this.AddToChart);
@@ -110,15 +117,15 @@ namespace Epsitec.Cresus.Graph
 		
 		private void SumRows(IEnumerable<int> rows)
 		{
-			var sum = this.graphDataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
+			var sum = this.graphDocument.DataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
 
 			if (sum == null)
 			{
 				return;
 			}
 
-			this.graphDataSet.DataTable.RemoveRows (rows);
-			this.graphDataSet.DataTable.Insert (rows.First (), sum.Label.Replace ("+-", "-"), sum.Values);
+			this.graphDocument.DataSet.DataTable.RemoveRows (rows);
+			this.graphDocument.DataSet.DataTable.Insert (rows.First (), sum.Label.Replace ("+-", "-"), sum.Values);
 
 			this.seriesPickerController.UpdateScrollListItems ();
 			this.seriesPickerController.UpdateChartView ();
@@ -128,7 +135,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			foreach (int row in rows)
 			{
-				var series = this.graphDataSet.DataTable.GetRowSeries (row);
+				var series = this.graphDocument.DataSet.DataTable.GetRowSeries (row);
 				this.seriesPickerController.NegateSeries (series.Label);
 			}
 
@@ -138,11 +145,22 @@ namespace Epsitec.Cresus.Graph
 
 		private void AddToChart(IEnumerable<int> rows)
 		{
+			var table = this.graphDocument.DataSet.DataTable;
+
+			foreach (int row in rows)
+			{
+				this.graphDocument.Add (table.GetRowSeries (row));
+			}
 		}
 
 		private void LoadDataSet()
 		{
-			this.graphDataSet.LoadDataTable ();
+			if (this.graphDocument == null)
+			{
+				this.graphDocument = new GraphDocument (new	GraphDataSet ());
+			}
+
+			this.graphDocument.DataSet.LoadDataTable ();
 
 			if (this.seriesPickerController != null)
 			{
@@ -153,7 +171,7 @@ namespace Epsitec.Cresus.Graph
 
 		private Controllers.SeriesPickerController seriesPickerController;
 
-		private GraphDataSet graphDataSet;
 		private GraphCommands graphCommands;
+		private GraphDocument graphDocument;
 	}
 }

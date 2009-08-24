@@ -94,10 +94,13 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public void DefineValueLabels(IEnumerable<string> collection)
 		{
-			if (this.seriesValueLabelsList.Count > 0)
+			if (this.seriesList.Count > 0)
 			{
-				throw new System.InvalidOperationException ("Cannot define value labels, there are already some defined");
+				throw new System.InvalidOperationException ("Cannot define value labels, there are already some series defined");
 			}
+
+			this.seriesValueLabelsList.Clear ();
+			this.seriesValueLabelsSet.Clear ();
 
 			foreach (var item in collection)
 			{

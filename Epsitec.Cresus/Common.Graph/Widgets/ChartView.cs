@@ -16,17 +16,19 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 
-		public void DefineRenderer(Renderers.AbstractRenderer renderer)
-		{
-			this.renderer = renderer;
-		}
-
-
 		public Renderers.AbstractRenderer Renderer
 		{
 			get
 			{
 				return this.renderer;
+			}
+			set
+			{
+				if (this.renderer != value)
+				{
+					this.renderer = value;
+					this.Invalidate ();
+				}
 			}
 		}
 

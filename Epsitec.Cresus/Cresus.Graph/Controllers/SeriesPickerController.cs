@@ -23,6 +23,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.graphDataSet = graphDataSet;
 			this.negatedSeriesLabels = new HashSet<string> ();
 
+			var lineChartRenderer = new LineChartRenderer ();
+
+			lineChartRenderer.DefineValueLabels (this.graphDataSet.DataTable.ColumnLabels);
+			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
+			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
+			
 			this.scrollList = new ScrollListMultiSelect ()
 			{
 				Dock = DockStyle.Left,
@@ -43,16 +49,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Fill,
 				PreferredWidth = 300,
-				Parent = root
+				Parent = root,
+				Renderer = lineChartRenderer
 			};
-
-			var lineChartRenderer = new LineChartRenderer ();
-
-			lineChartRenderer.DefineValueLabels (this.graphDataSet.DataTable.ColumnLabels);
-			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
-			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
-
-			this.chartView.DefineRenderer (lineChartRenderer);
 
 			this.hotRowIndex = -1;
 			this.visibleQuickButtons = new List<Button> ();
