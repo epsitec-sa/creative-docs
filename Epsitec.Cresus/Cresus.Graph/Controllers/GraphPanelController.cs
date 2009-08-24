@@ -43,6 +43,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 
 			this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
+			
+			this.detectionController= new SeriesDetectionController (this.chartView, this.captionView);
 
 			var button = new Button ()
 			{
@@ -116,6 +118,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		
 
 
 
@@ -123,6 +126,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ChartView chartView;
 		private readonly AutoSplitter splitter;
 		private readonly CaptionView captionView;
+		private readonly SeriesDetectionController detectionController;
+
 		private ContainerLayoutMode layoutMode;
 	}
 }

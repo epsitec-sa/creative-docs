@@ -44,6 +44,7 @@ namespace Epsitec.Common.Graph
 			}
 		}
 
+		
 		public void Clear()
 		{
 			this.samples.Clear ();
@@ -83,6 +84,11 @@ namespace Epsitec.Common.Graph
 			return this.captionLayoutSize;
 		}
 
+		/// <summary>
+		/// Renders the captions to the specified port.
+		/// </summary>
+		/// <param name="port">The rendering port.</param>
+		/// <param name="bounds">The bounds used for the layout.</param>
 		public void Render(IPaintPort port, Rectangle bounds)
 		{
 			int count = this.SampleCount;
@@ -97,20 +103,80 @@ namespace Epsitec.Common.Graph
 				double dx = bounds.Width;
 
 				double textOffset = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
-				
-				int i = 0;
 
-				foreach (var sample in this.samples)
+				foreach (var item in this.GetSampleRectangles (bounds))
 				{
-					var size = this.sampleSizeCache[i++];
+					var sample = item.Key;
+					var rect   = item.Value;
 					
-					oy -= size.Height;
-
-					sample.Render (port, new Rectangle (ox, oy, dx, size.Height), style, textOffset);
+					sample.Render (port, rect, style, textOffset);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Detects the caption which contains the specified position.
+		/// </summary>
+		/// <param name="bounds">The bounds used for the layout.</param>
+		/// <param name="position">The position.</param>
+		/// <returns>The index of the matching caption or <c>-1</c> if the detection fails.</returns>
+		public int DetectCaption(Rectangle bounds, Point position)
+		{
+			int index = 0;
+
+			foreach (var item in this.GetSampleRectangles (bounds))
+			{
+				if (item.Value.Contains (position))
+				{
+					return index;
+				}
+
+				index++;
+			}
+
+			return -1;
+		}
+
+		public Rectangle GetCaptionBounds(Rectangle bounds, int index)
+		{
+			foreach (var item in this.GetSampleRectangles (bounds))
+			{
+				if (index-- == 0)
+				{
+					return item.Value;
+				}
+			}
+
+			return Rectangle.Empty;
+		}
+
+		
+		private IEnumerable<KeyValuePair<ChartCaption, Rectangle>> GetSampleRectangles(Rectangle bounds)
+		{
+			int count = this.SampleCount;
+
+			if (count > 0)
+			{
+				this.UpdateCaptionLayoutSize (bounds.Size);
+
+				double ox = bounds.Left;
+				double oy = bounds.Top;
+				double dx = bounds.Width;
+
+				double textOffset = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
+
+				int i = 0;
+
+				foreach (var sample in this.samples)
+				{
+					var size = this.sampleSizeCache[i];
+					oy -= size.Height;
+					var rect = new Rectangle (ox, oy, dx, size.Height);
+					
+					yield return new KeyValuePair<ChartCaption, Rectangle> (sample, rect);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Updates the size of the caption layout, based on the available space.

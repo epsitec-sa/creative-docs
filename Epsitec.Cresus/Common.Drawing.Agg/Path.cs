@@ -1,6 +1,7 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 namespace Epsitec.Common.Drawing
 {
 	public class Path : System.IDisposable
@@ -538,8 +539,125 @@ namespace Epsitec.Common.Drawing
 				return new Rectangle (x1, y1, x2-x1, y2-y1);
 			}
 		}
+
 		
-		
+		public bool SurfaceContainsPoint(double x, double y, double approximationZoom)
+		{
+			if (this.ContainsCurves)
+			{
+				using (Path path = new Path ())
+				{
+					path.Append (path, approximationZoom);
+					return path.SurfaceContainsPoint (x, y, approximationZoom);
+				}
+			}
+			
+			var analyzer = new InsideSurfaceAnalyzer (new Point (x, y));
+
+			Point start   = Point.Zero;
+			Point current = Point.Zero;
+			Point p1 = Point.Zero;
+			bool closed = false;
+			
+			PathElement[] elements;
+			Point[] points;
+
+			this.GetElements (out elements, out points);
+			
+			for (int i = 0; i < elements.Length; i++)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						start = current = points[i];
+						closed = false;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i];
+						analyzer.AddSegment (current, p1);
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+					case PathElement.Curve4:
+						throw new System.InvalidOperationException ("Flattened path still contains curves");
+						break;
+
+					default:
+						break;
+				}
+
+				if ((elements[i] & PathElement.FlagClose) != 0)
+				{
+					analyzer.AddSegment (current, start);
+					closed = true;
+				}
+			}
+
+			if (!closed)
+			{
+				analyzer.AddSegment (current, start);
+			}
+
+			return analyzer.IsInside ();
+		}
+
+
+		#region Helper Class : InsideSurfaceAnalyzer
+
+		private sealed class InsideSurfaceAnalyzer
+		{
+			public InsideSurfaceAnalyzer(Point p)
+			{
+				this.p = p;
+				this.list = new List<double> ();
+			}
+
+			public void AddSegment(Point a, Point b)
+			{
+				Point i;
+				
+				if (Point.IntersectsWithHorizontal (a, b, this.p.Y, out i))
+				{
+					if (a.Y == b.Y)
+					{
+						//	Skip horizontal lines; we cannot find intersections with
+						//	those points.
+						
+						return;
+					}
+
+					this.list.Add (i.X);
+				}
+			}
+
+			public bool IsInside()
+			{
+				int count = 0;
+				
+				foreach (double x in this.list)
+				{
+					if (this.p.X < x)
+					{
+						count++;
+					}
+				}
+
+				//	An odd number of right-hand intersections means that we are inside of the
+				//	path (using the even/odd rule) :
+				
+				return (count%2 != 0);
+			}
+
+
+			private readonly Point			p;
+			private readonly List<double>	list;
+		}
+
+		#endregion
+
+
 		public bool								HasZeroElements
 		{
 			get
@@ -940,7 +1058,7 @@ namespace Epsitec.Common.Drawing
 			path.AppendCircle (x, y, rx, ry);
 			return path;
 		}
-		
+
 		
 		#region IDisposable Members
 		public void Dispose()
