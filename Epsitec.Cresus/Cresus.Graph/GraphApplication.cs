@@ -151,6 +151,11 @@ namespace Epsitec.Cresus.Graph
 			{
 				this.graphDocument.Add (table.GetRowSeries (row));
 			}
+
+			this.graphDocument.DataSet.DataTable.RemoveRows (rows);
+			
+			this.seriesPickerController.UpdateScrollListItems ();
+			this.seriesPickerController.UpdateChartView ();
 		}
 
 		private void LoadDataSet()
