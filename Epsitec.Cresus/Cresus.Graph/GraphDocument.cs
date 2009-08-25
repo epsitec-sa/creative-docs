@@ -9,20 +9,33 @@ using Epsitec.Cresus.Graph.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
 	public class GraphDocument
 	{
-		public GraphDocument(GraphDataSet dataSet)
+		public GraphDocument()
 		{
-			this.graphPanels = new List<GraphPanelController> ();
-			this.chartSeries = new List<ChartSeries> ();
-			this.dataSet = dataSet;
+			this.graphPanels  = new List<GraphPanelController> ();
+			this.chartSeries  = new List<ChartSeries> ();
+			this.dataSet      = new GraphDataSet ();
+			this.undoRecorder = new Actions.Recorder ();
+			this.redoRecorder = new Actions.Recorder ();
+
+			this.undoRecorder.ActionCreated += sender => this.redoRecorder.Clear ();
+
+			this.undoRecorder.Changed += sender => this.UpdateUndoRedo ();
+			this.redoRecorder.Changed += sender => this.UpdateUndoRedo ();
+			
 			this.dataSet.Changed += x => this.Clear ();
 
 			this.CreateUI ();
 			this.ProcessDocumentChanged ();
+
+			GraphProgram.Application.RegisterDocument (this);
+			GraphProgram.Application.SetActiveDocument (this);
+			GraphProgram.Application.SetupDataSet ();
 		}
 
 
@@ -42,6 +55,15 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public Actions.Recorder Recorder
+		{
+			get
+			{
+				return this.undoRecorder;
+			}
+		}
+
+
 		public void Add(ChartSeries series)
 		{
 			this.chartSeries.Add (series);
@@ -55,6 +77,47 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		internal XElement SaveSettings(XElement xml)
+		{
+			xml.Add (new XAttribute ("path", this.path ?? ""));
+			
+			return xml;
+		}
+
+		internal void RestoreSettings(XElement xml)
+		{
+			this.path = (string) xml.Attribute ("path");
+		}
+
+
+		internal void Undo()
+		{
+			if (this.undoRecorder.Count > 1)
+			{
+				this.redoRecorder.Push (this.undoRecorder.Pop ());
+
+				foreach (var item in this.undoRecorder)
+				{
+					item.PlayBack ();
+				}
+			}
+		}
+
+		internal void Redo()
+		{
+			if (this.redoRecorder.Count > 0)
+			{
+				this.undoRecorder.Push (this.redoRecorder.Pop ()).PlayBack ();
+			}
+		}
+		
+		
+		private void UpdateUndoRedo()
+		{
+			GraphProgram.Application.SetEnable (ApplicationCommands.Undo, this.undoRecorder.Count > 1);
+			GraphProgram.Application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
+		}
+		
 		private void ProcessDocumentChanged()
 		{
 			foreach (var panel in this.graphPanels)
@@ -92,7 +155,10 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphPanelController> graphPanels;
 		private readonly List<ChartSeries> chartSeries;
 		private readonly GraphDataSet dataSet;
+		private readonly Actions.Recorder undoRecorder;
+		private readonly Actions.Recorder redoRecorder;
 
 		private Window window;
+		private string path;
 	}
 }

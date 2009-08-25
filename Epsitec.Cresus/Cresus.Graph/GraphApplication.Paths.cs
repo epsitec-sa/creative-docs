@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Graph
 		internal static class Paths
 		{
 			public static readonly string SettingsPath = System.IO.Path.Combine (Globals.Directories.UserAppData, "Cresus.Graph.settings.xml");
+			public static readonly string AutoSavePath = System.IO.Path.Combine (Globals.Directories.UserAppData, "AutoSave");
 		}
 	}
 }

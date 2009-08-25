@@ -18,14 +18,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	internal sealed class SeriesPickerController
 	{
-		public SeriesPickerController(Widget root, GraphDataSet graphDataSet)
+		public SeriesPickerController(Widget root)
 		{
-			this.graphDataSet = graphDataSet;
 			this.negatedSeriesLabels = new HashSet<string> ();
 
 			var lineChartRenderer = new LineChartRenderer ();
 
-			lineChartRenderer.DefineValueLabels (this.graphDataSet.DataTable.ColumnLabels);
 			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
 			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
 			
@@ -90,8 +88,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.quickButtonAddToGraph.Clicked += (sender, e) => this.ProcessQuickButton (this.AddSeriesToGraphAction);
 			this.quickButtonSum.Clicked         += (sender, e) => this.ProcessQuickButton (this.SumSeriesAction);
 
-			this.UpdateScrollListItems ();
-
 			this.scrollList.DragMultiSelectionStarted += this.HandleDragMultiSelectionStarted;
 			this.scrollList.DragMultiSelectionEnded   += this.HandleDragMultiSelectionEnded;
 			this.scrollList.MultiSelectionChanged     += this.HandleMultiSelectionChanged;
@@ -99,14 +95,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.scrollList.Exited                    += this.HandleMouseExited;
 
 			this.scrollList.PaintForeground += this.HandlePaintForeground;
+
+			GraphProgram.Application.ActiveDocumentChanged += sender => this.UpdateScrollListItems ();
 		}
 
 
+		public GraphDataSet DataSet
+		{
+			get
+			{
+				return GraphProgram.Application.Document.DataSet;
+			}
+		}
+
 		public void UpdateScrollListItems()
 		{
-			if (this.scrollList != null)
+			if ((this.scrollList != null) &&
+				(this.DataSet != null) &&
+				(this.DataSet.DataTable != null))
 			{
-				List<string> labels = new List<string> (this.graphDataSet.DataTable.RowLabels);
+				List<string> labels = new List<string> (this.DataSet.DataTable.RowLabels);
 
 				var selection = this.scrollList.GetSortedSelection ();
 
@@ -122,6 +130,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var renderer = this.chartView.Renderer;
 
 			renderer.Clear ();
+			renderer.DefineValueLabels (this.DataSet.DataTable.ColumnLabels);
 			renderer.CollectRange (this.scrollList.GetSortedSelection ().Select (x => this.GetRowSeries (x)));
 			renderer.ClipRange (System.Math.Min (0, renderer.MinValue), System.Math.Max (0, renderer.MaxValue));
 
@@ -145,7 +154,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public ChartSeries GetRowSeries(int index)
 		{
-			var  table  = this.graphDataSet.DataTable;
+			var  table  = this.DataSet.DataTable;
 			var  series = table.GetRowSeries (index);
 			bool negate = this.negatedSeriesLabels.Contains (series.Label);
 
@@ -426,7 +435,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
 		public System.Action<IEnumerable<int>>	NegateSeriesAction;
 
-		readonly private GraphDataSet			graphDataSet;
 		readonly private ScrollListMultiSelect	scrollList;
 		readonly private ChartView				chartView;
 		readonly private HashSet<string>		negatedSeriesLabels;

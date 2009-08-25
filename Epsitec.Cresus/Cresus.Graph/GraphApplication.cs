@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.graphCommands = new GraphCommands (this);
 			this.persistenceManager = new Core.UI.PersistenceManager ();
+			this.documents = new List<GraphDocument> ();
+
+			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 		}
 
 		
@@ -46,14 +49,27 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.graphDocument;
+				if (this.activeDocument == null)
+				{
+					new GraphDocument ();
+				}
+				
+				return this.activeDocument;
 			}
 		}
-		
-		
+
+		internal void SetupDefaultDocument()
+		{
+			if (this.activeDocument == null)
+			{
+				new GraphDocument ();
+				this.SetupDataSet ();
+			}
+		}
+
 		internal void SetupDataSet()
 		{
-			Actions.Factory.New (this.LoadDataSet).Invoke ();
+			this.loadDataSetAction ();
 		}
 
 		internal void SetupInterface()
@@ -110,7 +126,7 @@ namespace Epsitec.Cresus.Graph
 				Parent = window.Root
 			};
 
-			this.seriesPickerController = new Controllers.SeriesPickerController (frame, this.graphDocument.DataSet);
+			this.seriesPickerController = new Controllers.SeriesPickerController (frame);
 			this.seriesPickerController.SumSeriesAction = Actions.Factory.New (this.SumRows);
 			this.seriesPickerController.NegateSeriesAction = Actions.Factory.New (this.NegateRows);
 			this.seriesPickerController.AddSeriesToGraphAction = Actions.Factory.New (this.AddToChart);
@@ -124,6 +140,27 @@ namespace Epsitec.Cresus.Graph
 		internal void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (this.SaveApplicationState);
+		}
+
+		internal void RegisterDocument(GraphDocument graphDocument)
+		{
+			System.Diagnostics.Debug.Assert (this.documents.Contains (graphDocument) == false);
+
+			this.documents.Add (graphDocument);
+
+			if (this.activeDocument == null)
+			{
+				this.SetActiveDocument (graphDocument);
+			}
+		}
+
+		internal void SetActiveDocument(GraphDocument document)
+		{
+			if (this.activeDocument != document)
+			{
+				this.activeDocument = document;
+				this.OnActiveDocumentChanged ();
+			}
 		}
 
 
@@ -141,6 +178,7 @@ namespace Epsitec.Cresus.Graph
 				XElement store = doc.Element ("store");
 
 //-				this.stateManager.RestoreStates (store.Element ("stateManager"));
+				this.RestoreDocumentSettings (store.Element ("documents"));
 				Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
 				this.persistenceManager.Restore (store.Element ("uiSettings"));
 			}
@@ -162,6 +200,7 @@ namespace Epsitec.Cresus.Graph
 					new XComment ("Saved on " + timeStamp),
 					new XElement ("store",
 //						this.StateManager.SaveStates ("stateManager"),
+						this.SaveDocumentSettings ("documents"),
 						Core.UI.SaveWindowPositions ("windowPositions"),
 						this.persistenceManager.Save ("uiSettings")));
 
@@ -170,19 +209,42 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		private XElement SaveDocumentSettings(string xmlNodeName)
+		{
+			return new XElement (xmlNodeName,
+					from doc in this.documents
+					select doc.SaveSettings (new XElement ("doc")));
+		}
+
+		private void RestoreDocumentSettings(XElement xml)
+		{
+			if (xml == null)
+			{
+				return;
+			}
+
+			foreach (XElement node in xml.Descendants ())
+			{
+				System.Diagnostics.Debug.Assert (node.Name == "doc");
+
+				var doc = new GraphDocument ();
+
+				doc.RestoreSettings (node);
+			}
+		}
 
 		
 		private void SumRows(IEnumerable<int> rows)
 		{
-			var sum = this.graphDocument.DataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
+			var sum = this.activeDocument.DataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
 
 			if (sum == null)
 			{
 				return;
 			}
 
-			this.graphDocument.DataSet.DataTable.RemoveRows (rows);
-			this.graphDocument.DataSet.DataTable.Insert (rows.First (), sum.Label.Replace ("+-", "-"), sum.Values);
+			this.activeDocument.DataSet.DataTable.RemoveRows (rows);
+			this.activeDocument.DataSet.DataTable.Insert (rows.First (), sum.Label.Replace ("+-", "-"), sum.Values);
 
 			this.seriesPickerController.UpdateScrollListItems ();
 			this.seriesPickerController.UpdateChartView ();
@@ -192,7 +254,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			foreach (int row in rows)
 			{
-				var series = this.graphDocument.DataSet.DataTable.GetRowSeries (row);
+				var series = this.activeDocument.DataSet.DataTable.GetRowSeries (row);
 				this.seriesPickerController.NegateSeries (series.Label);
 			}
 
@@ -202,14 +264,14 @@ namespace Epsitec.Cresus.Graph
 
 		private void AddToChart(IEnumerable<int> rows)
 		{
-			var table = this.graphDocument.DataSet.DataTable;
+			var table = this.activeDocument.DataSet.DataTable;
 
 			foreach (int row in rows)
 			{
-				this.graphDocument.Add (table.GetRowSeries (row));
+				this.activeDocument.Add (table.GetRowSeries (row));
 			}
 
-			this.graphDocument.DataSet.DataTable.RemoveRows (rows);
+			this.activeDocument.DataSet.DataTable.RemoveRows (rows);
 			
 			this.seriesPickerController.UpdateScrollListItems ();
 			this.seriesPickerController.UpdateChartView ();
@@ -217,24 +279,33 @@ namespace Epsitec.Cresus.Graph
 
 		private void LoadDataSet()
 		{
-			if (this.graphDocument == null)
-			{
-				this.graphDocument = new GraphDocument (new	GraphDataSet ());
-			}
-
-			this.graphDocument.DataSet.LoadDataTable ();
-
-			if (this.seriesPickerController != null)
-			{
-				this.seriesPickerController.UpdateScrollListItems ();
-			}
+			System.Diagnostics.Debug.Assert (this.activeDocument != null);
+			
+			this.activeDocument.DataSet.LoadDataTable ();
+			this.OnActiveDocumentChanged ();
 		}
 
 
 		private Controllers.SeriesPickerController seriesPickerController;
 
+		private void OnActiveDocumentChanged()
+		{
+			var handler = this.ActiveDocumentChanged;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+		
+		
+		public event EventHandler ActiveDocumentChanged;
+
+		private readonly System.Action loadDataSetAction;
+
 		private GraphCommands graphCommands;
-		private GraphDocument graphDocument;
+		private GraphDocument activeDocument;
+		private readonly List<GraphDocument> documents;
 		private readonly Core.UI.PersistenceManager persistenceManager;
 	}
 }

@@ -120,23 +120,14 @@ namespace Epsitec.Cresus.Graph.Actions
 		#endregion
 		
 		
-		public static Recorder Current
-		{
-			get
-			{
-				return Recorder.current;
-			}
-		}
-
-
 		public static ActionRecord Push(Action userAction)
 		{
-			return Recorder.Current.PushNewAction (new ActionRecord (userAction.Tag, ""));
+			return GraphProgram.Application.Document.Recorder.PushNewAction (new ActionRecord (userAction.Tag, ""));
 		}
 
 		public static ActionRecord Push<T>(Action userAction, T arg)
 		{
-			return Recorder.Current.PushNewAction (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
+			return GraphProgram.Application.Document.Recorder.PushNewAction (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
 		}
 		
 		
@@ -218,8 +209,6 @@ namespace Epsitec.Cresus.Graph.Actions
 		public event EventHandler				RecordPopped;
 		public event EventHandler				Changed;
 		public event EventHandler				ActionCreated;
-		
-		private static Recorder current = new Recorder ();
 		
 		private readonly List<ActionRecord> actionRecords;
 

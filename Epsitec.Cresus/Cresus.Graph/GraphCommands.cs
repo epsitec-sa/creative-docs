@@ -13,51 +13,23 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphCommands(GraphApplication application)
 		{
-			this.application  = application;
-			this.undoRecorder = Actions.Recorder.Current;
-			this.redoRecorder = new Actions.Recorder ();
-
-			this.undoRecorder.ActionCreated += sender => this.redoRecorder.Clear ();
-
-			this.undoRecorder.Changed += sender => this.UpdateUndoRedo ();
-			this.redoRecorder.Changed += sender => this.UpdateUndoRedo ();
-
-			application.CommandDispatcher.RegisterController (this);
-		}
-
-
-		private void UpdateUndoRedo()
-		{
-			this.application.SetEnable (ApplicationCommands.Undo, this.undoRecorder.Count > 1);
-			this.application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
+			this.application = application;
+			this.application.CommandDispatcher.RegisterController (this);
 		}
 
 
 		[Command(ApplicationCommands.Id.Undo)]
 		private void UndoCommand()
 		{
-			if (this.undoRecorder.Count > 1)
-			{
-				this.redoRecorder.Push (this.undoRecorder.Pop ());
-				
-				foreach (var item in this.undoRecorder)
-				{
-					item.PlayBack ();
-				}
-			}
+			this.application.Document.Undo ();
 		}
 
 		[Command (ApplicationCommands.Id.Redo)]
 		private void RedoCommand()
 		{
-			if (this.redoRecorder.Count > 0)
-			{
-				this.undoRecorder.Push (this.redoRecorder.Pop ()).PlayBack ();
-			}
+			this.application.Document.Redo ();
 		}
 
-		private readonly Actions.Recorder undoRecorder;
-		private readonly Actions.Recorder redoRecorder;
 
 		private readonly GraphApplication application;
 	}

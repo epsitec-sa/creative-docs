@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Graph
 
 			System.Diagnostics.Debug.Assert (GraphProgram.Application.ResourceManagerPool.PoolName == "Core");
 
-			GraphProgram.Application.SetupDataSet ();
 			GraphProgram.Application.SetupInterface ();
+			GraphProgram.Application.SetupDefaultDocument ();
 
 			GraphProgram.Application.Window.Show ();
 			GraphProgram.Application.Window.Run ();
