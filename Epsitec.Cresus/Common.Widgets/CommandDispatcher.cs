@@ -356,10 +356,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void RegisterMethod(object target, System.Reflection.MethodInfo info)
 		{
-			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
-			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
-			
-			object[] attributes = info.GetCustomAttributes (CommandDispatcher.commandAttributeType, false);
+			object[] attributes = info.GetCustomAttributes (CommandDispatcher.commandAttributeType, true);
 			
 			foreach (Support.CommandAttribute attribute in attributes)
 			{
