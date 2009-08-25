@@ -22,6 +22,27 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.chartView.MouseMove += this.HandleChartViewMouseMove;
 				this.chartView.Released  += this.HandleChartViewReleased;
+
+				this.chartView.PaintForeground +=
+					delegate (object sender, PaintEventArgs e)
+					{
+						Graphics graphics = e.Graphics;
+
+						if (this.hoverIndex >= 0)
+						{
+							var renderer = this.chartView.Renderer;
+							var series   = renderer.SeriesItems[this.hoverIndex];
+
+							using (Path path = renderer.GetDetectionPath (series, 3))
+							{
+								IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+								Color    color   = adorner.ColorCaption;
+
+								graphics.Color = Color.FromAlphaColor (0.3, color);
+								graphics.PaintSurface (path);
+							}
+						}
+					};
 			}
 			
 			if (this.captionView != null)
