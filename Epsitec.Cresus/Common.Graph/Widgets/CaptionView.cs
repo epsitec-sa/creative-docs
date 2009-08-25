@@ -33,6 +33,24 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 
+		/// <summary>
+		/// Finds the index of the caption at the specified position.
+		/// </summary>
+		/// <param name="pos">The position.</param>
+		/// <returns>The caption index or <c>-1</c>.</returns>
+		public int FindCaptionIndex(Point pos)
+		{
+			if (this.captions != null)
+			{
+				return this.captions.DetectCaption (Rectangle.Deflate (this.Client.Bounds, this.Padding), pos);
+			}
+			else
+			{
+				return -1;
+			}
+		}
+		
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			graphics.AddFilledRectangle (this.Client.Bounds);
@@ -40,7 +58,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (this.captions != null)
 			{
-				this.captions.Render (graphics, this.Client.Bounds);
+				this.captions.Render (graphics, Rectangle.Deflate (this.Client.Bounds, this.Padding));
 			}
 		}
 

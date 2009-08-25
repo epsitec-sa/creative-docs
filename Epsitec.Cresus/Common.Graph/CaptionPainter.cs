@@ -44,7 +44,12 @@ namespace Epsitec.Common.Graph
 			}
 		}
 
-		
+		public System.Action<CaptionPainter, int, Rectangle, IPaintPort> BackgroundPaintCallback
+		{
+			get;
+			set;
+		}
+
 		public void Clear()
 		{
 			this.samples.Clear ();
@@ -103,11 +108,18 @@ namespace Epsitec.Common.Graph
 				double dx = bounds.Width;
 
 				double textOffset = this.sampleWidth + CaptionPainter.defaultSpaceWidth;
+				
+				int index = 0;
 
 				foreach (var item in this.GetSampleRectangles (bounds))
 				{
 					var sample = item.Key;
 					var rect   = item.Value;
+
+					if (this.BackgroundPaintCallback != null)
+					{
+						this.BackgroundPaintCallback (this, index++, rect, port);
+					}
 					
 					sample.Render (port, rect, style, textOffset);
 				}
@@ -227,6 +239,7 @@ namespace Epsitec.Common.Graph
 		private double						sampleWidth;
 		private Size						sampleSizeCacheAvailableSize;
 		private Size						captionLayoutSize;
+
 		
 		private static readonly Styles.CaptionStyle	defaultStyle		= new Styles.CaptionStyle ();
 		private static readonly double				defaultSampleWidth	= CaptionPainter.defaultStyle.GetTextLineHeight () * 2;

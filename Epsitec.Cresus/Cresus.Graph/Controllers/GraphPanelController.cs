@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.captionView = new CaptionView ()
 			{
 				Parent = root,
+				Padding = new Margins(4, 4, 2, 2),
 				PreferredWidth = 160,
 				PreferredHeight = 80,
 				Captions = lineChartRenderer.Captions
