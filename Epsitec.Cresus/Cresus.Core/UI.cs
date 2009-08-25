@@ -112,6 +112,11 @@ namespace Epsitec.Cresus.Core
 				}
 				else
 				{
+					if (window.IsVisible)
+					{
+						window.Hide ();
+					}
+
 					window.WindowPlacement = wp;
 					windows.Remove (window);
 				}

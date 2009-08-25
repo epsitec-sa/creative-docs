@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -9,7 +10,6 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Cresus.Core
 {
@@ -447,10 +447,10 @@ namespace Epsitec.Cresus.Core
 			}
 			
 			this.persistenceManager.DiscardChanges ();
-			this.persistenceManager.SettingsChanged += (sender) => Application.QueueAsyncCallback (this.SaveApplicationState);
+			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
 
 			this.stateManager.StackChanged += (sender, e) => this.UpdateCommandsAfterStateChange ();
-			this.stateManager.StackChanged += (sender, e) => Application.QueueAsyncCallback (this.SaveApplicationState);
+			this.stateManager.StackChanged += (sender, e) => this.AsyncSaveApplicationState ();
 
 			this.UpdateCommandsAfterStateChange ();
 		}

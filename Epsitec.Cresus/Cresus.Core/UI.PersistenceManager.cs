@@ -230,9 +230,9 @@ namespace Epsitec.Cresus.Core
 
 					if (widget != null)
 					{
-
 						this.SaveXml (widget, xml);
 					}
+					
 					return xml;
 				}
 
