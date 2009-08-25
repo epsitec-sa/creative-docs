@@ -13,14 +13,16 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
-	public class GraphApplication : Application
+	public partial class GraphApplication : Application
 	{
 		public GraphApplication()
 		{
 			this.graphCommands = new GraphCommands (this);
+			this.persistenceManager = new Core.UI.PersistenceManager ();
 		}
 
 		
@@ -48,6 +50,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 		
+		
 		internal void SetupDataSet()
 		{
 			Actions.Factory.New (this.LoadDataSet).Invoke ();
@@ -55,10 +58,13 @@ namespace Epsitec.Cresus.Graph
 
 		internal void SetupInterface()
 		{
-			Window window = new Window ();
+			Window window = new Window ()
+			{
+				Text = this.ShortWindowTitle,
+				ClientSize = new Epsitec.Common.Drawing.Size (824, 400),
+				Name = "Application"
+			};
 
-			window.Text = this.ShortWindowTitle;
-			window.ClientSize = new Epsitec.Common.Drawing.Size (824, 400);
 			window.Root.Padding = new Margins (4, 8, 8, 4);
 
 			FrameBox bar = new FrameBox ()
@@ -111,8 +117,59 @@ namespace Epsitec.Cresus.Graph
 
 			
 			this.Window = window;
+			this.RestoreApplicationState ();
 			this.IsReady = true;
 		}
+
+		internal void AsyncSaveApplicationState()
+		{
+			Application.QueueAsyncCallback (this.SaveApplicationState);
+		}
+
+
+		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SaveApplicationState ();
+			base.ExecuteQuit (dispatcher, e);
+		}
+		
+		private void RestoreApplicationState()
+		{
+			if (System.IO.File.Exists (GraphApplication.Paths.SettingsPath))
+			{
+				XDocument doc = XDocument.Load (GraphApplication.Paths.SettingsPath);
+				XElement store = doc.Element ("store");
+
+//-				this.stateManager.RestoreStates (store.Element ("stateManager"));
+				Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
+				this.persistenceManager.Restore (store.Element ("uiSettings"));
+			}
+
+			this.persistenceManager.DiscardChanges ();
+			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
+		}
+		
+		private void SaveApplicationState()
+		{
+			if (this.IsReady)
+			{
+				System.Diagnostics.Debug.WriteLine ("Saving application state.");
+				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+				XDocument doc = new XDocument (
+					new XDeclaration ("1.0", "utf-8", "yes"),
+					new XComment ("Saved on " + timeStamp),
+					new XElement ("store",
+//						this.StateManager.SaveStates ("stateManager"),
+						Core.UI.SaveWindowPositions ("windowPositions"),
+						this.persistenceManager.Save ("uiSettings")));
+
+				doc.Save (GraphApplication.Paths.SettingsPath);
+				System.Diagnostics.Debug.WriteLine ("Save done.");
+			}
+		}
+
 
 		
 		private void SumRows(IEnumerable<int> rows)
@@ -178,5 +235,6 @@ namespace Epsitec.Cresus.Graph
 
 		private GraphCommands graphCommands;
 		private GraphDocument graphDocument;
+		private readonly Core.UI.PersistenceManager persistenceManager;
 	}
 }
