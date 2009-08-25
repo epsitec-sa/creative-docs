@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core
 					return;
 				}
 
-				foreach (XElement node in xml.Descendants ())
+				foreach (XElement node in xml.Elements ())
 				{
 					System.Diagnostics.Debug.Assert (node.Name == "w");
 

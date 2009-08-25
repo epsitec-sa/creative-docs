@@ -25,7 +25,7 @@ namespace Epsitec.ModuleRepository
 		{
 			XDocument doc = XDocument.Load (path);
 
-			return from c in doc.Descendants ("module")
+			return from c in doc.Elements ("module")
 				   select new ModuleRecord ()
 				   {
 					   ModuleId = (int) c.Attribute ("id"),

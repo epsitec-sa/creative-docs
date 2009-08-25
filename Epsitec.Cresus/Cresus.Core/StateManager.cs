@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.Core
 		public void RestoreStates(XElement xml)
 		{
 			List<States.CoreState> states = new	List<States.CoreState> (
-				from state in xml.Descendants (Strings.XmlState)
+				from state in xml.Elements (Strings.XmlState)
 				select States.StateFactory.CreateState (this, state, (string) state.Attribute (Strings.XmlClass)));
 
 			System.Diagnostics.Debug.Assert (this.states.Count == 0);

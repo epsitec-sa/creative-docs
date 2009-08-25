@@ -136,6 +136,7 @@
     <Compile Include="EntityEngine\EntityResolverResult.cs" />
     <Compile Include="EntityEngine\EntityResolver.cs" />
     <Compile Include="EntityEngine\IEntityResolver.cs" />
+    <Compile Include="Extensions\EnumeratorExtensions.cs" />
     <Compile Include="IExceptionManager.cs" />
     <Compile Include="Platform\StockIcons.cs" />
     <Compile Include="Platform\UserAccountApi.cs" />

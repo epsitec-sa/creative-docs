@@ -24,6 +24,23 @@ namespace Epsitec.Cresus.Graph.Actions
 			}
 		}
 
+
+		public string SaveToString()
+		{
+			using (System.IO.StringWriter writer = new System.IO.StringWriter ())
+			{
+				this.Save (writer);
+				return writer.ToString ();
+			}
+		}
+
+		public void RestoreFromString(string data)
+		{
+			using (System.IO.StringReader reader = new System.IO.StringReader (data))
+			{
+				this.Restore (reader);
+			}
+		}
 		
 		public void Save(System.IO.TextWriter stream)
 		{

@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Graph
 				return;
 			}
 
-			foreach (XElement node in xml.Descendants ())
+			foreach (XElement node in xml.Elements ())
 			{
 				System.Diagnostics.Debug.Assert (node.Name == "doc");
 

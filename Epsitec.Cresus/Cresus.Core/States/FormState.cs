@@ -664,7 +664,7 @@ namespace Epsitec.Cresus.Core.States
 			IValueConverter converter = Epsitec.Common.Types.Converters.AutomaticValueConverter.Instance;
 			System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.InvariantCulture;
 
-			foreach (XElement dataElement in element.Descendants ())
+			foreach (XElement dataElement in element.Elements ())
 			{
 				EntityFieldPath     path = EntityFieldPath.Parse ((string) dataElement.Attribute (Strings.XmlPath));
 				StructuredTypeField field;

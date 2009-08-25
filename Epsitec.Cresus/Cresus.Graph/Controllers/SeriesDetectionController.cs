@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Widgets;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -154,16 +155,5 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private int hoverIndex;
 		private int selectIndex;
-	}
-
-	public static class Extensions
-	{
-		public static void ForEach<T>(this IEnumerable<T> collection, System.Action<T> action)
-		{
-			foreach (T item in collection)
-			{
-				action (item);
-			}
-		}
 	}
 }

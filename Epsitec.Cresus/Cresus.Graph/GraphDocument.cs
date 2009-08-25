@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Graph.Controllers;
@@ -80,6 +81,8 @@ namespace Epsitec.Cresus.Graph
 		internal XElement SaveSettings(XElement xml)
 		{
 			xml.Add (new XAttribute ("path", this.path ?? ""));
+			xml.Add (new XElement ("undoActions",
+				new XText (this.undoRecorder.SaveToString ())));
 			
 			return xml;
 		}
@@ -87,6 +90,14 @@ namespace Epsitec.Cresus.Graph
 		internal void RestoreSettings(XElement xml)
 		{
 			this.path = (string) xml.Attribute ("path");
+
+			var undoActionsXml = xml.Element ("undoActions");
+
+			if (undoActionsXml != null)
+			{
+				this.undoRecorder.RestoreFromString (undoActionsXml.Value);
+				this.undoRecorder.ForEach (x => x.PlayBack ());
+			}
 		}
 
 
@@ -95,11 +106,7 @@ namespace Epsitec.Cresus.Graph
 			if (this.undoRecorder.Count > 1)
 			{
 				this.redoRecorder.Push (this.undoRecorder.Pop ());
-
-				foreach (var item in this.undoRecorder)
-				{
-					item.PlayBack ();
-				}
+				this.undoRecorder.ForEach (x => x.PlayBack ());
 			}
 		}
 
