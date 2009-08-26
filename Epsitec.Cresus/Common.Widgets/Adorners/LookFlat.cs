@@ -1001,6 +1001,15 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 		}
 
+
+		public override Drawing.Color ColorTabBackground
+		{
+			get
+			{
+				return this.colorControlBar;
+			}
+		}
+		
 		public override void PaintTabAboveBackground(Drawing.Graphics graphics,
 											Drawing.Rectangle frameRect,
 											Drawing.Rectangle titleRect,

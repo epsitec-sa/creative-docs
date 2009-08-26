@@ -289,6 +289,14 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 		}
 
+		public virtual Drawing.Color ColorTabBackground
+		{
+			get
+			{
+				return this.colorControl;
+			}
+		}
+
 		public abstract Drawing.Color ColorText(Widgets.WidgetPaintState state);
 
 		public abstract Drawing.Color ColorTextSliderBorder(bool enabled);
@@ -296,6 +304,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		public abstract Drawing.Color ColorTextFieldBorder(bool enabled);
 
 		public abstract Drawing.Color ColorTextDisplayMode(TextFieldDisplayMode mode);
+
 
 		public virtual double AlphaMenu
 		{

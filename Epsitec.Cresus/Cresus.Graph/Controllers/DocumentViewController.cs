@@ -11,12 +11,22 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class DocumentController
+	/// <summary>
+	/// The <c>DocumentViewController</c> class creates and manages one view of a document,
+	/// usually inside a tab page.
+	/// </summary>
+	internal sealed class DocumentViewController
 	{
-		public DocumentController(Widget root, GraphDocument document, System.Action<DocumentController> makeVisibleCallback)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DocumentViewController"/> class.
+		/// </summary>
+		/// <param name="container">The container.</param>
+		/// <param name="document">The document.</param>
+		/// <param name="showContainer">The callback used to make the container visible.</param>
+		public DocumentViewController(Widget container, GraphDocument document, System.Action<DocumentViewController> showContainer)
 		{
 			this.document = document;
-			this.makeVisibleCallback = makeVisibleCallback;
+			this.showContainerCallback = showContainer;
 
 			var lineChartRenderer = new LineChartRenderer ();
 
@@ -26,13 +36,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.chartView = new ChartView ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = root,
+				Parent = container,
 				Renderer = lineChartRenderer
 			};
 
 			this.captionView = new CaptionView ()
 			{
-				Parent = root,
+				Parent = container,
 				Padding = new Margins(4, 4, 2, 2),
 				PreferredWidth = 160,
 				PreferredHeight = 80,
@@ -41,7 +51,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.splitter = new AutoSplitter ()
 			{
-				Parent = root
+				Parent = container
 			};
 
 			this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
@@ -55,7 +65,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Text = "/",
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Parent = root
+				Parent = container
 			};
 
 			button.Clicked +=
@@ -122,22 +132,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void MakeVisible()
 		{
-			if (this.makeVisibleCallback != null)
+			if (this.showContainerCallback != null)
 			{
-				this.makeVisibleCallback (this);
+				this.showContainerCallback (this);
 			}
 		}
 		
 
 
 
-		private readonly GraphDocument document;
-		private readonly ChartView chartView;
-		private readonly AutoSplitter splitter;
-		private readonly CaptionView captionView;
+		private readonly GraphDocument			document;
+		private readonly ChartView				chartView;
+		private readonly AutoSplitter			splitter;
+		private readonly CaptionView			captionView;
 		private readonly SeriesDetectionController detectionController;
-		private readonly System.Action<DocumentController> makeVisibleCallback;
+		private readonly System.Action<DocumentViewController> showContainerCallback;
 
-		private ContainerLayoutMode layoutMode;
+		private ContainerLayoutMode				layoutMode;
 	}
 }

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Graph
 			this.graphCommands = new GraphCommands (this);
 			this.persistenceManager = new Core.UI.PersistenceManager ();
 			this.documents = new List<GraphDocument> ();
-			this.appWindowController = new Controllers.MainWindowController ();
+			this.mainWindowController = new Controllers.MainWindowController ();
 
 			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 		}
@@ -55,11 +55,19 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		internal Controllers.MainWindowController MainWindowController
+		{
+			get
+			{
+				return this.mainWindowController;
+			}
+		}
+
 		internal void SetupDefaultDocument()
 		{
 			if (this.activeDocument == null)
 			{
-				new GraphDocument (this.appWindowController);
+				new GraphDocument ();
 				this.SetupDataSet ();
 			}
 		}
@@ -71,7 +79,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void SetupInterface()
 		{
-			this.Window = this.appWindowController.Window;
+			this.Window = this.mainWindowController.Window;
 
 			this.SetEnable (ApplicationCommands.Save, false);
 			
@@ -175,7 +183,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				System.Diagnostics.Debug.Assert (node.Name == "doc");
 
-				var doc = new GraphDocument (this.appWindowController);
+				var doc = new GraphDocument ();
 
 				doc.RestoreSettings (node);
 			}
@@ -253,7 +261,7 @@ namespace Epsitec.Cresus.Graph
 
 		private GraphCommands graphCommands;
 		private GraphDocument activeDocument;
-		private readonly Controllers.MainWindowController appWindowController;
+		private readonly Controllers.MainWindowController mainWindowController;
 		private readonly List<GraphDocument> documents;
 		private readonly Core.UI.PersistenceManager persistenceManager;
 	}

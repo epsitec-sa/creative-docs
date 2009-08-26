@@ -14,11 +14,15 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
+	/// <summary>
+	/// The <c>GraphDocument</c> class represents a graph document (data, styles and
+	/// settings).
+	/// </summary>
 	public class GraphDocument
 	{
-		public GraphDocument(Controllers.MainWindowController controller)
+		public GraphDocument()
 		{
-			this.graphPanels  = new List<DocumentController> ();
+			this.views  = new List<DocumentViewController> ();
 			this.chartSeries  = new List<ChartSeries> ();
 			this.dataSet      = new GraphDataSet ();
 			this.undoRecorder = new Actions.Recorder ();
@@ -31,7 +35,7 @@ namespace Epsitec.Cresus.Graph
 			
 			this.dataSet.Changed += x => this.Clear ();
 
-			this.CreateUI (controller.DocTabBook);
+			this.CreateUI (GraphProgram.Application.MainWindowController.DocTabBook);
 			this.ProcessDocumentChanged ();
 
 			GraphProgram.Application.RegisterDocument (this);
@@ -79,7 +83,7 @@ namespace Epsitec.Cresus.Graph
 
 		public void MakeVisible()
 		{
-			this.graphPanels.ForEach (x => x.MakeVisible ());
+			this.views.ForEach (x => x.MakeVisible ());
 		}
 
 
@@ -132,7 +136,7 @@ namespace Epsitec.Cresus.Graph
 		
 		private void ProcessDocumentChanged()
 		{
-			foreach (var panel in this.graphPanels)
+			foreach (var panel in this.views)
 			{
 				panel.Refresh ();
 			}
@@ -149,19 +153,20 @@ namespace Epsitec.Cresus.Graph
 			var frame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 0),
-				Parent = page
+				Padding = new Margins (0, 0, 0, 0),
+				Parent = page,
+				BackColor = Epsitec.Common.Widgets.Adorners.Factory.Active.ColorTabBackground
 			};
 
-			var panel = new DocumentController (frame, this, x => book.ActivePage = page);
+			var panel = new DocumentViewController (frame, this, x => book.ActivePage = page);
 
-			this.graphPanels.Add (panel);
+			this.views.Add (panel);
 			
 			book.Items.Add (page);
 		}
 
 		
-		private readonly List<DocumentController> graphPanels;
+		private readonly List<DocumentViewController> views;
 		private readonly List<ChartSeries> chartSeries;
 		private readonly GraphDataSet dataSet;
 		private readonly Actions.Recorder undoRecorder;

@@ -1345,6 +1345,15 @@ namespace Epsitec.Common.Widgets.Adorners
 			graphics.RenderSolid(this.colorFrame);
 		}
 
+
+		public override Drawing.Color ColorTabBackground
+		{
+			get
+			{
+				return this.colorFrame;
+			}
+		}
+		
 		public override void PaintTabAboveBackground(Drawing.Graphics graphics,
 											Drawing.Rectangle frameRect,
 											Drawing.Rectangle titleRect,

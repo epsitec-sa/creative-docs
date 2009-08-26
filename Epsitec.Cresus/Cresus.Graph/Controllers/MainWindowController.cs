@@ -11,7 +11,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	public class MainWindowController
+	/// <summary>
+	/// The <c>MainWindowController</c> class creates and manages the main window of the
+	/// application, with its tools and document tab book.
+	/// </summary>
+	internal class MainWindowController
 	{
 		public MainWindowController()
 		{
@@ -83,6 +87,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		
 		private static void CreateTools(FrameBox frame)
 		{
 			new MetaButton ()
@@ -113,9 +118,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		private Window window;
-		private FrameBox toolsFrame;
-		private FrameBox docAreaFrame;
-		private TabBook docTabBook;
+		private Window							window;
+		private FrameBox						toolsFrame;
+		private FrameBox						docAreaFrame;
+		private TabBook							docTabBook;
 	}
 }
