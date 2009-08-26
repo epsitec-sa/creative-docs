@@ -66,7 +66,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Dock = DockStyle.Top,
 					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 					Parent = this.window.Root,
-					Margins = new Margins (0, 0, 0, 4)
+					Margins = new Margins (0, 0, 0, 4),
+					Padding = new Margins (2, 2, 2, 2)
 				};
 
 				this.docAreaFrame = new FrameBox ()

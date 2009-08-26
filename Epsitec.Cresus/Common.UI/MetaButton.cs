@@ -391,15 +391,38 @@ namespace Epsitec.Common.UI
 			else
 			{
 				Drawing.Rectangle rect = this.GetInnerBounds ();
+				Drawing.Image image = Support.ImageProvider.Default.GetImage (this.IconName, Support.Resources.DefaultManager);
 
-				if (this.textVisibility == false)
+				if ((image != null) &&
+					(image.Size.Width != image.Size.Height))
 				{
-					//	Center the icon in the available space; else just left align it.
+					double ox = rect.X + System.Math.Floor ((rect.Width - image.Width) / 2);
+					double oy = rect.Y + System.Math.Floor ((rect.Height - image.Height) / 2);
 
-					rect.Left += System.Math.Floor((rect.Width-rect.Height)/2);
+					if (this.textVisibility == false)
+					{
+						rect = new Drawing.Rectangle (ox, oy, image.Width, image.Height);
+					}
+					else
+					{
+						rect = new Drawing.Rectangle (rect.X, oy, image.Width, image.Height);
+					}
 				}
+				else
+				{
+					if (this.textVisibility == false)
+					{
+						//	Center the icon in the available space; else just left align it.
+						
+						rect.Left += System.Math.Floor ((rect.Width-rect.Height)/2);
+					}
 
-				rect.Width = rect.Height;  // forcément un carré
+					if (rect.Height > rect.Width)
+					{
+						rect.Width = rect.Height;
+					}
+				}
+				
 				return rect;
 			}
 		}

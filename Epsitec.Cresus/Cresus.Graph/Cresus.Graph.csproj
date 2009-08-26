@@ -137,9 +137,25 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
+    <Compile Include="Widgets\CommandSelectionBar.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <Content Include="Resources\Cresus.Graph\Captions.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Graph\module.info">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cresus.Graph\Strings.00.resource">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Images\GraphType.HorizontalBarChart.icon" />
+    <EmbeddedResource Include="Images\GraphType.LineChart.icon" />
+    <EmbeddedResource Include="Images\GraphType.VerticalBarChart.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

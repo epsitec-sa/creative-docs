@@ -186,6 +186,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public T GetValue<T>(DependencyProperty property)
+		{
+			return (T) this.GetValue (property);
+		}
+
 		/// <summary>
 		/// Gets the base value for the specified property. This is called by
 		/// <c>GetValue</c> or its override.

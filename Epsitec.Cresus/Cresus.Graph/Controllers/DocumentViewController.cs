@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.UI;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -32,17 +33,38 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
 			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
-			
+
+			var frame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = container
+			};
+
+			var bar = new Widgets.CommandSelectionBar ()
+			{
+				Dock = DockStyle.Top,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Parent = container,
+				BackColor = container.BackColor
+			};
+
+			bar.Items.Add (Res.Commands.GraphType.UseLineChart);
+			bar.Items.Add (Res.Commands.GraphType.UseBarChartVertical);
+			bar.Items.Add (Res.Commands.GraphType.UseBarChartHorizontal);
+
+			bar.ItemSize = new Size (64, 40);
+			bar.SelectedItem = Res.Commands.GraphType.UseLineChart;
+
 			this.chartView = new ChartView ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = container,
+				Parent = frame,
 				Renderer = lineChartRenderer
 			};
 
 			this.captionView = new CaptionView ()
 			{
-				Parent = container,
+				Parent = frame,
 				Padding = new Margins(4, 4, 2, 2),
 				PreferredWidth = 160,
 				PreferredHeight = 80,
@@ -51,7 +73,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.splitter = new AutoSplitter ()
 			{
-				Parent = container
+				Parent = frame
 			};
 
 			this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
@@ -65,7 +87,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Text = "/",
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Parent = container
+				Parent = frame
 			};
 
 			button.Clicked +=

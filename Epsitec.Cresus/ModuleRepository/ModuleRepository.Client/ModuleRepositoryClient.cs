@@ -22,7 +22,7 @@ namespace Epsitec.ModuleRepository
 			tcpBinding.Security.Transport.ClientCredentialType = TcpClientCredentialType.Windows;
 			tcpBinding.Security.Transport.ProtectionLevel = System.Net.Security.ProtectionLevel.EncryptAndSign;
 
-			EndpointAddress address = new EndpointAddress (new System.Uri ("net.tcp://212.147.113.17:31415/ModuleRepository"));
+			EndpointAddress address = new EndpointAddress (new System.Uri ("net.tcp://svn.opac.ch:31415/ModuleRepository"));
 			ModuleRepositoryClient.factory = new ChannelFactory<IModuleRepositoryService> (tcpBinding, address);
 		}
 

@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Graph
 		{
 			UI.Initialize ();
 
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBlue");
+
 			GraphProgram.Application = new GraphApplication ();
 
 			System.Diagnostics.Debug.Assert (GraphProgram.Application.ResourceManagerPool.PoolName == "Core");
