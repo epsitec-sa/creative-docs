@@ -55,7 +55,8 @@
     <Compile Include="Actions\Factory.cs" />
     <Compile Include="Actions\Recorder.cs" />
     <Compile Include="Actions\GenericAction.cs" />
-    <Compile Include="Controllers\GraphPanelController.cs" />
+    <Compile Include="Controllers\MainWindowController.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\SeriesDetectionController.cs" />
     <Compile Include="Controllers\SeriesPickerController.cs" />
     <Compile Include="GraphApplication.Paths.cs" />

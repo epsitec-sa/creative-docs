@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Graph
 			this.graphCommands = new GraphCommands (this);
 			this.persistenceManager = new Core.UI.PersistenceManager ();
 			this.documents = new List<GraphDocument> ();
+			this.appWindowController = new Controllers.MainWindowController ();
 
 			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 		}
@@ -49,11 +50,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				if (this.activeDocument == null)
-				{
-					new GraphDocument ();
-				}
-				
+				this.SetupDefaultDocument ();
 				return this.activeDocument;
 			}
 		}
@@ -62,7 +59,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.activeDocument == null)
 			{
-				new GraphDocument ();
+				new GraphDocument (this.appWindowController);
 				this.SetupDataSet ();
 			}
 		}
@@ -74,66 +71,17 @@ namespace Epsitec.Cresus.Graph
 
 		internal void SetupInterface()
 		{
-			Window window = new Window ()
-			{
-				Text = this.ShortWindowTitle,
-				ClientSize = new Epsitec.Common.Drawing.Size (824, 400),
-				Name = "Application"
-			};
-
-			window.Root.Padding = new Margins (4, 8, 8, 4);
-
-			FrameBox bar = new FrameBox ()
-			{
-				Dock = DockStyle.Top,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Margins = new Margins (0, 0, 0, 4),
-				Parent = window.Root
-			};
-
-			new MetaButton ()
-			{
-				ButtonClass = ButtonClass.FlatButton,
-				Dock = DockStyle.Stacked,
-				CommandObject = ApplicationCommands.Undo,
-				PreferredWidth = 32,
-				Embedder = bar
-			};
-
-			new MetaButton ()
-			{
-				ButtonClass = ButtonClass.FlatButton,
-				Dock = DockStyle.Stacked,
-				CommandObject = ApplicationCommands.Redo,
-				PreferredWidth = 32,
-				Embedder = bar
-			};
-
-			new IconButton ()
-			{
-				Dock = DockStyle.Stacked,
-				CommandObject = ApplicationCommands.Save,
-				PreferredWidth = 32,
-				Embedder = bar
-			};
+			this.Window = this.appWindowController.Window;
 
 			this.SetEnable (ApplicationCommands.Save, false);
 			
-
-			FrameBox frame = new FrameBox ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = window.Root
-			};
-
-			this.seriesPickerController = new Controllers.SeriesPickerController (frame);
+			this.seriesPickerController = new Controllers.SeriesPickerController (this.Window);
 			this.seriesPickerController.SumSeriesAction = Actions.Factory.New (this.SumRows);
 			this.seriesPickerController.NegateSeriesAction = Actions.Factory.New (this.NegateRows);
 			this.seriesPickerController.AddSeriesToGraphAction = Actions.Factory.New (this.AddToChart);
 
-			
-			this.Window = window;
 			this.RestoreApplicationState ();
+			this.Document.MakeVisible ();
 			this.IsReady = true;
 		}
 
@@ -227,7 +175,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				System.Diagnostics.Debug.Assert (node.Name == "doc");
 
-				var doc = new GraphDocument ();
+				var doc = new GraphDocument (this.appWindowController);
 
 				doc.RestoreSettings (node);
 			}
@@ -305,6 +253,7 @@ namespace Epsitec.Cresus.Graph
 
 		private GraphCommands graphCommands;
 		private GraphDocument activeDocument;
+		private readonly Controllers.MainWindowController appWindowController;
 		private readonly List<GraphDocument> documents;
 		private readonly Core.UI.PersistenceManager persistenceManager;
 	}

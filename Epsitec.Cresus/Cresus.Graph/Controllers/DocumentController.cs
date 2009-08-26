@@ -11,11 +11,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class GraphPanelController
+	internal sealed class DocumentController
 	{
-		public GraphPanelController(Widget root, GraphDocument document)
+		public DocumentController(Widget root, GraphDocument document, System.Action<DocumentController> makeVisibleCallback)
 		{
 			this.document = document;
+			this.makeVisibleCallback = makeVisibleCallback;
 
 			var lineChartRenderer = new LineChartRenderer ();
 
@@ -119,6 +120,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public void MakeVisible()
+		{
+			if (this.makeVisibleCallback != null)
+			{
+				this.makeVisibleCallback (this);
+			}
+		}
 		
 
 
@@ -128,6 +136,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly AutoSplitter splitter;
 		private readonly CaptionView captionView;
 		private readonly SeriesDetectionController detectionController;
+		private readonly System.Action<DocumentController> makeVisibleCallback;
 
 		private ContainerLayoutMode layoutMode;
 	}

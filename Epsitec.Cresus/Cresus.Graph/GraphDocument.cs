@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Graph
 {
 	public class GraphDocument
 	{
-		public GraphDocument()
+		public GraphDocument(Controllers.MainWindowController controller)
 		{
-			this.graphPanels  = new List<GraphPanelController> ();
+			this.graphPanels  = new List<DocumentController> ();
 			this.chartSeries  = new List<ChartSeries> ();
 			this.dataSet      = new GraphDataSet ();
 			this.undoRecorder = new Actions.Recorder ();
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Graph
 			
 			this.dataSet.Changed += x => this.Clear ();
 
-			this.CreateUI ();
+			this.CreateUI (controller.DocTabBook);
 			this.ProcessDocumentChanged ();
 
 			GraphProgram.Application.RegisterDocument (this);
@@ -75,6 +75,11 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.chartSeries.Clear ();
 			this.ProcessDocumentChanged ();
+		}
+
+		public void MakeVisible()
+		{
+			this.graphPanels.ForEach (x => x.MakeVisible ());
 		}
 
 
@@ -134,38 +139,34 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private void CreateUI()
+		private void CreateUI(TabBook book)
 		{
-			if (this.window == null)
+			var page = new TabPage ()
 			{
-				this.window = new Window ()
-				{
-					Text = "Document",
-					ClientSize = new Size (960, 600)
-				};
+				TabTitle = "Document"
+			};
 
-				var frame = new FrameBox ()
-				{
-					Dock = DockStyle.Fill,
-					Margins = new Margins (4, 4, 8, 8),
-					Parent = this.window.Root
-				};
+			var frame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Margins = new Margins (0, 0, 0, 0),
+				Parent = page
+			};
 
-				var panel = new GraphPanelController (frame, this);
+			var panel = new DocumentController (frame, this, x => book.ActivePage = page);
 
-				this.graphPanels.Add (panel);
-				this.window.Show ();
-			}
+			this.graphPanels.Add (panel);
+			
+			book.Items.Add (page);
 		}
 
 		
-		private readonly List<GraphPanelController> graphPanels;
+		private readonly List<DocumentController> graphPanels;
 		private readonly List<ChartSeries> chartSeries;
 		private readonly GraphDataSet dataSet;
 		private readonly Actions.Recorder undoRecorder;
 		private readonly Actions.Recorder redoRecorder;
 
-		private Window window;
 		private string path;
 	}
 }

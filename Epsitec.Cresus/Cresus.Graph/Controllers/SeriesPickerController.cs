@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	internal sealed class SeriesPickerController
 	{
-		public SeriesPickerController(Widget root)
+		public SeriesPickerController(Window owner)
 		{
 			this.negatedSeriesLabels = new HashSet<string> ();
 
@@ -26,6 +26,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
 			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
+
+
+			this.window = new Window ()
+			{
+				Text = "Choix des données à représenter",
+				ClientSize = new Epsitec.Common.Drawing.Size (824, 400),
+				Name = "SeriesPicker",
+				Owner = owner,
+				PreventAutoClose = true
+			};
+
+			this.window.MakeSecondaryWindow ();
+
+			var root = this.window.Root;
+
+			root.Padding = new Margins (4, 8, 8, 4);
+
 			
 			this.scrollList = new ScrollListMultiSelect ()
 			{
@@ -83,10 +100,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
+
+			this.window.WindowCloseClicked += sender => this.window.Hide ();
 			
-			this.quickButtonNegate.Clicked += (sender, e) => this.ProcessQuickButton (this.NegateSeriesAction);
+			this.quickButtonNegate.Clicked     += (sender, e) => this.ProcessQuickButton (this.NegateSeriesAction);
 			this.quickButtonAddToGraph.Clicked += (sender, e) => this.ProcessQuickButton (this.AddSeriesToGraphAction);
-			this.quickButtonSum.Clicked         += (sender, e) => this.ProcessQuickButton (this.SumSeriesAction);
+			this.quickButtonSum.Clicked        += (sender, e) => this.ProcessQuickButton (this.SumSeriesAction);
 
 			this.scrollList.DragMultiSelectionStarted += this.HandleDragMultiSelectionStarted;
 			this.scrollList.DragMultiSelectionEnded   += this.HandleDragMultiSelectionEnded;
@@ -99,6 +118,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			GraphProgram.Application.ActiveDocumentChanged += sender => this.UpdateScrollListItems ();
 		}
 
+
+		public void Show()
+		{
+			this.window.Show ();
+		}
 
 		public GraphDataSet DataSet
 		{
@@ -435,6 +459,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
 		public System.Action<IEnumerable<int>>	NegateSeriesAction;
 
+		readonly private Window					window;
 		readonly private ScrollListMultiSelect	scrollList;
 		readonly private ChartView				chartView;
 		readonly private HashSet<string>		negatedSeriesLabels;
