@@ -956,7 +956,7 @@ namespace Epsitec.Common.OpenType
 			}
 			if (FontName.GetFullHash (FontName.GetFullName (this.MacintoshFaceName, this.MacintoshStyleName)) == fullHash)
 			{
-				return true;
+//-				return true;
 			}
 			if (FontName.GetFullHash (FontName.GetFullName (this.InvariantFaceName, this.InvariantStyleName)) == fullHash)
 			{

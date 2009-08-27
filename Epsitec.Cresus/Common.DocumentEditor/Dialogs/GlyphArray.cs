@@ -195,6 +195,7 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 		{
 			//	Retourne le caractère Unicode correspondant à un index.
 			System.Diagnostics.Debug.Assert(!this.glyphsMode);
+			System.Diagnostics.Debug.Assert(this.unicodes != null);
 			if ( index < 0 || index >= this.unicodes.Length )  return 0;
 			return this.unicodes[index];
 		}
@@ -202,6 +203,15 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 		public int UnicodeToIndex(int code)
 		{
 			//	Retourne l'index correspondant à un caractère Unicode.
+			if (code < 0)
+			{
+				return -1;
+			}
+			if (this.unicodes == null)
+			{
+				return -1;
+			}
+
 			System.Diagnostics.Debug.Assert(!this.glyphsMode);
 			for ( int i=0 ; i<this.unicodes.Length ; i++ )
 			{
@@ -594,8 +604,14 @@ namespace Epsitec.Common.DocumentEditor.Widgets
 			//	Retourne le nombre total de cases.
 			get
 			{
-				if ( this.glyphsMode )  return this.glyphs.Length;
-				else                    return this.unicodes.Length;
+				if (this.glyphsMode)
+				{
+					return this.glyphs == null ? 0 : this.glyphs.Length;
+				}
+				else
+				{
+					return this.unicodes == null ? 0 : this.unicodes.Length;
+				}
 			}
 		}
 
