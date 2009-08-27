@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.Graph
 		internal XElement SaveSettings(XElement xml)
 		{
 			xml.Add (new XAttribute ("path", this.path ?? ""));
-			xml.Add (new XElement ("undoActions",
-				new XText (this.undoRecorder.SaveToString ())));
+			xml.Add (new XElement ("undoActions", new XText (this.undoRecorder.SaveToString ())));
+			xml.Add (new XElement ("views", this.views.Select (x => x.SaveSettings (new XElement ("view")))));
 			
 			return xml;
 		}
@@ -101,12 +101,30 @@ namespace Epsitec.Cresus.Graph
 			this.path = (string) xml.Attribute ("path");
 
 			var undoActionsXml = xml.Element ("undoActions");
+			var viewsXml = xml.Element ("views");
 
 			if (undoActionsXml != null)
 			{
 				this.undoRecorder.RestoreFromString (undoActionsXml.Value);
 				this.undoRecorder.ForEach (x => x.PlayBack ());
 			}
+			
+			if ((viewsXml != null) &&
+				(viewsXml.Elements ("view").Any ()))
+			{
+				this.views.ToArray ().ForEach (x => x.Dispose ());
+
+				System.Diagnostics.Debug.Assert (this.views.Count == 0);
+
+				foreach (XElement node in viewsXml.Elements ())
+				{
+					var panel = this.CreateUI (GraphProgram.Application.MainWindowController.DocTabBook);
+
+					panel.RestoreSettings (node);
+				}
+			}
+
+			this.ProcessDocumentChanged ();
 		}
 
 
@@ -143,7 +161,7 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private void CreateUI(TabBook book)
+		private DocumentViewController CreateUI(TabBook book)
 		{
 			var page = new TabPage ()
 			{
@@ -158,11 +176,18 @@ namespace Epsitec.Cresus.Graph
 				BackColor = Epsitec.Common.Widgets.Adorners.Factory.Active.ColorTabBackground
 			};
 
-			var panel = new DocumentViewController (frame, this, x => book.ActivePage = page);
+			var panel = new DocumentViewController (frame, this, x => book.ActivePage = page,
+				x =>
+				{
+					book.Items.Remove (page);
+					page.Dispose ();
+					this.views.Remove (x);
+				});
 
 			this.views.Add (panel);
-			
 			book.Items.Add (page);
+
+			return panel;
 		}
 
 		

@@ -10,6 +10,8 @@ using Epsitec.Cresus.Graph.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.UI;
+using Epsitec.Common.Graph.Data;
+using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -17,7 +19,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 	/// The <c>DocumentViewController</c> class creates and manages one view of a document,
 	/// usually inside a tab page.
 	/// </summary>
-	internal sealed class DocumentViewController
+	internal sealed class DocumentViewController : System.IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DocumentViewController"/> class.
@@ -25,10 +27,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		/// <param name="container">The container.</param>
 		/// <param name="document">The document.</param>
 		/// <param name="showContainer">The callback used to make the container visible.</param>
-		public DocumentViewController(Widget container, GraphDocument document, System.Action<DocumentViewController> showContainer)
+		public DocumentViewController(Widget container, GraphDocument document, System.Action<DocumentViewController> showContainer, System.Action<DocumentViewController> disposeContainer)
 		{
 			this.document = document;
 			this.showContainerCallback = showContainer;
+			this.disposeContainerCallback = disposeContainer;
 
 			var lineChartRenderer = new LineChartRenderer ();
 
@@ -56,7 +59,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.commandBar.ItemSize = new Size (64, 40);
 			this.commandBar.SelectedItem = Res.Commands.GraphType.UseLineChart;
 
+			var optionsContainer = new FrameBox ()
+			{
+				Dock = DockStyle.StackFill,
+				Parent = this.commandBar
+			};
 
+			var optionsFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Right,
+				Padding = new Margins (0, 2, 2, 2),
+				Parent = optionsContainer
+			};
+
+			this.accumulateValuesCheckButton = new CheckButton ()
+			{
+				Anchor = AnchorStyles.TopLeft,
+				Text = "accumulation des valeurs",
+				Margins = new Margins (0, 0, 0, 0),
+				Parent = optionsFrame
+			};
+
+			this.accumulateValuesCheckButton.PreferredSize = this.accumulateValuesCheckButton.GetBestFitSize ();
+			this.accumulateValuesCheckButton.ActiveStateChanged += sender => this.AccumulateValues = (this.accumulateValuesCheckButton.ActiveState == ActiveState.Yes);
+
+			
 
 			this.chartView = new ChartView ()
 			{
@@ -135,6 +162,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 			}
 		}
+
+		public bool AccumulateValues
+		{
+			get
+			{
+				return this.accumulateValues;
+			}
+			set
+			{
+				if (this.accumulateValues != value)
+				{
+					this.accumulateValues = value;
+					this.accumulateValuesCheckButton.ActiveState = value ? ActiveState.Yes : ActiveState.No;
+					this.Refresh ();
+				}
+			}
+		}
 		
 		
 		public void Refresh()
@@ -144,14 +188,52 @@ namespace Epsitec.Cresus.Graph.Controllers
 				(this.document.DataSet.DataTable != null))
 			{
 				var renderer = this.chartView.Renderer;
+
+				List<ChartSeries> series = new List<ChartSeries> (this.GetDocumentChartSeries ());
 				
 				renderer.Clear ();
 				renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
-				renderer.CollectRange (this.document.ChartSeries);
-				renderer.UpdateCaptions (this.document.ChartSeries);
+				renderer.CollectRange (series);
+				renderer.UpdateCaptions (series);
 				
 				this.chartView.Invalidate ();
 				this.captionView.Invalidate ();
+			}
+		}
+
+
+		public XElement SaveSettings(XElement xml)
+		{
+			xml.Add (new XAttribute ("accumulateValues", this.accumulateValues ? "yes" : "no"));
+
+			return xml;
+		}
+
+		public void RestoreSettings(XElement xml)
+		{
+			string accumulateValues = (string) xml.Attribute ("accumulateValues");
+
+			this.AccumulateValues = (accumulateValues == "yes");
+		}
+
+		
+		
+		private IEnumerable<ChartSeries> GetDocumentChartSeries()
+		{
+			foreach (var series in this.document.ChartSeries)
+			{
+				yield return new ChartSeries (series.Label, this.accumulateValues ? DocumentViewController.Accumulate (series.Values) : series.Values);
+			}
+		}
+		
+		private static IEnumerable<ChartValue> Accumulate(IEnumerable<ChartValue> collection)
+		{
+			double accumulation = 0.0;
+
+			foreach (var value in collection)
+			{
+				accumulation += value.Value;
+				yield return new ChartValue (value.Label, accumulation);
 			}
 		}
 
@@ -162,7 +244,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.showContainerCallback (this);
 			}
 		}
-		
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.commandBar.Dispose ();
+			this.chartView.Dispose ();
+			this.splitter.Dispose ();
+			this.captionView.Dispose ();
+			this.accumulateValuesCheckButton.Dispose ();
+//-			this.detectionController.Dispose ();
+
+			if (this.disposeContainerCallback != null)
+			{
+				this.disposeContainerCallback (this);
+			}
+		}
+
+		#endregion
 
 
 
@@ -171,9 +272,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ChartView				chartView;
 		private readonly AutoSplitter			splitter;
 		private readonly CaptionView			captionView;
+		private readonly CheckButton			accumulateValuesCheckButton;
 		private readonly SeriesDetectionController detectionController;
 		private readonly System.Action<DocumentViewController> showContainerCallback;
+		private readonly System.Action<DocumentViewController> disposeContainerCallback;
 
+		private bool							accumulateValues;
 		private ContainerLayoutMode				layoutMode;
 	}
 }

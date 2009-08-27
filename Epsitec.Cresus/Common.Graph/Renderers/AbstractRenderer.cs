@@ -256,7 +256,6 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		
 		private double minValue;
 		private double maxValue;
 		private Rectangle bounds;
