@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = container
 			};
 
-			var bar = new Widgets.CommandSelectionBar ()
+			this.commandBar = new CommandSelectionBar ()
 			{
 				Dock = DockStyle.Top,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
@@ -48,12 +49,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				BackColor = container.BackColor
 			};
 
-			bar.Items.Add (Res.Commands.GraphType.UseLineChart);
-			bar.Items.Add (Res.Commands.GraphType.UseBarChartVertical);
-			bar.Items.Add (Res.Commands.GraphType.UseBarChartHorizontal);
+			this.commandBar.Items.Add (Res.Commands.GraphType.UseLineChart);
+			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartVertical);
+			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartHorizontal);
 
-			bar.ItemSize = new Size (64, 40);
-			bar.SelectedItem = Res.Commands.GraphType.UseLineChart;
+			this.commandBar.ItemSize = new Size (64, 40);
+			this.commandBar.SelectedItem = Res.Commands.GraphType.UseLineChart;
+
+
 
 			this.chartView = new ChartView ()
 			{
@@ -164,6 +167,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 
 		private readonly GraphDocument			document;
+		private readonly CommandSelectionBar	commandBar;
 		private readonly ChartView				chartView;
 		private readonly AutoSplitter			splitter;
 		private readonly CaptionView			captionView;

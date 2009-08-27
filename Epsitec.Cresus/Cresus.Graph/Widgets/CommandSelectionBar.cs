@@ -83,6 +83,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 
+		
 		public override Margins GetPaintMargins()
 		{
 			return new Margins (0, 0, 0, this.MarkLength);
@@ -164,6 +165,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 
+		
 		#region IListHost<Command> Members
 
 		Epsitec.Common.Types.Collections.HostedList<Command> IListHost<Command>.Items
@@ -190,6 +192,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 
 		#endregion
 
+		
 		private void Add(MetaButton button)
 		{
 			this.metabuttons.Add (button);
