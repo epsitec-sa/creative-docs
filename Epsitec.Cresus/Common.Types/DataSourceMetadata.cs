@@ -1,19 +1,18 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
-using Epsitec.Common.UI;
 
 [assembly: DependencyClass (typeof (DataSourceMetadata))]
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>DataSourceMetadata</c> class describes the fields found in the data source
-	/// attached to a <see cref="Panel"/>.
+	/// attached to a panel, for instance.
 	/// </summary>
 	public class DataSourceMetadata : DependencyObject, IStructuredType
 	{

@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{BDF75452-AAB1-4E62-82D5-AE23F35C6319}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -171,8 +171,6 @@
     <Compile Include="MiniPanel.cs" />
     <Compile Include="PanelMode.cs" />
     <Compile Include="PanelMask.cs" />
-    <Compile Include="DataSource.cs" />
-    <Compile Include="DataSourceMetadata.cs" />
     <Compile Include="ObsoleteAbstractPanel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

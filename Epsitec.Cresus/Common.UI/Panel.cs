@@ -58,11 +58,11 @@ namespace Epsitec.Common.UI
 
 					if (oldSource != null)
 					{
-						oldSource.Metadata = null;
+						oldSource.SetDataSourceMetadata (null);
 					}
 					if (newSource != null)
 					{
-						newSource.Metadata = this.dataSourceMetadata;
+						newSource.SetDataSourceMetadata (this.dataSourceMetadata);
 					}
 
 					DataObject.SetDataContext (this, this.dataSourceBinding);
@@ -729,7 +729,7 @@ namespace Epsitec.Common.UI
 
 			if (this.dataSource != null)
 			{
-				this.dataSource.Metadata = this.dataSourceMetadata;
+				this.dataSource.SetDataSourceMetadata (this.dataSourceMetadata);
 			}
 
 			this.InvalidateProperty (Panel.DataSourceMetadataProperty, oldValue, newValue);

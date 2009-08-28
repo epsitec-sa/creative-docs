@@ -4,7 +4,11 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Graph.Controllers;
 using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
@@ -13,13 +17,15 @@ using Epsitec.Common.UI;
 using Epsitec.Common.Graph.Data;
 using System.Xml.Linq;
 
+[assembly: DependencyClass (typeof (DocumentViewController))]
+
 namespace Epsitec.Cresus.Graph.Controllers
 {
 	/// <summary>
 	/// The <c>DocumentViewController</c> class creates and manages one view of a document,
 	/// usually inside a tab page.
 	/// </summary>
-	internal sealed class DocumentViewController : System.IDisposable
+	internal sealed class DocumentViewController : DependencyObject, System.IDisposable
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DocumentViewController"/> class.
@@ -29,6 +35,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		/// <param name="showContainer">The callback used to make the container visible.</param>
 		public DocumentViewController(Widget container, GraphDocument document, System.Action<DocumentViewController> showContainer, System.Action<DocumentViewController> disposeContainer)
 		{
+			if (DocumentViewController.commandController == null)
+			{
+				DocumentViewController.commandController = new CommandController (GraphProgram.Application.CommandDispatcher);
+			}
+
 			this.document = document;
 			this.showContainerCallback = showContainer;
 			this.disposeContainerCallback = disposeContainer;
@@ -37,6 +48,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
 			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
+
+			Epsitec.Common.Types.Binding binding = new Epsitec.Common.Types.Binding (Epsitec.Common.Types.BindingMode.OneTime, document);
+			Epsitec.Common.Types.DataObject.SetDataContext (container, binding);
+
+			var context = new CommandContext ("DocumentViewController");
+			
+			CommandContext.SetContext (container, context);
+			DocumentViewController.SetDocumentViewController (context, this);
 
 			var frame = new FrameBox ()
 			{
@@ -52,7 +71,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				BackColor = container.BackColor
 			};
 
-			this.CreateGraphTypeButtons ();
+			this.CreateGraphTypeButtons (context);
 
 			var optionsContainer = new FrameBox ()
 			{
@@ -129,14 +148,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 		}
 
-		private void CreateGraphTypeButtons()
+		private void CreateGraphTypeButtons(CommandContext context)
 		{
-			this.commandBar.Items.Add (Res.Commands.GraphType.UseLineChart);
-			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartVertical);
-			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartHorizontal);
-
+			foreach (var command in this.GetGraphTypeCommands ())
+			{
+				this.commandBar.Items.Add (command);
+				context.GetCommandState (command).Enable = true;
+			}
+			
 			this.commandBar.ItemSize = new Size (64, 40);
 			this.commandBar.SelectedItem = Res.Commands.GraphType.UseLineChart;
+		}
+
+		private IEnumerable<Command> GetGraphTypeCommands()
+		{
+			yield return Res.Commands.GraphType.UseLineChart;
+			yield return Res.Commands.GraphType.UseBarChartVertical;
+			yield return Res.Commands.GraphType.UseBarChartHorizontal;
 		}
 
 
@@ -271,6 +299,42 @@ namespace Epsitec.Cresus.Graph.Controllers
 		#endregion
 
 
+		private class CommandController
+		{
+			public CommandController(CommandDispatcher dispatcher)
+			{
+				dispatcher.RegisterController (this);
+			}
+
+			[Command (Res.CommandIds.GraphType.UseLineChart)]
+			[Command (Res.CommandIds.GraphType.UseBarChartVertical)]
+			[Command (Res.CommandIds.GraphType.UseBarChartHorizontal)]
+			private void GraphTypeCommand(CommandDispatcher sender, CommandEventArgs e)
+			{
+				var controller = DocumentViewController.GetDocumentViewController (e.CommandContext);
+				controller.commandBar.SelectedItem = e.Command;
+			}
+		}
+
+		public static void SetDocumentViewController(DependencyObject o, DocumentViewController value)
+		{
+			o.SetValue (DocumentViewController.DocumentViewControllerProperty, value);
+		}
+
+		public static void ClearDocumentViewController(DependencyObject o)
+		{
+			o.ClearValue (DocumentViewController.DocumentViewControllerProperty);
+		}
+
+		public static DocumentViewController GetDocumentViewController(DependencyObject o)
+		{
+			return o.GetValue (DocumentViewController.DocumentViewControllerProperty) as DocumentViewController;
+		}
+
+		public static readonly DependencyProperty DocumentViewControllerProperty = DependencyProperty.RegisterAttached ("DocumentViewController", typeof (DocumentViewController), typeof (DocumentViewController), new DependencyPropertyMetadata ());
+
+
+		private static CommandController		commandController;
 
 		private readonly GraphDocument			document;
 		private readonly CommandSelectionBar	commandBar;

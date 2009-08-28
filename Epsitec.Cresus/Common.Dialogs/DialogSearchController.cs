@@ -621,7 +621,7 @@ namespace Epsitec.Common.Dialogs
 			DataSourceType    sourceType        = bindingExpression.GetSourceType ();
 
 			string path       = binding.Path;
-			string pathPrefix = string.Concat (UI.DataSource.DataName, ".");
+			string pathPrefix = string.Concat (DataSource.DataName, ".");
 
 			if ((sourceType == DataSourceType.StructuredData) &&
 				(path.StartsWith (pathPrefix)))

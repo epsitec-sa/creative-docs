@@ -35,6 +35,18 @@ namespace Epsitec.Common.Widgets
 			this.fence = fence;
 		}
 
+		public CommandContext(string name)
+			: this ()
+		{
+			this.name = name;
+		}
+
+		public CommandContext(string name, bool fence)
+			: this (fence)
+		{
+			this.name = name;
+		}
+
 #if false
 		/// <summary>
 		/// Gets the dispatchers in the dispatcher chain associated with this
@@ -425,6 +437,7 @@ namespace Epsitec.Common.Widgets
 		readonly Dictionary<long, Validation>	validations;
 		readonly Dictionary<long, CommandState>	states;
 		readonly bool							fence;
+		readonly string							name;
 
 #if false
 		private CommandDispatcherChain dispatcherChain;

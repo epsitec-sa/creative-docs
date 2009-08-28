@@ -3,7 +3,9 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Graph.Controllers;
@@ -12,13 +14,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
+[assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
+
 namespace Epsitec.Cresus.Graph
 {
 	/// <summary>
 	/// The <c>GraphDocument</c> class represents a graph document (data, styles and
 	/// settings).
 	/// </summary>
-	public class GraphDocument
+	public class GraphDocument : DependencyObject
 	{
 		public GraphDocument()
 		{
@@ -190,7 +194,7 @@ namespace Epsitec.Cresus.Graph
 			return panel;
 		}
 
-		
+
 		private readonly List<DocumentViewController> views;
 		private readonly List<ChartSeries> chartSeries;
 		private readonly GraphDataSet dataSet;

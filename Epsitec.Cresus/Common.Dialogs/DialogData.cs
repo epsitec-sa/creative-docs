@@ -311,7 +311,7 @@ namespace Epsitec.Common.Dialogs
 			if (panel != null)
 			{
 				IStructuredData data = this.Data;
-				UI.DataSource source = panel.DataSource;
+				DataSource source = panel.DataSource;
 
 				//	Put all placeholders into the hint reset mode; the values which will be set
 				//	through the initial data binding will be handled as if they had been typed in
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Dialogs
 					placeholder.SuggestionMode = Epsitec.Common.UI.PlaceholderSuggestionMode.DisplayHintResetText;
 				}
 
-				source.SetDataSource (UI.DataSource.DataName, data);
+				source.SetDataSource (DataSource.DataName, data);
 
 				this.panel = panel;
 			}
@@ -338,9 +338,9 @@ namespace Epsitec.Common.Dialogs
 
 			if (panel != null)
 			{
-				UI.DataSource source = panel.DataSource;
+				DataSource source = panel.DataSource;
 
-				source.SetDataSource (UI.DataSource.DataName, null);
+				source.SetDataSource (DataSource.DataName, null);
 
 				this.panel = null;
 			}

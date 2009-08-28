@@ -582,7 +582,6 @@ namespace Epsitec.Common.Drawing
 					case PathElement.Curve3:
 					case PathElement.Curve4:
 						throw new System.InvalidOperationException ("Flattened path still contains curves");
-						break;
 
 					default:
 						break;

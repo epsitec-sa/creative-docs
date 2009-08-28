@@ -188,7 +188,7 @@ namespace Epsitec.Common.Widgets
 		/// Gets the state of the command.
 		/// </summary>
 		/// <param name="command">The command.</param>
-		/// <param name="context">The context where the command state was found, or <c>null</c> is none was found.</param>
+		/// <param name="context">The context where the command state was found, or <c>null</c> if none was found.</param>
 		/// <returns>The command state.</returns>
 		public CommandState GetCommandState(Command command, out CommandContext context)
 		{

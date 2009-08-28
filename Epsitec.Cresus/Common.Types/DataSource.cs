@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
-namespace Epsitec.Common.UI
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>DataSource</c> class provides the list of named objects
@@ -32,7 +32,7 @@ namespace Epsitec.Common.UI
 			{
 				return this.metadata;
 			}
-			internal set
+			private set
 			{
 				this.metadata = value;
 			}
@@ -64,7 +64,6 @@ namespace Epsitec.Common.UI
 			
 			this.items.Add (new ItemRecord (id, source, captionId, null));
 		}
-
 
 		/// <summary>
 		/// Sets a named data source. This will replace an existing data source
@@ -124,6 +123,17 @@ namespace Epsitec.Common.UI
 				return record.Data;
 			}
 		}
+
+
+		/// <summary>
+		/// Sets the data source metadata. Do not use directly.
+		/// </summary>
+		/// <param name="metadata">The metadata.</param>
+		public void SetDataSourceMetadata(DataSourceMetadata metadata)
+		{
+			this.Metadata = metadata;
+		}
+
 
 		#region IStructuredType Members
 

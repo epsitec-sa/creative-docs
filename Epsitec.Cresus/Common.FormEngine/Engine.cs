@@ -168,8 +168,8 @@ namespace Epsitec.Common.FormEngine
 			UI.Panel root = new UI.Panel();
 			root.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 			root.CaptionResolver = this.resourceProvider;
-			root.DataSource = new UI.DataSource();
-			root.DataSource.AddDataSource(UI.DataSource.DataName, entityData);
+			root.DataSource = new DataSource();
+			root.DataSource.AddDataSource(DataSource.DataName, entityData);
 
 			//	Crée un gestionnaire de styles pour le panneau dans son entier; un tel
 			//	gestionnaire doit être attaché au panneau racine au moment de sa création
@@ -794,7 +794,7 @@ namespace Epsitec.Common.FormEngine
 					{
 						Embedder = root
 					};
-					placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, field.GetPath (UI.DataSource.DataName)));
+					placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, field.GetPath (DataSource.DataName)));
 					break;
 
 				case FieldRelation.Reference:
@@ -804,7 +804,7 @@ namespace Epsitec.Common.FormEngine
 						EntityType = fieldDef.Type as StructuredType,
 						EntityFieldPath = fieldPath
 					};
-					placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, field.GetPath (UI.DataSource.DataName)));
+					placeholder.SetBinding (UI.Placeholder.ValueProperty, new Binding (BindingMode.TwoWay, field.GetPath (DataSource.DataName)));
 					break;
 
 				case FieldRelation.Collection:
@@ -814,7 +814,7 @@ namespace Epsitec.Common.FormEngine
 						EntityType = fieldDef.Type as StructuredType,
 						EntityFieldPath = fieldPath
 					};
-					placeholder.SetBinding (UI.CollectionPlaceholder.CollectionProperty, new Binding (BindingMode.OneWay, field.GetPath (UI.DataSource.DataName)));
+					placeholder.SetBinding (UI.CollectionPlaceholder.CollectionProperty, new Binding (BindingMode.OneWay, field.GetPath (DataSource.DataName)));
 					break;
 			}
 
