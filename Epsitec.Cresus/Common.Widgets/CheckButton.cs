@@ -76,17 +76,15 @@ namespace Epsitec.Common.Widgets
 			return size;
 		}
 
-
-		protected override void UpdateTextLayout()
+		protected override Epsitec.Common.Drawing.Size GetTextLayoutSize()
 		{
-			System.Diagnostics.Debug.Assert (this.TextLayout != null);
-
+			Drawing.Size  size   = base.GetTextLayoutSize ();
 			Drawing.Point offset = this.LabelOffset;
-			double dx = this.Client.Size.Width - offset.X;
-			double dy = this.Client.Size.Height;
+			
+			double dx = size.Width - offset.X;
+			double dy = size.Height;
 
-			this.TextLayout.Alignment  = this.ContentAlignment;
-			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
+			return new Drawing.Size (dx, dy);
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

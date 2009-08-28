@@ -163,6 +163,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 			{
 				formatter.WriteCodeLine ();
 				ResGenerator.GenerateCaptions (manager, formatter, defaultNamespace, bundleId, bundle, capFields);
+				
+				formatter.WriteCodeLine ();
+				ResGenerator.GenerateCaptionIds (manager, formatter, defaultNamespace, bundleId, bundle, capFields);
 			}
 
 			if (typFields.Count > 0)
@@ -321,111 +324,54 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 		static void GenerateCommandIds(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> cmdFields)
 		{
-			string prefix   = "";
-			bool addNewline = false;
-
-			formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, "CommandIds");
-			
-			string[] fields   = new string[cmdFields.Count];
-			string[] sortKeys = new string[cmdFields.Count];
-
-			for (int i = 0; i < fields.Length; i++)
-			{
-				fields[i] = cmdFields[i];
-
-				int pos = fields[i].LastIndexOf ('.');
-				if (pos < 0)
+			ResGenerator.GenerateGenericCaptions (manager, formatter, defaultNamespace, bundleId, bundle, cmdFields,
+				"CommandIds",
+				(delta, localDruid) =>
 				{
-					sortKeys[i] = fields[i];
-				}
-				else
-				{
-					sortKeys[i] = string.Concat (fields[i].Substring (0, pos), "!", fields[i].Substring (pos+1));
-				}
-			}
-
-			System.Array.Sort (sortKeys, fields);
-
-			List<string> classes = new List<string> ();
-
-			for (int i = 0; i < fields.Length; i++)
-			{
-				string field = fields[i].Substring (4);
-
-				while (prefix != "" && !field.StartsWith (prefix + "."))
-				{
-					//	Remonte d'un niveau dans la hiérarchie des classes.
-					string[] args = prefix.Split ('.');
-					string last = args[args.Length-1];
-
-					formatter.WriteEndClass ();
-
-					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
-					addNewline = true;
-				}
-
-				string delta = prefix.Length == 0 ? field : field.Substring (prefix.Length+1);
-
-				if (addNewline)
-				{
-					formatter.WriteCodeLine ();
-					addNewline = false;
-				}
-
-				//	Crée les classes manquantes, si besoin :
-				while (delta.IndexOf ('.') > -1)
-				{
-					string[] args = delta.Split ('.');
-					string elem = args[0];
-
-					classes.Add (elem);
-					
-					formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
-					formatter.WriteCodeLine ();
-
-					if (prefix.Length == 0)
-					{
-						prefix = elem;
-					}
-					else
-					{
-						prefix = string.Concat (prefix, ".", elem);
-					}
-
-					delta = field.Substring (prefix.Length + 1);
-				}
-
-				//	Crée l'accesseur pour le champ actuel :
-
-				Support.Druid druid = bundle[fields[i]].Id;
-
-				druid = new Support.Druid (druid, manager.DefaultModuleId);
-
-				formatter.WriteCodeLine ("//\tdesigner:cap/", druid.ToString ().Trim ('[', ']'));
-				formatter.WriteField (CodeHelper.PublicConstFieldAttributes, "long ", delta, @" = 0x", druid.ToLong ().ToString ("X"), "L;");
-			}
-
-			//	Referme les classes ouvertes :
-			if (prefix.Length > 0)
-			{
-				string[] args = prefix.Split ('.');
-
-				for (int j = 0; j < args.Length; j++)
-				{
-					formatter.WriteEndClass ();
-				}
-			}
-
-			formatter.WriteEndClass ();
+					Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
+					formatter.WriteField (CodeHelper.PublicConstFieldAttributes, "long ", delta, @" = 0x", moduleDruid.ToLong ().ToString ("X"), "L;");
+				});
 		}
 
 		static void GenerateCaptions(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> capFields)
 		{
-#if false
+			ResGenerator.GenerateGenericCaptions (manager, formatter, defaultNamespace, bundleId, bundle, capFields,
+				"Captions",
+				(delta, localDruid) =>
+				{
+					formatter.WriteBeginProperty (CodeHelper.PublicStaticPropertyAttributes, string.Concat (@"global::Epsitec.Common.Types.Caption ", delta));
+					formatter.WriteBeginGetter (CodeAttributes.Default);
+					formatter.WriteCodeLine ("return global::", defaultNamespace, ".Res.", "_manager", ".GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ",
+						localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+						localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), "));");
+					formatter.WriteEndGetter ();
+					formatter.WriteEndProperty ();
+				});
+		}
+		
+		static void GenerateCaptionIds(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> capFields)
+		{
+			ResGenerator.GenerateGenericCaptions (manager, formatter, defaultNamespace, bundleId, bundle, capFields,
+				"CaptionIds",
+				(delta, localDruid) =>
+				{
+					formatter.WriteField (CodeHelper.PublicStaticReadOnlyFieldAttributes,
+						@"global::Epsitec.Common.Support.Druid ",
+						delta,
+						@" = new global::Epsitec.Common.Support.Druid (_moduleId, ",
+						localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture), ", ",
+						localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture), ");");
+				});
+		}
+
+
+		static void GenerateGenericCaptions(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> capFields, string className,
+			System.Action<string, Druid> fieldWriter)
+		{
 			string prefix   = "";
 			bool addNewline = false;
 
-			generator.BeginBlock ("public static class", "Captions");
+			formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, className);
 
 			string[] fields   = new string[capFields.Count];
 			string[] sortKeys = new string[capFields.Count];
@@ -457,7 +403,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = prefix.Split ('.');
 					string last = args[args.Length-1];
 
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 
 					prefix = prefix.Substring (0, System.Math.Max (0, prefix.Length-last.Length-1));
 					addNewline = true;
@@ -467,8 +413,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				if (addNewline)
 				{
-					buffer.Append (generator.Tabs);
-					buffer.Append ("\n");
+					formatter.WriteCodeLine ();
 					addNewline = false;
 				}
 
@@ -478,7 +423,7 @@ namespace Epsitec.Common.Designer.ModuleSupport
 					string[] args = delta.Split ('.');
 					string elem = args[0];
 
-					generator.BeginBlock ("public static class", elem);
+					formatter.WriteBeginClass (CodeHelper.PublicStaticClassAttributes, elem);
 
 					if (prefix.Length == 0)
 					{
@@ -497,16 +442,9 @@ namespace Epsitec.Common.Designer.ModuleSupport
 				Support.Druid localDruid = bundle[fields[i]].Id;
 				Druid moduleDruid = new Druid (localDruid, bundle.Module.Id);
 
-				buffer.Append (string.Concat (generator.Tabs, "//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'), "\n"));
-				buffer.Append (generator.Tabs);
+				formatter.WriteCodeLine ("//\tdesigner:cap/", moduleDruid.ToString ().Trim ('[', ']'));
 
-				buffer.Append ("public static global::Epsitec.Common.Types.Caption ");
-				buffer.Append (delta);
-				buffer.Append (@" { get { return Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, ");
-				buffer.Append (localDruid.DeveloperAndPatchLevel.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (", ");
-				buffer.Append (localDruid.Local.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (")); } }\n");
+				fieldWriter (delta, localDruid);
 			}
 
 			//	Referme les classes ouvertes :
@@ -516,15 +454,16 @@ namespace Epsitec.Common.Designer.ModuleSupport
 
 				for (int j=0; j<args.Length; j++)
 				{
-					generator.EndBlock ();
+					formatter.WriteEndClass ();
 				}
 			}
-			buffer.Append (generator.Tabs);
-			buffer.Append ("\n");
 
-			generator.EndBlock ();
-#endif
+			formatter.WriteCodeLine ();
+			formatter.WriteEndClass ();
 		}
+
+
+
 
 		static void GenerateValues(ResourceManager manager, CodeFormatter formatter, string defaultNamespace, string bundleId, ResourceBundle bundle, List<string> valFields)
 		{

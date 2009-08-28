@@ -36,7 +36,6 @@ namespace Epsitec.Cresus
 		{
 			public static class GraphType
 			{
-				
 				//	designer:cap/BVA2
 				public const long UseBarChartHorizontal = 0x3EB0000A000002L;
 				//	designer:cap/BVA1
@@ -44,6 +43,39 @@ namespace Epsitec.Cresus
 				//	designer:cap/BVA
 				public const long UseLineChart = 0x3EB0000A000000L;
 			}
+			
+		}
+		
+		public static class Captions
+		{
+			public static class DocumentView
+			{
+				public static class Options
+				{
+					//	designer:cap/BVA3
+					public static global::Epsitec.Common.Types.Caption AccumulateValues
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
+						}
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			public static class DocumentView
+			{
+				public static class Options
+				{
+					//	designer:cap/BVA3
+					public static readonly global::Epsitec.Common.Support.Druid AccumulateValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
+				}
+			}
+			
 		}
 		
 		//	Code mapping for 'String' resources

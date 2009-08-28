@@ -52,15 +52,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			Epsitec.Common.Types.Binding binding = new Epsitec.Common.Types.Binding (Epsitec.Common.Types.BindingMode.OneTime, document);
 			Epsitec.Common.Types.DataObject.SetDataContext (container, binding);
 
-			var context = new CommandContext ("DocumentViewController");
-			
-			CommandContext.SetContext (container, context);
-			DocumentViewController.SetDocumentViewController (context, this);
+			this.commandContext = this.CreateCommandContext (container);
 
-			var frame = new FrameBox ()
+			var chartFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = container
+				Parent = container,
+				Name = "Chart"
 			};
 
 			this.commandBar = new CommandSelectionBar ()
@@ -68,10 +66,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Top,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Parent = container,
-				BackColor = container.BackColor
+				BackColor = container.BackColor,
+				Name = "CommandBar"
 			};
 
-			this.CreateGraphTypeButtons (context);
+			this.CreateGraphTypeButtons ();
 
 			var optionsContainer = new FrameBox ()
 			{
@@ -83,13 +82,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Right,
 				Padding = new Margins (0, 2, 2, 2),
-				Parent = optionsContainer
+				Parent = optionsContainer,
+				Name = "Options"
 			};
 
 			this.accumulateValuesCheckButton = new CheckButton ()
 			{
 				Anchor = AnchorStyles.TopLeft,
-				Text = "accumulation des valeurs",
+				CaptionId = Res.CaptionIds.DocumentView.Options.AccumulateValues,
 				Margins = new Margins (0, 0, 0, 0),
 				Parent = optionsFrame
 			};
@@ -102,13 +102,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.chartView = new ChartView ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = frame,
+				Parent = chartFrame,
 				Renderer = lineChartRenderer
 			};
 
 			this.captionView = new CaptionView ()
 			{
-				Parent = frame,
+				Parent = chartFrame,
 				Padding = new Margins(4, 4, 2, 2),
 				PreferredWidth = 160,
 				PreferredHeight = 80,
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.splitter = new AutoSplitter ()
 			{
-				Parent = frame
+				Parent = chartFrame
 			};
 
 			this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Text = "/",
 				PreferredWidth = 20,
 				PreferredHeight = 20,
-				Parent = frame
+				Parent = chartFrame
 			};
 
 			button.Clicked +=
@@ -148,12 +148,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 		}
 
-		private void CreateGraphTypeButtons(CommandContext context)
+		private CommandContext CreateCommandContext(Widget container)
+		{
+			var context = new CommandContext ("DocumentViewController");
+
+			CommandContext.SetContext (container, context);
+			DocumentViewController.SetDocumentViewController (context, this);
+
+			return context;
+		}
+
+		private void CreateGraphTypeButtons()
 		{
 			foreach (var command in this.GetGraphTypeCommands ())
 			{
 				this.commandBar.Items.Add (command);
-				context.GetCommandState (command).Enable = true;
+				this.commandContext.GetCommandState (command).Enable = true;
 			}
 			
 			this.commandBar.ItemSize = new Size (64, 40);
@@ -337,6 +347,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private static CommandController		commandController;
 
 		private readonly GraphDocument			document;
+		private readonly CommandContext			commandContext;
 		private readonly CommandSelectionBar	commandBar;
 		private readonly ChartView				chartView;
 		private readonly AutoSplitter			splitter;

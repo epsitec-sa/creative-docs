@@ -12,8 +12,8 @@ namespace Epsitec.Common.Designer
 		{
 			//	Crée un panneau "UI" vide pour expérimenter.
 
-			UI.Panel panel = new Epsitec.Common.UI.Panel();
-			UI.DataSource sources = new Epsitec.Common.UI.DataSource();
+			var panel = new Epsitec.Common.UI.Panel();
+			var sources = new Epsitec.Common.Types.DataSource();
 
 			CustomerRecord customer = new CustomerRecord();
 
