@@ -987,6 +987,11 @@ namespace Epsitec.Common.Widgets
 
 			return new Drawing.Size ((double) metadataDx.DefaultValue, (double) metadataDy.DefaultValue);
 		}
+
+		public void UpdatePreferredSize()
+		{
+			this.PreferredSize = this.GetBestFitSize ();
+		}
 		
 		public virtual void Hide()
 		{

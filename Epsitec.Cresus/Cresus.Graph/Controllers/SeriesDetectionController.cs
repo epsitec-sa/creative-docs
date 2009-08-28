@@ -28,11 +28,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 					delegate (object sender, PaintEventArgs e)
 					{
 						Graphics graphics = e.Graphics;
+						var renderer = this.chartView.Renderer;
 
-						if (this.hoverIndex >= 0)
+						if ((this.hoverIndex >= 0) &&
+							(renderer != null))
 						{
-							var renderer = this.chartView.Renderer;
-							var series   = renderer.SeriesItems[this.hoverIndex];
+							var series = renderer.SeriesItems[this.hoverIndex];
 
 							using (Path path = renderer.GetDetectionPath (series, 3))
 							{
@@ -51,7 +52,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.captionView.MouseMove += this.HandleCaptionViewMouseMove;
 				this.captionView.Released  += this.HandleChartViewReleased;
 				
-				this.captionView.Captions.BackgroundPaintCallback =
+				this.captionView.BackgroundPaintCallback =
 					delegate (CaptionPainter painter, int index, Rectangle bounds, IPaintPort port)
 					{
 						Graphics graphics = port as Graphics;
@@ -88,20 +89,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var pos = e.Point;
 			var renderer = view.Renderer;
 
-			int index = 0;
-
-			foreach (var series in renderer.SeriesItems)
+			if (renderer != null)
 			{
-				using (Path path = renderer.GetDetectionPath (series, 4))
-				{
-					if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
-					{
-						this.NotifyHover (index);
-						return;
-					}
-				}
+				int index = 0;
 
-				index++;
+				foreach (var series in renderer.SeriesItems)
+				{
+					using (Path path = renderer.GetDetectionPath (series, 4))
+					{
+						if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
+						{
+							this.NotifyHover (index);
+							return;
+						}
+					}
+
+					index++;
+				}
 			}
 
 			this.NotifyHover (-1);

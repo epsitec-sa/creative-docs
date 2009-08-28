@@ -26,10 +26,27 @@ namespace Epsitec.Common.Graph.Widgets
 			{
 				if (this.captions != value)
 				{
+					if (this.captions != null)
+					{
+						this.captions.BackgroundPaintCallback = null;
+					}
+
 					this.captions = value;
+
+					if (this.captions != null)
+					{
+						this.captions.BackgroundPaintCallback = this.BackgroundPaintTrampoline;
+					}
+
 					this.Invalidate ();
 				}
 			}
+		}
+
+		public System.Action<CaptionPainter, int, Rectangle, IPaintPort> BackgroundPaintCallback
+		{
+			get;
+			set;
 		}
 
 
@@ -62,6 +79,13 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+		private void BackgroundPaintTrampoline(CaptionPainter painter, int index, Rectangle bounds, IPaintPort port)
+		{
+			if (this.BackgroundPaintCallback != null)
+			{
+				this.BackgroundPaintCallback (painter, index, bounds, port);
+			}
+		}
 
 		private CaptionPainter captions;
 	}

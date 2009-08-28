@@ -10,6 +10,7 @@ using Epsitec.Common.Widgets.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Graph.Widgets
 {
@@ -246,6 +247,13 @@ namespace Epsitec.Cresus.Graph.Widgets
 		private void OnSelectedItemChanged(Command oldValue, Command newValue)
 		{
 			this.Invalidate ();
+
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (CommandSelectionBar.SelectedItemChangedEvent);
+
+			if (handler != null)
+			{
+				handler (this, new DependencyPropertyChangedEventArgs ("SelectedItem", oldValue, newValue));
+			}
 		}
 
 
@@ -257,9 +265,22 @@ namespace Epsitec.Cresus.Graph.Widgets
 			that.OnItemSizeChanged (oldSize, newSize);
 		}
 
+		public event EventHandler<DependencyPropertyChangedEventArgs> SelectedItemChanged
+		{
+			add
+			{
+				this.AddUserEventHandler (CommandSelectionBar.SelectedItemChangedEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (CommandSelectionBar.SelectedItemChangedEvent, value);
+			}
+		}
 		
 		public static readonly DependencyProperty ItemSizeProperty = DependencyProperty.Register ("ItemSize", typeof (Size), typeof (CommandSelectionBar), new Epsitec.Common.Widgets.Helpers.VisualPropertyMetadata (Size.Empty, CommandSelectionBar.NotifyItemSizeChanged, Epsitec.Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay | Epsitec.Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsMeasure));
 		public static readonly DependencyProperty MarkLengthProperty = DependencyProperty.Register ("MarkLength", typeof (double), typeof (CommandSelectionBar), new Epsitec.Common.Widgets.Helpers.VisualPropertyMetadata (8.0, Epsitec.Common.Widgets.Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+
+		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
 		private readonly CommandCollection commands;
 		private readonly List<MetaButton> metabuttons;
