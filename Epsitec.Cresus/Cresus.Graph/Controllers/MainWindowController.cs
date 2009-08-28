@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.window = new Window ()
 				{
-					Text = "Crésus Graphe",
+					Text = Res.Strings.Application.Name.ToSimpleText (),
 					Name = "Application",
 					ClientSize = new Size (960, 600)
 				};

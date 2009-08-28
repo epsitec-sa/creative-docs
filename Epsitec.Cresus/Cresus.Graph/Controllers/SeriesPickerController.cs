@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.window = new Window ()
 			{
-				Text = "Choix des données à représenter",
+				Text = Res.Strings.DataPicker.Title.ToSimpleText (),
 				ClientSize = new Epsitec.Common.Drawing.Size (824, 400),
 				Name = "SeriesPicker",
 				Owner = owner,

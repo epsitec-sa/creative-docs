@@ -18,10 +18,10 @@ namespace Epsitec.Cresus
 				{
 				}
 				
-				//	designer:cap/BVA1
-				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartHorizontal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 				//	designer:cap/BVA2
-				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartVertical = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
+				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartHorizontal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2));
+				//	designer:cap/BVA1
+				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartVertical = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 				//	designer:cap/BVA
 				public static readonly global::Epsitec.Common.Widgets.Command UseLineChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			}
@@ -37,10 +37,10 @@ namespace Epsitec.Cresus
 			public static class GraphType
 			{
 				
-				//	designer:cap/BVA1
-				public const long UseBarChartHorizontal = 0x3EB0000A000001L;
 				//	designer:cap/BVA2
-				public const long UseBarChartVertical = 0x3EB0000A000002L;
+				public const long UseBarChartHorizontal = 0x3EB0000A000002L;
+				//	designer:cap/BVA1
+				public const long UseBarChartVertical = 0x3EB0000A000001L;
 				//	designer:cap/BVA
 				public const long UseLineChart = 0x3EB0000A000000L;
 			}

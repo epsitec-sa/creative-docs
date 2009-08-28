@@ -52,12 +52,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				BackColor = container.BackColor
 			};
 
-			this.commandBar.Items.Add (Res.Commands.GraphType.UseLineChart);
-			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartVertical);
-			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartHorizontal);
-
-			this.commandBar.ItemSize = new Size (64, 40);
-			this.commandBar.SelectedItem = Res.Commands.GraphType.UseLineChart;
+			this.CreateGraphTypeButtons ();
 
 			var optionsContainer = new FrameBox ()
 			{
@@ -132,6 +127,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 						this.LayoutMode = ContainerLayoutMode.VerticalFlow;
 					}
 				};
+		}
+
+		private void CreateGraphTypeButtons()
+		{
+			this.commandBar.Items.Add (Res.Commands.GraphType.UseLineChart);
+			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartVertical);
+			this.commandBar.Items.Add (Res.Commands.GraphType.UseBarChartHorizontal);
+
+			this.commandBar.ItemSize = new Size (64, 40);
+			this.commandBar.SelectedItem = Res.Commands.GraphType.UseLineChart;
 		}
 
 
