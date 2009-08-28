@@ -8,11 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Common.Graph.Renderers
 {
-	public class LineChartRenderer : AbstractRenderer
+	public class BarChartRenderer : AbstractRenderer
 	{
-		public LineChartRenderer()
+		public BarChartRenderer()
 		{
-			this.AdditionalRenderingPasses = 1;
 		}
 
 		
@@ -58,50 +57,19 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public override Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius)
 		{
-			using (Path outline = this.CreateOutlinePath (series))
-			{
-				Path path = new Path ();
-
-				path.Append (outline, detectionRadius * 2, CapStyle.Round, JoinStyle.Round, 5.0, 1.0);
-
-				return path;
-			}
+			return this.CreateSurfacePath (series, seriesIndex);
 		}
 
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
 		{
-			switch (pass)
+			if (series.Values.Count > 1)
 			{
-				case 0:
-					this.PaintSurface (port, series, seriesIndex);
-					break;
-				
-				case 1:
-					this.PaintLine (port, series, seriesIndex);
-					break;
-			}
-		}
-
-		
-		private void PaintLine(IPaintPort port, Data.ChartSeries series, int seriesIndex)
-		{
-			if (seriesIndex == 0)
-			{
-				this.BeginLayer (port, PaintLayer.Intermediate);
-			}
-
-			using (Path path = this.CreateOutlinePath (series))
-			{
-				if (series.Values.Count == 1)
+				using (Path path = this.CreateSurfacePath (series, seriesIndex))
 				{
-					path.LineTo (path.CurrentPoint.X + port.LineWidth, path.CurrentPoint.Y);
+					this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
+					port.PaintSurface (path);
 				}
-
-				this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
-				
-				port.LineWidth = 2;
-				port.PaintOutline (path);
 			}
 		}
 
@@ -117,59 +85,19 @@ namespace Epsitec.Common.Graph.Renderers
 
 						this.FindStyle ("line-color").ApplyStyle (seriesIndex, p);
 
-						p.LineWidth = 2;
+						p.LineWidth = 4;
 						p.LineCap = CapStyle.Butt;
 						p.PaintOutline (line);
 					}
 				});
 		}
 
-		private void PaintSurface(IPaintPort port, Data.ChartSeries series, int seriesIndex)
-		{
-			if ((series.Values.Count > 1) &&
-				(this.SurfaceAlpha > 0))
-			{
-				using (Path path = this.CreateSurfacePath (series))
-				{
-					this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
-
-					port.Color = Color.FromAlphaColor (this.SurfaceAlpha, port.Color);
-					port.PaintSurface (path);
-				}
-			}
-		}
-
-		private Path CreateOutlinePath(Data.ChartSeries series)
-		{
-			Path path = new Path ();
-
-			foreach (var item in series.Values)
-			{
-				int index = this.GetLabelIndex (item.Label);
-
-				System.Diagnostics.Debug.Assert (index >= 0);
-				System.Diagnostics.Debug.Assert (index < this.ValueCount);
-
-				Point pos = this.GetPoint (index, item.Value);
-
-				if (path.IsEmpty)
-				{
-					path.MoveTo (pos);
-				}
-				else
-				{
-					path.LineTo (pos);
-				}
-			}
-
-			return path;
-		}
 		
-		private Path CreateSurfacePath(Data.ChartSeries series)
+		private Path CreateSurfacePath(Data.ChartSeries series, int seriesIndex)
 		{
+			double seriesOffset = (1.0 * seriesIndex) / this.SeriesCount;
+			
 			Path path = new Path ();
-
-			path.MoveTo (this.GetPoint (0, 0.0));
 
 			foreach (var item in series.Values)
 			{
@@ -178,11 +106,26 @@ namespace Epsitec.Common.Graph.Renderers
 				System.Diagnostics.Debug.Assert (index >= 0);
 				System.Diagnostics.Debug.Assert (index < this.ValueCount);
 
-				path.LineTo (this.GetPoint (index, item.Value));
-			}
+				var posZero   = this.GetPoint (index, 0.0);
+				var posZeroX  = posZero.X;
+				var posZeroY  = posZero.Y;
+				var posNextX  = this.GetPoint (index+1, 0.0).X;
+				var posValueY = this.GetPoint (index, item.Value).Y;
 
-			path.LineTo (path.CurrentPoint.X, this.GetPoint (0, 0.0).Y);
-			path.Close ();
+				var width  = posNextX - posZeroX;
+				var space  = width * 0.9;
+				var step   = space / this.SeriesCount;
+				var offset = (width - space) / 2 + step * seriesIndex;
+
+				posZeroX += offset;
+				posNextX  = posZeroX + step;
+
+				path.MoveTo (posZeroX, posZeroY);
+				path.LineTo (posZeroX, posValueY);
+				path.LineTo (posNextX, posValueY);
+				path.LineTo (posNextX, posZeroY);
+				path.Close ();
+			}
 
 			return path;
 		}

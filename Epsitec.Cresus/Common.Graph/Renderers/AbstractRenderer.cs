@@ -224,7 +224,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public abstract Point GetPoint(int index, double value);
 
-		public abstract Path GetDetectionPath(Data.ChartSeries series, double detectionRadius);
+		public abstract Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius);
 
 
 		protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex);

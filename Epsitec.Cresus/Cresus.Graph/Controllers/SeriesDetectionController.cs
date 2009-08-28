@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						{
 							var series = renderer.SeriesItems[this.hoverIndex];
 
-							using (Path path = renderer.GetDetectionPath (series, 3))
+							using (Path path = renderer.GetDetectionPath (series, this.hoverIndex, 3))
 							{
 								IAdorner adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 								Color    color   = adorner.ColorCaption;
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				foreach (var series in renderer.SeriesItems)
 				{
-					using (Path path = renderer.GetDetectionPath (series, 4))
+					using (Path path = renderer.GetDetectionPath (series, index, 4))
 					{
 						if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
 						{

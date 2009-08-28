@@ -294,6 +294,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				renderer = new LineChartRenderer ();
 			}
+			else if (this.GraphType == Res.Commands.GraphType.UseBarChartVertical)
+			{
+				renderer = new BarChartRenderer ();
+			}
 
 			if (renderer != null)
 			{
