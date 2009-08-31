@@ -186,6 +186,10 @@ namespace Epsitec.Common.Graph.Renderers
 			this.BeginLayer (port, PaintLayer.Background);
 		}
 
+		public virtual void BeginPass(IPaintPort port, int pass)
+		{
+		}
+
 		public virtual void EndRender(IPaintPort port)
 		{
 			this.BeginLayer (port, PaintLayer.Foreground);
@@ -288,27 +292,38 @@ namespace Epsitec.Common.Graph.Renderers
 
 			this.BeginRender (port, bounds);
 
+			int start     = 0;
+			int increment = 1;
+
+			switch (this.ChartSeriesRenderingMode)
+			{
+				case ChartSeriesRenderingMode.Stacked:
+					series    = series.Reverse ();
+					increment = -1;
+					start     = series.Count () - 1;
+					break;
+			}
+			
 			//	The rendering might take several passes, for instance to paint several layers
 			//	and maybe insert a grid between them, or other graphic adornments.
-			
-			for (int pass = 0; pass < 1+this.AdditionalRenderingPasses; pass++)
+
+			if (series.IsEmpty ())
 			{
-				int seriesIndex = 0;
-				int increment = 1;
-
-				switch (this.ChartSeriesRenderingMode)
+				//	Do nothing if there is no value in the series.
+			}
+			else
+			{
+				for (int pass = 0; pass < 1+this.AdditionalRenderingPasses; pass++)
 				{
-					case ChartSeriesRenderingMode.Stacked:
-						series = series.Reverse ();
-						seriesIndex = series.Count () - 1;
-						increment = -1;
-						break;
-				}
+					this.BeginPass (port, pass);
 
-				foreach (var item in series)
-				{
-					this.Render (port, item, pass, seriesIndex);
-					seriesIndex += increment;
+					int seriesIndex = start;
+
+					foreach (var item in series)
+					{
+						this.Render (port, item, pass, seriesIndex);
+						seriesIndex += increment;
+					}
 				}
 			}
 

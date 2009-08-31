@@ -38,6 +38,13 @@ namespace Epsitec.Common.Graph.Renderers
 			base.BeginRender (port, bounds);
 		}
 
+		public override void BeginPass(IPaintPort port, int pass)
+		{
+			base.BeginPass (port, pass);
+			
+			this.BeginLayer (port, PaintLayer.Intermediate);
+		}
+
 		public override void EndRender(IPaintPort port)
 		{
 			base.EndRender (port);
@@ -71,11 +78,6 @@ namespace Epsitec.Common.Graph.Renderers
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
 		{
-			if (seriesIndex == 0)
-			{
-				this.BeginLayer (port, PaintLayer.Intermediate);
-			}
-
 			if (series.Values.Count > 1)
 			{
 				using (Path path = this.CreateSurfacePath (series, seriesIndex))
@@ -150,7 +152,7 @@ namespace Epsitec.Common.Graph.Renderers
 				var posValueY = this.GetPoint (index, item.Value).Y;
 
 				var width  = posNextX - posZeroX;
-				var space  = width * 0.9;
+				var space  = width * 0.9 - 4;
 				var step   = space / this.SeriesCount;
 				var offset = (width - space) / 2 + step * seriesIndex;
 

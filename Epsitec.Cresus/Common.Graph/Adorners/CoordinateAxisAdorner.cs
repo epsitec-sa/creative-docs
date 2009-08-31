@@ -286,6 +286,13 @@ namespace Epsitec.Common.Graph.Adorners
 		private static IEnumerable<double> GetLog10Values(double min, double max, int optimalVerticalValueCount)
 		{
 			double range     = max - min;
+
+			if (range <= 0)
+			{
+				yield return min;
+				yield break;
+			}
+
 			double logRange  = System.Math.Floor (System.Math.Log10 (range));
 			double adjRange  = System.Math.Pow (10, logRange);
 			double increment = adjRange / optimalVerticalValueCount;

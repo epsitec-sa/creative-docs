@@ -15,5 +15,15 @@ namespace Epsitec.Common.Support.Extensions
 				action (item);
 			}
 		}
+
+		public static bool IsEmpty<T>(this IEnumerable<T> collection)
+		{
+			foreach (T item in collection)
+			{
+				return false;
+			}
+
+			return true;
+		}
 	}
 }

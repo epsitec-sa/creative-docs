@@ -324,7 +324,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (this.GraphType == Res.Commands.GraphType.UseLineChart)
 			{
-				renderer = new LineChartRenderer ();
+				renderer = new LineChartRenderer ()
+				{
+					SurfaceAlpha = this.StackValues ? 1.0 : 0.0
+				};
 			}
 			else if (this.GraphType == Res.Commands.GraphType.UseBarChartVertical)
 			{

@@ -31,6 +31,16 @@ namespace Epsitec.Common.Graph.Renderers
 			base.BeginRender (port, bounds);
 		}
 
+		public override void BeginPass(IPaintPort port, int pass)
+		{
+			base.BeginPass (port, pass);
+			
+			if (pass == 1)
+			{
+				this.BeginLayer (port, PaintLayer.Intermediate);
+			}
+		}
+
 		public override void EndRender(IPaintPort port)
 		{
 			base.EndRender (port);
@@ -86,11 +96,6 @@ namespace Epsitec.Common.Graph.Renderers
 		
 		private void PaintLine(IPaintPort port, Data.ChartSeries series, int seriesIndex)
 		{
-			if (seriesIndex == 0)
-			{
-				this.BeginLayer (port, PaintLayer.Intermediate);
-			}
-
 			using (Path path = this.CreateOutlinePath (series))
 			{
 				if (series.Values.Count == 1)
