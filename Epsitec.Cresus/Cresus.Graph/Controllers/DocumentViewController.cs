@@ -257,6 +257,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
 					renderer.CollectRange (series);
 					renderer.UpdateCaptions (series);
+					renderer.AlwaysIncludeZero = true;
 
 					this.chartView.Renderer = renderer;
 					this.captionView.Captions = renderer.Captions;

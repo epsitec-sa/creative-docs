@@ -50,7 +50,14 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			get
 			{
-				return this.minValue;
+				if (this.AlwaysIncludeZero)
+				{
+					return System.Math.Min (this.minValue, 0.0);
+				}
+				else
+				{
+					return this.minValue;
+				}
 			}
 		}
 
@@ -58,7 +65,14 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			get
 			{
-				return this.maxValue;
+				if (this.AlwaysIncludeZero)
+				{
+					return System.Math.Max (this.maxValue, 0.0);
+				}
+				else
+				{
+					return this.maxValue;
+				}
 			}
 		}
 
@@ -100,6 +114,11 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
+		public bool AlwaysIncludeZero
+		{
+			get;
+			set;
+		}
 
 		public void DefineValueLabels(IEnumerable<string> collection)
 		{
