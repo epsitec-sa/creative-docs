@@ -9,7 +9,7 @@ namespace Epsitec.Common.Debug
 	public sealed class Expect
 	{
 		[System.Diagnostics.Conditional ("DEBUG")]
-		public static void Exception(Method method, System.Type ex_type)
+		public static void Exception(Method method, System.Type exType)
 		{
 			try
 			{
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Debug
 			}
 			catch (System.Exception ex)
 			{
-				if (ex.GetType () == ex_type)
+				if (ex.GetType () == exType)
 				{
 					return;
 				}
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Debug
 		}
 
 		[System.Diagnostics.Conditional ("DEBUG")]
-		public static void Exception(Method method, string ex_message)
+		public static void Exception(Method method, string exMessage)
 		{
 			try
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Debug
 			}
 			catch (System.Exception ex)
 			{
-				if (ex.Message == ex_message)
+				if (ex.Message == exMessage)
 				{
 					return;
 				}
