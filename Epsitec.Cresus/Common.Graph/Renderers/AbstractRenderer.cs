@@ -92,6 +92,14 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
+		public virtual Adorners.HorizontalAxisMode HorizontalAxisMode
+		{
+			get
+			{
+				return Adorners.HorizontalAxisMode.Ticks;
+			}
+		}
+
 
 		public void DefineValueLabels(IEnumerable<string> collection)
 		{

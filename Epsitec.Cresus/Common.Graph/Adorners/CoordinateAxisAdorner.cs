@@ -11,38 +11,35 @@ namespace Epsitec.Common.Graph.Adorners
 	{
 		public CoordinateAxisAdorner()
 		{
-			this.Font = Font.GetFont ("Calibri", "Regular");
-			this.FontSize = 12;
-			this.FontColor = Color.FromBrightness (0);
 			this.GridColor = Color.FromBrightness (0);
 			this.GridLineWidth = 0.5;
 		}
 
+		public Styles.CaptionStyle Style
+		{
+			get
+			{
+				return this.style ?? CoordinateAxisAdorner.defaultStyle;
+			}
+			set
+			{
+				this.style = value;
+			}
+		}
+		
 		public Color GridColor
 		{
 			get;
 			set;
 		}
-
+		
 		public double GridLineWidth
 		{
 			get;
 			set;
 		}
 
-		public Font Font
-		{
-			get;
-			set;
-		}
-
-		public double FontSize
-		{
-			get;
-			set;
-		}
-
-		public Color FontColor
+		private HorizontalAxisMode HorizontalAxisMode
 		{
 			get;
 			set;
@@ -54,6 +51,8 @@ namespace Epsitec.Common.Graph.Adorners
 			{
 				return;
 			}
+
+			this.HorizontalAxisMode = renderer.HorizontalAxisMode;
 
 			Rectangle bounds = renderer.Bounds;
 			Point     origin = renderer.GetPoint (0, 0.0);
@@ -95,7 +94,7 @@ namespace Epsitec.Common.Graph.Adorners
 					{
 						bool first = true;
 						
-						foreach (Point point in CoordinateAxisAdorner.GetHorizontalAxisTicks (renderer))
+						foreach (Point point in this.GetHorizontalAxisTicks (renderer))
 						{
 							if (first)
 							{
@@ -122,7 +121,7 @@ namespace Epsitec.Common.Graph.Adorners
 
 				using (Path path = new Path ())
 				{
-					foreach (Point point in CoordinateAxisAdorner.GetHorizontalAxisTicks (renderer))
+					foreach (Point point in this.GetHorizontalAxisTicks (renderer))
 					{
 						path.MoveTo (point.X, bounds.Bottom);
 						path.LineTo (point.X, bounds.Top + this.extraLength / 2);
@@ -144,21 +143,29 @@ namespace Epsitec.Common.Graph.Adorners
 			if (renderer.ValueCount > 0)
 			{
 				Rectangle bounds = renderer.Bounds;
-
-				port.Color = this.FontColor;
+				
+				var  style = this.Style;
+				port.Color = style.FontColor;
 
 				double max = renderer.MaxValue;
 				double min = renderer.MinValue;
 
-				double dx = bounds.Width / (renderer.ValueCount - 1);
+				int count = this.HorizontalAxisMode == HorizontalAxisMode.Ticks ? renderer.ValueCount-1 : renderer.ValueCount;
+
+				double dx = bounds.Width / count;
 				double x  = bounds.Left;
 				double y  = (0.0 <= max) && (0.0 >= min) ? renderer.GetPoint (0, 0.0).Y : bounds.Bottom;
-				double h  = this.Font.LineHeight * this.FontSize;
+				double h  = style.Font.LineHeight * style.FontSize;
+
+				if (this.HorizontalAxisMode == HorizontalAxisMode.Ranges)
+				{
+					x += dx/2;
+				}
 				
 				foreach (var text in renderer.ValueLabels)
 				{
-					double len = this.Font.GetTextAdvance (text) * this.FontSize;
-					port.PaintText (x - len/2, y - h, text, this.Font, this.FontSize);
+					double len = style.Font.GetTextAdvance (text) * style.FontSize;
+					port.PaintText (x - len/2, y - h, text, style.Font, style.FontSize);
 					x += dx;
 				}
 			}
@@ -168,15 +175,16 @@ namespace Epsitec.Common.Graph.Adorners
 		{
 			Rectangle bounds = renderer.Bounds;
 
-			port.Color = this.FontColor;
+			var  style = this.Style;
+			port.Color = style.FontColor;
 
 			foreach (var value in CoordinateAxisAdorner.GetLog10Values (renderer.MinValue, renderer.MaxValue, this.GetOptimalVerticalValueCount (bounds.Height)))
 			{
 				Point pos = renderer.GetPoint (0, value);
 				string text = string.Format (System.Globalization.CultureInfo.CurrentCulture, "{0}  ", value);
-				double len  = this.Font.GetTextAdvance (text) * this.FontSize;
+				double len  = style.Font.GetTextAdvance (text) * style.FontSize;
 
-				port.PaintText (pos.X - len, pos.Y, text, this.Font, this.FontSize);
+				port.PaintText (pos.X - len, pos.Y, text, style.Font, style.FontSize);
 			}
 		}
 
@@ -226,7 +234,8 @@ namespace Epsitec.Common.Graph.Adorners
 
 		private int GetOptimalVerticalValueCount(double height)
 		{
-			double lineHeight = this.Font.LineHeight * this.FontSize * 1.2;
+			var style = this.Style;
+			double lineHeight = style.Font.LineHeight * style.FontSize * 1.2;
 			double ratio = height / lineHeight;
 
 			if (ratio > 25)
@@ -251,9 +260,14 @@ namespace Epsitec.Common.Graph.Adorners
 			}
 		}
 
-		private static IEnumerable<Point> GetHorizontalAxisTicks(Renderers.AbstractRenderer renderer)
+		private IEnumerable<Point> GetHorizontalAxisTicks(Renderers.AbstractRenderer renderer)
 		{
 			int count = renderer.ValueCount;
+
+			if (this.HorizontalAxisMode == HorizontalAxisMode.Ranges)
+			{
+				count++;
+			}
 
 			for (int i = 0; i < count; i++)
 			{
@@ -305,9 +319,13 @@ namespace Epsitec.Common.Graph.Adorners
 		}
 
 
+		private static readonly Styles.CaptionStyle	defaultStyle = new Styles.CaptionStyle ();
+		
 		private readonly double extraLength = 12;
 		private readonly double arrowLength = 4;
 		private readonly double arrowBreadth = 3;
 		private readonly double tickLength = 4;
+
+		private Styles.CaptionStyle			style;
 	}
 }
