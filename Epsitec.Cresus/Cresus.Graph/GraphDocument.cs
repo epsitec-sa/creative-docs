@@ -148,6 +148,11 @@ namespace Epsitec.Cresus.Graph
 				this.undoRecorder.Push (this.redoRecorder.Pop ()).PlayBack ();
 			}
 		}
+
+		internal void ExportImage()
+		{
+			this.views.First ().SaveMetafile (@"F:\graph.emf");
+		}
 		
 		
 		private void UpdateUndoRedo()

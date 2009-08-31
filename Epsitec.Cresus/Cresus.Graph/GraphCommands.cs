@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Graph
 			this.application.Document.Redo ();
 		}
 
+		[Command (Res.CommandIds.File.ExportImage)]
+		private void ExportImageCommand()
+		{
+			this.application.Document.ExportImage ();
+		}
+
 
 		private readonly GraphApplication application;
 	}

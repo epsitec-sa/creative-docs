@@ -88,11 +88,70 @@ namespace Epsitec.Common.Printing
 			this.scale   = 1.0f;
 
 			this.transform = Drawing.Transform.Identity;
+
+			this.stackColorModifier = new Stack<Drawing.ColorModifierCallback> ();
 			
 			this.graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 			this.graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
 			
 			this.ResetTransform ();
+		}
+
+
+		public static void PrintToMetafile(System.Action<Drawing.IPaintPort> painter, string path, int dx, int dy)
+		{
+			using (Metafile metafile = new Metafile (path, dx, dy))
+			{
+				PrintPort port = new PrintPort (metafile.Graphics, dx, dy);
+				painter (port);
+			}
+		}
+
+
+		public class Metafile : System.IDisposable
+		{
+			public Metafile(string path, int dx, int dy)
+			{
+				this.bitmap = new System.Drawing.Bitmap (1, 1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+				this.bitmapGraphics = System.Drawing.Graphics.FromImage (this.bitmap);
+				this.units = System.Drawing.GraphicsUnit.Pixel;
+
+				this.bitmapGraphics.FillRectangle (System.Drawing.Brushes.White, bitmap.GetBounds (ref units));
+
+				this.hdc = bitmapGraphics.GetHdc ();
+				this.metafile = new System.Drawing.Imaging.Metafile (path, this.hdc, new System.Drawing.Rectangle (0, 0, dx, dy), System.Drawing.Imaging.MetafileFrameUnit.Pixel);
+				this.graphics = System.Drawing.Graphics.FromImage (this.metafile);
+				this.graphics.FillRectangle (System.Drawing.Brushes.White, 0, 0, 200, 200);
+			}
+
+			public System.Drawing.Graphics Graphics
+			{
+				get
+				{
+					return this.graphics;
+				}
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.graphics.Dispose ();
+				this.metafile.Dispose ();
+				this.bitmapGraphics.ReleaseHdc (hdc);
+				this.bitmapGraphics.Dispose ();
+				this.bitmap.Dispose ();
+			}
+
+			#endregion
+			
+			readonly System.Drawing.Bitmap bitmap;
+			readonly System.Drawing.Graphics bitmapGraphics;
+			readonly System.Drawing.GraphicsUnit units;
+
+			readonly System.IntPtr hdc;
+			readonly System.Drawing.Imaging.Metafile metafile;
+			readonly System.Drawing.Graphics graphics;
 		}
 		
 		

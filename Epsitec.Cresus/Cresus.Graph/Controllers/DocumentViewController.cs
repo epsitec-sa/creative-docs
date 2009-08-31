@@ -296,6 +296,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public void SaveMetafile(string path)
+		{
+			double dx = this.chartView.ActualWidth;
+			double dy = this.chartView.ActualHeight;
+
+			Epsitec.Common.Printing.PrintPort.PrintToMetafile (
+				port =>
+				{
+					this.chartView.Renderer.Render (port, new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height));
+				},
+				path, (int) dx, (int) dy);
+		}
+
 
 		public XElement SaveSettings(XElement xml)
 		{

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Drawing.Platform
 {
-	class FontHelper
+	static class FontHelper
 	{
 		#region Decompiled from System.Drawing
 		[StructLayout (LayoutKind.Sequential, CharSet=CharSet.Auto), ComVisible (false)]
