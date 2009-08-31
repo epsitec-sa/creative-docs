@@ -294,10 +294,21 @@ namespace Epsitec.Common.Graph.Renderers
 			for (int pass = 0; pass < 1+this.AdditionalRenderingPasses; pass++)
 			{
 				int seriesIndex = 0;
+				int increment = 1;
+
+				switch (this.ChartSeriesRenderingMode)
+				{
+					case ChartSeriesRenderingMode.Stacked:
+						series = series.Reverse ();
+						seriesIndex = series.Count () - 1;
+						increment = -1;
+						break;
+				}
 
 				foreach (var item in series)
 				{
-					this.Render (port, item, pass, seriesIndex++);
+					this.Render (port, item, pass, seriesIndex);
+					seriesIndex += increment;
 				}
 			}
 

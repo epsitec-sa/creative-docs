@@ -154,6 +154,14 @@ namespace Epsitec.Common.Graph.Renderers
 				var step   = space / this.SeriesCount;
 				var offset = (width - space) / 2 + step * seriesIndex;
 
+				switch (this.ChartSeriesRenderingMode)
+				{
+					case ChartSeriesRenderingMode.Stacked:
+						step = space;
+						offset = (width - space) / 2;
+						break;
+				}
+
 				posZeroX += offset;
 				posNextX  = posZeroX + step;
 
