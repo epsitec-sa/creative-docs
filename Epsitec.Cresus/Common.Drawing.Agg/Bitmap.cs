@@ -34,13 +34,13 @@ namespace Epsitec.Common.Drawing
 					if ((this.IsLocked) &&
 						(this.Stride != 0) &&
 						(this.Scan0 != System.IntPtr.Zero) &&
-						(this.bitmap_dx > 0) &&
-						(this.bitmap_dy > 0))
+						(this.bitmapDx > 0) &&
+						(this.bitmapDy > 0))
 					{
 						//	Des pixels sont définis, mais pas d'objet bitmap natif. On peut donc créer ici le bitmap
 						//	en se basant sur ces pixels :
 						
-						return new System.Drawing.Bitmap (this.bitmap_dx, this.bitmap_dy, this.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, this.Scan0);
+						return new System.Drawing.Bitmap (this.bitmapDx, this.bitmapDy, this.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, this.Scan0);
 					}
 				}
 				
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.bitmap_data != null;
+				return this.bitmapData != null;
 			}
 		}
 		
@@ -60,12 +60,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.bitmap_data == null)
+				if (this.bitmapData == null)
 				{
 					return System.IntPtr.Zero;
 				}
 				
-				return this.bitmap_data.Scan0;
+				return this.bitmapData.Scan0;
 			}
 		}
 		
@@ -73,12 +73,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.bitmap_data == null)
+				if (this.bitmapData == null)
 				{
 					return 0;
 				}
 				
-				return this.bitmap_data.Stride;
+				return this.bitmapData.Stride;
 			}
 		}
 
@@ -88,10 +88,10 @@ namespace Epsitec.Common.Drawing
 
 			try
 			{
-				if (this.bitmap_data != null)
+				if (this.bitmapData != null)
 				{
 					System.IntPtr memory = this.Scan0;
-					int size = this.bitmap_data.Height * this.bitmap_data.Stride;
+					int size = this.bitmapData.Height * this.bitmapData.Stride;
 
 					if ((memory != System.IntPtr.Zero) &&
 						(size > 0))
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.bitmap_dx;
+				return this.bitmapDx;
 			}
 		}
 		
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.bitmap_dy;
+				return this.bitmapDy;
 			}
 		}
 		
@@ -140,11 +140,11 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return Bitmap.canvas_factory;
+				return Bitmap.canvasFactory;
 			}
 			set
 			{
-				Bitmap.canvas_factory = value;
+				Bitmap.canvasFactory = value;
 			}
 		}
 		
@@ -169,13 +169,13 @@ namespace Epsitec.Common.Drawing
 		{
 			lock (this)
 			{
-				if (this.bitmap_data == null)
+				if (this.bitmapData == null)
 				{
 					System.Drawing.Imaging.ImageLockMode mode = System.Drawing.Imaging.ImageLockMode.ReadOnly;
 					System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
 					
-					int width  = this.bitmap_dx;
-					int height = this.bitmap_dy;
+					int width  = this.bitmapDx;
+					int height = this.bitmapDy;
 					
 					lock (lockedBitmapDataCache)
 					{
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Drawing
 						{
 							try
 							{
-								this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
+								this.bitmapData = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
 								success = true;
 							}
 							catch (System.Exception)
@@ -201,13 +201,13 @@ namespace Epsitec.Common.Drawing
 							}
 						}
 
-						Bitmap.lockedBitmapDataCache[this.bitmap] = this.bitmap_data;
+						Bitmap.lockedBitmapDataCache[this.bitmap] = this.bitmapData;
 					}
 				}
 				
-				if (this.bitmap_data != null)
+				if (this.bitmapData != null)
 				{
-					this.bitmap_lock_count++;
+					this.bitmapLockCount++;
 					return true;
 				}
 			}
@@ -219,17 +219,17 @@ namespace Epsitec.Common.Drawing
 		{
 			lock (this)
 			{
-				if (this.bitmap_lock_count > 0)
+				if (this.bitmapLockCount > 0)
 				{
-					this.bitmap_lock_count--;
+					this.bitmapLockCount--;
 					
-					if (this.bitmap_lock_count == 0)
+					if (this.bitmapLockCount == 0)
 					{
 						System.Diagnostics.Debug.Assert (this.bitmap != null);
-						System.Diagnostics.Debug.Assert (this.bitmap_data != null);
+						System.Diagnostics.Debug.Assert (this.bitmapData != null);
 						
-						this.bitmap.UnlockBits (this.bitmap_data);
-						this.bitmap_data = null;
+						this.bitmap.UnlockBits (this.bitmapData);
+						this.bitmapData = null;
 						
 						lock (Bitmap.lockedBitmapDataCache)
 						{
@@ -247,9 +247,9 @@ namespace Epsitec.Common.Drawing
 			{
 				this.LockBits ();
 				
-				int nx = this.bitmap_dx / 2;
-				int ny = this.bitmap_dy / 2;
-				int my = this.bitmap_dy - 1;
+				int nx = this.bitmapDx / 2;
+				int ny = this.bitmapDy / 2;
+				int my = this.bitmapDy - 1;
 				
 				unsafe
 				{
@@ -257,10 +257,10 @@ namespace Epsitec.Common.Drawing
 					{
 						int y1 = y;
 						int y2 = my-y;
-						int* s1 = (int*) (this.bitmap_data.Scan0.ToPointer ()) + y1 * this.bitmap_data.Stride / 4;
-						int* s2 = (int*) (this.bitmap_data.Scan0.ToPointer ()) + y2 * this.bitmap_data.Stride / 4;
+						int* s1 = (int*) (this.bitmapData.Scan0.ToPointer ()) + y1 * this.bitmapData.Stride / 4;
+						int* s2 = (int*) (this.bitmapData.Scan0.ToPointer ()) + y2 * this.bitmapData.Stride / 4;
 						
-						for (int x = 0; x < this.bitmap_dx; x++)
+						for (int x = 0; x < this.bitmapDx; x++)
 						{
 							int v1 = s1[x];
 							int v2 = s2[x];
@@ -383,21 +383,21 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			System.Drawing.Imaging.ImageCodecInfo    encoder_info    = Bitmap.GetCodecInfo (format);
-			System.Drawing.Imaging.EncoderParameters encoder_params  = new System.Drawing.Imaging.EncoderParameters (list.Count);
+			System.Drawing.Imaging.ImageCodecInfo    encoderInfo    = Bitmap.GetCodecInfo (format);
+			System.Drawing.Imaging.EncoderParameters encoderParams  = new System.Drawing.Imaging.EncoderParameters (list.Count);
 			
 			for (int i = 0; i < list.Count; i++)
 			{
-				encoder_params.Param[i] = list[i] as System.Drawing.Imaging.EncoderParameter;
+				encoderParams.Param[i] = list[i] as System.Drawing.Imaging.EncoderParameter;
 			}
 			
-			if (encoder_info != null)
+			if (encoderInfo != null)
 			{
 				System.IO.MemoryStream stream = new System.IO.MemoryStream ();
 				System.Drawing.Bitmap  bitmap = this.NativeBitmap;
 				
 				bitmap.SetResolution ((float) dpi, (float) dpi);
-				bitmap.Save (stream, encoder_info, encoder_params);
+				bitmap.Save (stream, encoderInfo, encoderParams);
 				stream.Close ();
 				
 				byte[] data = stream.ToArray ();
@@ -479,16 +479,16 @@ namespace Epsitec.Common.Drawing
 			
 			bitmap.pixmap    = pixmap;
 			bitmap.bitmap    = null;
-			bitmap.bitmap_dx = pixmap.Size.Width;
-			bitmap.bitmap_dy = pixmap.Size.Height;
-			bitmap.size      = new Size (bitmap.bitmap_dx, bitmap.bitmap_dy);
+			bitmap.bitmapDx = pixmap.Size.Width;
+			bitmap.bitmapDy = pixmap.Size.Height;
+			bitmap.size      = new Size (bitmap.bitmapDx, bitmap.bitmapDy);
 			bitmap.origin    = new Point (0, 0);
 			
 			//	Prétend que le bitmap est verrouillé, puisqu'on a de toute façons déjà accès aux
 			//	pixels (c'est d'ailleurs bien la seule chose qu'on a) :
 			
-			bitmap.bitmap_lock_count = 1;
-			bitmap.is_origin_defined = true;
+			bitmap.bitmapLockCount = 1;
+			bitmap.isOriginDefined = true;
 			
 			int dx, dy, stride;
 			System.IntPtr pixels;
@@ -496,13 +496,13 @@ namespace Epsitec.Common.Drawing
 			
 			pixmap.GetMemoryLayout (out dx, out dy, out stride, out format, out pixels);
 			
-			bitmap.bitmap_data = new BitmapData ();
+			bitmap.bitmapData = new BitmapData ();
 			
-			bitmap.bitmap_data.Width       = dx;
-			bitmap.bitmap_data.Height      = dy;
-			bitmap.bitmap_data.PixelFormat = format;
-			bitmap.bitmap_data.Scan0       = pixels;
-			bitmap.bitmap_data.Stride      = stride;
+			bitmap.bitmapData.Width       = dx;
+			bitmap.bitmapData.Height      = dy;
+			bitmap.bitmapData.PixelFormat = format;
+			bitmap.bitmapData.Scan0       = pixels;
+			bitmap.bitmapData.Stride      = stride;
 			
 			return bitmap;
 		}
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Drawing
 		public static Image FromNativeBitmap(System.Drawing.Bitmap native)
 		{
 			Image bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
-			bitmap.is_origin_defined = false;
+			bitmap.isOriginDefined = false;
 			return bitmap;
 		}
 		
@@ -534,12 +534,12 @@ namespace Epsitec.Common.Drawing
 			Bitmap bitmap = new Bitmap ();
 			
 			bitmap.bitmap    = native;
-			bitmap.bitmap_dx = native.Width;
-			bitmap.bitmap_dy = native.Height;
+			bitmap.bitmapDx = native.Width;
+			bitmap.bitmapDy = native.Height;
 			bitmap.size      = size;
 			bitmap.origin    = origin;
 			
-			bitmap.is_origin_defined = true;
+			bitmap.isOriginDefined = true;
 			
 			return bitmap;
 		}
@@ -613,28 +613,28 @@ namespace Epsitec.Common.Drawing
 				return null;
 			}
 
-			System.Drawing.Bitmap src_bitmap = native.ToBitmap ();
-			System.Drawing.Bitmap dst_bitmap;
+			System.Drawing.Bitmap srcBitmap = native.ToBitmap ();
+			System.Drawing.Bitmap dstBitmap;
 
-			double dpi_x = src_bitmap.HorizontalResolution;
-			double dpi_y = src_bitmap.VerticalResolution;
+			double dpiX = srcBitmap.HorizontalResolution;
+			double dpiY = srcBitmap.VerticalResolution;
 			
-			int dx = src_bitmap.Width;
-			int dy = src_bitmap.Height;
+			int dx = srcBitmap.Width;
+			int dy = srcBitmap.Height;
 
-			dst_bitmap = Bitmap.ConvertIcon (native.Handle, dx, dy);
+			dstBitmap = Bitmap.ConvertIcon (native.Handle, dx, dy);
 
 			Bitmap bitmap = new Bitmap ();
 
-			bitmap.bitmap			 = dst_bitmap;
-			bitmap.bitmap_dx         = dx;
-			bitmap.bitmap_dy         = dy;
+			bitmap.bitmap			 = dstBitmap;
+			bitmap.bitmapDx         = dx;
+			bitmap.bitmapDy         = dy;
 			bitmap.size				 = new Size (dx, dy);
 			bitmap.origin			 = new Point (0, 0);
-			bitmap.is_origin_defined = false;
+			bitmap.isOriginDefined = false;
 
-			bitmap.dpi_x = dpi_x;
-			bitmap.dpi_y = dpi_y;
+			bitmap.dpiX = dpiX;
+			bitmap.dpiY = dpiY;
 
 			return bitmap;
 			
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Drawing
 		public static Image FromData(byte[] data)
 		{
 			Image bitmap = Bitmap.FromData (data, new Point (0, 0));
-			bitmap.is_origin_defined = false;
+			bitmap.isOriginDefined = false;
 			return bitmap;
 		}
 		
@@ -665,9 +665,9 @@ namespace Epsitec.Common.Drawing
 					//	Il y a de très fortes chances que ce soit une image vectorielle définie
 					//	au moyen du format interne propre à EPSITEC.
 					
-					if (Bitmap.canvas_factory != null)
+					if (Bitmap.canvasFactory != null)
 					{
-						return Bitmap.canvas_factory.CreateCanvas (data);
+						return Bitmap.canvasFactory.CreateCanvas (data);
 					}
 					else
 					{
@@ -690,8 +690,8 @@ namespace Epsitec.Common.Drawing
 				{
 					System.Drawing.Imaging.Metafile metafile   = new System.Drawing.Imaging.Metafile (stream);
 
-					double dpi_x = metafile.HorizontalResolution;
-					double dpi_y = metafile.VerticalResolution;
+					double dpiX = metafile.HorizontalResolution;
+					double dpiY = metafile.VerticalResolution;
 					
 					int dx = metafile.Width;
 					int dy = metafile.Height;
@@ -703,12 +703,12 @@ namespace Epsitec.Common.Drawing
 					//	already really huge.
 					
 					while ((bitmapWidth*bitmapHeight > 100*1000*1000)
-						&& (dpi_x * dpi_y > 100*100))
+						&& (dpiX * dpiY > 100*100))
 					{
 						bitmapWidth  /= 2;
 						bitmapHeight /= 2;
-						dpi_x /= 2;
-						dpi_y /= 2;
+						dpiX /= 2;
+						dpiY /= 2;
 					}
 
 					if ((bitmapWidth != dx) ||
@@ -717,29 +717,29 @@ namespace Epsitec.Common.Drawing
 						System.Diagnostics.Debug.WriteLine (string.Format ("Reduced WMF size from {0}x{1} to {2}x{3} pixels", dx, dy, bitmapWidth, bitmapHeight));
 					}
 					
-					System.Drawing.Bitmap dst_bitmap;
+					System.Drawing.Bitmap dstBitmap;
 
 					try
 					{
-						dst_bitmap = new System.Drawing.Bitmap (bitmapWidth, bitmapHeight);
+						dstBitmap = new System.Drawing.Bitmap (bitmapWidth, bitmapHeight);
 					}
 					catch
 					{
-						dst_bitmap = null;
+						dstBitmap = null;
 					}
 					
 					
-					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 					{
 						graphics.DrawImage (metafile, 0, 0, bitmapWidth, bitmapHeight);
 					}
 					
-					Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
+					Image image = Bitmap.FromNativeBitmap (dstBitmap, origin, size);
 					
 					if (image != null)
 					{
-						image.dpi_x = dpi_x;
-						image.dpi_y = dpi_y;
+						image.dpiX = dpiX;
+						image.dpiY = dpiY;
 					}
 					
 					return image;
@@ -753,25 +753,25 @@ namespace Epsitec.Common.Drawing
 					{
 						using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
 						{
-							System.Drawing.Bitmap src_bitmap = new System.Drawing.Bitmap (stream);
-							System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+							System.Drawing.Bitmap srcBitmap = new System.Drawing.Bitmap (stream);
+							System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (srcBitmap.Width, srcBitmap.Height);
 
-							double dpi_x = src_bitmap.HorizontalResolution;
-							double dpi_y = src_bitmap.VerticalResolution;
+							double dpiX = srcBitmap.HorizontalResolution;
+							double dpiY = srcBitmap.VerticalResolution;
 
-							src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
+							srcBitmap.SetResolution (dstBitmap.HorizontalResolution, dstBitmap.VerticalResolution);
 
-							using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+							using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 							{
-								graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+								graphics.DrawImageUnscaled (srcBitmap, 0, 0, srcBitmap.Width, srcBitmap.Height);
 							}
 
-							Image image = Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
+							Image image = Bitmap.FromNativeBitmap (dstBitmap, origin, size);
 
 							if (image != null)
 							{
-								image.dpi_x = dpi_x;
-								image.dpi_y = dpi_y;
+								image.dpiX = dpiX;
+								image.dpiY = dpiY;
 							}
 
 							return image;
@@ -789,21 +789,21 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static Image FromFile(string file_name)
+		public static Image FromFile(string fileName)
 		{
-			Image bitmap = Bitmap.FromFile (file_name, new Point (0, 0));
-			bitmap.is_origin_defined = false;
+			Image bitmap = Bitmap.FromFile (fileName, new Point (0, 0));
+			bitmap.isOriginDefined = false;
 			return bitmap;
 		}
 		
-		public static Image FromFile(string file_name, Point origin)
+		public static Image FromFile(string fileName, Point origin)
 		{
-			return Bitmap.FromFile (file_name, origin, Size.Empty);
+			return Bitmap.FromFile (fileName, origin, Size.Empty);
 		}
 		
-		public static Image FromFile(string file_name, Point origin, Size size)
+		public static Image FromFile(string fileName, Point origin, Size size)
 		{
-			using (System.IO.FileStream file = new System.IO.FileStream (file_name, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+			using (System.IO.FileStream file = new System.IO.FileStream (fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
 				long   length = file.Length;
 				byte[] buffer = new byte[length];
@@ -813,31 +813,31 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static Image FromManifestResource(string namespace_name, string resource_name, System.Type type)
+		public static Image FromManifestResource(string namespaceName, string resourceName, System.Type type)
 		{
-			return Bitmap.FromManifestResource (string.Concat (namespace_name, ".", resource_name), type.Assembly);
+			return Bitmap.FromManifestResource (string.Concat (namespaceName, ".", resourceName), type.Assembly);
 		}
 		
-		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly)
+		public static Image FromManifestResource(string resourceName, System.Reflection.Assembly assembly)
 		{
-			Image bitmap = Bitmap.FromManifestResource (resource_name, assembly, new Point (0, 0));
+			Image bitmap = Bitmap.FromManifestResource (resourceName, assembly, new Point (0, 0));
 			
 			if (bitmap != null)
 			{
-				bitmap.is_origin_defined = false;
+				bitmap.isOriginDefined = false;
 			}
 			
 			return bitmap;
 		}
 		
-		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin)
+		public static Image FromManifestResource(string resourceName, System.Reflection.Assembly assembly, Point origin)
 		{
-			return Bitmap.FromManifestResource (resource_name, assembly, origin, Size.Empty);
+			return Bitmap.FromManifestResource (resourceName, assembly, origin, Size.Empty);
 		}
 		
-		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin, Size size)
+		public static Image FromManifestResource(string resourceName, System.Reflection.Assembly assembly, Point origin, Size size)
 		{
-			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
+			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resourceName))
 			{
 				if (stream == null)
 				{
@@ -862,30 +862,30 @@ namespace Epsitec.Common.Drawing
 			
 			ImageSeed seed = new ImageSeed (r, g, b, image.UniqueId);
 			
-			lock (Bitmap.disabled_images)
+			lock (Bitmap.disabledImages)
 			{
-				if (Bitmap.disabled_images.Contains (seed))
+				if (Bitmap.disabledImages.Contains (seed))
 				{
-					return Bitmap.disabled_images[seed] as Bitmap;
+					return Bitmap.disabledImages[seed] as Bitmap;
 				}
 				
 				System.Drawing.Color  color = System.Drawing.Color.FromArgb (r, g, b);
 				
-				System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
-				System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+				System.Drawing.Bitmap srcBitmap = image.BitmapImage.bitmap;
+				System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (srcBitmap.Width, srcBitmap.Height);
 				
-				Platform.ImageDisabler.Paint (src_bitmap, dst_bitmap, color);
+				Platform.ImageDisabler.Paint (srcBitmap, dstBitmap, color);
 				
 				Bitmap bitmap = new Bitmap ();
 				
-				bitmap.bitmap			 = dst_bitmap;
-				bitmap.bitmap_dx         = dst_bitmap.Width;
-				bitmap.bitmap_dy         = dst_bitmap.Height;
+				bitmap.bitmap			 = dstBitmap;
+				bitmap.bitmapDx         = dstBitmap.Width;
+				bitmap.bitmapDy         = dstBitmap.Height;
 				bitmap.size				 = image.Size;
 				bitmap.origin			 = image.Origin;
-				bitmap.is_origin_defined = image.IsOriginDefined;
+				bitmap.isOriginDefined = image.IsOriginDefined;
 				
-				Bitmap.disabled_images[seed] = bitmap;
+				Bitmap.disabledImages[seed] = bitmap;
 				
 				return bitmap;
 			}
@@ -898,30 +898,30 @@ namespace Epsitec.Common.Drawing
 				return null;
 			}
 			
-			System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
-			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+			System.Drawing.Bitmap srcBitmap = image.BitmapImage.bitmap;
+			System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (srcBitmap.Width, srcBitmap.Height);
 			
-			double dpi_x = src_bitmap.HorizontalResolution;
-			double dpi_y = src_bitmap.VerticalResolution;
+			double dpiX = srcBitmap.HorizontalResolution;
+			double dpiY = srcBitmap.VerticalResolution;
 				
-			src_bitmap.SetResolution (dst_bitmap.HorizontalResolution, dst_bitmap.VerticalResolution);
+			srcBitmap.SetResolution (dstBitmap.HorizontalResolution, dstBitmap.VerticalResolution);
 				
-			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 			{
-				graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+				graphics.DrawImageUnscaled (srcBitmap, 0, 0, srcBitmap.Width, srcBitmap.Height);
 			}
 			
 			Bitmap bitmap = new Bitmap ();
 			
-			bitmap.bitmap			 = dst_bitmap;
-			bitmap.bitmap_dx         = dst_bitmap.Width;
-			bitmap.bitmap_dy         = dst_bitmap.Height;
+			bitmap.bitmap			 = dstBitmap;
+			bitmap.bitmapDx         = dstBitmap.Width;
+			bitmap.bitmapDy         = dstBitmap.Height;
 			bitmap.size				 = image.Size;
 			bitmap.origin			 = image.Origin;
-			bitmap.is_origin_defined = image.IsOriginDefined;
+			bitmap.isOriginDefined = image.IsOriginDefined;
 			
-			bitmap.dpi_x = dpi_x;
-			bitmap.dpi_y = dpi_y;
+			bitmap.dpiX = dpiX;
+			bitmap.dpiY = dpiY;
 			
 			return bitmap;
 		}
@@ -929,7 +929,7 @@ namespace Epsitec.Common.Drawing
 		public static Image FromLargerImage(Image image, Rectangle clip)
 		{
 			Image bitmap = Bitmap.FromLargerImage (image, clip, Point.Zero);
-			bitmap.is_origin_defined = false;
+			bitmap.isOriginDefined = false;
 			return bitmap;
 		}
 		
@@ -940,32 +940,32 @@ namespace Epsitec.Common.Drawing
 				return null;
 			}
 			
-			System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
+			System.Drawing.Bitmap srcBitmap = image.BitmapImage.bitmap;
 			
 			int dx = (int)(clip.Width  + 0.5);
 			int dy = (int)(clip.Height + 0.5);
 			int x  = (int)(clip.Left);
 			int y  = (int)(clip.Bottom);
-			int yy = src_bitmap.Height - dy - y;
+			int yy = srcBitmap.Height - dy - y;
 			
-			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (dx, dy);
+			System.Drawing.Bitmap dstBitmap = new System.Drawing.Bitmap (dx, dy);
 			
-			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 			{
-				graphics.DrawImage (src_bitmap, 0, 0, new System.Drawing.Rectangle (x, yy, dx, dy), System.Drawing.GraphicsUnit.Pixel);
+				graphics.DrawImage (srcBitmap, 0, 0, new System.Drawing.Rectangle (x, yy, dx, dy), System.Drawing.GraphicsUnit.Pixel);
 			}
 			
 			Bitmap bitmap = new Bitmap ();
 			
-			double sx = image.Width  / src_bitmap.Width;
-			double sy = image.Height / src_bitmap.Height;
+			double sx = image.Width  / srcBitmap.Width;
+			double sy = image.Height / srcBitmap.Height;
 			
-			bitmap.bitmap			 = dst_bitmap;
-			bitmap.bitmap_dx         = dst_bitmap.Width;
-			bitmap.bitmap_dy         = dst_bitmap.Height;
+			bitmap.bitmap			 = dstBitmap;
+			bitmap.bitmapDx         = dstBitmap.Width;
+			bitmap.bitmapDy         = dstBitmap.Height;
 			bitmap.size				 = new Size (sx * dx, sy * dy);
 			bitmap.origin			 = origin;
-			bitmap.is_origin_defined = true;
+			bitmap.isOriginDefined = true;
 			
 			return bitmap;
 		}
@@ -1050,9 +1050,9 @@ namespace Epsitec.Common.Drawing
 		
 		protected override void Dispose(bool disposing)
 		{
-			System.Diagnostics.Debug.Assert (this.is_disposed == false);
+			System.Diagnostics.Debug.Assert (this.isDisposed == false);
 			
-			this.is_disposed = true;
+			this.isDisposed = true;
 			
 			if (disposing)
 			{
@@ -1062,8 +1062,8 @@ namespace Epsitec.Common.Drawing
 				}
 				
 				this.bitmap = null;
-				this.bitmap_data = null;
-				this.bitmap_lock_count = 0;
+				this.bitmapData = null;
+				this.bitmapLockCount = 0;
 			}
 			
 			base.Dispose (disposing);
@@ -1293,15 +1293,15 @@ namespace Epsitec.Common.Drawing
 		#endregion
 		
 		protected System.Drawing.Bitmap			bitmap;
-		protected int							bitmap_dx;
-		protected int							bitmap_dy;
-		protected BitmapData					bitmap_data;
-		protected volatile int					bitmap_lock_count;
+		protected int							bitmapDx;
+		protected int							bitmapDy;
+		protected BitmapData					bitmapData;
+		protected volatile int					bitmapLockCount;
 		protected Pixmap						pixmap;
 		
-		protected bool							is_disposed;
+		protected bool							isDisposed;
 		
-		static System.Collections.Hashtable		disabled_images = new System.Collections.Hashtable ();
-		static ICanvasFactory					canvas_factory;
+		static System.Collections.Hashtable		disabledImages = new System.Collections.Hashtable ();
+		static ICanvasFactory					canvasFactory;
 	}
 }

@@ -17,7 +17,7 @@ namespace Epsitec.Common.Dialogs
 		
 		internal void HideCancelButton()
 		{
-			this.hide_cancel = true;
+			this.hideCancel = true;
 		}
 		
 		
@@ -25,21 +25,21 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (buttons.Length > 0)
 			{
-				double total_width = 0;
+				double totalWidth = 0;
 				
 				for (int i = 0; i < buttons.Length; i++)
 				{
 					if (buttons[i] != null)
 					{
-						total_width += buttons[i].ActualWidth;
+						totalWidth += buttons[i].ActualWidth;
 					}
 				}
 				
-				total_width += (buttons.Length-1) * 8;
+				totalWidth += (buttons.Length-1) * 8;
 				
-				if (total_width < width)
+				if (totalWidth < width)
 				{
-					double x = System.Math.Floor ((width - total_width) / 2);
+					double x = System.Math.Floor ((width - totalWidth) / 2);
 					
 					for (int i = 0; i < buttons.Length; i++)
 					{
@@ -56,6 +56,6 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		protected bool							hide_cancel;
+		protected bool							hideCancel;
 	}
 }

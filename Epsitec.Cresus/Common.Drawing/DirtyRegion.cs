@@ -102,14 +102,14 @@ namespace Epsitec.Common.Drawing
 				
 				this.rectangles[j++] = rectangle;
 				
-				int first_empty = this.used;
+				int firstEmpty = this.used;
 				
 				this.used = j;
 				
 				//	Si la table des rectangles a rétréci, il faut encore vider les rectangles
 				//	qui traînent :
 				
-				while (j < first_empty)
+				while (j < firstEmpty)
 				{
 					this.rectangles[j++] = Rectangle.Empty;
 				}
@@ -131,12 +131,12 @@ namespace Epsitec.Common.Drawing
 				return new Rectangle[0];
 			}
 			
-			int index_a = 0;
-			int index_b = 1;
+			int indexA = 0;
+			int indexB = 1;
 			
 			double    surface;
 			Rectangle union       = Rectangle.MaxValue;
-			double    min_surface = Rectangle.MaxValue.Surface;
+			double    minSurface = Rectangle.MaxValue.Surface;
 			
 			for (int a = 0; a < n-1; a++)
 			{
@@ -145,11 +145,11 @@ namespace Epsitec.Common.Drawing
 					union   = Rectangle.Union (rectangles[a], rectangles[b]);
 					surface = union.Surface;
 					
-					if (surface < min_surface)
+					if (surface < minSurface)
 					{
-						index_a = a;
-						index_b = b;
-						min_surface = surface;
+						indexA = a;
+						indexB = b;
+						minSurface = surface;
 					}
 				}
 			}
@@ -163,8 +163,8 @@ namespace Epsitec.Common.Drawing
 			
 			for (int i = 0; i < n; i++)
 			{
-				if ((i == index_a) ||
-					(i == index_b))
+				if ((i == indexA) ||
+					(i == indexB))
 				{
 					//	Saute les rectangles fusionnés.
 				}
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Drawing
 			//	surface possible, on a l'assurance qu'aucun autre rectangle n'est couvert
 			//	entièrement par leur union; on peut donc économiser ici une deuxième passe :
 			
-			result[j] = Rectangle.Union (rectangles[index_a], rectangles[index_b]);
+			result[j] = Rectangle.Union (rectangles[indexA], rectangles[indexB]);
 			
 			return result;
 		}
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Drawing
 			System.Array.Sort (rectangles, new DirtyRegion.LeftXSorter ());
 			
 			Segment[] segments = new DirtyRegion.Segment[n];
-			Segment[] h_segs   = new DirtyRegion.Segment[n];
+			Segment[] hSegs   = new DirtyRegion.Segment[n];
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -229,10 +229,10 @@ namespace Epsitec.Common.Drawing
 			{
 				//	Génère les rectangles compris entre deux horizontales :
 				
-				double y_bot = ys[i+0];
-				double y_top = ys[i+1];
+				double yBot = ys[i+0];
+				double yTop = ys[i+1];
 				
-				if (y_top == y_bot)
+				if (yTop == yBot)
 				{
 					continue;
 				}
@@ -241,34 +241,34 @@ namespace Epsitec.Common.Drawing
 				//	par des rectangles, en profitant de l'occasion pour fusionner deux
 				//	segments adjacents :
 				
-				int h_seg_count = 0;
+				int hSegCount = 0;
 				
 				for (int j = 0; j < n; j++)
 				{
-					if ((rectangles[j].Top > y_bot) &&
-						(rectangles[j].Bottom < y_top))
+					if ((rectangles[j].Top > yBot) &&
+						(rectangles[j].Bottom < yTop))
 					{
-						if (h_seg_count == 0)
+						if (hSegCount == 0)
 						{
-							h_segs[h_seg_count++] = segments[j];
+							hSegs[hSegCount++] = segments[j];
 						}
 						else
 						{
-							if (DirtyRegion.Segment.Overlap (h_segs[h_seg_count-1], segments[j]))
+							if (DirtyRegion.Segment.Overlap (hSegs[hSegCount-1], segments[j]))
 							{
-								h_segs[h_seg_count-1] = DirtyRegion.Segment.Union (h_segs[h_seg_count-1], segments[j]);
+								hSegs[hSegCount-1] = DirtyRegion.Segment.Union (hSegs[hSegCount-1], segments[j]);
 							}
 							else
 							{
-								h_segs[h_seg_count++] = segments[j];
+								hSegs[hSegCount++] = segments[j];
 							}
 						}
 					}
 				}
 				
-				for (int j = 0; j < h_seg_count; j++)
+				for (int j = 0; j < hSegCount; j++)
 				{
-					list.Add (Rectangle.FromPoints (h_segs[j].Left, y_bot, h_segs[j].Right, y_top));
+					list.Add (Rectangle.FromPoints (hSegs[j].Left, yBot, hSegs[j].Right, yTop));
 				}
 			}
 			

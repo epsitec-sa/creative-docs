@@ -49,8 +49,8 @@ namespace Epsitec.Common.Dialogs
 		
 		public int								FilterIndex
 		{
-			get { return this.filter_index; }
-			set { this.filter_index = value; }
+			get { return this.filterIndex; }
+			set { this.filterIndex = value; }
 		}
 		
 		public string							InitialDirectory
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Dialogs
 		public void OpenDialog()
 		{
 			this.dialog.Filter = this.Filters.FileDialogFilter;
-			this.dialog.FilterIndex = this.filter_index + 1;
+			this.dialog.FilterIndex = this.filterIndex + 1;
 			
 			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
 			
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Dialogs
 				case System.Windows.Forms.DialogResult.OK:
 				case System.Windows.Forms.DialogResult.Yes:
 					this.result       = DialogResult.Accept;
-					this.filter_index = this.dialog.FilterIndex - 1;
+					this.filterIndex = this.dialog.FilterIndex - 1;
 					break;
 				
 				default:
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Dialogs
 		Common.Widgets.Window					owner;
 		System.Windows.Forms.SaveFileDialog 	dialog;
 		Helpers.FilterCollection				filters;
-		int										filter_index;
+		int										filterIndex;
 		private DialogResult					result = DialogResult.None;
 	}
 }

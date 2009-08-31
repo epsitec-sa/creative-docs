@@ -29,10 +29,10 @@ namespace Epsitec.Common.Drawing
 			uint b = (uint) (color.B * 256 - 0.1);
 			
 			
-			System.IntPtr font_handle = font.GetFontHandle (size); 
-			uint          win32_color = (b << 16) | (g << 8) | (r);
+			System.IntPtr fontHandle = font.GetFontHandle (size); 
+			uint          win32Color = (b << 16) | (g << 8) | (r);
 			
-			double box_y = pixmap.Size.Height;
+			double boxY = pixmap.Size.Height;
 			double hy    = font.GetAscender (size);
 			double oy    = y[0];
 			int    start = 0;
@@ -41,25 +41,25 @@ namespace Epsitec.Common.Drawing
 			{
 				if (y[i] != oy)
 				{
-					NativeTextRenderer.ExtendedTextOut (pixmap, font_handle, (int) (box_y - oy - hy), glyphs, start, i-start, x, win32_color);
+					NativeTextRenderer.ExtendedTextOut (pixmap, fontHandle, (int) (boxY - oy - hy), glyphs, start, i-start, x, win32Color);
 					start = i;
 					oy    = y[i];
 				}
 			}
 			
-			NativeTextRenderer.ExtendedTextOut (pixmap, font_handle, (int) (box_y - oy - hy), glyphs, start, length-start, x, win32_color);
+			NativeTextRenderer.ExtendedTextOut (pixmap, fontHandle, (int) (boxY - oy - hy), glyphs, start, length-start, x, win32Color);
 		}
 		
 		
-		private static void ExtendedTextOut(Pixmap pixmap, System.IntPtr font_handle, int oy, ushort[] glyphs, int offset, int length, double[] x, uint color)
+		private static void ExtendedTextOut(Pixmap pixmap, System.IntPtr fontHandle, int oy, ushort[] glyphs, int offset, int length, double[] x, uint color)
 		{
-			int[]    dx_array = new int[length];
+			int[]    dxArray = new int[length];
 			ushort[] text     = new ushort[length];
 			int      count    = 0;
 			
 			int ox = (int) x[offset];
 			
-			int last_x = ox;
+			int lastX = ox;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -73,8 +73,8 @@ namespace Epsitec.Common.Drawing
 					{
 						int xx = (int) x[offset+i];
 						
-						dx_array[count-1] = xx - last_x;
-						last_x = xx;
+						dxArray[count-1] = xx - lastX;
+						lastX = xx;
 					}
 					
 					count++;
@@ -83,9 +83,9 @@ namespace Epsitec.Common.Drawing
 			
 			if (count > 0)
 			{
-				dx_array[count-1] = 0;
+				dxArray[count-1] = 0;
 				
-				AntiGrain.Buffer.DrawGlyphs (pixmap.Handle, font_handle, ox, oy, text, dx_array, count, color);
+				AntiGrain.Buffer.DrawGlyphs (pixmap.Handle, fontHandle, ox, oy, text, dxArray, count, color);
 			}
 		}
 	}

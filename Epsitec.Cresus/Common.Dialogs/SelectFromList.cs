@@ -11,7 +11,7 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public class SelectFromList : AbstractOkCancel
 	{
-		public SelectFromList(string title, string caption, string[] data, string command_template, CommandDispatcher command_dispatcher) : base (title, null, null, command_template, command_dispatcher)
+		public SelectFromList(string title, string caption, string[] data, string commandTemplate, CommandDispatcher commandDispatcher) : base (title, null, null, commandTemplate, commandDispatcher)
 		{
 			this.caption = caption;
 			this.data    = data;

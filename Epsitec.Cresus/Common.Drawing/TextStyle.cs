@@ -624,13 +624,13 @@ namespace Epsitec.Common.Drawing
 				{
 					case "Font":
 					{
-						string[] font_args = data.Split ('/');
+						string[] fontArgs = data.Split ('/');
 							
-						System.Diagnostics.Debug.Assert (font_args.Length == 3);
+						System.Diagnostics.Debug.Assert (fontArgs.Length == 3);
 							
-						string face  = font_args[0];
-						string style = font_args[1];
-						string optic = font_args[2];
+						string face  = fontArgs[0];
+						string style = fontArgs[1];
+						string optic = fontArgs[2];
 							
 						this.Font = Font.GetFont (face, style, optic);
 						break;

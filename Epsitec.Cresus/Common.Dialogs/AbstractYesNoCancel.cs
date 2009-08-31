@@ -11,14 +11,14 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public abstract class AbstractYesNoCancel : AbstractMessageDialog
 	{
-		public AbstractYesNoCancel(string dialog_title, string yes_text, string no_text, string cancel_text, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
+		public AbstractYesNoCancel(string dialogTitle, string yesText, string noText, string cancelText, string commandYesTemplate, string commandNoTemplate, CommandDispatcher commandDispatcher)
 		{
-			this.dialog_title         = dialog_title;
-			this.yes_text             = yes_text;
-			this.no_text              = no_text;
-			this.cancel_text          = cancel_text;
-			this.command_yes_template = command_yes_template;
-			this.command_no_template  = command_no_template;
+			this.dialogTitle         = dialogTitle;
+			this.yesText             = yesText;
+			this.noText              = noText;
+			this.cancelText          = cancelText;
+			this.commandYesTemplate = commandYesTemplate;
+			this.commandNoTemplate  = commandNoTemplate;
 			
 			this.RegisterController (this);
 		}
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Dialogs
 
 			Window dialogWindow = new Window ();
 
-			dialogWindow.Text              = this.dialog_title;
+			dialogWindow.Text              = this.dialogTitle;
 			dialogWindow.Name              = "Dialog";
 			dialogWindow.ClientSize        = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			dialogWindow.PreventAutoClose  = true;
@@ -63,7 +63,7 @@ namespace Epsitec.Common.Dialogs
 
 			button1               = new Button (dialogWindow.Root);
 			button1.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 3*75 - 3*8, 16, 75, button1.PreferredHeight));
-			button1.Text          = string.IsNullOrEmpty(this.yes_text) ? Widgets.Res.Strings.Dialog.Button.Yes : this.yes_text;
+			button1.Text          = string.IsNullOrEmpty(this.yesText) ? Widgets.Res.Strings.Dialog.Button.Yes : this.yesText;
 			button1.CommandObject = Res.Commands.Dialog.Generic.Yes;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -71,16 +71,16 @@ namespace Epsitec.Common.Dialogs
 
 			button2               = new Button (dialogWindow.Root);
 			button2.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 2*75 - 2*8, 16, 75, button2.PreferredHeight));
-			button2.Text          = string.IsNullOrEmpty(this.no_text) ? Widgets.Res.Strings.Dialog.Button.No : this.no_text;
+			button2.Text          = string.IsNullOrEmpty(this.noText) ? Widgets.Res.Strings.Dialog.Button.No : this.noText;
 			button2.CommandObject = Res.Commands.Dialog.Generic.No;
 			button2.TabIndex      = 3;
 			button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			
-			if (this.hide_cancel == false)
+			if (this.hideCancel == false)
 			{
 				button3               = new Button (dialogWindow.Root);
 				button3.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 1*75 - 1*8, 16, 75, button3.PreferredHeight));
-				button3.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
+				button3.Text          = string.IsNullOrEmpty(this.cancelText) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancelText;
 				button3.Name          = "Cancel";
 				button3.CommandObject = Res.Commands.Dialog.Generic.Cancel;
 				button3.TabIndex      = 4;
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.DialogResult = DialogResult.Yes;
 			
-			if (this.command_yes_template != null)
+			if (this.commandYesTemplate != null)
 			{
-				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.command_yes_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.commandYesTemplate, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -120,9 +120,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.DialogResult = DialogResult.No;
 			
-			if (this.command_no_template != null)
+			if (this.commandNoTemplate != null)
 			{
-				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.command_no_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.commandNoTemplate, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -137,12 +137,12 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		protected string						dialog_title;
-		protected string						yes_text;
-		protected string						no_text;
-		protected string						cancel_text;
-		protected string						command_yes_template;
-		protected string						command_no_template;
-		protected CommandDispatcher				command_dispatcher;
+		protected string						dialogTitle;
+		protected string						yesText;
+		protected string						noText;
+		protected string						cancelText;
+		protected string						commandYesTemplate;
+		protected string						commandNoTemplate;
+		protected CommandDispatcher				commandDispatcher;
 	}
 }

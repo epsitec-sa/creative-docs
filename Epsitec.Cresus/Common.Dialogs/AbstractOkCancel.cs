@@ -11,14 +11,14 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public abstract class AbstractOkCancel : AbstractMessageDialog
 	{
-		public AbstractOkCancel(string dialog_title, string ok_text, string cancel_text, string command_template, CommandDispatcher command_dispatcher)
+		public AbstractOkCancel(string dialogTitle, string okText, string cancelText, string commandTemplate, CommandDispatcher commandDispatcher)
 		{
-			this.dialog_title       = dialog_title;
-			this.ok_text            = ok_text;
-			this.cancel_text        = cancel_text;
+			this.dialogTitle       = dialogTitle;
+			this.okText            = okText;
+			this.cancelText        = cancelText;
 			
-			this.command_template   = command_template;
-			this.command_dispatcher = command_dispatcher;
+			this.commandTemplate   = commandTemplate;
+			this.commandDispatcher = commandDispatcher;
 
 			this.RegisterController (this);
 		}
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Dialogs
 			
 			Window dialogWindow = new Window ();
 
-			dialogWindow.Text             = this.dialog_title;
+			dialogWindow.Text             = this.dialogTitle;
 			dialogWindow.Name             = "Dialog";
 			dialogWindow.ClientSize       = new Drawing.Size (dx+2*8, dy+2*16+24+16);
 			dialogWindow.PreventAutoClose = true;
@@ -62,17 +62,17 @@ namespace Epsitec.Common.Dialogs
 
 			button1               = new Button (dialogWindow.Root);
 			button1.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 2*75 - 2*8, 16, 75, button1.PreferredHeight));
-			button1.Text          = string.IsNullOrEmpty(this.ok_text) ? Widgets.Res.Strings.Dialog.Button.OK : this.ok_text;
+			button1.Text          = string.IsNullOrEmpty(this.okText) ? Widgets.Res.Strings.Dialog.Button.OK : this.okText;
 			button1.CommandObject = Res.Commands.Dialog.Generic.Ok;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			button1.Shortcuts.Add (Widgets.Feel.Factory.Active.AcceptShortcut);
 			
-			if (this.hide_cancel == false)
+			if (this.hideCancel == false)
 			{
 				button2               = new Button (dialogWindow.Root);
 				button2.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 1*75 - 1*8, 16, 75, button2.PreferredHeight));
-				button2.Text          = string.IsNullOrEmpty(this.cancel_text) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancel_text;
+				button2.Text          = string.IsNullOrEmpty(this.cancelText) ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancelText;
 				button2.Name          = "Cancel";
 				button2.CommandObject = Res.Commands.Dialog.Generic.Cancel;
 				button2.TabIndex      = 3;
@@ -99,9 +99,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.DialogResult = DialogResult.Accept;
 			
-			if (! string.IsNullOrEmpty (this.command_template))
+			if (! string.IsNullOrEmpty (this.commandTemplate))
 			{
-				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.command_template, this.CommandArgs));
+				this.DispatchWindow.QueueCommand (this.DialogWindow, string.Format (this.commandTemplate, this.CommandArgs));
 			}
 			
 			this.CloseDialog ();
@@ -116,10 +116,10 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		protected string						dialog_title;
-		protected string						ok_text;
-		protected string						cancel_text;
-		protected string						command_template;
-		protected CommandDispatcher				command_dispatcher;
+		protected string						dialogTitle;
+		protected string						okText;
+		protected string						cancelText;
+		protected string						commandTemplate;
+		protected CommandDispatcher				commandDispatcher;
 	}
 }

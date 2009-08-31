@@ -17,8 +17,8 @@ namespace Epsitec.Common.Drawing
 		{
 			this.size   = Size.Empty;
 			this.origin = new Point ();
-			this.dpi_x  = 96;
-			this.dpi_y  = 96;
+			this.dpiX  = 96;
+			this.dpiY  = 96;
 			
 			this.unique_id = uniqueId == 0 ? System.Threading.Interlocked.Increment (ref Image.unique_id_seed) : uniqueId;
 		}
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Drawing
 		
 		public virtual bool						IsOriginDefined
 		{
-			get { return this.is_origin_defined; }
+			get { return this.isOriginDefined; }
 		}
 		
 		public bool								IsEmpty
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.dpi_x;
+				return this.dpiX;
 			}
 		}
 		
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.dpi_y;
+				return this.dpiY;
 			}
 		}
 		
@@ -139,9 +139,9 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		internal bool							is_origin_defined;
-		internal double							dpi_x;
-		internal double							dpi_y;
+		internal bool							isOriginDefined;
+		internal double							dpiX;
+		internal double							dpiY;
 		
 		protected Size							size;
 		protected Point							origin;

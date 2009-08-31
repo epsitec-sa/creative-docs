@@ -11,11 +11,11 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldEx()
 		{
-			this.accept_reject_behavior = new Behaviors.AcceptRejectBehavior (this);
-			this.accept_reject_behavior.CreateButtons ();
+			this.acceptRejectBehavior = new Behaviors.AcceptRejectBehavior (this);
+			this.acceptRejectBehavior.CreateButtons ();
 			
-			this.accept_reject_behavior.RejectClicked += this.HandleAcceptRejectRejectClicked;
-			this.accept_reject_behavior.AcceptClicked += this.HandleAcceptRejectAcceptClicked;
+			this.acceptRejectBehavior.RejectClicked += this.HandleAcceptRejectRejectClicked;
+			this.acceptRejectBehavior.AcceptClicked += this.HandleAcceptRejectAcceptClicked;
 			
 			this.DefocusAction       = DefocusAction.None;
 			this.ButtonShowCondition = ButtonShowCondition.WhenModified;
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Widgets
 				(this.IsEditing) &&
 				(this.CheckAcceptEdition ()))
 			{
-				this.accept_reject_behavior.InitialText = this.Text;
+				this.acceptRejectBehavior.InitialText = this.Text;
 				this.OnTextDefined ();
 				this.UpdateButtonVisibility ();
 
@@ -77,10 +77,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.accept_reject_behavior.RejectClicked -= this.HandleAcceptRejectRejectClicked;
-				this.accept_reject_behavior.AcceptClicked -= this.HandleAcceptRejectAcceptClicked;
+				this.acceptRejectBehavior.RejectClicked -= this.HandleAcceptRejectRejectClicked;
+				this.acceptRejectBehavior.AcceptClicked -= this.HandleAcceptRejectAcceptClicked;
 				
-				this.accept_reject_behavior = null;
+				this.acceptRejectBehavior = null;
 			}
 			
 			base.Dispose (disposing);
@@ -131,10 +131,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateButtonGeometry()
 		{
-			if (this.accept_reject_behavior != null)
+			if (this.acceptRejectBehavior != null)
 			{
-				this.margins.Right = this.accept_reject_behavior.DefaultWidth;
-				this.accept_reject_behavior.UpdateButtonGeometry ();
+				this.margins.Right = this.acceptRejectBehavior.DefaultWidth;
+				this.acceptRejectBehavior.UpdateButtonGeometry ();
 			}
 			
 			base.UpdateButtonGeometry ();
@@ -175,14 +175,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected void SetButtonVisibility(bool show)
 		{
-			if (this.accept_reject_behavior == null)
+			if (this.acceptRejectBehavior == null)
 			{
 				return;
 			}
 			
-			if (this.accept_reject_behavior.IsVisible != show)
+			if (this.acceptRejectBehavior.IsVisible != show)
 			{
-				this.accept_reject_behavior.SetVisible (show);
+				this.acceptRejectBehavior.SetVisible (show);
 
 				Window window = this.Window;
 
@@ -200,9 +200,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateButtonEnable()
 		{
-			if (this.accept_reject_behavior != null)
+			if (this.acceptRejectBehavior != null)
 			{
-				this.accept_reject_behavior.SetAcceptEnabled (this.IsValid);
+				this.acceptRejectBehavior.SetAcceptEnabled (this.IsValid);
 			}
 		}
 		
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextDefined ();
 			
-			this.accept_reject_behavior.InitialText = this.Text;
+			this.acceptRejectBehavior.InitialText = this.Text;
 		}
 
 		protected override void OnTextChanged()
@@ -234,17 +234,17 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleAcceptRejectAcceptClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			System.Diagnostics.Debug.Assert (sender == this.acceptRejectBehavior);
 			this.AcceptEdition ();
 		}		
 		
 		private void HandleAcceptRejectRejectClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			System.Diagnostics.Debug.Assert (sender == this.acceptRejectBehavior);
 			this.RejectEdition ();
 		}		
 		
 		
-		private Behaviors.AcceptRejectBehavior	accept_reject_behavior;
+		private Behaviors.AcceptRejectBehavior	acceptRejectBehavior;
 	}
 }

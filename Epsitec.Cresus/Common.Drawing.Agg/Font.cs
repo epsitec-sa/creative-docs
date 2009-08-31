@@ -10,16 +10,16 @@ namespace Epsitec.Common.Drawing
 		#region Private constructors
 		Font(OpenType.FontIdentity fontIdentity)
 		{
-			this.open_type_FontIdentity = fontIdentity;
+			this.openTypeFontIdentity = fontIdentity;
 		}
 		
-		Font(Font baseFont, string synthetic_style, SyntheticFontMode synthetic_mode)
+		Font(Font baseFont, string syntheticStyle, SyntheticFontMode syntheticMode)
 		{
-			this.open_type_FontIdentity = baseFont.open_type_FontIdentity;
-			this.open_type_font = baseFont.OpenTypeFont;
+			this.openTypeFontIdentity = baseFont.openTypeFontIdentity;
+			this.openTypeFont = baseFont.OpenTypeFont;
 		    
-			this.synthetic_style = synthetic_style;
-		    this.synthetic_mode  = synthetic_mode;
+			this.syntheticStyle = syntheticStyle;
+		    this.syntheticMode  = syntheticMode;
 		}
 
 		~Font()
@@ -125,12 +125,12 @@ namespace Epsitec.Common.Drawing
 					int    size   = data.Length;
 					int    offset = segment.Offset;
 
-					if (this.open_type_FontIdentity.IsDynamicFont)
+					if (this.openTypeFontIdentity.IsDynamicFont)
 					{
 						string fontHash = this.OpenTypeFont.FontIdentity.FullHash;
 						string fontPath;
 
-						if (Font.registered_fonts.TryGetValue (fontHash, out fontPath))
+						if (Font.registeredFonts.TryGetValue (fontHash, out fontPath))
 						{
 							//	Font already registered...
 						}
@@ -140,8 +140,8 @@ namespace Epsitec.Common.Drawing
 
 							System.IO.File.WriteAllBytes (fontPath, data);
 							Font.AddFontResourceEx (fontPath, 0x10, System.IntPtr.Zero);
-							Font.registered_fonts[fontHash] = fontPath;
-							Font.shutdown_cleanup.Add (fontPath);
+							Font.registeredFonts[fontHash] = fontPath;
+							Font.shutdownCleanup.Add (fontPath);
 						}
 					}
 
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.open_type_FontIdentity.InvariantFaceName;
+				return this.openTypeFontIdentity.InvariantFaceName;
 			}
 		}
 
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.face_info;
+				return this.faceInfo;
 			}
 		}
 		
@@ -174,7 +174,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.synthetic_style ?? this.open_type_FontIdentity.InvariantStyleName;
+				return this.syntheticStyle ?? this.openTypeFontIdentity.InvariantStyleName;
 			}
 		}
 		
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.open_type_FontIdentity.LocaleStyleName;
+				return this.openTypeFontIdentity.LocaleStyleName;
 			}
 		}
 		
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Drawing
 			{
 				return "";
 				//	TODO: handle optical name
-//				return this.open_type_FontIdentity.InvariantOpticalName;
+//				return this.openTypeFontIdentity.InvariantOpticalName;
 			}
 		}
 		
@@ -235,7 +235,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.open_type_FontIdentity.UniqueFontId;
+				return this.openTypeFontIdentity.UniqueFontId;
 			}
 		}
 		
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.synthetic_mode != SyntheticFontMode.None;
+				return this.syntheticMode != SyntheticFontMode.None;
 			}
 		}
 		
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.synthetic_mode;
+				return this.syntheticMode;
 			}
 		}
 		
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				switch (this.synthetic_mode)
+				switch (this.syntheticMode)
 				{
 					case SyntheticFontMode.Oblique:
 						return new Transform (1, System.Math.Sin (Font.DefaultObliqueAngle * System.Math.PI / 180.0), 0, 1, 0, 0);
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.synthetic_mode == SyntheticFontMode.Oblique)
+				if (this.syntheticMode == SyntheticFontMode.Oblique)
 				{
 					return 90 - Font.DefaultObliqueAngle;
 				}
@@ -342,19 +342,19 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if ((this.open_type_font == null) &&
-					(this.open_type_FontIdentity != null))
+				if ((this.openTypeFont == null) &&
+					(this.openTypeFontIdentity != null))
 				{
 					lock (this)
 					{
-						if (this.open_type_font == null)
+						if (this.openTypeFont == null)
 						{
-							this.open_type_font = Font.font_collection.CreateFont (this.open_type_FontIdentity);
+							this.openTypeFont = Font.fontCollection.CreateFont (this.openTypeFontIdentity);
 						}
 					}
 				}
 				
-				return this.open_type_font;
+				return this.openTypeFont;
 			}
 		}
 
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.open_type_font != null;
+				return this.openTypeFont != null;
 			}
 		}
 		
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Drawing
 		
 		public Rectangle GetGlyphBounds(ushort glyph)
 		{
-			if (this.synthetic_mode == SyntheticFontMode.Oblique)
+			if (this.syntheticMode == SyntheticFontMode.Oblique)
 			{
 				using (Path path = new Path ())
 				{
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Drawing
 		
 		public Rectangle GetTextBounds(string text)
 		{
-			if (this.synthetic_mode == SyntheticFontMode.Oblique)
+			if (this.syntheticMode == SyntheticFontMode.Oblique)
 			{
 				Path path = new Path ();
 				Transform ft = this.SyntheticTransform;
@@ -439,14 +439,14 @@ namespace Epsitec.Common.Drawing
 			}
 
 			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
-			double[] temp_x = new double[glyphs.Length];
+			double[] tempX = new double[glyphs.Length];
 
 			if (glyphs.Length == 0)
 			{
 				return Rectangle.Empty;
 			}
 			
-			this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, temp_x);
+			this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, tempX);
 
 			double x1, y1, x2, y2;
 			double xmin, ymin, xmax, ymax;
@@ -462,8 +462,8 @@ namespace Epsitec.Common.Drawing
 			{
 				this.OpenTypeFont.GetGlyphBounds (glyphs[i], 1.0, out x1, out x2, out y1, out y2);
 				
-				x1 += temp_x[i];
-				x2 += temp_x[i];
+				x1 += tempX[i];
+				x2 += tempX[i];
 
 				xmin = System.Math.Min (xmin, x1);
 				xmax = System.Math.Max (xmax, x2);
@@ -483,9 +483,9 @@ namespace Epsitec.Common.Drawing
 			xPos = new double[n];
 
 			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text, ref glyphMap);
-			double[] temp_x = new double[glyphs.Length+1];
+			double[] tempX = new double[glyphs.Length+1];
 			
-			temp_x[glyphs.Length] = this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, temp_x);
+			tempX[glyphs.Length] = this.OpenTypeFont.GetPositions (glyphs, 1.0, 0.0, tempX);
 
 			int index = 0;
 			
@@ -495,39 +495,39 @@ namespace Epsitec.Common.Drawing
 
 				if (mapped > 1)
 				{
-					double dx = temp_x[i+1] - temp_x[i];
+					double dx = tempX[i+1] - tempX[i];
 					
 					for (int j = 0; j < mapped; j++)
 					{
-						xPos[index] = temp_x[i] + dx * (j+1) / mapped;
+						xPos[index] = tempX[i] + dx * (j+1) / mapped;
 						index++;
 					}
 				}
 				else
 				{
-					xPos[index] = temp_x[i+1];
+					xPos[index] = tempX[i+1];
 					index++;
 				}
 			}
 		}
 		
-		public void GetTextCharEndX(string text, FontClassInfo[] infos, out double[] x_array)
+		public void GetTextCharEndX(string text, FontClassInfo[] infos, out double[] xArray)
 		{
-			this.GetTextCharEndX (text, out x_array);
+			this.GetTextCharEndX (text, out xArray);
 			
-			double scale_space = 1.0;
-			double scale_plain = 1.0;
+			double scaleSpace = 1.0;
+			double scalePlain = 1.0;
 			
 			for (int i = 0; i < infos.Length; i++)
 			{
 				switch (infos[i].GlyphClass)
 				{
 					case GlyphClass.PlainText:
-						scale_plain = infos[i].Scale;
+						scalePlain = infos[i].Scale;
 						break;
 					
 					case GlyphClass.Space:
-						scale_space = infos[i].Scale;
+						scaleSpace = infos[i].Scale;
 						break;
 				}
 			}
@@ -538,16 +538,16 @@ namespace Epsitec.Common.Drawing
 			double x1 = 0;
 			double x2 = 0;
 
-			for (int i = 0; i < x_array.Length; i++)
+			for (int i = 0; i < xArray.Length; i++)
 			{
-				double dx = x_array[i] - x1;
+				double dx = xArray[i] - x1;
 				
-				dx *= (OpenType.Font.IsStretchableSpaceCharacter (text[i])) ? scale_space : scale_plain;
+				dx *= (OpenType.Font.IsStretchableSpaceCharacter (text[i])) ? scaleSpace : scalePlain;
 				
-				x1 = x_array[i];
+				x1 = xArray[i];
 				x2 = x2 + dx;
 				
-				x_array[i] = x2;
+				xArray[i] = x2;
 			}
 		}
 		
@@ -555,10 +555,10 @@ namespace Epsitec.Common.Drawing
 		{
 			int n = text.Length;
 			
-			int    n_text  = 0;
-			int    n_space = 0;
-			double w_text  = 0;
-			double w_space = 0;
+			int    nText  = 0;
+			int    nSpace = 0;
+			double wText  = 0;
+			double wSpace = 0;
 			
 			width      = 0;
 			elasticity = 0;
@@ -569,36 +569,36 @@ namespace Epsitec.Common.Drawing
 
 				if (OpenType.Font.IsStretchableSpaceCharacter (unicode))
 				{
-					n_space += 1;
-					w_space += this.GetCharAdvance (unicode);
+					nSpace += 1;
+					wSpace += this.GetCharAdvance (unicode);
 				}
 				else
 				{
-					n_text += 1;
-					w_text += this.GetCharAdvance (unicode);
+					nText += 1;
+					wText += this.GetCharAdvance (unicode);
 				}
 			}
 			
-			int m = ((n_text > 0 && w_text > 0) ? 1 : 0) + ((n_space > 0 && w_space > 0) ? 1 : 0);
+			int m = ((nText > 0 && wText > 0) ? 1 : 0) + ((nSpace > 0 && wSpace > 0) ? 1 : 0);
 			infos = new FontClassInfo[m];
 			
 			m = 0;
 			
-			if ((n_text > 0) && (w_text > 0))
+			if ((nText > 0) && (wText > 0))
 			{
-				double e = 0.00 * n_text;
+				double e = 0.00 * nText;
 				
-				infos[m++]  = new FontClassInfo (GlyphClass.PlainText, n_text, w_text, e);
-				width      += w_text;
+				infos[m++]  = new FontClassInfo (GlyphClass.PlainText, nText, wText, e);
+				width      += wText;
 				elasticity += e;
 			}
 			
-			if ((n_space > 0) && (w_space > 0))
+			if ((nSpace > 0) && (wSpace > 0))
 			{
-				double e = 1.00 * n_space;
+				double e = 1.00 * nSpace;
 				
-				infos[m++]  = new FontClassInfo (GlyphClass.Space, n_space, w_space, e);
-				width      += w_space;
+				infos[m++]  = new FontClassInfo (GlyphClass.Space, nSpace, wSpace, e);
+				width      += wSpace;
 				elasticity += e;
 			}
 		}
@@ -622,10 +622,10 @@ namespace Epsitec.Common.Drawing
 
 		public void ClearOpenTypeFont()
 		{
-			if (this.open_type_FontIdentity != null)
+			if (this.openTypeFontIdentity != null)
 			{
-				this.open_type_FontIdentity.InternalClearFontData ();
-				this.open_type_font = null;
+				this.openTypeFontIdentity.InternalClearFontData ();
+				this.openTypeFont = null;
 				this.DisposeFaceHandle ();
 			}
 		}
@@ -669,7 +669,7 @@ namespace Epsitec.Common.Drawing
 
 		public static void RegisterDynamicFont(byte[] data)
 		{
-			Font.font_collection.RegisterDynamicFont (data);
+			Font.fontCollection.RegisterDynamicFont (data);
 		}
 		
 		private void Dispose(bool disposing)
@@ -686,19 +686,19 @@ namespace Epsitec.Common.Drawing
 		{
 			bool save = false;
 			
-			if (Font.font_array == null)
+			if (Font.fontArray == null)
 			{
 				System.Diagnostics.Debug.WriteLine ("SetupFonts called", "Epsitec.Common.Drawing.Font");
 
-				Font.font_collection = OpenType.FontCollection.Default;
-				Font.font_collection.LoadFromCache ();
+				Font.fontCollection = OpenType.FontCollection.Default;
+				Font.fontCollection.LoadFromCache ();
 				
-				save = Font.font_collection.Initialize ();
+				save = Font.fontCollection.Initialize ();
 
-				Font.font_array = new List<Font> ();
-				Font.font_hash  = new Dictionary<string, Font> ();
+				Font.fontArray = new List<Font> ();
+				Font.fontHash  = new Dictionary<string, Font> ();
 				
-				foreach (OpenType.FontIdentity fontIdentity in Font.font_collection)
+				foreach (OpenType.FontIdentity fontIdentity in Font.fontCollection)
 				{
 					Font.AddFont (fontIdentity);
 				}
@@ -706,12 +706,12 @@ namespace Epsitec.Common.Drawing
 				System.Diagnostics.Debug.WriteLine ("SetupFonts done", "Epsitec.Common.Drawing.Font");
 			}
 			
-			if (Font.face_array == null)
+			if (Font.faceArray == null)
 			{
-				Font.face_array = new List<FontFaceInfo> ();
-				Font.face_hash = new Dictionary<string, FontFaceInfo> ();
+				Font.faceArray = new List<FontFaceInfo> ();
+				Font.faceHash = new Dictionary<string, FontFaceInfo> ();
 				
-				foreach (Font font in Font.font_array)
+				foreach (Font font in Font.fontArray)
 				{
 					Font.AddFontFace (font);
 				}
@@ -719,10 +719,10 @@ namespace Epsitec.Common.Drawing
 
 			if (save)
 			{
-				Font.font_collection.SaveToCache ();
+				Font.fontCollection.SaveToCache ();
 			}
 
-			Font.font_collection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
+			Font.fontCollection.FontIdentityDefined += Font.HandleFontCollectionFontIdentityDefined;
 		}
 
 		private static void HandleFontCollectionFontIdentityDefined(OpenType.FontIdentity fontIdentity)
@@ -736,15 +736,15 @@ namespace Epsitec.Common.Drawing
 
 			string name = font.FullName;
 
-			if (Font.font_hash.ContainsKey (name))
+			if (Font.fontHash.ContainsKey (name))
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("AddFont, font already known, name={0}", name), "Epsitec.Common.Drawing.Font");
-				return Font.font_hash[name];
+				return Font.fontHash[name];
 			}
 			else
 			{
-				Font.font_array.Add (font);
-				Font.font_hash[name] = font;
+				Font.fontArray.Add (font);
+				Font.fontHash[name] = font;
 
 				return font;
 			}
@@ -758,11 +758,11 @@ namespace Epsitec.Common.Drawing
 
 				FontFaceInfo info;
 
-				if (Font.face_hash.TryGetValue (face, out info) == false)
+				if (Font.faceHash.TryGetValue (face, out info) == false)
 				{
 					info = new FontFaceInfo (face);
-					Font.face_hash[face] = info;
-					Font.face_array.Add (info);
+					Font.faceHash[face] = info;
+					Font.faceArray.Add (info);
 				}
 
 				info.Add (font);
@@ -773,7 +773,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return Font.font_array.Count;
+				return Font.fontArray.Count;
 			}
 		}
 		
@@ -781,12 +781,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (Font.default_font == null)
+				if (Font.defaultFont == null)
 				{
-					Font.default_font = Font.GetFont (Font.DefaultFontFamily, "Regular");
+					Font.defaultFont = Font.GetFont (Font.DefaultFontFamily, "Regular");
 				}
 				
-				return Font.default_font;
+				return Font.defaultFont;
 			}
 		}
 
@@ -829,7 +829,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return Font.face_array.ToArray ();
+				return Font.faceArray.ToArray ();
 			}
 		}
 		
@@ -837,9 +837,9 @@ namespace Epsitec.Common.Drawing
 		public static Font GetFont(int rank)
 		{
 			if ((rank >= 0) &&
-				(rank < Font.font_array.Count))
+				(rank < Font.fontArray.Count))
 			{
-				return Font.font_array[rank];
+				return Font.fontArray[rank];
 			}
 			
 			return null;
@@ -872,7 +872,7 @@ namespace Epsitec.Common.Drawing
 			
 			Font font;
 			
-			if (Font.font_hash.TryGetValue (key, out font) == false)
+			if (Font.fontHash.TryGetValue (key, out font) == false)
 			{
 				int pos;
 				
@@ -915,34 +915,34 @@ namespace Epsitec.Common.Drawing
 					//	Le style oblique n'existe pas pour cette fonte. Tentons de le synthétiser
 					//	à partir de la version droite la plus approchante.
 					
-					string clean_style;
+					string cleanStyle;
 					
-					clean_style = style.Replace ("Oblique", "");
-					clean_style = clean_style.Trim ();
+					cleanStyle = style.Replace ("Oblique", "");
+					cleanStyle = cleanStyle.Trim ();
 					
-					if (clean_style == "")
+					if (cleanStyle == "")
 					{
-						clean_style = "Regular";
+						cleanStyle = "Regular";
 					}
 					
-					font = Font.GetFont (face, clean_style, optical);
+					font = Font.GetFont (face, cleanStyle, optical);
 					
 					if (font != null)
 					{
 						//	La fonte de base (droite) existe. C'est une bonne nouvelle. On va créer
 						//	une fonte synthétique oblique...
 						
-						Font   syn_font = new Font (font, style, SyntheticFontMode.Oblique);
-						string syn_name = syn_font.FullName;
+						Font   synFont = new Font (font, style, SyntheticFontMode.Oblique);
+						string synName = synFont.FullName;
 						
-						System.Diagnostics.Debug.Assert (syn_font.StyleName == style);
-						System.Diagnostics.Debug.Assert (syn_font.IsSynthetic);
-						System.Diagnostics.Debug.Assert (Font.font_hash.ContainsKey (syn_name) == false);
+						System.Diagnostics.Debug.Assert (synFont.StyleName == style);
+						System.Diagnostics.Debug.Assert (synFont.IsSynthetic);
+						System.Diagnostics.Debug.Assert (Font.fontHash.ContainsKey (synName) == false);
 
-						Font.font_array.Add (syn_font);
-						Font.font_hash[syn_name] = syn_font;
+						Font.fontArray.Add (synFont);
+						Font.fontHash[synName] = synFont;
 						
-						font = syn_font;
+						font = synFont;
 					}
 				}
 			}
@@ -971,7 +971,7 @@ namespace Epsitec.Common.Drawing
 		public static FontFaceInfo GetFaceInfo(string face)
 		{
 			FontFaceInfo info;
-			Font.face_hash.TryGetValue (face, out info);
+			Font.faceHash.TryGetValue (face, out info);
 			return info;
 		}
 		
@@ -979,7 +979,7 @@ namespace Epsitec.Common.Drawing
 		{
 			FontFaceInfo info;
 			
-			if (Font.face_hash.TryGetValue (face, out info))
+			if (Font.faceHash.TryGetValue (face, out info))
 			{
 				Font[] fonts = info.GetFonts ();
 				
@@ -1003,7 +1003,7 @@ namespace Epsitec.Common.Drawing
 		
 		internal void DefineFaceInfo(FontFaceInfo info)
 		{
-			this.face_info = info;
+			this.faceInfo = info;
 		}
 
 		#region ShutdownCleanup Class
@@ -1020,7 +1020,7 @@ namespace Epsitec.Common.Drawing
 
 			~ShutdownCleanup()
 			{
-				foreach (string path in temp_files)
+				foreach (string path in tempFiles)
 				{
 					try
 					{
@@ -1038,10 +1038,10 @@ namespace Epsitec.Common.Drawing
 
 			public void Add(string path)
 			{
-				this.temp_files.Add (path);
+				this.tempFiles.Add (path);
 			}
 
-			List<string> temp_files = new List<string> ();
+			List<string> tempFiles = new List<string> ();
 		}
 
 		#endregion
@@ -1061,21 +1061,21 @@ namespace Epsitec.Common.Drawing
 		#endregion
 
 		System.IntPtr							handle;
-		string									synthetic_style;
-		SyntheticFontMode						synthetic_mode;
-		FontFaceInfo							face_info;
-		OpenType.FontIdentity					open_type_FontIdentity;
-		OpenType.Font							open_type_font;
+		string									syntheticStyle;
+		SyntheticFontMode						syntheticMode;
+		FontFaceInfo							faceInfo;
+		OpenType.FontIdentity					openTypeFontIdentity;
+		OpenType.Font							openTypeFont;
 		
-		static OpenType.FontCollection			font_collection;
-		static List<Font>						font_array;
-		static List<FontFaceInfo>				face_array;
-		static Dictionary<string, Font>			font_hash;
-		static Dictionary<string, FontFaceInfo>	face_hash;
-		static Font								default_font;
+		static OpenType.FontCollection			fontCollection;
+		static List<Font>						fontArray;
+		static List<FontFaceInfo>				faceArray;
+		static Dictionary<string, Font>			fontHash;
+		static Dictionary<string, FontFaceInfo>	faceHash;
+		static Font								defaultFont;
 		static bool								useSegoe;
 
-		static Dictionary<string, string>		registered_fonts = new Dictionary<string,string> ();
-		static ShutdownCleanup					shutdown_cleanup = new ShutdownCleanup ();
+		static Dictionary<string, string>		registeredFonts = new Dictionary<string,string> ();
+		static ShutdownCleanup					shutdownCleanup = new ShutdownCleanup ();
 	}
 }

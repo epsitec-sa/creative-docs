@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 				//	ce qui évite de générer un événement ShortcutChanged avant
 				//	l'heure :
 				
-				this.internal_state &= ~InternalState.AutoMnemonic;
+				this.internalState &= ~InternalState.AutoMnemonic;
 			}
 			
 			this.OnShortcutChanged ();
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (disposing)
 			{
-				this.internal_state |= InternalState.Disposing;
+				this.internalState |= InternalState.Disposing;
 				
 				if (this.HasChildren)
 				{
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 					this.Disposed = null;
 				}
 				
-				this.internal_state |= InternalState.Disposed;
+				this.internalState |= InternalState.Disposed;
 			}
 		}
 		
@@ -171,17 +171,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internal_state & InternalState.DebugActive) != 0;
+				return (this.internalState & InternalState.DebugActive) != 0;
 			}
 			set
 			{
 				if (value)
 				{
-					this.internal_state |= InternalState.DebugActive;
+					this.internalState |= InternalState.DebugActive;
 				}
 				else
 				{
-					this.internal_state &= ~ InternalState.DebugActive;
+					this.internalState &= ~ InternalState.DebugActive;
 				}
 			}
 		}
@@ -331,7 +331,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internal_state & InternalState.Frozen) != 0)
+				if ((this.internalState & InternalState.Frozen) != 0)
 				{
 					return true;
 				}
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Widgets
 			//	Voir le constructeur Widget(Widget) et Widget.SetEmbedder.
 			get
 			{
-				return (this.internal_state & InternalState.Embedded) != 0;
+				return (this.internalState & InternalState.Embedded) != 0;
 			}
 		}
 		
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internal_state & InternalState.EditionEnabled) != 0)
+				if ((this.internalState & InternalState.EditionEnabled) != 0)
 				{
 					return true;
 				}
@@ -373,17 +373,17 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				bool enabled = (this.internal_state & InternalState.EditionEnabled) != 0;
+				bool enabled = (this.internalState & InternalState.EditionEnabled) != 0;
 				
 				if (enabled != value)
 				{
 					if (value)
 					{
-						this.internal_state |= InternalState.EditionEnabled;
+						this.internalState |= InternalState.EditionEnabled;
 					}
 					else
 					{
-						this.internal_state &= ~InternalState.EditionEnabled;
+						this.internalState &= ~InternalState.EditionEnabled;
 					}
 				}
 			}
@@ -393,7 +393,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internal_state & InternalState.Disposing) != 0;
+				return (this.internalState & InternalState.Disposing) != 0;
 			}
 		}
 
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internal_state & InternalState.Disposed) != 0;
+				return (this.internalState & InternalState.Disposed) != 0;
 			}
 		}
 		
@@ -429,7 +429,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internal_state & InternalState.AutoMnemonic) != 0;
+				return (this.internalState & InternalState.AutoMnemonic) != 0;
 			}
 			set
 			{
@@ -437,11 +437,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if (value)
 					{
-						this.internal_state |= InternalState.AutoMnemonic;
+						this.internalState |= InternalState.AutoMnemonic;
 					}
 					else
 					{
-						this.internal_state &= ~InternalState.AutoMnemonic;
+						this.internalState &= ~InternalState.AutoMnemonic;
 					}
 
 					this.ResetMnemonicShortcut ();
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internal_state & InternalState.AutoFitWidth) != 0;
+				return (this.internalState & InternalState.AutoFitWidth) != 0;
 			}
 			set
 			{
@@ -461,11 +461,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if (value)
 					{
-						this.internal_state |= InternalState.AutoFitWidth;
+						this.internalState |= InternalState.AutoFitWidth;
 					}
 					else
 					{
-						this.internal_state &= ~InternalState.AutoFitWidth;
+						this.internalState &= ~InternalState.AutoFitWidth;
 					}
 				}
 			}
@@ -475,11 +475,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.internal_state;
+				return this.internalState;
 			}
 			set
 			{
-				this.internal_state = value;
+				this.internalState = value;
 			}
 		}
 		
@@ -563,19 +563,19 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									CanSelect
 		{
-			get { return ((this.internal_state & InternalState.Selectable) != 0) && !this.IsFrozen; }
+			get { return ((this.internalState & InternalState.Selectable) != 0) && !this.IsFrozen; }
 		}
 		
 		public bool									CanEngage
 		{
-			get { return ((this.internal_state & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
+			get { return ((this.internalState & InternalState.Engageable) != 0) && this.IsEnabled && !this.IsFrozen; }
 		}
 
 		public virtual bool							AcceptsFocus
 		{
 			get
 			{
-				return ((this.internal_state & InternalState.Focusable) != 0)
+				return ((this.internalState & InternalState.Focusable) != 0)
 					&& (!this.IsFrozen);
 			}
 		}
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool									PossibleContainer
 		{
-			get { return ((this.internal_state & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }
+			get { return ((this.internalState & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }
 		}
 		
 		
@@ -959,7 +959,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internal_state & InternalState.Embedded) == 0)
+				if ((this.internalState & InternalState.Embedded) == 0)
 				{
 					return null;
 				}
@@ -1054,7 +1054,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void Validate()
 		{
-			bool oldValid = (this.internal_state & InternalState.WasValid) != 0;
+			bool oldValid = (this.internalState & InternalState.WasValid) != 0;
 			bool newValid;
 
 			using (ValidationContext.ValidationInProgress (this))
@@ -1066,11 +1066,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (newValid)
 				{
-					this.internal_state |= InternalState.WasValid;
+					this.internalState |= InternalState.WasValid;
 				}
 				else
 				{
-					this.internal_state &= ~InternalState.WasValid;
+					this.internalState &= ~InternalState.WasValid;
 				}
 
 				this.InvalidateProperty (Visual.IsValidProperty, oldValid, newValid);
@@ -1145,11 +1145,11 @@ namespace Epsitec.Common.Widgets
 
 		public virtual void SetFrozen(bool frozen)
 		{
-			if ((this.internal_state & InternalState.Frozen) == 0)
+			if ((this.internalState & InternalState.Frozen) == 0)
 			{
 				if (frozen)
 				{
-					this.internal_state |= InternalState.Frozen;
+					this.internalState |= InternalState.Frozen;
 					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
 			}
@@ -1157,7 +1157,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!frozen)
 				{
-					this.internal_state &= ~ InternalState.Frozen;
+					this.internalState &= ~ InternalState.Frozen;
 					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
 			}
@@ -1266,7 +1266,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if ((this.internal_state & InternalState.Engageable) == 0)
+			if ((this.internalState & InternalState.Engageable) == 0)
 			{
 				return;
 			}
@@ -1330,7 +1330,7 @@ namespace Epsitec.Common.Widgets
 		public void SetEmbedder(Widget embedder)
 		{
 			this.SetParent (embedder);
-			this.internal_state |= InternalState.Embedded;
+			this.internalState |= InternalState.Embedded;
 		}
 		
 		
@@ -4598,7 +4598,7 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ForwardEnterTabOverrideProperty = DependencyProperty.Register ("ForwardEnterTabOverride", typeof (Widget), typeof (Widget));
 		public static readonly DependencyProperty BackwardEnterTabOverrideProperty = DependencyProperty.Register ("BackwardEnterTabOverride", typeof (Widget), typeof (Widget));
 		
-		private InternalState					internal_state;
+		private InternalState					internalState;
 		
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;

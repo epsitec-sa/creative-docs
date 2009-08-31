@@ -16,7 +16,7 @@ namespace Epsitec.Common.Drawing
 			this.g = color.G / 255.0;
 			this.b = color.B / 255.0;
 			this.a = color.A / 255.0;
-			this.is_empty = color.IsEmpty;
+			this.isEmpty = color.IsEmpty;
 		}
 		
 		public Color(double a, double r, double g, double b)
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Drawing
 			this.g = g;
 			this.b = b;
 			this.a = a;
-			this.is_empty = false;
+			this.isEmpty = false;
 		}
 		
 		public Color(double r, double g, double b)
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Drawing
 			this.g = g;
 			this.b = b;
 			this.a = 1.0;
-			this.is_empty = false;
+			this.isEmpty = false;
 		}
 		
 		public Color(double brightness)
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Drawing
 			this.g = brightness;
 			this.b = brightness;
 			this.a = 1.0;
-			this.is_empty = false;
+			this.isEmpty = false;
 		}
 		
 		
@@ -78,27 +78,27 @@ namespace Epsitec.Common.Drawing
 		
 		public bool								IsEmpty
 		{
-			get { return this.is_empty; }
+			get { return this.isEmpty; }
 		}
 		
 		public bool								IsValid
 		{
-			get { return !this.is_empty; }
+			get { return !this.isEmpty; }
 		}
 		
 		public bool								IsTransparent
 		{
-			get { return !this.is_empty && (this.a == 0.0); }
+			get { return !this.isEmpty && (this.a == 0.0); }
 		}
 		
 		public bool								IsOpaque
 		{
-			get { return !this.is_empty && (this.a == 1.0); }
+			get { return !this.isEmpty && (this.a == 1.0); }
 		}
 		
 		public bool								IsVisible
 		{
-			get { return !this.is_empty && (this.a != 0.0); }
+			get { return !this.isEmpty && (this.a != 0.0); }
 		}
 		
 		public bool								IsInRange
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Drawing
 			get
 			{
 				Color c = new Color ();
-				c.is_empty = true;
+				c.isEmpty = true;
 				return c;
 			}
 		}
@@ -410,11 +410,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator==(Color a, Color b)
 		{
-			if (a.is_empty && b.is_empty)
+			if (a.isEmpty && b.isEmpty)
 			{
 				return true;
 			}
-			if (a.is_empty || b.is_empty)
+			if (a.isEmpty || b.isEmpty)
 			{
 				return false;
 			}
@@ -427,11 +427,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool operator!=(Color a, Color b)
 		{
-			if (a.is_empty && b.is_empty)
+			if (a.isEmpty && b.isEmpty)
 			{
 				return false;
 			}
-			if (a.is_empty || b.is_empty)
+			if (a.isEmpty || b.isEmpty)
 			{
 				return true;
 			}
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Drawing
 
 		private double							r, g, b;
 		private double							a;
-		private bool is_empty
+		private bool isEmpty
 		{
 			get
 			{
@@ -543,7 +543,7 @@ namespace Epsitec.Common.Drawing
 				}
 				else
 				{
-					System.Diagnostics.Debug.Assert (this.is_empty == false);
+					System.Diagnostics.Debug.Assert (this.isEmpty == false);
 				}
 			}
 		}

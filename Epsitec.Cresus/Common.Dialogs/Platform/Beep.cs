@@ -18,7 +18,7 @@ namespace Epsitec.Common.Dialogs.Platform
 			Information	= 0x00000040,
 		}
 		
-		[DllImport("User32.dll", SetLastError=true, EntryPoint="MessageBeep")]	private static extern bool Win32MessageBeep(int beep_type);
+		[DllImport("User32.dll", SetLastError=true, EntryPoint="MessageBeep")]	private static extern bool Win32MessageBeep(int beepType);
 		[DllImport("Kernel32.dll", EntryPoint="Beep")]							private static extern void Win32Beep(int f, int d);
 		
 		public static void MessageBeep(MessageType type)

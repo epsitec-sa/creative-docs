@@ -53,33 +53,33 @@ namespace Epsitec.Common.Drawing
 			this.engine.Rewind ();
 		}
 		
-		public bool GetNextBreak(double max_width, out string text, out double width, out int n_char)
+		public bool GetNextBreak(double maxWidth, out string text, out double width, out int n_char)
 		{
-			return this.engine.GetNextBreak (max_width, out text, out width, out n_char);
+			return this.engine.GetNextBreak (maxWidth, out text, out width, out n_char);
 		}
 
 
-		public TextBreak.Line[] GetLines(double max_width)
+		public TextBreak.Line[] GetLines(double maxWidth)
 		{
-			return this.GetLines (max_width, max_width, max_width);
+			return this.GetLines (maxWidth, maxWidth, maxWidth);
 		}
 
-		public TextBreak.Line[] GetLines(double initial_width, double following_width, double full_width)
+		public TextBreak.Line[] GetLines(double initialWidth, double followingWidth, double fullWidth)
 		{
 			//	Effectue le découpage des "runs" en lignes.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			this.Rewind ();
 			
-			double width = initial_width;
-			string line_text;
-			double line_width;
-			int    line_skip;
+			double width = initialWidth;
+			string lineText;
+			double lineWidth;
+			int    lineSkip;
 			
-			while (this.GetNextBreak (width, out line_text, out line_width, out line_skip))
+			while (this.GetNextBreak (width, out lineText, out lineWidth, out lineSkip))
 			{
-				if ((line_text.Length == 0) &&
-					(line_skip == 0))
+				if ((lineText.Length == 0) &&
+					(lineSkip == 0))
 				{
 					//	Panique: il n'est pas possible de couper cette ligne, quel que soit
 					//	le moyen utilisé. On abandonne !
@@ -87,23 +87,23 @@ namespace Epsitec.Common.Drawing
 					return null;
 				}
 
-				list.Add (new TextBreak.Line (line_text, line_width, line_skip));
+				list.Add (new TextBreak.Line (lineText, lineWidth, lineSkip));
 
-				if (line_skip == 0)
+				if (lineSkip == 0)
 				{
 					break;
 				}
 				
-				if ((line_text.Length > 0) &&
-					(line_text[line_text.Length-1] == TextBreak.CodeLineBreak))
+				if ((lineText.Length > 0) &&
+					(lineText[lineText.Length-1] == TextBreak.CodeLineBreak))
 				{
 					//	Le texte se termine par une fin de ligne forcée (<br/>) et il faut donc
 					//	continuer à disposer les lignes avec toute la largeur.
 					
-					following_width = full_width;
+					followingWidth = fullWidth;
 				}
 
-				width = following_width;
+				width = followingWidth;
 			}
 
 			TextBreak.Line[] lines = new TextBreak.Line[list.Count];
@@ -146,11 +146,11 @@ namespace Epsitec.Common.Drawing
 			{
 			}
 
-			public Run(int length, int font_id, double font_scale)
+			public Run(int length, int fontId, double fontScale)
 			{
 				this.Length    = length;
-				this.FontId    = font_id;
-				this.FontScale = font_scale;
+				this.FontId    = fontId;
+				this.FontScale = fontScale;
 			}
 
 			public Run(Run run)
