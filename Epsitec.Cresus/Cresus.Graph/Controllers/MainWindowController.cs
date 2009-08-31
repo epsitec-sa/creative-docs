@@ -116,6 +116,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 32,
 				Parent = frame
 			};
+
+			new IconButton ()
+			{
+				Dock = DockStyle.Stacked,
+				CommandObject = Res.Commands.File.ExportImage,
+				PreferredWidth = 32,
+				PreferredIconSize = new Size (20, 20),
+				Parent = frame
+			};
 		}
 
 

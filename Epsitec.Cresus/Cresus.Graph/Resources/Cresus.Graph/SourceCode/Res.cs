@@ -12,6 +12,16 @@ namespace Epsitec.Cresus
 		
 		public static class Commands
 		{
+			public static class File
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/BVA5
+				public static readonly global::Epsitec.Common.Widgets.Command ExportImage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
+			}
+			
 			public static class GraphType
 			{
 				internal static void _Initialize()
@@ -28,12 +38,19 @@ namespace Epsitec.Cresus
 			
 			internal static void _Initialize()
 			{
+				File._Initialize ();
 				GraphType._Initialize ();
 			}
 		}
 		
 		public static class CommandIds
 		{
+			public static class File
+			{
+				//	designer:cap/BVA5
+				public const long ExportImage = 0x3EB0000A000005L;
+			}
+			
 			public static class GraphType
 			{
 				//	designer:cap/BVA2
@@ -60,6 +77,14 @@ namespace Epsitec.Cresus
 							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3));
 						}
 					}
+					//	designer:cap/BVA4
+					public static global::Epsitec.Common.Types.Caption StackValues
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4));
+						}
+					}
 				}
 			}
 			
@@ -73,6 +98,8 @@ namespace Epsitec.Cresus
 				{
 					//	designer:cap/BVA3
 					public static readonly global::Epsitec.Common.Support.Druid AccumulateValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
+					//	designer:cap/BVA4
+					public static readonly global::Epsitec.Common.Support.Druid StackValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4);
 				}
 			}
 			

@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.stackValuesCheckButton = new CheckButton ()
 			{
 				Dock = DockStyle.Top,
-				Text = "empile",
+				CaptionId = Res.CaptionIds.DocumentView.Options.StackValues,
 				Parent = optionsFrame
 			};
 
