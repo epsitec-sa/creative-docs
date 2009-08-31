@@ -50,6 +50,7 @@
     <Compile Include="Adorners\HorizontalAxisMode.cs" />
     <Compile Include="CaptionPainter.cs" />
     <Compile Include="ChartCaption.cs" />
+    <Compile Include="ChartSeriesRenderingMode.cs" />
     <Compile Include="Data\Accumulator.cs" />
     <Compile Include="Data\ChartSeries.cs" />
     <Compile Include="Data\ChartValue.cs" />

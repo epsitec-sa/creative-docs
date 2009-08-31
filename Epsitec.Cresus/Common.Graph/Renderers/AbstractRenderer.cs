@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace Epsitec.Common.Graph.Renderers
 			this.seriesValueLabelsList = new List<string> ();
 			this.styles = new Dictionary<string, Styles.AbstractStyle> ();
 			this.adorners = new List<Adorners.AbstractAdorner> ();
-			this.seriesList = new List<Epsitec.Common.Graph.Data.ChartSeries> ();
+			this.seriesOriginals = new List<Data.ChartSeries> ();
+			this.seriesList = new List<Data.ChartSeries> ();
 			this.captions = new CaptionPainter ();
 			this.Clear ();
 		}
@@ -120,6 +122,12 @@ namespace Epsitec.Common.Graph.Renderers
 			set;
 		}
 
+		public ChartSeriesRenderingMode ChartSeriesRenderingMode
+		{
+			get;
+			set;
+		}
+
 		public void DefineValueLabels(IEnumerable<string> collection)
 		{
 			if (this.seriesList.Count > 0)
@@ -185,7 +193,8 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public virtual void Collect(Data.ChartSeries series)
 		{
-			this.seriesList.Add (series);
+			this.seriesOriginals.Add (series);
+			this.seriesList.Add (series = this.GetPreprocessedSeries (series));
 
 			int index = 0;
 
@@ -217,12 +226,60 @@ namespace Epsitec.Common.Graph.Renderers
 			System.Diagnostics.Debug.Assert (this.seriesValueLabelsList.Count == this.seriesValueLabelsSet.Count);
 		}
 
+		private Data.ChartSeries GetPreprocessedSeries(Data.ChartSeries series)
+		{
+			switch (this.ChartSeriesRenderingMode)
+			{
+				case ChartSeriesRenderingMode.Separate:
+					return series;
+
+				case ChartSeriesRenderingMode.Stacked:
+					return new Data.ChartSeries (series.Label, AbstractRenderer.GetStackedValues (this.seriesOriginals.Select (x => x.Values)));
+
+				default:
+					throw new System.InvalidOperationException ();
+			}
+		}
+
+		private static IList<Data.ChartValue> GetStackedValues(IEnumerable<IList<Data.ChartValue>> collection)
+		{
+			var lists = new List<IList<Data.ChartValue>> (collection);
+			var labelsDict = new Dictionary<string, double> ();
+
+			foreach (var list in lists)
+			{
+				foreach (var item in list)
+				{
+					double value;
+
+					if (labelsDict.TryGetValue (item.Label, out value))
+					{
+						labelsDict[item.Label] = value + item.Value;
+					}
+					else
+					{
+						labelsDict.Add (item.Label, item.Value);
+					}
+				}
+			}
+
+			return new List<Data.ChartValue> (
+				from kv in labelsDict
+				let key = kv.Key
+				let value = kv.Value
+				orderby key ascending
+				select new Data.ChartValue (key, value));
+		}
+
+
 		public void CollectRange(IEnumerable<Data.ChartSeries> collection)
 		{
-			foreach (var item in collection)
-			{
-				this.Collect (item);
-			}
+			collection.ForEach (item => this.Collect (item));
+		}
+
+		public void Render(IPaintPort port, Rectangle bounds)
+		{
+			this.Render (this.SeriesItems, port, bounds);
 		}
 
 		public void Render(IEnumerable<Data.ChartSeries> series, IPaintPort port, Rectangle bounds)
@@ -291,6 +348,7 @@ namespace Epsitec.Common.Graph.Renderers
 		private readonly List<string> seriesValueLabelsList;
 		private readonly Dictionary<string, Styles.AbstractStyle> styles;
 		private readonly List<Adorners.AbstractAdorner> adorners;
+		private readonly List<Data.ChartSeries> seriesOriginals;
 		private readonly List<Data.ChartSeries> seriesList;
 		private readonly CaptionPainter captions;
 	}

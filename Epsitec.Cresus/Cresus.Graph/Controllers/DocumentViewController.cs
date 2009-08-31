@@ -16,6 +16,7 @@ using System.Linq;
 using Epsitec.Common.UI;
 using Epsitec.Common.Graph.Data;
 using System.Xml.Linq;
+using Epsitec.Common.Graph;
 
 [assembly: DependencyClass (typeof (DocumentViewController))]
 
@@ -84,15 +85,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.accumulateValuesCheckButton = new CheckButton ()
 			{
-				Anchor = AnchorStyles.TopLeft,
+				Dock = DockStyle.Top,
 				CaptionId = Res.CaptionIds.DocumentView.Options.AccumulateValues,
 				Parent = optionsFrame
 			};
 
+			this.stackValuesCheckButton = new CheckButton ()
+			{
+				Dock = DockStyle.Top,
+				Text = "empile",
+				Parent = optionsFrame
+			};
+
 			this.accumulateValuesCheckButton.UpdatePreferredSize ();
+			this.stackValuesCheckButton.UpdatePreferredSize ();
 
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
 			this.accumulateValuesCheckButton.ActiveStateChanged += sender => this.AccumulateValues = (this.accumulateValuesCheckButton.ActiveState == ActiveState.Yes);
+			this.stackValuesCheckButton.ActiveStateChanged += sender => this.StackValues = (this.stackValuesCheckButton.ActiveState == ActiveState.Yes);
 
 			
 
@@ -218,6 +228,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public bool StackValues
+		{
+			get
+			{
+				return this.stackValues;
+			}
+			set
+			{
+				if (this.stackValues != value)
+				{
+					this.stackValues = value;
+					this.stackValuesCheckButton.ActiveState = value ? ActiveState.Yes : ActiveState.No;
+					this.Refresh ();
+				}
+			}
+		}
+
 		public Command GraphType
 		{
 			get
@@ -254,6 +281,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					List<ChartSeries> series = new List<ChartSeries> (this.GetDocumentChartSeries ());
 
 					renderer.Clear ();
+					renderer.ChartSeriesRenderingMode = this.StackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
 					renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
 					renderer.CollectRange (series);
 					renderer.UpdateCaptions (series);
@@ -272,6 +300,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public XElement SaveSettings(XElement xml)
 		{
 			xml.Add (new XAttribute ("accumulateValues", this.accumulateValues ? "yes" : "no"));
+			xml.Add (new XAttribute ("stackValues", this.stackValues ? "yes" : "no"));
 			xml.Add (new XAttribute ("graphType", this.graphType.CommandId));
 
 			return xml;
@@ -280,10 +309,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void RestoreSettings(XElement xml)
 		{
 			string accumulateValues = (string) xml.Attribute ("accumulateValues");
+			string stackValues = (string) xml.Attribute ("stackValues");
 			string graphTypeId = (string) xml.Attribute ("graphType");
 
 			this.GraphType        = Command.Find (graphTypeId);
 			this.AccumulateValues = (accumulateValues == "yes");
+			this.StackValues      = (stackValues == "yes");
 		}
 
 
@@ -347,6 +378,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.splitter.Dispose ();
 				this.captionView.Dispose ();
 				this.accumulateValuesCheckButton.Dispose ();
+				this.stackValuesCheckButton.Dispose ();
 //-				this.detectionController.Dispose ();
 
 				if (this.disposeContainerCallback != null)
@@ -405,11 +437,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly AutoSplitter			splitter;
 		private readonly CaptionView			captionView;
 		private readonly CheckButton			accumulateValuesCheckButton;
+		private readonly CheckButton			stackValuesCheckButton;
 		private readonly SeriesDetectionController detectionController;
 		private readonly System.Action<DocumentViewController> showContainerCallback;
 		private readonly System.Action<DocumentViewController> disposeContainerCallback;
 
 		private bool							accumulateValues;
+		private bool							stackValues;
 		private Command							graphType;
 		private ContainerLayoutMode				layoutMode;
 	}
