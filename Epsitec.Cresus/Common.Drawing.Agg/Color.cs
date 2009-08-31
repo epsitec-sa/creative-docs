@@ -132,6 +132,14 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		/// <summary>
+		/// Mixes the specified color A with a color B; the <c>mix</c> parameter specifies
+		/// how much of color B should be used.
+		/// </summary>
+		/// <param name="colorA">The color A.</param>
+		/// <param name="colorB">The color B.</param>
+		/// <param name="mix">The mix (<c>0</c> means 0 only, <c>1</c> means B only).</param>
+		/// <returns>The result of the mix.</returns>
 		public static Color Mix(Color colorA, Color colorB, double mix)
 		{
 			double r = colorA.R * (1 - mix) + colorB.R * mix;

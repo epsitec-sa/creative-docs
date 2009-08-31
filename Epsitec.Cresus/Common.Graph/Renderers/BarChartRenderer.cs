@@ -63,12 +63,24 @@ namespace Epsitec.Common.Graph.Renderers
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
 		{
+			if (seriesIndex == 0)
+			{
+				this.BeginLayer (port, PaintLayer.Intermediate);
+			}
+
 			if (series.Values.Count > 1)
 			{
 				using (Path path = this.CreateSurfacePath (series, seriesIndex))
 				{
 					this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
+					
 					port.PaintSurface (path);
+					
+					port.Color = this.GetOutlineColor (port.Color);
+					port.LineWidth = 2;
+					port.LineCap = CapStyle.Butt;
+					port.LineJoin = JoinStyle.Miter;
+					port.PaintOutline (path);
 				}
 			}
 		}
@@ -78,18 +90,35 @@ namespace Epsitec.Common.Graph.Renderers
 			this.Captions.AddSample (AbstractRenderer.CleanUpLabel (series.Label),
 				(p, r) =>
 				{
-					using (Path line = new Path ())
+					using (Path sample = new Path ())
 					{
-						line.MoveTo (r.Left, r.Center.Y);
-						line.LineTo (r.Right, r.Center.Y);
-
 						this.FindStyle ("line-color").ApplyStyle (seriesIndex, p);
+						
+						double x1 = r.Left;
+						double y1 = r.Center.Y - 4;
+						double x2 = r.Right;
+						double y2 = r.Center.Y + 4;
+						
+						sample.MoveTo (x1, y1);
+						sample.LineTo (x2, y1);
+						sample.LineTo (x2, y2);
+						sample.LineTo (x1, y2);
+						sample.Close ();
 
-						p.LineWidth = 4;
+						p.PaintSurface (sample);
+
+						p.Color = this.GetOutlineColor (p.Color);
+						p.LineWidth = 2;
 						p.LineCap = CapStyle.Butt;
-						p.PaintOutline (line);
+						p.LineJoin = JoinStyle.Miter;
+						p.PaintOutline (sample);
 					}
 				});
+		}
+
+		private Color GetOutlineColor(Color surfaceColor)
+		{
+			return Color.Mix (surfaceColor, Color.FromBrightness (0), 0.2);
 		}
 
 		
