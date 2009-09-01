@@ -171,6 +171,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public void ClearNegatedSeries()
+		{
+			this.negatedSeriesLabels.Clear ();
+		}
 
 		public void NegateSeries(string seriesLabel)
 		{

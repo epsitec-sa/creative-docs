@@ -266,6 +266,8 @@ namespace Epsitec.Cresus.Graph
 			System.Diagnostics.Debug.Assert (this.activeDocument != null);
 			
 			this.activeDocument.DataSet.LoadDataTable ();
+			this.seriesPickerController.ClearNegatedSeries ();
+
 			this.OnActiveDocumentChanged ();
 		}
 

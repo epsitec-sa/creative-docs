@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ColorCollection = new ColorCollection (DocumentViewController.GetColors ())
 			};
 
-			this.captionColorPalette.MinSize = this.captionColorPalette.GetBestFitSize (13);
+			this.captionColorPalette.MinSize = this.captionColorPalette.GetBestFitSize (11);
 			
 			this.splitter = new AutoSplitter ()
 			{
