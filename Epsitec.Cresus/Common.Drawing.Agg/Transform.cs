@@ -341,12 +341,12 @@ namespace Epsitec.Common.Drawing
 			
 			System.Diagnostics.Debug.Assert (det != 0.0);
 			
-			double det_1 = 1.0f / det;
+			double det1 = 1.0f / det;
 			
-			double xx =   m.yy * det_1;
-			double xy = - m.xy * det_1;
-			double yx = - m.yx * det_1;
-			double yy =   m.xx * det_1;
+			double xx =   m.yy * det1;
+			double xy = - m.xy * det1;
+			double yx = - m.yx * det1;
+			double yy =   m.xx * det1;
 			
 			double tx = - xx * m.tx - xy * m.ty;
 			double ty = - yx * m.tx - yy * m.ty;

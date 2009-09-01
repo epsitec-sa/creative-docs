@@ -55,10 +55,10 @@ namespace Epsitec.Common.Drawing
 		double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos);
 		
 		void PaintImage(Image bitmap, Rectangle fill);
-		void PaintImage(Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height);
-		void PaintImage(Image bitmap, Rectangle fill, Point image_origin);
-		void PaintImage(Image bitmap, Rectangle fill, Rectangle image_rect);
-		void PaintImage(Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y);
-		void PaintImage(Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y, double image_width, double image_height);
+		void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight);
+		void PaintImage(Image bitmap, Rectangle fill, Point imageOrigin);
+		void PaintImage(Image bitmap, Rectangle fill, Rectangle imageRect);
+		void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY);
+		void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight);
 	}
 }

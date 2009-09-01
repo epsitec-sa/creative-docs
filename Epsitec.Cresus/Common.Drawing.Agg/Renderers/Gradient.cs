@@ -105,17 +105,17 @@ namespace Epsitec.Common.Drawing.Renderers
 			double[] b = new double[256];
 			double[] a = new double[256];
 			
-			double delta_r = (br - ar) / 255.0;
-			double delta_g = (bg - ag) / 255.0;
-			double delta_b = (bb - ab) / 255.0;
-			double delta_a = (ba - aa) / 255.0;
+			double deltaR = (br - ar) / 255.0;
+			double deltaG = (bg - ag) / 255.0;
+			double deltaB = (bb - ab) / 255.0;
+			double deltaA = (ba - aa) / 255.0;
 			
 			for (int i = 0; i < 256; i++)
 			{
-				r[i] = ar + i * delta_r;
-				g[i] = ag + i * delta_g;
-				b[i] = ab + i * delta_b;
-				a[i] = aa + i * delta_a;
+				r[i] = ar + i * deltaR;
+				g[i] = ag + i * deltaG;
+				b[i] = ab + i * deltaB;
+				a[i] = aa + i * deltaA;
 			}
 			
 			this.SetColors (r, g, b, a);

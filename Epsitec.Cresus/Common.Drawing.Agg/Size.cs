@@ -121,20 +121,20 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid size specification ({0}).", value));
 			}
 			
-			string arg_x = args[0].Trim ();
-			string arg_y = args[1].Trim ();
+			string argX = args[0].Trim ();
+			string argY = args[1].Trim ();
 			
-			double x = arg_x == "*" ? double.NaN : System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y = arg_y == "*" ? double.NaN : System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			double x = argX == "*" ? double.NaN : System.Double.Parse (argX, System.Globalization.CultureInfo.InvariantCulture);
+			double y = argY == "*" ? double.NaN : System.Double.Parse (argY, System.Globalization.CultureInfo.InvariantCulture);
 
 			return new Size (x, y);
 		}
 		
-		public static Size Parse(string value, Size default_value)
+		public static Size Parse(string value, Size defaultValue)
 		{
 			if (value == "*")
 			{
-				return default_value;
+				return defaultValue;
 			}
 
 			string[] args = value.Split (new char[] { ';', ':' });
@@ -144,11 +144,11 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid size specification ({0}).", value));
 			}
 			
-			string arg_x = args[0].Trim ();
-			string arg_y = args[1].Trim ();
+			string argX = args[0].Trim ();
+			string argY = args[1].Trim ();
 			
-			double x = (arg_x == "*") ? default_value.Width  : System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y = (arg_y == "*") ? default_value.Height : System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			double x = (argX == "*") ? defaultValue.Width  : System.Double.Parse (argX, System.Globalization.CultureInfo.InvariantCulture);
+			double y = (argY == "*") ? defaultValue.Height : System.Double.Parse (argY, System.Globalization.CultureInfo.InvariantCulture);
 
 			return new Size (x, y);
 		}

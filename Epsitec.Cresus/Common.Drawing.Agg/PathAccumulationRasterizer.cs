@@ -51,7 +51,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public override void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
+		public override void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miterLimit)
 		{
 			if ((path != null) &&
 				(path.IsValid))
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Drawing
 				Path temp1 = new Path ();
 				Path temp2 = new Path ();
 				temp1.Append (path, this.transform, this.approximation);
-				temp2.Append (temp1, width, cap, join, miter_limit, this.approximation, false);
+				temp2.Append (temp1, width, cap, join, miterLimit, this.approximation, false);
 				this.list.Add (temp2);
 				temp1.Dispose ();
 			}

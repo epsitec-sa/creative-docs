@@ -112,16 +112,16 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid point specification ({0}).", value));
 			}
 			
-			string arg_x = args[0].Trim ();
-			string arg_y = args[1].Trim ();
+			string argX = args[0].Trim ();
+			string argY = args[1].Trim ();
 			
-			double x = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			double x = System.Double.Parse (argX, System.Globalization.CultureInfo.InvariantCulture);
+			double y = System.Double.Parse (argY, System.Globalization.CultureInfo.InvariantCulture);
 			
 			return new Point (x, y);
 		}
 		
-		public static Point Parse(string value, Point default_value)
+		public static Point Parse(string value, Point defaultValue)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
@@ -130,13 +130,13 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid point specification ({0}).", value));
 			}
 			
-			string arg_x = args[0].Trim ();
-			string arg_y = args[1].Trim ();
+			string argX = args[0].Trim ();
+			string argY = args[1].Trim ();
 			
-			if (arg_x != "*") default_value.X = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y != "*") default_value.Y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			if (argX != "*") defaultValue.X = System.Double.Parse (argX, System.Globalization.CultureInfo.InvariantCulture);
+			if (argY != "*") defaultValue.Y = System.Double.Parse (argY, System.Globalization.CultureInfo.InvariantCulture);
 			
-			return default_value;
+			return defaultValue;
 		}
 		
 		
@@ -291,12 +291,12 @@ namespace Epsitec.Common.Drawing
 		{
 			//	Détecte si le point P est sur un segment AB d'épaisseur 'width'.
 			
-			double x_left   = System.Math.Min (a.X, b.X) - width;
-			double x_right  = System.Math.Max (a.X, b.X) + width;
-			double y_bottom = System.Math.Min (a.Y, b.Y) - width;
-			double y_top    = System.Math.Max (a.Y, b.Y) + width;
+			double xLeft   = System.Math.Min (a.X, b.X) - width;
+			double xRight  = System.Math.Max (a.X, b.X) + width;
+			double yBottom = System.Math.Min (a.Y, b.Y) - width;
+			double yTop    = System.Math.Max (a.Y, b.Y) + width;
 			
-			Rectangle rect = new Rectangle (x_left, y_bottom, x_right - x_left, y_top - y_bottom);
+			Rectangle rect = new Rectangle (xLeft, yBottom, xRight - xLeft, yTop - yBottom);
 			
 			if (rect.Contains (p))
 			{
@@ -313,13 +313,13 @@ namespace Epsitec.Common.Drawing
 		{
 			//	Détecte si le point P est sur un segment de Bezier d'épaisseur 'width'.
 			
-			int max_step = 10;		//	nombre d'étapes arbitraire fixé à 10
+			int maxStep = 10;		//	nombre d'étapes arbitraire fixé à 10
 			
 			Point  a = p1;
 			double t = 0;
-			double dt = 1.0 / max_step;
+			double dt = 1.0 / maxStep;
 			
-			for (int step = 1; step <= max_step; step++)
+			for (int step = 1; step <= maxStep; step++)
 			{
 				t += dt;
 				
@@ -357,15 +357,15 @@ namespace Epsitec.Common.Drawing
 			//	Il n'est pas obligatoire que le nouveau point soit sur la courbe
 			//	(algorithme = distance la plus courte).
 			
-			int max_step = 1000;	//	nombre d'étapes arbitraire fixé à 1000
+			int maxStep = 1000;	//	nombre d'étapes arbitraire fixé à 1000
 			
 			double t = 0;
-			double dt = 1.0 / max_step;
+			double dt = 1.0 / maxStep;
 			
-			double best_t = 0;
+			double bestT = 0;
 			double min    = 1000000;
 			
-			for (int step = 1; step < max_step; step++)
+			for (int step = 1; step < maxStep; step++)
 			{
 				t += dt;
 				
@@ -375,11 +375,11 @@ namespace Epsitec.Common.Drawing
 				if (d < min)
 				{
 					min    = d;		// min <- distance minimale
-					best_t = t;		// t   <- valeur correspondante
+					bestT = t;		// t   <- valeur correspondante
 				}
 			}
 			
-			return best_t;
+			return bestT;
 		}
 
 		
@@ -444,12 +444,12 @@ namespace Epsitec.Common.Drawing
 				return point.ToString ();
 			}
 			
-			public static string ToString(object value, bool suppress_x, bool suppress_y)
+			public static string ToString(object value, bool suppressX, bool suppressY)
 			{
 				Point point = (Point) value;
 				
-				string arg1 = suppress_x ? "*" : point.X.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg2 = suppress_y ? "*" : point.Y.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg1 = suppressX ? "*" : point.X.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg2 = suppressY ? "*" : point.Y.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", arg1, arg2);
 			}

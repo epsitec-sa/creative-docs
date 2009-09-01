@@ -20,7 +20,7 @@ namespace Epsitec.Common.Drawing
 			this.dpiX  = 96;
 			this.dpiY  = 96;
 			
-			this.unique_id = uniqueId == 0 ? System.Threading.Interlocked.Increment (ref Image.unique_id_seed) : uniqueId;
+			this.uniqueId = uniqueId == 0 ? System.Threading.Interlocked.Increment (ref Image.uniqueIdSeed) : uniqueId;
 		}
 		
 		
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Drawing
 		
 		public long								UniqueId
 		{
-			get { return this.unique_id; }
+			get { return this.uniqueId; }
 		}
 		
 		public double							DpiX
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (uniqueId != 0)
 			{
-				this.unique_id = uniqueId;
+				this.uniqueId = uniqueId;
 			}
 		}
 		
@@ -145,8 +145,8 @@ namespace Epsitec.Common.Drawing
 		
 		protected Size							size;
 		protected Point							origin;
-		private long							unique_id;
+		private long							uniqueId;
 		
-		private static long						unique_id_seed = 1;
+		private static long						uniqueIdSeed = 1;
 	}
 }

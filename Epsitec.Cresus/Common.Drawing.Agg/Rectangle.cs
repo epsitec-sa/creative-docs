@@ -791,20 +791,20 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid rectangle specification ({0}).", value));
 			}
 			
-			string arg_x  = args[0].Trim ();
-			string arg_y  = args[1].Trim ();
-			string arg_dx = args[2].Trim ();
-			string arg_dy = args[3].Trim ();
+			string argX  = args[0].Trim ();
+			string argY  = args[1].Trim ();
+			string argDx = args[2].Trim ();
+			string argDy = args[3].Trim ();
 			
-			double x  = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			double y  = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
-			double dx = System.Double.Parse (arg_dx, System.Globalization.CultureInfo.InvariantCulture);
-			double dy = System.Double.Parse (arg_dy, System.Globalization.CultureInfo.InvariantCulture);
+			double x  = System.Double.Parse (argX, System.Globalization.CultureInfo.InvariantCulture);
+			double y  = System.Double.Parse (argY, System.Globalization.CultureInfo.InvariantCulture);
+			double dx = System.Double.Parse (argDx, System.Globalization.CultureInfo.InvariantCulture);
+			double dy = System.Double.Parse (argDy, System.Globalization.CultureInfo.InvariantCulture);
 			
 			return new Rectangle (x, y, dx, dy);
 		}
 		
-		public static Rectangle Parse(string value, Rectangle default_value)
+		public static Rectangle Parse(string value, Rectangle defaultValue)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
@@ -813,17 +813,17 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid rectangle specification ({0}).", value));
 			}
 			
-			string arg_x  = args[0].Trim ();
-			string arg_y  = args[1].Trim ();
-			string arg_dx = args[2].Trim ();
-			string arg_dy = args[3].Trim ();
+			string argX  = args[0].Trim ();
+			string argY  = args[1].Trim ();
+			string argDx = args[2].Trim ();
+			string argDy = args[3].Trim ();
 			
-			if (arg_x  != "*") default_value.X      = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y  != "*") default_value.Y      = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_dx != "*") default_value.Width  = System.Double.Parse (arg_dx, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_dy != "*") default_value.Height = System.Double.Parse (arg_dy, System.Globalization.CultureInfo.InvariantCulture);
+			if (argX  != "*") defaultValue.X      = System.Double.Parse (argX, System.Globalization.CultureInfo.InvariantCulture);
+			if (argY  != "*") defaultValue.Y      = System.Double.Parse (argY, System.Globalization.CultureInfo.InvariantCulture);
+			if (argDx != "*") defaultValue.Width  = System.Double.Parse (argDx, System.Globalization.CultureInfo.InvariantCulture);
+			if (argDy != "*") defaultValue.Height = System.Double.Parse (argDy, System.Globalization.CultureInfo.InvariantCulture);
 			
-			return default_value;
+			return defaultValue;
 		}
 		
 		public static bool operator ==(Rectangle a, Rectangle b)
@@ -869,14 +869,14 @@ namespace Epsitec.Common.Drawing
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", rect.X, rect.Y, rect.Width, rect.Height);
 			}
 			
-			public static string ToString(object value, bool suppress_x, bool suppress_y, bool suppress_width, bool suppress_height)
+			public static string ToString(object value, bool suppressX, bool suppressY, bool suppressWidth, bool suppressHeight)
 			{
 				Rectangle rect = (Rectangle) value;
 				
-				string arg1 = suppress_x      ? "*" : rect.X.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg2 = suppress_y      ? "*" : rect.Y.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg3 = suppress_width  ? "*" : rect.Width.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg4 = suppress_height ? "*" : rect.Height.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg1 = suppressX      ? "*" : rect.X.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg2 = suppressY      ? "*" : rect.Y.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg3 = suppressWidth  ? "*" : rect.Width.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg4 = suppressHeight ? "*" : rect.Height.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", arg1, arg2, arg3, arg4);
 			}

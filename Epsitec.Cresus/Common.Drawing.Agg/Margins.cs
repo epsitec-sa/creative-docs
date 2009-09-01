@@ -120,20 +120,20 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid margins specification ({0})", value));
 			}
 			
-			string arg_x1 = args[0].Trim ();
-			string arg_x2 = args[1].Trim ();
-			string arg_y1 = args[2].Trim ();
-			string arg_y2 = args[3].Trim ();
+			string argX1 = args[0].Trim ();
+			string argX2 = args[1].Trim ();
+			string argY1 = args[2].Trim ();
+			string argY2 = args[3].Trim ();
 			
-			double x1 = System.Double.Parse (arg_x1, System.Globalization.CultureInfo.InvariantCulture);
-			double x2 = System.Double.Parse (arg_x2, System.Globalization.CultureInfo.InvariantCulture);
-			double y1 = System.Double.Parse (arg_y1, System.Globalization.CultureInfo.InvariantCulture);
-			double y2 = System.Double.Parse (arg_y2, System.Globalization.CultureInfo.InvariantCulture);
+			double x1 = System.Double.Parse (argX1, System.Globalization.CultureInfo.InvariantCulture);
+			double x2 = System.Double.Parse (argX2, System.Globalization.CultureInfo.InvariantCulture);
+			double y1 = System.Double.Parse (argY1, System.Globalization.CultureInfo.InvariantCulture);
+			double y2 = System.Double.Parse (argY2, System.Globalization.CultureInfo.InvariantCulture);
 			
 			return new Margins (x1, x2, y1, y2);
 		}
 		
-		public static Margins Parse(string value, Margins default_value)
+		public static Margins Parse(string value, Margins defaultValue)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
@@ -142,17 +142,17 @@ namespace Epsitec.Common.Drawing
 				throw new System.ArgumentException (string.Format ("Invalid margins specification ({0})", value));
 			}
 			
-			string arg_x1 = args[0].Trim ();
-			string arg_x2 = args[1].Trim ();
-			string arg_y1 = args[2].Trim ();
-			string arg_y2 = args[3].Trim ();
+			string argX1 = args[0].Trim ();
+			string argX2 = args[1].Trim ();
+			string argY1 = args[2].Trim ();
+			string argY2 = args[3].Trim ();
 			
-			if (arg_x1 != "*") default_value.Left   = System.Double.Parse (arg_x1, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_x2 != "*") default_value.Right  = System.Double.Parse (arg_x2, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y1 != "*") default_value.Top    = System.Double.Parse (arg_y1, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y2 != "*") default_value.Bottom = System.Double.Parse (arg_y2, System.Globalization.CultureInfo.InvariantCulture);
+			if (argX1 != "*") defaultValue.Left   = System.Double.Parse (argX1, System.Globalization.CultureInfo.InvariantCulture);
+			if (argX2 != "*") defaultValue.Right  = System.Double.Parse (argX2, System.Globalization.CultureInfo.InvariantCulture);
+			if (argY1 != "*") defaultValue.Top    = System.Double.Parse (argY1, System.Globalization.CultureInfo.InvariantCulture);
+			if (argY2 != "*") defaultValue.Bottom = System.Double.Parse (argY2, System.Globalization.CultureInfo.InvariantCulture);
 			
-			return default_value;
+			return defaultValue;
 		}
 		
 		public static bool operator ==(Margins a, Margins b)
@@ -190,14 +190,14 @@ namespace Epsitec.Common.Drawing
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", margins.Left, margins.Right, margins.Top, margins.Bottom);
 			}
 			
-			public static string ToString(object value, bool suppress_left, bool suppress_right, bool suppress_top, bool suppress_bottom)
+			public static string ToString(object value, bool suppressLeft, bool suppressRight, bool suppressTop, bool suppressBottom)
 			{
 				Margins margins = (Margins) value;
 				
-				string arg1 = suppress_left   ? "*" : margins.Left.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg2 = suppress_right  ? "*" : margins.Right.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg3 = suppress_top    ? "*" : margins.Top.ToString (System.Globalization.CultureInfo.InvariantCulture);
-				string arg4 = suppress_bottom ? "*" : margins.Bottom.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg1 = suppressLeft   ? "*" : margins.Left.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg2 = suppressRight  ? "*" : margins.Right.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg3 = suppressTop    ? "*" : margins.Top.ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string arg4 = suppressBottom ? "*" : margins.Bottom.ToString (System.Globalization.CultureInfo.InvariantCulture);
 				
 				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1};{2};{3}", arg1, arg2, arg3, arg4);
 			}
