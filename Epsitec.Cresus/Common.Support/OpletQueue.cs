@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 		public OpletQueue()
 		{
 			this.queue      = new System.Collections.ArrayList ();
-			this.temp_queue = new System.Collections.ArrayList ();
+			this.tempQueue  = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.live_fence > 0;
+				return this.liveFence > 0;
 			}
 		}
 		
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.live_fence < this.fence_count;
+				return this.liveFence < this.fenceCount;
 			}
 		}
 		
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.live_fence;
+				return this.liveFence;
 			}
 		}
 		
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.fence_count - this.live_fence;
+				return this.fenceCount - this.liveFence;
 			}
 		}
 		
@@ -53,10 +53,10 @@ namespace Epsitec.Common.Support
 			get
 			{
 				if ((this.action == null) &&
-					(this.live_fence > 0) &&
-					(this.live_index > 0))
+					(this.liveFence > 0) &&
+					(this.liveIndex > 0))
 				{
-					int i = this.live_index - 1;
+					int i = this.liveIndex - 1;
 					int n = 0;
 					
 					IOplet oplet = this.queue[i] as IOplet;
@@ -105,10 +105,10 @@ namespace Epsitec.Common.Support
 			get
 			{
 				if ((this.action == null) &&
-					(this.live_fence > 0) &&
-					(this.live_index > 0))
+					(this.liveFence > 0) &&
+					(this.liveIndex > 0))
 				{
-					int i = this.live_index - 1;
+					int i = this.liveIndex - 1;
 					int n = 0;
 					
 					IOplet oplet = this.queue[i] as IOplet;
@@ -170,13 +170,13 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.live_fence > 0)
+				if (this.liveFence > 0)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.liveIndex > 0);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 					
-					int i = this.live_index;
-					int n = this.live_fence;
+					int i = this.liveIndex;
+					int n = this.liveFence;
 					int j = 0;
 					
 					string[] names = new string[n];
@@ -203,13 +203,13 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.live_fence < this.fence_count)
+				if (this.liveFence < this.fenceCount)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index < this.queue.Count);
+					System.Diagnostics.Debug.Assert (this.liveIndex < this.queue.Count);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 					
-					int i = this.live_index - 1;
-					int n = this.fence_count - this.live_fence;
+					int i = this.liveIndex - 1;
+					int n = this.fenceCount - this.liveFence;
 					int j = 0;
 					
 					string[] names = new string[n];
@@ -237,12 +237,12 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.live_fence > 0)
+				if (this.liveFence > 0)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.liveIndex > 0);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 				
-					int i = this.live_index - 1;
+					int i = this.liveIndex - 1;
 				
 					IOplet      oplet = this.queue[i] as IOplet;
 					Types.IName fence = oplet as Types.IName;
@@ -261,12 +261,12 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.live_fence > 0)
+				if (this.liveFence > 0)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.liveIndex > 0);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 				
-					int i = this.live_index - 1;
+					int i = this.liveIndex - 1;
 				
 					IOplet oplet = this.queue[i] as IOplet;
 					Fence  fence = oplet as Fence;
@@ -284,12 +284,12 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.live_fence > 1)
+				if (this.liveFence > 1)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.liveIndex > 0);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 				
-					int i = this.live_index;
+					int i = this.liveIndex;
 					int n = 0;
 				
 					while (i > 0)
@@ -318,7 +318,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.temp_queue.Count;
+				return this.tempQueue.Count;
 			}
 		}
 		
@@ -326,7 +326,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return (IOplet[]) this.temp_queue.ToArray (typeof (IOplet));
+				return (IOplet[]) this.tempQueue.ToArray (typeof (IOplet));
 			}
 		}
 		
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.disable_merge)
+				if (this.disableMerge)
 				{
 					return MergeMode.Disabled;
 				}
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return (this.disable_count > 0);
+				return (this.disableCount > 0);
 			}
 		}
 		
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return (this.disable_count == 0);
+				return (this.disableCount == 0);
 			}
 		}
 		
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.is_undo_redo_in_progress;
+				return this.isUndoRedoInProgress;
 			}
 		}
 		
@@ -378,7 +378,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if ((this.fence_id <= 0) ||
+				if ((this.fenceId <= 0) ||
 					(this.action == null))
 				{
 					return false;
@@ -408,7 +408,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -431,13 +431,13 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if ((this.fence_id <= 0) ||
+			if ((this.fenceId <= 0) ||
 				(this.action == null))
 			{
 				throw new System.InvalidOperationException ("BeginAction must be called before any oplets can be inserted into the queue.");
 			}
 			
-			this.temp_queue.Add (oplet);
+			this.tempQueue.Add (oplet);
 		}
 		
 		
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if ((this.fence_id <= 0) ||
+			if ((this.fenceId <= 0) ||
 				(this.action == null))
 			{
 				throw new System.InvalidOperationException ("BeginAction/ValidateAction mismatch.");
@@ -459,12 +459,12 @@ namespace Epsitec.Common.Support
 		
 		public void ChangeLastActionName(string name)
 		{
-			if (this.live_fence > 0)
+			if (this.liveFence > 0)
 			{
-				System.Diagnostics.Debug.Assert (this.live_index > 0);
+				System.Diagnostics.Debug.Assert (this.liveIndex > 0);
 				System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 				
-				int i = this.live_index - 1;
+				int i = this.liveIndex - 1;
 				
 				IOplet oplet = this.queue[i] as IOplet;
 				Fence  fence = oplet as Fence;
@@ -486,7 +486,7 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
-				this.disable_merge = true;
+				this.disableMerge = true;
 			}
 		}
 		
@@ -512,7 +512,7 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if ((this.fence_id <= 0) ||
+			if ((this.fenceId <= 0) ||
 				(this.action == null))
 			{
 				throw new System.InvalidOperationException ("BeginAction/ValidateAction mismatch.");
@@ -525,7 +525,7 @@ namespace Epsitec.Common.Support
 			
 			this.action.Release ();
 			
-			if (this.fence_id == 0)
+			if (this.fenceId == 0)
 			{
 				//	Toutes les actions "ouvertes" ont été validées. On peut donc copier les oplets
 				//	(avec leurs frontières) dans la liste officielle.
@@ -534,19 +534,19 @@ namespace Epsitec.Common.Support
 				
 				this.PurgeRedo ();
 				
-				if (this.temp_queue.Count > 0)
+				if (this.tempQueue.Count > 0)
 				{
 					//	N'insère un élément dans la liste que si des oplets seront effectivement
 					//	ajoutés; une insertion vide ne va pas apparaître dans la queue !
 					
-					if (this.disable_merge)
+					if (this.disableMerge)
 					{
-						if (this.live_index > 0)
+						if (this.liveIndex > 0)
 						{
 							//	Empêche la fusion de cette série d'oplets avec la série précédente;
 							//	il faut donc marquer la séquence précédente :
 							
-							Fence fence = this.queue[this.live_index-1] as Fence;
+							Fence fence = this.queue[this.liveIndex-1] as Fence;
 							
 							if (fence != null)
 							{
@@ -555,18 +555,18 @@ namespace Epsitec.Common.Support
 						}
 					}
 					
-					this.queue.AddRange (this.temp_queue);
-					this.queue.Add (new Fence (this.temp_name, mode));
-					this.temp_queue.Clear ();
+					this.queue.AddRange (this.tempQueue);
+					this.queue.Add (new Fence (this.tempName, mode));
+					this.tempQueue.Clear ();
 					
-					this.fence_count++;
+					this.fenceCount++;
 					
-					this.live_fence = this.fence_count;
-					this.live_index = this.queue.Count;
+					this.liveFence = this.fenceCount;
+					this.liveIndex = this.queue.Count;
 				}
 				
 				this.OnActionValidated ();
-				this.disable_merge = false;
+				this.disableMerge = false;
 			}
 		}
 		
@@ -577,35 +577,35 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if ((this.fence_id <= 0) ||
+			if ((this.fenceId <= 0) ||
 				(this.action == null))
 			{
 				throw new System.InvalidOperationException ("BeginAction/CancelAction mismatch.");
 			}
 			
-			int i = this.temp_queue.Count;
+			int i = this.tempQueue.Count;
 			
 			//	Il faut retirer tous les oplets faisant partie de l'action, de la liste
 			//	temporaire, et les supprimer proprement :
 			
 			while (i-- > this.action.Depth)
 			{
-				IOplet oplet = this.temp_queue[i] as IOplet;
+				IOplet oplet = this.tempQueue[i] as IOplet;
 
 				oplet.Undo ();
 				oplet.Dispose ();
 				
-				this.temp_queue.RemoveAt (i);
+				this.tempQueue.RemoveAt (i);
 			}
 			
 			this.action.Release ();
 
 			if ((this.action == null) ||
-				(this.fence_id <= 0))
+				(this.fenceId <= 0))
 			{
 				System.Diagnostics.Debug.Assert (this.action == null);
-				System.Diagnostics.Debug.Assert (this.fence_id == 0);
-				System.Diagnostics.Debug.Assert (this.temp_queue.Count == 0);
+				System.Diagnostics.Debug.Assert (this.fenceId == 0);
+				System.Diagnostics.Debug.Assert (this.tempQueue.Count == 0);
 				
 				this.OnActionCanceled ();
 			}
@@ -619,7 +619,7 @@ namespace Epsitec.Common.Support
 				return false;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -630,17 +630,17 @@ namespace Epsitec.Common.Support
 			
 			try
 			{
-				this.is_undo_redo_in_progress = true;
+				this.isUndoRedoInProgress = true;
 				
-				if (this.live_fence > 0)
+				if (this.liveFence > 0)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.liveIndex > 0);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 					
-					int i = this.live_index - 1;
+					int i = this.liveIndex - 1;
 					
 					IOplet oplet = this.queue[i] as IOplet;
-					this.live_fence--;
+					this.liveFence--;
 					
 					System.Diagnostics.Debug.Assert (oplet.IsFence);
 					
@@ -657,7 +657,7 @@ namespace Epsitec.Common.Support
 						this.queue[i] = oplet.Undo ();
 					}
 					
-					this.live_index = i;
+					this.liveIndex = i;
 					this.OnUndoExecuted ();
 					
 					return true;
@@ -667,7 +667,7 @@ namespace Epsitec.Common.Support
 			}
 			finally
 			{
-				this.is_undo_redo_in_progress = false;
+				this.isUndoRedoInProgress = false;
 			}
 		}
 		
@@ -678,7 +678,7 @@ namespace Epsitec.Common.Support
 				return false;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -687,16 +687,16 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
 			
-			this.is_undo_redo_in_progress = true;
+			this.isUndoRedoInProgress = true;
 			
 			try
 			{
-				if (this.live_fence < this.fence_count)
+				if (this.liveFence < this.fenceCount)
 				{
-					System.Diagnostics.Debug.Assert (this.live_index < this.queue.Count);
+					System.Diagnostics.Debug.Assert (this.liveIndex < this.queue.Count);
 					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
 					
-					int i = this.live_index - 1;
+					int i = this.liveIndex - 1;
 					
 					for (;;)
 					{
@@ -704,8 +704,8 @@ namespace Epsitec.Common.Support
 						
 						if (oplet.IsFence)
 						{
-							this.live_index = i + 1;
-							this.live_fence++;
+							this.liveIndex = i + 1;
+							this.liveFence++;
 							break;
 						}
 						
@@ -721,7 +721,7 @@ namespace Epsitec.Common.Support
 			}
 			finally
 			{
-				this.is_undo_redo_in_progress = false;
+				this.isUndoRedoInProgress = false;
 			}
 		}
 		
@@ -733,7 +733,7 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -742,12 +742,12 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
 			
-			if (this.live_fence < 2)
+			if (this.liveFence < 2)
 			{
 				return;
 			}
 			
-			int i = this.live_index;
+			int i = this.liveIndex;
 			int n = 0;
 			
 			System.Collections.Stack temp = new System.Collections.Stack ();
@@ -766,8 +766,8 @@ namespace Epsitec.Common.Support
 						break;
 					}
 					
-					this.live_fence--;
-					this.fence_count--;
+					this.liveFence--;
+					this.fenceCount--;
 				}
 				
 				n++;
@@ -781,10 +781,10 @@ namespace Epsitec.Common.Support
 				this.queue.Insert (i++, temp.Pop ());
 			}
 			
-			this.live_index = i;
+			this.liveIndex = i;
 			
-			System.Diagnostics.Debug.Assert (this.live_index >= 0);
-			System.Diagnostics.Debug.Assert (this.live_fence >= 0);
+			System.Diagnostics.Debug.Assert (this.liveIndex >= 0);
+			System.Diagnostics.Debug.Assert (this.liveFence >= 0);
 		}
 		
 		public void PurgeSingleUndo()
@@ -794,7 +794,7 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -802,12 +802,12 @@ namespace Epsitec.Common.Support
 			{
 				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
-			if (this.live_fence < 1)
+			if (this.liveFence < 1)
 			{
 				return;
 			}
 			
-			int i = this.live_index;
+			int i = this.liveIndex;
 			int n = 0;
 			
 			while (i > 0)
@@ -823,8 +823,8 @@ namespace Epsitec.Common.Support
 						break;
 					}
 					
-					this.live_fence--;
-					this.fence_count--;
+					this.liveFence--;
+					this.fenceCount--;
 				}
 				
 				n++;
@@ -833,10 +833,10 @@ namespace Epsitec.Common.Support
 				oplet.Dispose ();
 			}
 			
-			this.live_index = (i == 0) ? 0 : (i+1);
+			this.liveIndex = (i == 0) ? 0 : (i+1);
 			
-			System.Diagnostics.Debug.Assert (this.live_index >= 0);
-			System.Diagnostics.Debug.Assert (this.live_fence >= 0);
+			System.Diagnostics.Debug.Assert (this.liveIndex >= 0);
+			System.Diagnostics.Debug.Assert (this.liveFence >= 0);
 		}
 		
 		
@@ -847,7 +847,7 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -856,7 +856,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
 			
-			int i = this.live_index;
+			int i = this.liveIndex;
 			
 			while (i > 0)
 			{
@@ -866,17 +866,17 @@ namespace Epsitec.Common.Support
 				
 				if (oplet.IsFence)
 				{
-					this.live_fence--;
-					this.fence_count--;
+					this.liveFence--;
+					this.fenceCount--;
 				}
 				
 				this.queue.RemoveAt (i);
 				oplet.Dispose ();
 			}
 			
-			this.live_index = 0;
+			this.liveIndex = 0;
 			
-			System.Diagnostics.Debug.Assert (this.live_fence == 0);
+			System.Diagnostics.Debug.Assert (this.liveFence == 0);
 		}
 		
 		public void PurgeRedo()
@@ -886,7 +886,7 @@ namespace Epsitec.Common.Support
 				return;
 			}
 			
-			if (this.is_undo_redo_in_progress)
+			if (this.isUndoRedoInProgress)
 			{
 				throw new System.InvalidOperationException ("Undo/redo in progress.");
 			}
@@ -895,7 +895,7 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
 			
-			int i = this.live_index;
+			int i = this.liveIndex;
 			
 			while (i < this.queue.Count)
 			{
@@ -903,15 +903,15 @@ namespace Epsitec.Common.Support
 				
 				if (oplet.IsFence)
 				{
-					this.fence_count--;
+					this.fenceCount--;
 				}
 				
 				this.queue.RemoveAt (i);
 				oplet.Dispose ();
 			}
 			
-			System.Diagnostics.Debug.Assert (this.live_fence == this.fence_count);
-			System.Diagnostics.Debug.Assert (this.live_index == this.queue.Count);
+			System.Diagnostics.Debug.Assert (this.liveFence == this.fenceCount);
+			System.Diagnostics.Debug.Assert (this.liveIndex == this.queue.Count);
 		}
 		
 		
@@ -919,7 +919,7 @@ namespace Epsitec.Common.Support
 		{
 			lock (this)
 			{
-				this.disable_count++;
+				this.disableCount++;
 			}
 		}
 		
@@ -927,12 +927,12 @@ namespace Epsitec.Common.Support
 		{
 			lock (this)
 			{
-				if (this.disable_count == 0)
+				if (this.disableCount == 0)
 				{
 					throw new System.InvalidOperationException ("Enable not possible, queue is not disabled.");
 				}
 				
-				this.disable_count--;
+				this.disableCount--;
 			}
 		}
 		
@@ -941,12 +941,12 @@ namespace Epsitec.Common.Support
 		{
 			public AutoActionCleanup(OpletQueue queue, string name, MergeMode mode)
 			{
-				queue.fence_id++;
+				queue.fenceId++;
 				
 				this.queue    = queue;
-				this.fence_id = queue.fence_id;
+				this.fenceId = queue.fenceId;
 				this.link     = queue.action;
-				this.depth    = queue.temp_queue.Count;
+				this.depth    = queue.tempQueue.Count;
 				this.name     = name;
 				this.mode     = mode;
 				
@@ -1013,14 +1013,14 @@ namespace Epsitec.Common.Support
 			public void Release()
 			{
 				if ((this.queue.action != this) ||
-					(this.queue.fence_id != this.fence_id))
+					(this.queue.fenceId != this.fenceId))
 				{
 					throw new System.InvalidOperationException ("BeginAction/release mismatch.");
 				}
 				
-				this.queue.fence_id--;
+				this.queue.fenceId--;
 				this.queue.action    = this.link;
-				this.queue.temp_name = this.name;
+				this.queue.tempName = this.name;
 				
 				this.queue = null;
 				this.link  = null;
@@ -1038,7 +1038,7 @@ namespace Epsitec.Common.Support
 			#endregion
 			
 			protected OpletQueue				queue;
-			protected int						fence_id;
+			protected int						fenceId;
 			
 			protected AutoActionCleanup			link;
 			protected int						depth;
@@ -1146,19 +1146,19 @@ namespace Epsitec.Common.Support
 		public event EventHandler				RedoExecuted;
 		
 		protected System.Collections.ArrayList	queue;
-		protected System.Collections.ArrayList	temp_queue;
-		protected string						temp_name;
+		protected System.Collections.ArrayList	tempQueue;
+		protected string						tempName;
 		
 		protected AutoActionCleanup				action;
 		
-		protected int							live_index;
-		protected int							live_fence;
-		protected int							fence_count;
-		protected int							fence_id;
+		protected int							liveIndex;
+		protected int							liveFence;
+		protected int							fenceCount;
+		protected int							fenceId;
 		
-		protected bool							is_undo_redo_in_progress;
-		protected bool							disable_merge;
+		protected bool							isUndoRedoInProgress;
+		protected bool							disableMerge;
 		
-		private int								disable_count;
+		private int								disableCount;
 	}
 }

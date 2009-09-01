@@ -74,9 +74,9 @@ namespace Epsitec.Common.Support
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			int line_begin  = 0;
-			int last_tag    = -1;
-			int space_count = 0;
+			int lineBegin  = 0;
+			int lastTag    = -1;
+			int spaceCount = 0;
 			
 			for (int i = 0; i < value.Length; i++)
 			{
@@ -84,27 +84,27 @@ namespace Epsitec.Common.Support
 				
 				if (c == '<')
 				{
-					last_tag = buffer.Length;
-					space_count = 0;
+					lastTag = buffer.Length;
+					spaceCount = 0;
 				}
 				else if (c == ' ')
 				{
-					if (last_tag == -1)
+					if (lastTag == -1)
 					{
-						space_count++;
+						spaceCount++;
 					}
 				}
 				else
 				{
-					if (space_count > 1)
+					if (spaceCount > 1)
 					{
 						//	Il y a plusieurs espaces consécutifs; ceux-ci sont générelement supprimés
 						//	par le consommateur HTML.
 						
-						buffer.Length = buffer.Length - space_count;
+						buffer.Length = buffer.Length - spaceCount;
 						buffer.Append (@" <span style=""mso-spacerun: yes"">");
 						
-						for (int j = 1; j < space_count; j++)
+						for (int j = 1; j < spaceCount; j++)
 						{
 							buffer.Append ((char)160);
 						}
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Support
 						buffer.Append (@"</span>");
 					}
 					
-					space_count = 0;
+					spaceCount = 0;
 				}
 				
 				buffer.Append (c);
@@ -123,30 +123,30 @@ namespace Epsitec.Common.Support
 					//	auparavant. On peut maintenant analyser ce tag et déterminer ce qu'il
 					//	faut en faire :
 					
-					System.Diagnostics.Debug.Assert (last_tag >= 0);
+					System.Diagnostics.Debug.Assert (lastTag >= 0);
 					
-					string tag = buffer.ToString (last_tag, buffer.Length - last_tag);
+					string tag = buffer.ToString (lastTag, buffer.Length - lastTag);
 					
 					if (tag == "<br/>")
 					{
 						//	FrontPage n'aime pas <br/>, alors on doit modifier le tag pour que ça
 						//	soit plus digeste :
 						
-						buffer.Length = last_tag;
+						buffer.Length = lastTag;
 						buffer.Append ("<br />");
-						line_begin = buffer.Length;
+						lineBegin = buffer.Length;
 					}
 					
 					if (tag == "<tab/>")
 					{
-						buffer.Length = last_tag;
+						buffer.Length = lastTag;
 						buffer.Append ("<span style='mso-tab-count:1'>");
 						buffer.Append ((char)160, 11);
 						buffer.Append (' ');
 						buffer.Append ("</span>");
 					}
 					
-					last_tag = -1;
+					lastTag = -1;
 				}
 			}
 			
@@ -157,19 +157,19 @@ namespace Epsitec.Common.Support
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			int last_tag  = -1;
-			int last_elem = -1;
+			int lastTag  = -1;
+			int lastElem = -1;
 			
-			bool is_space        = true;
-			bool preserve_spaces = false;
-			bool delete_spaces   = false;
+			bool isSpace        = true;
+			bool preserveSpaces = false;
+			bool deleteSpaces   = false;
 			
 			for (int i = 0; i < value.Length; i++)
 			{
 				char c = value[i];
 				
 				if (((c == ' ') || (c == (char)160)) &&
-					(delete_spaces))
+					(deleteSpaces))
 				{
 					//	Si on est dans un mode spécial dicté par Office
 					//	(<span style="mso-tab-count:1">    </span>) on mange
@@ -194,11 +194,11 @@ namespace Epsitec.Common.Support
 					{
 						if (value.Substring (i, 4) == "<!--")
 						{
-							int end_pos = value.IndexOf ("-->", i+4);
+							int endPos = value.IndexOf ("-->", i+4);
 							
-							if (end_pos > 0)
+							if (endPos > 0)
 							{
-								i = end_pos + 2;
+								i = endPos + 2;
 								continue;
 							}
 
@@ -206,19 +206,19 @@ namespace Epsitec.Common.Support
 						}
 					}
 
-					last_tag        = buffer.Length;
-					preserve_spaces = false;
-					delete_spaces   = false;
+					lastTag        = buffer.Length;
+					preserveSpaces = false;
+					deleteSpaces   = false;
 				}
 				else if (c == '&')
 				{
-					last_elem = buffer.Length;
+					lastElem = buffer.Length;
 				}
-				else if (last_tag == -1)
+				else if (lastTag == -1)
 				{
 					if (c == ' ')
 					{
-						if (is_space && !preserve_spaces)
+						if (isSpace && !preserveSpaces)
 						{
 							//	Si plusieurs espaces se suivent, on n'en conserve que le
 							//	premier, sauf si on est dans le mode spécial dicté par
@@ -227,12 +227,12 @@ namespace Epsitec.Common.Support
 							continue;
 						}
 						
-						is_space = true;
+						isSpace = true;
 						
 					}
 					else
 					{
-						is_space = false;
+						isSpace = false;
 					}
 				}
 				
@@ -246,37 +246,37 @@ namespace Epsitec.Common.Support
 					//	auparavant. On peut maintenant analyser ce tag et déterminer ce qu'il
 					//	faut en faire :
 					
-					System.Diagnostics.Debug.Assert (last_tag >= 0);
+					System.Diagnostics.Debug.Assert (lastTag >= 0);
 					
-					string tag = buffer.ToString (last_tag, buffer.Length - last_tag);
+					string tag = buffer.ToString (lastTag, buffer.Length - lastTag);
 					
 					//	Supprime le tag du buffer; s'il est compatible avec la version simplifiée
 					//	il sera rajouté par la suite :
 					
-					buffer.Length = last_tag;
-					last_tag      = -1;
+					buffer.Length = lastTag;
+					lastTag      = -1;
 					
-					int space_pos = tag.IndexOf (' ');
+					int spacePos = tag.IndexOf (' ');
 					
-					string clean_tag;
+					string cleanTag;
 					
-					if (space_pos > 0)
+					if (spacePos > 0)
 					{
 						if (tag.EndsWith ("/>"))
 						{
-							clean_tag = tag.Substring (0, space_pos).ToLower () + "/>";
+							cleanTag = tag.Substring (0, spacePos).ToLower () + "/>";
 						}
 						else
 						{
-							clean_tag = tag.Substring (0, space_pos).ToLower () + ">";
+							cleanTag = tag.Substring (0, spacePos).ToLower () + ">";
 						}
 					}
 					else
 					{
-						clean_tag = tag.ToLower ();
+						cleanTag = tag.ToLower ();
 					}
 					
-					switch (clean_tag)
+					switch (cleanTag)
 					{
 						case  "<b>":
 						case  "<strong>":
@@ -310,55 +310,55 @@ namespace Epsitec.Common.Support
 						case "<br>":
 						case "<br/>":
 							buffer.Append ("<br/>");
-							is_space = true;
+							isSpace = true;
 							continue;
 					}
 					
 					if (tag == "<![if !supportEmptyParas]>")
 					{
-						string mso_nbsp_endif = "&nbsp;<![endif]>";
+						string msoNbspEndif = "&nbsp;<![endif]>";
 						
-						if (value.Substring (i+1).StartsWith (mso_nbsp_endif))
+						if (value.Substring (i+1).StartsWith (msoNbspEndif))
 						{
-							i += mso_nbsp_endif.Length;
+							i += msoNbspEndif.Length;
 						}
 					}
 					
-					Match match_style = Clipboard.regex_style.Match (tag);
+					Match matchStyle = Clipboard.regexStyle.Match (tag);
 					
-					if (match_style.Success)
+					if (matchStyle.Success)
 					{
-						CaptureCollection style_captures = match_style.Groups["style"].Captures;
+						CaptureCollection styleCaptures = matchStyle.Groups["style"].Captures;
 						
-						foreach (Capture style_capture in style_captures)
+						foreach (Capture styleCapture in styleCaptures)
 						{
-							string style     = style_capture.Value;
-							Match  match_opt = Clipboard.regex_mso_spacerun.Match (style);
+							string style     = styleCapture.Value;
+							Match  matchOpt = Clipboard.regexMsoSpacerun.Match (style);
 							
-							if ((match_opt.Success) &&
-								(match_opt.Groups["opt"].Captures.Count == 1) &&
-								(match_opt.Groups["opt"].Captures[0].Value == "yes"))
+							if ((matchOpt.Success) &&
+								(matchOpt.Groups["opt"].Captures.Count == 1) &&
+								(matchOpt.Groups["opt"].Captures[0].Value == "yes"))
 							{
-								preserve_spaces = true;
+								preserveSpaces = true;
 							}
 							else
 							{
-								match_opt = Clipboard.regex_mso_tabcount.Match (style);
+								matchOpt = Clipboard.regexMsoTabcount.Match (style);
 								
-								if ((match_opt.Success) &&
-									(match_opt.Groups["opt"].Captures.Count == 1))
+								if ((matchOpt.Success) &&
+									(matchOpt.Groups["opt"].Captures.Count == 1))
 								{
 									int n;
 									try
 									{
-										Types.InvariantConverter.Convert (match_opt.Groups["opt"].Captures[0].Value, out n);
+										Types.InvariantConverter.Convert (matchOpt.Groups["opt"].Captures[0].Value, out n);
 										
 										while (n-- > 0)
 										{
 											buffer.Append ("<tab/>");
 										}
 										
-										delete_spaces = true;
+										deleteSpaces = true;
 									}
 									catch
 									{
@@ -368,16 +368,16 @@ namespace Epsitec.Common.Support
 						}
 					}
 				}
-				else if ((c == ';') && (last_elem >= 0))
+				else if ((c == ';') && (lastElem >= 0))
 				{
 					//	Si on a trouvé une fin d'entité, il faut vérifier si c'est l'une des
 					//	entités de base valides pour du XML, ou au contraire, s'il s'agit de
 					//	particularités liées à HTML :
 					
-					string elem = buffer.ToString (last_elem, buffer.Length - last_elem);
+					string elem = buffer.ToString (lastElem, buffer.Length - lastElem);
 					
-					buffer.Length = last_elem;
-					last_elem     = -1;
+					buffer.Length = lastElem;
+					lastElem     = -1;
 					
 					switch (elem)
 					{
@@ -392,9 +392,9 @@ namespace Epsitec.Common.Support
 					
 					elem = elem.Substring (1, elem.Length - 2);
 					
-					if (Clipboard.map_entities.Contains (elem))
+					if (Clipboard.mapEntities.Contains (elem))
 					{
-						elem = Clipboard.map_entities[elem] as string;
+						elem = Clipboard.mapEntities[elem] as string;
 					}
 					
 					if (elem.StartsWith ("#"))
@@ -491,75 +491,75 @@ namespace Epsitec.Common.Support
 			
 			public string ReadHtmlFragment()
 			{
-				string raw_html = this.ReadAsString (Formats.Hmtl);
+				string rawHtml = this.ReadAsString (Formats.Hmtl);
 				
-				if (raw_html == null)
+				if (rawHtml == null)
 				{
 					return null;
 				}
 				
 				//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
 				
-				int idx_version    = raw_html.IndexOf ("Version:");
-				int idx_start_html = raw_html.IndexOf ("StartHTML:");
-				int idx_end_html   = raw_html.IndexOf ("EndHTML:");
-				int idx_start_frag = raw_html.IndexOf ("StartFragment:");
-				int idx_end_frag   = raw_html.IndexOf ("EndFragment:");
-				int idx_start      = raw_html.IndexOf ("<!--StartFragment");
-				int idx_end        = raw_html.IndexOf ("<!--EndFragment");
-				int idx_begin      = idx_start < 0 ? -1 : raw_html.IndexOf (">", idx_start) + 1;
+				int idxVersion    = rawHtml.IndexOf ("Version:");
+				int idxStartHtml  = rawHtml.IndexOf ("StartHTML:");
+				int idxEndHtml    = rawHtml.IndexOf ("EndHTML:");
+				int idxStartFrag  = rawHtml.IndexOf ("StartFragment:");
+				int idxEndFrag    = rawHtml.IndexOf ("EndFragment:");
+				int idxStart      = rawHtml.IndexOf ("<!--StartFragment");
+				int idxEnd        = rawHtml.IndexOf ("<!--EndFragment");
+				int idxBegin      = idxStart < 0 ? -1 : rawHtml.IndexOf (">", idxStart) + 1;
 				
-				if ((idx_start      < idx_version) ||
-					(idx_end        < idx_start) ||
-					(idx_begin      < 1) ||
-					(idx_version    < 0) ||
-					(idx_start_html < idx_version) ||
-					(idx_end_html   < idx_start_html) ||
-					(idx_start_frag < idx_version) ||
-					(idx_end_frag   < idx_start_frag))
+				if ((idxStart      < idxVersion) ||
+					(idxEnd        < idxStart) ||
+					(idxBegin      < 1) ||
+					(idxVersion    < 0) ||
+					(idxStartHtml < idxVersion) ||
+					(idxEndHtml   < idxStartHtml) ||
+					(idxStartFrag < idxVersion) ||
+					(idxEndFrag   < idxStartFrag))
 				{
 					return null;
 				}
 				
-				return Clipboard.ConvertBrokenUtf8ToString (raw_html.Substring (idx_begin, idx_end - idx_begin));
+				return Clipboard.ConvertBrokenUtf8ToString (rawHtml.Substring (idxBegin, idxEnd - idxBegin));
 			}
 			
 			public string ReadHtmlDocument()
 			{
-				string raw_html = this.ReadAsString (Formats.Hmtl);
+				string rawHtml = this.ReadAsString (Formats.Hmtl);
 				
-				if (raw_html == null)
+				if (rawHtml == null)
 				{
 					return null;
 				}
 				
 				//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
 				
-				int idx_version    = raw_html.IndexOf ("Version:");
-				int idx_start_html = raw_html.IndexOf ("StartHTML:");
-				int idx_end_html   = raw_html.IndexOf ("EndHTML:");
-				int idx_start_frag = raw_html.IndexOf ("StartFragment:");
-				int idx_end_frag   = raw_html.IndexOf ("EndFragment:");
-				int idx_start      = raw_html.IndexOf ("<!--StartFragment");
-				int idx_end        = raw_html.IndexOf ("<!--EndFragment");
-				int idx_begin      = idx_start < 0 ? -1 : raw_html.IndexOf (">", idx_start) + 1;
+				int idxVersion    = rawHtml.IndexOf ("Version:");
+				int idxStartHtml  = rawHtml.IndexOf ("StartHTML:");
+				int idxEndHtml    = rawHtml.IndexOf ("EndHTML:");
+				int idxStartFrag  = rawHtml.IndexOf ("StartFragment:");
+				int idxEndFrag    = rawHtml.IndexOf ("EndFragment:");
+				int idxStart      = rawHtml.IndexOf ("<!--StartFragment");
+				int idxEnd        = rawHtml.IndexOf ("<!--EndFragment");
+				int idxBegin      = idxStart < 0 ? -1 : rawHtml.IndexOf (">", idxStart) + 1;
 				
-				if ((idx_start      < idx_version) ||
-					(idx_end        < idx_start) ||
-					(idx_begin      < 1) ||
-					(idx_version    < 0) ||
-					(idx_start_html < idx_version) ||
-					(idx_end_html   < idx_start_html) ||
-					(idx_start_frag < idx_version) ||
-					(idx_end_frag   < idx_start_frag))
+				if ((idxStart      < idxVersion) ||
+					(idxEnd        < idxStart) ||
+					(idxBegin      < 1) ||
+					(idxVersion    < 0) ||
+					(idxStartHtml < idxVersion) ||
+					(idxEndHtml   < idxStartHtml) ||
+					(idxStartFrag < idxVersion) ||
+					(idxEndFrag   < idxStartFrag))
 				{
 					return null;
 				}
 				
-				idx_begin = System.Int32.Parse (this.ExtractDigits (raw_html, idx_start_html + 10));
-				idx_end   = System.Int32.Parse (this.ExtractDigits (raw_html, idx_end_html + 8));
+				idxBegin = System.Int32.Parse (this.ExtractDigits (rawHtml, idxStartHtml + 10));
+				idxEnd   = System.Int32.Parse (this.ExtractDigits (rawHtml, idxEndHtml + 8));
 				
-				return Clipboard.ConvertBrokenUtf8ToString (raw_html.Substring (idx_begin, idx_end - idx_begin));
+				return Clipboard.ConvertBrokenUtf8ToString (rawHtml.Substring (idxBegin, idxEnd - idxBegin));
 			}
 			
 			public string ReadTextLayout()
@@ -657,23 +657,23 @@ namespace Epsitec.Common.Support
 				string utf8   = Clipboard.ConvertStringToBrokenUtf8 (Clipboard.ConvertSimpleXmlToHtml (source));
 				
 				html.Append ("Version:1.0\n");
-				html.Append ("StartHTML:00000000\n");		int idx_start_html = html.Length - 9;
-				html.Append ("EndHTML:00000000\n");			int idx_end_html   = html.Length - 9;
-				html.Append ("StartFragment:00000000\n");	int idx_start_frag = html.Length - 9;
-				html.Append ("EndFragment:00000000\n");		int idx_end_frag   = html.Length - 9;
-				html.Append ("\n");							int idx_html_begin = html.Length;
+				html.Append ("StartHTML:00000000\n");		int idxStartHtml = html.Length - 9;
+				html.Append ("EndHTML:00000000\n");			int idxEndHtml   = html.Length - 9;
+				html.Append ("StartFragment:00000000\n");	int idxStartFrag = html.Length - 9;
+				html.Append ("EndFragment:00000000\n");		int idxEndFrag   = html.Length - 9;
+				html.Append ("\n");							int idxHtmlBegin = html.Length;
 				html.Append ("<html>\n");
-				html.Append ("<body>\n");					int idx_frag_begin = html.Length;
+				html.Append ("<body>\n");					int idxFragBegin = html.Length;
 				html.Append ("<!--StartFragment-->\n");
 				html.Append (utf8);
-				html.Append ("<!--EndFragment-->\n");		int idx_frag_end   = html.Length;
+				html.Append ("<!--EndFragment-->\n");		int idxFragEnd   = html.Length;
 				html.Append ("</body>\n");
-				html.Append ("</html>\n");					int idx_html_end   = html.Length;
+				html.Append ("</html>\n");					int idxHtmlEnd   = html.Length;
 				
-				this.PatchString (html, idx_start_html, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_html_begin));
-				this.PatchString (html, idx_end_html,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_html_end));
-				this.PatchString (html, idx_start_frag, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_begin));
-				this.PatchString (html, idx_end_frag,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_end));
+				this.PatchString (html, idxStartHtml, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxHtmlBegin));
+				this.PatchString (html, idxEndHtml,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxHtmlEnd));
+				this.PatchString (html, idxStartFrag, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxFragBegin));
+				this.PatchString (html, idxEndFrag,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxFragEnd));
 				
 				
 				byte[] blob = new byte[html.Length];
@@ -822,16 +822,16 @@ namespace Epsitec.Common.Support
 					"yuml",		"#255",
 				};
 			
-			Clipboard.map_entities = new System.Collections.Hashtable ();
+			Clipboard.mapEntities = new System.Collections.Hashtable ();
 			
 			for (int i = 0; i < pairs.Length; i += 2)
 			{
-				Clipboard.map_entities[pairs[i+0]] = pairs[i+1];
+				Clipboard.mapEntities[pairs[i+0]] = pairs[i+1];
 			}
 			
-			Clipboard.regex_style        = new Regex (@"\A<span((\s*style\s*=\s*(?<a>['""])(?<style>.*?)\k<a>)|(\s*\w*)|(\s*\w*\s*=\s*[^\s>]*?\s*))*\s*\>\Z", RegexOptions.Compiled | RegexOptions.Multiline);
-			Clipboard.regex_mso_spacerun = new Regex (@"\Amso\-spacerun\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
-			Clipboard.regex_mso_tabcount = new Regex (@"\Amso\-tab\-count\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+			Clipboard.regexStyle        = new Regex (@"\A<span((\s*style\s*=\s*(?<a>['""])(?<style>.*?)\k<a>)|(\s*\w*)|(\s*\w*\s*=\s*[^\s>]*?\s*))*\s*\>\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+			Clipboard.regexMsoSpacerun = new Regex (@"\Amso\-spacerun\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+			Clipboard.regexMsoTabcount = new Regex (@"\Amso\-tab\-count\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 		}
 		#endregion
 
@@ -842,9 +842,9 @@ namespace Epsitec.Common.Support
 			public const string Bitmap = "System.Drawing.Bitmap";
 		}
 		
-		static System.Collections.Hashtable		map_entities;
-		static Regex							regex_style;
-		static Regex							regex_mso_spacerun;
-		static Regex							regex_mso_tabcount;
+		static System.Collections.Hashtable		mapEntities;
+		static Regex							regexStyle;
+		static Regex							regexMsoSpacerun;
+		static Regex							regexMsoTabcount;
 	}
 }

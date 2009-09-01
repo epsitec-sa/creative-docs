@@ -122,7 +122,7 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 			System.IO.File.WriteAllText (projectFilePath, project.CreateProjectSource (), System.Text.Encoding.UTF8);
 
-			string msbuildPath = System.IO.Path.Combine (Paths.V35_Framework, "msbuild.exe");
+			string msbuildPath = System.IO.Path.Combine (Paths.V35Framework, "msbuild.exe");
 			string msbuildArgs = "/ToolsVersion:3.5 /nologo /noautoresponse /verbosity:quiet /t:Build /p:Configuration=Debug";
 			string msbuildOutput;
 			string msbuildErrors;
@@ -297,11 +297,11 @@ namespace Epsitec.Common.Support.CodeCompilation
 
 		private static bool VerifyBuildInstallation()
 		{
-			if ((System.IO.Directory.Exists (Paths.V20_Framework)) &&
-				(System.IO.Directory.Exists (Paths.V30_Framework)) &&
-				(System.IO.Directory.Exists (Paths.V35_Framework)) &&
-				(System.IO.Directory.Exists (Paths.V30_ReferenceAssemblies)) &&
-				(System.IO.Directory.Exists (Paths.V35_ReferenceAssemblies)))
+			if ((System.IO.Directory.Exists (Paths.V20Framework)) &&
+				(System.IO.Directory.Exists (Paths.V30Framework)) &&
+				(System.IO.Directory.Exists (Paths.V35Framework)) &&
+				(System.IO.Directory.Exists (Paths.V30ReferenceAssemblies)) &&
+				(System.IO.Directory.Exists (Paths.V35ReferenceAssemblies)))
 			{
 				return true;
 			}
@@ -320,9 +320,9 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 			get
 			{
-				yield return Paths.V35_ReferenceAssemblies;
-				yield return Paths.V30_ReferenceAssemblies;
-				yield return Paths.V20_Framework;
+				yield return Paths.V35ReferenceAssemblies;
+				yield return Paths.V30ReferenceAssemblies;
+				yield return Paths.V20Framework;
 			}
 		}
 		
@@ -330,9 +330,9 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 			get
 			{
-				yield return Paths.V35_Framework;
-				yield return Paths.V30_Framework;
-				yield return Paths.V20_Framework;
+				yield return Paths.V35Framework;
+				yield return Paths.V30Framework;
+				yield return Paths.V20Framework;
 			}
 		}
 
@@ -377,50 +377,50 @@ namespace Epsitec.Common.Support.CodeCompilation
 		{
 			static Paths()
 			{
-				Paths.v30_ReferenceAssemblies = System.IO.Path.Combine (Paths.ReferenceAssemblies, "v3.0");
-				Paths.v35_ReferenceAssemblies = System.IO.Path.Combine (Paths.ReferenceAssemblies, "v3.5");
-				Paths.v35_Framework = System.IO.Path.Combine (Paths.Framework, "v3.5");
-				Paths.v30_Framework = System.IO.Path.Combine (Paths.Framework, "v3.0");
-				Paths.v20_Framework = System.IO.Path.Combine (Paths.Framework, "v2.0.50727");
+				Paths.v30ReferenceAssemblies = System.IO.Path.Combine (Paths.ReferenceAssemblies, "v3.0");
+				Paths.v35ReferenceAssemblies = System.IO.Path.Combine (Paths.ReferenceAssemblies, "v3.5");
+				Paths.v35Framework = System.IO.Path.Combine (Paths.Framework, "v3.5");
+				Paths.v30Framework = System.IO.Path.Combine (Paths.Framework, "v3.0");
+				Paths.v20Framework = System.IO.Path.Combine (Paths.Framework, "v2.0.50727");
 			}
 
-			public static string V35_ReferenceAssemblies
+			public static string V35ReferenceAssemblies
 			{
 				get
 				{
-					return Paths.v35_ReferenceAssemblies;
+					return Paths.v35ReferenceAssemblies;
 				}
 			}
 
-			public static string V35_Framework
+			public static string V35Framework
 			{
 				get
 				{
-					return Paths.v35_Framework;
+					return Paths.v35Framework;
 				}
 			}
 
-			public static string V30_ReferenceAssemblies
+			public static string V30ReferenceAssemblies
 			{
 				get
 				{
-					return Paths.v30_ReferenceAssemblies;
+					return Paths.v30ReferenceAssemblies;
 				}
 			}
 
-			public static string V30_Framework
+			public static string V30Framework
 			{
 				get
 				{
-					return Paths.v30_Framework;
+					return Paths.v30Framework;
 				}
 			}
 
-			public static string V20_Framework
+			public static string V20Framework
 			{
 				get
 				{
-					return Paths.v20_Framework;
+					return Paths.v20Framework;
 				}
 			}
 
@@ -430,11 +430,11 @@ namespace Epsitec.Common.Support.CodeCompilation
 			public const string BuildBin	= "bin";
 			public const string	BuildTemp	= "temp";
 
-			private static readonly string v30_ReferenceAssemblies;
-			private static readonly string v35_ReferenceAssemblies;
-			private static readonly string v35_Framework;
-			private static readonly string v30_Framework;
-			private static readonly string v20_Framework;
+			private static readonly string v30ReferenceAssemblies;
+			private static readonly string v35ReferenceAssemblies;
+			private static readonly string v35Framework;
+			private static readonly string v30Framework;
+			private static readonly string v20Framework;
 		}
 
 		#endregion

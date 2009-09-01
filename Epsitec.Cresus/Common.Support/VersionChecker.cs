@@ -14,15 +14,15 @@ namespace Epsitec.Common.Support
 		
 		public VersionChecker(string version)
 		{
-			VersionChecker.SplitVersionString (version, out this.current_major, out this.current_minor, out this.current_build, out this.current_revision);
+			VersionChecker.SplitVersionString (version, out this.currentMajor, out this.currentMinor, out this.currentBuild, out this.currentRevision);
 		}		
 		
 		public VersionChecker(int major, int minor, int build, int revision)
 		{
-			this.current_major    = major;
-			this.current_minor    = minor;
-			this.current_build    = build;
-			this.current_revision = revision;
+			this.currentMajor    = major;
+			this.currentMinor    = minor;
+			this.currentBuild    = build;
+			this.currentRevision = revision;
 		}
 		
 		
@@ -30,25 +30,25 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.reader_result != null)
+				if (this.readerResult != null)
 				{
 					return true;
 				}
-				if ((this.reader_async != null) &&
-					(this.reader_async.IsCompleted))
+				if ((this.readerAsync != null) &&
+					(this.readerAsync.IsCompleted))
 				{
-					this.reader_result = this.reader.EndInvoke (this.reader_async);
-					this.reader_async  = null;
+					this.readerResult = this.reader.EndInvoke (this.readerAsync);
+					this.readerAsync  = null;
 					
-					if ((this.reader_result.Length > 0) &&
-						(this.reader_result.IndexOf ('|') > 0))
+					if ((this.readerResult.Length > 0) &&
+						(this.readerResult.IndexOf ('|') > 0))
 					{
-						string[] args = this.reader_result.Split ('|');
+						string[] args = this.readerResult.Split ('|');
 						
-						this.found_version = args[0];
-						this.found_url     = args[1];
+						this.foundVersion = args[0];
+						this.foundUrl     = args[1];
 						
-						VersionChecker.SplitVersionString (this.found_version, out this.found_major, out this.found_minor, out this.found_build, out this.found_revision);
+						VersionChecker.SplitVersionString (this.foundVersion, out this.foundMajor, out this.foundMinor, out this.foundBuild, out this.foundRevision);
 					}
 					
 					return true;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.IsReady && (this.reader_result.Length > 0);
+				return this.IsReady && (this.readerResult.Length > 0);
 			}
 		}
 		
@@ -72,10 +72,10 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return this.IsCheckSuccessful &&
-					((this.current_major < this.found_major) ||
-					((this.current_major == this.found_major) && (this.current_minor < this.found_minor)) ||
-					((this.current_major == this.found_major) && (this.current_minor == this.found_minor) && (this.current_build < this.found_build)) ||
-					((this.current_major == this.found_major) && (this.current_minor == this.found_minor) && (this.current_build == this.found_build) && (this.current_revision < this.found_revision)));
+					((this.currentMajor < this.foundMajor) ||
+					((this.currentMajor == this.foundMajor) && (this.currentMinor < this.foundMinor)) ||
+					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentBuild < this.foundBuild)) ||
+					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentBuild == this.foundBuild) && (this.currentRevision < this.foundRevision)));
 			}
 		}
 		
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", this.current_major, this.current_minor, this.current_build, this.current_revision);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", this.currentMajor, this.currentMinor, this.currentBuild, this.currentRevision);
 			}
 		}
 		
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.found_version;
+				return this.foundVersion;
 			}
 		}
 		
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.found_url;
+				return this.foundUrl;
 			}
 		}
 		
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Support
 		public void StartCheck(string url)
 		{
 			this.reader       = new ReadStringFromUrl (VersionChecker.Read);
-			this.reader_async = this.reader.BeginInvoke (url, null, null);
+			this.readerAsync = this.reader.BeginInvoke (url, null, null);
 		}
 		
 		
@@ -184,20 +184,20 @@ namespace Epsitec.Common.Support
 		private delegate string ReadStringFromUrl(string url);
 		
 		private ReadStringFromUrl				reader;
-		private System.IAsyncResult				reader_async;
-		private string							reader_result;
+		private System.IAsyncResult				readerAsync;
+		private string							readerResult;
 		
-		private int								current_major;
-		private int								current_minor;
-		private int								current_build;
-		private int								current_revision;
+		private int								currentMajor;
+		private int								currentMinor;
+		private int								currentBuild;
+		private int								currentRevision;
 		
-		private int								found_major;
-		private int								found_minor;
-		private int								found_build;
-		private int								found_revision;
+		private int								foundMajor;
+		private int								foundMinor;
+		private int								foundBuild;
+		private int								foundRevision;
 		
-		private string							found_version;
-		private string							found_url;
+		private string							foundVersion;
+		private string							foundUrl;
 	}
 }

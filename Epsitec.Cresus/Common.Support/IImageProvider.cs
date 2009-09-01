@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public interface IImageProvider
 	{
-		Drawing.Image GetImage(string name, ResourceManager resource_manager);
+		Drawing.Image GetImage(string name, ResourceManager resourceManager);
 		void ClearImageCache(string name);
 	}
 }

@@ -103,13 +103,13 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.line_width;
+				return this.lineWidth;
 			}
 			set
 			{
-				if (this.line_width != value)
+				if (this.lineWidth != value)
 				{
-					this.line_width = value;
+					this.lineWidth = value;
 					this.InvalidatePen ();
 				}
 			}
@@ -119,13 +119,13 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.line_join;
+				return this.lineJoin;
 			}
 			set
 			{
-				if (this.line_join != value)
+				if (this.lineJoin != value)
 				{
-					this.line_join = value;
+					this.lineJoin = value;
 					this.InvalidatePen ();
 				}
 			}
@@ -135,13 +135,13 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.line_cap;
+				return this.lineCap;
 			}
 			set
 			{
-				if (this.line_cap != value)
+				if (this.lineCap != value)
 				{
-					this.line_cap = value;
+					this.lineCap = value;
 					this.InvalidatePen ();
 				}
 			}
@@ -151,13 +151,13 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.line_miter_limit;
+				return this.lineMiterLimit;
 			}
 			set
 			{
-				if (this.line_miter_limit != value)
+				if (this.lineMiterLimit != value)
 				{
-					this.line_miter_limit = value;
+					this.lineMiterLimit = value;
 				}
 			}
 		}
@@ -241,15 +241,15 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.image_filter;
+				return this.imageFilter;
 			}
 			set
 			{
-				if (this.image_filter != value)
+				if (this.imageFilter != value)
 				{
-					this.image_filter = value;
+					this.imageFilter = value;
 
-					switch (this.image_filter.Mode)
+					switch (this.imageFilter.Mode)
 					{
 						case Epsitec.Common.Drawing.ImageFilteringMode.None:
 							this.graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
@@ -298,11 +298,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.image_crop;
+				return this.imageCrop;
 			}
 			set
 			{
-				this.image_crop = value;
+				this.imageCrop = value;
 			}
 		}
 
@@ -310,11 +310,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.image_final_size;
+				return this.imageFinalSize;
 			}
 			set
 			{
-				this.image_final_size = value;
+				this.imageFinalSize = value;
 			}
 		}
 
@@ -355,11 +355,11 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				return this.fill_mode;
+				return this.fillMode;
 			}
 			set
 			{
-				this.fill_mode = value;
+				this.fillMode = value;
 			}
 		}
 		
@@ -503,13 +503,13 @@ namespace Epsitec.Common.Printing
 		public void PaintOutline(Drawing.Path path)
 		{
 			if ((path != null) &&
-				(this.line_width > 0))
+				(this.lineWidth > 0))
 			{
 				this.UpdatePen ();
 				
-				System.Drawing.Drawing2D.GraphicsPath gra_path = path.CreateSystemPath ();
-				gra_path.FillMode = this.fill_mode == Drawing.FillMode.EvenOdd ? System.Drawing.Drawing2D.FillMode.Alternate : System.Drawing.Drawing2D.FillMode.Winding;
-				this.graphics.DrawPath (this.pen, gra_path);
+				System.Drawing.Drawing2D.GraphicsPath graPath = path.CreateSystemPath ();
+				graPath.FillMode = this.fillMode == Drawing.FillMode.EvenOdd ? System.Drawing.Drawing2D.FillMode.Alternate : System.Drawing.Drawing2D.FillMode.Winding;
+				this.graphics.DrawPath (this.pen, graPath);
 			}
 		}
 		
@@ -518,9 +518,9 @@ namespace Epsitec.Common.Printing
 			if (path != null)
 			{
 				this.UpdateBrush ();
-				System.Drawing.Drawing2D.GraphicsPath gra_path = path.CreateSystemPath ();
-				gra_path.FillMode = this.fill_mode == Drawing.FillMode.EvenOdd ? System.Drawing.Drawing2D.FillMode.Alternate : System.Drawing.Drawing2D.FillMode.Winding;
-				this.graphics.FillPath (this.brush, gra_path);
+				System.Drawing.Drawing2D.GraphicsPath graPath = path.CreateSystemPath ();
+				graPath.FillMode = this.fillMode == Drawing.FillMode.EvenOdd ? System.Drawing.Drawing2D.FillMode.Alternate : System.Drawing.Drawing2D.FillMode.Winding;
+				this.graphics.FillPath (this.brush, graPath);
 			}
 		}
 		
@@ -547,9 +547,9 @@ namespace Epsitec.Common.Printing
 			
 			for (int i = 0; i < n; i++)
 			{
-				double scale_x = sx == null ? 1 : sx[i];
-				double scale_y = sy == null ? 1 : sy[i];
-				path.Append (font, glyphs[i], ft.XX * scale_x, ft.XY * scale_x, ft.YX * scale_y, ft.YY * scale_y, ft.TX * scale_x + x[i], ft.TY * scale_y + y[i]);
+				double scaleX = sx == null ? 1 : sx[i];
+				double scaleY = sy == null ? 1 : sy[i];
+				path.Append (font, glyphs[i], ft.XX * scaleX, ft.XY * scaleX, ft.YX * scaleY, ft.YY * scaleY, ft.TX * scaleX + x[i], ft.TY * scaleY + y[i]);
 			}
 			
 			this.PaintSurface (path);
@@ -562,7 +562,7 @@ namespace Epsitec.Common.Printing
 			return this.PaintText (x, y, text, font, size, true);
 		}
 		
-		public double PaintText(double x, double y, string text, Drawing.Font font, double size, bool use_platform_font)
+		public double PaintText(double x, double y, string text, Drawing.Font font, double size, bool usePlatformFont)
 		{
 			int n = text.Length;
 			
@@ -573,46 +573,46 @@ namespace Epsitec.Common.Printing
 			
 			this.UpdateBrush ();
 			
-			System.Drawing.Font os_font = null;
+			System.Drawing.Font osFont = null;
 			
 			try
 			{
-				if (use_platform_font)
+				if (usePlatformFont)
 				{
 #if false
-					os_font = font.GetOsFont (size);
+					osFont = font.GetOsFont (size);
 #endif
 				}
 			}
 			catch
 			{
 				System.Diagnostics.Debug.WriteLine ("Cannot access OS font " + font.FullName + ", emulating using Path.");
-				os_font = null;
+				osFont = null;
 			}
 			
 			
 			
 			double width = 0;
 			
-			if ((os_font == null) ||
+			if ((osFont == null) ||
 				(graphics.Transform.Elements[1] != 0) ||
 				(graphics.Transform.Elements[2] != 0))
 			{
 				Drawing.Path path = new Drawing.Path ();
 				
-				double[] glyph_x;
+				double[] glyphX;
 				ushort[] glyph;
-				byte[]   glyph_n;
+				byte[]   glyphN;
 				
 				//	On n'a pas réussi à obtenir la fonte système pour représenter le texte, alors
 				//	on va générer le chemin équivalent et le peindre ainsi. Ca va revenir exactement
 				//	au même.
 				
-				font.GetGlyphsEndX (text, out glyph_x, out glyph, out glyph_n);
+				font.GetGlyphsEndX (text, out glyphX, out glyph, out glyphN);
 				
-				System.Diagnostics.Debug.Assert (glyph_x.Length == n);
+				System.Diagnostics.Debug.Assert (glyphX.Length == n);
 				System.Diagnostics.Debug.Assert (glyph.Length == n);
-				System.Diagnostics.Debug.Assert (glyph_n.Length == n);
+				System.Diagnostics.Debug.Assert (glyphN.Length == n);
 				
 				Drawing.Transform ft = font.SyntheticTransform;
 				
@@ -620,11 +620,11 @@ namespace Epsitec.Common.Printing
 				
 				for (int i = 0; i < n; i++)
 				{
-					double xx = x + glyph_x[i]*size;
+					double xx = x + glyphX[i]*size;
 					path.Append(font, glyph[i], ft.XX, ft.XY, ft.YX, ft.YY, ft.TX + xx, ft.TY + y);
 				}
 				
-				width = glyph_x[n-1] * size;
+				width = glyphX[n-1] * size;
 				
 				this.PaintSurface (path);
 				path.Dispose ();
@@ -646,31 +646,31 @@ namespace Epsitec.Common.Printing
 					
 					format.SetMeasurableCharacterRanges (ranges);
 					
-					regions = graphics.MeasureCharacterRanges ("AAAAAAAAAAAA", os_font, rect, format);
+					regions = graphics.MeasureCharacterRanges ("AAAAAAAAAAAA", osFont, rect, format);
 					rect    = regions[0].GetBounds (graphics);
 					
-					double open_type_advance = font.GetCharAdvance ('A') * size;
-					double gdi_plus_advance  = rect.Width;
+					double openTypeAdvance = font.GetCharAdvance ('A') * size;
+					double gdiPlusAdvance  = rect.Width;
 					
-					adjust = (float) (open_type_advance / gdi_plus_advance);
+					adjust = (float) (openTypeAdvance / gdiPlusAdvance);
 				}
 				
-				double[] end_x;
+				double[] endX;
 				double   ox = 0;
 				
-				font.GetTextCharEndX (text, out end_x);
+				font.GetTextCharEndX (text, out endX);
 				
-				System.Drawing.FontFamily family = os_font.FontFamily;
+				System.Drawing.FontFamily family = osFont.FontFamily;
 				
 				int ascent = family.GetCellAscent (System.Drawing.FontStyle.Regular);
 				int descent= family.GetCellDescent (System.Drawing.FontStyle.Regular);
 				int line   = family.GetLineSpacing (System.Drawing.FontStyle.Regular);
-				int em_h   = family.GetEmHeight (System.Drawing.FontStyle.Regular);
+				int emH   = family.GetEmHeight (System.Drawing.FontStyle.Regular);
 				
 //-				y += font.Ascender * size;
-				y += ascent * size / em_h;
+				y += ascent * size / emH;
 				
-				System.Diagnostics.Debug.Assert (end_x.Length == n);
+				System.Diagnostics.Debug.Assert (endX.Length == n);
 				
 				System.Drawing.Drawing2D.Matrix matrix = this.graphics.Transform;
 				
@@ -681,15 +681,15 @@ namespace Epsitec.Common.Printing
 					
 					this.graphics.TranslateTransform (tx, ty);
 					this.graphics.ScaleTransform (1.0f * adjust, -1.0f * adjust);
-					this.graphics.DrawString (text.Substring (i, 1), os_font, this.brush, 0, 0, System.Drawing.StringFormat.GenericTypographic);
+					this.graphics.DrawString (text.Substring (i, 1), osFont, this.brush, 0, 0, System.Drawing.StringFormat.GenericTypographic);
 					this.graphics.Transform = matrix;
 					
-					x += (end_x[i]-ox) * size;
-					ox = end_x[i];
+					x += (endX[i]-ox) * size;
+					ox = endX[i];
 				}
 				
 				
-				width = end_x[n-1] * size;
+				width = endX[n-1] * size;
 			}
 			
 			return width;
@@ -706,18 +706,18 @@ namespace Epsitec.Common.Printing
 					(infos[i].GlyphClass == Drawing.GlyphClass.Space))
 				{
 					string[] texts = text.Split (new char[] { ' ', (char) 160 });
-					double space_w = font.GetCharAdvance (' ') * size * infos[i].Scale;
-					double total_w = 0;
+					double spaceW = font.GetCharAdvance (' ') * size * infos[i].Scale;
+					double totalW = 0;
 					
 					for (int j = 0; j < texts.Length; j++)
 					{
-						double w = this.PaintText (x, y, texts[j], font, size) + space_w;
+						double w = this.PaintText (x, y, texts[j], font, size) + spaceW;
 						
-						total_w += w;
+						totalW += w;
 						x       += w;
 					}
 					
-					return total_w - space_w;
+					return totalW - spaceW;
 				}
 			}
 			
@@ -730,32 +730,32 @@ namespace Epsitec.Common.Printing
 			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
-		public void PaintImage(Drawing.Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height)
+		public void PaintImage(Drawing.Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight)
 		{
-			this.PaintImage (bitmap, fill_x, fill_y, fill_width, fill_height, 0, 0, bitmap.Width, bitmap.Height);
+			this.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
-		public void PaintImage(Drawing.Image bitmap, Drawing.Rectangle fill, Drawing.Point image_origin)
+		public void PaintImage(Drawing.Image bitmap, Drawing.Rectangle fill, Drawing.Point imageOrigin)
 		{
-			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, image_origin.X, image_origin.Y, fill.Width, fill.Height);
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, imageOrigin.X, imageOrigin.Y, fill.Width, fill.Height);
 		}
 		
-		public void PaintImage(Drawing.Image bitmap, Drawing.Rectangle fill, Drawing.Rectangle image_rect)
+		public void PaintImage(Drawing.Image bitmap, Drawing.Rectangle fill, Drawing.Rectangle imageRect)
 		{
-			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, image_rect.Left, image_rect.Bottom, image_rect.Width, image_rect.Height);
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, imageRect.Left, imageRect.Bottom, imageRect.Width, imageRect.Height);
 		}
 		
-		public void PaintImage(Drawing.Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y)
+		public void PaintImage(Drawing.Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY)
 		{
-			this.PaintImage (bitmap, fill_x, fill_y, fill_width, fill_height, image_origin_x, image_origin_y, fill_width, fill_height);
+			this.PaintImage (bitmap, fillX, fillY, fillWidth, fillHeight, imageOriginX, imageOriginY, fillWidth, fillHeight);
 		}
 		
-		public void PaintImage(Drawing.Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y, double image_width, double image_height)
+		public void PaintImage(Drawing.Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
-			double ix1 = image_origin_x;
-			double iy1 = image_origin_y;
-			double ix2 = image_origin_x + image_width;
-			double iy2 = image_origin_y + image_height;
+			double ix1 = imageOriginX;
+			double iy1 = imageOriginY;
+			double ix2 = imageOriginX + imageWidth;
+			double iy2 = imageOriginY + imageHeight;
 			
 			double idx = bitmap.Width;
 			double idy = bitmap.Height;
@@ -765,35 +765,35 @@ namespace Epsitec.Common.Printing
 			
 			if (ix1 < 0)			//	Clipping à gauche.
 			{
-				fill_x     -= ix1;
-				fill_width += ix1;
+				fillX     -= ix1;
+				fillWidth += ix1;
 				ix1 = 0;
 			}
 			
 			if (iy1 < 0)			//	Clipping en bas
 			{
-				fill_y      -= iy1;
-				fill_height += iy1;
+				fillY      -= iy1;
+				fillHeight += iy1;
 				iy1 = 0;
 			}
 			
 			if (ix2 > idx)			//	Clipping à droite
 			{
-				fill_width -= ix2 - idx;
+				fillWidth -= ix2 - idx;
 				ix2 = idx;
 			}
 			
 			if (iy2 > idy)			//	Clipping en haut
 			{
-				fill_height -= iy2 - idy;
+				fillHeight -= iy2 - idy;
 				iy2 = idy;
 			}
 			
 			System.Drawing.RectangleF src = new System.Drawing.RectangleF ((float)(ix1), (float)(iy1), (float)(ix2-ix1), (float)(iy2-iy1));
-			System.Drawing.RectangleF dst = new System.Drawing.RectangleF (0, 0, (float)(fill_width), (float)(fill_height));
+			System.Drawing.RectangleF dst = new System.Drawing.RectangleF (0, 0, (float)(fillWidth), (float)(fillHeight));
 			
-			float tx = (float)(fill_x);
-			float ty = (float)(fill_y + fill_height);
+			float tx = (float)(fillX);
+			float ty = (float)(fillY + fillHeight);
 			
 			this.graphics.TranslateTransform (tx, ty);
 			this.graphics.ScaleTransform (1, -1);
@@ -831,25 +831,25 @@ namespace Epsitec.Common.Printing
 
 		private void InvalidatePen()
 		{
-			this.is_pen_dirty = true;
+			this.isPenDirty = true;
 		}
 
 		private void InvalidateBrush()
 		{
-			this.is_brush_dirty = true;
+			this.isBrushDirty = true;
 		}
 
 		private void UpdatePen()
 		{
-			if (this.is_pen_dirty)
+			if (this.isPenDirty)
 			{
 				this.UpdateBrush ();
 				
 				this.pen.Brush      = this.brush;
-				this.pen.Width      = (float) this.line_width;
-				this.pen.MiterLimit = (float) this.line_miter_limit;
+				this.pen.Width      = (float) this.lineWidth;
+				this.pen.MiterLimit = (float) this.lineMiterLimit;
 				
-				switch (this.line_cap)
+				switch (this.lineCap)
 				{
 					case Drawing.CapStyle.Butt:
 						this.pen.StartCap = System.Drawing.Drawing2D.LineCap.Flat;
@@ -865,7 +865,7 @@ namespace Epsitec.Common.Printing
 						break;
 				}
 				
-				switch (this.line_join)
+				switch (this.lineJoin)
 				{
 					case Drawing.JoinStyle.Bevel:
 						this.pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
@@ -879,13 +879,13 @@ namespace Epsitec.Common.Printing
 						break;
 				}
 				
-				this.is_pen_dirty = false;
+				this.isPenDirty = false;
 			}
 		}
 
 		private void UpdateBrush()
 		{
-			if (this.is_brush_dirty)
+			if (this.isBrushDirty)
 			{
 				int a = (int)(this.color.A * 255.5);
 				int r = (int)(this.color.R * 255.5);
@@ -896,7 +896,7 @@ namespace Epsitec.Common.Printing
 				
 				this.brush = new System.Drawing.SolidBrush (color);
 				
-				this.is_brush_dirty = false;
+				this.isBrushDirty = false;
 			}
 		}
 
@@ -980,16 +980,16 @@ namespace Epsitec.Common.Printing
 		private System.Drawing.Brush			brush;
 		private System.Drawing.Pen				pen;
 
-		private bool							is_pen_dirty;
-		private bool							is_brush_dirty;
+		private bool							isPenDirty;
+		private bool							isBrushDirty;
 
-		private double							line_width       = 1.0;
-		private Drawing.JoinStyle				line_join        = Drawing.JoinStyle.Miter;
-		private Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
-		private double							line_miter_limit = 4.0;
-		private Drawing.ImageFilter				image_filter;
-		private Drawing.Margins					image_crop;
-		private Drawing.Size					image_final_size;
+		private double							lineWidth       = 1.0;
+		private Drawing.JoinStyle				lineJoin        = Drawing.JoinStyle.Miter;
+		private Drawing.CapStyle				lineCap         = Drawing.CapStyle.Square;
+		private double							lineMiterLimit = 4.0;
+		private Drawing.ImageFilter				imageFilter;
+		private Drawing.Margins					imageCrop;
+		private Drawing.Size					imageFinalSize;
 
 		private float							offsetX, offsetY;
 		private float							scale;
@@ -999,6 +999,6 @@ namespace Epsitec.Common.Printing
 		private readonly Stack<Drawing.ColorModifierCallback>		stackColorModifier;
 		private Drawing.Rectangle				clip = Drawing.Rectangle.MaxValue;
 		private Drawing.Transform				transform = Drawing.Transform.Identity;
-		private Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
+		private Drawing.FillMode				fillMode = Drawing.FillMode.NonZero;
 	}
 }

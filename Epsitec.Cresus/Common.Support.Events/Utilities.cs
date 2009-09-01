@@ -37,16 +37,16 @@ namespace Epsitec.Common.Support
 			return Utilities.StringSimplify (ref value, quote, quote);
 		}
 		
-		public static bool StringSimplify(ref string value, char start_quote, char end_quote)
+		public static bool StringSimplify(ref string value, char startQuote, char endQuote)
 		{
 			//	Convertit une chaîne entre guillemets en une chaîne sans guillemets
 			//	retourne "true" si la chaîne avait des guillemets "false" sinon
 			//	une exception est levée si des guillemets non apparentés sont trouvés
 			//	enlève les doubles guillemets en milieu de chaîne pour n'en mettre qu'un.
 			
-			if (value.IndexOf (start_quote) == 0)
+			if (value.IndexOf (startQuote) == 0)
 			{
-				if ((value.Length > 1) && (value.LastIndexOf (end_quote) == value.Length-1))
+				if ((value.Length > 1) && (value.LastIndexOf (endQuote) == value.Length-1))
 				{
 					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 					
@@ -54,13 +54,13 @@ namespace Epsitec.Common.Support
 					{
 						char c = value[i];
 						
-						if ((c == start_quote) &&
-							(start_quote == end_quote))
+						if ((c == startQuote) &&
+							(startQuote == endQuote))
 						{
 							i++;
 							c = value[i];
 							if ((i == value.Length-1) ||
-								(c != start_quote))
+								(c != startQuote))
 							{
 								throw new System.Exception (string.Format ("Quotes mismatch in {0}", value));
 							}
@@ -403,8 +403,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			const int max = 50;
-			int[] sep_pos = new int[max];
-			int arg_count = 1;
+			int[] sepPos  = new int[max];
+			int argCount  = 1;
 			
 			SplitState state  = SplitState.Normal;
 			int        depth  = 0;
@@ -434,9 +434,9 @@ namespace Epsitec.Common.Support
 							default:
 								if ((depth == 0) && (c == sep))
 								{
-									sep_pos[arg_count] = i;
-									arg_count++;
-									if (arg_count >= max-1)
+									sepPos[argCount] = i;
+									argCount++;
+									if (argCount >= max-1)
 									{
 										throw new System.ArgumentException (string.Format ("Text too complex to split: {0}.", text));
 									}
@@ -461,14 +461,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			sep_pos[0]         = -1;
-			sep_pos[arg_count] = text.Length;
+			sepPos[0]         = -1;
+			sepPos[argCount] = text.Length;
 			
-			string[] args = new string[arg_count];
+			string[] args = new string[argCount];
 			
-			for (int i = 0; i < arg_count; i++)
+			for (int i = 0; i < argCount; i++)
 			{
-				args[i] = text.Substring (sep_pos[i]+1, sep_pos[i+1]-sep_pos[i]-1);
+				args[i] = text.Substring (sepPos[i]+1, sepPos[i+1]-sepPos[i]-1);
 			}
 			
 			return args;
@@ -499,8 +499,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			const int max = 50;
-			int[] sep_pos = new int[max];
-			int arg_count = 1;
+			int[] sepPos  = new int[max];
+			int argCount  = 1;
 
 			SplitState state  = SplitState.Normal;
 			int        depth  = 0;
@@ -532,9 +532,9 @@ namespace Epsitec.Common.Support
 							if ((depth == 0) && (c == sep))
 							{
 								if (text.Substring (i, separator.Length) != separator) break;
-								sep_pos[arg_count] = i;
-								arg_count++;
-								if (arg_count >= max-1)
+								sepPos[argCount] = i;
+								argCount++;
+								if (argCount >= max-1)
 								{
 									throw new System.ArgumentException (string.Format ("Text too complex to split: {0}.", text));
 								}
@@ -560,14 +560,14 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			sep_pos[0]         = -separator.Length;
-			sep_pos[arg_count] = text.Length;
+			sepPos[0]         = -separator.Length;
+			sepPos[argCount] = text.Length;
 			
-			string[] args = new string[arg_count];
+			string[] args = new string[argCount];
 			
-			for (int i = 0; i < arg_count; i++)
+			for (int i = 0; i < argCount; i++)
 			{
-				args[i] = text.Substring (sep_pos[i]+separator.Length, sep_pos[i+1]-sep_pos[i]-separator.Length);
+				args[i] = text.Substring (sepPos[i]+separator.Length, sepPos[i+1]-sepPos[i]-separator.Length);
 			}
 			
 			return args;

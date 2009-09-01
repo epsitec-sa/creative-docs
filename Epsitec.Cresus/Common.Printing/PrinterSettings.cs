@@ -357,11 +357,11 @@ namespace Epsitec.Common.Printing
 			}
 		}
 		
-		public bool SetDevMode(System.IntPtr dev_mode)
+		public bool SetDevMode(System.IntPtr devMode)
 		{
 			try
 			{
-				this.ps.SetHdevmode (dev_mode);
+				this.ps.SetHdevmode (devMode);
 				return true;
 			}
 			catch

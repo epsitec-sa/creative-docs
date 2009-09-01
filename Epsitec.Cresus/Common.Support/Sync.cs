@@ -22,17 +22,17 @@ namespace Epsitec.Common.Support
 			
 			handles[n] = Common.Support.Globals.AbortEvent;
 			
-			int handle_index = System.Threading.WaitHandle.WaitAny (handles);
+			int handleIndex = System.Threading.WaitHandle.WaitAny (handles);
 			
 			//	Gère le cas particulier décrit dans la documentation où l'index peut être
 			//	incorrect dans certains cas :
 			
-			if (handle_index >= 128)
+			if (handleIndex >= 128)
 			{
-				handle_index -= 128;
+				handleIndex -= 128;
 			}
 			
-			return handle_index;
+			return handleIndex;
 		}
 	}
 }

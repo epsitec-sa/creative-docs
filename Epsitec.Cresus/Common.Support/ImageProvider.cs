@@ -126,21 +126,21 @@ namespace Epsitec.Common.Support
 			
 			if (name.StartsWith ("dyn:"))
 			{
-				string full_name = name.Substring (4);
+				string fullName = name.Substring (4);
 				
-				int pos = full_name.IndexOf ('/');
+				int pos = fullName.IndexOf ('/');
 				
 				if (pos < 0)
 				{
 					return null;
 				}
 				
-				string base_name = full_name.Substring (0, pos);
-				string argument = full_name.Substring (pos+1);
+				string baseName = fullName.Substring (0, pos);
+				string argument = fullName.Substring (pos+1);
 
 				Drawing.DynamicImage image;
 
-				if (this.dynamicImages.TryGetValue (base_name, out image))
+				if (this.dynamicImages.TryGetValue (baseName, out image))
 				{
 					image = image.GetImageForArgument (argument);
 				}
@@ -150,10 +150,10 @@ namespace Epsitec.Common.Support
 			
 			if (this.images.ContainsKey (name))
 			{
-				Types.Weak<Drawing.Image> weak_ref = this.images[name];
-				Drawing.Image image = weak_ref.Target;
+				Types.Weak<Drawing.Image> weakRef = this.images[name];
+				Drawing.Image image = weakRef.Target;
 				
-				if (weak_ref.IsAlive)
+				if (weakRef.IsAlive)
 				{
 					return image;
 				}
@@ -167,15 +167,15 @@ namespace Epsitec.Common.Support
 				//	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
 				
 				Drawing.Image                image     = null;
-				string                       base_name = name.Remove (0, 5);
+				string                       baseName = name.Remove (0, 5);
 				System.Collections.ArrayList attempts  = new System.Collections.ArrayList ();
 				
-				if ((base_name.StartsWith ("/")) ||
-					(! RegexFactory.PathName.IsMatch (base_name)))
+				if ((baseName.StartsWith ("/")) ||
+					(! RegexFactory.PathName.IsMatch (baseName)))
 				{
 					if (this.CheckFilePath)
 					{
-						throw new System.ArgumentException (string.Format ("Illegal file name for image ({0}).", base_name));
+						throw new System.ArgumentException (string.Format ("Illegal file name for image ({0}).", baseName));
 					}
 				}
 				
@@ -192,25 +192,25 @@ namespace Epsitec.Common.Support
 					
 					//	Nom du chemin complet.
 					
-					string file_name;
+					string fileName;
 					
 					if (path.Length > 0)
 					{
-						file_name = path + System.IO.Path.DirectorySeparatorChar + base_name;
+						fileName = path + System.IO.Path.DirectorySeparatorChar + baseName;
 					}
 					else
 					{
-						file_name = base_name;
+						fileName = baseName;
 					}
 					
 					try
 					{
-						image = Drawing.Bitmap.FromFile (file_name);
+						image = Drawing.Bitmap.FromFile (fileName);
 						break;
 					}
 					catch
 					{
-						attempts.Add (file_name);
+						attempts.Add (fileName);
 					}
 				}
 				
@@ -251,29 +251,29 @@ namespace Epsitec.Common.Support
 				//	faut en principe spécifier le provider à utiliser, sinon le provider
 				//	de ressources par défaut sera pris.
 				
-				string res_full = name.Remove (0, 4);
-				string res_bundle;
-				string res_field;
+				string resFull = name.Remove (0, 4);
+				string resBundle;
+				string resField;
 				
-				if (res_full.IndexOf (':') < 0)
+				if (resFull.IndexOf (':') < 0)
 				{
-					res_full = this.defaultResourceProvider + res_full;
+					resFull = this.defaultResourceProvider + resFull;
 				}
 				
 				Drawing.Image image = null;
 
-				if (Resources.SplitFieldId (res_full, out res_bundle, out res_field))
+				if (Resources.SplitFieldId (resFull, out resBundle, out resField))
 				{
-					ResourceBundle bundle = resourceManager.GetBundle (res_bundle);
+					ResourceBundle bundle = resourceManager.GetBundle (resBundle);
 					
 					if (bundle != null)
 					{
-						image = this.CreateBitmapFromBundle (bundle, res_field);
+						image = this.CreateBitmapFromBundle (bundle, resField);
 					}
 				}
 				else
 				{
-					byte[] data = resourceManager.GetBinaryData (res_full);
+					byte[] data = resourceManager.GetBinaryData (resFull);
 					image = Drawing.Bitmap.FromData (data);
 				}
 				
@@ -296,7 +296,7 @@ namespace Epsitec.Common.Support
 				//	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
 				//	.NET et des transformations futures pourraient ne pas fonctionner.
 				
-				string res_name = name.Remove (0, 9);
+				string resName = name.Remove (0, 9);
 				
 				System.AppDomain             domain     = System.AppDomain.CurrentDomain;
 				System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
@@ -304,9 +304,9 @@ namespace Epsitec.Common.Support
 				
 				for (int i = 0; i < assemblies.Length; i++)
 				{
-					object assembly_object = assemblies[i];
+					object assemblyObject = assemblies[i];
 					
-					if (assembly_object is System.Reflection.Emit.AssemblyBuilder)
+					if (assemblyObject is System.Reflection.Emit.AssemblyBuilder)
 					{
 						//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
 						//	puisqu'elles ont été générées dynamiquement.
@@ -315,14 +315,14 @@ namespace Epsitec.Common.Support
 					}
 					
 					string[] names = assemblies[i].GetManifestResourceNames ();
-					string lower_res_name = res_name.ToLower (System.Globalization.CultureInfo.InvariantCulture);
+					string lowerResName = resName.ToLower (System.Globalization.CultureInfo.InvariantCulture);
 					
 					for (int j = 0; j < names.Length; j++)
 					{
-						if (names[j].ToLower (System.Globalization.CultureInfo.InvariantCulture) == lower_res_name)
+						if (names[j].ToLower (System.Globalization.CultureInfo.InvariantCulture) == lowerResName)
 						{
 							assembly = assemblies[i];
-							res_name = names[j];
+							resName = names[j];
 							break;
 						}
 					}
@@ -338,10 +338,10 @@ namespace Epsitec.Common.Support
 					return null;
 				}
 				
-				Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
+				Drawing.Image image = Drawing.Bitmap.FromManifestResource (resName, assembly);
 //				image = Drawing.Bitmap.CopyImage (image);
 				
-				System.Diagnostics.Debug.WriteLine ("Loaded image " + res_name + " from assembly " + assembly.GetName ());
+				System.Diagnostics.Debug.WriteLine ("Loaded image " + resName + " from assembly " + assembly.GetName ());
 				
 				if (image != null)
 				{
@@ -433,27 +433,27 @@ namespace Epsitec.Common.Support
 			this.dynamicImages.Remove (tag);
 		}
 		
-		public void ClearDynamicImageCache(string full_name)
+		public void ClearDynamicImageCache(string fullName)
 		{
-			int pos = full_name.IndexOf ('/');
+			int pos = fullName.IndexOf ('/');
 			
-			string base_name;
+			string baseName;
 			string argument;
 			
 			if (pos < 0)
 			{
-				base_name = full_name;
+				baseName = fullName;
 				argument  = null;
 			}
 			else
 			{
-				base_name = full_name.Substring (0, pos);
-				argument = full_name.Substring (pos+1);
+				baseName = fullName.Substring (0, pos);
+				argument = fullName.Substring (pos+1);
 			}
 			
 			Drawing.DynamicImage image;
 			
-			if (this.dynamicImages.TryGetValue (base_name, out image))
+			if (this.dynamicImages.TryGetValue (baseName, out image))
 			{
 				image.ClearCache (argument);
 			}
@@ -466,9 +466,9 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < assemblies.Length; i++)
 			{
-				object assembly_object = assemblies[i];
+				object assemblyObject = assemblies[i];
 				
-				if (assembly_object is System.Reflection.Emit.AssemblyBuilder)
+				if (assemblyObject is System.Reflection.Emit.AssemblyBuilder)
 				{
 					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
 					//	puisqu'elles ont été générées dynamiquement.
@@ -482,24 +482,24 @@ namespace Epsitec.Common.Support
 				{
 					if (names[j].EndsWith (".icon"))
 					{
-						string                     res_name = names[j];
+						string                     resName  = names[j];
 						System.Reflection.Assembly assembly = assemblies[i];
 						
-						string name = string.Concat ("manifest:", res_name);
+						string name = string.Concat ("manifest:", resName);
 
 						if (this.images.ContainsKey (name))
 						{
-							Types.Weak<Drawing.Image> weak_ref = this.images[name];
+							Types.Weak<Drawing.Image> weakRef = this.images[name];
 
-							if (weak_ref.IsAlive == false)
+							if (weakRef.IsAlive == false)
 							{
 								try
 								{
-									Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
+									Drawing.Image image = Drawing.Bitmap.FromManifestResource (resName, assembly);
 
 									if (image != null)
 									{
-										System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + res_name + " from assembly " + assembly.GetName ());
+										System.Diagnostics.Debug.WriteLine ("Pre-loaded image " + resName + " from assembly " + assembly.GetName ());
 
 										this.images[name] = new Types.Weak<Drawing.Image> (image);
 
@@ -534,8 +534,8 @@ namespace Epsitec.Common.Support
 			}
 			else if (this.images.ContainsKey (name))
 			{
-				Types.Weak<Drawing.Image> weak_ref = this.images[name];
-				Drawing.Image             image    = weak_ref.Target;
+				Types.Weak<Drawing.Image> weakRef = this.images[name];
+				Drawing.Image             image    = weakRef.Target;
 				
 				this.images.Remove (name);
 				
@@ -561,9 +561,9 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < assemblies.Length; i++)
 			{
-				object assembly_object = assemblies[i];
+				object assemblyObject = assemblies[i];
 				
-				if (assembly_object is System.Reflection.Emit.AssemblyBuilder)
+				if (assemblyObject is System.Reflection.Emit.AssemblyBuilder)
 				{
 					//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
 					//	puisqu'elles ont été générées dynamiquement.
@@ -584,9 +584,9 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		private Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string image_name)
+		private Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string imageName)
 		{
-			string field_name = "i." + image_name;
+			string fieldName = "i." + imageName;
 			
 			Drawing.Image cache = this.bundleImages[bundle];
 			
@@ -597,33 +597,33 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Bundle does not contain image"));
 				}
 				
-				byte[] image_data = bundle["image.data"].AsBinary;
-				string image_args = bundle["image.size"].AsString;
+				byte[] imageData = bundle["image.data"].AsBinary;
+				string imageArgs = bundle["image.size"].AsString;
 				
-				Drawing.Size size = Drawing.Size.Parse (image_args);
+				Drawing.Size size = Drawing.Size.Parse (imageArgs);
 				
-				cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Zero, size);
+				cache = Drawing.Bitmap.FromData (imageData, Drawing.Point.Zero, size);
 				
 				this.bundleImages[bundle] = cache;
 			}
 			
 			System.Diagnostics.Debug.Assert (cache != null);
 			
-			if (bundle.Contains (field_name))
+			if (bundle.Contains (fieldName))
 			{
 				//	Une image est définie par un champ 'i.name' qui contient une chaîne composée
 				//	de 'x;y;dx;dy;ox;oy' définissant l'origine dans l'image mère, la taille et
 				//	l'offset de l'origine dans la sous-image. 'oy;oy' sont facultatifs.
 				
-				string[] args = bundle[field_name].AsString.Split (';', ':');
+				string[] args = bundle[fieldName].AsString.Split (';', ':');
 				
 				if ((args.Length != 4) && (args.Length != 6))
 				{
-					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", image_name, args.Length));
+					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", imageName, args.Length));
 				}
 				
-				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1]);
-				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3]);
+				Drawing.Point rectPos  = Drawing.Point.Parse (args[0] + ";" + args[1]);
+				Drawing.Size  rectSize = Drawing.Size.Parse (args[2] + ";" + args[3]);
 				Drawing.Point origin   = Drawing.Point.Zero;
 				
 				if (args.Length >= 6)
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Support
 					origin = Drawing.Point.Parse (args[4] + ";" + args[5]);
 				}
 				
-				return Drawing.Bitmap.FromLargerImage (cache, new Drawing.Rectangle (rect_pos, rect_siz), origin);
+				return Drawing.Bitmap.FromLargerImage (cache, new Drawing.Rectangle (rectPos, rectSize), origin);
 			}
 			
 			return null;

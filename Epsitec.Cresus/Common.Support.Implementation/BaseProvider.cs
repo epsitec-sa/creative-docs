@@ -30,14 +30,14 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public static void CreateResourceDatabase(string application_name)
+		public static void CreateResourceDatabase(string applicationName)
 		{
 			//	Crée une base de données pour stocker les ressources de l'application spécifiée.
 			//	Cette opération échoue si la base existe déjà et génère une exception.
 			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				infrastructure.CreateDatabase (BaseProvider.GetDbAccess (application_name));
+				infrastructure.CreateDatabase (BaseProvider.GetDbAccess (applicationName));
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction ())
 				{
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Support.Implementation
 		
 		protected static DbAccess GetDbAccess(string application)
 		{
-			string base_name = application + "_resdb";
-			DbAccess  access = DbInfrastructure.CreateDbAccess (base_name);
+			string baseName = application + "_resdb";
+			DbAccess  access = DbInfrastructure.CreateDbAccess (baseName);
 			
 			access.Provider = "Firebird";
 			
@@ -118,16 +118,16 @@ namespace Epsitec.Common.Support.Implementation
 				return false;
 			}
 			
-			this.data_table = this.dbi.ResolveDbTable (BaseProvider.DataTableName);
+			this.dataTable = this.dbi.ResolveDbTable (BaseProvider.DataTableName);
 			
-			if (this.data_table == null)
+			if (this.dataTable == null)
 			{
 				this.dbi.Dispose ();
 				this.dbi = null;
 				return false;
 			}
 			
-			this.data_column_index = this.data_table.Columns["Data"].TableColumnIndex;
+			this.dataColumn_index = this.data_table.Columns["Data"].TableColumnIndex;
 			
 			return true;
 		}
@@ -155,11 +155,11 @@ namespace Epsitec.Common.Support.Implementation
 				//	On valide toujours le nom avant, pour éviter des mauvaises surprises si
 				//	l'appelant est malicieux.
 				
-				string row_name   = this.GetRowNameFromId (id, ResourceLevel.Default);
-				string level_name = this.GetRowLevelFromId (id, ResourceLevel.Default);
+				string rowName   = this.GetRowNameFromId (id, ResourceLevel.Default);
+				string levelName = this.GetRowLevelFromId (id, ResourceLevel.Default);
 				
-				DbSelectCondition condition = this.CreateSelectCondition (row_name, level_name);
-				DbRichCommand     command   = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
+				DbSelectCondition condition = this.CreateSelectCondition (rowName, levelName);
+				DbRichCommand     command   = DbRichCommand.CreateFromTable (this.dbi, null, this.dataTable, condition);
 				
 				if (command.DataSet.Tables[0].Rows.Count > 0)
 				{
@@ -178,17 +178,17 @@ namespace Epsitec.Common.Support.Implementation
 				this.SelectLocale (culture);
 			}
 			
-			string row_name   = this.GetRowNameFromId (id, level);
-			string level_name = this.GetRowLevelFromId (id, level);
+			string rowName   = this.GetRowNameFromId (id, level);
+			string levelName = this.GetRowLevelFromId (id, level);
 			
-			DbSelectCondition condition = this.CreateSelectCondition (row_name, level_name);
-			DbRichCommand     command   = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
+			DbSelectCondition condition = this.CreateSelectCondition (rowName, levelName);
+			DbRichCommand     command   = DbRichCommand.CreateFromTable (this.dbi, null, this.dataTable, condition);
 			
 			this.dbi.ReleaseConnection ();
 
 			if (command.DataSet.Tables[0].Rows.Count > 0)
 			{
-				byte[] data = (byte[]) command.DataSet.Tables[0].Rows[0][this.data_column_index];
+				byte[] data = (byte[]) command.DataSet.Tables[0].Rows[0][this.dataColumn_index];
 				return data;
 			}
 			
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override string[] GetIds(string name_filter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
+		public override string[] GetIds(string nameFilter, string type_filter, ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			if (this.culture != culture)
 			{
@@ -216,14 +216,14 @@ namespace Epsitec.Common.Support.Implementation
 				this.SelectLocale (culture);
 			}
 			
-			string row_name   = this.GetRowNameFromId (id, level);
-			string level_name = this.GetRowLevelFromId (id, level);
+			string rowName   = this.GetRowNameFromId (id, level);
+			string levelName = this.GetRowLevelFromId (id, level);
 			
-			DbSelectCondition condition = this.CreateSelectCondition (row_name, level_name);
+			DbSelectCondition condition = this.CreateSelectCondition (rowName, levelName);
 			
 			using (DbTransaction transaction = this.dbi.BeginTransaction ())
 			{
-				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, transaction, this.data_table, condition);
+				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, transaction, this.dataTable, condition);
 				
 				switch (mode)
 				{
@@ -232,7 +232,7 @@ namespace Epsitec.Common.Support.Implementation
 						{
 							throw new ResourceException (string.Format ("Resource {0} (level {1}) already exists.", id, level));
 						}
-						this.AddNewDataRow (command, transaction, row_name, level_name, data);
+						this.AddNewDataRow (command, transaction, rowName, levelName, data);
 						break;
 					
 					case ResourceSetMode.UpdateOnly:
@@ -240,17 +240,17 @@ namespace Epsitec.Common.Support.Implementation
 						{
 							throw new ResourceException (string.Format ("Resource {0} (level {1}) does not exist.", id, level));
 						}
-						this.UpdateDataRow (command, transaction, row_name, level_name, data);
+						this.UpdateDataRow (command, transaction, rowName, levelName, data);
 						break;
 					
 					case ResourceSetMode.Write:
 						if (command.DataSet.Tables[0].Rows.Count == 0)
 						{
-							this.AddNewDataRow (command, transaction, row_name, level_name, data);
+							this.AddNewDataRow (command, transaction, rowName, levelName, data);
 						}
 						else
 						{
-							this.UpdateDataRow (command, transaction, row_name, level_name, data);
+							this.UpdateDataRow (command, transaction, rowName, levelName, data);
 						}
 						break;
 					
@@ -284,15 +284,15 @@ namespace Epsitec.Common.Support.Implementation
 					this.SelectLocale (culture);
 				}
 				
-				string row_name   = this.GetRowNameFromId (id, level);
-				string level_name = this.GetRowLevelFromId (id, level);
+				string rowName   = this.GetRowNameFromId (id, level);
+				string levelName = this.GetRowLevelFromId (id, level);
 				
-				condition = this.CreateSelectCondition (row_name, level_name);
+				condition = this.CreateSelectCondition (rowName, levelName);
 			}
 			
 			using (DbTransaction transaction = this.dbi.BeginTransaction ())
 			{
-				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, transaction, this.data_table, condition);
+				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, transaction, this.dataTable, condition);
 				int           changes = 0;
 				
 				foreach (System.Data.DataRow row in command.DataSet.Tables[0].Rows)
@@ -328,8 +328,8 @@ namespace Epsitec.Common.Support.Implementation
 			
 			condition.Revision = DbSelectRevision.LiveActive;
 			
-			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, name);
-			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level);
+			condition.AddCondition (this.dataTable.Columns["Name"], DbCompare.Equal, name);
+			condition.AddCondition (this.dataTable.Columns["Level"], DbCompare.Equal, level);
 			
 			return condition;
 		}
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Support.Implementation
 			
 			condition.Revision = DbSelectRevision.LiveActive;
 			
-			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, name);
+			condition.AddCondition (this.dataTable.Columns["Name"], DbCompare.Equal, name);
 			
 			return condition;
 		}
@@ -380,38 +380,38 @@ namespace Epsitec.Common.Support.Implementation
 			//	La base de données a été créée et elle est parfaitement vide. Il faut maintenant
 			//	définir les types et les tables de base :
 			
-			DbTable db_table = infrastructure.CreateDbTable (BaseProvider.DataTableName, DbElementCat.UserDataManaged, BaseProvider.UseRevisions);
+			DbTable dbTable = infrastructure.CreateDbTable (BaseProvider.DataTableName, DbElementCat.UserDataManaged, BaseProvider.UseRevisions);
 			
-			DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
-			DbType db_type_level = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
-			DbType db_type_type  = infrastructure.CreateDbType ("Type", 25, false) as DbTypeString;
-			DbType db_type_data  = infrastructure.CreateDbTypeByteArray ("Data");
+			DbType dbTypeName  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
+			DbType dbTypeLevel = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
+			DbType dbTypeType  = infrastructure.CreateDbType ("Type", 25, false) as DbTypeString;
+			DbType dbTypeData  = infrastructure.CreateDbTypeByteArray ("Data");
 			
-			infrastructure.RegisterNewDbType (transaction, db_type_name);
-			infrastructure.RegisterNewDbType (transaction, db_type_level);
-			infrastructure.RegisterNewDbType (transaction, db_type_type);
-			infrastructure.RegisterNewDbType (transaction, db_type_data);
+			infrastructure.RegisterNewDbType (transaction, dbTypeName);
+			infrastructure.RegisterNewDbType (transaction, dbTypeLevel);
+			infrastructure.RegisterNewDbType (transaction, dbTypeType);
+			infrastructure.RegisterNewDbType (transaction, dbTypeData);
 			
-			DbColumn col1 = DbColumn.CreateUserDataColumn ("Name",  db_type_name,  Nullable.No);
-			DbColumn col2 = DbColumn.CreateUserDataColumn ("Level", db_type_level, Nullable.No);
-			DbColumn col3 = DbColumn.CreateUserDataColumn ("Type",  db_type_type,  Nullable.Yes);
-			DbColumn col4 = DbColumn.CreateUserDataColumn ("Data",  db_type_data,  Nullable.Yes);
+			DbColumn col1 = DbColumn.CreateUserDataColumn ("Name",  dbTypeName,  Nullable.No);
+			DbColumn col2 = DbColumn.CreateUserDataColumn ("Level", dbTypeLevel, Nullable.No);
+			DbColumn col3 = DbColumn.CreateUserDataColumn ("Type",  dbTypeType,  Nullable.Yes);
+			DbColumn col4 = DbColumn.CreateUserDataColumn ("Data",  dbTypeData,  Nullable.Yes);
 			
-			db_table.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
+			dbTable.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
 			
-			infrastructure.RegisterNewDbTable (transaction, db_table);
+			infrastructure.RegisterNewDbTable (transaction, dbTable);
 		}
 		
 		private const string				DataTableName = "Data";
 		private const DbRevisionMode		UseRevisions  = DbRevisionMode.Disabled;
 		
 		protected DbInfrastructure			dbi;
-		protected DbTable					data_table;
-		protected int						data_column_index;
+		protected DbTable					dataTable;
+		protected int						dataColumnIndex;
 		
-		protected string					column_default;
-		protected string					column_local;
-		protected string					column_custom;
+		protected string					columnDefault;
+		protected string					columnLocal;
+		protected string					columnCustom;
 	}
 }
 #endif

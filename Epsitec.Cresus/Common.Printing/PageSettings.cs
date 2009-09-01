@@ -117,9 +117,9 @@ namespace Epsitec.Common.Printing
 			return this.ps.PrinterSettings.GetHdevmode (this.ps);
 		}
 		
-		public void SetDevMode(System.IntPtr dev_mode)
+		public void SetDevMode(System.IntPtr devMode)
 		{
-			this.ps.PrinterSettings.SetHdevmode (dev_mode);
+			this.ps.PrinterSettings.SetHdevmode (devMode);
 		}
 		
 		

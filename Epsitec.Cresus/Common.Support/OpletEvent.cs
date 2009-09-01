@@ -9,10 +9,10 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class OpletEventArgs : System.EventArgs
 	{
-		public OpletEventArgs(IOplet oplet, OpletEvent oplet_event)
+		public OpletEventArgs(IOplet oplet, OpletEvent opletEvent)
 		{
 			this.oplet       = oplet;
-			this.oplet_event = oplet_event;
+			this.opletEvent  = opletEvent;
 		}
 		
 		
@@ -28,13 +28,13 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.oplet_event;
+				return this.opletEvent;
 			}
 		}
 		
 		
 		private IOplet							oplet;
-		private OpletEvent						oplet_event;
+		private OpletEvent						opletEvent;
 	}
 	
 	public delegate void OpletEventHandler(object sender, OpletEventArgs e);
