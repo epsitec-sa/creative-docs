@@ -92,7 +92,8 @@ namespace Epsitec.Common.Widgets
 				if (this.OptionButtonVisibility != value)
 				{
 					this.optionButton.Visibility = value;
-					this.UpdateGeometry (this.Client.Bounds);
+					Layouts.LayoutContext.AddToMeasureQueue (this);
+//-					this.UpdateGeometry (this.Client.Bounds);
 				}
 			}
 		}
@@ -446,6 +447,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.Size GetBestFitSize(int sampleLength)
+		{
+			double dx = 1 + (sampleLength-1) * this.ColumnCount;
+			double dy = 1 + (sampleLength-1) * this.RowCount;
+
+			if (this.OptionButtonVisibility)
+			{
+				dx += 17;
+			}
+
+			return new Drawing.Size (dx, dy);
+		}
+
+		public override Drawing.Size GetBestFitSize()
+		{
+			return this.GetBestFitSize (19);
+		}
+
 		private void UpdateGeometry(Drawing.Rectangle rect)
 		{
 			if ((this.palette == null) ||
@@ -454,27 +473,60 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			double dx = (rect.Width+1.0)/this.columnCount;
-			double dy = (rect.Height+1.0)/this.rowCount;
+			double dx = System.Math.Floor (rect.Width/this.columnCount);
+			double dy = System.Math.Floor (rect.Height/this.rowCount);
+			
 			dx = dy = System.Math.Min (dx, dy);
 
-			Drawing.Point pos = new Drawing.Point (rect.Right-(dx-1.0)*this.columnCount-1.0, 0);
+			double contentsWidth  = dx * this.columnCount + 1;
+			double availableWidth = rect.Width;
+			double internalMargin = 0;
+
+			if (this.OptionButtonVisibility)
+			{
+				internalMargin = 17;
+			}
+
+			double offset = 0;
+			
+			switch (this.ContentAlignment)
+			{
+				case Drawing.ContentAlignment.BottomLeft:
+				case Drawing.ContentAlignment.MiddleLeft:
+				case Drawing.ContentAlignment.TopLeft:
+					offset = internalMargin;
+					break;
+
+				case Drawing.ContentAlignment.BottomCenter:
+				case Drawing.ContentAlignment.MiddleCenter:
+				case Drawing.ContentAlignment.TopCenter:
+					offset = System.Math.Floor ((availableWidth - internalMargin - contentsWidth) / 2);
+					break;
+					
+				case Drawing.ContentAlignment.BottomRight:
+				case Drawing.ContentAlignment.MiddleRight:
+				case Drawing.ContentAlignment.TopRight:
+					offset = availableWidth - contentsWidth;
+					break;
+			}
+			
+			Drawing.Point pos = new Drawing.Point (offset, 0);
 			int i = 0;
 			for (int x = 0; x < this.columnCount; x++)
 			{
-				pos.Y = rect.Top-dy;
+				pos.Y = rect.Top-(dy+1);
 				for (int y = 0; y < this.rowCount; y++)
 				{
-					Drawing.Rectangle r = new Drawing.Rectangle (pos.X, pos.Y, dx, dy);
+					Drawing.Rectangle r = new Drawing.Rectangle (pos.X, pos.Y, dx+1, dy+1);
 					this.palette[i++].SetManualBounds (r);
-					pos.Y -= dy-1.0;
+					pos.Y -= dy;
 				}
-				pos.X += dx-1.0;
+				pos.X += dx;
 			}
 
 			if (this.OptionButtonVisibility)
 			{
-				Drawing.Rectangle r = new Drawing.Rectangle (rect.Left, rect.Top-14, 14, 14);
+				Drawing.Rectangle r = new Drawing.Rectangle (offset - internalMargin, rect.Top-14, 14, 14);
 				this.optionButton.SetManualBounds (r);
 				this.optionButton.Visibility = true;
 			}

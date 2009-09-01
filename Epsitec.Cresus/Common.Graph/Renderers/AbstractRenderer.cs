@@ -100,6 +100,14 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
+		public IEnumerable<KeyValuePair<string, Styles.AbstractStyle>> Styles
+		{
+			get
+			{
+				return this.styles;
+			}
+		}
+
 		public CaptionPainter Captions
 		{
 			get

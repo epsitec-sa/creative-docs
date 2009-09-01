@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.showContainerCallback = showContainer;
 			this.disposeContainerCallback = disposeContainer;
 			this.graphType = Res.Commands.GraphType.UseLineChart;
+			this.colorStyle = new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" };
 
 			Epsitec.Common.Types.Binding binding = new Epsitec.Common.Types.Binding (Epsitec.Common.Types.BindingMode.OneTime, document);
 			Epsitec.Common.Types.DataObject.SetDataContext (container, binding);
@@ -118,7 +119,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.captionView = new CaptionView ()
 			{
 				Parent = this.captionFrame,
-				Padding = new Margins(4, 4, 2, 2),
+				Padding = new Margins (4, 4, 4, 4),
 				Dock = DockStyle.Stacked
 			};
 
@@ -137,9 +138,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.captionOptionsFrame = new FrameBox ()
 			{
 				Parent = this.captionFrame,
-				BackColor = Color.FromAlphaColor (0.3, Color.FromName ("Lime")),
-				Dock = DockStyle.Stacked
+				Dock = DockStyle.Stacked,
+				PreferredSize = new Size (144, 144)
 			};
+
+			this.captionColorPalette = new ColorPalette ()
+			{
+				Parent = this.captionOptionsFrame,
+				Dock = DockStyle.Fill,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+				OptionButtonVisibility = false,
+				RowCount = 12,
+				ColumnCount = 9,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				ColorCollection = new ColorCollection (DocumentViewController.GetColors ())
+			};
+
+			this.captionColorPalette.MinSize = this.captionColorPalette.GetBestFitSize (13);
 			
 			this.splitter = new AutoSplitter ()
 			{
@@ -158,7 +174,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
 			this.accumulateValuesCheckButton.ActiveStateChanged += sender => this.AccumulateValues = (this.accumulateValuesCheckButton.ActiveState == ActiveState.Yes);
 			this.stackValuesCheckButton.ActiveStateChanged += sender => this.StackValues = (this.stackValuesCheckButton.ActiveState == ActiveState.Yes);
-			
+			this.captionColorPalette.ExportSelectedColor += sender => this.DefineColor (this.captionColorPalette.SelectedColor.Basic);
 
 			var button = new Button ()
 			{
@@ -182,6 +198,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 						this.LayoutMode = ContainerLayoutMode.VerticalFlow;
 					}
 				};
+		}
+
+		private void DefineColor(Color color)
+		{
+			int index = this.detectionController.ActiveIndex;
+
+			if ((index < 0) ||
+				(index >= this.colorStyle.Count))
+			{
+				return;
+			}
+
+			this.colorStyle.DefineColor (index, color);
+
+			this.Refresh ();
 		}
 
 		public System.Action<IEnumerable<int>> RemoveSeriesFromGraphAction
@@ -430,7 +461,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (renderer != null)
 			{
-				renderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
+				renderer.AddStyle (this.colorStyle);
 				renderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
 			}
 
@@ -456,6 +487,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 				yield return new ChartValue (value.Label, accumulation);
 			}
 		}
+
+		private static IEnumerable<RichColor> GetColors()
+		{
+			foreach (int value in new int[] { 100, 75, 50 })
+			{
+				foreach (int saturation in new int[] { 100, 60, 30 })
+				{
+					for (int hue = 0; hue < 360; hue += 30)
+					{
+						yield return RichColor.FromHsv (hue, saturation / 100.0, value / 100.0);
+					}
+				}
+			}
+		}
+
 
 		public void MakeVisible()
 		{
@@ -510,12 +556,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (newValue == -1)
 			{
 				this.captionOptionsFrame.Hide ();
+				this.captionColorPalette.Hide ();
 				this.HideQuickButtons ();
 			}
 			else
 			{
 				this.captionOptionsFrame.Show ();
 				this.quickButtonRemoveSeries.Show ();
+				this.captionColorPalette.Show ();
 
 				var bounds = this.detectionController.ActiveCaptionBounds;
 				this.quickButtonRemoveSeries.Margins = new Margins (0, 0 - this.captionView.Padding.Right, 0, bounds.Bottom - this.captionView.Padding.Bottom);
@@ -557,7 +605,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return o.GetValue (DocumentViewController.DocumentViewControllerProperty) as DocumentViewController;
 		}
 
-
+		
 
 
 		
@@ -574,6 +622,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly FrameBox				captionFrame;
 		private readonly CaptionView			captionView;
 		private readonly FrameBox				captionOptionsFrame;
+		private readonly ColorPalette			captionColorPalette;
 		
 		private readonly Button					quickButtonRemoveSeries;
 		
@@ -587,5 +636,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private bool							stackValues;
 		private Command							graphType;
 		private ContainerLayoutMode				layoutMode;
+		private Epsitec.Common.Graph.Styles.ColorStyle colorStyle;
 	}
 }

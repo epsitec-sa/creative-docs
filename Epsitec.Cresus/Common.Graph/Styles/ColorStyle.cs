@@ -16,6 +16,15 @@ namespace Epsitec.Common.Graph.Styles
 			this.Name = name;
 		}
 
+
+		public int Count
+		{
+			get
+			{
+				return this.colors.Count;
+			}
+		}
+		
 		
 		public void Add(string name)
 		{
@@ -25,6 +34,12 @@ namespace Epsitec.Common.Graph.Styles
 		public void Add(Color color)
 		{
 			this.colors.Add (color);
+		}
+
+
+		public void DefineColor(int index, Color color)
+		{
+			this.colors[index] = color;
 		}
 
 
