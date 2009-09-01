@@ -91,40 +91,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		private static void CreateTools(FrameBox frame)
 		{
-			new MetaButton ()
+			foreach (var command in MainWindowController.GetToolCommands ())
 			{
-				ButtonClass = ButtonClass.FlatButton,
-				Dock = DockStyle.Stacked,
-				CommandObject = ApplicationCommands.Undo,
-				PreferredWidth = 32,
-				Parent = frame
-			};
+				new IconButton ()
+				{
+					Dock = DockStyle.Stacked,
+					CommandObject = command,
+					PreferredWidth = 32,
+					PreferredIconSize = new Size (20, 20),
+					Parent = frame
+				};
+			}
+		}
 
-			new MetaButton ()
-			{
-				ButtonClass = ButtonClass.FlatButton,
-				Dock = DockStyle.Stacked,
-				CommandObject = ApplicationCommands.Redo,
-				PreferredWidth = 32,
-				Parent = frame
-			};
-
-			new IconButton ()
-			{
-				Dock = DockStyle.Stacked,
-				CommandObject = ApplicationCommands.Save,
-				PreferredWidth = 32,
-				Parent = frame
-			};
-
-			new IconButton ()
-			{
-				Dock = DockStyle.Stacked,
-				CommandObject = Res.Commands.File.ExportImage,
-				PreferredWidth = 32,
-				PreferredIconSize = new Size (20, 20),
-				Parent = frame
-			};
+		private static IEnumerable<Command> GetToolCommands()
+		{
+			yield return ApplicationCommands.Undo;
+			yield return ApplicationCommands.Redo;
+			yield return ApplicationCommands.Save;
+			yield return ApplicationCommands.Copy;
+			yield return Res.Commands.File.ExportImage;
 		}
 
 

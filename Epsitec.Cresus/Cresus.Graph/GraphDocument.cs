@@ -72,43 +72,6 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-
-		public void Add(ChartSeries series)
-		{
-			this.chartSeries.Add (series);
-			this.ProcessDocumentChanged ();
-		}
-
-		public ChartSeries FindChartSeries(int index)
-		{
-			if ((index < 0) ||
-				(index >= this.chartSeries.Count))
-			{
-				return null;
-			}
-			else
-			{
-				return this.chartSeries[index];
-			}
-		}
-
-		public void Remove(ChartSeries series)
-		{
-			this.chartSeries.Remove (series);
-			this.ProcessDocumentChanged ();
-		}
-
-		public void Clear()
-		{
-			this.chartSeries.Clear ();
-			this.ProcessDocumentChanged ();
-		}
-
-		public void MakeVisible()
-		{
-			this.views.ForEach (x => x.MakeVisible ());
-		}
-
 		public System.Action<IEnumerable<int>> RemoveSeriesFromGraphAction
 		{
 			get
@@ -124,6 +87,45 @@ namespace Epsitec.Cresus.Graph
 				}
 			}
 		}
+
+		
+		public ChartSeries Find(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.chartSeries.Count))
+			{
+				return null;
+			}
+			else
+			{
+				return this.chartSeries[index];
+			}
+		}
+
+		public void Add(ChartSeries series)
+		{
+			this.chartSeries.Add (series);
+			this.ProcessDocumentChanged ();
+		}
+
+		public void Remove(ChartSeries series)
+		{
+			this.chartSeries.Remove (series);
+			this.ProcessDocumentChanged ();
+		}
+
+		public void Clear()
+		{
+			this.chartSeries.Clear ();
+			this.ProcessDocumentChanged ();
+		}
+
+		
+		public void MakeVisible()
+		{
+			this.views.ForEach (x => x.MakeVisible ());
+		}
+
 
 		internal XElement SaveSettings(XElement xml)
 		{

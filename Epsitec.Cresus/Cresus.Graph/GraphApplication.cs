@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Graph
 		private void RemoveFromChart(IEnumerable<int> rows)
 		{
 			var table = this.activeDocument.DataSet.DataTable;
-			var list  = new List<ChartSeries> (rows.Select (x => this.activeDocument.FindChartSeries (x)));
+			var list  = new List<ChartSeries> (rows.Select (x => this.activeDocument.Find (x)));
 
 			list.ForEach (series => this.activeDocument.Remove (series));
 			list.ForEach (series => table.Add (series.Label, series.Values));

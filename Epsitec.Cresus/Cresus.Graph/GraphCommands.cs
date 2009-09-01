@@ -33,6 +33,12 @@ namespace Epsitec.Cresus.Graph
 		[Command (Res.CommandIds.File.ExportImage)]
 		private void ExportImageCommand()
 		{
+			//-this.application.Document.ExportImage ();
+		}
+
+		[Command (ApplicationCommands.Id.Copy)]
+		private void CopyCommand()
+		{
 			this.application.Document.ExportImage ();
 		}
 
