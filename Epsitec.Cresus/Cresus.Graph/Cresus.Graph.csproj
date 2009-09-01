@@ -144,6 +144,9 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Glyph.Pick.icon" />
+    <EmbeddedResource Include="Images\Glyph.PlusMinus.icon" />
+    <EmbeddedResource Include="Images\Glyph.Sum.icon" />
     <EmbeddedResource Include="Images\File.ExportImage.icon" />
     <Content Include="Resources\Cresus.Graph\Captions.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

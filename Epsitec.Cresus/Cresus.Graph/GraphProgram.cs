@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			UI.Initialize ();
 
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBlue");
+			//Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBlue");
 
 			GraphProgram.Application = new GraphApplication ();
 

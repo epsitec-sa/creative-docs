@@ -71,32 +71,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.hotRowIndex = -1;
 			this.visibleQuickButtons = new List<Button> ();
 
-			this.quickButtonNegate = new GlyphButton ()
+			this.quickButtonNegate = new IconButton ()
 			{
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				GlyphShape = GlyphShape.Minus,
+				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.PlusMinus.icon",
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
 
-			this.quickButtonAddToGraph = new GlyphButton ()
+			this.quickButtonAddToGraph = new IconButton ()
 			{
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				GlyphShape = GlyphShape.Plus,
+				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Pick.icon",
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
 
-			this.quickButtonSum = new Button ()
+			this.quickButtonSum = new IconButton ()
 			{
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				Text = "Σ",
+				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Sum.icon",
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
@@ -283,7 +283,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					var rectangle = this.selection == null ? bounds : this.scrollList.GetRowBounds (this.selection.BeginIndex, this.selection.Count);
 
 					double arrowLength = 6;
-					double zoneWidth = arrowLength + (this.visibleQuickButtons.Count * 24) + 2;
+					double buttWidth = this.visibleQuickButtons.Count * 24;
+					double zoneWidth = arrowLength + 2 + buttWidth;
 
 					using (Path path = new Path ())
 					{
@@ -329,7 +330,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						graphics.RenderSolid ();
 					}
 
-					this.UpdateQuickButtons (new Rectangle (bounds.Right - zoneWidth + arrowLength, bounds.Bottom, zoneWidth - arrowLength, bounds.Height));
+					this.UpdateQuickButtons (new Rectangle (bounds.Right - buttWidth, bounds.Bottom, buttWidth, bounds.Height));
 				}
 			}
 			else
@@ -360,8 +361,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void UpdateQuickButtons()
 		{
-			double x = this.quickButtonsFrame.Left;
-			double y = this.quickButtonsFrame.Bottom + this.scrollList.ActualLocation.Y;
+			double x = this.quickButtonsFrame.Left + this.scrollList.ActualLocation.X - this.scrollList.Parent.Padding.Left;
+			double y = this.quickButtonsFrame.Bottom + this.scrollList.ActualLocation.Y - this.scrollList.Parent.Padding.Bottom;
+
+			double h = this.scrollList.RowHeight;
 
 			foreach (var button in this.QuickButtons)
 			{
@@ -369,7 +372,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					button.Enable = true;
 					button.Show ();
-					button.Margins = new Margins (x, 0, 0, y);
+					button.Margins = new Margins (x, 0, 0, System.Math.Floor (y + (h - button.PreferredHeight) / 2));
 
 					x += button.PreferredWidth + 2;
 				}
@@ -416,6 +419,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (action != null)
 			{
 				action (this.scrollList.GetSortedSelection ());
+				this.scrollList.Focus ();
 				this.scrollList.Invalidate ();
 			}
 		}
