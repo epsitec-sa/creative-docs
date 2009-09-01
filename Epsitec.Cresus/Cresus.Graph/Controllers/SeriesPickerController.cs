@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void UpdateVisibleButtons()
 		{
-			int selectionCount = (this.selection == null) ? 0 : this.selection.Count;
+			int selectionCount = (this.selection == null) ? 0 : this.scrollList.SelectionCount;
 
 			if (this.selectionCount != selectionCount)
 			{
