@@ -77,7 +77,7 @@ namespace Epsitec.Common.Printing
 
 		#endregion
 
-		public PrintPort(System.Drawing.Graphics graphics, int dx, int dy)
+		internal PrintPort(System.Drawing.Graphics graphics, int dx, int dy)
 		{
 			this.graphics = graphics;
 			this.brush    = System.Drawing.Brushes.Black;
@@ -98,94 +98,7 @@ namespace Epsitec.Common.Printing
 		}
 
 
-		public static void PrintToClipboardMetafile(System.Action<Drawing.IPaintPort> painter, int dx, int dy)
-		{
-			using (Metafile metafile = new Metafile (dx, dy))
-			{
-				PrintPort port = new PrintPort (metafile.Graphics, dx, dy);
-				painter (port);
-			}
-		}
 
-		public static void PrintToMetafile(System.Action<Drawing.IPaintPort> painter, string path, int dx, int dy)
-		{
-			using (Metafile metafile = new Metafile (path, dx, dy))
-			{
-				PrintPort port = new PrintPort (metafile.Graphics, dx, dy);
-				painter (port);
-			}
-		}
-
-
-		public class Metafile : System.IDisposable
-		{
-			public Metafile(int dx, int dy)
-				: this (Metafile.GetTempFilePath (), dx, dy)
-			{
-				this.copyToClipboard = true;
-			}
-
-			public Metafile(string path, int dx, int dy)
-			{
-				this.bitmap = new System.Drawing.Bitmap (1, 1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-				this.bitmapGraphics = System.Drawing.Graphics.FromImage (this.bitmap);
-				this.units = System.Drawing.GraphicsUnit.Pixel;
-
-				this.bitmapGraphics.FillRectangle (System.Drawing.Brushes.White, bitmap.GetBounds (ref units));
-
-				this.hdc = bitmapGraphics.GetHdc ();
-				this.metafile = new System.Drawing.Imaging.Metafile (path, this.hdc, new System.Drawing.Rectangle (0, 0, dx, dy), System.Drawing.Imaging.MetafileFrameUnit.Pixel);
-				this.graphics = System.Drawing.Graphics.FromImage (this.metafile);
-				this.graphics.FillRectangle (System.Drawing.Brushes.White, 0, 0, 200, 200);
-			}
-
-			public System.Drawing.Graphics Graphics
-			{
-				get
-				{
-					return this.graphics;
-				}
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				this.graphics.Dispose ();
-
-				if (this.copyToClipboard)
-				{
-					Epsitec.Common.Drawing.Platform.ClipboardMetafileHelper.PutMetafileOnClipboardAndDispose (this.metafile);
-				}
-				else
-				{
-					this.metafile.Dispose ();
-				}
-				
-				this.bitmapGraphics.ReleaseHdc (hdc);
-				this.bitmapGraphics.Dispose ();
-				this.bitmap.Dispose ();
-			}
-
-			#endregion
-
-			private static string GetTempFilePath()
-			{
-				return System.IO.Path.GetTempFileName ();
-			}
-
-			
-			readonly System.Drawing.Bitmap bitmap;
-			readonly System.Drawing.Graphics bitmapGraphics;
-			readonly System.Drawing.GraphicsUnit units;
-
-			readonly System.IntPtr hdc;
-			readonly System.Drawing.Imaging.Metafile metafile;
-			readonly System.Drawing.Graphics graphics;
-			readonly bool copyToClipboard;
-		}
-		
-		
 		public double							LineWidth
 		{
 			get
@@ -888,15 +801,33 @@ namespace Epsitec.Common.Printing
 			this.graphics.ScaleTransform (1, -1);
 			this.graphics.TranslateTransform (-tx, -ty);
 		}
-		
-		
+
+
+		public static void PrintToClipboardMetafile(System.Action<Drawing.IPaintPort> painter, int dx, int dy)
+		{
+			using (Metafile metafile = new Metafile (dx, dy))
+			{
+				PrintPort port = new PrintPort (metafile.Graphics, dx, dy);
+				painter (port);
+			}
+		}
+
+		public static void PrintToMetafile(System.Action<Drawing.IPaintPort> painter, string path, int dx, int dy)
+		{
+			using (Metafile metafile = new Metafile (path, dx, dy))
+			{
+				PrintPort port = new PrintPort (metafile.Graphics, dx, dy);
+				painter (port);
+			}
+		}
+
+
 		private void ResetTransform()
 		{
 			this.graphics.ResetTransform ();
 			this.graphics.TranslateTransform (this.offsetX, this.offsetY);
 			this.graphics.ScaleTransform (this.scale, -this.scale);
 		}
-
 
 		private void InvalidatePen()
 		{
@@ -970,6 +901,79 @@ namespace Epsitec.Common.Printing
 		}
 
 
+		#region Metafile Class
+
+		class Metafile : System.IDisposable
+		{
+			public Metafile(int dx, int dy)
+				: this (Metafile.GetTempFilePath (), dx, dy)
+			{
+				this.copyToClipboard = true;
+			}
+
+			public Metafile(string path, int dx, int dy)
+			{
+				this.bitmap = new System.Drawing.Bitmap (1, 1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+				this.bitmapGraphics = System.Drawing.Graphics.FromImage (this.bitmap);
+				this.units = System.Drawing.GraphicsUnit.Pixel;
+
+				this.bitmapGraphics.FillRectangle (System.Drawing.Brushes.White, bitmap.GetBounds (ref units));
+
+				this.hdc = bitmapGraphics.GetHdc ();
+				this.metafile = new System.Drawing.Imaging.Metafile (path, this.hdc, new System.Drawing.Rectangle (0, 0, dx, dy), System.Drawing.Imaging.MetafileFrameUnit.Pixel);
+				this.graphics = System.Drawing.Graphics.FromImage (this.metafile);
+				this.graphics.FillRectangle (System.Drawing.Brushes.White, 0, 0, 200, 200);
+			}
+
+			public System.Drawing.Graphics Graphics
+			{
+				get
+				{
+					return this.graphics;
+				}
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.graphics.Dispose ();
+
+				if (this.copyToClipboard)
+				{
+					Epsitec.Common.Drawing.Platform.ClipboardMetafileHelper.PutMetafileOnClipboardAndDispose (this.metafile);
+				}
+				else
+				{
+					this.metafile.Dispose ();
+				}
+
+				this.bitmapGraphics.ReleaseHdc (hdc);
+				this.bitmapGraphics.Dispose ();
+				this.bitmap.Dispose ();
+			}
+
+			#endregion
+
+			private static string GetTempFilePath()
+			{
+				return System.IO.Path.GetTempFileName ();
+			}
+
+
+			readonly System.Drawing.Bitmap bitmap;
+			readonly System.Drawing.Graphics bitmapGraphics;
+			readonly System.Drawing.GraphicsUnit units;
+
+			readonly System.IntPtr hdc;
+			readonly System.Drawing.Imaging.Metafile metafile;
+			readonly System.Drawing.Graphics graphics;
+			readonly bool copyToClipboard;
+		}
+
+		#endregion
+
+
 
 		private PageSettings					settings;
 
@@ -993,7 +997,7 @@ namespace Epsitec.Common.Printing
 
 		private Drawing.Color					originalColor = Drawing.Color.FromRgb (0, 0, 0);
 		private Drawing.Color					color = Drawing.Color.FromRgb (0, 0, 0);
-		private Stack<Drawing.ColorModifierCallback>		stackColorModifier;
+		private readonly Stack<Drawing.ColorModifierCallback>		stackColorModifier;
 		private Drawing.Rectangle				clip = Drawing.Rectangle.MaxValue;
 		private Drawing.Transform				transform = Drawing.Transform.Identity;
 		private Drawing.FillMode				fill_mode = Drawing.FillMode.NonZero;
