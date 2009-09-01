@@ -98,6 +98,15 @@ namespace Epsitec.Common.Printing
 		}
 
 
+		public static void PrintToClipboardMetafile(System.Action<Drawing.IPaintPort> painter, int dx, int dy)
+		{
+			using (Metafile metafile = new Metafile (dx, dy))
+			{
+				PrintPort port = new PrintPort (metafile.Graphics, dx, dy);
+				painter (port);
+			}
+		}
+
 		public static void PrintToMetafile(System.Action<Drawing.IPaintPort> painter, string path, int dx, int dy)
 		{
 			using (Metafile metafile = new Metafile (path, dx, dy))
@@ -110,6 +119,12 @@ namespace Epsitec.Common.Printing
 
 		public class Metafile : System.IDisposable
 		{
+			public Metafile(int dx, int dy)
+				: this (Metafile.GetTempFilePath (), dx, dy)
+			{
+				this.copyToClipboard = true;
+			}
+
 			public Metafile(string path, int dx, int dy)
 			{
 				this.bitmap = new System.Drawing.Bitmap (1, 1, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
@@ -137,13 +152,28 @@ namespace Epsitec.Common.Printing
 			public void Dispose()
 			{
 				this.graphics.Dispose ();
-				this.metafile.Dispose ();
+
+				if (this.copyToClipboard)
+				{
+					Epsitec.Common.Drawing.Platform.ClipboardMetafileHelper.PutMetafileOnClipboardAndDispose (this.metafile);
+				}
+				else
+				{
+					this.metafile.Dispose ();
+				}
+				
 				this.bitmapGraphics.ReleaseHdc (hdc);
 				this.bitmapGraphics.Dispose ();
 				this.bitmap.Dispose ();
 			}
 
 			#endregion
+
+			private static string GetTempFilePath()
+			{
+				return System.IO.Path.GetTempFileName ();
+			}
+
 			
 			readonly System.Drawing.Bitmap bitmap;
 			readonly System.Drawing.Graphics bitmapGraphics;
@@ -152,6 +182,7 @@ namespace Epsitec.Common.Printing
 			readonly System.IntPtr hdc;
 			readonly System.Drawing.Imaging.Metafile metafile;
 			readonly System.Drawing.Graphics graphics;
+			readonly bool copyToClipboard;
 		}
 		
 		

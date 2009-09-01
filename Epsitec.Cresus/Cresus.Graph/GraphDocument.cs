@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void ExportImage()
 		{
-			this.views.First ().SaveMetafile (@"F:\graph.emf");
+			this.views.First ().SaveMetafile (null);
 		}
 		
 		

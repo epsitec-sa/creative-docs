@@ -300,13 +300,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			double dx = this.chartView.ActualWidth;
 			double dy = this.chartView.ActualHeight;
+			var  rect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
 
-			Epsitec.Common.Printing.PrintPort.PrintToMetafile (
-				port =>
-				{
-					this.chartView.Renderer.Render (port, new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height));
-				},
-				path, (int) dx, (int) dy);
+			if (string.IsNullOrEmpty (path))
+			{
+				Epsitec.Common.Printing.PrintPort.PrintToClipboardMetafile (
+					port => this.chartView.Renderer.Render (port, rect),
+					(int) dx, (int) dy);
+			}
+			else
+			{
+				Epsitec.Common.Printing.PrintPort.PrintToMetafile (
+					port => this.chartView.Renderer.Render (port, rect),
+					path, (int) dx, (int) dy);
+			}
 		}
 
 
