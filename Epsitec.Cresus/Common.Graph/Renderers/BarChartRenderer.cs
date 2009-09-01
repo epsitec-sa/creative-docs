@@ -87,7 +87,7 @@ namespace Epsitec.Common.Graph.Renderers
 					port.PaintSurface (path);
 					
 					port.Color = this.GetOutlineColor (port.Color);
-					port.LineWidth = 2;
+					port.LineWidth = 1;
 					port.LineCap = CapStyle.Butt;
 					port.LineJoin = JoinStyle.Miter;
 					port.PaintOutline (path);

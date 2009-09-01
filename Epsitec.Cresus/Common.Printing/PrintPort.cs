@@ -922,7 +922,6 @@ namespace Epsitec.Common.Printing
 				this.hdc = bitmapGraphics.GetHdc ();
 				this.metafile = new System.Drawing.Imaging.Metafile (path, this.hdc, new System.Drawing.Rectangle (0, 0, dx, dy), System.Drawing.Imaging.MetafileFrameUnit.Pixel);
 				this.graphics = System.Drawing.Graphics.FromImage (this.metafile);
-				this.graphics.FillRectangle (System.Drawing.Brushes.White, 0, 0, 200, 200);
 			}
 
 			public System.Drawing.Graphics Graphics
