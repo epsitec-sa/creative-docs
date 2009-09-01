@@ -121,6 +121,11 @@ namespace Epsitec.Common.Widgets.Layouts
 					continue;
 				}
 
+				if (LayoutEngine.GetIgnoreMeasure (child))
+				{
+					continue;
+				}
+
 				Drawing.Margins margins = child.Margins;
 
 				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);

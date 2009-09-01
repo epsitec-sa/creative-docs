@@ -131,6 +131,32 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		public static bool GetIgnoreMeasure(DependencyObject o)
+		{
+			object value;
+
+			if (o.TryGetLocalValue (LayoutEngine.IgnoreMeasureProperty, out value))
+			{
+				return (bool) value;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public static void SetIgnoreMeasure(DependencyObject o, bool value)
+		{
+			if (value == false)
+			{
+				o.ClearValue (LayoutEngine.IgnoreMeasureProperty);
+			}
+			else
+			{
+				o.SetValue (LayoutEngine.IgnoreMeasureProperty, value);
+			}
+		}
+
 		private static void NotifyLayoutEngineChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Visual visual = o as Visual;
@@ -152,6 +178,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		
 		public static readonly DependencyProperty LayoutEngineProperty = DependencyProperty.RegisterAttached ("LayoutEngine", typeof (ILayoutEngine), typeof (LayoutEngine), new DependencyPropertyMetadata (LayoutEngine.NotifyLayoutEngineChanged));
+		public static readonly DependencyProperty IgnoreMeasureProperty = DependencyProperty.RegisterAttached ("IgnoreMeasure", typeof (bool), typeof (LayoutEngine), new DependencyPropertyMetadata (false));
 
 		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();
 		private static ILayoutEngine					anchor_engine = new AnchorLayoutEngine ();

@@ -135,6 +135,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Visibility = false
 			};
 
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.quickButtonRemoveSeries, true);
+
 			this.captionOptionsFrame = new FrameBox ()
 			{
 				Parent = this.captionFrame,
