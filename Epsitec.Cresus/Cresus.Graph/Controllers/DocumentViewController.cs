@@ -112,12 +112,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = chartFrame
 			};
 
-			this.captionView = new CaptionView ()
+			this.captionFrame = new FrameBox ()
 			{
 				Parent = chartFrame,
-				Padding = new Margins(4, 4, 2, 2),
 				PreferredWidth = 160,
-				PreferredHeight = 80
+				PreferredHeight = 80,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
+			};
+
+			this.captionView = new CaptionView ()
+			{
+				Parent = this.captionFrame,
+				Padding = new Margins(4, 4, 2, 2),
+				Dock = DockStyle.Stacked
+			};
+
+			this.captionOptionsFrame = new FrameBox ()
+			{
+				Parent = this.captionFrame,
+				BackColor = Color.FromAlphaColor (0.3, Color.FromName ("Lime")),
+				Dock = DockStyle.Stacked
 			};
 			
 			this.splitter = new AutoSplitter ()
@@ -199,14 +213,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 					{
 						case ContainerLayoutMode.HorizontalFlow:
 							this.splitter.Dock = DockStyle.Right;
-							this.captionView.Dock = DockStyle.Right;
+							this.captionFrame.Dock = DockStyle.Right;
+							this.captionFrame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 							break;
 
 						case ContainerLayoutMode.VerticalFlow:
 							this.splitter.Dock = DockStyle.Bottom;
-							this.captionView.Dock = DockStyle.Bottom;
+							this.captionFrame.Dock = DockStyle.Bottom;
+							this.captionFrame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 							break;
 					}
+
+					this.Refresh ();
 				}
 			}
 		}
@@ -286,6 +304,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 					renderer.CollectRange (series);
 					renderer.UpdateCaptions (series);
 					renderer.AlwaysIncludeZero = true;
+
+					Size size = renderer.Captions.GetCaptionLayoutSize (Size.MaxValue) + this.captionView.Padding.Size;
+
+					switch (this.LayoutMode)
+					{
+						case ContainerLayoutMode.HorizontalFlow:
+							this.captionView.PreferredHeight = size.Height;
+							break;
+
+						case ContainerLayoutMode.VerticalFlow:
+							this.captionView.PreferredWidth = size.Width;
+							break;
+					}
 
 					this.chartView.Renderer = renderer;
 					this.captionView.Captions = renderer.Captions;
@@ -400,6 +431,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.chartView.Dispose ();
 				this.splitter.Dispose ();
 				this.captionView.Dispose ();
+				this.captionFrame.Dispose ();
 				this.accumulateValuesCheckButton.Dispose ();
 				this.stackValuesCheckButton.Dispose ();
 //-				this.detectionController.Dispose ();
@@ -458,7 +490,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly CommandSelectionBar	commandBar;
 		private readonly ChartView				chartView;
 		private readonly AutoSplitter			splitter;
+		private readonly FrameBox				captionFrame;
 		private readonly CaptionView			captionView;
+		private readonly FrameBox				captionOptionsFrame;
 		private readonly CheckButton			accumulateValuesCheckButton;
 		private readonly CheckButton			stackValuesCheckButton;
 		private readonly SeriesDetectionController detectionController;

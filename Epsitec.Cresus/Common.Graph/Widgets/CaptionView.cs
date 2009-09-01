@@ -66,7 +66,7 @@ namespace Epsitec.Common.Graph.Widgets
 				return -1;
 			}
 		}
-		
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
