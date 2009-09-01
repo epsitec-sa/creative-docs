@@ -4,7 +4,9 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	public class SeriesDetectionController
+	public sealed class SeriesDetectionController
 	{
 		public SeriesDetectionController(ChartView chartView, CaptionView captionView)
 		{
@@ -23,6 +25,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.chartView.MouseMove += this.HandleChartViewMouseMove;
 				this.chartView.Released  += this.HandleChartViewReleased;
+				this.chartView.Exited    += (sender, e) => this.HoverIndex = -1;
 
 				this.chartView.PaintForeground +=
 					delegate (object sender, PaintEventArgs e)
@@ -51,6 +54,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.captionView.MouseMove += this.HandleCaptionViewMouseMove;
 				this.captionView.Released  += this.HandleChartViewReleased;
+				this.captionView.Exited    += (sender, e) => this.HoverIndex = -1;
 				
 				this.captionView.BackgroundPaintCallback =
 					delegate (CaptionPainter painter, int index, Rectangle bounds, IPaintPort port)
@@ -67,7 +71,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 								graphics.AddFilledRectangle (Rectangle.Inflate (bounds, 4.0, 1.0));
 								graphics.RenderSolid (Color.FromAlphaColor (0.3, color));
 							}
-							if (index == this.selectIndex)
+							if (index == this.ActiveIndex)
 							{
 								graphics.LineWidth = 2.0;
 								graphics.LineJoin  = JoinStyle.Miter;
@@ -78,11 +82,68 @@ namespace Epsitec.Cresus.Graph.Controllers
 					};
 			}
 
-			this.hoverIndex  = -1;
-			this.selectIndex = -1;
+			this.HoverIndex  = -1;
+			this.ActiveIndex = -1;
 		}
 
 
+		public int HoverIndex
+		{
+			get
+			{
+				return this.hoverIndex;
+			}
+			set
+			{
+				if (this.hoverIndex != value)
+				{
+					var oldValue = this.hoverIndex;
+					var newValue = value;
+
+					this.hoverIndex = value;
+
+					this.OnHoverIndexChanged (oldValue, newValue);
+					this.GetWidgets ().ForEach (widget => widget.Invalidate ());
+				}
+			}
+		}
+
+		public int ActiveIndex
+		{
+			get
+			{
+				return this.activeIndex;
+			}
+			set
+			{
+				if (this.activeIndex != value)
+				{
+					var oldValue = this.activeIndex;
+					var newValue = value;
+
+					this.activeIndex = value;
+
+					this.OnActiveIndexChanged (oldValue, newValue);
+					this.GetWidgets ().ForEach (widget => widget.Invalidate ());
+				}
+			}
+		}
+
+		public Rectangle ActiveCaptionBounds
+		{
+			get
+			{
+				if (this.ActiveIndex < 0)
+				{
+					return Rectangle.Empty;
+				}
+				else
+				{
+					return Rectangle.Inflate (this.captionView.GetCaptionBounds (this.ActiveIndex), 2, 2);
+				}
+			}
+		}
+		
 		private void HandleChartViewMouseMove(object sender, MessageEventArgs e)
 		{
 			var view = this.chartView;
@@ -119,24 +180,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleChartViewReleased(object sender, MessageEventArgs e)
 		{
-			if ((this.hoverIndex >= 0) &&
-				(this.selectIndex != this.hoverIndex))
+			if (this.hoverIndex >= 0)
 			{
-				this.selectIndex = this.hoverIndex;
-				this.GetWidgets ().ForEach (x => x.Invalidate ());
+				this.ActiveIndex = this.hoverIndex;
 			}
 		}
 
 		
 		private void NotifyHover(int index)
 		{
-			if (this.hoverIndex != index)
-			{
-				this.hoverIndex = index;
-				this.GetWidgets ().ForEach (x => x.Invalidate ());
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Hover : {0}", index));
-			}
+			this.HoverIndex = index;
 		}
 
 
@@ -152,12 +205,34 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		private void OnHoverIndexChanged(int oldIndex, int newIndex)
+		{
+			var handler = this.HoverIndexChanged;
+
+			if (handler != null)
+			{
+				handler (this, new DependencyPropertyChangedEventArgs ("HoverIndex", oldIndex, newIndex));
+			}
+		}
+
+		private void OnActiveIndexChanged(int oldIndex, int newIndex)
+		{
+			var handler = this.ActiveIndexChanged;
+
+			if (handler != null)
+			{
+				handler (this, new DependencyPropertyChangedEventArgs ("ActiveIndex", oldIndex, newIndex));
+			}
+		}
 
 
+		public event EventHandler<DependencyPropertyChangedEventArgs> HoverIndexChanged;
+		public event EventHandler<DependencyPropertyChangedEventArgs> ActiveIndexChanged;
+		
 		private readonly ChartView chartView;
 		private readonly CaptionView captionView;
 
 		private int hoverIndex;
-		private int selectIndex;
+		private int activeIndex;
 	}
 }

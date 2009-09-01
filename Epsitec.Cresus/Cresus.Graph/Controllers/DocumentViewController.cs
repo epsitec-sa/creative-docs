@@ -99,11 +99,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.accumulateValuesCheckButton.UpdatePreferredSize ();
 			this.stackValuesCheckButton.UpdatePreferredSize ();
-
-			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
-			this.accumulateValuesCheckButton.ActiveStateChanged += sender => this.AccumulateValues = (this.accumulateValuesCheckButton.ActiveState == ActiveState.Yes);
-			this.stackValuesCheckButton.ActiveStateChanged += sender => this.StackValues = (this.stackValuesCheckButton.ActiveState == ActiveState.Yes);
-
 			
 
 			this.chartView = new ChartView ()
@@ -127,6 +122,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Stacked
 			};
 
+			this.quickButtonRemoveSeries = new MetaButton ()
+			{
+				Parent = this.captionView,
+				ButtonClass = ButtonClass.FlatButton,
+				PreferredWidth = 22,
+				PreferredHeight = 22,
+				Anchor = AnchorStyles.BottomRight,
+				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Drop.icon",
+				AutoFocus = false,
+				Visibility = false
+			};
+
 			this.captionOptionsFrame = new FrameBox ()
 			{
 				Parent = this.captionFrame,
@@ -141,7 +148,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.LayoutMode = ContainerLayoutMode.HorizontalFlow;
 			
-			this.detectionController= new SeriesDetectionController (this.chartView, this.captionView);
+			this.detectionController = new SeriesDetectionController (this.chartView, this.captionView);
+
+			this.detectionController.ActiveIndexChanged += this.HandleDetectionControllerActiveIndexChanged;
+			this.detectionController.HoverIndexChanged += this.HandleDetectionControllerHoverIndexChanged;
+
+			this.quickButtonRemoveSeries.Clicked += (sender, e) => this.ProcessQuickButton (this.RemoveSeriesFromGraphAction);
+			
+			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
+			this.accumulateValuesCheckButton.ActiveStateChanged += sender => this.AccumulateValues = (this.accumulateValuesCheckButton.ActiveState == ActiveState.Yes);
+			this.stackValuesCheckButton.ActiveStateChanged += sender => this.StackValues = (this.stackValuesCheckButton.ActiveState == ActiveState.Yes);
+			
 
 			var button = new Button ()
 			{
@@ -166,6 +183,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				};
 		}
+
+		public System.Action<IEnumerable<int>> RemoveSeriesFromGraphAction
+		{
+			get;
+			set;
+		}
+		
+		
+		private void ProcessQuickButton(System.Action<IEnumerable<int>> action)
+		{
+			int[] items = new int[] { this.detectionController.ActiveIndex };
+
+			this.detectionController.ActiveIndex = -1;
+
+			if (action != null)
+			{
+				action (items);
+			}
+		}
+
+		private void HideQuickButtons()
+		{
+			this.quickButtonRemoveSeries.Hide ();
+		}
+		
+
 
 		private CommandContext CreateCommandContext(Widget container)
 		{
@@ -445,6 +488,40 @@ namespace Epsitec.Cresus.Graph.Controllers
 			base.Dispose (disposing);
 		}
 
+		private void HandleDetectionControllerHoverIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			int newValue = (int) e.NewValue;
+
+			if (newValue != this.detectionController.ActiveIndex)
+			{
+				this.HideQuickButtons ();
+			}
+			else if ((newValue >= 0) && (this.captionView.IsEntered))
+			{
+				this.quickButtonRemoveSeries.Show ();
+			}
+		}
+
+		private void HandleDetectionControllerActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			int oldValue = (int) e.OldValue;
+			int newValue = (int) e.NewValue;
+
+			if (newValue == -1)
+			{
+				this.captionOptionsFrame.Hide ();
+				this.HideQuickButtons ();
+			}
+			else
+			{
+				this.captionOptionsFrame.Show ();
+				this.quickButtonRemoveSeries.Show ();
+
+				var bounds = this.detectionController.ActiveCaptionBounds;
+				this.quickButtonRemoveSeries.Margins = new Margins (0, 0 - this.captionView.Padding.Right, 0, bounds.Bottom - this.captionView.Padding.Bottom);
+				//	TODO: ...
+			}
+		}
 		
 
 		private class CommandController
@@ -480,6 +557,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return o.GetValue (DocumentViewController.DocumentViewControllerProperty) as DocumentViewController;
 		}
 
+
+
+
+		
 		public static readonly DependencyProperty DocumentViewControllerProperty = DependencyProperty.RegisterAttached ("DocumentViewController", typeof (DocumentViewController), typeof (DocumentViewController), new DependencyPropertyMetadata ());
 
 
@@ -493,6 +574,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly FrameBox				captionFrame;
 		private readonly CaptionView			captionView;
 		private readonly FrameBox				captionOptionsFrame;
+		
+		private readonly Button					quickButtonRemoveSeries;
+		
 		private readonly CheckButton			accumulateValuesCheckButton;
 		private readonly CheckButton			stackValuesCheckButton;
 		private readonly SeriesDetectionController detectionController;

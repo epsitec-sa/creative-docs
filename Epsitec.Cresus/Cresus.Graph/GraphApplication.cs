@@ -14,6 +14,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -27,6 +28,7 @@ namespace Epsitec.Cresus.Graph
 			this.mainWindowController = new Controllers.MainWindowController ();
 
 			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
+			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
 		}
 
 		
@@ -67,7 +69,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.activeDocument == null)
 			{
-				new GraphDocument ();
+				this.CreateDocument ();
 				this.SetupDataSet ();
 			}
 		}
@@ -183,10 +185,22 @@ namespace Epsitec.Cresus.Graph
 			{
 				System.Diagnostics.Debug.Assert (node.Name == "doc");
 
-				var doc = new GraphDocument ();
+				var doc = this.CreateDocument ();
 
 				doc.RestoreSettings (node);
 			}
+		}
+
+		private GraphDocument CreateDocument()
+		{
+			var doc = new GraphDocument ()
+			{
+				RemoveSeriesFromGraphAction = this.removeSeriesFromGraphAction
+			};
+
+
+
+			return doc;
 		}
 
 		
@@ -227,10 +241,24 @@ namespace Epsitec.Cresus.Graph
 				this.activeDocument.Add (table.GetRowSeries (row));
 			}
 
-			this.activeDocument.DataSet.DataTable.RemoveRows (rows);
+			table.RemoveRows (rows);
 			
 			this.seriesPickerController.UpdateScrollListItems ();
 			this.seriesPickerController.UpdateChartView ();
+		}
+
+		private void RemoveFromChart(IEnumerable<int> rows)
+		{
+			var table = this.activeDocument.DataSet.DataTable;
+			var list  = new List<ChartSeries> (rows.Select (x => this.activeDocument.FindChartSeries (x)));
+
+			list.ForEach (series => this.activeDocument.Remove (series));
+			list.ForEach (series => table.Add (series.Label, series.Values));
+			
+			this.seriesPickerController.UpdateScrollListItems ();
+			this.seriesPickerController.UpdateChartView ();
+
+			this.seriesPickerController.SetSelectedItem (table.RowCount-1);
 		}
 
 		private void LoadDataSet()
@@ -264,5 +292,6 @@ namespace Epsitec.Cresus.Graph
 		private readonly Controllers.MainWindowController mainWindowController;
 		private readonly List<GraphDocument> documents;
 		private readonly Core.UI.PersistenceManager persistenceManager;
+		private readonly System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
 	}
 }

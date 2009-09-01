@@ -146,6 +146,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.scrollList.Items.Clear ();
 				this.scrollList.Items.AddRange (labels.Select (x => this.negatedSeriesLabels.Contains (x) ? string.Concat ("(", x, ")") : x));
 				this.scrollList.SelectedIndex = selection.Count == 0 ? -1 : selection.First ();
+				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
 			}
 		}
 
@@ -159,6 +160,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			renderer.ClipRange (System.Math.Min (0, renderer.MinValue), System.Math.Max (0, renderer.MaxValue));
 
 			this.chartView.Invalidate ();
+		}
+
+		public void SetSelectedItem(int index)
+		{
+			if (this.scrollList != null)
+			{
+				this.scrollList.SelectedIndex = index;
+				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
+			}
 		}
 
 

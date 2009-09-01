@@ -79,6 +79,25 @@ namespace Epsitec.Cresus.Graph
 			this.ProcessDocumentChanged ();
 		}
 
+		public ChartSeries FindChartSeries(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.chartSeries.Count))
+			{
+				return null;
+			}
+			else
+			{
+				return this.chartSeries[index];
+			}
+		}
+
+		public void Remove(ChartSeries series)
+		{
+			this.chartSeries.Remove (series);
+			this.ProcessDocumentChanged ();
+		}
+
 		public void Clear()
 		{
 			this.chartSeries.Clear ();
@@ -90,6 +109,21 @@ namespace Epsitec.Cresus.Graph
 			this.views.ForEach (x => x.MakeVisible ());
 		}
 
+		public System.Action<IEnumerable<int>> RemoveSeriesFromGraphAction
+		{
+			get
+			{
+				return this.removeSeriesFromGraphAction;
+			}
+			set
+			{
+				if (this.removeSeriesFromGraphAction != value)
+				{
+					this.removeSeriesFromGraphAction = value;
+					this.views.ForEach (view => view.RemoveSeriesFromGraphAction = value);
+				}
+			}
+		}
 
 		internal XElement SaveSettings(XElement xml)
 		{
@@ -191,7 +225,10 @@ namespace Epsitec.Cresus.Graph
 					book.Items.Remove (page);
 					page.Dispose ();
 					this.views.Remove (x);
-				});
+				})
+			{
+				RemoveSeriesFromGraphAction = this.RemoveSeriesFromGraphAction
+			};
 
 			this.views.Add (panel);
 			book.Items.Add (page);
@@ -207,5 +244,6 @@ namespace Epsitec.Cresus.Graph
 		private readonly Actions.Recorder redoRecorder;
 
 		private string path;
+		private System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
 	}
 }

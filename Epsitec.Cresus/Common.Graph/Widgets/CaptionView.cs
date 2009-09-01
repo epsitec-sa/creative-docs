@@ -59,11 +59,23 @@ namespace Epsitec.Common.Graph.Widgets
 		{
 			if (this.captions != null)
 			{
-				return this.captions.DetectCaption (Rectangle.Deflate (this.Client.Bounds, this.Padding), pos);
+				return this.captions.DetectCaption (this.GetContentsRectangle (), pos);
 			}
 			else
 			{
 				return -1;
+			}
+		}
+
+		public Rectangle GetCaptionBounds(int index)
+		{
+			if (this.captions != null)
+			{
+				return this.captions.GetCaptionBounds (this.GetContentsRectangle (), index);
+			}
+			else
+			{
+				return Rectangle.Empty;
 			}
 		}
 
@@ -75,8 +87,13 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (this.captions != null)
 			{
-				this.captions.Render (graphics, Rectangle.Deflate (this.Client.Bounds, this.Padding));
+				this.captions.Render (graphics, this.GetContentsRectangle ());
 			}
+		}
+
+		private Rectangle GetContentsRectangle()
+		{
+			return Rectangle.Deflate (this.Client.Bounds, this.Padding);
 		}
 
 		private void BackgroundPaintTrampoline(CaptionPainter painter, int index, Rectangle bounds, IPaintPort port)
