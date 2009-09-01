@@ -13,7 +13,7 @@ namespace Epsitec.Common.IO
 		
 		void Reset();
 		
-		void Update(int byte_value);
+		void Update(int byteValue);
 		void Update(byte[] buffer);
 		void Update(byte[] buffer, int offset, int length);
 		

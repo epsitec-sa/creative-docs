@@ -340,10 +340,10 @@ namespace Epsitec.Common.OpenType
 		{
 			FontIdentity fid = FontIdentity.CreateDynamicFont (data);
 
-			int name_t_offset = fid.FontData["name"].Offset;
-			int name_t_length = fid.FontData["name"].Length;
+			int nameTOffset = fid.FontData["name"].Offset;
+			int nameTLength = fid.FontData["name"].Length;
 
-			fid.DefineTableName (new Table_name (data, name_t_offset), name_t_length);
+			fid.DefineTableName (new TableName (data, nameTOffset), nameTLength);
 			
 			if (this.fullDict.ContainsKey (fid.FullName))
 			{
@@ -456,8 +456,8 @@ namespace Epsitec.Common.OpenType
 
 			foreach (FontIdentity id in this)
 			{
-				Table_name name = id.OpenTypeTable_name;
-				Table_name.NameEncoding[] encodings = name.GetAvailableNameEncodings ();
+				TableName name = id.OpenTypeTableName;
+				TableName.NameEncoding[] encodings = name.GetAvailableNameEncodings ();
 
 				lines.Add ("-----------------------------");
 				lines.AddRange (string.Format (
@@ -549,7 +549,7 @@ namespace Epsitec.Common.OpenType
 					
 					byte[] dataName = Platform.Neutral.LoadFontDataNameTable (family, style);
 					
-					Table_name name_t = null;
+					TableName nameT = null;
 					object     record = Platform.Neutral.GetFontSystemDescription (family, style);
 					
 					string fullName = null;
@@ -570,7 +570,7 @@ namespace Epsitec.Common.OpenType
 							{
 								if (fontData.Directory.Version == 0x00010000)
 								{
-									Table_ttcf ttcf = fontData.TrueTypeCollectionTable;
+									TableTtcf ttcf = fontData.TrueTypeCollectionTable;
 
 									int num  = ttcf.NumFonts;
 									byte[] data = ttcf.BaseData;
@@ -578,20 +578,20 @@ namespace Epsitec.Common.OpenType
 									for (int i = 0; i < num; i++)
 									{
 										fontData = new FontData (data, i);
-										FontIdentity fid_n = new FontIdentity (fontData, record, i);
-										int name_t_offset = fid_n.FontData["name"].Offset;
-										int name_t_length = fid_n.FontData["name"].Length;
+										FontIdentity fidN = new FontIdentity (fontData, record, i);
+										int nameTOffset = fidN.FontData["name"].Offset;
+										int nameTLength = fidN.FontData["name"].Length;
 
-										name_t    = new Table_name (data, name_t_offset);
-										fullName = name_t.GetFullFontName ();
-										fuidName = name_t.GetUniqueFontIdentifier ();
+										nameT    = new TableName (data, nameTOffset);
+										fullName = nameT.GetFullFontName ();
+										fuidName = nameT.GetUniqueFontIdentifier ();
 
-										fid_n.DefineTableName (name_t, name_t_length);
-										fid_n.DefineSystemFontFamilyAndStyle (fid_n.InvariantFaceName, fid_n.InvariantStyleName);
+										fidN.DefineTableName (nameT, nameTLength);
+										fidN.DefineSystemFontFamilyAndStyle (fidN.InvariantFaceName, fidN.InvariantStyleName);
 
-										delete.Remove (fid_n.InternalFontName);
+										delete.Remove (fidN.InternalFontName);
 
-										this.Add (fullName, fuidName, fid_n, callback);
+										this.Add (fullName, fuidName, fidN, callback);
 									}
 								}
 								else
@@ -609,15 +609,15 @@ namespace Epsitec.Common.OpenType
 					{
 						//	Standard font file, easy to process...
 						
-						name_t   = new Table_name (dataName, 0);
-						fullName = name_t.GetFullFontName ();
-						fuidName = name_t.GetUniqueFontIdentifier ();
+						nameT   = new TableName (dataName, 0);
+						fullName = nameT.GetFullFontName ();
+						fuidName = nameT.GetUniqueFontIdentifier ();
 						
 						if ((record != null) &&
 							(fullName != null) &&
 							(this.fullDict.ContainsKey (fullName) == false))
 						{
-							FontIdentity fid = new FontIdentity (name_t, dataName.Length, record);
+							FontIdentity fid = new FontIdentity (nameT, dataName.Length, record);
 							
 							fid.DefineSystemFontFamilyAndStyle (family, style);
 

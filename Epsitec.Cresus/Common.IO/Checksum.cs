@@ -69,15 +69,15 @@ namespace Epsitec.Common.IO
 				this.checksum.Reset ();
 			}
 
-			public void Update(int byte_value)
+			public void Update(int byteValue)
 			{
-				if ((byte_value < 0) ||
-					(byte_value > 255))
+				if ((byteValue < 0) ||
+					(byteValue > 255))
 				{
-					throw new System.ArgumentOutOfRangeException ("byte_value", byte_value, "The value must be in the 0..255 range.");
+					throw new System.ArgumentOutOfRangeException ("byte_value", byteValue, "The value must be in the 0..255 range.");
 				}
 				
-				this.checksum.Update (byte_value);
+				this.checksum.Update (byteValue);
 			}
 			
 			public void Update(byte[] buffer)

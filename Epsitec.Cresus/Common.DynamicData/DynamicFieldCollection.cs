@@ -45,10 +45,10 @@ namespace Epsitec.Common.DynamicData
 		}
 		
 		
-		public IDynamicField FindDynamicField(System.Data.DataTable table, int row_index, int column_index)
+		public IDynamicField FindDynamicField(System.Data.DataTable table, int rowIndex, int columnIndex)
 		{
-			System.Data.DataRow    row    = table.Rows[row_index];
-			System.Data.DataColumn column = table.Columns[column_index];
+			System.Data.DataRow    row    = table.Rows[rowIndex];
+			System.Data.DataColumn column = table.Columns[columnIndex];
 			
 			//	TODO: gérer un cache
 			
@@ -70,24 +70,24 @@ namespace Epsitec.Common.DynamicData
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			FieldMatchResult[] match_cols = this.AnalyseColumns (table);
-			FieldMatchResult[] match_rows = this.AnalyseRows (table);
+			FieldMatchResult[] matchCols = this.AnalyseColumns (table);
+			FieldMatchResult[] matchRows = this.AnalyseRows (table);
 			
-			int[] analyse_rows = this.FindPossibleIndexes (match_rows);
-			int[] analyse_cols = this.FindPossibleIndexes (match_cols);
+			int[] analyseRows = this.FindPossibleIndexes (matchRows);
+			int[] analyseCols = this.FindPossibleIndexes (matchCols);
 			
 			bool refresh;
 			
-			foreach (int ir in analyse_rows)
+			foreach (int ir in analyseRows)
 			{
-				switch (match_rows[ir])
+				switch (matchRows[ir])
 				{
 					case FieldMatchResult.One:
 						
 						//	Il y a juste un champ dans cette ligne; on peut donc s'arrêter dès que l'on
 						//	a trouvé une colonne avec un champ dynamique :
 						
-						this.FindDynamicCellsRow (table, list, ir, ref analyse_cols, match_cols, 1);
+						this.FindDynamicCellsRow (table, list, ir, ref analyseCols, matchCols, 1);
 						break;
 					
 					case FieldMatchResult.Some:
@@ -95,7 +95,7 @@ namespace Epsitec.Common.DynamicData
 						//	Il y a 0..n champs dans cette ligne; il faut donc vérifier toutes les
 						//	colonnes, une à une :
 						
-						this.FindDynamicCellsRow (table, list, ir, ref analyse_cols, match_cols, analyse_cols.Length);
+						this.FindDynamicCellsRow (table, list, ir, ref analyseCols, matchCols, analyseCols.Length);
 						break;
 					
 					case FieldMatchResult.All:
@@ -103,30 +103,30 @@ namespace Epsitec.Common.DynamicData
 						//	Toutes les colonnes de cette ligne contiennent des champs dynamiques; on
 						//	peut donc toutes les inclure dans la liste.
 						
-						System.Diagnostics.Debug.Assert (analyse_cols.Length == match_cols.Length);
+						System.Diagnostics.Debug.Assert (analyseCols.Length == matchCols.Length);
 						
 						refresh = false;
 						
-						for (int ic = 0; ic < match_cols.Length; ic++)
+						for (int ic = 0; ic < matchCols.Length; ic++)
 						{
 							list.Add (new CellIndex (ir, ic));
 							
-							System.Diagnostics.Debug.Assert (analyse_cols[ic] == ic);
+							System.Diagnostics.Debug.Assert (analyseCols[ic] == ic);
 							
 							//	Si une colonne spécifiait un champ dans une unique ligne, alors on
 							//	pourra supprimer la colonne en question pour ne pas la reconsidérer
 							//	ultérieurement :
 							
-							if (match_cols[ic] == FieldMatchResult.One)
+							if (matchCols[ic] == FieldMatchResult.One)
 							{
-								match_cols[ic] = FieldMatchResult.Zero;
+								matchCols[ic] = FieldMatchResult.Zero;
 								refresh = true;
 							}
 						}
 						
 						if (refresh)
 						{
-							analyse_cols = this.FindPossibleIndexes (match_cols);
+							analyseCols = this.FindPossibleIndexes (matchCols);
 						}
 						break;
 				}
@@ -189,9 +189,9 @@ namespace Epsitec.Common.DynamicData
 			return table.ExtendedProperties[DynamicFieldCollection.DynamicFieldsName] as DynamicFieldCollection;
 		}
 		
-		public static void SetDynamicFiels(System.Data.DataTable table, DynamicFieldCollection dynamic_fields)
+		public static void SetDynamicFiels(System.Data.DataTable table, DynamicFieldCollection dynamicFields)
 		{
-			if (dynamic_fields == null)
+			if (dynamicFields == null)
 			{
 				if (table.ExtendedProperties.Contains (DynamicFieldCollection.DynamicFieldsName))
 				{
@@ -200,7 +200,7 @@ namespace Epsitec.Common.DynamicData
 			}
 			else
 			{
-				table.ExtendedProperties[DynamicFieldCollection.DynamicFieldsName] = dynamic_fields;
+				table.ExtendedProperties[DynamicFieldCollection.DynamicFieldsName] = dynamicFields;
 			}
 		}
 		
@@ -265,21 +265,21 @@ namespace Epsitec.Common.DynamicData
 		}
 		#endregion
 		
-		private void FindDynamicCellsRow(System.Data.DataTable table, System.Collections.ArrayList list, int ir, ref int[] analyse_cols, FieldMatchResult[] match_cols, int max_match)
+		private void FindDynamicCellsRow(System.Data.DataTable table, System.Collections.ArrayList list, int ir, ref int[] analyseCols, FieldMatchResult[] matchCols, int maxMatch)
 		{
 			//	Passe en revue toutes les colonnes qui sont susceptibles de contenir un
 			//	champ dynamique; en fonction du type de match pour la colonne en cours,
 			//	on peut simplifier la recherche.
 			
-			//	Analyse au plus max_match colonnes.
+			//	Analyse au plus maxMatch colonnes.
 			
-			int n = analyse_cols.Length;
+			int n = analyseCols.Length;
 			
-			for (int c = 0; (c < n) && (max_match > 0); c++)
+			for (int c = 0; (c < n) && (maxMatch > 0); c++)
 			{
-				int ic = analyse_cols[c];
+				int ic = analyseCols[c];
 				
-				FieldMatchResult match = match_cols[ic];
+				FieldMatchResult match = matchCols[ic];
 				
 				if (match == FieldMatchResult.One)
 				{
@@ -288,18 +288,18 @@ namespace Epsitec.Common.DynamicData
 						//	Trouvé une cellule contenant un champ dynamique.
 						
 						list.Add (new CellIndex (ir, ic));
-						max_match--;
+						maxMatch--;
 						
 						//	La colonne contient exactement un champ et on vient de le trouver;
 						//	on peut donc supprimer la colonne et éviter des analyses ultérieures
 						//	inutiles de celle-ci.
 						
-						int[] fix_cols = new int[analyse_cols.Length-1];
+						int[] fixCols = new int[analyseCols.Length-1];
 						
-						System.Array.Copy (analyse_cols, 0,   fix_cols, 0, c);
-						System.Array.Copy (analyse_cols, c+1, fix_cols, c, n-c-1);
+						System.Array.Copy (analyseCols, 0,   fixCols, 0, c);
+						System.Array.Copy (analyseCols, c+1, fixCols, c, n-c-1);
 						
-						analyse_cols = fix_cols;
+						analyseCols = fixCols;
 						
 						//	Reprend là où on en était resté (comme on a enlevé la définition de
 						//	la colonne courante) :
@@ -314,7 +314,7 @@ namespace Epsitec.Common.DynamicData
 					//	besoin de vérifier si cette ligne particulière correspond.
 					
 					list.Add (new CellIndex (ir, ic));
-					max_match--;
+					maxMatch--;
 				}
 				else
 				{
@@ -326,7 +326,7 @@ namespace Epsitec.Common.DynamicData
 					if (this.FindDynamicField (table, ir, ic) != null)
 					{
 						list.Add (new CellIndex (ir, ic));
-						max_match--;
+						maxMatch--;
 					}
 				}
 			}

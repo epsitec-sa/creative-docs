@@ -22,16 +22,16 @@ namespace Epsitec.Common.OpenType
 			{
 				//	This is not a unique font, but a TrueType font Collection.
 				
-				Table_ttcf ttcf = new Table_ttcf (data, 0);
+				TableTtcf ttcf = new TableTtcf (data, 0);
 				
 				System.Diagnostics.Debug.Assert (ttcIndex >= 0);
 				System.Diagnostics.Debug.Assert (ttcIndex < ttcf.NumFonts);
 				
 				//	The table directory is located further in the file :
 				
-				int font_offset = ttcf.GetFontOffset (ttcIndex);
+				int fontOffset = ttcf.GetFontOffset (ttcIndex);
 				
-				this.Initialize (new TableDirectory (data, font_offset));
+				this.Initialize (new TableDirectory (data, fontOffset));
 			}
 			else
 			{
@@ -43,13 +43,13 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				if (this.ot_directory == null)
+				if (this.otDirectory == null)
 				{
 					return null;
 				}
 				else
 				{
-					return this.ot_directory.FindTable (name);
+					return this.otDirectory.FindTable (name);
 				}
 			}
 		}
@@ -58,7 +58,7 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return this.ot_directory;
+				return this.otDirectory;
 			}
 		}
 		
@@ -66,23 +66,23 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				return new System.ArraySegment<byte> (this.ot_directory.BaseData, this.ot_directory.BaseOffset, this.ot_directory.BaseLength);
+				return new System.ArraySegment<byte> (this.otDirectory.BaseData, this.otDirectory.BaseOffset, this.otDirectory.BaseLength);
 			}
 		}
 		
 		
-		public Table_ttcf						TrueTypeCollectionTable
+		public TableTtcf						TrueTypeCollectionTable
 		{
 			get
 			{
-				byte[] data = this.ot_directory.BaseData;
+				byte[] data = this.otDirectory.BaseData;
 
 				if ((data[0] == 't') &&
 					(data[1] == 't') &&
 					(data[2] == 'c') &&
 					(data[3] == 'f'))
 				{
-					return new Table_ttcf (data, 0);
+					return new TableTtcf (data, 0);
 				}
 				else
 				{
@@ -94,13 +94,13 @@ namespace Epsitec.Common.OpenType
 		
 		private void Initialize(TableDirectory directory)
 		{
-			System.Diagnostics.Debug.Assert (this.ot_directory == null);
+			System.Diagnostics.Debug.Assert (this.otDirectory == null);
 			System.Diagnostics.Debug.Assert (directory != null);
 			
-			this.ot_directory = directory;
+			this.otDirectory = directory;
 		}
 		
 		
-		private TableDirectory					ot_directory;
+		private TableDirectory					otDirectory;
 	}
 }

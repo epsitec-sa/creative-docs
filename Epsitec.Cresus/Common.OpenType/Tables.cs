@@ -182,9 +182,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_ttcf : Tables
+	public class TableTtcf : Tables
 	{
-		public Table_ttcf(byte[] data, int offset) : base (data, offset)
+		public TableTtcf(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -212,13 +212,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_head : Tables
+	public class TableHead : Tables
 	{
-		public Table_head(byte[] data, int offset) : base (data, offset)
+		public TableHead(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_head(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableHead(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -364,13 +364,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_glyf : Tables
+	public class TableGlyf : Tables
 	{
-		public Table_glyf(byte[] data, int offset) : base (data, offset)
+		public TableGlyf(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_glyf(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableGlyf(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -471,13 +471,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_post : Tables
+	public class TablePost : Tables
 	{
-		public Table_post(byte[] data, int offset) : base (data, offset)
+		public TablePost(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_post(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TablePost(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -554,7 +554,7 @@ namespace Epsitec.Common.OpenType
 		{
 			if (this.Version == 0x00010000)
 			{
-				return Table_post.GetMacGlyphName (glyph);
+				return TablePost.GetMacGlyphName (glyph);
 			}
 			else if (this.Version != 0x00020000)
 			{
@@ -592,7 +592,7 @@ namespace Epsitec.Common.OpenType
 				return buffer.ToString ();
 			}
 			
-			return Table_post.GetMacGlyphName (index);
+			return TablePost.GetMacGlyphName (index);
 		}
 		
 		
@@ -864,13 +864,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_loca_Short : Tables
+	public class TableLocaShort : Tables
 	{
-		public Table_loca_Short(byte[] data, int offset) : base (data, offset)
+		public TableLocaShort(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_loca_Short(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableLocaShort(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -880,13 +880,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_loca_Long : Tables
+	public class TableLocaLong : Tables
 	{
-		public Table_loca_Long(byte[] data, int offset) : base (data, offset)
+		public TableLocaLong(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_loca_Long(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableLocaLong(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -897,13 +897,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_maxp : Tables
+	public class TableMaxp : Tables
 	{
-		public Table_maxp(byte[] data, int offset) : base (data, offset)
+		public TableMaxp(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_maxp(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableMaxp(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1029,15 +1029,15 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_cmap : Tables
+	public class TableCmap : Tables
 	{
-		public Table_cmap(byte[] data, int offset) : base (data, offset)
+		public TableCmap(byte[] data, int offset) : base (data, offset)
 		{
 			//	http://partners.adobe.com/public/developer/opentype/index_cmap.html
 			
 		}
 		
-		public Table_cmap(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableCmap(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1245,34 +1245,34 @@ namespace Epsitec.Common.OpenType
 			
 			int max = (int) this.SegCountX2;
 			
-			int o_end_code   = 14;
-			int o_start_code = o_end_code + max + 2;
-			int o_id_delta   = o_start_code + max;
-			int o_id_range_o = o_id_delta + max;
+			int oEndCode   = 14;
+			int oStartCode = oEndCode + max + 2;
+			int oIdDelta   = oStartCode + max;
+			int oIdRangeO = oIdDelta + max;
 			
 			for (int i = 0; i < max; i += 2)
 			{
-				if (this.ReadInt16 (o_end_code + i) >= code)
+				if (this.ReadInt16 (oEndCode + i) >= code)
 				{
-					int start = this.ReadInt16 (o_start_code + i);
+					int start = this.ReadInt16 (oStartCode + i);
 					
 					if (start <= code)
 					{
-						int id_range_offset = this.ReadInt16 (o_id_range_o + i);
+						int idRangeOffset = this.ReadInt16 (oIdRangeO + i);
 						int index = 0;
 						
-						if (id_range_offset != 0)
+						if (idRangeOffset != 0)
 						{
-							index = this.ReadInt16 (o_id_range_o + i + (int) id_range_offset + 2 * (int)(code - start));
+							index = this.ReadInt16 (oIdRangeO + i + (int) idRangeOffset + 2 * (int)(code - start));
 							
 							if (index != 0)
 							{
-								index += this.ReadInt16 (o_id_delta + i);
+								index += this.ReadInt16 (oIdDelta + i);
 							}
 						}
 						else
 						{
-							index = this.ReadInt16 (o_id_delta + i) + code;
+							index = this.ReadInt16 (oIdDelta + i) + code;
 						}
 						
 						return (ushort)(index);
@@ -1331,18 +1331,18 @@ namespace Epsitec.Common.OpenType
 			
 			int max = (int) this.NumGroups;
 			
-			int o_start_char_code = 16;
-			int o_end_char_code   = 20;
-			int o_start_glyph_id  = 24;
+			int oStartCharCode = 16;
+			int oEndCharCode   = 20;
+			int oStartGlyphId  = 24;
 			
 			for (int i = 0; i < max; i++)
 			{
-				if (code <= this.ReadInt32 (12*i + o_end_char_code))
+				if (code <= this.ReadInt32 (12*i + oEndCharCode))
 				{
-					if (code >= this.ReadInt32 (12*i + o_start_char_code))
+					if (code >= this.ReadInt32 (12*i + oStartCharCode))
 					{
-						return (ushort) (code - this.ReadInt32 (12*i + o_start_char_code)
-							/**/              + this.ReadInt32 (12*i + o_start_glyph_id));
+						return (ushort) (code - this.ReadInt32 (12*i + oStartCharCode)
+							/**/              + this.ReadInt32 (12*i + oStartGlyphId));
 					}
 					
 					return 0;
@@ -1353,13 +1353,13 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class Table_name : Tables
+	public class TableName : Tables
 	{
-		public Table_name(byte[] data, int offset) : base (data, offset)
+		public TableName(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_name(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableName(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1403,17 +1403,17 @@ namespace Epsitec.Common.OpenType
 			
 			NameEncoding[] encodings = new NameEncoding[num];
 			
-			int o_platform_id   = 6;
-			int o_encoding_id   = 8;
-			int o_language_id   = 10;
-			int o_name_id       = 12;
+			int oPlatformId   = 6;
+			int oEncodingId   = 8;
+			int oLanguageId   = 10;
+			int oNameId       = 12;
 			
 			for (int i = 0; i < num; i++)
 			{
-				encodings[i].Platform = (PlatformId) (this.ReadInt16 (i*12 + o_platform_id));
-				encodings[i].Encoding = this.ReadInt16 (i*12 + o_encoding_id);
-				encodings[i].Language = this.ReadInt16 (i*12 + o_language_id);
-				encodings[i].Name     = (NameId) (this.ReadInt16 (i*12 + o_name_id));
+				encodings[i].Platform = (PlatformId) (this.ReadInt16 (i*12 + oPlatformId));
+				encodings[i].Encoding = this.ReadInt16 (i*12 + oEncodingId);
+				encodings[i].Language = this.ReadInt16 (i*12 + oLanguageId);
+				encodings[i].Name     = (NameId) (this.ReadInt16 (i*12 + oNameId));
 			}
 			
 			return encodings;
@@ -1424,26 +1424,26 @@ namespace Epsitec.Common.OpenType
 		{
 			int num = (int) this.NumNameRecords;
 			
-			int lang_id = (int) language;
-			int name_id = (int) name;
-			int plat_id = (int) platform;
+			int langId = (int) language;
+			int nameId = (int) name;
+			int platId = (int) platform;
 			
-			int o_platform_id   = 6;
-//			int o_encoding_id   = 8;
-			int o_language_id   = 10;
-			int o_name_id       = 12;
-			int o_string_length = 14;
-			int o_string_offset = 16;
+			int oPlatformId   = 6;
+//			int oEncodingId   = 8;
+			int oLanguageId   = 10;
+			int oNameId       = 12;
+			int oStringLength = 14;
+			int oStringOffset = 16;
 			
 			for (int i = 0; i < num; i++)
 			{
-				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
-/*					(this.ReadInt16 (i*12 + o_encoding_id) == 0) && */
-					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
-					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
+				if ((this.ReadInt16 (i*12 + oPlatformId) == platId) &&
+/*					(this.ReadInt16 (i*12 + oEncodingId) == 0) && */
+					(this.ReadInt16 (i*12 + oLanguageId) == langId) &&
+					(this.ReadInt16 (i*12 + oNameId)     == nameId))
 				{
-					int length = (int) (this.ReadInt16 (i*12 + o_string_length));
-					int offset = (int) (this.ReadInt16 (i*12 + o_string_offset) + this.StorageAreaOffset);
+					int length = (int) (this.ReadInt16 (i*12 + oStringLength));
+					int offset = (int) (this.ReadInt16 (i*12 + oStringOffset) + this.StorageAreaOffset);
 					
 					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 					
@@ -1463,26 +1463,26 @@ namespace Epsitec.Common.OpenType
 		{
 			int num = (int) this.NumNameRecords;
 			
-			int lang_id = (int) language;
-			int name_id = (int) name;
-			int plat_id = (int) platform;
+			int langId = (int) language;
+			int nameId = (int) name;
+			int platId = (int) platform;
 			
-			int o_platform_id   = 6;
-//			int o_encoding_id   = 8;
-			int o_language_id   = 10;
-			int o_name_id       = 12;
-			int o_string_length = 14;
-			int o_string_offset = 16;
+			int oPlatformId   = 6;
+//			int oEncodingId   = 8;
+			int oLanguageId   = 10;
+			int oNameId       = 12;
+			int oStringLength = 14;
+			int oStringOffset = 16;
 			
 			for (int i = 0; i < num; i++)
 			{
-				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
-/*					((this.ReadInt16 (i*12 + o_encoding_id) == 1) || (plat_id == 0)) && */
-					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
-					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
+				if ((this.ReadInt16 (i*12 + oPlatformId) == platId) &&
+/*					((this.ReadInt16 (i*12 + oEncodingId) == 1) || (platId == 0)) && */
+					(this.ReadInt16 (i*12 + oLanguageId) == langId) &&
+					(this.ReadInt16 (i*12 + oNameId)     == nameId))
 				{
-					int length = (int) (this.ReadInt16 (i*12 + o_string_length));
-					int offset = (int) (this.ReadInt16 (i*12 + o_string_offset) + this.StorageAreaOffset);
+					int length = (int) (this.ReadInt16 (i*12 + oStringLength));
+					int offset = (int) (this.ReadInt16 (i*12 + oStringOffset) + this.StorageAreaOffset);
 					
 					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 					
@@ -1581,10 +1581,10 @@ namespace Epsitec.Common.OpenType
 		DesignerURL,
 		License,
 		LicenseURL,
-		Reserved_0,
+		Reserved0,
 		PreferredFamily,		//	Arial (for "Arial Narrow", "Arial" and "Arial Black")
 		PreferredSubfamily,		//	Black Italic (for "Arial Black Italic")
-		Mac_CompatibleFull,
+		MacCompatibleFull,
 		SampleText,				//	"The quick brown fox..."
 		PostScriptCID,
 
@@ -1592,15 +1592,15 @@ namespace Epsitec.Common.OpenType
 	}
 	#endregion
 	
-	public class Table_hhea : Tables
+	public class TableHhea : Tables
 	{
-		public Table_hhea(byte[] data, int offset) : base (data, offset)
+		public TableHhea(byte[] data, int offset) : base (data, offset)
 		{
 			//	http://partners.adobe.com/public/developer/opentype/index_hhea.html
 			
 		}
 		
-		public Table_hhea(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableHhea(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1710,15 +1710,15 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 
-	public class Table_OS2 : Tables
+	public class TableOS2 : Tables
 	{
-		public Table_OS2(byte[] data, int offset)
+		public TableOS2(byte[] data, int offset)
 			: base (data, offset)
 		{
 			//	http://www.microsoft.com/typography/otspec/os2.htm
 		}
 
-		public Table_OS2(TableEntry entry)
+		public TableOS2(TableEntry entry)
 			: base (entry.BaseData, entry.Offset)
 		{
 		}
@@ -1788,15 +1788,15 @@ USHORT usMaxContext			94
 		*/
 	}
 
-	public class Table_hmtx : Tables
+	public class Tablehmtx : Tables
 	{
-		public Table_hmtx(byte[] data, int offset) : base (data, offset)
+		public Tablehmtx(byte[] data, int offset) : base (data, offset)
 		{
 			//	http://partners.adobe.com/public/developer/opentype/index_hmtx.html
 			
 		}
 		
-		public Table_hmtx(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public Tablehmtx(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1811,19 +1811,19 @@ USHORT usMaxContext			94
 			return (short) this.ReadInt16 ((int)(n*4+2));
 		}
 		
-		public int GetExtraLeftSideBearing(int number_h_metrics, int n)
+		public int GetExtraLeftSideBearing(int numberHMetrics, int n)
 		{
-			return (short) this.ReadInt16 ((int)(number_h_metrics*4 + n*2));
+			return (short) this.ReadInt16 ((int)(numberHMetrics*4 + n*2));
 		}
 	}
 	
-	public class Table_kern : Tables
+	public class TableKern : Tables
 	{
-		public Table_kern(byte[] data, int offset) : base (data, offset)
+		public TableKern(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
-		public Table_kern(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableKern(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -1864,14 +1864,14 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public static Table_kern Create(TableEntry entry)
+		public static TableKern Create(TableEntry entry)
 		{
 			if (entry == null)
 			{
 				return null;
 			}
 			
-			return new Table_kern (entry);
+			return new TableKern (entry);
 		}
 	}
 	
@@ -2029,7 +2029,7 @@ USHORT usMaxContext			94
 			int range = this.SearchRange;
 			int index = this.EntrySelector;
 			int count = this.PairCount;
-			int pow_2 = range;
+			int pow2 = range;
 			int fence = count * 6;
 			
 			if (range == fence)
@@ -2074,20 +2074,20 @@ USHORT usMaxContext			94
 					break;
 				}
 				
-				pow_2 >>= 1;
+				pow2 >>= 1;
 				
 				if (test > combined)
 				{
-					range -= pow_2;
+					range -= pow2;
 				}
 				else
 				{
-					range += pow_2;
+					range += pow2;
 					
 					while (range >= fence)
 					{
-						pow_2 >>= 1;
-						range  -= pow_2;
+						pow2 >>= 1;
+						range  -= pow2;
 						
 						if (++i >= index)
 						{
@@ -2104,16 +2104,16 @@ USHORT usMaxContext			94
 	}
 	
 	
-	public class Table_GDEF : Tables
+	public class TableGDEF : Tables
 	{
-		public Table_GDEF(byte[] data, int offset) : base (data, offset)
+		public TableGDEF(byte[] data, int offset) : base (data, offset)
 		{
 			//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html
 			//	http://www.microsoft.com/OpenType/OTSpec/gdef.htm
 			
 		}
 		
-		public Table_GDEF(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableGDEF(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -2175,14 +2175,14 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public static Table_GDEF Create(TableEntry entry)
+		public static TableGDEF Create(TableEntry entry)
 		{
 			if (entry == null)
 			{
 				return null;
 			}
 			
-			return new Table_GDEF (entry);
+			return new TableGDEF (entry);
 		}
 	}
 	
@@ -2277,9 +2277,9 @@ USHORT usMaxContext			94
 	}
 	
 	
-	public class Table_GSUB : Tables
+	public class TableGSUB : Tables
 	{
-		public Table_GSUB(byte[] data, int offset) : base (data, offset)
+		public TableGSUB(byte[] data, int offset) : base (data, offset)
 		{
 			//	See http://www.microsoft.com/OpenType/OTSpec/gsub.htm or
 			//	http://partners.adobe.com/public/developer/opentype/index_table_formats1.html
@@ -2289,7 +2289,7 @@ USHORT usMaxContext			94
 			
 		}
 		
-		public Table_GSUB(TableEntry entry) : base (entry.BaseData, entry.Offset)
+		public TableGSUB(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
 		
@@ -2352,20 +2352,20 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public int GetRequiredFeatureIndex(string script_tag, string language_tag)
+		public int GetRequiredFeatureIndex(string scriptTag, string languageTag)
 		{
-			ScriptTable script_table = this.ScriptListTable.GetScriptTable (script_tag);
+			ScriptTable scriptTable = this.ScriptListTable.GetScriptTable (scriptTag);
 			
-			if (script_table != null)
+			if (scriptTable != null)
 			{
-				LangSysTable lang_sys_table = script_table.GetLangSysTable (language_tag);
+				LangSysTable langSysTable = scriptTable.GetLangSysTable (languageTag);
 				
-				if (lang_sys_table == null)
+				if (langSysTable == null)
 				{
-					lang_sys_table = script_table.DefaultLangSysTable;
+					langSysTable = scriptTable.DefaultLangSysTable;
 				}
 				
-				return lang_sys_table.RequiredFeatureIndex;
+				return langSysTable.RequiredFeatureIndex;
 			}
 			else
 			{
@@ -2374,25 +2374,25 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public int[] GetFeatureIndexes(string script_tag, string language_tag)
+		public int[] GetFeatureIndexes(string scriptTag, string languageTag)
 		{
-			ScriptTable script_table = this.ScriptListTable.GetScriptTable (script_tag);
+			ScriptTable scriptTable = this.ScriptListTable.GetScriptTable (scriptTag);
 			
-			if (script_table != null)
+			if (scriptTable != null)
 			{
-				LangSysTable lang_sys_table = script_table.GetLangSysTable (language_tag);
+				LangSysTable langSysTable = scriptTable.GetLangSysTable (languageTag);
 				
-				if (lang_sys_table == null)
+				if (langSysTable == null)
 				{
-					lang_sys_table = script_table.DefaultLangSysTable;
+					langSysTable = scriptTable.DefaultLangSysTable;
 				}
 				
-				int   f_count  = lang_sys_table.FeatureCount;
-				int[] features = new int[f_count];
+				int   fCount  = langSysTable.FeatureCount;
+				int[] features = new int[fCount];
 				
-				for (int i = 0; i < f_count; i++)
+				for (int i = 0; i < fCount; i++)
 				{
-					features[i] = lang_sys_table.GetFeatureIndex (i);
+					features[i] = langSysTable.GetFeatureIndex (i);
 				}
 				
 				return features;
@@ -2403,7 +2403,7 @@ USHORT usMaxContext			94
 			}
 		}
 		
-		public int[] GetFeatureIndexes(string feature_tag)
+		public int[] GetFeatureIndexes(string featureTag)
 		{
 			FeatureListTable table = this.FeatureListTable;
 			
@@ -2413,7 +2413,7 @@ USHORT usMaxContext			94
 			
 			for (int i = 0; i < max; i++)
 			{
-				if (table.GetFeatureTag (i) == feature_tag)
+				if (table.GetFeatureTag (i) == featureTag)
 				{
 					if (num == 0)
 					{
@@ -2429,7 +2429,7 @@ USHORT usMaxContext			94
 			
 			for (int i = hit; i < max; i++)
 			{
-				if (table.GetFeatureTag (i) == feature_tag)
+				if (table.GetFeatureTag (i) == featureTag)
 				{
 					features[index++] = i;
 					
@@ -2444,14 +2444,14 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public static Table_GSUB Create(TableEntry entry)
+		public static TableGSUB Create(TableEntry entry)
 		{
 			if (entry == null)
 			{
 				return null;
 			}
 			
-			return new Table_GSUB (entry);
+			return new TableGSUB (entry);
 		}
 	}
 	
@@ -2983,9 +2983,9 @@ USHORT usMaxContext			94
 				if ((glyph >= start) &&
 					(glyph <= end))
 				{
-					int start_coverage = this.ReadInt16 ((int)(4+6*i+4));
+					int startCoverage = this.ReadInt16 ((int)(4+6*i+4));
 					
-					return (int)(start_coverage + glyph - start);
+					return (int)(startCoverage + glyph - start);
 				}
 			}
 			
@@ -3000,7 +3000,7 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public virtual bool ProcessSubstitution(ushort[] i_glyphs, ref int i_offset, int length, ushort[] o_glyphs, ref int o_offset)
+		public virtual bool ProcessSubstitution(ushort[] iGlyphs, ref int iOffset, int length, ushort[] oGlyphs, ref int oOffset)
 		{
 			return false;
 		}
@@ -3031,20 +3031,20 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public override bool ProcessSubstitution(ushort[] i_glyphs, ref int i_offset, int length, ushort[] o_glyphs, ref int o_offset)
+		public override bool ProcessSubstitution(ushort[] iGlyphs, ref int iOffset, int length, ushort[] oGlyphs, ref int oOffset)
 		{
-			length -= i_offset;
+			length -= iOffset;
 			
 			if (length > 0)
 			{
-				int cov = this.Coverage.FindIndex (i_glyphs[i_offset]);
+				int cov = this.Coverage.FindIndex (iGlyphs[iOffset]);
 				
 				if (cov >= 0)
 				{
-					o_glyphs[o_offset] = this.FindSubstitution (i_glyphs[i_offset]);
+					oGlyphs[oOffset] = this.FindSubstitution (iGlyphs[iOffset]);
 					
-					i_offset += 1;
-					o_offset += 1;
+					iOffset += 1;
+					oOffset += 1;
 					
 					return true;
 				}
@@ -3211,35 +3211,35 @@ USHORT usMaxContext			94
 		}
 		
 		
-		public override bool ProcessSubstitution(ushort[] i_glyphs, ref int i_offset, int length, ushort[] o_glyphs, ref int o_offset)
+		public override bool ProcessSubstitution(ushort[] iGlyphs, ref int iOffset, int length, ushort[] oGlyphs, ref int oOffset)
 		{
-			length -= i_offset;
+			length -= iOffset;
 			
 			if (length > 0)
 			{
-				int cov = this.Coverage.FindIndex (i_glyphs[i_offset]);
+				int cov = this.Coverage.FindIndex (iGlyphs[iOffset]);
 				
 				if (cov >= 0)
 				{
-					int max_set = this.LigatureSetCount;
+					int maxSet = this.LigatureSetCount;
 					
-					Debug.Assert.IsTrue (cov < max_set);
+					Debug.Assert.IsTrue (cov < maxSet);
 					
-					int set_offset = this.GetLigatureSetOffset ((int)cov);
-					int max_info   = this.GetLigatureSetInfoCount (set_offset, (int)cov);
+					int setOffset = this.GetLigatureSetOffset ((int)cov);
+					int maxInfo   = this.GetLigatureSetInfoCount (setOffset, (int)cov);
 					
-					for (int j = 0; j < max_info; j++)
+					for (int j = 0; j < maxInfo; j++)
 					{
-						int info_offset = this.GetLigatureSetInfoOffset (set_offset, j) + set_offset;
-						int comp_count  = this.ReadInt16 ((int)(2+info_offset));
+						int infoOffset = this.GetLigatureSetInfoOffset (setOffset, j) + setOffset;
+						int compCount  = this.ReadInt16 ((int)(2+infoOffset));
 						
-						if (comp_count <= length)
+						if (compCount <= length)
 						{
-							for (int k = 1; k < comp_count; k++)
+							for (int k = 1; k < compCount; k++)
 							{
-								int comp_elem = this.ReadInt16 ((int)(2+info_offset+2*k));
+								int compElem = this.ReadInt16 ((int)(2+infoOffset+2*k));
 								
-								if (comp_elem != i_glyphs[i_offset+k])
+								if (compElem != iGlyphs[iOffset+k])
 								{
 									goto try_next_in_set;
 								}
@@ -3247,10 +3247,10 @@ USHORT usMaxContext			94
 							
 							//	Hit: input glyph sequence matched.
 							
-							o_glyphs[o_offset] = (ushort) this.ReadInt16 ((int)(0+info_offset));
+							oGlyphs[oOffset] = (ushort) this.ReadInt16 ((int)(0+infoOffset));
 							
-							i_offset += comp_count;
-							o_offset += 1;
+							iOffset += compCount;
+							oOffset += 1;
 							
 							return true;
 						}

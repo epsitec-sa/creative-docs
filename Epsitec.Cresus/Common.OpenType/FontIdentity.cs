@@ -15,12 +15,12 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 
-		internal FontIdentity(Table_name openTypeNameTable, int length, object systemRecord)
+		internal FontIdentity(TableName openTypeNameTable, int length, object systemRecord)
 			: this (openTypeNameTable, length, systemRecord, -1)
 		{
 		}
 
-		internal FontIdentity(Table_name openTypeNameTable, int length, object systemRecord, int ttcIndex)
+		internal FontIdentity(TableName openTypeNameTable, int length, object systemRecord, int ttcIndex)
 		{
 			this.DefineTableName (openTypeNameTable, length);
 
@@ -636,7 +636,7 @@ namespace Epsitec.Common.OpenType
 					{
 						if (this.isSymbolFontDefined == false)
 						{
-							Table_cmap cmap = this.InternalGetTable_cmap ();
+							TableCmap cmap = this.InternalGetTableCmap ();
 
 							this.isSymbolFont        = cmap.FindFormatSubTable (3, 0, 4) != null;
 							this.isSymbolFontDefined = true;
@@ -686,7 +686,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
-		public Table_name						OpenTypeTable_name
+		public TableName						OpenTypeTableName
 		{
 			get
 			{
@@ -751,7 +751,7 @@ namespace Epsitec.Common.OpenType
 		public string GetGlyphName(int glyph)
 		{
 			TableEntry entry = this.FontData["post"];
-			Table_post post  = entry == null ? null : new Table_post (entry);
+			TablePost post  = entry == null ? null : new TablePost (entry);
 
 			if (post != null)
 			{
@@ -764,9 +764,9 @@ namespace Epsitec.Common.OpenType
 		}
 
 		
-		public Table_cmap InternalGetTable_cmap()
+		public TableCmap InternalGetTableCmap()
 		{
-			return new Table_cmap (this.FontData["cmap"]);
+			return new TableCmap (this.FontData["cmap"]);
 		}
 
 		public void InternalClearFontData()
@@ -803,77 +803,77 @@ namespace Epsitec.Common.OpenType
 			buffer.Append ('\0');
 			buffer.Append (fid.IsSymbolFont ? "S" : "s");
 
-			byte[] data_0 = new byte[10];
-			byte[] data_1 = System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
-			byte[] data_2 = new byte[fid.otNameLength];
-			byte[] data_3 = fid.AssociatedBlob1;
-			byte[] data_4 = fid.AssociatedBlob2;
+			byte[] data0 = new byte[10];
+			byte[] data1 = System.Text.Encoding.UTF8.GetBytes (buffer.ToString ());
+			byte[] data2 = new byte[fid.otNameLength];
+			byte[] data3 = fid.AssociatedBlob1;
+			byte[] data4 = fid.AssociatedBlob2;
 
-			System.Buffer.BlockCopy (fid.otName.BaseData, fid.otName.BaseOffset, data_2, 0, fid.otNameLength);
+			System.Buffer.BlockCopy (fid.otName.BaseData, fid.otName.BaseOffset, data2, 0, fid.otNameLength);
 
-			int length_1 = data_1.Length;
-			int length_2 = data_2.Length;
-			int length_3 = data_3.Length;
-			int length_4 = data_4.Length;
+			int length1 = data1.Length;
+			int length2 = data2.Length;
+			int length3 = data3.Length;
+			int length4 = data4.Length;
 
-			if (length_3 > 0xfff0)
+			if (length3 > 0xfff0)
 			{
-				length_3 = 0;
+				length3 = 0;
 			}
 
-			if (length_4 > 0xfff0)
+			if (length4 > 0xfff0)
 			{
-				length_4 = 0;
+				length4 = 0;
 			}
 
-			data_0[0] = 0;
-			data_0[1] = 0;
-			data_0[2] = (byte) (length_1 >> 8);
-			data_0[3] = (byte) (length_1 & 0xff);
-			data_0[4] = (byte) (length_2 >> 8);
-			data_0[5] = (byte) (length_2 & 0xff);
-			data_0[6] = (byte) (length_3 >> 8);
-			data_0[7] = (byte) (length_3 & 0xff);
-			data_0[8] = (byte) (length_4 >> 8);
-			data_0[9] = (byte) (length_4 & 0xff);
+			data0[0] = 0;
+			data0[1] = 0;
+			data0[2] = (byte) (length1 >> 8);
+			data0[3] = (byte) (length1 & 0xff);
+			data0[4] = (byte) (length2 >> 8);
+			data0[5] = (byte) (length2 & 0xff);
+			data0[6] = (byte) (length3 >> 8);
+			data0[7] = (byte) (length3 & 0xff);
+			data0[8] = (byte) (length4 >> 8);
+			data0[9] = (byte) (length4 & 0xff);
 
-			stream.Write (data_0, 0, data_0.Length);
-			stream.Write (data_1, 0, length_1);
-			stream.Write (data_2, 0, length_2);
-			stream.Write (data_3, 0, length_3);
-			stream.Write (data_4, 0, length_4);
+			stream.Write (data0, 0, data0.Length);
+			stream.Write (data1, 0, length1);
+			stream.Write (data2, 0, length2);
+			stream.Write (data3, 0, length3);
+			stream.Write (data4, 0, length4);
 		}
 
 		internal static FontIdentity Deserialize(System.IO.Stream stream)
 		{
-			byte[] data_0 = new byte[10];
+			byte[] data0 = new byte[10];
 
-			int read = IO.ReaderHelper.Read (stream, data_0, 0, 10);
+			int read = IO.ReaderHelper.Read (stream, data0, 0, 10);
 
 			if (read == 0)
 			{
 				return null;
 			}
 
-			System.Diagnostics.Debug.Assert (data_0[0] == 0);
-			System.Diagnostics.Debug.Assert (data_0[1] == 0);
+			System.Diagnostics.Debug.Assert (data0[0] == 0);
+			System.Diagnostics.Debug.Assert (data0[1] == 0);
 
-			int length_1 = (data_0[2] << 8) | data_0[3];
-			int length_2 = (data_0[4] << 8) | data_0[5];
-			int length_3 = (data_0[6] << 8) | data_0[7];
-			int length_4 = (data_0[8] << 8) | data_0[9];
+			int length1 = (data0[2] << 8) | data0[3];
+			int length2 = (data0[4] << 8) | data0[5];
+			int length3 = (data0[6] << 8) | data0[7];
+			int length4 = (data0[8] << 8) | data0[9];
 
-			byte[] data_1 = new byte[length_1];
-			byte[] data_2 = new byte[length_2];
-			byte[] data_3 = new byte[length_3];
-			byte[] data_4 = new byte[length_4];
+			byte[] data1 = new byte[length1];
+			byte[] data2 = new byte[length2];
+			byte[] data3 = new byte[length3];
+			byte[] data4 = new byte[length4];
 
-			IO.ReaderHelper.Read (stream, data_1, 0, length_1);
-			IO.ReaderHelper.Read (stream, data_2, 0, length_2);
-			IO.ReaderHelper.Read (stream, data_3, 0, length_3);
-			IO.ReaderHelper.Read (stream, data_4, 0, length_4);
+			IO.ReaderHelper.Read (stream, data1, 0, length1);
+			IO.ReaderHelper.Read (stream, data2, 0, length2);
+			IO.ReaderHelper.Read (stream, data3, 0, length3);
+			IO.ReaderHelper.Read (stream, data4, 0, length4);
 
-			string text = System.Text.Encoding.UTF8.GetString (data_1);
+			string text = System.Text.Encoding.UTF8.GetString (data1);
 			string[] args = text.Split ('\0');
 
 			System.Diagnostics.Debug.Assert (args.Length == 4);
@@ -886,12 +886,12 @@ namespace Epsitec.Common.OpenType
 
 			FontIdentity fid = new FontIdentity ();
 
-			fid.otName           = new Table_name (data_2, 0);
-			fid.otNameLength     = length_2;
+			fid.otName           = new TableName (data2, 0);
+			fid.otNameLength     = length2;
 			fid.systemFontFamily = systemFontFamily;
 			fid.systemFontStyle  = systemFontStyle;
-			fid.blob1            = data_3;
-			fid.blob2            = data_4;
+			fid.blob1            = data3;
+			fid.blob2            = data4;
 
 			fid.isSymbolFont        = flags.IndexOf ("S") != -1;
 			fid.isSymbolFontDefined = flags.IndexOfAny (new char[] { 's', 'S' }) != -1;
@@ -908,7 +908,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 
-		internal void DefineTableName(Table_name openTypeNameTable, int length)
+		internal void DefineTableName(TableName openTypeNameTable, int length)
 		{
 			this.otName        = openTypeNameTable;
 			this.otNameLength = length;
@@ -1237,9 +1237,9 @@ namespace Epsitec.Common.OpenType
 		{
 			System.Globalization.CultureInfo info = System.Globalization.CultureInfo.CurrentCulture;
 			
-			int locale_id = (info.LCID & 0x03ff) + 0x0400;
+			int localeId = (info.LCID & 0x03ff) + 0x0400;
 			
-			string name = this.GetName (id, locale_id);
+			string name = this.GetName (id, localeId);
 
 			return (name == null) ? this.GetName (id, FontIdentity.InvariantLocale) : name;
 		}
@@ -1269,7 +1269,7 @@ namespace Epsitec.Common.OpenType
 						
 		private object							exclusion = new object ();
 		
-		private Table_name						otName;
+		private TableName						otName;
 		private int								otNameLength;
 		
 		private object							record;

@@ -18,7 +18,7 @@ namespace Epsitec.Common.OpenType
 			Font         zapf    = collection.CreateFont ("Zapf Dingbats BT");
 			FontIdentity zapf_id = zapf.FontIdentity;
 			
-			Table_cmap zapf_cmap = zapf_id.InternalGetTable_cmap ();
+			TableCmap zapf_cmap = zapf_id.InternalGetTableCmap ();
 			IndexMappingTable zapf_imp = zapf_cmap.FindFormatSubTable (3, 0, 4);
 			
 			Assert.AreEqual (3, zapf_imp.GetGlyphIndex (0xF020));
@@ -33,7 +33,7 @@ namespace Epsitec.Common.OpenType
 			Font         wing1    = collection.CreateFont ("Wingdings");
 			FontIdentity wing1_id = wing1.FontIdentity;
 			
-			Table_cmap wing1_cmap = wing1_id.InternalGetTable_cmap ();
+			TableCmap wing1_cmap = wing1_id.InternalGetTableCmap ();
 			IndexMappingTable wing1_imp = wing1_cmap.FindFormatSubTable (3, 0, 4);
 			
 			Assert.AreEqual (3, wing1_imp.GetGlyphIndex (0xF020));
@@ -59,8 +59,8 @@ namespace Epsitec.Common.OpenType
 
 			foreach (FontIdentity id in collection)
 			{
-				OpenType.Table_name name = id.OpenTypeTable_name;
-				OpenType.Table_name.NameEncoding[] encodings = name.GetAvailableNameEncodings ();
+				OpenType.TableName name = id.OpenTypeTableName;
+				OpenType.TableName.NameEncoding[] encodings = name.GetAvailableNameEncodings ();
 				
 				System.Console.WriteLine (
 					"{0,-32}Style={1} Weight={2} Count={3}\n" +

@@ -18,23 +18,23 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			foreach (FontIdentity font in collection)
 			{
-//				string p_family = font.GetName (OpenType.NameId.PreferredFamily);
-//				string p_sub_f  = font.GetName (OpenType.NameId.PreferredSubfamily);
+//				string pFamily = font.GetName (OpenType.NameId.PreferredFamily);
+//				string pSubF  = font.GetName (OpenType.NameId.PreferredSubfamily);
 //				
-//				if ((p_family != null) ||
-//					(p_sub_f != null))
+//				if ((pFamily != null) ||
+//					(pSubF!= null))
 //				{
 //					System.Diagnostics.Debug.WriteLine ("La fonte " + font.FullName + " a des infos préférées.");
 //				}
 				
-				string font_face  = font.InvariantFaceName;
-				string font_style = font.InvariantStyleName;
+				string fontFace  = font.InvariantFaceName;
+				string fontStyle = font.InvariantStyleName;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3})\n    weight={5}, italic={6}, kerning={7}\n    {4}", font_face, font_style, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontStyle, CheckTables.TestKerningInformation (font)));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3})\n    weight={5}, italic={6}, kerning={7}\n    {4}", fontFace, fontStyle, font.LocaleFaceName, font.LocaleStyleName, font.FullName, font.FontWeight, font.FontStyle, CheckTables.TestKerningInformation (font)));
 			}
 			
 			Font         arial    = collection.CreateFont ("Arial Unicode MS");
-			FontIdentity arial_id = arial.FontIdentity;
+			FontIdentity arialId = arial.FontIdentity;
 			
 			int[] sizes = new int[] { 8, 9, 10, 11, 12, 24, 120, 2048 };
 			
@@ -48,7 +48,7 @@ namespace Epsitec.Common.OpenType.Tests
 				arial.SelectFontManager (FontManagerType.OpenType);
 				double perfect = arial.GetTotalWidth (glyphs, size);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}, size {4}, text width is {1}, perfect is {2}, delta is {3:0.00}%", arial_id.FullName, system, perfect, 100*system/perfect-100, size));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}, size {4}, text width is {1}, perfect is {2}, delta is {3:0.00}%", arialId.FullName, system, perfect, 100*system/perfect-100, size));
 			}
 			
 			CheckTables.TestFeatureTable ();
@@ -58,50 +58,50 @@ namespace Epsitec.Common.OpenType.Tests
 		
 		private static bool TestKerningInformation(FontIdentity font)
 		{
-			string font_face  = font.InvariantFaceName;
-			string font_style = font.InvariantStyleName;
+			string fontFace  = font.InvariantFaceName;
+			string fontStyle = font.InvariantStyleName;
 			
-			FontData font_data = font.FontData;
+			FontData fontData = font.FontData;
 			
-			if (font_data == null)
+			if (fontData == null)
 			{
 				return false;
 			}
 			
-			TableEntry entry   = font_data["kern"];
+			TableEntry entry   = fontData["kern"];
 			
 			if (entry == null)
 			{
 				return false;
 			}
 			
-			Table_kern kerning = new Table_kern (entry);
+			TableKern kerning = new TableKern (entry);
 			
 			for (int i = 0; i < kerning.Count; i++)
 			{
-				KerningTable        k_table   = kerning.GetKerningTable (i);
-				KerningTableFormat0 k_table_0 = k_table.Format0Subtable;
+				KerningTable        kTable   = kerning.GetKerningTable (i);
+				KerningTableFormat0 kTable0 = kTable.Format0Subtable;
 				
-				if (k_table_0 == null)
+				if (kTable0 == null)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("    {0}: unsupported format {1}.", i, k_table.SubtableFormat));
+					System.Diagnostics.Debug.WriteLine (string.Format ("    {0}: unsupported format {1}.", i, kTable.SubtableFormat));
 				}
 				else
 				{
-					int p_count = k_table_0.PairCount;
-					int k_value;
+					int pCount = kTable0.PairCount;
+					int kValue;
 					
-					for (int j = 0; j < p_count; j++)
+					for (int j = 0; j < pCount; j++)
 					{
-						int g_left  = k_table_0.GetLeftGlyph (j);
-						int g_right = k_table_0.GetRightGlyph (j);
+						int gLeft  = kTable0.GetLeftGlyph (j);
+						int gRight = kTable0.GetRightGlyph (j);
 						
-						Debug.Assert.IsTrue (k_table_0.FindKernValue (g_left, g_right, out k_value));
-						Debug.Assert.IsTrue (k_table_0.GetKernValue (j) == k_value);
+						Debug.Assert.IsTrue (kTable0.FindKernValue (gLeft, gRight, out kValue));
+						Debug.Assert.IsTrue (kTable0.GetKernValue (j) == kValue);
 					}
 					
-					Debug.Assert.IsFalse (k_table_0.FindKernValue (0, 0, out k_value));
-					Debug.Assert.IsFalse (k_table_0.FindKernValue (0xfff, 0xfff, out k_value));
+					Debug.Assert.IsFalse (kTable0.FindKernValue (0, 0, out kValue));
+					Debug.Assert.IsFalse (kTable0.FindKernValue (0xfff, 0xfff, out kValue));
 				}
 			}
 			
@@ -123,48 +123,48 @@ namespace Epsitec.Common.OpenType.Tests
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0}, offset={1}, length={2}.", entry.Tag, entry.Offset, entry.Length));
 			}
 			
-			TableEntry name_e = td.FindTable ("name");
-			Table_name name_t = new Table_name (data, (int) name_e.Offset);
+			TableEntry nameE = td.FindTable ("name");
+			TableName nameT = new TableName (data, (int) nameE.Offset);
 			
-			System.Array name_ids = System.Enum.GetValues (typeof (OpenType.NameId));
-			System.Array plat_ids = System.Enum.GetValues (typeof (OpenType.PlatformId));
+			System.Array nameIds = System.Enum.GetValues (typeof (OpenType.NameId));
+			System.Array platIds = System.Enum.GetValues (typeof (OpenType.PlatformId));
 			
-			Table_name.NameEncoding[] encodings = name_t.GetAvailableNameEncodings ();
+			TableName.NameEncoding[] encodings = nameT.GetAvailableNameEncodings ();
 			
-			foreach (Table_name.NameEncoding encoding in encodings)
+			foreach (TableName.NameEncoding encoding in encodings)
 			{
-				string latin_name   = name_t.GetLatinName (encoding.Language, encoding.Name, encoding.Platform);
-				string unicode_name = name_t.GetUnicodeName (encoding.Language, encoding.Name, encoding.Platform);
+				string latinName   = nameT.GetLatinName (encoding.Language, encoding.Name, encoding.Platform);
+				string unicodeName = nameT.GetUnicodeName (encoding.Language, encoding.Name, encoding.Platform);
 					
-				if (latin_name != null)
+				if (latinName != null)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} : {2}", encoding.Platform, encoding.Name, latin_name));
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} : {2}", encoding.Platform, encoding.Name, latinName));
 				}
-				if (unicode_name != null)
+				if (unicodeName != null)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} : {2} -- {3}", encoding.Platform, encoding.Name, unicode_name, encoding.Language));
+					System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} : {2} -- {3}", encoding.Platform, encoding.Name, unicodeName, encoding.Language));
 				}
 				
-				if (latin_name == unicode_name)
+				if (latinName == unicodeName)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("Error: {0}/{1}.", encoding.Platform, encoding.Name));
 				}
 			}
 			
-			string s_arial_family = name_t.GetUnicodeName (0x0409, OpenType.NameId.FontFamily, OpenType.PlatformId.Microsoft);
-			string s_arial_sub_de = name_t.GetUnicodeName (0x0407, OpenType.NameId.FontSubfamily, OpenType.PlatformId.Microsoft);
-			string s_arial_sub_fr = name_t.GetUnicodeName (0x040c, OpenType.NameId.FontSubfamily, OpenType.PlatformId.Microsoft);
+			string sArialFamily = nameT.GetUnicodeName (0x0409, OpenType.NameId.FontFamily, OpenType.PlatformId.Microsoft);
+			string sArialSubDe = nameT.GetUnicodeName (0x0407, OpenType.NameId.FontSubfamily, OpenType.PlatformId.Microsoft);
+			string sArialSubFr = nameT.GetUnicodeName (0x040c, OpenType.NameId.FontSubfamily, OpenType.PlatformId.Microsoft);
 			
-			Debug.Assert.IsTrue (s_arial_family == "Arial Unicode MS");
-			Debug.Assert.IsTrue (s_arial_sub_de == "Standard");
-			Debug.Assert.IsTrue (s_arial_sub_fr == "Normal");
+			Debug.Assert.IsTrue (sArialFamily == "Arial Unicode MS");
+			Debug.Assert.IsTrue (sArialSubDe == "Standard");
+			Debug.Assert.IsTrue (sArialSubFr == "Normal");
 			
-			Table_maxp maxp_t = new Table_maxp (data, (int) td.FindTable ("maxp").Offset);
-			Table_hhea hhea_t = new Table_hhea (data, (int) td.FindTable ("hhea").Offset);
-			Table_hmtx hmtx_t = new Table_hmtx (data, (int) td.FindTable ("hmtx").Offset);
-			Table_cmap cmap_t = new Table_cmap (data, (int) td.FindTable ("cmap").Offset);
+			TableMaxp maxpT = new TableMaxp (data, (int) td.FindTable ("maxp").Offset);
+			TableHhea hheaT = new TableHhea (data, (int) td.FindTable ("hhea").Offset);
+			Tablehmtx hmtxT = new Tablehmtx (data, (int) td.FindTable ("hmtx").Offset);
+			TableCmap cmapT = new TableCmap (data, (int) td.FindTable ("cmap").Offset);
 			
-			IndexMappingTable cmap_sub_t = cmap_t.FindFormatSubTable ();
+			IndexMappingTable cmapSubT = cmapT.FindFormatSubTable ();
 			
 			int total = 0;
 			int width = 0;
@@ -175,40 +175,40 @@ namespace Epsitec.Common.OpenType.Tests
 			{
 				for (char c = ' '; c < '\u01F6'; c++)
 				{
-					int c_index   = (int) c;
+					int cIndex   = (int) c;
 					
-					if ((c_index >= 127) && (c_index < 160))
+					if ((cIndex >= 127) && (cIndex < 160))
 					{
 						continue;
 					}
 					
-					int glyph     = cmap_sub_t.GetGlyphIndex ((int) c);
+					int glyph     = cmapSubT.GetGlyphIndex ((int) c);
 					
 					if (glyph == 0)
 					{
-//						System.Diagnostics.Debug.WriteLine (string.Format ("Missing glyph for '{0}', unicode {1}", c, c_index.ToString ("X4")));
+//						System.Diagnostics.Debug.WriteLine (string.Format ("Missing glyph for '{0}', unicode {1}", c, cIndex.ToString ("X4")));
 						continue;
 					}
 					
 					total++;
 					
-					int num_glyph = maxp_t.NumGlyphs;
-					int num_h_metrics = hhea_t.NumHMetrics;
+					int numGlyph = maxpT.NumGlyphs;
+					int numHMetrics = hheaT.NumHMetrics;
 					
 					int advance = 0;
 					int  lsb     = 0;
 					
-					if (glyph < num_glyph)
+					if (glyph < numGlyph)
 					{
-						if (glyph < num_h_metrics)
+						if (glyph < numHMetrics)
 						{
-							advance = hmtx_t.GetAdvanceWidth (glyph);
-							lsb     = hmtx_t.GetLeftSideBearing (glyph);
+							advance = hmtxT.GetAdvanceWidth (glyph);
+							lsb     = hmtxT.GetLeftSideBearing (glyph);
 						}
 						else
 						{
-							advance = hmtx_t.GetAdvanceWidth (num_h_metrics-1);
-							lsb     = hmtx_t.GetExtraLeftSideBearing (num_h_metrics, glyph - num_h_metrics);
+							advance = hmtxT.GetAdvanceWidth (numHMetrics-1);
+							lsb     = hmtxT.GetExtraLeftSideBearing (numHMetrics, glyph - numHMetrics);
 						}
 					}
 					
@@ -229,50 +229,50 @@ namespace Epsitec.Common.OpenType.Tests
 			byte[] data = Platform.Neutral.LoadFontData (font, "Normal");
 			
 			TableDirectory td = new TableDirectory (data, 0);
-			Table_GSUB gsub_t = new Table_GSUB (td.FindTable ("GSUB"));
+			TableGSUB gsubT = new TableGSUB (td.FindTable ("GSUB"));
 			
-			ScriptListTable  script_l  = gsub_t.ScriptListTable;
-			FeatureListTable feature_l = gsub_t.FeatureListTable;
+			ScriptListTable  scriptL  = gsubT.ScriptListTable;
+			FeatureListTable featureL = gsubT.FeatureListTable;
 			
-			System.Collections.Hashtable referenced_features = new System.Collections.Hashtable ();
+			System.Collections.Hashtable referencedFeatures = new System.Collections.Hashtable ();
 			
-			for (int i = 0; i < script_l.ScriptCount; i++)
+			for (int i = 0; i < scriptL.ScriptCount; i++)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
-				buffer.Append (script_l.GetScriptTag (i));
+				buffer.Append (scriptL.GetScriptTag (i));
 				buffer.Append (": ");
 				
-				ScriptTable script_t = script_l.GetScriptTable (i);
+				ScriptTable scriptT = scriptL.GetScriptTable (i);
 				
 				buffer.Append ("default=[");
 				
-				for (int k = 0; k < script_t.DefaultLangSysTable.FeatureCount; k++)
+				for (int k = 0; k < scriptT.DefaultLangSysTable.FeatureCount; k++)
 				{
 					if (k > 0) buffer.Append (";");
-					buffer.Append (script_t.DefaultLangSysTable.GetFeatureIndex (k));
-					referenced_features[(int) script_t.DefaultLangSysTable.GetFeatureIndex (k)] = true;
+					buffer.Append (scriptT.DefaultLangSysTable.GetFeatureIndex (k));
+					referencedFeatures[(int) scriptT.DefaultLangSysTable.GetFeatureIndex (k)] = true;
 				}
 				
 				buffer.Append ("]");
 				
-				for (int j = 0; j < script_t.LangSysCount; j++)
+				for (int j = 0; j < scriptT.LangSysCount; j++)
 				{
 					buffer.Append (", '");
-					buffer.Append (script_t.GetLangSysTag (j));
+					buffer.Append (scriptT.GetLangSysTag (j));
 					buffer.Append ("' f=[");
-					buffer.Append ((short) script_t.GetLangSysTable (j).RequiredFeatureIndex);
+					buffer.Append ((short) scriptT.GetLangSysTable (j).RequiredFeatureIndex);
 					
-					if (script_t.GetLangSysTable (j).RequiredFeatureIndex != 0xffff)
+					if (scriptT.GetLangSysTable (j).RequiredFeatureIndex != 0xffff)
 					{
-						referenced_features[(int) script_t.GetLangSysTable (j).RequiredFeatureIndex] = true;
+						referencedFeatures[(int) scriptT.GetLangSysTable (j).RequiredFeatureIndex] = true;
 					}
 					
-					for (int k = 0; k < script_t.GetLangSysTable (j).FeatureCount; k++)
+					for (int k = 0; k < scriptT.GetLangSysTable (j).FeatureCount; k++)
 					{
 						buffer.Append (";");
-						buffer.Append (script_t.GetLangSysTable (j).GetFeatureIndex (k));
-						referenced_features[(int) script_t.GetLangSysTable (j).GetFeatureIndex (k)] = true;
+						buffer.Append (scriptT.GetLangSysTable (j).GetFeatureIndex (k));
+						referencedFeatures[(int) scriptT.GetLangSysTable (j).GetFeatureIndex (k)] = true;
 					}
 					
 					buffer.Append ("]");
@@ -281,68 +281,68 @@ namespace Epsitec.Common.OpenType.Tests
 				System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 			}
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} features, {1} referenced.", feature_l.FeatureCount, referenced_features.Count));
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} features, {1} referenced.", featureL.FeatureCount, referencedFeatures.Count));
 			
 			
-			string[] feature_names = new string[feature_l.FeatureCount];
-			int[]   feature_index = new int[feature_l.FeatureCount];
+			string[] featureNames = new string[featureL.FeatureCount];
+			int[]   featureIndex = new int[featureL.FeatureCount];
 			
-			for (int i = 0; i < feature_l.FeatureCount; i++)
+			for (int i = 0; i < featureL.FeatureCount; i++)
 			{
-				feature_names[i] = feature_l.GetFeatureTag (i) + "-" + i.ToString ("X4");
-				feature_index[i] = i;
+				featureNames[i] = featureL.GetFeatureTag (i) + "-" + i.ToString ("X4");
+				featureIndex[i] = i;
 			}
 			
-			System.Array.Sort (feature_names, feature_index);
+			System.Array.Sort (featureNames, featureIndex);
 			
-			for (int i = 0; i < feature_index.Length; i++)
+			for (int i = 0; i < featureIndex.Length; i++)
 			{
-				string       feature_n = feature_l.GetFeatureTag (feature_index[i]);
-				FeatureTable feature_t = feature_l.GetFeatureTable (feature_index[i]);
+				string       featureN = featureL.GetFeatureTag (featureIndex[i]);
+				FeatureTable featureT = featureL.GetFeatureTable (featureIndex[i]);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}-{2:000}: {1} lookups.{3}", feature_n, feature_t.LookupCount, feature_index[i], referenced_features.Contains ((int)i) ? "" : " Not referenced."));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}-{2:000}: {1} lookups.{3}", featureN, featureT.LookupCount, featureIndex[i], referencedFeatures.Contains ((int)i) ? "" : " Not referenced."));
 				
 			}
 			
-			int rq_feature_arab_urdu = gsub_t.GetRequiredFeatureIndex ("arab", "URD ");
-			int[] features_arab_urdu = gsub_t.GetFeatureIndexes ("arab", "URD ");
+			int rqFeatureArabUrdu = gsubT.GetRequiredFeatureIndex ("arab", "URD ");
+			int[] featuresArabUrdu = gsubT.GetFeatureIndexes ("arab", "URD ");
 			
-			int rq_feature_arab_xxxx = gsub_t.GetRequiredFeatureIndex ("arab", "XXXX");
-			int[] features_arab_xxxx = gsub_t.GetFeatureIndexes ("arab", "XXXX");
+			int rqFeatureArabXxxx = gsubT.GetRequiredFeatureIndex ("arab", "XXXX");
+			int[] featuresArabXxxx = gsubT.GetFeatureIndexes ("arab", "XXXX");
 			
-			int[] fina_features = gsub_t.GetFeatureIndexes ("fina");
+			int[] finaFeatures = gsubT.GetFeatureIndexes ("fina");
 			
-//			Debug.Assert.IsTrue (fina_features.Length == 3);
-//			Debug.Assert.IsTrue (fina_features[0] == 3);
-//			Debug.Assert.IsTrue (fina_features[1] == 6);
-//			Debug.Assert.IsTrue (fina_features[2] == 11);
+//			Debug.Assert.IsTrue (finaFeatures.Length == 3);
+//			Debug.Assert.IsTrue (finaFeatures[0] == 3);
+//			Debug.Assert.IsTrue (finaFeatures[1] == 6);
+//			Debug.Assert.IsTrue (finaFeatures[2] == 11);
 			
-			LookupListTable gsub_lookup = gsub_t.LookupListTable;
+			LookupListTable gsubLookup = gsubT.LookupListTable;
 			
-			int[] liga_features = gsub_t.GetFeatureIndexes ("liga");
-			int[] rlig_features = gsub_t.GetFeatureIndexes ("rlig");
-			int[] dlig_features = gsub_t.GetFeatureIndexes ("dlig");
+			int[] ligaFeatures = gsubT.GetFeatureIndexes ("liga");
+			int[] rligFeatures = gsubT.GetFeatureIndexes ("rlig");
+			int[] dligFeatures = gsubT.GetFeatureIndexes ("dlig");
 			
-			System.Collections.ArrayList ligature_list = new System.Collections.ArrayList ();
+			System.Collections.ArrayList ligatureList = new System.Collections.ArrayList ();
 			
-			ligature_list.AddRange (liga_features);
-			ligature_list.AddRange (rlig_features);
-			ligature_list.AddRange (dlig_features);
-			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("alts"));
-			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("hlig"));
-			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("hist"));
-			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("smcp"));
-			ligature_list.AddRange (gsub_t.GetFeatureIndexes ("frac"));
+			ligatureList.AddRange (ligaFeatures);
+			ligatureList.AddRange (rligFeatures);
+			ligatureList.AddRange (dligFeatures);
+			ligatureList.AddRange (gsubT.GetFeatureIndexes ("alts"));
+			ligatureList.AddRange (gsubT.GetFeatureIndexes ("hlig"));
+			ligatureList.AddRange (gsubT.GetFeatureIndexes ("hist"));
+			ligatureList.AddRange (gsubT.GetFeatureIndexes ("smcp"));
+			ligatureList.AddRange (gsubT.GetFeatureIndexes ("frac"));
 			
-			for (int i = 0; i < ligature_list.Count; i++)
+			for (int i = 0; i < ligatureList.Count; i++)
 			{
-				int          feature_i    = (int)ligature_list[i];
-				FeatureTable feature      = gsub_t.FeatureListTable.GetFeatureTable (feature_i);
-				int          lookup_count = feature.LookupCount;
+				int          featureI		= (int)ligatureList[i];
+				FeatureTable feature		= gsubT.FeatureListTable.GetFeatureTable (featureI);
+				int          lookupCount	= feature.LookupCount;
 				
-				for (int feature_lookup_i = 0; feature_lookup_i < lookup_count; feature_lookup_i++)
+				for (int featureLookupI = 0; featureLookupI < lookupCount; featureLookupI++)
 				{
-					LookupTable lookup = gsub_lookup.GetLookupTable (feature.GetLookupIndex (feature_lookup_i));
+					LookupTable lookup = gsubLookup.GetLookupTable (feature.GetLookupIndex (featureLookupI));
 					
 					System.Diagnostics.Debug.WriteLine (string.Format ("Lookup: type={0}, flags={1}, sub.count={2}", lookup.LookupType, lookup.LookupFlags.ToString ("X4"), lookup.SubTableCount));
 					
@@ -350,16 +350,16 @@ namespace Epsitec.Common.OpenType.Tests
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
-							SubstSubTable base_subst = lookup.GetSubTable (s);
-							SingleSubstitution single_subst = new SingleSubstitution (base_subst);
+							SubstSubTable baseSubst = lookup.GetSubTable (s);
+							SingleSubstitution singleSubst = new SingleSubstitution (baseSubst);
 							
-							int[] covered = CheckTables.GetCoverageIndexes (single_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (singleSubst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Single", single_subst.SubstFormat, single_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Single", singleSubst.SubstFormat, singleSubst.Coverage.CoverageFormat, covered.Length));
 							
 							for (int c = 0; c < covered.Length; c++)
 							{
-								System.Diagnostics.Debug.WriteLine (string.Format ("Replace {0:0000} --> {1:0000}", covered[c], single_subst.FindSubstitution (covered[c])));
+								System.Diagnostics.Debug.WriteLine (string.Format ("Replace {0:0000} --> {1:0000}", covered[c], singleSubst.FindSubstitution (covered[c])));
 							}
 						}
 					}
@@ -367,26 +367,26 @@ namespace Epsitec.Common.OpenType.Tests
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
-							SubstSubTable base_subst = lookup.GetSubTable (s);
-							LigatureSubstitution liga_subst = new LigatureSubstitution (base_subst);
+							SubstSubTable baseSubst = lookup.GetSubTable (s);
+							LigatureSubstitution ligaSubst = new LigatureSubstitution (baseSubst);
 							
-							int[] covered = CheckTables.GetCoverageIndexes (liga_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (ligaSubst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Ligature", liga_subst.SubstFormat, liga_subst.Coverage.CoverageFormat, covered.Length));
-							System.Diagnostics.Debug.WriteLine (string.Format ("            # of ligature sets: {0}", liga_subst.LigatureSetCount));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Ligature", ligaSubst.SubstFormat, ligaSubst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("            # of ligature sets: {0}", ligaSubst.LigatureSetCount));
 							
-							Debug.Assert.IsTrue (liga_subst.LigatureSetCount == covered.Length);
+							Debug.Assert.IsTrue (ligaSubst.LigatureSetCount == covered.Length);
 							
-							for (int j = 0; j < liga_subst.LigatureSetCount; j++)
+							for (int j = 0; j < ligaSubst.LigatureSetCount; j++)
 							{
-								LigatureSet liga_set = liga_subst.GetLigatureSet (j);
+								LigatureSet ligaSet = ligaSubst.GetLigatureSet (j);
 								
-								for (int k = 0; k < liga_set.LigatureInfoCount; k++)
+								for (int k = 0; k < ligaSet.LigatureInfoCount; k++)
 								{
 									System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 									
-									LigatureInfo ligature = liga_set.GetLigatureInfo (k);
-									int result_glyph = ligature.Glyph;
+									LigatureInfo ligature = ligaSet.GetLigatureInfo (k);
+									int resultGlyph = ligature.Glyph;
 									
 									buffer.Append ("  o ");
 									buffer.Append (covered[j]);
@@ -410,15 +410,15 @@ namespace Epsitec.Common.OpenType.Tests
 							System.Diagnostics.Trace.WriteLine ("Starting ligature substitution:");
 							for (int zz = 0; zz < 1000; zz++)
 							{
-								int i_offset = 0;
-								int o_offset = 0;
+								int iOffset  = 0;
+								int oOffset	 = 0;
 								int length   = glyphs.Length;
 								
-								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
-								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
-								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset); i_offset++; o_offset++;
-								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
-								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
+								ligaSubst.ProcessSubstitution (glyphs, ref iOffset, length, result, ref oOffset);
+								ligaSubst.ProcessSubstitution (glyphs, ref iOffset, length, result, ref oOffset);
+								ligaSubst.ProcessSubstitution (glyphs, ref iOffset, length, result, ref oOffset); iOffset++; oOffset++;
+								ligaSubst.ProcessSubstitution (glyphs, ref iOffset, length, result, ref oOffset);
+								ligaSubst.ProcessSubstitution (glyphs, ref iOffset, length, result, ref oOffset);
 							}
 							System.Diagnostics.Trace.WriteLine ("Done.");
 						}
@@ -427,31 +427,31 @@ namespace Epsitec.Common.OpenType.Tests
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
-							SubstSubTable base_subst = lookup.GetSubTable (s);
-							ChainingContextSubstitution cctx_subst = new ChainingContextSubstitution (base_subst);
+							SubstSubTable baseSubst = lookup.GetSubTable (s);
+							ChainingContextSubstitution cctxSubst = new ChainingContextSubstitution (baseSubst);
 							
-							int[] covered = CheckTables.GetCoverageIndexes (cctx_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (cctxSubst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- ChainingContext", cctx_subst.SubstFormat, cctx_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- ChainingContext", cctxSubst.SubstFormat, cctxSubst.Coverage.CoverageFormat, covered.Length));
 						}
 					}
 					else if (lookup.LookupType == LookupType.Alternate)
 					{
 						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
-							SubstSubTable base_subst = lookup.GetSubTable (s);
-							AlternateSubstitution alt_subst = new AlternateSubstitution (base_subst);
+							SubstSubTable baseSubst = lookup.GetSubTable (s);
+							AlternateSubstitution altSubst = new AlternateSubstitution (baseSubst);
 							
-							int[] covered = CheckTables.GetCoverageIndexes (alt_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (altSubst.Coverage);
 							
-							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Alternate", alt_subst.SubstFormat, alt_subst.Coverage.CoverageFormat, covered.Length));
+							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2} -- Alternate", altSubst.SubstFormat, altSubst.Coverage.CoverageFormat, covered.Length));
 							
 							for (int c = 0; c < covered.Length; c++)
 							{
 								System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 								buffer.AppendFormat ("    Alternates for {0:0000} :", covered[c]);
 								
-								ushort[] alts = alt_subst.GetAlternates ((ushort) covered[c]);
+								ushort[] alts = altSubst.GetAlternates ((ushort) covered[c]);
 								
 								foreach (ushort alt in alts)
 								{
@@ -468,115 +468,115 @@ namespace Epsitec.Common.OpenType.Tests
 		
 		private static void TestFont()
 		{
-			string font_name_1 = "Palatino Linotype";
-			string font_name_2 = "Times New Roman";
+			string fontName1 = "Palatino Linotype";
+			string fontName2 = "Times New Roman";
 			
-			Font font_1 = new Font ();
-			Font font_2 = new Font ();
+			Font font1 = new Font ();
+			Font font2 = new Font ();
 			
-			font_1.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_1, "Normal"), -1));
-			font_2.Initialize (new FontData (Platform.Neutral.LoadFontData (font_name_2, "Normal"), -1));
+			font1.Initialize (new FontData (Platform.Neutral.LoadFontData (fontName1, "Normal"), -1));
+			font2.Initialize (new FontData (Platform.Neutral.LoadFontData (fontName2, "Normal"), -1));
 			
-			System.Diagnostics.Debug.WriteLine ("Palatino Linotype scripts:  " + string.Join ("; ", font_1.GetSupportedScripts ()));
-			System.Diagnostics.Debug.WriteLine ("Times New Roman scripts:    " + string.Join ("; ", font_2.GetSupportedScripts ()));
-			System.Diagnostics.Debug.WriteLine ("Palatino Linotype features: " + string.Join ("; ", font_1.GetSupportedFeatures ()));
-			System.Diagnostics.Debug.WriteLine ("Times New Roman features:   " + string.Join ("; ", font_2.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Palatino Linotype scripts:  " + string.Join ("; ", font1.GetSupportedScripts ()));
+			System.Diagnostics.Debug.WriteLine ("Times New Roman scripts:    " + string.Join ("; ", font2.GetSupportedScripts ()));
+			System.Diagnostics.Debug.WriteLine ("Palatino Linotype features: " + string.Join ("; ", font1.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Times New Roman features:   " + string.Join ("; ", font2.GetSupportedFeatures ()));
 			
-			font_1.SelectFeatures ("dlig", "liga");
+			font1.SelectFeatures ("dlig", "liga");
 			
-			font_1.SelectScript ("latn", "ROM ");
-			font_2.SelectScript ("arab");
+			font1.SelectScript ("latn", "ROM ");
+			font2.SelectScript ("arab");
 			
-			font_1.SelectFeatures ("dlig", "liga");
+			font1.SelectFeatures ("dlig", "liga");
 			
-			System.Diagnostics.Debug.WriteLine ("Palatino Linotype / 'latn'+'ROM ' features: " + string.Join ("; ", font_1.GetSupportedFeatures ()));
-			System.Diagnostics.Debug.WriteLine ("Times New Roman / 'arab' features:          " + string.Join ("; ", font_2.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Palatino Linotype / 'latn'+'ROM ' features: " + string.Join ("; ", font1.GetSupportedFeatures ()));
+			System.Diagnostics.Debug.WriteLine ("Times New Roman / 'arab' features:          " + string.Join ("; ", font2.GetSupportedFeatures ()));
 			
-			font_2.SelectScript ("latn");
-			font_2.SelectFeatures ("liga");
+			font2.SelectScript ("latn");
+			font2.SelectFeatures ("liga");
 			
 			string text = "Quelle fin affreuse, affligeant !";
 			
-			ushort[] glyphs_1a = font_1.GenerateGlyphs (text);
-			ushort[] glyphs_2a = font_2.GenerateGlyphs (text);
+			ushort[] glyphs1a = font1.GenerateGlyphs (text);
+			ushort[] glyphs2a = font2.GenerateGlyphs (text);
 			
-			ushort[] glyphs_1aa;
-			ushort[] glyphs_2aa;
-			byte[] attrib_1aa = new byte[text.Length];
-			byte[] attrib_2aa = new byte[text.Length];
+			ushort[] glyphs1aa;
+			ushort[] glyphs2aa;
+			byte[] attrib1aa = new byte[text.Length];
+			byte[] attrib2aa = new byte[text.Length];
 			
 			for (int i = 0; i < text.Length; i++)
 			{
-				attrib_1aa[i] = (byte) (i+1);
-				attrib_2aa[i] = (byte) (i+1);
+				attrib1aa[i] = (byte) (i+1);
+				attrib2aa[i] = (byte) (i+1);
 			}
 			
-			font_1.GenerateGlyphs(text, out glyphs_1aa, ref attrib_1aa);
-			font_2.GenerateGlyphs(text, out glyphs_2aa, ref attrib_2aa);
+			font1.GenerateGlyphs(text, out glyphs1aa, ref attrib1aa);
+			font2.GenerateGlyphs(text, out glyphs2aa, ref attrib2aa);
 			
-			Debug.Assert.IsTrue (attrib_1aa[0] == 1);
-			Debug.Assert.IsTrue (attrib_1aa[1] == 3);
-			Debug.Assert.IsTrue (attrib_1aa[18] == 22);
-			Debug.Assert.IsTrue (attrib_1aa[19] == 23);
-			Debug.Assert.IsTrue (attrib_1aa[20] == 26);
+			Debug.Assert.IsTrue (attrib1aa[0] == 1);
+			Debug.Assert.IsTrue (attrib1aa[1] == 3);
+			Debug.Assert.IsTrue (attrib1aa[18] == 22);
+			Debug.Assert.IsTrue (attrib1aa[19] == 23);
+			Debug.Assert.IsTrue (attrib1aa[20] == 26);
 			
-			Debug.Assert.IsTrue (attrib_2aa[0] == 1);
-			Debug.Assert.IsTrue (attrib_2aa[1] == 2);
-			Debug.Assert.IsTrue (attrib_2aa[22] == 24);
-			Debug.Assert.IsTrue (attrib_2aa[23] == 26);
+			Debug.Assert.IsTrue (attrib2aa[0] == 1);
+			Debug.Assert.IsTrue (attrib2aa[1] == 2);
+			Debug.Assert.IsTrue (attrib2aa[22] == 24);
+			Debug.Assert.IsTrue (attrib2aa[23] == 26);
 			
-			double w1a = font_1.GetTotalWidth (glyphs_1a, 10.0);
-			double w2a = font_2.GetTotalWidth (glyphs_2a, 10.0);
+			double w1a = font1.GetTotalWidth (glyphs1a, 10.0);
+			double w2a = font2.GetTotalWidth (glyphs2a, 10.0);
 			
-			double[] x_pos_1c = new double[glyphs_1a.Length];
-			double[] x_pos_2c = new double[glyphs_2a.Length];
+			double[] xPos1c = new double[glyphs1a.Length];
+			double[] xPos2c = new double[glyphs2a.Length];
 			
-			double w1c = font_1.GetPositions (glyphs_1a, 10.0, 0.0, x_pos_1c);
-			double w2c = font_1.GetPositions (glyphs_1a, 10.0, 0.0, x_pos_2c);
+			double w1c = font1.GetPositions (glyphs1a, 10.0, 0.0, xPos1c);
+			double w2c = font1.GetPositions (glyphs1a, 10.0, 0.0, xPos2c);
 			
 			double x, y;
 			
-			font_1.HitTest (text, 10.0, 24, out x, out y);
-			font_2.HitTest (text, 10.0, 24, out x, out y);
+			font1.HitTest (text, 10.0, 24, out x, out y);
+			font2.HitTest (text, 10.0, 24, out x, out y);
 			
-			font_1.HitTest (text, 10.0, 0, out x, out y);
-			font_1.HitTest (text, 10.0, 1, out x, out y);
-			font_1.HitTest (text, 10.0, 2, out x, out y);
-			font_1.HitTest (text, 10.0, text.Length, out x, out y);
+			font1.HitTest (text, 10.0, 0, out x, out y);
+			font1.HitTest (text, 10.0, 1, out x, out y);
+			font1.HitTest (text, 10.0, 2, out x, out y);
+			font1.HitTest (text, 10.0, text.Length, out x, out y);
 			
 			int    pos;
 			double subpos;
 			
-			font_1.HitTest (text, 10.0,  0.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0,  2.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0,  4.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0,  6.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0,  8.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0, 10.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0, 12.0, 0.0, out pos, out subpos);
-			font_1.HitTest (text, 10.0, 14.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0,  0.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0,  2.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0,  4.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0,  6.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0,  8.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0, 10.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0, 12.0, 0.0, out pos, out subpos);
+			font1.HitTest (text, 10.0, 14.0, 0.0, out pos, out subpos);
 			
-			font_1.HitTest (text, 10.0, x, y, out pos, out subpos);
+			font1.HitTest (text, 10.0, x, y, out pos, out subpos);
 			
 			Debug.Assert.IsTrue (pos == text.Length);
 			
-			font_1.SelectFeatures ();
-			font_2.SelectFeatures ();
+			font1.SelectFeatures ();
+			font2.SelectFeatures ();
 			
-			ushort[] glyphs_1b = font_1.GenerateGlyphs (text);
-			ushort[] glyphs_2b = font_2.GenerateGlyphs (text);
+			ushort[] glyphs1b = font1.GenerateGlyphs (text);
+			ushort[] glyphs2b = font2.GenerateGlyphs (text);
 			
-			double w1b = font_1.GetTotalWidth (glyphs_1b, 10.0);
-			double w2b = font_2.GetTotalWidth (glyphs_2b, 10.0);
+			double w1b = font1.GetTotalWidth (glyphs1b, 10.0);
+			double w2b = font2.GetTotalWidth (glyphs2b, 10.0);
 			
-			double asc1 = font_1.GetAscender (10.0);
-			double dsc1 = font_1.GetDescender (10.0);
+			double asc1 = font1.GetAscender (10.0);
+			double dsc1 = font1.GetDescender (10.0);
 			
 			Debug.Assert.IsTrue (asc1 > 0);
 			Debug.Assert.IsTrue (dsc1 < 0);
 			
-			double asc2 = font_2.GetAscender (10.0);
-			double dsc2 = font_2.GetDescender (10.0);
+			double asc2 = font2.GetAscender (10.0);
+			double dsc2 = font2.GetDescender (10.0);
 			
 			Debug.Assert.IsTrue (asc2 > 0);
 			Debug.Assert.IsTrue (dsc2 < 0);

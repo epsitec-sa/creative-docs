@@ -19,9 +19,9 @@ namespace Epsitec.Common.OpenType.Platform
 			return Platform.Win32.LoadFontData (family, style);
 		}
 		
-		public static byte[] LoadFontData(object system_description)
+		public static byte[] LoadFontData(object systemDescription)
 		{
-			return Platform.Win32.LoadFontData (system_description);
+			return Platform.Win32.LoadFontData (systemDescription);
 		}
 		
 		public static byte[] LoadFontDataNameTable(string family, string style)
@@ -47,20 +47,20 @@ namespace Epsitec.Common.OpenType.Platform
 		}
 		
 		
-		public static int GetFontWeight(object system_description)
+		public static int GetFontWeight(object systemDescription)
 		{
-			return Platform.Win32.GetFontWeight (system_description);
+			return Platform.Win32.GetFontWeight (systemDescription);
 		}
 		
-		public static int GetFontItalic(object system_description)
+		public static int GetFontItalic(object systemDescription)
 		{
-			return Platform.Win32.GetFontItalic (system_description);
+			return Platform.Win32.GetFontItalic (systemDescription);
 		}
 		
 		
-		public static Platform.IFontHandle GetFontHandle(object system_description, int size)
+		public static Platform.IFontHandle GetFontHandle(object systemDescription, int size)
 		{
-			return Platform.Win32.GetFontHandle (system_description, size);
+			return Platform.Win32.GetFontHandle (systemDescription, size);
 		}
 		
 		
@@ -69,9 +69,9 @@ namespace Epsitec.Common.OpenType.Platform
 			return Platform.Win32.FillFontWidths (font, glyph, count, widths, lsb, rsb);
 		}
 		
-		public static bool FillFontHeights(Platform.IFontHandle font, out int height, out int ascent, out int descent, out int internal_leading, out int external_leading)
+		public static bool FillFontHeights(Platform.IFontHandle font, out int height, out int ascent, out int descent, out int internalLeading, out int externalLeading)
 		{
-			return Platform.Win32.FillFontHeights (font, out height, out ascent, out descent, out internal_leading, out external_leading);
+			return Platform.Win32.FillFontHeights (font, out height, out ascent, out descent, out internalLeading, out externalLeading);
 		}
 	}
 }

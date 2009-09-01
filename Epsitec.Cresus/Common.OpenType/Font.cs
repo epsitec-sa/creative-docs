@@ -119,7 +119,7 @@ namespace Epsitec.Common.OpenType
 			{
 				if (this.spaceGlyph == 0)
 				{
-					this.spaceGlyph = this.ot_indexMapping.GetGlyphIndex (this.SpaceChar);
+					this.spaceGlyph = this.otIndexMapping.GetGlyphIndex (this.SpaceChar);
 				}
 				
 				return this.spaceGlyph;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.OpenType
 			{
 				if (this.hyphenGlyph == 0)
 				{
-					this.hyphenGlyph = this.ot_indexMapping.GetGlyphIndex (this.HyphenChar);
+					this.hyphenGlyph = this.otIndexMapping.GetGlyphIndex (this.HyphenChar);
 				}
 
 				return this.hyphenGlyph;
@@ -145,7 +145,7 @@ namespace Epsitec.Common.OpenType
 			{
 				if (this.ellipsisGlyph == 0)
 				{
-					this.ellipsisGlyph = this.ot_indexMapping.GetGlyphIndex (this.EllipsisChar);
+					this.ellipsisGlyph = this.otIndexMapping.GetGlyphIndex (this.EllipsisChar);
 				}
 
 				return this.ellipsisGlyph;
@@ -158,7 +158,7 @@ namespace Epsitec.Common.OpenType
 			{
 				if (this.periodGlyph == 0)
 				{
-					this.periodGlyph = this.ot_indexMapping.GetGlyphIndex (this.PeriodChar);
+					this.periodGlyph = this.otIndexMapping.GetGlyphIndex (this.PeriodChar);
 				}
 
 				return this.periodGlyph;
@@ -169,8 +169,8 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				double per_em  = this.ot_head.UnitsPerEm;
-				return this.GetAdvance (this.HyphenGlyph) / per_em;
+				double perEm  = this.otHead.UnitsPerEm;
+				return this.GetAdvance (this.HyphenGlyph) / perEm;
 			}
 		}
 
@@ -178,8 +178,8 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				double per_em  = this.ot_head.UnitsPerEm;
-				return this.GetAdvance (this.EllipsisGlyph) / per_em;
+				double perEm  = this.otHead.UnitsPerEm;
+				return this.GetAdvance (this.EllipsisGlyph) / perEm;
 			}
 		}
 
@@ -187,10 +187,10 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				double per_em  = this.ot_head.UnitsPerEm;
+				double perEm  = this.otHead.UnitsPerEm;
 				ushort glyph   = this.PeriodGlyph;
 				
-				return glyph == 0xffff ? 0.5 : (this.GetAdvance (this.PeriodGlyph) / per_em);
+				return glyph == 0xffff ? 0.5 : (this.GetAdvance (this.PeriodGlyph) / perEm);
 			}
 		}
 
@@ -215,13 +215,13 @@ namespace Epsitec.Common.OpenType
 			this.fontData = fontData;
 			this.fontType = FontType.Unsupported;
 			
-			this.ot_GSUB = Table_GSUB.Create (this.fontData["GSUB"]);
-			this.ot_GDEF = Table_GDEF.Create (this.fontData["GDEF"]);
-			this.ot_cmap = new Table_cmap (this.fontData["cmap"]);
-			this.ot_maxp = new Table_maxp (this.fontData["maxp"]);
-			this.ot_head = new Table_head (this.fontData["head"]);
-			this.ot_hhea = new Table_hhea (this.fontData["hhea"]);
-			this.ot_hmtx = new Table_hmtx (this.fontData["hmtx"]);
+			this.otGSUB = TableGSUB.Create (this.fontData["GSUB"]);
+			this.otGDEF = TableGDEF.Create (this.fontData["GDEF"]);
+			this.otCmap = new TableCmap (this.fontData["cmap"]);
+			this.otMaxp = new TableMaxp (this.fontData["maxp"]);
+			this.otHead = new TableHead (this.fontData["head"]);
+			this.otHhea = new TableHhea (this.fontData["hhea"]);
+			this.otHmtx = new Tablehmtx (this.fontData["hmtx"]);
 
 			if ((this.fontData["glyf"] != null) &&
 				(this.fontData["loca"] != null))
@@ -235,15 +235,15 @@ namespace Epsitec.Common.OpenType
 			
 			if (this.FontType == FontType.TrueType)
 			{
-				this.ot_glyf = new Table_glyf (this.fontData["glyf"]);
+				this.otGlyf = new TableGlyf (this.fontData["glyf"]);
 
-				switch (this.ot_head.IndexToLocFormat)
+				switch (this.otHead.IndexToLocFormat)
 				{
 					case 0:
-						this.ot_loca_short = new Table_loca_Short (this.fontData["loca"]);
+						this.otLocaShort = new TableLocaShort (this.fontData["loca"]);
 						break;
 					case 1:
-						this.ot_loca_long = new Table_loca_Long (this.fontData["loca"]);
+						this.otLocaLong = new TableLocaLong (this.fontData["loca"]);
 						break;
 				}
 			}
@@ -251,26 +251,26 @@ namespace Epsitec.Common.OpenType
 			//	TODO: handle GPOS for advanced glyph positioning, required by some advanced OpenType fonts.
 			//	See http://partners.adobe.com/public/developer/opentype/index_table_formats2.html
 			
-			Table_kern ot_kern = Table_kern.Create (this.fontData["kern"]);
+			TableKern otKern = TableKern.Create (this.fontData["kern"]);
 			
-			if ((ot_kern != null) &&
-				(ot_kern.Count > 0) &&
-				(ot_kern.GetKerningTable (0).SubtableFormat == 0))
+			if ((otKern != null) &&
+				(otKern.Count > 0) &&
+				(otKern.GetKerningTable (0).SubtableFormat == 0))
 			{
-				this.ot_kernFormat0 = ot_kern.GetKerningTable (0).Format0Subtable;
+				this.otKernFormat0 = otKern.GetKerningTable (0).Format0Subtable;
 			}
 			
-			this.ot_indexMapping = this.ot_cmap.FindFormatSubTable ();
+			this.otIndexMapping = this.otCmap.FindFormatSubTable ();
 
-			this.glyph_f = this.ot_indexMapping.GetGlyphIndex ('f');
-			this.glyph_i = this.ot_indexMapping.GetGlyphIndex ('i');
-			this.glyph_l = this.ot_indexMapping.GetGlyphIndex ('l');
+			this.glyphF = this.otIndexMapping.GetGlyphIndex ('f');
+			this.glyphI = this.otIndexMapping.GetGlyphIndex ('i');
+			this.glyphL = this.otIndexMapping.GetGlyphIndex ('l');
 			
-			this.glyph_lig_ff  = this.ot_indexMapping.GetGlyphIndex (0xfb00);
-			this.glyph_lig_fi  = this.ot_indexMapping.GetGlyphIndex (0xfb01);
-			this.glyph_lig_fl  = this.ot_indexMapping.GetGlyphIndex (0xfb02);
-			this.glyph_lig_ffi = this.ot_indexMapping.GetGlyphIndex (0xfb03);
-			this.glyph_lig_ffl = this.ot_indexMapping.GetGlyphIndex (0xfb04);
+			this.glyphLigFf  = this.otIndexMapping.GetGlyphIndex (0xfb00);
+			this.glyphLigFi  = this.otIndexMapping.GetGlyphIndex (0xfb01);
+			this.glyphLigFl  = this.otIndexMapping.GetGlyphIndex (0xfb02);
+			this.glyphLigFfi = this.otIndexMapping.GetGlyphIndex (0xfb03);
+			this.glyphLigFfl = this.otIndexMapping.GetGlyphIndex (0xfb04);
 			
 			this.glyphCache   = new ushort[Font.GlyphCacheSize];
 			this.advanceCache = new ushort[Font.AdvanceCacheSize];
@@ -312,8 +312,8 @@ namespace Epsitec.Common.OpenType
 		/// <returns>The glyphs represented by 16-bit unsigned values.</returns>
 		public ushort[] GenerateGlyphs(string text)
 		{
-			int[] gl_map = null;
-			return this.GenerateGlyphs (text, ref gl_map);
+			int[] glMap = null;
+			return this.GenerateGlyphs (text, ref glMap);
 		}
 
 		/// <summary>
@@ -322,11 +322,11 @@ namespace Epsitec.Common.OpenType
 		/// glyph.
 		/// </summary>
 		/// <param name="text">The text.</param>
-		/// <param name="gl_map">The glyph length map array or <c>null</c>.</param>
+		/// <param name="glMap">The glyph length map array or <c>null</c>.</param>
 		/// <returns>
 		/// The glyphs represented by 16-bit unsigned values.
 		/// </returns>
-		public ushort[] GenerateGlyphs(string text, ref int[] gl_map)
+		public ushort[] GenerateGlyphs(string text, ref int[] glMap)
 		{
 			int length = text.Length;
 			ushort[] glyphs = new ushort[length];
@@ -336,7 +336,7 @@ namespace Epsitec.Common.OpenType
 				glyphs[i] = this.GetGlyphIndex (text[i]);
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 			
 			return glyphs;
 		}
@@ -351,7 +351,7 @@ namespace Epsitec.Common.OpenType
 		public ushort[] GenerateGlyphs(ulong[] text, int start, int length)
 		{
 			ushort[] glyphs = new ushort[length];
-			int[]    gl_map = null;
+			int[]    glMap = null;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -361,7 +361,7 @@ namespace Epsitec.Common.OpenType
 				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 			
 			return glyphs;
 		}
@@ -381,18 +381,18 @@ namespace Epsitec.Common.OpenType
 		public void GenerateGlyphs(string text, out ushort[] glyphs, ref byte[] attributes)
 		{
 			int   length = text.Length;
-			int[] gl_map;
+			int[] glMap;
 			int   count;
 			
 			glyphs = new ushort[length];
-			gl_map = new int[length];
+			glMap = new int[length];
 			
 			for (int i = 0; i < length; i++)
 			{
 				glyphs[i] = this.GetGlyphIndex (text[i]);
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 			
 			if (attributes != null)
 			{
@@ -409,7 +409,7 @@ namespace Epsitec.Common.OpenType
 					attributes[dst] = attributes[src];
 					
 					dst += 1;
-					src += gl_map[i] + 1;
+					src += glMap[i] + 1;
 				}
 				while (src < count)
 				{
@@ -434,11 +434,11 @@ namespace Epsitec.Common.OpenType
 		/// <c>null</c> if there are no attributes.</param>
 		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, ref byte[] attributes)
 		{
-			int[] gl_map;
+			int[] glMap;
 			int   count;
 			
 			glyphs = new ushort[length];
-			gl_map = new int[length];
+			glMap = new int[length];
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -448,7 +448,7 @@ namespace Epsitec.Common.OpenType
 				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 			
 			if (attributes != null)
 			{
@@ -466,7 +466,7 @@ namespace Epsitec.Common.OpenType
 					attributes[dst] = attributes[src];
 					
 					dst += 1;
-					src += gl_map[i] + 1;
+					src += glMap[i] + 1;
 				}
 				while (src < count)
 				{
@@ -491,11 +491,11 @@ namespace Epsitec.Common.OpenType
 		/// <c>null</c> if there are no attributes.</param>
 		public void GenerateGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, ref short[] attributes)
 		{
-			int[] gl_map;
+			int[] glMap;
 			int   count;
 			
 			glyphs = new ushort[length];
-			gl_map = new int[length];
+			glMap = new int[length];
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -505,7 +505,7 @@ namespace Epsitec.Common.OpenType
 				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 			
 			if (attributes != null)
 			{
@@ -523,7 +523,7 @@ namespace Epsitec.Common.OpenType
 					attributes[dst] = attributes[src];
 					
 					dst += 1;
-					src += gl_map[i] + 1;
+					src += glMap[i] + 1;
 				}
 				while (src < count)
 				{
@@ -556,29 +556,29 @@ namespace Epsitec.Common.OpenType
 			}
 			else
 			{
-				int num_glyph     = this.ot_maxp.NumGlyphs;
-				int num_h_metrics = this.ot_hhea.NumHMetrics;
+				int numGlyph     = this.otMaxp.NumGlyphs;
+				int numHMetrics = this.otHhea.NumHMetrics;
 				
 				double advance = 0;
-				double per_em  = this.ot_head.UnitsPerEm;
+				double perEm  = this.otHead.UnitsPerEm;
 				
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
-					if (glyph < num_h_metrics)
+					if (glyph < numHMetrics)
 					{
 						advance = this.GetAdvance (glyph);
 					}
 					else
 					{
-						advance = this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+						advance = this.otHmtx.GetAdvanceWidth (numHMetrics-1);
 					}
 				}
 				else if (glyph >= 0xff00)
 				{
-					advance += this.GetSpaceGlyphWidth (glyph) * per_em;
+					advance += this.GetSpaceGlyphWidth (glyph) * perEm;
 				}
 				
-				return advance * size / per_em;
+				return advance * size / perEm;
 			}
 		}
 
@@ -604,22 +604,22 @@ namespace Epsitec.Common.OpenType
 			}
 			else
 			{
-				int num_glyph = this.ot_maxp.NumGlyphs;
+				int numGlyph = this.otMaxp.NumGlyphs;
 
-				double per_em  = this.ot_head.UnitsPerEm;
-				double scale   = size / per_em;
+				double perEm  = this.otHead.UnitsPerEm;
+				double scale   = size / perEm;
 
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
 					int offset = -1;
 					
-					if (this.ot_loca_short != null)
+					if (this.otLocaShort != null)
 					{
-						offset = this.ot_loca_short.GetOffset (glyph);
+						offset = this.otLocaShort.GetOffset (glyph);
 					}
-					else if (this.ot_loca_long != null)
+					else if (this.otLocaLong != null)
 					{
-						offset = this.ot_loca_long.GetOffset (glyph);
+						offset = this.otLocaLong.GetOffset (glyph);
 					}
 					else
 					{
@@ -628,14 +628,14 @@ namespace Epsitec.Common.OpenType
 
 					if (offset >= 0)
 					{
-						if (this.ot_glyf != null)
+						if (this.otGlyf != null)
 						{
-							Table_glyf ot_glyf = new Table_glyf (this.ot_glyf.BaseData, this.ot_glyf.BaseOffset + offset);
+							TableGlyf otGlyf = new TableGlyf (this.otGlyf.BaseData, this.otGlyf.BaseOffset + offset);
 
-							xMin = ot_glyf.XMin * scale;
-							xMax = ot_glyf.XMax * scale;
-							yMin = ot_glyf.YMin * scale;
-							yMax = ot_glyf.YMax * scale;
+							xMin = otGlyf.XMin * scale;
+							xMax = otGlyf.XMax * scale;
+							yMin = otGlyf.YMin * scale;
+							yMax = otGlyf.YMax * scale;
 						}
 						else
 						{
@@ -675,12 +675,12 @@ namespace Epsitec.Common.OpenType
 				return width;
 			}
 			
-			int num_glyph     = this.ot_maxp.NumGlyphs;
-			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			int numGlyph     = this.otMaxp.NumGlyphs;
+			int numHMetrics = this.otHhea.NumHMetrics;
 			
 			int    advance    = 0;
-			ushort prev_glyph = 0xffff;
-			double per_em     = this.ot_head.UnitsPerEm;
+			ushort prevGlyph = 0xffff;
+			double perEm     = this.otHead.UnitsPerEm;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -689,30 +689,30 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.useKerning)
 				{
-					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					if (this.ApplyKerningInformation (glyph, ref prevGlyph, numGlyph, out delta))
 					{
 						advance += delta;
 					}
 				}
 				
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
-					if (glyph < num_h_metrics)
+					if (glyph < numHMetrics)
 					{
 						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+						advance += this.otHmtx.GetAdvanceWidth (numHMetrics-1);
 					}
 				}
 				else if (glyph >= 0xff00)
 				{
-					advance += (int) (this.GetSpaceGlyphWidth (glyph) * per_em);
+					advance += (int) (this.GetSpaceGlyphWidth (glyph) * perEm);
 				}
 			}
 			
-			return advance * size / per_em;
+			return advance * size / perEm;
 		}
 
 		/// <summary>
@@ -721,10 +721,10 @@ namespace Epsitec.Common.OpenType
 		/// <param name="glyphs">The glyphs.</param>
 		/// <param name="size">The font point size.</param>
 		/// <param name="ox">The x origin for the first glyph.</param>
-		/// <param name="x_pos">The array of positions after every glyph; the array must
+		/// <param name="xPos">The array of positions after every glyph; the array must
 		/// be allocated by the caller.</param>
 		/// <returns>The total width of the glyphs.</returns>
-		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos)
+		public double GetPositions(ushort[] glyphs, double size, double ox, double[] xPos)
 		{
 			if (this.useSystemGlyphSize)
 			{
@@ -734,7 +734,7 @@ namespace Epsitec.Common.OpenType
 				
 				for (int i = 0; i < glyphs.Length; i++)
 				{
-					x_pos[i] = ox + width;
+					xPos[i] = ox + width;
 					
 					if (glyphs[i] >= 0xff00)
 					{
@@ -749,12 +749,12 @@ namespace Epsitec.Common.OpenType
 				return width;
 			}
 			
-			int num_glyph     = this.ot_maxp.NumGlyphs;
-			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			int numGlyph     = this.otMaxp.NumGlyphs;
+			int numHMetrics = this.otHhea.NumHMetrics;
 			
 			int    advance    = 0;
-			ushort prev_glyph = 0xffff;
-			double per_em     = this.ot_head.UnitsPerEm;
+			ushort prevGlyph = 0xffff;
+			double perEm     = this.otHead.UnitsPerEm;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -763,32 +763,32 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.useKerning)
 				{
-					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					if (this.ApplyKerningInformation (glyph, ref prevGlyph, numGlyph, out delta))
 					{
 						advance  += delta;
 					}
 				}
 				
-				x_pos[i] = ox + advance * size / per_em;
+				xPos[i] = ox + advance * size / perEm;
 				
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
-					if (glyph < num_h_metrics)
+					if (glyph < numHMetrics)
 					{
 						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+						advance += this.otHmtx.GetAdvanceWidth (numHMetrics-1);
 					}
 				}
 				else if (glyph >= 0xff00)
 				{
-					advance += (int) (this.GetSpaceGlyphWidth (glyph) * per_em);
+					advance += (int) (this.GetSpaceGlyphWidth (glyph) * perEm);
 				}
 			}
 			
-			return advance * size / per_em;
+			return advance * size / perEm;
 		}
 
 		/// <summary>
@@ -799,13 +799,13 @@ namespace Epsitec.Common.OpenType
 		/// <param name="glyphs">The glyphs.</param>
 		/// <param name="size">The font point size.</param>
 		/// <param name="ox">The x origin for the first glyph.</param>
-		/// <param name="x_pos">The array of positions after every glyph which must
+		/// <param name="xPos">The array of positions after every glyph which must
 		/// be allocated by the caller.</param>
-		/// <param name="x_scale">The array of horizontal scales applied for every individual glyph or <c>null</c> if every glyph has a scale of <c>1</c>.</param>
-		/// <param name="x_adjust">The array of horizontal width adjustement for every individual glyph or <c>null</c> if every glyph has an adjustement of <c>0</c>.</param>
-		/// <param name="x_glue">The array of horizontal glue for every individual glyph or <c>null</c> if every glyph has a glue of <c>0</c>.</param>
+		/// <param name="xScale">The array of horizontal scales applied for every individual glyph or <c>null</c> if every glyph has a scale of <c>1</c>.</param>
+		/// <param name="xAdjust">The array of horizontal width adjustement for every individual glyph or <c>null</c> if every glyph has an adjustement of <c>0</c>.</param>
+		/// <param name="xGlue">The array of horizontal glue for every individual glyph or <c>null</c> if every glyph has a glue of <c>0</c>.</param>
 		/// <returns>The total width of the glyphs.</returns>
-		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale, double[] x_adjust, double[] x_glue)
+		public double GetPositions(ushort[] glyphs, double size, double ox, double[] xPos, double[] xScale, double[] xAdjust, double[] xGlue)
 		{
 			if (this.useSystemGlyphSize)
 			{
@@ -815,40 +815,40 @@ namespace Epsitec.Common.OpenType
 				
 				for (int i = 0; i < glyphs.Length; i++)
 				{
-					x_pos[i] = ox + width;
+					xPos[i] = ox + width;
 					
-					double adjust = (x_adjust == null) ? 0 : x_adjust[i];
+					double adjust = (xAdjust == null) ? 0 : xAdjust[i];
 					
-					int glyph_width;
+					int glyphWidth;
 					
 					if (glyphs[i] >= 0xff00)
 					{
-						glyph_width = (int) (this.GetSpaceGlyphWidth (glyphs[i]) * size + 0.5);
+						glyphWidth = (int) (this.GetSpaceGlyphWidth (glyphs[i]) * size + 0.5);
 					}
 					else
 					{
-						glyph_width = info.GetGlyphWidth (glyphs[i]);
+						glyphWidth = info.GetGlyphWidth (glyphs[i]);
 					}
 					
-					if (x_glue == null)
+					if (xGlue == null)
 					{
-						width += (int)((glyph_width + adjust) * x_scale[i] + 0.5);
+						width += (int)((glyphWidth + adjust) * xScale[i] + 0.5);
 					}
 					else
 					{
-						width += (int)((glyph_width + adjust) * x_scale[i] + x_glue[i] + 0.5);
+						width += (int)((glyphWidth + adjust) * xScale[i] + xGlue[i] + 0.5);
 					}
 				}
 				
 				return width;
 			}
 			
-			int num_glyph     = this.ot_maxp.NumGlyphs;
-			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			int numGlyph     = this.otMaxp.NumGlyphs;
+			int numHMetrics = this.otHhea.NumHMetrics;
 			
-			double per_em     = this.ot_head.UnitsPerEm;
+			double perEm     = this.otHead.UnitsPerEm;
 			double advance    = 0;
-			ushort prev_glyph = 0xffff;
+			ushort prevGlyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -857,38 +857,38 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.useKerning)
 				{
-					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					if (this.ApplyKerningInformation (glyph, ref prevGlyph, numGlyph, out delta))
 					{
-						advance += delta * x_scale[i] * size / per_em;
+						advance += delta * xScale[i] * size / perEm;
 					}
 				}
 				
-				x_pos[i] = ox + advance;
+				xPos[i] = ox + advance;
 				
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
-					if (glyph < num_h_metrics)
+					if (glyph < numHMetrics)
 					{
-						advance += this.GetAdvance (glyph) * x_scale[i] * size / per_em;
+						advance += this.GetAdvance (glyph) * xScale[i] * size / perEm;
 					}
 					else
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * size / per_em;
+						advance += this.otHmtx.GetAdvanceWidth (numHMetrics-1) * xScale[i] * size / perEm;
 					}
 				}
 				else if (glyph >= 0xff00)
 				{
-					advance += this.GetSpaceGlyphWidth (glyph) * x_scale[i] * size;
+					advance += this.GetSpaceGlyphWidth (glyph) * xScale[i] * size;
 				}
 				
-				if (x_adjust != null)
+				if (xAdjust != null)
 				{
-					advance += x_adjust[i] * x_scale[i];
+					advance += xAdjust[i] * xScale[i];
 				}
 				
-				if (x_glue != null)
+				if (xGlue != null)
 				{
-					advance += x_glue[i];
+					advance += xGlue[i];
 				}
 			}
 			
@@ -902,12 +902,12 @@ namespace Epsitec.Common.OpenType
 		/// <param name="size">The font point size.</param>
 		/// <param name="ox">The x origin for the first glyph.</param>
 		/// <param name="oy">The y origin for the first glyph.</param>
-		/// <param name="x_pos">The array of horizontal positions after every glyph; the array must
+		/// <param name="xPos">The array of horizontal positions after every glyph; the array must
 		/// be allocated by the caller.</param>
-		/// <param name="y_pos">The array of baseline vertical positions for every glyph; the array must
+		/// <param name="yPos">The array of baseline vertical positions for every glyph; the array must
 		/// be allocated by the caller.</param>
 		/// <returns>The total width of the glyphs.</returns>
-		public double GetPositions(ushort[] glyphs, double size, double ox, double oy, double[] x_pos, double[] y_pos)
+		public double GetPositions(ushort[] glyphs, double size, double ox, double oy, double[] xPos, double[] yPos)
 		{
 			if (this.useSystemGlyphSize)
 			{
@@ -917,8 +917,8 @@ namespace Epsitec.Common.OpenType
 				
 				for (int i = 0; i < glyphs.Length; i++)
 				{
-					x_pos[i] = ox + width;
-					y_pos[i] = oy;
+					xPos[i] = ox + width;
+					yPos[i] = oy;
 					
 					if (glyphs[i] >= 0xff00)
 					{
@@ -933,12 +933,12 @@ namespace Epsitec.Common.OpenType
 				return width;
 			}
 			
-			int num_glyph     = this.ot_maxp.NumGlyphs;
-			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			int numGlyph     = this.otMaxp.NumGlyphs;
+			int numHMetrics = this.otHhea.NumHMetrics;
 			
-			double per_em     = this.ot_head.UnitsPerEm;
+			double perEm     = this.otHead.UnitsPerEm;
 			int    advance    = 0;
-			ushort prev_glyph = 0xffff;
+			ushort prevGlyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -947,33 +947,33 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.useKerning)
 				{
-					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					if (this.ApplyKerningInformation (glyph, ref prevGlyph, numGlyph, out delta))
 					{
 						advance  += delta;
 					}
 				}
 				
-				x_pos[i] = ox + advance * size / per_em;
-				y_pos[i] = oy;
+				xPos[i] = ox + advance * size / perEm;
+				yPos[i] = oy;
 				
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
-					if (glyph < num_h_metrics)
+					if (glyph < numHMetrics)
 					{
 						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+						advance += this.otHmtx.GetAdvanceWidth (numHMetrics-1);
 					}
 				} 
 				else if (glyph >= 0xff00)
 				{
-					advance += (int) (this.GetSpaceGlyphWidth (glyph) * per_em);
+					advance += (int) (this.GetSpaceGlyphWidth (glyph) * perEm);
 				}
 			}
 			
-			return advance * size / per_em;
+			return advance * size / perEm;
 		}
 
 
@@ -998,11 +998,11 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			ushort[] glyphs;
-			int[]    gl_map;
+			int[]    glMap;
 			
-			this.MapToGlyphs (text, out glyphs, out gl_map);
+			this.MapToGlyphs (text, out glyphs, out glMap);
 			
-			return this.HitTest (glyphs, gl_map, size, pos, out x, out y);
+			return this.HitTest (glyphs, glMap, size, pos, out x, out y);
 		}
 
 		/// <summary>
@@ -1028,11 +1028,11 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			ushort[] glyphs;
-			int[]    gl_map;
+			int[]    glMap;
 			
-			this.MapToGlyphs (text, start, length, out glyphs, out gl_map);
+			this.MapToGlyphs (text, start, length, out glyphs, out glMap);
 			
-			return this.HitTest (glyphs, gl_map, size, pos, out x, out y);
+			return this.HitTest (glyphs, glMap, size, pos, out x, out y);
 		}
 
 		/// <summary>
@@ -1049,11 +1049,11 @@ namespace Epsitec.Common.OpenType
 		public bool HitTest(string text, double size, double x, double y, out int pos, out double subpos)
 		{
 			ushort[] glyphs;
-			int[]    gl_map;
+			int[]    glMap;
 			
-			this.MapToGlyphs (text, out glyphs, out gl_map);
+			this.MapToGlyphs (text, out glyphs, out glMap);
 			
-			return this.HitTest (glyphs, gl_map, size, x, y, out pos, out subpos);
+			return this.HitTest (glyphs, glMap, size, x, y, out pos, out subpos);
 		}
 
 		/// <summary>
@@ -1072,11 +1072,11 @@ namespace Epsitec.Common.OpenType
 		public bool HitTest(ulong[] text, int start, int length, double size, double x, double y, out int pos, out double subpos)
 		{
 			ushort[] glyphs;
-			int[]    gl_map;
+			int[]    glMap;
 			
-			this.MapToGlyphs (text, start, length, out glyphs, out gl_map);
+			this.MapToGlyphs (text, start, length, out glyphs, out glMap);
 			
-			return this.HitTest (glyphs, gl_map, size, x, y, out pos, out subpos);
+			return this.HitTest (glyphs, glMap, size, x, y, out pos, out subpos);
 		}
 
 
@@ -1105,26 +1105,26 @@ namespace Epsitec.Common.OpenType
 			this.activeScript   = script;
 			this.activeLanguage = language;
 			
-			if ((this.ot_GSUB != null) &&
-				(this.ot_GSUB.ScriptListTable.ContainsScript (script)))
+			if ((this.otGSUB != null) &&
+				(this.otGSUB.ScriptListTable.ContainsScript (script)))
 			{
-				int   required_feature  = this.ot_GSUB.GetRequiredFeatureIndex (script, language);
-				int[] optional_features = this.ot_GSUB.GetFeatureIndexes (script, language);
+				int   requiredFeature  = this.otGSUB.GetRequiredFeatureIndex (script, language);
+				int[] optionalFeatures = this.otGSUB.GetFeatureIndexes (script, language);
 				
-				if (required_feature == 0xffff)
+				if (requiredFeature == 0xffff)
 				{
 					this.scriptRequiredFeature = null;
 				}
 				else
 				{
-					this.scriptRequiredFeature = this.ot_GSUB.FeatureListTable.GetTaggedFeatureTable (required_feature);
+					this.scriptRequiredFeature = this.otGSUB.FeatureListTable.GetTaggedFeatureTable (requiredFeature);
 				}
 				
-				this.scriptOptionalFeatures = new TaggedFeatureTable[optional_features.Length];
+				this.scriptOptionalFeatures = new TaggedFeatureTable[optionalFeatures.Length];
 				
-				for (int i = 0; i < optional_features.Length; i++)
+				for (int i = 0; i < optionalFeatures.Length; i++)
 				{
-					this.scriptOptionalFeatures[i] = this.ot_GSUB.FeatureListTable.GetTaggedFeatureTable (optional_features[i]);
+					this.scriptOptionalFeatures[i] = this.otGSUB.FeatureListTable.GetTaggedFeatureTable (optionalFeatures[i]);
 				}
 			}
 			else
@@ -1161,26 +1161,26 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
-			string collapsed_features = buffer.ToString ();
+			string collapsedFeatures = buffer.ToString ();
 			
-			if ((this.activeFeatures == collapsed_features) &&
-				((this.substitutionLookups != null) || (this.ot_GSUB == null)))
+			if ((this.activeFeatures == collapsedFeatures) &&
+				((this.substitutionLookups != null) || (this.otGSUB == null)))
 			{
 				return;
 			}
 			
-			this.activeFeatures = collapsed_features;
+			this.activeFeatures = collapsedFeatures;
 			
-			FeatureListTable             feature_list    = this.ot_GSUB == null ? null : this.ot_GSUB.FeatureListTable;
-			System.Collections.ArrayList active_features = new System.Collections.ArrayList ();
-			System.Collections.Hashtable active_names    = new System.Collections.Hashtable ();
+			FeatureListTable             featureList    = this.otGSUB == null ? null : this.otGSUB.FeatureListTable;
+			System.Collections.ArrayList activeFeatures = new System.Collections.ArrayList ();
+			System.Collections.Hashtable activeNames    = new System.Collections.Hashtable ();
 			
 			for (int i = 0; i < features.Length; i++)
 			{
-				active_names[features[i]] = null;
+				activeNames[features[i]] = null;
 			}
 			
-			if (active_names.Contains ("liga"))
+			if (activeNames.Contains ("liga"))
 			{
 				this.mapDefaultLigatures = true;
 			}
@@ -1189,7 +1189,7 @@ namespace Epsitec.Common.OpenType
 				this.mapDefaultLigatures = false;
 			}
 			
-			if (active_names.Contains ("kern"))
+			if (activeNames.Contains ("kern"))
 			{
 				this.useKerning = true;
 			}
@@ -1198,30 +1198,30 @@ namespace Epsitec.Common.OpenType
 				this.useKerning = false;
 			}
 			
-			if (active_names.Contains ("Mgr=System"))
+			if (activeNames.Contains ("Mgr=System"))
 			{
 				this.SelectFontManager (FontManagerType.System);
 			}
-			else if (active_names.Contains ("Mgr=OpenType"))
+			else if (activeNames.Contains ("Mgr=OpenType"))
 			{
 				this.SelectFontManager (FontManagerType.OpenType);
 			}
 			
 			if (this.scriptRequiredFeature != null)
 			{
-				active_features.Add (this.scriptRequiredFeature);
+				activeFeatures.Add (this.scriptRequiredFeature);
 			}
 			
 			if (this.scriptOptionalFeatures == null)
 			{
-				int n = feature_list == null ? 0 : feature_list.FeatureCount;
+				int n = featureList == null ? 0 : featureList.FeatureCount;
 				
 				for (int i = 0; i < n; i++)
 				{
-					if (active_names.Contains (feature_list.GetFeatureTag (i)))
+					if (activeNames.Contains (featureList.GetFeatureTag (i)))
 					{
-						active_features.Add (feature_list.GetFeatureTable (i));
-						active_names.Remove (feature_list.GetFeatureTag (i));
+						activeFeatures.Add (featureList.GetFeatureTable (i));
+						activeNames.Remove (featureList.GetFeatureTag (i));
 					}
 				}
 			}
@@ -1231,16 +1231,16 @@ namespace Epsitec.Common.OpenType
 				
 				for (int i = 0; i < n; i++)
 				{
-					if (active_names.Contains (this.scriptOptionalFeatures[i].Tag))
+					if (activeNames.Contains (this.scriptOptionalFeatures[i].Tag))
 					{
-						active_features.Add (this.scriptOptionalFeatures[i]);
+						activeFeatures.Add (this.scriptOptionalFeatures[i]);
 					}
 				}
 			}
 			
-			if (this.ot_GSUB != null)
+			if (this.otGSUB != null)
 			{
-				this.GenerateSubstitutionLookups (active_features);
+				this.GenerateSubstitutionLookups (activeFeatures);
 			}
 		}
 
@@ -1321,29 +1321,29 @@ namespace Epsitec.Common.OpenType
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			ScriptListTable script_list = this.ot_GSUB == null ? null : this.ot_GSUB.ScriptListTable;
-			int n = script_list == null ? 0 : script_list.ScriptCount;
+			ScriptListTable scriptList = this.otGSUB == null ? null : this.otGSUB.ScriptListTable;
+			int n = scriptList == null ? 0 : scriptList.ScriptCount;
 			
 			for (int i = 0; i < n; i++)
 			{
-				string      script_tag   = script_list.GetScriptTag (i);
-				ScriptTable script_table = script_list.GetScriptTable (i);
+				string      scriptTag   = scriptList.GetScriptTag (i);
+				ScriptTable scriptTable = scriptList.GetScriptTable (i);
 				
 				if (i > 0)
 				{
 					buffer.Append ("|");
 				}
 				
-				buffer.Append (script_tag);
+				buffer.Append (scriptTag);
 				
-				int m = script_table.LangSysCount;
+				int m = scriptTable.LangSysCount;
 				
 				for (int j = 0; j < m; j++)
 				{
 					buffer.Append ("|");
-					buffer.Append (script_tag);
+					buffer.Append (scriptTag);
 					buffer.Append (":");
-					buffer.Append (script_table.GetLangSysTag (j));
+					buffer.Append (scriptTable.GetLangSysTag (j));
 				}
 			}
 			
@@ -1360,13 +1360,13 @@ namespace Epsitec.Common.OpenType
 			
 			if (this.scriptOptionalFeatures == null)
 			{
-				FeatureListTable feature_list = this.ot_GSUB == null ? null : this.ot_GSUB.FeatureListTable;
+				FeatureListTable featureList = this.otGSUB == null ? null : this.otGSUB.FeatureListTable;
 				
-				int n = feature_list == null ? 0 : feature_list.FeatureCount;
+				int n = featureList == null ? 0 : featureList.FeatureCount;
 				
 				for (int i = 0; i < n; i++)
 				{
-					string tag = feature_list.GetFeatureTag (i);
+					string tag = featureList.GetFeatureTag (i);
 					
 					if (dict.Contains (tag) == false)
 					{
@@ -1392,7 +1392,7 @@ namespace Epsitec.Common.OpenType
 			//	Ajoute des features "synthétiques" comme le crénage et les ligatures
 			//	que nous savons émuler au besoin :
 			
-			if (ot_kernFormat0 != null)
+			if (otKernFormat0 != null)
 			{
 				if (dict.Contains ("kern") == false)
 				{
@@ -1440,19 +1440,19 @@ namespace Epsitec.Common.OpenType
 		{
 			List<LookupTable> list = new List<LookupTable> ();
 			
-			if (this.ot_GSUB != null)
+			if (this.otGSUB != null)
 			{
 				foreach (string feature in features)
 				{
-					int[] indexes = this.ot_GSUB.GetFeatureIndexes (feature);
+					int[] indexes = this.otGSUB.GetFeatureIndexes (feature);
 					foreach (int index in indexes)
 					{
-						FeatureTable f_table = this.ot_GSUB.FeatureListTable.GetFeatureTable (index);
-						int          count   = f_table.LookupCount;
+						FeatureTable fTable = this.otGSUB.FeatureListTable.GetFeatureTable (index);
+						int          count   = fTable.LookupCount;
 						
 						for (int i = 0; i < count; i++)
 						{
-							list.Add (this.ot_GSUB.LookupListTable.GetLookupTable (f_table.GetLookupIndex (i)));
+							list.Add (this.otGSUB.LookupListTable.GetLookupTable (fTable.GetLookupIndex (i)));
 						}
 					}
 				}
@@ -1584,7 +1584,7 @@ namespace Epsitec.Common.OpenType
 		/// <returns>The handle to the font or <c>System.IntPtr.Zero</c>.</returns>
 		public System.IntPtr GetFontHandleAtEmSize()
 		{
-			FontSizeInfo info = this.identity.GetSizeInfo (this.ot_head.UnitsPerEm);
+			FontSizeInfo info = this.identity.GetSizeInfo (this.otHead.UnitsPerEm);
             return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
 		}
 
@@ -1603,9 +1603,9 @@ namespace Epsitec.Common.OpenType
 			}
 			else
 			{
-				double scale = size / this.ot_head.UnitsPerEm;
+				double scale = size / this.otHead.UnitsPerEm;
 				
-				return this.ot_hhea.MacAscender * scale;
+				return this.otHhea.MacAscender * scale;
 			}
 		}
 
@@ -1623,9 +1623,9 @@ namespace Epsitec.Common.OpenType
 			}
 			else
 			{
-				double scale = size / this.ot_head.UnitsPerEm;
+				double scale = size / this.otHead.UnitsPerEm;
 				
-				return this.ot_hhea.MacDescender * scale;
+				return this.otHhea.MacDescender * scale;
 			}
 		}
 
@@ -1636,8 +1636,8 @@ namespace Epsitec.Common.OpenType
 		/// <returns>The font line gap.</returns>
 		public double GetLineGap(double size)
 		{
-			double scale = size / this.ot_head.UnitsPerEm;
-			return this.ot_hhea.MacLineGap * scale;
+			double scale = size / this.otHead.UnitsPerEm;
+			return this.otHhea.MacLineGap * scale;
 		}
 
 		/// <summary>
@@ -1646,8 +1646,8 @@ namespace Epsitec.Common.OpenType
 		/// <returns>The font caret angle in radians.</returns>
 		public double GetCaretAngleRad()
 		{
-			double dx = this.ot_hhea.CaretSlopeRun;
-			double dy = this.ot_hhea.CaretSlopeRise;
+			double dx = this.otHhea.CaretSlopeRun;
+			double dy = this.otHhea.CaretSlopeRise;
 			
 			return System.Math.Atan2 (dy, dx);
 		}
@@ -1664,8 +1664,8 @@ namespace Epsitec.Common.OpenType
 
 		public double GetXHeight(double size)
 		{
-			double scale = size / this.ot_head.UnitsPerEm;
-			Table_OS2 os2 = this.GetTable_OS2 ();
+			double scale = size / this.otHead.UnitsPerEm;
+			TableOS2 os2 = this.GetTableOS2 ();
 			double xHeight = scale * os2.XHeight;
 
 			if (xHeight == 0)
@@ -1683,8 +1683,8 @@ namespace Epsitec.Common.OpenType
 
 		public double GetCapHeight(double size)
 		{
-			double scale = size / this.ot_head.UnitsPerEm;
-			Table_OS2 os2 = this.GetTable_OS2 ();
+			double scale = size / this.otHead.UnitsPerEm;
+			TableOS2 os2 = this.GetTableOS2 ();
 			double capHeight = scale * os2.CapHeight;
 
 			if (capHeight == 0)
@@ -1700,9 +1700,9 @@ namespace Epsitec.Common.OpenType
 			return capHeight;
 		}
 
-		private Table_OS2 GetTable_OS2()
+		private TableOS2 GetTableOS2()
 		{
-			return new Table_OS2 (this.fontData["OS/2"]);
+			return new TableOS2 (this.fontData["OS/2"]);
 		}
 
 
@@ -1716,12 +1716,12 @@ namespace Epsitec.Common.OpenType
 		/// <param name="yMax">The maximum Y value.</param>
 		public void GetMaxBox(double size, out double xMin, out double xMax, out double yMin, out double yMax)
 		{
-			double scale = size / this.ot_head.UnitsPerEm;
+			double scale = size / this.otHead.UnitsPerEm;
 			
-			xMin = this.ot_head.XMin * scale;
-			xMax = this.ot_head.XMax * scale;
-			yMin = this.ot_head.YMin * scale;
-			yMax = this.ot_head.YMax * scale;
+			xMin = this.otHead.XMin * scale;
+			xMax = this.otHead.XMax * scale;
+			yMin = this.otHead.YMin * scale;
+			yMax = this.otHead.YMax * scale;
 		}
 
 		/// <summary>
@@ -1741,29 +1741,29 @@ namespace Epsitec.Common.OpenType
 		{
 			System.Diagnostics.Debug.Assert (glyphs.Length > 0);
 			
-			double scale = size / this.ot_head.UnitsPerEm;
+			double scale = size / this.otHead.UnitsPerEm;
 			
-			double ot_xmin = this.ot_head.XMin * scale;
-			double ot_xmax = this.ot_head.XMax * scale;
-			double ot_ymin = this.ot_head.YMin * scale;
-			double ot_ymax = this.ot_head.YMax * scale;
+			double otXmin = this.otHead.XMin * scale;
+			double otXmax = this.otHead.XMax * scale;
+			double otYmin = this.otHead.YMin * scale;
+			double otYmax = this.otHead.YMax * scale;
 			
-			xMin = x[0] + ot_xmin * (sx == null ? 1 : sx[0]);
-			xMax = x[0] + ot_xmax * (sx == null ? 1 : sx[0]);
-			yMin = y[0] + ot_ymin * (sy == null ? 1 : sy[0]);
-			yMax = y[0] + ot_ymax * (sy == null ? 1 : sy[0]);
+			xMin = x[0] + otXmin * (sx == null ? 1 : sx[0]);
+			xMax = x[0] + otXmax * (sx == null ? 1 : sx[0]);
+			yMin = y[0] + otYmin * (sy == null ? 1 : sy[0]);
+			yMax = y[0] + otYmax * (sy == null ? 1 : sy[0]);
 			
 			for (int i = 1; i < glyphs.Length; i++)
 			{
-				double xx_min = x[i] + ot_xmin * (sx == null ? 1 : sx[i]);
-				double xx_max = x[i] + ot_xmax * (sx == null ? 1 : sx[i]);
-				double yy_min = y[i] + ot_ymin * (sy == null ? 1 : sy[i]);
-				double yy_max = y[i] + ot_ymax * (sy == null ? 1 : sy[i]);
+				double xxMin = x[i] + otXmin * (sx == null ? 1 : sx[i]);
+				double xxMax = x[i] + otXmax * (sx == null ? 1 : sx[i]);
+				double yyMin = y[i] + otYmin * (sy == null ? 1 : sy[i]);
+				double yyMax = y[i] + otYmax * (sy == null ? 1 : sy[i]);
 				
-				if (xx_min < xMin) xMin = xx_min;
-				if (xx_max > xMax) xMax = xx_max;
-				if (yy_min < yMin) yMin = yy_min;
-				if (yy_max > yMax) yMax = yy_max;
+				if (xxMin < xMin) xMin = xxMin;
+				if (xxMax > xMax) xMax = xxMax;
+				if (yyMin < yMin) yMin = yyMin;
+				if (yyMax > yMax) yMax = yyMax;
 			}
 		}
 
@@ -1804,7 +1804,7 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			if ((code == 0) ||
-				(this.ot_indexMapping == null))
+				(this.otIndexMapping == null))
 			{
 				return 0xffff;
 			}
@@ -1817,7 +1817,7 @@ namespace Epsitec.Common.OpenType
 				return 0x0000;
 			}
 			
-			glyph = this.ot_indexMapping.GetGlyphIndex (code);
+			glyph = this.otIndexMapping.GetGlyphIndex (code);
 			
 			if (glyph == 0x0000)
 			{
@@ -1960,25 +1960,25 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		private void MapToGlyphs(string text, out ushort[] glyphs, out int[] gl_map)
+		private void MapToGlyphs(string text, out ushort[] glyphs, out int[] glMap)
 		{
 			int length = text.Length;
 			
 			glyphs = new ushort[length];
-			gl_map = new int[length];
+			glMap = new int[length];
 			
 			for (int i = 0; i < length; i++)
 			{
 				glyphs[i] = this.GetGlyphIndex (text[i]);
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 		}
 		
-		private void MapToGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, out int[] gl_map)
+		private void MapToGlyphs(ulong[] text, int start, int length, out ushort[] glyphs, out int[] glMap)
 		{
 			glyphs = new ushort[length];
-			gl_map = new int[length];
+			glMap = new int[length];
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -1988,44 +1988,44 @@ namespace Epsitec.Common.OpenType
 				glyphs[i] = (bits & Font.TransparentGlyphFlag) == 0 ? this.GetGlyphIndex (code) : (ushort) code;
 			}
 			
-			this.ApplySubstitutions (ref glyphs, ref gl_map);
+			this.ApplySubstitutions (ref glyphs, ref glMap);
 		}
 		
 		
-		private void GenerateSubstitutionLookups(System.Collections.ICollection feature_tables)
+		private void GenerateSubstitutionLookups(System.Collections.ICollection featureTables)
 		{
-			System.Collections.ArrayList lookup_indexes = new System.Collections.ArrayList ();
+			System.Collections.ArrayList lookupIndexes = new System.Collections.ArrayList ();
 			
-			foreach (FeatureTable feature_table in feature_tables)
+			foreach (FeatureTable featureTable in featureTables)
 			{
-				int n = feature_table.LookupCount;
+				int n = featureTable.LookupCount;
 				
 				for (int i = 0; i < n; i++)
 				{
-					int lookup = feature_table.GetLookupIndex (i);
+					int lookup = featureTable.GetLookupIndex (i);
 					
-					if (lookup_indexes.Contains (lookup) == false)
+					if (lookupIndexes.Contains (lookup) == false)
 					{
-						lookup_indexes.Add (lookup);
+						lookupIndexes.Add (lookup);
 					}
 				}
 			}
 			
-			lookup_indexes.Sort ();
+			lookupIndexes.Sort ();
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			if (this.ot_GSUB != null)
+			if (this.otGSUB != null)
 			{
-				foreach (int lookup in lookup_indexes)
+				foreach (int lookup in lookupIndexes)
 				{
-					LookupTable lookup_table = this.ot_GSUB.LookupListTable.GetLookupTable (lookup);
+					LookupTable lookupTable = this.otGSUB.LookupListTable.GetLookupTable (lookup);
 					
-					int n = lookup_table.SubTableCount;
+					int n = lookupTable.SubTableCount;
 					
 					for (int i = 0; i < n; i++)
 					{
-						BaseSubstitution subst = lookup_table.GetSubstitution (i);
+						BaseSubstitution subst = lookupTable.GetSubstitution (i);
 						
 						if (subst != null)
 						{
@@ -2040,7 +2040,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		private void ApplySubstitutions(ref ushort[] glyphs, ref int[] gl_map)
+		private void ApplySubstitutions(ref ushort[] glyphs, ref int[] glMap)
 		{
 			if ((this.substitutionLookups == null) ||
 				(this.substitutionLookups.Length == 0))
@@ -2056,16 +2056,16 @@ namespace Epsitec.Common.OpenType
 			//	Exécute les substitutions de glyphes en fonction des 'features'
 			//	sélectionnées :
 			
-			int max_size = count + 16;
+			int maxSize = count + 16;
 			
 		try_again:
 			
-			if (Font.tempGlyphMaxSize < max_size)
+			if (Font.tempGlyphMaxSize < maxSize)
 			{
 				Font.tempGlyphs = new ushort[2][];
-				Font.tempGlyphs[0] = new ushort[max_size];
-				Font.tempGlyphs[1] = new ushort[max_size];
-				Font.tempGlyphMaxSize = max_size;
+				Font.tempGlyphs[0] = new ushort[maxSize];
+				Font.tempGlyphs[1] = new ushort[maxSize];
+				Font.tempGlyphMaxSize = maxSize;
 			}
 
 			ushort[][] temp = Font.tempGlyphs;
@@ -2083,7 +2083,7 @@ namespace Epsitec.Common.OpenType
 				{
 					for (int i = 0; i < this.substitutionLookups.Length; i++)
 					{
-						Font.ApplySubstitutions (this.substitutionLookups[i], input, length, output, out length, ref gl_map);
+						Font.ApplySubstitutions (this.substitutionLookups[i], input, length, output, out length, ref glMap);
 						
 						input   = output;
 						output  = temp[toggle & 1];
@@ -2093,7 +2093,7 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.mapDefaultLigatures)
 				{
-					this.ApplyManualLigatureSubstitutions (input, length, output, out length, ref gl_map);
+					this.ApplyManualLigatureSubstitutions (input, length, output, out length, ref glMap);
 				}
 				else
 				{
@@ -2112,66 +2112,66 @@ namespace Epsitec.Common.OpenType
 			}
 			catch (System.IndexOutOfRangeException)
 			{
-				max_size += max_size / 8;
+				maxSize += maxSize / 8;
 				goto try_again;
 			}
 		}
 		
-		private void ApplyManualLigatureSubstitutions(ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
+		private void ApplyManualLigatureSubstitutions(ushort[] inputGlyphs, int inputLength, ushort[] outputGlyphs, out int outputLength, ref int[] glMap)
 		{
-			if (this.ot_indexMapping == null)
+			if (this.otIndexMapping == null)
 			{
-				for (int i = 0; i < input_length; i++)
+				for (int i = 0; i < inputLength; i++)
 				{
-					output_glyphs[i] = input_glyphs[i];
+					outputGlyphs[i] = inputGlyphs[i];
 				}
 				
-				output_length = input_length;
+				outputLength = inputLength;
 				
 				return;
 			}
 			
-			int input_offset  = 0;
-			int output_offset = 0;
+			int inputOffset  = 0;
+			int outputOffset = 0;
 			
-			while (input_offset < input_length)
+			while (inputOffset < inputLength)
 			{
-				int length = input_length - input_offset;
+				int length = inputLength - inputOffset;
 				
 				if (length > 2)
 				{
-					if ((this.glyph_lig_ffi > 0) &&
-						(input_glyphs[input_offset+0] == this.glyph_f) &&
-						(input_glyphs[input_offset+1] == this.glyph_f) &&
-						(input_glyphs[input_offset+2] == this.glyph_i))
+					if ((this.glyphLigFfi > 0) &&
+						(inputGlyphs[inputOffset+0] == this.glyphF) &&
+						(inputGlyphs[inputOffset+1] == this.glyphF) &&
+						(inputGlyphs[inputOffset+2] == this.glyphI))
 					{
-						output_glyphs[output_offset] = this.glyph_lig_ffi;
+						outputGlyphs[outputOffset] = this.glyphLigFfi;
 						
-						if (gl_map != null)
+						if (glMap != null)
 						{
-							gl_map[output_offset] = gl_map[input_offset] + 2;
+							glMap[outputOffset] = glMap[inputOffset] + 2;
 						}
 						
-						input_offset  += 3;
-						output_offset += 1;
+						inputOffset  += 3;
+						outputOffset += 1;
 						
 						continue;
 					}
 
-					if ((this.glyph_lig_ffl > 0) &&
-						(input_glyphs[input_offset+0] == this.glyph_f) &&
-						(input_glyphs[input_offset+1] == this.glyph_f) &&
-						(input_glyphs[input_offset+2] == this.glyph_l))
+					if ((this.glyphLigFfl > 0) &&
+						(inputGlyphs[inputOffset+0] == this.glyphF) &&
+						(inputGlyphs[inputOffset+1] == this.glyphF) &&
+						(inputGlyphs[inputOffset+2] == this.glyphL))
 					{
-						output_glyphs[output_offset] = this.glyph_lig_ffl;
+						outputGlyphs[outputOffset] = this.glyphLigFfl;
 						
-						if (gl_map != null)
+						if (glMap != null)
 						{
-							gl_map[output_offset] = gl_map[input_offset] + 2;
+							glMap[outputOffset] = glMap[inputOffset] + 2;
 						}
 						
-						input_offset  += 3;
-						output_offset += 1;
+						inputOffset  += 3;
+						outputOffset += 1;
 						
 						continue;
 					}
@@ -2179,112 +2179,112 @@ namespace Epsitec.Common.OpenType
 				
 				if (length > 1)
 				{
-					if ((this.glyph_lig_ff > 0) &&
-						(input_glyphs[input_offset+0] == this.glyph_f) &&
-						(input_glyphs[input_offset+1] == this.glyph_f))
+					if ((this.glyphLigFf > 0) &&
+						(inputGlyphs[inputOffset+0] == this.glyphF) &&
+						(inputGlyphs[inputOffset+1] == this.glyphF))
 					{
-						output_glyphs[output_offset] = this.glyph_lig_ff;
+						outputGlyphs[outputOffset] = this.glyphLigFf;
 						
-						if (gl_map != null)
+						if (glMap != null)
 						{
-							gl_map[output_offset] = gl_map[input_offset] + 1;
+							glMap[outputOffset] = glMap[inputOffset] + 1;
 						}
 						
-						input_offset  += 2;
-						output_offset += 1;
+						inputOffset  += 2;
+						outputOffset += 1;
 						
 						continue;
 					}
 
-					if ((this.glyph_lig_fi > 0) &&
-						(input_glyphs[input_offset+0] == this.glyph_f) &&
-						(input_glyphs[input_offset+1] == this.glyph_i))
+					if ((this.glyphLigFi > 0) &&
+						(inputGlyphs[inputOffset+0] == this.glyphF) &&
+						(inputGlyphs[inputOffset+1] == this.glyphI))
 					{
-						output_glyphs[output_offset] = this.glyph_lig_fi;
+						outputGlyphs[outputOffset] = this.glyphLigFi;
 						
-						if (gl_map != null)
+						if (glMap != null)
 						{
-							gl_map[output_offset] = gl_map[input_offset] + 1;
+							glMap[outputOffset] = glMap[inputOffset] + 1;
 						}
 						
-						input_offset  += 2;
-						output_offset += 1;
+						inputOffset  += 2;
+						outputOffset += 1;
 						
 						continue;
 					}
 
-					if ((this.glyph_lig_fl > 0) &&
-						(input_glyphs[input_offset+0] == this.glyph_f) &&
-						(input_glyphs[input_offset+1] == this.glyph_l))
+					if ((this.glyphLigFl > 0) &&
+						(inputGlyphs[inputOffset+0] == this.glyphF) &&
+						(inputGlyphs[inputOffset+1] == this.glyphL))
 					{
-						output_glyphs[output_offset] = this.glyph_lig_fl;
+						outputGlyphs[outputOffset] = this.glyphLigFl;
 						
-						if (gl_map != null)
+						if (glMap != null)
 						{
-							gl_map[output_offset] = gl_map[input_offset] + 1;
+							glMap[outputOffset] = glMap[inputOffset] + 1;
 						}
 						
-						input_offset  += 2;
-						output_offset += 1;
+						inputOffset  += 2;
+						outputOffset += 1;
 						
 						continue;
 					}
 				}
 				
-				output_glyphs[output_offset] = input_glyphs[input_offset];
+				outputGlyphs[outputOffset] = inputGlyphs[inputOffset];
 				
-				if (gl_map != null)
+				if (glMap != null)
 				{
-					gl_map[output_offset] = gl_map[input_offset];
+					glMap[outputOffset] = glMap[inputOffset];
 				}
 						
-				input_offset  += 1;
-				output_offset += 1;
+				inputOffset  += 1;
+				outputOffset += 1;
 			}
 			
-			output_length = output_offset;
+			outputLength = outputOffset;
 		}
 		
-		private static void ApplySubstitutions(BaseSubstitution substitution, ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length, ref int[] gl_map)
+		private static void ApplySubstitutions(BaseSubstitution substitution, ushort[] inputGlyphs, int inputLength, ushort[] outputGlyphs, out int outputLength, ref int[] glMap)
 		{
-			int input_offset  = 0;
-			int output_offset = 0;
+			int inputOffset  = 0;
+			int outputOffset = 0;
 			
-			if (gl_map == null)
+			if (glMap == null)
 			{
-				while (input_offset < input_length)
+				while (inputOffset < inputLength)
 				{
-					if (substitution.ProcessSubstitution (input_glyphs, ref input_offset, input_length, output_glyphs, ref output_offset))
+					if (substitution.ProcessSubstitution (inputGlyphs, ref inputOffset, inputLength, outputGlyphs, ref outputOffset))
 					{
 						//	Substitution avec succès.
 					}
 					else
 					{
-						output_glyphs[output_offset] = input_glyphs[input_offset];
+						outputGlyphs[outputOffset] = inputGlyphs[inputOffset];
 						
-						input_offset++;
-						output_offset++;
+						inputOffset++;
+						outputOffset++;
 					}
 				}
 			}
 			else
 			{
-				while (input_offset < input_length)
+				while (inputOffset < inputLength)
 				{
-					int input_origin  = input_offset;
-					int output_origin = output_offset;
+					int inputOrigin  = inputOffset;
+					int outputOrigin = outputOffset;
 					
-					if (substitution.ProcessSubstitution (input_glyphs, ref input_offset, input_length, output_glyphs, ref output_offset))
+					if (substitution.ProcessSubstitution (inputGlyphs, ref inputOffset, inputLength, outputGlyphs, ref outputOffset))
 					{
 						//	Substitution avec succès.
 						
-						int input_advance  = input_offset  - input_origin;
-						int output_advance = output_offset - output_origin;
+						int inputAdvance  = inputOffset  - inputOrigin;
+						int outputAdvance = outputOffset - outputOrigin;
 						
-						Debug.Assert.IsTrue (input_advance > 0);
-						Debug.Assert.IsTrue (output_advance == 1);
+						Debug.Assert.IsTrue (inputAdvance > 0);
+						Debug.Assert.IsTrue (outputAdvance == 1);
 						
-						gl_map[output_origin++] = gl_map[input_origin++] + input_advance - output_advance;
+						glMap[outputOrigin++] = glMap[inputOrigin++] + inputAdvance - outputAdvance;
 						
 						//	Attention, quand les substitutions pourront générer
 						//	plusieurs glyphes en sortie, ce code devra être
@@ -2292,50 +2292,50 @@ namespace Epsitec.Common.OpenType
 					}
 					else
 					{
-						output_glyphs[output_offset] = input_glyphs[input_offset];
-						gl_map[output_offset]        = gl_map[input_offset];
+						outputGlyphs[outputOffset] = inputGlyphs[inputOffset];
+						glMap[outputOffset]        = glMap[inputOffset];
 						
-						input_offset++;
-						output_offset++;
+						inputOffset++;
+						outputOffset++;
 					}
 				}
 			}
 			
-			output_length = output_offset;
+			outputLength = outputOffset;
 		}
 		
-		private bool ApplyKerningInformation(ushort glyph, ref ushort prev_glyph, int num_glyph, out int delta)
+		private bool ApplyKerningInformation(ushort glyph, ref ushort prevGlyph, int numGlyph, out int delta)
 		{
 			if ((this.useKerning) &&
-				(glyph < num_glyph) &&
-				(prev_glyph < num_glyph) &&
-				(this.ot_kernFormat0 != null) &&
-				(this.ot_kernFormat0.FindKernValue (prev_glyph, glyph, out delta)))
+				(glyph < numGlyph) &&
+				(prevGlyph < numGlyph) &&
+				(this.otKernFormat0 != null) &&
+				(this.otKernFormat0.FindKernValue (prevGlyph, glyph, out delta)))
 			{
-				prev_glyph = glyph;
+				prevGlyph = glyph;
 				return true;
 			}
 			else
 			{
 				delta      = 0;
-				prev_glyph = glyph;
+				prevGlyph = glyph;
 				return false;
 			}
 		}
 		
 		
-		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, int pos, out double x, out double y)
+		private bool HitTest(ushort[] glyphs, int[] glMap, double size, int pos, out double x, out double y)
 		{
-			//	TODO: gérer use_system_glyph_size
+			//	TODO: gérer useSystemGlyphSize
 			
-			double scale = size / this.ot_head.UnitsPerEm;
+			double scale = size / this.otHead.UnitsPerEm;
 			
-			int num_glyph     = this.ot_maxp.NumGlyphs;
-			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			int numGlyph     = this.otMaxp.NumGlyphs;
+			int numHMetrics = this.otHhea.NumHMetrics;
 			
 			int    advance    = 0;
 			int    distance   = 0;
-			ushort prev_glyph = 0xffff;
+			ushort prevGlyph = 0xffff;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
@@ -2344,20 +2344,20 @@ namespace Epsitec.Common.OpenType
 				
 				if (this.useKerning)
 				{
-					if (this.ApplyKerningInformation (glyph, ref prev_glyph, num_glyph, out delta))
+					if (this.ApplyKerningInformation (glyph, ref prevGlyph, numGlyph, out delta))
 					{
 						advance += delta;
 					}
 				}
 				
 				if ((distance <= pos) &&
-					(distance+gl_map[i] >= pos))
+					(distance+glMap[i] >= pos))
 				{
 					//	Trouve la position [x] exacte si c'est dans une ligature.
 					
-					if (gl_map[i] > 0)
+					if (glMap[i] > 0)
 					{
-						this.GetLigatureCaretPosition (glyph, gl_map[i]+1, size, pos - distance, out x, out y);
+						this.GetLigatureCaretPosition (glyph, glMap[i]+1, size, pos - distance, out x, out y);
 						
 						x += advance * scale;
 						y += 0.0;
@@ -2371,20 +2371,20 @@ namespace Epsitec.Common.OpenType
 					return true;
 				}
 				
-				if (glyph < num_glyph)
+				if (glyph < numGlyph)
 				{
-					if (glyph < num_h_metrics)
+					if (glyph < numHMetrics)
 					{
 						advance += this.GetAdvance (glyph);
 					}
 					else
 					{
-						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+						advance += this.otHmtx.GetAdvanceWidth (numHMetrics-1);
 					}
 				}
 				
 				distance += 1;
-				distance += gl_map[i];
+				distance += glMap[i];
 			}
 			
 			x = advance * scale;
@@ -2393,9 +2393,9 @@ namespace Epsitec.Common.OpenType
 			return true;
 		}
 		
-		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, double x, double y, out int pos, out double subpos)
+		private bool HitTest(ushort[] glyphs, int[] glMap, double size, double x, double y, out int pos, out double subpos)
 		{
-			//	TODO: gérer use_system_glyph_size
+			//	TODO: gérer useSystemGlyphSize
 			
 			if (x <= 0)
 			{
@@ -2405,25 +2405,25 @@ namespace Epsitec.Common.OpenType
 				return false;
 			}
 			
-			ushort[] one_glyph  = new ushort[1];
-			int[]    one_gl_map = new int[1];
+			ushort[] oneGlyph  = new ushort[1];
+			int[]    oneGlMap = new int[1];
 			
 			int count = 0;
 			
 			for (int i = 0; i < glyphs.Length; i++)
 			{
-				one_glyph[0]  = glyphs[i];
-				one_gl_map[0] = gl_map[i];
+				oneGlyph[0]  = glyphs[i];
+				oneGlMap[0] = glMap[i];
 				
 				double x1, x2;
 				double y1, y2;
 				
 				x2 = 0;
 				
-				for (int one_pos = 0; one_pos < gl_map[i]+1; one_pos++)
+				for (int onePos = 0; onePos < glMap[i]+1; onePos++)
 				{
-					this.HitTest (one_glyph, one_gl_map, size, one_pos + 0, out x1, out y1);
-					this.HitTest (one_glyph, one_gl_map, size, one_pos + 1, out x2, out y2);
+					this.HitTest (oneGlyph, oneGlMap, size, onePos + 0, out x1, out y1);
+					this.HitTest (oneGlyph, oneGlMap, size, onePos + 1, out x2, out y2);
 					
 					if ((x >= x1) &&
 						(x <= x2))
@@ -2458,7 +2458,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		private void GetLigatureCaretPosition(ushort glyph, int simple_glyph_count, double size, int pos, out double x, out double y)
+		private void GetLigatureCaretPosition(ushort glyph, int simpleGlyphCount, double size, int pos, out double x, out double y)
 		{
 			if (pos < 1)
 			{
@@ -2468,27 +2468,27 @@ namespace Epsitec.Common.OpenType
 				return;
 			}
 			
-			double scale = size / this.ot_head.UnitsPerEm;
+			double scale = size / this.otHead.UnitsPerEm;
 			
-			LigatureCaretListTable caret_list = this.ot_GDEF == null ? null : this.ot_GDEF.LigatureCaretListTable;
+			LigatureCaretListTable caretList = this.otGDEF == null ? null : this.otGDEF.LigatureCaretListTable;
 			
-			if (caret_list != null)
+			if (caretList != null)
 			{
-				int index = caret_list.Coverage.FindIndex (glyph);
+				int index = caretList.Coverage.FindIndex (glyph);
 				
 				if (index >= 0)
 				{
-					LigatureGlyphTable lig_table = caret_list.GetLigatureGlyphTable (index);
+					LigatureGlyphTable ligTable = caretList.GetLigatureGlyphTable (index);
 					
-					int caret_count = lig_table.CaretCount;
-					int caret_index = pos - 1;
+					int caretCount = ligTable.CaretCount;
+					int caretIndex = pos - 1;
 					
-					if (caret_index < caret_count)
+					if (caretIndex < caretCount)
 					{
-						switch (lig_table.GetCaretValueFormat (caret_index))
+						switch (ligTable.GetCaretValueFormat (caretIndex))
 						{
 							case 1:
-								x = lig_table.GetCaretCoordinateFmt1 (caret_index) * scale;
+								x = ligTable.GetCaretCoordinateFmt1 (caretIndex) * scale;
 								y = 0;
 								return;
 							
@@ -2497,7 +2497,7 @@ namespace Epsitec.Common.OpenType
 								break;
 							
 							case 3:
-								x = lig_table.GetCaretCoordinateFmt3 (caret_index) * scale;
+								x = ligTable.GetCaretCoordinateFmt3 (caretIndex) * scale;
 								y = 0;
 								
 								//	TODO: gérer la "device table"
@@ -2508,23 +2508,23 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
-			int num_glyph     = this.ot_maxp.NumGlyphs;
-			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			int numGlyph     = this.otMaxp.NumGlyphs;
+			int numHMetrics = this.otHhea.NumHMetrics;
 			int advance       = 0;
 			
-			if (glyph < num_glyph)
+			if (glyph < numGlyph)
 			{
-				if (glyph < num_h_metrics)
+				if (glyph < numHMetrics)
 				{
 					advance = this.GetAdvance (glyph);
 				}
 				else
 				{
-					advance = this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1);
+					advance = this.otHmtx.GetAdvanceWidth (numHMetrics-1);
 				}
 			}
 			
-			x = advance * pos * scale / simple_glyph_count;
+			x = advance * pos * scale / simpleGlyphCount;
 			y = 0.0;
 		}
 		
@@ -2542,7 +2542,7 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
-			advance = this.ot_hmtx.GetAdvanceWidth (glyph);
+			advance = this.otHmtx.GetAdvanceWidth (glyph);
 			
 			if (glyph < Font.AdvanceCacheSize)
 			{
@@ -2578,28 +2578,28 @@ namespace Epsitec.Common.OpenType
 		private FontIdentity					identity;
 		private FontData						fontData;
 		
-		private Table_GSUB						ot_GSUB;
-		private Table_GDEF						ot_GDEF;
-		private Table_cmap						ot_cmap;
-		private Table_maxp						ot_maxp;
-		private Table_head						ot_head;
-		private Table_hhea						ot_hhea;
-		private Table_hmtx						ot_hmtx;
-		private Table_loca_Short				ot_loca_short;
-		private Table_loca_Long					ot_loca_long;
-		private Table_glyf						ot_glyf;
-		private KerningTableFormat0				ot_kernFormat0;
-		private IndexMappingTable				ot_indexMapping;
+		private TableGSUB						otGSUB;
+		private TableGDEF						otGDEF;
+		private TableCmap						otCmap;
+		private TableMaxp						otMaxp;
+		private TableHead						otHead;
+		private TableHhea						otHhea;
+		private Tablehmtx						otHmtx;
+		private TableLocaShort				otLocaShort;
+		private TableLocaLong					otLocaLong;
+		private TableGlyf						otGlyf;
+		private KerningTableFormat0				otKernFormat0;
+		private IndexMappingTable				otIndexMapping;
 		private FontType						fontType;
 		
-		private ushort glyph_f;
-		private ushort glyph_i;
-		private ushort glyph_l;
-		private ushort glyph_lig_ff;
-		private ushort glyph_lig_fi;
-		private ushort glyph_lig_fl;
-		private ushort glyph_lig_ffi;
-		private ushort glyph_lig_ffl;
+		private ushort glyphF;
+		private ushort glyphI;
+		private ushort glyphL;
+		private ushort glyphLigFf;
+		private ushort glyphLigFi;
+		private ushort glyphLigFl;
+		private ushort glyphLigFfi;
+		private ushort glyphLigFfl;
 		
 		private string							activeScript;
 		private string							activeLanguage;

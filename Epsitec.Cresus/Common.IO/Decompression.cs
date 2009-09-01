@@ -127,12 +127,12 @@ namespace Epsitec.Common.IO
 				if (n == 0)
 				{
 					data = new byte[total];
-					int copy_to = 0;
+					int copyTo = 0;
 						
 					foreach (byte[] chunk in list)
 					{
-						chunk.CopyTo (data, copy_to);
-						copy_to += chunk.Length;
+						chunk.CopyTo (data, copyTo);
+						copyTo += chunk.Length;
 					}
 					
 					list.Clear ();

@@ -72,33 +72,33 @@ namespace Epsitec.Common.Drawing.Platform
 			public HandleRef(object wrapper, System.IntPtr handle)
 			{
 				//	Methods
-				this.m_wrapper = wrapper;
-				this.m_handle = handle;
+				this.mWrapper = wrapper;
+				this.mHandle = handle;
 			}
 			public static explicit operator System.IntPtr(HandleRef value)
 			{
-				return value.m_handle;
+				return value.mHandle;
 			}
 
 			public System.IntPtr Handle
 			{
 				get
 				{
-					return this.m_handle;
+					return this.mHandle;
 				}
 			}
 			public object Wrapper
 			{
 				get
 				{
-					return this.m_wrapper;
+					return this.mWrapper;
 				}
 			}
 			//	Properties
 
 			//	Fields
-			internal System.IntPtr m_handle;
-			internal object m_wrapper;
+			internal System.IntPtr mHandle;
+			internal object mWrapper;
 		}
 		[DllImport ("gdi32.dll", CharSet=CharSet.Auto)]
 		public static extern int GetObject(System.IntPtr hObject, int nSize, [In, Out] LOGFONT lf);

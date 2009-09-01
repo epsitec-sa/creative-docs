@@ -14,11 +14,11 @@ namespace Epsitec.Common.Drawing.Platform
 		}
 		
 		
-		public static void Paint(System.Drawing.Bitmap src_bitmap, System.Drawing.Bitmap dst_bitmap, System.Drawing.Color color)
+		public static void Paint(System.Drawing.Bitmap srcBitmap, System.Drawing.Bitmap dstBitmap, System.Drawing.Color color)
 		{
-			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dstBitmap))
 			{
-				System.Windows.Forms.ControlPaint.DrawImageDisabled (graphics, src_bitmap, 0, 0, color);
+				System.Windows.Forms.ControlPaint.DrawImageDisabled (graphics, srcBitmap, 0, 0, color);
 			}
 		}
 	}

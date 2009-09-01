@@ -80,15 +80,15 @@ namespace Epsitec.Common.OpenType
 
 			if (block >= this.glyphWidths.Length)
 			{
-				int[][] old_widths = this.glyphWidths;
-				int[][] new_widths = new int[block+1][];
+				int[][] oldWidths = this.glyphWidths;
+				int[][] newWidths = new int[block+1][];
 
-				for (int i = 0; i < old_widths.Length; i++)
+				for (int i = 0; i < oldWidths.Length; i++)
 				{
-					new_widths[i] = old_widths[i];
+					newWidths[i] = oldWidths[i];
 				}
 
-				this.glyphWidths = new_widths;
+				this.glyphWidths = newWidths;
 			}
 
 			if (this.glyphWidths[block] == null)

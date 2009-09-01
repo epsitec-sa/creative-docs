@@ -95,24 +95,24 @@ namespace Epsitec.Common.DynamicData
 		
 		[Test] public void Check04Changed()
 		{
-			this.changed_counter = 0;
+			this.changedCounter = 0;
 			
 			DynamicFieldCollection dfc = new DynamicFieldCollection ();
 			
 			dfc.Changed += new Support.EventHandler (this.ChangedEventHandler);
 			dfc.Clear ();
 			
-			Assert.AreEqual (0, this.changed_counter);
+			Assert.AreEqual (0, this.changedCounter);
 			
 			IDynamicField field = new DynamicFieldAllInColumn (null);
 			
 			dfc.Add (field);
 			
-			Assert.AreEqual (1, this.changed_counter);
+			Assert.AreEqual (1, this.changedCounter);
 			
 			dfc.Clear ();
 			
-			Assert.AreEqual (2, this.changed_counter);
+			Assert.AreEqual (2, this.changedCounter);
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void Check05AddEx()
@@ -128,7 +128,7 @@ namespace Epsitec.Common.DynamicData
 		
 		private void ChangedEventHandler(object sender)
 		{
-			this.changed_counter++;
+			this.changedCounter++;
 		}
 		
 		private System.Data.DataTable CreateTable()
@@ -227,6 +227,6 @@ namespace Epsitec.Common.DynamicData
 		}
 		#endregion
 		
-		private int								changed_counter;
+		private int								changedCounter;
 	}
 }
