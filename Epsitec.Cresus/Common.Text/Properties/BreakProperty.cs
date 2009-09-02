@@ -12,9 +12,9 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public BreakProperty(ParagraphStartMode start_mode)
+		public BreakProperty(ParagraphStartMode startMode)
 		{
-			this.start_mode = start_mode;
+			this.startMode = startMode;
 		}
 		
 		
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.start_mode;
+				return this.startMode;
 			}
 		}
 		
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeInt ((int) this.start_mode));
+				/**/				SerializerSupport.SerializeInt ((int) this.startMode));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -94,9 +94,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			int start_mode = SerializerSupport.DeserializeInt (args[0]);
+			int startMode = SerializerSupport.DeserializeInt (args[0]);
 			
-			this.start_mode = (ParagraphStartMode) start_mode;
+			this.startMode = (ParagraphStartMode) startMode;
 		}
 		
 		
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue ((int) this.start_mode);
+			checksum.UpdateValue ((int) this.startMode);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -119,10 +119,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(BreakProperty a, BreakProperty b)
 		{
-			return a.start_mode == b.start_mode;
+			return a.startMode == b.startMode;
 		}
 		
 		
-		private ParagraphStartMode				start_mode;
+		private ParagraphStartMode				startMode;
 	}
 }

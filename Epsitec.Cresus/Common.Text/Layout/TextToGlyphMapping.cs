@@ -26,8 +26,8 @@ namespace Epsitec.Common.Text.Layout
 		
 		public void Reset()
 		{
-			this.text_index  = 0;
-			this.glyph_index = 0;
+			this.textIndex  = 0;
+			this.glyphIndex = 0;
 		}
 		
 		public bool GetNextMapping(out int[] characters, out ushort[] glyphs)
@@ -42,40 +42,40 @@ namespace Epsitec.Common.Text.Layout
 			//	Dans le cas de caractères composites, on aura plusieurs glyphes
 			//	pour un seul caractère ("â" --> glyphes de 'a' + '^').
 
-			if ((this.text_index < this.text.Length) &&
-				(this.glyph_index < this.glyphs.Length))
+			if ((this.textIndex < this.text.Length) &&
+				(this.glyphIndex < this.glyphs.Length))
 			{
-				short map_0 = this.map[this.glyph_index];
+				short map0 = this.map[this.glyphIndex];
 				
-				int glyph_count = 1;
+				int glyphCount = 1;
 				
-				for (int i = 1; this.glyph_index + i < this.glyphs.Length; i++)
+				for (int i = 1; this.glyphIndex + i < this.glyphs.Length; i++)
 				{
-					if (this.map[this.glyph_index + i] != map_0)
+					if (this.map[this.glyphIndex + i] != map0)
 					{
 						break;
 					}
 					
-					glyph_count++;
+					glyphCount++;
 				}
 				
-				if (glyph_count > 1)
+				if (glyphCount > 1)
 				{
 					//	Il y a plusieurs glyphes pour représenter un unique
 					//	caractère de texte :
 					
 					characters = new int[1];
-					glyphs     = new ushort[glyph_count];
+					glyphs     = new ushort[glyphCount];
 					
-					for (int i = 0; i < glyph_count; i++)
+					for (int i = 0; i < glyphCount; i++)
 					{
-						glyphs[i] = this.glyphs[this.glyph_index+i];
+						glyphs[i] = this.glyphs[this.glyphIndex+i];
 					}
 					
-					characters[0] = Unicode.Bits.GetCode (this.text[this.text_index]);
+					characters[0] = Unicode.Bits.GetCode (this.text[this.textIndex]);
 					
-					this.text_index  += 1;
-					this.glyph_index += glyph_count;
+					this.textIndex  += 1;
+					this.glyphIndex += glyphCount;
 					
 					return true;
 				}
@@ -83,20 +83,20 @@ namespace Epsitec.Common.Text.Layout
 				//	Peut-être y a-t-il plusieurs caractères représentés par cet
 				//	unique glyphe :
 				
-				int char_count = this.map[this.glyph_index+1] - this.map[this.glyph_index];
+				int charCount = this.map[this.glyphIndex+1] - this.map[this.glyphIndex];
 				
-				characters = new int[char_count];
+				characters = new int[charCount];
 				glyphs     = new ushort[1];
 				
-				for (int i = 0; i < char_count; i++)
+				for (int i = 0; i < charCount; i++)
 				{
-					characters[i] = Unicode.Bits.GetCode (this.text[this.text_index+i]);
+					characters[i] = Unicode.Bits.GetCode (this.text[this.textIndex+i]);
 				}
 				
-				glyphs[0] = this.glyphs[this.glyph_index];
+				glyphs[0] = this.glyphs[this.glyphIndex];
 				
-				this.text_index  += char_count;
-				this.glyph_index += 1;
+				this.textIndex  += charCount;
+				this.glyphIndex += 1;
 				
 				return true;
 			}
@@ -109,42 +109,42 @@ namespace Epsitec.Common.Text.Layout
 		
 		public bool GetNextMapping(out int[] characters, out ushort[] glyphs, out ulong[] text)
 		{
-			if ((this.text_index < this.text.Length) &&
-				(this.glyph_index < this.glyphs.Length))
+			if ((this.textIndex < this.text.Length) &&
+				(this.glyphIndex < this.glyphs.Length))
 			{
-				short map_0 = this.map[this.glyph_index];
+				short map0 = this.map[this.glyphIndex];
 				
-				int glyph_count = 1;
+				int glyphCount = 1;
 				
-				for (int i = 1; this.glyph_index + i < this.glyphs.Length; i++)
+				for (int i = 1; this.glyphIndex + i < this.glyphs.Length; i++)
 				{
-					if (this.map[this.glyph_index + i] != map_0)
+					if (this.map[this.glyphIndex + i] != map0)
 					{
 						break;
 					}
 					
-					glyph_count++;
+					glyphCount++;
 				}
 				
-				if (glyph_count > 1)
+				if (glyphCount > 1)
 				{
 					//	Il y a plusieurs glyphes pour représenter un unique
 					//	caractère de texte :
 					
 					characters = new int[1];
 					text       = new ulong[1];
-					glyphs     = new ushort[glyph_count];
+					glyphs     = new ushort[glyphCount];
 					
-					for (int i = 0; i < glyph_count; i++)
+					for (int i = 0; i < glyphCount; i++)
 					{
-						glyphs[i] = this.glyphs[this.glyph_index+i];
+						glyphs[i] = this.glyphs[this.glyphIndex+i];
 					}
 					
-					characters[0] = Unicode.Bits.GetCode (this.text[this.text_index]);
-					text[0]       = this.text[this.text_index];
+					characters[0] = Unicode.Bits.GetCode (this.text[this.textIndex]);
+					text[0]       = this.text[this.textIndex];
 					
-					this.text_index  += 1;
-					this.glyph_index += glyph_count;
+					this.textIndex  += 1;
+					this.glyphIndex += glyphCount;
 					
 					return true;
 				}
@@ -152,22 +152,22 @@ namespace Epsitec.Common.Text.Layout
 				//	Peut-être y a-t-il plusieurs caractères représentés par cet
 				//	unique glyphe :
 				
-				int char_count = this.map[this.glyph_index+1] - this.map[this.glyph_index];
+				int charCount = this.map[this.glyphIndex+1] - this.map[this.glyphIndex];
 				
-				characters = new int[char_count];
-				text       = new ulong[char_count];
+				characters = new int[charCount];
+				text       = new ulong[charCount];
 				glyphs     = new ushort[1];
 				
-				for (int i = 0; i < char_count; i++)
+				for (int i = 0; i < charCount; i++)
 				{
-					characters[i] = Unicode.Bits.GetCode (this.text[this.text_index+i]);
-					text[i]       = this.text[this.text_index+i];
+					characters[i] = Unicode.Bits.GetCode (this.text[this.textIndex+i]);
+					text[i]       = this.text[this.textIndex+i];
 				}
 				
-				glyphs[0] = this.glyphs[this.glyph_index];
+				glyphs[0] = this.glyphs[this.glyphIndex];
 				
-				this.text_index  += char_count;
-				this.glyph_index += 1;
+				this.textIndex  += charCount;
+				this.glyphIndex += 1;
 				
 				return true;
 			}
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Text.Layout
 		private ulong[]							text;
 		private ushort[]						glyphs;
 		private short[]							map;
-		private int								text_index;
-		private int								glyph_index;
+		private int								textIndex;
+		private int								glyphIndex;
 	}
 }

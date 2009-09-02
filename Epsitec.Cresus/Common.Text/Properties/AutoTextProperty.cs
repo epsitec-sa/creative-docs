@@ -14,9 +14,9 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public AutoTextProperty()
 		{
-			lock (AutoTextProperty.unique_id_lock)
+			lock (AutoTextProperty.uniqueIdLock)
 			{
-				this.unique_id = AutoTextProperty.next_unique_id++;
+				this.uniqueId = AutoTextProperty.nextUniqueId++;
 			}
 		}
 		
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			get
 			{
-				return this.unique_id;
+				return this.uniqueId;
 			}
 		}
 		
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeString (this.tag),
-				/**/				SerializerSupport.SerializeLong (this.unique_id));
+				/**/				SerializerSupport.SerializeLong (this.uniqueId));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -92,16 +92,16 @@ namespace Epsitec.Common.Text.Properties
 			System.Diagnostics.Debug.Assert (args.Length == 2);
 			
 			string tag       = SerializerSupport.DeserializeString (args[0]);
-			long   unique_id = SerializerSupport.DeserializeLong (args[1]);
+			long   uniqueId  = SerializerSupport.DeserializeLong (args[1]);
 			
 			this.tag       = tag;
-			this.unique_id = unique_id;
+			this.uniqueId  = uniqueId;
 			
-			lock (AutoTextProperty.unique_id_lock)
+			lock (AutoTextProperty.uniqueIdLock)
 			{
-				if (AutoTextProperty.next_unique_id <= this.unique_id)
+				if (AutoTextProperty.nextUniqueId <= this.uniqueId)
 				{
-					AutoTextProperty.next_unique_id = this.unique_id + 1;
+					AutoTextProperty.nextUniqueId = this.uniqueId + 1;
 				}
 			}
 		}
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
 			checksum.UpdateValue (this.tag);
-			checksum.UpdateValue (this.unique_id);
+			checksum.UpdateValue (this.uniqueId);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -130,11 +130,11 @@ namespace Epsitec.Common.Text.Properties
 			{
 				if (property.WellKnownType == WellKnownType.AutoText)
 				{
-					AutoTextProperty auto_text = property as AutoTextProperty;
+					AutoTextProperty autoText = property as AutoTextProperty;
 					
-					if (auto_text.Tag == tag)
+					if (autoText.Tag == tag)
 					{
-						return auto_text;
+						return autoText;
 					}
 				}
 			}
@@ -146,15 +146,15 @@ namespace Epsitec.Common.Text.Properties
 		private static bool CompareEqualContents(AutoTextProperty a, AutoTextProperty b)
 		{
 			return a.tag == b.tag
-				&& a.unique_id == b.unique_id;
+				&& a.uniqueId == b.uniqueId;
 		}
 		
 		
 		
-		private static long						next_unique_id;
-		private static object					unique_id_lock = new object ();
+		private static long						nextUniqueId;
+		private static object					uniqueIdLock = new object ();
 		
 		private string							tag;
-		private long							unique_id;
+		private long							uniqueId;
 	}
 }

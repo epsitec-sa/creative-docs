@@ -13,9 +13,9 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public FontColorProperty(string text_color)
+		public FontColorProperty(string textColor)
 		{
-			this.text_color = text_color;
+			this.textColor = textColor;
 		}
 		
 		
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.text_color;
+				return this.textColor;
 			}
 		}
 		
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.text_color));
+				/**/				SerializerSupport.SerializeString (this.textColor));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -63,9 +63,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string text_color = SerializerSupport.DeserializeString (args[0]);
+			string textColor = SerializerSupport.DeserializeString (args[0]);
 			
-			this.text_color = text_color;
+			this.textColor = textColor;
 		}
 
 		public override Property GetCombination(Property property)
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Text.Properties
 			FontColorProperty b = property as FontColorProperty;
 			FontColorProperty c = new FontColorProperty ();
 			
-			c.text_color = (b.text_color == null) ? a.text_color : b.text_color;
+			c.textColor = (b.textColor == null) ? a.textColor : b.textColor;
 			
 			return c;
 		}
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.text_color);
+			checksum.UpdateValue (this.textColor);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -95,10 +95,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(FontColorProperty a, FontColorProperty b)
 		{
-			return a.text_color == b.text_color;
+			return a.textColor == b.textColor;
 		}
 		
 		
-		private string							text_color;
+		private string							textColor;
 	}
 }

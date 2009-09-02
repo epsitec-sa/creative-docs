@@ -50,9 +50,9 @@ namespace Epsitec.Common.Text
 		
 		private void RegisterTrustedAssembly(System.Reflection.Assembly assembly)
 		{
-			System.Type[] assembly_types = assembly.GetTypes ();
+			System.Type[] assemblyTypes = assembly.GetTypes ();
 			
-			foreach (System.Type type in assembly_types)
+			foreach (System.Type type in assemblyTypes)
 			{
 				if ((type.IsClass) &&
 					(!type.IsAbstract))

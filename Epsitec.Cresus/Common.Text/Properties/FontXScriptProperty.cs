@@ -49,7 +49,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.is_disabled;
+				return this.isDisabled;
 			}
 		}
 		
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text.Properties
 			{
 				FontXscriptProperty value = new FontXscriptProperty ();
 				
-				value.is_disabled = true;
+				value.isDisabled = true;
 				value.scale       = double.NaN;
 				value.offset      = double.NaN;
 				
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeBoolean (this.is_disabled),
+				/**/				SerializerSupport.SerializeBoolean (this.isDisabled),
 				/**/				SerializerSupport.SerializeDouble (this.scale),
 				/**/				SerializerSupport.SerializeDouble (this.offset));
 		}
@@ -112,11 +112,11 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 3);
 			
-			bool   is_disabled = SerializerSupport.DeserializeBoolean (args[0]);
+			bool   isDisabled  = SerializerSupport.DeserializeBoolean (args[0]);
 			double scale       = SerializerSupport.DeserializeDouble (args[1]);
 			double offset      = SerializerSupport.DeserializeDouble (args[2]);
 			
-			this.is_disabled = is_disabled;
+			this.isDisabled  = isDisabled;
 			this.scale       = scale;
 			this.offset      = offset;
 		}
@@ -128,11 +128,11 @@ namespace Epsitec.Common.Text.Properties
 			FontXscriptProperty a = this;
 			FontXscriptProperty b = property as FontXscriptProperty;
 			
-			if (b.is_disabled)
+			if (b.isDisabled)
 			{
 				FontXscriptProperty c = new FontXscriptProperty ();
 				
-				c.is_disabled = true;
+				c.isDisabled  = true;
 				c.scale       = a.scale;
 				c.offset      = a.offset;
 				
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.is_disabled);
+			checksum.UpdateValue (this.isDisabled);
 			checksum.UpdateValue (this.scale);
 			checksum.UpdateValue (this.offset);
 		}
@@ -163,13 +163,13 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(FontXscriptProperty a, FontXscriptProperty b)
 		{
-			return a.is_disabled == b.is_disabled
+			return a.isDisabled == b.isDisabled
 				&& NumberSupport.Equal (a.scale, b.scale)
 				&& NumberSupport.Equal (a.offset, b.offset);
 		}
 		
 		
-		private bool							is_disabled;
+		private bool							isDisabled;
 		private double							scale;
 		private double							offset;
 	}

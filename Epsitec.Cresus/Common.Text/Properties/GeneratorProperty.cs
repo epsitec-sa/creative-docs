@@ -15,11 +15,11 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public GeneratorProperty(string generator, int level, long unique_id)
+		public GeneratorProperty(string generator, int level, long uniqueId)
 		{
 			this.generator = generator;
 			this.level     = level;
-			this.unique_id = unique_id;
+			this.uniqueId  = uniqueId;
 		}
 		
 		
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			get
 			{
-				return this.unique_id;
+				return this.uniqueId;
 			}
 		}
 		
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Properties
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeString (this.generator),
 				/**/				SerializerSupport.SerializeInt (this.level),
-				/**/				SerializerSupport.SerializeLong (this.unique_id));
+				/**/				SerializerSupport.SerializeLong (this.uniqueId));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -108,11 +108,11 @@ namespace Epsitec.Common.Text.Properties
 			
 			string generator = SerializerSupport.DeserializeString (args[0]);
 			int    level     = SerializerSupport.DeserializeInt (args[1]);
-			long   unique_id = SerializerSupport.DeserializeLong (args[2]);
+			long   uniqueId  = SerializerSupport.DeserializeLong (args[2]);
 			
 			this.generator = generator;
 			this.level     = level;
-			this.unique_id = unique_id;
+			this.uniqueId  = uniqueId;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.generator);
 			checksum.UpdateValue (this.level);
-			checksum.UpdateValue (this.unique_id);
+			checksum.UpdateValue (this.uniqueId);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -138,7 +138,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			return a.generator == b.generator
 				&& a.level == b.level
-				&& a.unique_id == b.unique_id;
+				&& a.uniqueId == b.uniqueId;
 		}
 		
 		
@@ -164,11 +164,11 @@ namespace Epsitec.Common.Text.Properties
 				
 				if (result == 0)
 				{
-					if (px.unique_id < py.unique_id)
+					if (px.uniqueId < py.uniqueId)
 					{
 						return -1;
 					}
-					if (px.unique_id > py.unique_id)
+					if (px.uniqueId > py.uniqueId)
 					{
 						return 1;
 					}
@@ -182,6 +182,6 @@ namespace Epsitec.Common.Text.Properties
 		
 		private string							generator;
 		private int								level;
-		private long							unique_id;
+		private long							uniqueId;
 	}
 }

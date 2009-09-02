@@ -13,12 +13,12 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public ImageProperty(string image_tag)
+		public ImageProperty(string imageTag)
 		{
-			this.image_tag = image_tag;
+			this.imageTag = imageTag;
 		}
 		
-		public ImageProperty(string image_tag, TextContext context) : this (image_tag)
+		public ImageProperty(string imageTag, TextContext context) : this (imageTag)
 		{
 			this.SetupImageRenderer (context);
 		}
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.image_tag;
+				return this.imageTag;
 			}
 		}
 		
@@ -69,14 +69,14 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.image_renderer;
+				return this.imageRenderer;
 			}
 		}
 		
 		
 		public void SetupImageRenderer(TextContext context)
 		{
-			this.image_renderer = context.FindResource (this.image_tag);
+			this.imageRenderer = context.FindResource (this.imageTag);
 		}
 
 		
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.image_tag));
+				/**/				SerializerSupport.SerializeString (this.imageTag));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string image_tag = SerializerSupport.DeserializeString (args[0]);
+			string imageTag = SerializerSupport.DeserializeString (args[0]);
 			
-			this.image_tag = image_tag;
+			this.imageTag = imageTag;
 			
 			this.SetupImageRenderer (context);
 		}
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.image_tag);
+			checksum.UpdateValue (this.imageTag);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Text.Properties
 		#region IGlyphRenderer Members
 		public bool GetGeometry(out double ascender, out double descender, out double advance, out double x1, out double x2)
 		{
-			if (this.image_renderer == null)
+			if (this.imageRenderer == null)
 			{
 				ascender  = 0;
 				descender = 0;
@@ -136,25 +136,25 @@ namespace Epsitec.Common.Text.Properties
 				return false;
 			}
 			
-			return this.image_renderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
+			return this.imageRenderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
 		}
 		
 		public void RenderGlyph(ITextFrame frame, double x, double y)
 		{
-			if (this.image_renderer != null)
+			if (this.imageRenderer != null)
 			{
-				this.image_renderer.RenderGlyph (frame, x, y);
+				this.imageRenderer.RenderGlyph (frame, x, y);
 			}
 		}
 		#endregion
 		
 		private static bool CompareEqualContents(ImageProperty a, ImageProperty b)
 		{
-			return a.image_tag == b.image_tag;
+			return a.imageTag == b.imageTag;
 		}
 		
 		
-		private string							image_tag;
-		private IGlyphRenderer					image_renderer;
+		private string							imageTag;
+		private IGlyphRenderer					imageRenderer;
 	}
 }

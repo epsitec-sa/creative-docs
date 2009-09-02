@@ -16,20 +16,20 @@ namespace Epsitec.Common.Text.Layout
 		
 		public StretchProfile(StretchProfile profile)
 		{
-			this.count_no_stretch = profile.count_no_stretch;
-			this.count_character  = profile.count_character;
-			this.count_space      = profile.count_space;
-			this.count_kashida    = profile.count_kashida;
+			this.countNoStretch = profile.countNoStretch;
+			this.countCharacter  = profile.countCharacter;
+			this.countSpace      = profile.countSpace;
+			this.countKashida    = profile.countKashida;
 			
-			this.width_no_stretch = profile.width_no_stretch;
-			this.width_character  = profile.width_character;
-			this.width_space      = profile.width_space;
-			this.width_kashida    = profile.width_kashida;
+			this.widthNoStretch = profile.widthNoStretch;
+			this.widthCharacter  = profile.widthCharacter;
+			this.widthSpace      = profile.widthSpace;
+			this.widthKashida    = profile.widthKashida;
 			
-			this.count_end_space   = profile.count_end_space;
-			this.count_end_c_space = profile.count_end_c_space;
-			this.width_end_space   = profile.width_end_space;
-			this.width_end_c_space = profile.width_end_c_space;
+			this.countEndSpace   = profile.countEndSpace;
+			this.countEndCSpace = profile.countEndCSpace;
+			this.widthEndSpace   = profile.widthEndSpace;
+			this.widthEndCSpace = profile.widthEndCSpace;
 		}
 		
 		
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.count_no_stretch;
+				return this.countNoStretch;
 			}
 		}
 		
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.count_character;
+				return this.countCharacter;
 			}
 		}
 		
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.count_space;
+				return this.countSpace;
 			}
 		}
 		
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return (short)(this.count_end_space + this.count_end_c_space);
+				return (short)(this.countEndSpace + this.countEndCSpace);
 			}
 		}
 		
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.count_kashida;
+				return this.countKashida;
 			}
 		}
 		
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.width_no_stretch;
+				return this.widthNoStretch;
 			}
 		}
 		
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.width_character;
+				return this.widthCharacter;
 			}
 		}
 		
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.width_space;
+				return this.widthSpace;
 			}
 		}
 		
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.width_end_space + this.width_end_c_space;
+				return this.widthEndSpace + this.widthEndCSpace;
 			}
 		}
 		
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.width_kashida;
+				return this.widthKashida;
 			}
 		}
 		
@@ -134,70 +134,70 @@ namespace Epsitec.Common.Text.Layout
 		
 		public void Clear()
 		{
-			this.count_no_stretch = 0;
-			this.count_character  = 0;
-			this.count_space      = 0;
-			this.count_kashida    = 0;
+			this.countNoStretch = 0;
+			this.countCharacter  = 0;
+			this.countSpace      = 0;
+			this.countKashida    = 0;
 			
-			this.width_no_stretch = 0;
-			this.width_character  = 0;
-			this.width_space      = 0;
-			this.width_kashida    = 0;
+			this.widthNoStretch = 0;
+			this.widthCharacter  = 0;
+			this.widthSpace      = 0;
+			this.widthKashida    = 0;
 			
-			this.count_end_space   = 0;
-			this.count_end_c_space = 0;
-			this.width_end_space   = 0;
-			this.width_end_c_space = 0;
+			this.countEndSpace   = 0;
+			this.countEndCSpace = 0;
+			this.widthEndSpace   = 0;
+			this.widthEndCSpace = 0;
 		}
 		
 		public void IncludeEndSpace()
 		{
-			this.count_space += this.count_end_space;
-			this.width_space += this.width_end_space;
+			this.countSpace += this.countEndSpace;
+			this.widthSpace += this.widthEndSpace;
 			
-			this.count_character += this.count_end_c_space;
-			this.width_character += this.width_end_c_space;
+			this.countCharacter += this.countEndCSpace;
+			this.widthCharacter += this.widthEndCSpace;
 			
-			this.count_end_space   = 0;
-			this.count_end_c_space = 0;
-			this.width_end_space   = 0;
-			this.width_end_c_space = 0;
+			this.countEndSpace   = 0;
+			this.countEndCSpace = 0;
+			this.widthEndSpace   = 0;
+			this.widthEndCSpace = 0;
 		}
 		
 		
 		public void Add(StretchProfile profile)
 		{
-			if ((profile.count_no_stretch > 0) ||
-				(profile.count_character > 0) ||
-				(profile.count_kashida > 0))
+			if ((profile.countNoStretch > 0) ||
+				(profile.countCharacter > 0) ||
+				(profile.countKashida > 0))
 			{
-				this.count_space += this.count_end_space;
-				this.width_space += this.width_end_space;
+				this.countSpace += this.countEndSpace;
+				this.widthSpace += this.widthEndSpace;
 				
-				this.count_character += this.count_end_c_space;
-				this.width_character += this.width_end_c_space;
+				this.countCharacter += this.countEndCSpace;
+				this.widthCharacter += this.widthEndCSpace;
 				
-				this.count_end_space   = 0;
-				this.count_end_c_space = 0;
-				this.width_end_space   = 0;
-				this.width_end_c_space = 0;
+				this.countEndSpace   = 0;
+				this.countEndCSpace = 0;
+				this.widthEndSpace   = 0;
+				this.widthEndCSpace = 0;
 				
-				this.count_no_stretch += profile.count_no_stretch;
-				this.count_character  += profile.count_character;
-				this.count_space      += profile.count_space;
-				this.count_kashida    += profile.count_kashida;
+				this.countNoStretch += profile.countNoStretch;
+				this.countCharacter  += profile.countCharacter;
+				this.countSpace      += profile.countSpace;
+				this.countKashida    += profile.countKashida;
 				
-				this.width_no_stretch += profile.width_no_stretch;
-				this.width_character  += profile.width_character;
-				this.width_space      += profile.width_space;
-				this.width_kashida    += profile.width_kashida;
+				this.widthNoStretch += profile.widthNoStretch;
+				this.widthCharacter  += profile.widthCharacter;
+				this.widthSpace      += profile.widthSpace;
+				this.widthKashida    += profile.widthKashida;
 			}
 			else
 			{
-				this.count_end_space   += profile.count_space;
-				this.count_end_c_space += profile.count_end_c_space;
-				this.width_end_space   += profile.width_space;
-				this.width_end_c_space += profile.width_end_c_space;
+				this.countEndSpace   += profile.countSpace;
+				this.countEndCSpace += profile.countEndCSpace;
+				this.widthEndSpace   += profile.widthSpace;
+				this.widthEndCSpace += profile.widthEndCSpace;
 			}
 		}
 		
@@ -205,44 +205,44 @@ namespace Epsitec.Common.Text.Layout
 		{
 			if ((stretch != Unicode.StretchClass.Space) &&
 				(stretch != Unicode.StretchClass.CharacterSpace) &&
-				(this.count_end_space + this.count_end_c_space > 0))
+				(this.countEndSpace + this.countEndCSpace > 0))
 			{
-				this.count_space     += this.count_end_space;
-				this.count_character += this.count_end_c_space;
-				this.width_space     += this.width_end_space;
-				this.width_character += this.width_end_c_space;
+				this.countSpace     += this.countEndSpace;
+				this.countCharacter += this.countEndCSpace;
+				this.widthSpace     += this.widthEndSpace;
+				this.widthCharacter += this.widthEndCSpace;
 				
-				this.count_end_space   = 0;
-				this.count_end_c_space = 0;
-				this.width_end_space   = 0;
-				this.width_end_c_space = 0;
+				this.countEndSpace   = 0;
+				this.countEndCSpace = 0;
+				this.widthEndSpace   = 0;
+				this.widthEndCSpace = 0;
 			}
 			
 			switch (stretch)
 			{
 				case Unicode.StretchClass.NoStretch:
-					this.count_no_stretch += 1;
-					this.width_no_stretch += width;
+					this.countNoStretch += 1;
+					this.widthNoStretch += width;
 					break;
 				
 				case Unicode.StretchClass.Character:
-					this.count_character += 1;
-					this.width_character += width;
+					this.countCharacter += 1;
+					this.widthCharacter += width;
 					break;
 				
 				case Unicode.StretchClass.CharacterSpace:
-					this.count_end_c_space += 1;
-					this.width_end_c_space += width;
+					this.countEndCSpace += 1;
+					this.widthEndCSpace += width;
 					break;
 				
 				case Unicode.StretchClass.Space:
-					this.count_end_space += 1;
-					this.width_end_space += width;
+					this.countEndSpace += 1;
+					this.widthEndSpace += width;
 					break;
 				
 				case Unicode.StretchClass.Kashida:
-					this.count_kashida += 1;
-					this.width_kashida += width;
+					this.countKashida += 1;
+					this.widthKashida += width;
 					break;
 				
 				default:
@@ -266,45 +266,45 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			int      count = glyphs.Length;
-			double[] x_pos = new double[count];
-			double   x_end = font.GetPositions (glyphs, size, 0, x_pos);
+			double[] xPos = new double[count];
+			double   xEnd = font.GetPositions (glyphs, size, 0, xPos);
 			
 			for (int i = 0; i < count-1; i++)
 			{
 				if (glyphs[i] != 0xffff)
 				{
-					this.Add ((Unicode.StretchClass) attributes[i], x_pos[i+1] - x_pos[i] + glue);
+					this.Add ((Unicode.StretchClass) attributes[i], xPos[i+1] - xPos[i] + glue);
 				}
 			}
 			
 			if (glyphs[count-1] != 0xffff)
 			{
-				this.Add ((Unicode.StretchClass) attributes[count-1], x_end - x_pos[count-1] + glue);
+				this.Add ((Unicode.StretchClass) attributes[count-1], xEnd - xPos[count-1] + glue);
 			}
 		}
 		
-		public void Add(OpenType.Font font, double size, ushort[] glyphs, byte[] stretch_class_attributes, double glue)
+		public void Add(OpenType.Font font, double size, ushort[] glyphs, byte[] stretchClassAttributes, double glue)
 		{
 			int      count = glyphs.Length;
-			double[] x_pos = new double[count];
-			double   x_end = font.GetPositions (glyphs, size, 0, x_pos);
+			double[] xPos = new double[count];
+			double   xEnd = font.GetPositions (glyphs, size, 0, xPos);
 			
 			for (int i = 0; i < count-1; i++)
 			{
 				if (glyphs[i] != 0xffff)
 				{
-					this.Add ((Unicode.StretchClass) stretch_class_attributes[i], x_pos[i+1] - x_pos[i] + glue);
+					this.Add ((Unicode.StretchClass) stretchClassAttributes[i], xPos[i+1] - xPos[i] + glue);
 				}
 			}
 			
 			if (glyphs[count-1] != 0xffff)
 			{
-				this.Add ((Unicode.StretchClass) stretch_class_attributes[count-1], x_end - x_pos[count-1] + glue);
+				this.Add ((Unicode.StretchClass) stretchClassAttributes[count-1], xEnd - xPos[count-1] + glue);
 			}
 		}
 		
 		
-		public double ComputePenalty(double width, double fence_before, double fence_after)
+		public double ComputePenalty(double width, double fenceBefore, double fenceAfter)
 		{
 			//	Calcule la pénalité pour la ligne qui doit "tenir" dans l'espace
 			//	disponible (width = largeur disponible, avec les frontières avant
@@ -317,52 +317,52 @@ namespace Epsitec.Common.Text.Layout
 			//	NB: le calcul de la pénalité ne tient pas compte des espaces qui
 			//		débordent en fin de texte.
 			
-			double total_width = this.TotalWidth;
+			double totalWidth = this.TotalWidth;
 			
-			if (total_width == width)
+			if (totalWidth == width)
 			{
 				return 0;
 			}
 			
-			if ((total_width == 0) ||
-				(total_width > width + fence_after))
+			if ((totalWidth == 0) ||
+				(totalWidth > width + fenceAfter))
 			{
 				return StretchProfile.MaxPenalty;
 			}
 			
-			double ε_no_stretch;
-			double ε_character;
-			double ε_space;
-			double ε_kashida;
+			double εNoStretch;
+			double εCharacter;
+			double εSpace;
+			double εKashida;
 			
-			double delta_width;
+			double deltaWidth;
 			
 			//	L'extensibilité et la compressibilité des divers caractères utilise
 			//	des coefficients différents :
 			
-			if (total_width > width)
+			if (totalWidth > width)
 			{
-				delta_width = total_width - width;
+				deltaWidth = totalWidth - width;
 				
-				ε_no_stretch = this.width_no_stretch / StretchProfile.κ_no_stretch_compress;
-				ε_character  = this.width_character  / StretchProfile.κ_character_compress;
-				ε_space      = this.width_space      / StretchProfile.κ_space_compress;
-				ε_kashida    = this.width_kashida    / StretchProfile.κ_kashida_compress;
+				εNoStretch  = this.widthNoStretch / StretchProfile.κNoStretchCompress;
+				εCharacter  = this.widthCharacter  / StretchProfile.κCharacterCompress;
+				εSpace      = this.widthSpace      / StretchProfile.κSpaceCompress;
+				εKashida    = this.widthKashida    / StretchProfile.κKashidaCompress;
 			}
 			else
 			{
-				delta_width = width - total_width;
+				deltaWidth  = width - totalWidth;
 				
-				ε_no_stretch = this.width_no_stretch / StretchProfile.κ_no_stretch_extend;
-				ε_character  = this.width_character  / StretchProfile.κ_character_extend;
-				ε_space      = this.width_space      / StretchProfile.κ_space_extend;
-				ε_kashida    = this.width_kashida    / StretchProfile.κ_kashida_extend;
+				εNoStretch  = this.widthNoStretch / StretchProfile.κNoStretchExtend;
+				εCharacter  = this.widthCharacter  / StretchProfile.κCharacterExtend;
+				εSpace      = this.widthSpace      / StretchProfile.κSpaceExtend;
+				εKashida    = this.widthKashida    / StretchProfile.κKashidaExtend;
 			}
 			
-			double total_ε = ε_no_stretch + ε_character + ε_space + ε_kashida;
+			double total_ε = εNoStretch + εCharacter + εSpace + εKashida;
 			double total_κ = 1 / total_ε;
 			
-			return System.Math.Min (total_κ * delta_width, StretchProfile.MaxPenalty);
+			return System.Math.Min (total_κ * deltaWidth, StretchProfile.MaxPenalty);
 		}
 		
 		public double ComputeScales(double width, out Scales scales)
@@ -374,12 +374,12 @@ namespace Epsitec.Common.Text.Layout
 			//	NB: le calcul de l'échelle ne tient pas compte des espaces qui
 			//		débordent en fin de texte.
 			
-			double total_width = this.TotalWidth;
+			double totalWidth = this.TotalWidth;
 			
 			scales = new Scales ();
 			
-			if ((total_width == width) ||
-				(total_width == 0))
+			if ((totalWidth == width) ||
+				(totalWidth == 0))
 			{
 				scales.ScaleNoStretch = 1.0;
 				scales.ScaleCharacter = 1.0;
@@ -389,41 +389,41 @@ namespace Epsitec.Common.Text.Layout
 				return 0.0;
 			}
 			
-			double ε_no_stretch;
-			double ε_character;
-			double ε_space;
-			double ε_kashida;
+			double εNoStretch;
+			double εCharacter;
+			double εSpace;
+			double εKashida;
 			
-			double delta_width = width - total_width;
+			double deltaWidth = width - totalWidth;
 			
 			//	L'extensibilité et la compressibilité des divers caractères utilise
 			//	des coefficients différents :
 			
-			if (total_width > width)
+			if (totalWidth > width)
 			{
-				ε_no_stretch = this.width_no_stretch / StretchProfile.κ_no_stretch_compress;
-				ε_character  = this.width_character  / StretchProfile.κ_character_compress;
-				ε_space      = this.width_space      / StretchProfile.κ_space_compress;
-				ε_kashida    = this.width_kashida    / StretchProfile.κ_kashida_compress;
+				εNoStretch  = this.widthNoStretch / StretchProfile.κNoStretchCompress;
+				εCharacter  = this.widthCharacter  / StretchProfile.κCharacterCompress;
+				εSpace      = this.widthSpace      / StretchProfile.κSpaceCompress;
+				εKashida    = this.widthKashida    / StretchProfile.κKashidaCompress;
 			}
 			else
 			{
-				ε_no_stretch = this.width_no_stretch / StretchProfile.κ_no_stretch_extend;
-				ε_character  = this.width_character  / StretchProfile.κ_character_extend;
-				ε_space      = this.width_space      / StretchProfile.κ_space_extend;
-				ε_kashida    = this.width_kashida    / StretchProfile.κ_kashida_extend;
+				εNoStretch  = this.widthNoStretch / StretchProfile.κNoStretchExtend;
+				εCharacter  = this.widthCharacter  / StretchProfile.κCharacterExtend;
+				εSpace      = this.widthSpace      / StretchProfile.κSpaceExtend;
+				εKashida    = this.widthKashida    / StretchProfile.κKashidaExtend;
 			}
 			
-			double total_ε = ε_no_stretch + ε_character + ε_space + ε_kashida;
+			double total_ε = εNoStretch + εCharacter + εSpace + εKashida;
 			double total_κ = 1 / total_ε;
-			double force   = total_κ * delta_width;
+			double force   = total_κ * deltaWidth;
 			
-			scales.ScaleNoStretch = 1 + (this.width_no_stretch == 0 ? 0 : force * ε_no_stretch / this.width_no_stretch);
-			scales.ScaleCharacter = 1 + (this.width_character == 0  ? 0 : force * ε_character / this.width_character);
-			scales.ScaleSpace     = 1 + (this.width_space == 0      ? 0 : force * ε_space / this.width_space);
-			scales.ScaleKashida   = 1 + (this.width_kashida == 0    ? 0 : force * ε_kashida / this.width_kashida);
+			scales.ScaleNoStretch = 1 + (this.widthNoStretch == 0 ? 0 : force * εNoStretch / this.widthNoStretch);
+			scales.ScaleCharacter = 1 + (this.widthCharacter == 0  ? 0 : force * εCharacter / this.widthCharacter);
+			scales.ScaleSpace     = 1 + (this.widthSpace == 0      ? 0 : force * εSpace / this.widthSpace);
+			scales.ScaleKashida   = 1 + (this.widthKashida == 0    ? 0 : force * εKashida / this.widthKashida);
 			
-			return delta_width;
+			return deltaWidth;
 		}
 		
 		
@@ -476,30 +476,30 @@ namespace Epsitec.Common.Text.Layout
 		
 		
 		
-		private short							count_no_stretch;
-		private short							count_character;
-		private short							count_space;
-		private short							count_kashida;
+		private short							countNoStretch;
+		private short							countCharacter;
+		private short							countSpace;
+		private short							countKashida;
 		
-		private short							count_end_space;
-		private short							count_end_c_space;
-		private double							width_end_space;
-		private double							width_end_c_space;
+		private short							countEndSpace;
+		private short							countEndCSpace;
+		private double							widthEndSpace;
+		private double							widthEndCSpace;
 		
-		private double							width_no_stretch;
-		private double							width_character;
-		private double							width_space;
-		private double							width_kashida;
+		private double							widthNoStretch;
+		private double							widthCharacter;
+		private double							widthSpace;
+		private double							widthKashida;
 		
-		private static double					κ_no_stretch_compress = 1000000000.0;
-		private static double					κ_character_compress  = 1000000.0;
-		private static double					κ_space_compress	  = 100.0;
-		private static double					κ_kashida_compress	  = 100.0;
+		private static double					κNoStretchCompress = 1000000000.0;
+		private static double					κCharacterCompress  = 1000000.0;
+		private static double					κSpaceCompress	  = 100.0;
+		private static double					κKashidaCompress	  = 100.0;
 		
-		private static double					κ_no_stretch_extend	= 1000000000.0;
-		private static double					κ_character_extend	= 1000.0;
-		private static double					κ_space_extend		= 10.0;
-		private static double					κ_kashida_extend	= 1.0;
+		private static double					κNoStretchExtend	= 1000000000.0;
+		private static double					κCharacterExtend	= 1000.0;
+		private static double					κSpaceExtend		= 10.0;
+		private static double					κKashidaExtend	= 1.0;
 		
 		public static readonly double			MaxPenalty = 1000000.0*1000000.0;
 	}

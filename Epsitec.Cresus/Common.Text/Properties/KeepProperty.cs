@@ -14,14 +14,14 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public KeepProperty(int start_lines, int end_lines, ParagraphStartMode mode, ThreeState with_prev_paragraph, ThreeState with_next_paragraph)
+		public KeepProperty(int startLines, int endLines, ParagraphStartMode mode, ThreeState withPrevParagraph, ThreeState withNextParagraph)
 		{
-			this.start_lines  = start_lines;
-			this.end_lines    = end_lines;
+			this.startLines  = startLines;
+			this.endLines    = endLines;
 			
-			this.paragraph_start_mode = mode;
-			this.with_prev_paragraph  = with_prev_paragraph;
-			this.with_next_paragraph  = with_next_paragraph;
+			this.paragraphStartMode = mode;
+			this.withPrevParagraph  = withPrevParagraph;
+			this.withNextParagraph  = withNextParagraph;
 		}
 		
 		
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.start_lines;
+				return this.startLines;
 			}
 		}
 		
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.end_lines;
+				return this.endLines;
 			}
 		}
 		
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.paragraph_start_mode;
+				return this.paragraphStartMode;
 			}
 		}
 		
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.with_next_paragraph;
+				return this.withNextParagraph;
 			}
 		}
 		
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.with_prev_paragraph;
+				return this.withPrevParagraph;
 			}
 		}
 		
@@ -100,11 +100,11 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeInt (this.start_lines),
-				/**/				SerializerSupport.SerializeInt (this.end_lines),
-				/**/				SerializerSupport.SerializeEnum (this.paragraph_start_mode),
-				/**/				SerializerSupport.SerializeThreeState (this.with_next_paragraph),
-				/**/				SerializerSupport.SerializeThreeState (this.with_prev_paragraph));
+				/**/				SerializerSupport.SerializeInt (this.startLines),
+				/**/				SerializerSupport.SerializeInt (this.endLines),
+				/**/				SerializerSupport.SerializeEnum (this.paragraphStartMode),
+				/**/				SerializerSupport.SerializeThreeState (this.withNextParagraph),
+				/**/				SerializerSupport.SerializeThreeState (this.withPrevParagraph));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -113,18 +113,18 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 5);
 			
-			int start_lines = SerializerSupport.DeserializeInt (args[0]);
-			int end_lines   = SerializerSupport.DeserializeInt (args[1]);
+			int startLines = SerializerSupport.DeserializeInt (args[0]);
+			int endLines   = SerializerSupport.DeserializeInt (args[1]);
 			
-			ParagraphStartMode paragraph_start_mode = (ParagraphStartMode) SerializerSupport.DeserializeEnum (typeof (ParagraphStartMode), args[2]);
-			ThreeState         with_next_paragraph  = SerializerSupport.DeserializeThreeState (args[3]);
-			ThreeState         with_prev_paragraph  = SerializerSupport.DeserializeThreeState (args[4]);
+			ParagraphStartMode paragraphStartMode = (ParagraphStartMode) SerializerSupport.DeserializeEnum (typeof (ParagraphStartMode), args[2]);
+			ThreeState         withNextParagraph  = SerializerSupport.DeserializeThreeState (args[3]);
+			ThreeState         withPrevParagraph  = SerializerSupport.DeserializeThreeState (args[4]);
 			
-			this.start_lines          = start_lines;
-			this.end_lines            = end_lines;
-			this.paragraph_start_mode = paragraph_start_mode;
-			this.with_next_paragraph  = with_next_paragraph;
-			this.with_prev_paragraph  = with_prev_paragraph;
+			this.startLines         = startLines;
+			this.endLines           = endLines;
+			this.paragraphStartMode = paragraphStartMode;
+			this.withNextParagraph  = withNextParagraph;
+			this.withPrevParagraph  = withPrevParagraph;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -135,23 +135,23 @@ namespace Epsitec.Common.Text.Properties
 			KeepProperty b = property as KeepProperty;
 			KeepProperty c = new KeepProperty ();
 			
-			c.start_lines = b.start_lines == 0 ? a.start_lines : b.start_lines;
-			c.end_lines   = b.end_lines == 0   ? a.end_lines   : b.end_lines;
+			c.startLines = b.startLines == 0 ? a.startLines : b.startLines;
+			c.endLines   = b.endLines == 0   ? a.endLines   : b.endLines;
 			
-			c.paragraph_start_mode = b.paragraph_start_mode == ParagraphStartMode.Undefined ? a.paragraph_start_mode : b.paragraph_start_mode;
-			c.with_next_paragraph  = b.with_next_paragraph == ThreeState.Undefined ? a.with_next_paragraph : b.with_next_paragraph;
-			c.with_prev_paragraph  = b.with_prev_paragraph == ThreeState.Undefined ? a.with_prev_paragraph : b.with_prev_paragraph;
+			c.paragraphStartMode = b.paragraphStartMode == ParagraphStartMode.Undefined ? a.paragraphStartMode : b.paragraphStartMode;
+			c.withNextParagraph  = b.withNextParagraph == ThreeState.Undefined ? a.withNextParagraph : b.withNextParagraph;
+			c.withPrevParagraph  = b.withPrevParagraph == ThreeState.Undefined ? a.withPrevParagraph : b.withPrevParagraph;
 			
 			return c;
 		}
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.start_lines);
-			checksum.UpdateValue (this.end_lines);
-			checksum.UpdateValue ((int) this.paragraph_start_mode);
-			checksum.UpdateValue ((int) this.with_next_paragraph);
-			checksum.UpdateValue ((int) this.with_prev_paragraph);
+			checksum.UpdateValue (this.startLines);
+			checksum.UpdateValue (this.endLines);
+			checksum.UpdateValue ((int) this.paragraphStartMode);
+			checksum.UpdateValue ((int) this.withNextParagraph);
+			checksum.UpdateValue ((int) this.withPrevParagraph);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -162,19 +162,19 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(KeepProperty a, KeepProperty b)
 		{
-			return a.start_lines == b.start_lines
-				&& a.end_lines   == b.end_lines
-				&& a.paragraph_start_mode == b.paragraph_start_mode
-				&& a.with_next_paragraph  == b.with_next_paragraph
-				&& a.with_prev_paragraph  == b.with_prev_paragraph;
+			return a.startLines == b.startLines
+				&& a.endLines   == b.endLines
+				&& a.paragraphStartMode == b.paragraphStartMode
+				&& a.withNextParagraph  == b.withNextParagraph
+				&& a.withPrevParagraph  == b.withPrevParagraph;
 		}
 		
 		
-		private int								start_lines;
-		private int								end_lines;
+		private int								startLines;
+		private int								endLines;
 		
-		private ParagraphStartMode				paragraph_start_mode;
-		private ThreeState						with_next_paragraph;
-		private ThreeState						with_prev_paragraph;
+		private ParagraphStartMode				paragraphStartMode;
+		private ThreeState						withNextParagraph;
+		private ThreeState						withPrevParagraph;
 	}
 }

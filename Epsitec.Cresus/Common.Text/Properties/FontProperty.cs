@@ -14,8 +14,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public FontProperty(string face, string style)
 		{
-			this.face_name  = face;
-			this.style_name = style;
+			this.faceName  = face;
+			this.styleName = style;
 		}
 		
 		public FontProperty(string face, string style, params string[] features)
@@ -25,8 +25,8 @@ namespace Epsitec.Common.Text.Properties
 				features = new string[0];
 			}
 			
-			this.face_name  = face;
-			this.style_name = style;
+			this.faceName   = face;
+			this.styleName  = style;
 			this.features   = features.Clone () as string[];
 		}
 		
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.face_name;
+				return this.faceName;
 			}
 		}
 		
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.style_name;
+				return this.styleName;
 			}
 		}
 		
@@ -81,8 +81,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.face_name),
-				/**/				SerializerSupport.SerializeString (this.style_name),
+				/**/				SerializerSupport.SerializeString (this.faceName),
+				/**/				SerializerSupport.SerializeString (this.styleName),
 				/**/				SerializerSupport.SerializeStringArray (this.features));
 		}
 		
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 3);
 			
-			this.face_name  = SerializerSupport.DeserializeString (args[0]);
-			this.style_name = SerializerSupport.DeserializeString (args[1]);
+			this.faceName  = SerializerSupport.DeserializeString (args[0]);
+			this.styleName = SerializerSupport.DeserializeString (args[1]);
 			this.features   = SerializerSupport.DeserializeStringArray (args[2]);
 		}
 		
@@ -104,8 +104,8 @@ namespace Epsitec.Common.Text.Properties
 			FontProperty a = this;
 			FontProperty b = property as FontProperty;
 			
-			string face_name  = ((b.FaceName == null)  || (b.FaceName.Length == 0))  ? a.FaceName  : b.FaceName;
-			string style_name = ((b.StyleName == null) || (b.StyleName.Length == 0)) ? a.StyleName : b.StyleName;
+			string faceName  = ((b.FaceName == null)  || (b.FaceName.Length == 0))  ? a.FaceName  : b.FaceName;
+			string styleName = ((b.StyleName == null) || (b.StyleName.Length == 0)) ? a.StyleName : b.StyleName;
 			
 			//	Combine les noms des styles de manière avancée dès que la propriété
 			//	contient des styles à ajouter/supprimer/inverser, avec une syntaxe
@@ -117,11 +117,11 @@ namespace Epsitec.Common.Text.Properties
 			{
 				if (b.StyleName.IndexOfAny (new char[] { '+', '-', '!' }) != -1)
 				{
-					style_name = FontProperty.CombineStyles (a.StyleName, b.StyleName);
+					styleName = FontProperty.CombineStyles (a.StyleName, b.StyleName);
 				}
 			}
 			
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("Combined '{0}' with '{1}' --> '{2}'", a.StyleName, b.StyleName, style_name));
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("Combined '{0}' with '{1}' --> '{2}'", a.StyleName, b.StyleName, styleName));
 			
 			System.Collections.ArrayList features = new System.Collections.ArrayList ();
 			
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Text.Properties
 				}
 			}
 			
-			FontProperty c = new FontProperty (face_name, style_name, (string[]) features.ToArray (typeof (string)));
+			FontProperty c = new FontProperty (faceName, styleName, (string[]) features.ToArray (typeof (string)));
 			
 			return c;
 		}
@@ -160,10 +160,10 @@ namespace Epsitec.Common.Text.Properties
 			//	Combine deux séries de noms de styles, en simplifiant d'éventuelles
 			//	modifications "+Bold" et "-Bold" qui s'annuleraient.
 			
-			int  count_bold    = 0;
-			int  count_italic  = 0;
-			bool invert_bold   = false;
-			bool invert_italic = false;
+			int  countBold    = 0;
+			int  countItalic  = 0;
+			bool invertBold   = false;
+			bool invertItalic = false;
 			
 			System.Collections.ArrayList list   = new System.Collections.ArrayList ();
 			System.Collections.ArrayList result = new System.Collections.ArrayList ();
@@ -180,22 +180,22 @@ namespace Epsitec.Common.Text.Properties
 				
 				switch (element)
 				{
-					case "Bold":	count_bold  = 1;	break;
-					case "+Bold":	count_bold += 1;	break;
-					case "-Bold":	count_bold -= 1;	break;
+					case "Bold":	countBold  = 1;	break;
+					case "+Bold":	countBold += 1;	break;
+					case "-Bold":	countBold -= 1;	break;
 					
-					case "Italic":	count_italic  = 1;	break;
-					case "+Italic":	count_italic += 1;	break;
-					case "-Italic":	count_italic -= 1;	break;
+					case "Italic":	countItalic  = 1;	break;
+					case "+Italic":	countItalic += 1;	break;
+					case "-Italic":	countItalic -= 1;	break;
 					
-					case "!Bold":	invert_bold   = !invert_bold;	break;
-					case "!Italic":	invert_italic = !invert_italic;	break;
+					case "!Bold":	invertBold   = !invertBold;	break;
+					case "!Italic":	invertItalic = !invertItalic;	break;
 					
 					case "Regular":
 					case "Normal":
 					case "Roman":
-						count_bold   = 0; invert_bold   = false;
-						count_italic = 0; invert_italic = false;
+						countBold   = 0; invertBold   = false;
+						countItalic = 0; invertItalic = false;
 						
 						result.Add (element);
 						
@@ -212,17 +212,17 @@ namespace Epsitec.Common.Text.Properties
 			
 			//	Résume l'état des changements de graisse :
 			
-			while (count_bold-- > 0) result.Add ("+Bold");
-			while (++count_bold < 0) result.Add ("-Bold");
+			while (countBold-- > 0) result.Add ("+Bold");
+			while (++countBold < 0) result.Add ("-Bold");
 			
-			if (invert_bold) result.Add ("!Bold");
+			if (invertBold) result.Add ("!Bold");
 			
 			//	Résume l'état des changements d'italique :
 			
-			while (count_italic-- > 0) result.Add ("+Italic");
-			while (++count_italic < 0) result.Add ("-Italic");
+			while (countItalic-- > 0) result.Add ("+Italic");
+			while (++countItalic < 0) result.Add ("-Italic");
 			
-			if (invert_italic) result.Add ("!Italic");
+			if (invertItalic) result.Add ("!Italic");
 			
 			return string.Join (" ", (string[]) result.ToArray (typeof (string)));
 		}
@@ -230,8 +230,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.face_name);
-			checksum.UpdateValue (this.style_name);
+			checksum.UpdateValue (this.faceName);
+			checksum.UpdateValue (this.styleName);
 			checksum.UpdateValue (this.features);
 		}
 		
@@ -243,14 +243,14 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(FontProperty a, FontProperty b)
 		{
-			return a.face_name == b.face_name
-				&& a.style_name == b.style_name
+			return a.faceName == b.faceName
+				&& a.styleName == b.styleName
 				&& Types.Comparer.Equal (a.features, b.features);
 		}
 		
 		
-		private string							face_name;
-		private string							style_name;
+		private string							faceName;
+		private string							styleName;
 		private string[]						features;
 	}
 	

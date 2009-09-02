@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public double GetOffsetInPoints(double font_size_in_points)
+		public double GetOffsetInPoints(double fontSizeInPoints)
 		{
 			if (UnitsTools.IsAbsoluteSize (this.units))
 			{
@@ -62,11 +62,11 @@ namespace Epsitec.Common.Text.Properties
 			}
 			if (UnitsTools.IsRelativeSize (this.units))
 			{
-				return UnitsTools.ConvertToPoints (this.offset, this.units) + font_size_in_points;
+				return UnitsTools.ConvertToPoints (this.offset, this.units) + fontSizeInPoints;
 			}
 			if (UnitsTools.IsScale (this.units))
 			{
-				return UnitsTools.ConvertToScale (this.offset, this.units) * font_size_in_points;
+				return UnitsTools.ConvertToScale (this.offset, this.units) * fontSizeInPoints;
 			}
 			
 			throw new System.InvalidOperationException ();

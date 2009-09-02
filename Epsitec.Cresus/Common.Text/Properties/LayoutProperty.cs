@@ -43,7 +43,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.engine_name;
+				return this.engineName;
 			}
 		}
 		
@@ -55,12 +55,12 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
-			buffer.Append (SerializerSupport.SerializeString (this.engine_name));
+			buffer.Append (SerializerSupport.SerializeString (this.engineName));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
 		{
-			this.engine_name = SerializerSupport.DeserializeString (text.Substring (pos, length));
+			this.engineName = SerializerSupport.DeserializeString (text.Substring (pos, length));
 		}
 		
 		public override Property GetCombination(Property property)
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.engine_name);
+			checksum.UpdateValue (this.engineName);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(LayoutProperty a, LayoutProperty b)
 		{
-			if (a.engine_name == b.engine_name)
+			if (a.engineName == b.engineName)
 			{
 				return true;
 			}
@@ -90,6 +90,6 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		private string							engine_name;
+		private string							engineName;
 	}
 }

@@ -14,10 +14,10 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public ManagedParagraphProperty(string manager_name, string[] manager_parameters)
+		public ManagedParagraphProperty(string managerName, string[] managerParameters)
 		{
-			this.manager_name       = manager_name;
-			this.manager_parameters = manager_parameters == null ? new string[0] : (manager_parameters.Clone () as string[]);
+			this.managerName       = managerName;
+			this.managerParameters = managerParameters == null ? new string[0] : (managerParameters.Clone () as string[]);
 		}
 		
 		
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.manager_name;
+				return this.managerName;
 			}
 		}
 		
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.manager_parameters.Clone () as string[];
+				return this.managerParameters.Clone () as string[];
 			}
 		}
 		
@@ -88,8 +88,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.manager_name),
-				/**/				SerializerSupport.SerializeStringArray (this.manager_parameters));
+				/**/				SerializerSupport.SerializeString (this.managerName),
+				/**/				SerializerSupport.SerializeStringArray (this.managerParameters));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -98,11 +98,11 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 2);
 			
-			string   manager_name       = SerializerSupport.DeserializeString (args[0]);
-			string[] manager_parameters = SerializerSupport.DeserializeStringArray (args[1]);
+			string   managerName       = SerializerSupport.DeserializeString (args[0]);
+			string[] managerParameters = SerializerSupport.DeserializeStringArray (args[1]);
 			
-			this.manager_name       = manager_name;
-			this.manager_parameters = manager_parameters;
+			this.managerName       = managerName;
+			this.managerParameters = managerParameters;
 		}
 		
 		
@@ -114,8 +114,8 @@ namespace Epsitec.Common.Text.Properties
 			ManagedParagraphProperty b = property as ManagedParagraphProperty;
 			ManagedParagraphProperty c = new ManagedParagraphProperty ();
 			
-			c.manager_name       = b.manager_name;
-			c.manager_parameters = b.manager_parameters;
+			c.managerName       = b.managerName;
+			c.managerParameters = b.managerParameters;
 			
 			return c;
 		}
@@ -123,8 +123,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.manager_name);
-			checksum.UpdateValue (this.manager_parameters);
+			checksum.UpdateValue (this.managerName);
+			checksum.UpdateValue (this.managerParameters);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -183,8 +183,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(ManagedParagraphProperty a, ManagedParagraphProperty b)
 		{
-			return a.manager_name == b.manager_name
-				&& Types.Comparer.Equal (a.manager_parameters, b.manager_parameters);
+			return a.managerName == b.managerName
+				&& Types.Comparer.Equal (a.managerParameters, b.managerParameters);
 		}
 		
 		
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Text.Properties
 				Properties.ManagedParagraphProperty px = x as Properties.ManagedParagraphProperty;
 				Properties.ManagedParagraphProperty py = y as Properties.ManagedParagraphProperty;
 				
-				int result = string.Compare (px.manager_name, py.manager_name);
+				int result = string.Compare (px.managerName, py.managerName);
 				
 				if (result == 0)
 				{
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		#endregion
 		
-		private string							manager_name;
-		private string[]						manager_parameters;
+		private string							managerName;
+		private string[]						managerParameters;
 	}
 }

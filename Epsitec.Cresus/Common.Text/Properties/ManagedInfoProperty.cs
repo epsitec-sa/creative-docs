@@ -14,10 +14,10 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public ManagedInfoProperty(string manager_name, string manager_info)
+		public ManagedInfoProperty(string managerName, string managerInfo)
 		{
-			this.manager_name = manager_name;
-			this.manager_info = manager_info;
+			this.managerName = managerName;
+			this.managerInfo = managerInfo;
 		}
 		
 		
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.manager_name;
+				return this.managerName;
 			}
 		}
 		
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.manager_info;
+				return this.managerInfo;
 			}
 		}
 		
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.manager_name),
-				/**/				SerializerSupport.SerializeString (this.manager_info));
+				/**/				SerializerSupport.SerializeString (this.managerName),
+				/**/				SerializerSupport.SerializeString (this.managerInfo));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -89,11 +89,11 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 2);
 			
-			string manager_name = SerializerSupport.DeserializeString (args[0]);
-			string manager_info = SerializerSupport.DeserializeString (args[1]);
+			string managerName = SerializerSupport.DeserializeString (args[0]);
+			string managerInfo = SerializerSupport.DeserializeString (args[1]);
 			
-			this.manager_name = manager_name;
-			this.manager_info = manager_info;
+			this.managerName = managerName;
+			this.managerInfo = managerInfo;
 		}
 		
 		
@@ -105,8 +105,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.manager_name);
-			checksum.UpdateValue (this.manager_info);
+			checksum.UpdateValue (this.managerName);
+			checksum.UpdateValue (this.managerInfo);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -166,12 +166,12 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(ManagedInfoProperty a, ManagedInfoProperty b)
 		{
-			return a.manager_name == b.manager_name
-				&& a.manager_info == b.manager_info;
+			return a.managerName == b.managerName
+				&& a.managerInfo == b.managerInfo;
 		}
 		
 		
-		private string							manager_name;
-		private string							manager_info;
+		private string							managerName;
+		private string							managerInfo;
 	}
 }

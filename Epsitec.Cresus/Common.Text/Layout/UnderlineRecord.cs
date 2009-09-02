@@ -9,13 +9,13 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class XlineRecord
 	{
-		public XlineRecord(RecordType record_type, int text_offset, System.Collections.ICollection xlines, Properties.FontColorProperty text_color,
-			/**/		   double x, double y, double ascender, double descender, int frame_index, bool is_visible)
+		public XlineRecord(RecordType recordType, int textOffset, System.Collections.ICollection xlines, Properties.FontColorProperty textColor,
+			/**/		   double x, double y, double ascender, double descender, int frameIndex, bool isVisible)
 		{
 			int count = xlines == null ? 0 : xlines.Count;
 			
-			this.record_type = record_type;
-			this.text_offset = text_offset;
+			this.recordType  = recordType;
+			this.textOffset  = textOffset;
 			this.xlines      = new Properties.AbstractXlineProperty[count];
 			
 			if (xlines != null)
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Text.Layout
 				xlines.CopyTo (this.xlines, 0);
 			}
 			
-			this.text_color = text_color;
+			this.textColor = textColor;
 			
 			this.x = x;
 			this.y = y;
@@ -31,8 +31,8 @@ namespace Epsitec.Common.Text.Layout
 			this.ascender  = ascender;
 			this.descender = descender;
 			
-			this.frame_index = frame_index;
-			this.is_visible  = is_visible;
+			this.frameIndex = frameIndex;
+			this.isVisible  = isVisible;
 		}
 		
 		
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.record_type;
+				return this.recordType;
 			}
 		}
 		
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_offset;
+				return this.textOffset;
 			}
 		}
 		
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.frame_index;
+				return this.frameIndex;
 			}
 		}
 		
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.is_visible;
+				return this.isVisible;
 			}
 		}
 		
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_color;
+				return this.textColor;
 			}
 		}
 		
@@ -127,13 +127,13 @@ namespace Epsitec.Common.Text.Layout
 		}
 		#endregion
 		
-		private RecordType						record_type;
-		private int								text_offset;
+		private RecordType						recordType;
+		private int								textOffset;
 		private Properties.AbstractXlineProperty[]	xlines;
-		private int								frame_index;
-		private bool							is_visible;
+		private int								frameIndex;
+		private bool							isVisible;
 		private double							x, y;
 		private double							ascender, descender;
-		private Properties.FontColorProperty	text_color;
+		private Properties.FontColorProperty	textColor;
 	}
 }
