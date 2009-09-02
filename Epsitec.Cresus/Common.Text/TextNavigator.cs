@@ -25,10 +25,10 @@ namespace Epsitec.Common.Text
 			this.fitter = fitter;
 			this.cursor = new Cursors.SimpleCursor ();
 			
-			this.temp_cursor = new Cursors.TempCursor ();
+			this.tempCursor = new Cursors.TempCursor ();
 			
 			this.story.NewCursor (this.cursor);
-			this.story.NewCursor (this.temp_cursor);
+			this.story.NewCursor (this.tempCursor);
 			
 			this.story.OpletExecuted += this.HandleStoryOpletExecuted;
 			this.story.TextChanged   += this.HandleStoryTextChanged;
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Text
 				
 				TextStyle[] styles;
 				
-				styles = this.current_styles.Clone () as TextStyle[];
+				styles = this.currentStyles.Clone () as TextStyle[];
 				styles = this.TextContext.RemoveDeadStyles (styles);
 				styles = this.TextContext.AddDefaultTextStyleIfNeeded (styles);
 				
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text
 			get
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				return this.current_properties.Clone () as Property[];
+				return this.currentProperties.Clone () as Property[];
 			}
 		}
 		
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Text
 			get
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
-				return this.accumulated_properties.Clone () as Property[];
+				return this.accumulatedProperties.Clone () as Property[];
 			}
 		}
 		
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Text
 			//	mais pas encore le EndSelection.
 			get
 			{
-				return this.active_selection_cursor == null ? false : true;
+				return this.activeSelectionCursor == null ? false : true;
 			}
 		}
 		
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Text
 			//	Après un ClearSelection, la sélection n'existe plus.
 			get
 			{
-				return this.selection_cursors == null ? false : true;
+				return this.selectionCursors == null ? false : true;
 			}
 		}
 		
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Text
 			//	Comme HasSelection, mais en plus, la sélection doit comporter au moins un caractère.
 			get
 			{
-				if (this.selection_cursors != null)
+				if (this.selectionCursors != null)
 				{
 					int[] pos = this.GetAdjustedSelectionCursorPositions ();
 					
@@ -169,13 +169,13 @@ namespace Epsitec.Common.Text
 			//	correspond à une sélection multiple discontinue.
 			get
 			{
-				if (this.selection_cursors == null)
+				if (this.selectionCursors == null)
 				{
 					return 0;
 				}
 				else
 				{
-					return this.selection_cursors.Count / 2;
+					return this.selectionCursors.Count / 2;
 				}
 			}
 		}
@@ -194,19 +194,19 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if (this.active_selection_cursor != null)
+				if (this.activeSelectionCursor != null)
 				{
-					return this.active_selection_cursor;
+					return this.activeSelectionCursor;
 				}
-				else if ((this.selection_cursors != null) &&
-					/**/ (this.selection_cursors.Count >= 2))
+				else if ((this.selectionCursors != null) &&
+					/**/ (this.selectionCursors.Count >= 2))
 				{
 #if true
 					return this.cursor;
 #else
-					int n = this.selection_cursors.Count;
+					int n = this.selectionCursors.Count;
 					
-					return this.selection_cursors[n-1] as ICursor;
+					return this.selectionCursors[n-1] as ICursor;
 #endif
 				}
 				else
@@ -257,20 +257,20 @@ namespace Epsitec.Common.Text
 			
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
-			Property[] old_properties = this.current_properties;
-			Property[] new_properties = new Property[old_properties.Length+1];
+			Property[] oldProperties = this.currentProperties;
+			Property[] newProperties = new Property[oldProperties.Length+1];
 			
-			old_properties.CopyTo (new_properties, 0);
-			new_properties[old_properties.Length] = property;
+			oldProperties.CopyTo (newProperties, 0);
+			newProperties[oldProperties.Length] = property;
 			
 			try
 			{
-				this.current_properties = new_properties;
+				this.currentProperties = newProperties;
 				this.InsertText (new string ((char) code, 1));
 			}
 			finally
 			{
-				this.current_properties = old_properties;
+				this.currentProperties = oldProperties;
 			}
 		}
 
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Text
 			//	Supprime le contenu de la sélection (pour autant qu'il y en ait
 			//	une qui soit définie).
 			
-			if (this.selection_cursors != null)
+			if (this.selectionCursors != null)
 			{
 				this.story.SuspendTextChanged ();
 				
@@ -335,17 +335,17 @@ namespace Epsitec.Common.Text
 				{
 					this.InternalInsertSelectionOplet ();
 					
-					for (int i = 0; i < this.selection_cursors.Count; i += 2)
+					for (int i = 0; i < this.selectionCursors.Count; i += 2)
 					{
 						//	Traite les tranches dans l'ordre, en les détruisant les
 						//	unes après les autres.
 						
-						int[] selected_pos = this.GetAdjustedSelectionCursorPositions ();
+						int[] selectedPos = this.GetAdjustedSelectionCursorPositions ();
 						
-						int p1 = selected_pos[i+0];
-						int p2 = selected_pos[i+1];
+						int p1 = selectedPos[i+0];
+						int p2 = selectedPos[i+1];
 						
-						if (i+2 == this.selection_cursors.Count)
+						if (i+2 == this.selectionCursors.Count)
 						{
 							//	C'est la dernière tranche. Il faut positionner le curseur
 							//	de travail au début de la zone et hériter des styles actifs
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Text
 					int pos = this.story.GetCursorPosition (this.cursor);
 					int dir = this.story.GetCursorDirection (this.cursor);
 					
-					this.AdjustCursor (this.temp_cursor, Direction.Forward, ref pos, ref dir);
+					this.AdjustCursor (this.tempCursor, Direction.Forward, ref pos, ref dir);
 					this.story.SetCursorPosition (this.cursor, pos, dir);
 					
 					this.story.ValidateAction ();
@@ -466,7 +466,7 @@ namespace Epsitec.Common.Text
 					int pos = this.story.GetCursorPosition (this.cursor);
 					int dir = this.story.GetCursorDirection (this.cursor);
 					
-					this.AdjustCursor (this.temp_cursor, Direction.Forward, ref pos, ref dir);
+					this.AdjustCursor (this.tempCursor, Direction.Forward, ref pos, ref dir);
 					this.story.SetCursorPosition (this.cursor, pos, dir);
 					
 					this.story.ValidateAction ();
@@ -480,7 +480,7 @@ namespace Epsitec.Common.Text
 		
 		public void MoveTo(int position, int direction)
 		{
-			this.AdjustCursor (this.temp_cursor, (Direction) System.Math.Sign (direction), ref position, ref direction);
+			this.AdjustCursor (this.tempCursor, (Direction) System.Math.Sign (direction), ref position, ref direction);
 			this.InternalSetCursor (position, direction);
 		}
 		
@@ -488,97 +488,97 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (count >= 0);
 			
-			int old_pos = this.CursorPosition;
-			int old_dir = this.CursorDirection;
+			int oldPos = this.CursorPosition;
+			int oldDir = this.CursorDirection;
 			
-			int new_pos;
-			int new_dir;
+			int newPos;
+			int newDir;
 			
-			bool fix_dir = false;
+			bool fixDir = false;
 			
 			Direction direction = Direction.None;
 			
 			switch (target)
 			{
 				case Target.CharacterNext:
-					this.MoveCursor (this.ActiveCursor, count, out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, out newPos, out newDir);
 					direction = Direction.Forward;
-					fix_dir   = true;
+					fixDir   = true;
 					break;
 				
 				case Target.CharacterPrevious:
-					this.MoveCursor (this.ActiveCursor, -count, out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, -count, out newPos, out newDir);
 					direction = Direction.Backward;
 					break;
 				
 				case Target.TextStart:
-					new_pos   = 0;
-					new_dir   = -1;
+					newPos   = 0;
+					newDir   = -1;
 					direction = Direction.Backward;
 					break;
 				
 				case Target.TextEnd:
-					new_pos   = this.TextLength;
-					new_dir   = 1;
+					newPos   = this.TextLength;
+					newDir   = 1;
 					direction = Direction.Forward;
 					break;
 					
 				case Target.ParagraphStart:
-					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsParagraphStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsParagraphStart), out newPos, out newDir);
 					direction = Direction.Backward;
 					break;
 				
 				case Target.ParagraphEnd:
-					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsParagraphEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsParagraphEnd), out newPos, out newDir);
 					direction = Direction.Forward;
 					break;
 				
 				case Target.LineStart:
-					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsLineStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsLineStart), out newPos, out newDir);
 					direction = Direction.Backward;
 					break;
 				
 				case Target.LineEnd:
-					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsLineEnd), out newPos, out newDir);
 					direction = Direction.Forward;
 					break;
 				
 				case Target.WordStart:
-					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsWordStart), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Backward, new MoveCallback (this.IsWordStart), out newPos, out newDir);
 					direction = Direction.Backward;
 					break;
 				
 				case Target.WordEnd:
-					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsWordEnd), out new_pos, out new_dir);
+					this.MoveCursor (this.ActiveCursor, count, Direction.Forward, new MoveCallback (this.IsWordEnd), out newPos, out newDir);
 					direction = Direction.Forward;
-					fix_dir   = true;
+					fixDir   = true;
 					break;
 					
 				default:
 					throw new System.NotSupportedException (string.Format ("Target {0} not supported", target));
 			}
 			
-			if ((fix_dir) &&
-				(new_dir == 1))
+			if ((fixDir) &&
+				(newDir == 1))
 			{
 				//	Si en marche avant, on arrive à la fin d'une ligne qui n'est pas
 				//	une fin de paragraphe, alors il faut changer la direction, afin
 				//	que le curseur apparaisse au début de la ligne suivante :
 				
-				this.story.SetCursorPosition (this.temp_cursor, new_pos);
+				this.story.SetCursorPosition (this.tempCursor, newPos);
 				
-				if ((Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, 0) == false) &&
-					(Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0, 1)))
+				if ((Internal.Navigator.IsParagraphEnd (this.story, this.tempCursor, 0) == false) &&
+					(Internal.Navigator.IsLineEnd (this.story, this.fitter, this.tempCursor, 0, 1)))
 				{
-					new_dir = -1;
+					newDir = -1;
 				}
 			}
 			
-			if ((old_pos != new_pos) ||
-				(old_dir != new_dir))
+			if ((oldPos != newPos) ||
+				(oldDir != newDir))
 			{
-				this.AdjustCursor (this.temp_cursor, direction, ref new_pos, ref new_dir);
-				this.InternalSetCursor (new_pos, new_dir);
+				this.AdjustCursor (this.tempCursor, direction, ref newPos, ref newDir);
+				this.InternalSetCursor (newPos, newDir);
 			}
 		}
 		
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Text
 			
 			this.StartDisjointSelection ();
 			
-			System.Diagnostics.Debug.Assert (this.selection_cursors.Count == 2);
+			System.Diagnostics.Debug.Assert (this.selectionCursors.Count == 2);
 		}
 		
 		public void StartDisjointSelection()
@@ -625,8 +625,8 @@ namespace Epsitec.Common.Text
 			Cursors.SelectionCursor c1 = this.NewSelectionCursor ();
 			Cursors.SelectionCursor c2 = this.NewSelectionCursor ();
 			
-			this.selection_cursors.Add (c1);
-			this.selection_cursors.Add (c2);
+			this.selectionCursors.Add (c1);
+			this.selectionCursors.Add (c2);
 			
 			int position  = this.story.GetCursorPosition (this.cursor);
 			int direction = this.story.GetCursorDirection (this.cursor);
@@ -634,7 +634,7 @@ namespace Epsitec.Common.Text
 			this.story.SetCursorPosition (c1, position, direction);
 			this.story.SetCursorPosition (c2, position, direction);
 			
-			this.active_selection_cursor = c2;
+			this.activeSelectionCursor = c2;
 			this.NotifyCursorMoved ();
 		}
 		
@@ -649,19 +649,19 @@ namespace Epsitec.Common.Text
 			//	- HasRealSelection retourne true ou false
 			
 			System.Diagnostics.Debug.Assert (! this.IsSelectionActive);
-			System.Diagnostics.Debug.Assert (this.selection_cursors.Count > 1);
+			System.Diagnostics.Debug.Assert (this.selectionCursors.Count > 1);
 			
-			this.selection_before = this.GetSelectionCursorPositions ();
+			this.selectionBefore = this.GetSelectionCursorPositions ();
 			
-			int n = this.selection_cursors.Count;
+			int n = this.selectionCursors.Count;
 			
-			Cursors.SelectionCursor c1 = this.selection_cursors[n-2] as Cursors.SelectionCursor;
-			Cursors.SelectionCursor c2 = this.selection_cursors[n-1] as Cursors.SelectionCursor;
+			Cursors.SelectionCursor c1 = this.selectionCursors[n-2] as Cursors.SelectionCursor;
+			Cursors.SelectionCursor c2 = this.selectionCursors[n-1] as Cursors.SelectionCursor;
 			
 			System.Diagnostics.Debug.Assert (c1 != null);
 			System.Diagnostics.Debug.Assert (c2 != null);
 			
-			this.active_selection_cursor = c2;
+			this.activeSelectionCursor = c2;
 			this.NotifyCursorMoved ();
 		}
 		
@@ -676,21 +676,21 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (this.IsSelectionActive);
 			
-			this.active_selection_cursor = null;
+			this.activeSelectionCursor = null;
 			
 			using (this.story.BeginAction ())
 			{
-				if ((this.selection_before != null) &&
-					(this.selection_before.Length > 0))
+				if ((this.selectionBefore != null) &&
+					(this.selectionBefore.Length > 0))
 				{
-					this.InternalInsertDeselectionOplet (this.selection_before);
+					this.InternalInsertDeselectionOplet (this.selectionBefore);
 				}
 				else
 				{
 					this.InternalInsertDeselectionOplet ();
 				}
 				
-				this.selection_before = null;
+				this.selectionBefore = null;
 				this.story.ValidateAction ();
 			}
 			
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Text
 			
 			//	Désélectionne tout le texte.
 			
-			if (this.selection_cursors != null)
+			if (this.selectionCursors != null)
 			{
 				//	Prend note de la position des curseurs de sélection pour
 				//	pouvoir restaurer la sélection en cas de UNDO :
@@ -776,8 +776,8 @@ namespace Epsitec.Common.Text
 			
 			ulong[] buffer = new ulong[p2-p1];
 			
-			this.story.SetCursorPosition (this.temp_cursor, p1);
-			this.story.ReadText (this.temp_cursor, p2-p1, buffer);
+			this.story.SetCursorPosition (this.tempCursor, p1);
+			this.story.ReadText (this.tempCursor, p2-p1, buffer);
 			
 			return buffer;
 		}
@@ -789,7 +789,7 @@ namespace Epsitec.Common.Text
 			
 			string[] texts;
 			
-			if (this.selection_cursors == null)
+			if (this.selectionCursors == null)
 			{
 				texts = new string[0];
 			}
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Text
 			//	à la tranche sélectionnée 'index'.
 			//	S'il n'y en a pas, retourne un tableau vide.
 			
-			if ((this.selection_cursors == null) ||
+			if ((this.selectionCursors == null) ||
 				(index >= this.SelectionCount))
 			{
 				return new ulong[0];
@@ -826,12 +826,12 @@ namespace Epsitec.Common.Text
 		
 		public TabInfo[] GetTabInfos()
 		{
-			string[] tags_1 = this.GetParagraphTabTags ();
-			string[] tags_2 = this.GetTextTabTags ();
+			string[] tags1 = this.GetParagraphTabTags ();
+			string[] tags2 = this.GetTextTabTags ();
 			
 			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 			
-			foreach (string tag in tags_1)
+			foreach (string tag in tags1)
 			{
 				System.Diagnostics.Debug.Assert (hash.Contains (tag) == false);
 				
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Text
 				hash[tag] = info;
 			}
 			
-			foreach (string tag in tags_2)
+			foreach (string tag in tags2)
 			{
 				if (hash.Contains (tag))
 				{
@@ -866,25 +866,25 @@ namespace Epsitec.Common.Text
 		
 		public string[] GetAllTabTags()
 		{
-			string[] tags_1 = this.GetParagraphTabTags ();
-			string[] tags_2 = this.GetTextTabTags ();
+			string[] tags1 = this.GetParagraphTabTags ();
+			string[] tags2 = this.GetTextTabTags ();
 			
-			if (tags_2.Length == 0)
+			if (tags2.Length == 0)
 			{
-				return tags_1;
+				return tags1;
 			}
-			if (tags_1.Length == 0)
+			if (tags1.Length == 0)
 			{
-				return tags_2;
+				return tags2;
 			}
 
 			List<string> list = new List<string> ();
 			
-			foreach (string tag in tags_1)
+			foreach (string tag in tags1)
 			{
 				list.Add (tag);
 			}
-			foreach (string tag in tags_2)
+			foreach (string tag in tags2)
 			{
 				if (list.Contains (tag) == false)
 				{
@@ -909,8 +909,8 @@ namespace Epsitec.Common.Text
 			TabList  list = this.TextContext.TabList;
 			string[] tags = this.GetAllTabTags ();
 			
-			double best_dx  = double.PositiveInfinity;
-			string best_tag = null;
+			double bestDx  = double.PositiveInfinity;
+			string bestTag = null;
 again:			
 			for (int i = 0; i < tags.Length; i++)
 			{
@@ -920,15 +920,15 @@ again:
 				{
 					double dx = pos - x;
 					
-					if (dx < best_dx)
+					if (dx < bestDx)
 					{
-						best_dx  = dx;
-						best_tag = tags[i];
+						bestDx  = dx;
+						bestTag = tags[i];
 					}
 				}
 			}
 			
-			if ((best_tag == null) &&
+			if ((bestTag == null) &&
 				(x > 0))
 			{
 				//	Pas trouvé de tag après la position courante. Cherche encore
@@ -938,60 +938,60 @@ again:
 				goto again;
 			}
 			
-			return best_tag;
+			return bestTag;
 		}
 
 		
-		public bool RenameTab(string old_tag, string new_tag)
+		public bool RenameTab(string oldTag, string newTag)
 		{
-			return this.RenameTabs (new string[] { old_tag }, new_tag);
+			return this.RenameTabs (new string[] { oldTag }, newTag);
 		}
 		
-		public bool RenameTabs(string[] old_tags, string new_tag)
+		public bool RenameTabs(string[] oldTags, string newTag)
 		{
-			System.Diagnostics.Debug.Assert (old_tags != null);
-			System.Diagnostics.Debug.Assert (old_tags.Length > 0);
+			System.Diagnostics.Debug.Assert (oldTags != null);
+			System.Diagnostics.Debug.Assert (oldTags.Length > 0);
 			
-			if ((old_tags.Length > 1) ||
-				(old_tags[0] != new_tag))
+			if ((oldTags.Length > 1) ||
+				(oldTags[0] != newTag))
 			{
-				int[] pos_1 = this.FindTextTabPositions (old_tags);
-				int[] pos_2 = this.FindTextTabsPositions (old_tags);
+				int[] pos1 = this.FindTextTabPositions (oldTags);
+				int[] pos2 = this.FindTextTabsPositions (oldTags);
 				
-				if ((pos_1.Length > 0) ||
-					(pos_2.Length > 0))
+				if ((pos1.Length > 0) ||
+					(pos2.Length > 0))
 				{
-//-					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", string.Join ("/", old_tags), new_tag, pos_1.Length, pos_2.Length));
+//-					System.Diagnostics.Debug.WriteLine (string.Format ("Rename tab from {0} to {1}, {2} live, {3} defined", string.Join ("/", oldTags), newTag, pos1.Length, pos2.Length));
 					
 					using (this.story.BeginAction ())
 					{
 						//	Remplace les propriétés TabProperty des divers TAB
 						//	du texte par une nouvelle avec le nouveau nom :
 						
-						Property[] tab_rename  = new Property[1];
-						Property[] tabs_change = new Property[1];
+						Property[] tabRename  = new Property[1];
+						Property[] tabsChange = new Property[1];
 						
-						string[] tabs = new string[old_tags.Length + 1];
+						string[] tabs = new string[oldTags.Length + 1];
 						
-						for (int i = 0; i < old_tags.Length; i++)
+						for (int i = 0; i < oldTags.Length; i++)
 						{
-							tabs[i] = string.Concat ("-", old_tags[i]);
+							tabs[i] = string.Concat ("-", oldTags[i]);
 						}
 						
-						tabs[old_tags.Length] = new_tag;
+						tabs[oldTags.Length] = newTag;
 						
-						tab_rename[0]  = this.TextContext.TabList[new_tag];
-						tabs_change[0] = new Properties.TabsProperty (tabs);
+						tabRename[0]  = this.TextContext.TabList[newTag];
+						tabsChange[0] = new Properties.TabsProperty (tabs);
 						
-						for (int i = 0; i < pos_1.Length; i++)
+						for (int i = 0; i < pos1.Length; i++)
 						{
-							this.SetTextProperties (pos_1[i], 1, Properties.ApplyMode.Set, tab_rename);
-							this.SetParagraphProperties (pos_1[i], Properties.ApplyMode.Combine, tabs_change);
+							this.SetTextProperties (pos1[i], 1, Properties.ApplyMode.Set, tabRename);
+							this.SetParagraphProperties (pos1[i], Properties.ApplyMode.Combine, tabsChange);
 						}
 						
-						for (int i = 0; i < pos_2.Length; i++)
+						for (int i = 0; i < pos2.Length; i++)
 						{
-							this.SetParagraphProperties (pos_2[i], Properties.ApplyMode.Combine, tabs_change);
+							this.SetParagraphProperties (pos2[i], Properties.ApplyMode.Combine, tabsChange);
 						}
 						
 						this.story.ValidateAction ();
@@ -1024,11 +1024,11 @@ again:
 			}
 		}
 		
-		public void RedefineTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public void RedefineTab(string tag, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
 			this.story.SuspendTextChanged ();
 			
-			this.TextContext.TabList.RedefineTab (this.OpletQueue, this.TextStory, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+			this.TextContext.TabList.RedefineTab (this.OpletQueue, this.TextStory, new Properties.TabProperty (tag), position, units, disposition, dockingMark, positionMode, attribute);
 			
 			int[] pos = this.FindTextTabPositions (tag);
 			
@@ -1059,8 +1059,8 @@ again:
 			//	Retourne les tabulateurs définis dans un paragraphe en se basant
 			//	sur la propriété TabsProperty.
 			
-			List<Property> tabs_list = new List<Property> ();
-			List<string> tags_list = new List<string> ();
+			List<Property> tabsList = new List<Property> ();
+			List<string> tagsList = new List<string> ();
 			
 			int length = 0;
 			
@@ -1083,7 +1083,7 @@ again:
 						
 						if (property != null)
 						{
-							tabs_list.Add (property);
+							tabsList.Add (property);
 						}
 						
 						pos = this.FindNextParagraphStart (pos);
@@ -1093,30 +1093,30 @@ again:
 			
 			if (length == 0)
 			{
-				foreach (Property property in this.accumulated_properties)
+				foreach (Property property in this.accumulatedProperties)
 				{
 					if (property.WellKnownType == Properties.WellKnownType.Tabs)
 					{
-						tabs_list.Add (property);
+						tabsList.Add (property);
 						break;
 					}
 				}
 			}
 			
-			foreach (Properties.TabsProperty tabs_property in tabs_list)
+			foreach (Properties.TabsProperty tabsProperty in tabsList)
 			{
-				foreach (string tag in tabs_property.TabTags)
+				foreach (string tag in tabsProperty.TabTags)
 				{
-					if (tags_list.Contains (tag) == false)
+					if (tagsList.Contains (tag) == false)
 					{
-						tags_list.Add (tag);
+						tagsList.Add (tag);
 					}
 				}
 			}
 			
-			tags_list.Sort ();
+			tagsList.Sort ();
 			
-			return tags_list.ToArray ();
+			return tagsList.ToArray ();
 		}
 		
 		private string[] GetTextTabTags()
@@ -1124,7 +1124,7 @@ again:
 			//	Retourne la liste des tabulateurs en se basant sur les marques
 			//	de tabulation elles-mêmes.
 
-			List<string> tags_list = new List<string> ();
+			List<string> tagsList = new List<string> ();
 			
 			int length = 0;
 			
@@ -1143,7 +1143,7 @@ again:
 					
 					while (pos < end)
 					{
-						this.FindTextTabTags (tags_list, pos);
+						this.FindTextTabTags (tagsList, pos);
 						
 						pos = this.FindNextParagraphStart (pos);
 					}
@@ -1152,19 +1152,19 @@ again:
 			
 			if (length == 0)
 			{
-				this.FindTextTabTags (tags_list, this.CursorPosition);
+				this.FindTextTabTags (tagsList, this.CursorPosition);
 			}
 			
-			tags_list.Sort ();
+			tagsList.Sort ();
 
-			return tags_list.ToArray ();
+			return tagsList.ToArray ();
 		}
 		
 		
 		private Properties.TabsProperty GetTabsProperty(int pos)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
-			ulong code = this.story.ReadChar (this.temp_cursor);
+			this.story.SetCursorPosition (this.tempCursor, pos);
+			ulong code = this.story.ReadChar (this.tempCursor);
 			Properties.TabsProperty property;
 			this.TextContext.GetTabs (code, out property);
 			return property;
@@ -1199,17 +1199,17 @@ again:
 						//	analysant la propriété attachée :
 						
 						Properties.TabProperty property;
-						Properties.AutoTextProperty auto_text;
+						Properties.AutoTextProperty autoText;
 						
 						ulong code = text[i];
 						
 						context.GetTab (code, out property);
-						context.GetAutoText (code, out auto_text);
+						context.GetAutoText (code, out autoText);
 						
 						System.Diagnostics.Debug.Assert (property != null);
 						System.Diagnostics.Debug.Assert (property.TabTag != null);
 						
-						if (auto_text == null)
+						if (autoText == null)
 						{
 							//	Evite de lister les tabulateurs qui sont le résultat
 							//	d'un texte automatique.
@@ -1401,9 +1401,9 @@ again:
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
-			TextStyle[] paragraph_styles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
+			TextStyle[] paragraphStyles = TextStyle.FilterStyles (styles, TextStyleClass.Paragraph);
 			
-			System.Diagnostics.Debug.Assert (paragraph_styles.Length > 0);
+			System.Diagnostics.Debug.Assert (paragraphStyles.Length > 0);
 			
 			if (this.HasSelection)
 			{
@@ -1420,7 +1420,7 @@ again:
 						
 						while (pos < positions[range.EndIndex])
 						{
-							this.SetParagraphStyles (pos, paragraph_styles);
+							this.SetParagraphStyles (pos, paragraphStyles);
 							pos = this.FindNextParagraphStart (pos);
 							
 							//	Comme l'application d'un style de paragraphe avec manager peut
@@ -1440,17 +1440,17 @@ again:
 			
 			if (this.HasRealSelection == false)
 			{
-				this.SetParagraphStyles (this.story.GetCursorPosition (this.cursor), paragraph_styles);
+				this.SetParagraphStyles (this.story.GetCursorPosition (this.cursor), paragraphStyles);
 			}
 
-			List<TextStyle> new_styles = new List<TextStyle> ();
+			List<TextStyle> newStyles = new List<TextStyle> ();
 			
-			new_styles.AddRange (paragraph_styles);
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
+			newStyles.AddRange (paragraphStyles);
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Text));
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Symbol));
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.MetaProperty));
 			
-			this.current_styles = new_styles.ToArray ();
+			this.currentStyles = newStyles.ToArray ();
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
@@ -1465,14 +1465,14 @@ again:
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
-			TextStyle[] text_styles = TextStyle.FilterStyles (styles, TextStyleClass.Text);
+			TextStyle[] textStyles = TextStyle.FilterStyles (styles, TextStyleClass.Text);
 			
-			System.Diagnostics.Debug.Assert (text_styles.Length > 0);
+			System.Diagnostics.Debug.Assert (textStyles.Length > 0);
 			
 			//	Si besoin, supprime le style de texte par défaut (il n'apporte rien
 			//	dans ce contexte) :
 			
-			text_styles = story.TextContext.FilterDefaultTextStyle (text_styles);
+			textStyles = story.TextContext.FilterDefaultTextStyle (textStyles);
 			
 			if (this.HasSelection)
 			{
@@ -1486,7 +1486,7 @@ again:
 						int pos    = range.Start;
 						int length = range.Length;
 				
-						this.SetTextStyles (pos, length, text_styles);
+						this.SetTextStyles (pos, length, textStyles);
 					}
 					
 					this.story.ValidateAction ();
@@ -1496,14 +1496,14 @@ again:
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 
-				List<TextStyle> new_styles = new List<TextStyle> ();
+				List<TextStyle> newStyles = new List<TextStyle> ();
 				
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
-				new_styles.AddRange (text_styles);
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
+				newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
+				newStyles.AddRange (textStyles);
+				newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Symbol));
+				newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.MetaProperty));
 				
-				this.current_styles = new_styles.ToArray ();
+				this.currentStyles = newStyles.ToArray ();
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
@@ -1520,9 +1520,9 @@ again:
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
-			TextStyle[] character_styles = TextStyle.FilterStyles (styles, TextStyleClass.Symbol);
+			TextStyle[] characterStyles = TextStyle.FilterStyles (styles, TextStyleClass.Symbol);
 			
-			System.Diagnostics.Debug.Assert (character_styles.Length > 0);
+			System.Diagnostics.Debug.Assert (characterStyles.Length > 0);
 			
 			if (this.HasSelection)
 			{
@@ -1536,7 +1536,7 @@ again:
 						int pos    = range.Start;
 						int length = range.Length;
 						
-						this.SetSymbolStyles (pos, length, character_styles);
+						this.SetSymbolStyles (pos, length, characterStyles);
 					}
 					
 					this.story.ValidateAction ();
@@ -1546,14 +1546,14 @@ again:
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 
-				List<TextStyle> new_styles = new List<TextStyle> ();
+				List<TextStyle> newStyles = new List<TextStyle> ();
 				
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-				new_styles.AddRange (character_styles);
-				new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty));
+				newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
+				newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Text));
+				newStyles.AddRange (characterStyles);
+				newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.MetaProperty));
 				
-				this.current_styles = new_styles.ToArray ();
+				this.currentStyles = newStyles.ToArray ();
 				
 				this.RefreshAccumulatedStylesAndProperties ();
 			}
@@ -1570,25 +1570,25 @@ again:
 			System.Diagnostics.Debug.Assert (styles != null);
 			System.Diagnostics.Debug.Assert (styles.Length > 0);
 			
-			TextStyle[] meta_properties = TextStyle.FilterStyles (styles, TextStyleClass.MetaProperty);
+			TextStyle[] metaProperties = TextStyle.FilterStyles (styles, TextStyleClass.MetaProperty);
 			
-			System.Diagnostics.Debug.Assert (meta_properties.Length == styles.Length);
-			System.Diagnostics.Debug.Assert (meta_properties.Length > 0);
+			System.Diagnostics.Debug.Assert (metaProperties.Length == styles.Length);
+			System.Diagnostics.Debug.Assert (metaProperties.Length > 0);
 			
-			bool is_uniform = false;
+			bool isUniform = false;
 			
 			if (mode == Properties.ApplyMode.ClearUniform)
 			{
-				is_uniform = true;
+				isUniform = true;
 				mode       = Properties.ApplyMode.Clear;
 			}
 			else
 			{
-				foreach (TextStyle style in meta_properties)
+				foreach (TextStyle style in metaProperties)
 				{
 					if (style.RequiresUniformParagraph)
 					{
-						is_uniform = true;
+						isUniform = true;
 						break;
 					}
 				}
@@ -1605,14 +1605,14 @@ again:
 					{
 						int start = range.Start;
 						
-						if (is_uniform)
+						if (isUniform)
 						{
 							int pos = start;
 							int end = range.End;
 							
 							while (pos < positions[range.EndIndex])
 							{
-								this.SetParagraphMetaProperties (pos, mode, meta_properties);
+								this.SetParagraphMetaProperties (pos, mode, metaProperties);
 								pos = this.FindNextParagraphStart (pos);
 								
 								//	Comme l'application d'un style de paragraphe avec manager peut
@@ -1624,7 +1624,7 @@ again:
 						}
 						else
 						{
-							this.SetMetaProperties (start, range.Length, mode, meta_properties);
+							this.SetMetaProperties (start, range.Length, mode, metaProperties);
 						}
 					}
 					
@@ -1634,22 +1634,22 @@ again:
 			
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
-			if (is_uniform)
+			if (isUniform)
 			{
 				int pos = this.story.GetCursorPosition (this.cursor);
 			
-				this.SetParagraphMetaProperties (pos, mode, meta_properties);
+				this.SetParagraphMetaProperties (pos, mode, metaProperties);
 			}
 
 
 			List<TextStyle> new_styles = new List<TextStyle> ();
 			
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Symbol));
-			new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
+			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
+			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Text));
+			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Symbol));
+			new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.MetaProperty), metaProperties, mode));
 			
-			this.current_styles = new_styles.ToArray ();
+			this.currentStyles = new_styles.ToArray ();
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
@@ -1698,10 +1698,10 @@ again:
 
 				List<Property> new_properties = new List<Property> ();
 				
-				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
-				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.NonUniformOnly));
+				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
+				new_properties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.NonUniformOnly));
 				
-				this.current_properties = new_properties.ToArray ();
+				this.currentProperties = new_properties.ToArray ();
 				
 				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
@@ -1745,10 +1745,10 @@ again:
 
 				List<Property> new_properties = new List<Property> ();
 				
-				new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
-				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.current_properties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
+				new_properties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly));
+				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.currentProperties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
 				
-				this.current_properties = new_properties.ToArray ();
+				this.currentProperties = new_properties.ToArray ();
 				
 				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
@@ -1773,9 +1773,9 @@ again:
 					//	par exemple). Si c'est le cas, il faut déplacer le
 					//	curseur après le texte automatique.
 					
-					this.story.SetCursorPosition (this.temp_cursor, position, direction);
+					this.story.SetCursorPosition (this.tempCursor, position, direction);
 					
-					if (this.GetParagraphManager (this.temp_cursor) != null)
+					if (this.GetParagraphManager (this.tempCursor) != null)
 					{
 						if (this.SkipOverAutoText (ref position, Direction.Forward))
 						{
@@ -1884,9 +1884,9 @@ again:
 				if ((n >= 0) &&
 					(pos[n+0] < pos[n+1]))
 				{
-					this.story.SetCursorPosition (this.temp_cursor, pos[n+1] - 1);
+					this.story.SetCursorPosition (this.tempCursor, pos[n+1] - 1);
 					
-					return this.GetCursorGeometry (this.temp_cursor, out frame, out cx, out cy, out ascender, out descender, out angle);
+					return this.GetCursorGeometry (this.tempCursor, out frame, out cx, out cy, out ascender, out descender, out angle);
 				}
 			}
 			
@@ -1902,7 +1902,7 @@ again:
 			
 			if (this.fitter.GetCursorGeometry (cursor, out frame, out cx, out cy, out para_line, out line_char))
 			{
-				Property[] properties = this.accumulated_properties;
+				Property[] properties = this.accumulatedProperties;
 				
 				if ((this.CursorPosition == this.story.TextLength) &&
 					(para_line == 0) &&
@@ -2046,7 +2046,7 @@ again:
 				//	des textes automatiques.
 
 				if ((this.SkipOverAutoText (ref p2, Direction.Backward)) ||
-					(this.IsAfterManagedParagraph (this.temp_cursor)) ||
+					(this.IsAfterManagedParagraph (this.tempCursor)) ||
 					(p2+1 == this.TextLength))
 				{
 					this.SkipOverAutoText (ref p1, Direction.Backward);
@@ -2061,14 +2061,14 @@ again:
 		
 		public void ClearCurrentStylesAndProperties()
 		{
-			this.current_styles     = null;
-			this.current_properties = null;
+			this.currentStyles     = null;
+			this.currentProperties = null;
 		}
 		
 		public void UpdateCurrentStylesAndPropertiesIfNeeded()
 		{
-			if ((this.current_styles == null) ||
-				(this.current_properties == null))
+			if ((this.currentStyles == null) ||
+				(this.currentProperties == null))
 			{
 				this.UpdateCurrentStylesAndProperties ();
 			}
@@ -2244,8 +2244,8 @@ again:
 				}
 			}
 			
-			this.current_styles     = styles;
-			this.current_properties = properties;
+			this.currentStyles     = styles;
+			this.currentProperties = properties;
 			
 			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
@@ -2322,7 +2322,7 @@ again:
 			
 			int pos = this.story.GetCursorPosition (cursor);
 			
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
 			while (moved < count)
 			{
@@ -2341,7 +2341,7 @@ again:
 				//	l'on n'a pas atterri dans un fragment de texte marqué comme
 				//	étant un texte automatique.
 				
-				System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == pos);
+				System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.tempCursor) == pos);
 				
 				ulong code;
 				
@@ -2350,13 +2350,13 @@ again:
 				
 				if (direction > 0)
 				{
-					code = this.story.ReadChar (this.temp_cursor);
-					this.story.MoveCursor (this.temp_cursor, direction);
+					code = this.story.ReadChar (this.tempCursor);
+					this.story.MoveCursor (this.tempCursor, direction);
 				}
 				else
 				{
-					this.story.MoveCursor (this.temp_cursor, direction);
-					code = this.story.ReadChar (this.temp_cursor);
+					this.story.MoveCursor (this.tempCursor, direction);
+					code = this.story.ReadChar (this.tempCursor);
 				}
 				
 				if (code == 0)
@@ -2392,12 +2392,12 @@ again:
 				
 				if (property_to_skip != null)
 				{
-					int skip = this.SkipOverProperty (this.temp_cursor, property_to_skip, direction);
+					int skip = this.SkipOverProperty (this.tempCursor, property_to_skip, direction);
 					
 					//	Un texte produit par un générateur (ou un texte automatique)
 					//	compte comme un caractère unique pour la navigation.
 					
-					this.story.MoveCursor (this.temp_cursor, skip);
+					this.story.MoveCursor (this.tempCursor, skip);
 					
 					pos   += skip;
 					moved += 1;
@@ -2411,8 +2411,8 @@ again:
 			if ((moved > 0) &&
 				(direction > 0))
 			{
-				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, 0, direction) && ! Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, 0)) ||
-					(Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0)))
+				if ((Internal.Navigator.IsLineEnd (this.story, this.fitter, this.tempCursor, 0, direction) && ! Internal.Navigator.IsParagraphEnd (this.story, this.tempCursor, 0)) ||
+					(Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, 0)))
 				{
 					//	Si nous avons atteint la fin d'une ligne de texte en marche avant,
 					//	on prétend que l'on se trouve au début de la ligne suivante; si on
@@ -2445,7 +2445,7 @@ again:
 			System.Diagnostics.Debug.Assert (count >= 0);
 			System.Diagnostics.Debug.Assert ((direction == Direction.Backward) || (direction == Direction.Forward));
 			
-			this.story.SetCursorPosition (this.temp_cursor, old_pos);
+			this.story.SetCursorPosition (this.tempCursor, old_pos);
 			
 			if (direction == Direction.Forward)
 			{
@@ -2522,13 +2522,13 @@ again:
 				{
 					this.InternalInsertText (string.Concat (args[i], System.Char.ToString ((char) Unicode.Code.ParagraphSeparator)));
 					
-					if ((this.current_styles != null) &&
-						(this.current_styles.Length > 0) &&
-						(this.current_styles[0].NextStyle != null) &&
-						(this.current_styles[0].NextStyle != this.current_styles[0]) &&
+					if ((this.currentStyles != null) &&
+						(this.currentStyles.Length > 0) &&
+						(this.currentStyles[0].NextStyle != null) &&
+						(this.currentStyles[0].NextStyle != this.currentStyles[0]) &&
 						(Internal.Navigator.IsParagraphEnd (this.story, this.cursor, 0)))
 					{
-						this.SetParagraphStyles (this.current_styles[0].NextStyle);
+						this.SetParagraphStyles (this.currentStyles[0].NextStyle);
 					}
 				}
 				
@@ -2547,7 +2547,7 @@ again:
 			//	ment de style du paragraphe fragmentaire (le dernier morceau de
 			//	paragraphe hérite du style du premier paragraphe).
 			
-			System.Diagnostics.Debug.Assert (this.temp_cursor != cursor);
+			System.Diagnostics.Debug.Assert (this.tempCursor != cursor);
 			
 			ulong[] text = new ulong[length];
 			this.story.ReadText (cursor, length, text);
@@ -2575,7 +2575,7 @@ again:
 					
 					count++;
 					
-					this.story.SetCursorPosition (this.temp_cursor, start);
+					this.story.SetCursorPosition (this.tempCursor, start);
 					
 					Range range;
 					
@@ -2586,7 +2586,7 @@ again:
 						
 						range = new Range (start, pos+i - start + 1);
 						
-						IParagraphManager manager = this.GetParagraphManager (this.temp_cursor);
+						IParagraphManager manager = this.GetParagraphManager (this.tempCursor);
 						
 						if (manager != null)
 						{
@@ -2631,9 +2631,9 @@ again:
 				
 					if (this.SkipOverAutoText (ref fence, Direction.Backward))
 					{
-						this.story.SetCursorPosition (this.temp_cursor, fence);
+						this.story.SetCursorPosition (this.tempCursor, fence);
 					
-						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.temp_cursor) == fence);
+						System.Diagnostics.Debug.Assert (this.story.GetCursorPosition (this.tempCursor) == fence);
 						System.Diagnostics.Debug.Assert (this.IsParagraphStart (0, Direction.Backward));
 						
 						goto process_ranges;
@@ -2646,9 +2646,9 @@ again:
 					//	managed paragraph, on commence par le transformer en un
 					//	paragraphe normal; ça simplifie ensuite la fusion.
 					
-					this.story.SetCursorPosition (this.temp_cursor, start);
+					this.story.SetCursorPosition (this.tempCursor, start);
 					
-					IParagraphManager manager = this.GetParagraphManager (this.temp_cursor);
+					IParagraphManager manager = this.GetParagraphManager (this.tempCursor);
 					
 					if (manager != null)
 					{
@@ -2682,8 +2682,8 @@ process_ranges:
 					range.End = fence;
 				}
 				
-				this.story.SetCursorPosition (this.temp_cursor, range.Start);
-				this.story.DeleteText (this.temp_cursor, range.Length);
+				this.story.SetCursorPosition (this.tempCursor, range.Start);
+				this.story.DeleteText (this.tempCursor, range.Length);
 			}
 			
 			if (fix_up)
@@ -2695,14 +2695,14 @@ process_ranges:
 				TextStyle[] styles;
 				Property[]  props;
 				
-				Internal.Navigator.GetParagraphStyles (this.story, this.temp_cursor, -1, out styles);
-				Internal.Navigator.GetParagraphProperties (this.story, this.temp_cursor, -1, out props);
+				Internal.Navigator.GetParagraphStyles (this.story, this.tempCursor, -1, out styles);
+				Internal.Navigator.GetParagraphProperties (this.story, this.tempCursor, -1, out props);
 				
 				if (styles == null) styles = new TextStyle[0];
 				if (props == null)  props  = new Property[0];
 				
-				Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
-				Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, Properties.ApplyMode.Overwrite, props);
+				Internal.Navigator.SetParagraphStyles (this.story, this.tempCursor, styles);
+				Internal.Navigator.SetParagraphProperties (this.story, this.tempCursor, Properties.ApplyMode.Overwrite, props);
 			}
 			
 			
@@ -2710,8 +2710,8 @@ process_ranges:
 			//	différente de ce qu'il avait avant. Il faut mettre à jour juste la
 			//	partie "paragraphe" du style et des propriétés...
 			
-			Property[]  old_properties = this.current_properties;
-			TextStyle[] old_styles     = this.current_styles;
+			Property[]  old_properties = this.currentProperties;
+			TextStyle[] old_styles     = this.currentStyles;
 			
 			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (old_properties) == false);
 			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (old_properties) == false);
@@ -2724,19 +2724,19 @@ process_ranges:
 			List<TextStyle> new_styles     = new List<TextStyle> ();
 			List<Property>  new_properties = new List<Property> ();
 			
-			new_styles.AddRange (TextStyle.FilterStyles (this.current_styles, TextStyleClass.Paragraph));
+			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
 			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
 			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Symbol));
 			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
 			
-			new_properties.AddRange (Property.Filter (this.current_properties, Properties.PropertyFilter.UniformOnly));
+			new_properties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly));
 			new_properties.AddRange (Property.Filter (old_properties, Properties.PropertyFilter.NonUniformOnly));
 			
 			//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
 			//	concerne le texte, mais conserve les réglages du paragraphe en cours.
 			
-			this.current_styles     = new_styles.ToArray ();
-			this.current_properties = new_properties.ToArray ();
+			this.currentStyles     = new_styles.ToArray ();
+			this.currentProperties = new_properties.ToArray ();
 			
 			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
@@ -2747,7 +2747,7 @@ process_ranges:
 			
 			if (count > 0)
 			{
-				Properties.ManagedParagraphProperty[] mpps = Properties.ManagedParagraphProperty.Filter (this.accumulated_properties);
+				Properties.ManagedParagraphProperty[] mpps = Properties.ManagedParagraphProperty.Filter (this.accumulatedProperties);
 				
 				if (mpps.Length > 0)
 				{
@@ -2758,10 +2758,10 @@ process_ranges:
 					
 					System.Diagnostics.Debug.Assert (manager != null, string.Format ("Cannot find ParagraphManager '{0}'", mpp.ManagerName));
 					
-					this.story.SetCursorPosition (this.temp_cursor, this.CursorPosition);
-					this.story.MoveCursor (this.temp_cursor, Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor));
+					this.story.SetCursorPosition (this.tempCursor, this.CursorPosition);
+					this.story.MoveCursor (this.tempCursor, Internal.Navigator.GetParagraphStartOffset (this.story, this.tempCursor));
 					
-					manager.RefreshParagraph (this.story, this.temp_cursor, mpp);
+					manager.RefreshParagraph (this.story, this.tempCursor, mpp);
 				}
 			}
 		}
@@ -2947,12 +2947,12 @@ process_ranges:
 		
 		protected bool IsParagraphStart(int offset, Direction direction)
 		{
-			return Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, offset);
+			return Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, offset);
 		}
 		
 		protected bool IsParagraphEnd(int offset, Direction direction)
 		{
-			return Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset);
+			return Internal.Navigator.IsParagraphEnd (this.story, this.tempCursor, offset);
 		}
 		
 		protected bool IsWordStart(int offset, Direction direction)
@@ -2960,21 +2960,21 @@ process_ranges:
 			//	Si nous sommes à la fin d'un paragraphe, nous considérons que
 			//	c'est une frontière de mot :
 			
-			if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
+			if (Internal.Navigator.IsParagraphEnd (this.story, this.tempCursor, offset))
 			{
 				return true;
 			}
-			if ((this.IsAfterAutoText (this.temp_cursor, offset)) &&
-				(this.IsAfterAutoText (this.temp_cursor, offset+1) == false))
+			if ((this.IsAfterAutoText (this.tempCursor, offset)) &&
+				(this.IsAfterAutoText (this.tempCursor, offset+1) == false))
 			{
 				return true;
 			}
-			if (this.IsAfterAutoText (this.temp_cursor, offset+1))
+			if (this.IsAfterAutoText (this.tempCursor, offset+1))
 			{
 				return false;
 			}
 			
-			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
+			return Internal.Navigator.IsWordStart (this.story, this.tempCursor, offset);
 		}
 		
 		protected bool IsWordEnd(int offset, Direction direction)
@@ -2982,7 +2982,7 @@ process_ranges:
 			//	Si nous sommes à la fin d'un paragraphe nous sommes déjà à
 			//	une fin de mot :
 			
-			if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
+			if (Internal.Navigator.IsParagraphEnd (this.story, this.tempCursor, offset))
 			{
 				return true;
 			}
@@ -2990,7 +2990,7 @@ process_ranges:
 			//	On détermine que la fin d'un mot est la même chose que le début
 			//	du mot suivant, pour la navigation :
 			
-			return Internal.Navigator.IsWordStart (this.story, this.temp_cursor, offset);
+			return Internal.Navigator.IsWordStart (this.story, this.tempCursor, offset);
 		}
 		
 		protected bool IsLineStart(int offset, Direction direction)
@@ -2999,7 +2999,7 @@ process_ranges:
 			{
 				return true;
 			}
-			if (this.IsAfterAutoText (this.temp_cursor, offset))
+			if (this.IsAfterAutoText (this.tempCursor, offset))
 			{
 				return true;
 			}
@@ -3013,11 +3013,11 @@ process_ranges:
 			{
 				return true;
 			}
-			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.temp_cursor, offset, (int) direction))
+			if (Internal.Navigator.IsLineStart (this.story, this.fitter, this.tempCursor, offset, (int) direction))
 			{
 				return true;
 			}
-			if (Internal.Navigator.IsAfterLineBreak (this.story, this.temp_cursor, offset))
+			if (Internal.Navigator.IsAfterLineBreak (this.story, this.tempCursor, offset))
 			{
 				return true;
 			}
@@ -3031,11 +3031,11 @@ process_ranges:
 			{
 				return true;
 			}
-			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.temp_cursor, offset, (int) direction))
+			if (Internal.Navigator.IsLineEnd (this.story, this.fitter, this.tempCursor, offset, (int) direction))
 			{
 				return true;
 			}
-			if (Internal.Navigator.IsAfterLineBreak (this.story, this.temp_cursor, offset+1))
+			if (Internal.Navigator.IsAfterLineBreak (this.story, this.tempCursor, offset+1))
 			{
 				return true;
 			}
@@ -3059,11 +3059,11 @@ process_ranges:
 					this.story.TextContext.TabList.Changed -= this.HandleTabListChanged;
 					
 					this.story.RecycleCursor (this.cursor);
-					this.story.RecycleCursor (this.temp_cursor);
+					this.story.RecycleCursor (this.tempCursor);
 					
 					this.story  = null;
 					this.cursor = null;
-					this.temp_cursor = null;
+					this.tempCursor = null;
 				}
 			}
 		}
@@ -3074,73 +3074,73 @@ process_ranges:
 			//	Pour modifier le style d'un paragraphe, il faut se placer au début
 			//	du paragraphe :
 			
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.tempCursor);
 			
-			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			this.story.SetCursorPosition (this.tempCursor, pos + start);
 			
-			Internal.Navigator.SetParagraphStyles (this.story, this.temp_cursor, styles);
+			Internal.Navigator.SetParagraphStyles (this.story, this.tempCursor, styles);
 		}
 		
 		private void SetParagraphProperties(int pos, Properties.ApplyMode mode, Property[] properties)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.tempCursor);
 			
-			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			this.story.SetCursorPosition (this.tempCursor, pos + start);
 			
-			Internal.Navigator.SetParagraphProperties (this.story, this.temp_cursor, mode, properties);
+			Internal.Navigator.SetParagraphProperties (this.story, this.tempCursor, mode, properties);
 		}
 		
 		private void SetTextStyles(int pos, int length, TextStyle[] styles)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			Internal.Navigator.SetTextStyles (this.story, this.temp_cursor, length, styles);
+			Internal.Navigator.SetTextStyles (this.story, this.tempCursor, length, styles);
 		}
 		
 		private void SetSymbolStyles(int pos, int length, TextStyle[] styles)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			Internal.Navigator.SetSymbolStyles (this.story, this.temp_cursor, length, styles);
+			Internal.Navigator.SetSymbolStyles (this.story, this.tempCursor, length, styles);
 		}
 		
 		private void SetTextProperties(int pos, int length, Properties.ApplyMode mode, Property[] properties)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			Internal.Navigator.SetTextProperties (this.story, this.temp_cursor, length, mode, properties);
+			Internal.Navigator.SetTextProperties (this.story, this.tempCursor, length, mode, properties);
 		}
 		
 		private void SetMetaProperties(int pos, int length, Properties.ApplyMode mode, TextStyle[] meta_properties)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			Internal.Navigator.SetMetaProperties (this.story, this.temp_cursor, length, mode, meta_properties);
+			Internal.Navigator.SetMetaProperties (this.story, this.tempCursor, length, mode, meta_properties);
 		}
 		
 		private void SetParagraphMetaProperties(int pos, Properties.ApplyMode mode, TextStyle[] meta_properties)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.temp_cursor);
+			int start = Internal.Navigator.GetParagraphStartOffset (this.story, this.tempCursor);
 			
-			this.story.SetCursorPosition (this.temp_cursor, pos + start);
+			this.story.SetCursorPosition (this.tempCursor, pos + start);
 			
-			Internal.Navigator.SetParagraphMetaProperties (this.story, this.temp_cursor, mode, meta_properties);
+			Internal.Navigator.SetParagraphMetaProperties (this.story, this.tempCursor, mode, meta_properties);
 		}
 		
 		
 		private void RefreshFilterCurrentProperties ()
 		{
-			System.Diagnostics.Debug.Assert (this.current_properties != null);
+			System.Diagnostics.Debug.Assert (this.currentProperties != null);
 
 			List<Property> list = new List<Property> ();
 			
-			foreach (Property property in this.current_properties)
+			foreach (Property property in this.currentProperties)
 			{
 				switch (property.WellKnownType)
 				{
@@ -3153,9 +3153,9 @@ process_ranges:
 				}
 			}
 			
-			if (list.Count < this.current_properties.Length)
+			if (list.Count < this.currentProperties.Length)
 			{
-				this.current_properties = list.ToArray ();
+				this.currentProperties = list.ToArray ();
 			}
 		}
 		
@@ -3164,9 +3164,9 @@ process_ranges:
 			Styles.PropertyContainer.Accumulator current_accumulator = new Styles.PropertyContainer.Accumulator ();
 			
 			current_accumulator.SkipSymbolProperties = true;
-			current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.current_styles, this.current_properties));
+			current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.currentStyles, this.currentProperties));
 
-			this.accumulated_properties = current_accumulator.AccumulatedProperties;
+			this.accumulatedProperties = current_accumulator.AccumulatedProperties;
 			
 			//	Génère une "empreinte" des styles et propriétés actifs, ce qui va
 			//	permettre de déterminer si les réglages ont changé depuis la dernière
@@ -3174,15 +3174,15 @@ process_ranges:
 			
 			System.Text.StringBuilder fingerprint = new System.Text.StringBuilder ();
 			
-			for (int i = 0; i < this.accumulated_properties.Length; i++)
+			for (int i = 0; i < this.accumulatedProperties.Length; i++)
 			{
 				//	Vérifie qu'aucune propriété AutoText ou Generator n'est venue
 				//	se glisser dans la liste des propriétés accumulées :
 				
-				System.Diagnostics.Debug.Assert (this.accumulated_properties[i].WellKnownType != Properties.WellKnownType.AutoText);
-				System.Diagnostics.Debug.Assert (this.accumulated_properties[i].WellKnownType != Properties.WellKnownType.Generator);
+				System.Diagnostics.Debug.Assert (this.accumulatedProperties[i].WellKnownType != Properties.WellKnownType.AutoText);
+				System.Diagnostics.Debug.Assert (this.accumulatedProperties[i].WellKnownType != Properties.WellKnownType.Generator);
 				
-				fingerprint.Append (this.accumulated_properties[i].ToString ());
+				fingerprint.Append (this.accumulatedProperties[i].ToString ());
 			}
 			
 			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
@@ -3217,13 +3217,13 @@ process_ranges:
 		
 		private int FindNextParagraphStart(int pos)
 		{
-			this.story.SetCursorPosition (this.temp_cursor, pos);
+			this.story.SetCursorPosition (this.tempCursor, pos);
 			
 			int max = this.story.TextLength;
 			
 			for (int offset = 0; pos + offset < max; offset++)
 			{
-				if (Internal.Navigator.IsParagraphEnd (this.story, this.temp_cursor, offset))
+				if (Internal.Navigator.IsParagraphEnd (this.story, this.tempCursor, offset))
 				{
 					return pos + offset + 1;
 				}
@@ -3344,14 +3344,14 @@ process_ranges:
 				starts.Push (pos);
 			}
 			
-			this.story.ConvertToStyledText (text, this.current_styles, this.current_properties, out styled_text);
+			this.story.ConvertToStyledText (text, this.currentStyles, this.currentProperties, out styled_text);
 			this.story.InsertText (this.cursor, styled_text);
 			
 			//	Si le texte inséré contient un saut de paragraphe et que le style
 			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
 			//	l'ajout de texte automatique, il faut encore générer le texte auto.
 			
-			Properties.ManagedParagraphProperty[] mpps = Properties.ManagedParagraphProperty.Filter (this.accumulated_properties);
+			Properties.ManagedParagraphProperty[] mpps = Properties.ManagedParagraphProperty.Filter (this.accumulatedProperties);
 			
 			if (mpps.Length > 0)
 			{
@@ -3384,9 +3384,9 @@ process_ranges:
 					{
 						pos = (int) starts.Pop ();
 						
-						this.story.SetCursorPosition (this.temp_cursor, pos);
+						this.story.SetCursorPosition (this.tempCursor, pos);
 						
-						manager.AttachToParagraph (this.story, this.temp_cursor, mpp);
+						manager.AttachToParagraph (this.story, this.tempCursor, mpp);
 					}
 				}
 			}
@@ -3405,7 +3405,7 @@ process_ranges:
 			
 //-			System.Diagnostics.Debug.WriteLine (string.Format ("Pos: {0}, dir: {1}\n{2}", new_pos, new_dir, this.story.GetDebugAllStyledText ()));
 			
-			this.story.SetCursorPosition (this.temp_cursor, new_pos, new_dir);
+			this.story.SetCursorPosition (this.tempCursor, new_pos, new_dir);
 #if false
 			if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))
 			{
@@ -3419,20 +3419,20 @@ process_ranges:
 				}
 			}
 #endif
-			if (Internal.Navigator.IsEndOfText (this.story, this.temp_cursor, -1))
+			if (Internal.Navigator.IsEndOfText (this.story, this.tempCursor, -1))
 			{
 				//	Le curseur est au-delà de la fin du texte; il faut le ramener
 				//	juste avant le caractère marqueur de la fin du texte :
 				
 				new_pos -= 1;
-				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, -1) ? -1 : 1;
+				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, -1) ? -1 : 1;
 			}
-			else if (Internal.Navigator.IsEndOfText (this.story, this.temp_cursor, 0))
+			else if (Internal.Navigator.IsEndOfText (this.story, this.tempCursor, 0))
 			{
 				//	Le curseur est exactement sur la fin du texte; il faut déterminer
 				//	la direction à utiliser :
 				
-				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0) ? -1 : 1;
+				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, 0) ? -1 : 1;
 			}
 			
 			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
@@ -3480,17 +3480,17 @@ process_ranges:
 		
 		private void InternalClearSelection()
 		{
-			if (this.selection_cursors != null)
+			if (this.selectionCursors != null)
 			{
-				foreach (Cursors.SelectionCursor cursor in this.selection_cursors)
+				foreach (Cursors.SelectionCursor cursor in this.selectionCursors)
 				{
 					this.RecycleSelectionCursor (cursor);
 				}
 				
-				this.selection_cursors.Clear ();
-				this.selection_cursors = null;
+				this.selectionCursors.Clear ();
+				this.selectionCursors = null;
 				
-				this.active_selection_cursor = null;
+				this.activeSelectionCursor = null;
 			}
 			
 			System.Diagnostics.Debug.Assert (this.HasSelection == false);
@@ -3507,8 +3507,8 @@ process_ranges:
 				Cursors.SelectionCursor c1 = this.NewSelectionCursor ();
 				Cursors.SelectionCursor c2 = this.NewSelectionCursor ();
 				
-				this.selection_cursors.Add (c1);
-				this.selection_cursors.Add (c2);
+				this.selectionCursors.Add (c1);
+				this.selectionCursors.Add (c2);
 				
 				this.story.SetCursorPosition (c1, positions[i+0]);
 				this.story.SetCursorPosition (c2, positions[i+1]);
@@ -3605,9 +3605,9 @@ process_ranges:
 					//	Important de faire le SetCursorPosition ici; c'est un effet
 					//	de bord dont certaines méthodes dépendent !
 					
-					this.story.SetCursorPosition (this.temp_cursor, pos);
+					this.story.SetCursorPosition (this.tempCursor, pos);
 					
-					ulong code = this.story.ReadChar (this.temp_cursor);
+					ulong code = this.story.ReadChar (this.tempCursor);
 					
 					if (code == 0)
 					{
@@ -3627,7 +3627,7 @@ process_ranges:
 					System.Diagnostics.Debug.Assert (property != null);
 					System.Diagnostics.Debug.Assert (property.Tag != null);
 					
-					pos += this.SkipOverProperty (this.temp_cursor, property, 1);
+					pos += this.SkipOverProperty (this.tempCursor, property, 1);
 					hit  = true;
 				}
 			}
@@ -3638,14 +3638,14 @@ process_ranges:
 					//	Important de faire le SetCursorPosition ici; c'est un effet
 					//	de bord dont certaines méthodes dépendent !
 					
-					this.story.SetCursorPosition (this.temp_cursor, pos);
+					this.story.SetCursorPosition (this.tempCursor, pos);
 					
 					if (pos == 0)
 					{
 						break;
 					}
 					
-					ulong code = this.story.ReadChar (this.temp_cursor, -1);
+					ulong code = this.story.ReadChar (this.tempCursor, -1);
 					
 					//	Gère le déplacement par-dessus la section AutoText, s'il y en a
 					//	une :
@@ -3660,7 +3660,7 @@ process_ranges:
 					System.Diagnostics.Debug.Assert (property != null);
 					System.Diagnostics.Debug.Assert (property.Tag != null);
 					
-					pos += this.SkipOverProperty (this.temp_cursor, property, -1);
+					pos += this.SkipOverProperty (this.tempCursor, property, -1);
 					hit  = true;
 				}
 			}
@@ -3669,7 +3669,7 @@ process_ranges:
 				//	Important de faire le SetCursorPosition ici; c'est un effet
 				//	de bord dont certaines méthodes dépendent !
 				
-				this.story.SetCursorPosition (this.temp_cursor, pos);
+				this.story.SetCursorPosition (this.tempCursor, pos);
 			}
 			
 			return hit;
@@ -3682,9 +3682,9 @@ process_ranges:
 			//	encore des zombies, on les retourne à la vie plutôt que de
 			//	créer de nouveaux curseurs.
 			
-			if (this.selection_cursors == null)
+			if (this.selectionCursors == null)
 			{
-				this.selection_cursors = new List<Cursors.SelectionCursor> ();
+				this.selectionCursors = new List<Cursors.SelectionCursor> ();
 			}
 			
 			Cursors.SelectionCursor cursor = new Cursors.SelectionCursor ();
@@ -3728,17 +3728,17 @@ process_ranges:
 		{
 			int[] positions;
 			
-			if (this.selection_cursors == null)
+			if (this.selectionCursors == null)
 			{
 				positions = new int[0];
 			}
 			else
 			{
-				positions = new int[this.selection_cursors.Count];
+				positions = new int[this.selectionCursors.Count];
 				
-				for (int i = 0; i < this.selection_cursors.Count; i++)
+				for (int i = 0; i < this.selectionCursors.Count; i++)
 				{
-					ICursor cursor = this.selection_cursors[i];
+					ICursor cursor = this.selectionCursors[i];
 					
 					positions[i] = this.story.GetCursorPosition (cursor);
 				}
@@ -4086,14 +4086,14 @@ process_ranges:
 		private TextStory						story;
 		private TextFitter						fitter;
 		private Cursors.SimpleCursor			cursor;
-		private Cursors.TempCursor				temp_cursor;
-		private Cursors.SelectionCursor			active_selection_cursor;
-		private List<Cursors.SelectionCursor>	selection_cursors;
-		private int[]							selection_before;
+		private Cursors.TempCursor				tempCursor;
+		private Cursors.SelectionCursor			activeSelectionCursor;
+		private List<Cursors.SelectionCursor>	selectionCursors;
+		private int[]							selectionBefore;
 		
-		private TextStyle[]						current_styles;
-		private Property[]						current_properties;
-		private Property[]						accumulated_properties;
+		private TextStyle[]						currentStyles;
+		private Property[]						currentProperties;
+		private Property[]						accumulatedProperties;
 		private string							accumulated_properties_fingerprint;
 		private string							accumulated_tab_info_fingerprint;
 		

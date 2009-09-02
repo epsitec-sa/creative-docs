@@ -272,12 +272,12 @@ namespace Epsitec.Common.Text
 			
 			if (index < result.Length)
 			{
-				uint[] old_result = result;
-				uint[] new_result = new uint[index];
+				uint[] oldResult = result;
+				uint[] newResult = new uint[index];
 				
-				System.Buffer.BlockCopy (old_result, 0, new_result, 0, index*4);
+				System.Buffer.BlockCopy (oldResult, 0, newResult, 0, index*4);
 				
-				result = new_result;
+				result = newResult;
 			}
 		}
 		
@@ -345,12 +345,12 @@ namespace Epsitec.Common.Text
 			
 			if (index < result.Length)
 			{
-				ulong[] old_result = result;
-				ulong[] new_result = new ulong[index];
+				ulong[] oldResult = result;
+				ulong[] newResult = new ulong[index];
 				
-				System.Buffer.BlockCopy (old_result, 0, new_result, 0, index*8);
+				System.Buffer.BlockCopy (oldResult, 0, newResult, 0, index*8);
 				
-				result = new_result;
+				result = newResult;
 			}
 		}
 	}

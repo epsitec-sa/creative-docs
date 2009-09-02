@@ -880,44 +880,44 @@ namespace Epsitec.Common.Text
 		
 		public void GetConditions(ulong code, out Properties.ConditionalProperty[] properties, out bool summary)
 		{
-			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
-			long current_style_version = this.styleList.Version;
+			int  currentStyleIndex   = Internal.CharMarker.GetCoreIndex (code);
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_condition_last_style_version != current_style_version) ||
-				(this.get_condition_last_style_index   != current_style_index))
+			if ((this.getConditionLastStyleVersion != currentStyleVersion) ||
+				(this.getConditionLastStyleIndex   != currentStyleIndex))
 			{
-				Styles.CoreSettings core_settings = this.styleList.GetCoreFromIndex (current_style_index);
+				Styles.CoreSettings coreSettings = this.styleList.GetCoreFromIndex (currentStyleIndex);
 				
-				Property[] props = core_settings.FindProperties (Properties.WellKnownType.Conditional);
+				Property[] props = coreSettings.FindProperties (Properties.WellKnownType.Conditional);
 				
-				this.get_condition_last_style_version = current_style_version;
-				this.get_condition_last_style_index   = current_style_index;
-				this.get_condition_last_properties    = props;
+				this.getConditionLastStyleVersion = currentStyleVersion;
+				this.getConditionLastStyleIndex   = currentStyleIndex;
+				this.getConditionLastProperties    = props;
 				
 				bool ok = true;
 				
-				foreach (Properties.ConditionalProperty condition_p in props)
+				foreach (Properties.ConditionalProperty conditionP in props)
 				{
-					bool is_true = this.conditions.Contains (condition_p.Condition);
-					bool show_if = condition_p.ShowIfTrue;
+					bool isTrue = this.conditions.Contains (conditionP.Condition);
+					bool showIf = conditionP.ShowIfTrue;
 					
-					if ((show_if && !is_true) ||
-						(!show_if && is_true))
+					if ((showIf && !isTrue) ||
+						(!showIf && isTrue))
 					{
 						ok = false;
 						break;
 					}
 				}
 				
-				this.get_condition_last_summary = ok;
+				this.getConditionLastSummary = ok;
 			}
 			
-			if (this.get_condition_last_properties.Length > 0)
+			if (this.getConditionLastProperties.Length > 0)
 			{
-				summary    = this.get_condition_last_summary;
-				properties = new Properties.ConditionalProperty[this.get_condition_last_properties.Length];
+				summary    = this.getConditionLastSummary;
+				properties = new Properties.ConditionalProperty[this.getConditionLastProperties.Length];
 				
-				this.get_condition_last_properties.CopyTo (properties, 0);
+				this.getConditionLastProperties.CopyTo (properties, 0);
 			}
 			else
 			{
@@ -931,19 +931,19 @@ namespace Epsitec.Common.Text
 		{
 			if (this.IsPropertiesPropertyEnabled)
 			{
-				int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
-				long current_style_version = this.styleList.Version;
+				int  currentStyleIndex   = Internal.CharMarker.GetCoreIndex (code);
+				long currentStyleVersion = this.styleList.Version;
 				
-				if ((this.get_properties_last_style_version != current_style_version) ||
-					(this.get_properties_last_style_index   != current_style_index))
+				if ((this.getPropertiesLastStyleVersion != currentStyleVersion) ||
+					(this.getPropertiesLastStyleIndex   != currentStyleIndex))
 				{
-					Styles.CoreSettings core_settings = this.styleList.GetCoreFromIndex (current_style_index);
+					Styles.CoreSettings coreSettings = this.styleList.GetCoreFromIndex (currentStyleIndex);
 					
-					Properties.PropertiesProperty props = core_settings == null ? null : core_settings[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
+					Properties.PropertiesProperty props = coreSettings == null ? null : coreSettings[Properties.WellKnownType.Properties] as Properties.PropertiesProperty;
 					
 					if (props == null)
 					{
-						this.get_properties_last_properties = new Property[0];
+						this.getPropertiesLastProperties = new Property[0];
 					}
 					else
 					{
@@ -951,20 +951,20 @@ namespace Epsitec.Common.Text
 						
 						if (serialized.Length > 0)
 						{
-							this.get_properties_last_properties = Properties.PropertiesProperty.DeserializePropertiesFromStringArray (this, serialized);
+							this.getPropertiesLastProperties = Properties.PropertiesProperty.DeserializePropertiesFromStringArray (this, serialized);
 						}
 						else
 						{
-							this.get_properties_last_properties = new Property[0];
+							this.getPropertiesLastProperties = new Property[0];
 						}
 					}
 					
-					this.get_properties_last_style_version = current_style_version;
-					this.get_properties_last_style_index   = current_style_index;
+					this.getPropertiesLastStyleVersion = currentStyleVersion;
+					this.getPropertiesLastStyleIndex   = currentStyleIndex;
 				}
 				
-				properties = new Property[this.get_properties_last_properties.Length];
-				this.get_properties_last_properties.CopyTo (properties, 0);
+				properties = new Property[this.getPropertiesLastProperties.Length];
+				this.getPropertiesLastProperties.CopyTo (properties, 0);
 			}
 			else
 			{
@@ -982,25 +982,25 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractCoreAndExtraSettings (code);
 			
-			long current_style_version = this.styleList.Version;
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_styles_last_style_version != current_style_version) ||
-				(this.get_styles_last_style_code    != code))
+			if ((this.getStylesLastStyleVersion != currentStyleVersion) ||
+				(this.getStylesLastStyleCode    != code))
 			{
-				Styles.CoreSettings       core_settings = this.styleList[code];
+				Styles.CoreSettings       coreSettings = this.styleList[code];
 				Properties.StylesProperty props;
 				
-				if (core_settings == null)
+				if (coreSettings == null)
 				{
 					props = null;
 				}
 				else
 				{
-					props = core_settings[Properties.WellKnownType.Styles] as Properties.StylesProperty;
+					props = coreSettings[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 					
 					if (props == null)
 					{
-						Styles.ExtraSettings extra = core_settings.GetExtraSettings (code);
+						Styles.ExtraSettings extra = coreSettings.GetExtraSettings (code);
 						props = extra[Properties.WellKnownType.Styles] as Properties.StylesProperty;
 					}
 				}
@@ -1014,13 +1014,13 @@ namespace Epsitec.Common.Text
 					styles = props.GetTextStyles (this);
 				}
 				
-				this.get_styles_last_styles        = styles;
-				this.get_styles_last_style_version = current_style_version;
-				this.get_styles_last_style_code    = code;
+				this.getStylesLastStyles        = styles;
+				this.getStylesLastStyleVersion = currentStyleVersion;
+				this.getStylesLastStyleCode    = code;
 			}
 			
-			styles = new TextStyle[this.get_styles_last_styles.Length];
-			this.get_styles_last_styles.CopyTo (styles, 0);
+			styles = new TextStyle[this.getStylesLastStyles.Length];
+			this.getStylesLastStyles.CopyTo (styles, 0);
 		}
 		
 		
@@ -1212,7 +1212,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal void GetFlatProperties(System.Collections.ICollection text_styles, out TextStyle[] styles, out Property[] properties)
+		internal void GetFlatProperties(System.Collections.ICollection textStyles, out TextStyle[] styles, out Property[] properties)
 		{
 			//	Retourne les propriétés définies par une collection de styles.
 			//	Retourne aussi les styles sous la forme d'un tableau trié.
@@ -1222,8 +1222,8 @@ namespace Epsitec.Common.Text
 			//	Trie les styles selon leur priorité, avant de les convertir en
 			//	propriétés :
 			
-			styles = new TextStyle[text_styles.Count];
-			text_styles.CopyTo (styles, 0);
+			styles = new TextStyle[textStyles.Count];
+			textStyles.CopyTo (styles, 0);
 			System.Array.Sort (styles, TextStyle.Comparer);
 			
 			//	Les diverses propriétés des styles passés en entrée sont
@@ -1260,13 +1260,13 @@ namespace Epsitec.Common.Text
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			Property[] all_properties;
+			Property[] allProperties;
 			
 #if true
-			this.GetLocalAndExtraSettingsProperties (code, out all_properties);
+			this.GetLocalAndExtraSettingsProperties (code, out allProperties);
 			this.GetStyles (code, out styles);
 			
-			foreach (Property property in all_properties)
+			foreach (Property property in allProperties)
 			{
 				if (property.PropertyType == Properties.PropertyType.LocalSetting)
 				{
@@ -1294,15 +1294,15 @@ namespace Epsitec.Common.Text
 				}
 			}
 #else
-			this.GetAllProperties (code, out all_properties);
+			this.GetAllProperties (code, out allProperties);
 			this.GetStyles (code, out styles);
 			
-			Property[] style_properties;
+			Property[] styleProperties;
 			
-			this.GetFlatProperties (styles, out styles, out style_properties);
-			this.AccumulateProperties (style_properties, out style_properties);
+			this.GetFlatProperties (styles, out styles, out styleProperties);
+			this.AccumulateProperties (styleProperties, out styleProperties);
 			
-			foreach (Property pp in all_properties)
+			foreach (Property pp in allProperties)
 			{
 				if ((pp.WellKnownType == Properties.WellKnownType.Properties) ||
 					(pp.WellKnownType == Properties.WellKnownType.Styles))
@@ -1312,9 +1312,9 @@ namespace Epsitec.Common.Text
 				
 				bool skip = false;
 				
-				for (int i = 0; i < style_properties.Length; i++)
+				for (int i = 0; i < styleProperties.Length; i++)
 				{
-					Property sp = style_properties[i];
+					Property sp = styleProperties[i];
 					
 					if (sp != null)
 					{
@@ -1324,7 +1324,7 @@ namespace Epsitec.Common.Text
 							{
 								if (Property.CompareEqualContents (pp, sp))
 								{
-									style_properties[i] = null;
+									styleProperties[i] = null;
 									skip = true;
 									break;
 								}
@@ -1343,11 +1343,11 @@ namespace Epsitec.Common.Text
 			properties = (Property[]) list.ToArray (typeof (Property));
 		}
 		
-		internal void AccumulateProperties(System.Collections.ICollection text_properties, out Property[] properties)
+		internal void AccumulateProperties(System.Collections.ICollection textProperties, out Property[] properties)
 		{
 			Styles.PropertyContainer.Accumulator accumulator = new Styles.PropertyContainer.Accumulator ();
 			
-			foreach (Property property in text_properties)
+			foreach (Property property in textProperties)
 			{
 				accumulator.Accumulate (property);
 			}
@@ -1358,81 +1358,81 @@ namespace Epsitec.Common.Text
 		
 		public void GetLeading(ulong code, out Properties.LeadingProperty property)
 		{
-			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
-			long current_style_version = this.styleList.Version;
+			int  currentStyleIndex   = Internal.CharMarker.GetCoreIndex (code);
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_leading_last_style_version == current_style_version) &&
-				(this.get_leading_last_style_index   == current_style_index))
+			if ((this.getLeadingLastStyleVersion == currentStyleVersion) &&
+				(this.getLeadingLastStyleIndex   == currentStyleIndex))
 			{
-				property = this.get_leading_last_property;
+				property = this.getLeadingLastProperty;
 				
 				return;
 			}
 			
-			Styles.CoreSettings core_settings = this.styleList.GetCoreFromIndex (current_style_index);
+			Styles.CoreSettings coreSettings = this.styleList.GetCoreFromIndex (currentStyleIndex);
 			
-			property = core_settings[Properties.WellKnownType.Leading] as Properties.LeadingProperty;
+			property = coreSettings[Properties.WellKnownType.Leading] as Properties.LeadingProperty;
 			
-			this.get_leading_last_style_version = current_style_version;
-			this.get_leading_last_style_index   = current_style_index;
-			this.get_leading_last_property      = property;
+			this.getLeadingLastStyleVersion = currentStyleVersion;
+			this.getLeadingLastStyleIndex   = currentStyleIndex;
+			this.getLeadingLastProperty      = property;
 		}
 		
 		public void GetKeep(ulong code, out Properties.KeepProperty property)
 		{
-			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
-			long current_style_version = this.styleList.Version;
+			int  currentStyleIndex   = Internal.CharMarker.GetCoreIndex (code);
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_keep_last_style_version == current_style_version) &&
-				(this.get_keep_last_style_index   == current_style_index))
+			if ((this.getKeepLastStyleVersion == currentStyleVersion) &&
+				(this.getKeepLastStyleIndex   == currentStyleIndex))
 			{
-				property = this.get_keep_last_property;
+				property = this.getKeepLastProperty;
 				
 				return;
 			}
 			
-			Styles.CoreSettings core_settings = this.styleList.GetCoreFromIndex (current_style_index);
+			Styles.CoreSettings coreSettings = this.styleList.GetCoreFromIndex (currentStyleIndex);
 			
-			property = core_settings[Properties.WellKnownType.Keep] as Properties.KeepProperty;
+			property = coreSettings[Properties.WellKnownType.Keep] as Properties.KeepProperty;
 			
-			this.get_keep_last_style_version = current_style_version;
-			this.get_keep_last_style_index   = current_style_index;
-			this.get_keep_last_property      = property;
+			this.getKeepLastStyleVersion = currentStyleVersion;
+			this.getKeepLastStyleIndex   = currentStyleIndex;
+			this.getKeepLastProperty      = property;
 		}
 		
 		public void GetXlines(ulong code, out Properties.AbstractXlineProperty[] properties)
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			long current_style_version = this.styleList.Version;
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_underlines_last_style_version != current_style_version) ||
-				(this.get_underlines_last_code != code))
+			if ((this.getUnderlinesLastStyleVersion != currentStyleVersion) ||
+				(this.getUnderlinesLastCode != code))
 			{
-				Styles.CoreSettings core_settings = this.styleList[code];
+				Styles.CoreSettings coreSettings = this.styleList[code];
 				
-				Property[]           base_props     = null;
-				Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
+				Property[]           baseProps     = null;
+				Styles.ExtraSettings extraSettings = coreSettings.GetExtraSettings (code);
 				
-				if (extra_settings != null)
+				if (extraSettings != null)
 				{
-					base_props = extra_settings.FindProperties (Properties.WellKnownType.Underline, Properties.WellKnownType.Strikeout, Properties.WellKnownType.Overline, Properties.WellKnownType.TextBox, Properties.WellKnownType.TextMarker);
+					baseProps = extraSettings.FindProperties (Properties.WellKnownType.Underline, Properties.WellKnownType.Strikeout, Properties.WellKnownType.Overline, Properties.WellKnownType.TextBox, Properties.WellKnownType.TextMarker);
 					
-					System.Array.Sort (base_props, Properties.AbstractXlineProperty.Comparer);
+					System.Array.Sort (baseProps, Properties.AbstractXlineProperty.Comparer);
 				}
 				
-				this.get_underlines_last_style_version = current_style_version;
-				this.get_underlines_last_code          = code;
-				this.get_underlines_last_properties    = base_props;
+				this.getUnderlinesLastStyleVersion = currentStyleVersion;
+				this.getUnderlinesLastCode          = code;
+				this.getUnderlinesLastProperties    = baseProps;
 			}
 			
-			if ((this.get_underlines_last_properties != null) &&
-				(this.get_underlines_last_properties.Length > 0))
+			if ((this.getUnderlinesLastProperties != null) &&
+				(this.getUnderlinesLastProperties.Length > 0))
 			{
-				int count = this.get_underlines_last_properties.Length;
+				int count = this.getUnderlinesLastProperties.Length;
 				
 				properties = new Properties.AbstractXlineProperty[count];
-				this.get_underlines_last_properties.CopyTo (properties, 0);
+				this.getUnderlinesLastProperties.CopyTo (properties, 0);
 			}
 			else
 			{
@@ -1444,35 +1444,35 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			long current_style_version = this.styleList.Version;
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_links_last_style_version != current_style_version) ||
-				(this.get_links_last_code != code))
+			if ((this.getLinksLastStyleVersion != currentStyleVersion) ||
+				(this.getLinksLastCode != code))
 			{
-				Styles.CoreSettings core_settings = this.styleList[code];
+				Styles.CoreSettings coreSettings = this.styleList[code];
 				
-				Property[]           base_props     = null;
-				Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
+				Property[]           baseProps     = null;
+				Styles.ExtraSettings extraSettings = coreSettings.GetExtraSettings (code);
 				
-				if (extra_settings != null)
+				if (extraSettings != null)
 				{
-					base_props = extra_settings.FindProperties (Properties.WellKnownType.Link);
+					baseProps = extraSettings.FindProperties (Properties.WellKnownType.Link);
 					
-					System.Array.Sort (base_props, Properties.LinkProperty.Comparer);
+					System.Array.Sort (baseProps, Properties.LinkProperty.Comparer);
 				}
 				
-				this.get_links_last_style_version = current_style_version;
-				this.get_links_last_code          = code;
-				this.get_links_last_properties    = base_props;
+				this.getLinksLastStyleVersion = currentStyleVersion;
+				this.getLinksLastCode          = code;
+				this.getLinksLastProperties    = baseProps;
 			}
 			
-			if ((this.get_links_last_properties != null) &&
-				(this.get_links_last_properties.Length > 0))
+			if ((this.getLinksLastProperties != null) &&
+				(this.getLinksLastProperties.Length > 0))
 			{
-				int count = this.get_links_last_properties.Length;
+				int count = this.getLinksLastProperties.Length;
 				
 				properties = new Properties.LinkProperty[count];
-				this.get_links_last_properties.CopyTo (properties, 0);
+				this.getLinksLastProperties.CopyTo (properties, 0);
 			}
 			else
 			{
@@ -1484,35 +1484,35 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			long current_style_version = this.styleList.Version;
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_usertags_last_style_version != current_style_version) ||
-				(this.get_usertags_last_code != code))
+			if ((this.getUsertagsLastStyleVersion != currentStyleVersion) ||
+				(this.geUsertagsLastCode != code))
 			{
-				Styles.CoreSettings core_settings = this.styleList[code];
+				Styles.CoreSettings coreSettings = this.styleList[code];
 				
-				Property[]           base_props     = null;
-				Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
+				Property[]           baseProps     = null;
+				Styles.ExtraSettings extraSettings = coreSettings.GetExtraSettings (code);
 				
-				if (extra_settings != null)
+				if (extraSettings != null)
 				{
-					base_props = extra_settings.FindProperties (Properties.WellKnownType.UserTag);
+					baseProps = extraSettings.FindProperties (Properties.WellKnownType.UserTag);
 					
-					System.Array.Sort (base_props, Properties.UserTagProperty.Comparer);
+					System.Array.Sort (baseProps, Properties.UserTagProperty.Comparer);
 				}
 				
-				this.get_usertags_last_style_version = current_style_version;
-				this.get_usertags_last_code          = code;
-				this.get_usertags_last_properties    = base_props;
+				this.getUsertagsLastStyleVersion = currentStyleVersion;
+				this.geUsertagsLastCode          = code;
+				this.getUsertagsLastProperties    = baseProps;
 			}
 			
-			if ((this.get_usertags_last_properties != null) &&
-				(this.get_usertags_last_properties.Length > 0))
+			if ((this.getUsertagsLastProperties != null) &&
+				(this.getUsertagsLastProperties.Length > 0))
 			{
-				int count = this.get_usertags_last_properties.Length;
+				int count = this.getUsertagsLastProperties.Length;
 				
 				properties = new Properties.UserTagProperty[count];
-				this.get_usertags_last_properties.CopyTo (properties, 0);
+				this.getUsertagsLastProperties.CopyTo (properties, 0);
 			}
 			else
 			{
@@ -1522,21 +1522,21 @@ namespace Epsitec.Common.Text
 		
 		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
-			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
-			long current_style_version = this.styleList.Version;
+			int  currentStyleIndex   = Internal.CharMarker.GetCoreIndex (code);
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_layout_last_style_version == current_style_version) &&
-				(this.get_layout_last_style_index   == current_style_index))
+			if ((this.getLayoutLastStyleVersion == currentStyleVersion) &&
+				(this.getLayoutLastStyleIndex   == currentStyleIndex))
 			{
-				engine   = this.get_layout_last_engine;
-				property = this.get_layout_last_property;
+				engine   = this.getLayoutLastEngine;
+				property = this.getLayoutLastProperty;
 				
 				return;
 			}
 			
-			Styles.CoreSettings core_settings = this.styleList.GetCoreFromIndex (current_style_index);
+			Styles.CoreSettings coreSettings = this.styleList.GetCoreFromIndex (currentStyleIndex);
 			
-			property = core_settings[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
+			property = coreSettings[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
 			
 			if (property == null)
 			{
@@ -1552,49 +1552,49 @@ namespace Epsitec.Common.Text
 				engine = this.layoutList["*"];
 			}
 			
-			this.get_layout_last_style_version = current_style_version;
-			this.get_layout_last_style_index   = current_style_index;
-			this.get_layout_last_property      = property;
-			this.get_layout_last_engine        = engine;
+			this.getLayoutLastStyleVersion = currentStyleVersion;
+			this.getLayoutLastStyleIndex   = currentStyleIndex;
+			this.getLayoutLastProperty      = property;
+			this.getLayoutLastEngine        = engine;
 		}
 		
 		public void GetMargins(ulong code, out Properties.MarginsProperty property)
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			long current_style_version = this.styleList.Version;
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.get_margins_last_style_version == current_style_version) &&
-				(this.get_margins_last_code == code))
+			if ((this.getMarginsLastStyleVersion == currentStyleVersion) &&
+				(this.getMarginsLastCode == code))
 			{
-				property = this.get_margins_last_property;
+				property = this.getMarginsLastProperty;
 				
 				return;
 			}
 			
-			Styles.CoreSettings core_settings = this.styleList[code];
+			Styles.CoreSettings coreSettings = this.styleList[code];
 			
-			property = core_settings[Properties.WellKnownType.Margins] as Properties.MarginsProperty;
+			property = coreSettings[Properties.WellKnownType.Margins] as Properties.MarginsProperty;
 			
-			this.get_margins_last_style_version = current_style_version;
-			this.get_margins_last_code          = code;
-			this.get_margins_last_property      = property;
+			this.getMarginsLastStyleVersion = currentStyleVersion;
+			this.getMarginsLastCode          = code;
+			this.getMarginsLastProperty      = property;
 		}
 		
 		public void GetBreak(ulong code, out Properties.BreakProperty property)
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.CoreSettings  core_settings  = this.styleList[code];
-			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
+			Styles.CoreSettings  coreSettings  = this.styleList[code];
+			Styles.LocalSettings localSettings = coreSettings.GetLocalSettings (code);
 			
-			if (local_settings == null)
+			if (localSettings == null)
 			{
 				property = null;
 			}
 			else
 			{
-				property = local_settings[Properties.WellKnownType.Break] as Properties.BreakProperty;
+				property = localSettings[Properties.WellKnownType.Break] as Properties.BreakProperty;
 			}
 		}
 		
@@ -1602,16 +1602,16 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.CoreSettings  core_settings  = this.styleList[code];
-			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
+			Styles.CoreSettings  coreSettings  = this.styleList[code];
+			Styles.LocalSettings localSettings = coreSettings.GetLocalSettings (code);
 			
-			if (local_settings == null)
+			if (localSettings == null)
 			{
 				property = null;
 			}
 			else
 			{
-				property = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
+				property = localSettings[Properties.WellKnownType.Tab] as Properties.TabProperty;
 			}
 		}
 		
@@ -1619,56 +1619,56 @@ namespace Epsitec.Common.Text
 		{
 			code = Internal.CharMarker.ExtractCoreAndExtraSettings (code);
 			
-			Styles.CoreSettings  core_settings  = this.styleList[code];
-			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
+			Styles.CoreSettings  coreSettings  = this.styleList[code];
+			Styles.ExtraSettings extraSettings = coreSettings.GetExtraSettings (code);
 			
-			if (extra_settings == null)
+			if (extraSettings == null)
 			{
 				property = null;
 			}
 			else
 			{
-				property = extra_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+				property = extraSettings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
 			}
 		}
 		
-		public void GetTabAndTabs(ulong code, out Properties.TabProperty tab_property, out Properties.TabsProperty tabs_property)
+		public void GetTabAndTabs(ulong code, out Properties.TabProperty tabProperty, out Properties.TabsProperty tabsProperty)
 		{
 			code = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.CoreSettings  core_settings  = this.styleList[code];
-			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (code);
-			Styles.ExtraSettings extra_settings = core_settings.GetExtraSettings (code);
+			Styles.CoreSettings  coreSettings  = this.styleList[code];
+			Styles.LocalSettings localSettings = coreSettings.GetLocalSettings (code);
+			Styles.ExtraSettings extraSettings = coreSettings.GetExtraSettings (code);
 			
-			if (local_settings == null)
+			if (localSettings == null)
 			{
-				tab_property  = null;
+				tabProperty  = null;
 			}
 			else
 			{
-				tab_property  = local_settings[Properties.WellKnownType.Tab] as Properties.TabProperty;
+				tabProperty  = localSettings[Properties.WellKnownType.Tab] as Properties.TabProperty;
 			}
 			
-			if (extra_settings == null)
+			if (extraSettings == null)
 			{
-				tabs_property = null;
+				tabsProperty = null;
 			}
 			else
 			{
-				tabs_property = extra_settings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
+				tabsProperty = extraSettings[Properties.WellKnownType.Tabs] as Properties.TabsProperty;
 			}
 		}
 		
 		public void GetImage(ulong code, out Properties.ImageProperty property)
 		{
-			ulong stripped_code = Internal.CharMarker.ExtractCoreAndSettings (code);
+			ulong strippedCode = Internal.CharMarker.ExtractCoreAndSettings (code);
 			
-			Styles.CoreSettings  core_settings  = this.styleList[stripped_code];
-			Styles.LocalSettings local_settings = core_settings.GetLocalSettings (stripped_code);
+			Styles.CoreSettings  coreSettings  = this.styleList[strippedCode];
+			Styles.LocalSettings localSettings = coreSettings.GetLocalSettings (strippedCode);
 			
-			if (local_settings != null)
+			if (localSettings != null)
 			{
-				property = local_settings[Properties.WellKnownType.Image] as Properties.ImageProperty;
+				property = localSettings[Properties.WellKnownType.Image] as Properties.ImageProperty;
 			}
 			else
 			{
@@ -1731,10 +1731,10 @@ namespace Epsitec.Common.Text
 			{
 				code = Internal.CharMarker.ExtractCoreAndSettings (code);
 				
-				Styles.CoreSettings core_settings = this.styleList[code];
+				Styles.CoreSettings coreSettings = this.styleList[code];
 				
-				if ((core_settings != null) &&
-					(core_settings.Contains (code, property)))
+				if ((coreSettings != null) &&
+					(coreSettings.Contains (code, property)))
 				{
 					return true;
 				}
@@ -1743,7 +1743,7 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
-		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Properties.WellKnownType well_known_type, Properties.PropertyType property_type)
+		public bool ContainsProperty(TextStory story, ICursor cursor, int offset, Properties.WellKnownType wellKnownType, Properties.PropertyType propertyType)
 		{
 			ulong code = story.ReadChar (cursor, offset);
 			
@@ -1751,10 +1751,10 @@ namespace Epsitec.Common.Text
 			{
 				code = Internal.CharMarker.ExtractCoreAndSettings (code);
 				
-				Styles.CoreSettings core_settings = this.styleList[code];
+				Styles.CoreSettings coreSettings = this.styleList[code];
 				
-				if ((core_settings != null) &&
-					(core_settings.Contains (code, well_known_type, property_type)))
+				if ((coreSettings != null) &&
+					(coreSettings.Contains (code, wellKnownType, propertyType)))
 				{
 					return true;
 				}
@@ -1834,9 +1834,9 @@ namespace Epsitec.Common.Text
 				
 				this.code = code;
 				
-				Styles.CoreSettings core_settings = this.context.styleList[code];
+				Styles.CoreSettings coreSettings = this.context.styleList[code];
 				
-				if (core_settings.Contains (this.code, this.property))
+				if (coreSettings.Contains (this.code, this.property))
 				{
 					return false;
 				}
@@ -1857,8 +1857,8 @@ namespace Epsitec.Common.Text
 			internal DefaultMarkers(Internal.CharMarker marker)
 			{
 				this.selected                = marker[DefaultMarkers.TagSelected];
-				this.requires_spell_checking = marker[DefaultMarkers.TagRequiresSpellChecking];
-				this.spell_checking_error    = marker[DefaultMarkers.TagSpellCheckingError];
+				this.requiresSpellChecking = marker[DefaultMarkers.TagRequiresSpellChecking];
+				this.spellCheckingError    = marker[DefaultMarkers.TagSpellCheckingError];
 			}
 			
 			
@@ -1874,7 +1874,7 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.requires_spell_checking;
+					return this.requiresSpellChecking;
 				}
 			}
 			
@@ -1882,14 +1882,14 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.spell_checking_error;
+					return this.spellCheckingError;
 				}
 			}
 			
 			
 			private ulong						selected;
-			private ulong						requires_spell_checking;
-			private ulong						spell_checking_error;
+			private ulong						requiresSpellChecking;
+			private ulong						spellCheckingError;
 			
 			public const string					TagSelected					= "Selected";
 			public const string					TagRequiresSpellChecking	= "RequiresSpellChecking";
@@ -1925,62 +1925,62 @@ namespace Epsitec.Common.Text
 			this.layoutList.NewEngine ("*", typeof (Layout.LineEngine));
 		}
 		
-		private static void CreateOrGetFontFromCache(string fontFace, string font_style, out OpenType.Font font)
+		private static void CreateOrGetFontFromCache(string fontFace, string fontStyle, out OpenType.Font font)
 		{
 			TextContext.InitializeFontCollection (null);
 
-			string fullName = OpenType.FontName.GetFullName (fontFace, font_style);
+			string fullName = OpenType.FontName.GetFullName (fontFace, fontStyle);
 			
 			lock (TextContext.fontCache)
 			{
 				if (TextContext.fontCache.TryGetValue (fullName, out font) == false)
 				{
-					font = TextContext.fontCollection.CreateFont (fontFace, font_style);
+					font = TextContext.fontCollection.CreateFont (fontFace, fontStyle);
 					TextContext.fontCache[fullName] = font;
 				}
 			}
 		}
 		
-		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double font_size, out double scale, out double glue)
+		private void InternalGetFontAndSize(ulong code, out OpenType.Font font, out double fontSize, out double scale, out double glue)
 		{
-			int  current_style_index   = Internal.CharMarker.GetCoreIndex (code);
-			long current_style_version = this.styleList.Version;
+			int  currentStyleIndex   = Internal.CharMarker.GetCoreIndex (code);
+			long currentStyleVersion = this.styleList.Version;
 			
-			if ((this.getFontLastStyleVersion == current_style_version) &&
-				(this.getFontLastStyleIndex   == current_style_index))
+			if ((this.getFontLastStyleVersion == currentStyleVersion) &&
+				(this.getFontLastStyleIndex   == currentStyleIndex))
 			{
 				font      = this.getFontLastFont;
-				font_size = this.getFontLastFontSize;
-				scale     = this.get_font_last_scale;
-				glue      = this.get_font_last_glue;
+				fontSize = this.getFontLastFontSize;
+				scale     = this.getFontLastScale;
+				glue      = this.getFontLastGlue;
 				
 				return;
 			}
 			
-			Styles.CoreSettings core_settings = this.styleList.GetCoreFromIndex (current_style_index);
+			Styles.CoreSettings coreSettings = this.styleList.GetCoreFromIndex (currentStyleIndex);
 
-			Properties.FontProperty        font_p         = core_settings[Properties.WellKnownType.Font] as Properties.FontProperty;
-			Properties.FontSizeProperty    font_size_p    = core_settings[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
-			Properties.FontXscriptProperty font_xscript_p = core_settings[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
+			Properties.FontProperty        fontP         = coreSettings[Properties.WellKnownType.Font] as Properties.FontProperty;
+			Properties.FontSizeProperty    fontSizeP     = coreSettings[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
+			Properties.FontXscriptProperty fontXscriptP  = coreSettings[Properties.WellKnownType.FontXscript] as Properties.FontXscriptProperty;
 			
-			this.GetFont (font_p, out font);
-			this.GetFontSize (font_p, font_size_p, font_xscript_p, out font_size, out scale, out glue);
+			this.GetFont (fontP, out font);
+			this.GetFontSize (fontP, fontSizeP, fontXscriptP, out fontSize, out scale, out glue);
 			
-			if (font_p.Features == null)
+			if (fontP.Features == null)
 			{
 				font.SelectFeatures ();
 			}
 			else
 			{
-				font.SelectFeatures (font_p.Features);
+				font.SelectFeatures (fontP.Features);
 			}
 			
-			this.getFontLastStyleVersion = current_style_version;
-			this.getFontLastStyleIndex   = current_style_index;
+			this.getFontLastStyleVersion = currentStyleVersion;
+			this.getFontLastStyleIndex   = currentStyleIndex;
 			this.getFontLastFont          = font;
-			this.get_font_last_scale         = scale;
-			this.getFontLastFontSize     = font_size;
-			this.get_font_last_glue          = glue;
+			this.getFontLastScale         = scale;
+			this.getFontLastFontSize     = fontSize;
+			this.getFontLastGlue          = glue;
 		}
 		
 		
@@ -2013,8 +2013,8 @@ namespace Epsitec.Common.Text
 		private int								getFontLastStyleIndex;
 		private OpenType.Font					getFontLastFont;
 		private double							getFontLastFontSize;
-		private double							get_font_last_scale;
-		private double							get_font_last_glue;
+		private double							getFontLastScale;
+		private double							getFontLastGlue;
 		
 		private long							getFontOffsetLastStyleVersion;
 		private ulong							getFontOffsetLastCode;
@@ -2041,47 +2041,47 @@ namespace Epsitec.Common.Text
 		private ulong							getGeneratorLastCode;
 		private Properties.GeneratorProperty	getGeneratorLastProperty;
 		
-		private long							get_condition_last_style_version;
-		private int								get_condition_last_style_index;
-		private Property[]						get_condition_last_properties;
-		private bool							get_condition_last_summary;
+		private long							getConditionLastStyleVersion;
+		private int								getConditionLastStyleIndex;
+		private Property[]						getConditionLastProperties;
+		private bool							getConditionLastSummary;
 		
-		private long							get_properties_last_style_version;
-		private int								get_properties_last_style_index;
-		private Property[]						get_properties_last_properties;
+		private long							getPropertiesLastStyleVersion;
+		private int								getPropertiesLastStyleIndex;
+		private Property[]						getPropertiesLastProperties;
 		
-		private long							get_styles_last_style_version;
-		private ulong							get_styles_last_style_code;
-		private TextStyle[]						get_styles_last_styles;
+		private long							getStylesLastStyleVersion;
+		private ulong							getStylesLastStyleCode;
+		private TextStyle[]						getStylesLastStyles;
 		
-		private long							get_leading_last_style_version;
-		private int								get_leading_last_style_index;
-		private Properties.LeadingProperty		get_leading_last_property;
+		private long							getLeadingLastStyleVersion;
+		private int								getLeadingLastStyleIndex;
+		private Properties.LeadingProperty		getLeadingLastProperty;
 		
-		private long							get_keep_last_style_version;
-		private int								get_keep_last_style_index;
-		private Properties.KeepProperty			get_keep_last_property;
+		private long							getKeepLastStyleVersion;
+		private int								getKeepLastStyleIndex;
+		private Properties.KeepProperty			getKeepLastProperty;
 		
-		private long							get_underlines_last_style_version;
-		private ulong							get_underlines_last_code;
-		private Property[]						get_underlines_last_properties;
+		private long							getUnderlinesLastStyleVersion;
+		private ulong							getUnderlinesLastCode;
+		private Property[]						getUnderlinesLastProperties;
 		
-		private long							get_links_last_style_version;
-		private ulong							get_links_last_code;
-		private Property[]						get_links_last_properties;
+		private long							getLinksLastStyleVersion;
+		private ulong							getLinksLastCode;
+		private Property[]						getLinksLastProperties;
 		
-		private long							get_usertags_last_style_version;
-		private ulong							get_usertags_last_code;
-		private Property[]						get_usertags_last_properties;
+		private long							getUsertagsLastStyleVersion;
+		private ulong							geUsertagsLastCode;
+		private Property[]						getUsertagsLastProperties;
 		
-		private long							get_layout_last_style_version;
-		private int								get_layout_last_style_index;
-		private Properties.LayoutProperty		get_layout_last_property;
-		private Layout.BaseEngine				get_layout_last_engine;
+		private long							getLayoutLastStyleVersion;
+		private int								getLayoutLastStyleIndex;
+		private Properties.LayoutProperty		getLayoutLastProperty;
+		private Layout.BaseEngine				getLayoutLastEngine;
 		
-		private long							get_margins_last_style_version;
-		private ulong							get_margins_last_code;
-		private Properties.MarginsProperty		get_margins_last_property;
+		private long							getMarginsLastStyleVersion;
+		private ulong							getMarginsLastCode;
+		private Properties.MarginsProperty		getMarginsLastProperty;
 
 		static Dictionary<string, List<OpenType.FontIdentity>> fontIds = new Dictionary<string, List<Epsitec.Common.OpenType.FontIdentity>> ();
 		
