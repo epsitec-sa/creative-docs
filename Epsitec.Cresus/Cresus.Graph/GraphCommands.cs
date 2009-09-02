@@ -63,6 +63,12 @@ namespace Epsitec.Cresus.Graph
 			this.application.Document.ExportImage ();
 		}
 
+		[Command (ApplicationCommands.Id.Properties)]
+		private void PropertiesCommand()
+		{
+			this.application.SeriesPickerController.ShowWindow ();
+		}
+
 
 		private readonly GraphApplication application;
 	}

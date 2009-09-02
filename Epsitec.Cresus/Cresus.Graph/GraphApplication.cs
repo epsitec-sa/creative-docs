@@ -68,6 +68,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		internal Controllers.SeriesPickerController SeriesPickerController
+		{
+			get
+			{
+				return this.seriesPickerController;
+			}
+		}
+
 		internal void SetupDefaultDocument()
 		{
 			if (this.activeDocument == null)

@@ -112,7 +112,7 @@ namespace Epsitec.Common.Support
 
 			foreach (int i in System.Enum.GetValues (typeof (ClipboardDataFormat)))
 			{
-				ClipboardDataFormat format = (Clipboard.ClipboardDataFormat) i;
+				ClipboardDataFormat format = (ClipboardDataFormat) i;
 				System.Console.Out.WriteLine ("Compatible with {0}: {1}", format, data.IsCompatible (format));
 			}
 		}
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckWriteHtmlFragment()
 		{
-			ClipboardWriteData data = new Clipboard.ClipboardWriteData ();
+			ClipboardWriteData data = new ClipboardWriteData ();
 			
 			data.WriteText ("Hello world\u00A0! Three [   ] spaces.\r\n\r\nLast line.");
 			data.WriteHtmlFragment ("Hello <i>world</i>&#160;! Three [   ] spaces.<br/><br/>Last line.");

@@ -117,7 +117,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			yield return ApplicationCommands.Redo;
 			yield return ApplicationCommands.Save;
 			yield return ApplicationCommands.Copy;
+			
 			yield return Res.Commands.File.ExportImage;
+			yield return ApplicationCommands.Properties;
 		}
 
 

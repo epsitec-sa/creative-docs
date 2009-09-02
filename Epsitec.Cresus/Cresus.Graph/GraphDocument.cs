@@ -274,6 +274,7 @@ namespace Epsitec.Cresus.Graph
 			}
 			else
 			{
+				this.title = "Démo";
 				this.dataSet.LoadDataTable (GraphDataSet.LoadComptaDemoData ());
 			}
 		}

@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.BottomLeft
 			};
 
-			this.window.WindowCloseClicked += sender => this.window.Hide ();
+			this.window.WindowCloseClicked += sender => this.HideWindow ();
 			
 			this.quickButtonNegate.Clicked     += (sender, e) => this.ProcessQuickButton (this.NegateSeriesAction);
 			this.quickButtonAddToGraph.Clicked += (sender, e) => this.ProcessQuickButton (this.AddSeriesToGraphAction);
@@ -119,10 +119,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			GraphProgram.Application.ActiveDocumentChanged += sender => this.UpdateScrollListItems ();
 		}
 
-
-		public void Show()
+		public void ShowWindow()
 		{
 			this.window.Show ();
+		}
+
+		public void HideWindow()
+		{
+			this.window.Hide ();
 		}
 
 		public GraphDataSet DataSet
