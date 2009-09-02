@@ -17,12 +17,12 @@ namespace Epsitec.Common.Text
 		
 		public void DefineStartFence(int pos)
 		{
-			this.start_pos = pos;
+			this.startPos = pos;
 		}
 		
 		public void DefineEndFence(int pos)
 		{
-			this.end_pos = pos;
+			this.endPos = pos;
 		}
 		
 		
@@ -31,17 +31,17 @@ namespace Epsitec.Common.Text
 			this.Process (method, 100*1000, 10*1000);
 		}
 		
-		public void Process(Executor method, int chunk_size)
+		public void Process(Executor method, int chunkSize)
 		{
-			this.Process (method, chunk_size, System.Math.Max (1000, chunk_size / 10));
+			this.Process (method, chunkSize, System.Math.Max (1000, chunkSize / 10));
 		}
 		
-		public void Process(Executor method, int chunk_size, int chunk_size_increment)
+		public void Process(Executor method, int chunkSize, int chunkSizeIncrement)
 		{
 			//	Exécute une méthode pour tout le texte, en procédant par tranches
 			//	(exécution itérative).
 			
-			int pos = this.start_pos;
+			int pos = this.startPos;
 			
 			Cursors.TempCursor cursor = new Cursors.TempCursor ();
 			
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Text
 			
 			try
 			{
-				int step = chunk_size;
+				int step = chunkSize;
 				
 				for (;;)
 				{
@@ -64,8 +64,8 @@ namespace Epsitec.Common.Text
 					{
 						break;
 					}
-					if ((this.start_pos <= this.end_pos) &&
-						(pos >= this.end_pos))
+					if ((this.startPos <= this.endPos) &&
+						(pos >= this.endPos))
 					{
 						break;
 					}
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Text
 						//	de 'step' caractères. Il faut donc augmenter cette limite avant
 						//	de tenter un nouvel essai :
 						
-						step += chunk_size_increment;
+						step += chunkSizeIncrement;
 					}
 					else
 					{
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Text
 						this.story.MoveCursor (cursor, length);
 						
 						pos += length;
-						step = chunk_size;
+						step = chunkSize;
 					}
 				}
 			}
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Text
 		
 		private TextStory						story;
 		
-		private int								start_pos	= 0;
-		private int								end_pos		= -1;
+		private int								startPos	= 0;
+		private int								endPos		= -1;
 	}
 }

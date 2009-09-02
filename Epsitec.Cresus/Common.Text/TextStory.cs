@@ -20,10 +20,10 @@ namespace Epsitec.Common.Text
 			this.SetupContext (new TextContext ());
 		}
 		
-		public TextStory(Common.Support.OpletQueue oplet_queue)
+		public TextStory(Common.Support.OpletQueue opletQueue)
 		{
 			this.SetupTextStory ();
-			this.SetupOpletQueue (oplet_queue);
+			this.SetupOpletQueue (opletQueue);
 			this.SetupContext (new TextContext ());
 		}
 		
@@ -34,10 +34,10 @@ namespace Epsitec.Common.Text
 			this.SetupContext (context);
 		}
 		
-		public TextStory(Common.Support.OpletQueue oplet_queue, TextContext context)
+		public TextStory(Common.Support.OpletQueue opletQueue, TextContext context)
 		{
 			this.SetupTextStory ();
-			this.SetupOpletQueue (oplet_queue);
+			this.SetupOpletQueue (opletQueue);
 			this.SetupContext (context);
 		}
 		
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.text_length;
+				return this.textLength;
 			}
 		}
 		
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.undo_length;
+				return this.undoLength;
 			}
 		}
 		
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.oplet_queue;
+				return this.opletQueue;
 			}
 		}
 		
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Text
 			
 			get
 			{
-				return System.Math.Min (this.text_change_mark_start, this.TextLength);
+				return System.Math.Min (this.textChangeMarkStart, this.TextLength);
 			}
 		}
 		
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return System.Math.Min (this.text_change_mark_end, this.TextLength);
+				return System.Math.Min (this.textChangeMarkEnd, this.TextLength);
 			}
 		}
 		
@@ -133,11 +133,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.debug_disable_oplet;
+				return this.debugDisableOplet;
 			}
 			set
 			{
-				this.debug_disable_oplet = value;
+				this.debugDisableOplet = value;
 			}
 		}
 		
@@ -145,11 +145,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.debug_disable_merge;
+				return this.debugDisableMerge;
 			}
 			set
 			{
-				this.debug_disable_merge = value;
+				this.debugDisableMerge = value;
 			}
 		}
 		
@@ -157,7 +157,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return (this.DebugDisableOpletQueue || (this.oplet_queue == null)) ? false : (this.oplet_queue_disable == 0);
+				return (this.DebugDisableOpletQueue || (this.opletQueue == null)) ? false : (this.opletQueueDisable == 0);
 			}
 		}
 		
@@ -185,23 +185,23 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				int old_pos = this.text.GetCursorPosition (cursor.CursorId);
-				int old_dir = this.text.GetCursorDirection (cursor.CursorId);
+				int oldPos = this.text.GetCursorPosition (cursor.CursorId);
+				int oldDir = this.text.GetCursorDirection (cursor.CursorId);
 				
 				int direction = (distance > 0) ? 1 : (distance < 0) ? -1 : 0;
 				
 				this.text.MoveCursor (cursor.CursorId, distance);
 				this.text.SetCursorDirection (cursor.CursorId, direction);
 				
-				int new_pos = this.text.GetCursorPosition (cursor.CursorId);
-				int new_dir = this.text.GetCursorDirection (cursor.CursorId);
+				int newPos = this.text.GetCursorPosition (cursor.CursorId);
+				int newDir = this.text.GetCursorDirection (cursor.CursorId);
 				
-				System.Diagnostics.Debug.Assert (new_dir == direction);
+				System.Diagnostics.Debug.Assert (newDir == direction);
 				
-				if ((old_pos != new_pos) &&
+				if ((oldPos != newPos) &&
 					(this.IsOpletQueueEnabled))
 				{
-					this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos, old_dir));
+					this.InternalAddOplet (new CursorMoveOplet (this, cursor, oldPos, oldDir));
 				}
 			}
 		}
@@ -226,12 +226,12 @@ namespace Epsitec.Common.Text
 		
 		public void DisableOpletQueue()
 		{
-			this.oplet_queue_disable++;
+			this.opletQueueDisable++;
 		}
 		
 		public void EnableOpletQueue()
 		{
-			this.oplet_queue_disable--;
+			this.opletQueueDisable--;
 		}
 		
 		
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Text
 		{
 			if (this.IsOpletQueueEnabled)
 			{
-				return this.oplet_queue.BeginAction (name);
+				return this.opletQueue.BeginAction (name);
 			}
 			else
 			{
@@ -261,38 +261,38 @@ namespace Epsitec.Common.Text
 		{
 			if (this.IsOpletQueueEnabled)
 			{
-				this.oplet_queue.ValidateAction ();
+				this.opletQueue.ValidateAction ();
 				
 				bool force = false;
 				
-				Common.Support.OpletQueue.MergeMode merge_1 = this.oplet_queue.LastActionMergeMode;
-				Common.Support.OpletQueue.MergeMode merge_2 = this.oplet_queue.LastActionMinusOneMergeMode;
+				Common.Support.OpletQueue.MergeMode merge1 = this.opletQueue.LastActionMergeMode;
+				Common.Support.OpletQueue.MergeMode merge2 = this.opletQueue.LastActionMinusOneMergeMode;
 				
-				if ((merge_1 == Common.Support.OpletQueue.MergeMode.Disabled) ||
-					(merge_2 == Common.Support.OpletQueue.MergeMode.Disabled))
+				if ((merge1 == Common.Support.OpletQueue.MergeMode.Disabled) ||
+					(merge2 == Common.Support.OpletQueue.MergeMode.Disabled))
 				{
 					//	On ne fusionne pas !
 				}
 				else
 				{
-					Common.Support.IOplet[] oplets_1 = this.oplet_queue.LastActionOplets;
-					Common.Support.IOplet[] oplets_2 = this.oplet_queue.LastActionMinusOneOplets;
+					Common.Support.IOplet[] oplets1 = this.opletQueue.LastActionOplets;
+					Common.Support.IOplet[] oplets2 = this.opletQueue.LastActionMinusOneOplets;
 					
-					if ((oplets_1.Length == 1) &&
-						(oplets_2.Length == 1))
+					if ((oplets1.Length == 1) &&
+						(oplets2.Length == 1))
 					{
-						if (TextStory.MergeOplets (oplets_2[0], oplets_1[0]))
+						if (TextStory.MergeOplets (oplets2[0], oplets1[0]))
 						{
-							this.oplet_queue.PurgeSingleUndo ();
+							this.opletQueue.PurgeSingleUndo ();
 							force = true;
 						}
 					}
-					else if ((oplets_1.Length == 1) &&
-						/**/ (oplets_2.Length > 0))
+					else if ((oplets1.Length == 1) &&
+						/**/ (oplets2.Length > 0))
 					{
-						if (TextStory.MergeOplets (oplets_2[oplets_2.Length-1], oplets_1[0]))
+						if (TextStory.MergeOplets (oplets2[oplets2.Length-1], oplets1[0]))
 						{
-							this.oplet_queue.PurgeSingleUndo ();
+							this.opletQueue.PurgeSingleUndo ();
 							force = true;
 						}
 					}
@@ -303,14 +303,14 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void GetOpletsText(System.Collections.ICollection raw_oplets, out string inserted, out string deleted)
+		public void GetOpletsText(System.Collections.ICollection rawOplets, out string inserted, out string deleted)
 		{
-			Common.Support.IOplet[] text_oplets = this.FindTextOplets (raw_oplets);
+			Common.Support.IOplet[] textOplets = this.FindTextOplets (rawOplets);
 			
 			System.Text.StringBuilder insert = new System.Text.StringBuilder ();
 			System.Text.StringBuilder delete = new System.Text.StringBuilder ();
 			
-			foreach (Common.Support.IOplet oplet in text_oplets)
+			foreach (Common.Support.IOplet oplet in textOplets)
 			{
 				if (oplet is TextInsertOplet)
 				{
@@ -355,10 +355,10 @@ namespace Epsitec.Common.Text
 		
 		public void ApplyAutomaticOpletName(bool force)
 		{
-			if ((this.oplet_queue.LastActionName == null) ||
+			if ((this.opletQueue.LastActionName == null) ||
 				(force))
 			{
-				Common.Support.IOplet[] oplets = this.FindTextOplets (this.oplet_queue.LastActionOplets);
+				Common.Support.IOplet[] oplets = this.FindTextOplets (this.opletQueue.LastActionOplets);
 				
 				if (oplets.Length > 0)
 				{
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Text
 						
 						if (name != result)
 						{
-							this.oplet_queue.ChangeLastActionName (result);
+							this.opletQueue.ChangeLastActionName (result);
 						}
 					}
 				}
@@ -415,19 +415,19 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				int old_pos = this.text.GetCursorPosition (cursor.CursorId);
-				int old_dir = this.text.GetCursorDirection (cursor.CursorId);
+				int oldPos = this.text.GetCursorPosition (cursor.CursorId);
+				int oldDir = this.text.GetCursorDirection (cursor.CursorId);
 				
 				this.text.SetCursorPosition (cursor.CursorId, position);
 				this.text.SetCursorDirection (cursor.CursorId, direction);
 				
-				int new_pos = this.GetCursorPosition (cursor);
-				int new_dir = this.GetCursorDirection (cursor);
+				int newPos = this.GetCursorPosition (cursor);
+				int newDir = this.GetCursorDirection (cursor);
 				
-				if ((old_pos != new_pos) ||
-					(old_dir != new_dir))
+				if ((oldPos != newPos) ||
+					(oldDir != newDir))
 				{
-					this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos, old_dir));
+					this.InternalAddOplet (new CursorMoveOplet (this, cursor, oldPos, oldDir));
 				}
 			}
 		}
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Text
 			this.IncrementUserCount (text, length);
 			
 			this.text.InsertText (cursor.CursorId, text);
-			this.text_length += length;
+			this.textLength += length;
 			
 			this.UpdateTextBreakInformation (position, length);
 			
@@ -473,13 +473,13 @@ namespace Epsitec.Common.Text
 			
 			this.InternalSaveCursorPositions (position, length, out cursors);
 			
-			int undo_start = this.text_length + 1;
-			int undo_end   = undo_start + this.undo_length;
+			int undoStart = this.textLength + 1;
+			int undoEnd   = undoStart + this.undoLength;
 				
-			this.InternalMoveText (position, undo_end - length, length);
+			this.InternalMoveText (position, undoEnd - length, length);
 				
-			this.text_length -= length;
-			this.undo_length += length;
+			this.textLength -= length;
+			this.undoLength += length;
 			
 			this.UpdateTextBreakInformation (position, 0);
 			
@@ -648,8 +648,8 @@ namespace Epsitec.Common.Text
 			
 			bool changed = this.InternalReplaceText (position, length, text);
 			
-			this.text_length -= length;
-			this.text_length += text.Length;
+			this.textLength -= length;
+			this.textLength += text.Length;
 			
 			this.UpdateTextBreakInformation (position, length);
 			
@@ -666,8 +666,8 @@ namespace Epsitec.Common.Text
 			
 			bool changed = this.InternalReplaceText (position, length, utf32);
 			
-			this.text_length -= length;
-			this.text_length += utf32.Length;
+			this.textLength -= length;
+			this.textLength += utf32.Length;
 			
 			this.UpdateTextBreakInformation (position, length);
 			
@@ -792,8 +792,8 @@ namespace Epsitec.Common.Text
 			//	Indique que les réglages internes du texte entier ont changé sans notre
 			//	connaissance. On doit considérer le texte complet comme "sale".
 			
-			this.text_change_mark_start = 0;
-			this.text_change_mark_end   = this.TextLength;
+			this.textChangeMarkStart = 0;
+			this.textChangeMarkEnd   = this.TextLength;
 			
 			this.text.ChangeVersion ();
 			
@@ -807,8 +807,8 @@ namespace Epsitec.Common.Text
 		{
 			int end = System.Math.Min (start + length, this.TextLength);
 			
-			this.text_change_mark_start = System.Math.Min (this.text_change_mark_start, start);
-			this.text_change_mark_end   = System.Math.Max (this.text_change_mark_end, end);
+			this.textChangeMarkStart = System.Math.Min (this.textChangeMarkStart, start);
+			this.textChangeMarkEnd   = System.Math.Max (this.textChangeMarkEnd, end);
 			
 			this.text.ChangeVersion ();
 			
@@ -853,8 +853,8 @@ namespace Epsitec.Common.Text
 		
 		public void ClearTextChangeMarkPositions()
 		{
-			this.text_change_mark_start = this.TextLength;
-			this.text_change_mark_end   = 0;
+			this.textChangeMarkStart = this.TextLength;
+			this.textChangeMarkEnd   = 0;
 		}
 		
 		
@@ -863,7 +863,7 @@ namespace Epsitec.Common.Text
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, 0);
 			
-			for (int i = 0; i < this.text_length; i++)
+			for (int i = 0; i < this.textLength; i++)
 			{
 				ulong code = this.text[this.temp_cursor.CursorId];
 				this.text.MoveCursor (this.temp_cursor.CursorId, 1);
@@ -877,9 +877,9 @@ namespace Epsitec.Common.Text
 		public string GetDebugUndo()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, this.text_length + 1);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, this.textLength + 1);
 			
-			for (int i = 0; i < this.undo_length; i++)
+			for (int i = 0; i < this.undoLength; i++)
 			{
 				ulong code = this.text[this.temp_cursor.CursorId];
 				this.text.MoveCursor (this.temp_cursor.CursorId, 1);
@@ -1195,7 +1195,7 @@ namespace Epsitec.Common.Text
 		{
 			System.IO.MemoryStream stream = new System.IO.MemoryStream ();
 			
-			this.text.WriteRawText (stream, this.text_length + 1);
+			this.text.WriteRawText (stream, this.textLength + 1);
 			
 			return stream.ToArray ();
 		}
@@ -1240,8 +1240,8 @@ namespace Epsitec.Common.Text
 			stream = null;
 			data   = null;
 			
-			this.text_length = this.text.TextLength - 1;
-			this.undo_length = 0;
+			this.textLength = this.text.TextLength - 1;
+			this.undoLength = 0;
 			
 			//	Restitue les curseurs; ils seront placés en début de document,
 			//	ce qui convient parfaitement :
@@ -1361,11 +1361,11 @@ namespace Epsitec.Common.Text
 		{
 			if (this.IsOpletQueueEnabled)
 			{
-				Common.Support.IOplet[] last_oplets = this.oplet_queue.LastActionOplets;
-				bool enable_merge = (this.oplet_queue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
-					/**/            (this.oplet_queue.PendingMergeMode != Common.Support.OpletQueue.MergeMode.Disabled);
+				Common.Support.IOplet[] last_oplets = this.opletQueue.LastActionOplets;
+				bool enable_merge = (this.opletQueue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
+					/**/            (this.opletQueue.PendingMergeMode != Common.Support.OpletQueue.MergeMode.Disabled);
 				
-				this.oplet_queue.BeginAction ();
+				this.opletQueue.BeginAction ();
 				
 				this.NotifyAddingOplet (oplet);
 				
@@ -1373,22 +1373,22 @@ namespace Epsitec.Common.Text
 				//	événement. Si c'est le cas, on ne peut plus rien fusionner;
 				//	ajoute simplement l'oplet à la liste, puis valide l'action :
 				
-				if (this.oplet_queue.PendingOpletCount > 0)
+				if (this.opletQueue.PendingOpletCount > 0)
 				{
-					this.oplet_queue.Insert (oplet);
+					this.opletQueue.Insert (oplet);
 					this.NotifyAddedOplet (oplet);
-					this.oplet_queue.ValidateAction ();
+					this.opletQueue.ValidateAction ();
 					this.ApplyAutomaticOpletName ();
 					
 					return;
 				}
 				else
 				{
-					this.oplet_queue.CancelAction ();
+					this.opletQueue.CancelAction ();
 				}
 				
 				if ((last_oplets.Length == 1) &&
-					(this.debug_disable_merge == false) &&
+					(this.debugDisableMerge == false) &&
 					(enable_merge))
 				{
 					Common.Support.IOplet last = last_oplets[0];
@@ -1401,11 +1401,11 @@ namespace Epsitec.Common.Text
 					}
 				}
 				
-				using (this.oplet_queue.BeginAction ())
+				using (this.opletQueue.BeginAction ())
 				{
-					this.oplet_queue.Insert (oplet);
+					this.opletQueue.Insert (oplet);
 					this.NotifyAddedOplet (oplet);
-					this.oplet_queue.ValidateAction ();
+					this.opletQueue.ValidateAction ();
 					this.ApplyAutomaticOpletName ();
 				}
 			}
@@ -1594,7 +1594,7 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (position <= this.TextLength);
 			
 			int area_start = System.Math.Max (0, position - 20);
-			int area_end   = System.Math.Min (position + length + 20, this.text_length);
+			int area_end   = System.Math.Min (position + length + 20, this.textLength);
 			
 			if (area_end > area_start)
 			{
@@ -1701,13 +1701,13 @@ namespace Epsitec.Common.Text
 					para_end = para_end_2;
 				}
 				
-				if (para_start < this.text_change_mark_start)
+				if (para_start < this.textChangeMarkStart)
 				{
-					this.text_change_mark_start = para_start;
+					this.textChangeMarkStart = para_start;
 				}
-				if (para_end > this.text_change_mark_end)
+				if (para_end > this.textChangeMarkEnd)
 				{
-					this.text_change_mark_end = para_end;
+					this.textChangeMarkEnd = para_end;
 				}
 			}
 		}
@@ -1926,8 +1926,8 @@ namespace Epsitec.Common.Text
 		{
 			this.text = new Internal.TextTable ();
 			
-			this.text_length = 0;
-			this.undo_length = 0;
+			this.textLength = 0;
+			this.undoLength = 0;
 			
 			this.temp_cursor = new Cursors.TempCursor ();
 			
@@ -1937,7 +1937,7 @@ namespace Epsitec.Common.Text
 		
 		private void SetupOpletQueue(Common.Support.OpletQueue oplet_queue)
 		{
-			this.oplet_queue = oplet_queue;
+			this.opletQueue = oplet_queue;
 		}
 		
 		private void SetupContext(TextContext context)
@@ -2130,13 +2130,13 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (this.cursors != null);
 				
-				int undo_start = this.story.text_length + 1;
-				int undo_end   = undo_start + this.story.undo_length;
+				int undo_start = this.story.textLength + 1;
+				int undo_end   = undo_start + this.story.undoLength;
 				
 				this.story.InternalMoveText (this.position, undo_start - this.length, this.length);
 				
-				this.story.text_length -= this.length;
-				this.story.undo_length += this.length;
+				this.story.textLength -= this.length;
+				this.story.undoLength += this.length;
 				
 				if (this.cursor != null)
 				{
@@ -2158,13 +2158,13 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Redo()
 			{
-				int undo_start = this.story.text_length + 1;
-				int undo_end   = undo_start + this.story.undo_length;
+				int undo_start = this.story.textLength + 1;
+				int undo_end   = undo_start + this.story.undoLength;
 				
 				this.story.InternalMoveText (undo_start, this.position, this.length);
 				
-				this.story.text_length += this.length;
-				this.story.undo_length -= this.length;
+				this.story.textLength += this.length;
+				this.story.undoLength -= this.length;
 				
 				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
@@ -2215,8 +2215,8 @@ namespace Epsitec.Common.Text
 				
 				if (this.cursors != null)
 				{
-					int undo_start = this.story.text_length + 1;
-					int undo_end   = undo_start + this.story.undo_length;
+					int undo_start = this.story.textLength + 1;
+					int undo_end   = undo_start + this.story.undoLength;
 					
 					CursorInfo[] infos;
 					this.story.InternalDeleteText (undo_start, this.length, out infos, true);
@@ -2224,7 +2224,7 @@ namespace Epsitec.Common.Text
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...
 					
-					this.story.undo_length -= this.length;
+					this.story.undoLength -= this.length;
 					this.cursors = null;
 				}
 				
@@ -2294,8 +2294,8 @@ namespace Epsitec.Common.Text
 					//	Le texte doit encore être permuté dans le buffer d'annulation
 					//	avant de pouvoir allonger le texte à annuler :
 					
-					int undo_start = this.story.text_length + 1;
-					int undo_end   = undo_start + this.story.undo_length;
+					int undo_start = this.story.textLength + 1;
+					int undo_end   = undo_start + this.story.undoLength;
 					
 					int pos_2 = undo_end - other.length;
 					int pos_1 = pos_2 - this.length;
@@ -2320,13 +2320,13 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				int undo_start = this.story.text_length + 1;
-				int undo_end   = undo_start + this.story.undo_length;
+				int undo_start = this.story.textLength + 1;
+				int undo_end   = undo_start + this.story.undoLength;
 				
 				this.story.InternalMoveText (undo_end - this.length, this.position, this.length);
 				
-				this.story.text_length += this.length;
-				this.story.undo_length -= this.length;
+				this.story.textLength += this.length;
+				this.story.undoLength -= this.length;
 				
 				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
@@ -2353,13 +2353,13 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (this.cursors != null);
 				
-				int undo_start = this.story.text_length + 1;
-				int undo_end   = undo_start + this.story.undo_length;
+				int undo_start = this.story.textLength + 1;
+				int undo_end   = undo_start + this.story.undoLength;
 				
 				this.story.InternalMoveText (this.position, undo_end - this.length, this.length);
 				
-				this.story.text_length -= this.length;
-				this.story.undo_length += this.length;
+				this.story.textLength -= this.length;
+				this.story.undoLength += this.length;
 				
 				if (this.cursor != null)
 				{
@@ -2409,8 +2409,8 @@ namespace Epsitec.Common.Text
 				{
 					if (this.length > 0)
 					{
-						int undo_start = this.story.text_length + 1;
-						int undo_end   = undo_start + this.story.undo_length;
+						int undo_start = this.story.textLength + 1;
+						int undo_end   = undo_start + this.story.undoLength;
 						
 						CursorInfo[] infos;
 						this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
@@ -2419,7 +2419,7 @@ namespace Epsitec.Common.Text
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...
 					
-					this.story.undo_length -= this.length;
+					this.story.undoLength -= this.length;
 					this.cursors = null;
 				}
 				
@@ -2433,8 +2433,8 @@ namespace Epsitec.Common.Text
 			{
 				//	Génère le texte simple qui représente ce qui a été détruit.
 				
-				int undo_start = this.story.text_length + 1;
-				int undo_end   = undo_start + this.story.undo_length;
+				int undo_start = this.story.textLength + 1;
+				int undo_end   = undo_start + this.story.undoLength;
 				
 				ulong[] buffer = new ulong[this.length];
 				this.story.ReadText (undo_end - this.length, this.length, buffer);
@@ -2642,19 +2642,19 @@ namespace Epsitec.Common.Text
 		
 		
 		private Internal.TextTable				text;
-		private int								text_length;		//	texte dans la zone texte
-		private int								undo_length;		//	texte dans la zone undo
+		private int								textLength;		//	texte dans la zone texte
+		private int								undoLength;		//	texte dans la zone undo
 		private ICursor							temp_cursor;
 		
-		private Common.Support.OpletQueue		oplet_queue;
-		private int								oplet_queue_disable;
+		private Common.Support.OpletQueue		opletQueue;
+		private int								opletQueueDisable;
 		private TextContext						context;
 		
-		private bool							debug_disable_oplet;
-		private bool							debug_disable_merge;
+		private bool							debugDisableOplet;
+		private bool							debugDisableMerge;
 		
-		private int								text_change_mark_start;
-		private int								text_change_mark_end;
+		private int								textChangeMarkStart;
+		private int								textChangeMarkEnd;
 		
 		private int								suspend_text_changed;
 		private long							last_text_version = 0;

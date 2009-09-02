@@ -33,12 +33,12 @@ namespace Epsitec.Common.Text
 			
 			foreach (PropertyWrapper wrapper in wrappers)
 			{
-				Properties.FontProperty font_property = wrapper.Value as Properties.FontProperty;
+				Properties.FontProperty fontProperty = wrapper.Value as Properties.FontProperty;
 				
-				string font_face  = font_property.FaceName;
-				string font_style = OpenType.FontCollection.GetStyleHash (font_property.StyleName);
+				string fontFace  = fontProperty.FaceName;
+				string fontStyle = OpenType.FontCollection.GetStyleHash (fontProperty.StyleName);
 
-				OpenType.FontName name = new OpenType.FontName (font_face, font_style);
+				OpenType.FontName name = new OpenType.FontName (fontFace, fontStyle);
 				OpenType.FontIdentity id = OpenType.FontCollection.Default[name];
 
 				if (id != null)
@@ -74,11 +74,11 @@ namespace Epsitec.Common.Text
 			
 			foreach (PropertyWrapper wrapper in wrappers)
 			{
-				Properties.ImageProperty image_property = wrapper.Value as Properties.ImageProperty;
+				Properties.ImageProperty imageProperty = wrapper.Value as Properties.ImageProperty;
 				
-				if (hash.Contains (image_property.ImageTag) == false)
+				if (hash.Contains (imageProperty.ImageTag) == false)
 				{
-					hash[image_property.ImageTag] = image_property;
+					hash[imageProperty.ImageTag] = imageProperty;
 				}
 			}
 			
@@ -92,31 +92,31 @@ namespace Epsitec.Common.Text
 		
 		public string[] GetTabsUse()
 		{
-			PropertyWrapper[] wrappers_1 = this.GetPropertyUsage (Properties.WellKnownType.Tabs);
-			PropertyWrapper[] wrappers_2 = this.GetPropertyUsage (Properties.WellKnownType.Tab);
+			PropertyWrapper[] wrappers1 = this.GetPropertyUsage (Properties.WellKnownType.Tabs);
+			PropertyWrapper[] wrappers2 = this.GetPropertyUsage (Properties.WellKnownType.Tab);
 			
 			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 			
-			foreach (PropertyWrapper wrapper in wrappers_1)
+			foreach (PropertyWrapper wrapper in wrappers1)
 			{
-				Properties.TabsProperty tabs_property = wrapper.Value as Properties.TabsProperty;
+				Properties.TabsProperty tabsProperty = wrapper.Value as Properties.TabsProperty;
 				
-				foreach (string tag in tabs_property.TabTags)
+				foreach (string tag in tabsProperty.TabTags)
 				{
 					if (hash.Contains (tag) == false)
 					{
-						hash[tag] = tabs_property;
+						hash[tag] = tabsProperty;
 					}
 				}
 			}
 			
-			foreach (PropertyWrapper wrapper in wrappers_2)
+			foreach (PropertyWrapper wrapper in wrappers2)
 			{
-				Properties.TabProperty tab_property = wrapper.Value as Properties.TabProperty;
+				Properties.TabProperty tabProperty = wrapper.Value as Properties.TabProperty;
 				
-				if (hash.Contains (tab_property.TabTag) == false)
+				if (hash.Contains (tabProperty.TabTag) == false)
 				{
-					hash[tab_property.TabTag] = tab_property;
+					hash[tabProperty.TabTag] = tabProperty;
 				}
 			}
 			
@@ -191,31 +191,31 @@ namespace Epsitec.Common.Text
 		
 		private void Record(ulong bits, int count)
 		{
-			Styles.CoreSettings  core_settings;
-			Styles.LocalSettings local_settings;
-			Styles.ExtraSettings extra_settings;
+			Styles.CoreSettings  coreSettings;
+			Styles.LocalSettings localSettings;
+			Styles.ExtraSettings extraSettings;
 			
-			this.settings.GetCoreAndSettings (bits, out core_settings, out local_settings, out extra_settings);
+			this.settings.GetCoreAndSettings (bits, out coreSettings, out localSettings, out extraSettings);
 			
-			if (core_settings != null)
+			if (coreSettings != null)
 			{
-				foreach (Property property in core_settings.GetProperties ())
+				foreach (Property property in coreSettings.GetProperties ())
 				{
 					this.Record (property, count);
 				}
 			}
 			
-			if (local_settings != null)
+			if (localSettings != null)
 			{
-				foreach (Property property in local_settings.GetProperties ())
+				foreach (Property property in localSettings.GetProperties ())
 				{
 					this.Record (property, count);
 				}
 			}
 			
-			if (extra_settings != null)
+			if (extraSettings != null)
 			{
-				foreach (Property property in extra_settings.GetProperties ())
+				foreach (Property property in extraSettings.GetProperties ())
 				{
 					this.Record (property, count);
 				}

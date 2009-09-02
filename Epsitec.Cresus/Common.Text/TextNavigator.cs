@@ -1642,14 +1642,14 @@ again:
 			}
 
 
-			List<TextStyle> new_styles = new List<TextStyle> ();
+			List<TextStyle> newStyles = new List<TextStyle> ();
 			
-			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
-			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Symbol));
-			new_styles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.MetaProperty), metaProperties, mode));
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Text));
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Symbol));
+			newStyles.AddRange (Internal.Navigator.Combine (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.MetaProperty), metaProperties, mode));
 			
-			this.currentStyles = new_styles.ToArray ();
+			this.currentStyles = newStyles.ToArray ();
 			
 			this.RefreshAccumulatedStylesAndProperties ();
 			this.NotifyTextChanged ();
@@ -1665,7 +1665,7 @@ again:
 				properties = new Property[0];
 			}
 			
-			Property[] paragraph_properties = Property.Filter (properties, Properties.PropertyFilter.UniformOnly);
+			Property[] paragraphProperties = Property.Filter (properties, Properties.PropertyFilter.UniformOnly);
 			
 			if (this.HasSelection)
 			{
@@ -1682,7 +1682,7 @@ again:
 						
 						while (pos < end)
 						{
-							this.SetParagraphProperties (pos, mode, paragraph_properties);
+							this.SetParagraphProperties (pos, mode, paragraphProperties);
 							pos = this.FindNextParagraphStart (pos);
 						}
 					}
@@ -1694,14 +1694,14 @@ again:
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 				
-				Internal.Navigator.SetParagraphProperties (this.story, this.cursor, mode, paragraph_properties);
+				Internal.Navigator.SetParagraphProperties (this.story, this.cursor, mode, paragraphProperties);
 
-				List<Property> new_properties = new List<Property> ();
+				List<Property> newProperties = new List<Property> ();
 				
-				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
-				new_properties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.NonUniformOnly));
+				newProperties.AddRange (Internal.Navigator.Combine (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly), paragraphProperties, mode));
+				newProperties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.NonUniformOnly));
 				
-				this.currentProperties = new_properties.ToArray ();
+				this.currentProperties = newProperties.ToArray ();
 				
 				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
@@ -1719,7 +1719,7 @@ again:
 				properties = new Property[0];
 			}
 			
-			Property[] text_properties = Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly);
+			Property[] textProperties = Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly);
 			
 			if (this.HasSelection)
 			{
@@ -1733,7 +1733,7 @@ again:
 						int pos    = range.Start;
 						int length = range.Length;
 					
-						this.SetTextProperties (pos, length, mode, text_properties);
+						this.SetTextProperties (pos, length, mode, textProperties);
 					}
 					
 					this.story.ValidateAction ();
@@ -1743,12 +1743,12 @@ again:
 			{
 				this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 
-				List<Property> new_properties = new List<Property> ();
+				List<Property> newProperties = new List<Property> ();
 				
-				new_properties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly));
-				new_properties.AddRange (Internal.Navigator.Combine (Property.Filter (this.currentProperties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
+				newProperties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly));
+				newProperties.AddRange (Internal.Navigator.Combine (Property.Filter (this.currentProperties, Properties.PropertyFilter.NonUniformOnly), textProperties, mode));
 				
-				this.currentProperties = new_properties.ToArray ();
+				this.currentProperties = newProperties.ToArray ();
 				
 				this.RefreshFilterCurrentProperties ();
 				this.RefreshAccumulatedStylesAndProperties ();
@@ -1758,14 +1758,14 @@ again:
 		}
 		
 		
-		public bool HitTest(ITextFrame frame, double cx, double cy, bool skip_invisible, out int position, out int direction)
+		public bool HitTest(ITextFrame frame, double cx, double cy, bool skipInvisible, out int position, out int direction)
 		{
 			position  = -1;
 			direction = 0;
 			
 			if (frame != null)
 			{
-				if ((this.fitter.HitTestTextFrame (frame, cx, cy, skip_invisible, ref position, ref direction)) ||
+				if ((this.fitter.HitTestTextFrame (frame, cx, cy, skipInvisible, ref position, ref direction)) ||
 					(position >= 0))
 				{
 					//	Vérifie encore si le curseur ne se trouve pas dans un
@@ -1808,41 +1808,41 @@ again:
 			
 			try
 			{
-				int old_pos = this.CursorPosition;
-				int old_dir = this.CursorDirection;
+				int oldPos = this.CursorPosition;
+				int oldDir = this.CursorDirection;
 				
-				this.story.SetCursorPosition (temp, old_pos, old_dir);
+				this.story.SetCursorPosition (temp, oldPos, oldDir);
 				
-				int new_pos;
-				int new_dir;
+				int newPos;
+				int newDir;
 				
 				ITextFrame frame;
 				double cx, cy, ascender, descender, angle;
 				
 				if (direction < 0)
 				{
-					this.MoveCursor (temp, 0, Direction.Backward, new MoveCallback (this.IsRawLineStart), out new_pos, out new_dir);
-					this.story.SetCursorPosition (temp, new_pos, new_dir);
-					this.MoveCursor (temp, -1, out new_pos, out new_dir);
-					this.story.SetCursorPosition (temp, new_pos, new_dir);
+					this.MoveCursor (temp, 0, Direction.Backward, new MoveCallback (this.IsRawLineStart), out newPos, out newDir);
+					this.story.SetCursorPosition (temp, newPos, newDir);
+					this.MoveCursor (temp, -1, out newPos, out newDir);
+					this.story.SetCursorPosition (temp, newPos, newDir);
 					
 					if ((this.GetCursorGeometry (temp, out frame, out cx, out cy, out ascender, out descender, out angle)) &&
-						(this.HitTest (frame, x, cy, false, out new_pos, out new_dir)))
+						(this.HitTest (frame, x, cy, false, out newPos, out newDir)))
 					{
-						this.MoveTo (new_pos, new_dir);
+						this.MoveTo (newPos, newDir);
 					}
 				}
 				else
 				{
-					this.MoveCursor (temp, 0, Direction.Forward, new MoveCallback (this.IsLineEnd), out new_pos, out new_dir);
-					this.story.SetCursorPosition (temp, new_pos, new_dir);
-					this.MoveCursor (temp, 1, out new_pos, out new_dir);
-					this.story.SetCursorPosition (temp, new_pos, new_dir);
+					this.MoveCursor (temp, 0, Direction.Forward, new MoveCallback (this.IsLineEnd), out newPos, out newDir);
+					this.story.SetCursorPosition (temp, newPos, newDir);
+					this.MoveCursor (temp, 1, out newPos, out newDir);
+					this.story.SetCursorPosition (temp, newPos, newDir);
 					
 					if ((this.GetCursorGeometry (temp, out frame, out cx, out cy, out ascender, out descender, out angle)) &&
-						(this.HitTest (frame, x, cy, false, out new_pos, out new_dir)))
+						(this.HitTest (frame, x, cy, false, out newPos, out newDir)))
 					{
-						this.MoveTo (new_pos, new_dir);
+						this.MoveTo (newPos, newDir);
 					}
 				}
 			}
@@ -1897,16 +1897,16 @@ again:
 		{
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
-			int para_line;
-			int line_char;
+			int paraLine;
+			int lineChar;
 			
-			if (this.fitter.GetCursorGeometry (cursor, out frame, out cx, out cy, out para_line, out line_char))
+			if (this.fitter.GetCursorGeometry (cursor, out frame, out cx, out cy, out paraLine, out lineChar))
 			{
 				Property[] properties = this.accumulatedProperties;
 				
 				if ((this.CursorPosition == this.story.TextLength) &&
-					(para_line == 0) &&
-					(line_char == 0))
+					(paraLine == 0) &&
+					(lineChar == 0))
 				{
 					//	Cas particulier : le curseur se trouve tout seul en fin de pavé,
 					//	sans aucun autre caractère dans la ligne.
@@ -1925,10 +1925,10 @@ again:
 					double ox;
 					double oy;
 					double width;
-					double next_y;
+					double nextY;
 					
 					frame.MapFromView (ref cx, ref cy);
-					frame.ConstrainLineBox (cy, 0, 0, 0, 0, false, out ox, out oy, out width, out next_y);
+					frame.ConstrainLineBox (cy, 0, 0, 0, 0, false, out ox, out oy, out width, out nextY);
 					
 					double mx1 = margins.LeftMarginFirstLine;
 					double mx2 = margins.RightMarginFirstLine;
@@ -1943,24 +1943,24 @@ again:
 					frame.MapToView (ref cx, ref cy);
 				}
 				
-				OpenType.Font ot_font;
-				double        pt_size;
-				double        pt_offset;
-				double        font_scale;
-				double        font_glue;
+				OpenType.Font otFont;
+				double        ptSize;
+				double        ptOffset;
+				double        fontScale;
+				double        fontGlue;
 				
-				this.story.TextContext.GetFont (properties, out ot_font);
-				this.story.TextContext.GetFontSize (properties, out pt_size, out font_scale, out font_glue);
-				this.story.TextContext.GetFontBaselineOffset (pt_size, properties, out pt_offset);
+				this.story.TextContext.GetFont (properties, out otFont);
+				this.story.TextContext.GetFontSize (properties, out ptSize, out fontScale, out fontGlue);
+				this.story.TextContext.GetFontBaselineOffset (ptSize, properties, out ptOffset);
 				
-				ascender  = ot_font.GetAscender (pt_size) * font_scale;
-				descender = ot_font.GetDescender (pt_size) * font_scale;
-				angle     = ot_font.GetCaretAngleRad ();
+				ascender  = otFont.GetAscender (ptSize) * fontScale;
+				descender = otFont.GetDescender (ptSize) * fontScale;
+				angle     = otFont.GetCaretAngleRad ();
 				
-				if (pt_offset != 0)
+				if (ptOffset != 0)
 				{
 					frame.MapFromView (ref cx, ref cy);
-					cy += pt_offset;
+					cy += ptOffset;
 					frame.MapToView (ref cx, ref cy);
 				}
 				
@@ -2091,27 +2091,27 @@ again:
 			{
 				int[] sel = this.GetSelectionCursorPositions ();
 				
-				int sel_1 = sel[0];
-				int sel_2 = sel[1];
+				int sel1 = sel[0];
+				int sel2 = sel[1];
 				
-				if (sel_1 < sel_2)
+				if (sel1 < sel2)
 				{
-					if (pos < sel_2)
+					if (pos < sel2)
 					{
 						dir = -1;
 					}
-					else if (pos > sel_1)
+					else if (pos > sel1)
 					{
 						dir = 1;
 					}
 				}
 				else
 				{
-					if (pos < sel_1)
+					if (pos < sel1)
 					{
 						dir = -1;
 					}
-					else if (pos > sel_2)
+					else if (pos > sel2)
 					{
 						dir = 1;
 					}
@@ -2167,41 +2167,41 @@ again:
 			{
 				this.TextContext.GetStylesAndProperties (code, out styles, out properties);
 				
-				System.Text.StringBuilder debug_styles = new System.Text.StringBuilder ();
-				System.Text.StringBuilder debug_properties = new System.Text.StringBuilder ();
+				System.Text.StringBuilder debugStyles = new System.Text.StringBuilder ();
+				System.Text.StringBuilder debugProperties = new System.Text.StringBuilder ();
 				
 				foreach (TextStyle s in styles)
 				{
-					if (debug_styles.Length > 0)
+					if (debugStyles.Length > 0)
 					{
-						debug_styles.Append ("/");
+						debugStyles.Append ("/");
 					}
 					
 					if (s.MetaId != null)
 					{
-						debug_styles.Append (s.MetaId);
-						debug_styles.Append ("-");
-						debug_styles.Append (s.Priority);
+						debugStyles.Append (s.MetaId);
+						debugStyles.Append ("-");
+						debugStyles.Append (s.Priority);
 					}
 					else
 					{
-						debug_styles.Append (s.Name);
+						debugStyles.Append (s.Name);
 					}
 				}
 				
 				foreach (Property p in properties)
 				{
-					if (debug_properties.Length > 0)
+					if (debugProperties.Length > 0)
 					{
-						debug_properties.Append ("/");
+						debugProperties.Append ("/");
 					}
 					
-					debug_properties.Append (p.WellKnownType);
+					debugProperties.Append (p.WellKnownType);
 				}
 				
-				if (debug_properties.Length == 0)
+				if (debugProperties.Length == 0)
 				{
-					debug_properties.Append ("[none]");
+					debugProperties.Append ("[none]");
 				}
 #if false				
 				System.Diagnostics.Debug.WriteLine (string.Format ("[{0}:{1}:{2}:{3}] -> {4} + {5}",
@@ -2223,24 +2223,24 @@ again:
 				
 				if (n != properties.Length)
 				{
-					Property[] old_properties = properties;
-					Property[] new_properties = new Property[n];
+					Property[] oldProperties = properties;
+					Property[] newProperties = new Property[n];
 					
 					int j = 0;
 					
-					for (int i = 0; i < old_properties.Length; i++)
+					for (int i = 0; i < oldProperties.Length; i++)
 					{
-						if (old_properties[i].PropertyAffinity != Properties.PropertyAffinity.Symbol)
+						if (oldProperties[i].PropertyAffinity != Properties.PropertyAffinity.Symbol)
 						{
-							new_properties[j] = old_properties[i];
+							newProperties[j] = oldProperties[i];
 							j++;
 						}
 					}
 					
-					properties = new_properties;
+					properties = newProperties;
 					
-					System.Diagnostics.Debug.Assert (new_properties.Length == n);
-					System.Diagnostics.Debug.Assert (new_properties.Length < old_properties.Length);
+					System.Diagnostics.Debug.Assert (newProperties.Length == n);
+					System.Diagnostics.Debug.Assert (newProperties.Length < oldProperties.Length);
 				}
 			}
 			
@@ -2254,36 +2254,36 @@ again:
 		
 		public void SuspendNotifications()
 		{
-			this.suspend_notifications++;
+			this.suspendNotifications++;
 		}
 		
 		public void ResumeNotifications()
 		{
-			System.Diagnostics.Debug.Assert (this.suspend_notifications > 0);
+			System.Diagnostics.Debug.Assert (this.suspendNotifications > 0);
 			
-			this.suspend_notifications--;
+			this.suspendNotifications--;
 			
-			if (this.suspend_notifications == 0)
+			if (this.suspendNotifications == 0)
 			{
-				if (this.notify_text_changed)
+				if (this.notifyTextChanged)
 				{
 					this.OnTextChanged ();
-					this.notify_text_changed = false;
+					this.notifyTextChanged = false;
 				}
-				if (this.notify_tabs_changed)
+				if (this.notifyTabsChanged)
 				{
 					this.OnTabsChanged ();
-					this.notify_tabs_changed = false;
+					this.notifyTabsChanged = false;
 				}
-				if (this.notify_style_changed)
+				if (this.notifyStyleChanged)
 				{
 					this.OnActiveStyleChanged ();
-					this.notify_style_changed = false;
+					this.notifyStyleChanged = false;
 				}
-				if (this.notify_cursor_moved)
+				if (this.notifyCursorMoved)
 				{
 					this.OnCursorMoved ();
-					this.notify_cursor_moved = false;
+					this.notifyCursorMoved = false;
 				}
 			}
 		}
@@ -2295,7 +2295,7 @@ again:
 		}
 		
 		
-		private bool MoveCursor(ICursor cursor, int distance, out int new_pos, out int new_dir)
+		private bool MoveCursor(ICursor cursor, int distance, out int newPos, out int newDir)
 		{
 			//	Déplace le curseur sur la distance indiquée. Saute les textes
 			//	automatiques et ajuste la direction pour gérer correctement
@@ -2317,8 +2317,8 @@ again:
 			}
 			
 			TextContext        context    = this.TextContext;
-			Internal.TextTable text_table = this.story.TextTable;
-			StyleList          style_list = context.StyleList;
+			Internal.TextTable textTable = this.story.TextTable;
+			StyleList          styleList = context.StyleList;
 			
 			int pos = this.story.GetCursorPosition (cursor);
 			
@@ -2374,25 +2374,25 @@ again:
 				//	doivent être traitées comme indivisibles; idem pour les
 				//	générateurs :
 				
-				Properties.AutoTextProperty  auto_text_property;
-				Properties.GeneratorProperty generator_property;
+				Properties.AutoTextProperty  autoTextProperty;
+				Properties.GeneratorProperty generatorProperty;
 				
-				Property property_to_skip = null;
+				Property propertyToSkip = null;
 				
 				pos += direction;
 				
-				if (context.GetAutoText (code, out auto_text_property))
+				if (context.GetAutoText (code, out autoTextProperty))
 				{
-					property_to_skip = auto_text_property;
+					propertyToSkip = autoTextProperty;
 				}
-				else if (context.GetGenerator (code, out generator_property))
+				else if (context.GetGenerator (code, out generatorProperty))
 				{
-					property_to_skip = generator_property;
+					propertyToSkip = generatorProperty;
 				}
 				
-				if (property_to_skip != null)
+				if (propertyToSkip != null)
 				{
-					int skip = this.SkipOverProperty (this.tempCursor, property_to_skip, direction);
+					int skip = this.SkipOverProperty (this.tempCursor, propertyToSkip, direction);
 					
 					//	Un texte produit par un générateur (ou un texte automatique)
 					//	compte comme un caractère unique pour la navigation.
@@ -2423,34 +2423,34 @@ again:
 				}
 			}
 			
-			new_pos = pos;
-			new_dir = direction;
+			newPos = pos;
+			newDir = direction;
 			
 			return moved > 0;
 		}
 		
-		private bool MoveCursor(ICursor cursor, int count, Direction direction, MoveCallback callback, out int new_pos, out int new_dir)
+		private bool MoveCursor(ICursor cursor, int count, Direction direction, MoveCallback callback, out int newPos, out int newDir)
 		{
 			//	Déplace le curseur en sautant le nombre d'éléments indiqué. Le
 			//	callback permet de déterminer quand un élément est atteint.
 			
 			int moved   = 0;
-			int old_pos = this.story.GetCursorPosition (cursor);
-			int old_dir = this.story.GetCursorDirection (cursor);
+			int oldPos = this.story.GetCursorPosition (cursor);
+			int oldDir = this.story.GetCursorDirection (cursor);
 			
 			TextContext        context    = this.TextContext;
-			Internal.TextTable text_table = this.story.TextTable;
-			StyleList          style_list = context.StyleList;
+			Internal.TextTable textTable = this.story.TextTable;
+			StyleList          styleList = context.StyleList;
 			
 			System.Diagnostics.Debug.Assert (count >= 0);
 			System.Diagnostics.Debug.Assert ((direction == Direction.Backward) || (direction == Direction.Forward));
 			
-			this.story.SetCursorPosition (this.tempCursor, old_pos);
+			this.story.SetCursorPosition (this.tempCursor, oldPos);
 			
 			if (direction == Direction.Forward)
 			{
-				int dir = old_dir;
-				int max = this.story.TextLength - old_pos;
+				int dir = oldDir;
+				int max = this.story.TextLength - oldPos;
 				
 				for (int i = 0; i < max; i++)
 				{
@@ -2472,8 +2472,8 @@ again:
 			}
 			else
 			{
-				int dir = old_dir;
-				int max = old_pos;
+				int dir = oldDir;
+				int max = oldPos;
 				
 				for (int i = 0; i < max; i++)
 				{
@@ -2494,11 +2494,11 @@ again:
 				}
 			}
 			
-			new_pos = old_pos + moved;
-			new_dir = (int) direction;
+			newPos = oldPos + moved;
+			newDir = (int) direction;
 			
-			if ((new_pos != old_pos) ||
-				(new_dir != old_dir))
+			if ((newPos != oldPos) ||
+				(newDir != oldDir))
 			{
 				return true;
 			}
@@ -2561,7 +2561,7 @@ again:
 			int  start  = pos;
 			int  end    = pos + length;
 			int  fence  = end;
-			bool fix_up = false;
+			bool fixUp = false;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -2605,7 +2605,7 @@ again:
 						System.Diagnostics.Debug.Assert (count == 1);
 						
 						range  = new Range (start, pos+i - start + 1);
-						fix_up = true;
+						fixUp = true;
 					}
 					
 					Range.Merge (ranges, range);
@@ -2618,7 +2618,7 @@ again:
 			{
 				//	Il reste encore un fragment de début de paragraphe à détruire :
 				
-				if (! fix_up)
+				if (! fixUp)
 				{
 					//	Le premier paragraphe est sélectionné dans son entier (ou
 					//	il n'y a pas de premier paragraphe).
@@ -2660,7 +2660,7 @@ again:
 						//	Modifie la paragraphe final pour en faire un paragraphe
 						//	normal (supprime donc le texte automatique).
 						
-						//	ATTENTION: cet appel modifie la position du curseur temp_cursor !
+						//	ATTENTION: cet appel modifie la position du curseur tempCursor !
 						
 						this.SetParagraphStyles (start, new TextStyle[] { this.TextContext.DefaultParagraphStyle });
 						
@@ -2686,7 +2686,7 @@ process_ranges:
 				this.story.DeleteText (this.tempCursor, range.Length);
 			}
 			
-			if (fix_up)
+			if (fixUp)
 			{
 				//	La destruction a combiné le début du premier paragraphe avec
 				//	la fin du dernier paragraphe. Il faut donc appliquer les ré-
@@ -2710,33 +2710,33 @@ process_ranges:
 			//	différente de ce qu'il avait avant. Il faut mettre à jour juste la
 			//	partie "paragraphe" du style et des propriétés...
 			
-			Property[]  old_properties = this.currentProperties;
-			TextStyle[] old_styles     = this.currentStyles;
+			Property[]  oldProperties = this.currentProperties;
+			TextStyle[] oldStyles     = this.currentStyles;
 			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (old_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (old_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (oldProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (oldProperties) == false);
 			
 			//	Change l'état du curseur, comme s'il venait d'arriver où il est; on
 			//	perd donc les réglages précédents, temporairement.
 			
 			this.UpdateCurrentStylesAndProperties ();
 
-			List<TextStyle> new_styles     = new List<TextStyle> ();
-			List<Property>  new_properties = new List<Property> ();
+			List<TextStyle> newStyles     = new List<TextStyle> ();
+			List<Property>  newProperties = new List<Property> ();
 			
-			new_styles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
-			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Text));
-			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.Symbol));
-			new_styles.AddRange (TextStyle.FilterStyles (old_styles, TextStyleClass.MetaProperty));
+			newStyles.AddRange (TextStyle.FilterStyles (this.currentStyles, TextStyleClass.Paragraph));
+			newStyles.AddRange (TextStyle.FilterStyles (oldStyles, TextStyleClass.Text));
+			newStyles.AddRange (TextStyle.FilterStyles (oldStyles, TextStyleClass.Symbol));
+			newStyles.AddRange (TextStyle.FilterStyles (oldStyles, TextStyleClass.MetaProperty));
 			
-			new_properties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly));
-			new_properties.AddRange (Property.Filter (old_properties, Properties.PropertyFilter.NonUniformOnly));
+			newProperties.AddRange (Property.Filter (this.currentProperties, Properties.PropertyFilter.UniformOnly));
+			newProperties.AddRange (Property.Filter (oldProperties, Properties.PropertyFilter.NonUniformOnly));
 			
 			//	Regénère les styles et propriétés d'origine du curseur, pour ce qui
 			//	concerne le texte, mais conserve les réglages du paragraphe en cours.
 			
-			this.currentStyles     = new_styles.ToArray ();
-			this.currentProperties = new_properties.ToArray ();
+			this.currentStyles     = newStyles.ToArray ();
+			this.currentProperties = newProperties.ToArray ();
 			
 			this.RefreshFilterCurrentProperties ();
 			this.RefreshAccumulatedStylesAndProperties ();
@@ -2774,12 +2774,12 @@ process_ranges:
 			{
 			}
 			
-			public Range(int start, int length, int i_start, int i_end)
+			public Range(int start, int length, int iStart, int iEnd)
 			{
 				this.start   = start;
 				this.length  = length;
-				this.i_start = i_start;
-				this.i_end   = i_end;
+				this.iStart = iStart;
+				this.iEnd   = iEnd;
 			}
 			
 			
@@ -2825,7 +2825,7 @@ process_ranges:
 			{
 				get
 				{
-					return this.i_start;
+					return this.iStart;
 				}
 			}
 			
@@ -2833,12 +2833,12 @@ process_ranges:
 			{
 				get
 				{
-					return this.i_end;
+					return this.iEnd;
 				}
 			}
 			
 			
-			public static void Merge(System.Collections.Stack ranges, Range new_range)
+			public static void Merge(System.Collections.Stack ranges, Range newRange)
 			{
 				//	Insère une nouvelle zone sélectionnée. Si elle rejoint parfaitement
 				//	la zone précédente, on allonge simplement celle-ci. Dans le cas
@@ -2846,25 +2846,25 @@ process_ranges:
 				
 				if (ranges.Count > 0)
 				{
-					Range old_range = ranges.Peek () as Range;
+					Range oldRange = ranges.Peek () as Range;
 					
-					if (old_range.End == new_range.Start)
+					if (oldRange.End == newRange.Start)
 					{
-						old_range.End   = new_range.End;
-						old_range.i_end = new_range.i_end;
+						oldRange.End   = newRange.End;
+						oldRange.iEnd = newRange.iEnd;
 					}
 					else
 					{
-						ranges.Push (new_range);
+						ranges.Push (newRange);
 					}
 				}
 				else
 				{
-					ranges.Push (new_range);
+					ranges.Push (newRange);
 				}
 			}
 			
-			public static void Merge(System.Collections.ArrayList ranges, Range new_range)
+			public static void Merge(System.Collections.ArrayList ranges, Range newRange)
 			{
 				//	Fusionne une nouvelle zone dans la liste des zones existantes. S'il
 				//	y a recouvrement avec une zone existante, celle-ci sera agrandie.
@@ -2875,10 +2875,10 @@ process_ranges:
 				
 				for (int i = 0; i < ranges.Count; i++)
 				{
-					Range old_range = ranges[i] as Range;
+					Range oldRange = ranges[i] as Range;
 					
-					if ((new_range.Start <= old_range.End) &&
-						(new_range.End >= old_range.Start))
+					if ((newRange.Start <= oldRange.End) &&
+						(newRange.End >= oldRange.Start))
 					{
 						//	Il y a un chevauchement. Fusionne les deux zones. Pour traiter
 						//	correctement l'agrandissement, on préfère retirer l'ancienne
@@ -2886,29 +2886,29 @@ process_ranges:
 						
 						ranges.RemoveAt (i);
 						
-						if (old_range.Start > new_range.Start)
+						if (oldRange.Start > newRange.Start)
 						{
-							old_range.Start   = new_range.Start;
-							old_range.i_start = new_range.i_start;
+							oldRange.Start   = newRange.Start;
+							oldRange.iStart = newRange.iStart;
 						}
 						
-						if (old_range.End < new_range.End)
+						if (oldRange.End < newRange.End)
 						{
-							old_range.End    = new_range.End;
-							old_range.i_end  = new_range.i_end;
+							oldRange.End    = newRange.End;
+							oldRange.iEnd  = newRange.iEnd;
 						}
 						
-						Range.Merge (ranges, old_range);
+						Range.Merge (ranges, oldRange);
 						
 						return;
 					}
-					if (new_range.Start > old_range.End)
+					if (newRange.Start > oldRange.End)
 					{
 						pos = i+1;
 					}
 				}
 				
-				ranges.Insert (pos, new_range);
+				ranges.Insert (pos, newRange);
 			}
 			
 			
@@ -2940,8 +2940,8 @@ process_ranges:
 			
 			private int							start;
 			private int							length;
-			private int							i_start;
-			private int							i_end;
+			private int							iStart;
+			private int							iEnd;
 		}
 		#endregion
 		
@@ -3115,14 +3115,14 @@ process_ranges:
 			Internal.Navigator.SetTextProperties (this.story, this.tempCursor, length, mode, properties);
 		}
 		
-		private void SetMetaProperties(int pos, int length, Properties.ApplyMode mode, TextStyle[] meta_properties)
+		private void SetMetaProperties(int pos, int length, Properties.ApplyMode mode, TextStyle[] metaProperties)
 		{
 			this.story.SetCursorPosition (this.tempCursor, pos);
 			
-			Internal.Navigator.SetMetaProperties (this.story, this.tempCursor, length, mode, meta_properties);
+			Internal.Navigator.SetMetaProperties (this.story, this.tempCursor, length, mode, metaProperties);
 		}
 		
-		private void SetParagraphMetaProperties(int pos, Properties.ApplyMode mode, TextStyle[] meta_properties)
+		private void SetParagraphMetaProperties(int pos, Properties.ApplyMode mode, TextStyle[] metaProperties)
 		{
 			this.story.SetCursorPosition (this.tempCursor, pos);
 			
@@ -3130,7 +3130,7 @@ process_ranges:
 			
 			this.story.SetCursorPosition (this.tempCursor, pos + start);
 			
-			Internal.Navigator.SetParagraphMetaProperties (this.story, this.tempCursor, mode, meta_properties);
+			Internal.Navigator.SetParagraphMetaProperties (this.story, this.tempCursor, mode, metaProperties);
 		}
 		
 		
@@ -3161,12 +3161,12 @@ process_ranges:
 		
 		private void RefreshAccumulatedStylesAndProperties()
 		{
-			Styles.PropertyContainer.Accumulator current_accumulator = new Styles.PropertyContainer.Accumulator ();
+			Styles.PropertyContainer.Accumulator currentAccumulator = new Styles.PropertyContainer.Accumulator ();
 			
-			current_accumulator.SkipSymbolProperties = true;
-			current_accumulator.Accumulate (this.story.FlattenStylesAndProperties (this.currentStyles, this.currentProperties));
+			currentAccumulator.SkipSymbolProperties = true;
+			currentAccumulator.Accumulate (this.story.FlattenStylesAndProperties (this.currentStyles, this.currentProperties));
 
-			this.accumulatedProperties = current_accumulator.AccumulatedProperties;
+			this.accumulatedProperties = currentAccumulator.AccumulatedProperties;
 			
 			//	Génère une "empreinte" des styles et propriétés actifs, ce qui va
 			//	permettre de déterminer si les réglages ont changé depuis la dernière
@@ -3185,10 +3185,10 @@ process_ranges:
 				fingerprint.Append (this.accumulatedProperties[i].ToString ());
 			}
 			
-			if (this.accumulated_properties_fingerprint != fingerprint.ToString ())
+			if (this.accumulatedPropertiesFingerprint != fingerprint.ToString ())
 			{
-				this.accumulated_properties_fingerprint = fingerprint.ToString ();
-//-				System.Diagnostics.Debug.WriteLine (string.Format ("Property Fingerprint: {0}", this.accumulated_properties_fingerprint));
+				this.accumulatedPropertiesFingerprint = fingerprint.ToString ();
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("Property Fingerprint: {0}", this.accumulatedPropertiesFingerprint));
 				
 				this.NotifyActiveStyleChanged ();
 			}
@@ -3205,10 +3205,10 @@ process_ranges:
 				fingerprint.Append (info.Status);
 			}
 			
-			if (this.accumulated_tab_info_fingerprint != fingerprint.ToString ())
+			if (this.accumulatedTabInfoFingerprint != fingerprint.ToString ())
 			{
-				this.accumulated_tab_info_fingerprint = fingerprint.ToString ();
-//-				System.Diagnostics.Debug.WriteLine (string.Format ("TabInfo Fingerprint: {0}", this.accumulated_tab_info_fingerprint));
+				this.accumulatedTabInfoFingerprint = fingerprint.ToString ();
+//-				System.Diagnostics.Debug.WriteLine (string.Format ("TabInfo Fingerprint: {0}", this.accumulatedTabInfoFingerprint));
 				
 				this.NotifyTabsChanged ();
 			}
@@ -3330,7 +3330,7 @@ process_ranges:
 				return;
 			}
 			
-			ulong[] styled_text;
+			ulong[] styledText;
 			
 			this.UpdateCurrentStylesAndPropertiesIfNeeded ();
 			
@@ -3344,8 +3344,8 @@ process_ranges:
 				starts.Push (pos);
 			}
 			
-			this.story.ConvertToStyledText (text, this.currentStyles, this.currentProperties, out styled_text);
-			this.story.InsertText (this.cursor, styled_text);
+			this.story.ConvertToStyledText (text, this.currentStyles, this.currentProperties, out styledText);
+			this.story.InsertText (this.cursor, styledText);
 			
 			//	Si le texte inséré contient un saut de paragraphe et que le style
 			//	en cours fait référence à un gestionnaire de paragraphe nécessitant
@@ -3357,9 +3357,9 @@ process_ranges:
 			{
 				Properties.ManagedParagraphProperty mpp = mpps[0];
 				
-				for (int i = 0; i < styled_text.Length; i++)
+				for (int i = 0; i < styledText.Length; i++)
 				{
-					if (Internal.Navigator.IsParagraphSeparator (styled_text[i]))
+					if (Internal.Navigator.IsParagraphSeparator (styledText[i]))
 					{
 						int start = pos + i + 1;
 						
@@ -3393,7 +3393,7 @@ process_ranges:
 		}
 		
 		
-		private void InternalSetCursor(int new_pos, int new_dir)
+		private void InternalSetCursor(int newPos, int newDir)
 		{
 			//	Positionne le curseur à l'endroit spécifié, en utilisant la
 			//	direction d'approche indiquée.
@@ -3403,19 +3403,19 @@ process_ranges:
 			//	positionné correctement par rapport à d'éventuels textes auto-
 			//	matiques.
 			
-//-			System.Diagnostics.Debug.WriteLine (string.Format ("Pos: {0}, dir: {1}\n{2}", new_pos, new_dir, this.story.GetDebugAllStyledText ()));
+//-			System.Diagnostics.Debug.WriteLine (string.Format ("Pos: {0}, dir: {1}\n{2}", newPos, newDir, this.story.GetDebugAllStyledText ()));
 			
-			this.story.SetCursorPosition (this.tempCursor, new_pos, new_dir);
+			this.story.SetCursorPosition (this.tempCursor, newPos, newDir);
 #if false
-			if (Internal.Navigator.IsParagraphStart (this.story, this.temp_cursor, 0))
+			if (Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, 0))
 			{
 				//	Le curseur n'a pas le droit de se trouver en début de paragraphe
 				//	si celui-ci commence par du texte automatique, car on n'a pas le
 				//	droit d'insérer de texte avant celui-ci.
 				
-				if (this.SkipOverAutoText (ref new_pos, Direction.Forward))
+				if (this.SkipOverAutoText (ref newPos, Direction.Forward))
 				{
-					new_dir = -1;
+					newDir = -1;
 				}
 			}
 #endif
@@ -3424,22 +3424,22 @@ process_ranges:
 				//	Le curseur est au-delà de la fin du texte; il faut le ramener
 				//	juste avant le caractère marqueur de la fin du texte :
 				
-				new_pos -= 1;
-				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, -1) ? -1 : 1;
+				newPos -= 1;
+				newDir  = Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, -1) ? -1 : 1;
 			}
 			else if (Internal.Navigator.IsEndOfText (this.story, this.tempCursor, 0))
 			{
 				//	Le curseur est exactement sur la fin du texte; il faut déterminer
 				//	la direction à utiliser :
 				
-				new_dir  = Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, 0) ? -1 : 1;
+				newDir  = Internal.Navigator.IsParagraphStart (this.story, this.tempCursor, 0) ? -1 : 1;
 			}
 			
 			//	Déplace le curseur "officiel" une seule fois. Ceci permet d'éviter
 			//	qu'un appel à MoveTo provoque plusieurs enregistrements dans l'oplet
 			//	queue active :
 			
-			this.story.SetCursorPosition (this.ActiveCursor, new_pos, new_dir);
+			this.story.SetCursorPosition (this.ActiveCursor, newPos, newDir);
 			
 			//	Met encore à jour les marques de sélection ou les informations de
 			//	format associées au curseur :
@@ -3843,13 +3843,13 @@ process_ranges:
 		
 		private void NotifyTextChanged()
 		{
-			if (this.suspend_notifications == 0)
+			if (this.suspendNotifications == 0)
 			{
 				this.OnTextChanged ();
 			}
 			else
 			{
-				this.notify_text_changed = true;
+				this.notifyTextChanged = true;
 			}
 			
 			this.RefreshTabInfosFingerprint ();
@@ -3857,37 +3857,37 @@ process_ranges:
 		
 		private void NotifyTabsChanged()
 		{
-			if (this.suspend_notifications == 0)
+			if (this.suspendNotifications == 0)
 			{
 				this.OnTabsChanged ();
 			}
 			else
 			{
-				this.notify_tabs_changed = true;
+				this.notifyTabsChanged = true;
 			}
 		}
 		
 		private void NotifyCursorMoved()
 		{
-			if (this.suspend_notifications == 0)
+			if (this.suspendNotifications == 0)
 			{
 				this.OnCursorMoved ();
 			}
 			else
 			{
-				this.notify_cursor_moved = true;
+				this.notifyCursorMoved = true;
 			}
 		}
 		
 		private void NotifyActiveStyleChanged()
 		{
-			if (this.suspend_notifications == 0)
+			if (this.suspendNotifications == 0)
 			{
 				this.OnActiveStyleChanged ();
 			}
 			else
 			{
-				this.notify_style_changed = true;
+				this.notifyStyleChanged = true;
 			}
 		}
 		
@@ -4094,13 +4094,13 @@ process_ranges:
 		private TextStyle[]						currentStyles;
 		private Property[]						currentProperties;
 		private Property[]						accumulatedProperties;
-		private string							accumulated_properties_fingerprint;
-		private string							accumulated_tab_info_fingerprint;
+		private string							accumulatedPropertiesFingerprint;
+		private string							accumulatedTabInfoFingerprint;
 		
-		private int								suspend_notifications;
-		private bool							notify_text_changed;
-		private bool							notify_tabs_changed;
-		private bool							notify_cursor_moved;
-		private bool							notify_style_changed;
+		private int								suspendNotifications;
+		private bool							notifyTextChanged;
+		private bool							notifyTabsChanged;
+		private bool							notifyCursorMoved;
+		private bool							notifyStyleChanged;
 	}
 }
