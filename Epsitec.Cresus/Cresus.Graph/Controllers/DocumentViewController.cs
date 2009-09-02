@@ -206,8 +206,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			int index = this.detectionController.ActiveIndex;
 
-			if ((index < 0) ||
-				(index >= this.colorStyle.Count))
+			if (index < 0)
 			{
 				return;
 			}

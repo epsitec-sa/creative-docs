@@ -41,6 +41,17 @@ namespace Epsitec.Common.Graph.Styles
 
 		public void DefineColor(int index, Color color)
 		{
+			if (index >= this.colors.Count)
+			{
+				int n = this.colors.Count;
+				int i = n-1;
+
+				while (i++ < index)
+				{
+					this.colors.Add (this.colors[i - n]);
+				}
+			}
+
 			this.colors[index] = color;
 		}
 
