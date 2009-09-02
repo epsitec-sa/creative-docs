@@ -9,12 +9,12 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class Break
 	{
-		public Break(int offset, double advance, double space_penalty, double break_penalty, StretchProfile profile)
+		public Break(int offset, double advance, double spacePenalty, double breakPenalty, StretchProfile profile)
 		{
 			this.offset        = offset;
 			this.advance       = advance;
-			this.space_penalty = space_penalty;
-			this.break_penalty = break_penalty;
+			this.spacePenalty  = spacePenalty;
+			this.breakPenalty  = breakPenalty;
 			this.profile       = new StretchProfile (profile);
 		}
 		
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.space_penalty;
+				return this.spacePenalty;
 			}
 		}
 		
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.break_penalty;
+				return this.breakPenalty;
 			}
 		}
 		
@@ -62,8 +62,8 @@ namespace Epsitec.Common.Text.Layout
 		
 		private int								offset;
 		private double							advance;
-		private double							space_penalty;
-		private double							break_penalty;
+		private double							spacePenalty;
+		private double							breakPenalty;
 		private StretchProfile					profile;
 	}
 }

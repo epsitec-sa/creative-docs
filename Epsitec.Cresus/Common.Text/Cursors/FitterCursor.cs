@@ -65,7 +65,7 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			get
 			{
-				return this.paragraph_y;
+				return this.paragraphY;
 			}
 		}
 		
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			get
 			{
-				return this.paragraph_next_y;
+				return this.paragraphNextY;
 			}
 		}
 		
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			get
 			{
-				return this.space_after_paragraph;
+				return this.spaceAfterParagraph;
 			}
 		}
 		
@@ -89,7 +89,7 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			get
 			{
-				return this.keep_with_next_paragraph;
+				return this.keepWithNextParagraph;
 			}
 		}
 		
@@ -159,22 +159,22 @@ namespace Epsitec.Common.Text.Cursors
 		
 		public void DefineParagraphY(double y)
 		{
-			this.paragraph_y = y;
+			this.paragraphY = y;
 		}
 		
 		public void DefineParagraphNextY(double y)
 		{
-			this.paragraph_next_y = y;
+			this.paragraphNextY = y;
 		}
 		
 		public void DefineSpaceAfterParagraph(double y)
 		{
-			this.space_after_paragraph = y;
+			this.spaceAfterParagraph = y;
 		}
 		
 		public void DefineKeepWithNextParagraph(bool keep)
 		{
-			this.keep_with_next_paragraph = keep;
+			this.keepWithNextParagraph = keep;
 		}
 		
 		
@@ -197,17 +197,17 @@ namespace Epsitec.Common.Text.Cursors
 				{
 					int m = this.elements.Length;
 					
-					Element[] old_elements = this.elements;
-					Element[] new_elements = new Element[m + n];
+					Element[] oldElements = this.elements;
+					Element[] newElements = new Element[m + n];
 					
-					System.Array.Copy (old_elements, 0, new_elements, 0, m);
+					System.Array.Copy (oldElements, 0, newElements, 0, m);
 					
 					for (int i = 0; i < n; i++)
 					{
-						new_elements[m+i] = (Element) values[i];
+						newElements[m+i] = (Element) values[i];
 					}
 					
-					this.elements = new_elements;
+					this.elements = newElements;
 				}
 			}
 		}
@@ -232,9 +232,9 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
-		public static CursorInfo.Filter GetFrameFilter(int frame_index)
+		public static CursorInfo.Filter GetFrameFilter(int frameIndex)
 		{
-			FilterFrame filter = new FilterFrame (frame_index);
+			FilterFrame filter = new FilterFrame (frameIndex);
 			return new CursorInfo.Filter (filter.FilterCallback);
 		}
 		
@@ -346,11 +346,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.frame_index;
+					return this.frameIndex;
 				}
 				set
 				{
-					this.frame_index = value;
+					this.frameIndex = value;
 				}
 			}
 			
@@ -359,11 +359,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_start_x;
+					return this.lineStartX;
 				}
 				set
 				{
-					this.line_start_x = value;
+					this.lineStartX = value;
 				}
 			}
 			
@@ -371,11 +371,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_origin_x;
+					return this.lineOriginX;
 				}
 				set
 				{
-					this.line_origin_x = value;
+					this.lineOriginX = value;
 				}
 			}
 			
@@ -383,11 +383,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_base_y;
+					return this.lineBaseY;
 				}
 				set
 				{
-					this.line_base_y = value;
+					this.lineBaseY = value;
 				}
 			}
 			
@@ -395,11 +395,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_y1;
+					return this.lineY1;
 				}
 				set
 				{
-					this.line_y1 = value;
+					this.lineY1 = value;
 				}
 			}
 			
@@ -407,11 +407,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_y2;
+					return this.lineY2;
 				}
 				set
 				{
-					this.line_y2 = value;
+					this.lineY2 = value;
 				}
 			}
 			
@@ -419,11 +419,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_width;
+					return this.lineWidth;
 				}
 				set
 				{
-					this.line_width = value;
+					this.lineWidth = value;
 				}
 			}
 			
@@ -431,11 +431,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_ascender;
+					return this.lineAscender;
 				}
 				set
 				{
-					this.line_ascender = value;
+					this.lineAscender = value;
 				}
 			}
 			
@@ -443,11 +443,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.line_descender;
+					return this.lineDescender;
 				}
 				set
 				{
-					this.line_descender = value;
+					this.lineDescender = value;
 				}
 			}
 			
@@ -456,11 +456,11 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.is_tabulation;
+					return this.isTabulation;
 				}
 				set
 				{
-					this.is_tabulation = value;
+					this.isTabulation = value;
 				}
 			}
 			
@@ -468,28 +468,28 @@ namespace Epsitec.Common.Text.Cursors
 			{
 				get
 				{
-					return this.is_new_line;
+					return this.isNewLine;
 				}
 				set
 				{
-					this.is_new_line = value;
+					this.isNewLine = value;
 				}
 			}
 			
 			
 			private ushort						length;
 			private Layout.StretchProfile		profile;
-			private int							frame_index;
-			private double						line_start_x;
-			private double						line_origin_x;
-			private double						line_base_y;
-			private double						line_y1;
-			private double						line_y2;
-			private double						line_width;
-			private double						line_ascender;
-			private double						line_descender;
-			private bool						is_tabulation;
-			private bool						is_new_line;
+			private int							frameIndex;
+			private double						lineStartX;
+			private double						lineOriginX;
+			private double						lineBaseY;
+			private double						lineY1;
+			private double						lineY2;
+			private double						lineWidth;
+			private double						lineAscender;
+			private double						lineDescender;
+			private bool						isTabulation;
+			private bool						isNewLine;
 		}
 		#endregion
 		
@@ -528,9 +528,9 @@ namespace Epsitec.Common.Text.Cursors
 		#region FilterFitter Class
 		private class FilterFitter
 		{
-			public FilterFitter(TextFitter text_fitter)
+			public FilterFitter(TextFitter textFitter)
 			{
-				this.text_fitter = text_fitter;
+				this.textFitter = textFitter;
 			}
 			
 			
@@ -540,14 +540,14 @@ namespace Epsitec.Common.Text.Cursors
 				
 				if (fitter != null)
 				{
-					return fitter.TextFitter == this.text_fitter;
+					return fitter.TextFitter == this.textFitter;
 				}
 				
 				return false;
 			}
 			
 			
-			private TextFitter					text_fitter;
+			private TextFitter					textFitter;
 		}
 		#endregion
 		
@@ -558,10 +558,10 @@ namespace Epsitec.Common.Text.Cursors
 		
 		
 		private Element[]						elements;
-		private double							paragraph_y;
-		private double							paragraph_next_y;
-		private double							space_after_paragraph;
-		private bool							keep_with_next_paragraph;
+		private double							paragraphY;
+		private double							paragraphNextY;
+		private double							spaceAfterParagraph;
+		private bool							keepWithNextParagraph;
 		private TextFitter						fitter;
 	}
 }

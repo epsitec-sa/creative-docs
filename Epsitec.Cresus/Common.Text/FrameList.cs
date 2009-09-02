@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text
 		{
 			this.fitter     = fitter;
 			this.frames     = new System.Collections.ArrayList ();
-			this.cursor_map = new System.Collections.Hashtable ();
+			this.cursorMap = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text
 		
 		public void ClearCursorMap()
 		{
-			this.cursor_map.Clear ();
+			this.cursorMap.Clear ();
 		}
 		
 		
@@ -95,9 +95,9 @@ namespace Epsitec.Common.Text
 			
 			ITextFrame frame = this[index];
 			
-			if (this.cursor_map.Contains (frame))
+			if (this.cursorMap.Contains (frame))
 			{
-				return this.cursor_map[frame] as Cursors.FitterCursor;
+				return this.cursorMap[frame] as Cursors.FitterCursor;
 			}
 			
 			//	Recherche le premier curseur contenu dans le texte qui décrit
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Text
 			{
 				Cursors.FitterCursor cursor = text.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
 				
-				this.cursor_map[frame] = cursor;
+				this.cursorMap[frame] = cursor;
 				return cursor;
 			}
 			
@@ -125,9 +125,9 @@ namespace Epsitec.Common.Text
 		
 		public Cursors.FitterCursor FindFirstCursor(ITextFrame frame)
 		{
-			if (this.cursor_map.Contains (frame))
+			if (this.cursorMap.Contains (frame))
 			{
-				return this.cursor_map[frame] as Cursors.FitterCursor;
+				return this.cursorMap[frame] as Cursors.FitterCursor;
 			}
 			
 			return this.FindFirstCursor (this.IndexOf (frame));
@@ -140,28 +140,28 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void InsertAt(int index, ITextFrame new_frame)
+		public void InsertAt(int index, ITextFrame newFrame)
 		{
-			this.frames.Insert (index, new_frame);
-			this.HandleInsertion (new_frame);
+			this.frames.Insert (index, newFrame);
+			this.HandleInsertion (newFrame);
 		}
 		
-		public void InsertBefore(ITextFrame existing_frame, ITextFrame new_frame)
+		public void InsertBefore(ITextFrame existingFrame, ITextFrame newFrame)
 		{
-			Debug.Assert.IsFalse (this.frames.Contains (new_frame));
-			Debug.Assert.IsTrue (this.frames.Contains (existing_frame));
+			Debug.Assert.IsFalse (this.frames.Contains (newFrame));
+			Debug.Assert.IsTrue (this.frames.Contains (existingFrame));
 			
-			this.frames.Insert (this.frames.IndexOf (existing_frame)+0, new_frame);
-			this.HandleInsertion (new_frame);
+			this.frames.Insert (this.frames.IndexOf (existingFrame)+0, newFrame);
+			this.HandleInsertion (newFrame);
 		}
 		
-		public void InsertAfter(ITextFrame existing_frame, ITextFrame new_frame)
+		public void InsertAfter(ITextFrame existingFrame, ITextFrame newFrame)
 		{
-			Debug.Assert.IsFalse (this.frames.Contains (new_frame));
-			Debug.Assert.IsTrue (this.frames.Contains (existing_frame));
+			Debug.Assert.IsFalse (this.frames.Contains (newFrame));
+			Debug.Assert.IsTrue (this.frames.Contains (existingFrame));
 			
-			this.frames.Insert (this.frames.IndexOf (existing_frame)+1, new_frame);
-			this.HandleInsertion (new_frame);
+			this.frames.Insert (this.frames.IndexOf (existingFrame)+1, newFrame);
+			this.HandleInsertion (newFrame);
 		}
 		
 		
@@ -194,6 +194,6 @@ namespace Epsitec.Common.Text
 		
 		private TextFitter						fitter;
 		private System.Collections.ArrayList	frames;
-		private System.Collections.Hashtable	cursor_map;		//	cache: ITextFrame --> FitterCursor
+		private System.Collections.Hashtable	cursorMap;		//	cache: ITextFrame --> FitterCursor
 	}
 }

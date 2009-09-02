@@ -99,10 +99,10 @@ namespace Epsitec.Common.Text
 				if (properties[i].WellKnownType == Properties.WellKnownType.ManagedParagraph)
 				{
 					Properties.ManagedParagraphProperty mpp = properties[i] as Properties.ManagedParagraphProperty;
-					string   manager_name = mpp.ManagerName;
+					string   managerName = mpp.ManagerName;
 					string[] parameters   = mpp.ManagerParameters;
 					
-					switch (manager_name)
+					switch (managerName)
 					{
 						case "ItemList":
 							ParagraphManagers.ItemListManager.Parameters p = new ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text
 							break;
 					}
 					
-					properties[i] = new Properties.ManagedParagraphProperty (manager_name, parameters);
+					properties[i] = new Properties.ManagedParagraphProperty (managerName, parameters);
 					this.NotifyChanged (null);
 				}
 			}
@@ -204,12 +204,12 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				string new_state = this.generator.Save ();
-				string old_state = this.state;
+				string newState = this.generator.Save ();
+				string oldState = this.state;
 				
-				this.state = new_state;
+				this.state = newState;
 				
-				this.generator.Restore (this.list.context, old_state);
+				this.generator.Restore (this.list.context, oldState);
 				this.list.NotifyChanged (this.generator);
 				
 				return this;

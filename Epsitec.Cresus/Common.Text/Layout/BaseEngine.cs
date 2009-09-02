@@ -90,30 +90,30 @@ namespace Epsitec.Common.Text.Layout
 			return length;
 		}
 		
-		public int GetNextFragmentLength(ulong[] text, int start, int length, int fragment_length, out double break_penalty)
+		public int GetNextFragmentLength(ulong[] text, int start, int length, int fragmentLength, out double breakPenalty)
 		{
 			//	Détermine la taille d'un fragment de texte (prochaine césure) à
 			//	partir d'une longueur de départ.
 			
-			for (int i = fragment_length; i < length; i++)
+			for (int i = fragmentLength; i < length; i++)
 			{
 				Unicode.BreakInfo info = Unicode.Bits.GetBreakInfo (text[start+i]);
 				
 				if (info == Unicode.BreakInfo.HyphenatePoorChoice)
 				{
-					break_penalty = 10.0;
+					breakPenalty = 10.0;
 					return i+1;
 				}
 				else if (info == Unicode.BreakInfo.HyphenateGoodChoice)
 				{
-					break_penalty = 5.0;
+					breakPenalty = 5.0;
 					return i+1;
 				}
 				
 				Debug.Assert.IsTrue ((info == Unicode.BreakInfo.No) || (info == Unicode.BreakInfo.NoAlpha) || (i+1 == length));
 			}
 			
-			break_penalty = 0;
+			breakPenalty = 0;
 			
 			return length;
 		}
@@ -151,15 +151,15 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					ushort        s_glyph;
-					OpenType.Font s_font;
+					ushort        sGlyph;
+					OpenType.Font sFont;
 					
-					context.TextContext.GetGlyphAndFontForSpecialCode (bits, out s_glyph, out s_font);
+					context.TextContext.GetGlyphAndFontForSpecialCode (bits, out sGlyph, out sFont);
 					
-					temp[i] = (ulong) ((int) s_glyph | (int) Unicode.Bits.SpecialCodeFlag);
+					temp[i] = (ulong) ((int) sGlyph | (int) Unicode.Bits.SpecialCodeFlag);
 					
 					if ((special == false) &&
-						(s_font.FontIdentity.FullName != font.FontIdentity.FullName))
+						(sFont.FontIdentity.FullName != font.FontIdentity.FullName))
 					{
 						special = true;
 					}
@@ -213,15 +213,15 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					ushort        s_glyph;
-					OpenType.Font s_font;
+					ushort        sGlyph;
+					OpenType.Font sFont;
 					
-					context.TextContext.GetGlyphAndFontForSpecialCode (bits, out s_glyph, out s_font);
+					context.TextContext.GetGlyphAndFontForSpecialCode (bits, out sGlyph, out sFont);
 					
-					temp[i] = (ulong) ((int) s_glyph | (int) Unicode.Bits.SpecialCodeFlag);
+					temp[i] = (ulong) ((int) sGlyph | (int) Unicode.Bits.SpecialCodeFlag);
 					
 					if ((special == false) &&
-						(s_font.FontIdentity.FullName != font.FontIdentity.FullName))
+						(sFont.FontIdentity.FullName != font.FontIdentity.FullName))
 					{
 						special = true;
 					}
@@ -303,15 +303,15 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (Unicode.Bits.GetSpecialCodeFlag (bits))
 				{
-					ushort        s_glyph;
-					OpenType.Font s_font;
+					ushort        sGlyph;
+					OpenType.Font sFont;
 					
-					context.GetGlyphAndFontForSpecialCode (bits, out s_glyph, out s_font);
+					context.GetGlyphAndFontForSpecialCode (bits, out sGlyph, out sFont);
 					
-					temp[i] = (ulong) ((int) s_glyph | (int) Unicode.Bits.SpecialCodeFlag);
+					temp[i] = (ulong) ((int) sGlyph | (int) Unicode.Bits.SpecialCodeFlag);
 					
 					if ((special == false) &&
-						(s_font.FontIdentity.FullName != font.FontIdentity.FullName))
+						(sFont.FontIdentity.FullName != font.FontIdentity.FullName))
 					{
 						special = true;
 					}
@@ -340,13 +340,13 @@ namespace Epsitec.Common.Text.Layout
 		
 		public static double GetSpaceWidth(OpenType.Font font, int code)
 		{
-			double space_width  = font.SpaceWidth;
-			double en_width     = font.EnWidth;
-			double em_width     = font.EmWidth;
-			double figure_width = font.FigureWidth;
-			double period_width = font.PeriodWidth;
+			double spaceWidth  = font.SpaceWidth;
+			double enWidth     = font.EnWidth;
+			double emWidth     = font.EmWidth;
+			double figureWidth = font.FigureWidth;
+			double periodWidth = font.PeriodWidth;
 			
-			return Unicode.BreakAnalyzer.GetSpaceWidth (code, space_width, en_width, em_width, figure_width, period_width);
+			return Unicode.BreakAnalyzer.GetSpaceWidth (code, spaceWidth, enWidth, emWidth, figureWidth, periodWidth);
 		}
 		
 		

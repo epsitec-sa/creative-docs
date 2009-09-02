@@ -44,7 +44,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return double.IsNaN (this.tab_origin) == false;
+				return double.IsNaN (this.tabOrigin) == false;
 			}
 		}
 		
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.tab_origin;
+				return this.tabOrigin;
 			}
 		}
 		
@@ -60,19 +60,19 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.tab_stop;
+				return this.tabStop;
 			}
 		}
 		
 		
-		public void DefineTab(double tab_origin, double tab_stop)
+		public void DefineTab(double tabOrigin, double tabStop)
 		{
 			System.Diagnostics.Debug.Assert (this.ElementCount > 1);
 			
-			Element tab_element = this[this.ElementCount-2];
-			Element end_element = this[this.ElementCount-1];
+			Element tabElement = this[this.ElementCount-2];
+			Element endElement = this[this.ElementCount-1];
 			
-			end_element.X = tab_stop;
+			endElement.X = tabStop;
 		}
 		
 		
@@ -92,13 +92,13 @@ namespace Epsitec.Common.Text.Internal
 		{
 		}
 		
-		public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined, bool is_tab_auto)
+		public void RenderTab(Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined, bool isTabAuto)
 		{
-			this.tab_origin = tab_origin;
-			this.tab_stop   = tab_stop;
+			this.tabOrigin = tabOrigin;
+			this.tabStop   = tabStop;
 		}
 		
-		public void Render(Layout.Context layout, OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+		public void Render(Layout.Context layout, OpenType.Font font, double size, string color, Text.Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 		{
 			//	Enregistre la position des divers caractères qui composent le texte
 			//	avec la fonte courante. Peuple la liste des éléments à cet effet.
@@ -114,8 +114,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Diagnostics.Debug.Assert (font != null);
 			System.Diagnostics.Debug.Assert (mapping != null);
 			
-			int[]    map_char;
-			ushort[] map_glyphs;
+			int[]    mapChar;
+			ushort[] mapGlyphs;
 			
 			double ascender  = layout.LineAscender;
 			double descender = layout.LineDescender;
@@ -124,42 +124,42 @@ namespace Epsitec.Common.Text.Internal
 			double y1 = System.Math.Min (layout.LineY1, yb + descender);
 			double y2 = System.Math.Max (layout.LineY2, yb + ascender);
 			
-			int glyph_index = 0;
+			int glyphIndex = 0;
 			
-			while (mapping.GetNextMapping (out map_char, out map_glyphs))
+			while (mapping.GetNextMapping (out mapChar, out mapGlyphs))
 			{
-				System.Diagnostics.Debug.Assert ((map_glyphs.Length == 1) || (is_last_run));
+				System.Diagnostics.Debug.Assert ((mapGlyphs.Length == 1) || (isLastRun));
 				
-				double ox = x[glyph_index];
-				double oy = y[glyph_index];
-				double dx = x[glyph_index+1] - ox;
+				double ox = x[glyphIndex];
+				double oy = y[glyphIndex];
+				double dx = x[glyphIndex+1] - ox;
 				
-				double ax = dx / map_char.Length;
+				double ax = dx / mapChar.Length;
 				
 				//	S'il y a plusieurs caractères pour un glyphe donné (ligature),
 				//	on répartit la largeur de manière égale entre les caractères.
 				
-				for (int i = 0; i < map_char.Length; i++, ox += ax)
+				for (int i = 0; i < mapChar.Length; i++, ox += ax)
 				{
-					this.items.Add (new Element (frame, font, size, map_char[i], ox, oy, y1, y2));
+					this.items.Add (new Element (frame, font, size, mapChar[i], ox, oy, y1, y2));
 				}
 				
-				glyph_index++;
+				glyphIndex++;
 			}
 			
-			if (is_last_run)
+			if (isLastRun)
 			{
 				//	Pour la dernière ligne, on enregistre encore un élément pour
 				//	représenter la marque de fin de paragraphe :
 				
-				double ox = x[glyph_index];
-				double oy = y[glyph_index-1];
+				double ox = x[glyphIndex];
+				double oy = y[glyphIndex-1];
 				
 				this.items.Add (new Element (frame, font, size, 0, ox, oy, y1, y2));
 			}
 		}
 		
-		public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
+		public void Render(Layout.Context layout, IGlyphRenderer glyphRenderer, string color, double x, double y, bool isLastRun)
 		{
 			ITextFrame frame = layout.Frame;
 			
@@ -168,11 +168,11 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.items.Add (new Element (frame, null, 0, 0, x, y, y1, y2));
 			
-			if (is_last_run)
+			if (isLastRun)
 			{
 				double ascender, descender, advance, x1, x2;
 				
-				glyph_renderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
+				glyphRenderer.GetGeometry (out ascender, out descender, out advance, out x1, out x2);
 				
 				this.items.Add (new Element (frame, null, 0, 0, x + advance, y, y1, y2));
 			}
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		private System.Collections.ArrayList	items;
-		private double							tab_origin = double.NaN;
-		private double							tab_stop = double.NaN;
+		private double							tabOrigin = double.NaN;
+		private double							tabStop = double.NaN;
 	}
 }

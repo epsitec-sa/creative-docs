@@ -12,15 +12,15 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public Cursor(Internal.Cursor cursor)
 		{
-			this.chunk_id   = cursor.chunk_id;
-			this.cached_pos = cursor.cached_pos;
+			this.chunkId   = cursor.chunkId;
+			this.cachedPos = cursor.cachedPos;
 			this.instance   = cursor.instance;
 			
-			this.free_link  = cursor.free_link;
+			this.freeLink  = cursor.freeLink;
 			
 			//	Indique explicitement que ceci est une copie :
 			
-			this.cursor_state = Internal.CursorState.Copied;
+			this.cursorState = Internal.CursorState.Copied;
 		}
 		
 		
@@ -30,11 +30,11 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.chunk_id;
+				return this.chunkId;
 			}
 			set
 			{
-				this.chunk_id = value;
+				this.chunkId = value;
 			}
 		}
 		
@@ -54,11 +54,11 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.cached_pos-1;
+				return this.cachedPos-1;
 			}
 			set
 			{
-				this.cached_pos = value+1;
+				this.cachedPos = value+1;
 			}
 		}
 		
@@ -66,11 +66,11 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.free_link;
+				return this.freeLink;
 			}
 			set
 			{
-				this.free_link = value;
+				this.freeLink = value;
 			}
 		}
 		
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.cursor_state;
+				return this.cursorState;
 			}
 		}
 		
@@ -111,29 +111,29 @@ namespace Epsitec.Common.Text.Internal
 		
 		public override int GetHashCode()
 		{
-			return this.free_link
-				 ^ this.chunk_id
+			return this.freeLink
+				 ^ this.chunkId
 				 ^ (this.instance == null ? 0 : this.instance.GetHashCode ());
 		}
 
 		
 		internal void DefineCursorState(Internal.CursorState state)
 		{
-			this.cursor_state = state;
+			this.cursorState = state;
 		}
 		
 		
 		public static bool operator ==(Cursor a, Cursor b)
 		{
-			return (a.free_link == b.free_link)
-				&& (a.chunk_id == b.chunk_id)
+			return (a.freeLink == b.freeLink)
+				&& (a.chunkId == b.chunkId)
 				&& (a.instance == b.instance);
 		}
 		
 		public static bool operator !=(Cursor a, Cursor b)
 		{
-			return (a.free_link != b.free_link)
-				|| (a.chunk_id != b.chunk_id)
+			return (a.freeLink != b.freeLink)
+				|| (a.chunkId != b.chunkId)
 				|| (a.instance != b.instance);
 		}
 		
@@ -149,11 +149,11 @@ namespace Epsitec.Common.Text.Internal
 		//	- CursorTable.RecycleCursor
 		//
 		
-		private int							chunk_id;
+		private int							chunkId;
 		private ICursor						instance;
-		private int							cached_pos;
+		private int							cachedPos;
 		
-		private Internal.CursorId			free_link;
-		private Internal.CursorState		cursor_state;
+		private Internal.CursorId			freeLink;
+		private Internal.CursorState		cursorState;
 	}
 }

@@ -13,12 +13,12 @@ namespace Epsitec.Common.Text.Internal
 		public CursorTable()
 		{
 			this.cursors     = new Internal.Cursor[2];
-			this.cache_flags = new uint[1];
+			this.cacheFlags = new uint[1];
 			
 			this.version  = 1;
 			
-			this.free_cursor_id    = 1;
-			this.free_cursor_count = 1;
+			this.freeCursorId    = 1;
+			this.freeCursorCount = 1;
 			
 			this.cursors[0].DefineCursorState (Internal.CursorState.Invalid);
 			this.cursors[1].DefineCursorState (Internal.CursorState.Free);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.cursors.Length - this.free_cursor_count - 1;
+				return this.cursors.Length - this.freeCursorCount - 1;
 			}
 		}
 		
@@ -118,13 +118,13 @@ namespace Epsitec.Common.Text.Internal
 			return this.cursors[id].TextChunkId;
 		}
 		
-		public void SetCursorTextChunkId(Internal.CursorId id, int text_chunk_id)
+		public void SetCursorTextChunkId(Internal.CursorId id, int textChunkId)
 		{
 			Debug.Assert.IsTrue (id.IsValid);
 			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
-			this.cursors[id].TextChunkId = text_chunk_id;
+			this.cursors[id].TextChunkId = textChunkId;
 		}
 		
 		public void ModifyCursorTextChunkId(Internal.CursorId id, int delta)
@@ -139,21 +139,21 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Internal.CursorId NewCursor()
 		{
-			if (this.free_cursor_count < 1)
+			if (this.freeCursorCount < 1)
 			{
 				this.GrowCursors ();
 			}
 			
 			this.version++;
 			
-			CursorId free = this.free_cursor_id;
+			CursorId free = this.freeCursorId;
 			CursorId next = this.cursors[free].FreeListLink;
 			
 			Debug.Assert.IsTrue (free.IsValid);
 			Debug.Assert.IsTrue (this.cursors[free].CursorState == Internal.CursorState.Free);
 			
-			this.free_cursor_id = next;
-			this.free_cursor_count--;
+			this.freeCursorId = next;
+			this.freeCursorCount--;
 			
 			this.cursors[free].FreeListLink = 0;
 			this.cursors[free].DefineCursorState (Internal.CursorState.Allocated);
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Text.Internal
 				this.cursors[id].CursorInstance.CursorId = 0;
 			}
 			
-			this.cursors[id].FreeListLink   = this.free_cursor_id;
+			this.cursors[id].FreeListLink   = this.freeCursorId;
 			this.cursors[id].TextChunkId    = 0;
 			this.cursors[id].CursorInstance = null;
 			this.cursors[id].CachedPosition = -1;
@@ -185,8 +185,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.InvalidateCache (id);
 			
-			this.free_cursor_id = id;
-			this.free_cursor_count++;
+			this.freeCursorId = id;
+			this.freeCursorCount++;
 		}
 		
 		
@@ -195,7 +195,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Efface tous les bits de validité attachés à tous les curseurs.
 			//	Le plus rapide est de mettre à zéro le contenu du tableau :
 			
-			System.Array.Clear (this.cache_flags, 0, this.cache_flags.Length);
+			System.Array.Clear (this.cacheFlags, 0, this.cacheFlags.Length);
 		}
 		
 		public bool IsPositionCacheValid(Internal.CursorId id)
@@ -209,52 +209,52 @@ namespace Epsitec.Common.Text.Internal
 			
 			uint mask = (1u << bit);
 			
-			return (mask & this.cache_flags[offset]) != 0;
+			return (mask & this.cacheFlags[offset]) != 0;
 		}
 		
 		
 		private void GrowCursors()
 		{
-			Debug.Assert.IsTrue (this.free_cursor_id == 0);
-			Debug.Assert.IsTrue (this.free_cursor_count == 0);
+			Debug.Assert.IsTrue (this.freeCursorId == 0);
+			Debug.Assert.IsTrue (this.freeCursorCount == 0);
 			
-			int old_length = this.cursors.Length;
-			int new_length = old_length + old_length / 4 + 8;
+			int oldLength = this.cursors.Length;
+			int newLength = oldLength + oldLength / 4 + 8;
 			
-			Internal.Cursor[] old_data = this.cursors;
-			Internal.Cursor[] new_data = new Internal.Cursor[new_length];
+			Internal.Cursor[] oldData = this.cursors;
+			Internal.Cursor[] newData = new Internal.Cursor[newLength];
 			
-			System.Array.Copy (old_data, 0, new_data, 0, old_length);
+			System.Array.Copy (oldData, 0, newData, 0, oldLength);
 			
 			//	Il faut encore initialiser la liste des curseurs libres :
 			
-			for (int i = old_length; i < new_length-1; i++)
+			for (int i = oldLength; i < newLength-1; i++)
 			{
-				new_data[i].FreeListLink = i+1;
-				new_data[i].DefineCursorState (Internal.CursorState.Free);
+				newData[i].FreeListLink = i+1;
+				newData[i].DefineCursorState (Internal.CursorState.Free);
 			}
 			
-			new_data[new_length-1].FreeListLink = 0;
-			new_data[new_length-1].DefineCursorState (Internal.CursorState.Free);
+			newData[newLength-1].FreeListLink = 0;
+			newData[newLength-1].DefineCursorState (Internal.CursorState.Free);
 			
-			this.free_cursor_id    = old_length;
-			this.free_cursor_count = new_length - old_length;
+			this.freeCursorId    = oldLength;
+			this.freeCursorCount = newLength - oldLength;
 			
-			this.cursors = new_data;
+			this.cursors = newData;
 			
 			//	Agrandit, au besoin, la table des bits de validité du cache
 			//	de position :
 			
-			int cache_words = (this.cursors.Length+31) / 32;
+			int cacheWords = (this.cursors.Length+31) / 32;
 			
-			if (cache_words != this.cache_flags.Length)
+			if (cacheWords != this.cacheFlags.Length)
 			{
-				uint[] old_flags = this.cache_flags;
-				uint[] new_flags = new uint[cache_words];
+				uint[] oldFlags = this.cacheFlags;
+				uint[] newFlags = new uint[cacheWords];
 				
-				System.Array.Copy (old_flags, 0, new_flags, 0, old_flags.Length);
+				System.Array.Copy (oldFlags, 0, newFlags, 0, oldFlags.Length);
 				
-				this.cache_flags = new_flags;
+				this.cacheFlags = newFlags;
 			}
 		}
 		
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			uint mask = (1u << bit);
 			
-			this.cache_flags[offset] |= mask;
+			this.cacheFlags[offset] |= mask;
 		}
 		
 		private void InvalidateCache(Internal.CursorId id)
@@ -283,7 +283,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			uint mask = (1u << bit);
 			
-			this.cache_flags[offset] &= ~ mask;
+			this.cacheFlags[offset] &= ~ mask;
 		}
 		
 		
@@ -366,9 +366,9 @@ namespace Epsitec.Common.Text.Internal
 		#endregion
 		
 		private Internal.Cursor[]				cursors;			//	1..n; prendre index tel quel (zéro = invalide)
-		private uint[]							cache_flags;		//	validité du cache: 1 bit par curseur
-		private Internal.CursorId				free_cursor_id;
-		private int								free_cursor_count;
+		private uint[]							cacheFlags;		//	validité du cache: 1 bit par curseur
+		private Internal.CursorId				freeCursorId;
+		private int								freeCursorCount;
 		private int								version;
 	}
 }

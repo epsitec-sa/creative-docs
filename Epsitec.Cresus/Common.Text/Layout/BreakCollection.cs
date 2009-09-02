@@ -11,29 +11,29 @@ namespace Epsitec.Common.Text.Layout
 		public BreakCollection()
 		{
 			this.breaks      = new Layout.Break[4];
-			this.break_count = 0;
+			this.breakCount = 0;
 		}
 		
 		
 		public void Add(Layout.Break info)
 		{
-			if (this.break_count == this.breaks.Length)
+			if (this.breakCount == this.breaks.Length)
 			{
-				Layout.Break[] old_breaks = this.breaks;
-				Layout.Break[] new_breaks = new Layout.Break[this.break_count+8];
+				Layout.Break[] oldBreaks = this.breaks;
+				Layout.Break[] newBreaks = new Layout.Break[this.breakCount+8];
 				
-				System.Array.Copy (old_breaks, 0, new_breaks, 0, this.break_count);
+				System.Array.Copy (oldBreaks, 0, newBreaks, 0, this.breakCount);
 				
-				this.breaks = new_breaks;
+				this.breaks = newBreaks;
 			}
 			
-			this.breaks[this.break_count] = info;
-			this.break_count++;
+			this.breaks[this.breakCount] = info;
+			this.breakCount++;
 		}
 		
 		public void Clear()
 		{
-			this.break_count = 0;
+			this.breakCount = 0;
 		}
 		
 		
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				if (index < this.break_count)
+				if (index < this.breakCount)
 				{
 					return this.breaks[index];
 				}
@@ -72,21 +72,21 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.break_count;
+				return this.breakCount;
 			}
 		}
 		
 		
 		public void CopyTo(System.Array array, int index)
 		{
-			System.Array.Copy (this.breaks, 0, array, index, this.break_count);
+			System.Array.Copy (this.breaks, 0, array, index, this.breakCount);
 		}
 		#endregion
 		
 		#region IEnumerable Members
 		public System.Collections.IEnumerator GetEnumerator()
 		{
-			return new Enumerator (this.breaks, this.break_count);
+			return new Enumerator (this.breaks, this.breakCount);
 		}
 		#endregion
 
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				if (index < this.break_count)
+				if (index < this.breakCount)
 				{
 					return this.breaks[index];
 				}
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Text.Layout
 		
 		public int IndexOf(object value)
 		{
-			for (int i = 0; i < this.break_count; i++)
+			for (int i = 0; i < this.breakCount; i++)
 			{
 				if (this.breaks[i] == value)
 				{
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Text.Layout
 		
 		public bool Contains(object value)
 		{
-			for (int i = 0; i < this.break_count; i++)
+			for (int i = 0; i < this.breakCount; i++)
 			{
 				if (this.breaks[i] == value)
 				{
@@ -218,6 +218,6 @@ namespace Epsitec.Common.Text.Layout
 		#endregion
 		
 		private Break[]							breaks;
-		private int								break_count;
+		private int								breakCount;
 	}
 }

@@ -51,7 +51,7 @@ namespace Epsitec.Common.Text.BreakEngines
 					}
 
 					// Teste si la césure est une césure interdite à cause d'une
-					// exception dans dico_nc.
+					// exception dans dicoNc.
 					if (tp.Position == tp.Banned)
 					{
 						continue;

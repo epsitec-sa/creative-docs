@@ -9,40 +9,40 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class Context
 	{
-		public Context(Text.TextContext text_context, ulong[] text, int start, double oy_base, double line_height, double line_width, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
+		public Context(Text.TextContext textContext, ulong[] text, int start, double oyBase, double lineHeight, double lineWidth, double mxLeft, double mxRight, double breakFenceBefore, double breakFenceAfter)
 		{
 			this.buffer = null;
 			
-			this.text_context = text_context;
+			this.textContext = textContext;
 			
 			this.text       = text;
-			this.text_start = start;
+			this.textStart = start;
 			
-			this.oy_base = oy_base;
-			this.oy_max  = oy_base;
-			this.oy_min  = oy_base;
+			this.oyBase = oyBase;
+			this.oyMax  = oyBase;
+			this.oyMin  = oyBase;
 			
-			this.line_height = line_height;
-			this.line_width  = line_width;
+			this.lineHeight = lineHeight;
+			this.lineWidth  = lineWidth;
 			
-			this.ox       = mx_left;
-			this.mx_left  = mx_left;
-			this.mx_left_body = mx_left;
-			this.mx_right = mx_right;
-			this.x_origin = this.mx_left;
+			this.ox       = mxLeft;
+			this.mxLeft  = mxLeft;
+			this.mxLeftBody = mxLeft;
+			this.mxRight = mxRight;
+			this.xOrigin = this.mxLeft;
 			
-			this.break_fence_before = break_fence_before;
-			this.break_fence_after  = break_fence_after;
+			this.breakFenceBefore = breakFenceBefore;
+			this.breakFenceAfter  = breakFenceAfter;
 			
-			this.left_to_right = 0;
+			this.leftToRight = 0;
 		}
 		
-		public Context(Text.TextContext context, ulong[] text, int start, FrameList frame_list)
+		public Context(Text.TextContext context, ulong[] text, int start, FrameList frameList)
 		{
-			this.text_context = context;
+			this.textContext = context;
 			this.text         = text;
-			this.text_start   = start;
-			this.frame_list   = frame_list;
+			this.textStart   = start;
+			this.frameList   = frameList;
 		}
 		
 		
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.layout_engine;
+				return this.layoutEngine;
 			}
 		}
 		
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.layout_property;
+				return this.layoutProperty;
 			}
 		}
 		
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_context;
+				return this.textContext;
 			}
 		}
 		
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_offset;
+				return this.textOffset;
 			}
 		}
 		
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_profile;
+				return this.textProfile;
 			}
 		}
 		
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_scales;
+				return this.textScales;
 			}
 		}
 		
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_glue;
+				return this.textGlue;
 			}
 		}
 		
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.text_width;
+				return this.textWidth;
 			}
 		}
 		
@@ -132,11 +132,11 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				if ((this.text_offset > 0) &&
+				if ((this.textOffset > 0) &&
 					(this.text != null) &&
-					(this.text.Length >= this.text_offset))
+					(this.text.Length >= this.textOffset))
 				{
-					return this.text[this.text_offset-1];
+					return this.text[this.textOffset-1];
 				}
 				
 				return 0;
@@ -156,7 +156,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.ox_line_start;
+				return this.oxLineStart;
 			}
 		}
 		
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.x_origin;
+				return this.xOrigin;
 			}
 		}
 		
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_base;
+				return this.oyBase;
 			}
 		}
 		
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_y1;
+				return this.lineY1;
 			}
 		}
 		
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_y2;
+				return this.lineY2;
 			}
 		}
 		
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_max;
+				return this.oyMax;
 			}
 		}
 		
@@ -204,7 +204,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_min;
+				return this.oyMin;
 			}
 		}
 		
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.break_fence_before;
+				return this.breakFenceBefore;
 			}
 		}
 		
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.break_fence_after;
+				return this.breakFenceAfter;
 			}
 		}
 		
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.enable_hyphenation;
+				return this.enableHyphenation;
 			}
 		}
 		
@@ -253,7 +253,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.break_mode;
+				return this.breakMode;
 			}
 		}
 		
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.use_tab_indentation ? this.tab_indentation_x : this.mx_left;
+				return this.useTabIndentation ? this.tabIndentationX : this.mxLeft;
 			}
 		}
 		
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.mx_left_body;
+				return this.mxLeftBody;
 			}
 		}
 		
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.mx_right;
+				return this.mxRight;
 			}
 		}
 		
@@ -286,7 +286,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_height;
+				return this.lineHeight;
 			}
 		}
 		
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_width;
+				return this.lineWidth;
 			}
 		}
 		
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_max - this.oy_base;
+				return this.oyMax - this.oyBase;
 			}
 		}
 		
@@ -310,7 +310,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_min - this.oy_base;
+				return this.oyMin - this.oyBase;
 			}
 		}
 		
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			get
 			{
-				return this.line_skip_before;
+				return this.lineSkipBefore;
 			}
 		}
 		
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_space_before;
+				return this.lineSpaceBefore;
 			}
 		}
 		
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_space_after;
+				return this.lineSpaceAfter;
 			}
 		}
 		
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.frame_fences;
+				return this.frameFences;
 			}
 		}
 		
@@ -355,7 +355,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.keep_with_prev_para;
+				return this.keepWithPrevPara;
 			}
 		}
 		
@@ -363,7 +363,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.keep_with_next_para;
+				return this.keepWithNextPara;
 			}
 		}
 		
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.show_control_characters;
+				return this.showControlCharacters;
 			}
 		}
 		
@@ -380,7 +380,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.disable_simple_rendering;
+				return this.disableSimpleRendering;
 			}
 		}
 		
@@ -388,7 +388,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.disable_font_baseline_offset;
+				return this.disableFontBaselineOffset;
 			}
 		}
 		
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.line_width - this.LeftMargin - this.RightMargin;
+				return this.lineWidth - this.LeftMargin - this.RightMargin;
 			}
 		}
 		
@@ -405,7 +405,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return (this.left_to_right & 1) == 0;
+				return (this.leftToRight & 1) == 0;
 			}
 		}
 		
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return (this.left_to_right & 1) == 1;
+				return (this.leftToRight & 1) == 1;
 			}
 		}
 		
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.frame_index;
+				return this.frameIndex;
 			}
 		}
 		
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.frame_y;
+				return this.frameY;
 			}
 		}
 		
@@ -449,7 +449,7 @@ namespace Epsitec.Common.Text.Layout
 				//	Retourne la position Y de la ligne dans le frame, alors que FrameY retourne
 				//	la prochaine position Y à utiliser...
 				
-				return this.frame_y_line;
+				return this.frameYLine;
 			}
 		}
 		
@@ -458,15 +458,15 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				if ((this.xline_properties == null) ||
-					(this.xline_properties.Length == 0))
+				if ((this.xlineProperties == null) ||
+					(this.xlineProperties.Length == 0))
 				{
 					return new Properties.AbstractXlineProperty[0];
 				}
 				
-				Properties.AbstractXlineProperty[] properties = new Properties.AbstractXlineProperty[this.xline_properties.Length];
+				Properties.AbstractXlineProperty[] properties = new Properties.AbstractXlineProperty[this.xlineProperties.Length];
 				
-				this.xline_properties.CopyTo (properties, 0);
+				this.xlineProperties.CopyTo (properties, 0);
 				
 				return properties;
 			}
@@ -476,66 +476,66 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				if ((this.xline_records == null) ||
-					(this.xline_records.Count == 0))
+				if ((this.xlineRecords == null) ||
+					(this.xlineRecords.Count == 0))
 				{
 					return new Layout.XlineRecord[0];
 				}
 				
-				Layout.XlineRecord[] records = new Layout.XlineRecord[this.xline_records.Count];
+				Layout.XlineRecord[] records = new Layout.XlineRecord[this.xlineRecords.Count];
 				
-				this.xline_records.CopyTo (records);
+				this.xlineRecords.CopyTo (records);
 				
 				return records;
 			}
 		}
 		
 		
-		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
+		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraphLineCount)
 		{
 			this.ResetLineHeight ();
 			
-			return this.Fit (ref result, paragraph_line_count, false);
+			return this.Fit (ref result, paragraphLineCount, false);
 		}
 
-		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count, bool continuation)
+		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraphLineCount, bool continuation)
 		{
 			//	Détermine les points de découpe pour le texte, selon le contexte
 			//	courant.
 			
-			if (this.text_start + this.text_offset >= this.text.Length)
+			if (this.textStart + this.textOffset >= this.text.Length)
 			{
 				return Layout.Status.ErrorNeedMoreText;
 			}
 			
-			double initial_line_ascender  = this.LineAscender;
-			double initial_line_descender = this.LineDescender;
-			double initial_line_height    = this.LineHeight;
+			double initialLineAscender  = this.LineAscender;
+			double initialLineDescender = this.LineDescender;
+			double initialLineHeight    = this.LineHeight;
 			
-			this.SelectLayoutEngine (this.text_offset);
+			this.SelectLayoutEngine (this.textOffset);
 			
 			if (continuation)
 			{
 				//	TODO: gérer la continuation...
 				
-				this.mx_left = this.ox;
+				this.mxLeft = this.ox;
 			}
 			else
 			{
-				this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
-				this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
-				this.SelectVerticalAlignment (paragraph_line_count);
-				this.SelectKeep (this.text_offset);
+				this.SelectMarginsAndJustification (this.textOffset, paragraphLineCount, false);
+				this.SelectLineHeightAndLeading (this.textOffset, initialLineHeight, initialLineAscender, initialLineDescender);
+				this.SelectVerticalAlignment (paragraphLineCount);
+				this.SelectKeep (this.textOffset);
 				
 				this.ox = this.LeftMargin;
 			}
 			
-			this.ox_line_start = this.ox;
-			this.break_mode    = BreakMode.Default;
+			this.oxLineStart = this.ox;
+			this.breakMode    = BreakMode.Default;
 			
-			Debug.Assert.IsNotNull (this.layout_engine);
+			Debug.Assert.IsNotNull (this.layoutEngine);
 			Debug.Assert.IsNotNull (this.text);
-			Debug.Assert.IsNotNull (this.text_context);
+			Debug.Assert.IsNotNull (this.textContext);
 
 			Snapshot snapshot = new Snapshot (this);
 			
@@ -548,75 +548,75 @@ namespace Epsitec.Common.Text.Layout
 				result.Clear ();
 			}
 			
-			this.text_profile = new StretchProfile ();
+			this.textProfile = new StretchProfile ();
 			
-			int frame_index = this.frame_index;
+			int frameIndex = this.frameIndex;
 			
 restart:	
-			double def_line_height = 0;
-			double def_line_width  = 0;
+			double defLineHeight = 0;
+			double defLineWidth  = 0;
 			
 			if (! continuation)
 			{
-				int fence = this.frame_fences[frame_index];
+				int fence = this.frameFences[frameIndex];
 				
 				while ((fence > -1) &&
-					   (paragraph_line_count >= fence))
+					   (paragraphLineCount >= fence))
 				{
-					frame_index++;
-					fence = this.frame_fences[frame_index];
+					frameIndex++;
+					fence = this.frameFences[frameIndex];
 				}
 				
-				if (paragraph_line_count == 0)
+				if (paragraphLineCount == 0)
 				{
 					//	Sélectionne le frame qui convient pour ce paragraphe (selon
 					//	les réglages de la propriété Keep.ParagraphStartMode) :
 					
-					this.UpdateFrameIndex (ref frame_index, this.frame_y == 0, this.para_start_mode);
+					this.UpdateFrameIndex (ref frameIndex, this.frameY == 0, this.paraStartMode);
 				}
 			}
 			
-			if (frame_index != this.frame_index)
+			if (frameIndex != this.frameIndex)
 			{
-				if ((frame_index < this.frame_list.Count) &&
-					(frame_index > -1))
+				if ((frameIndex < this.frameList.Count) &&
+					(frameIndex > -1))
 				{
 					//	Reprend avec un autre frame. Vérifions d'abord si ce changement
 					//	de frame est permis ici :
 					
-					if ((this.frame_list[frame_index-1] is SingleLineTextFrame) ||
-						(this.frame_list[frame_index-0] is SingleLineTextFrame))
+					if ((this.frameList[frameIndex-1] is SingleLineTextFrame) ||
+						(this.frameList[frameIndex-0] is SingleLineTextFrame))
 					{
 						goto select_new_frame;
 					}
 					
-					if ((paragraph_line_count < this.keep_start_lines) &&
-						(paragraph_line_count > 0))
+					if ((paragraphLineCount < this.keepStartLines) &&
+						(paragraphLineCount > 0))
 					{
 						//	Il n'y a pas assez de lignes de texte consécutives en début
 						//	de paragraphe !
 						
-						this.frame_fences.Add (frame_index-1, 0);
-						this.frame_first_line = 0;
+						this.frameFences.Add (frameIndex-1, 0);
+						this.frameFirstLine = 0;
 						
-						if (this.keep_with_prev_para)
+						if (this.keepWithPrevPara)
 						{
 							return Layout.Status.RewindParagraphAndRestartLayout;
 						}
 						
-						this.SelectFrame (frame_index, 0);
+						this.SelectFrame (frameIndex, 0);
 						
 						return Layout.Status.RestartParagraphLayout;
 					}
-					if ((paragraph_line_count == 0) &&
-						(this.keep_with_prev_para) &&
-						(this.para_start_mode == Properties.ParagraphStartMode.Anywhere))
+					if ((paragraphLineCount == 0) &&
+						(this.keepWithPrevPara) &&
+						(this.paraStartMode == Properties.ParagraphStartMode.Anywhere))
 					{
 						//	Le paragraphe ne peut pas être dissocié de celui qui précède.
 						//	Un changement de frame ici va affecter le paragraphe qui
 						//	précède immédiatement (récursivement)
 						
-						this.frame_fences.Add (frame_index-1, 0);
+						this.frameFences.Add (frameIndex-1, 0);
 						
 						return Layout.Status.RewindParagraphAndRestartLayout;
 					}
@@ -625,18 +625,18 @@ restart:
 					
 					//	On reprend tout à zéro depuis ici :
 					
-					this.SelectLayoutEngine (this.text_offset);
-					this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
-					this.SelectFrame (frame_index, 0);
-					this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
-					this.SelectVerticalAlignment (paragraph_line_count);
+					this.SelectLayoutEngine (this.textOffset);
+					this.SelectMarginsAndJustification (this.textOffset, paragraphLineCount, false);
+					this.SelectFrame (frameIndex, 0);
+					this.SelectLineHeightAndLeading (this.textOffset, initialLineHeight, initialLineAscender, initialLineDescender);
+					this.SelectVerticalAlignment (paragraphLineCount);
 					
 					//	Prend note du nouveau frame de référence et de la position dans
 					//	le paragraphe au sommet du frame :
 					
-					this.frame_first_line = paragraph_line_count;
+					this.frameFirstLine = paragraphLineCount;
 					
-					snapshot.FixFrame (this.frame_index, this.frame_y, this.frame_first_line);
+					snapshot.FixFrame (this.frameIndex, this.frameY, this.frameFirstLine);
 				}
 				else
 				{
@@ -659,21 +659,21 @@ restart:
 				
 				if (this.frame != null)
 				{
-					this.SelectLineHeightAndLeading (this.text_offset, initial_line_height, initial_line_ascender, initial_line_descender);
+					this.SelectLineHeightAndLeading (this.textOffset, initialLineHeight, initialLineAscender, initialLineDescender);
 					
-					double line_ascender  = this.LineAscender;
-					double line_descender = this.LineDescender;
-					double line_height    = this.LineHeight;
+					double lineAscender  = this.LineAscender;
+					double lineDescender = this.LineDescender;
+					double lineHeight    = this.LineHeight;
 					
 					double ox, oy, dx;
-					double next_frame_y;
+					double nextFrameY;
 					
-					oy = this.frame_y;
+					oy = this.frameY;
 					
-					this.line_y2 = oy;
+					this.lineY2 = oy;
 					
-					if ((paragraph_line_count == 0) &&
-						(this.frame_y != 0))
+					if ((paragraphLineCount == 0) &&
+						(this.frameY != 0))
 					{
 						//	A la première ligne du paragraphe, on ajoute l'espace "avant"
 						//	tel que défini par la propriété de "leading". Mais on n'ajoute
@@ -681,20 +681,20 @@ restart:
 						
 						if (! continuation)
 						{
-							oy -= this.line_space_before;
-							oy -= this.line_skip_before;
+							oy -= this.lineSpaceBefore;
+							oy -= this.lineSkipBefore;
 							
-							this.line_y2 -= this.line_skip_before;
+							this.lineY2 -= this.lineSkipBefore;
 						}
 						else
 						{
-							this.line_y2 += this.line_space_before;
+							this.lineY2 += this.lineSpaceBefore;
 						}
 					}
 					
-					this.frame_y_line = oy;
+					this.frameYLine = oy;
 					
-					while ((! this.frame.ConstrainLineBox (oy, line_ascender, line_descender, line_height, this.line_leading, this.line_sync_to_grid, out ox, out oy, out dx, out next_frame_y))
+					while ((! this.frame.ConstrainLineBox (oy, lineAscender, lineDescender, lineHeight, this.lineLeading, this.lineSyncToGrid, out ox, out oy, out dx, out nextFrameY))
 						|| (dx < this.LeftMargin + this.RightMargin)
 						|| (pass > 1))
 					{
@@ -711,27 +711,27 @@ restart:
 						//	Il n'y a plus de place dans le ITextFrame courant, passe au
 						//	suivant, s'il en reste encore un (ou plus)...
 						
-						frame_index       = this.frame_index + 1;
-						this.frame_y      = 0;
-						this.frame_y_line = 0;
+						frameIndex       = this.frameIndex + 1;
+						this.frameY      = 0;
+						this.frameYLine = 0;
 						
 						goto restart;
 					}
 					
 					this.ox          = ox + this.LeftMargin;
-					this.oy_base     = oy;
-					this.oy_max      = oy + line_ascender;
-					this.oy_min      = oy + line_descender;
-					this.frame_y     = next_frame_y;
-					this.line_y1     = next_frame_y;
-					this.line_width  = dx;
-					this.line_height = line_height;
+					this.oyBase     = oy;
+					this.oyMax      = oy + lineAscender;
+					this.oyMin      = oy + lineDescender;
+					this.frameY     = nextFrameY;
+					this.lineY1     = nextFrameY;
+					this.lineWidth  = dx;
+					this.lineHeight = lineHeight;
 					
-					if ((def_line_height == 0) &&
-						(def_line_width == 0))
+					if ((defLineHeight == 0) &&
+						(defLineWidth == 0))
 					{
-						def_line_height = this.line_height;
-						def_line_width  = this.line_width;
+						defLineHeight = this.lineHeight;
+						defLineWidth  = this.lineWidth;
 					}
 				}
 				
@@ -740,7 +740,7 @@ restart:
 					break;
 				}
 				
-				Layout.Status status = this.layout_engine.Fit (this, ref result);
+				Layout.Status status = this.layoutEngine.Fit (this, ref result);
 				
 				switch (status)
 				{
@@ -748,11 +748,11 @@ restart:
 					case Layout.Status.OkFitEnded:
 					case Layout.Status.OkTabReached:
 						
-						if (this.auto_leading)
+						if (this.autoLeading)
 						{
 							if ((continuation) &&
 								(this.frame != null) &&
-								(this.line_height > def_line_height))
+								(this.lineHeight > defLineHeight))
 							{
 								//	Si on est en train de traiter une ligne avec des TABs et
 								//	que la hauteur de la ligne a changé, il faut demander à
@@ -762,20 +762,20 @@ restart:
 								return Layout.Status.RestartLineLayout;
 							}
 							
-							if ((this.frame_list != null) &&
-								(this.line_height > def_line_height))
+							if ((this.frameList != null) &&
+								(this.lineHeight > defLineHeight))
 							{
 								//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
 								//	pas dans l'espace alloué verticalement. Il faut forcer une
 								//	nouvelle passe :
 								
-								def_line_height = this.line_height;
+								defLineHeight = this.lineHeight;
 								result.Clear ();
-								this.break_mode = BreakMode.Default;
+								this.breakMode = BreakMode.Default;
 								pass = 0;
 								
-								initial_line_ascender  = this.LineAscender;
-								initial_line_descender = this.LineDescender;
+								initialLineAscender  = this.LineAscender;
+								initialLineDescender = this.LineDescender;
 								
 								snapshot.Restore (this);
 								continue;
@@ -792,23 +792,23 @@ restart:
 						
 						if ((status == Layout.Status.OkFitEnded) &&
 							(this.frame != null) &&
-							(this.frame_first_line > 0) &&
-							(frame_index > 0) &&
-							(paragraph_line_count > 0) &&
-							(paragraph_line_count - this.frame_first_line + 1 < this.keep_end_lines))
+							(this.frameFirstLine > 0) &&
+							(frameIndex > 0) &&
+							(paragraphLineCount > 0) &&
+							(paragraphLineCount - this.frameFirstLine + 1 < this.keepEndLines))
 						{
 							//	Les lignes qui constituent cette fin de paragraphe se trouvent
 							//	seules dans un frame et il y en a moins que le minimum requis.
 							
-							if ((this.frame_list[frame_index-1] is SingleLineTextFrame) ||
-								(this.frame_list[frame_index-0] is SingleLineTextFrame))
+							if ((this.frameList[frameIndex-1] is SingleLineTextFrame) ||
+								(this.frameList[frameIndex-0] is SingleLineTextFrame))
 							{
 								//	N'applique pas les contraintes dans le cas de lignes de texte
 								//	isolées; cela n'aurait aucun sens !
 							}
 							else
 							{
-								this.frame_fences.Add (frame_index-1, System.Math.Max (0, paragraph_line_count + 1 - this.keep_end_lines));
+								this.frameFences.Add (frameIndex-1, System.Math.Max (0, paragraphLineCount + 1 - this.keepEndLines));
 								
 								return Layout.Status.RestartParagraphLayout;
 							}
@@ -816,8 +816,8 @@ restart:
 						
 						if (status == Layout.Status.OkFitEnded)
 						{
-							this.frame_first_line = 0;
-							this.frame_fences.Clear ();
+							this.frameFirstLine = 0;
+							this.frameFences.Clear ();
 						}
 						
 						return status;
@@ -829,9 +829,9 @@ restart:
 						//	le texte...
 						
 						{
-							int offset = this.text_offset;
+							int offset = this.textOffset;
 							snapshot.Restore (this);
-							this.text_offset = offset;
+							this.textOffset = offset;
 						}
 						return status;
 					
@@ -843,21 +843,21 @@ restart:
 						continue;
 					
 					case Layout.Status.ErrorCannotFit:
-						if (this.break_mode == BreakMode.Hyphenate)
+						if (this.breakMode == BreakMode.Hyphenate)
 						{
-							if (this.text_context.IsDegradedLayoutEnabled)
+							if (this.textContext.IsDegradedLayoutEnabled)
 							{
-								this.break_mode = BreakMode.Break;
+								this.breakMode = BreakMode.Break;
 							}
 							
 							pass++;
 						}
 						else
 						{
-							this.break_mode = BreakMode.Hyphenate;
+							this.breakMode = BreakMode.Hyphenate;
 						}
 						
-//-						System.Diagnostics.Debug.WriteLine ("Cannot fit, break mode : " + this.break_mode);
+//-						System.Diagnostics.Debug.WriteLine ("Cannot fit, break mode : " + this.breakMode);
 						
 						snapshot.Restore (this, false);
 						continue;
@@ -877,17 +877,17 @@ restart:
 		}
 		
 		
-		public void UpdateXlineProperties(int offset, double ox, bool is_visible)
+		public void UpdateXlineProperties(int offset, double ox, bool isVisible)
 		{
 			Properties.AbstractXlineProperty[] current;
-			Properties.AbstractXlineProperty[] previous = this.xline_properties;
+			Properties.AbstractXlineProperty[] previous = this.xlineProperties;
 			
-			Properties.FontColorProperty current_color  = this.xline_text_color;
-			Properties.FontColorProperty previous_color = this.xline_text_color;
+			Properties.FontColorProperty currentColor  = this.xlineTextColor;
+			Properties.FontColorProperty previousColor = this.xlineTextColor;
 			
-			offset += this.text_offset;
+			offset += this.textOffset;
 			
-			this.text_context.GetXlines (this.text[offset], out current);
+			this.textContext.GetXlines (this.text[offset], out current);
 			
 			if ((current != null) &&
 				(current.Length > 0))
@@ -896,9 +896,9 @@ restart:
 				//	un soulignement est en cours :
 				
 				string color;
-				this.text_context.GetColor (this.text[offset], out color);
+				this.textContext.GetColor (this.text[offset], out color);
 				
-				current_color = new Properties.FontColorProperty (color);
+				currentColor = new Properties.FontColorProperty (color);
 			}
 			
 			//	Supprime les définitions qui donnent lieu à des soulignements
@@ -911,7 +911,7 @@ restart:
 			}
 			
 			if (! Property.CompareEqualContents (previous, current) ||
-				! Property.CompareEqualContents (previous_color, current_color))
+				! Property.CompareEqualContents (previousColor, currentColor))
 			{
 				//	Enregistre le changement d'état de soulignement.
 				
@@ -919,60 +919,60 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
-				ox = System.Math.Min (this.xline_end_x, ox);
+				ox = System.Math.Min (this.xlineEndX, ox);
 				
-				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.Change, offset, current, current_color, ox, oy, asc, desc, this.frame_index, is_visible));
+				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.Change, offset, current, currentColor, ox, oy, asc, desc, this.frameIndex, isVisible));
 				
-				this.xline_properties = current;
-				this.xline_text_color = current_color;
+				this.xlineProperties = current;
+				this.xlineTextColor = currentColor;
 			}
 		}
 		
 		
 		private void AddXlineRecord(XlineRecord record)
 		{
-			if (this.xline_records == null)
+			if (this.xlineRecords == null)
 			{
-				this.xline_records = new System.Collections.ArrayList ();
+				this.xlineRecords = new System.Collections.ArrayList ();
 			}
 			
-			this.xline_records.Add (record);
+			this.xlineRecords.Add (record);
 		}
 		
 		
 		public void DefineLineGeometry(double y, double y1, double y2, double ascender, double descender)
 		{
-			this.oy_base = y;
-			this.oy_max  = y + ascender;
-			this.oy_min  = y + descender;
-			this.line_y1 = y1;
-			this.line_y2 = y2;
+			this.oyBase = y;
+			this.oyMax  = y + ascender;
+			this.oyMin  = y + descender;
+			this.lineY1 = y1;
+			this.lineY2 = y2;
 		}
 		
 		public void DefineLineSkipBefore(double value)
 		{
-			this.line_skip_before = value;
+			this.lineSkipBefore = value;
 		}
 		
 		public void DefineFrameFences(Layout.FrameLineFenceDictionary value)
 		{
-			this.frame_fences.Clear ();
-			this.frame_fences.Add (value);
+			this.frameFences.Clear ();
+			this.frameFences.Add (value);
 		}
 		
 		public void DefineKeepWithPreviousParagraph(bool value)
 		{
-			this.keep_with_prev_para = value;
+			this.keepWithPrevPara = value;
 		}
 		
 		public void DefineTextOffset(int value)
 		{
-			this.text_offset = value;
+			this.textOffset = value;
 		}
 		
 		public void DefineShowControlCharacters()
 		{
-			this.show_control_characters = this.text_context.ShowControlCharacters;
+			this.showControlCharacters = this.textContext.ShowControlCharacters;
 		}
 		
 		public void DefineParagraphStartMode(Properties.ParagraphStartMode mode)
@@ -983,28 +983,28 @@ restart:
 				System.Diagnostics.Debug.WriteLine ("Force paragraph start mode: " + mode);
 			}
 			
-			this.para_default_start_mode = mode;
+			this.paraDefaultStartMode = mode;
 		}
 		
 		
 		public void DisableSimpleRendering()
 		{
-			this.disable_simple_rendering = true;
+			this.disableSimpleRendering = true;
 		}
 		
 		public void DisableFontBaselineOffset()
 		{
-			this.disable_font_baseline_offset = true;
+			this.disableFontBaselineOffset = true;
 		}
 		
 		
-		public void InvisibleLine(ITextRenderer renderer, int length, double line_base_x, double line_base_y)
+		public void InvisibleLine(ITextRenderer renderer, int length, double lineBaseX, double lineBaseY)
 		{
 			//	Appelé lorsqu'une ligne ne doit pas être affichée parce qu'elle
 			//	est entièrement hors du frame.
 			
 			Debug.Assert.IsNotNull (this.text);
-			Debug.Assert.IsTrue (this.text_start + this.text_offset + length <= this.text.Length);
+			Debug.Assert.IsTrue (this.textStart + this.textOffset + length <= this.text.Length);
 			
 			if (length > 0)
 			{
@@ -1012,7 +1012,7 @@ restart:
 			}
 		}
 		
-		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double line_base_x, double line_base_y, double line_width, int paragraph_line_count, bool is_tab, bool is_last_line)
+		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double lineBaseX, double lineBaseY, double lineWidth, int paragraphLineCount, bool isTab, bool isLastLine)
 		{
 			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
 			//	layout associés au texte.
@@ -1020,51 +1020,51 @@ restart:
 			Debug.Assert.IsNotNull (this.text);
 			
 			Debug.Assert.IsTrue (length > 0);
-			Debug.Assert.IsTrue (this.text_start + this.text_offset + length <= this.text.Length);
+			Debug.Assert.IsTrue (this.textStart + this.textOffset + length <= this.text.Length);
 			
-			this.SelectLayoutEngine (this.text_offset);
-			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
-			this.SelectLineHeightAndLeading (this.text_offset, 0, 0, 0);
+			this.SelectLayoutEngine (this.textOffset);
+			this.SelectMarginsAndJustification (this.textOffset, paragraphLineCount, isLastLine);
+			this.SelectLineHeightAndLeading (this.textOffset, 0, 0, 0);
 			
-			this.ox      = line_base_x;
-			this.oy_base = line_base_y;
+			this.ox      = lineBaseX;
+			this.oyBase  = lineBaseY;
 			
-			this.line_width = line_width + this.LeftMargin + this.RightMargin;
+			this.lineWidth = lineWidth + this.LeftMargin + this.RightMargin;
 			
-			Debug.Assert.IsNotNull (this.layout_engine);
-			Debug.Assert.IsNotNull (this.text_context);
+			Debug.Assert.IsNotNull (this.layoutEngine);
+			Debug.Assert.IsNotNull (this.textContext);
 			
-			this.text_profile = profile;
-			this.break_mode   = BreakMode.Default;
+			this.textProfile = profile;
+			this.breakMode   = BreakMode.Default;
 			
 			double space;
 			
-			space  = line_width - profile.TotalWidth;
+			space  = lineWidth - profile.TotalWidth;
 			space *= 1.0 - this.justification;
 			
-			if (! is_tab)
+			if (! isTab)
 			{
 				this.ox += space * this.disposition;
 			}
 			
-			this.text_width  = line_width - space;
-			this.xline_end_x = this.ox + this.text_width;
+			this.textWidth  = lineWidth - space;
+			this.xlineEndX = this.ox + this.textWidth;
 			
-			this.text_profile.ComputeScales (this.text_width, out this.text_scales);
+			this.textProfile.ComputeScales (this.textWidth, out this.textScales);
 			
-			int               end             = this.text_offset + length;
-			int               end_space_count = this.text_profile.CountEndSpace;
-			Unicode.BreakInfo end_break_info  = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
+			int               end             = this.textOffset + length;
+			int               endSpaceCount   = this.textProfile.CountEndSpace;
+			Unicode.BreakInfo endBreakInfo    = Unicode.Bits.GetBreakInfo (this.text[this.textStart + end - 1]);
 			
-			switch (end_break_info)
+			switch (endBreakInfo)
 			{
 				case Unicode.BreakInfo.HyphenateGoodChoice:
 				case Unicode.BreakInfo.HyphenatePoorChoice:
-					this.enable_hyphenation = true;
+					this.enableHyphenation = true;
 					break;
 				
 				default:
-					this.enable_hyphenation = false;
+					this.enableHyphenation = false;
 					break;
 			}
 			
@@ -1074,55 +1074,55 @@ restart:
 			//	problèmes, on peut introduire des cales ('glue') entre les carac-
 			//	tères et modifier la gestion des substitutions de glyphes :
 			
-			double would_be_character_width  = this.text_profile.WidthCharacter * this.text_scales.ScaleCharacter;
-			double would_be_no_stretch_width = this.text_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
+			double wouldBeCharacterWidth  = this.textProfile.WidthCharacter * this.textScales.ScaleCharacter;
+			double wouldBeNoStretchWidth = this.textProfile.WidthNoStretch * this.textScales.ScaleNoStretch;
 			
-			this.text_scales.ScaleCharacter = System.Math.Min (1.10, this.text_scales.ScaleCharacter);
-			this.text_scales.ScaleNoStretch = System.Math.Min (1.05, this.text_scales.ScaleNoStretch);
+			this.textScales.ScaleCharacter = System.Math.Min (1.10, this.textScales.ScaleCharacter);
+			this.textScales.ScaleNoStretch = System.Math.Min (1.05, this.textScales.ScaleNoStretch);
 			
-			double clipped_character_width  = this.text_profile.WidthCharacter * this.text_scales.ScaleCharacter;
-			double clipped_no_stretch_width = this.text_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
+			double clippedCharacterWidth  = this.textProfile.WidthCharacter * this.textScales.ScaleCharacter;
+			double clippedNoStretchWidth = this.textProfile.WidthNoStretch * this.textScales.ScaleNoStretch;
 			
-			double would_be_width = would_be_character_width + would_be_no_stretch_width;
-			double clipped_width  = clipped_character_width  + clipped_no_stretch_width;
+			double wouldBeWidth = wouldBeCharacterWidth + wouldBeNoStretchWidth;
+			double clippedWidth  = clippedCharacterWidth  + clippedNoStretchWidth;
 			
-			if (would_be_width > clipped_width)
+			if (wouldBeWidth > clippedWidth)
 			{
-				int            glue_count   = System.Math.Max (1, this.text_profile.TotalCount - 1);
-				double         glue_width   = would_be_width - clipped_width;
-				StretchProfile glue_profile = new StretchProfile ();
+				int            glueCount   = System.Math.Max (1, this.textProfile.TotalCount - 1);
+				double         glueWidth   = wouldBeWidth - clippedWidth;
+				StretchProfile glueProfile = new StretchProfile ();
 				
-				this.text_glue = glue_width / glue_count;
+				this.textGlue = glueWidth / glueCount;
 				
 				//	Le nombre de caractères à analyser correspond en principe à la
 				//	longueur de la ligne (length), mais si la ligne se termine par
-				//	une marque de fin de ligne, c'est l'info de text_profile qu'il
+				//	une marque de fin de ligne, c'est l'info de textProfile qu'il
 				//	faut utiliser.
 				
-				int fill_count = System.Math.Min (length, this.text_profile.TotalCount);
+				int fillCount = System.Math.Min (length, this.textProfile.TotalCount);
 				
-				this.layout_engine.FillProfile (this, fill_count, glue_profile);
+				this.layoutEngine.FillProfile (this, fillCount, glueProfile);
 				
-				glue_count = glue_profile.TotalCount;
-				glue_count = System.Math.Max (1, glue_count - 1);
+				glueCount = glueProfile.TotalCount;
+				glueCount = System.Math.Max (1, glueCount - 1);
 				
-				clipped_character_width  = glue_profile.WidthCharacter * this.text_scales.ScaleCharacter;
-				clipped_no_stretch_width = glue_profile.WidthNoStretch * this.text_scales.ScaleNoStretch;
+				clippedCharacterWidth  = glueProfile.WidthCharacter * this.textScales.ScaleCharacter;
+				clippedNoStretchWidth = glueProfile.WidthNoStretch * this.textScales.ScaleNoStretch;
 				
-				clipped_width = clipped_character_width + clipped_no_stretch_width;
-				glue_width    = would_be_width - clipped_width;
+				clippedWidth = clippedCharacterWidth + clippedNoStretchWidth;
+				glueWidth    = wouldBeWidth - clippedWidth;
 				
-				this.text_glue = glue_width / glue_count;
+				this.textGlue = glueWidth / glueCount;
 			}
 			else
 			{
-				this.text_glue = 0;
+				this.textGlue = 0;
 			}
 			
 			renderer.RenderStartLine (this);
 			
-			if ((this.xline_properties != null) &&
-				(this.xline_properties.Length > 0))
+			if ((this.xlineProperties != null) &&
+				(this.xlineProperties.Length > 0))
 			{
 				int offset = this.TextOffset;
 				
@@ -1131,29 +1131,29 @@ restart:
 				double asc  = this.LineAscender;
 				double desc = this.LineDescender;
 				
-				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineStart, offset, this.xline_properties, this.xline_text_color, ox, oy, asc, desc, this.frame_index, true));
+				this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineStart, offset, this.xlineProperties, this.xlineTextColor, ox, oy, asc, desc, this.frameIndex, true));
 			}
 			
 			for (;;)
 			{
-				Layout.Status status = this.layout_engine.Render (this, renderer, end - this.text_offset);
+				Layout.Status status = this.layoutEngine.Render (this, renderer, end - this.textOffset);
 				
 				switch (status)
 				{
 					case Layout.Status.Ok:
 						renderer.RenderEndLine (this);
 						
-						if ((this.xline_properties != null) &&
-							(this.xline_properties.Length > 0))
+						if ((this.xlineProperties != null) &&
+							(this.xlineProperties.Length > 0))
 						{
 							int offset = this.TextOffset;
 							
-							double ox   = this.xline_end_x;
+							double ox   = this.xlineEndX;
 							double oy   = this.LineBaseY;
 							double asc  = this.LineAscender;
 							double desc = this.LineDescender;
 							
-							this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineEnd, offset, this.xline_properties, this.xline_text_color, ox, oy, asc, desc, this.frame_index, true));
+							this.AddXlineRecord (new XlineRecord (XlineRecord.RecordType.LineEnd, offset, this.xlineProperties, this.xlineTextColor, ox, oy, asc, desc, this.frameIndex, true));
 						}
 						
 						return;
@@ -1171,88 +1171,88 @@ restart:
 		public void MoveTo(double x, int offset)
 		{
 			this.ox = x;
-			this.text_offset = offset;
+			this.textOffset = offset;
 		}
 		
-		public void DefineTabIndentation(bool tab_indents, double x)
+		public void DefineTabIndentation(bool tabIndents, double x)
 		{
-			this.use_tab_indentation = tab_indents;
-			this.tab_indentation_x   = x;
+			this.useTabIndentation = tabIndents;
+			this.tabIndentationX   = x;
 		}
 		
 		public void SwitchLayoutEngine(Layout.BaseEngine engine, Properties.LayoutProperty property)
 		{
-			this.layout_engine   = engine;
-			this.layout_property = property;
+			this.layoutEngine   = engine;
+			this.layoutProperty = property;
 		}
 		
 		
 		public void ResetLineHeight()
 		{
-			this.oy_max = this.oy_base;
-			this.oy_min = this.oy_base;
+			this.oyMax = this.oyBase;
+			this.oyMin = this.oyBase;
 			
-			this.line_height = 0;
+			this.lineHeight = 0;
 		}
 		
 		public void RecordAscender(double value)
 		{
-			double y = this.oy_base + value;
+			double y = this.oyBase + value;
 			
-			if (y > this.oy_max)
+			if (y > this.oyMax)
 			{
-				this.oy_max = y;
+				this.oyMax = y;
 			}
 		}
 		
 		public void RecordLineHeight(double value)
 		{
-			if (value > this.line_height)
+			if (value > this.lineHeight)
 			{
-				this.line_height = value;
+				this.lineHeight = value;
 				
-				if (this.auto_leading)
+				if (this.autoLeading)
 				{
-					this.line_leading = System.Math.Max (this.line_height, this.line_leading);
+					this.lineLeading = System.Math.Max (this.lineHeight, this.lineLeading);
 				}
 			}
 		}
 		
 		public void RecordDescender(double value)
 		{
-			double y = this.oy_base + value;
+			double y = this.oyBase + value;
 			
-			if (y < this.oy_min)
+			if (y < this.oyMin)
 			{
-				this.oy_min = y;
+				this.oyMin = y;
 			}
 		}
 		
 		
-		public bool GetNextWord(int offset, out ulong[] text, out int length, out Unicode.BreakInfo word_break_info)
+		public bool GetNextWord(int offset, out ulong[] text, out int length, out Unicode.BreakInfo wordBreakInfo)
 		{
-			word_break_info = Unicode.BreakInfo.No;
+			wordBreakInfo = Unicode.BreakInfo.No;
 			
 			//	TODO: gérer le sens <-- pour l'avance du texte
 			
 			int end   = this.text.Length;
-			int pos   = this.text_start + offset;
+			int pos   = this.textStart + offset;
 			
 			while (pos < end)
 			{
-				word_break_info = Unicode.Bits.GetBreakInfo (this.text[pos]);
+				wordBreakInfo = Unicode.Bits.GetBreakInfo (this.text[pos]);
 				
 				pos++;
 				
-				if ((word_break_info == Unicode.BreakInfo.Yes) ||
-					(word_break_info == Unicode.BreakInfo.Optional) ||
-					(word_break_info == Unicode.BreakInfo.HorizontalTab))
+				if ((wordBreakInfo == Unicode.BreakInfo.Yes) ||
+					(wordBreakInfo == Unicode.BreakInfo.Optional) ||
+					(wordBreakInfo == Unicode.BreakInfo.HorizontalTab))
 				{
 					break;
 				}
 			}
 			
-			length = pos - (this.text_start + offset);
+			length = pos - (this.textStart + offset);
 			text   = this.GetInternalBuffer (length);
 			
 			if (length == 0)
@@ -1263,7 +1263,7 @@ restart:
 			//	Copie le texte dans le buffer temporaire. C'est plus rapide de faire
 			//	la copie à la main que d'appeler System.Array.Copy :
 			
-			pos = this.text_start + offset;
+			pos = this.textStart + offset;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -1277,8 +1277,8 @@ restart:
 		{
 			//	TODO: gérer le sens <-- pour l'avance du texte
 			
-			int end = System.Math.Min (this.text_start + offset + length, this.text.Length);
-			int pos = this.text_start + offset;
+			int end = System.Math.Min (this.textStart + offset + length, this.text.Length);
+			int pos = this.textStart + offset;
 
 			length = end - pos;
 			text = this.GetInternalBuffer(length);
@@ -1300,41 +1300,41 @@ restart:
 		}
 		
 		
-		public void SelectFrame(int frame_index, double y)
+		public void SelectFrame(int frameIndex, double y)
 		{
-			if (frame_index == -1)
+			if (frameIndex == -1)
 			{
-				this.frame_index  = -1;
+				this.frameIndex  = -1;
 				this.frame        = null;
-				this.frame_y      = 0;
-				this.frame_y_line = 0;
+				this.frameY      = 0;
+				this.frameYLine = 0;
 			}
 			else
 			{
-				this.frame_index  = frame_index;
-				this.frame        = this.frame_list[this.frame_index];
-				this.frame_y      = y;
-				this.frame_y_line = y;
+				this.frameIndex  = frameIndex;
+				this.frame        = this.frameList[this.frameIndex];
+				this.frameY      = y;
+				this.frameYLine = y;
 			}
 			
-			this.frame_first_line = 0;
+			this.frameFirstLine = 0;
 		}
 		
 		public void DefineAvailableWidth(double width)
 		{
-			this.line_width = width + this.LeftMargin + this.RightMargin;
+			this.lineWidth = width + this.LeftMargin + this.RightMargin;
 		}
 		
-		public void DefineTabDockingMark(string tab_docking_mark)
+		public void DefineTabDockingMark(string tabDockingMark)
 		{
-			if ((tab_docking_mark != null) &&
-				(tab_docking_mark.Length > 0))
+			if ((tabDockingMark != null) &&
+				(tabDockingMark.Length > 0))
 			{
 				uint[] utf32;
 				
-				TextConverter.ConvertFromString (tab_docking_mark, out utf32);
+				TextConverter.ConvertFromString (tabDockingMark, out utf32);
 				
-				int start = this.text_start + this.text_offset;
+				int start = this.textStart + this.textOffset;
 				
 				for (int i = start; i < this.text.Length; i++)
 				{
@@ -1360,8 +1360,8 @@ restart:
 							Unicode.Bits.SetBreakInfo (ref copy[count], Unicode.BreakInfo.Yes);
 							
 							this.text        = copy;
-							this.text_start  = 0;
-							this.text_offset = 0;
+							this.textStart  = 0;
+							this.textOffset = 0;
 							
 							return;
 						}
@@ -1370,37 +1370,37 @@ restart:
 			}
 		}
 		
-		public void SelectMargins(int paragraph_line_index)
+		public void SelectMargins(int paragraphLineIndex)
 		{
-			ulong code = this.text[this.text_start + this.text_offset];
+			ulong code = this.text[this.textStart + this.textOffset];
 			
 			Properties.MarginsProperty margins;
-			double font_size_in_points;
+			double fontSizeInPoints;
 			
-			this.text_context.GetMargins (code, out margins);
-			this.text_context.GetFontSize (code, out font_size_in_points);
+			this.textContext.GetMargins (code, out margins);
+			this.textContext.GetFontSize (code, out fontSizeInPoints);
 			
 			if (margins != null)
 			{
 				if (Properties.UnitsTools.IsScale (margins.Units))
 				{
-					this.mx_left  = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-					this.mx_right = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
-					this.x_origin = this.mx_left;
+					this.mxLeft  = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (paragraphLineIndex == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mxRight = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (paragraphLineIndex == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.xOrigin = this.mxLeft;
 				
-					this.break_fence_before = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceBefore, margins.Units);
-					this.break_fence_after  = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceAfter, margins.Units);
-					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+					this.breakFenceBefore = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (margins.BreakFenceBefore, margins.Units);
+					this.breakFenceAfter  = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (margins.BreakFenceAfter, margins.Units);
+					this.enableHyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 				}
 				else
 				{
-					this.mx_left  = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-					this.mx_right = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
-					this.x_origin = this.mx_left;
+					this.mxLeft  = Properties.UnitsTools.ConvertToPoints (paragraphLineIndex == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mxRight = Properties.UnitsTools.ConvertToPoints (paragraphLineIndex == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.xOrigin = this.mxLeft;
 				
-					this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
-					this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
-					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+					this.breakFenceBefore = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
+					this.breakFenceAfter  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
+					this.enableHyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 				}
 			}
 		}
@@ -1408,90 +1408,90 @@ restart:
 		
 		private void SelectLayoutEngine(int offset)
 		{
-			ulong code = this.text[this.text_start + offset];
-			this.text_context.GetLayoutEngine (code, out this.layout_engine, out this.layout_property);
+			ulong code = this.text[this.textStart + offset];
+			this.textContext.GetLayoutEngine (code, out this.layoutEngine, out this.layoutProperty);
 		}
 		
-		private void SelectMarginsAndJustification(int offset, int paragraph_line_index, bool is_last_line)
+		private void SelectMarginsAndJustification(int offset, int paragraphLineIndex, bool isLastLine)
 		{
-			ulong code = this.text[this.text_start + offset];
+			ulong code = this.text[this.textStart + offset];
 			
 			Properties.MarginsProperty margins;
-			double font_size_in_points;
+			double fontSizeInPoints;
 			
-			this.text_context.GetMargins (code, out margins);
-			this.text_context.GetFontSize (code, out font_size_in_points);
+			this.textContext.GetMargins (code, out margins);
+			this.textContext.GetFontSize (code, out fontSizeInPoints);
 			
 			if (margins != null)
 			{
 				if (Properties.UnitsTools.IsScale (margins.Units))
 				{
-					this.mx_left      = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-					this.mx_right     = font_size_in_points * Properties.UnitsTools.ConvertToScale (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
-					this.mx_left_body = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.LeftMarginBody, margins.Units);
-					this.x_origin     = this.mx_left;
+					this.mxLeft      = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (paragraphLineIndex == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mxRight     = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (paragraphLineIndex == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.mxLeftBody  = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (margins.LeftMarginBody, margins.Units);
+					this.xOrigin     = this.mxLeft;
 				
-					this.break_fence_before = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceBefore, margins.Units);
-					this.break_fence_after  = font_size_in_points * Properties.UnitsTools.ConvertToScale (margins.BreakFenceAfter, margins.Units);
-					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+					this.breakFenceBefore = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (margins.BreakFenceBefore, margins.Units);
+					this.breakFenceAfter  = fontSizeInPoints * Properties.UnitsTools.ConvertToScale (margins.BreakFenceAfter, margins.Units);
+					this.enableHyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 				}
 				else
 				{
-					this.mx_left      = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
-					this.mx_right     = Properties.UnitsTools.ConvertToPoints (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
-					this.mx_left_body = Properties.UnitsTools.ConvertToPoints (margins.LeftMarginBody, margins.Units);
-					this.x_origin     = this.mx_left;
+					this.mxLeft      = Properties.UnitsTools.ConvertToPoints (paragraphLineIndex == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody, margins.Units);
+					this.mxRight     = Properties.UnitsTools.ConvertToPoints (paragraphLineIndex == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody, margins.Units);
+					this.mxLeftBody = Properties.UnitsTools.ConvertToPoints (margins.LeftMarginBody, margins.Units);
+					this.xOrigin     = this.mxLeft;
 					
-					this.break_fence_before = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
-					this.break_fence_after  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
-					this.enable_hyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
+					this.breakFenceBefore = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceBefore, margins.Units);
+					this.breakFenceAfter  = Properties.UnitsTools.ConvertToPoints (margins.BreakFenceAfter, margins.Units);
+					this.enableHyphenation = margins.EnableHyphenation == Properties.ThreeState.True;
 				}
 					
 				
-				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
+				this.justification = isLastLine ? margins.JustificationLastLine : margins.JustificationBody;
 				this.disposition   = margins.Disposition;
 			}
 		}
 		
 		private void SelectKeep(int offset)
 		{
-			ulong code = this.text[this.text_start + offset];
+			ulong code = this.text[this.textStart + offset];
 			
 			Properties.KeepProperty keep;
 			
-			this.text_context.GetKeep (code, out keep);
+			this.textContext.GetKeep (code, out keep);
 			
 			if (keep != null)
 			{
-				this.para_start_mode  = keep.ParagraphStartMode;
-				this.keep_start_lines = System.Math.Max (1, keep.StartLines);
-				this.keep_end_lines   = System.Math.Max (1, keep.EndLines);
+				this.paraStartMode  = keep.ParagraphStartMode;
+				this.keepStartLines = System.Math.Max (1, keep.StartLines);
+				this.keepEndLines   = System.Math.Max (1, keep.EndLines);
 				
 				//	Le TextFitter peut forcer un 'keep with previous paragraph' basé
 				//	sur les informations relatives au paragraphe précédent; on doit
-				//	donc conserver l'état 'keep_with_prev_para = true'...
+				//	donc conserver l'état 'keepWithPrevPara = true'...
 				
-				this.keep_with_prev_para |= keep.KeepWithPreviousParagraph == Properties.ThreeState.True;
-				this.keep_with_next_para  = keep.KeepWithNextParagraph == Properties.ThreeState.True;
+				this.keepWithPrevPara |= keep.KeepWithPreviousParagraph == Properties.ThreeState.True;
+				this.keepWithNextPara  = keep.KeepWithNextParagraph == Properties.ThreeState.True;
 			}
 			else
 			{
-				this.para_start_mode     = Properties.ParagraphStartMode.Anywhere;
-				this.keep_start_lines    = 1;
-				this.keep_end_lines      = 1;
+				this.paraStartMode     = Properties.ParagraphStartMode.Anywhere;
+				this.keepStartLines    = 1;
+				this.keepEndLines      = 1;
 				
-				this.keep_with_next_para = false;
+				this.keepWithNextPara = false;
 			}
 			
-			if ((this.para_default_start_mode == Properties.ParagraphStartMode.Undefined) ||
-				(this.para_default_start_mode == Properties.ParagraphStartMode.Anywhere))
+			if ((this.paraDefaultStartMode == Properties.ParagraphStartMode.Undefined) ||
+				(this.paraDefaultStartMode == Properties.ParagraphStartMode.Anywhere))
 			{
 			}
 			else
 			{
 				//	Combine les deux modes de début de paragraphe :
 				
-				switch (this.para_default_start_mode)
+				switch (this.paraDefaultStartMode)
 				{
 					case Properties.ParagraphStartMode.NewFrame:
 						
@@ -1499,11 +1499,11 @@ restart:
 						//	un saut uniquement si le paragraphe lui-même ne force pas
 						//	déjà un saut de page :
 						
-						switch (this.para_start_mode)
+						switch (this.paraStartMode)
 						{
 							case Properties.ParagraphStartMode.Undefined:
 							case Properties.ParagraphStartMode.Anywhere:
-								this.para_start_mode = this.para_default_start_mode;
+								this.paraStartMode = this.paraDefaultStartMode;
 								break;
 						}
 						break;
@@ -1516,13 +1516,13 @@ restart:
 						//	un saut uniquement si le paragraphe lui-même ne force pas
 						//	déjà un saut de page précis (page paire/impaire) :
 						
-						switch (this.para_start_mode)
+						switch (this.paraStartMode)
 						{
 							case Properties.ParagraphStartMode.Undefined:
 							case Properties.ParagraphStartMode.Anywhere:
 							case Properties.ParagraphStartMode.NewFrame:
 							case Properties.ParagraphStartMode.NewPage:
-								this.para_start_mode = this.para_default_start_mode;
+								this.paraStartMode = this.paraDefaultStartMode;
 								break;
 						}
 						break;
@@ -1531,93 +1531,93 @@ restart:
 			}
 		}
 		
-		private void SelectLineHeightAndLeading(int offset, double line_height, double ascender, double descender)
+		private void SelectLineHeightAndLeading(int offset, double lineHeight, double ascender, double descender)
 		{
-			ulong code = this.text[this.text_start + offset];
+			ulong code = this.text[this.textStart + offset];
 			
 			OpenType.Font font;
-			double        font_size;
-			double        font_scale;
+			double        fontSize;
+			double        fontScale;
 			
-			Properties.LeadingProperty leading_property;
+			Properties.LeadingProperty leadingProperty;
 			
-			this.text_context.GetFontAndSize (code, out font, out font_size, out font_scale);
-			this.text_context.GetLeading (code, out leading_property);
+			this.textContext.GetFontAndSize (code, out font, out fontSize, out fontScale);
+			this.textContext.GetLeading (code, out leadingProperty);
 			
-			font_size *= font_scale;
+			fontSize *= fontScale;
 			
 			if (font != null)
 			{
-				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
-				descender = System.Math.Min (descender, font.GetDescender (font_size));
-				font_size = System.Math.Max (font_size, (ascender - descender) * 1.2);
+				ascender  = System.Math.Max (ascender, font.GetAscender (fontSize));
+				descender = System.Math.Min (descender, font.GetDescender (fontSize));
+				fontSize = System.Math.Max (fontSize, (ascender - descender) * 1.2);
 				
-				double auto_scale = 1.0;
-				double leading    = font_size * auto_scale;
+				double autoScale = 1.0;
+				double leading    = fontSize * autoScale;
 				
-				if (leading_property != null)
+				if (leadingProperty != null)
 				{
-					if ((double.IsNaN (leading_property.Leading)) ||
-						(leading_property.Leading == 0))
+					if ((double.IsNaN (leadingProperty.Leading)) ||
+						(leadingProperty.Leading == 0))
 					{
 						//	Pas d'interligne spécifié : utilise l'interligne automatique.
 					}
 					else
 					{
-						if ((leading_property.LeadingUnits == Properties.SizeUnits.Percent) ||
-							(leading_property.LeadingUnits == Properties.SizeUnits.PercentNotCombining))
+						if ((leadingProperty.LeadingUnits == Properties.SizeUnits.Percent) ||
+							(leadingProperty.LeadingUnits == Properties.SizeUnits.PercentNotCombining))
 						{
-							leading   *= leading_property.Leading;
-							auto_scale = leading_property.Leading;
+							leading   *= leadingProperty.Leading;
+							autoScale = leadingProperty.Leading;
 						}
 						else
 						{
-							leading    = leading_property.LeadingInPoints;
-							auto_scale = 0;
+							leading    = leadingProperty.LeadingInPoints;
+							autoScale = 0;
 						}
 					}
 					
-					this.line_space_before = double.IsNaN (leading_property.SpaceBefore) ? 0 : leading_property.SpaceBeforeInPoints;
-					this.line_space_after  = double.IsNaN (leading_property.SpaceAfter)  ? 0 : leading_property.SpaceAfterInPoints;
+					this.lineSpaceBefore = double.IsNaN (leadingProperty.SpaceBefore) ? 0 : leadingProperty.SpaceBeforeInPoints;
+					this.lineSpaceAfter  = double.IsNaN (leadingProperty.SpaceAfter)  ? 0 : leadingProperty.SpaceAfterInPoints;
 				}
 				else
 				{
-					this.line_space_before = 0;
-					this.line_space_after  = 0;
+					this.lineSpaceBefore = 0;
+					this.lineSpaceAfter  = 0;
 				}
 				
-				this.auto_leading = auto_scale != 0;
-				this.line_leading = leading;
-				this.line_align   = leading_property == null ? Properties.AlignMode.None : leading_property.AlignMode;
-				this.line_height  = System.Math.Max (line_height, leading);
+				this.autoLeading = autoScale != 0;
+				this.lineLeading = leading;
+				this.lineAlign   = leadingProperty == null ? Properties.AlignMode.None : leadingProperty.AlignMode;
+				this.lineHeight  = System.Math.Max (lineHeight, leading);
 			}
 			
-			this.oy_max = this.oy_base + ascender;
-			this.oy_min = this.oy_base + descender;
+			this.oyMax = this.oyBase + ascender;
+			this.oyMin = this.oyBase + descender;
 		}
 		
-		private void SelectVerticalAlignment(int paragraph_line_index)
+		private void SelectVerticalAlignment(int paragraphLineIndex)
 		{
-			switch (this.line_align)
+			switch (this.lineAlign)
 			{
 				case Properties.AlignMode.First:
-					if ((paragraph_line_index == 0) ||
-						(this.frame_y == 0))
+					if ((paragraphLineIndex == 0) ||
+						(this.frameY == 0))
 					{
-						this.line_sync_to_grid = true;
+						this.lineSyncToGrid = true;
 						return;
 					}
 					break;
 				
 				case Properties.AlignMode.All:
-					this.line_sync_to_grid = true;
+					this.lineSyncToGrid = true;
 					return;
 				
 				default:
 					break;
 			}
 			
-			this.line_sync_to_grid = false;
+			this.lineSyncToGrid = false;
 		}
 		
 		
@@ -1636,73 +1636,73 @@ restart:
 		}
 		
 		
-		private void UpdateFrameIndex(ref int frame_index, bool is_top_of_frame, Properties.ParagraphStartMode para_start_mode)
+		private void UpdateFrameIndex(ref int frameIndex, bool isTopOfFrame, Properties.ParagraphStartMode paraStartMode)
 		{
 			//	Un paragraphe peut imposer des contraintes quant à sa position dans
 			//	un frame (début de frame, frame en début de page/page paire/page
 			//	impaire).
 			
-			switch (para_start_mode)
+			switch (paraStartMode)
 			{
 				case Properties.ParagraphStartMode.NewFrame:
-					if (! is_top_of_frame)
+					if (! isTopOfFrame)
 					{
-						frame_index++;
+						frameIndex++;
 					}
 					break;
 				
 				case Properties.ParagraphStartMode.NewPage:
-					if ((this.IsFirstFrameInPage (frame_index)) &&
-						(is_top_of_frame))
+					if ((this.IsFirstFrameInPage (frameIndex)) &&
+						(isTopOfFrame))
 					{
 						//	OK : déjà au début d'une page.
 					}
 					else
 					{
-						frame_index++;
+						frameIndex++;
 						
-						while ((frame_index < this.frame_list.Count)
-							&& (this.IsFirstFrameInPage (frame_index) == false))
+						while ((frameIndex < this.frameList.Count)
+							&& (this.IsFirstFrameInPage (frameIndex) == false))
 						{
-							frame_index++;
+							frameIndex++;
 						}
 					}
 					break;
 				
 				case Properties.ParagraphStartMode.NewEvenPage:
-					if ((this.IsFirstFrameInPage (frame_index)) &&
-						(this.IsFrameInEvenPage (frame_index)) &&
-						(is_top_of_frame))
+					if ((this.IsFirstFrameInPage (frameIndex)) &&
+						(this.IsFrameInEvenPage (frameIndex)) &&
+						(isTopOfFrame))
 					{
 						//	OK : déjà au début d'une page paire.
 					}
 					else
 					{
-						frame_index++;
+						frameIndex++;
 						
-						while ((frame_index < this.frame_list.Count)
-							&& ((this.IsFrameInEvenPage (frame_index) == false) || (this.IsFirstFrameInPage (frame_index) == false)))
+						while ((frameIndex < this.frameList.Count)
+							&& ((this.IsFrameInEvenPage (frameIndex) == false) || (this.IsFirstFrameInPage (frameIndex) == false)))
 						{
-							frame_index++;
+							frameIndex++;
 						}
 					}
 					break;
 				
 				case Properties.ParagraphStartMode.NewOddPage:
-					if ((this.IsFirstFrameInPage (frame_index)) &&
-						(this.IsFrameInOddPage (frame_index)) &&
-						(is_top_of_frame))
+					if ((this.IsFirstFrameInPage (frameIndex)) &&
+						(this.IsFrameInOddPage (frameIndex)) &&
+						(isTopOfFrame))
 					{
 						//	OK : déjà au début d'une page impaire.
 					}
 					else
 					{
-						frame_index++;
+						frameIndex++;
 						
-						while ((frame_index < this.frame_list.Count)
-							&& ((this.IsFrameInOddPage (frame_index) == false) || (this.IsFirstFrameInPage (frame_index) == false)))
+						while ((frameIndex < this.frameList.Count)
+							&& ((this.IsFrameInOddPage (frameIndex) == false) || (this.IsFirstFrameInPage (frameIndex) == false)))
 						{
-							frame_index++;
+							frameIndex++;
 						}
 					}
 					break;
@@ -1710,34 +1710,34 @@ restart:
 		}
 		
 		
-		private bool IsFirstFrameInPage(int frame_index)
+		private bool IsFirstFrameInPage(int frameIndex)
 		{
-			if (frame_index == 0)
+			if (frameIndex == 0)
 			{
 				return true;
 			}
 			
-			if ((frame_index > 0) &&
-				(frame_index < this.frame_list.Count))
+			if ((frameIndex > 0) &&
+				(frameIndex < this.frameList.Count))
 			{
-				ITextFrame frame_a = this.frame_list[frame_index-1];
-				ITextFrame frame_b = this.frame_list[frame_index];
+				ITextFrame frameA = this.frameList[frameIndex-1];
+				ITextFrame frameB = this.frameList[frameIndex];
 				
-				System.Diagnostics.Debug.Assert (frame_a != null);
-				System.Diagnostics.Debug.Assert (frame_b != null);
+				System.Diagnostics.Debug.Assert (frameA != null);
+				System.Diagnostics.Debug.Assert (frameB != null);
 				
-				return frame_a.PageNumber != frame_b.PageNumber;
+				return frameA.PageNumber != frameB.PageNumber;
 			}
 			
 			return false;
 		}
 		
-		private bool IsFrameInEvenPage(int frame_index)
+		private bool IsFrameInEvenPage(int frameIndex)
 		{
-			if ((frame_index > -1) &&
-				(frame_index < this.frame_list.Count))
+			if ((frameIndex > -1) &&
+				(frameIndex < this.frameList.Count))
 			{
-				ITextFrame frame = this.frame_list[frame_index];
+				ITextFrame frame = this.frameList[frameIndex];
 				
 				System.Diagnostics.Debug.Assert (frame != null);
 				
@@ -1749,12 +1749,12 @@ restart:
 			return false;
 		}
 		
-		private bool IsFrameInOddPage(int frame_index)
+		private bool IsFrameInOddPage(int frameIndex)
 		{
-			if ((frame_index > -1) &&
-				(frame_index < this.frame_list.Count))
+			if ((frameIndex > -1) &&
+				(frameIndex < this.frameList.Count))
 			{
-				ITextFrame frame = this.frame_list[frame_index];
+				ITextFrame frame = this.frameList[frameIndex];
 				
 				System.Diagnostics.Debug.Assert (frame != null);
 				
@@ -1773,14 +1773,14 @@ restart:
 			public Snapshot(Context context)
 			{
 				this.snapshot      = context.snapshot;
-				this.text_offset   = context.text_offset;
-				this.layout_engine = context.layout_engine;
+				this.textOffset    = context.textOffset;
+				this.layoutEngine  = context.layoutEngine;
 				this.ox            = context.ox;
-				this.oy_base       = context.oy_base;
+				this.oyBase        = context.oyBase;
 				
-				this.frame_index      = context.frame_index;
-				this.frame_y          = context.frame_y;
-				this.frame_first_line = context.frame_first_line;
+				this.frameIndex       = context.frameIndex;
+				this.frameY           = context.frameY;
+				this.frameFirstLine   = context.frameFirstLine;
 			}
 			
 			
@@ -1789,129 +1789,129 @@ restart:
 				this.Restore (context, true);
 			}
 			
-			public void Restore(Context context, bool restore_frame)
+			public void Restore(Context context, bool restoreFrame)
 			{
-				double ascender  = context.oy_max - context.oy_base;
-				double descender = context.oy_min - context.oy_base;
+				double ascender  = context.oyMax - context.oyBase;
+				double descender = context.oyMin - context.oyBase;
 				
 				context.snapshot      = this.snapshot;
-				context.text_offset   = this.text_offset;
-				context.layout_engine = this.layout_engine;
+				context.textOffset   = this.textOffset;
+				context.layoutEngine = this.layoutEngine;
 				
 				context.ox      = this.ox;
-				context.oy_base = this.oy_base;
-				context.oy_max  = this.oy_base + ascender;
-				context.oy_min  = this.oy_base + descender;
+				context.oyBase = this.oyBase;
+				context.oyMax  = this.oyBase + ascender;
+				context.oyMin  = this.oyBase + descender;
 				
-				if (restore_frame)
+				if (restoreFrame)
 				{
-					context.SelectFrame (this.frame_index, this.frame_y);
+					context.SelectFrame (this.frameIndex, this.frameY);
 				}
 				else
 				{
-					context.SelectFrame (context.frame_index, this.frame_y);
+					context.SelectFrame (context.frameIndex, this.frameY);
 				}
 				
-				context.frame_first_line = this.frame_first_line;
+				context.frameFirstLine = this.frameFirstLine;
 			}
 			
-			public void FixFrame(int frame_index, double frame_y, int frame_first_line)
+			public void FixFrame(int frameIndex, double frameY, int frameFirstLine)
 			{
-				this.frame_index      = frame_index;
-				this.frame_y          = frame_y;
-				this.frame_first_line = frame_first_line;
+				this.frameIndex      = frameIndex;
+				this.frameY          = frameY;
+				this.frameFirstLine = frameFirstLine;
 			}
 			
 			
 			private Snapshot					snapshot;
-			private int							text_offset;
-			private Layout.BaseEngine			layout_engine;
-			private double						ox, oy_base;
-			private int							frame_index;
-			private double						frame_y;
-			private int							frame_first_line;
+			private int							textOffset;
+			private Layout.BaseEngine			layoutEngine;
+			private double						ox, oyBase;
+			private int							frameIndex;
+			private double						frameY;
+			private int							frameFirstLine;
 		}
 		#endregion
 		
 		
-		private TextContext						text_context;
+		private TextContext						textContext;
 		private ulong[]							text;
-		private int								text_start;
-		private int								text_offset;
-		private StretchProfile					text_profile;
-		private StretchProfile.Scales			text_scales;
-		private double							text_width;
-		private double							text_glue;
+		private int								textStart;
+		private int								textOffset;
+		private StretchProfile					textProfile;
+		private StretchProfile.Scales			textScales;
+		private double							textWidth;
+		private double							textGlue;
 		
-		private FrameList						frame_list;
-		private int								frame_index = -1;
+		private FrameList						frameList;
+		private int								frameIndex = -1;
 		private ITextFrame						frame;
-		private double							frame_y;
-		private double							frame_y_line;
-		private int								frame_first_line;			//	# première ligne du paragraphe dans ce frame
+		private double							frameY;
+		private double							frameYLine;
+		private int								frameFirstLine;			//	# première ligne du paragraphe dans ce frame
 		
-		private int								left_to_right;
+		private int								leftToRight;
 		
 		private double							ox;
-		private double							ox_line_start;
-		private double							oy_base;
-		private double							oy_max;
-		private double							oy_min;
+		private double							oxLineStart;
+		private double							oyBase;
+		private double							oyMax;
+		private double							oyMin;
 		
-		private double							line_y1;
-		private double							line_y2;
+		private double							lineY1;
+		private double							lineY2;
 		
-		private double							line_height;
-		private double							line_width;
-		private double							line_leading;
-		private bool							auto_leading;
-		private Properties.AlignMode			line_align;
-		private bool							line_sync_to_grid;
-		private double							line_skip_before;
-		private double							line_space_before;
-		private double							line_space_after;
+		private double							lineHeight;
+		private double							lineWidth;
+		private double							lineLeading;
+		private bool							autoLeading;
+		private Properties.AlignMode			lineAlign;
+		private bool							lineSyncToGrid;
+		private double							lineSkipBefore;
+		private double							lineSpaceBefore;
+		private double							lineSpaceAfter;
 		
-		private Properties.ParagraphStartMode	para_default_start_mode;
-		private Properties.ParagraphStartMode	para_start_mode;
-		private int								keep_start_lines;
-		private int								keep_end_lines;
-		private bool							keep_with_prev_para;
-		private bool							keep_with_next_para;
+		private Properties.ParagraphStartMode	paraDefaultStartMode;
+		private Properties.ParagraphStartMode	paraStartMode;
+		private int								keepStartLines;
+		private int								keepEndLines;
+		private bool							keepWithPrevPara;
+		private bool							keepWithNextPara;
 		
-		private Layout.FrameLineFenceDictionary	frame_fences = new FrameLineFenceDictionary ();
+		private Layout.FrameLineFenceDictionary	frameFences = new FrameLineFenceDictionary ();
 		
-		private double							mx_left;
-		private double							mx_left_body;
-		private double							mx_right;
-		private double							x_origin;
+		private double							mxLeft;
+		private double							mxLeftBody;
+		private double							mxRight;
+		private double							xOrigin;
 		
-		private bool							use_tab_indentation;
-		private double							tab_indentation_x;
+		private bool							useTabIndentation;
+		private double							tabIndentationX;
 		
-		private double							break_fence_before;
-		private double							break_fence_after;
+		private double							breakFenceBefore;
+		private double							breakFenceAfter;
 		
 		private double							justification;
 		private double							disposition;
 		
-		private bool							enable_hyphenation;
-		private BreakMode						break_mode;
+		private bool							enableHyphenation;
+		private BreakMode						breakMode;
 		
-		private bool							show_control_characters;
+		private bool							showControlCharacters;
 		
-		private bool							disable_simple_rendering;
-		private bool							disable_font_baseline_offset;
+		private bool							disableSimpleRendering;
+		private bool							disableFontBaselineOffset;
 		
-		private Layout.BaseEngine				layout_engine;
-		private Properties.LayoutProperty		layout_property;
+		private Layout.BaseEngine				layoutEngine;
+		private Properties.LayoutProperty		layoutProperty;
 		
 		private Snapshot						snapshot;
 		
 		private ulong[]							buffer;
 		
-		Properties.AbstractXlineProperty[]		xline_properties;
-		Properties.FontColorProperty			xline_text_color;
-		System.Collections.ArrayList			xline_records;
-		private double							xline_end_x;
+		Properties.AbstractXlineProperty[]		xlineProperties;
+		Properties.FontColorProperty			xlineTextColor;
+		System.Collections.ArrayList			xlineRecords;
+		private double							xlineEndX;
 	}
 }

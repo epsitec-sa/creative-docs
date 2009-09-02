@@ -92,17 +92,17 @@ namespace Epsitec.Common.Text.Layout
 				}
 			}
 			
-			int[] temp_frames = new int[this.frames.Length+1];
-			int[] temp_fences = new int[this.fences.Length+1];
+			int[] tempFrames = new int[this.frames.Length+1];
+			int[] tempFences = new int[this.fences.Length+1];
 			
-			System.Array.Copy (this.frames, 0, temp_frames, 0, this.frames.Length);
-			System.Array.Copy (this.fences, 0, temp_fences, 0, this.fences.Length);
+			System.Array.Copy (this.frames, 0, tempFrames, 0, this.frames.Length);
+			System.Array.Copy (this.fences, 0, tempFences, 0, this.fences.Length);
 			
-			temp_frames[this.frames.Length] = frame;
-			temp_fences[this.fences.Length] = fence;
+			tempFrames[this.frames.Length] = frame;
+			tempFences[this.fences.Length] = fence;
 			
-			this.frames = temp_frames;
-			this.fences = temp_fences;
+			this.frames = tempFrames;
+			this.fences = tempFences;
 		}
 		
 		public void Add(FrameLineFenceDictionary dictionary)

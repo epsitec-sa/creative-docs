@@ -51,33 +51,33 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsInBounds (position, 0, CursorIdArray.MaxPosition);
 			
 			int offset;
-			int from_index = this.FindElement (id);
-			int to_index   = this.FindElementAtPosition (position, out offset);
+			int fromIndex = this.FindElement (id);
+			int toIndex   = this.FindElementAtPosition (position, out offset);
 			
 			Debug.Assert.IsTrue (offset >= 0);
-			Debug.Assert.IsInBounds (from_index, 0, this.length-1);
-			Debug.Assert.IsInBounds (to_index, 0, this.length);
+			Debug.Assert.IsInBounds (fromIndex, 0, this.length-1);
+			Debug.Assert.IsInBounds (toIndex, 0, this.length);
 			
-			if (from_index == to_index)
+			if (fromIndex == toIndex)
 			{
 				//	Pas besoin de déplacer l'élément dans le tableau, car il va
 				//	occuper la même place.
 				
-				int old_offset = this.elements[from_index].offset;
-				int new_offset = offset;
+				int oldOffset = this.elements[fromIndex].offset;
+				int newOffset = offset;
 				
-				this.elements[from_index].offset = new_offset;
+				this.elements[fromIndex].offset = newOffset;
 				
-				if (from_index+1 < this.length)
+				if (fromIndex+1 < this.length)
 				{
-					this.elements[from_index+1].offset += old_offset - new_offset;
+					this.elements[fromIndex+1].offset += oldOffset - newOffset;
 				}
 			}
 			else
 			{
 				int index;
 				
-				this.MoveElement (from_index, to_index, out index);
+				this.MoveElement (fromIndex, toIndex, out index);
 				
 				//	L'élément a été déplacé dans le tableau. Il faut ajuster l'offset
 				//	de l'élément courant et de l'élément suivant (s'il y en a un) :
@@ -156,12 +156,12 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void ProcessRemoval(int position, int length, int abs_origin, bool removal_continuation, out CursorInfo[] removed)
+		public void ProcessRemoval(int position, int length, int absOrigin, bool removalContinuation, out CursorInfo[] removed)
 		{
 			//	Décale les curseurs en fonction d'une suppression depuis la
 			//	position indiquée et génère la table des curseurs attachés
 			//	ainsi déplacés (la table contient la position absolue des
-			//	curseurs avant leur déplacement; 'abs_origin' spécifie le
+			//	curseurs avant leur déplacement; 'absOrigin' spécifie le
 			//	début absolu du morceau de texte dans lequel on travaille).
 			
 			//	Si des curseurs se trouvent dans la tranche supprimée, ils
@@ -169,32 +169,32 @@ namespace Epsitec.Common.Text.Internal
 			
 			System.Collections.ArrayList list = null;
 			
-			int index_before = this.FindElementBeforePosition (position);
-			int index_after  = this.FindElementBeforePosition (position + length + 1) + 1;
+			int indexBefore = this.FindElementBeforePosition (position);
+			int indexAfter  = this.FindElementBeforePosition (position + length + 1) + 1;
 			
-			int pos_at   = index_before < 0 ? 0 : this.FindElementPosition (index_before);
-			int pos_abs  = abs_origin + pos_at;
-			int index_at = index_before + 1;
+			int posAt   = indexBefore < 0 ? 0 : this.FindElementPosition (indexBefore);
+			int posAbs  = absOrigin + posAt;
+			int indexAt = indexBefore + 1;
 			
 			//	S'il y a des curseurs dans la tranche supprimée, on les déplace
 			//	un à un :
 			
-			while ((index_at < index_after)
-				&& (index_at < this.length))
+			while ((indexAt < indexAfter)
+				&& (indexAt < this.length))
 			{
-				pos_at  += this.elements[index_at].offset;
-				pos_abs += this.elements[index_at].offset;
+				posAt  += this.elements[indexAt].offset;
+				posAbs += this.elements[indexAt].offset;
 				
-				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == pos_at);
+				Debug.Assert.IsTrue (this.FindElementPosition (indexAt) == posAt);
 				
-				int coverage = pos_at - position;
+				int coverage = posAt - position;
 				
 				length -= coverage;
-				pos_at  = position;
+				posAt  = position;
 				
 				if (coverage > 0)
 				{
-					removal_continuation = true;
+					removalContinuation = true;
 				}
 				
 				Debug.Assert.IsTrue (coverage >= 0);
@@ -203,10 +203,10 @@ namespace Epsitec.Common.Text.Internal
 				//	Si le curseur est entièrement compris dans la zone à considérer
 				//	il est directement affecté par la destruction :
 				
-				CursorAttachment attachment = this.elements[index_at].attachment;
+				CursorAttachment attachment = this.elements[indexAt].attachment;
 				
 				if (((length >= 1) && (attachment == CursorAttachment.ToNext)) ||
-					((removal_continuation) && (attachment == CursorAttachment.ToPrevious)))
+					((removalContinuation) && (attachment == CursorAttachment.ToPrevious)))
 				{
 					if (list == null)
 					{
@@ -217,24 +217,24 @@ namespace Epsitec.Common.Text.Internal
 					//	ce qui permet à l'appelant de générer les informations pour
 					//	l'annulation :
 					
-					list.Add (new CursorInfo (this.elements[index_at].id, pos_abs, 0));
+					list.Add (new CursorInfo (this.elements[indexAt].id, posAbs, 0));
 				}
 				
 				//	Déplace le curseur au début de la tranche supprimée :
 				
-				this.elements[index_at].offset -= coverage;
+				this.elements[indexAt].offset -= coverage;
 				
-				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == position);
+				Debug.Assert.IsTrue (this.FindElementPosition (indexAt) == position);
 				
-				index_at++;
+				indexAt++;
 			}
 			
-			if (index_after < this.length)
+			if (indexAfter < this.length)
 			{
-				Debug.Assert.IsTrue (this.GetCursorPosition (this.elements[index_after].id) >= position + length);
-				Debug.Assert.IsTrue (this.elements[index_after].offset >= length);
+				Debug.Assert.IsTrue (this.GetCursorPosition (this.elements[indexAfter].id) >= position + length);
+				Debug.Assert.IsTrue (this.elements[indexAfter].offset >= length);
 				
-				this.elements[index_after].offset -= length;
+				this.elements[indexAfter].offset -= length;
 			}
 			
 			if ((list != null) &&
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Text.Internal
 			int index = this.FindElementAtPosition (origin, out delta);
 			int pos   = (index > 0) ? this.FindElementPosition (index-1) : 0;
 			int count = index;
-			int dst_i = 0;
+			int dstI  = 0;
 			
 			while (index < this.length)
 			{
@@ -272,7 +272,7 @@ namespace Epsitec.Common.Text.Internal
 				element.offset = pos - origin;
 				origin         = pos;
 				
-				destination.InsertElement (dst_i++, element);
+				destination.InsertElement (dstI++, element);
 			}
 			
 			//	Supprime encore les curseurs que l'on vient de copier vers la
@@ -405,8 +405,8 @@ namespace Epsitec.Common.Text.Internal
 
 			if (this.elements.Length == this.length)
 			{
-				Element[] old_elements = this.elements;
-				Element[] new_elements = new Element[this.length+1];
+				Element[] oldElements = this.elements;
+				Element[] newElements = new Element[this.length+1];
 
 				//	Si l'élément n'est pas ajouté à la fin du tableau, il
 				//	faut encore ajuster l'offset de l'élément qui va se
@@ -414,20 +414,20 @@ namespace Epsitec.Common.Text.Internal
 
 				if (index < this.length)
 				{
-					Debug.Assert.IsTrue (old_elements[index].offset > element.offset);
-					old_elements[index].offset -= element.offset;
+					Debug.Assert.IsTrue (oldElements[index].offset > element.offset);
+					oldElements[index].offset -= element.offset;
 				}
 
 				int n1 = index;
 				int n2 = this.length - index;
 
-				System.Array.Copy (old_elements, 0, new_elements, 0, n1);
-				System.Array.Copy (old_elements, n1, new_elements, n1+1, n2);
+				System.Array.Copy (oldElements, 0, newElements, 0, n1);
+				System.Array.Copy (oldElements, n1, newElements, n1+1, n2);
 
-				new_elements[index] = element;
+				newElements[index] = element;
 
-				this.elements = new_elements;
-				this.length   = new_elements.Length;
+				this.elements = newElements;
+				this.length   = newElements.Length;
 			}
 			else
 			{
@@ -482,7 +482,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		private bool MoveElement(int from_index, int to_index, out int index)
+		private bool MoveElement(int fromIndex, int toIndex, out int index)
 		{
 			//	Déplace un élément au sein du tableau et retourne true
 			//	si l'élément a réellement changé de position.
@@ -492,35 +492,35 @@ namespace Epsitec.Common.Text.Internal
 			//	ajusté par l'appelant); si l'élément n'est pas déplace,
 			//	son offset n'est pas modifié non plus.
 			
-			//	NB: La position de l'élément d'arrivée (to_index) est définie
+			//	NB: La position de l'élément d'arrivée (toIndex) est définie
 			//		par rapport à l'état du tableau avant la modification.
 			
-			//	to_index = i place l'élément à la position 'i' (i = 0 place
+			//	toIndex = i place l'élément à la position 'i' (i = 0 place
 			//	au début, i = n place après le dernier élément).
 			
 			Debug.Assert.IsTrue (this.length > 0);
 			Debug.Assert.IsTrue (this.length <= this.elements.Length);
 			
-			Debug.Assert.IsInBounds (from_index, 0, this.length-1);
-			Debug.Assert.IsInBounds (to_index, 0, this.length);
+			Debug.Assert.IsInBounds (fromIndex, 0, this.length-1);
+			Debug.Assert.IsInBounds (toIndex, 0, this.length);
 			
-			if (from_index < to_index)
+			if (fromIndex < toIndex)
 			{
-				index = to_index - 1;
+				index = toIndex - 1;
 				
 				//	Si on décale simplement après soi-même, il n'y a rien à
 				//	faire :
 				
-				if (from_index+1 == to_index)
+				if (fromIndex+1 == toIndex)
 				{
 					return false;
 				}
 				
 				//	Déplace l'élément plus loin dans le tableau :
 				
-				Element element = this.elements[from_index];
+				Element element = this.elements[fromIndex];
 				
-				for (int i = from_index; i < to_index-1; i++)
+				for (int i = fromIndex; i < toIndex-1; i++)
 				{
 					this.elements[i] = this.elements[i+1];
 				}
@@ -528,7 +528,7 @@ namespace Epsitec.Common.Text.Internal
 				//	Ajuste l'offset de l'élément qui se trouvait juste après
 				//	celui qui vient d'être retiré du tableau :
 				
-				this.elements[from_index].offset += element.offset;
+				this.elements[fromIndex].offset += element.offset;
 				
 				//	L'élément que l'on va insérer à nouveau aura un offset
 				//	nul par rapport à son prédécesseur, en attendant que
@@ -542,18 +542,18 @@ namespace Epsitec.Common.Text.Internal
 			}
 			else
 			{
-				index = to_index;
+				index = toIndex;
 				
-				if (from_index == to_index)
+				if (fromIndex == toIndex)
 				{
 					return false;
 				}
 				
 				//	Déplace l'élément plus en avant dans le tableau :
 				
-				Element element = this.elements[from_index];
+				Element element = this.elements[fromIndex];
 				
-				for (int i = from_index; i > to_index; i--)
+				for (int i = fromIndex; i > toIndex; i--)
 				{
 					this.elements[i] = this.elements[i-1];
 				}
@@ -562,9 +562,9 @@ namespace Epsitec.Common.Text.Internal
 				//	celui qui vient d'être retiré du tableau, pour autant qu'il
 				//	y en ait eu un :
 				
-				if (from_index+1 < this.length)
+				if (fromIndex+1 < this.length)
 				{
-					this.elements[from_index+1].offset += element.offset;
+					this.elements[fromIndex+1].offset += element.offset;
 				}
 				
 				//	L'élément que l'on va insérer à nouveau aura un offset
@@ -575,7 +575,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				//	Termine le déplacement.
 				
-				this.elements[to_index] = element;
+				this.elements[toIndex] = element;
 			}
 			
 			return true;

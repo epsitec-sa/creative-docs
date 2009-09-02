@@ -55,15 +55,15 @@ namespace Epsitec.Common.Text
 			#region IComparer Members
 			public int Compare(object x, object y)
 			{
-				CursorInfo info_x = (CursorInfo) x;
-				CursorInfo info_y = (CursorInfo) y;
+				CursorInfo infoX = (CursorInfo) x;
+				CursorInfo infoY = (CursorInfo) y;
 				
-				if (info_x.position == info_y.position)
+				if (infoX.position == infoY.position)
 				{
-					return info_x.direction - info_y.direction;
+					return infoX.direction - infoY.direction;
 				}
 				
-				return info_x.position - info_y.position;
+				return infoX.position - infoY.position;
 			}
 			#endregion
 		}
@@ -73,10 +73,10 @@ namespace Epsitec.Common.Text
 			#region IComparer Members
 			public int Compare(object x, object y)
 			{
-				CursorInfo info_x = (CursorInfo) x;
-				CursorInfo info_y = (CursorInfo) y;
+				CursorInfo infoX = (CursorInfo) x;
+				CursorInfo infoY = (CursorInfo) y;
 				
-				return info_x.id - info_y.id;
+				return infoX.id - infoY.id;
 			}
 			#endregion
 		}

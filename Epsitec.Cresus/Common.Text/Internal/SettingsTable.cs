@@ -16,20 +16,20 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void Attach(ref ulong code, Styles.CoreSettings core_settings)
+		public void Attach(ref ulong code, Styles.CoreSettings coreSettings)
 		{
-			//	Attache un core_settings au caractère passé en entrée.
-			
-			//	Prend note que le core_settings a une utilisation de plus (si un
-			//	core_settings identique existe déjà, c'est ce core_settings là qui
+			//	Attache un coreSettings au caractère passé en entrée.
+
+			//	Prend note que le coreSettings a une utilisation de plus (si un
+			//	coreSettings identique existe déjà, c'est ce coreSettings là qui
 			//	sera réutilisé; on évite ainsi les doublons).
 			
-			Styles.CoreSettings find = this.FindCore (core_settings, null);
+			Styles.CoreSettings find = this.FindCore (coreSettings, null);
 			
 			if (find == null)
 			{
-				this.Add (core_settings);
-				find = core_settings;
+				this.Add (coreSettings);
+				find = coreSettings;
 			}
 			
 			Debug.Assert.IsFalse (Internal.CharMarker.HasCoreOrSettings (code));
@@ -42,118 +42,118 @@ namespace Epsitec.Common.Text.Internal
 			Internal.CharMarker.SetExtraIndex (ref code, 0);
 		}
 		
-		public void Attach(ref ulong code, Styles.CoreSettings core_settings, Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
+		public void Attach(ref ulong code, Styles.CoreSettings coreSettings, Styles.LocalSettings localSettings, Styles.ExtraSettings extraSettings)
 		{
 			//	Variante de Attach avec réglages spécifiques (voir méthode simple
 			//	ci-dessus).
 			
-			if ((local_settings != null) &&
-				(local_settings.IsEmpty))
+			if ((localSettings != null) &&
+				(localSettings.IsEmpty))
 			{
-				local_settings = null;
+				localSettings = null;
 			}
 			
-			if ((extra_settings != null) &&
-				(extra_settings.IsEmpty))
+			if ((extraSettings != null) &&
+				(extraSettings.IsEmpty))
 			{
-				extra_settings = null;
+				extraSettings = null;
 			}
 			
-			if ((local_settings == null) &&
-				(extra_settings == null))
+			if ((localSettings == null) &&
+				(extraSettings == null))
 			{
-				this.Attach (ref code, core_settings);
+				this.Attach (ref code, coreSettings);
 			}
 			else
 			{
-				//	Trouve un core_settings qui abrite à la fois les réglages locaux et
+				//	Trouve un coreSettings qui abrite à la fois les réglages locaux et
 				//	les réglages supplémentaires :
 				
-				SettingsCoreMatcher matcher = new SettingsCoreMatcher (local_settings, extra_settings);
-				Styles.CoreSettings find    = this.FindCore (core_settings, new CoreMatcher (matcher.FindExactSettings));
+				SettingsCoreMatcher matcher = new SettingsCoreMatcher (localSettings, extraSettings);
+				Styles.CoreSettings find    = this.FindCore (coreSettings, new CoreMatcher (matcher.FindExactSettings));
 				
 				if ((find == null) &&
 					(matcher.WasCalled))
 				{
-					//	On avait trouvé un core_settings, mais il ne faisait pas l'affaire,
+					//	On avait trouvé un coreSettings, mais il ne faisait pas l'affaire,
 					//	car il n'avait pas les réglages demandés. Il faut donc voir
-					//	si parmi les candidats il y a un core_settings avec de la place
+					//	si parmi les candidats il y a un coreSettings avec de la place
 					//	pour y placer les réglages demandés :
 					
-					find = this.FindCore (core_settings, new CoreMatcher (matcher.FindFreeSettings));
+					find = this.FindCore (coreSettings, new CoreMatcher (matcher.FindFreeSettings));
 				}
 				
 				if (find == null)
 				{
-					//	Aucun core_settings ne fait l'affaire (soit parce qu'il n'y en a
+					//	Aucun coreSettings ne fait l'affaire (soit parce qu'il n'y en a
 					//	pas, soit parce que ceux qui existent sont déjà complets
 					//	en ce qui concerne les réglages).
 					
 					//	On en ajoute un neuf :
 					
-					this.Add (core_settings);
-					find = core_settings;
+					this.Add (coreSettings);
+					find = coreSettings;
 				}
 				
 				Debug.Assert.IsTrue (find.CoreIndex > 0);
 				Debug.Assert.IsFalse (Internal.CharMarker.HasCoreOrSettings (code));
+
+				//	Ajoute les réglages au coreSettings s'ils n'en font pas encore partie :
 				
-				//	Ajoute les réglages au core_settings s'ils n'en font pas encore partie :
-				
-				if (local_settings != null)
+				if (localSettings != null)
 				{
-					local_settings = find.Attach (local_settings);
-					Debug.Assert.IsNotNull (local_settings);
-					Debug.Assert.IsTrue (local_settings.SettingsIndex > 0);
+					localSettings = find.Attach (localSettings);
+					Debug.Assert.IsNotNull (localSettings);
+					Debug.Assert.IsTrue (localSettings.SettingsIndex > 0);
 				}
-				if (extra_settings != null)
+				if (extraSettings != null)
 				{
-					extra_settings = find.Attach (extra_settings);
-					Debug.Assert.IsNotNull (extra_settings);
-					Debug.Assert.IsTrue (extra_settings.SettingsIndex > 0);
+					extraSettings = find.Attach (extraSettings);
+					Debug.Assert.IsNotNull (extraSettings);
+					Debug.Assert.IsTrue (extraSettings.SettingsIndex > 0);
 				}
 				
 //-				find.IncrementUserCount ();
 				
 				Internal.CharMarker.SetCoreIndex (ref code, find.CoreIndex);
-				Internal.CharMarker.SetLocalIndex (ref code, local_settings == null ? 0 : local_settings.SettingsIndex);
-				Internal.CharMarker.SetExtraIndex (ref code, extra_settings == null ? 0 : extra_settings.SettingsIndex);
+				Internal.CharMarker.SetLocalIndex (ref code, localSettings == null ? 0 : localSettings.SettingsIndex);
+				Internal.CharMarker.SetExtraIndex (ref code, extraSettings == null ? 0 : extraSettings.SettingsIndex);
 			}
 		}
 		
 		
 		public void Detach(ref ulong code)
 		{
-			//	Détache le core_settings et les réglages associés au caractère 'code'.
+			//	Détache le coreSettings et les réglages associés au caractère 'code'.
 			//	Ceci décrémente les divers compteurs d'utilisation.
 			
-			int core_index  = Internal.CharMarker.GetCoreIndex (code);
-			int extra_index = Internal.CharMarker.GetExtraIndex (code);
-			int local_index = Internal.CharMarker.GetLocalIndex (code);
+			int coreIndex  = Internal.CharMarker.GetCoreIndex (code);
+			int extraIndex = Internal.CharMarker.GetExtraIndex (code);
+			int localIndex = Internal.CharMarker.GetLocalIndex (code);
 			
-			if (core_index == 0)
+			if (coreIndex == 0)
 			{
-				Debug.Assert.IsTrue (extra_index == 0);
-				Debug.Assert.IsTrue (local_index == 0);
+				Debug.Assert.IsTrue (extraIndex == 0);
+				Debug.Assert.IsTrue (localIndex == 0);
 			}
 			else
 			{
-				Styles.CoreSettings core_settings = this.cores[core_index-1] as Styles.CoreSettings;
+				Styles.CoreSettings coreSettings = this.cores[coreIndex-1] as Styles.CoreSettings;
 				
-				Debug.Assert.IsNotNull (core_settings);
+				Debug.Assert.IsNotNull (coreSettings);
 				
-				if (local_index != 0)
+				if (localIndex != 0)
 				{
-//-					core_settings.GetLocalSettings (code).DecrementUserCount ();
+//-					coreSettings.GetLocalSettings (code).DecrementUserCount ();
 					Internal.CharMarker.SetLocalIndex (ref code, 0);
 				}
-				if (extra_index != 0)
+				if (extraIndex != 0)
 				{
-//-					core_settings.GetExtraSettings (code).DecrementUserCount ();
+//-					coreSettings.GetExtraSettings (code).DecrementUserCount ();
 					Internal.CharMarker.SetExtraIndex (ref code, 0);
 				}
 				
-//-				core_settings.DecrementUserCount ();
+//-				coreSettings.DecrementUserCount ();
 				
 				Internal.CharMarker.SetCoreIndex (ref code, 0);
 			}
@@ -170,15 +170,15 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0; i < n; i++)
 			{
-				Styles.CoreSettings core_settings = this.cores[i] as Styles.CoreSettings;
+				Styles.CoreSettings coreSettings = this.cores[i] as Styles.CoreSettings;
 				
 				buffer.Append ("/");
-				buffer.Append (core_settings == null ? "0" : "1");
+				buffer.Append (coreSettings == null ? "0" : "1");
 				
-				if (core_settings != null)
+				if (coreSettings != null)
 				{
 					buffer.Append ("/");
-					core_settings.Serialize (buffer);
+					coreSettings.Serialize (buffer);
 				}
 			}
 			
@@ -206,9 +206,9 @@ namespace Epsitec.Common.Text.Internal
 					}
 					else if (test == "1")
 					{
-						Styles.CoreSettings core_settings = new Styles.CoreSettings ();
-						core_settings.Deserialize (context, version, args, ref offset);
-						this.cores.Add (core_settings);
+						Styles.CoreSettings coreSettings = new Styles.CoreSettings ();
+						coreSettings.Deserialize (context, version, args, ref offset);
+						this.cores.Add (coreSettings);
 					}
 					else
 					{
@@ -242,9 +242,9 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (Internal.CharMarker.HasSettings (code))
 			{
-				Styles.CoreSettings core_settings = this.GetCore (code);
+				Styles.CoreSettings coreSettings = this.GetCore (code);
 			
-				return (core_settings == null) ? null : core_settings.GetLocalSettings (code);
+				return (coreSettings == null) ? null : coreSettings.GetLocalSettings (code);
 			}
 			
 			return null;
@@ -254,27 +254,27 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (Internal.CharMarker.HasSettings (code))
 			{
-				Styles.CoreSettings core_settings = this.GetCore (code);
+				Styles.CoreSettings coreSettings = this.GetCore (code);
 				
-				return (core_settings == null) ? null : core_settings.GetExtraSettings (code);
+				return (coreSettings == null) ? null : coreSettings.GetExtraSettings (code);
 			}
 			
 			return null;
 		}
 		
-		public void GetCoreAndSettings(ulong code, out Styles.CoreSettings core_settings, out Styles.LocalSettings local_settings, out Styles.ExtraSettings extra_settings)
+		public void GetCoreAndSettings(ulong code, out Styles.CoreSettings coreSettings, out Styles.LocalSettings localSettings, out Styles.ExtraSettings extraSettings)
 		{
-			core_settings  = this.GetCoreFromIndex (Internal.CharMarker.GetCoreIndex (code));
+			coreSettings  = this.GetCoreFromIndex (Internal.CharMarker.GetCoreIndex (code));
 			
-			local_settings = (Internal.CharMarker.HasSettings (code) && (core_settings != null)) ? core_settings.GetLocalSettings (code) : null;
-			extra_settings = (Internal.CharMarker.HasSettings (code) && (core_settings != null)) ? core_settings.GetExtraSettings (code) : null;
+			localSettings = (Internal.CharMarker.HasSettings (code) && (coreSettings != null)) ? coreSettings.GetLocalSettings (code) : null;
+			extraSettings = (Internal.CharMarker.HasSettings (code) && (coreSettings != null)) ? coreSettings.GetExtraSettings (code) : null;
 		}
 		
 		
-		public Styles.CoreSettings FindCore(Styles.CoreSettings core_settings, CoreMatcher matcher)
+		public Styles.CoreSettings FindCore(Styles.CoreSettings coreSettings, CoreMatcher matcher)
 		{
-			//	Cherche si un core_settings identique existe déjà. Si oui, retourne la
-			//	référence au core_settings en question; si non, retourne null.
+			//	Cherche si un coreSettings identique existe déjà. Si oui, retourne la
+			//	référence au coreSettings en question; si non, retourne null.
 			
 			if ((this.cores == null) ||
 				(this.cores.Count == 0))
@@ -284,7 +284,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			foreach (Styles.CoreSettings find in this.cores)
 			{
-				if (Styles.CoreSettings.CompareEqual (find, core_settings))
+				if (Styles.CoreSettings.CompareEqual (find, coreSettings))
 				{
 					if ((matcher == null) ||
 						(matcher (find)))
@@ -298,13 +298,13 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private void Add(Styles.CoreSettings core_settings)
+		private void Add(Styles.CoreSettings coreSettings)
 		{
-			//	Ajoute le core_settings (qui ne doit pas encore être contenu dans la
+			//	Ajoute le coreSettings (qui ne doit pas encore être contenu dans la
 			//	liste). Ceci n'affecte nullement le compteur d'utilisations.
 			
-			Debug.Assert.IsTrue (core_settings.CoreIndex == 0);
-			Debug.Assert.IsTrue (core_settings.UserCount == 0);
+			Debug.Assert.IsTrue (coreSettings.CoreIndex == 0);
+			Debug.Assert.IsTrue (coreSettings.UserCount == 0);
 			
 			if (this.cores == null)
 			{
@@ -315,39 +315,39 @@ namespace Epsitec.Common.Text.Internal
 			{
 				if (this.cores[i] == null)
 				{
-					this.cores[i] = core_settings;
-					core_settings.CoreIndex = i+1;
+					this.cores[i] = coreSettings;
+					coreSettings.CoreIndex = i+1;
 					return;
 				}
 			}
 			
-			core_settings.CoreIndex = this.cores.Add (core_settings) + 1;
+			coreSettings.CoreIndex = this.cores.Add (coreSettings) + 1;
 		}
 		
-		private void Remove(Styles.CoreSettings core_settings)
+		private void Remove(Styles.CoreSettings coreSettings)
 		{
-			//	Supprime le core_settings. Le core_settings doit exister dans la liste.
+			//	Supprime le coreSettings. Le coreSettings doit exister dans la liste.
 			//	Ceci n'affecte nullement le compteur d'utilisations.
 			
-			Debug.Assert.IsTrue (core_settings.CoreIndex > 0);
-			Debug.Assert.IsTrue (this.cores[core_settings.CoreIndex-1] == core_settings);
+			Debug.Assert.IsTrue (coreSettings.CoreIndex > 0);
+			Debug.Assert.IsTrue (this.cores[coreSettings.CoreIndex-1] == coreSettings);
 			
 			//	Retire de la liste, sans pour autant réorganiser la liste
 			//	elle-même :
 			
-			this.cores[core_settings.CoreIndex-1] = null;
+			this.cores[coreSettings.CoreIndex-1] = null;
 			
-			core_settings.CoreIndex = 0;
+			coreSettings.CoreIndex = 0;
 		}
 		
 		
 		#region SettingsCoreMatcher Class
 		private class SettingsCoreMatcher
 		{
-			public SettingsCoreMatcher(Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
+			public SettingsCoreMatcher(Styles.LocalSettings localSettings, Styles.ExtraSettings extraSettings)
 			{
-				this.local_settings = local_settings;
-				this.extra_settings = extra_settings;
+				this.localSettings = localSettings;
+				this.extraSettings = extraSettings;
 			}
 			
 			
@@ -366,21 +366,21 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			
-			public bool FindExactSettings(Styles.CoreSettings core_settings)
+			public bool FindExactSettings(Styles.CoreSettings coreSettings)
 			{
 				this.counter++;
 				
-				if (this.local_settings != null)
+				if (this.localSettings != null)
 				{
-					if (core_settings.FindSettings (this.local_settings) == 0)
+					if (coreSettings.FindSettings (this.localSettings) == 0)
 					{
 						return false;
 					}
 				}
 				
-				if (this.extra_settings != null)
+				if (this.extraSettings != null)
 				{
-					if (core_settings.FindSettings (this.extra_settings) == 0)
+					if (coreSettings.FindSettings (this.extraSettings) == 0)
 					{
 						return false;
 					}
@@ -389,26 +389,26 @@ namespace Epsitec.Common.Text.Internal
 				return true;
 			}
 			
-			public bool FindFreeSettings(Styles.CoreSettings core_settings)
+			public bool FindFreeSettings(Styles.CoreSettings coreSettings)
 			{
 				this.counter++;
 				
-				if (this.local_settings != null)
+				if (this.localSettings != null)
 				{
-					if (core_settings.FindSettings (this.local_settings) == 0)
+					if (coreSettings.FindSettings (this.localSettings) == 0)
 					{
-						if (core_settings.CountLocalSettings == Styles.BaseSettings.MaxSettingsCount)
+						if (coreSettings.CountLocalSettings == Styles.BaseSettings.MaxSettingsCount)
 						{
 							return false;
 						}
 					}
 				}
 				
-				if (this.extra_settings != null)
+				if (this.extraSettings != null)
 				{
-					if (core_settings.FindSettings (this.extra_settings) == 0)
+					if (coreSettings.FindSettings (this.extraSettings) == 0)
 					{
-						if (core_settings.CountExtraSettings == Styles.BaseSettings.MaxSettingsCount)
+						if (coreSettings.CountExtraSettings == Styles.BaseSettings.MaxSettingsCount)
 						{
 							return false;
 						}
@@ -419,13 +419,13 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			
-			private Styles.LocalSettings		local_settings;
-			private Styles.ExtraSettings		extra_settings;
+			private Styles.LocalSettings		localSettings;
+			private Styles.ExtraSettings		extraSettings;
 			private int							counter;
 		}
 		#endregion
 		
-		public delegate bool CoreMatcher(Styles.CoreSettings core_settings);
+		public delegate bool CoreMatcher(Styles.CoreSettings coreSettings);
 		
 		private System.Collections.ArrayList	cores;
 	}

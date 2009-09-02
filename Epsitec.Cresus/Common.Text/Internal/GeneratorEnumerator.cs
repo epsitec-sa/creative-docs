@@ -14,15 +14,15 @@ namespace Epsitec.Common.Text.Internal
 			this.story      = story;
 			this.property   = property;
 			this.generator  = generator;
-			this.style_list = this.story.StyleList;
+			this.styleList = this.story.StyleList;
 			
-			this.failure_cache = new System.Collections.Hashtable ();
+			this.failureCache = new System.Collections.Hashtable ();
 			this.cursor        = new Cursors.TempCursor ();
 			
 			this.story.NewCursor (this.cursor);
 			
-			this.at_start_of_text = true;
-			this.at_end_of_text   = false;
+			this.atStartOfText = true;
+			this.atEndOfText   = false;
 			
 			this.state = State.None;
 		}
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Text.Internal
 			//	cette méthode au moins une fois avant de pouvoir lire la position
 			//	du curseur.
 			
-			if (this.at_end_of_text)
+			if (this.atEndOfText)
 			{
 				return false;
 			}
@@ -75,16 +75,16 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (length == 0)
 				{
-					this.at_end_of_text = true;
+					this.atEndOfText = true;
 					return false;
 				}
 				
-				if (this.at_start_of_text)
+				if (this.atStartOfText)
 				{
 					//	Au début du texte, on ne va pas avancer, mais simplement
 					//	analyser le code lié à la première tranche :
 					
-					this.at_start_of_text = false;
+					this.atStartOfText = false;
 				}
 				else
 				{
@@ -95,11 +95,11 @@ namespace Epsitec.Common.Text.Internal
 					code = next;
 				}
 				
-				if (this.failure_cache.Contains (code))
+				if (this.failureCache.Contains (code))
 				{
 					if (this.property != null)
 					{
-						this.Process (this.failure_cache[code] as Properties.ManagedParagraphProperty);
+						this.Process (this.failureCache[code] as Properties.ManagedParagraphProperty);
 					}
 					
 					continue;
@@ -114,12 +114,12 @@ namespace Epsitec.Common.Text.Internal
 				if (generator != null)
 				{
 					if ((pos > 0) &&
-						(generator.UniqueId == this.generator_unique_id))
+						(generator.UniqueId == this.generatorUniqueId))
 					{
 						continue;
 					}
 
-					this.generator_unique_id = generator.UniqueId;
+					this.generatorUniqueId = generator.UniqueId;
 					
 					switch (this.state)
 					{
@@ -136,11 +136,11 @@ namespace Epsitec.Common.Text.Internal
 					Properties.ManagedParagraphProperty managed = this.GetManagedParagraphProperty (code);
 					
 					this.Process (managed);
-					this.failure_cache[code] = managed;
+					this.failureCache[code] = managed;
 				}
 				else
 				{
-					this.failure_cache[code] = null;
+					this.failureCache[code] = null;
 				}
 			}
 		}
@@ -174,14 +174,14 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Properties.ManagedParagraphProperty GetManagedParagraphProperty(ulong code)
 		{
-			Styles.CoreSettings core = this.style_list[code];
+			Styles.CoreSettings core = this.styleList[code];
 			
 			return core[Properties.WellKnownType.ManagedParagraph] as Properties.ManagedParagraphProperty;
 		}
 		
 		public Properties.GeneratorProperty GetGeneratorProperty(ulong code)
 		{
-			Styles.CoreSettings  core  = this.style_list[code];
+			Styles.CoreSettings  core  = this.styleList[code];
 			Styles.ExtraSettings extra = core.GetExtraSettings (code);
 				
 			if (extra != null)
@@ -233,8 +233,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.state = State.None;
 			
-			this.at_start_of_text = true;
-			this.at_end_of_text   = false;
+			this.atStartOfText = true;
+			this.atEndOfText   = false;
 		}
 		
 		bool System.Collections.IEnumerator.MoveNext()
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				this.story         = null;
 				this.cursor        = null;
-				this.failure_cache = null;
+				this.failureCache = null;
 			}
 		}
 		
@@ -291,14 +291,14 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		private TextStory						story;
-		private StyleList						style_list;
+		private StyleList						styleList;
 		Properties.ManagedParagraphProperty		property;
 		private string							generator;
-		private System.Collections.Hashtable	failure_cache;
+		private System.Collections.Hashtable	failureCache;
 		private Cursors.TempCursor				cursor;
-		private long							generator_unique_id;
-		private bool							at_start_of_text;
-		private bool							at_end_of_text;
+		private long							generatorUniqueId;
+		private bool							atStartOfText;
+		private bool							atEndOfText;
 		private State							state;
 	}
 }

@@ -33,17 +33,17 @@ namespace Epsitec.Common.Text.Internal.Sequences
 			
 			text = text.ToUpper ();
 			
-			if (Roman.inverse_lookup.Count == 0)
+			if (Roman.inverseLookup.Count == 0)
 			{
 				for (int i = 1; i < 1000; i++)
 				{
-					Roman.inverse_lookup[this.GetRawText (i, System.Globalization.CultureInfo.InvariantCulture)] = i;
+					Roman.inverseLookup[this.GetRawText (i, System.Globalization.CultureInfo.InvariantCulture)] = i;
 				}
 			}
 			
-			if (Roman.inverse_lookup.Contains (text))
+			if (Roman.inverseLookup.Contains (text))
 			{
-				value = (int) Roman.inverse_lookup[text];
+				value = (int) Roman.inverseLookup[text];
 				return true;
 			}
 			
@@ -88,6 +88,6 @@ namespace Epsitec.Common.Text.Internal.Sequences
 		}
 		
 		
-		static System.Collections.Hashtable		inverse_lookup = new System.Collections.Hashtable ();
+		static System.Collections.Hashtable		inverseLookup = new System.Collections.Hashtable ();
 	}
 }

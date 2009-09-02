@@ -17,10 +17,10 @@ namespace Epsitec.Common.Text
 		
 		public static void GenerateHyphens(ILanguageRecognizer recognizer, ulong[] text, int offset, int length, Unicode.BreakInfo[] breaks)
 		{
-			int run_start  = 0;
-			int run_length = 0;
+			int runStart  = 0;
+			int runLength = 0;
 			
-			string run_locale = null;
+			string runLocale = null;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -37,35 +37,35 @@ namespace Epsitec.Common.Text
 				//	Détermine un "run" de caractères appartenant à la même langue
 				//	et constituant un mot complet.
 				
-				if ((locale != run_locale) ||
+				if ((locale != runLocale) ||
 					((i > 1) && (breaks[i-1] != Unicode.BreakInfo.No) && (breaks[i-1] != Unicode.BreakInfo.NoAlpha)))
 				{
-					if ((run_length > 0) &&
-						(run_locale != null))
+					if ((runLength > 0) &&
+						(runLocale != null))
 					{
 						//	Traite la tranche qui vient de se terminer.
 						
-						LanguageEngine.GenerateHyphensForRun (text, offset + run_start, run_length, run_locale, run_start, breaks);
+						LanguageEngine.GenerateHyphensForRun (text, offset + runStart, runLength, runLocale, runStart, breaks);
 					}
 					
-					run_start  = i;
-					run_length = 0;
-					run_locale = locale;
+					runStart  = i;
+					runLength = 0;
+					runLocale = locale;
 				}
 				
-				run_length++;
+				runLength++;
 			}
 			
-			if ((run_length > 0) &&
-				(run_locale != null))
+			if ((runLength > 0) &&
+				(runLocale != null))
 			{
 				//	Traite la tranche finale.
 				
-				LanguageEngine.GenerateHyphensForRun (text, offset + run_start, run_length, run_locale, run_start, breaks);
+				LanguageEngine.GenerateHyphensForRun (text, offset + runStart, runLength, runLocale, runStart, breaks);
 			}
 		}
 		
-		private static void GenerateHyphensForRun(ulong[] text, int text_offset, int length, string locale, int break_offset, Unicode.BreakInfo[] breaks)
+		private static void GenerateHyphensForRun(ulong[] text, int textOffset, int length, string locale, int breakOffset, Unicode.BreakInfo[] breaks)
 		{
 			if (length < 1)
 			{
@@ -77,15 +77,15 @@ namespace Epsitec.Common.Text
 				return;
 			}
 			
-			string two_letter_code = locale.Substring (0, 2);
+			string twoLetterCode = locale.Substring (0, 2);
 			
-			if (two_letter_code == "fr")
+			if (twoLetterCode == "fr")
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder (length);
 				
 				for (int i = 0; i < length; i++)
 				{
-					int code = Unicode.Bits.GetCode (text[text_offset + i]);
+					int code = Unicode.Bits.GetCode (text[textOffset + i]);
 					
 					if (code > 0xffff)
 					{
@@ -105,13 +105,13 @@ namespace Epsitec.Common.Text
 					{
 						foreach (int pos in BreakEngines.FrenchWordBreakEngine.Break (word))
 						{
-							breaks[break_offset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
+							breaks[breakOffset + pos - 1] = Unicode.BreakInfo.HyphenateGoodChoice;
 						}
 					}
 					
 					//	Avance de la longueur du mot et de l'espace qui suit.
 					
-					break_offset += word.Length + 1;
+					breakOffset += word.Length + 1;
 				}
 			}
 		}

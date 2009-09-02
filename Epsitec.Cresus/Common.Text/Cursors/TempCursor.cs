@@ -20,11 +20,11 @@ namespace Epsitec.Common.Text.Cursors
 		{
 			get
 			{
-				return this.cursor_id;
+				return this.cursorId;
 			}
 			set
 			{
-				this.cursor_id = value;
+				this.cursorId = value;
 			}
 		}
 		
@@ -54,6 +54,6 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		#endregion
 		
-		private Internal.CursorId				cursor_id;
+		private Internal.CursorId				cursorId;
 	}
 }

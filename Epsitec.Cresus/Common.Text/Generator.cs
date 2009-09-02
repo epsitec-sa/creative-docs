@@ -38,17 +38,17 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.start_vector == null ? new int[0] : this.start_vector.Clone () as int[];
+				return this.startVector == null ? new int[0] : this.startVector.Clone () as int[];
 			}
 			set
 			{
 				if (value == null)
 				{
-					this.start_vector = null;
+					this.startVector = null;
 				}
-				else if (! Types.Comparer.Equal (this.start_vector, value))
+				else if (! Types.Comparer.Equal (this.startVector, value))
 				{
-					this.start_vector = value.Clone () as int[];
+					this.startVector = value.Clone () as int[];
 				}
 			}
 		}
@@ -57,11 +57,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.global_prefix;
+				return this.globalPrefix;
 			}
 			set
 			{
-				this.global_prefix = value;
+				this.globalPrefix = value;
 			}
 		}
 		
@@ -69,28 +69,28 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if ((this.global_prefix_properties == null) ||
-					(this.global_prefix_properties.Length == 0))
+				if ((this.globalPrefixProperties == null) ||
+					(this.globalPrefixProperties.Length == 0))
 				{
 					return null;
 				}
 				else
 				{
-					return (Property[]) this.global_prefix_properties.Clone ();
+					return (Property[]) this.globalPrefixProperties.Clone ();
 				}
 			}
 			set
 			{
-				if (this.global_prefix_properties != value)
+				if (this.globalPrefixProperties != value)
 				{
 					if ((value == null) ||
 						(value.Length == 0))
 					{
-						this.global_prefix_properties = value;
+						this.globalPrefixProperties = value;
 					}
 					else
 					{
-						this.global_prefix_properties = (Property[]) value.Clone ();
+						this.globalPrefixProperties = (Property[]) value.Clone ();
 					}
 				}
 			}
@@ -100,11 +100,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.global_suffix;
+				return this.globalSuffix;
 			}
 			set
 			{
-				this.global_suffix = value;
+				this.globalSuffix = value;
 			}
 		}
 		
@@ -112,28 +112,28 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if ((this.global_suffix_properties == null) ||
-					(this.global_suffix_properties.Length == 0))
+				if ((this.globalSuffixProperties == null) ||
+					(this.globalSuffixProperties.Length == 0))
 				{
 					return null;
 				}
 				else
 				{
-					return (Property[]) this.global_suffix_properties.Clone ();
+					return (Property[]) this.globalSuffixProperties.Clone ();
 				}
 			}
 			set
 			{
-				if (this.global_suffix_properties != value)
+				if (this.globalSuffixProperties != value)
 				{
 					if ((value == null) ||
 						(value.Length == 0))
 					{
-						this.global_suffix_properties = value;
+						this.globalSuffixProperties = value;
 					}
 					else
 					{
-						this.global_suffix_properties = (Property[]) value.Clone ();
+						this.globalSuffixProperties = (Property[]) value.Clone ();
 					}
 				}
 			}
@@ -143,11 +143,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.user_data;
+				return this.userData;
 			}
 			set
 			{
-				this.user_data = value;
+				this.userData = value;
 			}
 		}
 		
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.user_count;
+				return this.userCount;
 			}
 		}
 		
@@ -211,21 +211,21 @@ namespace Epsitec.Common.Text
 			//	utiliser), il faudra encore appeler sequence.DefineSetupArgument sur
 			//	l'instance de séquence retournée.
 			
-			Sequence old_sequence = this.sequences[index] as Sequence;
-			Sequence new_sequence = Generator.CreateSequence (type);
+			Sequence oldSequence = this.sequences[index] as Sequence;
+			Sequence newSequence = Generator.CreateSequence (type);
 			
-			new_sequence.ValueProperties  = old_sequence.ValueProperties;
-			new_sequence.Prefix           = old_sequence.Prefix;
-			new_sequence.PrefixProperties = old_sequence.PrefixProperties;
-			new_sequence.Suffix           = old_sequence.Suffix;
-			new_sequence.SuffixProperties = old_sequence.SuffixProperties;
-			new_sequence.Casing           = old_sequence.Casing;
-			new_sequence.SuppressBefore   = old_sequence.SuppressBefore;
-			new_sequence.UserData         = old_sequence.UserData;
+			newSequence.ValueProperties  = oldSequence.ValueProperties;
+			newSequence.Prefix           = oldSequence.Prefix;
+			newSequence.PrefixProperties = oldSequence.PrefixProperties;
+			newSequence.Suffix           = oldSequence.Suffix;
+			newSequence.SuffixProperties = oldSequence.SuffixProperties;
+			newSequence.Casing           = oldSequence.Casing;
+			newSequence.SuppressBefore   = oldSequence.SuppressBefore;
+			newSequence.UserData         = oldSequence.UserData;
 			
-			this.sequences[index] = new_sequence;
+			this.sequences[index] = newSequence;
 			
-			return new_sequence;
+			return newSequence;
 		}
 		
 		
@@ -248,12 +248,12 @@ namespace Epsitec.Common.Text
 			return this.GenerateText (ranks, ranks.Length, culture);
 		}
 		
-		public TextRange[] GenerateText(int[] ranks, int max_level_count, System.Globalization.CultureInfo culture)
+		public TextRange[] GenerateText(int[] ranks, int maxLevelCount, System.Globalization.CultureInfo culture)
 		{
-			System.Collections.ArrayList text_range = new System.Collections.ArrayList ();
+			System.Collections.ArrayList textRange = new System.Collections.ArrayList ();
 			
-			System.Diagnostics.Debug.Assert (max_level_count > 0);
-			System.Diagnostics.Debug.Assert (max_level_count <= ranks.Length);
+			System.Diagnostics.Debug.Assert (maxLevelCount > 0);
+			System.Diagnostics.Debug.Assert (maxLevelCount <= ranks.Length);
 			
 			if (this.sequences.Count == 0)
 			{
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Text
 			
 			Sequence sequence = this.sequences[0] as Sequence;
 			
-			for (int i = 0; i < max_level_count; i++)
+			for (int i = 0; i < maxLevelCount; i++)
 			{
 				int index = System.Math.Min (i, this.sequences.Count - 1);
 				
@@ -270,13 +270,13 @@ namespace Epsitec.Common.Text
 				
 				if (sequence.SuppressBefore)
 				{
-					text_range.Clear ();
+					textRange.Clear ();
 				}
 				
 				if ((sequence.Prefix != null) &&
 					(sequence.Prefix.Length > 0))
 				{
-					text_range.Add (new TextRange (sequence.Prefix, sequence.PrefixProperties));
+					textRange.Add (new TextRange (sequence.Prefix, sequence.PrefixProperties));
 				}
 				
 				string text = sequence.GenerateText (ranks[i], culture);
@@ -290,26 +290,26 @@ namespace Epsitec.Common.Text
 					text = "\u200b";
 				}
 				
-				text_range.Add (new TextRange (text, sequence.ValueProperties));
+				textRange.Add (new TextRange (text, sequence.ValueProperties));
 				
 				if ((sequence.Suffix != null) &&
 					(sequence.Suffix.Length > 0))
 				{
-					text_range.Add (new TextRange (sequence.Suffix, sequence.SuffixProperties));
+					textRange.Add (new TextRange (sequence.Suffix, sequence.SuffixProperties));
 				}
 			}
 			
-			if (this.global_prefix != null)
+			if (this.globalPrefix != null)
 			{
-				text_range.Insert (0, new TextRange (this.global_prefix, this.global_prefix_properties));
+				textRange.Insert (0, new TextRange (this.globalPrefix, this.globalPrefixProperties));
 			}
 			
-			if (this.global_suffix != null)
+			if (this.globalSuffix != null)
 			{
-				text_range.Add (new TextRange (this.global_suffix, this.global_suffix_properties));
+				textRange.Add (new TextRange (this.globalSuffix, this.globalSuffixProperties));
 			}
 			
-			return TextRange.Simplify (text_range);
+			return TextRange.Simplify (textRange);
 		}
 		
 		
@@ -334,13 +334,13 @@ namespace Epsitec.Common.Text
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
 			Generator.Sequence[] sequences    = this.Sequences;
-			int[]                start_vector = this.StartVector;
+			int[]                startVector = this.StartVector;
 			
 			buffer.Append (SerializerSupport.SerializeString (this.name));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (sequences.Length));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (start_vector.Length));
+			buffer.Append (SerializerSupport.SerializeInt (startVector.Length));
 			
 			foreach (Generator.Sequence sequence in sequences)
 			{
@@ -348,22 +348,22 @@ namespace Epsitec.Common.Text
 				buffer.Append (SerializerSupport.SerializeString (Generator.SerializeToText (sequence)));
 			}
 			
-			foreach (int start in start_vector)
+			foreach (int start in startVector)
 			{
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeInt (start));
 			}
 			
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeString (this.global_prefix));
+			buffer.Append (SerializerSupport.SerializeString (this.globalPrefix));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeString (this.global_suffix));
+			buffer.Append (SerializerSupport.SerializeString (this.globalSuffix));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeString (Property.SerializeProperties (this.global_prefix_properties)));
+			buffer.Append (SerializerSupport.SerializeString (Property.SerializeProperties (this.globalPrefixProperties)));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeString (Property.SerializeProperties (this.global_suffix_properties)));
+			buffer.Append (SerializerSupport.SerializeString (Property.SerializeProperties (this.globalSuffixProperties)));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeStringArray (this.user_data));
+			buffer.Append (SerializerSupport.SerializeStringArray (this.userData));
 		}
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
@@ -372,10 +372,10 @@ namespace Epsitec.Common.Text
 			
 			this.name = SerializerSupport.DeserializeString (args[offset++]);
 
-			int num_sequences = SerializerSupport.DeserializeInt (args[offset++]);
-			int num_starts    = SerializerSupport.DeserializeInt (args[offset++]);
+			int numSequences = SerializerSupport.DeserializeInt (args[offset++]);
+			int numStarts    = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			for (int i = 0; i < num_sequences; i++)
+			for (int i = 0; i < numSequences; i++)
 			{
 				Generator.Sequence sequence;
 				
@@ -384,25 +384,25 @@ namespace Epsitec.Common.Text
 				this.Add (sequence);
 			}
 			
-			this.start_vector = new int[num_starts];
+			this.startVector = new int[numStarts];
 			
-			for (int i = 0; i < num_starts; i++)
+			for (int i = 0; i < numStarts; i++)
 			{
-				this.start_vector[i] = SerializerSupport.DeserializeInt (args[offset++]);
+				this.startVector[i] = SerializerSupport.DeserializeInt (args[offset++]);
 			}
 			
 			if (version >= 4)
 			{
-				this.global_prefix = SerializerSupport.DeserializeString (args[offset++]);
-				this.global_suffix = SerializerSupport.DeserializeString (args[offset++]);
+				this.globalPrefix = SerializerSupport.DeserializeString (args[offset++]);
+				this.globalSuffix = SerializerSupport.DeserializeString (args[offset++]);
 			}
 			
 			if (version >= 5)
 			{
-				this.global_prefix_properties = Property.DeserializeProperties (context, SerializerSupport.DeserializeString (args[offset++]));
-				this.global_suffix_properties = Property.DeserializeProperties (context, SerializerSupport.DeserializeString (args[offset++]));
+				this.globalPrefixProperties = Property.DeserializeProperties (context, SerializerSupport.DeserializeString (args[offset++]));
+				this.globalSuffixProperties = Property.DeserializeProperties (context, SerializerSupport.DeserializeString (args[offset++]));
 				
-				this.user_data = SerializerSupport.DeserializeStringArray (args[offset++]);
+				this.userData = SerializerSupport.DeserializeStringArray (args[offset++]);
 			}
 		}
 		
@@ -432,14 +432,14 @@ namespace Epsitec.Common.Text
 		
 		internal void IncrementUserCount()
 		{
-			this.user_count++;
-			System.Diagnostics.Debug.Assert (this.user_count > 0);
+			this.userCount++;
+			System.Diagnostics.Debug.Assert (this.userCount > 0);
 		}
 		
 		internal void DecrementUserCount()
 		{
-			System.Diagnostics.Debug.Assert (this.user_count > 0);
-			this.user_count--;
+			System.Diagnostics.Debug.Assert (this.userCount > 0);
+			this.userCount--;
 		}
 		
 		
@@ -470,10 +470,10 @@ namespace Epsitec.Common.Text
 			{
 				if (this.enumerator.MoveNext ())
 				{
-					Properties.AutoTextProperty    auto_text_property;
-					Properties.GeneratorProperty   generator_property;
-					Properties.MarginsProperty     margins_property = null;
-					Properties.ManagedInfoProperty m_info_property  = null;
+					Properties.AutoTextProperty    autoTextProperty;
+					Properties.GeneratorProperty   generatorProperty;
+					Properties.MarginsProperty     marginsProperty = null;
+					Properties.ManagedInfoProperty mInfoProperty  = null;
 					
 					TextContext        context = this.story.TextContext;
 					Cursors.TempCursor cursor  = this.enumerator.Cursor;
@@ -488,18 +488,18 @@ namespace Epsitec.Common.Text
 						//	qui permet ensuite de déterminer la longueur du texte
 						//	à remplacer :
 						
-						generator_property = this.enumerator.GetGeneratorProperty (code);
+						generatorProperty = this.enumerator.GetGeneratorProperty (code);
 						
-						context.GetAutoText (code, out auto_text_property);
-						context.GetMargins (code, out margins_property);
+						context.GetAutoText (code, out autoTextProperty);
+						context.GetMargins (code, out marginsProperty);
 						
 						if (this.mpp != null)
 						{
-							context.GetManagedInfo (code, this.mpp.ManagerName, out m_info_property);
+							context.GetManagedInfo (code, this.mpp.ManagerName, out mInfoProperty);
 						}
 						
-						if ((m_info_property != null) &&
-							(m_info_property.ManagerInfo != "auto"))
+						if ((mInfoProperty != null) &&
+							(mInfoProperty.ManagerInfo != "auto"))
 						{
 							//	Mode spécifique :
 							//
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Text
 							//	- "reset" ----> reprend au début
 							//	- "set ..." --> reprend avec le numéro spécifié
 							
-							string mode = m_info_property.ManagerInfo;
+							string mode = mInfoProperty.ManagerInfo;
 							
 							if (mode == "cont")
 							{
@@ -556,11 +556,11 @@ namespace Epsitec.Common.Text
 							}
 						}
 						
-						System.Diagnostics.Debug.Assert (generator_property != null);
-						System.Diagnostics.Debug.Assert (generator_property.Generator == this.generator.Name);
+						System.Diagnostics.Debug.Assert (generatorProperty != null);
+						System.Diagnostics.Debug.Assert (generatorProperty.Generator == this.generator.Name);
 						
-						int    length = this.context.GetTextEndDistance (this.story, cursor, generator_property);
-						int    level  = System.Math.Max (generator_property.Level, margins_property == null ? 0 : margins_property.Level);
+						int    length = this.context.GetTextEndDistance (this.story, cursor, generatorProperty);
+						int    level  = System.Math.Max (generatorProperty.Level, marginsProperty == null ? 0 : marginsProperty.Level);
 						
 						TextRange[] text = this.series.GetNextText (level);
 						
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Text
 						//	Compte combien de textes ont été modifiés pendant cette
 						//	opération :
 						
-						if (this.story.ReplaceTextSequence (cursor, length, auto_text_property, generator_property, text))
+						if (this.story.ReplaceTextSequence (cursor, length, autoTextProperty, generatorProperty, text))
 						{
 							this.count++;
 						}
@@ -760,11 +760,11 @@ namespace Epsitec.Common.Text
 					this.vector[level]++;
 				}
 				
-				TextRange[] text_range = this.generator.GenerateText (this.vector, level + 1, this.culture);
+				TextRange[] textRange = this.generator.GenerateText (this.vector, level + 1, this.culture);
 				
 				this.level = level;
 				
-				return text_range;
+				return textRange;
 			}
 			
 			
@@ -808,28 +808,28 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					if ((this.value_properties == null) ||
-						(this.value_properties.Length == 0))
+					if ((this.valueProperties == null) ||
+						(this.valueProperties.Length == 0))
 					{
 						return null;
 					}
 					else
 					{
-						return (Property[]) this.value_properties.Clone ();
+						return (Property[]) this.valueProperties.Clone ();
 					}
 				}
 				set
 				{
-					if (this.value_properties != value)
+					if (this.valueProperties != value)
 					{
 						if ((value == null) ||
 							(value.Length == 0))
 						{
-							this.value_properties = value;
+							this.valueProperties = value;
 						}
 						else
 						{
-							this.value_properties = (Property[]) value.Clone ();
+							this.valueProperties = (Property[]) value.Clone ();
 						}
 					}
 				}
@@ -851,28 +851,28 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					if ((this.prefix_properties == null) ||
-						(this.prefix_properties.Length == 0))
+					if ((this.prefixProperties == null) ||
+						(this.prefixProperties.Length == 0))
 					{
 						return null;
 					}
 					else
 					{
-						return (Property[]) this.prefix_properties.Clone ();
+						return (Property[]) this.prefixProperties.Clone ();
 					}
 				}
 				set
 				{
-					if (this.prefix_properties != value)
+					if (this.prefixProperties != value)
 					{
 						if ((value == null) ||
 							(value.Length == 0))
 						{
-							this.prefix_properties = value;
+							this.prefixProperties = value;
 						}
 						else
 						{
-							this.prefix_properties = (Property[]) value.Clone ();
+							this.prefixProperties = (Property[]) value.Clone ();
 						}
 					}
 				}
@@ -894,28 +894,28 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					if ((this.suffix_properties == null) ||
-						(this.suffix_properties.Length == 0))
+					if ((this.suffixProperties == null) ||
+						(this.suffixProperties.Length == 0))
 					{
 						return null;
 					}
 					else
 					{
-						return (Property[]) this.suffix_properties.Clone ();
+						return (Property[]) this.suffixProperties.Clone ();
 					}
 				}
 				set
 				{
-					if (this.suffix_properties != value)
+					if (this.suffixProperties != value)
 					{
 						if ((value == null) ||
 							(value.Length == 0))
 						{
-							this.suffix_properties = value;
+							this.suffixProperties = value;
 						}
 						else
 						{
-							this.suffix_properties = (Property[]) value.Clone ();
+							this.suffixProperties = (Property[]) value.Clone ();
 						}
 					}
 				}
@@ -937,11 +937,11 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.suppress_before;
+					return this.suppressBefore;
 				}
 				set
 				{
-					this.suppress_before = value;
+					this.suppressBefore = value;
 				}
 			}
 			
@@ -949,11 +949,11 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.user_data;
+					return this.userData;
 				}
 				set
 				{
-					this.user_data = value;
+					this.userData = value;
 				}
 			}
 			
@@ -987,19 +987,19 @@ namespace Epsitec.Common.Text
 			#region ISerializableAsText Members
 			public void SerializeToText(System.Text.StringBuilder buffer)
 			{
-				string value_p  = Property.SerializeProperties (this.value_properties);
-				string prefix_p = Property.SerializeProperties (this.prefix_properties);
-				string suffix_p = Property.SerializeProperties (this.suffix_properties);
+				string valueP  = Property.SerializeProperties (this.valueProperties);
+				string prefixP = Property.SerializeProperties (this.prefixProperties);
+				string suffixP = Property.SerializeProperties (this.suffixProperties);
 				
-				if ((value_p == null) &&
-					(prefix_p == null) &&
-					(suffix_p == null) &&
-					(this.user_data == null))
+				if ((valueP == null) &&
+					(prefixP == null) &&
+					(suffixP == null) &&
+					(this.userData == null))
 				{
 					SerializerSupport.Join (buffer,
 						/**/				SerializerSupport.SerializeString (this.prefix),
 						/**/				SerializerSupport.SerializeString (this.suffix),
-						/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppress_before ? 0x0100 : 0x0000)),
+						/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppressBefore ? 0x0100 : 0x0000)),
 						/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()));
 				}
 				else
@@ -1007,12 +1007,12 @@ namespace Epsitec.Common.Text
 					SerializerSupport.Join (buffer,
 						/**/				SerializerSupport.SerializeString (this.prefix),
 						/**/				SerializerSupport.SerializeString (this.suffix),
-						/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppress_before ? 0x0100 : 0x0000)),
+						/**/				SerializerSupport.SerializeInt ((int) this.casing | (this.suppressBefore ? 0x0100 : 0x0000)),
 						/**/				SerializerSupport.SerializeString (this.GetSetupArgument ()),
-						/**/				SerializerSupport.SerializeString (value_p),
-						/**/				SerializerSupport.SerializeString (prefix_p),
-						/**/				SerializerSupport.SerializeString (suffix_p),
-						/**/				SerializerSupport.SerializeStringArray (this.user_data));
+						/**/				SerializerSupport.SerializeString (valueP),
+						/**/				SerializerSupport.SerializeString (prefixP),
+						/**/				SerializerSupport.SerializeString (suffixP),
+						/**/				SerializerSupport.SerializeStringArray (this.userData));
 				}
 			}
 			
@@ -1022,17 +1022,17 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert ((args.Length == 4) || (args.Length == 8));
 				
-				string   value_p   = null;
-				string   prefix_p  = null;
-				string   suffix_p  = null;
-				string[] user_data = null;
+				string   valueP   = null;
+				string   prefixP  = null;
+				string   suffixP  = null;
+				string[] userData = null;
 				
 				if (args.Length == 8)
 				{
-					value_p   = SerializerSupport.DeserializeString (args[4]);
-					prefix_p  = SerializerSupport.DeserializeString (args[5]);
-					suffix_p  = SerializerSupport.DeserializeString (args[6]);
-					user_data = SerializerSupport.DeserializeStringArray (args[7]);
+					valueP   = SerializerSupport.DeserializeString (args[4]);
+					prefixP  = SerializerSupport.DeserializeString (args[5]);
+					suffixP  = SerializerSupport.DeserializeString (args[6]);
+					userData = SerializerSupport.DeserializeStringArray (args[7]);
 				}
 				
 				string prefix = SerializerSupport.DeserializeString (args[0]);
@@ -1043,11 +1043,11 @@ namespace Epsitec.Common.Text
 				this.prefix = prefix;
 				this.suffix = suffix;
 				this.casing = (Casing) (casing & 0x00ff);
-				this.suppress_before = (casing & 0x0100) != 0;
+				this.suppressBefore = (casing & 0x0100) != 0;
 				
-				this.value_properties  = Property.DeserializeProperties (context, value_p);
-				this.prefix_properties = Property.DeserializeProperties (context, prefix_p);
-				this.suffix_properties = Property.DeserializeProperties (context, suffix_p);
+				this.valueProperties  = Property.DeserializeProperties (context, valueP);
+				this.prefixProperties = Property.DeserializeProperties (context, prefixP);
+				this.suffixProperties = Property.DeserializeProperties (context, suffixP);
 				
 				this.Setup (setup);
 			}
@@ -1067,11 +1067,11 @@ namespace Epsitec.Common.Text
 			private string						prefix;
 			private string						suffix;
 			private Casing						casing;
-			private Property[]					value_properties;
-			private Property[]					prefix_properties;
-			private Property[]					suffix_properties;
-			private string[]					user_data;
-			private bool						suppress_before;
+			private Property[]					valueProperties;
+			private Property[]					prefixProperties;
+			private Property[]					suffixProperties;
+			private string[]					userData;
+			private bool						suppressBefore;
 		}
 		#endregion
 		
@@ -1120,11 +1120,11 @@ namespace Epsitec.Common.Text
 			return sequence;
 		}
 		
-		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing, string setup_argument)
+		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing, string setupArgument)
 		{
 			Generator.Sequence sequence = Generator.CreateSequence (type);
 			
-			sequence.DefineSetupArgument (setup_argument);
+			sequence.DefineSetupArgument (setupArgument);
 			sequence.Prefix = prefix;
 			sequence.Suffix = suffix;
 			sequence.Casing = casing;
@@ -1132,15 +1132,15 @@ namespace Epsitec.Common.Text
 			return sequence;
 		}
 		
-		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing, string setup_argument, bool suppress_before)
+		public static Generator.Sequence CreateSequence(SequenceType type, string prefix, string suffix, Casing casing, string setupArgument, bool suppressBefore)
 		{
 			Generator.Sequence sequence = Generator.CreateSequence (type);
 			
-			sequence.DefineSetupArgument (setup_argument);
+			sequence.DefineSetupArgument (setupArgument);
 			sequence.Prefix = prefix;
 			sequence.Suffix = suffix;
 			sequence.Casing = casing;
-			sequence.SuppressBefore = suppress_before;
+			sequence.SuppressBefore = suppressBefore;
 			
 			return sequence;
 		}
@@ -1157,12 +1157,12 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (sequence != null);
 			
-			string sequ_name = sequence.GetType ().Name;
+			string sequName = sequence.GetType ().Name;
 			
-			System.Diagnostics.Debug.Assert (sequence.WellKnownType.ToString () == sequ_name);
+			System.Diagnostics.Debug.Assert (sequence.WellKnownType.ToString () == sequName);
 			
 			buffer.Append ("{");
-			buffer.Append (sequ_name);
+			buffer.Append (sequName);
 			buffer.Append (":");
 			
 			sequence.SerializeToText (buffer);
@@ -1180,19 +1180,19 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (text[pos+0] == '{');
 			System.Diagnostics.Debug.Assert (text[pos+length-1] == '}');
 			
-			int sep_pos = text.IndexOf (':', pos, length);
-			int end_pos = pos + length;
+			int sepPos = text.IndexOf (':', pos, length);
+			int endPos = pos + length;
 			
-			System.Diagnostics.Debug.Assert (sep_pos > pos);
+			System.Diagnostics.Debug.Assert (sepPos > pos);
 			
-			string sequ_name = text.Substring (pos+1, sep_pos - pos - 1);
-			string type_name = string.Concat ("Epsitec.Common.Text.Internals.Sequences.", sequ_name, "Sequence");
+			string sequName = text.Substring (pos+1, sepPos - pos - 1);
+			string typeName = string.Concat ("Epsitec.Common.Text.Internals.Sequences.", sequName, "Sequence");
 			
-			sequence = Generator.CreateSequence ((SequenceType) System.Enum.Parse (typeof (SequenceType), sequ_name));
+			sequence = Generator.CreateSequence ((SequenceType) System.Enum.Parse (typeof (SequenceType), sequName));
 			
-			sep_pos++;
+			sepPos++;
 			
-			sequence.DeserializeFromText (context, text, sep_pos, end_pos - sep_pos - 1);
+			sequence.DeserializeFromText (context, text, sepPos, endPos - sepPos - 1);
 		}
 		
 		
@@ -1220,12 +1220,12 @@ namespace Epsitec.Common.Text
 		
 		private System.Collections.ArrayList	sequences = new System.Collections.ArrayList ();
 		private string							name;
-		private int[]							start_vector;
-		private string							global_prefix;
-		private string							global_suffix;
-		private Property[]						global_prefix_properties;
-		private Property[]						global_suffix_properties;
-		private string[]						user_data;
-		private int								user_count;
+		private int[]							startVector;
+		private string							globalPrefix;
+		private string							globalSuffix;
+		private Property[]						globalPrefixProperties;
+		private Property[]						globalSuffixProperties;
+		private string[]						userData;
+		private int								userCount;
 	}
 }

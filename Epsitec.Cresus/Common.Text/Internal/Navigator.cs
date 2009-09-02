@@ -80,30 +80,30 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool IsWordStart(TextStory story, ICursor cursor, int offset)
 		{
-			int code_0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
-			int code_1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
+			int code0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
+			int code1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
 			 
-			return Navigator.IsWordStart (code_0, code_1);
+			return Navigator.IsWordStart (code0, code1);
 		}
 		
-		public static bool IsWordStart(int code_0, int code_1)
+		public static bool IsWordStart(int code0, int code1)
 		{
-			if (code_1 == 0)
+			if (code1 == 0)
 			{
 				return true;
 			}
 			
-			CodeClass class_0 = Navigator.GetCodeClass (code_0);
-			CodeClass class_1 = Navigator.GetCodeClass (code_1);
+			CodeClass class0 = Navigator.GetCodeClass (code0);
+			CodeClass class1 = Navigator.GetCodeClass (code1);
 			
-			if (class_1 == CodeClass.ParagraphSeparator)
+			if (class1 == CodeClass.ParagraphSeparator)
 			{
 				return true;
 			}
 			
-			if (class_0 != class_1)
+			if (class0 != class1)
 			{
-				if (class_0 == CodeClass.Space)
+				if (class0 == CodeClass.Space)
 				{
 					return false;
 				}
@@ -120,30 +120,30 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool IsWordEnd(TextStory story, ICursor cursor, int offset)
 		{
-			int code_0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
-			int code_1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
+			int code0 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset));
+			int code1 = Unicode.Bits.GetCode (story.ReadChar (cursor, offset - 1));
 			 
-			return Navigator.IsWordEnd (code_0, code_1);
+			return Navigator.IsWordEnd (code0, code1);
 		}
 		
-		public static bool IsWordEnd(int code_0, int code_1)
+		public static bool IsWordEnd(int code0, int code1)
 		{
-			if (code_0 == 0)
+			if (code0 == 0)
 			{
 				return true;
 			}
 			
-			CodeClass class_0 = Navigator.GetCodeClass (code_0);
-			CodeClass class_1 = Navigator.GetCodeClass (code_1);
+			CodeClass class0 = Navigator.GetCodeClass (code0);
+			CodeClass class1 = Navigator.GetCodeClass (code1);
 			
-			if (class_0 == CodeClass.ParagraphSeparator)
+			if (class0 == CodeClass.ParagraphSeparator)
 			{
 				return true;
 			}
 			
-			if (class_0 != class_1)
+			if (class0 != class1)
 			{
-				if (class_1 == CodeClass.Space)
+				if (class1 == CodeClass.Space)
 				{
 					return false;
 				}
@@ -238,13 +238,13 @@ namespace Epsitec.Common.Text.Internal
 				
 				for (int i = 0; i < infos.Length; i++)
 				{
-					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+					Cursors.FitterCursor fitterCursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
 					
 					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
 					//	en page. La dernière position correspond à la fin du paragraphe
 					//	et doit donc être ignorée :
 					
-					int[] positions = fitter_cursor.GetLineStartPositions (text);
+					int[] positions = fitterCursor.GetLineStartPositions (text);
 					
 					for (int j = 0; j < positions.Length - 1; j++)
 					{
@@ -301,14 +301,14 @@ namespace Epsitec.Common.Text.Internal
 			{
 				for (int i = 0; i < infos.Length; i++)
 				{
-					Cursors.FitterCursor fitter_cursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
+					Cursors.FitterCursor fitterCursor = text.GetCursorInstance (infos[i].CursorId) as Cursors.FitterCursor;
 					
 					//	Vérifie où il y a des débuts de lignes dans le paragraphe mis
 					//	en page. La première position correspond au début du paragraphe
 					//	et n'est donc pas une fin de ligne, par contre tous les autres
 					//	débuts de lignes correspondent à la fin de la ligne précédente :
 					
-					int[] positions = fitter_cursor.GetLineStartPositions (text);
+					int[] positions = fitterCursor.GetLineStartPositions (text);
 					
 					for (int j = 1; j < positions.Length; j++)
 					{
@@ -405,15 +405,15 @@ namespace Epsitec.Common.Text.Internal
 			{
 				this.context   = context;
 				this.skip      = skip;
-				this.last_code = 0;
+				this.lastCode = 0;
 			}
 			
 			
 			public bool Check(ulong code)
 			{
-				ulong last = this.last_code;
+				ulong last = this.lastCode;
 				
-				this.last_code = code;
+				this.lastCode = code;
 				
 				if (Navigator.IsParagraphSeparator (code))
 				{
@@ -460,7 +460,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			private int							skip;
 			private TextContext					context;
-			private ulong						last_code;
+			private ulong						lastCode;
 		}
 		#endregion
 		
@@ -581,10 +581,10 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] old_properties, Properties.ManagedParagraphProperty[] new_properties)
+		public static void HandleManagedParagraphPropertiesChange(TextStory story, ICursor cursor, int offset, Properties.ManagedParagraphProperty[] oldProperties, Properties.ManagedParagraphProperty[] newProperties)
 		{
 			//	Gère le passage d'un jeu de propriétés ManagedParagraphProperty à
-			//	un autre (old_properties --> new_properties).
+			//	un autre (oldProperties --> newProperties).
 			
 			//	Pour chaque propriété qui disparaît, le gestionnaire correspondant
 			//	sera appelé (DetachFromParagaph); de même, pour chaque propriété
@@ -592,11 +592,11 @@ namespace Epsitec.Common.Text.Internal
 			
 			System.Diagnostics.Debug.Assert (Navigator.IsParagraphStart (story, cursor, offset));
 			
-			int n_old = old_properties == null ? 0 : old_properties.Length;
-			int n_new = new_properties == null ? 0 : new_properties.Length;
+			int nOld = oldProperties == null ? 0 : oldProperties.Length;
+			int nNew = newProperties == null ? 0 : newProperties.Length;
 			
-			if ((n_new == 0) &&
-				(n_old == 0))
+			if ((nNew == 0) &&
+				(nOld == 0))
 			{
 				return;
 			}
@@ -607,18 +607,18 @@ namespace Epsitec.Common.Text.Internal
 				//	n'est pas le cas au départ, on crée un curseur temporaire
 				//	qui satisfait à cette condition :
 				
-				Cursors.TempCursor temp_cursor = new Cursors.TempCursor ();
+				Cursors.TempCursor tempCursor = new Cursors.TempCursor ();
 				
-				story.NewCursor (temp_cursor);
-				story.SetCursorPosition (temp_cursor, story.GetCursorPosition (cursor) + offset);
+				story.NewCursor (tempCursor);
+				story.SetCursorPosition (tempCursor, story.GetCursorPosition (cursor) + offset);
 				
 				try
 				{
-					Navigator.HandleManagedParagraphPropertiesChange (story, temp_cursor, 0, old_properties, new_properties);
+					Navigator.HandleManagedParagraphPropertiesChange (story, tempCursor, 0, oldProperties, newProperties);
 				}
 				finally
 				{
-					story.RecycleCursor (temp_cursor);
+					story.RecycleCursor (tempCursor);
 				}
 				
 				return;
@@ -630,13 +630,13 @@ namespace Epsitec.Common.Text.Internal
 			Text.TextContext     context = story.TextContext;
 			ParagraphManagerList list    = context.ParagraphManagerList;
 			
-			for (int i = 0; i < n_old; i++)
+			for (int i = 0; i < nOld; i++)
 			{
 				bool same = false;
 				
-				for (int j = 0; j < n_new; j++)
+				for (int j = 0; j < nNew; j++)
 				{
-					if (Property.CompareEqualContents (old_properties[i], new_properties[j]))
+					if (Property.CompareEqualContents (oldProperties[i], newProperties[j]))
 					{
 						same = true;
 						break;
@@ -648,17 +648,17 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (! same)
 				{
-					list[old_properties[i].ManagerName].DetachFromParagraph (story, cursor, old_properties[i]);
+					list[oldProperties[i].ManagerName].DetachFromParagraph (story, cursor, oldProperties[i]);
 				}
 			}
 			
-			for (int i = 0; i < n_new; i++)
+			for (int i = 0; i < nNew; i++)
 			{
 				bool same = false;
 				
-				for (int j = 0; j < n_old; j++)
+				for (int j = 0; j < nOld; j++)
 				{
-					if (Property.CompareEqualContents (new_properties[i], old_properties[j]))
+					if (Property.CompareEqualContents (newProperties[i], oldProperties[j]))
 					{
 						same = true;
 						break;
@@ -670,11 +670,11 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (same)
 				{
-					list[new_properties[i].ManagerName].RefreshParagraph (story, cursor, new_properties[i]);
+					list[newProperties[i].ManagerName].RefreshParagraph (story, cursor, newProperties[i]);
 				}
 				else
 				{
-					list[new_properties[i].ManagerName].AttachToParagraph (story, cursor, new_properties[i]);
+					list[newProperties[i].ManagerName].AttachToParagraph (story, cursor, newProperties[i]);
 				}
 			}
 		}
@@ -695,19 +695,19 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] all_styles;
+			TextStyle[] allStyles;
 			
-			context.GetStyles (code, out all_styles);
+			context.GetStyles (code, out allStyles);
 			
-			int count = Properties.StylesProperty.CountMatchingStyles (all_styles, TextStyleClass.Paragraph);
+			int count = Properties.StylesProperty.CountMatchingStyles (allStyles, TextStyleClass.Paragraph);
 			
 			styles = new TextStyle[count];
 			
 			for (int i = 0, j = 0; j < count; i++)
 			{
-				if (all_styles[i].TextStyleClass == TextStyleClass.Paragraph)
+				if (allStyles[i].TextStyleClass == TextStyleClass.Paragraph)
 				{
-					styles[j++] = all_styles[i];
+					styles[j++] = allStyles[i];
 				}
 			}
 			
@@ -729,18 +729,18 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] all_styles;
+			TextStyle[] allStyles;
 			
-			context.GetStyles (code, out all_styles);
+			context.GetStyles (code, out allStyles);
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			for (int i = 0; i < all_styles.Length; i++)
+			for (int i = 0; i < allStyles.Length; i++)
 			{
-				if ((all_styles[i].TextStyleClass == TextStyleClass.MetaProperty) &&
-					(all_styles[i].RequiresUniformParagraph))
+				if ((allStyles[i].TextStyleClass == TextStyleClass.MetaProperty) &&
+					(allStyles[i].RequiresUniformParagraph))
 				{
-					list.Add (all_styles[i]);
+					list.Add (allStyles[i]);
 				}
 			}
 			
@@ -765,14 +765,14 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			Property[] all_properties;
+			Property[] allProperties;
 			int        count = 0;
 			
-			context.GetProperties (code, out all_properties);
+			context.GetProperties (code, out allProperties);
 			
-			for (int i = 0; i < all_properties.Length; i++)
+			for (int i = 0; i < allProperties.Length; i++)
 			{
-				if (all_properties[i].RequiresUniformParagraph)
+				if (allProperties[i].RequiresUniformParagraph)
 				{
 					count++;
 				}
@@ -782,9 +782,9 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = 0, j = 0; j < count; i++)
 			{
-				if (all_properties[i].RequiresUniformParagraph)
+				if (allProperties[i].RequiresUniformParagraph)
 				{
-					properties[j++] = all_properties[i];
+					properties[j++] = allProperties[i];
 				}
 			}
 			
@@ -811,10 +811,10 @@ namespace Epsitec.Common.Text.Internal
 			Navigator.Insert (story, cursor, utf32, styles, properties);
 		}
 		
-		public static void Insert(TextStory story, ICursor cursor, string simple_text, System.Collections.ICollection styles, System.Collections.ICollection properties)
+		public static void Insert(TextStory story, ICursor cursor, string simpleText, System.Collections.ICollection styles, System.Collections.ICollection properties)
 		{
 			uint[] utf32;
-			TextConverter.ConvertFromString (simple_text, out utf32);
+			TextConverter.ConvertFromString (simpleText, out utf32);
 			Navigator.Insert (story, cursor, utf32, styles, properties);
 		}
 		
@@ -822,28 +822,28 @@ namespace Epsitec.Common.Text.Internal
 		{
 			int offset = Navigator.GetParagraphStartOffset (story, cursor);
 			
-			TextStyle[] paragraph_styles;
-			TextStyle[] paragraph_meta;
-			Property[]  paragraph_properties;
+			TextStyle[] paragraphStyles;
+			TextStyle[] paragraphMeta;
+			Property[]  paragraphProperties;
 			
-			if ((Navigator.GetParagraphStyles (story, cursor, offset, out paragraph_styles)) &&
-				(Navigator.GetUniformMetaProperties (story, cursor, offset, out paragraph_meta)) &&
-				(Navigator.GetParagraphProperties (story, cursor, offset, out paragraph_properties)))
+			if ((Navigator.GetParagraphStyles (story, cursor, offset, out paragraphStyles)) &&
+				(Navigator.GetUniformMetaProperties (story, cursor, offset, out paragraphMeta)) &&
+				(Navigator.GetParagraphProperties (story, cursor, offset, out paragraphProperties)))
 			{
-				System.Collections.ArrayList all_styles     = new System.Collections.ArrayList ();
-				System.Collections.ArrayList all_properties = new System.Collections.ArrayList ();
+				System.Collections.ArrayList allStyles     = new System.Collections.ArrayList ();
+				System.Collections.ArrayList allProperties = new System.Collections.ArrayList ();
 				
-				all_styles.AddRange (paragraph_styles);
-				all_properties.AddRange (paragraph_properties);
+				allStyles.AddRange (paragraphStyles);
+				allProperties.AddRange (paragraphProperties);
 				
-				if (styles != null) all_styles.AddRange (styles);
-				if (properties != null) all_properties.AddRange (properties);
+				if (styles != null) allStyles.AddRange (styles);
+				if (properties != null) allProperties.AddRange (properties);
 				
-				all_styles.AddRange (paragraph_meta);
+				allStyles.AddRange (paragraphMeta);
 				
 				ulong[] text;
 				
-				story.ConvertToStyledText (utf32, story.FlattenStylesAndProperties (all_styles, all_properties), out text);
+				story.ConvertToStyledText (utf32, story.FlattenStylesAndProperties (allStyles, allProperties), out text);
 				story.InsertText (cursor, text);
 			}
 		}
@@ -851,14 +851,14 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static void SetParagraphStyles(TextStory story, ICursor cursor, System.Collections.ICollection styles)
 		{
-			TextStyle[] s_array = new TextStyle[styles == null ? 0 : styles.Count];
+			TextStyle[] sArray = new TextStyle[styles == null ? 0 : styles.Count];
 			
 			if (styles != null)
 			{
-				styles.CopyTo (s_array, 0);
+				styles.CopyTo (sArray, 0);
 			}
 			
-			Navigator.SetParagraphStyles (story, cursor, s_array);
+			Navigator.SetParagraphStyles (story, cursor, sArray);
 		}
 		
 		public static void SetParagraphStyles(TextStory story, ICursor cursor, params TextStyle[] styles)
@@ -868,10 +868,10 @@ namespace Epsitec.Common.Text.Internal
 				styles = new TextStyle[0];
 			}
 			
-			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
-			int offset_end   = Navigator.GetParagraphEndLength (story, cursor);
+			int offsetStart = Navigator.GetParagraphStartOffset (story, cursor);
+			int offsetEnd   = Navigator.GetParagraphEndLength (story, cursor);
 			
-			int length = offset_end - offset_start;
+			int length = offsetEnd - offsetStart;
 			
 			if (length == 0)
 			{
@@ -884,16 +884,16 @@ namespace Epsitec.Common.Text.Internal
 			
 			ulong[] text = new ulong[length];
 			
-			story.ReadText (cursor, offset_start, length, text);
+			story.ReadText (cursor, offsetStart, length, text);
 			
 			//	Détermine l'état des propriétés "ManagedParagraph" qui déterminent
 			//	si/comment un paragraphe est géré (liste à puces, etc.) et dont tout
 			//	changement requiert une gestion explicite.
 			
-			Properties.ManagedParagraphProperty[] old_props;
-			Properties.ManagedParagraphProperty[] new_props;
+			Properties.ManagedParagraphProperty[] oldProps;
+			Properties.ManagedParagraphProperty[] newProps;
 			
-			Navigator.GetManagedParagraphProperties (story, text[0], out old_props);
+			Navigator.GetManagedParagraphProperties (story, text[0], out oldProps);
 			
 			ulong code  = 0;
 			int   start = 0;
@@ -923,18 +923,18 @@ namespace Epsitec.Common.Text.Internal
 			//	Change encore le style de la dernière (ou de l'unique) tranche :
 			
 			Navigator.SetParagraphStyles (story, text, code, start, count, styles);
-			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
+			Navigator.GetManagedParagraphProperties (story, text[0], out newProps);
 			
 			System.Diagnostics.Debug.Assert (cursor.Attachment == CursorAttachment.Temporary);
 			
 			int pos = story.GetCursorPosition (cursor);
-			story.WriteText (cursor, offset_start, text);
+			story.WriteText (cursor, offsetStart, text);
 			story.SetCursorPosition (cursor, pos);
 			
 			//	Finalement, gère encore les changements de propriétés "ManagedParagraph"
 			//	afin d'ajouter ou de supprimer les textes automatiques :
 			
-			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offsetStart, oldProps, newProps);
 		}
 		
 		public static void SetSymbolStyles(TextStory story, ICursor cursor, int length, params TextStyle[] styles)
@@ -952,12 +952,12 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (styles == null) styles = new TextStyle[0];
 			
-			int offset_start = 0;
-			int offset_end   = length;
+			int offsetStart = 0;
+			int offsetEnd   = length;
 			
 			ulong[] text = new ulong[length];
 			
-			story.ReadText (cursor, offset_start, length, text);
+			story.ReadText (cursor, offsetStart, length, text);
 			
 			ulong code  = 0;
 			int   start = 0;
@@ -988,7 +988,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			Navigator.SetSymbolStyles (story, text, code, start, count, styles);
 			
-			story.WriteText (cursor, offset_start, text);
+			story.WriteText (cursor, offsetStart, text);
 		}
 		
 		public static void SetTextStyles(TextStory story, ICursor cursor, int length, params TextStyle[] styles)
@@ -1009,12 +1009,12 @@ namespace Epsitec.Common.Text.Internal
 				styles = new TextStyle[0];
 			}
 			
-			int offset_start = 0;
-			int offset_end   = length;
+			int offsetStart = 0;
+			int offsetEnd   = length;
 			
 			ulong[] text = new ulong[length];
 			
-			story.ReadText (cursor, offset_start, length, text);
+			story.ReadText (cursor, offsetStart, length, text);
 			
 			ulong code  = 0;
 			int   start = 0;
@@ -1045,7 +1045,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			Navigator.SetTextStyles (story, text, code, start, count, styles);
 			
-			story.WriteText (cursor, offset_start, text);
+			story.WriteText (cursor, offsetStart, text);
 		}
 		
 		
@@ -1061,12 +1061,12 @@ namespace Epsitec.Common.Text.Internal
 			
 			if (properties == null) properties = new Property[0];
 			
-			int offset_start = 0;
-			int offset_end   = length;
+			int offsetStart = 0;
+			int offsetEnd   = length;
 			
 			ulong[] text = new ulong[length];
 			
-			story.ReadText (cursor, offset_start, length, text);
+			story.ReadText (cursor, offsetStart, length, text);
 			
 			ulong code  = 0;
 			int   start = 0;
@@ -1097,30 +1097,30 @@ namespace Epsitec.Common.Text.Internal
 			
 			Navigator.SetTextProperties (story, text, code, start, count, properties, mode);
 			
-			story.WriteText (cursor, offset_start, text);
+			story.WriteText (cursor, offsetStart, text);
 		}
 		
-		public static void SetParagraphMetaProperties(TextStory story, ICursor cursor, Properties.ApplyMode mode, params TextStyle[] meta_properties)
+		public static void SetParagraphMetaProperties(TextStory story, ICursor cursor, Properties.ApplyMode mode, params TextStyle[] metaProperties)
 		{
 			int length = Navigator.GetParagraphEndLength (story, cursor);
 			int pos    = story.GetCursorPosition (cursor);
 			
-			Properties.ManagedParagraphProperty[] old_props;
-			Properties.ManagedParagraphProperty[] new_props;
+			Properties.ManagedParagraphProperty[] oldProps;
+			Properties.ManagedParagraphProperty[] newProps;
 			
-			Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor), out old_props);
-			Navigator.SetMetaProperties (story, cursor, length, mode, meta_properties);
+			Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor), out oldProps);
+			Navigator.SetMetaProperties (story, cursor, length, mode, metaProperties);
 			
 			story.SetCursorPosition (cursor, pos);
 			
-			Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor), out new_props);
+			Navigator.GetManagedParagraphProperties (story, story.ReadChar (cursor), out newProps);
 			
 			//	Met encore à jour les managed paragraphs (si nécessaire) :
 			
-			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, 0, old_props, new_props);
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, 0, oldProps, newProps);
 		}
 		
-		public static void SetMetaProperties(TextStory story, ICursor cursor, int length, Properties.ApplyMode mode, params TextStyle[] meta_properties)
+		public static void SetMetaProperties(TextStory story, ICursor cursor, int length, Properties.ApplyMode mode, params TextStyle[] metaProperties)
 		{
 			if (length == 0)
 			{
@@ -1130,14 +1130,14 @@ namespace Epsitec.Common.Text.Internal
 				return;
 			}
 			
-			if (meta_properties == null) meta_properties = new TextStyle[0];
+			if (metaProperties == null) metaProperties = new TextStyle[0];
 			
-			int offset_start = 0;
-			int offset_end   = length;
+			int offsetStart = 0;
+			int offsetEnd   = length;
 			
 			ulong[] text = new ulong[length];
 			
-			story.ReadText (cursor, offset_start, length, text);
+			story.ReadText (cursor, offsetStart, length, text);
 			
 			ulong code  = 0;
 			int   start = 0;
@@ -1152,7 +1152,7 @@ namespace Epsitec.Common.Text.Internal
 				
 				if (code != next)
 				{
-					Navigator.SetMetaProperties (story, text, code, start, count, meta_properties, mode);
+					Navigator.SetMetaProperties (story, text, code, start, count, metaProperties, mode);
 					
 					start = i;
 					count = 1;
@@ -1166,30 +1166,30 @@ namespace Epsitec.Common.Text.Internal
 			
 			//	Change encore le style de la dernière (ou de l'unique) tranche :
 			
-			Navigator.SetMetaProperties (story, text, code, start, count, meta_properties, mode);
+			Navigator.SetMetaProperties (story, text, code, start, count, metaProperties, mode);
 			
-			story.WriteText (cursor, offset_start, text);
+			story.WriteText (cursor, offsetStart, text);
 		}
 		
 		public static void SetParagraphProperties(TextStory story, ICursor cursor, Properties.ApplyMode mode, params Property[] properties)
 		{
-			int offset_start = Navigator.GetParagraphStartOffset (story, cursor);
-			int offset_end   = Navigator.GetParagraphEndLength (story, cursor);
+			int offsetStart = Navigator.GetParagraphStartOffset (story, cursor);
+			int offsetEnd   = Navigator.GetParagraphEndLength (story, cursor);
 			
-			Navigator.SetParagraphProperties (story, cursor, offset_start, offset_end, mode, properties);
+			Navigator.SetParagraphProperties (story, cursor, offsetStart, offsetEnd, mode, properties);
 		}
 		
 		public static void SetParagraphProperties(TextStory story, ICursor cursor, int length, Properties.ApplyMode mode, params Property[] properties)
 		{
-			int offset_start = 0;
-			int offset_end   = length;
+			int offsetStart = 0;
+			int offsetEnd   = length;
 			
-			Navigator.SetParagraphProperties (story, cursor, offset_start, offset_end, mode, properties);
+			Navigator.SetParagraphProperties (story, cursor, offsetStart, offsetEnd, mode, properties);
 		}
 		
-		public static void SetParagraphProperties(TextStory story, ICursor cursor, int offset_start, int offset_end, Properties.ApplyMode mode, params Property[] properties)
+		public static void SetParagraphProperties(TextStory story, ICursor cursor, int offsetStart, int offsetEnd, Properties.ApplyMode mode, params Property[] properties)
 		{
-			int length = offset_end - offset_start;
+			int length = offsetEnd - offsetStart;
 			
 			if (length == 0)
 			{
@@ -1203,12 +1203,12 @@ namespace Epsitec.Common.Text.Internal
 			
 			ulong[] text = new ulong[length];
 			
-			story.ReadText (cursor, offset_start, length, text);
+			story.ReadText (cursor, offsetStart, length, text);
 			
-			Properties.ManagedParagraphProperty[] old_props;
-			Properties.ManagedParagraphProperty[] new_props;
+			Properties.ManagedParagraphProperty[] oldProps;
+			Properties.ManagedParagraphProperty[] newProps;
 			
-			Navigator.GetManagedParagraphProperties (story, text[0], out old_props);
+			Navigator.GetManagedParagraphProperties (story, text[0], out oldProps);
 			
 			ulong code  = 0;
 			int   start = 0;
@@ -1238,19 +1238,19 @@ namespace Epsitec.Common.Text.Internal
 			//	Change encore le style de la dernière (ou de l'unique) tranche :
 			
 			Navigator.SetParagraphProperties (story, text, code, start, count, properties, mode);
-			Navigator.GetManagedParagraphProperties (story, text[0], out new_props);
+			Navigator.GetManagedParagraphProperties (story, text[0], out newProps);
 			
 			int pos = story.GetCursorPosition (cursor);
-			story.WriteText (cursor, offset_start, text);
+			story.WriteText (cursor, offsetStart, text);
 			story.SetCursorPosition (cursor, pos);
 			
 			//	Met encore à jour les managed paragraphs (si nécessaire) :
 			
-			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offset_start, old_props, new_props);
+			Navigator.HandleManagedParagraphPropertiesChange (story, cursor, offsetStart, oldProps, newProps);
 		}
 		
 		
-		private static void SetParagraphStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraph_styles)
+		private static void SetParagraphStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] paragraphStyles)
 		{
 			//	Change le style de paragraphe pour une tranche donnée.
 			
@@ -1262,46 +1262,46 @@ namespace Epsitec.Common.Text.Internal
 			Text.TextContext context = story.TextContext;
 			
 			Property[]  properties;
-			TextStyle[] old_styles;
+			TextStyle[] oldStyles;
 			
 			context.GetProperties (code, out properties);
-			context.GetStyles (code, out old_styles);
+			context.GetStyles (code, out oldStyles);
 			
 			//	Crée la table des styles à utiliser en retirant les anciens styles
 			//	de paragraphe et en insérant les nouveaux à la place :
 			
-			int n_para_styles  = Properties.StylesProperty.CountMatchingStyles (old_styles, TextStyleClass.Paragraph);
-			int n_other_styles = old_styles.Length - n_para_styles;
+			int nParaStyles  = Properties.StylesProperty.CountMatchingStyles (oldStyles, TextStyleClass.Paragraph);
+			int nOtherStyles = oldStyles.Length - nParaStyles;
 			
-			TextStyle[] new_styles = new TextStyle[paragraph_styles.Length + n_other_styles];
+			TextStyle[] newStyles = new TextStyle[paragraphStyles.Length + nOtherStyles];
 			
-			System.Array.Copy (paragraph_styles, 0, new_styles, 0, paragraph_styles.Length);
+			System.Array.Copy (paragraphStyles, 0, newStyles, 0, paragraphStyles.Length);
 			
-			for (int i = 0, j = paragraph_styles.Length; i < old_styles.Length; i++)
+			for (int i = 0, j = paragraphStyles.Length; i < oldStyles.Length; i++)
 			{
-				if (old_styles[i].TextStyleClass != TextStyleClass.Paragraph)
+				if (oldStyles[i].TextStyleClass != TextStyleClass.Paragraph)
 				{
-					new_styles[j++] = old_styles[i];
+					newStyles[j++] = oldStyles[i];
 				}
 			}
 			
 			//	Crée la table des propriétés à utiliser :
 			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (new_styles, Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly));
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (newStyles, Property.Filter (properties, Properties.PropertyFilter.NonUniformOnly));
 			
-			ulong style_bits;
+			ulong styleBits;
 			
-			story.ConvertToStyledText (flat, out style_bits);
+			story.ConvertToStyledText (flat, out styleBits);
 			
 			for (int i = 0; i < length; i++)
 			{
 				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
-				text[offset+i] |= style_bits;
+				text[offset+i] |= styleBits;
 			}
 		}
 		
 		
-		private static void SetTextProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] text_properties, Properties.ApplyMode mode)
+		private static void SetTextProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] textProperties, Properties.ApplyMode mode)
 		{
 			//	Modifie les propriétés du texte en utilisant celles passées en
 			//	entrée, en se basant sur le mode de combinaison spécifié.
@@ -1314,50 +1314,50 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] current_styles;
-			Property[]  current_properties;
+			TextStyle[] currentStyles;
+			Property[]  currentProperties;
 			
 			//	Récupère d'abord les styles et les propriétés courantes :
 			
-			context.GetStyles (code, out current_styles);
-			context.GetProperties (code, out current_properties);
+			context.GetStyles (code, out currentStyles);
+			context.GetProperties (code, out currentProperties);
 			
-//			foreach (Property p in current_properties)
+//			foreach (Property p in currentProperties)
 //			{
 //				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
 //			}
 			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (text_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (text_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (textProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (textProperties) == false);
 			
 			//	Dans un premier temps, on conserve tous les styles et ne garde que les
 			//	propriétés associées directement au paragraphe. Les autres propriétés
 			//	vont devoir être filtrées :
 
-			List<TextStyle> all_styles = new List<TextStyle> ();
-			List<Property>  all_properties = new List<Property> ();
+			List<TextStyle> allStyles = new List<TextStyle> ();
+			List<Property>  allProperties = new List<Property> ();
 			
-			all_styles.AddRange (current_styles);
+			allStyles.AddRange (currentStyles);
 			
-			all_properties.AddRange (Property.Filter (current_properties, Properties.PropertyFilter.UniformOnly));
-			all_properties.AddRange (Navigator.Combine (Property.Filter (current_properties, Properties.PropertyFilter.NonUniformOnly), text_properties, mode));
+			allProperties.AddRange (Property.Filter (currentProperties, Properties.PropertyFilter.UniformOnly));
+			allProperties.AddRange (Navigator.Combine (Property.Filter (currentProperties, Properties.PropertyFilter.NonUniformOnly), textProperties, mode));
 			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (allStyles, allProperties);
 			
-			ulong style_bits;
+			ulong styleBits;
 			
-			story.ConvertToStyledText (flat, out style_bits);
+			story.ConvertToStyledText (flat, out styleBits);
 			
 			for (int i = 0; i < length; i++)
 			{
 				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
-				text[offset+i] |= style_bits;
+				text[offset+i] |= styleBits;
 			}
 		}
 		
-		private static void SetMetaProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] meta_properties, Properties.ApplyMode mode)
+		private static void SetMetaProperties(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] metaProperties, Properties.ApplyMode mode)
 		{
 			//	Modifie les méta propriétés du texte en utilisant celles passées en
 			//	entrée, en se basant sur le mode de combinaison spécifié.
@@ -1370,39 +1370,39 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] current_styles;
-			Property[]  current_properties;
+			TextStyle[] currentStyles;
+			Property[]  currentProperties;
 			
 			//	Récupère d'abord les styles et les propriétés courantes :
 			
-			context.GetStyles (code, out current_styles);
-			context.GetProperties (code, out current_properties);
+			context.GetStyles (code, out currentStyles);
+			context.GetProperties (code, out currentProperties);
 			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (currentProperties) == false);
 
-			List<TextStyle> all_styles = new List<TextStyle> ();
-			ICollection<TextStyle> combined = Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode);
+			List<TextStyle> allStyles = new List<TextStyle> ();
+			ICollection<TextStyle> combined = Navigator.Combine (TextStyle.FilterStyles (currentStyles, TextStyleClass.MetaProperty), metaProperties, mode);
 			
-			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph));
-			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Text));
-			all_styles.AddRange (TextStyle.FilterStyles (current_styles, TextStyleClass.Symbol));
-			all_styles.AddRange (Navigator.Combine (TextStyle.FilterStyles (current_styles, TextStyleClass.MetaProperty), meta_properties, mode));
+			allStyles.AddRange (TextStyle.FilterStyles (currentStyles, TextStyleClass.Paragraph));
+			allStyles.AddRange (TextStyle.FilterStyles (currentStyles, TextStyleClass.Text));
+			allStyles.AddRange (TextStyle.FilterStyles (currentStyles, TextStyleClass.Symbol));
+			allStyles.AddRange (Navigator.Combine (TextStyle.FilterStyles (currentStyles, TextStyleClass.MetaProperty), metaProperties, mode));
 			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, current_properties);
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (allStyles, currentProperties);
 			
-			ulong style_bits;
+			ulong styleBits;
 			
-			story.ConvertToStyledText (flat, out style_bits);
+			story.ConvertToStyledText (flat, out styleBits);
 			
 			for (int i = 0; i < length; i++)
 			{
 				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
-				text[offset+i] |= style_bits;
+				text[offset+i] |= styleBits;
 			}
 		}
 		
-		private static void SetParagraphProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] paragraph_properties, Properties.ApplyMode mode)
+		private static void SetParagraphProperties(TextStory story, ulong[] text, ulong code, int offset, int length, Property[] paragraphProperties, Properties.ApplyMode mode)
 		{
 			//	Modifie les propriétés du paragraphe en utilisant celles passées en
 			//	entrée, en se basant sur le mode de combinaison spécifié.
@@ -1415,52 +1415,52 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] current_styles;
-			Property[]  current_properties;
+			TextStyle[] currentStyles;
+			Property[]  currentProperties;
 			
 			//	Récupère d'abord les styles et les propriétés courantes :
 			
-			context.GetStyles (code, out current_styles);
-			context.GetProperties (code, out current_properties);
+			context.GetStyles (code, out currentStyles);
+			context.GetProperties (code, out currentProperties);
 			
-//			foreach (Property p in current_properties)
+//			foreach (Property p in currentProperties)
 //			{
 //				System.Diagnostics.Debug.WriteLine (string.Format ("Current: {0} - {1}.", p.WellKnownType, p.ToString ()));
 //			}
 			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (paragraph_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (paragraph_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (paragraphProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (paragraphProperties) == false);
 			
 			//	Dans un premier temps, on ne conserve tous les styles et que les
 			//	propriétés associés directement au paragraphe. Les autres propriétés
 			//	vont devoir être filtrées :
 			
-			List<TextStyle> all_styles = new List<TextStyle> ();
-			List<Property> all_properties = new List<Property> ();
+			List<TextStyle> allStyles = new List<TextStyle> ();
+			List<Property> allProperties = new List<Property> ();
 			
-			all_styles.AddRange (current_styles);
+			allStyles.AddRange (currentStyles);
 			
-			all_properties.AddRange (Navigator.Combine (Property.Filter (current_properties, Properties.PropertyFilter.UniformOnly), paragraph_properties, mode));
-			all_properties.AddRange (Property.Filter (current_properties, Properties.PropertyFilter.NonUniformOnly));
+			allProperties.AddRange (Navigator.Combine (Property.Filter (currentProperties, Properties.PropertyFilter.UniformOnly), paragraphProperties, mode));
+			allProperties.AddRange (Property.Filter (currentProperties, Properties.PropertyFilter.NonUniformOnly));
 			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (allStyles, allProperties);
 			
-			ulong style_bits;
+			ulong styleBits;
 			
-			story.ConvertToStyledText (flat, out style_bits);
+			story.ConvertToStyledText (flat, out styleBits);
 			
 			for (int i = 0; i < length; i++)
 			{
 				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
-				text[offset+i] |= style_bits;
+				text[offset+i] |= styleBits;
 			}
 		}
 		
 		
 		
-		private static void SetSymbolStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] character_styles)
+		private static void SetSymbolStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] characterStyles)
 		{
 			//	Remplace les styles de symboles par ceux passés en entrée.
 			
@@ -1471,42 +1471,42 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] current_styles;
-			Property[]  current_properties;
+			TextStyle[] currentStyles;
+			Property[]  currentProperties;
 			
 			//	Récupère d'abord les styles et les propriétés associées au texte
 			//	actuel :
 			
-			context.GetStyles (code, out current_styles);
-			context.GetProperties (code, out current_properties);
+			context.GetStyles (code, out currentStyles);
+			context.GetProperties (code, out currentProperties);
 			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (currentProperties) == false);
 			
 			//	Ne conserve que les styles associés directement au paragraphe et
 			//	au texte. En fait, on supprime les styles liés aux symboles :
 			
-			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Text, TextStyleClass.MetaProperty);
-			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + character_styles.Length];
-			Property[]  all_properties  = current_properties;
+			TextStyle[] filteredStyles = TextStyle.FilterStyles (currentStyles, TextStyleClass.Paragraph, TextStyleClass.Text, TextStyleClass.MetaProperty);
+			TextStyle[] allStyles      = new TextStyle[filteredStyles.Length + characterStyles.Length];
+			Property[]  allProperties  = currentProperties;
 			
-			System.Array.Copy (filtered_styles, 0, all_styles, 0, filtered_styles.Length);
-			System.Array.Copy (character_styles, 0, all_styles, filtered_styles.Length, character_styles.Length);
+			System.Array.Copy (filteredStyles, 0, allStyles, 0, filteredStyles.Length);
+			System.Array.Copy (characterStyles, 0, allStyles, filteredStyles.Length, characterStyles.Length);
 			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (allStyles, allProperties);
 			
-			ulong style_bits;
+			ulong styleBits;
 			
-			story.ConvertToStyledText (flat, out style_bits);
+			story.ConvertToStyledText (flat, out styleBits);
 			
 			for (int i = 0; i < length; i++)
 			{
 				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
-				text[offset+i] |= style_bits;
+				text[offset+i] |= styleBits;
 			}
 		}
 		
-		private static void SetTextStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] text_styles)
+		private static void SetTextStyles(TextStory story, ulong[] text, ulong code, int offset, int length, TextStyle[] textStyles)
 		{
 			//	Remplace les styles de texte par ceux passés en entrée.
 			
@@ -1517,38 +1517,38 @@ namespace Epsitec.Common.Text.Internal
 			
 			Text.TextContext context = story.TextContext;
 			
-			TextStyle[] current_styles;
-			Property[]  current_properties;
+			TextStyle[] currentStyles;
+			Property[]  currentProperties;
 			
 			//	Récupère d'abord les styles et les propriétés associées au texte
 			//	actuel :
 			
-			context.GetStyles (code, out current_styles);
-			context.GetProperties (code, out current_properties);
+			context.GetStyles (code, out currentStyles);
+			context.GetProperties (code, out currentProperties);
 			
-			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (current_properties) == false);
-			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (current_properties) == false);
+			System.Diagnostics.Debug.Assert (Properties.PropertiesProperty.ContainsPropertiesProperties (currentProperties) == false);
+			System.Diagnostics.Debug.Assert (Properties.StylesProperty.ContainsStylesProperties (currentProperties) == false);
 			
 			//	Ne conserve que les styles associés directement au paragraphe et
 			//	aux symboles. En fait, on supprime les styles liés au texte :
 			
-			TextStyle[] filtered_styles = TextStyle.FilterStyles (current_styles, TextStyleClass.Paragraph, TextStyleClass.Symbol, TextStyleClass.MetaProperty);
-			TextStyle[] all_styles      = new TextStyle[filtered_styles.Length + text_styles.Length];
-			Property[]  all_properties  = current_properties;
+			TextStyle[] filteredStyles = TextStyle.FilterStyles (currentStyles, TextStyleClass.Paragraph, TextStyleClass.Symbol, TextStyleClass.MetaProperty);
+			TextStyle[] allStyles      = new TextStyle[filteredStyles.Length + textStyles.Length];
+			Property[]  allProperties  = currentProperties;
 			
-			System.Array.Copy (filtered_styles, 0, all_styles, 0, filtered_styles.Length);
-			System.Array.Copy (text_styles, 0, all_styles, filtered_styles.Length, text_styles.Length);
+			System.Array.Copy (filteredStyles, 0, allStyles, 0, filteredStyles.Length);
+			System.Array.Copy (textStyles, 0, allStyles, filteredStyles.Length, textStyles.Length);
 			
-			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (all_styles, all_properties);
+			System.Collections.ArrayList flat = story.FlattenStylesAndProperties (allStyles, allProperties);
 			
-			ulong style_bits;
+			ulong styleBits;
 			
-			story.ConvertToStyledText (flat, out style_bits);
+			story.ConvertToStyledText (flat, out styleBits);
 			
 			for (int i = 0; i < length; i++)
 			{
 				text[offset+i] &= ~ Internal.CharMarker.CoreAndSettingsMask;
-				text[offset+i] |= style_bits;
+				text[offset+i] |= styleBits;
 			}
 		}
 		
