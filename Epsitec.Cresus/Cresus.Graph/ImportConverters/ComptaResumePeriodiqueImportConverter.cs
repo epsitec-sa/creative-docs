@@ -26,9 +26,26 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			DataCube  cube  = new DataCube ();
 			DataTable table = new DataTable ();
 
+			string columnDimension;
+
+			switch (header.Count-2)
+			{
+				case 4:
+					columnDimension = "Trimestre";
+					break;
+				
+				case 6:
+				case 12:
+					columnDimension = "Mois";
+					break;
+
+				default:
+					return null;
+			}
+
 			table.DefineColumnLabels (GraphDataSet.CreateNumberedColumnLabels (header.Skip (2)));
-			table.ColumnDimensionKey = "Mois";
-			table.RowDimensionKey = "Compte";
+			table.ColumnDimensionKey = columnDimension;
+			table.RowDimensionKey = "Numéro/Compte";
 
 			foreach (var line in lines)
 			{
@@ -37,7 +54,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 				table.Add (label, values);
 			}
-			
+
 			cube.AddTable (table);
 
 			return cube;

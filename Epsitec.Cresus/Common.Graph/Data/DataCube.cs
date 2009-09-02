@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,6 +15,7 @@ namespace Epsitec.Common.Graph.Data
 			this.values = new Dictionary<string, double> ();
 			this.dimensions = new Dictionary<string, DimensionValues> ();
 			this.dimensionNames = new List<string> ();
+			this.naturalTableDimensionNames = new List<string> ();
 		}
 
 
@@ -23,6 +26,15 @@ namespace Epsitec.Common.Graph.Data
 				return this.dimensionNames.AsReadOnly ();
 			}
 		}
+
+		public IList<string> NaturalTableDimensionNames
+		{
+			get
+			{
+				return this.naturalTableDimensionNames.AsReadOnly ();
+			}
+		}
+
 
 
 		public void AddTable(DataTable table)
@@ -73,9 +85,18 @@ namespace Epsitec.Common.Graph.Data
 			}
 
 			this.dimensionNames.Sort ((a, b) => string.CompareOrdinal (a, b));
+			this.DefineNaturalTableDimensionNames (table.RowDimensionKey, table.ColumnDimensionKey);
 		}
 
+		public void DefineNaturalTableDimensionNames(string rows, string columns)
+		{
+			this.naturalTableDimensionNames.Clear ();
+			
+			this.naturalTableDimensionNames.Add (rows);
+			this.naturalTableDimensionNames.Add (columns);
+		}
 
+		
 		public IList<string> GetDimensionValues(string key)
 		{
 			DimensionValues values;
@@ -135,6 +156,111 @@ namespace Epsitec.Common.Graph.Data
 			}
 
 			return table;
+		}
+
+
+		public void Save(System.IO.TextWriter stream)
+		{
+			stream.WriteLine ("Epsitec.Common.Graph.Data.DataCube");
+			stream.WriteLine ("DataFormat:V1");
+
+			stream.WriteLine ("Section:DimensionNames");
+			this.dimensionNames.ForEach (name => stream.WriteLine (DataCube.Escape (name)));
+			
+			stream.WriteLine ("Section:NaturalTableDimensionNames");
+			this.naturalTableDimensionNames.ForEach (name => stream.WriteLine (DataCube.Escape (name)));
+			
+			stream.WriteLine ("Section:DimensionValues");
+			this.dimensions.ForEach (
+				pair =>
+				{
+					stream.Write (DataCube.Escape (pair.Key));
+					stream.Write ("=");
+					stream.WriteLine (pair.Value.ToString ());
+				});
+
+			stream.WriteLine ("Section:Values");
+			this.values.ForEach (
+				pair =>
+				{
+					stream.Write (DataCube.Escape (pair.Key));
+					stream.Write ("=");
+					stream.WriteLine (pair.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				});
+
+			stream.WriteLine ("Section:End");
+		}
+
+		public void Restore(System.IO.TextReader stream)
+		{
+			var line1 = stream.ReadLine ();
+			var line2 = stream.ReadLine ();
+
+			if ((line1 != "Epsitec.Common.Graph.Data.DataCube") ||
+				(line2 != "DataFormat:V1"))
+			{
+				throw new System.FormatException ();
+			}
+
+			System.Action<string> processor = null;
+
+			while (true)
+			{
+				var line = stream.ReadLine ();
+
+				if (line.StartsWith ("Section:"))
+				{
+					string token = line.Substring (8);
+
+					switch (token)
+					{
+						case "DimensionNames":
+							processor = x => this.dimensionNames.Add (DataCube.Unescape (x));
+							break;
+
+						case "NaturalTableDimensionNames":
+							processor = x => this.naturalTableDimensionNames.Add (DataCube.Unescape (x));
+							break;
+
+						case "DimensionValues":
+							processor =
+								x =>
+								{
+									int pos = x.IndexOf ('=');
+									var key = x.Substring (0, pos);
+									var val = x.Substring (pos+1);
+									this.dimensions.Add (key, DimensionValues.Parse (val));
+								};
+							break;
+
+						case "Values":
+							processor =
+								x =>
+								{
+									int pos = x.IndexOf ('=');
+									var key = x.Substring (0, pos);
+									var val = double.Parse (x.Substring (pos+1), System.Globalization.CultureInfo.InvariantCulture);
+									this.values.Add (key, val);
+								};
+							break;
+
+						case "End":
+							return;
+
+						default:
+							throw new System.FormatException ();
+					}
+				}
+				else
+				{
+					if (processor == null)
+					{
+						throw new System.FormatException ();
+					}
+
+					processor (line);
+				}
+			}
 		}
 
 		
@@ -267,11 +393,120 @@ namespace Epsitec.Common.Graph.Data
 			return groupIndexes;
 		}
 
+		
+		private static string Escape(string text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (char c in text)
+			{
+				switch (c)
+				{
+					case '\\':
+						buffer.Append ("\\\\");
+						break;
+
+					case ':':
+						buffer.Append ("\\.");
+						break;
+
+					case ';':
+						buffer.Append ("\\,");
+						break;
+
+					case '=':
+						buffer.Append ("\\-");
+						break;
+
+					case '\n':
+						buffer.Append ("\\n");
+						break;
+
+					default:
+						buffer.Append (c);
+						break;
+
+				}
+			}
+
+			return buffer.ToString ();
+		}
+
+		private static string Unescape(string text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			bool escape = false;
+
+			foreach (char c in text)
+			{
+				if (escape)
+				{
+					switch (c)
+					{
+						case '\\':
+							buffer.Append ('\\');
+							break;
+
+						case '.':
+							buffer.Append (':');
+							break;
+
+						case ',':
+							buffer.Append (';');
+							break;
+
+						case '-':
+							buffer.Append ('=');
+							break;
+
+						case 'n':
+							buffer.Append ('\n');
+							break;
+
+						default:
+							throw new System.InvalidOperationException ("Unexpected escape sequence \\" + escape);
+					}
+
+					escape = false;
+				}
+				else if (c == '\\')
+				{
+					escape = true;
+				}
+				else
+				{
+					buffer.Append (c);
+				}
+			}
+
+			return buffer.ToString ();
+		}
+
 
 		#region DimensionValues Class
 
 		private sealed class DimensionValues : HashSet<string>
 		{
+			public override string ToString()
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				buffer.Append (this.Count.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				this.ForEach (x => buffer.Append (";" + DataCube.Escape (x)));
+				return buffer.ToString ();
+			}
+
+			public void Restore(string line)
+			{
+				line.Split (';').Skip (1).ForEach (x => this.Add (DataCube.Unescape (x)));
+			}
+
+			public static DimensionValues Parse(string s)
+			{
+				DimensionValues values = new DimensionValues ();
+				values.Restore (s);
+				return values;
+			}
 		}
 
 		#endregion
@@ -283,5 +518,6 @@ namespace Epsitec.Common.Graph.Data
 		readonly Dictionary<string, double> values;
 		readonly Dictionary<string, DimensionValues> dimensions;
 		readonly List<string> dimensionNames;
+		readonly List<string> naturalTableDimensionNames;
 	}
 }

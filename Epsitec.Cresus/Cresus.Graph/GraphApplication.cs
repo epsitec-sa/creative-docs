@@ -318,9 +318,18 @@ namespace Epsitec.Cresus.Graph
 					return;
 				}
 
+				string path = System.IO.Path.GetTempFileName ();
+
+				using (var stream = new System.IO.StreamWriter (path, false, System.Text.Encoding.UTF8))
+				{
+					cube.Save (stream);
+				}
+
 				this.CreateDocument ();
-				
-				this.activeDocument.DataSet.LoadDataTable (cube.ExtractDataTable (cube.DimensionNames[0], cube.DimensionNames[1]));
+
+				var dimensionNames = cube.NaturalTableDimensionNames;
+
+				this.activeDocument.DataSet.LoadDataTable (cube.ExtractDataTable (dimensionNames[0], dimensionNames[1]));
 				this.seriesPickerController.ClearNegatedSeries ();
 
 				this.OnActiveDocumentChanged ();
