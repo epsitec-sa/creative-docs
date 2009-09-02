@@ -42,7 +42,8 @@ namespace Epsitec.Common.Support
 				return data.GetFormats (true);
 			}
 		}
-		
+
+
 		
 		public object Read(string format)
 		{
@@ -164,13 +165,20 @@ namespace Epsitec.Common.Support
 			{
 				case ClipboardDataFormat.Text:
 					return this.data.GetDataPresent (Clipboard.Formats.String, true);
+				
 				case ClipboardDataFormat.Image:
 					return this.data.GetDataPresent (Clipboard.Formats.Bitmap, true);
+				
 				case ClipboardDataFormat.MicrosoftHtml:
 					return this.data.GetDataPresent (Clipboard.Formats.Hmtl, false);
 			}
 			
 			return false;
+		}
+
+		public bool IsCompatible(string format)
+		{
+			return this.data.GetDataPresent (format, true);
 		}
 		
 		

@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Graph
 
 			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
+
+			Clipboard.DataChanged += this.HandleClipboardDataChanged;
 		}
 
 		
@@ -283,7 +285,47 @@ namespace Epsitec.Cresus.Graph
 				handler (this);
 			}
 		}
-		
+
+		private void HandleClipboardDataChanged(object sender, ClipboardDataChangedEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.NativeFormats));
+			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.AllPossibleFormats));
+
+			var clipboard = e.Data;
+
+			if (clipboard.IsCompatible (ClipboardDataFormat.Text))
+			{
+				string text = clipboard.ReadText ();
+				long checksum = Epsitec.Common.IO.Checksum.ComputeAdler32 (x => x.UpdateValue (text));
+
+				if (checksum == this.lastPasteChecksum)
+				{
+					return;
+				}
+
+				this.lastPasteChecksum = checksum;
+
+				string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
+				string[] headColumns = lines[0].Split ('\t');
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0} characters, {1} lines, {2} columns, text={3}", text.Length, lines.Length, headColumns.Length, text.Length > 20 ? text.Substring (0, 20)+"..." : text));
+
+				var converter = new Epsitec.Cresus.Graph.ImportConverters.ComptaResumePeriodiqueImportConverter ();
+				var cube      = converter.ToDataCube (headColumns, lines.Skip (1).Select (x => x.Split ('\t')));
+
+				if (cube == null)
+				{
+					return;
+				}
+
+				this.CreateDocument ();
+				
+				this.activeDocument.DataSet.LoadDataTable (cube.ExtractDataTable (cube.DimensionNames[0], cube.DimensionNames[1]));
+				this.seriesPickerController.ClearNegatedSeries ();
+
+				this.OnActiveDocumentChanged ();
+			}
+		}
 		
 		public event EventHandler ActiveDocumentChanged;
 
@@ -295,5 +337,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphDocument> documents;
 		private readonly Core.UI.PersistenceManager persistenceManager;
 		private readonly System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
+
+		private long lastPasteChecksum;
 	}
 }

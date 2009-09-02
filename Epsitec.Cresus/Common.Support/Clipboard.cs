@@ -552,7 +552,8 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		internal static class Formats
+		
+		public static class Formats
 		{
 			public const string Hmtl			= "HTML Format";
 			public const string String			= "System.String";

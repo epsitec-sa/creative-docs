@@ -80,13 +80,14 @@ namespace Epsitec.Common.Support.Platform.Win32
 		{
 			public ClipboardViewerHelper()
 			{
-				this.nextViewer = Clipboard.SetClipboardViewer (this.Handle);
+				this.handle = this.Handle;
+				this.nextViewer = Clipboard.SetClipboardViewer (this.handle);
 			}
 
 
 			protected override void Dispose(bool disposing)
 			{
-				Clipboard.ChangeClipboardChain (this.Handle, this.nextViewer);
+				Clipboard.ChangeClipboardChain (this.handle, this.nextViewer);
 				
 				base.Dispose (disposing);
 			}
@@ -149,6 +150,7 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			
 			private System.IntPtr nextViewer;
+			private System.IntPtr handle;
 			private ClipboardReadData data;
 		}
 

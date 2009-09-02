@@ -137,6 +137,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ImportConverters\AbstractImportConverter.cs" />
+    <Compile Include="ImportConverters\ComptaResumePeriodiqueImportConverter.cs" />
     <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
     <Compile Include="Widgets\CommandSelectionBar.cs" />
   </ItemGroup>

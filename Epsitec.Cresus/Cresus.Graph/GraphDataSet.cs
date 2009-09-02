@@ -28,7 +28,12 @@ namespace Epsitec.Cresus.Graph
 
 		public void LoadDataTable()
 		{
-			this.dataTable = GraphDataSet.LoadComptaData ();
+			this.LoadDataTable (GraphDataSet.LoadComptaData ());
+		}
+
+		public void LoadDataTable(DataTable table)
+		{
+			this.dataTable = table;
 			this.OnChanged ();
 		}
 
@@ -66,7 +71,8 @@ namespace Epsitec.Cresus.Graph
 			return table;
 		}
 		
-		static double? GetNumericValue(object x)
+		
+		public static double? GetNumericValue(object x)
 		{
 			double value;
 			string text = x as string;
@@ -86,6 +92,15 @@ namespace Epsitec.Cresus.Graph
 			return 0;
 		}
 
+		public static IEnumerable<string> CreateNumberedColumnLabels(IEnumerable<string> labels)
+		{
+			int index = 0;
+
+			foreach (string label in labels)
+			{
+				yield return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:000}{1}{2}", index++, DataCube.LabelSortPrefixSeparator, label);
+			}
+		}
 
 		public event EventHandler Changed;
 

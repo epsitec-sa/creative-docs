@@ -362,7 +362,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		protected static string CleanUpLabel(string label)
 		{
-			int pos = label.LastIndexOf ("¦");
+			int pos = label.LastIndexOf (Data.DataCube.LabelSortPrefixSeparator);
 
 			if (pos < 0)
 			{

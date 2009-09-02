@@ -278,6 +278,7 @@ namespace Epsitec.Common.Graph.Data
 
 
 		public const char LabelSeparator = '+';
+		public const char LabelSortPrefixSeparator = '¦';
 
 		readonly Dictionary<string, double> values;
 		readonly Dictionary<string, DimensionValues> dimensions;
