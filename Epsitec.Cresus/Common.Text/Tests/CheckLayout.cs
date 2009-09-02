@@ -25,7 +25,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.NewCursor (cursor);
 			
-			ulong[] styled_text;
+			ulong[] styledText;
 			System.Collections.ArrayList properties;
 			
 			properties = new System.Collections.ArrayList ();
@@ -34,8 +34,8 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 0.0, 0.0, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Affiche juste quelques mots pour ", properties, out styled_text);	// 33
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("Affiche juste quelques mots pour ", properties, out styledText);	// 33
+			story.InsertText (cursor, styledText);
 			
 			properties = new System.Collections.ArrayList ();
 			
@@ -43,8 +43,8 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontSizeProperty (16.0, Properties.SizeUnits.Points));
 			properties.Add (new Properties.MarginsProperty (40, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 0.0, 0.0, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("voir", properties, out styled_text);								// 37
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("voir", properties, out styledText);								// 37
+			story.InsertText (cursor, styledText);
 			
 			properties = new System.Collections.ArrayList ();
 			
@@ -55,27 +55,27 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText (" comment l'algorithme de "
 				/**/				 + "découpe des lignes se débrouille "
 				/**/				 + "lorsqu'il faut couler du texte dans " /*131*/
-				/**/				 + "plusieurs cadres.\n", properties, out styled_text);
+				/**/				 + "plusieurs cadres.\n", properties, out styledText);
 			
-			story.InsertText (cursor, styled_text);
+			story.InsertText (cursor, styledText);
 			
 			story.MoveCursor (cursor, - story.TextLength);
 			
-			ulong[] story_text = new ulong[story.TextLength];
+			ulong[] storyText = new ulong[story.TextLength];
 			
-			story.ReadText (cursor, story_text.Length, story_text);
+			story.ReadText (cursor, storyText.Length, storyText);
 			
 			TextFitter fitter = new TextFitter (story);
 			FrameList  frames = new FrameList (fitter);
 			
-			SimpleTextFrame frame_0 = new SimpleTextFrame (200, 20);
-			SimpleTextFrame frame_1 = new SimpleTextFrame (200, 1000);
+			SimpleTextFrame frame0 = new SimpleTextFrame (200, 20);
+			SimpleTextFrame frame1 = new SimpleTextFrame (200, 1000);
 			
-			frames.InsertAt (0, frame_0);
-			frames.InsertAt (1, frame_1);
+			frames.InsertAt (0, frame0);
+			frames.InsertAt (1, frame1);
 			
 			Layout.LineEngine layout  = new Layout.LineEngine ();
-			Layout.Context    context = new Layout.Context (story.TextContext, story_text, 0, frames);
+			Layout.Context    context = new Layout.Context (story.TextContext, storyText, 0, frames);
 			
 			Layout.BreakCollection breaks;
 			Layout.Status status;
@@ -139,8 +139,8 @@ namespace Epsitec.Common.Text.Tests
 			//	Elargit le cadre 0 pour permettre de placer le mot en Arial 16
 			//	autant en largeur qu'en hauteur :
 			
-			frame_0.Width = 300;
-			frame_0.Height = 22;
+			frame0.Width = 300;
+			frame0.Height = 22;
 			
 			context.DefineTextOffset (0);
 			context.SelectFrame (0, 0);
@@ -155,8 +155,8 @@ namespace Epsitec.Common.Text.Tests
 			//	Diminue la hauteur du cadre 0 pour que la ligne en Arial 16 ne
 			//	tienne plus dans le cadre :
 			
-			frame_0.Width = 300;
-			frame_0.Height = 18;
+			frame0.Width = 300;
+			frame0.Height = 18;
 			
 			context.DefineTextOffset (0);
 			context.SelectFrame (0, 0);
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.NewCursor (cursor);
 			
-			ulong[] styled_text;
+			ulong[] styledText;
 			System.Collections.ArrayList properties;
 			
 			properties = new System.Collections.ArrayList ();
@@ -198,30 +198,30 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("voir", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("voir", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("\u00A0"+"comment l'algorithme se débrouille.", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("\u00A0"+"comment l'algorithme se débrouille.", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			story.MoveCursor (cursor, - story.TextLength);
 			
-			ulong[] story_text = new ulong[story.TextLength];
+			ulong[] storyText = new ulong[story.TextLength];
 			
-			story.ReadText (cursor, story_text.Length, story_text);
+			story.ReadText (cursor, storyText.Length, storyText);
 			
 			Layout.LineEngine layout = new Layout.LineEngine ();
 			Layout.Context    context;
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.Status status;
 			
 			breaks  = null;
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 120, 0, 20, 40, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 120, 0, 20, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Text.Tests
 			double y1 = context.MaxY;
 			double y2 = context.MinY;
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 200, 0, 30, 40, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 200, 0, 30, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Text.Tests
 			double y3 = context.MaxY;
 			double y4 = context.MinY;
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 300, 0, 0, 40, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 300, 0, 0, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -264,17 +264,17 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[1].Advance + breaks[1].Profile.WidthEndSpace > 307.10);
 			Debug.Assert.IsTrue (breaks[1].Advance + breaks[1].Profile.WidthEndSpace < 307.11);
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 400, 0, 0, 40, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 400, 0, 0, 40, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorNeedMoreText);
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 20, 0, 0, 10, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 20, 0, 0, 10, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 20, 0, 0, 10, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 20, 0, 0, 10, 10);
 			story.TextContext.IsDegradedLayoutEnabled = true;
 			status  = context.Fit (ref breaks, 0);
 			
@@ -286,20 +286,20 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("\n", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("\n", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			story.MoveCursor (cursor, - story.TextLength);
 			
-			story_text = new ulong[story.TextLength];
-			story.ReadText (cursor, story_text.Length, story_text);
+			storyText = new ulong[story.TextLength];
+			story.ReadText (cursor, storyText.Length, storyText);
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 400, 0, 0, 10, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 400, 0, 0, 10, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 			
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 200, 0, 0, 10, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, -100, 14.0, 200, 0, 0, 10, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
@@ -325,7 +325,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.NewCursor (cursor);
 			
-			ulong[] styled_text;
+			ulong[] styledText;
 			System.Collections.ArrayList properties;
 			
 			properties = new System.Collections.ArrayList ();
@@ -333,30 +333,30 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("essayer", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("essayer", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			properties = new System.Collections.ArrayList ();
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText (" l'algo-rithme.\n", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText (" l'algo-rithme.\n", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			story.MoveCursor (cursor, - story.TextLength);
 			
-			ulong[] story_text = new ulong[story.TextLength];
+			ulong[] storyText = new ulong[story.TextLength];
 			
-			story.ReadText (cursor, story_text.Length, story_text);
+			story.ReadText (cursor, storyText.Length, storyText);
 			
 			Layout.LineEngine layout = new Layout.LineEngine ();
 			Layout.Context    context;
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.BreakCollection breaks = null;
 			Layout.Status status;
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 300, 0, 0, 150, 10);
+			context = new Layout.Context (story.TextContext, storyText, 0, 0, 14.0, 300, 0, 0, 150, 10);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 3);
@@ -377,15 +377,15 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			OpenType.Font font;
-			double        font_size;
-			double        font_scale;
+			double        fontSize;
+			double        fontScale;
 			
-			story.TextContext.GetFontAndSize (story_text[0], out font, out font_size, out font_scale);
+			story.TextContext.GetFontAndSize (storyText[0], out font, out fontSize, out fontScale);
 			
 			Layout.StretchProfile profile = new Layout.StretchProfile ();
-			profile.Add (null, font, font_size, story_text, 0, 26, 0);
+			profile.Add (null, font, fontSize, storyText, 0, 26, 0);
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 300, 20, 20, 30, 0);
+			context = new Layout.Context (story.TextContext, storyText, 0, 0, 14.0, 300, 20, 20, 30, 0);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 1);
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Text.Tests
 //			System.Diagnostics.Trace.WriteLine ("Starting layout.");
 //			for (int i = 0; i < 1000000; i++)
 //			{
-//				context = new Layout.TextContext (story.TextContext, story_text, 0, 0, 14.0, 300, 15, 15, 30, 0);
+//				context = new Layout.TextContext (story.TextContext, storyText, 0, 0, 14.0, 300, 15, 15, 30, 0);
 //				status  = context.Fit (ref breaks, 0);
 //			}
 //			System.Diagnostics.Trace.WriteLine ("Done.");
@@ -405,11 +405,11 @@ namespace Epsitec.Common.Text.Tests
 			TextStory story  = new TextStory ();
 			ICursor   cursor = new Cursors.SimpleCursor ();
 			
-			ulong[] story_text;
+			ulong[] storyText;
 			
 			story.NewCursor (cursor);
 			
-			ulong[] styled_text;
+			ulong[] styledText;
 			System.Collections.ArrayList properties;
 			
 			properties = new System.Collections.ArrayList ();
@@ -417,14 +417,14 @@ namespace Epsitec.Common.Text.Tests
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
 			
-			story.ConvertToStyledText ("Essai tout simple. XXXXXXXXXX", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("Essai tout simple. XXXXXXXXXX", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			story.MoveCursor (cursor, - story.TextLength);
 			
-			story_text = new ulong[story.TextLength];
+			storyText = new ulong[story.TextLength];
 			
-			story.ReadText (cursor, story_text.Length, story_text);
+			story.ReadText (cursor, storyText.Length, storyText);
 			
 			Layout.LineEngine layout = new Layout.LineEngine ();
 			Layout.Context    context;
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.BreakCollection breaks = null;
 			Layout.Status status;
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 105, 0, 0, 0, 0);
+			context = new Layout.Context (story.TextContext, storyText, 0, 0, 14.0, 105, 0, 0, 0, 0);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 1);
@@ -441,16 +441,16 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance < 94.04);
 			
 			story.MoveCursor (cursor, story.TextLength - 10);
-			story.ConvertToStyledText ("    ", properties, out styled_text);
-			story.InsertText (cursor, styled_text);
+			story.ConvertToStyledText ("    ", properties, out styledText);
+			story.InsertText (cursor, styledText);
 			
 			story.MoveCursor (cursor, - (story.TextLength - 10));
 			
-			story_text = new ulong[story.TextLength];
+			storyText = new ulong[story.TextLength];
 			
-			story.ReadText (cursor, story_text.Length, story_text);
+			story.ReadText (cursor, storyText.Length, storyText);
 			
-			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 105, 0, 0, 0, 0);
+			context = new Layout.Context (story.TextContext, storyText, 0, 0, 14.0, 105, 0, 0, 0, 0);
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 1);

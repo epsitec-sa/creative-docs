@@ -11,9 +11,9 @@ namespace Epsitec.Common.Text
 		public TabList(TextContext context)
 		{
 			this.context  = context;
-			this.tag_hash = new System.Collections.Hashtable ();
-			this.auto_tab_hash = new System.Collections.Hashtable ();
-			this.shared_tab_hash = new System.Collections.Hashtable ();
+			this.tagHash = new System.Collections.Hashtable ();
+			this.autoTabHash = new System.Collections.Hashtable ();
+			this.sharedTabHash = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -40,12 +40,12 @@ namespace Epsitec.Common.Text
 			return this.NewTab (tag, position, units, disposition, null, TabPositionMode.Absolute, null);
 		}
 		
-		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode)
+		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode)
 		{
-			return this.NewTab (tag, position, units, disposition, docking_mark, position_mode, null);
+			return this.NewTab (tag, position, units, disposition, dockingMark, positionMode, null);
 		}
 		
-		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public Properties.TabProperty NewTab(string tag, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
 			if (tag == null)
 			{
@@ -58,20 +58,20 @@ namespace Epsitec.Common.Text
 			
 			Properties.TabProperty tab = new Properties.TabProperty (tag);
 			
-			this.Attach (new TabRecord (tag, position, units, disposition, docking_mark, position_mode, attribute));
+			this.Attach (new TabRecord (tag, position, units, disposition, dockingMark, positionMode, attribute));
 			this.NotifyChanged (null);
 			
 			return tab;
 		}
 		
 		
-		public Properties.TabProperty FindAutoTab(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public Properties.TabProperty FindAutoTab(double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
-			TabRecord find = new TabRecord ("?", position, units, disposition, docking_mark, position_mode, attribute);
+			TabRecord find = new TabRecord ("?", position, units, disposition, dockingMark, positionMode, attribute);
 			
-			if (this.auto_tab_hash.Contains (find))
+			if (this.autoTabHash.Contains (find))
 			{
-				find = this.auto_tab_hash[find] as TabRecord;
+				find = this.autoTabHash[find] as TabRecord;
 				
 				return this.GetTabProperty (find.Tag);
 			}
@@ -79,13 +79,13 @@ namespace Epsitec.Common.Text
 			return null;
 		}
 		
-		public Properties.TabProperty FindSharedTab(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public Properties.TabProperty FindSharedTab(double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
-			TabRecord find = new TabRecord ("?", position, units, disposition, docking_mark, position_mode, attribute);
+			TabRecord find = new TabRecord ("?", position, units, disposition, dockingMark, positionMode, attribute);
 			
-			if (this.shared_tab_hash.Contains (find))
+			if (this.sharedTabHash.Contains (find))
 			{
-				find = this.shared_tab_hash[find] as TabRecord;
+				find = this.sharedTabHash[find] as TabRecord;
 				
 				return this.GetTabProperty (find.Tag);
 			}
@@ -94,25 +94,25 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public Properties.TabProperty CreateOrGetAutoTab(double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public Properties.TabProperty CreateOrGetAutoTab(double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
-			Properties.TabProperty find = this.FindAutoTab (position, units, disposition, docking_mark, position_mode, attribute);
+			Properties.TabProperty find = this.FindAutoTab (position, units, disposition, dockingMark, positionMode, attribute);
 			
 			if (find == null)
 			{
-				find = this.NewTab (null, position, units, disposition, docking_mark, position_mode, attribute);
+				find = this.NewTab (null, position, units, disposition, dockingMark, positionMode, attribute);
 			}
 			
 			return find;
 		}
 		
 		
-		public void RedefineTab(Common.Support.OpletQueue queue, string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public void RedefineTab(Common.Support.OpletQueue queue, string tag, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
-			this.RedefineTab (queue, null, new Properties.TabProperty (tag), position, units, disposition, docking_mark, position_mode, attribute);
+			this.RedefineTab (queue, null, new Properties.TabProperty (tag), position, units, disposition, dockingMark, positionMode, attribute);
 		}
 		
-		public void RedefineTab(Common.Support.OpletQueue queue, TextStory story, Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+		public void RedefineTab(Common.Support.OpletQueue queue, TextStory story, Properties.TabProperty tab, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 		{
 			System.Diagnostics.Debug.Assert (tab != null);
 			System.Diagnostics.Debug.Assert (tab.TabTag != null);
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Text
 				int count = record.UserCount;
 				
 				this.Detach (record.Tag);
-				record.Initialize (tab.TabTag, position, units, disposition, docking_mark, position_mode, attribute);
+				record.Initialize (tab.TabTag, position, units, disposition, dockingMark, positionMode, attribute);
 				this.Attach (record);
 				
 				System.Diagnostics.Debug.Assert (record.UserCount == count);
@@ -175,8 +175,8 @@ namespace Epsitec.Common.Text
 		
 		public string[] GetTabTags()
 		{
-			string[] tags = new string[this.tag_hash.Count];
-			this.tag_hash.Keys.CopyTo (tags, 0);
+			string[] tags = new string[this.tagHash.Count];
+			this.tagHash.Keys.CopyTo (tags, 0);
 			System.Array.Sort (tags);
 			return tags;
 		}
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Text
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			foreach (TabRecord record in this.auto_tab_hash.Values)
+			foreach (TabRecord record in this.autoTabHash.Values)
 			{
 				if (record.UserCount == 0)
 				{
@@ -193,7 +193,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			foreach (TabRecord record in this.shared_tab_hash.Values)
+			foreach (TabRecord record in this.sharedTabHash.Values)
 			{
 				if (record.UserCount == 0)
 				{
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Text
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			foreach (TabRecord record in this.auto_tab_hash.Values)
+			foreach (TabRecord record in this.autoTabHash.Values)
 			{
 				if (record.UserCount == 0)
 				{
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			foreach (TabRecord record in this.shared_tab_hash.Values)
+			foreach (TabRecord record in this.sharedTabHash.Values)
 			{
 				if (record.UserCount == 0)
 				{
@@ -276,7 +276,7 @@ namespace Epsitec.Common.Text
 		
 		public Properties.TabProperty GetTabProperty(string tag)
 		{
-			if (this.tag_hash.Contains (tag))
+			if (this.tagHash.Contains (tag))
 			{
 				return new Properties.TabProperty (tag);
 			}
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static Properties.TabsProperty FilterTabs(Properties.TabsProperty property, TabClass tab_class)
+		public static Properties.TabsProperty FilterTabs(Properties.TabsProperty property, TabClass tabClass)
 		{
 			string[] tags = property.TabTags;
 			
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Text
 			
 			for (int i = 0; i < tags.Length; i++)
 			{
-				if (TabList.GetTabClass (tags[i]) == tab_class)
+				if (TabList.GetTabClass (tags[i]) == tabClass)
 				{
 					count++;
 				}
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Text
 				
 				for (int i = 0, j = 0; (i < tags.Length) && (j < count); i++)
 				{
-					if (TabList.GetTabClass (tags[i]) == tab_class)
+					if (TabList.GetTabClass (tags[i]) == tabClass)
 					{
 						copy[j] = tags[i];
 						j++;
@@ -476,13 +476,13 @@ namespace Epsitec.Common.Text
 		
 		internal void Serialize(System.Text.StringBuilder buffer)
 		{
-			int count = this.tag_hash.Count;
+			int count = this.tagHash.Count;
 			
-			buffer.Append (SerializerSupport.SerializeLong (this.unique_id));
+			buffer.Append (SerializerSupport.SerializeLong (this.uniqueId));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (count));
 			
-			foreach (TabRecord record in this.tag_hash.Values)
+			foreach (TabRecord record in this.tagHash.Values)
 			{
 				buffer.Append ("/");
 				record.Serialize (buffer);
@@ -491,13 +491,13 @@ namespace Epsitec.Common.Text
 		
 		internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
-			this.unique_id = SerializerSupport.DeserializeLong (args[offset++]);
+			this.uniqueId = SerializerSupport.DeserializeLong (args[offset++]);
 			
 			int count = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			this.tag_hash        = new System.Collections.Hashtable ();
-			this.auto_tab_hash   = new System.Collections.Hashtable ();
-			this.shared_tab_hash = new System.Collections.Hashtable ();
+			this.tagHash        = new System.Collections.Hashtable ();
+			this.autoTabHash   = new System.Collections.Hashtable ();
+			this.sharedTabHash = new System.Collections.Hashtable ();
 			
 			for (int i = 0; i < count; i++)
 			{
@@ -531,7 +531,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public static double GetLevelOffset(double font_size_in_points, int level, string attribute)
+		public static double GetLevelOffset(double fontSizeInPoints, int level, string attribute)
 		{
 			string[] args = TabList.UnpackFromAttribute (attribute);
 			double offset = 0;
@@ -545,13 +545,13 @@ namespace Epsitec.Common.Text
 						if (args[i].StartsWith (TabList.LevelMultiplier))
 						{
 							string value = args[i].Substring (TabList.LevelMultiplier.Length);
-							offset = TabList.GetLevelOffsetFromMultiplier (font_size_in_points, level, value);
+							offset = TabList.GetLevelOffsetFromMultiplier (fontSizeInPoints, level, value);
 							break;
 						}
 						else if (args[i].StartsWith (TabList.LevelTable))
 						{
 							string value = args[i].Substring (TabList.LevelTable.Length);
-							offset = TabList.GetLevelOffsetFromTable (font_size_in_points, level, value);
+							offset = TabList.GetLevelOffsetFromTable (fontSizeInPoints, level, value);
 							break;
 						}
 					}
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Text
 			return offset;
 		}
 		
-		public static double GetRelativeOffset(double font_size_in_points, string attribute)
+		public static double GetRelativeOffset(double fontSizeInPoints, string attribute)
 		{
 			string[] args = TabList.UnpackFromAttribute (attribute);
 			double offset = 0;
@@ -574,7 +574,7 @@ namespace Epsitec.Common.Text
 					{
 						string value = args[i].Substring (TabList.RelativeEmOffset.Length);
 						double scale = System.Double.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
-						offset = scale * font_size_in_points;
+						offset = scale * fontSizeInPoints;
 						break;
 					}
 				}
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		private static double GetLevelOffsetFromMultiplier(double font_size_in_points, int level, string value)
+		private static double GetLevelOffsetFromMultiplier(double fontSizeInPoints, int level, string value)
 		{
 			if (level == 0)
 			{
@@ -654,7 +654,7 @@ namespace Epsitec.Common.Text
 				
 				if (Properties.UnitsTools.IsScale (units))
 				{
-					return Properties.UnitsTools.ConvertToScale (multiplier, units) * level * font_size_in_points;
+					return Properties.UnitsTools.ConvertToScale (multiplier, units) * level * fontSizeInPoints;
 				}
 				else
 				{
@@ -663,7 +663,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		private static double GetLevelOffsetFromTable(double font_size_in_points, int level, string value)
+		private static double GetLevelOffsetFromTable(double fontSizeInPoints, int level, string value)
 		{
 			string[] args = value.Split (';');
 			
@@ -676,7 +676,7 @@ namespace Epsitec.Common.Text
 			
 			if (Properties.UnitsTools.IsScale (units))
 			{
-				return Properties.UnitsTools.ConvertToScale (offset, units) * font_size_in_points;
+				return Properties.UnitsTools.ConvertToScale (offset, units) * fontSizeInPoints;
 			}
 			else
 			{
@@ -697,11 +697,11 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				string old_state = this.record.Save ();
-				string new_state = this.state;
+				string oldState = this.record.Save ();
+				string newState = this.state;
 				
-				this.record.Restore (new_state);
-				this.state = old_state;
+				this.record.Restore (newState);
+				this.state = oldState;
 				this.list.NotifyChanged (this.record);
 				
 				return this;
@@ -740,9 +740,9 @@ namespace Epsitec.Common.Text
 			{
 			}
 			
-			public TabRecord(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+			public TabRecord(string tag, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 			{
-				this.Initialize (tag, position, units, disposition, docking_mark, position_mode, attribute);
+				this.Initialize (tag, position, units, disposition, dockingMark, positionMode, attribute);
 			}
 			
 			
@@ -790,7 +790,7 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.docking_mark;
+					return this.dockingMark;
 				}
 			}
 			
@@ -798,7 +798,7 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.position_mode;
+					return this.positionMode;
 				}
 			}
 			
@@ -826,7 +826,7 @@ namespace Epsitec.Common.Text
 			{
 				get
 				{
-					return this.user_count;
+					return this.userCount;
 				}
 			}
 		
@@ -841,29 +841,29 @@ namespace Epsitec.Common.Text
 			
 			public void IncrementUserCount(int n)
 			{
-				Debug.Assert.IsInBounds (this.user_count+n, 1, TabRecord.MaxUserCount);
+				Debug.Assert.IsInBounds (this.userCount+n, 1, TabRecord.MaxUserCount);
 				
 				for (int i = 0; i < n; i++)
 				{
-					System.Threading.Interlocked.Increment (ref this.user_count);
+					System.Threading.Interlocked.Increment (ref this.userCount);
 				}
 			}
 		
 			public void DecrementUserCount()
 			{
-				Debug.Assert.IsInBounds (this.user_count, 1, TabRecord.MaxUserCount);
-				System.Threading.Interlocked.Decrement (ref this.user_count);
+				Debug.Assert.IsInBounds (this.userCount, 1, TabRecord.MaxUserCount);
+				System.Threading.Interlocked.Decrement (ref this.userCount);
 			}
 		
 			
-			public void Initialize(string tag, double position, Properties.SizeUnits units, double disposition, string docking_mark, TabPositionMode position_mode, string attribute)
+			public void Initialize(string tag, double position, Properties.SizeUnits units, double disposition, string dockingMark, TabPositionMode positionMode, string attribute)
 			{
 				this.tag           = tag;
 				this.position      = position;
 				this.units         = units;
 				this.disposition   = disposition;
-				this.docking_mark  = docking_mark;
-				this.position_mode = position_mode;
+				this.dockingMark  = dockingMark;
+				this.positionMode = positionMode;
 				this.attribute     = attribute;
 				
 				this.version = 0;
@@ -879,9 +879,9 @@ namespace Epsitec.Common.Text
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeDouble (this.disposition));
 				buffer.Append ("/");
-				buffer.Append (SerializerSupport.SerializeString (this.docking_mark));
+				buffer.Append (SerializerSupport.SerializeString (this.dockingMark));
 				buffer.Append ("/");
-				buffer.Append (SerializerSupport.SerializeEnum (this.position_mode));
+				buffer.Append (SerializerSupport.SerializeEnum (this.positionMode));
 				buffer.Append ("/");
 				buffer.Append (SerializerSupport.SerializeString (this.attribute));
 			}
@@ -892,8 +892,8 @@ namespace Epsitec.Common.Text
 				this.position      = SerializerSupport.DeserializeDouble (args[offset++]);
 				this.units         = SerializerSupport.DeserializeSizeUnits (args[offset++]);
 				this.disposition   = SerializerSupport.DeserializeDouble (args[offset++]);
-				this.docking_mark  = SerializerSupport.DeserializeString (args[offset++]);
-				this.position_mode = (TabPositionMode) SerializerSupport.DeserializeEnum (typeof (TabPositionMode), args[offset++]);
+				this.dockingMark  = SerializerSupport.DeserializeString (args[offset++]);
+				this.positionMode = (TabPositionMode) SerializerSupport.DeserializeEnum (typeof (TabPositionMode), args[offset++]);
 				this.attribute     = SerializerSupport.DeserializeString (args[offset++]);
 			}
 			
@@ -935,8 +935,8 @@ namespace Epsitec.Common.Text
 					checksum.UpdateValue (this.position);
 					checksum.UpdateValue ((int) this.units);
 					checksum.UpdateValue (this.disposition);
-					checksum.UpdateValue (this.docking_mark);
-					checksum.UpdateValue ((int) this.position_mode);
+					checksum.UpdateValue (this.dockingMark);
+					checksum.UpdateValue ((int) this.positionMode);
 					checksum.UpdateValue (this.attribute);
 					
 					int signature = checksum.Value.GetHashCode ();
@@ -967,8 +967,8 @@ namespace Epsitec.Common.Text
 				return that.position == this.position
 					&& that.units == this.units
 					&& that.disposition == this.disposition
-					&& that.docking_mark == this.docking_mark
-					&& that.position_mode == this.position_mode
+					&& that.dockingMark == this.dockingMark
+					&& that.positionMode == this.positionMode
 					&& that.attribute == this.attribute;
 			}
 			#endregion
@@ -995,12 +995,12 @@ namespace Epsitec.Common.Text
 			private double						position;
 			private Properties.SizeUnits		units;
 			private double						disposition;				//	0.0 = aligné à gauche, 0.5 = centré, 1.0 = aligné à droite
-			private string						docking_mark;				//	"." = aligne sur le point décimal
-			private TabPositionMode				position_mode;
+			private string						dockingMark;				//	"." = aligne sur le point décimal
+			private TabPositionMode				positionMode;
 			private string						attribute;
 			private long						version;
 			private int							signature;
-			private int							user_count;
+			private int							userCount;
 		}
 		#endregion
 		
@@ -1013,30 +1013,30 @@ namespace Epsitec.Common.Text
 				return null;
 			}
 			
-			string new_tag = null;
+			string newTag = null;
 			
 			switch (record.TabClass)
 			{
-				case TabClass.Auto:		new_tag = this.GenerateAutoTagName ();		break;
-				case TabClass.Shared:	new_tag = this.GenerateSharedTagName ();	break;
+				case TabClass.Auto:		newTag = this.GenerateAutoTagName ();		break;
+				case TabClass.Shared:	newTag = this.GenerateSharedTagName ();	break;
 			}
 			
-			if (new_tag != null)
+			if (newTag != null)
 			{
 				string state = record.Save ();
 				record = new TabRecord ();
-				record.RestoreAndRename (state, new_tag);
+				record.RestoreAndRename (state, newTag);
 				this.Attach (record);
 			}
 			
-			return new_tag;
+			return newTag;
 		}
 		
 		private string GenerateUniqueName(string prefix)
 		{
 			lock (this)
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}{1}", prefix, this.unique_id++);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}{1}", prefix, this.uniqueId++);
 			}
 		}
 		
@@ -1070,12 +1070,12 @@ namespace Epsitec.Common.Text
 		
 		private TabRecord GetTabRecord(Properties.TabProperty tab)
 		{
-			return this.tag_hash[tab.TabTag] as TabRecord;
+			return this.tagHash[tab.TabTag] as TabRecord;
 		}
 		
 		private TabRecord GetTabRecord(string tag)
 		{
-			return this.tag_hash[tag] as TabRecord;
+			return this.tagHash[tag] as TabRecord;
 		}
 		
 		
@@ -1083,21 +1083,21 @@ namespace Epsitec.Common.Text
 		{
 			string tag = record.Tag;
 			
-			if (this.tag_hash.Contains (tag))
+			if (this.tagHash.Contains (tag))
 			{
 				throw new System.ArgumentException (string.Format ("TabProperty named {0} already exists", tag), "record");
 			}
 			
-			this.tag_hash[tag] = record;
+			this.tagHash[tag] = record;
 			
 			switch (record.TabClass)
 			{
 				case TabClass.Auto:
-					this.auto_tab_hash[record] = record;
+					this.autoTabHash[record] = record;
 					break;
 				
 				case TabClass.Shared:
-					this.shared_tab_hash[record] = record;
+					this.sharedTabHash[record] = record;
 					break;
 			}
 		}
@@ -1111,20 +1111,20 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException (string.Format ("TabProperty named {0} does not exist", tag), "tag");
 			}
 			
-			System.Diagnostics.Debug.Assert (this.tag_hash.Contains (tag));
+			System.Diagnostics.Debug.Assert (this.tagHash.Contains (tag));
 			
-			this.tag_hash.Remove (tag);
+			this.tagHash.Remove (tag);
 			
 			switch (record.TabClass)
 			{
 				case TabClass.Auto:
-					System.Diagnostics.Debug.Assert (this.auto_tab_hash.Contains (record));
-					this.auto_tab_hash.Remove (record);
+					System.Diagnostics.Debug.Assert (this.autoTabHash.Contains (record));
+					this.autoTabHash.Remove (record);
 					break;
 				
 				case TabClass.Shared:
-					System.Diagnostics.Debug.Assert (this.shared_tab_hash.Contains (record));
-					this.shared_tab_hash.Remove (record);
+					System.Diagnostics.Debug.Assert (this.sharedTabHash.Contains (record));
+					this.sharedTabHash.Remove (record);
 					break;
 			}
 		}
@@ -1133,10 +1133,10 @@ namespace Epsitec.Common.Text
 		public event Common.Support.EventHandler Changed;
 		
 		private TextContext						context;
-		private System.Collections.Hashtable	tag_hash;
-		private System.Collections.Hashtable	auto_tab_hash;
-		private System.Collections.Hashtable	shared_tab_hash;
-		private long							unique_id;
+		private System.Collections.Hashtable	tagHash;
+		private System.Collections.Hashtable	autoTabHash;
+		private System.Collections.Hashtable	sharedTabHash;
+		private long							uniqueId;
 		private StyleVersion					version = new StyleVersion ();
 		
 		private const string					AutoTagPrefix = "#A#";

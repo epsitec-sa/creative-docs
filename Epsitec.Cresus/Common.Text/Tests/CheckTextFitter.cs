@@ -144,35 +144,35 @@ namespace Epsitec.Common.Text.Tests
 			System.IO.StreamWriter writer = new System.IO.StreamWriter (@"S:\text.txt", false, System.Text.Encoding.UTF8);
 			story.MoveCursor (cursor, -story.TextLength);
 			
-			int last_page = 0;
+			int lastPage = 0;
 			
 			foreach (CursorInfo info in infos)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
 				
-				buffer.AppendFormat ("{0}:", story.GetCursorPosition (fitter_cursor));
+				buffer.AppendFormat ("{0}:", story.GetCursorPosition (fitterCursor));
 				
 				int pos = 0;
 				
-				foreach (Cursors.FitterCursor.Element element in fitter_cursor.Elements)
+				foreach (Cursors.FitterCursor.Element element in fitterCursor.Elements)
 				{
 					int    length = element.Length;
-					string text_str;
+					string textStr;
 					
 					text = new ulong[length];
 					
 					story.ReadText (cursor, length, text);
 					story.MoveCursor (cursor, length);
 					
-					if (last_page != fitter.FrameList[element.FrameIndex].PageNumber)
+					if (lastPage != fitter.FrameList[element.FrameIndex].PageNumber)
 					{
-						last_page = fitter.FrameList[element.FrameIndex].PageNumber;
-						writer.WriteLine ("_{0}___________________________________________________________________\r\n", last_page);
+						lastPage = fitter.FrameList[element.FrameIndex].PageNumber;
+						writer.WriteLine ("_{0}___________________________________________________________________\r\n", lastPage);
 					}
 					
-					TextConverter.ConvertToString (text, out text_str);
-					writer.WriteLine (text_str.Replace ("\n", "<\r\n"));
+					TextConverter.ConvertToString (text, out textStr);
+					writer.WriteLine (textStr.Replace ("\n", "<\r\n"));
 					
 					buffer.AppendFormat (" {0}", element.Length);
 					
@@ -192,22 +192,22 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Fitter: render (1) -- full document x 1");
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
-				fitter.RenderParagraph (fitter_cursor, renderer);
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				fitter.RenderParagraph (fitterCursor, renderer);
 				renderer.NewParagraph ();
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
 				
-				if (fitter_cursor.Elements.Length == 5)
+				if (fitterCursor.Elements.Length == 5)
 				{
 					System.Diagnostics.Trace.WriteLine ("Fitter: render (2) -- single paragraph x 1000");
 					for (int i = 0; i < 1000; i++)
 					{
-						fitter.RenderParagraph (fitter_cursor, renderer);
+						fitter.RenderParagraph (fitterCursor, renderer);
 					}
 					System.Diagnostics.Trace.WriteLine ("Done.");
 					break;
@@ -236,29 +236,29 @@ namespace Epsitec.Common.Text.Tests
 			ulong[] text;
 			int     length;
 			
-			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties2 = new System.Collections.ArrayList ();
 			
 			TabList tabs = story.TextContext.TabList;
 			
-			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.FontColorProperty ("Black"));
-			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+			properties1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties1.Add (new Properties.FontColorProperty ("Black"));
+			properties1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
-			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.FontColorProperty ("Black"));
-			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties2.Add (new Properties.FontColorProperty ("Black"));
+			properties2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.ConvertToStyledText ("Text:\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("T", properties_2, out text);
+			story.ConvertToStyledText ("T", properties2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2 et du texte pour la suite...\n", properties_1, out text);
+			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2 et du texte pour la suite...\n", properties1, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -291,11 +291,11 @@ namespace Epsitec.Common.Text.Tests
 			
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
 				
-				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
+				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitterCursor));
 				
-				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
+				foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
 				{
 					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
@@ -312,29 +312,29 @@ namespace Epsitec.Common.Text.Tests
 			ulong[] text;
 			int     length;
 			
-			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties2 = new System.Collections.ArrayList ();
 			
 			TabList tabs = story.TextContext.TabList;
 			
-			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.FontColorProperty ("Black"));
-			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
+			properties1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties1.Add (new Properties.FontColorProperty ("Black"));
+			properties1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.5, null, TabPositionMode.Absolute));
 			
-			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.FontColorProperty ("Black"));
-			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties2.Add (new Properties.FontColorProperty ("Black"));
+			properties2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.ConvertToStyledText ("Text:\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("T", properties_2, out text);
+			story.ConvertToStyledText ("T", properties2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2, texte centré\n", properties_1, out text);
+			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2, texte centré\n", properties1, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -366,11 +366,11 @@ namespace Epsitec.Common.Text.Tests
 			
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
 				
-				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
+				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitterCursor));
 				
-				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
+				foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
 				{
 					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
@@ -380,8 +380,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
-				fitter.RenderParagraph (fitter_cursor, renderer);
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				fitter.RenderParagraph (fitterCursor, renderer);
 				renderer.NewParagraph ();
 			}
 		}
@@ -396,29 +396,29 @@ namespace Epsitec.Common.Text.Tests
 			ulong[] text;
 			int     length;
 			
-			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties2 = new System.Collections.ArrayList ();
 			
 			TabList tabs = story.TextContext.TabList;
 			
-			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.FontColorProperty ("Black"));
-			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+			properties1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties1.Add (new Properties.FontColorProperty ("Black"));
+			properties1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
-			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.FontColorProperty ("Black"));
-			properties_2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties2.Add (new Properties.FontColorProperty ("Black"));
+			properties2.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.ConvertToStyledText ("Text:\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("T", properties_2, out text);
+			story.ConvertToStyledText ("T", properties2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2 et du texte pour la suite...\n", properties_1, out text);
+			story.ConvertToStyledText ("1\nXyz blablabla blablabla blablah blah.\tT2 et du texte pour la suite...\n", properties1, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -450,11 +450,11 @@ namespace Epsitec.Common.Text.Tests
 			
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
 				
-				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
+				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitterCursor));
 				
-				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
+				foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
 				{
 					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
@@ -471,29 +471,29 @@ namespace Epsitec.Common.Text.Tests
 			ulong[] text;
 			int     length;
 			
-			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties2 = new System.Collections.ArrayList ();
 			
 			TabList tabs = story.TextContext.TabList;
 			
-			properties_1.Add (new Properties.FontProperty ("Arial", "Regular"));
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.FontColorProperty ("Black"));
-			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+			properties1.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties1.Add (new Properties.FontColorProperty ("Black"));
+			properties1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
 			
-			properties_2.Add (new Properties.FontProperty ("Arial", "Bold"));
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.FontColorProperty ("Black"));
-			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties2.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties2.Add (new Properties.FontColorProperty ("Black"));
+			properties2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Text:\t", properties_1, out text);
+			story.ConvertToStyledText ("Text:\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);
+			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties2, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("Xyz\n", properties_1, out text);
+			story.ConvertToStyledText ("Xyz\n", properties1, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -530,11 +530,11 @@ namespace Epsitec.Common.Text.Tests
 			
 			foreach (CursorInfo info in infos)
 			{
-				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				Cursors.FitterCursor fitterCursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
 				
-				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
+				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitterCursor));
 				
-				foreach (Cursors.FitterCursor.Element elem in fitter_cursor.Elements)
+				foreach (Cursors.FitterCursor.Element elem in fitterCursor.Elements)
 				{
 					System.Console.Out.WriteLine ("    [{0:0.00}:{1:0.00}], width={4:0.00}/{2:0.00}, length={3}", elem.LineStartX, elem.LineBaseY, elem.LineWidth, elem.Length, elem.Profile.TotalWidth);
 				}
@@ -591,46 +591,46 @@ namespace Epsitec.Common.Text.Tests
 			
 			ulong[] text;
 			
-			System.Collections.ArrayList properties_1 = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties_2 = new System.Collections.ArrayList ();
-			System.Collections.ArrayList properties_3 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties1 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties2 = new System.Collections.ArrayList ();
+			System.Collections.ArrayList properties3 = new System.Collections.ArrayList ();
 			
 			TabList tabs = story.TextContext.TabList;
 			
-			Properties.FontProperty font_regular = new Properties.FontProperty ("Arial", "Regular", "liga");
-			Properties.FontProperty font_bold    = new Properties.FontProperty ("Arial", "Bold");
-			Properties.FontProperty font_italic  = new Properties.FontProperty ("Arial", "Italic");
+			Properties.FontProperty fontRegular = new Properties.FontProperty ("Arial", "Regular", "liga");
+			Properties.FontProperty fontBold    = new Properties.FontProperty ("Arial", "Bold");
+			Properties.FontProperty fontItalic  = new Properties.FontProperty ("Arial", "Italic");
 			
-			properties_1.Add (font_regular);
-			properties_1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_1.Add (new Properties.FontColorProperty ("Black"));
-			properties_1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties1.Add (fontRegular);
+			properties1.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties1.Add (new Properties.FontColorProperty ("Black"));
+			properties1.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			properties_2.Add (font_bold);
-			properties_2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
-			properties_2.Add (new Properties.FontColorProperty ("Black"));
-			properties_2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
+			properties2.Add (fontBold);
+			properties2.Add (new Properties.FontSizeProperty (12.5, Properties.SizeUnits.Points));
+			properties2.Add (new Properties.FontColorProperty ("Black"));
+			properties2.Add (new Properties.MarginsProperty (60, 60, 0, 0, Properties.SizeUnits.Points, 1.0, 0.0, 0.0, 15, 1, Properties.ThreeState.False));
 			
-			properties_3.Add (font_italic);
-			properties_3.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
-			properties_3.Add (new Properties.FontColorProperty ("Black"));
-			properties_3.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Properties.ThreeState.False));
+			properties3.Add (fontItalic);
+			properties3.Add (new Properties.FontSizeProperty (12.0, Properties.SizeUnits.Points));
+			properties3.Add (new Properties.FontColorProperty ("Black"));
+			properties3.Add (new Properties.MarginsProperty (0, 0, 0, 0, Properties.SizeUnits.Points, 0.0, 0.0, 1.0, 15, 1, Properties.ThreeState.False));
 			
-			story.ConvertToStyledText ("Text:", properties_1, out text);
+			story.ConvertToStyledText ("Text:", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			properties_1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
-			story.ConvertToStyledText ("\t", properties_1, out text);
+			properties1.Add (tabs.NewTab ("T1", 60, Properties.SizeUnits.Points, 0.0, null, TabPositionMode.Absolute));
+			story.ConvertToStyledText ("\t", properties1, out text);
 			story.InsertText (cursor, text);
 			
-			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties_2, out text);
+			story.ConvertToStyledText ("Tout un paragraphe indenté (comme si le tabulateur se comportait comme un indentateur).\n", properties2, out text);
 			story.InsertText (cursor, text);
 			
-			Text.TextStyle default_style = story.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties_3);
+			Text.TextStyle defaultStyle = story.StyleList.NewTextStyle (null, "Default", Text.TextStyleClass.Paragraph, properties3);
 			
-			story.TextContext.DefaultParagraphStyle = default_style;
+			story.TextContext.DefaultParagraphStyle = defaultStyle;
 			
-			story.ConvertToStyledText ("fin\n", default_style, out text);
+			story.ConvertToStyledText ("fin\n", defaultStyle, out text);
 			story.InsertText (cursor, text);
 			
 			/*
@@ -655,73 +655,73 @@ namespace Epsitec.Common.Text.Tests
 			frame.PageNumber = 0;
 			fitter.FrameList.InsertAt (0, frame);
 			
-			ITextFrame c_frame;
+			ITextFrame cFrame;
 			double cx, cy;
-			int c_line, c_char;
+			int cLine, cChar;
 			
 			fitter.GenerateAllMarks ();
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
-			Debug.Assert.IsTrue (c_frame == frame);
-			Debug.Assert.IsTrue (c_line == 0);
-			Debug.Assert.IsTrue (c_char == 0);
+			Debug.Assert.IsTrue (cFrame == frame);
+			Debug.Assert.IsTrue (cLine == 0);
+			Debug.Assert.IsTrue (cChar == 0);
 			
 			story.SetCursorPosition (cursor, 6, 1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
-			Debug.Assert.IsTrue (c_frame == frame);
-			Debug.Assert.IsTrue (c_line == 0);
-			Debug.Assert.IsTrue (c_char == 6);
+			Debug.Assert.IsTrue (cFrame == frame);
+			Debug.Assert.IsTrue (cLine == 0);
+			Debug.Assert.IsTrue (cChar == 6);
 			
 			story.SetCursorPosition (cursor, 14, 1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
-			Debug.Assert.IsTrue (c_frame == frame);
-			Debug.Assert.IsTrue (c_line == 0);
-			Debug.Assert.IsTrue (c_char == 14);
+			Debug.Assert.IsTrue (cFrame == frame);
+			Debug.Assert.IsTrue (cLine == 0);
+			Debug.Assert.IsTrue (cChar == 14);
 			
 			story.SetCursorPosition (cursor, 15, 1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
-			Debug.Assert.IsTrue (c_frame == frame);
-			Debug.Assert.IsTrue (c_line == 1);
-			Debug.Assert.IsTrue (c_char == 1);
+			Debug.Assert.IsTrue (cFrame == frame);
+			Debug.Assert.IsTrue (cLine == 1);
+			Debug.Assert.IsTrue (cChar == 1);
 			
 			story.SetCursorPosition (cursor, 14, -1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
-			Debug.Assert.IsTrue (c_frame == frame);
-			Debug.Assert.IsTrue (c_line == 1);
-			Debug.Assert.IsTrue (c_char == 0);
+			Debug.Assert.IsTrue (cFrame == frame);
+			Debug.Assert.IsTrue (cLine == 1);
+			Debug.Assert.IsTrue (cChar == 0);
 			
 			story.SetCursorPosition (cursor, 97, 1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
 			
-			Debug.Assert.IsTrue (c_frame == frame);
-			Debug.Assert.IsTrue (c_line == 0);
-			Debug.Assert.IsTrue (c_char == 3);
+			Debug.Assert.IsTrue (cFrame == frame);
+			Debug.Assert.IsTrue (cLine == 0);
+			Debug.Assert.IsTrue (cChar == 3);
 			Debug.Assert.IsTrue (cx == 150.0);
 			
 			story.SetCursorPosition (cursor, 98, 1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
 			story.SetCursorPosition (cursor, 98, -1);
-			fitter.GetCursorGeometry (cursor, out c_frame, out cx, out cy, out c_line, out c_char);
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, c_line, c_char));
+			fitter.GetCursorGeometry (cursor, out cFrame, out cx, out cy, out cLine, out cChar);
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cursor at {0:0.00}:{1:0.00}, line {2}, column {3}", cx, cy, cLine, cChar));
 			
-			Debug.Assert.IsTrue (c_line == 0);
-			Debug.Assert.IsTrue (c_char == 0);
+			Debug.Assert.IsTrue (cLine == 0);
+			Debug.Assert.IsTrue (cChar == 0);
 			
 			TextNavigator navigator = new TextNavigator (fitter);
 			
@@ -731,7 +731,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			navigator.MoveTo (TextNavigator.Target.TextEnd, 0);
-			navigator.GetCursorGeometry (out c_frame, out cx, out cy, out ascender, out descender, out angle);
+			navigator.GetCursorGeometry (out cFrame, out cx, out cy, out ascender, out descender, out angle);
 			
 			Debug.Assert.IsInBounds (ascender,  10.863, 10.864);
 			Debug.Assert.IsInBounds (descender, -2.543, -2.542);
@@ -775,11 +775,11 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined, bool is_tab_auto)
+			public void RenderTab(Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tab_code, bool isTabDefined, bool isTabAuto)
 			{
 			}
 			
-			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 			{
 				ITextFrame frame = layout.Frame;
 				
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Text.Tests
 				}
 			}
 			
-			public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
+			public void Render(Layout.Context layout, IGlyphRenderer glyphRenderer, string color, double x, double y, bool isLastRun)
 			{
 			}
 			
@@ -855,15 +855,15 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, string tag, double tab_origin, double tab_stop, ulong tab_code, bool is_tab_defined, bool is_tab_auto)
+			public void RenderTab(Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined, bool isTabAuto)
 			{
 			}
 			
-			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool is_last_run)
+			public void Render(Layout.Context layout, Epsitec.Common.OpenType.Font font, double size, string color, Layout.TextToGlyphMapping mapping, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy, bool isLastRun)
 			{
 			}
-			
-			public void Render(Layout.Context layout, IGlyphRenderer glyph_renderer, string color, double x, double y, bool is_last_run)
+
+			public void Render(Layout.Context layout, IGlyphRenderer glyphRenderer, string color, double x, double y, bool isLastRun)
 			{
 			}
 			

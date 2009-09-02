@@ -116,21 +116,21 @@ namespace Epsitec.Common.Text.Styles
 		{
 			get
 			{
-				return this.user_count;
+				return this.userCount;
 			}
 		}
 		
 		
 		public void IncrementUserCount()
 		{
-			Debug.Assert.IsInBounds (this.user_count+1, 1, BaseSettings.MaxUserCount-1);
-			System.Threading.Interlocked.Increment (ref this.user_count);
+			Debug.Assert.IsInBounds (this.userCount+1, 1, BaseSettings.MaxUserCount-1);
+			System.Threading.Interlocked.Increment (ref this.userCount);
 		}
 		
 		public void DecrementUserCount()
 		{
-			Debug.Assert.IsInBounds (this.user_count, 1, BaseSettings.MaxUserCount-1);
-			System.Threading.Interlocked.Decrement (ref this.user_count);
+			Debug.Assert.IsInBounds (this.userCount, 1, BaseSettings.MaxUserCount-1);
+			System.Threading.Interlocked.Decrement (ref this.userCount);
 		}
 		
 		
@@ -178,11 +178,11 @@ namespace Epsitec.Common.Text.Styles
 			this.ClearContentsSignature ();
 		}
 		
-		public virtual bool Update(long current_version)
+		public virtual bool Update(long currentVersion)
 		{
-			if (this.version < current_version)
+			if (this.version < currentVersion)
 			{
-				this.version = current_version;
+				this.version = currentVersion;
 				
 				return true;
 			}
@@ -354,13 +354,13 @@ namespace Epsitec.Common.Text.Styles
 			if ((this.properties != null) &&
 				(types.Length > 0))
 			{
-				Properties.WellKnownType max_type = Properties.WellKnownType.Undefined;
+				Properties.WellKnownType maxType = Properties.WellKnownType.Undefined;
 				
 				for (int i = 0; i < types.Length; i++)
 				{
-					if (types[i] > max_type)
+					if (types[i] > maxType)
 					{
-						max_type = types[i];
+						maxType = types[i];
 					}
 				}
 				
@@ -372,7 +372,7 @@ namespace Epsitec.Common.Text.Styles
 					//	un WellKnownType plus grand que celui recherché, car la
 					//	table est triée :
 					
-					if (found > max_type)
+					if (found > maxType)
 					{
 						break;
 					}
@@ -449,11 +449,11 @@ namespace Epsitec.Common.Text.Styles
 			{
 				get
 				{
-					return this.skip_symbol_properties;
+					return this.skipSymbolProperties;
 				}
 				set
 				{
-					this.skip_symbol_properties = value;
+					this.skipSymbolProperties = value;
 				}
 			}
 			
@@ -498,7 +498,7 @@ namespace Epsitec.Common.Text.Styles
 			
 			public Accumulator Accumulate(Property property)
 			{
-				if ((this.skip_symbol_properties) &&
+				if ((this.skipSymbolProperties) &&
 					(property.PropertyAffinity == Properties.PropertyAffinity.Symbol))
 				{
 					return this;
@@ -519,10 +519,10 @@ namespace Epsitec.Common.Text.Styles
 				{
 					if (this.hash.Contains (type))
 					{
-						Property base_prop = this.hash[type] as Property;
-						Property comb_prop = base_prop.GetCombination (property);
+						Property baseProp = this.hash[type] as Property;
+						Property combProp = baseProp.GetCombination (property);
 						
-						this.hash[type] = comb_prop;
+						this.hash[type] = combProp;
 					}
 					else
 					{
@@ -564,7 +564,7 @@ namespace Epsitec.Common.Text.Styles
 			System.Collections.Hashtable		hash;
 			System.Collections.ArrayList		list;
 			bool								special;
-			bool								skip_symbol_properties;
+			bool								skipSymbolProperties;
 		}
 		#endregion
 		
@@ -595,7 +595,7 @@ namespace Epsitec.Common.Text.Styles
 			//	cela qu'à la demande, car le calcul de la signature peut être
 			//	relativement onéreux :
 			
-			if (this.contents_signature == 0)
+			if (this.contentsSignature == 0)
 			{
 				IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
 				
@@ -607,10 +607,10 @@ namespace Epsitec.Common.Text.Styles
 				//	l'ajuste pour éviter d'interpréter cela comme une absence
 				//	de signature :
 				
-				this.contents_signature = (signature == 0) ? 1 : signature;
+				this.contentsSignature = (signature == 0) ? 1 : signature;
 			}
 			
-			return this.contents_signature;
+			return this.contentsSignature;
 		}
 		#endregion
 		
@@ -640,7 +640,7 @@ namespace Epsitec.Common.Text.Styles
 			int users  = SerializerSupport.DeserializeInt (source[index++]);
 			
 			this.properties = new Property[length];
-			this.user_count = users;
+			this.userCount = users;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		protected void ClearContentsSignature()
 		{
-			this.contents_signature = 0;
+			this.contentsSignature = 0;
 		}
 		
 		
@@ -727,10 +727,10 @@ namespace Epsitec.Common.Text.Styles
 				
 				if (wpx == Epsitec.Common.Text.Properties.WellKnownType.Other)
 				{
-					string x_name = px.GetType ().Name;
-					string y_name = py.GetType ().Name;
+					string xName = px.GetType ().Name;
+					string yName = py.GetType ().Name;
 					
-					return string.Compare (x_name, y_name);
+					return string.Compare (xName, yName);
 				}
 				
 				return 0;
@@ -740,9 +740,9 @@ namespace Epsitec.Common.Text.Styles
 		#endregion
 		
 		private long							version;
-		private int								contents_signature;
+		private int								contentsSignature;
 		
 		private Property[]						properties;
-		private int								user_count;
+		private int								userCount;
 	}
 }

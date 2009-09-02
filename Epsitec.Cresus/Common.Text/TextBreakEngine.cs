@@ -107,16 +107,16 @@ namespace Epsitec.Common.Text
 			}
 		}
 
-		private string FindNextBreak(ref double width, out int n_chars)
+		private string FindNextBreak(ref double width, out int nChars)
 		{
-			bool add_ellipsis = false;
+			bool addEllipsis = false;
 			char ellipsis = '\0';
 
 		restart:
 			if (this.pos >= this.text.Length)
 			{
 				width = 0.0;
-				n_chars = 0;
+				nChars = 0;
 				return null; 
 			}
 
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Text
 
 					if (((this.mode & Drawing.TextBreakMode.Ellipsis) != 0) &&
 						(font != null) &&
-						(add_ellipsis == false))
+						(addEllipsis == false))
 					{
 						//	The caller specified that an ellipsis should be added if a word gets
 						//	truncated.
@@ -250,12 +250,12 @@ namespace Epsitec.Common.Text
 
 							width -= font.OpenTypeFont.EllipsisWidth*scale;
 							ellipsis = font.OpenTypeFont.EllipsisChar;
-							add_ellipsis = true;
+							addEllipsis = true;
 							goto restart;
 						}
 					}
 					
-					if ((add_ellipsis) &&
+					if ((addEllipsis) &&
 						(ellipsis != font.OpenTypeFont.PeriodChar) &&
 						(offset == 0))
 					{
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Text
 					}
 
 					if (((this.mode & Drawing.TextBreakMode.Split) != 0) ||
-						(add_ellipsis))
+						(addEllipsis))
 					{
 						//	Truncation required, just stop here.
 
@@ -323,7 +323,7 @@ namespace Epsitec.Common.Text
 				this.runOffset = runOffset;
 				
 				width   = advance;
-				n_chars = offset;
+				nChars = offset;
 				
 				return text;
 			}
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Text
 				//	and hope that the caller will be able to handle the condition.
 				
 				width   = 0.0;
-				n_chars = 0;
+				nChars = 0;
 				
 				return "";
 			}
@@ -370,7 +370,7 @@ namespace Epsitec.Common.Text
 					buffer.Length = buffer.Length-1;
 				}
 			}
-			else if (!hyphenate && !add_ellipsis)
+			else if (!hyphenate && !addEllipsis)
 			{
 				//	The line breaks with a breaking character. Since it has been placed on the
 				//	current line, we must skip it in order not to reconsider it on the next
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Text
 			this.runOffset  = breakRunOffset;
 			
 			width   = breakAdvance;
-			n_chars = breakOffset;
+			nChars = breakOffset;
 			
 			return buffer.ToString ();
 		}

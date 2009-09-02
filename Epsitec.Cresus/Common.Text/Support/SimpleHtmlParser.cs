@@ -69,25 +69,25 @@ namespace Epsitec.Common.Text.Support
 			System.Diagnostics.Debug.Assert (text[offset] == '<');
 			System.Diagnostics.Debug.Assert (text[offset + count - 1] == '>');
 			
-			bool is_simple = (text[offset + count - 2] == '/');
-			int  space_pos = text.IndexOf (' ', offset, count);
-			int  tag_length;
+			bool isSimple = (text[offset + count - 2] == '/');
+			int  spacePos = text.IndexOf (' ', offset, count);
+			int  tagLength;
 			
-			if (space_pos > offset)
+			if (spacePos > offset)
 			{
-				tag_length = space_pos - offset - 1;
+				tagLength = spacePos - offset - 1;
 			}
 			else
 			{
-				tag_length = is_simple ? count - 3 : count - 2;
+				tagLength = isSimple ? count - 3 : count - 2;
 			}
 			
-			string tag_name = text.Substring (offset + 1, tag_length);
-			string tag_args = text.Substring (offset + 1 + tag_length, count - tag_length - (is_simple ? 2 : 1) - 1).Trim ();
+			string tagName = text.Substring (offset + 1, tagLength);
+			string tagArgs = text.Substring (offset + 1 + tagLength, count - tagLength - (isSimple ? 2 : 1) - 1).Trim ();
 			
-			if (is_simple)
+			if (isSimple)
 			{
-				switch (tag_name)
+				switch (tagName)
 				{
 					case "br":
 						this.Append (Unicode.Code.LineSeparator);
@@ -108,19 +108,19 @@ namespace Epsitec.Common.Text.Support
 				this.buffer.Length = 0;
 			}
 			
-			System.Diagnostics.Debug.Assert (is_simple == false);
+			System.Diagnostics.Debug.Assert (isSimple == false);
 			
 			string[] args;
 			
-			Common.Support.Utilities.StringToTokens (tag_args, ' ', out args);
+			Common.Support.Utilities.StringToTokens (tagArgs, ' ', out args);
 			
-			if (tag_name[0] == '/')
+			if (tagName[0] == '/')
 			{
-				this.PopElement (tag_name.Substring (1));
+				this.PopElement (tagName.Substring (1));
 			}
 			else
 			{
-				this.PushElement (tag_name, args);
+				this.PushElement (tagName, args);
 			}
 		}
 		
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Text.Support
 				case (char) Unicode.Code.LineFeed:
 				case (char) Unicode.Code.ParagraphSeparator:
 				case (char) Unicode.Code.PageSeparator:
-					this.tab_count = 0;
+					this.tabCount = 0;
 					break;
 				
 				case (char) Unicode.Code.HorizontalTab:
@@ -200,13 +200,13 @@ namespace Epsitec.Common.Text.Support
 		{
 			//	TODO: ajouter la définition du tabulateur en question
 			
-			this.tab_count++;
+			this.tabCount++;
 		}
 		
 		
 		private void GenerateStyledText(string text)
 		{
-			ulong[] styled_text;
+			ulong[] styledText;
 			
 			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
 			Element[] elements = new Element[this.stack.Count];
@@ -229,8 +229,8 @@ namespace Epsitec.Common.Text.Support
 				}
 			}
 			
-			this.story.ConvertToStyledText (text, this.style, properties, out styled_text);
-			this.story.InsertText (this.cursor, styled_text);
+			this.story.ConvertToStyledText (text, this.style, properties, out styledText);
+			this.story.InsertText (this.cursor, styledText);
 		}
 		
 		
@@ -240,6 +240,6 @@ namespace Epsitec.Common.Text.Support
 		private System.Text.StringBuilder		buffer			= new System.Text.StringBuilder ();
 		private System.Collections.Stack		stack			= new System.Collections.Stack ();
 		
-		private int								tab_count;
+		private int								tabCount;
 	}
 }

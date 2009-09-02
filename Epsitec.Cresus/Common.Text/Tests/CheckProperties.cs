@@ -24,76 +24,76 @@ namespace Epsitec.Common.Text.Tests
 		
 		private static void TestFont()
 		{
-			Properties.FontProperty font_a = new Properties.FontProperty ("Futura", "Roman");
-			Properties.FontProperty font_b = new Properties.FontProperty (null, "Heavy");
-			Properties.FontProperty font_c = new Properties.FontProperty ("Arial", null);
+			Properties.FontProperty fontA = new Properties.FontProperty ("Futura", "Roman");
+			Properties.FontProperty fontB = new Properties.FontProperty (null, "Heavy");
+			Properties.FontProperty fontC = new Properties.FontProperty ("Arial", null);
 			
-			Properties.FontProperty font_ab = font_a.GetCombination (font_b) as Properties.FontProperty;
-			Properties.FontProperty font_ac = font_a.GetCombination (font_c) as Properties.FontProperty;
+			Properties.FontProperty fontAb = fontA.GetCombination (fontB) as Properties.FontProperty;
+			Properties.FontProperty fontAc = fontA.GetCombination (fontC) as Properties.FontProperty;
 			
-			Debug.Assert.IsTrue (font_ab.FaceName == "Futura");
-			Debug.Assert.IsTrue (font_ab.StyleName == "Heavy");
-			Debug.Assert.IsTrue (font_ac.FaceName == "Arial");
-			Debug.Assert.IsTrue (font_ac.StyleName == "Roman");
+			Debug.Assert.IsTrue (fontAb.FaceName == "Futura");
+			Debug.Assert.IsTrue (fontAb.StyleName == "Heavy");
+			Debug.Assert.IsTrue (fontAc.FaceName == "Arial");
+			Debug.Assert.IsTrue (fontAc.StyleName == "Roman");
 			
-			Debug.Assert.IsTrue (font_a.ToString () == "Futura/Roman/[null]");
-			Debug.Assert.IsTrue (font_b.ToString () == "[null]/Heavy/[null]");
-			Debug.Assert.IsTrue (font_c.ToString () == "Arial/[null]/[null]");
+			Debug.Assert.IsTrue (fontA.ToString () == "Futura/Roman/[null]");
+			Debug.Assert.IsTrue (fontB.ToString () == "[null]/Heavy/[null]");
+			Debug.Assert.IsTrue (fontC.ToString () == "Arial/[null]/[null]");
 		}
 		
 		private static void TestFontSize()
 		{
-			Properties.FontSizeProperty font_size_a = new Properties.FontSizeProperty ( 12.0, Properties.SizeUnits.Points);
-			Properties.FontSizeProperty font_size_b = new Properties.FontSizeProperty ( 50.0/100, Properties.SizeUnits.Percent);
-			Properties.FontSizeProperty font_size_c = new Properties.FontSizeProperty ( -2.0, Properties.SizeUnits.DeltaPoints);
-			Properties.FontSizeProperty font_size_d = new Properties.FontSizeProperty (200.0/100, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty fontSizeA = new Properties.FontSizeProperty ( 12.0, Properties.SizeUnits.Points);
+			Properties.FontSizeProperty fontSizeB = new Properties.FontSizeProperty ( 50.0/100, Properties.SizeUnits.Percent);
+			Properties.FontSizeProperty fontSizeC = new Properties.FontSizeProperty ( -2.0, Properties.SizeUnits.DeltaPoints);
+			Properties.FontSizeProperty fontSizeD = new Properties.FontSizeProperty (200.0/100, Properties.SizeUnits.Percent);
 			
-			Properties.FontSizeProperty font_size_ab = font_size_a.GetCombination (font_size_b) as Properties.FontSizeProperty;
-			Properties.FontSizeProperty font_size_ba = font_size_b.GetCombination (font_size_a) as Properties.FontSizeProperty;
-			Properties.FontSizeProperty font_size_ac = font_size_a.GetCombination (font_size_c) as Properties.FontSizeProperty;
-			Properties.FontSizeProperty font_size_cb = font_size_c.GetCombination (font_size_b) as Properties.FontSizeProperty;
-			Properties.FontSizeProperty font_size_bd = font_size_b.GetCombination (font_size_d) as Properties.FontSizeProperty;
+			Properties.FontSizeProperty fontSizeAb = fontSizeA.GetCombination (fontSizeB) as Properties.FontSizeProperty;
+			Properties.FontSizeProperty fontSizeBa = fontSizeB.GetCombination (fontSizeA) as Properties.FontSizeProperty;
+			Properties.FontSizeProperty fontSizeAc = fontSizeA.GetCombination (fontSizeC) as Properties.FontSizeProperty;
+			Properties.FontSizeProperty fontSizeCb = fontSizeC.GetCombination (fontSizeB) as Properties.FontSizeProperty;
+			Properties.FontSizeProperty fontSizeBd = fontSizeB.GetCombination (fontSizeD) as Properties.FontSizeProperty;
 			
-			Debug.Assert.IsTrue (font_size_ab.ToString () == "6/pt/[NaN]");
-			Debug.Assert.IsTrue (font_size_ba.ToString () == "12/pt/[NaN]");
-			Debug.Assert.IsTrue (font_size_ac.ToString () == "10/pt/[NaN]");
-			Debug.Assert.IsTrue (font_size_cb.ToString () == "-1/+pt/[NaN]");
-			Debug.Assert.IsTrue (font_size_bd.ToString () == "1/%/[NaN]");
+			Debug.Assert.IsTrue (fontSizeAb.ToString () == "6/pt/[NaN]");
+			Debug.Assert.IsTrue (fontSizeBa.ToString () == "12/pt/[NaN]");
+			Debug.Assert.IsTrue (fontSizeAc.ToString () == "10/pt/[NaN]");
+			Debug.Assert.IsTrue (fontSizeCb.ToString () == "-1/+pt/[NaN]");
+			Debug.Assert.IsTrue (fontSizeBd.ToString () == "1/%/[NaN]");
 			
 			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (System.InvalidOperationException));
 		}
 		
 		private static void TestMargins()
 		{
-			Properties.MarginsProperty margins_a = new Properties.MarginsProperty ();
-			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0, Properties.SizeUnits.Points, 0, 0, 0, 0, 0, Properties.ThreeState.False);
+			Properties.MarginsProperty marginsA = new Properties.MarginsProperty ();
+			Properties.MarginsProperty marginsB = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0, Properties.SizeUnits.Points, 0, 0, 0, 0, 0, Properties.ThreeState.False);
 			
-			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
-			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
+			Properties.MarginsProperty marginsC = marginsA.GetCombination (marginsB) as Properties.MarginsProperty;
+			Properties.MarginsProperty marginsD = marginsB.GetCombination (marginsA) as Properties.MarginsProperty;
 			
-			margins_a = new Properties.MarginsProperty (double.NaN, 10, double.NaN, 10, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 0.0, 0.0, Properties.ThreeState.Undefined);
+			marginsA = new Properties.MarginsProperty (double.NaN, 10, double.NaN, 10, Properties.SizeUnits.Points, 0.0, 0.0, 0.0, 0.0, 0.0, Properties.ThreeState.Undefined);
 			
-			Properties.MarginsProperty margins_e = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
-			Properties.MarginsProperty margins_f = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
+			Properties.MarginsProperty marginsE = marginsA.GetCombination (marginsB) as Properties.MarginsProperty;
+			Properties.MarginsProperty marginsF = marginsB.GetCombination (marginsA) as Properties.MarginsProperty;
 			
-			Debug.Assert.IsTrue (margins_c.LeftMarginFirstLine == 15.0);
-			Debug.Assert.IsTrue (margins_c.LeftMarginBody      == 20.0);
-			Debug.Assert.IsTrue (margins_c.RightMarginBody     ==  0.0);
+			Debug.Assert.IsTrue (marginsC.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (marginsC.LeftMarginBody      == 20.0);
+			Debug.Assert.IsTrue (marginsC.RightMarginBody     ==  0.0);
 			
-			Debug.Assert.IsTrue (margins_d.LeftMarginFirstLine == 15.0);
-			Debug.Assert.IsTrue (margins_d.LeftMarginBody      == 20.0);
-			Debug.Assert.IsTrue (margins_d.RightMarginBody     ==  0.0);
+			Debug.Assert.IsTrue (marginsD.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (marginsD.LeftMarginBody      == 20.0);
+			Debug.Assert.IsTrue (marginsD.RightMarginBody     ==  0.0);
 			
-			Debug.Assert.IsTrue (margins_e.LeftMarginFirstLine == 15.0);
-			Debug.Assert.IsTrue (margins_e.LeftMarginBody      == 20.0);
-			Debug.Assert.IsTrue (margins_e.RightMarginBody     ==  0.0);
+			Debug.Assert.IsTrue (marginsE.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (marginsE.LeftMarginBody      == 20.0);
+			Debug.Assert.IsTrue (marginsE.RightMarginBody     ==  0.0);
 			
-			Debug.Assert.IsTrue (margins_f.LeftMarginFirstLine == 15.0);
-			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
-			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
+			Debug.Assert.IsTrue (marginsF.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (marginsF.LeftMarginBody      == 10.0);
+			Debug.Assert.IsTrue (marginsF.RightMarginBody     == 10.0);
 			
-			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]/-1/[null]");
-			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]/-1/[null]");
+			Debug.Assert.IsTrue (marginsA.ToString () == "[NaN]/10/[NaN]/10/pt/0/0/0/0/0/[?]/-1/[null]");
+			Debug.Assert.IsTrue (marginsB.ToString () == "15/20/0/0/pt/0/0/0/0/0/[false]/-1/[null]");
 		}
 		
 		private static void TestXlines()
@@ -306,15 +306,15 @@ namespace Epsitec.Common.Text.Tests
 			
 			Traverser traverser = new Traverser ();
 			
-			TextStory.CodeCallback cb_false = new TextStory.CodeCallback (traverser.TestFalse);
-			TextStory.CodeCallback cb_true  = new TextStory.CodeCallback (traverser.TestTrue);
+			TextStory.CodeCallback cbFalse = new TextStory.CodeCallback (traverser.TestFalse);
+			TextStory.CodeCallback cbTrue  = new TextStory.CodeCallback (traverser.TestTrue);
 			
 			story.SetCursorPosition (cursor, 5);
 			
-			Debug.Assert.IsTrue (-1 == story.TextTable.TraverseText (cursor.CursorId, 5, cb_false));
-			Debug.Assert.IsTrue (0  == story.TextTable.TraverseText (cursor.CursorId, 5, cb_true));
-			Debug.Assert.IsTrue (-1 == story.TextTable.TraverseText (cursor.CursorId, -5, cb_false));
-			Debug.Assert.IsTrue (0  == story.TextTable.TraverseText (cursor.CursorId, -5, cb_true));
+			Debug.Assert.IsTrue (-1 == story.TextTable.TraverseText (cursor.CursorId, 5, cbFalse));
+			Debug.Assert.IsTrue (0  == story.TextTable.TraverseText (cursor.CursorId, 5, cbTrue));
+			Debug.Assert.IsTrue (-1 == story.TextTable.TraverseText (cursor.CursorId, -5, cbFalse));
+			Debug.Assert.IsTrue (0  == story.TextTable.TraverseText (cursor.CursorId, -5, cbTrue));
 		}
 		
 		private class Traverser
@@ -348,15 +348,15 @@ namespace Epsitec.Common.Text.Tests
 			story.ConvertToStyledText ("Abc", style, null, out text);
 			story.InsertText (cursor, text);
 			
-			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 1);
-			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 2);
+			Properties.GeneratorProperty g1A = new Properties.GeneratorProperty ("G1", 0, 1);
+			Properties.GeneratorProperty g1B = new Properties.GeneratorProperty ("G1", 0, 2);
 			
-			properties.Clear (); properties.Add (g1_a);
+			properties.Clear (); properties.Add (g1A);
 			
 			story.ConvertToStyledText ("Def", style, properties, out text);
 			story.InsertText (cursor, text);
 			
-			properties.Clear (); properties.Add (g1_b);
+			properties.Clear (); properties.Add (g1B);
 			
 			story.ConvertToStyledText ("Ghi", style, properties, out text);
 			story.InsertText (cursor, text);
@@ -370,8 +370,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, 1)));
 			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, 2)));
 			
-			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));
-			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1_a));
+			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, 0, g1A));
+			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1A));
 			
 			story.SetCursorPosition (cursor, 3);
 			
@@ -379,30 +379,30 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue ('b' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, -2)));
 			Debug.Assert.IsTrue ('c' == (char) Unicode.Bits.GetCode (story.ReadChar (cursor, -1)));
 			
-			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, -1, g1_a));
-			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 0, g1_a));
-			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1_b));
+			Debug.Assert.IsFalse (story.TextContext.ContainsProperty (story, cursor, -1, g1A));
+			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 0, g1A));
+			Debug.Assert.IsTrue (story.TextContext.ContainsProperty (story, cursor, 3, g1B));
 			
 			TextContext context = story.TextContext;
 			
-			Debug.Assert.IsTrue (0 == context.GetTextStartDistance (story, cursor, g1_a));
-			Debug.Assert.IsTrue (3 == context.GetTextEndDistance (story, cursor, g1_a));
-			Debug.Assert.IsTrue (-1 == context.GetTextEndDistance (story, cursor, g1_b));
+			Debug.Assert.IsTrue (0 == context.GetTextStartDistance (story, cursor, g1A));
+			Debug.Assert.IsTrue (3 == context.GetTextEndDistance (story, cursor, g1A));
+			Debug.Assert.IsTrue (-1 == context.GetTextEndDistance (story, cursor, g1B));
 			
 			story.SetCursorPosition (cursor, 4);
 			
-			Debug.Assert.IsTrue (1 == context.GetTextStartDistance (story, cursor, g1_a));
-			Debug.Assert.IsTrue (2 == context.GetTextEndDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (1 == context.GetTextStartDistance (story, cursor, g1A));
+			Debug.Assert.IsTrue (2 == context.GetTextEndDistance (story, cursor, g1A));
 			
 			story.SetCursorPosition (cursor, 5);
 			
-			Debug.Assert.IsTrue (2 == context.GetTextStartDistance (story, cursor, g1_a));
-			Debug.Assert.IsTrue (1 == context.GetTextEndDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (2 == context.GetTextStartDistance (story, cursor, g1A));
+			Debug.Assert.IsTrue (1 == context.GetTextEndDistance (story, cursor, g1A));
 			
 			story.SetCursorPosition (cursor, 6);
 			
-			Debug.Assert.IsTrue (-1 == context.GetTextStartDistance (story, cursor, g1_a));
-			Debug.Assert.IsTrue (-1 == context.GetTextEndDistance (story, cursor, g1_a));
+			Debug.Assert.IsTrue (-1 == context.GetTextStartDistance (story, cursor, g1A));
+			Debug.Assert.IsTrue (-1 == context.GetTextEndDistance (story, cursor, g1A));
 		}
 		
 		private static void Ex1()

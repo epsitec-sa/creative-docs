@@ -19,37 +19,37 @@ namespace Epsitec.Common.Text.Tests
 		{
 			Generator generator = new Generator ("Test");
 			
-			Generator.Sequence s_num = Generator.CreateSequence (Generator.SequenceType.Numeric);
-			Generator.Sequence s_alf = Generator.CreateSequence (Generator.SequenceType.Alphabetic);
-			Generator.Sequence s_ALF = Generator.CreateSequence (Generator.SequenceType.Alphabetic);
+			Generator.Sequence sNum = Generator.CreateSequence (Generator.SequenceType.Numeric);
+			Generator.Sequence sAlf = Generator.CreateSequence (Generator.SequenceType.Alphabetic);
+			Generator.Sequence sALF = Generator.CreateSequence (Generator.SequenceType.Alphabetic);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			s_num.Suffix = ".";
-			s_alf.Suffix = ")";
-			s_ALF.Prefix = "<";
-			s_ALF.Casing = Generator.Casing.Upper;
-			s_ALF.Suffix = ">";
+			sNum.Suffix = ".";
+			sAlf.Suffix = ")";
+			sALF.Prefix = "<";
+			sALF.Casing = Generator.Casing.Upper;
+			sALF.Suffix = ">";
 			
-			buffer.Append (s_num.Prefix == null ? "" : s_num.Prefix);
-			buffer.Append (s_num.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture));
-			buffer.Append (s_num.Suffix == null ? "" : s_num.Suffix);
-			buffer.Append (s_num.Prefix == null ? "" : s_num.Prefix);
-			buffer.Append (s_num.GenerateText (10, System.Globalization.CultureInfo.CurrentCulture));
-			buffer.Append (s_num.Suffix == null ? "" : s_num.Suffix);
-			buffer.Append (s_alf.Prefix == null ? "" : s_alf.Prefix);
-			buffer.Append (s_alf.GenerateText (3, System.Globalization.CultureInfo.CurrentCulture));
-			buffer.Append (s_alf.Suffix == null ? "" : s_alf.Suffix);
-			buffer.Append (s_ALF.Prefix == null ? "" : s_ALF.Prefix);
-			buffer.Append (s_ALF.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture));
-			buffer.Append (s_ALF.Suffix == null ? "" : s_ALF.Suffix);
+			buffer.Append (sNum.Prefix == null ? "" : sNum.Prefix);
+			buffer.Append (sNum.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (sNum.Suffix == null ? "" : sNum.Suffix);
+			buffer.Append (sNum.Prefix == null ? "" : sNum.Prefix);
+			buffer.Append (sNum.GenerateText (10, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (sNum.Suffix == null ? "" : sNum.Suffix);
+			buffer.Append (sAlf.Prefix == null ? "" : sAlf.Prefix);
+			buffer.Append (sAlf.GenerateText (3, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (sAlf.Suffix == null ? "" : sAlf.Suffix);
+			buffer.Append (sALF.Prefix == null ? "" : sALF.Prefix);
+			buffer.Append (sALF.GenerateText (1, System.Globalization.CultureInfo.CurrentCulture));
+			buffer.Append (sALF.Suffix == null ? "" : sALF.Suffix);
 			
 			Debug.Assert.IsTrue (buffer.ToString () == "1.10.c)<A>");
 			
-			generator.Add (s_num);
-			generator.Add (s_num);
-			generator.Add (s_alf);
-			generator.Add (s_num);
+			generator.Add (sNum);
+			generator.Add (sNum);
+			generator.Add (sAlf);
+			generator.Add (sNum);
 			
 			int[] ranks = new int[] { 1, 10, 3, 2, 3, 4 };
 			
@@ -85,14 +85,14 @@ namespace Epsitec.Common.Text.Tests
 			
 			TextStyle style = story.StyleList.NewTextStyle (null, "Normal", TextStyleClass.Paragraph, properties);
 			
-			Properties.GeneratorProperty g1_a = new Properties.GeneratorProperty ("G1", 0, 101);
-			Properties.GeneratorProperty g1_b = new Properties.GeneratorProperty ("G1", 0, 102);
-			Properties.GeneratorProperty g1_c = new Properties.GeneratorProperty ("G1", 1, 103);
-			Properties.GeneratorProperty g1_d = new Properties.GeneratorProperty ("G1", 2, 104);
-			Properties.GeneratorProperty g1_e = new Properties.GeneratorProperty ("G1", 1, 105);
+			Properties.GeneratorProperty g1A = new Properties.GeneratorProperty ("G1", 0, 101);
+			Properties.GeneratorProperty g1B = new Properties.GeneratorProperty ("G1", 0, 102);
+			Properties.GeneratorProperty g1C = new Properties.GeneratorProperty ("G1", 1, 103);
+			Properties.GeneratorProperty g1D = new Properties.GeneratorProperty ("G1", 2, 104);
+			Properties.GeneratorProperty g1E = new Properties.GeneratorProperty ("G1", 1, 105);
 
 			properties.Clear ();
-			properties.Add (g1_a);
+			properties.Add (g1A);
 			properties.Add (new Properties.AutoTextProperty ("g1a"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 
 			properties.Clear ();
-			properties.Add (g1_b);
+			properties.Add (g1B);
 			properties.Add (new Properties.AutoTextProperty ("g1b"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 
 			properties.Clear ();
-			properties.Add (g1_c);
+			properties.Add (g1C);
 			properties.Add (new Properties.AutoTextProperty ("g1c"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 
 			properties.Clear ();
-			properties.Add (g1_d);
+			properties.Add (g1D);
 			properties.Add (new Properties.AutoTextProperty ("g1d"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Text.Tests
 			story.InsertText (cursor, text);
 
 			properties.Clear ();
-			properties.Add (g1_e);
+			properties.Add (g1E);
 			properties.Add (new Properties.AutoTextProperty ("g1e"));
 			
 			story.ConvertToStyledText ("X", style, properties, out text);

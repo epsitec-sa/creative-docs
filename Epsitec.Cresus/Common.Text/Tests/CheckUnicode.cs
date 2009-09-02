@@ -34,20 +34,20 @@ namespace Epsitec.Common.Text.Tests
 		}
 		
 		
-		private static void CheckText(Unicode.BreakAnalyzer analyzer, string plain_text, string expected)
+		private static void CheckText(Unicode.BreakAnalyzer analyzer, string plainText, string expected)
 		{
-			ulong[] utf32_text;
+			ulong[] utf32Text;
 			Unicode.BreakInfo[] breaks;
 			
-			TextConverter.ConvertFromString (plain_text, out utf32_text);
+			TextConverter.ConvertFromString (plainText, out utf32Text);
 			
-			breaks = new Unicode.BreakInfo[utf32_text.Length];
+			breaks = new Unicode.BreakInfo[utf32Text.Length];
 			
-			analyzer.GenerateBreaks (utf32_text, 0, utf32_text.Length, breaks);
+			analyzer.GenerateBreaks (utf32Text, 0, utf32Text.Length, breaks);
 			
-//-			System.Diagnostics.Debug.WriteLine (CheckUnicode.GenerateBreakModel (plain_text, breaks));
+//-			System.Diagnostics.Debug.WriteLine (CheckUnicode.GenerateBreakModel (plainText, breaks));
 			
-			Debug.Assert.IsTrue (CheckUnicode.GenerateBreakModel (plain_text, breaks) == expected);
+			Debug.Assert.IsTrue (CheckUnicode.GenerateBreakModel (plainText, breaks) == expected);
 		}
 		
 		private static string GenerateBreakModel(string text, Unicode.BreakInfo[] breaks)
