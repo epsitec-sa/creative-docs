@@ -267,8 +267,8 @@ namespace Epsitec.Cresus.Graph
 		private void LoadDataSet()
 		{
 			System.Diagnostics.Debug.Assert (this.activeDocument != null);
-			
-			this.activeDocument.DataSet.LoadDataTable ();
+
+			this.activeDocument.ReloadDataSet ();
 			this.seriesPickerController.ClearNegatedSeries ();
 
 			this.OnActiveDocumentChanged ();
@@ -324,7 +324,9 @@ namespace Epsitec.Cresus.Graph
 					var document       = this.CreateDocument ();
 					var dimensionNames = cube.NaturalTableDimensionNames;
 
-					this.activeDocument.DataSet.LoadDataTable (cube.ExtractDataTable (dimensionNames[0], dimensionNames[1]));
+					this.activeDocument.LoadCube (cube);
+					this.activeDocument.SelectCubeSlice (dimensionNames[0], dimensionNames[1]);
+					
 					this.seriesPickerController.ClearNegatedSeries ();
 
 					document.Title = converter.DataTitle;

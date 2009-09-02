@@ -227,8 +227,8 @@ namespace Epsitec.Common.Graph.Data
 								x =>
 								{
 									int pos = x.IndexOf ('=');
-									var key = x.Substring (0, pos);
-									var val = x.Substring (pos+1);
+									var key = DataCube.Unescape (x.Substring (0, pos));
+									var val = DataCube.Unescape (x.Substring (pos+1));
 									this.dimensions.Add (key, DimensionValues.Parse (val));
 								};
 							break;
@@ -238,8 +238,8 @@ namespace Epsitec.Common.Graph.Data
 								x =>
 								{
 									int pos = x.IndexOf ('=');
-									var key = x.Substring (0, pos);
-									var val = double.Parse (x.Substring (pos+1), System.Globalization.CultureInfo.InvariantCulture);
+									var key = DataCube.Unescape (x.Substring (0, pos));
+									var val = double.Parse (DataCube.Unescape (x.Substring (pos+1)), System.Globalization.CultureInfo.InvariantCulture);
 									this.values.Add (key, val);
 								};
 							break;

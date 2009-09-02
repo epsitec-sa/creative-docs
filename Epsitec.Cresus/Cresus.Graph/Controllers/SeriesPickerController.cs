@@ -402,6 +402,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					button.Hide ();
 				}
 			}
+
+			this.scrollList.Invalidate ();
 		}
 
 		private void UpdateVisibleButtons()
@@ -429,11 +431,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void ProcessQuickButton(System.Action<IEnumerable<int>> action)
 		{
 			this.selection = null;
-			this.UpdateVisibleButtons ();
-
+			this.HideQuickButtons ();
+			
 			if (action != null)
 			{
 				action (this.scrollList.GetSortedSelection ());
+				
 				this.scrollList.Focus ();
 				this.scrollList.Invalidate ();
 			}

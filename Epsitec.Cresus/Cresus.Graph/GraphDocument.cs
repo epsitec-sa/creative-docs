@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Graph
 	{
 		public GraphDocument()
 		{
+			this.guid   = System.Guid.NewGuid ();
 			this.views  = new List<DocumentViewController> ();
 			this.chartSeries  = new List<ChartSeries> ();
 			this.dataSet      = new GraphDataSet ();
@@ -145,19 +146,57 @@ namespace Epsitec.Cresus.Graph
 
 		internal XElement SaveSettings(XElement xml)
 		{
-			xml.Add (new XAttribute ("path", this.path ?? ""));
+			if (string.IsNullOrEmpty (this.path))
+			{
+
+				this.path = System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, this.guid.ToString ("D") + ".crgraph");
+			}
+
+			xml.Add (new XAttribute ("guid", this.guid));
+			xml.Add (new XAttribute ("path", this.path));
+			xml.Add (new XAttribute ("title", this.title ?? ""));
 			xml.Add (new XElement ("undoActions", new XText (this.undoRecorder.SaveToString ())));
 			xml.Add (new XElement ("views", this.views.Select (x => x.SaveSettings (new XElement ("view")))));
+
+			if (this.cube != null)
+			{
+				xml.Add (new XElement ("cube",
+					new XAttribute ("sliceDimA", this.cubeSliceDim1 ?? ""),
+					new XAttribute ("sliceDimB", this.cubeSliceDim2 ?? "")));
+
+				System.IO.Directory.CreateDirectory (GraphApplication.Paths.AutoSavePath);
+				
+				using (var stream = new System.IO.StreamWriter (this.path, false, System.Text.Encoding.UTF8))
+				{
+					this.cube.Save (stream);
+				}
+			}
 			
 			return xml;
 		}
 
 		internal void RestoreSettings(XElement xml)
 		{
+			this.guid = (System.Guid) xml.Attribute ("guid");
 			this.path = (string) xml.Attribute ("path");
+			this.title = (string) xml.Attribute ("title");
 
 			var undoActionsXml = xml.Element ("undoActions");
 			var viewsXml = xml.Element ("views");
+			var cubeXml = xml.Element ("cube");
+
+			if ((cubeXml != null) &&
+				(System.IO.File.Exists (this.path)))
+			{
+				this.cubeSliceDim1 = (string) cubeXml.Attribute ("sliceDimA");
+				this.cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
+
+				using (var stream = new System.IO.StreamReader (this.path, System.Text.Encoding.UTF8))
+				{
+					this.cube = new DataCube ();
+					this.cube.Restore (stream);
+				}
+			}
 
 			if (undoActionsXml != null)
 			{
@@ -223,7 +262,35 @@ namespace Epsitec.Cresus.Graph
 					break;
 			}
 		}
+
+
+		internal void ReloadDataSet()
+		{
+			if ((this.cube != null) &&
+				(!string.IsNullOrEmpty (this.cubeSliceDim1)) &&
+				(!string.IsNullOrEmpty (this.cubeSliceDim2)))
+			{
+				this.dataSet.LoadDataTable (this.cube.ExtractDataTable (this.cubeSliceDim1, this.cubeSliceDim2));
+			}
+			else
+			{
+				this.dataSet.LoadDataTable (GraphDataSet.LoadComptaDemoData ());
+			}
+		}
 		
+		internal void LoadCube(DataCube cube)
+		{
+			this.cube = cube;
+			this.ReloadDataSet ();
+		}
+
+		internal void SelectCubeSlice(string dim1, string dim2)
+		{
+			this.cubeSliceDim1 = dim1;
+			this.cubeSliceDim2 = dim2;
+			this.ReloadDataSet ();
+		}
+
 		
 		private void UpdateUndoRedo()
 		{
@@ -244,7 +311,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			var page = new TabPage ()
 			{
-				TabTitle = "Document",
+				TabTitle = this.title ?? "Document",
 				Rank = 1
 			};
 
@@ -298,5 +365,10 @@ namespace Epsitec.Cresus.Graph
 		private string path;
 		private string title;
 		private System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
+		private System.Guid guid;
+		
+		private DataCube cube;
+		private string cubeSliceDim1;
+		private string cubeSliceDim2;
 	}
 }
