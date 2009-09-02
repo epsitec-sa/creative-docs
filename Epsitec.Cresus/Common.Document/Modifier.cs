@@ -1914,7 +1914,7 @@ namespace Epsitec.Common.Document
 			//	Met un objet quelconque dans le presse-papiers, lorsque CrDoc a coupé/copié un objet
 			//	interne. Ainsi, l'éventuel texte ou image standard contenu dans le presse-papiers
 			//	est "effacé".
-			ClipboardWriteData data = new Clipboard.ClipboardWriteData ();
+			ClipboardWriteData data = new ClipboardWriteData ();
 			data.WriteObject("Epsitec.Crdoc", new FooObject());
 			Clipboard.SetData(data);
 		}
