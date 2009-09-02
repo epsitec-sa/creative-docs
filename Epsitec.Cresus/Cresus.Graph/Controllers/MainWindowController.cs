@@ -84,6 +84,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Parent = this.docAreaFrame
 				};
 
+				this.docTabBook.ActivePageChanged +=
+					delegate
+					{
+						GraphProgram.Application.SetActiveDocument (GraphDocument.GetDocument (this.docTabBook.ActivePage));
+					};
+
 				MainWindowController.CreateTools (this.toolsFrame);
 			}
 		}

@@ -210,7 +210,8 @@ namespace Epsitec.Cresus.Graph
 		{
 			var page = new TabPage ()
 			{
-				TabTitle = "Document"
+				TabTitle = "Document",
+				Rank = 1
 			};
 
 			var frame = new FrameBox ()
@@ -232,6 +233,8 @@ namespace Epsitec.Cresus.Graph
 				RemoveSeriesFromGraphAction = this.RemoveSeriesFromGraphAction
 			};
 
+			GraphDocument.SetDocument (page, this);
+
 			this.views.Add (panel);
 			book.Items.Add (page);
 
@@ -244,6 +247,18 @@ namespace Epsitec.Cresus.Graph
 		private readonly GraphDataSet dataSet;
 		private readonly Actions.Recorder undoRecorder;
 		private readonly Actions.Recorder redoRecorder;
+
+		public static void SetDocument(DependencyObject o, GraphDocument value)
+		{
+			o.SetValue (GraphDocument.DocumentProperty, value);
+		}
+
+		public static GraphDocument GetDocument(DependencyObject o)
+		{
+			return (GraphDocument) o.GetValue (GraphDocument.DocumentProperty);
+		}
+
+		public static DependencyProperty DocumentProperty = DependencyProperty.RegisterAttached ("Document", typeof (GraphDocument), typeof (GraphDocument));
 
 		private string path;
 		private System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
