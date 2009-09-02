@@ -88,6 +88,22 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public string Title
+		{
+			get
+			{
+				return this.title;
+			}
+			set
+			{
+				if (this.title != value)
+				{
+					this.title = value;
+					this.views.ForEach (view => view.TitleSetterAction (value));
+				}
+			}
+		}
+
 		
 		public ChartSeries Find(int index)
 		{
@@ -230,7 +246,8 @@ namespace Epsitec.Cresus.Graph
 					this.views.Remove (x);
 				})
 			{
-				RemoveSeriesFromGraphAction = this.RemoveSeriesFromGraphAction
+				RemoveSeriesFromGraphAction = this.RemoveSeriesFromGraphAction,
+				TitleSetterAction = title => page.TabTitle = title
 			};
 
 			GraphDocument.SetDocument (page, this);
@@ -261,6 +278,7 @@ namespace Epsitec.Cresus.Graph
 		public static DependencyProperty DocumentProperty = DependencyProperty.RegisterAttached ("Document", typeof (GraphDocument), typeof (GraphDocument));
 
 		private string path;
+		private string title;
 		private System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
 	}
 }

@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.ImportConverters
 {
+	/// <summary>
+	/// The <c>ComptaResumePeriodiqueImportConverter</c> class converts from the
+	/// Crésus Comptabilité report named "Résumé périodique".
+	/// </summary>
 	public class ComptaResumePeriodiqueImportConverter : AbstractImportConverter
 	{
 		public override DataCube ToDataCube(IList<string> header, IEnumerable<IList<string>> lines)
@@ -58,6 +62,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			cube.AddTable (table);
 
 			return cube;
+		}
+
+		public override string DataTitle
+		{
+			get
+			{
+				return "Compta – Résumé périodique";
+			}
 		}
 	}
 }

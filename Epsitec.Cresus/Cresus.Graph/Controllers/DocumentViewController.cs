@@ -222,6 +222,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			get;
 			set;
 		}
+
+		public System.Action<string> TitleSetterAction
+		{
+			get;
+			set;
+		}
 		
 		
 		private void ProcessQuickButton(System.Action<IEnumerable<int>> action)

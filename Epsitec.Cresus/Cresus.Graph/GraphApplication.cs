@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Cresus.Graph.ImportConverters;
 using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.UI;
@@ -307,32 +308,30 @@ namespace Epsitec.Cresus.Graph
 
 				string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 				string[] headColumns = lines[0].Split ('\t');
-				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0} characters, {1} lines, {2} columns, text={3}", text.Length, lines.Length, headColumns.Length, text.Length > 20 ? text.Substring (0, 20)+"..." : text));
 
-				var converter = new Epsitec.Cresus.Graph.ImportConverters.ComptaResumePeriodiqueImportConverter ();
-				var cube      = converter.ToDataCube (headColumns, lines.Skip (1).Select (x => x.Split ('\t')));
+				AbstractImportConverter converter;
+				DataCube                cube;
 
-				if (cube == null)
+				if (ImportConverter.ConvertToCube (headColumns, lines.Skip (1).Select (x => x.Split ('\t')), out converter, out cube))
 				{
-					return;
+					string path = System.IO.Path.GetTempFileName ();
+
+					using (var stream = new System.IO.StreamWriter (path, false, System.Text.Encoding.UTF8))
+					{
+						cube.Save (stream);
+					}
+
+					var document       = this.CreateDocument ();
+					var dimensionNames = cube.NaturalTableDimensionNames;
+
+					this.activeDocument.DataSet.LoadDataTable (cube.ExtractDataTable (dimensionNames[0], dimensionNames[1]));
+					this.seriesPickerController.ClearNegatedSeries ();
+
+					document.Title = converter.DataTitle;
+					document.MakeVisible ();
+
+					this.OnActiveDocumentChanged ();
 				}
-
-				string path = System.IO.Path.GetTempFileName ();
-
-				using (var stream = new System.IO.StreamWriter (path, false, System.Text.Encoding.UTF8))
-				{
-					cube.Save (stream);
-				}
-
-				this.CreateDocument ();
-
-				var dimensionNames = cube.NaturalTableDimensionNames;
-
-				this.activeDocument.DataSet.LoadDataTable (cube.ExtractDataTable (dimensionNames[0], dimensionNames[1]));
-				this.seriesPickerController.ClearNegatedSeries ();
-
-				this.OnActiveDocumentChanged ();
 			}
 		}
 		
