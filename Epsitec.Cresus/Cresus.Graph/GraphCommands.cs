@@ -33,7 +33,28 @@ namespace Epsitec.Cresus.Graph
 		[Command (Res.CommandIds.File.ExportImage)]
 		private void ExportImageCommand()
 		{
-			//-this.application.Document.ExportImage ();
+			var doc = GraphProgram.Application.Document;
+
+			System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog ()
+			{
+				AddExtension = true,
+				AutoUpgradeEnabled = true,
+				CheckPathExists = true,
+				DefaultExt = ".emf",
+				Filter = "Windows Enhanced Metafile (*.emf)|*.emf|Image PNG (*.png)|*.png|Image GIF (*.gif)|*.gif|Image Bitmap (*.bmp)|*.bmp",
+				FilterIndex = 0,
+				OverwritePrompt = true,
+				RestoreDirectory = true,
+				Title = "Exporter le graphique en tant qu'image",
+				ValidateNames = true
+			};
+
+			var result = dialog.ShowDialog (GraphProgram.Application.Window.PlatformWindowObject as System.Windows.Forms.IWin32Window);
+
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				this.application.Document.ExportImage (dialog.FileName);
+			}
 		}
 
 		[Command (ApplicationCommands.Id.Copy)]

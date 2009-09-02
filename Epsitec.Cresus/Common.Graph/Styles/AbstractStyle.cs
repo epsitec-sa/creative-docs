@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Drawing;
 
+using System.Xml.Linq;
+
 namespace Epsitec.Common.Graph.Styles
 {
 	public abstract class AbstractStyle
@@ -19,6 +21,16 @@ namespace Epsitec.Common.Graph.Styles
 		}
 		
 		public abstract void ApplyStyle(int index, IPaintPort port);
+
+		
+		public virtual XElement SaveSettings(XElement xml)
+		{
+			return xml;
+		}
+
+		public virtual void RestoreSettings(XElement xml)
+		{
+		}
 
 
 

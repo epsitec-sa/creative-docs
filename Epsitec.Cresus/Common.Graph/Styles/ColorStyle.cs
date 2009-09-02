@@ -2,9 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Graph.Styles
 {
@@ -48,6 +50,28 @@ namespace Epsitec.Common.Graph.Styles
 			Color color = this.colors[this.ConstrainIndex (index, this.colors.Count)];
 
 			port.Color = color;
+		}
+
+		public override XElement SaveSettings(XElement xml)
+		{
+			xml = base.SaveSettings (xml);
+
+			xml.Add (new XElement ("colors",
+				from color in this.colors
+				select new XElement ("color", new XAttribute ("value", Color.ToHexa (color)))));
+
+			return xml;
+		}
+
+		public override void RestoreSettings(XElement xml)
+		{
+			base.RestoreSettings (xml);
+
+			var colors = xml.Element ("colors");
+
+			this.colors.Clear ();
+			this.colors.AddRange (from node in colors.Elements ("color")
+								  select Color.FromHexa ((string) node.Attribute ("value")));
 		}
 
 		

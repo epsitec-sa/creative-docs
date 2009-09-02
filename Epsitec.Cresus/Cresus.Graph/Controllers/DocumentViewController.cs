@@ -413,6 +413,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			double dx = this.chartView.ActualWidth;
 			double dy = this.chartView.ActualHeight;
+			
 			var  rect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
 
 			if (string.IsNullOrEmpty (path))
@@ -429,13 +430,28 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public void SaveBitmap(string path)
+		{
+			double dx = this.chartView.ActualWidth;
+			double dy = this.chartView.ActualHeight;
+
+			var  rect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
+			
+			Epsitec.Common.Printing.PrintPort.PrintToBitmap (
+				port => this.chartView.Renderer.Render (port, rect),
+				path, (int) dx, (int) dy);
+		}
+
 
 		public XElement SaveSettings(XElement xml)
 		{
 			xml.Add (new XAttribute ("accumulateValues", this.accumulateValues ? "yes" : "no"));
 			xml.Add (new XAttribute ("stackValues", this.stackValues ? "yes" : "no"));
 			xml.Add (new XAttribute ("graphType", this.graphType.CommandId));
-
+			
+			xml.Add (new XElement ("styles",
+				this.colorStyle.SaveSettings (new XElement ("colorStyle"))));
+			
 			return xml;
 		}
 
@@ -448,6 +464,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.GraphType        = Command.Find (graphTypeId);
 			this.AccumulateValues = (accumulateValues == "yes");
 			this.StackValues      = (stackValues == "yes");
+
+			var styles = xml.Element ("styles");
+			var colorStyle = styles == null ? null : styles.Element ("colorStyle");
+
+			if (colorStyle != null)
+			{
+				this.colorStyle.RestoreSettings (colorStyle);
+			}
 		}
 
 

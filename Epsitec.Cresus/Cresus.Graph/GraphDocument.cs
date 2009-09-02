@@ -205,6 +205,24 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.views.First ().SaveMetafile (null);
 		}
+
+		internal void ExportImage(string path)
+		{
+			string ext = System.IO.Path.GetExtension (path).ToLowerInvariant ();
+
+			switch (ext)
+			{
+				case ".emf":
+					this.views.First ().SaveMetafile (path);
+					break;
+
+				case ".bmp":
+				case ".png":
+				case ".gif":
+					this.views.First ().SaveBitmap (path);
+					break;
+			}
+		}
 		
 		
 		private void UpdateUndoRedo()

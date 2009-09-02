@@ -245,9 +245,27 @@ namespace Epsitec.Common.Drawing
 			return new Color (color);
 		}
 
+		
 		public static Color FromHexa(string hexa)
 		{
 			//	Conversion d'une chaîne "FF3300" en une couleur.
+			
+			if (hexa.Length == 8)
+			{
+				try
+				{
+					byte a = System.Convert.ToByte (hexa.Substring (0, 2), 16);
+					byte r = System.Convert.ToByte (hexa.Substring (2, 2), 16);
+					byte g = System.Convert.ToByte (hexa.Substring (4, 2), 16);
+					byte b = System.Convert.ToByte (hexa.Substring (6, 2), 16);
+				
+					return new Color (a/255.0, r/255.0, g/255.0, b/255.0);
+				}
+				catch
+				{
+					return Color.Empty;
+				}
+			}
 			
 			if (hexa.Length != 6)
 			{
@@ -271,12 +289,22 @@ namespace Epsitec.Common.Drawing
 		
 		public static string ToHexa(Color color)
 		{
-			//	Conversion d'une couleur en chaîne "FF3300".
-			
-			int r = (int)(color.R*255.0+0.5);
-			int g = (int)(color.G*255.0+0.5);
-			int b = (int)(color.B*255.0+0.5);
-			return r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+			//	Conversion d'une couleur en chaîne "FF3300" ou "80FF3300" s'il y a un
+			//	canal alpha.
+
+			int a = System.Math.Max (0, System.Math.Min (255, (int)(color.A*255.0+0.5)));
+			int r = System.Math.Max (0, System.Math.Min (255, (int)(color.R*255.0+0.5)));
+			int g = System.Math.Max (0, System.Math.Min (255, (int)(color.G*255.0+0.5)));
+			int b = System.Math.Max (0, System.Math.Min (255, (int)(color.B*255.0+0.5)));
+
+			if (a == 255)
+			{
+				return r.ToString ("X2") + g.ToString ("X2") + b.ToString ("X2");
+			}
+			else
+			{
+				return a.ToString ("X2") + r.ToString ("X2") + g.ToString ("X2") + b.ToString ("X2");
+			}
 		}
 
 		

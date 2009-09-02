@@ -126,6 +126,12 @@ namespace Epsitec.Common.Widgets
 			widget.Color = this.Color;
 			widget.DragHost = this;
 
+			if (this.dragInfo != null)
+			{
+				this.dragInfo.Dispose ();
+				this.dragInfo = null;
+			}
+
 			this.dragInfo = new DragInfo (cursor, widget);
 
 			return true;
@@ -374,6 +380,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (this.dragInfo != null)
+			{
+				this.dragInfo.Dispose ();
+				this.dragInfo = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		private static Drawing.Color GetHiliteColor(Drawing.Color color)
 		{
 			//	Trouve une couleur qui contraste avec la couleur spécifiée,
@@ -500,7 +517,7 @@ namespace Epsitec.Common.Widgets
 		/// The <c>DragInfo</c> classe stores information needed only while drag
 		/// and drop is in progress.
 		/// </summary>
-		private class DragInfo
+		private class DragInfo : System.IDisposable
 		{
 			public DragInfo(ColorSample host)
 			{
@@ -512,8 +529,6 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (widget.DragHost != null);
 
 				this.host   = widget.DragHost;
-				this.window = new DragWindow ();
-
 				this.target = null;
 				this.origin = widget.DragHost.MapClientToScreen (new Drawing.Point (-5, -5));
 
@@ -571,15 +586,6 @@ namespace Epsitec.Common.Widgets
 				this.target = target;
 			}
 			
-			public void Dispose()
-			{
-				if (this.Window != null)
-				{
-					this.window.Hide ();
-					this.window.Dispose ();
-					this.window = null;
-				}
-			}
 
 			public void DissolveAndDispose()
 			{
@@ -588,7 +594,26 @@ namespace Epsitec.Common.Widgets
 					this.window.DissolveAndDisposeWindow ();
 					this.window = null;
 				}
+
+				this.Dispose ();
 			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				if (this.window != null)
+				{
+					this.window.Hide ();
+					this.window.Dispose ();
+				}
+				
+				this.window = null;
+				this.host   = null;
+				this.target = null;
+			}
+
+			#endregion
 
 			private ColorSample host;
 			private DragWindow window;

@@ -821,6 +821,14 @@ namespace Epsitec.Common.Printing
 			}
 		}
 
+		public static void PrintToBitmap(System.Action<Drawing.IPaintPort> painter, string path, int dx, int dy)
+		{
+			using (Bitmap bitmap = new Bitmap (path, dx, dy))
+			{
+				PrintPort port = new PrintPort (bitmap.Graphics, dx, dy);
+				painter (port);
+			}
+		}
 
 		private void ResetTransform()
 		{
@@ -968,6 +976,60 @@ namespace Epsitec.Common.Printing
 			readonly System.Drawing.Imaging.Metafile metafile;
 			readonly System.Drawing.Graphics graphics;
 			readonly bool copyToClipboard;
+		}
+
+		#endregion
+
+		#region Bitmap Class
+
+		class Bitmap : System.IDisposable
+		{
+			public Bitmap(string path, int dx, int dy)
+			{
+				string ext = System.IO.Path.GetExtension (path).ToLowerInvariant ();
+
+				switch (ext)
+				{
+					case ".bmp": this.format = System.Drawing.Imaging.ImageFormat.Bmp; break;
+					case ".png": this.format = System.Drawing.Imaging.ImageFormat.Png; break;
+					case ".gif": this.format = System.Drawing.Imaging.ImageFormat.Gif; break;
+
+					default:
+						throw new System.FormatException ("Unsupported image format : " + ext);
+				}
+
+				this.path = path;
+				this.bitmap = new System.Drawing.Bitmap (dx, dy, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+				this.bitmapGraphics = System.Drawing.Graphics.FromImage (this.bitmap);
+				this.units = System.Drawing.GraphicsUnit.Pixel;
+
+				this.bitmapGraphics.FillRectangle (System.Drawing.Brushes.White, bitmap.GetBounds (ref units));
+			}
+
+			public System.Drawing.Graphics Graphics
+			{
+				get
+				{
+					return this.bitmapGraphics;
+				}
+			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.bitmapGraphics.Dispose ();
+				this.bitmap.Save (this.path, this.format);
+				this.bitmap.Dispose ();
+			}
+
+			#endregion
+
+			readonly string path;
+			readonly System.Drawing.Imaging.ImageFormat format;
+			readonly System.Drawing.Bitmap bitmap;
+			readonly System.Drawing.Graphics bitmapGraphics;
+			readonly System.Drawing.GraphicsUnit units;
 		}
 
 		#endregion
