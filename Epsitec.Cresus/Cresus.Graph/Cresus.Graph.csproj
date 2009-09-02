@@ -14,6 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+    <ApplicationIcon>App.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -146,11 +147,16 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Application-16x16.icon" />
+    <EmbeddedResource Include="Images\Application.icon" />
+    <EmbeddedResource Include="Images\Document.icon" />
     <EmbeddedResource Include="Images\Glyph.Drop.icon" />
     <EmbeddedResource Include="Images\Glyph.Pick.icon" />
     <EmbeddedResource Include="Images\Glyph.PlusMinus.icon" />
     <EmbeddedResource Include="Images\Glyph.Sum.icon" />
     <EmbeddedResource Include="Images\File.ExportImage.icon" />
+    <Content Include="App.ico" />
+    <Content Include="Doc.ico" />
     <Content Include="Resources\Cresus.Graph\Captions.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

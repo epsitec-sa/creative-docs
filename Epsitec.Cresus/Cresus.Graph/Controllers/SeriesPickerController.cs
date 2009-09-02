@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ClientSize = new Epsitec.Common.Drawing.Size (824, 400),
 				Name = "SeriesPicker",
 				Owner = owner,
+				Icon = owner.Icon,
 				PreventAutoClose = true
 			};
 
