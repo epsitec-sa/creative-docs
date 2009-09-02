@@ -15,10 +15,10 @@ namespace Epsitec.Common.Text
 		public StyleList(TextContext context)
 		{
 			this.context           = context;
-			this.internal_settings = new Internal.SettingsTable ();
+			this.internalSettings  = new Internal.SettingsTable ();
 			
-			this.text_style_list = new System.Collections.ArrayList ();
-			this.text_style_hash = new System.Collections.Hashtable ();
+			this.textStyleList = new System.Collections.ArrayList ();
+			this.textStyleHash = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -34,12 +34,12 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if (this.style_map == null)
+				if (this.styleMap == null)
 				{
-					this.style_map = new StyleMap (this);
+					this.styleMap = new StyleMap (this);
 				}
 				
-				return this.style_map;
+				return this.styleMap;
 			}
 		}
 		
@@ -52,11 +52,11 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public TextStyle						this[string name, TextStyleClass text_style_class]
+		public TextStyle						this[string name, TextStyleClass textStyleClass]
 		{
 			get
 			{
-				return this.GetTextStyle (name, text_style_class);
+				return this.GetTextStyle (name, textStyleClass);
 			}
 		}
 		
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.internal_settings;
+				return this.internalSettings;
 			}
 		}
 		
@@ -74,9 +74,9 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert (this.text_style_list.Count == this.text_style_hash.Count);
+				System.Diagnostics.Debug.Assert (this.textStyleList.Count == this.textStyleHash.Count);
 				
-				return this.text_style_list.Count;
+				return this.textStyleList.Count;
 			}
 		}
 		
@@ -84,34 +84,34 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.internal_settings.GetCore (code);
+				return this.internalSettings.GetCore (code);
 			}
 		}
 		#endregion
 		
-		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass textStyleClass)
 		{
-			return this.NewTextStyle (queue, name, text_style_class, new Property[0], null);
+			return this.NewTextStyle (queue, name, textStyleClass, new Property[0], null);
 		}
 		
-		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class, params Property[] properties)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass textStyleClass, params Property[] properties)
 		{
-			return this.NewTextStyle (queue, name, text_style_class, properties, null);
+			return this.NewTextStyle (queue, name, textStyleClass, properties, null);
 		}
 		
-		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class, System.Collections.ICollection properties)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass textStyleClass, System.Collections.ICollection properties)
 		{
-			return this.NewTextStyle (queue, name, text_style_class, properties, null);
+			return this.NewTextStyle (queue, name, textStyleClass, properties, null);
 		}
 		
-		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass textStyleClass, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
 			if (name == null)
 			{
 				name = this.GenerateUniqueName ();
 			}
 			
-			TextStyle style = new TextStyle (name, text_style_class, properties, parent_styles);
+			TextStyle style = new TextStyle (name, textStyleClass, properties, parent_styles);
 			
 			this.Attach (style);
 			this.UpdateTabListUserCount (style, 1);
@@ -127,22 +127,22 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public TextStyle NewMetaProperty(string name, string meta_id, params Property[] properties)
+		public TextStyle NewMetaProperty(string name, string metaId, params Property[] properties)
 		{
-			return this.NewMetaProperty (name, meta_id, 0, properties, null);
+			return this.NewMetaProperty (name, metaId, 0, properties, null);
 		}
 		
-		public TextStyle NewMetaProperty(string name, string meta_id, int priority, params Property[] properties)
+		public TextStyle NewMetaProperty(string name, string metaId, int priority, params Property[] properties)
 		{
-			return this.NewMetaProperty (name, meta_id, priority, properties, null);
+			return this.NewMetaProperty (name, metaId, priority, properties, null);
 		}
 		
-		public TextStyle NewMetaProperty(string name, string meta_id, int priority, System.Collections.ICollection properties)
+		public TextStyle NewMetaProperty(string name, string metaId, int priority, System.Collections.ICollection properties)
 		{
-			return this.NewMetaProperty (name, meta_id, priority, properties, null);
+			return this.NewMetaProperty (name, metaId, priority, properties, null);
 		}
 		
-		public TextStyle NewMetaProperty(string name, string meta_id, int priority, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public TextStyle NewMetaProperty(string name, string metaId, int priority, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
 		{
 			if (name == null)
 			{
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Text
 			
 			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
 			
-			style.DefineMetaId (meta_id);
+			style.DefineMetaId (metaId);
 			style.DefinePriority (priority);
 			
 			this.Attach (style);
@@ -160,12 +160,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public TextStyle CreateOrGetMetaProperty(string meta_id, params Property[] properties)
+		public TextStyle CreateOrGetMetaProperty(string metaId, params Property[] properties)
 		{
 			//	Crée ou réutilise une méta propriété déjà existante s'il en existe
 			//	une qui soit 100% équivalente à celle demandée.
 			
-			TextStyle   temp = this.NewMetaProperty (null, meta_id, properties);
+			TextStyle   temp = this.NewMetaProperty (null, metaId, properties);
 			TextStyle[] find = this.FindEqualTextStyles (temp);
 			
 			if (find.Length > 0)
@@ -180,12 +180,12 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public TextStyle CreateOrGetMetaProperty(string meta_id, int priority, params Property[] properties)
+		public TextStyle CreateOrGetMetaProperty(string metaId, int priority, params Property[] properties)
 		{
 			//	Crée ou réutilise une méta propriété déjà existante s'il en existe
 			//	une qui soit 100% équivalente à celle demandée.
 			
-			TextStyle   temp = this.NewMetaProperty (null, meta_id, priority, properties);
+			TextStyle   temp = this.NewMetaProperty (null, metaId, priority, properties);
 			TextStyle[] find = this.FindEqualTextStyles (temp);
 			
 			if (find.Length > 0)
@@ -209,12 +209,12 @@ namespace Epsitec.Common.Text
 			this.RedefineTextStyle (queue, style, properties, null);
 		}
 		
-		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public void RedefineTextStyle(Common.Support.OpletQueue queue, TextStyle style, System.Collections.ICollection properties, System.Collections.ICollection parentStyles)
 		{
 			//	Change les propriétés et les parents d'un style. Le style devient
 			//	un style dérivé.
 			
-			System.Diagnostics.Debug.Assert (this.text_style_list.Contains (style));
+			System.Diagnostics.Debug.Assert (this.textStyleList.Contains (style));
 			
 			if (queue != null)
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			this.PreRedefine (style);
-			style.Initialize (properties, parent_styles);
+			style.Initialize (properties, parentStyles);
 			this.PostRedefine (style);
 		}
 		
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (style != null);
 			System.Diagnostics.Debug.Assert (style.IsDeleted == false);
 			
-			TextStyle default_style = this.GetDefaultTextStyle (style);
+			TextStyle defaultStyle = this.GetDefaultTextStyle (style);
 			
 			if (queue != null)
 			{
@@ -246,12 +246,12 @@ namespace Epsitec.Common.Text
 			TextStory.InsertOplet (queue, new DeleteOplet (this, style));
 			
 			style.IsDeleted = true;
-			this.RedefineTextStyle (queue, style, new Property[0], new TextStyle[1] { default_style } );
+			this.RedefineTextStyle (queue, style, new Property[0], new TextStyle[1] { defaultStyle } );
 		}
 		
-		public void SetNextStyle(Common.Support.OpletQueue queue, TextStyle style, TextStyle next_style)
+		public void SetNextStyle(Common.Support.OpletQueue queue, TextStyle style, TextStyle nextStyle)
 		{
-			if (style.NextStyle == next_style)
+			if (style.NextStyle == nextStyle)
 			{
 				return;
 			}
@@ -262,14 +262,14 @@ namespace Epsitec.Common.Text
 				TextStory.InsertOplet (queue, new SetNextStyleOplet (this, style));
 			}
 			
-			if (next_style == null)
+			if (nextStyle == null)
 			{
-				style.DefineNextStyle (next_style);
+				style.DefineNextStyle (nextStyle);
 			}
 			else
 			{
-				System.Diagnostics.Debug.Assert (style.TextStyleClass == next_style.TextStyleClass);
-				style.DefineNextStyle (next_style);
+				System.Diagnostics.Debug.Assert (style.TextStyleClass == nextStyle.TextStyleClass);
+				style.DefineNextStyle (nextStyle);
 			}
 		}
 		
@@ -288,14 +288,14 @@ namespace Epsitec.Common.Text
 			long version = this.Version;
 			int  changes = 0;
 			
-			if (version == this.version_of_last_update)
+			if (version == this.versionOfLastUpdate)
 			{
 				return;
 			}
 			
-			this.version_of_last_update = version;
+			this.versionOfLastUpdate = version;
 			
-			foreach (TextStyle style in this.text_style_list)
+			foreach (TextStyle style in this.textStyleList)
 			{
 				if (style.Update (version))
 				{
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Text
 				this.UpdateTextStories ();
 			}
 			
-			foreach (TextStyle style in this.text_style_list)
+			foreach (TextStyle style in this.textStyleList)
 			{
 				style.DefineIsFlagged (false);
 			}
@@ -336,17 +336,17 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public TextStyle GetTextStyle(string name, TextStyleClass text_style_class)
+		public TextStyle GetTextStyle(string name, TextStyleClass textStyleClass)
 		{
-			return this.GetTextStyle (StyleList.GetFullName (name, text_style_class));
+			return this.GetTextStyle (StyleList.GetFullName (name, textStyleClass));
 		}
 		
 		
-		internal TextStyle GetTextStyle(string full_name)
+		internal TextStyle GetTextStyle(string fullName)
 		{
-			if (this.text_style_hash.Contains (full_name))
+			if (this.textStyleHash.Contains (fullName))
 			{
-				return this.text_style_hash[full_name] as TextStyle;
+				return this.textStyleHash[fullName] as TextStyle;
 			}
 			else
 			{
@@ -356,20 +356,20 @@ namespace Epsitec.Common.Text
 		
 		internal TextStyle GetDefaultTextStyle(TextStyle style)
 		{
-			TextStyle default_style = null;
+			TextStyle defaultStyle = null;
 			
 			switch (style.TextStyleClass)
 			{
-				case TextStyleClass.Text:		default_style = this.TextContext.DefaultTextStyle;		break;
-				case TextStyleClass.Paragraph:	default_style = this.TextContext.DefaultParagraphStyle;	break;
+				case TextStyleClass.Text:		defaultStyle = this.TextContext.DefaultTextStyle;		break;
+				case TextStyleClass.Paragraph:	defaultStyle = this.TextContext.DefaultParagraphStyle;	break;
 					
 				default:
 					throw new System.NotSupportedException (string.Format ("Cannot delete style {0} of class {1}", style.Name, style.TextStyleClass));
 			}
 			
-			System.Diagnostics.Debug.Assert (default_style != null);
+			System.Diagnostics.Debug.Assert (defaultStyle != null);
 			
-			return default_style;
+			return defaultStyle;
 		}
 		
 		
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Text
 			
 			int signature = style.GetContentsSignature ();
 			
-			foreach (TextStyle candidate in this.text_style_list)
+			foreach (TextStyle candidate in this.textStyleList)
 			{
 				if (candidate != style)
 				{
@@ -403,11 +403,11 @@ namespace Epsitec.Common.Text
 		
 		public void Serialize(System.Text.StringBuilder buffer)
 		{
-			int n = this.text_style_list.Count;
+			int n = this.textStyleList.Count;
 			
-			for (int i = 0; i < this.text_style_list.Count; i++)
+			for (int i = 0; i < this.textStyleList.Count; i++)
 			{
-				TextStyle style = this.text_style_list[i] as TextStyle;
+				TextStyle style = this.textStyleList[i] as TextStyle;
 				
 				if (style.IsDeleted)
 				{
@@ -415,17 +415,17 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			buffer.Append (SerializerSupport.SerializeLong (this.unique_id));
+			buffer.Append (SerializerSupport.SerializeLong (this.uniqueId));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (n));
 			buffer.Append ("/");
 			
-			this.internal_settings.Serialize (buffer);
+			this.internalSettings.Serialize (buffer);
 			buffer.Append ("/");
 			
-			for (int i = 0; i < this.text_style_list.Count; i++)
+			for (int i = 0; i < this.textStyleList.Count; i++)
 			{
-				TextStyle style = this.text_style_list[i] as TextStyle;
+				TextStyle style = this.textStyleList[i] as TextStyle;
 				
 				if (style.IsDeleted == false)
 				{
@@ -439,17 +439,17 @@ namespace Epsitec.Common.Text
 		
 		public void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
-			this.internal_settings = new Internal.SettingsTable ();
-			this.text_style_list   = new System.Collections.ArrayList ();
-			this.text_style_hash   = new System.Collections.Hashtable ();
+			this.internalSettings = new Internal.SettingsTable ();
+			this.textStyleList   = new System.Collections.ArrayList ();
+			this.textStyleHash   = new System.Collections.Hashtable ();
 			
 			long unique   = SerializerSupport.DeserializeLong (args[offset++]);
-			int  n_styles = SerializerSupport.DeserializeInt (args[offset++]);
+			int  nStyles = SerializerSupport.DeserializeInt (args[offset++]);
 			
-			this.unique_id = unique;
-			this.internal_settings.Deserialize (context, version, args, ref offset);
+			this.uniqueId = unique;
+			this.internalSettings.Deserialize (context, version, args, ref offset);
 			
-			for (int i = 0; i < n_styles; i++)
+			for (int i = 0; i < nStyles; i++)
 			{
 				TextStyle style = new TextStyle ();
 				
@@ -458,7 +458,7 @@ namespace Epsitec.Common.Text
 				this.Attach (style);
 			}
 			
-			foreach (TextStyle style in this.text_style_list)
+			foreach (TextStyle style in this.textStyleList)
 			{
 				style.DeserializeFixups (this);
 			}
@@ -474,9 +474,9 @@ namespace Epsitec.Common.Text
 		
 		public long GenerateUniqueId()
 		{
-			lock (this.unique_id_lock)
+			lock (this.uniqueIdLock)
 			{
-				return this.unique_id++;
+				return this.uniqueId++;
 			}
 		}
 		
@@ -503,7 +503,7 @@ namespace Epsitec.Common.Text
 		#region Internal Methods
 		internal Styles.CoreSettings GetCoreFromIndex(int index)
 		{
-			return this.internal_settings.GetCoreFromIndex (index);
+			return this.internalSettings.GetCoreFromIndex (index);
 		}
 		
 		internal void NotifyStyleMapChanged()
@@ -514,11 +514,11 @@ namespace Epsitec.Common.Text
 		
 		internal Property[] Flatten(ulong code)
 		{
-			Styles.CoreSettings core_settings = this[code];
+			Styles.CoreSettings coreSettings = this[code];
 			
-			if (core_settings != null)
+			if (coreSettings != null)
 			{
-				return core_settings.Flatten (code);
+				return coreSettings.Flatten (code);
 			}
 			else
 			{
@@ -529,7 +529,7 @@ namespace Epsitec.Common.Text
 		
 		internal void UpdateTabListUserCount()
 		{
-			foreach (TextStyle style in this.text_style_list)
+			foreach (TextStyle style in this.textStyleList)
 			{
 				this.UpdateTabListUserCount (style, 1);
 			}
@@ -537,7 +537,7 @@ namespace Epsitec.Common.Text
 		
 		internal void UpdateGeneratorUserCount()
 		{
-			foreach (TextStyle style in this.text_style_list)
+			foreach (TextStyle style in this.textStyleList)
 			{
 				this.UpdateGeneratorUserCount (style, 1);
 			}
@@ -571,10 +571,10 @@ namespace Epsitec.Common.Text
 			
 			if (mpp != null)
 			{
-				string   manager_name = mpp.ManagerName;
+				string   managerName = mpp.ManagerName;
 				string[] parameters   = mpp.ManagerParameters;
 				
-				switch (manager_name)
+				switch (managerName)
 				{
 					case "ItemList":
 						ParagraphManagers.ItemListManager.Parameters p = new Epsitec.Common.Text.ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
@@ -618,10 +618,10 @@ namespace Epsitec.Common.Text
 			
 			if (mpp != null)
 			{
-				string   manager_name = mpp.ManagerName;
+				string   managerName = mpp.ManagerName;
 				string[] parameters   = mpp.ManagerParameters;
 				
-				switch (manager_name)
+				switch (managerName)
 				{
 					case "ItemList":
 						ParagraphManagers.ItemListManager.Parameters p = new ParagraphManagers.ItemListManager.Parameters (this.context, parameters);
@@ -643,14 +643,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal static string GetFullName(TextStyle text_style)
+		internal static string GetFullName(TextStyle textStyle)
 		{
-			return StyleList.GetFullName (text_style.Name, text_style.TextStyleClass);
+			return StyleList.GetFullName (textStyle.Name, textStyle.TextStyleClass);
 		}
 		
-		internal static string GetFullName(string name, TextStyleClass text_style_class)
+		internal static string GetFullName(string name, TextStyleClass textStyleClass)
 		{
-			switch (text_style_class)
+			switch (textStyleClass)
 			{
 				case TextStyleClass.Abstract:		return string.Concat ("A.", name);
 				case TextStyleClass.Paragraph:		return string.Concat ("P.", name);
@@ -663,29 +663,29 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal static void SplitFullName(string full_name, out string name, out TextStyleClass text_style_class)
+		internal static void SplitFullName(string fullName, out string name, out TextStyleClass textStyleClass)
 		{
-			if ((full_name.Length < 2) ||
-				(full_name[1] != '.'))
+			if ((fullName.Length < 2) ||
+				(fullName[1] != '.'))
 			{
 				throw new System.ArgumentException ();
 			}
 			
-			char prefix = full_name[0];
+			char prefix = fullName[0];
 			
 			switch (prefix)
 			{
-				case 'A': text_style_class = TextStyleClass.Abstract;		break;
-				case 'P': text_style_class = TextStyleClass.Paragraph;		break;
-				case 'T': text_style_class = TextStyleClass.Text;			break;
-				case 'S': text_style_class = TextStyleClass.Symbol;			break;
-				case 'M': text_style_class = TextStyleClass.MetaProperty;	break;
+				case 'A': textStyleClass = TextStyleClass.Abstract;		break;
+				case 'P': textStyleClass = TextStyleClass.Paragraph;		break;
+				case 'T': textStyleClass = TextStyleClass.Text;			break;
+				case 'S': textStyleClass = TextStyleClass.Symbol;			break;
+				case 'M': textStyleClass = TextStyleClass.MetaProperty;	break;
 				
 				default:
 					throw new System.ArgumentException ();
 			}
 			
-			name = full_name.Substring (2);
+			name = fullName.Substring (2);
 		}
 		#endregion
 		
@@ -721,7 +721,7 @@ namespace Epsitec.Common.Text
 			Patcher patcher = new Patcher ();
 			ulong[] buffer  = new ulong[1000];
 			
-			System.Collections.ArrayList dirty_stories = new System.Collections.ArrayList ();
+			System.Collections.ArrayList dirtyStories = new System.Collections.ArrayList ();
 			
 			foreach (TextStory story in this.context.GetTextStories ())
 			{
@@ -738,8 +738,8 @@ namespace Epsitec.Common.Text
 					
 					int pos = 0;
 					
-					this.is_patcher_on_break     = true;
-					this.pending_manager_patches = new System.Collections.Stack ();
+					this.isPatcherOnBreak     = true;
+					this.pendingManagerPatches = new System.Collections.Stack ();
 					
 					try
 					{
@@ -780,16 +780,16 @@ namespace Epsitec.Common.Text
 						//	ne seront pas altérées par l'insertion ou la suppression de
 						//	textes automatiques.
 						
-						while (this.pending_manager_patches.Count > 0)
+						while (this.pendingManagerPatches.Count > 0)
 						{
-							ManagedParagraphPropertyInfo mppi = this.pending_manager_patches.Pop () as ManagedParagraphPropertyInfo;
+							ManagedParagraphPropertyInfo mppi = this.pendingManagerPatches.Pop () as ManagedParagraphPropertyInfo;
 							
 							story.SetCursorPosition (cursor, mppi.Position);
 							
-							Properties.ManagedParagraphProperty[] mpp_old = (mppi.Mpp1 == null) ? new Properties.ManagedParagraphProperty[0] : new Properties.ManagedParagraphProperty[1] { mppi.Mpp1 };
-							Properties.ManagedParagraphProperty[] mpp_new = (mppi.Mpp2 == null) ? new Properties.ManagedParagraphProperty[0] : new Properties.ManagedParagraphProperty[1] { mppi.Mpp2 };
+							Properties.ManagedParagraphProperty[] mppOld = (mppi.Mpp1 == null) ? new Properties.ManagedParagraphProperty[0] : new Properties.ManagedParagraphProperty[1] { mppi.Mpp1 };
+							Properties.ManagedParagraphProperty[] mppNew = (mppi.Mpp2 == null) ? new Properties.ManagedParagraphProperty[0] : new Properties.ManagedParagraphProperty[1] { mppi.Mpp2 };
 							
-							Internal.Navigator.HandleManagedParagraphPropertiesChange (story, cursor, 0, mpp_old, mpp_new);
+							Internal.Navigator.HandleManagedParagraphPropertiesChange (story, cursor, 0, mppOld, mppNew);
 						}
 					}
 					finally
@@ -799,28 +799,28 @@ namespace Epsitec.Common.Text
 						story.ResumeTextChanged ();
 					}
 					
-					this.is_patcher_on_break     = false;
-					this.pending_manager_patches = null;
+					this.isPatcherOnBreak     = false;
+					this.pendingManagerPatches = null;
 				}
 				
 				if (update)
 				{
-					dirty_stories.Add (story);
+					dirtyStories.Add (story);
 				}
 			}
 			
 			//	Signale encore que les diverses instances de TextStory ont été
 			//	modifiées :
 			
-			foreach (TextStory story in dirty_stories)
+			foreach (TextStory story in dirtyStories)
 			{
 				story.NotifyTextChanged ();
 			}
 			
-			return dirty_stories.Count > 0;
+			return dirtyStories.Count > 0;
 		}
 		
-		private bool UpdateTextBuffer(TextStory story, Patcher patcher, ulong[] buffer, int abs_pos, int length)
+		private bool UpdateTextBuffer(TextStory story, Patcher patcher, ulong[] buffer, int absPos, int length)
 		{
 			bool update = false;
 			
@@ -838,7 +838,7 @@ namespace Epsitec.Common.Text
 				
 				if (code != last)
 				{
-					update |= this.UpdateTextRun (story, patcher, buffer, last, abs_pos, i-num, num);
+					update |= this.UpdateTextRun (story, patcher, buffer, last, absPos, i-num, num);
 					
 					num  = 1;
 					last = code;
@@ -849,12 +849,12 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			update |= this.UpdateTextRun (story, patcher, buffer, last, abs_pos, length-num, num);
+			update |= this.UpdateTextRun (story, patcher, buffer, last, absPos, length-num, num);
 			
 			return update;
 		}
 		
-		private bool UpdateTextRun(TextStory story, Patcher patcher, ulong[] buffer, ulong code, int abs_pos, int pos, int length)
+		private bool UpdateTextRun(TextStory story, Patcher patcher, ulong[] buffer, ulong code, int absPos, int pos, int length)
 		{
 			//	La tranche définie par 'pos' et 'length' est définie avec les
 			//	mêmes propriétés. On peut donc procéder au même remplacement
@@ -870,7 +870,7 @@ namespace Epsitec.Common.Text
 				
 				this.context.GetStylesAndProperties (code, out styles, out properties);
 				
-				bool is_flagged = false;
+				bool isFlagged = false;
 				
 				//	Regarde si l'un des styles appliqués au "run" actuel a été marqué
 				//	comme modifié. Ce n'est que dans ce cas qu'une substitution sera
@@ -880,12 +880,12 @@ namespace Epsitec.Common.Text
 				{
 					if (styles[i].IsFlagged)
 					{
-						is_flagged = true;
+						isFlagged = true;
 						break;
 					}
 				}
 				
-				if (is_flagged)
+				if (isFlagged)
 				{
 					//	Trouve le remplacement adéquat pour les styles et propriétés
 					//	définies pour l'ancien 'code' :
@@ -938,7 +938,7 @@ namespace Epsitec.Common.Text
 			{
 				for (int i = pos; i < end; i++)
 				{
-					if (this.is_patcher_on_break)
+					if (this.isPatcherOnBreak)
 					{
 						//	Au début de chaque paragraphe, vérifie si nous avons un
 						//	changement de "managed paragraph". Si c'est le cas, il
@@ -948,9 +948,9 @@ namespace Epsitec.Common.Text
 						
 						if (mppi != null)
 						{
-							mppi = new ManagedParagraphPropertyInfo (mppi, abs_pos+i);
+							mppi = new ManagedParagraphPropertyInfo (mppi, absPos+i);
 							
-							this.pending_manager_patches.Push (mppi);
+							this.pendingManagerPatches.Push (mppi);
 						}
 					}
 					
@@ -959,7 +959,7 @@ namespace Epsitec.Common.Text
 					//	Regarde encore si l'on se trouve à une fin de paragraphe;
 					//	c'est utile pour la suite :
 					
-					this.is_patcher_on_break = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[i]));
+					this.isPatcherOnBreak = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[i]));
 				}
 				
 				return true;
@@ -969,7 +969,7 @@ namespace Epsitec.Common.Text
 				//	Aucune modification n'a été nécessaire. Vérifie encore si le
 				//	"run" se termine par une fin de paragraphe :
 				
-				this.is_patcher_on_break = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[end-1]));
+				this.isPatcherOnBreak = Internal.Navigator.IsParagraphSeparator (Unicode.Bits.GetUnicodeCode (buffer[end-1]));
 				
 				return false;
 			}
@@ -979,16 +979,16 @@ namespace Epsitec.Common.Text
 		private void Attach(TextStyle style)
 		{
 			string         name             = style.Name;
-			TextStyleClass text_style_class = style.TextStyleClass;
-			string         full_name        = StyleList.GetFullName (name, text_style_class);
+			TextStyleClass textStyleClass   = style.TextStyleClass;
+			string         fullName         = StyleList.GetFullName (name, textStyleClass);
 			
-			if (this.text_style_hash.Contains (full_name))
+			if (this.textStyleHash.Contains (fullName))
 			{
-				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) already exists", name, text_style_class), "style");
+				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) already exists", name, textStyleClass), "style");
 			}
 			
-			this.text_style_list.Add (style);
-			this.text_style_hash[full_name] = style;
+			this.textStyleList.Add (style);
+			this.textStyleHash[fullName] = style;
 			
 			this.OnStyleAdded ();
 		}
@@ -996,17 +996,17 @@ namespace Epsitec.Common.Text
 		private void Detach(TextStyle style)
 		{
 			string         name             = style.Name;
-			TextStyleClass text_style_class = style.TextStyleClass;
-			string         full_name        = StyleList.GetFullName (name, text_style_class);
+			TextStyleClass textStyleClass   = style.TextStyleClass;
+			string         fullName         = StyleList.GetFullName (name, textStyleClass);
 			
-			if (this.text_style_hash.Contains (full_name))
+			if (this.textStyleHash.Contains (fullName))
 			{
-				this.text_style_list.Remove (style);
-				this.text_style_hash.Remove (full_name);
+				this.textStyleList.Remove (style);
+				this.textStyleHash.Remove (fullName);
 			}
 			else
 			{
-				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) does not exist", name, text_style_class), "style");
+				throw new System.ArgumentException (string.Format ("TextStyle named {0} ({1}) does not exist", name, textStyleClass), "style");
 			}
 		}
 		
@@ -1124,13 +1124,13 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				string new_state = this.style.SaveState (this.stylist);
-				string old_state = this.state;
+				string newState = this.style.SaveState (this.stylist);
+				string oldState = this.state;
 				
-				this.state = new_state;
+				this.state = newState;
 				
 				this.stylist.PreRedefine (this.style);
-				this.style.RestoreState (this.stylist, old_state);
+				this.style.RestoreState (this.stylist, oldState);
 				this.stylist.PostRedefine (this.style);
 				
 				return this;
@@ -1178,12 +1178,12 @@ namespace Epsitec.Common.Text
 
 			public override Common.Support.IOplet Undo()
 			{
-				TextStyle new_next = this.next;
-				TextStyle old_next = this.style.NextStyle;
+				TextStyle newNext = this.next;
+				TextStyle oldNext = this.style.NextStyle;
 				
-				this.style.DefineNextStyle (new_next);
+				this.style.DefineNextStyle (newNext);
 				
-				this.next = old_next;
+				this.next = oldNext;
 				
 				return this;
 			}
@@ -1244,10 +1244,10 @@ namespace Epsitec.Common.Text
 			{
 				this.state = this.style.SaveState (this.stylist);
 				
-				TextStyle default_style = this.stylist.GetDefaultTextStyle (this.style);
+				TextStyle defaultStyle = this.stylist.GetDefaultTextStyle (this.style);
 				
 				this.style.IsDeleted = true;
-				this.stylist.RedefineTextStyle (null, this.style, new Property[0], new TextStyle[1] { default_style } );
+				this.stylist.RedefineTextStyle (null, this.style, new Property[0], new TextStyle[1] { defaultStyle } );
 				
 				return this;
 			}
@@ -1309,16 +1309,16 @@ namespace Epsitec.Common.Text
 		public event EventHandler				StyleMapChanged;
 		
 		private TextContext						context;
-		private Internal.SettingsTable			internal_settings;
-		private System.Collections.ArrayList	text_style_list;
-		private System.Collections.Hashtable	text_style_hash;
-		private StyleMap						style_map;
-		private long							unique_id;
-		private object							unique_id_lock = new object ();
+		private Internal.SettingsTable			internalSettings;
+		private System.Collections.ArrayList	textStyleList;
+		private System.Collections.Hashtable	textStyleHash;
+		private StyleMap						styleMap;
+		private long							uniqueId;
+		private object							uniqueIdLock = new object ();
 		private StyleVersion					version = new StyleVersion ();
-		private long							version_of_last_update;
+		private long							versionOfLastUpdate;
 		
-		private bool							is_patcher_on_break;
-		private System.Collections.Stack		pending_manager_patches;
+		private bool							isPatcherOnBreak;
+		private System.Collections.Stack		pendingManagerPatches;
 	}
 }

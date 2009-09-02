@@ -39,19 +39,19 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.page_number;
+				return this.pageNumber;
 			}
 			set
 			{
-				if (this.page_number != value)
+				if (this.pageNumber != value)
 				{
-					this.page_number = value;
+					this.pageNumber = value;
 				}
 			}
 		}
 		
 		
-		public bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, double leading, bool sync_to_grid, out double ox, out double oy, out double width, out double next_y_dist)
+		public bool ConstrainLineBox(double yDist, double ascender, double descender, double height, double leading, bool syncToGrid, out double ox, out double oy, out double width, out double nextYDist)
 		{
 			//	A partir d'une position suggérée :
 			//
@@ -65,9 +65,9 @@ namespace Epsitec.Common.Text
 			ox    = 0;
 			oy    = 0;
 			width = this.width;
-			next_y_dist = -1;
+			nextYDist = -1;
 
-			if ( y_dist == 0 )  // première ligne ?
+			if ( yDist == 0 )  // première ligne ?
 			{
 				return true;
 			}
@@ -88,6 +88,6 @@ namespace Epsitec.Common.Text
 		
 		
 		private double							width;
-		private int								page_number;
+		private int								pageNumber;
 	}
 }

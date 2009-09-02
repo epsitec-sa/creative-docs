@@ -13,11 +13,11 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public OpenTypeProperty(string font_face, string font_style, int glyph_index)
+		public OpenTypeProperty(string fontFace, string fontStyle, int glyphIndex)
 		{
-			this.font_face   = font_face;
-			this.font_style  = font_style;
-			this.glyph_index = glyph_index;
+			this.fontFace   = fontFace;
+			this.fontStyle  = fontStyle;
+			this.glyphIndex = glyphIndex;
 		}
 		
 		
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.font_face;
+				return this.fontFace;
 			}
 		}
 		
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.font_style;
+				return this.fontStyle;
 			}
 		}
 		
@@ -82,19 +82,19 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.glyph_index;
+				return this.glyphIndex;
 			}
 		}
 		
 		
 		public override int GetGlyphForSpecialCode(ulong code)
 		{
-			return this.glyph_index;
+			return this.glyphIndex;
 		}
 		
 		public override OpenType.Font GetFontForSpecialCode(TextContext context, ulong code)
 		{
-			return TextContext.GetFont (this.font_face, this.font_style);
+			return TextContext.GetFont (this.fontFace, this.fontStyle);
 		}
 
 		
@@ -106,9 +106,9 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.font_face),
-				/**/				SerializerSupport.SerializeString (this.font_style),
-				/**/				SerializerSupport.SerializeInt (this.glyph_index));
+				/**/				SerializerSupport.SerializeString (this.fontFace),
+				/**/				SerializerSupport.SerializeString (this.fontStyle),
+				/**/				SerializerSupport.SerializeInt (this.glyphIndex));
 		}
 
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -117,13 +117,13 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 3);
 			
-			string font_face   = SerializerSupport.DeserializeString (args[0]);
-			string font_style  = SerializerSupport.DeserializeString (args[1]);
-			int    glyph_index = SerializerSupport.DeserializeInt (args[2]);
+			string fontFace   = SerializerSupport.DeserializeString (args[0]);
+			string fontStyle  = SerializerSupport.DeserializeString (args[1]);
+			int    glyphIndex = SerializerSupport.DeserializeInt (args[2]);
 			
-			this.font_face   = font_face;
-			this.font_style  = font_style;
-			this.glyph_index = glyph_index;
+			this.fontFace   = fontFace;
+			this.fontStyle  = fontStyle;
+			this.glyphIndex = glyphIndex;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -134,9 +134,9 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.font_face);
-			checksum.UpdateValue (this.font_style);
-			checksum.UpdateValue (this.glyph_index);
+			checksum.UpdateValue (this.fontFace);
+			checksum.UpdateValue (this.fontStyle);
+			checksum.UpdateValue (this.glyphIndex);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -147,15 +147,15 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(OpenTypeProperty a, OpenTypeProperty b)
 		{
-			return a.font_face == b.font_face
-				&& a.font_style == b.font_style
-				&& a.glyph_index == b.glyph_index;
+			return a.fontFace == b.fontFace
+				&& a.fontStyle == b.fontStyle
+				&& a.glyphIndex == b.glyphIndex;
 		}
 		
 		
 		
-		private string							font_face;
-		private string							font_style;
-		private int								glyph_index;
+		private string							fontFace;
+		private string							fontStyle;
+		private int								glyphIndex;
 	}
 }

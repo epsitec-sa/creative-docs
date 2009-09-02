@@ -22,12 +22,12 @@ namespace Epsitec.Common.Text.Styles
 		{
 			get
 			{
-				return this.settings_index;
+				return this.settingsIndex;
 			}
 			set
 			{
 				Debug.Assert.IsInBounds (value, 0, BaseSettings.MaxSettingsCount);
-				this.settings_index = (byte) value;
+				this.settingsIndex = (byte) value;
 			}
 		}
 		
@@ -37,6 +37,6 @@ namespace Epsitec.Common.Text.Styles
 		#endregion
 		
 		
-		private byte							settings_index;
+		private byte							settingsIndex;
 	}
 }

@@ -11,23 +11,23 @@ namespace Epsitec.Common.Text.Properties
 	{
 		public PropertiesProperty()
 		{
-			this.serialized_properties = new string[0];
+			this.serializedProperties = new string[0];
 		}
 		
-		public PropertiesProperty(string[] serialized_properties)
+		public PropertiesProperty(string[] serializedProperties)
 		{
-			this.serialized_properties = serialized_properties.Clone () as string[];
+			this.serializedProperties = serializedProperties.Clone () as string[];
 		}
 		
 		public PropertiesProperty(System.Collections.ICollection properties)
 		{
-			this.serialized_properties = new string[properties.Count];
+			this.serializedProperties = new string[properties.Count];
 			
 			Property[] props  = new Property[properties.Count];
 			
 			properties.CopyTo (props, 0);
 			
-			this.serialized_properties = PropertiesProperty.SerializePropertiesToStringArray (props);
+			this.serializedProperties = PropertiesProperty.SerializePropertiesToStringArray (props);
 		}
 		
 		
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.serialized_properties.Clone () as string[];
+				return this.serializedProperties.Clone () as string[];
 			}
 		}
 		
@@ -63,9 +63,9 @@ namespace Epsitec.Common.Text.Properties
 				int count = 0;
 				int index = 0;
 				
-				for (int i = 0; i < this.serialized_properties.Length; i++)
+				for (int i = 0; i < this.serializedProperties.Length; i++)
 				{
-					if (this.serialized_properties[i][0] == 'P')
+					if (this.serializedProperties[i][0] == 'P')
 					{
 						count++;
 					}
@@ -73,11 +73,11 @@ namespace Epsitec.Common.Text.Properties
 				
 				string[] copy = new string[count];
 				
-				for (int i = 0; i < this.serialized_properties.Length; i++)
+				for (int i = 0; i < this.serializedProperties.Length; i++)
 				{
-					if (this.serialized_properties[i][0] == 'P')
+					if (this.serializedProperties[i][0] == 'P')
 					{
-						copy[index++] = this.serialized_properties[i];
+						copy[index++] = this.serializedProperties[i];
 						
 						if (index == count)
 						{
@@ -97,9 +97,9 @@ namespace Epsitec.Common.Text.Properties
 				int count = 0;
 				int index = 0;
 				
-				for (int i = 0; i < this.serialized_properties.Length; i++)
+				for (int i = 0; i < this.serializedProperties.Length; i++)
 				{
-					if (this.serialized_properties[i][0] != 'P')
+					if (this.serializedProperties[i][0] != 'P')
 					{
 						count++;
 					}
@@ -107,11 +107,11 @@ namespace Epsitec.Common.Text.Properties
 				
 				string[] copy = new string[count];
 				
-				for (int i = 0; i < this.serialized_properties.Length; i++)
+				for (int i = 0; i < this.serializedProperties.Length; i++)
 				{
-					if (this.serialized_properties[i][0] != 'P')
+					if (this.serializedProperties[i][0] != 'P')
 					{
-						copy[index++] = this.serialized_properties[i];
+						copy[index++] = this.serializedProperties[i];
 						
 						if (index == count)
 						{
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Text.Properties
 			}
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			string[]   serialized_properties = new string[properties.Length];
+			string[]   serializedProperties  = new string[properties.Length];
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
@@ -151,34 +151,34 @@ namespace Epsitec.Common.Text.Properties
 				
 				Property.SerializeToText (buffer, properties[i]);
 				
-				serialized_properties[i] = buffer.ToString ();
+				serializedProperties[i] = buffer.ToString ();
 			}
 			
-			return serialized_properties;
+			return serializedProperties;
 		}
 		
-		public static Property[] DeserializePropertiesFromStringArray(TextContext context, string[] serialized_properties)
+		public static Property[] DeserializePropertiesFromStringArray(TextContext context, string[] serializedProperties)
 		{
-			if ((serialized_properties == null) ||
-				(serialized_properties.Length == 0))
+			if ((serializedProperties == null) ||
+				(serializedProperties.Length == 0))
 			{
 				return new Property[0];
 			}
 			
-			Property[] properties = new Property[serialized_properties.Length];
+			Property[] properties = new Property[serializedProperties.Length];
 			
 			for (int i = 0; i < properties.Length; i++)
 			{
-				properties[i] = PropertiesProperty.DeserializeProperty (context, serialized_properties[i]);
+				properties[i] = PropertiesProperty.DeserializeProperty (context, serializedProperties[i]);
 			}
 			
 			return properties;
 		}
 		
-		public static Property DeserializeProperty(TextContext context, string serialized_property)
+		public static Property DeserializeProperty(TextContext context, string serializedProperty)
 		{
 			Property property;
-			Property.DeserializeFromText (context, serialized_property, 2, serialized_property.Length-2, out property);
+			Property.DeserializeFromText (context, serializedProperty, 2, serializedProperty.Length-2, out property);
 			return property;
 		}
 		
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeStringArray (this.serialized_properties));
+				/**/				SerializerSupport.SerializeStringArray (this.serializedProperties));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -195,9 +195,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string[] serialized_properties = SerializerSupport.DeserializeStringArray (args[0]);
+			string[] serializedProperties = SerializerSupport.DeserializeStringArray (args[0]);
 			
-			this.serialized_properties = serialized_properties;
+			this.serializedProperties = serializedProperties;
 		}
 
 		public override Property GetCombination(Property property)
@@ -214,10 +214,10 @@ namespace Epsitec.Common.Text.Properties
 			
 			//	TODO: gérer les doublets
 			
-			c.serialized_properties = new string[a.serialized_properties.Length + b.serialized_properties.Length];
+			c.serializedProperties = new string[a.serializedProperties.Length + b.serializedProperties.Length];
 			
-			a.serialized_properties.CopyTo (c.serialized_properties, 0);
-			b.serialized_properties.CopyTo (c.serialized_properties, a.serialized_properties.Length);
+			a.serializedProperties.CopyTo (c.serializedProperties, 0);
+			b.serializedProperties.CopyTo (c.serializedProperties, a.serializedProperties.Length);
 			
 			return c;
 		}
@@ -229,7 +229,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
 		{
-			foreach (string property in this.serialized_properties)
+			foreach (string property in this.serializedProperties)
 			{
 				checksum.UpdateValue (property);
 			}
@@ -284,10 +284,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(PropertiesProperty a, PropertiesProperty b)
 		{
-			return Types.Comparer.Equal (a.serialized_properties, b.serialized_properties);
+			return Types.Comparer.Equal (a.serializedProperties, b.serializedProperties);
 		}
 		
 		
-		private string[]						serialized_properties;
+		private string[]						serializedProperties;
 	}
 }

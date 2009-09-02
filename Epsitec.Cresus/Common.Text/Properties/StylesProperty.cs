@@ -30,13 +30,13 @@ namespace Epsitec.Common.Text.Properties
 			int n = styles == null ? 0 : styles.Count;
 			int i = 0;
 			
-			this.style_names = new string[n];
+			this.styleNames = new string[n];
 			
 			if (n > 0)
 			{
 				foreach (TextStyle style in styles)
 				{
-					this.style_names[i++] = StyleList.GetFullName (style.Name, style.TextStyleClass);
+					this.styleNames[i++] = StyleList.GetFullName (style.Name, style.TextStyleClass);
 				}
 			}
 		}
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.style_names.Clone () as string[];
+				return this.styleNames.Clone () as string[];
 			}
 		}
 		
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.style_names.Length;
+				return this.styleNames.Length;
 			}
 		}
 		
@@ -78,12 +78,12 @@ namespace Epsitec.Common.Text.Properties
 		
 		public TextStyle[] GetTextStyles(TextContext context)
 		{
-			if (this.style_cache == null)
+			if (this.styleCache == null)
 			{
 				this.RefreshStyleCache (context.StyleList);
 			}
 			
-			return (TextStyle[]) this.style_cache.Clone ();
+			return (TextStyle[]) this.styleCache.Clone ();
 		}
 		
 		
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeStringArray (this.style_names));
+				/**/				SerializerSupport.SerializeStringArray (this.styleNames));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -106,8 +106,8 @@ namespace Epsitec.Common.Text.Properties
 			
 			string[] names = SerializerSupport.DeserializeStringArray (args[0]);
 			
-			this.style_names = names;
-			this.style_cache = null;
+			this.styleNames = names;
+			this.styleCache = null;
 		}
 
 		public override Property GetCombination(Property property)
@@ -124,10 +124,10 @@ namespace Epsitec.Common.Text.Properties
 			
 			//	TODO: gérer les doublets
 			
-			c.style_names = new string[a.style_names.Length + b.style_names.Length];
+			c.styleNames = new string[a.styleNames.Length + b.styleNames.Length];
 			
-			a.style_names.CopyTo (c.style_names, 0);
-			b.style_names.CopyTo (c.style_names, a.style_names.Length);
+			a.styleNames.CopyTo (c.styleNames, 0);
+			b.styleNames.CopyTo (c.styleNames, a.styleNames.Length);
 			
 			return c;
 		}
@@ -139,20 +139,20 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(Epsitec.Common.IO.IChecksum checksum)
 		{
-			foreach (string style in this.style_names)
+			foreach (string style in this.styleNames)
 			{
 				checksum.UpdateValue (style);
 			}
 		}
 		
 		
-		public static int CountMatchingStyles(TextStyle[] styles, TextStyleClass style_class)
+		public static int CountMatchingStyles(TextStyle[] styles, TextStyleClass styleClass)
 		{
 			int count = 0;
 			
 			for (int i = 0; i < styles.Length; i++)
 			{
-				if (styles[i].TextStyleClass == style_class)
+				if (styles[i].TextStyleClass == styleClass)
 				{
 					count++;
 				}
@@ -218,70 +218,70 @@ namespace Epsitec.Common.Text.Properties
 			//	des styles supprimés (qui ne se trouvent plus dans le StyleList)
 			//	par le style par défaut correspondant.
 			
-			int n = (this.style_names == null) ? 0 : this.style_names.Length;
+			int n = (this.styleNames == null) ? 0 : this.styleNames.Length;
 			
-			bool refresh_names = false;
-			bool replace_done  = false;
-			bool filter_null   = false;
+			bool refreshNames = false;
+			bool replaceDone  = false;
+			bool filterNull   = false;
 			
-			this.style_cache = new TextStyle[n];
+			this.styleCache = new TextStyle[n];
 			
 			for (int i = 0; i < n; i++)
 			{
-				TextStyle style = list.GetTextStyle (this.style_names[i]);
+				TextStyle style = list.GetTextStyle (this.styleNames[i]);
 				
 				if (style == null)
 				{
-					if (!replace_done)
+					if (!replaceDone)
 					{
 						//	Le style a été supprimé et nous n'avons pas encore généré
 						//	de référence au style de paragraphe par défaut :
 						
 						string         name;
-						TextStyleClass text_style_class;
+						TextStyleClass textStyleClass;
 						
-						StyleList.SplitFullName(this.style_names[i], out name, out text_style_class);
+						StyleList.SplitFullName(this.styleNames[i], out name, out textStyleClass);
 						
-						if (text_style_class == TextStyleClass.Paragraph)
+						if (textStyleClass == TextStyleClass.Paragraph)
 						{
 							//	Ne remplace que le style qui faisait référence à un
 							//	style de paragraphe; les autres styles peuvent simple-
 							//	ment être "oubliés".
 							
 							style        = list.TextContext.DefaultParagraphStyle;
-							replace_done = true;
+							replaceDone = true;
 						}
 						
-						refresh_names = true;
+						refreshNames = true;
 					}
 				}
 				
 				if (style == null)
 				{
-					filter_null = true;
+					filterNull = true;
 				}
 				
-				this.style_cache[i] = style;
+				this.styleCache[i] = style;
 			}
 			
-			if (filter_null)
+			if (filterNull)
 			{
-				this.style_cache = TextStyle.FilterNullStyles (this.style_cache);
+				this.styleCache = TextStyle.FilterNullStyles (this.styleCache);
 			}
 			
-			if (refresh_names)
+			if (refreshNames)
 			{
 				//	Regénère la table des noms de styles; ceci est nécessaire, car
 				//	nous avons fait le ménage plus haut :
 				
-				this.style_names = new string[this.style_cache.Length];
+				this.styleNames = new string[this.styleCache.Length];
 				
-				for (int i = 0; i < this.style_cache.Length; i++)
+				for (int i = 0; i < this.styleCache.Length; i++)
 				{
-					TextStyle style = this.style_cache[i];
+					TextStyle style = this.styleCache[i];
 					string    name  = StyleList.GetFullName (style.Name, style.TextStyleClass);
 					
-					this.style_names[i] = name;
+					this.styleNames[i] = name;
 				}
 			}
 		}
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Text.Properties
 				return true;
 			}
 			
-			return Types.Comparer.Equal (a.style_names, b.style_names);
+			return Types.Comparer.Equal (a.styleNames, b.styleNames);
 		}
 		
 		private static bool CompareEqualContents(TextStyle[] a, TextStyle[] b)
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		private string[]						style_names;
-		private TextStyle[]						style_cache;
+		private string[]						styleNames;
+		private TextStyle[]						styleCache;
 	}
 }

@@ -14,49 +14,49 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public static void Combine(double a_value, SizeUnits a_units, double b_value, SizeUnits b_units, out double c_value, out SizeUnits c_units)
+		public static void Combine(double aValue, SizeUnits aUnits, double bValue, SizeUnits bUnits, out double cValue, out SizeUnits cUnits)
 		{
-			switch (b_units)
+			switch (bUnits)
 			{
 				case SizeUnits.Percent:				//	xxx * Percent --> xxx
-					c_units = a_units;
-					c_value = a_value * b_value;
+					cUnits = aUnits;
+					cValue = aValue * bValue;
 					break;
 				
 				case SizeUnits.PercentNotCombining:	//	[%] --> [%] (écrase)
-					c_units = b_units;
-					c_value = b_value;
+					cUnits = bUnits;
+					cValue = bValue;
 					break;
 				
 				case SizeUnits.Points:				//	[pt] --> [pt] (écrase)
 				case SizeUnits.Millimeters:			//	[mm] --> [mm] (écrase)
 				case SizeUnits.Inches:				//	[in] --> [in] (écrase)
-					c_units = b_units;
-					c_value = b_value;
+					cUnits = bUnits;
+					cValue = bValue;
 					break;
 				
 				case SizeUnits.None:				//	xxx * [rien] --> xxx source
-					c_units = a_units;
-					c_value = a_value;
+					cUnits = aUnits;
+					cValue = aValue;
 					break;
 				
 				case SizeUnits.DeltaPoints:			//	ajoute des deltas, conserve l'unité de départ
 				case SizeUnits.DeltaMillimeters:
 				case SizeUnits.DeltaInches:
-					if (a_units == SizeUnits.None)
+					if (aUnits == SizeUnits.None)
 					{
-						c_units = b_units;
-						c_value = b_value;
+						cUnits = bUnits;
+						cValue = bValue;
 					}
 					else
 					{
-						c_units = a_units;
-						c_value = a_value + UnitsTools.ConvertToSizeUnits (b_value, b_units, a_units);
+						cUnits = aUnits;
+						cValue = aValue + UnitsTools.ConvertToSizeUnits (bValue, bUnits, aUnits);
 					}
 					break;
 				
 				default:
-					throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", b_units));
+					throw new System.NotSupportedException (string.Format ("Unsupported units: {0}.", bUnits));
 			}
 		}
 		
@@ -262,9 +262,9 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public static double ConvertToSizeUnits(double value, SizeUnits from_units, SizeUnits to_units)
+		public static double ConvertToSizeUnits(double value, SizeUnits fromUnits, SizeUnits toUnits)
 		{
-			if (from_units == to_units)
+			if (fromUnits == toUnits)
 			{
 				return value;
 			}
@@ -273,22 +273,22 @@ namespace Epsitec.Common.Text.Properties
 				return double.NaN;
 			}
 			
-			switch (to_units)
+			switch (toUnits)
 			{
 				case SizeUnits.Points:
 				case SizeUnits.DeltaPoints:
-					return UnitsTools.ConvertToPoints (value, from_units);
+					return UnitsTools.ConvertToPoints (value, fromUnits);
 				
 				case SizeUnits.Millimeters:
 				case SizeUnits.DeltaMillimeters:
-					return UnitsTools.ConvertToMillimeters (value, from_units);
+					return UnitsTools.ConvertToMillimeters (value, fromUnits);
 				
 				case SizeUnits.Inches:
 				case SizeUnits.DeltaInches:
-					return UnitsTools.ConvertToInches (value, from_units);
+					return UnitsTools.ConvertToInches (value, fromUnits);
 			}
 			
-			throw new System.InvalidOperationException (string.Format ("Cannot convert from {0} to {1}.", from_units, to_units));
+			throw new System.InvalidOperationException (string.Format ("Cannot convert from {0} to {1}.", fromUnits, toUnits));
 		}
 	}
 }

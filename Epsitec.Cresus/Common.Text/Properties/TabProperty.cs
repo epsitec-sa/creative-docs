@@ -14,7 +14,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public TabProperty(string tag)
 		{
-			this.tab_tag = tag;
+			this.tabTag = tag;
 		}
 		
 		
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.tab_tag;
+				return this.tabTag;
 			}
 		}
 		
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.tab_tag));
+				/**/				SerializerSupport.SerializeString (this.tabTag));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -78,9 +78,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string tab_tag = SerializerSupport.DeserializeString (args[0]);
+			string tabTag = SerializerSupport.DeserializeString (args[0]);
 			
-			this.tab_tag = tab_tag;
+			this.tabTag = tabTag;
 		}
 		
 		
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.tab_tag);
+			checksum.UpdateValue (this.tabTag);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -103,10 +103,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(TabProperty a, TabProperty b)
 		{
-			return a.tab_tag == b.tab_tag;
+			return a.tabTag == b.tabTag;
 		}
 		
 		
-		private string							tab_tag;
+		private string							tabTag;
 	}
 }

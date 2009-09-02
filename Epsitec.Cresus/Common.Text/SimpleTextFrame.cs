@@ -19,11 +19,11 @@ namespace Epsitec.Common.Text
 			this.height = height;
 		}
 		
-		public SimpleTextFrame(double width, double height, double grid_step)
+		public SimpleTextFrame(double width, double height, double gridStep)
 		{
 			this.width     = width;
 			this.height    = height;
-			this.grid_step = grid_step;
+			this.gridStep = gridStep;
 		}
 		
 		
@@ -61,13 +61,13 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.origin_x;
+				return this.originX;
 			}
 			set
 			{
-				if (this.origin_x != value)
+				if (this.originX != value)
 				{
-					this.origin_x = value;
+					this.originX = value;
 				}
 			}
 		}
@@ -76,13 +76,13 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.origin_y;
+				return this.originY;
 			}
 			set
 			{
-				if (this.origin_y != value)
+				if (this.originY != value)
 				{
-					this.origin_y = value;
+					this.originY = value;
 				}
 			}
 		}
@@ -121,13 +121,13 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.grid_step;
+				return this.gridStep;
 			}
 			set
 			{
-				if (this.grid_step != value)
+				if (this.gridStep != value)
 				{
-					this.grid_step = value;
+					this.gridStep = value;
 				}
 			}
 		}
@@ -136,13 +136,13 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.grid_offset;
+				return this.gridOffset;
 			}
 			set
 			{
-				if (this.grid_offset != value)
+				if (this.gridOffset != value)
 				{
-					this.grid_offset = value;
+					this.gridOffset = value;
 				}
 			}
 		}
@@ -152,19 +152,19 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.page_number;
+				return this.pageNumber;
 			}
 			set
 			{
-				if (this.page_number != value)
+				if (this.pageNumber != value)
 				{
-					this.page_number = value;
+					this.pageNumber = value;
 				}
 			}
 		}
 		
 		
-		public bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, double leading, bool sync_to_grid, out double ox, out double oy, out double width, out double next_y_dist)
+		public bool ConstrainLineBox(double yDist, double ascender, double descender, double height, double leading, bool syncToGrid, out double ox, out double oy, out double width, out double nextYDist)
 		{
 			//	A partir d'une position suggérée :
 			//
@@ -175,41 +175,41 @@ namespace Epsitec.Common.Text
 			//	détermine la position exacte de la ligne ainsi que la largeur
 			//	disponible et la position suggérée pour la prochaine ligne.
 			
-			double line_dy = leading;
-			double text_dy = ascender - descender;
-			double filler  = line_dy - text_dy;
+			double lineDy = leading;
+			double textDy = ascender - descender;
+			double filler = lineDy - textDy;
 			
-			double y_top = y_dist;
-			double y_bot = y_top - line_dy;
+			double yTop = yDist;
+			double yBot = yTop - lineDy;
 			
 			ox    = 0;
-			oy    = y_top - ascender - filler / 2;
+			oy    = yTop - ascender - filler / 2;
 			width = this.width;
 			
-			if ((sync_to_grid) &&
-				(this.grid_step != 0))
+			if ((syncToGrid) &&
+				(this.gridStep != 0))
 			{
 				//	Les coordonnées verticales (oy) commencent à zéro au sommet du cadre
 				//	et vont vers des valeurs négatives, plus on descend. L'arrondi doit
 				//	donc toujours se faire vers une valeur plus basse :
 				
-				oy += this.origin_y;
-				oy  = System.Math.Floor ((oy - this.grid_offset + 0.5) / this.grid_step) * this.grid_step + this.grid_offset;
-				oy -= this.origin_y;
+				oy += this.originY;
+				oy  = System.Math.Floor ((oy - this.gridOffset + 0.5) / this.gridStep) * this.gridStep + this.gridOffset;
+				oy -= this.originY;
 				
-				y_top  = oy + ascender + filler / 2;
-				y_bot  = y_top - line_dy;
-				y_dist = y_top;
+				yTop  = oy + ascender + filler / 2;
+				yBot  = yTop - lineDy;
+				yDist = yTop;
 			}
 			
-			if (y_bot < -this.height)
+			if (yBot < -this.height)
 			{
-				next_y_dist = y_dist;
+				nextYDist = yDist;
 				return false;
 			}
 			else
 			{
-				next_y_dist = y_dist - line_dy;
+				nextYDist = yDist - lineDy;
 				return true;
 			}
 		}
@@ -229,10 +229,10 @@ namespace Epsitec.Common.Text
 		
 		
 		private double							x, y;
-		private double							origin_x, origin_y;
+		private double							originX, originY;
 		private double							width, height;
-		private int								page_number;
-		private double							grid_step;
-		private double							grid_offset;
+		private int								pageNumber;
+		private double							gridStep;
+		private double							gridOffset;
 	}
 }

@@ -24,9 +24,9 @@ namespace Epsitec.Common.Text.Properties
 			this.DefineTabTags (tags);
 		}
 		
-		public TabsProperty(params string[] tab_tags)
+		public TabsProperty(params string[] tabTags)
 		{
-			this.DefineTabTags (tab_tags);
+			this.DefineTabTags (tabTags);
 		}
 		
 		
@@ -62,11 +62,11 @@ namespace Epsitec.Common.Text.Properties
 			{
 				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
-				for (int i = 0; i < this.tab_tags.Length; i++)
+				for (int i = 0; i < this.tabTags.Length; i++)
 				{
-					if (this.tab_tags[i].StartsWith ("-") == false)
+					if (this.tabTags[i].StartsWith ("-") == false)
 					{
-						list.Add (this.tab_tags[i]);
+						list.Add (this.tabTags[i]);
 					}
 				}
 				
@@ -77,11 +77,11 @@ namespace Epsitec.Common.Text.Properties
 		
 		public bool ContainsTabTag(string tag)
 		{
-			if (this.tab_tags != null)
+			if (this.tabTags != null)
 			{
-				for (int i = 0; i < this.tab_tags.Length; i++)
+				for (int i = 0; i < this.tabTags.Length; i++)
 				{
-					if (this.tab_tags[i] == tag)
+					if (this.tabTags[i] == tag)
 					{
 						return true;
 					}
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeStringArray (this.tab_tags));
+				/**/				SerializerSupport.SerializeStringArray (this.tabTags));
 		}
 		
 		public override void DeserializeFromText(TextContext context, string text, int pos, int length)
@@ -109,9 +109,9 @@ namespace Epsitec.Common.Text.Properties
 			
 			Debug.Assert.IsTrue (args.Length == 1);
 			
-			string[] tab_tags = SerializerSupport.DeserializeStringArray (args[0]);
+			string[] tabTags = SerializerSupport.DeserializeStringArray (args[0]);
 			
-			this.tab_tags = tab_tags;
+			this.tabTags = tabTags;
 		}
 		
 		
@@ -124,10 +124,10 @@ namespace Epsitec.Common.Text.Properties
 			
 			System.Collections.ArrayList tags = new System.Collections.ArrayList ();
 			
-			if ((a.tab_tags != null) &&
-				(a.tab_tags.Length > 0))
+			if ((a.tabTags != null) &&
+				(a.tabTags.Length > 0))
 			{
-				foreach (string tag in a.tab_tags)
+				foreach (string tag in a.tabTags)
 				{
 					if (tags.Contains (tag) == false)
 					{
@@ -136,10 +136,10 @@ namespace Epsitec.Common.Text.Properties
 				}
 			}
 			
-			if ((b.tab_tags != null) &&
-				(b.tab_tags.Length > 0))
+			if ((b.tabTags != null) &&
+				(b.tabTags.Length > 0))
 			{
-				foreach (string tag in b.tab_tags)
+				foreach (string tag in b.tabTags)
 				{
 					if (tag.StartsWith ("-"))
 					{
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.tab_tags);
+			checksum.UpdateValue (this.tabTags);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -171,17 +171,17 @@ namespace Epsitec.Common.Text.Properties
 		
 		private void DefineTabTags(string[] tags)
 		{
-			this.tab_tags = (string[]) tags.Clone ();
+			this.tabTags = (string[]) tags.Clone ();
 			this.Invalidate ();
 		}
 		
 		
 		private static bool CompareEqualContents(TabsProperty a, TabsProperty b)
 		{
-			return Types.Comparer.Equal (a.tab_tags, b.tab_tags);
+			return Types.Comparer.Equal (a.tabTags, b.tabTags);
 		}
 		
 		
-		private string[]						tab_tags;
+		private string[]						tabTags;
 	}
 }

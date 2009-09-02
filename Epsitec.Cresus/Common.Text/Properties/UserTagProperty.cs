@@ -13,11 +13,11 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public UserTagProperty(string tag_type, string tag_data, long id)
+		public UserTagProperty(string tagType, string tagData, long id)
 		{
-			this.tag_type = tag_type;
-			this.tag_data = tag_data;
-			this.id       = id;
+			this.tagType = tagType;
+			this.tagData = tagData;
+			this.id      = id;
 		}
 		
 		
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.tag_type;
+				return this.tagType;
 			}
 		}
 		
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 			get
 			{
-				return this.tag_data;
+				return this.tagData;
 			}
 		}
 		
@@ -88,8 +88,8 @@ namespace Epsitec.Common.Text.Properties
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			SerializerSupport.Join (buffer,
-				/**/				SerializerSupport.SerializeString (this.tag_type),
-				/**/				SerializerSupport.SerializeString (this.tag_data),
+				/**/				SerializerSupport.SerializeString (this.tagType),
+				/**/				SerializerSupport.SerializeString (this.tagData),
 				/**/				SerializerSupport.SerializeLong (this.id));
 		}
 
@@ -99,13 +99,13 @@ namespace Epsitec.Common.Text.Properties
 			
 			System.Diagnostics.Debug.Assert (args.Length == 3);
 			
-			string tag_type = SerializerSupport.DeserializeString (args[0]);
-			string tag_data = SerializerSupport.DeserializeString (args[1]);
-			long   id       = SerializerSupport.DeserializeLong (args[2]);
+			string tagType = SerializerSupport.DeserializeString (args[0]);
+			string tagData = SerializerSupport.DeserializeString (args[1]);
+			long   id      = SerializerSupport.DeserializeLong (args[2]);
 			
-			this.tag_type = tag_type;
-			this.tag_data = tag_data;
-			this.id       = id;
+			this.tagType = tagType;
+			this.tagData = tagData;
+			this.id      = id;
 		}
 		
 		public override Property GetCombination(Property property)
@@ -116,8 +116,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.tag_type);
-			checksum.UpdateValue (this.tag_data);
+			checksum.UpdateValue (this.tagType);
+			checksum.UpdateValue (this.tagData);
 			checksum.UpdateValue (this.id);
 		}
 		
@@ -129,8 +129,8 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(UserTagProperty a, UserTagProperty b)
 		{
-			return a.tag_type == b.tag_type
-				&& a.tag_data == b.tag_data
+			return a.tagType == b.tagType
+				&& a.tagData == b.tagData
 				&& a.id == b.id;
 		}
 		
@@ -144,11 +144,11 @@ namespace Epsitec.Common.Text.Properties
 				Properties.UserTagProperty px = x as Properties.UserTagProperty;
 				Properties.UserTagProperty py = y as Properties.UserTagProperty;
 				
-				int result = string.Compare (px.tag_type, py.tag_type);
+				int result = string.Compare (px.tagType, py.tagType);
 				
 				if (result == 0)
 				{
-					result = string.Compare (px.tag_data, py.tag_data);
+					result = string.Compare (px.tagData, py.tagData);
 					
 					if (result == 0)
 					{
@@ -166,8 +166,8 @@ namespace Epsitec.Common.Text.Properties
 		#endregion
 		
 		
-		private string							tag_type;
-		private string							tag_data;
+		private string							tagType;
+		private string							tagData;
 		private long							id;
 	}
 }

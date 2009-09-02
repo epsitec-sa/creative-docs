@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
-		public StrikeoutProperty(double position, SizeUnits position_units, double thickness, SizeUnits thickness_units, string draw_class, string draw_style) : base (position, position_units, thickness, thickness_units, draw_class, draw_style)
+		public StrikeoutProperty(double position, SizeUnits positionUnits, double thickness, SizeUnits thicknessUnits, string drawClass, string drawStyle) : base (position, positionUnits, thickness, thicknessUnits, drawClass, drawStyle)
 		{
 		}
 		

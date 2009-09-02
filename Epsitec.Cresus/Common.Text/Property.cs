@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.internal_name;
+				return this.internalName;
 			}
 			set
 			{
@@ -71,9 +71,9 @@ namespace Epsitec.Common.Text
 					value = null;
 				}
 				
-				if (this.internal_name != value)
+				if (this.internalName != value)
 				{
-					this.internal_name = value;
+					this.internalName = value;
 				}
 			}
 		}
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Text
 		
 		public void Invalidate()
 		{
-			this.contents_signature = 0;
+			this.contentsSignature = 0;
 		}
 		
 		
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Text
 		#region IContentsSignature Members
 		public int GetContentsSignature()
 		{
-			if (this.contents_signature == 0)
+			if (this.contentsSignature == 0)
 			{
 				IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
 				
@@ -122,10 +122,10 @@ namespace Epsitec.Common.Text
 				//	l'ajuste pour éviter d'interpréter cela comme une absence
 				//	de signature :
 				
-				this.contents_signature = (signature == 0) ? 1 : signature;
+				this.contentsSignature = (signature == 0) ? 1 : signature;
 			}
 			
-			return this.contents_signature;
+			return this.contentsSignature;
 		}
 		#endregion
 		
@@ -351,20 +351,20 @@ namespace Epsitec.Common.Text
 		{
 			System.Diagnostics.Debug.Assert (property != null);
 			
-			string type_name = property.GetType ().Name;
-			string prop_name = type_name.Substring (0, type_name.Length - 8);	//	"XxxProperty" --> "Xxx"
+			string typeName = property.GetType ().Name;
+			string propName = typeName.Substring (0, typeName.Length - 8);	//	"XxxProperty" --> "Xxx"
 			
-			System.Diagnostics.Debug.Assert (property.WellKnownType.ToString () == prop_name);
-			System.Diagnostics.Debug.Assert (type_name.Substring (prop_name.Length) == "Property");
+			System.Diagnostics.Debug.Assert (property.WellKnownType.ToString () == propName);
+			System.Diagnostics.Debug.Assert (typeName.Substring (propName.Length) == "Property");
 			
 			buffer.Append ("{");
-			buffer.Append (prop_name);
+			buffer.Append (propName);
 			
-			if ((property.internal_name != null) &&
-				(property.internal_name.Length > 0))
+			if ((property.internalName != null) &&
+				(property.internalName.Length > 0))
 			{
 				buffer.Append (",");
-				buffer.Append (property.internal_name);
+				buffer.Append (property.internalName);
 			}
 			
 			buffer.Append (":");
@@ -384,45 +384,45 @@ namespace Epsitec.Common.Text
 			System.Diagnostics.Debug.Assert (text[pos+0] == '{');
 			System.Diagnostics.Debug.Assert (text[pos+length-1] == '}');
 			
-			int sep_pos = text.IndexOf (':', pos, length);
-			int end_pos = pos + length;
+			int sepPos = text.IndexOf (':', pos, length);
+			int endPos = pos + length;
 			
-			System.Diagnostics.Debug.Assert (sep_pos > pos);
+			System.Diagnostics.Debug.Assert (sepPos > pos);
 			
-			string prop_name = text.Substring (pos+1, sep_pos - pos - 1);
-			string intl_name = null;
+			string propName = text.Substring (pos+1, sepPos - pos - 1);
+			string intlName = null;
 			
-			if (prop_name.IndexOf (',') > 0)
+			if (propName.IndexOf (',') > 0)
 			{
-				string[] split = prop_name.Split (',');
+				string[] split = propName.Split (',');
 				
-				prop_name = split[0];
-				intl_name = split[1];
+				propName = split[0];
+				intlName = split[1];
 			}
 			
-			Property template = Property.templates[prop_name] as Property;
+			Property template = Property.templates[propName] as Property;
 			
 			if (template == null)
 			{
 				//	Nous n'avons pas encore de propriété modèle que l'on puisse
 				//	clôner; il faut donc l'instancier dynamiquement :
 				
-				string type_name = string.Concat ("Epsitec.Common.Text.Properties.", prop_name, "Property");
+				string typeName = string.Concat ("Epsitec.Common.Text.Properties.", propName, "Property");
 				
 				System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly ();
-				System.Type                type     = assembly.GetType (type_name);
+				System.Type                type     = assembly.GetType (typeName);
 				
 				template = System.Activator.CreateInstance (type) as Property;
 				
-				Property.templates[prop_name] = template;
+				Property.templates[propName] = template;
 			}
 			
 			property = template.EmptyClone ();
-			property.internal_name = intl_name;
+			property.internalName = intlName;
 			
-			sep_pos++;
+			sepPos++;
 			
-			property.DeserializeFromText (context, text, sep_pos, end_pos - sep_pos - 1);
+			property.DeserializeFromText (context, text, sepPos, endPos - sepPos - 1);
 		}
 		
 		
@@ -546,8 +546,8 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		private int								contents_signature;
-		private string							internal_name;
+		private int								contentsSignature;
+		private string							internalName;
 		
 		static System.Collections.Hashtable		templates = new System.Collections.Hashtable ();
 	}
