@@ -1,26 +1,24 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Support
 {
-	using IDataObject       = System.Windows.Forms.IDataObject;
-	using Regex             = System.Text.RegularExpressions.Regex;
-	using RegexOptions      = System.Text.RegularExpressions.RegexOptions;
-	using Match             = System.Text.RegularExpressions.Match;
-	using CaptureCollection = System.Text.RegularExpressions.CaptureCollection;
-	using Capture           = System.Text.RegularExpressions.Capture;
+	using IDataObject=System.Windows.Forms.IDataObject;
 	
 	/// <summary>
 	/// La classe Clipboard donne accès au presse-papier.
 	/// </summary>
 	public class Clipboard
 	{
-		public static ReadData GetData()
+		public static ClipboardReadData GetData()
 		{
-			return new ReadData (null);
+			return new ClipboardReadData (null);
 		}
 		
-		public static void     SetData(WriteData data)
+		public static void     SetData(ClipboardWriteData data)
 		{
 			System.Windows.Forms.Clipboard.SetDataObject (data.Data, true);
 		}
@@ -391,10 +389,11 @@ namespace Epsitec.Common.Support
 					}
 					
 					elem = elem.Substring (1, elem.Length - 2);
+					string mappedElem;
 					
-					if (Clipboard.mapEntities.Contains (elem))
+					if (Clipboard.mapEntities.TryGetValue (elem, out mappedElem))
 					{
-						elem = Clipboard.mapEntities[elem] as string;
+						elem = mappedElem;
 					}
 					
 					if (elem.StartsWith ("#"))
@@ -413,311 +412,15 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static ReadData CreateReadDataFromIDataObject(IDataObject data)
+		public static ClipboardReadData CreateReadDataFromIDataObject(IDataObject data)
 		{
-			return new ReadData (data);
+			return new ClipboardReadData (data);
 		}
 		
 		
-		#region ReadData class
-		public class ReadData
-		{
-			internal ReadData(IDataObject data)
-			{
-				if (data == null)
-				{
-					this.data = System.Windows.Forms.Clipboard.GetDataObject ();
-					this.html = Epsitec.Common.Support.Platform.Win32.Clipboard.ReadHtmlFormat ();
-				}
-				else
-				{
-					this.data = data;
-					this.html = null;
-				}
-			}
-			
-			
-			public string[]						NativeFormats
-			{
-				get
-				{
-					return data.GetFormats (false);
-				}
-			}
-			
-			public string[]						AllPossibleFormats
-			{
-				get
-				{
-					return data.GetFormats (true);
-				}
-			}
-			
-			
-			public object Read(string format)
-			{
-				if ((format == Formats.Hmtl) &&
-					(this.html != null))
-				{
-					System.Text.StringBuilder buffer = new System.Text.StringBuilder (this.html.Length);
-
-					for (int i = 0; i < this.html.Length; i++)
-					{
-						buffer.Append ((char) this.html[i]);
-					}
-
-					return buffer.ToString ();
-				}
-				else
-				{
-					return data.GetData (format, true);
-				}
-			}
-			
-			public string ReadAsString(string format)
-			{
-				return this.Read (format) as string;
-			}
-			
-			public string[] ReadAsStringArray(string format)
-			{
-				return this.Read (format) as string[];
-			}
-			
-			public string ReadText()
-			{
-				return this.data.GetData (typeof (string)) as string;
-			}
-			
-			public string ReadHtmlFragment()
-			{
-				string rawHtml = this.ReadAsString (Formats.Hmtl);
-				
-				if (rawHtml == null)
-				{
-					return null;
-				}
-				
-				//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
-				
-				int idxVersion    = rawHtml.IndexOf ("Version:");
-				int idxStartHtml  = rawHtml.IndexOf ("StartHTML:");
-				int idxEndHtml    = rawHtml.IndexOf ("EndHTML:");
-				int idxStartFrag  = rawHtml.IndexOf ("StartFragment:");
-				int idxEndFrag    = rawHtml.IndexOf ("EndFragment:");
-				int idxStart      = rawHtml.IndexOf ("<!--StartFragment");
-				int idxEnd        = rawHtml.IndexOf ("<!--EndFragment");
-				int idxBegin      = idxStart < 0 ? -1 : rawHtml.IndexOf (">", idxStart) + 1;
-				
-				if ((idxStart      < idxVersion) ||
-					(idxEnd        < idxStart) ||
-					(idxBegin      < 1) ||
-					(idxVersion    < 0) ||
-					(idxStartHtml < idxVersion) ||
-					(idxEndHtml   < idxStartHtml) ||
-					(idxStartFrag < idxVersion) ||
-					(idxEndFrag   < idxStartFrag))
-				{
-					return null;
-				}
-				
-				return Clipboard.ConvertBrokenUtf8ToString (rawHtml.Substring (idxBegin, idxEnd - idxBegin));
-			}
-			
-			public string ReadHtmlDocument()
-			{
-				string rawHtml = this.ReadAsString (Formats.Hmtl);
-				
-				if (rawHtml == null)
-				{
-					return null;
-				}
-				
-				//	Vérifie qu'il y a bien tous les tags dans le fragment HTML :
-				
-				int idxVersion    = rawHtml.IndexOf ("Version:");
-				int idxStartHtml  = rawHtml.IndexOf ("StartHTML:");
-				int idxEndHtml    = rawHtml.IndexOf ("EndHTML:");
-				int idxStartFrag  = rawHtml.IndexOf ("StartFragment:");
-				int idxEndFrag    = rawHtml.IndexOf ("EndFragment:");
-				int idxStart      = rawHtml.IndexOf ("<!--StartFragment");
-				int idxEnd        = rawHtml.IndexOf ("<!--EndFragment");
-				int idxBegin      = idxStart < 0 ? -1 : rawHtml.IndexOf (">", idxStart) + 1;
-				
-				if ((idxStart      < idxVersion) ||
-					(idxEnd        < idxStart) ||
-					(idxBegin      < 1) ||
-					(idxVersion    < 0) ||
-					(idxStartHtml < idxVersion) ||
-					(idxEndHtml   < idxStartHtml) ||
-					(idxStartFrag < idxVersion) ||
-					(idxEndFrag   < idxStartFrag))
-				{
-					return null;
-				}
-				
-				idxBegin = System.Int32.Parse (this.ExtractDigits (rawHtml, idxStartHtml + 10));
-				idxEnd   = System.Int32.Parse (this.ExtractDigits (rawHtml, idxEndHtml + 8));
-				
-				return Clipboard.ConvertBrokenUtf8ToString (rawHtml.Substring (idxBegin, idxEnd - idxBegin));
-			}
-			
-			public string ReadTextLayout()
-			{
-				return this.ReadAsString ("Epsitec:TextLayout ver:1");
-			}
-			
-			
-			public bool IsCompatible(Format format)
-			{
-				switch (format)
-				{
-					case Format.Text:
-						return this.data.GetDataPresent (Formats.String, true);
-					case Format.Image:
-						return this.data.GetDataPresent (Formats.Bitmap, true);
-					case Format.MicrosoftHtml:
-						return this.data.GetDataPresent (Formats.Hmtl, false);
-				}
-				
-				return false;
-			}
-			
-			
-			protected string ExtractDigits(string text, int pos)
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				
-				for (int i = pos; i < text.Length; i++)
-				{
-					char c = text[i];
-					
-					if ((c < '0') || (c > '9'))
-					{
-						break;
-					}
-					
-					buffer.Append (c);
-				}
-				
-				return buffer.ToString ();
-			}
-			
-			
-			private IDataObject				data;
-			private byte[]					html;
-		}
-		#endregion
-		
-		#region WriteData class
-		public class WriteData
-		{
-			public WriteData()
-			{
-				this.data = new System.Windows.Forms.DataObject ();
-			}
-			
-			
-			internal IDataObject				Data
-			{
-				get
-				{
-					return this.data;
-				}
-			}
-
-
-			public void WriteObject(string format, object value)
-			{
-				this.data.SetData(format, false, value);
-			}
-
-			public void WriteText(string value)
-			{
-				value = value.Replace ("\r\n", "\n");
-				value = value.Replace ("\n", "\r\n");
-				
-				this.data.SetData ("UnicodeText", true, value);
-			}
-			
-			public void WriteHtmlFragment(string value)
-			{
-				//	Quand on place un texte HTML dans le presse-papier, il faut aussi en placer une
-				//	version textuelle :
-				
-				string text = value.Replace ("<br />", "\r\n");
-				this.WriteText (Support.Utilities.XmlBreakToText (text));
-				
-				System.Text.StringBuilder html = new System.Text.StringBuilder ();
-				
-				//	Le malheur, c'est que ni FrontPage 2000, ni Word 2000 ne comprennent l'entité &apos;
-				//	et du coup, on ne peut pas l'utiliser !
-				
-				string source = value.Replace ("&apos;", "&#39;");
-				string utf8   = Clipboard.ConvertStringToBrokenUtf8 (Clipboard.ConvertSimpleXmlToHtml (source));
-				
-				html.Append ("Version:1.0\n");
-				html.Append ("StartHTML:00000000\n");		int idxStartHtml = html.Length - 9;
-				html.Append ("EndHTML:00000000\n");			int idxEndHtml   = html.Length - 9;
-				html.Append ("StartFragment:00000000\n");	int idxStartFrag = html.Length - 9;
-				html.Append ("EndFragment:00000000\n");		int idxEndFrag   = html.Length - 9;
-				html.Append ("\n");							int idxHtmlBegin = html.Length;
-				html.Append ("<html>\n");
-				html.Append ("<body>\n");					int idxFragBegin = html.Length;
-				html.Append ("<!--StartFragment-->\n");
-				html.Append (utf8);
-				html.Append ("<!--EndFragment-->\n");		int idxFragEnd   = html.Length;
-				html.Append ("</body>\n");
-				html.Append ("</html>\n");					int idxHtmlEnd   = html.Length;
-				
-				this.PatchString (html, idxStartHtml, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxHtmlBegin));
-				this.PatchString (html, idxEndHtml,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxHtmlEnd));
-				this.PatchString (html, idxStartFrag, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxFragBegin));
-				this.PatchString (html, idxEndFrag,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idxFragEnd));
-				
-				
-				byte[] blob = new byte[html.Length];
-
-				for (int i = 0; i < html.Length; i++)
-				{
-					blob[i] = (byte) html[i];
-				}
-
-				System.IO.MemoryStream stream = new System.IO.MemoryStream (blob);
-				
-				this.data.SetData ("HTML Format", true, stream);
-			}
-
-			public void WriteTextLayout(string value)
-			{
-				this.data.SetData ("Epsitec:TextLayout ver:1", false, value);
-			}
-			
-			
-			protected void PatchString(System.Text.StringBuilder buffer, int pos, string text)
-			{
-				for (int i = 0; i < text.Length; i++)
-				{
-					buffer[pos+i] = text[i];
-				}
-			}
-			
-			
-			protected IDataObject				data;
-		}
-		#endregion
-		
-		public enum Format
-		{
-			None,
-			Unsupported,
-			
-			Text,
-			Image,
-			MicrosoftHtml
-		}
 		
 		#region Clipboard setup
+		
 		static Clipboard()
 		{
 			//	Référence: http://www.w3.org/TR/REC-html40/sgml/entities.html#iso-88591
@@ -821,30 +524,70 @@ namespace Epsitec.Common.Support
 					"thorn",	"#254",
 					"yuml",		"#255",
 				};
-			
-			Clipboard.mapEntities = new System.Collections.Hashtable ();
+
+			Clipboard.mapEntities = new Dictionary<string, string> ();
 			
 			for (int i = 0; i < pairs.Length; i += 2)
 			{
-				Clipboard.mapEntities[pairs[i+0]] = pairs[i+1];
+				Clipboard.mapEntities.Add (pairs[i+0], pairs[i+1]);
 			}
 			
-			Clipboard.regexStyle        = new Regex (@"\A<span((\s*style\s*=\s*(?<a>['""])(?<style>.*?)\k<a>)|(\s*\w*)|(\s*\w*\s*=\s*[^\s>]*?\s*))*\s*\>\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+			Clipboard.regexStyle       = new Regex (@"\A<span((\s*style\s*=\s*(?<a>['""])(?<style>.*?)\k<a>)|(\s*\w*)|(\s*\w*\s*=\s*[^\s>]*?\s*))*\s*\>\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 			Clipboard.regexMsoSpacerun = new Regex (@"\Amso\-spacerun\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 			Clipboard.regexMsoTabcount = new Regex (@"\Amso\-tab\-count\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+
+			Platform.Win32.Clipboard.Initialize ();
+			Platform.Win32.Clipboard.DataChanged += Clipboard.HandleDataChanged;
 		}
+
 		#endregion
 
-		private static class Formats
+		private static void HandleDataChanged(object sender, ClipboardDataChangedEventArgs e)
 		{
-			public const string Hmtl   = "HTML Format";
-			public const string String = "System.String";
-			public const string Bitmap = "System.Drawing.Bitmap";
+			var handler = Clipboard.DataChanged;
+
+			if (handler != null)
+			{
+				handler (sender, e);
+			}
 		}
+
+		internal static class Formats
+		{
+			public const string Hmtl			= "HTML Format";
+			public const string String			= "System.String";
+			public const string Bitmap			= "System.Drawing.Bitmap";
+			public const string TextLayoutV1	= "Epsitec:TextLayout ver:1";
+			
+			public const string RawBitmap		= "Bitmap";
+			public const string CommaSeparatedValue = "CommaSeparatedValue";
+			public const string Dib				= "Dib";
+			public const string EnhancedMetafile = "EnhancedMetafile";
+			public const string FileDrop		= "FileDrop";
+			public const string RawHtml			= "Html";
+			public const string Locale			= "Locale";
+			public const string MetafilePict	= "MetafilePict";
+			public const string OemText			= "OemText";
+			public const string Palette			= "Palette";
+			public const string PenData			= "PenData";
+			public const string Riff			= "Riff";
+			public const string Rtf				= "Rtf";
+			public const string Serializable	= "Serializable";
+			public const string StringFormat	= "StringFormat";
+			public const string SymbolicLink	= "SymbolicLink";
+			public const string Text			= "Text";
+			public const string Tiff			= "Tiff";
+			public const string UnicodeText		= "UnicodeText";
+			public const string WaveAudio		= "WaveAudio";
+		}
+
 		
-		static System.Collections.Hashtable		mapEntities;
-		static Regex							regexStyle;
-		static Regex							regexMsoSpacerun;
-		static Regex							regexMsoTabcount;
+
+		public static event EventHandler<ClipboardDataChangedEventArgs> DataChanged;
+		
+		private static readonly Dictionary<string, string>	mapEntities;
+		private static readonly Regex						regexStyle;
+		private static readonly Regex						regexMsoSpacerun;
+		private static readonly Regex						regexMsoTabcount;
 	}
 }

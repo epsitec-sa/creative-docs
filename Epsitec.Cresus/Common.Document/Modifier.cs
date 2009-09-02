@@ -1914,7 +1914,7 @@ namespace Epsitec.Common.Document
 			//	Met un objet quelconque dans le presse-papiers, lorsque CrDoc a coupé/copié un objet
 			//	interne. Ainsi, l'éventuel texte ou image standard contenu dans le presse-papiers
 			//	est "effacé".
-			Clipboard.WriteData data = new Clipboard.WriteData();
+			ClipboardWriteData data = new Clipboard.ClipboardWriteData ();
 			data.WriteObject("Epsitec.Crdoc", new FooObject());
 			Clipboard.SetData(data);
 		}
@@ -2076,7 +2076,7 @@ namespace Epsitec.Common.Document
 		protected System.Drawing.Bitmap GetPastedBitmap()
 		{
 			//	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.
-			Clipboard.ReadData clipboard = Clipboard.GetData();
+			ClipboardReadData clipboard = Clipboard.GetData ();
 			System.Drawing.Bitmap bitmap;
 
 			bitmap = clipboard.Read("System.Drawing.Bitmap") as System.Drawing.Bitmap;

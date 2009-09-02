@@ -2039,7 +2039,7 @@ namespace Epsitec.Common.Widgets
 					value = this.host.Text;
 				}
 
-				Clipboard.WriteData data = new Clipboard.WriteData ();
+				ClipboardWriteData data = new ClipboardWriteData ();
 
 				data.WriteTextLayout (value);
 				data.WriteHtmlFragment (value);
@@ -2064,7 +2064,7 @@ namespace Epsitec.Common.Widgets
 					this.host.SelectAll ();
 				}
 
-				Clipboard.WriteData data = new Clipboard.WriteData ();
+				ClipboardWriteData data = new ClipboardWriteData ();
 
 				data.WriteTextLayout (value);
 				data.WriteHtmlFragment (value);
@@ -2113,7 +2113,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 
-				Clipboard.ReadData data = Clipboard.GetData ();
+				ClipboardReadData data = Clipboard.GetData ();
 
 				string text_layout = data.ReadTextLayout ();
 				string html        = null;

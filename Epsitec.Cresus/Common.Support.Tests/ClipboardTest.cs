@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckGetData()
 		{
-			Clipboard.ReadData data = Clipboard.GetData ();
+			ClipboardReadData data = Clipboard.GetData ();
 			
 			string[] fmt_1 = data.NativeFormats;
 			string[] fmt_2 = data.AllPossibleFormats;
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckReadHtmlFragment()
 		{
-			Clipboard.ReadData data = Clipboard.GetData ();
+			ClipboardReadData data = Clipboard.GetData ();
 			string             html = data.ReadHtmlFragment ();
 			
 			if (html != null)
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckReadHtmlDocument()
 		{
-			Clipboard.ReadData data = Clipboard.GetData ();
+			ClipboardReadData data = Clipboard.GetData ();
 			string             html = data.ReadHtmlDocument ();
 			
 			if (html != null)
@@ -108,11 +108,11 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckIsCompatible()
 		{
-			Clipboard.ReadData data = Clipboard.GetData ();
-			
-			foreach (int i in System.Enum.GetValues (typeof (Clipboard.Format)))
+			ClipboardReadData data = Clipboard.GetData ();
+
+			foreach (int i in System.Enum.GetValues (typeof (ClipboardDataFormat)))
 			{
-				Clipboard.Format format = (Clipboard.Format) i;
+				ClipboardDataFormat format = (Clipboard.ClipboardDataFormat) i;
 				System.Console.Out.WriteLine ("Compatible with {0}: {1}", format, data.IsCompatible (format));
 			}
 		}
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Support
 		[Test]
 		public void CheckWriteHtmlFragment()
 		{
-			Clipboard.WriteData data = new Clipboard.WriteData ();
+			ClipboardWriteData data = new Clipboard.ClipboardWriteData ();
 			
 			data.WriteText ("Hello world\u00A0! Three [   ] spaces.\r\n\r\nLast line.");
 			data.WriteHtmlFragment ("Hello <i>world</i>&#160;! Three [   ] spaces.<br/><br/>Last line.");

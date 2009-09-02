@@ -95,8 +95,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				{
 					value = text.Text;
 				}
-				
-				Support.Clipboard.WriteData data = new Support.Clipboard.WriteData ();
+
+				Support.ClipboardWriteData data = new Support.ClipboardWriteData ();
 				
 				data.WriteTextLayout (value);
 				data.WriteHtmlFragment (value);
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (text != null)
 			{
-				Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
+				Support.ClipboardReadData data = Support.Clipboard.GetData ();
 				
 				string html = null;
 

@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Support.Clipboard.ReadData Data
+		public Support.ClipboardReadData Data
 		{
 			get
 			{

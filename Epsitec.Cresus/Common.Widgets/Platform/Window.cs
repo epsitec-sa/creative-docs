@@ -2460,7 +2460,7 @@ namespace Epsitec.Common.Widgets.Platform
 			buffer.Append ("------------------------------------------------------------");
 			buffer.Append ("\r\n");
 
-			Support.Clipboard.WriteData data = new Epsitec.Common.Support.Clipboard.WriteData ();
+			Support.ClipboardWriteData data = new Epsitec.Common.Support.Clipboard.ClipboardWriteData ();
 			data.WriteText (buffer.ToString ());
 			Support.Clipboard.SetData (data);
 
