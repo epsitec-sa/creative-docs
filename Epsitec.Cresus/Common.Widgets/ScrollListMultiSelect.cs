@@ -157,7 +157,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.dragSelectionStartIndex == EmptySelection)
 			{
-				this.dragSelectionStartIndex = index;
+				if (index >= 0)
+				{
+					int max = this.Items.Count-1;
+					this.dragSelectionStartIndex = System.Math.Min (max, index);
+				}
 			}
 
 			base.MouseSelectRow (index);

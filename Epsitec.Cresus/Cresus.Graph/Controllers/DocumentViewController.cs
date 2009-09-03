@@ -178,6 +178,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.stackValuesCheckButton.ActiveStateChanged += sender => this.StackValues = (this.stackValuesCheckButton.ActiveState == ActiveState.Yes);
 			this.captionColorPalette.ExportSelectedColor += sender => this.DefineColor (this.captionColorPalette.SelectedColor.Basic);
 
+#if false
 			var button = new Button ()
 			{
 				Anchor = AnchorStyles.TopRight,
@@ -200,6 +201,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						this.LayoutMode = ContainerLayoutMode.VerticalFlow;
 					}
 				};
+#endif
 		}
 
 		private void DefineColor(Color color)
