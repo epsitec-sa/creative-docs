@@ -342,6 +342,11 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public abstract Point GetPoint(int index, double value);
 
+		public Point AdjustPoint(Point point)
+		{
+			return Point.GridAlign (point, 0.5, 1.0);
+		}
+
 		public abstract Path GetDetectionPath(Data.ChartSeries series, int seriesIndex, double detectionRadius);
 
 

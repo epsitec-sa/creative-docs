@@ -54,7 +54,12 @@ namespace Epsitec.Common.Drawing
 		{
 			return new Size (this.x, this.y);
 		}
-		
+
+
+		public static Point GridAlign(Point point)
+		{
+			return Point.GridAlign (point, 0, 1);
+		}
 		
 		public static Point GridAlign(Point point, double offset, double step)
 		{

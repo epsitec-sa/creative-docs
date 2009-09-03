@@ -55,7 +55,7 @@ namespace Epsitec.Common.Graph.Renderers
 			double offset = value - this.MinValue;
 			Point  origin = this.Bounds.Location;
 
-			return new Point (origin.X + index * this.horizontalScale, origin.Y + offset * this.verticalScale);
+			return this.AdjustPoint (new Point (origin.X + index * this.horizontalScale, origin.Y + offset * this.verticalScale));
 		}
 
 		public override void UpdateCaptions(IEnumerable<Data.ChartSeries> series)
