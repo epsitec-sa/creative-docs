@@ -51,9 +51,9 @@ namespace Epsitec.Cresus.DataLayer
 		/// <param name="dataSet">The data set.</param>
 		public void GenerateRequests(System.Data.DataSet dataSet)
 		{
-			foreach (System.Data.DataTable data_table in dataSet.Tables)
+			foreach (System.Data.DataTable dataTable in dataSet.Tables)
 			{
-				this.GenerateRequests (data_table);
+				this.GenerateRequests (dataTable);
 			}
 		}
 

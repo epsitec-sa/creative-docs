@@ -55,16 +55,16 @@ namespace Epsitec.Cresus.Replication
 		
 		public System.Data.DataTable ExtractDataUsingIds(DbTable table, DbId syncStartId, DbId syncEndId)
 		{
-			long sync_id_min = syncStartId.Value;
-			long sync_id_max = syncEndId.Value;
+			long syncIdMin = syncStartId.Value;
+			long syncIdMax = syncEndId.Value;
 			
-			System.Diagnostics.Debug.Assert (DbId.GetClass (sync_id_min) == DbIdClass.Standard);
-			System.Diagnostics.Debug.Assert (DbId.GetClass (sync_id_max) == DbIdClass.Standard);
+			System.Diagnostics.Debug.Assert (DbId.GetClass (syncIdMin) == DbIdClass.Standard);
+			System.Diagnostics.Debug.Assert (DbId.GetClass (syncIdMax) == DbIdClass.Standard);
 			
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.Converter);
 			
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.GreaterThanOrEqual, sync_id_min);
-			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.LessThanOrEqual, sync_id_max);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.GreaterThanOrEqual, syncIdMin);
+			condition.AddCondition (new DbTableColumn (table.Columns[Tags.ColumnId]), DbCompare.LessThanOrEqual, syncIdMax);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{
@@ -123,12 +123,12 @@ namespace Epsitec.Cresus.Replication
 			return sets;
 		}
 		
-		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId sync_start_id, DbId sync_end_id)
+		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId syncStartId, DbId syncEndId)
 		{
-			return this.ExtractRowSetsUsingLogIds (sync_start_id, sync_end_id, DbElementCat.Any);
+			return this.ExtractRowSetsUsingLogIds (syncStartId, syncEndId, DbElementCat.Any);
 		}
 		
-		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId sync_start_id, DbId sync_end_id, DbElementCat category)
+		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId syncStartId, DbId syncEndId, DbElementCat category)
 		{
 			DbTable[] tables = this.infrastructure.FindDbTables (this.transaction, category, DbRowSearchMode.All);
 			
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Replication
 					continue;
 				}
 				
-				System.Data.DataTable data = this.ExtractDataUsingLogIds (tables[i], sync_start_id, sync_end_id);
+				System.Data.DataTable data = this.ExtractDataUsingLogIds (tables[i], syncStartId, syncEndId);
 				
 				if (data.Rows.Count > 0)
 				{

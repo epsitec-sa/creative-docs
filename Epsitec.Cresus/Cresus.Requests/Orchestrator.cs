@@ -840,11 +840,11 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		void OnRequestExecuted(DbId request_id)
+		void OnRequestExecuted(DbId requestId)
 		{
 			if (this.RequestExecuted != null)
 			{
-				this.RequestExecuted (this, request_id);
+				this.RequestExecuted (this, requestId);
 			}
 		}
 		
