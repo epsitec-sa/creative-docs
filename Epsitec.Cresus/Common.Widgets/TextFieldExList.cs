@@ -19,11 +19,11 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldExList()
 		{
-			this.accept_reject_behavior = new Behaviors.AcceptRejectBehavior (this);
-			this.accept_reject_behavior.CreateButtons ();
+			this.acceptRejectBehavior = new Behaviors.AcceptRejectBehavior (this);
+			this.acceptRejectBehavior.CreateButtons ();
 			
-			this.accept_reject_behavior.RejectClicked += this.HandleRejectClicked;
-			this.accept_reject_behavior.AcceptClicked += this.HandleAcceptClicked;
+			this.acceptRejectBehavior.RejectClicked += this.HandleRejectClicked;
+			this.acceptRejectBehavior.AcceptClicked += this.HandleAcceptClicked;
 			
 			this.DefocusAction = DefocusAction.None;
 			this.IsReadOnly    = true;
@@ -40,13 +40,13 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				if (this.accept_reject_behavior != null)
+				if (this.acceptRejectBehavior != null)
 				{
-					this.accept_reject_behavior.RejectClicked -= this.HandleRejectClicked;
-					this.accept_reject_behavior.AcceptClicked -= this.HandleAcceptClicked;
+					this.acceptRejectBehavior.RejectClicked -= this.HandleRejectClicked;
+					this.acceptRejectBehavior.AcceptClicked -= this.HandleAcceptClicked;
 				}
 				
-				this.accept_reject_behavior = null;
+				this.acceptRejectBehavior = null;
 			}
 			
 			base.Dispose (disposing);
@@ -58,11 +58,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.place_holder;
+				return this.placeHolder;
 			}
 			set
 			{
-				this.place_holder = value;
+				this.placeHolder = value;
 			}
 		}
 		
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.place_holder != null;
+				return this.placeHolder != null;
 			}
 		}
 		
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 				(this.mode == TextFieldExListMode.EditPassive))
 			{
 				this.SwitchToState (TextFieldExListMode.Combo);
-				this.SelectedItem = this.accept_reject_behavior.InitialText;
+				this.SelectedItem = this.acceptRejectBehavior.InitialText;
 				this.OnEditionRejected ();
 				return true;
 			}
@@ -144,17 +144,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool AutoRejectEdition(bool change_focus)
+		public bool AutoRejectEdition(bool changeFocus)
 		{
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))
 			{
-				if (this.Items.FindExactMatch (this.accept_reject_behavior.InitialText) == -1)
+				if (this.Items.FindExactMatch (this.acceptRejectBehavior.InitialText) == -1)
 				{
 					this.Text = this.PlaceHolder;
 					this.SwitchToState (TextFieldExListMode.EditPassive);
 					
-					if (change_focus)
+					if (changeFocus)
 					{
 						this.Focus ();
 					}
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					this.SelectedItem = this.accept_reject_behavior.InitialText;
+					this.SelectedItem = this.acceptRejectBehavior.InitialText;
 					this.SwitchToState (TextFieldExListMode.Combo);
 				}
 				
@@ -324,10 +324,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateButtonGeometry()
 		{
-			if (this.accept_reject_behavior != null)
+			if (this.acceptRejectBehavior != null)
 			{
-				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.accept_reject_behavior.DefaultWidth : this.button.PreferredWidth;
-				this.accept_reject_behavior.UpdateButtonGeometry ();
+				this.margins.Right = this.mode == TextFieldExListMode.EditActive ? this.acceptRejectBehavior.DefaultWidth : this.button.PreferredWidth;
+				this.acceptRejectBehavior.UpdateButtonGeometry ();
 			}
 			
 			base.UpdateButtonGeometry ();
@@ -335,27 +335,27 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual  void UpdateButtonEnable()
 		{
-			if ((this.accept_reject_behavior != null) &&
+			if ((this.acceptRejectBehavior != null) &&
 				(this.mode == TextFieldExListMode.EditActive))
 			{
-				this.accept_reject_behavior.SetAcceptEnabled (this.IsValid);
+				this.acceptRejectBehavior.SetAcceptEnabled (this.IsValid);
 			}
 		}
 		
 		protected override  void UpdateButtonVisibility()
 		{
 			if ((this.button != null) &&
-				(this.accept_reject_behavior != null))
+				(this.acceptRejectBehavior != null))
 			{
 				if (this.mode == TextFieldExListMode.EditActive)
 				{
 					this.button.Visibility = false;
-					this.accept_reject_behavior.SetVisible (this.ComputeButtonVisibility ());
+					this.acceptRejectBehavior.SetVisible (this.ComputeButtonVisibility ());
 				}
 				else
 				{
 					this.button.Visibility = (this.ComputeButtonVisibility ());
-					this.accept_reject_behavior.SetVisible (false);
+					this.acceptRejectBehavior.SetVisible (false);
 				}
 			}
 		}
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Widgets
 				this.mode = mode;
 				
 				if ((this.button == null) ||
-					(this.accept_reject_behavior == null))
+					(this.acceptRejectBehavior == null))
 				{
 					return;
 				}
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnTextDefined()
 		{
 			base.OnTextDefined ();
-			this.accept_reject_behavior.InitialText = this.Text;
+			this.acceptRejectBehavior.InitialText = this.Text;
 		}
 		
 		protected override void OnTextChanged()
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Widgets
 				//	Prend note de l'élément actuellement actif, afin de pouvoir le restaurer
 				//	en cas d'annulation par la suite :
 				
-				this.accept_reject_behavior.InitialText = this.SelectedItem;
+				this.acceptRejectBehavior.InitialText = this.SelectedItem;
 			}
 			
 			base.OpenCombo ();
@@ -475,22 +475,22 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleAcceptClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			System.Diagnostics.Debug.Assert (sender == this.acceptRejectBehavior);
 			this.AcceptEdition ();
 		}		
 		
 		private void HandleRejectClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			System.Diagnostics.Debug.Assert (sender == this.acceptRejectBehavior);
 			this.AutoRejectEdition (true);
 		}
 		
 		
 		public const string						PlaceHolderTag = "$PlaceHolder$";
 		
-		private string							place_holder;
+		private string							placeHolder;
 		
 		private TextFieldExListMode				mode = TextFieldExListMode.Undefined;
-		private Behaviors.AcceptRejectBehavior	accept_reject_behavior;
+		private Behaviors.AcceptRejectBehavior	acceptRejectBehavior;
 	}
 }

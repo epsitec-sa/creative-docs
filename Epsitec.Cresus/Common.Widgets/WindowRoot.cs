@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 		public WindowRoot(Window window) : this ()
 		{
 			this.window       = window;
-			this.is_ready     = true;
+			this.isReady     = true;
 		}
 		
 		
@@ -41,13 +41,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.window_styles;
+				return this.windowStyles;
 			}
 			set
 			{
-				if (this.window_styles != value)
+				if (this.windowStyles != value)
 				{
-					this.window_styles = value;
+					this.windowStyles = value;
 					
 					if (this.window != null)
 					{
@@ -63,13 +63,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.window_type;
+				return this.windowType;
 			}
 			set
 			{
-				if (this.window_type != value)
+				if (this.windowType != value)
 				{
-					this.window_type = value;
+					this.windowType = value;
 					
 					if (this.window != null)
 					{
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets
 
 			this.RefreshFocusChain ();
 			
-			return this.focus_chain.Contains (visual);
+			return this.focusChain.Contains (visual);
 		}
 		
 		public override void MessageHandler(Message message, Drawing.Point pos)
@@ -167,14 +167,14 @@ namespace Epsitec.Common.Widgets
 			//	Si la chaîne des widgets décrivant les widgets contenant le
 			//	focus n'existe pas, on la construit
 
-			if ((this.focus_chain.Count == 0) &&
+			if ((this.focusChain.Count == 0) &&
 				(this.window != null))
 			{
 				Widget widget = this.window.FocusedWidget;
 
 				while (widget != null)
 				{
-					this.focus_chain.Add (widget);
+					this.focusChain.Add (widget);
 					widget = widget.Parent;
 				}
 			}
@@ -182,7 +182,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void ClearFocusChain()
 		{
-			this.focus_chain.Clear ();
+			this.focusChain.Clear ();
 		}
 		
 		internal override void SetBounds(Drawing.Rectangle value)
@@ -208,14 +208,14 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
+		protected override bool ShortcutHandler(Shortcut shortcut, bool executeFocused)
 		{
-			if (base.ShortcutHandler (shortcut, execute_focused))
+			if (base.ShortcutHandler (shortcut, executeFocused))
 			{
 				return true;
 			}
 			
-			if (this.InternalShortcutHandler (shortcut, execute_focused))
+			if (this.InternalShortcutHandler (shortcut, executeFocused))
 			{
 				return true;
 			}
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		protected virtual bool InternalShortcutHandler(Shortcut shortcut, bool execute_focused)
+		protected virtual bool InternalShortcutHandler(Shortcut shortcut, bool executeFocused)
 		{
 			if (this.window != null)
 			{
@@ -380,9 +380,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			if (this.is_ready == false)
+			if (this.isReady == false)
 			{
 				return;
 			}
@@ -390,10 +390,10 @@ namespace Epsitec.Common.Widgets
 			double dx = this.Client.Size.Width;
 			double dy = this.Client.Size.Height;
 			
-			double x1 = System.Math.Max (clip_rect.Left, 0);
-			double y1 = System.Math.Max (clip_rect.Bottom, 0);
-			double x2 = System.Math.Min (clip_rect.Right, dx);
-			double y2 = System.Math.Min (clip_rect.Top, dy);
+			double x1 = System.Math.Max (clipRect.Left, 0);
+			double y1 = System.Math.Max (clipRect.Bottom, 0);
+			double x2 = System.Math.Min (clipRect.Right, dx);
+			double y2 = System.Math.Min (clipRect.Top, dy);
 			
 			if (this.BackColor.IsValid)
 			{
@@ -496,11 +496,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected WindowStyles						window_styles;
-		protected WindowType						window_type;
+		protected WindowStyles						windowStyles;
+		protected WindowType						windowType;
 		protected Window							window;
-		protected bool								is_ready;
-		protected List<Visual>						focus_chain = new List<Visual> ();
+		protected bool								isReady;
+		protected List<Visual>						focusChain = new List<Visual> ();
 		protected int								treeChangeCounter;
 	}
 }

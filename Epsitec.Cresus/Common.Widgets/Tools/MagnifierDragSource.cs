@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets.Tools
 			}
 		}
 		
-		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
+		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
 		{
 			double dx = this.Client.Size.Width;
 			double dy = this.Client.Size.Height;
@@ -43,19 +43,19 @@ namespace Epsitec.Common.Widgets.Tools
 			
 			double r = System.Math.Min (cx, cy) - 1;
 			
-			Drawing.Color color_1 = Drawing.Color.FromAlphaRgb (0.3, 0.3, 0.8, 1.0);
-			Drawing.Color color_2 = Drawing.Color.FromRgb (0, 0, 0.7);
+			Drawing.Color color1 = Drawing.Color.FromAlphaRgb (0.3, 0.3, 0.8, 1.0);
+			Drawing.Color color2 = Drawing.Color.FromRgb (0, 0, 0.7);
 			
 			if ((this.PaintState & WidgetPaintState.Enabled) == 0)
 			{
-				double bright = color_1.GetBrightness ();
+				double bright = color1.GetBrightness ();
 				
-				color_1 = Drawing.Color.FromAlphaRgb (color_1.A, bright, bright, bright);
-				color_2 = Adorners.Factory.Active.ColorTextFieldBorder (false);
+				color1 = Drawing.Color.FromAlphaRgb (color1.A, bright, bright, bright);
+				color2 = Adorners.Factory.Active.ColorTextFieldBorder (false);
 			}
 			
 			graphics.AddFilledCircle (cx, cy, r);
-			graphics.RenderSolid (color_1);
+			graphics.RenderSolid (color1);
 			graphics.LineWidth = 0.5;
 			graphics.AddCircle (cx, cy, r);
 			
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Widgets.Tools
 				graphics.Rasterizer.AddOutline (path, 0.5);
 			}
 			
-			graphics.RenderSolid (color_2);
+			graphics.RenderSolid (color2);
 		}
 		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)

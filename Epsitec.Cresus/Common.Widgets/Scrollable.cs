@@ -270,44 +270,44 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			double total_dx = this.Client.Size.Width;
-			double total_dy = this.Client.Size.Height;
-			double viewport_dx = viewport.SurfaceWidth;
-			double viewport_dy = viewport.SurfaceHeight;
-			double margin_x = (this.vScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.vScroller.PreferredWidth : 0;
-			double margin_y = (this.hScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.hScroller.PreferredHeight : 0;
+			double totalDx = this.Client.Size.Width;
+			double totalDy = this.Client.Size.Height;
+			double viewportDx = viewport.SurfaceWidth;
+			double viewportDy = viewport.SurfaceHeight;
+			double marginX = (this.vScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.vScroller.PreferredWidth : 0;
+			double marginY = (this.hScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.hScroller.PreferredHeight : 0;
 			
-			double delta_dx;
-			double delta_dy;
+			double deltaDx;
+			double deltaDy;
 			
 			//	Procède itérativement pour savoir quels ascenceurs vont être utilisés
 			//	et quelle place ils vont occuper.
 			
 			for (;;)
 			{
-				delta_dx = viewport_dx - total_dx + margin_x;
-				delta_dy = viewport_dy - total_dy + margin_y;
+				deltaDx = viewportDx - totalDx + marginX;
+				deltaDy = viewportDy - totalDy + marginY;
 				
-				if ((delta_dx > 0) &&
+				if ((deltaDx > 0) &&
 					(this.hScrollerMode != ScrollableScrollerMode.HideAlways))
 				{
 					//	Il y a besoin d'un ascenceur horizontal.
 					
-					if (margin_y == 0)
+					if (marginY == 0)
 					{
-						margin_y = this.hScroller.PreferredHeight;
+						marginY = this.hScroller.PreferredHeight;
 						continue;
 					}
 				}
 				
-				if ((delta_dy > 0) &&
+				if ((deltaDy > 0) &&
 					(this.vScrollerMode != ScrollableScrollerMode.HideAlways))
 				{
 					//	Il y a besoin d'un ascenceur vertical.
 					
-					if (margin_x == 0)
+					if (marginX == 0)
 					{
-						margin_x = this.vScroller.PreferredWidth;
+						marginX = this.vScroller.PreferredWidth;
 						continue;
 					}
 				}
@@ -315,35 +315,35 @@ namespace Epsitec.Common.Widgets
 				break;
 			}
 			
-			double vis_dx = total_dx - margin_x;
-			double vis_dy = total_dy - margin_y;
+			double visDx = totalDx - marginX;
+			double visDy = totalDy - marginY;
 			
-			double offset_x = 0;
-			double offset_y = 0;
+			double offsetX = 0;
+			double offsetY = 0;
 
-			viewport_dx = System.Math.Max (viewport_dx, vis_dx);
-			viewport_dy = System.Math.Max (viewport_dy, vis_dy);
+			viewportDx = System.Math.Max (viewportDx, visDx);
+			viewportDy = System.Math.Max (viewportDy, visDy);
 			
 			//	Détermine l'aspect des ascenceurs ainsi que les offsets [x] et [y] qui
 			//	doivent s'appliquer à l'ouverture (aperture) qui permet de voir le viewport.
 
-			if ((viewport_dx > 0) &&
-				(delta_dx > 0) &&
-				(vis_dx > 0))
+			if ((viewportDx > 0) &&
+				(deltaDx > 0) &&
+				(visDx > 0))
 			{
-				this.hScroller.MaxValue          = (decimal) (delta_dx);
-				this.hScroller.VisibleRangeRatio = (decimal) (vis_dx / viewport_dx);
+				this.hScroller.MaxValue          = (decimal) (deltaDx);
+				this.hScroller.VisibleRangeRatio = (decimal) (visDx / viewportDx);
 				this.hScroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
-				this.hScroller.LargeChange       = (decimal) (vis_dx * Scrollable.LargeScrollPercent / 100);
+				this.hScroller.LargeChange       = (decimal) (visDx * Scrollable.LargeScrollPercent / 100);
 
-				offset_x = System.Math.Min (this.viewportOffset.X, delta_dx);
+				offsetX = System.Math.Min (this.viewportOffset.X, deltaDx);
 				
-				this.hScrollerValue  = (decimal) offset_x;
-				this.hScroller.Value = (decimal) offset_x;
+				this.hScrollerValue  = (decimal) offsetX;
+				this.hScroller.Value = (decimal) offsetX;
 			}
 			else
 			{
-				viewport_dx = vis_dx;
+				viewportDx = visDx;
 				
 				this.hScrollerValue = 0;
 				this.viewportOffset.X  = 0;
@@ -353,23 +353,23 @@ namespace Epsitec.Common.Widgets
 				this.hScroller.VisibleRangeRatio = 1.0M;
 			}
 
-			if ((viewport_dy > 0) &&
-				(delta_dy > 0) &&
-				(vis_dy > 0))
+			if ((viewportDy > 0) &&
+				(deltaDy > 0) &&
+				(visDy > 0))
 			{
-				this.vScroller.MaxValue          = (decimal) (delta_dy);
-				this.vScroller.VisibleRangeRatio = (decimal) (vis_dy / viewport_dy);
+				this.vScroller.MaxValue          = (decimal) (deltaDy);
+				this.vScroller.VisibleRangeRatio = (decimal) (visDy / viewportDy);
 				this.vScroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
-				this.vScroller.LargeChange       = (decimal) (vis_dy * Scrollable.LargeScrollPercent / 100);
+				this.vScroller.LargeChange       = (decimal) (visDy * Scrollable.LargeScrollPercent / 100);
 
-				offset_y = System.Math.Min (this.viewportOffset.Y, delta_dy);
+				offsetY = System.Math.Min (this.viewportOffset.Y, deltaDy);
 				
-				this.vScrollerValue = (decimal) offset_y;
-				this.vScroller.Value = (decimal) offset_y;
+				this.vScrollerValue = (decimal) offsetY;
+				this.vScroller.Value = (decimal) offsetY;
 			}
 			else
 			{
-				viewport_dy = vis_dy;
+				viewportDy = visDy;
 				
 				this.vScrollerValue = 0;
 				this.viewportOffset.Y  = 0;
@@ -383,11 +383,11 @@ namespace Epsitec.Common.Widgets
 			//	ce dernier pour que la partie qui intéresse l'utilisateur soit en face de
 			//	l'ouverture.
 
-			this.hScroller.Visibility = (margin_y > 0);
-			this.vScroller.Visibility = (margin_x > 0);
+			this.hScroller.Visibility = (marginY > 0);
+			this.vScroller.Visibility = (marginX > 0);
 
-			this.viewportAperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			viewport.SetManualBounds (new Drawing.Rectangle (-offset_x, total_dy - viewport_dy + offset_y, viewport_dx, viewport_dy));
+			this.viewportAperture = new Drawing.Rectangle (0, marginY, visDx, visDy);
+			viewport.SetManualBounds (new Drawing.Rectangle (-offsetX, totalDy - viewportDy + offsetY, viewportDx, viewportDy));
 			viewport.Aperture = viewport.MapParentToClient (this.viewportAperture);
 			
 			this.Invalidate ();
@@ -435,10 +435,10 @@ namespace Epsitec.Common.Widgets
 			WidgetPaintState state = this.PaintState;
 			
 			Drawing.Rectangle rect  = this.Client.Bounds;
-			double margin_x = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
-			double margin_y = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
-			rect.Right -= margin_x;
-			rect.Bottom += margin_y;
+			double marginX = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
+			double marginY = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
+			rect.Right -= marginX;
+			rect.Bottom += marginY;
 			rect.Deflate (this.foregroundFrameMargins);
 			rect.Deflate (0.5);
 			graphics.AddRectangle (rect);

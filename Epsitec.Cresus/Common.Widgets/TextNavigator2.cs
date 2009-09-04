@@ -11,15 +11,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextNavigator2()
 		{
-			this.disable_tab_key    = false;
-			this.disable_return_key = false;
-			this.disable_escape_key = false;
+			this.disableTabKey    = false;
+			this.disableReturnKey = false;
+			this.disableEscapeKey = false;
 			
-			this.allow_tabs   = true;
-			this.allow_lines  = true;
-			this.allow_frames = true;
+			this.allowTabs   = true;
+			this.allowLines  = true;
+			this.allowFrames = true;
 			
-			this.is_read_only = false;
+			this.isReadOnly = false;
 		}
 		
 		
@@ -27,28 +27,28 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.text_navigator;
+				return this.textNavigator;
 			}
 			set
 			{
-				if (this.text_navigator != value)
+				if (this.textNavigator != value)
 				{
-					if (this.text_navigator != null)
+					if (this.textNavigator != null)
 					{
-						this.text_navigator.ActiveStyleChanged -= this.HandleActiveStyleChanged;
-						this.text_navigator.TabsChanged -= this.HandleTabsChanged;
-						this.text_navigator.TextChanged -= this.HandleTextChanged;
-						this.text_navigator.CursorMoved -= this.HandleCursorMoved;
+						this.textNavigator.ActiveStyleChanged -= this.HandleActiveStyleChanged;
+						this.textNavigator.TabsChanged -= this.HandleTabsChanged;
+						this.textNavigator.TextChanged -= this.HandleTextChanged;
+						this.textNavigator.CursorMoved -= this.HandleCursorMoved;
 					}
 					
-					this.text_navigator = value;
+					this.textNavigator = value;
 					
-					if (this.text_navigator != null)
+					if (this.textNavigator != null)
 					{
-						this.text_navigator.CursorMoved += this.HandleCursorMoved;
-						this.text_navigator.TextChanged += this.HandleTextChanged;
-						this.text_navigator.TabsChanged += this.HandleTabsChanged;
-						this.text_navigator.ActiveStyleChanged += this.HandleActiveStyleChanged;
+						this.textNavigator.CursorMoved += this.HandleCursorMoved;
+						this.textNavigator.TextChanged += this.HandleTextChanged;
+						this.textNavigator.TabsChanged += this.HandleTabsChanged;
+						this.textNavigator.ActiveStyleChanged += this.HandleActiveStyleChanged;
 					}
 				}
 			}
@@ -69,11 +69,11 @@ namespace Epsitec.Common.Widgets
 					return this.ProcessMouseDown (message, pos, frame);
 				
 				case MessageType.MouseMove:
-					return ( this.is_mouse_dragging && this.ProcessMouseDrag (pos, frame))
-						|| (!this.is_mouse_dragging && this.ProcessMouseMove (pos, frame));
+					return ( this.isMouseDragging && this.ProcessMouseDrag (pos, frame))
+						|| (!this.isMouseDragging && this.ProcessMouseMove (pos, frame));
 				
 				case MessageType.MouseUp:
-					return this.is_mouse_down && this.ProcessMouseUp (message, pos, frame);
+					return this.isMouseDown && this.ProcessMouseUp (message, pos, frame);
 			}
 			
 			return false;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 			
 			bool processed = false;
 			
-			if (this.is_read_only == false)
+			if (this.isReadOnly == false)
 			{
 				switch (message.KeyCodeOnly)
 				{
@@ -128,11 +128,11 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessReturnKey(Message message)
 		{
-			if (this.disable_return_key)
+			if (this.disableReturnKey)
 			{
 				if ((message.IsControlPressed == true) &&
 					(message.IsAltPressed == false) &&
-					(this.allow_lines))
+					(this.allowLines))
 				{
 					if (message.IsShiftPressed)
 					{
@@ -147,10 +147,10 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				if ((message.IsAltPressed == false) &&
-					(this.allow_lines))
+					(this.allowLines))
 				{
 					if ((message.IsControlPressed) &&
-						(this.allow_frames))
+						(this.allowFrames))
 					{
 						if (message.IsShiftPressed)										//	saut de colonne
 						{
@@ -180,11 +180,11 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessTabKey(Message message)
 		{
-			if (this.disable_tab_key)
+			if (this.disableTabKey)
 			{
 				if ((message.IsControlPressed == true) &&
 					(message.IsAltPressed == false) &&
-					(this.allow_tabs))
+					(this.allowTabs))
 				{
 					return this.Insert (Text.Unicode.Code.HorizontalTab);
 				}
@@ -192,7 +192,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				if ((message.IsAltPressed == false) &&
-					(this.allow_tabs))
+					(this.allowTabs))
 				{
 					return this.Insert (Text.Unicode.Code.HorizontalTab);
 				}
@@ -203,13 +203,13 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessEscapeKey(Message message)
 		{
-			if (this.disable_escape_key == false)
+			if (this.disableEscapeKey == false)
 			{
 				this.EndSelection ();
 			
-				if (this.text_navigator.HasSelection)
+				if (this.textNavigator.HasSelection)
 				{
-					this.text_navigator.ClearSelection ();
+					this.textNavigator.ClearSelection ();
 					return true;
 				}
 			}
@@ -221,13 +221,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.EndSelection ();
 			
-			if (this.text_navigator.HasSelection)
+			if (this.textNavigator.HasSelection)
 			{
-				this.text_navigator.Delete ();
+				this.textNavigator.Delete ();
 				return true;
 			}
 			
-			this.text_navigator.Delete (Text.TextNavigator.Direction.Backward);
+			this.textNavigator.Delete (Text.TextNavigator.Direction.Backward);
 			return true;
 		}
 		
@@ -235,13 +235,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.EndSelection ();
 			
-			if (this.text_navigator.HasSelection)
+			if (this.textNavigator.HasSelection)
 			{
-				this.text_navigator.Delete ();
+				this.textNavigator.Delete ();
 				return true;
 			}
 			
-			this.text_navigator.Delete (Text.TextNavigator.Direction.Forward);
+			this.textNavigator.Delete (Text.TextNavigator.Direction.Forward);
 			return true;
 		}
 		
@@ -263,11 +263,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsControlPressed)
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
 			}
 			else
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
 			}
 			
 			return true;
@@ -281,11 +281,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsControlPressed)
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
 			}
 			else
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 0);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.LineEnd, 0);
 			}
 			
 			return true;
@@ -306,11 +306,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsControlPressed)
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 1);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.WordStart, 1);
 			}
 			else
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
 			}
 			
 			return true;
@@ -331,11 +331,11 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsControlPressed)
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 			}
 			else
 			{
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
 			}
 			
 			return true;
@@ -349,11 +349,11 @@ namespace Epsitec.Common.Widgets
 			if (message.IsControlPressed)
 			{
 				this.ClearVerticalMoveCache ();
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.ParagraphStart, 1);
 			}
 			else
 			{
-				this.text_navigator.VerticalMove (this.GetVerticalMoveCache (), -1);
+				this.textNavigator.VerticalMove (this.GetVerticalMoveCache (), -1);
 			}
 			
 			return true;
@@ -367,11 +367,11 @@ namespace Epsitec.Common.Widgets
 			if (message.IsControlPressed)
 			{
 				this.ClearVerticalMoveCache ();
-				this.text_navigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
+				this.textNavigator.MoveTo (Text.TextNavigator.Target.ParagraphEnd, 1);
 			}
 			else
 			{
-				this.text_navigator.VerticalMove (this.GetVerticalMoveCache (), 1);
+				this.textNavigator.VerticalMove (this.GetVerticalMoveCache (), 1);
 			}
 			
 			return true;
@@ -400,18 +400,18 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ClearVerticalMoveCache ();
 			
-			this.is_mouse_down = true;
+			this.isMouseDown = true;
 			
 			if (message.ButtonDownCount == 1)
 			{
-				this.is_mouse_dragging = true;
+				this.isMouseDragging = true;
 			}
 			
 			this.EndSelection ();
 
-			if (this.text_navigator.HasSelection)
+			if (this.textNavigator.HasSelection)
 			{
-				this.text_navigator.ClearSelection ();
+				this.textNavigator.ClearSelection ();
 			}
 			
 			int p, d;
@@ -419,17 +419,17 @@ namespace Epsitec.Common.Widgets
 			double cx = pos.X;
 			double cy = pos.Y;
 			
-			if (this.text_navigator.HitTest (frame, cx, cy, true, out p, out d))
+			if (this.textNavigator.HitTest (frame, cx, cy, true, out p, out d))
 			{
-				this.initial_position = p;
+				this.initialPosition = p;
 				
-				this.text_navigator.HitTest (frame, cx, cy, false, out p, out d);
-				this.text_navigator.MoveTo (p, d);
+				this.textNavigator.HitTest (frame, cx, cy, false, out p, out d);
+				this.textNavigator.MoveTo (p, d);
 				
 				return true;
 			}
 			
-			this.initial_position = -1;
+			this.initialPosition = -1;
 			return false;
 		}
 		
@@ -440,33 +440,33 @@ namespace Epsitec.Common.Widgets
 			double cx = pos.X;
 			double cy = pos.Y;
 			
-			if (this.text_navigator.HitTest (frame, cx, cy, true, out p, out d))
+			if (this.textNavigator.HitTest (frame, cx, cy, true, out p, out d))
 			{
-				if ((this.is_mouse_selecting == false) &&
-					(this.initial_position != p))
+				if ((this.isMouseSelecting == false) &&
+					(this.initialPosition != p))
 				{
 					this.EndSelection ();
-					this.text_navigator.ClearSelection ();
+					this.textNavigator.ClearSelection ();
 					
-					this.is_mouse_selecting = true;
+					this.isMouseSelecting = true;
 				}
 				
-				if (this.is_mouse_selecting)
+				if (this.isMouseSelecting)
 				{
-					if (this.text_navigator.IsSelectionActive)
+					if (this.textNavigator.IsSelectionActive)
 					{
 						//	Rien à faire, sélection déjà active.
 					}
-					else if (this.text_navigator.HasSelection)
+					else if (this.textNavigator.HasSelection)
 					{
-						this.text_navigator.ContinueSelection ();
+						this.textNavigator.ContinueSelection ();
 					}
 					else
 					{
-						this.text_navigator.StartSelection ();
+						this.textNavigator.StartSelection ();
 					}
 					
-					this.text_navigator.MoveTo (p, d);
+					this.textNavigator.MoveTo (p, d);
 				}
 				
 				return true;
@@ -485,10 +485,10 @@ namespace Epsitec.Common.Widgets
 		
 		private bool ProcessMouseUp(Message message, Drawing.Point pos, Text.ITextFrame frame)
 		{
-			if (this.text_navigator.IsSelectionActive)
+			if (this.textNavigator.IsSelectionActive)
 			{
-//-				this.text_navigator.EndSelection ();
-//-				this.is_mouse_selecting = false;
+//-				this.textNavigator.EndSelection ();
+//-				this.isMouseSelecting = false;
 			}
 			
 			if (message.ButtonDownCount == 1)
@@ -508,11 +508,11 @@ namespace Epsitec.Common.Widgets
 				this.SelectAll ();
 			}
 			
-//-			System.Diagnostics.Debug.Assert (this.is_mouse_selecting == false);
+//-			System.Diagnostics.Debug.Assert (this.isMouseSelecting == false);
 			
-			this.is_mouse_down      = false;
-			this.is_mouse_dragging  = false;
-			this.is_mouse_selecting = false;
+			this.isMouseDown      = false;
+			this.isMouseDragging  = false;
+			this.isMouseSelecting = false;
 			
 			return true;
 		}
@@ -526,60 +526,60 @@ namespace Epsitec.Common.Widgets
 			this.ClearVerticalMoveCache ();
 			this.ChangeSelectionModeBeforeMove (shift, dir);
 			
-			this.text_navigator.MoveTo (target, count);
+			this.textNavigator.MoveTo (target, count);
 		}
 		
 		
 		public void SelectInsertedCharacter()
 		{
 			this.EndSelection ();
-			this.text_navigator.ClearSelection ();
+			this.textNavigator.ClearSelection ();
 			
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
-			this.text_navigator.StartSelection ();
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
-			this.text_navigator.EndSelection ();
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.CharacterPrevious, 1);
+			this.textNavigator.StartSelection ();
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.CharacterNext, 1);
+			this.textNavigator.EndSelection ();
 		}
 		
 		public void SelectWord()
 		{
 			this.EndSelection ();
-			this.text_navigator.ClearSelection ();
+			this.textNavigator.ClearSelection ();
 			
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
-			this.text_navigator.StartSelection ();
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.WordStart, 0);
+			this.textNavigator.StartSelection ();
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.WordEnd, 1);
 		}
 		
 		public void SelectLine()
 		{
 			this.EndSelection ();
-			this.text_navigator.ClearSelection ();
+			this.textNavigator.ClearSelection ();
 			
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
-			this.text_navigator.StartSelection ();
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.LineStart, 0);
+			this.textNavigator.StartSelection ();
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.LineEnd, 1);
 		}
 		
 		public void SelectAll()
 		{
 			this.EndSelection ();
-			this.text_navigator.ClearSelection ();
+			this.textNavigator.ClearSelection ();
 			
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
-			this.text_navigator.StartSelection ();
-			this.text_navigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.TextStart, 0);
+			this.textNavigator.StartSelection ();
+			this.textNavigator.MoveTo (Text.TextNavigator.Target.TextEnd, 0);
 		}
 		
 		
 		public void ClearSelection()
 		{
 			this.EndSelection ();
-			this.text_navigator.ClearSelection ();
+			this.textNavigator.ClearSelection ();
 		}
 		
 		
-		public bool Insert(Text.Unicode.Code code, Text.Properties.OpenTypeProperty ot_property)
+		public bool Insert(Text.Unicode.Code code, Text.Properties.OpenTypeProperty otProperty)
 		{
 			if (code > Text.Unicode.Code.Invalid)
 			{
@@ -590,7 +590,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.DeleteSelection ();
-				this.text_navigator.Insert (code, ot_property);
+				this.textNavigator.Insert (code, otProperty);
 			
 				return true;
 			}
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Widgets
 
 				System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 				watch.Start ();
-				this.text_navigator.Insert (code);
+				this.textNavigator.Insert (code);
 				watch.Stop ();
 				System.Diagnostics.Trace.WriteLine (string.Format ("{0} ms", watch.ElapsedMilliseconds));
 				
@@ -618,18 +618,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool Insert(Text.Properties.TabProperty tab_property)
+		public bool Insert(Text.Properties.TabProperty tabProperty)
 		{
 			this.DeleteSelection ();
-			this.text_navigator.Insert (Text.Unicode.Code.HorizontalTab, tab_property);
+			this.textNavigator.Insert (Text.Unicode.Code.HorizontalTab, tabProperty);
 			
 			return true;
 		}
 		
-		public bool Insert(Text.Properties.BreakProperty break_property)
+		public bool Insert(Text.Properties.BreakProperty breakProperty)
 		{
 			this.DeleteSelection ();
-			this.text_navigator.Insert (Text.Unicode.Code.PageSeparator, break_property);
+			this.textNavigator.Insert (Text.Unicode.Code.PageSeparator, breakProperty);
 			
 			return true;
 		}
@@ -641,24 +641,24 @@ namespace Epsitec.Common.Widgets
 			
 			string[] fragments = text.Split ('\t');
 			
-			this.text_navigator.Insert (fragments[0]);
+			this.textNavigator.Insert (fragments[0]);
 			
 			for (int i = 1; i < fragments.Length; i++)
 			{
-				string tag = this.text_navigator.FindInsertionTabTag ();
+				string tag = this.textNavigator.FindInsertionTabTag ();
 				
 				if (tag == null)
 				{
-					this.text_navigator.Insert (" ");
+					this.textNavigator.Insert (" ");
 				}
 				else
 				{
-					this.text_navigator.Insert (Text.Unicode.Code.HorizontalTab, new Text.Properties.TabProperty (tag));
+					this.textNavigator.Insert (Text.Unicode.Code.HorizontalTab, new Text.Properties.TabProperty (tag));
 				}
 				
 				if (fragments[i].Length > 0)
 				{
-					this.text_navigator.Insert (fragments[i]);
+					this.textNavigator.Insert (fragments[i]);
 				}
 			}
 			
@@ -668,7 +668,7 @@ namespace Epsitec.Common.Widgets
 		public bool Insert(string text)
 		{
 			this.DeleteSelection ();
-			this.text_navigator.InsertWithTabs (text);
+			this.textNavigator.InsertWithTabs (text);
 			return true;
 		}
 #endif
@@ -678,18 +678,18 @@ namespace Epsitec.Common.Widgets
 		{
 			this.EndSelection ();
 
-			if (this.text_navigator.HasSelection)
+			if (this.textNavigator.HasSelection)
 			{
-				this.text_navigator.Delete ();
+				this.textNavigator.Delete ();
 			}
 		}
 		
 		
 		public void EndSelection()
 		{
-			if (this.text_navigator.IsSelectionActive)
+			if (this.textNavigator.IsSelectionActive)
 			{
-				this.text_navigator.EndSelection ();
+				this.textNavigator.EndSelection ();
 			}
 		}
 		
@@ -698,9 +698,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.EndSelection ();
 			
-			if (this.text_navigator.OpletQueue.CanUndo)
+			if (this.textNavigator.OpletQueue.CanUndo)
 			{
-				this.text_navigator.Undo ();
+				this.textNavigator.Undo ();
 				
 				return true;
 			}
@@ -712,9 +712,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.EndSelection ();
 			
-			if (this.text_navigator.OpletQueue.CanRedo)
+			if (this.textNavigator.OpletQueue.CanRedo)
 			{
-				this.text_navigator.Redo ();
+				this.textNavigator.Redo ();
 				
 				return true;
 			}
@@ -727,49 +727,49 @@ namespace Epsitec.Common.Widgets
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetParagraphStyles (styles);
+			this.textNavigator.SetParagraphStyles (styles);
 		}
 		
 		public void SetTextStyles(params Text.TextStyle[] styles)
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetTextStyles (styles);
+			this.textNavigator.SetTextStyles (styles);
 		}
 		
 		public void SetSymbolStyles(params Text.TextStyle[] styles)
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetSymbolStyles (styles);
+			this.textNavigator.SetSymbolStyles (styles);
 		}
 		
-		public void SetMetaProperties(Text.Properties.ApplyMode mode, params Text.TextStyle[] meta_properties)
+		public void SetMetaProperties(Text.Properties.ApplyMode mode, params Text.TextStyle[] metaProperties)
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetMetaProperties (mode, meta_properties);
+			this.textNavigator.SetMetaProperties (mode, metaProperties);
 		}
 		
 		public void SetParagraphProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetParagraphProperties (mode, properties);
+			this.textNavigator.SetParagraphProperties (mode, properties);
 		}
 		
 		public void SetTextProperties(Text.Properties.ApplyMode mode, params Text.Property[] properties)
 		{
 			this.EndSelection ();
 			
-			this.text_navigator.SetTextProperties (mode, properties);
+			this.textNavigator.SetTextProperties (mode, properties);
 		}
 		
 		
 		public void RemoveTab(string tag)
 		{
 			this.EndSelection ();
-			this.text_navigator.RemoveTab (tag);
+			this.textNavigator.RemoveTab (tag);
 		}
 		
 		
@@ -794,17 +794,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void PreProcessCursorMove (bool is_shift_pressed)
+		private void PreProcessCursorMove (bool isShiftPressed)
 		{
-			if (! is_shift_pressed)
+			if (! isShiftPressed)
 			{
-				this.text_navigator.ClearCurrentStylesAndProperties ();
+				this.textNavigator.ClearCurrentStylesAndProperties ();
 			}
 		}
 		
 		private void ClearVerticalMoveCache()
 		{
-			this.initial_x = double.NaN;
+			this.initialX = double.NaN;
 		}
 		
 		private double GetVerticalMoveCache()
@@ -814,16 +814,16 @@ namespace Epsitec.Common.Widgets
 			//	pouvoir sauter des lignes plus courtes en maintenant un déplacement
 			//	avec [x] constant.
 			
-			if (double.IsNaN (this.initial_x))
+			if (double.IsNaN (this.initialX))
 			{
 				Text.ITextFrame frame;
 				double cx, cy, ascender, descender, angle;
 					
-				this.text_navigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
-				this.initial_x = cx;
+				this.textNavigator.GetCursorGeometry (out frame, out cx, out cy, out ascender, out descender, out angle);
+				this.initialX = cx;
 			}
 			
-			return this.initial_x;
+			return this.initialX;
 		}
 		
 		private bool ChangeSelectionModeBeforeMove(bool selection, Text.TextNavigator.Direction direction)
@@ -839,15 +839,15 @@ namespace Epsitec.Common.Widgets
 			
 			if (selection)
 			{
-				if (this.text_navigator.IsSelectionActive == false)
+				if (this.textNavigator.IsSelectionActive == false)
 				{
-					if (this.text_navigator.HasSelection)
+					if (this.textNavigator.HasSelection)
 					{
-						this.text_navigator.ContinueSelection ();
+						this.textNavigator.ContinueSelection ();
 					}
 					else
 					{
-						this.text_navigator.StartSelection ();
+						this.textNavigator.StartSelection ();
 					}
 				}
 			}
@@ -858,9 +858,9 @@ namespace Epsitec.Common.Widgets
 				//	Si une sélection est active, il faut la désactiver en tenant
 				//	compte de la direction de déplacement souhaitée :
 				
-				if (this.text_navigator.HasSelection)
+				if (this.textNavigator.HasSelection)
 				{
-					this.text_navigator.ClearSelection (direction);
+					this.textNavigator.ClearSelection (direction);
 					return true;
 				}
 			}
@@ -932,22 +932,22 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		CursorMoved;
 		public event Support.EventHandler		ActiveStyleChanged;
 		
-		private Text.TextNavigator				text_navigator;
+		private Text.TextNavigator				textNavigator;
 		
-		private int								initial_position;
-		private double							initial_x = double.NaN;
+		private int								initialPosition;
+		private double							initialX = double.NaN;
 		
-		private bool							disable_tab_key;
-		private bool							disable_return_key;
-		private bool							disable_escape_key;
+		private bool							disableTabKey;
+		private bool							disableReturnKey;
+		private bool							disableEscapeKey;
 		
-		private bool							allow_tabs;
-		private bool							allow_lines;
-		private bool							allow_frames;
+		private bool							allowTabs;
+		private bool							allowLines;
+		private bool							allowFrames;
 		
-		private bool							is_read_only;
-		private bool							is_mouse_down;
-		private bool							is_mouse_dragging;
-		private bool							is_mouse_selecting;
+		private bool							isReadOnly;
+		private bool							isMouseDown;
+		private bool							isMouseDragging;
+		private bool							isMouseSelecting;
 	}
 }

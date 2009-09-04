@@ -28,9 +28,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
+		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clipRect)
 		{
-			base.PaintBackgroundImplementation (graphics, clip_rect);
+			base.PaintBackgroundImplementation (graphics, clipRect);
 			
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			

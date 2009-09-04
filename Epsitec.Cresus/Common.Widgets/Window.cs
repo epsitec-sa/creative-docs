@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal Window(WindowRoot root)
 		{
-			this.id = System.Threading.Interlocked.Increment (ref Window.next_window_id);
+			this.id = System.Threading.Interlocked.Increment (ref Window.nextWindowId);
 
 			if (root == null)
 			{
@@ -244,9 +244,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AsyncValidation ();
 			
-			if (this.show_count == 0)
+			if (this.showCount == 0)
 			{
-				this.show_count++;
+				this.showCount++;
 //				this.root.InternalUpdateGeometry ();
 				this.root.Invalidate ();
 			}
@@ -263,9 +263,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AsyncValidation ();
 			
-			if (this.show_count == 0)
+			if (this.showCount == 0)
 			{
-				this.show_count++;
+				this.showCount++;
 //				this.root.InternalUpdateGeometry ();
 			}
 			
@@ -424,10 +424,10 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.focused_widget != null) &&
-					(this.focused_widget.Window == this))
+				if ((this.focusedWidget != null) &&
+					(this.focusedWidget.Window == this))
 				{
-					return this.focused_widget;
+					return this.focusedWidget;
 				}
 				else
 				{
@@ -436,58 +436,58 @@ namespace Epsitec.Common.Widgets
 			}
 			private set
 			{
-				 if (this.focused_widget != value)
+				 if (this.focusedWidget != value)
 				{
-					Widget old_focus = this.focused_widget;
-					Widget new_focus = value;
+					Widget oldFocus = this.focusedWidget;
+					Widget newFocus = value;
 					
-					this.focused_widget = null;
+					this.focusedWidget = null;
 					
-					if (old_focus != null)
+					if (oldFocus != null)
 					{
-						old_focus.SetFocused (false);
+						oldFocus.SetFocused (false);
 					}
 					
-					this.focused_widget = new_focus;
+					this.focusedWidget = newFocus;
 					
-					if (new_focus != null)
+					if (newFocus != null)
 					{
-						new_focus.SetFocused (true);
+						newFocus.SetFocused (true);
 					}
 
-					this.OnFocusedWidgetChanged (new DependencyPropertyChangedEventArgs ("FocusedWidget", old_focus, new_focus));
+					this.OnFocusedWidgetChanged (new DependencyPropertyChangedEventArgs ("FocusedWidget", oldFocus, newFocus));
 				}
 			}
 		}
 		
 		public Widget							EngagedWidget
 		{
-			get { return this.engaged_widget; }
+			get { return this.engagedWidget; }
 			set
 			{
-				if (this.engaged_widget != value)
+				if (this.engagedWidget != value)
 				{
-					Widget old_engage = this.engaged_widget;
-					Widget new_engage = value;
+					Widget oldEngage = this.engagedWidget;
+					Widget newEngage = value;
 					
-					this.engaged_widget = null;
+					this.engagedWidget = null;
 					
-					if (old_engage != null)
+					if (oldEngage != null)
 					{
-						old_engage.SetEngaged (false);
+						oldEngage.SetEngaged (false);
 						this.timer.Stop ();
 					}
 					
-					this.engaged_widget = new_engage;
+					this.engagedWidget = newEngage;
 					
-					if (new_engage != null)
+					if (newEngage != null)
 					{
-						new_engage.SetEngaged (true);
+						newEngage.SetEngaged (true);
 						
-						if (new_engage.AutoRepeat)
+						if (newEngage.AutoRepeat)
 						{
 							this.timer.Stop ();
-							this.timer.AutoRepeat = new_engage.AutoEngageDelay;
+							this.timer.AutoRepeat = newEngage.AutoEngageDelay;
 							this.timer.Start ();
 						}
 					}
@@ -499,7 +499,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.capturing_widget;
+				return this.capturingWidget;
 			}
 		}
 
@@ -507,11 +507,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.modal_widget;
+				return this.modalWidget;
 			}
 			set
 			{
-				this.modal_widget = value;
+				this.modalWidget = value;
 			}
 		}
 		
@@ -519,11 +519,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.paint_filter;
+				return this.paintFilter;
 			}
 			set
 			{
-				this.paint_filter = value;
+				this.paintFilter = value;
 			}
 		}
 		
@@ -532,7 +532,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.window.Cursor = (value == null) ? null : value.GetPlatformCursor ();
-				this.window_cursor = value;
+				this.windowCursor = value;
 			}
 		}
 		
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				if ((this.window != null) &&
-					(this.window_is_visible))
+					(this.windowIsVisible))
 				{
 					return true;
 				}
@@ -597,7 +597,7 @@ namespace Epsitec.Common.Widgets
 					return true;
 				}
 				
-				return this.window_is_focused;
+				return this.windowIsFocused;
 			}
 		}
 		
@@ -669,7 +669,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.window_location_set = true;
+				this.windowLocationSet = true;
 				this.window.WindowBounds = value;
 			}
 		}
@@ -830,7 +830,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.window_location_set = true;
+				this.windowLocationSet = true;
 				this.window.Location = new System.Drawing.Point ((int)(value.X + 0.5), (int)(value.Y + 0.5));
 			}
 		}
@@ -860,7 +860,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.window_location_set = true;
+				this.windowLocationSet = true;
 				this.window.WindowLocation = value;
 			}
 		}
@@ -873,7 +873,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if (this.window_location_set == false)
+				if (this.windowLocationSet == false)
 				{
 					//	L'utilisateur n'a jamais positionné sa fenêtre et le système
 					//	dans son immense bonté nous a proposé une origine. Si nous
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Widgets
 					bounds.Width  = value.Width;
 					
 					this.WindowBounds        = bounds;
-					this.window_location_set = false;
+					this.windowLocationSet = false;
 				}
 				else
 				{
@@ -933,10 +933,10 @@ namespace Epsitec.Common.Widgets
 				if ((this.window != null) &&
 					(this.ClientSize != value))
 				{
-					Drawing.Size window_size = this.window.WindowSize;
-					Drawing.Size client_size = this.ClientSize;
+					Drawing.Size windowSize = this.window.WindowSize;
+					Drawing.Size clientSize = this.ClientSize;
 					
-					this.WindowSize = new Drawing.Size (value.Width - client_size.Width + window_size.Width, value.Height - client_size.Height + window_size.Height);
+					this.WindowSize = new Drawing.Size (value.Width - clientSize.Width + windowSize.Width, value.Height - clientSize.Height + windowSize.Height);
 				}
 			}
 		}
@@ -969,7 +969,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return Window.is_running_in_automated_test_environment;
+				return Window.isRunningInAutomatedTestEnvironment;
 			}
 			set
 			{
@@ -978,9 +978,9 @@ namespace Epsitec.Common.Widgets
 				//	de tests automatique (NUnit) ne se bloque après l'affichage d'une
 				//	fenêtre.
 				
-				if (Window.is_running_in_automated_test_environment != value)
+				if (Window.isRunningInAutomatedTestEnvironment != value)
 				{
-					Window.is_running_in_automated_test_environment = value;
+					Window.isRunningInAutomatedTestEnvironment = value;
 				}
 			}
 		}
@@ -1031,9 +1031,9 @@ namespace Epsitec.Common.Widgets
 			public PushPaintFilterHelper(Window window, IPaintFilter filter)
 			{
 				this.window = window;
-				this.filter = window.paint_filter;
+				this.filter = window.paintFilter;
 				
-				window.paint_filter = filter;
+				window.paintFilter = filter;
 			}
 
 			~PushPaintFilterHelper()
@@ -1047,7 +1047,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.GC.SuppressFinalize (this);
 
-				this.window.paint_filter = this.filter;
+				this.window.paintFilter = this.filter;
 			}
 
 			#endregion
@@ -1107,19 +1107,19 @@ namespace Epsitec.Common.Widgets
 		
 		public void AttachLogicalFocus(Widget widget)
 		{
-			this.logical_focus_stack.Remove (widget);
-			this.logical_focus_stack.Insert (0, widget);
+			this.logicalFocusStack.Remove (widget);
+			this.logicalFocusStack.Insert (0, widget);
 		}
 		
 		public void DetachLogicalFocus(Widget widget)
 		{
-			this.logical_focus_stack.Remove (widget);
+			this.logicalFocusStack.Remove (widget);
 		}
 		
 		
 		public Widget FindLogicalFocus()
 		{
-			foreach (Widget widget in this.logical_focus_stack)
+			foreach (Widget widget in this.logicalFocusStack)
 			{
 				if ((widget.IsVisible) &&
 					(widget.IsEnabled))
@@ -1149,7 +1149,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void PlatformWindowDisposing()
 		{
-			if (this.is_disposed == false)
+			if (this.isDisposed == false)
 			{
 				this.window = null;
 				this.Dispose ();
@@ -1159,13 +1159,13 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			if (this.is_disposed)
+			if (this.isDisposed)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Disposing window {0} which has already been disposed", this.Name));
 				return;
 			}
 			
-			this.is_disposed = true;
+			this.isDisposed = true;
 				
 			if (Widget.DebugDispose)
 			{
@@ -1181,7 +1181,7 @@ namespace Epsitec.Common.Widgets
 					this.OnAboutToHideWindow ();
 				}
 				
-				if (this.cmd_queue.Count > 0)
+				if (this.cmdQueue.Count > 0)
 				{
 					//	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
 					//	à une autre fenêtre encore en vie, soit les exécuter tout de suite.
@@ -1199,9 +1199,9 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						while (this.cmd_queue.Count > 0)
+						while (this.cmdQueue.Count > 0)
 						{
-							QueueItem item = this.cmd_queue.Dequeue ();
+							QueueItem item = this.cmdQueue.Dequeue ();
 							helper.QueueCommand (item);
 						}
 					}
@@ -1254,11 +1254,11 @@ namespace Epsitec.Common.Widgets
 				this.window = null;
 				this.owner  = null;
 				
-				this.last_in_widget   = null;
-				this.capturing_widget = null;
-				this.capturing_button = MouseButtons.None;
-				this.focused_widget   = null;
-				this.engaged_widget   = null;;
+				this.lastInWidget   = null;
+				this.capturingWidget = null;
+				this.capturingButton = MouseButtons.None;
+				this.focusedWidget   = null;
+				this.engagedWidget   = null;;
 				
 				if (this.components.Count > 0)
 				{
@@ -1372,9 +1372,9 @@ namespace Epsitec.Common.Widgets
 		
 		internal void OnWindowShown()
 		{
-			System.Diagnostics.Debug.Assert (! this.window_is_visible);
+			System.Diagnostics.Debug.Assert (! this.windowIsVisible);
 
-			this.window_is_visible = true;
+			this.windowIsVisible = true;
 			
 			if ((this.owner != null) &&
 				(this.window != null) &&
@@ -1393,9 +1393,9 @@ namespace Epsitec.Common.Widgets
 		
 		internal void OnWindowHidden()
 		{
-			System.Diagnostics.Debug.Assert (this.window_is_visible);
+			System.Diagnostics.Debug.Assert (this.windowIsVisible);
 
-			this.window_is_visible = false;
+			this.windowIsVisible = false;
 			
 			if ((this.owner != null) &&
 				(this.window != null) &&
@@ -1466,16 +1466,16 @@ namespace Epsitec.Common.Widgets
 		internal void NotifyWindowFocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("Window focused");
-			if (this.window_is_focused == false)
+			if (this.windowIsFocused == false)
 			{
-				if (this.focused_widget != null)
+				if (this.focusedWidget != null)
 				{
-					this.window_is_focused = true;
-					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
+					this.windowIsFocused = true;
+					this.focusedWidget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
 				}
 				else
 				{
-					this.window_is_focused = true;
+					this.windowIsFocused = true;
 				}
 				
 				this.OnWindowFocused ();
@@ -1485,17 +1485,17 @@ namespace Epsitec.Common.Widgets
 		internal void NotifyWindowDefocused()
 		{
 			System.Diagnostics.Debug.WriteLine ("Window de-focused");
-			if ((this.window_is_focused == true) &&
+			if ((this.windowIsFocused == true) &&
 				(this.IsSubmenuOpen == false))
 			{
-				if (this.focused_widget != null)
+				if (this.focusedWidget != null)
 				{
-					this.window_is_focused = false;
-					this.focused_widget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
+					this.windowIsFocused = false;
+					this.focusedWidget.Invalidate (Widgets.InvalidateReason.FocusedChanged);
 				}
 				else
 				{
-					this.window_is_focused = false;
+					this.windowIsFocused = false;
 				}
 				
 				this.OnWindowDefocused ();
@@ -1786,9 +1786,9 @@ namespace Epsitec.Common.Widgets
 
 		private void QueueCommand(QueueItem item)
 		{
-			this.cmd_queue.Enqueue (item);
+			this.cmdQueue.Enqueue (item);
 			
-			if (this.cmd_queue.Count == 1)
+			if (this.cmdQueue.Count == 1)
 			{
 				if (this.window != null)
 				{
@@ -1805,15 +1805,15 @@ namespace Epsitec.Common.Widgets
 		
 		public void AsyncDispose()
 		{
-			this.is_dispose_queued = true;
+			this.isDisposeQueued = true;
 			this.SendQueueCommand ();
 		}
 		
 		public void AsyncNotify()
 		{
-			if (this.is_async_notification_queued == false)
+			if (this.isAsyncNotificationQueued == false)
 			{
-				this.is_async_notification_queued = true;
+				this.isAsyncNotificationQueued = true;
 				this.SendQueueCommand ();
 			}
 		}
@@ -1822,9 +1822,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsVisible)
 			{
-				if (this.is_async_layout_queued == false)
+				if (this.isAsyncLayoutQueued == false)
 				{
-					this.is_async_layout_queued = true;
+					this.isAsyncLayoutQueued = true;
 					this.SendQueueCommand ();
 				}
 			}
@@ -1832,37 +1832,37 @@ namespace Epsitec.Common.Widgets
 		
 		public void AsyncValidation()
 		{
-			if (this.pending_validation == false)
+			if (this.pendingValidation == false)
 			{
-				this.pending_validation = true;
+				this.pendingValidation = true;
 				this.window.SendValidation ();
 			}
 		}
 
 		public void AsyncValidation(Widget widget)
 		{
-			if (! this.async_validation_list.Contains (widget))
+			if (! this.asyncValidationList.Contains (widget))
 			{
-				this.async_validation_list.Add (widget);
+				this.asyncValidationList.Add (widget);
 				this.AsyncValidation ();
 			}
 		}
 
 		public static void SuspendAsyncNotify()
 		{
-			System.Threading.Interlocked.Increment (ref Window.async_suspend_count);
+			System.Threading.Interlocked.Increment (ref Window.asyncSuspendCount);
 		}
 
 		public static void ResumeAsyncNotify()
 		{
-			if (System.Threading.Interlocked.Decrement (ref Window.async_suspend_count) == 0)
+			if (System.Threading.Interlocked.Decrement (ref Window.asyncSuspendCount) == 0)
 			{
 				Window[] windows = new Window[0];
 
-				lock (Window.pending_async_windows)
+				lock (Window.pendingAsyncWindows)
 				{
-					windows = Window.pending_async_windows.ToArray ();
-					Window.pending_async_windows.Clear ();
+					windows = Window.pendingAsyncWindows.ToArray ();
+					Window.pendingAsyncWindows.Clear ();
 				}
 
 				foreach (Window window in windows)
@@ -1874,17 +1874,17 @@ namespace Epsitec.Common.Widgets
 
 		private void SendQueueCommand()
 		{
-			if (Window.async_suspend_count == 0)
+			if (Window.asyncSuspendCount == 0)
 			{
 				this.window.SendQueueCommand ();
 			}
 			else
 			{
-				lock (Window.pending_async_windows)
+				lock (Window.pendingAsyncWindows)
 				{
-					if (!Window.pending_async_windows.Contains (this))
+					if (!Window.pendingAsyncWindows.Contains (this))
 					{
-						Window.pending_async_windows.Add (this);
+						Window.pendingAsyncWindows.Add (this);
 					}
 				}
 			}
@@ -1892,12 +1892,12 @@ namespace Epsitec.Common.Widgets
 
 		public void ForceLayout()
 		{
-			if (this.recursive_layout_count > 0)
+			if (this.recursiveLayoutCount > 0)
 			{
 				return;
 			}
 
-			this.recursive_layout_count++;
+			this.recursiveLayoutCount++;
 			
 			try
 			{
@@ -1922,7 +1922,7 @@ namespace Epsitec.Common.Widgets
 			}
 			finally
 			{
-				this.recursive_layout_count--;
+				this.recursiveLayoutCount--;
 			}
 			
 			this.SyncMinSizeWithWindowRoot ();
@@ -1941,22 +1941,22 @@ namespace Epsitec.Common.Widgets
 		
 		private void ReleaseCapturingWidget()
 		{
-			Widget       widget = this.capturing_widget;
-			MouseButtons button = this.capturing_button;
+			Widget       widget = this.capturingWidget;
+			MouseButtons button = this.capturingButton;
 
 			this.ClearCapture ();
 			
 			if ((widget != null) &&
 				(button != MouseButtons.None))
 			{
-				widget.DispatchDummyMouseUpEvent (button, this.capturing_cursor);
+				widget.DispatchDummyMouseUpEvent (button, this.capturingCursor);
 			}
 		}
 
 		private void ClearCapture()
 		{
-			this.capturing_widget = null;
-			this.capturing_button = MouseButtons.None;
+			this.capturingWidget = null;
+			this.capturingButton = MouseButtons.None;
 			this.window.Capture = false;
 		}
 
@@ -1995,9 +1995,9 @@ namespace Epsitec.Common.Widgets
 
 		internal void DispatchQueuedCommands()
 		{
-			while (this.cmd_queue.Count > 0)
+			while (this.cmdQueue.Count > 0)
 			{
-				QueueItem item          = this.cmd_queue.Dequeue ();
+				QueueItem item          = this.cmdQueue.Dequeue ();
 				object    source        = item.Source;
 				string    commandLine   = item.CommandLine;
 				Command   commandObject = item.CommandObject;
@@ -2034,28 +2034,28 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if (this.is_dispose_queued)
+			if (this.isDisposeQueued)
 			{
 				this.Dispose ();
 			}
-			if (this.is_async_layout_queued)
+			if (this.isAsyncLayoutQueued)
 			{
-				this.is_async_layout_queued = false;
+				this.isAsyncLayoutQueued = false;
 				this.ForceLayout ();
 			}
-			if (this.is_async_notification_queued)
+			if (this.isAsyncNotificationQueued)
 			{
-				this.is_async_notification_queued = false;
+				this.isAsyncNotificationQueued = false;
 				this.OnAsyncNotification ();
 			}
 		}
 		
 		internal void DispatchValidation()
 		{
-			Widget[] widgets = this.async_validation_list.ToArray ();
+			Widget[] widgets = this.asyncValidationList.ToArray ();
 			
-			this.async_validation_list.Clear ();
-			this.pending_validation = false;
+			this.asyncValidationList.Clear ();
+			this.pendingValidation = false;
 
 			for (int i = 0; i < widgets.Length; i++)
 			{
@@ -2070,7 +2070,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void DispatchMessage(Message message)
 		{
-			this.DispatchMessage (message, this.modal_widget);
+			this.DispatchMessage (message, this.modalWidget);
 		}
 		
 		internal void DispatchMessage(Message message, Widget root)
@@ -2084,7 +2084,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsMouseType)
 			{
-				if (this.capturing_widget == null)
+				if (this.capturingWidget == null)
 				{
 					//	C'est un message souris. Nous allons commencer par vérifier si tous les widgets
 					//	encore marqués comme IsEntered contiennent effectivement encore la souris. Si non,
@@ -2097,16 +2097,16 @@ namespace Epsitec.Common.Widgets
 					//	Un widget a capturé les événements souris. Il ne faut donc gérer l'état Entered
 					//	uniquement pour ce widget-là.
 					
-					Widget.UpdateEntered (this, this.capturing_widget, message);
+					Widget.UpdateEntered (this, this.capturingWidget, message);
 				}
 				
-				this.last_in_widget = this.DetectWidget (message.Cursor);
+				this.lastInWidget = this.DetectWidget (message.Cursor);
 			}
 			
-			message.InWidget = this.last_in_widget;
+			message.InWidget = this.lastInWidget;
 			message.Consumer = null;
 			
-			if (this.capturing_widget == null)
+			if (this.capturingWidget == null)
 			{
 				//	La capture des événements souris n'est pas active. Si un widget a le focus, il va
 				//	recevoir les événements clavier en priorité (message.FilterOnlyFocused = true).
@@ -2163,7 +2163,7 @@ namespace Epsitec.Common.Widgets
 				message.FilterNoChildren = true;
 				message.Captured         = true;
 
-				Widget widget = this.capturing_widget;
+				Widget widget = this.capturingWidget;
 
 				if (message.MessageType == MessageType.MouseUp)
 				{
@@ -2204,20 +2204,20 @@ namespace Epsitec.Common.Widgets
 			if ((widget != null) &&
 				(widget.IsFocused == false) &&
 				(widget.AcceptsFocus) &&
-				(widget != this.focused_widget))
+				(widget != this.focusedWidget))
 			{
 				//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget
 				//	ayant le focus actuellement, ainsi que le widget candidat pour l'obtention du
 				//	focus soient d'accord...
 				
-				if ((this.focused_widget == null) ||
-					(this.focused_widget.AcceptsDefocus && this.focused_widget.InternalAboutToLoseFocus (dir, mode)))
+				if ((this.focusedWidget == null) ||
+					(this.focusedWidget.AcceptsDefocus && this.focusedWidget.InternalAboutToLoseFocus (dir, mode)))
 				{
 					Widget focus;
 					
 					if (widget.InternalAboutToGetFocus (dir, mode, out focus))
 					{
-						FocusChangingEventArgs e = new FocusChangingEventArgs (this.focused_widget, focus, dir, mode);
+						FocusChangingEventArgs e = new FocusChangingEventArgs (this.focusedWidget, focus, dir, mode);
 						
 						this.OnFocusedWidgetChanging (e);
 
@@ -2279,9 +2279,9 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if (this.capturing_widget != null)
+			if (this.capturingWidget != null)
 			{
-				if (this.capturing_widget.IsVisible == false)
+				if (this.capturingWidget.IsVisible == false)
 				{
 					//	Il faut terminer la capture si le widget n'est plus visible,
 					//	sinon on risque de ne plus jamais recevoir d'événements pour
@@ -2300,9 +2300,9 @@ namespace Epsitec.Common.Widgets
 						if ((consumer.AutoCapture) ||
 							(message.ForceCapture))
 						{
-							this.capturing_widget = consumer;
-							this.capturing_button = message.Button;
-							this.capturing_cursor = message.Cursor;
+							this.capturingWidget = consumer;
+							this.capturingButton = message.Button;
+							this.capturingCursor = message.Cursor;
 							this.window.Capture = true;
 						}
 						else
@@ -2323,7 +2323,7 @@ namespace Epsitec.Common.Widgets
 								(consumer.CanEngage))
 							{
 								this.EngagedWidget = consumer;
-								this.initially_engaged_widget = consumer;
+								this.initiallyEngagedWidget = consumer;
 							}
 						}
 						break;
@@ -2344,7 +2344,7 @@ namespace Epsitec.Common.Widgets
 							}
 							
 							this.EngagedWidget = null;
-							this.initially_engaged_widget = null;
+							this.initiallyEngagedWidget = null;
 						}
 						break;
 					
@@ -2358,7 +2358,7 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseEnter:
 						if ((Message.CurrentState.IsLeftButton) &&
 							(Message.CurrentState.IsSameWindowAsButtonDown) &&
-							(this.initially_engaged_widget == consumer) &&
+							(this.initiallyEngagedWidget == consumer) &&
 							(consumer.AutoEngage) &&
 							(consumer.IsEngaged == false) &&
 							(consumer.CanEngage))
@@ -2399,8 +2399,8 @@ namespace Epsitec.Common.Widgets
 				{
 					case MessageType.MouseDown:
 						this.window.FilterMouseMessages = true;
-						this.capturing_widget = null;
-						this.capturing_button = MouseButtons.None;
+						this.capturingWidget = null;
+						this.capturingButton = MouseButtons.None;
 						break;
 							
 					case MessageType.KeyDown:
@@ -2412,7 +2412,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
-			if (this.is_disposed)
+			if (this.isDisposed)
 			{
 				return;
 			}
@@ -2429,7 +2429,7 @@ namespace Epsitec.Common.Widgets
 					
 //-					System.Diagnostics.Debug.WriteLine (string.Format ("Strip {0} : {1}", i, strips[i].ToString ()));
 					
-					this.Root.PaintHandler (graphics, strips[i], this.paint_filter);
+					this.Root.PaintHandler (graphics, strips[i], this.paintFilter);
 				}
 				
 //-				System.Diagnostics.Debug.WriteLine ("Done");
@@ -2444,12 +2444,12 @@ namespace Epsitec.Common.Widgets
 				graphics.ResetClippingRectangle ();
 				graphics.SetClippingRectangle (repaint);
 				
-				this.Root.PaintHandler (graphics, repaint, this.paint_filter);
+				this.Root.PaintHandler (graphics, repaint, this.paintFilter);
 			}
 			
-			while (this.post_paint_queue.Count > 0)
+			while (this.postPaintQueue.Count > 0)
 			{
-				PostPaintRecord record = this.post_paint_queue.Dequeue ();
+				PostPaintRecord record = this.postPaintQueue.Dequeue ();
 				record.Paint (graphics);
 			}
 		}
@@ -2481,7 +2481,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void QueuePostPaintHandler(Window.IPostPaintHandler handler, Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
-			this.post_paint_queue.Enqueue (new Window.PostPaintRecord (handler, graphics, repaint));
+			this.postPaintQueue.Enqueue (new Window.PostPaintRecord (handler, graphics, repaint));
 		}
 		
 		
@@ -2514,13 +2514,13 @@ namespace Epsitec.Common.Widgets
 		
 		protected void HandleTimeElapsed(object sender)
 		{
-			if (this.engaged_widget != null)
+			if (this.engagedWidget != null)
 			{
-				this.timer.AutoRepeat = this.engaged_widget.AutoEngageRepeatPeriod;
+				this.timer.AutoRepeat = this.engagedWidget.AutoEngageRepeatPeriod;
 				
-				if (this.engaged_widget.IsEngaged)
+				if (this.engagedWidget.IsEngaged)
 				{
-					this.engaged_widget.FireStillEngaged ();
+					this.engagedWidget.FireStillEngaged ();
 					this.GenerateDummyMouseMoveEvent ();
 					return;
 				}
@@ -2621,7 +2621,7 @@ namespace Epsitec.Common.Widgets
 
 		private static readonly string			DispatchCommandIdOption = "-dispatch-command-id:";
 
-		private static long						next_window_id;
+		private static long						nextWindowId;
 
 		private string							name;
 		private string							text;
@@ -2631,43 +2631,43 @@ namespace Epsitec.Common.Widgets
 		private Platform.Window					window;
 		private Window							owner;
 		private WindowRoot						root;
-		private bool							window_is_visible;
-		private bool							window_is_focused;
-		private bool							window_location_set;
+		private bool							windowIsVisible;
+		private bool							windowIsFocused;
+		private bool							windowLocationSet;
 		
-		private int								show_count;
-		private int								recursive_layout_count;
-		private Widget							last_in_widget;
-		private Widget							capturing_widget;
-		private MouseButtons					capturing_button;
-		private Drawing.Point					capturing_cursor;
-		private Widget							focused_widget;
-		private Widget							engaged_widget;
-		private Widget							initially_engaged_widget;
-		private Widget							modal_widget;
+		private int								showCount;
+		private int								recursiveLayoutCount;
+		private Widget							lastInWidget;
+		private Widget							capturingWidget;
+		private MouseButtons					capturingButton;
+		private Drawing.Point					capturingCursor;
+		private Widget							focusedWidget;
+		private Widget							engagedWidget;
+		private Widget							initiallyEngagedWidget;
+		private Widget							modalWidget;
 		private Timer							timer;
-		private MouseCursor						window_cursor;
-		private List<Widget>					logical_focus_stack = new List<Widget> ();
+		private MouseCursor						windowCursor;
+		private List<Widget>					logicalFocusStack = new List<Widget> ();
 		
-		private Queue<QueueItem>				cmd_queue = new Queue<QueueItem> ();
-		private bool							is_dispose_queued;
-		private bool							is_async_notification_queued;
-		private bool							is_async_layout_queued;
-		private bool							is_disposed;
-		private static int						async_suspend_count;
-		private static List<Window>				pending_async_windows = new List<Window> ();
+		private Queue<QueueItem>				cmdQueue = new Queue<QueueItem> ();
+		private bool							isDisposeQueued;
+		private bool							isAsyncNotificationQueued;
+		private bool							isAsyncLayoutQueued;
+		private bool							isDisposed;
+		private static int						asyncSuspendCount;
+		private static List<Window>				pendingAsyncWindows = new List<Window> ();
 
 		
-		private bool							pending_validation;
-		private List<Widget>					async_validation_list = new List<Widget> ();
+		private bool							pendingValidation;
+		private List<Widget>					asyncValidationList = new List<Widget> ();
 		
-		private IPaintFilter					paint_filter;
+		private IPaintFilter					paintFilter;
 		
-		private Queue<PostPaintRecord>			post_paint_queue = new Queue<PostPaintRecord> ();
+		private Queue<PostPaintRecord>			postPaintQueue = new Queue<PostPaintRecord> ();
 		
 		private Support.Data.ComponentCollection components;
 
 		static WeakList<Window>					windows = new WeakList<Window> ();
-		static bool								is_running_in_automated_test_environment;
+		static bool								isRunningInAutomatedTestEnvironment;
 	}
 }

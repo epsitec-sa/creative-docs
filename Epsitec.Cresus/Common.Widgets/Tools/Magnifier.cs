@@ -15,19 +15,19 @@ namespace Epsitec.Common.Widgets.Tools
 	{
 		public Magnifier()
 		{
-			this.zoom_window = new Window ();
-			this.zoom_view   = new MagnifierZoomView (this);
+			this.zoomWindow = new Window ();
+			this.zoomView   = new MagnifierZoomView (this);
 			
-			this.zoom_window.MakeTopLevelWindow ();
-			this.zoom_window.MakeFramelessWindow ();
-			this.zoom_window.MakeLayeredWindow ();
+			this.zoomWindow.MakeTopLevelWindow ();
+			this.zoomWindow.MakeFramelessWindow ();
+			this.zoomWindow.MakeLayeredWindow ();
 			
-			this.zoom_window.ClientSize = new Drawing.Size (111, 111);
-			this.zoom_window.Root.BackColor = Drawing.Color.Transparent;
+			this.zoomWindow.ClientSize = new Drawing.Size (111, 111);
+			this.zoomWindow.Root.BackColor = Drawing.Color.Transparent;
 			
-			this.zoom_view.Dock   = DockStyle.Fill;
-			this.zoom_view.SetParent (this.zoom_window.Root);
-			this.zoom_view.Focus ();
+			this.zoomView.Dock   = DockStyle.Fill;
+			this.zoomView.SetParent (this.zoomWindow.Root);
+			this.zoomView.Focus ();
 			
 			this.DisplayRadius = 55;
 			this.SampleRadius  = 3;
@@ -36,12 +36,12 @@ namespace Epsitec.Common.Widgets.Tools
 		
 		public void Show()
 		{
-			this.zoom_window.Show ();
+			this.zoomWindow.Show ();
 		}
 		
 		public void Hide()
 		{
-			this.zoom_window.Hide ();
+			this.zoomWindow.Hide ();
 		}
 		
 		
@@ -49,16 +49,16 @@ namespace Epsitec.Common.Widgets.Tools
 		{
 			get
 			{
-				return this.display_radius;
+				return this.displayRadius;
 			}
 			set
 			{
 				if (value < 40)  value = 40;
 				if (value > 200) value = 200;
 				
-				if (this.display_radius != value)
+				if (this.displayRadius != value)
 				{
-					this.display_radius = value;
+					this.displayRadius = value;
 					this.OnDisplayRadiusChanged ();
 				}
 			}
@@ -68,16 +68,16 @@ namespace Epsitec.Common.Widgets.Tools
 		{
 			get
 			{
-				return this.sample_radius;
+				return this.sampleRadius;
 			}
 			set
 			{
 				if (value < 2)  value = 2;
 				if (value > 10) value = 10;
 				
-				if (this.sample_radius != value)
+				if (this.sampleRadius != value)
 				{
-					this.sample_radius = value;
+					this.sampleRadius = value;
 					this.OnSampleRadiusChanged ();
 				}
 			}
@@ -87,14 +87,14 @@ namespace Epsitec.Common.Widgets.Tools
 		{
 			get
 			{
-				return this.hot_color;
+				return this.hotColor;
 			}
 				
 			set
 			{
-				if (this.hot_color != value)
+				if (this.hotColor != value)
 				{
-					this.hot_color = value;
+					this.hotColor = value;
 					this.OnHotColorChanged ();
 				}
 			}
@@ -104,14 +104,14 @@ namespace Epsitec.Common.Widgets.Tools
 		{
 			get
 			{
-				return this.color_picker;
+				return this.colorPicker;
 			}
 			set
 			{
-				if (this.color_picker != value)
+				if (this.colorPicker != value)
 				{
-					this.color_picker = value;
-					this.zoom_view.Invalidate ();
+					this.colorPicker = value;
+					this.zoomView.Invalidate ();
 				}
 			}
 		}
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Widgets.Tools
 		{
 			get
 			{
-				return this.zoom_view;
+				return this.zoomView;
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets.Tools
 		{
 			get
 			{
-				return this.zoom_window;
+				return this.zoomWindow;
 			}
 		}
 
@@ -187,7 +187,7 @@ namespace Epsitec.Common.Widgets.Tools
 				
 				this.bitmap = Drawing.Bitmap.FromNativeBitmap (dx, dy);
 				
-				this.zoom_view.Invalidate ();
+				this.zoomView.Invalidate ();
 			}
 		}
 		
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets.Tools
 			double dx = this.DisplayRadius * 2 + 1;
 			double dy = dx;
 			
-			this.zoom_window.ClientSize = new Drawing.Size (dx, dy);
+			this.zoomWindow.ClientSize = new Drawing.Size (dx, dy);
 		}
 		
 		
@@ -205,12 +205,12 @@ namespace Epsitec.Common.Widgets.Tools
 		public event EventHandler				DisplayRadiusChanged;
 		
 		
-		private Drawing.Color					hot_color;
-		private double							display_radius;
-		private int								sample_radius;
+		private Drawing.Color					hotColor;
+		private double							displayRadius;
+		private int								sampleRadius;
 		private Drawing.Image					bitmap;
-		private MagnifierZoomView				zoom_view;
-		private Window							zoom_window;
-		private bool							color_picker;
+		private MagnifierZoomView				zoomView;
+		private Window							zoomWindow;
+		private bool							colorPicker;
 	}
 }

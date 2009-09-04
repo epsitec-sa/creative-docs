@@ -496,19 +496,19 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void UpdateValidator()
 		{
-			if (this.validator_1 != null)
+			if (this.validator1 != null)
 			{
-				this.validator_1.Dispose ();
+				this.validator1.Dispose ();
 			}
 
-			this.validator_1 = new Validators.RegexValidator (this, RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
+			this.validator1 = new Validators.RegexValidator (this, RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
 
-			if (this.validator_2 != null)
+			if (this.validator2 != null)
 			{
-				this.validator_2.Dispose ();
+				this.validator2.Dispose ();
 			}
 
-			this.validator_2 = new Validators.NumRangeValidator (this);
+			this.validator2 = new Validators.NumRangeValidator (this);
 		}
 
 
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Widgets
 		protected decimal defaultValue = 0;
 		protected bool isDefaultValueDefined = false;
 		protected decimal step = 1;
-		protected Validators.RegexValidator validator_1;
-		protected Validators.NumRangeValidator validator_2;
+		protected Validators.RegexValidator validator1;
+		protected Validators.NumRangeValidator validator2;
 	}
 }

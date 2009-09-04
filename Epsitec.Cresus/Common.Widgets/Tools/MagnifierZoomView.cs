@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Tools
 				case MessageType.MouseDown:
 					if (message.IsLeftButton)
 					{
-						this.is_dragging = true;
+						this.isDragging = true;
 						this.origin      = this.MapClientToScreen (pos);
 						
 						MouseCursor.Hide ();
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Widgets.Tools
 					break;
 				
 				case MessageType.MouseMove:
-					if (this.is_dragging)
+					if (this.isDragging)
 					{
 						pos = this.MapClientToScreen (pos);
 						
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets.Tools
 			
 				case MessageType.MouseUp:
 					MouseCursor.Show ();
-					this.is_dragging = false;
+					this.isDragging = false;
 					break;
 				
 				case MessageType.MouseWheel:
@@ -59,12 +59,12 @@ namespace Epsitec.Common.Widgets.Tools
 					switch (message.KeyCode)
 					{
 						case KeyCode.AlphaL:
-							this.is_rgb_lcd = ! this.is_rgb_lcd;
+							this.isRgbLcd = ! this.isRgbLcd;
 							this.Invalidate ();
 							break;
 						
 						case KeyCode.AlphaM:
-							this.is_rgb_mono = ! this.is_rgb_mono;
+							this.isRgbMono = ! this.isRgbMono;
 							this.Invalidate ();
 							break;
 						
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets.Tools
 			base.Dispose (disposing);
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			if (this.magnifier.SampleRadius < 1)
 			{
@@ -145,8 +145,8 @@ namespace Epsitec.Common.Widgets.Tools
 			Drawing.Path path;
 			
 			if ((this.mask == null) ||
-				(this.mask_dx != dx) ||
-				(this.mask_dy != dy))
+				(this.maskDx != dx) ||
+				(this.maskDy != dy))
 			{
 				if (this.mask != null)
 				{
@@ -155,8 +155,8 @@ namespace Epsitec.Common.Widgets.Tools
 				}
 				
 				this.mask = graphics.CreateAlphaMask ();
-				this.mask_dx = dx;
-				this.mask_dy = dy;
+				this.maskDx = dx;
+				this.maskDy = dy;
 				
 				path = Drawing.Path.FromCircle (cx, cy, cx, cy);
 				
@@ -191,9 +191,9 @@ namespace Epsitec.Common.Widgets.Tools
 				{
 					x = 0;
 					
-					if (this.is_rgb_lcd)
+					if (this.isRgbLcd)
 					{
-						if (this.is_rgb_mono)
+						if (this.isRgbMono)
 						{
 							for (int ix = 0; ix < nx; ix++)
 							{
@@ -345,11 +345,11 @@ namespace Epsitec.Common.Widgets.Tools
 		
 		private Magnifier					magnifier;
 		
-		private bool						is_rgb_lcd;
-		private bool						is_rgb_mono;
-		private bool						is_dragging;
+		private bool						isRgbLcd;
+		private bool						isRgbMono;
+		private bool						isDragging;
 		private Drawing.Point				origin;
-		private double						mask_dx, mask_dy;
+		private double						maskDx, maskDy;
 		private Drawing.Graphics			mask;
 		
 		private Timer						timer;

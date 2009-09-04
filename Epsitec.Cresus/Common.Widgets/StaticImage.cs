@@ -33,14 +33,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.image_name;
+				return this.imageName;
 			}
 			
 			set
 			{
-				if (this.image_name != value)
+				if (this.imageName != value)
 				{
-					this.image_name = value;
+					this.imageName = value;
 					this.RebuildTextLayout ();
 				}
 			}
@@ -50,13 +50,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.image_size;
+				return this.imageSize;
 			}
 			set
 			{
-				if (this.image_size != value)
+				if (this.imageSize != value)
 				{
-					this.image_size = value;
+					this.imageSize = value;
 					this.RebuildTextLayout ();
 				}
 			}
@@ -66,13 +66,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.vertical_offset;
+				return this.verticalOffset;
 			}
 			set
 			{
-				if (this.vertical_offset != value)
+				if (this.verticalOffset != value)
 				{
-					this.vertical_offset = value;
+					this.verticalOffset = value;
 					this.RebuildTextLayout ();
 				}
 			}
@@ -96,8 +96,8 @@ namespace Epsitec.Common.Widgets
 				
 				int vOffset = (int) (this.VerticalOffset * 100 + 0.5);
 				
-				int imageDx = (int) (this.image_size.Width + 0.5);
-				int imageDy = (int) (this.image_size.Height + 0.5);
+				int imageDx = (int) (this.imageSize.Width + 0.5);
+				int imageDy = (int) (this.imageSize.Height + 0.5);
 				
 				if (vOffset != 0)
 				{
@@ -126,8 +126,8 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected string				image_name;
-		protected Drawing.Size			image_size;
-		protected double				vertical_offset;
+		protected string				imageName;
+		protected Drawing.Size			imageSize;
+		protected double				verticalOffset;
 	}
 }

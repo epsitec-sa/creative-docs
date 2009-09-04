@@ -35,9 +35,9 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (handle != System.IntPtr.Zero)
 				{
-					int my_pid = 0;
+					int myPid = 0;
 					
-					Win32Api.GetWindowThreadProcessId (form.Handle, out my_pid);
+					Win32Api.GetWindowThreadProcessId (form.Handle, out myPid);
 					
 					for (int i = 0; i < 1000; i++)
 					{
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets.Platform
 						if (handle == System.IntPtr.Zero) break;
 						if (thread == 0) break;
 						
-						if ((pid == my_pid) &&
+						if ((pid == myPid) &&
 							(visible))
 						{
 							foreach (Platform.Window window in WindowList.windows)

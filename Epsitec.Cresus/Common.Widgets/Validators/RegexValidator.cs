@@ -17,20 +17,20 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 		}
 		
-		public RegexValidator(Widget widget, string regex, bool accept_empty) : base (widget)
+		public RegexValidator(Widget widget, string regex, bool acceptEmpty) : base (widget)
 		{
 			this.SetRegex (regex);
-			this.accept_empty = accept_empty;
+			this.acceptEmpty = acceptEmpty;
 		}
 		
 		public RegexValidator(Widget widget, System.Text.RegularExpressions.Regex regex) : this (widget, regex, true)
 		{
 		}
 		
-		public RegexValidator(Widget widget, System.Text.RegularExpressions.Regex regex, bool accept_empty) : base (widget)
+		public RegexValidator(Widget widget, System.Text.RegularExpressions.Regex regex, bool acceptEmpty) : base (widget)
 		{
 			this.SetRegex (regex);
-			this.accept_empty = accept_empty;
+			this.acceptEmpty = acceptEmpty;
 		}
 		
 		
@@ -38,11 +38,11 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			get
 			{
-				return this.accept_empty;
+				return this.acceptEmpty;
 			}
 			set
 			{
-				this.accept_empty = value;
+				this.acceptEmpty = value;
 			}
 		}
 		
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		protected override void ValidateText(string text)
 		{
-			if (((this.accept_empty) && (text.Length == 0)) ||
+			if (((this.acceptEmpty) && (text.Length == 0)) ||
 				((text.Length > 0)) && (this.regex.IsMatch (text)))
 			{
 				this.SetState (ValidationState.Ok);
@@ -90,6 +90,6 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		
 		protected System.Text.RegularExpressions.Regex	regex;
-		protected bool									accept_empty;
+		protected bool									acceptEmpty;
 	}
 }

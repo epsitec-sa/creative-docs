@@ -16,9 +16,9 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			Microsoft.Win32.SystemEvents.UserPreferenceChanged += Window.HandleSystemEventsUserPreferenceChanged;
 			
-			Window.dispatch_window = new Window ();
-			Window.dispatch_window.CreateControl ();
-			Window.dispatch_window_handle = Window.dispatch_window.Handle;
+			Window.dispatchWindow = new Window ();
+			Window.dispatchWindow.CreateControl ();
+			Window.dispatchWindowHandle = Window.dispatchWindow.Handle;
 			
 			Epsitec.Common.Drawing.Platform.Dispatcher.Initialize ();
 			
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Platform
 			//	code on the main application thread. Thus, we have to register
 			//	the special thread invoker interface :
 			
-			Types.BindingAsyncOperation.DefineApplicationThreadInvoker (Window.dispatch_window);
+			Types.BindingAsyncOperation.DefineApplicationThreadInvoker (Window.dispatchWindow);
 		}
 
 
@@ -64,10 +64,10 @@ namespace Epsitec.Common.Widgets.Platform
 		internal Window(Epsitec.Common.Widgets.Window window)
 			: this ()
 		{
-			this.widget_window = window;
+			this.widgetWindow = window;
 			
-			this.dirty_rectangle = Drawing.Rectangle.Empty;
-			this.dirty_region    = new Drawing.DirtyRegion ();
+			this.dirtyRectangle = Drawing.Rectangle.Empty;
+			this.dirtyRegion    = new Drawing.DirtyRegion ();
 
 			base.MinimumSize = new System.Drawing.Size (1, 1);
 
@@ -90,12 +90,12 @@ namespace Epsitec.Common.Widgets.Platform
 			//	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
 			//	en le décalant, ce qui donne des effets bizarres :
 			
-			int class_window_style = Win32Api.GetClassLong (this.Handle, Win32Const.GCL_STYLE);
+			int classWindowStyle = Win32Api.GetClassLong (this.Handle, Win32Const.GCL_STYLE);
 			
-			class_window_style |= Win32Const.CS_HREDRAW;
-			class_window_style |= Win32Const.CS_VREDRAW;
+			classWindowStyle |= Win32Const.CS_HREDRAW;
+			classWindowStyle |= Win32Const.CS_VREDRAW;
 			
-			Win32Api.SetClassLong (this.Handle, Win32Const.GCL_STYLE, class_window_style);
+			Win32Api.SetClassLong (this.Handle, Win32Const.GCL_STYLE, classWindowStyle);
 			
 			this.ReallocatePixmap ();
 			
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.ShowInTaskbar   = false;
-			this.is_tool_window  = true;
+			this.isToolWindow  = true;
 			Window.DummyHandleEater (this.Handle);
 		}
 
@@ -194,20 +194,20 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.ShowInTaskbar   = false;
-			this.is_tool_window  = true;
+			this.isToolWindow  = true;
 			Window.DummyHandleEater (this.Handle);
 		}
 
 		internal void MakeFloatingWindow()
 		{
 			this.ShowInTaskbar   = false;
-			this.is_tool_window  = true;
+			this.isToolWindow  = true;
 			Window.DummyHandleEater (this.Handle);
 		}
 		
 		internal void ResetHostingWidgetWindow()
 		{
-			this.widget_window_disposed = true;
+			this.widgetWindowDisposed = true;
 		}
 		
 		
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			Window.DummyHandleEater (this.Handle);
 
-			if (this.is_layered)
+			if (this.isLayered)
 			{
 				switch (animation)
 				{
@@ -238,9 +238,9 @@ namespace Epsitec.Common.Widgets.Platform
 			Drawing.Point o1;
 			Drawing.Point o2;
 			
-			double start_alpha = this.alpha;
+			double startAlpha = this.alpha;
 			
-			this.is_animating_active_window = true;
+			this.isAnimatingActiveWindow = true;
 			this.WindowBounds = bounds;
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
@@ -252,7 +252,7 @@ namespace Epsitec.Common.Widgets.Platform
 				default:
 				case Animation.None:
 					this.ShowWindow ();
-					this.is_animating_active_window = false;
+					this.isAnimatingActiveWindow = false;
 					return;
 				
 				case Animation.RollDown:
@@ -284,25 +284,25 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case Animation.FadeIn:
-					this.is_frozen = true;
+					this.isFrozen = true;
 					this.IsLayered = true;
 					this.Alpha = 0.0;
 					
 					animator = new Animator (SystemInformation.MenuAnimationFadeInTime);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
-					animator.SetValue (0.0, start_alpha);
+					animator.SetValue (0.0, startAlpha);
 					animator.Start ();
 					this.ShowWindow ();
 					return;
 				
 				case Animation.FadeOut:
-					this.is_frozen = true;
+					this.isFrozen = true;
 					this.IsLayered = true;
 //					this.Alpha = 1.0;
 					
 					animator = new Animator (SystemInformation.MenuAnimationFadeOutTime);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
-					animator.SetValue (start_alpha, 0.0);
+					animator.SetValue (startAlpha, 0.0);
 					animator.Start ();
 					return;
 			}
@@ -313,8 +313,8 @@ namespace Epsitec.Common.Widgets.Platform
 				case Animation.RollUp:
 				case Animation.RollRight:
 				case Animation.RollLeft:
-					this.is_frozen = true;
-					this.form_min_size = this.MinimumSize;
+					this.isFrozen = true;
+					this.formMinSize = this.MinimumSize;
 					this.MinimumSize = new System.Drawing.Size (1, 1);
 					this.WindowBounds = b1;
 					this.UpdateLayeredWindow ();
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Widgets.Platform
 			Drawing.Point o1;
 			Drawing.Point o2;
 			
-			double start_alpha = this.alpha;
+			double startAlpha = this.alpha;
 			
 			this.WindowBounds = bounds;
 			this.MarkForRepaint ();
@@ -394,8 +394,8 @@ namespace Epsitec.Common.Widgets.Platform
 				case Animation.RollUp:
 				case Animation.RollRight:
 				case Animation.RollLeft:
-					this.is_frozen = true;
-					this.is_animating_active_window = this.IsActive;
+					this.isFrozen = true;
+					this.isAnimatingActiveWindow = this.IsActive;
 					this.WindowBounds = b1;
 					this.UpdateLayeredWindow ();
 					
@@ -416,7 +416,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			
 			this.WindowBounds = bounds;
-			this.paint_offset = offset;
+			this.paintOffset = offset;
 			this.Invalidate ();
 			this.Update ();
 		}
@@ -440,14 +440,14 @@ namespace Epsitec.Common.Widgets.Platform
 				return;
 			}
 			
-			this.MinimumSize = this.form_min_size;
-			this.is_frozen = false;
-			this.is_animating_active_window = false;
+			this.MinimumSize = this.formMinSize;
+			this.isFrozen = false;
+			this.isAnimatingActiveWindow = false;
 			this.Invalidate ();
 
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowAnimationEnded ();
+				this.widgetWindow.OnWindowAnimationEnded ();
 			}
 		}
 		
@@ -457,13 +457,13 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.window_styles;
+				return this.windowStyles;
 			}
 			set
 			{
-				if (this.window_styles != value)
+				if (this.windowStyles != value)
 				{
-					this.window_styles = value;
+					this.windowStyles = value;
 					this.UpdateWindowTypeAndStyles ();
 				}
 			}
@@ -473,13 +473,13 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.window_type;
+				return this.windowType;
 			}
 			set
 			{
-				if (this.window_type != value)
+				if (this.windowType != value)
 				{
-					this.window_type = value;
+					this.windowType = value;
 					this.UpdateWindowTypeAndStyles ();
 				}
 			}
@@ -488,10 +488,10 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private void UpdateWindowTypeAndStyles()
 		{
-			switch (this.window_type)
+			switch (this.windowType)
 			{
 				case WindowType.Document:
-					if ((this.window_styles & WindowStyles.CanResize) == 0)
+					if ((this.windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 					}
@@ -503,7 +503,7 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case WindowType.Dialog:
-					if ((this.window_styles & WindowStyles.CanResize) == 0)
+					if ((this.windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 					}
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case WindowType.Palette:
-					if ((this.window_styles & WindowStyles.CanResize) == 0)
+					if ((this.windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 					}
@@ -527,10 +527,10 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 			}
 			
-			this.MinimizeBox = ((this.window_styles & WindowStyles.CanMinimize)    != 0);
-			this.MaximizeBox = ((this.window_styles & WindowStyles.CanMaximize)    != 0);
-			this.HelpButton  = ((this.window_styles & WindowStyles.HasHelpButton)  != 0);
-			this.ControlBox  = ((this.window_styles & WindowStyles.HasCloseButton) != 0);
+			this.MinimizeBox = ((this.windowStyles & WindowStyles.CanMinimize)    != 0);
+			this.MaximizeBox = ((this.windowStyles & WindowStyles.CanMaximize)    != 0);
+			this.HelpButton  = ((this.windowStyles & WindowStyles.HasHelpButton)  != 0);
+			this.ControlBox  = ((this.windowStyles & WindowStyles.HasCloseButton) != 0);
 		}
 		
 		
@@ -538,7 +538,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.disable_sync_paint > 0;
+				return this.disableSyncPaint > 0;
 			}
 		}
 		
@@ -546,11 +546,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.prevent_close;
+				return this.preventClose;
 			}
 			set
 			{
-				this.prevent_close = value;
+				this.preventClose = value;
 			}
 		}
 		
@@ -558,11 +558,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.prevent_quit;
+				return this.preventQuit;
 			}
 			set
 			{
-				this.prevent_quit = value;
+				this.preventQuit = value;
 			}
 		}
 		
@@ -570,11 +570,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.is_layered;
+				return this.isLayered;
 			}
 			set
 			{
-				if (this.is_layered != value)
+				if (this.isLayered != value)
 				{
 					if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
 					{
@@ -583,19 +583,19 @@ namespace Epsitec.Common.Widgets.Platform
 					
 					if (SystemInformation.SupportsLayeredWindows)
 					{
-						int ex_style = Win32Api.GetWindowExStyle (this.Handle);
+						int exStyle = Win32Api.GetWindowExStyle (this.Handle);
 						
 						if (value)
 						{
-							ex_style |= Win32Const.WS_EX_LAYERED;
+							exStyle |= Win32Const.WS_EX_LAYERED;
 						}
 						else
 						{
-							ex_style &= ~ Win32Const.WS_EX_LAYERED;
+							exStyle &= ~ Win32Const.WS_EX_LAYERED;
 						}
 						
-						Win32Api.SetWindowExStyle (this.Handle, ex_style);
-						this.is_layered = value;
+						Win32Api.SetWindowExStyle (this.Handle, exStyle);
+						this.isLayered = value;
 					}
 				}
 			}
@@ -620,10 +620,10 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return (this.is_frozen)
-					|| (this.widget_window == null)
-					|| (this.widget_window.Root == null)
-					|| (this.widget_window.Root.IsFrozen);
+				return (this.isFrozen)
+					|| (this.widgetWindow == null)
+					|| (this.widgetWindow.Root == null)
+					|| (this.widgetWindow.Root.IsFrozen);
 			}
 		}
 		
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.is_animating_active_window;
+				return this.isAnimatingActiveWindow;
 			}
 		}
 		
@@ -639,12 +639,12 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return !this.is_no_activate;
+				return !this.isNoActivate;
 			}
 			
 			set
 			{
-				this.is_no_activate = !value;
+				this.isNoActivate = !value;
 			}
 		}
 		
@@ -652,7 +652,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.is_tool_window;
+				return this.isToolWindow;
 			}
 		}
 		
@@ -660,16 +660,16 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.is_size_move_in_progress;
+				return this.isSizeMoveInProgress;
 			}
 			set
 			{
-				if (this.is_size_move_in_progress != value)
+				if (this.isSizeMoveInProgress != value)
 				{
-					this.is_size_move_in_progress = value;
-					if (this.widget_window != null)
+					this.isSizeMoveInProgress = value;
+					if (this.widgetWindow != null)
 					{
-						this.widget_window.OnWindowSizeMoveStatusChanged ();
+						this.widgetWindow.OnWindowSizeMoveStatusChanged ();
 					}
 				}
 			}
@@ -680,11 +680,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.window_mode;
+				return this.windowMode;
 			}
 			set
 			{
-				this.window_mode = value;
+				this.windowMode = value;
 			}
 		}
 		
@@ -694,9 +694,9 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				System.Drawing.Rectangle rect;
 				
-				if (this.form_bounds_set)
+				if (this.formBoundsSet)
 				{
-					rect = this.form_bounds;
+					rect = this.formBounds;
 				}
 				else
 				{
@@ -712,19 +712,19 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			set
 			{
-				if (this.window_bounds != value)
+				if (this.windowBounds != value)
 				{
 					int ox = this.MapToWinFormsX (value.Left);
 					int oy = this.MapToWinFormsY (value.Top);
 					int dx = this.MapToWinFormsWidth (value.Width);
 					int dy = this.MapToWinFormsHeight (value.Height);
 					
-					this.window_bounds   = value;
-					this.form_bounds     = new System.Drawing.Rectangle (ox, oy, dx, dy);
-					this.form_bounds_set = true;
-					this.on_resize_event = true;
+					this.windowBounds   = value;
+					this.formBounds     = new System.Drawing.Rectangle (ox, oy, dx, dy);
+					this.formBoundsSet = true;
+					this.onResizeEvent = true;
 					
-					if (this.is_layered)
+					if (this.isLayered)
 					{
 						//	Be very careful here: in order to avoid any jitter while
 						//	moving & sizing the layered window, we must resize the
@@ -752,10 +752,10 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				System.Drawing.Size clientSize = base.ClientSize;
 				
-				if (this.form_bounds_set)
+				if (this.formBoundsSet)
 				{
-					int deltaWidth  = this.form_bounds.Width - this.Width;
-					int deltaHeight = this.form_bounds.Height - this.Height;
+					int deltaWidth  = this.formBounds.Width - this.Width;
+					int deltaHeight = this.formBounds.Height - this.Height;
 					
 					clientSize.Width  += deltaWidth;
 					clientSize.Height += deltaHeight;
@@ -769,11 +769,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				return this.minimum_size;
+				return this.minimumSize;
 			}
 			set
 			{
-				this.minimum_size = value;
+				this.minimumSize = value;
 			}
 		}
 		
@@ -970,58 +970,58 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			get
 			{
-				System.Drawing.Size border_size = new System.Drawing.Size (0, 0);
+				System.Drawing.Size borderSize = new System.Drawing.Size (0, 0);
 				
 				switch (this.FormBorderStyle)
 				{
 					case System.Windows.Forms.FormBorderStyle.Fixed3D:
-						border_size = System.Windows.Forms.SystemInformation.Border3DSize;
+						borderSize = System.Windows.Forms.SystemInformation.Border3DSize;
 						break;
 					
 					case System.Windows.Forms.FormBorderStyle.Sizable:
 					case System.Windows.Forms.FormBorderStyle.SizableToolWindow:
-						border_size = System.Windows.Forms.SystemInformation.FrameBorderSize;
+						borderSize = System.Windows.Forms.SystemInformation.FrameBorderSize;
 						break;
 					
 					case System.Windows.Forms.FormBorderStyle.FixedDialog:
-						border_size = System.Windows.Forms.SystemInformation.FixedFrameBorderSize;
+						borderSize = System.Windows.Forms.SystemInformation.FixedFrameBorderSize;
 						break;
 					
 					case System.Windows.Forms.FormBorderStyle.FixedSingle:
 					case System.Windows.Forms.FormBorderStyle.FixedToolWindow:
-						border_size = new System.Drawing.Size (1, 1);
+						borderSize = new System.Drawing.Size (1, 1);
 						break;
 					
 					case System.Windows.Forms.FormBorderStyle.None:
 						break;
 				}
 				
-				return border_size;
+				return borderSize;
 			}
 		}
 		
 		
 		internal bool							FilterMouseMessages
 		{
-			get { return this.filter_mouse_messages; }
-			set { this.filter_mouse_messages = value; }
+			get { return this.filterMouseMessages; }
+			set { this.filterMouseMessages = value; }
 		}
 		
 		internal bool							FilterKeyMessages
 		{
-			get { return this.filter_key_messages; }
-			set { this.filter_key_messages = value; }
+			get { return this.filterKeyMessages; }
+			set { this.filterKeyMessages = value; }
 		}
 		
 		
 		internal Epsitec.Common.Widgets.Window	HostingWidgetWindow
 		{
-			get { return this.widget_window; }
+			get { return this.widgetWindow; }
 		}
 		
 		internal static bool					IsApplicationActive
 		{
-			get { return Window.is_app_active; }
+			get { return Window.isAppActive; }
 		}
 
 		internal static new bool				UseWaitCursor
@@ -1041,18 +1041,18 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			try
 			{
-				this.forced_close = true;
+				this.forcedClose = true;
 				base.Close ();
 			}
 			finally
 			{
-				this.forced_close = false;
+				this.forcedClose = false;
 			}
 		}
 
 		internal void SetFrozen(bool frozen)
 		{
-			this.is_frozen = frozen;
+			this.isFrozen = frozen;
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -1065,7 +1065,7 @@ namespace Epsitec.Common.Widgets.Platform
 				//	WndProc, car cela perturbe le bon acheminement des messages dans Windows. On
 				//	préfère donc remettre la destruction à plus tard si on détecte cette condition.
 				
-				if (this.wnd_proc_depth > 0)
+				if (this.wndProcDepth > 0)
 				{
 					Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_DISPOSE, System.IntPtr.Zero, System.IntPtr.Zero);
 					return;
@@ -1078,12 +1078,12 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				this.graphics = null;
 				
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					if (this.widget_window_disposed == false)
+					if (this.widgetWindowDisposed == false)
 					{
-						this.widget_window.PlatformWindowDisposing ();
-						this.widget_window_disposed = true;
+						this.widgetWindow.PlatformWindowDisposing ();
+						this.widgetWindowDisposed = true;
 					}
 				}
 			}
@@ -1108,9 +1108,9 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 			}
 
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowClosed ();
+				this.widgetWindow.OnWindowClosed ();
 			}
 			
 			base.OnClosed (e);
@@ -1119,18 +1119,18 @@ namespace Epsitec.Common.Widgets.Platform
 		protected override void OnGotFocus(System.EventArgs e)
 		{
 			base.OnGotFocus (e);
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.NotifyWindowFocused ();
+				this.widgetWindow.NotifyWindowFocused ();
 			}
 		}
 		
 		protected override void OnLostFocus(System.EventArgs e)
 		{
 			base.OnLostFocus (e);
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.NotifyWindowDefocused ();
+				this.widgetWindow.NotifyWindowDefocused ();
 			}
 		}
 
@@ -1140,28 +1140,28 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnClosing (e);
 			
-			if (this.forced_close)
+			if (this.forcedClose)
 			{
 				return;
 			}
 
-			if (this.widget_window == null)
+			if (this.widgetWindow == null)
 			{
 				return;
 			}
 
-			this.widget_window.OnWindowCloseClicked ();
+			this.widgetWindow.OnWindowCloseClicked ();
 			
-			if (this.prevent_close)
+			if (this.preventClose)
 			{
 				e.Cancel = true;
 				
-				if (this.prevent_quit)
+				if (this.preventQuit)
 				{
 					return;
 				}
 
-				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (this.widget_window);
+				CommandDispatcher dispatcher = CommandDispatcher.GetDispatcher (this.widgetWindow);
 
 				//	Don't generate an Alt-F4 event if there is no dispatcher attached with this
 				//	window, as it would probably bubble up to the owner window and cause the
@@ -1175,9 +1175,9 @@ namespace Epsitec.Common.Widgets.Platform
 				//	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
 				//	fermeture, et synthétise un événement clavier ALT + F4 à la place...
 				
-				System.Windows.Forms.Keys alt_f4 = System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
-				System.Windows.Forms.KeyEventArgs fake_event = new System.Windows.Forms.KeyEventArgs (alt_f4);
-				Message message = Message.FromKeyEvent (MessageType.KeyDown, fake_event);
+				System.Windows.Forms.Keys altF4 = System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
+				System.Windows.Forms.KeyEventArgs fakeEvent = new System.Windows.Forms.KeyEventArgs (altF4);
+				Message message = Message.FromKeyEvent (MessageType.KeyDown, fakeEvent);
 				message.MarkAsDummyMessage ();
 				this.DispatchMessage (message);
 			}
@@ -1221,13 +1221,13 @@ namespace Epsitec.Common.Widgets.Platform
 			base.OnMouseEnter (e);
 			
 			System.Drawing.Point point = this.PointToClient (System.Windows.Forms.Control.MousePosition);
-			System.Windows.Forms.MouseEventArgs fake_event = new System.Windows.Forms.MouseEventArgs (System.Windows.Forms.MouseButtons.None, 0, point.X, point.Y, 0);
+			System.Windows.Forms.MouseEventArgs fakeEvent = new System.Windows.Forms.MouseEventArgs (System.Windows.Forms.MouseButtons.None, 0, point.X, point.Y, 0);
 			
-			Message message = Message.FromMouseEvent (MessageType.MouseEnter, this, fake_event);
+			Message message = Message.FromMouseEvent (MessageType.MouseEnter, this, fakeEvent);
 
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				if (this.widget_window.FilterMessage (message) == false)
+				if (this.widgetWindow.FilterMessage (message) == false)
 				{
 					this.DispatchMessage (message);
 				}
@@ -1240,9 +1240,9 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			Message message = Message.FromMouseEvent (MessageType.MouseLeave, this, null);
 
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				if (this.widget_window.FilterMessage (message) == false)
+				if (this.widgetWindow.FilterMessage (message) == false)
 				{
 					this.DispatchMessage (message);
 				}
@@ -1272,50 +1272,50 @@ namespace Epsitec.Common.Widgets.Platform
 		protected override void OnResizeBegin(System.EventArgs e)
 		{
 			base.OnResizeBegin (e);
-			this.widget_window.OnWindowResizeBeginning ();
+			this.widgetWindow.OnWindowResizeBeginning ();
 		}
 
 		protected override void OnResizeEnd(System.EventArgs e)
 		{
 			base.OnResizeEnd (e);
-			this.widget_window.OnWindowResizeEnded ();
+			this.widgetWindow.OnWindowResizeEnded ();
 		}
 
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
 //			System.Diagnostics.Debug.WriteLine ("OnSizeChanged");
-			this.disable_sync_paint++;
+			this.disableSyncPaint++;
 			
 			try
 			{
 				if ((this.Created == false) &&
-					(this.form_bounds_set) &&
-					(this.form_bounds.Size != this.Size))
+					(this.formBoundsSet) &&
+					(this.formBounds.Size != this.Size))
 				{
-					this.Size = this.form_bounds.Size;
+					this.Size = this.formBounds.Size;
 				}
-				else if ((this.form_bounds_set) &&
-					     (this.form_bounds.Size == this.Size) &&
-					     (this.on_resize_event == false))
+				else if ((this.formBoundsSet) &&
+					     (this.formBounds.Size == this.Size) &&
+					     (this.onResizeEvent == false))
 				{
 					//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
 				}
 				else
 				{
-					this.form_bounds_set = true;
-					this.on_resize_event = false;
-					this.form_bounds     = this.Bounds;
-					this.window_bounds   = this.WindowBounds;
+					this.formBoundsSet = true;
+					this.onResizeEvent = false;
+					this.formBounds     = this.Bounds;
+					this.windowBounds   = this.WindowBounds;
 					
 					base.OnSizeChanged (e);
 					this.ReallocatePixmap ();
 				}
 				
-				this.form_bounds_set = false;
+				this.formBoundsSet = false;
 			}
 			finally
 			{
-				this.disable_sync_paint--;
+				this.disableSyncPaint--;
 			}
 		}
 		
@@ -1323,9 +1323,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnActivated (e);
 			
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowActivated ();
+				this.widgetWindow.OnWindowActivated ();
 			}
 		}
 		
@@ -1333,9 +1333,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnDeactivate (e);
 			
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowDeactivated ();
+				this.widgetWindow.OnWindowDeactivated ();
 			}
 		}
 
@@ -1345,20 +1345,20 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.Visible)
 			{
-				if (! this.is_pixmap_ok)
+				if (! this.isPixmapOk)
 				{
 					this.ReallocatePixmap ();
 				}
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.OnWindowShown ();
+					this.widgetWindow.OnWindowShown ();
 				}
 			}
 			else
 			{
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.OnWindowHidden ();
+					this.widgetWindow.OnWindowHidden ();
 				}
 			}
 		}
@@ -1368,9 +1368,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnDragEnter (drgevent);
 			
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowDragEntered (new WindowDragEventArgs (drgevent));
+				this.widgetWindow.OnWindowDragEntered (new WindowDragEventArgs (drgevent));
 			}
 		}
 		
@@ -1378,9 +1378,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnDragLeave (e);
 			
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowDragLeft ();
+				this.widgetWindow.OnWindowDragLeft ();
 			}
 		}
 		
@@ -1388,9 +1388,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			base.OnDragDrop (drgevent);
 			
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.OnWindowDragDropped (new WindowDragEventArgs (drgevent));
+				this.widgetWindow.OnWindowDragDropped (new WindowDragEventArgs (drgevent));
 			}
 		}
 		
@@ -1418,22 +1418,22 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.graphics.SetPixmapSize (width, height))
 			{
-//				System.Diagnostics.Debug.WriteLine ("ReallocatePixmapLowLevel" + (this.is_frozen ? " (frozen)" : "") + " Size: " + width.ToString () + "," + height.ToString());
+//				System.Diagnostics.Debug.WriteLine ("ReallocatePixmapLowLevel" + (this.isFrozen ? " (frozen)" : "") + " Size: " + width.ToString () + "," + height.ToString());
 				
 				this.graphics.Pixmap.Clear ();
 
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.Root.NotifyWindowSizeChanged (width, height);
+					this.widgetWindow.Root.NotifyWindowSizeChanged (width, height);
 				}
-				this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
-				this.dirty_region    = new Drawing.DirtyRegion ();
-				this.dirty_region.Add (this.dirty_rectangle);
+				this.dirtyRectangle = new Drawing.Rectangle (0, 0, width, height);
+				this.dirtyRegion    = new Drawing.DirtyRegion ();
+				this.dirtyRegion.Add (this.dirtyRectangle);
 
 				changed = true;
 			}
 			
-			this.is_pixmap_ok = true;
+			this.isPixmapOk = true;
 			
 			return changed;
 		}
@@ -1490,8 +1490,8 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			rect.RoundInflate ();
 			
-			this.dirty_rectangle.MergeWith (rect);
-			this.dirty_region.Add (rect);
+			this.dirtyRectangle.MergeWith (rect);
+			this.dirtyRegion.Add (rect);
 			
 			int top    = (int) (rect.Top);
 			int bottom = (int) (rect.Bottom);
@@ -1501,9 +1501,9 @@ namespace Epsitec.Common.Widgets.Platform
 			int x      = (int) (rect.Left);
 			int y      = this.ClientSize.Height - top;
 			
-			if (this.is_layered)
+			if (this.isLayered)
 			{
-				this.is_layered_dirty = true;
+				this.isLayeredDirty = true;
 			}
 			
 			this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
@@ -1511,28 +1511,28 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void SynchronousRepaint()
 		{
-			if (this.is_layout_in_progress)
+			if (this.isLayoutInProgress)
 			{
 				return;
 			}
 
-			this.is_layout_in_progress = true;
+			this.isLayoutInProgress = true;
 
 			try
 			{
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.ForceLayout ();
+					this.widgetWindow.ForceLayout ();
 				}
 			}
 			finally
 			{
-				this.is_layout_in_progress = false;
+				this.isLayoutInProgress = false;
 			}
 			
-			if (this.dirty_rectangle.IsValid)
+			if (this.dirtyRectangle.IsValid)
 			{
-				this.is_sync_updating++;
+				this.isSyncUpdating++;
 
 				try
 				{
@@ -1540,7 +1540,7 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				finally
 				{
-					this.is_sync_updating--;
+					this.isSyncUpdating--;
 				}
 			}
 		}
@@ -1566,23 +1566,23 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void StartSizeMove()
 		{
 			this.IsSizeMoveInProgress = true;
-			this.disable_sync_paint++;
+			this.disableSyncPaint++;
 		}
 		
 		internal void StopSizeMove()
 		{
 			this.IsSizeMoveInProgress = false;
-			this.disable_sync_paint--;
+			this.disableSyncPaint--;
 		}
 		
 		
 		internal static void SendSynchronizeCommandCache()
 		{
-			Window.is_sync_requested = true;
+			Window.isSyncRequested = true;
 			
 			try
 			{
-				Win32Api.PostMessage (Window.dispatch_window_handle, Win32Const.WM_APP_SYNCMDCACHE, System.IntPtr.Zero, System.IntPtr.Zero);
+				Win32Api.PostMessage (Window.dispatchWindowHandle, Win32Const.WM_APP_SYNCMDCACHE, System.IntPtr.Zero, System.IntPtr.Zero);
 			}
 			catch (System.Exception ex)
 			{
@@ -1595,11 +1595,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			bool awake = false;
 
-			lock (Window.dispatch_window)
+			lock (Window.dispatchWindow)
 			{
-				if (Window.is_awake_requested == false)
+				if (Window.isAwakeRequested == false)
 				{
-					Window.is_awake_requested = true;
+					Window.isAwakeRequested = true;
 					awake = true;
 				}
 			}
@@ -1608,7 +1608,7 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				try
 				{
-					Win32Api.PostMessage (Window.dispatch_window_handle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
+					Win32Api.PostMessage (Window.dispatchWindowHandle, Win32Const.WM_APP_AWAKE, System.IntPtr.Zero, System.IntPtr.Zero);
 				}
 				catch (System.Exception ex)
 				{
@@ -1625,20 +1625,20 @@ namespace Epsitec.Common.Widgets.Platform
 
 			bool syncCommandCache = false;
 
-			lock (Window.dispatch_window)
+			lock (Window.dispatchWindow)
 			{
-				if (this.is_sync_updating == 0)
+				if (this.isSyncUpdating == 0)
 				{
-					if (Window.is_sync_requested)
+					if (Window.isSyncRequested)
 					{
-						Window.is_sync_requested = false;
+						Window.isSyncRequested = false;
 						syncCommandCache = true;
 					}
 				}
 				
-				if (Window.is_awake_requested)
+				if (Window.isAwakeRequested)
 				{
-					Window.is_awake_requested = false;
+					Window.isAwakeRequested = false;
 				}
 			}
 
@@ -1657,7 +1657,7 @@ namespace Epsitec.Common.Widgets.Platform
 				CommandCache.Instance.Synchronize ();
 			}
 			
-			if (Window.dispatch_window == this)
+			if (Window.dispatchWindow == this)
 			{
 				base.WndProc (ref msg);
 				return;
@@ -1691,10 +1691,10 @@ namespace Epsitec.Common.Widgets.Platform
 					Win32Api.Rect* rect = (Win32Api.Rect*) msg.LParam.ToPointer ();
 					int wParam = msg.WParam.ToInt32 ();
 
-//					System.Diagnostics.Debug.WriteLine (string.Format ("dx={0} MinWidth={1} MinimumSize={2}", rect->Right - rect->Left, this.minimum_size.Width, base.MinimumSize.Width));
+//					System.Diagnostics.Debug.WriteLine (string.Format ("dx={0} MinWidth={1} MinimumSize={2}", rect->Right - rect->Left, this.minimumSize.Width, base.MinimumSize.Width));
 
-					int dx = System.Math.Max (this.minimum_size.Width, rect->Right - rect->Left);
-					int dy = System.Math.Max (this.minimum_size.Height, rect->Bottom - rect->Top);
+					int dx = System.Math.Max (this.minimumSize.Width, rect->Right - rect->Left);
+					int dy = System.Math.Max (this.minimumSize.Height, rect->Bottom - rect->Top);
 
 					dx = System.Math.Max (dx, base.MinimumSize.Width);
 					dy = System.Math.Max (dy, base.MinimumSize.Height);
@@ -1746,13 +1746,13 @@ namespace Epsitec.Common.Widgets.Platform
 				unsafe
 				{
 					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
-					this.form_bounds = new System.Drawing.Rectangle (wp->X, wp->Y, wp->Width, wp->Height);
+					this.formBounds = new System.Drawing.Rectangle (wp->X, wp->Y, wp->Width, wp->Height);
 				}
 			}
 			
 			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
 			{
-				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
+				System.Diagnostics.Debug.Assert (this.wndProcDepth == 0);
 				
 				//	L'appelant avait tenté de nous détruire alors qu'il était dans un WndProc,
 				//	on reçoint maintenant la commande explicite (asynchrone) qui nous autorise
@@ -1764,13 +1764,13 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (msg.Msg == Win32Const.WM_APP_EXEC_CMD)
 			{
-				if (this.wnd_proc_depth == 0)
+				if (this.wndProcDepth == 0)
 				{
 					try
 					{
-						if (this.widget_window != null)
+						if (this.widgetWindow != null)
 						{
-							this.widget_window.DispatchQueuedCommands ();
+							this.widgetWindow.DispatchQueuedCommands ();
 						}
 					}
 					catch (System.Exception ex)
@@ -1787,7 +1787,7 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				else
 				{
-					this.is_dispatch_pending = true;
+					this.isDispatchPending = true;
 				}
 				
 				return;
@@ -1795,13 +1795,13 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (msg.Msg == Win32Const.WM_APP_VALIDATION)
 			{
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.DispatchValidation ();
+					this.widgetWindow.DispatchValidation ();
 				}
 			}
 			
-			this.wnd_proc_depth++;
+			this.wndProcDepth++;
 			System.Threading.Interlocked.Increment (ref Window.globalWndProcDepth);
 			
 			try
@@ -1816,10 +1816,10 @@ namespace Epsitec.Common.Widgets.Platform
 				//	système continue à fonctionner (ALT + ESPACE), il faut laisser transiter les événements
 				//	clavier qui ne concernent que ALT ou ALT + ESPACE sans modification.
 				
-				int w_param = (int) msg.WParam;
-				int l_param = (int) msg.LParam;
+				int wParam = (int) msg.WParam;
+				int lParam = (int) msg.LParam;
 				
-				if ((w_param != Win32Const.VK_SPACE) && (w_param != Win32Const.VK_MENU))
+				if ((wParam != Win32Const.VK_SPACE) && (wParam != Win32Const.VK_MENU))
 				{
 					switch (msg.Msg)
 					{
@@ -1834,8 +1834,8 @@ namespace Epsitec.Common.Widgets.Platform
 					(msg.Msg == Win32Const.WM_KEYDOWN) &&
 					(((KeyCode) (int) msg.WParam) == KeyCode.ScrollLock))
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} :", this.widget_window.Text));
-					Helpers.VisualTree.DebugDump (this.widget_window.Root, 1);
+					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} :", this.widgetWindow.Text));
+					Helpers.VisualTree.DebugDump (this.widgetWindow.Root, 1);
 				}
 				
 				//	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
@@ -1844,12 +1844,12 @@ namespace Epsitec.Common.Widgets.Platform
 				if ((msg.Msg == Win32Const.WM_KEYDOWN) ||
 					(msg.Msg == Win32Const.WM_SYSKEYDOWN))
 				{
-					switch (w_param)
+					switch (wParam)
 					{
 						case Win32Const.VK_SHIFT:
 						case Win32Const.VK_CONTROL:
 						case Win32Const.VK_MENU:
-							if ((l_param & 0x40000000) != 0)
+							if ((lParam & 0x40000000) != 0)
 							{
 								return;
 							}
@@ -1862,7 +1862,7 @@ namespace Epsitec.Common.Widgets.Platform
 					//	Si l'utilisateur clique dans la fenêtre, on veut recevoir l'événement d'activation
 					//	dans tous les cas.
 					
-					msg.Result = (System.IntPtr) (this.is_no_activate ? Win32Const.MA_NOACTIVATE : Win32Const.MA_ACTIVATE);
+					msg.Result = (System.IntPtr) (this.isNoActivate ? Win32Const.MA_NOACTIVATE : Win32Const.MA_ACTIVATE);
 					return;
 				}
 				
@@ -1897,8 +1897,8 @@ namespace Epsitec.Common.Widgets.Platform
 			finally
 			{
 				System.Diagnostics.Debug.Assert (this.IsDisposed == false);
-				System.Diagnostics.Debug.Assert (this.wnd_proc_depth > 0);
-				this.wnd_proc_depth--;
+				System.Diagnostics.Debug.Assert (this.wndProcDepth > 0);
+				this.wndProcDepth--;
 				System.Threading.Interlocked.Decrement (ref Window.globalWndProcDepth);
 
 				if (Window.IsInAnyWndProc == false)
@@ -1906,13 +1906,13 @@ namespace Epsitec.Common.Widgets.Platform
 					Application.ExecuteAsyncCallbacks ();
 				}
 				
-				if ((this.wnd_proc_depth == 0) &&
-					(this.is_dispatch_pending))
+				if ((this.wndProcDepth == 0) &&
+					(this.isDispatchPending))
 				{
-					this.is_dispatch_pending = false;
-					if (this.widget_window != null)
+					this.isDispatchPending = false;
+					if (this.widgetWindow != null)
 					{
-						this.widget_window.DispatchQueuedCommands ();
+						this.widgetWindow.DispatchQueuedCommands ();
 					}
 				}
 			}
@@ -1942,7 +1942,7 @@ namespace Epsitec.Common.Widgets.Platform
 						//	Notre fenêtre vient d'être activée. Si c'est une fenêtre "flottante", alors il faut activer
 						//	la fenêtre principale et les autres fenêtres "flottantes".
 						
-						if (this.is_tool_window)
+						if (this.isToolWindow)
 						{
 							Window owner = this.Owner as Window;
 							
@@ -1966,12 +1966,12 @@ namespace Epsitec.Common.Widgets.Platform
 								//	Si cette fenêtre est "flottante", alors on doit s'assurer que notre état visuel
 								//	reste actif.
 								
-								if (window.PlatformWindow.is_tool_window)
+								if (window.PlatformWindow.isToolWindow)
 								{
 									active = true;
 								}
 							}
-							else if (this.is_tool_window)
+							else if (this.isToolWindow)
 							{
 								if (this.FindRootOwner () == window.PlatformWindow)
 								{
@@ -1984,7 +1984,7 @@ namespace Epsitec.Common.Widgets.Platform
 						}
 					}
 					
-					if (this.is_tool_window)
+					if (this.isToolWindow)
 					{
 						//	Il ne faut touiller l'état d'activation des fenêtres que si la fenêtre
 						//	actuelle est une palette...
@@ -2001,14 +2001,14 @@ namespace Epsitec.Common.Widgets.Platform
 						this.FakeActivate (active);
 					}
 					
-					if ((Window.is_app_active == false) &&
+					if ((Window.isAppActive == false) &&
 						(active == true))
 					{
-						Window.is_app_active = true;
+						Window.isAppActive = true;
 //						System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated (synthetic)");
-						if (this.widget_window != null)
+						if (this.widgetWindow != null)
 						{
-							this.widget_window.OnApplicationActivated ();
+							this.widgetWindow.OnApplicationActivated ();
 						}
 					}
 					
@@ -2017,23 +2017,23 @@ namespace Epsitec.Common.Widgets.Platform
 				case Win32Const.WM_ACTIVATEAPP:
 					active = (((int) msg.WParam) != 0);
 //					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATEAPP {1}.", this.Name, active));
-					if (Window.is_app_active != active)
+					if (Window.isAppActive != active)
 					{
-						Window.is_app_active = active;
+						Window.isAppActive = active;
 						if (active)
 						{
 //							System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated");
-							if (this.widget_window != null)
+							if (this.widgetWindow != null)
 							{
-								this.widget_window.OnApplicationActivated ();
+								this.widgetWindow.OnApplicationActivated ();
 							}
 						}
 						else
 						{
 //							System.Diagnostics.Debug.WriteLine ("Fire ApplicationDeactivated");
-							if (this.widget_window != null)
+							if (this.widgetWindow != null)
 							{
-								this.widget_window.OnApplicationDeactivated ();
+								this.widgetWindow.OnApplicationDeactivated ();
 							}
 						}
 					}
@@ -2128,9 +2128,9 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected void FakeActivate(bool active)
 		{
-			if (this.has_active_frame != active)
+			if (this.hasActiveFrame != active)
 			{
-				this.has_active_frame = active;
+				this.hasActiveFrame = active;
 				
 				if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
 				{
@@ -2153,7 +2153,7 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (window != null)
 				{
-					if (window.is_tool_window)
+					if (window.isToolWindow)
 					{
 						window.FakeActivate (active);
 					}
@@ -2200,7 +2200,7 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 			}
 			
-			if (this.filter_mouse_messages)
+			if (this.filterMouseMessages)
 			{
 				//	Si le filtre des messages souris est actif, on mange absolument tous
 				//	les événements relatifs à la souris, jusqu'à ce que tous les boutons
@@ -2210,7 +2210,7 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					if (Message.CurrentState.Buttons == Widgets.MouseButtons.None)
 					{
-						this.filter_mouse_messages = false;
+						this.filterMouseMessages = false;
 					}
 					
 					return true;
@@ -2219,7 +2219,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (message != null)
 			{
-				if (this.filter_key_messages)
+				if (this.filterKeyMessages)
 				{
 					if (message.IsKeyType)
 					{
@@ -2228,13 +2228,13 @@ namespace Epsitec.Common.Widgets.Platform
 							return true;
 						}
 						
-						this.filter_key_messages = false;
+						this.filterKeyMessages = false;
 					}
 				}
 
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					if (this.widget_window.FilterMessage (message))
+					if (this.widgetWindow.FilterMessage (message))
 					{
 						return true;
 					}
@@ -2249,20 +2249,20 @@ namespace Epsitec.Common.Widgets.Platform
 					return false;
 				}
 				
-				Widgets.Window  w_window = Message.CurrentState.LastWindow;
-				Platform.Window p_window = (w_window != null) ? w_window.PlatformWindow : null;
+				Widgets.Window  wWindow = Message.CurrentState.LastWindow;
+				Platform.Window pWindow = (wWindow != null) ? wWindow.PlatformWindow : null;
 				
-				if (p_window == null)
+				if (pWindow == null)
 				{
-					p_window = this;
+					pWindow = this;
 				}
 				
-				if (p_window.IsDisposed)
+				if (pWindow.IsDisposed)
 				{
 					return true;
 				}
 				
-				p_window.DispatchMessage (message);
+				pWindow.DispatchMessage (message);
 				
 				return true;
 			}
@@ -2287,13 +2287,13 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
-		protected void DispatchPaint(System.Drawing.Graphics win_graphics, System.Drawing.Rectangle win_clip_rect)
+		protected void DispatchPaint(System.Drawing.Graphics winGraphics, System.Drawing.Rectangle winClipRect)
 		{
 			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement
 			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
 			//	contenu du pixmap servant de cache.
 
-			if (this.widget_window.Root.IsFrozen)
+			if (this.widgetWindow.Root.IsFrozen)
 			{
 				return;
 			}
@@ -2305,31 +2305,31 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				if (pixmap != null)
 				{
-					System.Drawing.Point offset = new System.Drawing.Point ((int)(this.paint_offset.X), (int)(this.paint_offset.Y));
-					pixmap.Paint (win_graphics, offset, win_clip_rect);
+					System.Drawing.Point offset = new System.Drawing.Point ((int)(this.paintOffset.X), (int)(this.paintOffset.Y));
+					pixmap.Paint (winGraphics, offset, winClipRect);
 				}
 			}
 		}
 		
 		protected bool RefreshGraphics()
 		{
-			if (this.is_layout_in_progress)
+			if (this.isLayoutInProgress)
 			{
 				return false;
 			}
 
-			this.is_layout_in_progress = true;
+			this.isLayoutInProgress = true;
 			
 			try
 			{
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.ForceLayout ();
+					this.widgetWindow.ForceLayout ();
 				}
 			}
 			finally
 			{
-				this.is_layout_in_progress = false;
+				this.isLayoutInProgress = false;
 			}
 
 			if (this.IsFrozen)
@@ -2342,17 +2342,17 @@ namespace Epsitec.Common.Widgets.Platform
 
 		private bool RefreshGraphicsLowLevel()
 		{
-			if (this.dirty_rectangle.IsValid)
+			if (this.dirtyRectangle.IsValid)
 			{
-				Drawing.Rectangle repaint = this.dirty_rectangle;
-				Drawing.Rectangle[] strips  = this.dirty_region.GenerateStrips ();
+				Drawing.Rectangle repaint = this.dirtyRectangle;
+				Drawing.Rectangle[] strips  = this.dirtyRegion.GenerateStrips ();
 
-				this.dirty_rectangle = Drawing.Rectangle.Empty;
-				this.dirty_region = new Drawing.DirtyRegion ();
+				this.dirtyRectangle = Drawing.Rectangle.Empty;
+				this.dirtyRegion = new Drawing.DirtyRegion ();
 
-				if (this.widget_window != null)
+				if (this.widgetWindow != null)
 				{
-					this.widget_window.RefreshGraphics (this.graphics, repaint, strips);
+					this.widgetWindow.RefreshGraphics (this.graphics, repaint, strips);
 				}
 
 				return true;
@@ -2363,15 +2363,15 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected bool UpdateLayeredWindow()
 		{
-			bool paint_needed = true;
+			bool paintNeeded = true;
 
 			this.RefreshGraphics ();
 			
-			if (this.is_layered)
+			if (this.isLayered)
 			{
-				if (this.is_layered_dirty)
+				if (this.isLayeredDirty)
 				{
-					this.is_layered_dirty = false;
+					this.isLayeredDirty = false;
 				}
 
 				//	UpdateLayeredWindow can be called as the result of setting a
@@ -2381,9 +2381,9 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				System.Drawing.Rectangle rect;
 				
-				if (this.form_bounds_set)
+				if (this.formBoundsSet)
 				{
-					rect = this.form_bounds;
+					rect = this.formBounds;
 				}
 				else
 				{
@@ -2408,13 +2408,13 @@ namespace Epsitec.Common.Widgets.Platform
 						}
 					}
 
-//					System.Diagnostics.Debug.WriteLine ("UpdateLayeredWindow" + (this.is_frozen ? " (frozen)" : "") + " Bounds: " + rect.ToString ());
+//					System.Diagnostics.Debug.WriteLine ("UpdateLayeredWindow" + (this.isFrozen ? " (frozen)" : "") + " Bounds: " + rect.ToString ());
 					
-					paint_needed = !Win32Api.UpdateLayeredWindow (this.Handle, bitmap, rect, this.alpha);
+					paintNeeded = !Win32Api.UpdateLayeredWindow (this.Handle, bitmap, rect, this.alpha);
 				}
 			}
 			
-			return paint_needed;
+			return paintNeeded;
 		}
 		
 		
@@ -2467,22 +2467,22 @@ namespace Epsitec.Common.Widgets.Platform
 			string key   = "Bug report e-mail";
 			string email = Globals.Properties.GetProperty (key, "bugs@opac.ch");
 			
-			string msg_fr = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
+			string msgFr = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
 							"description de ce que vous étiez en train de faire au moment où ce message\n" + 
 							"est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n" +
 							"Envoyez s'il-vous-plaît ces informations à " + email + "\n\n" +
 							"Merci pour votre aide.";
 			
-			string msg_en = "An internal error occurred. Please send an e-mail with a short description\n" +
+			string msgEn = "An internal error occurred. Please send an e-mail with a short description\n" +
 							"of what you were doing when this message appeared and include (press CTRL+V)\n" +
 							"contents of the clipboard, which contains useful debugging information.\n\n" +
 							"Please send these informations to " + email + "\n\n" +
 							"Thank you very much for your help.";
 			
-			bool is_french = (System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr");
+			bool isFrench = (System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "fr");
 			
-			string title   = is_french ? "Erreur interne" : "Internal error";
-			string message = is_french ? msg_fr : msg_en;
+			string title   = isFrench ? "Erreur interne" : "Internal error";
+			string message = isFrench ? msgFr : msgEn;
 			
 			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 			System.Windows.Forms.MessageBox.Show (null, message, title);
@@ -2491,9 +2491,9 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void DispatchMessage(Message message)
 		{
-			if (this.widget_window != null)
+			if (this.widgetWindow != null)
 			{
-				this.widget_window.DispatchMessage (message);
+				this.widgetWindow.DispatchMessage (message);
 			}
 		}
 		
@@ -2520,19 +2520,19 @@ namespace Epsitec.Common.Widgets.Platform
 
 			ToolTip.HideAllToolTips ();
 
-			bool preventQuit = this.prevent_quit;
+			bool preventQuit = this.preventQuit;
 			int wndProcDepth = Window.globalWndProcDepth;
 
 			try
 			{
-				this.prevent_quit = true;
+				this.preventQuit = true;
 				Window.globalWndProcDepth = 0;
 
 				this.ShowDialog (this.Owner);
 			}
 			finally
 			{
-				this.prevent_quit = preventQuit;
+				this.preventQuit = preventQuit;
 				Window.globalWndProcDepth = wndProcDepth;
 			}
 		}
@@ -2557,54 +2557,54 @@ namespace Epsitec.Common.Widgets.Platform
 
 		#endregion
 		
-		private bool							widget_window_disposed;
-		private Epsitec.Common.Widgets.Window	widget_window;
+		private bool							widgetWindowDisposed;
+		private Epsitec.Common.Widgets.Window	widgetWindow;
 		
 		private Drawing.Graphics				graphics;
-		private Drawing.Rectangle				dirty_rectangle;
-		private Drawing.DirtyRegion				dirty_region;
-		private Drawing.Rectangle				window_bounds;
-		private Drawing.Point					paint_offset;
-		private System.Drawing.Rectangle		form_bounds;
-		private System.Drawing.Size				form_min_size;
-		private System.Drawing.Size				minimum_size;
-		private bool							form_bounds_set = false;
-		private bool							on_resize_event = false;
+		private Drawing.Rectangle				dirtyRectangle;
+		private Drawing.DirtyRegion				dirtyRegion;
+		private Drawing.Rectangle				windowBounds;
+		private Drawing.Point					paintOffset;
+		private System.Drawing.Rectangle		formBounds;
+		private System.Drawing.Size				formMinSize;
+		private System.Drawing.Size				minimumSize;
+		private bool							formBoundsSet = false;
+		private bool							onResizeEvent = false;
 		
-		private bool							is_layered;
-		private bool							is_layered_dirty;
-		private bool							is_frozen;
-		private bool							is_animating_active_window;
-		private bool							is_no_activate;
-		private bool							is_tool_window;
+		private bool							isLayered;
+		private bool							isLayeredDirty;
+		private bool							isFrozen;
+		private bool							isAnimatingActiveWindow;
+		private bool							isNoActivate;
+		private bool							isToolWindow;
 		
-		private bool							has_active_frame;
+		private bool							hasActiveFrame;
 		
-		private bool							prevent_close;
-		private bool							prevent_quit;
-		private bool							forced_close;
-		private bool							filter_mouse_messages;
-		private bool							filter_key_messages;
+		private bool							preventClose;
+		private bool							preventQuit;
+		private bool							forcedClose;
+		private bool							filterMouseMessages;
+		private bool							filterKeyMessages;
 		private double							alpha = 1.0;
 		
-		private WindowMode						window_mode = WindowMode.Window;
-		private WindowStyles					window_styles;
-		private WindowType						window_type;
+		private WindowMode						windowMode = WindowMode.Window;
+		private WindowStyles					windowStyles;
+		private WindowType						windowType;
 		
 		private static int						globalWndProcDepth;
 
-		private int								wnd_proc_depth;
-		private bool							is_dispatch_pending;
-		private bool							is_pixmap_ok;
-		private bool							is_size_move_in_progress;
-		private bool							is_layout_in_progress;
-		private int								disable_sync_paint;
-		private int								is_sync_updating;
+		private int								wndProcDepth;
+		private bool							isDispatchPending;
+		private bool							isPixmapOk;
+		private bool							isSizeMoveInProgress;
+		private bool							isLayoutInProgress;
+		private int								disableSyncPaint;
+		private int								isSyncUpdating;
 		
-		private static bool						is_app_active;
-		private static bool						is_sync_requested;
-		private static bool						is_awake_requested;
-		private static Window					dispatch_window;
-		private static System.IntPtr			dispatch_window_handle;
+		private static bool						isAppActive;
+		private static bool						isSyncRequested;
+		private static bool						isAwakeRequested;
+		private static Window					dispatchWindow;
+		private static System.IntPtr			dispatchWindowHandle;
 	}
 }

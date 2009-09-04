@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.ButtonShowCondition = ButtonShowCondition.Always;
 			
-			this.select_item_behavior = new Behaviors.SelectItemBehavior (this.AutomaticItemSelection);
+			this.selectItemBehavior = new Behaviors.SelectItemBehavior (this.AutomaticItemSelection);
 
 			this.items = new Collections.StringCollection (this);
 			this.items.AcceptsRichText = true;
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.button.Name     = "Open";
 			this.button.Pressed += this.HandleButtonPressed;
 			
-			this.default_button_width = this.button.PreferredWidth;
+			this.defaultButtonWidth = this.button.PreferredWidth;
 			this.margins.Right        = this.button.PreferredWidth;
 		}
 		
@@ -69,11 +69,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.is_live_update_enabled;
+				return this.isLiveUpdateEnabled;
 			}
 			set
 			{
-				this.is_live_update_enabled = value;
+				this.isLiveUpdateEnabled = value;
 			}
 		}
 		
@@ -81,11 +81,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.combo_arrow_mode;
+				return this.comboArrowMode;
 			}
 			set
 			{
-				this.combo_arrow_mode = value;
+				this.comboArrowMode = value;
 			}
 		}
 
@@ -119,12 +119,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.scroll_list;
+				return this.scrollList;
 			}
 		}
 		
 		
-		public bool FindMatch(string find, out int index, out bool exact_match)
+		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
 			//	Trouve l'index de l'élément recherché. Indique s'il s'agit d'un
 			//	match exact ('find' est égal au contenu de la cellule) ou non
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (index < 0)
 			{
-				exact_match = false;
+				exactMatch = false;
 				
 				if (find == "")
 				{
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				exact_match = true;
+				exactMatch = true;
 			}
 			
 			return true;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.button != null)
 			{
-				this.margins.Right = this.button.Visibility ? this.default_button_width : 0;
+				this.margins.Right = this.button.Visibility ? this.defaultButtonWidth : 0;
 				this.button.SetManualBounds(this.GetButtonBounds());
 			}
 		}
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessKeyPressInSelectItemBehavior(Message message)
 		{
-			return this.select_item_behavior.ProcessKeyPress (message);
+			return this.selectItemBehavior.ProcessKeyPress (message);
 		}
 		
 		protected virtual void ProcessComboActivatedIndex(int sel)
@@ -386,7 +386,7 @@ namespace Epsitec.Common.Widgets
 			//	dans la liste, pour autant qu'une telle mise à jour "live" ait été
 			//	activée.
 			
-			if (this.is_live_update_enabled)
+			if (this.isLiveUpdateEnabled)
 			{
 				this.SelectedIndex = this.MapComboListToIndex (sel);
 			}
@@ -458,10 +458,10 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			Support.CancelEventArgs cancel_event = new Support.CancelEventArgs ();
-			this.OnComboOpening (cancel_event);
+			Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs ();
+			this.OnComboOpening (cancelEvent);
 			
-			if (cancel_event.Cancel)
+			if (cancelEvent.Cancel)
 			{
 				return;
 			}
@@ -478,19 +478,19 @@ namespace Epsitec.Common.Widgets
 			this.menu.AutoDispose = true;
 			this.menu.ShowAsComboList (this, this.MapClientToScreen (new Point(0, 0)), this.Button);
 			
-			if (this.scroll_list != null)
+			if (this.scrollList != null)
 			{
-				this.scroll_list.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
-				this.scroll_list.ShowSelected (ScrollShowMode.Center);
+				this.scrollList.SelectedIndex = this.MapIndexToComboList (this.SelectedIndex);
+				this.scrollList.ShowSelected (ScrollShowMode.Center);
 			}
 			
 			this.menu.Accepted += this.HandleMenuAccepted;
 			this.menu.Rejected += this.HandleMenuRejected;
 			
-			if (this.scroll_list != null)
+			if (this.scrollList != null)
 			{
-				this.scroll_list.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
-				this.scroll_list.SelectionActivated   += this.HandleScrollListSelectionActivated;
+				this.scrollList.SelectedIndexChanged += this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectionActivated   += this.HandleScrollListSelectionActivated;
 			}
 			
 			this.StartEdition ();
@@ -518,13 +518,13 @@ namespace Epsitec.Common.Widgets
 			this.menu.Accepted -= this.HandleMenuAccepted;
 			this.menu.Rejected -= this.HandleMenuRejected;
 			
-			if (this.scroll_list != null)
+			if (this.scrollList != null)
 			{
-				this.scroll_list.SelectionActivated   -= this.HandleScrollListSelectionActivated;
-				this.scroll_list.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
+				this.scrollList.SelectionActivated   -= this.HandleScrollListSelectionActivated;
+				this.scrollList.SelectedIndexChanged -= this.HandleScrollerSelectedIndexChanged;
 				
-				this.scroll_list.Dispose();
-				this.scroll_list = null;
+				this.scrollList.Dispose();
+				this.scrollList = null;
 			}
 			
 //-			this.menu.Dispose ();
@@ -579,16 +579,16 @@ namespace Epsitec.Common.Widgets
 			
 			menu.MinWidth = this.ActualWidth;
 			
-			this.scroll_list = new ScrollList ();
-			this.scroll_list.ScrollListStyle = ScrollListStyle.Menu;
+			this.scrollList = new ScrollList ();
+			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
 			
-			menu.Contents = this.scroll_list;
+			menu.Contents = this.scrollList;
 			
 			//	Remplit la liste :
 			
-			this.CopyItemsToComboList (this.scroll_list.Items);
+			this.CopyItemsToComboList (this.scrollList.Items);
 
-			TextFieldCombo.AdjustScrollListWidth (this.scroll_list);
+			TextFieldCombo.AdjustScrollListWidth (this.scrollList);
 			TextFieldCombo.AdjustComboSize (this, menu, true);
 			
 			return menu;
@@ -644,14 +644,14 @@ namespace Epsitec.Common.Widgets
 		{
 			//	L'utilisateur a cliqué dans la liste pour terminer son choix.
 			
-			this.ProcessComboActivatedIndex (this.scroll_list.SelectedIndex);
+			this.ProcessComboActivatedIndex (this.scrollList.SelectedIndex);
 		}
 		
 		private void HandleScrollerSelectedIndexChanged(object sender)
 		{
 			//	L'utilisateur a simplement déplacé la souris dans la liste.
 			
-			this.ProcessComboSelectedIndex (this.scroll_list.SelectedIndex);
+			this.ProcessComboSelectedIndex (this.scrollList.SelectedIndex);
 		}
 		
 		private void HandleMenuAccepted(object sender)
@@ -1018,17 +1018,17 @@ namespace Epsitec.Common.Widgets
 		System.Converter<string, string>		itemTextConverter;
 		System.Converter<string, string>		listTextConverter;
 		
-		private Behaviors.SelectItemBehavior	select_item_behavior;
-		private ComboArrowMode					combo_arrow_mode		= ComboArrowMode.Open;
-		private bool							is_live_update_enabled	= true;
+		private Behaviors.SelectItemBehavior	selectItemBehavior;
+		private ComboArrowMode					comboArrowMode		= ComboArrowMode.Open;
+		private bool							isLiveUpdateEnabled	= true;
 		
 		protected AbstractMenu					menu;
 		
-		private ScrollList						scroll_list;
+		private ScrollList						scrollList;
 		private int								selectedIndex;
 		
 		protected Button						button;
 		protected Collections.StringCollection	items;
-		protected double						default_button_width;
+		protected double						defaultButtonWidth;
 	}
 }

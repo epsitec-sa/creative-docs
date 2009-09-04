@@ -209,11 +209,11 @@ namespace Epsitec.Common.Widgets
 					//	Passe en revue tous les widgets connus (même les décédés) et reconstruit
 					//	une liste ne contenant que les widgets vivants :
 					
-					foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+					foreach (System.WeakReference weakRef in Widget.aliveWidgets)
 					{
-						if (weak_ref.IsAlive)
+						if (weakRef.IsAlive)
 						{
-							alive.Add (weak_ref);
+							alive.Add (weakRef);
 						}
 					}
 					
@@ -235,11 +235,11 @@ namespace Epsitec.Common.Widgets
 				
 				lock (Widget.aliveWidgets)
 				{
-					foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+					foreach (System.WeakReference weakRef in Widget.aliveWidgets)
 					{
-						if (weak_ref.IsAlive)
+						if (weakRef.IsAlive)
 						{
-							alive.Add (weak_ref.Target);
+							alive.Add (weakRef.Target);
 						}
 					}
 				}
@@ -256,13 +256,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.mouse_cursor == null ? MouseCursor.Default : this.mouse_cursor;
+				return this.mouseCursor == null ? MouseCursor.Default : this.mouseCursor;
 			}
 			set
 			{
-				if (this.mouse_cursor != value)
+				if (this.mouseCursor != value)
 				{
-					this.mouse_cursor = value;
+					this.mouseCursor = value;
 				}
 				
 				if (this.IsEntered)
@@ -279,16 +279,16 @@ namespace Epsitec.Common.Widgets
 				double width  = this.MinWidth;
 				double height = this.MinHeight;
 
-				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (this);
-				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (this);
+				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (this);
+				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (this);
 
-				if (measure_dx != null)
+				if (measureDx != null)
 				{
-					width = System.Math.Max (width, measure_dx.Min);
+					width = System.Math.Max (width, measureDx.Min);
 				}
-				if (measure_dy != null)
+				if (measureDy != null)
 				{
-					height = System.Math.Max (height, measure_dy.Min);
+					height = System.Math.Max (height, measureDy.Min);
 				}
 				
 				return new Drawing.Size (width, height);
@@ -302,16 +302,16 @@ namespace Epsitec.Common.Widgets
 				double width  = this.MaxWidth;
 				double height = this.MaxHeight;
 
-				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (this);
-				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (this);
+				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (this);
+				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (this);
 
-				if (measure_dx != null)
+				if (measureDx != null)
 				{
-					width = System.Math.Min (width, measure_dx.Max);
+					width = System.Math.Min (width, measureDx.Max);
 				}
-				if (measure_dy != null)
+				if (measureDy != null)
 				{
-					height = System.Math.Min (height, measure_dy.Max);
+					height = System.Math.Min (height, measureDy.Max);
 				}
 
 				return new Drawing.Size (width, height);
@@ -1208,17 +1208,17 @@ namespace Epsitec.Common.Widgets
 			//	Utiliser Focus() en lieu et place de SetFocused(true), pour
 			//	avoir une gestion complète des conditions de focus.
 			
-			bool old_focus = this.KeyboardFocus;
-			bool new_focus = focused;
+			bool oldFocus = this.KeyboardFocus;
+			bool newFocus = focused;
 			
-			if (old_focus == new_focus)
+			if (oldFocus == newFocus)
 			{
 				return;
 			}
 			
 			Window window = this.Window;
 
-			if (new_focus)
+			if (newFocus)
 			{
 				if (window != null)
 				{
@@ -1468,13 +1468,13 @@ namespace Epsitec.Common.Widgets
 		
 		public static void UpdateEntered(Window window, Widget widget, Message message)
 		{
-			Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
+			Drawing.Point pointInWidget = widget.MapRootToClient (message.Cursor);
 			
 			if ((widget.Window != window) ||
-				(point_in_widget.X < 0) ||
-				(point_in_widget.Y < 0) ||
-				(point_in_widget.X >= widget.Client.Size.Width) ||
-				(point_in_widget.Y >= widget.Client.Size.Height) ||
+				(pointInWidget.X < 0) ||
+				(pointInWidget.Y < 0) ||
+				(pointInWidget.X >= widget.Client.Size.Width) ||
+				(pointInWidget.Y >= widget.Client.Size.Height) ||
 				(message.MessageType == MessageType.MouseLeave))
 			{
 				widget.SetEntered (false);
@@ -1659,7 +1659,7 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Point MapClientToScreen(Drawing.Point point)
 		{
 			point = this.MapClientToRoot (point);
-			Drawing.Point point_wdo = point;
+			Drawing.Point pointWdo = point;
 			point = this.Window.MapWindowToScreen (point);
 			return point;
 		}
@@ -1675,8 +1675,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapRootToClient(Drawing.Rectangle rect)
 		{
-			bool flip_x = rect.Width < 0;
-			bool flip_y = rect.Height < 0;
+			bool flipX = rect.Width < 0;
+			bool flipY = rect.Height < 0;
 			
 			Drawing.Point p1 = this.MapRootToClient (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapRootToClient (new Drawing.Point (rect.Right, rect.Top));
@@ -1687,8 +1687,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) rect.FlipX ();
-			if (flip_y) rect.FlipY ();
+			if (flipX) rect.FlipX ();
+			if (flipY) rect.FlipY ();
 			
 			return rect;
 		}
@@ -1701,8 +1701,8 @@ namespace Epsitec.Common.Widgets
 			//	Pour obtenir les "bounds" d'un widget, il faut donc convertir [0;0;width;height]
 			//	comme ceci:
 			//		widget.MapClientToRoot(widget.Client.Bounds);
-			bool flip_x = rect.Width < 0;
-			bool flip_y = rect.Height < 0;
+			bool flipX = rect.Width < 0;
+			bool flipY = rect.Height < 0;
 			
 			Drawing.Point p1 = this.MapClientToRoot (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapClientToRoot (new Drawing.Point (rect.Right, rect.Top));
@@ -1713,8 +1713,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) rect.FlipX ();
-			if (flip_y) rect.FlipY ();
+			if (flipX) rect.FlipX ();
+			if (flipY) rect.FlipY ();
 			
 			return rect;
 		}
@@ -1722,8 +1722,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapParentToClient(Drawing.Rectangle rect)
 		{
-			bool flip_x = rect.Width < 0;
-			bool flip_y = rect.Height < 0;
+			bool flipX = rect.Width < 0;
+			bool flipY = rect.Height < 0;
 			
 			Drawing.Point p1 = this.MapParentToClient (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapParentToClient (new Drawing.Point (rect.Right, rect.Top));
@@ -1734,16 +1734,16 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) rect.FlipX ();
-			if (flip_y) rect.FlipY ();
+			if (flipX) rect.FlipX ();
+			if (flipY) rect.FlipY ();
 			
 			return rect;
 		}
 		
 		public virtual Drawing.Rectangle MapClientToParent(Drawing.Rectangle rect)
 		{
-			bool flip_x = rect.Width < 0;
-			bool flip_y = rect.Height < 0;
+			bool flipX = rect.Width < 0;
+			bool flipY = rect.Height < 0;
 			
 			Drawing.Point p1 = this.MapClientToParent (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapClientToParent (new Drawing.Point (rect.Right, rect.Top));
@@ -1754,16 +1754,16 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) rect.FlipX ();
-			if (flip_y) rect.FlipY ();
+			if (flipX) rect.FlipX ();
+			if (flipY) rect.FlipY ();
 			
 			return rect;
 		}
 
 		public virtual Drawing.Rectangle MapScreenToClient(Drawing.Rectangle rect)
 		{
-			bool flip_x = rect.Width < 0;
-			bool flip_y = rect.Height < 0;
+			bool flipX = rect.Width < 0;
+			bool flipY = rect.Height < 0;
 			
 			Drawing.Point p1 = this.MapScreenToClient (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapScreenToClient (new Drawing.Point (rect.Right, rect.Top));
@@ -1774,16 +1774,16 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) rect.FlipX ();
-			if (flip_y) rect.FlipY ();
+			if (flipX) rect.FlipX ();
+			if (flipY) rect.FlipY ();
 			
 			return rect;
 		}
 		
 		public virtual Drawing.Rectangle MapClientToScreen(Drawing.Rectangle rect)
 		{
-			bool flip_x = rect.Width < 0;
-			bool flip_y = rect.Height < 0;
+			bool flipX = rect.Width < 0;
+			bool flipY = rect.Height < 0;
 			
 			Drawing.Point p1 = this.MapClientToScreen (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapClientToScreen (new Drawing.Point (rect.Right, rect.Top));
@@ -1794,8 +1794,8 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) rect.FlipX ();
-			if (flip_y) rect.FlipY ();
+			if (flipX) rect.FlipX ();
+			if (flipY) rect.FlipY ();
 			
 			return rect;
 		}
@@ -1872,12 +1872,12 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			double model_offset  = model.GetBaseLine ().Y;
-			double widget_offset = widget.GetBaseLine ().Y;
+			double modelOffset  = model.GetBaseLine ().Y;
+			double widgetOffset = widget.GetBaseLine ().Y;
 			
-			double y_bottom = model.ActualLocation.Y + model_offset - widget_offset;
+			double yBottom = model.ActualLocation.Y + modelOffset - widgetOffset;
 			
-			widget.SetManualBounds(new Drawing.Rectangle (widget.ActualLocation.X, y_bottom, widget.ActualWidth, widget.ActualHeight));
+			widget.SetManualBounds(new Drawing.Rectangle (widget.ActualLocation.X, yBottom, widget.ActualWidth, widget.ActualHeight));
 		}
 		
 		
@@ -1904,11 +1904,11 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
+			int  childrenNum = children.Length;
 			
-			for (int i = 0; i < children_num; i++)
+			for (int i = 0; i < childrenNum; i++)
 			{
-				Widget widget = children[children_num-1 - i];
+				Widget widget = children[childrenNum-1 - i];
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
@@ -1998,11 +1998,11 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
+			int  childrenNum = children.Length;
 			
-			for (int i = 0; i < children_num; i++)
+			for (int i = 0; i < childrenNum; i++)
 			{
-				Widget widget = children[children_num-1 - i];
+				Widget widget = children[childrenNum-1 - i];
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
@@ -2092,9 +2092,9 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
+			int  childrenNum = children.Length;
 			
-			for (int i = 0; i < children_num; i++)
+			for (int i = 0; i < childrenNum; i++)
 			{
 				Widget widget = children[i];
 				
@@ -2159,9 +2159,9 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
+			int  childrenNum = children.Length;
 			
-			for (int i = 0; i < children_num; i++)
+			for (int i = 0; i < childrenNum; i++)
 			{
 				Widget widget = children[i];
 				
@@ -2332,16 +2332,16 @@ namespace Epsitec.Common.Widgets
 			
 			lock (Widget.aliveWidgets)
 			{
-				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+				foreach (System.WeakReference weakRef in Widget.aliveWidgets)
 				{
 					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
 					//	à tous les widgets sans nécessiter de descente récursive :
 					
-					if (weak_ref.IsAlive)
+					if (weakRef.IsAlive)
 					{
 						//	Le widget trouvé existe (encore) :
 						
-						Widget widget = weak_ref.Target as Widget;
+						Widget widget = weakRef.Target as Widget;
 						
 						if ((widget != null) &&
 							(widget.Name != ""))
@@ -2354,16 +2354,16 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						dead.Add (weak_ref);
+						dead.Add (weakRef);
 					}
 				}
 				
 				//	Profite de l'occasion, puisqu'on vient de passer en revue tous les widgets,
 				//	de supprimer ceux qui sont morts entre temps :
 				
-				foreach (System.WeakReference weak_ref in dead)
+				foreach (System.WeakReference weakRef in dead)
 				{
-					Widget.aliveWidgets.Remove (weak_ref);
+					Widget.aliveWidgets.Remove (weakRef);
 				}
 			}
 			
@@ -2486,7 +2486,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode, bool disable_first_enter, bool accept_focus, ref int iterations)
+		private Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode, bool disableFirstEnter, bool acceptFocus, ref int iterations)
 		{
 			if (iterations > 2)
 			{
@@ -2547,7 +2547,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if ((!disable_first_enter) &&
+			if ((!disableFirstEnter) &&
 				((this.TabNavigationMode & TabNavigationMode.ForwardToChildren) != 0) &&
 				(this.HasChildren))
 			{
@@ -2571,7 +2571,7 @@ namespace Epsitec.Common.Widgets
 					{
 						find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
 					}
-					else if (accept_focus)
+					else if (acceptFocus)
 					{
 						int count = candidates.Length;
 						find = candidates[count-i-1].FindTabWidget (dir, mode, false, true, ref iterations);
@@ -2584,7 +2584,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if (accept_focus)
+			if (acceptFocus)
 			{
 				if ((this.TabNavigationMode & mode) != 0)
 				{
@@ -2628,7 +2628,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			Widget[] tabSiblings = this.GetTabNavigationSiblings (dir, mode).ToArray ();
-			bool     search_z    = true;
+			bool     searchZ    = true;
 			
 			for (int i = 0; i < tabSiblings.Length; i++)
 			{
@@ -2637,7 +2637,7 @@ namespace Epsitec.Common.Widgets
 					//	On vient de trouver notre position dans la liste des widgets activables
 					//	par la touche TAB.
 					
-					search_z = false;
+					searchZ = false;
 					
 					switch (dir)
 					{
@@ -2656,7 +2656,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if (search_z)
+			if (searchZ)
 			{
 				find = this;
 				
@@ -2731,7 +2731,7 @@ namespace Epsitec.Common.Widgets
 						{
 							find = candidates[i].FindTabWidget (dir, mode, false, true, ref iterations);
 						}
-						else//? if (accept_focus)
+						else//? if (acceptFocus)
 						{
 							int count = candidates.Length;
 							find = candidates[count-1-i].FindTabWidget (dir, mode, false, true, ref iterations);
@@ -2758,7 +2758,7 @@ namespace Epsitec.Common.Widgets
 							break;
 						
 						case TabNavigationDir.Backwards:
-//?							if (accept_focus)
+//?							if (acceptFocus)
 							{
 								find = tabSiblings[tabSiblings.Length-1].FindTabWidget (dir, mode, false, true, ref iterations);
 							}
@@ -2943,9 +2943,9 @@ namespace Epsitec.Common.Widgets
 							//	Saute aussi les widgets qui déclarent être en lecture seule. Ils ne
 							//	sont pas intéressants pour une navigation clavier :
 							
-							Types.IReadOnly read_only = sibling as Types.IReadOnly;
+							Types.IReadOnly readOnly = sibling as Types.IReadOnly;
 							
-							if (read_only.IsReadOnly)
+							if (readOnly.IsReadOnly)
 							{
 								continue;
 							}
@@ -3076,11 +3076,11 @@ namespace Epsitec.Common.Widgets
 				//	le focus sur le frère qui est actuellement activé :
 				
 				Helpers.GroupController controller    = Helpers.GroupController.GetGroupController (this);
-				Widget                  active_widget = controller.FindActiveWidget ();
+				Widget                  activeWidget = controller.FindActiveWidget ();
 				
-				if (active_widget != null)
+				if (activeWidget != null)
 				{
-					return active_widget.AboutToGetFocus (dir, mode, out focus);
+					return activeWidget.AboutToGetFocus (dir, mode, out focus);
 				}
 			}
 			
@@ -3103,9 +3103,9 @@ namespace Epsitec.Common.Widgets
 			if (this.HasChildren)
 			{
 				Widget[] children = this.Children.Widgets;
-				int  children_num = children.Length;
+				int  childrenNum = children.Length;
 				
-				for (int i = 0; i < children_num; i++)
+				for (int i = 0; i < childrenNum; i++)
 				{
 					children[i].AboutToBecomeOrphan ();
 				}
@@ -3368,12 +3368,12 @@ namespace Epsitec.Common.Widgets
 
 			HypertextInfo info = new HypertextInfo (this.textLayout, e.Bounds, e.Index);
 
-			if (this.hypertext_list == null)
+			if (this.hypertextList == null)
 			{
-				this.hypertext_list = new System.Collections.ArrayList ();
+				this.hypertextList = new System.Collections.ArrayList ();
 			}
 
-			this.hypertext_list.Add (info);
+			this.hypertextList.Add (info);
 		}
 
 		internal void InternalNotifyTextLayoutTextChanged(string oldText, string newText)
@@ -3386,10 +3386,10 @@ namespace Epsitec.Common.Widgets
 			this.SetValueBase (Widget.TextProperty, newText);
 		}
 		
-		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paint_filter)
+		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paintFilter)
 		{
-			if ((paint_filter != null) &&
-				(paint_filter.IsWidgetFullyDiscarded (this)))
+			if ((paintFilter != null) &&
+				(paintFilter.IsWidgetFullyDiscarded (this)))
 			{
 				return;
 			}
@@ -3410,9 +3410,9 @@ namespace Epsitec.Common.Widgets
 				bounds  = this.MapClientToRoot (bounds);
 				repaint = this.MapParentToClient (repaint);
 				
-				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
-				Drawing.Transform original_transform = graphics.Transform;
-				Drawing.Transform graphics_transform = Drawing.Transform.CreateTranslationTransform (this.ActualLocation);
+				Drawing.Rectangle originalClipping  = graphics.SaveClippingRectangle ();
+				Drawing.Transform originalTransform = graphics.Transform;
+				Drawing.Transform graphicsTransform = Drawing.Transform.CreateTranslationTransform (this.ActualLocation);
 				
 				graphics.SetClippingRectangle (bounds);
 				
@@ -3421,34 +3421,34 @@ namespace Epsitec.Common.Widgets
 					//	Optimisation du cas où la région de clipping devient vide: on restaure
 					//	la région précédente et on ne fait rien de plus.
 					
-					graphics.RestoreClippingRectangle (original_clipping);
+					graphics.RestoreClippingRectangle (originalClipping);
 					return;
 				}
 				
-				graphics.Transform = graphics_transform.MultiplyBy (original_transform);
+				graphics.Transform = graphicsTransform.MultiplyBy (originalTransform);
 			
 				try
 				{
-					if (this.hypertext_list != null)
+					if (this.hypertextList != null)
 					{
-						this.hypertext_list.Clear ();
+						this.hypertextList.Clear ();
 					}
 					
-					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, repaint);
+					PaintEventArgs localPaintArgs = new PaintEventArgs (graphics, repaint);
 					
 					//	Peint l'arrière-plan du widget. En principe, tout va dans l'arrière plan, sauf
 					//	si l'on désire réaliser des effets de transparence par dessus le dessin des
 					//	widgets enfants.
 					
-					if ((paint_filter == null) ||
-						(paint_filter.IsWidgetPaintDiscarded (this) == false))
+					if ((paintFilter == null) ||
+						(paintFilter.IsWidgetPaintDiscarded (this) == false))
 					{
 						graphics.ResetLineStyle ();
-						this.OnPaintBackground (local_paint_args);
+						this.OnPaintBackground (localPaintArgs);
 						
-						if (paint_filter != null)
+						if (paintFilter != null)
 						{
-							paint_filter.NotifyAboutToProcessChildren (this, local_paint_args);
+							paintFilter.NotifyAboutToProcessChildren (this, localPaintArgs);
 						}
 					}
 					
@@ -3458,9 +3458,9 @@ namespace Epsitec.Common.Widgets
 					if (this.HasChildren)
 					{
 						Widget[] children = this.Children.Widgets;
-						int  children_num = children.Length;
+						int  childrenNum = children.Length;
 						
-						for (int i = 0; i < children_num; i++)
+						for (int i = 0; i < childrenNum; i++)
 						{
 							Widget widget = children[i];
 						
@@ -3468,7 +3468,7 @@ namespace Epsitec.Common.Widgets
 						
 							if (widget.Visibility)
 							{
-								widget.PaintHandler (graphics, repaint, paint_filter);
+								widget.PaintHandler (graphics, repaint, paintFilter);
 							}
 						}
 					}
@@ -3476,22 +3476,22 @@ namespace Epsitec.Common.Widgets
 					//	Peint l'avant-plan du widget, à n'utiliser que pour faire un "effet" spécial
 					//	après coup.
 					
-					if ((paint_filter == null) ||
-						(paint_filter.IsWidgetPaintDiscarded (this) == false))
+					if ((paintFilter == null) ||
+						(paintFilter.IsWidgetPaintDiscarded (this) == false))
 					{
 						graphics.ResetLineStyle ();
-						this.OnPaintForeground (local_paint_args);
+						this.OnPaintForeground (localPaintArgs);
 						
-						if (paint_filter != null)
+						if (paintFilter != null)
 						{
-							paint_filter.NotifyChildrenProcessed (this, local_paint_args);
+							paintFilter.NotifyChildrenProcessed (this, localPaintArgs);
 						}
 					}
 				}
 				finally
 				{
-					graphics.Transform = original_transform;
-					graphics.RestoreClippingRectangle (original_clipping);
+					graphics.Transform = originalTransform;
+					graphics.RestoreClippingRectangle (originalClipping);
 				}
 			}
 #if false
@@ -3568,9 +3568,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void MessageHandler(Message message, Drawing.Point pos)
 		{
-			Drawing.Point client_pos = message.IsDummy ? pos : this.MapParentToClient (pos);
+			Drawing.Point clientPos = message.IsDummy ? pos : this.MapParentToClient (pos);
 			
-			if (! this.PreProcessMessage (message, client_pos))
+			if (! this.PreProcessMessage (message, clientPos))
 			{
 				return;
 			}
@@ -3584,19 +3584,19 @@ namespace Epsitec.Common.Widgets
 				(this.HasChildren))
 			{
 				Widget[] children = this.Children.Widgets;
-				int  children_num = children.Length;
+				int  childrenNum = children.Length;
 
 				WindowRoot root = message.WindowRoot ?? Helpers.VisualTree.GetWindowRoot (this);
 				
-				for (int i = 0; i < children_num; i++)
+				for (int i = 0; i < childrenNum; i++)
 				{
-					Widget widget         = children[children_num-1 - i];
-					bool   contains_focus = (root == null) ? false : root.DoesVisualContainKeyboardFocus (widget);
+					Widget widget         = children[childrenNum-1 - i];
+					bool   containsFocus = (root == null) ? false : root.DoesVisualContainKeyboardFocus (widget);
 					
 					if ((widget.IsFrozen == false) &&
-						((widget.Visibility) || (contains_focus && message.IsKeyType)) &&
-						((message.FilterOnlyFocused == false) || (contains_focus)) &&
-						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
+						((widget.Visibility) || (containsFocus && message.IsKeyType)) &&
+						((message.FilterOnlyFocused == false) || (containsFocus)) &&
+						((message.FilterOnlyOnHit == false) || (widget.HitTest (clientPos))))
 					{
 						if (widget.IsEnabled)
 						{
@@ -3612,7 +3612,7 @@ namespace Epsitec.Common.Widgets
 								}
 							}
 							
-							widget.MessageHandler (message, client_pos);
+							widget.MessageHandler (message, clientPos);
 							
 							if (message.Handled)
 							{
@@ -3639,10 +3639,10 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.Handled == false)
 			{
-				this.DispatchMessage (message, client_pos);
+				this.DispatchMessage (message, clientPos);
 			}
 			
-			this.PostProcessMessage (message, client_pos);
+			this.PostProcessMessage (message, clientPos);
 		}
 		
 		
@@ -3650,7 +3650,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.Visibility || message.IsKeyType)
 			{
-				bool is_entered = this.IsEntered;
+				bool isEntered = this.IsEntered;
 				
 				switch (message.MessageType)
 				{
@@ -3666,7 +3666,7 @@ namespace Epsitec.Common.Widgets
 						
 						this.OnReleased (new MessageEventArgs (message, pos));
 						
-						if (is_entered)
+						if (isEntered)
 						{
 							switch (message.ButtonDownCount)
 							{
@@ -3721,9 +3721,9 @@ namespace Epsitec.Common.Widgets
 			{
 				bool reset = true;
 				
-				if (this.hypertext_list != null)
+				if (this.hypertextList != null)
 				{
-					foreach (HypertextInfo info in this.hypertext_list)
+					foreach (HypertextInfo info in this.hypertextList)
 					{
 						if (info.Bounds.Contains (pos))
 						{
@@ -3791,16 +3791,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
+		protected virtual bool ShortcutHandler(Shortcut shortcut, bool executeFocused)
 		{
 			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
+			int  childrenNum = children.Length;
 			
-			if (execute_focused)
+			if (executeFocused)
 			{
-				for (int i = 0; i < children_num; i++)
+				for (int i = 0; i < childrenNum; i++)
 				{
-					Widget widget = children[children_num-1 - i];
+					Widget widget = children[childrenNum-1 - i];
 				
 					if (widget.ContainsKeyboardFocus)
 					{
@@ -3817,9 +3817,9 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 			
-			for (int i = 0; i < children_num; i++)
+			for (int i = 0; i < childrenNum; i++)
 			{
-				Widget widget = children[children_num-1 - i];
+				Widget widget = children[childrenNum-1 - i];
 				
 				if ((widget.IsEnabled) &&
 					(widget.IsFrozen == false) &&
@@ -3941,28 +3941,28 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnParentChanged (e);
 			
-			Widget old_parent = e.OldValue as Widget;
-			Widget new_parent = e.NewValue as Widget;
+			Widget oldParent = e.OldValue as Widget;
+			Widget newParent = e.NewValue as Widget;
 			
-			if (new_parent == null)
+			if (newParent == null)
 			{
 				this.AboutToBecomeOrphan ();
 			}
 			
-			Window old_window = old_parent == null ? null : Helpers.VisualTree.GetWindow (old_parent);
-			Window new_window = new_parent == null ? null : Helpers.VisualTree.GetWindow (new_parent);
+			Window oldWindow = oldParent == null ? null : Helpers.VisualTree.GetWindow (oldParent);
+			Window newWindow = newParent == null ? null : Helpers.VisualTree.GetWindow (newParent);
 			
-			if (old_window != new_window)
+			if (oldWindow != newWindow)
 			{
-				this.NotifyWindowChanged (old_window, new_window);
+				this.NotifyWindowChanged (oldWindow, newWindow);
 			}
 		}
 		
-		protected virtual void NotifyWindowChanged(Window old_window, Window new_window)
+		protected virtual void NotifyWindowChanged(Window oldWindow, Window newWindow)
 		{
 			foreach (Widget widget in this.Children.Widgets)
 			{
-				widget.NotifyWindowChanged (old_window, new_window);
+				widget.NotifyWindowChanged (oldWindow, newWindow);
 			}
 		}
 		
@@ -4600,12 +4600,12 @@ namespace Epsitec.Common.Widgets
 		
 		private InternalState					internalState;
 		
-		private System.Collections.ArrayList	hypertext_list;
+		private System.Collections.ArrayList	hypertextList;
 		private HypertextInfo					hypertext;
 		
 		private TextLayout						textLayout;
 		private Collections.ShortcutCollection	shortcuts;
-		private MouseCursor						mouse_cursor;
+		private MouseCursor						mouseCursor;
 		
 		static List<Widget>						enteredWidgets = new List<Widget> ();
 		static List<System.WeakReference>		aliveWidgets = new List<System.WeakReference> ();

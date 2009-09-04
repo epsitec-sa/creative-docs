@@ -149,53 +149,53 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public static IValidator Combine(IValidator validator_a, IValidator validator_b)
+		public static IValidator Combine(IValidator validatorA, IValidator validatorB)
 		{
-			if (validator_a == null)
+			if (validatorA == null)
 			{
-				return validator_b;
+				return validatorB;
 			}
 			
-			if (validator_b == null)
+			if (validatorB == null)
 			{
-				return validator_a;
+				return validatorA;
 			}
 			
 			MulticastValidator mv = new MulticastValidator ();
 			
-			mv.Add (validator_a);
-			mv.Add (validator_b);
+			mv.Add (validatorA);
+			mv.Add (validatorB);
 			
 			return mv;
 		}
 
-		public static IValidator Remove(IValidator validator_a, IValidator validator_b)
+		public static IValidator Remove(IValidator validatorA, IValidator validatorB)
 		{
-			if (validator_a == null)
+			if (validatorA == null)
 			{
 				return null;
 			}
-			if (validator_b == null)
+			if (validatorB == null)
 			{
-				return validator_a;
+				return validatorA;
 			}
 
-			MulticastValidator mv = validator_a as MulticastValidator;
+			MulticastValidator mv = validatorA as MulticastValidator;
 
 			if (mv == null)
 			{
-				foreach (IValidator item in MulticastValidator.GetValidators (validator_b))
+				foreach (IValidator item in MulticastValidator.GetValidators (validatorB))
 				{
-					if (item == validator_a)
+					if (item == validatorA)
 					{
 						return null;
 					}
 				}
 				
-				return validator_a;
+				return validatorA;
 			}
 
-			mv.Remove (validator_b);
+			mv.Remove (validatorB);
 
 			return MulticastValidator.Simplify (mv);
 		}
@@ -298,11 +298,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private void OnUpdateState(ValidationState new_state)
+		private void OnUpdateState(ValidationState newState)
 		{
-			System.Diagnostics.Debug.Assert (new_state != ValidationState.Dirty);
+			System.Diagnostics.Debug.Assert (newState != ValidationState.Dirty);
 
-			this.state = new_state;
+			this.state = newState;
 		}
 
 		private void OnBecameDirty()

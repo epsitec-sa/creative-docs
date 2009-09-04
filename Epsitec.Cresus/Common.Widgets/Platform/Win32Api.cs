@@ -15,25 +15,25 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static int GetWindowLong(System.IntPtr handle, int index);
 		[DllImport ("User32.dll")]	internal extern static int SetClassLong(System.IntPtr handle, int index, int value);
 		[DllImport ("User32.dll")]	internal extern static int GetClassLong(System.IntPtr handle, int index);
-		[DllImport ("User32.dll", SetLastError=true)]	internal extern static bool UpdateLayeredWindow(System.IntPtr handle, System.IntPtr dst_dc, ref Win32Api.Point dst, ref Win32Api.Size size, System.IntPtr src_dc, ref Win32Api.Point src, int color, ref Win32Api.BlendFunction blend, int flags);
+		[DllImport ("User32.dll", SetLastError=true)]	internal extern static bool UpdateLayeredWindow(System.IntPtr handle, System.IntPtr dstDc, ref Win32Api.Point dst, ref Win32Api.Size size, System.IntPtr srcDc, ref Win32Api.Point src, int color, ref Win32Api.BlendFunction blend, int flags);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDC(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static int ReleaseDC(System.IntPtr handle, System.IntPtr dc);
 		[DllImport ("User32.dll")]	internal extern static bool ReleaseCapture();
-		[DllImport ("User32.dll")]	internal extern static void SendMessage(System.IntPtr handle, uint msg, System.IntPtr w_param, System.IntPtr l_param);
-		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, uint msg, System.IntPtr w_param, System.IntPtr l_param);
-		[DllImport ("User32.dll")]	internal extern static bool PostThreadMessage(int threadId, uint msg, System.IntPtr w_param, System.IntPtr l_param);
+		[DllImport ("User32.dll")]	internal extern static void SendMessage(System.IntPtr handle, uint msg, System.IntPtr wParam, System.IntPtr lParam);
+		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, uint msg, System.IntPtr wParam, System.IntPtr lParam);
+		[DllImport ("User32.dll")]	internal extern static bool PostThreadMessage(int threadId, uint msg, System.IntPtr wParam, System.IntPtr lParam);
 		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
-		[DllImport ("User32.dll")]	internal extern static System.IntPtr FindWindow(string window_class, string window_title);
+		[DllImport ("User32.dll")]	internal extern static System.IntPtr FindWindow(string windowClass, string windowTitle);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDesktopWindow();
-		[DllImport ("User32.dll")]	internal extern static bool GetGUIThreadInfo(int thread_id, out GUIThreadInfo info);
+		[DllImport ("User32.dll")]	internal extern static bool GetGUIThreadInfo(int threadId, out GUIThreadInfo info);
 		[DllImport ("User32.dll")]	internal extern static bool IsWindowVisible(System.IntPtr handle);
 		[DllImport ("user32.dll")]  internal extern static bool IsWindowEnabled(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool BringWindowToTop(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool GetIconInfo(System.IntPtr handle, out IconInfo info);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr CreateIconIndirect(ref IconInfo info);
 		[DllImport ("User32.dll")]	internal extern static bool DestroyIcon(System.IntPtr handle);
-		[DllImport ("User32.dll")]	internal extern static bool ShowWindow(System.IntPtr handle, int cmd_show);
+		[DllImport ("User32.dll")]	internal extern static bool ShowWindow(System.IntPtr handle, int cmdShow);
 		[DllImport ("User32.dll")]	internal extern static bool MoveWindow(System.IntPtr handle, int x, int y, int width, int height, bool repaint);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetActiveWindow();
 		[DllImport ("User32.dll")]	internal extern static bool GetWindowPlacement(System.IntPtr handle, ref WindowPlacement placement);
@@ -41,8 +41,8 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr SetParent(System.IntPtr child, System.IntPtr parent);
 		[DllImport ("User32.dll")]	internal extern static bool IsIconic(System.IntPtr window);
 		[DllImport ("User32.dll")]  internal extern static int GetKeyNameText(int param, [System.Runtime.InteropServices.Out] System.Text.StringBuilder buffer, int size);
-		[DllImport ("User32.dll")]  internal extern static int MapVirtualKeyEx(int code, int map_type, System.IntPtr layout);
-		[DllImport ("User32.dll")]  internal extern static System.IntPtr GetKeyboardLayout(int thread_id);
+		[DllImport ("User32.dll")]  internal extern static int MapVirtualKeyEx(int code, int mapType, System.IntPtr layout);
+		[DllImport ("User32.dll")]  internal extern static System.IntPtr GetKeyboardLayout(int threadId);
 		[DllImport ("User32.dll")]	internal extern static bool SetWindowPos(System.IntPtr hWnd, System.IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
 		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRestart(string pszCommandLine, int dwFlags);
@@ -58,17 +58,17 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
-		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
-		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr DeleteObject(System.IntPtr handle_object);
+		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handleObject);
+		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr DeleteObject(System.IntPtr handleObject);
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static void SetStretchBltMode(System.IntPtr dc, int mode);
-		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr src_dc, int src_x, int src_y, int src_dx, int src_dy, int rop);
+		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr srcDc, int srcX, int srcY, int srcDx, int srcDy, int rop);
 
 		internal delegate int ApplicationRecoveryCallback(System.IntPtr pvParameter);
 		
 		internal static bool GetKeyName(KeyCode key, out string name)
 		{
-			int scan_code = Win32Api.MapVirtualKeyEx ((int)key, 0, Win32Api.GetKeyboardLayout (0));
+			int scanCode = Win32Api.MapVirtualKeyEx ((int)key, 0, Win32Api.GetKeyboardLayout (0));
 			
 			switch (key)
 			{
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Widgets.Platform
 				case KeyCode.ArrowRight:
 				case KeyCode.ArrowUp:
 				case KeyCode.ArrowDown:
-					scan_code |= 0x0100;	//	ajoute 'extended bit'
+					scanCode |= 0x0100;	//	ajoute 'extended bit'
 					break;
 			}
 			
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			buffer.Length = 100;
 			
-			bool ok = Win32Api.GetKeyNameText (scan_code << 16, buffer, 99) != 0;
+			bool ok = Win32Api.GetKeyNameText (scanCode << 16, buffer, 99) != 0;
 			
 			name = buffer.ToString ();
 			
@@ -216,52 +216,52 @@ namespace Epsitec.Common.Widgets.Platform
 			return Win32Api.GetWindowLong (handle, Win32Const.GWL_EXSTYLE);
 		}
 		
-		internal static int SetWindowExStyle(System.IntPtr handle, int ex_style)
+		internal static int SetWindowExStyle(System.IntPtr handle, int exStyle)
 		{
-			return Win32Api.SetWindowLong (handle, Win32Const.GWL_EXSTYLE, ex_style);
+			return Win32Api.SetWindowLong (handle, Win32Const.GWL_EXSTYLE, exStyle);
 		}
 		
 		internal static bool UpdateLayeredWindow(System.IntPtr handle, System.Drawing.Bitmap bitmap, System.Drawing.Rectangle bounds, double alpha)
 		{
-			Win32Api.Point src_point = new Win32Api.Point ();
-			Win32Api.Point dst_point = new Win32Api.Point ();
-			Win32Api.Size  new_size  = new Win32Api.Size ();
+			Win32Api.Point srcPoint = new Win32Api.Point ();
+			Win32Api.Point dstPoint = new Win32Api.Point ();
+			Win32Api.Size  newSize  = new Win32Api.Size ();
 			
-			Win32Api.BlendFunction blend_function = new Win32Api.BlendFunction ();
+			Win32Api.BlendFunction blendFunction = new Win32Api.BlendFunction ();
 			
 			//	Get the screen DC, then create a memory based DC compatible with the screen DC.
 			
-			System.IntPtr screen_dc = Win32Api.GetDC (System.IntPtr.Zero);
-			System.IntPtr memory_dc = Win32Api.CreateCompatibleDC (screen_dc);
+			System.IntPtr screenDc = Win32Api.GetDC (System.IntPtr.Zero);
+			System.IntPtr memoryDc = Win32Api.CreateCompatibleDC (screenDc);
 			
 			//	Get access to the bitmap handle contained in the Bitmap object, then select it.
 			
-			System.IntPtr memory_bitmap = bitmap.GetHbitmap (System.Drawing.Color.FromArgb (0));
-			System.IntPtr old_bitmap    = Win32Api.SelectObject (memory_dc, memory_bitmap);
+			System.IntPtr memoryBitmap = bitmap.GetHbitmap (System.Drawing.Color.FromArgb (0));
+			System.IntPtr oldBitmap    = Win32Api.SelectObject (memoryDc, memoryBitmap);
 			
-			new_size.Width  = bounds.Width;
-			new_size.Height = bounds.Height;
-			dst_point.X = bounds.Left;
-			dst_point.Y = bounds.Top;
-			src_point.X = 0;
-			src_point.Y = 0;
+			newSize.Width  = bounds.Width;
+			newSize.Height = bounds.Height;
+			dstPoint.X = bounds.Left;
+			dstPoint.Y = bounds.Top;
+			srcPoint.X = 0;
+			srcPoint.Y = 0;
 			
-			blend_function.BlendOp				= Win32Const.AC_SRC_OVER;
-			blend_function.BlendFlags			= 0;
-			blend_function.SourceConstantAlpha	= (byte) System.Math.Min (255, System.Math.Max (0, (int) (alpha * 255.9)));
-			blend_function.AlphaFormat			= Win32Const.AC_SRC_ALPHA;
+			blendFunction.BlendOp				= Win32Const.AC_SRC_OVER;
+			blendFunction.BlendFlags			= 0;
+			blendFunction.SourceConstantAlpha	= (byte) System.Math.Min (255, System.Math.Max (0, (int) (alpha * 255.9)));
+			blendFunction.AlphaFormat			= Win32Const.AC_SRC_ALPHA;
 			
 			int flags = Win32Const.ULW_ALPHA;
 			bool res = false;
 			
 			res = Win32Api.UpdateLayeredWindow (handle,
-				/**/							screen_dc,
-				/**/							ref dst_point,
-				/**/							ref new_size,
-				/**/							memory_dc,
-				/**/							ref src_point,
+				/**/							screenDc,
+				/**/							ref dstPoint,
+				/**/							ref newSize,
+				/**/							memoryDc,
+				/**/							ref srcPoint,
 				/**/							0,
-				/**/							ref blend_function,
+				/**/							ref blendFunction,
 				/**/							flags);
 			
 			if (res == false)
@@ -269,10 +269,10 @@ namespace Epsitec.Common.Widgets.Platform
 				System.Diagnostics.Debug.WriteLine ("LastError = " + Marshal.GetLastWin32Error ().ToString ());
 			}
 			
-			Win32Api.SelectObject (memory_dc, old_bitmap);
-			Win32Api.ReleaseDC (System.IntPtr.Zero, screen_dc);
-			Win32Api.DeleteObject (memory_bitmap);
-			Win32Api.DeleteDC (memory_dc);
+			Win32Api.SelectObject (memoryDc, oldBitmap);
+			Win32Api.ReleaseDC (System.IntPtr.Zero, screenDc);
+			Win32Api.DeleteObject (memoryBitmap);
+			Win32Api.DeleteDC (memoryDc);
 			
 			return res;
 		}
@@ -283,19 +283,19 @@ namespace Epsitec.Common.Widgets.Platform
 			System.Drawing.Bitmap   native = bitmap.BitmapImage.NativeBitmap;
 			System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage (native);
 			
-			System.IntPtr bitmap_dc  = gfx.GetHdc ();
-			System.IntPtr desktop_dc = Win32Api.GetDC (System.IntPtr.Zero);
+			System.IntPtr bitmapDc  = gfx.GetHdc ();
+			System.IntPtr desktopDc = Win32Api.GetDC (System.IntPtr.Zero);
 			
 			int dx = native.Width;
 			int dy = native.Height;
 			
 			y = (int)(ScreenInfo.PrimaryHeight) - y - dy;
 			
-			Win32Api.SetStretchBltMode (bitmap_dc, Win32Const.BLT_COLOR_ON_COLOR);
-			Win32Api.StretchBlt (bitmap_dc, 0, 0, dx, dy, desktop_dc, x, y, dx, dy, Win32Const.ROP_SRC_COPY);
+			Win32Api.SetStretchBltMode (bitmapDc, Win32Const.BLT_COLOR_ON_COLOR);
+			Win32Api.StretchBlt (bitmapDc, 0, 0, dx, dy, desktopDc, x, y, dx, dy, Win32Const.ROP_SRC_COPY);
 			
-			gfx.ReleaseHdc (bitmap_dc);
-			Win32Api.ReleaseDC (System.IntPtr.Zero, desktop_dc);
+			gfx.ReleaseHdc (bitmapDc);
+			Win32Api.ReleaseDC (System.IntPtr.Zero, desktopDc);
 			gfx.Flush ();
 			gfx.Dispose ();
 		}
