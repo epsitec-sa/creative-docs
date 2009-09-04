@@ -13,34 +13,34 @@ namespace Epsitec.Common.Text
 		{
 		}
 		
-		internal TextStyle(string name, TextStyleClass text_style_class)
+		internal TextStyle(string name, TextStyleClass textStyleClass)
 		{
 			this.name             = name;
-			this.text_style_class = text_style_class;
+			this.textStyleClass = textStyleClass;
 		}
 		
-		internal TextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties) : base (properties)
+		internal TextStyle(string name, TextStyleClass textStyleClass, System.Collections.ICollection properties) : base (properties)
 		{
 			this.name             = name;
-			this.text_style_class = text_style_class;
+			this.textStyleClass = textStyleClass;
 			
 			this.SaveStyleProperties (properties);
 		}
 		
-		internal TextStyle(string name, TextStyleClass text_style_class, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		internal TextStyle(string name, TextStyleClass textStyleClass, System.Collections.ICollection properties, System.Collections.ICollection parentStyles)
 		{
 			this.name             = name;
-			this.text_style_class = text_style_class;
+			this.textStyleClass = textStyleClass;
 			
-			if ((parent_styles == null) ||
-				(parent_styles.Count == 0))
+			if ((parentStyles == null) ||
+				(parentStyles.Count == 0))
 			{
 				this.Initialize (properties);
 				this.SaveStyleProperties (properties);
 			}
 			else
 			{
-				this.Initialize (properties, parent_styles);
+				this.Initialize (properties, parentStyles);
 			}
 		}
 		
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.meta_id;
+				return this.metaId;
 			}
 		}
 		
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.text_style_class;
+				return this.textStyleClass;
 			}
 		}
 		
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.is_flagged;
+				return this.isFlagged;
 			}
 		}
 		
@@ -107,9 +107,9 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if (this.style_properties != null)
+				if (this.styleProperties != null)
 				{
-					return (Property[]) this.style_properties.Clone ();
+					return (Property[]) this.styleProperties.Clone ();
 				}
 				else
 				{
@@ -122,11 +122,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if (this.parent_styles != null)
+				if (this.parentStyles != null)
 				{
 					System.Collections.ArrayList list = new System.Collections.ArrayList ();
 					
-					foreach (TextStyle style in this.parent_styles)
+					foreach (TextStyle style in this.parentStyles)
 					{
 						if ((style != null) &&
 							(style.IsDeleted == false))
@@ -148,17 +148,17 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if (this.next_style == null)
+				if (this.nextStyle == null)
 				{
-					return this.next_style;
+					return this.nextStyle;
 				}
-				else if (this.next_style.IsDeleted)
+				else if (this.nextStyle.IsDeleted)
 				{
 					return null;
 				}
 				else
 				{
-					return this.next_style;
+					return this.nextStyle;
 				}
 			}
 		}
@@ -168,11 +168,11 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.is_deleted;
+				return this.isDeleted;
 			}
 			set
 			{
-				this.is_deleted = value;
+				this.isDeleted = value;
 			}
 		}
 		
@@ -186,9 +186,9 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		internal void DefineMetaId(string meta_id)
+		internal void DefineMetaId(string metaId)
 		{
-			this.meta_id = meta_id;
+			this.metaId = metaId;
 		}
 		
 		internal void DefinePriority(int priority)
@@ -198,12 +198,12 @@ namespace Epsitec.Common.Text
 		
 		internal void DefineIsFlagged(bool value)
 		{
-			this.is_flagged = value;
+			this.isFlagged = value;
 		}
 		
-		internal void DefineNextStyle(TextStyle next_style)
+		internal void DefineNextStyle(TextStyle nextStyle)
 		{
-			this.next_style = next_style;
+			this.nextStyle = nextStyle;
 		}
 		
 		
@@ -242,16 +242,16 @@ namespace Epsitec.Common.Text
 			//	Oublie les dépendances d'un style avec d'éventuels styles parents
 			//	pour redevenir un style "plat".
 			
-			this.parent_styles = null;
-			this.style_properties = null;
-			this.next_style = null;
+			this.parentStyles = null;
+			this.styleProperties = null;
+			this.nextStyle = null;
 			this.Invalidate ();
 		}
 		
-		internal void Initialize(System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		internal void Initialize(System.Collections.ICollection properties, System.Collections.ICollection parentStyles)
 		{
-			if ((parent_styles == null) ||
-				(parent_styles.Count == 0))
+			if ((parentStyles == null) ||
+				(parentStyles.Count == 0))
 			{
 				this.Initialize (properties);
 				this.SaveStyleProperties (properties);
@@ -264,10 +264,10 @@ namespace Epsitec.Common.Text
 				//	toutes les propriétés au même niveau, il ne serait pas possible
 				//	d'en regénérer la liste si ces infos n'étaient pas conservées.
 				
-				this.parent_styles    = TextStyle.FilterNullStyles (parent_styles);
-				this.style_properties = new Property[properties.Count];
+				this.parentStyles    = TextStyle.FilterNullStyles (parentStyles);
+				this.styleProperties = new Property[properties.Count];
 				
-				properties.CopyTo (this.style_properties, 0);
+				properties.CopyTo (this.styleProperties, 0);
 				
 				this.GenerateStyleProperties ();
 			}
@@ -277,12 +277,12 @@ namespace Epsitec.Common.Text
 		{
 			if (properties != null)
 			{
-				this.style_properties = new Property[properties.Count];
-				properties.CopyTo (this.style_properties, 0);
+				this.styleProperties = new Property[properties.Count];
+				properties.CopyTo (this.styleProperties, 0);
 			}
 			else
 			{
-				this.style_properties = new Property[0];
+				this.styleProperties = new Property[0];
 			}
 		}
 		
@@ -291,12 +291,12 @@ namespace Epsitec.Common.Text
 		{
 			//	Ignore le nom dans le calcul de la signature. C'est voulu !
 			
-			checksum.UpdateValue ((int) this.text_style_class);
+			checksum.UpdateValue ((int) this.textStyleClass);
 			
-			if ((this.parent_styles != null) &&
-				(this.parent_styles.Length > 0))
+			if ((this.parentStyles != null) &&
+				(this.parentStyles.Length > 0))
 			{
-				foreach (TextStyle style in this.parent_styles)
+				foreach (TextStyle style in this.parentStyles)
 				{
 					checksum.UpdateValue (style.GetContentsSignature ());
 				}
@@ -305,18 +305,18 @@ namespace Epsitec.Common.Text
 			base.UpdateContentsSignature (checksum);
 		}
 		
-		public override bool Update(long current_version)
+		public override bool Update(long currentVersion)
 		{
 			bool flag = this.IsFlagged;
 			
-			if (base.Update (current_version))
+			if (base.Update (currentVersion))
 			{
-				if ((this.parent_styles != null) &&
-					(this.parent_styles.Length > 0))
+				if ((this.parentStyles != null) &&
+					(this.parentStyles.Length > 0))
 				{
-					foreach (TextStyle style in this.parent_styles)
+					foreach (TextStyle style in this.parentStyles)
 					{
-						style.Update (current_version);
+						style.Update (currentVersion);
 						
 						if (flag == false)
 						{
@@ -355,35 +355,35 @@ namespace Epsitec.Common.Text
 		
 		internal void Serialize(System.Text.StringBuilder buffer)
 		{
-			Property[] properties = this.style_properties;
+			Property[] properties = this.styleProperties;
 			
 			if (properties == null)
 			{
 				properties = new Property[0];
 			}
 			
-			int n_styles;
+			int nStyles;
 			
-			n_styles  = this.parent_styles == null ? 0 : this.parent_styles.Length;
-			n_styles += this.next_style == null ? 0 : 1;
+			nStyles  = this.parentStyles == null ? 0 : this.parentStyles.Length;
+			nStyles += this.nextStyle == null ? 0 : 1;
 			
 			buffer.Append (SerializerSupport.SerializeString (this.name));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeString (this.meta_id));
+			buffer.Append (SerializerSupport.SerializeString (this.metaId));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (this.priority));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeEnum (this.TextStyleClass));
 			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeInt (n_styles));
+			buffer.Append (SerializerSupport.SerializeInt (nStyles));
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeInt (properties == null ? 0 : properties.Length));
 			
-			if (this.parent_styles != null)
+			if (this.parentStyles != null)
 			{
-				for (int i = 0; i < this.parent_styles.Length; i++)
+				for (int i = 0; i < this.parentStyles.Length; i++)
 				{
-					TextStyle parent = this.parent_styles[i] as TextStyle;
+					TextStyle parent = this.parentStyles[i] as TextStyle;
 					string    name   = TextStyle.GetStyleNameAndFilterDeletedStyles (parent);
 					
 					buffer.Append ("/");
@@ -395,9 +395,9 @@ namespace Epsitec.Common.Text
 			//	sérialise en utilisant le même principe que pour les styles parents,
 			//	avec un préfixe "=>" :
 			
-			if (this.next_style != null)
+			if (this.nextStyle != null)
 			{
-				string name = TextStyle.GetStyleNameAndFilterDeletedStyles (this.next_style);
+				string name = TextStyle.GetStyleNameAndFilterDeletedStyles (this.nextStyle);
 				
 				System.Diagnostics.Debug.Assert (name != null);
 				
@@ -420,117 +420,117 @@ namespace Epsitec.Common.Text
 		internal void Deserialize(TextContext context, int version, string[] args, ref int offset)
 		{
 			string name     = SerializerSupport.DeserializeString (args[offset++]);
-			string meta_id  = SerializerSupport.DeserializeString (args[offset++]);
+			string metaId  = SerializerSupport.DeserializeString (args[offset++]);
 			int    priority = SerializerSupport.DeserializeInt (args[offset++]);
 			
 			TextStyleClass tsc = (TextStyleClass) SerializerSupport.DeserializeEnum (typeof (TextStyleClass), args[offset++]);
 			
-			int n_styles = SerializerSupport.DeserializeInt (args[offset++]);
-			int n_props  = SerializerSupport.DeserializeInt (args[offset++]);
+			int nStyles = SerializerSupport.DeserializeInt (args[offset++]);
+			int nProps  = SerializerSupport.DeserializeInt (args[offset++]);
 			
 			this.name     = name;
-			this.meta_id  = meta_id;
+			this.metaId  = metaId;
 			this.priority = priority;
 			
-			this.text_style_class = tsc;
+			this.textStyleClass = tsc;
 			
 			//	S'il y a des styles "parents" pour le style courant, on récupère leur
 			//	nom; ce n'est qu'au moment du DeserializeFixups que les noms seront
 			//	remplacés par des instances d'objets réels :
 			
-			if (n_styles > 0)
+			if (nStyles > 0)
 			{
-				this.parent_styles = new string[n_styles];
+				this.parentStyles = new string[nStyles];
 				
-				for (int i = 0; i < n_styles; i++)
+				for (int i = 0; i < nStyles; i++)
 				{
-					this.parent_styles[i] = SerializerSupport.DeserializeString (args[offset++]);
+					this.parentStyles[i] = SerializerSupport.DeserializeString (args[offset++]);
 				}
 			}
 			
 			//	Désérialise encore les propriétés propres au style, s'il y en a :
 			
-			if (n_props > 0)
+			if (nProps > 0)
 			{
-				this.style_properties = new Property[n_props];
+				this.styleProperties = new Property[nProps];
 				
-				for (int i = 0; i < n_props; i++)
+				for (int i = 0; i < nProps; i++)
 				{
 					string definition = SerializerSupport.DeserializeString (args[offset++]);
-					this.style_properties[i] = Property.Deserialize (context, version, definition);
+					this.styleProperties[i] = Property.Deserialize (context, version, definition);
 				}
 			}
 			
-			this.is_fixup_required = true;
+			this.isFixupRequired = true;
 		}
 		
 		internal void DeserializeFixups(StyleList list)
 		{
-			if (this.is_fixup_required)
+			if (this.isFixupRequired)
 			{
-				this.is_fixup_required = false;
+				this.isFixupRequired = false;
 				
-				if ((this.parent_styles != null) &&
-					(this.parent_styles.Length > 0))
+				if ((this.parentStyles != null) &&
+					(this.parentStyles.Length > 0))
 				{
-					int    n         = this.parent_styles.Length;
-					string last_name = this.parent_styles[n-1] as string;
+					int    n         = this.parentStyles.Length;
+					string lastName = this.parentStyles[n-1] as string;
 					
-					if ((last_name != null) && (last_name.StartsWith ("=>")))
+					if ((lastName != null) && (lastName.StartsWith ("=>")))
 					{
-						this.next_style = list.GetTextStyle (last_name.Substring (2));
-						this.next_style.DeserializeFixups (list);
+						this.nextStyle = list.GetTextStyle (lastName.Substring (2));
+						this.nextStyle.DeserializeFixups (list);
 						
 						n--;
 					}
 					
-					TextStyle[] parent_styles = new TextStyle[n];
+					TextStyle[] parentStyles = new TextStyle[n];
 					
-					for (int i = 0; i < parent_styles.Length; i++)
+					for (int i = 0; i < parentStyles.Length; i++)
 					{
-						string full_name = this.parent_styles[i] as string;
+						string fullName = this.parentStyles[i] as string;
 						
-						if (full_name != null)
+						if (fullName != null)
 						{
-							parent_styles[i] = list.GetTextStyle (full_name);
+							parentStyles[i] = list.GetTextStyle (fullName);
 							
 							//	Il faut s'assurer que le style duquel nous dérivons est
 							//	prête à l'emploi :
 							
-							parent_styles[i].DeserializeFixups (list);
+							parentStyles[i].DeserializeFixups (list);
 						}
 					}
 					
-					Property[] style_properties = this.style_properties;
+					Property[] styleProperties = this.styleProperties;
 					
-					this.parent_styles    = null;
-					this.style_properties = null;
+					this.parentStyles    = null;
+					this.styleProperties = null;
 					
-					if (style_properties == null)
+					if (styleProperties == null)
 					{
-						style_properties = new Property[0];
+						styleProperties = new Property[0];
 					}
 					
-					System.Diagnostics.Debug.Assert (style_properties != null);
-					System.Diagnostics.Debug.Assert (parent_styles != null);
+					System.Diagnostics.Debug.Assert (styleProperties != null);
+					System.Diagnostics.Debug.Assert (parentStyles != null);
 					
-					this.Initialize (style_properties, parent_styles);
+					this.Initialize (styleProperties, parentStyles);
 				}
 				else
 				{
-					Property[] style_properties = this.style_properties;
+					Property[] styleProperties = this.styleProperties;
 					
-					this.style_properties = null;
+					this.styleProperties = null;
 					
-					if (style_properties == null)
+					if (styleProperties == null)
 					{
-						style_properties = new Property[0];
+						styleProperties = new Property[0];
 					}
 					
-					System.Diagnostics.Debug.Assert (style_properties != null);
+					System.Diagnostics.Debug.Assert (styleProperties != null);
 					
-					this.Initialize (style_properties);
-					this.SaveStyleProperties (style_properties);
+					this.Initialize (styleProperties);
+					this.SaveStyleProperties (styleProperties);
 				}
 			}
 		}
@@ -597,11 +597,11 @@ namespace Epsitec.Common.Text
 				TextStyle px = x as TextStyle;
 				TextStyle py = y as TextStyle;
 				
-				if (px.text_style_class < py.text_style_class)
+				if (px.textStyleClass < py.textStyleClass)
 				{
 					return -1;
 				}
-				if (px.text_style_class > py.text_style_class)
+				if (px.textStyleClass > py.textStyleClass)
 				{
 					return 1;
 				}
@@ -630,8 +630,8 @@ namespace Epsitec.Common.Text
 		
 		public static bool CompareEqualContents(TextStyle a, TextStyle b)
 		{
-			if ((a.text_style_class == b.text_style_class) &&
-				(a.meta_id == b.meta_id) &&
+			if ((a.textStyleClass == b.textStyleClass) &&
+				(a.metaId == b.metaId) &&
 				(a.priority == b.priority) &&
 				(Styles.PropertyContainer.CompareEqualContents (a, b)))
 			{
@@ -665,15 +665,15 @@ namespace Epsitec.Common.Text
 			return (TextStyle[]) list.ToArray (typeof (TextStyle));
 		}
 		
-		public static TextStyle[] FilterStyles(System.Collections.ICollection styles, params TextStyleClass[] text_style_classes)
+		public static TextStyle[] FilterStyles(System.Collections.ICollection styles, params TextStyleClass[] textStyleClasses)
 		{
 			int count = 0;
 			
 			foreach (TextStyle style in styles)
 			{
-				for (int i = 0; i < text_style_classes.Length; i++)
+				for (int i = 0; i < textStyleClasses.Length; i++)
 				{
-					if (style.TextStyleClass == text_style_classes[i])
+					if (style.TextStyleClass == textStyleClasses[i])
 					{
 						count++;
 						break;
@@ -687,9 +687,9 @@ namespace Epsitec.Common.Text
 			
 			foreach (TextStyle style in styles)
 			{
-				for (int i = 0; i < text_style_classes.Length; i++)
+				for (int i = 0; i < textStyleClasses.Length; i++)
 				{
-					if (style.TextStyleClass == text_style_classes[i])
+					if (style.TextStyleClass == textStyleClasses[i])
 					{
 						filtered[index++] = style;
 						break;
@@ -707,17 +707,17 @@ namespace Epsitec.Common.Text
 			//	les styles parents et aux propriétés locales, puis initialise le
 			//	PropertyContainer avec ces propriétés "à plat".
 			
-			System.Diagnostics.Debug.Assert (this.style_properties != null);
-			System.Diagnostics.Debug.Assert (this.parent_styles != null);
+			System.Diagnostics.Debug.Assert (this.styleProperties != null);
+			System.Diagnostics.Debug.Assert (this.parentStyles != null);
 			
 			Styles.PropertyContainer.Accumulator accumulator = new Accumulator ();
 			
-			foreach (TextStyle style in this.parent_styles)
+			foreach (TextStyle style in this.parentStyles)
 			{
 				accumulator.Accumulate (style);
 			}
 			
-			accumulator.Accumulate (this.style_properties);
+			accumulator.Accumulate (this.styleProperties);
 			
 			this.Initialize (accumulator.AccumulatedProperties);
 			
@@ -727,15 +727,15 @@ namespace Epsitec.Common.Text
 		
 		private string							name;
 		private int								priority;
-		private string							meta_id;
-		private TextStyleClass					text_style_class;
-		private object[]						parent_styles;
-		private TextStyle						next_style;
-		private Property[]						style_properties;
+		private string							metaId;
+		private TextStyleClass					textStyleClass;
+		private object[]						parentStyles;
+		private TextStyle						nextStyle;
+		private Property[]						styleProperties;
 		private System.Collections.ArrayList	wrappers;
 		
-		private bool							is_flagged;
-		private bool							is_fixup_required;
-		private bool							is_deleted;
+		private bool							isFlagged;
+		private bool							isFixupRequired;
+		private bool							isDeleted;
 	}
 }

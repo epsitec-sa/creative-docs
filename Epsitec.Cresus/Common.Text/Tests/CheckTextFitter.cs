@@ -775,7 +775,7 @@ namespace Epsitec.Common.Text.Tests
 			{
 			}
 			
-			public void RenderTab(Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tab_code, bool isTabDefined, bool isTabAuto)
+			public void RenderTab(Layout.Context layout, string tag, double tabOrigin, double tabStop, ulong tabCode, bool isTabDefined, bool isTabAuto)
 			{
 			}
 			

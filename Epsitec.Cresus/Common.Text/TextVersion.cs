@@ -32,7 +32,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.text_version != this.story.Version;
+				return this.textVersion != this.story.Version;
 			}
 		}
 		
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.style_version != this.story.TextContext.StyleList.Version;
+				return this.styleVersion != this.story.TextContext.StyleList.Version;
 			}
 		}
 		
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Text
 			{
 				long version = this.fitter == null ? 0 : this.fitter.Version;
 				
-				return this.fitter_version != version;
+				return this.fitterVersion != version;
 			}
 		}
 		
@@ -82,26 +82,26 @@ namespace Epsitec.Common.Text
 		
 		public void Update()
 		{
-			long text_version   = this.story.Version;
-			long style_version  = this.story.TextContext.StyleList.Version;
-			long fitter_version = this.fitter == null ? 0 : this.fitter.Version;
+			long textVersion   = this.story.Version;
+			long styleVersion  = this.story.TextContext.StyleList.Version;
+			long fitterVersion = this.fitter == null ? 0 : this.fitter.Version;
 			
-			if (this.text_version != text_version)
+			if (this.textVersion != textVersion)
 			{
 				this.OnTextChanged ();
 			}
-			if (this.style_version != style_version)
+			if (this.styleVersion != styleVersion)
 			{
 				this.OnStyleChanged ();
 			}
-			if (this.fitter_version != fitter_version)
+			if (this.fitterVersion != fitterVersion)
 			{
 				this.OnFitterChanged ();
 			}
 			
-			this.text_version   = text_version;
-			this.style_version  = style_version;
-			this.fitter_version = fitter_version;
+			this.textVersion   = textVersion;
+			this.styleVersion  = styleVersion;
+			this.fitterVersion = fitterVersion;
 		}
 		
 		
@@ -138,8 +138,8 @@ namespace Epsitec.Common.Text
 		private TextFitter						fitter;
 		private object							argument;
 		
-		private long							text_version;
-		private long							style_version;
-		private long							fitter_version;
+		private long							textVersion;
+		private long							styleVersion;
+		private long							fitterVersion;
 	}
 }

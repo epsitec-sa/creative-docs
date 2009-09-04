@@ -104,14 +104,14 @@ namespace Epsitec.Common.Text
 			return this.NewTextStyle (queue, name, textStyleClass, properties, null);
 		}
 		
-		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass textStyleClass, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public TextStyle NewTextStyle(Common.Support.OpletQueue queue, string name, TextStyleClass textStyleClass, System.Collections.ICollection properties, System.Collections.ICollection parentStyles)
 		{
 			if (name == null)
 			{
 				name = this.GenerateUniqueName ();
 			}
 			
-			TextStyle style = new TextStyle (name, textStyleClass, properties, parent_styles);
+			TextStyle style = new TextStyle (name, textStyleClass, properties, parentStyles);
 			
 			this.Attach (style);
 			this.UpdateTabListUserCount (style, 1);
@@ -142,14 +142,14 @@ namespace Epsitec.Common.Text
 			return this.NewMetaProperty (name, metaId, priority, properties, null);
 		}
 		
-		public TextStyle NewMetaProperty(string name, string metaId, int priority, System.Collections.ICollection properties, System.Collections.ICollection parent_styles)
+		public TextStyle NewMetaProperty(string name, string metaId, int priority, System.Collections.ICollection properties, System.Collections.ICollection parentStyles)
 		{
 			if (name == null)
 			{
 				name = this.GenerateUniqueName ();
 			}
 			
-			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parent_styles);
+			TextStyle style = new TextStyle (name, TextStyleClass.MetaProperty, properties, parentStyles);
 			
 			style.DefineMetaId (metaId);
 			style.DefinePriority (priority);

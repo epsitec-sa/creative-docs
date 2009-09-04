@@ -283,39 +283,39 @@ namespace Epsitec.Common.Text.Tests
 			 *	Traversée <-- 750ns / caractère
 			 */
 			
-			Internal.CursorId cursor_3_1 = table3.NewCursor (null);
-			Internal.CursorId cursor_3_2 = table3.NewCursor (null);
+			Internal.CursorId cursor3_1 = table3.NewCursor (null);
+			Internal.CursorId cursor3_2 = table3.NewCursor (null);
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal, 1 char. at a time -->");
-			while (table3.MoveCursor (cursor_3_1, 1) > 0)
+			while (table3.MoveCursor (cursor3_1, 1) > 0)
 			{
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal, 10'000 char. at a time >>>");
-			while (table3.MoveCursor (cursor_3_2, 10000) > 0)
+			while (table3.MoveCursor (cursor3_2, 10000) > 0)
 			{
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
-			Debug.Assert.IsTrue (table3.TextLength == table3.GetCursorPosition (cursor_3_1));
-			Debug.Assert.IsTrue (table3.TextLength == table3.GetCursorPosition (cursor_3_2));
+			Debug.Assert.IsTrue (table3.TextLength == table3.GetCursorPosition (cursor3_1));
+			Debug.Assert.IsTrue (table3.TextLength == table3.GetCursorPosition (cursor3_2));
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal, 1 char. at a time <--");
-			while (table3.MoveCursor (cursor_3_1, -1) < 0)
+			while (table3.MoveCursor (cursor3_1, -1) < 0)
 			{
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal, 10'000 char. at a time <<<");
-			while (table3.MoveCursor (cursor_3_2, -10000) < 0)
+			while (table3.MoveCursor (cursor3_2, -10000) < 0)
 			{
 			}
 			
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
-			Debug.Assert.IsTrue (0 == table3.GetCursorPosition (cursor_3_1));
-			Debug.Assert.IsTrue (0 == table3.GetCursorPosition (cursor_3_2));
+			Debug.Assert.IsTrue (0 == table3.GetCursorPosition (cursor3_1));
+			Debug.Assert.IsTrue (0 == table3.GetCursorPosition (cursor3_2));
 
 			
 			/*
@@ -325,20 +325,20 @@ namespace Epsitec.Common.Text.Tests
 			 *	Traversée avec lecture <-- 1350ns / caractère
 			 */
 			
-			ulong xxx = table3[cursor_3_1];
+			ulong xxx = table3[cursor3_1];
 			ulong yyy = 0;
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal + read, 1 char. at a time -->");
-			while (table3.MoveCursor (cursor_3_1, 1) > 0)
+			while (table3.MoveCursor (cursor3_1, 1) > 0)
 			{
-				xxx += table3[cursor_3_1];
+				xxx += table3[cursor3_1];
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal + read, 1 char. at a time <--");
-			while (table3.MoveCursor (cursor_3_1, -1) < 0)
+			while (table3.MoveCursor (cursor3_1, -1) < 0)
 			{
-				yyy += table3[cursor_3_1];
+				yyy += table3[cursor3_1];
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 			
@@ -349,8 +349,8 @@ namespace Epsitec.Common.Text.Tests
 			 *	texte utilisant plusieurs morceaux.
 			 */
 			
-			table3.MoveCursor (cursor_3_1, 8000);
-			table3.MoveCursor (cursor_3_2, 25000);
+			table3.MoveCursor (cursor3_1, 8000);
+			table3.MoveCursor (cursor3_2, 25000);
 			
 			CursorInfo[] info3A = table3.FindCursors (10, 100);
 			CursorInfo[] info3B = table3.FindCursors (10, 10000);

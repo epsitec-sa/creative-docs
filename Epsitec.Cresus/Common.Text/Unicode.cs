@@ -318,22 +318,22 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
-		public static bool IsWordStart(char c, char c_before)
+		public static bool IsWordStart(char c, char cBefore)
 		{
 			//	Retourne true si une frontière de mot se trouve entre les caractères
 			//	passés en entrée. Utilisé pour déterminer la position d'un début de
-			//	mot (le mot commence par 'c' et est précédé par 'c_before').
+			//	mot (le mot commence par 'c' et est précédé par 'cBefore').
 			
-			return Internal.Navigator.IsWordStart (c, c_before);
+			return Internal.Navigator.IsWordStart (c, cBefore);
 		}
 		
-		public static bool IsWordEnd(char c, char c_before)
+		public static bool IsWordEnd(char c, char cBefore)
 		{
 			//	Retourne true si une frontière de mot se trouve entre les caractères
 			//	passés en entrée. Utilisé pour déterminer la position d'une fin de
-			//	mot (le mot finit par 'c' et est précédé par 'c_before').
+			//	mot (le mot finit par 'c' et est précédé par 'cBefore').
 			
-			return Internal.Navigator.IsWordEnd (c, c_before);
+			return Internal.Navigator.IsWordEnd (c, cBefore);
 		}
 		
 		
@@ -341,10 +341,10 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				if (Unicode.break_analyzer == null)
+				if (Unicode.breakAnalyzer == null)
 				{
-					System.Type                host_type = typeof (Unicode.BreakAnalyzer);
-					System.Reflection.Assembly assembly  = host_type.Assembly;
+					System.Type                hostType = typeof (Unicode.BreakAnalyzer);
+					System.Reflection.Assembly assembly  = hostType.Assembly;
 					
 					using (System.IO.Stream stream = assembly.GetManifestResourceStream ("Epsitec.Common.Text.Resources.LineBreak.compressed"))
 					{
@@ -352,14 +352,14 @@ namespace Epsitec.Common.Text
 						{
 							using (System.IO.StreamReader reader = new System.IO.StreamReader (data, System.Text.Encoding.ASCII))
 							{
-								Unicode.break_analyzer = new BreakAnalyzer ();
-								Unicode.break_analyzer.LoadFile (reader);
+								Unicode.breakAnalyzer = new BreakAnalyzer ();
+								Unicode.breakAnalyzer.LoadFile (reader);
 							}
 						}
 					}
 				}
 				
-				return Unicode.break_analyzer;
+				return Unicode.breakAnalyzer;
 			}
 		}
 		
@@ -387,8 +387,8 @@ namespace Epsitec.Common.Text
 				 *	first pages will be done in the CPUs cache.
 				 */
 				
-				this.table_1  = new Unicode.BreakClass[0x3200];	//	Unicode 000000-0031FF
-				this.table_2  = new Unicode.BreakClass[0x0700];	//	Unicode 00F900-00FFFF
+				this.table1  = new Unicode.BreakClass[0x3200];	//	Unicode 000000-0031FF
+				this.table2  = new Unicode.BreakClass[0x0700];	//	Unicode 00F900-00FFFF
 				this.elements = new System.Collections.ArrayList ();
 			}
 			
@@ -399,7 +399,7 @@ namespace Epsitec.Common.Text
 				{
 					if (code < 0x003200)
 					{
-						return this.table_1[code];
+						return this.table1[code];
 					}
 					else if (code < 0x00D800)
 					{
@@ -415,16 +415,16 @@ namespace Epsitec.Common.Text
 					}
 					else if (code < 0x010000)
 					{
-						return this.table_2[code - 0x00F900];
+						return this.table2[code - 0x00F900];
 					}
 					else
 					{
 						foreach (Element elem in this.elements)
 						{
-							if ((elem.code_begin <= code) &&
-								(elem.code_end   >= code))
+							if ((elem.codeBegin <= code) &&
+								(elem.codeEnd   >= code))
 							{
-								return elem.break_class;
+								return elem.breakClass;
 							}
 						}
 						
@@ -466,78 +466,78 @@ namespace Epsitec.Common.Text
 					
 					if (pos > 0)
 					{
-						string code_range = line.Substring (0, pos);
-						string break_name = line.Substring (pos+1, 2);
+						string codeRange = line.Substring (0, pos);
+						string breakName = line.Substring (pos+1, 2);
 						
-						Unicode.BreakClass break_class = BreakAnalyzer.ParseBreakClass (break_name);
+						Unicode.BreakClass breakClass = BreakAnalyzer.ParseBreakClass (breakName);
 						
-						int code_begin;
-						int code_end;
+						int codeBegin;
+						int codeEnd;
 						
-						if (code_range.IndexOf ("..") > -1)
+						if (codeRange.IndexOf ("..") > -1)
 						{
-							string[] range = code_range.Split ('.');
+							string[] range = codeRange.Split ('.');
 							
-							code_begin = int.Parse (range[0], System.Globalization.NumberStyles.HexNumber);
-							code_end   = int.Parse (range[2], System.Globalization.NumberStyles.HexNumber);
+							codeBegin = int.Parse (range[0], System.Globalization.NumberStyles.HexNumber);
+							codeEnd   = int.Parse (range[2], System.Globalization.NumberStyles.HexNumber);
 						}
 						else
 						{
-							code_begin = int.Parse (code_range, System.Globalization.NumberStyles.HexNumber);
-							code_end   = code_begin + 1;
+							codeBegin = int.Parse (codeRange, System.Globalization.NumberStyles.HexNumber);
+							codeEnd   = codeBegin + 1;
 						}
 						
 					again_range:
-						if (code_begin < 0x003200)				//	0x000000 - 0x0031FF, 1ère table
+						if (codeBegin < 0x003200)				//	0x000000 - 0x0031FF, 1ère table
 						{
-							this.table_1[code_begin - 0x000000] = break_class;
+							this.table1[codeBegin - 0x000000] = breakClass;
 							
-							code_begin++;
+							codeBegin++;
 							
-							if (code_begin < code_end)
+							if (codeBegin < codeEnd)
 							{
 								goto again_range;
 							}
 						}
-						else if (code_begin < 0x00F900)			//	0x003200 - 0x00F8FF, tranche connue
+						else if (codeBegin < 0x00F900)			//	0x003200 - 0x00F8FF, tranche connue
 						{
 							continue;
 						}
-						else if (code_begin < 0x010000)			//	0x00F900 - 0x00FFFF, 2ème table
+						else if (codeBegin < 0x010000)			//	0x00F900 - 0x00FFFF, 2ème table
 						{
-							this.table_2[code_begin - 0x00F900] = break_class;
+							this.table2[codeBegin - 0x00F900] = breakClass;
 							
-							code_begin++;
+							codeBegin++;
 							
-							if (code_begin < code_end)
+							if (codeBegin < codeEnd)
 							{
 								goto again_range;
 							}
 						}
 						else if ((this.elements.Count == 0) ||
-							/**/ (this.TailElement.break_class != break_class) ||
-							/**/ (this.TailElement.code_end + 1 != code_begin))
+							/**/ (this.TailElement.breakClass != breakClass) ||
+							/**/ (this.TailElement.codeEnd + 1 != codeBegin))
 						{
 							Element element = new Element ();
 							
-							element.break_class = break_class;
-							element.code_begin  = code_begin;
-							element.code_end    = code_end;
+							element.breakClass = breakClass;
+							element.codeBegin  = codeBegin;
+							element.codeEnd    = codeEnd;
 							
 							this.elements.Add (element);
 						}
 						else
 						{
-							this.TailElement.code_end = code_end;
+							this.TailElement.codeEnd = codeEnd;
 						}
 					}
 				}
 			}
 			
 			
-			public bool IsSpace(Unicode.BreakClass break_class)
+			public bool IsSpace(Unicode.BreakClass breakClass)
 			{
-				switch (break_class)
+				switch (breakClass)
 				{
 					case Unicode.BreakClass.GL_NonBreakingGlue:
 					case Unicode.BreakClass.SP_Space:
@@ -719,31 +719,31 @@ namespace Epsitec.Common.Text
 				
 				Unicode.BreakClass[] cclass = new Unicode.BreakClass[length+1];
 				
-				int cur_unicode = 0;
-				int prv_unicode = 0;
+				int curUnicode = 0;
+				int prvUnicode = 0;
 				
-				Unicode.BreakClass cur_class;
-				Unicode.BreakClass prv_class = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
+				Unicode.BreakClass curClass;
+				Unicode.BreakClass prvClass = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
 				
 				for (int i = 0; i < length; i++)
 				{
-					cur_unicode = Unicode.Bits.GetCode (text[start+i]);
-					cur_class   = this[cur_unicode];
+					curUnicode = Unicode.Bits.GetCode (text[start+i]);
+					curClass   = this[curUnicode];
 					
 					//	Comme on passe déjà en revue le texte, on profite de mettre
 					//	à jour les fanions Combining et Reordering :
 					
-					if (cur_class == Unicode.BreakClass.CM_CombiningMarks)
+					if (curClass == Unicode.BreakClass.CM_CombiningMarks)
 					{
 						Unicode.Bits.SetCombiningFlag (ref text[start+i], true);
 						
-						if (prv_class == Unicode.BreakClass.SP_Space)
+						if (prvClass == Unicode.BreakClass.SP_Space)
 						{
-							cur_class = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
+							curClass = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
 						}
 						else
 						{
-							cur_class = prv_class;
+							curClass = prvClass;
 						}
 					}
 					else
@@ -759,37 +759,37 @@ namespace Epsitec.Common.Text
 					//	Simplifie les traitements ultérieurs en remplaçant certaines
 					//	classes par d'autres :
 					
-					switch (cur_class)
+					switch (curClass)
 					{
 						case Unicode.BreakClass.SG_Surrogates:
 							throw new Unicode.IllegalCodeException ("Found surrogate in UTF-32");
 						
 						case Unicode.BreakClass.NL_NewLine:
-							cur_class = Unicode.BreakClass.BK_MandatoryBreak;
+							curClass = Unicode.BreakClass.BK_MandatoryBreak;
 							break;
 						
 						case Unicode.BreakClass.WJ_WordJoiner:
-							cur_class = Unicode.BreakClass.GL_NonBreakingGlue;
+							curClass = Unicode.BreakClass.GL_NonBreakingGlue;
 							break;
 						
 						case Unicode.BreakClass.AI_AmbiguousAlphabeticOrIdeographic:
 						case Unicode.BreakClass.CB_ContingentBreakOpportunity:
 						case Unicode.BreakClass.XX_Unknown:
-							cur_class = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
+							curClass = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
 							break;
 						
 						case Unicode.BreakClass.SA_ComplexContextSouthEastAsian:
-							cur_class = Unicode.BreakClass.ID_Ideographic;
+							curClass = Unicode.BreakClass.ID_Ideographic;
 							break;
 						
 						//	LB 9
 						//	LB 11a
 						
 						case Unicode.BreakClass.SP_Space:
-							if ((prv_class == Unicode.BreakClass.OP_OpeningPunctuation) ||				
-								(prv_class == Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter))
+							if ((prvClass == Unicode.BreakClass.OP_OpeningPunctuation) ||				
+								(prvClass == Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter))
 							{
-								cur_class = prv_class;
+								curClass = prvClass;
 							}
 							break;
 						
@@ -799,16 +799,16 @@ namespace Epsitec.Common.Text
 						case Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol:
 							if ((i > 1) &&
 								(cclass[i-2] == Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol) &&
-								(prv_unicode == '\''))
+								(prvUnicode == '\''))
 							{
 								cclass[i-1] = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
 							}
 							break;
 					}
 					
-					cclass[i]   = cur_class;
-					prv_class   = cur_class;
-					prv_unicode = cur_unicode;
+					cclass[i]   = curClass;
+					prvClass   = curClass;
+					prvUnicode = curUnicode;
 				}
 				
 				cclass[length] = Unicode.BreakClass.BK_MandatoryBreak;
@@ -1099,48 +1099,48 @@ namespace Epsitec.Common.Text
 			}
 			
 			
-			public static double GetSpaceWidth(ulong code, double space_width, double en_width, double em_width, double figure_width, double period_width)
+			public static double GetSpaceWidth(ulong code, double spaceWidth, double enWidth, double emWidth, double figureWidth, double periodWidth)
 			{
-				return BreakAnalyzer.GetSpaceWidth ((Unicode.Code) code, space_width, en_width, em_width, figure_width, period_width);
+				return BreakAnalyzer.GetSpaceWidth ((Unicode.Code) code, spaceWidth, enWidth, emWidth, figureWidth, periodWidth);
+			}
+
+			public static double GetSpaceWidth(int code, double spaceWidth, double enWidth, double emWidth, double figureWidth, double periodWidth)
+			{
+				return BreakAnalyzer.GetSpaceWidth ((Unicode.Code) code, spaceWidth, enWidth, emWidth, figureWidth, periodWidth);
 			}
 			
-			public static double GetSpaceWidth(int code, double space_width, double en_width, double em_width, double figure_width, double period_width)
-			{
-				return BreakAnalyzer.GetSpaceWidth ((Unicode.Code) code, space_width, en_width, em_width, figure_width, period_width);
-			}
-			
-			public static double GetSpaceWidth(Unicode.Code code, double space_width, double en_width, double em_width, double figure_width, double period_width)
+			public static double GetSpaceWidth(Unicode.Code code, double spaceWidth, double enWidth, double emWidth, double figureWidth, double periodWidth)
 			{
 				switch (code)
 				{
 					//	http://www.microsoft.com/typography/developers/fdsspec/spaces.htm
 					
-					case Unicode.Code.Space:				return space_width;
-					case Unicode.Code.NoBreakSpace:			return space_width;
-					case Unicode.Code.NarrowNoBreakSpace:	return space_width / 2;
+					case Unicode.Code.Space:				return spaceWidth;
+					case Unicode.Code.NoBreakSpace:			return spaceWidth;
+					case Unicode.Code.NarrowNoBreakSpace:	return spaceWidth / 2;
 					
-					case Unicode.Code.EnQuad:				return en_width;
-					case Unicode.Code.EmQuad:				return em_width;
+					case Unicode.Code.EnQuad:				return enWidth;
+					case Unicode.Code.EmQuad:				return emWidth;
 					
-					case Unicode.Code.EnSpace:				return en_width;
-					case Unicode.Code.EmSpace:				return em_width;
+					case Unicode.Code.EnSpace:				return enWidth;
+					case Unicode.Code.EmSpace:				return emWidth;
 					
-					case Unicode.Code.ThreePerEmSpace:		return em_width / 3;
-					case Unicode.Code.FourPerEmSpace:		return em_width / 4;
-					case Unicode.Code.SixPerEmSpace:		return em_width / 6;
+					case Unicode.Code.ThreePerEmSpace:		return emWidth / 3;
+					case Unicode.Code.FourPerEmSpace:		return emWidth / 4;
+					case Unicode.Code.SixPerEmSpace:		return emWidth / 6;
 					
-					case Unicode.Code.ThinSpace:			return space_width / 5;
-					case Unicode.Code.HairSpace:			return space_width / 16;
+					case Unicode.Code.ThinSpace:			return spaceWidth / 5;
+					case Unicode.Code.HairSpace:			return spaceWidth / 16;
 					
-					case Unicode.Code.MediumMathSpace:		return em_width * 4 / 18;
+					case Unicode.Code.MediumMathSpace:		return emWidth * 4 / 18;
 					
 					case Unicode.Code.ZeroWidthSpace:		return 0;
 					case Unicode.Code.ZeroWidthNonJoiner:	return 0;
 					case Unicode.Code.ZeroWidthJoiner:		return 0;
 					case Unicode.Code.WordJoiner:			return 0;
 					
-					case Unicode.Code.FigureSpace:			return figure_width;
-					case Unicode.Code.PunctuationSpace:		return period_width;
+					case Unicode.Code.FigureSpace:			return figureWidth;
+					case Unicode.Code.PunctuationSpace:		return periodWidth;
 				}
 				
 				return -1;
@@ -1203,18 +1203,18 @@ namespace Epsitec.Common.Text
 			#region Element Class
 			private class Element
 			{
-				public Unicode.BreakClass		break_class;
-				public int						code_begin;
-				public int						code_end;
+				public Unicode.BreakClass		breakClass;
+				public int						codeBegin;
+				public int						codeEnd;
 			}
 			#endregion
 			
-			Unicode.BreakClass[]				table_1;
-			Unicode.BreakClass[]				table_2;
+			Unicode.BreakClass[]				table1;
+			Unicode.BreakClass[]				table2;
 			System.Collections.ArrayList		elements;
 		}
 		
 		
-		private static BreakAnalyzer			break_analyzer;
+		private static BreakAnalyzer			breakAnalyzer;
 	}
 }

@@ -499,7 +499,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public bool ReplaceText(ICursor cursor, int length, string simple_text)
+		public bool ReplaceText(ICursor cursor, int length, string simpleText)
 		{
 			//	Cette méthode permet de remplacer un texte par un autre, sur place,
 			//	en conservant les mêmes attributs typographiques.
@@ -507,7 +507,7 @@ namespace Epsitec.Common.Text
 			//	Contrairement à InPlaceReplaceText, cette méthode est annulable.
 			
 			System.Diagnostics.Debug.Assert (length > 0);
-			System.Diagnostics.Debug.Assert (simple_text.Length > 0);
+			System.Diagnostics.Debug.Assert (simpleText.Length > 0);
 			
 			ulong   mask = Internal.CharMarker.CoreAndSettingsMask | this.TextContext.Markers.Selected;
 			ulong   code = 0;
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Text
 			
 			this.ReadText (cursor, length, data);
 			
-			TextConverter.ConvertFromString (simple_text, out text);
+			TextConverter.ConvertFromString (simpleText, out text);
 			
 			for (int i = 0; i < text.Length; i++)
 			{
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Text
 			return change;
 		}
 		
-		public bool ReplaceTextSequence(ICursor cursor, int length, Properties.AutoTextProperty auto_text, Properties.GeneratorProperty generator, Generator.TextRange[] ranges)
+		public bool ReplaceTextSequence(ICursor cursor, int length, Properties.AutoTextProperty autoText, Properties.GeneratorProperty generator, Generator.TextRange[] ranges)
 		{
 			//	Voir ReplaceText ci-avant.
 			
@@ -580,7 +580,7 @@ namespace Epsitec.Common.Text
 			foreach (Generator.TextRange range in ranges)
 			{
 				Property[] properties = new Property[range.PropertyCount+2];
-				properties[0] = auto_text;
+				properties[0] = autoText;
 				properties[1] = generator;
 				
 				if (properties.Length > 2)
@@ -656,13 +656,13 @@ namespace Epsitec.Common.Text
 			return changed;
 		}
 		
-		internal bool InPlaceReplaceText(ICursor cursor, int length, string simple_text)
+		internal bool InPlaceReplaceText(ICursor cursor, int length, string simpleText)
 		{
 			int position = this.text.GetCursorPosition (cursor.CursorId);
 			
 			uint[] utf32;
 			
-			TextConverter.ConvertFromString (simple_text, out utf32);
+			TextConverter.ConvertFromString (simpleText, out utf32);
 			
 			bool changed = this.InternalReplaceText (position, length, utf32);
 			
@@ -677,8 +677,8 @@ namespace Epsitec.Common.Text
 		
 		public int ReadText(int position, int length, ulong[] buffer)
 		{
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
-			return this.ReadText (this.temp_cursor, 0, length, buffer);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
+			return this.ReadText (this.tempCursor, 0, length, buffer);
 		}
 		
 		public int ReadText(ICursor cursor, int length, ulong[] buffer)
@@ -703,12 +703,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public int WriteText(ICursor cursor, ulong[] new_text)
+		public int WriteText(ICursor cursor, ulong[] newText)
 		{
-			return this.WriteText (cursor, 0, new_text);
+			return this.WriteText (cursor, 0, newText);
 		}
 		
-		public int WriteText(ICursor cursor, int offset, ulong[] new_text)
+		public int WriteText(ICursor cursor, int offset, ulong[] newText)
 		{
 			//	Remplace du texte existant par un nouveau texte; cette opération
 			//	écrase l'ancien texte, lequel est remplacé caractère par caractère.
@@ -716,19 +716,19 @@ namespace Epsitec.Common.Text
 			//	Comparer avec ReplaceText qui peut travailler avec des longueurs
 			//	différentes.
 			
-			int length  = new_text.Length;
+			int length  = newText.Length;
 			int changes = 0;
 			
 			Internal.SettingsTable settings   = this.StyleList.InternalSettingsTable;
-			ulong[]		           old_text = new ulong[length];
+			ulong[]		           oldText = new ulong[length];
 			
-			this.text.ReadText (cursor.CursorId, offset, length, old_text);
+			this.text.ReadText (cursor.CursorId, offset, length, oldText);
 			
 			//	Y a-t-il vraiment des modifications ?
 			
 			for (int i = 0; i < length; i++)
 			{
-				if (old_text[i] != new_text[i])
+				if (oldText[i] != newText[i])
 				{
 					changes++;
 				}
@@ -746,14 +746,14 @@ namespace Epsitec.Common.Text
 			//	ancien ne doit pas être "décrémenté" pour le moment, car il va
 			//	être mémorisé dans l'oplet ci-après :
 			
-			this.IncrementUserCount (new_text, length);
+			this.IncrementUserCount (newText, length);
 			
 			int position = this.text.GetCursorPosition (cursor.CursorId) + offset;
-			int written  = this.text.WriteText (cursor.CursorId, offset, length, new_text);
+			int written  = this.text.WriteText (cursor.CursorId, offset, length, newText);
 			
 			this.UpdateTextBreakInformation (position, length);
 			
-			this.InternalAddOplet (new TextChangeOplet (this, position, length, old_text));
+			this.InternalAddOplet (new TextChangeOplet (this, position, length, oldText));
 			
 			return written;
 		}
@@ -763,15 +763,15 @@ namespace Epsitec.Common.Text
 		{
 			//	Cette opération n'est pas annulable.
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, 0);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, 0);
 			
-			return this.ChangeMarkers (this.temp_cursor, this.TextLength, marker, set);
+			return this.ChangeMarkers (this.tempCursor, this.TextLength, marker, set);
 		}
 		
 		public int ChangeMarkers(int position, int length, ulong marker, bool set)
 		{
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
-			return this.ChangeMarkers (this.temp_cursor, length, marker, set);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
+			return this.ChangeMarkers (this.tempCursor, length, marker, set);
 		}
 		
 		public int ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Text
 			
 			this.text.ChangeVersion ();
 			
-			if (this.suspend_text_changed == 0)
+			if (this.suspendTextChanged == 0)
 			{
 				this.OnTextChanged ();
 			}
@@ -812,7 +812,7 @@ namespace Epsitec.Common.Text
 			
 			this.text.ChangeVersion ();
 			
-			if (this.suspend_text_changed == 0)
+			if (this.suspendTextChanged == 0)
 			{
 				this.OnTextChanged ();
 			}
@@ -820,20 +820,20 @@ namespace Epsitec.Common.Text
 		
 		public void SuspendTextChanged()
 		{
-			this.suspend_text_changed++;
+			this.suspendTextChanged++;
 		}
 		
 		public void ResumeTextChanged()
 		{
-			System.Diagnostics.Debug.Assert (this.suspend_text_changed > 0);
+			System.Diagnostics.Debug.Assert (this.suspendTextChanged > 0);
 			
-			this.suspend_text_changed--;
+			this.suspendTextChanged--;
 			
-			if (this.pending_oplet_executed_notifications != null)
+			if (this.pendingOpletExecutedNotifications != null)
 			{
-				OpletEventArgs[] args = (OpletEventArgs[]) this.pending_oplet_executed_notifications.ToArray (typeof (OpletEventArgs));
+				OpletEventArgs[] args = (OpletEventArgs[]) this.pendingOpletExecutedNotifications.ToArray (typeof (OpletEventArgs));
 				
-				this.pending_oplet_executed_notifications = null;
+				this.pendingOpletExecutedNotifications = null;
 				
 				foreach (OpletEventArgs e in args)
 				{
@@ -841,9 +841,9 @@ namespace Epsitec.Common.Text
 				}
 			}
 			
-			if (this.suspend_text_changed == 0)
+			if (this.suspendTextChanged == 0)
 			{
-				if (this.last_text_version != this.text.Version)
+				if (this.lastTextVersion != this.text.Version)
 				{
 					this.OnTextChanged ();
 				}
@@ -861,12 +861,12 @@ namespace Epsitec.Common.Text
 		public string GetDebugText()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, 0);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, 0);
 			
 			for (int i = 0; i < this.textLength; i++)
 			{
-				ulong code = this.text[this.temp_cursor.CursorId];
-				this.text.MoveCursor (this.temp_cursor.CursorId, 1);
+				ulong code = this.text[this.tempCursor.CursorId];
+				this.text.MoveCursor (this.tempCursor.CursorId, 1);
 				
 				buffer.Append ((char) Unicode.Bits.GetCode (code));
 			}
@@ -877,12 +877,12 @@ namespace Epsitec.Common.Text
 		public string GetDebugUndo()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, this.textLength + 1);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, this.textLength + 1);
 			
 			for (int i = 0; i < this.undoLength; i++)
 			{
-				ulong code = this.text[this.temp_cursor.CursorId];
-				this.text.MoveCursor (this.temp_cursor.CursorId, 1);
+				ulong code = this.text[this.tempCursor.CursorId];
+				this.text.MoveCursor (this.tempCursor.CursorId, 1);
 				
 				buffer.Append ((char) Unicode.Bits.GetCode (code));
 			}
@@ -1008,49 +1008,49 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void ConvertToStyledText(string simple_text, TextStyle text_style, out ulong[] styled_text)
+		public void ConvertToStyledText(string simpleText, TextStyle textStyle, out ulong[] styledText)
 		{
 			//	Génère un texte en lui appliquant les propriétés qui définissent
 			//	le style et les réglages associés.
 			
-			TextStyle[] text_styles = { text_style };
+			TextStyle[] textStyles = { textStyle };
 			
-			this.ConvertToStyledText (simple_text, text_styles, null, out styled_text);
+			this.ConvertToStyledText (simpleText, textStyles, null, out styledText);
 		}
 		
-		public void ConvertToStyledText(string simple_text, TextStyle text_style, System.Collections.ICollection properties, out ulong[] styled_text)
+		public void ConvertToStyledText(string simpleText, TextStyle textStyle, System.Collections.ICollection properties, out ulong[] styledText)
 		{
-			TextStyle[] text_styles = (text_style == null) ? new TextStyle[0] : new TextStyle[] { text_style };
+			TextStyle[] textStyles = (textStyle == null) ? new TextStyle[0] : new TextStyle[] { textStyle };
 			
-			this.ConvertToStyledText (simple_text, text_styles, properties, out styled_text);
+			this.ConvertToStyledText (simpleText, textStyles, properties, out styledText);
 		}
 		
-		public void ConvertToStyledText(string simple_text, System.Collections.ICollection text_styles, System.Collections.ICollection properties, out ulong[] styled_text)
+		public void ConvertToStyledText(string simpleText, System.Collections.ICollection textStyles, System.Collections.ICollection properties, out ulong[] styledText)
 		{
-			this.ConvertToStyledText (simple_text, this.FlattenStylesAndProperties (text_styles, properties), out styled_text);
+			this.ConvertToStyledText (simpleText, this.FlattenStylesAndProperties (textStyles, properties), out styledText);
 		}
 		
-		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
+		public void ConvertToStyledText(string simpleText, System.Collections.ICollection properties, out ulong[] styledText)
 		{
 			uint[] utf32;
 			
-			TextConverter.ConvertFromString (simple_text, out utf32);
+			TextConverter.ConvertFromString (simpleText, out utf32);
 			
-			this.ConvertToStyledText (utf32, properties, out styled_text);
+			this.ConvertToStyledText (utf32, properties, out styledText);
 		}
 		
-		public void ConvertToStyledText(uint[] utf32, System.Collections.ICollection properties, out ulong[] styled_text)
+		public void ConvertToStyledText(uint[] utf32, System.Collections.ICollection properties, out ulong[] styledText)
 		{
 			ulong style;
 			int   length = utf32.Length;
 			
 			this.ConvertToStyledText (properties, out style);
 			
-			styled_text = new ulong[length];
+			styledText = new ulong[length];
 			
 			for (int i = 0; i < length; i++)
 			{
-				styled_text[i] = utf32[i] | style;
+				styledText[i] = utf32[i] | style;
 			}
 		}
 		
@@ -1062,40 +1062,40 @@ namespace Epsitec.Common.Text
 			
 			int length = properties == null ? 0 : properties.Count;
 			
-			Property[] prop_mixed = new Property[length];
+			Property[] propMixed = new Property[length];
 			Property   polymorph  = null;
 			
-			Styles.CoreSettings  search_core  = new Styles.CoreSettings ();
-			Styles.LocalSettings search_local = new Styles.LocalSettings ();
-			Styles.ExtraSettings search_extra = new Styles.ExtraSettings ();
+			Styles.CoreSettings  searchCore  = new Styles.CoreSettings ();
+			Styles.LocalSettings searchLocal = new Styles.LocalSettings ();
+			Styles.ExtraSettings searchExtra = new Styles.ExtraSettings ();
 			
-			Styles.PropertyContainer.Accumulator core_acc  = search_core.StartAccumulation ();
-			Styles.PropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
-			Styles.PropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator coreAcc  = searchCore.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator localAcc = searchLocal.StartAccumulation ();
+			Styles.PropertyContainer.Accumulator extraAcc = searchExtra.StartAccumulation ();
 			
 			if (length > 0)
 			{
-				properties.CopyTo (prop_mixed, 0);
+				properties.CopyTo (propMixed, 0);
 			}
 			
 			for (int i = 0; i < length; i++)
 			{
-				switch (prop_mixed[i].PropertyType)
+				switch (propMixed[i].PropertyType)
 				{
-					case Properties.PropertyType.CoreSetting:	core_acc.Accumulate (prop_mixed[i]); break;
-					case Properties.PropertyType.LocalSetting:	local_acc.Accumulate (prop_mixed[i]); break;
-					case Properties.PropertyType.ExtraSetting:	extra_acc.Accumulate (prop_mixed[i]); break;
+					case Properties.PropertyType.CoreSetting:	coreAcc.Accumulate (propMixed[i]); break;
+					case Properties.PropertyType.LocalSetting:	localAcc.Accumulate (propMixed[i]); break;
+					case Properties.PropertyType.ExtraSetting:	extraAcc.Accumulate (propMixed[i]); break;
 					
 					case Properties.PropertyType.Polymorph:
 						if (polymorph == null)
 						{
-							polymorph = prop_mixed[i];
+							polymorph = propMixed[i];
 						}
 						else
 						{
-							System.Diagnostics.Debug.Assert (polymorph.WellKnownType == prop_mixed[i].WellKnownType);
+							System.Diagnostics.Debug.Assert (polymorph.WellKnownType == propMixed[i].WellKnownType);
 							
-							polymorph = polymorph.GetCombination (prop_mixed[i]);
+							polymorph = polymorph.GetCombination (propMixed[i]);
 						}
 						break;
 					
@@ -1109,63 +1109,63 @@ namespace Epsitec.Common.Text
 			
 			if (polymorph != null)
 			{
-				if (extra_acc.IsEmpty)
+				if (extraAcc.IsEmpty)
 				{
-					core_acc.Accumulate (polymorph);
+					coreAcc.Accumulate (polymorph);
 				}
 				else
 				{
-					extra_acc.Accumulate (polymorph);
+					extraAcc.Accumulate (polymorph);
 				}
 			}
 			
 			//	Génère le style et les réglages en fonction des propriétés :
 			
-			core_acc.Done ();
-			local_acc.Done ();
-			extra_acc.Done ();
+			coreAcc.Done ();
+			localAcc.Done ();
+			extraAcc.Done ();
 			
 			style = 0;
 			
 			//	Attache le style et les réglages; réutilise de manière interne
 			//	un style existant, si possible :
 			
-			this.StyleList.InternalSettingsTable.Attach (ref style, search_core, search_local, search_extra);
+			this.StyleList.InternalSettingsTable.Attach (ref style, searchCore, searchLocal, searchExtra);
 			
-			if ((core_acc.RequiresSpecialCodeProcessing) ||
-				(local_acc.RequiresSpecialCodeProcessing) ||
-				(extra_acc.RequiresSpecialCodeProcessing))
+			if ((coreAcc.RequiresSpecialCodeProcessing) ||
+				(localAcc.RequiresSpecialCodeProcessing) ||
+				(extraAcc.RequiresSpecialCodeProcessing))
 			{
 				Unicode.Bits.SetSpecialCodeFlag (ref style, true);
 			}
 		}
 		
 		
-		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection text_styles, System.Collections.ICollection properties)
+		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection textStyles, System.Collections.ICollection properties)
 		{
-			return this.FlattenStylesAndProperties (text_styles, properties, true);
+			return this.FlattenStylesAndProperties (textStyles, properties, true);
 		}
 		
-		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection text_styles, System.Collections.ICollection properties, bool generate_styles_property)
+		public System.Collections.ArrayList FlattenStylesAndProperties(System.Collections.ICollection textStyles, System.Collections.ICollection properties, bool generateStylesProperty)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			if ((text_styles != null) &&
-				(text_styles.Count > 0))
+			if ((textStyles != null) &&
+				(textStyles.Count > 0))
 			{
-				TextStyle[] flat_styles;
-				Property[]  flat_properties;
+				TextStyle[] flatStyles;
+				Property[]  flatProperties;
 				
-				this.TextContext.GetFlatProperties (text_styles, out flat_styles, out flat_properties);
+				this.TextContext.GetFlatProperties (textStyles, out flatStyles, out flatProperties);
 				
 				//	Crée une propriété StylesProperty qui résume les styles dont
 				//	les propriétés viennent d'être mises à plat ci-dessus :
 				
-				list.AddRange (flat_properties);
+				list.AddRange (flatProperties);
 				
-				if (generate_styles_property)
+				if (generateStylesProperty)
 				{
-					list.Add (new Properties.StylesProperty (flat_styles));
+					list.Add (new Properties.StylesProperty (flatStyles));
 				}
 			}
 			
@@ -1215,16 +1215,16 @@ namespace Epsitec.Common.Text
 			
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (data, 0, data.Length, false);
 			
-			Internal.CursorTable cursor_table = this.text.CursorTable;
-			ICursor[]            cursor_array = cursor_table.GetCursorArray ();
+			Internal.CursorTable cursorTable = this.text.CursorTable;
+			ICursor[]            cursorArray = cursorTable.GetCursorArray ();
 			
 			//	Dans un texte fraîchement créé, il y a un curseur temporaire qui
 			//	appartient à TextStory, un curseur normal qui appartient au navi-
 			//	gateur, ainsi qu'un curseur temporaire (pour le navigateur) :
 			
-			System.Diagnostics.Debug.Assert (cursor_array.Length == 3);
+			System.Diagnostics.Debug.Assert (cursorArray.Length == 3);
 			
-			foreach (ICursor cursor in cursor_array)
+			foreach (ICursor cursor in cursorArray)
 			{
 				this.text.RecycleCursor (cursor.CursorId);
 			}
@@ -1246,7 +1246,7 @@ namespace Epsitec.Common.Text
 			//	Restitue les curseurs; ils seront placés en début de document,
 			//	ce qui convient parfaitement :
 			
-			foreach (ICursor cursor in cursor_array)
+			foreach (ICursor cursor in cursorArray)
 			{
 				this.text.NewCursor (cursor);
 			}
@@ -1361,8 +1361,8 @@ namespace Epsitec.Common.Text
 		{
 			if (this.IsOpletQueueEnabled)
 			{
-				Common.Support.IOplet[] last_oplets = this.opletQueue.LastActionOplets;
-				bool enable_merge = (this.opletQueue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
+				Common.Support.IOplet[] lastOplets = this.opletQueue.LastActionOplets;
+				bool enableMerge = (this.opletQueue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
 					/**/            (this.opletQueue.PendingMergeMode != Common.Support.OpletQueue.MergeMode.Disabled);
 				
 				this.opletQueue.BeginAction ();
@@ -1387,11 +1387,11 @@ namespace Epsitec.Common.Text
 					this.opletQueue.CancelAction ();
 				}
 				
-				if ((last_oplets.Length == 1) &&
+				if ((lastOplets.Length == 1) &&
 					(this.debugDisableMerge == false) &&
-					(enable_merge))
+					(enableMerge))
 				{
-					Common.Support.IOplet last = last_oplets[0];
+					Common.Support.IOplet last = lastOplets[0];
 					
 					if (TextStory.MergeOplets (last, oplet))
 					{
@@ -1419,11 +1419,11 @@ namespace Epsitec.Common.Text
 		{
 			if (queue.IsActionDefinitionInProgress)
 			{
-				Common.Support.IOplet[] last_oplets = queue.PendingOplets;
+				Common.Support.IOplet[] lastOplets = queue.PendingOplets;
 				
-				if (last_oplets.Length > 0)
+				if (lastOplets.Length > 0)
 				{
-					Common.Support.IOplet last = last_oplets[last_oplets.Length-1];
+					Common.Support.IOplet last = lastOplets[lastOplets.Length-1];
 					
 					if (TextStory.MergeOplets (last, oplet))
 					{
@@ -1436,15 +1436,15 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				Common.Support.IOplet[] last_oplets = queue.LastActionOplets;
+				Common.Support.IOplet[] lastOplets = queue.LastActionOplets;
 				
-				bool enable_merge = (queue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
+				bool enableEerge = (queue.LastActionMergeMode != Common.Support.OpletQueue.MergeMode.Disabled) &&
 					/**/            (queue.PendingMergeMode != Common.Support.OpletQueue.MergeMode.Disabled);
 					
-				if ((last_oplets.Length == 1) &&
-					(enable_merge))
+				if ((lastOplets.Length == 1) &&
+					(enableEerge))
 				{
-					Common.Support.IOplet last = last_oplets[0];
+					Common.Support.IOplet last = lastOplets[0];
 						
 					if (TextStory.MergeOplets (last, oplet))
 					{
@@ -1476,40 +1476,40 @@ namespace Epsitec.Common.Text
 					//	conserve que la position de départ; pour autant que
 					//	les deux oplets concernent le même curseur.
 					
-					CursorMoveOplet op_1 = oplet as CursorMoveOplet;
-					CursorMoveOplet op_2 = last as CursorMoveOplet;
+					CursorMoveOplet op1 = oplet as CursorMoveOplet;
+					CursorMoveOplet op2 = last as CursorMoveOplet;
 					
-					if (op_1.Cursor == op_2.Cursor)
+					if (op1.Cursor == op2.Cursor)
 					{
 						return true;
 					}
 				}
 				else if (oplet is TextInsertOplet)
 				{
-					TextInsertOplet op_1 = oplet as TextInsertOplet;
-					TextInsertOplet op_2 = last as TextInsertOplet;
+					TextInsertOplet op1 = oplet as TextInsertOplet;
+					TextInsertOplet op2 = last as TextInsertOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
 				}
 				else if (oplet is TextDeleteOplet)
 				{
-					TextDeleteOplet op_1 = oplet as TextDeleteOplet;
-					TextDeleteOplet op_2 = last as TextDeleteOplet;
+					TextDeleteOplet op1 = oplet as TextDeleteOplet;
+					TextDeleteOplet op2 = last as TextDeleteOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
 				}
 				else if (oplet is TextChangeOplet)
 				{
-					TextChangeOplet op_1 = oplet as TextChangeOplet;
-					TextChangeOplet op_2 = last as TextChangeOplet;
+					TextChangeOplet op1 = oplet as TextChangeOplet;
+					TextChangeOplet op2 = last as TextChangeOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
@@ -1523,40 +1523,40 @@ namespace Epsitec.Common.Text
 				}
 				else if (oplet is StyleMap.ChangeOplet)
 				{
-					StyleMap.ChangeOplet op_1 = oplet as StyleMap.ChangeOplet;
-					StyleMap.ChangeOplet op_2 = last as StyleMap.ChangeOplet;
+					StyleMap.ChangeOplet op1 = oplet as StyleMap.ChangeOplet;
+					StyleMap.ChangeOplet op2 = last as StyleMap.ChangeOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
 				}
 				else if (oplet is StyleList.RedefineOplet)
 				{
-					StyleList.RedefineOplet op_1 = oplet as StyleList.RedefineOplet;
-					StyleList.RedefineOplet op_2 = last as StyleList.RedefineOplet;
+					StyleList.RedefineOplet op1 = oplet as StyleList.RedefineOplet;
+					StyleList.RedefineOplet op2 = last as StyleList.RedefineOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
 				}
 				else if (oplet is TabList.RedefineOplet)
 				{
-					TabList.RedefineOplet op_1 = oplet as TabList.RedefineOplet;
-					TabList.RedefineOplet op_2 = last as TabList.RedefineOplet;
+					TabList.RedefineOplet op1 = oplet as TabList.RedefineOplet;
+					TabList.RedefineOplet op2 = last as TabList.RedefineOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
 				}
 				else if (oplet is GeneratorList.RedefineOplet)
 				{
-					GeneratorList.RedefineOplet op_1 = oplet as GeneratorList.RedefineOplet;
-					GeneratorList.RedefineOplet op_2 = last as GeneratorList.RedefineOplet;
+					GeneratorList.RedefineOplet op1 = oplet as GeneratorList.RedefineOplet;
+					GeneratorList.RedefineOplet op2 = last as GeneratorList.RedefineOplet;
 					
-					if (op_2.MergeWith (op_1))
+					if (op2.MergeWith (op1))
 					{
 						return true;
 					}
@@ -1593,36 +1593,36 @@ namespace Epsitec.Common.Text
 			
 			System.Diagnostics.Debug.Assert (position <= this.TextLength);
 			
-			int area_start = System.Math.Max (0, position - 20);
-			int area_end   = System.Math.Min (position + length + 20, this.textLength);
+			int areaStart = System.Math.Max (0, position - 20);
+			int areaEnd   = System.Math.Min (position + length + 20, this.textLength);
 			
-			if (area_end > area_start)
+			if (areaEnd > areaStart)
 			{
-				ulong[] text = new ulong[area_end - area_start];
+				ulong[] text = new ulong[areaEnd - areaStart];
 				
-				this.text.SetCursorPosition (this.temp_cursor.CursorId, area_start);
-				this.text.ReadText (this.temp_cursor.CursorId, area_end - area_start, text);
+				this.text.SetCursorPosition (this.tempCursor.CursorId, areaStart);
+				this.text.ReadText (this.tempCursor.CursorId, areaEnd - areaStart, text);
 				
 				//	S'il y a des sauts de lignes "forcés" dans le texte avant et
 				//	après le passage modifié, on recadre la fenêtre :
 				
-				int from_pos = area_start;
-				int to_pos   = area_end;
+				int fromPos = areaStart;
+				int toPos   = areaEnd;
 				
-				for (int i = position - 1; i >= area_start; i--)
+				for (int i = position - 1; i >= areaStart; i--)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Yes)
+					if (Unicode.Bits.GetBreakInfo (text[i - areaStart]) == Unicode.BreakInfo.Yes)
 					{
-						from_pos = i + 1;
+						fromPos = i + 1;
 						break;
 					}
 				}
 				
-				for (int i = position + length; i < area_end; i++)
+				for (int i = position + length; i < areaEnd; i++)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Yes)
+					if (Unicode.Bits.GetBreakInfo (text[i - areaStart]) == Unicode.BreakInfo.Yes)
 					{
-						to_pos = i;
+						toPos = i;
 						break;
 					}
 				}
@@ -1630,91 +1630,91 @@ namespace Epsitec.Common.Text
 				//	Cherche les frontières de mots les plus proches, avant/après le
 				//	passage considéré :
 				
-				int word_start = from_pos;
-				int word_end   = to_pos;
+				int wordStart = fromPos;
+				int wordEnd   = toPos;
 				
-				for (int i = position - 2; i >= from_pos; i--)
+				for (int i = position - 2; i >= fromPos; i--)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Optional)
+					if (Unicode.Bits.GetBreakInfo (text[i - areaStart]) == Unicode.BreakInfo.Optional)
 					{
-						word_start = i + 1;
+						wordStart = i + 1;
 						break;
 					}
 				}
 				
-				for (int i = position + length; i < to_pos; i++)
+				for (int i = position + length; i < toPos; i++)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - area_start]) == Unicode.BreakInfo.Optional)
+					if (Unicode.Bits.GetBreakInfo (text[i - areaStart]) == Unicode.BreakInfo.Optional)
 					{
-						word_end = i + 1;
+						wordEnd = i + 1;
 						break;
 					}
 				}
 				
-				System.Diagnostics.Debug.Assert (from_pos <= position);
-				System.Diagnostics.Debug.Assert (to_pos >= position + length);
+				System.Diagnostics.Debug.Assert (fromPos <= position);
+				System.Diagnostics.Debug.Assert (toPos >= position + length);
 				
-				System.Diagnostics.Debug.Assert (word_start >= from_pos);
-				System.Diagnostics.Debug.Assert (word_end <= to_pos);
+				System.Diagnostics.Debug.Assert (wordStart >= fromPos);
+				System.Diagnostics.Debug.Assert (wordEnd <= toPos);
 				
 				//	Demande une analyse du passage considéré et recopie les
 				//	informations dans le texte lui-même :
 				
-				int text_offset = word_start - area_start;
-				int text_length = word_end - word_start;
+				int textOffset = wordStart - areaStart;
+				int textLength = wordEnd - wordStart;
 				
-				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[text_length];
-				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, text_offset, text_length, breaks);
-				LanguageEngine.GenerateHyphens (this.context, text, text_offset, text_length, breaks);
-				Unicode.Bits.SetBreakInfo (text, text_offset, breaks);
+				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[textLength];
+				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, textOffset, textLength, breaks);
+				LanguageEngine.GenerateHyphens (this.context, text, textOffset, textLength, breaks);
+				Unicode.Bits.SetBreakInfo (text, textOffset, breaks);
 				
-				Internal.CharMarker.SetMarkers (this.context.Markers.RequiresSpellChecking, text, text_offset, text_length);
+				Internal.CharMarker.SetMarkers (this.context.Markers.RequiresSpellChecking, text, textOffset, textLength);
 				
-				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_start, text);
+				this.text.WriteText (this.tempCursor.CursorId, areaEnd - areaStart, text);
 				
 				//	Agrandit la plage dans laquelle il y a eu des modifications signalées
 				//	par des marques telles que RequiresSpellChecking. On s'arrange pour
 				//	toujours couvrir des paragraphes complets :
 				
-				int para_start;
-				int para_end;
+				int paraStart;
+				int paraEnd;
 				
-				Internal.Navigator.GetExtendedParagraphPositions (this, word_start, out para_start, out para_end);
+				Internal.Navigator.GetExtendedParagraphPositions (this, wordStart, out paraStart, out paraEnd);
 				
 #if DEBUG
-				int para_start_1;
-				int para_end_1;
+				int paraStart1;
+				int paraEnd1;
 				
-				Internal.Navigator.GetParagraphPositions (this, word_start, out para_start_1, out para_end_1);
+				Internal.Navigator.GetParagraphPositions (this, wordStart, out paraStart1, out paraEnd1);
 				
-				System.Diagnostics.Debug.Assert (para_start <= para_start_1);
-				System.Diagnostics.Debug.Assert (para_end == para_end_1);
+				System.Diagnostics.Debug.Assert (paraStart <= paraStart1);
+				System.Diagnostics.Debug.Assert (paraEnd == paraEnd1);
 #endif
 				
-				if (word_end > para_end)
+				if (wordEnd > paraEnd)
 				{
-					int para_start_2;
-					int para_end_2;
+					int paraStart2;
+					int paraEnd2;
 					
-					Internal.Navigator.GetParagraphPositions (this, word_end, out para_start_2, out para_end_2);
+					Internal.Navigator.GetParagraphPositions (this, wordEnd, out paraStart2, out paraEnd2);
 					
-					para_end = para_end_2;
+					paraEnd = paraEnd2;
 				}
 				
-				if (para_start < this.textChangeMarkStart)
+				if (paraStart < this.textChangeMarkStart)
 				{
-					this.textChangeMarkStart = para_start;
+					this.textChangeMarkStart = paraStart;
 				}
-				if (para_end > this.textChangeMarkEnd)
+				if (paraEnd > this.textChangeMarkEnd)
 				{
-					this.textChangeMarkEnd = para_end;
+					this.textChangeMarkEnd = paraEnd;
 				}
 			}
 		}
 		
-		protected void InternalInsertText(int position, ulong[] text, bool book_keeping)
+		protected void InternalInsertText(int position, ulong[] text, bool bookKeeping)
 		{
-			if (book_keeping)
+			if (bookKeeping)
 			{
 				//	Passe en revue tous les caractères et met à jour les compteurs
 				//	d'utilisation pour les styles associés :
@@ -1722,27 +1722,27 @@ namespace Epsitec.Common.Text
 				this.IncrementUserCount (text, text.Length);
 			}
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
-			this.text.InsertText (this.temp_cursor.CursorId, text);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
+			this.text.InsertText (this.tempCursor.CursorId, text);
 		}
 		
-		protected void InternalDeleteText(int position, int length, out CursorInfo[] infos, bool book_keeping)
+		protected void InternalDeleteText(int position, int length, out CursorInfo[] infos, bool bookKeeping)
 		{
-			if (book_keeping)
+			if (bookKeeping)
 			{
 				//	Passe en revue tous les caractères et met à jour les compteurs
 				//	d'utilisation pour les styles associés :
 				
 				ulong[] text = new ulong[length];
 				
-				this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
-				this.text.ReadText (this.temp_cursor.CursorId, length, text);
+				this.text.SetCursorPosition (this.tempCursor.CursorId, position);
+				this.text.ReadText (this.tempCursor.CursorId, length, text);
 				
 				this.DecrementUserCount (text, length);
 			}
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
-			this.text.DeleteText (this.temp_cursor.CursorId, length, out infos);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
+			this.text.DeleteText (this.tempCursor.CursorId, length, out infos);
 		}
 		
 		protected bool InternalReplaceText(int position, int length, ulong[] text)
@@ -1751,10 +1751,10 @@ namespace Epsitec.Common.Text
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
 			//	des curseurs.
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
 			
 			ulong[] data = new ulong[length];
-			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
+			int     read = this.text.ReadText (this.tempCursor.CursorId, length, data);
 			
 			System.Diagnostics.Debug.Assert (read == length);
 			
@@ -1794,11 +1794,11 @@ namespace Epsitec.Common.Text
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
 			//	des curseurs.
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
 			
 			ulong[] text = new ulong[utf32.Length];
 			ulong[] data = new ulong[length];
-			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
+			int     read = this.text.ReadText (this.tempCursor.CursorId, length, data);
 			
 			System.Diagnostics.Debug.Assert (read == length);
 			
@@ -1839,7 +1839,7 @@ namespace Epsitec.Common.Text
 			return false;
 		}
 		
-		protected void InternalMoveText(int from_pos, int to_pos, int length)
+		protected void InternalMoveText(int fromPos, int toPos, int length)
 		{
 			//	Déplace le texte sans gestion du undo/redo ni mise à jour des
 			//	longueurs respectives de 'text area' et 'undo area', ni gestion
@@ -1848,17 +1848,17 @@ namespace Epsitec.Common.Text
 			//	L'appelant fournit une position de destination qui est valide
 			//	seulement après la suppression (temporaire) du texte.
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, from_pos);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, fromPos);
 			
 			ulong[] data = new ulong[length];
-			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data);
+			int     read = this.text.ReadText (this.tempCursor.CursorId, length, data);
 			
 			System.Diagnostics.Debug.Assert (read == length);
 			
 			CursorInfo[] infos;
 			
-			this.InternalDeleteText (from_pos, length, out infos, false);
-			this.InternalInsertText (to_pos, data, false);
+			this.InternalDeleteText (fromPos, length, out infos, false);
+			this.InternalInsertText (toPos, data, false);
 			
 			if ((infos != null) &&
 				(infos.Length > 0))
@@ -1869,7 +1869,7 @@ namespace Epsitec.Common.Text
 				
 				infos = this.text.FilterCursors (infos, new CursorInfo.Filter (this.FilterSaveCursors));
 				
-				this.InternalRestoreCursorPositions (infos, to_pos - from_pos);
+				this.InternalRestoreCursorPositions (infos, toPos - fromPos);
 			}
 		}
 		
@@ -1877,10 +1877,10 @@ namespace Epsitec.Common.Text
 		{
 			//	Lit le texte à la position donnée.
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
 			
 			int length = buffer.Length;
-			int read   = this.text.ReadText (this.temp_cursor.CursorId, length, buffer);
+			int read   = this.text.ReadText (this.tempCursor.CursorId, length, buffer);
 			
 			System.Diagnostics.Debug.Assert (read == length);
 		}
@@ -1889,10 +1889,10 @@ namespace Epsitec.Common.Text
 		{
 			//	Ecrit le texte à la position donnée.
 			
-			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			this.text.SetCursorPosition (this.tempCursor.CursorId, position);
 			
 			int length  = text.Length;
-			int written = this.text.WriteText (this.temp_cursor.CursorId, length, text);
+			int written = this.text.WriteText (this.tempCursor.CursorId, length, text);
 			
 			System.Diagnostics.Debug.Assert (written == length);
 		}
@@ -1929,15 +1929,15 @@ namespace Epsitec.Common.Text
 			this.textLength = 0;
 			this.undoLength = 0;
 			
-			this.temp_cursor = new Cursors.TempCursor ();
+			this.tempCursor = new Cursors.TempCursor ();
 			
-			this.text.NewCursor (this.temp_cursor);
-			this.text.InsertText (this.temp_cursor.CursorId, new ulong[] { 0ul });
+			this.text.NewCursor (this.tempCursor);
+			this.text.InsertText (this.tempCursor.CursorId, new ulong[] { 0ul });
 		}
 		
-		private void SetupOpletQueue(Common.Support.OpletQueue oplet_queue)
+		private void SetupOpletQueue(Common.Support.OpletQueue opletQueue)
 		{
-			this.opletQueue = oplet_queue;
+			this.opletQueue = opletQueue;
 		}
 		
 		private void SetupContext(TextContext context)
@@ -1979,7 +1979,7 @@ namespace Epsitec.Common.Text
 		
 		protected virtual void OnOpletExecuted(OpletEventArgs e)
 		{
-			if (this.suspend_text_changed == 0)
+			if (this.suspendTextChanged == 0)
 			{
 				if (this.OpletExecuted != null)
 				{
@@ -1988,18 +1988,18 @@ namespace Epsitec.Common.Text
 			}
 			else
 			{
-				if (this.pending_oplet_executed_notifications == null)
+				if (this.pendingOpletExecutedNotifications == null)
 				{
-					this.pending_oplet_executed_notifications = new System.Collections.ArrayList ();
+					this.pendingOpletExecutedNotifications = new System.Collections.ArrayList ();
 				}
 				
-				this.pending_oplet_executed_notifications.Add (e);
+				this.pendingOpletExecutedNotifications.Add (e);
 			}
 		}
 		
 		protected virtual void OnTextChanged()
 		{
-			this.last_text_version = this.text.Version;
+			this.lastTextVersion = this.text.Version;
 			
 			if (this.TextChanged != null)
 			{
@@ -2130,22 +2130,22 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (this.cursors != null);
 				
-				int undo_start = this.story.textLength + 1;
-				int undo_end   = undo_start + this.story.undoLength;
+				int undoStart = this.story.textLength + 1;
+				int undoEnd   = undoStart + this.story.undoLength;
 				
-				this.story.InternalMoveText (this.position, undo_start - this.length, this.length);
+				this.story.InternalMoveText (this.position, undoStart - this.length, this.length);
 				
 				this.story.textLength -= this.length;
 				this.story.undoLength += this.length;
 				
 				if (this.cursor != null)
 				{
-					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
-					int old_dir = this.direction;
+					int newDir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int oldDir = this.direction;
 					
-					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					this.story.text.SetCursorDirection (this.cursor.CursorId, oldDir);
 					
-					this.direction = new_dir;
+					this.direction = newDir;
 					
 					System.Diagnostics.Debug.Assert (this.story.text.GetCursorPosition (this.cursor.CursorId) == this.position);
 				}
@@ -2158,10 +2158,10 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Redo()
 			{
-				int undo_start = this.story.textLength + 1;
-				int undo_end   = undo_start + this.story.undoLength;
+				int undoStart = this.story.textLength + 1;
+				int undoEnd   = undoStart + this.story.undoLength;
 				
-				this.story.InternalMoveText (undo_start, this.position, this.length);
+				this.story.InternalMoveText (undoStart, this.position, this.length);
 				
 				this.story.textLength += this.length;
 				this.story.undoLength -= this.length;
@@ -2171,12 +2171,12 @@ namespace Epsitec.Common.Text
 				
 				if (this.cursor != null)
 				{
-					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
-					int old_dir = this.direction;
+					int newDir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int oldDir = this.direction;
 					
-					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					this.story.text.SetCursorDirection (this.cursor.CursorId, oldDir);
 					
-					this.direction = new_dir;
+					this.direction = newDir;
 				}
 				
 				this.cursors = null;
@@ -2215,11 +2215,11 @@ namespace Epsitec.Common.Text
 				
 				if (this.cursors != null)
 				{
-					int undo_start = this.story.textLength + 1;
-					int undo_end   = undo_start + this.story.undoLength;
+					int undoStart = this.story.textLength + 1;
+					int undoEnd   = undoStart + this.story.undoLength;
 					
 					CursorInfo[] infos;
-					this.story.InternalDeleteText (undo_start, this.length, out infos, true);
+					this.story.InternalDeleteText (undoStart, this.length, out infos, true);
 					
 					//	TODO: gérer la suppression des curseurs...
 					//	TODO: gérer la suppression des styles...
@@ -2294,13 +2294,13 @@ namespace Epsitec.Common.Text
 					//	Le texte doit encore être permuté dans le buffer d'annulation
 					//	avant de pouvoir allonger le texte à annuler :
 					
-					int undo_start = this.story.textLength + 1;
-					int undo_end   = undo_start + this.story.undoLength;
+					int undoStart = this.story.textLength + 1;
+					int undoEnd   = undoStart + this.story.undoLength;
 					
-					int pos_2 = undo_end - other.length;
-					int pos_1 = pos_2 - this.length;
+					int pos2 = undoEnd - other.length;
+					int pos1 = pos2 - this.length;
 					
-					this.story.InternalMoveText (pos_2, pos_1, other.length);
+					this.story.InternalMoveText (pos2, pos1, other.length);
 					
 					this.position = other.position;
 					this.text     = string.Concat (other.text, this.text);
@@ -2320,10 +2320,10 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Undo()
 			{
-				int undo_start = this.story.textLength + 1;
-				int undo_end   = undo_start + this.story.undoLength;
+				int undoStart = this.story.textLength + 1;
+				int undoEnd   = undoStart + this.story.undoLength;
 				
-				this.story.InternalMoveText (undo_end - this.length, this.position, this.length);
+				this.story.InternalMoveText (undoEnd - this.length, this.position, this.length);
 				
 				this.story.textLength += this.length;
 				this.story.undoLength -= this.length;
@@ -2333,12 +2333,12 @@ namespace Epsitec.Common.Text
 				
 				if (this.cursor != null)
 				{
-					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
-					int old_dir = this.direction;
+					int newDir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int oldDir = this.direction;
 					
-					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					this.story.text.SetCursorDirection (this.cursor.CursorId, oldDir);
 					
-					this.direction = new_dir;
+					this.direction = newDir;
 				}
 				
 				this.cursors = null;
@@ -2353,22 +2353,22 @@ namespace Epsitec.Common.Text
 				
 				System.Diagnostics.Debug.Assert (this.cursors != null);
 				
-				int undo_start = this.story.textLength + 1;
-				int undo_end   = undo_start + this.story.undoLength;
+				int undoStart = this.story.textLength + 1;
+				int undoEnd   = undoStart + this.story.undoLength;
 				
-				this.story.InternalMoveText (this.position, undo_end - this.length, this.length);
+				this.story.InternalMoveText (this.position, undoEnd - this.length, this.length);
 				
 				this.story.textLength -= this.length;
 				this.story.undoLength += this.length;
 				
 				if (this.cursor != null)
 				{
-					int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
-					int old_dir = this.direction;
+					int newDir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+					int oldDir = this.direction;
 					
-					this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+					this.story.text.SetCursorDirection (this.cursor.CursorId, oldDir);
 					
-					this.direction = new_dir;
+					this.direction = newDir;
 					
 					System.Diagnostics.Debug.Assert (this.story.text.GetCursorPosition (this.cursor.CursorId) == this.position);
 				}
@@ -2409,11 +2409,11 @@ namespace Epsitec.Common.Text
 				{
 					if (this.length > 0)
 					{
-						int undo_start = this.story.textLength + 1;
-						int undo_end   = undo_start + this.story.undoLength;
+						int undoStart = this.story.textLength + 1;
+						int undoEnd   = undoStart + this.story.undoLength;
 						
 						CursorInfo[] infos;
-						this.story.InternalDeleteText (undo_end - this.length, this.length, out infos, true);
+						this.story.InternalDeleteText (undoEnd - this.length, this.length, out infos, true);
 					}
 					
 					//	TODO: gérer la suppression des curseurs...
@@ -2433,11 +2433,11 @@ namespace Epsitec.Common.Text
 			{
 				//	Génère le texte simple qui représente ce qui a été détruit.
 				
-				int undo_start = this.story.textLength + 1;
-				int undo_end   = undo_start + this.story.undoLength;
+				int undoStart = this.story.textLength + 1;
+				int undoEnd   = undoStart + this.story.undoLength;
 				
 				ulong[] buffer = new ulong[this.length];
-				this.story.ReadText (undo_end - this.length, this.length, buffer);
+				this.story.ReadText (undoEnd - this.length, this.length, buffer);
 				
 				TextConverter.ConvertToString (buffer, out this.text);
 			}
@@ -2456,23 +2456,23 @@ namespace Epsitec.Common.Text
 		#region TextChangeOplet Class
 		internal class TextChangeOplet : BaseOplet
 		{
-			public TextChangeOplet(TextStory story, int position, int length, ulong[] old_text) : base (story)
+			public TextChangeOplet(TextStory story, int position, int length, ulong[] oldText) : base (story)
 			{
 				this.position = position;
 				this.length   = length;
-				this.text     = old_text;
+				this.text     = oldText;
 			}
 			
 			
 			public override Common.Support.IOplet Undo()
 			{
-				ulong[] old_text = new ulong[this.length];
-				ulong[] new_text = this.text;
+				ulong[] oldText = new ulong[this.length];
+				ulong[] newText = this.text;
 				
-				this.story.InternalReadText (this.position, old_text);
-				this.story.InternalWriteText (this.position, new_text);
+				this.story.InternalReadText (this.position, oldText);
+				this.story.InternalWriteText (this.position, newText);
 				
-				this.text = old_text;
+				this.text = oldText;
 				
 				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.NotifyUndoExecuted ();
@@ -2482,13 +2482,13 @@ namespace Epsitec.Common.Text
 			
 			public override Common.Support.IOplet Redo()
 			{
-				ulong[] old_text = new ulong[this.length];
-				ulong[] new_text = this.text;
+				ulong[] oldText = new ulong[this.length];
+				ulong[] newText = this.text;
 				
-				this.story.InternalReadText (this.position, old_text);
-				this.story.InternalWriteText (this.position, new_text);
+				this.story.InternalReadText (this.position, oldText);
+				this.story.InternalWriteText (this.position, newText);
 				
-				this.text = old_text;
+				this.text = oldText;
 				
 				this.story.UpdateTextBreakInformation (this.position, 0);
 				this.NotifyRedoExecuted ();
@@ -2558,17 +2558,17 @@ namespace Epsitec.Common.Text
 			
 			private Common.Support.IOplet Swap()
 			{
-				int old_pos = this.position;
-				int old_dir = this.direction;
+				int oldPos = this.position;
+				int oldDir = this.direction;
 				
-				int new_pos = this.story.text.GetCursorPosition (this.cursor.CursorId);
-				int new_dir = this.story.text.GetCursorDirection (this.cursor.CursorId);
+				int newPos = this.story.text.GetCursorPosition (this.cursor.CursorId);
+				int newDir = this.story.text.GetCursorDirection (this.cursor.CursorId);
 				
-				this.story.text.SetCursorPosition (this.cursor.CursorId, old_pos);
-				this.story.text.SetCursorDirection (this.cursor.CursorId, old_dir);
+				this.story.text.SetCursorPosition (this.cursor.CursorId, oldPos);
+				this.story.text.SetCursorDirection (this.cursor.CursorId, oldDir);
 				
-				this.position  = new_pos;
-				this.direction = new_dir;
+				this.position  = newPos;
+				this.direction = newDir;
 				
 				return this;
 			}
@@ -2644,7 +2644,7 @@ namespace Epsitec.Common.Text
 		private Internal.TextTable				text;
 		private int								textLength;		//	texte dans la zone texte
 		private int								undoLength;		//	texte dans la zone undo
-		private ICursor							temp_cursor;
+		private ICursor							tempCursor;
 		
 		private Common.Support.OpletQueue		opletQueue;
 		private int								opletQueueDisable;
@@ -2656,8 +2656,8 @@ namespace Epsitec.Common.Text
 		private int								textChangeMarkStart;
 		private int								textChangeMarkEnd;
 		
-		private int								suspend_text_changed;
-		private long							last_text_version = 0;
-		private System.Collections.ArrayList	pending_oplet_executed_notifications;
+		private int								suspendTextChanged;
+		private long							lastTextVersion = 0;
+		private System.Collections.ArrayList	pendingOpletExecutedNotifications;
 	}
 }
