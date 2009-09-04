@@ -272,7 +272,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 				
-				bool is_leaf = (i == n);
+				bool isLeaf = (i == n);
 				
 				if (name == "*")
 				{
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Types
 					
 					foreach (IDataItem item in root)
 					{
-						if (is_leaf)
+						if (isLeaf)
 						{
 							if (this.Contains (item) == false)
 							{
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Types
 				{
 					foreach (IDataItem item in root)
 					{
-						if (is_leaf)
+						if (isLeaf)
 						{
 							if (this.Contains (item) == false)
 							{
@@ -336,7 +336,7 @@ namespace Epsitec.Common.Types
 					{
 						IDataItem item = root[index];
 						
-						if (is_leaf)
+						if (isLeaf)
 						{
 							if (this.Contains (item) == false)
 							{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Types
 					
 					if (item != null)
 					{
-						if (is_leaf)
+						if (isLeaf)
 						{
 							if (this.Contains (item) == false)
 							{

@@ -24,8 +24,8 @@ namespace Epsitec.Common.Types.Exceptions
 		{
 		}
 
-		public WrongBaseTypeException(string message, System.Exception inner_exception)
-			: base (message, inner_exception)
+		public WrongBaseTypeException(string message, System.Exception innerException)
+			: base (message, innerException)
 		{
 		}
 

@@ -48,10 +48,10 @@ namespace Epsitec.Common.Types
 		{
 			if (time is System.DateTime)
 			{
-				System.DateTime date_time  = (System.DateTime)time;
-				Time       date_time_time = new Time (date_time.Hour, date_time.Minute, date_time.Second, date_time.Millisecond);
+				System.DateTime dateTime  = (System.DateTime)time;
+				Time       dateTimeTime = new Time (dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
 				
-				this.milliseconds = date_time_time.milliseconds;
+				this.milliseconds = dateTimeTime.milliseconds;
 			}
 			else if (time is Time)
 			{
@@ -179,23 +179,23 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 			
-			long this_ticks = this.Ticks;
-			long that_ticks;
+			long thisTicks = this.Ticks;
+			long thatTicks;
 
 			if (obj is System.DateTime)
 			{
-				that_ticks = ((System.DateTime) obj).Ticks;
+				thatTicks = ((System.DateTime) obj).Ticks;
 			}
 			else if (obj is Time)
 			{
-				that_ticks = ((Time) obj).Ticks;
+				thatTicks = ((Time) obj).Ticks;
 			}
 			else
 			{
 				return false;
 			}
 
-			return this_ticks == that_ticks;
+			return thisTicks == thatTicks;
 		}
 		
 		public override int GetHashCode()
@@ -285,8 +285,8 @@ namespace Epsitec.Common.Types
 
 		public int CompareTo(object obj)
 		{
-			long this_ticks = this.Ticks;
-			long that_ticks = 0;
+			long thisTicks = this.Ticks;
+			long thatTicks = 0;
 			
 			if (obj == null)
 			{
@@ -295,22 +295,22 @@ namespace Epsitec.Common.Types
 			
 			if (obj is System.DateTime)
 			{
-				that_ticks = ((System.DateTime)obj).Ticks;
+				thatTicks = ((System.DateTime)obj).Ticks;
 			}
 			else if (obj is Time)
 			{
-				that_ticks = ((Time)obj).Ticks;
+				thatTicks = ((Time)obj).Ticks;
 			}
 			else
 			{
 				throw new System.ArgumentException ("Invalid argument");
 			}
 			
-			if (this_ticks > that_ticks)
+			if (thisTicks > thatTicks)
 			{
 				return 1;
 			}
-			if (this_ticks < that_ticks)
+			if (thisTicks < thatTicks)
 			{
 				return -1;
 			}

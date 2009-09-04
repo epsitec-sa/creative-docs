@@ -12,49 +12,49 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class ResourceBundle : Types.DependencyObject, System.ICloneable
 	{
-		public static ResourceBundle Create(ResourceManager resource_manager)
+		public static ResourceBundle Create(ResourceManager resourceManager)
 		{
-			return ResourceBundle.Create (resource_manager, null, null, ResourceLevel.Merged, null, 0);
+			return ResourceBundle.Create (resourceManager, null, null, ResourceLevel.Merged, null, 0);
 		}
 		
-		public static ResourceBundle Create(ResourceManager resource_manager, ResourceLevel level)
+		public static ResourceBundle Create(ResourceManager resourceManager, ResourceLevel level)
 		{
-			return ResourceBundle.Create (resource_manager, null, null, level, null, 0);
+			return ResourceBundle.Create (resourceManager, null, null, level, null, 0);
 		}
 		
-		public static ResourceBundle Create(ResourceManager resource_manager, string name)
+		public static ResourceBundle Create(ResourceManager resourceManager, string name)
 		{
-			return ResourceBundle.Create (resource_manager, null, name, ResourceLevel.Merged, null, 0);
+			return ResourceBundle.Create (resourceManager, null, name, ResourceLevel.Merged, null, 0);
 		}
 		
-		public static ResourceBundle Create(ResourceManager resource_manager, string name, ResourceLevel level)
+		public static ResourceBundle Create(ResourceManager resourceManager, string name, ResourceLevel level)
 		{
-			return ResourceBundle.Create (resource_manager, null, name, level, null, 0);
+			return ResourceBundle.Create (resourceManager, null, name, level, null, 0);
 		}
 		
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level)
+		public static ResourceBundle Create(ResourceManager resourceManager, string prefix, string name, ResourceLevel level)
 		{
-			return ResourceBundle.Create (resource_manager, prefix, name, level, null, 0);
+			return ResourceBundle.Create (resourceManager, prefix, name, level, null, 0);
 		}
 		
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, int recursion)
+		public static ResourceBundle Create(ResourceManager resourceManager, string prefix, string name, ResourceLevel level, int recursion)
 		{
-			return ResourceBundle.Create (resource_manager, prefix, name, level, null, recursion);
+			return ResourceBundle.Create (resourceManager, prefix, name, level, null, recursion);
 		}
 		
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture)
+		public static ResourceBundle Create(ResourceManager resourceManager, string prefix, string name, ResourceLevel level, CultureInfo culture)
 		{
-			return ResourceBundle.Create (resource_manager, prefix, name, level, culture, 0);
+			return ResourceBundle.Create (resourceManager, prefix, name, level, culture, 0);
 		}
 
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
+		public static ResourceBundle Create(ResourceManager resourceManager, string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			return ResourceBundle.Create (resource_manager, prefix, new ResourceModuleId (), name, level, culture, recursion);
+			return ResourceBundle.Create (resourceManager, prefix, new ResourceModuleId (), name, level, culture, recursion);
 		}
 
-		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, ResourceModuleId module, string name, ResourceLevel level, CultureInfo culture, int recursion)
+		public static ResourceBundle Create(ResourceManager resourceManager, string prefix, ResourceModuleId module, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			ResourceBundle bundle = new ResourceBundle (resource_manager, name);
+			ResourceBundle bundle = new ResourceBundle (resourceManager, name);
 
 			bundle.DefinePrefix (prefix);
 			bundle.DefineModule (module);
@@ -66,18 +66,18 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		private ResourceBundle(ResourceManager resource_manager)
+		private ResourceBundle(ResourceManager resourceManager)
 		{
-			this.manager = resource_manager;
+			this.manager = resourceManager;
 			this.fields  = new Field[0];
 		}
 
-		private ResourceBundle(ResourceManager resource_manager, string name) : this (resource_manager)
+		private ResourceBundle(ResourceManager resourceManager, string name) : this (resourceManager)
 		{
 			this.DefineName (name);
 		}
 
-		private ResourceBundle(ResourceManager resource_manager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (resource_manager, name)
+		private ResourceBundle(ResourceManager resourceManager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (resourceManager, name)
 		{
 			this.DefinePrefix (parent.prefix);
 			this.level  = parent.level;
@@ -413,9 +413,9 @@ namespace Epsitec.Common.Support
 
 		#region Internal Define... Methods
 
-		internal void DefineManager(ResourceManager resource_manager)
+		internal void DefineManager(ResourceManager resourceManager)
 		{
-			this.manager = resource_manager;
+			this.manager = resourceManager;
 		}
 
 		internal void DefinePrefix(string prefix)
@@ -764,47 +764,47 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Bundle does not start with <bundle> tag (<{0}> is an unsupported root).", xmlroot.Name));
 			}
 			
-			string name_attr    = this.GetAttributeValue (xmlroot, "name");
-			string caption_attr = this.GetAttributeValue (xmlroot, "caption");
-			string type_attr    = this.GetAttributeValue (xmlroot, "type");
-			string about_attr   = this.GetAttributeValue (xmlroot, "about");
-			string culture_attr = this.GetAttributeValue (xmlroot, "culture");
-			string rank_attr    = this.GetAttributeValue (xmlroot, "rank");
+			string nameAttr    = this.GetAttributeValue (xmlroot, "name");
+			string captionAttr = this.GetAttributeValue (xmlroot, "caption");
+			string typeAttr    = this.GetAttributeValue (xmlroot, "type");
+			string aboutAttr   = this.GetAttributeValue (xmlroot, "about");
+			string cultureAttr = this.GetAttributeValue (xmlroot, "culture");
+			string rankAttr    = this.GetAttributeValue (xmlroot, "rank");
 			
-			if (!string.IsNullOrEmpty (name_attr))
+			if (!string.IsNullOrEmpty (nameAttr))
 			{
 				if (string.IsNullOrEmpty (this.name))
 				{
-					this.DefineName (name_attr);
+					this.DefineName (nameAttr);
 				}
 			}
-			if (!string.IsNullOrEmpty (caption_attr))
+			if (!string.IsNullOrEmpty (captionAttr))
 			{
 				if (string.IsNullOrEmpty (this.caption))
 				{
-					this.DefineCaption (caption_attr);
+					this.DefineCaption (captionAttr);
 				}
 			}
-			if (!string.IsNullOrEmpty (type_attr))
+			if (!string.IsNullOrEmpty (typeAttr))
 			{
-				this.type = type_attr;
+				this.type = typeAttr;
 			}
-			if (!string.IsNullOrEmpty (about_attr))
+			if (!string.IsNullOrEmpty (aboutAttr))
 			{
-				this.about = about_attr;
+				this.about = aboutAttr;
 			}
-			if (!string.IsNullOrEmpty (culture_attr))
+			if (!string.IsNullOrEmpty (cultureAttr))
 			{
-				this.culture = Resources.FindCultureInfo (culture_attr);
+				this.culture = Resources.FindCultureInfo (cultureAttr);
 			}
 			
-			if (string.IsNullOrEmpty (rank_attr))
+			if (string.IsNullOrEmpty (rankAttr))
 			{
 				this.rank = -1;
 			}
 			else
 			{
-				this.rank = System.Int32.Parse (rank_attr, System.Globalization.CultureInfo.InvariantCulture);
+				this.rank = System.Int32.Parse (rankAttr, System.Globalization.CultureInfo.InvariantCulture);
 			}
 
 			List<Field> list = new List<Field> ();
@@ -855,43 +855,43 @@ namespace Epsitec.Common.Support
 		{
 			System.Xml.XmlElement bundleNode = xmldoc.CreateElement ("bundle");
 			
-			System.Xml.XmlAttribute name_attr    = xmldoc.CreateAttribute ("name");
-			System.Xml.XmlAttribute caption_attr = xmldoc.CreateAttribute ("caption");
-			System.Xml.XmlAttribute type_attr    = xmldoc.CreateAttribute ("type");
-			System.Xml.XmlAttribute about_attr   = xmldoc.CreateAttribute ("about");
-			System.Xml.XmlAttribute culture_attr = xmldoc.CreateAttribute ("culture");
-			System.Xml.XmlAttribute rank_attr    = xmldoc.CreateAttribute ("rank");
+			System.Xml.XmlAttribute nameAttr    = xmldoc.CreateAttribute ("name");
+			System.Xml.XmlAttribute captionAttr = xmldoc.CreateAttribute ("caption");
+			System.Xml.XmlAttribute typeAttr    = xmldoc.CreateAttribute ("type");
+			System.Xml.XmlAttribute aboutAttr   = xmldoc.CreateAttribute ("about");
+			System.Xml.XmlAttribute cultureAttr = xmldoc.CreateAttribute ("culture");
+			System.Xml.XmlAttribute rankAttr    = xmldoc.CreateAttribute ("rank");
 			
-			name_attr.Value    = this.name;
-			caption_attr.Value = this.caption;
-			type_attr.Value    = this.type;
-			about_attr.Value   = this.about;
-			culture_attr.Value = this.culture.TwoLetterISOLanguageName;
-			rank_attr.Value    = this.rank < 0 ? "" : this.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			nameAttr.Value    = this.name;
+			captionAttr.Value = this.caption;
+			typeAttr.Value    = this.type;
+			aboutAttr.Value   = this.about;
+			cultureAttr.Value = this.culture.TwoLetterISOLanguageName;
+			rankAttr.Value    = this.rank < 0 ? "" : this.rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			
-			if (!string.IsNullOrEmpty (name_attr.Value))
+			if (!string.IsNullOrEmpty (nameAttr.Value))
 			{
-				bundleNode.Attributes.Append (name_attr);
+				bundleNode.Attributes.Append (nameAttr);
 			}
-			if (!string.IsNullOrEmpty (caption_attr.Value))
+			if (!string.IsNullOrEmpty (captionAttr.Value))
 			{
-				bundleNode.Attributes.Append (caption_attr);
+				bundleNode.Attributes.Append (captionAttr);
 			}
-			if (!string.IsNullOrEmpty (type_attr.Value))
+			if (!string.IsNullOrEmpty (typeAttr.Value))
 			{
-				bundleNode.Attributes.Append (type_attr);
+				bundleNode.Attributes.Append (typeAttr);
 			}
-			if (!string.IsNullOrEmpty (about_attr.Value))
+			if (!string.IsNullOrEmpty (aboutAttr.Value))
 			{
-				bundleNode.Attributes.Append (about_attr);
+				bundleNode.Attributes.Append (aboutAttr);
 			}
-			if (!string.IsNullOrEmpty (culture_attr.Value))
+			if (!string.IsNullOrEmpty (cultureAttr.Value))
 			{
-				bundleNode.Attributes.Append (culture_attr);
+				bundleNode.Attributes.Append (cultureAttr);
 			}
-			if (!string.IsNullOrEmpty (rank_attr.Value))
+			if (!string.IsNullOrEmpty (rankAttr.Value))
 			{
-				bundleNode.Attributes.Append (rank_attr);
+				bundleNode.Attributes.Append (rankAttr);
 			}
 			
 			for (int i = 0; i < this.fields.Length; i++)
@@ -942,12 +942,12 @@ namespace Epsitec.Common.Support
 
 			System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder ();
 
-			int byte_length = 16;
-			int char_length = decoder.GetCharCount (data, 0, byte_length);
+			int byteLength = 16;
+			int charLength = decoder.GetCharCount (data, 0, byteLength);
 
-			char[] chars = new char[char_length];
+			char[] chars = new char[charLength];
 
-			decoder.GetChars (data, 0, byte_length, chars, 0);
+			decoder.GetChars (data, 0, byteLength, chars, 0);
 
 			//	Le header peut commencer par un "byte order mark" Unicode; il faut le sauter
 			//	car il n'est pas signifiant pour le fichier XML considéré :
@@ -1019,7 +1019,7 @@ namespace Epsitec.Common.Support
 			return field;
 		}
 
-		private void CreateFieldList(System.Xml.XmlNode xmlroot, List<Field> list, bool unpack_bundle_ref)
+		private void CreateFieldList(System.Xml.XmlNode xmlroot, List<Field> list, bool unpackBundleRef)
 		{
 			foreach (System.Xml.XmlNode node in xmlroot.ChildNodes)
 			{
@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Support
 						
 						ResourceBundle bundle = this.ResolveRefBundle (node);
 						
-						if (unpack_bundle_ref)
+						if (unpackBundleRef)
 						{
 							list.AddRange (bundle.fields);
 						}
@@ -1054,29 +1054,29 @@ namespace Epsitec.Common.Support
 
 		private ResourceBundle ResolveRefBundle(System.Xml.XmlNode node)
 		{
-			string ref_target  = this.GetAttributeValue (node, "target");
-			string ref_type    = this.GetAttributeValue (node, "type");
-			string full_target = this.GetTargetSpecification (ref_target);
+			string refTarget  = this.GetAttributeValue (node, "target");
+			string refType    = this.GetAttributeValue (node, "type");
+			string fullTarget = this.GetTargetSpecification (refTarget);
 			
-			string target_bundle;
-			string target_field;
+			string targetBundle;
+			string targetField;
 			
-			Resources.SplitFieldId (full_target, out target_bundle, out target_field);
+			Resources.SplitFieldId (fullTarget, out targetBundle, out targetField);
 			
-			if (target_field != null)
+			if (targetField != null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a bundle. XML: {1}.", ref_target, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a bundle. XML: {1}.", refTarget, node.OuterXml));
 			}
-			if (ref_type != null)
+			if (refType != null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", ref_target, ref_type, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", refTarget, refType, node.OuterXml));
 			}
 			
-			ResourceBundle bundle = this.manager.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
+			ResourceBundle bundle = this.manager.GetBundle (targetBundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", refTarget, node.OuterXml));
 			}
 			
 			return bundle;
@@ -1084,40 +1084,40 @@ namespace Epsitec.Common.Support
 
 		private Field ResolveRefField(System.Xml.XmlNode node)
 		{
-			string ref_target  = this.GetAttributeValue (node, "target");
-			string ref_type    = this.GetAttributeValue (node, "type");
-			string full_target = this.GetTargetSpecification (ref_target);
+			string refTarget  = this.GetAttributeValue (node, "target");
+			string refType    = this.GetAttributeValue (node, "type");
+			string fullTarget = this.GetTargetSpecification (refTarget);
 			
-			string target_bundle;
-			string target_field;
+			string targetBundle;
+			string targetField;
 
-			Resources.SplitFieldId (full_target, out target_bundle, out target_field);
+			Resources.SplitFieldId (fullTarget, out targetBundle, out targetField);
 			
-			if (target_field == null)
+			if (targetField == null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a field. XML: {1}.", ref_target, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a field. XML: {1}.", refTarget, node.OuterXml));
 			}
-			if (ref_type != null)
+			if (refType != null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", ref_target, ref_type, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", refTarget, refType, node.OuterXml));
 			}
 			
-			ResourceBundle bundle = this.manager.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
+			ResourceBundle bundle = this.manager.GetBundle (targetBundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", refTarget, node.OuterXml));
 			}
 			if (bundle.depth > Resources.MaxRecursionCount)
 			{
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
 			
-			Field field = bundle[target_field];
+			Field field = bundle[targetField];
 			
 			if (field.IsEmpty)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing field. XML: {1}.", ref_target, node.OuterXml));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing field. XML: {1}.", refTarget, node.OuterXml));
 			}
 			
 			return field;
@@ -1125,28 +1125,28 @@ namespace Epsitec.Common.Support
 
 		private byte[] ResolveRefBinary(System.Xml.XmlNode node)
 		{
-			string ref_target  = this.GetAttributeValue (node, "target");
-			string full_target = this.GetTargetSpecification (ref_target);
+			string refTarget  = this.GetAttributeValue (node, "target");
+			string fullTarget = this.GetTargetSpecification (refTarget);
 			
-			string target_bundle;
-			string target_field;
+			string targetBundle;
+			string targetField;
 
-			Resources.SplitFieldId (full_target, out target_bundle, out target_field);
+			Resources.SplitFieldId (fullTarget, out targetBundle, out targetField);
 			
-			if ((target_bundle != null) &&
-				(target_field  == null))
+			if ((targetBundle != null) &&
+				(targetField  == null))
 			{
-				byte[] data = this.manager.GetBinaryData (target_bundle, level);
+				byte[] data = this.manager.GetBinaryData (targetBundle, level);
 				
 				if (data == null)
 				{
-					throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved. XML: {1}.", ref_target, node.OuterXml));
+					throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved. XML: {1}.", refTarget, node.OuterXml));
 				}
 				
 				return data;
 			}
 			
-			throw new ResourceException (string.Format ("Illegal reference to binary target '{0}'. XML: {1}.", ref_target, node.OuterXml));
+			throw new ResourceException (string.Format ("Illegal reference to binary target '{0}'. XML: {1}.", refTarget, node.OuterXml));
 		}
 
 		private string GetTargetSpecification(string target)
@@ -1431,7 +1431,7 @@ namespace Epsitec.Common.Support
 
 				if (!string.IsNullOrEmpty (mod))
 				{
-					this.modification_id = int.Parse (mod, System.Globalization.CultureInfo.InvariantCulture);
+					this.modificationId = int.Parse (mod, System.Globalization.CultureInfo.InvariantCulture);
 				}
 			}
 			
@@ -1486,7 +1486,7 @@ namespace Epsitec.Common.Support
 			{
 				get
 				{
-					return this.modification_id;
+					return this.modificationId;
 				}
 			}
 			
@@ -1730,13 +1730,13 @@ namespace Epsitec.Common.Support
 					throw new ResourceException ("An empty field cannot be modified.");
 				}
 
-				if (this.modification_id != id)
+				if (this.modificationId != id)
 				{
-					this.modification_id = id;
+					this.modificationId = id;
 
 					if (this.xml != null)
 					{
-						if (this.modification_id > 0)
+						if (this.modificationId > 0)
 						{
 							this.parent.SetAttributeValue (this.xml, "mod", id.ToString (System.Globalization.CultureInfo.InvariantCulture));
 						}
@@ -1953,7 +1953,7 @@ namespace Epsitec.Common.Support
 			private string name;
 			private long id;
 			private string about;
-			private int modification_id;
+			private int modificationId;
 			private System.Xml.XmlNode xml;
 			private object data;
 			private ResourceFieldType type;

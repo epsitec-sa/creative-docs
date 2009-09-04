@@ -24,8 +24,8 @@ namespace Epsitec.Common.Types.Exceptions
 		{
 		}
 
-		public InvalidTypeObjectException(string message, System.Exception inner_exception)
-			: base (message, inner_exception)
+		public InvalidTypeObjectException(string message, System.Exception innerException)
+			: base (message, innerException)
 		{
 		}
 

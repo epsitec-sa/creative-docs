@@ -20,7 +20,7 @@ namespace Epsitec.Common.Support
 			this.regex   = regex;
 			this.pattern = null;
 			this.options = RegexFactory.Options.None;
-			this.pre_reg = PredefinedRegex.None;
+			this.preReg = PredefinedRegex.None;
 		}
 		
 		public RegexConstraint(string pattern, RegexFactory.Options options)
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support
 			this.regex   = RegexFactory.FromSimpleJoker (pattern, options);
 			this.pattern = pattern;
 			this.options = options;
-			this.pre_reg = PredefinedRegex.None;
+			this.preReg = PredefinedRegex.None;
 		}
 		
 		public RegexConstraint(PredefinedRegex regex)
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Support
 			this.regex   = RegexFactory.FromPredefinedRegex (regex);
 			this.pattern = null;
 			this.options = RegexFactory.Options.None;
-			this.pre_reg = regex;
+			this.preReg = regex;
 		}
 		
 		
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.pre_reg;
+				return this.preReg;
 			}
 		}
 		
@@ -99,10 +99,10 @@ namespace Epsitec.Common.Support
 				buffer.Append (":");
 				buffer.Append (this.pattern);
 			}
-			else if (this.pre_reg != PredefinedRegex.None)
+			else if (this.preReg != PredefinedRegex.None)
 			{
 				buffer.Append ("def:");
-				buffer.Append (this.pre_reg.ToString ());
+				buffer.Append (this.preReg.ToString ());
 			}
 			else if (this.regex != null)
 			{
@@ -140,14 +140,14 @@ namespace Epsitec.Common.Support
 		{
 			int pos = value.IndexOf (":");
 			
-			string arg_options = value.Substring (0, pos);
-			string arg_pattern = value.Substring (pos+1);
+			string argOptions = value.Substring (0, pos);
+			string argPattern = value.Substring (pos+1);
 			
 			System.Enum options;
 			
-			Types.InvariantConverter.Convert (arg_options, typeof (RegexFactory.Options), out options);
+			Types.InvariantConverter.Convert (argOptions, typeof (RegexFactory.Options), out options);
 			
-			return new RegexConstraint (arg_pattern, (RegexFactory.Options) options);
+			return new RegexConstraint (argPattern, (RegexFactory.Options) options);
 		}
 		
 		protected static RegexConstraint FromStringPredefined(string value)
@@ -187,6 +187,6 @@ namespace Epsitec.Common.Support
 		private Regex							regex;
 		private string							pattern;
 		private RegexFactory.Options			options;
-		private PredefinedRegex					pre_reg;
+		private PredefinedRegex					preReg;
 	}
 }

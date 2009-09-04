@@ -124,23 +124,23 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 
-			long this_ticks = this.Ticks;
-			long that_ticks;
+			long thisTicks = this.Ticks;
+			long thatTicks;
 
 			if (obj is System.DateTime)
 			{
-				that_ticks = ((System.DateTime) obj).Ticks;
+				thatTicks = ((System.DateTime) obj).Ticks;
 			}
 			else if (obj is Date)
 			{
-				that_ticks = ((Date) obj).Ticks;
+				thatTicks = ((Date) obj).Ticks;
 			}
 			else
 			{
 				return false;
 			}
 
-			return this_ticks == that_ticks;
+			return thisTicks == thatTicks;
 		}
 		
 		public override int GetHashCode()
@@ -228,8 +228,8 @@ namespace Epsitec.Common.Types
 		#region IComparable Members
 		public int CompareTo(object obj)
 		{
-			long this_ticks = this.Ticks;
-			long that_ticks = 0;
+			long thisTicks = this.Ticks;
+			long thatTicks = 0;
 			
 			if (obj == null)
 			{
@@ -238,22 +238,22 @@ namespace Epsitec.Common.Types
 			
 			if (obj is System.DateTime)
 			{
-				that_ticks = ((System.DateTime) obj).Ticks;
+				thatTicks = ((System.DateTime) obj).Ticks;
 			}
 			else if (obj is Date)
 			{
-				that_ticks = ((Date) obj).Ticks;
+				thatTicks = ((Date) obj).Ticks;
 			}
 			else
 			{
 				throw new System.ArgumentException ("Invalid argument");
 			}
 			
-			if (this_ticks > that_ticks)
+			if (thisTicks > thatTicks)
 			{
 				return 1;
 			}
-			if (this_ticks < that_ticks)
+			if (thisTicks < thatTicks)
 			{
 				return -1;
 			}

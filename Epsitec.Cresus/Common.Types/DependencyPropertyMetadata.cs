@@ -14,63 +14,63 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
-		public DependencyPropertyMetadata(object default_value)
+		public DependencyPropertyMetadata(object defaultValue)
 		{
-			this.defaultValue = default_value;
+			this.defaultValue = defaultValue;
 		}
-		public DependencyPropertyMetadata(object default_value, PropertyInvalidatedCallback property_invalidated_callback)
+		public DependencyPropertyMetadata(object defaultValue, PropertyInvalidatedCallback propertyInvalidatedCallback)
 		{
-			this.defaultValue = default_value;
-			this.propertyInvalidated = property_invalidated_callback;
+			this.defaultValue = defaultValue;
+			this.propertyInvalidated = propertyInvalidatedCallback;
 		}
 
-		public DependencyPropertyMetadata(PropertyInvalidatedCallback property_invalidated_callback)
+		public DependencyPropertyMetadata(PropertyInvalidatedCallback propertyInvalidatedCallback)
 		{
-			this.propertyInvalidated = property_invalidated_callback;
+			this.propertyInvalidated = propertyInvalidatedCallback;
 		}
 		
-		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback)
+		public DependencyPropertyMetadata(GetValueOverrideCallback getValueOverrideCallback)
 		{
-			this.getValueOverride = get_value_override_callback;
+			this.getValueOverride = getValueOverrideCallback;
 		}
-		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback)
+		public DependencyPropertyMetadata(GetValueOverrideCallback getValueOverrideCallback, SetValueOverrideCallback setValueOverrideCallback)
 		{
-			this.getValueOverride = get_value_override_callback;
-			this.setValueOverride = set_value_override_callback;
+			this.getValueOverride = getValueOverrideCallback;
+			this.setValueOverride = setValueOverrideCallback;
 		}
-		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
+		public DependencyPropertyMetadata(GetValueOverrideCallback getValueOverrideCallback, SetValueOverrideCallback setValueOverrideCallback, PropertyInvalidatedCallback propertyInvalidatedCallback)
 		{
-			this.getValueOverride = get_value_override_callback;
-			this.setValueOverride = set_value_override_callback;
-			this.propertyInvalidated = property_invalidated_callback;
+			this.getValueOverride = getValueOverrideCallback;
+			this.setValueOverride = setValueOverrideCallback;
+			this.propertyInvalidated = propertyInvalidatedCallback;
 		}
-		public DependencyPropertyMetadata(GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
+		public DependencyPropertyMetadata(GetValueOverrideCallback getValueOverrideCallback, PropertyInvalidatedCallback propertyInvalidatedCallback)
 		{
-			this.getValueOverride = get_value_override_callback;
-			this.propertyInvalidated = property_invalidated_callback;
+			this.getValueOverride = getValueOverrideCallback;
+			this.propertyInvalidated = propertyInvalidatedCallback;
 		}
 		
-		public DependencyPropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback)
+		public DependencyPropertyMetadata(object defaultValue, GetValueOverrideCallback getValueOverrideCallback, SetValueOverrideCallback setValueOverrideCallback)
 		{
-			this.defaultValue     = default_value;
-			this.getValueOverride = get_value_override_callback;
-			this.setValueOverride = set_value_override_callback;
+			this.defaultValue     = defaultValue;
+			this.getValueOverride = getValueOverrideCallback;
+			this.setValueOverride = setValueOverrideCallback;
 		}
-		public DependencyPropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback)
+		public DependencyPropertyMetadata(object defaultValue, GetValueOverrideCallback getValueOverrideCallback, PropertyInvalidatedCallback propertyInvalidatedCallback)
 		{
-			this.defaultValue        = default_value;
-			this.getValueOverride    = get_value_override_callback;
-			this.propertyInvalidated = property_invalidated_callback;
+			this.defaultValue        = defaultValue;
+			this.getValueOverride    = getValueOverrideCallback;
+			this.propertyInvalidated = propertyInvalidatedCallback;
 		}
-		public DependencyPropertyMetadata(object default_value, GetValueOverrideCallback get_value_override_callback)
+		public DependencyPropertyMetadata(object defaultValue, GetValueOverrideCallback getValueOverrideCallback)
 		{
-			this.defaultValue     = default_value;
-			this.getValueOverride = get_value_override_callback;
+			this.defaultValue     = defaultValue;
+			this.getValueOverride = getValueOverrideCallback;
 		}
-		public DependencyPropertyMetadata(object default_value, SetValueOverrideCallback set_value_override_callback)
+		public DependencyPropertyMetadata(object defaultValue, SetValueOverrideCallback setValueOverrideCallback)
 		{
-			this.defaultValue     = default_value;
-			this.setValueOverride = set_value_override_callback;
+			this.defaultValue     = defaultValue;
+			this.setValueOverride = setValueOverrideCallback;
 		}
 		
 		
@@ -301,11 +301,11 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		internal bool NotifyPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
+		internal bool NotifyPropertyInvalidated(DependencyObject sender, object oldValue, object newValue)
 		{
 			if (this.PropertyNotifiesChanges)
 			{
-				this.OnPropertyInvalidated (sender, old_value, new_value);
+				this.OnPropertyInvalidated (sender, oldValue, newValue);
 				
 				return true;
 			}
@@ -315,11 +315,11 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		protected virtual void OnPropertyInvalidated(DependencyObject sender, object old_value, object new_value)
+		protected virtual void OnPropertyInvalidated(DependencyObject sender, object oldValue, object newValue)
 		{
 			if (this.PropertyInvalidated != null)
 			{
-				this.PropertyInvalidated (sender, old_value, new_value);
+				this.PropertyInvalidated (sender, oldValue, newValue);
 			}
 		}
 

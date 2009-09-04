@@ -40,16 +40,16 @@ namespace Epsitec.Common.Support
 		{
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
-			RegexFactory.alpha_name     = new Regex (@"^[a-zA-Z]+$", options);
-			RegexFactory.alpha_num_name = new Regex (@"^[a-zA-Z_][a-zA-Z0-9_]*$", options);
-			RegexFactory.alpha_dot_name = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
-			RegexFactory.file_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
-			RegexFactory.path_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\.\/\ ]$)(?<X>[\.\/\ ])(?!\k<X>))*)*$", options);
-			RegexFactory.r_full_name    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
-			RegexFactory.r_bundle_name  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
-			RegexFactory.r_field_name   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
+			RegexFactory.alphaName     = new Regex (@"^[a-zA-Z]+$", options);
+			RegexFactory.alphaNumName = new Regex (@"^[a-zA-Z_][a-zA-Z0-9_]*$", options);
+			RegexFactory.alphaDotName = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
+			RegexFactory.fileName      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
+			RegexFactory.pathName      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\.\/\ ]$)(?<X>[\.\/\ ])(?!\k<X>))*)*$", options);
+			RegexFactory.rFullName    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
+			RegexFactory.rBundleName  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
+			RegexFactory.rFieldName   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			
-			RegexFactory.pascal_case_symbol = new Regex (@"^[A-Z¿¡¬√ƒ≈∆«»… ÀÃÕŒœ—“”‘’÷åŸ⁄€‹›][a-zﬂ‡·‚„‰ÂÊÁËÈÍÎÌÓÔÒÚÛÙıˆú˘˙˚¸˝ˇA-Z¿¡¬√ƒ≈∆«»… ÀÃÕŒœ—“”‘’÷åŸ⁄€‹›0-9]*$", options);
+			RegexFactory.pascalCaseSymbol = new Regex (@"^[A-Z¿¡¬√ƒ≈∆«»… ÀÃÕŒœ—“”‘’÷åŸ⁄€‹›][a-zﬂ‡·‚„‰ÂÊÁËÈÍÎÌÓÔÒÚÛÙıˆú˘˙˚¸˝ˇA-Z¿¡¬√ƒ≈∆«»… ÀÃÕŒœ—“”‘’÷åŸ⁄€‹›0-9]*$", options);
 			
 			//	TODO: recalculer l'expression rÈguliËre en fonction de la culture
 			
@@ -57,20 +57,20 @@ namespace Epsitec.Common.Support
 			//	devrait Ítre recalculÈe chaque fois que la culture active change, mais on ne le fait
 			//	pas encore :
 			
-			char decimal_separator;
+			char decimalSeparator;
 			
-			decimal_separator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+			decimalSeparator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
 			
-			//	TODO: regÈnÈrer loc_decimal_num ‡ chaque changement de culture
+			//	TODO: regÈnÈrer locDecimalNum ‡ chaque changement de culture
 			
-			RegexFactory.loc_decimal_num = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimal_separator +
-				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
+			RegexFactory.locDecimalNum = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimalSeparator +
+				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimalSeparator +
 				/* */								  @"(\d{0,12})?0*))$", options);
 			
-			decimal_separator = System.Globalization.CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator[0];
+			decimalSeparator = System.Globalization.CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator[0];
 			
-			RegexFactory.inv_decimal_num = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimal_separator +
-				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
+			RegexFactory.invDecimalNum = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimalSeparator +
+				/* */								  @"\d{0,12})?0*)|(\d{0,12}\" + decimalSeparator +
 				/* */								  @"(\d{0,12})?0*))$", options);
 		}
 		
@@ -89,17 +89,17 @@ namespace Epsitec.Common.Support
 				throw new System.ArgumentException ("Empty pattern specified");
 			}
 
-			RegexOptions              regex_options = RegexOptions.ExplicitCapture;
-			System.Text.StringBuilder regex_pattern = new System.Text.StringBuilder ();
+			RegexOptions              regexOptions = RegexOptions.ExplicitCapture;
+			System.Text.StringBuilder regexPattern = new System.Text.StringBuilder ();
 			
 			bool escape     = false;
 			bool capture    = (options & Options.Capture) != 0;
-			int  capture_id = 1;
+			int  captureId = 1;
 			
-			if ((options & Options.IgnoreCase) != 0)	regex_options |= RegexOptions.IgnoreCase;
-			if ((options & Options.Compiled) != 0)		regex_options |= RegexOptions.Compiled;
+			if ((options & Options.IgnoreCase) != 0)	regexOptions |= RegexOptions.IgnoreCase;
+			if ((options & Options.Compiled) != 0)		regexOptions |= RegexOptions.Compiled;
 			
-			regex_pattern.Append (@"\A((");						//	force ancrage au dÈbut
+			regexPattern.Append (@"\A((");						//	force ancrage au dÈbut
 
 			for (int i = 0; i < pattern.Length; i++)
 			{
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Support
 				
 				if (escape)
 				{
-					regex_pattern.Append (Regex.Escape (pattern.Substring (i, 1)));
+					regexPattern.Append (Regex.Escape (pattern.Substring (i, 1)));
 					escape = false;
 				}
 				else if (c == '\\')
@@ -118,43 +118,43 @@ namespace Epsitec.Common.Support
 				{
 					if (capture)
 					{
-						regex_pattern.Append (@"(?<");			//	groupe nommÈ..
-						regex_pattern.Append (capture_id++);	//	..avec comme nom le range 'capture_id'..
-						regex_pattern.Append (@">(.){0,}?)");	//	..et acceptant zero ou plus de caractËre (minimum possible)
+						regexPattern.Append (@"(?<");			//	groupe nommÈ..
+						regexPattern.Append (captureId++);	//	..avec comme nom le range 'captureId'..
+						regexPattern.Append (@">(.){0,}?)");	//	..et acceptant zero ou plus de caractËre (minimum possible)
 					}
 					else
 					{
-						regex_pattern.Append (@"(.){0,}?");		//	zero ou plus de caractËres (minimum possible)
+						regexPattern.Append (@"(.){0,}?");		//	zero ou plus de caractËres (minimum possible)
 					}
 				}
 				else if (c == '?')
 				{
 					if (capture)
 					{
-						regex_pattern.Append (@"(?<");			//	groupe nommÈ..
-						regex_pattern.Append (capture_id++);	//	..avec comme nom le range 'capture_id'..
-						regex_pattern.Append (@">(.){1})");		//	..et acceptant exactement un caractËre
+						regexPattern.Append (@"(?<");			//	groupe nommÈ..
+						regexPattern.Append (captureId++);	//	..avec comme nom le range 'captureId'..
+						regexPattern.Append (@">(.){1})");		//	..et acceptant exactement un caractËre
 					}
 					else
 					{
-						regex_pattern.Append (@"(.){1}");		//	exactement un caractËre
+						regexPattern.Append (@"(.){1}");		//	exactement un caractËre
 					}
 				}
 				else if (c == '|')
 				{
-					regex_pattern.Append (")|(");
+					regexPattern.Append (")|(");
 				}
 				else
 				{
-					regex_pattern.Append (Regex.Escape (pattern.Substring (i, 1)));
+					regexPattern.Append (Regex.Escape (pattern.Substring (i, 1)));
 				}
 			}
 
-			regex_pattern.Append (@"))\z");						//	force ancrage ‡ la fin
+			regexPattern.Append (@"))\z");						//	force ancrage ‡ la fin
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} --> {1}", pattern, regex_pattern.ToString ()));
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} --> {1}", pattern, regexPattern.ToString ()));
 			
-			return new Regex (regex_pattern.ToString (), regex_options);
+			return new Regex (regexPattern.ToString (), regexOptions);
 		}
 		
 		
@@ -183,7 +183,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.alpha_name;
+				return RegexFactory.alphaName;
 			}
 		}
 		
@@ -191,7 +191,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.alpha_num_name;
+				return RegexFactory.alphaNumName;
 			}
 		}
 		
@@ -199,7 +199,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.alpha_dot_name;
+				return RegexFactory.alphaDotName;
 			}
 		}
 
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.pascal_case_symbol;
+				return RegexFactory.pascalCaseSymbol;
 			}
 		}
 		
@@ -215,7 +215,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.file_name;
+				return RegexFactory.fileName;
 			}
 		}
 		
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.path_name;
+				return RegexFactory.pathName;
 			}
 		}
 		
@@ -231,7 +231,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.r_full_name;
+				return RegexFactory.rFullName;
 			}
 		}
 		
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.r_bundle_name;
+				return RegexFactory.rBundleName;
 			}
 		}
 		
@@ -247,7 +247,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.r_field_name;
+				return RegexFactory.rFieldName;
 			}
 		}
 		
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.loc_decimal_num;
+				return RegexFactory.locDecimalNum;
 			}
 		}
 		
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return RegexFactory.inv_decimal_num;
+				return RegexFactory.invDecimalNum;
 			}
 		}
 		
@@ -278,18 +278,18 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		private static Regex					alpha_name;
-		private static Regex					alpha_num_name;
-		private static Regex					alpha_dot_name;
-		private static Regex					file_name;
-		private static Regex					path_name;
-		private static Regex					r_full_name;
-		private static Regex					r_bundle_name;
-		private static Regex					r_field_name;
+		private static Regex					alphaName;
+		private static Regex					alphaNumName;
+		private static Regex					alphaDotName;
+		private static Regex					fileName;
+		private static Regex					pathName;
+		private static Regex					rFullName;
+		private static Regex					rBundleName;
+		private static Regex					rFieldName;
 		
-		private static Regex					pascal_case_symbol;
+		private static Regex					pascalCaseSymbol;
 
-		private static Regex					loc_decimal_num;
-		private static Regex					inv_decimal_num;
+		private static Regex					locDecimalNum;
+		private static Regex					invDecimalNum;
 	}
 }

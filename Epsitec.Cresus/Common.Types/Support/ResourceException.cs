@@ -20,7 +20,7 @@ namespace Epsitec.Common.Support
 		{
 		}
 		
-		public ResourceException(string message, System.Exception inner_exception) : base (message, inner_exception)
+		public ResourceException(string message, System.Exception innerException) : base (message, innerException)
 		{
 		}
 		

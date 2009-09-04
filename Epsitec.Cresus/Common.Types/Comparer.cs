@@ -67,10 +67,10 @@ namespace Epsitec.Common.Types
 			
 			if (a.GetType ().IsArray)
 			{
-				System.Array a_array = a as System.Array;
-				System.Array b_array = b as System.Array;
+				System.Array aArray = a as System.Array;
+				System.Array bArray = b as System.Array;
 				
-				return Comparer.Equal (a_array, b_array);
+				return Comparer.Equal (aArray, bArray);
 			}
 
 			System.Collections.IEnumerable enumerableA = a as System.Collections.IEnumerable;

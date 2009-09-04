@@ -13,10 +13,10 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ResourceBundleCollection : ICollection<ResourceBundle>, IList<ResourceBundle>
 	{
-		public ResourceBundleCollection(ResourceManager resource_manager)
+		public ResourceBundleCollection(ResourceManager resourceManager)
 		{
 			this.list    = new List<ResourceBundle> ();
-			this.manager = resource_manager;
+			this.manager = resourceManager;
 		}
 
 		public ResourceBundle					this[int index]

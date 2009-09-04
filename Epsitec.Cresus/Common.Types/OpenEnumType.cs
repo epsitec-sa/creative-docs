@@ -14,11 +14,11 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public class OpenEnumType : EnumType
 	{
-		public OpenEnumType(System.Type enum_type) : base (enum_type)
+		public OpenEnumType(System.Type enumType) : base (enumType)
 		{
 		}
 		
-		public OpenEnumType(System.Type enum_type, IDataConstraint constraint) : this (enum_type)
+		public OpenEnumType(System.Type enumType, IDataConstraint constraint) : this (enumType)
 		{
 			this.constraint = constraint;
 		}

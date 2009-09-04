@@ -375,30 +375,30 @@ namespace Epsitec.Common.Types
 		}
 		public static bool Convert(object obj, out bool value)
 		{
-			decimal value_decimal;
-			bool ok = InvariantConverter.Convert (obj, out value_decimal);
-			value = (value_decimal == 0) ? false : true;
+			decimal valueDecimal;
+			bool ok = InvariantConverter.Convert (obj, out valueDecimal);
+			value = (valueDecimal == 0) ? false : true;
 			return ok;
 		}
 		public static bool Convert(object obj, out int value)
 		{
-			decimal value_decimal;
-			bool ok = InvariantConverter.Convert (obj, out value_decimal);
-			value = (int) value_decimal;
+			decimal valueDecimal;
+			bool ok = InvariantConverter.Convert (obj, out valueDecimal);
+			value = (int) valueDecimal;
 			return ok;
 		}
 		public static bool Convert(object obj, out long value)
 		{
-			decimal value_decimal;
-			bool ok = InvariantConverter.Convert (obj, out value_decimal);
-			value = (long) value_decimal;
+			decimal valueDecimal;
+			bool ok = InvariantConverter.Convert (obj, out valueDecimal);
+			value = (long) valueDecimal;
 			return ok;
 		}
 		public static bool Convert(object obj, out short value)
 		{
-			decimal value_decimal;
-			bool ok = InvariantConverter.Convert (obj, out value_decimal);
-			value = (short) value_decimal;
+			decimal valueDecimal;
+			bool ok = InvariantConverter.Convert (obj, out valueDecimal);
+			value = (short) valueDecimal;
 			return ok;
 		}
 		public static bool Convert(object obj, out decimal value)
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Types
 		
 		public static string ExtractDecimal(ref string value)
 		{
-			char dot_char = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+			char dotChar = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
 			
 			if (value == null)
 			{
@@ -732,7 +732,7 @@ namespace Epsitec.Common.Types
 				{
 					continue;
 				}
-				if ((c == dot_char) &&
+				if ((c == dotChar) &&
 					(dot == false))
 				{
 					dot = true;

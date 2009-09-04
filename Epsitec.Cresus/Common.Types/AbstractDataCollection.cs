@@ -153,7 +153,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				if (this.is_dirty)
+				if (this.isDirty)
 				{
 					this.UpdateCachedItemArray ();
 				}
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Types
 		
 		protected virtual void UpdateCachedItemArray()
 		{
-			this.is_dirty = false;
+			this.isDirty = false;
 		}
 		
 		protected virtual void ClearCachedItemArray()
@@ -175,7 +175,7 @@ namespace Epsitec.Common.Types
 			//	TODO: le jour où un accès aux noms est implémenté via une table de hachage, il
 			//	faudra purger la table ici...
 			
-			this.is_dirty = true;
+			this.isDirty = true;
 		}
 		
 		
@@ -197,6 +197,6 @@ namespace Epsitec.Common.Types
 		
 		
 		private List<IDataItem>					list = new List<IDataItem> ();
-		private bool							is_dirty;
+		private bool							isDirty;
 	}
 }

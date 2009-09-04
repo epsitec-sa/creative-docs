@@ -12,36 +12,36 @@ namespace Epsitec.Common.Types
 		{
 		}
 
-		public DependencyPropertyMetadataWithInheritance(object default_value) : base (default_value)
+		public DependencyPropertyMetadataWithInheritance(object defaultValue) : base (defaultValue)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(object default_value, PropertyInvalidatedCallback property_invalidated_callback) : base (default_value, property_invalidated_callback)
+		public DependencyPropertyMetadataWithInheritance(object defaultValue, PropertyInvalidatedCallback propertyInvalidatedCallback) : base (defaultValue, propertyInvalidatedCallback)
 		{
 		}
 
-		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback get_value_override_callback) : base (get_value_override_callback)
+		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback getValueOverrideCallback) : base (getValueOverrideCallback)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback) : base (get_value_override_callback, set_value_override_callback)
+		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback getValueOverrideCallback, SetValueOverrideCallback setValueOverrideCallback) : base (getValueOverrideCallback, setValueOverrideCallback)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback) : base (get_value_override_callback, set_value_override_callback, property_invalidated_callback)
+		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback getValueOverrideCallback, SetValueOverrideCallback setValueOverrideCallback, PropertyInvalidatedCallback propertyInvalidatedCallback) : base (getValueOverrideCallback, setValueOverrideCallback, propertyInvalidatedCallback)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback) : base (get_value_override_callback, property_invalidated_callback)
+		public DependencyPropertyMetadataWithInheritance(GetValueOverrideCallback getValueOverrideCallback, PropertyInvalidatedCallback propertyInvalidatedCallback) : base (getValueOverrideCallback, propertyInvalidatedCallback)
 		{
 		}
 		
-		public DependencyPropertyMetadataWithInheritance(object default_value, GetValueOverrideCallback get_value_override_callback, SetValueOverrideCallback set_value_override_callback) : base (default_value, get_value_override_callback, set_value_override_callback)
+		public DependencyPropertyMetadataWithInheritance(object defaultValue, GetValueOverrideCallback getValueOverrideCallback, SetValueOverrideCallback setValueOverrideCallback) : base (defaultValue, getValueOverrideCallback, setValueOverrideCallback)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(object default_value, GetValueOverrideCallback get_value_override_callback, PropertyInvalidatedCallback property_invalidated_callback) : base (default_value, get_value_override_callback, property_invalidated_callback)
+		public DependencyPropertyMetadataWithInheritance(object defaultValue, GetValueOverrideCallback getValueOverrideCallback, PropertyInvalidatedCallback propertyInvalidatedCallback) : base (defaultValue, getValueOverrideCallback, propertyInvalidatedCallback)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(object default_value, GetValueOverrideCallback get_value_override_callback) : base (default_value, get_value_override_callback)
+		public DependencyPropertyMetadataWithInheritance(object defaultValue, GetValueOverrideCallback getValueOverrideCallback) : base (defaultValue, getValueOverrideCallback)
 		{
 		}
-		public DependencyPropertyMetadataWithInheritance(object default_value, SetValueOverrideCallback set_value_override_callback) : base (default_value, set_value_override_callback)
+		public DependencyPropertyMetadataWithInheritance(object defaultValue, SetValueOverrideCallback setValueOverrideCallback) : base (defaultValue, setValueOverrideCallback)
 		{
 		}
 		

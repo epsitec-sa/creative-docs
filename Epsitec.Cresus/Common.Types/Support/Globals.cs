@@ -15,13 +15,13 @@ namespace Epsitec.Common.Support
 	{
 		private Globals()
 		{
-			this.property_hash = new Dictionary<string, object> ();
+			this.propertyHash = new Dictionary<string, object> ();
 		}
 		
 		static Globals()
 		{
 			Globals.properties  = new Globals ();
-			Globals.abort_event = new System.Threading.ManualResetEvent (false);
+			Globals.abortEvent = new System.Threading.ManualResetEvent (false);
 		}
 		
 		
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Support
 			
 			get
 			{
-				return Globals.abort_event;
+				return Globals.abortEvent;
 			}
 		}
 
@@ -101,14 +101,14 @@ namespace Epsitec.Common.Support
 		
 		public static void SignalAbort()
 		{
-			Globals.abort_event.Set ();
+			Globals.abortEvent.Set ();
 		}
 		
 		
 		public string[] GetPropertyNames()
 		{
-			string[] names = new string[this.property_hash.Count];
-			this.property_hash.Keys.CopyTo (names, 0);
+			string[] names = new string[this.propertyHash.Count];
+			this.propertyHash.Keys.CopyTo (names, 0);
 			System.Array.Sort (names);
 			
 			return names;
@@ -120,11 +120,11 @@ namespace Epsitec.Common.Support
 			{
 				if (Types.UndefinedValue.IsUndefinedValue (value))
 				{
-					this.property_hash.Remove (key);
+					this.propertyHash.Remove (key);
 				}
 				else
 				{
-					this.property_hash[key] = value;
+					this.propertyHash[key] = value;
 				}
 			}
 		}
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Support
 			{
 				object value;
 
-				if (this.property_hash.TryGetValue (key, out value))
+				if (this.propertyHash.TryGetValue (key, out value))
 				{
 					return value;
 				}
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Support
 		{
 			lock (this)
 			{
-				return this.property_hash.ContainsKey (key);
+				return this.propertyHash.ContainsKey (key);
 			}
 		}
 		
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Support
 		{
 			lock (this)
 			{
-				this.property_hash.Remove (key);
+				this.propertyHash.Remove (key);
 			}
 		}
 
@@ -291,9 +291,9 @@ namespace Epsitec.Common.Support
 		
 		#endregion
 		
-		private Dictionary<string, object>		property_hash;
+		private Dictionary<string, object>		propertyHash;
 		private static Globals					properties;
-		private static ManualResetEvent			abort_event;
+		private static ManualResetEvent			abortEvent;
 		private static bool						isDebugBuild;
 		private static bool						isDebugBuildInitialized;
 	}

@@ -84,35 +84,35 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 
 					index++;
 					if( index >= tokens.Count ) break;
-					string tag_name = tokens[index];
+					string tagName = tokens[index];
 					index++;
-					element = new HtmlElement( tag_name );
+					element = new HtmlElement( tagName );
 					// read the attributes and values
 
 					while( index < tokens.Count && ! ">".Equals( tokens[index] ) && ! "/>".Equals( tokens[index] ) )
 					{
-						string attribute_name = tokens[ index ];
+						string attributeName = tokens[ index ];
 						index++;
 						if( index < tokens.Count && "=".Equals( tokens[ index ] ) )
 						{
 							index++;
-							string attribute_value;
+							string attributeValue;
 							if( index < tokens.Count )
 							{
-								attribute_value = tokens[ index ];
+								attributeValue = tokens[ index ];
 							}
 							else
 							{
-								attribute_value = null;
+								attributeValue = null;
 							}
 							index++;
-							HtmlAttribute attribute = new HtmlAttribute( attribute_name , HtmlEncoder.DecodeValue( attribute_value ) );
+							HtmlAttribute attribute = new HtmlAttribute( attributeName , HtmlEncoder.DecodeValue( attributeValue ) );
 							element.Attributes.Add( attribute );
 						}
 						else if( index < tokens.Count )
 						{
 							// Null-value attribute
-							HtmlAttribute attribute = new HtmlAttribute( attribute_name , null );
+							HtmlAttribute attribute = new HtmlAttribute( attributeName , null );
 							element.Attributes.Add( attribute );
 						}
 					}
@@ -137,13 +137,13 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 					// Read close tag
 					index++;
 					if( index >= tokens.Count ) break;
-					string tag_name = tokens[index];
+					string tagName = tokens[index];
 					index++;
 
-					int open_index = FindTagOpenNodeIndex( nodes , tag_name );
-					if( open_index != -1 )
+					int openIndex = FindTagOpenNodeIndex( nodes , tagName );
+					if( openIndex != -1 )
 					{
-						MoveNodesDown( ref nodes , open_index + 1 , (HtmlElement)nodes[open_index] );
+						MoveNodesDown( ref nodes , openIndex + 1 , (HtmlElement)nodes[openIndex] );
 					}
 					else
 					{
@@ -195,22 +195,22 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 		/// This will move all the nodes from the specified index to the new parent.
 		/// </summary>
 		/// <param name="nodes">The collection of nodes</param>
-		/// <param name="node_index">The index of the first node (in the above collection) to move</param>
-		/// <param name="new_parent">The node which will become the parent of the moved nodes</param>
+		/// <param name="nodeIndex">The index of the first node (in the above collection) to move</param>
+		/// <param name="newParent">The node which will become the parent of the moved nodes</param>
 
-		private void MoveNodesDown(ref HtmlNodeCollection nodes,int node_index,HtmlElement new_parent)
+		private void MoveNodesDown(ref HtmlNodeCollection nodes,int nodeIndex,HtmlElement newParent)
 		{
-			for( int i = node_index ; i < nodes.Count ; i++ )
+			for( int i = nodeIndex ; i < nodes.Count ; i++ )
 			{
-				((HtmlElement)new_parent).Nodes.Add( nodes[i] );
-				nodes[i].SetParent( new_parent );
+				((HtmlElement)newParent).Nodes.Add( nodes[i] );
+				nodes[i].SetParent( newParent );
 			}
 			int c = nodes.Count;
-			for( int i = node_index ; i < c ; i++ )
+			for( int i = nodeIndex ; i < c ; i++ )
 			{
-				nodes.RemoveAt( node_index );
+				nodes.RemoveAt( nodeIndex );
 			}
-			new_parent.IsExplicitlyTerminated = true;
+			newParent.IsExplicitlyTerminated = true;
 		}
 
 		/// <summary>
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 				}
 				else if( input.Substring( i , 1 ).Equals( "\"" ) && inTag )
 				{
-					int string_start = i;
+					int stringStart = i;
 					i++;
 					i = input.IndexOf( "\"" , i );
 					if( i == -1 )
@@ -301,11 +301,11 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						break;
 					}
 					i++;
-					output.Append( input.Substring( string_start , i - string_start ) );
+					output.Append( input.Substring( stringStart , i - stringStart ) );
 				}
 				else if( input.Substring( i , 1 ).Equals( "\'" ) && inTag )
 				{
-					int string_start = i;
+					int stringStart = i;
 					i++;
 					i = input.IndexOf( "\'" , i );
 					if( i == -1 )
@@ -313,7 +313,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						break;
 					}
 					i++;
-					output.Append( input.Substring( string_start , i - string_start ) );
+					output.Append( input.Substring( stringStart , i - stringStart ) );
 				}
 				else
 				{
@@ -365,7 +365,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 				}
 				else if( input.Substring( i , 1 ).Equals( "\"" ) && inTag )
 				{
-					int string_start = i;
+					int stringStart = i;
 					i++;
 					i = input.IndexOf( "\"" , i );
 					if( i == -1 )
@@ -373,11 +373,11 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						break;
 					}
 					i++;
-					output.Append( input.Substring( string_start , i - string_start ) );
+					output.Append( input.Substring( stringStart , i - stringStart ) );
 				}
 				else if( input.Substring( i , 1 ).Equals( "\'" ) && inTag )
 				{
-					int string_start = i;
+					int stringStart = i;
 					i++;
 					i = input.IndexOf( "\'" , i );
 					if( i == -1 )
@@ -385,7 +385,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						break;
 					}
 					i++;
-					output.Append( input.Substring( string_start , i - string_start ) );
+					output.Append( input.Substring( stringStart , i - stringStart ) );
 				}
 				else
 				{
@@ -405,15 +405,15 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 		/// </summary>
 		/// <param name="input">The HTML to examine</param>
 		/// <returns>The HTML with the scripts marked up differently</returns>
-		private string PreprocessScript(string input,string tag_name)
+		private string PreprocessScript(string input,string tagName)
 		{
 			StringBuilder output = new StringBuilder();
 			int index = 0;
-			int tag_name_len = tag_name.Length;
+			int tagNameLen = tagName.Length;
 			while( index < input.Length )
 			{
-				bool omit_body = false;
-				if( index + tag_name_len + 1 < input.Length && input.Substring( index , tag_name_len + 1 ).ToLower().Equals( "<" + tag_name ) )
+				bool omitBody = false;
+				if( index + tagNameLen + 1 < input.Length && input.Substring( index , tagNameLen + 1 ).ToLower().Equals( "<" + tagName ) )
 				{
 					// Look for the end of the tag (we pass the attributes through as normal)
 					do
@@ -432,7 +432,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						{
 							output.Append( "/>" );
 							index += 2;
-							omit_body = true;
+							omitBody = true;
 							break;
 						}
 						else if( input.Substring( index , 1 ).Equals( "\"" ) ) 
@@ -474,20 +474,20 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 					if( index >= input.Length ) break;
 					// Phew! Ok now we are reading the script body
 
-					if( ! omit_body )
+					if( ! omitBody )
 					{
-						StringBuilder script_body = new StringBuilder();
-						while( index + tag_name_len + 3 < input.Length && ! input.Substring( index , tag_name_len + 3 ).ToLower().Equals( "</" + tag_name + ">" ) )
+						StringBuilder scriptBody = new StringBuilder();
+						while( index + tagNameLen + 3 < input.Length && ! input.Substring( index , tagNameLen + 3 ).ToLower().Equals( "</" + tagName + ">" ) )
 						{
-							script_body.Append( input.Substring( index , 1 ) );
+							scriptBody.Append( input.Substring( index , 1 ) );
 							index++;
 						}
 						// Done - now encode the script
-						output.Append( EncodeScript( script_body.ToString() ) );
-						output.Append( "</" + tag_name + ">" );
-						if( index + tag_name_len + 3 < input.Length )
+						output.Append( EncodeScript( scriptBody.ToString() ) );
+						output.Append( "</" + tagName + ">" );
+						if( index + tagNameLen + 3 < input.Length )
 						{
-							index += tag_name_len + 3;
+							index += tagNameLen + 3;
 						}
 					}
 				}
@@ -579,8 +579,8 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 					}
 					else
 					{
-						int next_index = input.IndexOf( "<" , i );
-						if( next_index == -1 )
+						int nextIndex = input.IndexOf( "<" , i );
+						if( nextIndex == -1 )
 						{
 							string sub = input.Substring (i);
 							sub = RemoveEndOfLines (sub);
@@ -589,14 +589,14 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						}
 						else
 						{
-							string sub = input.Substring (i, next_index - i);
+							string sub = input.Substring (i, nextIndex - i);
 							if (!OnlyEndOfLines(sub))
 							{
 								sub = RemoveEndOfLines (sub);
 								tokens.Add (sub);
 							}
 
-							i = next_index;
+							i = nextIndex;
 						}
 					}
 				}
@@ -608,12 +608,12 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						i++;
 					}
 					// Read tag name
-					int tag_name_start = i;
+					int tagNameStart = i;
 					while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( " \r\n\t/>".ToCharArray() ) == -1 )
 					{
 						i++;
 					}
-					tokens.Add( input.Substring( tag_name_start , i - tag_name_start ) );
+					tokens.Add( input.Substring( tagNameStart , i - tagNameStart ) );
 					// Skip trailing whitespace in tag
 					while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( WHITESPACE_CHARS ) != -1 )
 					{
@@ -644,12 +644,12 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						i++;
 					}
 					// Read tag name
-					int tag_name_start = i;
+					int tagNameStart = i;
 					while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( " \r\n\t>".ToCharArray() ) == -1 )
 					{
 						i++;
 					}
-					tokens.Add( input.Substring( tag_name_start , i - tag_name_start ) );
+					tokens.Add( input.Substring( tagNameStart , i - tagNameStart ) );
 					// Skip trailing whitespace in tag
 					while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( WHITESPACE_CHARS ) != -1 )
 					{
@@ -669,12 +669,12 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 					{
 						i++;
 					}
-					int attribute_name_start = i;
+					int attributeNameStart = i;
 					while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( " \r\n\t/>=".ToCharArray() ) == -1 )
 					{
 						i++;
 					}
-					tokens.Add( input.Substring( attribute_name_start , i - attribute_name_start ) );
+					tokens.Add( input.Substring( attributeNameStart , i - attributeNameStart ) );
 					while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( WHITESPACE_CHARS ) != -1 )
 					{
 						i++;
@@ -711,7 +711,7 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 					}
 					if(  i<input.Length && input.Substring( i , 1 ).Equals( "\"" ) )
 					{
-						int value_start = i;
+						int valueStart = i;
 						i++;
 						while( i<input.Length &&  ! input.Substring( i , 1 ).Equals( "\"" ) )
 						{
@@ -721,12 +721,12 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						{
 							i++;
 						}
-						tokens.Add( input.Substring( value_start + 1 , i - value_start - 2) );
+						tokens.Add( input.Substring( valueStart + 1 , i - valueStart - 2) );
 						status = ParseStatus.ReadAttributeName;
 					}
 					else if(  i<input.Length && input.Substring( i , 1 ).Equals( "\'" ) )
 					{
-						int value_start = i;
+						int valueStart = i;
 						i++;
 						while( i<input.Length &&  ! input.Substring( i , 1 ).Equals( "\'" ) )
 						{
@@ -736,17 +736,17 @@ namespace Epsitec.Common.Text.Exchange.HtmlParser
 						{
 							i++;
 						}
-						tokens.Add( input.Substring( value_start + 1, i - value_start - 2 ) );
+						tokens.Add( input.Substring( valueStart + 1, i - valueStart - 2 ) );
 						status = ParseStatus.ReadAttributeName;
 					}
 					else
 					{
-						int value_start = i;
+						int valueStart = i;
 						while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( " \r\n\t/>".ToCharArray() ) == -1 )
 						{
 							i++;
 						}
-						tokens.Add( input.Substring( value_start , i - value_start ) );
+						tokens.Add( input.Substring( valueStart , i - valueStart ) );
 						while( i<input.Length &&  input.Substring( i , 1 ).IndexOfAny( WHITESPACE_CHARS ) != -1 )
 						{
 							i++;

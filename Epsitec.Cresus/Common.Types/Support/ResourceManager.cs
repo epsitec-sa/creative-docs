@@ -567,32 +567,32 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public string[] GetBundleIds(string name_filter)
+		public string[] GetBundleIds(string nameFilter)
 		{
-			return this.GetBundleIds (name_filter, null, ResourceLevel.Default, this.culture);
+			return this.GetBundleIds (nameFilter, null, ResourceLevel.Default, this.culture);
 		}
 		
-		public string[] GetBundleIds(string name_filter, string type_filter)
+		public string[] GetBundleIds(string nameFilter, string typeFilter)
 		{
-			return this.GetBundleIds (name_filter, type_filter, ResourceLevel.Default, this.culture);
+			return this.GetBundleIds (nameFilter, typeFilter, ResourceLevel.Default, this.culture);
 		}
 		
-		public string[] GetBundleIds(string name_filter, ResourceLevel level)
+		public string[] GetBundleIds(string nameFilter, ResourceLevel level)
 		{
-			return this.GetBundleIds (name_filter, null, level, this.culture);
+			return this.GetBundleIds (nameFilter, null, level, this.culture);
 		}
 		
-		public string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level)
+		public string[] GetBundleIds(string nameFilter, string typeFilter, ResourceLevel level)
 		{
-			return this.GetBundleIds (name_filter, type_filter, level, this.culture);
+			return this.GetBundleIds (nameFilter, typeFilter, level, this.culture);
 		}
 		
-		public string[] GetBundleIds(string name_filter, ResourceLevel level, CultureInfo culture)
+		public string[] GetBundleIds(string nameFilter, ResourceLevel level, CultureInfo culture)
 		{
-			return this.GetBundleIds (name_filter, null, level, culture);
+			return this.GetBundleIds (nameFilter, null, level, culture);
 		}
 		
-		public string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level, CultureInfo culture)
+		public string[] GetBundleIds(string nameFilter, string typeFilter, ResourceLevel level, CultureInfo culture)
 		{
 			culture = culture ?? this.culture;
 
@@ -607,13 +607,13 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Invalid level {0} specified in GetBundleIds.", level));
 			}
 			
-			string name_filter_id;
+			string nameFilterId;
 			
-			IResourceProvider provider = this.FindProvider (name_filter, out name_filter_id);
+			IResourceProvider provider = this.FindProvider (nameFilter, out nameFilterId);
 			
 			if (provider != null)
 			{
-				return provider.GetIds (name_filter_id, type_filter, level, culture);
+				return provider.GetIds (nameFilterId, typeFilter, level, culture);
 			}
 			
 			return null;
@@ -859,10 +859,10 @@ namespace Epsitec.Common.Support
 			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
 			//	chaque fois le provider, lorsqu'une ressource est demandée.
 			
-			string resource_id;
+			string resourceId;
 			byte[] data = null;
 			
-			IResourceProvider provider = this.FindProvider (id, out resource_id);
+			IResourceProvider provider = this.FindProvider (id, out resourceId);
 			CultureInfo defaultCulture = Resources.FindCultureInfo (Resources.GetDefaultTwoLetterISOLanguageName ());
 			
 			if (provider != null)
@@ -870,14 +870,14 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						data = provider.GetData (resource_id, ResourceLevel.Customized, culture);
+						data = provider.GetData (resourceId, ResourceLevel.Customized, culture);
 						
 						if (data != null)
 						{
 							break;
 						}
 
-						data = provider.GetData (resource_id, ResourceLevel.Localized, culture);
+						data = provider.GetData (resourceId, ResourceLevel.Localized, culture);
 						
 						if (data != null)
 						{
@@ -886,7 +886,7 @@ namespace Epsitec.Common.Support
 
 						if (defaultCulture != null)
 						{
-							data = provider.GetData (resource_id, ResourceLevel.Localized, defaultCulture);
+							data = provider.GetData (resourceId, ResourceLevel.Localized, defaultCulture);
 							
 							if (data != null)
 							{
@@ -894,13 +894,13 @@ namespace Epsitec.Common.Support
 							}
 						}
 
-						data = provider.GetData (resource_id, ResourceLevel.Default, culture);
+						data = provider.GetData (resourceId, ResourceLevel.Default, culture);
 						break;
 					
 					case ResourceLevel.Default:
 					case ResourceLevel.Localized:
 					case ResourceLevel.Customized:
-						data = provider.GetData (resource_id, level, culture);
+						data = provider.GetData (resourceId, level, culture);
 						break;
 					
 					default:
@@ -1163,16 +1163,16 @@ namespace Epsitec.Common.Support
 		
 		public string GetText(string id, ResourceLevel level, CultureInfo culture)
 		{
-			string bundle_name;
-			string field_name;
+			string bundleName;
+			string fieldName;
 
-			if (Resources.SplitFieldId (id, out bundle_name, out field_name))
+			if (Resources.SplitFieldId (id, out bundleName, out fieldName))
 			{
-				ResourceBundle bundle = this.GetBundle (bundle_name, level, culture);
+				ResourceBundle bundle = this.GetBundle (bundleName, level, culture);
 			
 				if (bundle != null)
 				{
-					ResourceBundle.Field field = bundle[field_name];
+					ResourceBundle.Field field = bundle[fieldName];
 					
 					if (field != null)
 					{
@@ -1197,16 +1197,16 @@ namespace Epsitec.Common.Support
 		{
 			culture = culture ?? this.culture;
 			
-			string bundle_name;
-			string field_name;
+			string bundleName;
+			string fieldName;
 
-			if (Resources.SplitFieldId (id, out bundle_name, out field_name))
+			if (Resources.SplitFieldId (id, out bundleName, out fieldName))
 			{
-				ResourceBundle bundle = this.GetBundle (bundle_name, level, culture);
+				ResourceBundle bundle = this.GetBundle (bundleName, level, culture);
 			
 				if (bundle != null)
 				{
-					ResourceBundle.Field field = bundle[field_name];
+					ResourceBundle.Field field = bundle[fieldName];
 					
 					if (field != null)
 					{
@@ -1296,9 +1296,9 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
 			}
 			
-			string resource_id;
+			string resourceId;
 			
-			IResourceProvider provider = this.FindProvider (id, out resource_id);
+			IResourceProvider provider = this.FindProvider (id, out resourceId);
 
 			if (provider != null)
 			{
@@ -1307,7 +1307,7 @@ namespace Epsitec.Common.Support
 					provider.SelectModule (ref moduleId);
 				}
 				
-				if (provider.SetData (resource_id, level, culture, data, mode))
+				if (provider.SetData (resourceId, level, culture, data, mode))
 				{
 					return true;
 				}
@@ -1333,15 +1333,15 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
 			}
 			
-			string resource_id;
+			string resourceId;
 			ResourceModuleId module;
 			
-			IResourceProvider provider = this.FindProvider (id, out resource_id, out module);
+			IResourceProvider provider = this.FindProvider (id, out resourceId, out module);
 			
 			if (provider != null)
 			{
 				string prefix = provider.Prefix;
-				string key = Resources.CreateBundleKey (prefix, module, resource_id, level, culture, this.GetKeySuffix ());
+				string key = Resources.CreateBundleKey (prefix, module, resourceId, level, culture, this.GetKeySuffix ());
 
 				this.pool.RemoveBundle (key);
 				
@@ -1350,7 +1350,7 @@ namespace Epsitec.Common.Support
 					provider.SelectModule (ref moduleId);
 				}
 				
-				if (provider.Remove (resource_id, level, culture))
+				if (provider.Remove (resourceId, level, culture))
 				{
 					return true;
 				}

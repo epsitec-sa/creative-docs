@@ -452,19 +452,19 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				object old_value = this.GetValue (property);
+				object oldValue = this.GetValue (property);
 
 				this.SetLocalValue (property, value);
 
-				object new_value = this.GetValue (property);
+				object newValue = this.GetValue (property);
 
-				if (DependencyObject.EqualObjectValues (old_value, new_value))
+				if (DependencyObject.EqualObjectValues (oldValue, newValue))
 				{
 					//	C'est exactement la même valeur -- on ne signale donc rien ici.
 				}
 				else
 				{
-					this.InvalidateProperty (property, old_value, new_value, metadata);
+					this.InvalidateProperty (property, oldValue, newValue, metadata);
 				}
 			}
 		}
@@ -479,30 +479,30 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				object old_value = this.GetValue (property);
+				object oldValue = this.GetValue (property);
 
 				this.ClearLocalValue (property);
 
-				object new_value = this.GetValue (property);
+				object newValue = this.GetValue (property);
 
-				if (DependencyObject.EqualObjectValues (old_value, new_value))
+				if (DependencyObject.EqualObjectValues (oldValue, newValue))
 				{
 					//	C'est exactement la même valeur -- on ne signale donc rien ici.
 				}
 				else
 				{
-					this.InvalidateProperty (property, old_value, new_value, metadata);
+					this.InvalidateProperty (property, oldValue, newValue, metadata);
 				}
 			}
 		}
-		private void InvalidateProperty(DependencyProperty property, object old_value, object new_value, DependencyPropertyMetadata metadata)
+		private void InvalidateProperty(DependencyProperty property, object oldValue, object newValue, DependencyPropertyMetadata metadata)
 		{
-			if (metadata.NotifyPropertyInvalidated (this, old_value, new_value))
+			if (metadata.NotifyPropertyInvalidated (this, oldValue, newValue))
 			{
 				if (this.HasEventHandlerForProperty (property))
 				{
 					PropertyChangedEventHandler handler = this.propertyEvents[property];
-					DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, old_value, new_value);
+					DependencyPropertyChangedEventArgs args = new DependencyPropertyChangedEventArgs (property, oldValue, newValue);
 
 					handler (this, args);
 				}
