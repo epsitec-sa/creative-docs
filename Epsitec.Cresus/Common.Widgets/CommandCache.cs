@@ -642,16 +642,16 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		private void GrowRecords()
 		{
-			int old_size = this.records.Length;
-			int new_size = old_size + this.bunchOfFreeIndexes.Length + old_size / 8;
+			int oldSize = this.records.Length;
+			int newSize = oldSize + this.bunchOfFreeIndexes.Length + oldSize / 8;
 			
-			Record[] old_records = this.records;
-			Record[] new_records = new Record[new_size];
+			Record[] oldRecords = this.records;
+			Record[] newRecords = new Record[newSize];
 			
-			System.Array.Copy (old_records, 0, new_records, 0, old_size);
+			System.Array.Copy (oldRecords, 0, newRecords, 0, oldSize);
 			
-			this.records    = new_records;
-			this.freeCount += new_size - old_size;
+			this.records    = newRecords;
+			this.freeCount += newSize - oldSize;
 			
 			this.RefreshBunchOfFreeIndexes ();
 		}

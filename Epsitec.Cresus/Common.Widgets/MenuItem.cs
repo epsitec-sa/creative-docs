@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 			this.icon.Alignment     = Drawing.ContentAlignment.MiddleLeft;
 			this.shortcut.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			
-			this.submenu_mark_width = Widget.DefaultFontHeight;
+			this.submenuMarkWidth = Widget.DefaultFontHeight;
 		}
 		
 		public MenuItem(Widget embedder) : this ()
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.CommandObject = Command.Get (command);
 			this.Text     = text;
-			this.text_only = true;
+			this.textOnly = true;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut) : this ()
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 			this.IconName = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
-			this.text_only = false;
+			this.textOnly = false;
 		}
 		
 		public MenuItem(string command, string icon, string text, string shortcut, string name) : this (command, icon, text, shortcut)
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Widgets
 			this.IconName = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
-			this.text_only = false;
+			this.textOnly = false;
 			this.Submenu  = submenu;
 		}
 		
@@ -199,13 +199,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.icon_size.Width;
+				return this.iconSize.Width;
 			}
 			set
 			{
-				if (this.icon_size.Width != value)
+				if (this.iconSize.Width != value)
 				{
-					this.icon_size.Width = value;
+					this.iconSize.Width = value;
 					this.OnIconSizeChanged ();
 				}
 			}
@@ -215,13 +215,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.icon_size;
+				return this.iconSize;
 			}
 			set
 			{
-				if (this.icon_size != value)
+				if (this.iconSize != value)
 				{
-					this.icon_size = value;
+					this.iconSize = value;
 					this.OnIconSizeChanged ();
 				}
 			}
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 			size.Width  = System.Math.Ceiling(size.Width);
 			size.Height = System.Math.Ceiling(size.Height);
 
-			if ( !this.text_only )
+			if ( !this.textOnly )
 			{
 				size.Width  += MenuItem.MarginItem*2;
 				size.Height += MenuItem.MarginItem*2;
@@ -319,7 +319,7 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 
-			if (this.text_only)
+			if (this.textOnly)
 			{
 				dx = MenuItem.MarginHeader*2 + this.mainTextSize.Width;
 				dy = this.mainTextSize.Height;
@@ -330,13 +330,13 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				dx += this.icon_size.Width;
+				dx += this.iconSize.Width;
 				dx += this.mainTextSize.Width;
 				dx += MenuItem.MarginSpace;
 				dx += this.shortcutSize.Width;
-				dx += this.submenu_mark_width;
+				dx += this.submenuMarkWidth;
 
-				dy = System.Math.Max(dy, this.icon_size.Height);
+				dy = System.Math.Max(dy, this.iconSize.Height);
 				dy = System.Math.Max(dy, this.mainTextSize.Height);
 				dy = System.Math.Max(dy, this.shortcutSize.Height);
 			}
@@ -453,7 +453,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateGeometry()
 		{
-			if ( this.text_only )
+			if ( this.textOnly )
 			{
 				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 			}
@@ -462,7 +462,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if ( this.icon != null )  this.icon.LayoutSize = this.icon_size;
+				if ( this.icon != null )  this.icon.LayoutSize = this.iconSize;
 				if ( this.TextLayout != null )  this.TextLayout.LayoutSize = this.mainTextSize;
 				if ( this.shortcut != null )  this.shortcut.LayoutSize = this.shortcutSize;
 			}
@@ -483,7 +483,7 @@ namespace Epsitec.Common.Widgets
 			}
 			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.MenuOrientation, iType);
 
-			if ( this.text_only || this.MenuOrientation == MenuOrientation.Horizontal )
+			if ( this.textOnly || this.MenuOrientation == MenuOrientation.Horizontal )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
@@ -492,7 +492,7 @@ namespace Epsitec.Common.Widgets
 			else if ( this.IsSeparator )
 			{
 				Drawing.Rectangle inside = rect;
-				inside.Left  = MenuItem.MarginItem*2+this.icon_size.Width;
+				inside.Left  = MenuItem.MarginItem*2+this.iconSize.Width;
 				inside.Right = rect.Width-MenuItem.MarginItem;
 				adorner.PaintSeparatorBackground(graphics, inside, state, Direction.Up, false);
 			}
@@ -526,13 +526,13 @@ namespace Epsitec.Common.Widgets
 						(icon != this.iconNameActiveYes))
 					{
 						Drawing.Rectangle iRect = rect;
-						iRect.Width = this.icon_size.Width;
+						iRect.Width = this.iconSize.Width;
 						iRect.Inflate(-2, -2);
 						adorner.PaintButtonBackground(graphics, iRect, state, Direction.Up, ButtonStyle.ToolItem);
 					}
 					
 					pos.X = MenuItem.MarginItem;
-					pos.Y = (rect.Height-this.icon_size.Height)/2;
+					pos.Y = (rect.Height-this.iconSize.Height)/2;
 					
 					icon = this.GetIconText (icon);
 					
@@ -544,20 +544,20 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.MenuOrientation, iType);
 				}
 
-				pos.X = MenuItem.MarginItem*2+this.icon_size.Width;
+				pos.X = MenuItem.MarginItem*2+this.iconSize.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
 				adorner.PaintMenuItemTextLayout(graphics, pos, this.TextLayout, state, Direction.Up, this.MenuOrientation, iType);
 
-				pos.X = rect.Width-this.submenu_mark_width-this.shortcutSize.Width+MenuItem.MarginItem;
+				pos.X = rect.Width-this.submenuMarkWidth-this.shortcutSize.Width+MenuItem.MarginItem;
 				pos.Y = (rect.Height-this.shortcutSize.Height)/2;
 				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortcut, state, Direction.Up, this.MenuOrientation, iType);
 
 				if ( this.Submenu != null )  // triangle ">" ?
 				{
 					Drawing.Rectangle aRect = rect;
-					aRect.Left = aRect.Right-this.submenu_mark_width;
-					aRect.Bottom = (rect.Height-this.submenu_mark_width)/2;
-					aRect.Top = aRect.Bottom+this.submenu_mark_width;
+					aRect.Left = aRect.Right-this.submenuMarkWidth;
+					aRect.Bottom = (rect.Height-this.submenuMarkWidth)/2;
+					aRect.Top = aRect.Bottom+this.submenuMarkWidth;
 					adorner.PaintGlyph(graphics, aRect, state, GlyphShape.ArrowRight, PaintTextStyle.VMenu);
 				}
 			}
@@ -714,7 +714,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private static void NotifySubmenuChanged(DependencyObject o, object old_value, object new_value)
+		private static void NotifySubmenuChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			//	Quand la propriété "Submenu" est appliquée à un item d'un menu,
 			//	on réalise un lien entre le menu et l'item en question. Ce lien
@@ -722,10 +722,10 @@ namespace Epsitec.Common.Widgets
 			
 			MenuItem that = o as MenuItem;
 			
-			Widget old_submenu = old_value as Widget;
-			Widget new_submenu = new_value as Widget;
+			Widget oldSubmenu = oldValue as Widget;
+			Widget newSubmenu = newValue as Widget;
 			
-			if (new_submenu != null)
+			if (newSubmenu != null)
 			{
 				//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
 				//	commande associée :
@@ -733,19 +733,19 @@ namespace Epsitec.Common.Widgets
 				that.CommandObject = null;
 			}
 			
-			if (old_submenu != null)
+			if (oldSubmenu != null)
 			{
-				System.Diagnostics.Debug.Assert (old_submenu == MenuItem.GetMenuRoot (old_submenu));
-				System.Diagnostics.Debug.Assert (MenuItem.GetParentMenuItem (old_submenu) == that);
+				System.Diagnostics.Debug.Assert (oldSubmenu == MenuItem.GetMenuRoot (oldSubmenu));
+				System.Diagnostics.Debug.Assert (MenuItem.GetParentMenuItem (oldSubmenu) == that);
 				
-				old_submenu.ClearValue (MenuItem.ParentMenuItemProperty);
+				oldSubmenu.ClearValue (MenuItem.ParentMenuItemProperty);
 			}
 			
-			if (new_submenu != null)
+			if (newSubmenu != null)
 			{
-				System.Diagnostics.Debug.Assert (new_submenu == MenuItem.GetMenuRoot (new_submenu));
+				System.Diagnostics.Debug.Assert (newSubmenu == MenuItem.GetMenuRoot (newSubmenu));
 				
-				new_submenu.SetValue (MenuItem.ParentMenuItemProperty, that);
+				newSubmenu.SetValue (MenuItem.ParentMenuItemProperty, that);
 			}
 		}
 		
@@ -765,14 +765,14 @@ namespace Epsitec.Common.Widgets
 		private const double					MarginSpace		= 8;
 		private const double					SeparatorHeight = 5;
 		
-		protected bool							text_only = false;
+		protected bool							textOnly = false;
 		
-		protected double						submenu_mark_width;
+		protected double						submenuMarkWidth;
 		protected string						iconNameActiveNo;
 		protected string						iconNameActiveYes;
 		protected TextLayout					icon;
 		protected TextLayout					shortcut;
-		protected Drawing.Size					icon_size;
+		protected Drawing.Size					iconSize;
 		protected Drawing.Size					mainTextSize;
 		protected Drawing.Size					shortcutSize;
 		protected Widget						submenu;

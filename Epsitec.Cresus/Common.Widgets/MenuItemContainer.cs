@@ -110,7 +110,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override MenuItemType GetPaintItemType()
 		{
-			if (this.filter_disabled)
+			if (this.filterDisabled)
 			{
 				return MenuItemType.Default;
 			}
@@ -123,9 +123,9 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleIsVisibleChanged(object sender, Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
 		{
-			bool is_visible = (bool) e.NewValue;
+			bool isVisible = (bool) e.NewValue;
 			
-			if (is_visible == false)
+			if (isVisible == false)
 			{
 				//	Si le widget devient invisible, il faut réactiver le filtre
 				//	clavier du gestionnaire de menus !
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if ((this.filter_disabled) &&
+			if ((this.filterDisabled) &&
 				(message.MessageType == MessageType.KeyDown))
 			{
 				IFeel feel    = Feel.Factory.Active;
@@ -249,7 +249,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void DisableFilter()
 		{
-			if (! this.filter_disabled)
+			if (! this.filterDisabled)
 			{
 				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
 				
@@ -257,14 +257,14 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter disabled temporarily");
 				
-				this.filter_disabled   = true;
+				this.filterDisabled   = true;
 				this.IsVisibleChanged += this.HandleIsVisibleChanged;
 			}
 		}
 		
 		private void EnableFilter()
 		{
-			if (this.filter_disabled)
+			if (this.filterDisabled)
 			{
 				Behaviors.MenuBehavior behavior = MenuItem.GetMenuBehavior (this);
 				
@@ -272,12 +272,12 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.WriteLine ("Keyboard Filter re-enabled");
 				
-				this.filter_disabled   = false;
+				this.filterDisabled   = false;
 				this.IsVisibleChanged -= this.HandleIsVisibleChanged;
 			}
 		}
 		
 		
-		private bool							filter_disabled;
+		private bool							filterDisabled;
 	}
 }

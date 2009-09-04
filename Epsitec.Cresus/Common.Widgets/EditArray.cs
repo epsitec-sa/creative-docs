@@ -13,8 +13,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public EditArray()
 		{
-			this.edit_line = new EditWidget (this);
-			this.edit_line.Hide ();
+			this.editLine = new EditWidget (this);
+			this.editLine.Hide ();
 			this.IsFocusedChanged += this.HandleIsFocusedChanged;
 		}
 		
@@ -28,11 +28,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.edit_line.Values;
+				return this.editLine.Values;
 			}
 			set
 			{
-				this.edit_line.Values = value;
+				this.editLine.Values = value;
 			}
 		}
 		
@@ -40,14 +40,14 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.search_caption;
+				return this.searchCaption;
 			}
 			set
 			{
-				if (this.search_caption != value)
+				if (this.searchCaption != value)
 				{
-					this.search_caption = value;
-					this.edit_line.UpdateCaption ();
+					this.searchCaption = value;
+					this.editLine.UpdateCaption ();
 					this.OnSearchCaptionChanged ();
 				}
 			}
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.title_widget as EditArray.Header;
+				return this.titleWidget as EditArray.Header;
 			}
 		}
 		
@@ -80,12 +80,12 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartEdition(int row, int column)
 		{
-			if ((row < 0) || (row >= this.max_rows))
+			if ((row < 0) || (row >= this.maxRows))
 			{
 				throw new System.ArgumentOutOfRangeException ("row", row, "Cannot edit specified row.");
 			}
 			
-			if ((column < 0) || (column>= this.max_columns))
+			if ((column < 0) || (column>= this.maxColumns))
 			{
 				throw new System.ArgumentOutOfRangeException ("column", column, "Cannot edit specified column.");
 			}
@@ -98,8 +98,8 @@ namespace Epsitec.Common.Widgets
 			
 			column = this.FindFirstReadWriteColumn (column, 1);
 			
-			this.edit_line.Values = this.GetRowTexts (row);
-			this.edit_line.FocusColumn (column);
+			this.editLine.Values = this.GetRowTexts (row);
+			this.editLine.FocusColumn (column);
 			this.Invalidate ();
 		}
 		
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 			this.SetInteractionMode (ScrollInteractionMode.Search);
 			this.InvalidateContents ();
 			this.Update ();
-			this.edit_line.FocusColumn (0);
+			this.editLine.FocusColumn (0);
 			this.Invalidate ();
 		}
 		
@@ -134,13 +134,13 @@ namespace Epsitec.Common.Widgets
 			{
 				if (finished)
 				{
-					this.edit_line.Defocus ();
+					this.editLine.Defocus ();
 				}
 				
 				if (this.SelectedIndex >= 0)
 				{
-					this.edit_line.Values = this.GetRowTexts (this.SelectedIndex);
-					this.edit_line.SelectFocusedColumn ();
+					this.editLine.Values = this.GetRowTexts (this.SelectedIndex);
+					this.editLine.SelectFocusedColumn ();
 				}
 				
 				if (finished)
@@ -159,12 +159,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (finished)
 				{
-					this.edit_line.Defocus ();
+					this.editLine.Defocus ();
 				}
 				
 				if (this.SelectedIndex >= 0)
 				{
-					this.SetRowTexts (this.SelectedIndex, this.edit_line.Values);
+					this.SetRowTexts (this.SelectedIndex, this.editLine.Values);
 				}
 				
 				if (finished)
@@ -209,9 +209,9 @@ namespace Epsitec.Common.Widgets
 					this.controller = null;
 				}
 				
-				this.edit_line.ColumnCount = 0;
+				this.editLine.ColumnCount = 0;
 				
-				this.max_columns  = 0;
+				this.maxColumns  = 0;
 			}
 			
 			base.Dispose (disposing);
@@ -221,14 +221,14 @@ namespace Epsitec.Common.Widgets
 		protected int FindFirstReadWriteColumn(int column, int dir)
 		{
 			if ((column < 0) ||
-				(column >= this.max_columns))
+				(column >= this.maxColumns))
 			{
 				return -1;
 			}
 			
 			if (dir > 0)
 			{
-				for (int i = column; i < this.max_columns; i++)
+				for (int i = column; i < this.maxColumns; i++)
 				{
 					if (! this.Columns[i].IsReadOnly)
 					{
@@ -254,9 +254,9 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateColumnCount ();
 			
-			if (this.edit_line.ColumnCount != this.max_columns)
+			if (this.editLine.ColumnCount != this.maxColumns)
 			{
-				this.edit_line.ColumnCount = this.max_columns;
+				this.editLine.ColumnCount = this.maxColumns;
 			}
 		}
 		
@@ -273,40 +273,40 @@ namespace Epsitec.Common.Widgets
 			
 			Drawing.Rectangle bounds = this.GetEditBounds ();
 			
-			if ((this.edit_bounds != bounds) ||
-				(this.edit_offset != this.offset) ||
-				(this.edit_width  != this.total_width))
+			if ((this.editBounds != bounds) ||
+				(this.editOffset != this.offset) ||
+				(this.editWidth  != this.totalWidth))
 			{
-				this.edit_bounds = bounds;
-				this.edit_offset = this.offset;
-				this.edit_width  = this.total_width;
+				this.editBounds = bounds;
+				this.editOffset = this.offset;
+				this.editWidth  = this.totalWidth;
 				
-				if (this.edit_bounds.IsValid)
+				if (this.editBounds.IsValid)
 				{
 					bounds.Deflate (1, 1, 0, -1);
 
-					this.edit_line.SetManualBounds(bounds);
-					this.edit_line.Show ();
-					this.edit_line.UpdateGeometry ();
+					this.editLine.SetManualBounds(bounds);
+					this.editLine.Show ();
+					this.editLine.UpdateGeometry ();
 					
-					if ((this.focused_column >= 0) &&
-						(this.focused_column < this.max_columns))
+					if ((this.focusedColumn >= 0) &&
+						(this.focusedColumn < this.maxColumns))
 					{
-						this.edit_line.FocusColumn (this.focused_column);
+						this.editLine.FocusColumn (this.focusedColumn);
 					}
 					
-					this.focused_column = -1;
+					this.focusedColumn = -1;
 				}
-				else if (this.edit_line.IsVisible)
+				else if (this.editLine.IsVisible)
 				{
-					this.focused_column = this.edit_line.FindFocusedColumn ();
+					this.focusedColumn = this.editLine.FindFocusedColumn ();
 					
-					if (this.edit_line.ContainsKeyboardFocus)
+					if (this.editLine.ContainsKeyboardFocus)
 					{
 						this.SetFocused (true);
 					}
 					
-					this.edit_line.Hide ();
+					this.editLine.Hide ();
 				}
 			}
 		}
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.InteractionMode == ScrollInteractionMode.Search)
 			{
-				this.InnerTopMargin = this.edit_line.DesiredHeight;
+				this.InnerTopMargin = this.editLine.DesiredHeight;
 			}
 			else
 			{
@@ -337,15 +337,15 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case ScrollInteractionMode.Search:
-					bounds = new Drawing.Rectangle (this.inner_bounds.Left, this.inner_bounds.Top, this.inner_bounds.Width, this.table_bounds.Height - this.inner_bounds.Height);
+					bounds = new Drawing.Rectangle (this.innerBounds.Left, this.innerBounds.Top, this.innerBounds.Width, this.tableBounds.Height - this.innerBounds.Height);
 					break;
 			}
 			
-			if ((this.h_scroller.IsVisible) &&
+			if ((this.hScroller.IsVisible) &&
 				(bounds.IsValid) &&
-				(bounds.Bottom <= this.h_scroller.ActualBounds.Top))
+				(bounds.Bottom <= this.hScroller.ActualBounds.Top))
 			{
-				bounds.Bottom = this.h_scroller.ActualBounds.Top + 1;
+				bounds.Bottom = this.hScroller.ActualBounds.Top + 1;
 			}
 			
 			return bounds;
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Widgets
 				case ScrollInteractionMode.Search:
 					if (this.GetUnclippedCellX (column, out x1, out x2))
 					{
-						cell = new Drawing.Rectangle (x1, this.inner_bounds.Top - 1, x2-x1+1, this.table_bounds.Top - this.inner_bounds.Top + 1);
+						cell = new Drawing.Rectangle (x1, this.innerBounds.Top - 1, x2-x1+1, this.tableBounds.Top - this.innerBounds.Top + 1);
 					}
 					break;
 			}
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Widgets
 							if ((message.Type == MessageType.MouseDown) &&
 								(message.ButtonDownCount == 1) &&
 								(message.IsLeftButton) &&
-								(row >= 0) && (row < this.max_rows) &&
+								(row >= 0) && (row < this.maxRows) &&
 								(this.CheckChangeSelectedIndexTo (row)))
 							{
 								//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
@@ -409,9 +409,9 @@ namespace Epsitec.Common.Widgets
 								
 								column = this.FindFirstReadWriteColumn (column, 1);
 								
-								this.edit_line.FocusColumn (column);
+								this.editLine.FocusColumn (column);
 								
-								message.Consumer  = this.edit_line[column];
+								message.Consumer  = this.editLine[column];
 								message.Swallowed = true;
 								
 								return;
@@ -434,17 +434,17 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.InteractionMode == ScrollInteractionMode.Edition)
 				{
-					int column = this.edit_line.FindFocusedColumn ();
+					int column = this.editLine.FindFocusedColumn ();
 					
 					if ((column >= 0) &&
-						(column < this.max_columns))
+						(column < this.maxColumns))
 					{
-						Widget edition_widget = this.Columns[column].EditionWidget;
+						Widget editionWidget = this.Columns[column].EditionWidget;
 
-						if (edition_widget != null)
+						if (editionWidget != null)
 						{
-							if ((edition_widget.AcceptsDefocus == false) ||
-								(edition_widget.InternalAboutToLoseFocus (TabNavigationDir.None, TabNavigationMode.Passive) == false))
+							if ((editionWidget.AcceptsDefocus == false) ||
+								(editionWidget.InternalAboutToLoseFocus (TabNavigationDir.None, TabNavigationMode.Passive) == false))
 							{
 								return false;
 							}
@@ -458,15 +458,15 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		protected override void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
+		protected override void PaintCellContents(int rowLine, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
 		{
 			if ((this.Columns[column].IsReadOnly) ||
-				((this.TextArrayStore != null) && (this.TextArrayStore.CheckEnabledCell (row_line, column) == false)))
+				((this.TextArrayStore != null) && (this.TextArrayStore.CheckEnabledCell (rowLine, column) == false)))
 			{
 				state &= ~ WidgetState.Enabled;
 			}
 			
-			base.PaintCellContents (row_line, column, graphics, adorner, pos, state, layout);
+			base.PaintCellContents (rowLine, column, graphics, adorner, pos, state, layout);
 		}
 		
 		
@@ -492,15 +492,15 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnInteractionModeChanging()
 		{
-			this.edit_line.DeallocateLines ();
+			this.editLine.DeallocateLines ();
 			base.OnInteractionModeChanging ();
 		}
 		
 		protected override void OnInteractionModeChanged()
 		{
-			this.edit_line.ReallocateLines ();
-			this.edit_line.UpdateCaption ();
-			this.edit_bounds = Drawing.Rectangle.Empty;
+			this.editLine.ReallocateLines ();
+			this.editLine.UpdateCaption ();
+			this.editBounds = Drawing.Rectangle.Empty;
 			
 			base.OnInteractionModeChanged ();
 		}
@@ -539,7 +539,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.focused_column = -1;
+				this.focusedColumn = -1;
 			}
 		}
 
@@ -557,7 +557,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int row = this.SelectedIndex + offset;
 				
-				row = System.Math.Min (row, this.max_rows-1);
+				row = System.Math.Min (row, this.maxRows-1);
 				row = System.Math.Max (row, 0);
 				
 				if ((this.SelectedIndex != row) &&
@@ -592,7 +592,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return this.edit_widgets[i];
+					return this.editWidgets[i];
 				}
 			}
 			
@@ -600,25 +600,25 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return this.edit_widgets.Length;
+					return this.editWidgets.Length;
 				}
 				set
 				{
 					AbstractTextField[] widgets = new AbstractTextField[value];
 					
-					int n = System.Math.Min (value, this.edit_widgets.Length);
+					int n = System.Math.Min (value, this.editWidgets.Length);
 					
 					for (int i = 0; i < n; i++)
 					{
-						widgets[i] = this.edit_widgets[i];
+						widgets[i] = this.editWidgets[i];
 					}
 					
-					for (int i = n; i < this.edit_widgets.Length; i++)
+					for (int i = n; i < this.editWidgets.Length; i++)
 					{
-						this.Detach (this.edit_widgets[i]);
+						this.Detach (this.editWidgets[i]);
 					}
 					
-					this.edit_widgets = widgets;
+					this.editWidgets = widgets;
 					
 					this.AttachEditWidgets ();
 				}
@@ -628,11 +628,11 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					string[] values = new string[this.edit_widgets.Length];
+					string[] values = new string[this.editWidgets.Length];
 				    
-					for (int i = 0; i < this.edit_widgets.Length; i++)
+					for (int i = 0; i < this.editWidgets.Length; i++)
 					{
-						values[i] = this.edit_widgets[i].Text;
+						values[i] = this.editWidgets[i].Text;
 					}
 					
 					return values;
@@ -642,34 +642,34 @@ namespace Epsitec.Common.Widgets
 					//	Evite de générer des événements EditTextChanged pendant la mise à jour
 					//	des divers champs :
 					
-					this.setting_values = true;
-					this.text_change_count = 0;
+					this.settingValues = true;
+					this.textChangeCount = 0;
 					
-					for (int i = 0; i < this.edit_widgets.Length; i++)
+					for (int i = 0; i < this.editWidgets.Length; i++)
 					{
-						bool read_only = this.host.Columns[i].IsReadOnly;
+						bool readOnly = this.host.Columns[i].IsReadOnly;
 						
-						this.edit_widgets[i].Text = value[i];
+						this.editWidgets[i].Text = value[i];
 						
-						if (this.edit_widgets[i].IsPropertyDefined (EditArray.prop_model_based))
+						if (this.editWidgets[i].IsPropertyDefined (EditArray.propModelBased))
 						{
 							//	Si c'est une ligne éditable créée à partir d'un modèle, on ne touche pas
 							//	à la propriété "read only", car elle a été définie dans le modèle !
 						}
 						else
 						{
-							this.edit_widgets[i].IsReadOnly = read_only;
+							this.editWidgets[i].IsReadOnly = readOnly;
 						}
 						
-						this.edit_widgets[i].Enable = !read_only;
+						this.editWidgets[i].Enable = !readOnly;
 					}
 					
-					this.setting_values = false;
+					this.settingValues = false;
 					
 					//	S'il y a effectivement eu des changements dans les contenus de champs,
 					//	on envoie l'événement maintenant et une seule fois :
 					
-					if (this.text_change_count > 0)
+					if (this.textChangeCount > 0)
 					{
 						this.host.OnEditTextChanged ();
 					}
@@ -698,7 +698,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					return System.Math.Floor (this.host.EditionZoneHeight * this.host.row_height + 2);
+					return System.Math.Floor (this.host.EditionZoneHeight * this.host.rowHeight + 2);
 				}
 			}
 			
@@ -706,7 +706,7 @@ namespace Epsitec.Common.Widgets
 			protected Widget FindEditWidget(int column, int dir)
 			{
 				if ((column < 0) ||
-					(column >= this.edit_widgets.Length))
+					(column >= this.editWidgets.Length))
 				{
 					return null;
 				}
@@ -714,9 +714,9 @@ namespace Epsitec.Common.Widgets
 				column = this.host.FindFirstReadWriteColumn (column, dir);
 				
 				if ((column > -1) &&
-					(column < this.edit_widgets.Length))
+					(column < this.editWidgets.Length))
 				{
-					return this.edit_widgets[column];
+					return this.editWidgets[column];
 				}
 				
 				return null;
@@ -739,11 +739,11 @@ namespace Epsitec.Common.Widgets
 					switch (dir)
 					{
 						case TabNavigationDir.Forwards:
-							focus = this.edit_widgets[0];
+							focus = this.editWidgets[0];
 							break;
 						
 						case TabNavigationDir.Backwards:
-							focus = this.edit_widgets[this.edit_widgets.Length-1];
+							focus = this.editWidgets[this.editWidgets.Length-1];
 							break;
 						
 						default:
@@ -759,7 +759,7 @@ namespace Epsitec.Common.Widgets
 					switch (dir)
 					{
 						case TabNavigationDir.Forwards:  move =  1; start = 0;                          break;
-						case TabNavigationDir.Backwards: move = -1; start = this.edit_widgets.Length-1; break;
+						case TabNavigationDir.Backwards: move = -1; start = this.editWidgets.Length-1; break;
 					}
 					
 					if (this.host.MoveEditionToLine (move))
@@ -868,7 +868,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (column >= 0)
 				{
-					this.edit_widgets[column].SetFocused (false);
+					this.editWidgets[column].SetFocused (false);
 				}
 			}
 			
@@ -881,16 +881,16 @@ namespace Epsitec.Common.Widgets
 			{
 				if (column >= 0)
 				{
-					this.edit_widgets[column].SetFocused (true);
-					this.edit_widgets[column].SelectAll ();
+					this.editWidgets[column].SetFocused (true);
+					this.editWidgets[column].SelectAll ();
 				}
 			}
 			
 			public int  FindFocusedColumn()
 			{
-				for (int i = 0; i < this.edit_widgets.Length; i++)
+				for (int i = 0; i < this.editWidgets.Length; i++)
 				{
-					if (this.edit_widgets[i].ContainsKeyboardFocus)
+					if (this.editWidgets[i].ContainsKeyboardFocus)
 					{
 						return i;
 					}
@@ -904,14 +904,14 @@ namespace Epsitec.Common.Widgets
 				TextFieldStyle style = (this.host.InteractionMode == ScrollInteractionMode.Search ? TextFieldStyle.Normal : TextFieldStyle.Flat);
 				int created = 0;
 				
-				for (int i = 0; i < this.edit_widgets.Length; i++)
+				for (int i = 0; i < this.editWidgets.Length; i++)
 				{
-					if (this.edit_widgets[i] == null)
+					if (this.editWidgets[i] == null)
 					{
 						Widget      model = this.host.Columns[i].EditionWidgetModel;
 						System.Type type  = this.host.Columns[i].EditionWidgetType;
 						
-						if (this.host.edition_add_rows > 0)
+						if (this.host.editionAddRows > 0)
 						{
 							type  = typeof (TextFieldMulti);
 							style = TextFieldStyle.Multi;
@@ -922,20 +922,20 @@ namespace Epsitec.Common.Widgets
 							type = typeof (TextField);
 						}
 						
-						this.edit_widgets[i] = System.Activator.CreateInstance (type, new object[] { this } ) as AbstractTextField;
+						this.editWidgets[i] = System.Activator.CreateInstance (type, new object[] { this } ) as AbstractTextField;
 						
 						if (model != null)
 						{
-							//?Support.ObjectBundler.Default.CopyObject (model, this.edit_widgets[i]);
-							this.edit_widgets[i].SetProperty (EditArray.prop_model_based, true);
+							//?Support.ObjectBundler.Default.CopyObject (model, this.editWidgets[i]);
+							this.editWidgets[i].SetProperty (EditArray.propModelBased, true);
 						}
 						else
 						{
-							this.edit_widgets[i].TextFieldStyle = style;
+							this.editWidgets[i].TextFieldStyle = style;
 						}
 						
-						this.Attach (this.edit_widgets[i], i);
-						this.host.Columns[i].EditionWidget = this.edit_widgets[i];
+						this.Attach (this.editWidgets[i], i);
+						this.host.Columns[i].EditionWidget = this.editWidgets[i];
 						
 						created++;
 					}
@@ -964,7 +964,7 @@ namespace Epsitec.Common.Widgets
 					oy += yy;
 				}
 				
-				for (int i = 0; i < this.edit_widgets.Length; i++)
+				for (int i = 0; i < this.editWidgets.Length; i++)
 				{
 					Drawing.Rectangle cell = this.host.GetEditCellBounds (i);
 						
@@ -973,12 +973,12 @@ namespace Epsitec.Common.Widgets
 						cell.Offset (ox, oy);
 						cell.Height = height - 1;
 
-						this.edit_widgets[i].SetManualBounds(cell);
-						this.edit_widgets[i].Show ();
+						this.editWidgets[i].SetManualBounds(cell);
+						this.editWidgets[i].Show ();
 					}
 					else
 					{
-						this.edit_widgets[i].Hide ();
+						this.editWidgets[i].Hide ();
 					}
 				}
 			}
@@ -989,7 +989,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.host.InteractionMode == ScrollInteractionMode.Search)
 				{
-					caption = this.host.search_caption;
+					caption = this.host.searchCaption;
 				}
 				
 				if (caption == null)
@@ -1026,7 +1026,7 @@ namespace Epsitec.Common.Widgets
 			public void ReallocateLines()
 			{
 				this.ColumnCount = 0;
-				this.ColumnCount = this.host.max_columns;
+				this.ColumnCount = this.host.maxColumns;
 			}
 			
 			
@@ -1074,9 +1074,9 @@ namespace Epsitec.Common.Widgets
 			
 			private void HandleTextChanged(object sender)
 			{
-				if (this.setting_values)
+				if (this.settingValues)
 				{
-					this.text_change_count++;
+					this.textChangeCount++;
 				}
 				else
 				{
@@ -1085,10 +1085,10 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			protected bool						setting_values;
-			protected int						text_change_count;
+			protected bool						settingValues;
+			protected int						textChangeCount;
 			protected EditArray					host;
-			protected AbstractTextField[]		edit_widgets = new AbstractTextField[0];
+			protected AbstractTextField[]		editWidgets = new AbstractTextField[0];
 			protected StaticText				caption;
 
 		}
@@ -1139,14 +1139,14 @@ namespace Epsitec.Common.Widgets
 						{
 							this.caption.Text = "";
 							this.caption.Hide ();
-							this.is_caption_ok = false;
+							this.isCaptionOk = false;
 						}
 						else
 						{
 							this.caption.Text = value;
-							this.caption_height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
+							this.captionHeight = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
 							this.caption.Show ();
-							this.is_caption_ok = true;
+							this.isCaptionOk = true;
 						}
 						
 						this.UpdateHeaderHeight ();
@@ -1167,13 +1167,13 @@ namespace Epsitec.Common.Widgets
 			{
 				double height = 0;
 				
-				if (this.is_toolbar_ok)
+				if (this.isToolbarOk)
 				{
 					height += this.toolbar.ActualHeight;
 				}
-				if (this.is_caption_ok)
+				if (this.isCaptionOk)
 				{
-					height += this.caption_height;
+					height += this.captionHeight;
 				}
 				
 				this.host.TitleHeight = height;
@@ -1189,18 +1189,18 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.toolbar.Items.Count == 0)
 				{
-					if (this.is_toolbar_ok == true)
+					if (this.isToolbarOk == true)
 					{
-						this.is_toolbar_ok = false;
+						this.isToolbarOk == false;
 						this.toolbar.Hide ();
 						this.UpdateHeaderHeight ();
 					}
 				}
 				else
 				{
-					if (this.is_toolbar_ok == false)
+					if (this.isToolbarOk == false)
 					{
-						this.is_toolbar_ok = true;
+						this.isToolbarOk = true;
 						this.toolbar.Show ();
 						this.UpdateHeaderHeight ();
 					}
@@ -1210,10 +1210,10 @@ namespace Epsitec.Common.Widgets
 			
 			protected EditArray					host;
 			protected StaticText				caption;
-			protected double					caption_height;
+			protected double					captionHeight;
 			protected HToolBar					toolbar;
-			protected bool						is_toolbar_ok;
-			protected bool						is_caption_ok;
+			protected bool						isToolbarOk;
+			protected bool						isCaptionOk;
 		}
 		#endregion
 		
@@ -1343,7 +1343,7 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void Delete()
 			{
-				int n_rows = this.host.RowCount;
+				int nRows = this.host.RowCount;
 				
 				ScrollInteractionMode mode;
 				int row;
@@ -1357,7 +1357,7 @@ namespace Epsitec.Common.Widgets
 				//	quitte le mode "edition"; détruire la ligne à notre tour produirait une
 				//	double destruction.
 				
-				if (this.host.RowCount == n_rows)
+				if (this.host.RowCount == nRows)
 				{
 					this.store.RemoveRows (row, 1);
 				}
@@ -1389,7 +1389,7 @@ namespace Epsitec.Common.Widgets
 			protected void SaveModeAndReset(out ScrollInteractionMode mode, out int row, out int column)
 			{
 				mode   = this.host.InteractionMode;
-				column = this.host.edit_line.FindFocusedColumn ();
+				column = this.host.editLine.FindFocusedColumn ();
 				
 				this.StartReadOnly ();
 				
@@ -1415,38 +1415,38 @@ namespace Epsitec.Common.Widgets
 					
 					case ScrollInteractionMode.Edition:
 						this.StartEdition ();
-						this.host.edit_line.FocusColumn (column);
+						this.host.editLine.FocusColumn (column);
 						break;
 					
 					case ScrollInteractionMode.Search:
 						this.StartSearch ();
-						this.host.edit_line.FocusColumn (column);
+						this.host.editLine.FocusColumn (column);
 						break;
 				}
 			}
 			
 			
-			protected string       GetCommandName(string command_name)
+			protected string       GetCommandName(string commandName)
 			{
-				return this.name + command_name;
+				return this.name + commandName;
 			}
 			
-			protected CommandState GetCommandState(string command_name)
+			protected CommandState GetCommandState(string commandName)
 			{
-				return CommandState.Find (this.GetCommandName (command_name), this.host.CommandDispatchers[0]);
+				return CommandState.Find (this.GetCommandName (commandName), this.host.CommandDispatchers[0]);
 			}
 			
 			
-			protected IconButton CreateIconButton(string command_name, string icon_name, string tool_tip)
+			protected IconButton CreateIconButton(string commandName, string iconName, string toolTip)
 			{
-				IconButton button = new IconButton (this.GetCommandName (command_name), icon_name);
-				this.CreateToolTip (button, tool_tip);
+				IconButton button = new IconButton (this.GetCommandName (commandName), iconName);
+				this.CreateToolTip (button, toolTip);
 				return button;
 			}
 			
-			protected IconButton CreateIconButton(string command_name, string icon_name, string tool_tip, KeyCode shortcut)
+			protected IconButton CreateIconButton(string commandName, string iconName, string toolTip, KeyCode shortcut)
 			{
-				IconButton button = this.CreateIconButton (command_name, icon_name, tool_tip);
+				IconButton button = this.CreateIconButton (commandName, iconName, toolTip);
 				button.Shortcuts.Add (new Shortcut (shortcut));
 				return button;
 			}
@@ -1571,33 +1571,33 @@ namespace Epsitec.Common.Widgets
 			{
 				int index  = this.host.SelectedIndex;
 				
-				ActiveState act_edition  = ActiveState.No;
-				ActiveState act_search   = ActiveState.No;
-				ActiveState act_readonly = ActiveState.No;
+				ActiveState actEdition  = ActiveState.No;
+				ActiveState actSearch   = ActiveState.No;
+				ActiveState actReadonly = ActiveState.No;
 				
 				switch (this.host.InteractionMode)
 				{
-					case ScrollInteractionMode.ReadOnly: act_readonly = ActiveState.Yes;	break;
-					case ScrollInteractionMode.Edition:  act_edition = ActiveState.Yes;	break;
-					case ScrollInteractionMode.Search:   act_search = ActiveState.Yes;	break;
+					case ScrollInteractionMode.ReadOnly: actReadonly = ActiveState.Yes;	break;
+					case ScrollInteractionMode.Edition:  actEdition = ActiveState.Yes;	break;
+					case ScrollInteractionMode.Search:   actSearch = ActiveState.Yes;	break;
 				}
 				
-				bool ok_edit       = this.store.CheckSetRow (index);
-				bool ok_ins_before = this.store.CheckInsertRows (index, 1);
-				bool ok_ins_after  = this.store.CheckInsertRows (index+1, 1);
-				bool ok_delete     = this.store.CheckRemoveRows (index, 1);
-				bool ok_move_up    = this.store.CheckMoveRow (index, -1);
-				bool ok_move_down  = this.store.CheckMoveRow (index, 1);
+				bool okEdit       = this.store.CheckSetRow (index);
+				bool okInsBefore = this.store.CheckInsertRows (index, 1);
+				bool okInsAfter  = this.store.CheckInsertRows (index+1, 1);
+				bool okDelete     = this.store.CheckRemoveRows (index, 1);
+				bool okMoveUp    = this.store.CheckMoveRow (index, -1);
+				bool okMoveDown  = this.store.CheckMoveRow (index, 1);
 				
-				this.UpdateCommandState ("StartReadOnly", true, act_readonly);
-				this.UpdateCommandState ("StartEdition", ok_edit, act_edition);
-				this.UpdateCommandState ("StartSearch", true, act_search);
+				this.UpdateCommandState ("StartReadOnly", true, actReadonly);
+				this.UpdateCommandState ("StartEdition", okEdit, actEdition);
+				this.UpdateCommandState ("StartSearch", true, actSearch);
 				
-				this.UpdateCommandState ("InsertBefore", ok_ins_before, ActiveState.No);
-				this.UpdateCommandState ("InsertAfter",  ok_ins_after,  ActiveState.No);
-				this.UpdateCommandState ("Delete",       ok_delete,     ActiveState.No);
-				this.UpdateCommandState ("MoveUp",       ok_move_up,    ActiveState.No);
-				this.UpdateCommandState ("MoveDown",     ok_move_down,  ActiveState.No);
+				this.UpdateCommandState ("InsertBefore", okInsBefore, ActiveState.No);
+				this.UpdateCommandState ("InsertAfter",  okInsAfter,  ActiveState.No);
+				this.UpdateCommandState ("Delete",       okDelete,     ActiveState.No);
+				this.UpdateCommandState ("MoveUp",       okMoveUp,    ActiveState.No);
+				this.UpdateCommandState ("MoveDown",     okMoveDown,  ActiveState.No);
 			}
 			
 			protected virtual void UpdateCommandState(string name, bool enable, ActiveState active)
@@ -1664,18 +1664,18 @@ namespace Epsitec.Common.Widgets
 
 			public void MoveRow(int row, int distance)
 			{
-				int row_a = row;
-				int row_b = row + distance;
+				int rowA = row;
+				int rowB = row + distance;
 				
 				int n = this.host.ColumnCount;
 				
 				for (int i = 0; i < n; i++)
 				{
-					string a = this.host[row_a, i];
-					string b = this.host[row_b, i];
+					string a = this.host[rowA, i];
+					string b = this.host[rowB, i];
 					
-					this.host[row_a, i] = b;
-					this.host[row_b, i] = a;
+					this.host[rowA, i] = b;
+					this.host[rowB, i] = a;
 				}
 				
 				this.OnStoreContentsChanged ();
@@ -1758,17 +1758,17 @@ namespace Epsitec.Common.Widgets
 				
 				while (iter != null)
 				{
-					EditArray edit_array = iter as EditArray;
+					EditArray editArray = iter as EditArray;
 					
-					if ((edit_array != null) &&
-						(edit_array.InteractionMode == ScrollInteractionMode.Edition))
+					if ((editArray != null) &&
+						(editArray.InteractionMode == ScrollInteractionMode.Edition))
 					{
-						int                          index = edit_array.SelectedIndex;
-						Support.Data.ITextArrayStore store = edit_array.TextArrayStore;
+						int                          index = editArray.SelectedIndex;
+						Support.Data.ITextArrayStore store = editArray.TextArrayStore;
 						
-						int max_rows = store.GetRowCount ();
+						int maxRows = store.GetRowCount ();
 						
-						for (int i = 0; i < max_rows; i++)
+						for (int i = 0; i < maxRows; i++)
 						{
 							if (i != index)
 							{
@@ -1795,16 +1795,16 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		EditTextChanged;
 		public event Support.EventHandler		EditWidgetsCreated;
 		
-		protected EditWidget					edit_line    = null;
-		protected Drawing.Rectangle				edit_bounds  = Drawing.Rectangle.Empty;
-		protected double						edit_offset  = 0;
-		protected double						edit_width   = 0;
+		protected EditWidget					editLine    = null;
+		protected Drawing.Rectangle				editBounds  = Drawing.Rectangle.Empty;
+		protected double						editOffset  = 0;
+		protected double						editWidth   = 0;
 		
-		protected string						search_caption;
-		protected int							focused_column = -1;
+		protected string						searchCaption;
+		protected int							focusedColumn = -1;
 		
 		protected Controller					controller;
-		protected const string					prop_model_based = "$edit array$model based$";
+		protected const string					propModelBased = "$edit array$model based$";
 	}
 }
 #endif

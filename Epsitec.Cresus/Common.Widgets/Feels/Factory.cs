@@ -14,8 +14,8 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		static Factory()
 		{
-			Factory.feel_table = new System.Collections.Hashtable ();
-			Factory.feel_list  = new System.Collections.ArrayList ();
+			Factory.feelTable = new System.Collections.Hashtable ();
+			Factory.feelList  = new System.Collections.ArrayList ();
 			
 			System.Reflection.Assembly assembly = System.Reflection.Assembly.GetAssembly (typeof (Factory));
 			
@@ -23,8 +23,8 @@ namespace Epsitec.Common.Widgets.Feel
 			
 			Factory.SetActive ("Default");
 			
-			System.Diagnostics.Debug.Assert (Factory.feel_table.ContainsKey ("Default"));
-			System.Diagnostics.Debug.Assert (Factory.active_feel != null);
+			System.Diagnostics.Debug.Assert (Factory.feelTable.ContainsKey ("Default"));
+			System.Diagnostics.Debug.Assert (Factory.activeFeel != null);
 		}
 		
 		
@@ -32,24 +32,24 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			int n = 0;
 			
-			System.Type[] all_types_in_assembly = assembly.GetTypes ();
-			System.Type   i_feel_type           = typeof (IFeel);
+			System.Type[] allTypesInAssembly = assembly.GetTypes ();
+			System.Type   iFeelType           = typeof (IFeel);
 				
 			//	Cherche dans tous les types connus les classes qui implémentent l'interface
 			//	IFeel, et crée une instance unique de chacune de ces classes.
 			
-			foreach (System.Type type in all_types_in_assembly)
+			foreach (System.Type type in allTypesInAssembly)
 			{
 				if (type.IsClass && type.IsPublic)
 				{
 					System.Type[] interfaces = type.GetInterfaces ();
 					
-					if (System.Array.IndexOf (interfaces, i_feel_type) >= 0)
+					if (System.Array.IndexOf (interfaces, iFeelType) >= 0)
 					{
-						if (! Factory.feel_list.Contains (type.Name))
+						if (! Factory.feelList.Contains (type.Name))
 						{
-							Factory.feel_list.Add (type.Name);
-							Factory.feel_table[type.Name] = System.Activator.CreateInstance (type);
+							Factory.feelList.Add (type.Name);
+							Factory.feelTable[type.Name] = System.Activator.CreateInstance (type);
 							n++;
 						}
 					}
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets.Feel
 		
 		public static IFeel				Active
 		{
-			get { return Factory.active_feel; }
+			get { return Factory.activeFeel; }
 		}
 		
 		public static string			ActiveName
@@ -77,8 +77,8 @@ namespace Epsitec.Common.Widgets.Feel
 		{
 			get
 			{
-				string[] names = new string[Factory.feel_list.Count];
-				Factory.feel_list.CopyTo (names);
+				string[] names = new string[Factory.feelList.Count];
+				Factory.feelList.CopyTo (names);
 				return names;
 			}
 		}
@@ -86,24 +86,24 @@ namespace Epsitec.Common.Widgets.Feel
 
 		public static bool SetActive(string name)
 		{
-			IFeel feel = Factory.feel_table[name] as IFeel;
+			IFeel feel = Factory.feelTable[name] as IFeel;
 			
 			if (feel == null)
 			{
 				return false;
 			}
 			
-			if (Factory.active_feel != feel)
+			if (Factory.activeFeel != feel)
 			{
-				Factory.active_feel = feel;
+				Factory.activeFeel = feel;
 			}
 			
 			return true;
 		}
 		
 		
-		private static IFeel						active_feel;
-		private static System.Collections.Hashtable	feel_table;
-		private static System.Collections.ArrayList	feel_list;
+		private static IFeel						activeFeel;
+		private static System.Collections.Hashtable	feelTable;
+		private static System.Collections.ArrayList	feelList;
 	}
 }

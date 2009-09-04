@@ -23,8 +23,8 @@ namespace Epsitec.Common.Widgets.Layouts
 					continue;
 				}
 				
-				AnchorStyles anchor_x = child.Anchor & AnchorStyles.LeftAndRight;
-				AnchorStyles anchor_y = child.Anchor & AnchorStyles.TopAndBottom;
+				AnchorStyles anchorX = child.Anchor & AnchorStyles.LeftAndRight;
+				AnchorStyles anchorY = child.Anchor & AnchorStyles.TopAndBottom;
 				
 				Drawing.Rectangle client  = rect;
 				Drawing.Margins   margins = child.Margins;
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					dy = child.ActualHeight;		//	TODO: améliorer
 				}
 				
-				switch (anchor_x)
+				switch (anchorX)
 				{
 					case AnchorStyles.Left:							//	[x1] fixe à gauche
 						x1 = client.Left + margins.Left;
@@ -69,10 +69,10 @@ namespace Epsitec.Common.Widgets.Layouts
 						x2 = client.Right - margins.Right;
 						break;
 					default:
-						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchor_x));
+						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchorX));
 				}
 				
-				switch (anchor_y)
+				switch (anchorY)
 				{
 					case AnchorStyles.Bottom:						//	[y1] fixe en bas
 						y1 = client.Bottom + margins.Bottom;
@@ -91,19 +91,19 @@ namespace Epsitec.Common.Widgets.Layouts
 						y2 = client.Top - margins.Top;
 						break;
 					default:
-						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchor_y));
+						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchorY));
 				}
 				
 				DockLayoutEngine.SetChildBounds (child, Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
 			}
 		}
 
-		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size min_size, ref Drawing.Size max_size)
+		public void UpdateMinMax(Visual container, LayoutContext context, IEnumerable<Visual> children, ref Drawing.Size minSize, ref Drawing.Size maxSize)
 		{
-			double min_dx = min_size.Width;
-			double min_dy = min_size.Height;
-			double max_dx = max_size.Width;
-			double max_dy = max_size.Height;
+			double minDx = minSize.Width;
+			double minDy = minSize.Height;
+			double maxDx = maxSize.Width;
+			double maxDy = maxSize.Height;
 
 			foreach (Visual child in children)
 			{
@@ -128,11 +128,11 @@ namespace Epsitec.Common.Widgets.Layouts
 
 				Drawing.Margins margins = child.Margins;
 
-				Layouts.LayoutMeasure measure_dx = Layouts.LayoutMeasure.GetWidth (child);
-				Layouts.LayoutMeasure measure_dy = Layouts.LayoutMeasure.GetHeight (child);
+				Layouts.LayoutMeasure measureDx = Layouts.LayoutMeasure.GetWidth (child);
+				Layouts.LayoutMeasure measureDy = Layouts.LayoutMeasure.GetHeight (child);
 
-				if ((measure_dx == null) ||
-					(measure_dy == null))
+				if ((measureDx == null) ||
+					(measureDy == null))
 				{
 					throw new System.InvalidOperationException ();
 				}
@@ -142,42 +142,42 @@ namespace Epsitec.Common.Widgets.Layouts
 				switch (anchor & AnchorStyles.LeftAndRight)
 				{
 					case AnchorStyles.Left:
-						min_dx = System.Math.Max (min_dx, margins.Left + System.Math.Max (measure_dx.Min, measure_dx.Desired));
-						max_dx = System.Math.Min (max_dx, margins.Left + measure_dx.Max);
+						minDx = System.Math.Max (minDx, margins.Left + System.Math.Max (measureDx.Min, measureDx.Desired));
+						maxDx = System.Math.Min (maxDx, margins.Left + measureDx.Max);
 						break;
 
 					case AnchorStyles.Right:
-						min_dx = System.Math.Max (min_dx, margins.Right + System.Math.Max (measure_dx.Min, measure_dx.Desired));
-						max_dx = System.Math.Min (max_dx, margins.Right + measure_dx.Max);
+						minDx = System.Math.Max (minDx, margins.Right + System.Math.Max (measureDx.Min, measureDx.Desired));
+						maxDx = System.Math.Min (maxDx, margins.Right + measureDx.Max);
 						break;
 
 					case AnchorStyles.LeftAndRight:
-						min_dx = System.Math.Max (min_dx, margins.Width + measure_dx.Min);
-						max_dx = System.Math.Min (max_dx, margins.Width + measure_dx.Max);
+						minDx = System.Math.Max (minDx, margins.Width + measureDx.Min);
+						maxDx = System.Math.Min (maxDx, margins.Width + measureDx.Max);
 						break;
 				}
 
 				switch (anchor & AnchorStyles.TopAndBottom)
 				{
 					case AnchorStyles.Bottom:
-						min_dy = System.Math.Max (min_dy, margins.Bottom + System.Math.Max (measure_dy.Min, measure_dy.Desired));
-						max_dy = System.Math.Min (max_dy, margins.Bottom + measure_dy.Max);
+						minDy = System.Math.Max (minDy, margins.Bottom + System.Math.Max (measureDy.Min, measureDy.Desired));
+						maxDy = System.Math.Min (maxDy, margins.Bottom + measureDy.Max);
 						break;
 
 					case AnchorStyles.Top:
-						min_dy = System.Math.Max (min_dy, margins.Top + System.Math.Max (measure_dy.Min, measure_dy.Desired));
-						max_dy = System.Math.Min (max_dy, margins.Top + measure_dy.Max);
+						minDy = System.Math.Max (minDy, margins.Top + System.Math.Max (measureDy.Min, measureDy.Desired));
+						maxDy = System.Math.Min (maxDy, margins.Top + measureDy.Max);
 						break;
 
 					case AnchorStyles.TopAndBottom:
-						min_dy = System.Math.Max (min_dy, margins.Height + measure_dy.Min);
-						max_dy = System.Math.Min (max_dy, margins.Height + measure_dy.Max);
+						minDy = System.Math.Max (minDy, margins.Height + measureDy.Min);
+						maxDy = System.Math.Min (maxDy, margins.Height + measureDy.Max);
 						break;
 				}
 			}
 
-			min_size = new Drawing.Size (min_dx, min_dy);
-			max_size = new Drawing.Size (max_dx, max_dy);
+			minSize = new Drawing.Size (minDx, minDy);
+			maxSize = new Drawing.Size (maxDx, maxDy);
 		}
 		
 		public LayoutMode LayoutMode

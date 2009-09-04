@@ -20,8 +20,8 @@ namespace Epsitec.Common.Widgets.Exceptions
 		{
 		}
 
-		public InfiniteCommandLoopException(string message, System.Exception inner_exception)
-			: base (message, inner_exception)
+		public InfiniteCommandLoopException(string message, System.Exception innerException)
+			: base (message, innerException)
 		{
 		}
 

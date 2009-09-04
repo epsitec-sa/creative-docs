@@ -31,19 +31,19 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			int n = 0;
 			
-			System.Type[] all_types_in_assembly = assembly.GetTypes ();
-			System.Type   i_adorner_type        = typeof (IAdorner);
+			System.Type[] allTypesInAssembly = assembly.GetTypes ();
+			System.Type   iAdornerType       = typeof (IAdorner);
 				
 			//	Cherche dans tous les types connus les classes qui implémentent l'interface
 			//	IAdorner, et crée une instance unique de chacune de ces classes.
 			
-			foreach (System.Type type in all_types_in_assembly)
+			foreach (System.Type type in allTypesInAssembly)
 			{
 				if (type.IsClass && type.IsPublic && !type.IsAbstract)
 				{
 					System.Type[] interfaces = type.GetInterfaces ();
 					
-					if (System.Array.IndexOf (interfaces, i_adorner_type) >= 0)
+					if (System.Array.IndexOf (interfaces, iAdornerType) >= 0)
 					{
 						if (! Factory.adornerTable.ContainsKey (type.Name))
 						{

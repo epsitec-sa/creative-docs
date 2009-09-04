@@ -16,62 +16,62 @@ namespace Epsitec.Common.Widgets
 	{
 		public Message()
 		{
-			this.tick_count = System.Environment.TickCount;
+			this.tickCount = System.Environment.TickCount;
 			
 			Message.state.buttons   = (MouseButtons) (int) System.Windows.Forms.Control.MouseButtons;
 			Message.state.modifiers = (ModifierKeys) (int) System.Windows.Forms.Control.ModifierKeys;
 			
 			this.modifiers = Message.state.modifiers;
 			
-			this.cursor = Message.state.window_cursor;
+			this.cursor = Message.state.windowCursor;
 			this.button = MouseButtons.None;
 
-			Message.last_message = this;
+			Message.lastMessage = this;
 		}
 
 		public bool							IsDummy
 		{
-			get { return this.is_dummy_message; }
+			get { return this.isDummyMessage; }
 		}
 		
 		public bool							FilterNoChildren
 		{
-			get { return this.filter_no_children; }
-			set { this.filter_no_children = value; }
+			get { return this.filterNoChildren; }
+			set { this.filterNoChildren = value; }
 		}
 		
 		public bool							FilterOnlyFocused
 		{
-			get { return this.filter_only_focused; }
+			get { return this.filterOnlyFocused; }
 		}
 		
 		public bool							FilterOnlyOnHit
 		{
-			get { return this.filter_only_on_hit; }
+			get { return this.filterOnlyOnHit; }
 		}
 		
 		
 		public bool							Captured
 		{
-			get { return this.is_captured; }
-			set { this.is_captured = value; }
+			get { return this.isCaptured; }
+			set { this.isCaptured = value; }
 		}
 		
 		public bool							Handled
 		{
-			get { return this.is_handled; }
-			set { this.is_handled = value; }
+			get { return this.isHandled; }
+			set { this.isHandled = value; }
 		}
 		
 		public bool							Swallowed
 		{
-			get { return this.is_swallowed; }
+			get { return this.isSwallowed; }
 			set
 			{
 				if (value)
 				{
-					this.is_handled = true;
-					this.is_swallowed = true;
+					this.isHandled = true;
+					this.isSwallowed = true;
 				}
 			}
 		}
@@ -85,17 +85,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.is_retired;
+				return this.isRetired;
 			}
 			set
 			{
-				this.is_retired = value;
+				this.isRetired = value;
 			}
 		}
 		
 		public bool							NonClient
 		{
-			get { return this.is_non_client; }
+			get { return this.isNonClient; }
 		}
 		
 		public Widget						Consumer
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.consumer   = value;
-				this.is_handled = (value == null) ? false : true;
+				this.isHandled = (value == null) ? false : true;
 			}
 		}
 		
@@ -112,11 +112,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.in_widget;
+				return this.inWidget;
 			}
 			set
 			{
-				this.in_widget = value;
+				this.inWidget = value;
 			}
 		}
 
@@ -124,18 +124,18 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.window_root;
+				return this.windowRoot;
 			}
 			set
 			{
-				this.window_root = value;
+				this.windowRoot = value;
 			}
 		}
 		
 		public bool							ForceCapture
 		{
-			get { return this.force_capture; }
-			set { this.force_capture = value; }
+			get { return this.forceCapture; }
+			set { this.forceCapture = value; }
 		}
 
 		public bool							CancelFocus
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets
 		
 		public int							TickCount
 		{
-			get { return this.tick_count; }
+			get { return this.tickCount; }
 		}
 		
 		public string						Command
@@ -222,7 +222,7 @@ namespace Epsitec.Common.Widgets
 		
 		public int							ButtonDownCount
 		{
-			get { return this.button_down_count; }
+			get { return this.buttonDownCount; }
 		}
 		
 		public ModifierKeys					ModifierKeys
@@ -232,12 +232,12 @@ namespace Epsitec.Common.Widgets
 		
 		public int							KeyChar
 		{
-			get { return this.key_char; }
+			get { return this.keyChar; }
 		}
 		
 		public KeyCode						KeyCode
 		{
-			get { return this.key_code; }
+			get { return this.keyCode; }
 		}
 		
 		public KeyCode						KeyCodeOnly
@@ -300,7 +300,7 @@ namespace Epsitec.Common.Widgets
 
 		internal void MarkAsDummyMessage()
 		{
-			this.is_dummy_message = true;
+			this.isDummyMessage = true;
 		}
 
 		public static Message CreateDummyMessage(MessageType type)
@@ -313,25 +313,25 @@ namespace Epsitec.Common.Widgets
 
 			if (message.IsMouseType)
 			{
-				message.filter_no_children  = false;
-				message.filter_only_focused = false;
-				message.filter_only_on_hit  = true;
+				message.filterNoChildren  = false;
+				message.filterOnlyFocused = false;
+				message.filterOnlyOnHit  = true;
 			}
 			else if (message.IsKeyType)
 			{
-				message.filter_no_children  = false;
-				message.filter_only_focused = true;
-				message.filter_only_on_hit  = false;
+				message.filterNoChildren  = false;
+				message.filterOnlyFocused = true;
+				message.filterOnlyOnHit  = false;
 			}
 			
-			message.is_dummy_message = true;
+			message.isDummyMessage = true;
 			
 			return message;
 		}
 
 		public static void ResetButtonDownCounter()
 		{
-			Message.state.button_down_count = 0;
+			Message.state.buttonDownCount = 0;
 		}
 		
 		public static string GetKeyName(KeyCode code)
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Widgets
 
 		public static Message GetLastMessage()
 		{
-			return Message.last_message;
+			return Message.lastMessage;
 		}
 
 
@@ -376,11 +376,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.type = other.type;
 			this.button = other.button;
-			this.button_down_count = other.button_down_count;
+			this.buttonDownCount = other.buttonDownCount;
 			this.wheel = other.wheel;
 			this.modifiers = other.modifiers;
-			this.key_code = other.key_code;
-			this.key_char = other.key_char;
+			this.keyCode = other.keyCode;
+			this.keyChar = other.keyChar;
 		}
 
 		public override string ToString()
@@ -397,7 +397,7 @@ namespace Epsitec.Common.Widgets
 				buffer.Append (" ");
 				buffer.Append (this.button.ToString ());
 				buffer.Append (" (");
-				buffer.Append (this.button_down_count.ToString ());
+				buffer.Append (this.buttonDownCount.ToString ());
 				buffer.Append (")");
 			}
 			
@@ -407,22 +407,22 @@ namespace Epsitec.Common.Widgets
 				buffer.Append (this.modifiers.ToString ());
 			}
 			
-			if (this.key_char != 0)
+			if (this.keyChar != 0)
 			{
 				buffer.Append (" char=");
-				buffer.Append (this.key_char.ToString ());
+				buffer.Append (this.keyChar.ToString ());
 			}
 			
-			if (this.key_code != 0)
+			if (this.keyCode != 0)
 			{
 				buffer.Append (" code=");
-				buffer.Append (this.key_code.ToString ());
+				buffer.Append (this.keyCode.ToString ());
 			}
 			
-			if (this.in_widget != null)
+			if (this.inWidget != null)
 			{
 				buffer.Append (" in='");
-				buffer.Append (this.in_widget.Name);
+				buffer.Append (this.inWidget.Name);
 				buffer.Append ("'");
 			}
 			
@@ -444,10 +444,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr w_param)
+		internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr wParam)
 		{
 			System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
-			int wp = (int) w_param;
+			int wp = (int) wParam;
 			
 			if ((wp & Win32Const.MK_LBUTTON) != 0)
 			{
@@ -473,16 +473,16 @@ namespace Epsitec.Common.Widgets
 			return buttons;
 		}
 		
-		internal static int WheelDeltaFromWParam(System.IntPtr w_param)
+		internal static int WheelDeltaFromWParam(System.IntPtr wParam)
 		{
-			int wp = (int) w_param;
+			int wp = (int) wParam;
 			return (short)((wp >> 16) & 0x0000ffff);
 		}
 		
-		internal static void XYFromLParam(System.IntPtr l_param, out int x, out int y)
+		internal static void XYFromLParam(System.IntPtr lParam, out int x, out int y)
 		{
-			x = (short)((((int)l_param) >>  0) & 0x0000ffff);
-			y = (short)((((int)l_param) >> 16) & 0x0000ffff);
+			x = (short)((((int)lParam) >>  0) & 0x0000ffff);
+			y = (short)((((int)lParam) >> 16) & 0x0000ffff);
 		}
 		
 		internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
@@ -546,8 +546,8 @@ namespace Epsitec.Common.Widgets
 				case Win32Const.WM_XBUTTONDBLCLK:
 				case Win32Const.WM_XBUTTONUP:
 				case Win32Const.WM_NCXBUTTONDOWN:
-					int w_param = (int) msg.WParam;
-					switch (w_param & 0x00ff0000)
+					int wParam = (int) msg.WParam;
+					switch (wParam & 0x00ff0000)
 					{
 						case 0x00010000: return System.Windows.Forms.MouseButtons.XButton1;
 						case 0x00020000: return System.Windows.Forms.MouseButtons.XButton2;
@@ -604,7 +604,7 @@ namespace Epsitec.Common.Widgets
 					y = point.Y;
 					buttons = Message.ButtonFromMsg (msg);
 					message = Message.FromMouseEvent (MessageType.MouseDown, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
-					message.is_non_client = true;
+					message.isNonClient = true;
 					break;
 				
 				case Win32Const.WM_LBUTTONDOWN:
@@ -642,7 +642,7 @@ namespace Epsitec.Common.Widgets
 					message = new Message ();
 					
 					message.type   = MessageType.MouseLeave;
-					message.cursor = Message.state.window_cursor;
+					message.cursor = Message.state.windowCursor;
 					break;
 			}
 			
@@ -660,9 +660,9 @@ namespace Epsitec.Common.Widgets
 			
 			message.type = type;
 			
-			message.filter_no_children  = false;
-			message.filter_only_focused = false;
-			message.filter_only_on_hit  = true;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = false;
+			message.filterOnlyOnHit  = true;
 			
 			int x = 0;
 			int y = 0;
@@ -682,8 +682,8 @@ namespace Epsitec.Common.Widgets
 				message.wheel  = e.Delta;
 				
 				Message.state.window = form.HostingWidgetWindow;
-				Message.state.window_cursor = message.cursor;
-				Message.state.screen_cursor = Message.CurrentState.window == null ? Drawing.Point.Zero : Message.CurrentState.window.MapWindowToScreen (message.cursor);
+				Message.state.windowCursor = message.cursor;
+				Message.state.screenCursor = Message.CurrentState.window == null ? Drawing.Point.Zero : Message.CurrentState.window.MapWindowToScreen (message.cursor);
 			}
 			
 			//	Gère les clics multiples, en tenant compte des réglages de l'utilisateur.
@@ -693,38 +693,38 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (e != null);
 				System.Diagnostics.Debug.Assert (e.Button != System.Windows.Forms.MouseButtons.None);
 				
-				Message.state.window_mouse_down = Message.state.window;
+				Message.state.windowMouseDown = Message.state.window;
 				
-				int time_new   = message.TickCount;
-				int time_delta = time_new - Message.state.button_down_time;
-				int time_max   = (int)(SystemInformation.DoubleClickDelay * 1000);
-				int down_count = 1;
+				int timeNew   = message.TickCount;
+				int timeDelta = timeNew - Message.state.buttonDownTime;
+				int timeMax   = (int)(SystemInformation.DoubleClickDelay * 1000);
+				int downCount = 1;
 				
-				if ((time_delta < time_max) && (time_delta > 0) && (Message.state.button_down_id == message.button))
+				if ((timeDelta < timeMax) && (timeDelta > 0) && (Message.state.buttonDownId == message.button))
 				{
-					int max_dr2 = SystemInformation.DoubleClickRadius2;
+					int maxDr2 = SystemInformation.DoubleClickRadius2;
 					
-					int dx  = x - Message.state.button_down_x;
-					int dy  = y - Message.state.button_down_y;
+					int dx  = x - Message.state.buttonDownX;
+					int dy  = y - Message.state.buttonDownY;
 					int dr2 = dx*dx + dy*dy;
 					
-					if (dr2 <= max_dr2)
+					if (dr2 <= maxDr2)
 					{
-						down_count = Message.state.button_down_count + 1;
+						downCount = Message.state.buttonDownCount + 1;
 					}
 				}
 				
-				Message.state.button_down_time  = time_new;
-				Message.state.button_down_x     = x;
-				Message.state.button_down_y     = y;
-				Message.state.button_down_count = down_count;
-				Message.state.button_down_id    = message.button;
+				Message.state.buttonDownTime  = timeNew;
+				Message.state.buttonDownX     = x;
+				Message.state.buttonDownY     = y;
+				Message.state.buttonDownCount = downCount;
+				Message.state.buttonDownId    = message.button;
 			}
 			
 			if ((type == MessageType.MouseDown) ||
 				(type == MessageType.MouseUp))
 			{
-				message.button_down_count = Message.state.button_down_count;
+				message.buttonDownCount = Message.state.buttonDownCount;
 			}
 			
 			return message;
@@ -735,11 +735,11 @@ namespace Epsitec.Common.Widgets
 			Message message = new Message ();
 			
 			message.type     = type;
-			message.key_code = (KeyCode) (int) e.KeyCode;
+			message.keyCode = (KeyCode) (int) e.KeyCode;
 			
-			message.filter_no_children  = false;
-			message.filter_only_focused = true;
-			message.filter_only_on_hit  = false;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = true;
+			message.filterOnlyOnHit  = false;
 			
 			if (e.Alt)
 			{
@@ -758,13 +758,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (type == MessageType.KeyDown)
 			{
-				Message.state.key_down_code = message.key_code;
+				Message.state.keyDownCode = message.keyCode;
 			}
 			
 			return message;
 		}
 		
-		internal static Message FromKeyEvent(int msg, System.IntPtr w_param, System.IntPtr l_param)
+		internal static Message FromKeyEvent(int msg, System.IntPtr wParam, System.IntPtr lParam)
 		{
 			//	Synthétise un événement clavier à partir de la description de
 			//	très bas niveau...
@@ -780,9 +780,9 @@ namespace Epsitec.Common.Widgets
 				case Win32Const.WM_CHAR:		message.type = MessageType.KeyPress;	break;
 			}
 			
-			message.filter_no_children  = false;
-			message.filter_only_focused = true;
-			message.filter_only_on_hit  = false;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = true;
+			message.filterOnlyOnHit  = false;
 			
 			if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Alt) != 0)
 			{
@@ -801,13 +801,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.type == MessageType.KeyPress)
 			{
-				message.key_code = Message.last_code;
-				message.key_char = (int) w_param;
+				message.keyCode = Message.lastCode;
+				message.keyChar = (int) wParam;
 			}
 			else
 			{
-				Message.last_code = (KeyCode) (int) w_param;
-				message.key_code  = Message.last_code;
+				Message.lastCode = (KeyCode) (int) wParam;
+				message.keyCode  = Message.lastCode;
 			}
 			
 			return message;
@@ -818,12 +818,12 @@ namespace Epsitec.Common.Widgets
 			Message message = new Message ();
 			
 			message.type     = type;
-			message.key_char = e.KeyChar;
-			message.key_code = Message.state.key_down_code;
+			message.keyChar = e.KeyChar;
+			message.keyCode = Message.state.keyDownCode;
 			
-			message.filter_no_children  = false;
-			message.filter_only_focused = true;
-			message.filter_only_on_hit  = false;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = true;
+			message.filterOnlyOnHit  = false;
 			
 			return message;
 		}
@@ -833,9 +833,9 @@ namespace Epsitec.Common.Widgets
 			Message message = new Message ();
 			
 			message.type                = MessageType.MouseMove;
-			message.filter_no_children  = false;
-			message.filter_only_focused = false;
-			message.filter_only_on_hit  = true;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = false;
+			message.filterOnlyOnHit  = true;
 			
 			return message;
 		}
@@ -846,9 +846,9 @@ namespace Epsitec.Common.Widgets
 			
 			message.type                = MessageType.MouseMove;
 			message.cursor              = pos;
-			message.filter_no_children  = false;
-			message.filter_only_focused = false;
-			message.filter_only_on_hit  = true;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = false;
+			message.filterOnlyOnHit  = true;
 			
 			return message;
 		}
@@ -860,9 +860,9 @@ namespace Epsitec.Common.Widgets
 			message.type                = MessageType.MouseUp;
 			message.button              = button;
 			message.cursor              = pos;
-			message.filter_no_children  = false;
-			message.filter_only_focused = false;
-			message.filter_only_on_hit  = true;
+			message.filterNoChildren  = false;
+			message.filterOnlyFocused = false;
+			message.filterOnlyOnHit  = true;
 			
 			return message;
 		}
@@ -953,12 +953,12 @@ namespace Epsitec.Common.Widgets
 			
 			public Drawing.Point				LastPosition
 			{
-				get { return this.window_cursor; }
+				get { return this.windowCursor; }
 			}
 			
 			public Drawing.Point				LastScreenPosition
 			{
-				get { return this.screen_cursor; }
+				get { return this.screenCursor; }
 			}
 			
 			public Window						LastWindow
@@ -968,28 +968,28 @@ namespace Epsitec.Common.Widgets
 			
 			public Window						MouseDownWindow
 			{
-				get { return this.window_mouse_down; }
+				get { return this.windowMouseDown; }
 			}
 			
 			public bool							IsSameWindowAsButtonDown
 			{
-				get { return (this.window_mouse_down == null) || (this.window_mouse_down == this.window); }
+				get { return (this.windowMouseDown == null) || (this.windowMouseDown == this.window); }
 			}
 			
 			
 			#region Internal Fields
 			internal ModifierKeys				modifiers;
-			internal KeyCode					key_down_code;
+			internal KeyCode					keyDownCode;
 			internal MouseButtons				buttons;
-			internal MouseButtons				button_down_id;
-			internal int						button_down_count;
-			internal int						button_down_time;
-			internal int						button_down_x;
-			internal int						button_down_y;
-			internal Drawing.Point				window_cursor;
-			internal Drawing.Point				screen_cursor;
+			internal MouseButtons				buttonDownId;
+			internal int						buttonDownCount;
+			internal int						buttonDownTime;
+			internal int						buttonDownX;
+			internal int						buttonDownY;
+			internal Drawing.Point				windowCursor;
+			internal Drawing.Point				screenCursor;
 			internal Window						window;
-			internal Window						window_mouse_down;
+			internal Window						windowMouseDown;
 			#endregion
 		}
 		#endregion
@@ -1039,35 +1039,35 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private bool						filter_no_children;
-		private bool						filter_only_focused;
-		private bool						filter_only_on_hit;
-		private bool						is_captured;
-		private bool						is_handled;
-		private bool						is_non_client;
-		private bool						is_swallowed;
-		private bool						is_dummy_message;
-		private bool						is_retired;
-		private bool						force_capture;
-		private WindowRoot					window_root;
-		private Widget						in_widget;
+		private bool						filterNoChildren;
+		private bool						filterOnlyFocused;
+		private bool						filterOnlyOnHit;
+		private bool						isCaptured;
+		private bool						isHandled;
+		private bool						isNonClient;
+		private bool						isSwallowed;
+		private bool						isDummyMessage;
+		private bool						isRetired;
+		private bool						forceCapture;
+		private WindowRoot					windowRoot;
+		private Widget						inWidget;
 		private Widget						consumer;
 		private string						command;
 		
 		private MessageType					type;
-		private int							tick_count;
+		private int							tickCount;
 		private Drawing.Point				cursor;
 		
 		private MouseButtons				button;
-		private int							button_down_count;
+		private int							buttonDownCount;
 		private int							wheel;
 		
 		private ModifierKeys				modifiers;
-		private KeyCode						key_code;
-		private int							key_char;
+		private KeyCode						keyCode;
+		private int							keyChar;
 		
-		private static KeyCode				last_code;
-		private static Message				last_message;
+		private static KeyCode				lastCode;
+		private static Message				lastMessage;
 		private static Message.State		state;
 	}
 }

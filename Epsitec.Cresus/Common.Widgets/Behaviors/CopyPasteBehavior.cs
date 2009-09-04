@@ -120,11 +120,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 				if (this.IsRichTextEnabled)
 				{
-					string text_layout = data.ReadTextLayout ();
+					string textLayout = data.ReadTextLayout ();
 
-					if (text_layout != null)
+					if (textLayout != null)
 					{
-						html = text_layout;
+						html = textLayout;
 					}
 					else
 					{

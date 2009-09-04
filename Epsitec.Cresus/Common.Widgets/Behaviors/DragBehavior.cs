@@ -14,19 +14,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 		}
 		
-		public DragBehavior(IDragBehaviorHost host, Widget widget, bool is_relative, bool is_zero_based)
+		public DragBehavior(IDragBehaviorHost host, Widget widget, bool isRelative, bool isZeroBased)
 		{
 			this.host          = host;
 			this.widget        = widget;
-			this.is_relative   = is_relative;
-			this.is_zero_based = is_zero_based;
+			this.isRelative   = isRelative;
+			this.isZeroBased = isZeroBased;
 		}
 		
 		public DragBehavior(Widget widget) : this(widget as IDragBehaviorHost, widget)
 		{
 		}
 		
-		public DragBehavior(Widget widget, bool is_relative, bool is_zero_based) : this(widget as IDragBehaviorHost, widget, is_relative, is_zero_based)
+		public DragBehavior(Widget widget, bool isRelative, bool isZeroBased) : this(widget as IDragBehaviorHost, widget, isRelative, isZeroBased)
 		{
 		}
 		
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public bool							IsDragging
 		{
-			get { return this.is_dragging; }
+			get { return this.isDragging; }
 		}
 		
 		
@@ -94,14 +94,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		protected void StartDragging(Message message, Drawing.Point pos)
 		{
-			if (this.is_relative)
+			if (this.isRelative)
 			{
 				if (this.host.OnDragBegin (pos) == false)
 				{
 					return;
 				}
 
-				this.drag_offset = pos - this.host.DragLocation;
+				this.dragOffset = pos - this.host.DragLocation;
 			}
 			else
 			{
@@ -110,22 +110,22 @@ namespace Epsitec.Common.Widgets.Behaviors
 					return;
 				}
 				
-				this.drag_offset = message.Cursor - this.host.DragLocation;
+				this.dragOffset = message.Cursor - this.host.DragLocation;
 			}
 			
 			message.Captured = true;
 			message.Consumer = this.widget;
 			
-			this.is_dragging = true;
+			this.isDragging = true;
 		}
 		
 		protected void StopDragging(Message message, Drawing.Point pos)
 		{
-			if (this.is_dragging)
+			if (this.isDragging)
 			{
 				message.Consumer = this.widget;
 				
-				this.is_dragging = false;
+				this.isDragging = false;
 				
 				this.host.OnDragEnd ();
 			}
@@ -133,23 +133,23 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		protected void HandleDragging(Message message, Drawing.Point pos)
 		{
-			if (this.is_dragging)
+			if (this.isDragging)
 			{
 				message.Consumer = this.widget;
 				
-				if (this.is_relative)
+				if (this.isRelative)
 				{
-					Drawing.Point old_pos = this.host.DragLocation;
-					Drawing.Point new_pos = this.is_zero_based ? pos : pos - this.drag_offset;
+					Drawing.Point oldPos = this.host.DragLocation;
+					Drawing.Point newPos = this.isZeroBased ? pos : pos - this.dragOffset;
 					
-					this.host.OnDragging (new DragEventArgs (old_pos, new_pos));
+					this.host.OnDragging (new DragEventArgs (oldPos, newPos));
 				}
 				else
 				{
-					Drawing.Point old_pos = this.host.DragLocation;
-					Drawing.Point new_pos = this.is_zero_based ? message.Cursor : message.Cursor - this.drag_offset;
+					Drawing.Point oldPos = this.host.DragLocation;
+					Drawing.Point newPos = this.isZeroBased ? message.Cursor : message.Cursor - this.dragOffset;
 					
-					this.host.OnDragging (new DragEventArgs (old_pos, new_pos));
+					this.host.OnDragging (new DragEventArgs (oldPos, newPos));
 				}
 			}
 		}
@@ -158,10 +158,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 		protected IDragBehaviorHost			host;
 		protected Widget					widget;
 		
-		protected bool						is_dragging;
-		protected bool						is_relative;
-		protected bool						is_zero_based;
+		protected bool						isDragging;
+		protected bool						isRelative;
+		protected bool						isZeroBased;
 		
-		protected Drawing.Point				drag_offset;
+		protected Drawing.Point				dragOffset;
 	}
 }

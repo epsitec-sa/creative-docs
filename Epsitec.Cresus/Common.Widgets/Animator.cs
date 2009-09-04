@@ -10,19 +10,19 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Animator : System.IDisposable
 	{
-		public Animator(double time_span)
+		public Animator(double timeSpan)
 		{
-			System.Diagnostics.Debug.Assert (time_span > 0);
+			System.Diagnostics.Debug.Assert (timeSpan > 0);
 			
-			this.time_span = time_span;
+			this.timeSpan = timeSpan;
 		}
 		
 		
 		
-		public void SetCallback(System.Delegate callback_changed, System.Delegate callback_finished)
+		public void SetCallback(System.Delegate callbackChanged, System.Delegate callbackFinished)
 		{
-			this.callback_changed  = callback_changed;
-			this.callback_finished = callback_finished;
+			this.callbackChanged  = callbackChanged;
+			this.callbackFinished = callbackFinished;
 		}
 		
 		public void SetValue(object begin, object end)
@@ -32,17 +32,17 @@ namespace Epsitec.Common.Widgets
 		
 		public void SetValue(int i, object begin, object end)
 		{
-			int old_count = this.Count;
+			int oldCount = this.Count;
 			
-			if (i >= old_count)
+			if (i >= oldCount)
 			{
-				Value[] old_values = this.values;
+				Value[] oldValues = this.values;
 				
 				this.values  = new Value[i+1];
 				
-				for (int j = 0; j < old_count; j++)
+				for (int j = 0; j < oldCount; j++)
 				{
-					this.values[j] = old_values[j];
+					this.values[j] = oldValues[j];
 				}
 			}
 			
@@ -81,8 +81,8 @@ namespace Epsitec.Common.Widgets
 				this.timer.TimeElapsed += HandleTimerTimeElapsed;
 			}
 			
-			this.tick_begin  = System.DateTime.Now.Ticks;
-			this.tick_end    = this.tick_begin + (long)(this.time_span * 10000000);
+			this.tickBegin  = System.DateTime.Now.Ticks;
+			this.tickEnd    = this.tickBegin + (long)(this.timeSpan * 10000000);
 			
 			this.timer.Start ();
 		}
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Widgets
 		
 		public double							TimeSpan
 		{
-			get { return this.time_span; }
+			get { return this.timeSpan; }
 		}
 		
 		
@@ -120,20 +120,20 @@ namespace Epsitec.Common.Widgets
 		{
 			long now = System.DateTime.Now.Ticks;
 			
-			if (now > this.tick_end)
+			if (now > this.tickEnd)
 			{
 				this.timer.Stop ();
-				now = this.tick_end;
+				now = this.tickEnd;
 			}
 			
-			this.ratio = (double)(now - this.tick_begin) / (double)(this.tick_end - this.tick_begin);
+			this.ratio = (double)(now - this.tickBegin) / (double)(this.tickEnd - this.tickBegin);
 			
 			if (this.Changed != null)
 			{
 				this.Changed (this);
 			}
 			
-			if (this.callback_changed != null)
+			if (this.callbackChanged != null)
 			{
 				object[] args = new object[this.Count];
 				
@@ -142,18 +142,18 @@ namespace Epsitec.Common.Widgets
 					args[i] = this.GetValue (i);
 				}
 				
-				this.callback_changed.DynamicInvoke (args);
+				this.callbackChanged.DynamicInvoke (args);
 			}
 			
-			if (now == this.tick_end)
+			if (now == this.tickEnd)
 			{
 				if (this.Finished != null)
 				{
 					this.Finished (this);
 				}
-				if (this.callback_finished != null)
+				if (this.callbackFinished != null)
 				{
-					this.callback_finished.DynamicInvoke (new object[] { this });
+					this.callbackFinished.DynamicInvoke (new object[] { this });
 				}
 			}
 		}
@@ -327,10 +327,10 @@ namespace Epsitec.Common.Widgets
 		protected Timer							timer;
 		protected Value[]						values;
 		protected double						ratio;
-		protected double						time_span;
-		protected long							tick_begin;
-		protected long							tick_end;
-		protected System.Delegate				callback_changed;
-		protected System.Delegate				callback_finished;
+		protected double						timeSpan;
+		protected long							tickBegin;
+		protected long							tickEnd;
+		protected System.Delegate				callbackChanged;
+		protected System.Delegate				callbackFinished;
 	}
 }

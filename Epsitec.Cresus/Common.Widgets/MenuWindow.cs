@@ -19,12 +19,12 @@ namespace Epsitec.Common.Widgets
 			this.DisableMouseActivation ();
 		}
 		
-		public MenuWindow(Behaviors.MenuBehavior behavior, Widget parent_widget) : this ()
+		public MenuWindow(Behaviors.MenuBehavior behavior, Widget parentWidget) : this ()
 		{
 			System.Diagnostics.Debug.Assert (behavior != null);
 			
 			this.Behavior     = behavior;
-			this.ParentWidget = parent_widget;
+			this.ParentWidget = parentWidget;
 		}
 		
 		
@@ -59,11 +59,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.menu_type;
+				return this.menuType;
 			}
 			set
 			{
-				this.menu_type = value;
+				this.menuType = value;
 			}
 		}
 		
@@ -156,12 +156,12 @@ namespace Epsitec.Common.Widgets
 			
 			that.SetValueBase (MenuWindow.ParentWidgetProperty, value);
 			
-			Window old_owner = that.Owner;
-			Window new_owner = parent == null ? null : parent.Window;
+			Window oldOwner = that.Owner;
+			Window newOwner = parent == null ? null : parent.Window;
 			
-			if (old_owner != new_owner)
+			if (oldOwner != newOwner)
 			{
-				that.Owner = new_owner;
+				that.Owner = newOwner;
 			}
 		}
 		
@@ -169,6 +169,6 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ParentWidgetProperty	= DependencyProperty.Register ("ParentWidget", typeof (Widget), typeof (MenuWindow), new DependencyPropertyMetadata (null, new SetValueOverrideCallback (MenuWindow.SetParentWidgetValue)));
 		
 		private Behaviors.MenuBehavior			behavior;
-		private MenuType						menu_type;
+		private MenuType						menuType;
 	}
 }

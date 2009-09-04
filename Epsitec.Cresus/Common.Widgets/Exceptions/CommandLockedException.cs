@@ -20,8 +20,8 @@ namespace Epsitec.Common.Widgets.Exceptions
 		{
 		}
 
-		public CommandLockedException(string message, System.Exception inner_exception)
-			: base (message, inner_exception)
+		public CommandLockedException(string message, System.Exception innerException)
+			: base (message, innerException)
 		{
 		}
 

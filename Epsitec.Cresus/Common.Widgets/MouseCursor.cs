@@ -31,53 +31,53 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Image         image      = Drawing.Bitmap.CopyImage (cursorImage);
 			System.Drawing.Bitmap bitmap     = image.BitmapImage.NativeBitmap;
-			System.IntPtr         org_handle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
-			Win32Api.IconInfo     icon_info  = new Win32Api.IconInfo ();
+			System.IntPtr         orgHandle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
+			Win32Api.IconInfo     iconInfo  = new Win32Api.IconInfo ();
 			
-			if (org_handle == System.IntPtr.Zero)
+			if (orgHandle == System.IntPtr.Zero)
 			{
 				throw new System.NullReferenceException ("FromImage cannot derive bitmap handle.");
 			}
 			
-			Win32Api.GetIconInfo (org_handle, out icon_info);
+			Win32Api.GetIconInfo (orgHandle, out iconInfo);
 			
-			if ((icon_info.BitmapColor == System.IntPtr.Zero) ||
-				(icon_info.BitmapMask == System.IntPtr.Zero))
+			if ((iconInfo.BitmapColor == System.IntPtr.Zero) ||
+				(iconInfo.BitmapMask == System.IntPtr.Zero))
 			{
 				throw new System.NullReferenceException ("FromImage got empty IconInfo.");
 			}
 			
-			icon_info.FlagIcon = 0;
-			icon_info.HotspotX = xhot;
-			icon_info.HotspotY = (int)(image.Height) - yhot;
+			iconInfo.FlagIcon = 0;
+			iconInfo.HotspotX = xhot;
+			iconInfo.HotspotY = (int)(image.Height) - yhot;
 			
-			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
-			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
+			System.IntPtr               newHandle = Win32Api.CreateIconIndirect (ref iconInfo);
+			System.Windows.Forms.Cursor winCursor = new System.Windows.Forms.Cursor (newHandle);
 
-			Win32Api.DeleteObject (icon_info.BitmapColor);
-			Win32Api.DeleteObject (icon_info.BitmapMask);
-			Win32Api.DestroyIcon (org_handle);
+			Win32Api.DeleteObject (iconInfo.BitmapColor);
+			Win32Api.DeleteObject (iconInfo.BitmapMask);
+			Win32Api.DestroyIcon (orgHandle);
 			image.Dispose ();
 			
-			return new MouseCursor (win_cursor, new_handle);
+			return new MouseCursor (winCursor, newHandle);
 		}
 		
 		public static MouseCursor FromImage(Drawing.Image cursorImage)
 		{
 			Drawing.Image         image      = Drawing.Bitmap.CopyImage (cursorImage);
 			System.Drawing.Bitmap bitmap     = image.BitmapImage.NativeBitmap;
-			System.IntPtr         org_handle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
-			Win32Api.IconInfo     icon_info  = new Win32Api.IconInfo ();
+			System.IntPtr         orgHandle = bitmap == null ? System.IntPtr.Zero : bitmap.GetHicon ();
+			Win32Api.IconInfo     iconInfo  = new Win32Api.IconInfo ();
 			
-			if (org_handle == System.IntPtr.Zero)
+			if (orgHandle == System.IntPtr.Zero)
 			{
 				throw new System.NullReferenceException ("FromImage cannot derive bitmap handle.");
 			}
 			
-			Win32Api.GetIconInfo (org_handle, out icon_info);
+			Win32Api.GetIconInfo (orgHandle, out iconInfo);
 			
-			if ((icon_info.BitmapColor == System.IntPtr.Zero) ||
-				(icon_info.BitmapMask == System.IntPtr.Zero))
+			if ((iconInfo.BitmapColor == System.IntPtr.Zero) ||
+				(iconInfo.BitmapMask == System.IntPtr.Zero))
 			{
 				throw new System.NullReferenceException ("FromImage got empty IconInfo.");
 			}
@@ -85,19 +85,19 @@ namespace Epsitec.Common.Widgets
 			double ox = image.Origin.X;
 			double oy = image.Height - image.Origin.Y;
 			
-			icon_info.FlagIcon = 0;
-			icon_info.HotspotX = (int)System.Math.Floor(ox+0.5);;
-			icon_info.HotspotY = (int)System.Math.Floor(oy+0.5);;
+			iconInfo.FlagIcon = 0;
+			iconInfo.HotspotX = (int)System.Math.Floor(ox+0.5);;
+			iconInfo.HotspotY = (int)System.Math.Floor(oy+0.5);;
 			
-			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
-			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
+			System.IntPtr               newHandle = Win32Api.CreateIconIndirect (ref iconInfo);
+			System.Windows.Forms.Cursor winCursor = new System.Windows.Forms.Cursor (newHandle);
 
-			Win32Api.DeleteObject (icon_info.BitmapColor);
-			Win32Api.DeleteObject (icon_info.BitmapMask);
-			Win32Api.DestroyIcon (org_handle);
+			Win32Api.DeleteObject (iconInfo.BitmapColor);
+			Win32Api.DeleteObject (iconInfo.BitmapMask);
+			Win32Api.DestroyIcon (orgHandle);
 			image.Dispose ();
 			
-			return new MouseCursor (win_cursor, new_handle);
+			return new MouseCursor (winCursor, newHandle);
 		}
 		
 		
@@ -151,122 +151,122 @@ namespace Epsitec.Common.Widgets
 		
 		public static MouseCursor			AsArrow
 		{
-			get { return MouseCursor.as_arrow; }
+			get { return MouseCursor.asArrow; }
 		}
 		
 		public static MouseCursor			AsHand
 		{
-			get { return MouseCursor.as_hand; }
+			get { return MouseCursor.asHand; }
 		}
 		
 		public static MouseCursor			AsIBeam
 		{
-			get { return MouseCursor.as_I_beam; }
+			get { return MouseCursor.asIBeam; }
 		}
 		
 		public static MouseCursor			AsHSplit
 		{
-			get { return MouseCursor.as_h_split; }
+			get { return MouseCursor.asHSplit; }
 		}
 		
 		public static MouseCursor			AsVSplit
 		{
-			get { return MouseCursor.as_v_split; }
+			get { return MouseCursor.asVSplit; }
 		}
 		
 		public static MouseCursor			AsCross
 		{
-			get { return MouseCursor.as_cross; }
+			get { return MouseCursor.asCross; }
 		}
 		
 		public static MouseCursor			AsWait
 		{
-			get { return MouseCursor.as_wait; }
+			get { return MouseCursor.asWait; }
 		}
 		
 		public static MouseCursor			AsHelp
 		{
-			get { return MouseCursor.as_help; }
+			get { return MouseCursor.asHelp; }
 		}
 		
 		public static MouseCursor			AsNo
 		{
-			get { return MouseCursor.as_no; }
+			get { return MouseCursor.asNo; }
 		}
 		
 		public static MouseCursor			AsNoHMove
 		{
-			get { return MouseCursor.as_no_h_move; }
+			get { return MouseCursor.asNoHMove; }
 		}
 		
 		public static MouseCursor			AsNoVMove
 		{
-			get { return MouseCursor.as_no_v_move; }
+			get { return MouseCursor.asNoVMove; }
 		}
 		
 		public static MouseCursor			AsPanEast
 		{
-			get { return MouseCursor.as_pan_east; }
+			get { return MouseCursor.asPanEast; }
 		}
 		
 		public static MouseCursor			AsPanNE
 		{
-			get { return MouseCursor.as_pan_ne; }
+			get { return MouseCursor.asPanNe; }
 		}
 		
 		public static MouseCursor			AsPanNorth
 		{
-			get { return MouseCursor.as_pan_north; }
+			get { return MouseCursor.asPanNorth; }
 		}
 		
 		public static MouseCursor			AsPanNW
 		{
-			get { return MouseCursor.as_pan_nw; }
+			get { return MouseCursor.asPanNw; }
 		}
 		
 		public static MouseCursor			AsPanSE
 		{
-			get { return MouseCursor.as_pan_se; }
+			get { return MouseCursor.asPanSe; }
 		}
 		
 		public static MouseCursor			AsPanSouth
 		{
-			get { return MouseCursor.as_pan_south; }
+			get { return MouseCursor.asPanSouth; }
 		}
 		
 		public static MouseCursor			AsPanSW
 		{
-			get { return MouseCursor.as_pan_sw; }
+			get { return MouseCursor.asPanSw; }
 		}
 		
 		public static MouseCursor			AsPanWest
 		{
-			get { return MouseCursor.as_pan_west; }
+			get { return MouseCursor.asPanWest; }
 		}
 		
 		public static MouseCursor			AsSizeAll
 		{
-			get { return MouseCursor.as_size_all; }
+			get { return MouseCursor.asSizeAll; }
 		}
 		
 		public static MouseCursor			AsSizeNESW
 		{
-			get { return MouseCursor.as_size_nesw; }
+			get { return MouseCursor.asSizeNesw; }
 		}
 		
 		public static MouseCursor			AsSizeNS
 		{
-			get { return MouseCursor.as_size_ns; }
+			get { return MouseCursor.asSizeNs; }
 		}
 		
 		public static MouseCursor			AsSizeNWSE
 		{
-			get { return MouseCursor.as_size_nwse; }
+			get { return MouseCursor.asSizeNwse; }
 		}
 		
 		public static MouseCursor			AsSizeWE
 		{
-			get { return MouseCursor.as_size_we; }
+			get { return MouseCursor.asSizeWe; }
 		}
 		
 		
@@ -274,29 +274,29 @@ namespace Epsitec.Common.Widgets
 		private System.IntPtr				handle;
 		
 		
-		private static MouseCursor			as_arrow     = new MouseCursor (System.Windows.Forms.Cursors.Arrow);
-		private static MouseCursor			as_hand      = new MouseCursor (System.Windows.Forms.Cursors.Hand);
-		private static MouseCursor			as_I_beam    = new MouseCursor (System.Windows.Forms.Cursors.IBeam);
-		private static MouseCursor			as_h_split   = new MouseCursor (System.Windows.Forms.Cursors.HSplit);
-		private static MouseCursor			as_v_split   = new MouseCursor (System.Windows.Forms.Cursors.VSplit);
-		private static MouseCursor			as_cross     = new MouseCursor (System.Windows.Forms.Cursors.Cross);
-		private static MouseCursor			as_wait      = new MouseCursor (System.Windows.Forms.Cursors.WaitCursor);
-		private static MouseCursor			as_help      = new MouseCursor (System.Windows.Forms.Cursors.Help);
-		private static MouseCursor			as_no        = new MouseCursor (System.Windows.Forms.Cursors.No);
-		private static MouseCursor			as_no_h_move = new MouseCursor (System.Windows.Forms.Cursors.NoMoveHoriz);
-		private static MouseCursor			as_no_v_move = new MouseCursor (System.Windows.Forms.Cursors.NoMoveVert);
-		private static MouseCursor			as_pan_east  = new MouseCursor (System.Windows.Forms.Cursors.PanEast);
-		private static MouseCursor			as_pan_ne    = new MouseCursor (System.Windows.Forms.Cursors.PanNE);
-		private static MouseCursor			as_pan_north = new MouseCursor (System.Windows.Forms.Cursors.PanNorth);
-		private static MouseCursor			as_pan_nw    = new MouseCursor (System.Windows.Forms.Cursors.PanNW);
-		private static MouseCursor			as_pan_se    = new MouseCursor (System.Windows.Forms.Cursors.PanSE);
-		private static MouseCursor			as_pan_south = new MouseCursor (System.Windows.Forms.Cursors.PanSouth);
-		private static MouseCursor			as_pan_sw    = new MouseCursor (System.Windows.Forms.Cursors.PanSW);
-		private static MouseCursor			as_pan_west  = new MouseCursor (System.Windows.Forms.Cursors.PanWest);
-		private static MouseCursor			as_size_all  = new MouseCursor (System.Windows.Forms.Cursors.SizeAll);
-		private static MouseCursor			as_size_nesw = new MouseCursor (System.Windows.Forms.Cursors.SizeNESW);
-		private static MouseCursor			as_size_ns   = new MouseCursor (System.Windows.Forms.Cursors.SizeNS);
-		private static MouseCursor			as_size_nwse = new MouseCursor (System.Windows.Forms.Cursors.SizeNWSE);
-		private static MouseCursor			as_size_we   = new MouseCursor (System.Windows.Forms.Cursors.SizeWE);
+		private static MouseCursor			asArrow     = new MouseCursor (System.Windows.Forms.Cursors.Arrow);
+		private static MouseCursor			asHand      = new MouseCursor (System.Windows.Forms.Cursors.Hand);
+		private static MouseCursor			asIBeam    = new MouseCursor (System.Windows.Forms.Cursors.IBeam);
+		private static MouseCursor			asHSplit   = new MouseCursor (System.Windows.Forms.Cursors.HSplit);
+		private static MouseCursor			asVSplit   = new MouseCursor (System.Windows.Forms.Cursors.VSplit);
+		private static MouseCursor			asCross     = new MouseCursor (System.Windows.Forms.Cursors.Cross);
+		private static MouseCursor			asWait      = new MouseCursor (System.Windows.Forms.Cursors.WaitCursor);
+		private static MouseCursor			asHelp      = new MouseCursor (System.Windows.Forms.Cursors.Help);
+		private static MouseCursor			asNo        = new MouseCursor (System.Windows.Forms.Cursors.No);
+		private static MouseCursor			asNoHMove = new MouseCursor (System.Windows.Forms.Cursors.NoMoveHoriz);
+		private static MouseCursor			asNoVMove = new MouseCursor (System.Windows.Forms.Cursors.NoMoveVert);
+		private static MouseCursor			asPanEast  = new MouseCursor (System.Windows.Forms.Cursors.PanEast);
+		private static MouseCursor			asPanNe    = new MouseCursor (System.Windows.Forms.Cursors.PanNE);
+		private static MouseCursor			asPanNorth = new MouseCursor (System.Windows.Forms.Cursors.PanNorth);
+		private static MouseCursor			asPanNw    = new MouseCursor (System.Windows.Forms.Cursors.PanNW);
+		private static MouseCursor			asPanSe    = new MouseCursor (System.Windows.Forms.Cursors.PanSE);
+		private static MouseCursor			asPanSouth = new MouseCursor (System.Windows.Forms.Cursors.PanSouth);
+		private static MouseCursor			asPanSw    = new MouseCursor (System.Windows.Forms.Cursors.PanSW);
+		private static MouseCursor			asPanWest  = new MouseCursor (System.Windows.Forms.Cursors.PanWest);
+		private static MouseCursor			asSizeAll  = new MouseCursor (System.Windows.Forms.Cursors.SizeAll);
+		private static MouseCursor			asSizeNesw = new MouseCursor (System.Windows.Forms.Cursors.SizeNESW);
+		private static MouseCursor			asSizeNs   = new MouseCursor (System.Windows.Forms.Cursors.SizeNS);
+		private static MouseCursor			asSizeNwse = new MouseCursor (System.Windows.Forms.Cursors.SizeNWSE);
+		private static MouseCursor			asSizeWe   = new MouseCursor (System.Windows.Forms.Cursors.SizeWE);
 	}
 }

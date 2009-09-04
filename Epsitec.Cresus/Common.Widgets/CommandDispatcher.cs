@@ -314,7 +314,7 @@ namespace Epsitec.Common.Widgets
 			//	Il peut y avoir zéro à n arguments séparés par des virgules, le tout entre
 			//	parenthèses.
 			
-			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
+			string regex1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
 				//	                      <---- nom valide --->
 				/**/       @"\s*\(\s*((((?<arg>(" +
 				/**/                          @"(\""[^\""]{0,}\"")|" +
@@ -329,7 +329,7 @@ namespace Epsitec.Common.Widgets
 			
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
-			CommandDispatcher.commandArgRegex = new Regex (regex_1, options);
+			CommandDispatcher.commandArgRegex = new Regex (regex1, options);
 #endif
 
 			CommandDispatcher.commandAttributeType = typeof (Support.CommandAttribute);

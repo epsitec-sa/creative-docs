@@ -160,8 +160,8 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public static Drawing.Rectangle MapVisualToParent(Visual visual, Drawing.Rectangle value)
 		{
-			bool flip_x = value.Width < 0;
-			bool flip_y = value.Height < 0;
+			bool flipX = value.Width < 0;
+			bool flipY = value.Height < 0;
 			
 			Drawing.Point p1 = VisualTree.MapVisualToParent (visual, value.BottomLeft);
 			Drawing.Point p2 = VisualTree.MapVisualToParent (visual, value.TopRight);
@@ -172,16 +172,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			value.Width  = System.Math.Abs (p1.X - p2.X);
 			value.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) value.FlipX ();
-			if (flip_y) value.FlipY ();
+			if (flipX) value.FlipX ();
+			if (flipY) value.FlipY ();
 			
 			return value;
 		}
 		
 		public static Drawing.Rectangle MapVisualToRoot(Visual visual, Drawing.Rectangle value)
 		{
-			bool flip_x = value.Width < 0;
-			bool flip_y = value.Height < 0;
+			bool flipX = value.Width < 0;
+			bool flipY = value.Height < 0;
 			
 			Drawing.Point p1 = VisualTree.MapVisualToRoot (visual, value.BottomLeft);
 			Drawing.Point p2 = VisualTree.MapVisualToRoot (visual, value.TopRight);
@@ -192,16 +192,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			value.Width  = System.Math.Abs (p1.X - p2.X);
 			value.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) value.FlipX ();
-			if (flip_y) value.FlipY ();
+			if (flipX) value.FlipX ();
+			if (flipY) value.FlipY ();
 			
 			return value;
 		}
 		
 		public static Drawing.Rectangle MapParentToVisual(Visual visual, Drawing.Rectangle value)
 		{
-			bool flip_x = value.Width < 0;
-			bool flip_y = value.Height < 0;
+			bool flipX = value.Width < 0;
+			bool flipY = value.Height < 0;
 			
 			Drawing.Point p1 = VisualTree.MapParentToVisual (visual, value.BottomLeft);
 			Drawing.Point p2 = VisualTree.MapParentToVisual (visual, value.TopRight);
@@ -212,16 +212,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			value.Width  = System.Math.Abs (p1.X - p2.X);
 			value.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) value.FlipX ();
-			if (flip_y) value.FlipY ();
+			if (flipX) value.FlipX ();
+			if (flipY) value.FlipY ();
 			
 			return value;
 		}
 		
 		public static Drawing.Rectangle MapRootToVisual(Visual visual, Drawing.Rectangle value)
 		{
-			bool flip_x = value.Width < 0;
-			bool flip_y = value.Height < 0;
+			bool flipX = value.Width < 0;
+			bool flipY = value.Height < 0;
 			
 			Drawing.Point p1 = VisualTree.MapRootToVisual (visual, value.BottomLeft);
 			Drawing.Point p2 = VisualTree.MapRootToVisual (visual, value.TopRight);
@@ -232,8 +232,8 @@ namespace Epsitec.Common.Widgets.Helpers
 			value.Width  = System.Math.Abs (p1.X - p2.X);
 			value.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) value.FlipX ();
-			if (flip_y) value.FlipY ();
+			if (flipX) value.FlipX ();
+			if (flipY) value.FlipY ();
 			
 			return value;
 		}
@@ -241,8 +241,8 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public static Drawing.Rectangle MapVisualToScreen(Visual visual, Drawing.Rectangle value)
 		{
-			bool flip_x = value.Width < 0;
-			bool flip_y = value.Height < 0;
+			bool flipX = value.Width < 0;
+			bool flipY = value.Height < 0;
 			
 			Drawing.Point p1 = VisualTree.MapVisualToScreen (visual, value.BottomLeft);
 			Drawing.Point p2 = VisualTree.MapVisualToScreen (visual, value.TopRight);
@@ -253,16 +253,16 @@ namespace Epsitec.Common.Widgets.Helpers
 			value.Width  = System.Math.Abs (p1.X - p2.X);
 			value.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) value.FlipX ();
-			if (flip_y) value.FlipY ();
+			if (flipX) value.FlipX ();
+			if (flipY) value.FlipY ();
 			
 			return value;
 		}
 		
 		public static Drawing.Rectangle MapScreenToVisual(Visual visual, Drawing.Rectangle value)
 		{
-			bool flip_x = value.Width < 0;
-			bool flip_y = value.Height < 0;
+			bool flipX = value.Width < 0;
+			bool flipY = value.Height < 0;
 			
 			Drawing.Point p1 = VisualTree.MapScreenToVisual (visual, value.BottomLeft);
 			Drawing.Point p2 = VisualTree.MapScreenToVisual (visual, value.TopRight);
@@ -273,8 +273,8 @@ namespace Epsitec.Common.Widgets.Helpers
 			value.Width  = System.Math.Abs (p1.X - p2.X);
 			value.Height = System.Math.Abs (p1.Y - p2.Y);
 			
-			if (flip_x) value.FlipX ();
-			if (flip_y) value.FlipY ();
+			if (flipX) value.FlipX ();
+			if (flipY) value.FlipY ();
 			
 			return value;
 		}

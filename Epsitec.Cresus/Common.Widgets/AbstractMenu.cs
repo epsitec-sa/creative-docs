@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.icon_width;
+				return this.iconWidth;
 			}
 		}
 		
@@ -208,9 +208,9 @@ namespace Epsitec.Common.Widgets
 			
 			if (button != null)
 			{
-				this.open_button = button;
-				this.open_button.SetEngaged (true);
-				this.open_button.SetFrozen (true);
+				this.openButton = button;
+				this.openButton.SetEngaged (true);
+				this.openButton.SetFrozen (true);
 			}
 			
 			this.ConnectEventHandlers ();
@@ -235,14 +235,14 @@ namespace Epsitec.Common.Widgets
 				max = System.Math.Max (max, item.IconWidth);
 			}
 			
-			this.icon_width = max;
+			this.iconWidth = max;
 			
 			double dx = 0;
 			double dy = 0;
 			
 			foreach (MenuItem item in this.items)
 			{
-				item.IconWidth = this.icon_width;
+				item.IconWidth = this.iconWidth;
 				
 				Drawing.Size rs = item.GetBestFitSize ();
 				
@@ -327,30 +327,30 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void ConnectEventHandlers()
 		{
-			if (this.is_connected == false)
+			if (this.isConnected == false)
 			{
 				this.Behavior.Accepted += this.HandleBehaviorAccepted;
 				this.Behavior.Rejected += this.HandleBehaviorRejected;
 				
-				this.is_connected = true;
+				this.isConnected = true;
 			}
 		}
 		
 		protected virtual void DisconnectEventHandlers()
 		{
-			if (this.is_connected)
+			if (this.isConnected)
 			{
-				if (this.open_button != null)
+				if (this.openButton != null)
 				{
-					this.open_button.SetFrozen (false);
-					this.open_button.SetEngaged (false);
-					this.open_button = null;
+					this.openButton.SetFrozen (false);
+					this.openButton.SetEngaged (false);
+					this.openButton = null;
 				}
 				
 				this.Behavior.Accepted -= this.HandleBehaviorAccepted;
 				this.Behavior.Rejected -= this.HandleBehaviorRejected;
 				
-				this.is_connected = false;
+				this.isConnected = false;
 			}
 		}
 		
@@ -444,8 +444,8 @@ namespace Epsitec.Common.Widgets
 			#region IMenuHost Members
 			public void GetMenuDisposition(Widget item, ref Drawing.Size size, out Drawing.Point location, out Animation animation)
 			{
-				ScreenInfo        screen_info;
-				Drawing.Rectangle working_area;
+				ScreenInfo        screenInfo;
+				Drawing.Rectangle workingArea;
 				
 				if (this.menu.IsHorizontal)
 				{
@@ -461,10 +461,10 @@ namespace Epsitec.Common.Widgets
 					
 					test.X += size.Width;
 					
-					screen_info  = ScreenInfo.Find (test);
-					working_area = screen_info.WorkingArea;
+					screenInfo  = ScreenInfo.Find (test);
+					workingArea = screenInfo.WorkingArea;
 					
-					if (test.X <= working_area.Right)
+					if (test.X <= workingArea.Right)
 					{
 						//	Le menu a suffisamment de place pour s'afficher à droite
 						//	de son parent :
@@ -491,13 +491,13 @@ namespace Epsitec.Common.Widgets
 				//	Détermine s'il faut décaler verticalement le menu pour qu'il tienne
 				//	dans la partie visible de l'écran :
 				
-				screen_info  = ScreenInfo.Find (new Drawing.Rectangle (location, size));
-				working_area = screen_info.WorkingArea;
+				screenInfo  = ScreenInfo.Find (new Drawing.Rectangle (location, size));
+				workingArea = screenInfo.WorkingArea;
 				
-				if (location.Y < working_area.Bottom)
+				if (location.Y < workingArea.Bottom)
 				{
 					animation  = Animation.FadeIn;
-					location.Y = working_area.Bottom;
+					location.Y = workingArea.Bottom;
 				}
 			}
 			#endregion
@@ -613,9 +613,9 @@ namespace Epsitec.Common.Widgets
 		private Drawing.Margins					shadow  = Drawing.Margins.Zero;
 		private MenuItemCollection				items;
 		private DependencyObject				host;
-		private double							icon_width;
-		private Widget							open_button;
-		private bool							is_connected;
+		private double							iconWidth;
+		private Widget							openButton;
+		private bool							isConnected;
 		private bool							autoDisposeOnCleanup;
 	}
 }

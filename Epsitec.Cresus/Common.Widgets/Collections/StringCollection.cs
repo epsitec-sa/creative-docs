@@ -19,11 +19,11 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.accepts_rich_text;
+				return this.acceptsRichText;
 			}
 			set
 			{
-				this.accepts_rich_text = value;
+				this.acceptsRichText = value;
 			}
 		}
 		
@@ -82,18 +82,18 @@ namespace Epsitec.Common.Widgets.Collections
 		
 		public int  Add(string name, object value)
 		{
-			int index_0 = this.list.Count;
-			int index_1 = this.names.Count;
+			int index0 = this.list.Count;
+			int index1 = this.names.Count;
 			
 			this.list.Add (value);
 			this.names.Add (name);
 			
-			System.Diagnostics.Debug.Assert (index_0 == index_1);
+			System.Diagnostics.Debug.Assert (index0 == index1);
 			
 			this.HandleInsert (value);
 			this.HandleChange ();
 			
-			return index_0;
+			return index0;
 		}
 
 		public void AddRange(System.Collections.Generic.IEnumerable<string> values)
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets.Collections
 				{
 					string text = this[i];
 					
-					if (this.accepts_rich_text)
+					if (this.acceptsRichText)
 					{
 						text = TextLayout.ConvertToSimpleText (text);
 					}
@@ -158,15 +158,15 @@ namespace Epsitec.Common.Widgets.Collections
 			return this.FindStartMatch (find, 0);
 		}
 		
-		public int FindStartMatch(string find, int start_at)
+		public int FindStartMatch(string find, int startAt)
 		{
 			find = find.ToUpper ();
 			
-			for (int i = start_at; i < this.list.Count; i++)
+			for (int i = startAt; i < this.list.Count; i++)
 			{
 				string text = this[i];
 					
-				if (this.accepts_rich_text)
+				if (this.acceptsRichText)
 				{
 					text = TextLayout.ConvertToSimpleText (text);
 				}
@@ -274,18 +274,18 @@ namespace Epsitec.Common.Widgets.Collections
 
 		public int Add(object value)
 		{
-			int index_0 = this.list.Count;
-			int index_1 = this.names.Count;
+			int index0 = this.list.Count;
+			int index1 = this.names.Count;
 
 			this.list.Add (value);
 			this.names.Add (null);
 			
-			System.Diagnostics.Debug.Assert (index_0 == index_1);
+			System.Diagnostics.Debug.Assert (index0 == index1);
 			
 			this.HandleInsert (value);
 			this.HandleChange ();
 			
-			return index_0;
+			return index0;
 		}
 
 		public bool IsFixedSize
@@ -358,7 +358,7 @@ namespace Epsitec.Common.Widgets.Collections
 		private IStringCollectionHost			host;
 		private List<object>					list;
 		private List<string>					names;
-		private bool							accepts_rich_text;
+		private bool							acceptsRichText;
 		private ConverterCallback				converter;
 	}
 }

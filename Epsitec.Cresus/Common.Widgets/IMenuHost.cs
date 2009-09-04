@@ -9,6 +9,6 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface IMenuHost
 	{
-		void GetMenuDisposition(Widget parent_widget, ref Drawing.Size size, out Drawing.Point location, out Animation animation);
+		void GetMenuDisposition(Widget parentWidget, ref Drawing.Size size, out Drawing.Point location, out Animation animation);
 	}
 }

@@ -2115,12 +2115,12 @@ namespace Epsitec.Common.Widgets
 
 				ClipboardReadData data = Clipboard.GetData ();
 
-				string text_layout = data.ReadTextLayout ();
+				string textLayout = data.ReadTextLayout ();
 				string html        = null;
 
-				if (text_layout != null)
+				if (textLayout != null)
 				{
-					html = text_layout;
+					html = textLayout;
 				}
 				else
 				{

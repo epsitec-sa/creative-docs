@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets
 	{
 		protected AbstractScroller(bool vertical)
 		{
-			this.drag_behavior = new Behaviors.DragBehavior (this, true, false);
+			this.dragBehavior = new Behaviors.DragBehavior (this, true, false);
 			
-			this.is_vertical = vertical;
+			this.isVertical = vertical;
 			
 			this.AutoEngage = true;
 			this.AutoRepeat = true;
@@ -72,14 +72,14 @@ namespace Epsitec.Common.Widgets
 			
 			get
 			{
-				return this.is_inverted;
+				return this.isInverted;
 			}
 
 			set
 			{
-				if (this.is_inverted != value)
+				if (this.isInverted != value)
 				{
-					this.is_inverted = value;
+					this.isInverted = value;
 					this.Invalidate();
 				}
 			}
@@ -209,61 +209,61 @@ namespace Epsitec.Common.Widgets
 			
 			Drawing.Rectangle rect = this.Client.Bounds;
 			
-			double arrow_length = this.is_vertical ? rect.Width : rect.Height;
-			double total_length = this.is_vertical ? rect.Height : rect.Width;
+			double arrowLength = this.isVertical ? rect.Width : rect.Height;
+			double totalLength = this.isVertical ? rect.Height : rect.Width;
 			
-			if (arrow_length * 2 > total_length - AbstractScroller.minimalThumb)
+			if (arrowLength * 2 > totalLength - AbstractScroller.minimalThumb)
 			{
 				//	Les boutons occupent trop de place. Il faut donc les comprimer.
 				
-				arrow_length = System.Math.Floor ((total_length - AbstractScroller.minimalThumb) / 2);
+				arrowLength = System.Math.Floor ((totalLength - AbstractScroller.minimalThumb) / 2);
 				
-				if (arrow_length < AbstractScroller.minimalArrow)
+				if (arrowLength < AbstractScroller.minimalArrow)
 				{
 					//	S'il n'y a plus assez de place pour afficher un bouton visible,
 					//	autant les cacher complètement !
 					
-					arrow_length = 0;
+					arrowLength = 0;
 				}
 			}
 			
-			if (this.is_vertical)
+			if (this.isVertical)
 			{
 				Drawing.Rectangle bounds;
 				
-				bounds = new Drawing.Rectangle (0, rect.Height - arrow_length, rect.Width, arrow_length);
+				bounds = new Drawing.Rectangle (0, rect.Height - arrowLength, rect.Width, arrowLength);
 				
-				this.arrowUp.Visibility = (arrow_length > 0);
+				this.arrowUp.Visibility = (arrowLength > 0);
 				this.arrowUp.SetManualBounds(bounds);
 				this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
 				
-				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrow_length);
+				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrowLength);
 				
-				this.arrowDown.Visibility = (arrow_length > 0);
+				this.arrowDown.Visibility = (arrowLength > 0);
 				this.arrowDown.SetManualBounds(bounds);
 				this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 				
-				rect.Bottom += arrow_length;
-				rect.Top    -= arrow_length;
+				rect.Bottom += arrowLength;
+				rect.Top    -= arrowLength;
 			}
 			else
 			{
 				Drawing.Rectangle bounds;
 				
-				bounds = new Drawing.Rectangle (rect.Width - arrow_length, 0, arrow_length, rect.Height);
+				bounds = new Drawing.Rectangle (rect.Width - arrowLength, 0, arrowLength, rect.Height);
 				
-				this.arrowUp.Visibility = (arrow_length > 0);
+				this.arrowUp.Visibility = (arrowLength > 0);
 				this.arrowUp.SetManualBounds(bounds);
 				this.arrowUp.GlyphShape = GlyphShape.ArrowRight;
 				
-				bounds = new Drawing.Rectangle (0, 0, arrow_length, rect.Height);
+				bounds = new Drawing.Rectangle (0, 0, arrowLength, rect.Height);
 				
-				this.arrowDown.Visibility = (arrow_length > 0);
+				this.arrowDown.Visibility = (arrowLength > 0);
 				this.arrowDown.SetManualBounds(bounds);
 				this.arrowDown.GlyphShape = GlyphShape.ArrowLeft;
 				
-				rect.Left  += arrow_length;
-				rect.Right -= arrow_length;
+				rect.Left  += arrowLength;
+				rect.Right -= arrowLength;
 			}
 			
 			this.sliderRect = rect;
@@ -272,68 +272,68 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateInternalGeometry()
 		{
-			Drawing.Rectangle slider_rect = this.sliderRect;
-			Drawing.Rectangle tab_rect    = Drawing.Rectangle.Empty;
-			Drawing.Rectangle thumb_rect  = Drawing.Rectangle.Empty;
+			Drawing.Rectangle sliderRect = this.sliderRect;
+			Drawing.Rectangle tabRect    = Drawing.Rectangle.Empty;
+			Drawing.Rectangle thumbRect  = Drawing.Rectangle.Empty;
 
 			decimal value = System.Math.Max (0, System.Math.Min (this.Range, this.position));
 			
 			if ((this.Range > 0) && (this.VisibleRangeRatio > 0))
 			{
-				double pos   = (double) (this.is_inverted ? this.Range - value : value);
+				double pos   = (double) (this.isInverted ? this.Range - value : value);
 				double range = (double) (this.Range);
 				double ratio = (double) (this.VisibleRangeRatio);
 				
-				if (this.is_vertical)
+				if (this.isVertical)
 				{
-					double h = slider_rect.Height * ratio;
+					double h = sliderRect.Height * ratio;
 					h = System.Math.Max (h, AbstractScroller.minimalThumb);
-					h = System.Math.Min (h, slider_rect.Height);
-					double p = (pos/range) * (slider_rect.Height-h);
+					h = System.Math.Min (h, sliderRect.Height);
+					double p = (pos/range) * (sliderRect.Height-h);
 					
-					thumb_rect = slider_rect;
-					thumb_rect.Bottom += p;
-					thumb_rect.Height  = h;
+					thumbRect = sliderRect;
+					thumbRect.Bottom += p;
+					thumbRect.Height  = h;
 					
 					switch (this.HiliteZone)
 					{
 						case Zone.PageDown:
-							tab_rect     = slider_rect;
-							tab_rect.Top = thumb_rect.Bottom;
+							tabRect     = sliderRect;
+							tabRect.Top = thumbRect.Bottom;
 							break;
 						case Zone.PageUp:
-							tab_rect        = slider_rect;
-							tab_rect.Bottom = thumb_rect.Top;
+							tabRect        = sliderRect;
+							tabRect.Bottom = thumbRect.Top;
 							break;
 					}
 				}
 				else
 				{
-					double h = slider_rect.Width * ratio;
+					double h = sliderRect.Width * ratio;
 					h = System.Math.Max (h, AbstractScroller.minimalThumb);
-					h = System.Math.Min (h, slider_rect.Width);
-					double p = (pos/range) * (slider_rect.Width-h);
+					h = System.Math.Min (h, sliderRect.Width);
+					double p = (pos/range) * (sliderRect.Width-h);
 					
-					thumb_rect = slider_rect;
-					thumb_rect.Left += p;
-					thumb_rect.Width = h;
+					thumbRect = sliderRect;
+					thumbRect.Left += p;
+					thumbRect.Width = h;
 					
 					switch (this.HiliteZone)
 					{
 						case Zone.PageDown:
-							tab_rect       = slider_rect;
-							tab_rect.Right = thumb_rect.Left;
+							tabRect       = sliderRect;
+							tabRect.Right = thumbRect.Left;
 							break;
 						case Zone.PageUp:
-							tab_rect      = slider_rect;
-							tab_rect.Left = thumb_rect.Right;
+							tabRect      = sliderRect;
+							tabRect.Left = thumbRect.Right;
 							break;
 					}
 				}
 			}
 			
-			this.thumbRect  = thumb_rect;
-			this.tabRect    = tab_rect;
+			this.thumbRect  = thumbRect;
+			this.tabRect    = tabRect;
 		}
 
 		
@@ -346,18 +346,18 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsMouseType)
 			{
-				if (this.is_scrolling)
+				if (this.isScrolling)
 				{
 					if (message.MessageType == MessageType.MouseUp)
 					{
-						this.is_scrolling = false;
+						this.isScrolling = false;
 						message.Consumer = this;
 					}
 					
 					return;
 				}
 				
-				if (! this.is_dragging && (message.MessageType != MessageType.MouseLeave))
+				if (! this.isDragging && (message.MessageType != MessageType.MouseLeave))
 				{
 					this.HiliteZone = this.DetectZone (pos);
 					
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Widgets
 						if ((message.MessageType == MessageType.MouseDown) &&
 							(message.Button == MouseButtons.Left))
 						{
-							this.is_scrolling = true;
+							this.isScrolling = true;
 							this.ScrollByPages ();
 							message.Consumer = this;
 							return;
@@ -376,9 +376,9 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if (! this.is_scrolling)
+			if (! this.isScrolling)
 			{
-				if (! this.drag_behavior.ProcessMessage (message, pos))
+				if (! this.dragBehavior.ProcessMessage (message, pos))
 				{
 					base.ProcessMessage (message, pos);
 				}
@@ -390,7 +390,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsEnabled)
 			{
-				if (this.is_vertical)
+				if (this.isVertical)
 				{
 					if (pos.Y < this.thumbRect.Bottom)
 					{
@@ -430,7 +430,7 @@ namespace Epsitec.Common.Widgets
 			double offset;
 			double length;
 			
-			if (this.is_vertical)
+			if (this.isVertical)
 			{
 				offset = pos-this.sliderRect.Bottom;
 				length = this.sliderRect.Height-this.thumbRect.Height;
@@ -443,14 +443,14 @@ namespace Epsitec.Common.Widgets
 			
 			if (length > 0)
 			{
-				double new_pos = offset / length;
+				double newPos = offset / length;
 				
-				if (this.is_inverted)
+				if (this.isInverted)
 				{
-					new_pos = 1.0 - new_pos;
+					newPos = 1.0 - newPos;
 				}
 				
-				decimal value = (decimal) new_pos;
+				decimal value = (decimal) newPos;
 				
 				this.Value = value * this.Range + this.MinValue;
 			}
@@ -461,10 +461,10 @@ namespace Epsitec.Common.Widgets
 			switch (this.HiliteZone)
 			{
 				case Zone.PageUp:
-					this.Value += (this.is_inverted) ? -this.largeChange : this.largeChange;
+					this.Value += (this.isInverted) ? -this.largeChange : this.largeChange;
 					break;
 				case Zone.PageDown:
-					this.Value += (this.is_inverted) ? this.largeChange : -this.largeChange;
+					this.Value += (this.isInverted) ? this.largeChange : -this.largeChange;
 					break;
 			}
 		}
@@ -476,13 +476,13 @@ namespace Epsitec.Common.Widgets
 
 			if ( button == this.arrowUp )
 			{
-				if ( this.is_inverted )  this.Value -= this.smallChange;
+				if ( this.isInverted )  this.Value -= this.smallChange;
 				else                     this.Value += this.smallChange;
 				this.Invalidate();
 			}
 			else if ( button == this.arrowDown )
 			{
-				if ( this.is_inverted )  this.Value += this.smallChange;
+				if ( this.isInverted )  this.Value += this.smallChange;
 				else                     this.Value -= this.smallChange;
 				this.Invalidate();
 			}
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			
-			Widgets.Direction dir   = this.is_vertical ? Direction.Up : Direction.Left;
+			Widgets.Direction dir   = this.isVertical ? Direction.Up : Direction.Left;
 			WidgetPaintState       state = this.PaintState;
 
 			//	Dessine le fond.
@@ -553,7 +553,7 @@ namespace Epsitec.Common.Widgets
 					state &= ~ WidgetPaintState.Entered;
 					state &= ~ WidgetPaintState.Engaged;
 				}
-				if (this.is_dragging)
+				if (this.isDragging)
 				{
 					state |= WidgetPaintState.Engaged;
 					state |= WidgetPaintState.Entered;
@@ -576,19 +576,19 @@ namespace Epsitec.Common.Widgets
 		
 		bool Behaviors.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
-			this.is_dragging = true;
+			this.isDragging = true;
 			this.Invalidate ();
 			return true;
 		}
 		
 		void Behaviors.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
-			this.ScrollByDragging (this.is_vertical ? e.ToPoint.Y : e.ToPoint.X);
+			this.ScrollByDragging (this.isVertical ? e.ToPoint.Y : e.ToPoint.X);
 		}
 		
 		void Behaviors.IDragBehaviorHost.OnDragEnd()
 		{
-			this.is_dragging = false;
+			this.isDragging = false;
 			this.Invalidate ();
 		}
 		#endregion
@@ -709,18 +709,18 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double	minimalThumb = 8;
 		protected static readonly double	minimalArrow = 6;
 		
-		private Behaviors.DragBehavior		drag_behavior;
+		private Behaviors.DragBehavior		dragBehavior;
 		
-		private bool						is_vertical;
-		private bool						is_inverted;
+		private bool						isVertical;
+		private bool						isInverted;
 		private decimal						display    = 0.5M;
 		private decimal						position   = 0.0M;
 		private decimal						smallChange = 0.1M;
 		private decimal						largeChange   = 0.2M;
 		private GlyphButton					arrowUp;
 		private GlyphButton					arrowDown;
-		private bool						is_scrolling;
-		private bool						is_dragging;
+		private bool						isScrolling;
+		private bool						isDragging;
 		private Drawing.Rectangle			sliderRect;
 		private Drawing.Rectangle			thumbRect;
 		private Drawing.Rectangle			tabRect;

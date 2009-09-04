@@ -98,14 +98,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 				(this.buttonAccept != null))
 			{
 				Drawing.Rectangle bounds = text.GetButtonBounds ();
-				Drawing.Rectangle rect_1 = bounds;
-				Drawing.Rectangle rect_2 = bounds;
+				Drawing.Rectangle rect1 = bounds;
+				Drawing.Rectangle rect2 = bounds;
 				
-				rect_1.Right = rect_1.Left + rect_1.Width / 2 + 0.5;
-				rect_2.Left  = rect_1.Right - 1;
+				rect1.Right = rect1.Left + rect1.Width / 2 + 0.5;
+				rect2.Left  = rect1.Right - 1;
 				
-				this.buttonAccept.SetManualBounds(rect_1);
-				this.buttonReject.SetManualBounds(rect_2);
+				this.buttonAccept.SetManualBounds(rect1);
+				this.buttonReject.SetManualBounds(rect2);
 			}
 		}
 		

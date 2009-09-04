@@ -12,12 +12,12 @@ namespace Epsitec.Common.Widgets.Layouts
 	{
 		public void UpdateLayout(Visual container, Drawing.Rectangle rect, IEnumerable<Visual> children)
 		{
-			System.Collections.Queue fill_queue = null;
+			System.Collections.Queue fillQueue = null;
 			
 			Drawing.Rectangle client = rect;
 			
-			double push_dx = 0;
-			double push_dy = 0;
+			double pushDx = 0;
+			double pushDy = 0;
 			
 			foreach (Visual child in children)
 			{
@@ -94,68 +94,68 @@ namespace Epsitec.Common.Widgets.Layouts
 						break;
 					
 					case DockStyle.Fill:
-						if (fill_queue == null)
+						if (fillQueue == null)
 						{
-							fill_queue = new System.Collections.Queue ();
+							fillQueue = new System.Collections.Queue ();
 						}
-						fill_queue.Enqueue (child);
+						fillQueue.Enqueue (child);
 						break;
 				}
 			}
 			
-			if (fill_queue != null)
+			if (fillQueue != null)
 			{
 				Drawing.Rectangle bounds;
-				int n = fill_queue.Count;
+				int n = fillQueue.Count;
 				
-				double fill_dx = client.Width;
-				double fill_dy = client.Height;
+				double fillDx = client.Width;
+				double fillDy = client.Height;
 				
 				switch (container.ContainerLayoutMode)
 				{
 					case ContainerLayoutMode.HorizontalFlow:
-						foreach (Visual child in fill_queue)
+						foreach (Visual child in fillQueue)
 						{
-							double min_dx = child.MinWidth;
-							double new_dx = fill_dx / n;
+							double minDx = child.MinWidth;
+							double newDx = fillDx / n;
 							
-							if (new_dx < min_dx)
+							if (newDx < minDx)
 							{
-								push_dx += min_dx - new_dx;
-								new_dx   = min_dx;
+								pushDx += minDx - newDx;
+								newDx   = minDx;
 							}
 							
-							bounds = new Drawing.Rectangle (client.Left, client.Bottom, new_dx, client.Height);
+							bounds = new Drawing.Rectangle (client.Left, client.Bottom, newDx, client.Height);
 							bounds.Deflate (child.Margins);
 
 							DockLayoutEngine.SetChildBounds (child, bounds);
-							client.Left += new_dx;
+							client.Left += newDx;
 						}
 						break;
 					
 					case ContainerLayoutMode.VerticalFlow:
-						foreach (Visual child in fill_queue)
+						foreach (Visual child in fillQueue)
 						{
-							double min_dy = child.MinHeight;
-							double new_dy = fill_dy / n;
+							double minDy = child.MinHeight;
+							double newDy = fillDy / n;
 							
-							if (new_dy < min_dy)
+							if (newDy < minDy)
 							{
-								push_dy += min_dy - new_dy;
-								new_dy   = min_dy;
+								pushDy += minDy - newDy;
+								newDy   = minDy;
 							}
 							
-							bounds = new Drawing.Rectangle (client.Left, client.Top - new_dy, client.Width, new_dy);
+							bounds = new Drawing.Rectangle (client.Left, client.Top - newDy, client.Width, newDy);
 							bounds.Deflate (child.Margins);
 
 							DockLayoutEngine.SetChildBounds (child, bounds);
-							client.Top -= new_dy;
+							client.Top -= newDy;
 						}
 						break;
 				}
 			}
 			
-			if (push_dy > 0)
+			if (pushDy > 0)
 			{
 				foreach (Visual child in children)
 				{
@@ -168,12 +168,12 @@ namespace Epsitec.Common.Widgets.Layouts
 					}
 					
 					bounds = child.GetCurrentBounds ();
-					bounds.Offset (0, - push_dy);
+					bounds.Offset (0, - pushDy);
 					child.SetBounds (bounds);
 				}
 			}
 			
-			if (push_dx > 0)
+			if (pushDx > 0)
 			{
 				foreach (Visual child in children)
 				{
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					}
 					
 					bounds = child.GetCurrentBounds ();
-					bounds.Offset (push_dx, 0);
+					bounds.Offset (pushDx, 0);
 					child.SetBounds (bounds);
 				}
 			}
@@ -196,13 +196,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			//	Décompose les dimensions comme suit :
 			//
-			//	|											  |
-			//	|<---min_ox1--->| zone de travail |<-min_ox2->|
-			//	|											  |
-			//	|<-------------------min_dx------------------>|
+			//	|											|
+			//	|<---minOx1--->| zone de travail |<-minOx2->|
+			//	|											|
+			//	|<-------------------minDx----------------->|
 			//
-			//	min_ox = min_ox1 + min_ox2
-			//	min_dx = minimum courant
+			//	minOx = minOx1 + minOx2
+			//	minDx = minimum courant
 			//
 			//	La partie centrale (DockStyle.Fill) va s'additionner au reste de manière
 			//	indépendante au moyen du fill_min_dx.

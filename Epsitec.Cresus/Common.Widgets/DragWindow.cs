@@ -39,9 +39,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public void DefineWidget(Widget widget, Drawing.Size initial_size, Drawing.Margins margins)
+		public void DefineWidget(Widget widget, Drawing.Size initialSize, Drawing.Margins margins)
 		{
-			this.WindowSize = initial_size + margins.Size;
+			this.WindowSize = initialSize + margins.Size;
 
 			widget.Dock     = DockStyle.Fill;
 

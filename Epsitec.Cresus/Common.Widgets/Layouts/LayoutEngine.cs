@@ -20,28 +20,28 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			get
 			{
-				return LayoutEngine.dock_engine;
+				return LayoutEngine.dockEngine;
 			}
 		}
 		public static ILayoutEngine					AnchorEngine
 		{
 			get
 			{
-				return LayoutEngine.anchor_engine;
+				return LayoutEngine.anchorEngine;
 			}
 		}
 		public static ILayoutEngine					StackEngine
 		{
 			get
 			{
-				return LayoutEngine.stack_engine;
+				return LayoutEngine.stackEngine;
 			}
 		}
 		public static ILayoutEngine					NoOpEngine
 		{
 			get
 			{
-				return LayoutEngine.no_op_engine;
+				return LayoutEngine.noOpEngine;
 			}
 		}
 
@@ -180,9 +180,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		public static readonly DependencyProperty LayoutEngineProperty = DependencyProperty.RegisterAttached ("LayoutEngine", typeof (ILayoutEngine), typeof (LayoutEngine), new DependencyPropertyMetadata (LayoutEngine.NotifyLayoutEngineChanged));
 		public static readonly DependencyProperty IgnoreMeasureProperty = DependencyProperty.RegisterAttached ("IgnoreMeasure", typeof (bool), typeof (LayoutEngine), new DependencyPropertyMetadata (false));
 
-		private static ILayoutEngine					dock_engine   = new DockLayoutEngine ();
-		private static ILayoutEngine					anchor_engine = new AnchorLayoutEngine ();
-		private static ILayoutEngine					no_op_engine  = new NoOpLayoutEngine ();
-		private static ILayoutEngine					stack_engine  = new StackLayoutEngine ();
+		private static ILayoutEngine					dockEngine   = new DockLayoutEngine ();
+		private static ILayoutEngine					anchorEngine = new AnchorLayoutEngine ();
+		private static ILayoutEngine					noOpEngine  = new NoOpLayoutEngine ();
+		private static ILayoutEngine					stackEngine  = new StackLayoutEngine ();
 	}
 }

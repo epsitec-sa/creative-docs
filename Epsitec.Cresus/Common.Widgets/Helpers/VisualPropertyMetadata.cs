@@ -14,25 +14,25 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 		}
 		
-		public VisualPropertyMetadata(object default_value) : base (default_value)
+		public VisualPropertyMetadata(object defaultValue) : base (defaultValue)
 		{
 		}
-		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback) : base (default_value, property_invalidated_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.PropertyInvalidatedCallback propertyInvalidatedCallback) : base (defaultValue, propertyInvalidatedCallback)
 		{
 		}
-		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, Types.CoerceValueCallback coerce_value_callback) : base (default_value, property_invalidated_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.PropertyInvalidatedCallback propertyInvalidatedCallback, Types.CoerceValueCallback coerceValueCallback) : base (defaultValue, propertyInvalidatedCallback)
 		{
-			this.CoerceValue = coerce_value_callback;
+			this.CoerceValue = coerceValueCallback;
 		}
 		
-		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback) : base (get_value_override_callback)
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback getValueOverrideCallback) : base (getValueOverrideCallback)
 		{
 		}
-		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyMetadataOptions flags) : base (get_value_override_callback)
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback getValueOverrideCallback, VisualPropertyMetadataOptions flags) : base (getValueOverrideCallback)
 		{
 			this.InitializeFromFlags (flags);
 		}
-		public VisualPropertyMetadata(Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (get_value_override_callback, property_invalidated_callback)
+		public VisualPropertyMetadata(Types.GetValueOverrideCallback getValueOverrideCallback, Types.PropertyInvalidatedCallback propertyInvalidatedCallback, VisualPropertyMetadataOptions flags) : base (getValueOverrideCallback, propertyInvalidatedCallback)
 		{
 			this.InitializeFromFlags (flags);
 		}
@@ -42,32 +42,32 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.InitializeFromFlags (flags);
 		}
 
-		public VisualPropertyMetadata(object default_value, VisualPropertyMetadataOptions flags) : base (default_value)
+		public VisualPropertyMetadata(object defaultValue, VisualPropertyMetadataOptions flags) : base (defaultValue)
 		{
 			this.InitializeFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.GetValueOverrideCallback getValueOverrideCallback, VisualPropertyMetadataOptions flags) : base (defaultValue, getValueOverrideCallback)
 		{
 			this.InitializeFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (default_value, property_invalidated_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.PropertyInvalidatedCallback propertyInvalidatedCallback, VisualPropertyMetadataOptions flags) : base (defaultValue, propertyInvalidatedCallback)
 		{
 			this.InitializeFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.PropertyInvalidatedCallback property_invalidated_callback, Types.CoerceValueCallback coerce_value_callback, VisualPropertyMetadataOptions flags) : base (default_value, property_invalidated_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.PropertyInvalidatedCallback propertyInvalidatedCallback, Types.CoerceValueCallback coerceValueCallback, VisualPropertyMetadataOptions flags) : base (defaultValue, propertyInvalidatedCallback)
 		{
 			this.InitializeFromFlags (flags);
-			this.CoerceValue = coerce_value_callback;
+			this.CoerceValue = coerceValueCallback;
 		}
-		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.PropertyInvalidatedCallback property_invalidated_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback, property_invalidated_callback)
-		{
-			this.InitializeFromFlags (flags);
-		}
-		public VisualPropertyMetadata(object default_value, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyMetadataOptions flags) : base (default_value, set_value_override_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.GetValueOverrideCallback getValueOverrideCallback, Types.PropertyInvalidatedCallback propertyInvalidatedCallback, VisualPropertyMetadataOptions flags) : base (defaultValue, getValueOverrideCallback, propertyInvalidatedCallback)
 		{
 			this.InitializeFromFlags (flags);
 		}
-		public VisualPropertyMetadata(object default_value, Types.GetValueOverrideCallback get_value_override_callback, Types.SetValueOverrideCallback set_value_override_callback, VisualPropertyMetadataOptions flags) : base (default_value, get_value_override_callback, set_value_override_callback)
+		public VisualPropertyMetadata(object defaultValue, Types.SetValueOverrideCallback setValueOverrideCallback, VisualPropertyMetadataOptions flags) : base (defaultValue, setValueOverrideCallback)
+		{
+			this.InitializeFromFlags (flags);
+		}
+		public VisualPropertyMetadata(object defaultValue, Types.GetValueOverrideCallback getValueOverrideCallback, Types.SetValueOverrideCallback setValueOverrideCallback, VisualPropertyMetadataOptions flags) : base (defaultValue, getValueOverrideCallback, setValueOverrideCallback)
 		{
 			this.InitializeFromFlags (flags);
 		}
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.notifiesChanges       = (flags & VisualPropertyMetadataOptions.ChangesSilently) == 0;
 		}
 		
-		protected override void OnPropertyInvalidated(Types.DependencyObject sender, object old_value, object new_value)
+		protected override void OnPropertyInvalidated(Types.DependencyObject sender, object oldValue, object newValue)
 		{
 			Visual visual = sender as Visual;
 			
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				visual.InvalidateTextLayout ();
 			}
 			
-			base.OnPropertyInvalidated (sender, old_value, new_value);
+			base.OnPropertyInvalidated (sender, oldValue, newValue);
 		}
 
 		protected override Types.DependencyPropertyMetadata CloneNewObject()

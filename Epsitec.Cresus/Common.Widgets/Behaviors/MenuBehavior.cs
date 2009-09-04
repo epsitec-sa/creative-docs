@@ -28,9 +28,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			get
 			{
-				lock (MenuBehavior.sync_object)
+				lock (MenuBehavior.syncObject)
 				{
-					if (MenuBehavior.menu_list.Count > 0)
+					if (MenuBehavior.menuList.Count > 0)
 					{
 						return true;
 					}
@@ -48,38 +48,38 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			get
 			{
-				return this.is_frozen;
+				return this.isFrozen;
 			}
 			set
 			{
-				if (this.is_frozen != value)
+				if (this.isFrozen != value)
 				{
-					this.is_frozen = value;
+					this.isFrozen = value;
 					
 					if (value)
 					{
-						System.Diagnostics.Debug.Assert (MenuBehavior.menu_last_behavior == this);
+						System.Diagnostics.Debug.Assert (MenuBehavior.menuLastBehavior == this);
 						
 						//	Quand un menu est "gelé", il ne réagit plus aux
 						//	événements souris. Il faut mémoriser l'état courant
 						//	pour pouvoir le restaurer au moment où le menu est
 						//	dégelé :
 						
-						this.frozen_menu_last_item = MenuBehavior.menu_last_item;
+						this.frozenMenuLastItem = MenuBehavior.menuLastItem;
 						
-						MenuBehavior.menu_last_behavior = null;
-						MenuBehavior.menu_last_item     = null;
+						MenuBehavior.menuLastBehavior = null;
+						MenuBehavior.menuLastItem     = null;
 						
 						Behaviors.MenuBehavior.DisableKeyboardFilter ();
 					}
 					else
 					{
-						if (this.frozen_menu_last_item != null)
+						if (this.frozenMenuLastItem != null)
 						{
-							MenuBehavior.menu_last_behavior = this;
-							MenuBehavior.menu_last_item     = this.frozen_menu_last_item;
+							MenuBehavior.menuLastBehavior = this;
+							MenuBehavior.menuLastItem     = this.frozenMenuLastItem;
 							
-							this.frozen_menu_last_item = null;
+							this.frozenMenuLastItem = null;
 						}
 						
 						Behaviors.MenuBehavior.EnableKeyboardFilter ();
@@ -170,14 +170,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void DisableKeyboardFilter()
 		{
-			MenuBehavior.filter_keyboard_off++;
+			MenuBehavior.filterKeyboardOff++;
 		}
 		
 		private static void EnableKeyboardFilter()
 		{
-			if (MenuBehavior.filter_keyboard_off > 0)
+			if (MenuBehavior.filterKeyboardOff > 0)
 			{
-				MenuBehavior.filter_keyboard_off--;
+				MenuBehavior.filterKeyboardOff--;
 			}
 		}
 		
@@ -220,8 +220,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			System.Diagnostics.Debug.Assert (window.Behavior == this);
 			
-			MenuWindow[] live  = (MenuWindow[]) this.live_menu_windows.ToArray (typeof (MenuWindow));
-			int          index = this.live_menu_windows.IndexOf (window);
+			MenuWindow[] live  = (MenuWindow[]) this.liveMenuWindows.ToArray (typeof (MenuWindow));
+			int          index = this.liveMenuWindows.IndexOf (window);
 			
 			if (index >= 0)
 			{
@@ -247,12 +247,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (window.MenuType == MenuType.Submenu)
 				{
-					Widget parent_widget = window.ParentWidget;
-					Window parent_window = parent_widget == null ? null : MenuItem.GetMenuWindow (parent_widget);
+					Widget parentWidget = window.ParentWidget;
+					Window parentWindow = parentWidget == null ? null : MenuItem.GetMenuWindow (parentWidget);
 					
-					if (parent_widget != null)
+					if (parentWidget != null)
 					{
-						this.OpenSubmenu (parent_window as MenuWindow, animate);
+						this.OpenSubmenu (parentWindow as MenuWindow, animate);
 					}
 				}
 				
@@ -267,9 +267,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			MenuBehavior.DisableKeyboardNavigation ();
 			
-			while (this.live_menu_windows.Count > 0)
+			while (this.liveMenuWindows.Count > 0)
 			{
-				MenuWindow window = this.live_menu_windows[this.live_menu_windows.Count-1] as MenuWindow;
+				MenuWindow window = this.liveMenuWindows[this.liveMenuWindows.Count-1] as MenuWindow;
 				window.Hide ();
 			}
 			
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void Accept()
 		{
-			if (this.is_open)
+			if (this.isOpen)
 			{
 				this.HideAll ();
 				this.OnAccepted ();
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void Reject()
 		{
-			if (this.is_open)
+			if (this.isOpen)
 			{
 				this.HideAll ();
 				this.OnRejected ();
@@ -295,38 +295,38 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 		
 		
-		internal void Attach(Widget root_menu)
+		internal void Attach(Widget rootMenu)
 		{
 			//	Attache un menu racine au gestionnaire de menus. Un seul menu
 			//	racine peut être attaché à la fois. Attache aussi la fenêtre
 			//	contenant le menu racine si le menu est est visible.
 			
-			System.Diagnostics.Debug.Assert (this.root_menu == null);
+			System.Diagnostics.Debug.Assert (this.rootMenu == null);
 			
-			this.root_menu = root_menu;
+			this.rootMenu = rootMenu;
 			
-			if (this.root_menu.IsVisible)
+			if (this.rootMenu.IsVisible)
 			{
 				this.AttachRootWindow ();
 			}
 			
-			this.root_menu.IsVisibleChanged += this.HandleRootMenuIsVisibleChanged;
+			this.rootMenu.IsVisibleChanged += this.HandleRootMenuIsVisibleChanged;
 		}
 		
-		internal void Detach(Widget root_menu)
+		internal void Detach(Widget rootMenu)
 		{
 			//	Cf. Attach
 			
-			System.Diagnostics.Debug.Assert (this.root_menu == root_menu);
+			System.Diagnostics.Debug.Assert (this.rootMenu == rootMenu);
 			
-			this.root_menu.IsVisibleChanged -= this.HandleRootMenuIsVisibleChanged;
+			this.rootMenu.IsVisibleChanged -= this.HandleRootMenuIsVisibleChanged;
 			
-			if (this.root_menu.IsVisible)
+			if (this.rootMenu.IsVisible)
 			{
 				this.DetachRootWindow ();
 			}
 			
-			this.root_menu = null;
+			this.rootMenu = null;
 		}
 		
 		
@@ -335,12 +335,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.IsFrozen = true;
 			this.UpdateItems ();
 			
-			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == item);
+			System.Diagnostics.Debug.Assert (this.frozenMenuLastItem == item);
 		}
 		
 		internal void DetachMenuItemContainer(MenuItemContainer item)
 		{
-			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == item);
+			System.Diagnostics.Debug.Assert (this.frozenMenuLastItem == item);
 			
 			this.IsFrozen = false;
 			this.UpdateItems ();
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					break;
 				
 				case Animate.Automatic:
-					if (this.live_menu_windows.Count > 0)
+					if (this.liveMenuWindows.Count > 0)
 					{
 						animation = Animation.None;
 					}
@@ -394,11 +394,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			window.WindowLocation = location;
 			window.AnimateShow (animation);
 			
-			this.is_open = true;
+			this.isOpen = true;
 			
-			if (this.keyboard_menu_window == null)
+			if (this.keyboardMenuWindow == null)
 			{
-				this.keyboard_menu_window = window;
+				this.keyboardMenuWindow = window;
 			}
 		}
 		
@@ -408,20 +408,20 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	le gestionnaire de menus dans un état "neutre".
 			
 			MenuBehavior.timer.Stop ();
-			MenuBehavior.timer_item      = null;
-			MenuBehavior.timer_keep_menu = null;
-			MenuBehavior.timer_behaviour = null;
+			MenuBehavior.timerItem      = null;
+			MenuBehavior.timerKeepMenu  = null;
+			MenuBehavior.timerBehaviour = null;
 			
 			if (this.IsFrozen)
 			{
 				this.ChangeFocusedItem (null);
 			}
 			
-			System.Diagnostics.Debug.Assert (this.is_frozen == false);
-			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == null);
+			System.Diagnostics.Debug.Assert (this.isFrozen == false);
+			System.Diagnostics.Debug.Assert (this.frozenMenuLastItem == null);
 			
-			this.is_open = false;
-			this.keyboard_menu_active = false;
+			this.isOpen = false;
+			this.keyboardMenuActive = false;
 		}
 		
 		
@@ -441,17 +441,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.AttachMenu ();
 			
-			lock (MenuBehavior.sync_object)
+			lock (MenuBehavior.syncObject)
 			{
-				MenuBehavior.menu_list.Remove (this);
-				MenuBehavior.menu_list.Add (this);
+				MenuBehavior.menuList.Remove (this);
+				MenuBehavior.menuList.Add (this);
 			}
 			
 			MenuBehavior.NotifyMenuListChanged ();
 			
-			System.Diagnostics.Debug.Assert (this.live_menu_windows.Contains (window) == false);
+			System.Diagnostics.Debug.Assert (this.liveMenuWindows.Contains (window) == false);
 			
-			this.live_menu_windows.Add (window);
+			this.liveMenuWindows.Add (window);
 			this.UpdateItems ();
 		}
 		
@@ -459,10 +459,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			//	Appelé avant qu'une fenêtre du menu ne soit cachée.
 			
-			System.Diagnostics.Debug.Assert (this.live_menu_windows.Contains (window) == true);
-			System.Diagnostics.Debug.Assert (this.live_menu_windows.IndexOf (window) == this.live_menu_windows.Count-1);
+			System.Diagnostics.Debug.Assert (this.liveMenuWindows.Contains (window) == true);
+			System.Diagnostics.Debug.Assert (this.liveMenuWindows.IndexOf (window) == this.liveMenuWindows.Count-1);
 			
-			this.live_menu_windows.Remove (window);
+			this.liveMenuWindows.Remove (window);
 			this.UpdateItems ();
 			
 			//	Si une fenêtre possède le focus, il faut avant de la cacher activer
@@ -481,11 +481,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.DetachMenu ();
 			
-			if (this.live_menu_windows.Count == 0)
+			if (this.liveMenuWindows.Count == 0)
 			{
-				lock (MenuBehavior.sync_object)
+				lock (MenuBehavior.syncObject)
 				{
-					MenuBehavior.menu_list.Remove (this);
+					MenuBehavior.menuList.Remove (this);
 				}
 				
 				MenuBehavior.NotifyMenuListChanged ();
@@ -503,8 +503,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			MenuBehavior.timer = new Timer ();
 			MenuBehavior.stack = new Stack<State> ();
 
-			MenuBehavior.menu_list      = new List<MenuBehavior> ();
-			MenuBehavior.menu_root_list = new List<MenuBehavior> ();
+			MenuBehavior.menuList      = new List<MenuBehavior> ();
+			MenuBehavior.menuRootList = new List<MenuBehavior> ();
 			
 			MenuBehavior.timer.TimeElapsed += MenuBehavior.HandleTimerTimeElapsed;
 		}
@@ -512,15 +512,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void AttachMenu()
 		{
-			this.local_menu_count++;
+			this.localMenuCount++;
 			
-			if (this.local_menu_count == 1)
+			if (this.localMenuCount == 1)
 			{
-				lock (MenuBehavior.sync_object)
+				lock (MenuBehavior.syncObject)
 				{
-					MenuBehavior.menu_count++;
+					MenuBehavior.menuCount++;
 				
-					if (MenuBehavior.menu_count == 1)
+					if (MenuBehavior.menuCount == 1)
 					{
 						MenuBehavior.RegisterFilter ();
 					}
@@ -532,17 +532,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void DetachMenu()
 		{
-			this.local_menu_count--;
+			this.localMenuCount--;
 			
-			if (this.local_menu_count == 0)
+			if (this.localMenuCount == 0)
 			{
 				MenuBehavior.Pop (this);
 				
-				lock (MenuBehavior.sync_object)
+				lock (MenuBehavior.syncObject)
 				{
-					MenuBehavior.menu_count--;
+					MenuBehavior.menuCount--;
 				
-					if (MenuBehavior.menu_count == 0)
+					if (MenuBehavior.menuCount == 0)
 					{
 						MenuBehavior.UnregisterFilter ();
 						MenuBehavior.GenerateDummyMouseMoveEvents ();
@@ -559,11 +559,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.AttachMenu ();
 			
-			this.root_window = this.root_menu.Window;
+			this.rootWindow = this.rootMenu.Window;
 			
-			lock (MenuBehavior.sync_object)
+			lock (MenuBehavior.syncObject)
 			{
-				MenuBehavior.menu_root_list.Add (this);
+				MenuBehavior.menuRootList.Add (this);
 			}
 		}
 		
@@ -571,12 +571,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			//	Cf. AttachRootWindow
 			
-			lock (MenuBehavior.sync_object)
+			lock (MenuBehavior.syncObject)
 			{
-				MenuBehavior.menu_root_list.Remove (this);
+				MenuBehavior.menuRootList.Remove (this);
 			}
 			
-			this.root_window = null;
+			this.rootWindow = null;
 			
 			this.DetachMenu ();
 		}
@@ -587,7 +587,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	Quand le menu racine devient visible, on s'attache à sa fenêtre
 			//	via AttachRootWindow, et vice versa.
 			
-			System.Diagnostics.Debug.Assert (this.root_menu == sender);
+			System.Diagnostics.Debug.Assert (this.rootMenu == sender);
 			
 			if ((bool) e.NewValue)
 			{
@@ -607,13 +607,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return;
 			}
 			
-			if (this.keyboard_menu_item != item)
+			if (this.keyboardMenuItem != item)
 			{
-				this.keyboard_menu_item   = item;
-				this.keyboard_menu_window = item.Window;
+				this.keyboardMenuItem   = item;
+				this.keyboardMenuWindow = item.Window;
 			}
 			
-			if (this.is_open == false)
+			if (this.isOpen == false)
 			{
 				this.UpdateItems ();
 			}
@@ -621,9 +621,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuBehavior.timer.Suspend ();
 				
-				MenuBehavior.timer_item      = null;
-				MenuBehavior.timer_keep_menu = null;
-				MenuBehavior.timer_behaviour = null;
+				MenuBehavior.timerItem      = null;
+				MenuBehavior.timerKeepMenu = null;
+				MenuBehavior.timerBehaviour = null;
 				
 				MenuBehavior.OpenItemSubmenu (item, Animate.No);
 			}
@@ -631,9 +631,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuBehavior.timer.Suspend ();
 				
-				MenuBehavior.timer_item      = item;
-				MenuBehavior.timer_keep_menu = null;
-				MenuBehavior.timer_behaviour = null;
+				MenuBehavior.timerItem      = item;
+				MenuBehavior.timerKeepMenu = null;
+				MenuBehavior.timerBehaviour = null;
 
 				MenuBehavior.timer.Delay = SystemInformation.MenuShowDelay;
 				MenuBehavior.timer.Start ();
@@ -644,19 +644,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void NotifyExitedItem(MenuItem item)
 		{
-			this.keyboard_menu_item   = null;
-			this.keyboard_menu_window = null;
+			this.keyboardMenuItem   = null;
+			this.keyboardMenuWindow = null;
 			
-			if (this.live_menu_windows.Count > 0)
+			if (this.liveMenuWindows.Count > 0)
 			{
 				//	Il reste probablement des fenêtres de sous-menu à
 				//	refermer :
 				
 				MenuBehavior.timer.Suspend ();
 				
-				MenuBehavior.timer_item      = null;
-				MenuBehavior.timer_keep_menu = MenuItem.GetMenuWindow (item) as MenuWindow;
-				MenuBehavior.timer_behaviour = this;
+				MenuBehavior.timerItem      = null;
+				MenuBehavior.timerKeepMenu = MenuItem.GetMenuWindow (item) as MenuWindow;
+				MenuBehavior.timerBehaviour = this;
 				
 				MenuBehavior.timer.Delay = SystemInformation.MenuShowDelay;
 				MenuBehavior.timer.Start ();
@@ -668,17 +668,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void KeyboardCloseLatestMenu()
 		{
-			int n = this.live_menu_windows.Count;
+			int n = this.liveMenuWindows.Count;
 			
 			if (n > 0)
 			{
-				MenuWindow window = this.live_menu_windows[n-1] as MenuWindow;
+				MenuWindow window = this.liveMenuWindows[n-1] as MenuWindow;
 				
-				this.keyboard_menu_item   = ((window.ParentWidget != null) && (window.ParentWidget.RootParent is WindowRoot)) ? window.ParentWidget as MenuItem : null;
-				this.keyboard_menu_window = (this.keyboard_menu_item == null) ? null : this.keyboard_menu_item.Window;
-				this.keyboard_menu_active = true;
+				this.keyboardMenuItem   = ((window.ParentWidget != null) && (window.ParentWidget.RootParent is WindowRoot)) ? window.ParentWidget as MenuItem : null;
+				this.keyboardMenuWindow = (this.keyboardMenuItem == null) ? null : this.keyboardMenuItem.Window;
+				this.keyboardMenuActive = true;
 				
-				if (this.keyboard_menu_window != null)
+				if (this.keyboardMenuWindow != null)
 				{
 					window.Hide ();
 				}
@@ -689,17 +689,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			else
 			{
-				this.keyboard_menu_item   = null;
-				this.keyboard_menu_window = null;
-				this.keyboard_menu_active = false;
+				this.keyboardMenuItem   = null;
+				this.keyboardMenuWindow = null;
+				this.keyboardMenuActive = false;
 				
-				this.is_open = false;
+				this.isOpen = false;
 				
 				MenuBehavior.DisableKeyboardNavigation ();
 			}
 			
-			MenuBehavior.menu_last_item     = this.keyboard_menu_item;
-			MenuBehavior.menu_last_behavior = this.keyboard_menu_item == null ? null : this;
+			MenuBehavior.menuLastItem     = this.keyboardMenuItem;
+			MenuBehavior.menuLastBehavior = this.keyboardMenuItem == null ? null : this;
 			
 			this.UpdateItems ();
 		}
@@ -709,8 +709,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	Sélectionne un élément du même menu à la suite d'un déplacement
 			//	avec les touches haut/bas.
 			
-			int    n    = this.live_menu_windows.Count;
-			Widget root = this.keyboard_menu_window == null ? null : this.keyboard_menu_window.Root;
+			int    n    = this.liveMenuWindows.Count;
+			Widget root = this.keyboardMenuWindow == null ? null : this.keyboardMenuWindow.Root;
 			
 			if (n > 0)
 			{
@@ -718,7 +718,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (direction < 0)
 				{
-					item = this.FindPrevItem (root, this.keyboard_menu_item);
+					item = this.FindPrevItem (root, this.keyboardMenuItem);
 					
 					if (item == null)
 					{
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 				else if (direction > 0)
 				{
-					item = this.FindNextItem (root, this.keyboard_menu_item);
+					item = this.FindNextItem (root, this.keyboardMenuItem);
 					
 					if (item == null)
 					{
@@ -741,13 +741,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 				else
 				{
-					this.keyboard_menu_item = item;
+					this.keyboardMenuItem = item;
 					
-					MenuWindow[] live = (MenuWindow[]) this.live_menu_windows.ToArray (typeof (MenuWindow));
+					MenuWindow[] live = (MenuWindow[]) this.liveMenuWindows.ToArray (typeof (MenuWindow));
 					
 					for (int i = live.Length-1; i >= 0; i--)
 					{
-						if (live[i] == this.keyboard_menu_window)
+						if (live[i] == this.keyboardMenuWindow)
 						{
 							break;
 						}
@@ -762,19 +762,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 				//	Aucun (sous-)menu n'est actuellement visible. On va donc
 				//	ouvrir celui correspondant à la case sélectionnée :
 				
-				MenuBehavior.OpenItemSubmenu (this.keyboard_menu_item, Animate.No);
+				MenuBehavior.OpenItemSubmenu (this.keyboardMenuItem, Animate.No);
 				MenuBehavior.EnableKeyboardNavigation ();
 				
-				n = this.live_menu_windows.Count;
+				n = this.liveMenuWindows.Count;
 				
 				if (n > 0)
 				{
-					this.keyboard_menu_window = this.live_menu_windows[n-1] as MenuWindow;
-					this.keyboard_menu_item   = this.FindFirstItem (this.keyboard_menu_window.Root);
+					this.keyboardMenuWindow = this.liveMenuWindows[n-1] as MenuWindow;
+					this.keyboardMenuItem   = this.FindFirstItem (this.keyboardMenuWindow.Root);
 				}
 			}
 			
-			this.UpdateItemsAfterKeyboardAction (this.keyboard_menu_item);
+			this.UpdateItemsAfterKeyboardAction (this.keyboardMenuItem);
 		}
 		
 		private void KeyboardSelectMenu(int direction)
@@ -782,25 +782,25 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	Navigation avec les touches gauche/droite, pour passer de menu
 			//	en menu, dans le cas d'un menu hiérarchique.
 			
-			int      n      = this.live_menu_windows.Count;
+			int      n      = this.liveMenuWindows.Count;
 			MenuItem item   = null;
 			Window   window = null;
 			
 			if ((n > 0) &&
-				((this.root_window == this.keyboard_menu_window) || (MenuBehavior.menu_last_item == null)))
+				((this.rootWindow == this.keyboardMenuWindow) || (MenuBehavior.menuLastItem == null)))
 			{
 				//	Aucune case sélectionnée dans le menu, ou alors c'est une case
 				//	du menu principal. Dans ce cas, il faut commencer par sélec-
 				//	tionner la première case du premier sous-menu :
 				
-				MenuWindow menu = this.live_menu_windows[0] as MenuWindow;
+				MenuWindow menu = this.liveMenuWindows[0] as MenuWindow;
 				
 				item = this.FindFirstItem (menu.Root);
 				
 				if (item != null)
 				{
-					this.keyboard_menu_item   = item;
-					this.keyboard_menu_window = item.Window;
+					this.keyboardMenuItem   = item;
+					this.keyboardMenuWindow = item.Window;
 				}
 			}
 			
@@ -812,26 +812,26 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (direction < 0)
 				{
-					item = this.FindPrevItem (this.root_menu, this.keyboard_menu_item);
+					item = this.FindPrevItem (this.rootMenu, this.keyboardMenuItem);
 					
 					if (item == null)
 					{
-						item = this.FindLastItem (this.root_menu);
+						item = this.FindLastItem (this.rootMenu);
 					}
 				}
 				else if (direction > 0)
 				{
-					item = this.FindNextItem (this.root_menu, this.keyboard_menu_item);
+					item = this.FindNextItem (this.rootMenu, this.keyboardMenuItem);
 					
 					if (item == null)
 					{
-						item = this.FindFirstItem (this.root_menu);
+						item = this.FindFirstItem (this.rootMenu);
 					}
 				}
 				
 				if (item != null)
 				{
-					window = this.root_window;
+					window = this.rootWindow;
 				}
 			}
 			else
@@ -842,15 +842,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				item = null;
 				
-				if ((this.keyboard_menu_item != null) &&
-					(this.keyboard_menu_item.RootParent is WindowRoot))
+				if ((this.keyboardMenuItem != null) &&
+					(this.keyboardMenuItem.RootParent is WindowRoot))
 				{
-					item = this.keyboard_menu_item;
+					item = this.keyboardMenuItem;
 				}
 				
 				if (item == null)
 				{
-					Widget root = this.keyboard_menu_window == null ? null : this.keyboard_menu_window.Root;
+					Widget root = this.keyboardMenuWindow == null ? null : this.keyboardMenuWindow.Root;
 					
 					item   = this.FindFirstItem (root);
 					window = item == null ? null : item.Window;
@@ -868,15 +868,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 							MenuBehavior.OpenItemSubmenu (item, Animate.No);
 							MenuBehavior.EnableKeyboardNavigation ();
 							
-							n = this.live_menu_windows.Count - 1;
+							n = this.liveMenuWindows.Count - 1;
 							
 							if (n > 0)
 							{
-								window = this.live_menu_windows[n] as MenuWindow;
+								window = this.liveMenuWindows[n] as MenuWindow;
 								item   = this.FindFirstItem (window.Root);
 							}
 						}
-						else if (this.root_menu != null)
+						else if (this.rootMenu != null)
 						{
 							//	Il n'y a pas de sous-menu pour l'élément en cours.
 							//	Il faut donc fermer ce menu et ouvrir le menu de
@@ -886,11 +886,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 							
 							if (root != null)
 							{
-								item = this.FindNextItem (this.root_menu, root);
+								item = this.FindNextItem (this.rootMenu, root);
 								
 								if (item == null)
 								{
-									item = this.FindFirstItem (this.root_menu);
+									item = this.FindFirstItem (this.rootMenu);
 								}
 								
 								if (item != null)
@@ -898,9 +898,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 									MenuBehavior.OpenItemSubmenu (item, Animate.No);
 									MenuBehavior.EnableKeyboardNavigation ();
 									
-									if (this.live_menu_windows.Count == 1)
+									if (this.liveMenuWindows.Count == 1)
 									{
-										window = this.live_menu_windows[0] as MenuWindow;
+										window = this.liveMenuWindows[0] as MenuWindow;
 										item   = this.FindFirstItem (window.Root);
 									}
 								}
@@ -915,7 +915,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 						Widget parent = this.FindParentItem (item);
 						
 						if ((parent == null) ||
-							(parent.Window == this.root_window))
+							(parent.Window == this.rootWindow))
 						{
 							//	Il n'y a plus de parent sur lequel on puisse se
 							//	rabattre. Montre le menu précédent :
@@ -924,11 +924,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 							
 							if (root != null)
 							{
-								item = this.FindPrevItem (this.root_menu, root);
+								item = this.FindPrevItem (this.rootMenu, root);
 								
 								if (item == null)
 								{
-									item = this.FindLastItem (this.root_menu);
+									item = this.FindLastItem (this.rootMenu);
 								}
 								
 								if (item != null)
@@ -936,9 +936,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 									MenuBehavior.OpenItemSubmenu (item, Animate.No);
 									MenuBehavior.EnableKeyboardNavigation ();
 									
-									if (this.live_menu_windows.Count == 1)
+									if (this.liveMenuWindows.Count == 1)
 									{
-										window = this.live_menu_windows[0] as MenuWindow;
+										window = this.liveMenuWindows[0] as MenuWindow;
 										item   = this.FindFirstItem (window.Root);
 									}
 								}
@@ -949,7 +949,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 							//	Ferme le sous-menu actuellement ouvert et change
 							//	le "focus" de place :
 							
-							window = this.live_menu_windows[n-1] as MenuWindow;
+							window = this.liveMenuWindows[n-1] as MenuWindow;
 							window.Hide ();
 							
 							item   = parent as MenuItem;
@@ -962,8 +962,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if ((item != null) &&
 				(window != null))
 			{
-				this.keyboard_menu_item   = item;
-				this.keyboard_menu_window = window;
+				this.keyboardMenuItem   = item;
+				this.keyboardMenuWindow = window;
 				
 				this.UpdateItemsAfterKeyboardAction (item);
 			}
@@ -973,54 +973,54 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			this.SuspendUpdates ();
 			
-			MenuItem old_item = MenuBehavior.menu_last_item;
-			MenuItem new_item = item;
+			MenuItem oldItem = MenuBehavior.menuLastItem;
+			MenuItem newItem = item;
 			
-			MenuBehavior.menu_last_item     = item;
-			MenuBehavior.menu_last_behavior = (item == null) ? null : this;
+			MenuBehavior.menuLastItem     = item;
+			MenuBehavior.menuLastBehavior = (item == null) ? null : this;
 			
-			if (old_item != new_item)
+			if (oldItem != newItem)
 			{
-				this.ChangeFocusedItem (new_item);
+				this.ChangeFocusedItem (newItem);
 			}
 			
-			this.keyboard_menu_active = true;
+			this.keyboardMenuActive = true;
 			
 			this.UpdateItems ();
 			this.ResumeUpdates ();
 		}
 		
-		private bool ChangeFocusedItem(MenuItem new_item)
+		private bool ChangeFocusedItem(MenuItem newItem)
 		{
 			//	Change le focus d'un item à un autre, tout en tenant compte des
 			//	éventuels items "riches" qui nécessitent un traitement spécial.
 			
-			MenuItemContainer old_container = this.frozen_menu_last_item as MenuItemContainer;
-			MenuItemContainer new_container = new_item as MenuItemContainer;
+			MenuItemContainer oldContainer = this.frozenMenuLastItem as MenuItemContainer;
+			MenuItemContainer newContainer = newItem as MenuItemContainer;
 			
-			if (old_container != null)
+			if (oldContainer != null)
 			{
 				//	Un item "riche" a le focus et il faut donc lui signaler qu'il va le
 				//	perdre (ce qui va mettre IsFrozen à 'false' et procéder à diverses
 				//	modifications) :
 				
-				old_container.DefocusFromMenu ();
+				oldContainer.DefocusFromMenu ();
 				
-				//	Les réglages de menu_last_... peuvent avoir été modifiés depuis
+				//	Les réglages de menuLast_... peuvent avoir été modifiés depuis
 				//	notre appel. On les applique à nouveau ici pour être sûr :
 				
-				MenuBehavior.menu_last_item     = new_item;
-				MenuBehavior.menu_last_behavior = (new_item == null) ? null : this;
+				MenuBehavior.menuLastItem     = newItem;
+				MenuBehavior.menuLastBehavior = (newItem == null) ? null : this;
 			}
 			
-			System.Diagnostics.Debug.Assert (this.is_frozen == false);
-			System.Diagnostics.Debug.Assert (this.frozen_menu_last_item == null);
+			System.Diagnostics.Debug.Assert (this.isFrozen == false);
+			System.Diagnostics.Debug.Assert (this.frozenMenuLastItem == null);
 			
-			if (new_container != null)
+			if (newContainer != null)
 			{
 				//	Un item "riche" va recevoir le focus :
 				
-				return new_container.FocusFromMenu ();
+				return newContainer.FocusFromMenu ();
 			}
 			else
 			{
@@ -1140,18 +1140,18 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void SuspendUpdates()
 		{
-			this.suspend_updates++;
+			this.suspendUpdates++;
 		}
 		
 		private void ResumeUpdates()
 		{
-			System.Diagnostics.Debug.Assert (this.suspend_updates > 0);
+			System.Diagnostics.Debug.Assert (this.suspendUpdates > 0);
 			
-			this.suspend_updates--;
+			this.suspendUpdates--;
 			
-			if (this.suspend_updates == 0)
+			if (this.suspendUpdates == 0)
 			{
-				if (this.update_requested > 0)
+				if (this.updateRequested > 0)
 				{
 					this.UpdateItems ();
 				}
@@ -1160,18 +1160,18 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void UpdateItems()
 		{
-			if (this.suspend_updates > 0)
+			if (this.suspendUpdates > 0)
 			{
-				this.update_requested++;
+				this.updateRequested++;
 				return;
 			}
 			
-			this.suspend_updates++;
+			this.suspendUpdates++;
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			MenuWindow[] windows = (MenuWindow[]) this.live_menu_windows.ToArray (typeof (MenuWindow));
-			int hilite_below_i = -1;
+			MenuWindow[] windows = (MenuWindow[]) this.liveMenuWindows.ToArray (typeof (MenuWindow));
+			int hiliteBelowI = -1;
 			
 			for (int i = 0; i < windows.Length; i++)
 			{
@@ -1179,10 +1179,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 				{
 					if (widget is MenuItem)
 					{
-						if (widget == MenuBehavior.menu_last_item)
+						if (widget == MenuBehavior.menuLastItem)
 						{
 							MenuItem.SetItemType (widget, MenuItemType.Selected);
-							hilite_below_i = i + 1;
+							hiliteBelowI = i + 1;
 						}
 						else
 						{
@@ -1192,13 +1192,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 			}
 			
-			if (this.root_menu != null)
+			if (this.rootMenu != null)
 			{
-				foreach (Widget widget in this.root_menu.FindAllChildren ())
+				foreach (Widget widget in this.rootMenu.FindAllChildren ())
 				{
 					if (widget is MenuItem)
 					{
-						if (widget == MenuBehavior.menu_last_item)
+						if (widget == MenuBehavior.menuLastItem)
 						{
 							MenuItem.SetItemType (widget, MenuItemType.Selected);
 						}
@@ -1210,29 +1210,29 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 			}
 			
-			if (MenuBehavior.menu_last_item == null)
+			if (MenuBehavior.menuLastItem == null)
 			{
-				hilite_below_i = windows.Length;
+				hiliteBelowI = windows.Length;
 			}
 			
-			if ((hilite_below_i > 0) &&
-				(MenuBehavior.timer_keep_menu != null))
+			if ((hiliteBelowI > 0) &&
+				(MenuBehavior.timerKeepMenu != null))
 			{
-				//	La souris est sortie du menu spécifié par timer_keep_menu et
+				//	La souris est sortie du menu spécifié par timerKeepMenu et
 				//	on ne doit donc pas peindre la case mise en évidence pour le
 				//	sous-menu ouvert, s'il y en a un.
 				
-				for (int i = 0; i < hilite_below_i; i++)
+				for (int i = 0; i < hiliteBelowI; i++)
 				{
-					if (windows[i] == MenuBehavior.timer_keep_menu)
+					if (windows[i] == MenuBehavior.timerKeepMenu)
 					{
-						hilite_below_i = i+1;
+						hiliteBelowI = i+1;
 						break;
 					}
 				}
 			}
 			
-			for (int i = 0; i < hilite_below_i; i++)
+			for (int i = 0; i < hiliteBelowI; i++)
 			{
 				MenuWindow menu = windows[i];
 				
@@ -1251,8 +1251,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				MenuItem.SetItemType (widget, MenuItemType.Default);
 			}
 			
-			this.suspend_updates--;
-			this.update_requested = 0;
+			this.suspendUpdates--;
+			this.updateRequested = 0;
 		}
 		
 		
@@ -1282,26 +1282,26 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static MenuBehavior[] GetActiveMenuBehaviors()
 		{
-			lock (MenuBehavior.sync_object)
+			lock (MenuBehavior.syncObject)
 			{
-				return MenuBehavior.menu_list.ToArray ();
+				return MenuBehavior.menuList.ToArray ();
 			}
 		}
 		
 		private static MenuBehavior[] GetRootMenuBehaviors()
 		{
-			lock (MenuBehavior.sync_object)
+			lock (MenuBehavior.syncObject)
 			{
-				return MenuBehavior.menu_root_list.ToArray ();
+				return MenuBehavior.menuRootList.ToArray ();
 			}
 		}
 		
 		
 		private static long GetNextId()
 		{
-			lock (MenuBehavior.sync_object)
+			lock (MenuBehavior.syncObject)
 			{
-				return MenuBehavior.next_id++;
+				return MenuBehavior.nextId++;
 			}
 		}
 		
@@ -1313,7 +1313,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			for (int i = behaviors.Length-1; i >= 0; i--)
 			{
 				MenuBehavior behavior = behaviors[i];
-				MenuWindow[] windows  = (MenuWindow[]) behavior.live_menu_windows.ToArray (typeof (MenuWindow));
+				MenuWindow[] windows  = (MenuWindow[]) behavior.liveMenuWindows.ToArray (typeof (MenuWindow));
 				
 				//	Analyse la chaîne des fenêtres correspondant au menu déroulé,
 				//	en commençant par la fin (dernier élément affiché = premier à
@@ -1345,11 +1345,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				MenuBehavior behavior = behaviors[i];
 				
-				if ((behavior.root_window != null) &&
-					(behavior.root_window.WindowBounds.Contains (pos)) &&
-					(behavior.root_menu.HitTest (behavior.root_menu.MapScreenToParent (pos))))
+				if ((behavior.rootWindow != null) &&
+					(behavior.rootWindow.WindowBounds.Contains (pos)) &&
+					(behavior.rootMenu.HitTest (behavior.rootMenu.MapScreenToParent (pos))))
 				{
-					return behavior.root_window;
+					return behavior.rootWindow;
 				}
 			}
 			
@@ -1400,8 +1400,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void MessageFilter(object sender, Message message)
 		{
-			if ((MenuBehavior.menu_list.Count == 0) &&
-				(MenuBehavior.menu_root_list.Count == 0))
+			if ((MenuBehavior.menuList.Count == 0) &&
+				(MenuBehavior.menuRootList.Count == 0))
 			{
 				//	Rien à filtrer si aucun menu n'est actuellement visible. Il
 				//	est primordial de faire le test immédiatement, pour éviter
@@ -1420,21 +1420,21 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			if (message.IsMouseType)
 			{
-				if ((MenuBehavior.menu_list.Count > 0) &&
+				if ((MenuBehavior.menuList.Count > 0) &&
 					(window.CapturingWidget != null))
 				{
 					//	Quelqu'un a capturé la souris... On désactive cette capture,
 					//	à moins que la fenêtre responsable de la capture soit elle-
 					//	même une fenêtre appartenant au menu actif :
 					
-					int  n       = MenuBehavior.menu_list.Count;
+					int  n       = MenuBehavior.menuList.Count;
 					bool release = true;
 					
 					if (n > 0)
 					{
-						MenuBehavior that = MenuBehavior.menu_list[n-1];
+						MenuBehavior that = MenuBehavior.menuList[n-1];
 						
-						foreach (Window menu in that.live_menu_windows)
+						foreach (Window menu in that.liveMenuWindows)
 						{
 							if (menu == window)
 							{
@@ -1455,15 +1455,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			else if (message.IsKeyType)
 			{
-				if (MenuBehavior.filter_keyboard_off > 0)
+				if (MenuBehavior.filterKeyboardOff > 0)
 				{
 					return;
 				}
 				
-				MenuWindow menu_window = window as MenuWindow;
+				MenuWindow menuWindow = window as MenuWindow;
 				
-				if ((menu_window != null) &&
-					(menu_window.MenuType == MenuType.ComboList))
+				if ((menuWindow != null) &&
+					(menuWindow.MenuType == MenuType.ComboList))
 				{
 					return;
 				}
@@ -1476,7 +1476,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			Drawing.Point mouse = window.MapWindowToScreen (message.Cursor);
 			
-			MenuBehavior.last_mouse_pos = mouse;
+			MenuBehavior.lastMousePos = mouse;
 			
 			//	Détermine dans quelle fenêtre appartenant à un menu la souris se
 			//	trouve ('menu' ou 'root' si la souris se trouve dans la fenêtre
@@ -1501,8 +1501,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	- La souris se trouve dans une partie "client" d'une fenêtre
 			//	- La souris se trouve hors d'une fenêtre appartenant à un menu
 
-			bool mouse_in_menu   = (item != null) || (menu != null);
-			bool swallow_message = (MenuBehavior.menu_list.Count > 0) && (message.NonClient == false) && !mouse_in_menu;
+			bool mouseInMenu   = (item != null) || (menu != null);
+			bool swallowMessage = (MenuBehavior.menuList.Count > 0) && (message.NonClient == false) && !mouseInMenu;
 			
 			
 			//	Pour résumer : un clic hors du menu ferme le menu; un clic dans
@@ -1512,18 +1512,18 @@ namespace Epsitec.Common.Widgets.Behaviors
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
-					if (!mouse_in_menu)
+					if (!mouseInMenu)
 					{
 						//	L'utilisateur a cliqué hors de tout menu actuellement
 						//	ouvert. Si un menu est actuellement ouvert, il faut le
 						//	refermer :
 						
-						if (MenuBehavior.menu_list.Count > 0)
+						if (MenuBehavior.menuList.Count > 0)
 						{
 							MenuBehavior.RejectActive ();
 						}
 					}
-					else if (mouse_in_menu && (root == null))
+					else if (mouseInMenu && (root == null))
 					{
 						//	L'utilisateur a cliqué dans une fenêtre appartenant à
 						//	un menu (autre que celui de la racine); on va changer
@@ -1545,10 +1545,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 						//	surface du menu racine. S'il y a des menus ouverts, il
 						//	faut les fermer :
 						
-						if (MenuBehavior.menu_list.Count > 0)
+						if (MenuBehavior.menuList.Count > 0)
 						{
 							MenuBehavior.RejectActive ();
-							swallow_message = true;
+							swallowMessage = true;
 						}
 					}
 					break;
@@ -1570,7 +1570,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 							
 							item.SimulateClicked ();
 							
-							swallow_message = true;
+							swallowMessage = true;
 						}
 					}
 					break;
@@ -1578,13 +1578,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				case MessageType.MouseEnter:
 				case MessageType.MouseLeave:
 				case MessageType.MouseMove:
-					if ((MenuBehavior.keyboard_navigation_active) &&
-						(Drawing.Point.Distance (mouse, MenuBehavior.keyboard_navigation_mouse_pos) < 4))
+					if ((MenuBehavior.keyboardNavigationActive) &&
+						(Drawing.Point.Distance (mouse, MenuBehavior.keyboardNavigationMousePos) < 4))
 					{
 						//	En cas de navigation au clavier, on ne tient pas compte
 						//	des petits déplacements de souris.
 						
-						swallow_message = true;
+						swallowMessage = true;
 					}
 					else
 					{
@@ -1595,7 +1595,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 					break;
 			}
 			
-			if (swallow_message)
+			if (swallowMessage)
 			{
 				message.Swallowed = true;
 			}
@@ -1607,7 +1607,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	eu un changement depuis la dernière fois, il faut mettre à jour
 			//	les menus correspondants.
 			
-			if (MenuBehavior.menu_last_item == item)
+			if (MenuBehavior.menuLastItem == item)
 			{
 				return;
 			}
@@ -1616,7 +1616,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	est active, on ignore le changement :
 			
 			if ((item == null) &&
-				(MenuBehavior.keyboard_navigation_active))
+				(MenuBehavior.keyboardNavigationActive))
 			{
 				return;
 			}
@@ -1630,25 +1630,25 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	états de sélection des menu items. Pour éviter de clignoter, on
 			//	suspend (éventuellement) le redessin temporairement.
 			
-			MenuBehavior suspended_behavior = null;
+			MenuBehavior suspendedBehavior = null;
 			
 			//	S'il y avait un menu item sélectionné, on commence par signaler
 			//	que la souris a quitté cet item.
 			
-			if (MenuBehavior.menu_last_item != null)
+			if (MenuBehavior.menuLastItem != null)
 			{
-				MenuItem     last_item = MenuBehavior.menu_last_item;
-				MenuBehavior behavior  = MenuBehavior.menu_last_behavior;
+				MenuItem     lastItem = MenuBehavior.menuLastItem;
+				MenuBehavior behavior  = MenuBehavior.menuLastBehavior;
 				
-				MenuBehavior.menu_last_behavior = null;
-				MenuBehavior.menu_last_item     = null;
+				MenuBehavior.menuLastBehavior = null;
+				MenuBehavior.menuLastItem     = null;
 				
 				System.Diagnostics.Debug.Assert (behavior.IsFrozen == false);
 				
 				behavior.SuspendUpdates ();
-				behavior.NotifyExitedItem (last_item);
+				behavior.NotifyExitedItem (lastItem);
 				
-				suspended_behavior = behavior;
+				suspendedBehavior = behavior;
 			}
 			
 			//	S'il y a un nouvel item qui contient la souris, on signale qu'il
@@ -1660,30 +1660,30 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				if (behavior.IsFrozen == false)
 				{
-					MenuBehavior.menu_last_behavior = behavior;
-					MenuBehavior.menu_last_item     = item;
+					MenuBehavior.menuLastBehavior = behavior;
+					MenuBehavior.menuLastItem     = item;
 					
 					behavior.SuspendUpdates ();
-					behavior.NotifyEnteredItem (MenuBehavior.menu_last_item);
+					behavior.NotifyEnteredItem (MenuBehavior.menuLastItem);
 					behavior.ResumeUpdates ();
 				}
 			}
 			
-			if (suspended_behavior != null)
+			if (suspendedBehavior != null)
 			{
-				suspended_behavior.ResumeUpdates ();
+				suspendedBehavior.ResumeUpdates ();
 			}
 		}
 		
 		
 		private static void ProcessKeyboardEvent(Window window, Message message)
 		{
-			MenuBehavior that = MenuBehavior.menu_last_behavior;
+			MenuBehavior that = MenuBehavior.menuLastBehavior;
 			
 			if ((that == null) &&
-				(MenuBehavior.menu_list.Count > 0))
+				(MenuBehavior.menuList.Count > 0))
 			{
-				that = MenuBehavior.menu_list[MenuBehavior.menu_list.Count-1];
+				that = MenuBehavior.menuList[MenuBehavior.menuList.Count-1];
 			}
 			
 			if (that == null)
@@ -1695,8 +1695,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			//	clavier uniquement si une navigation avait été activée au
 			//	préalable :
 			
-			if ((that.is_open == false) &&
-				(that.keyboard_menu_active == false))
+			if ((that.isOpen == false) &&
+				(that.keyboardMenuActive == false))
 			{
 				return;
 			}
@@ -1705,7 +1705,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			that.SuspendUpdates ();
 			
-			bool swallow_message = true;
+			bool swallowMessage = true;
 			
 			if (message.MessageType == MessageType.KeyDown)
 			{
@@ -1720,9 +1720,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 					
 					default:
 						if ((feel.TestSelectItemKey (message)) &&
-							(that.keyboard_menu_item != null))
+							(that.keyboardMenuItem != null))
 						{
-							that.keyboard_menu_item.SimulatePressed ();
+							that.keyboardMenuItem.SimulatePressed ();
 						}
 						else if (feel.TestCancelKey (message))
 						{
@@ -1734,7 +1734,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			that.ResumeUpdates ();
 			
-			if (swallow_message)
+			if (swallowMessage)
 			{
 				message.Swallowed = true;
 			}
@@ -1743,15 +1743,15 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void EnableKeyboardNavigation()
 		{
-			MenuBehavior.keyboard_navigation_active    = true;
-			MenuBehavior.keyboard_navigation_mouse_pos = MenuBehavior.last_mouse_pos;
+			MenuBehavior.keyboardNavigationActive    = true;
+			MenuBehavior.keyboardNavigationMousePos = MenuBehavior.lastMousePos;
 		}
 		
 		private static void DisableKeyboardNavigation()
 		{
-			if (MenuBehavior.keyboard_navigation_active)
+			if (MenuBehavior.keyboardNavigationActive)
 			{
-				MenuBehavior.keyboard_navigation_active = false;
+				MenuBehavior.keyboardNavigationActive = false;
 			}
 		}
 		
@@ -1767,17 +1767,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private static void HandleTimerTimeElapsed(object sender)
 		{
-			if (MenuBehavior.timer_item != null)
+			if (MenuBehavior.timerItem != null)
 			{
-				MenuBehavior.OpenItemSubmenu (MenuBehavior.timer_item, Animate.No);
+				MenuBehavior.OpenItemSubmenu (MenuBehavior.timerItem, Animate.No);
 			}
-			if (MenuBehavior.timer_behaviour != null)
+			if (MenuBehavior.timerBehaviour != null)
 			{
-				MenuWindow   menu     = MenuBehavior.timer_keep_menu;
-				MenuBehavior behavior = MenuBehavior.timer_behaviour;
+				MenuWindow   menu     = MenuBehavior.timerKeepMenu;
+				MenuBehavior behavior = MenuBehavior.timerBehaviour;
 				
-				MenuBehavior.timer_keep_menu = null;
-				MenuBehavior.timer_behaviour = null;
+				MenuBehavior.timerKeepMenu = null;
+				MenuBehavior.timerBehaviour = null;
 				
 				if (menu != null)
 				{
@@ -1855,42 +1855,42 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			public void Save()
 			{
-				this.menu_list      = new List<MenuBehavior> ();
-				this.menu_root_list = new List<MenuBehavior> ();
+				this.menuList      = new List<MenuBehavior> ();
+				this.menuRootList  = new List<MenuBehavior> ();
 				
-				this.menu_list.AddRange (MenuBehavior.menu_list);
-				this.menu_root_list.AddRange (MenuBehavior.menu_root_list);
+				this.menuList.AddRange (MenuBehavior.menuList);
+				this.menuRootList.AddRange (MenuBehavior.menuRootList);
 				
-				this.menu_last_item     = MenuBehavior.menu_last_item;
-				this.menu_last_behavior = MenuBehavior.menu_last_behavior;
+				this.menuLastItem     = MenuBehavior.menuLastItem;
+				this.menuLastBehavior = MenuBehavior.menuLastBehavior;
 				
-				this.filter_keyboard_off = MenuBehavior.filter_keyboard_off;
+				this.filterKeyboardOff = MenuBehavior.filterKeyboardOff;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Saved; menu list: {0} items, root list: {1} items", this.menu_list.Count, this.menu_root_list.Count));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Saved; menu list: {0} items, root list: {1} items", this.menuList.Count, this.menuRootList.Count));
 				
-				MenuBehavior.menu_last_item = null;
-				MenuBehavior.menu_last_behavior = null;
-				MenuBehavior.menu_list.Clear ();
-				MenuBehavior.menu_root_list.Clear ();
-				MenuBehavior.filter_keyboard_off = 0;
+				MenuBehavior.menuLastItem = null;
+				MenuBehavior.menuLastBehavior = null;
+				MenuBehavior.menuList.Clear ();
+				MenuBehavior.menuRootList.Clear ();
+				MenuBehavior.filterKeyboardOff = 0;
 
 				MenuBehavior.NotifyMenuListChanged ();
 			}
 			
 			public void Restore()
 			{
-				MenuBehavior.menu_list.Clear ();
-				MenuBehavior.menu_root_list.Clear ();
+				MenuBehavior.menuList.Clear ();
+				MenuBehavior.menuRootList.Clear ();
 				
-				MenuBehavior.menu_list.AddRange (this.menu_list);
-				MenuBehavior.menu_root_list.AddRange (this.menu_root_list);
+				MenuBehavior.menuList.AddRange (this.menuList);
+				MenuBehavior.menuRootList.AddRange (this.menuRootList);
 				
-				MenuBehavior.menu_last_item     = this.menu_last_item;
-				MenuBehavior.menu_last_behavior = this.menu_last_behavior;
+				MenuBehavior.menuLastItem     = this.menuLastItem;
+				MenuBehavior.menuLastBehavior = this.menuLastBehavior;
 				
-				MenuBehavior.filter_keyboard_off = this.filter_keyboard_off;
+				MenuBehavior.filterKeyboardOff = this.filterKeyboardOff;
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Restored; menu list: {0} items, root list: {1} items", this.menu_list.Count, this.menu_root_list.Count));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Restored; menu list: {0} items, root list: {1} items", this.menuList.Count, this.menuRootList.Count));
 
 				MenuBehavior.NotifyMenuListChanged ();
 			}
@@ -1898,11 +1898,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			MenuBehavior						behavior;
 			
-			List<MenuBehavior>					menu_list;
-			List<MenuBehavior>					menu_root_list;
-			MenuItem							menu_last_item;
-			MenuBehavior						menu_last_behavior;
-			int									filter_keyboard_off;
+			List<MenuBehavior>					menuList;
+			List<MenuBehavior>					menuRootList;
+			MenuItem							menuLastItem;
+			MenuBehavior						menuLastBehavior;
+			int									filterKeyboardOff;
 		}
 		#endregion
 		
@@ -1911,41 +1911,41 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		public static event Support.SimpleCallback MenuListChanged;
 		
-		static readonly object					sync_object = new object ();
-		static long								next_id = 1;
-		static int								menu_count;
-		static List<MenuBehavior>				menu_list;
-		static List<MenuBehavior>				menu_root_list;
-		static MenuItem							menu_last_item;
-		static MenuBehavior						menu_last_behavior;
+		static readonly object					syncObject = new object ();
+		static long								nextId = 1;
+		static int								menuCount;
+		static List<MenuBehavior>				menuList;
+		static List<MenuBehavior>				menuRootList;
+		static MenuItem							menuLastItem;
+		static MenuBehavior						menuLastBehavior;
 		
 		static Stack<State>						stack;
 		static Timer							timer;
 		
-		static MenuItem							timer_item;
-		static MenuWindow						timer_keep_menu;
-		static MenuBehavior						timer_behaviour;
+		static MenuItem							timerItem;
+		static MenuWindow						timerKeepMenu;
+		static MenuBehavior						timerBehaviour;
 		
-		static int								filter_keyboard_off;
-		static Drawing.Point					last_mouse_pos;
-		static bool								keyboard_navigation_active;
-		static Drawing.Point					keyboard_navigation_mouse_pos;
+		static int								filterKeyboardOff;
+		static Drawing.Point					lastMousePos;
+		static bool								keyboardNavigationActive;
+		static Drawing.Point					keyboardNavigationMousePos;
 		
 		private long							id = MenuBehavior.GetNextId ();
-		private System.Collections.ArrayList	live_menu_windows = new System.Collections.ArrayList ();
-		private Window							root_window;
-		private Widget							root_menu;
-		private bool							is_open;
-		private bool							is_frozen;
+		private System.Collections.ArrayList	liveMenuWindows = new System.Collections.ArrayList ();
+		private Window							rootWindow;
+		private Widget							rootMenu;
+		private bool							isOpen;
+		private bool							isFrozen;
 		
-		private bool							keyboard_menu_active;
-		private Window							keyboard_menu_window;
-		private MenuItem						keyboard_menu_item;
+		private bool							keyboardMenuActive;
+		private Window							keyboardMenuWindow;
+		private MenuItem						keyboardMenuItem;
 		
-		private MenuItem						frozen_menu_last_item;
+		private MenuItem						frozenMenuLastItem;
 		
-		private int								local_menu_count;
-		private int								suspend_updates;
-		private int								update_requested;
+		private int								localMenuCount;
+		private int								suspendUpdates;
+		private int								updateRequested;
 	}
 }
