@@ -31,8 +31,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.window = new Window ()
 			{
 				Text = Res.Strings.DataPicker.Title.ToSimpleText (),
-				ClientSize = new Epsitec.Common.Drawing.Size (824, 400),
-				Name = "SeriesPicker",
+				ClientSize = new Epsitec.Common.Drawing.Size (1008, 736),
+				Name = "SeriesPicker2",
 				Owner = owner,
 				Icon = owner.Icon,
 				PreventAutoClose = true
@@ -42,92 +42,115 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			var root = this.window.Root;
 
-			root.Padding = new Margins (4, 8, 8, 4);
+			root.Padding = new Margins (0, 0, 0, 0);
 
-			
-			this.scrollList = new ScrollListMultiSelect ()
+			var frameTop = new FrameBox ()
 			{
-				Dock = DockStyle.Left,
-				PreferredWidth = 300,
+				Dock = DockStyle.Top,
+				PreferredHeight = 150,
 				Parent = root,
-				RowHeight = 24,
-				ScrollListStyle = ScrollListStyle.AlternatingRows
+				Name = "top",
+				BackColor = Color.FromRgb (1, 0.9, 0.9)
 			};
 
-			VSplitter splitter = new VSplitter ()
-			{
-				Dock = DockStyle.Left,
-				PreferredWidth = 8,
-				Parent = root
-			};
-
-			var view = new FrameBox ()
+			var frameWorkspace = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
 				Parent = root,
-				PreferredWidth = 300,
-				BackColor = Color.FromBrightness (1.0)
+				Name = "workspace",
+				BackColor = Color.FromRgb (1, 1, 0.9)
 			};
 
+			var frameInputs = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = frameWorkspace,
+				Name = "inputs",
+				BackColor = Color.FromRgb (0.9, 1, 0.9),
+				PreferredHeight = 320
+			};
+
+			var frameOutputs = new FrameBox ()
+			{
+				Dock = DockStyle.Bottom,
+				Parent = frameWorkspace,
+				Name = "outputs",
+				PreferredHeight = 260
+			};
+
+			var frameOutputsLeft = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = frameOutputs,
+				Name = "left"
+			};
+
+			var frameGroups = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = frameOutputsLeft,
+				Name = "groups",
+				BackColor = Color.FromRgb (0.9, 0.9, 1),
+				PreferredHeight = 160
+			};
+
+			var frameSelection = new FrameBox ()
+			{
+				Dock = DockStyle.Bottom,
+				Parent = frameOutputsLeft,
+				Name = "selection",
+				BackColor = Color.FromRgb (1, 0.9, 0.8),
+				PreferredHeight = 100
+			};
+
+			var framePreview = new FrameBox ()
+			{
+				Dock = DockStyle.Right,
+				Parent = frameOutputs,
+				Name = "preview",
+				BackColor = Color.FromRgb (1, 0.85, 0.8),
+				PreferredWidth = 260
+			};
+
+			this.selectionItemsController = new ItemListController (frameSelection)
+			{
+				ItemLayoutMode = ItemLayoutMode.Horizontal
+			};
+
+			for (int i = 0; i < 5; i++)
+			{
+				var view = new MiniChartView ()
+				{
+					Anchor = AnchorStyles.BottomLeft,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					VerticalAlignment = VerticalAlignment.Center,
+					PreferredWidth = 80,
+					PreferredHeight = 80,
+					Padding = new Margins (4, 4, 4, 4),
+					Scale = 0.5,
+					Renderer = lineChartRenderer
+				};
+
+				this.selectionItemsController.Add (view);
+			}
+
+			this.selectionItemsController.Layout ();
+			
 			this.chartView = new MiniChartView ()
 			{
-				Dock = DockStyle.Fill,
+				Anchor = AnchorStyles.TopLeft,
 				HorizontalAlignment = HorizontalAlignment.Center,
 				VerticalAlignment = VerticalAlignment.Center,
 				PreferredWidth = 80,
 				PreferredHeight = 80,
 				Padding = new Margins (4, 4, 4, 4),
+				Margins = new Margins (0, 0, 0, 0),
 				Scale = 0.5,
-				Parent = view,
+				Parent = frameInputs,
 				Renderer = lineChartRenderer
 			};
 
-			this.hotRowIndex = -1;
-			this.visibleQuickButtons = new List<Button> ();
-
-			this.quickButtonNegate = new IconButton ()
-			{
-				PreferredWidth = 22,
-				PreferredHeight = 22,
-				ButtonStyle = ButtonStyle.Icon,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.PlusMinus.icon",
-				Parent = this.scrollList.Parent,
-				Anchor = AnchorStyles.BottomLeft
-			};
-
-			this.quickButtonAddToGraph = new IconButton ()
-			{
-				PreferredWidth = 22,
-				PreferredHeight = 22,
-				ButtonStyle = ButtonStyle.Icon,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Pick.icon",
-				Parent = this.scrollList.Parent,
-				Anchor = AnchorStyles.BottomLeft
-			};
-
-			this.quickButtonSum = new IconButton ()
-			{
-				PreferredWidth = 22,
-				PreferredHeight = 22,
-				ButtonStyle = ButtonStyle.Icon,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Sum.icon",
-				Parent = this.scrollList.Parent,
-				Anchor = AnchorStyles.BottomLeft
-			};
-
 			this.window.WindowCloseClicked += sender => this.HideWindow ();
-			
-			this.quickButtonNegate.Clicked     += (sender, e) => this.ProcessQuickButton (this.NegateSeriesAction);
-			this.quickButtonAddToGraph.Clicked += (sender, e) => this.ProcessQuickButton (this.AddSeriesToGraphAction);
-			this.quickButtonSum.Clicked        += (sender, e) => this.ProcessQuickButton (this.SumSeriesAction);
-
-			this.scrollList.DragMultiSelectionStarted += this.HandleDragMultiSelectionStarted;
-			this.scrollList.DragMultiSelectionEnded   += this.HandleDragMultiSelectionEnded;
-			this.scrollList.MultiSelectionChanged     += this.HandleMultiSelectionChanged;
-			this.scrollList.MouseMove                 += this.HandleMouseMove;
-			this.scrollList.Exited                    += this.HandleMouseExited;
-
-			this.scrollList.PaintForeground += this.HandlePaintForeground;
 
 			GraphProgram.Application.ActiveDocumentChanged += sender => this.UpdateScrollListItems ();
 		}
@@ -152,12 +175,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void UpdateScrollListItems()
 		{
-			if ((this.scrollList != null) &&
-				(this.DataSet != null) &&
+			if ((this.DataSet != null) &&
 				(this.DataSet.DataTable != null))
 			{
 				List<string> labels = new List<string> (this.DataSet.DataTable.RowLabels);
 
+#if false
 				var selection = this.scrollList.GetSortedSelection ();
 
 				this.scrollList.ClearSelection ();
@@ -165,6 +188,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.scrollList.Items.AddRange (labels.Select (x => this.negatedSeriesLabels.Contains (x) ? string.Concat ("(", x, ")") : x));
 				this.scrollList.SelectedIndex = selection.Count == 0 ? -1 : selection.First ();
 				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
+#endif
 			}
 		}
 
@@ -174,7 +198,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			renderer.Clear ();
 			renderer.DefineValueLabels (this.DataSet.DataTable.ColumnLabels);
-			renderer.CollectRange (this.scrollList.GetSortedSelection ().Select (x => this.GetRowSeries (x)));
+//-			renderer.CollectRange (this.scrollList.GetSortedSelection ().Select (x => this.GetRowSeries (x)));
 			renderer.ClipRange (System.Math.Min (0, renderer.MinValue), System.Math.Max (0, renderer.MaxValue));
 
 			this.chartView.Invalidate ();
@@ -182,11 +206,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void SetSelectedItem(int index)
 		{
-			if (this.scrollList != null)
-			{
-				this.scrollList.SelectedIndex = index;
-				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
-			}
 		}
 
 		public void ClearNegatedSeries()
@@ -204,8 +223,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.negatedSeriesLabels.Add (seriesLabel);
 			}
-
-			this.scrollList.Invalidate ();
 		}
 
 		public ChartSeries GetRowSeries(int index)
@@ -225,251 +242,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private void HandleDragMultiSelectionStarted(object sender, MultiSelectEventArgs e)
-		{
-			if (Message.CurrentState.IsControlPressed == false)
-			{
-				this.scrollList.ClearSelection ();
-			}
-
-			this.selection = null;
-			this.UpdateVisibleButtons ();
-		}
-
-		private void HandleDragMultiSelectionEnded(object sender, MultiSelectEventArgs e)
-		{
-			if ((e.Count == 1) &&
-				(this.scrollList.IsItemSelected (e.BeginIndex)))
-			{
-				this.scrollList.RemoveSelection (Enumerable.Range (e.BeginIndex, e.Count));
-			}
-			else
-			{
-				this.scrollList.AddSelection (Enumerable.Range (e.BeginIndex, e.Count));
-				this.selection = e;
-				this.UpdateVisibleButtons ();
-			}
-		}
-
-		private void HandleMultiSelectionChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-			int index = this.scrollList.SelectedIndex;
-
-			if ((this.scrollList.IsItemSelected (index)) &&
-				(this.scrollList.SelectionCount == 1))
-			{
-				this.selection = new MultiSelectEventArgs (index, index);
-			}
-			else
-			{
-				this.selection = null;
-			}
-
-			this.UpdateVisibleButtons ();
-			this.UpdateChartView ();
-			
-			this.OnChanged ();
-		}
-
-		private void HandleMouseExited(object sender, MessageEventArgs e)
-		{
-			this.NotifyHotRow (-1);
-		}
-
-		private void HandleMouseMove(object sender, MessageEventArgs e)
-		{
-			int count = this.scrollList.VisibleRowCount;
-			int first = this.scrollList.FirstVisibleRow;
-
-			for (int i = 0; i < count; i++)
-			{
-				int index = first + i;
-				var frame = this.scrollList.GetRowBounds (index);
-
-				if (frame.Contains (e.Point))
-				{
-					this.NotifyHotRow (index);
-					return;
-				}
-			}
-		}
-
-		private void HandlePaintForeground(object sender, PaintEventArgs e)
-		{
-			int index = this.scrollList.SelectedIndex;
-
-			if ((index >= 0) &&
-				(this.selection != null) &&
-				(this.selection.Count > 0))
-			{
-				var graphics  = e.Graphics;
-				var bounds    = this.scrollList.GetRowBounds (index);
-
-				if ((bounds.IsEmpty) ||
-					(this.visibleQuickButtons.Count == 0))
-				{
-					this.HideQuickButtons ();
-				}
-				else
-				{
-					var rectangle = this.selection == null ? bounds : this.scrollList.GetRowBounds (this.selection.BeginIndex, this.selection.Count);
-
-					double arrowLength = 6;
-					double buttWidth = this.visibleQuickButtons.Count * 24;
-					double zoneWidth = arrowLength + 2 + buttWidth;
-
-					using (Path path = new Path ())
-					{
-						double ox = bounds.Right - zoneWidth + 1;
-						double oy = rectangle.Bottom;
-						double cy = bounds.Center.Y;
-
-						path.MoveTo (ox, oy);
-						path.LineTo (ox, cy-arrowLength);
-						path.LineTo (ox+arrowLength, cy);
-						path.LineTo (ox, cy+arrowLength);
-						path.LineTo (ox, rectangle.Top);
-						path.LineTo (rectangle.TopRight);
-						path.LineTo (rectangle.BottomRight);
-						path.Close ();
-
-						Color background = Color.FromName ("ActiveCaption");
-
-						graphics.Color = Color.Mix (background, Color.FromBrightness (1), 0.20);
-
-						graphics.PaintSurface (path);
-						graphics.RenderSolid ();
-					}
-
-					using (Path path = new Path ())
-					{
-						double ox = bounds.Right - zoneWidth + 0.5;
-						double oy = rectangle.Bottom;
-						double cy = bounds.Center.Y;
-
-						path.MoveTo (ox, oy);
-						path.LineTo (ox, cy-arrowLength);
-						path.LineTo (ox+arrowLength, cy);
-						path.LineTo (ox, cy+arrowLength);
-						path.LineTo (ox, rectangle.Top);
-
-						graphics.LineWidth = 1.0;
-						graphics.LineCap = CapStyle.Butt;
-						graphics.LineJoin = JoinStyle.Miter;
-						graphics.Color = Color.FromBrightness (1);
-
-						graphics.PaintOutline (path);
-						graphics.RenderSolid ();
-					}
-
-					this.UpdateQuickButtons (new Rectangle (bounds.Right - buttWidth, bounds.Bottom, buttWidth, bounds.Height));
-				}
-			}
-			else
-			{
-				this.HideQuickButtons ();
-			}
-		}
-
-		private void UpdateQuickButtons(Rectangle frame)
-		{
-			System.Diagnostics.Debug.Assert (frame.IsEmpty == false);
-
-			if (this.quickButtonsFrame == frame)
-			{
-				return;
-			}
-
-			this.quickButtonsFrame = frame;
-			this.UpdateQuickButtons ();
-		}
-
-		private void HideQuickButtons()
-		{
-			this.quickButtonsFrame = Rectangle.Empty;
-			this.visibleQuickButtons.Clear ();
-			this.UpdateQuickButtons ();
-		}
-
-		private void UpdateQuickButtons()
-		{
-			double x = this.quickButtonsFrame.Left + this.scrollList.ActualLocation.X - this.scrollList.Parent.Padding.Left;
-			double y = this.quickButtonsFrame.Bottom + this.scrollList.ActualLocation.Y - this.scrollList.Parent.Padding.Bottom;
-
-			double h = this.scrollList.RowHeight;
-
-			foreach (var button in this.QuickButtons)
-			{
-				if (this.visibleQuickButtons.Contains (button))
-				{
-					button.Enable = true;
-					button.Show ();
-					button.Margins = new Margins (x, 0, 0, System.Math.Floor (y + (h - button.PreferredHeight) / 2));
-
-					x += button.PreferredWidth + 2;
-				}
-				else
-				{
-					if (button.IsFocused)
-					{
-						this.scrollList.Focus ();
-					}
-
-					button.Enable = false;
-					button.Hide ();
-				}
-			}
-
-			this.scrollList.Invalidate ();
-		}
-
-		private void UpdateVisibleButtons()
-		{
-			int selectionCount = (this.selection == null) ? 0 : this.scrollList.SelectionCount;
-
-			if (this.selectionCount != selectionCount)
-			{
-				this.selectionCount = selectionCount;
-				this.visibleQuickButtons.Clear ();
-
-				if (selectionCount == 1)
-				{
-					this.visibleQuickButtons.Add (this.quickButtonNegate);
-					this.visibleQuickButtons.Add (this.quickButtonAddToGraph);
-				}
-				else if (selectionCount > 1)
-				{
-					this.visibleQuickButtons.Add (this.quickButtonSum);
-				}
-			}
-		}
-
-
-		private void ProcessQuickButton(System.Action<IEnumerable<int>> action)
-		{
-			this.selection = null;
-			this.HideQuickButtons ();
-			
-			if (action != null)
-			{
-				action (this.scrollList.GetSortedSelection ());
-				
-				this.scrollList.Focus ();
-				this.scrollList.Invalidate ();
-			}
-		}
-
-		
-		private void NotifyHotRow(int index)
-		{
-			if (this.hotRowIndex != index)
-			{
-				//	TODO: handle hover over row in scroll list
-
-				this.hotRowIndex = index;
-			}
-		}
-
 		private void OnChanged()
 		{
 			var handler = this.Changed;
@@ -481,17 +253,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		private IEnumerable<Button>				QuickButtons
-		{
-			get
-			{
-				yield return this.quickButtonNegate;
-				yield return this.quickButtonAddToGraph;
-				yield return this.quickButtonSum;
-			}
-		}
-
-
 		public event EventHandler				Changed;
 		
 		public System.Action<IEnumerable<int>>	SumSeriesAction;
@@ -499,18 +260,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public System.Action<IEnumerable<int>>	NegateSeriesAction;
 
 		readonly private Window					window;
-		readonly private ScrollListMultiSelect	scrollList;
 		readonly private ChartView				chartView;
 		readonly private HashSet<string>		negatedSeriesLabels;
-		
-		readonly private Button					quickButtonNegate;
-		readonly private Button					quickButtonAddToGraph;
-		readonly private Button					quickButtonSum;
-		readonly private List<Button>			visibleQuickButtons;
-		
-		private int								hotRowIndex;
-		private MultiSelectEventArgs			selection;
-		private Rectangle						quickButtonsFrame;
-		private int								selectionCount;
+
+		readonly private ItemListController		selectionItemsController;
 	}
 }
