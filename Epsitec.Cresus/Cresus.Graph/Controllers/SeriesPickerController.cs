@@ -133,8 +133,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.selectionItemsController.Add (view);
 			}
-
-			this.selectionItemsController.Layout ();
 			
 			this.chartView = new MiniChartView ()
 			{

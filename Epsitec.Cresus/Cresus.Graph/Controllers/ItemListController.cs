@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		public void Layout()
+		private void Layout()
 		{
 			switch (this.itemLayoutMode)
 			{
@@ -130,8 +130,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void LayoutHorizontal()
 		{
-			double totalWidth = this.items.Aggregate (0.0, this.ComputeWidth);
 			double availableWidth = this.container.Client.Size.Width - this.container.Padding.Width;
+
+			if (availableWidth == this.cachedSize.Width)
+			{
+				return;
+			}
+			else
+			{
+				this.cachedSize = new Size (availableWidth, this.cachedSize.Height);
+			}
+			
+			double totalWidth = this.items.Aggregate (0.0, this.ComputeWidth);
 			double activeBegin = 0;
 			double activeEnd = 0;
 
@@ -182,7 +192,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void InvalidateLayout()
 		{
-			
+			this.cachedSize = Size.Empty;
+			Epsitec.Common.Widgets.Application.QueueAsyncCallback (this.Layout);
 		}
 
 
@@ -193,5 +204,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private double originOffset;
 		private double overlapX;
 		private double overlapY;
+		private Size cachedSize;
 	}
 }
