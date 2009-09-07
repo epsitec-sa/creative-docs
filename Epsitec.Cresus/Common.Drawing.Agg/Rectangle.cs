@@ -622,6 +622,7 @@ namespace Epsitec.Common.Drawing
 
 			return r;
 		}
+		
 		public static Rectangle FromPoints(double x1, double y1, double x2, double y2)
 		{
 			Rectangle r;
@@ -645,8 +646,12 @@ namespace Epsitec.Common.Drawing
 			
 			return r;
 		}
-		
-		
+
+		public static Rectangle Scale(Rectangle r, double s)
+		{
+			return new Rectangle (r.x1*s, r.y1*s, r.Width*s, r.Height*s);
+		}
+
 		public static Rectangle Inflate(Rectangle r, double x, double y)
 		{
 			if (r.IsEmpty)

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var lineChartRenderer = new LineChartRenderer ();
 
 			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
-			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ());
+			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner () { VisibleGrid = false, VisibleLabels = false, VisibleTicks = false });
 
 
 			this.window = new Window ()
@@ -61,11 +61,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = root
 			};
 
-			this.chartView = new ChartView ()
+			var view = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				PreferredWidth = 300,
 				Parent = root,
+				PreferredWidth = 300,
+				BackColor = Color.FromBrightness (1.0)
+			};
+
+			this.chartView = new MiniChartView ()
+			{
+				Dock = DockStyle.Fill,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+				PreferredWidth = 80,
+				PreferredHeight = 80,
+				Padding = new Margins (4, 4, 4, 4),
+				Scale = 0.5,
+				Parent = view,
 				Renderer = lineChartRenderer
 			};
 

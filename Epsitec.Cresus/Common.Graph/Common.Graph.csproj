@@ -71,6 +71,7 @@
     <Compile Include="Styles\ColorStyle.cs" />
     <Compile Include="Widgets\ChartView.cs" />
     <Compile Include="Widgets\CaptionView.cs" />
+    <Compile Include="Widgets\MiniChartView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
@@ -114,6 +115,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\PaperClip.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -14,6 +14,7 @@ namespace Epsitec.Common.Graph.Widgets
 		public ChartView()
 		{
 			this.Padding = new Margins (60, 30, 30, 30);
+			this.scale = 1.0;
 		}
 
 
@@ -33,6 +34,22 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+		public double Scale
+		{
+			get
+			{
+				return this.scale;
+			}
+			set
+			{
+				if (this.scale != value)
+				{
+					this.scale = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -41,11 +58,16 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (this.renderer != null)
 			{
-				this.renderer.Render (graphics, Rectangle.Deflate (this.Client.Bounds, this.Padding));
+				var transform = graphics.Transform;
+				graphics.ScaleTransform (this.scale, this.scale, 0, 0);
+				Rectangle paint = Rectangle.Deflate (this.Client.Bounds, this.Padding);
+				this.renderer.Render (graphics, Rectangle.Scale (paint, 1/this.scale));
+				graphics.Transform = transform;
 			}
 		}
 
 
 		private Renderers.AbstractRenderer renderer;
+		private double scale;
 	}
 }

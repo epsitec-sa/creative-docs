@@ -13,6 +13,9 @@ namespace Epsitec.Common.Graph.Adorners
 		{
 			this.GridColor = Color.FromBrightness (0);
 			this.GridLineWidth = 0.5;
+			this.VisibleGrid = true;
+			this.VisibleLabels = true;
+			this.VisibleTicks = true;
 		}
 
 		public Styles.CaptionStyle Style
@@ -39,6 +42,24 @@ namespace Epsitec.Common.Graph.Adorners
 			set;
 		}
 
+		public bool VisibleGrid
+		{
+			get;
+			set;
+		}
+
+		public bool VisibleLabels
+		{
+			get;
+			set;
+		}
+
+		public bool VisibleTicks
+		{
+			get;
+			set;
+		}
+
 		private HorizontalAxisMode HorizontalAxisMode
 		{
 			get;
@@ -60,9 +81,16 @@ namespace Epsitec.Common.Graph.Adorners
 			double max = renderer.MaxValue;
 			double min = renderer.MinValue;
 
-			this.PaintGrid (port, renderer);
-			this.PaintVerticalAxisLabels (port, renderer);
-			this.PaintHorizontalAxisLabels (port, renderer);
+			if (this.VisibleGrid)
+			{
+				this.PaintGrid (port, renderer);
+			}
+
+			if (this.VisibleLabels)
+			{
+				this.PaintVerticalAxisLabels (port, renderer);
+				this.PaintHorizontalAxisLabels (port, renderer);
+			}
 
 			port.LineWidth = 1;
 			port.Color = Color.FromBrightness (0);
@@ -198,7 +226,8 @@ namespace Epsitec.Common.Graph.Adorners
 				path.LineTo (x2, y);
 				path.LineTo (x2 - this.arrowLength, y + this.arrowBreadth/2);
 
-				if (this.tickLength > 0)
+				if ((this.tickLength > 0) &&
+					(this.VisibleTicks))
 				{
 					if (addTicks != null)
 					{
@@ -220,7 +249,8 @@ namespace Epsitec.Common.Graph.Adorners
 				path.LineTo (x, y2);
 				path.LineTo (x + this.arrowBreadth/2, y2 - this.arrowLength);
 
-				if (this.tickLength > 0)
+				if ((this.tickLength > 0) &&
+					(this.VisibleTicks))
 				{
 					if (addTicks != null)
 					{
