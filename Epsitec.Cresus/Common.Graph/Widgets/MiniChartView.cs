@@ -16,54 +16,45 @@ namespace Epsitec.Common.Graph.Widgets
 			var renderer  = this.Renderer;
 			var scale     = this.Scale;
 			var rectangle = Rectangle.Deflate (this.Client.Bounds, this.Padding);
-			var transform = graphics.Transform;
-			int seriesNum = renderer == null ? 0 : renderer.SeriesItems.Count;
+			int seriesCount = renderer == null ? 0 : renderer.SeriesItems.Count;
 
-			if (seriesNum > 1)
+			graphics.LineWidth = 1.0;
+			graphics.LineJoin = JoinStyle.Miter;
+
+			if (seriesCount > 1)
 			{
+				var transform = graphics.Transform;
 				graphics.RotateTransformDeg (3, rectangle.Center.X, rectangle.Center.Y);
-				graphics.AddFilledRectangle (Rectangle.Inflate (rectangle, 1, 1));
-				graphics.RenderSolid (Color.FromAlphaRgb (0.2, 0.8, 0.8, 0.8));
-				graphics.AddFilledRectangle (rectangle);
-				graphics.RenderSolid (Color.FromAlphaRgb (0.6, 0.8, 0.8, 0.8));
-				graphics.AddFilledRectangle (Rectangle.Deflate (rectangle, 1, 1));
-				graphics.RenderSolid (Color.FromBrightness (1.0));
+				MiniChartView.PaintBackSheet (graphics, rectangle);
 
-				if (seriesNum > 2)
+				if (seriesCount > 2)
 				{
 					graphics.RotateTransformDeg (-3-4, rectangle.Center.X, rectangle.Center.Y);
-					graphics.AddFilledRectangle (Rectangle.Inflate (rectangle, 1, 1));
-					graphics.RenderSolid (Color.FromAlphaRgb (0.2, 0.8, 0.8, 0.8));
-					graphics.AddFilledRectangle (rectangle);
-					graphics.RenderSolid (Color.FromAlphaRgb (0.6, 0.8, 0.8, 0.8));
-					graphics.AddFilledRectangle (Rectangle.Deflate (rectangle, 1, 1));
-					graphics.RenderSolid (Color.FromBrightness (1.0));
+					MiniChartView.PaintBackSheet (graphics, rectangle);
 				}
 
 				graphics.Transform = transform;
 			}
 
-			graphics.AddFilledRectangle (rectangle);
-			graphics.GradientRenderer.Fill = GradientFill.Y;
-			graphics.GradientRenderer.SetColors (Color.FromBrightness (1.0), Color.FromRgb (0.9, 0.9, 0.95));
-			graphics.GradientRenderer.SetParameters (0, 100);
-			graphics.GradientRenderer.Transform = Transform.Identity.Scale (rectangle.Width/100, rectangle.Height/100).Translate (rectangle.Height/2, rectangle.Width/2).RotateDeg (10, rectangle.Center);
-			graphics.RenderGradient ();
+			MiniChartView.PaintTopmostSheet (graphics, rectangle);
 
 			if ((renderer != null) &&
 				(renderer.SeriesItems.Count > 0))
 			{
+				var transform = graphics.Transform;
 				graphics.ScaleTransform (scale, scale, 0, 0);
-				
+
 				Rectangle paint = rectangle;
-				
+
 				paint = Rectangle.Deflate (paint, new Margins (6, 6, 6, 20));
 				graphics.AddFilledRectangle (Rectangle.Scale (paint, 1/scale));
 				graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1.0, 1.0, 1.0));
-				
+
 				paint = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
 				renderer.Render (graphics, Rectangle.Scale (paint, 1/scale));
-				
+
+				graphics.LineWidth = 1.0;
+				graphics.LineJoin = JoinStyle.Miter;
 				graphics.Transform = transform;
 
 				Font   font     = Font.GetFont ("Futura", "Condensed Medium");
@@ -74,11 +65,43 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.RenderSolid ();
 			}
 
-			graphics.LineWidth = 1.0;
-			graphics.LineJoin = JoinStyle.Miter;
+			MiniChartView.PaintNote (graphics, rectangle, "Budget");
 			
+			if (seriesCount > 1)
+			{
+				MiniChartView.PaintPaperClip (graphics, rectangle);
+			}
+		}
+
+
+		private static void PaintBackSheet(Graphics graphics, Rectangle rectangle)
+		{
+			graphics.AddFilledRectangle (Rectangle.Inflate (rectangle, 1, 1));
+			graphics.RenderSolid (Color.FromAlphaRgb (0.2, 0.8, 0.8, 0.8));
+			graphics.AddFilledRectangle (rectangle);
+			graphics.RenderSolid (Color.FromAlphaRgb (0.6, 0.8, 0.8, 0.8));
+			graphics.AddFilledRectangle (Rectangle.Deflate (rectangle, 1, 1));
+			graphics.RenderSolid (Color.FromBrightness (1.0));
+		}
+		
+		private static void PaintTopmostSheet(Graphics graphics, Rectangle rectangle)
+		{
+			graphics.AddFilledRectangle (rectangle);
+			graphics.GradientRenderer.Fill = GradientFill.Y;
+			graphics.GradientRenderer.SetColors (Color.FromBrightness (1.0), Color.FromRgb (0.9, 0.9, 0.95));
+			graphics.GradientRenderer.SetParameters (0, 100);
+			graphics.GradientRenderer.Transform = Transform.Identity.Scale (rectangle.Width/100, rectangle.Height/100).Translate (rectangle.Height/2, rectangle.Width/2).RotateDeg (10, rectangle.Center);
+			graphics.RenderGradient ();
+
+			graphics.AddRectangle (Rectangle.Deflate (rectangle, 0.5, 0.5));
+			graphics.RenderSolid (Color.FromBrightness (0.8));
+		}
+
+		private static void PaintNote(Graphics graphics, Rectangle rectangle, string text)
+		{
 			var label = new Rectangle (6, rectangle.Top - 18 - 6, 48, 18);
 
+			var transform = graphics.Transform;
 			graphics.RotateTransformDeg (5, label.Center.X, label.Center.Y);
 
 			MiniChartView.PaintShadow (graphics, label);
@@ -91,21 +114,11 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.RenderGradient ();
 
 			graphics.Color = Color.FromBrightness (0.0);
-			graphics.PaintText (label.X, label.Y, label.Width, label.Height, "2008", Font.GetFont ("Futura", "Condensed Medium"), 14.0, ContentAlignment.MiddleCenter);
+			graphics.PaintText (label.X, label.Y, label.Width, label.Height, text, Font.GetFont ("Futura", "Condensed Medium"), 14.0, ContentAlignment.MiddleCenter);
 			graphics.RenderSolid ();
 
 			graphics.Transform = transform;
-
-			graphics.AddRectangle (Rectangle.Deflate (rectangle, 0.5, 0.5));
-			graphics.RenderSolid (Color.FromBrightness (0.8));
-
-			if (seriesNum > 1)
-			{
-				var image = Epsitec.Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Graph.Images.PaperClip.icon", Support.Resources.DefaultManager);
-				graphics.PaintImage (image, new Rectangle (rectangle.X + 10, rectangle.Top - 34, 20, 40));
-			}
 		}
-
 
 		private static void PaintShadow(Graphics graphics, Rectangle rect)
 		{
@@ -118,6 +131,12 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (Color.FromAlphaRgb (alpha[i], 0.8, 0.8, 0.8));
 			}
+		}
+
+		private static void PaintPaperClip(Graphics graphics, Rectangle rectangle)
+		{
+			var image = Epsitec.Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Graph.Images.PaperClip.icon", Support.Resources.DefaultManager);
+			graphics.PaintImage (image, new Rectangle (rectangle.X + 10, rectangle.Top - 34, 20, 40));
 		}
 	}
 }
