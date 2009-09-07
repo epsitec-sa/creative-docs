@@ -69,6 +69,7 @@
     <Compile Include="Styles\AbstractStyle.cs" />
     <Compile Include="Styles\CaptionStyle.cs" />
     <Compile Include="Styles\ColorStyle.cs" />
+    <Compile Include="Widgets\ButtonVisibility.cs" />
     <Compile Include="Widgets\ChartView.cs" />
     <Compile Include="Widgets\CaptionView.cs" />
     <Compile Include="Widgets\MiniChartView.cs" />

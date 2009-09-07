@@ -62,6 +62,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public int Count
+		{
+			get
+			{
+				return this.items.Count;
+			}
+		}
+		
 
 		public void Add(Widget item)
 		{

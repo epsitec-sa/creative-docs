@@ -113,20 +113,38 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
-		public void ShowGroupButton(bool visible)
+		public void ShowIconButton(ButtonVisibility visibility, System.Action action, string iconName)
 		{
-			if (visible)
+			if (visibility != ButtonVisibility.Hide)
 			{
-				if (this.groupButton == null)
+				if (this.iconButton == null)
 				{
-					this.groupButton = new IconButton ()
+					this.iconButtonVisibility = visibility;
+
+					this.iconButton = new IconButton ()
 					{
 						Parent = this,
 						Anchor = AnchorStyles.TopRight,
 						Margins = new Margins (0, 0, 0, 0),
 						PreferredWidth = 19,
 						PreferredHeight = 19,
-						IconName = "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon"
+						IconName = iconName,
+						AutoFocus = false
+					};
+
+					if ((visibility == ButtonVisibility.Show) ||
+						(visibility == ButtonVisibility.ShowOnlyWhenEntered && this.IsEntered))
+					{
+						this.iconButton.Show ();
+					}
+					else
+					{
+						this.iconButton.Hide ();
+					}
+
+					if (action != null)
+					{
+						this.iconButton.Clicked += (sender, e) => action ();
 					};
 				}
 
@@ -134,10 +152,10 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 			else
 			{
-				if (this.groupButton != null)
+				if (this.iconButton != null)
 				{
-					this.groupButton.Dispose ();
-					this.groupButton = null;
+					this.iconButton.Dispose ();
+					this.iconButton = null;
 				}
 			}
 		}
@@ -146,7 +164,7 @@ namespace Epsitec.Common.Graph.Widgets
 		protected override void OnEntered(MessageEventArgs e)
 		{
 			if ((this.AutoCheckButton) &&
-				(this.groupButton == null))
+				(this.iconButton == null))
 			{
 				this.checkButton = new CheckButton ()
 				{
@@ -160,6 +178,11 @@ namespace Epsitec.Common.Graph.Widgets
 
 				this.checkButton.ActiveStateChanged += sender => this.ActiveState = ((CheckButton) sender).ActiveState;
 			}
+			else if ((this.iconButtonVisibility == ButtonVisibility.ShowOnlyWhenEntered) &&
+			         (this.iconButton != null))
+			{
+				this.iconButton.Show ();
+			}
 
 			base.OnEntered (e);
 		}
@@ -167,6 +190,12 @@ namespace Epsitec.Common.Graph.Widgets
 		protected override void OnExited(MessageEventArgs e)
 		{
 			this.HideCheckButton ();
+
+			if ((this.iconButtonVisibility == ButtonVisibility.ShowOnlyWhenEntered) &&
+				(this.iconButton != null))
+			{
+				this.iconButton.Hide ();
+			}
 
 			base.OnExited (e);
 		}
@@ -294,6 +323,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 
 		private CheckButton checkButton;
-		private IconButton groupButton;
+		private IconButton iconButton;
+		private ButtonVisibility iconButtonVisibility;
 	}
 }

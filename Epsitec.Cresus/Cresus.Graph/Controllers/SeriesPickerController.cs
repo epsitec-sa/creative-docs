@@ -205,28 +205,39 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void UpdateUserSelection()
 		{
-			if (this.groupItemsController.Count () == 0)
-			{
-				this.groupItemsController.Add (this.CreateMiniChartView (-1, null));
-			}
-
-			var view = this.groupItemsController.First () as MiniChartView;
-
-			if (view == null)
-			{
-				return;
-			}
-
 			int n = this.inputItemsController.Where (x => x.IsSelected).Count ();
+			this.inputItemsController.Cast<MiniChartView> ().ForEach (x => x.ShowIconButton (x.IsSelected && n > 1 ? ButtonVisibility.Show : ButtonVisibility.Hide, this.HandleGroupButtonClicked, "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon"));
+		}
+
+		private void HandleDropButtonClicked(int index)
+		{
+			this.inputItemsController.Find (x => x.Index == index).ActiveState = ActiveState.No;
+		}
+
+		private void HandleGroupButtonClicked()
+		{
+			var view = this.CreateMiniChartView (this.groupItemsController.Count, null);
+
+			this.groupItemsController.Add (view);
 
 			view.Renderer.Clear ();
 			view.Renderer.CollectRange (this.inputItemsController.Cast<MiniChartView> ().Where (x => x.IsSelected).Select (x => x.Renderer.SeriesItems.First ()));
-			view.AutoCheckButton = true;
 			view.Label = "Nouveau";
 			view.Title = string.Format (view.Renderer.SeriesCount > 1 ? "{0} éléments" : "{0} élément", view.Renderer.SeriesCount);
-			view.Invalidate ();
+			view.Clicked +=
+				(sender, e) =>
+				{
+					MiniChartView v = sender as MiniChartView;
 
-			this.inputItemsController.Cast<MiniChartView> ().ForEach (x => x.ShowGroupButton (x.IsSelected && n > 1));
+					if ((e.Message.Button == MouseButtons.Left) &&
+						(e.Message.ButtonDownCount == 1))
+					{
+						v.SetSelected (!v.IsSelected);
+					}
+				};
+
+			this.inputItemsController.ForEach (x => x.SetSelected (false));
+			this.UpdateUserSelection ();
 		}
 
 		private MiniChartView CreateMiniChartView(int index, ChartSeries item)
@@ -266,6 +277,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void AddSeriesToGraph(int index)
 		{
 			var view = this.CreateMiniChartView (index, this.DataSet.DataTable.GetRowSeries (index));
+
+			view.ShowIconButton (ButtonVisibility.ShowOnlyWhenEntered, () => this.HandleDropButtonClicked (index), "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon");
+
 			this.selectionItemsController.Add (view);
 		}
 
