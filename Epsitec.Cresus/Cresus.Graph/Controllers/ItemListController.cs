@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (item, true);
 
-			item.Anchor = (item.Anchor & AnchorStyles.TopAndBottom) | AnchorStyles.Left;
+			item.Anchor = AnchorStyles.TopLeft;
 			item.Parent = this.container;
 			item.Clicked += (sender, e) => this.ActiveItem = item;
 
@@ -123,8 +123,55 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.LayoutHorizontal ();
 					break;
 				
+				case ItemLayoutMode.Flow:
+					this.LayoutFlow ();
+					break;
+
 				default:
 					throw new System.NotImplementedException ();
+			}
+		}
+
+		private void LayoutFlow()
+		{
+			double availableWidth  = this.container.Client.Size.Width - this.container.Padding.Width;
+			double availableHeight = this.container.Client.Size.Height - this.container.Padding.Height;
+
+			if ((availableWidth == this.cachedSize.Width) &&
+				(availableHeight == this.cachedSize.Height))
+			{
+				return;
+			}
+			else
+			{
+				this.cachedSize = new Size (availableWidth, availableHeight);
+			}
+			
+			double posBeginX = 0;
+			double posBeginY = 0;
+			double lineHeight = 0;
+
+			foreach (var item in this.items)
+			{
+				double posEndX  = posBeginX + item.PreferredWidth;
+
+				if (posEndX > availableWidth)
+				{
+					posBeginX  = 0;
+					posEndX    = item.PreferredWidth;
+					posBeginY += lineHeight;
+					lineHeight = 0;
+				}
+
+				lineHeight = System.Math.Max (lineHeight, item.PreferredHeight);
+
+				double posEndY  = posBeginY + item.PreferredHeight;
+				var    margins  = item.Margins;
+
+				item.Margins = new Margins (posBeginX, margins.Right, posBeginY, margins.Bottom);
+				item.Visibility = (posEndY > 0) && (posBeginY < availableHeight);
+
+				posBeginX = posEndX - this.overlapX;
 			}
 		}
 

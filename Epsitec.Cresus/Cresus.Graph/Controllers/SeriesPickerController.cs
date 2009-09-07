@@ -112,10 +112,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 260
 			};
 
+			this.inputItemsController = new ItemListController (frameInputs)
+			{
+				ItemLayoutMode = ItemLayoutMode.Flow
+			};
+
 			this.selectionItemsController = new ItemListController (frameSelection)
 			{
 				ItemLayoutMode = ItemLayoutMode.Horizontal
 			};
+
+			for (int i = 0; i < 20; i++)
+			{
+				var view = new MiniChartView ()
+				{
+					Anchor = AnchorStyles.BottomLeft,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					VerticalAlignment = VerticalAlignment.Center,
+					PreferredWidth = 80,
+					PreferredHeight = 80,
+					Padding = new Margins (4, 4, 4, 4),
+					Scale = 0.5,
+					Renderer = lineChartRenderer
+				};
+
+				this.inputItemsController.Add (view);
+			}
 
 			for (int i = 0; i < 5; i++)
 			{
@@ -133,7 +155,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.selectionItemsController.Add (view);
 			}
-			
+
 			this.chartView = new MiniChartView ()
 			{
 				Anchor = AnchorStyles.TopLeft,
@@ -144,7 +166,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = new Margins (4, 4, 4, 4),
 				Margins = new Margins (0, 0, 0, 0),
 				Scale = 0.5,
-				Parent = frameInputs,
 				Renderer = lineChartRenderer
 			};
 
@@ -261,6 +282,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		readonly private ChartView				chartView;
 		readonly private HashSet<string>		negatedSeriesLabels;
 
+		readonly private ItemListController		inputItemsController;
 		readonly private ItemListController		selectionItemsController;
 	}
 }
