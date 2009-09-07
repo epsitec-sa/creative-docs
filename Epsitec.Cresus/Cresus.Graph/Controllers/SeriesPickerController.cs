@@ -190,8 +190,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 								}
 								else
 								{
+									bool select = !v.IsSelected;
 									this.inputItemsController.ForEach (x => x.SetSelected (false));
-									v.SetSelected (true);
+									v.SetSelected (select);
 								}
 
 								this.UpdateUserSelection ();
@@ -232,7 +233,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 					if ((e.Message.Button == MouseButtons.Left) &&
 						(e.Message.ButtonDownCount == 1))
 					{
-						v.SetSelected (!v.IsSelected);
+						bool select = !v.IsSelected;
+						this.groupItemsController.ForEach (x => x.SetSelected (false));
+						v.SetSelected (select);
 					}
 				};
 

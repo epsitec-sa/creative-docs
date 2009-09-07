@@ -93,11 +93,6 @@ namespace Epsitec.Common.Graph.Widgets
 			{
 				MiniChartView.PaintNote (graphics, rectangle, this.Label);
 			}
-			
-			if (seriesCount > 1)
-			{
-				MiniChartView.PaintPaperClip (graphics, rectangle);
-			}
 
 			if (this.ActiveState != ActiveState.No)
 			{
@@ -110,6 +105,11 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.Color = Epsitec.Common.Widgets.Adorners.Factory.Active.ColorCaption;
 				graphics.AddRectangle (Rectangle.Inflate (rectangle, new Margins (1, 1, 1, 1)));
 				graphics.RenderSolid ();
+			}
+
+			if (seriesCount > 1)
+			{
+				MiniChartView.PaintPaperClip (graphics, rectangle);
 			}
 		}
 
