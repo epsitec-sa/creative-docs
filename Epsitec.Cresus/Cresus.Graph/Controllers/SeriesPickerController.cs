@@ -6,7 +6,7 @@ using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Widgets;
 
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -154,37 +154,125 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.inputItemsController.Clear ();
 
+				int index = 0;
+
 				foreach (var item in this.DataSet.DataTable.RowSeries)
 				{
-					var lineChartRenderer = new LineChartRenderer ();
+					var view = this.CreateMiniChartView (index++, item);
 
-					lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
-					lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
-					{
-						VisibleGrid = false,
-						VisibleLabels = false,
-						VisibleTicks = false
-					});
-					
-					lineChartRenderer.DefineValueLabels (this.DataSet.DataTable.ColumnLabels);
-					lineChartRenderer.Collect (item);
+					view.AutoCheckButton = true;
 
-					var view = new MiniChartView ()
-					{
-						Anchor = AnchorStyles.TopLeft,
-						HorizontalAlignment = HorizontalAlignment.Center,
-						VerticalAlignment = VerticalAlignment.Center,
-						PreferredWidth = 80,
-						PreferredHeight = 80,
-						Padding = new Margins (4, 4, 4, 4),
-						Margins = new Margins (0, 0, 0, 0),
-						Scale = 0.5,
-						Renderer = lineChartRenderer
-					};
+					view.ActiveStateChanged +=
+						sender =>
+						{
+							MiniChartView v = sender as MiniChartView;
+							if (v.ActiveState == ActiveState.Yes)
+							{
+								this.AddSeriesToGraph (v.Index);
+							}
+							else
+							{
+								this.RemoveSeriesFromGraph (v.Index);
+							}
+						};
+
+					view.Clicked +=
+						(sender, e) =>
+						{
+							MiniChartView v = sender as MiniChartView;
+							
+							if ((e.Message.Button == MouseButtons.Left) &&
+								(e.Message.ButtonDownCount == 1))
+							{
+								if (Message.CurrentState.IsControlPressed)
+								{
+									v.SetSelected (!v.IsSelected);
+								}
+								else
+								{
+									this.inputItemsController.ForEach (x => x.SetSelected (false));
+									v.SetSelected (true);
+								}
+
+								this.UpdateUserSelection ();
+							}
+						};
 
 					this.inputItemsController.Add (view);
 				}
 			}
+		}
+
+		private void UpdateUserSelection()
+		{
+			if (this.groupItemsController.Count () == 0)
+			{
+				this.groupItemsController.Add (this.CreateMiniChartView (-1, null));
+			}
+
+			var view = this.groupItemsController.First () as MiniChartView;
+
+			if (view == null)
+			{
+				return;
+			}
+
+			int n = this.inputItemsController.Where (x => x.IsSelected).Count ();
+
+			view.Renderer.Clear ();
+			view.Renderer.CollectRange (this.inputItemsController.Cast<MiniChartView> ().Where (x => x.IsSelected).Select (x => x.Renderer.SeriesItems.First ()));
+			view.AutoCheckButton = true;
+			view.Label = "Nouveau";
+			view.Title = string.Format (view.Renderer.SeriesCount > 1 ? "{0} éléments" : "{0} élément", view.Renderer.SeriesCount);
+			view.Invalidate ();
+
+			this.inputItemsController.Cast<MiniChartView> ().ForEach (x => x.ShowGroupButton (x.IsSelected && n > 1));
+		}
+
+		private MiniChartView CreateMiniChartView(int index, ChartSeries item)
+		{
+			var lineChartRenderer = new LineChartRenderer ();
+
+			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
+			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
+			{
+				VisibleGrid = false,
+				VisibleLabels = false,
+				VisibleTicks = false
+			});
+
+			lineChartRenderer.DefineValueLabels (this.DataSet.DataTable.ColumnLabels);
+			lineChartRenderer.Collect (item);
+
+			var view = new MiniChartView ()
+			{
+				Anchor = AnchorStyles.TopLeft,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+				PreferredWidth = 80,
+				PreferredHeight = 80,
+				Padding = new Margins (4, 4, 4, 4),
+				Margins = new Margins (0, 0, 0, 0),
+				Scale = 0.5,
+				Renderer = lineChartRenderer,
+				Title = item == null ? "" : item.Label.Substring (item.Label.IndexOf (' ')+1),
+				Label = item == null ? "" : item.Label.Substring (0, item.Label.IndexOf (' ')),
+				Index = index
+			};
+			
+			return view;
+		}
+
+		private void AddSeriesToGraph(int index)
+		{
+			var view = this.CreateMiniChartView (index, this.DataSet.DataTable.GetRowSeries (index));
+			this.selectionItemsController.Add (view);
+		}
+
+		private void RemoveSeriesFromGraph(int index)
+		{
+			var view = this.selectionItemsController.Find (item => item.Index == index);
+			this.selectionItemsController.Remove (view);
 		}
 
 		public void UpdateChartView()

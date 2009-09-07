@@ -205,6 +205,11 @@ namespace Epsitec.Common.Graph.Renderers
 
 		public virtual void Collect(Data.ChartSeries series)
 		{
+			if (series == null)
+			{
+				return;
+			}
+
 			this.seriesOriginals.Add (series);
 			this.seriesList.Add (series = this.GetPreprocessedSeries (series));
 

@@ -11,6 +11,30 @@ namespace Epsitec.Common.Graph.Widgets
 {
 	public class MiniChartView : ChartView
 	{
+		public MiniChartView()
+		{
+		}
+
+
+		public string Label
+		{
+			get;
+			set;
+		}
+
+		public string Title
+		{
+			get;
+			set;
+		}
+
+		public bool AutoCheckButton
+		{
+			get;
+			set;
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var renderer  = this.Renderer;
@@ -61,19 +85,112 @@ namespace Epsitec.Common.Graph.Widgets
 				double fontSize = 11.0;
 
 				graphics.Color = Color.FromBrightness (0.0);
-				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, renderer.SeriesItems.First ().Label, font, fontSize, ContentAlignment.MiddleCenter);
+				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, this.Title, font, fontSize, ContentAlignment.MiddleCenter);
 				graphics.RenderSolid ();
 			}
 
-			MiniChartView.PaintNote (graphics, rectangle, "Budget");
+			if (!string.IsNullOrEmpty (this.Label))
+			{
+				MiniChartView.PaintNote (graphics, rectangle, this.Label);
+			}
 			
 			if (seriesCount > 1)
 			{
 				MiniChartView.PaintPaperClip (graphics, rectangle);
 			}
+
+			if (this.ActiveState != ActiveState.No)
+			{
+				MiniChartView.PaintCheckMark (graphics, rectangle, this.PaintState);
+			}
+
+			if (this.IsSelected)
+			{
+				graphics.LineWidth = 2.0;
+				graphics.Color = Epsitec.Common.Widgets.Adorners.Factory.Active.ColorCaption;
+				graphics.AddRectangle (Rectangle.Inflate (rectangle, new Margins (1, 1, 1, 1)));
+				graphics.RenderSolid ();
+			}
 		}
 
+		public void ShowGroupButton(bool visible)
+		{
+			if (visible)
+			{
+				if (this.groupButton == null)
+				{
+					this.groupButton = new IconButton ()
+					{
+						Parent = this,
+						Anchor = AnchorStyles.TopRight,
+						Margins = new Margins (0, 0, 0, 0),
+						PreferredWidth = 19,
+						PreferredHeight = 19,
+						IconName = "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon"
+					};
+				}
 
+				this.HideCheckButton ();
+			}
+			else
+			{
+				if (this.groupButton != null)
+				{
+					this.groupButton.Dispose ();
+					this.groupButton = null;
+				}
+			}
+		}
+
+		
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			if ((this.AutoCheckButton) &&
+				(this.groupButton == null))
+			{
+				this.checkButton = new CheckButton ()
+				{
+					Parent = this,
+					Anchor = AnchorStyles.TopRight,
+					Margins = new Margins (0, 2, 2, 0),
+					PreferredWidth = 15,
+					PreferredHeight = 15,
+					ActiveState = this.ActiveState
+				};
+
+				this.checkButton.ActiveStateChanged += sender => this.ActiveState = ((CheckButton) sender).ActiveState;
+			}
+
+			base.OnEntered (e);
+		}
+
+		protected override void OnExited(MessageEventArgs e)
+		{
+			this.HideCheckButton ();
+
+			base.OnExited (e);
+		}
+
+		private void HideCheckButton()
+		{
+			if (this.checkButton != null)
+			{
+				this.checkButton.Dispose ();
+				this.checkButton = null;
+			}
+		}
+
+		protected override void OnActiveStateChanged()
+		{
+			if (this.checkButton != null)
+			{
+				this.checkButton.ActiveState = this.ActiveState;
+			}
+
+			base.OnActiveStateChanged ();
+		}
+
+		
 		private static void PaintBackSheet(Graphics graphics, Rectangle rectangle)
 		{
 			graphics.AddFilledRectangle (Rectangle.Inflate (rectangle, 1, 1));
@@ -133,10 +250,50 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+		private static void PaintCheckMark(Graphics graphics, Rectangle rectangle, WidgetPaintState state)
+		{
+			var rect = new Rectangle (rectangle.Right - 17-1, rectangle.Top - 17, 15, 15);
+			
+			graphics.Color = (state & WidgetPaintState.Enabled) != 0 ? Color.FromRgb (33.0/255.0, 161.0/255.0, 33.0/255.0)
+				/**/												 : Color.FromRgb (198.0/255.0, 197.0/255.0, 201.0/255.0);
+			
+
+			if ((state & WidgetPaintState.ActiveYes) != 0)
+			{
+				rect = Rectangle.Deflate (rect, 1, 1);
+				
+				using (Drawing.Path path = new Drawing.Path ())
+				{
+					var center = rect.Center;
+					
+					path.MoveTo (center.X-rect.Width*0.1, center.Y-rect.Height*0.1);
+					path.LineTo (center.X+rect.Width*0.3, center.Y+rect.Height*0.3);
+					path.LineTo (center.X+rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.LineTo (center.X-rect.Width*0.1, center.Y-rect.Height*0.3);
+					path.LineTo (center.X-rect.Width*0.3, center.Y-rect.Height*0.1);
+					path.LineTo (center.X-rect.Width*0.3, center.Y+rect.Height*0.1);
+					path.Close ();
+					
+					graphics.PaintSurface (path);
+				}
+			}
+			else if ((state & WidgetPaintState.ActiveMaybe) != 0)
+			{
+				rect = Rectangle.Deflate (rect, 4, 4);
+
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid ();
+			}
+		}
+
 		private static void PaintPaperClip(Graphics graphics, Rectangle rectangle)
 		{
 			var image = Epsitec.Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Graph.Images.PaperClip.icon", Support.Resources.DefaultManager);
 			graphics.PaintImage (image, new Rectangle (rectangle.X + 10, rectangle.Top - 34, 20, 40));
 		}
+
+
+		private CheckButton checkButton;
+		private IconButton groupButton;
 	}
 }

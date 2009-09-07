@@ -16,7 +16,7 @@ using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class ItemListController
+	internal sealed class ItemListController : IEnumerable<Widget>
 	{
 		public ItemListController(Widget container)
 		{
@@ -77,6 +77,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public bool Remove(Widget item)
 		{
+			if (item == null)
+			{
+				return false;
+			}
+
 			int index = this.items.IndexOf (item);
 
 			if (index < 0)
@@ -114,6 +119,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public Widget Find(System.Predicate<Widget> predicate)
+		{
+			return this.items.Find (predicate);
+		}
+		
 		public void Clear()
 		{
 			this.items.ForEach (item => item.Parent = null);
@@ -122,6 +132,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.InvalidateLayout ();
 		}
+
+		
+		#region IEnumerable<Widget> Members
+
+		public IEnumerator<Widget> GetEnumerator()
+		{
+			return this.items.GetEnumerator ();
+		}
+
+		#endregion
+
+		#region IEnumerable Members
+
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+		{
+			return this.items.GetEnumerator ();
+		}
+
+		#endregion
 
 
 		private void Layout()
