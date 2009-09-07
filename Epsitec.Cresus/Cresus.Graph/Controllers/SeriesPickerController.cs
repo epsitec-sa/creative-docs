@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.negatedSeriesLabels = new HashSet<string> ();
 
-			var lineChartRenderer = new LineChartRenderer ();
-
-			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
-			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner () { VisibleGrid = false, VisibleLabels = false, VisibleTicks = false });
-
 
 			this.window = new Window ()
 			{
@@ -122,51 +117,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ItemLayoutMode = ItemLayoutMode.Horizontal
 			};
 
-			for (int i = 0; i < 20; i++)
+			this.groupItemsController = new ItemListController (frameGroups)
 			{
-				var view = new MiniChartView ()
-				{
-					Anchor = AnchorStyles.BottomLeft,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					VerticalAlignment = VerticalAlignment.Center,
-					PreferredWidth = 80,
-					PreferredHeight = 80,
-					Padding = new Margins (4, 4, 4, 4),
-					Scale = 0.5,
-					Renderer = lineChartRenderer
-				};
-
-				this.inputItemsController.Add (view);
-			}
-
-			for (int i = 0; i < 5; i++)
-			{
-				var view = new MiniChartView ()
-				{
-					Anchor = AnchorStyles.BottomLeft,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					VerticalAlignment = VerticalAlignment.Center,
-					PreferredWidth = 80,
-					PreferredHeight = 80,
-					Padding = new Margins (4, 4, 4, 4),
-					Scale = 0.5,
-					Renderer = lineChartRenderer
-				};
-
-				this.selectionItemsController.Add (view);
-			}
-
-			this.chartView = new MiniChartView ()
-			{
-				Anchor = AnchorStyles.TopLeft,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				VerticalAlignment = VerticalAlignment.Center,
-				PreferredWidth = 80,
-				PreferredHeight = 80,
-				Padding = new Margins (4, 4, 4, 4),
-				Margins = new Margins (0, 0, 0, 0),
-				Scale = 0.5,
-				Renderer = lineChartRenderer
+				ItemLayoutMode = ItemLayoutMode.Horizontal
 			};
 
 			this.window.WindowCloseClicked += sender => this.HideWindow ();
@@ -199,28 +152,43 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				List<string> labels = new List<string> (this.DataSet.DataTable.RowLabels);
 
-#if false
-				var selection = this.scrollList.GetSortedSelection ();
+				this.inputItemsController.Clear ();
 
-				this.scrollList.ClearSelection ();
-				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (labels.Select (x => this.negatedSeriesLabels.Contains (x) ? string.Concat ("(", x, ")") : x));
-				this.scrollList.SelectedIndex = selection.Count == 0 ? -1 : selection.First ();
-				this.scrollList.ShowSelected (ScrollShowMode.Extremity);
-#endif
+				foreach (var item in this.DataSet.DataTable.RowSeries)
+				{
+					var lineChartRenderer = new LineChartRenderer ();
+
+					lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
+					lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
+					{
+						VisibleGrid = false,
+						VisibleLabels = false,
+						VisibleTicks = false
+					});
+					
+					lineChartRenderer.DefineValueLabels (this.DataSet.DataTable.ColumnLabels);
+					lineChartRenderer.Collect (item);
+
+					var view = new MiniChartView ()
+					{
+						Anchor = AnchorStyles.TopLeft,
+						HorizontalAlignment = HorizontalAlignment.Center,
+						VerticalAlignment = VerticalAlignment.Center,
+						PreferredWidth = 80,
+						PreferredHeight = 80,
+						Padding = new Margins (4, 4, 4, 4),
+						Margins = new Margins (0, 0, 0, 0),
+						Scale = 0.5,
+						Renderer = lineChartRenderer
+					};
+
+					this.inputItemsController.Add (view);
+				}
 			}
 		}
 
 		public void UpdateChartView()
 		{
-			var renderer = this.chartView.Renderer;
-
-			renderer.Clear ();
-			renderer.DefineValueLabels (this.DataSet.DataTable.ColumnLabels);
-//-			renderer.CollectRange (this.scrollList.GetSortedSelection ().Select (x => this.GetRowSeries (x)));
-			renderer.ClipRange (System.Math.Min (0, renderer.MinValue), System.Math.Max (0, renderer.MaxValue));
-
-			this.chartView.Invalidate ();
 		}
 
 		public void SetSelectedItem(int index)
@@ -279,10 +247,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public System.Action<IEnumerable<int>>	NegateSeriesAction;
 
 		readonly private Window					window;
-		readonly private ChartView				chartView;
 		readonly private HashSet<string>		negatedSeriesLabels;
 
 		readonly private ItemListController		inputItemsController;
 		readonly private ItemListController		selectionItemsController;
+		readonly private ItemListController		groupItemsController;
 	}
 }

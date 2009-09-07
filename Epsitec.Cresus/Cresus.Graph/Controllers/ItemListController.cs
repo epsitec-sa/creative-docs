@@ -114,6 +114,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public void Clear()
+		{
+			this.items.ForEach (item => item.Parent = null);
+			this.items.Clear ();
+			this.activeItem = null;
+
+			this.InvalidateLayout ();
+		}
+
 
 		private void Layout()
 		{
