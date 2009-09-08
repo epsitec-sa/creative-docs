@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
-	public class GraphDataGroup
+	public sealed class GraphDataGroup : System.IDisposable
 	{
 		public GraphDataGroup()
 		{
@@ -75,6 +75,15 @@ namespace Epsitec.Cresus.Graph
 			this.dataSeries.Clear ();
 		}
 
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Clear ();
+		}
+
+		#endregion
 
 		
 		private List<GraphDataSeries> dataSeries;

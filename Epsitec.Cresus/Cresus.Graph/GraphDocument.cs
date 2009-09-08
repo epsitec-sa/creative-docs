@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Graph
 			this.application = application;
 			this.dataSources = new List<GraphDataSource> ();
 			this.outputSeries = new List<GraphDataSeries> ();
+			this.groups = new List<GraphDataGroup> ();
 			this.columnLabels = new List<string> ();
 
 			this.guid   = System.Guid.NewGuid ();
@@ -77,6 +78,14 @@ namespace Epsitec.Cresus.Graph
 			get
 			{
 				return this.outputSeries;
+			}
+		}
+
+		public IEnumerable<GraphDataGroup> Groups
+		{
+			get
+			{
+				return this.groups;
 			}
 		}
 
@@ -156,10 +165,42 @@ namespace Epsitec.Cresus.Graph
 
 		public void RemoveOutput(GraphDataSeries series)
 		{
-			System.Diagnostics.Debug.Assert (this.outputSeries.Contains (series));
+			GraphDataSeries item = null;
 
-			series.Parent.IsSelected = false;
-			this.outputSeries.Remove (series);
+			if (this.outputSeries.Contains (series))
+			{
+				item = series;
+			}
+			else
+			{
+				item = this.outputSeries.Find (x => x.Parent == series);
+			}
+
+			System.Diagnostics.Debug.Assert (item != null);
+			System.Diagnostics.Debug.Assert (item.Parent != null);
+
+			item.Parent.IsSelected = false;
+			this.outputSeries.Remove (item);
+		}
+
+
+		public GraphDataGroup AddGroup(IEnumerable<GraphDataSeries> series)
+		{
+			var group = new GraphDataGroup ();
+
+			series.ForEach (x => group.Add (x));
+
+			this.groups.Add (group);
+
+			return group;
+		}
+
+		public void RemoveGroup(GraphDataGroup group)
+		{
+			System.Diagnostics.Debug.Assert (this.groups.Contains (group));
+
+			group.Dispose ();
+			this.groups.Remove (group);
 		}
 
 
@@ -402,6 +443,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly GraphApplication application;
 		private readonly List<GraphDataSource> dataSources;
 		private readonly List<GraphDataSeries> outputSeries;
+		private readonly List<GraphDataGroup> groups;
 		private readonly List<string> columnLabels;
 
 		private readonly GraphDataSet dataSet;

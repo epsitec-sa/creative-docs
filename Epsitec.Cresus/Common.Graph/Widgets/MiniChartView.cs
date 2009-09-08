@@ -116,7 +116,7 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
-		public void ShowIconButton(ButtonVisibility visibility, System.Action action, string iconName)
+		public void ShowIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)
 		{
 			if (visibility != ButtonVisibility.Hide)
 			{
@@ -145,9 +145,9 @@ namespace Epsitec.Common.Graph.Widgets
 						this.iconButton.Hide ();
 					}
 
-					if (action != null)
+					if (buttonClicked != null)
 					{
-						this.iconButton.Clicked += (sender, e) => action ();
+						this.iconButton.Clicked += (sender, e) => buttonClicked ();
 					};
 				}
 
