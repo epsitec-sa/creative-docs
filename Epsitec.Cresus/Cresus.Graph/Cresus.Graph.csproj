@@ -146,11 +146,18 @@
     <Compile Include="ImportConverters\ImportConverter.cs" />
     <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
     <Compile Include="Widgets\CommandSelectionBar.cs" />
+    <Compile Include="Widgets\VerticalInjectionArrow.cs" />
+    <Compile Include="Widgets\GraphicIconButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Button.Off.icon" />
+    <EmbeddedResource Include="Images\Button.OffHilite.icon" />
+    <EmbeddedResource Include="Images\Button.On.icon" />
+    <EmbeddedResource Include="Images\Button.OnHilite.icon" />
+    <EmbeddedResource Include="Images\Button.Press.icon" />
     <EmbeddedResource Include="Images\Application-16x16.icon" />
     <EmbeddedResource Include="Images\Application.icon" />
     <EmbeddedResource Include="Images\Document.icon" />

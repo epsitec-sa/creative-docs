@@ -13,6 +13,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Cresus.Graph.Widgets;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -248,6 +249,50 @@ namespace Epsitec.Cresus.Graph.Controllers
 						this.groupItemsController.ForEach (x => x.SetSelected (false));
 						v.SetSelected (select);
 
+						var bounds = v.MapClientToRoot (v.Client.Bounds);
+
+						var arrow = new VerticalInjectionArrow ()
+						{
+							Anchor = AnchorStyles.BottomLeft,
+							Margins = new Margins (bounds.Left, 0, 0, bounds.Top),
+							Parent = v.RootParent,
+							PreferredWidth = v.PreferredWidth,
+							ArrowWidth = 40,
+							Padding = new Margins (0, 0, 24, 4),
+							BackColor = v.Parent.BackColor,
+							ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
+						};
+
+						var b1 = new GraphicIconButton ()
+						{
+							IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
+							HorizontalAlignment = HorizontalAlignment.Center,
+							PreferredSize = new Size (36, 20),
+							Dock = DockStyle.Stacked,
+							Parent = arrow,
+							AutoToggle = true
+						};
+						/*
+						var b2 = new GraphicIconButton ()
+						{
+							IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
+							HorizontalAlignment = HorizontalAlignment.Center,
+							PreferredSize = new Size (36, 20),
+							Dock = DockStyle.Stacked,
+							Parent = arrow,
+							AutoToggle = true
+						};
+
+						var b3 = new GraphicIconButton ()
+						{
+							IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
+							HorizontalAlignment = HorizontalAlignment.Center,
+							PreferredSize = new Size (36, 20),
+							Dock = DockStyle.Stacked,
+							Parent = arrow,
+							AutoToggle = true
+						};
+						*/
 						if (select)
 						{
 							view.Renderer.SeriesItems.ForEach (s => this.groupDetailItemsController.Add (this.CreateMiniChartView (-1, s)));

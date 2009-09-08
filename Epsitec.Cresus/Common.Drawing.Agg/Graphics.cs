@@ -502,6 +502,10 @@ namespace Epsitec.Common.Drawing
 		
 		public void PaintImage(Image bitmap, double fillX, double fillY, double fillWidth, double fillHeight, double imageOriginX, double imageOriginY, double imageWidth, double imageHeight)
 		{
+			if (bitmap == null)
+			{
+				return;
+			}
 			double ix1 = imageOriginX;
 			double iy1 = imageOriginY;
 			double ix2 = imageOriginX + imageWidth;
