@@ -81,11 +81,11 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public IEnumerable<GraphDataGroup> Groups
+		public IList<GraphDataGroup> Groups
 		{
 			get
 			{
-				return this.groups;
+				return this.groups.AsReadOnly ();
 			}
 		}
 

@@ -144,6 +144,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			return this.items.Find (predicate);
 		}
+
+		public int IndexOf(T item)
+		{
+			return this.items.IndexOf (item);
+		}
 		
 		public void Clear()
 		{

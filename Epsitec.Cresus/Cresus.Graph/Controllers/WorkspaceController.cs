@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void RefreshInputViewSelection()
 		{
-			int    count = this.inputItemsController.Where (x => x.IsSelected).Count ();
+			int    count = this.inputItemsController.Where (x => x.IsSelected).Count () + this.groupItemsController.Where (x => x.IsSelected).Count ();
 			string icon  = "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon";
 
 			foreach (var item in this.inputItemsController)
@@ -158,6 +158,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var visibility = item.IsSelected && count > 1 ? ButtonVisibility.Show : ButtonVisibility.Hide;
 
 				item.ShowIconButton (visibility, icon, this.CreateGroup);
+			}
+		}
+
+		private void RefreshGroupView()
+		{
+			var view  = this.groupItemsController.ActiveItem;
+			int index = this.groupItemsController.IndexOf (view);
+
+			if (index < 0)
+			{
+				this.ShowGroupCalculator (null);
+				this.ShowGroupDetails (null);
+			}
+			else
+			{
+				this.ShowGroupCalculator (view);
+				this.ShowGroupDetails (this.application.Document.Groups[index]);
 			}
 		}
 
@@ -243,34 +260,78 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		private void CreateGroup()
 		{
-			this.CreateGroup (this.inputItemsController.Where (x => x.IsSelected).Select (x => this.DataSource[x.Index]));
-		}
-		
-		private void CreateGroup(IEnumerable<GraphDataSeries> series)
-		{
-			var group = this.application.Document.AddGroup (series);
-			int count = series.Count ();
+			var view  = this.groupItemsController.ActiveItem;
+			int index = this.groupItemsController.IndexOf (view);
+			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.DataSource[x.Index]);
+
+			GraphDataGroup group;
+
+			if (index < 0)
+			{
+				group = this.CreateGroup (items);
+			}
+			else
+			{
+				group = this.UpdateGroup (this.application.Document.Groups[index], items);
+			}
+
+			int count = group.Count;
 
 			group.Name = string.Format (count > 1 ? "{0} éléments" : "{0} élément", count);
+			
+			this.Refresh ();
+		}
 
-			var view  = this.CreateGroupView (group);
+		private GraphDataGroup UpdateGroup(GraphDataGroup group, IEnumerable<GraphDataSeries> items)
+		{
+			foreach (var item in items)
+			{
+				if (!group.Contains (item))
+				{
+					group.Add (item);
+				}
+			}
 
-			this.groupItemsController.Add (view);
-			this.inputItemsController.ForEach (x => x.SetSelected (false));
-			this.RefreshInputViewSelection ();
+			return group;
+		}
+
+		private GraphDataGroup CreateGroup(IEnumerable<GraphDataSeries> series)
+		{
+			var group = this.application.Document.AddGroup (series);
+			
+			this.groupItemsController.Add (this.CreateGroupView (group));
+
+			return group;
 		}
 
 		
 		private void HandleGroupViewClicked(GraphDataGroup group, MiniChartView view)
 		{
-			bool select = !view.IsSelected;
+			if (Message.CurrentState.IsControlPressed)
+			{
+				view.SetSelected (!view.IsSelected);
+			}
+			else
+			{
+				bool select = !view.IsSelected;
 
-			this.groupItemsController.ForEach (x => x.SetSelected (false));
+				this.inputItemsController.ForEach (x => x.SetSelected (false));
+				this.groupItemsController.ForEach (x => x.SetSelected (false));
 
-			view.SetSelected (select);
+				view.SetSelected (select);
+			}
 
-			this.ShowGroupCalculator (select ? view : null);
-			this.ShowGroupDetails (select ? group : null);
+			if (view.IsSelected)
+			{
+				this.groupItemsController.ActiveItem = view;
+			}
+			else
+			{
+				this.groupItemsController.ActiveItem = null;
+			}
+			
+			this.RefreshInputViewSelection ();
+			this.RefreshGroupView ();
 		}
 		
 		private void HandleInputViewClicked(MiniChartView view)
@@ -282,11 +343,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 			else
 			{
 				bool select = !view.IsSelected;
+				
 				this.inputItemsController.ForEach (x => x.SetSelected (false));
+				this.groupItemsController.ForEach (x => x.SetSelected (false));
+
+				this.groupItemsController.ActiveItem = null;
+
 				view.SetSelected (select);
 			}
 
 			this.RefreshInputViewSelection ();
+			this.RefreshGroupView ();
 		}
 
 

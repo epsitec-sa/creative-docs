@@ -75,6 +75,11 @@ namespace Epsitec.Cresus.Graph
 			this.dataSeries.Clear ();
 		}
 
+		public bool Contains(GraphDataSeries series)
+		{
+			return this.dataSeries.Contains (series);
+		}
+
 
 		#region IDisposable Members
 
