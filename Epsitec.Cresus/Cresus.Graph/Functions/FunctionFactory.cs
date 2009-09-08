@@ -13,11 +13,25 @@ namespace Epsitec.Cresus.Graph.Functions
 		{
 			switch (name)
 			{
-				case "sum":
+				case FunctionFactory.FunctionSum:
 					return x => x.Aggregate (0.0, (sum, value) => sum + value);
 			}
 			
 			return null;
 		}
+
+		public static string GetFunctionCaption(string name)
+		{
+			switch (name)
+			{
+				case FunctionFactory.FunctionSum:
+					return "Somme";
+			}
+
+			return null;
+		}
+
+
+		public const string FunctionSum = "sum";
 	}
 }

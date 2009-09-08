@@ -87,18 +87,21 @@ namespace Epsitec.Cresus.Graph
 			this.syntheticDataSeries.ForEach (x => x.Enabled = false);
 		}
 
-		public GraphSyntheticDataSeries AddSyntheticDataSeries(string label, string functionName)
+		public GraphSyntheticDataSeries AddSyntheticDataSeries(string functionName)
 		{
 			var series = this.syntheticDataSeries.Find (x => x.FunctionName == functionName);
 
 			if (series == null)
 			{
-				series = new GraphSyntheticDataSeries (this, functionName);
+				series = new GraphSyntheticDataSeries (this, functionName)
+				{
+					Label = Functions.FunctionFactory.GetFunctionCaption (functionName)
+				};
+				
 				this.syntheticDataSeries.Add (series);
 			}
 
 			series.Title   = this.Name;
-			series.Label   = label;
 			series.Enabled = true;
 
 			return series;

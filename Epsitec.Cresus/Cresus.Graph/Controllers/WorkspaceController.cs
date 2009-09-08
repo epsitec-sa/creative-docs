@@ -226,15 +226,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private MiniChartView CreateGroupDetailView(GraphDataGroup group, GraphDataSeries item)
 		{
 			var view = this.CreateView (item);
-
+			var synt = item as GraphSyntheticDataSeries;
+			
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
-			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
-				delegate
-				{
-					group.Remove (item);
-					this.UpdateGroupName (group);
-				});
+			if (synt != null)
+			{
+				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+					delegate
+					{
+						group.RemoveSyntheticDataSeries (synt.FunctionName);
+						this.Document.UpdateSyntheticSeries ();
+						this.Refresh ();
+					});
+			}
+			else
+			{
+				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+					delegate
+					{
+						group.Remove (item);
+						this.UpdateGroupName (group);
+					});
+			}
 
 			return view;
 		}
@@ -475,33 +489,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
 				};
 
-				var b1 = new GraphicIconButton ()
-				{
-					IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
-					HorizontalAlignment = HorizontalAlignment.Center,
-					PreferredSize = new Size (36, 20),
-					Dock = DockStyle.Stacked,
-					Parent = arrow,
-					AutoToggle = true,
-					ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == "sum").Count () == 0 ? ActiveState.No : ActiveState.Yes,
-				};
-
-				b1.ActiveStateChanged +=
-					delegate
-					{
-						if (b1.ActiveState == ActiveState.Yes)
-						{
-							group.AddSyntheticDataSeries ("Somme", "sum");
-						}
-						else
-						{
-							group.RemoveSyntheticDataSeries ("sum");
-						}
-						this.Document.UpdateSyntheticSeries ();
-						this.Refresh ();
-					};
-
-				//	TODO: add button handlers here
+				this.CreateFunctionButton (group, arrow, Functions.FunctionFactory.FunctionSum);
 
 				this.groupCalculatorArrow = arrow;
 			}
@@ -520,7 +508,40 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var series2 = group.InputDataSeries;
 			var series = series1.Concat (series2);
 
-			series.ForEach (x => this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, x)));
+			foreach (var item in series)
+			{
+				this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, item));
+			}
+		}
+
+		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
+		{
+			var button = new GraphicIconButton ()
+			{
+				IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
+				HorizontalAlignment = HorizontalAlignment.Center,
+				PreferredSize = new Size (36, 20),
+				Dock = DockStyle.Stacked,
+				Parent = arrow,
+				AutoToggle = true,
+				Name = function,
+				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).Count () == 0 ? ActiveState.No : ActiveState.Yes,
+			};
+
+			button.ActiveStateChanged +=
+				delegate
+				{
+					if (button.ActiveState == ActiveState.Yes)
+					{
+						group.AddSyntheticDataSeries (function);
+					}
+					else
+					{
+						group.RemoveSyntheticDataSeries (function);
+					}
+					this.Document.UpdateSyntheticSeries ();
+					this.Refresh ();
+				};
 		}
 
 
