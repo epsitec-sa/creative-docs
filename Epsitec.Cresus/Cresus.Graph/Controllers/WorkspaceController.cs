@@ -108,11 +108,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		public GraphDataSource DataSource
+		private GraphDataSource DataSource
 		{
 			get
 			{
 				return this.application.Document.ActiveDataSource;
+			}
+		}
+
+		private GraphDocument Document
+		{
+			get
+			{
+				return this.application.Document;
 			}
 		}
 
@@ -128,6 +136,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		
 		private void RefreshInputs()
 		{
 			this.inputItemsController.Clear ();
@@ -142,7 +151,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.outputItemsController.Clear ();
 
-			foreach (var item in this.application.Document.OutputSeries)
+			foreach (var item in this.Document.OutputSeries)
 			{
 				this.outputItemsController.Add (this.CreateOutputView (item));
 			}
@@ -174,7 +183,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			else
 			{
 				this.ShowGroupCalculator (view);
-				this.ShowGroupDetails (this.application.Document.Groups[index]);
+				this.ShowGroupDetails (this.Document.Groups[index]);
 			}
 		}
 
@@ -184,7 +193,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.groupItemsController.Clear ();
 
-			foreach (var group in this.application.Document.Groups)
+			foreach (var group in this.Document.Groups)
 			{
 				this.groupItemsController.Add (this.CreateGroupView (group));
 			}
@@ -193,7 +202,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				(index < this.groupItemsController.Count))
 			{
 				var view  = this.groupItemsController[index];
-				var group = this.application.Document.Groups[index];
+				var group = this.Document.Groups[index];
 
 				this.groupItemsController.ActiveItem = this.groupItemsController[index];
 				
@@ -250,12 +259,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (view.ActiveState == ActiveState.Yes)
 					{
-						this.application.Document.AddOutput (item);
+						this.Document.AddOutput (item);
 						this.RefreshOutputs ();
 					}
 					else
 					{
-						this.application.Document.RemoveOutput (item);
+						this.Document.RemoveOutput (item);
 						this.Refresh ();
 					}
 				};
@@ -281,7 +290,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.ShowIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 				delegate
 				{
-					this.application.Document.RemoveOutput (item);
+					this.Document.RemoveOutput (item);
 					this.Refresh ();
 				});
 			
@@ -304,7 +313,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
-				group = this.UpdateGroup (this.application.Document.Groups[index], items);
+				group = this.UpdateGroup (this.Document.Groups[index], items);
 			}
 
 			this.UpdateGroupName (group);
@@ -334,7 +343,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private GraphDataGroup CreateGroup(IEnumerable<GraphDataSeries> series)
 		{
-			var group = this.application.Document.AddGroup (series);
+			var group = this.Document.AddGroup (series);
 			
 			this.groupItemsController.Add (this.CreateGroupView (group));
 
@@ -430,7 +439,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				VisibleTicks = false
 			});
 
-			lineChartRenderer.DefineValueLabels (this.application.Document.ChartColumnLabels);
+			lineChartRenderer.DefineValueLabels (this.Document.ChartColumnLabels);
 
 			return new MiniChartView ()
 			{
@@ -509,19 +518,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		
-		private void OnChanged()
-		{
-			var handler = this.Changed;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-
-		public event EventHandler				Changed;
 		
 		public System.Action<IEnumerable<int>>	SumSeriesAction;
 		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
