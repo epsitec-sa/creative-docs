@@ -108,14 +108,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private GraphDataSource DataSource
-		{
-			get
-			{
-				return this.application.Document.ActiveDataSource;
-			}
-		}
-
 		private GraphDocument Document
 		{
 			get
@@ -127,8 +119,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		public void Refresh()
 		{
-			if ((this.DataSource != null) &&
-				(this.DataSource.Count > 0))
+			if (this.Document != null)
 			{
 				this.RefreshInputs ();
 				this.RefreshOutputs ();
@@ -141,7 +132,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.inputItemsController.Clear ();
 
-			foreach (var item in this.DataSource)
+			foreach (var item in this.Document.DataSeries)
 			{
 				this.inputItemsController.Add (this.CreateInputView (item));
 			}
@@ -177,13 +168,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (index < 0)
 			{
-				this.ShowGroupCalculator (null);
+				this.ShowGroupCalculator (null, null);
 				this.ShowGroupDetails (null);
 			}
 			else
 			{
-				this.ShowGroupCalculator (view);
-				this.ShowGroupDetails (this.Document.Groups[index]);
+				var group = this.Document.Groups[index];
+				this.ShowGroupCalculator (group, view);
+				this.ShowGroupDetails (group);
 			}
 		}
 
@@ -206,7 +198,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.groupItemsController.ActiveItem = this.groupItemsController[index];
 				
-				this.ShowGroupCalculator (view);
+				this.ShowGroupCalculator (group, view);
 				this.ShowGroupDetails (group);
 
 				view.SetSelected (true);
@@ -297,13 +289,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
-
 		
 		private void CreateGroup()
 		{
 			var view  = this.groupItemsController.ActiveItem;
 			int index = this.groupItemsController.IndexOf (view);
-			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.DataSource[x.Index]);
+			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.Document.DataSeries.ElementAt (x.Index));
 
 			GraphDataGroup group;
 
@@ -317,15 +308,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.UpdateGroupName (group);
-		}
-
-		private void UpdateGroupName(GraphDataGroup group)
-		{
-			int count = group.Count;
-			
-			group.Name = string.Format (count > 1 ? "{0} éléments" : "{0} élément", count);
-
-			this.Refresh ();
 		}
 
 		private GraphDataGroup UpdateGroup(GraphDataGroup group, IEnumerable<GraphDataSeries> items)
@@ -348,6 +330,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.groupItemsController.Add (this.CreateGroupView (group));
 
 			return group;
+		}
+
+		private void UpdateGroupName(GraphDataGroup group)
+		{
+			int count = group.Count;
+
+			group.Name = string.Format (count > 1 ? "{0} éléments" : "{0} élément", count);
+
+			this.Refresh ();
 		}
 
 		
@@ -402,7 +393,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshGroupView ();
 		}
 
-
 		
 		private MiniChartView CreateView(GraphDataSeries item)
 		{
@@ -456,7 +446,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private void ShowGroupCalculator(MiniChartView view)
+		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
 		{
 			if (this.groupCalculatorArrow != null)
 			{
@@ -494,6 +484,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Parent = arrow,
 					AutoToggle = true
 				};
+
+				b1.ActiveStateChanged +=
+					delegate
+					{
+						if (b1.ActiveState == ActiveState.Yes)
+						{
+							group.ClearSyntheticDataSeries ();
+							group.AddSyntheticDataSeries ("Somme", x => x.Aggregate (new ChartValue ("", 0.0), (sum, value) => new ChartValue (value.Label, sum.Value + value.Value)));
+							this.Document.UpdateSyntheticSeries ();
+						}
+						this.Refresh ();
+					};
 
 				//	TODO: add button handlers here
 

@@ -81,15 +81,7 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.LineJoin = JoinStyle.Miter;
 				graphics.Transform = transform;
 
-				if (!string.IsNullOrEmpty (this.Title))
-				{
-					Font   font     = Font.GetFont ("Futura", "Condensed Medium");
-					double fontSize = 11.0;
-
-					graphics.Color = Color.FromBrightness (0.0);
-					graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, this.Title, font, fontSize, ContentAlignment.MiddleCenter);
-					graphics.RenderSolid ();
-				}
+				this.PaintTitle (graphics, rectangle);
 			}
 
 			if (!string.IsNullOrEmpty (this.Label))
@@ -114,6 +106,47 @@ namespace Epsitec.Common.Graph.Widgets
 			{
 				MiniChartView.PaintPaperClip (graphics, rectangle);
 			}
+		}
+
+		private Rectangle PaintTitle(Graphics graphics, Rectangle rectangle)
+		{
+			if (!string.IsNullOrEmpty (this.Title))
+			{
+				Font   font     = Font.GetFont ("Futura", "Condensed Medium");
+				double fontSize = 11.0;
+				string text     = this.Title;
+
+				int length = FitText (rectangle.Width, font, fontSize, text);
+
+				if (length < text.Length)
+				{
+					length = FitText (rectangle.Width, font, fontSize, ".." + text);
+					text = text.Substring (0, length-2) + "..";
+				}
+
+				graphics.Color = Color.FromBrightness (0.0);
+				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, text, font, fontSize, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid ();
+			}
+			return rectangle;
+		}
+
+		private static int FitText(double width, Font font, double fontSize, string text)
+		{
+			double[] xPos;
+			double xLength = width / fontSize;
+			
+			font.GetTextCharEndX (text, out xPos);
+
+			for (int i = 0; i < xPos.Length; i++)
+			{
+				if (xPos[i] > xLength)
+				{
+					return i;
+				}
+			}
+			
+			return text.Length;
 		}
 
 		public void ShowIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)

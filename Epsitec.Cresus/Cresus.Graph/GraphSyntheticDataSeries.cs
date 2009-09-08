@@ -10,7 +10,8 @@ namespace Epsitec.Cresus.Graph
 {
 	public class GraphSyntheticDataSeries : GraphDataSeries
 	{
-		public GraphSyntheticDataSeries(GraphDataGroup group)
+		public GraphSyntheticDataSeries(GraphDataGroup group, ChartSeries series)
+			: base (series)
 		{
 			this.group = group;
 		}

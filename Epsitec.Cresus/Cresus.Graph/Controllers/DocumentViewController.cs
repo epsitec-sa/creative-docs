@@ -502,7 +502,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		private IEnumerable<ChartSeries> GetDocumentChartSeries()
 		{
-			foreach (var series in this.document.ChartSeries)
+			foreach (var series in this.document.DataSeries.Select (x => x.ChartSeries))
 			{
 				yield return new ChartSeries (series.Label, this.accumulateValues ? DocumentViewController.Accumulate (series.Values) : series.Values);
 			}

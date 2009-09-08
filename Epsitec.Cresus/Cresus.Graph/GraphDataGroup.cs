@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -78,6 +79,59 @@ namespace Epsitec.Cresus.Graph
 		public bool Contains(GraphDataSeries series)
 		{
 			return this.dataSeries.Contains (series);
+		}
+
+
+		public void ClearSyntheticDataSeries()
+		{
+			this.syntheticDataSeries.Clear ();
+		}
+
+		public GraphSyntheticDataSeries AddSyntheticDataSeries(string label, System.Func<IList<ChartValue>, ChartValue> function)
+		{
+			var series = this.Synthesize (label, function);
+			this.syntheticDataSeries.Add (series);
+			return series;
+		}
+
+
+		private GraphSyntheticDataSeries Synthesize(string label, System.Func<IList<ChartValue>, ChartValue> function)
+		{
+			int n = this.dataSeries.Count;
+			int m = this.dataSeries[0].ChartSeries.Values.Count;
+			
+			ChartValue[] inputVector = new ChartValue[n];
+			ChartValue[] outputVector = new ChartValue[m];
+
+			List<ChartValue>[] values = new List<ChartValue>[n];
+
+			for (int i = 0; i < n; i++)
+			{
+				var source = this.dataSeries[i].ChartSeries.Values;
+
+				if (source.Count != m)
+				{
+					throw new System.NotSupportedException ("Ragged input not supported");
+				}
+				
+				values[i] = new List<ChartValue> (source);
+			}
+
+			for (int j = 0; j < m; j++)
+			{
+				for (int i = 0; i < n; i++)
+				{
+					inputVector[i] = values[i][j];
+				}
+
+				outputVector[j] = function (inputVector);
+			}
+
+			return new GraphSyntheticDataSeries (this, new ChartSeries (label, outputVector))
+			{
+				Title = this.Name,
+				Label = label,
+			};
 		}
 
 

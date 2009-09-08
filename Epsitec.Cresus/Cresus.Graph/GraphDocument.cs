@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Graph
 			this.application = application;
 			this.dataSources = new List<GraphDataSource> ();
 			this.outputSeries = new List<GraphDataSeries> ();
+			this.syntheticSeries = new List<GraphSyntheticDataSeries> ();
 			this.groups = new List<GraphDataGroup> ();
 			this.columnLabels = new List<string> ();
 
@@ -73,11 +74,11 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public IEnumerable<GraphDataSeries> OutputSeries
+		public IList<GraphDataSeries> OutputSeries
 		{
 			get
 			{
-				return this.outputSeries;
+				return this.outputSeries.AsReadOnly ();
 			}
 		}
 
@@ -89,11 +90,19 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public IEnumerable<ChartSeries> ChartSeries
+		public IEnumerable<GraphDataSeries> DataSeries
 		{
 			get
 			{
-				return this.outputSeries.Select (x => x.ChartSeries);
+				return this.activeDataSource.Concat (this.syntheticSeries.Cast<GraphDataSeries> ());
+			}
+		}
+
+		public IList<GraphSyntheticDataSeries> SyntheticSeries
+		{
+			get
+			{
+				return this.syntheticSeries.AsReadOnly ();
 			}
 		}
 
@@ -154,7 +163,7 @@ namespace Epsitec.Cresus.Graph
 			
 			var output = new GraphDataSeries (series)
 			{
-				Label = series.Source.Name,
+				Label = series.Source == null ? "" : series.Source.Name,
 				Title = series.ChartSeries.Label
 			};
 			
@@ -378,6 +387,16 @@ namespace Epsitec.Cresus.Graph
 			this.ReloadDataSet ();
 		}
 
+		internal void UpdateSyntheticSeries()
+		{
+			this.syntheticSeries.Clear ();
+			
+			foreach (var group in this.groups)
+			{
+				this.syntheticSeries.AddRange (group.SyntheticDataSeries);
+			}
+		}
+
 		
 		private void UpdateUndoRedo()
 		{
@@ -445,6 +464,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphDataSeries> outputSeries;
 		private readonly List<GraphDataGroup> groups;
 		private readonly List<string> columnLabels;
+		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
 
 		private readonly GraphDataSet dataSet;
 		private readonly Actions.Recorder undoRecorder;
