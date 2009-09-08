@@ -141,6 +141,7 @@
     <Compile Include="Controllers\ItemLayoutMode.cs" />
     <Compile Include="Controllers\ItemListController.cs" />
     <Compile Include="Controllers\SeriesPickerControllerOriginal.cs" />
+    <Compile Include="Functions\FunctionFactory.cs" />
     <Compile Include="GraphSyntheticDataSeries.cs" />
     <Compile Include="GraphDataGroup.cs" />
     <Compile Include="GraphDataSeries.cs" />

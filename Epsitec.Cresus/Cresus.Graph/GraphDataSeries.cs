@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Graph
 		}
 		
 		
-		public ChartSeries ChartSeries
+		public virtual ChartSeries ChartSeries
 		{
 			get
 			{

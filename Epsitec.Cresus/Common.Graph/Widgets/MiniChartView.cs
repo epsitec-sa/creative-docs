@@ -35,6 +35,54 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 
+		public void DefineIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)
+		{
+			if (visibility != ButtonVisibility.Hide)
+			{
+				if (this.iconButton == null)
+				{
+					this.iconButtonVisibility = visibility;
+
+					this.iconButton = new IconButton ()
+					{
+						Parent = this,
+						Anchor = AnchorStyles.TopRight,
+						Margins = new Margins (0, 0, 0, 0),
+						PreferredWidth = 19,
+						PreferredHeight = 19,
+						IconName = iconName,
+						AutoFocus = false
+					};
+
+					if ((visibility == ButtonVisibility.Show) ||
+						(visibility == ButtonVisibility.ShowOnlyWhenEntered && this.IsEntered))
+					{
+						this.iconButton.Show ();
+					}
+					else
+					{
+						this.iconButton.Hide ();
+					}
+
+					if (buttonClicked != null)
+					{
+						this.iconButton.Clicked += (sender, e) => buttonClicked ();
+					};
+				}
+
+				this.HideCheckButton ();
+			}
+			else
+			{
+				if (this.iconButton != null)
+				{
+					this.iconButton.Dispose ();
+					this.iconButton = null;
+				}
+			}
+		}
+		
+		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var renderer  = this.Renderer;
@@ -81,7 +129,7 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.LineJoin = JoinStyle.Miter;
 				graphics.Transform = transform;
 
-				this.PaintTitle (graphics, rectangle);
+				MiniChartView.PaintTitle (graphics, rectangle, this.Title);
 			}
 
 			if (!string.IsNullOrEmpty (this.Label))
@@ -107,95 +155,6 @@ namespace Epsitec.Common.Graph.Widgets
 				MiniChartView.PaintPaperClip (graphics, rectangle);
 			}
 		}
-
-		private Rectangle PaintTitle(Graphics graphics, Rectangle rectangle)
-		{
-			if (!string.IsNullOrEmpty (this.Title))
-			{
-				Font   font     = Font.GetFont ("Futura", "Condensed Medium");
-				double fontSize = 11.0;
-				string text     = this.Title;
-
-				int length = FitText (rectangle.Width, font, fontSize, text);
-
-				if (length < text.Length)
-				{
-					length = FitText (rectangle.Width, font, fontSize, ".." + text);
-					text = text.Substring (0, length-2) + "..";
-				}
-
-				graphics.Color = Color.FromBrightness (0.0);
-				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, text, font, fontSize, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid ();
-			}
-			return rectangle;
-		}
-
-		private static int FitText(double width, Font font, double fontSize, string text)
-		{
-			double[] xPos;
-			double xLength = width / fontSize;
-			
-			font.GetTextCharEndX (text, out xPos);
-
-			for (int i = 0; i < xPos.Length; i++)
-			{
-				if (xPos[i] > xLength)
-				{
-					return i;
-				}
-			}
-			
-			return text.Length;
-		}
-
-		public void ShowIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)
-		{
-			if (visibility != ButtonVisibility.Hide)
-			{
-				if (this.iconButton == null)
-				{
-					this.iconButtonVisibility = visibility;
-
-					this.iconButton = new IconButton ()
-					{
-						Parent = this,
-						Anchor = AnchorStyles.TopRight,
-						Margins = new Margins (0, 0, 0, 0),
-						PreferredWidth = 19,
-						PreferredHeight = 19,
-						IconName = iconName,
-						AutoFocus = false
-					};
-
-					if ((visibility == ButtonVisibility.Show) ||
-						(visibility == ButtonVisibility.ShowOnlyWhenEntered && this.IsEntered))
-					{
-						this.iconButton.Show ();
-					}
-					else
-					{
-						this.iconButton.Hide ();
-					}
-
-					if (buttonClicked != null)
-					{
-						this.iconButton.Clicked += (sender, e) => buttonClicked ();
-					};
-				}
-
-				this.HideCheckButton ();
-			}
-			else
-			{
-				if (this.iconButton != null)
-				{
-					this.iconButton.Dispose ();
-					this.iconButton = null;
-				}
-			}
-		}
-
 		
 		protected override void OnEntered(MessageEventArgs e)
 		{
@@ -236,15 +195,6 @@ namespace Epsitec.Common.Graph.Widgets
 			base.OnExited (e);
 		}
 
-		private void HideCheckButton()
-		{
-			if (this.checkButton != null)
-			{
-				this.checkButton.Dispose ();
-				this.checkButton = null;
-			}
-		}
-
 		protected override void OnActiveStateChanged()
 		{
 			if (this.checkButton != null)
@@ -256,6 +206,55 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 		
+		private void HideCheckButton()
+		{
+			if (this.checkButton != null)
+			{
+				this.checkButton.Dispose ();
+				this.checkButton = null;
+			}
+		}
+
+
+		private static void PaintTitle(Graphics graphics, Rectangle rectangle, string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				Font   font     = Font.GetFont ("Futura", "Condensed Medium");
+				double fontSize = 11.0;
+				
+				int length = FitText (rectangle.Width, font, fontSize, text);
+
+				if (length < text.Length)
+				{
+					length = FitText (rectangle.Width, font, fontSize, ".." + text);
+					text = text.Substring (0, length-2) + "..";
+				}
+
+				graphics.Color = Color.FromBrightness (0.0);
+				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, text, font, fontSize, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid ();
+			}
+		}
+
+		private static int FitText(double width, Font font, double fontSize, string text)
+		{
+			double[] xPos;
+			double xLength = width / fontSize;
+
+			font.GetTextCharEndX (text, out xPos);
+
+			for (int i = 0; i < xPos.Length; i++)
+			{
+				if (xPos[i] > xLength)
+				{
+					return i;
+				}
+			}
+
+			return text.Length;
+		}
+
 		private static void PaintBackSheet(Graphics graphics, Rectangle rectangle)
 		{
 			graphics.AddFilledRectangle (Rectangle.Inflate (rectangle, 1, 1));

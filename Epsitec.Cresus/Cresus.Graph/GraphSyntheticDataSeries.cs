@@ -10,12 +10,24 @@ namespace Epsitec.Cresus.Graph
 {
 	public class GraphSyntheticDataSeries : GraphDataSeries
 	{
-		public GraphSyntheticDataSeries(GraphDataGroup group, ChartSeries series)
-			: base (series)
+		public GraphSyntheticDataSeries(GraphDataGroup group, string functionName)
+			: base ()
 		{
 			this.group = group;
+			this.functionName = functionName;
 		}
 
+
+		public override ChartSeries ChartSeries
+		{
+			get
+			{
+				var func   = Functions.FunctionFactory.GetFunction (this.functionName);
+				var series = this.group.SynthesizeChartSeries (this.Label, func);
+
+				return series;
+			}
+		}
 
 		public GraphDataGroup SourceGroup
 		{
@@ -25,7 +37,21 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public bool Enabled
+		{
+			get;
+			set;
+		}
+
+		public string FunctionName
+		{
+			get
+			{
+				return this.functionName;
+			}
+		}
 
 		private readonly GraphDataGroup group;
+		private readonly string functionName;
 	}
 }

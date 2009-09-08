@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				var visibility = item.IsSelected && count > 1 ? ButtonVisibility.Show : ButtonVisibility.Hide;
 
-				item.ShowIconButton (visibility, icon, this.CreateGroup);
+				item.DefineIconButton (visibility, icon, this.CreateGroup);
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
-			view.ShowIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 				delegate
 				{
 					group.Remove (item);
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var view = this.CreateInputView (item);
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
-			view.ShowIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 				delegate
 				{
 					this.Document.RemoveOutput (item);
@@ -482,7 +482,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					PreferredSize = new Size (36, 20),
 					Dock = DockStyle.Stacked,
 					Parent = arrow,
-					AutoToggle = true
+					AutoToggle = true,
+					ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == "sum").Count () == 0 ? ActiveState.No : ActiveState.Yes,
 				};
 
 				b1.ActiveStateChanged +=
@@ -490,10 +491,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 					{
 						if (b1.ActiveState == ActiveState.Yes)
 						{
-							group.ClearSyntheticDataSeries ();
-							group.AddSyntheticDataSeries ("Somme", x => x.Aggregate (new ChartValue ("", 0.0), (sum, value) => new ChartValue (value.Label, sum.Value + value.Value)));
-							this.Document.UpdateSyntheticSeries ();
+							group.AddSyntheticDataSeries ("Somme", "sum");
 						}
+						else
+						{
+							group.RemoveSyntheticDataSeries ("sum");
+						}
+						this.Document.UpdateSyntheticSeries ();
 						this.Refresh ();
 					};
 

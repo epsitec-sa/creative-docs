@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.syntheticDataSeries;
+				return this.syntheticDataSeries.Where (x => x.Enabled);
 			}
 		}
 
@@ -84,23 +84,42 @@ namespace Epsitec.Cresus.Graph
 
 		public void ClearSyntheticDataSeries()
 		{
-			this.syntheticDataSeries.Clear ();
+			this.syntheticDataSeries.ForEach (x => x.Enabled = false);
 		}
 
-		public GraphSyntheticDataSeries AddSyntheticDataSeries(string label, System.Func<IList<ChartValue>, ChartValue> function)
+		public GraphSyntheticDataSeries AddSyntheticDataSeries(string label, string functionName)
 		{
-			var series = this.Synthesize (label, function);
-			this.syntheticDataSeries.Add (series);
+			var series = this.syntheticDataSeries.Find (x => x.FunctionName == functionName);
+
+			if (series == null)
+			{
+				series = new GraphSyntheticDataSeries (this, functionName);
+				this.syntheticDataSeries.Add (series);
+			}
+
+			series.Title   = this.Name;
+			series.Label   = label;
+			series.Enabled = true;
+
 			return series;
 		}
 
+		public void RemoveSyntheticDataSeries(string functionName)
+		{
+			var series = this.syntheticDataSeries.Find (x => x.FunctionName == functionName);
 
-		private GraphSyntheticDataSeries Synthesize(string label, System.Func<IList<ChartValue>, ChartValue> function)
+			if (series != null)
+			{
+				series.Enabled = false;
+			}
+		}
+
+		internal ChartSeries SynthesizeChartSeries(string label, System.Func<IList<double>, double> function)
 		{
 			int n = this.dataSeries.Count;
 			int m = this.dataSeries[0].ChartSeries.Values.Count;
 			
-			ChartValue[] inputVector = new ChartValue[n];
+			double[]     inputVector  = new double[n];
 			ChartValue[] outputVector = new ChartValue[m];
 
 			List<ChartValue>[] values = new List<ChartValue>[n];
@@ -121,17 +140,13 @@ namespace Epsitec.Cresus.Graph
 			{
 				for (int i = 0; i < n; i++)
 				{
-					inputVector[i] = values[i][j];
+					inputVector[i] = values[i][j].Value;
 				}
 
-				outputVector[j] = function (inputVector);
+				outputVector[j] = new ChartValue (values[0][j].Label, function (inputVector));
 			}
 
-			return new GraphSyntheticDataSeries (this, new ChartSeries (label, outputVector))
-			{
-				Title = this.Name,
-				Label = label,
-			};
+			return new ChartSeries (label, outputVector);
 		}
 
 
