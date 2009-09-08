@@ -199,6 +199,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				
 				this.ShowGroupCalculator (view);
 				this.ShowGroupDetails (group);
+
+				view.SetSelected (true);
 			}
 		}
 
@@ -230,7 +232,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				delegate
 				{
 					group.Remove (item);
-					this.Refresh ();
+					this.UpdateGroupName (group);
 				});
 
 			return view;
@@ -305,10 +307,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 				group = this.UpdateGroup (this.application.Document.Groups[index], items);
 			}
 
-			int count = group.Count;
+			this.UpdateGroupName (group);
+		}
 
-			group.Name = string.Format (count > 1 ? "{0} éléments" : "{0} élément", count);
+		private void UpdateGroupName(GraphDataGroup group)
+		{
+			int count = group.Count;
 			
+			group.Name = string.Format (count > 1 ? "{0} éléments" : "{0} élément", count);
+
 			this.Refresh ();
 		}
 
