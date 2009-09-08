@@ -16,15 +16,16 @@ using Epsitec.Common.Graph.Data;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class ItemListController : IEnumerable<Widget>
+	internal sealed class ItemListController<T> : IEnumerable<T> where T : Widget
 	{
 		public ItemListController(Widget container)
 		{
 			this.container = container;
-			this.items = new List<Widget> ();
+			this.items = new List<T> ();
 			this.originOffset = 0;
 			this.overlapX = 4;
 			this.overlapY = 4;
+			this.Anchor = AnchorStyles.TopLeft;
 
 			this.container.SizeChanged += (sender, e) => this.Layout ();
 		}
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		public Widget ActiveItem
+		public T ActiveItem
 		{
 			get
 			{
@@ -69,13 +70,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return this.items.Count;
 			}
 		}
+
+		public AnchorStyles Anchor
+		{
+			get;
+			set;
+		}
 		
 
-		public void Add(Widget item)
+		public void Add(T item)
 		{
 			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (item, true);
 
-			item.Anchor = AnchorStyles.TopLeft;
+			item.Anchor = this.Anchor;
 			item.Parent = this.container;
 			item.Clicked += (sender, e) => this.ActiveItem = item;
 
@@ -83,7 +90,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.InvalidateLayout ();
 		}
 
-		public bool Remove(Widget item)
+		public bool Remove(T item)
 		{
 			if (item == null)
 			{
@@ -127,7 +134,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		public Widget Find(System.Predicate<Widget> predicate)
+		public T Find(System.Predicate<T> predicate)
 		{
 			return this.items.Find (predicate);
 		}
@@ -142,9 +149,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		#region IEnumerable<Widget> Members
+		#region IEnumerable<T> Members
 
-		public IEnumerator<Widget> GetEnumerator()
+		public IEnumerator<T> GetEnumerator()
 		{
 			return this.items.GetEnumerator ();
 		}
@@ -291,9 +298,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 
 		private readonly Widget container;
-		private readonly List<Widget> items;
+		private readonly List<T> items;
 		private ItemLayoutMode itemLayoutMode;
-		private Widget activeItem;
+		private T activeItem;
 		private double originOffset;
 		private double overlapX;
 		private double overlapY;

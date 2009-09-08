@@ -107,19 +107,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 260
 			};
 
-			this.inputItemsController = new ItemListController (frameInputs)
+			this.inputItemsController = new ItemListController<MiniChartView> (frameInputs)
 			{
 				ItemLayoutMode = ItemLayoutMode.Flow
 			};
 
-			this.selectionItemsController = new ItemListController (frameSelection)
+			this.selectionItemsController = new ItemListController<MiniChartView> (frameSelection)
 			{
 				ItemLayoutMode = ItemLayoutMode.Horizontal
 			};
 
-			this.groupItemsController = new ItemListController (frameGroups)
+			this.groupItemsController = new ItemListController<MiniChartView> (frameGroups)
 			{
 				ItemLayoutMode = ItemLayoutMode.Horizontal
+			};
+
+			this.groupDetailItemsController = new ItemListController<MiniChartView> (frameGroups)
+			{
+				ItemLayoutMode = ItemLayoutMode.Horizontal,
+				Anchor = AnchorStyles.BottomLeft
 			};
 
 			this.window.WindowCloseClicked += sender => this.HideWindow ();
@@ -207,7 +213,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void UpdateUserSelection()
 		{
 			int n = this.inputItemsController.Where (x => x.IsSelected).Count ();
-			this.inputItemsController.Cast<MiniChartView> ().ForEach (x => x.ShowIconButton (x.IsSelected && n > 1 ? ButtonVisibility.Show : ButtonVisibility.Hide, this.HandleGroupButtonClicked, "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon"));
+			this.inputItemsController.ForEach (x => x.ShowIconButton (x.IsSelected && n > 1 ? ButtonVisibility.Show : ButtonVisibility.Hide, this.HandleGroupButtonClicked, "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon"));
 		}
 
 		private void HandleDropButtonClicked(int index)
@@ -217,12 +223,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleGroupButtonClicked()
 		{
+			this.CreateGroupView (this.inputItemsController.Where (x => x.IsSelected).Select (x => x.Renderer.SeriesItems.First ()));
+		}
+
+		private void CreateGroupView(IEnumerable<ChartSeries> series)
+		{
 			var view = this.CreateMiniChartView (this.groupItemsController.Count, null);
 
 			this.groupItemsController.Add (view);
 
 			view.Renderer.Clear ();
-			view.Renderer.CollectRange (this.inputItemsController.Cast<MiniChartView> ().Where (x => x.IsSelected).Select (x => x.Renderer.SeriesItems.First ()));
+			view.Renderer.CollectRange (series);
 			view.Label = "Nouveau";
 			view.Title = string.Format (view.Renderer.SeriesCount > 1 ? "{0} éléments" : "{0} élément", view.Renderer.SeriesCount);
 			view.Clicked +=
@@ -236,6 +247,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 						bool select = !v.IsSelected;
 						this.groupItemsController.ForEach (x => x.SetSelected (false));
 						v.SetSelected (select);
+
+						if (select)
+						{
+							view.Renderer.SeriesItems.ForEach (s => this.groupDetailItemsController.Add (this.CreateMiniChartView (-1, s)));
+						}
+						else
+						{
+							this.groupDetailItemsController.Clear ();
+						}
 					}
 				};
 
@@ -354,8 +374,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		readonly private Window					window;
 		readonly private HashSet<string>		negatedSeriesLabels;
 
-		readonly private ItemListController		inputItemsController;
-		readonly private ItemListController		selectionItemsController;
-		readonly private ItemListController		groupItemsController;
+		readonly private ItemListController<MiniChartView>		inputItemsController;
+		readonly private ItemListController<MiniChartView>		selectionItemsController;
+		readonly private ItemListController<MiniChartView>		groupItemsController;
+		readonly private ItemListController<MiniChartView>		groupDetailItemsController;
 	}
 }
