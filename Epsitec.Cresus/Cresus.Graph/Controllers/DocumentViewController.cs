@@ -366,9 +366,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		public void Refresh()
 		{
-			if ((this.document != null) &&
-				(this.document.DataSet != null) &&
-				(this.document.DataSet.DataTable != null))
+			if (this.document != null)
 			{
 				var renderer = this.CreateRenderer ();
 
@@ -383,7 +381,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					renderer.Clear ();
 					renderer.ChartSeriesRenderingMode = this.StackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
-					renderer.DefineValueLabels (this.document.DataSet.DataTable.ColumnLabels);
+					renderer.DefineValueLabels (this.document.ChartColumnLabels);
 					renderer.CollectRange (series);
 					renderer.UpdateCaptions (series);
 					renderer.AlwaysIncludeZero = true;

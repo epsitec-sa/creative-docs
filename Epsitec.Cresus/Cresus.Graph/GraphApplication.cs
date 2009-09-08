@@ -25,11 +25,12 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.graphCommands = new GraphCommands (this);
 			this.persistenceManager = new Core.UI.PersistenceManager ();
-			this.documents = new List<GraphDocument> ();
-			this.mainWindowController = new Controllers.MainWindowController ();
+			
+			this.mainWindowController = new Controllers.MainWindowController (this);
+			this.workspaceController = new Controllers.WorkspaceController (this);
 
-			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
-			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
+//			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
+//			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
 
 			Clipboard.DataChanged += this.HandleClipboardDataChanged;
 		}
@@ -46,7 +47,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return "Crésus Graphe";
+				return Res.Strings.Application.Name.ToSimpleText ();
 			}
 		}
 
@@ -55,8 +56,18 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				this.SetupDefaultDocument ();
 				return this.activeDocument;
+			}
+		}
+
+		public IEnumerable<GraphDocument> OpenDocuments
+		{
+			get
+			{
+				if (this.activeDocument != null)
+				{
+					yield return this.activeDocument;
+				}
 			}
 		}
 
@@ -68,12 +79,26 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		internal Controllers.GraphController SeriesPickerController
+		internal Controllers.WorkspaceController WorkspaceController
 		{
 			get
 			{
-				return this.seriesPickerController;
+				return this.workspaceController;
 			}
+		}
+
+
+		internal void SetupUI()
+		{
+			this.mainWindowController.SetupUI ();
+			this.workspaceController.SetupUI ();
+
+			this.Window = this.mainWindowController.Window;
+
+			this.SetEnable (ApplicationCommands.Save, false);
+			
+			this.RestoreApplicationState ();
+			this.IsReady = true;
 		}
 
 		internal void SetupDefaultDocument()
@@ -81,29 +106,7 @@ namespace Epsitec.Cresus.Graph
 			if (this.activeDocument == null)
 			{
 				this.CreateDocument ();
-				this.SetupDataSet ();
 			}
-		}
-
-		internal void SetupDataSet()
-		{
-			this.loadDataSetAction ();
-		}
-
-		internal void SetupInterface()
-		{
-			this.Window = this.mainWindowController.Window;
-
-			this.SetEnable (ApplicationCommands.Save, false);
-			
-			this.seriesPickerController = new Controllers.GraphController (this.Window);
-			this.seriesPickerController.SumSeriesAction = Actions.Factory.New (this.SumRows);
-			this.seriesPickerController.NegateSeriesAction = Actions.Factory.New (this.NegateRows);
-			this.seriesPickerController.AddSeriesToGraphAction = Actions.Factory.New (this.AddToChart);
-
-			this.RestoreApplicationState ();
-			this.Document.MakeVisible ();
-			this.IsReady = true;
 		}
 
 		internal void AsyncSaveApplicationState()
@@ -111,16 +114,11 @@ namespace Epsitec.Cresus.Graph
 			Application.QueueAsyncCallback (this.SaveApplicationState);
 		}
 
-		internal void RegisterDocument(GraphDocument graphDocument)
+		internal void RegisterDocument(GraphDocument document)
 		{
-			System.Diagnostics.Debug.Assert (this.documents.Contains (graphDocument) == false);
+			System.Diagnostics.Debug.Assert (this.activeDocument == null);
 
-			this.documents.Add (graphDocument);
-
-			if (this.activeDocument == null)
-			{
-				this.SetActiveDocument (graphDocument);
-			}
+			this.SetActiveDocument (document);
 		}
 
 		internal void SetActiveDocument(GraphDocument document)
@@ -146,10 +144,15 @@ namespace Epsitec.Cresus.Graph
 				XDocument doc = XDocument.Load (GraphApplication.Paths.SettingsPath);
 				XElement store = doc.Element ("store");
 
-//-				this.stateManager.RestoreStates (store.Element ("stateManager"));
-				this.RestoreDocumentSettings (store.Element ("documents"));
-				Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
-				this.persistenceManager.Restore (store.Element ("uiSettings"));
+				var version = (string) store.Attribute ("version");
+
+				if (version == "1")
+				{
+//-					this.stateManager.RestoreStates (store.Element ("stateManager"));
+					this.RestoreDocumentSettings (store.Element ("documents"));
+					Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
+					this.persistenceManager.Restore (store.Element ("uiSettings"));
+				}
 			}
 
 			this.persistenceManager.DiscardChanges ();
@@ -168,6 +171,7 @@ namespace Epsitec.Cresus.Graph
 					new XDeclaration ("1.0", "utf-8", "yes"),
 					new XComment ("Saved on " + timeStamp),
 					new XElement ("store",
+						new XAttribute ("version", "1"),
 //						this.StateManager.SaveStates ("stateManager"),
 						this.SaveDocumentSettings ("documents"),
 						Core.UI.SaveWindowPositions ("windowPositions"),
@@ -181,7 +185,7 @@ namespace Epsitec.Cresus.Graph
 		private XElement SaveDocumentSettings(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
-					from doc in this.documents
+					from doc in this.OpenDocuments
 					select doc.SaveSettings (new XElement ("doc")));
 		}
 
@@ -204,17 +208,14 @@ namespace Epsitec.Cresus.Graph
 
 		private GraphDocument CreateDocument()
 		{
-			var doc = new GraphDocument ()
+			var doc = new GraphDocument (this)
 			{
-				RemoveSeriesFromGraphAction = this.removeSeriesFromGraphAction
 			};
-
-
 
 			return doc;
 		}
 
-		
+#if false
 		private void SumRows(IEnumerable<int> rows)
 		{
 			var sum = this.activeDocument.DataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
@@ -281,9 +282,7 @@ namespace Epsitec.Cresus.Graph
 
 			this.OnActiveDocumentChanged ();
 		}
-
-
-		private Controllers.GraphController seriesPickerController;
+#endif
 
 		private void OnActiveDocumentChanged()
 		{
@@ -329,16 +328,13 @@ namespace Epsitec.Cresus.Graph
 						cube.Save (stream);
 					}
 
-					var document       = this.CreateDocument ();
+					var document       = this.Document;
 					var dimensionNames = cube.NaturalTableDimensionNames;
 
-					this.activeDocument.LoadCube (cube);
-					this.activeDocument.SelectCubeSlice (dimensionNames[0], dimensionNames[1]);
+					document.LoadCube (cube);
+					document.SelectCubeSlice (dimensionNames[0], dimensionNames[1]);
 					
-					this.seriesPickerController.ClearNegatedSeries ();
-
 					document.Title = converter.DataTitle;
-					document.MakeVisible ();
 
 					this.OnActiveDocumentChanged ();
 				}
@@ -347,15 +343,15 @@ namespace Epsitec.Cresus.Graph
 		
 		public event EventHandler ActiveDocumentChanged;
 
-		private readonly System.Action loadDataSetAction;
-
-		private GraphCommands graphCommands;
-		private GraphDocument activeDocument;
+		private readonly GraphCommands graphCommands;
+		
 		private readonly Controllers.MainWindowController mainWindowController;
-		private readonly List<GraphDocument> documents;
+		private readonly Controllers.WorkspaceController workspaceController;
+
 		private readonly Core.UI.PersistenceManager persistenceManager;
 		private readonly System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
 
+		private GraphDocument activeDocument;
 		private long lastPasteChecksum;
 	}
 }

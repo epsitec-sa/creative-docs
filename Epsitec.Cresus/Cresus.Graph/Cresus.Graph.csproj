@@ -59,7 +59,7 @@
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\DocumentViewController.cs" />
     <Compile Include="Controllers\SeriesDetectionController.cs" />
-    <Compile Include="Controllers\GraphController.cs" />
+    <Compile Include="Controllers\WorkspaceController.cs" />
     <Compile Include="GraphApplication.Paths.cs" />
     <Compile Include="GraphApplication.cs" />
     <Compile Include="GraphCommands.cs" />

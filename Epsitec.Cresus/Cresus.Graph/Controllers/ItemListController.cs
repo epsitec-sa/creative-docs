@@ -18,19 +18,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	internal sealed class ItemListController<T> : IEnumerable<T> where T : Widget
 	{
-		public ItemListController(Widget container)
+		public ItemListController()
 		{
-			this.container = container;
 			this.items = new List<T> ();
 			this.originOffset = 0;
 			this.overlapX = 4;
 			this.overlapY = 4;
 			this.Anchor = AnchorStyles.TopLeft;
-
-			this.container.SizeChanged += (sender, e) => this.Layout ();
 		}
 
-
+		
 		public ItemLayoutMode ItemLayoutMode
 		{
 			get
@@ -76,14 +73,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 			get;
 			set;
 		}
-		
 
+
+		public void SetupUI(Widget container)
+		{
+			this.container = container;
+			this.container.SizeChanged += (sender, e) => this.Layout ();
+			this.Layout ();
+		}
+
+		
 		public void Add(T item)
 		{
 			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (item, true);
 
 			item.Anchor = this.Anchor;
 			item.Parent = this.container;
+			item.Index  = this.items.Count;
 			item.Clicked += (sender, e) => this.ActiveItem = item;
 
 			this.items.Add (item);
@@ -170,18 +176,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void Layout()
 		{
-			switch (this.itemLayoutMode)
+			if (this.container != null)
 			{
-				case ItemLayoutMode.Horizontal:
-					this.LayoutHorizontal ();
-					break;
-				
-				case ItemLayoutMode.Flow:
-					this.LayoutFlow ();
-					break;
+				switch (this.itemLayoutMode)
+				{
+					case ItemLayoutMode.Horizontal:
+						this.LayoutHorizontal ();
+						break;
 
-				default:
-					throw new System.NotImplementedException ();
+					case ItemLayoutMode.Flow:
+						this.LayoutFlow ();
+						break;
+
+					default:
+						throw new System.NotImplementedException ();
+				}
 			}
 		}
 
@@ -297,7 +306,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		private readonly Widget container;
+		private Widget container;
 		private readonly List<T> items;
 		private ItemLayoutMode itemLayoutMode;
 		private T activeItem;

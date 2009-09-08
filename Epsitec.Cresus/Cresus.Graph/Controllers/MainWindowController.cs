@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	/// <summary>
 	/// The <c>MainWindowController</c> class creates and manages the main window of the
-	/// application, with its tools and document tab book.
+	/// application, with its tools and the workspace area.
 	/// </summary>
 	internal class MainWindowController
 	{
-		public MainWindowController()
+		public MainWindowController(GraphApplication application)
 		{
 		}
 
@@ -28,28 +28,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				if (this.window == null)
 				{
-					this.CreateUI ();
+					this.SetupUI ();
 				}
 
 				return this.window;
 			}
 		}
 
-		public TabBook DocTabBook
+		public Widget WorkspaceFrame
 		{
 			get
 			{
-				if (this.window == null)
-				{
-					this.CreateUI ();
-				}
-				
-				return this.docTabBook;
+				return this.workspaceFrame;
 			}
 		}
 
-		
-		private void CreateUI()
+
+		public void SetupUI()
 		{
 			if (this.window == null)
 			{
@@ -63,33 +58,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.toolsFrame = new FrameBox ()
 				{
-					Name = "ToolsFrame",
+					Name = "tools",
 					Dock = DockStyle.Top,
 					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 					Parent = this.window.Root,
 					Margins = new Margins (0, 0, 0, 4),
-					Padding = new Margins (2, 2, 2, 2)
+					Padding = new Margins (2, 2, 2, 2),
+					PreferredHeight = 150,
 				};
 
-				this.docAreaFrame = new FrameBox ()
+				this.workspaceFrame = new FrameBox ()
 				{
-					Name = "DocAreaFrame",
+					Name = "workspace",
 					Dock = DockStyle.Fill,
-					Parent = this.window.Root
+					Parent = this.window.Root,
 				};
-
-				this.docTabBook = new TabBook ()
-				{
-					Name = "DocTabBook",
-					Dock = DockStyle.Fill,
-					Parent = this.docAreaFrame
-				};
-
-				this.docTabBook.ActivePageChanged +=
-					delegate
-					{
-						GraphProgram.Application.SetActiveDocument (GraphDocument.GetDocument (this.docTabBook.ActivePage));
-					};
 
 				MainWindowController.CreateTools (this.toolsFrame);
 			}
@@ -119,13 +102,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			yield return ApplicationCommands.Copy;
 			
 			yield return Res.Commands.File.ExportImage;
-			yield return ApplicationCommands.Properties;
 		}
 
 
 		private Window							window;
 		private FrameBox						toolsFrame;
-		private FrameBox						docAreaFrame;
-		private TabBook							docTabBook;
+		private FrameBox						workspaceFrame;
 	}
 }

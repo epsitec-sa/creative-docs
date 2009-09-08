@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return GraphProgram.Application.Document.DataSet;
+				return null; //-	GraphProgram.Application.Document.DataSet;
 			}
 		}
 

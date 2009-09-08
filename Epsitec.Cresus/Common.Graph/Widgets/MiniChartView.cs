@@ -81,12 +81,15 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.LineJoin = JoinStyle.Miter;
 				graphics.Transform = transform;
 
-				Font   font     = Font.GetFont ("Futura", "Condensed Medium");
-				double fontSize = 11.0;
+				if (!string.IsNullOrEmpty (this.Title))
+				{
+					Font   font     = Font.GetFont ("Futura", "Condensed Medium");
+					double fontSize = 11.0;
 
-				graphics.Color = Color.FromBrightness (0.0);
-				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, this.Title, font, fontSize, ContentAlignment.MiddleCenter);
-				graphics.RenderSolid ();
+					graphics.Color = Color.FromBrightness (0.0);
+					graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, this.Title, font, fontSize, ContentAlignment.MiddleCenter);
+					graphics.RenderSolid ();
+				}
 			}
 
 			if (!string.IsNullOrEmpty (this.Label))

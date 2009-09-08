@@ -21,12 +21,22 @@ namespace Epsitec.Cresus.Graph
 			this.chartSeries = series;
 		}
 
+		public GraphDataSeries(GraphDataSeries series)
+			: this ()
+		{
+			this.parent = series;
+			this.Title = series.Title;
+			this.Label = series.Label;
+		}
+		
 		
 		public ChartSeries ChartSeries
 		{
 			get
 			{
-				if (this.chartSeries == null)
+				var series = this.parent == null ? this.chartSeries : this.parent.ChartSeries;
+
+				if (series == null)
 				{
 					return new ChartSeries ();
 				}
@@ -34,11 +44,11 @@ namespace Epsitec.Cresus.Graph
 				{
 					if (this.NegateValues)
 					{
-						return new ChartSeries (this.chartSeries.Label, this.chartSeries.Values.Select (x => new ChartValue (x.Label, -x.Value)));
+						return new ChartSeries (series.Label, series.Values.Select (x => new ChartValue (x.Label, -x.Value)));
 					}
 					else
 					{
-						return new ChartSeries (this.chartSeries.Label, this.chartSeries.Values);
+						return new ChartSeries (series.Label, series.Values);
 					}
 				}
 			}
@@ -58,8 +68,18 @@ namespace Epsitec.Cresus.Graph
 
 		public GraphDataSource Source
 		{
-			get;
-			private set;
+			get
+			{
+				return this.parent == null ? this.source : this.parent.Source;
+			}
+		}
+
+		public GraphDataSeries Parent
+		{
+			get
+			{
+				return this.parent;
+			}
 		}
 
 		public IEnumerable<GraphDataGroup> Groups
@@ -78,12 +98,32 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public int Index
+		{
+			get;
+			set;
+		}
+
+		public string Title
+		{
+			get;
+			set;
+		}
+
+		public string Label
+		{
+			get;
+			set;
+		}
+
+
 
 		internal void DefineDataSource(GraphDataSource source)
 		{
-			System.Diagnostics.Debug.Assert (this.Source == null || source == null);
+			System.Diagnostics.Debug.Assert (this.parent == null);
+			System.Diagnostics.Debug.Assert (this.source == null || source == null);
 
-			this.Source = source;
+			this.source = source;
 		}
 
 		internal void AddDataGroup(GraphDataGroup group)
@@ -102,6 +142,8 @@ namespace Epsitec.Cresus.Graph
 
 
 		protected ChartSeries chartSeries;
-		private List<GraphDataGroup> dataGroups;
+		private readonly List<GraphDataGroup> dataGroups;
+		private readonly GraphDataSeries parent;
+		private GraphDataSource source;
 	}
 }

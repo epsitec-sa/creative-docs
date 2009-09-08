@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public GraphDataSeries this[int index]
+		{
+			get
+			{
+				return this.dataSeries[index];
+			}
+		}
+
 		
 		public void Add(GraphDataSeries series)
 		{

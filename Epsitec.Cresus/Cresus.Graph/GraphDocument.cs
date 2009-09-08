@@ -24,11 +24,15 @@ namespace Epsitec.Cresus.Graph
 	/// </summary>
 	public class GraphDocument : DependencyObject
 	{
-		public GraphDocument()
+		public GraphDocument(GraphApplication application)
 		{
+			this.application = application;
+			this.dataSources = new List<GraphDataSource> ();
+			this.outputSeries = new List<GraphDataSeries> ();
+			this.columnLabels = new List<string> ();
+
 			this.guid   = System.Guid.NewGuid ();
-			this.views  = new List<DocumentViewController> ();
-			this.chartSeries  = new List<ChartSeries> ();
+//-			this.views  = new List<DocumentViewController> ();
 			this.dataSet      = new GraphDataSet ();
 			this.undoRecorder = new Actions.Recorder ();
 			this.redoRecorder = new Actions.Recorder ();
@@ -38,22 +42,41 @@ namespace Epsitec.Cresus.Graph
 			this.undoRecorder.Changed += sender => this.UpdateUndoRedo ();
 			this.redoRecorder.Changed += sender => this.UpdateUndoRedo ();
 			
-			this.dataSet.Changed += x => this.Clear ();
-
-			this.CreateUI (GraphProgram.Application.MainWindowController.DocTabBook);
-			this.ProcessDocumentChanged ();
-
-			GraphProgram.Application.RegisterDocument (this);
-			GraphProgram.Application.SetActiveDocument (this);
-			GraphProgram.Application.SetupDataSet ();
+			
+			this.application.RegisterDocument (this);
+			this.application.SetActiveDocument (this);
 		}
 
 
-		public GraphDataSet DataSet
+		public IEnumerable<GraphDataSource> DataSources
 		{
 			get
 			{
-				return this.dataSet;
+				return this.dataSources;
+			}
+		}
+
+		public int DataSourceCount
+		{
+			get
+			{
+				return this.dataSources.Count;
+			}
+		}
+
+		public GraphDataSource ActiveDataSource
+		{
+			get
+			{
+				return this.activeDataSource;
+			}
+		}
+
+		public IEnumerable<GraphDataSeries> OutputSeries
+		{
+			get
+			{
+				return this.outputSeries;
 			}
 		}
 
@@ -61,7 +84,15 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.chartSeries;
+				return this.outputSeries.Select (x => x.ChartSeries);
+			}
+		}
+
+		public IList<string> ChartColumnLabels
+		{
+			get
+			{
+				return this.columnLabels.AsReadOnly ();
 			}
 		}
 
@@ -84,7 +115,7 @@ namespace Epsitec.Cresus.Graph
 				if (this.removeSeriesFromGraphAction != value)
 				{
 					this.removeSeriesFromGraphAction = value;
-					this.views.ForEach (view => view.RemoveSeriesFromGraphAction = value);
+//-					this.views.ForEach (view => view.RemoveSeriesFromGraphAction = value);
 				}
 			}
 		}
@@ -100,47 +131,35 @@ namespace Epsitec.Cresus.Graph
 				if (this.title != value)
 				{
 					this.title = value;
-					this.views.ForEach (view => view.TitleSetterAction (value));
+//-					this.views.ForEach (view => view.TitleSetterAction (value));
 				}
 			}
 		}
 
-		
-		public ChartSeries Find(int index)
+
+
+
+		public GraphDataSeries AddOutput(GraphDataSeries series)
 		{
-			if ((index < 0) ||
-				(index >= this.chartSeries.Count))
+			series.IsSelected = true;
+			
+			var output = new GraphDataSeries (series)
 			{
-				return null;
-			}
-			else
-			{
-				return this.chartSeries[index];
-			}
+				Label = series.Source.Name,
+				Title = series.ChartSeries.Label
+			};
+			
+			this.outputSeries.Add (output);
+
+			return output;
 		}
 
-		public void Add(ChartSeries series)
+		public void RemoveOutput(GraphDataSeries series)
 		{
-			this.chartSeries.Add (series);
-			this.ProcessDocumentChanged ();
-		}
+			System.Diagnostics.Debug.Assert (this.outputSeries.Contains (series));
 
-		public void Remove(ChartSeries series)
-		{
-			this.chartSeries.Remove (series);
-			this.ProcessDocumentChanged ();
-		}
-
-		public void Clear()
-		{
-			this.chartSeries.Clear ();
-			this.ProcessDocumentChanged ();
-		}
-
-		
-		public void MakeVisible()
-		{
-			this.views.ForEach (x => x.MakeVisible ());
+			series.Parent.IsSelected = false;
+			this.outputSeries.Remove (series);
 		}
 
 
@@ -156,7 +175,7 @@ namespace Epsitec.Cresus.Graph
 			xml.Add (new XAttribute ("path", this.path));
 			xml.Add (new XAttribute ("title", this.title ?? ""));
 			xml.Add (new XElement ("undoActions", new XText (this.undoRecorder.SaveToString ())));
-			xml.Add (new XElement ("views", this.views.Select (x => x.SaveSettings (new XElement ("view")))));
+//-			xml.Add (new XElement ("views", this.views.Select (x => x.SaveSettings (new XElement ("view")))));
 
 			if (this.cube != null)
 			{
@@ -203,7 +222,10 @@ namespace Epsitec.Cresus.Graph
 				this.undoRecorder.RestoreFromString (undoActionsXml.Value);
 				this.undoRecorder.ForEach (x => x.PlayBack ());
 			}
-			
+
+			this.ReloadDataSet ();
+			this.application.WorkspaceController.Refresh ();
+#if false
 			if ((viewsXml != null) &&
 				(viewsXml.Elements ("view").Any ()))
 			{
@@ -218,8 +240,7 @@ namespace Epsitec.Cresus.Graph
 					panel.RestoreSettings (node);
 				}
 			}
-
-			this.ProcessDocumentChanged ();
+#endif
 		}
 
 
@@ -242,7 +263,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void ExportImage()
 		{
-			this.views.First ().SaveMetafile (null);
+//-			this.views.First ().SaveMetafile (null);
 		}
 
 		internal void ExportImage(string path)
@@ -252,13 +273,13 @@ namespace Epsitec.Cresus.Graph
 			switch (ext)
 			{
 				case ".emf":
-					this.views.First ().SaveMetafile (path);
+//-					this.views.First ().SaveMetafile (path);
 					break;
 
 				case ".bmp":
 				case ".png":
 				case ".gif":
-					this.views.First ().SaveBitmap (path);
+//-					this.views.First ().SaveBitmap (path);
 					break;
 			}
 		}
@@ -266,6 +287,10 @@ namespace Epsitec.Cresus.Graph
 
 		internal void ReloadDataSet()
 		{
+			this.dataSources.Clear ();
+
+			var source = new GraphDataSource ();
+
 			if ((this.cube != null) &&
 				(!string.IsNullOrEmpty (this.cubeSliceDim1)) &&
 				(!string.IsNullOrEmpty (this.cubeSliceDim2)))
@@ -277,6 +302,26 @@ namespace Epsitec.Cresus.Graph
 				this.title = "Démo";
 				this.dataSet.LoadDataTable (GraphDataSet.LoadComptaDemoData ());
 			}
+			
+
+			int index = 0;
+			source.Name = "2009";
+			
+			this.dataSet.DataTable.RowSeries.ForEach (
+				series =>
+					source.Add (
+						new GraphDataSeries (series)
+						{
+							Index = index++,
+							Label = series.Label.Substring (0, series.Label.IndexOf (' ')+1).Trim (),
+							Title = series.Label.Substring (series.Label.IndexOf (' ')+1).Trim ()
+						}));
+			
+			this.dataSources.Add (source);
+
+			this.activeDataSource = source;
+			
+			this.application.WorkspaceController.Refresh ();
 		}
 		
 		internal void LoadCube(DataCube cube)
@@ -299,15 +344,8 @@ namespace Epsitec.Cresus.Graph
 			GraphProgram.Application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
 		}
 		
-		private void ProcessDocumentChanged()
-		{
-			foreach (var panel in this.views)
-			{
-				panel.Refresh ();
-			}
-		}
 
-
+#if false
 		private DocumentViewController CreateUI(TabBook book)
 		{
 			var page = new TabPage ()
@@ -343,13 +381,9 @@ namespace Epsitec.Cresus.Graph
 
 			return panel;
 		}
+#endif
 
-
-		private readonly List<DocumentViewController> views;
-		private readonly List<ChartSeries> chartSeries;
-		private readonly GraphDataSet dataSet;
-		private readonly Actions.Recorder undoRecorder;
-		private readonly Actions.Recorder redoRecorder;
+		#region Dependency Properties
 
 		public static void SetDocument(DependencyObject o, GraphDocument value)
 		{
@@ -363,6 +397,18 @@ namespace Epsitec.Cresus.Graph
 
 		public static DependencyProperty DocumentProperty = DependencyProperty.RegisterAttached ("Document", typeof (GraphDocument), typeof (GraphDocument));
 
+		#endregion
+
+		private readonly GraphApplication application;
+		private readonly List<GraphDataSource> dataSources;
+		private readonly List<GraphDataSeries> outputSeries;
+		private readonly List<string> columnLabels;
+
+		private readonly GraphDataSet dataSet;
+		private readonly Actions.Recorder undoRecorder;
+		private readonly Actions.Recorder redoRecorder;
+		
+
 		private string path;
 		private string title;
 		private System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
@@ -371,5 +417,8 @@ namespace Epsitec.Cresus.Graph
 		private DataCube cube;
 		private string cubeSliceDim1;
 		private string cubeSliceDim2;
+		private string cubeSliceSource;
+
+		private GraphDataSource activeDataSource;
 	}
 }
