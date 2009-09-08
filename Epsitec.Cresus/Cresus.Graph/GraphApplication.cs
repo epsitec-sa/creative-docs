@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		internal Controllers.SeriesPickerController SeriesPickerController
+		internal Controllers.GraphController SeriesPickerController
 		{
 			get
 			{
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Graph
 
 			this.SetEnable (ApplicationCommands.Save, false);
 			
-			this.seriesPickerController = new Controllers.SeriesPickerController (this.Window);
+			this.seriesPickerController = new Controllers.GraphController (this.Window);
 			this.seriesPickerController.SumSeriesAction = Actions.Factory.New (this.SumRows);
 			this.seriesPickerController.NegateSeriesAction = Actions.Factory.New (this.NegateRows);
 			this.seriesPickerController.AddSeriesToGraphAction = Actions.Factory.New (this.AddToChart);
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private Controllers.SeriesPickerController seriesPickerController;
+		private Controllers.GraphController seriesPickerController;
 
 		private void OnActiveDocumentChanged()
 		{

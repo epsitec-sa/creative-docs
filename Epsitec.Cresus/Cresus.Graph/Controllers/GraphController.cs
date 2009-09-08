@@ -17,9 +17,9 @@ using Epsitec.Cresus.Graph.Widgets;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class SeriesPickerController
+	internal sealed class GraphController
 	{
-		public SeriesPickerController(Window owner)
+		public GraphController(Window owner)
 		{
 			this.negatedSeriesLabels = new HashSet<string> ();
 

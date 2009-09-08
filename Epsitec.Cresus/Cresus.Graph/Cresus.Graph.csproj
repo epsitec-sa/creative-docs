@@ -59,7 +59,7 @@
     <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\DocumentViewController.cs" />
     <Compile Include="Controllers\SeriesDetectionController.cs" />
-    <Compile Include="Controllers\SeriesPickerController.cs" />
+    <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="GraphApplication.Paths.cs" />
     <Compile Include="GraphApplication.cs" />
     <Compile Include="GraphCommands.cs" />
@@ -141,6 +141,10 @@
     <Compile Include="Controllers\ItemLayoutMode.cs" />
     <Compile Include="Controllers\ItemListController.cs" />
     <Compile Include="Controllers\SeriesPickerControllerOriginal.cs" />
+    <Compile Include="GraphSyntheticDataSeries.cs" />
+    <Compile Include="GraphDataGroup.cs" />
+    <Compile Include="GraphDataSeries.cs" />
+    <Compile Include="GraphDataSource.cs" />
     <Compile Include="ImportConverters\AbstractImportConverter.cs" />
     <Compile Include="ImportConverters\ComptaResumePeriodiqueImportConverter.cs" />
     <Compile Include="ImportConverters\ImportConverter.cs" />
