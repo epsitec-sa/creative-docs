@@ -180,11 +180,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void RefreshGroups()
 		{
+			int index = this.groupItemsController.IndexOf (this.groupItemsController.ActiveItem);
+
 			this.groupItemsController.Clear ();
 
 			foreach (var group in this.application.Document.Groups)
 			{
 				this.groupItemsController.Add (this.CreateGroupView (group));
+			}
+
+			if ((index >= 0) &&
+				(index < this.groupItemsController.Count))
+			{
+				var view  = this.groupItemsController[index];
+				var group = this.application.Document.Groups[index];
+
+				this.groupItemsController.ActiveItem = this.groupItemsController[index];
+				
+				this.ShowGroupCalculator (view);
+				this.ShowGroupDetails (group);
 			}
 		}
 
@@ -206,6 +220,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
+		private MiniChartView CreateGroupDetailView(GraphDataGroup group, GraphDataSeries item)
+		{
+			var view = this.CreateView (item);
+
+			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
+
+			view.ShowIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+				delegate
+				{
+					group.Remove (item);
+					this.Refresh ();
+				});
+
+			return view;
+		}
+		
 		private MiniChartView CreateInputView(GraphDataSeries item)
 		{
 			var view = this.CreateView (item);
@@ -420,6 +450,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (view != null)
 			{
+				if ((!view.IsActualGeometryValid) &&
+					(view.Window != null))
+				{
+					view.Window.ForceLayout ();
+				}
+
 				var bounds = view.MapClientToRoot (view.Client.Bounds);
 				var arrow  = new VerticalInjectionArrow ()
 				{
@@ -462,8 +498,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var series2 = group.InputDataSeries;
 			var series = series1.Concat (series2);
 
-			series.ForEach (x => this.groupDetailItemsController.Add (this.CreateView (x)));
+			series.ForEach (x => this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, x)));
 		}
+
 
 		
 		private void OnChanged()

@@ -60,6 +60,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public T this[int index]
+		{
+			get
+			{
+				return this.items[index];
+			}
+		}
+
 		public int Count
 		{
 			get
