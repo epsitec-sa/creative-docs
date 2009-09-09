@@ -14,9 +14,22 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 	/// </summary>
 	public abstract class AbstractImportConverter
 	{
+		protected AbstractImportConverter(string name)
+		{
+			this.name = name;
+		}
+
 		public abstract string DataTitle
 		{
 			get;
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
 		}
 		
 		public abstract DataCube ToDataCube(IList<string> header, IEnumerable<IList<string>> lines);
@@ -25,5 +38,13 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 			return this.ToDataCube (header, lines.Cast<IList<string>> ());
 		}
+
+		public virtual GraphDataCategory GetCategory(ChartSeries series)
+		{
+			return GraphDataCategory.Generic;
+		}
+
+
+		private readonly string name;
 	}
 }

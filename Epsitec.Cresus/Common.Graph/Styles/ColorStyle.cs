@@ -26,6 +26,23 @@ namespace Epsitec.Common.Graph.Styles
 				return this.colors.Count;
 			}
 		}
+
+		public Color this[int index]
+		{
+			get
+			{
+				int n = this.colors.Count;
+				
+				if (n == 0)
+				{
+					return Color.Empty;
+				}
+				else
+				{
+					return this.colors[index % n];
+				}
+			}
+		}
 		
 		
 		public void Add(string name)

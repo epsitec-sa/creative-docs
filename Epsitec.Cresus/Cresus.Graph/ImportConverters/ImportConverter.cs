@@ -21,15 +21,69 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		/// <returns><c>true</c> if the data could be converted; otherwise, <c>false</c>.</returns>
 		public static bool ConvertToCube(IList<string> headColumns, IEnumerable<string[]> lines, out AbstractImportConverter converter, out DataCube cube)
 		{
-			converter = new ComptaResumePeriodiqueImportConverter ();
-			cube      = converter.ToDataCube (headColumns, lines);
-
-			if (cube == null)
+			foreach (var pair in ImportConverter.GetConverters ())
 			{
-				return false;
+				converter = pair.Value;
+				cube      = converter.ToDataCube (headColumns, lines);
+
+				if (cube != null)
+				{
+					return true;
+				}
 			}
 
-			return true;
+			converter = null;
+			cube      = null;
+
+			return false;
 		}
+
+		/// <summary>
+		/// Finds the converter with the specified name.
+		/// </summary>
+		/// <param name="name">The converter name.</param>
+		/// <returns>The converter instance or <c>null</c> if the name does not match any converter.</returns>
+		public static AbstractImportConverter FindConverter(string name)
+		{
+			var dict = ImportConverter.GetConverters ();
+			
+			AbstractImportConverter converter;
+
+			if (dict.TryGetValue (name, out converter))
+			{
+				return converter;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		
+		private static Dictionary<string, AbstractImportConverter> GetConverters()
+		{
+			if (ImportConverter.converters == null)
+			{
+				ImportConverter.converters = new Dictionary<string, AbstractImportConverter> ();
+
+				foreach (var pair in ImportConverter.GetConverterTypes (typeof (ImportConverter).Assembly))
+				{
+					var args = new object[] { pair.Key };
+					ImportConverter.converters[pair.Key] = System.Activator.CreateInstance (pair.Value, args) as AbstractImportConverter;
+				}
+			}
+
+			return ImportConverter.converters;
+		}
+
+		private static IEnumerable<KeyValuePair<string, System.Type>> GetConverterTypes(System.Reflection.Assembly assembly)
+		{
+			return from type in assembly.GetTypes ()
+				   from attr in type.GetCustomAttributes (typeof (ImporterAttribute), false).Cast<ImporterAttribute> ()
+				   select new KeyValuePair<string, System.Type> (attr.Name, type);
+		}
+
+
+		private static Dictionary<string, AbstractImportConverter> converters;
 	}
 }

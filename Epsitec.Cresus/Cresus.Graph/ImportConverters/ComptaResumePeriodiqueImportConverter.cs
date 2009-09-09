@@ -12,8 +12,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 	/// The <c>ComptaResumePeriodiqueImportConverter</c> class converts from the
 	/// Crésus Comptabilité report named "Résumé périodique".
 	/// </summary>
+	[Importer ("compta:résumé périodique")]
 	public class ComptaResumePeriodiqueImportConverter : AbstractImportConverter
 	{
+		public ComptaResumePeriodiqueImportConverter(string name)
+			: base (name)
+		{
+		}
+
 		public override DataCube ToDataCube(IList<string> header, IEnumerable<IList<string>> lines)
 		{
 			if (header.Count < 2)
@@ -70,6 +76,50 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			{
 				return "Compta – Résumé périodique";
 			}
+		}
+
+		public override GraphDataCategory GetCategory(ChartSeries series)
+		{
+			string cat = series.Label.Substring (0, 1);
+
+			switch (cat)
+			{
+				case "1":
+					return new GraphDataCategory (1)
+					{
+						Name = "Actif"
+					};
+
+				case "2":
+					return new GraphDataCategory (2)
+					{
+						Name = "Passif"
+					};
+
+				case "3":
+				case "7":
+					return new GraphDataCategory (3)
+					{
+						Name = "Produit"
+					};
+
+				case "4":
+				case "5":
+				case "6":
+				case "8":
+					return new GraphDataCategory (4)
+					{
+						Name = "Charge"
+					};
+
+				case "9":
+					return new GraphDataCategory (5)
+					{
+						Name = "Exploitation"
+					};
+			}
+			
+			return base.GetCategory (series);
 		}
 	}
 }

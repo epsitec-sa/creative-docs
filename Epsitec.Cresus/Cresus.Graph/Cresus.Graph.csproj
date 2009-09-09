@@ -141,6 +141,7 @@
     <Compile Include="Controllers\ItemLayoutMode.cs" />
     <Compile Include="Controllers\ItemListController.cs" />
     <Compile Include="Controllers\SeriesPickerControllerOriginal.cs" />
+    <Compile Include="GraphDataCategory.cs" />
     <Compile Include="Functions\FunctionFactory.cs" />
     <Compile Include="GraphSyntheticDataSeries.cs" />
     <Compile Include="GraphDataGroup.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="ImportConverters\AbstractImportConverter.cs" />
     <Compile Include="ImportConverters\ComptaResumePeriodiqueImportConverter.cs" />
     <Compile Include="ImportConverters\ImportConverter.cs" />
+    <Compile Include="ImportConverters\ImporterAttribute.cs" />
     <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
     <Compile Include="Widgets\CommandSelectionBar.cs" />
     <Compile Include="Widgets\VerticalInjectionArrow.cs" />
