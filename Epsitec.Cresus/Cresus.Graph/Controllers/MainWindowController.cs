@@ -43,6 +43,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public Widget ToolsFrame
+		{
+			get
+			{
+				return this.toolsFrame;
+			}
+		}
+
 
 		public void SetupUI()
 		{
@@ -60,11 +68,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					Name = "tools",
 					Dock = DockStyle.Top,
-					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 					Parent = this.window.Root,
-					Margins = new Margins (0, 0, 0, 4),
-					Padding = new Margins (2, 2, 2, 2),
 					PreferredHeight = 150,
+				};
+
+				var commandFrame = new FrameBox ()
+				{
+					Name = "commands",
+					Dock = DockStyle.Left,
+					PreferredWidth = 200,
+					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+					Margins = new Margins (2, 2, 2, 6),
+					Parent = this.toolsFrame,
 				};
 
 				this.workspaceFrame = new FrameBox ()
@@ -74,7 +89,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Parent = this.window.Root,
 				};
 
-				MainWindowController.CreateTools (this.toolsFrame);
+				MainWindowController.CreateTools (commandFrame);
 			}
 		}
 

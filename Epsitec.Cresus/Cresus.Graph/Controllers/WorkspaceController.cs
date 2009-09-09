@@ -78,10 +78,43 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 		
+		
 		public void SetupUI()
 		{
-			var container = this.application.MainWindowController.WorkspaceFrame;
+			this.SetupToolsFrameUI ();
+			this.SetupWorkspaceFrameUI ();
+		}
 
+		private void SetupToolsFrameUI()
+		{
+			var controller = this.application.MainWindowController;
+			var container  = controller.ToolsFrame;
+
+			var settingsFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				PreferredWidth = 400,
+				Name = "settings",
+				BackColor = Color.FromRgb (0.9, 1, 0.9),
+				Parent = container,
+			};
+
+			var filterFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 100,
+				Name = "filters",
+				Parent = settingsFrame,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+			};
+
+		}
+		
+		private void SetupWorkspaceFrameUI()
+		{
+			var controller = this.application.MainWindowController;
+			var container  = controller.WorkspaceFrame;
+			
 			var inputFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
@@ -131,22 +164,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Name = "book",
 			};
 
-			outputBook.PaintBackground +=
-				(sender, e) =>
-				{
-					var graphics = e.Graphics;
-					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
-					var part     = Rectangle.Deflate (outputBook.Client.Bounds, new Margins (0.0, 0.0, outputBook.TabHeight + 0.5, 0.0));
-
-					graphics.AddLine (part.TopLeft, part.TopRight);
-					graphics.RenderSolid (adorner.ColorBorder);
-
-					graphics.AddFilledRectangle (Rectangle.Deflate (part, new Margins (0, 0, 0.5, 0)));
-					graphics.RenderSolid (Color.FromBrightness (1));
-
-					e.Suppress = true;
-				};
-
 			var outputPage = new TabPage ()
 			{
 				Name = "page1",
@@ -166,6 +183,46 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = new Margins (1, 0, 1, 0)
 			};
 
+			WorkspaceController.PatchTabBookPaintBackground (outputBook);
+			WorkspaceController.PatchInputFramePaintBackground (inputFrame);
+			WorkspaceController.PatchBottomFrameLeftPaintBackground (bottomFrameLeft);
+			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
+
+			this.inputItemsController.SetupUI (inputFrame);
+			this.groupItemsController.SetupUI (groupFrame);
+			this.groupDetailItemsController.SetupUI (groupFrame);
+			this.outputItemsController.SetupUI (outputPage);
+
+			this.chartView = new ChartView ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = previewFrame,
+				Padding = new Margins (16, 24, 24, 16),
+			};
+		}
+
+
+		private static void PatchTabBookPaintBackground(TabBook outputBook)
+		{
+			outputBook.PaintBackground +=
+				(sender, e) =>
+				{
+					var graphics = e.Graphics;
+					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					var part     = Rectangle.Deflate (outputBook.Client.Bounds, new Margins (0.0, 0.0, outputBook.TabHeight + 0.5, 0.0));
+
+					graphics.AddLine (part.TopLeft, part.TopRight);
+					graphics.RenderSolid (adorner.ColorBorder);
+
+					graphics.AddFilledRectangle (Rectangle.Deflate (part, new Margins (0, 0, 0.5, 0)));
+					graphics.RenderSolid (Color.FromBrightness (1));
+
+					e.Suppress = true;
+				};
+		}
+
+		private static void PatchInputFramePaintBackground(FrameBox inputFrame)
+		{
 			inputFrame.PaintBackground +=
 				(sender, e) =>
 				{
@@ -184,7 +241,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					e.Suppress = true;
 				};
+		}
 
+		private static void PatchBottomFrameLeftPaintBackground(FrameBox bottomFrameLeft)
+		{
 			bottomFrameLeft.PaintBackground +=
 				(sender, e) =>
 				{
@@ -203,7 +263,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					e.Suppress = true;
 				};
+		}
 
+		private static void PatchPreviewFramePaintBackground(TabBook outputBook, FrameBox previewFrame)
+		{
 			previewFrame.PaintBackground +=
 				(sender, e) =>
 				{
@@ -224,18 +287,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					e.Suppress = true;
 				};
-
-			this.inputItemsController.SetupUI (inputFrame);
-			this.groupItemsController.SetupUI (groupFrame);
-			this.groupDetailItemsController.SetupUI (groupFrame);
-			this.outputItemsController.SetupUI (outputPage);
-
-			this.chartView = new ChartView ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = previewFrame,
-				Padding = new Margins (16, 24, 24, 16),
-			};
 		}
 
 		
@@ -256,6 +307,28 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshOutputs ();
 				this.RefreshGroups ();
 				this.RefreshPreview ();
+
+				var filters = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
+				filters.Children.Clear ();
+				
+				foreach (var category in this.Document.ActiveDataSource.Categories)
+				{
+					var frame = new FrameBox ()
+					{
+						Dock = DockStyle.Stacked,
+						PreferredHeight = 20,
+						BackColor = this.labelColorStyle[category.Index],
+						Parent = filters,
+						Padding = new Margins (4, 4, 1, 1),
+					};
+					
+					var button = new CheckButton ()
+					{
+						Text = category.Name,
+						Dock = DockStyle.Fill,
+						Parent = frame,
+					};
+				}
 			}
 		}
 

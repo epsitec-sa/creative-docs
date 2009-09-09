@@ -37,6 +37,13 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public IList<GraphDataCategory> Categories
+		{
+			get
+			{
+				return this.categories.AsReadOnly ();
+			}
+		}
 		
 		public void Add(GraphDataSeries series)
 		{
