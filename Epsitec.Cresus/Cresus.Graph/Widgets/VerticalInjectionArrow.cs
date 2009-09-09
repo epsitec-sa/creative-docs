@@ -37,25 +37,39 @@ namespace Epsitec.Cresus.Graph.Widgets
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			var bounds = this.Client.Bounds;
-			var center = bounds.Center;
+			var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+			var bounds  = Rectangle.Deflate (this.Client.Bounds, new Margins (1, 1, 1, 0));
+			var center  = bounds.Center;
 			var w = this.ArrowWidth;
 			var d = w / 2;
 
 			using (Path path = new Path ())
 			{
-				path.MoveTo (center.X, bounds.Top);
+				path.MoveTo (center.X - d, bounds.Bottom);
+				path.LineTo (center.X - d, bounds.Top - d);
+				path.LineTo (center.X - w, bounds.Top - d);
+				path.LineTo (center.X, bounds.Top);
 				path.LineTo (center.X + w, bounds.Top - d);
 				path.LineTo (center.X + d, bounds.Top - d);
 				path.LineTo (center.X + d, bounds.Bottom);
-				path.LineTo (center.X - d, bounds.Bottom);
-				path.LineTo (center.X - d, bounds.Top - d);
-				path.LineTo (center.X - w, bounds.Top - d);
 				path.Close ();
 
 				graphics.Color = this.BackColor;
 				graphics.PaintSurface (path);
-				graphics.RenderSolid ();
+			}
+			
+			using (Path path = new Path ())
+			{
+				path.MoveTo (center.X - d - 0.5, bounds.Bottom);
+				path.LineTo (center.X - d - 0.5, bounds.Top - d - 0.5);
+				path.LineTo (center.X - w,       bounds.Top - d - 0.5);
+				path.LineTo (center.X,           bounds.Top + 0.5);
+				path.LineTo (center.X + w,       bounds.Top - d - 0.5);
+				path.LineTo (center.X + d + 0.5, bounds.Top - d - 0.5);
+				path.LineTo (center.X + d + 0.5, bounds.Bottom);
+
+				graphics.Color = adorner.ColorBorder;
+				graphics.PaintOutline (path);
 			}
 		}
 

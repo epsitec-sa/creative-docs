@@ -51,10 +51,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.labelColorStyle = new ColorStyle ("labels")
 			{
 				Color.FromRgb (1.0, 1.0, 1.0),
-				Color.FromRgb (0.5, 1.0, 0.5),
-				Color.FromRgb (1.0, 0.5, 0.5),
-				Color.FromRgb (0.5, 0.5, 1.0),
-				Color.FromRgb (1.0, 0.5, 1.0),
+				Color.FromRgb (0.8, 1.0, 0.8),
+				Color.FromRgb (1.0, 0.8, 0.8),
+				Color.FromRgb (0.8, 0.8, 1.0),
+				Color.FromRgb (1.0, 0.8, 1.0),
 			};
 			
 			this.graphType = Res.Commands.GraphType.UseLineChart;
@@ -87,7 +87,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 				Parent = container,
 				Name = "inputs",
-				BackColor = Color.FromRgb (0.9, 1, 0.9),
 				PreferredHeight = 320
 			};
 
@@ -103,7 +102,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Fill,
 				Parent = bottomFrame,
-				Name = "left"
+				Name = "left",
+				Padding = new Margins (0, 0, 2, 0),
 			};
 
 			var groupFrame = new FrameBox ()
@@ -111,8 +111,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 				Parent = bottomFrameLeft,
 				Name = "groups",
-				BackColor = Color.FromRgb (0.9, 0.9, 1),
-				PreferredHeight = 160
+				BackColor = Color.FromBrightness (1.0),
+				PreferredHeight = 161,
+				Padding = new Margins (0, 0, 1, 0),
 			};
 
 			var outputFrame = new FrameBox ()
@@ -120,7 +121,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Bottom,
 				Parent = bottomFrameLeft,
 				Name = "outputs",
-				BackColor = Color.FromRgb (1, 0.9, 0.8),
 				PreferredHeight = 104
 			};
 
@@ -134,9 +134,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			outputBook.PaintBackground +=
 				(sender, e) =>
 				{
-					var               graphics = e.Graphics;
-					IAdorner          adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
-					Rectangle         part     = Rectangle.Deflate (outputBook.Client.Bounds, new Margins (0.0, 0.0, outputBook.TabHeight + 0.5, 0.0));
+					var graphics = e.Graphics;
+					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					var part     = Rectangle.Deflate (outputBook.Client.Bounds, new Margins (0.0, 0.0, outputBook.TabHeight + 0.5, 0.0));
 
 					graphics.AddLine (part.TopLeft, part.TopRight);
 					graphics.RenderSolid (adorner.ColorBorder);
@@ -166,14 +166,53 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = new Margins (1, 0, 1, 0)
 			};
 
+			inputFrame.PaintBackground +=
+				(sender, e) =>
+				{
+					var bounds   = inputFrame.Client.Bounds;
+					var graphics = e.Graphics;
+					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
+					double y2 = bounds.Top - 0.5;
+					double x2 = bounds.Right - 0.5;
+
+					graphics.AddFilledRectangle (bounds);
+					graphics.RenderSolid (Color.FromBrightness (1.0));
+
+					graphics.AddLine (0.0, y2, x2, y2);
+					graphics.RenderSolid (adorner.ColorBorder);
+
+					e.Suppress = true;
+				};
+
+			bottomFrameLeft.PaintBackground +=
+				(sender, e) =>
+				{
+					var bounds   = bottomFrameLeft.Client.Bounds;
+					var graphics = e.Graphics;
+					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
+					double y2 = bounds.Top - 0.5;
+					double x2 = bounds.Right - 0.5;
+
+					graphics.AddFilledRectangle (bounds);
+					graphics.RenderSolid (Color.FromBrightness (1.0));
+
+					graphics.AddLine (0.0, y2, x2, y2);
+					graphics.RenderSolid (adorner.ColorBorder);
+
+					e.Suppress = true;
+				};
+
 			previewFrame.PaintBackground +=
 				(sender, e) =>
 				{
-					var bounds = previewFrame.Client.Bounds;
-					var               graphics = e.Graphics;
-					IAdorner          adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					var bounds   = previewFrame.Client.Bounds;
+					var graphics = e.Graphics;
+					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
 					double y1 = outputBook.Client.Bounds.Top - outputBook.TabHeight - 0.5;
-					double y2 = bounds.Top - 0.5	;
+					double y2 = bounds.Top - 0.5;
 					double x2 = bounds.Right - 0.5;
 
 					graphics.AddFilledRectangle (bounds);
@@ -580,12 +619,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var arrow  = new VerticalInjectionArrow ()
 				{
 					Anchor = AnchorStyles.BottomLeft,
-					Margins = new Margins (bounds.Left, 0, 0, bounds.Top),
+					Margins = new Margins (bounds.Left, 0, 0, bounds.Top + 2),
 					Parent = view.RootParent,
 					PreferredWidth = view.PreferredWidth,
 					ArrowWidth = 40,
 					Padding = new Margins (0, 0, 24, 4),
-					BackColor = view.Parent.BackColor,
+					BackColor = Color.FromBrightness (1),
 					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
 				};
 
