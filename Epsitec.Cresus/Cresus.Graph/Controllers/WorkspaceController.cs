@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Cresus.Graph.Widgets;
+using Epsitec.Common.Graph.Styles;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -42,6 +43,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				ItemLayoutMode = ItemLayoutMode.Horizontal,
 				Anchor         = AnchorStyles.BottomLeft,
+			};
+
+
+			this.labelColorStyle = new ColorStyle ("labels")
+			{
+				Color.FromRgb (1.0, 1.0, 1.0),
+				Color.FromRgb (0.5, 1.0, 0.5),
+				Color.FromRgb (1.0, 0.5, 0.5),
+				Color.FromRgb (0.5, 0.5, 1.0),
+				Color.FromRgb (1.0, 0.5, 1.0),
 			};
 		}
 		
@@ -256,9 +267,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private MiniChartView CreateInputView(GraphDataSeries item)
 		{
 			var view = this.CreateView (item);
+			var cat  = item.Source.GetCategory (item);
 
 			view.AutoCheckButton = true;
 			view.ActiveState = item.IsSelected ? ActiveState.Yes : ActiveState.No;
+			view.LabelColor = this.labelColorStyle[cat.Index];
 
 			view.ActiveStateChanged +=
 				delegate
@@ -290,7 +303,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private MiniChartView CreateOutputView(GraphDataSeries item)
 		{
-			var view = this.CreateInputView (item);
+			var view = this.CreateView (item);
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
 			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
@@ -562,5 +575,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
 
 		private VerticalInjectionArrow	groupCalculatorArrow;
+		private ColorStyle labelColorStyle;
 	}
 }

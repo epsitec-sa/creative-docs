@@ -32,6 +32,11 @@ namespace Epsitec.Cresus.Graph
 			this.syntheticSeries = new List<GraphSyntheticDataSeries> ();
 			this.groups = new List<GraphDataGroup> ();
 			this.columnLabels = new List<string> ();
+			
+			this.groupSource = new GraphDataSource (null)
+			{
+				Name = "Groups"
+			};
 
 			this.guid   = System.Guid.NewGuid ();
 //-			this.views  = new List<DocumentViewController> ();
@@ -195,7 +200,10 @@ namespace Epsitec.Cresus.Graph
 
 		public GraphDataGroup AddGroup(IEnumerable<GraphDataSeries> series)
 		{
-			var group = new GraphDataGroup ();
+			var group = new GraphDataGroup ()
+			{
+				Source = this.groupSource
+			};
 
 			series.ForEach (x => group.Add (x));
 
@@ -493,5 +501,6 @@ namespace Epsitec.Cresus.Graph
 		private string converterName;
 
 		private GraphDataSource activeDataSource;
+		private GraphDataSource groupSource;
 	}
 }

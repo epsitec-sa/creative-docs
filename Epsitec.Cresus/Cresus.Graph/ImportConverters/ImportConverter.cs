@@ -49,7 +49,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			
 			AbstractImportConverter converter;
 
-			if (dict.TryGetValue (name, out converter))
+			if ((!string.IsNullOrEmpty (name)) &&
+				(dict.TryGetValue (name, out converter)))
 			{
 				return converter;
 			}

@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.ImportConverters
 {
+	/// <summary>
+	/// The <c>ImporterAttribute</c> class is used to decorate importer classes
+	/// derived from <see cref="AbstractImportConverter"/>.
+	/// </summary>
 	[System.AttributeUsage (System.AttributeTargets.Class, AllowMultiple=true)]
 	public class ImporterAttribute : System.Attribute
 	{

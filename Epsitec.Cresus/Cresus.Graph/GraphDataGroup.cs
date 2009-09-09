@@ -46,7 +46,13 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		
+		public GraphDataSource Source
+		{
+			get;
+			set;
+		}
+
+
 		public void Add(GraphDataSeries series)
 		{
 			if (series != null)
@@ -98,8 +104,10 @@ namespace Epsitec.Cresus.Graph
 			{
 				series = new GraphSyntheticDataSeries (this, functionName)
 				{
-					Label = Functions.FunctionFactory.GetFunctionCaption (functionName)
+					Label = Functions.FunctionFactory.GetFunctionCaption (functionName),
 				};
+
+				series.DefineDataSource (this.Source);
 				
 				this.syntheticDataSeries.Add (series);
 			}

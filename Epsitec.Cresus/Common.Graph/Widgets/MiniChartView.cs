@@ -13,6 +13,7 @@ namespace Epsitec.Common.Graph.Widgets
 	{
 		public MiniChartView()
 		{
+			this.LabelColor = Color.FromRgb (250/255.0, 255/255.0, 124/255.0); // Color.FromRgb (255/255.0, 254/255.0, 173/255.0)
 		}
 
 
@@ -29,6 +30,12 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 		public bool AutoCheckButton
+		{
+			get;
+			set;
+		}
+
+		public Color LabelColor
 		{
 			get;
 			set;
@@ -134,7 +141,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (!string.IsNullOrEmpty (this.Label))
 			{
-				MiniChartView.PaintNote (graphics, rectangle, this.Label);
+				MiniChartView.PaintNote (graphics, rectangle, this.Label, this.LabelColor);
 			}
 
 			if (this.ActiveState != ActiveState.No)
@@ -278,7 +285,7 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.RenderSolid (Color.FromBrightness (0.8));
 		}
 
-		private static void PaintNote(Graphics graphics, Rectangle rectangle, string text)
+		private static void PaintNote(Graphics graphics, Rectangle rectangle, string text, Color labelColor)
 		{
 			var label = new Rectangle (6, rectangle.Top - 18 - 6, 48, 18);
 
@@ -288,8 +295,11 @@ namespace Epsitec.Common.Graph.Widgets
 			MiniChartView.PaintShadow (graphics, label);
 			graphics.AddFilledRectangle (label);
 
+			Color color1 = labelColor;
+			Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+			
 			graphics.GradientRenderer.Fill = GradientFill.Y;
-			graphics.GradientRenderer.SetColors (Color.FromRgb (250/255.0, 255/255.0, 124/255.0), Color.FromRgb (255/255.0, 254/255.0, 173/255.0));
+			graphics.GradientRenderer.SetColors (color1, color2);
 			graphics.GradientRenderer.SetParameters (0, 100);
 			graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, label.Height / 100.0).Translate (label.BottomLeft);
 			graphics.RenderGradient ();
