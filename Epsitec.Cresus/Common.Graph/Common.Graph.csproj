@@ -118,7 +118,6 @@
     </None>
     <EmbeddedResource Include="Images\Glyph.Group.icon" />
     <EmbeddedResource Include="Images\Glyph.DropItem.icon" />
-    <EmbeddedResource Include="Images\Glyph.PickItem.icon" />
     <EmbeddedResource Include="Images\PaperClip.icon" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
