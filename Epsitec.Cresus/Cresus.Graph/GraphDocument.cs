@@ -231,7 +231,8 @@ namespace Epsitec.Cresus.Graph
 			{
 				xml.Add (new XElement ("cube",
 					new XAttribute ("sliceDimA", this.cubeSliceDim1 ?? ""),
-					new XAttribute ("sliceDimB", this.cubeSliceDim2 ?? "")));
+					new XAttribute ("sliceDimB", this.cubeSliceDim2 ?? ""),
+					new XAttribute ("converter", this.converterName ?? "")));
 
 				System.IO.Directory.CreateDirectory (GraphApplication.Paths.AutoSavePath);
 				
@@ -259,6 +260,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				this.cubeSliceDim1 = (string) cubeXml.Attribute ("sliceDimA");
 				this.cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
+				this.converterName = (string) cubeXml.Attribute ("converter");
 
 				using (var stream = new System.IO.StreamReader (this.path, System.Text.Encoding.UTF8))
 				{
@@ -339,7 +341,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.dataSources.Clear ();
 
-			var source = new GraphDataSource ();
+			var source = new GraphDataSource (this.converterName);
 
 			if ((this.cube != null) &&
 				(!string.IsNullOrEmpty (this.cubeSliceDim1)) &&
@@ -366,12 +368,20 @@ namespace Epsitec.Cresus.Graph
 							Label = series.Label.Substring (0, series.Label.IndexOf (' ')+1).Trim (),
 							Title = series.Label.Substring (series.Label.IndexOf (' ')+1).Trim ()
 						}));
+
+			source.UpdateCategories ();
 			
 			this.dataSources.Add (source);
 
 			this.activeDataSource = source;
 			
 			this.application.WorkspaceController.Refresh ();
+		}
+
+
+		internal void DefineImportConverter(string importerName)
+		{
+			this.converterName = importerName;
 		}
 		
 		internal void LoadCube(DataCube cube)
@@ -480,6 +490,7 @@ namespace Epsitec.Cresus.Graph
 		private string cubeSliceDim1;
 		private string cubeSliceDim2;
 		private string cubeSliceSource;
+		private string converterName;
 
 		private GraphDataSource activeDataSource;
 	}

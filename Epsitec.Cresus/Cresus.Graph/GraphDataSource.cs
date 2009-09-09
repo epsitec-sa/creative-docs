@@ -8,11 +8,12 @@ namespace Epsitec.Cresus.Graph
 {
 	public class GraphDataSource : IEnumerable<GraphDataSeries>
 	{
-		public GraphDataSource()
+		public GraphDataSource(string importConverter)
 		{
+			this.converterName = importConverter;
 			this.dataSeries = new List<GraphDataSeries> ();
+			this.categories = new List<GraphDataCategory> ();
 		}
-
 
 		public string Name
 		{
@@ -67,6 +68,32 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		public void UpdateCategories()
+		{
+			var cat = new HashSet<GraphDataCategory> ();
+
+			this.dataSeries.ForEach (x => cat.Add (this.GetCategory (x)));
+
+			this.categories.Clear ();
+			this.categories.AddRange (cat.OrderBy (x => x));
+		}
+
+		
+		public GraphDataCategory GetCategory(GraphDataSeries series)
+		{
+			var converter = ImportConverters.ImportConverter.FindConverter (this.converterName);
+
+			if (converter == null)
+			{
+				return GraphDataCategory.Generic;
+			}
+			else
+			{
+				return converter.GetCategory (series.ChartSeries);
+			}
+		}
+
+
 		#region IEnumerable<GraphDataSeries> Members
 
 		public IEnumerator<GraphDataSeries> GetEnumerator()
@@ -86,6 +113,8 @@ namespace Epsitec.Cresus.Graph
 		#endregion
 
 		
-		private List<GraphDataSeries> dataSeries;
+		private readonly string converterName;
+		private readonly List<GraphDataSeries> dataSeries;
+		private readonly List<GraphDataCategory> categories;
 	}
 }

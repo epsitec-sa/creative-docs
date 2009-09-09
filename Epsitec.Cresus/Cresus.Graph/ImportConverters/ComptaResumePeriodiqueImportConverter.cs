@@ -85,38 +85,23 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			switch (cat)
 			{
 				case "1":
-					return new GraphDataCategory (1)
-					{
-						Name = "Actif"
-					};
+					return new GraphDataCategory (1, "Actif");
 
 				case "2":
-					return new GraphDataCategory (2)
-					{
-						Name = "Passif"
-					};
+					return new GraphDataCategory (2, "Passif");
 
 				case "3":
 				case "7":
-					return new GraphDataCategory (3)
-					{
-						Name = "Produit"
-					};
+					return new GraphDataCategory (3, "Produit");
 
 				case "4":
 				case "5":
 				case "6":
 				case "8":
-					return new GraphDataCategory (4)
-					{
-						Name = "Charge"
-					};
+					return new GraphDataCategory (4, "Charge");
 
 				case "9":
-					return new GraphDataCategory (5)
-					{
-						Name = "Exploitation"
-					};
+					return new GraphDataCategory (5, "Exploitation");
 			}
 			
 			return base.GetCategory (series);

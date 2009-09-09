@@ -331,6 +331,7 @@ namespace Epsitec.Cresus.Graph
 					var document       = this.Document;
 					var dimensionNames = cube.NaturalTableDimensionNames;
 
+					document.DefineImportConverter (converter.Name);
 					document.LoadCube (cube);
 					document.SelectCubeSlice (dimensionNames[0], dimensionNames[1]);
 					
