@@ -716,19 +716,9 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Dessine le groupe d'onglets.
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState       state = this.PaintState;
-
-			Drawing.Rectangle part = new Drawing.Rectangle();
-
-			part = rect;
-			part.Bottom = part.Top-this.TabHeight;
-			//adorner.PaintTabBand(graphics, part, state, Direction.Down);
-			
-			part = rect;
-			part.Top -= this.TabHeight;
+			IAdorner          adorner = Widgets.Adorners.Factory.Active;
+			WidgetPaintState  state   = this.PaintState;
+			Drawing.Rectangle part    = Drawing.Rectangle.Deflate (this.Client.Bounds, new Drawing.Margins (0, 0, this.TabHeight, 0));
 			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
 		}
 		

@@ -15,6 +15,7 @@ using System.Linq;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Cresus.Graph.Widgets;
 using Epsitec.Common.Graph.Styles;
+using Epsitec.Common.Graph;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -23,7 +24,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public WorkspaceController(GraphApplication application)
 		{
 			this.application = application;
-
+			this.colorStyle = new ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" };
+			
 			this.inputItemsController = new ItemListController<MiniChartView> ()
 			{
 				ItemLayoutMode = ItemLayoutMode.Flow
@@ -54,8 +56,27 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Color.FromRgb (0.5, 0.5, 1.0),
 				Color.FromRgb (1.0, 0.5, 1.0),
 			};
+			
+			this.graphType = Res.Commands.GraphType.UseLineChart;
 		}
+
 		
+		public Command GraphType
+		{
+			get
+			{
+				return this.graphType;
+			}
+			set
+			{
+				if (this.graphType != value)
+				{
+					this.graphType = value;
+//-					this.commandBar.SelectedItem = this.graphType;
+					this.RefreshPreview ();
+				}
+			}
+		}
 		
 		public void SetupUI()
 		{
@@ -100,8 +121,40 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = bottomFrameLeft,
 				Name = "outputs",
 				BackColor = Color.FromRgb (1, 0.9, 0.8),
-				PreferredHeight = 100
+				PreferredHeight = 104
 			};
+
+			var outputBook = new TabBook ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = outputFrame,
+				Name = "book",
+			};
+
+			outputBook.PaintBackground +=
+				(sender, e) =>
+				{
+					var               graphics = e.Graphics;
+					IAdorner          adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					Rectangle         part     = Rectangle.Deflate (outputBook.Client.Bounds, new Margins (0.0, 0.0, outputBook.TabHeight + 0.5, 0.0));
+
+					graphics.AddLine (part.TopLeft, part.TopRight);
+					graphics.RenderSolid (adorner.ColorBorder);
+
+					graphics.AddFilledRectangle (Rectangle.Deflate (part, new Margins (0, 0, 0.5, 0)));
+					graphics.RenderSolid (Color.FromBrightness (1));
+
+					e.Suppress = true;
+				};
+
+			var outputPage = new TabPage ()
+			{
+				Name = "page1",
+				TabTitle = "Graphique",
+			};
+
+			outputBook.Items.Add (outputPage);
+			outputBook.ActivePage = outputPage;
 
 			var previewFrame = new FrameBox ()
 			{
@@ -109,13 +162,41 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = bottomFrame,
 				Name = "preview",
 				BackColor = Color.FromRgb (1, 0.85, 0.8),
-				PreferredWidth = 260
+				PreferredWidth = 260,
+				Padding = new Margins (1, 0, 1, 0)
 			};
+
+			previewFrame.PaintBackground +=
+				(sender, e) =>
+				{
+					var bounds = previewFrame.Client.Bounds;
+					var               graphics = e.Graphics;
+					IAdorner          adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					double y1 = outputBook.Client.Bounds.Top - outputBook.TabHeight - 0.5;
+					double y2 = bounds.Top - 0.5	;
+					double x2 = bounds.Right - 0.5;
+
+					graphics.AddFilledRectangle (bounds);
+					graphics.RenderSolid (Color.FromBrightness (1.0));
+
+					graphics.AddLine (0.5, y1, 0.5, y2);
+					graphics.AddLine (0.5, y2, x2, y2);
+					graphics.RenderSolid (adorner.ColorBorder);
+
+					e.Suppress = true;
+				};
 
 			this.inputItemsController.SetupUI (inputFrame);
 			this.groupItemsController.SetupUI (groupFrame);
 			this.groupDetailItemsController.SetupUI (groupFrame);
-			this.outputItemsController.SetupUI (outputFrame);
+			this.outputItemsController.SetupUI (outputPage);
+
+			this.chartView = new ChartView ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = previewFrame,
+				Padding = new Margins (16, 24, 24, 16),
+			};
 		}
 
 		
@@ -135,6 +216,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshInputs ();
 				this.RefreshOutputs ();
 				this.RefreshGroups ();
+				this.RefreshPreview ();
 			}
 		}
 
@@ -280,6 +362,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					{
 						this.Document.AddOutput (item);
 						this.RefreshOutputs ();
+						this.RefreshPreview ();
 					}
 					else
 					{
@@ -450,7 +533,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var lineChartRenderer = new LineChartRenderer ();
 
-			lineChartRenderer.AddStyle (new Epsitec.Common.Graph.Styles.ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" });
+			lineChartRenderer.AddStyle (this.colorStyle);
 			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
 			{
 				VisibleGrid = false,
@@ -562,6 +645,108 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
+		private void RefreshPreview()
+		{
+			if (this.Document != null)
+			{
+				var renderer = this.CreateRenderer ();
+
+				if (renderer == null)
+				{
+					this.chartView.Renderer   = null;
+//-					this.captionView.Captions = null;
+				}
+				else
+				{
+					List<ChartSeries> series = new List<ChartSeries> (this.GetDocumentChartSeries ());
+
+					bool stackValues = false;
+
+					renderer.Clear ();
+					renderer.ChartSeriesRenderingMode = stackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
+					renderer.DefineValueLabels (this.Document.ChartColumnLabels);
+					renderer.CollectRange (series);
+					renderer.UpdateCaptions (series);
+					renderer.AlwaysIncludeZero = true;
+
+//-					Size size = renderer.Captions.GetCaptionLayoutSize (Size.MaxValue) + this.captionView.Padding.Size;
+
+					var layoutMode = ContainerLayoutMode.None;
+
+					switch (layoutMode)
+					{
+						case ContainerLayoutMode.HorizontalFlow:
+//-							this.captionView.PreferredHeight = size.Height;
+							break;
+
+						case ContainerLayoutMode.VerticalFlow:
+//-							this.captionView.PreferredWidth = size.Width;
+							break;
+					}
+
+					this.chartView.Renderer = renderer;
+//-					this.captionView.Captions = renderer.Captions;
+				}
+
+				this.chartView.Invalidate ();
+//-				this.captionView.Invalidate ();
+			}
+		}
+
+		private IEnumerable<ChartSeries> GetDocumentChartSeries()
+		{
+			bool accumulateValues = false;
+			foreach (var series in this.Document.OutputSeries.Select (x => x.ChartSeries))
+			{
+				yield return new ChartSeries (series.Label, accumulateValues ? WorkspaceController.Accumulate (series.Values) : series.Values);
+			}
+		}
+
+		private static IEnumerable<ChartValue> Accumulate(IEnumerable<ChartValue> collection)
+		{
+			double accumulation = 0.0;
+
+			foreach (var value in collection)
+			{
+				accumulation += value.Value;
+				yield return new ChartValue (value.Label, accumulation);
+			}
+		}
+
+		private AbstractRenderer CreateRenderer()
+		{
+			AbstractRenderer renderer = null;
+			bool stackValues = false;
+
+			if (this.GraphType == Res.Commands.GraphType.UseLineChart)
+			{
+				renderer = new LineChartRenderer ()
+				{
+					SurfaceAlpha = stackValues ? 1.0 : 0.0
+				};
+			}
+			else if (this.GraphType == Res.Commands.GraphType.UseBarChartVertical)
+			{
+				renderer = new BarChartRenderer ();
+			}
+
+			if (renderer != null)
+			{
+				var adorner = new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
+				{
+					GridColor = Color.FromBrightness (0.8),
+					VisibleGrid = true,
+					VisibleLabels = false,
+					VisibleTicks = true,
+				};
+
+				renderer.AddStyle (this.colorStyle);
+				renderer.AddAdorner (adorner);
+			}
+
+			return renderer;
+		}
+
 		
 		public System.Action<IEnumerable<int>>	SumSeriesAction;
 		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
@@ -573,8 +758,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		outputItemsController;
 		private readonly ItemListController<MiniChartView>		groupItemsController;
 		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
+		
+		private ChartView				chartView;
 
 		private VerticalInjectionArrow	groupCalculatorArrow;
 		private ColorStyle labelColorStyle;
+		private Command							graphType;
+		private ColorStyle colorStyle;
 	}
 }
