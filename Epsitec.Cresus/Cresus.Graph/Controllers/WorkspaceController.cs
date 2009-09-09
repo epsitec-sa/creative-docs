@@ -315,12 +315,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (index < 0)
 			{
 				group = this.CreateGroup (items);
+				index = this.Document.Groups.IndexOf (group);
 			}
 			else
 			{
 				group = this.UpdateGroup (this.Document.Groups[index], items);
 			}
 
+			this.groupItemsController.ActiveItem = this.groupItemsController[index];
 			this.UpdateGroupName (group);
 		}
 
