@@ -90,6 +90,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.Layout ();
 		}
 
+		public void UpdateLayout()
+		{
+			this.Layout ();
+		}
 		
 		public void Add(T item)
 		{

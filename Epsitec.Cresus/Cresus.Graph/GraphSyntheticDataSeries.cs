@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,13 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				var func   = Functions.FunctionFactory.GetFunction (this.functionName);
-				var series = this.group.SynthesizeChartSeries (this.Label, func);
+				if (this.cache == null)
+				{
+					var func   = Functions.FunctionFactory.GetFunction (this.functionName);
+					this.cache = this.group.SynthesizeChartSeries (this.Label, func);
+				}
 
-				return series;
+				return this.cache;
 			}
 		}
 
@@ -51,7 +55,18 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public void Invalidate()
+		{
+			if (this.cache != null)
+			{
+				this.cache = null;
+				this.Groups.ForEach (x => x.Invalidate ());
+			}
+		}
+		
+			
 		private readonly GraphDataGroup group;
 		private readonly string functionName;
+		private ChartSeries cache;
 	}
 }

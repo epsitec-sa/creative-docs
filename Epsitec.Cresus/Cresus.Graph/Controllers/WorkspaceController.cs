@@ -472,6 +472,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (view != null)
 			{
+				this.groupItemsController.UpdateLayout ();
+
 				if ((!view.IsActualGeometryValid) &&
 					(view.Window != null))
 				{

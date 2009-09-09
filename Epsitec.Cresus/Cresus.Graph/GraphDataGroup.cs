@@ -53,6 +53,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				series.AddDataGroup (this);
 				this.dataSeries.Add (series);
+				this.Invalidate ();
 			}
 		}
 
@@ -62,6 +63,7 @@ namespace Epsitec.Cresus.Graph
 				(this.dataSeries.Remove (series)))
 			{
 				series.RemoveDataGroup (this);
+				this.Invalidate ();
 				return true;
 			}
 			else
@@ -74,6 +76,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.dataSeries.ForEach (x => x.RemoveDataGroup (this));
 			this.dataSeries.Clear ();
+			this.Invalidate ();
 		}
 
 		public bool Contains(GraphDataSeries series)
@@ -117,6 +120,12 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public void Invalidate()
+		{
+			this.syntheticDataSeries.ForEach (x => x.Invalidate ());
+		}
+
+		
 		internal ChartSeries SynthesizeChartSeries(string label, System.Func<IList<double>, double> function)
 		{
 			int n = this.dataSeries.Count;
