@@ -309,27 +309,65 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshPreview ();
 
 				var filters = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
+				
 				filters.Children.Clear ();
+
+				var label = new StaticText ()
+				{
+					Dock = DockStyle.Stacked,
+					PreferredHeight = 20,
+					Parent = filters,
+					Text = "Filtrer selon..",
+				};
 				
 				foreach (var category in this.Document.ActiveDataSource.Categories)
 				{
-					var frame = new FrameBox ()
-					{
-						Dock = DockStyle.Stacked,
-						PreferredHeight = 20,
-						BackColor = this.labelColorStyle[category.Index],
-						Parent = filters,
-						Padding = new Margins (4, 4, 1, 1),
-					};
-					
-					var button = new CheckButton ()
-					{
-						Text = category.Name,
-						Dock = DockStyle.Fill,
-						Parent = frame,
-					};
+					this.CreateFilterButton (filters, category);
 				}
 			}
+		}
+
+		private void CreateFilterButton(Widget filters, GraphDataCategory category)
+		{
+			var frame = new FrameBox ()
+			{
+				Dock = DockStyle.Stacked,
+				PreferredHeight = 24,
+				BackColor = this.labelColorStyle[category.Index],
+				Parent = filters,
+				Padding = new Margins (4, 4, 1, 1),
+			};
+
+			frame.PaintBackground +=
+				(sender, e) =>
+				{
+					var label = Rectangle.Deflate (frame.Client.Bounds, new Margins (3, 3, 3, 3));
+					var graphics = e.Graphics;
+					var transform = graphics.Transform;
+					graphics.RotateTransformDeg (0, label.Center.X, label.Center.Y);
+
+					MiniChartView.PaintShadow (graphics, label);
+					graphics.AddFilledRectangle (label);
+
+					Color color1 = frame.BackColor;
+					Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+
+					graphics.GradientRenderer.Fill = GradientFill.Y;
+					graphics.GradientRenderer.SetColors (color1, color2);
+					graphics.GradientRenderer.SetParameters (0, 100);
+					graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, label.Height / 100.0).Translate (label.BottomLeft);
+					graphics.RenderGradient ();
+
+					graphics.Transform = transform;
+					e.Suppress = true;
+				};
+
+			var button = new CheckButton ()
+			{
+				Text = category.Name,
+				Dock = DockStyle.Fill,
+				Parent = frame,
+			};
 		}
 
 		

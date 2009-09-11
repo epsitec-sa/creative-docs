@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Name = "tools",
 					Dock = DockStyle.Top,
 					Parent = this.window.Root,
-					PreferredHeight = 150,
+					PreferredHeight = 80,
 				};
 
 				var commandFrame = new FrameBox ()

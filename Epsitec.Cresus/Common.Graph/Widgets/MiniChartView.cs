@@ -311,7 +311,7 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.Transform = transform;
 		}
 
-		private static void PaintShadow(Graphics graphics, Rectangle rect)
+		public static void PaintShadow(Graphics graphics, Rectangle rect)
 		{
 			rect = Rectangle.Deflate (rect, new Margins (2, 0, 2, 0));
 			double[] alpha = new double[] { 0.4, 0.3, 0.2 };

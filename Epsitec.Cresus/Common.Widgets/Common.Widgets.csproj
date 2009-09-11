@@ -618,9 +618,6 @@
     <Compile Include="StaticImage.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StaticLine.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="StaticText.cs">
       <SubType>Code</SubType>
     </Compile>
