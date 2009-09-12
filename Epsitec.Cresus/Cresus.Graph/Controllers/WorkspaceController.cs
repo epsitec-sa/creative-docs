@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public WorkspaceController(GraphApplication application)
 		{
 			this.application = application;
+			this.filterCategories = new HashSet<GraphDataCategory> ();
 			this.colorStyle = new ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" };
 			
 			this.inputItemsController = new ItemListController<MiniChartView> ()
@@ -199,6 +200,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = previewFrame,
 				Padding = new Margins (16, 24, 24, 16),
 			};
+
+			this.inputItemsWarning = new StaticText ()
+			{
+				Anchor = AnchorStyles.All,
+				Parent = inputFrame,
+				Visibility = false,
+				Text = "Aucune donnée n'est visible pour l'instant.<br/>Cochez les catégories que vous souhaitez voir apparaître ici.",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				PreferredHeight = 40,
+			};
 		}
 
 
@@ -307,23 +318,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshOutputs ();
 				this.RefreshGroups ();
 				this.RefreshPreview ();
+				this.RefreshFilters ();
+			}
+		}
 
-				var filters = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
-				
-				filters.Children.Clear ();
+		private void RefreshFilters()
+		{
 
-				var label = new StaticText ()
-				{
-					Dock = DockStyle.Stacked,
-					PreferredHeight = 20,
-					Parent = filters,
-					Text = "Filtrer selon..",
-				};
-				
-				foreach (var category in this.Document.ActiveDataSource.Categories)
-				{
-					this.CreateFilterButton (filters, category);
-				}
+			var container = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
+
+			container.Children.Widgets.ForEach (x => x.Dispose ());
+
+			System.Diagnostics.Debug.Assert (container.Children.Count == 0);
+
+			var label = new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				PreferredHeight = 20,
+				Parent = container,
+				Text = "Catégories",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+			};
+
+			foreach (var category in this.Document.ActiveDataSource.Categories)
+			{
+				this.CreateFilterButton (container, category);
 			}
 		}
 
@@ -367,7 +386,28 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Text = category.Name,
 				Dock = DockStyle.Fill,
 				Parent = frame,
+				ActiveState = this.filterCategories.Contains (category) ? ActiveState.Yes : ActiveState.No,
 			};
+
+			button.ActiveStateChanged +=
+				sender =>
+				{
+					bool changed;
+
+					if (button.ActiveState == ActiveState.Yes)
+					{
+						changed = this.filterCategories.Add (category);
+					}
+					else
+					{
+						changed = this.filterCategories.Remove (category);
+					}
+
+					if (changed)
+					{
+						this.RefreshInputs ();
+					}
+				};
 		}
 
 		
@@ -377,8 +417,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			foreach (var item in this.Document.DataSeries)
 			{
-				this.inputItemsController.Add (this.CreateInputView (item));
+				var category = item.GetCategory ();
+
+				if (category.IsGeneric || this.filterCategories.Contains (category))
+				{
+					this.inputItemsController.Add (this.CreateInputView (item));
+				}
 			}
+
+			this.inputItemsWarning.Visibility = (this.inputItemsController.Count == 0);
 		}
 
 		private void RefreshOutputs()
@@ -908,9 +955,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		outputItemsController;
 		private readonly ItemListController<MiniChartView>		groupItemsController;
 		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
+		private readonly HashSet<GraphDataCategory> filterCategories;
 		
 		private ChartView				chartView;
 
+		private StaticText				inputItemsWarning;
 		private VerticalInjectionArrow	groupCalculatorArrow;
 		private ColorStyle labelColorStyle;
 		private Command							graphType;

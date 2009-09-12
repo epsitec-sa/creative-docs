@@ -117,6 +117,18 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		public virtual GraphDataCategory GetCategory()
+		{
+			if (this.Source == null)
+			{
+				return GraphDataCategory.Generic;
+			}
+			else
+			{
+				return this.Source.GetCategory (this);
+			}
+		}
+
 
 		internal void DefineDataSource(GraphDataSource source)
 		{
