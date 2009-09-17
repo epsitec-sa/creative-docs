@@ -121,6 +121,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 				Parent = container,
 				Name = "inputs",
+				Padding = new Margins (0, 0, 1, 0),
 				PreferredHeight = 320
 			};
 
@@ -246,6 +247,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					graphics.AddFilledRectangle (bounds);
 					graphics.RenderSolid (Color.FromBrightness (1.0));
+
+					e.Suppress = true;
+				};
+			
+			inputFrame.PaintForeground +=
+				(sender, e) =>
+				{
+					var bounds   = inputFrame.Client.Bounds;
+					var graphics = e.Graphics;
+					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
+
+					double y2 = bounds.Top - 0.5;
+					double x2 = bounds.Right - 0.5;
 
 					graphics.AddLine (0.0, y2, x2, y2);
 					graphics.RenderSolid (adorner.ColorBorder);
