@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.viewToGroup = new Dictionary<long, GraphDataGroup> ();
 			this.viewToSeries = new Dictionary<long, GraphDataSeries> ();
+			this.hiliteInputs = new List<GraphDataSeries> ();
+			this.hiliteOutputs = new List<GraphDataSeries> ();
 
 			this.labelColorStyle = new ColorStyle ("labels")
 			{
@@ -335,6 +337,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshGroups ();
 				this.RefreshPreview ();
 				this.RefreshFilters ();
+				this.RefreshHilites ();
 			}
 		}
 
@@ -814,45 +817,55 @@ namespace Epsitec.Cresus.Graph.Controllers
 			GraphDataGroup group;
 			GraphDataSeries series;
 
-			if (entered == false)
+			this.hiliteInputs.Clear ();
+			this.hiliteOutputs.Clear ();
+			
+			if (entered)
 			{
-				this.GetAllMiniChartViews ().ForEach (x => x.HiliteColor = Color.Empty);
-			}
-			else
-			{
-				List<GraphDataSeries> inputs = new List<GraphDataSeries> ();
-				List<GraphDataSeries> outputs = new List<GraphDataSeries> ();
-
 				if (this.viewToGroup.TryGetValue (id, out group))
 				{
-					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (inputs, x));
-					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (outputs, x));
+					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (hiliteInputs, x));
+					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (hiliteOutputs, x));
 				}
 				else if (this.viewToSeries.TryGetValue (id, out series))
 				{
-				}
-
-				foreach (var item in this.GetAllMiniChartViews ())
-				{
-					id = item.GetVisualSerialId ();
-					Color color = Color.Empty;
-
-					if (this.viewToSeries.TryGetValue (id, out series))
+					while (series != null)
 					{
-						if (inputs.Contains (series))
-						{
-							color = Color.FromRgb (0, 1, 0);
-						}
-						else if (outputs.Contains (series))
-						{
-							color = Color.FromRgb (0, 0, 1);
-						}
+						WorkspaceController.AddInputSeries (this.hiliteInputs, series);
+						series.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (this.hiliteOutputs, y)));
+						series = series.Parent;
 					}
-
-					item.HiliteColor = color;
 				}
 			}
+			
+			this.RefreshHilites ();
 		}
+
+
+		private void RefreshHilites()
+		{
+			foreach (var item in this.GetAllMiniChartViews ())
+			{
+				long id = item.GetVisualSerialId ();
+				GraphDataSeries series;
+				Color color = Color.Empty;
+
+				if (this.viewToSeries.TryGetValue (id, out series))
+				{
+					if (this.hiliteInputs.Contains (series))
+					{
+						color = Color.FromRgb (0, 1, 0);
+					}
+					else if (this.hiliteOutputs.Contains (series))
+					{
+						color = Color.FromRgb (0, 0, 1);
+					}
+				}
+
+				item.HiliteColor = color;
+			}
+		}
+
 
 		private static void AddOutputSeries(List<GraphDataSeries> outputs, GraphDataSeries item)
 		{
@@ -943,6 +956,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, item));
 			}
+
+			this.RefreshHilites ();
 		}
 
 		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
@@ -1093,6 +1108,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
 		private readonly Dictionary<long, GraphDataGroup> viewToGroup;
+		private readonly List<GraphDataSeries> hiliteInputs;
+		private readonly List<GraphDataSeries> hiliteOutputs;
 		
 		private ChartView				chartView;
 
