@@ -82,6 +82,10 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		/// <summary>
+		/// Gets the groups to which this data series has been added to.
+		/// </summary>
+		/// <value>The groups or an empty collection.</value>
 		public IEnumerable<GraphDataGroup> Groups
 		{
 			get

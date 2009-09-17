@@ -48,6 +48,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor         = AnchorStyles.BottomLeft,
 			};
 
+			this.viewToGroup = new Dictionary<long, GraphDataGroup> ();
+			this.viewToSeries = new Dictionary<long, GraphDataSeries> ();
 
 			this.labelColorStyle = new ColorStyle ("labels")
 			{
@@ -534,7 +536,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
-			if (synt != null)
+			if ((synt != null) &&
+				(synt.SourceGroup == group))
 			{
 				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 					delegate
@@ -726,6 +729,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.Title = item.Title;
 			view.Label = item.Label;
 
+			long id = view.GetVisualSerialId ();
+
+			this.viewToSeries[id] = item;
+
+			view.Disposed +=
+				delegate
+				{
+					this.viewToSeries.Remove (id);
+				};
+
 			return view;
 		}
 
@@ -736,6 +749,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
 			view.Title = group.Name;
 			view.Label = "Groupe";
+
+			long id = view.GetVisualSerialId ();
+
+			this.viewToGroup[id] = group;
+
+			view.Disposed +=
+				delegate
+				{
+					this.viewToGroup.Remove (id);
+				};
 
 			return view;
 		}
@@ -754,7 +777,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			lineChartRenderer.DefineValueLabels (this.Document.ChartColumnLabels);
 
-			return new MiniChartView ()
+			var view = new MiniChartView ()
 			{
 				Anchor = AnchorStyles.TopLeft,
 				HorizontalAlignment = HorizontalAlignment.Center,
@@ -766,8 +789,105 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Renderer = lineChartRenderer,
 				Scale = 0.5,
 			};
+
+			view.Entered +=
+				delegate
+				{
+					this.HandleViewHiliteChanged (view, true);
+					view.HiliteColor = Color.FromRgb (1.0, 1.0, 0.0);
+				};
+
+			view.Exited +=
+				delegate
+				{
+					view.HiliteColor = Color.Empty;
+					this.HandleViewHiliteChanged (view, false);
+				};
+			
+			return view;
 		}
 
+		private void HandleViewHiliteChanged(MiniChartView view, bool entered)
+		{
+			long id = view.GetVisualSerialId ();
+
+			GraphDataGroup group;
+			GraphDataSeries series;
+
+			if (entered == false)
+			{
+				this.GetAllMiniChartViews ().ForEach (x => x.HiliteColor = Color.Empty);
+			}
+			else
+			{
+				List<GraphDataSeries> inputs = new List<GraphDataSeries> ();
+				List<GraphDataSeries> outputs = new List<GraphDataSeries> ();
+
+				if (this.viewToGroup.TryGetValue (id, out group))
+				{
+					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (inputs, x));
+					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (outputs, x));
+				}
+				else if (this.viewToSeries.TryGetValue (id, out series))
+				{
+				}
+
+				foreach (var item in this.GetAllMiniChartViews ())
+				{
+					id = item.GetVisualSerialId ();
+					Color color = Color.Empty;
+
+					if (this.viewToSeries.TryGetValue (id, out series))
+					{
+						if (inputs.Contains (series))
+						{
+							color = Color.FromRgb (0, 1, 0);
+						}
+						else if (outputs.Contains (series))
+						{
+							color = Color.FromRgb (0, 0, 1);
+						}
+					}
+
+					item.HiliteColor = color;
+				}
+			}
+		}
+
+		private static void AddOutputSeries(List<GraphDataSeries> outputs, GraphDataSeries item)
+		{
+			if (outputs.Contains (item))
+			{
+				return;
+			}
+
+			outputs.Add (item);
+
+			item.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (outputs, y)));
+		}
+
+		private static void AddInputSeries(List<GraphDataSeries> inputs, GraphDataSeries item)
+		{
+			if (inputs.Contains (item))
+			{
+				return;
+			}
+
+			inputs.Add (item);
+
+			var synth = item as GraphSyntheticDataSeries;
+
+			if ((synth != null) &&
+				(synth.SourceGroup != null))
+			{
+				synth.SourceGroup.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (inputs, x));
+			}
+		}
+
+		private IEnumerable<MiniChartView> GetAllMiniChartViews()
+		{
+			return this.inputItemsController.Concat (this.groupItemsController).Concat (this.groupDetailItemsController).Concat (this.outputItemsController);
+		}
 		
 		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
 		{
@@ -970,6 +1090,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		groupItemsController;
 		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
 		private readonly HashSet<GraphDataCategory> filterCategories;
+
+		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
+		private readonly Dictionary<long, GraphDataGroup> viewToGroup;
 		
 		private ChartView				chartView;
 

@@ -14,6 +14,7 @@ namespace Epsitec.Common.Graph.Widgets
 		public MiniChartView()
 		{
 			this.LabelColor = Color.FromRgb (250/255.0, 255/255.0, 124/255.0); // Color.FromRgb (255/255.0, 254/255.0, 173/255.0)
+			this.hiliteColor = Color.Empty;
 		}
 
 
@@ -39,6 +40,22 @@ namespace Epsitec.Common.Graph.Widgets
 		{
 			get;
 			set;
+		}
+
+		public Color HiliteColor
+		{
+			get
+			{
+				return this.hiliteColor;
+			}
+			set
+			{
+				if (this.hiliteColor != value)
+				{
+					this.hiliteColor = value;
+					this.Invalidate ();
+				}
+			}
 		}
 
 
@@ -115,7 +132,7 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.Transform = transform;
 			}
 
-			MiniChartView.PaintTopmostSheet (graphics, rectangle);
+			MiniChartView.PaintTopmostSheet (graphics, rectangle, this.hiliteColor);
 
 			if ((renderer != null) &&
 				(renderer.SeriesItems.Count > 0))
@@ -272,11 +289,14 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.RenderSolid (Color.FromBrightness (1.0));
 		}
 		
-		private static void PaintTopmostSheet(Graphics graphics, Rectangle rectangle)
+		private static void PaintTopmostSheet(Graphics graphics, Rectangle rectangle, Color hiliteColor)
 		{
+			Color sheetColor = hiliteColor.IsValid ? hiliteColor : Color.FromRgb (0.9, 0.9, 0.95);
+			Color whiteColor = Color.Mix (sheetColor, Color.FromBrightness (1), 0.75);
+
 			graphics.AddFilledRectangle (rectangle);
 			graphics.GradientRenderer.Fill = GradientFill.Y;
-			graphics.GradientRenderer.SetColors (Color.FromBrightness (1.0), Color.FromRgb (0.9, 0.9, 0.95));
+			graphics.GradientRenderer.SetColors (whiteColor, sheetColor);
 			graphics.GradientRenderer.SetParameters (0, 100);
 			graphics.GradientRenderer.Transform = Transform.Identity.Scale (rectangle.Width/100, rectangle.Height/100).Translate (rectangle.Height/2, rectangle.Width/2).RotateDeg (10, rectangle.Center);
 			graphics.RenderGradient ();
@@ -370,5 +390,6 @@ namespace Epsitec.Common.Graph.Widgets
 		private CheckButton checkButton;
 		private IconButton iconButton;
 		private ButtonVisibility iconButtonVisibility;
+		private Color hiliteColor;
 	}
 }

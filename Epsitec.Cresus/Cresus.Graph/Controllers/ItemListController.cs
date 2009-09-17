@@ -126,8 +126,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.items.Remove (item);
 				this.InvalidateLayout ();
-				
-				item.Parent = null;
+
+				item.Dispose ();
 
 				//	Removing the active item ? If so, select the next one or, if there
 				//	are no following items any more, the previous one, until there are no
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		public void Clear()
 		{
-			this.items.ForEach (item => item.Parent = null);
+			this.items.ForEach (item => item.Dispose ());
 			this.items.Clear ();
 			this.activeItem = null;
 
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				posMaxY = System.Math.Max (posMaxY, posEndY);
 
 				item.Margins = new Margins (posBeginX, margins.Right, posBeginY + this.originOffset, margins.Bottom);
-				item.Visibility = (posEndY > 0) && (posBeginY < availableHeight);
+				item.Visibility = (posEndY + this.originOffset > 0) && (posBeginY + this.originOffset < availableHeight);
 
 				posBeginX = posEndX - this.overlapX;
 			}
