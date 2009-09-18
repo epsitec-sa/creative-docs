@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Bottom,
 				Parent = container,
 				Name = "bottom",
-				PreferredHeight = 260
+				PreferredHeight = 264
 			};
 
 			var bottomFrameLeft = new FrameBox ()
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = bottomFrameLeft,
 				Name = "groups",
 				BackColor = Color.FromBrightness (1.0),
-				PreferredHeight = 161,
+				PreferredHeight = 164,
 				Padding = new Margins (0, 0, 1, 0),
 			};
 
@@ -364,71 +364,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void CreateFilterButton(Widget filters, GraphDataCategory category)
-		{
-			var frame = new FrameBox ()
-			{
-				Dock = DockStyle.Stacked,
-				PreferredHeight = 24,
-				BackColor = this.labelColorStyle[category.Index],
-				Parent = filters,
-				Padding = new Margins (4, 4, 1, 1),
-			};
-
-			frame.PaintBackground +=
-				(sender, e) =>
-				{
-					var label = Rectangle.Deflate (frame.Client.Bounds, new Margins (3, 3, 3, 3));
-					var graphics = e.Graphics;
-					var transform = graphics.Transform;
-					graphics.RotateTransformDeg (0, label.Center.X, label.Center.Y);
-
-					MiniChartView.PaintShadow (graphics, label);
-					graphics.AddFilledRectangle (label);
-
-					Color color1 = frame.BackColor;
-					Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
-
-					graphics.GradientRenderer.Fill = GradientFill.Y;
-					graphics.GradientRenderer.SetColors (color1, color2);
-					graphics.GradientRenderer.SetParameters (0, 100);
-					graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, label.Height / 100.0).Translate (label.BottomLeft);
-					graphics.RenderGradient ();
-
-					graphics.Transform = transform;
-					e.Suppress = true;
-				};
-
-			var button = new CheckButton ()
-			{
-				Text = category.Name,
-				Dock = DockStyle.Fill,
-				Parent = frame,
-				ActiveState = this.filterCategories.Contains (category) ? ActiveState.Yes : ActiveState.No,
-			};
-
-			button.ActiveStateChanged +=
-				sender =>
-				{
-					bool changed;
-
-					if (button.ActiveState == ActiveState.Yes)
-					{
-						changed = this.filterCategories.Add (category);
-					}
-					else
-					{
-						changed = this.filterCategories.Remove (category);
-					}
-
-					if (changed)
-					{
-						this.RefreshInputs ();
-					}
-				};
-		}
-
-		
 		private void RefreshInputs()
 		{
 			this.inputItemsController.Clear ();
@@ -513,6 +448,49 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		private void RefreshHilites()
+		{
+			foreach (var item in this.GetAllMiniChartViews ())
+			{
+				long id = item.GetVisualSerialId ();
+				GraphDataSeries series;
+				GraphDataGroup group;
+				Color color = Color.Empty;
+				HiliteInfo info = HiliteInfo.Empty;
+
+				if (this.viewToSeries.TryGetValue (id, out series))
+				{
+					info = this.hilites.Find (x => x.Series == series || ((x.Series != null) && (x.Series == series.Parent)));
+				}
+				else if (this.viewToGroup.TryGetValue (id, out group))
+				{
+					info = this.hilites.Find (x => x.Group == group);
+				}
+
+				switch (info.Type)
+				{
+					case HiliteType.Default:
+						color = Color.FromRgb (1, 1, 0);
+						break;
+
+					case HiliteType.Input:
+						color = Color.FromRgb (0, 1, 0);
+						break;
+					case HiliteType.Output:
+						color = Color.FromRgb (0, 0, 1);
+						break;
+				}
+
+				if (info.Depth > 0)
+				{
+					double mix = 1.0 / (1 << info.Depth);
+					color = Color.Mix (color, Color.FromBrightness (1), mix);
+				}
+
+				item.HiliteColor = color;
+			}
+		}
+
 		
 		private MiniChartView CreateGroupView(GraphDataGroup group)
 		{
@@ -528,6 +506,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				};
 
+			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
+
+			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+				delegate
+				{
+					//	TODO: make this fool proof (deleting a group which is still used is fatal)
+					this.DeleteGroup (group, view);
+					this.Refresh ();
+				});
+			
 			return view;
 		}
 
@@ -615,6 +603,70 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
+		private void CreateFilterButton(Widget filters, GraphDataCategory category)
+		{
+			var frame = new FrameBox ()
+			{
+				Dock = DockStyle.Stacked,
+				PreferredHeight = 24,
+				BackColor = this.labelColorStyle[category.Index],
+				Parent = filters,
+				Padding = new Margins (4, 4, 1, 1),
+			};
+
+			frame.PaintBackground +=
+				(sender, e) =>
+				{
+					var label = Rectangle.Deflate (frame.Client.Bounds, new Margins (3, 3, 3, 3));
+					var graphics = e.Graphics;
+					var transform = graphics.Transform;
+					graphics.RotateTransformDeg (0, label.Center.X, label.Center.Y);
+
+					MiniChartView.PaintShadow (graphics, label);
+					graphics.AddFilledRectangle (label);
+
+					Color color1 = frame.BackColor;
+					Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+
+					graphics.GradientRenderer.Fill = GradientFill.Y;
+					graphics.GradientRenderer.SetColors (color1, color2);
+					graphics.GradientRenderer.SetParameters (0, 100);
+					graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, label.Height / 100.0).Translate (label.BottomLeft);
+					graphics.RenderGradient ();
+
+					graphics.Transform = transform;
+					e.Suppress = true;
+				};
+
+			var button = new CheckButton ()
+			{
+				Text = category.Name,
+				Dock = DockStyle.Fill,
+				Parent = frame,
+				ActiveState = this.filterCategories.Contains (category) ? ActiveState.Yes : ActiveState.No,
+			};
+
+			button.ActiveStateChanged +=
+				sender =>
+				{
+					bool changed;
+
+					if (button.ActiveState == ActiveState.Yes)
+					{
+						changed = this.filterCategories.Add (category);
+					}
+					else
+					{
+						changed = this.filterCategories.Remove (category);
+					}
+
+					if (changed)
+					{
+						this.RefreshInputs ();
+					}
+				};
+		}
+		
 		
 		private void CreateGroup()
 		{
@@ -654,10 +706,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private GraphDataGroup CreateGroup(IEnumerable<GraphDataSeries> series)
 		{
 			var group = this.Document.AddGroup (series);
-			
+
 			this.groupItemsController.Add (this.CreateGroupView (group));
 
 			return group;
+		}
+
+		private void DeleteGroup(GraphDataGroup group, MiniChartView view)
+		{
+			this.Document.RemoveGroup (group);
+			this.groupItemsController.Remove (view);
 		}
 
 		private void UpdateGroupName(GraphDataGroup group)
@@ -719,6 +777,38 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.RefreshInputViewSelection ();
 			this.RefreshGroupView ();
+		}
+
+		private void HandleViewHiliteChanged(MiniChartView view, bool entered)
+		{
+			long id = view.GetVisualSerialId ();
+
+			GraphDataGroup group;
+			GraphDataSeries series;
+
+			this.hilites.Clear ();
+
+			if (entered)
+			{
+				if (this.viewToGroup.TryGetValue (id, out group))
+				{
+					this.hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
+					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (this.hilites, x, 0));
+					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (this.hilites, x, 0));
+				}
+				else if (this.viewToSeries.TryGetValue (id, out series))
+				{
+					while (series != null)
+					{
+						this.hilites.Add (new HiliteInfo (series, 0, HiliteType.Default));
+						WorkspaceController.AddInputSeries (this.hilites, series, 0);
+						series.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (this.hilites, y, 0)));
+						series = series.Parent;
+					}
+				}
+			}
+
+			this.RefreshHilites ();
 		}
 
 		
@@ -809,82 +899,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
-		private void HandleViewHiliteChanged(MiniChartView view, bool entered)
-		{
-			long id = view.GetVisualSerialId ();
 
-			GraphDataGroup group;
-			GraphDataSeries series;
-
-			this.hilites.Clear ();
-
-			if (entered)
-			{
-				if (this.viewToGroup.TryGetValue (id, out group))
-				{
-					this.hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
-					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (this.hilites, x, 0));
-					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (this.hilites, x, 0));
-				}
-				else if (this.viewToSeries.TryGetValue (id, out series))
-				{
-					while (series != null)
-					{
-						this.hilites.Add (new HiliteInfo (series, 0, HiliteType.Default));
-						WorkspaceController.AddInputSeries (this.hilites, series, 0);
-						series.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (this.hilites, y, 0)));
-						series = series.Parent;
-					}
-				}
-			}
-			
-			this.RefreshHilites ();
-		}
-
-
-		private void RefreshHilites()
-		{
-			foreach (var item in this.GetAllMiniChartViews ())
-			{
-				long id = item.GetVisualSerialId ();
-				GraphDataSeries series;
-				GraphDataGroup group;
-				Color color = Color.Empty;
-				HiliteInfo info = HiliteInfo.Empty;
-
-				if (this.viewToSeries.TryGetValue (id, out series))
-				{
-					info = this.hilites.Find (x => x.Series == series || ((x.Series != null) && (x.Series == series.Parent)));
-				}
-				else if (this.viewToGroup.TryGetValue (id, out group))
-				{
-					info = this.hilites.Find (x => x.Group == group);
-				}
-
-				switch (info.Type)
-				{
-					case HiliteType.Default:
-						color = Color.FromRgb (1, 1, 0);
-						break;
-
-					case HiliteType.Input:
-						color = Color.FromRgb (0, 1, 0);
-						break;
-					case HiliteType.Output:
-						color = Color.FromRgb (0, 0, 1);
-						break;
-				}
-
-				if (info.Depth > 0)
-				{
-					double mix = 1.0 / (1 << info.Depth);
-					color = Color.Mix (color, Color.FromBrightness (1), mix);
-				}
-
-				item.HiliteColor = color;
-			}
-		}
-
+		#region HiliteType Enumeration
 
 		enum HiliteType
 		{
@@ -893,6 +909,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			Input,
 			Output,
 		}
+
+		#endregion
+
+		#region HiliteInfo Structure
 
 		struct HiliteInfo
 		{
@@ -951,6 +971,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			private int depth;
 			private HiliteType type;
 		}
+
+		#endregion
 
 		private static void AddOutputSeries(List<HiliteInfo> outputs, GraphDataSeries item, int depth)
 		{

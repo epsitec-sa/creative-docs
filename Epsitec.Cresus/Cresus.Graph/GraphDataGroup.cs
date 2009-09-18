@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Graph
 		internal ChartSeries SynthesizeChartSeries(string label, System.Func<IList<double>, double> function)
 		{
 			int n = this.dataSeries.Count;
-			int m = this.dataSeries[0].ChartSeries.Values.Count;
+			int m = n == 0 ? 0 : this.dataSeries[0].ChartSeries.Values.Count;
 			
 			double[]     inputVector  = new double[n];
 			ChartValue[] outputVector = new ChartValue[m];
