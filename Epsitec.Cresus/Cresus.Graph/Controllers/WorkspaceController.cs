@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var view  = this.groupItemsController.ActiveItem;
 			int index = this.groupItemsController.IndexOf (view);
-			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.Document.DataSeries.ElementAt (x.Index));
+			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.viewToSeries[x.GetVisualSerialId ()]);
 
 			GraphDataGroup group;
 
@@ -822,6 +822,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				if (this.viewToGroup.TryGetValue (id, out group))
 				{
+					this.hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
 					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (this.hilites, x, 0));
 					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (this.hilites, x, 0));
 				}
@@ -829,6 +830,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					while (series != null)
 					{
+						this.hilites.Add (new HiliteInfo (series, 0, HiliteType.Default));
 						WorkspaceController.AddInputSeries (this.hilites, series, 0);
 						series.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (this.hilites, y, 0)));
 						series = series.Parent;
@@ -846,27 +848,37 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				long id = item.GetVisualSerialId ();
 				GraphDataSeries series;
+				GraphDataGroup group;
 				Color color = Color.Empty;
+				HiliteInfo info = HiliteInfo.Empty;
 
 				if (this.viewToSeries.TryGetValue (id, out series))
 				{
-					var info = this.hilites.Find (x => x.Series == series);
+					info = this.hilites.Find (x => x.Series == series || ((x.Series != null) && (x.Series == series.Parent)));
+				}
+				else if (this.viewToGroup.TryGetValue (id, out group))
+				{
+					info = this.hilites.Find (x => x.Group == group);
+				}
 
-					switch (info.Type)
-					{
-						case HiliteType.Input:
-							color = Color.FromRgb (0, 1, 0);
-							break;
-						case HiliteType.Output:
-							color = Color.FromRgb (0, 0, 1);
-							break;
-					}
+				switch (info.Type)
+				{
+					case HiliteType.Default:
+						color = Color.FromRgb (1, 1, 0);
+						break;
 
-					if (info.Depth > 0)
-					{
-						double mix = 1.0 / (1 << info.Depth);
-						color = Color.Mix (color, Color.FromBrightness (1), mix);
-					}
+					case HiliteType.Input:
+						color = Color.FromRgb (0, 1, 0);
+						break;
+					case HiliteType.Output:
+						color = Color.FromRgb (0, 0, 1);
+						break;
+				}
+
+				if (info.Depth > 0)
+				{
+					double mix = 1.0 / (1 << info.Depth);
+					color = Color.Mix (color, Color.FromBrightness (1), mix);
 				}
 
 				item.HiliteColor = color;
@@ -876,6 +888,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		enum HiliteType
 		{
+			Undefined,
 			Default,
 			Input,
 			Output,
@@ -906,6 +919,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					return this.series;
 				}
 			}
+			
 			public GraphDataGroup Group
 			{
 				get
@@ -913,6 +927,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					return this.group;
 				}
 			}
+			
 			public int Depth
 			{
 				get
@@ -920,6 +935,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					return this.depth;
 				}
 			}
+			
 			public HiliteType Type
 			{
 				get
@@ -927,6 +943,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					return this.type;
 				}
 			}
+
+			public static readonly HiliteInfo Empty = new HiliteInfo ();
 
 			private readonly GraphDataSeries series;
 			private readonly GraphDataGroup group;
@@ -936,7 +954,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private static void AddOutputSeries(List<HiliteInfo> outputs, GraphDataSeries item, int depth)
 		{
-			if (outputs.Any (x => x.Series == item))
+			if (outputs.Any (x => x.Series == item && x.Type != HiliteType.Default))
 			{
 				return;
 			}
@@ -946,9 +964,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 			item.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (outputs, y, depth+1)));
 		}
 
+		private static void AddInputGroup(List<HiliteInfo> inputs, GraphDataGroup item, int depth)
+		{
+			if (inputs.Any (x => x.Group == item && x.Type != HiliteType.Default))
+			{
+				return;
+			}
+
+			inputs.Add (new HiliteInfo (item, depth, HiliteType.Input));
+
+			foreach (var series in item.InputDataSeries)
+			{
+				WorkspaceController.AddInputSeries (inputs, series, depth+1);
+			}
+		}
+
 		private static void AddInputSeries(List<HiliteInfo> inputs, GraphDataSeries item, int depth)
 		{
-			if (inputs.Any (x => x.Series == item))
+			if (inputs.Any (x => x.Series == item && x.Type != HiliteType.Default))
 			{
 				return;
 			}
@@ -960,7 +993,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if ((synth != null) &&
 				(synth.SourceGroup != null))
 			{
-				synth.SourceGroup.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (inputs, x, depth+1));
+				WorkspaceController.AddInputGroup (inputs, synth.SourceGroup, depth);
 			}
 		}
 
