@@ -807,17 +807,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				if (this.viewToGroup.TryGetValue (id, out group))
 				{
+					//	Hovering over a group in the group view.
+
 					this.hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
+					
 					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (this.hilites, x, 0));
 					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (this.hilites, x, 0));
 				}
 				else if (this.viewToSeries.TryGetValue (id, out series))
 				{
+					//	Hovering over a series (either in the input view, details view of a group or output view).
+
 					while (series != null)
 					{
 						this.hilites.Add (new HiliteInfo (series, 0, HiliteType.Default));
+						
 						WorkspaceController.AddInputSeries (this.hilites, series, 0);
-						series.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (this.hilites, y, 0)));
+						
+						series.Groups.ForEach (x => WorkspaceController.AddOutputGroup (this.hilites, x, 0));
 						series = series.Parent;
 					}
 				}
@@ -1001,21 +1008,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			item.Groups.ForEach (x => x.SyntheticDataSeries.ForEach (y => WorkspaceController.AddOutputSeries (outputs, y, depth+1)));
 		}
 
-		private static void AddInputGroup(List<HiliteInfo> inputs, GraphDataGroup item, int depth)
-		{
-			if (inputs.Any (x => x.Group == item && x.Type != HiliteType.Default))
-			{
-				return;
-			}
-
-			inputs.Add (new HiliteInfo (item, depth, HiliteType.Input));
-
-			foreach (var series in item.InputDataSeries)
-			{
-				WorkspaceController.AddInputSeries (inputs, series, depth+1);
-			}
-		}
-
 		private static void AddInputSeries(List<HiliteInfo> inputs, GraphDataSeries item, int depth)
 		{
 			if (inputs.Any (x => x.Series == item && x.Type != HiliteType.Default))
@@ -1031,6 +1023,33 @@ namespace Epsitec.Cresus.Graph.Controllers
 				(synth.SourceGroup != null))
 			{
 				WorkspaceController.AddInputGroup (inputs, synth.SourceGroup, depth);
+			}
+		}
+
+		private static void AddOutputGroup(List<HiliteInfo> outputs, GraphDataGroup item, int depth)
+		{
+			if (outputs.Any (x => x.Group == item && x.Type != HiliteType.Default))
+			{
+				return;
+			}
+
+			outputs.Add (new HiliteInfo (item, depth, HiliteType.Output));
+
+			item.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (outputs, x, depth));
+		}
+
+		private static void AddInputGroup(List<HiliteInfo> inputs, GraphDataGroup item, int depth)
+		{
+			if (inputs.Any (x => x.Group == item && x.Type != HiliteType.Default))
+			{
+				return;
+			}
+
+			inputs.Add (new HiliteInfo (item, depth, HiliteType.Input));
+
+			foreach (var series in item.InputDataSeries)
+			{
+				WorkspaceController.AddInputSeries (inputs, series, depth+1);
 			}
 		}
 
