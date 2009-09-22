@@ -153,6 +153,7 @@
     <Compile Include="ImportConverters\ImporterAttribute.cs" />
     <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
     <Compile Include="Widgets\CommandSelectionBar.cs" />
+    <Compile Include="Widgets\BalloonTip.cs" />
     <Compile Include="Widgets\VerticalInjectionArrow.cs" />
     <Compile Include="Widgets\GraphicIconButton.cs" />
   </ItemGroup>
