@@ -172,6 +172,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.InvalidateLayout ();
 		}
 
+		public void DefineOffset(double offset)
+		{
+			if (this.manualOffset != offset)
+			{
+				this.manualOffset = offset;
+				this.InvalidateLayout ();
+			}
+		}
+
 		
 		#region IEnumerable<T> Members
 
@@ -294,17 +303,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void LayoutHorizontal()
 		{
 			double availableWidth = this.container.Client.Size.Width - this.container.Padding.Width;
-
-			if (availableWidth == this.cachedSize.Width)
+			double totalWidth = this.items.Aggregate (0.0, this.ComputeWidth);
+			double startOffset;
+			
+			if (AdjustHorizontalOffset (availableWidth, totalWidth, out startOffset))
 			{
+				//	Nothing changed (same availableWidth, same startOffset)
 				return;
 			}
-			else
-			{
-				this.cachedSize = new Size (availableWidth, this.cachedSize.Height);
-			}
 			
-			double totalWidth = this.items.Aggregate (0.0, this.ComputeWidth);
 			double activeBegin = 0;
 			double activeEnd = 0;
 
@@ -340,10 +347,46 @@ namespace Epsitec.Cresus.Graph.Controllers
 				double posEnd   = posBegin + item.PreferredWidth;
 				var    margins  = item.Margins;
 
-				item.Margins = new Margins (posBegin, 0, margins.Top, margins.Bottom);
+				item.Margins = new Margins (startOffset + posBegin, 0, margins.Top, margins.Bottom);
 				item.Visibility = (posEnd > 0) && (posBegin < availableWidth);
 
 				posBegin = posEnd - this.overlapX;
+			}
+		}
+
+		/// <summary>
+		/// Adjusts the horizontal starting offset based on the manual offset (i.e. where the
+		/// elements should start) and on the available space.
+		/// </summary>
+		/// <param name="availableWidth">Available width.</param>
+		/// <param name="totalWidth">Total width.</param>
+		/// <param name="start">The start offset.</param>
+		/// <returns><c>true</c> if neither the available width, not the start offset changed.</returns>
+		private bool AdjustHorizontalOffset(double availableWidth, double totalWidth, out double start)
+		{
+			start = this.manualOffset;
+			double end = this.manualOffset + totalWidth;
+
+			if (end > availableWidth)
+			{
+				end = availableWidth;
+				start = end - totalWidth;
+			}
+			if (start < 0)
+			{
+				start = 0;
+			}
+
+			availableWidth -= start;
+
+			if (new Size (availableWidth, start) == this.cachedSize)
+			{
+				return true;
+			}
+			else
+			{
+				this.cachedSize = new Size (availableWidth, start);
+				return false;
 			}
 		}
 
@@ -375,6 +418,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private ItemLayoutMode itemLayoutMode;
 		private T activeItem;
 		private double originOffset;
+		private double manualOffset;
 		private double overlapX;
 		private double overlapY;
 		private Size cachedSize;

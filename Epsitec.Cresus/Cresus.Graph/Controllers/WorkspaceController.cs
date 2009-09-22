@@ -210,7 +210,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.All,
 				Parent = inputFrame,
 				Visibility = false,
-				Text = "Aucune donnée n'est visible pour l'instant.<br/>Cochez les catégories que vous souhaitez voir apparaître ici.",
+				Text = "<font size=\"120%\">Aucune donnée n'est visible pour l'instant.</font><br/>" +
+				"Cochez les catégories que vous souhaitez voir apparaître ici.",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				PreferredHeight = 40,
+			};
+
+			this.groupItemsHint = new StaticText ()
+			{
+				Anchor = AnchorStyles.All,
+				Parent = groupFrame,
+				Visibility = false,
+				Text = "<font size=\"120%\">Aucun groupe n'existe pour l'instant.</font><br/>" +
+				"Pour créer un groupe, sélectionnez plusieurs éléments ci-dessus en maintenant la touche Ctrl<br/>" +
+				"enfoncée (Ctrl-clic), puis cliquez sur le trombone miniature d'un des éléments sélectionnés.",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				PreferredHeight = 40,
+			};
+
+			this.outputItemsHint = new StaticText ()
+			{
+				Anchor = AnchorStyles.All,
+				Parent = outputFrame,
+				Visibility = false,
+				Text = "<font size=\"120%\">Graphique vide.</font><br/>" +
+				"Cochez les éléments que vous souhaitez voir apparaître dans le graphique.",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				PreferredHeight = 40,
 			};
@@ -389,6 +413,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.outputItemsController.Add (this.CreateOutputView (item));
 			}
+
+			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
 		}
 
 		private void RefreshInputViewSelection()
@@ -412,13 +438,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (index < 0)
 			{
 				this.ShowGroupCalculator (null, null);
-				this.ShowGroupDetails (null);
+				this.ShowGroupDetails (null, null);
 			}
 			else
 			{
 				var group = this.Document.Groups[index];
 				this.ShowGroupCalculator (group, view);
-				this.ShowGroupDetails (group);
+				this.ShowGroupDetails (group, view);
 			}
 		}
 
@@ -442,10 +468,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.groupItemsController.ActiveItem = this.groupItemsController[index];
 				
 				this.ShowGroupCalculator (group, view);
-				this.ShowGroupDetails (group);
+				this.ShowGroupDetails (group, view);
 
 				view.SetSelected (true);
 			}
+
+			this.groupItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.groupItemsController.Count == 0);
 		}
 
 		private void RefreshHilites()
@@ -678,6 +706,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					if (changed)
 					{
 						this.RefreshInputs ();
+						this.RefreshGroups ();
+						this.RefreshOutputs ();
 					}
 				};
 		}
@@ -802,10 +832,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			GraphDataSeries series;
 
 			this.hilites.Clear ();
+			
+			if (this.balloonTip != null)
+			{
+				this.balloonTip.Dispose ();
+				this.balloonTip = null;
+			}
 
 			if (entered)
 			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				string summary = "";
 
 				if (this.viewToGroup.TryGetValue (id, out group))
 				{
@@ -813,15 +849,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					this.hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
 
-					buffer.Append ("<font face=\"Futura\" style=\"Condensed Medium\">");
-					buffer.Append ("<font size=\"120%\">");
-					buffer.Append (group.Name);
-					buffer.Append ("</font><br/>");
-					buffer.AppendFormat (group.Count < 2 ? "Groupe avec {0} élément" : "Groupe avec {0} éléments<br/>", group.Count);
-					buffer.Append ("<font size=\"80%\">");
-					buffer.Append (string.Join (", ", group.InputDataSeries.Select (x => x.Label).ToArray ()));
-					buffer.Append ("</font>");
-					buffer.Append ("</font>");
+					summary = this.GetSummary (group);
 
 					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (this.hilites, x, 0));
 					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (this.hilites, x, 0));
@@ -830,33 +858,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					//	Hovering over a series (either in the input view, details view of a group or output view).
 
-					buffer.Append ("<font face=\"Futura\" style=\"Condensed Medium\">");
-					
-					if (this.Document.OutputSeries.Contains (series))
-					{
-						buffer.Append ("<font size=\"120%\">");
-						buffer.AppendFormat ("Source {0}", series.Label);
-						buffer.Append ("</font><br/>");
-						buffer.Append (series.Title);
-						buffer.Append ("<br/>");
-						buffer.Append ("<font size=\"80%\">");
-						buffer.Append ("Min: 12.0 Max: 3456.7");
-						buffer.Append ("</font>");
-					}
-					else
-					{
-						buffer.Append ("<font size=\"120%\">");
-						buffer.AppendFormat ("Compte {0}", series.Label);
-						buffer.Append ("</font><br/>");
-						buffer.Append (series.Title);
-						buffer.Append ("<br/>");
-						buffer.Append ("<font size=\"80%\">");
-						buffer.AppendFormat ("Source: {0}<br/>", series.Source.Name);
-						buffer.Append ("Min: 12.0 Max: 3456.7");
-						buffer.Append ("</font>");
-					}
-					
-					buffer.Append ("</font>");
+					summary = this.GetSummary (series);
 
 					while (series != null)
 					{
@@ -869,45 +871,95 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				}
 
-				if (this.balloonTip != null)
-				{
-					this.balloonTip.Dispose ();
-					this.balloonTip = null;
-				}
-
-				if ((!view.IsActualGeometryValid) &&
-					(view.Window != null))
-				{
-					view.Window.ForceLayout ();
-				}
-
-				var bounds = Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4);
-				var mark = ButtonMarkDisposition.Below;
-				var rect = BalloonTip.GetBestPosition (new Size (160, 80), bounds, view.Window.ClientSize, ref mark);
-
-				this.balloonTip = new BalloonTip ()
-				{
-					Anchor = AnchorStyles.BottomLeft,
-					Margins = new Margins (rect.Left, 0, 0, rect.Bottom),
-					Parent = view.RootParent,
-					PreferredSize = rect.Size,
-					BackColor = Color.FromName ("Info"),
-					TipAttachment = bounds.Center - rect.BottomLeft,
-					Disposition = mark,
-					Text = buffer.ToString (),
-					ContentAlignment = ContentAlignment.TopLeft,
-				};
-			}
-			else
-			{
-				if (this.balloonTip != null)
-				{
-					this.balloonTip.Dispose ();
-					this.balloonTip = null;
-				}
+				this.balloonTip = this.CreateSummaryBalloon (view, summary);
 			}
 
 			this.RefreshHilites ();
+		}
+
+		
+		private BalloonTip CreateSummaryBalloon(MiniChartView view, string summary)
+		{
+			var window = view.Window;
+			
+			if (window == null)
+			{
+				return null;
+			}
+
+			if (!view.IsActualGeometryValid)
+			{
+				window.ForceLayout ();
+			}
+
+			var bounds = Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4);
+			var mark = ButtonMarkDisposition.Below;
+			var rect = BalloonTip.GetBestPosition (new Size (160, 80), bounds, window.ClientSize, ref mark);
+
+			return new BalloonTip ()
+			{
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (rect.Left, 0, 0, rect.Bottom),
+				Parent = window.Root,
+				PreferredSize = rect.Size,
+				BackColor = Color.FromName ("Info"),
+				TipAttachment = bounds.Center - rect.BottomLeft,
+				Disposition = mark,
+				Text = summary,
+				ContentAlignment = ContentAlignment.TopLeft,
+			};
+		}
+
+		private string GetSummary(GraphDataSeries series)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("<font face=\"Futura\" style=\"Condensed Medium\">");
+
+			if (this.Document.OutputSeries.Contains (series))
+			{
+				buffer.Append ("<font size=\"120%\">");
+				buffer.AppendFormat ("Source {0}", series.Label);
+				buffer.Append ("</font><br/>");
+				buffer.Append (series.Title);
+				buffer.Append ("<br/>");
+				buffer.Append ("<font size=\"80%\">");
+				buffer.Append ("Min: 12.0 Max: 3456.7");
+				buffer.Append ("</font>");
+			}
+			else
+			{
+				buffer.Append ("<font size=\"120%\">");
+				buffer.AppendFormat ("Compte {0}", series.Label);
+				buffer.Append ("</font><br/>");
+				buffer.Append (series.Title);
+				buffer.Append ("<br/>");
+				buffer.Append ("<font size=\"80%\">");
+				buffer.AppendFormat ("Source: {0}<br/>", series.Source.Name);
+				buffer.Append ("Min: 12.0 Max: 3456.7");
+				buffer.Append ("</font>");
+			}
+
+			buffer.Append ("</font>");
+			
+			return buffer.ToString ();
+		}
+
+		private string GetSummary(GraphDataGroup group)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("<font face=\"Futura\" style=\"Condensed Medium\">");
+			buffer.Append ("<font size=\"120%\">");
+			buffer.Append (group.Name);
+			buffer.Append ("</font><br/>");
+			buffer.AppendFormat (group.Count < 2 ? "Groupe avec {0} élément" : "Groupe avec {0} éléments<br/>", group.Count);
+			buffer.Append ("<font size=\"80%\">");
+			buffer.Append (string.Join (", ", group.InputDataSeries.Select (x => x.Label).ToArray ()));
+			buffer.Append ("</font>");
+			buffer.Append ("</font>");
+
+			return buffer.ToString ();
 		}
 
 		
@@ -1172,7 +1224,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void ShowGroupDetails(GraphDataGroup group)
+		private void ShowGroupDetails(GraphDataGroup group, MiniChartView view)
 		{
 			this.groupDetailItemsController.Clear ();
 
@@ -1189,6 +1241,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, item));
 			}
+
+			double offset = 0;
+
+			if ((view != null) &&
+				(view.Window != null))
+			{
+				if (view.IsActualGeometryValid == false)
+				{
+					view.Window.ForceLayout ();
+				}
+
+				offset = view.ActualBounds.Left;
+			}
+
+			this.groupDetailItemsController.DefineOffset (offset);
 
 			this.RefreshHilites ();
 		}
@@ -1387,6 +1454,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private ChartView				chartView;
 
 		private StaticText				inputItemsWarning;
+		private StaticText				groupItemsHint;
+		private StaticText				outputItemsHint;
 		private VerticalInjectionArrow	groupCalculatorArrow;
 		private BalloonTip				balloonTip;
 		private ColorStyle labelColorStyle;
