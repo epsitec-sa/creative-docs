@@ -564,14 +564,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (view.ActiveState == ActiveState.Yes)
 					{
-						this.Document.AddOutput (item);
-						this.RefreshOutputs ();
-						this.RefreshPreview ();
+						this.IncludeOutput (item);
 					}
 					else
 					{
-						this.Document.RemoveOutput (item);
-						this.Refresh ();
+						this.ExcludeOutput (item);
 					}
 				};
 
@@ -586,6 +583,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 			
 			return view;
+		}
+
+		private void ExcludeOutput(GraphDataSeries item)
+		{
+			this.Document.RemoveOutput (item);
+			this.RefreshInputs ();
+			this.RefreshGroups ();
+			this.RefreshOutputs ();
+			this.RefreshPreview ();
+		}
+
+		private void IncludeOutput(GraphDataSeries item)
+		{
+			this.Document.AddOutput (item);
+			this.RefreshInputs ();
+			this.RefreshGroups ();
+			this.RefreshOutputs ();
+			this.RefreshPreview ();
 		}
 
 		private MiniChartView CreateOutputView(GraphDataSeries item)
@@ -1084,17 +1099,37 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
 		{
+			var container = new FrameBox ()
+			{
+				Dock = DockStyle.Stacked,
+				Parent = arrow,
+				PreferredHeight = 20,
+			};
+
 			var button = new GraphicIconButton ()
 			{
 				IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
 				HorizontalAlignment = HorizontalAlignment.Center,
 				PreferredSize = new Size (36, 20),
-				Dock = DockStyle.Stacked,
-				Parent = arrow,
+				Dock = DockStyle.Fill,
+				Parent = container,
 				AutoToggle = true,
 				Name = function,
 				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).Count () == 0 ? ActiveState.No : ActiveState.Yes,
 			};
+
+			var check = new CheckButton ()
+			{
+				Anchor = AnchorStyles.TopRight,
+				Text = "",
+				Parent = container,
+				Margins = new Margins (0, 2, 2, 0),
+				PreferredSize = new Size (15, 15),
+				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function && x.IsSelected).Count () == 0 ? ActiveState.No : ActiveState.Yes,
+				Visibility = button.ActiveState == ActiveState.Yes
+			};
+
+			//	TODO: ...handle check box...
 
 			button.ActiveStateChanged +=
 				delegate
@@ -1102,14 +1137,35 @@ namespace Epsitec.Cresus.Graph.Controllers
 					if (button.ActiveState == ActiveState.Yes)
 					{
 						group.AddSyntheticDataSeries (function);
+						check.Visibility = true;
 					}
 					else
 					{
 						group.RemoveSyntheticDataSeries (function);
+						check.Visibility = false;
 					}
 					this.Document.UpdateSyntheticSeries ();
 					this.Refresh ();
 				};
+
+			check.ActiveStateChanged +=
+				delegate
+				{
+					var item = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).FirstOrDefault ();
+
+					if (item != null)
+					{
+						if (check.ActiveState == ActiveState.Yes)
+						{
+							this.IncludeOutput (item);
+						}
+						else
+						{
+							this.ExcludeOutput (item);
+						}
+					}
+				};
+
 		}
 
 
