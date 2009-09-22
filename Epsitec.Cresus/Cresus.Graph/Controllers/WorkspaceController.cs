@@ -414,6 +414,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.outputItemsController.Add (this.CreateOutputView (item));
 			}
 
+			if ((this.outputActiveIndex >= 0) &&
+				(this.outputActiveIndex < this.outputItemsController.Count))
+			{
+				this.outputItemsController.ActiveItem = this.outputItemsController[this.outputActiveIndex];
+			}
+			
 			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
 		}
 
@@ -616,6 +622,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void ExcludeOutput(GraphDataSeries item)
 		{
 			this.Document.RemoveOutput (item);
+
+			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
+
 			this.RefreshInputs ();
 			this.RefreshGroups ();
 			this.RefreshOutputs ();
@@ -625,6 +634,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void IncludeOutput(GraphDataSeries item)
 		{
 			this.Document.AddOutput (item);
+
+			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
+
 			this.RefreshInputs ();
 			this.RefreshGroups ();
 			this.RefreshOutputs ();
@@ -1461,5 +1473,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private ColorStyle labelColorStyle;
 		private Command							graphType;
 		private ColorStyle colorStyle;
+		private int outputActiveIndex;
 	}
 }

@@ -305,8 +305,33 @@ namespace Epsitec.Cresus.Graph.Controllers
 			double availableWidth = this.container.Client.Size.Width - this.container.Padding.Width;
 			double totalWidth = this.items.Aggregate (0.0, this.ComputeWidth);
 			double startOffset;
+			double buttonOffset = 0;
+
+			if (totalWidth > availableWidth)
+			{
+				//	No room for all items.
+
+				this.CreateHorizontalScrollButtons ();
+
+				this.scrollPlus.ZOrder = 1;
+				this.scrollMinus.ZOrder = 0;
+				
+				this.scrollMinus.Visibility = true;
+				this.scrollPlus.Visibility  = true;
+				
+				buttonOffset = this.scrollPlus.PreferredWidth;
+				availableWidth -= 2 * buttonOffset;
+			}
+			else
+			{
+				if (this.scrollMinus != null)
+				{
+					this.scrollMinus.Visibility = false;
+					this.scrollPlus.Visibility  = false;
+				}
+			}
 			
-			if (AdjustHorizontalOffset (availableWidth, totalWidth, out startOffset))
+			if (this.AdjustHorizontalOffset (availableWidth, totalWidth, out startOffset))
 			{
 				//	Nothing changed (same availableWidth, same startOffset)
 				return;
@@ -347,10 +372,75 @@ namespace Epsitec.Cresus.Graph.Controllers
 				double posEnd   = posBegin + item.PreferredWidth;
 				var    margins  = item.Margins;
 
-				item.Margins = new Margins (startOffset + posBegin, 0, margins.Top, margins.Bottom);
+				item.Margins = new Margins (buttonOffset + startOffset + posBegin, 0, margins.Top, margins.Bottom);
 				item.Visibility = (posEnd > 0) && (posBegin < availableWidth);
 
 				posBegin = posEnd - this.overlapX;
+			}
+		}
+
+		private void CreateHorizontalScrollButtons()
+		{
+			if (this.scrollMinus == null)
+			{
+				this.scrollMinus = new Button ()
+				{
+					Parent = this.container,
+					Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom,
+					PreferredWidth = 16,
+					ButtonStyle = ButtonStyle.Flat,
+					Margins = new Margins (-1, 0, 4, 4),
+					AutoFocus = false,
+					Text = "&lt;",
+					AutoEngage = true,
+					AutoRepeat = true,
+				};
+
+				this.scrollPlus = new Button ()
+				{
+					Parent = this.container,
+					Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom,
+					PreferredWidth = 16,
+					ButtonStyle = ButtonStyle.Flat,
+					Margins = new Margins (0, -1, 4, 4),
+					AutoFocus = false,
+					Text = "&gt;",
+					AutoEngage = true,
+					AutoRepeat = true,
+				};
+
+				this.scrollMinus.Engaged      += delegate
+				{
+					this.ScrollHorizontalLayout (-1);
+				};
+				
+				this.scrollMinus.StillEngaged += delegate
+				{
+					this.ScrollHorizontalLayout (-1);
+				};
+				
+				this.scrollPlus.Engaged       += delegate
+				{
+					this.ScrollHorizontalLayout (1);
+				};
+				
+				this.scrollPlus.StillEngaged  += delegate
+				{
+					this.ScrollHorizontalLayout (1);
+				};
+			}
+		}
+
+		private void ScrollHorizontalLayout(int increment)
+		{
+			this.activeItem = null;
+
+			var item = this.items.FirstOrDefault ();
+			
+			if (item != null)
+			{
+				this.originOffset = System.Math.Max (0, this.originOffset + (item.PreferredWidth - this.overlapX) * increment);
+				this.InvalidateLayout ();
 			}
 		}
 
@@ -422,5 +512,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private double overlapX;
 		private double overlapY;
 		private Size cachedSize;
+		private Button scrollMinus;
+		private Button scrollPlus;
 	}
 }
