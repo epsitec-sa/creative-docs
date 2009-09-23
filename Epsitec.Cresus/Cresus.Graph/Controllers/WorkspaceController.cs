@@ -739,16 +739,42 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.Refresh ();
 				});
 
+			DragWindow dragWindow = null;
+			
 			view.Pressed +=
-				delegate
-				{
+				(sender, e) =>
+				{ 
+					var pos = view.MapClientToScreen (new Point (0, 0));
+					var mouseOrigin = view.MapClientToScreen (e.Point);
+
 					view.Enable = false;
+
+					dragWindow = new DragWindow ()
+					{
+						Alpha = 0.6,
+						WindowLocation = pos,
+						Owner = view.Window,
+					};
+					
+					dragWindow.DefineWidget (this.CreateView (item), view.PreferredSize, Margins.Zero);
+					dragWindow.Show ();
+
+					e.Message.Captured = true;
+
+					view.MouseMove +=
+						(sender2, e2) =>
+						{
+							var mouse = view.MapClientToScreen (e2.Point);
+							dragWindow.WindowLocation = new Point (pos.X + mouse.X - mouseOrigin.X, pos.Y);
+						};
 				};
 
 			view.Released +=
 				delegate
 				{
 					view.Enable = true;
+					view.ClearUserEventHandlers (Widget.EventNames.MouseMoveEvent);
+					dragWindow.Dispose ();
 				};
 			
 			return view;

@@ -4085,7 +4085,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnMouseMove(MessageEventArgs e)
 		{
-			var handler = this.GetUserEventHandler<MessageEventArgs> (Widget.MouseMoveEvent);
+			var handler = this.GetUserEventHandler<MessageEventArgs> (Widget.EventNames.MouseMoveEvent);
 
 			if (handler != null)
 			{
@@ -4419,11 +4419,11 @@ namespace Epsitec.Common.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler (Widget.MouseMoveEvent, value);
+				this.AddUserEventHandler (Widget.EventNames.MouseMoveEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (Widget.MouseMoveEvent, value);
+				this.RemoveUserEventHandler (Widget.EventNames.MouseMoveEvent, value);
 			}
 		}
 
@@ -4453,8 +4453,10 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
 
-
-		private const string MouseMoveEvent = "MouseMove";
+		public static class EventNames
+		{
+			public const string MouseMoveEvent = "MouseMove";
+		}
 		
 		#endregion
 		

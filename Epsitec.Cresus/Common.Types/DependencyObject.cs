@@ -565,6 +565,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public void ClearEventHandlers(DependencyProperty property)
+		{
+			if ((this.propertyEvents != null) &&
+				(this.propertyEvents.ContainsKey (property)))
+			{
+				this.propertyEvents[property] = null;
+			}
+		}
+		
+		public void ClearUserEventHandlers(string name)
+		{
+			if ((this.userEvents != null) &&
+				(this.userEvents.ContainsKey (name)))
+			{
+				this.userEvents[name] = null;
+			}
+		}
+
 		/// <summary>
 		/// Determines whether the specified property has at least one event handler
 		/// registered.
