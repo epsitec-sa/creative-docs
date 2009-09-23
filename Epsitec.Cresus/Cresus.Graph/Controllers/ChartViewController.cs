@@ -74,17 +74,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.commandContext = this.CreateCommandContext (this.container);
 
-			this.commandBar = new CommandSelectionBar ()
-			{
-				Dock = DockStyle.Top,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Parent = container,
-				BackColor = container.BackColor,
-				Name = "CommandBar"
-			};
-
-			this.CreateGraphTypeButtons ();
-			
 			this.chartView = new ChartView ()
 			{
 				Dock = DockStyle.Fill,
@@ -92,7 +81,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Padding = new Margins (16, 24, 24, 16),
 			};
 
+			this.commandBar = new CommandSelectionBar ()
+			{
+				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Parent = container,
+				BackColor = container.BackColor,
+				Name = "command bar",
+				Visibility = false,
+			};
+
+			this.CreateGraphTypeButtons ();
+			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
+			
+			this.container.Entered +=
+				delegate
+				{
+					this.commandBar.Visibility = true;
+				};
+			
+			this.container.Exited +=
+				delegate
+				{
+					this.commandBar.Visibility = false;
+				};
 		}
 
 		public void Refresh()

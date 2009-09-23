@@ -484,9 +484,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.outputItemsController.Clear ();
 
+			int index = 0;
+
 			foreach (var item in this.Document.OutputSeries)
 			{
-				this.outputItemsController.Add (this.CreateOutputView (item));
+				this.outputItemsController.Add (this.CreateOutputView (item, index++));
 			}
 
 			if ((this.outputActiveIndex >= 0) &&
@@ -718,9 +720,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshPreview ();
 		}
 
-		private MiniChartView CreateOutputView(GraphDataSeries item)
+		private MiniChartView CreateOutputView(GraphDataSeries item, int index)
 		{
 			var view = this.CreateView (item);
+
+			view.Renderer.RemoveStyle (this.colorStyle);
+			view.Renderer.AddStyle (new ColorStyle (this.colorStyle.Name)
+			{
+				this.colorStyle[index]
+			});
+
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
 			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,

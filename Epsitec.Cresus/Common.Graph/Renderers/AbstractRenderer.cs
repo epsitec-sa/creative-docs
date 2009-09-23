@@ -158,6 +158,11 @@ namespace Epsitec.Common.Graph.Renderers
 			this.styles.Add (style.Name, style);
 		}
 
+		public void RemoveStyle(Styles.AbstractStyle style)
+		{
+			this.styles.Remove (style.Name);
+		}
+
 		public void AddAdorner(Adorners.AbstractAdorner adorner)
 		{
 			this.adorners.Add (adorner);
