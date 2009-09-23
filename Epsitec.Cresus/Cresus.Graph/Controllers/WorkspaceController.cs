@@ -738,6 +738,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.Document.RemoveOutput (item);
 					this.Refresh ();
 				});
+
+			view.Pressed +=
+				delegate
+				{
+					view.Enable = false;
+				};
+
+			view.Released +=
+				delegate
+				{
+					view.Enable = true;
+				};
 			
 			return view;
 		}

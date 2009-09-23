@@ -132,7 +132,7 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.Transform = transform;
 			}
 
-			MiniChartView.PaintTopmostSheet (graphics, rectangle, this.hiliteColor);
+			MiniChartView.PaintTopmostSheet (graphics, rectangle, this.TransformColor (this.hiliteColor));
 
 			if ((renderer != null) &&
 				(renderer.SeriesItems.Count > 0))
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Graph.Widgets
 
 			if (!string.IsNullOrEmpty (this.Label))
 			{
-				MiniChartView.PaintNote (graphics, rectangle, this.Label, this.LabelColor);
+				MiniChartView.PaintNote (graphics, rectangle, this.Label, this.TransformColor (this.LabelColor));
 			}
 
 			if (this.ActiveState != ActiveState.No)
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Graph.Widgets
 			if (this.IsSelected)
 			{
 				graphics.LineWidth = 2.0;
-				graphics.Color = Epsitec.Common.Widgets.Adorners.Factory.Active.ColorCaption;
+				graphics.Color = this.TransformColor (Epsitec.Common.Widgets.Adorners.Factory.Active.ColorCaption);
 				graphics.AddRectangle (Rectangle.Inflate (rectangle, new Margins (1, 1, 1, 1)));
 				graphics.RenderSolid ();
 			}
@@ -229,6 +229,20 @@ namespace Epsitec.Common.Graph.Widgets
 			base.OnActiveStateChanged ();
 		}
 
+		private Color TransformColor(Color color)
+		{
+			if (this.IsEnabled || color.IsEmpty)
+			{
+				return color;
+			}
+			else
+			{
+				var brightness = color.GetBrightness ();
+				var alpha = color.A;
+
+				return Color.FromAlphaRgb (alpha, brightness, brightness, brightness);
+			}
+		}
 		
 		private void HideCheckButton()
 		{
