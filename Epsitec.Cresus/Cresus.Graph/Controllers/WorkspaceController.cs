@@ -904,9 +904,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				window.ForceLayout ();
 			}
 
-			var bounds = Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4);
-			var mark = ButtonMarkDisposition.Below;
-			var rect = BalloonTip.GetBestPosition (new Size (160, 80), bounds, window.ClientSize, ref mark);
+			var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
+			var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
+			var mark   = ButtonMarkDisposition.Below;
+			var rect   = BalloonTip.GetBestPosition (new Size (160, 80), bounds, window.ClientSize, ref mark);
 
 			return new BalloonTip ()
 			{

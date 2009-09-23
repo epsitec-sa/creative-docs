@@ -235,6 +235,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					IsInverted = true,
 					MinValue = 0.0M,
 					MaxValue = 1.0M,
+					SmallChange = 76,
+					LargeChange = 76,
 				};
 
 				this.scroller.ValueChanged +=
@@ -275,9 +277,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 					lineHeight = 0;
 				}
 
-				lineHeight = System.Math.Max (lineHeight, item.PreferredHeight);
+				lineHeight = System.Math.Max (lineHeight, item.PreferredHeight - this.overlapY);
 
-				double posEndY  = posBeginY + item.PreferredHeight;
+				double posEndY  = posBeginY + item.PreferredHeight - this.overlapY;
 				var    margins  = item.Margins;
 
 				posMaxY = System.Math.Max (posMaxY, posEndY);
@@ -291,8 +293,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (posMaxY > availableHeight)
 			{
 				this.scroller.Enable = true;
-				this.scroller.VisibleRangeRatio = (decimal)(availableHeight / posMaxY);
-				this.scroller.MaxValue = (decimal)(posMaxY - availableHeight);
+				this.scroller.VisibleRangeRatio = (decimal) (availableHeight / posMaxY);
+				this.scroller.MaxValue = (decimal) (posMaxY - availableHeight);
+				this.scroller.SmallChange = (decimal) (this.items.First ().PreferredHeight - this.overlapY);
+				this.scroller.LargeChange = (decimal) (availableHeight);
 			}
 			else
 			{
@@ -379,6 +383,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		
 		private void CreateHorizontalScrollButtons()
 		{
 			if (this.scrollMinus == null)
