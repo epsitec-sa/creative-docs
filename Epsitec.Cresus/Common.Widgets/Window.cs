@@ -1145,6 +1145,16 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
+
+		
+		public void RefreshEnteredWidgets(Message message)
+		{
+			this.ForceLayout ();
+			Widget.ClearEntered (this);
+			Widget child = this.Root.FindChild (message.Cursor, Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipHidden);
+			Widget.UpdateEntered (this, child, message);
+		}
+		
 		
 		
 		internal void PlatformWindowDisposing()

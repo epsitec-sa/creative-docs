@@ -1449,9 +1449,18 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		public static void UpdateEntered(Window window, Message message)
+
+
+		internal static void ClearEntered(Window window)
+		{
+			while (Widget.enteredWidgets.Count > 0)
+			{
+				Widget widget = Widget.enteredWidgets[0];
+				widget.SetEntered (false);
+			}
+		}
+
+		internal static void UpdateEntered(Window window, Message message)
 		{
 			int index = Widget.enteredWidgets.Count;
 			
@@ -1466,7 +1475,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static void UpdateEntered(Window window, Widget widget, Message message)
+		internal static void UpdateEntered(Window window, Widget widget, Message message)
 		{
 			Drawing.Point pointInWidget = widget.MapRootToClient (message.Cursor);
 			
