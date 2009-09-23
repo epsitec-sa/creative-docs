@@ -671,9 +671,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var view = this.CreateView (item);
 			var cat  = item.Source.GetCategory (item);
 
-			view.AutoCheckButton = true;
+			view.AutoCheckButton = false;
 			view.ActiveState = item.IsSelected ? ActiveState.Yes : ActiveState.No;
-			view.LabelColor = this.labelColorStyle[cat.Index];
+			view.BackColor = this.labelColorStyle[cat.Index];
 
 			view.ActiveStateChanged +=
 				delegate
@@ -694,7 +694,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 					if ((e.Message.Button == MouseButtons.Left) &&
 						(e.Message.ButtonDownCount == 1))
 					{
-						this.HandleInputViewClicked (view);
+						this.HandleInputViewClicked (item, view);
+
+						this.inputItemsController.UpdateLayout ();
+						this.application.Window.RefreshEnteredWidgets (e.Message);
 					}
 				};
 			
@@ -1076,7 +1079,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshGroupView ();
 		}
 		
-		private void HandleInputViewClicked(MiniChartView view)
+		private void HandleInputViewClicked(GraphDataSeries item, MiniChartView view)
 		{
 			if (Message.CurrentState.IsControlPressed)
 			{
@@ -1084,6 +1087,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
+#if true
+				view.Toggle ();
+#else
 				bool select = !view.IsSelected;
 				
 				this.inputItemsController.ForEach (x => x.SetSelected (false));
@@ -1092,6 +1098,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.groupItemsController.ActiveItem = null;
 
 				view.SetSelected (select);
+#endif
 			}
 
 			this.RefreshInputViewSelection ();
@@ -1214,10 +1221,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
+				string name = series.Title;
+				string compte = name.Substring (0, name.IndexOf (' ')+1).Trim ();
+				string libellé = name.Substring (name.IndexOf (' ')+1).Trim ();
+
 				buffer.Append ("<font size=\"120%\">");
-				buffer.AppendFormat ("Compte {0}", series.Label);
+				buffer.AppendFormat ("Compte {0}", compte);
 				buffer.Append ("</font><br/>");
-				buffer.Append (series.Title);
+				buffer.Append (libellé);
 				buffer.Append ("<br/>");
 				buffer.Append ("<font size=\"80%\">");
 				buffer.AppendFormat ("Source: {0}<br/>", series.Source.Name);

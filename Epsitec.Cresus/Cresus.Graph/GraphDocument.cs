@@ -425,8 +425,13 @@ namespace Epsitec.Cresus.Graph
 						new GraphDataSeries (series)
 						{
 							Index = index++,
+#if true
+							Label = "",
+							Title = series.Label,
+#else
 							Label = series.Label.Substring (0, series.Label.IndexOf (' ')+1).Trim (),
 							Title = series.Label.Substring (series.Label.IndexOf (' ')+1).Trim ()
+#endif
 						}));
 
 			source.UpdateCategories ();

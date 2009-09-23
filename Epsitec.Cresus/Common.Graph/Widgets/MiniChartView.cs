@@ -132,7 +132,7 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.Transform = transform;
 			}
 
-			MiniChartView.PaintTopmostSheet (graphics, rectangle, this.TransformColor (this.hiliteColor));
+			MiniChartView.PaintTopmostSheet (graphics, rectangle, this.TransformColor (this.hiliteColor.IsEmpty ? this.BackColor : this.hiliteColor));
 
 			if ((renderer != null) &&
 				(renderer.SeriesItems.Count > 0))
