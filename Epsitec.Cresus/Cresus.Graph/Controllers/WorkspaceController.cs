@@ -48,6 +48,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor         = AnchorStyles.BottomLeft,
 			};
 
+			this.chartViewController = new ChartViewController (this.application)
+			{
+				GraphType = Res.Commands.GraphType.UseLineChart,
+				ColorStyle = this.colorStyle,
+			};
+			
 			this.viewToGroup = new Dictionary<long, GraphDataGroup> ();
 			this.viewToSeries = new Dictionary<long, GraphDataSeries> ();
 			this.hilites = new List<HiliteInfo> ();
@@ -60,28 +66,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Color.FromRgb (0.8, 0.8, 1.0),
 				Color.FromRgb (1.0, 0.8, 1.0),
 			};
-			
-			this.graphType = Res.Commands.GraphType.UseLineChart;
 		}
 
-		
-		public Command GraphType
-		{
-			get
-			{
-				return this.graphType;
-			}
-			set
-			{
-				if (this.graphType != value)
-				{
-					this.graphType = value;
-//-					this.commandBar.SelectedItem = this.graphType;
-					this.RefreshPreview ();
-				}
-			}
-		}
-		
 		
 		public void SetupUI()
 		{
@@ -237,12 +223,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.groupDetailItemsController.SetupUI (groupFrame);
 			this.outputItemsController.SetupUI (outputPage);
 
-			this.chartView = new ChartView ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = previewFrame,
-				Padding = new Margins (16, 24, 24, 16),
-			};
+			this.chartViewController.SetupUI (previewFrame);
 
 			this.inputItemsWarning = new StaticText ()
 			{
@@ -1499,105 +1480,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if (this.Document != null)
 			{
-				var renderer = this.CreateRenderer ();
-
-				if (renderer == null)
-				{
-					this.chartView.Renderer   = null;
-//-					this.captionView.Captions = null;
-				}
-				else
-				{
-					List<ChartSeries> series = new List<ChartSeries> (this.GetDocumentChartSeries ());
-
-					bool stackValues = false;
-
-					renderer.Clear ();
-					renderer.ChartSeriesRenderingMode = stackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
-					renderer.DefineValueLabels (this.Document.ChartColumnLabels);
-					renderer.CollectRange (series);
-					renderer.UpdateCaptions (series);
-					renderer.AlwaysIncludeZero = true;
-
-//-					Size size = renderer.Captions.GetCaptionLayoutSize (Size.MaxValue) + this.captionView.Padding.Size;
-
-					var layoutMode = ContainerLayoutMode.None;
-
-					switch (layoutMode)
-					{
-						case ContainerLayoutMode.HorizontalFlow:
-//-							this.captionView.PreferredHeight = size.Height;
-							break;
-
-						case ContainerLayoutMode.VerticalFlow:
-//-							this.captionView.PreferredWidth = size.Width;
-							break;
-					}
-
-					this.chartView.Renderer = renderer;
-//-					this.captionView.Captions = renderer.Captions;
-				}
-
-				this.chartView.Invalidate ();
-//-				this.captionView.Invalidate ();
+				this.chartViewController.Refresh (this.Document);
 			}
 		}
 
-		private IEnumerable<ChartSeries> GetDocumentChartSeries()
-		{
-			bool accumulateValues = false;
-			foreach (var series in this.Document.OutputSeries.Select (x => x.ChartSeries))
-			{
-				yield return new ChartSeries (series.Label, accumulateValues ? WorkspaceController.Accumulate (series.Values) : series.Values);
-			}
-		}
-
-		private static IEnumerable<ChartValue> Accumulate(IEnumerable<ChartValue> collection)
-		{
-			double accumulation = 0.0;
-
-			foreach (var value in collection)
-			{
-				accumulation += value.Value;
-				yield return new ChartValue (value.Label, accumulation);
-			}
-		}
-
-		private AbstractRenderer CreateRenderer()
-		{
-			AbstractRenderer renderer = null;
-			bool stackValues = false;
-
-			if (this.GraphType == Res.Commands.GraphType.UseLineChart)
-			{
-				renderer = new LineChartRenderer ()
-				{
-					SurfaceAlpha = stackValues ? 1.0 : 0.0
-				};
-			}
-			else if (this.GraphType == Res.Commands.GraphType.UseBarChartVertical)
-			{
-				renderer = new BarChartRenderer ();
-			}
-
-			if (renderer != null)
-			{
-				var adorner = new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
-				{
-					GridColor = Color.FromBrightness (0.8),
-					VisibleGrid = true,
-					VisibleLabels = false,
-					VisibleTicks = true,
-				};
-
-				renderer.AddStyle (this.colorStyle);
-				renderer.AddAdorner (adorner);
-			}
-
-			return renderer;
-		}
-
-		
 		public System.Action<IEnumerable<int>>	SumSeriesAction;
 		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
 		public System.Action<IEnumerable<int>>	NegateSeriesAction;
@@ -1613,9 +1499,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
 		private readonly Dictionary<long, GraphDataGroup> viewToGroup;
 		private readonly List<HiliteInfo> hilites;
-		
-		private ChartView				chartView;
 
+		private ChartViewController		chartViewController;
+		
 		private StaticText				inputItemsWarning;
 		private StaticText				groupItemsHint;
 		private StaticText				outputItemsHint;
