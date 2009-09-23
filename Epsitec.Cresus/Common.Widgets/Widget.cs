@@ -593,7 +593,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public new Widget							Parent
+		public new virtual Widget					Parent
 		{
 			get
 			{

@@ -129,6 +129,37 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override Widget Parent
+		{
+			get
+			{
+				return base.Parent;
+			}
+			set
+			{
+				if (base.Parent != value)
+				{
+					TabBook newParent = value as TabBook;
+					TabBook oldParent = base.Parent as TabBook;
+
+					if (oldParent != null)
+					{
+						oldParent.Items.Remove (this);
+					}
+					
+					if (newParent == null)
+					{
+						base.Parent = value;
+					}
+					else
+					{
+						newParent.Items.Add (this);
+					}
+				}
+			}
+		}
+
+
 		
 		protected virtual void OnRankChanged()
 		{

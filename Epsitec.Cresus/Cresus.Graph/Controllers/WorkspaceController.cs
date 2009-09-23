@@ -205,9 +205,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Name = "page1",
 				TabTitle = "Graphique",
+				Parent = outputBook,
 			};
 
-			outputBook.Items.Add (outputPage);
+			var newPage = new TabPage ()
+			{
+				Name = "page+",
+				TabTitle = "+",
+				Parent = outputBook,
+			};
+
 			outputBook.ActivePage = outputPage;
 
 			var previewFrame = new FrameBox ()
