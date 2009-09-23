@@ -2,20 +2,20 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph;
+using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Graph.Renderers;
+using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Graph.Widgets;
-
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Graph.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Graph.Data;
-using Epsitec.Cresus.Graph.Widgets;
-using Epsitec.Common.Graph.Styles;
-using Epsitec.Common.Graph;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {

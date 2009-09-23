@@ -2,28 +2,36 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph;
+using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Graph.Renderers;
+using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Graph.Widgets;
-
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Graph.Controllers;
+using Epsitec.Cresus.Graph.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Graph.Data;
-using Epsitec.Cresus.Graph.Widgets;
-using Epsitec.Common.Graph.Styles;
-using Epsitec.Common.Graph;
+
+[assembly: DependencyClass (typeof (ChartViewController))]
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class ChartViewController
+	internal sealed class ChartViewController : DependencyObject
 	{
 		public ChartViewController(GraphApplication application)
 		{
 			this.application = application;
+			
+			if (ChartViewController.commandController == null)
+			{
+				ChartViewController.commandController = new CommandController (this.application.CommandDispatcher);
+			}
 		}
 
 		public Command GraphType
@@ -38,7 +46,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					this.graphType = value;
 					//-					this.commandBar.SelectedItem = this.graphType;
-					this.Refresh (this.document);
+					this.Refresh ();
 				}
 			}
 		}
@@ -54,7 +62,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				if (this.colorStyle != value)
 				{
 					this.colorStyle = value;
-					this.Refresh (this.document);
+					this.Refresh ();
 				}
 			}
 		}
@@ -64,12 +72,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.container = container;
 			
+			this.commandContext = this.CreateCommandContext (this.container);
+
+			this.commandBar = new CommandSelectionBar ()
+			{
+				Dock = DockStyle.Top,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Parent = container,
+				BackColor = container.BackColor,
+				Name = "CommandBar"
+			};
+
+			this.CreateGraphTypeButtons ();
+			
 			this.chartView = new ChartView ()
 			{
 				Dock = DockStyle.Fill,
 				Parent = this.container,
 				Padding = new Margins (16, 24, 24, 16),
 			};
+
+			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
+		}
+
+		public void Refresh()
+		{
+			this.Refresh (this.document);
 		}
 
 		public void Refresh(GraphDocument document)
@@ -124,6 +152,28 @@ namespace Epsitec.Cresus.Graph.Controllers
 			//-				this.captionView.Invalidate ();
 		}
 
+		private void CreateGraphTypeButtons()
+		{
+			foreach (var command in this.GetGraphTypeCommands ())
+			{
+				this.commandBar.Items.Add (command);
+				this.commandContext.GetCommandState (command).Enable = true;
+			}
+
+			this.commandBar.ItemSize = new Size (64, 40);
+			this.commandBar.SelectedItem = this.graphType;
+		}
+
+		private CommandContext CreateCommandContext(Widget container)
+		{
+			var context = new CommandContext ("ChartViewController");
+
+			CommandContext.SetContext (container, context);
+			ChartViewController.SetChartViewController (context, this);
+
+			return context;
+		}
+		
 		private AbstractRenderer CreateRenderer()
 		{
 			AbstractRenderer renderer = null;
@@ -158,6 +208,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return renderer;
 		}
 
+		private IEnumerable<Command> GetGraphTypeCommands()
+		{
+			yield return Res.Commands.GraphType.UseLineChart;
+			yield return Res.Commands.GraphType.UseBarChartVertical;
+			yield return Res.Commands.GraphType.UseBarChartHorizontal;
+		}
+
+
 		private IEnumerable<ChartSeries> GetDocumentChartSeries()
 		{
 			bool accumulateValues = false;
@@ -178,9 +236,50 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		
+
+		private class CommandController
+		{
+			public CommandController(CommandDispatcher dispatcher)
+			{
+				dispatcher.RegisterController (this);
+			}
+
+			[Command (Res.CommandIds.GraphType.UseLineChart)]
+			[Command (Res.CommandIds.GraphType.UseBarChartVertical)]
+			[Command (Res.CommandIds.GraphType.UseBarChartHorizontal)]
+			private void GraphTypeCommand(CommandDispatcher sender, CommandEventArgs e)
+			{
+				var controller = ChartViewController.GetChartViewController (e.CommandContext);
+				controller.commandBar.SelectedItem = e.Command;
+			}
+		}
+
+
+		public static void SetChartViewController(DependencyObject o, ChartViewController value)
+		{
+			o.SetValue (ChartViewController.ChartViewControllerProperty, value);
+		}
+
+		public static void ClearChartViewController(DependencyObject o)
+		{
+			o.ClearValue (ChartViewController.ChartViewControllerProperty);
+		}
+
+		public static ChartViewController GetChartViewController(DependencyObject o)
+		{
+			return o.GetValue (ChartViewController.ChartViewControllerProperty) as ChartViewController;
+		}
+
+
+
+
+
+		public static readonly DependencyProperty ChartViewControllerProperty = DependencyProperty.RegisterAttached ("ChartViewController", typeof (ChartViewController), typeof (ChartViewController), new DependencyPropertyMetadata ());
+		private static CommandController		commandController;
 
 		private readonly GraphApplication	application;
+		private CommandContext			commandContext;
+		private CommandSelectionBar	commandBar;
 		private Widget container;
 		private ChartView				chartView;
 		private GraphDocument document;
