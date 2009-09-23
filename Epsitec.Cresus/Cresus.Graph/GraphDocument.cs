@@ -77,6 +77,14 @@ namespace Epsitec.Cresus.Graph
 			{
 				return this.activeDataSource;
 			}
+			set
+			{
+				if (this.activeDataSource != value)
+				{
+					this.activeDataSource = value;
+					this.NotifyDataSourceChanged ();
+				}
+			}
 		}
 
 		public IList<GraphDataSeries> OutputSeries
@@ -382,7 +390,11 @@ namespace Epsitec.Cresus.Graph
 			this.dataSources.Add (source);
 
 			this.activeDataSource = source;
-			
+			this.NotifyDataSourceChanged ();
+		}
+
+		private void NotifyDataSourceChanged()
+		{
 			this.application.WorkspaceController.Refresh ();
 		}
 

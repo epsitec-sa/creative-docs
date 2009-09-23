@@ -99,8 +99,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 				PreferredWidth = 400,
 				Name = "settings",
-				BackColor = Color.FromRgb (0.9, 1, 0.9),
+//-				BackColor = Color.FromRgb (0.9, 1, 0.9),
 				Parent = container,
+			};
+
+			new Separator ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 3,
+				IsVerticalLine = true,
+				Parent = settingsFrame,
 			};
 
 			var filterFrame = new FrameBox ()
@@ -112,6 +120,30 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 			};
 
+			new Separator ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 3,
+				IsVerticalLine = true,
+				Parent = settingsFrame,
+			};
+
+			var sourceFrame = new FrameBox ()
+			{
+				Dock= DockStyle.Left,
+				PreferredWidth = 160,
+				Name = "sources",
+				Parent = settingsFrame,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+			};
+
+			new Separator ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 3,
+				IsVerticalLine = true,
+				Parent = settingsFrame,
+			};
 		}
 		
 		private void SetupWorkspaceFrameUI()
@@ -360,13 +392,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshGroups ();
 				this.RefreshPreview ();
 				this.RefreshFilters ();
+				this.RefreshSources ();
 				this.RefreshHilites ();
 			}
 		}
 
 		private void RefreshFilters()
 		{
-
 			var container = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
 
 			container.Children.Widgets.ForEach (x => x.Dispose ());
@@ -385,6 +417,61 @@ namespace Epsitec.Cresus.Graph.Controllers
 			foreach (var category in this.Document.ActiveDataSource.Categories)
 			{
 				this.CreateFilterButton (container, category);
+			}
+		}
+
+		private void RefreshSources()
+		{
+			var container = this.application.MainWindowController.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
+
+			container.Children.Widgets.ForEach (x => x.Dispose ());
+
+			System.Diagnostics.Debug.Assert (container.Children.Count == 0);
+
+			var label = new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				PreferredHeight = 20,
+				Parent = container,
+				Text = "Sources de données",
+				ContentAlignment = ContentAlignment.MiddleCenter,
+			};
+
+			var bottom = new FrameBox ()
+			{
+				Dock = DockStyle.StackFill,
+				Parent = container,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			var container1 = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Parent = bottom,
+			};
+
+			var container2 = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Parent = bottom,
+			};
+
+			int index = 0;
+
+			foreach (var source in this.Document.DataSources)
+			{
+				if (index < 2)
+				{
+					this.CreateSourceButton (container1, source);
+				}
+				else if (index < 4)
+				{
+					this.CreateSourceButton (container2, source);
+				}
+
+				index++;
 			}
 		}
 
@@ -723,7 +810,63 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				};
 		}
-		
+
+		private void CreateSourceButton(Widget filters, GraphDataSource source)
+		{
+			var frame = new FrameBox ()
+			{
+				Dock = DockStyle.Stacked,
+				PreferredHeight = 24,
+				BackColor = Color.FromRgb (1.0, 1.0, 0.8),
+				Parent = filters,
+				Padding = new Margins (4, 4, 1, 1),
+			};
+
+			frame.PaintBackground +=
+				(sender, e) =>
+				{
+					var label = Rectangle.Deflate (frame.Client.Bounds, new Margins (3, 3, 3, 3));
+					var graphics = e.Graphics;
+					var transform = graphics.Transform;
+					graphics.RotateTransformDeg (0, label.Center.X, label.Center.Y);
+
+					MiniChartView.PaintShadow (graphics, label);
+					graphics.AddFilledRectangle (label);
+
+					Color color1 = frame.BackColor;
+					Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+
+					graphics.GradientRenderer.Fill = GradientFill.Y;
+					graphics.GradientRenderer.SetColors (color1, color2);
+					graphics.GradientRenderer.SetParameters (0, 100);
+					graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, label.Height / 100.0).Translate (label.BottomLeft);
+					graphics.RenderGradient ();
+
+					graphics.Transform = transform;
+					e.Suppress = true;
+				};
+
+			var button = new RadioButton ()
+			{
+				Text = source.Name,
+				Dock = DockStyle.Fill,
+				Parent = frame,
+				ActiveState = this.Document.ActiveDataSource == source ? ActiveState.Yes : ActiveState.No,
+			};
+
+			button.ActiveStateChanged +=
+				sender =>
+				{
+					if (button.ActiveState == ActiveState.Yes)
+					{
+						this.Document.ActiveDataSource = source;
+					}
+					
+					this.RefreshInputs ();
+					this.RefreshGroups ();
+					this.RefreshOutputs ();
+				};
+		}
 		
 		private void CreateGroup()
 		{
