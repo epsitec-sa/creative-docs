@@ -25,7 +25,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.application = application;
 			this.filterCategories = new HashSet<GraphDataCategory> ();
-			this.colorStyle = new ColorStyle ("line-color") { "Red", "DeepPink", "Coral", "Tomato", "SkyBlue", "RoyalBlue", "DarkBlue", "Green", "PaleGreen", "Lime", "Yellow", "Wheat" };
+			this.colorStyle = new ColorStyle ("line-color");
+			
+			for (int hue = 0; hue < 360; hue += 36)
+			{
+				this.colorStyle.Add (Color.FromAlphaHsv (1.0, hue, 1.0, 1.0));
+			}
 			
 			this.inputItemsController = new ItemListController<MiniChartView> ()
 			{
@@ -724,6 +729,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var view = this.CreateView (item);
 
+			view.MouseCursor = MouseCursor.AsHand;
+
 			view.Renderer.RemoveStyle (this.colorStyle);
 			view.Renderer.AddStyle (new ColorStyle (this.colorStyle.Name)
 			{
@@ -739,11 +746,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.Refresh ();
 				});
 
-			DragWindow dragWindow = null;
+			this.CreateOutputDragAndDropHandler (item, view);
 			
+			return view;
+		}
+
+		private void CreateOutputDragAndDropHandler(GraphDataSeries item, MiniChartView view)
+		{
+			DragWindow dragWindow = null;
+			Separator separator = null;
+
+			int insertAt = -1;
+
 			view.Pressed +=
 				(sender, e) =>
-				{ 
+				{
+					this.CloseBalloonTip ();
+
 					var pos = view.MapClientToScreen (new Point (0, 0));
 					var mouseOrigin = view.MapClientToScreen (e.Point);
 
@@ -755,9 +774,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 						WindowLocation = pos,
 						Owner = view.Window,
 					};
-					
+
 					dragWindow.DefineWidget (this.CreateView (item), view.PreferredSize, Margins.Zero);
 					dragWindow.Show ();
+
+					separator = new Separator ()
+					{
+						Parent = view.Parent,
+						Visibility = false,
+						Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left,
+						PreferredWidth = 2,
+					};
 
 					e.Message.Captured = true;
 
@@ -765,7 +792,47 @@ namespace Epsitec.Cresus.Graph.Controllers
 						(sender2, e2) =>
 						{
 							var mouse = view.MapClientToScreen (e2.Point);
+							var hotPos = view.MapClientToParent (e2.Point);
+							view.MouseCursor = MouseCursor.AsSizeWE;
 							dragWindow.WindowLocation = new Point (pos.X + mouse.X - mouseOrigin.X, pos.Y);
+							e2.Suppress = true;
+							
+							var dist = this.outputItemsController.Select (x => new
+							{
+								Distance = hotPos.X - x.ActualBounds.Center.X,
+								View = x
+							});
+
+							var best = dist.OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
+
+							if ((best != null) &&
+								(best.View != view))
+							{
+								if ((best.Distance < 0) &&
+									(best.View.Index != view.Index+1))
+								{
+									separator.Margins = new Margins (best.View.ActualBounds.Left - separator.PreferredWidth + 3, 0, 0, 0);
+									separator.Visibility = true;
+									insertAt = best.View.Index;
+								}
+								else if ((best.Distance >= 0) &&
+									     (best.View.Index != view.Index-1))
+								{
+									separator.Margins = new Margins (best.View.ActualBounds.Right - 3, 0, 0, 0);
+									separator.Visibility = true;
+									insertAt = best.View.Index+1;
+								}
+								else
+								{
+									separator.Visibility = false;
+									insertAt = -1;
+								}
+							}
+							else
+							{
+								separator.Visibility = false;
+								insertAt = -1;
+							}
 						};
 				};
 
@@ -773,11 +840,28 @@ namespace Epsitec.Cresus.Graph.Controllers
 				delegate
 				{
 					view.Enable = true;
+					view.MouseCursor = MouseCursor.AsHand;
 					view.ClearUserEventHandlers (Widget.EventNames.MouseMoveEvent);
-					dragWindow.Dispose ();
+
+					if (dragWindow != null)
+					{
+						dragWindow.Dispose ();
+						dragWindow = null;
+					}
+					
+					if (separator != null)
+					{
+						separator.Dispose ();
+						separator = null;
+					}
+
+					if (insertAt >= 0)
+					{
+						this.Document.SetOutputIndex (item, insertAt);
+						this.RefreshOutputs ();
+						this.RefreshPreview ();
+					}
 				};
-			
-			return view;
 		}
 
 		private void CreateFilterButton(Widget filters, GraphDataCategory category)
@@ -1016,55 +1100,65 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleViewHiliteChanged(MiniChartView view, bool entered)
 		{
+			this.hilites.Clear ();
+			
+			this.CloseBalloonTip ();
+
+			if (entered && view.IsEnabled)
+			{
+				this.ShowBalloonTip (view, this.hilites);
+			}
+
+			this.RefreshHilites ();
+		}
+
+		private void ShowBalloonTip(MiniChartView view, List<HiliteInfo> hilites)
+		{
 			long id = view.GetVisualSerialId ();
 
 			GraphDataGroup group;
 			GraphDataSeries series;
 
-			this.hilites.Clear ();
-			
+			string summary = "";
+
+			if (this.viewToGroup.TryGetValue (id, out group))
+			{
+				//	Hovering over a group in the group view.
+
+				hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
+
+				summary = this.GetSummary (group);
+
+				group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (hilites, x, 0));
+				group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (hilites, x, 0));
+			}
+			else if (this.viewToSeries.TryGetValue (id, out series))
+			{
+				//	Hovering over a series (either in the input view, details view of a group or output view).
+
+				summary = this.GetSummary (series);
+
+				while (series != null)
+				{
+					hilites.Add (new HiliteInfo (series, 0, HiliteType.Default));
+
+					WorkspaceController.AddInputSeries (hilites, series, 0);
+
+					series.Groups.ForEach (x => WorkspaceController.AddOutputGroup (hilites, x, 0));
+					series = series.Parent;
+				}
+			}
+
+			this.balloonTip = this.CreateSummaryBalloon (view, summary);
+		}
+
+		private void CloseBalloonTip()
+		{
 			if (this.balloonTip != null)
 			{
 				this.balloonTip.Dispose ();
 				this.balloonTip = null;
 			}
-
-			if (entered)
-			{
-				string summary = "";
-
-				if (this.viewToGroup.TryGetValue (id, out group))
-				{
-					//	Hovering over a group in the group view.
-
-					this.hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
-
-					summary = this.GetSummary (group);
-
-					group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (this.hilites, x, 0));
-					group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (this.hilites, x, 0));
-				}
-				else if (this.viewToSeries.TryGetValue (id, out series))
-				{
-					//	Hovering over a series (either in the input view, details view of a group or output view).
-
-					summary = this.GetSummary (series);
-
-					while (series != null)
-					{
-						this.hilites.Add (new HiliteInfo (series, 0, HiliteType.Default));
-
-						WorkspaceController.AddInputSeries (this.hilites, series, 0);
-
-						series.Groups.ForEach (x => WorkspaceController.AddOutputGroup (this.hilites, x, 0));
-						series = series.Parent;
-					}
-				}
-
-				this.balloonTip = this.CreateSummaryBalloon (view, summary);
-			}
-
-			this.RefreshHilites ();
 		}
 
 		

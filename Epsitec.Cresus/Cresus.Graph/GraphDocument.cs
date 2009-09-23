@@ -179,7 +179,8 @@ namespace Epsitec.Cresus.Graph
 				Label = series.Source == null ? "" : series.Source.Name,
 				Title = series.ChartSeries.Label
 			};
-			
+
+			output.Index = this.outputSeries.Count;
 			this.outputSeries.Add (output);
 
 			return output;
@@ -202,7 +203,50 @@ namespace Epsitec.Cresus.Graph
 			System.Diagnostics.Debug.Assert (item.Parent != null);
 
 			item.Parent.IsSelected = false;
+
 			this.outputSeries.Remove (item);
+			this.RenumberSeries (this.outputSeries);
+		}
+
+		private void RenumberSeries(IEnumerable<GraphDataSeries> collection)
+		{
+			int index = 0;
+			
+			foreach (var item in collection)
+			{
+				item.Index = index++;
+			}
+		}
+
+		public bool SetOutputIndex(GraphDataSeries series, int newIndex)
+		{
+			GraphDataSeries item = null;
+
+			if (this.outputSeries.Contains (series))
+			{
+				item = series;
+			}
+			else
+			{
+				item = this.outputSeries.Find (x => x.Parent == series);
+			}
+
+			if (item == null)
+			{
+				return false;
+			}
+
+			int oldIndex = item.Index;
+
+			if (oldIndex < newIndex)
+			{
+				newIndex--;
+			}
+
+			this.outputSeries.Remove (item);
+			this.outputSeries.Insert (newIndex, item);
+
+			return true;
 		}
 
 

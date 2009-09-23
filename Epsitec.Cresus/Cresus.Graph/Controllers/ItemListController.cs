@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				double posEndY  = posBeginY + item.PreferredHeight - this.overlapY;
 				var    margins  = item.Margins;
 
-				posMaxY = System.Math.Max (posMaxY, posEndY);
+				posMaxY = System.Math.Max (posMaxY, posEndY + this.overlapY);
 
 				item.Margins = new Margins (posBeginX, margins.Right, posBeginY + this.originOffset, margins.Bottom);
 				item.Visibility = (posEndY + this.originOffset > 0) && (posBeginY + this.originOffset < availableHeight);
