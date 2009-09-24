@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (item == null)
 			{
-				return false;
+				item = this.AddOutput (series);
 			}
 
 			int oldIndex = item.Index;

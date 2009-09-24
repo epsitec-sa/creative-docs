@@ -66,7 +66,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 			}
 		}
-		
+
+		public Widget Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
 
 		public void SetupUI(Widget container)
 		{
