@@ -89,6 +89,30 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				return this.overlapX;
 			}
+			set
+			{
+				if (this.overlapX != value)
+				{
+					this.overlapX = value;
+					this.InvalidateLayout ();
+				}
+			}
+		}
+
+		public double OverlapY
+		{
+			get
+			{
+				return this.overlapY;
+			}
+			set
+			{
+				if (this.overlapY != value)
+				{
+					this.overlapY = value;
+					this.InvalidateLayout ();
+				}
+			}
 		}
 
 		public Widget Container
@@ -231,6 +255,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 						this.LayoutFlow ();
 						break;
 
+					case ItemLayoutMode.Vertical:
+						this.LayoutVertical ();
+						break;
+
 					default:
 						throw new System.NotImplementedException ();
 				}
@@ -304,6 +332,75 @@ namespace Epsitec.Cresus.Graph.Controllers
 				item.Visibility = (posEndY + this.originOffset > 0) && (posBeginY + this.originOffset < availableHeight);
 
 				posBeginX = posEndX - this.overlapX;
+			}
+
+			if (posMaxY > availableHeight)
+			{
+				this.scroller.Enable = true;
+				this.scroller.VisibleRangeRatio = (decimal) (availableHeight / posMaxY);
+				this.scroller.MaxValue = (decimal) (posMaxY - availableHeight);
+				this.scroller.SmallChange = (decimal) (this.items.First ().PreferredHeight - this.overlapY);
+				this.scroller.LargeChange = (decimal) (availableHeight);
+			}
+			else
+			{
+				this.scroller.Enable = false;
+			}
+		}
+
+		private void LayoutVertical()
+		{
+			if (this.scroller == null)
+			{
+				Margins padding = new Margins ();
+
+				this.scroller = new VScroller ()
+				{
+					Anchor = AnchorStyles.Right | AnchorStyles.TopAndBottom,
+					Margins = new Margins (0, padding.Right, padding.Top, padding.Bottom),
+					Parent = this.container,
+					IsInverted = true,
+					MinValue = 0.0M,
+					MaxValue = 1.0M,
+					SmallChange = 76,
+					LargeChange = 76,
+				};
+
+				this.scroller.ValueChanged +=
+					delegate
+					{
+						this.originOffset = -this.scroller.DoubleValue;
+						this.InvalidateLayout ();
+					};
+			}
+
+			double availableHeight = this.container.Client.Size.Height - this.container.Padding.Height;
+
+			if (availableHeight == this.cachedSize.Height)
+			{
+				return;
+			}
+			else
+			{
+				this.cachedSize = new Size (0, availableHeight);
+			}
+
+			double posBeginY  = 0;
+			double posMaxY    = 0;
+
+			foreach (var item in this.items)
+			{
+				var lineHeight = item.PreferredHeight - this.overlapY;
+
+				double posEndY  = posBeginY + item.PreferredHeight - this.overlapY;
+				var    margins  = item.Margins;
+
+				posMaxY = System.Math.Max (posMaxY, posEndY + this.overlapY);
+
+				item.Margins = new Margins (margins.Left, margins.Right, posBeginY + this.originOffset, margins.Bottom);
+				item.Visibility = (posEndY + this.originOffset > 0) && (posBeginY + this.originOffset < availableHeight);
+
+				posBeginY += lineHeight;
 			}
 
 			if (posMaxY > availableHeight)

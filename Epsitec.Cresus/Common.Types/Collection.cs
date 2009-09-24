@@ -278,6 +278,11 @@ namespace Epsitec.Common.Types
 			return array;
 		}
 
+		public static IEnumerable<T> Single<T>(T item)
+		{
+			yield return item;
+		}
+
 		/// <summary>
 		/// Determines whether the collection contains an item based on a predicate.
 		/// </summary>
