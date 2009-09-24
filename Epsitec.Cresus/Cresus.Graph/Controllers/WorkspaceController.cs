@@ -141,15 +141,46 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var controller = this.application.MainWindowController;
 			var container  = controller.WorkspaceFrame;
+
+			var topFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = container,
+				Name = "top",
+				PreferredHeight = 320,
+				Padding = new Margins (0, 0, 1, 0),
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+			
+			//	Top half of the workspace : input frame & group frame
 			
 			var inputFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = container,
+				Parent = topFrame,
 				Name = "inputs",
-				Padding = new Margins (0, 0, 1, 0),
-				PreferredHeight = 320
+				PreferredWidth = 480,
+				BackColor = Color.FromBrightness (1),
 			};
+
+			var groupFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Right,
+				Parent = topFrame,
+				Name = "groups",
+				BackColor = Color.FromBrightness (1.0),
+				PreferredWidth = 200,
+				Padding = new Margins (0, 0, 1, 0),
+			};
+
+			var splitter1 = new VSplitter ()
+			{
+				Dock = DockStyle.Right,
+				Parent = topFrame,
+				PreferredWidth = 3,
+			};
+
+			//	Bottom half of the workspace : book with preview and output
 
 			var bottomFrame = new FrameBox ()
 			{
@@ -159,44 +190,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredHeight = 264
 			};
 
-			var bottomFrameLeft = new FrameBox ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = bottomFrame,
-				Name = "left",
-				Padding = new Margins (0, 0, 2, 0),
-			};
-
-			var groupFrame = new FrameBox ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = bottomFrameLeft,
-				Name = "groups",
-				BackColor = Color.FromBrightness (1.0),
-				PreferredHeight = 164,
-				Padding = new Margins (0, 0, 1, 0),
-			};
-
-			var outputFrame = new FrameBox ()
+			var splitter2 = new HSplitter ()
 			{
 				Dock = DockStyle.Bottom,
-				Parent = bottomFrameLeft,
-				Name = "outputs",
-				PreferredHeight = 104
+				Parent = container,
+				PreferredHeight = 3,
 			};
 
 			var outputBook = new TabBook ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = outputFrame,
+				Parent = bottomFrame,
 				Name = "book",
+				Margins = new Margins (0, 0, 4, 0),
 			};
+
+			//	Book contents :
 
 			var outputPage = new TabPage ()
 			{
 				Name = "page1",
 				TabTitle = "Graphique",
 				Parent = outputBook,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
 			var newPage = new TabPage ()
@@ -206,28 +222,41 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = outputBook,
 			};
 
-			outputBook.ActivePage = outputPage;
-
 			var previewFrame = new FrameBox ()
 			{
-				Dock = DockStyle.Right,
-				Parent = bottomFrame,
+				Dock = DockStyle.Left,
+				Parent = outputPage,
 				Name = "preview",
 				BackColor = Color.FromRgb (1, 0.85, 0.8),
 				PreferredWidth = 260,
 				Padding = new Margins (1, 0, 1, 0)
 			};
 
+			var outputFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = outputPage,
+				Name = "outputs",
+				PreferredHeight = 104
+			};
+
+			outputFrame.SizeChanged +=
+				delegate
+				{
+					this.AdjustOutputItemsWidth ();
+				};
+
+			outputBook.ActivePage = outputPage;
+
 			WorkspaceController.PatchTabBookPaintBackground (outputBook);
-			WorkspaceController.PatchInputFramePaintBackground (inputFrame);
-			WorkspaceController.PatchBottomFrameLeftPaintBackground (bottomFrameLeft);
-			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
+//-			WorkspaceController.PatchInputFramePaintBackground (inputFrame);
+//-			WorkspaceController.PatchBottomFrameLeftPaintBackground (bottomFrameLeft);
+//-			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
 
 			this.inputItemsController.SetupUI (inputFrame);
 			this.groupItemsController.SetupUI (groupFrame);
 			this.groupDetailItemsController.SetupUI (groupFrame);
-			this.outputItemsController.SetupUI (outputPage);
-
+			this.outputItemsController.SetupUI (outputFrame);
 			this.chartViewController.SetupUI (previewFrame);
 
 			this.inputItemsWarning = new StaticText ()
@@ -496,6 +525,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.outputItemsController.Add (this.CreateOutputView (item, index++));
 			}
 
+			this.AdjustOutputItemsWidth ();
+
 			if ((this.outputActiveIndex >= 0) &&
 				(this.outputActiveIndex < this.outputItemsController.Count))
 			{
@@ -503,6 +534,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			
 			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
+		}
+
+		private void AdjustOutputItemsWidth()
+		{
+			int count = this.outputItemsController.Count;
+
+			if (count > 0)
+			{
+				double availableWidth = this.outputItemsController.Container.ActualWidth - this.outputItemsController.OverlapX;
+				double itemWidth = System.Math.Min (WorkspaceController.DefaultViewWidth, System.Math.Floor (availableWidth / count) + this.outputItemsController.OverlapX);
+				
+				this.outputItemsController.ForEach (x => x.PreferredWidth = itemWidth);
+			}
 		}
 
 		private void RefreshInputViewSelection()
@@ -671,7 +715,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var view = this.CreateView (item);
 			var cat  = item.Source.GetCategory (item);
 
-			view.AutoCheckButton = false;
+			view.PreferredWidth  = WorkspaceController.InputViewWidth;
+			view.PreferredHeight = WorkspaceController.InputViewHeight;
+//-			view.AutoCheckButton = true;
 			view.ActiveState = item.IsSelected ? ActiveState.Yes : ActiveState.No;
 			view.BackColor = this.labelColorStyle[cat.Index];
 
@@ -1321,8 +1367,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.TopLeft,
 				HorizontalAlignment = HorizontalAlignment.Center,
 				VerticalAlignment = VerticalAlignment.Center,
-				PreferredWidth = 80,
-				PreferredHeight = 80,
+				PreferredWidth = WorkspaceController.DefaultViewWidth,
+				PreferredHeight = WorkspaceController.DefaultViewHeight,
 				Padding = new Margins (4, 4, 4, 4),
 				Margins = new Margins (0, 0, 0, 0),
 				Renderer = lineChartRenderer,
@@ -1636,6 +1682,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		private static readonly double DefaultViewWidth  = 100;
+		private static readonly double DefaultViewHeight =  80;
+
+		private static readonly double InputViewWidth  = 120;
+		private static readonly double InputViewHeight =  60;
+		
 		public System.Action<IEnumerable<int>>	SumSeriesAction;
 		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
 		public System.Action<IEnumerable<int>>	NegateSeriesAction;

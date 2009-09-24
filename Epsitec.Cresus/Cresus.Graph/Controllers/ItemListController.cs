@@ -83,6 +83,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
+		public double OverlapX
+		{
+			get
+			{
+				return this.overlapX;
+			}
+		}
+
+		public Widget Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
+
 
 		public void SetupUI(Widget container)
 		{
@@ -311,6 +327,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			double startOffset;
 			double buttonOffset = 0;
 
+#if false
 			if (totalWidth > availableWidth)
 			{
 				//	No room for all items.
@@ -334,6 +351,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.scrollPlus.Visibility  = false;
 				}
 			}
+#endif
 			
 			if (this.AdjustHorizontalOffset (availableWidth, totalWidth, out startOffset))
 			{
@@ -383,7 +401,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		
+#if false
 		private void CreateHorizontalScrollButtons()
 		{
 			if (this.scrollMinus == null)
@@ -448,6 +466,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.InvalidateLayout ();
 			}
 		}
+#endif
 
 		/// <summary>
 		/// Adjusts the horizontal starting offset based on the manual offset (i.e. where the
@@ -517,7 +536,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private double overlapX;
 		private double overlapY;
 		private Size cachedSize;
-		private Button scrollMinus;
-		private Button scrollPlus;
+//-		private Button scrollMinus;
+//-		private Button scrollPlus;
 	}
 }
