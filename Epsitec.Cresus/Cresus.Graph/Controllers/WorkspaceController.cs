@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.outputItemsController.SetupUI (outputFrame);
 			this.chartViewController.SetupUI (previewFrame);
 
-			this.inputItemsWarning = new StaticText ()
+			this.inputItemsHint = new StaticText ()
 			{
 				Anchor = AnchorStyles.All,
 				Parent = inputFrame,
@@ -519,7 +519,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 			}
 
-			this.inputItemsWarning.Visibility = (this.inputItemsController.Count == 0);
+			this.RefreshHints ();
 		}
 
 		private void RefreshOutputs()
@@ -540,9 +540,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.outputItemsController.ActiveItem = this.outputItemsController[this.outputActiveIndex];
 			}
-			
+
+			this.RefreshHints ();
+		}
+
+		private void RefreshHints()
+		{
+			this.inputItemsHint.Visibility  = (this.inputItemsController.Count == 0);
 			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
 			this.outputPageFrame.Visibility = (this.outputItemsController.Count > 0);
+			this.groupItemsHint.Visibility  = (this.inputItemsController.Count > 0) && (this.groupItemsController.Count == 0);
 		}
 
 		private void AdjustOutputItemsWidth()
@@ -614,7 +621,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				view.SetSelected (true);
 			}
 
-			this.groupItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.groupItemsController.Count == 0);
+			this.RefreshHints ();
 		}
 
 		private void RefreshHilites()
@@ -957,12 +964,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 					double y = this.viewOrigin.Y + (this.LockY ? 0 : mouse.Y - this.mouseOrigin.Y);
 
 					this.DragWindow.WindowLocation = new Point (x, y);
-					return this.DetectOutput (mouse);
+					
+					if ((this.DetectOutput (mouse)) ||
+						(this.DetectGroup (mouse)))
+					{
+						return true;
+					}
+
+					this.host.RefreshHints ();
 				}
-				else
-				{
-					return false;
-				}
+				
+				return false;
 			}
 
 			public void ProcessDragEnd()
@@ -997,9 +1009,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					if (this.host.outputItemsController.Count == 0)
 					{
-						this.Separator.Margins = new Margins (2, 0, 0, 0);
-						this.Separator.Visibility = true;
-						this.InsertAt = 0;
+						this.SetOutputDropTarget (2, 0);
 						return true;
 					}
 
@@ -1022,34 +1032,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 						if ((best.Distance < 0) &&
 							((best.View.Index != this.view.Index+1) || !this.host.Document.OutputSeries.Contains (this.item)))
 						{
-							this.Separator.Margins = new Margins (best.View.ActualBounds.Left - this.Separator.PreferredWidth + 3, 0, 0, 0);
-							this.Separator.Visibility = true;
-							this.InsertAt = best.View.Index;
+							this.SetOutputDropTarget (best.View.ActualBounds.Left - this.Separator.PreferredWidth + 3, best.View.Index);
 							return true;
 						}
 						if ((best.Distance >= 0) &&
 						    ((best.View.Index != this.view.Index-1) || !this.host.Document.OutputSeries.Contains (this.item)))
 						{
-							this.Separator.Margins = new Margins (best.View.ActualBounds.Right - 3, 0, 0, 0);
-							this.Separator.Visibility = true;
-							this.InsertAt = best.View.Index+1;
+							this.SetOutputDropTarget (best.View.ActualBounds.Right - 3, best.View.Index+1);
 							return true;
 						}
 					}
 				}
-				else if (this.host.chartViewController.Container.Client.Bounds.Contains (this.host.chartViewController.Container.MapScreenToClient (screenMouse)))
+				else if (this.host.outputPageFrame.Parent.Client.Bounds.Contains (this.host.outputPageFrame.MapScreenToParent (screenMouse)))
 				{
-					double x = 2;
-					int    n = this.host.outputItemsController.Count;
+					int n = this.host.outputItemsController.Count;
 
-					if (n > 0)
-					{
-						x = this.host.outputItemsController.Last ().ActualBounds.Right - 3;
-					}
-
-					this.Separator.Margins = new Margins (x, 0, 0, 0);
-					this.Separator.Visibility = true;
-					this.InsertAt = n;
+					this.SetOutputDropTarget (n > 0 ? this.host.outputItemsController.Last ().ActualBounds.Right - 3 : 2, n);
 					
 					return true;
 				}
@@ -1060,6 +1058,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return false;
 			}
 
+			private void SetOutputDropTarget(double x, int index)
+			{
+				this.Separator.Margins = new Margins (x, 0, 0, 0);
+				this.Separator.Visibility = true;
+				
+				this.InsertAt = index;
+				
+				this.host.outputItemsHint.Visibility = false;
+			}
+
+			private bool DetectGroup(Point screenMouse)
+			{
+				var container = this.host.groupItemsController.Container;
+				var mouse     = container.MapScreenToClient (screenMouse);
+
+				if (container.Client.Bounds.Contains (mouse))
+				{
+
+					this.host.groupItemsHint.Visibility = false;
+
+					return true;
+				}
+
+				return false;
+			}
 			
 			private void CreateDragWindow()
 			{
@@ -1989,7 +2012,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private ChartViewController		chartViewController;
 		
-		private StaticText				inputItemsWarning;
+		private StaticText				inputItemsHint;
 		private StaticText				groupItemsHint;
 		private FrameBox				outputPageFrame;
 		private StaticText				outputItemsHint;
