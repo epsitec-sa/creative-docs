@@ -705,7 +705,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected static readonly double	defaultBreadth = 17;
+		public static readonly double		DefaultBreadth = 17;
 		protected static readonly double	minimalThumb = 8;
 		protected static readonly double	minimalArrow = 6;
 		

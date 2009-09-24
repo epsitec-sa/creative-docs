@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.overlapX = 4;
 			this.overlapY = 4;
 			this.Anchor = AnchorStyles.TopLeft;
+			this.visibleScroller = true;
 		}
 
 		
@@ -120,6 +121,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 			get
 			{
 				return this.container;
+			}
+		}
+
+		public bool VisibleScroller
+		{
+			get
+			{
+				return this.visibleScroller;
+			}
+			set
+			{
+				if (this.visibleScroller != value)
+				{
+					this.visibleScroller = value;
+					this.InvalidateLayout ();
+				}
 			}
 		}
 
@@ -267,7 +284,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void LayoutFlow()
 		{
-			if (this.scroller == null)
+			if ((this.visibleScroller) &&
+				(this.scroller == null))
 			{
 				Margins padding = new Margins ();
 
@@ -291,7 +309,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					};
 			}
 
-			double availableWidth  = this.container.Client.Size.Width - this.container.Padding.Width - this.scroller.PreferredWidth;
+			double availableWidth  = this.container.Client.Size.Width - this.container.Padding.Width - (this.visibleScroller ? this.scroller.PreferredWidth : 0);
 			double availableHeight = this.container.Client.Size.Height - this.container.Padding.Height;
 
 			if ((availableWidth == this.cachedSize.Width) &&
@@ -334,23 +352,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 				posBeginX = posEndX - this.overlapX;
 			}
 
-			if (posMaxY > availableHeight)
+			if (this.visibleScroller)
 			{
-				this.scroller.Enable = true;
-				this.scroller.VisibleRangeRatio = (decimal) (availableHeight / posMaxY);
-				this.scroller.MaxValue = (decimal) (posMaxY - availableHeight);
-				this.scroller.SmallChange = (decimal) (this.items.First ().PreferredHeight - this.overlapY);
-				this.scroller.LargeChange = (decimal) (availableHeight);
+				if ((posMaxY > availableHeight) &&
+					(availableHeight > 0))
+				{
+					this.scroller.Enable = true;
+					this.scroller.VisibleRangeRatio = (decimal) (availableHeight / posMaxY);
+					this.scroller.MaxValue = (decimal) (posMaxY - availableHeight);
+					this.scroller.SmallChange = (decimal) (this.items.First ().PreferredHeight - this.overlapY);
+					this.scroller.LargeChange = (decimal) (availableHeight);
+				}
+				else
+				{
+					this.scroller.Enable = false;
+				}
 			}
 			else
 			{
-				this.scroller.Enable = false;
+				this.DisposeScroller ();
 			}
 		}
 
 		private void LayoutVertical()
 		{
-			if (this.scroller == null)
+			if ((this.visibleScroller) &&
+				(this.scroller == null))
 			{
 				Margins padding = new Margins ();
 
@@ -403,17 +430,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 				posBeginY += lineHeight;
 			}
 
-			if (posMaxY > availableHeight)
+			if (this.visibleScroller)
 			{
-				this.scroller.Enable = true;
-				this.scroller.VisibleRangeRatio = (decimal) (availableHeight / posMaxY);
-				this.scroller.MaxValue = (decimal) (posMaxY - availableHeight);
-				this.scroller.SmallChange = (decimal) (this.items.First ().PreferredHeight - this.overlapY);
-				this.scroller.LargeChange = (decimal) (availableHeight);
+				if (posMaxY > availableHeight)
+				{
+					this.scroller.Enable = true;
+					this.scroller.VisibleRangeRatio = (decimal) (availableHeight / posMaxY);
+					this.scroller.MaxValue = (decimal) (posMaxY - availableHeight);
+					this.scroller.SmallChange = (decimal) (this.items.First ().PreferredHeight - this.overlapY);
+					this.scroller.LargeChange = (decimal) (availableHeight);
+				}
+				else
+				{
+					this.scroller.Enable = false;
+				}
 			}
 			else
 			{
-				this.scroller.Enable = false;
+				this.DisposeScroller ();
 			}
 		}
 
@@ -633,6 +667,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private double overlapX;
 		private double overlapY;
 		private Size cachedSize;
+		private bool visibleScroller;
 //-		private Button scrollMinus;
 //-		private Button scrollPlus;
 	}

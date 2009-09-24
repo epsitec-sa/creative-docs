@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
 			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
-			double dx = AbstractScroller.defaultBreadth;
+			double dx = AbstractScroller.DefaultBreadth;
 			double dy = AbstractScroller.minimalThumb+6;
 
 			metadataDx.DefineDefaultValue (dx);

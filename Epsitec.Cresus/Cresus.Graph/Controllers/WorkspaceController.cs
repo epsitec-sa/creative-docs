@@ -50,8 +50,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.groupDetailItemsController = new ItemListController<MiniChartView> ()
 			{
-				ItemLayoutMode = ItemLayoutMode.Horizontal,
-				Anchor         = AnchorStyles.BottomLeft,
+				ItemLayoutMode = ItemLayoutMode.Flow,
 			};
 
 			this.chartViewController = new ChartViewController (this.application)
@@ -269,9 +268,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 //-			WorkspaceController.PatchBottomFrameLeftPaintBackground (bottomFrameLeft);
 			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
 
+			this.groupDetailsBalloon = new BalloonTip ()
+			{
+				Anchor = AnchorStyles.BottomLeft,
+				Disposition = ButtonMarkDisposition.Below,
+				Padding = new Margins (5, 5, 20, 5),
+				Visibility = false,
+				Parent = container.Window.Root,
+				BackColor = Color.FromBrightness (1),
+			};
+
+			var detailsFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = this.groupDetailsBalloon,
+			};
+
 			this.inputItemsController.SetupUI (inputFrame);
 			this.groupItemsController.SetupUI (groupFrame);
-			this.groupDetailItemsController.SetupUI (groupFrame);
+			this.groupDetailItemsController.SetupUI (detailsFrame);
 			this.outputItemsController.SetupUI (outputFrame);
 			this.chartViewController.SetupUI (previewFrame);
 
@@ -1818,35 +1833,68 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void ShowGroupDetails(GraphDataGroup group, MiniChartView view)
 		{
 			this.groupDetailItemsController.Clear ();
+			this.groupDetailsBalloon.Visibility = false;
 
 			if (group == null)
 			{
 				return;
 			}
 
-			var series1 = group.SyntheticDataSeries.Cast<GraphDataSeries> ();
-			var series2 = group.InputDataSeries;
-			var series = series1.Concat (series2);
+//-			var series1 = group.SyntheticDataSeries.Cast<GraphDataSeries> ();
+//			var series2 = group.InputDataSeries;
+//			var series = series1.Concat (series2);
 
-			foreach (var item in series)
+			foreach (var item in group.InputDataSeries)
 			{
 				this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, item));
 			}
 
-			double offset = 0;
-
-			if ((view != null) &&
-				(view.Window != null))
+			var window = view.Window;
+			
+			if (window != null)
 			{
 				if (view.IsActualGeometryValid == false)
 				{
-					view.Window.ForceLayout ();
+					window.ForceLayout ();
 				}
 
-				offset = view.ActualBounds.Left;
-			}
+				double width  = 0;
+				double height = WorkspaceController.DefaultViewHeight;
 
-			this.groupDetailItemsController.DefineOffset (offset);
+				switch (group.Count)
+				{
+					case 0:
+					case 1:
+						width = WorkspaceController.DefaultViewWidth;
+						break;
+
+					case 2:
+						width = WorkspaceController.DefaultViewWidth * 2 - this.groupDetailItemsController.OverlapX;
+						break;
+
+					default:
+						width = WorkspaceController.DefaultViewWidth * 3 - this.groupDetailItemsController.OverlapX * 2;
+						
+						if (group.Count > 3)
+						{
+							height = WorkspaceController.DefaultViewHeight * 2 - this.groupDetailItemsController.OverlapY;
+							width += AbstractScroller.DefaultBreadth + 2;
+						}
+						break;
+				}
+
+				this.groupDetailItemsController.VisibleScroller = group.Count > 3;
+				
+				var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
+				var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
+				var mark   = ButtonMarkDisposition.Below;
+				var rect   = BalloonTip.GetBestPosition (new Size (width + 12, height + 12 + 10), bounds, window.ClientSize, ref mark);
+
+				this.groupDetailsBalloon.Visibility = true;
+				this.groupDetailsBalloon.Margins = new Margins (rect.Left, 0, 0, rect.Bottom);
+				this.groupDetailsBalloon.PreferredSize = rect.Size;
+				this.groupDetailsBalloon.TipAttachment = bounds.Center - rect.BottomLeft;
+			}
 
 			this.RefreshHilites ();
 		}
@@ -1961,6 +2009,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private StaticText				outputItemsHint;
 		private VerticalInjectionArrow	groupCalculatorArrow;
 		private BalloonTip				balloonTip;
+		private BalloonTip				groupDetailsBalloon;
 		private ColorStyle labelColorStyle;
 		private Command							graphType;
 		private ColorStyle colorStyle;
