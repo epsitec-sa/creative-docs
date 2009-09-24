@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets
 			this.items = new TabPageCollection(this);
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
+			this.InternalPadding = new Drawing.Margins (2, 2, 2, 2);
 
 			this.arrowLeft = new GlyphButton(this);
 			this.arrowRight = new GlyphButton(this);
@@ -141,10 +142,17 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 		}
+
+		public Drawing.Margins				InternalPadding
+		{
+			get;
+			set;
+		}
 		
 		public override Drawing.Margins GetInternalPadding()
 		{
-			return new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
+			var padding = this.InternalPadding;
+			return new Drawing.Margins (padding.Left, padding.Right, this.TabHeight + padding.Top, padding.Bottom);
 		}
 		
 		public TabPageCollection			Items

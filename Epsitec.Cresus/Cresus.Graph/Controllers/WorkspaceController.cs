@@ -203,6 +203,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = bottomFrame,
 				Name = "book",
 				Margins = new Margins (0, 0, 4, 0),
+				InternalPadding = new Margins (0, 0, 1, 0),
 			};
 
 			//	Book contents :
@@ -213,6 +214,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				TabTitle = "Graphique",
 				Parent = outputBook,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Padding = Margins.Zero,
 			};
 
 			var newPage = new TabPage ()
@@ -229,7 +231,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Name = "preview",
 				BackColor = Color.FromRgb (1, 0.85, 0.8),
 				PreferredWidth = 260,
-				Padding = new Margins (1, 0, 1, 0)
+				Padding = new Margins (0, 1, 0, 0)
+			};
+
+			var splitter3 = new VSplitter ()
+			{
+				Dock = DockStyle.Left,
+				Parent = outputPage,
+				PreferredWidth = 3,
 			};
 
 			var outputFrame = new FrameBox ()
@@ -251,7 +260,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			WorkspaceController.PatchTabBookPaintBackground (outputBook);
 //-			WorkspaceController.PatchInputFramePaintBackground (inputFrame);
 //-			WorkspaceController.PatchBottomFrameLeftPaintBackground (bottomFrameLeft);
-//-			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
+			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
 
 			this.inputItemsController.SetupUI (inputFrame);
 			this.groupItemsController.SetupUI (groupFrame);
@@ -380,16 +389,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					var graphics = e.Graphics;
 					var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;
 
-					double y1 = outputBook.Client.Bounds.Top - outputBook.TabHeight - 0.5;
-					double y2 = bounds.Top - 0.5;
-					double x2 = bounds.Right - 0.5;
-
 					graphics.AddFilledRectangle (bounds);
 					graphics.RenderSolid (Color.FromBrightness (1.0));
-
-					graphics.AddLine (0.5, y1, 0.5, y2);
-					graphics.AddLine (0.5, y2, x2, y2);
-					graphics.RenderSolid (adorner.ColorBorder);
 
 					e.Suppress = true;
 				};
@@ -801,6 +802,200 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		private void CreateOutputDragAndDropHandler(GraphDataSeries item, MiniChartView view)
+		{
+			ViewDragDropManager target = null;
+
+			view.Pressed +=
+				(sender, e) =>
+				{
+					this.CloseBalloonTip ();
+
+					var pos = view.MapClientToScreen (new Point (0, 0));
+					var mouseOrigin = view.MapClientToScreen (e.Point);
+
+					view.Enable = false;
+					view.MouseCursor = MouseCursor.AsSizeWE;
+
+					e.Message.Captured = true;
+
+					target = new ViewDragDropManager (item, view, this, mouseOrigin);
+					
+					view.MouseMove +=
+						(sender2, e2) =>
+						{
+							var mouse = e2.Point;
+
+							if (target.ProcessMouseMove (mouse))
+							{
+								target.DetectOutput (mouse);
+							}
+
+							e2.Suppress = true;
+						};
+				};
+
+			view.Released +=
+				delegate
+				{
+					view.Enable = true;
+					view.MouseCursor = MouseCursor.AsHand;
+					view.ClearUserEventHandlers (Widget.EventNames.MouseMoveEvent);
+
+					target.ProcessDragEnd ();
+
+					if (target.InsertAt >= 0)
+					{
+						this.Document.SetOutputIndex (item, target.InsertAt);
+						this.RefreshOutputs ();
+						this.RefreshPreview ();
+					}
+				};
+		}
+
+		class ViewDragDropManager
+		{
+			public ViewDragDropManager(GraphDataSeries item, MiniChartView view, WorkspaceController host, Point mouse)
+			{
+				this.item = item;
+				this.view = view;
+				this.host = host;
+				
+				this.viewOrigin  = view.MapClientToScreen (new Point (0, 0));
+				this.mouseOrigin = mouse;
+				
+				this.InsertAt = -1;
+				this.Separator = new Separator ()
+				{
+					Parent = view.Parent,
+					Visibility = false,
+					Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left,
+					PreferredWidth = 2,
+				};
+			}
+
+			private void CreateDragWindow()
+			{
+				this.DragWindow = new DragWindow ()
+				{
+					Alpha = 0.6,
+					WindowLocation = this.viewOrigin,
+					Owner = this.view.Window,
+				};
+
+				this.DragWindow.DefineWidget (this.host.CreateView (this.item), this.view.PreferredSize, Margins.Zero);
+				this.DragWindow.Show ();
+			}
+
+			public DragWindow DragWindow
+			{
+				get;
+				private set;
+			}
+
+			public Separator Separator
+			{
+				get;
+				private set;
+			}
+
+			public int InsertAt
+			{
+				get;
+				private set;
+			}
+
+			
+			public bool ProcessMouseMove(Point mouse)
+			{
+				mouse = this.view.MapClientToScreen (mouse);
+				
+				if (this.DragWindow == null)
+				{
+					if (Point.Distance (mouse, this.mouseOrigin) > 2.0)
+					{
+						this.CreateDragWindow ();
+					}
+				}
+
+				if (this.DragWindow != null)
+				{
+					this.DragWindow.WindowLocation = new Point (this.viewOrigin.X + mouse.X - this.mouseOrigin.X, this.viewOrigin.Y);
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			public void ProcessDragEnd()
+			{
+				if (this.DragWindow != null)
+				{
+					this.DragWindow.Dispose ();
+					this.DragWindow = null;
+				}
+
+				if (this.Separator != null)
+				{
+					this.Separator.Dispose ();
+					this.Separator = null;
+				}
+			}
+
+			public void DetectOutput(Point mouse)
+			{
+				mouse = this.view.MapClientToParent (mouse);
+				
+				var dist = this.host.outputItemsController.Select (x => new
+				{
+					Distance = mouse.X - x.ActualBounds.Center.X,
+					View = x
+				});
+
+				System.Diagnostics.Debug.WriteLine (string.Join (", ", dist.Select (x => string.Format ("{0}:{1}", x.View.Index, x.Distance)).ToArray ()));
+
+				var best = dist.OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
+
+				if ((best != null) &&
+					(best.View != this.view))
+				{
+					if ((best.Distance < 0) &&
+						(best.View.Index != this.view.Index+1))
+					{
+						this.Separator.Margins = new Margins (best.View.ActualBounds.Left - this.Separator.PreferredWidth + 3, 0, 0, 0);
+						this.Separator.Visibility = true;
+						this.InsertAt = best.View.Index;
+					}
+					else if ((best.Distance >= 0) &&
+						     (best.View.Index != this.view.Index-1))
+					{
+						this.Separator.Margins = new Margins (best.View.ActualBounds.Right - 3, 0, 0, 0);
+						this.Separator.Visibility = true;
+						this.InsertAt = best.View.Index+1;
+					}
+					else
+					{
+						this.Separator.Visibility = false;
+						this.InsertAt = -1;
+					}
+				}
+				else
+				{
+					this.Separator.Visibility = false;
+					this.InsertAt = -1;
+				}
+			}
+
+			private readonly GraphDataSeries item;
+			private readonly MiniChartView view;
+			private readonly WorkspaceController host;
+			private readonly Point viewOrigin;
+			private readonly Point mouseOrigin;
+		}
+		
+		
+		private void CreateXxxDragAndDropHandler(GraphDataSeries item, MiniChartView view)
 		{
 			DragWindow dragWindow = null;
 			Separator separator = null;
