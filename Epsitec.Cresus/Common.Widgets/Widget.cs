@@ -3624,7 +3624,8 @@ namespace Epsitec.Common.Widgets
 								if ((!childEntered) &&
 									(message.MessageType != MessageType.MouseLeave))
 								{
-									if (widget.IsEntered == false)
+									if ((this.IsEntered) &&
+										(widget.IsEntered == false))
 									{
 										widget.SetEntered (true);
 									}

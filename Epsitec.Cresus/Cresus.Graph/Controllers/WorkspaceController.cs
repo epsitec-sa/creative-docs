@@ -1884,7 +1884,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void MessageFilter(object sender, Message message)
 		{
-			if (message.MessageType == MessageType.MouseDown)
+			if (message.IsMouseType)
 			{
 				var container = this.groupDetailItemsController.Container;
 				var pos = container.MapRootToClient (message.Cursor);
@@ -1895,7 +1895,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 				else
 				{
-					this.CloseGroupDetails ();
+					if (message.MessageType == MessageType.MouseDown)
+					{
+						this.CloseGroupDetails ();
+					}
 				}
 			}
 		}
@@ -2017,7 +2020,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private BalloonTip				balloonTip;
 		private BalloonTip				groupDetailsBalloon;
 		private ColorStyle labelColorStyle;
-		private Command							graphType;
 		private ColorStyle colorStyle;
 		private GraphDataGroup activeGroup;
 		private MiniChartView activeGroupView;
