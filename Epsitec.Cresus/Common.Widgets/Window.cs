@@ -2094,6 +2094,10 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.IsMouseType)
 			{
+				this.lastInWidget = this.DetectWidget (message.Cursor);
+
+				System.Diagnostics.Debug.Assert (this.lastInWidget != null);
+
 				if (this.capturingWidget == null)
 				{
 					//	C'est un message souris. Nous allons commencer par vérifier si tous les widgets
@@ -2101,6 +2105,7 @@ namespace Epsitec.Common.Widgets
 					//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
 					
 					Widget.UpdateEntered (this, message);
+					this.lastInWidget.InternalSetEntered ();
 				}
 				else
 				{
@@ -2109,8 +2114,6 @@ namespace Epsitec.Common.Widgets
 					
 					Widget.UpdateEntered (this, this.capturingWidget, message);
 				}
-				
-				this.lastInWidget = this.DetectWidget (message.Cursor);
 			}
 			
 			message.InWidget = this.lastInWidget;
@@ -2465,10 +2468,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Widget DetectWidget(Drawing.Point pos)
+		private Widget DetectWidget(Drawing.Point pos)
 		{
-			Widget child = this.root.FindChild (pos);
-			return (child == null) ? this.root : child;
+			return this.root.FindChild (pos, Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep) ?? this.root;
 		}
 		
 		

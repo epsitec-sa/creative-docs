@@ -1348,7 +1348,12 @@ namespace Epsitec.Common.Widgets
 			
 			return buffer.ToString ();
 		}
-		
+
+
+		internal void InternalSetEntered()
+		{
+			this.SetEntered (true);
+		}
 		
 		protected void SetEntered(bool value)
 		{
@@ -1359,17 +1364,17 @@ namespace Epsitec.Common.Widgets
 				
 				if (value)
 				{
-					Widget.ExitWidgetsNotParentOf (this);
-					Widget.enteredWidgets.Add (this);
-
-					this.SetValue (Visual.EnteredProperty, value);
-					
 					if ((this.Parent != null) &&
 						(this.Parent.IsEntered == false) &&
 						(!(this.Parent is WindowRoot)))
 					{
 						this.Parent.SetEntered (true);
 					}
+					
+					Widget.ExitWidgetsNotParentOf (this);
+					Widget.enteredWidgets.Add (this);
+
+					this.SetValue (Visual.EnteredProperty, value);
 					
 					message = Message.CreateDummyMessage (MessageType.MouseEnter);
 					
@@ -3590,12 +3595,14 @@ namespace Epsitec.Common.Widgets
 			
 			if ((message.FilterNoChildren == false) &&
 				(message.Handled == false) &&
-				(this.HasChildren))
+				(this.HasChildren) &&
+				(message.IsDummy == false))
 			{
 				Widget[] children = this.Children.Widgets;
 				int  childrenNum = children.Length;
 
 				WindowRoot root = message.WindowRoot ?? Helpers.VisualTree.GetWindowRoot (this);
+				bool childEntered = false;
 				
 				for (int i = 0; i < childrenNum; i++)
 				{
@@ -3613,11 +3620,16 @@ namespace Epsitec.Common.Widgets
 							{
 								//	C'est un message souris. Vérifions d'abord si le widget contenait déjà
 								//	la souris auparavant.
-								
-								if ((widget.IsEntered == false) &&
+
+								if ((!childEntered) &&
 									(message.MessageType != MessageType.MouseLeave))
 								{
-									widget.SetEntered (true);
+									if (widget.IsEntered == false)
+									{
+										widget.SetEntered (true);
+									}
+									
+									childEntered = widget.IsEntered;
 								}
 							}
 							
