@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Anchor = AnchorStyles.BottomLeft,
 				Disposition = ButtonMarkDisposition.Below,
-				Padding = new Margins (5, 5, 20, 5),
+				Padding = new Margins (5, 5, 17, 8),
 				Visibility = false,
 				Parent = container.Window.Root,
 				BackColor = Color.FromBrightness (1),
@@ -596,47 +596,28 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void RefreshGroupView()
 		{
-			var view  = this.groupItemsController.ActiveItem;
-			int index = this.groupItemsController.IndexOf (view);
-
-			if (index < 0)
-			{
-//				this.ShowGroupCalculator (null, null);
-				this.ShowGroupDetails (null, null);
-			}
-			else
-			{
-				var group = this.Document.Groups[index];
-//				this.ShowGroupCalculator (group, view);
-				this.ShowGroupDetails (group, view);
-			}
+			this.ShowGroupDetails (this.activeGroup, this.activeGroupView);
 		}
 
 		private void RefreshGroups()
 		{
-			int index = this.groupItemsController.IndexOf (this.groupItemsController.ActiveItem);
-
 			this.groupItemsController.Clear ();
+
+			this.activeGroupView = null;
 
 			foreach (var group in this.Document.Groups)
 			{
-				this.groupItemsController.Add (this.CreateGroupView (group));
+				var view = this.CreateGroupView (group);
+
+				if (group == this.activeGroup)
+				{
+					this.activeGroupView = view;
+				}
+
+				this.groupItemsController.Add (view);
 			}
 
-			if ((index >= 0) &&
-				(index < this.groupItemsController.Count))
-			{
-				var view  = this.groupItemsController[index];
-				var group = this.Document.Groups[index];
-
-				this.groupItemsController.ActiveItem = this.groupItemsController[index];
-				
-//				this.ShowGroupCalculator (group, view);
-				this.ShowGroupDetails (group, view);
-
-				view.SetSelected (true);
-			}
-
+			this.RefreshGroupView ();
 			this.RefreshHints ();
 		}
 
@@ -1302,23 +1283,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		private void CreateGroup()
 		{
-			var view  = this.groupItemsController.ActiveItem;
-			int index = this.groupItemsController.IndexOf (view);
 			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.viewToSeries[x.GetVisualSerialId ()]);
-
-			GraphDataGroup group;
-
-			if (index < 0)
-			{
-				group = this.CreateGroup (items);
-				index = this.Document.Groups.IndexOf (group);
-			}
-			else
-			{
-				group = this.UpdateGroup (this.Document.Groups[index], items);
-			}
-
-			this.groupItemsController.ActiveItem = this.groupItemsController[index];
+			var group = this.CreateGroup (items);
+			int index = this.Document.Groups.IndexOf (group);
+			this.activeGroup = null;
+			this.activeGroupView = null;
 			this.UpdateGroupName (group);
 		}
 
@@ -1362,29 +1331,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		private void HandleGroupViewClicked(GraphDataGroup group, MiniChartView view)
 		{
-			if (Message.CurrentState.IsControlPressed)
-			{
-				view.SetSelected (!view.IsSelected);
-			}
-			else
-			{
-				bool select = !view.IsSelected;
-
-				this.inputItemsController.ForEach (x => x.SetSelected (false));
-				this.groupItemsController.ForEach (x => x.SetSelected (false));
-
-				view.SetSelected (select);
-			}
-
-			if (view.IsSelected)
-			{
-				this.groupItemsController.ActiveItem = view;
-			}
-			else
-			{
-				this.groupItemsController.ActiveItem = null;
-			}
-			
+			this.activeGroup = group;
+			this.activeGroupView = view;
 			this.RefreshInputViewSelection ();
 			this.RefreshGroupView ();
 		}
@@ -1442,12 +1390,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				//	Hovering over a group in the group view.
 
+#if false
 				hilites.Add (new HiliteInfo (group, 0, HiliteType.Default));
 
 				summary = this.GetSummary (group);
 
 				group.InputDataSeries.ForEach (x => WorkspaceController.AddInputSeries (hilites, x, 0));
 				group.SyntheticDataSeries.ForEach (x => WorkspaceController.AddOutputSeries (hilites, x, 0));
+#endif
 			}
 			else if (this.viewToSeries.TryGetValue (id, out series))
 			{
@@ -1483,7 +1433,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var window = view.Window;
 			
-			if (window == null)
+			if ((window == null) ||
+				(string.IsNullOrEmpty (summary)))
 			{
 				return null;
 			}
@@ -1833,7 +1784,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private void ShowGroupDetails(GraphDataGroup group, MiniChartView view)
 		{
 			this.groupDetailItemsController.Clear ();
-			this.groupDetailsBalloon.Visibility = false;
+			this.CloseGroupDetails ();
 
 			if (group == null)
 			{
@@ -1890,13 +1841,68 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var mark   = ButtonMarkDisposition.Below;
 				var rect   = BalloonTip.GetBestPosition (new Size (width + 12, height + 12 + 10), bounds, window.ClientSize, ref mark);
 
-				this.groupDetailsBalloon.Visibility = true;
 				this.groupDetailsBalloon.Margins = new Margins (rect.Left, 0, 0, rect.Bottom);
 				this.groupDetailsBalloon.PreferredSize = rect.Size;
 				this.groupDetailsBalloon.TipAttachment = bounds.Center - rect.BottomLeft;
+				this.ShowGroupDetails ();
 			}
 
 			this.RefreshHilites ();
+		}
+
+		private void ShowGroupDetails()
+		{
+			if (this.groupDetailsBalloon.Visibility == false)
+			{
+				this.groupDetailsBalloon.Visibility = true;
+				this.RegisterFilter ();
+			}
+		}
+
+		private void CloseGroupDetails()
+		{
+			if (this.groupDetailsBalloon.Visibility)
+			{
+				this.activeGroup = null;
+				this.activeGroupView = null;
+				this.groupDetailsBalloon.Visibility = false;
+				this.UnregisterFilter ();
+			}
+		}
+
+		private void RegisterFilter()
+		{
+			Window.ApplicationDeactivated += this.HandleApplicationDeactivated;
+			Window.MessageFilter          += this.MessageFilter;
+		}
+
+		private void UnregisterFilter()
+		{
+			Window.ApplicationDeactivated -= this.HandleApplicationDeactivated;
+			Window.MessageFilter          -= this.MessageFilter;
+		}
+
+		private void MessageFilter(object sender, Message message)
+		{
+			if (message.MessageType == MessageType.MouseDown)
+			{
+				var container = this.groupDetailItemsController.Container;
+				var pos = container.MapRootToClient (message.Cursor);
+				
+				if (container.Client.Bounds.Contains (pos))
+				{
+					//	OK
+				}
+				else
+				{
+					this.CloseGroupDetails ();
+				}
+			}
+		}
+
+		private void HandleApplicationDeactivated(object sender)
+		{
+			this.CloseGroupDetails ();
 		}
 
 		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
@@ -2013,6 +2019,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private ColorStyle labelColorStyle;
 		private Command							graphType;
 		private ColorStyle colorStyle;
+		private GraphDataGroup activeGroup;
+		private MiniChartView activeGroupView;
 		private int outputActiveIndex;
 	}
 }
