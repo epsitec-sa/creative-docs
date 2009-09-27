@@ -59,6 +59,11 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			foreach (var line in lines)
 			{
+				if (string.IsNullOrEmpty (line[0]))
+				{
+					continue;
+				}
+
 				string label = string.Concat (line[0], " ", line[1]);
 				IEnumerable<double?> values = line.Skip (2).Select (x => GraphDataSet.GetNumericValue (x));
 

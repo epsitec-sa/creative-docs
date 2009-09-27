@@ -888,14 +888,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 				
 				this.viewOrigin  = view.MapClientToScreen (new Point (0, 0));
 				this.mouseOrigin = mouse;
-				
+
+				this.groupIndex = -1;
 				this.outputIndex = -1;
-				this.Separator = new Separator ()
+				
+				this.outputInsertionMark = new Separator ()
 				{
 					Parent = this.host.outputItemsController.Container,
 					Visibility = false,
 					Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left,
 					PreferredWidth = 2,
+				};
+
+				this.groupInsertionMark = new Separator ()
+				{
+					Parent = this.host.groupItemsController.Container,
+					Visibility = false,
+					Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
+					PreferredHeight = 2,
 				};
 			}
 
@@ -917,15 +927,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				private set;
 			}
 
-			public Separator Separator
-			{
-				get;
-				private set;
-			}
-
-			
-
-			
 			public bool ProcessMouseMove(Point mouse, System.Action dragStartAction)
 			{
 				mouse = this.view.MapClientToScreen (mouse);
@@ -969,12 +970,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.DragWindow = null;
 				}
 
-				if (this.Separator != null)
+				if (this.outputInsertionMark != null)
 				{
-					this.Separator.Dispose ();
-					this.Separator = null;
+					this.outputInsertionMark.Dispose ();
+					this.outputInsertionMark = null;
 				}
-				
+
+				if (this.groupInsertionMark != null)
+				{
+					this.groupInsertionMark.Dispose ();
+					this.groupInsertionMark = null;
+				}
+
 				if (this.outputIndex >= 0)
 				{
 					this.host.Document.SetOutputIndex (this.item, this.outputIndex);
@@ -1038,7 +1045,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 						if ((best.Distance < 0) &&
 							((best.View.Index != this.view.Index+1) || !this.host.Document.OutputSeries.Contains (this.item)))
 						{
-							this.SetOutputDropTarget (best.View.ActualBounds.Left - this.Separator.PreferredWidth + 3, best.View.Index);
+							this.SetOutputDropTarget (best.View.ActualBounds.Left - this.outputInsertionMark.PreferredWidth + 3, best.View.Index);
 							return true;
 						}
 						if ((best.Distance >= 0) &&
@@ -1058,7 +1065,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					return true;
 				}
 				
-				this.Separator.Visibility = false;
+				this.outputInsertionMark.Visibility = false;
 				this.outputIndex = -1;
 				
 				return false;
@@ -1066,16 +1073,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			private void SetOutputDropTarget(double x, int index)
 			{
-				this.Separator.Margins = new Margins (x, 0, 0, 0);
-				this.Separator.Visibility = true;
+				this.outputInsertionMark.Margins = new Margins (x, 0, 0, 0);
+				this.outputInsertionMark.Visibility = true;
 				
 				this.outputIndex = index;
 				
 				this.host.outputItemsHint.Visibility = false;
 			}
 
-			private void SetGroupDropTarget(int index, bool update)
+			private void SetGroupDropTarget(int index, bool update, double y, double dy)
 			{
+				this.groupInsertionMark.Margins = new Margins (0, 0, y, 0);
+				this.groupInsertionMark.Visibility = dy > 0;
+				this.groupInsertionMark.PreferredHeight = dy;
+				this.groupInsertionMark.ZOrder = this.groupInsertionMark.Parent.Children.Count - 1;
+				
 				this.groupIndex = index;
 				this.groupUpdate = update;
 
@@ -1092,7 +1104,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (this.host.groupItemsController.Count == 0)
 					{
-						this.SetGroupDropTarget (0, false);
+						this.SetGroupDropTarget (0, false, 0.0, 2.0);
 						return true;
 					}
 
@@ -1100,7 +1112,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					if (drop != null)
 					{
-						this.SetGroupDropTarget (drop.Index, true);
+						double y = drop.Parent.ActualHeight - drop.ActualBounds.Top;
+						this.SetGroupDropTarget (drop.Index, true, y, drop.ActualBounds.Height);
 						return true;
 					}
 					
@@ -1116,11 +1129,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					if (best != null)
 					{
-						this.SetGroupDropTarget (best.View.Index, false);
+						double y = best.View.Parent.ActualHeight - best.View.ActualBounds.Top + (best.View.Index > 0 ? this.host.groupItemsController.OverlapY / 2 : -2); 
+						this.SetGroupDropTarget (best.View.Index, false, y, 2.0);
 					}
 					else
 					{
-						this.SetGroupDropTarget (this.host.groupItemsController.Count, false);
+						double y = this.host.groupItemsController.Container.ActualHeight - this.host.groupItemsController.Last ().ActualBounds.Bottom + this.host.groupItemsController.OverlapY / 2; 
+						this.SetGroupDropTarget (this.host.groupItemsController.Count, false, y, 2.0);
 					}
 
 					return true;
@@ -1151,6 +1166,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			private readonly Point viewOrigin;
 			private readonly Point mouseOrigin;
 			private readonly MouseCursor viewMouseCursor;
+			
+			private Separator outputInsertionMark;
+			private Separator groupInsertionMark;
 
 			private int outputIndex;
 			private int groupIndex;

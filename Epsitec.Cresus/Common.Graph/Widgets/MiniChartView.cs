@@ -258,7 +258,7 @@ namespace Epsitec.Common.Graph.Widgets
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				Font   font     = Font.GetFont ("Futura", "Condensed Medium");
+				Font   font     = Font.GetFont ("Futura", "Condensed Medium") ?? Font.DefaultFont;
 				double fontSize = 11.0;
 				
 				int length = FitText (rectangle.Width, font, fontSize, text);
@@ -338,8 +338,10 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, label.Height / 100.0).Translate (label.BottomLeft);
 			graphics.RenderGradient ();
 
+			Font font = Font.GetFont ("Futura", "Condensed Medium") ?? Font.DefaultFont;
+
 			graphics.Color = Color.FromBrightness (0.0);
-			graphics.PaintText (label.X, label.Y, label.Width, label.Height, text, Font.GetFont ("Futura", "Condensed Medium"), 14.0, ContentAlignment.MiddleCenter);
+			graphics.PaintText (label.X, label.Y, label.Width, label.Height, text, font, 14.0, ContentAlignment.MiddleCenter);
 			graphics.RenderSolid ();
 
 			graphics.Transform = transform;
