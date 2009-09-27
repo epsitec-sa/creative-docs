@@ -222,9 +222,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		public void Clear()
 		{
-			this.items.ForEach (item => item.Dispose ());
+			var copy = this.items.ToList ();
+			
 			this.items.Clear ();
 			this.activeItem = null;
+			
+			copy.ForEach (item => item.Dispose ());
 
 			this.InvalidateLayout ();
 		}

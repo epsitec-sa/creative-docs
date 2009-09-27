@@ -42,10 +42,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ItemLayoutMode = ItemLayoutMode.Horizontal
 			};
 
-			this.groupItemsController = new ItemListController<MiniChartView> ()
+			this.groupItemsController = new ItemListController<Widget> ()
 			{
 				ItemLayoutMode = ItemLayoutMode.Vertical,
-				OverlapY = -8,
+				OverlapY = 0,
 			};
 
 			this.groupDetailItemsController = new ItemListController<MiniChartView> ()
@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				if (group == this.activeGroup)
 				{
-					this.activeGroupView = view;
+					this.activeGroupView = view.Children[0] as MiniChartView;
 				}
 
 				this.groupItemsController.Add (view);
@@ -665,7 +665,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private MiniChartView CreateGroupView(GraphDataGroup group)
+		private Widget CreateGroupView(GraphDataGroup group)
 		{
 			var view = this.CreateView (group);
 
@@ -688,8 +688,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.DeleteGroup (group, view);
 					this.Refresh ();
 				});
+
+			var frame = new FrameBox ()
+			{
+				PreferredHeight = view.PreferredHeight + 8,
+				Padding = new Margins (0, 0, 4, 4),
+			};
+
+			view.Parent = frame;
+			view.Dock   = DockStyle.Left;
 			
-			return view;
+			return frame;
 		}
 
 		private MiniChartView CreateGroupDetailView(GraphDataGroup group, GraphDataSeries item)
@@ -1129,12 +1138,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					if (best != null)
 					{
-						double y = best.View.Parent.ActualHeight - best.View.ActualBounds.Top + (best.View.Index > 0 ? this.host.groupItemsController.OverlapY / 2 : -2); 
+						double y = best.View.Parent.ActualHeight - best.View.ActualBounds.Top - 2; 
 						this.SetGroupDropTarget (best.View.Index, false, y, 2.0);
 					}
 					else
 					{
-						double y = this.host.groupItemsController.Container.ActualHeight - this.host.groupItemsController.Last ().ActualBounds.Bottom + this.host.groupItemsController.OverlapY / 2; 
+						double y = this.host.groupItemsController.Container.ActualHeight - this.host.groupItemsController.Last ().ActualBounds.Bottom - 2; 
 						this.SetGroupDropTarget (this.host.groupItemsController.Count, false, y, 2.0);
 					}
 
@@ -1759,7 +1768,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private IEnumerable<MiniChartView> GetAllMiniChartViews()
 		{
-			return this.inputItemsController.Concat (this.groupItemsController).Concat (this.groupDetailItemsController).Concat (this.outputItemsController);
+			var groups = this.groupItemsController.Select (widget => widget.Children[0] as MiniChartView);
+			return this.inputItemsController.Concat (groups).Concat (this.groupDetailItemsController).Concat (this.outputItemsController);
 		}
 		
 		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
@@ -2020,7 +2030,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private readonly ItemListController<MiniChartView>		inputItemsController;
 		private readonly ItemListController<MiniChartView>		outputItemsController;
-		private readonly ItemListController<MiniChartView>		groupItemsController;
+		private readonly ItemListController<Widget>				groupItemsController;
 		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
 		private readonly HashSet<GraphDataCategory> filterCategories;
 
