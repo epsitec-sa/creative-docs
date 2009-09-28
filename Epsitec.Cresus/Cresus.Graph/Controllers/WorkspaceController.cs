@@ -1315,7 +1315,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			int index = this.Document.Groups.IndexOf (group);
 			this.activeGroup = null;
 			this.activeGroupView = null;
-			this.UpdateGroupName (group);
 		}
 
 		private GraphDataGroup UpdateGroup(GraphDataGroup group, IEnumerable<GraphDataSeries> items)
@@ -1328,6 +1327,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 			}
 
+			this.UpdateGroupName (group);
+
 			return group;
 		}
 
@@ -1336,6 +1337,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var group = this.Document.AddGroup (series);
 
 			this.groupItemsController.Add (this.CreateGroupView (group));
+			this.UpdateGroupName (group);
 
 			return group;
 		}
@@ -1344,6 +1346,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.Document.RemoveGroup (group);
 			this.groupItemsController.Remove (view);
+			this.UpdateGroupName (group);
 		}
 
 		private void UpdateGroupName(GraphDataGroup group)
@@ -1464,11 +1467,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				(string.IsNullOrEmpty (summary)))
 			{
 				return null;
-			}
-
-			if (!view.IsActualGeometryValid)
-			{
-				window.ForceLayout ();
 			}
 
 			var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
@@ -1784,12 +1782,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.groupItemsController.UpdateLayout ();
 
-				if ((!view.IsActualGeometryValid) &&
-					(view.Window != null))
-				{
-					view.Window.ForceLayout ();
-				}
-
 				var bounds = view.MapClientToRoot (view.Client.Bounds);
 				var arrow  = new VerticalInjectionArrow ()
 				{
@@ -1819,6 +1811,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 
+			this.activeGroup = group;
+			this.activeGroupView = view;
+
 //-			var series1 = group.SyntheticDataSeries.Cast<GraphDataSeries> ();
 //			var series2 = group.InputDataSeries;
 //			var series = series1.Concat (series2);
@@ -1832,10 +1827,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			if (window != null)
 			{
-				if (view.IsActualGeometryValid == false)
-				{
-					window.ForceLayout ();
-				}
+				this.groupItemsController.UpdateLayout ();
+				this.groupDetailItemsController.UpdateLayout ();
 
 				double width  = 0;
 				double height = WorkspaceController.DefaultViewHeight;
@@ -1933,7 +1926,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleApplicationDeactivated(object sender)
 		{
-			this.CloseGroupDetails ();
+//-			this.CloseGroupDetails ();
 		}
 
 		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)

@@ -150,7 +150,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void UpdateLayout()
 		{
-			this.Layout ();
+			if ((this.container != null) &&
+				(this.container.Window != null))
+			{
+				if (!this.container.IsActualGeometryValid)
+				{
+					this.container.Window.ForceLayout ();
+				}
+				
+				this.Layout ();
+				
+				this.container.Window.ForceLayout ();
+			}
 		}
 		
 		public void Add(T item)
