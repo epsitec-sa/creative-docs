@@ -775,7 +775,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void IncludeOutput(GraphDataSeries item)
 		{
-			this.Document.AddOutput (item);
+			this.AddOutputToDocument (item);
 
 			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
 
@@ -783,6 +783,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshGroups ();
 			this.RefreshOutputs ();
 			this.RefreshPreview ();
+		}
+
+		private void AddOutputToDocument(GraphDataSeries item)
+		{
+			int n = this.colorStyle.Count;
+			int[] colors = new int[n];
+
+			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
+			int min = colors.Min ();
+
+			for (int i = 0; i < n; i++)
+			{
+				if (colors[i] == min)
+				{
+					item.ColorIndex = i;
+					break;
+				}
+			}
+
+			this.Document.AddOutput (item);
 		}
 
 		private MiniChartView CreateOutputView(GraphDataSeries item, int index)
@@ -794,7 +814,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.Renderer.RemoveStyle (this.colorStyle);
 			view.Renderer.AddStyle (new ColorStyle (this.colorStyle.Name)
 			{
-				this.colorStyle[index]
+				this.colorStyle[item.ColorIndex]
 			});
 
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
@@ -993,7 +1013,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				if (this.outputIndex >= 0)
 				{
-					this.host.Document.SetOutputIndex (this.item, this.outputIndex);
+					if (!this.host.Document.SetOutputIndex (this.item, this.outputIndex))
+					{
+						this.host.AddOutputToDocument (this.item);
+						this.host.Document.SetOutputIndex (this.item, this.outputIndex);
+					}
+
 					this.host.Refresh ();
 				}
 				else if (this.groupIndex >= 0)

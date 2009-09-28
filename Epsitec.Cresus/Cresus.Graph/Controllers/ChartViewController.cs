@@ -221,11 +221,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 					VisibleTicks = true,
 				};
 
-				renderer.AddStyle (this.colorStyle);
+				renderer.AddStyle (this.GetDocumentChartSeriesColorStyle ());
 				renderer.AddAdorner (adorner);
 			}
 
 			return renderer;
+		}
+
+		private ColorStyle GetDocumentChartSeriesColorStyle()
+		{
+			ColorStyle style = new ColorStyle (this.colorStyle.Name);
+
+			foreach (int index in this.document.OutputSeries.Select (x => x.ColorIndex))
+			{
+				style.Add (this.colorStyle[index]);
+			}
+			
+			return style;
 		}
 
 		private IEnumerable<Command> GetGraphTypeCommands()

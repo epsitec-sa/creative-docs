@@ -55,6 +55,10 @@ namespace Epsitec.Common.Graph.Styles
 			this.colors.Add (color);
 		}
 
+		public void Clear()
+		{
+			this.colors.Clear ();
+		}
 
 		public void DefineColor(int index, Color color)
 		{

@@ -177,7 +177,8 @@ namespace Epsitec.Cresus.Graph
 			var output = new GraphDataSeries (series)
 			{
 				Label = series.Source == null ? "" : series.Source.Name,
-				Title = series.ChartSeries.Label
+				Title = series.ChartSeries.Label,
+				ColorIndex = series.ColorIndex,
 			};
 
 			output.Index = this.outputSeries.Count;
@@ -233,7 +234,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (item == null)
 			{
-				item = this.AddOutput (series);
+				return false;
 			}
 
 			int oldIndex = item.Index;

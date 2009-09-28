@@ -54,6 +54,12 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public int ColorIndex
+		{
+			get;
+			set;
+		}
+
 		public bool IsSelected
 		{
 			get;
