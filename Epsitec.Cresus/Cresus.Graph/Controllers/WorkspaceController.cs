@@ -19,7 +19,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
-	internal sealed class WorkspaceController
+	internal sealed partial class WorkspaceController
 	{
 		public WorkspaceController(GraphApplication application)
 		{
@@ -48,16 +48,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 				OverlapY = 0,
 			};
 
-			this.groupDetailItemsController = new ItemListController<MiniChartView> ()
-			{
-				ItemLayoutMode = ItemLayoutMode.Flow,
-			};
-
 			this.chartViewController = new ChartViewController (this.application)
 			{
 				GraphType = Res.Commands.GraphType.UseLineChart,
 				ColorStyle = this.colorStyle,
 			};
+
+			this.groupDetailsController = new GroupDetailsController (this, this.groupItemsController);
 			
 			this.viewToGroup = new Dictionary<long, GraphDataGroup> ();
 			this.viewToSeries = new Dictionary<long, GraphDataSeries> ();
@@ -268,27 +265,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 //-			WorkspaceController.PatchBottomFrameLeftPaintBackground (bottomFrameLeft);
 			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
 
-			this.groupDetailsBalloon = new BalloonTip ()
-			{
-				Anchor = AnchorStyles.BottomLeft,
-				Disposition = ButtonMarkDisposition.Below,
-				Padding = new Margins (5, 5, 17, 8),
-				Visibility = false,
-				Parent = container.Window.Root,
-				BackColor = Color.FromBrightness (1),
-			};
-
-			var detailsFrame = new FrameBox ()
-			{
-				Dock = DockStyle.Fill,
-				Parent = this.groupDetailsBalloon,
-			};
-
 			this.inputItemsController.SetupUI (inputFrame);
 			this.groupItemsController.SetupUI (groupFrame);
-			this.groupDetailItemsController.SetupUI (detailsFrame);
 			this.outputItemsController.SetupUI (outputFrame);
 			this.chartViewController.SetupUI (previewFrame);
+			this.groupDetailsController.SetupUI (container);
 
 			this.inputItemsHint = new StaticText ()
 			{
@@ -420,7 +401,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private GraphDocument Document
+		public GraphDocument Document
 		{
 			get
 			{
@@ -596,7 +577,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void RefreshGroupView()
 		{
-			this.ShowGroupDetails (this.activeGroup, this.activeGroupView);
+			this.groupDetailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
 		}
 
 		private void RefreshGroups()
@@ -621,7 +602,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshHints ();
 		}
 
-		private void RefreshHilites()
+		public void RefreshHilites()
 		{
 			foreach (var item in this.GetAllMiniChartViews ())
 			{
@@ -701,37 +682,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return frame;
 		}
 
-		private MiniChartView CreateGroupDetailView(GraphDataGroup group, GraphDataSeries item)
-		{
-			var view = this.CreateView (item);
-			var synt = item as GraphSyntheticDataSeries;
-			
-			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
-
-			if ((synt != null) &&
-				(synt.SourceGroup == group))
-			{
-				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
-					delegate
-					{
-						group.RemoveSyntheticDataSeries (synt.FunctionName);
-						this.Document.UpdateSyntheticSeries ();
-						this.Refresh ();
-					});
-			}
-			else
-			{
-				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
-					delegate
-					{
-						group.Remove (item);
-						this.UpdateGroupName (group);
-					});
-			}
-
-			return view;
-		}
-		
 		private MiniChartView CreateInputView(GraphDataSeries item)
 		{
 			var view = this.CreateView (item);
@@ -904,311 +854,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 		}
 
-		class ViewDragDropManager
-		{
-			public ViewDragDropManager(GraphDataSeries item, MiniChartView view, WorkspaceController host, Point mouse)
-			{
-				this.item = item;
-				this.view = view;
-				this.host = host;
-				this.viewMouseCursor = this.view.MouseCursor;
-				
-				this.host.CloseBalloonTip ();
-				
-				this.viewOrigin  = view.MapClientToScreen (new Point (0, 0));
-				this.mouseOrigin = mouse;
-
-				this.groupIndex = -1;
-				this.outputIndex = -1;
-				
-				this.outputInsertionMark = new Separator ()
-				{
-					Parent = this.host.outputItemsController.Container,
-					Visibility = false,
-					Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left,
-					PreferredWidth = 2,
-				};
-
-				this.groupInsertionMark = new Separator ()
-				{
-					Parent = this.host.groupItemsController.Container,
-					Visibility = false,
-					Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
-					PreferredHeight = 2,
-				};
-			}
-
-			public bool LockX
-			{
-				get;
-				set;
-			}
-
-			public bool LockY
-			{
-				get;
-				set;
-			}
-
-			public DragWindow DragWindow
-			{
-				get;
-				private set;
-			}
-
-			public bool ProcessMouseMove(Point mouse, System.Action dragStartAction)
-			{
-				mouse = this.view.MapClientToScreen (mouse);
-				
-				if (this.DragWindow == null)
-				{
-					if (Point.Distance (mouse, this.mouseOrigin) > 2.0)
-					{
-						this.CreateDragWindow ();
-					}
-
-					dragStartAction ();
-				}
-
-				if (this.DragWindow != null)
-				{
-					double x = this.viewOrigin.X + (this.LockX ? 0 : mouse.X - this.mouseOrigin.X);
-					double y = this.viewOrigin.Y + (this.LockY ? 0 : mouse.Y - this.mouseOrigin.Y);
-
-					this.DragWindow.WindowLocation = new Point (x, y);
-					
-					if ((this.DetectOutput (mouse)) ||
-						(this.DetectGroup (mouse)))
-					{
-						return true;
-					}
-
-					this.host.RefreshHints ();
-				}
-				
-				return false;
-			}
-
-			public bool ProcessDragEnd()
-			{
-				bool ok = this.DragWindow != null;
-
-				if (this.DragWindow != null)
-				{
-					this.DragWindow.Dispose ();
-					this.DragWindow = null;
-				}
-
-				if (this.outputInsertionMark != null)
-				{
-					this.outputInsertionMark.Dispose ();
-					this.outputInsertionMark = null;
-				}
-
-				if (this.groupInsertionMark != null)
-				{
-					this.groupInsertionMark.Dispose ();
-					this.groupInsertionMark = null;
-				}
-
-				if (this.outputIndex >= 0)
-				{
-					if (!this.host.Document.SetOutputIndex (this.item, this.outputIndex))
-					{
-						this.host.AddOutputToDocument (this.item);
-						this.host.Document.SetOutputIndex (this.item, this.outputIndex);
-					}
-
-					this.host.Refresh ();
-				}
-				else if (this.groupIndex >= 0)
-				{
-					var groups = this.host.Document.Groups;
-
-					if ((this.groupIndex < groups.Count) &&
-						(this.groupUpdate))
-					{
-						this.host.UpdateGroup (groups[this.groupIndex], Collection.Single (this.item));
-					}
-					else
-					{
-						this.host.CreateGroup (Collection.Single (this.item));
-					}
-					
-					this.host.Refresh ();
-				}
-
-				this.view.Enable = true;
-				this.view.MouseCursor = this.viewMouseCursor;
-				this.view.ClearUserEventHandlers (Widget.EventNames.MouseMoveEvent);
-
-				return ok;
-			}
-
-			private bool DetectOutput(Point screenMouse)
-			{
-				var container = this.host.outputItemsController.Container;
-				var mouse     = container.MapScreenToClient (screenMouse);
-
-				if (container.Client.Bounds.Contains (mouse))
-				{
-					//	If the target is empty, accept to drop independently of the position :
-
-					if (this.host.outputItemsController.Count == 0)
-					{
-						this.SetOutputDropTarget (2, 0);
-						return true;
-					}
-
-					//	Otherwise, find the best possible match, but discard dropping on the item
-					//	itself, or between it and its immediate neighbours :
-
-					var dist = this.host.outputItemsController.Select (x => new
-					{
-						Distance = mouse.X - x.ActualBounds.Center.X,
-						View = x
-					});
-
-					System.Diagnostics.Debug.WriteLine (string.Join (", ", dist.Select (x => string.Format ("{0}:{1}", x.View.Index, x.Distance)).ToArray ()));
-
-					var best = dist.OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
-
-					if ((best != null) &&
-						(best.View != this.view))
-					{
-						if ((best.Distance < 0) &&
-							((best.View.Index != this.view.Index+1) || !this.host.Document.OutputSeries.Contains (this.item)))
-						{
-							this.SetOutputDropTarget (best.View.ActualBounds.Left - this.outputInsertionMark.PreferredWidth + 3, best.View.Index);
-							return true;
-						}
-						if ((best.Distance >= 0) &&
-						    ((best.View.Index != this.view.Index-1) || !this.host.Document.OutputSeries.Contains (this.item)))
-						{
-							this.SetOutputDropTarget (best.View.ActualBounds.Right - 3, best.View.Index+1);
-							return true;
-						}
-					}
-				}
-				else if (this.host.outputPageFrame.Parent.Client.Bounds.Contains (this.host.outputPageFrame.MapScreenToParent (screenMouse)))
-				{
-					int n = this.host.outputItemsController.Count;
-
-					this.SetOutputDropTarget (n > 0 ? this.host.outputItemsController.Last ().ActualBounds.Right - 3 : 2, n);
-					
-					return true;
-				}
-				
-				this.outputInsertionMark.Visibility = false;
-				this.outputIndex = -1;
-				
-				return false;
-			}
-
-			private void SetOutputDropTarget(double x, int index)
-			{
-				this.outputInsertionMark.Margins = new Margins (x, 0, 0, 0);
-				this.outputInsertionMark.Visibility = true;
-				
-				this.outputIndex = index;
-				
-				this.host.outputItemsHint.Visibility = false;
-			}
-
-			private void SetGroupDropTarget(int index, bool update, double y, double dy)
-			{
-				this.groupInsertionMark.Margins = new Margins (0, 0, y, 0);
-				this.groupInsertionMark.Visibility = dy > 0;
-				this.groupInsertionMark.PreferredHeight = dy;
-				this.groupInsertionMark.ZOrder = this.groupInsertionMark.Parent.Children.Count - 1;
-				
-				this.groupIndex = index;
-				this.groupUpdate = update;
-
-				this.host.groupItemsHint.Visibility = false;
-			}
-
-
-			private bool DetectGroup(Point screenMouse)
-			{
-				var container = this.host.groupItemsController.Container;
-				var mouse     = container.MapScreenToClient (screenMouse);
-
-				if (container.Client.Bounds.Contains (mouse))
-				{
-					if (this.host.groupItemsController.Count == 0)
-					{
-						this.SetGroupDropTarget (0, false, 0.0, 2.0);
-						return true;
-					}
-
-					var drop = this.host.groupItemsController.Where (x => x.HitTest (mouse)).FirstOrDefault ();
-
-					if (drop != null)
-					{
-						double y = drop.Parent.ActualHeight - drop.ActualBounds.Top;
-						this.SetGroupDropTarget (drop.Index, true, y, drop.ActualBounds.Height);
-						return true;
-					}
-					
-					var dist = this.host.groupItemsController.Select (x => new
-					{
-						Distance = mouse.Y - x.ActualBounds.Center.Y,
-						View = x
-					});
-
-					System.Diagnostics.Debug.WriteLine (string.Join (", ", dist.Select (x => string.Format ("{0}:{1}", x.View.Index, x.Distance)).ToArray ()));
-
-					var best = dist.Where (x => x.Distance >= 0).OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
-
-					if (best != null)
-					{
-						double y = best.View.Parent.ActualHeight - best.View.ActualBounds.Top - 2; 
-						this.SetGroupDropTarget (best.View.Index, false, y, 2.0);
-					}
-					else
-					{
-						double y = this.host.groupItemsController.Container.ActualHeight - this.host.groupItemsController.Last ().ActualBounds.Bottom - 2; 
-						this.SetGroupDropTarget (this.host.groupItemsController.Count, false, y, 2.0);
-					}
-
-					return true;
-				}
-
-				this.groupIndex = -1;
-
-				return false;
-			}
-			
-			private void CreateDragWindow()
-			{
-				this.DragWindow = new DragWindow ()
-				{
-					Alpha = 0.6,
-					WindowLocation = this.viewOrigin,
-					Owner = this.view.Window,
-				};
-
-				this.DragWindow.DefineWidget (this.host.CreateView (this.item), this.view.PreferredSize, Margins.Zero);
-				this.DragWindow.Show ();
-			}
-
-			
-			private readonly GraphDataSeries item;
-			private readonly MiniChartView view;
-			private readonly WorkspaceController host;
-			private readonly Point viewOrigin;
-			private readonly Point mouseOrigin;
-			private readonly MouseCursor viewMouseCursor;
-			
-			private Separator outputInsertionMark;
-			private Separator groupInsertionMark;
-
-			private int outputIndex;
-			private int groupIndex;
-			private bool groupUpdate;
-		}
-		
 		
 		private void CreateFilterButton(Widget filters, GraphDataCategory category)
 		{
@@ -1374,7 +1019,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.UpdateGroupName (group);
 		}
 
-		private void UpdateGroupName(GraphDataGroup group)
+		public void UpdateGroupName(GraphDataGroup group)
 		{
 			int count = group.Count;
 
@@ -1570,7 +1215,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private MiniChartView CreateView(GraphDataSeries item)
+		public MiniChartView CreateView(GraphDataSeries item)
 		{
 			var view = CreateView ();
 			var series = item.ChartSeries;
@@ -1592,7 +1237,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
-		private MiniChartView CreateView(GraphDataGroup group)
+		public MiniChartView CreateView(GraphDataGroup group)
 		{
 			var view = CreateView ();
 			
@@ -1613,7 +1258,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
-		private MiniChartView CreateView()
+		public MiniChartView CreateView()
 		{
 			var lineChartRenderer = new LineChartRenderer ();
 
@@ -1792,7 +1437,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private IEnumerable<MiniChartView> GetAllMiniChartViews()
 		{
 			var groups = this.groupItemsController.Select (widget => widget.Children[0] as MiniChartView);
-			return this.inputItemsController.Concat (groups).Concat (this.groupDetailItemsController).Concat (this.outputItemsController);
+			return this.inputItemsController.Concat (groups).Concat (this.groupDetailsController.MiniChartViews).Concat (this.outputItemsController);
 		}
 		
 		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
@@ -1824,134 +1469,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.groupCalculatorArrow = arrow;
 			}
-		}
-
-		private void ShowGroupDetails(GraphDataGroup group, MiniChartView view)
-		{
-			this.groupDetailItemsController.Clear ();
-			this.CloseGroupDetails ();
-
-			if (group == null)
-			{
-				return;
-			}
-
-			this.activeGroup = group;
-			this.activeGroupView = view;
-
-//-			var series1 = group.SyntheticDataSeries.Cast<GraphDataSeries> ();
-//			var series2 = group.InputDataSeries;
-//			var series = series1.Concat (series2);
-
-			foreach (var item in group.InputDataSeries)
-			{
-				this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, item));
-			}
-
-			var window = view.Window;
-			
-			if (window != null)
-			{
-				this.groupItemsController.UpdateLayout ();
-				this.groupDetailItemsController.UpdateLayout ();
-
-				double width  = 0;
-				double height = WorkspaceController.DefaultViewHeight;
-
-				switch (group.Count)
-				{
-					case 0:
-					case 1:
-						width = WorkspaceController.DefaultViewWidth;
-						break;
-
-					case 2:
-						width = WorkspaceController.DefaultViewWidth * 2 - this.groupDetailItemsController.OverlapX;
-						break;
-
-					default:
-						width = WorkspaceController.DefaultViewWidth * 3 - this.groupDetailItemsController.OverlapX * 2;
-						
-						if (group.Count > 3)
-						{
-							height = WorkspaceController.DefaultViewHeight * 2 - this.groupDetailItemsController.OverlapY;
-							width += AbstractScroller.DefaultBreadth + 2;
-						}
-						break;
-				}
-
-				this.groupDetailItemsController.VisibleScroller = group.Count > 3;
-				
-				var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
-				var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
-				var mark   = ButtonMarkDisposition.Below;
-				var rect   = BalloonTip.GetBestPosition (new Size (width + 12, height + 12 + 10), bounds, window.ClientSize, ref mark);
-
-				this.groupDetailsBalloon.Margins = new Margins (rect.Left, 0, 0, rect.Bottom);
-				this.groupDetailsBalloon.PreferredSize = rect.Size;
-				this.groupDetailsBalloon.TipAttachment = bounds.Center - rect.BottomLeft;
-				this.ShowGroupDetails ();
-			}
-
-			this.RefreshHilites ();
-		}
-
-		private void ShowGroupDetails()
-		{
-			if (this.groupDetailsBalloon.Visibility == false)
-			{
-				this.groupDetailsBalloon.Visibility = true;
-				this.RegisterFilter ();
-			}
-		}
-
-		private void CloseGroupDetails()
-		{
-			if (this.groupDetailsBalloon.Visibility)
-			{
-				this.activeGroup = null;
-				this.activeGroupView = null;
-				this.groupDetailsBalloon.Visibility = false;
-				this.UnregisterFilter ();
-			}
-		}
-
-		private void RegisterFilter()
-		{
-			Window.ApplicationDeactivated += this.HandleApplicationDeactivated;
-			Window.MessageFilter          += this.MessageFilter;
-		}
-
-		private void UnregisterFilter()
-		{
-			Window.ApplicationDeactivated -= this.HandleApplicationDeactivated;
-			Window.MessageFilter          -= this.MessageFilter;
-		}
-
-		private void MessageFilter(object sender, Message message)
-		{
-			if (message.IsMouseType)
-			{
-				var container = this.groupDetailItemsController.Container;
-				var pos = container.MapRootToClient (message.Cursor);
-				
-				if (container.Client.Bounds.Contains (pos))
-				{
-					//	OK
-				}
-				else
-				{
-					if (message.MessageType == MessageType.MouseDown)
-					{
-						this.CloseGroupDetails ();
-					}
-				}
-			}
-		}
-
-		private void HandleApplicationDeactivated(object sender)
-		{
-//-			this.CloseGroupDetails ();
 		}
 
 		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
@@ -2034,8 +1551,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private static readonly double DefaultViewWidth  = 100;
-		private static readonly double DefaultViewHeight =  80;
+		public static readonly double DefaultViewWidth  = 100;
+		public static readonly double DefaultViewHeight =  80;
 
 		private static readonly double InputViewWidth  = 120;
 		private static readonly double InputViewHeight =  60;
@@ -2049,7 +1566,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		inputItemsController;
 		private readonly ItemListController<MiniChartView>		outputItemsController;
 		private readonly ItemListController<Widget>				groupItemsController;
-		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
+		private readonly GroupDetailsController groupDetailsController;
 		private readonly HashSet<GraphDataCategory> filterCategories;
 
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
@@ -2064,7 +1581,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private StaticText				outputItemsHint;
 		private VerticalInjectionArrow	groupCalculatorArrow;
 		private BalloonTip				balloonTip;
-		private BalloonTip				groupDetailsBalloon;
 		private ColorStyle labelColorStyle;
 		private ColorStyle colorStyle;
 		private GraphDataGroup activeGroup;
