@@ -245,6 +245,7 @@ namespace Epsitec.Cresus.Graph
 
 			this.outputSeries.Remove (item);
 			this.outputSeries.Insert (newIndex, item);
+			this.RenumberSeries (this.outputSeries);
 
 			return true;
 		}

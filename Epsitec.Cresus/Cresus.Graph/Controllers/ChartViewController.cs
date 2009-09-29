@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				if (this.graphType != value)
 				{
 					this.graphType = value;
-					//-					this.commandBar.SelectedItem = this.graphType;
+//-					this.commandBar.SelectedItem = this.graphType;
 					this.Refresh ();
 				}
 			}
@@ -93,9 +93,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Parent = container,
-				BackColor = container.BackColor,
+				BackColor = Color.FromBrightness (1),
 				Name = "command bar",
 				Visibility = false,
+			};
+
+			this.commandButton = new Button ()
+			{
+				Anchor = AnchorStyles.All,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+				Parent = container,
+				Name = "command button",
+				Visibility = false,
+				Text = "Montrer dans une nouvelle fenêtre",
+				PreferredWidth = 120,
+				PreferredHeight = 40,
 			};
 
 			this.CreateGraphTypeButtons ();
@@ -106,12 +119,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				delegate
 				{
 					this.commandBar.Visibility = true;
+					this.commandButton.Visibility = true;
 				};
 			
 			this.container.Exited +=
 				delegate
 				{
 					this.commandBar.Visibility = false;
+					this.commandButton.Visibility = false;
 				};
 		}
 
@@ -309,14 +324,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public static readonly DependencyProperty ChartViewControllerProperty = DependencyProperty.RegisterAttached ("ChartViewController", typeof (ChartViewController), typeof (ChartViewController), new DependencyPropertyMetadata ());
 		private static CommandController		commandController;
 
-		private readonly GraphApplication	application;
-		private CommandContext			commandContext;
-		private CommandSelectionBar	commandBar;
-		private Widget container;
-		private ChartView				chartView;
-		private GraphDocument document;
-		private Command graphType;
-		private ColorStyle colorStyle;
+		private readonly GraphApplication		application;
+		private CommandContext					commandContext;
+		private CommandSelectionBar				commandBar;
+		private Button							commandButton;
+		private Widget							container;
+		private ChartView						chartView;
+		private GraphDocument					document;
+		private Command							graphType;
+		private ColorStyle						colorStyle;
 
 	}
 }
