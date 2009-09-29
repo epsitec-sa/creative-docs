@@ -25,8 +25,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.workspace = workspace;
 
-			this.itemsController = new ItemListController<Widget> ()
+			this.itemsController = new ItemListController<GroupView> ()
 			{
+				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
 				ItemLayoutMode = ItemLayoutMode.Vertical,
 				OverlapY = 0,
 			};
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return this.itemsController.Select (widget => widget.Children[0] as MiniChartView);
+				return this.itemsController.Select (widget => widget.View);
 			}
 		}
 
@@ -93,7 +94,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				if (group == this.activeGroup)
 				{
-					this.activeGroupView = view.Children[0] as MiniChartView;
+					this.SetActiveGroup (group, view);
 				}
 
 				this.itemsController.Add (view);
@@ -108,7 +109,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.workspace.RefreshHints ();
 		}
 
+		public void SetActiveGroup(GraphDataGroup group, GroupView view)
+		{
+			this.ClearActiveGroup ();
+			
+			this.activeGroup = group;
+			this.activeGroupView = view;
+			this.activeGroupView.SetSelected (true);
+		}
 
+		public void ClearActiveGroup()
+		{
+			if (this.activeGroupView != null)
+			{
+				this.activeGroupView.SetSelected (false);
+				this.activeGroupView = null;
+			}
+
+			if (this.activeGroup != null)
+			{
+				this.activeGroup = null;
+				this.detailsController.HideGroupDetails ();
+			}
+		}
+
+		
 		public GraphDataGroup CreateGroup(IEnumerable<GraphDataSeries> series)
 		{
 			var group = this.workspace.Document.AddGroup (series);
@@ -121,12 +146,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			group.AddSyntheticDataSeries (Functions.FunctionFactory.FunctionSum);
 
 			return group;
-		}
-
-		private void ClearActiveGroup()
-		{
-			this.activeGroup = null;
-			this.activeGroupView = null;
 		}
 
 		public GraphDataGroup UpdateGroup(GraphDataGroup group, IEnumerable<GraphDataSeries> items)
@@ -156,7 +175,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void DeleteGroup(GraphDataGroup group, MiniChartView view)
 		{
 			this.workspace.Document.RemoveGroup (group);
-			this.itemsController.Remove (view);
+			var groupView = this.itemsController.Find (x => x.View == view);
+			this.itemsController.Remove (groupView);
 		}
 
 		public void DetectGroup(Point mouse, System.Action<int, bool> setGroup, System.Action<double, double> setGeometry)
@@ -200,6 +220,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		
 		private void UpdateGroupName(GraphDataGroup group)
 		{
 			int count = group.Count;
@@ -209,13 +230,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.Refresh ();
 		}
 
-		
-		private Widget CreateGroupView(GraphDataGroup group)
+		private GroupView CreateGroupView(GraphDataGroup group)
 		{
 			var view = this.workspace.CreateView (group);
 
-			ViewDragDropManager drag = null;
+			var frame = new GroupView ()
+			{
+				PreferredHeight = view.PreferredHeight + 8,
+				Padding = new Margins (0, 0, 4, 4),
+				View = view,
+			};
 
+			
+			ViewDragDropManager drag = null;
+			
 			view.Pressed +=
 				(sender, e) =>
 				{
@@ -233,7 +261,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (drag.ProcessDragEnd () == false)
 					{
-						this.HandleGroupViewClicked (group, view);
+						this.HandleGroupViewClicked (group, frame);
 					}
 				};
 			
@@ -248,19 +276,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.Refresh ();
 				});
 
-			var frame = new FrameBox ()
-			{
-				PreferredHeight = view.PreferredHeight + 8,
-				Padding = new Margins (0, 0, 4, 4),
-			};
-
-			view.Parent = frame;
-			view.Dock   = DockStyle.Left;
-
 			return frame;
 		}
 
-		private void HandleGroupViewClicked(GraphDataGroup group, MiniChartView view)
+		private void HandleGroupViewClicked(GraphDataGroup group, GroupView view)
 		{
 			if (this.activeGroup == group)
 			{
@@ -269,8 +288,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
-				this.activeGroup = group;
-				this.activeGroupView = view;
+				this.SetActiveGroup (group, view);
+				
 				this.workspace.RefreshInputViewSelection ();
 				this.detailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
 			}
@@ -380,12 +399,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 
 		private readonly WorkspaceController	workspace;
-		private readonly ItemListController<Widget> itemsController;
+		private readonly ItemListController<GroupView> itemsController;
 		private readonly GroupDetailsController detailsController;
 		
 		private Widget							container;
 		private GraphDataGroup					activeGroup;
-		private MiniChartView					activeGroupView;
+		private GroupView						activeGroupView;
 		private VerticalInjectionArrow			groupCalculatorArrow;
 	}
 }

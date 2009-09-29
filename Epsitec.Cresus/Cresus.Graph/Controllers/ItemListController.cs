@@ -458,6 +458,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					this.scroller.Enable = false;
 				}
+
+				this.scroller.ZOrder = 0;
 			}
 			else
 			{

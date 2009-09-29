@@ -61,18 +61,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		public void ShowGroupDetails(GraphDataGroup group, MiniChartView view)
+		public void ShowGroupDetails(GraphDataGroup group, GroupView groupView)
 		{
 			this.itemsController.Clear ();
 			this.HideGroupDetails ();
 
-			if (group == null)
+			if ((group == null) ||
+				(groupView == null))
 			{
 				return;
 			}
 
 			this.activeGroup = group;
-			this.activeGroupView = view;
+			this.activeGroupView = groupView.View;
 
 			//-			var series1 = group.SyntheticDataSeries.Cast<GraphDataSeries> ();
 			//			var series2 = group.InputDataSeries;
@@ -83,7 +84,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.itemsController.Add (this.CreateGroupDetailView (group, item));
 			}
 
-			var window = view.Window;
+			var window = groupView.Window;
 
 			if (window != null)
 			{
@@ -117,8 +118,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.itemsController.VisibleScroller = group.Count > 3;
 
-				var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
-				var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
+				var clip   = groupView.MapClientToRoot (groupView.Client.Bounds);
+				var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (groupView.View.MapClientToRoot (groupView.View.Client.Bounds), 4, 4));
 				var mark   = ButtonMarkDisposition.Below;
 				var rect   = BalloonTip.GetBestPosition (new Size (width + 12, height + 12 + 10), bounds, window.ClientSize, ref mark);
 
@@ -165,7 +166,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var container = this.itemsController.Container;
 				var pos = container.MapRootToClient (message.Cursor);
 
-				if (container.Client.Bounds.Contains (pos))
+				if ((container.Client.Bounds.Contains (pos)) ||
+					((this.activeGroupView != null) && (this.activeGroupView.Client.Bounds.Contains (this.activeGroupView.MapRootToClient (message.Cursor)))))
 				{
 					//	OK
 				}
@@ -173,7 +175,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (message.MessageType == MessageType.MouseDown)
 					{
-						this.HideGroupDetails ();
+						this.workspace.Groups.ClearActiveGroup ();
 					}
 				}
 			}
