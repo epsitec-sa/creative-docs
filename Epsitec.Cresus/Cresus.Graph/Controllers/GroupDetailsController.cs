@@ -208,6 +208,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					delegate
 					{
 						this.workspace.Groups.RemoveGroup (group, Collection.Single (item));
+						this.workspace.Refresh ();
 					});
 			}
 

@@ -118,6 +118,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.ClearActiveGroup ();
 
+			group.AddSyntheticDataSeries (Functions.FunctionFactory.FunctionSum);
+
 			return group;
 		}
 
@@ -207,20 +209,34 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.Refresh ();
 		}
 
+		
 		private Widget CreateGroupView(GraphDataGroup group)
 		{
 			var view = this.workspace.CreateView (group);
 
-			view.Clicked +=
+			ViewDragDropManager drag = null;
+
+			view.Pressed +=
 				(sender, e) =>
 				{
-					if ((e.Message.Button == MouseButtons.Left) &&
-						(e.Message.ButtonDownCount == 1))
+					drag = new ViewDragDropManager (this.workspace, view, view.MapClientToScreen (e.Point))
+					{
+						Group = group,
+					};
+
+					drag.DefineMouseMoveBehaviour (MouseCursor.AsHand);
+					e.Message.Captured = true;
+				};
+
+			view.Released +=
+				(sender, e) =>
+				{
+					if (drag.ProcessDragEnd () == false)
 					{
 						this.HandleGroupViewClicked (group, view);
 					}
 				};
-
+			
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
 			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,

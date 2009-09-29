@@ -21,9 +21,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	class ViewDragDropManager
 	{
-		public ViewDragDropManager(WorkspaceController workspace, GraphDataSeries item, MiniChartView view, Point mouse)
+		public ViewDragDropManager(WorkspaceController workspace, MiniChartView view, Point mouse)
 		{
-			this.item = item;
 			this.view = view;
 			this.workspace = workspace;
 			this.viewMouseCursor = this.view.MouseCursor;
@@ -54,6 +53,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
+		public GraphDataSeries				Series;
+
+		public GraphDataGroup				Group;
+		
 		public bool							LockX
 		{
 			get;
@@ -66,6 +69,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
+
+		public void DefineMouseMoveBehaviour(MouseCursor mouseCursor)
+		{
+			this.view.MouseMove +=
+				(sender, e) =>
+				{
+					this.ProcessMouseMove (e.Point,
+						delegate
+						{
+							view.Enable = false;
+							view.MouseCursor = mouseCursor;
+						});
+
+					e.Suppress = true;
+				};
+		}
 		
 		public bool ProcessMouseMove(Point mouse, System.Action dragStartAction)
 		{
@@ -124,10 +143,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (this.outputIndex >= 0)
 			{
-				if (!this.workspace.Document.SetOutputIndex (this.item, this.outputIndex))
+				GraphDataSeries series = this.Series ?? this.Group.SyntheticDataSeries.FirstOrDefault ();
+
+				if (!this.workspace.Document.SetOutputIndex (series, this.outputIndex))
 				{
-					this.workspace.AddOutputToDocument (this.item);
-					this.workspace.Document.SetOutputIndex (this.item, this.outputIndex);
+					this.workspace.AddOutputToDocument (series);
+					this.workspace.Document.SetOutputIndex (series, this.outputIndex);
 				}
 
 				this.workspace.Refresh ();
@@ -139,11 +160,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				if ((this.groupIndex < groups.Count) &&
 					(this.groupUpdate))
 				{
-					this.workspace.Groups.UpdateGroup (groups[this.groupIndex], Collection.Single (this.item));
+					this.workspace.Groups.UpdateGroup (groups[this.groupIndex], Collection.Single (this.Series));
 				}
 				else
 				{
-					this.workspace.Groups.CreateGroup (Collection.Single (this.item));
+					this.workspace.Groups.CreateGroup (Collection.Single (this.Series));
 				}
 				
 				this.workspace.Refresh ();
@@ -189,13 +210,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 					(best.View != this.view))
 				{
 					if ((best.Distance < 0) &&
-						((best.View.Index != this.view.Index+1) || !this.workspace.Document.OutputSeries.Contains (this.item)))
+						((best.View.Index != this.view.Index+1) || !this.workspace.Document.OutputSeries.Contains (this.Series)))
 					{
 						this.SetOutputDropTarget (best.View.ActualBounds.Left - this.outputInsertionMark.PreferredWidth + 3, best.View.Index);
 						return true;
 					}
 					if ((best.Distance >= 0) &&
-					    ((best.View.Index != this.view.Index-1) || !this.workspace.Document.OutputSeries.Contains (this.item)))
+					    ((best.View.Index != this.view.Index-1) || !this.workspace.Document.OutputSeries.Contains (this.Series)))
 					{
 						this.SetOutputDropTarget (best.View.ActualBounds.Right - 3, best.View.Index+1);
 						return true;
@@ -222,7 +243,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var container = this.workspace.Groups.Container;
 			var mouse     = container.MapScreenToClient (screenMouse);
 
-			if (container.Client.Bounds.Contains (mouse))
+			if ((this.Series != null) &&
+				(container.Client.Bounds.Contains (mouse)))
 			{
 				int  index = 0;
 				bool update = false;
@@ -285,12 +307,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Owner = this.view.Window,
 			};
 
-			this.dragWindow.DefineWidget (this.workspace.CreateView (this.item), this.view.PreferredSize, Margins.Zero);
+			MiniChartView view = null;
+
+			if (this.Series != null)
+			{
+				view = this.workspace.CreateView (this.Series);
+			}
+			else if (this.Group != null)
+			{
+				view = this.workspace.CreateView (this.Group);
+			}
+
+			this.dragWindow.DefineWidget (view, this.view.PreferredSize, Margins.Zero);
 			this.dragWindow.Show ();
 		}
 
 		
-		private readonly GraphDataSeries	item;
 		private readonly MiniChartView		view;
 		private readonly WorkspaceController workspace;
 		private readonly Point				viewOrigin;

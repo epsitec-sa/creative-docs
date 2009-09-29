@@ -866,68 +866,46 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		private void CreateOutputDragAndDropHandler(GraphDataSeries item, MiniChartView view)
 		{
-			ViewDragDropManager target = null;
+			ViewDragDropManager drag = null;
 
 			view.Pressed +=
 				(sender, e) =>
 				{
-					e.Message.Captured = true;
-
-					target = new ViewDragDropManager (this, item, view, view.MapClientToScreen (e.Point))
+					drag = new ViewDragDropManager (this, view, view.MapClientToScreen (e.Point))
 					{
+						Series = item,
 						LockY = true,
 					};
-
-					view.MouseMove +=
-						(sender2, e2) =>
-						{
-							target.ProcessMouseMove (e2.Point,
-								delegate
-								{
-									view.Enable = false;
-									view.MouseCursor = MouseCursor.AsSizeWE;
-								});
-
-							e2.Suppress = true;
-						};
+					drag.DefineMouseMoveBehaviour (MouseCursor.AsSizeWE);
+					e.Message.Captured = true;
 				};
 
 			view.Released +=
 				delegate
 				{
-					target.ProcessDragEnd ();
+					drag.ProcessDragEnd ();
 				};
 		}
 
 		private void CreateInputDragAndDropHandler(GraphDataSeries item, MiniChartView view)
 		{
-			ViewDragDropManager target = null;
+			ViewDragDropManager drag = null;
 
 			view.Pressed +=
 				(sender, e) =>
 				{
+					drag = new ViewDragDropManager (this, view, view.MapClientToScreen (e.Point))
+					{
+						Series = item,
+					};
+					drag.DefineMouseMoveBehaviour (MouseCursor.AsHand);
 					e.Message.Captured = true;
-
-					target = new ViewDragDropManager (this, item, view, view.MapClientToScreen (e.Point));
-
-					view.MouseMove +=
-						(sender2, e2) =>
-						{
-							target.ProcessMouseMove (e2.Point,
-								delegate
-								{
-									view.Enable = false;
-									view.MouseCursor = MouseCursor.AsHand;
-								});
-
-							e2.Suppress = true;
-						};
 				};
 
 			view.Released +=
 				(sender, e) =>
 				{
-					if (target.ProcessDragEnd () == false)
+					if (drag.ProcessDragEnd () == false)
 					{
 						this.HandleInputViewClicked (item, view);
 
