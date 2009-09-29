@@ -234,13 +234,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var view = this.workspace.CreateView (group);
 
-			var frame = new GroupView ()
+			var groupView = new GroupView ()
 			{
 				PreferredHeight = view.PreferredHeight + 8,
 				Padding = new Margins (0, 0, 4, 4),
 				View = view,
 			};
 
+			this.CreateFunctionButton (group, groupView.ButtonSurface, null, "Groupe");
+			this.CreateFunctionButton (group, groupView.ButtonSurface, Functions.FunctionFactory.FunctionSum, "Somme");
 			
 			ViewDragDropManager drag = null;
 			
@@ -252,7 +254,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 						Group = group,
 					};
 
-					drag.DefineMouseMoveBehaviour (MouseCursor.AsHand);
+					drag.DefineMouseMoveBehaviour (MouseCursor.AsHand,
+						delegate
+						{
+							this.ClearActiveGroup ();
+						});
 					e.Message.Captured = true;
 				};
 
@@ -261,7 +267,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (drag.ProcessDragEnd () == false)
 					{
-						this.HandleGroupViewClicked (group, frame);
+						this.HandleGroupViewClicked (group, groupView);
 					}
 				};
 			
@@ -276,7 +282,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.Refresh ();
 				});
 
-			return frame;
+			return groupView;
 		}
 
 		private void HandleGroupViewClicked(GraphDataGroup group, GroupView view)
@@ -295,106 +301,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
+		private void CreateFunctionButton(GraphDataGroup group, Widget container, string function, string label)
 		{
-			if (this.groupCalculatorArrow != null)
+			var button = new RadioButton ()
 			{
-				this.groupCalculatorArrow.Dispose ();
-				this.groupCalculatorArrow = null;
-			}
-
-			if (view != null)
-			{
-				this.itemsController.UpdateLayout ();
-
-				var bounds = view.MapClientToRoot (view.Client.Bounds);
-				var arrow  = new VerticalInjectionArrow ()
-				{
-					Anchor = AnchorStyles.BottomLeft,
-					Margins = new Margins (bounds.Left, 0, 0, bounds.Top + 2),
-					Parent = view.RootParent,
-					PreferredWidth = view.PreferredWidth,
-					ArrowWidth = 40,
-					Padding = new Margins (0, 0, 24, 4),
-					BackColor = Color.FromBrightness (1),
-					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
-				};
-
-				this.CreateFunctionButton (group, arrow, Functions.FunctionFactory.FunctionSum);
-
-				this.groupCalculatorArrow = arrow;
-			}
-		}
-
-		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
-		{
-			var container = new FrameBox ()
-			{
+				PreferredHeight = 15,
 				Dock = DockStyle.Stacked,
-				Parent = arrow,
-				PreferredHeight = 20,
-			};
-
-			var button = new GraphicIconButton ()
-			{
-				IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
-				HorizontalAlignment = HorizontalAlignment.Center,
-				PreferredSize = new Size (36, 20),
-				Dock = DockStyle.Fill,
 				Parent = container,
-				AutoToggle = true,
-				Name = function,
-				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).Count () == 0 ? ActiveState.No : ActiveState.Yes,
+				Name = function ?? "none",
+				Text = label,
+				ActiveState = group.DefaultFunctionName == function ? ActiveState.Yes : ActiveState.No,
 			};
-
-			var check = new CheckButton ()
-			{
-				Anchor = AnchorStyles.TopRight,
-				Text = "",
-				Parent = container,
-				Margins = new Margins (0, 2, 2, 0),
-				PreferredSize = new Size (15, 15),
-				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function && x.IsSelected).Count () == 0 ? ActiveState.No : ActiveState.Yes,
-				Visibility = button.ActiveState == ActiveState.Yes
-			};
-
-			//	TODO: ...handle check box...
-
+			
 			button.ActiveStateChanged +=
 				delegate
 				{
 					if (button.ActiveState == ActiveState.Yes)
 					{
-						group.AddSyntheticDataSeries (function);
-						check.Visibility = true;
+						group.DefaultFunctionName = function;
 					}
-					else
-					{
-						group.RemoveSyntheticDataSeries (function);
-						check.Visibility = false;
-					}
+					
 					this.workspace.Document.UpdateSyntheticSeries ();
 					this.Refresh ();
 				};
-
-			check.ActiveStateChanged +=
-				delegate
-				{
-					var item = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).FirstOrDefault ();
-
-					if (item != null)
-					{
-						if (check.ActiveState == ActiveState.Yes)
-						{
-							this.workspace.IncludeOutput (item);
-						}
-						else
-						{
-							this.workspace.ExcludeOutput (item);
-						}
-					}
-				};
-
 		}
 
 
@@ -405,6 +334,5 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private Widget							container;
 		private GraphDataGroup					activeGroup;
 		private GroupView						activeGroupView;
-		private VerticalInjectionArrow			groupCalculatorArrow;
 	}
 }

@@ -52,6 +52,12 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
+		public string DefaultFunctionName
+		{
+			get;
+			set;
+		}
+
 
 		public void Add(GraphDataSeries series)
 		{
@@ -108,7 +114,12 @@ namespace Epsitec.Cresus.Graph
 				};
 
 				series.DefineDataSource (this.Source);
-				
+
+				this.syntheticDataSeries.Add (series);
+			}
+			else
+			{
+				this.syntheticDataSeries.Remove (series);
 				this.syntheticDataSeries.Add (series);
 			}
 
@@ -126,6 +137,23 @@ namespace Epsitec.Cresus.Graph
 			{
 				series.Enabled = false;
 			}
+		}
+
+		public GraphSyntheticDataSeries GetSyntheticDataSeries(string functionName)
+		{
+			if (string.IsNullOrEmpty (functionName))
+			{
+				return null;
+			}
+
+			var series = this.syntheticDataSeries.Find (x => x.FunctionName == functionName);
+
+			if (series == null)
+			{
+				series = this.AddSyntheticDataSeries (functionName);
+			}
+
+			return series;
 		}
 
 		public void Invalidate()

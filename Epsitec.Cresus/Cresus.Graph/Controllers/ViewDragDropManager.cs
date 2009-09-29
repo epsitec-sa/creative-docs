@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.workspace.HideBalloonTip ();
 			
 			this.viewOrigin  = view.MapClientToScreen (new Point (0, 0));
-			this.mouseOrigin = mouse;
+			this.mouseScreenOrigin = mouse;
 
 			this.groupIndex = -1;
 			this.outputIndex = -1;
@@ -72,6 +72,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void DefineMouseMoveBehaviour(MouseCursor mouseCursor)
 		{
+			this.DefineMouseMoveBehaviour (mouseCursor, null);
+		}
+
+		public void DefineMouseMoveBehaviour(MouseCursor mouseCursor, System.Action mouseMoveAction)
+		{
 			this.view.MouseMove +=
 				(sender, e) =>
 				{
@@ -80,6 +85,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 						{
 							view.Enable = false;
 							view.MouseCursor = mouseCursor;
+							if (mouseMoveAction != null)
+							{
+								mouseMoveAction ();
+							}
 						});
 
 					e.Suppress = true;
@@ -92,18 +101,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			if (this.dragWindow == null)
 			{
-				if (Point.Distance (mouse, this.mouseOrigin) > 2.0)
+				if (Point.Distance (mouse, this.mouseScreenOrigin) > 2.0)
 				{
 					this.CreateDragWindow ();
+					dragStartAction ();
 				}
-
-				dragStartAction ();
 			}
 
 			if (this.dragWindow != null)
 			{
-				double x = this.viewOrigin.X + (this.LockX ? 0 : mouse.X - this.mouseOrigin.X);
-				double y = this.viewOrigin.Y + (this.LockY ? 0 : mouse.Y - this.mouseOrigin.Y);
+				double x = this.viewOrigin.X + (this.LockX ? 0 : mouse.X - this.mouseScreenOrigin.X);
+				double y = this.viewOrigin.Y + (this.LockY ? 0 : mouse.Y - this.mouseScreenOrigin.Y);
 
 				this.dragWindow.WindowLocation = new Point (x, y);
 				
@@ -143,14 +151,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (this.outputIndex >= 0)
 			{
-				GraphDataSeries series = this.Series ?? this.Group.SyntheticDataSeries.FirstOrDefault ();
+				int index = this.outputIndex;
 
-				if (!this.workspace.Document.SetOutputIndex (series, this.outputIndex))
+				if (this.Series != null)
 				{
-					this.workspace.AddOutputToDocument (series);
-					this.workspace.Document.SetOutputIndex (series, this.outputIndex);
+					this.InsertSeries (this.Series, index);
 				}
-
+				else if (this.Group != null)
+				{
+					var series = this.Group.GetSyntheticDataSeries (this.Group.DefaultFunctionName);
+					
+					if (series == null)
+					{
+						foreach (var item in this.Group.InputDataSeries)
+						{
+							index = this.InsertSeries (item, index);
+						}
+					}
+					else
+					{
+						this.InsertSeries (series, index);
+					}
+				}
+				
 				this.workspace.Refresh ();
 			}
 			else if (this.groupIndex >= 0)
@@ -175,6 +198,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.view.ClearUserEventHandlers (Widget.EventNames.MouseMoveEvent);
 
 			return ok;
+		}
+
+		private int InsertSeries(GraphDataSeries series, int index)
+		{
+			if (series != null)
+			{
+				if (!this.workspace.Document.SetOutputIndex (series, index))
+				{
+					this.workspace.AddOutputToDocument (series);
+					this.workspace.Document.SetOutputIndex (series, index);
+				}
+
+				index = this.workspace.Document.ResolveOutputSeries (series).Index + 1;
+			}
+
+			return index;
 		}
 
 		
@@ -326,7 +365,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly MiniChartView		view;
 		private readonly WorkspaceController workspace;
 		private readonly Point				viewOrigin;
-		private readonly Point				mouseOrigin;
+		private readonly Point				mouseScreenOrigin;
 		private readonly MouseCursor		viewMouseCursor;
 		
 		private Separator					outputInsertionMark;

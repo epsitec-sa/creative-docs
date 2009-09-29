@@ -221,16 +221,7 @@ namespace Epsitec.Cresus.Graph
 
 		public bool SetOutputIndex(GraphDataSeries series, int newIndex)
 		{
-			GraphDataSeries item = null;
-
-			if (this.outputSeries.Contains (series))
-			{
-				item = series;
-			}
-			else
-			{
-				item = this.outputSeries.Find (x => x.Parent == series);
-			}
+			var item = this.ResolveOutputSeries (series);
 
 			if (item == null)
 			{
@@ -248,6 +239,18 @@ namespace Epsitec.Cresus.Graph
 			this.outputSeries.Insert (newIndex, item);
 
 			return true;
+		}
+
+		public GraphDataSeries ResolveOutputSeries(GraphDataSeries series)
+		{
+			if (this.outputSeries.Contains (series))
+			{
+				return series;
+			}
+			else
+			{
+				return this.outputSeries.Find (x => x.Parent == series);
+			}
 		}
 
 

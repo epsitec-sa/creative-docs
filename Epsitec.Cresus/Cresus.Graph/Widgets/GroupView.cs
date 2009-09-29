@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 				Parent = this,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Margins = new Margins (4, 0, 0, 0),
-				BackColor = Color.FromName ("Lime"),
+				Visibility = false,
 			};
 		}
 		
@@ -47,6 +47,14 @@ namespace Epsitec.Cresus.Graph.Widgets
 						this.view.Dock   = DockStyle.Left;
 					}
 				}
+			}
+		}
+
+		public FrameBox ButtonSurface
+		{
+			get
+			{
+				return this.frame;
 			}
 		}
 

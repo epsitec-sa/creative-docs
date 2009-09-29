@@ -696,9 +696,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var view = CreateView ();
 
-			view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
 			view.Title = group.Name;
-			view.Label = "Groupe";
+
+			switch (group.DefaultFunctionName)
+			{
+				case Functions.FunctionFactory.FunctionSum:
+					view.Renderer.Collect (group.GetSyntheticDataSeries (group.DefaultFunctionName).ChartSeries);
+					view.Label = "Somme";
+					break;
+				
+				default:
+					view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
+					view.Label = "Groupe";
+					break;
+			}
 
 			long id = view.GetVisualSerialId ();
 

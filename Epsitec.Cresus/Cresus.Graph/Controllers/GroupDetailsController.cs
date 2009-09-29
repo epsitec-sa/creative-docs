@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var pos = container.MapRootToClient (message.Cursor);
 
 				if ((container.Client.Bounds.Contains (pos)) ||
-					((this.activeGroupView != null) && (this.activeGroupView.Client.Bounds.Contains (this.activeGroupView.MapRootToClient (message.Cursor)))))
+					((this.activeGroupView != null) && (this.activeGroupView.Parent.Client.Bounds.Contains (this.activeGroupView.Parent.MapRootToClient (message.Cursor)))))
 				{
 					//	OK
 				}
