@@ -44,11 +44,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.groupsController = new GroupsController (this);
 
-			this.chartViewController = new ChartViewController (this.application)
+			this.chartViewController = new ChartViewController (this.application, this)
 			{
 				GraphType = Res.Commands.GraphType.UseLineChart,
 				ColorStyle = this.colorStyle,
 			};
+
+			this.floatingChartViews = new List<ChartViewController> ();
 			
 			this.viewToGroup = new Dictionary<long, GraphDataGroup> ();
 			this.viewToSeries = new Dictionary<long, GraphDataSeries> ();
@@ -667,6 +669,44 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.Document.AddOutput (item);
+		}
+
+
+		public void OpenChartViewWindow()
+		{
+			Window window = new Window ()
+			{
+				Icon = this.application.Window.Icon,
+				Text = this.application.Window.Text,
+				ClientSize = new Size (800, 600),
+			};
+
+			var frame = new FrameBox ()
+			{
+				Parent = window.Root,
+				Dock = DockStyle.Fill,
+			};
+
+			var controller = new ChartViewController (this.application, this)
+			{
+				IsStandalone = true,
+				GraphType = this.chartViewController.GraphType,
+				ColorStyle = this.chartViewController.ColorStyle,
+			};
+
+			controller.SetupUI (frame);
+			controller.Refresh (this.Document);
+
+			this.floatingChartViews.Add (controller);
+			
+			window.WindowClosed +=
+				delegate
+				{
+					this.floatingChartViews.Remove (controller);
+					window.Dispose ();
+				};
+			
+			window.Show ();
 		}
 
 
@@ -1354,6 +1394,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (this.Document != null)
 			{
 				this.chartViewController.Refresh (this.Document);
+				this.floatingChartViews.ForEach (x => x.Refresh (this.Document));
 			}
 		}
 
@@ -1379,6 +1420,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly List<HiliteInfo> hilites;
 
 		private ChartViewController		chartViewController;
+		private List<ChartViewController> floatingChartViews;
 		
 		private StaticText				inputItemsHint;
 		private StaticText				groupItemsHint;

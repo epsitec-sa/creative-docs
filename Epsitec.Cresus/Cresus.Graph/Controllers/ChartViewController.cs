@@ -24,14 +24,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	internal sealed class ChartViewController : DependencyObject
 	{
-		public ChartViewController(GraphApplication application)
+		public ChartViewController(GraphApplication application, WorkspaceController workspace)
 		{
 			this.application = application;
-			
-			if (ChartViewController.commandController == null)
-			{
-				ChartViewController.commandController = new CommandController (this.application.CommandDispatcher);
-			}
+			this.workspace   = workspace;
+		}
+
+		public bool IsStandalone
+		{
+			get;
+			set;
 		}
 
 		public Command GraphType
@@ -78,6 +80,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void SetupUI(Widget container)
 		{
 			this.container = container;
+
+			if (this.IsStandalone)
+			{
+				var dispatcher = new CommandDispatcher ("chart view", CommandDispatcherLevel.Secondary);
+				CommandDispatcher.SetDispatcher (this.container, dispatcher);
+				this.localController = new CommandController (dispatcher);
+			}
+			else
+			{
+				if (ChartViewController.commandController == null)
+				{
+					ChartViewController.commandController = new CommandController (this.application.CommandDispatcher);
+				}
+			}
 			
 			this.commandContext = this.CreateCommandContext (this.container);
 
@@ -86,6 +102,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 				Parent = this.container,
 				Padding = new Margins (16, 24, 24, 16),
+			};
+
+			var palette = new AnchoredPalette ()
+			{
+				Anchor = AnchorStyles.BottomLeft,
+				Margins = new Margins (0, 0, 0, 0),
+				Parent = this.container,
+				BackColor = Color.FromAlphaRgb (0.5, 0.8, 0.8, 1),
+				Visibility = false,
+			};
+
+			this.captionView = new CaptionView ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = palette,
 			};
 
 			this.commandBar = new CommandSelectionBar ()
@@ -111,23 +142,38 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredHeight = 40,
 			};
 
+			if (this.IsStandalone)
+			{
+				this.commandBar.Dock = DockStyle.Top;
+				this.commandBar.Visibility = true;
+				palette.Visibility = true;
+			}
+			else
+			{
+				this.container.Entered +=
+					delegate
+					{
+						this.commandBar.Visibility = true;
+						this.commandButton.Visibility = true;
+					};
+
+				this.container.Exited +=
+					delegate
+					{
+						this.commandBar.Visibility = false;
+						this.commandButton.Visibility = false;
+					};
+			}
+
+			this.commandButton.Clicked +=
+				delegate
+				{
+					this.workspace.OpenChartViewWindow ();
+				};
+
 			this.CreateGraphTypeButtons ();
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
-			
-			this.container.Entered +=
-				delegate
-				{
-					this.commandBar.Visibility = true;
-					this.commandButton.Visibility = true;
-				};
-			
-			this.container.Exited +=
-				delegate
-				{
-					this.commandBar.Visibility = false;
-					this.commandButton.Visibility = false;
-				};
 		}
 
 		public void Refresh()
@@ -180,11 +226,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 
 				this.chartView.Renderer = renderer;
-				//-					this.captionView.Captions = renderer.Captions;
+				this.captionView.Captions = renderer.Captions;
+				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
+				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600));
 			}
 
 			this.chartView.Invalidate ();
-			//-				this.captionView.Invalidate ();
+			this.captionView.Invalidate ();
 		}
 
 		private void CreateGraphTypeButtons()
@@ -324,12 +372,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public static readonly DependencyProperty ChartViewControllerProperty = DependencyProperty.RegisterAttached ("ChartViewController", typeof (ChartViewController), typeof (ChartViewController), new DependencyPropertyMetadata ());
 		private static CommandController		commandController;
 
+		private CommandController				localController;
 		private readonly GraphApplication		application;
+		private readonly WorkspaceController	workspace;
 		private CommandContext					commandContext;
 		private CommandSelectionBar				commandBar;
 		private Button							commandButton;
 		private Widget							container;
 		private ChartView						chartView;
+		private CaptionView						captionView;
 		private GraphDocument					document;
 		private Command							graphType;
 		private ColorStyle						colorStyle;

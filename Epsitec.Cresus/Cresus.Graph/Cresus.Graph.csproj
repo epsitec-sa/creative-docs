@@ -156,6 +156,7 @@
     <Compile Include="ImportConverters\ImportConverter.cs" />
     <Compile Include="ImportConverters\ImporterAttribute.cs" />
     <Compile Include="Resources\Cresus.Graph\SourceCode\Res.cs" />
+    <Compile Include="Widgets\AnchoredPalette.cs" />
     <Compile Include="Widgets\CommandSelectionBar.cs" />
     <Compile Include="Widgets\BalloonTip.cs" />
     <Compile Include="Widgets\GroupView.cs" />
