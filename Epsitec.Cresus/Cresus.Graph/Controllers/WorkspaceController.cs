@@ -65,6 +65,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
+		public ItemListController<MiniChartView> Outputs
+		{
+			get
+			{
+				return this.outputItemsController;
+			}
+		}
+
 		public GroupsController Groups
 		{
 			get
@@ -641,6 +649,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshPreview ();
 		}
 
+		public void AddOutputToDocument(GraphDataSeries item)
+		{
+			int n = this.colorStyle.Count;
+			int[] colors = new int[n];
+
+			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
+			int min = colors.Min ();
+
+			for (int i = 0; i < n; i++)
+			{
+				if (colors[i] == min)
+				{
+					item.ColorIndex = i;
+					break;
+				}
+			}
+
+			this.Document.AddOutput (item);
+		}
+
 
 		public MiniChartView CreateView(GraphDataSeries item)
 		{
@@ -685,6 +713,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
+
+		public void HideBalloonTip()
+		{
+			if (this.balloonTip != null)
+			{
+				this.balloonTip.Dispose ();
+				this.balloonTip = null;
+			}
+		}
+
+		public void HideGroupItemsHint()
+		{
+			this.groupItemsHint.Visibility = false;
+		}
+
+		public void HideOutputItemsHint()
+		{
+			this.outputItemsHint.Visibility = false;
+		}
+
 		
 		private IEnumerable<GraphDataSeries> GetSelectedSeries()
 		{
@@ -713,26 +761,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.outputItemsController.ForEach (x => x.PreferredWidth = itemWidth);
 			}
-		}
-
-		private void AddOutputToDocument(GraphDataSeries item)
-		{
-			int n = this.colorStyle.Count;
-			int[] colors = new int[n];
-
-			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
-			int min = colors.Min ();
-
-			for (int i = 0; i < n; i++)
-			{
-				if (colors[i] == min)
-				{
-					item.ColorIndex = i;
-					break;
-				}
-			}
-
-			this.Document.AddOutput (item);
 		}
 
 		
@@ -845,7 +873,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					e.Message.Captured = true;
 
-					target = new ViewDragDropManager (item, view, this, view.MapClientToScreen (e.Point))
+					target = new ViewDragDropManager (this, item, view, view.MapClientToScreen (e.Point))
 					{
 						LockY = true,
 					};
@@ -880,7 +908,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					e.Message.Captured = true;
 
-					target = new ViewDragDropManager (item, view, this, view.MapClientToScreen (e.Point));
+					target = new ViewDragDropManager (this, item, view, view.MapClientToScreen (e.Point));
 
 					view.MouseMove +=
 						(sender2, e2) =>
@@ -1063,7 +1091,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.hilites.Clear ();
 			
-			this.CloseBalloonTip ();
+			this.HideBalloonTip ();
 
 			if (entered && view.IsEnabled)
 			{
@@ -1113,15 +1141,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.balloonTip = this.CreateSummaryBalloon (view, summary);
-		}
-
-		private void CloseBalloonTip()
-		{
-			if (this.balloonTip != null)
-			{
-				this.balloonTip.Dispose ();
-				this.balloonTip = null;
-			}
 		}
 
 		

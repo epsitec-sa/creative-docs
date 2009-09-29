@@ -141,7 +141,7 @@
     <Compile Include="Controllers\ChartViewController.cs" />
     <Compile Include="Controllers\GroupDetailsController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />
-    <Compile Include="Controllers\WorkspaceController.ViewDragDropManager.cs" />
+    <Compile Include="Controllers\ViewDragDropManager.cs" />
     <Compile Include="Controllers\ItemLayoutMode.cs" />
     <Compile Include="Controllers\ItemListController.cs" />
     <Compile Include="Controllers\SeriesPickerControllerOriginal.cs" />
