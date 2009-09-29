@@ -69,6 +69,12 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			base.ProcessMessage (message, pos);
+
+			message.Handled = true;
+		}
 		
 		private static Path GetBalloonPath(Rectangle bounds, Point attachment, ButtonMarkDisposition disposition)
 		{

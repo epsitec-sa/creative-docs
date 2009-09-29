@@ -42,19 +42,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ItemLayoutMode = ItemLayoutMode.Horizontal
 			};
 
-			this.groupItemsController = new ItemListController<Widget> ()
-			{
-				ItemLayoutMode = ItemLayoutMode.Vertical,
-				OverlapY = 0,
-			};
+			this.groupsController = new GroupsController (this);
 
 			this.chartViewController = new ChartViewController (this.application)
 			{
 				GraphType = Res.Commands.GraphType.UseLineChart,
 				ColorStyle = this.colorStyle,
 			};
-
-			this.groupDetailsController = new GroupDetailsController (this, this.groupItemsController);
 			
 			this.viewToGroup = new Dictionary<long, GraphDataGroup> ();
 			this.viewToSeries = new Dictionary<long, GraphDataSeries> ();
@@ -70,6 +64,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 		}
 
+
+		public GroupsController Groups
+		{
+			get
+			{
+				return this.groupsController;
+			}
+		}
 		
 		public void SetupUI()
 		{
@@ -266,10 +268,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			WorkspaceController.PatchPreviewFramePaintBackground (outputBook, previewFrame);
 
 			this.inputItemsController.SetupUI (inputFrame);
-			this.groupItemsController.SetupUI (groupFrame);
 			this.outputItemsController.SetupUI (outputFrame);
+			this.groupsController.SetupUI (groupFrame);
 			this.chartViewController.SetupUI (previewFrame);
-			this.groupDetailsController.SetupUI (container);
 
 			this.inputItemsHint = new StaticText ()
 			{
@@ -278,6 +279,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Visibility = false,
 				Text = "<font size=\"120%\">Aucune donnée n'est visible pour l'instant.</font><br/>" +
 				"Cochez les catégories que vous souhaitez voir apparaître ici.",
+				BackColor = Color.FromBrightness (1),
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				PreferredHeight = 40,
 			};
@@ -287,10 +289,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.All,
 				Parent = groupFrame,
 				Visibility = false,
-				Text = "<font size=\"120%\">Aucun groupe n'existe pour l'instant.</font><br/>" +
-				"Pour créer un groupe, sélectionnez plusieurs éléments ci-dessus en maintenant la touche Ctrl<br/>" +
-				"enfoncée (Ctrl-clic), puis cliquez sur le trombone miniature d'un des éléments sélectionnés.",
+				Text = "<font size=\"120%\">Groupes et calculs.</font><br/>" +
+				"Glissez et empilez ici les éléments que vous souhaitez grouper.",
 				ContentAlignment = ContentAlignment.MiddleCenter,
+				BackColor = Color.FromBrightness (1),
 				PreferredHeight = 40,
 			};
 
@@ -424,7 +426,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void RefreshFilters()
+		public void RefreshGroups()
+		{
+			this.groupsController.Refresh ();
+		}
+
+		public void RefreshFilters()
 		{
 			var container = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
 
@@ -447,7 +454,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void RefreshSources()
+		public void RefreshSources()
 		{
 			var container = this.application.MainWindowController.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
 
@@ -502,7 +509,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private void RefreshInputs()
+		public void RefreshInputs()
 		{
 			this.inputItemsController.Clear ();
 
@@ -519,7 +526,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshHints ();
 		}
 
-		private void RefreshOutputs()
+		public void RefreshOutputs()
 		{
 			this.outputItemsController.Clear ();
 
@@ -541,70 +548,34 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.RefreshHints ();
 		}
 
-		private void RefreshHints()
+		public void RefreshHints()
 		{
 			this.inputItemsHint.Visibility  = (this.inputItemsController.Count == 0);
 			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
 			this.outputPageFrame.Visibility = (this.outputItemsController.Count > 0);
-			this.groupItemsHint.Visibility  = (this.inputItemsController.Count > 0) && (this.groupItemsController.Count == 0);
+			this.groupItemsHint.Visibility  = (this.inputItemsController.Count > 0) && (this.groupsController.Count == 0);
 		}
 
-		private void AdjustOutputItemsWidth()
+		public void RefreshInputViewSelection()
 		{
-			int count = this.outputItemsController.Count;
-
-			if (count > 0)
-			{
-				double availableWidth = this.outputItemsController.Container.ActualWidth - this.outputItemsController.OverlapX;
-				double itemWidth = System.Math.Min (WorkspaceController.DefaultViewWidth, System.Math.Floor (availableWidth / count) + this.outputItemsController.OverlapX);
-				
-				this.outputItemsController.ForEach (x => x.PreferredWidth = itemWidth);
-			}
-		}
-
-		private void RefreshInputViewSelection()
-		{
-			int    count = this.inputItemsController.Where (x => x.IsSelected).Count () + this.groupItemsController.Where (x => x.IsSelected).Count ();
+			int    count = this.inputItemsController.Where (x => x.IsSelected).Count ();
 			string icon  = "manifest:Epsitec.Common.Graph.Images.Glyph.Group.icon";
 
 			foreach (var item in this.inputItemsController)
 			{
 				var visibility = item.IsSelected && count > 1 ? ButtonVisibility.Show : ButtonVisibility.Hide;
 
-				item.DefineIconButton (visibility, icon, this.CreateGroup);
+				item.DefineIconButton (visibility, icon,
+					delegate
+					{
+						this.groupsController.CreateGroup (this.GetSelectedSeries ());
+					});
 			}
-		}
-
-		private void RefreshGroupView()
-		{
-			this.groupDetailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
-		}
-
-		private void RefreshGroups()
-		{
-			this.groupItemsController.Clear ();
-
-			this.activeGroupView = null;
-
-			foreach (var group in this.Document.Groups)
-			{
-				var view = this.CreateGroupView (group);
-
-				if (group == this.activeGroup)
-				{
-					this.activeGroupView = view.Children[0] as MiniChartView;
-				}
-
-				this.groupItemsController.Add (view);
-			}
-
-			this.RefreshGroupView ();
-			this.RefreshHints ();
 		}
 
 		public void RefreshHilites()
 		{
-			foreach (var item in this.GetAllMiniChartViews ())
+			foreach (var item in this.GetAllViews ())
 			{
 				long id = item.GetVisualSerialId ();
 				GraphDataSeries series;
@@ -646,42 +617,125 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 		
-		private Widget CreateGroupView(GraphDataGroup group)
+		public void ExcludeOutput(GraphDataSeries item)
 		{
-			var view = this.CreateView (group);
+			this.Document.RemoveOutput (item);
 
-			view.Clicked +=
-				(sender, e) =>
-				{
-					if ((e.Message.Button == MouseButtons.Left) &&
-						(e.Message.ButtonDownCount == 1))
-					{
-						this.HandleGroupViewClicked (group, view);
-					}
-				};
+			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
 
-			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
-
-			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
-				delegate
-				{
-					//	TODO: make this fool proof (deleting a group which is still used is fatal)
-					this.DeleteGroup (group, view);
-					this.Refresh ();
-				});
-
-			var frame = new FrameBox ()
-			{
-				PreferredHeight = view.PreferredHeight + 8,
-				Padding = new Margins (0, 0, 4, 4),
-			};
-
-			view.Parent = frame;
-			view.Dock   = DockStyle.Left;
-			
-			return frame;
+			this.RefreshInputs ();
+			this.RefreshGroups ();
+			this.RefreshOutputs ();
+			this.RefreshPreview ();
 		}
 
+		public void IncludeOutput(GraphDataSeries item)
+		{
+			this.AddOutputToDocument (item);
+
+			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
+
+			this.RefreshInputs ();
+			this.RefreshGroups ();
+			this.RefreshOutputs ();
+			this.RefreshPreview ();
+		}
+
+
+		public MiniChartView CreateView(GraphDataSeries item)
+		{
+			var view = CreateView ();
+			var series = item.ChartSeries;
+
+			view.Renderer.Collect (series);
+			view.Title = item.Title;
+			view.Label = item.Label;
+
+			long id = view.GetVisualSerialId ();
+
+			this.viewToSeries[id] = item;
+
+			view.Disposed +=
+				delegate
+				{
+					this.viewToSeries.Remove (id);
+				};
+
+			return view;
+		}
+
+		public MiniChartView CreateView(GraphDataGroup group)
+		{
+			var view = CreateView ();
+
+			view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
+			view.Title = group.Name;
+			view.Label = "Groupe";
+
+			long id = view.GetVisualSerialId ();
+
+			this.viewToGroup[id] = group;
+
+			view.Disposed +=
+				delegate
+				{
+					this.viewToGroup.Remove (id);
+				};
+
+			return view;
+		}
+
+		
+		private IEnumerable<GraphDataSeries> GetSelectedSeries()
+		{
+			return this.inputItemsController.Where (x => x.IsSelected).Select (x => this.viewToSeries[x.GetVisualSerialId ()]);
+		}
+
+		private IEnumerable<MiniChartView> GetAllViews()
+		{
+			var inputs  = this.inputItemsController;
+			var groups  = this.groupsController.GroupViews;
+			var details = this.groupsController.DetailViews;
+			var outputs = this.outputItemsController;
+
+			return inputs.Concat (groups).Concat (details).Concat (outputs);
+		}
+		
+		
+		private void AdjustOutputItemsWidth()
+		{
+			int count = this.outputItemsController.Count;
+
+			if (count > 0)
+			{
+				double availableWidth = this.outputItemsController.Container.ActualWidth - this.outputItemsController.OverlapX;
+				double itemWidth = System.Math.Min (WorkspaceController.DefaultViewWidth, System.Math.Floor (availableWidth / count) + this.outputItemsController.OverlapX);
+
+				this.outputItemsController.ForEach (x => x.PreferredWidth = itemWidth);
+			}
+		}
+
+		private void AddOutputToDocument(GraphDataSeries item)
+		{
+			int n = this.colorStyle.Count;
+			int[] colors = new int[n];
+
+			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
+			int min = colors.Min ();
+
+			for (int i = 0; i < n; i++)
+			{
+				if (colors[i] == min)
+				{
+					item.ColorIndex = i;
+					break;
+				}
+			}
+
+			this.Document.AddOutput (item);
+		}
+
+		
 		private MiniChartView CreateInputView(GraphDataSeries item)
 		{
 			var view = this.CreateView (item);
@@ -711,50 +765,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
-		private void ExcludeOutput(GraphDataSeries item)
-		{
-			this.Document.RemoveOutput (item);
-
-			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
-
-			this.RefreshInputs ();
-			this.RefreshGroups ();
-			this.RefreshOutputs ();
-			this.RefreshPreview ();
-		}
-
-		private void IncludeOutput(GraphDataSeries item)
-		{
-			this.AddOutputToDocument (item);
-
-			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
-
-			this.RefreshInputs ();
-			this.RefreshGroups ();
-			this.RefreshOutputs ();
-			this.RefreshPreview ();
-		}
-
-		private void AddOutputToDocument(GraphDataSeries item)
-		{
-			int n = this.colorStyle.Count;
-			int[] colors = new int[n];
-
-			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
-			int min = colors.Min ();
-
-			for (int i = 0; i < n; i++)
-			{
-				if (colors[i] == min)
-				{
-					item.ColorIndex = i;
-					break;
-				}
-			}
-
-			this.Document.AddOutput (item);
-		}
-
 		private MiniChartView CreateOutputView(GraphDataSeries item, int index)
 		{
 			var view = this.CreateView (item);
@@ -781,6 +791,51 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return view;
 		}
 
+		private MiniChartView CreateView()
+		{
+			var lineChartRenderer = new LineChartRenderer ();
+
+			lineChartRenderer.AddStyle (this.colorStyle);
+			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
+			{
+				VisibleGrid = false,
+				VisibleLabels = false,
+				VisibleTicks = false
+			});
+
+			lineChartRenderer.DefineValueLabels (this.Document.ChartColumnLabels);
+
+			var view = new MiniChartView ()
+			{
+				Anchor = AnchorStyles.TopLeft,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+				PreferredWidth = WorkspaceController.DefaultViewWidth,
+				PreferredHeight = WorkspaceController.DefaultViewHeight,
+				Padding = new Margins (4, 4, 4, 4),
+				Margins = new Margins (0, 0, 0, 0),
+				Renderer = lineChartRenderer,
+				Scale = 0.5,
+			};
+
+			view.Entered +=
+				delegate
+				{
+					this.HandleViewHiliteChanged (view, true);
+					view.HiliteColor = Color.FromRgb (1.0, 1.0, 0.0);
+				};
+
+			view.Exited +=
+				delegate
+				{
+					view.HiliteColor = Color.Empty;
+					this.HandleViewHiliteChanged (view, false);
+				};
+
+			return view;
+		}
+
+		
 		private void CreateOutputDragAndDropHandler(GraphDataSeries item, MiniChartView view)
 		{
 			ViewDragDropManager target = null;
@@ -853,7 +908,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				};
 		}
-
 		
 		private void CreateFilterButton(Widget filters, GraphDataCategory category)
 		{
@@ -977,66 +1031,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.RefreshOutputs ();
 				};
 		}
-		
-		private void CreateGroup()
-		{
-			var items = this.inputItemsController.Where (x => x.IsSelected).Select (x => this.viewToSeries[x.GetVisualSerialId ()]);
-			var group = this.CreateGroup (items);
-			int index = this.Document.Groups.IndexOf (group);
-			this.activeGroup = null;
-			this.activeGroupView = null;
-		}
 
-		private GraphDataGroup UpdateGroup(GraphDataGroup group, IEnumerable<GraphDataSeries> items)
-		{
-			foreach (var item in items)
-			{
-				if (!group.Contains (item))
-				{
-					group.Add (item);
-				}
-			}
 
-			this.UpdateGroupName (group);
-
-			return group;
-		}
-
-		private GraphDataGroup CreateGroup(IEnumerable<GraphDataSeries> series)
-		{
-			var group = this.Document.AddGroup (series);
-
-			this.groupItemsController.Add (this.CreateGroupView (group));
-			this.UpdateGroupName (group);
-
-			return group;
-		}
-
-		private void DeleteGroup(GraphDataGroup group, MiniChartView view)
-		{
-			this.Document.RemoveGroup (group);
-			this.groupItemsController.Remove (view);
-			this.UpdateGroupName (group);
-		}
-
-		public void UpdateGroupName(GraphDataGroup group)
-		{
-			int count = group.Count;
-
-			group.Name = string.Format (count > 1 ? "{0} éléments" : "{0} élément", count);
-
-			this.Refresh ();
-		}
-
-		
-		private void HandleGroupViewClicked(GraphDataGroup group, MiniChartView view)
-		{
-			this.activeGroup = group;
-			this.activeGroupView = view;
-			this.RefreshInputViewSelection ();
-			this.RefreshGroupView ();
-		}
-		
 		private void HandleInputViewClicked(GraphDataSeries item, MiniChartView view)
 		{
 			if (Message.CurrentState.IsControlPressed)
@@ -1060,7 +1056,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.RefreshInputViewSelection ();
-			this.RefreshGroupView ();
+			this.RefreshGroups ();
 		}
 
 		private void HandleViewHiliteChanged(MiniChartView view, bool entered)
@@ -1214,94 +1210,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return buffer.ToString ();
 		}
 
-		
-		public MiniChartView CreateView(GraphDataSeries item)
-		{
-			var view = CreateView ();
-			var series = item.ChartSeries;
-
-			view.Renderer.Collect (series);
-			view.Title = item.Title;
-			view.Label = item.Label;
-
-			long id = view.GetVisualSerialId ();
-
-			this.viewToSeries[id] = item;
-
-			view.Disposed +=
-				delegate
-				{
-					this.viewToSeries.Remove (id);
-				};
-
-			return view;
-		}
-
-		public MiniChartView CreateView(GraphDataGroup group)
-		{
-			var view = CreateView ();
-			
-			view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
-			view.Title = group.Name;
-			view.Label = "Groupe";
-
-			long id = view.GetVisualSerialId ();
-
-			this.viewToGroup[id] = group;
-
-			view.Disposed +=
-				delegate
-				{
-					this.viewToGroup.Remove (id);
-				};
-
-			return view;
-		}
-
-		public MiniChartView CreateView()
-		{
-			var lineChartRenderer = new LineChartRenderer ();
-
-			lineChartRenderer.AddStyle (this.colorStyle);
-			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
-			{
-				VisibleGrid = false,
-				VisibleLabels = false,
-				VisibleTicks = false
-			});
-
-			lineChartRenderer.DefineValueLabels (this.Document.ChartColumnLabels);
-
-			var view = new MiniChartView ()
-			{
-				Anchor = AnchorStyles.TopLeft,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				VerticalAlignment = VerticalAlignment.Center,
-				PreferredWidth = WorkspaceController.DefaultViewWidth,
-				PreferredHeight = WorkspaceController.DefaultViewHeight,
-				Padding = new Margins (4, 4, 4, 4),
-				Margins = new Margins (0, 0, 0, 0),
-				Renderer = lineChartRenderer,
-				Scale = 0.5,
-			};
-
-			view.Entered +=
-				delegate
-				{
-					this.HandleViewHiliteChanged (view, true);
-					view.HiliteColor = Color.FromRgb (1.0, 1.0, 0.0);
-				};
-
-			view.Exited +=
-				delegate
-				{
-					view.HiliteColor = Color.Empty;
-					this.HandleViewHiliteChanged (view, false);
-				};
-			
-			return view;
-		}
-
 
 		#region HiliteType Enumeration
 
@@ -1434,115 +1342,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
-		private IEnumerable<MiniChartView> GetAllMiniChartViews()
-		{
-			var groups = this.groupItemsController.Select (widget => widget.Children[0] as MiniChartView);
-			return this.inputItemsController.Concat (groups).Concat (this.groupDetailsController.MiniChartViews).Concat (this.outputItemsController);
-		}
-		
-		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
-		{
-			if (this.groupCalculatorArrow != null)
-			{
-				this.groupCalculatorArrow.Dispose ();
-				this.groupCalculatorArrow = null;
-			}
-
-			if (view != null)
-			{
-				this.groupItemsController.UpdateLayout ();
-
-				var bounds = view.MapClientToRoot (view.Client.Bounds);
-				var arrow  = new VerticalInjectionArrow ()
-				{
-					Anchor = AnchorStyles.BottomLeft,
-					Margins = new Margins (bounds.Left, 0, 0, bounds.Top + 2),
-					Parent = view.RootParent,
-					PreferredWidth = view.PreferredWidth,
-					ArrowWidth = 40,
-					Padding = new Margins (0, 0, 24, 4),
-					BackColor = Color.FromBrightness (1),
-					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
-				};
-
-				this.CreateFunctionButton (group, arrow, Functions.FunctionFactory.FunctionSum);
-
-				this.groupCalculatorArrow = arrow;
-			}
-		}
-
-		private void CreateFunctionButton(GraphDataGroup group, VerticalInjectionArrow arrow, string function)
-		{
-			var container = new FrameBox ()
-			{
-				Dock = DockStyle.Stacked,
-				Parent = arrow,
-				PreferredHeight = 20,
-			};
-
-			var button = new GraphicIconButton ()
-			{
-				IconFamilyName = "manifest:Epsitec.Cresus.Graph.Images.Button",
-				HorizontalAlignment = HorizontalAlignment.Center,
-				PreferredSize = new Size (36, 20),
-				Dock = DockStyle.Fill,
-				Parent = container,
-				AutoToggle = true,
-				Name = function,
-				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).Count () == 0 ? ActiveState.No : ActiveState.Yes,
-			};
-
-			var check = new CheckButton ()
-			{
-				Anchor = AnchorStyles.TopRight,
-				Text = "",
-				Parent = container,
-				Margins = new Margins (0, 2, 2, 0),
-				PreferredSize = new Size (15, 15),
-				ActiveState = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function && x.IsSelected).Count () == 0 ? ActiveState.No : ActiveState.Yes,
-				Visibility = button.ActiveState == ActiveState.Yes
-			};
-
-			//	TODO: ...handle check box...
-
-			button.ActiveStateChanged +=
-				delegate
-				{
-					if (button.ActiveState == ActiveState.Yes)
-					{
-						group.AddSyntheticDataSeries (function);
-						check.Visibility = true;
-					}
-					else
-					{
-						group.RemoveSyntheticDataSeries (function);
-						check.Visibility = false;
-					}
-					this.Document.UpdateSyntheticSeries ();
-					this.Refresh ();
-				};
-
-			check.ActiveStateChanged +=
-				delegate
-				{
-					var item = group.SyntheticDataSeries.Where (x => x.Enabled && x.FunctionName == function).FirstOrDefault ();
-
-					if (item != null)
-					{
-						if (check.ActiveState == ActiveState.Yes)
-						{
-							this.IncludeOutput (item);
-						}
-						else
-						{
-							this.ExcludeOutput (item);
-						}
-					}
-				};
-
-		}
-
-
 		private void RefreshPreview()
 		{
 			if (this.Document != null)
@@ -1565,8 +1364,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private readonly ItemListController<MiniChartView>		inputItemsController;
 		private readonly ItemListController<MiniChartView>		outputItemsController;
-		private readonly ItemListController<Widget>				groupItemsController;
-		private readonly GroupDetailsController groupDetailsController;
+		private readonly GroupsController			groupsController;
 		private readonly HashSet<GraphDataCategory> filterCategories;
 
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
@@ -1579,12 +1377,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private StaticText				groupItemsHint;
 		private FrameBox				outputPageFrame;
 		private StaticText				outputItemsHint;
-		private VerticalInjectionArrow	groupCalculatorArrow;
 		private BalloonTip				balloonTip;
-		private ColorStyle labelColorStyle;
-		private ColorStyle colorStyle;
-		private GraphDataGroup activeGroup;
-		private MiniChartView activeGroupView;
-		private int outputActiveIndex;
+		private ColorStyle				labelColorStyle;
+		private ColorStyle				colorStyle;
+		private int						outputActiveIndex;
 	}
 }

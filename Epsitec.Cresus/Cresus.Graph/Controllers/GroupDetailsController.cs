@@ -21,10 +21,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 {
 	internal sealed class GroupDetailsController
 	{
-		public GroupDetailsController(WorkspaceController workspaceController, ItemListController<Widget> groupItemsController)
+		public GroupDetailsController(WorkspaceController workspace)
 		{
-			this.workspaceController = workspaceController;
-			this.groupItemsController = groupItemsController;
+			this.workspace = workspace;
 			this.groupDetailItemsController = new ItemListController<MiniChartView> ()
 			{
 				ItemLayoutMode = ItemLayoutMode.Flow,
@@ -42,7 +41,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void SetupUI(Widget container)
 		{
-			this.groupDetailsBalloon = new BalloonTip ()
+			this.balloon = new BalloonTip ()
 			{
 				Anchor = AnchorStyles.BottomLeft,
 				Disposition = ButtonMarkDisposition.Below,
@@ -55,7 +54,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var detailsFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				Parent = this.groupDetailsBalloon,
+				Parent = this.balloon,
 			};
 
 			this.groupDetailItemsController.SetupUI (detailsFrame);
@@ -88,7 +87,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (window != null)
 			{
-				this.groupItemsController.UpdateLayout ();
+				this.workspace.Groups.UpdateLayout ();
 				this.groupDetailItemsController.UpdateLayout ();
 
 				double width  = 0;
@@ -123,31 +122,31 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var mark   = ButtonMarkDisposition.Below;
 				var rect   = BalloonTip.GetBestPosition (new Size (width + 12, height + 12 + 10), bounds, window.ClientSize, ref mark);
 
-				this.groupDetailsBalloon.Margins = new Margins (rect.Left, 0, 0, rect.Bottom);
-				this.groupDetailsBalloon.PreferredSize = rect.Size;
-				this.groupDetailsBalloon.TipAttachment = bounds.Center - rect.BottomLeft;
+				this.balloon.Margins = new Margins (rect.Left, 0, 0, rect.Bottom);
+				this.balloon.PreferredSize = rect.Size;
+				this.balloon.TipAttachment = bounds.Center - rect.BottomLeft;
 				this.ShowGroupDetails ();
 			}
 
-			this.workspaceController.RefreshHilites ();
+			this.workspace.RefreshHilites ();
 		}
 
 		private void ShowGroupDetails()
 		{
-			if (this.groupDetailsBalloon.Visibility == false)
+			if (this.balloon.Visibility == false)
 			{
-				this.groupDetailsBalloon.Visibility = true;
+				this.balloon.Visibility = true;
 				this.RegisterFilter ();
 			}
 		}
 
 		private void CloseGroupDetails()
 		{
-			if (this.groupDetailsBalloon.Visibility)
+			if (this.balloon.Visibility)
 			{
 				this.activeGroup = null;
 				this.activeGroupView = null;
-				this.groupDetailsBalloon.Visibility = false;
+				this.balloon.Visibility = false;
 				this.UnregisterFilter ();
 			}
 		}
@@ -192,7 +191,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private MiniChartView CreateGroupDetailView(GraphDataGroup group, GraphDataSeries item)
 		{
-			var view = this.workspaceController.CreateView (item);
+			var view = this.workspace.CreateView (item);
 			var synt = item as GraphSyntheticDataSeries;
 
 			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
@@ -204,8 +203,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					delegate
 					{
 						group.RemoveSyntheticDataSeries (synt.FunctionName);
-						this.workspaceController.Document.UpdateSyntheticSeries ();
-						this.workspaceController.Refresh ();
+						this.workspace.Document.UpdateSyntheticSeries ();
+						this.workspace.Refresh ();
 					});
 			}
 			else
@@ -213,8 +212,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 					delegate
 					{
-						group.Remove (item);
-						this.workspaceController.UpdateGroupName (group);
+						this.workspace.Groups.RemoveGroup (group, Collection.Single (item));
 					});
 			}
 
@@ -222,12 +220,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 		
 
-		private readonly GraphApplication application;
-		private readonly WorkspaceController workspaceController;
-		private readonly ItemListController<Widget> groupItemsController;
-		private readonly ItemListController<MiniChartView>		groupDetailItemsController;
-		private BalloonTip				groupDetailsBalloon;
-		private GraphDataGroup activeGroup;
-		private MiniChartView activeGroupView;
+		private readonly WorkspaceController	workspace;
+		private readonly ItemListController<MiniChartView> groupDetailItemsController;
+		private BalloonTip						balloon;
+		private GraphDataGroup					activeGroup;
+		private MiniChartView					activeGroupView;
 	}
 }

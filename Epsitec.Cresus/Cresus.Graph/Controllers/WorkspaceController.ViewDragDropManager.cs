@@ -48,36 +48,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.groupInsertionMark = new Separator ()
 				{
-					Parent = this.host.groupItemsController.Container,
+					Parent = this.host.Groups.Container,
 					Visibility = false,
 					Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
 					PreferredHeight = 2,
 				};
 			}
 
-			public bool LockX
+			
+			public bool							LockX
 			{
 				get;
 				set;
 			}
 
-			public bool LockY
+			public bool							LockY
 			{
 				get;
 				set;
 			}
 
-			public DragWindow DragWindow
-			{
-				get;
-				private set;
-			}
-
+			
 			public bool ProcessMouseMove(Point mouse, System.Action dragStartAction)
 			{
 				mouse = this.view.MapClientToScreen (mouse);
 				
-				if (this.DragWindow == null)
+				if (this.dragWindow == null)
 				{
 					if (Point.Distance (mouse, this.mouseOrigin) > 2.0)
 					{
@@ -87,12 +83,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 					dragStartAction ();
 				}
 
-				if (this.DragWindow != null)
+				if (this.dragWindow != null)
 				{
 					double x = this.viewOrigin.X + (this.LockX ? 0 : mouse.X - this.mouseOrigin.X);
 					double y = this.viewOrigin.Y + (this.LockY ? 0 : mouse.Y - this.mouseOrigin.Y);
 
-					this.DragWindow.WindowLocation = new Point (x, y);
+					this.dragWindow.WindowLocation = new Point (x, y);
 					
 					if ((this.DetectOutput (mouse)) ||
 						(this.DetectGroup (mouse)))
@@ -108,12 +104,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			public bool ProcessDragEnd()
 			{
-				bool ok = this.DragWindow != null;
+				bool ok = this.dragWindow != null;
 
-				if (this.DragWindow != null)
+				if (this.dragWindow != null)
 				{
-					this.DragWindow.Dispose ();
-					this.DragWindow = null;
+					this.dragWindow.Dispose ();
+					this.dragWindow = null;
 				}
 
 				if (this.outputInsertionMark != null)
@@ -145,11 +141,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 					if ((this.groupIndex < groups.Count) &&
 						(this.groupUpdate))
 					{
-						this.host.UpdateGroup (groups[this.groupIndex], Collection.Single (this.item));
+						this.host.Groups.UpdateGroup (groups[this.groupIndex], Collection.Single (this.item));
 					}
 					else
 					{
-						this.host.CreateGroup (Collection.Single (this.item));
+						this.host.Groups.CreateGroup (Collection.Single (this.item));
 					}
 					
 					this.host.Refresh ();
@@ -162,6 +158,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return ok;
 			}
 
+			
 			private bool DetectOutput(Point screenMouse)
 			{
 				var container = this.host.outputItemsController.Container;
@@ -222,6 +219,41 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return false;
 			}
 
+			private bool DetectGroup(Point screenMouse)
+			{
+				var container = this.host.Groups.Container;
+				var mouse     = container.MapScreenToClient (screenMouse);
+
+				if (container.Client.Bounds.Contains (mouse))
+				{
+					int  index = 0;
+					bool update = false;
+					double y = 0;
+					double height = 0;
+
+					this.host.Groups.DetectGroup (mouse,
+						(setIndex, setUpdate) =>
+						{
+							index = setIndex;
+							update = setUpdate;
+						},
+						(setY, setHeight) =>
+						{
+							y = setY;
+							height = setHeight;
+						});
+
+					this.SetGroupDropTarget (index, update, y, height);
+					return true;
+				}
+				else
+				{
+					this.SetGroupDropTarget (-1, false, 0, 0);
+					return false;
+				}
+			}
+
+			
 			private void SetOutputDropTarget(double x, int index)
 			{
 				this.outputInsertionMark.Margins = new Margins (x, 0, 0, 0);
@@ -245,85 +277,35 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.host.groupItemsHint.Visibility = false;
 			}
 
-
-			private bool DetectGroup(Point screenMouse)
-			{
-				var container = this.host.groupItemsController.Container;
-				var mouse     = container.MapScreenToClient (screenMouse);
-
-				if (container.Client.Bounds.Contains (mouse))
-				{
-					if (this.host.groupItemsController.Count == 0)
-					{
-						this.SetGroupDropTarget (0, false, 0.0, 2.0);
-						return true;
-					}
-
-					var drop = this.host.groupItemsController.Where (x => x.HitTest (mouse)).FirstOrDefault ();
-
-					if (drop != null)
-					{
-						double y = drop.Parent.ActualHeight - drop.ActualBounds.Top;
-						this.SetGroupDropTarget (drop.Index, true, y, drop.ActualBounds.Height);
-						return true;
-					}
-					
-					var dist = this.host.groupItemsController.Select (x => new
-					{
-						Distance = mouse.Y - x.ActualBounds.Center.Y,
-						View = x
-					});
-
-					System.Diagnostics.Debug.WriteLine (string.Join (", ", dist.Select (x => string.Format ("{0}:{1}", x.View.Index, x.Distance)).ToArray ()));
-
-					var best = dist.Where (x => x.Distance >= 0).OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
-
-					if (best != null)
-					{
-						double y = best.View.Parent.ActualHeight - best.View.ActualBounds.Top - 2; 
-						this.SetGroupDropTarget (best.View.Index, false, y, 2.0);
-					}
-					else
-					{
-						double y = this.host.groupItemsController.Container.ActualHeight - this.host.groupItemsController.Last ().ActualBounds.Bottom - 2; 
-						this.SetGroupDropTarget (this.host.groupItemsController.Count, false, y, 2.0);
-					}
-
-					return true;
-				}
-
-				this.groupIndex = -1;
-
-				return false;
-			}
 			
 			private void CreateDragWindow()
 			{
-				this.DragWindow = new DragWindow ()
+				this.dragWindow = new DragWindow ()
 				{
 					Alpha = 0.6,
 					WindowLocation = this.viewOrigin,
 					Owner = this.view.Window,
 				};
 
-				this.DragWindow.DefineWidget (this.host.CreateView (this.item), this.view.PreferredSize, Margins.Zero);
-				this.DragWindow.Show ();
+				this.dragWindow.DefineWidget (this.host.CreateView (this.item), this.view.PreferredSize, Margins.Zero);
+				this.dragWindow.Show ();
 			}
 
 			
-			private readonly GraphDataSeries item;
-			private readonly MiniChartView view;
+			private readonly GraphDataSeries	item;
+			private readonly MiniChartView		view;
 			private readonly WorkspaceController host;
-			private readonly Point viewOrigin;
-			private readonly Point mouseOrigin;
-			private readonly MouseCursor viewMouseCursor;
+			private readonly Point				viewOrigin;
+			private readonly Point				mouseOrigin;
+			private readonly MouseCursor		viewMouseCursor;
 			
-			private Separator outputInsertionMark;
-			private Separator groupInsertionMark;
+			private Separator					outputInsertionMark;
+			private Separator					groupInsertionMark;
+			private DragWindow					dragWindow;
 
-			private int outputIndex;
-			private int groupIndex;
-			private bool groupUpdate;
+			private int							outputIndex;
+			private int							groupIndex;
+			private bool						groupUpdate;
 		}
 	}
 }
