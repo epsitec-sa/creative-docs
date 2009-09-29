@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 		{
 			this.dragBehavior = new DragBehavior (this);
 			this.AutoCapture = true;
+			this.DrawFullFrame = true;
 		}
 
 
@@ -37,6 +38,9 @@ namespace Epsitec.Cresus.Graph.Widgets
 		{
 			get
 			{
+				double x = (this.Anchor & AnchorStyles.Left) != 0 ? this.Margins.Left : this.Margins.Right;
+				double y = (this.Anchor & AnchorStyles.Bottom) != 0 ? this.Margins.Bottom : this.Margins.Top;
+
 				return new Point (this.Margins.Left, this.Margins.Bottom);
 			}
 		}
@@ -48,21 +52,48 @@ namespace Epsitec.Cresus.Graph.Widgets
 
 		public void OnDragging(DragEventArgs e)
 		{
-			double x = this.Margins.Left;
-			double y = this.Margins.Bottom;
-
-			this.Margins = new Margins (e.Offset.X + x, 0, 0, e.Offset.Y + y);
+			this.Margins = new Margins (this.Margins.Left + e.Offset.X, this.Margins.Right - e.Offset.X, this.Margins.Top - e.Offset.Y, this.Margins.Bottom + e.Offset.Y);
 			this.Invalidate ();
 			this.Window.SynchronousRepaint ();
 		}
 
 		public void OnDragEnd()
 		{
+			var center = this.ActualBounds.Center;
+			var parent = this.Parent.Client.Bounds.Center;
+			var anchor = AnchorStyles.None;
+			double x1, x2, y1, y2;
+
+			if (center.X < parent.X)
+			{
+				anchor |= AnchorStyles.Left;
+			}
+			else
+			{
+				anchor |= AnchorStyles.Right;
+			}
+
+			if (center.Y < parent.Y)
+			{
+				anchor |= AnchorStyles.Bottom;
+			}
+			else
+			{
+				anchor |= AnchorStyles.Top;
+			}
+
+			x1 = this.ActualBounds.Left;
+			x2 = this.Parent.Client.Size.Width - this.ActualBounds.Right;
+			y1 = this.ActualBounds.Bottom;
+			y2 = this.Parent.Client.Size.Height - this.ActualBounds.Top;
+			
+			this.Anchor = anchor;
+			this.Margins = new Margins (x1, x2, y2, y1);
 		}
 
 		#endregion
 
 
-		private readonly DragBehavior dragBehavior;
+		private readonly DragBehavior			dragBehavior;
 	}
 }

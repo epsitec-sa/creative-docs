@@ -109,7 +109,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.BottomLeft,
 				Margins = new Margins (0, 0, 0, 0),
 				Parent = this.container,
-				BackColor = Color.FromAlphaRgb (0.5, 0.8, 0.8, 1),
+				BackColor = Color.FromBrightness (1),
+				Padding = new Margins (4, 4, 2, 2),
 				Visibility = false,
 			};
 
@@ -228,7 +229,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.chartView.Renderer = renderer;
 				this.captionView.Captions = renderer.Captions;
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
-				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600));
+				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.captionView.Parent.Padding.Size;
 			}
 
 			this.chartView.Invalidate ();
