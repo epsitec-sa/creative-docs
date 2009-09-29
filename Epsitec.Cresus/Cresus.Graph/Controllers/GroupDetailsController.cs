@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public GroupDetailsController(WorkspaceController workspace)
 		{
 			this.workspace = workspace;
-			this.groupDetailItemsController = new ItemListController<MiniChartView> ()
+			this.itemsController = new ItemListController<MiniChartView> ()
 			{
 				ItemLayoutMode = ItemLayoutMode.Flow,
 			};
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return this.groupDetailItemsController;
+				return this.itemsController;
 			}
 		}
 
@@ -57,14 +57,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = this.balloon,
 			};
 
-			this.groupDetailItemsController.SetupUI (detailsFrame);
+			this.itemsController.SetupUI (detailsFrame);
 		}
 
 		
 		public void ShowGroupDetails(GraphDataGroup group, MiniChartView view)
 		{
-			this.groupDetailItemsController.Clear ();
-			this.CloseGroupDetails ();
+			this.itemsController.Clear ();
+			this.HideGroupDetails ();
 
 			if (group == null)
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			foreach (var item in group.InputDataSeries)
 			{
-				this.groupDetailItemsController.Add (this.CreateGroupDetailView (group, item));
+				this.itemsController.Add (this.CreateGroupDetailView (group, item));
 			}
 
 			var window = view.Window;
@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (window != null)
 			{
 				this.workspace.Groups.UpdateLayout ();
-				this.groupDetailItemsController.UpdateLayout ();
+				this.itemsController.UpdateLayout ();
 
 				double width  = 0;
 				double height = WorkspaceController.DefaultViewHeight;
@@ -101,21 +101,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 						break;
 
 					case 2:
-						width = WorkspaceController.DefaultViewWidth * 2 - this.groupDetailItemsController.OverlapX;
+						width = WorkspaceController.DefaultViewWidth * 2 - this.itemsController.OverlapX;
 						break;
 
 					default:
-						width = WorkspaceController.DefaultViewWidth * 3 - this.groupDetailItemsController.OverlapX * 2;
+						width = WorkspaceController.DefaultViewWidth * 3 - this.itemsController.OverlapX * 2;
 
 						if (group.Count > 3)
 						{
-							height = WorkspaceController.DefaultViewHeight * 2 - this.groupDetailItemsController.OverlapY;
+							height = WorkspaceController.DefaultViewHeight * 2 - this.itemsController.OverlapY;
 							width += AbstractScroller.DefaultBreadth + 2;
 						}
 						break;
 				}
 
-				this.groupDetailItemsController.VisibleScroller = group.Count > 3;
+				this.itemsController.VisibleScroller = group.Count > 3;
 
 				var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
 				var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
@@ -125,22 +125,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.balloon.Margins = new Margins (rect.Left, 0, 0, rect.Bottom);
 				this.balloon.PreferredSize = rect.Size;
 				this.balloon.TipAttachment = bounds.Center - rect.BottomLeft;
-				this.ShowGroupDetails ();
+
+				System.Diagnostics.Debug.Assert (this.balloon.Visibility == false);
+				
+				this.balloon.Visibility = true;
+				this.RegisterFilter ();
 			}
 
 			this.workspace.RefreshHilites ();
 		}
 
-		private void ShowGroupDetails()
-		{
-			if (this.balloon.Visibility == false)
-			{
-				this.balloon.Visibility = true;
-				this.RegisterFilter ();
-			}
-		}
-
-		private void CloseGroupDetails()
+		public void HideGroupDetails()
 		{
 			if (this.balloon.Visibility)
 			{
@@ -167,7 +162,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if (message.IsMouseType)
 			{
-				var container = this.groupDetailItemsController.Container;
+				var container = this.itemsController.Container;
 				var pos = container.MapRootToClient (message.Cursor);
 
 				if (container.Client.Bounds.Contains (pos))
@@ -178,7 +173,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (message.MessageType == MessageType.MouseDown)
 					{
-						this.CloseGroupDetails ();
+						this.HideGroupDetails ();
 					}
 				}
 			}
@@ -221,7 +216,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 
 		private readonly WorkspaceController	workspace;
-		private readonly ItemListController<MiniChartView> groupDetailItemsController;
+		private readonly ItemListController<MiniChartView> itemsController;
 		private BalloonTip						balloon;
 		private GraphDataGroup					activeGroup;
 		private MiniChartView					activeGroupView;

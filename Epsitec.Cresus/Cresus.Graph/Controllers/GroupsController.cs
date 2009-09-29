@@ -25,13 +25,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.workspace = workspace;
 
-			this.groupItemsController = new ItemListController<Widget> ()
+			this.itemsController = new ItemListController<Widget> ()
 			{
 				ItemLayoutMode = ItemLayoutMode.Vertical,
 				OverlapY = 0,
 			};
 
-			this.groupDetailsController = new GroupDetailsController (this.workspace);
+			this.detailsController = new GroupDetailsController (this.workspace);
 		}
 
 
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return this.groupItemsController.Count;
+				return this.itemsController.Count;
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return this.groupItemsController.Select (widget => widget.Children[0] as MiniChartView);
+				return this.itemsController.Select (widget => widget.Children[0] as MiniChartView);
 			}
 		}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return this.groupDetailsController.MiniChartViews;
+				return this.detailsController.MiniChartViews;
 			}
 		}
 
@@ -71,19 +71,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void SetupUI(Widget container)
 		{
 			this.container = container;
-			this.groupItemsController.SetupUI (container);
-			this.groupDetailsController.SetupUI (container);
+			this.itemsController.SetupUI (container);
+			this.detailsController.SetupUI (container);
 		}
 
 
 		public void UpdateLayout()
 		{
-			this.groupItemsController.UpdateLayout ();
+			this.itemsController.UpdateLayout ();
 		}
 
 		public void Refresh()
 		{
-			this.groupItemsController.Clear ();
+			this.itemsController.Clear ();
 
 			this.activeGroupView = null;
 
@@ -96,10 +96,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.activeGroupView = view.Children[0] as MiniChartView;
 				}
 
-				this.groupItemsController.Add (view);
+				this.itemsController.Add (view);
 			}
 
-			this.groupDetailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
+			if (this.activeGroupView == null)
+			{
+				this.ClearActiveGroup ();
+			}
+
+			this.detailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
 			this.workspace.RefreshHints ();
 		}
 
@@ -108,13 +113,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var group = this.workspace.Document.AddGroup (series);
 
-			this.groupItemsController.Add (this.CreateGroupView (group));
+			this.itemsController.Add (this.CreateGroupView (group));
 			this.UpdateGroupName (group);
 
-			this.activeGroup = null;
-			this.activeGroupView = null;
+			this.ClearActiveGroup ();
 
 			return group;
+		}
+
+		private void ClearActiveGroup()
+		{
+			this.activeGroup = null;
+			this.activeGroupView = null;
 		}
 
 		public GraphDataGroup UpdateGroup(GraphDataGroup group, IEnumerable<GraphDataSeries> items)
@@ -144,20 +154,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void DeleteGroup(GraphDataGroup group, MiniChartView view)
 		{
 			this.workspace.Document.RemoveGroup (group);
-			this.groupItemsController.Remove (view);
-			this.UpdateGroupName (group);
+			this.itemsController.Remove (view);
 		}
 
 		public void DetectGroup(Point mouse, System.Action<int, bool> setGroup, System.Action<double, double> setGeometry)
 		{
-			if (this.groupItemsController.Count == 0)
+			if (this.itemsController.Count == 0)
 			{
 				setGroup (0, false);
 				setGeometry (0.0, 0.0);
 				return;
 			}
 
-			var drop = this.groupItemsController.Where (x => x.HitTest (mouse)).FirstOrDefault ();
+			var drop = this.itemsController.Where (x => x.HitTest (mouse)).FirstOrDefault ();
 
 			if (drop != null)
 			{
@@ -167,7 +176,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 			
-			var dist = this.groupItemsController.Select (x => new
+			var dist = this.itemsController.Select (x => new
 			{
 				Distance = mouse.Y - x.ActualBounds.Center.Y,
 				View = x
@@ -183,8 +192,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
-				double y = this.groupItemsController.Container.ActualHeight - this.groupItemsController.Last ().ActualLocation.Y - 2; 
-				setGroup (this.groupItemsController.Count, false);
+				double y = this.itemsController.Container.ActualHeight - this.itemsController.Last ().ActualLocation.Y - 2; 
+				setGroup (this.itemsController.Count, false);
 				setGeometry (y, 2.0);
 			}
 		}
@@ -219,6 +228,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					//	TODO: make this fool proof (deleting a group which is still used is fatal)
 					this.DeleteGroup (group, view);
+					this.ClearActiveGroup ();
 					this.Refresh ();
 				});
 
@@ -236,10 +246,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleGroupViewClicked(GraphDataGroup group, MiniChartView view)
 		{
-			this.activeGroup = group;
-			this.activeGroupView = view;
-			this.workspace.RefreshInputViewSelection ();
-			this.groupDetailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
+			if (this.activeGroup == group)
+			{
+				this.ClearActiveGroup ();
+				this.detailsController.HideGroupDetails ();
+			}
+			else
+			{
+				this.activeGroup = group;
+				this.activeGroupView = view;
+				this.workspace.RefreshInputViewSelection ();
+				this.detailsController.ShowGroupDetails (this.activeGroup, this.activeGroupView);
+			}
 		}
 
 		private void ShowGroupCalculator(GraphDataGroup group, MiniChartView view)
@@ -252,7 +270,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (view != null)
 			{
-				this.groupItemsController.UpdateLayout ();
+				this.itemsController.UpdateLayout ();
 
 				var bounds = view.MapClientToRoot (view.Client.Bounds);
 				var arrow  = new VerticalInjectionArrow ()
@@ -345,13 +363,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
-		private readonly WorkspaceController workspace;
-		private readonly ItemListController<Widget>				groupItemsController;
-		private readonly GroupDetailsController groupDetailsController;
+		private readonly WorkspaceController	workspace;
+		private readonly ItemListController<Widget> itemsController;
+		private readonly GroupDetailsController detailsController;
 		
-		private Widget container;
-		private GraphDataGroup activeGroup;
-		private MiniChartView activeGroupView;
-		private VerticalInjectionArrow	groupCalculatorArrow;
+		private Widget							container;
+		private GraphDataGroup					activeGroup;
+		private MiniChartView					activeGroupView;
+		private VerticalInjectionArrow			groupCalculatorArrow;
 	}
 }

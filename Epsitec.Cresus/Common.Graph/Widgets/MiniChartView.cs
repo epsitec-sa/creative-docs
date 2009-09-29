@@ -307,12 +307,12 @@ namespace Epsitec.Common.Graph.Widgets
 		{
 			Color sheetColor = hiliteColor.IsValid ? hiliteColor : Color.FromRgb (0.9, 0.9, 0.95);
 			Color whiteColor = Color.Mix (sheetColor, Color.FromBrightness (1), 0.75);
-
+			
 			graphics.AddFilledRectangle (rectangle);
 			graphics.GradientRenderer.Fill = GradientFill.Y;
 			graphics.GradientRenderer.SetColors (whiteColor, sheetColor);
 			graphics.GradientRenderer.SetParameters (0, 100);
-			graphics.GradientRenderer.Transform = Transform.Identity.Scale (rectangle.Width/100, rectangle.Height/100).Translate (rectangle.Height/2, rectangle.Width/2).RotateDeg (10, rectangle.Center);
+			graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, rectangle.Height / 100).Translate (rectangle.BottomLeft).RotateDeg (10, rectangle.Center);
 			graphics.RenderGradient ();
 
 			graphics.AddRectangle (Rectangle.Deflate (rectangle, 0.5, 0.5));

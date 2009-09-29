@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.inputItemsHint = new StaticText ()
 			{
 				Anchor = AnchorStyles.All,
-				Parent = inputFrame,
+				Parent = topFrame,
 				Visibility = false,
 				Text = "<font size=\"120%\">Aucune donnée n'est visible pour l'instant.</font><br/>" +
 				"Cochez les catégories que vous souhaitez voir apparaître ici.",
