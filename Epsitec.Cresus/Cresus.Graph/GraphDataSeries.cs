@@ -114,16 +114,42 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
-		public string Title
+		public virtual string Title
 		{
-			get;
-			set;
+			get
+			{
+				if (this.parent != null)
+				{
+					return this.title ?? this.parent.Title;
+				}
+				else
+				{
+					return this.title;
+				}
+			}
+			set
+			{
+				this.title = value;
+			}
 		}
 
-		public string Label
+		public virtual string Label
 		{
-			get;
-			set;
+			get
+			{
+				if (this.parent != null)
+				{
+					return this.label ?? this.parent.Label;
+				}
+				else
+				{
+					return this.label;
+				}
+			}
+			set
+			{
+				this.label = value;
+			}
 		}
 
 
@@ -167,5 +193,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphDataGroup> dataGroups;
 		private readonly GraphDataSeries parent;
 		private GraphDataSource source;
+		private string title;
+		private string label;
 	}
 }

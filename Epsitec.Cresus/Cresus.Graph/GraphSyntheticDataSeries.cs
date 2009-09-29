@@ -19,6 +19,18 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		public override string Title
+		{
+			get
+			{
+				return base.Title ?? this.group.Name;
+			}
+			set
+			{
+				base.Title = value;
+			}
+		}
+
 		public override ChartSeries ChartSeries
 		{
 			get
@@ -26,7 +38,7 @@ namespace Epsitec.Cresus.Graph
 				if (this.cache == null)
 				{
 					var func   = Functions.FunctionFactory.GetFunction (this.functionName);
-					this.cache = this.group.SynthesizeChartSeries (this.Label, func);
+					this.cache = this.group.SynthesizeChartSeries (this.group.Name, func);
 				}
 
 				return this.cache;

@@ -695,20 +695,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public MiniChartView CreateView(GraphDataGroup group)
 		{
 			var view = CreateView ();
+			var func = group.DefaultFunctionName;
 
 			view.Title = group.Name;
 
-			switch (group.DefaultFunctionName)
+			if (string.IsNullOrEmpty (func))
 			{
-				case Functions.FunctionFactory.FunctionSum:
-					view.Renderer.Collect (group.GetSyntheticDataSeries (group.DefaultFunctionName).ChartSeries);
-					view.Label = "Somme";
-					break;
-				
-				default:
-					view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
-					view.Label = "Groupe";
-					break;
+				view.Renderer.CollectRange (group.InputDataSeries.Select (x => x.ChartSeries));
+				view.Label = "Groupe";
+			}
+			else
+			{
+				view.Renderer.Collect (group.GetSyntheticDataSeries (func).ChartSeries);
+				view.Label = Functions.FunctionFactory.GetFunctionCaption (func);
 			}
 
 			long id = view.GetVisualSerialId ();

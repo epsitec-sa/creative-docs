@@ -177,9 +177,17 @@ namespace Epsitec.Cresus.Graph
 			var output = new GraphDataSeries (series)
 			{
 				Label = series.Source == null ? "" : series.Source.Name,
-				Title = series.ChartSeries.Label,
+				Title = null,												//	force title inheritance through parent series
 				ColorIndex = series.ColorIndex,
 			};
+
+			var syn = series as GraphSyntheticDataSeries;
+
+			if ((syn != null) &&
+				(!string.IsNullOrEmpty (syn.FunctionName)))
+			{
+				output.Label = Functions.FunctionFactory.GetFunctionCaption (syn.FunctionName);
+			}
 
 			output.Index = this.outputSeries.Count;
 			this.outputSeries.Add (output);

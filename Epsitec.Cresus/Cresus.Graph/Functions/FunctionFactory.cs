@@ -15,6 +15,15 @@ namespace Epsitec.Cresus.Graph.Functions
 			{
 				case FunctionFactory.FunctionSum:
 					return x => x.Aggregate (0.0, (sum, value) => sum + value);
+
+				case FunctionFactory.FunctionMean:
+					return x => x.Count == 0 ? 0 : x.Aggregate (0.0, (sum, value) => sum + value) / x.Count;
+
+				case FunctionFactory.FunctionMin:
+					return x => x.Aggregate (double.PositiveInfinity, (min, value) => System.Math.Min (min, value));
+
+				case FunctionFactory.FunctionMax:
+					return x => x.Aggregate (double.NegativeInfinity, (max, value) => System.Math.Max (max, value));
 			}
 			
 			return null;
@@ -26,12 +35,28 @@ namespace Epsitec.Cresus.Graph.Functions
 			{
 				case FunctionFactory.FunctionSum:
 					return "Somme";
+				case FunctionFactory.FunctionMean:
+					return "Moyenne";
+				case FunctionFactory.FunctionMin:
+					return "Minimum";
+				case FunctionFactory.FunctionMax:
+					return "Maximum";
 			}
 
 			return null;
 		}
 
+		public static IEnumerable<string> GetFunctionNames()
+		{
+			yield return FunctionFactory.FunctionSum;
+			yield return FunctionFactory.FunctionMean;
+			yield return FunctionFactory.FunctionMin;
+			yield return FunctionFactory.FunctionMax;
+		}
 
-		public const string FunctionSum = "sum";
+		public const string FunctionSum  = "sum";
+		public const string FunctionMean = "mean";
+		public const string FunctionMin  = "min";
+		public const string FunctionMax  = "max";
 	}
 }

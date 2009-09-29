@@ -242,7 +242,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 
 			this.CreateFunctionButton (group, groupView.ButtonSurface, null, "Groupe");
-			this.CreateFunctionButton (group, groupView.ButtonSurface, Functions.FunctionFactory.FunctionSum, "Somme");
+
+			foreach (string functionName in Functions.FunctionFactory.GetFunctionNames ())
+			{
+				this.CreateFunctionButton (group, groupView.ButtonSurface, functionName, Functions.FunctionFactory.GetFunctionCaption (functionName));
+			}
 			
 			ViewDragDropManager drag = null;
 			

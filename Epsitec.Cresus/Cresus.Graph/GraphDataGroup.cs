@@ -108,10 +108,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (series == null)
 			{
-				series = new GraphSyntheticDataSeries (this, functionName)
-				{
-					Label = Functions.FunctionFactory.GetFunctionCaption (functionName),
-				};
+				series = new GraphSyntheticDataSeries (this, functionName);
 
 				series.DefineDataSource (this.Source);
 
@@ -123,7 +120,7 @@ namespace Epsitec.Cresus.Graph
 				this.syntheticDataSeries.Add (series);
 			}
 
-			series.Title   = this.Name;
+//-			series.Title   = this.Name;
 			series.Enabled = true;
 
 			return series;

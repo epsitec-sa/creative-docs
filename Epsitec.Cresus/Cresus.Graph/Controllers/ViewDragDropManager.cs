@@ -241,8 +241,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 					View = x
 				});
 
-				System.Diagnostics.Debug.WriteLine (string.Join (", ", dist.Select (x => string.Format ("{0}:{1}", x.View.Index, x.Distance)).ToArray ()));
-
 				var best = dist.OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
 
 				if ((best != null) &&
