@@ -40,7 +40,6 @@ namespace Epsitec.Cresus.Graph
 
 			this.guid   = System.Guid.NewGuid ();
 //-			this.views  = new List<DocumentViewController> ();
-			this.dataSet      = new GraphDataSet ();
 			this.undoRecorder = new Actions.Recorder ();
 			this.redoRecorder = new Actions.Recorder ();
 
@@ -411,25 +410,27 @@ namespace Epsitec.Cresus.Graph
 
 			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
 			{
+				GraphDataSet dataSet = new GraphDataSet ();
+
 				var source = new GraphDataSource (this.converterName);
 
 				if ((this.cube != null) &&
 				(!string.IsNullOrEmpty (this.cubeSliceDim1)) &&
 				(!string.IsNullOrEmpty (this.cubeSliceDim2)))
 				{
-					this.dataSet.LoadDataTable (this.cube.ExtractDataTable ("Source="+sourceName, this.cubeSliceDim1, this.cubeSliceDim2));
+					dataSet.LoadDataTable (this.cube.ExtractDataTable ("Source="+sourceName, this.cubeSliceDim1, this.cubeSliceDim2));
 				}
 				else
 				{
 					this.title = "Démo";
-					this.dataSet.LoadDataTable (GraphDataSet.LoadComptaDemoData ());
+					dataSet.LoadDataTable (GraphDataSet.LoadComptaDemoData ());
 				}
 
 
 				int index = 0;
 				source.Name = sourceName;
 
-				this.dataSet.DataTable.RowSeries.ForEach (
+				dataSet.DataTable.RowSeries.ForEach (
 					series =>
 						source.Add (
 							new GraphDataSeries (series)
@@ -556,7 +557,6 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<string> columnLabels;
 		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
 
-		private readonly GraphDataSet dataSet;
 		private readonly Actions.Recorder undoRecorder;
 		private readonly Actions.Recorder redoRecorder;
 		
@@ -569,7 +569,6 @@ namespace Epsitec.Cresus.Graph
 		private DataCube cube;
 		private string cubeSliceDim1;
 		private string cubeSliceDim2;
-		private string cubeSliceSource;
 		private string converterName;
 
 		private GraphDataSource activeDataSource;
