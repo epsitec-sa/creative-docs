@@ -197,16 +197,7 @@ namespace Epsitec.Cresus.Graph
 
 		public void RemoveOutput(GraphDataSeries series)
 		{
-			GraphDataSeries item = null;
-
-			if (this.outputSeries.Contains (series))
-			{
-				item = series;
-			}
-			else
-			{
-				item = this.outputSeries.Find (x => x.Parent == series);
-			}
+			GraphDataSeries item = this.ResolveOutputSeries (series);
 
 			System.Diagnostics.Debug.Assert (item != null);
 			System.Diagnostics.Debug.Assert (item.Parent != null);

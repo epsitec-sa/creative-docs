@@ -548,13 +548,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.AdjustOutputItemsWidth ();
-
-			if ((this.outputActiveIndex >= 0) &&
-				(this.outputActiveIndex < this.outputItemsController.Count))
-			{
-				this.outputItemsController.ActiveItem = this.outputItemsController[this.outputActiveIndex];
-			}
-
 			this.RefreshHints ();
 		}
 
@@ -631,7 +624,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.Document.RemoveOutput (item);
 
-			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
+			this.outputActiveIndex = -1;
 
 			this.RefreshInputs ();
 			this.RefreshGroups ();
@@ -811,6 +804,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.outputItemsController.ForEach (x => x.PreferredWidth = itemWidth);
 			}
+
+			this.RefreshActiveOutput ();
+		}
+
+		private void RefreshActiveOutput()
+		{
+			this.outputItemsController.UpdateLayout ();
+
+			if ((this.outputActiveIndex >= 0) &&
+				(this.outputActiveIndex < this.outputItemsController.Count))
+			{
+				var active = this.outputItemsController[this.outputActiveIndex];
+				System.Diagnostics.Debug.WriteLine (string.Format ("item {0} at {1} - {2}", this.outputActiveIndex, active.ActualBounds.Left, active.ActualBounds.Right));
+			}
 		}
 
 		
@@ -933,7 +940,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.Released +=
 				delegate
 				{
-					drag.ProcessDragEnd ();
+					if (drag.ProcessDragEnd () == false)
+					{
+						this.outputActiveIndex = this.Document.ResolveOutputSeries (item).Index;
+					}
+
+					this.RefreshActiveOutput ();
 				};
 		}
 
