@@ -1047,25 +1047,78 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.Pressed +=
 				(sender, e) =>
 				{
-					drag = new ViewDragDropManager (this, view, view.MapClientToScreen (e.Point))
+					switch (e.Message.Button)
 					{
-						Series = item,
-					};
-					drag.DefineMouseMoveBehaviour (MouseCursor.AsHand);
+						case MouseButtons.Left:
+							drag = new ViewDragDropManager (this, view, view.MapClientToScreen (e.Point))
+							{
+								Series = item,
+							};
+							drag.DefineMouseMoveBehaviour (MouseCursor.AsHand);
+							break;
+						
+						case MouseButtons.Right:
+							this.ShowInputContextMenu (item, view, e.Point);
+							break;
+					}
+
 					e.Message.Captured = true;
 				};
 
 			view.Released +=
 				(sender, e) =>
 				{
-					if (drag.ProcessDragEnd () == false)
+					if ((drag != null) &&
+						(drag.ProcessDragEnd () == false))
 					{
 						this.HandleInputViewClicked (item, view);
 
 						this.inputItemsController.UpdateLayout ();
 						this.application.Window.RefreshEnteredWidgets (e.Message);
 					}
+
+					drag = null;
 				};
+		}
+
+		private void ShowInputContextMenu(GraphDataSeries item, MiniChartView view, Point pos)
+		{
+			VMenu contextMenu = new VMenu ()
+			{
+				Host = view,
+				AutoDispose = true,
+			};
+
+			var item1 = new MenuItem ()
+			{
+				Text = view.IsActive ? "Exclure du graphique" : "Inclure dans le graphique",
+			};
+
+			var item2 = new MenuItem ()
+			{
+				Text = "Changer le signe",
+			};
+
+			item1.Clicked +=
+				delegate
+				{
+					view.ActiveState = view.IsActive ? ActiveState.No : ActiveState.Yes;
+				};
+
+			item2.Clicked +=
+				delegate
+				{
+					item.NegateValues = !item.NegateValues;
+					this.Document.InvalidateCache ();
+					this.Refresh ();
+				};
+
+			contextMenu.Items.Add (item1);
+			contextMenu.Items.Add (item2);
+
+			this.HideBalloonTip ();
+			contextMenu.ShowAsContextMenu (view, view.MapClientToScreen (pos));
+			
 		}
 		
 		private void CreateFilterButton(Widget filters, GraphDataCategory category)
@@ -1507,10 +1560,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private static readonly double InputViewWidth  = 120;
 		private static readonly double InputViewHeight =  60;
 		
-		public System.Action<IEnumerable<int>>	SumSeriesAction;
-		public System.Action<IEnumerable<int>>	AddSeriesToGraphAction;
-		public System.Action<IEnumerable<int>>	NegateSeriesAction;
-
 		private readonly GraphApplication		application;
 
 		private readonly ItemListController<MiniChartView>		inputItemsController;

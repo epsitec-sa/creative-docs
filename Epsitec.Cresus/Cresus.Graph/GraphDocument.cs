@@ -276,6 +276,10 @@ namespace Epsitec.Cresus.Graph
 			this.groups.Remove (group);
 		}
 
+		public void InvalidateCache()
+		{
+			this.groups.ForEach (x => x.Invalidate ());
+		}
 
 		internal XElement SaveSettings(XElement xml)
 		{
