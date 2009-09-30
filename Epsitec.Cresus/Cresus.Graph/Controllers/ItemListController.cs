@@ -175,6 +175,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.items.Add (item);
 			this.InvalidateLayout ();
+
+			if (this.scroller != null)
+			{
+				this.scroller.ZOrder = 0;
+			}
 		}
 
 		public bool Remove(T item)
@@ -458,8 +463,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					this.scroller.Enable = false;
 				}
-
-				this.scroller.ZOrder = 0;
 			}
 			else
 			{

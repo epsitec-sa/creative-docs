@@ -602,6 +602,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.inputItemsHint.Visibility  = (this.inputItemsController.Count == 0);
 			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
 			this.groupItemsHint.Visibility  = (this.inputItemsController.Count > 0) && (this.groupsController.Count == 0);
+
+			if (this.groupItemsHint.Visibility)
+			{
+				this.groupItemsHint.ZOrder = 0;
+			}
 		}
 
 		public void RefreshInputViewSelection()
