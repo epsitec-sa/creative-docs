@@ -665,7 +665,22 @@ namespace Epsitec.Common.Drawing
 				this.handle = System.IntPtr.Zero;
 			}
 		}
-		
+
+
+		public static void RegisterDynamicFont(System.IO.Stream stream)
+		{
+			if (stream == null)
+			{
+				return;
+			}
+
+			long   length = stream.Length;
+			byte[] data   = new byte[length];
+			
+			stream.Read (data, 0, (int) length);
+			
+			Font.RegisterDynamicFont (data);
+		}
 
 		public static void RegisterDynamicFont(byte[] data)
 		{

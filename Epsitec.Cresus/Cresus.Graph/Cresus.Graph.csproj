@@ -167,6 +167,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Resources\futuramc.ttf" />
     <EmbeddedResource Include="Images\Button.Off.icon" />
     <EmbeddedResource Include="Images\Button.OffHilite.icon" />
     <EmbeddedResource Include="Images\Button.On.icon" />

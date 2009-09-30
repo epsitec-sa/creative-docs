@@ -90,6 +90,11 @@ namespace Epsitec.Cresus.Graph
 
 		internal void SetupUI()
 		{
+			using (var stream = System.Reflection.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.Cresus.Graph.Resources.futuramc.ttf"))
+			{
+				Font.RegisterDynamicFont (stream);
+			}
+
 			this.mainWindowController.SetupUI ();
 			this.workspaceController.SetupUI ();
 
