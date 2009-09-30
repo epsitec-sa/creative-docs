@@ -10,15 +10,23 @@ using Epsitec.Common.Widgets.Behaviors;
 
 namespace Epsitec.Cresus.Graph.Widgets
 {
+	/// <summary>
+	/// The <c>AnchoredPalette</c> class can be used to implement a palette which
+	/// is constrained within a parent widget, but can be dragged around by the
+	/// user. When the parent gets resized, the palette follows the borders which
+	/// are the nearest to its position.
+	/// </summary>
 	public class AnchoredPalette : FrameBox, IDragBehaviorHost
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AnchoredPalette"/> class.
+		/// </summary>
 		public AnchoredPalette()
 		{
 			this.dragBehavior = new DragBehavior (this);
 			this.AutoCapture = true;
 			this.DrawFullFrame = true;
 		}
-
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{

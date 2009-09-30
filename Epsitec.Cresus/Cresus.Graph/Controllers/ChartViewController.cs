@@ -77,6 +77,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public bool StackValues
+		{
+			get;
+			set;
+		}
+
 		public void SetupUI(Widget container)
 		{
 			this.container = container;
@@ -107,7 +113,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Fill,
 				Parent = chartSurface,
-				Padding = new Margins (16, 24, 24, 16),
+				Padding = this.IsStandalone ? new Margins (48, 24, 24, 24) : new Margins (16, 24, 24, 16),
 			};
 
 			var palette = new AnchoredPalette ()
@@ -202,35 +208,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (renderer == null)
 			{
 				this.chartView.Renderer   = null;
-				//-					this.captionView.Captions = null;
+				this.captionView.Captions = null;
 			}
 			else
 			{
 				List<ChartSeries> series = new List<ChartSeries> (this.GetDocumentChartSeries ());
 
-				bool stackValues = false;
-
 				renderer.Clear ();
-				renderer.ChartSeriesRenderingMode = stackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
+				renderer.ChartSeriesRenderingMode = this.StackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
 				renderer.DefineValueLabels (this.document.ChartColumnLabels);
 				renderer.CollectRange (series);
 				renderer.UpdateCaptions (series);
 				renderer.AlwaysIncludeZero = true;
-
-				//-					Size size = renderer.Captions.GetCaptionLayoutSize (Size.MaxValue) + this.captionView.Padding.Size;
-
-				var layoutMode = ContainerLayoutMode.None;
-
-				switch (layoutMode)
-				{
-					case ContainerLayoutMode.HorizontalFlow:
-						//-							this.captionView.PreferredHeight = size.Height;
-						break;
-
-					case ContainerLayoutMode.VerticalFlow:
-						//-							this.captionView.PreferredWidth = size.Width;
-						break;
-				}
 
 				this.chartView.Renderer = renderer;
 				this.captionView.Captions = renderer.Captions;
@@ -287,7 +276,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					GridColor = Color.FromBrightness (0.8),
 					VisibleGrid = true,
-					VisibleLabels = false,
+					VisibleLabels = this.IsStandalone,
 					VisibleTicks = true,
 				};
 
@@ -314,7 +303,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			yield return Res.Commands.GraphType.UseLineChart;
 			yield return Res.Commands.GraphType.UseBarChartVertical;
-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
+//-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
 		}
 
 

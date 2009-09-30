@@ -1019,19 +1019,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.Pressed +=
 				(sender, e) =>
 				{
-					drag = new ViewDragDropManager (this, view, view.MapClientToScreen (e.Point))
+					switch (e.Message.Button)
 					{
-						Series = item,
-						LockY = true,
-					};
-					drag.DefineMouseMoveBehaviour (MouseCursor.AsSizeWE);
-					e.Message.Captured = true;
+						case MouseButtons.Left:
+							drag = new ViewDragDropManager (this, view, view.MapClientToScreen (e.Point))
+							{
+								Series = item,
+								LockY = true,
+							};
+							drag.DefineMouseMoveBehaviour (MouseCursor.AsSizeWE);
+							e.Message.Captured = true;
+							break;
+
+						case MouseButtons.Right:
+							this.ShowInputContextMenu (item.Parent, view, e.Point);
+							break;
+					}
 				};
 
 			view.Released +=
 				delegate
 				{
-					if (drag.ProcessDragEnd () == false)
+					if ((drag != null) &&
+						(drag.ProcessDragEnd () == false))
 					{
 						this.outputActiveIndex = this.Document.ResolveOutputSeries (item).Index;
 					}
@@ -1041,6 +1051,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 
 					this.RefreshActiveOutput ();
+					
+					drag = null;
 				};
 		}
 
@@ -1095,7 +1107,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			var item1 = new MenuItem ()
 			{
-				Text = view.IsActive ? "Exclure du graphique" : "Inclure dans le graphique",
+				Text = this.Document.ResolveOutputSeries (item) != null ? "Exclure du graphique" : "Inclure dans le graphique",
+				Name = this.Document.ResolveOutputSeries (item) != null ? "-" : "+",
 			};
 
 			var item2 = new MenuItem ()
@@ -1106,7 +1119,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			item1.Clicked +=
 				delegate
 				{
-					view.ActiveState = view.IsActive ? ActiveState.No : ActiveState.Yes;
+					if (item1.Name == "-")
+					{
+						this.ExcludeOutput (item);
+					}
+					else
+					{
+						this.IncludeOutput (item);
+					}
 				};
 
 			item2.Clicked +=
@@ -1121,8 +1141,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			contextMenu.Items.Add (item2);
 
 			this.HideBalloonTip ();
+			this.outputActiveIndex = -1;
+			this.RefreshActiveOutput ();
+
 			contextMenu.ShowAsContextMenu (view, view.MapClientToScreen (pos));
-			
 		}
 		
 		private void CreateFilterButton(Widget filters, GraphDataCategory category)
