@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.activeDataSource.Concat (this.syntheticSeries.Cast<GraphDataSeries> ());
+				return this.activeDataSource;
 			}
 		}
 

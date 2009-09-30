@@ -97,18 +97,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.commandContext = this.CreateCommandContext (this.container);
 
-			this.chartView = new ChartView ()
+			var chartSurface = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
 				Parent = this.container,
+			};
+
+			this.chartView = new ChartView ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = chartSurface,
 				Padding = new Margins (16, 24, 24, 16),
 			};
 
 			var palette = new AnchoredPalette ()
 			{
-				Anchor = AnchorStyles.BottomLeft,
-				Margins = new Margins (0, 0, 0, 0),
-				Parent = this.container,
+				Anchor = AnchorStyles.TopRight,
+				Margins = new Margins (0, 4, 4, 0),
+				Parent = chartSurface,
 				BackColor = Color.FromBrightness (1),
 				Padding = new Margins (4, 4, 2, 2),
 				Visibility = false,
@@ -124,7 +130,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Parent = container,
+				Parent = this.container,
 				BackColor = Color.FromBrightness (1),
 				Name = "command bar",
 				Visibility = false,
@@ -135,7 +141,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Anchor = AnchorStyles.All,
 				HorizontalAlignment = HorizontalAlignment.Center,
 				VerticalAlignment = VerticalAlignment.Center,
-				Parent = container,
+				Parent = this.container,
 				Name = "command button",
 				Visibility = false,
 				Text = "Montrer dans une nouvelle fenêtre",

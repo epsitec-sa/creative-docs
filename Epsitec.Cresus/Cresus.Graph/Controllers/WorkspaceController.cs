@@ -1033,6 +1033,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (drag.ProcessDragEnd () == false)
 					{
+						this.outputActiveIndex = this.Document.ResolveOutputSeries (item).Index;
+					}
+					else
+					{
 						this.outputActiveIndex = -1;
 					}
 
