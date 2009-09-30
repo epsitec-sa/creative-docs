@@ -270,6 +270,36 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.AdjustOutputItemsWidth ();
 				};
 
+			this.outputActiveInfo = new BalloonTip ()
+			{
+				Anchor = AnchorStyles.BottomLeft,
+				Parent = outputFrame,
+				Name = "output info",
+				BackColor = Color.FromBrightness (1),
+				Visibility = false,
+				PreferredWidth = 120,
+				PreferredHeight = 150,
+				Padding = new Margins (5, 5, 17, 8),
+			};
+
+			this.outputColorPalette = new ColorPalette ()
+			{
+				Parent = this.outputActiveInfo,
+				Dock = DockStyle.Fill,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				VerticalAlignment = VerticalAlignment.Center,
+				OptionButtonVisibility = false,
+				RowCount = 12,
+				ColumnCount = 9,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				ColorCollection = new ColorCollection (WorkspaceController.GetColors ()),
+			};
+
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.outputActiveInfo, true);
+			
+			this.outputColorPalette.PreferredSize = this.outputColorPalette.GetBestFitSize (11);
+			this.outputColorPalette.ExportSelectedColor += sender => this.DefineOutputColor (this.outputColorPalette.SelectedColor.Basic);
+
 			outputBook.ActivePage = outputPage;
 
 			WorkspaceController.PatchTabBookPaintBackground (outputBook);
@@ -317,6 +347,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				PreferredHeight = 40,
 			};
+		}
+
+		private static IEnumerable<RichColor> GetColors()
+		{
+			foreach (int value in new int[] { 100, 75, 50 })
+			{
+				foreach (int saturation in new int[] { 100, 60, 30 })
+				{
+					for (int hue = 0; hue < 360; hue += 30)
+					{
+						yield return RichColor.FromHsv (hue, saturation / 100.0, value / 100.0);
+					}
+				}
+			}
 		}
 
 
@@ -546,6 +590,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.outputItemsController.Add (this.CreateOutputView (item, index++));
 			}
+			
+			this.outputPageFrame.Visibility = (this.outputItemsController.Count > 0);
 
 			this.AdjustOutputItemsWidth ();
 			this.RefreshHints ();
@@ -555,7 +601,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.inputItemsHint.Visibility  = (this.inputItemsController.Count == 0);
 			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
-			this.outputPageFrame.Visibility = (this.outputItemsController.Count > 0);
 			this.groupItemsHint.Visibility  = (this.inputItemsController.Count > 0) && (this.groupsController.Count == 0);
 		}
 
@@ -817,6 +862,48 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				var active = this.outputItemsController[this.outputActiveIndex];
 				System.Diagnostics.Debug.WriteLine (string.Format ("item {0} at {1} - {2}", this.outputActiveIndex, active.ActualBounds.Left, active.ActualBounds.Right));
+				this.ShowOutputInfo (active);
+			}
+			else
+			{
+				this.HideOutputInfo ();
+			}
+		}
+
+
+		private void ShowOutputInfo(MiniChartView view)
+		{
+			if (this.outputActiveInfo != null)
+			{
+				var size = this.outputColorPalette.PreferredSize + this.outputColorPalette.Margins.Size + this.outputActiveInfo.Padding.Size;
+				
+				var disposition = ButtonMarkDisposition.Below;
+				var balloonRect = BalloonTip.GetBestPosition (size, view.ActualBounds, view.Parent.Client.Size, ref disposition);
+
+				this.outputActiveInfo.PreferredSize = size;
+				this.outputActiveInfo.TipAttachment = view.ActualBounds.Center -  balloonRect.BottomLeft;
+				this.outputActiveInfo.Margins = new Margins (balloonRect.Left, 0, 0, balloonRect.Bottom);
+				this.outputActiveInfo.Disposition = disposition;
+				this.outputActiveInfo.Visibility = true;
+				this.outputActiveInfo.ZOrder = 0;
+			}
+		}
+
+		private void HideOutputInfo()
+		{
+			if (this.outputActiveInfo != null)
+			{
+				this.outputActiveInfo.Visibility = false;
+			}
+		}
+
+		private void DefineOutputColor(Color color)
+		{
+			if ((this.outputActiveIndex >= 0) &&
+				(this.outputActiveIndex < this.outputItemsController.Count))
+			{
+				this.colorStyle.DefineColor (this.Document.OutputSeries[this.outputActiveIndex].ColorIndex, color);
+				this.Refresh ();
 			}
 		}
 
@@ -826,11 +913,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var view = this.CreateView (item);
 			var cat  = item.Source.GetCategory (item);
 
+			Color color = this.labelColorStyle[cat.Index];
+			Color dark  = Color.FromHsv (color.Hue, 1.0, 0.5);
+
 			view.PreferredWidth  = WorkspaceController.InputViewWidth;
 			view.PreferredHeight = WorkspaceController.InputViewHeight;
 //-			view.AutoCheckButton = true;
 			view.ActiveState = item.IsSelected ? ActiveState.Yes : ActiveState.No;
-			view.BackColor = this.labelColorStyle[cat.Index];
+			view.BackColor = color;
+			view.Renderer.ClearStyles ();
+			view.Renderer.AddStyle (new ColorStyle (this.colorStyle.Name) { dark });
 
 			view.ActiveStateChanged +=
 				delegate
@@ -856,7 +948,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			view.MouseCursor = MouseCursor.AsHand;
 
-			view.Renderer.RemoveStyle (this.colorStyle);
+			view.Renderer.ClearStyles ();
 			view.Renderer.AddStyle (new ColorStyle (this.colorStyle.Name)
 			{
 				this.colorStyle[item.ColorIndex]
@@ -867,8 +959,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 				delegate
 				{
-					this.Document.RemoveOutput (item);
-					this.Refresh ();
+					this.ExcludeOutput (item);
 				});
 
 			this.CreateOutputDragAndDropHandler (item, view);
@@ -880,7 +971,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			var lineChartRenderer = new LineChartRenderer ();
 
-			lineChartRenderer.AddStyle (this.colorStyle);
+			lineChartRenderer.AddStyle (new ColorStyle (this.colorStyle.Name) { Color.FromBrightness (0.3) });
 			lineChartRenderer.AddAdorner (new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
 			{
 				VisibleGrid = false,
@@ -942,7 +1033,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (drag.ProcessDragEnd () == false)
 					{
-						this.outputActiveIndex = this.Document.ResolveOutputSeries (item).Index;
+						this.outputActiveIndex = -1;
 					}
 
 					this.RefreshActiveOutput ();
@@ -1442,5 +1533,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private ColorStyle				labelColorStyle;
 		private ColorStyle				colorStyle;
 		private int						outputActiveIndex;
+		private BalloonTip				outputActiveInfo;
+		private ColorPalette			outputColorPalette;
 	}
 }

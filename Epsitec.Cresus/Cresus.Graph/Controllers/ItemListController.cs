@@ -159,9 +159,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 				
 				this.Layout ();
-				
-				this.container.Window.ForceLayout ();
 			}
+			
+			this.container.Window.ForceLayout ();
 		}
 		
 		public void Add(T item)

@@ -163,6 +163,12 @@ namespace Epsitec.Common.Graph.Renderers
 			this.styles.Remove (style.Name);
 		}
 
+		public void ClearStyles()
+		{
+			this.styles.Clear ();
+		}
+
+
 		public void AddAdorner(Adorners.AbstractAdorner adorner)
 		{
 			this.adorners.Add (adorner);

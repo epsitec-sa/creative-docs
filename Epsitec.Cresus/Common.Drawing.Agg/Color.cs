@@ -131,6 +131,37 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		public double							Hue
+		{
+			get
+			{
+				double h, s, v;
+				Color.ConvertRgbToHsv (this.r, this.g, this.b, out h, out s, out v);
+				return h;
+			}
+		}
+
+		public double							Saturation
+		{
+			get
+			{
+				double h, s, v;
+				Color.ConvertRgbToHsv (this.r, this.g, this.b, out h, out s, out v);
+				return s;
+			}
+		}
+
+		public double							Value
+		{
+			get
+			{
+				double h, s, v;
+				Color.ConvertRgbToHsv (this.r, this.g, this.b, out h, out s, out v);
+				return v;
+			}
+		}
+
+
 
 		/// <summary>
 		/// Mixes the specified color A with a color B; the <c>mix</c> parameter specifies
