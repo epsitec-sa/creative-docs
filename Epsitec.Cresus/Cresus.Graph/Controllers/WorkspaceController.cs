@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Visibility = false,
 				BackColor = Color.FromBrightness (1),
 				Text = "<font size=\"120%\">Graphique vide.</font><br/>" +
-				"Cochez les éléments que vous souhaitez voir apparaître dans le graphique.",
+				"Cochez (ou glissez ici) les éléments que vous souhaitez voir apparaître dans le graphique.",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				PreferredHeight = 40,
 			};
@@ -600,8 +600,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void RefreshHints()
 		{
 			this.inputItemsHint.Visibility  = (this.inputItemsController.Count == 0);
-			this.outputItemsHint.Visibility = (this.inputItemsController.Count > 0) && (this.outputItemsController.Count == 0);
-			this.groupItemsHint.Visibility  = (this.inputItemsController.Count > 0) && (this.groupsController.Count == 0);
+			this.outputItemsHint.Visibility = !this.inputItemsHint.Visibility  && (this.outputItemsController.Count == 0);
+			this.groupItemsHint.Visibility  = !this.outputItemsHint.Visibility && (this.groupsController.Count == 0);
 
 			if (this.groupItemsHint.Visibility)
 			{
