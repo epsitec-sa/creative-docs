@@ -24,7 +24,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public WorkspaceController(GraphApplication application)
 		{
 			this.application = application;
-			this.filterCategories = new HashSet<GraphDataCategory> ();
 			this.colorStyle = new ColorStyle ("line-color");
 			
 			for (int hue = 0; hue < 360; hue += 36)
@@ -567,11 +566,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.inputItemsController.Clear ();
 
+			var categories = new HashSet<GraphDataCategory> (this.Document.ActiveFilterCategories);
+
 			foreach (var item in this.Document.DataSeries)
 			{
 				var category = item.GetCategory ();
 
-				if (category.IsGeneric || this.filterCategories.Contains (category))
+				if (category.IsGeneric || categories.Contains (category))
 				{
 					this.inputItemsController.Add (this.CreateInputView (item));
 				}
@@ -1192,28 +1193,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Text = category.Name,
 				Dock = DockStyle.Fill,
 				Parent = frame,
-				ActiveState = this.filterCategories.Contains (category) ? ActiveState.Yes : ActiveState.No,
+				ActiveState = this.Document.ActiveFilterCategories.Contains (category) ? ActiveState.Yes : ActiveState.No,
 			};
 
 			button.ActiveStateChanged +=
 				sender =>
 				{
-					bool changed;
-
 					if (button.ActiveState == ActiveState.Yes)
 					{
-						changed = this.filterCategories.Add (category);
+						this.Document.AddFilterCategory (category.Name);
 					}
 					else
 					{
-						changed = this.filterCategories.Remove (category);
-					}
-
-					if (changed)
-					{
-						this.RefreshInputs ();
-						this.RefreshGroups ();
-						this.RefreshOutputs ();
+						this.Document.RemoveFilterCategory (category.Name);
 					}
 				};
 		}
@@ -1596,7 +1588,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		inputItemsController;
 		private readonly ItemListController<MiniChartView>		outputItemsController;
 		private readonly GroupsController			groupsController;
-		private readonly HashSet<GraphDataCategory> filterCategories;
 
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
 		private readonly Dictionary<long, GraphDataGroup> viewToGroup;

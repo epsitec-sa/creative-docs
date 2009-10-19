@@ -204,6 +204,10 @@ namespace Epsitec.Cresus.Graph.Actions
 			{
 				return Recorder.Serialize ((IEnumerable<int>) arg);
 			}
+			if (arg is IEnumerable<string>)
+            {
+				return Recorder.Serialize ((IEnumerable<string>) arg);
+            }
 
 			throw new System.ArgumentException ();
 		}
@@ -223,11 +227,22 @@ namespace Epsitec.Cresus.Graph.Actions
 				Recorder.Deserialize (arg, out result);
 				return result;
 			}
+			if (type ==	typeof (IEnumerable<string>))
+            {
+				IEnumerable<string> result;
+				Recorder.Deserialize (arg, out result);
+				return result;
+            }
 
 			throw new System.ArgumentException ();
 		}
 
 
+		/// <summary>
+		/// Pushes a new action record onto the active undo recorder.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <returns>The action.</returns>
 		private static ActionRecord PushNew(ActionRecord action)
 		{
 			var manager = UndoRedoManager.Active;
@@ -244,9 +259,86 @@ namespace Epsitec.Cresus.Graph.Actions
 			return string.Join (" ", arg.Select (x => x.ToString (System.Globalization.CultureInfo.InvariantCulture)).ToArray ());
 		}
 
+		private static string Serialize(IEnumerable<string> arg)
+		{
+			return string.Join (" ", arg.Select (x => Recorder.Escape (x)).ToArray ());
+		}
+
+		
 		private static void Deserialize(string arg, out IEnumerable<int> result)
 		{
 			result = arg.Length == 0 ? Enumerable.Empty<int> () : arg.Split (' ').Select (x => int.Parse (x, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture)).ToArray ();
+		}
+
+		private static void Deserialize(string arg, out IEnumerable<string> result)
+		{
+			result = arg.Length == 0 ? Enumerable.Empty<string> () : arg.Split (' ').Select (x => Recorder.Unescape (x)).ToArray ();
+		}
+
+		
+		private static string Escape(string text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			foreach (char c in text)
+			{
+				switch (c)
+				{
+					case '\\':
+						buffer.Append ("\\\\");
+						break;
+
+					case ' ':
+						buffer.Append ("\\_");
+						break;
+
+					default:
+						buffer.Append (c);
+						break;
+
+				}
+			}
+
+			return buffer.ToString ();
+		}
+
+		private static string Unescape(string text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			bool escape = false;
+
+			foreach (char c in text)
+			{
+				if (escape)
+				{
+					switch (c)
+					{
+						case '\\':
+							buffer.Append ('\\');
+							break;
+
+						case '_':
+							buffer.Append (' ');
+							break;
+
+						default:
+							throw new System.InvalidOperationException ("Unexpected escape sequence \\" + escape);
+					}
+
+					escape = false;
+				}
+				else if (c == '\\')
+				{
+					escape = true;
+				}
+				else
+				{
+					buffer.Append (c);
+				}
+			}
+
+			return buffer.ToString ();
 		}
 
 

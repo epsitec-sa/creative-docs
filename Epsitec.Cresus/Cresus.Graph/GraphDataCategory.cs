@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.name;
+				return this.name ?? "";
 			}
 		}
 
@@ -35,7 +35,15 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.index == 0 && this.name.Length == 0;
+				return this.index == 0 && this.name != null && this.name.Length == 0;
+			}
+		}
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.name == null;
 			}
 		}
 
@@ -58,7 +66,6 @@ namespace Epsitec.Cresus.Graph
 
 		#endregion
 
-
 		#region IComparable<GraphDataCategory> Members
 
 		public int CompareTo(GraphDataCategory other)
@@ -75,6 +82,7 @@ namespace Epsitec.Cresus.Graph
 
 		#endregion
 
+		
 		public override bool Equals(object obj)
 		{
 			if (obj is GraphDataCategory)

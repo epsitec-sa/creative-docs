@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Graph
 			this.syntheticSeries = new List<GraphSyntheticDataSeries> ();
 			this.groups = new List<GraphDataGroup> ();
 			this.columnLabels = new List<string> ();
+			this.filterCategories = new HashSet<GraphDataCategory> ();
 			
 			this.groupSource = new GraphDataSource (null)
 			{
@@ -55,6 +56,14 @@ namespace Epsitec.Cresus.Graph
 			get
 			{
 				return this.dataSources;
+			}
+		}
+
+		public IEnumerable<GraphDataCategory> ActiveFilterCategories
+		{
+			get
+			{
+				return this.filterCategories;
 			}
 		}
 
@@ -248,6 +257,41 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public void AddFilterCategory(string name)
+		{
+			var category = this.FindCategory (name);
+			
+			if (category.IsEmpty)
+			{
+				return;
+			}
+			
+			if (this.filterCategories.Add (category))
+			{
+				this.NotifyDataSourceChanged ();
+			}
+		}
+
+		public void RemoveFilterCategory(string name)
+		{
+			var category = this.FindCategory (name);
+
+			if (category.IsEmpty)
+            {
+				return;
+            }
+
+			if (this.filterCategories.Remove (category))
+            {
+				this.NotifyDataSourceChanged ();
+            }
+		}
+
+
+		private GraphDataCategory FindCategory(string name)
+		{
+			return this.ActiveDataSource.Categories.FirstOrDefault (x => x.Name == name);
+		}
 
 		public GraphDataGroup AddGroup(IEnumerable<GraphDataSeries> series)
 		{
@@ -534,6 +578,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphDataGroup> groups;
 		private readonly List<string> columnLabels;
 		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
+		private readonly HashSet<GraphDataCategory> filterCategories;
 
 		private readonly Actions.UndoRedoManager undoRedoManager;
 		
