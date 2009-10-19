@@ -48,13 +48,9 @@ namespace Epsitec.Cresus.Graph
 		}
 
 		
-		public static GraphDataCategory Generic
-		{
-			get
-			{
-				return new GraphDataCategory (0, "");
-			}
-		}
+		public static readonly GraphDataCategory Generic = new GraphDataCategory (0, "");
+
+		public static readonly GraphDataCategory Empty;
 
 		
 		#region IEquatable<GraphDataCategory> Members

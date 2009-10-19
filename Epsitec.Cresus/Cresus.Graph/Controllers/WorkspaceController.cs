@@ -1258,12 +1258,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (button.ActiveState == ActiveState.Yes)
 					{
-						this.Document.ActiveDataSource = source;
+						this.Document.SelectDataSource (source.Name);
 					}
-					
-					this.RefreshInputs ();
-					this.RefreshGroups ();
-					this.RefreshOutputs ();
 				};
 		}
 

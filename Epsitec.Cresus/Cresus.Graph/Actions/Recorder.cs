@@ -208,6 +208,10 @@ namespace Epsitec.Cresus.Graph.Actions
             {
 				return Recorder.Serialize ((IEnumerable<string>) arg);
             }
+			if (arg is string)
+            {
+				return Recorder.Serialize ((string) arg);
+            }
 
 			throw new System.ArgumentException ();
 		}
@@ -230,6 +234,12 @@ namespace Epsitec.Cresus.Graph.Actions
 			if (type ==	typeof (IEnumerable<string>))
             {
 				IEnumerable<string> result;
+				Recorder.Deserialize (arg, out result);
+				return result;
+            }
+			if (type == typeof (string))
+            {
+				string result;
 				Recorder.Deserialize (arg, out result);
 				return result;
             }
@@ -264,6 +274,11 @@ namespace Epsitec.Cresus.Graph.Actions
 			return string.Join (" ", arg.Select (x => Recorder.Escape (x)).ToArray ());
 		}
 
+		private static string Serialize(string arg)
+		{
+			return arg;
+		}
+
 		
 		private static void Deserialize(string arg, out IEnumerable<int> result)
 		{
@@ -273,6 +288,11 @@ namespace Epsitec.Cresus.Graph.Actions
 		private static void Deserialize(string arg, out IEnumerable<string> result)
 		{
 			result = arg.Length == 0 ? Enumerable.Empty<string> () : arg.Split (' ').Select (x => Recorder.Unescape (x)).ToArray ();
+		}
+
+		private static void Deserialize(string arg, out string result)
+		{
+			result = arg;
 		}
 
 		

@@ -287,10 +287,31 @@ namespace Epsitec.Cresus.Graph
             }
 		}
 
+		public void SelectDataSource(string name)
+		{
+			var source = this.FindSource (name);
+
+			if (source == null)
+            {
+				return;
+            }
+
+			this.ActiveDataSource = source;
+		}
 
 		private GraphDataCategory FindCategory(string name)
 		{
+			if (this.ActiveDataSource == null)
+            {
+				return GraphDataCategory.Empty;
+            }
+			
 			return this.ActiveDataSource.Categories.FirstOrDefault (x => x.Name == name);
+		}
+
+		private GraphDataSource FindSource(string name)
+		{
+			return this.DataSources.FirstOrDefault (x => x.Name == name);
 		}
 
 		public GraphDataGroup AddGroup(IEnumerable<GraphDataSeries> series)
