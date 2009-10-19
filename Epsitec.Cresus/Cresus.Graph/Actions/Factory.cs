@@ -24,6 +24,13 @@ namespace Epsitec.Cresus.Graph.Actions
 			return x;
 		}
 
+		public static GenericAction<string> New(System.Action<string> action)
+		{
+			var x = new GenericAction<string> (action);
+			Factory.RegisterUserAction (x);
+			return x;
+		}
+
 		/// <summary>
 		/// Registers a new action.
 		/// </summary>

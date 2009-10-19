@@ -1,0 +1,17 @@
+﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+
+namespace Epsitec.Cresus.Graph
+{
+	public static class GraphActions
+	{
+		public static System.Action DocumentReload;
+		public static System.Action<string> DocumentSelectDataSource;
+		public static System.Action<string> DocumentIncludeFilterCategory;
+		public static System.Action<string> DocumentExcludeFilterCategory;
+		public static System.Action<string> DocumentAddSeriesToOutput;
+		public static System.Action<string> DocumentRemoveSeriesFromOutput;
+	}
+}

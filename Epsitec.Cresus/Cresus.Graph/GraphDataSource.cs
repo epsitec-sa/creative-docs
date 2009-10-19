@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -75,6 +76,25 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		public int IndexOf(GraphDataSeries series)
+		{
+			if (series == null)
+            {
+				return -1;
+            }
+
+			int index = this.dataSeries.IndexOf (series);
+
+			if (index >= 0)
+			{
+				return index;
+			}
+			else
+			{
+				return this.IndexOf (series.Parent);
+			}
+		}
+        
 		public void UpdateCategories()
 		{
 			var cat = new HashSet<GraphDataCategory> ();

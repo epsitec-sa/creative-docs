@@ -193,8 +193,9 @@ namespace Epsitec.Cresus.Graph
 				output.Label = Functions.FunctionFactory.GetFunctionCaption (syn.FunctionName);
 			}
 
-			output.Index = this.outputSeries.Count;
 			this.outputSeries.Add (output);
+
+			GraphDocument.RenumberSeries (this.outputSeries);
 
 			return output;
 		}
@@ -209,17 +210,8 @@ namespace Epsitec.Cresus.Graph
 			item.Parent.IsSelected = false;
 
 			this.outputSeries.Remove (item);
-			this.RenumberSeries (this.outputSeries);
-		}
-
-		private void RenumberSeries(IEnumerable<GraphDataSeries> collection)
-		{
-			int index = 0;
 			
-			foreach (var item in collection)
-			{
-				item.Index = index++;
-			}
+			GraphDocument.RenumberSeries (this.outputSeries);
 		}
 
 		public bool SetOutputIndex(GraphDataSeries series, int newIndex)
@@ -240,7 +232,8 @@ namespace Epsitec.Cresus.Graph
 
 			this.outputSeries.Remove (item);
 			this.outputSeries.Insert (newIndex, item);
-			this.RenumberSeries (this.outputSeries);
+			
+			GraphDocument.RenumberSeries (this.outputSeries);
 
 			return true;
 		}
@@ -257,7 +250,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public void AddFilterCategory(string name)
+		public void IncludeFilterCategory(string name)
 		{
 			var category = this.FindCategory (name);
 			
@@ -272,7 +265,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public void RemoveFilterCategory(string name)
+		public void ExcludeFilterCategory(string name)
 		{
 			var category = this.FindCategory (name);
 
@@ -325,6 +318,8 @@ namespace Epsitec.Cresus.Graph
 
 			this.groups.Add (group);
 
+			GraphDocument.RenumberGroups (this.groups);
+
 			return group;
 		}
 
@@ -334,7 +329,132 @@ namespace Epsitec.Cresus.Graph
 
 			group.Dispose ();
 			this.groups.Remove (group);
+			
+			GraphDocument.RenumberGroups (this.groups);
 		}
+
+
+		public GraphDataSeries FindSeries(string id)
+		{
+			string[] args = GraphDocument.SplitSeriesId (id);
+
+			string prefix = args[0];
+			int    index;
+			int    color;
+			string name = args[3];
+
+			if (!int.TryParse (args[1], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out index))
+			{
+				throw new System.ArgumentException ("Invalid id : index not a number");
+			}
+			if (!int.TryParse (args[2], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out color))
+			{
+				throw new System.ArgumentException ("Invalid id : color index not a number");
+			}
+
+			GraphDataSeries series;
+
+			switch (prefix)
+			{
+				case "I":
+					series = this.FindSource (name)[index];
+					break;
+
+				case "F":
+					series = this.FindGroup (index).GetSyntheticDataSeries (name);
+					break;
+
+				default:
+					throw new System.ArgumentException ("Invalid id : prefix unknown");
+			}
+
+			if (series != null)
+			{
+				series.ColorIndex = color;
+			}
+
+			return series;
+		}
+
+		public string GetSeriesId(GraphDataSeries series)
+		{
+			return this.GetSeriesId (series, series.ColorIndex);
+		}
+		
+		private string GetSeriesId(GraphDataSeries series, int colorIndex)
+		{
+			if (series.Parent != null)
+			{
+				return this.GetSeriesId (series.Parent, colorIndex);
+			}
+
+			var synthetic = series as GraphSyntheticDataSeries;
+
+			if (synthetic == null)
+			{
+				var index  = series.Source.IndexOf (series);
+				var source = series.Source.Name;
+
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "I:{0}:{1}:{2}", index, colorIndex, source);
+			}
+			else
+			{
+				var index = synthetic.SourceGroup.Index;
+				var func  = synthetic.FunctionName;
+
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "F:{0}:{1}:{2}", index, colorIndex, func);
+			}
+		}
+		
+		public GraphDataGroup FindGroup(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.groups.Count))
+			{
+				return null;
+			}
+			else
+			{
+				return this.groups[index];
+			}
+		}
+
+		
+		private static void RenumberSeries(IEnumerable<GraphDataSeries> collection)
+		{
+			int index = 0;
+
+			foreach (var item in collection)
+			{
+				item.Index = index++;
+			}
+		}
+
+		private static void RenumberGroups(IEnumerable<GraphDataGroup> collection)
+		{
+			int index = 0;
+
+			foreach (var item in collection)
+			{
+				item.Index = index++;
+			}
+		}
+
+		private static string[] SplitSeriesId(string id)
+		{
+			int p1 = id.IndexOf (':');
+			int p2 = id.IndexOf (':', p1+1);
+			int p3 = id.IndexOf (':', p2+1);
+
+			return new string[]
+			{
+				id.Substring (0, p1),
+				id.Substring (p1+1, p2-p1-1),
+				id.Substring (p2+1, p3-p2-1),
+				id.Substring (p3+1)
+			};
+		}
+
 
 		public void InvalidateCache()
 		{
@@ -399,6 +519,8 @@ namespace Epsitec.Cresus.Graph
 				}
 			}
 
+			GraphActions.DocumentReload ();
+			
 			if (undoActionsXml != null)
 			{
 				this.UndoRedo.UndoRecorder.RestoreFromString (undoActionsXml.Value);
@@ -409,7 +531,6 @@ namespace Epsitec.Cresus.Graph
 				this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
             }
 
-			this.ReloadDataSet ();
 			this.application.WorkspaceController.Refresh ();
 #if false
 			if ((viewsXml != null) &&
@@ -454,7 +575,7 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		internal void ReloadDataSet()
+		public void ReloadDataSet()
 		{
 			this.dataSources.Clear ();
 

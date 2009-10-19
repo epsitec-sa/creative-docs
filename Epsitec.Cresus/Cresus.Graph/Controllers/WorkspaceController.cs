@@ -712,7 +712,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 			}
 
-			this.Document.AddOutput (item);
+			string id = this.Document.GetSeriesId (item);
+
+			GraphActions.DocumentAddSeriesToOutput (id);
+
+//-			this.Document.AddOutput (item);
 		}
 
 
@@ -1201,11 +1205,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (button.ActiveState == ActiveState.Yes)
 					{
-						this.Document.AddFilterCategory (category.Name);
+						GraphActions.DocumentIncludeFilterCategory (category.Name);
 					}
 					else
 					{
-						this.Document.RemoveFilterCategory (category.Name);
+						GraphActions.DocumentExcludeFilterCategory (category.Name);
 					}
 				};
 		}
@@ -1258,7 +1262,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					if (button.ActiveState == ActiveState.Yes)
 					{
-						this.Document.SelectDataSource (source.Name);
+						GraphActions.DocumentSelectDataSource (source.Name);
 					}
 				};
 		}

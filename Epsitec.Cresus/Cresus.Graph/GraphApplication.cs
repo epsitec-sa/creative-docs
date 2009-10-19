@@ -29,6 +29,13 @@ namespace Epsitec.Cresus.Graph
 			this.mainWindowController = new Controllers.MainWindowController (this);
 			this.workspaceController = new Controllers.WorkspaceController (this);
 
+			GraphActions.DocumentReload = Actions.Factory.New (this.DocumentReload);
+			GraphActions.DocumentSelectDataSource = Actions.Factory.New (this.DocumentSelectDataSource);
+			GraphActions.DocumentIncludeFilterCategory = Actions.Factory.New (this.DocumentIncludeFilterCategory);
+			GraphActions.DocumentExcludeFilterCategory = Actions.Factory.New (this.DocumentExcludeFilterCategory);
+			GraphActions.DocumentAddSeriesToOutput = Actions.Factory.New (this.DocumentAddSeriesToOutput);
+			GraphActions.DocumentRemoveSeriesFromOutput = Actions.Factory.New (this.DocumentRemoveSeriesFromOutput);
+
 //			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 //			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
 
@@ -346,9 +353,42 @@ namespace Epsitec.Cresus.Graph
 				}
 			}
 		}
+
+		
+		private void DocumentSelectDataSource(string name)
+		{
+			this.Document.SelectDataSource (name);
+		}
+
+		private void DocumentReload()
+		{
+			this.Document.ReloadDataSet ();
+		}
+
+		private void DocumentIncludeFilterCategory(string name)
+		{
+			this.Document.IncludeFilterCategory (name);
+		}
+
+		private void DocumentExcludeFilterCategory(string name)
+		{
+			this.Document.ExcludeFilterCategory (name);
+		}
+
+		private void DocumentAddSeriesToOutput(string id)
+		{
+			this.Document.AddOutput (this.Document.FindSeries (id));
+		}
+
+		private void DocumentRemoveSeriesFromOutput(string id)
+		{
+			this.Document.RemoveOutput (this.Document.FindSeries (id));
+		}
 		
 		public event EventHandler ActiveDocumentChanged;
 
+
+		
 		private readonly GraphCommands graphCommands;
 		
 		private readonly Controllers.MainWindowController mainWindowController;

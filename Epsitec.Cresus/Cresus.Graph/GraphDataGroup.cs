@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public int Index
+		{
+			get;
+			set;
+		}
+
 		public IEnumerable<GraphDataSeries> InputDataSeries
 		{
 			get
