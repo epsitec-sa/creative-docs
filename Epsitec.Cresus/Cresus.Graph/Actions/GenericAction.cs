@@ -31,6 +31,30 @@ namespace Epsitec.Cresus.Graph.Actions
 	}
 
 	/// <summary>
+	/// The <c>GenericAction{T1,T2}</c> class wraps <see cref="System.Action{T1,T2}"/>. Its
+	/// instances can be used as action delegates: when they execute, they get pushed
+	/// onto the undo stack.
+	/// </summary>
+	/// <typeparam name="T">The argument type.</typeparam>
+	public class GenericAction<T1, T2> : Action
+	{
+		public GenericAction(System.Action<T1, T2> action)
+			: base (action)
+		{
+		}
+
+		public void Invoke(T1 arg1, T2 arg2)
+		{
+			Recorder.Push (this, arg1, arg2).PlayBack ();
+		}
+
+		public static implicit operator System.Action<T1, T2>(GenericAction<T1, T2> action)
+		{
+			return action.Invoke;
+		}
+	}
+
+	/// <summary>
 	/// The <c>GenericAction</c> class wraps <see cref="System.Action"/>. Its
 	/// instances can be used as action delegates: when they execute, they get pushed
 	/// onto the undo stack.

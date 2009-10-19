@@ -191,6 +191,11 @@ namespace Epsitec.Cresus.Graph.Actions
 			return Recorder.PushNew (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
 		}
 
+		public static ActionRecord Push<T1, T2>(Action userAction, T1 arg1, T2 arg2)
+		{
+			return Recorder.PushNew (new ActionRecord (userAction.Tag, Recorder.Serialize (arg1), Recorder.Serialize (arg2)));
+		}
+
 
 		/// <summary>
 		/// Serializes the specified argument.
@@ -211,6 +216,10 @@ namespace Epsitec.Cresus.Graph.Actions
 			if (arg is string)
             {
 				return Recorder.Serialize ((string) arg);
+            }
+			if (arg is int)
+            {
+				return Recorder.Serialize ((int) arg);
             }
 
 			throw new System.ArgumentException ();
@@ -243,6 +252,12 @@ namespace Epsitec.Cresus.Graph.Actions
 				Recorder.Deserialize (arg, out result);
 				return result;
             }
+			if (type == typeof (int))
+			{
+				int result;
+				Recorder.Deserialize (arg, out result);
+				return result;
+			}
 
 			throw new System.ArgumentException ();
 		}
@@ -279,6 +294,11 @@ namespace Epsitec.Cresus.Graph.Actions
 			return arg;
 		}
 
+		private static string Serialize(int arg)
+		{
+			return arg.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+
 		
 		private static void Deserialize(string arg, out IEnumerable<int> result)
 		{
@@ -293,6 +313,11 @@ namespace Epsitec.Cresus.Graph.Actions
 		private static void Deserialize(string arg, out string result)
 		{
 			result = arg;
+		}
+
+		private static void Deserialize(string arg, out int result)
+		{
+			result = int.Parse (arg, System.Globalization.CultureInfo.InvariantCulture);
 		}
 
 		

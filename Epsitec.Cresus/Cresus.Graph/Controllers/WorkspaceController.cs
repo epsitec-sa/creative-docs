@@ -16,6 +16,7 @@ using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -695,6 +696,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
+		public void SetOutputIndex(GraphDataSeries item, int index)
+		{
+			GraphActions.DocumentSetSeriesOutputIndex (this.Document.GetSeriesId (item), index);
+		}
+        
 		public void OpenChartViewWindow()
 		{
 			Window window = new Window ()

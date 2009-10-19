@@ -19,8 +19,22 @@ namespace Epsitec.Cresus.Graph.Actions
 		/// <param name="arg">The argument (if any).</param>
 		public ActionRecord(string tag, string arg)
 		{
-			this.tag = tag;
-			this.arg = arg;
+			this.tag  = tag;
+			this.arg1 = arg;
+			this.arg2 = null;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ActionRecord"/> struct.
+		/// </summary>
+		/// <param name="tag">The tag.</param>
+		/// <param name="arg1">The first argument.</param>
+		/// <param name="arg2">The second argument.</param>
+		public ActionRecord(string tag, string arg1, string arg2)
+		{
+			this.tag  = tag;
+			this.arg1 = arg1 ?? "";
+			this.arg2 = arg2 ?? "";
 		}
 
 
@@ -50,15 +64,25 @@ namespace Epsitec.Cresus.Graph.Actions
 				throw new System.InvalidOperationException ("Cannot play back action " + this.tag);
 			}
 
-			var type = action.ArgumentType;
+			var type1 = action.ArgumentType1;
 
-			if (type == typeof (void))
+			if (type1 == typeof (void))
 			{
 				action.DynamicInvoke ();
+				
+				return;
+			}
+
+			var type2 = action.ArgumentType2;
+
+			if (type2 == typeof (void))
+			{
+				action.DynamicInvoke (Recorder.Deserialize (this.arg1, type1));
 			}
 			else
 			{
-				action.DynamicInvoke (Recorder.Deserialize (this.arg, type));
+				action.DynamicInvoke (Recorder.Deserialize (this.arg1, type1),
+									  Recorder.Deserialize (this.arg2, type2));
 			}
 		}
 
@@ -71,7 +95,14 @@ namespace Epsitec.Cresus.Graph.Actions
 		/// </returns>
 		public override string ToString()
 		{
-			return string.Concat (ActionRecord.Escape (this.tag), ">", ActionRecord.Escape (this.arg));
+			if (this.arg2 == null)
+			{
+				return string.Concat (ActionRecord.Escape (this.tag), ">", ActionRecord.Escape (this.arg1));
+			}
+			else
+			{
+				return string.Concat (ActionRecord.Escape (this.tag), ">", ActionRecord.Escape (this.arg1), ">", ActionRecord.Escape (this.arg2));
+			}
 		}
 
 		/// <summary>
@@ -83,13 +114,18 @@ namespace Epsitec.Cresus.Graph.Actions
 		public static ActionRecord Parse(string s)
 		{
 			string[] args = s.Split ('>');
-			
-			if (args.Length != 2)
-			{
-				throw new System.ArgumentException ("Invalid ActionRecord syntax");
-			}
 
-			return new ActionRecord (ActionRecord.Unescape (args[0]), ActionRecord.Unescape (args[1]));
+			switch (args.Length)
+			{
+				case 2:
+					return new ActionRecord (ActionRecord.Unescape (args[0]), ActionRecord.Unescape (args[1]));
+
+				case 3:
+					return new ActionRecord (ActionRecord.Unescape (args[0]), ActionRecord.Unescape (args[1]), ActionRecord.Unescape (args[2]));
+
+				default:
+					throw new System.ArgumentException ("Invalid ActionRecord syntax");
+			}
 		}
 
 		
@@ -168,6 +204,7 @@ namespace Epsitec.Cresus.Graph.Actions
 
 		
 		private readonly string tag;
-		private readonly string arg;
+		private readonly string arg1;
+		private readonly string arg2;
 	}
 }

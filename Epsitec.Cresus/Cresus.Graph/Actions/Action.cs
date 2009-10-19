@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Graph.Actions
 		/// <param name="action">The action.</param>
 		protected Action(System.Delegate action)
 		{
-			System.Diagnostics.Debug.Assert (action.Method.GetParameters ().Length < 2);
+			System.Diagnostics.Debug.Assert (action.Method.GetParameters ().Length < 3);
 
 			this.action = action;
 		}
@@ -45,19 +45,36 @@ namespace Epsitec.Cresus.Graph.Actions
 		/// Gets the argument type.
 		/// </summary>
 		/// <value>The argument type (or <c>typeof (void)</c> if the action has no argument).</value>
-		public System.Type ArgumentType
+		public System.Type ArgumentType1
 		{
 			get
 			{
 				var parameters = this.Method.GetParameters ();
 
-				if (parameters.Length == 0)
+				if (parameters.Length < 1)
 				{
 					return typeof (void);
 				}
 				else
 				{
 					return parameters[0].ParameterType;
+				}
+			}
+		}
+
+		public System.Type ArgumentType2
+		{
+			get
+			{
+				var parameters = this.Method.GetParameters ();
+
+				if (parameters.Length < 2)
+				{
+					return typeof (void);
+				}
+				else
+				{
+					return parameters[1].ParameterType;
 				}
 			}
 		}

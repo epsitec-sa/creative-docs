@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Graph
 			GraphActions.DocumentExcludeFilterCategory = Actions.Factory.New (this.DocumentExcludeFilterCategory);
 			GraphActions.DocumentAddSeriesToOutput = Actions.Factory.New (this.DocumentAddSeriesToOutput);
 			GraphActions.DocumentRemoveSeriesFromOutput = Actions.Factory.New (this.DocumentRemoveSeriesFromOutput);
+			GraphActions.DocumentSetSeriesOutputIndex = Actions.Factory.New<string, int> (this.DocumentSetSeriesOutputIndex);
 
 //			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 //			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
@@ -384,6 +385,12 @@ namespace Epsitec.Cresus.Graph
 		private void DocumentRemoveSeriesFromOutput(string id)
 		{
 			this.Document.RemoveOutput (this.Document.FindSeries (id));
+			this.Document.RefreshUI ();
+		}
+
+		private void DocumentSetSeriesOutputIndex(string id, int index)
+		{
+			this.Document.SetOutputIndex (this.Document.FindSeries (id), index);
 			this.Document.RefreshUI ();
 		}
 		

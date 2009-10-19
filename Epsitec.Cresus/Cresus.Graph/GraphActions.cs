@@ -13,5 +13,6 @@ namespace Epsitec.Cresus.Graph
 		public static System.Action<string> DocumentExcludeFilterCategory;
 		public static System.Action<string> DocumentAddSeriesToOutput;
 		public static System.Action<string> DocumentRemoveSeriesFromOutput;
+		public static System.Action<string, int> DocumentSetSeriesOutputIndex;
 	}
 }

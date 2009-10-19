@@ -207,8 +207,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				if (!this.workspace.Document.SetOutputIndex (series, index))
 				{
 					this.workspace.AddOutputToDocument (series);
-					this.workspace.Document.SetOutputIndex (series, index);
 				}
+				
+				this.workspace.SetOutputIndex (series, index);
 
 				index = this.workspace.Document.ResolveOutputSeries (series).Index + 1;
 			}
