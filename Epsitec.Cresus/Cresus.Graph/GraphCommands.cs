@@ -21,13 +21,13 @@ namespace Epsitec.Cresus.Graph
 		[Command(ApplicationCommands.Id.Undo)]
 		private void UndoCommand()
 		{
-			this.application.Document.Undo ();
+			this.application.Document.UndoRedo.Undo ();
 		}
 
 		[Command (ApplicationCommands.Id.Redo)]
 		private void RedoCommand()
 		{
-			this.application.Document.Redo ();
+			this.application.Document.UndoRedo.Redo ();
 		}
 
 		[Command (Res.CommandIds.File.ExportImage)]

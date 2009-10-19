@@ -8,14 +8,24 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Actions
 {
+	/// <summary>
+	/// The <c>Recorder</c> class maintains a stack of <see cref="ActionRecord"/> items.
+	/// </summary>
 	public class Recorder : IEnumerable<ActionRecord>
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Recorder"/> class.
+		/// </summary>
 		public Recorder()
 		{
 			this.actionRecords = new List<ActionRecord> ();
 		}
 
 
+		/// <summary>
+		/// Gets the number of items stored in the recorder.
+		/// </summary>
+		/// <value>The number of items stored in the recorder.</value>
 		public int Count
 		{
 			get
@@ -25,6 +35,10 @@ namespace Epsitec.Cresus.Graph.Actions
 		}
 
 
+		/// <summary>
+		/// Saves the recorder contentes to a string.
+		/// </summary>
+		/// <returns>The recorder contents.</returns>
 		public string SaveToString()
 		{
 			using (System.IO.StringWriter writer = new System.IO.StringWriter ())
@@ -34,6 +48,11 @@ namespace Epsitec.Cresus.Graph.Actions
 			}
 		}
 
+		/// <summary>
+		/// Restores the recorder contents from a string. A single <see cref="OnChanged"/>
+		/// gets fired at the end of the restore.
+		/// </summary>
+		/// <param name="data">The data.</param>
 		public void RestoreFromString(string data)
 		{
 			using (System.IO.StringReader reader = new System.IO.StringReader (data))
@@ -41,7 +60,11 @@ namespace Epsitec.Cresus.Graph.Actions
 				this.Restore (reader);
 			}
 		}
-		
+
+		/// <summary>
+		/// Saves the recorder contents to the specified stream.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
 		public void Save(System.IO.TextWriter stream)
 		{
 			foreach (var item in this.actionRecords)
@@ -50,6 +73,11 @@ namespace Epsitec.Cresus.Graph.Actions
 			}
 		}
 
+		/// <summary>
+		/// Restores the recorder contents from a stream. A single <see cref="OnChanged"/>
+		/// gets fired at the end of the restore.
+		/// </summary>
+		/// <param name="stream">The stream.</param>
 		public void Restore(System.IO.TextReader stream)
 		{
 			this.actionRecords.Clear ();
@@ -70,11 +98,15 @@ namespace Epsitec.Cresus.Graph.Actions
 		}
 
 
+		/// <summary>
+		/// Pushes the specified record onto the stack.
+		/// </summary>
+		/// <param name="record">The record.</param>
+		/// <returns>The pushed record.</returns>
 		public ActionRecord Push(ActionRecord record)
 		{
 			this.actionRecords.Add (record);
 
-			this.OnRecordPushed ();
 			this.OnChanged ();
 
 			System.Diagnostics.Debug.WriteLine (record.ToString ());
@@ -82,15 +114,10 @@ namespace Epsitec.Cresus.Graph.Actions
 			return record;
 		}
 
-		private ActionRecord PushNewAction(ActionRecord record)
-		{
-			this.Push (record);
-			
-			this.OnActionCreated ();
-
-			return record;
-		}
-
+		/// <summary>
+		/// Pops the topmost record from the stack.
+		/// </summary>
+		/// <returns>The record (or an empty record if the stack is empty).</returns>
 		public ActionRecord Pop()
 		{
 			int index = this.actionRecords.Count - 1;
@@ -102,19 +129,24 @@ namespace Epsitec.Cresus.Graph.Actions
 			else
 			{
 				var record = this.actionRecords[index];
-				this.actionRecords.RemoveAt (index);
 				
-				this.OnRecordPopped ();
+				this.actionRecords.RemoveAt (index);
 				this.OnChanged ();
 
 				return record;
 			}
 		}
 
+		/// <summary>
+		/// Clears the stack.
+		/// </summary>
 		public void Clear()
 		{
-			this.actionRecords.Clear ();
-			this.OnChanged ();
+			if (this.actionRecords.Count > 0)
+			{
+				this.actionRecords.Clear ();
+				this.OnChanged ();
+			}
 		}
 
 
@@ -135,19 +167,37 @@ namespace Epsitec.Cresus.Graph.Actions
 		}
 
 		#endregion
-		
-		
+
+
+		/// <summary>
+		/// Pushes the specified user action onto the stack.
+		/// </summary>
+		/// <param name="userAction">The user action.</param>
+		/// <returns>The record.</returns>
 		public static ActionRecord Push(Action userAction)
 		{
-			return GraphProgram.Application.Document.Recorder.PushNewAction (new ActionRecord (userAction.Tag, ""));
+			return Recorder.PushNew (new ActionRecord (userAction.Tag, ""));
 		}
 
+		/// <summary>
+		/// Pushes the specified generic user action onto the stack.
+		/// </summary>
+		/// <typeparam name="T">Argument type.</typeparam>
+		/// <param name="userAction">The user action.</param>
+		/// <param name="arg">The argument.</param>
+		/// <returns>The record.</returns>
 		public static ActionRecord Push<T>(Action userAction, T arg)
 		{
-			return GraphProgram.Application.Document.Recorder.PushNewAction (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
+			return Recorder.PushNew (new ActionRecord (userAction.Tag, Recorder.Serialize (arg)));
 		}
-		
-		
+
+
+		/// <summary>
+		/// Serializes the specified argument.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Throws an argument exception if the type is not supported.</exception>
+		/// <param name="arg">The argument.</param>
+		/// <returns>The serialized argument</returns>
 		public static string Serialize(object arg)
 		{
 			if (arg is IEnumerable<int>)
@@ -158,6 +208,13 @@ namespace Epsitec.Cresus.Graph.Actions
 			throw new System.ArgumentException ();
 		}
 
+		/// <summary>
+		/// Deserializes the specified argument.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">Throws an argument exception if the type is not supported.</exception>
+		/// <param name="arg">The argument.</param>
+		/// <param name="type">The expected type.</param>
+		/// <returns>The deserialized argument.</returns>
 		public static object Deserialize(string arg, System.Type type)
 		{
 			if (type == typeof (IEnumerable<int>))
@@ -170,7 +227,18 @@ namespace Epsitec.Cresus.Graph.Actions
 			throw new System.ArgumentException ();
 		}
 
-		
+
+		private static ActionRecord PushNew(ActionRecord action)
+		{
+			var manager = UndoRedoManager.Active;
+
+			manager.UndoRecorder.Push (action);
+			manager.RedoRecorder.Clear ();
+
+			return action;
+		}
+
+
 		private static string Serialize(IEnumerable<int> arg)
 		{
 			return string.Join (" ", arg.Select (x => x.ToString (System.Globalization.CultureInfo.InvariantCulture)).ToArray ());
@@ -182,26 +250,6 @@ namespace Epsitec.Cresus.Graph.Actions
 		}
 
 
-		private void OnRecordPushed()
-		{
-			var handler = this.RecordPushed;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		private void OnRecordPopped()
-		{
-			var handler = this.RecordPopped;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
 		private void OnChanged()
 		{
 			var handler = this.Changed;
@@ -212,22 +260,9 @@ namespace Epsitec.Cresus.Graph.Actions
 			}
 		}
 
-		private void OnActionCreated()
-		{
-			var handler = this.ActionCreated;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-		public event EventHandler				RecordPushed;
-		public event EventHandler				RecordPopped;
-		public event EventHandler				Changed;
-		public event EventHandler				ActionCreated;
 		
-		private readonly List<ActionRecord> actionRecords;
-
+		public event EventHandler				Changed;
+		
+		private readonly List<ActionRecord>		actionRecords;
 	}
 }

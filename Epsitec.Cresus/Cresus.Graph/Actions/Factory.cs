@@ -6,25 +6,41 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Actions
 {
+	/// <summary>
+	/// The <c>Factory</c> class implements an action factory, which is used
+	/// to map between C# action delegates and <see cref="Action"/> instances.
+	/// </summary>
 	public static class Factory
 	{
+		/// <summary>
+		/// Registers a new action.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <returns>The <see cref="Action"/> instance.</returns>
 		public static GenericAction<IEnumerable<int>> New(System.Action<IEnumerable<int>> action)
 		{
-			return new GenericAction<IEnumerable<int>> (action);
+			var x = new GenericAction<IEnumerable<int>> (action);
+			Factory.RegisterUserAction (x);
+			return x;
 		}
 
+		/// <summary>
+		/// Registers a new action.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		/// <returns>The <see cref="Action"/> instance.</returns>
 		public static GenericAction New(System.Action action)
 		{
-			return new GenericAction (action);
+			var x = new GenericAction (action);
+			Factory.RegisterUserAction (x);
+			return x;
 		}
 
-		public static void RegisterUserAction(Action action)
-		{
-			System.Diagnostics.Debug.Assert (Factory.actions.ContainsKey (action.Tag) == false);
-
-			Factory.actions[action.Tag] = action;
-		}
-
+		/// <summary>
+		/// Finds the specified action based on its tag.
+		/// </summary>
+		/// <param name="tag">The action tag.</param>
+		/// <returns>The <see cref="Action"/> instance or <c>null</c>.</returns>
 		public static Action Find(string tag)
 		{
 			Action action;
@@ -37,6 +53,18 @@ namespace Epsitec.Cresus.Graph.Actions
 			{
 				return null;
 			}
+		}
+
+
+		/// <summary>
+		/// Registers the specified action.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		private static void RegisterUserAction(Action action)
+		{
+			System.Diagnostics.Debug.Assert (Factory.actions.ContainsKey (action.Tag) == false);
+
+			Factory.actions[action.Tag] = action;
 		}
 
 

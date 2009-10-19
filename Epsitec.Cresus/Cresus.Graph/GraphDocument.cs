@@ -40,13 +40,9 @@ namespace Epsitec.Cresus.Graph
 
 			this.guid   = System.Guid.NewGuid ();
 //-			this.views  = new List<DocumentViewController> ();
-			this.undoRecorder = new Actions.Recorder ();
-			this.redoRecorder = new Actions.Recorder ();
 
-			this.undoRecorder.ActionCreated += sender => this.redoRecorder.Clear ();
+			this.undoRedoManager = new Actions.UndoRedoManager ();
 
-			this.undoRecorder.Changed += sender => this.UpdateUndoRedo ();
-			this.redoRecorder.Changed += sender => this.UpdateUndoRedo ();
 			
 			
 			this.application.RegisterDocument (this);
@@ -126,11 +122,11 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public Actions.Recorder Recorder
+		public Actions.UndoRedoManager UndoRedo
 		{
 			get
 			{
-				return this.undoRecorder;
+				return this.undoRedoManager;
 			}
 		}
 
@@ -291,7 +287,8 @@ namespace Epsitec.Cresus.Graph
 			xml.Add (new XAttribute ("guid", this.guid));
 			xml.Add (new XAttribute ("path", this.path));
 			xml.Add (new XAttribute ("title", this.title ?? ""));
-			xml.Add (new XElement ("undoActions", new XText (this.undoRecorder.SaveToString ())));
+			xml.Add (new XElement ("undoActions", new XText (this.UndoRedo.UndoRecorder.SaveToString ())));
+			xml.Add (new XElement ("redoActions", new XText (this.UndoRedo.RedoRecorder.SaveToString ())));
 //-			xml.Add (new XElement ("views", this.views.Select (x => x.SaveSettings (new XElement ("view")))));
 
 			if (this.cube != null)
@@ -319,6 +316,7 @@ namespace Epsitec.Cresus.Graph
 			this.title = (string) xml.Attribute ("title");
 
 			var undoActionsXml = xml.Element ("undoActions");
+			var redoActionsXml = xml.Element ("redoActions");
 			var viewsXml = xml.Element ("views");
 			var cubeXml = xml.Element ("cube");
 
@@ -338,9 +336,13 @@ namespace Epsitec.Cresus.Graph
 
 			if (undoActionsXml != null)
 			{
-				this.undoRecorder.RestoreFromString (undoActionsXml.Value);
-				this.undoRecorder.ForEach (x => x.PlayBack ());
+				this.UndoRedo.UndoRecorder.RestoreFromString (undoActionsXml.Value);
+				this.UndoRedo.UndoRecorder.ForEach (x => x.PlayBack ());
 			}
+			if (redoActionsXml != null)
+            {
+				this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
+            }
 
 			this.ReloadDataSet ();
 			this.application.WorkspaceController.Refresh ();
@@ -362,23 +364,6 @@ namespace Epsitec.Cresus.Graph
 #endif
 		}
 
-
-		internal void Undo()
-		{
-			if (this.undoRecorder.Count > 1)
-			{
-				this.redoRecorder.Push (this.undoRecorder.Pop ());
-				this.undoRecorder.ForEach (x => x.PlayBack ());
-			}
-		}
-
-		internal void Redo()
-		{
-			if (this.redoRecorder.Count > 0)
-			{
-				this.undoRecorder.Push (this.redoRecorder.Pop ()).PlayBack ();
-			}
-		}
 
 		internal void ExportImage()
 		{
@@ -489,13 +474,6 @@ namespace Epsitec.Cresus.Graph
 		}
 
 		
-		private void UpdateUndoRedo()
-		{
-			GraphProgram.Application.SetEnable (ApplicationCommands.Undo, this.undoRecorder.Count > 1);
-			GraphProgram.Application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
-		}
-		
-
 #if false
 		private DocumentViewController CreateUI(TabBook book)
 		{
@@ -557,8 +535,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<string> columnLabels;
 		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
 
-		private readonly Actions.Recorder undoRecorder;
-		private readonly Actions.Recorder redoRecorder;
+		private readonly Actions.UndoRedoManager undoRedoManager;
 		
 
 		private string path;

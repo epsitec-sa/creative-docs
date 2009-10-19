@@ -6,6 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Actions
 {
+	/// <summary>
+	/// The <c>GenericAction{T}</c> class wraps <see cref="System.Action{T}"/>. Its
+	/// instances can be used as action delegates: when they execute, they get pushed
+	/// onto the undo stack.
+	/// </summary>
+	/// <typeparam name="T">The argument type.</typeparam>
 	public class GenericAction<T> : Action
 	{
 		public GenericAction(System.Action<T> action)
@@ -24,6 +30,11 @@ namespace Epsitec.Cresus.Graph.Actions
 		}
 	}
 
+	/// <summary>
+	/// The <c>GenericAction</c> class wraps <see cref="System.Action"/>. Its
+	/// instances can be used as action delegates: when they execute, they get pushed
+	/// onto the undo stack.
+	/// </summary>
 	public class GenericAction : Action
 	{
 		public GenericAction(System.Action action)
