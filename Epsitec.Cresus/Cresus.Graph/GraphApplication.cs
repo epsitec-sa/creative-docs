@@ -378,11 +378,13 @@ namespace Epsitec.Cresus.Graph
 		private void DocumentAddSeriesToOutput(string id)
 		{
 			this.Document.AddOutput (this.Document.FindSeries (id));
+			this.Document.RefreshUI ();
 		}
 
 		private void DocumentRemoveSeriesFromOutput(string id)
 		{
 			this.Document.RemoveOutput (this.Document.FindSeries (id));
+			this.Document.RefreshUI ();
 		}
 		
 		public event EventHandler ActiveDocumentChanged;

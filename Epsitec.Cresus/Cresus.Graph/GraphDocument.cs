@@ -139,22 +139,6 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public System.Action<IEnumerable<int>> RemoveSeriesFromGraphAction
-		{
-			get
-			{
-				return this.removeSeriesFromGraphAction;
-			}
-			set
-			{
-				if (this.removeSeriesFromGraphAction != value)
-				{
-					this.removeSeriesFromGraphAction = value;
-//-					this.views.ForEach (view => view.RemoveSeriesFromGraphAction = value);
-				}
-			}
-		}
-
 		public string Title
 		{
 			get
@@ -629,7 +613,7 @@ namespace Epsitec.Cresus.Graph
 			this.RefreshUI ();
 		}
 
-		private void RefreshUI()
+		public void RefreshUI()
 		{
 			this.application.WorkspaceController.Refresh ();
 		}
@@ -731,7 +715,6 @@ namespace Epsitec.Cresus.Graph
 
 		private string path;
 		private string title;
-		private System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
 		private System.Guid guid;
 		
 		private DataCube cube;

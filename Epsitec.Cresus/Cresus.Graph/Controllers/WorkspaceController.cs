@@ -673,50 +673,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 		
 		public void ExcludeOutput(GraphDataSeries item)
 		{
-			this.Document.RemoveOutput (item);
-
 			this.outputActiveIndex = -1;
 
-			this.RefreshInputs ();
-			this.RefreshGroups ();
-			this.RefreshOutputs ();
-			this.RefreshPreview ();
+			GraphActions.DocumentRemoveSeriesFromOutput (this.Document.GetSeriesId (item));
 		}
 
 		public void IncludeOutput(GraphDataSeries item)
 		{
+			int n = this.Document.OutputSeries.Count;
+			
+			this.outputActiveIndex = n;
 			this.AddOutputToDocument (item);
 
-			this.outputActiveIndex = this.Document.OutputSeries.Count - 1;
-
-			this.RefreshInputs ();
-			this.RefreshGroups ();
-			this.RefreshOutputs ();
-			this.RefreshPreview ();
+			System.Diagnostics.Debug.Assert (this.Document.OutputSeries.Count == n+1);
 		}
 
 		public void AddOutputToDocument(GraphDataSeries item)
 		{
-			int n = this.colorStyle.Count;
-			int[] colors = new int[n];
-
-			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
-			int min = colors.Min ();
-
-			for (int i = 0; i < n; i++)
-			{
-				if (colors[i] == min)
-				{
-					item.ColorIndex = i;
-					break;
-				}
-			}
-
-			string id = this.Document.GetSeriesId (item);
-
-			GraphActions.DocumentAddSeriesToOutput (id);
-
-//-			this.Document.AddOutput (item);
+			this.SelectUnusedColor (item);
+			GraphActions.DocumentAddSeriesToOutput (this.Document.GetSeriesId (item));
 		}
 
 
@@ -846,8 +821,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			return inputs.Concat (groups).Concat (details).Concat (outputs);
 		}
-		
-		
+
+
+		private void SelectUnusedColor(GraphDataSeries item)
+		{
+			int n = this.colorStyle.Count;
+			int[] colors = new int[n];
+
+			this.Document.OutputSeries.ForEach (x => colors[x.ColorIndex % n]++);
+			int min = colors.Min ();
+
+			for (int i = 0; i < n; i++)
+			{
+				if (colors[i] == min)
+				{
+					item.ColorIndex = i;
+					break;
+				}
+			}
+		}
+
 		private void AdjustOutputItemsWidth()
 		{
 			int count = this.outputItemsController.Count;
