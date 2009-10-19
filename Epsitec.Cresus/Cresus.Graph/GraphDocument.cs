@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Graph
 			this.guid   = System.Guid.NewGuid ();
 //-			this.views  = new List<DocumentViewController> ();
 
-			this.undoRedoManager = new Actions.UndoRedoManager ();
-
+			this.undoRedoManager = new UndoRedoManager ();
+			this.undoRedoManager.UndoRedoExecuted += sender => this.RefreshUI ();
 			
 			
 			this.application.RegisterDocument (this);
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Graph
 				if (this.activeDataSource != value)
 				{
 					this.activeDataSource = value;
-					this.NotifyDataSourceChanged ();
+					this.RefreshUI ();
 				}
 			}
 		}
@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public Actions.UndoRedoManager UndoRedo
+		public UndoRedoManager UndoRedo
 		{
 			get
 			{
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Graph
 			
 			if (this.filterCategories.Add (category))
 			{
-				this.NotifyDataSourceChanged ();
+				this.RefreshUI ();
 			}
 		}
 
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (this.filterCategories.Remove (category))
             {
-				this.NotifyDataSourceChanged ();
+				this.RefreshUI ();
             }
 		}
 
@@ -578,6 +578,10 @@ namespace Epsitec.Cresus.Graph
 		public void ReloadDataSet()
 		{
 			this.dataSources.Clear ();
+			this.outputSeries.Clear ();
+			this.groups.Clear ();
+			this.syntheticSeries.Clear ();
+			this.filterCategories.Clear ();
 
 			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
 			{
@@ -622,10 +626,10 @@ namespace Epsitec.Cresus.Graph
 				this.activeDataSource = source;
 			}
 			
-			this.NotifyDataSourceChanged ();
+			this.RefreshUI ();
 		}
 
-		private void NotifyDataSourceChanged()
+		private void RefreshUI()
 		{
 			this.application.WorkspaceController.Refresh ();
 		}
@@ -722,7 +726,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
 		private readonly HashSet<GraphDataCategory> filterCategories;
 
-		private readonly Actions.UndoRedoManager undoRedoManager;
+		private readonly UndoRedoManager undoRedoManager;
 		
 
 		private string path;

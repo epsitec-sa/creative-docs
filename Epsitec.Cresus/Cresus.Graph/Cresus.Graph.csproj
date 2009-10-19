@@ -138,7 +138,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\UndoRedoManager.cs" />
+    <Compile Include="UndoRedoManager.cs" />
     <Compile Include="Controllers\ChartViewController.cs" />
     <Compile Include="Controllers\GroupDetailsController.cs" />
     <Compile Include="Controllers\GroupsController.cs" />

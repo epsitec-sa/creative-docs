@@ -1,14 +1,17 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Graph.Actions;
+
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
-namespace Epsitec.Cresus.Graph.Actions
+
+namespace Epsitec.Cresus.Graph
 {
 	/// <summary>
 	/// The <c>UndoRedoManager</c> class encapsulates an undo recorder and a redo
@@ -85,6 +88,7 @@ namespace Epsitec.Cresus.Graph.Actions
 			{
 				this.redoRecorder.Push (this.undoRecorder.Pop ());
 				this.undoRecorder.ForEach (x => x.PlayBack ());
+				this.OnUndoRedoExecuted ();
 			}
 		}
 
@@ -96,6 +100,7 @@ namespace Epsitec.Cresus.Graph.Actions
 			if (this.redoRecorder.Count > 0)
 			{
 				this.undoRecorder.Push (this.redoRecorder.Pop ()).PlayBack ();
+				this.OnUndoRedoExecuted ();
 			}
 		}
 
@@ -107,6 +112,19 @@ namespace Epsitec.Cresus.Graph.Actions
 			GraphProgram.Application.SetEnable (ApplicationCommands.Undo, this.undoRecorder.Count > 1);
 			GraphProgram.Application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
 		}
+
+		private void OnUndoRedoExecuted()
+		{
+			var handler = this.UndoRedoExecuted;
+
+			if (handler != null)
+            {
+				handler (this);
+            }
+		}
+
+
+		public event EventHandler UndoRedoExecuted;
 		
 		
 		private readonly Recorder undoRecorder;
