@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Visibility = false,
 				BackColor = Color.FromBrightness (1),
 				Text = "<font size=\"120%\">Graphique vide.</font><br/>" +
-				"Cochez (ou glissez ici) les éléments que vous souhaitez voir apparaître dans le graphique.",
+				"Cliquez (ou glissez ici) les éléments que vous souhaitez voir apparaître dans le graphique.",
 				ContentAlignment = ContentAlignment.MiddleCenter,
 				PreferredHeight = 40,
 			};

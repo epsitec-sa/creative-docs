@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = this.container,
 				Name = "command button",
 				Visibility = false,
-				Text = "Montrer dans une nouvelle fenêtre",
+				Text = "Montrer dans une fenêtre séparée",
 				PreferredWidth = 120,
 				PreferredHeight = 40,
 			};
