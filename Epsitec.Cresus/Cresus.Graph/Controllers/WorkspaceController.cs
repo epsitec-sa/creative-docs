@@ -17,6 +17,7 @@ using Epsitec.Cresus.Graph.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using Epsitec.Cresus.Core;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -703,11 +704,14 @@ namespace Epsitec.Cresus.Graph.Controllers
         
 		public void OpenChartViewWindow()
 		{
+			int index = this.GetNewChartViewIndex ();
+
 			Window window = new Window ()
 			{
 				Icon = this.application.Window.Icon,
 				Text = this.application.Window.Text,
 				ClientSize = new Size (800, 600),
+				Name = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "floating chart view {0}", index),
 			};
 
 			var frame = new FrameBox ()
@@ -721,6 +725,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				IsStandalone = true,
 				GraphType = this.chartViewController.GraphType,
 				ColorStyle = this.chartViewController.ColorStyle,
+				Index = index,
 			};
 
 			controller.SetupUI (frame);
@@ -734,7 +739,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.floatingChartViews.Remove (controller);
 					window.Dispose ();
 				};
-			
+
+			UI.RestoreWindowPosition (window);
 			window.Show ();
 		}
 
@@ -828,6 +834,25 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return inputs.Concat (groups).Concat (details).Concat (outputs);
 		}
 
+
+		private int GetNewChartViewIndex()
+		{
+			int index = 0;
+
+			foreach (var item in this.floatingChartViews)
+			{
+				if (item.Index == index)
+				{
+					index++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			
+			return index;
+		}
 
 		private void SelectUnusedColor(GraphDataSeries item)
 		{

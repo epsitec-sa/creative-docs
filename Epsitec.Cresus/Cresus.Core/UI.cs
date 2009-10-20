@@ -94,6 +94,8 @@ namespace Epsitec.Cresus.Core
 		/// <param name="xml">The XML tree.</param>
 		public static void RestoreWindowPositions(XElement xml)
 		{
+			UI.windowPlacementHints.Clear ();
+
 			List<Window> windows = new List<Window> (Window.GetAllLiveWindows ());
 
 			foreach (XElement element in xml.Elements ("window"))
@@ -103,6 +105,8 @@ namespace Epsitec.Cresus.Core
 				string placement = (string) element.Attribute ("placement");
 
 				WindowPlacement wp = WindowPlacement.Parse (placement);
+
+				UI.windowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
 
 				Window window = UI.FindBestWindowMatch (windows, name, title);
 
@@ -123,9 +127,126 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+
+		public static void SaveWindowPosition(Window window)
+		{
+			var hint = UI.FindBestPlacement (window);
+
+			if (!hint.IsEmpty)
+            {
+				UI.windowPlacementHints.Remove (hint);
+            }
+
+			UI.windowPlacementHints.Add (new WindowPlacementHint (window.Name, window.Text, window.WindowPlacement));
+		}
 		
+		/// <summary>
+		/// Restores the window position based on previous placement information.
+		/// </summary>
+		/// <param name="window">The window.</param>
+		/// <returns><c>true</c> if the window placement was restored; otherwise, <c>false</c>.</returns>
+		public static bool RestoreWindowPosition(Window window)
+		{
+			var hint = UI.FindBestPlacement (window);
+
+			window.WindowFocused += sender => UI.SaveWindowPosition (window);
+			window.WindowCloseClicked += sender => UI.SaveWindowPosition (window);
+
+			if (hint.IsEmpty)
+			{
+				return false;
+			}
+			else
+			{
+				window.WindowPlacement = hint.Placement;
+				return true;
+			}
+		}
+
+
+		static UI()
+		{
+			UI.windowPlacementHints = new List<WindowPlacementHint> ();
+		}
+
+		
+		#region WindowPlacementHint Class
+
+		struct WindowPlacementHint : System.IEquatable<WindowPlacementHint>
+		{
+			public WindowPlacementHint(string name, string title, WindowPlacement placement)
+			{
+				this.name = name ?? "";
+				this.title = title ?? "";
+				this.placement = placement;
+			}
+
+
+			public string Name
+			{
+				get
+				{
+					return this.name;
+				}
+			}
+
+			public string Title
+			{
+				get
+				{
+					return this.title;
+				}
+			}
+
+			public WindowPlacement Placement
+			{
+				get
+				{
+					return this.placement;
+				}
+			}
+
+			public bool IsEmpty
+			{
+				get
+				{
+					return this.name == null && this.title == null;
+				}
+			}
+
+			public static readonly WindowPlacementHint Empty;
+
+			#region IEquatable<WindowPlacementHint> Members
+
+			public bool Equals(WindowPlacementHint other)
+			{
+				return (this.name == other.name) && (this.title == other.title) && (this.placement.Equals (other.placement));
+			}
+
+			#endregion
+
+			public override bool Equals(object obj)
+			{
+				if (obj is WindowPlacementHint)
+				{
+					return this.Equals ((WindowPlacementHint) obj);
+				}
+				else
+				{
+					return false;
+				}
+			}
+
+			private readonly string name;
+			private readonly string title;
+			private readonly WindowPlacement placement;
+		}
+
+		#endregion
+
 		private static Window FindBestWindowMatch(IEnumerable<Window> windows, string name, string title)
 		{
+			//	First, try to find an exact match : name + title
 			foreach (Window window in windows)
 			{
 				string windowName = window.Name ?? "";
@@ -138,10 +259,10 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 			
+			//	Second, try to find a match based only on the anme
 			foreach (Window window in windows)
 			{
 				string windowName = window.Name ?? "";
-				string windowTitle = window.Text ?? "";
 
 				if (windowName == name)
 				{
@@ -152,6 +273,32 @@ namespace Epsitec.Cresus.Core
 			return null;
 		}
 
+		private static WindowPlacementHint FindBestPlacement(Window window)
+		{
+			string name = window.Name ?? "";
+			string title = window.Text ?? "";
+
+			//	First, try to find an exact match : name + title
+			foreach (var hint in UI.windowPlacementHints)
+			{
+				if ((hint.Name == name) &&
+					(hint.Title == title))
+				{
+					return hint;
+				}
+			}
+
+			//	Second, try to find a match based only on the anme
+			foreach (var hint in UI.windowPlacementHints)
+			{
+				if (hint.Name == name)
+				{
+					return hint;
+				}
+			}
+
+			return WindowPlacementHint.Empty;
+		}
 		
 		private static Panel CreateUserInterfaceFromForm(ResourceBundle bundle, PanelInteractionMode mode)
 		{
@@ -204,5 +351,7 @@ namespace Epsitec.Cresus.Core
 			
 			MessageDialog.ShowError (fullMessage, CoreProgram.Application.ShortWindowTitle, null);
 		}
+
+		private static List<WindowPlacementHint> windowPlacementHints;
 	}
 }

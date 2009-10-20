@@ -83,6 +83,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
+		public int Index
+		{
+			get;
+			set;
+		}
+
 		public void SetupUI(Widget container)
 		{
 			this.container = container;

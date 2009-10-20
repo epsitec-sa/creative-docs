@@ -1,13 +1,17 @@
-//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
-using System.Collections.Generic;
-
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>WindowPlacement</c> structure describes the geometry of a window,
+	/// including its state (full screen and/or minimized).
+	/// </summary>
 	[System.ComponentModel.TypeConverter (typeof (WindowPlacement.Converter))]
 
 	public struct WindowPlacement : System.IEquatable<WindowPlacement>
