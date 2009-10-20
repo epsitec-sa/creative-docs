@@ -1,12 +1,14 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Graph.Controllers;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Graph.Controllers;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -35,27 +37,30 @@ namespace Epsitec.Cresus.Graph
 		private void ExportImageCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
-			var doc = GraphProgram.Application.Document;
 
-			System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog ()
+			if (chartViewController == null)
+            {
+				return;
+            }
+
+			var dialog = new FileSave ()
 			{
-				AddExtension = true,
-				AutoUpgradeEnabled = true,
-				CheckPathExists = true,
 				DefaultExt = ".emf",
-				Filter = "Windows Enhanced Metafile (*.emf)|*.emf|Image PNG (*.png)|*.png|Image GIF (*.gif)|*.gif|Image Bitmap (*.bmp)|*.bmp",
 				FilterIndex = 0,
-				OverwritePrompt = true,
-				RestoreDirectory = true,
+				PromptForOverwriting = true,
 				Title = "Exporter le graphique en tant qu'image",
-				ValidateNames = true
 			};
 
-			var result = dialog.ShowDialog (GraphProgram.Application.Window.PlatformWindowObject as System.Windows.Forms.IWin32Window);
+			dialog.Filters.Add ("EMF", "Windows Enhanced Metafile", "*.emf");
+			dialog.Filters.Add ("PNG", "Image PNG", "*.png");
+			dialog.Filters.Add ("GIF", "Image GIF", "*.gif");
+			dialog.Filters.Add ("BMP", "Image Bitmap", "*.bmp");
 
-			if (result == System.Windows.Forms.DialogResult.OK)
+			dialog.OpenDialog ();
+
+			if (dialog.DialogResult == DialogResult.Accept)
 			{
-				this.application.Document.ExportImage (dialog.FileName);
+				chartViewController.ExportImage (dialog.FileName);
 			}
 		}
 
@@ -64,10 +69,12 @@ namespace Epsitec.Cresus.Graph
 		{
 			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
 			
-			if (chartViewController != null)
+			if (chartViewController == null)
             {
-				chartViewController.SaveMetafile (null);
-            }
+				return;
+			}
+			
+			chartViewController.SaveMetafile (null);
 		}
 
 

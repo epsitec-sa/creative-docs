@@ -90,6 +90,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
+		public GraphDocument Document
+		{
+			get
+			{
+				return this.workspace.Document;
+			}
+		}
+
 		public void SetupUI(Widget container)
 		{
 			this.container = container;
@@ -249,7 +257,46 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
+		public void ExportImage(string path)
+		{
+			string ext = System.IO.Path.GetExtension (path).ToLowerInvariant ();
+
+			switch (ext)
+			{
+				case ".emf":
+					this.SaveMetafile (path);
+					break;
+
+				case ".bmp":
+				case ".png":
+				case ".gif":
+					this.SaveBitmap (path);
+					break;
+
+				default:
+					throw new System.ArgumentException ("Unsupported file extension");
+			}
+		}
+
+		
 		public void SaveMetafile(string path)
+		{
+			if (string.IsNullOrEmpty (path))
+			{
+				this.RenderToPort ((painter, dx, dy) => Epsitec.Common.Printing.PrintPort.PrintToClipboardMetafile (painter, (int) dx, (int) dy));
+			}
+			else
+			{
+				this.RenderToPort ((painter, dx, dy) => Epsitec.Common.Printing.PrintPort.PrintToMetafile (painter, path, (int) dx, (int) dy));
+			}
+		}
+
+		public void SaveBitmap(string path)
+		{
+			this.RenderToPort ((painter, dx, dy) => Epsitec.Common.Printing.PrintPort.PrintToBitmap (painter, path, (int) dx, (int) dy));
+		}
+		
+		private void RenderToPort(System.Action<System.Action<IPaintPort>, double, double> callback)
 		{
 			double dx = this.chartView.ActualWidth;
 			double dy = this.chartView.ActualHeight;
@@ -282,27 +329,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.captionView.Captions.Render (port, captionRect);
 				};
 
-			if (string.IsNullOrEmpty (path))
-			{
-				Epsitec.Common.Printing.PrintPort.PrintToClipboardMetafile (painter, (int) dx, (int) dy);
-			}
-			else
-			{
-				Epsitec.Common.Printing.PrintPort.PrintToMetafile (painter,	path, (int) dx, (int) dy);
-			}
+			callback (painter, dx, dy);
 		}
 
-		public void SaveBitmap(string path)
-		{
-			double dx = this.chartView.ActualWidth;
-			double dy = this.chartView.ActualHeight;
-
-			var  rect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
-
-			Epsitec.Common.Printing.PrintPort.PrintToBitmap (
-				port => this.chartView.Renderer.Render (port, rect),
-				path, (int) dx, (int) dy);
-		}
 
 
 		
