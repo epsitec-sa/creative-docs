@@ -712,6 +712,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Text = this.application.Window.Text,
 				ClientSize = new Size (800, 600),
 				Name = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "floating chart view {0}", index),
+				Parent = this.application.Window,
 			};
 
 			var frame = new FrameBox ()

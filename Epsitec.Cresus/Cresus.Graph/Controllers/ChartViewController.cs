@@ -96,8 +96,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (this.IsStandalone)
 			{
-				var dispatcher = new CommandDispatcher ("chart view", CommandDispatcherLevel.Secondary);
+				var dispatcher = new CommandDispatcher ("chart view", CommandDispatcherLevel.Secondary)
+				{
+					AutoForwardCommands = true,
+				};
+				
 				CommandDispatcher.SetDispatcher (this.container, dispatcher);
+				
 				this.localController = new CommandController (dispatcher);
 			}
 			else

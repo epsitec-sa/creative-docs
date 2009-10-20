@@ -14,6 +14,11 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Graph.Widgets
 {
+	/// <summary>
+	/// The <c>CommandSelectionBar</c> class represents a special tool bar where
+	/// a single command button is active, which gets underlined by a tiny arrow
+	/// overlapping the view below the command.
+	/// </summary>
 	public class CommandSelectionBar : FrameBox, IListHost<Command>
 	{
 		public CommandSelectionBar()
