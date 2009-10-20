@@ -849,7 +849,7 @@ namespace Epsitec.Common.Printing
 			var transform = Drawing.Transform.CreateScaleTransform (scale, scale);
 			transform = transform.Translate ((bounds.Width - scale*dx) / 2, (bounds.Height - scale*dy) / 2);
 
-			document.Print (new PrintEngine (painter, transform));
+			document.Print (new SinglePagePrintEngine (painter, transform));
 		}
 
 
@@ -1057,9 +1057,11 @@ namespace Epsitec.Common.Printing
 
 		#endregion
 
-		class PrintEngine : IPrintEngine
+		#region PrintEngine Class
+
+		class SinglePagePrintEngine : IPrintEngine
 		{
-			public PrintEngine(System.Action<Drawing.IPaintPort> print, Drawing.Transform transform)
+			public SinglePagePrintEngine(System.Action<Drawing.IPaintPort> print, Drawing.Transform transform)
 			{
 				this.print = print;
 				this.transform = transform;
@@ -1094,6 +1096,8 @@ namespace Epsitec.Common.Printing
 			readonly System.Action<Drawing.IPaintPort> print;
 			readonly Drawing.Transform transform;
 		}
+
+		#endregion
 
 
 

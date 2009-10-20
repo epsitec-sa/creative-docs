@@ -68,13 +68,26 @@ namespace Epsitec.Cresus.Graph
 		private void CopyCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
-			
+
 			if (chartViewController == null)
-            {
+			{
 				return;
 			}
-			
+
 			chartViewController.SaveMetafile (null);
+		}
+
+		[Command (ApplicationCommands.Id.Print)]
+		private void PrintCommand(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
+
+			if (chartViewController == null)
+			{
+				return;
+			}
+
+			chartViewController.Print ();
 		}
 
 

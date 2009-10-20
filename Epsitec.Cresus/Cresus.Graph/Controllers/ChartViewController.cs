@@ -18,6 +18,7 @@ using Epsitec.Cresus.Graph.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.UI;
+using Epsitec.Common.Printing;
 
 [assembly: DependencyClass (typeof (ChartViewController))]
 
@@ -283,17 +284,40 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if (string.IsNullOrEmpty (path))
 			{
-				this.RenderToPort ((painter, dx, dy) => Epsitec.Common.Printing.PrintPort.PrintToClipboardMetafile (painter, (int) dx, (int) dy));
+				this.RenderToPort ((painter, dx, dy) => PrintPort.PrintToClipboardMetafile (painter, (int) dx, (int) dy));
 			}
 			else
 			{
-				this.RenderToPort ((painter, dx, dy) => Epsitec.Common.Printing.PrintPort.PrintToMetafile (painter, path, (int) dx, (int) dy));
+				this.RenderToPort ((painter, dx, dy) => PrintPort.PrintToMetafile (painter, path, (int) dx, (int) dy));
 			}
 		}
 
 		public void SaveBitmap(string path)
 		{
-			this.RenderToPort ((painter, dx, dy) => Epsitec.Common.Printing.PrintPort.PrintToBitmap (painter, path, (int) dx, (int) dy));
+			this.RenderToPort ((painter, dx, dy) => PrintPort.PrintToBitmap (painter, path, (int) dx, (int) dy));
+		}
+
+		public void Print()
+		{
+			if (ChartViewController.printDialog == null)
+			{
+				ChartViewController.printDialog = new Epsitec.Common.Dialogs.Print ();
+			}
+
+			var dialog = ChartViewController.printDialog;
+			
+			dialog.Owner = this.container.Window;
+			dialog.AllowFromPageToPage = false;
+			dialog.AllowSelectedPages = false;
+			dialog.Document.PrinterSettings.FromPage = 1;
+			dialog.Document.PrinterSettings.ToPage = 1;
+			dialog.OpenDialog ();
+
+			if (dialog.Result == Epsitec.Common.Dialogs.DialogResult.Accept)
+			{
+				var print = dialog.Document;
+				this.RenderToPort ((painter, dx, dy) => PrintPort.PrintSinglePage (painter, print, (int) dx, (int) dy));
+			}
 		}
 		
 		private void RenderToPort(System.Action<System.Action<IPaintPort>, double, double> callback)
@@ -502,6 +526,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public static readonly DependencyProperty ChartViewControllerProperty = DependencyProperty.RegisterAttached ("ChartViewController", typeof (ChartViewController), typeof (ChartViewController), new DependencyPropertyMetadata ());
 		private static CommandController		commandController;
+		private static Epsitec.Common.Dialogs.Print printDialog;
 
 		private CommandController				localController;
 		private readonly GraphApplication		application;
