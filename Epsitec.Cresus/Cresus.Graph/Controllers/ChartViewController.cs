@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					AutoForwardCommands = true,
 				};
 				
-				CommandDispatcher.SetDispatcher (this.container, dispatcher);
+				CommandDispatcher.SetDispatcher (this.container.Window, dispatcher);
 				
 				this.localController = new CommandController (dispatcher);
 			}

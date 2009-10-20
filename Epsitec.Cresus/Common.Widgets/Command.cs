@@ -229,6 +229,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsTemporary
+		{
+			get
+			{
+				return this.temporary;
+			}
+		}
+
 		public bool								IsAdminLevelRequired
 		{
 			get

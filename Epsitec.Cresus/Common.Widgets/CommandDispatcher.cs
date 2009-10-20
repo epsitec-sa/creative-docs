@@ -637,11 +637,10 @@ namespace Epsitec.Common.Widgets
 
 		again:
 			
-			if (commandObject.IsReadWrite)
+			if (commandObject.IsTemporary)
 			{
-				//	The command will always be considered to be "enabled" if it
-				//	has never been defined as such or if no command state has ever
-				//	been created for it.
+				//	Don't fetch a state for a temporary command -- anyways, we should never
+				//	dispatch to a temporary command !?
 
 				commandContext = null;
 				commandState   = null;

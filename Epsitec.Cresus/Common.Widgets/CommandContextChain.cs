@@ -308,7 +308,7 @@ namespace Epsitec.Common.Widgets
 					that.chain.Add (new Weak<CommandContext> (context));
 				}
 
-				window = window.Owner;
+				window = window.Owner ?? window.Parent;
 			}
 
 			//	TODO: ajouter ici la notion d'application/module/document
