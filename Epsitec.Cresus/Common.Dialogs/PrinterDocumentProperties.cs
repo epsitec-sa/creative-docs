@@ -16,7 +16,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public override void OpenDialog()
 		{
-			System.Windows.Forms.IWin32Window owner  = this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window;
+			System.Windows.Forms.IWin32Window owner  = this.owner == null ? null : this.owner.PlatformWindowObject;
 			System.Windows.Forms.DialogResult result = this.InternalShowDialog (owner);
 			
 			switch (result)

@@ -14,6 +14,7 @@ namespace Epsitec.Common.Dialogs
 			this.filters = new Helpers.FilterCollection (this);
 			
 			this.dialog.AddExtension = true;
+			this.dialog.AutoUpgradeEnabled = true;
 			this.dialog.CheckFileExists = false;
 			this.dialog.CheckPathExists = true;
 			this.dialog.CreatePrompt = false;
@@ -98,7 +99,7 @@ namespace Epsitec.Common.Dialogs
 			this.dialog.Filter = this.Filters.FileDialogFilter;
 			this.dialog.FilterIndex = this.filterIndex + 1;
 			
-			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
+			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject);
 			
 			switch (result)
 			{

@@ -110,7 +110,7 @@ namespace Epsitec.Common.Dialogs
 		#region IDialog Members
 		public virtual void OpenDialog()
 		{
-			System.Windows.Forms.IWin32Window owner  = this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window;
+			System.Windows.Forms.IWin32Window owner  = this.owner == null ? null : this.owner.PlatformWindowObject;
 			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (owner);
 			
 			switch (result)

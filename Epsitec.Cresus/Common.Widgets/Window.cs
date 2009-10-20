@@ -849,7 +849,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public object							PlatformWindowObject
+		public System.Windows.Forms.IWin32Window PlatformWindowObject
 		{
 			get
 			{
