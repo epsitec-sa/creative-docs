@@ -830,6 +830,29 @@ namespace Epsitec.Common.Printing
 			}
 		}
 
+		public static void PrintSinglePage(System.Action<Drawing.IPaintPort> painter, PrintDocument document, int dx, int dy)
+		{
+			var bounds = document.DefaultPageSettings.Bounds;
+			var margins = document.DefaultPageSettings.Margins;
+
+			double mx = System.Math.Max (margins.Left, margins.Right);
+			double my = System.Math.Max (margins.Top, margins.Bottom);
+
+			double pageDx = bounds.Width - 2 * mx;
+			double pageDy = bounds.Height - 2 * my;
+
+			double ratioX = dx / pageDx;
+			double ratioY = dy / pageDy;
+
+			double scale = 1 / System.Math.Max (ratioX, ratioY);
+
+			var transform = Drawing.Transform.CreateScaleTransform (scale, scale);
+			transform = transform.Translate ((bounds.Width - scale*dx) / 2, (bounds.Height - scale*dy) / 2);
+
+			document.Print (new PrintEngine (painter, transform));
+		}
+
+
 		private void ResetTransform()
 		{
 			this.graphics.ResetTransform ();
@@ -1033,6 +1056,44 @@ namespace Epsitec.Common.Printing
 		}
 
 		#endregion
+
+		class PrintEngine : IPrintEngine
+		{
+			public PrintEngine(System.Action<Drawing.IPaintPort> print, Drawing.Transform transform)
+			{
+				this.print = print;
+				this.transform = transform;
+			}
+
+			#region IPrintEngine Members
+
+			public void PrepareNewPage(PageSettings settings)
+			{
+				settings.Margins = new Drawing.Margins (0, 0, 0, 0);
+			}
+
+			public void FinishingPrintJob()
+			{
+			}
+
+			public void StartingPrintJob()
+			{
+			}
+
+			public PrintEngineStatus PrintPage(PrintPort port)
+			{
+				port.Transform = transform;
+
+				this.print (port);
+
+				return PrintEngineStatus.FinishJob;
+			}
+
+			#endregion
+
+			readonly System.Action<Drawing.IPaintPort> print;
+			readonly Drawing.Transform transform;
+		}
 
 
 
