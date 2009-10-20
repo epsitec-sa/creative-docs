@@ -6,6 +6,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Graph.Controllers;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -31,8 +32,9 @@ namespace Epsitec.Cresus.Graph
 		}
 
 		[Command (Res.CommandIds.File.ExportImage)]
-		private void ExportImageCommand()
+		private void ExportImageCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
 			var doc = GraphProgram.Application.Document;
 
 			System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog ()
@@ -58,9 +60,14 @@ namespace Epsitec.Cresus.Graph
 		}
 
 		[Command (ApplicationCommands.Id.Copy)]
-		private void CopyCommand()
+		private void CopyCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.application.Document.ExportImage ();
+			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
+			
+			if (chartViewController != null)
+            {
+				chartViewController.SaveMetafile (null);
+            }
 		}
 
 

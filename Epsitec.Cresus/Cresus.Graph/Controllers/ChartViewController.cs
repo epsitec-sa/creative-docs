@@ -196,7 +196,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.workspace.OpenChartViewWindow ();
 				};
 
-			this.CreateToolButtons ();
+			if (this.IsStandalone)
+			{
+				this.CreateToolButtons ();
+			}
+
 			this.CreateGraphTypeButtons ();
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
@@ -244,6 +248,65 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.captionView.Invalidate ();
 		}
 
+
+		public void SaveMetafile(string path)
+		{
+			double dx = this.chartView.ActualWidth;
+			double dy = this.chartView.ActualHeight;
+
+			var chartRect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
+			var captionRect = this.captionView.Parent.MapClientToParent (this.captionView.ActualBounds);
+			var captionFrame = Rectangle.Inflate (captionRect, 4, 2);
+
+			System.Action<IPaintPort> painter =
+				port =>
+				{
+					this.chartView.Renderer.Render (port, chartRect);
+
+					using (var p = new Path ())
+					{
+						p.AppendRectangle (captionFrame);
+						port.Color = Color.FromBrightness (1);
+						port.PaintSurface (p);
+					}
+
+					using (var p = new Path ())
+					{
+						p.AppendRectangle (Rectangle.Deflate (captionFrame, 0.5, 0.5));
+						port.Color = Color.FromBrightness (0);
+						port.LineWidth = 1.0;
+						port.LineJoin = JoinStyle.Miter;
+						port.PaintOutline (p);
+					}
+					
+					this.captionView.Captions.Render (port, captionRect);
+				};
+
+			if (string.IsNullOrEmpty (path))
+			{
+				Epsitec.Common.Printing.PrintPort.PrintToClipboardMetafile (painter, (int) dx, (int) dy);
+			}
+			else
+			{
+				Epsitec.Common.Printing.PrintPort.PrintToMetafile (painter,	path, (int) dx, (int) dy);
+			}
+		}
+
+		public void SaveBitmap(string path)
+		{
+			double dx = this.chartView.ActualWidth;
+			double dy = this.chartView.ActualHeight;
+
+			var  rect = new Rectangle (this.chartView.Padding.Left, this.chartView.Padding.Bottom, dx - this.chartView.Padding.Width, dy - this.chartView.Padding.Height);
+
+			Epsitec.Common.Printing.PrintPort.PrintToBitmap (
+				port => this.chartView.Renderer.Render (port, rect),
+				path, (int) dx, (int) dy);
+		}
+
+
+		
+		
 		private void CreateToolButtons()
 		{
 			foreach (var command in ChartViewController.GetToolCommands ())
