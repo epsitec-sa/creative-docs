@@ -395,6 +395,12 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		public Window							Parent
+		{
+			get;
+			set;
+		}
 		
 		public Window[]							OwnedWindows
 		{

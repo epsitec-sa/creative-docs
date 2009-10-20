@@ -260,7 +260,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 
-				window = window.Owner;
+				window = window.Owner ?? window.Parent;
 			}
 
 			//	TODO: ajouter ici la notion d'application/module/document
