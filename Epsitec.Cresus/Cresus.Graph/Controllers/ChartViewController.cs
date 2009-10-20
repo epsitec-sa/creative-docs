@@ -17,6 +17,7 @@ using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.UI;
 
 [assembly: DependencyClass (typeof (ChartViewController))]
 
@@ -190,6 +191,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.workspace.OpenChartViewWindow ();
 				};
 
+			this.CreateToolButtons ();
 			this.CreateGraphTypeButtons ();
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
@@ -237,9 +239,33 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.captionView.Invalidate ();
 		}
 
+		private void CreateToolButtons()
+		{
+			foreach (var command in ChartViewController.GetToolCommands ())
+			{
+				var button = new MetaButton ()
+				{
+					Dock = DockStyle.Stacked,
+					ButtonClass = ButtonClass.FlatButton,
+					PreferredSize = new Size (40, 40),
+					CommandObject = command,
+					Parent = this.commandBar,
+				};
+			}
+
+			var sep = new Separator ()
+			{
+				IsVerticalLine = true,
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 1,
+				Parent = this.commandBar,
+			};
+
+		}
+
 		private void CreateGraphTypeButtons()
 		{
-			foreach (var command in this.GetGraphTypeCommands ())
+			foreach (var command in ChartViewController.GetGraphTypeCommands ())
 			{
 				this.commandBar.Items.Add (command);
 				this.commandContext.GetCommandState (command).Enable = true;
@@ -305,7 +331,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return style;
 		}
 
-		private IEnumerable<Command> GetGraphTypeCommands()
+		private static IEnumerable<Command> GetGraphTypeCommands()
 		{
 			yield return Res.Commands.GraphType.UseLineChart;
 			yield return Res.Commands.GraphType.UseBarChartVertical;
@@ -369,6 +395,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 
 
+		private static IEnumerable<Command> GetToolCommands()
+		{
+			yield return ApplicationCommands.Copy;
+			yield return Res.Commands.File.ExportImage;
+			yield return ApplicationCommands.Print;
+		}
 
 
 		public static readonly DependencyProperty ChartViewControllerProperty = DependencyProperty.RegisterAttached ("ChartViewController", typeof (ChartViewController), typeof (ChartViewController), new DependencyPropertyMetadata ());
