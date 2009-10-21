@@ -109,8 +109,14 @@ namespace Epsitec.Cresus.Graph
 		/// </summary>
         private void UpdateUndoRedo()
 		{
+			var document = GraphProgram.Application.Document;
+
+			System.Diagnostics.Debug.Assert (document != null);
+			
 			GraphProgram.Application.SetEnable (ApplicationCommands.Undo, this.undoRecorder.Count > 1);
 			GraphProgram.Application.SetEnable (ApplicationCommands.Redo, this.redoRecorder.Count > 0);
+
+			document.NotifyNeedsSave (true);
 		}
 
 		private void OnUndoRedoExecuted()

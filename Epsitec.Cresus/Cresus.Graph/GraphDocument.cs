@@ -13,6 +13,7 @@ using Epsitec.Cresus.Graph.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 
@@ -155,6 +156,11 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public string SavePath
+		{
+			get;
+			set;
+		}
 
 
 
@@ -445,16 +451,64 @@ namespace Epsitec.Cresus.Graph
 			this.groups.ForEach (x => x.Invalidate ());
 		}
 
+		public void NotifyNeedsSave(bool dirty)
+		{
+			this.application.CommandContext.GetCommandState (ApplicationCommands.Save).Enable = dirty;
+		}
+
+		public void SaveDocument(string path)
+		{
+			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+
+			XDocument doc = new XDocument (
+				new XDeclaration ("1.0", "utf-8", "yes"),
+				new XComment ("Saved on " + timeStamp),
+				new XElement ("store",
+					new XAttribute ("version", "1"),
+					new XElement ("about",
+						new XAttribute ("savePath", path),
+						new XAttribute ("saveTime", timeStamp)),
+					this.SaveSettings (new XElement ("doc"))));
+
+			doc.Save (path);
+
+			this.SavePath = path;
+			this.NotifyNeedsSave (false);
+		}
+
+		public bool LoadDocument(string path)
+		{
+			var xmlDocument = XDocument.Load (path);
+			var xmlStore    = xmlDocument.Element ("store");
+
+			var version = (string) xmlStore.Attribute ("version");
+
+			if (version == "1")
+			{
+				var element = xmlStore.Element ("doc");
+
+				if (element != null)
+				{
+					this.RestoreSettings (element);
+					this.SavePath = path;
+
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		internal XElement SaveSettings(XElement xml)
 		{
-			if (string.IsNullOrEmpty (this.path))
+			if (string.IsNullOrEmpty (this.dataPath))
 			{
-
-				this.path = System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, this.guid.ToString ("D") + ".crgraph");
+				this.dataPath = System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, this.guid.ToString ("D") + ".crgraph-data");
 			}
 
 			xml.Add (new XAttribute ("guid", this.guid));
-			xml.Add (new XAttribute ("path", this.path));
+			xml.Add (new XAttribute ("dataPath", this.dataPath));
 			xml.Add (new XAttribute ("title", this.title ?? ""));
 			xml.Add (new XElement ("undoActions", new XText (this.UndoRedo.UndoRecorder.SaveToString ())));
 			xml.Add (new XElement ("redoActions", new XText (this.UndoRedo.RedoRecorder.SaveToString ())));
@@ -467,9 +521,9 @@ namespace Epsitec.Cresus.Graph
 					new XAttribute ("sliceDimB", this.cubeSliceDim2 ?? ""),
 					new XAttribute ("converter", this.converterName ?? "")));
 
-				System.IO.Directory.CreateDirectory (GraphApplication.Paths.AutoSavePath);
+				System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (this.dataPath));
 				
-				using (var stream = new System.IO.StreamWriter (this.path, false, System.Text.Encoding.UTF8))
+				using (var stream = new System.IO.StreamWriter (this.dataPath, false, System.Text.Encoding.UTF8))
 				{
 					this.cube.Save (stream);
 				}
@@ -481,7 +535,7 @@ namespace Epsitec.Cresus.Graph
 		internal void RestoreSettings(XElement xml)
 		{
 			this.guid = (System.Guid) xml.Attribute ("guid");
-			this.path = (string) xml.Attribute ("path");
+			this.dataPath = (string) xml.Attribute ("dataPath");
 			this.title = (string) xml.Attribute ("title");
 
 			var undoActionsXml = xml.Element ("undoActions");
@@ -490,13 +544,13 @@ namespace Epsitec.Cresus.Graph
 			var cubeXml = xml.Element ("cube");
 
 			if ((cubeXml != null) &&
-				(System.IO.File.Exists (this.path)))
+				(System.IO.File.Exists (this.dataPath)))
 			{
 				this.cubeSliceDim1 = (string) cubeXml.Attribute ("sliceDimA");
 				this.cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
 				this.converterName = (string) cubeXml.Attribute ("converter");
 
-				using (var stream = new System.IO.StreamReader (this.path, System.Text.Encoding.UTF8))
+				using (var stream = new System.IO.StreamReader (this.dataPath, System.Text.Encoding.UTF8))
 				{
 					this.cube = new DataCube ();
 					this.cube.Restore (stream);
@@ -515,6 +569,7 @@ namespace Epsitec.Cresus.Graph
 				this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
             }
 
+			this.NotifyNeedsSave (false);
 			this.application.WorkspaceController.Refresh ();
 #if false
 			if ((viewsXml != null) &&
@@ -678,7 +733,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly UndoRedoManager undoRedoManager;
 		
 
-		private string path;
+		private string dataPath;
 		private string title;
 		private System.Guid guid;
 		

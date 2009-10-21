@@ -19,6 +19,13 @@ namespace Epsitec.Common.Graph.Data
 		}
 
 
+		public string Information
+		{
+			get;
+			set;
+		}
+
+
 		public IList<string> DimensionNames
 		{
 			get
@@ -164,6 +171,12 @@ namespace Epsitec.Common.Graph.Data
 			stream.WriteLine ("Epsitec.Common.Graph.Data.DataCube");
 			stream.WriteLine ("DataFormat:V1");
 
+			if (this.Information != null)
+			{
+				stream.WriteLine ("Section:Information");
+				stream.WriteLine (DataCube.Escape (this.Information));
+			}
+
 			stream.WriteLine ("Section:DimensionNames");
 			this.dimensionNames.ForEach (name => stream.WriteLine (DataCube.Escape (name)));
 			
@@ -214,6 +227,10 @@ namespace Epsitec.Common.Graph.Data
 
 					switch (token)
 					{
+						case "Information":
+							processor = x => this.Information = DataCube.Unescape (x);
+							break;
+
 						case "DimensionNames":
 							processor = x => this.dimensionNames.Add (DataCube.Unescape (x));
 							break;

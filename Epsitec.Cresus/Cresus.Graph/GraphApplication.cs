@@ -176,7 +176,6 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.IsReady)
 			{
-				System.Diagnostics.Debug.WriteLine ("Saving application state.");
 				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
 				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
@@ -186,16 +185,15 @@ namespace Epsitec.Cresus.Graph
 					new XElement ("store",
 						new XAttribute ("version", "1"),
 //						this.StateManager.SaveStates ("stateManager"),
-						this.SaveDocumentSettings ("documents"),
+						this.SaveOpenDocumentSettings ("documents"),
 						Core.UI.SaveWindowPositions ("windowPositions"),
 						this.persistenceManager.Save ("uiSettings")));
 
 				doc.Save (GraphApplication.Paths.SettingsPath);
-				System.Diagnostics.Debug.WriteLine ("Save done.");
 			}
 		}
 
-		private XElement SaveDocumentSettings(string xmlNodeName)
+		private XElement SaveOpenDocumentSettings(string xmlNodeName)
 		{
 			return new XElement (xmlNodeName,
 					from doc in this.OpenDocuments

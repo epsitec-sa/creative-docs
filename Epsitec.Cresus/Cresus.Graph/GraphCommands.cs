@@ -90,6 +90,25 @@ namespace Epsitec.Cresus.Graph
 			chartViewController.Print ();
 		}
 
+		[Command (ApplicationCommands.Id.Save)]
+		private void SaveCommand()
+		{
+			var dialog = new FileSave ()
+			{
+				DefaultExt = ".crgraph",
+				PromptForOverwriting = true,
+				Title = "Enregistrer le graphe",
+			};
+
+			dialog.Filters.Add ("CRGRAPH", "Document Crésus Graphe", "*.crgraph");
+
+			dialog.OpenDialog ();
+
+			if (dialog.DialogResult == DialogResult.Accept)
+            {
+				this.application.Document.SaveDocument (dialog.FileName);
+			}
+		}
 
 		private readonly GraphApplication application;
 	}
