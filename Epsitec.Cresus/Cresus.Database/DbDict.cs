@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="item">The item to remove.</param>
 		/// <returns>
-		/// 	<c>true</c> if item was successfully removed; otherwise <c>false</c>.
+		/// 	<c>true</c> if item was successfully removed; otherwise, <c>false</c>.
 		/// </returns>
 		public bool Remove(KeyValuePair<string, string> item)
 		{

@@ -543,43 +543,32 @@ namespace Epsitec.Cresus.Graph
 			this.syntheticSeries.Clear ();
 			this.filterCategories.Clear ();
 
+			this.activeDataSource = null;
+
+			if ((this.cube == null) ||
+				(string.IsNullOrEmpty (this.cubeSliceDim1)) ||
+				(string.IsNullOrEmpty (this.cubeSliceDim2)))
+			{
+				return;
+			}
+
 			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
 			{
-				GraphDataSet dataSet = new GraphDataSet ();
-
-				var source = new GraphDataSource (this.converterName);
-
-				if ((this.cube != null) &&
-				(!string.IsNullOrEmpty (this.cubeSliceDim1)) &&
-				(!string.IsNullOrEmpty (this.cubeSliceDim2)))
+				var source  = new GraphDataSource (this.converterName)
 				{
-					dataSet.LoadDataTable (this.cube.ExtractDataTable ("Source="+sourceName, this.cubeSliceDim1, this.cubeSliceDim2));
-				}
-				else
-				{
-					this.title = "Démo";
-					dataSet.LoadDataTable (GraphDataSet.LoadComptaDemoData ());
-				}
+					Name = sourceName,
+				};
 
+				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cubeSliceDim1, this.cubeSliceDim2);
 
-				int index = 0;
-				source.Name = sourceName;
+				source.AddRange (from series in table.RowSeries
+								 select new GraphDataSeries (series)
+								 {
+									 Label = "",
+									 Title = series.Label,
+								 });
 
-				dataSet.DataTable.RowSeries.ForEach (
-					series =>
-						source.Add (
-							new GraphDataSeries (series)
-							{
-								Index = index++,
-#if true
-								Label = "",
-								Title = series.Label,
-#else
-							Label = series.Label.Substring (0, series.Label.IndexOf (' ')+1).Trim (),
-							Title = series.Label.Substring (series.Label.IndexOf (' ')+1).Trim ()
-#endif
-							}));
-
+				source.RenumberSeries ();
 				source.UpdateCategories ();
 
 				this.dataSources.Add (source);

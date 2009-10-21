@@ -334,7 +334,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="property">The property.</param>
 		/// <param name="value">The value.</param>
-		/// <returns><c>true</c> if the value could be found; otherwise <c>false</c>.</returns>
+		/// <returns><c>true</c> if the value could be found; otherwise, <c>false</c>.</returns>
 		public bool TryGetLocalValue(DependencyProperty property, out object value)
 		{
 			if (this.properties.TryGetValue (property, out value))

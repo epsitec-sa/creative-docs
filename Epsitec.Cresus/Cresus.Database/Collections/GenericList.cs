@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Database.Collections
 		/// <param name="name">The name.</param>
 		/// <param name="value">The value.</param>
 		/// <returns>
-		/// 	<c>true</c> if the list contains the item with the specified name; otherwise <c>faluse</c>.
+		/// 	<c>true</c> if the list contains the item with the specified name; otherwise, <c>faluse</c>.
 		/// </returns>
 		public bool TryGetValue(string name, out T value)
 		{

@@ -1,12 +1,18 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 using System;
 
 namespace Epsitec.Cresus.Graph
 {
+	/// <summary>
+	/// The <c>GraphDataSource</c> class stores all <see cref="GraphDataSeries"/> which belong
+	/// to a given data source.
+	/// </summary>
 	public class GraphDataSource : IEnumerable<GraphDataSeries>
 	{
 		public GraphDataSource(string importConverter)
@@ -16,12 +22,20 @@ namespace Epsitec.Cresus.Graph
 			this.categories = new List<GraphDataCategory> ();
 		}
 
+		/// <summary>
+		/// Gets or sets the name of this source.
+		/// </summary>
+		/// <value>The name.</value>
 		public string Name
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets the number of series in this source.
+		/// </summary>
+		/// <value>The number of series in this source.</value>
 		public int Count
 		{
 			get
@@ -30,6 +44,10 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		/// <summary>
+		/// Gets the series at the specified index.
+		/// </summary>
+		/// <value>The series at the specified index</value>
 		public GraphDataSeries this[int index]
 		{
 			get
@@ -38,6 +56,10 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		/// <summary>
+		/// Gets a list of the data categories.
+		/// </summary>
+		/// <value>The data categories.</value>
 		public IList<GraphDataCategory> Categories
 		{
 			get
@@ -45,7 +67,11 @@ namespace Epsitec.Cresus.Graph
 				return this.categories.AsReadOnly ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Adds the specified series.
+		/// </summary>
+		/// <param name="series">The series.</param>
 		public void Add(GraphDataSeries series)
 		{
 			if (series != null)
@@ -55,6 +81,23 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		/// <summary>
+		/// Adds a collection of series.
+		/// </summary>
+		/// <param name="collection">The collection of series.</param>
+		public void AddRange(IEnumerable<GraphDataSeries> collection)
+		{
+			if (collection != null)
+			{
+				collection.ForEach (x => this.Add (x));
+			}
+		}
+
+		/// <summary>
+		/// Removes the specified series.
+		/// </summary>
+		/// <param name="series">The series.</param>
+		/// <returns><c>true</c> if the series was removed; otherwise, <c>false</c>.</returns>
 		public bool Remove(GraphDataSeries series)
 		{
 			if ((series != null) &&
@@ -69,13 +112,22 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		/// <summary>
+		/// Clears the source: remove all series.
+		/// </summary>
 		public void Clear()
 		{
 			this.dataSeries.ForEach (x => x.DefineDataSource (null));
 			this.dataSeries.Clear ();
+			this.categories.Clear ();
 		}
 
 
+		/// <summary>
+		/// Finds the index of the specified series.
+		/// </summary>
+		/// <param name="series">The series.</param>
+		/// <returns>The index of the series or <c>-1</c> if it cannot be found.</returns>
 		public int IndexOf(GraphDataSeries series)
 		{
 			if (series == null)
@@ -94,7 +146,22 @@ namespace Epsitec.Cresus.Graph
 				return this.IndexOf (series.Parent);
 			}
 		}
-        
+
+		/// <summary>
+		/// Renumbers the series by setting <see cref="GraphDataSeries.Index"/> to the series index
+		/// in this source.
+		/// </summary>
+		public void RenumberSeries()
+		{
+			for (int i = 0; i < this.dataSeries.Count; i++)
+			{
+				this.dataSeries[i].Index = i;
+			}
+		}
+
+		/// <summary>
+		/// Updates the categories based on the series in this source.
+		/// </summary>
 		public void UpdateCategories()
 		{
 			var cat = new HashSet<GraphDataCategory> ();
@@ -105,7 +172,12 @@ namespace Epsitec.Cresus.Graph
 			this.categories.AddRange (cat.OrderBy (x => x));
 		}
 
-		
+
+		/// <summary>
+		/// Gets the category for the specified series. This will query the converter.
+		/// </summary>
+		/// <param name="series">The series.</param>
+		/// <returns>The category.</returns>
 		public GraphDataCategory GetCategory(GraphDataSeries series)
 		{
 			var converter = ImportConverters.ImportConverter.FindConverter (this.converterName);
