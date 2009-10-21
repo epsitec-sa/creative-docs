@@ -61,9 +61,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.widgetCodeAddress = new MyWidgets.CodeAddress(this);
 			this.widgetCodeAddress.PreferredHeight = 20;
 			this.widgetCodeAddress.Dock = DockStyle.Fill;
-			this.widgetCodeAddress.Entered += new MessageEventHandler(this.HandleCodeAddressEntered);
-			this.widgetCodeAddress.Exited += new MessageEventHandler(this.HandleCodeAddressExited);
-			this.widgetCodeAddress.Clicked += new MessageEventHandler(this.HandleCodeAddressClicked);
+			this.widgetCodeAddress.Entered += this.HandleCodeAddressEntered;
+			this.widgetCodeAddress.Exited += this.HandleCodeAddressExited;
+			this.widgetCodeAddress.Clicked += this.HandleCodeAddressClicked;
 		}
 
 		public Code(Widget embedder) : this()
@@ -80,9 +80,9 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.widgetInstruction.AcceptingEdition -= new EventHandler<CancelEventArgs> (this.HandleInstructionAcceptingEdition);
 				this.widgetInstruction.EditionAccepted -= new EventHandler (this.HandleInstructionEditionAccepted);
 
-				this.widgetCodeAddress.Entered -= new MessageEventHandler(this.HandleCodeAddressEntered);
-				this.widgetCodeAddress.Exited -= new MessageEventHandler(this.HandleCodeAddressExited);
-				this.widgetCodeAddress.Clicked -= new MessageEventHandler(this.HandleCodeAddressClicked);
+				this.widgetCodeAddress.Entered -= this.HandleCodeAddressEntered;
+				this.widgetCodeAddress.Exited -= this.HandleCodeAddressExited;
+				this.widgetCodeAddress.Clicked -= this.HandleCodeAddressClicked;
 			}
 
 			base.Dispose(disposing);

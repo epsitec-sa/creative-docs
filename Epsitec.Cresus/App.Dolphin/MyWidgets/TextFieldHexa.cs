@@ -42,7 +42,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.buttonPlus.PreferredSize = new Size(14, 11);
 			this.buttonPlus.Margins = new Margins(0, 0, 0, -1);
 			this.buttonPlus.Dock = DockStyle.Top;
-			this.buttonPlus.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonPlus.Clicked += this.HandleButtonClicked;
 
 			this.buttonMinus = new GlyphButton(pm);
 			this.buttonMinus.GlyphShape = GlyphShape.TriangleDown;
@@ -50,7 +50,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.buttonMinus.PreferredSize = new Size(14, 11);
 			this.buttonMinus.Margins = new Margins(0, 0, -1, 0);
 			this.buttonMinus.Dock = DockStyle.Bottom;
-			this.buttonMinus.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonMinus.Clicked += this.HandleButtonClicked;
 
 			this.buttonClear = new GlyphButton(this);
 			this.buttonClear.GlyphShape = GlyphShape.Close;
@@ -58,7 +58,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 			this.buttonClear.PreferredSize = new Size(18, 20);
 			this.buttonClear.Margins = new Margins(-1, 0, 0, 0);
 			this.buttonClear.Dock = DockStyle.Left;
-			this.buttonClear.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			this.buttonClear.Clicked += this.HandleButtonClicked;
 
 			Panel buttons = new Panel(this);
 			buttons.PreferredHeight = 20;
@@ -74,7 +74,7 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				button.PreferredHeight = 20;
 				button.Margins = new Margins((i+1)%4 == 0 ? 10:1, 0, 0, 0);
 				button.Dock = DockStyle.Right;
-				button.Clicked += new MessageEventHandler(this.HandleSwitchClicked);
+				button.Clicked += this.HandleSwitchClicked;
 
 				this.buttons.Add(button);
 			}
@@ -94,13 +94,13 @@ namespace Epsitec.App.Dolphin.MyWidgets
 				this.textField.TextChanged -= new EventHandler(this.HandleFieldTextChanged);
 				this.textField.IsFocusedChanged -= new EventHandler<Epsitec.Common.Types.DependencyPropertyChangedEventArgs>(this.HandleFieldIsFocusedChanged);
 
-				this.buttonPlus.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonMinus.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-				this.buttonClear.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+				this.buttonPlus.Clicked -= this.HandleButtonClicked;
+				this.buttonMinus.Clicked -= this.HandleButtonClicked;
+				this.buttonClear.Clicked -= this.HandleButtonClicked;
 
 				for (int i=0; i<12; i++)
 				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.HandleSwitchClicked);
+					this.buttons[i].Clicked -= this.HandleSwitchClicked;
 					this.buttons[i].Dispose();
 				}
 			}
