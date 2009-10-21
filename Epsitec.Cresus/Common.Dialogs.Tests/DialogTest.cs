@@ -169,8 +169,8 @@ namespace Epsitec.Common.Dialogs
 
 			System.Console.Out.WriteLine ("Raw dialog data:");
 			System.Console.Out.WriteLine (dialog.Data.Data.Dump ());
-			
-			switch (dialog.DialogResult)
+
+			switch (dialog.Result)
 			{
 				case DialogResult.Accept:
 					dialog.Data.ApplyChanges ();

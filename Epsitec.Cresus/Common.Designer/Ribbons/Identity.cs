@@ -46,7 +46,7 @@ namespace Epsitec.Common.Designer.Ribbons
 			dialog.OwnerWindow = this.designerApplication.Window;
 			dialog.ActiveIdentityCard = this.widget.IdentityCard ?? nullCard;
 			dialog.OpenDialog();
-			if (dialog.DialogResult == Common.Dialogs.DialogResult.Accept)
+			if (dialog.Result == Common.Dialogs.DialogResult.Accept)
 			{
 				IdentityCard card = dialog.ActiveIdentityCard;
 
