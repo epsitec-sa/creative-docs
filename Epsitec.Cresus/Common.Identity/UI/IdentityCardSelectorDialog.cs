@@ -59,7 +59,7 @@ namespace Epsitec.Common.Identity.UI
 
 			dialogWindow.WindowCloseClicked += delegate
 			{
-				this.DialogResult = Dialogs.DialogResult.Cancel;
+				this.Result = Dialogs.DialogResult.Cancel;
 				this.CloseDialog ();
 			};
 
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Identity.UI
 			button.Clicked +=
 				delegate
 				{
-					this.DialogResult = Dialogs.DialogResult.Cancel;
+					this.Result = Dialogs.DialogResult.Cancel;
 					this.CloseDialog ();
 				};
 
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Identity.UI
 			button.Clicked +=
 				delegate
 				{
-					this.DialogResult = Dialogs.DialogResult.Accept;
+					this.Result = Dialogs.DialogResult.Accept;
 					this.CloseDialog ();
 				};
 			
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Identity.UI
 				widget.DoubleClicked +=
 					delegate
 					{
-						this.dialog.DialogResult = Dialogs.DialogResult.Accept;
+						this.dialog.Result = Dialogs.DialogResult.Accept;
 						this.dialog.CloseDialog ();
 					};
 

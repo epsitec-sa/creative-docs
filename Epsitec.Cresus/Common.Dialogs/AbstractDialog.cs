@@ -104,7 +104,7 @@ namespace Epsitec.Common.Dialogs
 		/// Gets the dialog result.
 		/// </summary>
 		/// <value>The dialog result.</value>
-		public DialogResult						DialogResult
+		public DialogResult						Result
 		{
 			get
 			{

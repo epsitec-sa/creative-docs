@@ -409,7 +409,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						double s = (double) size;
 						s = System.Math.Ceiling (s*1000/1024);  // 0..999 KB
-						return string.Format (Res.Strings.Dialog.File.Size.Kilo, s.ToString ());
+						return string.Format (Res.Strings.Dialog.File.Size.Kilo.ToSimpleText (), s.ToString ());
 					}
 
 					size = (size+1023)/1024;
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						double s = (double) size;
 						s = System.Math.Ceiling (s*1000/1024);  // 0..999 MB
-						return string.Format (Res.Strings.Dialog.File.Size.Mega, s.ToString ());
+						return string.Format (Res.Strings.Dialog.File.Size.Mega.ToSimpleText (), s.ToString ());
 					}
 
 					size = (size+1023)/1024;
@@ -425,7 +425,7 @@ namespace Epsitec.Common.Dialogs
 					{
 						double s = (double) size;
 						s = System.Math.Ceiling (s*1000/1024);  // 0..999 GB
-						return string.Format (Res.Strings.Dialog.File.Size.Giga, s.ToString ());
+						return string.Format (Res.Strings.Dialog.File.Size.Giga.ToSimpleText (), s.ToString ());
 					}
 
 					return "?";

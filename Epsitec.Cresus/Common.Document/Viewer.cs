@@ -4048,7 +4048,7 @@ namespace Epsitec.Common.Document
 			Common.Dialogs.IDialog dialog = Common.Dialogs.MessageDialog.CreateYesNo(title, icon, message, null, null, this.GetCommandDispatcher());
 			dialog.OwnerWindow = this.Window;
 			dialog.OpenDialog();
-			return (dialog.DialogResult == Common.Dialogs.DialogResult.Yes);
+			return (dialog.Result == Common.Dialogs.DialogResult.Yes);
 		}
 		#endregion
 

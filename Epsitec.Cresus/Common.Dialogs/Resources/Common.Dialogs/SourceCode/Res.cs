@@ -109,10 +109,8 @@ namespace Epsitec.Common.Dialogs
 		{
 			public static class Dialog
 			{
-				
 				public static class File
 				{
-					
 					//	designer:cap/6005
 					public const long Delete = 0x600000000005L;
 					//	designer:cap/6007
@@ -133,7 +131,6 @@ namespace Epsitec.Common.Dialogs
 					public const long ViewSize = 0x600000000013L;
 					public static class Favorites
 					{
-						
 						//	designer:cap/6008
 						public const long Add = 0x600000000008L;
 						//	designer:cap/600B
@@ -149,7 +146,6 @@ namespace Epsitec.Common.Dialogs
 				
 				public static class Generic
 				{
-					
 					//	designer:cap/6014
 					public const long Apply = 0x600001000004L;
 					//	designer:cap/6012
@@ -165,7 +161,6 @@ namespace Epsitec.Common.Dialogs
 			
 			public static class HintList
 			{
-				
 				//	designer:cap/6017
 				public const long ClearSearch = 0x600001000007L;
 				//	designer:cap/6019
@@ -175,8 +170,80 @@ namespace Epsitec.Common.Dialogs
 				//	designer:cap/6018
 				public const long ValidateSearch = 0x600001000008L;
 			}
+			
 		}
 		
+		public static class Captions
+		{
+			public static class File
+			{
+				public static class Column
+				{
+					//	designer:cap/600F
+					public static global::Epsitec.Common.Types.Caption Date
+					{
+						get
+						{
+							return global::Epsitec.Common.Dialogs.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 15));
+						}
+					}
+					//	designer:cap/6
+					public static global::Epsitec.Common.Types.Caption Icon
+					{
+						get
+						{
+							return global::Epsitec.Common.Dialogs.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 0));
+						}
+					}
+					//	designer:cap/600H
+					public static global::Epsitec.Common.Types.Caption Info
+					{
+						get
+						{
+							return global::Epsitec.Common.Dialogs.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 17));
+						}
+					}
+					//	designer:cap/600E
+					public static global::Epsitec.Common.Types.Caption Name
+					{
+						get
+						{
+							return global::Epsitec.Common.Dialogs.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 14));
+						}
+					}
+					//	designer:cap/600G
+					public static global::Epsitec.Common.Types.Caption Size
+					{
+						get
+						{
+							return global::Epsitec.Common.Dialogs.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16));
+						}
+					}
+				}
+			}
+			
+		}
+		
+		public static class CaptionIds
+		{
+			public static class File
+			{
+				public static class Column
+				{
+					//	designer:cap/600F
+					public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 15);
+					//	designer:cap/6
+					public static readonly global::Epsitec.Common.Support.Druid Icon = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 0);
+					//	designer:cap/600H
+					public static readonly global::Epsitec.Common.Support.Druid Info = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 17);
+					//	designer:cap/600E
+					public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 14);
+					//	designer:cap/600G
+					public static readonly global::Epsitec.Common.Support.Druid Size = new global::Epsitec.Common.Support.Druid (_moduleId, 0, 16);
+				}
+			}
+			
+		}
 		
 		
 		
@@ -332,6 +399,34 @@ namespace Epsitec.Common.Dialogs
 							get
 							{
 								return global::Epsitec.Common.Dialogs.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (20));
+							}
+						}
+					}
+					
+					public static class Message
+					{
+						//	designer:str/60A2
+						public static global::Epsitec.Common.Types.FormattedText PromptForCreation
+						{
+							get
+							{
+								return global::Epsitec.Common.Dialogs.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772162));
+							}
+						}
+						//	designer:str/60A1
+						public static global::Epsitec.Common.Types.FormattedText PromptForOverwriting
+						{
+							get
+							{
+								return global::Epsitec.Common.Dialogs.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772161));
+							}
+						}
+						//	designer:str/60A
+						public static global::Epsitec.Common.Types.FormattedText SaveTitle
+						{
+							get
+							{
+								return global::Epsitec.Common.Dialogs.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772160));
 							}
 						}
 					}

@@ -1399,7 +1399,7 @@ namespace Epsitec.Common.Document
 			dialog.PromptForOverwriting = true;
 			dialog.OwnerWindow = this.windowPrint;
 			dialog.OpenDialog();
-			if ( dialog.DialogResult != Common.Dialogs.DialogResult.Accept )  return;
+			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
 
 			this.document.Settings.PrintInfo.PrintFilename = dialog.FileName;
 			this.document.Settings.PrintInfo.PrintToFile = true;

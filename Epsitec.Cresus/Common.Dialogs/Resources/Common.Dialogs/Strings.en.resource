@@ -35,4 +35,7 @@
   <data id="0T">The file &lt;b&gt;{0}&lt;/b&gt; has been modified.</data>
   <data id="0U">Do you want to save changes?</data>
   <data id="031">Empty document</data>
+  <data id="A">Save Prompt</data>
+  <data id="A1">{0} already exists.&lt;br/&gt;Do you want to overwrite it?</data>
+  <data id="A2">{0} does not exists.&lt;br/&gt;Do you want to create it?</data>
 </bundle>

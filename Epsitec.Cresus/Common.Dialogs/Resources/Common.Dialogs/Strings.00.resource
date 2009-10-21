@@ -37,4 +37,7 @@
   <data name="Dialog.File.NewEmptyDocument" id="031">Document vide</data>
   <data name="Dialog.Tooltip.Help" id="01">Texte explicatif</data>
   <data name="Dialog.Tooltip.Resize" id="02">Redimensionner la fenêtre</data>
+  <data name="Dialog.File.Message.SaveTitle" id="A">Confirmation d&amp;apos;enregistrement</data>
+  <data name="Dialog.File.Message.PromptForOverwriting" id="A1">Le fichier {0} existe déjà.&lt;br/&gt;Souhaitez-vous le remplacer ?</data>
+  <data name="Dialog.File.Message.PromptForCreation" id="A2">Le fichier {0} n&amp;apos;existe pas.&lt;br/&gt;Souhaitez-vous le créer ?</data>
 </bundle>

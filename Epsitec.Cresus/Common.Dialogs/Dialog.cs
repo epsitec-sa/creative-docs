@@ -168,14 +168,14 @@ namespace Epsitec.Common.Dialogs
 		protected virtual void HandleCancelCommand()
 		{
 			this.dialogData.RevertChanges ();
-			this.DialogResult = DialogResult.Cancel;
+			this.Result = DialogResult.Cancel;
 			this.CloseDialog ();
 		}
 
 		protected virtual void HandleAcceptCommand()
 		{
 			this.Data.ApplyChanges ();
-			this.DialogResult = DialogResult.Accept;
+			this.Result = DialogResult.Accept;
 			this.CloseDialog ();
 		}
 

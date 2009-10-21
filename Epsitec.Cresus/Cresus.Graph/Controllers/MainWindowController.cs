@@ -111,12 +111,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private static IEnumerable<Command> GetToolCommands()
 		{
+			yield return ApplicationCommands.Open;
+			yield return ApplicationCommands.Save;
 			yield return ApplicationCommands.Undo;
 			yield return ApplicationCommands.Redo;
-			yield return ApplicationCommands.Save;
-			yield return ApplicationCommands.Copy;
-			
-			yield return Res.Commands.File.ExportImage;
 		}
 
 

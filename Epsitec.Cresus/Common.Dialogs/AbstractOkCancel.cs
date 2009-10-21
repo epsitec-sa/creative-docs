@@ -97,7 +97,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Ok)]
 		protected void CommandValidateDialog()
 		{
-			this.DialogResult = DialogResult.Accept;
+			this.Result = DialogResult.Accept;
 			
 			if (! string.IsNullOrEmpty (this.commandTemplate))
 			{
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
-			this.DialogResult = DialogResult.Cancel;
+			this.Result = DialogResult.Cancel;
 			
 			this.CloseDialog ();
 		}

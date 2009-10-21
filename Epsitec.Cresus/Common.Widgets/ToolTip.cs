@@ -156,10 +156,16 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
+
 		public void SetToolTip(Widget widget, string caption)
 		{
 			ToolTip.SetToolTipText (widget, caption);
+			this.DefineToolTip (widget, caption);
+		}
+
+		public void SetToolTip(Widget widget, FormattedText caption)
+		{
+			ToolTip.SetToolTipText (widget, caption.ToString ());
 			this.DefineToolTip (widget, caption);
 		}
 

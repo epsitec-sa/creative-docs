@@ -264,7 +264,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Label;
+				return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Label.ToSimpleText ();
 			}
 		}
 
@@ -275,13 +275,13 @@ namespace Epsitec.Common.Dialogs
 				switch (this.FileDialogType)
 				{
 					case FileDialogType.New:
-						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New;
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.New.ToSimpleText ();
 
 					case FileDialogType.Save:
-						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save;
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Save.ToSimpleText ();
 
 					default:
-						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open;
+						return Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Button.Open.ToSimpleText ();
 				}
 			}
 		}
@@ -704,7 +704,9 @@ namespace Epsitec.Common.Dialogs
 			ToolTip.Default.SetToolTip (this.toolbarExtend, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.Tooltip.ExtendToolbar);
 
 			StaticText label = new StaticText (group);
-			label.Text = this.FileDialogType == FileDialogType.Save ? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Save : Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Open;
+			label.Text = this.FileDialogType == FileDialogType.Save
+				? Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Save.ToString ()
+				: Epsitec.Common.Dialogs.Res.Strings.Dialog.File.LabelPath.Open.ToString ();
 			label.PreferredWidth = AbstractFileDialog.LeftColumnWidth-16-10;
 			label.ContentAlignment = ContentAlignment.MiddleRight;
 			label.Dock = DockStyle.Left;
@@ -874,7 +876,7 @@ namespace Epsitec.Common.Dialogs
 			//	Dans l'ordre de droite à gauche:
 			this.buttonCancel = new Button (footer);
 			this.buttonCancel.PreferredWidth = 75;
-			this.buttonCancel.Text = Epsitec.Common.Dialogs.Res.Strings.Dialog.Generic.Button.Cancel;
+			this.buttonCancel.Text = Epsitec.Common.Dialogs.Res.Strings.Dialog.Generic.Button.Cancel.ToString ();
 			this.buttonCancel.ButtonStyle = ButtonStyle.DefaultCancel;
 			this.buttonCancel.Dock = DockStyle.Right;
 			this.buttonCancel.Margins = new Margins (6, 0, 0, 0);
@@ -1426,7 +1428,7 @@ namespace Epsitec.Common.Dialogs
 
 				if (this.FileDialogType == FileDialogType.New)
 				{
-					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", AbstractFileDialog.NewEmptyDocument, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument));  // première ligne avec 'nouveau document vide'
+					this.files.Add (new FileListItem ("manifest:Epsitec.Common.Dialogs.Images.New.icon", AbstractFileDialog.NewEmptyDocument, Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument.ToSimpleText (), Epsitec.Common.Dialogs.Res.Strings.Dialog.File.NewEmptyDocument.ToSimpleText ()));  // première ligne avec 'nouveau document vide'
 				}
 			}
 		}
@@ -2145,7 +2147,7 @@ namespace Epsitec.Common.Dialogs
 			//	Si requis, demande s'il faut écraser le fichier ?
 			if (this.FileDialogType != FileDialogType.Save && this.selectedFileName != AbstractFileDialog.NewEmptyDocument && !System.IO.File.Exists (this.selectedFileName))  // fichier n'existe pas ?
 			{
-				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File;
+				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Open.File.ToString ();
 				string filePath = this.selectedFileName;
 				string fileName = FolderItem.GetShortFileName (filePath);
 				string message  = string.Format (question, MessageDialog.FormatMessage (fileName), MessageDialog.FormatMessage (filePath));
@@ -2159,7 +2161,7 @@ namespace Epsitec.Common.Dialogs
 
 			if (this.FileDialogType == FileDialogType.Save && System.IO.File.Exists (this.selectedFileName))  // fichier existe déjà ?
 			{
-				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File;
+				string question = Epsitec.Common.Dialogs.Res.Strings.Dialog.Question.Save.File.ToString ();
 				string filePath = this.selectedFileName;
 				string fileName = FolderItem.GetShortFileName (filePath);
 				string message  = string.Format (question, MessageDialog.FormatMessage (fileName), MessageDialog.FormatMessage (filePath));

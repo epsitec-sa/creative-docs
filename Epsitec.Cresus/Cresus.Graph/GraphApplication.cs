@@ -207,12 +207,38 @@ namespace Epsitec.Cresus.Graph
 				return;
 			}
 
+			var args = System.Environment.GetCommandLineArgs ();
+
+			if (!System.Diagnostics.Debugger.IsAttached)
+            {
+				System.Diagnostics.Debugger.Launch ();
+			}
+
+			if (args.Length == 3)
+            {
+				string verb = args[1];
+				string path = args[2];
+
+				if (verb == "-open")
+				{
+					try
+					{
+						var doc = this.CreateDocument ();
+						doc.LoadDocument (path);
+						return;
+					}
+					catch
+					{
+						System.Environment.Exit (1);
+					}
+				}
+            }
+
 			foreach (XElement node in xml.Elements ())
 			{
 				System.Diagnostics.Debug.Assert (node.Name == "doc");
 
 				var doc = this.CreateDocument ();
-
 				doc.RestoreSettings (node);
 			}
 		}

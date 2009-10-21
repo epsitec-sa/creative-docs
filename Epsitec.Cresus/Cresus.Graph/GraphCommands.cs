@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Graph
 
 			var dialog = new FileSave ()
 			{
-				DefaultExt = ".emf",
+				DefaultExt = "emf",
 				FilterIndex = 0,
 				PromptForOverwriting = true,
 				Title = "Exporter le graphique en tant qu'image",
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Graph
 
 			dialog.OpenDialog ();
 
-			if (dialog.DialogResult == DialogResult.Accept)
+			if (dialog.Result == DialogResult.Accept)
 			{
 				chartViewController.ExportImage (dialog.FileName);
 			}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			var dialog = new FileSave ()
 			{
-				DefaultExt = ".crgraph",
+				DefaultExt = "crgraph",
 				PromptForOverwriting = true,
 				Title = "Enregistrer le graphe",
 			};
@@ -104,9 +104,46 @@ namespace Epsitec.Cresus.Graph
 
 			dialog.OpenDialog ();
 
-			if (dialog.DialogResult == DialogResult.Accept)
-            {
+			if (dialog.Result == DialogResult.Accept)
+			{
 				this.application.Document.SaveDocument (dialog.FileName);
+			}
+		}
+
+		[Command (ApplicationCommands.Id.Open)]
+		private void OpenCommand()
+		{
+			var dialog = new FileOpen ()
+			{
+				DefaultExt = "crgraph",
+				Title = "Ouvrir le graphe",
+			};
+
+			dialog.Filters.Add ("CRGRAPH", "Document Crésus Graphe", "*.crgraph");
+
+			dialog.OpenDialog ();
+
+			if (dialog.Result == DialogResult.Accept)
+			{
+				if (this.application.Document.IsEmpty)
+				{
+					this.application.Document.LoadDocument (dialog.FileName);
+				}
+				else
+				{
+					var info = new System.Diagnostics.ProcessStartInfo ()
+					{
+						Arguments = string.Concat ("-open ", @"""", dialog.FileName, @""""),
+						FileName = Globals.ExecutablePath,
+					};
+
+					var process = System.Diagnostics.Process.Start (info);
+
+					if (process != null)
+                    {
+						process.WaitForInputIdle ();
+                    }
+				}
 			}
 		}
 

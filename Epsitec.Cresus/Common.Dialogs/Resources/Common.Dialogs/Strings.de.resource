@@ -35,4 +35,7 @@
   <data id="0T">Die Datei &lt;b&gt;{0}&lt;/b&gt; wurde geändert.</data>
   <data id="0U">Sollen die Änderungen gespeichert werden?</data>
   <data id="031">Leeres Dokument</data>
+  <data id="A">Bestätigung vor dem Speichern</data>
+  <data id="A1">Die Datei {0} existiert schon.&lt;br/&gt;Möchten Sie diese Datei überschreiben ?</data>
+  <data id="A2">Die Datei {0} existiert nicht.&lt;br/&gt;Möchten Sie diese Datei erstellen ?</data>
 </bundle>

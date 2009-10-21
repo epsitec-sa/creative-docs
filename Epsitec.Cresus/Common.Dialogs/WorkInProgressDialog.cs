@@ -222,7 +222,7 @@ namespace Epsitec.Common.Dialogs
 				this.cancelButton.HorizontalAlignment = HorizontalAlignment.Center;
 				this.cancelButton.Margins = new Epsitec.Common.Drawing.Margins (0, 0, 16, 8);
 				this.cancelButton.Clicked += this.HandleCancelButtonClicked;
-				this.cancelButton.Text = Res.Strings.Dialog.Generic.Button.Cancel;
+				this.cancelButton.Text = Res.Strings.Dialog.Generic.Button.Cancel.ToString ();
 			}
 
 			this.timer = new Timer ();
@@ -334,7 +334,7 @@ namespace Epsitec.Common.Dialogs
 		[Command (Res.CommandIds.Dialog.Generic.Cancel)]
 		protected void CommandQuitDialog()
 		{
-			this.DialogResult = DialogResult.Cancel;
+			this.Result = DialogResult.Cancel;
 
 			this.CloseDialog ();
 		}

@@ -162,6 +162,13 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.cube == null;
+			}
+		}
 
 
 		public GraphDataSeries AddOutput(GraphDataSeries series)

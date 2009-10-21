@@ -134,7 +134,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (application == null)
 			{
-				return Res.Strings.Dialog.Generic.Title;
+				return Res.Strings.Dialog.Generic.Title.ToSimpleText ();
 			}
 			else
 			{
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
 
-			return dialog.DialogResult;
+			return dialog.Result;
 		}
 
 		public static DialogResult ShowMessage(string formattedMessage, Window owner)
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
 
-			return dialog.DialogResult;
+			return dialog.Result;
 		}
 
 		public static DialogResult ShowQuestion(string formattedQuestion, Window owner)
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.OwnerWindow = owner;
 			dialog.OpenDialog ();
 
-			return dialog.DialogResult;
+			return dialog.Result;
 		}
 		
 		protected static string GetIconName(DialogIcon icon)

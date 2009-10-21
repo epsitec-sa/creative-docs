@@ -116,7 +116,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				dialogWindow.WindowCloseClicked += delegate
 				{
-					this.DialogResult = DialogResult.Cancel;
+					this.Result = DialogResult.Cancel;
 					this.CloseDialog ();
 				};
 			}
@@ -143,12 +143,12 @@ namespace Epsitec.Common.Dialogs
 
 			if (button.Name == ConfirmationDialog.cancelButtonName)
 			{
-				this.DialogResult = DialogResult.Cancel;
+				this.Result = DialogResult.Cancel;
 			}
 			else
 			{
 				int rank = button.Index;
-				this.DialogResult = (DialogResult) (DialogResult.Answer1+rank);
+				this.Result = (DialogResult) (DialogResult.Answer1+rank);
 			}
 			this.CloseDialog();
 		}
