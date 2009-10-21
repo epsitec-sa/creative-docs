@@ -98,6 +98,7 @@ namespace Epsitec.Cresus.Graph
 				DefaultExt = "crgraph",
 				PromptForOverwriting = true,
 				Title = "Enregistrer le graphe",
+				FileName = this.application.Document.SavePath ?? "",
 			};
 
 			dialog.Filters.Add ("CRGRAPH", "Document Crésus Graphe", "*.crgraph");

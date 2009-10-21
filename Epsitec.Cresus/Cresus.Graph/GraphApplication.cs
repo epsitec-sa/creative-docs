@@ -209,10 +209,12 @@ namespace Epsitec.Cresus.Graph
 
 			var args = System.Environment.GetCommandLineArgs ();
 
+#if false
 			if (!System.Diagnostics.Debugger.IsAttached)
             {
 				System.Diagnostics.Debugger.Launch ();
 			}
+#endif
 
 			if (args.Length == 3)
             {
