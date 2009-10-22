@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void AsyncSaveApplicationState()
 		{
-			Application.QueueAsyncCallback (this.SaveApplicationState);
+			Application.QueueAsyncCallback (() => this.SaveApplicationState (false));
 		}
 
 		internal void RegisterDocument(GraphDocument document)
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Graph
                 }
 			}
 			
-			this.SaveApplicationState ();
+			this.SaveApplicationState (true);
 			base.ExecuteQuit (dispatcher, e);
 		}
 
@@ -196,11 +196,17 @@ namespace Epsitec.Cresus.Graph
 				XElement store = doc.Element ("store");
 
 				var version = (string) store.Attribute ("version");
+				var status  = (string) store.Attribute ("status");
 
 				if (version == "1")
 				{
 //-					this.stateManager.RestoreStates (store.Element ("stateManager"));
-					this.RestoreDocumentSettings (store.Element ("documents"));
+
+					if (status != "done")
+					{
+						this.RestoreDocumentSettings (store.Element ("documents"));
+					}
+					
 					Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
 					this.persistenceManager.Restore (store.Element ("uiSettings"));
 				}
@@ -210,7 +216,7 @@ namespace Epsitec.Cresus.Graph
 			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
 		}
 		
-		private void SaveApplicationState()
+		private void SaveApplicationState(bool saveStatus)
 		{
 			if (this.IsReady)
 			{
@@ -222,6 +228,7 @@ namespace Epsitec.Cresus.Graph
 					new XComment ("Saved on " + timeStamp),
 					new XElement ("store",
 						new XAttribute ("version", "1"),
+						new XAttribute ("status", saveStatus ? "done" : "open"),
 //						this.StateManager.SaveStates ("stateManager"),
 						this.SaveOpenDocumentSettings ("documents"),
 						Core.UI.SaveWindowPositions ("windowPositions"),
