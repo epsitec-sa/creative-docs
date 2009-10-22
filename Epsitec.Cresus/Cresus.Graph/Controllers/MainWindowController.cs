@@ -113,6 +113,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			yield return ApplicationCommands.Open;
 			yield return ApplicationCommands.Save;
+			yield return ApplicationCommands.SaveAs;
 			yield return ApplicationCommands.Undo;
 			yield return ApplicationCommands.Redo;
 		}

@@ -170,6 +170,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public bool IsDirty
+		{
+			get
+			{
+				return this.isDirty;
+			}
+		}
+
 
 		public GraphDataSeries AddOutput(GraphDataSeries series)
 		{
@@ -460,7 +468,10 @@ namespace Epsitec.Cresus.Graph
 
 		public void NotifyNeedsSave(bool dirty)
 		{
-			this.application.CommandContext.GetCommandState (ApplicationCommands.Save).Enable = dirty;
+			this.application.SetEnable (ApplicationCommands.Save, dirty);
+			this.application.SetEnable (ApplicationCommands.SaveAs, true);
+
+			this.isDirty = dirty;
 		}
 
 		public void SaveDocument(string path)
@@ -743,6 +754,7 @@ namespace Epsitec.Cresus.Graph
 		private string dataPath;
 		private string title;
 		private System.Guid guid;
+		private bool isDirty;
 		
 		private DataCube cube;
 		private string cubeSliceDim1;

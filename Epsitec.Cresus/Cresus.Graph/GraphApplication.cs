@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -109,6 +110,7 @@ namespace Epsitec.Cresus.Graph
 			this.Window = this.mainWindowController.Window;
 
 			this.SetEnable (ApplicationCommands.Save, false);
+			this.SetEnable (ApplicationCommands.SaveAs, false);
 			
 			this.RestoreApplicationState ();
 			this.IsReady = true;
@@ -146,10 +148,46 @@ namespace Epsitec.Cresus.Graph
 
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			var dirtyDocs = from doc in this.OpenDocuments
+							where doc.IsDirty
+							select doc;
+
+			foreach (var doc in dirtyDocs)
+			{
+				var header = "<font size=\"120%\">Ce document contient des modifications.</font><br/>Que faut-il faire avant de quitter ?";
+				var questions = new string[]
+				{
+					"<font size=\"120%\">Enregistrer ce document</font><br/>Vos modifications seront enregistrées avant de quitter.",
+					"<font size=\"120%\">Ne pas enregistrer ce document</font><br/>Vos modifications ne seront pas enregistrées et elles seront perdues.",
+				};
+				var dialog = new ConfirmationDialog (this.ShortWindowTitle, header, questions, true);
+				
+				dialog.OwnerWindow = this.Window;
+				dialog.OpenDialog ();
+
+				switch (dialog.Result)
+                {
+					case DialogResult.Answer1:
+						if (!this.graphCommands.Save (doc, false))
+						{
+							e.Executed = true;
+							return;
+						}
+						break;
+					
+					case DialogResult.Answer2:
+						break;
+
+					case DialogResult.Cancel:
+						e.Executed = true;
+						return;
+                }
+			}
+			
 			this.SaveApplicationState ();
 			base.ExecuteQuit (dispatcher, e);
 		}
-		
+
 		private void RestoreApplicationState()
 		{
 			if (System.IO.File.Exists (GraphApplication.Paths.SettingsPath))

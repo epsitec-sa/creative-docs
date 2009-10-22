@@ -93,21 +93,54 @@ namespace Epsitec.Cresus.Graph
 		[Command (ApplicationCommands.Id.Save)]
 		private void SaveCommand()
 		{
-			var dialog = new FileSave ()
+			this.Save (this.application.Document, false);
+		}
+
+		[Command (ApplicationCommands.Id.SaveAs)]
+		private void SaveAsCommand()
+		{
+			this.Save (this.application.Document, true);
+		}
+
+		public bool Save(GraphDocument document, bool alwaysAsk)
+		{
+			if (string.IsNullOrEmpty (document.SavePath))
+            {
+				alwaysAsk = true;
+            }
+
+			if (alwaysAsk)
 			{
-				DefaultExt = "crgraph",
-				PromptForOverwriting = true,
-				Title = "Enregistrer le graphe",
-				FileName = this.application.Document.SavePath ?? "",
-			};
+				var dialog = new FileSave ()
+				{
+					DefaultExt = "crgraph",
+					PromptForOverwriting = true,
+					Title = "Enregistrer le graphe",
+					FileName = document.SavePath ?? "",
+				};
 
-			dialog.Filters.Add ("CRGRAPH", "Document Crésus Graphe", "*.crgraph");
+				dialog.Filters.Add ("CRGRAPH", "Document Crésus Graphe", "*.crgraph");
 
-			dialog.OpenDialog ();
+				dialog.OpenDialog ();
 
-			if (dialog.Result == DialogResult.Accept)
+				if (dialog.Result == DialogResult.Accept)
+				{
+					document.SaveDocument (dialog.FileName);
+					return document.IsDirty == false;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
 			{
-				this.application.Document.SaveDocument (dialog.FileName);
+				if (document.IsDirty)
+				{
+					document.SaveDocument (document.SavePath);
+				}
+
+				return document.IsDirty == false;
 			}
 		}
 
