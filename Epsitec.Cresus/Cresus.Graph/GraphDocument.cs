@@ -472,6 +472,8 @@ namespace Epsitec.Cresus.Graph
 			this.application.SetEnable (ApplicationCommands.SaveAs, true);
 
 			this.isDirty = dirty;
+			
+			this.application.AsyncSaveApplicationState ();
 		}
 
 		public void SaveDocument(string path)
@@ -527,6 +529,7 @@ namespace Epsitec.Cresus.Graph
 
 			xml.Add (new XAttribute ("guid", this.guid));
 			xml.Add (new XAttribute ("dataPath", this.dataPath));
+			xml.Add (new XAttribute ("savePath", this.SavePath ?? ""));
 			xml.Add (new XAttribute ("title", this.title ?? ""));
 			xml.Add (new XElement ("undoActions", new XText (this.UndoRedo.UndoRecorder.SaveToString ())));
 			xml.Add (new XElement ("redoActions", new XText (this.UndoRedo.RedoRecorder.SaveToString ())));
@@ -554,6 +557,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.guid = (System.Guid) xml.Attribute ("guid");
 			this.dataPath = (string) xml.Attribute ("dataPath");
+			this.SavePath = (string) xml.Attribute ("savePath");
 			this.title = (string) xml.Attribute ("title");
 
 			var undoActionsXml = xml.Element ("undoActions");
