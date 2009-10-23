@@ -418,8 +418,8 @@ namespace Epsitec.Cresus.Graph
 					document.LoadCube (
 						new GraphDataCube (cube)
 						{
-							SliceDim1 = dimensionNames[0],
-							SliceDim2 = dimensionNames[1],
+							SliceDimA = dimensionNames[0],
+							SliceDimB = dimensionNames[1],
 							ConverterName = converter.Name,
 						});
 					

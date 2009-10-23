@@ -8,13 +8,19 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
+	/// <summary>
+	/// The <c>GraphDataCube</c> class encapsulates the <see cref="DataCube"/> while adding
+	/// some information, such as slicing, unique ID, etc.
+	/// </summary>
 	public class GraphDataCube : DataCube
 	{
 		public GraphDataCube()
 		{
+			this.Guid = System.Guid.NewGuid ();
 		}
 
 		public GraphDataCube(DataCube cube)
+			: this ()
 		{
 			var writer = new System.IO.StringWriter ();
 			cube.Save (writer);
@@ -26,8 +32,8 @@ namespace Epsitec.Cresus.Graph
 			: this ((DataCube) cube)
 		{
 			this.Guid = cube.Guid;
-			this.SliceDim1 = cube.SliceDim1;
-			this.SliceDim2 = cube.SliceDim2;
+			this.SliceDimA = cube.SliceDimA;
+			this.SliceDimB = cube.SliceDimB;
 			this.ConverterName = cube.ConverterName;
 		}
 
@@ -37,13 +43,13 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 		
-		public string SliceDim1
+		public string SliceDimA
 		{
 			get;
 			set;
 		}
 		
-		public string SliceDim2
+		public string SliceDimB
 		{
 			get;
 			set;

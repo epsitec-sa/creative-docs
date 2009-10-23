@@ -520,6 +520,72 @@ namespace Epsitec.Cresus.Graph
 			return false;
 		}
 
+		public void ReloadDataSet()
+		{
+			this.dataSources.Clear ();
+			this.outputSeries.Clear ();
+			this.groups.Clear ();
+			this.syntheticSeries.Clear ();
+			this.filterCategories.Clear ();
+
+			this.activeDataSource = null;
+
+			if ((this.cube == null) ||
+				(string.IsNullOrEmpty (this.cube.SliceDimA)) ||
+				(string.IsNullOrEmpty (this.cube.SliceDimB)))
+			{
+				return;
+			}
+
+			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
+			{
+				var source  = new GraphDataSource (this.cube.ConverterName)
+				{
+					Name = sourceName,
+				};
+
+				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cube.SliceDimA, this.cube.SliceDimB);
+
+				source.AddRange (from series in table.RowSeries
+								 select new GraphDataSeries (series)
+								 {
+									 Label = "",
+									 Title = series.Label,
+								 });
+
+				source.RenumberSeries ();
+				source.UpdateCategories ();
+
+				this.dataSources.Add (source);
+				this.activeDataSource = source;
+			}
+			
+			this.RefreshUI ();
+		}
+
+		public void RefreshUI()
+		{
+			this.application.WorkspaceController.Refresh ();
+		}
+
+
+		internal void LoadCube(GraphDataCube cube)
+		{
+			GraphDocument.SaveCubeData (cube);
+			this.cube = cube;
+			this.ReloadDataSet ();
+		}
+
+		internal void UpdateSyntheticSeries()
+		{
+			this.syntheticSeries.Clear ();
+
+			foreach (var group in this.groups)
+			{
+				this.syntheticSeries.AddRange (group.SyntheticDataSeries);
+			}
+		}
+
 		internal XElement SaveSettings(XElement xml)
 		{
 			xml.Add (new XAttribute ("guid", this.guid));
@@ -550,16 +616,16 @@ namespace Epsitec.Cresus.Graph
 
 
 			GraphActions.DocumentReload ();
-			
+
 			if (undoActionsXml != null)
 			{
 				this.UndoRedo.UndoRecorder.RestoreFromString (undoActionsXml.Value);
 				this.UndoRedo.UndoRecorder.ForEach (x => x.PlayBack ());
 			}
 			if (redoActionsXml != null)
-            {
+			{
 				this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
-            }
+			}
 
 			this.NotifyNeedsSave (false);
 			this.application.WorkspaceController.Refresh ();
@@ -582,9 +648,36 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private static string GetDataPath(Guid guid)
+		private IEnumerable<XElement> SaveCubeSettings()
 		{
-			return System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, guid.ToString ("D") + ".crgraph-data");
+			if (this.cube != null)
+			{
+				yield return GraphDocument.SaveCubeSettings (this.cube);
+			}
+		}
+
+		private static XElement SaveCubeSettings(GraphDataCube cube)
+		{
+			GraphDocument.SaveCubeData (cube);
+
+			return new XElement ("cube",
+				new XAttribute ("sliceDimA", cube.SliceDimA ?? ""),
+				new XAttribute ("sliceDimB", cube.SliceDimB ?? ""),
+				new XAttribute ("converter", cube.ConverterName ?? ""),
+				new XAttribute ("guid", cube.Guid));
+		}
+
+		private static void SaveCubeData(GraphDataCube cube)
+		{
+			var cubeGuid = cube.Guid;
+			var dataPath = GraphDocument.GetDataPath (cubeGuid);
+
+			System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (dataPath));
+
+			using (var stream = new System.IO.StreamWriter (dataPath, false, System.Text.Encoding.UTF8))
+			{
+				cube.Save (stream);
+			}
 		}
 
 		private void RestoreCubeSettings(IEnumerable<XElement> elements)
@@ -608,8 +701,8 @@ namespace Epsitec.Cresus.Graph
 							this.cube = new GraphDataCube ()
 							{
 								Guid = cubeGuid,
-								SliceDim1 = cubeSliceDim1,
-								SliceDim2 = cubeSliceDim2,
+								SliceDimA = cubeSliceDim1,
+								SliceDimB = cubeSliceDim2,
 								ConverterName = converterName,
 							};
 
@@ -620,137 +713,11 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		private IEnumerable<XElement> SaveCubeSettings()
+		private static string GetDataPath(Guid guid)
 		{
-			if (this.cube != null)
-			{
-				yield return GraphDocument.SaveCubeSettings (this.cube);
-			}
+			return System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, guid.ToString ("D") + ".crgraph-data");
 		}
 
-		private static XElement SaveCubeSettings(GraphDataCube cube)
-		{
-			var cubeGuid = cube.Guid;
-			var dataPath = GraphDocument.GetDataPath (cubeGuid);
-
-			System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (dataPath));
-
-			using (var stream = new System.IO.StreamWriter (dataPath, false, System.Text.Encoding.UTF8))
-			{
-				cube.Save (stream);
-			}
-
-			return new XElement ("cube",
-				new XAttribute ("sliceDimA", cube.SliceDim1 ?? ""),
-				new XAttribute ("sliceDimB", cube.SliceDim2 ?? ""),
-				new XAttribute ("converter", cube.ConverterName ?? ""),
-				new XAttribute ("guid", cubeGuid));
-		}
-
-		public void ReloadDataSet()
-		{
-			this.dataSources.Clear ();
-			this.outputSeries.Clear ();
-			this.groups.Clear ();
-			this.syntheticSeries.Clear ();
-			this.filterCategories.Clear ();
-
-			this.activeDataSource = null;
-
-			if ((this.cube == null) ||
-				(string.IsNullOrEmpty (this.cube.SliceDim1)) ||
-				(string.IsNullOrEmpty (this.cube.SliceDim2)))
-			{
-				return;
-			}
-
-			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
-			{
-				var source  = new GraphDataSource (this.cube.ConverterName)
-				{
-					Name = sourceName,
-				};
-
-				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cube.SliceDim1, this.cube.SliceDim2);
-
-				source.AddRange (from series in table.RowSeries
-								 select new GraphDataSeries (series)
-								 {
-									 Label = "",
-									 Title = series.Label,
-								 });
-
-				source.RenumberSeries ();
-				source.UpdateCategories ();
-
-				this.dataSources.Add (source);
-				this.activeDataSource = source;
-			}
-			
-			this.RefreshUI ();
-		}
-
-		public void RefreshUI()
-		{
-			this.application.WorkspaceController.Refresh ();
-		}
-
-
-		internal void LoadCube(GraphDataCube cube)
-		{
-			this.cube = cube;
-			this.ReloadDataSet ();
-		}
-
-
-		internal void UpdateSyntheticSeries()
-		{
-			this.syntheticSeries.Clear ();
-			
-			foreach (var group in this.groups)
-			{
-				this.syntheticSeries.AddRange (group.SyntheticDataSeries);
-			}
-		}
-
-		
-#if false
-		private DocumentViewController CreateUI(TabBook book)
-		{
-			var page = new TabPage ()
-			{
-				TabTitle = this.title ?? "Document",
-				Rank = 1
-			};
-
-			var frame = new FrameBox ()
-			{
-				Dock = DockStyle.Fill,
-				Padding = new Margins (0, 0, 0, 0),
-				Parent = page,
-				BackColor = Epsitec.Common.Widgets.Adorners.Factory.Active.ColorTabBackground
-			};
-
-			var panel = new DocumentViewController (frame, this, x => book.ActivePage = page,
-				x =>
-				{
-					book.Items.Remove (page);
-					page.Dispose ();
-					this.views.Remove (x);
-				})
-			{
-				RemoveSeriesFromGraphAction = this.RemoveSeriesFromGraphAction,
-				TitleSetterAction = title => page.TabTitle = title
-			};
-
-			GraphDocument.SetDocument (page, this);
-
-			this.views.Add (panel);
-			book.Items.Add (page);
-
-			return panel;
-		}
-#endif
 
 		#region Dependency Properties
 
@@ -779,7 +746,6 @@ namespace Epsitec.Cresus.Graph
 		private readonly UndoRedoManager undoRedoManager;
 		
 
-		private string dataPath;
 		private string title;
 		private System.Guid guid;
 		private bool isDirty;
