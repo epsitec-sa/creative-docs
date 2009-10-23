@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.workspace   = workspace;
 		}
 
+		
 		public bool IsStandalone
 		{
 			get;
@@ -99,6 +100,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		
 		public void SetupUI(Widget container)
 		{
 			this.container = container;
@@ -163,19 +165,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Visibility = false,
 			};
 
-			this.commandButton = new Button ()
-			{
-				Anchor = AnchorStyles.All,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				VerticalAlignment = VerticalAlignment.Center,
-				Parent = this.container,
-				Name = "command button",
-				Visibility = false,
-				Text = "Montrer dans une fenêtre séparée",
-				PreferredWidth = 120,
-				PreferredHeight = 40,
-			};
-
 			if (this.IsStandalone)
 			{
 				this.commandBar.Dock = DockStyle.Top;
@@ -184,6 +173,19 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
+				this.commandButton = new Button ()
+				{
+					Anchor = AnchorStyles.All,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					VerticalAlignment = VerticalAlignment.Center,
+					Parent = this.container,
+					Name = "command button",
+					Visibility = false,
+					Text = "Montrer dans une fenêtre séparée",
+					PreferredWidth = 120,
+					PreferredHeight = 40,
+				};
+
 				this.container.Entered +=
 					delegate
 					{
@@ -197,66 +199,33 @@ namespace Epsitec.Cresus.Graph.Controllers
 						this.commandBar.Visibility = false;
 						this.commandButton.Visibility = false;
 					};
+				
+				this.commandButton.Clicked +=
+					delegate
+					{
+						this.workspace.OpenChartViewWindow ();
+					};
 			}
-
-			this.commandButton.Clicked +=
-				delegate
-				{
-					this.workspace.OpenChartViewWindow ();
-				};
 
 			if (this.IsStandalone)
 			{
-				this.CreateToolButtons ();
+				this.CreateLeftToolButtons ();
+				this.CreateGraphTypeButtons ();
+				this.CreateRightToolButtons ();
 			}
-
-			this.CreateGraphTypeButtons ();
+			else
+			{
+				this.CreateGraphTypeButtons ();
+			}
 			
 			this.commandBar.SelectedItemChanged += (sender, e) => this.GraphType = this.commandBar.SelectedItem;
-		}
-
-		public void Refresh()
-		{
-			this.Refresh (this.document);
 		}
 
 		public void Refresh(GraphDocument document)
 		{
 			this.document = document;
-
-			if (this.document == null)
-			{
-				return;
-			}
-
-			var renderer = this.CreateRenderer ();
-
-			if (renderer == null)
-			{
-				this.chartView.Renderer   = null;
-				this.captionView.Captions = null;
-			}
-			else
-			{
-				List<ChartSeries> series = new List<ChartSeries> (this.GetDocumentChartSeries ());
-
-				renderer.Clear ();
-				renderer.ChartSeriesRenderingMode = this.StackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
-				renderer.DefineValueLabels (this.document.ChartColumnLabels);
-				renderer.CollectRange (series);
-				renderer.UpdateCaptions (series);
-				renderer.AlwaysIncludeZero = true;
-
-				this.chartView.Renderer = renderer;
-				this.captionView.Captions = renderer.Captions;
-				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
-				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.captionView.Parent.Padding.Size;
-			}
-
-			this.chartView.Invalidate ();
-			this.captionView.Invalidate ();
+			this.Refresh ();
 		}
-
 
 		public void ExportImage(string path)
 		{
@@ -320,6 +289,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 		
+		
 		private void RenderToPort(System.Action<System.Action<IPaintPort>, double, double> callback)
 		{
 			double dx = this.chartView.ActualWidth;
@@ -355,12 +325,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			callback (painter, dx, dy);
 		}
-
-
-
 		
 		
-		private void CreateToolButtons()
+		private void CreateLeftToolButtons()
 		{
 			foreach (var command in ChartViewController.GetToolCommands ())
 			{
@@ -370,18 +337,60 @@ namespace Epsitec.Cresus.Graph.Controllers
 					ButtonClass = ButtonClass.FlatButton,
 					PreferredSize = new Size (40, 40),
 					CommandObject = command,
+					Margins = new Margins (0, 0, 1, 1),
 					Parent = this.commandBar,
 				};
 			}
 
-			var sep = new Separator ()
+			new Separator ()
 			{
 				IsVerticalLine = true,
 				Dock = DockStyle.Stacked,
 				PreferredWidth = 1,
 				Parent = this.commandBar,
+				Margins = new Margins (2, 2, 0, 0),
+			};
+		}
+		
+		private void CreateRightToolButtons()
+		{
+			new Separator ()
+			{
+				IsVerticalLine = true,
+				Dock = DockStyle.Stacked,
+				PreferredWidth = 1,
+				Parent = this.commandBar,
+				Margins = new Margins (2, 2, 0, 0),
+			};
+			
+			var frame = new FrameBox ()
+			{
+				Dock = DockStyle.Stacked,
+				Parent = this.commandBar,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
+			var button = new Button ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 130,
+				Text = "Créer un cliché instantané",
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				ButtonStyle = ButtonStyle.ToolItem,
+				Parent = frame,
+				Margins = new Margins (0, 0, 1, 1),
+				Padding = new Margins (40, 4, 0, 0),
+			};
+
+			button.PaintForeground +=
+				(sender, e) =>
+				{
+					var widget   = (Widget) sender;
+					var graphics = e.Graphics;
+
+					graphics.AddFilledRectangle (new Rectangle (6, 6, 24, 24));
+					graphics.RenderSolid (Color.FromAlphaRgb (0.5, 0, 0, 1));
+				};
 		}
 
 		private void CreateGraphTypeButtons()
@@ -405,8 +414,45 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			return context;
 		}
-		
-		private AbstractRenderer CreateRenderer()
+
+
+		private void Refresh()
+		{
+			if (this.document == null)
+			{
+				return;
+			}
+
+			var snapshot = GraphChartSnapshot.FromDocument (this.document);
+			var renderer = this.CreateRenderer (snapshot);
+
+			if (renderer == null)
+			{
+				this.chartView.Renderer   = null;
+				this.captionView.Captions = null;
+			}
+			else
+			{
+				List<ChartSeries> series = new List<ChartSeries> (snapshot.SeriesItems);
+
+				renderer.Clear ();
+				renderer.ChartSeriesRenderingMode = this.StackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
+				renderer.DefineValueLabels (snapshot.ColumnLabels);
+				renderer.CollectRange (series);
+				renderer.UpdateCaptions (series);
+				renderer.AlwaysIncludeZero = true;
+
+				this.chartView.Renderer = renderer;
+				this.captionView.Captions = renderer.Captions;
+				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
+				this.captionView.Parent.PreferredSize = this.captionView.Captions.GetCaptionLayoutSize (new Size (240, 600)) + this.captionView.Parent.Padding.Size;
+			}
+
+			this.chartView.Invalidate ();
+			this.captionView.Invalidate ();
+		}
+
+		private AbstractRenderer CreateRenderer(GraphChartSnapshot snapshot)
 		{
 			AbstractRenderer renderer = null;
 			bool stackValues = false;
@@ -433,42 +479,30 @@ namespace Epsitec.Cresus.Graph.Controllers
 					VisibleTicks = true,
 				};
 
-				renderer.AddStyle (this.GetDocumentChartSeriesColorStyle ());
+				renderer.AddStyle (snapshot.ColorStyle);
 				renderer.AddAdorner (adorner);
 			}
 
 			return renderer;
 		}
 
-		private ColorStyle GetDocumentChartSeriesColorStyle()
-		{
-			ColorStyle style = new ColorStyle (this.colorStyle.Name);
-
-			foreach (int index in this.document.OutputSeries.Select (x => x.ColorIndex))
-			{
-				style.Add (this.colorStyle[index]);
-			}
-			
-			return style;
-		}
-
-		private static IEnumerable<Command> GetGraphTypeCommands()
-		{
-			yield return Res.Commands.GraphType.UseLineChart;
-			yield return Res.Commands.GraphType.UseBarChartVertical;
-//-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
-		}
-
 
 		private IEnumerable<ChartSeries> GetDocumentChartSeries()
 		{
 			bool accumulateValues = false;
+			
 			foreach (var series in this.document.OutputSeries.Select (x => x.ChartSeries))
 			{
 				yield return new ChartSeries (series.Label, accumulateValues ? ChartViewController.Accumulate (series.Values) : series.Values);
 			}
 		}
 
+		private IEnumerable<string> GetDocumentChartColumnLabels()
+		{
+			return this.document.ChartColumnLabels;
+		}
+
+		
 		private static IEnumerable<ChartValue> Accumulate(IEnumerable<ChartValue> collection)
 		{
 			double accumulation = 0.0;
@@ -480,6 +514,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		private static IEnumerable<Command> GetGraphTypeCommands()
+		{
+			yield return Res.Commands.GraphType.UseLineChart;
+			yield return Res.Commands.GraphType.UseBarChartVertical;
+			//-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
+		}
+
+
+		#region CommandController Class
 
 		private class CommandController
 		{
@@ -498,6 +541,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		#endregion
+
 
 		public static void SetChartViewController(DependencyObject o, ChartViewController value)
 		{
@@ -513,7 +558,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			return o.GetValue (ChartViewController.ChartViewControllerProperty) as ChartViewController;
 		}
-
 
 
 		private static IEnumerable<Command> GetToolCommands()
@@ -540,6 +584,5 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private GraphDocument					document;
 		private Command							graphType;
 		private ColorStyle						colorStyle;
-
 	}
 }

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using System;
+using Epsitec.Common.Graph.Styles;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 
@@ -45,8 +46,9 @@ namespace Epsitec.Cresus.Graph
 
 			this.undoRedoManager = new UndoRedoManager ();
 			this.undoRedoManager.UndoRedoExecuted += sender => this.RefreshUI ();
-			
-			
+
+			this.CreateDefaultColorStyle ();
+
 			this.application.RegisterDocument (this);
 			this.application.SetActiveDocument (this);
 		}
@@ -175,6 +177,12 @@ namespace Epsitec.Cresus.Graph
 			{
 				return this.isDirty;
 			}
+		}
+
+		public ColorStyle DefaultColorStyle
+		{
+			get;
+			private set;
 		}
 
 
@@ -644,6 +652,18 @@ namespace Epsitec.Cresus.Graph
 #endif
 		}
 
+
+		private void CreateDefaultColorStyle()
+		{
+			var colorStyle = new ColorStyle ("line-color");
+
+			for (int hue = 0; hue < 360; hue += 36)
+			{
+				colorStyle.Add (Color.FromAlphaHsv (1.0, hue, 1.0, 1.0));
+			}
+
+			this.DefaultColorStyle = colorStyle;
+		}
 
 		private IEnumerable<XElement> SaveCubeSettings()
 		{

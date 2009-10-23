@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override Epsitec.Common.Drawing.Size GetTextLayoutSize()
 		{
-			Drawing.Size size = base.GetTextLayoutSize ();
+			var size = base.GetTextLayoutSize () - this.Padding.Size;
 
 			switch (this.ButtonStyle)
 			{
@@ -165,7 +165,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override Epsitec.Common.Drawing.Point GetTextLayoutOffset()
 		{
-			Drawing.Point offset = base.GetTextLayoutOffset ();
+			var padding = this.Padding;
+			var offset = base.GetTextLayoutOffset () + new Drawing.Point (padding.Left, padding.Bottom);
 
 			switch (this.ButtonStyle)
 			{
@@ -173,8 +174,7 @@ namespace Epsitec.Common.Widgets
 				case ButtonStyle.DefaultAccept:
 				case ButtonStyle.DefaultAcceptAndCancel:
 				case ButtonStyle.DefaultCancel:
-					offset.X += 4;
-					offset.Y += 4;
+					return offset + new Drawing.Point (4, 4);
 					break;
 			}
 			

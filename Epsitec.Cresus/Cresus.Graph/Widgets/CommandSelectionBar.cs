@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			this.commands = new CommandCollection (this);
 			this.metabuttons = new List<MetaButton> ();
 
-			this.Padding = new Margins (1, 1, 1, 1);
+			this.Padding = new Margins (1, 1, 0, 1);
 		}
 
 
@@ -187,7 +187,8 @@ namespace Epsitec.Cresus.Graph.Widgets
 			this.Add (
 				new MetaButton ()
 				{
-					CommandObject = item
+					CommandObject = item,
+					Margins = new Margins (0, 0, 1, 1),
 				});
 		}
 
