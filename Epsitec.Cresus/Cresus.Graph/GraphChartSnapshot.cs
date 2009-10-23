@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Graph.Data;
+using System.Xml.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -40,6 +42,51 @@ namespace Epsitec.Cresus.Graph
 				return this.columns;
 			}
 		}
+
+
+		internal XElement SaveSettings(XElement xml)
+		{
+			xml.Add (GraphChartSnapshot.SaveColorStyle (this.ColorStyle));
+			xml.Add (new XElement ("items", this.SeriesItems.Select (x => GraphChartSnapshot.SaveSeries (x))));
+			xml.Add (new XElement ("columnLabels", this.ColumnLabels.Select (x => GraphChartSnapshot.SaveColumnLabel (x))));
+
+			return xml;
+		}
+
+		internal void RestoreSettings(XElement xml)
+		{
+			this.colorStyle = new ColorStyle (null);
+			this.colorStyle.RestoreSettings (xml.Element ("colorStyle"));
+
+			foreach (var element in xml.Elements ("items"))
+			{
+				var series = new ChartSeries ();
+				series.RestoreSettings (element);
+				this.seriesItems.Add (series);
+			}
+			foreach (var element in xml.Elements ("columnLabels"))
+			{
+				this.columns.Add ((string) element.Attribute ("value"));
+			}
+		}
+
+		
+		private static XElement SaveColorStyle(ColorStyle colorStyle)
+		{
+			return colorStyle.SaveSettings (new XElement ("colorStyle"));
+		}
+
+		private static XElement SaveSeries(ChartSeries series)
+		{
+			return series.SaveSettings (new XElement ("series"));
+		}
+
+		private static XElement SaveColumnLabel(string columnLabel)
+		{
+			return new XElement ("label",
+				new XAttribute ("value", columnLabel ?? ""));
+		}
+        
 
 
 		public static GraphChartSnapshot FromDocument(GraphDocument document)

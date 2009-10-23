@@ -25,11 +25,13 @@ namespace Epsitec.Common.Graph.Styles
 		
 		public virtual XElement SaveSettings(XElement xml)
 		{
+			xml.Add (new XAttribute ("name", this.Name ?? ""));
 			return xml;
 		}
 
 		public virtual void RestoreSettings(XElement xml)
 		{
+			this.Name = (string) xml.Attribute ("name");
 		}
 
 

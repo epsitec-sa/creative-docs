@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace Epsitec.Common.Graph.Data
 {
@@ -38,6 +39,25 @@ namespace Epsitec.Common.Graph.Data
 			{
 				return this.values;
 			}
+		}
+
+
+		public XElement SaveSettings(XElement xml)
+		{
+			xml.Add (new XAttribute ("label", this.Label ?? ""));
+			xml.Add (new XElement ("values",
+				this.Values.Select (value =>
+					new XElement ("value",
+						new XAttribute ("x", value.Label ?? ""),
+						new XAttribute ("y", value.Value)))));
+
+			return xml;
+		}
+
+		public void RestoreSettings(XElement xml)
+		{
+			this.Label = (string) xml.Attribute ("label");
+			this.values.AddRange (xml.Elements ("value").Select (value => new ChartValue ((string) value.Attribute ("x"), (double) value.Attribute ("y"))));
 		}
 
 

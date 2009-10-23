@@ -572,7 +572,7 @@ namespace Epsitec.Cresus.Graph
 
 		public void RefreshUI()
 		{
-			this.application.WorkspaceController.Refresh ();
+			Application.QueueAsyncCallback (this.application.WorkspaceController.Refresh);
 		}
 
 
