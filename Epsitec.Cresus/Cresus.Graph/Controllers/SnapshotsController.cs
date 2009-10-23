@@ -18,7 +18,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			this.itemsController = new ItemListController<Widget> ()
 			{
-				ItemLayoutMode = ItemLayoutMode.Flow
+				ItemLayoutMode = ItemLayoutMode.Flow,
+				OverlapX = -2,
+				OverlapY = -2,
 			};
 		}
 		
@@ -53,7 +55,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 					PreferredWidth = WorkspaceController.DefaultViewWidth,
 					PreferredHeight = WorkspaceController.DefaultViewHeight,
 					Padding = new Margins (4, 4, 4, 4),
-					Margins = new Margins (2, 2, 2, 2),
 					Renderer = chartSnapShot.CreateRenderer (false),
 					Scale = 0.5,
 				};

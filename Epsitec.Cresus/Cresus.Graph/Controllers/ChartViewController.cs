@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					newWindow.Show ();
 					oldWindow.Close ();
 
-					this.application.AsyncSaveApplicationState ();
+					this.document.NotifyNeedsSave (true);
 				};
 		}
 
