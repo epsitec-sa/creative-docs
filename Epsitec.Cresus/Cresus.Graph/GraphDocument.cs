@@ -144,14 +144,13 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.title;
-			}
-			set
-			{
-				if (this.title != value)
+				if (this.cube == null)
 				{
-					this.title = value;
-//-					this.views.ForEach (view => view.TitleSetterAction (value));
+					return null;
+				}
+				else
+				{
+					return this.cube.Title;
 				}
 			}
 		}
@@ -590,7 +589,6 @@ namespace Epsitec.Cresus.Graph
 		{
 			xml.Add (new XAttribute ("guid", this.guid));
 			xml.Add (new XAttribute ("savePath", this.SavePath ?? ""));
-			xml.Add (new XAttribute ("title", this.title ?? ""));
 			xml.Add (new XElement ("undoActions", new XText (this.UndoRedo.UndoRecorder.SaveToString ())));
 			xml.Add (new XElement ("redoActions", new XText (this.UndoRedo.RedoRecorder.SaveToString ())));
 			xml.Add (new XElement ("cubes", this.SaveCubeSettings ()));
@@ -602,8 +600,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.guid = (System.Guid) xml.Attribute ("guid");
 			this.SavePath = (string) xml.Attribute ("savePath");
-			this.title = (string) xml.Attribute ("title");
-
+			
 			var undoActionsXml = xml.Element ("undoActions");
 			var redoActionsXml = xml.Element ("redoActions");
 			var viewsXml = xml.Element ("views");
@@ -661,10 +658,12 @@ namespace Epsitec.Cresus.Graph
 			GraphDocument.SaveCubeData (cube);
 
 			return new XElement ("cube",
+				new XAttribute ("guid", cube.Guid),
 				new XAttribute ("sliceDimA", cube.SliceDimA ?? ""),
 				new XAttribute ("sliceDimB", cube.SliceDimB ?? ""),
 				new XAttribute ("converter", cube.ConverterName ?? ""),
-				new XAttribute ("guid", cube.Guid));
+				new XAttribute ("title", cube.Title ?? "")
+				);
 		}
 
 		private static void SaveCubeData(GraphDataCube cube)
@@ -695,6 +694,7 @@ namespace Epsitec.Cresus.Graph
 						var cubeSliceDim1 = (string) cubeXml.Attribute ("sliceDimA");
 						var cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
 						var converterName = (string) cubeXml.Attribute ("converter");
+						var cubeTitle     = (string) cubeXml.Attribute ("title");
 
 						using (var stream = new System.IO.StreamReader (dataPath, System.Text.Encoding.UTF8))
 						{
@@ -704,6 +704,7 @@ namespace Epsitec.Cresus.Graph
 								SliceDimA = cubeSliceDim1,
 								SliceDimB = cubeSliceDim2,
 								ConverterName = converterName,
+								Title = cubeTitle,
 							};
 
 							this.cube.Restore (stream);
@@ -746,7 +747,6 @@ namespace Epsitec.Cresus.Graph
 		private readonly UndoRedoManager undoRedoManager;
 		
 
-		private string title;
 		private System.Guid guid;
 		private bool isDirty;
 		

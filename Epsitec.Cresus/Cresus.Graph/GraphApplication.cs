@@ -299,75 +299,6 @@ namespace Epsitec.Cresus.Graph
 			return doc;
 		}
 
-#if false
-		private void SumRows(IEnumerable<int> rows)
-		{
-			var sum = this.activeDocument.DataSet.DataTable.SumRows (rows, this.seriesPickerController.GetRowSeries);
-
-			if (sum == null)
-			{
-				return;
-			}
-
-			this.activeDocument.DataSet.DataTable.RemoveRows (rows);
-			this.activeDocument.DataSet.DataTable.Insert (rows.First (), sum.Label.Replace ("+-", "-"), sum.Values);
-
-			this.seriesPickerController.UpdateScrollListItems ();
-			this.seriesPickerController.UpdateChartView ();
-		}
-
-		private void NegateRows(IEnumerable<int> rows)
-		{
-			foreach (int row in rows)
-			{
-				var series = this.activeDocument.DataSet.DataTable.GetRowSeries (row);
-				this.seriesPickerController.NegateSeries (series.Label);
-			}
-
-			this.seriesPickerController.UpdateScrollListItems ();
-			this.seriesPickerController.UpdateChartView ();
-		}
-
-		private void AddToChart(IEnumerable<int> rows)
-		{
-			var table = this.activeDocument.DataSet.DataTable;
-
-			foreach (int row in rows)
-			{
-				this.activeDocument.Add (table.GetRowSeries (row));
-			}
-
-			table.RemoveRows (rows);
-			
-			this.seriesPickerController.UpdateScrollListItems ();
-			this.seriesPickerController.UpdateChartView ();
-		}
-
-		private void RemoveFromChart(IEnumerable<int> rows)
-		{
-			var table = this.activeDocument.DataSet.DataTable;
-			var list  = new List<ChartSeries> (rows.Select (x => this.activeDocument.Find (x)));
-
-			list.ForEach (series => this.activeDocument.Remove (series));
-			list.ForEach (series => table.Add (series.Label, series.Values));
-			
-			this.seriesPickerController.UpdateScrollListItems ();
-			this.seriesPickerController.UpdateChartView ();
-
-			this.seriesPickerController.SetSelectedItem (table.RowCount-1);
-		}
-
-		private void LoadDataSet()
-		{
-			System.Diagnostics.Debug.Assert (this.activeDocument != null);
-
-			this.activeDocument.ReloadDataSet ();
-			this.seriesPickerController.ClearNegatedSeries ();
-
-			this.OnActiveDocumentChanged ();
-		}
-#endif
-
 		private void OnActiveDocumentChanged()
 		{
 			var handler = this.ActiveDocumentChanged;
@@ -414,17 +345,18 @@ namespace Epsitec.Cresus.Graph
 
 					var document       = this.Document;
 					var dimensionNames = cube.NaturalTableDimensionNames;
-
-					document.LoadCube (
+					
+					var graphDataCube  =
 						new GraphDataCube (cube)
 						{
 							SliceDimA = dimensionNames[0],
 							SliceDimB = dimensionNames[1],
 							ConverterName = converter.Name,
-						});
-					
-					document.Title = converter.DataTitle;
+							Title = converter.DataTitle,
+						};
 
+					document.LoadCube (graphDataCube);
+					
 					this.OnActiveDocumentChanged ();
 				}
 			}

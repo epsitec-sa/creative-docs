@@ -31,10 +31,11 @@ namespace Epsitec.Cresus.Graph
 		public GraphDataCube(GraphDataCube cube)
 			: this ((DataCube) cube)
 		{
-			this.Guid = cube.Guid;
-			this.SliceDimA = cube.SliceDimA;
-			this.SliceDimB = cube.SliceDimB;
+			this.Guid          = cube.Guid;
+			this.SliceDimA     = cube.SliceDimA;
+			this.SliceDimB     = cube.SliceDimB;
 			this.ConverterName = cube.ConverterName;
+			this.Title         = cube.Title;
 		}
 
 		public System.Guid Guid
@@ -56,6 +57,12 @@ namespace Epsitec.Cresus.Graph
 		}
 		
 		public string ConverterName
+		{
+			get;
+			set;
+		}
+
+		public string Title
 		{
 			get;
 			set;
