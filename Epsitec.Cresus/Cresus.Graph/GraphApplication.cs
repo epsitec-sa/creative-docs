@@ -415,9 +415,13 @@ namespace Epsitec.Cresus.Graph
 					var document       = this.Document;
 					var dimensionNames = cube.NaturalTableDimensionNames;
 
-					document.DefineImportConverter (converter.Name);
-					document.LoadCube (cube);
-					document.SelectCubeSlice (dimensionNames[0], dimensionNames[1]);
+					document.LoadCube (
+						new GraphDataCube (cube)
+						{
+							SliceDim1 = dimensionNames[0],
+							SliceDim2 = dimensionNames[1],
+							ConverterName = converter.Name,
+						});
 					
 					document.Title = converter.DataTitle;
 

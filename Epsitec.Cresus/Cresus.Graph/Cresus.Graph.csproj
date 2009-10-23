@@ -139,6 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GraphDataCube.cs" />
     <Compile Include="UndoRedoManager.cs" />
     <Compile Include="Controllers\ChartViewController.cs" />
     <Compile Include="Controllers\GroupDetailsController.cs" />

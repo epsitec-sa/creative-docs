@@ -522,62 +522,32 @@ namespace Epsitec.Cresus.Graph
 
 		internal XElement SaveSettings(XElement xml)
 		{
-			if (string.IsNullOrEmpty (this.dataPath))
-			{
-				this.dataPath = System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, this.guid.ToString ("D") + ".crgraph-data");
-			}
-
 			xml.Add (new XAttribute ("guid", this.guid));
-			xml.Add (new XAttribute ("dataPath", this.dataPath));
 			xml.Add (new XAttribute ("savePath", this.SavePath ?? ""));
 			xml.Add (new XAttribute ("title", this.title ?? ""));
 			xml.Add (new XElement ("undoActions", new XText (this.UndoRedo.UndoRecorder.SaveToString ())));
 			xml.Add (new XElement ("redoActions", new XText (this.UndoRedo.RedoRecorder.SaveToString ())));
-//-			xml.Add (new XElement ("views", this.views.Select (x => x.SaveSettings (new XElement ("view")))));
+			xml.Add (new XElement ("cubes", this.SaveCubeSettings ()));
 
-			if (this.cube != null)
-			{
-				xml.Add (new XElement ("cube",
-					new XAttribute ("sliceDimA", this.cubeSliceDim1 ?? ""),
-					new XAttribute ("sliceDimB", this.cubeSliceDim2 ?? ""),
-					new XAttribute ("converter", this.converterName ?? "")));
-
-				System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (this.dataPath));
-				
-				using (var stream = new System.IO.StreamWriter (this.dataPath, false, System.Text.Encoding.UTF8))
-				{
-					this.cube.Save (stream);
-				}
-			}
-			
 			return xml;
 		}
 
 		internal void RestoreSettings(XElement xml)
 		{
 			this.guid = (System.Guid) xml.Attribute ("guid");
-			this.dataPath = (string) xml.Attribute ("dataPath");
 			this.SavePath = (string) xml.Attribute ("savePath");
 			this.title = (string) xml.Attribute ("title");
 
 			var undoActionsXml = xml.Element ("undoActions");
 			var redoActionsXml = xml.Element ("redoActions");
 			var viewsXml = xml.Element ("views");
-			var cubeXml = xml.Element ("cube");
+			var cubesXml = xml.Element ("cubes");
 
-			if ((cubeXml != null) &&
-				(System.IO.File.Exists (this.dataPath)))
+			if (cubesXml != null)
 			{
-				this.cubeSliceDim1 = (string) cubeXml.Attribute ("sliceDimA");
-				this.cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
-				this.converterName = (string) cubeXml.Attribute ("converter");
-
-				using (var stream = new System.IO.StreamReader (this.dataPath, System.Text.Encoding.UTF8))
-				{
-					this.cube = new DataCube ();
-					this.cube.Restore (stream);
-				}
+				this.RestoreCubeSettings (cubesXml.Elements ());
 			}
+
 
 			GraphActions.DocumentReload ();
 			
@@ -612,6 +582,71 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+		private static string GetDataPath(Guid guid)
+		{
+			return System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, guid.ToString ("D") + ".crgraph-data");
+		}
+
+		private void RestoreCubeSettings(IEnumerable<XElement> elements)
+		{
+			foreach (var cubeXml in elements)
+			{
+				if ((cubeXml != null) &&
+					(cubeXml.Name == "cube"))
+				{
+					var cubeGuid = (System.Guid) cubeXml.Attribute ("guid");
+					var dataPath = GraphDocument.GetDataPath (cubeGuid);
+
+					if (System.IO.File.Exists (dataPath))
+					{
+						var cubeSliceDim1 = (string) cubeXml.Attribute ("sliceDimA");
+						var cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
+						var converterName = (string) cubeXml.Attribute ("converter");
+
+						using (var stream = new System.IO.StreamReader (dataPath, System.Text.Encoding.UTF8))
+						{
+							this.cube = new GraphDataCube ()
+							{
+								Guid = cubeGuid,
+								SliceDim1 = cubeSliceDim1,
+								SliceDim2 = cubeSliceDim2,
+								ConverterName = converterName,
+							};
+
+							this.cube.Restore (stream);
+						}
+					}
+				}
+			}
+		}
+
+		private IEnumerable<XElement> SaveCubeSettings()
+		{
+			if (this.cube != null)
+			{
+				yield return GraphDocument.SaveCubeSettings (this.cube);
+			}
+		}
+
+		private static XElement SaveCubeSettings(GraphDataCube cube)
+		{
+			var cubeGuid = cube.Guid;
+			var dataPath = GraphDocument.GetDataPath (cubeGuid);
+
+			System.IO.Directory.CreateDirectory (System.IO.Path.GetDirectoryName (dataPath));
+
+			using (var stream = new System.IO.StreamWriter (dataPath, false, System.Text.Encoding.UTF8))
+			{
+				cube.Save (stream);
+			}
+
+			return new XElement ("cube",
+				new XAttribute ("sliceDimA", cube.SliceDim1 ?? ""),
+				new XAttribute ("sliceDimB", cube.SliceDim2 ?? ""),
+				new XAttribute ("converter", cube.ConverterName ?? ""),
+				new XAttribute ("guid", cubeGuid));
+		}
+
 		public void ReloadDataSet()
 		{
 			this.dataSources.Clear ();
@@ -623,20 +658,20 @@ namespace Epsitec.Cresus.Graph
 			this.activeDataSource = null;
 
 			if ((this.cube == null) ||
-				(string.IsNullOrEmpty (this.cubeSliceDim1)) ||
-				(string.IsNullOrEmpty (this.cubeSliceDim2)))
+				(string.IsNullOrEmpty (this.cube.SliceDim1)) ||
+				(string.IsNullOrEmpty (this.cube.SliceDim2)))
 			{
 				return;
 			}
 
 			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
 			{
-				var source  = new GraphDataSource (this.converterName)
+				var source  = new GraphDataSource (this.cube.ConverterName)
 				{
 					Name = sourceName,
 				};
 
-				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cubeSliceDim1, this.cubeSliceDim2);
+				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cube.SliceDim1, this.cube.SliceDim2);
 
 				source.AddRange (from series in table.RowSeries
 								 select new GraphDataSeries (series)
@@ -661,23 +696,12 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		internal void DefineImportConverter(string importerName)
-		{
-			this.converterName = importerName;
-		}
-		
-		internal void LoadCube(DataCube cube)
+		internal void LoadCube(GraphDataCube cube)
 		{
 			this.cube = cube;
 			this.ReloadDataSet ();
 		}
 
-		internal void SelectCubeSlice(string dim1, string dim2)
-		{
-			this.cubeSliceDim1 = dim1;
-			this.cubeSliceDim2 = dim2;
-			this.ReloadDataSet ();
-		}
 
 		internal void UpdateSyntheticSeries()
 		{
@@ -760,10 +784,7 @@ namespace Epsitec.Cresus.Graph
 		private System.Guid guid;
 		private bool isDirty;
 		
-		private DataCube cube;
-		private string cubeSliceDim1;
-		private string cubeSliceDim2;
-		private string converterName;
+		private GraphDataCube	cube;
 
 		private GraphDataSource activeDataSource;
 		private GraphDataSource groupSource;

@@ -1,11 +1,11 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe ResizeKnob gère le coin inf/droite de redimensionnement d'une
-	/// fenêtre.
+	/// The <c>ResizeKnob</c> class provides a special button which can be used to
+	/// drag the bottom right corner of a window in order to resize it.
 	/// </summary>
 	public class ResizeKnob : Button
 	{
