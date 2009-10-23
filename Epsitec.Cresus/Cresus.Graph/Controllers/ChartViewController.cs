@@ -100,6 +100,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public GraphChartSnapshot ChartSnapshot
+		{
+			get;
+			set;
+		}
+
 		
 		public void SetupUI(Widget container)
 		{
@@ -181,7 +187,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Parent = this.container,
 					Name = "command button",
 					Visibility = false,
-					Text = "Montrer dans une fenêtre séparée",
+					Text = "Afficher dans une fenêtre séparée",
 					PreferredWidth = 120,
 					PreferredHeight = 40,
 				};
@@ -203,7 +209,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.commandButton.Clicked +=
 					delegate
 					{
-						this.workspace.OpenChartViewWindow ();
+						var window = this.workspace.FindDefaultChartViewWindow ()
+									 ?? this.workspace.CreateChartViewWindow (null);
+						
+						window.Show ();
+						window.MakeActive ();
 					};
 			}
 
@@ -380,6 +390,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = frame,
 				Margins = new Margins (0, 0, 1, 1),
 				Padding = new Margins (40, 4, 0, 0),
+				Visibility = this.ChartSnapshot == null,
 			};
 
 			button.PaintForeground +=
@@ -390,6 +401,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					graphics.AddFilledRectangle (new Rectangle (6, 6, 24, 24));
 					graphics.RenderSolid (Color.FromAlphaRgb (0.5, 0, 0, 1));
+				};
+
+			button.Clicked +=
+				(sender, e) =>
+				{
+					var snapshot  = GraphChartSnapshot.FromDocument (this.document);
+					var newWindow = this.workspace.CreateChartViewWindow (snapshot);
+					var oldWindow = this.container.Window;
+
+					this.document.ChartSnapshots.Add (snapshot);
+
+					newWindow.WindowPlacement = oldWindow.WindowPlacement;
+					newWindow.Show ();
+					oldWindow.Close ();
 				};
 		}
 
@@ -423,7 +448,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 
-			var snapshot = GraphChartSnapshot.FromDocument (this.document);
+			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document);
 			var renderer = this.CreateRenderer (snapshot);
 
 			if (renderer == null)

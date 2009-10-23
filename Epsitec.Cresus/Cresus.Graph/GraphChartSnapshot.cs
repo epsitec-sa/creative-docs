@@ -1,12 +1,12 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
 using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Graph.Data;
+
+using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
-using System;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.seriesItems = new List<ChartSeries> ();
 			this.columns = new List<string> ();
+			this.Guid = System.Guid.NewGuid ();
 		}
 
 
@@ -43,9 +44,16 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public System.Guid Guid
+		{
+			get;
+			private set;
+		}
+
 
 		internal XElement SaveSettings(XElement xml)
 		{
+			xml.Add (new XAttribute ("guid", this.Guid));
 			xml.Add (GraphChartSnapshot.SaveColorStyle (this.ColorStyle));
 			xml.Add (new XElement ("items", this.SeriesItems.Select (x => GraphChartSnapshot.SaveSeries (x))));
 			xml.Add (new XElement ("columnLabels", this.ColumnLabels.Select (x => GraphChartSnapshot.SaveColumnLabel (x))));
@@ -55,6 +63,8 @@ namespace Epsitec.Cresus.Graph
 
 		internal void RestoreSettings(XElement xml)
 		{
+			this.Guid = (System.Guid) xml.Attribute ("guid");
+			
 			this.colorStyle = new ColorStyle (null);
 			this.colorStyle.RestoreSettings (xml.Element ("colorStyle"));
 
@@ -97,6 +107,13 @@ namespace Epsitec.Cresus.Graph
 			snapshot.seriesItems.AddRange (GraphChartSnapshot.CreateChartSeriesCollection (document));
 			snapshot.columns.AddRange (GraphChartSnapshot.CreateChartSeriesColumnLabels (document));
 
+			return snapshot;
+		}
+
+		public static GraphChartSnapshot FromXml(XElement xml)
+		{
+			var snapshot = new GraphChartSnapshot ();
+			snapshot.RestoreSettings (xml);
 			return snapshot;
 		}
 

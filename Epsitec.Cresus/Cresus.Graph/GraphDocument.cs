@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Graph
 			this.groups = new List<GraphDataGroup> ();
 			this.columnLabels = new List<string> ();
 			this.filterCategories = new HashSet<GraphDataCategory> ();
+			this.chartSnapshots = new List<GraphChartSnapshot> ();
 			
 			this.groupSource = new GraphDataSource (null)
 			{
@@ -183,6 +184,14 @@ namespace Epsitec.Cresus.Graph
 		{
 			get;
 			private set;
+		}
+
+		public List<GraphChartSnapshot> ChartSnapshots
+		{
+			get
+			{
+				return this.chartSnapshots;
+			}
 		}
 
 
@@ -600,6 +609,7 @@ namespace Epsitec.Cresus.Graph
 			xml.Add (new XElement ("undoActions", new XText (this.UndoRedo.UndoRecorder.SaveToString ())));
 			xml.Add (new XElement ("redoActions", new XText (this.UndoRedo.RedoRecorder.SaveToString ())));
 			xml.Add (new XElement ("cubes", this.SaveCubeSettings ()));
+			xml.Add (new XElement ("snapshots", this.chartSnapshots.Select (snapshot => snapshot.SaveSettings (new XElement ("snapshot")))));
 
 			return xml;
 		}
@@ -611,8 +621,9 @@ namespace Epsitec.Cresus.Graph
 			
 			var undoActionsXml = xml.Element ("undoActions");
 			var redoActionsXml = xml.Element ("redoActions");
-			var viewsXml = xml.Element ("views");
-			var cubesXml = xml.Element ("cubes");
+			var viewsXml       = xml.Element ("views");
+			var cubesXml       = xml.Element ("cubes");
+			var snapshotsXml   = xml.Element ("snapshots");
 
 			if (cubesXml != null)
 			{
@@ -630,6 +641,11 @@ namespace Epsitec.Cresus.Graph
 			if (redoActionsXml != null)
 			{
 				this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
+			}
+
+			if (snapshotsXml != null)
+			{
+				this.chartSnapshots.AddRange (snapshotsXml.Elements ().Select (x => GraphChartSnapshot.FromXml (x)));
 			}
 
 			this.NotifyNeedsSave (false);
@@ -763,6 +779,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<string> columnLabels;
 		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
 		private readonly HashSet<GraphDataCategory> filterCategories;
+		private readonly List<GraphChartSnapshot> chartSnapshots;
 
 		private readonly UndoRedoManager undoRedoManager;
 		

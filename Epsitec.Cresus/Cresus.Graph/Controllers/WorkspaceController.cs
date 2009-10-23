@@ -701,17 +701,30 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			GraphActions.DocumentSetSeriesOutputIndex (this.Document.GetSeriesId (item), index);
 		}
-        
-		public void OpenChartViewWindow()
+
+		public Window FindDefaultChartViewWindow()
+		{
+			return this.floatingChartViews.Where (x => x.ChartSnapshot == null).Select (x => x.Container.Window).FirstOrDefault ();
+		}
+
+		public Window CreateChartViewWindow(GraphChartSnapshot snapshot)
 		{
 			int index = this.GetNewChartViewIndex ();
 
+			var windowName = index.ToString (System.Globalization.CultureInfo.InstalledUICulture);
+			var windowSize = new Size (800, 600);
+
+			if (snapshot != null)
+            {
+				windowName = snapshot.Guid.ToString ("D");
+            }
+			
 			Window window = new Window ()
 			{
 				Icon = this.application.Window.Icon,
 				Text = this.application.Window.Text,
-				ClientSize = new Size (800, 600),
-				Name = string.Format (System.Globalization.CultureInfo.InstalledUICulture, "floating chart view {0}", index),
+				ClientSize = windowSize,
+				Name = string.Concat ("floating chart view ", windowName),
 				Parent = this.application.Window,
 			};
 
@@ -727,13 +740,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				GraphType = this.chartViewController.GraphType,
 				ColorStyle = this.chartViewController.ColorStyle,
 				Index = index,
+				ChartSnapshot = snapshot,
 			};
 
 			controller.SetupUI (frame);
 			controller.Refresh (this.Document);
 
 			this.floatingChartViews.Add (controller);
-			
+
 			window.WindowClosed +=
 				delegate
 				{
@@ -743,6 +757,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			UI.RestoreWindowPosition (window);
 			window.Show ();
+			return window;
 		}
 
 
