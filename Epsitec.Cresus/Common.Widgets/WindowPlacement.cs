@@ -16,11 +16,12 @@ namespace Epsitec.Common.Widgets
 
 	public struct WindowPlacement : System.IEquatable<WindowPlacement>
 	{
-		public WindowPlacement(Drawing.Rectangle bounds, bool isFullScreen, bool isMinimized)
+		public WindowPlacement(Drawing.Rectangle bounds, bool isFullScreen, bool isMinimized, bool isHidden)
 		{
 			this.bounds = bounds;
 			this.isFullScreen = isFullScreen;
 			this.isMinimized = isMinimized;
+			this.isHidden = isHidden;
 		}
 
 
@@ -48,6 +49,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsHidden
+		{
+			get
+			{
+				return this.isHidden;
+			}
+		}
+
 		
 		#region IEquatable<WindowPlacement> Members
 
@@ -55,7 +64,8 @@ namespace Epsitec.Common.Widgets
 		{
 			return this.bounds == other.bounds
 				&& this.isFullScreen == other.isFullScreen
-				&& this.IsMinimized == other.isMinimized;
+				&& this.isMinimized == other.isMinimized
+				&& this.isHidden == other.isHidden;
 		}
 
 		#endregion
@@ -79,7 +89,7 @@ namespace Epsitec.Common.Widgets
 
 		public override string ToString()
 		{
-			return string.Concat (this.bounds.ToString (), ";", this.isFullScreen ? "F" : "", this.isMinimized ? "M" : "");
+			return string.Concat (this.bounds.ToString (), ";", this.isFullScreen ? "F" : "", this.isMinimized ? "M" : "", this.isHidden ? "H" : "");
 		}
 
 		public static WindowPlacement Parse(string value)
@@ -94,7 +104,7 @@ namespace Epsitec.Common.Widgets
 			string rect = value.Substring (0, pos);
 			string attr = value.Substring (pos+1);
 
-			return new WindowPlacement (Drawing.Rectangle.Parse (rect), attr.Contains ("F"), attr.Contains ("M"));
+			return new WindowPlacement (Drawing.Rectangle.Parse (rect), attr.Contains ("F"), attr.Contains ("M"), attr.Contains ("H"));
 		}
 
 		#region Converter Class
@@ -118,5 +128,6 @@ namespace Epsitec.Common.Widgets
 		private readonly Drawing.Rectangle		bounds;
 		private readonly bool					isFullScreen;
 		private readonly bool					isMinimized;
+		private readonly bool					isHidden;
 	}
 }

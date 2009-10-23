@@ -756,7 +756,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 
 			UI.RestoreWindowPosition (window);
-			window.Show ();
+			
 			return window;
 		}
 

@@ -838,13 +838,16 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					Length = 4+4+4+2*4+2*4+4*4
 				};
-				
+
 				Win32Api.GetWindowPlacement (this.Handle, ref placement);
 
 				bool isMaximized = (placement.Flags & Win32Const.WPF_RESTORETOMAXIMIZED) != 0;
 				bool isMinimized = (placement.ShowCmd == Win32Const.SW_SHOWMINIMIZED);
-				
-				return new WindowPlacement (new Drawing.Rectangle (placement.NormalPosition.Left, placement.NormalPosition.Top, placement.NormalPosition.Right - placement.NormalPosition.Left, placement.NormalPosition.Bottom - placement.NormalPosition.Top), isMaximized, isMinimized);
+				bool isHidden    = (placement.ShowCmd == Win32Const.SW_HIDE);
+
+				var bounds = new Drawing.Rectangle (placement.NormalPosition.Left, placement.NormalPosition.Top, placement.NormalPosition.Right - placement.NormalPosition.Left, placement.NormalPosition.Bottom - placement.NormalPosition.Top);
+
+				return new WindowPlacement (bounds, isMaximized, isMinimized, isHidden);
 			}
 			set
 			{
@@ -860,6 +863,10 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					show = Win32Const.SW_SHOWMINIMIZED;
 				}
+				if (value.IsHidden)
+                {
+					show = Win32Const.SW_HIDE;
+                }
 
 
 				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ()

@@ -211,9 +211,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 					{
 						var window = this.workspace.FindDefaultChartViewWindow ()
 									 ?? this.workspace.CreateChartViewWindow (null);
-						
+
 						window.Show ();
 						window.MakeActive ();
+
+						this.application.AsyncSaveApplicationState ();
 					};
 			}
 
@@ -409,12 +411,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 					var snapshot  = GraphChartSnapshot.FromDocument (this.document);
 					var newWindow = this.workspace.CreateChartViewWindow (snapshot);
 					var oldWindow = this.container.Window;
+					var placement = oldWindow.WindowPlacement;
 
 					this.document.ChartSnapshots.Add (snapshot);
 
-					newWindow.WindowPlacement = oldWindow.WindowPlacement;
+					newWindow.WindowPlacement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, placement.IsMinimized, true);
 					newWindow.Show ();
 					oldWindow.Close ();
+
+					this.application.AsyncSaveApplicationState ();
 				};
 		}
 
