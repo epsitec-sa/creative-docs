@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 
 			this.groupsController = new GroupsController (this);
+			this.snapshotsController = new SnapshotsController (this);
 
 			this.chartViewController = new ChartViewController (this.application, this)
 			{
@@ -81,6 +82,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			get
 			{
 				return this.groupsController;
+			}
+		}
+
+		public SnapshotsController Snapshots
+		{
+			get
+			{
+				return this.snapshotsController;
 			}
 		}
 		
@@ -220,23 +229,40 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			var outputPage = new TabPage ()
 			{
-				Name = "page1",
+				Name = "output",
 				TabTitle = "Graphique",
 				Parent = outputBook,
 			};
 
+			var snapshotsPage = new TabPage ()
+			{
+				Name = "snapshots",
+				TabTitle = "Clichés",
+				Parent = outputBook,
+			};
+
+#if false
 			var newPage = new TabPage ()
 			{
 				Name = "page+",
 				TabTitle = "+",
 				Parent = outputBook,
 			};
+#endif
 
 			this.outputPageFrame = new FrameBox ()
 			{
 				Dock = DockStyle.Fill,
-				Name = "page frame",
+				Name = "output page frame",
 				Parent = outputPage,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			var snapshotsPageFrame = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Name = "snapshots frame",
+				Parent = snapshotsPage,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
@@ -312,6 +338,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.outputItemsController.SetupUI (outputFrame);
 			this.groupsController.SetupUI (groupFrame);
 			this.chartViewController.SetupUI (previewFrame);
+			this.snapshotsController.SetupUI (snapshotsPageFrame);
 
 			this.inputItemsHint = new StaticText ()
 			{
@@ -484,6 +511,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void RefreshGroups()
 		{
 			this.groupsController.Refresh ();
+		}
+
+		public void RefreshSnapshots()
+		{
+			this.snapshotsController.Refresh ();
 		}
 
 		public void RefreshFilters()
@@ -1627,14 +1659,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private readonly ItemListController<MiniChartView>		inputItemsController;
 		private readonly ItemListController<MiniChartView>		outputItemsController;
-		private readonly GroupsController			groupsController;
+		private readonly GroupsController		groupsController;
+		private readonly SnapshotsController	snapshotsController;
 
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
 		private readonly Dictionary<long, GraphDataGroup> viewToGroup;
-		private readonly List<HiliteInfo> hilites;
+		private readonly List<HiliteInfo>		hilites;
 
-		private ChartViewController		chartViewController;
-		private List<ChartViewController> floatingChartViews;
+		private ChartViewController				chartViewController;
+		private List<ChartViewController>		floatingChartViews;
 		
 		private StaticText				inputItemsHint;
 		private StaticText				groupItemsHint;

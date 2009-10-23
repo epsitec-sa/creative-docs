@@ -1,8 +1,12 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Graph.Styles;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Graph.Renderers;
+using Epsitec.Common.Graph.Styles;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +14,10 @@ using System.Xml.Linq;
 
 namespace Epsitec.Cresus.Graph
 {
+	/// <summary>
+	/// The <c>GraphChartSnapshot</c> class stores a snapshot of the workspace output series,
+	/// with the related settings; the snapshot is used to store a graph in a persistent way.
+	/// </summary>
 	public class GraphChartSnapshot
 	{
 		protected GraphChartSnapshot()
@@ -50,10 +58,19 @@ namespace Epsitec.Cresus.Graph
 			private set;
 		}
 
+		public Command GraphType
+		{
+			get;
+			set;
+		}
+
 
 		internal XElement SaveSettings(XElement xml)
 		{
+			var  graphType = this.GraphType ?? Res.Commands.GraphType.UseLineChart;
+
 			xml.Add (new XAttribute ("guid", this.Guid));
+			xml.Add (new XAttribute ("type", graphType.CommandId));
 			xml.Add (GraphChartSnapshot.SaveColorStyle (this.ColorStyle));
 			xml.Add (new XElement ("items", this.SeriesItems.Select (x => GraphChartSnapshot.SaveSeries (x))));
 			xml.Add (new XElement ("columnLabels", this.ColumnLabels.Select (x => GraphChartSnapshot.SaveColumnLabel (x))));
@@ -64,21 +81,79 @@ namespace Epsitec.Cresus.Graph
 		internal void RestoreSettings(XElement xml)
 		{
 			this.Guid = (System.Guid) xml.Attribute ("guid");
-			
+			this.GraphType = Command.Find ((string) xml.Attribute ("type"));
+
 			this.colorStyle = new ColorStyle (null);
 			this.colorStyle.RestoreSettings (xml.Element ("colorStyle"));
 
-			foreach (var element in xml.Elements ("items"))
+			var xmlItems = xml.Element ("items");
+			var xmlColumnLabels = xml.Element ("columnLabels");
+			
+			if (xmlItems != null)
 			{
-				var series = new ChartSeries ();
-				series.RestoreSettings (element);
-				this.seriesItems.Add (series);
+				foreach (var element in xmlItems.Elements ())
+				{
+					var series = new ChartSeries ();
+					series.RestoreSettings (element);
+					this.seriesItems.Add (series);
+				}
 			}
-			foreach (var element in xml.Elements ("columnLabels"))
+
+			if (xmlColumnLabels != null)
 			{
-				this.columns.Add ((string) element.Attribute ("value"));
+				foreach (var element in xmlColumnLabels.Elements ())
+				{
+					this.columns.Add ((string) element.Attribute ("value"));
+				}
 			}
 		}
+
+		internal AbstractRenderer CreateRenderer(bool visibleLabels)
+		{
+			AbstractRenderer renderer = null;
+			bool stackValues = false;
+			var  graphType   = this.GraphType ?? Res.Commands.GraphType.UseLineChart;
+
+			if (graphType == Res.Commands.GraphType.UseLineChart)
+			{
+				renderer = new LineChartRenderer ()
+				{
+					SurfaceAlpha = stackValues ? 1.0 : 0.0
+				};
+			}
+			else if (graphType == Res.Commands.GraphType.UseBarChartVertical)
+			{
+				renderer = new BarChartRenderer ();
+			}
+
+			System.Diagnostics.Debug.Assert (renderer != null);
+
+			var adorner = new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
+			{
+				GridColor = Color.FromBrightness (0.8),
+				VisibleGrid = true,
+				VisibleLabels = visibleLabels,
+				VisibleTicks = true,
+			};
+
+			renderer.AddStyle (this.ColorStyle);
+			renderer.AddAdorner (adorner);
+
+			var series = this.SeriesItems;
+
+			renderer.Clear ();
+			renderer.ChartSeriesRenderingMode = /*this.StackValues ? ChartSeriesRenderingMode.Stacked : */ChartSeriesRenderingMode.Separate;
+			renderer.DefineValueLabels (this.ColumnLabels);
+			renderer.CollectRange (series);
+			renderer.UpdateCaptions (series);
+			renderer.AlwaysIncludeZero = true;
+			
+
+			return renderer;
+		}
+
+
+
 
 		
 		private static XElement SaveColorStyle(ColorStyle colorStyle)
@@ -99,13 +174,14 @@ namespace Epsitec.Cresus.Graph
         
 
 
-		public static GraphChartSnapshot FromDocument(GraphDocument document)
+		public static GraphChartSnapshot FromDocument(GraphDocument document, Command graphType)
 		{
 			var snapshot = new GraphChartSnapshot ();
 
 			snapshot.colorStyle = GraphChartSnapshot.CreateChartSeriesColorStyle (document);
 			snapshot.seriesItems.AddRange (GraphChartSnapshot.CreateChartSeriesCollection (document));
 			snapshot.columns.AddRange (GraphChartSnapshot.CreateChartSeriesColumnLabels (document));
+			snapshot.GraphType = graphType;
 
 			return snapshot;
 		}

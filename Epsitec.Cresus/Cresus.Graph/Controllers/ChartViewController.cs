@@ -43,15 +43,32 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			get
 			{
-				return this.graphType;
+				if (this.ChartSnapshot == null)
+				{
+					return this.graphType;
+				}
+				else
+				{
+					return this.ChartSnapshot.GraphType;
+				}
 			}
 			set
 			{
-				if (this.graphType != value)
+				if (this.ChartSnapshot == null)
 				{
-					this.graphType = value;
-//-					this.commandBar.SelectedItem = this.graphType;
-					this.Refresh ();
+					if (this.graphType != value)
+					{
+						this.graphType = value;
+						this.Refresh ();
+					}
+				}
+				else
+				{
+					if (this.ChartSnapshot.GraphType != value)
+                    {
+						this.ChartSnapshot.GraphType = value;
+						this.Refresh ();
+                    }
 				}
 			}
 		}
@@ -408,12 +425,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			button.Clicked +=
 				(sender, e) =>
 				{
-					var snapshot  = GraphChartSnapshot.FromDocument (this.document);
+					var snapshot  = GraphChartSnapshot.FromDocument (this.document, this.GraphType);
 					var newWindow = this.workspace.CreateChartViewWindow (snapshot);
 					var oldWindow = this.container.Window;
 					var placement = oldWindow.WindowPlacement;
 
 					this.document.ChartSnapshots.Add (snapshot);
+					this.workspace.RefreshSnapshots ();
 
 					newWindow.WindowPlacement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, placement.IsMinimized, true);
 					newWindow.Show ();
@@ -432,7 +450,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 
 			this.commandBar.ItemSize = new Size (64, 40);
-			this.commandBar.SelectedItem = this.graphType;
+			this.commandBar.SelectedItem = this.GraphType;
 		}
 
 		private CommandContext CreateCommandContext(Widget container)
@@ -453,8 +471,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return;
 			}
 
-			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document);
-			var renderer = this.CreateRenderer (snapshot);
+			var snapshot = this.ChartSnapshot ?? GraphChartSnapshot.FromDocument (this.document, this.graphType);
+			var renderer = snapshot.CreateRenderer (this.IsStandalone);
 
 			if (renderer == null)
 			{
@@ -463,15 +481,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
-				List<ChartSeries> series = new List<ChartSeries> (snapshot.SeriesItems);
-
-				renderer.Clear ();
-				renderer.ChartSeriesRenderingMode = this.StackValues ? ChartSeriesRenderingMode.Stacked : ChartSeriesRenderingMode.Separate;
-				renderer.DefineValueLabels (snapshot.ColumnLabels);
-				renderer.CollectRange (series);
-				renderer.UpdateCaptions (series);
-				renderer.AlwaysIncludeZero = true;
-
 				this.chartView.Renderer = renderer;
 				this.captionView.Captions = renderer.Captions;
 				this.captionView.Captions.LayoutMode = ContainerLayoutMode.VerticalFlow;
@@ -481,41 +490,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.chartView.Invalidate ();
 			this.captionView.Invalidate ();
 		}
-
-		private AbstractRenderer CreateRenderer(GraphChartSnapshot snapshot)
-		{
-			AbstractRenderer renderer = null;
-			bool stackValues = false;
-
-			if (this.GraphType == Res.Commands.GraphType.UseLineChart)
-			{
-				renderer = new LineChartRenderer ()
-				{
-					SurfaceAlpha = stackValues ? 1.0 : 0.0
-				};
-			}
-			else if (this.GraphType == Res.Commands.GraphType.UseBarChartVertical)
-			{
-				renderer = new BarChartRenderer ();
-			}
-
-			if (renderer != null)
-			{
-				var adorner = new Epsitec.Common.Graph.Adorners.CoordinateAxisAdorner ()
-				{
-					GridColor = Color.FromBrightness (0.8),
-					VisibleGrid = true,
-					VisibleLabels = this.IsStandalone,
-					VisibleTicks = true,
-				};
-
-				renderer.AddStyle (snapshot.ColorStyle);
-				renderer.AddAdorner (adorner);
-			}
-
-			return renderer;
-		}
-
 
 		private IEnumerable<ChartSeries> GetDocumentChartSeries()
 		{

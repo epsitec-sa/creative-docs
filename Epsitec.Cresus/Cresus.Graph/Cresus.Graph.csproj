@@ -139,6 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\SnapshotsController.cs" />
     <Compile Include="GraphChartSnapshot.cs" />
     <Compile Include="GraphDataCube.cs" />
     <Compile Include="UndoRedoManager.cs" />

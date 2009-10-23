@@ -2300,7 +2300,9 @@ namespace Epsitec.Common.Widgets.Platform
 			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
 			//	contenu du pixmap servant de cache.
 
-			if (this.widgetWindow.Root.IsFrozen)
+			if ((this.widgetWindow == null) ||
+				(this.widgetWindow.Root == null) ||
+				(this.widgetWindow.Root.IsFrozen))
 			{
 				return;
 			}

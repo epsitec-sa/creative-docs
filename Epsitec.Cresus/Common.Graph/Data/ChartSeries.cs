@@ -57,7 +57,7 @@ namespace Epsitec.Common.Graph.Data
 		public void RestoreSettings(XElement xml)
 		{
 			this.Label = (string) xml.Attribute ("label");
-			this.values.AddRange (xml.Elements ("value").Select (value => new ChartValue ((string) value.Attribute ("x"), (double) value.Attribute ("y"))));
+			this.values.AddRange (xml.Element ("values").Elements ().Select (value => new ChartValue ((string) value.Attribute ("x"), (double) value.Attribute ("y"))));
 		}
 
 

@@ -650,6 +650,7 @@ namespace Epsitec.Cresus.Graph
 
 			this.NotifyNeedsSave (false);
 			this.application.WorkspaceController.Refresh ();
+			this.application.WorkspaceController.RefreshSnapshots ();
 #if false
 			if ((viewsXml != null) &&
 				(viewsXml.Elements ("view").Any ()))
