@@ -30,6 +30,12 @@ namespace Epsitec.Common.Graph.Widgets
 			set;
 		}
 
+		public bool PaintPaperclip
+		{
+			get;
+			set;
+		}
+
 		public bool AutoCheckButton
 		{
 			get;
@@ -174,7 +180,7 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.RenderSolid ();
 			}
 
-			if (seriesCount > 1)
+			if (this.PaintPaperclip)
 			{
 				MiniChartView.PaintPaperClip (graphics, rectangle);
 			}

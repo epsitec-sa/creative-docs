@@ -795,7 +795,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public MiniChartView CreateView(GraphDataSeries item)
 		{
-			var view = CreateView ();
+			var view = this.CreateView ();
 			var series = item.ChartSeries;
 
 			view.Renderer.Collect (series);
@@ -817,10 +817,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public MiniChartView CreateView(GraphDataGroup group)
 		{
-			var view = CreateView ();
+			var view = this.CreateView ();
 			var func = group.DefaultFunctionName;
 
 			view.Title = group.Name;
+			view.PaintPaperclip = true;
 
 			if (string.IsNullOrEmpty (func))
 			{
