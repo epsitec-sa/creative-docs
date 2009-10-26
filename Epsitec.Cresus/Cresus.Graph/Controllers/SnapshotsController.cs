@@ -5,6 +5,8 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Graph.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -47,7 +49,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			foreach (var chartSnapShot in this.workspace.Document.ChartSnapshots)
 			{
-				var view = new MiniChartView ()
+				var view = new SnapshotMiniChartView ()
 				{
 					Anchor = AnchorStyles.TopLeft,
 					HorizontalAlignment = HorizontalAlignment.Center,

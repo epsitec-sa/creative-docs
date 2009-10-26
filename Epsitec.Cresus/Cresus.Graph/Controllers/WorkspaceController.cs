@@ -821,7 +821,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var func = group.DefaultFunctionName;
 
 			view.Title = group.Name;
-			view.PaintPaperclip = true;
+			view.PaintPaperClip = true;
 
 			if (string.IsNullOrEmpty (func))
 			{
@@ -1075,6 +1075,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Margins = new Margins (0, 0, 0, 0),
 				Renderer = lineChartRenderer,
 				Scale = 0.5,
+				PaintPaperStack = true,
 			};
 
 			view.Entered +=

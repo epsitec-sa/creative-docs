@@ -30,7 +30,13 @@ namespace Epsitec.Common.Graph.Widgets
 			set;
 		}
 
-		public bool PaintPaperclip
+		public bool PaintPaperClip
+		{
+			get;
+			set;
+		}
+
+		public bool PaintPaperStack
 		{
 			get;
 			set;
@@ -123,22 +129,23 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.LineWidth = 1.0;
 			graphics.LineJoin = JoinStyle.Miter;
 
-			if (seriesCount > 1)
+			if ((this.PaintPaperStack) &&
+				(seriesCount > 1))
 			{
 				var transform = graphics.Transform;
 				graphics.RotateTransformDeg (3, rectangle.Center.X, rectangle.Center.Y);
-				MiniChartView.PaintBackSheet (graphics, rectangle);
+				this.PaintBackSheet (graphics, rectangle);
 
 				if (seriesCount > 2)
 				{
 					graphics.RotateTransformDeg (-3-4, rectangle.Center.X, rectangle.Center.Y);
-					MiniChartView.PaintBackSheet (graphics, rectangle);
+					this.PaintBackSheet (graphics, rectangle);
 				}
 
 				graphics.Transform = transform;
 			}
 
-			MiniChartView.PaintTopmostSheet (graphics, rectangle, this.TransformColor (this.hiliteColor.IsEmpty ? this.BackColor : this.hiliteColor));
+			this.PaintTopmostSheet (graphics, rectangle, this.TransformColor (this.hiliteColor.IsEmpty ? this.BackColor : this.hiliteColor));
 
 			if ((renderer != null) &&
 				(renderer.SeriesItems.Count > 0))
@@ -180,9 +187,9 @@ namespace Epsitec.Common.Graph.Widgets
 				graphics.RenderSolid ();
 			}
 
-			if (this.PaintPaperclip)
+			if (this.PaintPaperClip)
 			{
-				MiniChartView.PaintPaperClip (graphics, rectangle);
+				MiniChartView.PaintPaperClipAdorner (graphics, rectangle);
 			}
 		}
 		
@@ -299,32 +306,61 @@ namespace Epsitec.Common.Graph.Widgets
 			return text.Length;
 		}
 
-		private static void PaintBackSheet(Graphics graphics, Rectangle rectangle)
+		private void PaintBackSheet(Graphics graphics, Rectangle rectangle)
 		{
-			graphics.AddFilledRectangle (Rectangle.Inflate (rectangle, 1, 1));
+			this.AddFrameSurface (graphics, Rectangle.Inflate (rectangle, 1, 1));
 			graphics.RenderSolid (Color.FromAlphaRgb (0.2, 0.8, 0.8, 0.8));
-			graphics.AddFilledRectangle (rectangle);
+			this.AddFrameSurface (graphics, rectangle);
 			graphics.RenderSolid (Color.FromAlphaRgb (0.6, 0.8, 0.8, 0.8));
-			graphics.AddFilledRectangle (Rectangle.Deflate (rectangle, 1, 1));
+			this.AddFrameSurface (graphics, Rectangle.Deflate (rectangle, 1, 1));
 			graphics.RenderSolid (Color.FromBrightness (1.0));
 		}
-		
-		private static void PaintTopmostSheet(Graphics graphics, Rectangle rectangle, Color hiliteColor)
+
+
+
+		protected void AddFrameSurface(Graphics graphics, Rectangle rectangle)
+		{
+			using (Path path = new Path ())
+			{
+				this.AppendFramePath (path, rectangle);
+				graphics.Rasterizer.AddSurface (path);
+			}
+		}
+
+		protected void AddFrameOutline(Graphics graphics, Rectangle rectangle)
+		{
+			using (Path path = new Path ())
+			{
+				this.AppendFramePath (path, rectangle);
+				graphics.Rasterizer.AddOutline (path);
+			}
+		}
+
+		protected virtual void AppendFramePath(Path path, Rectangle rectangle)
+		{
+			path.AppendRectangle (rectangle);
+		}
+
+		private void PaintTopmostSheet(Graphics graphics, Rectangle rectangle, Color hiliteColor)
+		{
+			this.PaintTopmostSheetBackground (graphics, rectangle);
+			this.AddFrameOutline (graphics, Rectangle.Deflate (rectangle, 0.5, 0.5));
+			graphics.RenderSolid (Color.FromBrightness (0.8));
+		}
+
+		protected virtual void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle)
 		{
 			Color sheetColor = hiliteColor.IsValid ? hiliteColor : Color.FromRgb (0.9, 0.9, 0.95);
 			Color whiteColor = Color.Mix (sheetColor, Color.FromBrightness (1), 0.75);
+
+			this.AddFrameSurface (graphics, rectangle);
 			
-			graphics.AddFilledRectangle (rectangle);
 			graphics.GradientRenderer.Fill = GradientFill.Y;
 			graphics.GradientRenderer.SetColors (whiteColor, sheetColor);
 			graphics.GradientRenderer.SetParameters (0, 100);
 			graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, rectangle.Height / 100).Translate (rectangle.BottomLeft).RotateDeg (10, rectangle.Center);
 			graphics.RenderGradient ();
-
-			graphics.AddRectangle (Rectangle.Deflate (rectangle, 0.5, 0.5));
-			graphics.RenderSolid (Color.FromBrightness (0.8));
 		}
-
 		private static void PaintNote(Graphics graphics, Rectangle rectangle, string text, Color labelColor)
 		{
 			var label = new Rectangle (6, rectangle.Top - 18 - 6, 48, 18);
@@ -402,7 +438,7 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
-		private static void PaintPaperClip(Graphics graphics, Rectangle rectangle)
+		private static void PaintPaperClipAdorner(Graphics graphics, Rectangle rectangle)
 		{
 			var image = Epsitec.Common.Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Graph.Images.PaperClip.icon", Support.Resources.DefaultManager);
 			graphics.PaintImage (image, new Rectangle (rectangle.X + 10, rectangle.Top - 34, 20, 40));

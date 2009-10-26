@@ -166,6 +166,7 @@
     <Compile Include="Widgets\CommandSelectionBar.cs" />
     <Compile Include="Widgets\BalloonTip.cs" />
     <Compile Include="Widgets\GroupView.cs" />
+    <Compile Include="Widgets\SnapshotMiniChartView.cs" />
     <Compile Include="Widgets\VerticalInjectionArrow.cs" />
     <Compile Include="Widgets\GraphicIconButton.cs" />
   </ItemGroup>
