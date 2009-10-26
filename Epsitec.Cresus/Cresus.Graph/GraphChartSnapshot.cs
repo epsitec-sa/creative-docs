@@ -6,6 +6,7 @@ using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Styles;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -79,6 +80,34 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
+		public Window Window
+		{
+			get
+			{
+				if ((this.window != null) &&
+					(this.window.IsAlive))
+                {
+					var window = this.window.Target;
+
+					if ((window != null) &&
+						(window.IsDisposed))
+					{
+						this.window = null;
+					}
+					else
+					{
+						return window;
+					}
+				}
+
+				return null;
+			}
+			set
+			{
+				this.window = new Weak<Window> (value);
+			}
+		}
+
 
 		internal XElement SaveSettings(XElement xml)
 		{
@@ -86,9 +115,16 @@ namespace Epsitec.Cresus.Graph
 
 			xml.Add (new XAttribute ("guid", this.Guid));
 			xml.Add (new XAttribute ("type", graphType.CommandId));
+
+			if (!this.Visibility)
+			{
+				xml.Add (new XAttribute ("visibility", "false"));
+			}
+			
 			xml.Add (GraphChartSnapshot.SaveColorStyle (this.ColorStyle));
 			xml.Add (new XElement ("items", this.SeriesItems.Select (x => GraphChartSnapshot.SaveSeries (x))));
 			xml.Add (new XElement ("columnLabels", this.ColumnLabels.Select (x => GraphChartSnapshot.SaveColumnLabel (x))));
+
 
 			return xml;
 		}
@@ -97,6 +133,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.Guid = (System.Guid) xml.Attribute ("guid");
 			this.GraphType = Command.Find ((string) xml.Attribute ("type"));
+			this.Visibility = (string) xml.Attribute ("visibility") != "false";
 
 			this.colorStyle = new ColorStyle (null);
 			this.colorStyle.RestoreSettings (xml.Element ("colorStyle"));
@@ -239,5 +276,6 @@ namespace Epsitec.Cresus.Graph
 		private ColorStyle colorStyle;
 		private readonly List<ChartSeries> seriesItems;
 		private readonly List<string> columns;
+		private Weak<Window> window;
 	}
 }

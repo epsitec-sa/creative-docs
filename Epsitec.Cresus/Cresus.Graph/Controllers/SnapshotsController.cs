@@ -61,8 +61,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Scale = 0.5,
 				};
 
+				var    snapshot = chartSnapShot;
 				string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
-				string guidName = chartSnapShot.GuidName;
+				string guidName = snapshot.GuidName;
 
 				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
 					delegate
@@ -70,7 +71,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 						GraphActions.DocumentHideSnapshot (guidName);
 					});
 
-
+				view.Released +=
+					delegate
+					{
+						var window = snapshot.Window ?? this.workspace.CreateChartViewWindow (snapshot);
+						
+						window.Show ();
+						window.MakeActive ();
+					};
 
 				this.itemsController.Add (view);
 			}

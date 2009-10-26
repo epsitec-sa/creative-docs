@@ -788,6 +788,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 
 			UI.RestoreWindowPosition (window);
+
+			snapshot.Window = window;
 			
 			return window;
 		}
