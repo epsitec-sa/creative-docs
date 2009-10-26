@@ -184,20 +184,13 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//	Dessine le bouton.
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			var adorner = Widgets.Adorners.Factory.Active;
 
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState  state = this.PaintState;
-			Drawing.Point     pos   = this.GetTextLayoutOffset ();
-			
-			if ( (state & WidgetPaintState.Enabled) == 0 )
-			{
-				state &= ~WidgetPaintState.Focused;
-				state &= ~WidgetPaintState.Entered;
-				state &= ~WidgetPaintState.Engaged;
-			}
-			
-			if ( this.BackColor.IsTransparent )
+			var rect  = this.Client.Bounds;
+			var state = Widget.ConstrainPaintState (this.PaintState);
+			var pos   = this.GetTextLayoutOffset ();
+
+			if (this.BackColor.IsTransparent)
 			{
 				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement défini
 				//	comme "transparent".

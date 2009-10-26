@@ -92,6 +92,22 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return this.snapshotsController;
 			}
 		}
+
+		public Widget ToolsFrame
+		{
+			get
+			{
+				return this.application.MainWindowController.ToolsFrame;
+			}
+		}
+
+		public Widget WorkspaceFrame
+		{
+			get
+			{
+				return this.application.MainWindowController.WorkspaceFrame;
+			}
+		}
 		
 		public void SetupUI()
 		{
@@ -101,8 +117,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void SetupToolsFrameUI()
 		{
-			var controller = this.application.MainWindowController;
-			var container  = controller.ToolsFrame;
+			var container  = this.ToolsFrame;
 
 			var settingsFrame = new FrameBox ()
 			{
@@ -154,12 +169,52 @@ namespace Epsitec.Cresus.Graph.Controllers
 				IsVerticalLine = true,
 				Parent = settingsFrame,
 			};
+
+			var cubeButton = new DataCubeButton ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 100,
+				Name = "data cube",
+				Parent = settingsFrame,
+			};
+
+			var cubeFrame = new DataCubeFrame ()
+			{
+				Anchor = AnchorStyles.Top | AnchorStyles.Right,
+				Parent = settingsFrame.RootParent,
+				Visibility = false,
+				FrameHeight = 300,
+				FrameWidth = 400,
+			};
+
+			settingsFrame.RootParent.SizeChanged +=
+				delegate
+				{
+					cubeFrame.UpdateGeometry ();
+				};
+
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (cubeFrame, true);
+
+			cubeButton.Clicked +=
+				delegate
+				{
+					cubeButton.SetSelected (!cubeButton.IsSelected);
+					cubeFrame.Visibility = cubeButton.IsSelected;
+					cubeFrame.UpdateGeometry ();
+				};
+
+			new Separator ()
+			{
+				Dock = DockStyle.Left,
+				PreferredWidth = 3,
+				IsVerticalLine = true,
+				Parent = settingsFrame,
+			};
 		}
 		
 		private void SetupWorkspaceFrameUI()
 		{
-			var controller = this.application.MainWindowController;
-			var container  = controller.WorkspaceFrame;
+			var container  = this.WorkspaceFrame;
 
 			var topFrame = new FrameBox ()
 			{
@@ -520,7 +575,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void RefreshFilters()
 		{
-			var container = this.application.MainWindowController.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
+			var container = this.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
 
 			container.Children.Widgets.ForEach (x => x.Dispose ());
 
@@ -543,7 +598,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void RefreshSources()
 		{
-			var container = this.application.MainWindowController.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
+			var container = this.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
 
 			container.Children.Widgets.ForEach (x => x.Dispose ());
 

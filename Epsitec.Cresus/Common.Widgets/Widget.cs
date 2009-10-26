@@ -1292,7 +1292,20 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
 		
+		public static WidgetPaintState ConstrainPaintState(WidgetPaintState state)
+		{
+			if ((state & WidgetPaintState.Enabled) == 0)
+			{
+				state &= ~WidgetPaintState.Focused;
+				state &= ~WidgetPaintState.Entered;
+				state &= ~WidgetPaintState.Engaged;
+			}
+			
+			return state;
+		}
+
 		
 		internal void FireStillEngaged()
 		{

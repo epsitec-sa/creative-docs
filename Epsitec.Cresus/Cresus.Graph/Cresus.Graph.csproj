@@ -165,6 +165,8 @@
     <Compile Include="Widgets\AnchoredPalette.cs" />
     <Compile Include="Widgets\CommandSelectionBar.cs" />
     <Compile Include="Widgets\BalloonTip.cs" />
+    <Compile Include="Widgets\DataCubeFrame.cs" />
+    <Compile Include="Widgets\DataCubeButton.cs" />
     <Compile Include="Widgets\GroupView.cs" />
     <Compile Include="Widgets\SnapshotMiniChartView.cs" />
     <Compile Include="Widgets\VerticalInjectionArrow.cs" />
@@ -174,6 +176,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\DataCube.icon" />
     <EmbeddedResource Include="Resources\futuramc.ttf" />
     <EmbeddedResource Include="Images\Button.Off.icon" />
     <EmbeddedResource Include="Images\Button.OffHilite.icon" />
