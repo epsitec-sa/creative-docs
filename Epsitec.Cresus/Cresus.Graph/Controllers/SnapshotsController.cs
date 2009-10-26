@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
+	/// <summary>
+	/// The <c>SnapshotsController</c> class manages the list of miniature snapshots
+	/// in the workspace.
+	/// </summary>
 	internal sealed class SnapshotsController
 	{
 		public SnapshotsController(WorkspaceController workspace)

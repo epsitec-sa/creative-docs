@@ -734,11 +734,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 			GraphActions.DocumentSetSeriesOutputIndex (this.Document.GetSeriesId (item), index);
 		}
 
-		public Window FindDefaultChartViewWindow()
+		/// <summary>
+		/// Finds the window containing the chart view of the live document output.
+		/// </summary>
+		/// <returns>The window or <c>null</c>.</returns>
+		public Window FindLiveChartViewWindow()
 		{
 			return this.floatingChartViews.Where (x => x.ChartSnapshot == null).Select (x => x.Container.Window).FirstOrDefault ();
 		}
 
+		/// <summary>
+		/// Creates a window with a chart view; the chart view will either be the live copy
+		/// of the document output or an existing chart snapshot.
+		/// </summary>
+		/// <param name="snapshot">The snapshot.</param>
+		/// <returns></returns>
 		public Window CreateChartViewWindow(GraphChartSnapshot snapshot)
 		{
 			int index = this.GetNewChartViewIndex ();
@@ -748,7 +758,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			if (snapshot != null)
             {
-				windowName = snapshot.Guid.ToString ("D");
+				windowName = snapshot.GuidName;
             }
 			
 			Window window = new Window ()
@@ -789,7 +799,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			UI.RestoreWindowPosition (window);
 
-			snapshot.Window = window;
+			//	Associate the window with the snapshot : there is at most one window for
+			//	a given snapshot.
+			
+			if (snapshot != null)
+            {
+				snapshot.Window = window;
+			}
 			
 			return window;
 		}

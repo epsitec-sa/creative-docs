@@ -80,6 +80,11 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the window associated with this snapshot. This information will not be
+		/// persisted by the <see cref="SaveSettings"/> and <see cref="RestoreSettings"/> methods.
+		/// </summary>
+		/// <value>The window.</value>
 		public Window Window
 		{
 			get
@@ -88,6 +93,9 @@ namespace Epsitec.Cresus.Graph
 					(this.window.IsAlive))
                 {
 					var window = this.window.Target;
+
+					//	Check that the window still exists and that it has not been disposed in
+					//	the meantime (closing a snapshot window usually disposes it) :
 
 					if ((window != null) &&
 						(window.IsDisposed))
@@ -118,6 +126,9 @@ namespace Epsitec.Cresus.Graph
 
 			if (!this.Visibility)
 			{
+				//	Only store visibility information for hidden snapshots, since the default is
+				//	'visible' for any snapshot.
+
 				xml.Add (new XAttribute ("visibility", "false"));
 			}
 			

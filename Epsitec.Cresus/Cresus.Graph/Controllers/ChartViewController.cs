@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.commandButton.Clicked +=
 					delegate
 					{
-						var window = this.workspace.FindDefaultChartViewWindow ()
+						var window = this.workspace.FindLiveChartViewWindow ()
 									 ?? this.workspace.CreateChartViewWindow (null);
 
 						window.Show ();
