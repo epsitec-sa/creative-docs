@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.itemsController.Clear ();
 
-			foreach (var chartSnapShot in this.workspace.Document.ChartSnapshots)
+			foreach (var chartSnapShot in this.workspace.Document.ChartSnapshots.Where (x => x.Visibility))
 			{
 				var view = new SnapshotMiniChartView ()
 				{
@@ -60,6 +60,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Renderer = chartSnapShot.CreateRenderer (false),
 					Scale = 0.5,
 				};
+
+				string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
+				string guidName = chartSnapShot.GuidName;
+
+				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+					delegate
+					{
+						GraphActions.DocumentHideSnapshot (guidName);
+					});
+
+
 
 				this.itemsController.Add (view);
 			}

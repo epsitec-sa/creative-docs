@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Graph
 			this.seriesItems = new List<ChartSeries> ();
 			this.columns = new List<string> ();
 			this.Guid = System.Guid.NewGuid ();
+			this.Visibility = true;
 		}
 
 
@@ -56,6 +57,20 @@ namespace Epsitec.Cresus.Graph
 		{
 			get;
 			private set;
+		}
+
+		public string GuidName
+		{
+			get
+			{
+				return this.Guid.ToString ("D");
+			}
+		}
+
+		public bool Visibility
+		{
+			get;
+			set;
 		}
 
 		public Command GraphType

@@ -543,6 +543,7 @@ namespace Epsitec.Cresus.Graph
 			this.groups.Clear ();
 			this.syntheticSeries.Clear ();
 			this.filterCategories.Clear ();
+			this.chartSnapshots.ForEach (x => x.Visibility = true);
 
 			this.activeDataSource = null;
 
@@ -582,6 +583,7 @@ namespace Epsitec.Cresus.Graph
 		public void RefreshUI()
 		{
 			Application.QueueAsyncCallback (this.application.WorkspaceController.Refresh);
+			Application.QueueAsyncCallback (this.application.WorkspaceController.RefreshSnapshots);
 		}
 
 
@@ -649,8 +651,7 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			this.NotifyNeedsSave (false);
-			this.application.WorkspaceController.Refresh ();
-			this.application.WorkspaceController.RefreshSnapshots ();
+			this.RefreshUI ();
 #if false
 			if ((viewsXml != null) &&
 				(viewsXml.Elements ("view").Any ()))
