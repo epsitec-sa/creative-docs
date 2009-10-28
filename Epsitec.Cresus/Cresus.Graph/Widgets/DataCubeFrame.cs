@@ -3,12 +3,12 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using System;
 
 namespace Epsitec.Cresus.Graph.Widgets
 {
@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 		public DataCubeFrame()
 		{
 			this.AutoFocus = false;
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this, true);
 		}
 
 
@@ -31,7 +32,6 @@ namespace Epsitec.Cresus.Graph.Widgets
 			get;
 			set;
 		}
-
 
 		public void UpdateGeometry()
 		{
@@ -56,14 +56,14 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 			
 			var cubeButtonBounds  = button.MapClientToRoot (button.Client.Bounds);
-			var parentFrameBounds = this.Parent.MapClientToRoot (this.Parent.Client.Bounds);
+			var parentFrameBounds = parent.MapClientToRoot (this.Parent.Client.Bounds);
 
-			double x1 = cubeButtonBounds.Left+2 - parentFrameBounds.Left;
-			double x2 = parentFrameBounds.Width - cubeButtonBounds.Right-2;
+			double xLeft  = cubeButtonBounds.Left+2 - parentFrameBounds.Left;
+			double xRight = parentFrameBounds.Width - cubeButtonBounds.Right-2;
 
-			double top = parentFrameBounds.Height - cubeButtonBounds.Bottom-4;
-			double left = x1;
-			double right = x2;
+			double top   = button.ActualHeight + button.Parent.Padding.Height + button.Parent.Margins.Height - 4;
+			double left  = xLeft;
+			double right = xRight;
 			double width = cubeButtonBounds.Width-4 + 2*16;
 
 			if (width < this.FrameWidth)
@@ -83,21 +83,48 @@ namespace Epsitec.Cresus.Graph.Widgets
 				left = 4;
 			}
 
-			if (right > x2-16)
+			if (right > xRight-16)
 			{
-				left -= right - x2;
-				right = x2;
+				left -= right - xRight;
+				right = xRight;
 			}
-			if (left > x1-16)
+			if (left > xLeft-16)
             {
-				right -= left - x1;
-				left   = x1;
+				right -= left - xLeft;
+				left   = xLeft;
             }
 
 			this.Margins = new Margins (left, right, top, 0);
 			this.PreferredWidth = parentFrameBounds.Width - left - right;
 			this.PreferredHeight = this.FrameHeight;
+		}
 
+		protected override void OnParentChanged(Epsitec.Common.Types.DependencyPropertyChangedEventArgs e)
+		{
+			base.OnParentChanged (e);
+
+			Widget oldParent = (Widget) e.OldValue;
+			Widget newParent = (Widget) e.NewValue;
+
+			if (oldParent != null)
+            {
+				oldParent.SizeChanged -= this.HandleParentSizeChanged;
+            }
+			if (newParent != null)
+			{
+				newParent.SizeChanged += this.HandleParentSizeChanged;
+				this.UpdateGeometry ();
+			}
+		}
+
+		private void HandleParentSizeChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			this.UpdateGeometry ();
+		}
+
+		public override Margins GetInternalPadding()
+		{
+			return new Margins (3, 3, 5, 3);
 		}
         
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)

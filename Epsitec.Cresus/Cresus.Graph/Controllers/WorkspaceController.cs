@@ -186,15 +186,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				FrameHeight = 300,
 				FrameWidth = 400,
 			};
-
-			settingsFrame.RootParent.SizeChanged +=
-				delegate
-				{
-					cubeFrame.UpdateGeometry ();
-				};
-
-			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (cubeFrame, true);
-
+			
 			cubeButton.Clicked +=
 				delegate
 				{

@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					default:
 						throw new System.NotSupportedException (string.Format ("AnchorStyle {0} not supported", anchorY));
 				}
-				
+
 				DockLayoutEngine.SetChildBounds (child, Drawing.Rectangle.FromPoints (x1, y1, x2, y2));
 			}
 		}

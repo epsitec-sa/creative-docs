@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			this.AutoFocus = false;
 		}
 
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
