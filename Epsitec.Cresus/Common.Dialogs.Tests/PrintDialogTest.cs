@@ -32,7 +32,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckShow1()
 		{
-			Print dialog = new Print ();
+			PrintDialog dialog = new PrintDialog ();
 
 			using (Tool.InjectKey (System.Windows.Forms.Keys.Return))
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckShow2()
 		{
-			Print dialog = new Print ();
+			PrintDialog dialog = new PrintDialog ();
 			
 			dialog.AllowFromPageToPage = true;
 			dialog.AllowSelectedPages  = false;
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 
-			PrinterDocumentProperties dialog = new PrinterDocumentProperties ();
+			PrinterDocumentPropertiesDialog dialog = new PrinterDocumentPropertiesDialog ();
 			
 			dialog.AllowFromPageToPage = true;
 			dialog.AllowSelectedPages  = false;
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckPrint()
 		{
-			Print dialog = new Print ();
+			PrintDialog dialog = new PrintDialog ();
 			
 			dialog.AllowFromPageToPage = false;
 			dialog.AllowSelectedPages  = false;
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckPrintToFile()
 		{
-			Print dialog = new Print ();
+			PrintDialog dialog = new PrintDialog ();
 			
 			dialog.Document.SelectPrinter ("Adobe PDF");
 			

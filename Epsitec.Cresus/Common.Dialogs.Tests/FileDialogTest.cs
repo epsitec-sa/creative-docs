@@ -69,7 +69,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void button1_Clicked(object sender, MessageEventArgs e)
 		{
-			FileOpen dialog = new FileOpen ();
+			FileOpenDialog dialog = new FileOpenDialog ();
 			
 			dialog.Title = "CheckFileOpen";
 			dialog.Filters.Add ("text", "Textes", "*.txt");
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Dialogs
 
 		private void button2_Clicked(object sender, MessageEventArgs e)
 		{
-			FileSave dialog = new FileSave ();
+			FileSaveDialog dialog = new FileSaveDialog ();
 			
 			dialog.Title = "CheckFileSave";
 			dialog.Filters.Add ("text", "Textes", "*.txt");
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Dialogs
 
 		[Test] public void CheckFileOpen()
 		{
-			FileOpen dialog = new FileOpen ();
+			FileOpenDialog dialog = new FileOpenDialog ();
 
 			using (Tool.InjectKey (System.Windows.Forms.Keys.Escape))
 			{
@@ -112,7 +112,7 @@ namespace Epsitec.Common.Dialogs
 
 		[Test] public void CheckFileSave1()
 		{
-			FileSave dialog = new FileSave ();
+			FileSaveDialog dialog = new FileSaveDialog ();
 
 			using (Tool.InjectKey (System.Windows.Forms.Keys.Escape))
 			{
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckFileSave2()
 		{
-			FileSave dialog = new FileSave ();
+			FileSaveDialog dialog = new FileSaveDialog ();
 
 			using (Tool.InjectKey (System.Windows.Forms.Keys.Escape))
 			{

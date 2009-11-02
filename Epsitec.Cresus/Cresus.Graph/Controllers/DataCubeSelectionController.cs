@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
@@ -101,6 +102,16 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleImportButtonClicked(object sender, MessageEventArgs e)
 		{
+			var dialog = new FileOpenDialog ()
+			{
+				Owner = this.container.Window,
+				Title = "Importer des données",
+			};
+
+			dialog.Filters.Add ("csv", "Fichiers avec données tabulées", "*.csv");
+			dialog.Filters.Add ("*", "Tous les fichiers", "*.*");
+
+			dialog.OpenDialog ();
 		}
 
 

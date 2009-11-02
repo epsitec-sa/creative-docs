@@ -7,9 +7,9 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// La classe FileSave présente le dialogue pour enregistrer un fichier.
 	/// </summary>
-	public class FileSave : Helpers.IFilterCollectionHost, IDialog
+	public class FileSaveDialog : Helpers.IFilterCollectionHost, IDialog
 	{
-		public FileSave()
+		public FileSaveDialog()
 		{
 			this.dialog = new System.Windows.Forms.SaveFileDialog ();
 			this.filters = new Helpers.FilterCollection (this);

@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		public void Print(Epsitec.Common.Dialogs.Print dp)
+		public void Print(Epsitec.Common.Dialogs.PrintDialog dp)
 		{
 			//	Imprime le document selon les choix faits dans le dialogue Window (dp)
 			//	ainsi que dans le dialogue des réglages (PrintInfo).
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document
 
 		protected class PrintEngine : Printing.IPrintEngine
 		{
-			public bool Initialize(Printer printer, Epsitec.Common.Dialogs.Print dp)
+			public bool Initialize(Printer printer, Epsitec.Common.Dialogs.PrintDialog dp)
 			{
 				this.printer = printer;
 				this.document = printer.document;

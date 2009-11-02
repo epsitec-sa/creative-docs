@@ -198,10 +198,10 @@
     <Compile Include="FileListItem.cs" />
     <Compile Include="FileListItemViewFactory.cs" />
     <Compile Include="FileListSettings.cs" />
-    <Compile Include="FileOpen.cs">
+    <Compile Include="FileOpenDialog.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FileSave.cs">
+    <Compile Include="FileSaveDialog.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="FilterItem.cs">
@@ -230,10 +230,10 @@
     <Compile Include="Platform\Beep.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Print.cs">
+    <Compile Include="PrintDialog.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="PrinterDocumentProperties.cs">
+    <Compile Include="PrinterDocumentPropertiesDialog.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Resources\Common.Dialogs\SourceCode\Entities.cs" />

@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Graph
 				return;
             }
 
-			var dialog = new FileSave ()
+			var dialog = new FileSaveDialog ()
 			{
 				DefaultExt = "emf",
 				FilterIndex = 0,
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (alwaysAsk)
 			{
-				var dialog = new FileSave ()
+				var dialog = new FileSaveDialog ()
 				{
 					DefaultExt = "crgraph",
 					PromptForOverwriting = true,
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Graph
 		[Command (ApplicationCommands.Id.Open)]
 		private void OpenCommand()
 		{
-			var dialog = new FileOpen ()
+			var dialog = new FileOpenDialog ()
 			{
 				DefaultExt = "crgraph",
 				Title = "Ouvrir le graphe",

@@ -6,9 +6,9 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// La classe FileOpen présente le dialogue pour ouvrir un fichier.
 	/// </summary>
-	public class FileOpen : Helpers.IFilterCollectionHost
+	public class FileOpenDialog : Helpers.IFilterCollectionHost
 	{
-		public FileOpen()
+		public FileOpenDialog()
 		{
 			this.dialog = new System.Windows.Forms.OpenFileDialog ();
 			this.filters = new Helpers.FilterCollection (this);

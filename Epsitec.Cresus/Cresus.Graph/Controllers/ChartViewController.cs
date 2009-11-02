@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if (ChartViewController.printDialog == null)
 			{
-				ChartViewController.printDialog = new Epsitec.Common.Dialogs.Print ();
+				ChartViewController.printDialog = new Epsitec.Common.Dialogs.PrintDialog ();
 			}
 
 			var dialog = ChartViewController.printDialog;
@@ -574,7 +574,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public static readonly DependencyProperty ChartViewControllerProperty = DependencyProperty.RegisterAttached ("ChartViewController", typeof (ChartViewController), typeof (ChartViewController), new DependencyPropertyMetadata ());
 		private static CommandController		commandController;
-		private static Epsitec.Common.Dialogs.Print printDialog;
+		private static Epsitec.Common.Dialogs.PrintDialog printDialog;
 
 		private CommandController				localController;
 		private readonly GraphApplication		application;

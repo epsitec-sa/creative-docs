@@ -8,9 +8,9 @@ namespace Epsitec.Common.Dialogs
 	/// les préférences de l'imprimante (ce sont les réglages avancés propres
 	/// à l'imprimante et généralement pas accessibles via programmation).
 	/// </summary>
-	public class PrinterDocumentProperties : Print
+	public class PrinterDocumentPropertiesDialog : PrintDialog
 	{
-		public PrinterDocumentProperties()
+		public PrinterDocumentPropertiesDialog()
 		{
 		}
 		
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Dialogs
 				return System.Windows.Forms.DialogResult.Abort;
 			}
 			
-			System.IntPtr devModePtr     = PrinterDocumentProperties.GlobalLock (devModeHandle);
+			System.IntPtr devModePtr     = PrinterDocumentPropertiesDialog.GlobalLock (devModeHandle);
 			System.IntPtr printerHandle   = System.IntPtr.Zero;
 			System.IntPtr printerDefaults = System.IntPtr.Zero;
 			
@@ -69,11 +69,11 @@ namespace Epsitec.Common.Dialogs
 				//	avancés (via winspool.drv), puis copie les réglages du DEVMODE vers
 				//	les classes de support .NET :
 				
-				if (PrinterDocumentProperties.OpenPrinter (printerName, out printerHandle, printerDefaults))
+				if (PrinterDocumentPropertiesDialog.OpenPrinter (printerName, out printerHandle, printerDefaults))
 				{
-					int result = PrinterDocumentProperties.DocumentProperties (owner == null ? System.IntPtr.Zero : owner.Handle, printerHandle, deviceName, devModePtr, devModePtr, 0x0e);
+					int result = PrinterDocumentPropertiesDialog.DocumentProperties (owner == null ? System.IntPtr.Zero : owner.Handle, printerHandle, deviceName, devModePtr, devModePtr, 0x0e);
 					this.document.PrinterSettings.SetDevMode (devModeHandle);
-					PrinterDocumentProperties.ClosePrinter (printerHandle);
+					PrinterDocumentPropertiesDialog.ClosePrinter (printerHandle);
 					return (System.Windows.Forms.DialogResult) result;
 				}
 			}
@@ -82,8 +82,8 @@ namespace Epsitec.Common.Dialogs
 				//	Dans tous les cas, ne pas oublier de libérer la mémoire globale associée
 				//	au HDEVMODE :
 
-				PrinterDocumentProperties.GlobalUnlock (devModeHandle);
-				PrinterDocumentProperties.GlobalFree (devModeHandle);
+				PrinterDocumentPropertiesDialog.GlobalUnlock (devModeHandle);
+				PrinterDocumentPropertiesDialog.GlobalFree (devModeHandle);
 			}
 			
 			return System.Windows.Forms.DialogResult.Abort;

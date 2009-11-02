@@ -1392,7 +1392,7 @@ namespace Epsitec.Common.Document
 
 		private void HandleFilenameButtonClicked(object sender, MessageEventArgs e)
 		{
-			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
+			Common.Dialogs.FileSaveDialog dialog = new Common.Dialogs.FileSaveDialog();
 			dialog.FileName = this.document.Settings.PrintInfo.PrintFilename;
 			dialog.Title = Res.Strings.Dialog.Print.ToFile.Title;
 			dialog.Filters.Add("prn", TextLayout.ConvertToSimpleText(Res.Strings.Dialog.Print.ToFile.Type), "*.prn");
@@ -1720,7 +1720,7 @@ namespace Epsitec.Common.Document
 		private void HandlePrinterButtonClicked(object sender, MessageEventArgs e)
 		{
 			Button button = sender as Button;
-			Common.Dialogs.Print dialog = this.document.PrintDialog;
+			Common.Dialogs.PrintDialog dialog = this.document.PrintDialog;
 			Settings.PrintInfo pi = this.document.Settings.PrintInfo;
 			
 			if ( dialog.Document.PrinterSettings.PrinterName != pi.PrintName )
@@ -1745,7 +1745,7 @@ namespace Epsitec.Common.Document
 			Settings.String sString = settings as Settings.String;
 			if ( sString == null )  return;
 
-			Common.Dialogs.Print dialog = this.document.PrintDialog;
+			Common.Dialogs.PrintDialog dialog = this.document.PrintDialog;
 			TextFieldCombo field = this.WidgetsTableSearch(name, "") as TextFieldCombo;
 			field.Text = Types.FormattedText.Escape(this.document.Settings.PrintInfo.PrintName);
 		}

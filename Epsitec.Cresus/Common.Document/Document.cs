@@ -154,7 +154,7 @@ namespace Epsitec.Common.Document
 			this.containOldText = false;
 			this.fontList = null;
 
-			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
+			this.printDialog = new Common.Dialogs.PrinterDocumentPropertiesDialog();
 
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Document
 			set { this.printer = value; }
 		}
 		
-		public Common.Dialogs.Print PrintDialog
+		public Common.Dialogs.PrintDialog PrintDialog
 		{
 			//	Dialogue d'impression pour ce document.
 			get { return this.printDialog; }
@@ -2415,7 +2415,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		public void Print(Common.Dialogs.Print dp)
+		public void Print(Common.Dialogs.PrintDialog dp)
 		{
 			//	Imprime le document.
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
@@ -3309,7 +3309,7 @@ namespace Epsitec.Common.Document
 		protected Wrappers						wrappers;
 		protected Notifier						notifier;
 		protected Printer						printer;
-		protected Common.Dialogs.Print			printDialog;
+		protected Common.Dialogs.PrintDialog			printDialog;
 		protected PDF.Export					exportPDF;
 		protected DocumentDialogs				dialogs;
 		protected string						ioDirectory;

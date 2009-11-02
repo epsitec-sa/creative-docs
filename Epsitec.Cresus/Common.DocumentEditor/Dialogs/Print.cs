@@ -133,7 +133,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		{
 			this.CloseWindow();
 
-			Common.Dialogs.Print dialog = this.editor.CurrentDocument.PrintDialog;
+			Common.Dialogs.PrintDialog dialog = this.editor.CurrentDocument.PrintDialog;
 			this.editor.CurrentDocument.Print(dialog);
 		}
 		

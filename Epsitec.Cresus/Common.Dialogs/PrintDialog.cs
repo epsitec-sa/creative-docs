@@ -6,9 +6,9 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// La classe Print présente le dialogue pour imprimer un document.
 	/// </summary>
-	public class Print
+	public class PrintDialog
 	{
-		public Print()
+		public PrintDialog()
 		{
 			this.dialog   = new System.Windows.Forms.PrintDialog ();
 			
