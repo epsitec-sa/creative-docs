@@ -585,9 +585,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContentAlignment = ContentAlignment.MiddleCenter,
 			};
 
-			foreach (var category in this.Document.ActiveDataSource.Categories)
+			var document   = this.Document;
+			var dataSource = document.ActiveDataSource;
+
+			if (dataSource == null)
 			{
-				this.CreateFilterButton (container, category);
+				return;
+			}
+
+			var categories = dataSource.Categories;
+
+			if ((categories.Count > 1) ||
+				((categories.Count == 1) && !categories[0].IsGeneric))
+			{
+				foreach (var category in categories)
+				{
+					this.CreateFilterButton (container, category);
+				}
 			}
 		}
 
@@ -650,9 +664,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			this.inputItemsController.Clear ();
 
-			var categories = new HashSet<GraphDataCategory> (this.Document.ActiveFilterCategories);
+			var document   = this.Document;
+			var categories = new HashSet<GraphDataCategory> (document.ActiveFilterCategories);
 
-			foreach (var item in this.Document.DataSeries)
+			if (document.DataSeries == null)
+			{
+				return;
+			}
+
+			foreach (var item in document.DataSeries)
 			{
 				var category = item.GetCategory ();
 

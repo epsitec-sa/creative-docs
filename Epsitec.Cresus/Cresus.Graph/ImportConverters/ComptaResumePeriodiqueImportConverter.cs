@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 		}
 
-		public override DataCube ToDataCube(IList<string> header, IEnumerable<IList<string>> lines)
+		public override DataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines)
 		{
 			if (header.Count < 2)
 			{
@@ -62,12 +62,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			foreach (var line in lines)
 			{
-				if (string.IsNullOrEmpty (line[0]))
+				var item0 = line.ElementAt (0);
+				var item1 = line.ElementAt (1);
+
+				if (string.IsNullOrEmpty (item0))
 				{
 					continue;
 				}
 
-				string label = string.Concat (line[0], " ", line[1]);
+				string label = string.Concat (item0, " ", item1);
 				IEnumerable<double?> values = line.Skip (2).Select (x => GraphDataSet.GetNumericValue (x));
 
 				table.Add (label, values);

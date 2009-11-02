@@ -19,12 +19,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		/// <param name="converter">The successful converter.</param>
 		/// <param name="cube">The cube.</param>
 		/// <returns><c>true</c> if the data could be converted; otherwise, <c>false</c>.</returns>
-		public static bool ConvertToCube(IList<string> headColumns, IEnumerable<string[]> lines, out AbstractImportConverter converter, out DataCube cube)
+		public static bool ConvertToCube(IEnumerable<string> headColumns, IEnumerable<IEnumerable<string>> lines, out AbstractImportConverter converter, out DataCube cube)
 		{
-			foreach (var pair in ImportConverter.GetConverters ())
+			List<string> head = new List<string> (headColumns);
+
+			foreach (var pair in ImportConverter.GetConverters ().OrderByDescending (x => x.Value.Priority))
 			{
+				
 				converter = pair.Value;
-				cube      = converter.ToDataCube (headColumns, lines);
+				cube      = converter.ToDataCube (head, lines);
 
 				if (cube != null)
 				{
@@ -60,7 +63,105 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Splits a (possibly) quoted text, breaking up items between the specified
+		/// separators.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="separator">The separator.</param>
+		/// <returns>The collection of items.</returns>
+		public static IEnumerable<string> QuotedSplit(string text, char separator)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+
+			char quote = '"';
+			char final = '\0';
+			bool insideQuotedText = false;
+			int quoteCount = 0;
+
+			foreach (char c in ImportConverter.TextWithFinalMarker (text, final))
+			{
+				//	Quotes are treated in a special way only if the first character for
+				//	the current item was a quote; otherwise, quotes are just plain chars:
+
+				if (c == quote)
+				{
+					if ((quoteCount == 0) &&
+						(buffer.Length == 0))
+					{
+						insideQuotedText = true;
+					}
+
+					if (insideQuotedText)
+					{
+						quoteCount++;
+					}
+				}
+
+				//	An unquoted separator (or the final marker) imply that we have reached
+				//	the end of the current item and we have to yield it after cleaning up
+				//	the possible mess with the quotes:
+				
+				if (((c == separator) && ((quoteCount % 2) == 0)) ||
+					(c == final))
+				{
+					var value = buffer.ToString ();
+					int count = buffer.Length;
+					
+					if ((insideQuotedText) &&
+						(count > 1))
+					{
+						if ((value[0] == quote) &&
+							(value[count-1] == quote))
+                        {
+							//	The item is a properly formed "xyz" string (quote-text-quote)
+							//	but we will remove the quotes only if the text contains "" or
+							//	a separator, in order to make up for the Excel strangeness of
+							//	handling the quoting (copy&paste and CSV files are not handled
+							//	the same way):
+
+							var inner = value.Substring (1, count-2);
+
+							if ((inner.Contains (separator)) ||
+								(inner.Contains ("\"\"")))
+							{
+								value = inner.Replace ("\"\"", "\"");
+							}
+						}
+					}
+
+					yield return value;
+
+					buffer.Length    = 0;
+					insideQuotedText = false;
+					quoteCount       = 0;
+				}
+				else
+				{
+					buffer.Append (c);
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Enumerate all characters in the specified text, adding a final marker
+		/// at the end.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="marker">The marker.</param>
+		/// <returns>The collection of characters.</returns>
+		private static IEnumerable<char> TextWithFinalMarker(string text, char marker)
+		{
+			for (int i = 0; i < text.Length; i++)
+			{
+				yield return text[i];
+			}
+
+			yield return marker;
+		}
+
 		private static Dictionary<string, AbstractImportConverter> GetConverters()
 		{
 			if (ImportConverter.converters == null)
@@ -70,7 +171,12 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				foreach (var pair in ImportConverter.GetConverterTypes (typeof (ImportConverter).Assembly))
 				{
 					var args = new object[] { pair.Key };
-					ImportConverter.converters[pair.Key] = System.Activator.CreateInstance (pair.Value, args) as AbstractImportConverter;
+					var type = pair.Value;
+					var conv = System.Activator.CreateInstance (type, args) as AbstractImportConverter;
+
+					conv.Priority = ImportConverter.GetImporterAttributes (type).First ().Priority;
+					
+					ImportConverter.converters[pair.Key] = conv;
 				}
 			}
 
@@ -80,10 +186,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		private static IEnumerable<KeyValuePair<string, System.Type>> GetConverterTypes(System.Reflection.Assembly assembly)
 		{
 			return from type in assembly.GetTypes ()
-				   from attr in type.GetCustomAttributes (typeof (ImporterAttribute), false).Cast<ImporterAttribute> ()
+				   from attr in ImportConverter.GetImporterAttributes (type)
 				   select new KeyValuePair<string, System.Type> (attr.Name, type);
 		}
 
+
+		private static IEnumerable<ImporterAttribute> GetImporterAttributes(System.Type type)
+		{
+			return type.GetCustomAttributes (typeof (ImporterAttribute), false).Cast<ImporterAttribute> ();
+		}
 
 		private static Dictionary<string, AbstractImportConverter> converters;
 	}

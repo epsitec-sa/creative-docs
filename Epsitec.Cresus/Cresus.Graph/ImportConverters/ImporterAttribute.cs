@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		public ImporterAttribute(string name)
 		{
 			this.name = name;
+			this.Priority = 100;
 		}
 
 		public string Name
@@ -24,6 +25,12 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			{
 				return this.name;
 			}
+		}
+
+		public int Priority
+		{
+			get;
+			set;
 		}
 
 		private readonly string name;
