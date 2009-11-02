@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 
 		public override Margins GetInternalPadding()
 		{
-			return new Margins (3, 3, 5, 3);
+			return new Margins (3, 3, 5+2, 3+2);	//	top and bottom +2 pixels because of rounded corner radius
 		}
         
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 		
-		private Widget FindDataCubeButton()
+		public Widget FindDataCubeButton()
 		{
 			return this.Window.Root.FindAllChildren (w => w is DataCubeButton).FirstOrDefault ();
 		}

@@ -88,8 +88,10 @@ namespace Epsitec.Common.Widgets
 			pos.Y += this.GetBaseLineVerticalOffset ();
 			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.ButtonStyle);
 
+			double lineY = System.Math.Floor (pos.Y + this.TextLayout.GetLineOrigin (0).Y);
+
 			//	Dessine un petit ">" positionné de façon empyrique.
-			rect = new Drawing.Rectangle(rect.Left+2, rect.Top-20-13, 20, 20);
+			rect = new Drawing.Rectangle(rect.Left+2, /*rect.Top-20-13*/ lineY-5, 20, 20);
 			adorner.PaintGlyph(graphics, rect, state, adorner.ColorCaption, GlyphShape.TriangleRight, PaintTextStyle.StaticText);
 		}
 

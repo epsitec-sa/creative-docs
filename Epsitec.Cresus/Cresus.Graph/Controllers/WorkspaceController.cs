@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.groupsController = new GroupsController (this);
 			this.snapshotsController = new SnapshotsController (this);
+			this.cubeSelController = new DataCubeSelectionController (this);
 
 			this.chartViewController = new ChartViewController (this.application, this)
 			{
@@ -202,6 +203,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				IsVerticalLine = true,
 				Parent = settingsFrame,
 			};
+
+			this.cubeSelController.SetupUI (cubeFrame);
 		}
 		
 		private void SetupWorkspaceFrameUI()
@@ -1728,6 +1731,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private readonly ItemListController<MiniChartView>		outputItemsController;
 		private readonly GroupsController		groupsController;
 		private readonly SnapshotsController	snapshotsController;
+		private readonly DataCubeSelectionController cubeSelController;
 
 		private readonly Dictionary<long, GraphDataSeries> viewToSeries;
 		private readonly Dictionary<long, GraphDataGroup> viewToGroup;
