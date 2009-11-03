@@ -584,8 +584,6 @@ namespace Epsitec.Cresus.Graph
 		{
 			GraphDocument.SaveCubeData (cube);
 			this.cube = cube;
-			this.ReloadDataSet ();
-			this.application.NotifyDocumentChanged ();
 		}
 
 		internal void UpdateSyntheticSeries()

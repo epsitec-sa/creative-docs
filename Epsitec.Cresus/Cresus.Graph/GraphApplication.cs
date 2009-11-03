@@ -94,6 +94,10 @@ namespace Epsitec.Cresus.Graph
 				if (graphDataCube != null)
 				{
 					document.LoadCube (graphDataCube);
+					this.NotifyDocumentChanged ();
+					
+					GraphActions.DocumentReload ();
+
 					return true;
 				}
 			}
@@ -371,7 +375,16 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		private void HandleClipboardDataChanged(object sender, ClipboardDataChangedEventArgs e)
+		private void NotifyClipboardDataChanged()
+		{
+			var handler = this.ClipboardDataChanged;
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+        private void HandleClipboardDataChanged(object sender, ClipboardDataChangedEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.NativeFormats));
 			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.AllPossibleFormats));
@@ -389,7 +402,11 @@ namespace Epsitec.Cresus.Graph
 				}
 
 				this.lastPasteChecksum = checksum;
-				this.ImportCube (this.Document, text);
+				this.lastPasteTextData = text;
+
+				this.NotifyClipboardDataChanged ();
+				
+				this.ImportCube (this.Document, this.lastPasteTextData);
 			}
 		}
 
@@ -444,6 +461,7 @@ namespace Epsitec.Cresus.Graph
 		}
 		
 		public event EventHandler ActiveDocumentChanged;
+		public event EventHandler ClipboardDataChanged;
 
 
 		
@@ -453,9 +471,9 @@ namespace Epsitec.Cresus.Graph
 		private readonly Controllers.WorkspaceController workspaceController;
 
 		private readonly Core.UI.PersistenceManager persistenceManager;
-		private readonly System.Action<IEnumerable<int>> removeSeriesFromGraphAction;
-
+		
 		private GraphDocument activeDocument;
 		private long lastPasteChecksum;
+		private string lastPasteTextData;
 	}
 }

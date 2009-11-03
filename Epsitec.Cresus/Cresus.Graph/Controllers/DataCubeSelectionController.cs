@@ -95,6 +95,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					this.container.FindDataCubeButton ().SimulateClicked ();
 				};
+
+			pasteButton.Clicked +=
+				delegate
+				{
+				};
 			
 			importButton.Clicked += this.HandleImportButtonClicked;
 		}
