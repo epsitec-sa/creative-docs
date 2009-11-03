@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Graph
 		[Command (ApplicationCommands.Id.SaveAs)]
 		private void SaveAsCommand()
 		{
-			throw new System.NotSupportedException ();
+		//	throw new System.NotSupportedException ();
 			this.Save (this.application.Document, true);
 		}
 

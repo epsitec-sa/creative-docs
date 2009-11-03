@@ -1,6 +1,9 @@
 //	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Reflection;
+using System.Runtime.InteropServices;
+
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
@@ -21,7 +24,43 @@ namespace Epsitec.Common.Dialogs
 			this.dialog.ShowHelp = false;
 			this.dialog.ShowReadOnly = false;
 			this.dialog.ValidateNames = true;
+			
+			this.dialog.FileOk +=
+				(sender, e) =>
+				{
+					string name = this.FileName;
+					string path = System.IO.Path.GetDirectoryName (name);
+					string ext  = System.IO.Path.GetExtension (name);
+
+					if ((this.dialog.AddExtension) &&
+						(this.filters.FindExtension (ext) == null))
+					{
+#if false
+						var type = typeof (System.Windows.Forms.FileDialog);
+						var info = type.GetField ("dialogHWnd", BindingFlags.NonPublic | BindingFlags.Instance);
+						var fileDialogHandle = (System.IntPtr) info.GetValue (dialog);
+
+						var fixedName = System.IO.Path.Combine (path, System.IO.Path.GetFileNameWithoutExtension (name) + "." + this.DefaultExt);
+
+						FileOpenDialog.SetFileName (fileDialogHandle, fixedName);
+#endif
+						e.Cancel = true;
+					}
+				};
 		}
+
+#if false
+		[DllImport ("User32")]
+		private static extern int SetDlgItemText(System.IntPtr hwnd, int id, string title);
+
+		private const int FileTitleCntrlID = 0x47c;
+
+		private static void SetFileName(System.IntPtr hdlg, string name)
+		{
+			FileOpenDialog.SetDlgItemText (hdlg, FileTitleCntrlID, name);
+		}
+#endif
+		
 		
 		#region IDialog Members
 		public void OpenDialog()

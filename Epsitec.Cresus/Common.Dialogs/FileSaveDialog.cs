@@ -1,6 +1,8 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
-using System;
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -29,6 +31,23 @@ namespace Epsitec.Common.Dialogs
 				(sender, e) =>
 				{
 					string name = this.FileName;
+					string path = System.IO.Path.GetDirectoryName (name);
+					string ext  = System.IO.Path.GetExtension (name);
+
+					if ((this.dialog.AddExtension) &&
+						(this.filters.FindExtension (ext) == null))
+					{
+#if false
+						var type = typeof (System.Windows.Forms.FileDialog);
+						var info = type.GetField ("dialogHWnd", BindingFlags.NonPublic | BindingFlags.Instance);
+						var fileDialogHandle = (System.IntPtr) info.GetValue (dialog);
+
+						var fixedName = System.IO.Path.Combine (path, System.IO.Path.GetFileNameWithoutExtension (name) + "." + this.DefaultExt);
+
+						FileSaveDialog.SetFileName (fileDialogHandle, fixedName);
+#endif
+						e.Cancel = true;
+					}
 
 					if (this.PromptForOverwriting)
 					{
@@ -60,6 +79,18 @@ namespace Epsitec.Common.Dialogs
 					}
 				};
 		}
+
+#if false
+		[DllImport ("User32")]
+		private static extern int SetDlgItemText(System.IntPtr hwnd, int id, string title);
+
+		private const int FileTitleCntrlID = 0x47c;
+
+		private static void SetFileName(System.IntPtr hdlg, string name)
+		{
+			FileSaveDialog.SetDlgItemText (hdlg, FileTitleCntrlID, name);
+		}
+#endif
 		
 		
 		public string							DefaultExt

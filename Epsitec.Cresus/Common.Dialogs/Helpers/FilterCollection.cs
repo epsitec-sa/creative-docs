@@ -53,7 +53,20 @@ namespace Epsitec.Common.Dialogs.Helpers
 		{
 			return this.Add (new FilterItem (name, caption, filter));
 		}
-		
+
+
+		public FilterItem FindExtension(string filter)
+		{
+			foreach (FilterItem item in this.list)
+			{
+				if (item.Filter.EndsWith (filter, System.StringComparison.InvariantCultureIgnoreCase))
+				{
+					return item;
+				}
+			}
+
+			return null;
+		}
 		
 		
 		public void Dispose()
