@@ -28,6 +28,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkSubset>Client</TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -93,6 +94,9 @@
     </Reference>
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Name>Common.Drawing.Agg</Name>
@@ -272,6 +276,7 @@
     <Compile Include="VersionChecker.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Xml.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Common.Support\Captions.00.resource" />

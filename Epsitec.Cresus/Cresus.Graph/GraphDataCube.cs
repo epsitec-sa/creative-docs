@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Graph
 			this.Title         = cube.Title;
 		}
 
+		
 		public System.Guid Guid
 		{
 			get;

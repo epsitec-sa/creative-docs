@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Graph.Styles;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -13,8 +14,6 @@ using Epsitec.Cresus.Graph.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System;
-using Epsitec.Common.Graph.Styles;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 
@@ -194,7 +193,12 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-
+		public bool FullDocumentSaveInProgress
+		{
+			get;
+			set;
+		}
+        
 		public GraphDataSeries AddOutput(GraphDataSeries series)
 		{
 			series.IsSelected = true;
@@ -494,23 +498,32 @@ namespace Epsitec.Cresus.Graph
 
 		public void SaveDocument(string path)
 		{
-			System.DateTime now = System.DateTime.Now.ToUniversalTime ();
-			string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
+			try
+			{
+				this.FullDocumentSaveInProgress = true;
 
-			XDocument doc = new XDocument (
-				new XDeclaration ("1.0", "utf-8", "yes"),
-				new XComment ("Saved on " + timeStamp),
-				new XElement ("store",
-					new XAttribute ("version", "1"),
-					new XElement ("about",
-						new XAttribute ("savePath", path),
-						new XAttribute ("saveTime", timeStamp)),
-					this.SaveSettings (new XElement ("doc"))));
+				System.DateTime now = System.DateTime.Now.ToUniversalTime ();
+				string timeStamp = string.Concat (now.ToShortDateString (), " ", now.ToShortTimeString (), " UTC");
 
-			doc.Save (path);
+				XDocument doc = new XDocument (
+					new XDeclaration ("1.0", "utf-8", "yes"),
+					new XComment ("Saved on " + timeStamp),
+					new XElement ("store",
+						new XAttribute ("version", "1"),
+						new XElement ("about",
+							new XAttribute ("savePath", path),
+							new XAttribute ("saveTime", timeStamp)),
+						this.SaveSettings (new XElement ("doc"))));
 
-			this.SavePath = path;
-			this.NotifyNeedsSave (false);
+				doc.Save (path);
+
+				this.SavePath = path;
+				this.NotifyNeedsSave (false);
+			}
+			finally
+			{
+				this.FullDocumentSaveInProgress = false;
+			}
 		}
 
 		public bool LoadDocument(string path)
@@ -708,21 +721,34 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.cube != null)
 			{
-				yield return GraphDocument.SaveCubeSettings (this.cube);
+				yield return GraphDocument.SaveCubeSettings (this.cube, this.FullDocumentSaveInProgress);
 			}
 		}
 
-		private static XElement SaveCubeSettings(GraphDataCube cube)
+		private static XElement SaveCubeSettings(GraphDataCube cube, bool saveCubeData)
 		{
 			GraphDocument.SaveCubeData (cube);
 
-			return new XElement ("cube",
+			var xml = new XElement ("cube",
 				new XAttribute ("guid", cube.Guid),
 				new XAttribute ("sliceDimA", cube.SliceDimA ?? ""),
 				new XAttribute ("sliceDimB", cube.SliceDimB ?? ""),
 				new XAttribute ("converter", cube.ConverterName ?? ""),
 				new XAttribute ("title", cube.Title ?? "")
 				);
+
+			if (saveCubeData)
+            {
+				xml.Add (new XAttribute ("data", "embedded"));
+
+				using (var stream = new System.IO.StringWriter ())
+				{
+					cube.Save (stream);
+					xml.Add (new XCData (stream.ToString ()));
+				}
+            }
+			
+			return xml;
 		}
 
 		private static void SaveCubeData(GraphDataCube cube)
@@ -773,7 +799,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		private static string GetDataPath(Guid guid)
+		private static string GetDataPath(System.Guid guid)
 		{
 			return System.IO.Path.Combine (GraphApplication.Paths.AutoSavePath, guid.ToString ("D") + ".crgraph-data");
 		}
