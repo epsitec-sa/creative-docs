@@ -240,6 +240,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				BackColor = Color.FromBrightness (1.0),
 				PreferredWidth = 200,
 				Padding = new Margins (0, 0, 1, 0),
+				Visibility = false,
 			};
 
 			var splitter1 = new VSplitter ()

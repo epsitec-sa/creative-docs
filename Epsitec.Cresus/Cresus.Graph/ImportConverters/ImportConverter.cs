@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			foreach (var pair in ImportConverter.GetConverters ().OrderByDescending (x => x.Value.Priority))
 			{
-				
 				converter = pair.Value;
 				cube      = converter.ToDataCube (head, lines);
 

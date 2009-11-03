@@ -538,14 +538,7 @@ namespace Epsitec.Cresus.Graph
 
 		public void ReloadDataSet()
 		{
-			this.dataSources.Clear ();
-			this.outputSeries.Clear ();
-			this.groups.Clear ();
-			this.syntheticSeries.Clear ();
-			this.filterCategories.Clear ();
-			this.chartSnapshots.ForEach (x => x.Visibility = true);
-
-			this.activeDataSource = null;
+			this.ClearData ();
 
 			if ((this.cube == null) ||
 				(string.IsNullOrEmpty (this.cube.SliceDimA)) ||
@@ -634,16 +627,33 @@ namespace Epsitec.Cresus.Graph
 			}
 
 
-			GraphActions.DocumentReload ();
-
-			if (undoActionsXml != null)
+			try
 			{
-				this.UndoRedo.UndoRecorder.RestoreFromString (undoActionsXml.Value);
-				this.UndoRedo.UndoRecorder.ForEach (x => x.PlayBack ());
+				if (undoActionsXml != null)
+				{
+					this.UndoRedo.UndoRecorder.RestoreFromString (undoActionsXml.Value);
+					this.UndoRedo.UndoRecorder.ForEach (x => x.PlayBack ());
+				}
+				if (redoActionsXml != null)
+				{
+					this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
+				}
 			}
-			if (redoActionsXml != null)
+			catch
 			{
-				this.UndoRedo.RedoRecorder.RestoreFromString (redoActionsXml.Value);
+				//	In case of a deserialization issue, simply clear everything back to
+				//	an empy document:
+
+				this.UndoRedo.UndoRecorder.Clear ();
+				this.UndoRedo.RedoRecorder.Clear ();
+
+				this.ClearData ();
+			}
+
+			if ((this.UndoRedo.UndoRecorder.Count == 0) &&
+				(this.UndoRedo.RedoRecorder.Count == 0))
+			{
+				GraphActions.DocumentReload ();
 			}
 
 			if (snapshotsXml != null)
@@ -671,6 +681,18 @@ namespace Epsitec.Cresus.Graph
 #endif
 		}
 
+
+		private void ClearData()
+		{
+			this.dataSources.Clear ();
+			this.outputSeries.Clear ();
+			this.groups.Clear ();
+			this.syntheticSeries.Clear ();
+			this.filterCategories.Clear ();
+			this.chartSnapshots.ForEach (x => x.Visibility = true);
+
+			this.activeDataSource = null;
+		}
 
 		private void CreateDefaultColorStyle()
 		{
