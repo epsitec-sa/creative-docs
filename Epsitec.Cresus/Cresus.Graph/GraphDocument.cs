@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Graph
 			this.columnLabels = new List<string> ();
 			this.filterCategories = new HashSet<GraphDataCategory> ();
 			this.chartSnapshots = new List<GraphChartSnapshot> ();
+			this.cubes = new List<GraphDataCube> ();
 			
 			this.groupSource = new GraphDataSource (null)
 			{
@@ -358,6 +359,23 @@ namespace Epsitec.Cresus.Graph
 			GraphDocument.RenumberGroups (this.groups);
 		}
 
+		public bool SelectCube(System.Guid guid)
+		{
+			var cube = this.cubes.Find (x => x.Guid == guid);
+
+			if (cube == null)
+			{
+				return false;
+			}
+
+			this.cube = cube;
+			
+			this.application.NotifyDocumentChanged ();
+			this.ReloadDataSet ();
+
+			return true;
+		}
+
 
 		public GraphDataSeries FindSeries(string id)
 		{
@@ -596,7 +614,11 @@ namespace Epsitec.Cresus.Graph
 		internal void LoadCube(GraphDataCube cube)
 		{
 			GraphDocument.SaveCubeData (cube);
+			
 			this.cube = cube;
+			this.cubes.Add (cube);
+			
+			this.application.NotifyDocumentChanged ();
 		}
 
 		internal void UpdateSyntheticSeries()
@@ -719,10 +741,7 @@ namespace Epsitec.Cresus.Graph
 
 		private IEnumerable<XElement> SaveCubeSettings()
 		{
-			if (this.cube != null)
-			{
-				yield return GraphDocument.SaveCubeSettings (this.cube, this.FullDocumentSaveInProgress);
-			}
+			return this.cubes.Select (cube => GraphDocument.SaveCubeSettings (cube, this.FullDocumentSaveInProgress));
 		}
 
 		private static XElement SaveCubeSettings(GraphDataCube cube, bool saveCubeData)
@@ -781,19 +800,21 @@ namespace Epsitec.Cresus.Graph
 						var converterName = (string) cubeXml.Attribute ("converter");
 						var cubeTitle     = (string) cubeXml.Attribute ("title");
 
+						var cube = new GraphDataCube ()
+						{
+							Guid = cubeGuid,
+							SliceDimA = cubeSliceDim1,
+							SliceDimB = cubeSliceDim2,
+							ConverterName = converterName,
+							Title = cubeTitle,
+						};
+						
 						using (var stream = new System.IO.StreamReader (dataPath, System.Text.Encoding.UTF8))
 						{
-							this.cube = new GraphDataCube ()
-							{
-								Guid = cubeGuid,
-								SliceDimA = cubeSliceDim1,
-								SliceDimB = cubeSliceDim2,
-								ConverterName = converterName,
-								Title = cubeTitle,
-							};
-
-							this.cube.Restore (stream);
+							cube.Restore (stream);
 						}
+						
+						this.LoadCube (cube);
 					}
 				}
 			}
@@ -829,6 +850,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly List<GraphSyntheticDataSeries> syntheticSeries;
 		private readonly HashSet<GraphDataCategory> filterCategories;
 		private readonly List<GraphChartSnapshot> chartSnapshots;
+		private readonly List<GraphDataCube> cubes;
 
 		private readonly UndoRedoManager undoRedoManager;
 		

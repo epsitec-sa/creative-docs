@@ -94,7 +94,6 @@ namespace Epsitec.Cresus.Graph
 				if (graphDataCube != null)
 				{
 					document.LoadCube (graphDataCube);
-					this.NotifyDocumentChanged ();
 					
 					GraphActions.DocumentReload ();
 
