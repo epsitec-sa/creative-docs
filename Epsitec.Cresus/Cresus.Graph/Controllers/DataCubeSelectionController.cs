@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.UI;
+using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -20,6 +22,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void SetupUI(Widgets.DataCubeFrame container)
 		{
+			GraphProgram.Application.ClipboardDataChanged +=
+				(sender, e) =>
+				{
+					if (e.Format == ClipboardDataFormat.Text)
+					{
+						GraphProgram.Application.SetEnable (ApplicationCommands.Paste, true);
+					}
+				};
+			
 			this.container = container;
 
 			var innerFrame = new FrameBox ()
@@ -81,13 +92,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Right,
 			};
 
-			var pasteButton = new Button ()
+			var pasteButton = new MetaButton ()
 			{
 				Parent = topFrame,
 				Dock = DockStyle.Right,
-				Text = "<img src=\"manifest:Epsitec.Common.Widgets.Images.Cmd.Paste.icon\" dx=\"31\" dy=\"31\"/>",
+				CommandObject = ApplicationCommands.Paste,
+				//Text = "<img src=\"manifest:Epsitec.Common.Widgets.Images.Cmd.Paste.icon\" dx=\"31\" dy=\"31\"/>",
 				PreferredWidth = 72,
-				ButtonStyle = ButtonStyle.ToolItem,
+//				ButtonStyle = ButtonStyle.ToolItem,
 			};
 
 			closeButton.Clicked +=
@@ -96,11 +108,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 					this.container.FindDataCubeButton ().SimulateClicked ();
 				};
 
-			pasteButton.Clicked +=
-				delegate
-				{
-				};
-			
 			importButton.Clicked += this.HandleImportButtonClicked;
 		}
 

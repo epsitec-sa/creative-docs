@@ -139,6 +139,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClipboardDataEventArgs.cs" />
     <Compile Include="Controllers\DataCubeSelectionController.cs" />
     <Compile Include="Controllers\SnapshotsController.cs" />
     <Compile Include="GraphChartSnapshot.cs" />
@@ -178,6 +179,7 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+    <EmbeddedResource Include="Images\Cmd.Kill.icon" />
     <EmbeddedResource Include="Images\DataCube.icon" />
     <EmbeddedResource Include="Resources\futuramc.ttf" />
     <EmbeddedResource Include="Images\Button.Off.icon" />

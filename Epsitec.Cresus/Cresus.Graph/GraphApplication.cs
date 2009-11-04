@@ -170,6 +170,10 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		internal void ExecutePaste()
+		{
+			this.ImportCube (this.Document, this.lastPasteTextData);
+		}
 
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -381,9 +385,10 @@ namespace Epsitec.Cresus.Graph
 
 			if (handler != null)
 			{
-				handler (this);
+				handler (this, new ClipboardDataEventArgs (this.lastPasteTextData));
 			}
 		}
+
         private void HandleClipboardDataChanged(object sender, ClipboardDataChangedEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Join ("/", e.Data.NativeFormats));
@@ -405,8 +410,6 @@ namespace Epsitec.Cresus.Graph
 				this.lastPasteTextData = text;
 
 				this.NotifyClipboardDataChanged ();
-				
-				this.ImportCube (this.Document, this.lastPasteTextData);
 			}
 		}
 
@@ -461,7 +464,7 @@ namespace Epsitec.Cresus.Graph
 		}
 		
 		public event EventHandler ActiveDocumentChanged;
-		public event EventHandler ClipboardDataChanged;
+		public event EventHandler<ClipboardDataEventArgs> ClipboardDataChanged;
 
 
 		

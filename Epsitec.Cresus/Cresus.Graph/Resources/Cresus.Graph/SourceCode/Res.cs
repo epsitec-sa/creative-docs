@@ -22,6 +22,16 @@ namespace Epsitec.Cresus
 				public static readonly global::Epsitec.Common.Widgets.Command ExportImage = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5));
 			}
 			
+			public static class General
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/BVA6
+				public static readonly global::Epsitec.Common.Widgets.Command Kill = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
+			}
+			
 			public static class GraphType
 			{
 				internal static void _Initialize()
@@ -39,6 +49,7 @@ namespace Epsitec.Cresus
 			internal static void _Initialize()
 			{
 				File._Initialize ();
+				General._Initialize ();
 				GraphType._Initialize ();
 			}
 		}
@@ -49,6 +60,12 @@ namespace Epsitec.Cresus
 			{
 				//	designer:cap/BVA5
 				public const long ExportImage = 0x3EB0000A000005L;
+			}
+			
+			public static class General
+			{
+				//	designer:cap/BVA6
+				public const long Kill = 0x3EB0000A000006L;
 			}
 			
 			public static class GraphType

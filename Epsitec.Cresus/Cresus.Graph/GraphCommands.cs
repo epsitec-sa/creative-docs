@@ -77,6 +77,12 @@ namespace Epsitec.Cresus.Graph
 			chartViewController.SaveMetafile (null);
 		}
 
+		[Command (ApplicationCommands.Id.Paste)]
+		private void PasteCommand(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			GraphProgram.Application.ExecutePaste ();
+		}
+
 		[Command (ApplicationCommands.Id.Print)]
 		private void PrintCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -99,8 +105,13 @@ namespace Epsitec.Cresus.Graph
 		[Command (ApplicationCommands.Id.SaveAs)]
 		private void SaveAsCommand()
 		{
-		//	throw new System.NotSupportedException ();
 			this.Save (this.application.Document, true);
+		}
+
+		[Command (Res.CommandIds.General.Kill)]
+		private void KillCommand()
+		{
+			throw new System.NotSupportedException ();
 		}
 
 		public bool Save(GraphDocument document, bool alwaysAsk)

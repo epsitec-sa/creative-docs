@@ -1,14 +1,20 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs.Helpers
 {
-	public class FilterCollection : System.Collections.IList, System.IDisposable
+	/// <summary>
+	/// The <c>FilterCollection</c> class implements a list of <see cref="FilterItem"/>
+	/// elements.
+	/// </summary>
+	public class FilterCollection : System.Collections.IList, System.IDisposable, IEnumerable<FilterItem>
 	{
 		public FilterCollection(IFilterCollectionHost host)
 		{
 			this.host  = host;
-			this.list  = new System.Collections.ArrayList ();
+			this.list  = new List<FilterItem> ();
 		}
 		
 		
@@ -17,7 +23,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			get
 			{
 				if (index == -1) return null;
-				return this.list[index] as FilterItem;
+				return this.list[index];
 			}
 		}
 		
@@ -43,7 +49,8 @@ namespace Epsitec.Common.Dialogs.Helpers
 		
 		public int Add(FilterItem item)
 		{
-			int index = this.list.Add (item);
+			int index = this.list.Count;
+			this.list.Add (item);
 			this.HandleInsert (item);
 			this.HandleChange ();
 			return index;
@@ -55,11 +62,25 @@ namespace Epsitec.Common.Dialogs.Helpers
 		}
 
 
-		public FilterItem FindExtension(string filter)
+		/// <summary>
+		/// Finds the <see cref="FilterItem"/> with the specified extension.
+		/// </summary>
+		/// <param name="extension">The extension (with or without a leading dot).</param>
+		/// <returns></returns>
+		public FilterItem FindExtension(string extension)
 		{
-			foreach (FilterItem item in this.list)
+			if (string.IsNullOrEmpty (extension))
+            {
+				return null;
+            }
+			if (extension[0] != '.')
 			{
-				if (item.Filter.EndsWith (filter, System.StringComparison.InvariantCultureIgnoreCase))
+				extension = "." + extension;
+			}
+
+			foreach (var item in this.list)
+			{
+				if (item.Filter.EndsWith (extension, System.StringComparison.InvariantCultureIgnoreCase))
 				{
 					return item;
 				}
@@ -102,7 +123,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 			}
 			set
 			{
-				this.list[index] = value;
+				this.list[index] = (FilterItem) value;
 			}
 		}
 
@@ -116,14 +137,14 @@ namespace Epsitec.Common.Dialogs.Helpers
 
 		public void Insert(int index, object value)
 		{
-			this.list.Insert (index, value);
+			this.list.Insert (index, (FilterItem) value);
 			this.HandleInsert (value);
 			this.HandleChange ();
 		}
 
 		public void Remove(object value)
 		{
-			int index = this.list.IndexOf (value);
+			int index = this.list.IndexOf ((FilterItem) value);
 			if (index >= 0)
 			{
 				this.HandleRemove (value);
@@ -134,7 +155,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 
 		public bool Contains(object value)
 		{
-			return this.list.Contains (value);
+			return this.list.Contains ((FilterItem) value);
 		}
 
 		public void Clear()
@@ -149,24 +170,19 @@ namespace Epsitec.Common.Dialogs.Helpers
 
 		public int IndexOf(object value)
 		{
-			return this.list.IndexOf (value);
+			return this.list.IndexOf ((FilterItem) value);
 		}
 
 		public int Add(object value)
 		{
-			int index = this.list.Add (value);
-			
-			this.HandleInsert (value);
-			this.HandleChange ();
-			
-			return index;
+			return this.Add ((FilterItem) value);
 		}
 
 		public bool IsFixedSize
 		{
 			get
 			{
-				return this.list.IsFixedSize;
+				return false;
 			}
 		}
 		#endregion
@@ -176,7 +192,7 @@ namespace Epsitec.Common.Dialogs.Helpers
 		{
 			get
 			{
-				return this.list.IsSynchronized;
+				return false;
 			}
 		}
 
@@ -190,24 +206,34 @@ namespace Epsitec.Common.Dialogs.Helpers
 
 		public void CopyTo(System.Array array, int index)
 		{
-			this.list.CopyTo (array, index);
+			System.Collections.ICollection collection = this.list;
+			collection.CopyTo (array, index);
 		}
 
 		public object SyncRoot
 		{
 			get
 			{
-				return this.list.SyncRoot;
+				return this.list;
 			}
 		}
 
 		#endregion
 		
 		#region IEnumerable Members
-		public System.Collections.IEnumerator GetEnumerator()
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
 			return this.list.GetEnumerator ();
 		}
+		#endregion
+
+		#region IEnumerable<FilterItem> Members
+
+		public IEnumerator<FilterItem> GetEnumerator()
+		{
+			return this.list.GetEnumerator ();
+		}
+
 		#endregion
 		
 		protected virtual void HandleInsert(object item)
@@ -228,6 +254,6 @@ namespace Epsitec.Common.Dialogs.Helpers
 		
 		
 		private IFilterCollectionHost			host;
-		private System.Collections.ArrayList	list;
+		private List<FilterItem>				list;
 	}
 }
