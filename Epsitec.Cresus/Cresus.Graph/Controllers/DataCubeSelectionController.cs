@@ -5,6 +5,7 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.UI;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -30,7 +31,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 						GraphProgram.Application.SetEnable (ApplicationCommands.Paste, true);
 					}
 				};
-			
+
+			GraphProgram.Application.ActiveDocumentChanged +=
+				(sender) =>
+				{
+					this.UpdateCubeList ();
+				};
+
 			this.container = container;
 
 			var innerFrame = new FrameBox ()
@@ -109,6 +116,34 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 
 			importButton.Clicked += this.HandleImportButtonClicked;
+
+			this.cubesScrollable = new Scrollable ()
+			{
+				Parent = middleFrame,
+				Dock = DockStyle.Left,
+				PreferredWidth = 160,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
+				VerticalScrollerMode = ScrollableScrollerMode.ShowAlways,
+			};
+
+			this.cubesScrollable.Viewport.IsAutoFitting = true;
+		}
+
+		private void UpdateCubeList()
+		{
+			this.cubesScrollable.Viewport.Children.Widgets.ForEach (x => x.Dispose ());
+
+			foreach (var cube in this.workspace.Document.Cubes)
+			{
+				var button = new Button ()
+				{
+					Parent = this.cubesScrollable.Viewport,
+					Dock = DockStyle.Stacked,
+					Text = cube.Guid.ToString (),
+					PreferredHeight = 80,
+				};
+			}
 		}
 
 
@@ -129,5 +164,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private readonly WorkspaceController	workspace;
 		private Widgets.DataCubeFrame			container;
+		private Scrollable						cubesScrollable;
 	}
 }

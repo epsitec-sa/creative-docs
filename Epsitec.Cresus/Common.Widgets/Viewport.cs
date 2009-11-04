@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 		public Drawing.Size						SurfaceSize
 		{
 			//	La taille de la surface indique une taille minimale idéale, en-dessous de laquelle
-			//	le contenu ne sera plus entièrement visible. Scrollable utiliser cette information
+			//	le contenu ne sera plus entièrement visible. Scrollable utilise cette information
 			//	pour décider du moment à partir duquel afficher les ascenceurs.
 			
 			//	Par défaut, la taille de la surface est zéro, ce qui signifie qu'il n'y aura jamais

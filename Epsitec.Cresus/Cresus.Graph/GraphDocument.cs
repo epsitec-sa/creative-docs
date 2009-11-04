@@ -127,6 +127,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public IList<GraphDataCube> Cubes
+		{
+			get
+			{
+				return this.cubes.AsReadOnly ();
+			}
+		}
+
 		public IList<string> ChartColumnLabels
 		{
 			get
