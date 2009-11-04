@@ -6,18 +6,6 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'énumération ScrollableScrollerMode détermine comment Scrollable affiche les
-	/// ascenceurs (automatiquement, en fonction de la place disponible, ne jamais les
-	/// montrer ou toujours les montrer).
-	/// </summary>
-	public enum ScrollableScrollerMode
-	{
-		Auto,
-		HideAlways,
-		ShowAlways
-	}
-	
-	/// <summary>
 	/// La classe Scrollable permet de représenter un Viewport de taille
 	/// quelconque dans une surface de taille déterminée, en ajoutant
 	/// au besoin des ascenceurs.
@@ -232,19 +220,58 @@ namespace Epsitec.Common.Widgets
 			double width  = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
 			double height = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
 
-			double right = this.Client.Bounds.Right;
-			double top   = this.Client.Bounds.Top;
+			var rect = this.Client.Bounds;
 
 			if (this.vScroller.Visibility)
 			{
-				Drawing.Rectangle bounds = new Drawing.Rectangle (right - width, height, width, top - height);
-				this.UpdateVerticalScrollerBounds (bounds);
+				if (this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+				{
+					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (width, 0, 0, 0));
+				}
+				else
+				{
+					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (0, width, 0, 0));
+				}
+			}
+			
+			if (this.hScroller.Visibility)
+			{
+				if (this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+				{
+					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (0, 0, height, 0));
+				}
+				else
+				{
+					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (0, 0, 0, height));
+				}
+			}
+			
+			if (this.vScroller.Visibility)
+			{
+				if (this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+				{
+					var bounds = new Drawing.Rectangle (0, rect.Bottom, width, rect.Height);
+					this.UpdateVerticalScrollerBounds (bounds);
+				}
+				else
+				{
+					var bounds = new Drawing.Rectangle (rect.Right, rect.Bottom, width, rect.Height);
+					this.UpdateVerticalScrollerBounds (bounds);
+				}
 			}
 
 			if (this.hScroller.Visibility)
 			{
-				Drawing.Rectangle bounds = new Drawing.Rectangle (0, 0, right - width, height);
-				this.UpdateHorizontalScrollerBounds (bounds);
+				if (this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+				{
+					var bounds = new Drawing.Rectangle (rect.Left, rect.Top, rect.Width, height);
+					this.UpdateHorizontalScrollerBounds (bounds);
+				}
+				else
+				{
+					var bounds = new Drawing.Rectangle (rect.Left, 0, rect.Width, height);
+					this.UpdateHorizontalScrollerBounds (bounds);
+				}
 			}
 		}
 
@@ -274,8 +301,8 @@ namespace Epsitec.Common.Widgets
 			double totalDy = this.Client.Size.Height;
 			double viewportDx = viewport.SurfaceWidth;
 			double viewportDy = viewport.SurfaceHeight;
-			double marginX = (this.vScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.vScroller.PreferredWidth : 0;
-			double marginY = (this.hScrollerMode == ScrollableScrollerMode.ShowAlways) ? this.hScroller.PreferredHeight : 0;
+			double marginX = this.GetVerticalShowAlways () ? this.vScroller.PreferredWidth : 0;
+			double marginY = this.GetHorizontalShowAlways () ? this.hScroller.PreferredHeight : 0;
 			
 			double deltaDx;
 			double deltaDy;
@@ -386,14 +413,39 @@ namespace Epsitec.Common.Widgets
 			this.hScroller.Visibility = (marginY > 0);
 			this.vScroller.Visibility = (marginX > 0);
 
-			this.viewportAperture = new Drawing.Rectangle (0, marginY, visDx, visDy);
-			viewport.SetManualBounds (new Drawing.Rectangle (-offsetX, totalDy - viewportDy + offsetY, viewportDx, viewportDy));
+			double ox = 0;
+			double oy = marginY;
+
+			if (this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+			{
+				oy = 0;
+			}
+			if (this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+			{
+				ox = marginX;
+			}
+			
+			this.viewportAperture = new Drawing.Rectangle (ox, oy, visDx, visDy);
+			
+			viewport.SetManualBounds (new Drawing.Rectangle (ox-offsetX, oy+totalDy - viewportDy + offsetY, viewportDx, viewportDy));
 			viewport.Aperture = viewport.MapParentToClient (this.viewportAperture);
 			
 			this.Invalidate ();
 		}
-		
-		
+
+
+		private bool GetVerticalShowAlways()
+		{
+			return this.vScrollerMode == ScrollableScrollerMode.ShowAlways
+				|| this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide;
+		}
+
+		private bool GetHorizontalShowAlways()
+		{
+			return this.hScrollerMode == ScrollableScrollerMode.ShowAlways
+				|| this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide;
+		}
+
 		private void HandleHScrollerValueChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.hScroller == sender);

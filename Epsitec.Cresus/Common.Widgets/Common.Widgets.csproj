@@ -161,6 +161,7 @@
     <Compile Include="CommandHandlerPair.cs" />
     <Compile Include="AutoSplitter.cs" />
     <Compile Include="MultiSelectEventArgs.cs" />
+    <Compile Include="ScrollableScrollerMode.cs" />
     <Compile Include="ScrollListMultiSelect.cs" />
     <Compile Include="FlatTextField.cs" />
     <Compile Include="WindowPlacement.cs" />
