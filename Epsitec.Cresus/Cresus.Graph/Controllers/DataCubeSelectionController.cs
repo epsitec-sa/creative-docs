@@ -6,6 +6,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.UI;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
@@ -126,6 +127,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.ShowAlwaysOppositeSide,
 				PaintViewportFrame = true,
+				ViewportFrameMargins = new Margins (0, -1, 0, 0),
 			};
 
 			this.cubesScrollable.Viewport.IsAutoFitting = true;
@@ -141,8 +143,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					Parent = this.cubesScrollable.Viewport,
 					Dock = DockStyle.Stacked,
-					Text = cube.Guid.ToString (),
+					Text = cube.Guid.ToString () + "<br/>" + FormattedText.Escape (cube.Title),
 					PreferredHeight = 80,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					ButtonStyle = ButtonStyle.ListItem,
+					Padding = new Margins (8, 8, 4, 4),
 				};
 			}
 		}

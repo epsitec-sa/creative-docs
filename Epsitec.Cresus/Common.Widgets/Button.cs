@@ -1,3 +1,6 @@
+//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Types;
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Button))]
