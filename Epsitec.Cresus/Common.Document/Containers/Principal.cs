@@ -35,8 +35,9 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.Viewport.IsAutoFitting = true;
-			this.scrollable.PaintForegroundFrame = true;
-			this.scrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
+			this.scrollable.PaintViewportFrame = true;
+			this.scrollable.ViewportFrameMargins = new Margins(0, 1, 0, 0);
+			this.scrollable.ViewportPadding = new Margins (-1);
 			this.scrollable.SetParent(this);
 
 			this.colorSelector = new ColorSelector();

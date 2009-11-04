@@ -1,42 +1,45 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Scrollable permet de représenter un Viewport de taille
-	/// quelconque dans une surface de taille déterminée, en ajoutant
-	/// au besoin des ascenceurs.
-	/// </summary>
+	/// The <c>Scrollable</c> class manages a <see cref="Viewport"/> which can
+	/// have an arbitrary surface size. Scrollers will be added as required.
 	public class Scrollable : AbstractGroup
 	{
 		public Scrollable()
 		{
-			this.hScroller = new HScroller (this);
-			this.vScroller = new VScroller (this);
+			this.hScroller = new HScroller (this)
+			{
+				Name = "HorizontalScroller",
+				MaxValue = 0,
+				VisibleRangeRatio = 1,
+				IsInverted = false,
+			};
+
+			this.vScroller = new VScroller (this)
+			{
+				Name = "VerticalScroller",
+				MaxValue = 0,
+				VisibleRangeRatio = 1,
+				IsInverted = true,
+			};
 			
 			this.hScrollerMode = ScrollableScrollerMode.Auto;
 			this.vScrollerMode = ScrollableScrollerMode.Auto;
 
-			this.hScroller.Name = "HorizontalScroller";
-			this.hScroller.MaxValue          = 0;
-			this.hScroller.VisibleRangeRatio = 1;
-			this.hScroller.IsInverted        = false;
-
-			this.vScroller.Name = "VerticalScroller";
-			this.vScroller.MaxValue          = 0;
-			this.vScroller.VisibleRangeRatio = 1;
-			this.vScroller.IsInverted        = true;
-			
 			this.hScroller.ValueChanged += this.HandleHScrollerValueChanged;
 			this.vScroller.ValueChanged += this.HandleVScrollerValueChanged;
 
 			this.Viewport = new Viewport ();
 		}
-		
-		public Scrollable(Widget embedder) : this ()
+
+		public Scrollable(Widget embedder)
+			: this ()
 		{
 			this.SetEmbedder (embedder);
 		}
@@ -54,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double ViewportOffsetX
+		public double							ViewportOffsetX
 		{
 			get
 			{
@@ -70,7 +73,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double ViewportOffsetY
+		public double							ViewportOffsetY
 		{
 			get
 			{
@@ -117,17 +120,53 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		public bool								PaintForegroundFrame
+
+		public bool PaintViewportFrame
 		{
-			get { return this.paintForegroundFrame; }
-			set { this.paintForegroundFrame = value; }
+			get
+			{
+				return this.paintForegroundFrame;
+			}
+			set
+			{
+				if (this.paintForegroundFrame != value)
+				{
+					this.paintForegroundFrame = value;
+					this.UpdateGeometry ();
+				}
+			}
 		}
 
-		public Drawing.Margins					ForegroundFrameMargins
+		public Margins							ViewportFrameMargins
 		{
-			get { return this.foregroundFrameMargins; }
-			set { this.foregroundFrameMargins = value; }
+			get
+			{
+				return this.viewportFrameMargins;
+			}
+			set
+			{
+				if (this.viewportFrameMargins != value)
+                {
+					this.viewportFrameMargins = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+
+		public Margins							ViewportPadding
+		{
+			get
+			{
+				return this.viewportPadding;
+			}
+			set
+			{
+				if (this.viewportPadding != value)
+                {
+					this.viewportPadding = value;
+					this.UpdateGeometry ();
+                }
+			}
 		}
 
 		public HScroller						HorizontalScroller
@@ -166,9 +205,14 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		protected override void SetBoundsOverride(Drawing.Rectangle oldRect, Drawing.Rectangle newRect)
+		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{
 			base.SetBoundsOverride(oldRect, newRect);
+
+			//	Geometry becomes valid the first time the bounds get defined; before that, there is
+			//	no need to try to update the geometry...
+			
+			this.isGeometryValid = true;
 			this.UpdateGeometry ();
 		}
 
@@ -178,7 +222,7 @@ namespace Epsitec.Common.Widgets
 			if (viewport != null)
 			{
 				viewport.SetEmbedder (this);
-				viewport.Aperture = Drawing.Rectangle.Empty;
+				viewport.Aperture = Rectangle.Empty;
 
 				viewport.SurfaceSizeChanged += this.HandleViewportSurfaceSizeChanged;
 			}
@@ -191,7 +235,7 @@ namespace Epsitec.Common.Widgets
 				viewport.SurfaceSizeChanged -= this.HandleViewportSurfaceSizeChanged;
 
 				viewport.SetEmbedder (null);
-				viewport.Aperture = Drawing.Rectangle.MaxValue;
+				viewport.Aperture = Rectangle.MaxValue;
 			}
 		}
 		
@@ -206,57 +250,66 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
+
 			//	Met à jour la position du viewport dans la surface disponible; ceci détermine aussi
 			//	du même coup la visibilité des ascenceurs.
-
-			this.UpdateViewportLocation ();
-			this.UpdateScrollerLocation ();
+			
+			if (this.isGeometryValid)
+            {
+				this.UpdateViewportLocation ();
+				this.UpdateScrollerLocation ();
+			}
 		}
 
 		protected virtual void UpdateScrollerLocation()
 		{
-			//	Place correctement les ascenceurs.
+			var rect = this.GetSurfaceRectangle ();
 
+			if (this.vScroller.Visibility)
+			{
+				if (this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+				{
+					var bounds = new Rectangle (0, rect.Bottom, this.vScroller.PreferredWidth, rect.Height);
+					this.UpdateVerticalScrollerBounds (bounds);
+				}
+				else
+				{
+					var bounds = new Rectangle (rect.Right, rect.Bottom, this.vScroller.PreferredWidth, rect.Height);
+					this.UpdateVerticalScrollerBounds (bounds);
+				}
+			}
+
+			if (this.hScroller.Visibility)
+			{
+				if (this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
+				{
+					var bounds = new Rectangle (rect.Left, rect.Top, rect.Width, this.hScroller.PreferredHeight);
+					this.UpdateHorizontalScrollerBounds (bounds);
+				}
+				else
+				{
+					var bounds = new Rectangle (rect.Left, 0, rect.Width, this.hScroller.PreferredHeight);
+					this.UpdateHorizontalScrollerBounds (bounds);
+				}
+			}
+		}
+
+		private Rectangle GetSurfaceRectangle()
+		{
 			double width  = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
 			double height = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
-
+			
 			var rect = this.Client.Bounds;
 
 			if (this.vScroller.Visibility)
 			{
 				if (this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
 				{
-					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (width, 0, 0, 0));
+					rect = Rectangle.Deflate (rect, new Margins (width, 0, 0, 0));
 				}
 				else
 				{
-					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (0, width, 0, 0));
-				}
-			}
-			
-			if (this.hScroller.Visibility)
-			{
-				if (this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
-				{
-					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (0, 0, height, 0));
-				}
-				else
-				{
-					rect = Drawing.Rectangle.Deflate (rect, new Drawing.Margins (0, 0, 0, height));
-				}
-			}
-			
-			if (this.vScroller.Visibility)
-			{
-				if (this.vScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
-				{
-					var bounds = new Drawing.Rectangle (0, rect.Bottom, width, rect.Height);
-					this.UpdateVerticalScrollerBounds (bounds);
-				}
-				else
-				{
-					var bounds = new Drawing.Rectangle (rect.Right, rect.Bottom, width, rect.Height);
-					this.UpdateVerticalScrollerBounds (bounds);
+					rect = Rectangle.Deflate (rect, new Margins (0, width, 0, 0));
 				}
 			}
 
@@ -264,23 +317,37 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.hScrollerMode == ScrollableScrollerMode.ShowAlwaysOppositeSide)
 				{
-					var bounds = new Drawing.Rectangle (rect.Left, rect.Top, rect.Width, height);
-					this.UpdateHorizontalScrollerBounds (bounds);
+					rect = Rectangle.Deflate (rect, new Margins (0, 0, height, 0));
 				}
 				else
 				{
-					var bounds = new Drawing.Rectangle (rect.Left, 0, rect.Width, height);
-					this.UpdateHorizontalScrollerBounds (bounds);
+					rect = Rectangle.Deflate (rect, new Margins (0, 0, 0, height));
 				}
 			}
+
+			return rect;
+		}
+		
+		private Rectangle GetViewportRectangle()
+		{
+			var rect = this.GetSurfaceRectangle ();
+
+			if (this.paintForegroundFrame)
+			{
+				rect = Rectangle.Deflate (rect, new Margins (1));
+				rect = Rectangle.Deflate (rect, this.viewportFrameMargins + this.viewportPadding);
+			}
+			
+			return rect;
 		}
 
-		protected virtual void UpdateVerticalScrollerBounds(Epsitec.Common.Drawing.Rectangle bounds)
+
+		protected virtual void UpdateVerticalScrollerBounds(Rectangle bounds)
 		{
 			this.vScroller.SetManualBounds (bounds);
 		}
 
-		protected virtual void UpdateHorizontalScrollerBounds(Drawing.Rectangle bounds)
+		protected virtual void UpdateHorizontalScrollerBounds(Rectangle bounds)
 		{
 			this.hScroller.SetManualBounds (bounds);
 		}
@@ -299,6 +366,16 @@ namespace Epsitec.Common.Widgets
 			
 			double totalDx = this.Client.Size.Width;
 			double totalDy = this.Client.Size.Height;
+
+			if (this.paintForegroundFrame)
+			{
+				double mx = this.viewportFrameMargins.Width + this.viewportPadding.Width + 2;
+				double my = this.viewportFrameMargins.Height + this.viewportPadding.Height + 2;
+
+				totalDx -= mx;
+				totalDy -= my;
+			}
+
 			double viewportDx = viewport.SurfaceWidth;
 			double viewportDy = viewport.SurfaceHeight;
 			double marginX = this.GetVerticalShowAlways () ? this.vScroller.PreferredWidth : 0;
@@ -424,10 +501,14 @@ namespace Epsitec.Common.Widgets
 			{
 				ox = marginX;
 			}
-			
-			this.viewportAperture = new Drawing.Rectangle (ox, oy, visDx, visDy);
-			
-			viewport.SetManualBounds (new Drawing.Rectangle (ox-offsetX, oy+totalDy - viewportDy + offsetY, viewportDx, viewportDy));
+
+			this.viewportAperture = this.GetViewportRectangle ();
+
+			viewport.SetManualBounds (
+				new Rectangle (
+					this.viewportAperture.Left - offsetX, this.viewportAperture.Top - viewportDy + offsetY,
+					viewportDx, viewportDy));
+
 			viewport.Aperture = viewport.MapParentToClient (this.viewportAperture);
 			
 			this.Invalidate ();
@@ -476,7 +557,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			if (this.paintForegroundFrame == false)
 			{
@@ -485,14 +566,12 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			WidgetPaintState state = this.PaintState;
+
+			var rect = this.GetSurfaceRectangle ();
+
+			rect = Rectangle.Deflate (rect, this.viewportFrameMargins);
+			rect = Rectangle.Deflate (rect, new Margins (0.5));
 			
-			Drawing.Rectangle rect  = this.Client.Bounds;
-			double marginX = (this.vScroller.Visibility) ? this.vScroller.PreferredWidth  : 0;
-			double marginY = (this.hScroller.Visibility) ? this.hScroller.PreferredHeight : 0;
-			rect.Right -= marginX;
-			rect.Bottom += marginY;
-			rect.Deflate (this.foregroundFrameMargins);
-			rect.Deflate (0.5);
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
@@ -544,8 +623,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ViewportOffsetXProperty = DependencyProperty.Register ("ViewportOffsetX", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetXValue, Scrollable.SetViewportOffsetXValue));
 		public static readonly DependencyProperty ViewportOffsetYProperty = DependencyProperty.Register ("ViewportOffsetY", typeof (double), typeof (Scrollable), new DependencyPropertyMetadata (Scrollable.GetViewportOffsetYValue, Scrollable.SetViewportOffsetYValue));
 
-		private Drawing.Rectangle				viewportAperture;
-		private Drawing.Point					viewportOffset;
+		private bool							isGeometryValid;
+		private Rectangle						viewportAperture;
+		private Point							viewportOffset;
 		
 		protected VScroller						vScroller;
 		protected HScroller						hScroller;
@@ -555,7 +635,8 @@ namespace Epsitec.Common.Widgets
 		private ScrollableScrollerMode			hScrollerMode;
 		
 		private bool							paintForegroundFrame;
-		private Drawing.Margins					foregroundFrameMargins;
+		private Margins							viewportFrameMargins;
+		private Margins							viewportPadding;
 
 		protected const double					SmallScrollPixels  = 5;
 		protected const double					LargeScrollPercent = 50;

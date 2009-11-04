@@ -125,6 +125,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.ShowAlwaysOppositeSide,
+				PaintViewportFrame = true,
 			};
 
 			this.cubesScrollable.Viewport.IsAutoFitting = true;

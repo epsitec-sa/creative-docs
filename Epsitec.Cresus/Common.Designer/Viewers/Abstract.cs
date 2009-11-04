@@ -184,7 +184,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.scrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.scrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.scrollable.Viewport.IsAutoFitting = true;
-			this.scrollable.PaintForegroundFrame = true;
+			this.scrollable.PaintViewportFrame = true;
+			this.scrollable.ViewportPadding = new Margins (-1);
 			this.scrollable.Viewport.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			this.scrollable.TabIndex = this.tabIndex++;
 			this.scrollable.TabNavigationMode = TabNavigationMode.ForwardTabPassive;

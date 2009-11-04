@@ -64,7 +64,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.drawingScrollable.HorizontalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.drawingScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.drawingScrollable.Viewport.IsAutoFitting = true;
-			this.drawingScrollable.PaintForegroundFrame = true;
+			this.drawingScrollable.PaintViewportFrame = true;
+			this.drawingScrollable.ViewportPadding = new Margins (-1);
 
 			FrameBox container = new FrameBox(this.drawingScrollable.Viewport);
 			container.MinWidth = 100;
@@ -138,7 +139,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.propertiesScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.propertiesScrollable.Viewport.IsAutoFitting = true;
 			this.propertiesScrollable.Viewport.Margins = new Margins(10, 10, 10, 10);
-			this.propertiesScrollable.PaintForegroundFrame = true;
+			this.propertiesScrollable.PaintViewportFrame = true;
+			this.propertiesScrollable.ViewportPadding = new Margins (-1);
 
 			//	Crée l'onglet 'objets'.
 			this.tabPageObjects = new TabPage();
@@ -170,7 +172,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.objectsScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.objectsScrollable.Viewport.IsAutoFitting = true;
 			this.objectsScrollable.Viewport.Padding = new Margins(6, 6, 6, 6);
-			this.objectsScrollable.PaintForegroundFrame = true;
+			this.objectsScrollable.PaintViewportFrame = true;
+			this.objectsScrollable.ViewportPadding = new Margins (-1);
 
 			//	Crée l'onglet 'cultures'.
 			this.tabPageCultures = new TabPage();

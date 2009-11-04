@@ -95,8 +95,9 @@ namespace Epsitec.Common.Document.Containers
 			this.bottomScrollable.HorizontalScrollerMode = ScrollableScrollerMode.HideAlways;
 			this.bottomScrollable.VerticalScrollerMode = ScrollableScrollerMode.ShowAlways;
 			this.bottomScrollable.Viewport.IsAutoFitting = true;
-			this.bottomScrollable.PaintForegroundFrame = true;
-			this.bottomScrollable.ForegroundFrameMargins = new Margins(0, 1, 0, 0);
+			this.bottomScrollable.PaintViewportFrame = true;
+			this.bottomScrollable.ViewportFrameMargins = new Margins(0, 1, 0, 0);
+			this.bottomScrollable.ViewportPadding = new Margins (-1);
 			this.bottomScrollable.SetParent(this.bottomPage);
 
 			//	Conteneur du panneau.
