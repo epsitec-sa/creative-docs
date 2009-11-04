@@ -141,6 +141,7 @@
   <ItemGroup>
     <Compile Include="ClipboardDataEventArgs.cs" />
     <Compile Include="Controllers\DataCubeSelectionController.cs" />
+    <Compile Include="Controllers\DragController.cs" />
     <Compile Include="Controllers\SnapshotsController.cs" />
     <Compile Include="GraphChartSnapshot.cs" />
     <Compile Include="GraphDataCube.cs" />

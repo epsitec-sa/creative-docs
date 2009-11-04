@@ -11,6 +11,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -149,11 +150,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 					ButtonStyle = ButtonStyle.ListItem,
 					Padding = new Margins (8, 8, 4, 4),
 				};
+
+				this.CreateCubeDragHandler (cube, button);
 			}
 		}
 
 
-		private void HandleImportButtonClicked(object sender, MessageEventArgs e)
+		private void CreateCubeDragHandler(GraphDataCube cube, Button button)
+		{
+			DragController.Attach (button);
+		}
+
+        private void HandleImportButtonClicked(object sender, MessageEventArgs e)
 		{
 			var dialog = new FileOpenDialog ()
 			{

@@ -2208,6 +2208,31 @@ namespace Epsitec.Common.Widgets
 #endif
 		}
 
+		public static void SetCaptureAndRetireMessage(Widget widget, Message message)
+		{
+			Window window = widget.Window;
+
+			if (window.capturingWidget != null)
+			{
+				if (window.capturingWidget.IsVisible == false)
+				{
+					//	Il faut terminer la capture si le widget n'est plus visible,
+					//	sinon on risque de ne plus jamais recevoir d'événements pour
+					//	les autres widgets.
+
+					window.ReleaseCapturingWidget ();
+				}
+			}
+
+			window.capturingWidget = widget;
+			window.capturingButton = message.Button;
+			window.capturingCursor = message.Cursor;
+			window.window.Capture  = true;
+			
+			message.Captured = true;
+			message.Retired  = true;
+		}
+
 		public void ReleaseCapture()
 		{
 			this.ReleaseCapturingWidget ();
