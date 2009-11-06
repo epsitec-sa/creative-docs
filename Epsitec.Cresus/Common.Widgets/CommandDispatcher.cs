@@ -667,7 +667,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			CommandEventArgs e = new CommandEventArgs (source, commandObject, commandContext, commandState);
+			CommandEventArgs e = new CommandEventArgs (source, commandObject, contextChain, commandContext, commandState);
 
 			this.OnCommandDispatching ();
 

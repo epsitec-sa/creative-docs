@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Graph
 		[Command (Res.CommandIds.File.ExportImage)]
 		private void ExportImageCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
+			var chartViewController = GraphCommands.GetChartViewController (e);
 
 			if (chartViewController == null)
             {
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Graph
 		[Command (ApplicationCommands.Id.Copy)]
 		private void CopyCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
+			var chartViewController = GraphCommands.GetChartViewController (e);
 
 			if (chartViewController == null)
 			{
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Graph
 		[Command (ApplicationCommands.Id.Print)]
 		private void PrintCommand(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
+			var chartViewController = GraphCommands.GetChartViewController (e);
 
 			if (chartViewController == null)
 			{
@@ -193,6 +193,25 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		private static ChartViewController GetChartViewController (CommandEventArgs e)
+		{
+			var chartViewController = ChartViewController.GetChartViewController (e.CommandContext);
+
+			if (chartViewController == null)
+			{
+				foreach (var context in e.CommandContextChain.Contexts)
+				{
+					chartViewController = ChartViewController.GetChartViewController (context);
+
+					if (chartViewController != null)
+					{
+						break;
+					}
+				}
+			}
+			
+			return chartViewController;
+		}
 		private readonly GraphApplication application;
 	}
 }

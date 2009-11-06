@@ -1,18 +1,27 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe CommandEvent représente une commande, telle que transmise
-	/// par le CommandDispatcher.
+	/// The <c>CommandEventArgs</c> class describes a command dispatched by the
+	/// <see cref="CommandDispatcher"/>.
 	/// </summary>
 	public class CommandEventArgs : System.EventArgs
 	{
-		public CommandEventArgs(object source, Command command, CommandContext context, CommandState state)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CommandEventArgs"/> class.
+		/// </summary>
+		/// <param name="source">The source.</param>
+		/// <param name="command">The command.</param>
+		/// <param name="contextChain">The context chain.</param>
+		/// <param name="context">The context.</param>
+		/// <param name="state">The state.</param>
+		public CommandEventArgs(object source, Command command, CommandContextChain contextChain, CommandContext context, CommandState state)
 		{
 			this.source  = source;
 			this.command = command;
+			this.chain   = contextChain;
 			this.context = context;
 			this.state   = state;
 		}
@@ -54,6 +63,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public CommandContextChain				CommandContextChain
+		{
+			get
+			{
+				return this.chain;
+			}
+		}
+
 		public CommandState						CommandState
 		{
 			get
@@ -61,12 +78,13 @@ namespace Epsitec.Common.Widgets
 				return this.state;
 			}
 		}
-		
-		
-		private object							source;
-		private Command							command;
-		private CommandContext					context;
-		private CommandState					state;
+
+
+		private readonly object					source;
+		private readonly Command				command;
+		private readonly CommandContextChain	chain;
+		private readonly CommandContext			context;
+		private readonly CommandState			state;
 		private bool							executed;
 	}
 	
