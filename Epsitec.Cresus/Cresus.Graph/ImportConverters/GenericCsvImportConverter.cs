@@ -40,11 +40,11 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			string sourceName = headerInfo.ElementAtOrDefault (2) ?? "CSV";
 
 			table.DimensionVector.Add ("Source", sourceName);
-			table.DefineColumnLabels (GraphDataSet.CreateNumberedColumnLabels (header.Skip (1)));
+			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (1)));
 			table.ColumnDimensionKey = colDimension;
 			table.RowDimensionKey    = rowDimension;
 
-			using (var mapper = new Mapper<string, string> (labels => GraphDataSet.CreateNumberedColumnLabels (labels)))
+			using (var mapper = new Mapper<string, string> (labels => GraphDataSet.CreateNumberedLabels (labels)))
 			{
 				foreach (var line in lines)
 				{

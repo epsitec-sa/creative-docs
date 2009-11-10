@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			string sourceName = "2009";
 
 			table.DimensionVector.Add ("Source", sourceName);
-			table.DefineColumnLabels (GraphDataSet.CreateNumberedColumnLabels (header.Skip (2)));
+			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (2)));
 			table.ColumnDimensionKey = columnDimension;
 			table.RowDimensionKey = "Numéro/Compte";
 
