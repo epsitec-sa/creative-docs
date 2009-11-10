@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// La classe FileSave présente le dialogue pour enregistrer un fichier.
+	/// La classe FileSaveDialog présente le dialogue pour enregistrer un fichier.
 	/// </summary>
 	public class FileSaveDialog : Helpers.IFilterCollectionHost, IDialog
 	{
@@ -35,9 +35,14 @@ namespace Epsitec.Common.Dialogs
 					string ext  = System.IO.Path.GetExtension (name);
 
 					if ((this.dialog.AddExtension) &&
-						(this.filters.FindExtension (ext) == null))
+						(this.filters.FindExtension (ext) == null) &&
+						(this.dialog.ShowHelp))
 					{
-#if false
+#if true
+						//	Works only for dialogs which are XP compatible; to force that, use the
+						//	ShowHelp = true setting.
+						//	http://stackoverflow.com/questions/1599511/how-to-replace-filename-in-savefiledialog-fileok-event-handler
+
 						var type = typeof (System.Windows.Forms.FileDialog);
 						var info = type.GetField ("dialogHWnd", BindingFlags.NonPublic | BindingFlags.Instance);
 						var fileDialogHandle = (System.IntPtr) info.GetValue (dialog);
@@ -80,7 +85,7 @@ namespace Epsitec.Common.Dialogs
 				};
 		}
 
-#if false
+#if true
 		[DllImport ("User32")]
 		private static extern int SetDlgItemText(System.IntPtr hwnd, int id, string title);
 

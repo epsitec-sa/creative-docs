@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph;
+using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -96,7 +98,7 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			get
 			{
-				return this.seriesValueLabelsList.Select (x => AbstractRenderer.CleanUpLabel (x));
+				return this.seriesValueLabelsList.Select (x => DataCube.CleanUpLabel (x));
 			}
 		}
 
@@ -379,20 +381,6 @@ namespace Epsitec.Common.Graph.Renderers
 		protected int GetLabelIndex(string label)
 		{
 			return this.seriesValueLabelsList.IndexOf (label);
-		}
-
-		protected static string CleanUpLabel(string label)
-		{
-			int pos = label.LastIndexOf (Data.DataCube.LabelSortPrefixSeparator);
-
-			if (pos < 0)
-			{
-				return label;
-			}
-			else
-			{
-				return label.Substring (pos+1);
-			}
 		}
 
 		private double minValue;

@@ -87,6 +87,6 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
-		public const string LoadPathClipboard = "<clipboard>";
+		public const string LoadPathClipboard = "clipboard";
 	}
 }

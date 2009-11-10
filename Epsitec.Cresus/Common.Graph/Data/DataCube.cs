@@ -280,6 +280,21 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+
+		public static string CleanUpLabel(string label)
+		{
+			int pos = label.LastIndexOf (Data.DataCube.LabelSortPrefixSeparator);
+
+			if (pos < 0)
+			{
+				return label;
+			}
+			else
+			{
+				return label.Substring (pos+1);
+			}
+		}
+
 		
 		private Accumulator Accumulate(string[] dimensions)
 		{

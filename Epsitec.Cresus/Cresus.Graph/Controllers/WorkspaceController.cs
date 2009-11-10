@@ -888,8 +888,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var series = item.ChartSeries;
 
 			view.Renderer.Collect (series);
-			view.Title = item.Title;
-			view.Label = item.Label;
+			view.Title = DataCube.CleanUpLabel (item.Title);
+			view.Label = DataCube.CleanUpLabel (item.Label);
 
 			long id = view.GetVisualSerialId ();
 
@@ -1552,7 +1552,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (this.Document.OutputSeries.Contains (series))
 			{
 				buffer.Append ("<font size=\"120%\">");
-				buffer.AppendFormat ("Source {0}", series.Label);
+				buffer.AppendFormat ("Source {0}", DataCube.CleanUpLabel (series.Label));
 				buffer.Append ("</font><br/>");
 				buffer.Append (series.Title);
 				buffer.Append ("<br/>");
@@ -1592,7 +1592,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			buffer.Append ("</font><br/>");
 			buffer.AppendFormat (group.Count < 2 ? "Groupe avec {0} élément" : "Groupe avec {0} éléments<br/>", group.Count);
 			buffer.Append ("<font size=\"80%\">");
-			buffer.Append (string.Join (", ", group.InputDataSeries.Select (x => x.Label).ToArray ()));
+			buffer.AppendJoin (", ", group.InputDataSeries.Select (x => DataCube.CleanUpLabel (x.Label)));
 			buffer.Append ("</font>");
 			buffer.Append ("</font>");
 

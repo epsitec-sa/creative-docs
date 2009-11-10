@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
+using System.Linq;
 
 using NUnit.Framework;
 
@@ -1132,6 +1133,15 @@ namespace Epsitec.Common.Types
 		}
 
 
+		[Test]
+		public void CheckMapper1()
+		{
+			using (var mapper = new Collections.Mapper<int, string> (x => x.Select (v => v.ToString ())))
+			{
+				Assert.AreEqual ("1", mapper.Map (1));
+				Assert.AreEqual ("2", mapper.Map (2));
+			}
+		}
 
 
 		#region Support Code

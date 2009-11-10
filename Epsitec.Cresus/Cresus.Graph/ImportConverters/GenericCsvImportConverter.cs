@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Graph.Data;
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -43,12 +44,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			table.ColumnDimensionKey = colDimension;
 			table.RowDimensionKey    = rowDimension;
 
-			foreach (var line in lines)
+			using (var mapper = new Mapper<string, string> (labels => GraphDataSet.CreateNumberedColumnLabels (labels)))
 			{
-				var label  = line.ElementAt (0);
-				var values = line.Skip (1).Select (x => GraphDataSet.GetNumericValue (x));
+				foreach (var line in lines)
+				{
+					var label  = mapper.Map (line.ElementAt (0));
+					var values = line.Skip (1).Select (x => GraphDataSet.GetNumericValue (x));
 
-				table.Add (label, values);
+					table.Add (label, values);
+				}
 			}
 
 			cube.AddTable (table);

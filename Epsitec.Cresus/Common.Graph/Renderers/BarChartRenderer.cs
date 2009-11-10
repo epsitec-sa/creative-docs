@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph;
+using Epsitec.Common.Graph.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -97,7 +99,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		private void CreateCaption(Data.ChartSeries series, int seriesIndex)
 		{
-			this.Captions.AddSample (AbstractRenderer.CleanUpLabel (series.Label),
+			this.Captions.AddSample (DataCube.CleanUpLabel (series.Label),
 				(p, r) =>
 				{
 					using (Path sample = new Path ())

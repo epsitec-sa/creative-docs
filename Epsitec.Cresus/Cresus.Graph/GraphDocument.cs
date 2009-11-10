@@ -805,7 +805,9 @@ namespace Epsitec.Cresus.Graph
 				new XAttribute ("sliceDimA", cube.SliceDimA ?? ""),
 				new XAttribute ("sliceDimB", cube.SliceDimB ?? ""),
 				new XAttribute ("converter", cube.ConverterName ?? ""),
-				new XAttribute ("title", cube.Title ?? "")
+				new XAttribute ("title", cube.Title ?? ""),
+				new XAttribute ("loadPath", cube.LoadPath ?? ""),
+				new XAttribute ("loadEncoding", cube.LoadEncoding == null ? "" : cube.LoadEncoding.WebName)
 				);
 
 			if (saveCubeData)
@@ -851,6 +853,8 @@ namespace Epsitec.Cresus.Graph
 						var cubeSliceDim2 = (string) cubeXml.Attribute ("sliceDimB");
 						var converterName = (string) cubeXml.Attribute ("converter");
 						var cubeTitle     = (string) cubeXml.Attribute ("title");
+						var loadPath      = (string) cubeXml.Attribute ("loadPath");
+						var loadEncoding  = (string) cubeXml.Attribute ("loadEncoding");
 
 						var cube = new GraphDataCube ()
 						{
@@ -859,6 +863,8 @@ namespace Epsitec.Cresus.Graph
 							SliceDimB = cubeSliceDim2,
 							ConverterName = converterName,
 							Title = cubeTitle,
+							LoadPath = loadPath,
+							LoadEncoding = string.IsNullOrEmpty (loadEncoding) ? null : System.Text.Encoding.GetEncoding (loadEncoding),
 						};
 						
 						using (var stream = new System.IO.StreamReader (dataPath, System.Text.Encoding.UTF8))
