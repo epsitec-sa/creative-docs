@@ -68,5 +68,11 @@ namespace Epsitec.Cresus.Graph
 			get;
 			set;
 		}
+
+		public GraphDataSettings SavedSettings
+		{
+			get;
+			set;
+		}
 	}
 }

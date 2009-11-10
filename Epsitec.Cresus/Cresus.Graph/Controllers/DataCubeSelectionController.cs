@@ -106,7 +106,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = topFrame,
 				Dock = DockStyle.Right,
 				CommandObject = ApplicationCommands.Paste,
-				//Text = "<img src=\"manifest:Epsitec.Common.Widgets.Images.Cmd.Paste.icon\" dx=\"31\" dy=\"31\"/>",
 				PreferredWidth = 72,
 //				ButtonStyle = ButtonStyle.ToolItem,
 			};
@@ -140,25 +139,73 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			foreach (var cube in this.workspace.Document.Cubes)
 			{
-				var button = new Button ()
-				{
-					Parent = this.cubesScrollable.Viewport,
-					Dock = DockStyle.Stacked,
-					Text = cube.Guid.ToString () + "<br/>" + FormattedText.Escape (cube.Title),
-					PreferredHeight = 80,
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					ButtonStyle = ButtonStyle.ListItem,
-					Padding = new Margins (8, 8, 4, 4),
-				};
-
-				this.CreateCubeDragHandler (cube, button);
+				this.CreateCubeButton (cube);
 			}
 		}
 
 
+		private void CreateCubeButton(Epsitec.Cresus.Graph.GraphDataCube cube)
+		{
+			var button = new Button ()
+			{
+				Parent = this.cubesScrollable.Viewport,
+				Dock = DockStyle.Stacked,
+				Text = DataCubeSelectionController.GetCubeDescription (cube),
+				PreferredHeight = 80,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				ButtonStyle = ButtonStyle.ListItem,
+				Padding = new Margins (8, 8, 4, 4),
+			};
+
+			this.CreateCubeDragHandler (cube, button);
+		}
+		
+		private static string GetCubeDescription(Epsitec.Cresus.Graph.GraphDataCube cube)
+		{
+			var names1 = cube.NaturalTableDimensionNames;
+			var names2 = from name in cube.DimensionNames
+						 where !names1.Contains (name)
+						 select name;
+
+			var buffer = new System.Text.StringBuilder ();
+
+			buffer.Append (FormattedText.Escape (cube.Title));
+			buffer.Append ("<br/>");
+			buffer.AppendJoin (", ", names1.Select (x => string.Concat ("<b>", FormattedText.Escape (x), "</b>")));
+			
+			if (!buffer.EndsWith ("<br/>"))
+			{
+				buffer.Append (", ");
+			}
+			
+			buffer.AppendJoin (", ", names2.Select (x => FormattedText.Escape (x)));
+
+			return buffer.ToString ();
+		}
+		
 		private void CreateCubeDragHandler(GraphDataCube cube, Button button)
 		{
-			DragController.Attach (button);
+			DragController.Attach (button,
+				(action) =>
+				{
+					action.LockX = true;
+				},
+				(action, moved) =>
+				{
+					if (moved)
+					{
+						//	Cube was moved to a new position
+					}
+					else
+					{
+						this.HandleCubeClicked (cube);
+					}
+				});
+		}
+
+		private void HandleCubeClicked(GraphDataCube cube)
+		{
+			this.workspace.Document.SelectCube (cube.Guid);
 		}
 
         private void HandleImportButtonClicked(object sender, MessageEventArgs e)

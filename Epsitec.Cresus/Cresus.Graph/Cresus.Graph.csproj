@@ -145,6 +145,7 @@
     <Compile Include="Controllers\SnapshotsController.cs" />
     <Compile Include="GraphChartSnapshot.cs" />
     <Compile Include="GraphDataCube.cs" />
+    <Compile Include="GraphDataSettings.cs" />
     <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
     <Compile Include="UndoRedoManager.cs" />
     <Compile Include="Controllers\ChartViewController.cs" />

@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					e.Suppress = true;
 				};
+
+			this.widget.SetEngaged (true);
 		}
 
 
@@ -45,7 +47,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
-		public static void Attach(Widget widget)
+		public static void Attach(Widget widget, System.Action<DragController> beginAction, System.Action<DragController, bool> endAction)
 		{
 			DragController drag = null;
 
@@ -56,6 +58,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 					{
 						case MouseButtons.Left:
 							drag = new DragController (widget, e.Point);
+							if (beginAction != null)
+							{
+								beginAction (drag);
+							}
 //							drag.DefineMouseMoveBehaviour (MouseCursor.AsHand);
 							break;
 
@@ -70,10 +76,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			widget.Released +=
 				(sender, e) =>
 				{
-					if ((drag != null) &&
-						(drag.ProcessDragEnd () == false))
+					if (drag != null)
 					{
-						//	...
+						bool moved = drag.ProcessDragEnd ();
+
+						if (endAction != null)
+						{
+							endAction (drag, moved);
+						}
 					}
 
 					drag = null;
@@ -145,6 +155,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.widget.Enable = true;
 			this.widget.MouseCursor = null;
 			this.widget.ClearUserEventHandlers (Widget.EventNames.MouseMoveEvent);
+			this.widget.SetEngaged (false);
 
 			return ok;
 		}

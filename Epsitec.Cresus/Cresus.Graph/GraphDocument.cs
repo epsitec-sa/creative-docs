@@ -376,10 +376,12 @@ namespace Epsitec.Cresus.Graph
 				return false;
 			}
 
+			this.PreserveActiveSeriesAndGroups ();
 			this.cube = cube;
+			this.RestoreActiveSeriesAndGroups ();
+			this.ReloadDataSet ();
 			
 			this.application.NotifyDocumentChanged ();
-			this.ReloadDataSet ();
 
 			return true;
 		}
@@ -577,8 +579,6 @@ namespace Epsitec.Cresus.Graph
 
 		public void ReloadDataSet()
 		{
-			this.ClearData ();
-
 			if ((this.cube == null) ||
 				(string.IsNullOrEmpty (this.cube.SliceDimA)) ||
 				(string.IsNullOrEmpty (this.cube.SliceDimB)))
@@ -723,14 +723,58 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private void ClearData()
+		private void PreserveActiveSeriesAndGroups()
 		{
-			this.dataSources.Clear ();
+			if (this.cube != null)
+            {
+				var save = new GraphDataSettings ();
+
+				save.FilterCategories.AddRange (this.filterCategories);
+				save.Groups.AddRange (this.groups);
+				save.OutputSeries.AddRange (this.outputSeries);
+				save.DataSourceName = this.activeDataSource == null ? null : this.activeDataSource.Name;
+
+				this.cube.SavedSettings = save;
+            }
+		}
+
+		private void RestoreActiveSeriesAndGroups()
+		{
+			this.ClearData ();
+			
+			if (this.cube != null)
+            {
+				var save = cube.SavedSettings;
+
+				if (save != null)
+				{
+					this.filterCategories.AddRange (save.FilterCategories);
+					this.groups.AddRange (save.Groups);
+					this.outputSeries.AddRange (save.OutputSeries);
+
+					string name = save.DataSourceName;
+
+					if (name != null)
+					{
+						this.activeDataSource = this.dataSources.Find (x => x.Name == name);
+					}
+				}
+            }
+			
+			this.UpdateSyntheticSeries ();
+		}
+
+		public void ClearData()
+		{
 			this.outputSeries.Clear ();
 			this.groups.Clear ();
+			
+			//	Clear information which can or will be rebuilt automatically when the
+			//	ReloadDataSet method will be called:
+			
+			this.dataSources.Clear ();
 			this.syntheticSeries.Clear ();
 			this.filterCategories.Clear ();
-			this.chartSnapshots.ForEach (x => x.Visibility = true);
 
 			this.activeDataSource = null;
 		}

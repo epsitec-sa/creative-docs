@@ -420,7 +420,14 @@ namespace Epsitec.Cresus.Graph
 
 		private void DocumentReload()
 		{
+			this.Document.ClearData ();
 			this.Document.ReloadDataSet ();
+
+			//	Make all snapshots visible again; this is useful when actions gets run again
+			//	in order to execute an undo/redo operation; snapshots will be hidden by the
+			//	'HideSnapshot' actions :
+
+			this.Document.ChartSnapshots.ForEach (x => x.Visibility = true);
 		}
 
 		private void DocumentIncludeFilterCategory(string name)
