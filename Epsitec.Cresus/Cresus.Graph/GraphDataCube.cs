@@ -74,5 +74,19 @@ namespace Epsitec.Cresus.Graph
 			get;
 			set;
 		}
+
+		public string LoadPath
+		{
+			get;
+			set;
+		}
+
+		public System.Text.Encoding LoadEncoding
+		{
+			get;
+			set;
+		}
+
+		public const string LoadPathClipboard = "<clipboard>";
 	}
 }

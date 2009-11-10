@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public bool ImportCube(GraphDocument document, string text)
+		private GraphDataCube ImportCube(GraphDocument document, string text)
 		{
 			string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 			char[] columnSeparators = new char[] { '\t', ';' };
@@ -94,14 +94,12 @@ namespace Epsitec.Cresus.Graph
 				if (graphDataCube != null)
 				{
 					document.LoadCube (graphDataCube);
-					
-					GraphActions.DocumentReload ();
 
-					return true;
+					return graphDataCube;
 				}
 			}
 
-			return false;
+			return null;
 		}
 		
 		internal Controllers.MainWindowController MainWindowController
@@ -171,7 +169,36 @@ namespace Epsitec.Cresus.Graph
 
 		internal void ExecutePaste()
 		{
-			this.ImportCube (this.Document, this.lastPasteTextData);
+			if (this.lastPasteTextData == null)
+			{
+				if (! this.ReadClipboardTextData (Clipboard.GetData ()))
+				{
+					return;
+				}
+			}
+
+			var cube = this.ImportCube (this.Document, this.lastPasteTextData);
+
+			if (cube != null)
+            {
+				cube.LoadPath = GraphDataCube.LoadPathClipboard;
+				cube.LoadEncoding = System.Text.Encoding.UTF8;
+				
+				GraphActions.DocumentReload ();
+            }
+		}
+
+		internal void ExecuteImport(string path, System.Text.Encoding encoding)
+		{
+			var cube = this.ImportCube (this.Document, System.IO.File.ReadAllText (path, encoding));
+
+			if (cube != null)
+            {
+				cube.LoadPath = path;
+				cube.LoadEncoding = encoding;
+				
+				GraphActions.DocumentReload ();
+            }
 		}
 
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -374,7 +401,7 @@ namespace Epsitec.Cresus.Graph
 
 			if (handler != null)
 			{
-				handler (this);
+				Application.QueueAsyncCallback (() => handler (this));
 			}
 		}
 
@@ -395,23 +422,33 @@ namespace Epsitec.Cresus.Graph
 
 			var clipboard = e.Data;
 
-			if (clipboard.IsCompatible (ClipboardDataFormat.Text))
+			if (this.ReadClipboardTextData (clipboard))
 			{
-				string text = clipboard.ReadText ();
-				long checksum = Epsitec.Common.IO.Checksum.ComputeAdler32 (x => x.UpdateValue (text));
-
-				if (checksum == this.lastPasteChecksum)
-				{
-					return;
-				}
-
-				this.lastPasteChecksum = checksum;
-				this.lastPasteTextData = text;
-
 				this.NotifyClipboardDataChanged ();
 			}
 		}
 
+
+		private bool ReadClipboardTextData(ClipboardReadData clipboard)
+		{
+			if (!clipboard.IsCompatible (ClipboardDataFormat.Text))
+			{
+				return false;
+			}
+
+			var textData = clipboard.ReadText ();
+			var checksum = string.IsNullOrEmpty (textData) ? 0 : Epsitec.Common.IO.Checksum.ComputeAdler32 (x => x.UpdateValue (textData));
+
+			if (checksum == this.lastPasteChecksum)
+			{
+				return false;
+			}
+
+			this.lastPasteChecksum = checksum;
+			this.lastPasteTextData = textData;
+
+			return true;
+		}
 		
 		private void DocumentSelectDataSource(string name)
 		{

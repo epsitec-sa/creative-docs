@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Parent = middleFrame,
 				Dock = DockStyle.Left,
-				PreferredWidth = 160,
+				PreferredWidth = 200,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.ShowAlwaysOppositeSide,
@@ -180,9 +180,43 @@ namespace Epsitec.Cresus.Graph.Controllers
 			
 			buffer.AppendJoin (", ", names2.Select (x => FormattedText.Escape (x)));
 
+			buffer.Append ("<br/><font size=\"80%\">");
+			buffer.Append (FormattedText.Escape (DataCubeSelectionController.GetCubeLoadPath (cube)));
+			buffer.Append ("</font>");
+
 			return buffer.ToString ();
 		}
-		
+
+		private static string GetCubeLoadPath(Epsitec.Cresus.Graph.GraphDataCube cube)
+		{
+			var path = cube.LoadPath;
+			
+			if (string.IsNullOrEmpty (path))
+            {
+				return "<inconnu>";
+            }
+			else if (path == GraphDataCube.LoadPathClipboard)
+			{
+				return "Presse-papier";
+			}
+			else
+			{
+				var p1 = System.IO.Path.GetDirectoryName (path);
+				var p2 = System.IO.Path.GetFileName (path);
+
+				int len = System.Math.Max (0, 60 - p2.Length);
+
+				if (p1.Length > len)
+				{
+					return string.Concat (p1.Substring (0, len), "...", System.IO.Path.DirectorySeparatorChar.ToString (), p2);
+				}
+				else
+				{
+					return path;
+				}
+			}
+		}
+
 		private void CreateCubeDragHandler(GraphDataCube cube, Button button)
 		{
 			DragController.Attach (button,
