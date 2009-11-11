@@ -251,9 +251,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 
 			dialog.Filters.Add ("csv", "Fichiers avec données tabulées", "*.csv");
+			dialog.Filters.Add ("txt", "Fichiers texte", "*.txt");
 			dialog.Filters.Add ("*", "Tous les fichiers", "*.*");
 
 			dialog.OpenDialog ();
+
+			if (dialog.Result == DialogResult.Accept)
+            {
+				GraphProgram.Application.ExecuteImport (dialog.FileName, System.Text.Encoding.Default);
+            }
 		}
 
 

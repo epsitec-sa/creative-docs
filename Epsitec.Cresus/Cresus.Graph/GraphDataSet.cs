@@ -82,7 +82,7 @@ Màj Salaires	35'921.16	8'419.46	6'563.86	2'234.12	3'711.18	3'098.45	3'658.94	2'
 
 			if (string.IsNullOrEmpty (text))
 			{
-				return 0;
+				return null;
 			}
 
 			text = text.Replace ("'", "");
@@ -92,7 +92,7 @@ Màj Salaires	35'921.16	8'419.46	6'563.86	2'234.12	3'711.18	3'098.45	3'658.94	2'
 				return value;
 			}
 
-			return 0;
+			return null;
 		}
 
 		public static IEnumerable<string> CreateNumberedLabels(IEnumerable<string> labels)

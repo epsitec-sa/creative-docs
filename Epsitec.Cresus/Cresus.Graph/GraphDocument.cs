@@ -596,6 +596,7 @@ namespace Epsitec.Cresus.Graph
 				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cube.SliceDimA, this.cube.SliceDimB);
 
 				source.AddRange (from series in table.RowSeries
+//-								 where series.Values.Any (value => value.Value != 0)
 								 select new GraphDataSeries (series)
 								 {
 									 Label = "",

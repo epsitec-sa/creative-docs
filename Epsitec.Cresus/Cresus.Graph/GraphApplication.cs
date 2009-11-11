@@ -171,6 +171,9 @@ namespace Epsitec.Cresus.Graph
 		{
 			if (this.lastPasteTextData == null)
 			{
+				//	Pasting for the first time and cut/copy was done before the application
+				//	started, fetch the data now from the clipboard (if any) :
+
 				if (! this.ReadClipboardTextData (Clipboard.GetData ()))
 				{
 					return;
