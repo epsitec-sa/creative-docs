@@ -1130,6 +1130,8 @@ namespace Epsitec.Common.Types
 
 		protected virtual void Dispose(bool disposing)
 		{
+			this.propertyEvents = null;
+			this.userEvents = null;
 		}
 
 		protected virtual void BeginMultiplePropertyChange()

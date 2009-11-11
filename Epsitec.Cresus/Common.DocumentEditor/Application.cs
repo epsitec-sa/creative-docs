@@ -218,7 +218,14 @@ namespace Epsitec.Common.DocumentEditor
 		{
 			get
 			{
-				return ".crmod";
+				if (this.editor.DocumentType == DocumentType.Pictogram)
+				{
+					return ".iconmod";
+				}
+				else
+				{
+					return ".crmod";
+				}
 			}
 		}
 

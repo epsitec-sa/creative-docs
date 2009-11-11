@@ -101,7 +101,8 @@ namespace Epsitec.Common.Document
 			Unknown,		// extension inconnue
 			CrDoc,			// extension *.crdoc
 			CrMod,			// extension *.crmod
-			Icon			// extension *.icon
+			Icon,			// extension *.icon
+			IconMod,		// extension *.iconmod
 		}
 
 		public Document(DocumentType type, DocumentMode mode, InstallType installType, DebugMode debugMode, Settings.GlobalSettings globalSettings, CommandDispatcher commandDispatcher, CommandContext commandContext, Window mainWindow)
@@ -922,7 +923,8 @@ namespace Epsitec.Common.Document
 						this.globalSettings.LastFilenameAdd(filename);
 						this.ClearDirtySerialize();
 					}
-					if (ext == DocumentFileExtension.CrMod)
+					if (ext == DocumentFileExtension.CrMod ||
+						ext == DocumentFileExtension.IconMod)
 					{
 						this.globalSettings.LastModelAdd(filename);
 					}
@@ -1598,6 +1600,7 @@ namespace Epsitec.Common.Document
 			if ( Misc.IsExtension(path, ".crdoc") )  return DocumentFileExtension.CrDoc;
 			if ( Misc.IsExtension(path, ".crmod") )  return DocumentFileExtension.CrMod;
 			if ( Misc.IsExtension(path, ".icon" ) )  return DocumentFileExtension.Icon;
+			if ( Misc.IsExtension(path, ".iconmod") )return DocumentFileExtension.IconMod;
 
 			return DocumentFileExtension.Unknown;
 		}

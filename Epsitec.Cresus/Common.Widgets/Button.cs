@@ -150,7 +150,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override Epsitec.Common.Drawing.Size GetTextLayoutSize()
 		{
-			var size = base.GetTextLayoutSize () - this.Padding.Size;
+			var padding = this.Padding + this.GetInternalPadding ();
+			var size = base.GetTextLayoutSize () - padding.Size;
 
 			switch (this.ButtonStyle)
 			{
@@ -168,7 +169,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override Epsitec.Common.Drawing.Point GetTextLayoutOffset()
 		{
-			var padding = this.Padding;
+			var padding = this.Padding + this.GetInternalPadding ();
 			var offset = base.GetTextLayoutOffset () + new Drawing.Point (padding.Left, padding.Bottom);
 
 			switch (this.ButtonStyle)

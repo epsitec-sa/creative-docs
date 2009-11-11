@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using System.Runtime.Serialization;
 
 using System.Collections.Generic;
+using System;
 
 namespace Epsitec.Common.Document.Settings
 {
@@ -950,6 +951,9 @@ namespace Epsitec.Common.Document.Settings
 				this.lastModel = new System.Collections.ArrayList();
 			}
 
+			this.CleanUpLastFiles (this.lastFilename);
+			this.CleanUpLastFiles (this.lastModel);
+
 			if ( version >= 8 )
 			{
 				System.Collections.ArrayList serializableFavoritesList = (System.Collections.ArrayList) info.GetValue("FavoritesList", typeof(System.Collections.ArrayList));
@@ -967,6 +971,28 @@ namespace Epsitec.Common.Document.Settings
 				this.favoritesList = new Epsitec.Common.Types.Collections.ObservableList<string> ();
 				this.favoritesBig = true;
 			}
+		}
+		
+		private void CleanUpLastFiles(System.Collections.ArrayList paths)
+		{
+			var alive = new List<string> ();
+			
+			foreach (string name in paths)
+			{
+				try
+				{
+					if (System.IO.File.Exists (name))
+					{
+						alive.Add (name);
+					}
+				}
+				catch
+				{
+				}
+			}
+
+			paths.Clear ();
+			paths.AddRange (alive);
 		}
 		#endregion
 

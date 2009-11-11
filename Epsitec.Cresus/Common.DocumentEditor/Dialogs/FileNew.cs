@@ -15,7 +15,15 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 	{
 		public FileNew(DocumentEditor editor) : base(editor)
 		{
-			this.FileExtension = ".crmod";
+			if (editor.DocumentType == DocumentType.Pictogram)
+			{
+				this.FileExtension = ".iconmod";
+			}
+			else
+			{
+				this.FileExtension = ".crmod";
+			}
+			
 			this.enableNavigation = true;
 			this.enableMultipleSelection = false;
 		}
