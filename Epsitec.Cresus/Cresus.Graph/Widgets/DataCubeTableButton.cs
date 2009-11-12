@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 
+		public static Color HiliteColor
+		{
+			get
+			{
+				return Color.FromRgb (1.0, 186.0/255.0, 1.0/255.0);
+			}
+		}
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var rect = this.Client.Bounds;
@@ -47,7 +55,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 				graphics.RenderSolid (Color.FromBrightness (1));
 
 				graphics.AddFilledRectangle (0, 0, 3, rect.Height);
-				graphics.RenderSolid (Color.FromRgb (1.0, 186.0/255.0, 1.0/255.0));
+				graphics.RenderSolid (DataCubeTableButton.HiliteColor);
 			}
 			else
 			{

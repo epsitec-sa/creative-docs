@@ -6,17 +6,17 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
 	internal sealed class DragController
 	{
-		public DragController(Widget widget, Point mouseOrigin)
+		public DragController(Widget widget, Point mouseOrigin, System.Action<DragController, Point> dragAction)
 		{
 			this.widget = widget;
 			this.widgetOrigin = this.widget.MapClientToScreen (Point.Zero);
 			this.mouseOrigin = this.widget.MapClientToScreen (mouseOrigin);
+			this.dragAction = dragAction;
 
 			this.widget.MouseMove +=
 				(sender, e) =>
@@ -34,6 +34,13 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.widget.SetEngaged (true);
 		}
 
+		public Widget Widget
+		{
+			get
+			{
+				return this.widget;
+			}
+		}
 
 		public bool LockX
 		{
@@ -47,7 +54,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
-		public static void Attach(Widget widget, System.Action<DragController> beginAction, System.Action<DragController, bool> endAction)
+		public static void Attach(Widget widget,
+			System.Action<DragController> beginAction,
+			System.Action<DragController, Point> dragAction,
+			System.Action<DragController, bool> endAction)
 		{
 			DragController drag = null;
 
@@ -57,7 +67,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					switch (e.Message.Button)
 					{
 						case MouseButtons.Left:
-							drag = new DragController (widget, e.Point);
+							drag = new DragController (widget, e.Point, dragAction);
 							if (beginAction != null)
 							{
 								beginAction (drag);
@@ -128,7 +138,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 				this.dragWindow.WindowLocation = new Point (x, y);
 				
-				//	...
+				if (this.dragAction != null)
+                {
+					this.dragAction (this, mouse);
+                }
 			}
 			
 			return false;
@@ -160,9 +173,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 			return ok;
 		}
 
-		private Widget widget;
-		private Point mouseOrigin;
-		private Point widgetOrigin;
+		private readonly Widget widget;
+		private readonly Point mouseOrigin;
+		private readonly Point widgetOrigin;
+		private readonly System.Action<DragController, Point> dragAction;
 		private DragWindow dragWindow;
 		private CloneView clone;
 	}

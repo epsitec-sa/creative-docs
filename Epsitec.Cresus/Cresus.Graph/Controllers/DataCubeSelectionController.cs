@@ -139,21 +139,29 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 
 			this.cubesScrollable.Viewport.IsAutoFitting = true;
+			this.cubesScrollable.AddEventHandler (Scrollable.ViewportOffsetYProperty, (sender, e) => this.UpdateInsertionMark ());
+			
+			this.outputInsertionMark = new Separator ()
+			{
+				Parent = innerFrame,
+				Visibility = false,
+				Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom,
+				PreferredHeight = 2,
+				Color = DataCubeTableButton.HiliteColor,
+			};
+
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.outputInsertionMark, true);
 		}
 
 		private void UpdateCubeList()
 		{
 			this.cubesScrollable.Viewport.Children.Widgets.ForEach (x => x.Dispose ());
 
-			bool first = true;
+			int index = 0;
 
 			foreach (var cube in this.workspace.Document.Cubes)
 			{
-				if (first)
-				{
-					first = false;
-				}
-				else
+				if (index > 0)
 				{
 					var sep = new Separator ()
 					{
@@ -164,7 +172,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					};
 				}
 
-				this.CreateCubeButton (cube);
+				this.CreateCubeButton (cube).Index = index++;
 			}
 		}
 
@@ -182,8 +190,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			buttons.ForEach (button => button.SetSelected (button.Cube.Guid == guid));
 		}
-        
-		private void CreateCubeButton(GraphDataCube cube)
+
+		private DataCubeTableButton CreateCubeButton(GraphDataCube cube)
 		{
 			var button = new DataCubeTableButton ()
 			{
@@ -194,18 +202,27 @@ namespace Epsitec.Cresus.Graph.Controllers
 			};
 
 			this.CreateCubeDragHandler (cube, button);
+
+			return button;
 		}
 		
 
 		private void CreateCubeDragHandler(GraphDataCube cube, Widget button)
 		{
 			DragController.Attach (button,
-				(action) =>
+				(drag) =>
 				{
-					action.LockX = true;
+					drag.LockX = true;
 				},
-				(action, moved) =>
+				(drag, mouse) =>
 				{
+					this.DetectOutput (drag, mouse);
+				},
+				(drag, moved) =>
+				{
+					this.cubesScrollable.VerticalScroller.SimulateArrowEngaged (0);
+					this.outputInsertionMark.Visibility = false;
+
 					if (moved)
 					{
 						//	Cube was moved to a new position
@@ -216,6 +233,91 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				});
 		}
+
+		private bool DetectOutput(DragController drag, Point screenMouse)
+		{
+			var container = this.cubesScrollable.Viewport;
+			var mouse     = container.MapScreenToClient (screenMouse);
+			var buttons   = container.Children.Widgets.OfType<DataCubeTableButton> ();
+
+			this.SetScrollableAutoScroll (mouse.Y);
+
+			//	Find the best possible match, but discard dropping on the item
+			//	itself, or between it and its immediate neighbours :
+
+			var dist = buttons.Select (button => new
+			{
+				Distance = button.ActualBounds.Center.Y - mouse.Y,
+				Button   = button
+			});
+
+			var best = dist.OrderBy (x => System.Math.Abs (x.Distance)).FirstOrDefault ();
+
+			if ((best != null) &&
+				(best.Button != drag.Widget))
+			{
+				int bestIndex = best.Button.Index;
+				int thisIndex = drag.Widget.Index;
+				var bounds = best.Button.ActualBounds;
+
+				if ((best.Distance < 0) &&
+					(bestIndex != thisIndex+1))
+				{
+					this.SetOutputDropTarget (bounds.Top + 1, bestIndex);
+					return true;
+				}
+				if ((best.Distance >= 0) &&
+				    (bestIndex != thisIndex-1))
+				{
+					this.SetOutputDropTarget (bounds.Bottom, bestIndex+1);
+					return true;
+				}
+			}
+
+			this.outputInsertionMark.Visibility = false;
+			this.outputIndex = -1;
+
+			return false;
+		}
+
+		private void SetScrollableAutoScroll(double y)
+		{
+			double y1 = y - this.cubesScrollable.Viewport.Aperture.Top;
+			double y2 = this.cubesScrollable.Viewport.Aperture.Bottom - y;
+
+			if (y1 > 0)
+			{
+				this.cubesScrollable.VerticalScroller.SimulateArrowEngaged (1);
+				this.cubesScrollable.Window.SetEngageTimerDelay (this.cubesScrollable.VerticalScroller.AutoEngageRepeatPeriod);
+			}
+			else if (y2 > 0)
+			{
+				this.cubesScrollable.VerticalScroller.SimulateArrowEngaged (-1);
+				this.cubesScrollable.Window.SetEngageTimerDelay (this.cubesScrollable.VerticalScroller.AutoEngageRepeatPeriod);
+			}
+			else
+			{
+				this.cubesScrollable.VerticalScroller.SimulateArrowEngaged (0);
+			}
+		}
+		
+		private void SetOutputDropTarget(double y, int index)
+		{
+			this.outputOffset = y;
+			this.outputIndex = index;
+			this.outputInsertionMark.Visibility = true;
+			this.UpdateInsertionMark ();
+		}
+
+		private void UpdateInsertionMark()
+		{
+			double y = this.outputInsertionMark.Parent.MapRootToClient (this.cubesScrollable.Viewport.MapClientToRoot (new Point (0, this.outputOffset))).Y;
+			double dy = System.Math.Floor (this.outputInsertionMark.PreferredHeight / 2);
+			
+			this.outputInsertionMark.Margins = new Margins (AbstractScroller.DefaultBreadth+1, this.cubeDetails.ActualWidth+1, 0, y - dy - 1);
+		}
+
+
 
 		private void HandleCubeClicked(GraphDataCube cube)
 		{
@@ -248,5 +350,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private Widgets.DataCubeFrame			container;
 		private Scrollable						cubesScrollable;
 		private DataCubeTableDetails			cubeDetails;
+		private Separator						outputInsertionMark;
+		private int								outputIndex;
+		private double							outputOffset;
 	}
 }

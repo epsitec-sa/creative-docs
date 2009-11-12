@@ -2285,6 +2285,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.FocusedWidget = null;
 		}
+
+		public void SetEngageTimerDelay(double delay)
+		{
+			this.timer.Delay = delay;
+		}
 		
 		internal void PostProcessMessage(Message message)
 		{
