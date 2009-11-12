@@ -54,6 +54,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			set;
 		}
 
+		public Margins WindowPadding
+		{
+			get;
+			set;
+		}
+
 		public static void Attach(Widget widget,
 			System.Action<DragController> beginAction,
 			System.Action<DragController, Point> dragAction,
@@ -114,7 +120,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 							Model = this.widget,
 						};
 
-			this.dragWindow.DefineWidget (this.clone, this.widget.ActualSize, Margins.Zero);
+			this.dragWindow.DefineWidget (this.clone, this.widget.ActualSize, this.WindowPadding);
 			this.dragWindow.Show ();
 		}
 

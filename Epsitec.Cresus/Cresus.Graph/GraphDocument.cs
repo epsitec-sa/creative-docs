@@ -267,6 +267,8 @@ namespace Epsitec.Cresus.Graph
 
 			int oldIndex = item.Index;
 
+			System.Diagnostics.Debug.Assert (oldIndex > -1);
+			
 			if (oldIndex < newIndex)
 			{
 				newIndex--;
@@ -276,6 +278,30 @@ namespace Epsitec.Cresus.Graph
 			this.outputSeries.Insert (newIndex, item);
 			
 			GraphDocument.RenumberSeries (this.outputSeries);
+
+			return true;
+		}
+
+		public bool SetCubeIndex(System.Guid guid, int newIndex)
+		{
+			var cube = this.cubes.Find (x => x.Guid == guid);
+
+			if (cube == null)
+			{
+				return false;
+			}
+			
+			int oldIndex = this.cubes.IndexOf (cube);
+
+			System.Diagnostics.Debug.Assert (oldIndex > -1);
+
+			if (oldIndex < newIndex)
+			{
+				newIndex--;
+			}
+
+			this.cubes.RemoveAt (oldIndex);
+			this.cubes.Insert (newIndex, cube);
 
 			return true;
 		}

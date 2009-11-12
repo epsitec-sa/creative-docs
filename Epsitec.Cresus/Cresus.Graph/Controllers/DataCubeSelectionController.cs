@@ -13,6 +13,7 @@ using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -213,6 +214,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				(drag) =>
 				{
 					drag.LockX = true;
+					drag.WindowPadding = new Margins (0, -1, 0, 0);
 				},
 				(drag, mouse) =>
 				{
@@ -225,7 +227,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 					if (moved)
 					{
-						//	Cube was moved to a new position
+						this.HandleCubeMoved (cube);
 					}
 					else
 					{
@@ -325,7 +327,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			this.UpdateSelectedCube ();
 		}
 
-        private void HandleImportButtonClicked(object sender, MessageEventArgs e)
+		private void HandleCubeMoved(GraphDataCube cube)
+		{
+			this.workspace.Document.SetCubeIndex (cube.Guid, this.outputIndex);
+			this.UpdateCubeList ();
+			this.UpdateSelectedCube ();
+		}
+        
+		private void HandleImportButtonClicked(object sender, MessageEventArgs e)
 		{
 			var dialog = new FileOpenDialog ()
 			{

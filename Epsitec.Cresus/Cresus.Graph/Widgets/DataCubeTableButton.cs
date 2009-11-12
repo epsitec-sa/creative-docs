@@ -49,24 +49,43 @@ namespace Epsitec.Cresus.Graph.Widgets
 		{
 			var rect = this.Client.Bounds;
 
-			if (this.IsSelected && this.IsEnabled)
+			if (this.IsEnabled)
 			{
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromBrightness (1));
+				if (this.IsSelected)
+				{
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (Color.FromBrightness (1));
 
-				graphics.AddFilledRectangle (0, 0, 3, rect.Height);
-				graphics.RenderSolid (DataCubeTableButton.HiliteColor);
+					graphics.AddFilledRectangle (0, 0, 3, rect.Height);
+					graphics.RenderSolid (DataCubeTableButton.HiliteColor);
+				}
+				else
+				{
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (Color.FromRgb (0.95, 0.95, 0.98));
+					
+					var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					var border  = adorner.ColorBorder;
+
+					graphics.AddFilledRectangle (rect.Width-1, 0, 1, rect.Height);
+					graphics.RenderSolid (border);
+				}
 			}
 			else
 			{
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromRgb (0.95, 0.95, 0.98));
-
-				var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
-				var border  = adorner.ColorBorder;
-
-				if (this.IsEnabled)
+				if (this.IsSelected)
 				{
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (Color.FromBrightness (1));
+				}
+				else
+				{
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (Color.FromRgb (0.95, 0.95, 0.95));
+					
+					var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+					var border  = adorner.ColorBorder;
+
 					graphics.AddFilledRectangle (rect.Width-1, 0, 1, rect.Height);
 					graphics.RenderSolid (border);
 				}
