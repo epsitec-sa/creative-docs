@@ -24,18 +24,46 @@ namespace Epsitec.Cresus.Graph
 
 				using (ChannelFactory<IConnector> factory = new ChannelFactory<IConnector> (binding, address))
 				{
-					IConnector proxy = factory.CreateChannel ();
-
-					using (IClientChannel channel = proxy as IClientChannel)
+					bool? result  = null;
+					int   timeout = 10*1000;
+					int   sleep   = 50;
+					
+					for (int i = 0; i < timeout && !result.HasValue; i += sleep)
 					{
-						return proxy.SendData (windowHandle.ToInt64 (), path, meta, data);
+						IConnector proxy  = factory.CreateChannel ();
+						IClientChannel channel = proxy as IClientChannel;
+
+						bool ok = false;
+						try
+						{
+							channel.Open ();
+							ok = true;
+						}
+						catch
+						{
+							System.Threading.Thread.Sleep (sleep);
+						}
+
+						if (ok)
+                        {
+							using (channel)
+							{
+								result = proxy.SendData (windowHandle.ToInt64 (), path, meta, data);
+							}
+						}
+					}
+
+					if (result.HasValue)
+					{
+						return result.Value;
 					}
 				}
 			}
 			catch
 			{
-				return false;
 			}
+			
+			return false;
 		}
 
 		private readonly System.Diagnostics.Process serverProcess;

@@ -111,6 +111,8 @@ xcopy "$(SolutionDir)Common.Support\Resources\*" "$(ProjectDir)Resources\" /S/Y 
 xcopy "$(SolutionDir)Common.Types\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Common.Widgets\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
 xcopy "$(SolutionDir)Demo\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\..\excludesvn.ini
+xcopy "$(SolutionDir)Cresus.Graph\GraphConnector\bin\Debug\GraphConnector.dll" "$(TargetDir)" /Y
+xcopy "$(SolutionDir)Cresus.Graph\GraphConnector.Win32\Debug\GraphConnector.Win32.dll" "$(TargetDir)" /Y
 </PostBuildEvent>
   </PropertyGroup>
 </Project>
