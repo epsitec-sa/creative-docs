@@ -23,37 +23,34 @@ namespace Epsitec.Cresus.Graph
 				NetNamedPipeBinding binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
 				EndpointAddress     address = new EndpointAddress (ConnectorServer.GetAddress (this.serverProcess.Id));
 
-				using (ChannelFactory<IConnector> factory = new ChannelFactory<IConnector> (binding, address))
+				bool? result  = null;
+				int   timeout = 10*1000;
+				int   sleep   = 50;
+
+				//	Try connecting to the endpoint; if it does not respond, wait a bit and try
+				//	again - the server could be started, but not ready yet to accept data.
+				
+				for (int i = 0; i < timeout && !result.HasValue; i += sleep)
 				{
-					bool? result  = null;
-					int   timeout = 10*1000;
-					int   sleep   = 50;
-
-					//	Try connecting to the endpoint; if it does not respond, wait a bit and try
-					//	again - the server could be started, but not ready yet to accept data.
-					
-					for (int i = 0; i < timeout && !result.HasValue; i += sleep)
+					using (ChannelFactory<IConnector> factory = new ChannelFactory<IConnector> (binding, address))
 					{
-						IConnector proxy  = factory.CreateChannel ();
-						IClientChannel channel = proxy as IClientChannel;
+						IConnector     connector = factory.CreateChannel ();
+						IClientChannel channel   = connector as IClientChannel;
 
-						bool ok = false;
-						try
+						using (channel)
 						{
-							channel.Open ();
-							ok = true;
-						}
-						catch
-						{
-							System.Threading.Thread.Sleep (sleep);
-						}
-
-						if (ok)
-                        {
-							using (channel)
+							try
 							{
-								result = proxy.SendData (windowHandle.ToInt64 (), path, meta, data);
+								channel.Open ();
 							}
+							catch
+							{
+								channel.Abort ();
+								System.Threading.Thread.Sleep (sleep);
+								continue;
+							}
+
+							result = connector.SendData (windowHandle.ToInt64 (), path, meta, data);
 						}
 					}
 
