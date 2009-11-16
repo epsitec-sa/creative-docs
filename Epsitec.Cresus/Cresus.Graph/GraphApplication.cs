@@ -146,6 +146,19 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		internal void SetupConnectorServer()
+		{
+			this.connectorServer = new ConnectorServer (false);
+			this.connectorServer.Open (this.ProcessSendData);
+		}
+
+		private bool ProcessSendData(System.IntPtr handle, string path, string meta, string data)
+		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("ProcessSendData : {0} - {1} - {2}", path ?? "<null>", meta ?? "<null>", data ?? "<null>"));
+			
+			return true;
+		}
+
 		internal void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (() => this.SaveApplicationState (false));
@@ -244,6 +257,20 @@ namespace Epsitec.Cresus.Graph
 			
 			this.SaveApplicationState (true);
 			base.ExecuteQuit (dispatcher, e);
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+            {
+				if (this.connectorServer != null)
+				{
+					this.connectorServer.Dispose ();
+					this.connectorServer = null;
+				}
+            }
+			
+			base.Dispose (disposing);
 		}
 
 		private void RestoreApplicationState()
@@ -524,5 +551,6 @@ namespace Epsitec.Cresus.Graph
 		private GraphDocument activeDocument;
 		private long lastPasteChecksum;
 		private string lastPasteTextData;
+		private ConnectorServer connectorServer;
 	}
 }

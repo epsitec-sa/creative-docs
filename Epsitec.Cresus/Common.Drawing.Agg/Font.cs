@@ -49,6 +49,7 @@ namespace Epsitec.Common.Drawing
 				string[] probePaths = new string[]
 				{
 					Support.Globals.Directories.ExecutableRoot,
+					Support.Globals.Directories.Executable,
 					Support.Globals.Directories.InitialDirectory,
 				};
 

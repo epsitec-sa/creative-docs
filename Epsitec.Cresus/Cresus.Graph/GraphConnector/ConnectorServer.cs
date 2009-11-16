@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Graph
 				this.isOpen = true;
 				
 				ConnectorService.DefineSendDataCallback (sendDataCallback);
+
+				System.Diagnostics.Debug.WriteLine ("Listening on " + ConnectorServer.Address);
 			}
 		}
 
@@ -102,7 +104,7 @@ namespace Epsitec.Cresus.Graph
 
 		public static string GetAddress(int processId)
 		{
-			return string.Concat (processId.ToString ("X8"), ".IConnector");
+			return string.Concat ("net.pipe://localhost/epsitec/", processId.ToString ("X8"), ".IConnector");
 		}
 
 

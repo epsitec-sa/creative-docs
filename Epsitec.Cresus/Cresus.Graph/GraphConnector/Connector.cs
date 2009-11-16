@@ -3,6 +3,9 @@
 
 namespace Epsitec.Cresus.Graph
 {
+	/// <summary>
+	/// The <c>Connector</c> class is called by the native Win32 wrapper.
+	/// </summary>
 	public static class Connector
 	{
 		public static int SendData(System.IntPtr windowHandle, string path, string meta, string data)
@@ -19,15 +22,38 @@ namespace Epsitec.Cresus.Graph
 			if ((Connector.process == null) ||
 				(Connector.process.HasExited))
 			{
-				var info = new System.Diagnostics.ProcessStartInfo ()
+				try
 				{
-					FileName = "CresusGraph.exe",
-					Arguments = ""
-				};
+					var graphDirPath = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallDir", null);
 
-				Connector.process = System.Diagnostics.Process.Start (info);
+					if (System.Diagnostics.Debugger.IsAttached)
+					{
+						graphDirPath = @"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug";
+					}
 
-				Connector.process.WaitForInputIdle ();
+					var graphExePath = System.IO.Path.Combine (graphDirPath, "Graph.exe");
+
+					if (!System.IO.File.Exists (graphExePath))
+                    {
+						return -2;
+                    }
+					
+					var info = new System.Diagnostics.ProcessStartInfo ()
+					{
+						FileName = graphExePath,
+						Arguments = ""
+					};
+
+					Connector.process = System.Diagnostics.Process.Start (info);
+
+					System.Diagnostics.Debug.WriteLine ("Process started : " + Connector.process.Id.ToString ());
+					Connector.process.WaitForInputIdle ();
+					System.Diagnostics.Debug.WriteLine ("Process ready and waiting for input");
+				}
+				catch
+				{
+					return -3;
+				}
 			}
 
 			var client = new ConnectorClient (Connector.process);
