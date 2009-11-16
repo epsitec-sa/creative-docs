@@ -38,17 +38,18 @@ namespace Epsitec.Cresus.Graph
 						return -2;
                     }
 					
-					var info = new System.Diagnostics.ProcessStartInfo ()
-					{
-						FileName = graphExePath,
-						Arguments = ""
-					};
-
+					//	Launch "Crésus Graphe" and wait for it to have started its UI thread;
+					//	from then on, we will be able to communicate with it using a named pipe.
+					
+					//	The communication is implemented by the ConnectorClient/ConnectorServer
+					//	classes.
+					
+					var info = new System.Diagnostics.ProcessStartInfo (graphExePath, "-connector=SendData");
 					Connector.process = System.Diagnostics.Process.Start (info);
 
-					System.Diagnostics.Debug.WriteLine ("Process started : " + Connector.process.Id.ToString ());
+//-					System.Diagnostics.Debug.WriteLine ("Process started : " + Connector.process.Id.ToString ());
 					Connector.process.WaitForInputIdle ();
-					System.Diagnostics.Debug.WriteLine ("Process ready and waiting for input");
+//-					System.Diagnostics.Debug.WriteLine ("Process ready and waiting for input");
 				}
 				catch
 				{

@@ -1,13 +1,14 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Runtime.InteropServices;
 
 namespace Epsitec.Cresus.Graph
 {
+	/// <summary>
+	/// The <c>ConnectorClient</c> class communicates with the <see cref="ConnectorServer"/>
+	/// through a named pipe, in a purely synchronous way.
+	/// </summary>
 	class ConnectorClient
 	{
 		public ConnectorClient(System.Diagnostics.Process serverProcess)
@@ -27,6 +28,9 @@ namespace Epsitec.Cresus.Graph
 					bool? result  = null;
 					int   timeout = 10*1000;
 					int   sleep   = 50;
+
+					//	Try connecting to the endpoint; if it does not respond, wait a bit and try
+					//	again - the server could be started, but not ready yet to accept data.
 					
 					for (int i = 0; i < timeout && !result.HasValue; i += sleep)
 					{

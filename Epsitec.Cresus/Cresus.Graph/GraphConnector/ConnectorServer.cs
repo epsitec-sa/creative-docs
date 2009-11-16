@@ -35,6 +35,19 @@ namespace Epsitec.Cresus.Graph
 		}
 
 		/// <summary>
+		/// Gets the address of this endpoint.
+		/// </summary>
+		/// <value>The address.</value>
+		private static string Address
+		{
+			get
+			{
+				return ConnectorServer.GetAddress (System.Diagnostics.Process.GetCurrentProcess ().Id);
+			}
+		}
+
+		
+		/// <summary>
 		/// Opens the server: the service host will listen to incoming requests
 		/// until <see cref="M:Close"/> is called.
 		/// </summary>
@@ -55,7 +68,7 @@ namespace Epsitec.Cresus.Graph
 				
 				ConnectorService.DefineSendDataCallback (sendDataCallback);
 
-				System.Diagnostics.Debug.WriteLine ("Listening on " + ConnectorServer.Address);
+//-				System.Diagnostics.Debug.WriteLine ("Listening on " + ConnectorServer.Address);
 			}
 		}
 
@@ -79,6 +92,16 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		/// <summary>
+		/// Gets the address of the endpoint for a given process id.
+		/// </summary>
+		/// <param name="processId">The process id.</param>
+		/// <returns>The address.</returns>
+		public static string GetAddress(int processId)
+		{
+			return string.Concat ("net.pipe://localhost/epsitec/", processId.ToString ("X8"), ".IConnector");
+		}
+
 		#region IDisposable Members
 
 		public void Dispose()
@@ -92,21 +115,6 @@ namespace Epsitec.Cresus.Graph
 		}
 
 		#endregion
-
-		private static string Address
-		{
-			get
-			{
-				return ConnectorServer.GetAddress (System.Diagnostics.Process.GetCurrentProcess ().Id);
-			}
-		}
-
-
-		public static string GetAddress(int processId)
-		{
-			return string.Concat ("net.pipe://localhost/epsitec/", processId.ToString ("X8"), ".IConnector");
-		}
-
 
 		private readonly ServiceHost serviceHost;
 

@@ -15,7 +15,8 @@ namespace Epsitec.Common.Graph
 		[Test]
 		public void CheckSendData()
 		{
-			ConnectorTest.GraphConnectorSendData (System.IntPtr.Zero, @"S:\test.bla", null, "abc");
+			Assert.AreEqual (0, ConnectorTest.GraphConnectorSendData (System.IntPtr.Zero, @"S:\test.bla", null, "abc"));
+			Assert.AreEqual (0, ConnectorTest.GraphConnectorSendData (System.IntPtr.Zero, @"S:\test.bla", null, "def"));
 		}
 
 		[DllImport ("GraphConnector.Win32.dll")]

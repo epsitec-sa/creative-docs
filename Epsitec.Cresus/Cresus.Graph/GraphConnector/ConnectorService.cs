@@ -9,9 +9,17 @@ namespace Epsitec.Cresus.Graph
 {
 	public delegate bool SendDataCallback(System.IntPtr windowHandle, string path, string meta, string data);
 
+	/// <summary>
+	/// The <c>ConnectorService</c> class implements the <see cref="IConnector"/>
+	/// service contract.
+	/// </summary>
 	[ServiceBehavior]
 	internal class ConnectorService : IConnector
 	{
+		/// <summary>
+		/// Defines the callback used to send data to the Graph application.
+		/// </summary>
+		/// <param name="callback">The callback.</param>
 		internal static void DefineSendDataCallback(SendDataCallback callback)
 		{
 			ConnectorService.sendData = callback;
