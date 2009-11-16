@@ -16,7 +16,33 @@ namespace Epsitec.Cresus.Graph
 
 			System.Windows.Forms.MessageBox.Show (win32Window, "Hello !", "GraphConnector", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information, System.Windows.Forms.MessageBoxDefaultButton.Button1);
 
-			return 0;
+			if ((Connector.process == null) ||
+				(Connector.process.HasExited))
+			{
+				var info = new System.Diagnostics.ProcessStartInfo ()
+				{
+					FileName = "CresusGraph.exe",
+					Arguments = ""
+				};
+
+				Connector.process = System.Diagnostics.Process.Start (info);
+
+				Connector.process.WaitForInputIdle ();
+			}
+
+			var client = new ConnectorClient (Connector.process);
+
+			if (client.SendData (windowHandle, path, meta, data))
+			{
+				return 0;
+			}
+			else
+			{
+				return -1;
+			}
 		}
+
+
+		private static System.Diagnostics.Process process;
 	}
 }
