@@ -32,12 +32,32 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			var table = new DataTable ();
 
 			string headerZero = header[0];
-			var    headerInfo = headerZero.Split ('/').Select (x => x.Trim ());
+			var    headerInfo = headerZero.Split ('/').Select (x => x.Trim ()).Where (x => x.Length > 0).ToArray ();
 
-			string rowDimension = headerInfo.ElementAtOrDefault (0);
-			string colDimension = headerInfo.ElementAtOrDefault (1);
-			
-			string sourceName = headerInfo.ElementAtOrDefault (2) ?? "CSV";
+			string sourceName   = "CSV";
+			string rowDimension = "Ligne";
+			string colDimension = "Colonne";
+
+			switch (headerInfo.Length)
+            {
+				case 0:
+					break;
+
+				case 1:
+					sourceName = headerInfo[0];
+					break;
+
+				case 2:
+					colDimension = headerInfo[0];
+					rowDimension = headerInfo[1];
+					break;
+
+				default:
+					colDimension = headerInfo[0];
+					rowDimension = headerInfo[1];
+					sourceName   = headerInfo[2];
+					break;
+            }
 
 			table.DimensionVector.Add ("Source", sourceName);
 			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (1)));

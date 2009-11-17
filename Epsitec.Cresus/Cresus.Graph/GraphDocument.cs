@@ -636,20 +636,26 @@ namespace Epsitec.Cresus.Graph
 
 			this.cube.Clear ();
 
-			this.cube.SliceDimA = this.activeCube.SliceDimA;
-			this.cube.SliceDimB = this.activeCube.SliceDimB;
-			this.cube.Title     = this.activeCube.Title;
+			this.cube.SliceDimA = this.cube.SliceDimA ?? this.activeCube.SliceDimA;
+			this.cube.SliceDimB = this.cube.SliceDimB ?? this.activeCube.SliceDimB;
+			this.cube.Title     = this.cube.Title     ?? this.activeCube.Title;
 			
 			this.cubes.ForEach (x => this.cube.AddCube (x));
 
 			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
 			{
+				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cube.SliceDimA, this.cube.SliceDimB);
+
+				if ((table.RowCount == 0) ||
+					(table.ColumnCount == 0))
+                {
+					continue;
+                }
+
 				var source  = new GraphDataSource (this.cube.ConverterName)
 				{
 					Name = sourceName,
 				};
-
-				var table = this.cube.ExtractDataTable ("Source="+sourceName, this.cube.SliceDimA, this.cube.SliceDimB);
 
 				source.AddRange (from series in table.RowSeries
 //-								 where series.Values.Any (value => value.Value != 0)
