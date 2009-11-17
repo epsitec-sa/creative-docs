@@ -36,17 +36,18 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			var cube  = new GraphDataCube ();
 			var table = new DataTable ();
 
-			string columnDimension;
+			string colDimension;
+			string rowDimension = "Numéro/Compte";
 
 			switch (header.Count-2)
 			{
 				case 4:
-					columnDimension = "Trimestre";
+					colDimension = "Trimestre";
 					break;
 				
 				case 6:
 				case 12:
-					columnDimension = "Mois";
+					colDimension = "Mois";
 					break;
 
 				default:
@@ -57,8 +58,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			table.DimensionVector.Add ("Source", sourceName);
 			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (2)));
-			table.ColumnDimensionKey = columnDimension;
-			table.RowDimensionKey = "Numéro/Compte";
+			table.ColumnDimensionKey = colDimension;
+			table.RowDimensionKey    = rowDimension;
 
 			foreach (var line in lines)
 			{

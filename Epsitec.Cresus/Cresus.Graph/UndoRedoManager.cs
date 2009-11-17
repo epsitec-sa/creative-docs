@@ -86,7 +86,17 @@ namespace Epsitec.Cresus.Graph
 		/// </summary>
 		internal void PlayBackAll()
 		{
-			this.PlayBackUndoHistory ();
+			if (this.undoRecorder.Count == 0)
+			{
+				//	No action at all -- add the initial action to the undo/redo
+				//	history.
+
+				GraphActions.DocumentReload ();
+			}
+			else
+			{
+				this.PlayBackUndoHistory ();
+			}
 		}
 
 		/// <summary>
