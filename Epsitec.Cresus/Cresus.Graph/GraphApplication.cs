@@ -199,8 +199,8 @@ namespace Epsitec.Cresus.Graph
             {
 				cube.LoadPath = GraphDataCube.LoadPathClipboard;
 				cube.LoadEncoding = System.Text.Encoding.UTF8;
-				
-				GraphActions.DocumentReload ();
+
+				this.Document.RefreshDataSet ();
             }
 		}
 
@@ -212,8 +212,8 @@ namespace Epsitec.Cresus.Graph
             {
 				cube.LoadPath = path;
 				cube.LoadEncoding = encoding;
-				
-				GraphActions.DocumentReload ();
+
+				this.Document.RefreshDataSet ();
             }
 		}
 

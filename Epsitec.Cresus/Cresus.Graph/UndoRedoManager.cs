@@ -82,6 +82,14 @@ namespace Epsitec.Cresus.Graph
 
 
 		/// <summary>
+		/// Plays back every action from the beginning of time.
+		/// </summary>
+		internal void PlayBackAll()
+		{
+			this.PlayBackUndoHistory ();
+		}
+
+		/// <summary>
 		/// Undo the last action found in the undo list, if any.
 		/// </summary>
 		internal void Undo()
@@ -89,7 +97,7 @@ namespace Epsitec.Cresus.Graph
 			if (this.undoRecorder.Count > 1)
 			{
 				this.redoRecorder.Push (this.undoRecorder.Pop ());
-				this.undoRecorder.ForEach (x => x.PlayBack ());
+				this.PlayBackUndoHistory ();
 				this.OnUndoRedoExecuted ();
 			}
 		}
@@ -120,6 +128,11 @@ namespace Epsitec.Cresus.Graph
             {
 				document.NotifyNeedsSave (true);
 			}
+		}
+
+		private void PlayBackUndoHistory()
+		{
+			this.undoRecorder.ForEach (x => x.PlayBack ());
 		}
 
 		private void OnUndoRedoExecuted()

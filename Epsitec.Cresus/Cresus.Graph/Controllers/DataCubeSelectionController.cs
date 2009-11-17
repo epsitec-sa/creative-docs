@@ -148,8 +148,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 					table.DimensionVector.Add ("Source", sourceName);
 					cube.Clear ();
 					cube.AddTable (table);
-					document.ClearData ();
-					document.ReloadDataSet ();
+					document.RefreshDataSet ();
+//-					document.ClearData ();
+//-					document.ReloadDataSet ();
 				};
 
 			this.cubesScrollable.Viewport.IsAutoFitting = true;

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Graph.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 
@@ -413,7 +414,8 @@ namespace Epsitec.Cresus.Graph
 			this.PreserveActiveSeriesAndGroups ();
 			this.activeCube = cube;
 			this.RestoreActiveSeriesAndGroups ();
-			this.ReloadDataSet ();
+			this.RefreshDataSet ();
+//			this.ReloadDataSet ();
 			
 			this.application.NotifyDocumentChanged ();
 
@@ -662,6 +664,11 @@ namespace Epsitec.Cresus.Graph
 			this.RefreshUI ();
 		}
 
+		public void RefreshDataSet()
+		{
+			this.UndoRedo.PlayBackAll ();
+		}
+        
 		public void RefreshUI()
 		{
 			Application.QueueAsyncCallback (this.application.WorkspaceController.Refresh);
