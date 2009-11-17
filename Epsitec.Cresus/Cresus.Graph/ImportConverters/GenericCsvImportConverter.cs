@@ -48,13 +48,13 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					break;
 
 				case 2:
-					colDimension = headerInfo[0];
-					rowDimension = headerInfo[1];
+					rowDimension = headerInfo[0];
+					colDimension = headerInfo[1];
 					break;
 
 				default:
-					colDimension = headerInfo[0];
-					rowDimension = headerInfo[1];
+					rowDimension = headerInfo[0];
+					colDimension = headerInfo[1];
 					sourceName   = headerInfo[2];
 					break;
             }

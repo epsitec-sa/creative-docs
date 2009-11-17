@@ -44,10 +44,27 @@ namespace Epsitec.Common.Graph.Data
 
 
 
-		public void AddTable(DataTable table)
+		public bool AddTable(DataTable table)
 		{
 			string colKey = table.ColumnDimensionKey;
 			string rowKey = table.RowDimensionKey;
+
+			if (this.dimensionNames.Count > 0)
+			{
+				var testVector = new DimensionVector ();
+
+				testVector.Add (table.DimensionVector);
+				testVector.Add (colKey, "");
+				testVector.Add (rowKey, "");
+
+				var v1 = string.Join (":", testVector.Keys.ToArray ());
+				var v2 = string.Join (":", this.dimensionNames.ToArray ());
+
+				if (v1 != v2)
+				{
+					return false;
+				}
+			}
 
 			if (string.IsNullOrEmpty (colKey))
 			{
@@ -76,10 +93,28 @@ namespace Epsitec.Common.Graph.Data
 
 			this.dimensionNames.Sort ((a, b) => string.CompareOrdinal (a, b));
 			this.DefineNaturalTableDimensionNames (table.RowDimensionKey, table.ColumnDimensionKey);
+
+			return true;
 		}
 
-		public void AddCube(DataCube cube)
+		public bool AddCube(DataCube cube)
 		{
+			if (cube == null)
+			{
+				return false;
+			}
+
+			if (this.dimensionNames.Count > 0)
+			{
+				var v1 = string.Join (":", cube.dimensionNames.ToArray ());
+				var v2 = string.Join (":", this.dimensionNames.ToArray ());
+
+				if (v1 != v2)
+				{
+					return false;
+				}
+			}
+			
 			foreach (var value in cube.values)
 			{
 				var vector = new DimensionVector (value.Key);
@@ -94,6 +129,8 @@ namespace Epsitec.Common.Graph.Data
 			{
 				this.naturalTableDimensionNames.AddRange (cube.NaturalTableDimensionNames);
 			}
+
+			return true;
 		}
 
 		public void DefineNaturalTableDimensionNames(string rows, string columns)
