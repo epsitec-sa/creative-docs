@@ -1074,7 +1074,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if ((this.outputActiveIndex >= 0) &&
 				(this.outputActiveIndex < this.outputItemsController.Count))
 			{
-				this.colorStyle.DefineColor (this.Document.OutputSeries[this.outputActiveIndex].ColorIndex, color);
+				var doc = this.Document;
+				var colorIndex = doc.OutputSeries[this.outputActiveIndex].ColorIndex;
+
+				this.colorStyle.DefineColor (colorIndex, color);
+				doc.DefaultColorStyle.DefineColor (colorIndex, color);
+
 				this.Refresh ();
 			}
 		}
