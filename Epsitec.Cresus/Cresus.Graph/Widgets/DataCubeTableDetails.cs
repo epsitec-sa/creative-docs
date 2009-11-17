@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 					Dock = DockStyle.Stacked,
 					PreferredHeight = 32,
 					BackColor = Color.FromRgb (0, 0, 0.25),
-					Text = "<font color=\"#fff\"><b>Réglages de la table</b></font>",
+					Text = "<font color=\"#ffffff\"><b>Réglages de la table</b></font>",
 				};
 
 				var frame = new FrameBox ()

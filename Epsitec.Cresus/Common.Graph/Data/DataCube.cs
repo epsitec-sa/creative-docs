@@ -70,29 +70,30 @@ namespace Epsitec.Common.Graph.Data
 					vector.Add (new Dimension (colKey, cell.Label));
 
 					this.values.Add (vector.Compile (), cell.Value);
-
-					foreach (Dimension dimension in vector)
-					{
-						DimensionValues values;
-
-						if (this.dimensions.TryGetValue (dimension.Key, out values))
-						{
-							values.Add (dimension.Value);
-						}
-						else
-						{
-							values = new DimensionValues ();
-							values.Add (dimension.Value);
-							
-							this.dimensions.Add (dimension.Key, values);
-							this.dimensionNames.Add (dimension.Key);
-						}
-					}
+					this.AddDimensionVector(vector);
 				}
 			}
 
 			this.dimensionNames.Sort ((a, b) => string.CompareOrdinal (a, b));
 			this.DefineNaturalTableDimensionNames (table.RowDimensionKey, table.ColumnDimensionKey);
+		}
+
+		public void AddCube(DataCube cube)
+		{
+			foreach (var value in cube.values)
+			{
+				var vector = new DimensionVector (value.Key);
+
+				this.values[vector.Compile ()] = value.Value;
+				this.AddDimensionVector (vector);
+			}
+			
+			this.dimensionNames.Sort ((a, b) => string.CompareOrdinal (a, b));
+
+			if (this.naturalTableDimensionNames.Count == 0)
+			{
+				this.naturalTableDimensionNames.AddRange (cube.NaturalTableDimensionNames);
+			}
 		}
 
 		public void DefineNaturalTableDimensionNames(string rows, string columns)
@@ -307,7 +308,28 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
-		
+
+		private void AddDimensionVector(DimensionVector vector)
+		{
+			foreach (Dimension dimension in vector)
+			{
+				DimensionValues values;
+
+				if (this.dimensions.TryGetValue (dimension.Key, out values))
+				{
+					values.Add (dimension.Value);
+				}
+				else
+				{
+					values = new DimensionValues ();
+					values.Add (dimension.Value);
+
+					this.dimensions.Add (dimension.Key, values);
+					this.dimensionNames.Add (dimension.Key);
+				}
+			}
+		}
+
 		private Accumulator Accumulate(string[] dimensions)
 		{
 			List<string> axes;

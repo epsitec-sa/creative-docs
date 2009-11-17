@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.cube;
+				return this.activeCube;
 			}
 		}
 
@@ -163,13 +163,13 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				if (this.cube == null)
+				if (this.activeCube == null)
 				{
 					return null;
 				}
 				else
 				{
-					return this.cube.Title;
+					return this.activeCube.Title;
 				}
 			}
 		}
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.cube == null;
+				return this.activeCube == null;
 			}
 		}
 
@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			this.PreserveActiveSeriesAndGroups ();
-			this.cube = cube;
+			this.activeCube = cube;
 			this.RestoreActiveSeriesAndGroups ();
 			this.ReloadDataSet ();
 			
@@ -613,12 +613,27 @@ namespace Epsitec.Cresus.Graph
 
 		public void ReloadDataSet()
 		{
-			if ((this.cube == null) ||
-				(string.IsNullOrEmpty (this.cube.SliceDimA)) ||
-				(string.IsNullOrEmpty (this.cube.SliceDimB)))
+			if ((this.cube == null) &&
+				(this.activeCube != null))
+			{
+				this.cube = new GraphDataCube ();
+			}
+
+			if ((this.cubes.Count == 0) ||
+				(this.activeCube == null) ||
+				(string.IsNullOrEmpty (this.activeCube.SliceDimA)) ||
+				(string.IsNullOrEmpty (this.activeCube.SliceDimB)))
 			{
 				return;
 			}
+
+			this.cube.Clear ();
+
+			this.cube.SliceDimA = this.activeCube.SliceDimA;
+			this.cube.SliceDimB = this.activeCube.SliceDimB;
+			this.cube.Title     = this.activeCube.Title;
+			
+			this.cubes.ForEach (x => this.cube.AddCube (x));
 
 			foreach (string sourceName in this.cube.GetDimensionValues ("Source"))
 			{
@@ -658,7 +673,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			GraphDocument.SaveCubeData (cube);
 			
-			this.cube = cube;
+			this.activeCube = cube;
 			this.cubes.Add (cube);
 			
 			this.application.NotifyDocumentChanged ();
@@ -760,7 +775,7 @@ namespace Epsitec.Cresus.Graph
 
 		private void PreserveActiveSeriesAndGroups()
 		{
-			if (this.cube != null)
+			if (this.activeCube != null)
             {
 				var save = new GraphDataSettings ();
 
@@ -769,7 +784,7 @@ namespace Epsitec.Cresus.Graph
 				save.OutputSeries.AddRange (this.outputSeries);
 				save.DataSourceName = this.activeDataSource == null ? null : this.activeDataSource.Name;
 
-				this.cube.SavedSettings = save;
+				this.activeCube.SavedSettings = save;
             }
 		}
 
@@ -777,9 +792,9 @@ namespace Epsitec.Cresus.Graph
 		{
 			this.ClearData ();
 			
-			if (this.cube != null)
+			if (this.activeCube != null)
             {
-				var save = cube.SavedSettings;
+				var save = activeCube.SavedSettings;
 
 				if (save != null)
 				{
@@ -950,8 +965,9 @@ namespace Epsitec.Cresus.Graph
 
 		private System.Guid guid;
 		private bool isDirty;
-		
+
 		private GraphDataCube	cube;
+		private GraphDataCube	activeCube;
 
 		private GraphDataSource activeDataSource;
 		private GraphDataSource groupSource;
