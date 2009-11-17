@@ -36,6 +36,22 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 
+		public bool IsSourceNameReadOnly
+		{
+			get
+			{
+				return this.sourceNameIsReadOnly;
+			}
+			set
+			{
+				if (this.sourceNameIsReadOnly != value)
+                {
+					this.sourceNameIsReadOnly = value;
+					this.InvalidateUI ();
+                }
+			}
+		}
+
         public GraphDataCube Cube
 		{
 			get
@@ -52,6 +68,20 @@ namespace Epsitec.Cresus.Graph.Widgets
 			}
 		}
 
+		
+		public string GetSourceName()
+		{
+			if (this.button == null)
+			{
+				return "";
+			}
+			else
+			{
+				return this.button.Sources.FirstOrDefault () ?? "";
+			}
+		}
+
+		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var rect = this.Client.Bounds;
@@ -92,7 +122,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 
 			if (cardinality == DataCubeCardinality.Table)
             {
-				var oldValue = this.button.Sources.FirstOrDefault ();
+				var oldValue = this.GetSourceName();
 
 				new StaticText ()
 				{
@@ -122,6 +152,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 					Dock = DockStyle.Fill,
 					Text = FormattedText.Escape (oldValue),
 					VerticalAlignment = VerticalAlignment.Center,
+					IsReadOnly = this.sourceNameIsReadOnly,
 				};
 
 				field.EditionAccepted +=
@@ -147,5 +178,6 @@ namespace Epsitec.Cresus.Graph.Widgets
 
 		private GraphDataCube cube;
 		private DataCubeTableButton button;
+		private bool sourceNameIsReadOnly;
 	}
 }

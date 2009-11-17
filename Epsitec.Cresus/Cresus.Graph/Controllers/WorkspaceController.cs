@@ -1356,7 +1356,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddFilledRectangle (label);
 
 					Color color1 = frame.BackColor;
-					Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+					Color color2 = MiniChartView.GetLightColor (color1);
 
 					graphics.GradientRenderer.Fill = GradientFill.Y;
 					graphics.GradientRenderer.SetColors (color1, color2);
@@ -1396,7 +1396,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Stacked,
 				PreferredHeight = 24,
-				BackColor = Color.FromRgb (1.0, 1.0, 0.8),
+				BackColor = MiniChartView.StickyNoteYellow,
 				Parent = filters,
 				Padding = new Margins (4, 4, 1, 1),
 			};
@@ -1413,7 +1413,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddFilledRectangle (label);
 
 					Color color1 = frame.BackColor;
-					Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+					Color color2 = MiniChartView.GetLightColor (color1);
 
 					graphics.GradientRenderer.Fill = GradientFill.Y;
 					graphics.GradientRenderer.SetColors (color1, color2);

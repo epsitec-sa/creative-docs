@@ -198,12 +198,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 						  where button is DataCubeTableButton
 						  select button as DataCubeTableButton;
 
-			var cube = this.workspace.Document.ActiveCube;
+			var doc  = this.workspace.Document;
+			var cube = doc.ActiveCube;
 			var guid = cube == null ? System.Guid.Empty : cube.Guid;
 
 			buttons.ForEach (button => button.SetSelected (button.Cube.Guid == guid));
 
 			this.cubeDetails.Button = buttons.FirstOrDefault (x => x.IsSelected);
+
+			var selectedSourceName = this.cubeDetails.GetSourceName ();
+
+			this.cubeDetails.IsSourceNameReadOnly = doc.OutputSeries.Any (x => x.Source.Name == selectedSourceName);
 		}
 
 		private DataCubeTableButton CreateCubeButton(GraphDataCube cube)
@@ -343,9 +348,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		private void HandleCubeMoved(GraphDataCube cube)
 		{
-			this.workspace.Document.SetCubeIndex (cube.Guid, this.outputIndex);
-			this.UpdateCubeList ();
-			this.UpdateSelectedCube ();
+			int index = this.outputIndex;
+
+			if (index >= 0)
+			{
+				this.workspace.Document.SetCubeIndex (cube.Guid, index);
+				this.UpdateCubeList ();
+				this.UpdateSelectedCube ();
+			}
 		}
         
 		private void HandleImportButtonClicked(object sender, MessageEventArgs e)

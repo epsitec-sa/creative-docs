@@ -351,7 +351,7 @@ namespace Epsitec.Common.Graph.Widgets
 		protected virtual void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle)
 		{
 			Color sheetColor = hiliteColor.IsValid ? hiliteColor : Color.FromRgb (0.9, 0.9, 0.95);
-			Color whiteColor = Color.Mix (sheetColor, Color.FromBrightness (1), 0.75);
+			Color whiteColor = MiniChartView.GetLightColor (sheetColor);
 
 			this.AddFrameSurface (graphics, rectangle);
 			
@@ -361,9 +361,10 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.GradientRenderer.Transform = Transform.Identity.Scale (1.0, rectangle.Height / 100).Translate (rectangle.BottomLeft).RotateDeg (10, rectangle.Center);
 			graphics.RenderGradient ();
 		}
-		private static void PaintNote(Graphics graphics, Rectangle rectangle, string text, Color labelColor)
+		
+		public static void PaintNote(Graphics graphics, Rectangle rectangle, string text, Color labelColor)
 		{
-			var label = new Rectangle (6, rectangle.Top - 18 - 6, 48, 18);
+			var label = new Rectangle (rectangle.Left + 2, rectangle.Top - 18 - 6, 48, 18);
 
 			var transform = graphics.Transform;
 			graphics.RotateTransformDeg (5, label.Center.X, label.Center.Y);
@@ -372,7 +373,7 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.AddFilledRectangle (label);
 
 			Color color1 = labelColor;
-			Color color2 = Color.Mix (color1, Color.FromBrightness (1), 0.75);
+			Color color2 = MiniChartView.GetLightColor (color1);
 			
 			graphics.GradientRenderer.Fill = GradientFill.Y;
 			graphics.GradientRenderer.SetColors (color1, color2);
@@ -387,6 +388,11 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.RenderSolid ();
 
 			graphics.Transform = transform;
+		}
+
+		public static Color GetLightColor(Color color)
+		{
+			return Color.Mix (color, Color.FromBrightness (1), 0.75);
 		}
 
 		public static void PaintShadow(Graphics graphics, Rectangle rect)
@@ -444,6 +450,8 @@ namespace Epsitec.Common.Graph.Widgets
 			graphics.PaintImage (image, new Rectangle (rectangle.X + 10, rectangle.Top - 34, 20, 40));
 		}
 
+
+		public static Color StickyNoteYellow = Color.FromRgb (1.0, 1.0, 0.8);
 
 		private CheckButton checkButton;
 		private IconButton iconButton;

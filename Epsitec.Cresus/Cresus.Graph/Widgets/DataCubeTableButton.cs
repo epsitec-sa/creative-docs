@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Graph.Widgets;
 using Epsitec.Common.UI;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -10,7 +11,6 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Epsitec.Cresus.Graph.Widgets
 {
@@ -122,6 +122,22 @@ namespace Epsitec.Cresus.Graph.Widgets
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintForegroundImplementation (graphics, clipRect);
+
+			if (this.IsSelected)
+			{
+				//	No need for a note with the source name, since it will appear in the
+				//	details widget.
+			}
+			else
+			{
+				var rect = this.Client.Bounds;
+				var label = this.Sources.FirstOrDefault () ?? "";
+				var width = 54.0;
+
+				rect = new Rectangle (rect.Right - width, rect.Bottom, width, rect.Height);
+
+				MiniChartView.PaintNote (graphics, rect, label, MiniChartView.StickyNoteYellow);
+			}
 		}
 
 
