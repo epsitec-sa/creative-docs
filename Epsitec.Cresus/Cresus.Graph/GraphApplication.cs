@@ -39,6 +39,7 @@ namespace Epsitec.Cresus.Graph
 			GraphActions.DocumentRemoveSeriesFromOutput = Actions.Factory.New (this.DocumentRemoveSeriesFromOutput);
 			GraphActions.DocumentSetSeriesOutputIndex = Actions.Factory.New<string, int> (this.DocumentSetSeriesOutputIndex);
 			GraphActions.DocumentHideSnapshot = Actions.Factory.New (this.DocumentHideSnapshot);
+			GraphActions.DocumentDefineColor = Actions.Factory.New<int, string> (this.DocumentDefineColor);
 
 //			this.loadDataSetAction = Actions.Factory.New (this.LoadDataSet);
 //			this.removeSeriesFromGraphAction = Actions.Factory.New (this.RemoveFromChart);
@@ -483,6 +484,7 @@ namespace Epsitec.Cresus.Graph
 
 		public void DocumentReload()
 		{
+			this.Document.ResetDefaultColors ();
 			this.Document.ClearData ();
 			this.Document.ReloadDataSet ();
 
@@ -521,6 +523,12 @@ namespace Epsitec.Cresus.Graph
 		private void DocumentSetSeriesOutputIndex(string id, int index)
 		{
 			this.Document.SetOutputIndex (this.Document.FindSeries (id), index);
+			this.Document.RefreshUI ();
+		}
+
+		private void DocumentDefineColor(int index, string color)
+		{
+			this.Document.DefaultColorStyle.DefineColor (index, Color.Parse (color));
 			this.Document.RefreshUI ();
 		}
 

@@ -15,5 +15,6 @@ namespace Epsitec.Cresus.Graph
 		public static System.Action<string> DocumentRemoveSeriesFromOutput;
 		public static System.Action<string, int> DocumentSetSeriesOutputIndex;
 		public static System.Action<string> DocumentHideSnapshot;
+		public static System.Action<int, string> DocumentDefineColor;
 	}
 }

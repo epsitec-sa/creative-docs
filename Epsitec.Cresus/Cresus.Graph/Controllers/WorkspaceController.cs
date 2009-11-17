@@ -26,12 +26,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public WorkspaceController(GraphApplication application)
 		{
 			this.application = application;
-			this.colorStyle = new ColorStyle ("line-color");
-			
-			for (int hue = 0; hue < 360; hue += 36)
-			{
-				this.colorStyle.Add (Color.FromAlphaHsv (1.0, hue, 1.0, 1.0));
-			}
+			this.colorStyle = GraphDocument.GetDefaultColorStyle ();
 			
 			this.inputItemsController = new ItemListController<MiniChartView> ()
 			{
@@ -549,6 +544,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			if (this.Document != null)
 			{
+				this.RefreshColors ();
 				this.RefreshInputs ();
 				this.RefreshOutputs ();
 				this.RefreshGroups ();
@@ -559,6 +555,17 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 		}
 
+		public void RefreshColors()
+		{
+			var doc = this.Document;
+
+			if (doc != null)
+			{
+				this.colorStyle = doc.DefaultColorStyle;
+				this.chartViewController.ColorStyle = this.colorStyle;
+			}
+		}
+        
 		public void RefreshGroups()
 		{
 			this.groupsController.Refresh ();
@@ -1076,11 +1083,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				var doc = this.Document;
 				var colorIndex = doc.OutputSeries[this.outputActiveIndex].ColorIndex;
+				var colorValue = color.ToString ();
 
-				this.colorStyle.DefineColor (colorIndex, color);
-				doc.DefaultColorStyle.DefineColor (colorIndex, color);
+				GraphActions.DocumentDefineColor (colorIndex, colorValue);
 
-				this.Refresh ();
+//-				doc.DefaultColorStyle.DefineColor (colorIndex, color);
+//-				this.Refresh ();
 			}
 		}
 

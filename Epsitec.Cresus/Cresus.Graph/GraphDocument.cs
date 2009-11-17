@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Graph
 			this.undoRedoManager = new UndoRedoManager ();
 			this.undoRedoManager.UndoRedoExecuted += sender => this.RefreshUI ();
 
-			this.CreateDefaultColorStyle ();
+			this.ResetDefaultColors();
 
 			this.application.RegisterDocument (this);
 			this.application.SetActiveDocument (this);
@@ -613,6 +613,11 @@ namespace Epsitec.Cresus.Graph
 			return false;
 		}
 
+		public void ResetDefaultColors()
+		{
+			this.DefaultColorStyle = GetDefaultColorStyle ();
+		}
+
 		public void ReloadDataSet()
 		{
 			if ((this.cube == null) &&
@@ -836,7 +841,7 @@ namespace Epsitec.Cresus.Graph
 			this.activeDataSource = null;
 		}
 
-		private void CreateDefaultColorStyle()
+		public static ColorStyle GetDefaultColorStyle()
 		{
 			var colorStyle = new ColorStyle ("line-color");
 
@@ -845,7 +850,7 @@ namespace Epsitec.Cresus.Graph
 				colorStyle.Add (Color.FromAlphaHsv (1.0, hue, 1.0, 1.0));
 			}
 
-			this.DefaultColorStyle = colorStyle;
+			return colorStyle;
 		}
 
 		private IEnumerable<XElement> SaveCubeSettings()
