@@ -103,6 +103,13 @@ namespace Epsitec.Common.Graph.Data
 			this.naturalTableDimensionNames.Add (columns);
 		}
 
+		public void Clear()
+		{
+			this.values.Clear ();
+			this.dimensions.Clear ();
+			this.dimensionNames.Clear ();
+			this.naturalTableDimensionNames.Clear ();
+		}
 		
 		public IList<string> GetDimensionValues(string key)
 		{
@@ -123,6 +130,11 @@ namespace Epsitec.Common.Graph.Data
 		public ChartSeries ExtractChartSeries(params string[] dimensions)
 		{
 			return new ChartSeries (this.Accumulate (dimensions).Values);
+		}
+
+		public DataTable ExtractNaturalDataTable()
+		{
+			return this.ExtractDataTable (this.naturalTableDimensionNames[0], this.naturalTableDimensionNames[1]);
 		}
 
 		public DataTable ExtractDataTable(params string[] dimensions)

@@ -18,6 +18,8 @@ namespace Epsitec.Cresus.Graph.Widgets
 	{
 		public DataCubeTableButton()
 		{
+			this.sources = new List<string> ();
+
 			this.CreateUI ();
 		}
 
@@ -32,8 +34,33 @@ namespace Epsitec.Cresus.Graph.Widgets
 				if (this.cube != value)
 				{
 					this.cube = value;
+					this.AnalyzeCube ();
 					this.InvalidateUI ();
 				}
+			}
+		}
+
+		public DataCubeCardinality Cardinality
+		{
+			get
+			{
+				switch (this.sources.Count)
+				{
+					case 0:
+						return DataCubeCardinality.Empty;
+					case 1:
+						return DataCubeCardinality.Table;
+					default:
+						return DataCubeCardinality.Cube;
+				}
+			}
+		}
+
+		public IList<string> Sources
+		{
+			get
+			{
+				return this.sources.AsReadOnly ();
 			}
 		}
 
@@ -97,6 +124,18 @@ namespace Epsitec.Cresus.Graph.Widgets
 			base.PaintForegroundImplementation (graphics, clipRect);
 		}
 
+
+		private void AnalyzeCube()
+		{
+			this.sources.Clear ();
+
+			if (this.cube == null)
+			{
+				return;
+			}
+
+			this.sources.AddRange (this.cube.GetDimensionValues ("Source"));
+		}
 
 		private void InvalidateUI()
 		{
@@ -211,5 +250,6 @@ namespace Epsitec.Cresus.Graph.Widgets
 		const double TableIconLength = DataCubeTableButton.TableIconImageLength + 2*4;
 
 		private GraphDataCube cube;
+		private readonly List<string> sources;
 	}
 }

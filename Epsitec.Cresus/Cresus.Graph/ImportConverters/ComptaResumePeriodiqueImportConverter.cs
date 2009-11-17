@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 		}
 
-		public override DataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines)
+		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines)
 		{
 			if (header.Count < 2)
 			{
@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				return null;
 			}
 
-			DataCube  cube  = new DataCube ();
-			DataTable table = new DataTable ();
+			var cube  = new GraphDataCube ();
+			var table = new DataTable ();
 
 			string columnDimension;
 

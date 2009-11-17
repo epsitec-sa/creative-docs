@@ -13,7 +13,6 @@ using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -139,6 +138,20 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Fill,
 			};
 
+			this.cubeDetails.SourceEdited +=
+				(sender, e) =>
+				{
+					var cube  = this.cubeDetails.Cube;
+					var table = cube.ExtractNaturalDataTable ();
+					var sourceName = e.NewValue as string;
+					var document   = this.workspace.Document;
+					table.DimensionVector.Add ("Source", sourceName);
+					cube.Clear ();
+					cube.AddTable (table);
+					document.ClearData ();
+					document.ReloadDataSet ();
+				};
+
 			this.cubesScrollable.Viewport.IsAutoFitting = true;
 			this.cubesScrollable.AddEventHandler (Scrollable.ViewportOffsetYProperty, (sender, e) => this.UpdateInsertionMark ());
 			
@@ -187,9 +200,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var cube = this.workspace.Document.ActiveCube;
 			var guid = cube == null ? System.Guid.Empty : cube.Guid;
 
-			this.cubeDetails.Cube = cube;
-
 			buttons.ForEach (button => button.SetSelected (button.Cube.Guid == guid));
+
+			this.cubeDetails.Button = buttons.FirstOrDefault (x => x.IsSelected);
 		}
 
 		private DataCubeTableButton CreateCubeButton(GraphDataCube cube)

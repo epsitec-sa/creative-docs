@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Graph
 				var headColumns = ImportConverter.QuotedSplit (lines.First (), columnSeparator);
 
 				AbstractImportConverter converter;
-				DataCube                cube;
+				GraphDataCube           cube;
 
 				var lineColumns = lines.Skip (1).Select (x => ImportConverter.QuotedSplit (x, columnSeparator));
 
@@ -406,16 +406,12 @@ namespace Epsitec.Cresus.Graph
 
 					var dimensionNames = cube.NaturalTableDimensionNames;
 
-					var graphDataCube  =
-						new GraphDataCube (cube)
-							{
-								SliceDimA = dimensionNames[0],
-								SliceDimB = dimensionNames[1],
-								ConverterName = converter.Name,
-								Title = converter.DataTitle,
-							};
-
-					return graphDataCube;
+					cube.SliceDimA = dimensionNames[0];
+					cube.SliceDimB = dimensionNames[1];
+					cube.ConverterName = converter.Name;
+					cube.Title = converter.DataTitle;
+					
+					return cube;
 				}
 			}
 			catch
@@ -485,14 +481,17 @@ namespace Epsitec.Cresus.Graph
 			this.Document.SelectDataSource (name);
 		}
 
-		private void DocumentReload()
+		public void DocumentReload()
 		{
 			this.Document.ClearData ();
 			this.Document.ReloadDataSet ();
 
-			//	Make all snapshots visible again; this is useful when actions gets run again
+			//	Make all snapshots visible again; this is useful when actions get run again
 			//	in order to execute an undo/redo operation; snapshots will be hidden by the
 			//	'HideSnapshot' actions :
+
+			//	TODO: do this only while rewinding the actions, not when executing other
+			//	"reload" actions in the history...
 
 			this.Document.ChartSnapshots.ForEach (x => x.Visibility = true);
 		}
