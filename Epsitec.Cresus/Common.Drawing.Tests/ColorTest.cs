@@ -40,10 +40,10 @@ namespace Epsitec.Common.Drawing
 		
 		[Test] public void CheckComponents()
 		{
+			float a = 0.8f;
 			float r = 0.4f;
 			float g = 0.1f;
 			float b = 0.6f;
-			float a = 0.8f;
 			
 			Color color = Color.FromAlphaRgb (a, r, g, b);
 			
@@ -52,7 +52,8 @@ namespace Epsitec.Common.Drawing
 			Assert.IsTrue (color.G == g);
 			Assert.IsTrue (color.B == b);
 			
-			Assert.AreEqual ("{R=0.40,G=0.10,B=0.60,A=0.80}", color.ToString (), "Color.ToString failure");
+			Assert.AreEqual ("#C;#6;#199A;#9", color.ToString
+				(), "Color.ToString failure");
 		}
 		
 		[Test] public void CheckRanges()
