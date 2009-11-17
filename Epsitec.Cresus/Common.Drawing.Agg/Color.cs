@@ -341,7 +341,8 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.r, this.g, this.b, this.a);
+			return Color.ToString (this);
+//-			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{{R={0:0.00},G={1:0.00},B={2:0.00},A={3:0.00}}}", this.r, this.g, this.b, this.a);
 		}
 		
 		
