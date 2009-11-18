@@ -86,16 +86,18 @@ namespace Epsitec.Cresus.Graph.Widgets
 			if (right > xRight-16)
 			{
 				left -= right - xRight;
-				right = xRight;
+				right = xRight+2;
 			}
 			if (left > xLeft-16)
             {
 				right -= left - xLeft;
-				left   = xLeft;
+				left   = xLeft+2;
             }
 
+			System.Diagnostics.Debug.WriteLine (string.Format ("l={0} r={1}", left, right));
+
 			this.Margins = new Margins (left, right, top, 0);
-			this.PreferredWidth = parentFrameBounds.Width - left - right;
+			this.PreferredWidth = this.FrameWidth; // parentFrameBounds.Width - left - right;
 			this.PreferredHeight = this.FrameHeight;
 		}
 
@@ -129,6 +131,8 @@ namespace Epsitec.Cresus.Graph.Widgets
         
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("inside: {0}", Rectangle.Deflate (this.Client.Bounds, this.GetInternalPadding ())));
+
 			Widget button = this.FindDataCubeButton();
 
 			if (button == null)

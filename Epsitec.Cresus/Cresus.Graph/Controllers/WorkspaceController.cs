@@ -243,6 +243,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Dock = DockStyle.Right,
 				Parent = topFrame,
 				PreferredWidth = 3,
+				Visibility = false,
 			};
 
 			//	Bottom half of the workspace : book with preview and output
@@ -615,20 +616,50 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 		public void RefreshSources()
 		{
-			var container = this.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
+			var container  = this.ToolsFrame.FindChild ("sources", Widget.ChildFindMode.Deep);
+			int numSources = this.Document.DataSourceCount;
 
 			container.Children.Widgets.ForEach (x => x.Dispose ());
 
 			System.Diagnostics.Debug.Assert (container.Children.Count == 0);
 
-			var label = new StaticText ()
+			if (numSources < 5)
 			{
-				Dock = DockStyle.Stacked,
-				PreferredHeight = 20,
-				Parent = container,
-				Text = "Sources de données",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-			};
+				container.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
+
+				new StaticText ()
+				{
+					Dock = DockStyle.Stacked,
+					PreferredHeight = 20,
+					Parent = container,
+					Text = "Sources de données",
+					ContentAlignment = ContentAlignment.MiddleCenter,
+				};
+			}
+			else
+			{
+				container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+				
+				var text = new StaticText ()
+				{
+					Dock = DockStyle.Stacked,
+					PreferredWidth = 20,
+					Parent = container,
+					Text = "Sources",
+					ContentAlignment = ContentAlignment.MiddleCenter,
+				};
+
+				text.PaintBackground +=
+					(sender, e) =>
+					{
+						var bounds = text.Client.Bounds;
+						var center = bounds.Center;
+						e.Graphics.RotateTransformDeg (90, center.X, center.Y);
+						e.Graphics.Color = text.TextLayout.DefaultRichColor.Basic;
+						e.Graphics.PaintText (bounds.X, bounds.Y, bounds.Width, bounds.Height, text.Text, text.TextLayout.DefaultFont, text.TextLayout.DefaultFontSize, text.ContentAlignment);
+						e.Suppress = true;
+					};
+			}
 
 			var bottom = new FrameBox ()
 			{
@@ -637,32 +668,54 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			var container1 = new FrameBox ()
+			int columns = 1;
+			int rows    = 1;
+			var space   = 1.0;
+			
+			if (numSources <= 2)
+            {
+				columns = 1;
+				rows    = numSources;
+            }
+			else if (numSources <= 4)
 			{
-				Dock = DockStyle.Fill,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Parent = bottom,
-			};
+				columns = 2;
+				rows    = 2;
+			}
+			else if (numSources <= 6)
+            {
+				columns = 2;
+				rows    = 3;
+			}
+			else
+			{
+				columns = (numSources+3) / 4;
+				rows    = 4;
+				space   = 0.0;
+			}
 
-			var container2 = new FrameBox ()
+			var containers = new List<FrameBox> ();
+
+			for (int i = 0; i < columns; i++)
 			{
-				Dock = DockStyle.Fill,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Parent = bottom,
-			};
+				var frame = new FrameBox ()
+				{
+					Dock = DockStyle.Fill,
+					ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+					Parent = bottom,
+				};
+
+				containers.Add (frame);
+			}
 
 			int index = 0;
 
 			foreach (var source in this.Document.DataSources)
 			{
-				if (index < 2)
-				{
-					this.CreateSourceButton (container1, source);
-				}
-				else if (index < 4)
-				{
-					this.CreateSourceButton (container2, source);
-				}
+				int c = index / rows;
+				int r = index % rows;
+
+				this.CreateSourceButton (containers[c], source, space);
 
 				index++;
 			}
@@ -1390,21 +1443,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 		}
 
-		private void CreateSourceButton(Widget filters, GraphDataSource source)
+		private void CreateSourceButton(Widget filters, GraphDataSource source, double verticalSpace)
 		{
 			var frame = new FrameBox ()
 			{
 				Dock = DockStyle.Stacked,
-				PreferredHeight = 24,
+				PreferredHeight = 20 + 4 * verticalSpace,
 				BackColor = MiniChartView.StickyNoteYellow,
 				Parent = filters,
-				Padding = new Margins (4, 4, 1, 1),
+				Padding = new Margins (4, 4, verticalSpace, verticalSpace),
 			};
 
 			frame.PaintBackground +=
 				(sender, e) =>
 				{
-					var label = Rectangle.Deflate (frame.Client.Bounds, new Margins (3, 3, 3, 3));
+					var label = Rectangle.Deflate (frame.Client.Bounds, new Margins (3, 3, 1+2*verticalSpace, 1+2*verticalSpace));
 					var graphics = e.Graphics;
 					var transform = graphics.Transform;
 					graphics.RotateTransformDeg (0, label.Center.X, label.Center.Y);
