@@ -636,9 +636,10 @@ namespace Epsitec.Cresus.Graph
 
 			this.cube.Clear ();
 
-			this.cube.SliceDimA = this.cube.SliceDimA ?? this.activeCube.SliceDimA;
-			this.cube.SliceDimB = this.cube.SliceDimB ?? this.activeCube.SliceDimB;
-			this.cube.Title     = this.cube.Title     ?? this.activeCube.Title;
+			this.cube.SliceDimA     = this.cube.SliceDimA ?? this.activeCube.SliceDimA;
+			this.cube.SliceDimB     = this.cube.SliceDimB ?? this.activeCube.SliceDimB;
+			this.cube.Title         = this.cube.Title     ?? this.activeCube.Title;
+			this.cube.ConverterName = this.cube.ConverterName ?? this.activeCube.ConverterName;
 			
 			this.cubes.ForEach (x => this.cube.AddCube (x));
 

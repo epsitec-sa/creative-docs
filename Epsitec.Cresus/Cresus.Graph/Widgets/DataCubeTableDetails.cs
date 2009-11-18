@@ -92,9 +92,9 @@ namespace Epsitec.Cresus.Graph.Widgets
 			var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
 			var border  = adorner.ColorBorder;
 
-			graphics.AddFilledRectangle (0, rect.Height-1, rect.Width, 1);
-			graphics.AddFilledRectangle (0, 0, rect.Width, 1);
-			graphics.RenderSolid (border);
+//-			graphics.AddFilledRectangle (0, rect.Height-1, rect.Width, 1);
+//-			graphics.AddFilledRectangle (0, 0, rect.Width, 1);
+//-			graphics.RenderSolid (border);
 		}
 		
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)

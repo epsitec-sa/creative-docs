@@ -128,6 +128,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 3,
+				Name = "filters-sep",
 				IsVerticalLine = true,
 				Parent = settingsFrame,
 			};
@@ -162,6 +163,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 3,
+				Name = "sources-sep",
 				IsVerticalLine = true,
 				Parent = settingsFrame,
 			};
@@ -553,6 +555,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 				this.RefreshFilters ();
 				this.RefreshSources ();
 				this.RefreshHilites ();
+				
+				this.application.Window.Root.Invalidate ();
 			}
 		}
 
@@ -580,7 +584,8 @@ namespace Epsitec.Cresus.Graph.Controllers
 		public void RefreshFilters()
 		{
 			var container = this.ToolsFrame.FindChild ("filters", Widget.ChildFindMode.Deep);
-
+			var separator = this.ToolsFrame.FindChild ("filters-sep", Widget.ChildFindMode.Deep);
+			
 			container.Children.Widgets.ForEach (x => x.Dispose ());
 
 			System.Diagnostics.Debug.Assert (container.Children.Count == 0);
@@ -611,6 +616,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 				{
 					this.CreateFilterButton (container, category);
 				}
+
+				container.Visibility = true;
+				separator.Visibility = true;
+			}
+			else
+			{
+				container.Visibility = false;
+				separator.Visibility = false;
 			}
 		}
 
@@ -643,7 +656,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				var text = new StaticText ()
 				{
 					Dock = DockStyle.Stacked,
-					PreferredWidth = 20,
+					PreferredWidth = 16,
 					Parent = container,
 					Text = "Sources",
 					ContentAlignment = ContentAlignment.MiddleCenter,
@@ -696,7 +709,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			var containers = new List<FrameBox> ();
 
-			for (int i = 0; i < columns; i++)
+			for (int i = 0; i < System.Math.Max (2, columns); i++)
 			{
 				var frame = new FrameBox ()
 				{

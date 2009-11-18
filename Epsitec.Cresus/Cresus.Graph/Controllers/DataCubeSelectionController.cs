@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var innerFrame = new FrameBox ()
 			{
 				Parent = this.container,
-				BackColor = Color.FromRgb (1, 0.8, 0.8),
+//-				BackColor = Color.FromRgb (1, 0.8, 0.8),
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 			};
@@ -56,18 +56,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Parent = innerFrame,
 				Name = "top",
-				BackColor = Color.FromRgb (1, 1, 0.8),
+//-				BackColor = Color.FromRgb (1, 1, 0.8),
 				Dock = DockStyle.Top,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredHeight = 76,
 				Padding = new Margins (0, 0, 2, 2),
 			};
 
+			new Separator ()
+			{
+				Parent = innerFrame,
+				Dock = DockStyle.Top,
+				PreferredHeight = 1,
+				IsHorizontalLine = true,
+			};
+
 			var middleFrame = new FrameBox ()
 			{
 				Parent = innerFrame,
 				Name = "mid",
-				BackColor = Color.FromRgb (0.8, 1, 0.8),
+//-				BackColor = Color.FromRgb (0.8, 1, 0.8),
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 			};
@@ -76,9 +84,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Parent = innerFrame,
 				Name = "bot",
-				BackColor = Color.FromRgb (0.8, 1, 1),
+//-				BackColor = Color.FromRgb (0.8, 1, 1),
 				Dock = DockStyle.Bottom,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Visibility = false,
+			};
+
+			new Separator ()
+			{
+				Parent = innerFrame,
+				PreferredHeight = 1,
+				Dock = DockStyle.Bottom,
+				IsHorizontalLine = true,
 			};
 
 			var importButton = new ConfirmationButton ()
@@ -128,7 +145,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				HorizontalScrollerMode = ScrollableScrollerMode.HideAlways,
 				VerticalScrollerMode = ScrollableScrollerMode.ShowAlwaysOppositeSide,
-				PaintViewportFrame = true,
+				PaintViewportFrame = false,
 				ViewportFrameMargins = new Margins (0, -1, 0, 0),
 			};
 
