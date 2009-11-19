@@ -13,6 +13,7 @@ using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {
@@ -35,12 +36,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					}
 				};
 
-			GraphProgram.Application.ActiveDocumentChanged +=
-				(sender) =>
-				{
-					this.UpdateCubeList ();
-					this.UpdateSelectedCube ();
-				};
+			GraphProgram.Application.ActiveDocumentChanged += this.HandleActiveDocumentChanged;
 
 			this.container = container;
 
@@ -221,7 +217,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			buttons.ForEach (button => button.SetSelected (button.Cube.Guid == guid));
 
-			this.cubeDetails.Button = buttons.FirstOrDefault (x => x.IsSelected);
+			var activeButton = buttons.FirstOrDefault (x => x.IsSelected);
+			
+			this.cubeDetails.Button = activeButton;
+			this.cubesScrollable.Show (activeButton);
 
 			var selectedSourceName = this.cubeDetails.GetSourceName ();
 
@@ -357,6 +356,24 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 
 
+		private void HandleActiveDocumentChanged(object sender)
+		{
+			var doc = this.workspace.Document;
+
+			if (doc == null)
+            {
+				return;
+            }
+
+			if (doc.ActiveCube == null)
+            {
+				return;
+            }
+
+			this.UpdateCubeList ();
+			this.UpdateSelectedCube ();
+		}
+        
 		private void HandleCubeClicked(GraphDataCube cube)
 		{
 			this.workspace.Document.SelectCube (cube.Guid);

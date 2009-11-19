@@ -14,7 +14,6 @@ using Epsitec.Cresus.Graph.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 
@@ -687,15 +686,37 @@ namespace Epsitec.Cresus.Graph
 			Application.QueueAsyncCallback (this.application.WorkspaceController.RefreshSnapshots);
 		}
 
+		/// <summary>
+		/// Imports the cube into the document.
+		/// </summary>
+		/// <param name="cube">The cube.</param>
+		/// <param name="path">The path of the source data.</param>
+		/// <param name="encoding">The encoding of the source data (or <c>null</c> if the
+		/// source data cannot be used, i.e. because it has to be transformed by some
+		/// external application).</param>
+		internal void ImportCube(GraphDataCube cube, string path, System.Text.Encoding encoding)
+		{
+			if (cube != null)
+			{
+				cube.LoadPath = path;
+				cube.LoadEncoding = encoding;
+				
+				this.LoadCube (cube);
+				this.RefreshDataSet ();
+			}
+		}
 
 		internal void LoadCube(GraphDataCube cube)
 		{
-			GraphDocument.SaveCubeData (cube);
-			
-			this.activeCube = cube;
-			this.cubes.Add (cube);
-			
-			this.application.NotifyDocumentChanged ();
+			if (cube != null)
+			{
+				GraphDocument.SaveCubeData (cube);
+
+				this.activeCube = cube;
+				this.cubes.Add (cube);
+
+				this.application.NotifyDocumentChanged ();
+			}
 		}
 
 		internal void UpdateSyntheticSeries()

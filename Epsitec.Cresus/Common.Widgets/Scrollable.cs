@@ -57,6 +57,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public Point							ViewportOffset
+		{
+			get
+			{
+				return this.viewportOffset;
+			}
+			set
+			{
+				if (this.viewportOffset != value)
+                {
+					this.viewportOffset = value;
+					this.UpdateViewportLocation ();
+                }
+			}
+		}
+
 		public double							ViewportOffsetX
 		{
 			get
@@ -67,8 +84,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.viewportOffset.X != value)
 				{
-					this.viewportOffset.X = value;
-					this.UpdateViewportLocation ();
+					this.ViewportOffset = new Point (value, this.ViewportOffsetY);
 				}
 			}
 		}
@@ -83,8 +99,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.viewportOffset.Y != value)
 				{
-					this.viewportOffset.Y = value;
-					this.UpdateViewportLocation ();
+					this.ViewportOffset = new Point (this.ViewportOffsetX, value);
+					
 				}
 			}
 		}
@@ -121,7 +137,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool PaintViewportFrame
+		public bool								PaintViewportFrame
 		{
 			get
 			{
@@ -185,7 +201,65 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
+
+		public void Show(Widget child)
+		{
+			if (child == null)
+            {
+				return;
+            }
+
+			if (!child.IsActualGeometryValid)
+            {
+				this.Window.ForceLayout ();
+            }
+
+			var aperture = this.Viewport.Aperture;
+			var bounds   = child.ActualBounds;
+
+			//aperture.Deflate (this.ViewportPadding);
+
+			if (aperture.Contains (bounds))
+			{
+				//	Nothing to do : the view is already completely visible in
+				//	the current aperture.
+			}
+			else
+			{
+				double ox = 0;
+				double oy = 0;
+
+				if ((aperture.Right < bounds.Right) &&
+					(aperture.Left < bounds.Left))
+				{
+					ox = System.Math.Max (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
+				}
+				else if ((aperture.Right > bounds.Right) &&
+					     (aperture.Left > bounds.Left))
+				{
+					ox = System.Math.Min (aperture.Right - bounds.Right, aperture.Left - bounds.Left);
+				}
+
+				if ((aperture.Top < bounds.Top) &&
+					(aperture.Bottom < bounds.Bottom))
+				{
+					oy = System.Math.Max (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
+				}
+				else if ((aperture.Top > bounds.Top) &&
+					     (aperture.Bottom > bounds.Bottom))
+				{
+					oy = System.Math.Min (aperture.Top - bounds.Top, aperture.Bottom - bounds.Bottom);
+				}
+
+				var offset = this.ViewportOffset;
+
+				offset = offset + new Point (ox, oy);
+
+				this.ViewportOffset = offset;
+			}
+		}
+
+
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)

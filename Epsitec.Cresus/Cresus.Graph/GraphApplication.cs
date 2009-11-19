@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		private GraphDataCube ImportCube(GraphDocument document, string text, string sourcePath)
+		private GraphDataCube ImportCube(string text, string sourcePath)
 		{
 			string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 			char[] columnSeparators = new char[] { '\t', ';' };
@@ -94,8 +94,6 @@ namespace Epsitec.Cresus.Graph
 
 				if (graphDataCube != null)
 				{
-					document.LoadCube (graphDataCube);
-
 					return graphDataCube;
 				}
 			}
@@ -181,34 +179,22 @@ namespace Epsitec.Cresus.Graph
 				//	Pasting for the first time and cut/copy was done before the application
 				//	started, fetch the data now from the clipboard (if any) :
 
-				if (! this.ReadClipboardTextData (Clipboard.GetData ()))
+				if (!this.ReadClipboardTextData (Clipboard.GetData ()))
 				{
 					return;
 				}
 			}
 
-			var cube = this.ImportCube (this.Document, this.lastPasteTextData, null);
-
-			if (cube != null)
-            {
-				cube.LoadPath = GraphDataCube.LoadPathClipboard;
-				cube.LoadEncoding = System.Text.Encoding.UTF8;
-
-				this.Document.RefreshDataSet ();
-            }
+			this.Document.ImportCube (
+				this.ImportCube (this.lastPasteTextData, null),
+				GraphDataCube.LoadPathClipboard, System.Text.Encoding.UTF8);
 		}
 
 		internal void ExecuteImport(string path, System.Text.Encoding encoding)
 		{
-			var cube = this.ImportCube (this.Document, System.IO.File.ReadAllText (path, encoding), path);
-
-			if (cube != null)
-            {
-				cube.LoadPath = path;
-				cube.LoadEncoding = encoding;
-
-				this.Document.RefreshDataSet ();
-            }
+			this.Document.ImportCube (
+				this.ImportCube (System.IO.File.ReadAllText (path, encoding), path),
+				path, encoding);
 		}
 
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -448,18 +434,10 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		
+
 		private bool ProcessSendData(System.IntPtr handle, string path, string meta, string data)
 		{
-			var cube = this.ImportCube (this.Document, data, path);
-
-			if (cube != null)
-			{
-				cube.LoadPath = path;
-				cube.LoadEncoding = System.Text.Encoding.Default;
-
-				this.Document.RefreshDataSet ();
-			}
+			this.Document.ImportCube (this.ImportCube (data, path), path, null);
 
 			return true;
 		}

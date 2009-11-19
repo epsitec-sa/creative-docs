@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 				return this.aperture;
 			}
 
-			set
+			internal set
 			{
 				if (this.aperture != value)
 				{
