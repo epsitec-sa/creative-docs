@@ -17,7 +17,15 @@ namespace Epsitec.Cresus.Graph
 
 			var win32Window = new Win32Window (windowHandle);
 
-			System.Windows.Forms.MessageBox.Show (win32Window, "Hello !", "GraphConnector", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+			//	Bug in Compta 8.1.004.
+			if ((data == null) &&
+				(meta != null))
+			{
+				data = meta;
+				meta = null;
+			}
+
+//-			System.Windows.Forms.MessageBox.Show (win32Window, "Hello !", "GraphConnector", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Information, System.Windows.Forms.MessageBoxDefaultButton.Button1);
 
 			if ((Connector.process == null) ||
 				(Connector.process.HasExited))
@@ -26,7 +34,7 @@ namespace Epsitec.Cresus.Graph
 				{
 					var graphDirPath = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallDir", null);
 
-					if (System.Diagnostics.Debugger.IsAttached)
+					if (System.Diagnostics.Debugger.IsAttached || true)
 					{
 						graphDirPath = @"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug";
 					}

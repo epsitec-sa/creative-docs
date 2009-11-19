@@ -83,14 +83,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		private GraphDataCube ImportCube(GraphDocument document, string text)
+		private GraphDataCube ImportCube(GraphDocument document, string text, string sourcePath)
 		{
 			string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 			char[] columnSeparators = new char[] { '\t', ';' };
 
 			foreach (var columnSeparator in columnSeparators)
 			{
-				var graphDataCube = this.TryImportCube (lines, columnSeparator);
+				var graphDataCube = this.TryImportCube (lines, columnSeparator, sourcePath);
 
 				if (graphDataCube != null)
 				{
@@ -153,13 +153,6 @@ namespace Epsitec.Cresus.Graph
 			this.connectorServer.Open (this.ProcessSendData);
 		}
 
-		private bool ProcessSendData(System.IntPtr handle, string path, string meta, string data)
-		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("ProcessSendData : {0} - {1} - {2}", path ?? "<null>", meta ?? "<null>", data ?? "<null>"));
-			
-			return true;
-		}
-
 		internal void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (() => this.SaveApplicationState (false));
@@ -194,7 +187,7 @@ namespace Epsitec.Cresus.Graph
 				}
 			}
 
-			var cube = this.ImportCube (this.Document, this.lastPasteTextData);
+			var cube = this.ImportCube (this.Document, this.lastPasteTextData, null);
 
 			if (cube != null)
             {
@@ -207,7 +200,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void ExecuteImport(string path, System.Text.Encoding encoding)
 		{
-			var cube = this.ImportCube (this.Document, System.IO.File.ReadAllText (path, encoding));
+			var cube = this.ImportCube (this.Document, System.IO.File.ReadAllText (path, encoding), path);
 
 			if (cube != null)
             {
@@ -385,7 +378,7 @@ namespace Epsitec.Cresus.Graph
 			return doc;
 		}
 
-		private GraphDataCube TryImportCube(IEnumerable<string> lines, char columnSeparator)
+		private GraphDataCube TryImportCube(IEnumerable<string> lines, char columnSeparator, string sourcePath)
 		{
 			try
 			{
@@ -396,7 +389,7 @@ namespace Epsitec.Cresus.Graph
 
 				var lineColumns = lines.Skip (1).Select (x => ImportConverter.QuotedSplit (x, columnSeparator));
 
-				if (ImportConverter.ConvertToCube (headColumns, lineColumns, out converter, out cube))
+				if (ImportConverter.ConvertToCube (headColumns, lineColumns, sourcePath, out converter, out cube))
 				{
 					string path = System.IO.Path.GetTempFileName ();
 
@@ -453,6 +446,22 @@ namespace Epsitec.Cresus.Graph
 			{
 				this.NotifyClipboardDataChanged ();
 			}
+		}
+
+		
+		private bool ProcessSendData(System.IntPtr handle, string path, string meta, string data)
+		{
+			var cube = this.ImportCube (this.Document, data, path);
+
+			if (cube != null)
+			{
+				cube.LoadPath = path;
+				cube.LoadEncoding = System.Text.Encoding.Default;
+
+				this.Document.RefreshDataSet ();
+			}
+
+			return true;
 		}
 
 

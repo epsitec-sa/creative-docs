@@ -38,11 +38,11 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			internal set;
 		}
 		
-		public abstract GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines);
+		public abstract GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath);
 
-		public GraphDataCube ToDataCube(IList<string> header, IEnumerable<string[]> lines)
+		public GraphDataCube ToDataCube(IList<string> header, IEnumerable<string[]> lines, string sourcePath)
 		{
-			return this.ToDataCube (header, lines.Cast<IEnumerable<string>> ());
+			return this.ToDataCube (header, lines.Cast<IEnumerable<string>> (), sourcePath);
 		}
 
 		public virtual GraphDataCategory GetCategory(ChartSeries series)

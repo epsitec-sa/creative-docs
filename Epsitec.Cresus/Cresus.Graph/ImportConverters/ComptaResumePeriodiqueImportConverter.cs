@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 		}
 
-		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines)
+		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
 		{
 			if (header.Count < 2)
 			{
@@ -54,7 +54,28 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					return null;
 			}
 
-			string sourceName = "2009";
+			string sourceName = "";
+
+			if (string.IsNullOrEmpty (sourcePath))
+			{
+				//	Unknown source - probably the clipboard
+			}
+			else
+			{
+				var fileExt  = System.IO.Path.GetExtension (sourcePath).ToLowerInvariant ();
+				var fileName = System.IO.Path.GetFileNameWithoutExtension (sourcePath);
+
+				if ((fileExt == ".cre") &&
+					(fileName.Length > 4))
+                {
+					int year;
+
+					if (int.TryParse (fileName.Substring (fileName.Length-4), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out year))
+					{
+						sourceName = year.ToString ("D4");
+					}
+                }
+			}
 
 			table.DimensionVector.Add ("Source", sourceName);
 			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (2)));
@@ -71,8 +92,28 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					continue;
 				}
 
+				int start = 0;
+
+				while (start < item1.Length)
+				{
+					char c = item1[start];
+
+					if ((c != ' ') &&
+						(c != '>'))
+					{
+						break;
+					}
+				}
+
+				item1 = item1.Substring (start);
+
+				if (string.IsNullOrEmpty (item1))
+				{
+					continue;
+				}
+
 				string label = string.Concat (item0, " ", item1);
-				IEnumerable<double?> values = line.Skip (2).Select (x => GraphDataSet.GetNumericValue (x));
+				IEnumerable<double?> values = line.Skip (2).Select (x => GraphDataSet.GetNumericValue (string.IsNullOrEmpty (x) ? "0" : x));
 
 				table.Add (label, values);
 			}
