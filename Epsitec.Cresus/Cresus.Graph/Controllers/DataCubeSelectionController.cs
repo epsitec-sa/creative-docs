@@ -168,6 +168,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			this.cubesScrollable.Viewport.IsAutoFitting = true;
 			this.cubesScrollable.AddEventHandler (Scrollable.ViewportOffsetYProperty, (sender, e) => this.UpdateInsertionMark ());
+			this.CreateCubeButtonAdorner();
 			
 			this.outputInsertionMark = new Separator ()
 			{
@@ -271,6 +272,35 @@ namespace Epsitec.Cresus.Graph.Controllers
 				});
 		}
 
+		private void CreateCubeButtonAdorner()
+		{
+			this.cubesScrollable.PaintForeground +=
+				(sender, e) =>
+				{
+					if (this.cubesScrollable.ViewportOffset != Point.Zero)
+					{
+						return;
+					}
+					
+					var graphics = e.Graphics;
+					var button   = this.cubesScrollable.Viewport.Children.Widgets.LastOrDefault ();
+
+					if (button != null)
+                    {
+						var rect = this.cubesScrollable.MapRootToClient (button.MapClientToRoot (button.Client.Bounds));
+						
+						if (rect.Bottom > 0)
+                        {
+							var adorner = Epsitec.Common.Widgets.Adorners.Factory.Active;
+							var color   = adorner.ColorBorder;
+							
+							graphics.AddFilledRectangle (rect.Left, rect.Bottom-1, rect.Width, 1);
+							graphics.AddFilledRectangle (rect.Right-1, 0, 1, rect.Bottom);
+							graphics.RenderSolid (color);
+                        }
+                    }
+				};
+		}
 		private bool DetectOutput(DragController drag, Point screenMouse)
 		{
 			var container = this.cubesScrollable.Viewport;
