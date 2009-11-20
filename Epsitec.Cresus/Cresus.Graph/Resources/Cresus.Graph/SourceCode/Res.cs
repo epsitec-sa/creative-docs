@@ -105,6 +105,64 @@ namespace Epsitec.Cresus
 				}
 			}
 			
+			public static class Message
+			{
+				public static class DataImport
+				{
+					//	designer:cap/BVA9
+					public static global::Epsitec.Common.Types.Caption WhatToDo
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9));
+						}
+					}
+					//	designer:cap/BVAB
+					public static global::Epsitec.Common.Types.Caption WhatToDoAdd
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11));
+						}
+					}
+					//	designer:cap/BVAC
+					public static global::Epsitec.Common.Types.Caption WhatToDoCancel
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12));
+						}
+					}
+					//	designer:cap/BVAA
+					public static global::Epsitec.Common.Types.Caption WhatToDoMerge
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10));
+						}
+					}
+					public static class Failure
+					{
+						//	designer:cap/BVA8
+						public static global::Epsitec.Common.Types.Caption MultipleSources
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8));
+							}
+						}
+						//	designer:cap/BVA7
+						public static global::Epsitec.Common.Types.Caption NoSource
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
+							}
+						}
+					}
+				}
+			}
+			
 		}
 		
 		public static class CaptionIds
@@ -117,6 +175,28 @@ namespace Epsitec.Cresus
 					public static readonly global::Epsitec.Common.Support.Druid AccumulateValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 					//	designer:cap/BVA4
 					public static readonly global::Epsitec.Common.Support.Druid StackValues = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 4);
+				}
+			}
+			
+			public static class Message
+			{
+				public static class DataImport
+				{
+					//	designer:cap/BVA9
+					public static readonly global::Epsitec.Common.Support.Druid WhatToDo = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
+					//	designer:cap/BVAB
+					public static readonly global::Epsitec.Common.Support.Druid WhatToDoAdd = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
+					//	designer:cap/BVAC
+					public static readonly global::Epsitec.Common.Support.Druid WhatToDoCancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 12);
+					//	designer:cap/BVAA
+					public static readonly global::Epsitec.Common.Support.Druid WhatToDoMerge = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
+					public static class Failure
+					{
+						//	designer:cap/BVA8
+						public static readonly global::Epsitec.Common.Support.Druid MultipleSources = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
+						//	designer:cap/BVA7
+						public static readonly global::Epsitec.Common.Support.Druid NoSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
+					}
 				}
 			}
 			

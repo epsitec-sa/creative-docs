@@ -437,7 +437,9 @@ namespace Epsitec.Cresus.Graph
 
 		private bool ProcessSendData(System.IntPtr handle, string path, string meta, string data)
 		{
-			this.Document.ImportCube (this.ImportCube (data, path), path, null);
+			var doc = this.Document;
+
+			Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (data, path), path, null));
 
 			return true;
 		}

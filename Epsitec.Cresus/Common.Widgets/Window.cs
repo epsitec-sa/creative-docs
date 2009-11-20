@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 			this.components = new Support.Data.ComponentCollection (this);
 			
 			this.root   = root;
-			this.window = new Platform.Window (this);
+			this.window = new Platform.Window (this, w => this.window = w);
 			this.timer  = new Timer ();
 			
 			Drawing.Size size = new Drawing.Size (this.window.ClientSize);
@@ -62,8 +62,8 @@ namespace Epsitec.Common.Widgets
 			
 			Window.windows.Add (this);
 		}
-		
-		
+
+
 		public void Run()
 		{
 			System.Windows.Forms.Application.Run (this.window);
@@ -718,6 +718,7 @@ namespace Epsitec.Common.Widgets
 			internal set
 			{
 				this.window.WindowStyles = value;
+				this.root.WindowStyles = value;
 			}
 		}
 
@@ -735,6 +736,7 @@ namespace Epsitec.Common.Widgets
 			internal set
 			{
 				this.window.WindowType = value;
+				this.root.WindowType = value;
 			}
 		}
 		

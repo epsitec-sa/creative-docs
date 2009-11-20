@@ -1,9 +1,12 @@
 //	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Daniel Roux
 
-using System.Collections.Generic;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -28,87 +31,179 @@ namespace Epsitec.Common.Dialogs
 			this.hasCancel = hasCancelButton;
 		}
 
-
-		protected Widget CreateBodyWidget()
+		public ConfirmationDialog(string title, string header, params string[] questions)
+			: this (title, header, questions, false)
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
+		}
 
-			FrameBox container = new FrameBox ();
-			container.BackColor = adorner.ColorTextBackground;
-			container.Padding = new Drawing.Margins(ConfirmationDialog.margin);
 
-			ConfirmationStaticText header = new ConfirmationStaticText(container);
-			header.Text = this.header;
-			header.Dock = DockStyle.Top;
-			header.Margins = new Drawing.Margins(0, 0, 0, 10);
+		protected ConfirmationDialog()
+		{
+			this.questions = new List<string> ();
+		}
+
+		protected void DefineTitle(FormattedText text)
+		{
+			this.CheckMutable ();
+
+			this.title = text.ToSimpleText ();
+		}
+
+		protected void DefineHeader(FormattedText text)
+		{
+			this.CheckMutable ();
+
+			this.header = text.ToString ();
+		}
+
+		protected void AddQuestion(FormattedText text)
+		{
+			this.CheckMutable ();
+
+			this.questions.Add (text.ToString ());
+		}
+
+		private void CheckMutable()
+		{
+			if (this.HasWindow)
+            {
+				throw new System.InvalidOperationException ("Cannot change dialog contents: UI already exists");
+            }
+		}
+
+
+		protected virtual Widget CreateUI()
+		{
+			var adorner = Widgets.Adorners.Factory.Active;
+
+			var container = new FrameBox ()
+			{
+				BackColor = adorner.ColorTextBackground,
+				Padding = new Margins (ConfirmationDialog.margin),
+			};
+
+			this.CreateUIHeader (container);
 
 			int index = 1;
-			
+
 			foreach (string question in this.questions)
 			{
-				if (question.StartsWith ("#TEXT#"))
-				{
-					header = new ConfirmationStaticText (container);
-					header.Text = question.Substring (6);
-					header.Dock = DockStyle.Top;
-					header.Margins = new Drawing.Margins (0, 0, 5, 5);
-				}
-				else
-				{
-					Button button = new ConfirmationButton (container);
-					button.Text = question;
-					button.Index = index-1;
-					button.TabIndex = index++;
-					button.Dock = DockStyle.Top;
-					button.Clicked += this.HandleButtonClicked;
-				}
+				index = this.CreateUIQuestion (index, container, question);
 			}
 
-			if (this.hasCancel)  // bouton Cancel dans une bande grise en bas ?
+			if (this.hasCancel)
 			{
-				FrameBox buttons = container;
-				
-				container = new FrameBox ();
-
-				buttons.SetParent(container);
-				buttons.Dock = DockStyle.Fill;
-				buttons.TabIndex = 1;
-
-				FrameBox footer = new FrameBox(container);
-				footer.PreferredHeight = 38;
-				footer.Dock = DockStyle.Bottom;
-				footer.TabIndex = 2;
-
-				Button button = new Button(footer);
-				button.CommandId = Druid.FromLong (Dialogs.Res.CommandIds.Dialog.Generic.Cancel);
-//-				button.Text = Widgets.Res.Strings.Dialog.Button.Cancel;
-				button.Name = ConfirmationDialog.cancelButtonName;
-				button.Dock = DockStyle.Right;
-				button.Margins = new Drawing.Margins(ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8);
-				button.Clicked += this.HandleButtonClicked;
-				button.TabIndex = 1;
-				button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
+				container = this.CreateUICancelButton (container);
 			}
-			
-			container.PreferredSize = new Drawing.Size(ConfirmationDialog.width, 100);
+
+			container.PreferredSize = new Size (ConfirmationDialog.width, 100);
+
 			return container;
+		}
+
+		protected virtual Widget CreateUIHeader(FrameBox container)
+		{
+			if (string.IsNullOrEmpty (this.header))
+			{
+				return null;
+			}
+			else
+			{
+				return new ConfirmationStaticText (container)
+				{
+					Text = this.header,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 0, 10),
+					Name = "header",
+				};
+			}
+		}
+		
+		protected virtual int CreateUIQuestion(int index, FrameBox container, string question)
+		{
+			if (string.IsNullOrEmpty (question))
+            {
+				new Separator ()
+				{
+					Dock = DockStyle.Top,
+					PreferredHeight = 1,
+					IsHorizontalLine = true,
+				};
+            }
+			else if (question.StartsWith ("#TEXT#"))
+			{
+				new ConfirmationStaticText (container)
+				{
+					Text = question.Substring (6),
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 0, 5, 5),
+				};
+			}
+			else
+			{
+				var button = new ConfirmationButton (container)
+				{
+					Text = question,
+					Index = index-1,
+					TabIndex = index++,
+					Dock = DockStyle.Top,
+					Name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "q{0}", index),
+				};
+
+				button.Clicked += this.HandleButtonClicked;
+			}
+
+			return index;
+		}
+
+		private FrameBox CreateUICancelButton(FrameBox container)
+		{
+			var buttonsFrame = container;
+			var newContainer = new FrameBox ();
+
+			buttonsFrame.SetParent (newContainer);
+			buttonsFrame.Dock = DockStyle.Fill;
+			buttonsFrame.TabIndex = 1;
+
+			var footer = new FrameBox ()
+			{
+				Parent = newContainer,
+				PreferredHeight = 38,
+				Dock = DockStyle.Bottom,
+				TabIndex = 2,
+			};
+
+			var button = new Button ()
+			{
+				Parent = footer,
+				CommandId = Druid.FromLong (Dialogs.Res.CommandIds.Dialog.Generic.Cancel),
+				Name = ConfirmationDialog.cancelButtonName,
+				Dock = DockStyle.Right,
+				Margins = new Margins (ConfirmationDialog.margin, ConfirmationDialog.margin, 8, 8),
+				TabIndex = 1,
+			};
+
+			button.Clicked += this.HandleButtonClicked;
+			button.Shortcuts.Add (Common.Widgets.Feel.Factory.Active.CancelShortcut);
+			
+			return newContainer;
 		}
 
 		protected override Window CreateWindow()
 		{
 			Window dialogWindow = new Window ();
 			
-			Widget body = this.CreateBodyWidget();
+			Widget body = this.CreateUI();
 			double dx = body.PreferredWidth;
 			double dy = body.PreferredHeight;
 
-			dialogWindow.Text = this.title;
-			dialogWindow.Name = "Dialog";
-			dialogWindow.ClientSize = new Drawing.Size (dx+ConfirmationDialog.margin*2, dy+ConfirmationDialog.margin*2);
-			dialogWindow.PreventAutoClose = true;
-
 			dialogWindow.MakeFixedSizeWindow ();
 			dialogWindow.MakeSecondaryWindow ();
+
+			dialogWindow.Text = this.title;
+			dialogWindow.Name = "Dialog";
+			dialogWindow.ClientSize = new Size (dx+ConfirmationDialog.margin*2, dy+ConfirmationDialog.margin*2);
+			dialogWindow.PreventAutoClose = true;
 
 			CommandDispatcher.SetDispatcher (dialogWindow, new CommandDispatcher ());
 
@@ -132,7 +227,7 @@ namespace Epsitec.Common.Dialogs
 			Platform.Beep.MessageBeep(Platform.Beep.MessageType.Warning);
 
 			dialogWindow.AdjustWindowSize ();
-
+			
 			return dialogWindow;
 		}
 
@@ -157,10 +252,10 @@ namespace Epsitec.Common.Dialogs
 		private const double width = 300;
 		private const double margin = 20;
 		private const string cancelButtonName = "Cancel";
-		
+
+		private readonly List<string>			questions;
 		private string							title;
 		private string							header;
-		private List<string>					questions;
 		private bool							hasCancel;
 	}
 }

@@ -61,10 +61,11 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
-		internal Window(Epsitec.Common.Widgets.Window window)
+		internal Window(Epsitec.Common.Widgets.Window window, System.Action<Window> platformWindowSetter)
 			: this ()
 		{
 			this.widgetWindow = window;
+			platformWindowSetter (this);
 			
 			this.dirtyRectangle = Drawing.Rectangle.Empty;
 			this.dirtyRegion    = new Drawing.DirtyRegion ();
@@ -77,9 +78,9 @@ namespace Epsitec.Common.Widgets.Platform
 			this.SetStyle (System.Windows.Forms.ControlStyles.Opaque, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.ResizeRedraw, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.UserPaint, true);
-			
-			this.WindowType   = WindowType.Document;
-			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
+
+			this.widgetWindow.WindowType   = WindowType.Document;
+			this.widgetWindow.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
 			
 			this.graphics = new Epsitec.Common.Drawing.Graphics ();
 			this.graphics.AllocatePixmap ();
@@ -137,6 +138,8 @@ namespace Epsitec.Common.Widgets.Platform
 			this.MaximizeBox     = false;
 			this.MinimizeBox     = false;
 			Window.DummyHandleEater (this.Handle);
+			
+			this.widgetWindow.WindowStyles = this.WindowStyles & ~(WindowStyles.CanMaximize | WindowStyles.CanMinimize | WindowStyles.CanResize);
 		}
 
 		internal void MakeMinimizableFixedSizeWindow()
@@ -145,6 +148,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.MaximizeBox     = false;
 			this.MinimizeBox     = true;
 			Window.DummyHandleEater (this.Handle);
+			this.widgetWindow.WindowStyles = (this.WindowStyles & ~(WindowStyles.CanMaximize | WindowStyles.CanResize)) | WindowStyles.CanMinimize;
 		}
 
 		internal void MakeButtonlessWindow()
@@ -153,6 +157,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.MaximizeBox     = false;
 			this.MinimizeBox     = false;
 			Window.DummyHandleEater (this.Handle);
+			this.widgetWindow.WindowStyles = this.WindowStyles & ~(WindowStyles.CanMaximize | WindowStyles.CanMinimize | WindowStyles.HasCloseButton);
 		}
 
 		internal bool IsFixedSize
@@ -488,10 +493,12 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private void UpdateWindowTypeAndStyles()
 		{
+			var windowStyles = this.WindowStyles;
+
 			switch (this.windowType)
 			{
 				case WindowType.Document:
-					if ((this.windowStyles & WindowStyles.CanResize) == 0)
+					if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 					}
@@ -503,7 +510,7 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case WindowType.Dialog:
-					if ((this.windowStyles & WindowStyles.CanResize) == 0)
+					if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 					}
@@ -515,7 +522,7 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case WindowType.Palette:
-					if ((this.windowStyles & WindowStyles.CanResize) == 0)
+					if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 					}
@@ -526,11 +533,11 @@ namespace Epsitec.Common.Widgets.Platform
 					this.ShowInTaskbar = false;
 					break;
 			}
-			
-			this.MinimizeBox = ((this.windowStyles & WindowStyles.CanMinimize)    != 0);
-			this.MaximizeBox = ((this.windowStyles & WindowStyles.CanMaximize)    != 0);
-			this.HelpButton  = ((this.windowStyles & WindowStyles.HasHelpButton)  != 0);
-			this.ControlBox  = ((this.windowStyles & WindowStyles.HasCloseButton) != 0);
+
+			this.MinimizeBox = ((windowStyles & WindowStyles.CanMinimize)    != 0);
+			this.MaximizeBox = ((windowStyles & WindowStyles.CanMaximize)    != 0);
+			this.HelpButton  = ((windowStyles & WindowStyles.HasHelpButton)  != 0);
+			this.ControlBox  = ((windowStyles & WindowStyles.HasCloseButton) != 0);
 		}
 		
 		

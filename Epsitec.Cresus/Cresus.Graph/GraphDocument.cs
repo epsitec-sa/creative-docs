@@ -14,6 +14,7 @@ using Epsitec.Cresus.Graph.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using System;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 
@@ -700,9 +701,14 @@ namespace Epsitec.Cresus.Graph
 			{
 				cube.LoadPath = path;
 				cube.LoadEncoding = encoding;
-				
-				this.LoadCube (cube);
-				this.RefreshDataSet ();
+
+				var op = this.CheckCubeSources (cube);
+
+				if (op != ImportOperation.Cancel)
+                {
+					this.LoadCube (cube);
+					this.RefreshDataSet ();
+				}
 			}
 		}
 
@@ -812,6 +818,42 @@ namespace Epsitec.Cresus.Graph
 #endif
 		}
 
+
+		private ImportOperation CheckCubeSources(GraphDataCube cube)
+		{
+			var sources = cube.GetDimensionValues ("Source").ToArray ();
+			var count   = sources.Length;
+
+			switch (count)
+			{
+				case 0:
+					//	Problem : no source defined !
+					//Res.Captions.Message.DataImport.Failure.NoSource;
+					break;
+				
+				case 1:
+					//	Single source : check the value ...
+					
+					if (this.cubes.Any (x => x.GetDimensionValues ("Source").FirstOrDefault () == sources[0]))
+					{
+						//	Found at least one other cube which has the same source
+						//	name. Ask what to do.
+						return Dialogs.DuplicateImportDialog.AskHowToImportDuplicateSource (cube);
+					}
+					else
+					{
+						return ImportOperation.Add;
+					}
+					break;
+				
+				default:
+					//	Problem : multiple sources not supported (yet)
+					//Res.Captions.Message.DataImport.Failure.MultipleSources;
+					break;
+			}
+
+			return ImportOperation.Cancel;
+		}
 
 		private void PreserveActiveSeriesAndGroups()
 		{

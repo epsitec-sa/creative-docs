@@ -164,10 +164,13 @@
     <Compile Include="Controllers\DragController.cs" />
     <Compile Include="Controllers\SnapshotsController.cs" />
     <Compile Include="DataCubeCardinality.cs" />
+    <Compile Include="Dialogs\DuplicateImportDialog.cs" />
+    <Compile Include="Dialogs\QuestionDialog.cs" />
     <Compile Include="GraphChartSnapshot.cs" />
     <Compile Include="GraphDataCube.cs" />
     <Compile Include="GraphDataSettings.cs" />
     <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
+    <Compile Include="ImportOperation.cs" />
     <Compile Include="UndoRedoManager.cs" />
     <Compile Include="Controllers\ChartViewController.cs" />
     <Compile Include="Controllers\GroupDetailsController.cs" />
