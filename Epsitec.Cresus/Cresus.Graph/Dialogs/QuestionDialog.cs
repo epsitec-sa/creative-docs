@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Cresus.Graph.Widgets;
+
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
@@ -8,6 +10,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Graph.Dialogs
@@ -18,6 +21,8 @@ namespace Epsitec.Cresus.Graph.Dialogs
 		{
 			this.DefineTitle (FormattedText.ParseSimpleText (GraphProgram.Application.ShortWindowTitle));
 			this.DefineHeader (QuestionDialog.CreateCaptionText (header));
+
+			this.headerTitle = header.SortedLabels.First ();
 			
 			captions.ForEach (question => this.AddQuestion (QuestionDialog.CreateCaptionText (question)));
 
@@ -39,20 +44,10 @@ namespace Epsitec.Cresus.Graph.Dialogs
 				PreferredSize = widget.PreferredSize,
 			};
 
-			var band = new FrameBox ()
+			var band = new DialogHeader ()
 			{
 				Parent = frame,
-				Dock = DockStyle.Top,
-				PreferredHeight = 100,
-				BackColor = Color.FromBrightness (1),
-			};
-
-			new Separator ()
-			{
-				Parent = frame,
-				Dock = DockStyle.Top,
-				PreferredHeight = 1,
-				IsHorizontalLine = true,
+				Text = this.headerTitle,
 			};
 
 			widget.Dock = DockStyle.Fill;
@@ -79,5 +74,7 @@ namespace Epsitec.Cresus.Graph.Dialogs
 
 			return new FormattedText (text.ToString ());
 		}
+
+		private string headerTitle;
 	}
 }

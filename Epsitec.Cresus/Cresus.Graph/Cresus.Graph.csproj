@@ -42,7 +42,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -204,6 +204,7 @@
     <Compile Include="Widgets\DataCubeFrame.cs" />
     <Compile Include="Widgets\DataCubeButton.cs" />
     <Compile Include="Widgets\DataCubeTableButton.cs" />
+    <Compile Include="Widgets\DialogHeader.cs" />
     <Compile Include="Widgets\GroupView.cs" />
     <Compile Include="Widgets\SnapshotMiniChartView.cs" />
     <Compile Include="Widgets\VerticalInjectionArrow.cs" />
@@ -242,6 +243,7 @@
     <Content Include="Resources\Cresus.Graph\Strings.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Images\HeaderLogo.png" />
     <EmbeddedResource Include="Images\GraphType.HorizontalBarChart.icon" />
     <EmbeddedResource Include="Images\GraphType.LineChart.icon" />
     <EmbeddedResource Include="Images\GraphType.VerticalBarChart.icon" />

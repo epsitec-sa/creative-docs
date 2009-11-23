@@ -205,19 +205,18 @@ namespace Epsitec.Cresus.Graph
 
 			foreach (var doc in dirtyDocs)
 			{
-				var header = "<font size=\"120%\">Ce document contient des modifications.</font><br/>Que faut-il faire avant de quitter ?";
-				var questions = new string[]
+				var dialog = new Dialogs.QuestionDialog (Res.Captions.Message.Quit.Question,
+					Res.Captions.Message.Quit.Option1Save,
+					Res.Captions.Message.Quit.Option2DoNotSave,
+					Res.Captions.Message.Quit.Option3Cancel)
 				{
-					"<font size=\"120%\">Enregistrer ce document</font><br/>Vos modifications seront enregistrées avant de quitter.",
-					"<font size=\"120%\">Ne pas enregistrer ce document</font><br/>Vos modifications ne seront pas enregistrées et elles seront perdues.",
+					OwnerWindow = this.Window
 				};
-				var dialog = new ConfirmationDialog (this.ShortWindowTitle, header, questions, true);
-				
-				dialog.OwnerWindow = this.Window;
+
 				dialog.OpenDialog ();
 
 				switch (dialog.Result)
-                {
+				{
 					case DialogResult.Answer1:
 						if (!this.graphCommands.Save (doc, false))
 						{
@@ -229,7 +228,7 @@ namespace Epsitec.Cresus.Graph
 					case DialogResult.Answer2:
 						break;
 
-					case DialogResult.Cancel:
+					case DialogResult.Answer3:
 						e.Executed = true;
 						return;
                 }

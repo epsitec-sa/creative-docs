@@ -213,6 +213,42 @@ namespace Epsitec.Cresus
 						}
 					}
 				}
+				
+				public static class Quit
+				{
+					//	designer:cap/BVAK
+					public static global::Epsitec.Common.Types.Caption Option1Save
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20));
+						}
+					}
+					//	designer:cap/BVAL
+					public static global::Epsitec.Common.Types.Caption Option2DoNotSave
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21));
+						}
+					}
+					//	designer:cap/BVAM
+					public static global::Epsitec.Common.Types.Caption Option3Cancel
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22));
+						}
+					}
+					//	designer:cap/BVAJ
+					public static global::Epsitec.Common.Types.Caption Question
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19));
+						}
+					}
+				}
 			}
 			
 		}
@@ -265,6 +301,18 @@ namespace Epsitec.Cresus
 					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
 					//	designer:cap/BVAH
 					public static readonly global::Epsitec.Common.Support.Druid QuestionStandalone = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
+				}
+				
+				public static class Quit
+				{
+					//	designer:cap/BVAK
+					public static readonly global::Epsitec.Common.Support.Druid Option1Save = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 20);
+					//	designer:cap/BVAL
+					public static readonly global::Epsitec.Common.Support.Druid Option2DoNotSave = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 21);
+					//	designer:cap/BVAM
+					public static readonly global::Epsitec.Common.Support.Druid Option3Cancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22);
+					//	designer:cap/BVAJ
+					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
 				}
 			}
 			
