@@ -275,6 +275,7 @@
     </Compile>
     <Compile Include="FolderId.cs" />
     <Compile Include="TimedLock.cs" />
+    <Compile Include="UrlNavigator.cs" />
     <Compile Include="VersionChecker.cs">
       <SubType>Code</SubType>
     </Compile>

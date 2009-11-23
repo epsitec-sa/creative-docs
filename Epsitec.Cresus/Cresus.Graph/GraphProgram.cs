@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Graph
 			GraphProgram.Application.SetupDefaultDocument ();
 			GraphProgram.Application.SetupConnectorServer ();
 
+			GraphSerial.CheckLicense (GraphProgram.Application.Window);
+
 			GraphProgram.Application.Window.Show ();
 			GraphProgram.Application.Window.Run ();
 

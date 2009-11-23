@@ -161,6 +161,58 @@ namespace Epsitec.Cresus
 						}
 					}
 				}
+				
+				public static class LicenseInvalid
+				{
+					//	designer:cap/BVAE
+					public static global::Epsitec.Common.Types.Caption Option1BuyGraph
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14));
+						}
+					}
+					//	designer:cap/BVAI
+					public static global::Epsitec.Common.Types.Caption Option1UpdateGraph
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18));
+						}
+					}
+					//	designer:cap/BVAG
+					public static global::Epsitec.Common.Types.Caption Option2UpdateCompta
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16));
+						}
+					}
+					//	designer:cap/BVAF
+					public static global::Epsitec.Common.Types.Caption Option3Quit
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
+						}
+					}
+					//	designer:cap/BVAD
+					public static global::Epsitec.Common.Types.Caption Question
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13));
+						}
+					}
+					//	designer:cap/BVAH
+					public static global::Epsitec.Common.Types.Caption QuestionStandalone
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17));
+						}
+					}
+				}
 			}
 			
 		}
@@ -197,6 +249,22 @@ namespace Epsitec.Cresus
 						//	designer:cap/BVA7
 						public static readonly global::Epsitec.Common.Support.Druid NoSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
 					}
+				}
+				
+				public static class LicenseInvalid
+				{
+					//	designer:cap/BVAE
+					public static readonly global::Epsitec.Common.Support.Druid Option1BuyGraph = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 14);
+					//	designer:cap/BVAI
+					public static readonly global::Epsitec.Common.Support.Druid Option1UpdateGraph = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
+					//	designer:cap/BVAG
+					public static readonly global::Epsitec.Common.Support.Druid Option2UpdateCompta = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16);
+					//	designer:cap/BVAF
+					public static readonly global::Epsitec.Common.Support.Druid Option3Quit = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15);
+					//	designer:cap/BVAD
+					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 13);
+					//	designer:cap/BVAH
+					public static readonly global::Epsitec.Common.Support.Druid QuestionStandalone = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 17);
 				}
 			}
 			

@@ -157,11 +157,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		protected static string GetKey()
 		{
 			//	Lit la clé d'installation.
-			string key = Common.Support.SerialAlgorithm.ReadSerial();
+			string key = Common.Support.SerialAlgorithm.ReadCrDocSerial();
 
 			if ( key != null && key.Length == 24 )
 			{
-				if ( Common.Support.SerialAlgorithm.CheckSerial(key) )
+				if ( Common.Support.SerialAlgorithm.CheckSerial(key, 40) )
 				{
 					return key;
 				}

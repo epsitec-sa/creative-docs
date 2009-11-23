@@ -140,7 +140,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				this.buttonCancel.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 			}
 
-			this.KeyFields = Common.Support.SerialAlgorithm.ReadSerial();
+			this.KeyFields = Common.Support.SerialAlgorithm.ReadCrDocSerial();
 			this.UpdateRadio();
 			this.UpdateKeys();
 			this.UpdateButton();
@@ -161,7 +161,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			{
 				if ( value != null && value.Length == 24 )
 				{
-					this.validKey = Common.Support.SerialAlgorithm.CheckSerial(value);
+					this.validKey = Common.Support.SerialAlgorithm.CheckSerial(value, 40);
 
 					if ( this.validKey )
 					{
@@ -213,11 +213,15 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 		protected void UpdateKeys()
 		{
-			this.keyLabel.Enable = (!this.demo);
-			this.key1.Enable = (!this.demo);
-			this.key2.Enable = (!this.demo);
-			this.key3.Enable = (!this.demo);
-			this.key4.Enable = (!this.demo);
+			bool enable = !this.demo;
+
+			enable = false;
+
+			this.keyLabel.Enable = enable;
+			this.key1.Enable = enable;
+			this.key2.Enable = enable;
+			this.key3.Enable = enable;
+			this.key4.Enable = enable;
 		}
 
 		protected void UpdateButton()
@@ -245,7 +249,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		private void HandleKeyTextChanged(object sender)
 		{
 			string key = this.KeyFields;
-			this.validKey = Common.Support.SerialAlgorithm.CheckSerial(key);
+			this.validKey = Common.Support.SerialAlgorithm.CheckSerial(key, 40);
 			this.UpdateButton();
 
 			if ( sender == this.key1 )

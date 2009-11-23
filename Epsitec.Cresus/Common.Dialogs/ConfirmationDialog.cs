@@ -96,9 +96,14 @@ namespace Epsitec.Common.Dialogs
 				container = this.CreateUICancelButton (container);
 			}
 
-			container.PreferredSize = new Size (ConfirmationDialog.width, 100);
+			container.PreferredSize = new Size (this.GetDefaultWidth (), 100);
 
 			return container;
+		}
+
+		protected virtual double GetDefaultWidth()
+		{
+			return ConfirmationDialog.width;
 		}
 
 		protected virtual Widget CreateUIHeader(FrameBox container)

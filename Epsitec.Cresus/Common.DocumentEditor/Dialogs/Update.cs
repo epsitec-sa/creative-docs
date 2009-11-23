@@ -64,7 +64,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 			if ( this.editor.InstallType == InstallType.Full )
 			{
-				string key = SerialAlgorithm.ReadSerial();
+				string key = SerialAlgorithm.ReadCrDocSerial();
 				string date = SerialAlgorithm.GetExpirationDate(key).Subtract(new System.TimeSpan(1, 0, 0, 0)).ToShortDateString();
 				this.limit.Text = "<font size=\"120%\">" + string.Format(Res.Strings.Dialog.Update.Limit, date) + "</font>";
 			}

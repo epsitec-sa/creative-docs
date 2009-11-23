@@ -20,7 +20,7 @@
   <data name="Menu.Main.Document" id="0F">Document</data>
   <data name="Menu.Main.Debug" id="0G">Debug</data>
   <data name="Menu.Main.Help" id="0H">Aide</data>
-  <data name="Menu.Help.Key" id="0I">Clé...</data>
+  <data name="Menu.Help.Key" id="0I">Licence d'utilisation...</data>
   <data name="Menu.Help.Update" id="0J">Mise à jour...</data>
   <data name="Menu.Help.About" id="0K">A propos de...</data>
   <data name="LastFiles.None" id="0L">&lt;i&gt;Aucun&lt;/i&gt;</data>
@@ -193,11 +193,11 @@
   <data name="Dialog.Glyphs.Substitute.Text.English" id="0L3">Master Crow perched on a tree, was holding a cheese in his beak. Master Fox attracted by the smell said something like this: &amp;quot;Well, Hello Mister Crow! How beautiful you are! how nice you seem to me! Really, if your voice is like your plumage, you are the phoenix of all the inhabitants of these woods.&amp;quot; At these words, the Crow is overjoyed. And in order to show off his beautiful voice, he opens his beak wide, lets his prey fall. The Fox grabs it, and says: &amp;quot;My good man, learn that every flatterer lives at the expense of the one who listens to him. This lesson, without doubt, is well worth a cheese.&amp;quot; The Crow, ashamed and embarrassed, swore, but a little late, that he would not be taken again.</data>
   <data name="Dialog.Glyphs.Alternates.Help" id="0M3">Alternatives au caractère sélectionné dans le texte:</data>
   <data name="Dialog.Infos.Title" id="0N3">Informations</data>
-  <data name="Dialog.Key.Title" id="0O3">Clé...</data>
+  <data name="Dialog.Key.Title" id="0O3">Licence d'utilisation</data>
   <data name="Dialog.Key.Label" id="0P3">Mode de fonctionnement :</data>
   <data name="Dialog.Key.RadioDemo" id="0Q3">Version démo</data>
   <data name="Dialog.Key.RadioFull" id="0R3">Version complète</data>
-  <data name="Dialog.Key.Number" id="0S3">Numéro de la clé :</data>
+  <data name="Dialog.Key.Number" id="0S3">Numéro d'identification :</data>
   <data name="Dialog.Key.Expired" id="0T3">Version échue</data>
   <data name="Dialog.PageStack.Title" id="0U3">Structure de la page imprimée...</data>
   <data name="Dialog.PageStack.Help1" id="0V3">La liste ci-dessous montre tous les calques qui seront imprimés pour la page sélectionnée.</data>

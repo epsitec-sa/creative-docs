@@ -101,10 +101,12 @@ namespace Epsitec.Common.Support
 			return true;
 		}
 		
-		private static bool TestSerial(string snum)
+		private static bool TestSerial(string snum, out bool updatesAllowed)
 		{
 			//	ppppp-nnnnnn-ssss-cccccc
 			
+			updatesAllowed = false;
+
 			if (SerialAlgorithm.TestSyntax (snum) == false)
 			{
 				return false;
@@ -128,40 +130,18 @@ namespace Epsitec.Common.Support
 			int limite     = (complement/100)%1000;			//	extrait la date limite
 			complement     = complement/100000 + 10 * ((complement/10)%10) + 100 * (complement%10);
 			
-			int product = prodid / 100;
-			int prodrev = prodid % 100;
-			
-			if (product != 40)
-			{
-				//	Le produit 40, c'est "Crésus Documents". Si l'utilisateur donne un
-				//	autre numéro, on échoue ici.
-				
-				return false;
-			}
-			
-			//	Soit, l'appelant fournit un numéro complémentaire valide par rapport à
-			//	la date de compilation du logiciel...
-			
 			if (scompl != "000000")
 			{
-				int month       = SerialAlgorithm.BuildDate.Month + (SerialAlgorithm.BuildDate.Year - 2000) * 12;
+				var now         = System.DateTime.Now;
+				int month       = now.Month + (now.Year - 2000) * 12;
 				int serialcompl = SerialAlgorithm.GetSerialCompl (checksum, numero, limite);
 				
 				if ((complement == serialcompl) &&
-					(month <= limite) &&
 					(SerialAlgorithm.BuildDate < System.DateTime.Now))
 				{
+					updatesAllowed = month <= limite;
 					return true;
 				}
-			}
-			
-			//	...soit l'appelant utilise une révision de produit qui est conforme à la
-			//	révision actuelle (en se basant cette fois-ci sur le "build generation" à
-			//	la place de la date de "release").
-			
-			if (prodrev >= (SerialAlgorithm.ProductGeneration - SerialAlgorithm.ProductGracePeriod))
-			{
-				return true;
 			}
 			
 			return false;
@@ -202,7 +182,7 @@ namespace Epsitec.Common.Support
 			
 			return new System.DateTime (year, month, 1);
 		}
-		
+
 		private static string GetAppDataPath()
 		{
 			string path = System.Windows.Forms.Application.CommonAppDataPath;
@@ -222,8 +202,9 @@ namespace Epsitec.Common.Support
 		static int				ProductGracePeriod	= 0;
 		#endregion
 		
-		public static string ReadSerial()
+		public static string ReadCrDocSerial()
 		{
+#if false
 			string path = SerialAlgorithm.GetAppDataPath ();
 			string key  = null;
 			
@@ -243,6 +224,9 @@ namespace Epsitec.Common.Support
 			}
 			
 			return key;
+#else
+			return (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Documents\Setup", "ID", "");
+#endif
 		}
 		
 		public static void WriteSerial(string key)
@@ -261,17 +245,66 @@ namespace Epsitec.Common.Support
 				writer.WriteLine (key);
 			}
 		}
-		
-		public static bool CheckSerial(string key)
+
+		public static bool CheckSerial(string key, int productFamily)
 		{
-			return SerialAlgorithm.TestSerial (key);
+			bool updatesAllowed;
+			return SerialAlgorithm.CheckSerial (key, productFamily, out updatesAllowed);
+		}
+
+		public static bool CheckSerial(string key, int productFamily, out bool updatesAllowed)
+		{
+			if (SerialAlgorithm.TestSerial (key, out updatesAllowed))
+			{
+				var product = SerialAlgorithm.GetProduct (key) % 100;
+				
+				if ((product == productFamily) ||
+					(productFamily == 0))
+				{
+					//	C'est le bon produit (par ex. x40 = Crésus Documents)
+
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 		public static System.DateTime GetExpirationDate(string key)
 		{
 			return SerialAlgorithm.GetSerialLimit(key);
 		}
-		
+
+		public static int GetProduct(string key)
+		{
+			//	ppppp-nnnnnn-ssss-cccccc
+
+			if (SerialAlgorithm.TestSyntax (key) == false)
+			{
+				return 0;
+			}
+
+			var sprodid = key.Substring (0, 5);
+			int prodid  = System.Int32.Parse (sprodid, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+
+			return prodid / 100;
+		}
+
+		public static int GetRevision(string key)
+		{
+			//	ppppp-nnnnnn-ssss-cccccc
+
+			if (SerialAlgorithm.TestSyntax (key) == false)
+			{
+				return 0;
+			}
+
+			var sprodid = key.Substring (0, 5);
+			int prodid  = System.Int32.Parse (sprodid, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+
+			return prodid % 100;
+		}
+
 		
 		
 		public static void SetProductBuildDate(System.DateTime date)
