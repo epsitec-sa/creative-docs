@@ -254,8 +254,59 @@ namespace Epsitec.Common.Drawing
 				return src[x, y];
 			}
 		}
-		
-		
+
+		public void PremultiplyAlpha()
+		{
+			int pixWidth;
+			int pixHeight;
+			int pixStride;
+
+			System.Drawing.Imaging.PixelFormat pixFormat;
+			System.IntPtr pixScan0;
+
+			this.GetMemoryLayout (out pixWidth, out pixHeight, out pixStride, out pixFormat, out pixScan0);
+
+			if (pixScan0 != System.IntPtr.Zero)
+			{
+				if ((pixFormat == PixelFormat.Format32bppArgb) ||
+					(pixFormat == PixelFormat.Format32bppPArgb))
+				{
+					unsafe
+					{
+						byte* pixData = (byte*) pixScan0.ToPointer ();
+
+						for (int y = 0; y < pixHeight; y++)
+						{
+							byte* row = pixData + pixStride * y;
+
+							for (int x = 0; x < pixWidth; x++)
+							{
+								int a = row[3];
+								int r = row[2];
+								int g = row[1];
+								int b = row[0];
+
+								if ((a != 0) &&
+									(a != 255))
+								{
+									r = r * a / 255;
+									g = g * a / 255;
+									b = b * a / 255;
+
+									row[2] = (byte) r;
+									row[1] = (byte) g;
+									row[0] = (byte) b;
+								}
+
+								row += 4;
+							}
+						}
+					}
+				}
+			}
+		}
+
+
 		#region IDisposable Members
 		public void Dispose()
 		{
@@ -505,5 +556,6 @@ namespace Epsitec.Common.Drawing
 		protected System.Drawing.Size			size;
 		protected bool							isOsBitmap;
 		protected Opac.FreeImage.Image			associatedImage;
+
 	}
 }

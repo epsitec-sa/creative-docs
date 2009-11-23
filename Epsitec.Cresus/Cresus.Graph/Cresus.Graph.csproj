@@ -42,6 +42,7 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -173,6 +174,7 @@
     <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
     <Compile Include="ImportOperation.cs" />
     <Compile Include="LicensingInfo.cs" />
+    <Compile Include="Splash\Win32Api.cs" />
     <Compile Include="UndoRedoManager.cs" />
     <Compile Include="Controllers\ChartViewController.cs" />
     <Compile Include="Controllers\GroupDetailsController.cs" />
