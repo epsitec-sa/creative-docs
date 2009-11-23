@@ -77,6 +77,11 @@ namespace Epsitec.Cresus.Graph.ImportConverters
                 }
 			}
 
+			if (string.IsNullOrEmpty (sourceName))
+            {
+				sourceName = "?";
+            }
+
 			table.DimensionVector.Add ("Source", sourceName);
 			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (2)));
 			table.ColumnDimensionKey = colDimension;
@@ -103,6 +108,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					{
 						break;
 					}
+
+					start++;
 				}
 
 				item1 = item1.Substring (start);

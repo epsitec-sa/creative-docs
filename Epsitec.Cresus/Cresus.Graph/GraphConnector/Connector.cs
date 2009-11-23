@@ -34,9 +34,15 @@ namespace Epsitec.Cresus.Graph
 				{
 					var graphDirPath = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallDir", null);
 
-					if (System.Diagnostics.Debugger.IsAttached || true)
+					try
 					{
-						graphDirPath = @"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug";
+						if (System.IO.Directory.Exists (@"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug"))
+						{
+							graphDirPath = @"S:\Epsitec.Cresus\Cresus.Graph\bin\Debug";
+						}
+					}
+					catch
+					{
 					}
 
 					var graphExePath = System.IO.Path.Combine (graphDirPath, "Graph.exe");
