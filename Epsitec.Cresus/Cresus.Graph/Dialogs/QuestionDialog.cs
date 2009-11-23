@@ -1,15 +1,14 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Epsitec.Common.Dialogs;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Support.Extensions;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Graph.Dialogs
 {

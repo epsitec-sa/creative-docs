@@ -276,7 +276,14 @@ namespace Epsitec.Common.Support.Platform.Win32
 
 			IShellFolder folder;
 
-			FileInfo.instance.root.BindToObject (pidlPath, System.IntPtr.Zero, ref ShellGuids.IID_IShellFolder, out ptrPath);
+			try
+			{
+				FileInfo.instance.root.BindToObject (pidlPath, System.IntPtr.Zero, ref ShellGuids.IID_IShellFolder, out ptrPath);
+			}
+			catch
+			{
+				yield break;
+			}
 
 			if (ptrPath == System.IntPtr.Zero)
 			{
