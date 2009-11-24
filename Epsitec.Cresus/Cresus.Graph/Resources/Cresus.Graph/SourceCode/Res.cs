@@ -28,6 +28,8 @@ namespace Epsitec.Cresus
 				{
 				}
 				
+				//	designer:cap/BVAN
+				public static readonly global::Epsitec.Common.Widgets.Command DownloadUpdate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 23));
 				//	designer:cap/BVA6
 				public static readonly global::Epsitec.Common.Widgets.Command Kill = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 6));
 			}
@@ -64,6 +66,8 @@ namespace Epsitec.Cresus
 			
 			public static class General
 			{
+				//	designer:cap/BVAN
+				public const long DownloadUpdate = 0x3EB0000A000017L;
 				//	designer:cap/BVA6
 				public const long Kill = 0x3EB0000A000006L;
 			}
@@ -249,6 +253,34 @@ namespace Epsitec.Cresus
 						}
 					}
 				}
+				
+				public static class Update
+				{
+					//	designer:cap/BVAP
+					public static global::Epsitec.Common.Types.Caption Option1DownloadAndInstall
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25));
+						}
+					}
+					//	designer:cap/BVAQ
+					public static global::Epsitec.Common.Types.Caption Option2Cancel
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
+						}
+					}
+					//	designer:cap/BVAO
+					public static global::Epsitec.Common.Types.Caption Question
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24));
+						}
+					}
+				}
 			}
 			
 		}
@@ -313,6 +345,16 @@ namespace Epsitec.Cresus
 					public static readonly global::Epsitec.Common.Support.Druid Option3Cancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 22);
 					//	designer:cap/BVAJ
 					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 19);
+				}
+				
+				public static class Update
+				{
+					//	designer:cap/BVAP
+					public static readonly global::Epsitec.Common.Support.Druid Option1DownloadAndInstall = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25);
+					//	designer:cap/BVAQ
+					public static readonly global::Epsitec.Common.Support.Druid Option2Cancel = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26);
+					//	designer:cap/BVAO
+					public static readonly global::Epsitec.Common.Support.Druid Question = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
 				}
 			}
 			

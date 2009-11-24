@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Graph
 {
-	enum ImportOperation
+	public enum ImportOperation
 	{
 		Merge,
 		Add,

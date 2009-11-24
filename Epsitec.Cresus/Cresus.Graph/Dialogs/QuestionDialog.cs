@@ -5,7 +5,6 @@ using Epsitec.Cresus.Graph.Widgets;
 
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -34,6 +33,20 @@ namespace Epsitec.Cresus.Graph.Dialogs
 		{
 		}
 
+
+		public void DefineArguments(params string[] args)
+		{
+			this.UpdateQuestions (
+				x =>
+				{
+					for (int i = 0; i < args.Length; i++)
+					{
+						x = x.Replace (string.Format (System.Globalization.CultureInfo.InvariantCulture, "{{{0}}}", i), args[i]);
+					}
+
+					return x;
+				});
+		}
 		
 		protected override Widget CreateUI()
 		{

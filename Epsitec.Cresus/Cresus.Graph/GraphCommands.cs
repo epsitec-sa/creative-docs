@@ -114,6 +114,17 @@ namespace Epsitec.Cresus.Graph
 			throw new System.NotSupportedException ();
 		}
 
+		[Command (Res.CommandIds.General.DownloadUpdate)]
+		private void DownloadUpdateCommand()
+		{
+			var versionChecker = GraphProgram.Application.VersionChecker;
+			
+			if (Dialogs.DownloadUpdateDialog.AskDownloadConfirmation (versionChecker))
+			{
+				UrlNavigator.OpenUrl (versionChecker.NewerVersionUrl);
+			}
+		}
+
 		public bool Save(GraphDocument document, bool alwaysAsk)
 		{
 			if (string.IsNullOrEmpty (document.SavePath))

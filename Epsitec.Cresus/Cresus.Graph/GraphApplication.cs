@@ -83,6 +83,15 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public VersionChecker VersionChecker
+		{
+			get
+			{
+				return this.versionChecker;
+			}
+		}
+
+
 		private GraphDataCube ImportCube(string text, string sourcePath)
 		{
 			string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
@@ -410,9 +419,19 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		internal void NotifyNewerVersion(VersionChecker checker)
+		internal void NotifyNewerVersion(VersionChecker versionChecker)
 		{
-			System.Diagnostics.Debug.WriteLine ("Newer version : " + checker.NewerVersionUrl);
+			this.versionChecker = versionChecker;
+
+			if (versionChecker.FoundNewerVersion)
+			{
+				this.SetEnable (Res.Commands.General.DownloadUpdate, true);
+			}
+			else
+			{
+				this.SetEnable (Res.Commands.General.DownloadUpdate, false);
+				this.Window.Root.FindCommandWidget (Res.Commands.General.DownloadUpdate).Visibility = false;
+			}
 		}
 
 
@@ -553,5 +572,6 @@ namespace Epsitec.Cresus.Graph
 		private long lastPasteChecksum;
 		private string lastPasteTextData;
 		private ConnectorServer connectorServer;
+		private VersionChecker versionChecker;
 	}
 }

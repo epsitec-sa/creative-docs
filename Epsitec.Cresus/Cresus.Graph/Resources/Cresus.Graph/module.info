@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1003" name="Cresus.Graph" layer="A" namespace="Epsitec.Cresus">
   <Versions>
-    <Version id="1" build="19" date="2009-11-23T21:59:54.9750000Z" />
+    <Version id="1" build="22" date="2009-11-24T08:57:47.4270000Z" />
   </Versions>
 </ModuleInfo>

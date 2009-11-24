@@ -103,8 +103,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 					Dock = DockStyle.Stacked,
 					CommandObject = command,
 					PreferredWidth = 32,
+					PreferredHeight = 32,
 					PreferredIconSize = new Size (20, 20),
-					Parent = frame
+					Parent = frame,
+					VerticalAlignment = VerticalAlignment.Center,
 				};
 			}
 		}
@@ -117,6 +119,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			yield return Res.Commands.General.Kill;
 			yield return ApplicationCommands.Undo;
 			yield return ApplicationCommands.Redo;
+			yield return Res.Commands.General.DownloadUpdate;
 		}
 
 

@@ -165,6 +165,7 @@
     <Compile Include="Controllers\DragController.cs" />
     <Compile Include="Controllers\SnapshotsController.cs" />
     <Compile Include="DataCubeCardinality.cs" />
+    <Compile Include="Dialogs\DownloadUpdateDialog.cs" />
     <Compile Include="Dialogs\DuplicateImportDialog.cs" />
     <Compile Include="Dialogs\QuestionDialog.cs" />
     <Compile Include="GraphChartSnapshot.cs" />
@@ -235,6 +236,7 @@
     <EmbeddedResource Include="Images\File.ExportImage.icon" />
     <Content Include="App.ico" />
     <Content Include="Doc.ico" />
+    <EmbeddedResource Include="Images\Package.png" />
     <Content Include="Resources\Cresus.Graph\Captions.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

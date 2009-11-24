@@ -61,6 +61,7 @@ namespace Epsitec.Common.Dialogs
 				if (this.dialogWindow == null)
 				{
 					this.CreateDialogWindow ();
+					this.dialogWindow.Owner = this.OwnerWindow;
 				}
 
 				return this.dialogWindow;
@@ -75,26 +76,27 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
-				if (this.dialogWindow != null)
-				{
-					return this.dialogWindow.Owner;
-				}
-				
-				return null;
+				return this.ownerWindow;
 			}
 			set
 			{
-				Window window = this.DialogWindow;
+				if (this.ownerWindow != value)
+                {
+					this.ownerWindow = value;
 
-				if ((window != null) &&
-					(window.Owner != value))
-				{
-					if (value != null) 
+					if (this.dialogWindow != null)
 					{
-						window.Icon = value.Icon;
-					}
+						if (this.dialogWindow.Owner != value)
+						{
+							if (value != null)
+							{
+								this.dialogWindow.Icon = value.Icon;
+							}
 
-					window.Owner = value;
+							this.dialogWindow.Owner = value;
+						}
+					}
+					
 					this.OnWindowOwnerChanged ();
 				}
 			}
@@ -462,7 +464,8 @@ namespace Epsitec.Common.Dialogs
 		public event EventHandler				DialogOpening;
 		public event EventHandler				DialogOpened;
 		public event EventHandler				DialogClosed;
-		
+
+		private Window							ownerWindow;
 		private Window							dialogWindow;
 		private DialogResult					dialogResult;
 

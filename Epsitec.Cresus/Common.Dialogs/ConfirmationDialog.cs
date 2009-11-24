@@ -63,6 +63,20 @@ namespace Epsitec.Common.Dialogs
 			this.questions.Add (text.ToString ());
 		}
 
+		protected void UpdateQuestions(System.Func<string, string> updater)
+		{
+			this.CheckMutable ();
+
+			this.title = updater (this.title);
+			this.header = updater (this.header);
+
+			for (int i = 0; i < this.questions.Count; i++)
+			{
+				this.questions[i] = updater (this.questions[i]);
+			}
+		}
+
+
 		private void CheckMutable()
 		{
 			if (this.HasWindow)

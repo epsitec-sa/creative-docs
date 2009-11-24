@@ -14,8 +14,6 @@ namespace Epsitec.Cresus.Graph
 			checker.VersionInformationChanged +=
 				delegate
 				{
-					System.Diagnostics.Debug.WriteLine ("Checker returned result");
-
 					if (checker.FoundNewerVersion)
 					{
 						GraphProgram.Application.NotifyNewerVersion (checker);
