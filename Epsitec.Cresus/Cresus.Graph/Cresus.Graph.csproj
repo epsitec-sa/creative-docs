@@ -171,6 +171,7 @@
     <Compile Include="GraphDataCube.cs" />
     <Compile Include="GraphDataSettings.cs" />
     <Compile Include="GraphSerial.cs" />
+    <Compile Include="GraphUpdate.cs" />
     <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
     <Compile Include="ImportOperation.cs" />
     <Compile Include="LicensingInfo.cs" />

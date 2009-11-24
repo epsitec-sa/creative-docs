@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			{
 				Parent = this,
 				Anchor = AnchorStyles.TopRight,
-				Margins = new Margins (24, 24, 24, 24),
+				Margins = new Margins (24, 24, 20, 20),
 				PreferredSize = new Size (80, 56),
 				ImageSize = new Size (80, 56),
 				ImageName = "manifest:Epsitec.Cresus.Graph.Images.HeaderLogo.png",
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 			var size = 28.0;
 
 			graphics.Color = adorner.ColorCaption;
-			graphics.PaintText (24, 24, this.Text, font, size);
+			graphics.PaintText (24, 32, this.Text, font, size);
 		}
 
 		private readonly StaticImage image;

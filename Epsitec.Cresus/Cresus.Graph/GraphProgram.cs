@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-
 		
 		static void ExecuteCoreProgram(Splash.SplashScreen splash)
 		{
@@ -42,6 +41,8 @@ namespace Epsitec.Cresus.Graph
 			splash.NotifyIsRunning ();
 			
 			GraphProgram.Application.Window.MakeActive ();
+			
+			GraphUpdate.CheckUpdate ();
 			GraphSerial.CheckLicense (GraphProgram.Application.Window);
 
 			GraphProgram.Application.Window.Show ();

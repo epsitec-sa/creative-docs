@@ -8,66 +8,73 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class VersionChecker
 	{
-		public VersionChecker(System.Reflection.Assembly assembly) : this (assembly.FullName.Split(',')[1].Split('=')[1])
+		public static VersionChecker CheckUpdate(string productName, string productVersion)
+		{
+			var url = "http://www.epsitec.ch/dynamics/check.php?software={0}&version={1}";
+			var checker = new VersionChecker (productVersion);
+
+			checker.StartCheck (string.Format (url, productName, productVersion));
+
+			return checker;
+		}
+
+		public static VersionChecker CheckUpdate(System.Reflection.Assembly assembly, string urlFormat, string productName)
+		{
+			var checker = new VersionChecker (assembly);
+
+			checker.StartCheck (string.Format (urlFormat, productName, checker.CurrentVersion));
+
+			return checker;
+		}
+
+
+		private VersionChecker()
+		{
+			this.context = System.Threading.SynchronizationContext.Current ?? new System.Threading.SynchronizationContext ();
+			System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += this.HandleNetworkAvailabilityChanged;
+		}
+
+		private VersionChecker(System.Reflection.Assembly assembly)
+			: this (assembly.FullName.Split (',')[1].Split ('=')[1])
 		{
 		}
-		
-		public VersionChecker(string version)
+
+		private VersionChecker(string version)
+			: this ()
 		{
 			VersionChecker.SplitVersionString (version, out this.currentMajor, out this.currentMinor, out this.currentBuild, out this.currentRevision);
-		}		
-		
-		public VersionChecker(int major, int minor, int build, int revision)
-		{
-			this.currentMajor    = major;
-			this.currentMinor    = minor;
-			this.currentBuild    = build;
-			this.currentRevision = revision;
 		}
-		
-		
-		public bool								IsReady
+
+		public bool IsReady
 		{
 			get
 			{
-				if (this.readerResult != null)
+				lock (this.exclusion)
 				{
-					return true;
-				}
-				if ((this.readerAsync != null) &&
-					(this.readerAsync.IsCompleted))
-				{
-					this.readerResult = this.reader.EndInvoke (this.readerAsync);
-					this.readerAsync  = null;
-					
-					if ((this.readerResult.Length > 0) &&
-						(this.readerResult.IndexOf ('|') > 0))
+					if (this.readerResult != null)
 					{
-						string[] args = this.readerResult.Split ('|');
-						
-						this.foundVersion = args[0];
-						this.foundUrl     = args[1];
-						
-						VersionChecker.SplitVersionString (this.foundVersion, out this.foundMajor, out this.foundMinor, out this.foundBuild, out this.foundRevision);
+						return true;
 					}
-					
-					return true;
+					else
+					{
+						return false;
+					}
 				}
-				
-				return false;
 			}
 		}
-		
-		public bool								IsCheckSuccessful
+
+		public bool IsCheckSuccessful
 		{
 			get
 			{
-				return this.IsReady && (this.readerResult.Length > 0);
+				lock (this.exclusion)
+				{
+					return !string.IsNullOrEmpty (this.readerResult);
+				}
 			}
 		}
-		
-		
-		public bool								FoundNewerVersion
+
+		public bool FoundNewerVersion
 		{
 			get
 			{
@@ -78,76 +85,158 @@ namespace Epsitec.Common.Support
 					((this.currentMajor == this.foundMajor) && (this.currentMinor == this.foundMinor) && (this.currentBuild == this.foundBuild) && (this.currentRevision < this.foundRevision)));
 			}
 		}
-		
-		
-		public string							CurrentVersion
+
+		public bool? IsNetworkAvailable
 		{
 			get
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2}.{3}", this.currentMajor, this.currentMinor, this.currentBuild, this.currentRevision);
+				lock (this.exclusion)
+				{
+					return this.isNetworkAvailable;
+				}
+			}
+			private set
+			{
+				bool change = false;
+
+				lock (this.exclusion)
+				{
+					if (this.isNetworkAvailable != value)
+					{
+						this.isNetworkAvailable = value;
+						change = true;
+					}
+				}
+
+				if (change)
+				{
+					this.OnNetworkAvailabilityChanged ();
+				}
 			}
 		}
-		
-		public string							NewerVersion
+
+		public string CurrentVersion
+		{
+			get
+			{
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2:###}.{3}", this.currentMajor, this.currentMinor, this.currentBuild, this.currentRevision);
+			}
+		}
+
+		public string NewerVersion
 		{
 			get
 			{
 				return this.foundVersion;
 			}
 		}
-		
-		public string							NewerVersionUrl
+
+		public string NewerVersionUrl
 		{
 			get
 			{
 				return this.foundUrl;
 			}
 		}
-		
-		
-		public void StartCheck(string url)
+
+
+		private void StartCheck(string url)
 		{
-			this.reader       = new ReadStringFromUrl (VersionChecker.Read);
-			this.readerAsync = this.reader.BeginInvoke (url, null, null);
+			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (url));
+
+			lock (this.exclusion)
+			{
+				if (this.isAsyncCheckRunning)
+				{
+					return;
+				}
+				this.isAsyncCheckRunning = true;
+			}
+
+
+			System.Threading.WaitCallback callback =
+                delegate
+				{
+					try
+					{
+						this.ReadVersionInfoFromWebServer (url);
+					}
+					finally
+					{
+						lock (this.exclusion)
+						{
+							this.isAsyncCheckRunning = false;
+						}
+					}
+				};
+
+			System.Threading.ThreadPool.QueueUserWorkItem (callback);
 		}
-		
-		
-		private static string Read(string url)
+
+		private void ReadVersionInfoFromWebServer(string url)
 		{
 			string result = "";
-			
+
 			try
 			{
+				//  Wait until the network is available : it is useless to try
+				//  to download the info from the web if we know for sure that
+				//  there is no connectivity !
+
+				while (this.IsNetworkAvailable == false)
+				{
+					System.Threading.Thread.Sleep (1000);
+				}
+
 				System.Diagnostics.Debug.WriteLine ("Checking for updates at URL " + url);
 
 				System.Net.WebRequest  request  = System.Net.HttpWebRequest.Create (new System.Uri (url));
 				System.Net.WebResponse response = request.GetResponse ();
-				
+
 				System.IO.Stream       raw      = response.GetResponseStream ();
 				System.IO.StreamReader reader   = new System.IO.StreamReader (raw);
-				
+
 				result = reader.ReadToEnd ();
-				
+
 				reader.Close ();
 				response.Close ();
 
+				lock (this.exclusion)
+				{
+					this.readerResult = result;
+
+					if ((result.Length > 0) &&
+                        (result.IndexOf ('|') > 0))
+					{
+						string[] args = result.Split ('|');
+
+						this.foundVersion = args[0];
+						this.foundUrl = args[1];
+
+						VersionChecker.SplitVersionString (this.foundVersion, out this.foundMajor, out this.foundMinor, out this.foundBuild, out this.foundRevision);
+					}
+				}
+
+				this.OnVersionInformationChanged ();
+				this.IsNetworkAvailable = true;
+
 				System.Diagnostics.Debug.WriteLine ("Update result : " + result);
 			}
-			catch (System.Exception ex)
+			catch (System.Exception)
 			{
-				System.Diagnostics.Debug.WriteLine ("No updates found : " + ex.Message);
-
-				//	Mange toutes les exceptions. On retourne simple une chaîne
-				//	vide si on n'a pas réussi à se connecter à l'URL spécifiée.
+				if (this.IsNetworkAvailable.HasValue == false)
+				{
+					this.OnVersionInformationChanged ();
+					this.IsNetworkAvailable = false;
+					this.ReadVersionInfoFromWebServer (url);
+				}
 			}
-			
-			return result;
 		}
-		
+
 		private static void SplitVersionString(string v, out int major, out int minor, out int build, out int revision)
 		{
 			string[] args = v.Split ('.');
-			
+
 			major    = 0;
 			minor    = 0;
 			build    = 0;
@@ -161,15 +250,15 @@ namespace Epsitec.Common.Support
 
 					if (args.Length > 1)
 					{
-						minor = System.Int32.Parse(args[1], System.Globalization.CultureInfo.InvariantCulture);
+						minor = System.Int32.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
 
 						if (args.Length > 2)
 						{
-							build = System.Int32.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture);
+							build = System.Int32.Parse (args[2].Split (' ')[0], System.Globalization.CultureInfo.InvariantCulture);
 
 							if (args.Length > 3)
 							{
-								revision = System.Int32.Parse(args[3], System.Globalization.CultureInfo.InvariantCulture);
+								revision = System.Int32.Parse (args[3], System.Globalization.CultureInfo.InvariantCulture);
 							}
 						}
 					}
@@ -179,25 +268,57 @@ namespace Epsitec.Common.Support
 			{
 			}
 		}
-		
-		
-		private delegate string ReadStringFromUrl(string url);
-		
-		private ReadStringFromUrl				reader;
-		private System.IAsyncResult				readerAsync;
-		private string							readerResult;
-		
+
+		private void HandleNetworkAvailabilityChanged(object sender, System.Net.NetworkInformation.NetworkAvailabilityEventArgs e)
+		{
+			this.IsNetworkAvailable = e.IsAvailable;
+		}
+
+		private void OnVersionInformationChanged()
+		{
+			var handler = this.VersionInformationChanged;
+
+			if ((handler != null) &&
+				(this.context != null))
+			{
+				this.context.Post (x => handler (this), null);
+			}
+		}
+
+		private void OnNetworkAvailabilityChanged()
+		{
+			var handler = this.NetworkAvailabilityChanged;
+
+			if ((handler != null) &&
+				(this.context != null))
+			{
+				this.context.Post (x => handler (this), null);
+			}
+		}
+
+
+
+		public event EventHandler NetworkAvailabilityChanged;
+		public event EventHandler VersionInformationChanged;
+
+		readonly object                         exclusion = new object ();
+		readonly System.Threading.SynchronizationContext context;
+		string							        readerResult;
+
 		private int								currentMajor;
 		private int								currentMinor;
 		private int								currentBuild;
 		private int								currentRevision;
-		
+
 		private int								foundMajor;
 		private int								foundMinor;
 		private int								foundBuild;
 		private int								foundRevision;
-		
+
 		private string							foundVersion;
 		private string							foundUrl;
+
+		private bool                            isAsyncCheckRunning;
+		private bool?                           isNetworkAvailable;
 	}
 }

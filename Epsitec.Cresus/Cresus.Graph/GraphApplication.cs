@@ -410,6 +410,12 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		internal void NotifyNewerVersion(VersionChecker checker)
+		{
+			System.Diagnostics.Debug.WriteLine ("Newer version : " + checker.NewerVersionUrl);
+		}
+
+
 		private void NotifyClipboardDataChanged()
 		{
 			var handler = this.ClipboardDataChanged;
