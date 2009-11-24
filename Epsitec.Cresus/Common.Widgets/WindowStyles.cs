@@ -20,6 +20,8 @@ namespace Epsitec.Common.Widgets
 		HasCloseButton			= 0x00000100,
 		HasHelpButton			= 0x00000200,
 
+		Frameless				= 0x00001000,
+
 		DefaultDocumentWindow	= CanResize|CanMinimize|CanMaximize|HasCloseButton
 	}
 }

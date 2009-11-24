@@ -28,6 +28,17 @@ namespace Epsitec.Cresus.Graph.Widgets
 			};
 		}
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			switch (message.MessageType)
+			{
+				case MessageType.MouseDown:
+					this.Window.StartWindowManagerOperation (Epsitec.Common.Widgets.Platform.WindowManagerOperation.MoveWindow);
+					break;
+			}
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var adorner  = Epsitec.Common.Widgets.Adorners.Factory.Active;

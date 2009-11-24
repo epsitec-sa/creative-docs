@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using System;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -239,6 +240,8 @@ namespace Epsitec.Common.Dialogs
 				dialogWindow.MakeButtonlessWindow ();
 			}
 
+			this.SetupWindow (dialogWindow);
+
 			body.SetParent (dialogWindow.Root);
 			body.Dock = DockStyle.Fill;
 
@@ -250,7 +253,10 @@ namespace Epsitec.Common.Dialogs
 			return dialogWindow;
 		}
 
-		
+		protected virtual void SetupWindow(Window dialogWindow)
+		{
+		}
+        
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
 			Widget button = sender as Widget;

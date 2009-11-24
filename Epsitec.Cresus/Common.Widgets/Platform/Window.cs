@@ -130,6 +130,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.ShowInTaskbar   = false;
 			Window.DummyHandleEater (this.Handle);
+			this.widgetWindow.WindowStyles = this.WindowStyles | (WindowStyles.Frameless);
 		}
 		
 		internal void MakeFixedSizeWindow()
@@ -498,7 +499,11 @@ namespace Epsitec.Common.Widgets.Platform
 			switch (this.windowType)
 			{
 				case WindowType.Document:
-					if ((windowStyles & WindowStyles.CanResize) == 0)
+					if ((windowStyles & WindowStyles.Frameless) != 0)
+                    {
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                    }
+					else if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
 					}
@@ -510,7 +515,11 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case WindowType.Dialog:
-					if ((windowStyles & WindowStyles.CanResize) == 0)
+					if ((windowStyles & WindowStyles.Frameless) != 0)
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+					}
+					else if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 					}
@@ -522,7 +531,11 @@ namespace Epsitec.Common.Widgets.Platform
 					break;
 				
 				case WindowType.Palette:
-					if ((windowStyles & WindowStyles.CanResize) == 0)
+					if ((windowStyles & WindowStyles.Frameless) != 0)
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+					}
+					else if ((windowStyles & WindowStyles.CanResize) == 0)
 					{
 						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 					}

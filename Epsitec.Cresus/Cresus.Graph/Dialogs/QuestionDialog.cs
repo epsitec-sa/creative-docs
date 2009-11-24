@@ -54,22 +54,39 @@ namespace Epsitec.Cresus.Graph.Dialogs
 
 			var frame  = new FrameBox ()
 			{
-				PreferredSize = widget.PreferredSize,
+				PreferredSize = widget.PreferredSize + new Size (2, 2),
+				DrawFullFrame = true,
+				Padding = new Margins (3, 3, 3, 3),
+				BackColor = Color.Mix (Epsitec.Common.Widgets.Adorners.Factory.Active.ColorBorder, Color.FromBrightness (1), 0.25),
+			};
+
+			var inside = new FrameBox ()
+			{
+				Dock = DockStyle.Fill,
+				Parent = frame,
+				DrawFullFrame = true,
+				Padding = new Margins (1, 1, 1, 1),
 			};
 
 			var band = new DialogHeader ()
 			{
-				Parent = frame,
+				Parent = inside,
 				Text = this.headerTitle,
 			};
 
 			widget.Dock = DockStyle.Fill;
-			widget.Parent = frame;
+			widget.Parent = inside;
 			widget.Padding = new Margins (12, 12, 8, 8);
 
 			return frame;
 		}
-		
+
+		protected override void SetupWindow(Window dialogWindow)
+		{
+			base.SetupWindow (dialogWindow);
+
+			dialogWindow.MakeFramelessWindow ();
+		}
 		
 		private static FormattedText CreateCaptionText(Caption caption)
 		{
