@@ -1,6 +1,7 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Pierre ARNAUD
 
+using System.Collections.Generic;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -137,6 +138,91 @@ namespace Epsitec.Common.Support
 			{
 				return this.foundUrl;
 			}
+		}
+
+
+		/// <summary>
+		/// Formats a version number using a <c>#.#.###</c> pattern. Extra zeroes will
+		/// be removed.
+		/// </summary>
+		/// <param name="format">The format pattern.</param>
+		/// <param name="version">The version string.</param>
+		/// <returns>The formatted version string.</returns>
+		public static string PrettyPrint(string format, string version)
+		{
+			var buffer = new System.Text.StringBuilder ();
+			int pos    = 0;
+
+			foreach (var item in (version + "....").Split ('.'))
+			{
+				var digits = item;
+
+				while (digits.Length > 1)
+				{
+					if (digits[0] == '0')
+					{
+						digits = digits.Substring (1);
+					}
+					else
+					{
+						break;
+					}
+				}
+
+				int len = 0;
+				bool inserted = false;
+
+				while (true)
+				{
+					if ((pos < format.Length) &&
+						(format[pos] == '#'))
+					{
+						//	Only count # on the first iteration; once we have done a substitution, we
+						//	stop when we see a new #, since it belongs to the next group of digits.
+						
+						if (inserted)
+						{
+							break;
+						}
+
+						pos++;
+						len++;
+
+						continue;
+					}
+					
+					if (len > 0)
+                    {
+						//	We have accumulated a series of # and we will have to produce at least
+						//	as many digits in the output buffer.
+						
+						if (digits.Length < len)
+                        {
+							buffer.Append (new string ('0', len - digits.Length));
+                        }
+						
+						buffer.Append (digits);
+						
+						len      = 0;
+						inserted = true;
+                    }
+
+					//	Copy non-formatting characters to the output.
+
+					while ((pos < format.Length) &&
+						   (format[pos] != '#'))
+					{
+						buffer.Append (format[pos++]);
+					}
+
+					if (pos == format.Length)
+					{
+						return buffer.ToString ();
+					}
+				}
+			}
+
+			return buffer.ToString ();
 		}
 
 

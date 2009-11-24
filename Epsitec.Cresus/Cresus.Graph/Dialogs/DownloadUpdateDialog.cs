@@ -13,7 +13,10 @@ namespace Epsitec.Cresus.Graph.Dialogs
 				Res.Captions.Message.Update.Option1DownloadAndInstall,
 				Res.Captions.Message.Update.Option2Cancel);
 
-			dialog.DefineArguments (checker.CurrentVersion, checker.NewerVersion, checker.NewerVersionUrl);
+			dialog.DefineArguments (
+				VersionChecker.PrettyPrint ("#.#.###", checker.CurrentVersion),
+				VersionChecker.PrettyPrint ("#.#.###", checker.NewerVersion),
+				checker.NewerVersionUrl);
 
 			dialog.OpenDialog ();
 
