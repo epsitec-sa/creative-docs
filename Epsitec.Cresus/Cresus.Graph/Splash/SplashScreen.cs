@@ -143,7 +143,8 @@ namespace Epsitec.Cresus.Graph.Splash
 							else
 							{
 								Win32Api.UpdateLayeredWindow (handle, image, this.splashForm.Left, this.splashForm.Top, 0);
-								this.splashForm.Close ();
+								this.splashTimer.Dispose ();
+								this.splashForm.Dispose ();
 							}
 							break;
 					}
@@ -153,9 +154,6 @@ namespace Epsitec.Cresus.Graph.Splash
 			this.splashTimer.Start ();
 
 			System.Windows.Forms.Application.Run (splashForm);
-
-			this.splashTimer.Dispose ();
-			this.splashForm.Dispose ();
 		}
 
 

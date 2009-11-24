@@ -5,11 +5,13 @@ namespace Epsitec.Cresus.Graph
 {
 	public enum LicensingInfo
 	{
+		Undefined,
+
 		Unknown,
 		Expired,
 
-		ValidPiccolo,
-		ValidPro,
-		ValidLargo,
+		ValidPiccolo	= 10,
+		ValidPro		= 11,
+		ValidLargo		= 12,
 	}
 }

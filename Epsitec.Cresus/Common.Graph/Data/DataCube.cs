@@ -227,6 +227,12 @@ namespace Epsitec.Common.Graph.Data
 				stream.WriteLine (DataCube.Escape (this.Information));
 			}
 
+			foreach (var annotation in this.GetAnnotations ())
+			{
+				stream.WriteLine ("Section:Annotation");
+				stream.WriteLine (DataCube.Escape (annotation));
+			}
+
 			stream.WriteLine ("Section:DimensionNames");
 			this.dimensionNames.ForEach (name => stream.WriteLine (DataCube.Escape (name)));
 			
@@ -279,6 +285,10 @@ namespace Epsitec.Common.Graph.Data
 					{
 						case "Information":
 							processor = x => this.Information = DataCube.Unescape (x);
+							break;
+
+						case "Annotation":
+							processor = x => this.AddAnnotation (DataCube.Unescape (x));
 							break;
 
 						case "DimensionNames":
@@ -345,6 +355,14 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+		protected virtual IEnumerable<string> GetAnnotations()
+		{
+			yield break;
+		}
+
+		protected virtual void AddAnnotation(string annotation)
+		{
+		}
 
 		private void AddDimensionVector(DimensionVector vector)
 		{

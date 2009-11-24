@@ -1,6 +1,9 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Responsable: Denis DUMOULIN & Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -79,10 +82,27 @@ namespace Epsitec.Common.Support
 		
 		public static int StringToTokens(string value, char sep, out string[] tokens)
 		{
-			return StringToTokens (value, sep, null, out tokens);
+			var list = new List<string> (Utilities.StringToTokens (value, sep, null));
+			tokens = list.ToArray ();
+			return list.Count;
 		}
-	
-		public static int StringToTokens(string value, char sep, string trimchars, out string [] tokens)
+
+		public static IEnumerable<string> StringToTokens(string value, char sep, System.StringSplitOptions options)
+		{
+			switch (options)
+			{
+				case System.StringSplitOptions.None:
+					return Utilities.StringToTokens (value, sep, null);
+
+				case System.StringSplitOptions.RemoveEmptyEntries:
+					return Utilities.StringToTokens (value, sep, null).Where (x => !string.IsNullOrEmpty (x));
+
+				default:
+					throw new System.ArgumentException ("Invalid options");
+			}
+		}
+
+		public static IEnumerable<string> StringToTokens(string value, char sep, string trimchars)
 		{
 			//	transforme une chaîne en une série de Tokens strings
 			//	en fonction du séparateur donné.
@@ -95,17 +115,33 @@ namespace Epsitec.Common.Support
 			//			par exemple pour accepter
 			//			un, deux,    trois , quatre
 
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			var buffer = new System.Text.StringBuilder ();
+			var trim   = string.IsNullOrEmpty (trimchars) ? new char[0] : trimchars.ToCharArray ();
 
-			string	s;
-			int		nb = 0;
-			int		n1 = 0;
-			int		n2 = 0;
+			int	n1 = 0;
+			int	n2 = 0;
 
-			for (int i = 0 ; i < value.Length ; i++)
+			System.Func<string> getToken =
+				delegate
+				{
+					string s = buffer.ToString ();
+					
+					buffer.Length = 0;
+
+					if (trim.Length > 0)
+					{
+						return s.Trim (trim);
+					}
+					else
+					{
+						return s;
+					}
+				};
+
+			for (int i = 0; i < value.Length; i++)
 			{
-				char	c = value[i];
+				char c = value[i];
+
 				if ((c == '"') && (n2 == 0))
 				{
 					n1 = 1-n1;
@@ -117,26 +153,20 @@ namespace Epsitec.Common.Support
 
 				if ((n1 == 0) && (n2 == 0) && (c == sep))
 				{
-					s = buffer.ToString ();
-					if ( trimchars != null ) s.Trim (trimchars.ToCharArray ());
-					list.Add (s);
-					buffer.Length = 0;
-					nb++;
-					continue;
+					yield return getToken ();
 				}
-				buffer.Append (c);
+				else
+				{
+					buffer.Append (c);
+				}
 			}
-			s = buffer.ToString ();
-			if ( trimchars != null ) s.Trim (trimchars.ToCharArray ());
-			list.Add (s);
-			nb++;
-			if ( (n1 > 0) || (n2 > 0))
+
+			yield return getToken ();
+			
+			if ((n1 > 0) || (n2 > 0))
 			{
 				throw new System.Exception (string.Format ("Quotes mismatch in {0}", value));
 			}
-			tokens = new string [list.Count];
-			list.CopyTo (tokens, 0);
-			return nb;
 		}
 		
 		

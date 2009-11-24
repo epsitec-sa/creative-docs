@@ -206,7 +206,37 @@ namespace Epsitec.Cresus.Graph
 				path, encoding);
 		}
 
-		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		internal void ExecuteLoadCube(string path)
+		{
+			var cube = GraphDocument.LoadCubeData (path);
+			
+			this.Document.LoadCube (cube);
+			this.Document.RefreshDataSet ();
+		}
+
+		internal void ProcessCommandLine()
+		{
+			var args = new List<string> (Utilities.StringToTokens (System.Environment.CommandLine, ' ', System.StringSplitOptions.RemoveEmptyEntries).Skip (1));
+
+			for (int i = 0; i < args.Count; i++)
+			{
+				string arg  = args[i];
+				string verb = arg.Split ('=')[0];
+
+				switch (verb)
+				{
+					case "-loadcube":
+						if (i+1 < args.Count)
+                        {
+							string path = Utilities.StringSimplify (args[++i]);
+							Application.QueueAsyncCallback (() => this.ExecuteLoadCube (path));
+                        }
+						break;
+				}
+			}
+		}
+
+        protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var dirtyDocs = from doc in this.OpenDocuments
 							where doc.IsDirty

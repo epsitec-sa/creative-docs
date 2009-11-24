@@ -704,15 +704,44 @@ namespace Epsitec.Cresus.Graph
 
 				var op = this.CheckCubeSources (cube);
 
-				if (op != ImportOperation.Cancel)
-                {
-					this.LoadCube (cube);
-					this.RefreshDataSet ();
+				switch (op)
+				{
+					case ImportOperation.Add:
+					case ImportOperation.Merge:
+						this.LoadCube (cube);
+						this.RefreshDataSet ();
+						break;
+
+					case ImportOperation.New:
+						this.LoadCubeInNewInstance (cube);
+						break;
 				}
 			}
 		}
 
-		internal void LoadCube(GraphDataCube cube)
+		internal void LoadCubeInNewInstance(GraphDataCube cube)
+		{
+			if (cube != null)
+			{
+				GraphDocument.SaveCubeData (cube);
+				
+				var cubeGuid = cube.Guid;
+				var dataPath = GraphDocument.GetDataPath (cubeGuid);
+
+				var startInfo = new System.Diagnostics.ProcessStartInfo (
+					Globals.ExecutablePath,
+					string.Concat ("-loadcube \"", dataPath, "\""));
+
+				var process = System.Diagnostics.Process.Start (startInfo);
+
+				if (process != null)
+				{
+					process.WaitForInputIdle ();
+				}
+			}
+		}
+
+        internal void LoadCube(GraphDataCube cube)
 		{
 			if (cube != null)
 			{
@@ -832,20 +861,9 @@ namespace Epsitec.Cresus.Graph
 					break;
 				
 				case 1:
-					//	Single source : check the value ...
-					
-					if (this.cubes.Any (x => x.GetDimensionValues ("Source").FirstOrDefault () == sources[0]))
-					{
-						//	Found at least one other cube which has the same source
-						//	name. Ask what to do.
-						return Dialogs.DuplicateImportDialog.AskHowToImportDuplicateSource (cube);
-					}
-					else
-					{
-						return ImportOperation.Add;
-					}
-					break;
-				
+					//	Single source
+					return this.CheckSingleCube (cube, sources);
+
 				default:
 					//	Problem : multiple sources not supported (yet)
 					//Res.Captions.Message.DataImport.Failure.MultipleSources;
@@ -853,6 +871,38 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			return ImportOperation.Cancel;
+		}
+
+		private ImportOperation CheckSingleCube(GraphDataCube cube, string[] sources)
+		{
+			//	For PICCOLO (and below), do not allow more than one source at any
+			//	given time...
+
+			if (GraphSerial.LicensingInfo <= LicensingInfo.ValidPiccolo)
+			{
+				if (this.cubes.Count == 0)
+				{
+					return ImportOperation.Add;
+				}
+				else
+				{
+					return ImportOperation.New;
+				}
+			}
+
+			//	Check whether there is a source collision with existing sources :
+
+			if (this.cubes.Any (x => x.GetDimensionValues ("Source").FirstOrDefault () == sources[0]))
+			{
+				//	Found at least one other cube which has the same source
+				//	name. Ask what to do.
+				
+				return Dialogs.DuplicateImportDialog.AskHowToImportDuplicateSource (cube);
+			}
+			else
+			{
+				return ImportOperation.Add;
+			}
 		}
 
 		private void PreserveActiveSeriesAndGroups()
@@ -956,7 +1006,7 @@ namespace Epsitec.Cresus.Graph
 			return xml;
 		}
 
-		private static void SaveCubeData(GraphDataCube cube)
+		internal static void SaveCubeData(GraphDataCube cube)
 		{
 			var cubeGuid = cube.Guid;
 			var dataPath = GraphDocument.GetDataPath (cubeGuid);
@@ -967,6 +1017,21 @@ namespace Epsitec.Cresus.Graph
 			{
 				cube.Save (stream);
 			}
+		}
+
+		internal static GraphDataCube LoadCubeData(string path)
+		{
+			if (System.IO.File.Exists (path))
+			{
+				using (var stream = new System.IO.StreamReader (path, System.Text.Encoding.UTF8))
+				{
+					GraphDataCube cube = new GraphDataCube ();
+					cube.Restore (stream);
+					return cube;
+				}
+			}
+
+			return null;
 		}
 
 		private void RestoreCubeSettings(IEnumerable<XElement> elements)

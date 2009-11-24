@@ -45,6 +45,8 @@ namespace Epsitec.Cresus.Graph
 			GraphUpdate.CheckUpdate ();
 			GraphSerial.CheckLicense (GraphProgram.Application.Window);
 
+			GraphProgram.Application.ProcessCommandLine ();
+
 			GraphProgram.Application.Window.Show ();
 			GraphProgram.Application.Window.Run ();
 

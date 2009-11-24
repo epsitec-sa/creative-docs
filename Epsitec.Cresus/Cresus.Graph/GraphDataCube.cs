@@ -87,6 +87,88 @@ namespace Epsitec.Cresus.Graph
 			set;
 		}
 
+
+
+		protected override IEnumerable<string> GetAnnotations()
+		{
+			yield return "Guid " + this.Guid.ToString ("D");
+			
+			if (!string.IsNullOrEmpty (this.SliceDimA))
+			{
+				yield return "SliceDimA " + this.SliceDimA;
+			}
+
+			if (!string.IsNullOrEmpty (this.SliceDimB))
+			{
+				yield return "SliceDimB " + this.SliceDimB;
+			}
+
+			if (!string.IsNullOrEmpty (this.ConverterName))
+			{
+				yield return "ConverterName " + this.ConverterName;
+			}
+
+			if (!string.IsNullOrEmpty (this.Title))
+            {
+				yield return "Title " + this.Title;
+			}
+
+			if (!string.IsNullOrEmpty (this.LoadPath))
+			{
+				yield return "LoadPath " + this.LoadPath;
+			}
+
+			if (this.LoadEncoding != null)
+			{
+				yield return "LoadEncoding " + this.LoadEncoding.WebName;
+			}
+		}
+
+		protected override void AddAnnotation(string annotation)
+		{
+			int pos = annotation.IndexOf (' ');
+			
+			if (pos < 1)
+			{
+				throw new System.FormatException ("Invalid annotation");
+			}
+
+			string key   = annotation.Substring (0, pos);
+			string value = annotation.Substring (pos+1);
+
+			switch (key)
+			{
+				case "Guid":
+					this.Guid = new System.Guid (value);
+					break;
+
+				case "SliceDimA":
+					this.SliceDimA = value;
+					break;
+
+				case "SliceDimB":
+					this.SliceDimB = value;
+					break;
+
+				case "ConverterName":
+					this.ConverterName = value;
+					break;
+
+				case "Title":
+					this.Title = value;
+					break;
+
+				case "LoadPath":
+					this.LoadPath = value;
+					break;
+
+				case "LoadEncoding":
+					this.LoadEncoding = System.Text.Encoding.GetEncoding (value);
+					break;
+			}
+		}
+
+
 		public const string LoadPathClipboard = "clipboard";
 	}
 }

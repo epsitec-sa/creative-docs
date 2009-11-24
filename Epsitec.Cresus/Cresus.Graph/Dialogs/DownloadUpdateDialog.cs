@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Graph.Dialogs
 				Res.Captions.Message.Update.Option2Cancel);
 
 			dialog.DefineArguments (
-				VersionChecker.PrettyPrint ("#.#.###", checker.CurrentVersion),
-				VersionChecker.PrettyPrint ("#.#.###", checker.NewerVersion),
+				VersionChecker.Format ("#.#.###", checker.CurrentVersion),
+				VersionChecker.Format ("#.#.###", checker.NewerVersion),
 				checker.NewerVersionUrl);
 
 			dialog.OpenDialog ();

@@ -15,6 +15,8 @@ namespace Epsitec.Cresus.Graph
 		{
 			var info = GraphSerial.GetLicensingInfo ();
 
+			GraphSerial.licensingInfo = info;
+
 			if ((info == LicensingInfo.Unknown) ||
 				(info == LicensingInfo.Expired))
 			{
@@ -67,7 +69,22 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
-		public static LicensingInfo GetLicensingInfo()
+
+		public static LicensingInfo LicensingInfo
+		{
+			get
+			{
+				if (GraphSerial.licensingInfo == LicensingInfo.Undefined)
+				{
+					throw new System.InvalidOperationException ("Undefined licensing information");
+				}
+
+				return GraphSerial.licensingInfo;
+			}
+		}
+
+
+		private static LicensingInfo GetLicensingInfo()
 		{
 			var graphId  = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallID", "");
 			var comptaId = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus\Setup", "InstallID", "");
@@ -162,5 +179,7 @@ namespace Epsitec.Cresus.Graph
 		private static bool hasValidGraphLicense;
 		private static bool hasComptaLicense;
 		private static bool hasValidComptaLicense;
+
+		private static LicensingInfo licensingInfo;
 	}
 }

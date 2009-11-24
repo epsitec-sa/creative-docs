@@ -1,7 +1,8 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -148,7 +149,7 @@ namespace Epsitec.Common.Support
 		/// <param name="format">The format pattern.</param>
 		/// <param name="version">The version string.</param>
 		/// <returns>The formatted version string.</returns>
-		public static string PrettyPrint(string format, string version)
+		public static string Format(string format, string version)
 		{
 			var buffer = new System.Text.StringBuilder ();
 			int pos    = 0;
@@ -384,12 +385,14 @@ namespace Epsitec.Common.Support
 
 
 
-		public event EventHandler NetworkAvailabilityChanged;
-		public event EventHandler VersionInformationChanged;
+		public event EventHandler				NetworkAvailabilityChanged;
+		public event EventHandler				VersionInformationChanged;
 
+		
 		readonly object                         exclusion = new object ();
 		readonly System.Threading.SynchronizationContext context;
-		string							        readerResult;
+		
+		private string							readerResult;
 
 		private int								currentMajor;
 		private int								currentMinor;

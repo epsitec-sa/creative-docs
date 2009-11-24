@@ -7,6 +7,7 @@ namespace Epsitec.Cresus.Graph
 	{
 		Merge,
 		Add,
-		Cancel
+		Cancel,
+		New,
 	}
 }
