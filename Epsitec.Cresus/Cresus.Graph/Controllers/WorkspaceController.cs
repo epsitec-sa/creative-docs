@@ -168,40 +168,43 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = settingsFrame,
 			};
 
-			var cubeButton = new DataCubeButton ()
+			if (GraphSerial.LicensingInfo >	LicensingInfo.ValidPiccolo)
 			{
-				Dock = DockStyle.Left,
-				PreferredWidth = 100,
-				Name = "data cube",
-				Parent = settingsFrame,
-			};
-
-			var cubeFrame = new DataCubeFrame ()
-			{
-				Anchor = AnchorStyles.Top | AnchorStyles.Right,
-				Parent = settingsFrame.RootParent,
-				Visibility = false,
-				FrameHeight = 300,
-				FrameWidth = 400,
-			};
-			
-			cubeButton.Clicked +=
-				delegate
+				var cubeButton = new DataCubeButton ()
 				{
-					cubeButton.SetSelected (!cubeButton.IsSelected);
-					cubeFrame.Visibility = cubeButton.IsSelected;
-					cubeFrame.UpdateGeometry ();
+					Dock = DockStyle.Left,
+					PreferredWidth = 100,
+					Name = "data cube",
+					Parent = settingsFrame,
 				};
 
-			new Separator ()
-			{
-				Dock = DockStyle.Left,
-				PreferredWidth = 3,
-				IsVerticalLine = true,
-				Parent = settingsFrame,
-			};
+				var cubeFrame = new DataCubeFrame ()
+				{
+					Anchor = AnchorStyles.Top | AnchorStyles.Right,
+					Parent = settingsFrame.RootParent,
+					Visibility = false,
+					FrameHeight = 300,
+					FrameWidth = 400,
+				};
 
-			this.cubeSelController.SetupUI (cubeFrame);
+				cubeButton.Clicked +=
+				delegate
+					{
+						cubeButton.SetSelected (!cubeButton.IsSelected);
+						cubeFrame.Visibility = cubeButton.IsSelected;
+						cubeFrame.UpdateGeometry ();
+					};
+
+				new Separator ()
+				{
+					Dock = DockStyle.Left,
+					PreferredWidth = 3,
+					IsVerticalLine = true,
+					Parent = settingsFrame,
+				};
+
+				this.cubeSelController.SetupUI (cubeFrame);
+			}
 		}
 		
 		private void SetupWorkspaceFrameUI()

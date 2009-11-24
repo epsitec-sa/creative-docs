@@ -13,9 +13,7 @@ namespace Epsitec.Cresus.Graph
 	{
 		public static void CheckLicense(Window owner)
 		{
-			var info = GraphSerial.GetLicensingInfo ();
-
-			GraphSerial.licensingInfo = info;
+			var info = GraphSerial.LicensingInfo;
 
 			if ((info == LicensingInfo.Unknown) ||
 				(info == LicensingInfo.Expired))
@@ -76,7 +74,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				if (GraphSerial.licensingInfo == LicensingInfo.Undefined)
 				{
-					throw new System.InvalidOperationException ("Undefined licensing information");
+					GraphSerial.licensingInfo = GraphSerial.GetLicensingInfo ();
 				}
 
 				return GraphSerial.licensingInfo;
