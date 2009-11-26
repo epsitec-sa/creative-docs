@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 
+using System.Linq;
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
@@ -134,6 +135,23 @@ namespace Epsitec.Common.Widgets
 				this.commandContext.GetCommandState (command).Enable = enable;
 			}
 		}
+
+		public static string GetCommandLineProgram()
+		{
+			var commandLine = System.Environment.CommandLine;
+			var splitMode   = System.StringSplitOptions.RemoveEmptyEntries;
+
+			return Support.Utilities.StringToTokens (commandLine, ' ', splitMode).FirstOrDefault ();
+		}
+
+		public static IList<string> GetCommandLineArguments()
+		{
+			var commandLine = System.Environment.CommandLine;
+			var splitMode   = System.StringSplitOptions.RemoveEmptyEntries;
+			
+			return new List<string> (Support.Utilities.StringToTokens (commandLine, ' ', splitMode).Skip (1));
+		}
+
 
 		
 		public void RunMessageLoop()

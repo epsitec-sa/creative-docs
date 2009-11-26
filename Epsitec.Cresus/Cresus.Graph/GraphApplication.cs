@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Graph
 
 		internal void ProcessCommandLine()
 		{
-			var args = new List<string> (Utilities.StringToTokens (System.Environment.CommandLine, ' ', System.StringSplitOptions.RemoveEmptyEntries).Skip (1));
+			var args = Application.GetCommandLineArguments ();
 
 			for (int i = 0; i < args.Count; i++)
 			{
@@ -305,9 +305,12 @@ namespace Epsitec.Cresus.Graph
 				{
 //-					this.stateManager.RestoreStates (store.Element ("stateManager"));
 
-					if (status != "done")
+					if (Application.GetCommandLineArguments ().Count == 0)
 					{
-						this.RestoreDocumentSettings (store.Element ("documents"));
+						if (status != "done")
+						{
+							this.RestoreDocumentSettings (store.Element ("documents"));
+						}
 					}
 					
 					Core.UI.RestoreWindowPositions (store.Element ("windowPositions"));
