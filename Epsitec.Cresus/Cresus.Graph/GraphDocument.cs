@@ -672,6 +672,19 @@ namespace Epsitec.Cresus.Graph
 				this.dataSources.Add (source);
 				this.activeDataSource = source;
 			}
+
+			if (this.activeDataSource != null)
+			{
+				foreach (var cat in this.activeDataSource.Categories)
+				{
+					if (cat.IsGeneric)
+					{
+						continue;
+					}
+
+					this.filterCategories.Add (cat);
+				}
+			}
 			
 			this.RefreshUI ();
 		}

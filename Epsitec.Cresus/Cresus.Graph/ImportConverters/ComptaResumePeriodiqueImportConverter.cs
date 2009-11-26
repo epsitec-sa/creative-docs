@@ -36,23 +36,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			var cube  = new GraphDataCube ();
 			var table = new DataTable ();
 
-			string colDimension;
+			string colDimension = "Période";
 			string rowDimension = "Numéro/Compte";
-
-			switch (header.Count-2)
-			{
-				case 4:
-					colDimension = "Trimestre";
-					break;
-				
-				case 6:
-				case 12:
-					colDimension = "Mois";
-					break;
-
-				default:
-					return null;
-			}
 
 			string sourceName = "";
 
