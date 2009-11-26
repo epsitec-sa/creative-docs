@@ -32,6 +32,9 @@ namespace Epsitec.Common.Graph.Data
 		}
 
 
+		public static readonly ChartValue Empty = new ChartValue ();
+
+
 		public override bool Equals(object obj)
 		{
 			if (obj is ChartValue)

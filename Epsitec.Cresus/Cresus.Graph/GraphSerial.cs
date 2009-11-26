@@ -178,6 +178,6 @@ namespace Epsitec.Cresus.Graph
 		private static bool hasComptaLicense;
 		private static bool hasValidComptaLicense;
 
-		private static LicensingInfo licensingInfo;
+		private static LicensingInfo licensingInfo = LicensingInfo.ValidPro;
 	}
 }

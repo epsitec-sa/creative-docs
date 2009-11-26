@@ -8,6 +8,7 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Common.Graph.Renderers
 {
@@ -370,6 +371,16 @@ namespace Epsitec.Common.Graph.Renderers
 
 		protected abstract void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex);
 
+		protected virtual void CreateCaption(Data.ChartSeries series, int seriesIndex)
+		{
+			var label   = DataCube.CleanUpLabel (series.Label);
+			var painter = this.CreateCaptionSamplePainter (series, seriesIndex);
+
+			this.Captions.AddSample (label, painter);
+		}
+
+		protected abstract System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex);
+		
 		protected void BeginLayer(IPaintPort port, PaintLayer layer)
 		{
 			foreach (var adorner in this.adorners)

@@ -6,6 +6,7 @@ using Epsitec.Common.Graph;
 using Epsitec.Common.Graph.Data;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Styles;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -272,9 +273,26 @@ namespace Epsitec.Cresus.Graph
 
 		private static IEnumerable<ChartSeries> CreateChartSeriesCollection(GraphDocument document)
 		{
-			foreach (var series in document.OutputSeries.Select (x => x.ChartSeries))
+			var labels = new HashSet<string> ();
+			System.Func<GraphDataSeries, string> formatter;
+
+			labels.AddRange (document.OutputSeries.Select (x => x.Label));
+
+			if (labels.Count < 2)
 			{
-				yield return new ChartSeries (series.Label, series.Values);
+				formatter = x => x.Title;
+			}
+			else
+			{
+				//	If there is more than one source, include the source name (which is stored
+				//	in the series title) in the caption name, in order to differntiate them:
+
+				formatter = x => string.IsNullOrEmpty (x.Label) ? x.Title : string.Format ("{0} — {1}", x.Title, x.Label);
+			}
+
+			foreach (var series in document.OutputSeries)
+			{
+				yield return new ChartSeries (formatter (series), series.ChartSeries.Values);
 			}
 		}
 		

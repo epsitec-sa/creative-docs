@@ -77,7 +77,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				var item0 = line.ElementAt (0);
 				var item1 = line.ElementAt (1);
 
-				if (string.IsNullOrEmpty (item0))
+				if (string.IsNullOrEmpty (item0) &&
+					string.IsNullOrEmpty (item1))
 				{
 					continue;
 				}
@@ -104,7 +105,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					continue;
 				}
 
-				string label = string.Concat (item0, " ", item1);
+				string label = string.Concat (item0, "\t", item1);
 				IEnumerable<double?> values = line.Skip (2).Select (x => GraphDataSet.GetNumericValue (string.IsNullOrEmpty (x) ? "0" : x));
 
 				table.Add (label, values);

@@ -343,6 +343,11 @@ namespace Epsitec.Common.Graph.Data
 
 		public static string CleanUpLabel(string label)
 		{
+			return DataCube.CleanUpLabelPrefixOnly (label).Trim ().Replace ('\t', ' ');
+		}
+
+		public static string CleanUpLabelPrefixOnly(string label)
+		{
 			int pos = label.LastIndexOf (Data.DataCube.LabelSortPrefixSeparator);
 
 			if (pos < 0)

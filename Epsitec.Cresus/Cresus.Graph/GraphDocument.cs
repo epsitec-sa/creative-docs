@@ -863,7 +863,14 @@ namespace Epsitec.Cresus.Graph
 
 		private ImportOperation CheckCubeSources(GraphDataCube cube)
 		{
-			var sources = cube.GetDimensionValues ("Source").ToArray ();
+			var dimensionValues = cube.GetDimensionValues ("Source");
+
+			if (dimensionValues == null)
+            {
+				return ImportOperation.Cancel;
+            }
+
+			var sources = dimensionValues.ToArray ();
 			var count   = sources.Length;
 
 			switch (count)
@@ -872,7 +879,7 @@ namespace Epsitec.Cresus.Graph
 					//	Problem : no source defined !
 					//Res.Captions.Message.DataImport.Failure.NoSource;
 					break;
-				
+
 				case 1:
 					//	Single source
 					return this.CheckSingleCube (cube, sources);

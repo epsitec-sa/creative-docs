@@ -97,10 +97,9 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		private void CreateCaption(Data.ChartSeries series, int seriesIndex)
+		protected override System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex)
 		{
-			this.Captions.AddSample (DataCube.CleanUpLabel (series.Label),
-				(p, r) =>
+			return (p, r) =>
 				{
 					using (Path sample = new Path ())
 					{
@@ -125,7 +124,7 @@ namespace Epsitec.Common.Graph.Renderers
 						p.LineJoin = JoinStyle.Miter;
 						p.PaintOutline (sample);
 					}
-				});
+				};
 		}
 
 		private Color GetOutlineColor(Color surfaceColor)

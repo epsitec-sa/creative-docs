@@ -41,6 +41,46 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+		public ChartValue GetMinValue()
+		{
+			if (this.values.Count == 0)
+			{
+				return ChartValue.Empty;
+			}
+			
+			ChartValue value = this.values[0];
+
+			foreach (var item in this.values)
+			{
+				if (item.Value < value.Value)
+				{
+					value = item;
+				}
+			}
+
+			return value;
+		}
+
+		public ChartValue GetMaxValue()
+		{
+			if (this.values.Count == 0)
+			{
+				return ChartValue.Empty;
+			}
+
+			ChartValue value = this.values[0];
+
+			foreach (var item in this.values)
+			{
+				if (item.Value > value.Value)
+				{
+					value = item;
+				}
+			}
+
+			return value;
+		}
+
 
 		public XElement SaveSettings(XElement xml)
 		{

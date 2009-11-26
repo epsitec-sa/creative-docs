@@ -617,6 +617,11 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				foreach (var category in categories)
 				{
+					if (category.IsGeneric)
+                    {
+						continue;
+                    }
+					
 					this.CreateFilterButton (container, category);
 				}
 
@@ -1628,39 +1633,52 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private string GetSummary(GraphDataSeries series)
 		{
 			var buffer = new System.Text.StringBuilder ();
-			
+			var minValue = series.ChartSeries.GetMinValue ();
+			var maxValue = series.ChartSeries.GetMaxValue ();
+			var minMax = string.Format ("Min: {0:0.#} Max: {1:0.#}", minValue.Value, maxValue.Value);
+
 			buffer.Append ("<font face=\"Futura\" style=\"Condensed Medium\">");
 
 			if (this.Document.OutputSeries.Contains (series))
 			{
 				buffer.Append ("<font size=\"120%\">");
-				buffer.AppendFormat ("Source {0}", DataCube.CleanUpLabel (series.Label));
+				buffer.AppendFormat ("Source {0}", FormattedText.Escape (DataCube.CleanUpLabel (series.Label)));
 				buffer.Append ("</font><br/>");
-				buffer.Append (DataCube.CleanUpLabel (series.Title));
+				buffer.Append (FormattedText.Escape (DataCube.CleanUpLabel (series.Title)));
 				buffer.Append ("<br/>");
 				buffer.Append ("<font size=\"80%\">");
-				buffer.Append ("Min: 12.0 Max: 3456.7");
+				buffer.Append (minMax);
 				buffer.Append ("</font>");
 			}
 			else
 			{
-				string name = DataCube.CleanUpLabel (series.Title);
-				string compte = name.Substring (0, name.IndexOf (' ')+1).Trim ();
-				string libellé = name.Substring (name.IndexOf (' ')+1).Trim ();
+				string name = DataCube.CleanUpLabelPrefixOnly (series.Title);
+				int    pos  = name.IndexOf ('\t');
+				string compte  = pos < 0 ? "" : name.Substring (0, pos).Trim ();
+				string libellé = name.Substring (pos+1).Trim ();
 
-				buffer.Append ("<font size=\"120%\">");
-				buffer.AppendFormat ("Compte {0}", compte);
-				buffer.Append ("</font><br/>");
-				buffer.Append (libellé);
+				if (string.IsNullOrEmpty (compte))
+				{
+					buffer.Append ("<font size=\"120%\">");
+					buffer.Append (FormattedText.Escape (libellé));
+					buffer.Append ("</font><br/>");
+				}
+				else
+				{
+					buffer.Append ("<font size=\"120%\">");
+					buffer.AppendFormat ("Compte {0}", FormattedText.Escape (compte));
+					buffer.Append ("</font><br/>");
+					buffer.Append (FormattedText.Escape (libellé));
+				}
 				buffer.Append ("<br/>");
 				buffer.Append ("<font size=\"80%\">");
-				buffer.AppendFormat ("Source: {0}<br/>", series.Source.Name);
-				buffer.Append ("Min: 12.0 Max: 3456.7");
+				buffer.AppendFormat ("Source: {0}<br/>", FormattedText.Escape (series.Source.Name));
+				buffer.Append (minMax);
 				buffer.Append ("</font>");
 			}
 
 			buffer.Append ("</font>");
-			
+
 			return buffer.ToString ();
 		}
 
