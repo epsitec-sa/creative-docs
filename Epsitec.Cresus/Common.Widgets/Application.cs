@@ -136,6 +136,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void SetActiveState(Command command, ActiveState activeState)
+		{
+			if (this.commandContext != null)
+			{
+				this.commandContext.GetCommandState (command).ActiveState = activeState;
+			}
+		}
+
 		public static string GetCommandLineProgram()
 		{
 			var commandLine = System.Environment.CommandLine;
