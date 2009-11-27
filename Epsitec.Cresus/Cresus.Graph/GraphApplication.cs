@@ -496,9 +496,15 @@ namespace Epsitec.Cresus.Graph
 		{
 			var doc = this.Document;
 
-			Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (data, path), path, null));
-
-			return true;
+			if (this.ProcessClipboardText (data))
+			{
+				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (data, path), path, null));
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 
@@ -509,20 +515,34 @@ namespace Epsitec.Cresus.Graph
 				return false;
 			}
 
-			var textData = clipboard.ReadText ();
-			var checksum = string.IsNullOrEmpty (textData) ? 0 : Epsitec.Common.IO.Checksum.ComputeAdler32 (x => x.UpdateValue (textData));
+			return this.ProcessClipboardText(clipboard.ReadText ());
+		}
 
-			if (checksum == this.lastPasteChecksum)
+		private bool ProcessClipboardText(string textData)
+		{
+			if (string.IsNullOrEmpty (textData))
 			{
 				return false;
 			}
 
-			this.lastPasteChecksum = checksum;
-			this.lastPasteTextData = textData;
+			var checksum  = string.IsNullOrEmpty (textData) ? 0 : Epsitec.Common.IO.Checksum.ComputeAdler32 (x => x.UpdateValue (textData));
+			var tickCount = System.Environment.TickCount;
+			var timeout   = this.lastPasteTickCount + GraphApplication.PasteTickCountTimeout;
+
+			this.lastPasteTickCount = tickCount;
+
+			if ((checksum == this.lastPasteChecksum) &&
+				(tickCount < timeout))
+			{
+				return false;
+			}
+
+			this.lastPasteChecksum  = checksum;
+			this.lastPasteTextData  = textData;
 
 			return true;
 		}
-		
+
 		private void DocumentSelectDataSource(string name)
 		{
 			this.Document.SelectDataSource (name);
@@ -600,10 +620,13 @@ namespace Epsitec.Cresus.Graph
 		private readonly Controllers.WorkspaceController workspaceController;
 
 		private readonly Core.UI.PersistenceManager persistenceManager;
+
+		private const int PasteTickCountTimeout = 5000;	//	[ms]
 		
 		private GraphDocument activeDocument;
 		private long lastPasteChecksum;
 		private string lastPasteTextData;
+		private int lastPasteTickCount;
 		private ConnectorServer connectorServer;
 		private VersionChecker versionChecker;
 	}

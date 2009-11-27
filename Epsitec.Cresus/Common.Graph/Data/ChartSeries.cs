@@ -1,6 +1,9 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -12,6 +15,7 @@ namespace Epsitec.Common.Graph.Data
 		public ChartSeries()
 		{
 			this.values = new List<ChartValue> ();
+			this.attributes = new Dictionary<string, string> ();
 		}
 
 		public ChartSeries(IEnumerable<ChartValue> collection)
@@ -41,6 +45,33 @@ namespace Epsitec.Common.Graph.Data
 			}
 		}
 
+		public IDictionary<string, string> Attributes
+		{
+			get
+			{
+				return this.attributes;
+			}
+		}
+
+
+		public string GetAttribute(string key)
+		{
+			string value;
+			this.attributes.TryGetValue (key, out value);
+			return value;
+		}
+
+		public void SetAttribute(string key, string value)
+		{
+			this.attributes[key] = value;
+		}
+
+		public void ClearAttribute(string key)
+		{
+			this.attributes.Remove (key);
+		}
+		
+		
 		public ChartValue GetMinValue()
 		{
 			if (this.values.Count == 0)
@@ -91,6 +122,15 @@ namespace Epsitec.Common.Graph.Data
 						new XAttribute ("x", value.Label ?? ""),
 						new XAttribute ("y", value.Value)))));
 
+			if (this.attributes.Count > 0)
+			{
+				xml.Add (new XElement ("attributes",
+					this.Attributes.Select (item =>
+						new XElement ("attr",
+							new XAttribute ("key", item.Key),
+							new XAttribute ("value", item.Value ?? "")))));
+			}
+
 			return xml;
 		}
 
@@ -98,6 +138,13 @@ namespace Epsitec.Common.Graph.Data
 		{
 			this.Label = (string) xml.Attribute ("label");
 			this.values.AddRange (xml.Element ("values").Elements ().Select (value => new ChartValue ((string) value.Attribute ("x"), (double) value.Attribute ("y"))));
+
+			var attributes = xml.Element ("attributes");
+
+			if (attributes != null)
+			{
+				attributes.Elements ().ForEach (item => this.attributes.Add ((string) item.Attribute ("key"), (string) item.Attribute ("value")));
+			}
 		}
 
 
@@ -129,5 +176,6 @@ namespace Epsitec.Common.Graph.Data
 
 
 		private readonly List<ChartValue> values;
+		private readonly Dictionary<string, string> attributes;
 	}
 }

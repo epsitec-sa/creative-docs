@@ -27,7 +27,7 @@ namespace Epsitec.Common.Graph.Renderers
 		}
 
 
-		public int SeriesCount
+		public int								SeriesCount
 		{
 			get
 			{
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public IList<Data.ChartSeries> SeriesItems
+		public IList<Data.ChartSeries>			SeriesItems
 		{
 			get
 			{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public int ValueCount
+		public int								ValueCount
 		{
 			get
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public double MinValue
+		public double							MinValue
 		{
 			get
 			{
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public double MaxValue
+		public double							MaxValue
 		{
 			get
 			{
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public Rectangle Bounds
+		public Rectangle						Bounds
 		{
 			get
 			{
@@ -89,13 +89,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public int AdditionalRenderingPasses
-		{
-			get;
-			protected set;
-		}
-
-		public IEnumerable<string> ValueLabels
+		public IEnumerable<string>				ValueLabels
 		{
 			get
 			{
@@ -111,7 +105,7 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public CaptionPainter Captions
+		public CaptionPainter					Captions
 		{
 			get
 			{
@@ -127,18 +121,26 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 		}
 
-		public bool AlwaysIncludeZero
+		public bool								AlwaysIncludeZero
 		{
 			get;
 			set;
 		}
 
-		public ChartSeriesRenderingMode ChartSeriesRenderingMode
+		public ChartSeriesRenderingMode			ChartSeriesRenderingMode
 		{
 			get;
 			set;
 		}
 
+		
+		protected int							AdditionalRenderingPasses
+		{
+			get;
+			set;
+		}
+
+		
 		public void DefineValueLabels(IEnumerable<string> collection)
 		{
 			if (this.seriesList.Count > 0)
@@ -192,6 +194,7 @@ namespace Epsitec.Common.Graph.Renderers
 			this.maxValue = maxValue;
 		}
 
+		
 		public virtual void Clear()
 		{
 			this.seriesList.Clear ();
@@ -255,51 +258,6 @@ namespace Epsitec.Common.Graph.Renderers
 			}
 
 			System.Diagnostics.Debug.Assert (this.seriesValueLabelsList.Count == this.seriesValueLabelsSet.Count);
-		}
-
-		private Data.ChartSeries GetPreprocessedSeries(Data.ChartSeries series)
-		{
-			switch (this.ChartSeriesRenderingMode)
-			{
-				case ChartSeriesRenderingMode.Separate:
-					return series;
-
-				case ChartSeriesRenderingMode.Stacked:
-					return new Data.ChartSeries (series.Label, AbstractRenderer.GetStackedValues (this.seriesOriginals.Select (x => x.Values)));
-
-				default:
-					throw new System.InvalidOperationException ();
-			}
-		}
-
-		private static IList<Data.ChartValue> GetStackedValues(IEnumerable<IList<Data.ChartValue>> collection)
-		{
-			var lists = new List<IList<Data.ChartValue>> (collection);
-			var labelsDict = new Dictionary<string, double> ();
-
-			foreach (var list in lists)
-			{
-				foreach (var item in list)
-				{
-					double value;
-
-					if (labelsDict.TryGetValue (item.Label, out value))
-					{
-						labelsDict[item.Label] = value + item.Value;
-					}
-					else
-					{
-						labelsDict.Add (item.Label, item.Value);
-					}
-				}
-			}
-
-			return new List<Data.ChartValue> (
-				from kv in labelsDict
-				let key = kv.Key
-				let value = kv.Value
-				orderby key ascending
-				select new Data.ChartValue (key, value));
 		}
 
 
@@ -394,16 +352,63 @@ namespace Epsitec.Common.Graph.Renderers
 			return this.seriesValueLabelsList.IndexOf (label);
 		}
 
-		private double minValue;
-		private double maxValue;
-		private Rectangle bounds;
+
+		private Data.ChartSeries GetPreprocessedSeries(Data.ChartSeries series)
+		{
+			switch (this.ChartSeriesRenderingMode)
+			{
+				case ChartSeriesRenderingMode.Separate:
+					return series;
+
+				case ChartSeriesRenderingMode.Stacked:
+					return new Data.ChartSeries (series.Label, AbstractRenderer.GetStackedValues (this.seriesOriginals.Select (x => x.Values)));
+
+				default:
+					throw new System.InvalidOperationException ();
+			}
+		}
+
+		private static IList<Data.ChartValue> GetStackedValues(IEnumerable<IList<Data.ChartValue>> collection)
+		{
+			var lists = new List<IList<Data.ChartValue>> (collection);
+			var labelsDict = new Dictionary<string, double> ();
+
+			foreach (var list in lists)
+			{
+				foreach (var item in list)
+				{
+					double value;
+
+					if (labelsDict.TryGetValue (item.Label, out value))
+					{
+						labelsDict[item.Label] = value + item.Value;
+					}
+					else
+					{
+						labelsDict.Add (item.Label, item.Value);
+					}
+				}
+			}
+
+			return new List<Data.ChartValue> (
+				from kv in labelsDict
+				let key = kv.Key
+				let value = kv.Value
+				orderby key ascending
+				select new Data.ChartValue (key, value));
+		}
+
 		
-		private readonly HashSet<string> seriesValueLabelsSet;
-		private readonly List<string> seriesValueLabelsList;
+		private double							minValue;
+		private double							maxValue;
+		private Rectangle						bounds;
+		
+		private readonly HashSet<string>		seriesValueLabelsSet;
+		private readonly List<string>			seriesValueLabelsList;
 		private readonly Dictionary<string, Styles.AbstractStyle> styles;
 		private readonly List<Adorners.AbstractAdorner> adorners;
 		private readonly List<Data.ChartSeries> seriesOriginals;
 		private readonly List<Data.ChartSeries> seriesList;
-		private readonly CaptionPainter captions;
+		private readonly CaptionPainter			captions;
 	}
 }
