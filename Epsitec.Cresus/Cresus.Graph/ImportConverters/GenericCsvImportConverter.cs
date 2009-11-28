@@ -21,6 +21,11 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 		}
 
+		public override bool CheckCompatibleMeta(IDictionary<string, string> meta)
+		{
+			return meta.Count == 0;
+		}
+
 		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
 		{
 			if (header.Count < 2)

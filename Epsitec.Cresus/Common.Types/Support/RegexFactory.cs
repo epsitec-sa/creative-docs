@@ -1,5 +1,5 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
 
@@ -156,7 +156,54 @@ namespace Epsitec.Common.Support
 			
 			return new Regex (regexPattern.ToString (), regexOptions);
 		}
-		
+
+		/// <summary>
+		/// Escapes the specified text so that it does not conflict with any of
+		/// the regex patterns.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns>The escaped text.</returns>
+		public static string Escape(string text)
+		{
+			if (text == null)
+            {
+				return null;
+            }
+			
+			var buffer = new System.Text.StringBuilder ();
+
+			foreach (char c in text)
+			{
+				switch (c)
+				{
+					case '^':
+					case '$':
+					case '(':
+					case ')':
+					case '[':
+					case ']':			//	not really required
+					case '{':
+					case '}':			//	not really required
+					case '\\':
+					case '|':
+					case '.':
+					case '*':
+					case '+':
+					case '?':
+					case '<':
+					case '>':
+						buffer.Append ('\\');
+						break;
+
+					default:
+						break;
+				}
+				
+				buffer.Append (c);
+			}
+
+			return buffer.ToString ();
+		}
 		
 		public static Regex	FromPredefinedRegex(PredefinedRegex regex)
 		{

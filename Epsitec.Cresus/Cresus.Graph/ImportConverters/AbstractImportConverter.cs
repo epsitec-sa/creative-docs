@@ -5,6 +5,7 @@ using Epsitec.Common.Graph.Data;
 
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Epsitec.Cresus.Graph.ImportConverters
 {
@@ -37,7 +38,9 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			get;
 			internal set;
 		}
-		
+
+		public abstract bool CheckCompatibleMeta(IDictionary<string, string> meta);
+        
 		public abstract GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath);
 
 		public GraphDataCube ToDataCube(IList<string> header, IEnumerable<string[]> lines, string sourcePath)

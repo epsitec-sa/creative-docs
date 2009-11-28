@@ -19,14 +19,26 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		/// <param name="converter">The successful converter.</param>
 		/// <param name="cube">The cube.</param>
 		/// <returns><c>true</c> if the data could be converted; otherwise, <c>false</c>.</returns>
-		public static bool ConvertToCube(IEnumerable<string> headColumns, IEnumerable<IEnumerable<string>> lines, string sourcePath, out AbstractImportConverter converter, out GraphDataCube cube)
+		public static bool ConvertToCube(
+			IEnumerable<string> headColumns, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta,
+			out AbstractImportConverter converter, out GraphDataCube cube)
 		{
 			List<string> head = new List<string> (headColumns);
 
 			foreach (var pair in ImportConverter.GetConverters ().OrderByDescending (x => x.Value.Priority))
 			{
 				converter = pair.Value;
-				cube      = converter.ToDataCube (head, lines, sourcePath);
+				
+				if (meta != null)
+                {
+					if (!converter.CheckCompatibleMeta (meta))
+					{
+						continue;
+					}
+                }
+				
+				
+				cube = converter.ToDataCube (head, lines, sourcePath);
 
 				if (cube != null)
 				{

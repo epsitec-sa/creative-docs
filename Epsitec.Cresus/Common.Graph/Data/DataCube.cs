@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Graph.Data
 {
@@ -54,8 +55,8 @@ namespace Epsitec.Common.Graph.Data
 				var testVector = new DimensionVector ();
 
 				testVector.Add (table.DimensionVector);
-				testVector.Add (colKey, "");
-				testVector.Add (rowKey, "");
+				testVector.Add (colKey, "?");
+				testVector.Add (rowKey, "?");
 
 				var v1 = string.Join (":", testVector.Keys.ToArray ());
 				var v2 = string.Join (":", this.dimensionNames.ToArray ());
@@ -400,7 +401,7 @@ namespace Epsitec.Common.Graph.Data
 		{
 			List<string> dims;
 			
-			System.Text.RegularExpressions.Regex regex = this.GetExtractionRegex (dimensions, out dims, out axes);
+			var regex = this.GetExtractionRegex (dimensions, out dims, out axes);
 
 			int[] groupIndexMap = DataCube.GetGroupIndexMapAndUpdateAxes (dims, axes);
 
@@ -452,56 +453,67 @@ namespace Epsitec.Common.Graph.Data
 			{
 				string prefix = name + "=";
 
+				//	Is this dimension specified as an extraction axe, such as "foo" in the dimensions
+				//	vector provided by the caller ?
+				
 				int pos = dims.FindIndex (x => x == name);
 
 				if (pos >= 0)
 				{
 					//	Found an exact match, which means that we have found the dimension
-					//	which we will enumerate to produce our sequence.
+					//	which we will enumerate to produce our sequence. Extract "foo=*".
 
 					if (buffer.Length > 1)
 					{
-						buffer.Append (':');
+						buffer.Append (DimensionVector.DimensionSeparator);
 					}
 
-					buffer.Append (prefix);
-					buffer.Append ("([^:]*)");
+					buffer.Append (RegexFactory.Escape (name));
+					buffer.Append (DimensionVector.KeyValueSeparator);
+					buffer.Append ("([^" + DimensionVector.DimensionSeparator.ToString () + "]*)");
 
 					axes.Add (name);
 
 					continue;
 				}
 
+				//	Is this dimension specified as an extraction criterion, such as "foo=123" in the
+				//	dimensions vector provided by the caller ?
+
 				pos = dims.FindIndex (x => x.StartsWith (prefix));
 
 				if (pos >= 0)
 				{
-					//	Found an extraction match; just use it as is.
+					//	Found an extraction match; just use it as is. Extract "foo=123".
 
 					if (buffer.Length > 1)
 					{
-						buffer.Append (':');
+						buffer.Append (DimensionVector.DimensionSeparator);
 					}
 
-					buffer.Append (dims[pos]);
+					buffer.Append (RegexFactory.Escape (name));
+					buffer.Append (DimensionVector.KeyValueSeparator);
+					buffer.Append (RegexFactory.Escape (dims[pos].Substring (prefix.Length)));
 					dims.RemoveAt (pos);
 
 					continue;
 				}
 
+				//	Else, the dimension was not provided by the caller as something he is interested
+				//	in; Extract the dimension "foo=*".
+
 				if (buffer.Length > 1)
 				{
-					buffer.Append (':');
+					buffer.Append (DimensionVector.DimensionSeparator);
 				}
 
-				buffer.Append (prefix);
-				buffer.Append ("[^:]*");
+				buffer.Append (RegexFactory.Escape (prefix));
+				buffer.Append ("([^" + DimensionVector.DimensionSeparator.ToString () + "]*)");
 			}
 
 			buffer.Append ('$');
 
-			System.Text.RegularExpressions.Regex regex = new System.Text.RegularExpressions.Regex (buffer.ToString (), System.Text.RegularExpressions.RegexOptions.Compiled);
-			return regex;
+			return new System.Text.RegularExpressions.Regex (buffer.ToString (), System.Text.RegularExpressions.RegexOptions.Compiled);
 		}
 
 		private static int[] GetGroupIndexMapAndUpdateAxes(List<string> dims, List<string> axes)

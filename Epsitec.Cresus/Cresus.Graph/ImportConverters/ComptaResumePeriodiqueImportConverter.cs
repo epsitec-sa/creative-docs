@@ -13,13 +13,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 	/// Crésus Comptabilité report named "Résumé périodique".
 	/// </summary>
 	[Importer ("compta:résumé périodique")]
-	public class ComptaResumePeriodiqueImportConverter : AbstractImportConverter
+	public class ComptaResumePeriodiqueImportConverter : Compta
 	{
 		public ComptaResumePeriodiqueImportConverter(string name)
-			: base (name)
+			: base (name, "10")
 		{
 		}
 
+		
 		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
 		{
 			if (header.Count < 2)
@@ -38,37 +39,10 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			string colDimension = "Période";
 			string rowDimension = "Numéro/Compte";
-
-			string sourceName = "";
-
-			if (string.IsNullOrEmpty (sourcePath))
-			{
-				//	Unknown source - probably the clipboard
-			}
-			else
-			{
-				var fileExt  = System.IO.Path.GetExtension (sourcePath).ToLowerInvariant ();
-				var fileName = System.IO.Path.GetFileNameWithoutExtension (sourcePath);
-
-				if ((fileExt == ".cre") &&
-					(fileName.Length > 4))
-                {
-					int year;
-
-					if (int.TryParse (fileName.Substring (fileName.Length-4), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out year))
-					{
-						sourceName = year.ToString ("D4");
-					}
-                }
-			}
-
-			if (string.IsNullOrEmpty (sourceName))
-            {
-				sourceName = "?";
-            }
+			string sourceName   = Compta.GetSourceName (sourcePath);
 
 			table.DimensionVector.Add ("Source", sourceName);
-			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (2)));
+			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (header.Skip (2).Where (x => x != "Précédent")));	// contourne bug du "Précédent" (provisoire)
 			table.ColumnDimensionKey = colDimension;
 			table.RowDimensionKey    = rowDimension;
 
@@ -122,35 +96,6 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			{
 				return "Compta – Résumé périodique";
 			}
-		}
-
-		public override GraphDataCategory GetCategory(ChartSeries series)
-		{
-			string cat = series.Label.Substring (0, 1);
-
-			switch (cat)
-			{
-				case "1":
-					return new GraphDataCategory (1, "Actif");
-
-				case "2":
-					return new GraphDataCategory (2, "Passif");
-
-				case "3":
-				case "7":
-					return new GraphDataCategory (3, "Produit");
-
-				case "4":
-				case "5":
-				case "6":
-				case "8":
-					return new GraphDataCategory (4, "Charge");
-
-				case "9":
-					return new GraphDataCategory (5, "Exploitation");
-			}
-			
-			return base.GetCategory (series);
 		}
 	}
 }

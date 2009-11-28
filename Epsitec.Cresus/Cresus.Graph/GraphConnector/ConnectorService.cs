@@ -7,7 +7,7 @@ using System.ServiceModel;
 
 namespace Epsitec.Cresus.Graph
 {
-	public delegate bool SendDataCallback(System.IntPtr windowHandle, string path, string meta, string data);
+	public delegate bool SendDataCallback(ConnectorData connectorData);
 
 	/// <summary>
 	/// The <c>ConnectorService</c> class implements the <see cref="IConnector"/>
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Graph
 			}
 			else
             {
-				return ConnectorService.sendData (new System.IntPtr (windowHandle), path, meta, data);
+				return ConnectorService.sendData (new ConnectorData (new System.IntPtr (windowHandle), path, meta, data));
             }
 		}
 

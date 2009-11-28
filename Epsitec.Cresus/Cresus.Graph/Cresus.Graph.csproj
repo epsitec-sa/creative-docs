@@ -173,6 +173,8 @@
     <Compile Include="GraphDataSettings.cs" />
     <Compile Include="GraphSerial.cs" />
     <Compile Include="GraphUpdate.cs" />
+    <Compile Include="ImportConverters\Compta.cs" />
+    <Compile Include="ImportConverters\ComptaBilanImportConverter.cs" />
     <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
     <Compile Include="ImportOperation.cs" />
     <Compile Include="LicensingInfo.cs" />
@@ -217,6 +219,7 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
+    <EmbeddedResource Include="Images\TakeSnapshot.icon" />
     <EmbeddedResource Include="Images\Cube.Table1.icon" />
     <EmbeddedResource Include="Images\Cmd.Kill.icon" />
     <EmbeddedResource Include="Images\DataCube.icon" />

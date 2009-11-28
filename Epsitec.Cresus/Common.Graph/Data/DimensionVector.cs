@@ -16,7 +16,7 @@ namespace Epsitec.Common.Graph.Data
 		public DimensionVector(string compiledVector)
 			: this ()
 		{
-			string[] items = compiledVector.Split (':', '=');
+			string[] items = compiledVector.Split (DimensionVector.KeyValueSeparator, DimensionVector.DimensionSeparator);
 
 			System.Diagnostics.Debug.Assert ((items.Length % 2) == 0);
 
@@ -105,10 +105,10 @@ namespace Epsitec.Common.Graph.Data
 			{
 				if (buffer.Length > 0)
 				{
-					buffer.Append (':');
+					buffer.Append (DimensionVector.DimensionSeparator);
 				}
 				buffer.Append (item.Key);
-				buffer.Append ('=');
+				buffer.Append (DimensionVector.KeyValueSeparator);
 				buffer.Append (item.Value);
 			}
 
@@ -144,6 +144,9 @@ namespace Epsitec.Common.Graph.Data
 		#endregion
 
 
-		private readonly List<Dimension> dimensions;
+		public const char						KeyValueSeparator	= '~'; //'\u2E30';
+		public const char						DimensionSeparator	= '£'; //'\u2E31';
+		
+		private readonly						List<Dimension> dimensions;
 	}
 }

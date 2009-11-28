@@ -887,7 +887,15 @@ namespace Epsitec.Cresus.Graph
 				default:
 					//	Problem : multiple sources not supported (yet)
 					//Res.Captions.Message.DataImport.Failure.MultipleSources;
-					break;
+					//	HACK: fix this to analyze all sources
+					if (this.cubes.Count == 0)
+					{
+						return ImportOperation.Add;
+					}
+					else
+					{
+						return ImportOperation.New;
+					}
 			}
 
 			return ImportOperation.Cancel;

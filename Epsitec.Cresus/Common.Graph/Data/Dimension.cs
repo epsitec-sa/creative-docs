@@ -20,14 +20,14 @@ namespace Epsitec.Common.Graph.Data
 				throw new System.ArgumentNullException ("value");
 			}
 
-			if (key.Contains ('=') ||
-				key.Contains (':'))
+			if (key.Contains (DimensionVector.KeyValueSeparator) ||
+				key.Contains (DimensionVector.DimensionSeparator))
 			{
 				throw new System.ArgumentException ("Dimension key contains illegal character");
 			}
 
-			if (value.Contains ('=') ||
-				value.Contains (':'))
+			if (value.Contains (DimensionVector.KeyValueSeparator) ||
+				value.Contains (DimensionVector.DimensionSeparator))
 			{
 				throw new System.ArgumentException ("Dimension value contains illegal character");
 			}

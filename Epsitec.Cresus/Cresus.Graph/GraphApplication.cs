@@ -92,14 +92,14 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private GraphDataCube ImportCube(string text, string sourcePath)
+		private GraphDataCube ImportCube(string text, string sourcePath, IDictionary<string, string> meta)
 		{
 			string[] lines = text.Split (new char[] { '\n', '\r' }, System.StringSplitOptions.RemoveEmptyEntries);
 			char[] columnSeparators = new char[] { '\t', ';' };
 
 			foreach (var columnSeparator in columnSeparators)
 			{
-				var graphDataCube = this.TryImportCube (lines, columnSeparator, sourcePath);
+				var graphDataCube = this.TryImportCube (lines, columnSeparator, sourcePath, meta);
 
 				if (graphDataCube != null)
 				{
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Graph
 		internal void SetupConnectorServer()
 		{
 			this.connectorServer = new ConnectorServer (false);
-			this.connectorServer.Open (this.ProcessSendData);
+			this.connectorServer.Open (this.ProcessConnectorData);
 		}
 
 		internal void AsyncSaveApplicationState()
@@ -195,14 +195,14 @@ namespace Epsitec.Cresus.Graph
 			}
 
 			this.Document.ImportCube (
-				this.ImportCube (this.lastPasteTextData, null),
+				this.ImportCube (this.lastPasteTextData, null, null),
 				GraphDataCube.LoadPathClipboard, System.Text.Encoding.UTF8);
 		}
 
 		internal void ExecuteImport(string path, System.Text.Encoding encoding)
 		{
 			this.Document.ImportCube (
-				this.ImportCube (System.IO.File.ReadAllText (path, encoding), path),
+				this.ImportCube (System.IO.File.ReadAllText (path, encoding), path, null),
 				path, encoding);
 		}
 
@@ -405,7 +405,7 @@ namespace Epsitec.Cresus.Graph
 			return doc;
 		}
 
-		private GraphDataCube TryImportCube(IEnumerable<string> lines, char columnSeparator, string sourcePath)
+		private GraphDataCube TryImportCube(IEnumerable<string> lines, char columnSeparator, string sourcePath, IDictionary<string, string> meta)
 		{
 			try
 			{
@@ -416,7 +416,7 @@ namespace Epsitec.Cresus.Graph
 
 				var lineColumns = lines.Skip (1).Select (x => ImportConverter.QuotedSplit (x, columnSeparator));
 
-				if (ImportConverter.ConvertToCube (headColumns, lineColumns, sourcePath, out converter, out cube))
+				if (ImportConverter.ConvertToCube (headColumns, lineColumns, sourcePath, meta, out converter, out cube))
 				{
 					string path = System.IO.Path.GetTempFileName ();
 
@@ -492,13 +492,18 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
-		private bool ProcessSendData(System.IntPtr handle, string path, string meta, string data)
+		private bool ProcessConnectorData(ConnectorData connectorData)
 		{
 			var doc = this.Document;
 
-			if (this.ProcessClipboardText (data))
-			{
-				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (data, path), path, null));
+			if ((this.lastConnectorData == null) ||
+				(this.lastConnectorData.Checksum != connectorData.Checksum) ||
+				(this.lastConnectorData.Ticks < connectorData.Ticks + GraphApplication.PasteTickCountTimeout))
+            {
+				this.lastConnectorData = connectorData;
+
+				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (connectorData.Data, connectorData.Path, connectorData.Meta), connectorData.Path, null));
+				
 				return true;
 			}
 			else
@@ -542,6 +547,7 @@ namespace Epsitec.Cresus.Graph
 
 			return true;
 		}
+
 
 		private void DocumentSelectDataSource(string name)
 		{
@@ -623,11 +629,12 @@ namespace Epsitec.Cresus.Graph
 
 		private const int PasteTickCountTimeout = 5000;	//	[ms]
 		
-		private GraphDocument activeDocument;
-		private long lastPasteChecksum;
-		private string lastPasteTextData;
-		private int lastPasteTickCount;
-		private ConnectorServer connectorServer;
-		private VersionChecker versionChecker;
+		private GraphDocument					activeDocument;
+		private long							lastPasteChecksum;
+		private string							lastPasteTextData;
+		private int								lastPasteTickCount;
+		private ConnectorServer					connectorServer;
+		private ConnectorData					lastConnectorData;
+		private VersionChecker					versionChecker;
 	}
 }
