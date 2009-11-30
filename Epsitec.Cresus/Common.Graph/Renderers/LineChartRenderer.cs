@@ -168,6 +168,11 @@ namespace Epsitec.Common.Graph.Renderers
 				}
 			}
 
+			if (series.Values.Count == 1)
+			{
+				path.LineTo (this.GetPoint (1, series.Values[0].Value));
+			}
+
 			return path;
 		}
 		
@@ -187,6 +192,11 @@ namespace Epsitec.Common.Graph.Renderers
 				path.LineTo (this.GetPoint (index, item.Value));
 			}
 
+			if (series.Values.Count == 1)
+			{
+				path.LineTo (this.GetPoint (1, series.Values[0].Value));
+			}
+			
 			path.LineTo (path.CurrentPoint.X, this.GetPoint (0, 0.0).Y);
 			path.Close ();
 

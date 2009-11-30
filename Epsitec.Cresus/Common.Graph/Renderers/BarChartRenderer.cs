@@ -80,7 +80,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		protected override void Render(IPaintPort port, Data.ChartSeries series, int pass, int seriesIndex)
 		{
-			if (series.Values.Count > 1)
+			if (series.Values.Count > 0)
 			{
 				using (Path path = this.CreateSurfacePath (series, seriesIndex))
 				{
