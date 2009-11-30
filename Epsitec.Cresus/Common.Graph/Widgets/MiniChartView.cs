@@ -117,8 +117,8 @@ namespace Epsitec.Common.Graph.Widgets
 				}
 			}
 		}
-		
-		
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			var renderer  = this.Renderer;
@@ -150,21 +150,31 @@ namespace Epsitec.Common.Graph.Widgets
 			if ((renderer != null) &&
 				(renderer.SeriesItems.Count > 0))
 			{
-				var transform = graphics.Transform;
-				graphics.ScaleTransform (scale, scale, 0, 0);
+				int valueCount = renderer.ValueCount;
+				
+				if (valueCount > 1)
+				{
+					var transform = graphics.Transform;
+					graphics.ScaleTransform (scale, scale, 0, 0);
 
-				Rectangle paint = rectangle;
+					Rectangle paint = rectangle;
 
-				paint = Rectangle.Deflate (paint, new Margins (6, 6, 6, 20));
-				graphics.AddFilledRectangle (Rectangle.Scale (paint, 1/scale));
-				graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1.0, 1.0, 1.0));
+					paint = Rectangle.Deflate (paint, new Margins (6, 6, 6, 20));
+					graphics.AddFilledRectangle (Rectangle.Scale (paint, 1/scale));
+					graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1.0, 1.0, 1.0));
 
-				paint = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
-				renderer.Render (graphics, Rectangle.Scale (paint, 1/scale));
+					paint = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
+					renderer.Render (graphics, Rectangle.Scale (paint, 1/scale));
 
-				graphics.LineWidth = 1.0;
-				graphics.LineJoin = JoinStyle.Miter;
-				graphics.Transform = transform;
+					graphics.LineWidth = 1.0;
+					graphics.LineJoin = JoinStyle.Miter;
+					graphics.Transform = transform;
+				}
+				else if (valueCount == 1)
+				{
+					string value = string.Format ("{0:N}", (decimal) renderer.SeriesItems[0].Values[0].Value);
+					MiniChartView.PaintValueAsText (graphics, Rectangle.Offset (rectangle, 0, System.Math.Round (this.Client.Size.Height / 3)), value);
+				}
 
 				MiniChartView.PaintTitle (graphics, rectangle, this.Title);
 			}
@@ -266,6 +276,28 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+
+		private static void PaintValueAsText(Graphics graphics, Rectangle rectangle, string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				Font   font     = Font.DefaultFont;
+				double fontSize = 16.0;
+
+			again:
+				int length = FitText (rectangle.Width, font, fontSize, text);
+
+				if (length < text.Length)
+				{
+					fontSize -= 1.0;
+					goto again;
+				}
+
+				graphics.Color = Color.FromBrightness (0.0);
+				graphics.PaintText (rectangle.X, rectangle.Y, rectangle.Width, 20, text, font, fontSize, ContentAlignment.MiddleCenter);
+				graphics.RenderSolid ();
+			}
+		}
 
 		private static void PaintTitle(Graphics graphics, Rectangle rectangle, string text)
 		{
