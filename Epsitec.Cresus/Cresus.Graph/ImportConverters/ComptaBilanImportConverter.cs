@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			int column = 2;
 
-			foreach (var sourceName in GraphDataSet.CreateNumberedLabels (sources))
+			foreach (var sourceName in GraphDataSet.CreateNumberedLabels (sources, index => 2-index))
 			{
 				var table = new DataTable ();
 

@@ -29,6 +29,11 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			this.verticalScale = bounds.Height / (this.MaxValue - this.MinValue);
 			this.horizontalScale = bounds.Width / System.Math.Max (1, this.ValueCount - 1);
+
+			if (this.MaxValue == this.MinValue)
+			{
+				this.verticalScale = 0;
+			}
 			
 			base.BeginRender (port, bounds);
 		}
@@ -100,11 +105,6 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			using (Path path = this.CreateOutlinePath (series))
 			{
-				if (series.Values.Count == 1)
-				{
-					path.LineTo (path.CurrentPoint.X + port.LineWidth, path.CurrentPoint.Y);
-				}
-
 				this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
 				
 				port.LineWidth = 2;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Graph.Renderers
 
 		private void PaintSurface(IPaintPort port, Data.ChartSeries series, int seriesIndex)
 		{
-			if ((series.Values.Count > 1) &&
+			if ((series.Values.Count > 0) &&
 				(this.SurfaceAlpha > 0))
 			{
 				using (Path path = this.CreateSurfacePath (series))

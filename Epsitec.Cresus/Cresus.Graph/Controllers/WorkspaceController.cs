@@ -1239,6 +1239,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			});
 
 			lineChartRenderer.DefineValueLabels (this.Document.ChartColumnLabels);
+			lineChartRenderer.AlwaysIncludeZero = true;
 
 			var view = new MiniChartView ()
 			{
@@ -1501,7 +1502,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			var button = new RadioButton ()
 			{
-				Text = source.Name,
+				Text = FormattedText.Escape (DataCube.CleanUpLabel (source.Name)),
 				Dock = DockStyle.Fill,
 				Parent = frame,
 				ActiveState = this.Document.ActiveDataSource == source ? ActiveState.Yes : ActiveState.No,
@@ -1633,9 +1634,26 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private string GetSummary(GraphDataSeries series)
 		{
 			var buffer = new System.Text.StringBuilder ();
+			var valCount = series.ChartSeries.Values.Count;
 			var minValue = series.ChartSeries.GetMinValue ();
 			var maxValue = series.ChartSeries.GetMaxValue ();
-			var minMax = string.Format ("Min: {0:0.#} Max: {1:0.#}", minValue.Value, maxValue.Value);
+			
+			string minMax;
+
+			switch (valCount)
+			{
+				case 0:
+					minMax = "Aucune valeur";
+					break;
+				
+				case 1:
+					minMax = string.Format ("Valeur: {0:0.#}", minValue.Value);
+					break;
+
+				default:
+					minMax = string.Format ("Min: {0:0.#} Max: {1:0.#}", minValue.Value, maxValue.Value);
+					break;
+			}
 
 			buffer.Append ("<font face=\"Futura\" style=\"Condensed Medium\">");
 
@@ -1672,7 +1690,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				}
 				buffer.Append ("<br/>");
 				buffer.Append ("<font size=\"80%\">");
-				buffer.AppendFormat ("Source: {0}<br/>", FormattedText.Escape (series.Source.Name));
+				buffer.AppendFormat ("Source {0}<br/>", FormattedText.Escape (DataCube.CleanUpLabel (series.Source.Name)));
 				buffer.Append (minMax);
 				buffer.Append ("</font>");
 			}

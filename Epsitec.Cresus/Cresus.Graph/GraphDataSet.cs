@@ -97,12 +97,22 @@ Màj Salaires	35'921.16	8'419.46	6'563.86	2'234.12	3'711.18	3'098.45	3'658.94	2'
 
 		public static IEnumerable<string> CreateNumberedLabels(IEnumerable<string> labels)
 		{
+			return GraphDataSet.CreateNumberedLabels (labels, index => index);
+		}
+
+		public static IEnumerable<string> CreateNumberedLabels(IEnumerable<string> labels, System.Func<int, int> indexMapper)
+		{
 			int index = 0;
 
 			foreach (string label in labels)
 			{
-				yield return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:000}{1}{2}", index++, DataCube.LabelSortPrefixSeparator, label);
+				yield return GraphDataSet.CreateNumberedLabel (label, indexMapper (index++));
 			}
+		}
+
+		public static string CreateNumberedLabel(string label, int index)
+		{
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:000}{1}{2}", index, DataCube.LabelSortPrefixSeparator, label);
 		}
 
 		public event EventHandler Changed;
