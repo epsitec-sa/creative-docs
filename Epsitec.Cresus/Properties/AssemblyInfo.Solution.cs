@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]
 
-[assembly: AssemblyVersion ("2.4.9.0948")]
-[assembly: AssemblyFileVersion ("2.4.9.0948")]
+[assembly: AssemblyVersion ("2.4.9.0949")]
+[assembly: AssemblyFileVersion ("2.4.9.0949")]
 
 [assembly: ComVisibleAttribute (false)]

@@ -381,6 +381,7 @@ namespace Epsitec.Common.OpenType
 					string style = this.GetMacName (NameId.FontSubfamily);
 
 					if ((face != null) &&
+						(style != null) &&
 						(face.EndsWith (style)))
 					{
 						face = face.Substring (0, face.Length - style.Length).Trim ();
