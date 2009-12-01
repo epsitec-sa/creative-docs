@@ -12,12 +12,11 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Graph.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
-using Epsitec.Cresus.Core;
 
 namespace Epsitec.Cresus.Graph.Controllers
 {

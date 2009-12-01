@@ -8,7 +8,6 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace Epsitec.Common.Graph.Renderers
 {

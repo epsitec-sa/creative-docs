@@ -5,7 +5,6 @@ using Epsitec.Common.Graph.Data;
 
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Graph.ImportConverters

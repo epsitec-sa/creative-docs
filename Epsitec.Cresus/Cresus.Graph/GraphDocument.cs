@@ -14,7 +14,6 @@ using Epsitec.Cresus.Graph.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using System;
 
 [assembly:DependencyClass (typeof (Epsitec.Cresus.Graph.GraphDocument))]
 

@@ -31,10 +31,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		
 		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
 		{
-			if (header.Count < 4)
-			{
-				return null;
-			}
+			IEnumerable<string>[] headerEnum = new  IEnumerable<string>[] { header };
+			var allLines = headerEnum.Concat (lines);
 
 			var cube  = new GraphDataCube ();
 
@@ -42,22 +40,126 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			string rowDimension = "Transaction";
 			string sourceName   = Compta.GetSourceName (sourcePath);
 
-			var table = new DataTable ();
-
-			table.DimensionVector.Add ("Source", sourceName);
-			table.ColumnDimensionKey = colDimension;
-			table.RowDimensionKey    = rowDimension;
-
+			var enumerator = allLines.GetEnumerator ();
 			var dates = new HashSet<System.DateTime> ();
-			var data  = new Dictionary<System.DateTime, double> ();
+			var list = new List<Compte> ();
 
-			foreach (var line in lines)
+			while (enumerator.MoveNext ())
 			{
+				var line   = enumerator.Current;
 				var fields = line.ToArray ();
-				
-				if (string.IsNullOrEmpty (fields[0]) ||
-					string.IsNullOrEmpty (fields[1]))
+				var field0 = fields[0];
+
+				if (field0.StartsWith ("Compte "))
+                {
+					var name = field0.Substring (7);
+					var compte = ComptaCompteImportConverter.GetData (name, enumerator, dates);
+
+					if (compte.Values.Count > 0)
+					{
+						list.Add (compte);
+					}
+                }
+			}
+
+			var minDate = dates.Min ();
+			var maxDate = dates.Max ();
+			var dateRange = ComptaCompteImportConverter.Range (minDate, maxDate);
+
+			foreach (var compte in list)
+			{
+				var table = new DataTable ();
+
+				table.DimensionVector.Add ("Source", sourceName);
+				table.ColumnDimensionKey = colDimension;
+				table.RowDimensionKey    = rowDimension;
+				table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (dateRange.Select (date => date.ToShortDateString ())));
+
+				table.Add (compte.Name, compte.GetValues (dateRange));
+
+				cube.AddTable (table);
+			}
+			
+			return cube;
+		}
+
+		class Compte
+		{
+			public Compte(string name)
+			{
+				this.values = new Dictionary<System.DateTime, double> ();
+				this.name   = name;
+			}
+
+			public Dictionary<System.DateTime, double> Values
+			{
+				get
 				{
+					return this.values;
+				}
+			}
+
+			public string Name
+			{
+				get
+				{
+					return this.name;
+				}
+			}
+
+			public IEnumerable<double?> GetValues(IEnumerable<System.DateTime> dates)
+			{
+				double? currentSolde = null;
+				
+				foreach (var currentDate in dates)
+				{
+					double value;
+
+					if (this.values.TryGetValue (currentDate, out value))
+					{
+						currentSolde = value;
+					}
+
+					yield return currentSolde;
+				}
+			}
+
+			private readonly Dictionary<System.DateTime, double> values;
+			private readonly string name;
+		}
+
+		private static IEnumerable<System.DateTime> Range(System.DateTime minDate, System.DateTime maxDate)
+		{
+			var currentDate = minDate;
+
+			while (currentDate <= maxDate)
+			{
+				yield return currentDate;
+				currentDate = currentDate.AddDays (1);
+			}
+		}
+
+		private static Compte GetData(string name, IEnumerator<IEnumerable<string>> enumerator, HashSet<System.DateTime> dates)
+		{
+			var data = new Compte (name);
+
+			while (enumerator.MoveNext ())
+			{
+				var line   = enumerator.Current;
+				var fields = line.ToArray ();
+
+				if ((fields.Length < 7) ||
+					(string.IsNullOrEmpty (fields[0])) ||
+					(string.IsNullOrEmpty (fields[1])) ||
+					(fields[0].Length < 8) ||
+					(fields[0][2] != '.') ||
+					(fields[0][5] != '.'))
+				{
+					if (fields.Length == 1)
+                    {
+						break;
+                    }
+
 					continue;
 				}
 
@@ -73,41 +175,13 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 				if (solde.HasValue)
 				{
-					data[date] = solde.Value;
+					data.Values[date] = solde.Value;
 				}
 			}
-
-			var minDate = dates.Min ();
-			var maxDate = dates.Max ();
-
-			var     currentDate  = minDate;
-			double? currentSolde = null;
-			var     values       = new List<double?> ();
-			var     columns      = new List<string> ();
-
-			while (currentDate <= maxDate)
-			{
-				double value;
-				
-				if (data.TryGetValue (currentDate, out value))
-				{
-					currentSolde = value;
-				}
-
-				columns.Add (currentDate.ToShortDateString ());
-				values.Add (currentSolde);
-
-				currentDate = currentDate.AddDays (1);
-			}
-
-			table.DefineColumnLabels (GraphDataSet.CreateNumberedLabels (columns));
-			table.Add ("Compte", values);
-
-			cube.AddTable (table);
-
-			return cube;
+			
+			return data;
 		}
-
+		
 		public override string DataTitle
 		{
 			get
