@@ -880,6 +880,14 @@ namespace Epsitec.Cresus.Graph.Controllers
 			GraphActions.DocumentAddSeriesToOutput (this.Document.GetSeriesId (item));
 		}
 
+		public void SetPreferredGraphType(Command graphType)
+		{
+			if ((this.chartViewController != null) &&
+				(graphType != null))
+            {
+				this.chartViewController.GraphType = graphType;
+            }
+		}
 
 		public void SetOutputIndex(GraphDataSeries item, int index)
 		{

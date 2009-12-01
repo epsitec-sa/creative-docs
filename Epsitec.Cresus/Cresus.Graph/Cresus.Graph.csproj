@@ -175,6 +175,7 @@
     <Compile Include="GraphUpdate.cs" />
     <Compile Include="ImportConverters\Compta.cs" />
     <Compile Include="ImportConverters\ComptaBilanImportConverter.cs" />
+    <Compile Include="ImportConverters\ComptaPPImportConverter.cs" />
     <Compile Include="ImportConverters\GenericCsvImportConverter.cs" />
     <Compile Include="ImportOperation.cs" />
     <Compile Include="LicensingInfo.cs" />

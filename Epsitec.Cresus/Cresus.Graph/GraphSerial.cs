@@ -124,6 +124,10 @@ namespace Epsitec.Cresus.Graph
             {
 				return LicensingInfo.ValidPiccolo;
             }
+			if (GraphSerial.hasComptaLicense)
+			{
+				return LicensingInfo.Expired;
+			}
 
 			return LicensingInfo.Unknown;
 		}
@@ -178,6 +182,6 @@ namespace Epsitec.Cresus.Graph
 		private static bool hasComptaLicense;
 		private static bool hasValidComptaLicense;
 
-		private static LicensingInfo licensingInfo = LicensingInfo.ValidPro;
+		private static LicensingInfo licensingInfo; // = LicensingInfo.ValidPro;
 	}
 }

@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+#if false
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Graph.Renderers;
 using Epsitec.Common.Graph.Widgets;
@@ -670,3 +671,4 @@ namespace Epsitec.Cresus.Graph.Controllers
 		private Epsitec.Common.Graph.Styles.ColorStyle colorStyle;
 	}
 }
+#endif

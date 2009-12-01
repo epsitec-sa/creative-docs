@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Graph.Widgets
 			this.DisplayValue = false;
 		}
 
-		protected override void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle)
+		protected override void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle, Color hiliteColor)
 		{
-			base.PaintTopmostSheetBackground (graphics, rectangle);
+			base.PaintTopmostSheetBackground (graphics, rectangle, hiliteColor);
 			
 			this.AddFrameSurface (graphics, rectangle);
 			graphics.RenderSolid (Color.FromBrightness (1));

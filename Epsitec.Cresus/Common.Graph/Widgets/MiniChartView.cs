@@ -382,12 +382,12 @@ namespace Epsitec.Common.Graph.Widgets
 
 		private void PaintTopmostSheet(Graphics graphics, Rectangle rectangle, Color hiliteColor)
 		{
-			this.PaintTopmostSheetBackground (graphics, rectangle);
+			this.PaintTopmostSheetBackground (graphics, rectangle, hiliteColor);
 			this.AddFrameOutline (graphics, Rectangle.Deflate (rectangle, 0.5, 0.5));
 			graphics.RenderSolid (Color.FromBrightness (0.8));
 		}
 
-		protected virtual void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle)
+		protected virtual void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle, Color hiliteColor)
 		{
 			Color sheetColor = hiliteColor.IsValid ? hiliteColor : Color.FromRgb (0.9, 0.9, 0.95);
 			Color whiteColor = MiniChartView.GetLightColor (sheetColor);

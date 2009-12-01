@@ -85,6 +85,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			return cube;
 		}
 
+		public override Epsitec.Common.Widgets.Command PreferredGraphType
+		{
+			get
+			{
+				return Res.Commands.GraphType.UseLineChart;
+			}
+		}
+
 		public override string DataTitle
 		{
 			get

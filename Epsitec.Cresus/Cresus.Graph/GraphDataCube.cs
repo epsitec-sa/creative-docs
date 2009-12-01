@@ -5,6 +5,7 @@ using Epsitec.Common.Graph.Data;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -88,6 +89,20 @@ namespace Epsitec.Cresus.Graph
 		}
 
 
+
+		public Command GetPreferredGraphType()
+		{
+			var converter = ImportConverters.ImportConverter.FindConverter (this.ConverterName);
+
+			if (converter == null)
+			{
+				return null;
+			}
+			else
+			{
+				return converter.PreferredGraphType;
+			}
+		}
 
 		protected override IEnumerable<string> GetAnnotations()
 		{

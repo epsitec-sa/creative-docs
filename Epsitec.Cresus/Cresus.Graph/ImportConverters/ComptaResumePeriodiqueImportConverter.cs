@@ -20,7 +20,15 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 		}
 
-		
+
+		public override Epsitec.Common.Widgets.Command PreferredGraphType
+		{
+			get
+			{
+				return Res.Commands.GraphType.UseLineChart;
+			}
+		}
+
 		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
 		{
 			if (header.Count < 2)

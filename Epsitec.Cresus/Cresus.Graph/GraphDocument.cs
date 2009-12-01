@@ -763,6 +763,7 @@ namespace Epsitec.Cresus.Graph
 				this.activeCube = cube;
 				this.cubes.Add (cube);
 
+				this.application.WorkspaceController.SetPreferredGraphType (cube.GetPreferredGraphType ());
 				this.application.NotifyDocumentChanged ();
 			}
 		}

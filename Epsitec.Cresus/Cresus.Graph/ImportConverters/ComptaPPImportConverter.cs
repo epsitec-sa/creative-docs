@@ -9,14 +9,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Graph.ImportConverters
 {
 	/// <summary>
-	/// The <c>ComptaBilanImportConverter</c> class converts from the
-	/// Crésus Comptabilité report named "Bilan".
+	/// The <c>ComptaPPImportConverter</c> class converts from the
+	/// Crésus Comptabilité report named "PP".
 	/// </summary>
-	[Importer ("compta:blian")]
-	public class ComptaBilanImportConverter : Compta
+	[Importer ("compta:pp")]
+	public class ComptaPPImportConverter : Compta
 	{
-		public ComptaBilanImportConverter(string name)
-			: base (name, "4")
+		public ComptaPPImportConverter(string name)
+			: base (name, "5")
 		{
 		}
 
