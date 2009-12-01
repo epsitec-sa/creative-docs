@@ -20,7 +20,16 @@ namespace Epsitec.Cresus.Graph
 		{
 			try
 			{
-				NetNamedPipeBinding binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
+				NetNamedPipeBinding binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None)
+				{
+					MaxReceivedMessageSize = Connector.MaxMessageSize,
+					MaxBufferSize = Connector.MaxMessageSize,
+//					TransferMode = System.ServiceModel.TransferMode.Streamed
+				};
+
+				var quotas = binding.ReaderQuotas;
+				quotas.MaxStringContentLength = Connector.MaxMessageSize;
+
 				EndpointAddress     address = new EndpointAddress (ConnectorServer.GetAddress (this.serverProcess.Id));
 
 				bool? result  = null;

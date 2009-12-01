@@ -92,7 +92,34 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 			return base.GetCategory (series);
 		}
-		
-		private readonly string view;
+
+		public static System.DateTime ParseDate(string text)
+		{
+			if ((text.Length == 8) &&
+				(text[2] == '.') &&
+				(text[5] == '.'))
+			{
+				int day   = int.Parse (text.Substring (0, 2), System.Globalization.CultureInfo.InvariantCulture);
+				int month = int.Parse (text.Substring (3, 2), System.Globalization.CultureInfo.InvariantCulture);
+				int year  = int.Parse (text.Substring (6, 2), System.Globalization.CultureInfo.InvariantCulture);
+
+				if (year < 80)
+				{
+					year += 2000;
+				}
+				else
+				{
+					year += 1900;
+				}
+
+				return new System.DateTime (year, month, day);
+			}
+			else
+			{
+				throw new System.FormatException ("Invalid date format");
+			}
+		}
+
+        private readonly string view;
 	}
 }

@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 			get
 			{
-				return "Compta – Bilan";
+				return "Compta – Pertes et Profits";
 			}
 		}
 	}

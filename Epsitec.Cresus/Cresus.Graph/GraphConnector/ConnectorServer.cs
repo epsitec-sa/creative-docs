@@ -21,7 +21,14 @@ namespace Epsitec.Cresus.Graph
 		public ConnectorServer(bool enableMetadata)
 		{
 			this.serviceHost = new ServiceHost (typeof (ConnectorService));
-			NetNamedPipeBinding binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None);
+			NetNamedPipeBinding binding = new NetNamedPipeBinding (NetNamedPipeSecurityMode.None)
+			{
+				MaxBufferSize = Connector.MaxMessageSize,
+				MaxReceivedMessageSize = Connector.MaxMessageSize,
+			};
+
+			var quotas = binding.ReaderQuotas;
+			quotas.MaxStringContentLength = Connector.MaxMessageSize;
 
 			if (enableMetadata)
 			{

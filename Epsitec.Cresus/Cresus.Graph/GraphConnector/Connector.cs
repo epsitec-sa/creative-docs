@@ -85,5 +85,7 @@ namespace Epsitec.Cresus.Graph
 
 
 		private static System.Diagnostics.Process process;
+		
+		internal static readonly int MaxMessageSize = 128*1024*1024;	//	max. 100 MB while streaming
 	}
 }
