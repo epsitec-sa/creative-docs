@@ -70,6 +70,12 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+		public bool DisplayValue
+		{
+			get;
+			set;
+		}
+
 
 		public void DefineIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)
 		{
@@ -152,7 +158,8 @@ namespace Epsitec.Common.Graph.Widgets
 			{
 				int valueCount = renderer.ValueCount;
 				
-				if (valueCount > 1)
+				if ((valueCount > 1) ||
+					((valueCount == 1) && (this.DisplayValue == false)))
 				{
 					var transform = graphics.Transform;
 					graphics.ScaleTransform (scale, scale, 0, 0);

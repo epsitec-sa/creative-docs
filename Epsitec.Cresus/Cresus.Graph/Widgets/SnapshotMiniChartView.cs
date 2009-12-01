@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Graph.Widgets
 	{
 		public SnapshotMiniChartView()
 		{
+			this.DisplayValue = false;
 		}
 
 		protected override void PaintTopmostSheetBackground(Graphics graphics, Rectangle rectangle)

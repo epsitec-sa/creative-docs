@@ -399,19 +399,21 @@ namespace Epsitec.Cresus.Graph.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 			};
 
-			var button = new Button ()
+			var button = new MetaButton ()
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 130,
+				IconName = "manifest:Epsitec.Cresus.Graph.Images.TakeSnapshot.icon",
 				Text = "Créer un cliché instantané",
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				ButtonStyle = ButtonStyle.ToolItem,
+				ButtonClass = ButtonClass.FlatButton,
+//				ContentAlignment = ContentAlignment.MiddleLeft,
+//				ButtonStyle = ButtonStyle.ToolItem,
 				Parent = frame,
 				Margins = new Margins (0, 0, 1, 1),
 				Padding = new Margins (40, 4, 0, 0),
 				Visibility = this.ChartSnapshot == null,
 			};
-
+#if false
 			button.PaintForeground +=
 				(sender, e) =>
 				{
@@ -421,6 +423,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					graphics.AddFilledRectangle (new Rectangle (6, 6, 24, 24));
 					graphics.RenderSolid (Color.FromAlphaRgb (0.5, 0, 0, 1));
 				};
+#endif
 
 			button.Clicked +=
 				(sender, e) =>

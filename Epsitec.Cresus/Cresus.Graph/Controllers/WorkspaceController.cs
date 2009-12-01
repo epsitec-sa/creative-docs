@@ -1253,6 +1253,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Renderer = lineChartRenderer,
 				Scale = 0.5,
 				PaintPaperStack = true,
+				DisplayValue = true,
 			};
 
 			view.Entered +=

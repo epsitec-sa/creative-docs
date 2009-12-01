@@ -6,6 +6,19 @@
 
 /*****************************************************************************/
 
+class DllLoadNotifier
+{
+public:
+	DllLoadNotifier ()
+	{
+		System::Diagnostics::Debug::WriteLine ("Graph Connector DLL loaded");
+	}
+};
+
+static DllLoadNotifier notifier = DllLoadNotifier ();
+
+/*****************************************************************************/
+
 extern "C" DLL
 int
 __cdecl GraphConnectorSendData(void* window, const char* documentPath, const char* meta, const char* data)
@@ -14,6 +27,8 @@ __cdecl GraphConnectorSendData(void* window, const char* documentPath, const cha
 	System::String ^ managedPath = Marshal::PtrToStringAnsi (System::IntPtr ((void*) documentPath));
 	System::String ^ managedMeta = Marshal::PtrToStringAnsi (System::IntPtr ((void*) meta));
 	System::String ^ managedData = Marshal::PtrToStringAnsi (System::IntPtr ((void*) data));
+
+	System::Diagnostics::Debug::WriteLine ("GraphConnectorSendData");
 
 	//	...and jump into C# world
 	return Epsitec::Cresus::Graph::Connector::SendData (System::IntPtr (window), managedPath, managedMeta, managedData);

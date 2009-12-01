@@ -23,7 +23,7 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				ButtonClass value = (ButtonClass) this.GetValue(MetaButton.ButtonClassProperty);
+				var value = this.GetValue<ButtonClass > (MetaButton.ButtonClassProperty);
 
 				return (value == ButtonClass.None) ? this.cachedButtonClass : value;
 			}
@@ -42,43 +42,38 @@ namespace Epsitec.Common.UI
 
 		public ButtonMarkDisposition			MarkDisposition
 		{
-			//	Emplacement de la marque.
 			get
 			{
-				return (ButtonMarkDisposition) this.GetValue(MetaButton.MarkDispositionProperty);
+				return this.GetValue<ButtonMarkDisposition > (MetaButton.MarkDispositionProperty);
 			}
-
 			set
 			{
-				this.SetValue(MetaButton.MarkDispositionProperty, value);
+				this.SetValue (MetaButton.MarkDispositionProperty, value);
 			}
 		}
 
 		public double							MarkLength
 		{
-			//	Dimension de la marque.
 			get
 			{
-				return (double) this.GetValue(MetaButton.MarkLengthProperty);
+				return this.GetValue<double> (MetaButton.MarkLengthProperty);
 			}
-
 			set
 			{
-				this.SetValue(MetaButton.MarkLengthProperty, value);
+				this.SetValue (MetaButton.MarkLengthProperty, value);
 			}
 		}
 
 		public Drawing.Color					BulletColor
 		{
-			//	Couleur de la puce éventuelle (si différent de Color.Empty).
 			get
 			{
-				return (Drawing.Color) this.GetValue(MetaButton.BulletColorProperty);
+				return this.GetValue<Drawing.Color> (MetaButton.BulletColorProperty);
 			}
 
 			set
 			{
-				this.SetValue(MetaButton.BulletColorProperty, value);
+				this.SetValue (MetaButton.BulletColorProperty, value);
 			}
 		}
 
@@ -99,12 +94,24 @@ namespace Epsitec.Common.UI
 		{
 			get
 			{
-				return (string) this.GetValue(MetaButton.PreferredIconStyleProperty);
+				return this.GetValue<string> (MetaButton.PreferredIconStyleProperty);
 			}
 
 			set
 			{
-				this.SetValue(MetaButton.PreferredIconStyleProperty, value);
+				this.SetValue (MetaButton.PreferredIconStyleProperty, value);
+			}
+		}
+
+		public Drawing.Size PreferredIconSize
+		{
+			get
+			{
+				return this.GetValue<Drawing.Size> (MetaButton.PreferredIconSizeProperty);
+			}
+			set
+			{
+				this.SetValue (MetaButton.PreferredIconSizeProperty, value);
 			}
 		}
 
@@ -390,22 +397,28 @@ namespace Epsitec.Common.UI
 			}
 			else
 			{
-				Drawing.Rectangle rect = this.GetInnerBounds ();
-				Drawing.Image image = Support.ImageProvider.Default.GetImage (this.IconName, Support.Resources.DefaultManager);
+				var rect = this.GetInnerBounds ();
+				var image = Support.ImageProvider.Default.GetImage (this.IconName, Support.Resources.DefaultManager);
+				var size  = image.Size;
+
+				if (this.ContainsValue (MetaButton.PreferredIconSizeProperty))
+				{
+					size = this.PreferredIconSize;
+				}
 
 				if ((image != null) &&
-					(image.Size.Width != image.Size.Height))
+					(size.Width != size.Height))
 				{
-					double ox = rect.X + System.Math.Floor ((rect.Width - image.Width) / 2);
-					double oy = rect.Y + System.Math.Floor ((rect.Height - image.Height) / 2);
+					double ox = rect.X + System.Math.Floor ((rect.Width - size.Width) / 2);
+					double oy = rect.Y + System.Math.Floor ((rect.Height - size.Height) / 2);
 
 					if (this.textVisibility == false)
 					{
-						rect = new Drawing.Rectangle (ox, oy, image.Width, image.Height);
+						rect = new Drawing.Rectangle (ox, oy, size.Width, size.Height);
 					}
 					else
 					{
-						rect = new Drawing.Rectangle (rect.X, oy, image.Width, image.Height);
+						rect = new Drawing.Rectangle (rect.X, oy, size.Width, size.Height);
 					}
 				}
 				else
@@ -526,6 +539,7 @@ namespace Epsitec.Common.UI
 		public static readonly DependencyProperty BulletColorProperty			= DependencyProperty.Register ("BulletColor", typeof (Drawing.Color), typeof (MetaButton), new DependencyPropertyMetadata (Drawing.Color.Empty, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty PreferredIconLanguageProperty	= DependencyProperty.Register ("PreferredIconLanguage", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName, MetaButton.HandleIconDefinitionChanged));
 		public static readonly DependencyProperty PreferredIconStyleProperty	= DependencyProperty.Register ("PreferredIconStyle", typeof (string), typeof (MetaButton), new DependencyPropertyMetadata (null, MetaButton.HandleIconDefinitionChanged));
+		public static readonly DependencyProperty PreferredIconSizeProperty		= DependencyProperty.Register ("PreferredIconSize", typeof (Drawing.Size), typeof (MetaButton), new DependencyPropertyMetadata (Drawing.Size.Zero, MetaButton.HandleIconDefinitionChanged));
 
 		private TextLayout			iconLayout;
 		private ButtonClass			cachedButtonClass;
