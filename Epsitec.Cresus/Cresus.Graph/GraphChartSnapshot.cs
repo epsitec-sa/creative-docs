@@ -189,6 +189,13 @@ namespace Epsitec.Cresus.Graph
 			{
 				renderer = new BarChartRenderer ();
 			}
+			else if (graphType == Res.Commands.GraphType.UsePieChart)
+			{
+				renderer = new PieChartRenderer ()
+				{
+					SurfaceAlpha = 0.8,
+				};
+			}
 
 			System.Diagnostics.Debug.Assert (renderer != null);
 

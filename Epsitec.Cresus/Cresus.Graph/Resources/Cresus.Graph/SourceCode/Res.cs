@@ -46,6 +46,8 @@ namespace Epsitec.Cresus
 				public static readonly global::Epsitec.Common.Widgets.Command UseBarChartVertical = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 				//	designer:cap/BVA
 				public static readonly global::Epsitec.Common.Widgets.Command UseLineChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+				//	designer:cap/BVAR
+				public static readonly global::Epsitec.Common.Widgets.Command UsePieChart = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 			}
 			
 			internal static void _Initialize()
@@ -80,6 +82,8 @@ namespace Epsitec.Cresus
 				public const long UseBarChartVertical = 0x3EB0000A000001L;
 				//	designer:cap/BVA
 				public const long UseLineChart = 0x3EB0000A000000L;
+				//	designer:cap/BVAR
+				public const long UsePieChart = 0x3EB0000A00001BL;
 			}
 			
 		}

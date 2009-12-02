@@ -526,6 +526,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			yield return Res.Commands.GraphType.UseLineChart;
 			yield return Res.Commands.GraphType.UseBarChartVertical;
 			//-			yield return Res.Commands.GraphType.UseBarChartHorizontal;
+			yield return Res.Commands.GraphType.UsePieChart;
 		}
 
 
@@ -541,6 +542,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			[Command (Res.CommandIds.GraphType.UseLineChart)]
 			[Command (Res.CommandIds.GraphType.UseBarChartVertical)]
 			[Command (Res.CommandIds.GraphType.UseBarChartHorizontal)]
+			[Command (Res.CommandIds.GraphType.UsePieChart)]
 			private void GraphTypeCommand(CommandDispatcher sender, CommandEventArgs e)
 			{
 				var controller = ChartViewController.GetChartViewController (e.CommandContext);

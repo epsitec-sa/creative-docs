@@ -162,15 +162,13 @@ namespace Epsitec.Common.Drawing
 		{
 			this.ArcToDeg (x, y, rx, ry, a1, a2, ccw, this.defaultZoom);
 		}
-		
+
 		public void ArcToDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximationZoom)
 		{
-			a1 = Math.DegToRad(a1);
-			a2 = Math.DegToRad(a2);
+			a1 = Math.DegToRad (a1);
+			a2 = Math.DegToRad (a2);
 
-			this.currentPoint = this.ArcBezierRad (x, y, rx, ry, a1, a2, ccw, true);
-			this.hasCurrentPoint = true;
-			this.isEmpty = false;
+			this.ArcToRad (x, y, rx, ry, a1, a2, ccw, approximationZoom);
 		}
 		
 		public void ArcToRad(Point c, double rx, double ry, double a1, double a2, bool ccw)
@@ -185,6 +183,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void ArcToRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximationZoom)
 		{
+			this.LineTo (new Point (x + System.Math.Cos (a1) * rx, y + System.Math.Sin (a1) * ry));
 			this.currentPoint = this.ArcBezierRad (x, y, rx, ry, a1, a2, ccw, true);
 			this.hasCurrentPoint = true;
 			this.isEmpty = false;

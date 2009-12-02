@@ -562,12 +562,12 @@ namespace Epsitec.Common.Drawing
 			
 			//	...et maintenant les arcs jointifs.
 			
-			path1.MoveTo (90, 180);
-			path1.ArcToDeg (90, 180, 30, 30, 30, 135, true);
+			path1.MoveTo (200, 200);
+			path1.ArcToDeg (200, 200, 50, 50, 30, 60, true);
 			path1.Close ();
 			
-			path1.MoveTo (90, 180);
-			path1.ArcToDeg (90, 180, 30, 30, 145, 20, true);
+			path1.MoveTo (200, 200);
+			path1.ArcToDeg (200, 200, 40, 40, 145, 20, true);
 			path1.Close ();
 			
 			
