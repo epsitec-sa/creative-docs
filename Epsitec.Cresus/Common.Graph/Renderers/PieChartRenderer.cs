@@ -15,17 +15,10 @@ namespace Epsitec.Common.Graph.Renderers
 	{
 		public PieChartRenderer()
 		{
-			this.AdditionalRenderingPasses = 0;
+			this.AdditionalRenderingPasses = 1;
 		}
 
 		
-		public double SurfaceAlpha
-		{
-			get;
-			set;
-		}
-
-
 		public override void Collect(ChartSeries series)
 		{
 			base.Collect (series);
@@ -37,7 +30,7 @@ namespace Epsitec.Common.Graph.Renderers
 			this.UpdatePies ();
 
 			int rows = PieChartRenderer.GetRowCount (bounds.Size, this.pies.Count);
-			int cols = this.pies.Count == 0  ? 1 : (int) System.Math.Ceiling (rows / (double) this.pies.Count);
+			int cols = this.pies.Count == 0  ? 1 : (int) System.Math.Ceiling ((double) this.pies.Count / rows);
 
 			double dx = bounds.Width / cols;
 			double dy = bounds.Height / rows;
@@ -59,6 +52,8 @@ namespace Epsitec.Common.Graph.Renderers
 						pie.Center = new Point (x, y);
 						pie.Radius = d / 2;
 					}
+
+					pieIndex++;
 				}
 			}
 
@@ -106,6 +101,10 @@ namespace Epsitec.Common.Graph.Renderers
 				case 0:
 					this.PaintSurface (port, series, seriesIndex);
 					break;
+				
+				case 1:
+					this.PaintOutline (port, series, seriesIndex);
+					break;
 			}
 		}
 
@@ -141,15 +140,25 @@ namespace Epsitec.Common.Graph.Renderers
 
 		private void PaintSurface(IPaintPort port, Data.ChartSeries series, int seriesIndex)
 		{
-			if ((series.Values.Count > 0) &&
-				(this.SurfaceAlpha > 0))
+			if (series.Values.Count > 0)
 			{
 				using (Path path = this.CreateOutlinePath (series, seriesIndex))
 				{
 					this.FindStyle ("line-color").ApplyStyle (seriesIndex, port);
-
-					port.Color = Color.FromAlphaColor (this.SurfaceAlpha, port.Color);
 					port.PaintSurface (path);
+				}
+			}
+		}
+
+		private void PaintOutline(IPaintPort port, Data.ChartSeries series, int seriesIndex)
+		{
+			if (series.Values.Count > 0)
+			{
+				using (Path path = this.CreateOutlinePath (series, seriesIndex))
+				{
+					port.Color = Color.FromBrightness (1);
+					port.LineWidth = 1;
+					port.PaintOutline (path);
 				}
 			}
 		}
@@ -165,14 +174,21 @@ namespace Epsitec.Common.Graph.Renderers
 
 				if ((pie == null) ||
 					(seriesIndex >= pie.Sectors.Count))
-                {
+				{
 					continue;
-                }
+				}
 
 				var sector = pie.Sectors[seriesIndex];
+				var center = pie.Center + this.Bounds.Location;
+				var radius = pie.Radius;
+
+				if ((sector.Angle2 - sector.Angle1) < 0.1)
+				{
+					continue;
+				}
 				
-				path.MoveTo (pie.Center);
-				path.ArcToDeg (pie.Center, pie.Radius, pie.Radius, sector.Angle1 * 360, sector.Angle2 * 360, true);
+				path.MoveTo (center);
+				path.ArcToDeg (center, radius, radius, sector.Angle1, sector.Angle2, true);
 				path.Close ();
 			}
 
@@ -288,8 +304,10 @@ namespace Epsitec.Common.Graph.Renderers
 
 				foreach (var sector in this.sectors)
 				{
+					double offset = System.Math.Abs (sector.Value.Value) * scale;
+
 					sector.Angle1 = angle;
-					sector.Angle2 = angle = angle + System.Math.Abs (sector.Value.Value) / total;
+					sector.Angle2 = angle = angle + offset;
 				}
 			}
 

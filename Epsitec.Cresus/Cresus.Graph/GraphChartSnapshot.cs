@@ -191,10 +191,7 @@ namespace Epsitec.Cresus.Graph
 			}
 			else if (graphType == Res.Commands.GraphType.UsePieChart)
 			{
-				renderer = new PieChartRenderer ()
-				{
-					SurfaceAlpha = 0.8,
-				};
+				renderer = new PieChartRenderer ();
 			}
 
 			System.Diagnostics.Debug.Assert (renderer != null);
