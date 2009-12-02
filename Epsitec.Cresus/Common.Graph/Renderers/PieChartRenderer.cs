@@ -29,7 +29,7 @@ namespace Epsitec.Common.Graph.Renderers
 		{
 			this.UpdatePies ();
 
-			int rows = PieChartRenderer.GetRowCount (bounds.Size, this.pies.Count);
+			int rows = PieChartRenderer.GetRowCount (bounds.Width, bounds.Height, this.pies.Count);
 			int cols = this.pies.Count == 0  ? 1 : (int) System.Math.Ceiling ((double) this.pies.Count / rows);
 
 			double dx = bounds.Width / cols;
@@ -327,34 +327,25 @@ namespace Epsitec.Common.Graph.Renderers
 			private readonly List<SeriesSector> sectors;
 		}
 
-		private static int GetRowCount(Size size, int count)
+		private static int GetRowCount(double dx, double dy, int count)
 		{
-			if (count < 1)
-            {
-				return 1;
-            }
+			int bestRowCount = 1;
+			var bestSize     = 0.0;
 
-			if (size.Width > size.Height)
+			for (int rows = 1; rows < count; rows++)
 			{
-				return PieChartRenderer.GetStripeCount (size.Width, size.Height, count);
-			}
-			else
-			{
-				return (int) System.Math.Ceiling (count / (double) PieChartRenderer.GetStripeCount (size.Height, size.Width, count));
-			}
-		}
-
-
-		private static int GetStripeCount(double breadth, double depth, int count)
-		{
-			int stripeCount = 2;
-
-			while (System.Math.Floor (breadth / count * stripeCount)*stripeCount <= depth)
-			{
-				stripeCount++;
+				int cols = (count + rows - 1) / rows;
+				var itemDx = dx / cols;
+				var itemDy = dy / rows;
+				var itemSize = System.Math.Floor (System.Math.Min (itemDx, itemDy));
+				if (itemSize > bestSize)
+				{
+					bestRowCount = rows;
+					bestSize = itemSize;
+				}
 			}
 
-			return stripeCount-1;
+			return bestRowCount;
 		}
 
 		private List<SeriesPie> pies;
