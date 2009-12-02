@@ -81,6 +81,27 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public static string LicensingFriendlyName
+		{
+			get
+			{
+				switch (GraphSerial.LicensingInfo)
+				{
+					case LicensingInfo.ValidPiccolo:
+						return "PICCOLO";
+
+					case LicensingInfo.ValidPro:
+						return "PRO";
+
+					case LicensingInfo.ValidLargo:
+						return "LARGO";
+					
+					default:
+						return "DEMO";
+				}
+			}
+		}
+
 
 		private static LicensingInfo GetLicensingInfo()
 		{

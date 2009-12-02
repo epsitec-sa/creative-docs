@@ -1,23 +1,16 @@
 ﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
-using Epsitec.Cresus.Graph.ImportConverters;
-using Epsitec.Common.Graph.Widgets;
-using Epsitec.Common.Graph.Renderers;
-using Epsitec.Common.UI;
-
 using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
+
+using Epsitec.Cresus.Graph.ImportConverters;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Epsitec.Common.Graph.Data;
-using Epsitec.Common.Dialogs;
-using System.Collections;
 
 namespace Epsitec.Cresus.Graph
 {
@@ -59,7 +52,9 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return Res.Strings.Application.Name.ToSimpleText ();
+				string version = VersionChecker.Format ("#.#.###", GraphUpdate.GetInstalledVersion ());
+				string mode    = GraphSerial.LicensingFriendlyName;
+				return string.Format (Res.Strings.Application.Name.ToSimpleText (), mode, version);
 			}
 		}
 

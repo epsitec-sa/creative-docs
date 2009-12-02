@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				this.window = new Window ()
 				{
-					Text = Res.Strings.Application.Name.ToSimpleText (),
+					Text = GraphProgram.Application.ShortWindowTitle,
 					Name = "Application",
 					ClientSize = new Size (960, 600),
 					Icon = Bitmap.FromManifestResource ("Epsitec.Cresus.Graph.Images.Application.icon", this.GetType ().Assembly)
