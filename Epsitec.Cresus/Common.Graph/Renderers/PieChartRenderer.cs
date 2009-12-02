@@ -50,7 +50,7 @@ namespace Epsitec.Common.Graph.Renderers
 					if (pie != null)
 					{
 						pie.Center = new Point (x, y);
-						pie.Radius = d / 2;
+						pie.Radius = 0.9 * d / 2;
 					}
 
 					pieIndex++;
@@ -123,19 +123,31 @@ namespace Epsitec.Common.Graph.Renderers
 		protected override System.Action<IPaintPort, Rectangle> CreateCaptionSamplePainter(Data.ChartSeries series, int seriesIndex)
 		{
 			return (p, r) =>
+			{
+				using (Path sample = new Path ())
 				{
-					using (Path line = new Path ())
-					{
-						line.MoveTo (r.Left, r.Center.Y);
-						line.LineTo (r.Right, r.Center.Y);
+					this.FindStyle ("line-color").ApplyStyle (seriesIndex, p);
 
-						this.FindStyle ("line-color").ApplyStyle (seriesIndex, p);
+					double x1 = r.Left;
+					double y1 = r.Center.Y - 4;
+					double x2 = r.Right;
+					double y2 = r.Center.Y + 4;
 
-						p.LineWidth = 2;
-						p.LineCap = CapStyle.Butt;
-						p.PaintOutline (line);
-					}
-				};
+					sample.MoveTo (x1, y1);
+					sample.LineTo (x2, y1);
+					sample.LineTo (x2, y2);
+					sample.LineTo (x1, y2);
+					sample.Close ();
+
+					p.PaintSurface (sample);
+
+					p.Color = Color.FromBrightness (1);
+					p.LineWidth = 1;
+					p.LineCap = CapStyle.Butt;
+					p.LineJoin = JoinStyle.Miter;
+					p.PaintOutline (sample);
+				}
+			};
 		}
 
 		private void PaintSurface(IPaintPort port, Data.ChartSeries series, int seriesIndex)
