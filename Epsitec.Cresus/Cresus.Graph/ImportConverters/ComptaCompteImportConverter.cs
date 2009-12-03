@@ -43,23 +43,29 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			var enumerator = allLines.GetEnumerator ();
 			var dates = new HashSet<System.DateTime> ();
 			var list = new List<Compte> ();
+			bool skip = false;
 
-			while (enumerator.MoveNext ())
+			while (skip || enumerator.MoveNext ())
 			{
 				var line   = enumerator.Current;
 				var fields = line.ToArray ();
 				var field0 = fields[0];
 
 				if (field0.StartsWith ("Compte "))
-                {
+				{
 					var name = field0.Substring (7);
 					var compte = ComptaCompteImportConverter.GetData (name, enumerator, dates);
+					skip = true;
 
 					if (compte.Values.Count > 0)
 					{
 						list.Add (compte);
 					}
-                }
+				}
+				else
+				{
+					skip = false;
+				}
 			}
 
 			var minDate = dates.Min ();

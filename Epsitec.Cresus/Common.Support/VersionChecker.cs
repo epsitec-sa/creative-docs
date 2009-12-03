@@ -32,6 +32,11 @@ namespace Epsitec.Common.Support
 
 		private VersionChecker()
 		{
+			if (VersionChecker.defaultChecker == null)
+			{
+				VersionChecker.defaultChecker = this;
+			}
+
 			this.context = System.Threading.SynchronizationContext.Current ?? new System.Threading.SynchronizationContext ();
 			System.Net.NetworkInformation.NetworkChange.NetworkAvailabilityChanged += this.HandleNetworkAvailabilityChanged;
 		}
@@ -141,6 +146,13 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public static VersionChecker Default
+		{
+			get
+			{
+				return VersionChecker.defaultChecker;
+			}
+		}
 
 		/// <summary>
 		/// Formats a version number using a <c>#.#.###</c> pattern. Extra zeroes will
@@ -388,6 +400,7 @@ namespace Epsitec.Common.Support
 		public event EventHandler				NetworkAvailabilityChanged;
 		public event EventHandler				VersionInformationChanged;
 
+		private static VersionChecker			defaultChecker;
 		
 		readonly object                         exclusion = new object ();
 		readonly System.Threading.SynchronizationContext context;

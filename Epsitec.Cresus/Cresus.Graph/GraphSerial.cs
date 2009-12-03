@@ -107,6 +107,9 @@ namespace Epsitec.Cresus.Graph
 		{
 			var graphId  = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallID", "");
 			var comptaId = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus\Setup", "InstallID", "");
+
+			System.Diagnostics.Trace.WriteLine ("Crésus Graphe InstallID : " + graphId);
+			System.Diagnostics.Trace.WriteLine ("Crésus Compta InstallID : " + comptaId);
 			
 			var now  = System.DateTime.Now;
 			bool updatesAllowed;
@@ -115,12 +118,16 @@ namespace Epsitec.Cresus.Graph
             {
 				GraphSerial.hasGraphLicense = true;
 				GraphSerial.hasValidGraphLicense = updatesAllowed;
+
+				System.Diagnostics.Trace.WriteLine ("Graphe license validity : " + updatesAllowed.ToString ());
 			}
 
 			if (SerialAlgorithm.CheckSerial (comptaId, 20, out updatesAllowed))
 			{
 				GraphSerial.hasComptaLicense = true;
 				GraphSerial.hasValidComptaLicense = updatesAllowed;
+
+				System.Diagnostics.Trace.WriteLine ("Compta license validity : " + updatesAllowed.ToString ());
 			}
 
 			if (GraphSerial.hasGraphLicense)

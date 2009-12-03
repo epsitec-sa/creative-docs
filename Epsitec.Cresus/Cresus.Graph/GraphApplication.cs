@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Graph
 		{
 			get
 			{
-				return this.versionChecker;
+				return this.versionChecker ?? VersionChecker.Default;
 			}
 		}
 

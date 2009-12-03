@@ -45,6 +45,13 @@ namespace Epsitec.Cresus.Graph.Splash
 			public byte AlphaFormat;
 		}
 
+		[DllImport ("kernel32.dll", SetLastError=true)]
+		internal extern static System.IntPtr CreateSemaphore(System.IntPtr securityAttributes, int initialCount, int maximumCount, string name);
+		
+		[DllImport ("kernel32.dll", SetLastError=true)]
+		internal extern static System.IntPtr OpenSemaphore(int desiredAccess, int inheritHandle, string name);
+
+
 		[DllImport ("User32.dll")]
 		internal extern static int SetWindowLong(System.IntPtr handle, int index, int value);
 		[DllImport ("User32.dll")]

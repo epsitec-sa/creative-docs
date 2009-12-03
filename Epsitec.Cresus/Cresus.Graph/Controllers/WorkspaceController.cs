@@ -691,6 +691,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			int columns = 1;
 			int rows    = 1;
 			var space   = 1.0;
+			var containers = new List<FrameBox> ();
 			
 			if (numSources <= 2)
             {
@@ -713,8 +714,6 @@ namespace Epsitec.Cresus.Graph.Controllers
 				rows    = 4;
 				space   = 0.0;
 			}
-
-			var containers = new List<FrameBox> ();
 
 			for (int i = 0; i < System.Math.Max (2, columns); i++)
 			{

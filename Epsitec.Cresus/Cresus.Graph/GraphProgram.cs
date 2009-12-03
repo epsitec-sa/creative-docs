@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Graph
 		
 		static void ExecuteCoreProgram(Splash.SplashScreen splash)
 		{
+			GraphProgram.CreateSemaphore ();
+
 			UI.Initialize ();
 
 			//Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookBlue");
@@ -56,6 +58,11 @@ namespace Epsitec.Cresus.Graph
 			GraphProgram.Application = null;
 		}
 
+
+		static void CreateSemaphore()
+		{
+			Splash.Win32Api.CreateSemaphore (System.IntPtr.Zero, 0, 1, "CresusGrapheMainEp");
+		}
 
 
 		public static GraphApplication Application
