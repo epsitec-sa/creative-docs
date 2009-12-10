@@ -45,12 +45,12 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		}
 
 		public abstract bool CheckCompatibleMeta(IDictionary<string, string> meta);
-        
-		public abstract GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath);
 
-		public GraphDataCube ToDataCube(IList<string> header, IEnumerable<string[]> lines, string sourcePath)
+		public abstract GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta);
+
+		public GraphDataCube ToDataCube(IList<string> header, IEnumerable<string[]> lines, string sourcePath, IDictionary<string, string> meta)
 		{
-			return this.ToDataCube (header, lines.Cast<IEnumerable<string>> (), sourcePath);
+			return this.ToDataCube (header, lines.Cast<IEnumerable<string>> (), sourcePath, meta);
 		}
 
 		public virtual GraphDataCategory GetCategory(ChartSeries series)

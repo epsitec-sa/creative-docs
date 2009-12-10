@@ -98,28 +98,64 @@ namespace Epsitec.Cresus.Graph.Controllers
 		{
 			foreach (var command in MainWindowController.GetToolCommands ())
 			{
+				double iconSize = 20;
+
+				switch (command.CommandSize)
+				{
+					case CommandSize.Large:
+						iconSize = 31;
+						break;
+				}
+
 				new IconButton ()
 				{
 					Dock = DockStyle.Stacked,
-					CommandObject = command,
-					PreferredWidth = 32,
-					PreferredHeight = 32,
-					PreferredIconSize = new Size (20, 20),
+					CommandObject = command.Command,
+					PreferredSize = new Size (iconSize+2, iconSize+2),
+					PreferredIconSize = new Size (iconSize, iconSize),
 					Parent = frame,
-					VerticalAlignment = VerticalAlignment.Center,
+					VerticalAlignment = VerticalAlignment.Top,
 				};
 			}
 		}
 
-		private static IEnumerable<Command> GetToolCommands()
+		private static IEnumerable<CommandDescription> GetToolCommands()
 		{
-			yield return ApplicationCommands.Open;
-			yield return ApplicationCommands.Save;
-			yield return ApplicationCommands.SaveAs;
-//-			yield return Res.Commands.General.Kill;
-			yield return ApplicationCommands.Undo;
-			yield return ApplicationCommands.Redo;
-			yield return Res.Commands.General.DownloadUpdate;
+			yield return new CommandDescription (ApplicationCommands.Open, CommandSize.Large);
+			yield return new CommandDescription (ApplicationCommands.Save, CommandSize.Large);
+			yield return new CommandDescription (ApplicationCommands.SaveAs, CommandSize.Medium);
+//-			yield return new CommandDescription (Res.Commands.General.Kill, CommandSize.Medium);
+			yield return new CommandDescription (ApplicationCommands.Undo, CommandSize.Medium);
+			yield return new CommandDescription (ApplicationCommands.Redo, CommandSize.Medium);
+			yield return new CommandDescription (Res.Commands.General.DownloadUpdate, CommandSize.Large);
+		}
+
+		class CommandDescription
+		{
+			public CommandDescription(Command command, CommandSize size)
+			{
+				this.Command = command;
+				this.CommandSize = size;
+			}
+			
+			public Command Command
+			{
+				get;
+				set;
+			}
+
+			public CommandSize CommandSize
+			{
+				get;
+				set;
+			}
+		}
+
+		enum CommandSize
+		{
+			Small,
+			Medium,
+			Large,
 		}
 
 

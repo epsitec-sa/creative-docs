@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			return meta.Count == 0;
 		}
 
-		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
+		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta)
 		{
 			if (header.Count < 2)
 			{

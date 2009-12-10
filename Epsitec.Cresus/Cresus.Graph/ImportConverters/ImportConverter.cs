@@ -37,8 +37,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					}
                 }
 				
-				
-				cube = converter.ToDataCube (head, lines, sourcePath);
+				cube = converter.ToDataCube (head, lines, sourcePath, meta);
 
 				if (cube != null)
 				{

@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				return Res.Commands.GraphType.UseLineChart;
 			}
 		}
-		
-		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath)
+
+		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta)
 		{
 			IEnumerable<string>[] headerEnum = new  IEnumerable<string>[] { header };
 			var allLines = headerEnum.Concat (lines);
@@ -43,28 +43,43 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			var enumerator = allLines.GetEnumerator ();
 			var dates = new HashSet<System.DateTime> ();
 			var list = new List<Compte> ();
-			bool skip = false;
 
-			while (skip || enumerator.MoveNext ())
+			if ((meta != null) &&
+				(meta.ContainsKey ("Account")))
 			{
-				var line   = enumerator.Current;
-				var fields = line.ToArray ();
-				var field0 = fields[0];
+				var name   = meta["Account"].Replace ('\t', ' ');
+				var compte = ComptaCompteImportConverter.GetData (name, enumerator, dates);
 
-				if (field0.StartsWith ("Compte "))
+				if (compte.Values.Count > 0)
 				{
-					var name = field0.Substring (7);
-					var compte = ComptaCompteImportConverter.GetData (name, enumerator, dates);
-					skip = true;
-
-					if (compte.Values.Count > 0)
-					{
-						list.Add (compte);
-					}
+					list.Add (compte);
 				}
-				else
+			}
+			else
+			{
+				bool skip = false;
+				
+				while (skip || enumerator.MoveNext ())
 				{
-					skip = false;
+					var line   = enumerator.Current;
+					var fields = line.ToArray ();
+					var field0 = fields[0];
+
+					if (field0.StartsWith ("Compte "))
+					{
+						var name = field0.Substring (7);
+						var compte = ComptaCompteImportConverter.GetData (name, enumerator, dates);
+						skip = true;
+
+						if (compte.Values.Count > 0)
+						{
+							list.Add (compte);
+						}
+					}
+					else
+					{
+						skip = false;
+					}
 				}
 			}
 

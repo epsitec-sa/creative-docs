@@ -202,6 +202,18 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
+			if ((caption is string) ||
+				(caption is Caption) ||
+				(caption is FormattedText) ||
+				(caption is Widget))
+			{
+				//	OK.
+			}
+			else
+			{
+				throw new System.ArgumentException ("Specified tool tip caption is of type " + caption.GetType ().FullName);
+			}
+
 			this.RegisterWidget (widget);
 			
 			this.hash[widget] = caption;
@@ -459,6 +471,11 @@ namespace Epsitec.Common.Widgets
 			
 			Caption realCaption = caption as Caption;
 			string  textCaption = caption as string;
+			
+			if (caption is FormattedText)
+            {
+				textCaption = ((FormattedText)caption).ToString ();
+            }
 
 			if (realCaption != null)
 			{
