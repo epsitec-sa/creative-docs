@@ -196,8 +196,8 @@ namespace Epsitec.Common.Support
 			
 			return path.Substring (0, pos);
 		}
-		
-		static System.DateTime	BuildDate			= System.DateTime.Now;	// <- doit être mis à jour
+
+		static System.DateTime	BuildDate			= new System.DateTime (2009, 12, 10);	//	TODO: update on each publication
 		static int				ProductGeneration	= 1;
 		static int				ProductGracePeriod	= 0;
 		#endregion
