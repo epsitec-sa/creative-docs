@@ -76,6 +76,12 @@ namespace Epsitec.Common.Graph.Widgets
 			set;
 		}
 
+		public bool DisplaySample
+		{
+			get;
+			set;
+		}
+
 
 		public void DefineIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)
 		{
@@ -157,30 +163,26 @@ namespace Epsitec.Common.Graph.Widgets
 				(renderer.SeriesItems.Count > 0))
 			{
 				int valueCount = renderer.ValueCount;
-				
+
 				if ((valueCount > 1) ||
 					((valueCount == 1) && (this.DisplayValue == false)))
 				{
-					var transform = graphics.Transform;
-					graphics.ScaleTransform (scale, scale, 0, 0);
-
-					Rectangle paint = rectangle;
-
-					paint = Rectangle.Deflate (paint, new Margins (6, 6, 6, 20));
-					graphics.AddFilledRectangle (Rectangle.Scale (paint, 1/scale));
-					graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1.0, 1.0, 1.0));
-
-					paint = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
-					renderer.Render (graphics, Rectangle.Scale (paint, 1/scale));
-
-					graphics.LineWidth = 1.0;
-					graphics.LineJoin = JoinStyle.Miter;
-					graphics.Transform = transform;
+					MiniChartView.PaintGraph (graphics, renderer, rectangle, scale);
 				}
 				else if (valueCount == 1)
 				{
 					string value = string.Format ("{0:N}", (decimal) renderer.SeriesItems[0].Values[0].Value);
 					MiniChartView.PaintValueAsText (graphics, Rectangle.Offset (rectangle, 0, System.Math.Round (this.Client.Size.Height / 3)), value);
+				}
+
+				if (this.DisplaySample)
+                {
+					renderer.FindStyle ("line-color").ApplyStyle (0, graphics);
+
+					graphics.AddFilledRectangle (new Rectangle (rectangle.Right-12, rectangle.Top-12, 8, 8));
+					graphics.RenderSolid ();
+					graphics.AddRectangle (new Rectangle (rectangle.Right-12.5, rectangle.Top-12.5, 8, 8));
+					graphics.RenderSolid (Color.FromBrightness (0.5));
 				}
 
 				MiniChartView.PaintTitle (graphics, rectangle, this.Title);
@@ -283,6 +285,25 @@ namespace Epsitec.Common.Graph.Widgets
 			}
 		}
 
+
+		private static void PaintGraph(Graphics graphics, Epsitec.Common.Graph.Renderers.AbstractRenderer renderer, Rectangle rectangle, double scale)
+		{
+			var transform = graphics.Transform;
+			graphics.ScaleTransform (scale, scale, 0, 0);
+
+			Rectangle paint = rectangle;
+
+			paint = Rectangle.Deflate (paint, new Margins (6, 6, 6, 20));
+			graphics.AddFilledRectangle (Rectangle.Scale (paint, 1/scale));
+			graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1.0, 1.0, 1.0));
+
+			paint = Rectangle.Deflate (paint, new Margins (4.5, 9, 9, 5));
+			renderer.Render (graphics, Rectangle.Scale (paint, 1/scale));
+
+			graphics.LineWidth = 1.0;
+			graphics.LineJoin = JoinStyle.Miter;
+			graphics.Transform = transform;
+		}
 
 		private static void PaintValueAsText(Graphics graphics, Rectangle rectangle, string text)
 		{

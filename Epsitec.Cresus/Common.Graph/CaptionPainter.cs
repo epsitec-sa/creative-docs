@@ -162,6 +162,19 @@ namespace Epsitec.Common.Graph
 			return Rectangle.Empty;
 		}
 
+		public ChartCaption GetSampleCaption(int index)
+		{
+			if ((index >= 0) &&
+				(index < this.samples.Count))
+			{
+				return this.samples[index];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		
 		private IEnumerable<KeyValuePair<ChartCaption, Rectangle>> GetSampleRectangles(Rectangle bounds)
 		{

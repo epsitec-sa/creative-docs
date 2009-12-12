@@ -1205,6 +1205,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var view = this.CreateView (item);
 
 			view.MouseCursor = MouseCursor.AsHand;
+			view.DisplaySample = true;
 
 			view.Renderer.ClearStyles ();
 			view.Renderer.AddStyle (new ColorStyle (this.colorStyle.Name)
@@ -1612,10 +1613,23 @@ namespace Epsitec.Cresus.Graph.Controllers
 				return null;
 			}
 
+			TextLayout layout = new TextLayout ()
+			{
+				Text = summary,
+				LayoutSize = new Size (this.WorkspaceFrame.ActualWidth, 1000)
+			};
+
+			var size   = layout.StandardRectangle.Size + new Size (20, 20);
+
+			if (size.Width < 160)
+            {
+				size.Width = 160;
+            }
+
 			var clip   = view.Parent.MapClientToRoot (view.Parent.Client.Bounds);
 			var bounds = Rectangle.Intersection (clip, Rectangle.Deflate (view.MapClientToRoot (view.Client.Bounds), 4, 4));
 			var mark   = ButtonMarkDisposition.Below;
-			var rect   = BalloonTip.GetBestPosition (new Size (160, 80), bounds, window.ClientSize, ref mark);
+			var rect   = BalloonTip.GetBestPosition (size, bounds, window.ClientSize, ref mark);
 
 			return new BalloonTip ()
 			{
