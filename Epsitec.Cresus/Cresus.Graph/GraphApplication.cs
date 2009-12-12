@@ -381,6 +381,16 @@ namespace Epsitec.Cresus.Graph
 					}
 				}
             }
+			else if (args.Length == 2)
+			{
+				string verb = args[1];
+
+				if (verb == "-new")
+				{
+					var doc = this.CreateDocument ();
+					return;
+				}
+			}
 
 			foreach (XElement node in xml.Elements ())
 			{

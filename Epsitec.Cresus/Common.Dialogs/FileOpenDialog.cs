@@ -15,7 +15,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.dialog = new System.Windows.Forms.OpenFileDialog ();
 			this.filters = new Helpers.FilterCollection (this);
-			
+
+			this.dialog.AutoUpgradeEnabled = true;
+			this.dialog.DereferenceLinks = true;
 			this.dialog.AddExtension = true;
 			this.dialog.CheckFileExists = true;
 			this.dialog.CheckPathExists = true;
@@ -33,20 +35,24 @@ namespace Epsitec.Common.Dialogs
 					string ext  = System.IO.Path.GetExtension (name);
 
 					if ((this.dialog.AddExtension) &&
-						(this.filters.FindExtension (ext) == null) &&
-						(this.dialog.ShowHelp))
+						(this.filters.FindExtension (ext) == null))
 					{
-#if true
-						//	See FileSaveDialog.
-						var type = typeof (System.Windows.Forms.FileDialog);
-						var info = type.GetField ("dialogHWnd", BindingFlags.NonPublic | BindingFlags.Instance);
-						var fileDialogHandle = (System.IntPtr) info.GetValue (dialog);
+						if (this.dialog.ShowHelp)
+						{
+							//	See FileSaveDialog.
+							var type = typeof (System.Windows.Forms.FileDialog);
+							var info = type.GetField ("dialogHWnd", BindingFlags.NonPublic | BindingFlags.Instance);
+							var fileDialogHandle = (System.IntPtr) info.GetValue (dialog);
 
-						var fixedName = System.IO.Path.Combine (path, System.IO.Path.GetFileNameWithoutExtension (name) + "." + this.DefaultExt);
+							var fixedName = System.IO.Path.Combine (path, System.IO.Path.GetFileNameWithoutExtension (name) + "." + this.DefaultExt);
 
-						FileOpenDialog.SetFileName (fileDialogHandle, fixedName);
-#endif
-						e.Cancel = true;
+							FileOpenDialog.SetFileName (fileDialogHandle, fixedName);
+							e.Cancel = true;
+						}
+						if (ext.ToLowerInvariant () == ".url")
+                        {
+							e.Cancel = true;
+                        }
 					}
 				};
 		}

@@ -592,14 +592,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 
 			System.Diagnostics.Debug.Assert (container.Children.Count == 0);
 
-			var label = new StaticText ()
-			{
-				Dock = DockStyle.Stacked,
-				PreferredHeight = 20,
-				Parent = container,
-				Text = "Catégories",
-				ContentAlignment = ContentAlignment.MiddleCenter,
-			};
+			WorkspaceController.CreateLabel (container, "Catégories");
 
 			var document   = this.Document;
 			var dataSource = document.ActiveDataSource;
@@ -647,27 +640,15 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				container.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
-				new StaticText ()
-				{
-					Dock = DockStyle.Stacked,
-					PreferredHeight = 20,
-					Parent = container,
-					Text = "Sources de données",
-					ContentAlignment = ContentAlignment.MiddleCenter,
-				};
+				WorkspaceController.CreateLabel (container, "Sources de données");
 			}
 			else
 			{
 				container.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 				
-				var text = new StaticText ()
-				{
-					Dock = DockStyle.Stacked,
-					PreferredWidth = 16,
-					Parent = container,
-					Text = "Sources",
-					ContentAlignment = ContentAlignment.MiddleCenter,
-				};
+				var text = WorkspaceController.CreateLabel (container, "Sources");
+				
+				text.PreferredWidth = 16;
 
 				text.PaintBackground +=
 					(sender, e) =>
@@ -1060,6 +1041,18 @@ namespace Epsitec.Cresus.Graph.Controllers
 		}
 
 
+		public static StaticText CreateLabel(Widget container, string title)
+		{
+			return new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				PreferredHeight = 20,
+				Parent = container,
+				Text = title,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+			};
+		}
+		
 		private int GetNewChartViewIndex()
 		{
 			int index = 0;

@@ -591,22 +591,29 @@ namespace Epsitec.Cresus.Graph
 
 		public bool LoadDocument(string path)
 		{
-			var xmlDocument = XDocument.Load (path);
-			var xmlStore    = xmlDocument.Element ("store");
-
-			var version = (string) xmlStore.Attribute ("version");
-
-			if (version == "1")
+			try
 			{
-				var element = xmlStore.Element ("doc");
+				var xmlDocument = XDocument.Load (path);
+				var xmlStore    = xmlDocument.Element ("store");
 
-				if (element != null)
+				var version = (string) xmlStore.Attribute ("version");
+
+				if (version == "1")
 				{
-					this.RestoreSettings (element);
-					this.SavePath = path;
+					var element = xmlStore.Element ("doc");
 
-					return true;
+					if (element != null)
+					{
+						this.RestoreSettings (element);
+						this.SavePath = path;
+
+						return true;
+					}
 				}
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("LoadDocument : " + ex.Message);
 			}
 
 			return false;

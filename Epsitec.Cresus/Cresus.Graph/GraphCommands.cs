@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Graph
 
 			var dialog = new FileSaveDialog ()
 			{
-				DefaultExt = "emf",
+//-				DefaultExt = "emf",
 				FilterIndex = 0,
 				PromptForOverwriting = true,
 				Title = "Exporter le graphique en tant qu'image",
@@ -164,6 +164,30 @@ namespace Epsitec.Cresus.Graph
 				}
 
 				return document.IsDirty == false;
+			}
+		}
+
+		[Command (ApplicationCommands.Id.New)]
+		private void NewCommand()
+		{
+			if (this.application.Document.IsEmpty)
+			{
+				//	Nothing to do : document already empty.
+			}
+			else
+			{
+				var info = new System.Diagnostics.ProcessStartInfo ()
+				{
+					Arguments = "-new",
+					FileName = Globals.ExecutablePath,
+				};
+
+				var process = System.Diagnostics.Process.Start (info);
+
+				if (process != null)
+				{
+					process.WaitForInputIdle ();
+				}
 			}
 		}
 
