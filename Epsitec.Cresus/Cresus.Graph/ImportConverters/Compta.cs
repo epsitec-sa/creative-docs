@@ -95,9 +95,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 		public static System.DateTime ParseDate(string text)
 		{
-			if ((text.Length == 8) &&
-				(text[2] == '.') &&
-				(text[5] == '.'))
+			if ((text.Length == 8) && (text[2] == '.') && (text[5] == '.'))
 			{
 				int day   = int.Parse (text.Substring (0, 2), System.Globalization.CultureInfo.InvariantCulture);
 				int month = int.Parse (text.Substring (3, 2), System.Globalization.CultureInfo.InvariantCulture);
@@ -111,6 +109,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				{
 					year += 1900;
 				}
+
+				return new System.DateTime (year, month, day);
+			}
+			else if ((text.Length == 10) && (text[2] == '.') && (text[5] == '.'))
+			{
+				int day   = int.Parse (text.Substring (0, 2), System.Globalization.CultureInfo.InvariantCulture);
+				int month = int.Parse (text.Substring (3, 2), System.Globalization.CultureInfo.InvariantCulture);
+				int year  = int.Parse (text.Substring (6, 4), System.Globalization.CultureInfo.InvariantCulture);
 
 				return new System.DateTime (year, month, day);
 			}
