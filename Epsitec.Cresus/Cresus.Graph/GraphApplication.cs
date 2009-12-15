@@ -508,7 +508,7 @@ namespace Epsitec.Cresus.Graph
             {
 				this.lastConnectorData = connectorData;
 
-				System.IO.File.WriteAllText (System.IO.Path.GetTempFileName (), connectorData.Data);
+//-				System.IO.File.WriteAllText (System.IO.Path.GetTempFileName (), connectorData.Data);
 
 				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (connectorData.Data, connectorData.Path, connectorData.Meta), connectorData.Path, null));
 				

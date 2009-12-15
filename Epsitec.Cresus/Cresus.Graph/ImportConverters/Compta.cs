@@ -45,14 +45,42 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				var fileExt  = System.IO.Path.GetExtension (sourcePath).ToLowerInvariant ();
 				var fileName = System.IO.Path.GetFileNameWithoutExtension (sourcePath);
 
-				if ((fileExt == ".cre") &&
-					(fileName.Length > 4))
+				if (fileExt == ".cre")
 				{
-					int year;
+					var compta = new Epsitec.CresusToolkit.CresusComptaDocument (sourcePath);
 
-					if (int.TryParse (fileName.Substring (fileName.Length-4), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out year))
+					if (compta.CheckMetadata ())
 					{
-						sourceName = year.ToString ("D4");
+						//	Try to derive the start/end year of the file from the associated *.crp
+						//	metadata.
+
+						var date1 = compta.BeginDate.Year;
+						var date2 = compta.EndDate.Year;
+
+						if ((date1 >= 1980) &&
+							(date1 <= date2) &&
+							(date2 <= 2999))
+						{
+							if (date1 == date2)
+							{
+								sourceName = date1.ToString ("D4");
+							}
+							else
+							{
+								sourceName = date1.ToString ("D4") + "-" + date2.ToString ("D4");
+							}
+						}
+					}
+					
+					if ((string.IsNullOrEmpty (sourceName)) &&
+						(fileName.Length > 4))
+					{
+						int year;
+
+						if (int.TryParse (fileName.Substring (fileName.Length-4), System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out year))
+						{
+							sourceName = year.ToString ("D4");
+						}
 					}
 				}
 			}
@@ -79,7 +107,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 				if (this.compta != null)
 				{
-					var account = this.compta.GetAccounts (x => x.Number == number).FirstOrDefault ();
+					var account = this.compta.GetAccounts (x => x.Number == number, true).FirstOrDefault ();
 
 					if (account != null)
 					{
@@ -109,35 +137,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 		public static System.DateTime ParseDate(string text)
 		{
-			if ((text.Length == 8) && (text[2] == '.') && (text[5] == '.'))
-			{
-				int day   = int.Parse (text.Substring (0, 2), System.Globalization.CultureInfo.InvariantCulture);
-				int month = int.Parse (text.Substring (3, 2), System.Globalization.CultureInfo.InvariantCulture);
-				int year  = int.Parse (text.Substring (6, 2), System.Globalization.CultureInfo.InvariantCulture);
-
-				if (year < 80)
-				{
-					year += 2000;
-				}
-				else
-				{
-					year += 1900;
-				}
-
-				return new System.DateTime (year, month, day);
-			}
-			else if ((text.Length == 10) && (text[2] == '.') && (text[5] == '.'))
-			{
-				int day   = int.Parse (text.Substring (0, 2), System.Globalization.CultureInfo.InvariantCulture);
-				int month = int.Parse (text.Substring (3, 2), System.Globalization.CultureInfo.InvariantCulture);
-				int year  = int.Parse (text.Substring (6, 4), System.Globalization.CultureInfo.InvariantCulture);
-
-				return new System.DateTime (year, month, day);
-			}
-			else
-			{
-				throw new System.FormatException ("Invalid date format");
-			}
+			return Epsitec.CresusToolkit.CresusComptaDocument.ParseDate (text);
 		}
 
         private readonly string view;
