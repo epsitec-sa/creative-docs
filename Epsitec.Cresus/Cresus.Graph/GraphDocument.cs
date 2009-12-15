@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Graph
 			this.chartSnapshots = new List<GraphChartSnapshot> ();
 			this.cubes = new List<GraphDataCube> ();
 			
-			this.groupSource = new GraphDataSource (null)
+			this.groupSource = new GraphDataSource (null, null)
 			{
 				Name = "Groups"
 			};
@@ -646,6 +646,7 @@ namespace Epsitec.Cresus.Graph
 			this.cube.SliceDimB     = this.cube.SliceDimB ?? this.activeCube.SliceDimB;
 			this.cube.Title         = this.cube.Title     ?? this.activeCube.Title;
 			this.cube.ConverterName = this.cube.ConverterName ?? this.activeCube.ConverterName;
+			this.cube.ConverterMeta = this.cube.ConverterMeta ?? this.activeCube.ConverterMeta;
 			
 			this.cubes.ForEach (x => this.cube.AddCube (x));
 
@@ -659,7 +660,7 @@ namespace Epsitec.Cresus.Graph
 					continue;
                 }
 
-				var source  = new GraphDataSource (this.cube.ConverterName)
+				var source  = new GraphDataSource (this.cube.ConverterName, this.cube.ConverterMeta)
 				{
 					Name = sourceName,
 				};

@@ -16,7 +16,9 @@ namespace Epsitec.Cresus.Graph
 			this.Path         = path ?? "";
 			this.Data         = data ?? "";
 			this.metaSource   = meta ?? "";
-			this.Ticks        = System.Environment.TickCount;
+	 		this.Ticks        = System.Environment.TickCount;
+
+			this.meta["Path"] = this.Path;
 
 			foreach (var line in this.metaSource.Split ('\n'))
 			{

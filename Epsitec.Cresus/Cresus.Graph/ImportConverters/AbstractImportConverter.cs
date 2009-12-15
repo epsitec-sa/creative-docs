@@ -30,11 +30,46 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			get;
 		}
 
+		public IDictionary<string, string> Meta
+		{
+			get;
+			protected set;
+		}
+
 		public string Name
 		{
 			get
 			{
 				return this.name;
+			}
+		}
+
+		public string FlatMeta
+		{
+			get
+			{
+				var dict = this.Meta;
+
+				if (dict == null)
+                {
+					return "";
+                }
+
+				var buffer = new System.Text.StringBuilder ();
+
+				foreach (var pair in dict)
+				{
+					if (buffer.Length > 0)
+					{
+						buffer.Append ("\n");
+					}
+
+					buffer.Append (pair.Key);
+					buffer.Append ("\t");
+					buffer.Append (pair.Value);
+				}
+
+				return buffer.ToString ();
 			}
 		}
 
@@ -44,6 +79,30 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			internal set;
 		}
 
+		public abstract AbstractImportConverter CreateSpecificConverter(IDictionary<string, string> meta);
+
+		public AbstractImportConverter CreateSpecificConverter(string metaText)
+		{
+			Dictionary<string, string> dict = new Dictionary<string, string> ();
+
+			if (!string.IsNullOrEmpty (metaText))
+			{
+				string[] lines = metaText.Split ('\n');
+
+				foreach (var line in lines)
+				{
+					string[] args = line.Split ('\t');
+
+					string key   = args[0];
+					string value = args[1];
+
+					dict[key] = value;
+				}
+			}
+
+			return this.CreateSpecificConverter (dict);
+		}
+		
 		public abstract bool CheckCompatibleMeta(IDictionary<string, string> meta);
 
 		public abstract GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta);
@@ -60,5 +119,6 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 
 		private readonly string name;
+
 	}
 }

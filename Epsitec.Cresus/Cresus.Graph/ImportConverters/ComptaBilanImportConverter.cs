@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			}
 		}
 
+		public override AbstractImportConverter  CreateSpecificConverter(IDictionary<string,string> meta)
+		{
+ 			return new ComptaBilanImportConverter (this.Name)
+			{
+				Meta = meta
+			};
+		}
+
 		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta)
 		{
 			if (header.Count < 4)
@@ -52,7 +60,10 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				sources[1] = (sourceYear-1).ToString (System.Globalization.CultureInfo.InvariantCulture);
             }
 
-			int column = 2;
+			//	Some exports (bilan sur 1 colonne) have 5 columns, other (bilan sur 2 colonnes) have 7 columns
+			//	and there is garbage in some of them in the 7 columns mode.
+
+			int column = (header.Count == 7) ? 3 : 2;
 
 			foreach (var sourceName in GraphDataSet.CreateNumberedLabels (sources, index => 2-index))
 			{
@@ -69,7 +80,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 					var item1 = line.ElementAt (1);
 
 					if (string.IsNullOrEmpty (item0) ||
-					string.IsNullOrEmpty (item1))
+						string.IsNullOrEmpty (item1))
 					{
 						continue;
 					}

@@ -21,6 +21,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		{
 		}
 
+		public override AbstractImportConverter CreateSpecificConverter(IDictionary<string, string> meta)
+		{
+			return new GenericCsvImportConverter (this.Name)
+			{
+				Meta = meta
+			};
+		}
+
 		public override bool CheckCompatibleMeta(IDictionary<string, string> meta)
 		{
 			return meta.Count == 0;

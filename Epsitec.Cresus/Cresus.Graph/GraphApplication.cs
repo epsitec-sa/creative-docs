@@ -435,6 +435,7 @@ namespace Epsitec.Cresus.Graph
 					cube.SliceDimA = dimensionNames[0];
 					cube.SliceDimB = dimensionNames[1];
 					cube.ConverterName = converter.Name;
+					cube.ConverterMeta = converter.FlatMeta;
 					cube.Title = converter.DataTitle;
 					
 					return cube;
@@ -506,6 +507,8 @@ namespace Epsitec.Cresus.Graph
 				(this.lastConnectorData.Ticks < connectorData.Ticks + GraphApplication.PasteTickCountTimeout))
             {
 				this.lastConnectorData = connectorData;
+
+				System.IO.File.WriteAllText (System.IO.Path.GetTempFileName (), connectorData.Data);
 
 				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (connectorData.Data, connectorData.Path, connectorData.Meta), connectorData.Path, null));
 				

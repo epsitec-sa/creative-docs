@@ -57,8 +57,14 @@ namespace Epsitec.Cresus.Graph
 			get;
 			set;
 		}
-		
+
 		public string ConverterName
+		{
+			get;
+			set;
+		}
+
+		public string ConverterMeta
 		{
 			get;
 			set;
@@ -123,6 +129,11 @@ namespace Epsitec.Cresus.Graph
 				yield return "ConverterName " + this.ConverterName;
 			}
 
+			if (!string.IsNullOrEmpty (this.ConverterMeta))
+            {
+				yield return "ConverterMeta " + this.ConverterMeta;
+            }
+
 			if (!string.IsNullOrEmpty (this.Title))
             {
 				yield return "Title " + this.Title;
@@ -167,6 +178,10 @@ namespace Epsitec.Cresus.Graph
 
 				case "ConverterName":
 					this.ConverterName = value;
+					break;
+
+				case "ConverterMeta":
+					this.ConverterMeta = value;
 					break;
 
 				case "Title":

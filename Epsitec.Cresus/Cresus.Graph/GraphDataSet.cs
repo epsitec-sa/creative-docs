@@ -78,6 +78,7 @@ Màj Salaires	35'921.16	8'419.46	6'563.86	2'234.12	3'711.18	3'098.45	3'658.94	2'
 		public static double? GetNumericValue(object x)
 		{
 			double value;
+			double sign = 1.0;
 			string text = x as string;
 
 			if (string.IsNullOrEmpty (text))
@@ -87,9 +88,16 @@ Màj Salaires	35'921.16	8'419.46	6'563.86	2'234.12	3'711.18	3'098.45	3'658.94	2'
 
 			text = text.Replace ("'", "");
 
+			if ((text.StartsWith ("(")) &&
+				(text.EndsWith (")")))
+            {
+				text = text.Substring (1, text.Length-2);
+				sign = -1.0;
+            }
+
 			if (double.TryParse (text, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out value))
 			{
-				return value;
+				return value * sign;
 			}
 
 			return null;

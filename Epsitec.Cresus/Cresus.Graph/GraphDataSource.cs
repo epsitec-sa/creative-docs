@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Graph
 	/// </summary>
 	public class GraphDataSource : IEnumerable<GraphDataSeries>
 	{
-		public GraphDataSource(string importConverter)
+		public GraphDataSource(string importConverter, string importConverterMeta)
 		{
 			this.converterName = importConverter;
+			this.converterMeta = importConverterMeta;
 			this.dataSeries = new List<GraphDataSeries> ();
 			this.categories = new List<GraphDataCategory> ();
 		}
@@ -179,15 +180,15 @@ namespace Epsitec.Cresus.Graph
 		/// <returns>The category.</returns>
 		public GraphDataCategory GetCategory(GraphDataSeries series)
 		{
-			var converter = ImportConverters.ImportConverter.FindConverter (this.converterName);
+			this.ResolveConverter ();
 
-			if (converter == null)
+			if (this.converter == null)
 			{
 				return GraphDataCategory.Generic;
 			}
 			else
 			{
-				return converter.GetCategory (series.ChartSeries);
+				return this.converter.GetCategory (series.ChartSeries);
 			}
 		}
 
@@ -210,9 +211,25 @@ namespace Epsitec.Cresus.Graph
 
 		#endregion
 
-		
+
+		private void ResolveConverter()
+		{
+			if (this.converter == null)
+			{
+				this.converter = ImportConverters.ImportConverter.FindConverter (this.converterName);
+
+				if (this.converter != null)
+				{
+					this.converter = this.converter.CreateSpecificConverter (this.converterMeta);
+				}
+			}
+		}
+
 		private readonly string converterName;
+		private readonly string converterMeta;
 		private readonly List<GraphDataSeries> dataSeries;
 		private readonly List<GraphDataCategory> categories;
+
+		private ImportConverters.AbstractImportConverter converter;
 	}
 }

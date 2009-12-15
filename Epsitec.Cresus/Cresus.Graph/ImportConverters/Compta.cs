@@ -66,29 +66,43 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 		public override GraphDataCategory GetCategory(ChartSeries series)
 		{
-			string cat = series.Label.Substring (0, 1);
+			string label  = series.Label;
+			string number = label.Split ('\t')[0];
 
-			switch (cat)
-			{
-				case "1":
-					return new GraphDataCategory (1, "Actif");
+			if (this.Meta != null)
+            {
+				if (this.compta == null)
+				{
+					var path = this.Meta["Path"];
+					this.compta = new Epsitec.CresusToolkit.CresusComptaDocument (path);
+				}
 
-				case "2":
-					return new GraphDataCategory (2, "Passif");
+				if (this.compta != null)
+				{
+					var account = this.compta.GetAccounts (x => x.Number == number).FirstOrDefault ();
 
-				case "3":
-				case "7":
-					return new GraphDataCategory (3, "Produit");
-
-				case "4":
-				case "5":
-				case "6":
-				case "8":
-					return new GraphDataCategory (4, "Charge");
-
-				case "9":
-					return new GraphDataCategory (5, "Exploitation");
-			}
+					if (account != null)
+					{
+						switch (account.Category)
+						{
+							case Epsitec.CresusToolkit.CresusComptaCategory.Actif:
+								return new GraphDataCategory (1, "Actif");
+							
+							case Epsitec.CresusToolkit.CresusComptaCategory.Passif:
+								return new GraphDataCategory (2, "Passif");
+							
+							case Epsitec.CresusToolkit.CresusComptaCategory.Produit:
+								return new GraphDataCategory (3, "Produit");
+							
+							case Epsitec.CresusToolkit.CresusComptaCategory.Charge:
+								return new GraphDataCategory (4, "Charge");
+							
+							case Epsitec.CresusToolkit.CresusComptaCategory.Exploitation:
+								return new GraphDataCategory (5, "Exploitation");
+						}
+					}
+				}
+            }
 
 			return base.GetCategory (series);
 		}
@@ -127,5 +141,6 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 		}
 
         private readonly string view;
+		private Epsitec.CresusToolkit.CresusComptaDocument compta;
 	}
 }

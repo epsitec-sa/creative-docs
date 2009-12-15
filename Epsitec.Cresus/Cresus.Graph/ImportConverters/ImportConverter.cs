@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 
 				if (cube != null)
 				{
+					converter = converter.CreateSpecificConverter (meta);
 					return true;
 				}
 			}

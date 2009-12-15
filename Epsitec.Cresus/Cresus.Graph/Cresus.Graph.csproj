@@ -98,6 +98,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.ShellPE\Epsitec.CresusToolkit\Epsitec.CresusToolkit.csproj">
+      <Project>{BC0605F1-C986-4B52-AE21-AAE545FCB970}</Project>
+      <Name>Epsitec.CresusToolkit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
       <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
       <Name>Common.Debug</Name>

@@ -28,6 +28,14 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 			}
 		}
 
+		public override AbstractImportConverter CreateSpecificConverter(IDictionary<string, string> meta)
+		{
+			return new ComptaPPImportConverter (this.Name)
+			{
+				Meta = meta
+			};
+		}
+
 		public override GraphDataCube ToDataCube(IList<string> header, IEnumerable<IEnumerable<string>> lines, string sourcePath, IDictionary<string, string> meta)
 		{
 			if (header.Count < 4)
