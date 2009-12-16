@@ -102,6 +102,32 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public static bool HasGraphLicense
+		{
+			get
+			{
+				return GraphSerial.hasGraphLicense;
+			}
+		}
+
+		public static System.DateTime? ComptaExpirationDate
+		{
+			get
+			{
+				var info = GraphSerial.LicensingInfo;
+
+				if (info != LicensingInfo.Undefined)
+				{
+					if (GraphSerial.hasComptaLicense)
+					{
+						return GraphSerial.comptaExpirationDate;
+					}
+				}
+
+				return null;
+			}
+		}
+
 
 		private static LicensingInfo GetLicensingInfo()
 		{
@@ -126,6 +152,7 @@ namespace Epsitec.Cresus.Graph
 			{
 				GraphSerial.hasComptaLicense = true;
 				GraphSerial.hasValidComptaLicense = updatesAllowed;
+				GraphSerial.comptaExpirationDate = SerialAlgorithm.GetExpirationDate (comptaId);
 
 //-				System.Diagnostics.Trace.WriteLine ("Compta license validity : " + updatesAllowed.ToString ());
 			}
@@ -209,6 +236,7 @@ namespace Epsitec.Cresus.Graph
 		private static bool hasValidGraphLicense;
 		private static bool hasComptaLicense;
 		private static bool hasValidComptaLicense;
+		private static System.DateTime comptaExpirationDate;
 
 		private static LicensingInfo licensingInfo; // = LicensingInfo.ValidPro;
 	}

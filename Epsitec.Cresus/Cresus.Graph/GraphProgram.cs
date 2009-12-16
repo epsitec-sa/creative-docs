@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Graph
 
 			GraphProgram.Application.SetupUI ();
 			GraphProgram.Application.SetupDefaultDocument ();
-			GraphProgram.Application.SetupConnectorServer ();
 
 			splash.NotifyIsRunning ();
 			

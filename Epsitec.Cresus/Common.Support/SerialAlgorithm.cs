@@ -53,12 +53,13 @@ namespace Epsitec.Common.Support
 		
 		private static bool TestSerial0(int a, int b, int c)
 		{
-			return (c == SerialAlgorithm.f3 (1000000 * a + b)) ;
+			a &= 0xffff;  // il faut tronquer à 16 bits un numéro trop grand, du style '92100'
+			return (c == SerialAlgorithm.f3 (1000000 * a + b));
 		}
 
 		private static int GetSerialCompl(int a, long b, int c)
 		{
-			b = 10000000 * (b%100) + 10000 * c + a;
+			b = 10000000L * (b%100) + 10000L * c + a;
 			return SerialAlgorithm.f3 (b) % 1000;
 		}
 

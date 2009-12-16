@@ -215,17 +215,32 @@ namespace Epsitec.Cresus.Graph
 
 			for (int i = 0; i < args.Count; i++)
 			{
-				string arg  = args[i];
-				string verb = arg.Split ('=')[0];
+				var arg  = Utilities.StringSimplify (args[i]);
+				int pos = arg.IndexOf ('=');
+				var verb = pos < 0 ? arg : arg.Substring (0, pos);
+				var param = pos < 0 ? "" : arg.Substring (pos+1);
 
 				switch (verb)
 				{
 					case "-loadcube":
-						if (i+1 < args.Count)
+						Application.QueueAsyncCallback (() => this.ExecuteLoadCube (param));
+						break;
+
+					case "-open":
+						try
+						{
+							this.activeDocument.LoadDocument (param);
+						}
+						catch
+						{
+						}
+						break;
+
+					case "-connector":
+						if (param == "SendData")
                         {
-							string path = Utilities.StringSimplify (args[++i]);
-							Application.QueueAsyncCallback (() => this.ExecuteLoadCube (path));
-                        }
+							this.SetupConnectorServer ();
+						}
 						break;
 				}
 			}
@@ -353,45 +368,6 @@ namespace Epsitec.Cresus.Graph
 				return;
 			}
 
-			var args = System.Environment.GetCommandLineArgs ();
-
-#if false
-			if (!System.Diagnostics.Debugger.IsAttached)
-            {
-				System.Diagnostics.Debugger.Launch ();
-			}
-#endif
-
-			if (args.Length == 3)
-            {
-				string verb = args[1];
-				string path = args[2];
-
-				if (verb == "-open")
-				{
-					try
-					{
-						var doc = this.CreateDocument ();
-						doc.LoadDocument (path);
-						return;
-					}
-					catch
-					{
-						System.Environment.Exit (1);
-					}
-				}
-            }
-			else if (args.Length == 2)
-			{
-				string verb = args[1];
-
-				if (verb == "-new")
-				{
-					var doc = this.CreateDocument ();
-					return;
-				}
-			}
-
 			foreach (XElement node in xml.Elements ())
 			{
 				System.Diagnostics.Debug.Assert (node.Name == "doc");
@@ -508,7 +484,7 @@ namespace Epsitec.Cresus.Graph
             {
 				this.lastConnectorData = connectorData;
 
-//-				System.IO.File.WriteAllText (System.IO.Path.GetTempFileName (), connectorData.Data);
+				System.IO.File.WriteAllText (System.IO.Path.GetTempFileName (), connectorData.Data);
 
 				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (connectorData.Data, connectorData.Path, connectorData.Meta), connectorData.Path, null));
 				

@@ -392,6 +392,26 @@ namespace Epsitec.Cresus
 				}
 			}
 			
+			public static class Message
+			{
+				//	designer:str/BVA2
+				public static global::Epsitec.Common.Types.FormattedText FreePiccoloBecauseOfCompta
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772162));
+					}
+				}
+				//	designer:str/BVA3
+				public static global::Epsitec.Common.Types.FormattedText MoreThanPiccolo
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772163));
+					}
+				}
+			}
+			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
 				string field = string.Join (".", path);

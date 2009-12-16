@@ -750,7 +750,7 @@ namespace Epsitec.Cresus.Graph
 
 				var startInfo = new System.Diagnostics.ProcessStartInfo (
 					Globals.ExecutablePath,
-					string.Concat ("-loadcube \"", dataPath, "\""));
+					string.Concat (@"""", "-loadcube=", dataPath, @""""));
 
 				var process = System.Diagnostics.Process.Start (startInfo);
 

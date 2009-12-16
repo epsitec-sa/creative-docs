@@ -167,7 +167,9 @@ namespace Epsitec.Cresus.Graph.Controllers
 				Parent = settingsFrame,
 			};
 
-			if (GraphSerial.LicensingInfo >	LicensingInfo.ValidPiccolo)
+			var licensing = GraphSerial.LicensingInfo;
+
+			if (licensing >	LicensingInfo.ValidPiccolo)
 			{
 				var cubeButton = new DataCubeButton ()
 				{
@@ -187,7 +189,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 
 				cubeButton.Clicked +=
-				delegate
+					delegate
 					{
 						cubeButton.SetSelected (!cubeButton.IsSelected);
 						cubeFrame.Visibility = cubeButton.IsSelected;
@@ -203,6 +205,47 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 
 				this.cubeSelController.SetupUI (cubeFrame);
+			}
+			else
+			{
+				var comptaDate = GraphSerial.ComptaExpirationDate;
+
+				var messageFrame = new FrameBox ()
+				{
+					Dock = DockStyle.Fill,
+					MinWidth = 200,
+					Name = "message",
+					Parent = settingsFrame,
+					BackColor = Color.FromBrightness (1),
+				};
+
+				if ((GraphSerial.HasGraphLicense == false) &&
+					(comptaDate.HasValue))
+				{
+					var date = comptaDate.Value;
+					
+					date = date.AddMonths (1);
+					date = date.AddDays (-1);
+
+					var message1 = new StaticText ()
+					{
+						Parent = messageFrame,
+						Dock = DockStyle.Top,
+						Text = string.Format (Res.Strings.Message.FreePiccoloBecauseOfCompta.ToString (), date.ToShortDateString ()),
+						PreferredHeight = 36,
+						Margins = new Margins (4, 4, 0, 0),
+					};
+
+					messageFrame.MinWidth = 300;
+				}
+
+				var message2 = new StaticText ()
+				{
+					Parent = messageFrame,
+					Dock = DockStyle.Fill,
+					Text = Res.Strings.Message.MoreThanPiccolo.ToString (),
+					Margins = new Margins (4, 4, 0, 0),
+				};
 			}
 		}
 		
