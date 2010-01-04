@@ -8,14 +8,14 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Cresus.Remoting.Interfaces")]
 [assembly: AssemblyDescription ("Cresus remoting interfaces")]
 [assembly: AssemblyProduct ("Cresus.Remoting")]
-[assembly: AssemblyCopyright ("Copyright © 2004-2009, Pierre Arnaud, EPSITEC SA, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2004-2010, Pierre Arnaud, EPSITEC SA, Switzerland")]
 
 [assembly: AssemblyCompany ("Epsitec")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]
 
-[assembly: AssemblyVersion ("2.5.0.0902")]
-[assembly: AssemblyFileVersion ("2.5.0.0902")]
+[assembly: AssemblyVersion ("2.5.0.1001")]
+[assembly: AssemblyFileVersion ("2.5.0.1001")]
 
 [assembly: ComVisibleAttribute (false)]

@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Cresus.CoreLibrary")]
 [assembly: AssemblyDescription ("Crésus Application Core Library")]
 [assembly: AssemblyProduct ("Crésus")]
-[assembly: AssemblyCopyright ("Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Common.Dialogs")]
 [assembly: AssemblyDescription ("Dialogs Library")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2010, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]

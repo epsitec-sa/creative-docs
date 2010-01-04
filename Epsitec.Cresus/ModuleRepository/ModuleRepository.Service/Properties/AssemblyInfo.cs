@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("EPSITEC SA")]
 [assembly: AssemblyProduct ("ModuleRepository")]
-[assembly: AssemblyCopyright ("Copyright © 2008, Pierre ARNAUD & EPSITEC SA")]
+[assembly: AssemblyCopyright ("Copyright © 2008-2010, Pierre ARNAUD & EPSITEC SA")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 [assembly: ComVisible (false)]

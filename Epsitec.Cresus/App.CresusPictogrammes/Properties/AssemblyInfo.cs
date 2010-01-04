@@ -8,4 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription ("Epsitec Pictogram Application")]
 [assembly: AssemblyCompany ("EPSITEC SA")]
 [assembly: AssemblyProduct ("CrDoc")]
-[assembly: AssemblyCopyright ("Copyright © 2002-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2002-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

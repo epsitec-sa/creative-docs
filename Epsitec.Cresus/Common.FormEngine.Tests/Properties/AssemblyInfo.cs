@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Common.FormEngine.Tests")]
 [assembly: AssemblyDescription ("Tests for the Form Engine")]
 [assembly: AssemblyProduct ("Framework Tests")]
-[assembly: AssemblyCopyright ("Copyright © 2007-2009, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2010, EPSITEC SA & OPaC bright ideas, Switzerland")]

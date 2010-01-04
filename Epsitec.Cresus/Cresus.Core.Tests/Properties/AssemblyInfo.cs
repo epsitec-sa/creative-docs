@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Cresus.Core.Tests")]
 [assembly: AssemblyDescription ("Tests for the Cresus Core and CoreLibrary")]
 [assembly: AssemblyProduct ("Cresus Core Tests")]
-[assembly: AssemblyCopyright ("Copyright © 2008, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2008-2010, EPSITEC SA & OPaC bright ideas, Switzerland")]

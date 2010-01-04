@@ -6,4 +6,4 @@ using System.Reflection;
 [assembly: AssemblyTitle ("Epsitec.Common.Graph")]
 [assembly: AssemblyDescription ("Charting Framework")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2009-2010, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]

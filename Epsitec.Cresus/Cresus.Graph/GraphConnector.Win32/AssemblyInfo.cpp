@@ -14,12 +14,12 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute("")];
 [assembly:AssemblyCompanyAttribute("Epsitec")];
 [assembly:AssemblyProductAttribute("Crésus")];
-[assembly:AssemblyCopyrightAttribute("Copyright © 2009, Pierre Arnaud, EPSITEC SA, Switzerland")];
+[assembly:AssemblyCopyrightAttribute("Copyright © 2009-2010, Pierre Arnaud, EPSITEC SA, Switzerland")];
 [assembly:AssemblyTrademarkAttribute("")];
 [assembly:AssemblyCultureAttribute("")];
 
-[assembly:AssemblyVersionAttribute("1.0.0947.0")];
-[assembly:AssemblyFileVersionAttribute("1.0.0947.0")];
+[assembly:AssemblyVersionAttribute("1.0.1001.0")];
+[assembly:AssemblyFileVersionAttribute("1.0.1001.0")];
 
 [assembly:ComVisible(false)];
 [assembly:CLSCompliantAttribute(true)];

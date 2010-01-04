@@ -8,4 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyCompany ("Epsitec")]
 [assembly: AssemblyProduct ("Crésus Designer")]
-[assembly: AssemblyCopyright ("Copyright © 2002-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2002-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

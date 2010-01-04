@@ -1,4 +1,4 @@
-﻿//	Copyright © 2007-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2007-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Reflection;
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture ("")]
 [assembly: AssemblyConfiguration ("")]
 
-[assembly: AssemblyVersion ("2.4.9.0951")]
-[assembly: AssemblyFileVersion ("2.4.9.0951")]
+[assembly: AssemblyVersion ("2.5.0.1001")]
+[assembly: AssemblyFileVersion ("2.5.0.1001")]
 
 [assembly: ComVisibleAttribute (false)]

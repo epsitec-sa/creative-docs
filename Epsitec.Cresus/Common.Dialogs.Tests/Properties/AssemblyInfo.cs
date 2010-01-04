@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Common.Dialogs.Tests")]
 [assembly: AssemblyDescription ("Tests for the Dialogs Library")]
 [assembly: AssemblyProduct ("Framework Tests")]
-[assembly: AssemblyCopyright ("Copyright © 2003-2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2003-2010, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]

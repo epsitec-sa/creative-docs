@@ -7,4 +7,4 @@ using System.Reflection;
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyCompany ("OPaC bright ideas")]
 [assembly: AssemblyProduct ("CrDesigner")]
-[assembly: AssemblyCopyright ("Copyright © 2007-2009, OPaC bright ideas")]
+[assembly: AssemblyCopyright ("Copyright © 2007-2010, OPaC bright ideas")]

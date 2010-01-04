@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Epsitec.Cresus.Server")]
 [assembly: AssemblyDescription ("Crésus Server (Windows Service)")]
 [assembly: AssemblyProduct("Crésus")]
-[assembly: AssemblyCopyright("Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

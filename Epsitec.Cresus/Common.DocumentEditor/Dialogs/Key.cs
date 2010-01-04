@@ -215,7 +215,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 		{
 			bool enable = !this.demo;
 
-			enable = false;
+//-			enable = false;
 
 			this.keyLabel.Enable = enable;
 			this.key1.Enable = enable;

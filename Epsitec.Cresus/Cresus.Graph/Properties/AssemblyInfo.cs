@@ -8,4 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle ("Epsitec.Cresus.Graph")]
 [assembly: AssemblyDescription ("Crésus Graphe")]
 [assembly: AssemblyProduct ("Crésus Graphe")]
-[assembly: AssemblyCopyright ("Copyright © 2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2009-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

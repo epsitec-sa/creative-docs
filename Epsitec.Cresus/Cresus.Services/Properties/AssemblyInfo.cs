@@ -8,4 +8,4 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle ("Epsitec.Cresus.Services")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyProduct ("Crésus")]
-[assembly: AssemblyCopyright ("Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland")]

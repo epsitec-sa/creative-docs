@@ -6,4 +6,4 @@ using System.Reflection;
 [assembly: AssemblyTitle ("Epsitec.Common.Reporting.Tests")]
 [assembly: AssemblyDescription ("Tests for the Reporting Library")]
 [assembly: AssemblyProduct ("Framework Tests")]
-[assembly: AssemblyCopyright ("Copyright © 2008, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2008-2010, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]

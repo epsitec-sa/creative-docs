@@ -7,4 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle ("Epsitec.Common.Types")]
 [assembly: AssemblyDescription ("Types Library")]
 [assembly: AssemblyProduct ("Framework")]
-[assembly: AssemblyCopyright ("Copyright © 2004-2009, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
+[assembly: AssemblyCopyright ("Copyright © 2004-2010, Pierre Arnaud, EPSITEC SA & OPaC bright ideas, Switzerland")]
