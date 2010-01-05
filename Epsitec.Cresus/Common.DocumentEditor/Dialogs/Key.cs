@@ -308,7 +308,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 			if ( this.validKey && !this.demo )
 			{
 				this.editor.InstallType = InstallType.Full;
-				Common.Support.SerialAlgorithm.WriteSerial(this.KeyFields);
+				Common.Support.SerialAlgorithm.WriteCrDocSerial(this.KeyFields);
 			}
 			else
 			{
@@ -323,7 +323,7 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 				else if ( this.editor.InstallType == InstallType.Demo )
 				{
 					this.editor.InstallType = InstallType.Demo;
-					Common.Support.SerialAlgorithm.WriteSerial("demo");
+					Common.Support.SerialAlgorithm.WriteCrDocSerial("demo");
 				}
 			}
 		}

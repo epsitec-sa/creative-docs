@@ -481,13 +481,16 @@ namespace Epsitec.Cresus.Graph
 			if ((this.lastConnectorData == null) ||
 				(this.lastConnectorData.Checksum != connectorData.Checksum) ||
 				(this.lastConnectorData.Ticks < connectorData.Ticks + GraphApplication.PasteTickCountTimeout))
-            {
+			{
 				this.lastConnectorData = connectorData;
 
-				System.IO.File.WriteAllText (System.IO.Path.GetTempFileName (), connectorData.Data);
+				string tempPath = System.IO.Path.GetTempFileName ();
+				System.IO.File.WriteAllText (tempPath, connectorData.Data);
+
+				System.Diagnostics.Debug.WriteLine ("Saved connector data to " + tempPath);
 
 				Application.QueueAsyncCallback (() => doc.ImportCube (this.ImportCube (connectorData.Data, connectorData.Path, connectorData.Meta), connectorData.Path, null));
-				
+
 				return true;
 			}
 			else

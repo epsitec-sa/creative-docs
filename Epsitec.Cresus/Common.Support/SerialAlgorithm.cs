@@ -205,7 +205,7 @@ namespace Epsitec.Common.Support
 		
 		public static string ReadCrDocSerial()
 		{
-#if false
+#if true
 			string path = SerialAlgorithm.GetAppDataPath ();
 			string key  = null;
 			
@@ -226,12 +226,13 @@ namespace Epsitec.Common.Support
 			
 			return key;
 #else
-			return (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Documents\Setup", "ID", "");
+			return (string) Microsoft.Win32.Registry.GetValue (SerialAlgorithm.RegistrySerialPath, "ID", "");
 #endif
 		}
 		
-		public static void WriteSerial(string key)
+		public static void WriteCrDocSerial(string key)
 		{
+#if true
 			string path = SerialAlgorithm.GetAppDataPath ();
 			
 			if (path == null)
@@ -245,6 +246,9 @@ namespace Epsitec.Common.Support
 			{
 				writer.WriteLine (key);
 			}
+#else
+//-			Microsoft.Win32.Registry.SetValue (SerialAlgorithm.RegistrySerialPath, "ID", key);
+#endif
 		}
 
 		public static bool CheckSerial(string key, int productFamily)
@@ -318,5 +322,7 @@ namespace Epsitec.Common.Support
 			SerialAlgorithm.ProductGeneration  = generation;
 			SerialAlgorithm.ProductGracePeriod = grace;
 		}
+		
+		private const string RegistrySerialPath = @"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Documents\Setup";
 	}
 }

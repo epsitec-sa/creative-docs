@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Graph.ImportConverters
 				(meta.TryGetValue ("View", out viewNumber)))
 			{
 				return (softId.Length == 24)
-					&& (softId.Substring (1, 2) == "20")
+					&& ((softId.Substring (1, 2) == "20") || (softId.Substring (0, 3) == "025"))
 					&& (viewNumber == this.view);
 			}
 
