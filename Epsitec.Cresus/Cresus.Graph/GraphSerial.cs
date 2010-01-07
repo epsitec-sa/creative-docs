@@ -133,9 +133,11 @@ namespace Epsitec.Cresus.Graph
 		{
 			var graphId  = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Graphe\Setup", "InstallID", "");
 			var comptaId = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus\Setup", "InstallID", "");
+			var peId     = (string) Microsoft.Win32.Registry.GetValue (@"HKEY_LOCAL_MACHINE\SOFTWARE\Epsitec\Cresus Gestion PE\Setup", "ID", "");
 
 //-			System.Diagnostics.Trace.WriteLine ("Crésus Graphe InstallID : " + graphId);
 //-			System.Diagnostics.Trace.WriteLine ("Crésus Compta InstallID : " + comptaId);
+//-			System.Diagnostics.Trace.WriteLine ("Crésus Gestion PE ID :    " + peId);
 			
 			var now  = System.DateTime.Now;
 			bool updatesAllowed;
@@ -155,6 +157,21 @@ namespace Epsitec.Cresus.Graph
 				GraphSerial.comptaExpirationDate = SerialAlgorithm.GetExpirationDate (comptaId);
 
 //-				System.Diagnostics.Trace.WriteLine ("Compta license validity : " + updatesAllowed.ToString ());
+			}
+
+			if (SerialAlgorithm.CheckSerial (peId, 25, out updatesAllowed))
+			{
+				var date = SerialAlgorithm.GetExpirationDate (peId);
+
+				GraphSerial.hasComptaLicense = true;
+				GraphSerial.hasValidComptaLicense |= updatesAllowed;
+
+				if (date > GraphSerial.comptaExpirationDate)
+				{
+					GraphSerial.comptaExpirationDate = date;
+				}
+
+//-				System.Diagnostics.Trace.WriteLine ("Gestion PE license validity : " + updatesAllowed.ToString ());
 			}
 
 			if (GraphSerial.hasGraphLicense)
