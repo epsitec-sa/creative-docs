@@ -109,7 +109,8 @@ namespace Epsitec.Common.Drawing
 			
 			if (size > 0)
 			{
-				image = Opac.FreeImage.Image.LoadThumbnail (path, size);
+				image = Opac.FreeImage.Image.Load (path);
+				image = image.MakeThumbnail (size);
 			}
 			else
 			{
