@@ -5,6 +5,7 @@
 using Epsitec.Common.Drawing;
 
 using System;
+using System.Xml;
 
 
 namespace Epsitec.App.BanquePiguet
@@ -12,6 +13,12 @@ namespace Epsitec.App.BanquePiguet
 
 	class BvrFieldMultiLineColumn : BvrFieldMultiLine
 	{
+
+		public BvrFieldMultiLineColumn(XmlNode xmlBvrField)
+			: base (xmlBvrField)
+		{
+			this.HorizontalSpace = double.Parse (xmlBvrField.SelectSingleNode ("horizontalSpace").InnerText.Trim());
+		}
 
 		public double HorizontalSpace
 		{

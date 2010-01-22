@@ -4,12 +4,20 @@
 
 using Epsitec.Common.Drawing;
 
+using System.Xml;
+
 
 namespace Epsitec.App.BanquePiguet
 {
 
 	class BvrFieldMultiLine : BvrField
 	{
+
+		public BvrFieldMultiLine(XmlNode xmlBvrField)
+			: base (xmlBvrField)
+		{
+			this.VerticalSpace = double.Parse (xmlBvrField.SelectSingleNode ("verticalSpace").InnerText.Trim());
+		}
 
 		public double VerticalSpace
 		{
@@ -24,7 +32,7 @@ namespace Epsitec.App.BanquePiguet
 			double xPosition = this.ComputeAbsoluteXPosition (this.XRelativePosition, bounds);
 			double yPositionBase = this.ComputeAbsoluteYPosition (this.YRelativePosition, bounds);
 			double textHeight = this.ComputeTextAbsoluteHeight (bounds);
-
+			
 			string[] ligns = this.Text.Split ('\n');
 
 			for (int i = 0; i < ligns.Length; i++)

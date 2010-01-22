@@ -4,6 +4,7 @@
 
 using Epsitec.Common.Drawing;
 
+using System.Xml;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -11,6 +12,22 @@ namespace Epsitec.App.BanquePiguet
 	class BvrField
 	{
 
+		public BvrField(XmlNode xmlBvrField)
+		{
+			/*
+			 * using (var stream = System.Reflection.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.Cresus.Graph.Resources.futuramc.ttf"))
+			{
+				Font.RegisterDynamicFont (stream);
+			}
+			 * */
+
+			this.Text = "";
+			this.TextRelativeHeight = double.Parse (xmlBvrField.SelectSingleNode ("textRelativeHeight").InnerText.Trim());
+			this.TextFont = Font.DefaultFont;
+			this.XRelativePosition = double.Parse (xmlBvrField.SelectSingleNode ("xRelativePosition").InnerText.Trim());
+			this.YRelativePosition = double.Parse (xmlBvrField.SelectSingleNode ("yRelativePosition").InnerText.Trim());
+		}
+        
 		public string Text
 		{
 			get;

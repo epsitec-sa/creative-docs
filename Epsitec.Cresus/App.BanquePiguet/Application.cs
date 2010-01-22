@@ -7,6 +7,9 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.UI;
 
+using System;
+using System.Xml;
+
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -81,6 +84,10 @@ namespace Epsitec.App.BanquePiguet
 				Parent = beneficiaryIbanGroupBox,
 				PreferredWidth = 200,
 			};
+			this.BenefeciaryIbanTextField.TextChanged += sender =>
+			{
+				this.BvrWidget.BeneficiaryIban = this.BenefeciaryIbanTextField.Text;
+			};
 			
 			GroupBox beneficiaryAddressGroupBox = new GroupBox ()
 			{
@@ -100,7 +107,11 @@ namespace Epsitec.App.BanquePiguet
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 			};
-			
+			this.BeneficiaryAddressTextField.TextChanged += sender =>
+			{
+				string text = this.BeneficiaryAddressTextField.Text.Replace ("<br/>", "\n");
+				this.BvrWidget.BeneficiaryAddress = text;
+			};
 
 			GroupBox reasonGroupBox = new GroupBox ()
 			{
@@ -120,6 +131,11 @@ namespace Epsitec.App.BanquePiguet
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 			};
+			this.ReasonTextField.TextChanged += sender =>
+			{
+				string text = this.ReasonTextField.Text.Replace ("<br/>", "\n");
+				this.BvrWidget.Reason = text;
+			};
 
 			Button printButton = new Button ()
 			{
@@ -132,7 +148,7 @@ namespace Epsitec.App.BanquePiguet
 
 		private void SetupBvrWidget()
 		{
-			this.BvrWidget = new BvrWidget ()
+			this.BvrWidget = new BvrWidget (Application.bvrDefinition)
 			{
 				Anchor = AnchorStyles.TopLeft,
 				Margins = new Margins (240, 10, 10, 10),
@@ -140,6 +156,78 @@ namespace Epsitec.App.BanquePiguet
 				PreferredHeight = 318,
 				PreferredWidth = 630,
 			};
+
+			try
+			{
+				XmlDocument bvrDefinitionXml = new XmlDocument ();
+				bvrDefinitionXml.Load (Application.bvrValues);
+
+				XmlNodeList values = bvrDefinitionXml.GetElementsByTagName ("value");
+
+				int nbValues = 0;
+
+				foreach (XmlNode value in values)
+				{
+					string name = value.SelectSingleNode ("name").InnerText.Trim();
+					string text = value.SelectSingleNode ("text").InnerText.Trim();
+					
+					if (text.Contains ("\\n"))
+					{
+						string[] lines = text.Replace("\\n", "\n").Split ('\n');
+						
+						text = lines[0];
+
+						for (int i = 1; i < lines.Length; i++)
+						{
+							text += String.Format ("\n{0}", lines[i].Trim());
+						}
+					}
+
+					switch (name)
+					{
+						case "BankAddress":
+							this.BvrWidget.BankAddress = text;
+							break;
+						case "BankAccount":
+							this.BvrWidget.BankAccount = text;
+							break;
+						case "LayoutCode":
+							this.BvrWidget.LayoutCode = text;
+							break;
+						case "ReferenceClientNumber":
+							this.BvrWidget.ReferenceClientNumber = text;
+							break;
+						case "ClearingConstant":
+							this.BvrWidget.ClearingConstant = text;
+							break;
+						case "ClearingBank":
+							this.BvrWidget.ClearingBank = text;
+							break;
+						case "ClearingBankKey":
+							this.BvrWidget.ClearingBankKey = text;
+							break;
+						case "CcpNumber":
+							this.BvrWidget.CcpNumber = text;
+							break;
+						default:
+							throw new Exception (String.Format ("Unknown value: {0}", name));
+					}
+
+					nbValues++;
+
+				}
+
+				if (nbValues < 8)
+				{
+					throw new Exception ("Some bvr values are missing.");
+				}
+
+
+			}
+			catch (Exception e)
+			{
+				throw new Exception ("An error occured while loading the bvr values.", e);
+			}
 		}
 
 		[Command (ApplicationCommands.Id.Print)]
@@ -162,6 +250,10 @@ namespace Epsitec.App.BanquePiguet
 				Epsitec.Common.Printing.PrintPort.PrintSinglePage (painter => this.BvrWidget.Print(painter, new Rectangle(0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
 			}
 		}
+
+		private static string bvrDefinition = String.Format ("{0}\\Data\\BvrDefinition.xml", Epsitec.Common.Support.Globals.Directories.ExecutableRoot);
+
+		private static string bvrValues = String.Format ("{0}\\Data\\BvrValues.xml", Epsitec.Common.Support.Globals.Directories.ExecutableRoot);
 
 	}
 

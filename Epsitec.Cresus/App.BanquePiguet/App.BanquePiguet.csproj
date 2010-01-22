@@ -68,7 +68,13 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BvrFieldMultiLineColumn.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <None Include="App.BanquePiguet.snk" />
+    <None Include="Resources\OCR_BB.TTF" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
@@ -165,7 +171,20 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\BvrDefinition.xml" />
+    <None Include="Resources\BvrValues.xml" />
+    <None Include="Resources\BvrDefinition.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\BvrDefinition.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\BvrValues.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

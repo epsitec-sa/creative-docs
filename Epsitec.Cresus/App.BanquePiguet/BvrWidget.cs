@@ -5,10 +5,9 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-using System.Collections.Generic;
-using System.Linq;
 using System;
-
+using System.Collections.Generic;
+using System.Xml;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -16,7 +15,7 @@ namespace Epsitec.App.BanquePiguet
 	class BvrWidget : Widget
 	{
 
-		protected enum Fields {
+		protected enum BvrFieldId {
 			BankAddress1,
 			BankAddress2,
 			BeneficiaryIban1,
@@ -32,193 +31,193 @@ namespace Epsitec.App.BanquePiguet
 			CcpNumber
 		}
 
-		public BvrWidget()
+		public BvrWidget(string bvrDefinitionFile)
 		{
 
-			this.BvrFields = new Dictionary<Fields, BvrField> ();
+			this.BvrFields = new Dictionary<BvrFieldId, BvrField> ();
 
-			this.BvrFields.Add (
-				Fields.BankAccount1,
-				new BvrFieldMultiLine ()
+			try
+			{
+				XmlDocument bvrDefinitionXml = new XmlDocument ();
+				bvrDefinitionXml.Load (bvrDefinitionFile);
+
+				XmlNodeList bvrFields = bvrDefinitionXml.GetElementsByTagName ("bvrField");
+
+				foreach (XmlNode xmlBvrField in bvrFields)
 				{
-					Text = "Banque Piguet & Cie\n1400 Yverdon-les-Bains",
-					TextFont = Font.DefaultFont,
-					TextRelativeHeight = 1.0 / 25.0,
-					VerticalSpace = 1.0 / 25.0,
-					XRelativePosition = 1.0 / 83.0,
-					YRelativePosition =  22.2 / 25.0,
+					this.SetupBvrField (xmlBvrField);
 				}
-			);
 
-			this.BvrFields.Add (
-				Fields.BeneficiaryIban1,
-				new BvrField ()
-				{
-					Text = "CH38 0888 8123 4567 8901 2",
-					TextFont = Font.DefaultFont,
-					TextRelativeHeight = 1.0 / 25.0,
-					XRelativePosition = 1.0 / 83.0,
-					YRelativePosition =  19.2 / 25.0,
-				}
-			);
+			}
+			catch (Exception e)
+			{
+				throw new Exception ("An error occured while loading the bvr fields.", e);
+			}
 
-			this.BvrFields.Add (
-				Fields.Reason,
-				new BvrFieldMultiLineColumn ()
-				{
-					HorizontalSpace = 2.0 / 83.0,
-					Text = "0123456789\n0123456789\n0123456789",
-					TextFont = Font.DefaultFont,
-					TextRelativeHeight = 1.0 / 25.0,
-					VerticalSpace = 1.6 / 25.0,
-					XRelativePosition = 49.2 / 83.0,
-					YRelativePosition =  22.0 / 25.0,
-				}
-			);
-
-
-			/*this.BankAddress = "Banque Piguet & Cie\n1400 Yverdon-les-Bains";
-			this.BeneficiaryIban = "CH38 0888 8123 4567 8901 2";
-			this.BeneficiaryAddress = "Muster AG\nBahnofstrasse 5\n8001 ZURICH";
-			this.BankAccount = "10-664-6";
-			this.LayoutCode = "303";
-			this.Reason = "0123456789\n0123456789\n0123456789";
-			this.ReferenceClientNumber = "0000000000";
-			this.ClearingConstant = "07";
-			this.ClearingBank = "08777";
-			this.ClearingBankKey = "7";
-			this.CcpNumber = "100006646>";
-			 */
-
-			/*this.BankAddressPosition1 = new Point (1.0/83.0, 22.2/25.0);
-			this.BankAddressPosition2 = new Point (25.0/83.0, 22.2/25.0);
-			this.BeneficiaryIbanPosition1 = new Point (1.0/83.0, 19.2/25);
-			this.BeneficiaryIbanPosition2 = new Point (25.0/83.0, 19.2/25);
-			this.BeneficiaryAddressPosition1 = new Point (1.0/83.0, 18.2/25);
-			this.BeneficiaryAddressPosition2 = new Point (25.0/83.0, 18.2/25);
-			this.BankAccountPosition1 = new Point (11.5/83.0, 14.2/25.0);
-			this.BankAccountPosition2 = new Point (35.5/83.0, 14.2/25.0);
-			this.LayoutCodePosition = new Point (28.0/83.0, 7.0/25.0);
-			this.ReasonPosition = new Point (49.2/83.0, 22.0/25.0);
-			this.ReferenceLinePosition = new Point (41.0/83.0, 4.2/25.0);
-			this.ClearingLinePosition = new Point (70.3/83.0, 4.2/25.0);
-			this.CcpNumberPosition = new Point (70.3/83.0, 2.2/25.0);*/
-
-			/*this.AddressVerticalSpace = (1.0/25.0);
-			this.ReasonVerticalSpace = (1.6/25.0);
-			this.ReasonHorizontalSpace = (2.0/83.0);
-			this.TextHeight = (1.0/25.0);*/
+			if (this.BvrFields.Count < Enum.GetValues (typeof (BvrFieldId)).Length)
+			{
+				throw new Exception (
+					"An error occured while loading the bvr fields." ,
+					new Exception("Some bvr fields are missing.")
+				);
+			}
 
 		}
-
-
-		protected Dictionary<Fields, BvrField> BvrFields
-		{
-			get;
-			set;
-		}
-
 
 		public string BankAddress
 		{
-			get;
-			set;
+			get
+			{
+				return this.BvrFields[BvrFieldId.BankAddress1].Text;
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.BankAddress1].Text = value;
+				this.BvrFields[BvrFieldId.BankAddress2].Text = value;
+				this.Invalidate ();
+			}
 		}
 		
 		public string BeneficiaryIban
 		{
-			get;
-			set;
+			get
+			{
+				return this.BvrFields[BvrFieldId.BeneficiaryIban1].Text;
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.BeneficiaryIban1].Text = value;
+				this.BvrFields[BvrFieldId.BeneficiaryIban2].Text = value;
+				this.Invalidate ();
+			}
 		}
 
 		public string BeneficiaryAddress
 		{
-			get;
-			set;
+			get
+			{
+				return this.BvrFields[BvrFieldId.BeneficiaryAddress1].Text;
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.BeneficiaryAddress1].Text = value;
+				this.BvrFields[BvrFieldId.BeneficiaryAddress2].Text = value;
+				this.Invalidate ();
+			}
 		}
 
 		public string BankAccount
 		{
-			get;
-			set;
+			get
+			{
+				return this.BvrFields[BvrFieldId.BankAccount1].Text;
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.BankAccount1].Text = value;
+				this.BvrFields[BvrFieldId.BankAccount2].Text = value;
+				this.Invalidate ();
+			}
 		}
 
 		public string LayoutCode
 		{
-			get;
-			set;
+			get
+			{
+				return this.BvrFields[BvrFieldId.LayoutCode].Text;
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.LayoutCode].Text = value;
+				this.Invalidate ();
+			}
 		}
 
 		public string Reason
 		{
-			get;
-			set;
+			get
+			{
+				return this.BvrFields[BvrFieldId.Reason].Text;
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.Reason].Text = value;
+				this.Invalidate ();
+			}
 		}
 
 		public string ReferenceClientNumber
 		{
-			get;
-			set;
-		}
-
-		protected string ReferenceKey
-		{
 			get
 			{
-				return "0";
+				return this.referenceClientNumber;
 			}
-		}
-
-		protected string ReferenceLine
-		{
-			get
+			set
 			{
-				return "0000000000000000000000+";
+				this.referenceClientNumber = value;
+				this.UpdateReferenceLine ();
 			}
 		}
 
 		public string ClearingConstant
 		{
-			get;
-			set;
+			get
+			{
+				return this.clearingConstant;
+			}
+			set
+			{
+				this.clearingConstant = value;
+				this.UpdateClearingLine ();
+			}
 		}
 
 		public string ClearingBank
 		{
-			get;
-			set;
+			get
+			{
+				return this.clearingBank;
+			}
+			set
+			{
+				this.clearingBank = value;
+				this.UpdateClearingLine ();
+			}
 		}
 
 		public string ClearingBankKey
 		{
-			get;
-			set;
-		}
-
-
-		protected string ClearingKey
-		{
 			get
 			{
-				return "0";
+				return this.clearingBankKey;
+			}
+			set
+			{
+				this.clearingBankKey = value;
+				this.UpdateClearingLine ();
 			}
 		}
 
-
-		protected string ClearingLine
-		{
-			get
-			{
-				return "000000000>";
-			}
-		}
 
 		public string CcpNumber
 		{
+			get
+			{
+				string text = this.BvrFields[BvrFieldId.CcpNumber].Text;
+				return text.Substring (0, text.Length - 1);
+			}
+			set
+			{
+				this.BvrFields[BvrFieldId.CcpNumber].Text = String.Format ("{0}>", value);
+				this.Invalidate ();
+			}
+		}
+
+		protected Dictionary<BvrFieldId, BvrField> BvrFields
+		{
 			get;
 			set;
 		}
-
 
 		public void Print(IPaintPort paintPort, Rectangle bounds)
 		{
@@ -233,7 +232,7 @@ namespace Epsitec.App.BanquePiguet
 			this.PaintBvrWidgets (graphics, bounds);
 		}
 
-		private void PaintBackground(IPaintPort port, Rectangle bounds)
+		protected void PaintBackground(IPaintPort port, Rectangle bounds)
 		{
 			using (Path path = Path.FromRectangle (bounds))
 			{
@@ -251,6 +250,68 @@ namespace Epsitec.App.BanquePiguet
 			}
 
 		}
+
+		protected void SetupBvrField(XmlNode xmlBvrField)
+		{
+			string name = xmlBvrField.SelectSingleNode ("name").InnerText.Trim();
+			string type = xmlBvrField.SelectSingleNode ("type").InnerText.Trim();
+
+			BvrFieldId id = (BvrFieldId) Enum.Parse (typeof (BvrFieldId), name);
+			BvrField field;
+
+			switch (type)
+			{
+				case "BvrField":
+					field = new BvrField (xmlBvrField);
+					break;
+				case "BvrFieldMultiLine":
+					field = new BvrFieldMultiLine (xmlBvrField);
+					break;
+				case "BvrFieldMultiLineColumn":
+					field = new BvrFieldMultiLineColumn (xmlBvrField);
+					break;
+				default:
+					throw new Exception (String.Format ("Invalid bvrField type: {0}.", type));
+			}
+
+			this.BvrFields[id] = field;
+		}
+
+		protected void UpdateReferenceLine()
+		{
+			string part0 = this.ReferenceClientNumber;
+			string part1 = "XXXXXXXXXXXX";
+			string part2 = this.ComputeReferenceKey ();
+
+			this.BvrFields[BvrFieldId.ReferenceLine].Text = String.Format ("{0}{1}{2}+", part0, part1, part2);
+			this.Invalidate ();
+		}
+
+		protected void UpdateClearingLine()
+		{
+			string part0 = this.ClearingConstant;
+			string part1 = this.ClearingBank;
+			string part2 = this.ClearingBankKey;
+			string part3 = this.ComputeClearingKey ();
+
+			this.BvrFields[BvrFieldId.ClearingLine].Text = String.Format ("{0}{1}{2}{3}>", part0, part1, part2, part3);
+			this.Invalidate ();
+		}
+
+		protected string ComputeReferenceKey()
+		{
+			return "X";
+		}
+
+		protected string ComputeClearingKey()
+		{
+			return "X";
+		}
+
+		protected string referenceClientNumber;
+		protected string clearingConstant;
+		protected string clearingBank;
+		protected string clearingBankKey;
 
 	}
 
