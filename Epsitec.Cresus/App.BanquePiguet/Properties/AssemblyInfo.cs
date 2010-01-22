@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Epsitec")]
 [assembly: AssemblyProduct("App.BanquePiguet")]
-[assembly: AssemblyCopyright("Copyright © 2010, Epsitec SA ...")]
+[assembly: AssemblyCopyright("Copyright © 2010, Epsitec SA")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
