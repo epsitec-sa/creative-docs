@@ -2,12 +2,16 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.UI;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Validators;
 
 using System;
+using System.IO;
+using System.Linq;
+using System.Collections.Generic;
 using System.Xml;
 
 
@@ -25,25 +29,37 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
-		private TextField BenefeciaryIbanTextField
+		protected TextField BenefeciaryIbanTextField
 		{
 			get;
 			set;
 		}
 
-		private TextFieldMulti BeneficiaryAddressTextField
+		protected TextFieldMulti BeneficiaryAddressTextField
 		{
 			get;
 			set;
 		}
 
-		private TextFieldMulti ReasonTextField
+		protected TextFieldMulti ReasonTextField
 		{
 			get;
 			set;
 		}
 
-		private BvrWidget BvrWidget
+		protected BvrWidget BvrWidget
+		{
+			get;
+			set;
+		}
+
+		protected Button PrintButton
+		{
+			get;
+			set;
+		}
+
+		protected Button OptionsButton
 		{
 			get;
 			set;
@@ -54,27 +70,44 @@ namespace Epsitec.App.BanquePiguet
 			this.SetupWindow ();
 			this.SetupForm ();
 			this.SetupBvrWidget ();
+			this.SetupEvents ();
+			this.SetupValidators ();
+			this.checkPrintButtonEnbled();
+			this.Window.AdjustWindowSize ();
 		}
 
-		private void SetupWindow()
+		public void SetupAdminMode(bool adminMode)
+		{
+			this.OptionsButton.Visibility = adminMode;
+		}
+
+		protected void SetupWindow()
 		{
 			this.Window = new Window ()
 			{
 				Text = this.ShortWindowTitle,
-				WindowSize = new Size (1000, 330),
+				//WindowSize = new Size (1000, 600),
 			};
+			this.Window.MakeFixedSizeWindow ();
 		}
 
-		private void SetupForm()
+		protected void SetupForm()
 		{
+
+			FrameBox formFrameBox = new FrameBox ()
+			{
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Dock = DockStyle.Left,
+				Parent = this.Window.Root,
+			};
 
 			GroupBox beneficiaryIbanGroupBox = new GroupBox ()
 			{
-				Anchor = AnchorStyles.TopLeft,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 10, 10),
 				Padding = new Margins (5, 5, 5, 5),
-				Parent = this.Window.Root,
+				Parent = formFrameBox,
 				Text = "N° IBAN du bénéficiaire",
 			};
 
@@ -84,18 +117,14 @@ namespace Epsitec.App.BanquePiguet
 				Parent = beneficiaryIbanGroupBox,
 				PreferredWidth = 200,
 			};
-			this.BenefeciaryIbanTextField.TextChanged += sender =>
-			{
-				this.BvrWidget.BeneficiaryIban = this.BenefeciaryIbanTextField.Text;
-			};
 			
 			GroupBox beneficiaryAddressGroupBox = new GroupBox ()
 			{
-				Anchor = AnchorStyles.TopLeft,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Margins = new Margins (10, 10, 65, 10),
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (10, 10, 0, 10),
 				Padding = new Margins (5, 5, 5, 5),
-				Parent = this.Window.Root,
+				Parent = formFrameBox,
 				Text = "Nom et adresse du bénéficiaire",
 			};
 
@@ -107,19 +136,14 @@ namespace Epsitec.App.BanquePiguet
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 			};
-			this.BeneficiaryAddressTextField.TextChanged += sender =>
-			{
-				string text = this.BeneficiaryAddressTextField.Text.Replace ("<br/>", "\n");
-				this.BvrWidget.BeneficiaryAddress = text;
-			};
 
 			GroupBox reasonGroupBox = new GroupBox ()
 			{
-				Anchor = AnchorStyles.TopLeft,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Margins = new Margins (10, 10, 165, 10),
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (10, 10, 0, 10),
 				Padding = new Margins (5, 5, 5, 5),
-				Parent = this.Window.Root,
+				Parent = formFrameBox,
 				Text = "Motif du versement",
 			};
 
@@ -131,36 +155,46 @@ namespace Epsitec.App.BanquePiguet
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 			};
-			this.ReasonTextField.TextChanged += sender =>
+
+			FrameBox buttonsFrameBox = new FrameBox ()
 			{
-				string text = this.ReasonTextField.Text.Replace ("<br/>", "\n");
-				this.BvrWidget.Reason = text;
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock = DockStyle.Stacked,
+				Parent = formFrameBox,
 			};
 
-			Button printButton = new Button ()
+			this.PrintButton = new Button ()
 			{
-				Anchor = AnchorStyles.TopLeft,
 				CommandObject = ApplicationCommands.Print,
-				Margins = new Margins (10, 10, 255, 10),
-				Parent = this.Window.Root,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (10, 10, 0, 10),
+				Parent = buttonsFrameBox,
+			};
+
+			this.OptionsButton = new Button ()
+			{
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 10, 0, 10),
+				Parent = buttonsFrameBox,
+				Text = "Options",
+				Visibility = false,
 			};
 		}
 
-		private void SetupBvrWidget()
+		protected void SetupBvrWidget()
 		{
-			this.BvrWidget = new BvrWidget (Application.bvrDefinition)
+			this.BvrWidget = new BvrWidget ()
 			{
-				Anchor = AnchorStyles.TopLeft,
-				Margins = new Margins (240, 10, 10, 10),
+				Dock = DockStyle.Left,
+				Margins = new Margins (10, 10, 10, 10),
 				Parent = this.Window.Root,
-				PreferredHeight = 318,
-				PreferredWidth = 630,
+				PreferredSize = new Size (622, 314),
 			};
 
 			try
 			{
 				XmlDocument bvrDefinitionXml = new XmlDocument ();
-				bvrDefinitionXml.Load (Application.bvrValues);
+				bvrDefinitionXml.LoadXml(BanquePiguet.Properties.Resources.BvrValues);
 
 				XmlNodeList values = bvrDefinitionXml.GetElementsByTagName ("value");
 
@@ -214,7 +248,6 @@ namespace Epsitec.App.BanquePiguet
 					}
 
 					nbValues++;
-
 				}
 
 				if (nbValues < 8)
@@ -230,8 +263,60 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		protected void SetupEvents()
+		{
+			this.BenefeciaryIbanTextField.TextChanged += sender =>
+			{
+				this.BvrWidget.BeneficiaryIban = this.BenefeciaryIbanTextField.Text;
+				this.checkPrintButtonEnbled ();
+			};
+
+			this.BeneficiaryAddressTextField.TextChanged += sender =>
+			{
+				string text = this.BeneficiaryAddressTextField.Text.Replace ("<br/>", "\n");
+				this.BvrWidget.BeneficiaryAddress = text;
+				this.checkPrintButtonEnbled ();
+			};
+
+			this.ReasonTextField.TextChanged += sender =>
+			{
+				string text = this.ReasonTextField.Text.Replace ("<br/>", "\n");
+				this.BvrWidget.Reason = text;
+				this.checkPrintButtonEnbled ();
+			};
+		}
+
+		protected void SetupValidators()
+		{
+			List<IValidator> validators = new List<IValidator> ();
+
+			validators.Add(new PredicateValidator (
+				this.BenefeciaryIbanTextField,
+				() => this.BvrWidget.IsBeneficiaryIbanValid ()
+			));
+
+			validators.Add(new PredicateValidator (
+				this.BeneficiaryAddressTextField,
+				() => this.BvrWidget.IsBeneficiaryAddressValid ()
+			));
+
+			validators.Add(new PredicateValidator (
+				this.ReasonTextField,
+				() => this.BvrWidget.IsReasonValid ()
+			));
+
+			validators.ForEach (validator => validator.Validate());
+		}
+
+
+		protected void checkPrintButtonEnbled()
+		{
+			this.SetEnable (ApplicationCommands.Print, this.BvrWidget.IsValid ());
+		}
+
+
 		[Command (ApplicationCommands.Id.Print)]
-		private void ExecuteCommandPrint()
+		protected void ExecuteCommandPrint()
 		{
 
 			Epsitec.Common.Dialogs.PrintDialog dialog = new Epsitec.Common.Dialogs.PrintDialog
@@ -248,13 +333,29 @@ namespace Epsitec.App.BanquePiguet
 			if (dialog.Result == Epsitec.Common.Dialogs.DialogResult.Accept)
 			{
 				Epsitec.Common.Printing.PrintPort.PrintSinglePage (painter => this.BvrWidget.Print(painter, new Rectangle(0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
+				this.LogPrintCommand (0);
 			}
 		}
 
-		private static string bvrDefinition = String.Format ("{0}\\Data\\BvrDefinition.xml", Epsitec.Common.Support.Globals.Directories.ExecutableRoot);
+		protected void LogPrintCommand(int number)
+		{
+			DateTime date = DateTime.Now;
+			string iban = this.BvrWidget.BeneficiaryIban;
+			string address = this.BvrWidget.BeneficiaryAddress;
+			string reason = this.BvrWidget.Reason;
 
-		private static string bvrValues = String.Format ("{0}\\Data\\BvrValues.xml", Epsitec.Common.Support.Globals.Directories.ExecutableRoot);
+			using (StreamWriter streamWriter = File.AppendText(App.BanquePiguet.Properties.Resources.LogFile))
+			{
+				streamWriter.WriteLine ("========= Entry =========");
+				streamWriter.WriteLine (String.Format ("Date: {0}", date));
+				streamWriter.WriteLine (String.Format ("Number: {0}", number));
+				streamWriter.WriteLine (String.Format ("Beneficiary iban: {0}", iban));
+				streamWriter.WriteLine (String.Format ("Beneficiary address: {0}", address.Replace ('\n', ' ')));
+				streamWriter.WriteLine (String.Format ("Reason: {0}", reason.Replace ('\n', ' ')));
+			}
+			
+		}
 
-	}
+	}	
 
 }

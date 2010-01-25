@@ -63,25 +63,28 @@ namespace Epsitec.App.BanquePiguet.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
         ///
-        ///&lt;bvrFields&gt;
+        ///&lt;bvr&gt;
         ///
-        ///  &lt;bvrField&gt;
-        ///    &lt;name&gt;BankAddress1&lt;/name&gt;
-        ///    &lt;type&gt;BvrFieldMultiLine&lt;/type&gt;
-        ///    &lt;font&gt;OCR-B1&lt;/font&gt;
-        ///    &lt;!-- 0.6 / 25 --&gt;
-        ///    &lt;textRelativeHeight&gt;0.024&lt;/textRelativeHeight&gt;
-        ///    &lt;!-- 1 / 83 --&gt;
-        ///    &lt;xRelativePosition&gt;0.012&lt;/xRelativePosition&gt;
-        ///    &lt;!-- 22.2 /25 --&gt;
-        ///    &lt;yRelativePosition&gt;0.9&lt;/yRelativePosition&gt;
-        ///    &lt;!-- 1 / 25--&gt;
-        ///    &lt;verticalSpace&gt;0.04&lt;/verticalSpace&gt;
-        ///  &lt;/bvrField&gt;
+        ///  &lt;size&gt;
+        ///    &lt;height&gt;106&lt;/height&gt;
+        ///    &lt;width&gt;210&lt;/width&gt; 
+        ///  &lt;/size&gt;
         ///
-        ///  &lt;bvrField&gt;
-        ///    &lt;name&gt;BankAddress2&lt;/name&gt;
-        ///    &lt;typ [rest of string was truncated]&quot;;.
+        ///  &lt;bvrFields&gt;
+        ///
+        ///    &lt;bvrField&gt;
+        ///      &lt;name&gt;BankAddress1&lt;/name&gt;
+        ///      &lt;type&gt;BvrFieldMultiLine&lt;/type&gt;
+        ///      &lt;textHeight&gt;4.23&lt;/textHeight&gt;
+        ///      &lt;xPosition&gt;2.54&lt;/xPosition&gt;
+        ///      &lt;yPosition&gt;93.98&lt;/yPosition&gt;
+        ///      &lt;verticalSpace&gt;4.233&lt;/verticalSpace&gt;
+        ///    &lt;/bvrField&gt;
+        ///
+        ///    &lt;bvrField&gt;
+        ///      &lt;name&gt;BankAddress2&lt;/name&gt;
+        ///      &lt;type&gt;BvrFieldMultiLine&lt;/type&gt;    
+        ///      &lt;textHeight&gt;4. [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string BvrDefinition {
             get {
@@ -124,6 +127,15 @@ namespace Epsitec.App.BanquePiguet.Properties {
         internal static string BvrValues {
             get {
                 return ResourceManager.GetString("BvrValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logs/logs.txt.
+        /// </summary>
+        internal static string LogFile {
+            get {
+                return ResourceManager.GetString("LogFile", resourceCulture);
             }
         }
         

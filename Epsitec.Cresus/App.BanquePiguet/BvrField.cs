@@ -4,6 +4,8 @@
 
 using Epsitec.Common.Drawing;
 
+using System.IO;
+using System.Reflection;
 using System.Xml;
 
 namespace Epsitec.App.BanquePiguet
@@ -12,20 +14,21 @@ namespace Epsitec.App.BanquePiguet
 	class BvrField
 	{
 
-		public BvrField(XmlNode xmlBvrField)
+		static BvrField()
 		{
-			/*
-			 * using (var stream = System.Reflection.Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.Cresus.Graph.Resources.futuramc.ttf"))
+			using (Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.App.BanquePiguet.Resources.OCR_BB.tff"))
 			{
 				Font.RegisterDynamicFont (stream);
 			}
-			 * */
-
+		}
+		
+		public BvrField(BvrWidget parent, XmlNode xmlBvrField)
+		{
 			this.Text = "";
-			this.TextRelativeHeight = double.Parse (xmlBvrField.SelectSingleNode ("textRelativeHeight").InnerText.Trim());
-			this.TextFont = Font.DefaultFont;
-			this.XRelativePosition = double.Parse (xmlBvrField.SelectSingleNode ("xRelativePosition").InnerText.Trim());
-			this.YRelativePosition = double.Parse (xmlBvrField.SelectSingleNode ("yRelativePosition").InnerText.Trim());
+			this.TextRelativeHeight = double.Parse (xmlBvrField.SelectSingleNode ("textHeight").InnerText.Trim()) / parent.BvrSize.Height;
+			this.TextFont = Font.GetFont ("OCR-B Bold", "Regular");
+			this.XRelativePosition = double.Parse (xmlBvrField.SelectSingleNode ("xPosition").InnerText.Trim()) / parent.BvrSize.Width;
+			this.YRelativePosition = double.Parse (xmlBvrField.SelectSingleNode ("yPosition").InnerText.Trim()) / parent.BvrSize.Height;
 		}
         
 		public string Text
@@ -61,22 +64,22 @@ namespace Epsitec.App.BanquePiguet
 
 		public virtual void Paint(IPaintPort port, Rectangle bounds)
 		{
-			double xPosition = this.ComputeAbsoluteXPosition (this.XRelativePosition, bounds);
-			double yPosition = this.ComputeAbsoluteYPosition (this.YRelativePosition, bounds);
+			double xPosition = this.ComputeAbsoluteXPosition (bounds);
+			double yPosition = this.ComputeAbsoluteYPosition (bounds);
 			double textHeight = this.ComputeTextAbsoluteHeight (bounds);
 
 			port.Color = Color.FromRgb (0, 0, 0);
 			port.PaintText (xPosition, yPosition, this.Text, this.TextFont, textHeight);
 		}
 
-		protected double ComputeAbsoluteXPosition(double relativeX, Rectangle bounds)
+		protected double ComputeAbsoluteXPosition(Rectangle bounds)
 		{
-			return relativeX * bounds.Width;
+			return this.XRelativePosition * bounds.Width;
 		}
 
-		protected double ComputeAbsoluteYPosition(double relativeY, Rectangle bounds)
+		protected double ComputeAbsoluteYPosition(Rectangle bounds)
 		{
-			return relativeY * bounds.Height;
+			return this.YRelativePosition * bounds.Height;
 		}
 
 		protected double ComputeTextAbsoluteHeight(Rectangle bounds)

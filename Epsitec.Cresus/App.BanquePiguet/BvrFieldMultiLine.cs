@@ -13,10 +13,9 @@ namespace Epsitec.App.BanquePiguet
 	class BvrFieldMultiLine : BvrField
 	{
 
-		public BvrFieldMultiLine(XmlNode xmlBvrField)
-			: base (xmlBvrField)
+		public BvrFieldMultiLine(BvrWidget parent, XmlNode xmlBvrField) : base (parent, xmlBvrField)
 		{
-			this.VerticalSpace = double.Parse (xmlBvrField.SelectSingleNode ("verticalSpace").InnerText.Trim());
+			this.VerticalSpace = double.Parse (xmlBvrField.SelectSingleNode ("verticalSpace").InnerText.Trim()) / parent.BvrSize.Height;
 		}
 
 		public double VerticalSpace
@@ -29,8 +28,8 @@ namespace Epsitec.App.BanquePiguet
 		{
 			port.Color = Color.FromRgb (0, 0, 0);
 
-			double xPosition = this.ComputeAbsoluteXPosition (this.XRelativePosition, bounds);
-			double yPositionBase = this.ComputeAbsoluteYPosition (this.YRelativePosition, bounds);
+			double xPosition = this.ComputeAbsoluteXPosition (bounds);
+			double yPositionBase = this.ComputeAbsoluteYPosition (bounds);
 			double textHeight = this.ComputeTextAbsoluteHeight (bounds);
 			
 			string[] ligns = this.Text.Split ('\n');

@@ -124,7 +124,10 @@
   <data name="BvrValues" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BvrValues.xml;System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="LogFile" xml:space="preserve">
+    <value>Logs/logs.txt</value>
+  </data>
   <data name="OCR_BB" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\OCR_BB.TTF;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>..\Resources\OCR_BB.tff;System.Byte[], mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>

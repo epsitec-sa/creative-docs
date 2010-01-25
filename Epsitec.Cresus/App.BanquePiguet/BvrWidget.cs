@@ -7,7 +7,10 @@ using Epsitec.Common.Drawing;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
+
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -31,15 +34,22 @@ namespace Epsitec.App.BanquePiguet
 			CcpNumber
 		}
 
-		public BvrWidget(string bvrDefinitionFile)
+		public BvrWidget()
 		{
 
 			this.BvrFields = new Dictionary<BvrFieldId, BvrField> ();
+			this.BvrFieldsDisplay = new Dictionary<BvrFieldId, bool> ();
 
 			try
 			{
 				XmlDocument bvrDefinitionXml = new XmlDocument ();
-				bvrDefinitionXml.Load (bvrDefinitionFile);
+				bvrDefinitionXml.LoadXml (App.BanquePiguet.Properties.Resources.BvrDefinition);
+
+				XmlNode bvrSize = bvrDefinitionXml.GetElementsByTagName ("size").Item(0);
+				double bvrHeight = double.Parse(bvrSize.SelectSingleNode("height").InnerText.Trim());
+				double bvrWidth = double.Parse(bvrSize.SelectSingleNode("width").InnerText.Trim());
+
+				this.BvrSize = new Size(bvrWidth, bvrHeight);
 
 				XmlNodeList bvrFields = bvrDefinitionXml.GetElementsByTagName ("bvrField");
 
@@ -86,8 +96,21 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				this.BvrFields[BvrFieldId.BeneficiaryIban1].Text = value;
-				this.BvrFields[BvrFieldId.BeneficiaryIban2].Text = value;
+				string iban = Regex.Replace(value, @"\s", "");
+
+				for (int i = 4; i < iban.Length && i < 27; i += 5)
+				{
+					iban = iban.Insert (i, " ");
+				}
+
+				this.BvrFields[BvrFieldId.BeneficiaryIban1].Text = iban;
+				this.BvrFields[BvrFieldId.BeneficiaryIban2].Text = iban;
+				
+				bool valid = BvrWidget.IsBeneficiaryIbanValid(iban);
+				this.BvrFieldsDisplay[BvrFieldId.BeneficiaryIban1] = valid;
+				this.BvrFieldsDisplay[BvrFieldId.BeneficiaryIban2] = valid;
+
+				this.UpdateReferenceLine ();
 				this.Invalidate ();
 			}
 		}
@@ -102,6 +125,11 @@ namespace Epsitec.App.BanquePiguet
 			{
 				this.BvrFields[BvrFieldId.BeneficiaryAddress1].Text = value;
 				this.BvrFields[BvrFieldId.BeneficiaryAddress2].Text = value;
+
+				bool valid = BvrWidget.IsbeneficiaryAddressValid (value);
+				this.BvrFieldsDisplay[BvrFieldId.BeneficiaryAddress1] = valid;
+				this.BvrFieldsDisplay[BvrFieldId.BeneficiaryAddress2] = valid;
+
 				this.Invalidate ();
 			}
 		}
@@ -142,6 +170,8 @@ namespace Epsitec.App.BanquePiguet
 			set
 			{
 				this.BvrFields[BvrFieldId.Reason].Text = value;
+				this.BvrFieldsDisplay[BvrFieldId.Reason] = BvrWidget.IsReasonValid (value);
+
 				this.Invalidate ();
 			}
 		}
@@ -213,10 +243,42 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		public Size BvrSize
+		{
+			get;
+			set;
+		}
+
 		protected Dictionary<BvrFieldId, BvrField> BvrFields
 		{
 			get;
 			set;
+		}
+
+		protected Dictionary<BvrFieldId, bool> BvrFieldsDisplay
+		{
+			get;
+			set;
+		}
+
+		public bool IsBeneficiaryIbanValid()
+		{
+			return BvrWidget.IsBeneficiaryIbanValid (this.BeneficiaryIban);
+		}
+
+		public bool IsBeneficiaryAddressValid()
+		{
+			return BvrWidget.IsbeneficiaryAddressValid (this.BeneficiaryAddress);
+		}
+
+		public bool IsReasonValid()
+		{
+			return BvrWidget.IsReasonValid (this.Reason);
+		}
+
+		public bool IsValid()
+		{
+			return this.IsBeneficiaryIbanValid () && this.IsBeneficiaryAddressValid () && this.IsReasonValid ();
 		}
 
 		public void Print(IPaintPort paintPort, Rectangle bounds)
@@ -244,9 +306,12 @@ namespace Epsitec.App.BanquePiguet
 		protected void PaintBvrWidgets(IPaintPort paintPort, Rectangle bounds)
 		{
 
-			foreach (BvrField field in this.BvrFields.Values)
+			foreach (BvrFieldId fieldId in this.BvrFields.Keys)
 			{
-				field.Paint (paintPort, bounds);
+				if (this.BvrFieldsDisplay[fieldId])
+				{
+					this.BvrFields[fieldId].Paint (paintPort, bounds);
+				}
 			}
 
 		}
@@ -262,28 +327,39 @@ namespace Epsitec.App.BanquePiguet
 			switch (type)
 			{
 				case "BvrField":
-					field = new BvrField (xmlBvrField);
+					field = new BvrField (this, xmlBvrField);
 					break;
 				case "BvrFieldMultiLine":
-					field = new BvrFieldMultiLine (xmlBvrField);
+					field = new BvrFieldMultiLine (this, xmlBvrField);
 					break;
 				case "BvrFieldMultiLineColumn":
-					field = new BvrFieldMultiLineColumn (xmlBvrField);
+					field = new BvrFieldMultiLineColumn (this, xmlBvrField);
 					break;
 				default:
 					throw new Exception (String.Format ("Invalid bvrField type: {0}.", type));
 			}
 
 			this.BvrFields[id] = field;
+			this.BvrFieldsDisplay[id] = true;
+
 		}
 
 		protected void UpdateReferenceLine()
 		{
-			string part0 = this.ReferenceClientNumber;
-			string part1 = "XXXXXXXXXXXX";
-			string part2 = this.ComputeReferenceKey ();
 
-			this.BvrFields[BvrFieldId.ReferenceLine].Text = String.Format ("{0}{1}{2}+", part0, part1, part2);
+			if (this.IsBeneficiaryIbanValid ())
+			{
+				string part0 = this.ReferenceClientNumber;
+				string part1 = String.Format ("0000{0}", Regex.Replace (this.BeneficiaryIban, @"\s", "").Substring (9, 12));
+				string part2 = this.ComputeReferenceKey ();
+
+				this.BvrFields[BvrFieldId.ReferenceLine].Text = String.Format ("{0}{1}{2}+", part0, part1, part2);
+				this.BvrFieldsDisplay[BvrFieldId.ReferenceLine] = true;
+			}
+			else
+			{
+				this.BvrFieldsDisplay[BvrFieldId.ReferenceLine] = false;
+			}
 			this.Invalidate ();
 		}
 
@@ -306,6 +382,23 @@ namespace Epsitec.App.BanquePiguet
 		protected string ComputeClearingKey()
 		{
 			return "X";
+		}
+
+		protected static bool IsBeneficiaryIbanValid(string iban)
+		{
+			return Regex.IsMatch (iban, @"^CH\d{2} \d{4} \d{4} \d{4} \d{4} \d{1}$");
+		}
+
+		protected static bool IsbeneficiaryAddressValid(string address)
+		{
+			string[] lines = address.Split ('\n');
+			return (lines.Length <= 4) && lines.All (line => line.Length <= 27);
+		}
+
+		protected static bool IsReasonValid(string reason)
+		{
+			string[] lines = reason.Split ('\n');
+			return (lines.Length <= 3) && lines.All (line => line.Length <= 10);
 		}
 
 		protected string referenceClientNumber;

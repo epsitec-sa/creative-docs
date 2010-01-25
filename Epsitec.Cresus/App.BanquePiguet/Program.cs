@@ -4,6 +4,10 @@
 
 using Epsitec.Cresus.Core;
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -12,13 +16,16 @@ namespace Epsitec.App.BanquePiguet
 	{
 
 		[System.STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
 			UI.Initialize ();
 
-			using (Application application = new Application ())
+			bool adminMode = args.Any (arg => arg == "-admin");
+
+			using (Application application = new Application())
 			{
 				application.SetupUI ();
+				application.SetupAdminMode (adminMode);
 				application.Window.Show ();
 				application.Window.Run ();
 			}
