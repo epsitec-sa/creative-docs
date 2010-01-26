@@ -1,11 +1,9 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-
 using Epsitec.Common.Drawing;
 
-using System.Xml;
-
+using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -13,9 +11,9 @@ namespace Epsitec.App.BanquePiguet
 	class BvrFieldMultiLine : BvrField
 	{
 
-		public BvrFieldMultiLine(BvrWidget parent, XmlNode xmlBvrField) : base (parent, xmlBvrField)
+		public BvrFieldMultiLine(XElement xBvrField, Size bvrSize) : base (xBvrField, bvrSize)
 		{
-			this.VerticalSpace = double.Parse (xmlBvrField.SelectSingleNode ("verticalSpace").InnerText.Trim()) / parent.BvrSize.Height;
+			this.VerticalSpace = (double) xBvrField.Element ("verticalSpace") / bvrSize.Height;
 		}
 
 		public double VerticalSpace
@@ -24,7 +22,7 @@ namespace Epsitec.App.BanquePiguet
 			set;
 		}
 
-		public override void Paint(IPaintPort port, Rectangle bounds)
+		protected override void PaintImplementation(IPaintPort port, Rectangle bounds)
 		{
 			port.Color = Color.FromRgb (0, 0, 0);
 

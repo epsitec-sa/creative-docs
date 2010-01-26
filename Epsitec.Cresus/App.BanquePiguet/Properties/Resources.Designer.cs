@@ -70,21 +70,21 @@ namespace Epsitec.App.BanquePiguet.Properties {
         ///    &lt;width&gt;210&lt;/width&gt; 
         ///  &lt;/size&gt;
         ///
-        ///  &lt;bvrFields&gt;
+        ///  &lt;fields&gt;
         ///
-        ///    &lt;bvrField&gt;
+        ///    &lt;field&gt;
         ///      &lt;name&gt;BankAddress1&lt;/name&gt;
         ///      &lt;type&gt;BvrFieldMultiLine&lt;/type&gt;
         ///      &lt;textHeight&gt;4.23&lt;/textHeight&gt;
         ///      &lt;xPosition&gt;2.54&lt;/xPosition&gt;
         ///      &lt;yPosition&gt;93.98&lt;/yPosition&gt;
         ///      &lt;verticalSpace&gt;4.233&lt;/verticalSpace&gt;
-        ///    &lt;/bvrField&gt;
+        ///    &lt;/field&gt;
         ///
-        ///    &lt;bvrField&gt;
+        ///    &lt;field&gt;
         ///      &lt;name&gt;BankAddress2&lt;/name&gt;
         ///      &lt;type&gt;BvrFieldMultiLine&lt;/type&gt;    
-        ///      &lt;textHeight&gt;4. [rest of string was truncated]&quot;;.
+        ///      &lt;textHeight&gt;4.23&lt;/textHeig [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string BvrDefinition {
             get {
@@ -95,7 +95,7 @@ namespace Epsitec.App.BanquePiguet.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
         ///
-        ///&lt;bvrValues&gt;
+        ///&lt;values&gt;
         ///
         ///  &lt;value&gt;
         ///    &lt;name&gt;BankAddress&lt;/name&gt;
@@ -122,7 +122,7 @@ namespace Epsitec.App.BanquePiguet.Properties {
         ///    &lt;text&gt;07&lt;/text&gt;
         ///  &lt;/value&gt;
         ///
-        /// [rest of string was truncated]&quot;;.
+        ///  &lt; [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string BvrValues {
             get {
@@ -143,6 +143,15 @@ namespace Epsitec.App.BanquePiguet.Properties {
             get {
                 object obj = ResourceManager.GetObject("OCR_BB", resourceCulture);
                 return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Printers/printers.xml.
+        /// </summary>
+        internal static string PrintersFile {
+            get {
+                return ResourceManager.GetString("PrintersFile", resourceCulture);
             }
         }
     }

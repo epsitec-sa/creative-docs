@@ -1,19 +1,17 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-
+using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
-using Epsitec.Common.UI;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Widgets.Validators;
 
 using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
-using System.Xml;
-
+using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -21,12 +19,32 @@ namespace Epsitec.App.BanquePiguet
 	class Application : Epsitec.Common.Widgets.Application
 	{
 
+		public Application(bool adminMode)
+		{
+			this.AdminMode = adminMode;
+			this.SetupWindow ();
+			this.SetupForm ();
+			this.SetupBvrWidget ();
+			this.SetupEvents ();
+			this.SetupValidators ();
+			this.SetupPrintersManager ();
+			this.checkPrintButtonEnbled ();
+			this.Window.AdjustWindowSize ();
+			this.BenefeciaryIbanTextField.Text = "CH00 0000 0000 0000 0000 0";
+		}
+
 		public override string ShortWindowTitle
 		{
 			get
 			{
 				return "Banque Piguet";
 			}
+		}
+
+		public bool AdminMode
+		{
+			get;
+			protected set;
 		}
 
 		protected TextField BenefeciaryIbanTextField
@@ -65,20 +83,10 @@ namespace Epsitec.App.BanquePiguet
 			set;
 		}
 
-		public void SetupUI()
+		protected PrintersManager PrintersManager
 		{
-			this.SetupWindow ();
-			this.SetupForm ();
-			this.SetupBvrWidget ();
-			this.SetupEvents ();
-			this.SetupValidators ();
-			this.checkPrintButtonEnbled();
-			this.Window.AdjustWindowSize ();
-		}
-
-		public void SetupAdminMode(bool adminMode)
-		{
-			this.OptionsButton.Visibility = adminMode;
+			get;
+			set;
 		}
 
 		protected void SetupWindow()
@@ -86,7 +94,6 @@ namespace Epsitec.App.BanquePiguet
 			this.Window = new Window ()
 			{
 				Text = this.ShortWindowTitle,
-				//WindowSize = new Size (1000, 600),
 			};
 			this.Window.MakeFixedSizeWindow ();
 		}
@@ -98,7 +105,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Left,
-				Parent = this.Window.Root,
+				Parent = this.Window.Root
 			};
 
 			GroupBox beneficiaryIbanGroupBox = new GroupBox ()
@@ -106,7 +113,7 @@ namespace Epsitec.App.BanquePiguet
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 10, 10),
-				Padding = new Margins (5, 5, 5, 5),
+				Padding = new Margins (5, 5, 0, 5),
 				Parent = formFrameBox,
 				Text = "N° IBAN du bénéficiaire",
 			};
@@ -116,14 +123,16 @@ namespace Epsitec.App.BanquePiguet
 				Dock = DockStyle.Stacked,
 				Parent = beneficiaryIbanGroupBox,
 				PreferredWidth = 200,
+				TabIndex = 1,
 			};
+			this.BenefeciaryIbanTextField.Focus ();
 			
 			GroupBox beneficiaryAddressGroupBox = new GroupBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 0, 10),
-				Padding = new Margins (5, 5, 5, 5),
+				Padding = new Margins (5, 5, 0, 5),
 				Parent = formFrameBox,
 				Text = "Nom et adresse du bénéficiaire",
 			};
@@ -135,6 +144,7 @@ namespace Epsitec.App.BanquePiguet
 				PreferredHeight = 65,
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
+				TabIndex = 2,
 			};
 
 			GroupBox reasonGroupBox = new GroupBox ()
@@ -142,7 +152,7 @@ namespace Epsitec.App.BanquePiguet
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 0, 10),
-				Padding = new Margins (5, 5, 5, 5),
+				Padding = new Margins (5, 5, 0, 5),
 				Parent = formFrameBox,
 				Text = "Motif du versement",
 			};
@@ -154,6 +164,7 @@ namespace Epsitec.App.BanquePiguet
 				PreferredHeight = 52,
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
+				TabIndex = 3,
 			};
 
 			FrameBox buttonsFrameBox = new FrameBox ()
@@ -166,19 +177,21 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintButton = new Button ()
 			{
 				CommandObject = ApplicationCommands.Print,
-				Dock = DockStyle.Fill,
+				Dock = DockStyle.StackFill,
 				Margins = new Margins (10, 10, 0, 10),
 				Parent = buttonsFrameBox,
 			};
 
-			this.OptionsButton = new Button ()
+			if (this.AdminMode)
 			{
-				Dock = DockStyle.Right,
-				Margins = new Margins (0, 10, 0, 10),
-				Parent = buttonsFrameBox,
-				Text = "Options",
-				Visibility = false,
-			};
+				this.OptionsButton = new Button ()
+				{
+					Dock = DockStyle.StackFill,
+					Margins = new Margins (0, 10, 0, 10),
+					Parent = buttonsFrameBox,
+					Text = "Options",
+				};
+			}
 		}
 
 		protected void SetupBvrWidget()
@@ -188,33 +201,24 @@ namespace Epsitec.App.BanquePiguet
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 10, 10, 10),
 				Parent = this.Window.Root,
-				PreferredSize = new Size (622, 314),
+				PreferredSize = new Size (525, 265),
 			};
 
 			try
 			{
-				XmlDocument bvrDefinitionXml = new XmlDocument ();
-				bvrDefinitionXml.LoadXml(BanquePiguet.Properties.Resources.BvrValues);
-
-				XmlNodeList values = bvrDefinitionXml.GetElementsByTagName ("value");
-
+				XElement xBvrValues = XElement.Parse (App.BanquePiguet.Properties.Resources.BvrValues);
+				
 				int nbValues = 0;
 
-				foreach (XmlNode value in values)
+				foreach (XElement value in xBvrValues.Elements("value"))
 				{
-					string name = value.SelectSingleNode ("name").InnerText.Trim();
-					string text = value.SelectSingleNode ("text").InnerText.Trim();
+					string name = (string) value.Element ("name");
+					string text = (string) value.Element ("text");
 					
 					if (text.Contains ("\\n"))
 					{
 						string[] lines = text.Replace("\\n", "\n").Split ('\n');
-						
-						text = lines[0];
-
-						for (int i = 1; i < lines.Length; i++)
-						{
-							text += String.Format ("\n{0}", lines[i].Trim());
-						}
+						text = lines.Aggregate ((a, b) => String.Format ("{0}\n{1}", a, b));
 					}
 
 					switch (name)
@@ -265,25 +269,33 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void SetupEvents()
 		{
-			this.BenefeciaryIbanTextField.TextChanged += sender =>
+			this.BenefeciaryIbanTextField.TextChanged += (sender) =>
 			{
 				this.BvrWidget.BeneficiaryIban = this.BenefeciaryIbanTextField.Text;
 				this.checkPrintButtonEnbled ();
 			};
 
-			this.BeneficiaryAddressTextField.TextChanged += sender =>
+			this.BeneficiaryAddressTextField.TextChanged += (sender) =>
 			{
 				string text = this.BeneficiaryAddressTextField.Text.Replace ("<br/>", "\n");
 				this.BvrWidget.BeneficiaryAddress = text;
 				this.checkPrintButtonEnbled ();
 			};
 
-			this.ReasonTextField.TextChanged += sender =>
+			this.ReasonTextField.TextChanged += (sender) =>
 			{
 				string text = this.ReasonTextField.Text.Replace ("<br/>", "\n");
 				this.BvrWidget.Reason = text;
 				this.checkPrintButtonEnbled ();
 			};
+
+			if (this.AdminMode)
+			{
+				this.OptionsButton.Clicked += (sender, e) =>
+				{
+					this.PrintersManager.Show ();
+				};
+			}
 		}
 
 		protected void SetupValidators()
@@ -308,6 +320,11 @@ namespace Epsitec.App.BanquePiguet
 			validators.ForEach (validator => validator.Validate());
 		}
 
+		protected void SetupPrintersManager()
+		{
+			this.PrintersManager = new PrintersManager ();
+		}
+
 
 		protected void checkPrintButtonEnbled()
 		{
@@ -319,20 +336,20 @@ namespace Epsitec.App.BanquePiguet
 		protected void ExecuteCommandPrint()
 		{
 
-			Epsitec.Common.Dialogs.PrintDialog dialog = new Epsitec.Common.Dialogs.PrintDialog
+			PrintDialog dialog = new PrintDialog
 			{
 				Owner = this.Window,
 				AllowFromPageToPage = false,
-				AllowSelectedPages = false
+				AllowSelectedPages = false,
 			};
 
 			dialog.Document.PrinterSettings.FromPage = 1;
 			dialog.Document.PrinterSettings.ToPage = 1;
 			dialog.OpenDialog ();
 
-			if (dialog.Result == Epsitec.Common.Dialogs.DialogResult.Accept)
+			if (dialog.Result == DialogResult.Accept)
 			{
-				Epsitec.Common.Printing.PrintPort.PrintSinglePage (painter => this.BvrWidget.Print(painter, new Rectangle(0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
+				PrintPort.PrintSinglePage (painter => this.BvrWidget.Print(painter, new Rectangle(0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
 				this.LogPrintCommand (0);
 			}
 		}

@@ -1,13 +1,11 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-
 using Epsitec.Cresus.Core;
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -22,15 +20,13 @@ namespace Epsitec.App.BanquePiguet
 
 			bool adminMode = args.Any (arg => arg == "-admin");
 
-			using (Application application = new Application())
+			using (Application application = new Application(adminMode))
 			{
-				application.SetupUI ();
-				application.SetupAdminMode (adminMode);
 				application.Window.Show ();
 				application.Window.Run ();
 			}
 
-			UI.ShutDown ();	
+			UI.ShutDown ();
 		}
 
 	}

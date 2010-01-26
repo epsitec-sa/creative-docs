@@ -67,6 +67,8 @@
     <Compile Include="BvrFieldMultiLine.cs" />
     <Compile Include="BvrWidget.cs" />
     <Compile Include="PredicateValidator.cs" />
+    <Compile Include="Printer.cs" />
+    <Compile Include="PrintersManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BvrFieldMultiLineColumn.cs" />
@@ -185,7 +187,12 @@
     <None Include="Resources\OCR_BB.tff" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Logs\logs.txt" />
+    <Content Include="Logs\logs.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Printers\printers.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
