@@ -4,12 +4,35 @@
 
   <printer>
     <name>myPrinter</name>
+    <tray>tray1</tray>
     <xOffset>10.5</xOffset>
     <yOffset>21.2</yOffset>
   </printer>
 
   <printer>
     <name>lolipop</name>
+    <tray>tray2</tray>
+    <xOffset>453</xOffset>
+    <yOffset>84</yOffset>
+  </printer>
+
+  <printer>
+    <name>a</name>
+    <tray>tray2</tray>
+    <xOffset>453</xOffset>
+    <yOffset>84</yOffset>
+  </printer>
+
+  <printer>
+    <name>z</name>
+    <tray>tray2</tray>
+    <xOffset>453</xOffset>
+    <yOffset>84</yOffset>
+  </printer>
+
+  <printer>
+    <name>t</name>
+    <tray>tray2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
   </printer>

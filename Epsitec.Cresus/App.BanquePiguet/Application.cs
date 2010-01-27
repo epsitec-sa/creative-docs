@@ -6,6 +6,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Validators;
 
 using System;
 using System.IO;
@@ -28,8 +29,9 @@ namespace Epsitec.App.BanquePiguet
 			this.SetupEvents ();
 			this.SetupValidators ();
 			this.SetupPrintersManager ();
-			this.checkPrintButtonEnbled ();
+			this.CheckPrintButtonEnbled ();
 			this.Window.AdjustWindowSize ();
+
 			this.BenefeciaryIbanTextField.Text = "CH00 0000 0000 0000 0000 0";
 		}
 
@@ -116,6 +118,7 @@ namespace Epsitec.App.BanquePiguet
 				Padding = new Margins (5, 5, 0, 5),
 				Parent = formFrameBox,
 				Text = "N° IBAN du bénéficiaire",
+				TabIndex = 1,
 			};
 
 			this.BenefeciaryIbanTextField = new TextField ()
@@ -135,6 +138,7 @@ namespace Epsitec.App.BanquePiguet
 				Padding = new Margins (5, 5, 0, 5),
 				Parent = formFrameBox,
 				Text = "Nom et adresse du bénéficiaire",
+				TabIndex = 2,
 			};
 
 			this.BeneficiaryAddressTextField = new TextFieldMulti ()
@@ -155,6 +159,7 @@ namespace Epsitec.App.BanquePiguet
 				Padding = new Margins (5, 5, 0, 5),
 				Parent = formFrameBox,
 				Text = "Motif du versement",
+				TabIndex = 3,
 			};
 
 			this.ReasonTextField = new TextFieldMulti ()
@@ -172,6 +177,7 @@ namespace Epsitec.App.BanquePiguet
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Stacked,
 				Parent = formFrameBox,
+				TabIndex = 10,
 			};
 
 			this.PrintButton = new Button ()
@@ -180,6 +186,7 @@ namespace Epsitec.App.BanquePiguet
 				Dock = DockStyle.StackFill,
 				Margins = new Margins (10, 10, 0, 10),
 				Parent = buttonsFrameBox,
+				TabIndex = 1,
 			};
 
 			if (this.AdminMode)
@@ -190,6 +197,7 @@ namespace Epsitec.App.BanquePiguet
 					Margins = new Margins (0, 10, 0, 10),
 					Parent = buttonsFrameBox,
 					Text = "Options",
+					TabIndex = 2,
 				};
 			}
 		}
@@ -272,28 +280,28 @@ namespace Epsitec.App.BanquePiguet
 			this.BenefeciaryIbanTextField.TextChanged += (sender) =>
 			{
 				this.BvrWidget.BeneficiaryIban = this.BenefeciaryIbanTextField.Text;
-				this.checkPrintButtonEnbled ();
+				this.CheckPrintButtonEnbled ();
 			};
 
 			this.BeneficiaryAddressTextField.TextChanged += (sender) =>
 			{
 				string text = this.BeneficiaryAddressTextField.Text.Replace ("<br/>", "\n");
 				this.BvrWidget.BeneficiaryAddress = text;
-				this.checkPrintButtonEnbled ();
+				this.CheckPrintButtonEnbled ();
 			};
 
 			this.ReasonTextField.TextChanged += (sender) =>
 			{
 				string text = this.ReasonTextField.Text.Replace ("<br/>", "\n");
 				this.BvrWidget.Reason = text;
-				this.checkPrintButtonEnbled ();
+				this.CheckPrintButtonEnbled ();
 			};
 
 			if (this.AdminMode)
 			{
 				this.OptionsButton.Clicked += (sender, e) =>
 				{
-					this.PrintersManager.Show ();
+					this.DisplayPrintersManager (true);
 				};
 			}
 		}
@@ -322,13 +330,27 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void SetupPrintersManager()
 		{
-			this.PrintersManager = new PrintersManager ();
+			this.PrintersManager = new PrintersManager (this);
 		}
 
 
-		protected void checkPrintButtonEnbled()
+		protected void CheckPrintButtonEnbled()
 		{
 			this.SetEnable (ApplicationCommands.Print, this.BvrWidget.IsValid ());
+		}
+
+		public void DisplayPrintersManager(bool display)
+		{
+			if (display)
+			{
+				this.PrintersManager.Show ();
+				this.Window.IsFrozen = true;
+			}
+			else
+			{
+				this.PrintersManager.Hide ();
+				this.Window.IsFrozen = false;
+			}
 		}
 
 

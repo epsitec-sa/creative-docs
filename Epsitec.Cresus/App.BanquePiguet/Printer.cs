@@ -16,14 +16,21 @@ namespace Epsitec.App.BanquePiguet
 		{
 		}
 
-		public Printer(string name, double xOffset, double yOffset)
+		public Printer(string name, string tray, double xOffset, double yOffset)
 		{
 			this.Name = name;
+			this.Tray = tray;
 			this.XOffset = xOffset;
 			this.YOffset = yOffset;
 		}
 
 		public string Name
+		{
+			get;
+			set;
+		}
+
+		public string Tray
 		{
 			get;
 			set;
@@ -41,11 +48,6 @@ namespace Epsitec.App.BanquePiguet
 			set;
 		}
 
-		public override string ToString()
-		{
-			return String.Format ("{0} ({1}, {2})", this.Name, this.XOffset, this.YOffset);
-		}
-
 		public static void Save(List<Printer> printers)
 		{
 			XElement xPrinters = new XElement ("printers");
@@ -57,6 +59,7 @@ namespace Epsitec.App.BanquePiguet
 					(
 						"printer",
 						new XElement ("name", printer.Name),
+						new XElement ("tray", printer.Tray),
 						new XElement ("xOffset", printer.XOffset),
 						new XElement ("yOffset", printer.YOffset)
 					)
@@ -75,6 +78,7 @@ namespace Epsitec.App.BanquePiguet
 				select new Printer ()
 				{
 					Name = (string) xPrinter.Element ("name"),
+					Tray = (string) xPrinter.Element ("tray"),
 					XOffset = (double) xPrinter.Element ("xOffset"),
 					YOffset = (double) xPrinter.Element ("yOffset"),
 				}

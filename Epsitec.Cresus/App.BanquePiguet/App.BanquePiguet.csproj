@@ -66,7 +66,6 @@
     <Compile Include="BvrField.cs" />
     <Compile Include="BvrFieldMultiLine.cs" />
     <Compile Include="BvrWidget.cs" />
-    <Compile Include="PredicateValidator.cs" />
     <Compile Include="Printer.cs" />
     <Compile Include="PrintersManager.cs" />
     <Compile Include="Program.cs" />

@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Cresus.Core;
+using Epsitec.Common.Printing;
 
 using System;
 using System.Collections.Generic;
@@ -16,13 +17,13 @@ namespace Epsitec.App.BanquePiguet
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+
 			UI.Initialize ();
-
-			bool adminMode = args.Any (arg => arg == "-admin");
-
-			using (Application application = new Application(adminMode))
+			
+			using (Application application = new Application(args.Contains ("-admin")))
 			{
 				application.Window.Show ();
+				application.DisplayPrintersManager (true);
 				application.Window.Run ();
 			}
 
