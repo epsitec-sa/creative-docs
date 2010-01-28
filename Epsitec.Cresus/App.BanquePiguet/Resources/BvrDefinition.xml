@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<bvr>
+
+  <size>
+    <height>106</height>
+    <width>210</width> 
+  </size>
+
+  <fields>
+
+    <field>
+      <name>BankAddress1</name>
+      <type>BvrFieldMultiLine</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>2.54</xPosition>
+      <yPosition>93.98</yPosition>
+      <verticalSpace>4.233</verticalSpace>
+    </field>
+
+    <field>
+      <name>BankAddress2</name>
+      <type>BvrFieldMultiLine</type>    
+      <textHeight>4.23</textHeight>
+      <xPosition>63.5</xPosition>
+      <yPosition>93.98</yPosition>
+      <verticalSpace>4.233</verticalSpace>
+    </field>
+
+    <field>
+      <name>BeneficiaryIban1</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>2.54</xPosition>
+      <yPosition>81.28</yPosition>
+    </field>
+
+    <field>
+      <name>BeneficiaryIban2</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>63.5</xPosition>
+      <yPosition>81.28</yPosition>
+    </field>
+
+    <field>
+      <name>BeneficiaryAddress1</name>
+      <type>BvrFieldMultiLine</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>2.54</xPosition>
+      <yPosition>77.046</yPosition>
+      <verticalSpace>4.233</verticalSpace>
+    </field>
+
+    <field>
+      <name>BeneficiaryAddress2</name>
+      <type>BvrFieldMultiLine</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>63.5</xPosition>
+      <yPosition>77.046</yPosition>
+      <verticalSpace>4.233</verticalSpace>
+    </field>
+
+    <field>
+      <name>BankAccount1</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>29.21</xPosition>
+      <yPosition>60.113</yPosition>
+    </field>
+
+    <field>
+      <name>BankAccount2</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>90.17</xPosition>
+      <yPosition>60.113</yPosition>
+    </field>
+
+    <field>
+      <name>LayoutCode</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>73.152</xPosition>
+      <yPosition>29.633</yPosition>
+    </field>
+
+    <field>
+      <name>Reason</name>
+      <type>BvrFieldMultiLineColumn</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>124.968</xPosition>
+      <yPosition>93.133</yPosition>
+      <verticalSpace>6.773</verticalSpace>
+      <horizontalSpace>5.08</horizontalSpace>
+    </field>
+
+    <field>
+      <name>ReferenceLine</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>104.14</xPosition>
+      <yPosition>17.18</yPosition>
+    </field>
+
+    <field>
+      <name>ClearingLine</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>178.562</xPosition>
+      <yPosition>17.18</yPosition>
+    </field>
+
+    <field>
+      <name>CcpNumber</name>
+      <type>BvrField</type>
+      <textHeight>4.23</textHeight>
+      <xPosition>178.562</xPosition>
+      <yPosition>9.313</yPosition>
+    </field>
+
+  </fields>
+
+</bvr>
