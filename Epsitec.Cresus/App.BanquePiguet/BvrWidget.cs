@@ -6,6 +6,7 @@ using Epsitec.Common.Drawing;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
@@ -46,8 +47,8 @@ namespace Epsitec.App.BanquePiguet
 
 				XElement xSize = xBvrDefinition.Element ("size");
 				this.BvrSize = new Size (
-					(double) xSize.Element ("width"),
-					(double) xSize.Element ("height")
+					Double.Parse (xSize.Element ("width").Value, CultureInfo.InvariantCulture),
+					Double.Parse (xSize.Element ("height").Value, CultureInfo.InvariantCulture)
 				);
 
 				IEnumerable<XElement> xBvrfields = xBvrDefinition.Element ("fields").Elements ("field");
@@ -243,7 +244,7 @@ namespace Epsitec.App.BanquePiguet
 		public Size BvrSize
 		{
 			get;
-			set;
+			protected set;
 		}
 
 		protected Dictionary<BvrFieldId, BvrField> BvrFields
@@ -309,11 +310,13 @@ namespace Epsitec.App.BanquePiguet
 
 			if (this.IsBeneficiaryIbanValid ())
 			{
-				string part0 = this.ReferenceClientNumber;
-				string part1 = String.Format ("0000{0}", Regex.Replace (this.BeneficiaryIban, @"\s", "").Substring (9, 12));
-				string part2 = this.ComputeReferenceKey ();
+				string line = String.Format ("{0}{1}{2}",
+					this.referenceClientNumber,
+					"0000",
+					Regex.Replace (this.BeneficiaryIban, @"\s", "").Substring (9, 12)
+				);
 
-				this.BvrFields[BvrFieldId.ReferenceLine].Text = String.Format ("{0}{1}{2}+", part0, part1, part2);
+				this.BvrFields[BvrFieldId.ReferenceLine].Text = String.Format ("{0}{1}+", line, ControlKeyComputer.Compute (line));
 				this.BvrFields[BvrFieldId.ReferenceLine].Valid = true;
 			}
 			else
@@ -325,23 +328,14 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void UpdateClearingLine()
 		{
-			string part0 = this.ClearingConstant;
-			string part1 = this.ClearingBank;
-			string part2 = this.ClearingBankKey;
-			string part3 = this.ComputeClearingKey ();
+			string line = String.Format ("{0}{1}{2}",
+				this.ClearingConstant,
+				this.ClearingBank,
+				this.ClearingBankKey
+			);
 
-			this.BvrFields[BvrFieldId.ClearingLine].Text = String.Format ("{0}{1}{2}{3}>", part0, part1, part2, part3);
+			this.BvrFields[BvrFieldId.ClearingLine].Text = String.Format ("{0}{1}>", line, ControlKeyComputer.Compute (line));
 			this.Invalidate ();
-		}
-
-		protected string ComputeReferenceKey()
-		{
-			return "X";
-		}
-
-		protected string ComputeClearingKey()
-		{
-			return "X";
 		}
 
 		protected static bool IsBeneficiaryIbanValid(string iban)

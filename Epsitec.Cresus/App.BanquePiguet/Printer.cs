@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -60,8 +61,8 @@ namespace Epsitec.App.BanquePiguet
 						"printer",
 						new XElement ("name", printer.Name),
 						new XElement ("tray", printer.Tray),
-						new XElement ("xOffset", printer.XOffset),
-						new XElement ("yOffset", printer.YOffset)
+						new XElement ("xOffset", printer.XOffset.ToString(CultureInfo.InvariantCulture)),
+						new XElement ("yOffset", printer.YOffset.ToString(CultureInfo.InvariantCulture))
 					)
 				)
 			);
@@ -77,10 +78,10 @@ namespace Epsitec.App.BanquePiguet
 				from xPrinter in xPrinters.Elements ("printer")
 				select new Printer ()
 				{
-					Name = (string) xPrinter.Element ("name"),
-					Tray = (string) xPrinter.Element ("tray"),
-					XOffset = (double) xPrinter.Element ("xOffset"),
-					YOffset = (double) xPrinter.Element ("yOffset"),
+					Name = xPrinter.Element ("name").Value,
+					Tray = xPrinter.Element ("tray").Value,
+					XOffset = Double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
+					YOffset = Double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
 				}
 			);
 		}

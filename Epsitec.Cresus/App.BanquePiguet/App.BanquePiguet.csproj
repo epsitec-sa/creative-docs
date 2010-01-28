@@ -66,6 +66,7 @@
     <Compile Include="BvrField.cs" />
     <Compile Include="BvrFieldMultiLine.cs" />
     <Compile Include="BvrWidget.cs" />
+    <Compile Include="ControlKeyComputer.cs" />
     <Compile Include="Printer.cs" />
     <Compile Include="PrintersManager.cs" />
     <Compile Include="Program.cs" />

@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Xml.Linq;
@@ -26,9 +27,9 @@ namespace Epsitec.App.BanquePiguet
 		{
 			this.Text = "";
 			this.TextFont = Font.GetFont ("OCR-B Bold", "Regular");
-			this.TextRelativeHeight = (double) xBvrField.Element ("textHeight") / bvrSize.Height;
-			this.XRelativePosition = (double) xBvrField.Element ("xPosition") / bvrSize.Width;
-			this.YRelativePosition = (double) xBvrField.Element ("yPosition") / bvrSize.Height;
+			this.TextRelativeHeight = Double.Parse (xBvrField.Element ("textHeight").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
+			this.XRelativePosition = Double.Parse (xBvrField.Element ("xPosition").Value, CultureInfo.InvariantCulture) / bvrSize.Width;
+			this.YRelativePosition = Double.Parse (xBvrField.Element ("yPosition").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
 			this.Valid = true;
 		}
         

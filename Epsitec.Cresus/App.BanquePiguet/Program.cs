@@ -17,7 +17,6 @@ namespace Epsitec.App.BanquePiguet
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-
 			UI.Initialize ();
 			
 			using (Application application = new Application(args.Contains ("-admin")))

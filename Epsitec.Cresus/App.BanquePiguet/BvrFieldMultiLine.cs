@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Drawing;
 
+using System;
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
@@ -12,8 +14,8 @@ namespace Epsitec.App.BanquePiguet
 	{
 
 		public BvrFieldMultiLine(XElement xBvrField, Size bvrSize) : base (xBvrField, bvrSize)
-		{
-			this.VerticalSpace = (double) xBvrField.Element ("verticalSpace") / bvrSize.Height;
+		{ 
+			this.VerticalSpace = Double.Parse (xBvrField.Element ("verticalSpace").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
 		}
 
 		public double VerticalSpace

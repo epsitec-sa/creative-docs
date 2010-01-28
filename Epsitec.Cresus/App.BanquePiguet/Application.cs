@@ -371,7 +371,7 @@ namespace Epsitec.App.BanquePiguet
 
 			if (dialog.Result == DialogResult.Accept)
 			{
-				PrintPort.PrintSinglePage (painter => this.BvrWidget.Print(painter, new Rectangle(0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
+				PrintPort.PrintSinglePage (painter => this.BvrWidget.Print (painter, new Rectangle (0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
 				this.LogPrintCommand (0);
 			}
 		}
