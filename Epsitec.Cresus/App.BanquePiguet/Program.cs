@@ -2,10 +2,8 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Cresus.Core;
-using Epsitec.Common.Printing;
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.App.BanquePiguet
@@ -22,7 +20,6 @@ namespace Epsitec.App.BanquePiguet
 			using (Application application = new Application(args.Contains ("-admin")))
 			{
 				application.Window.Show ();
-				application.DisplayPrintersManager (true);
 				application.Window.Run ();
 			}
 

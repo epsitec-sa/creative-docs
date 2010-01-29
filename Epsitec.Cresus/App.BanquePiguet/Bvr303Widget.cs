@@ -7,14 +7,14 @@ using Epsitec.Common.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
 {
 
-	class BvrWidget : Widget
+	class Bvr303Widget : Widget
 	{
 
 		protected enum BvrFieldId {
@@ -30,20 +30,26 @@ namespace Epsitec.App.BanquePiguet
 			Reason,
 			ReferenceLine,
 			ClearingLine,
-			CcpNumber
+			CcpNumberLine
 		}
 
-		public BvrWidget() : this (null)
+		public Bvr303Widget() : this (null)
 		{
 		}
 
-		public BvrWidget(Widget embedder) : base (embedder)
+		public Bvr303Widget(Widget embedder) : base (embedder)
 		{
-			this.BvrFields = new Dictionary<BvrFieldId, BvrField> ();
+			this.BvrFields = new Dictionary<BvrFieldId, Bvr303Field> ();
 
 			try
 			{
-				XElement xBvrDefinition = XElement.Parse (App.BanquePiguet.Properties.Resources.BvrDefinition);
+
+				XElement xBvrDefinition;
+				
+				using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream("BvrDefinition.xml")))
+				{
+					xBvrDefinition = XElement.Load (xmlReader);	
+				}
 
 				XElement xSize = xBvrDefinition.Element ("size");
 				this.BvrSize = new Size (
@@ -57,7 +63,7 @@ namespace Epsitec.App.BanquePiguet
 				{
 					string name = (string) xBvrField.Element ("name");
 					BvrFieldId id = (BvrFieldId) Enum.Parse (typeof (BvrFieldId), name);
-					this.BvrFields[id] = BvrField.GetInstance (xBvrField, this.BvrSize);
+					this.BvrFields[id] = Bvr303Field.GetInstance (xBvrField, this.BvrSize);
 				}
 
 			}
@@ -70,6 +76,14 @@ namespace Epsitec.App.BanquePiguet
 			{
 				throw new Exception ("An error occured while loading the bvr fields.", new Exception ("Some fields are missing."));
 			}
+
+			this.BackgroundImage = (Bitmap) Bitmap.FromManifestResource ("Epsitec.App.BanquePiguet.Resources.bvr.jpg", System.Reflection.Assembly.GetExecutingAssembly ());
+
+			this.referenceClientNumber = "";
+			this.clearingConstant = "";
+			this.clearingBank = "";
+			this.clearingBankKey = "";
+			this.ccpNumber = "";
 		}
         
 		public string BankAddress
@@ -78,35 +92,39 @@ namespace Epsitec.App.BanquePiguet
 			{
 				return this.BvrFields[BvrFieldId.BankAddress1].Text;
 			}
+
 			set
 			{
+				if (!Bvr303Helper.CheckBankAddress (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.BvrFields[BvrFieldId.BankAddress1].Text = value;
 				this.BvrFields[BvrFieldId.BankAddress2].Text = value;
+
 				this.Invalidate ();
 			}
 		}
-		
+
 		public string BeneficiaryIban
 		{
 			get
 			{
 				return this.BvrFields[BvrFieldId.BeneficiaryIban1].Text;
 			}
+
 			set
 			{
-				string iban = Regex.Replace(value, @"\s", "");
+				string iban = Bvr303Helper.BuildNormalizedIban (value);
 
-				for (int i = 4; i < iban.Length && i < 27; i += 5)
+				if (!Bvr303Helper.CheckBeneficiaryIban (iban))
 				{
-					iban = iban.Insert (i, " ");
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvrFields[BvrFieldId.BeneficiaryIban1].Text = iban;
 				this.BvrFields[BvrFieldId.BeneficiaryIban2].Text = iban;
-				
-				bool valid = BvrWidget.IsBeneficiaryIbanValid(iban);
-				this.BvrFields[BvrFieldId.BeneficiaryIban1].Valid = valid;
-				this.BvrFields[BvrFieldId.BeneficiaryIban2].Valid = valid;
 
 				this.UpdateReferenceLine ();
 				this.Invalidate ();
@@ -121,12 +139,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckBeneficiaryAddress (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.BvrFields[BvrFieldId.BeneficiaryAddress1].Text = value;
 				this.BvrFields[BvrFieldId.BeneficiaryAddress2].Text = value;
-
-				bool valid = BvrWidget.IsbeneficiaryAddressValid (value);
-				this.BvrFields[BvrFieldId.BeneficiaryAddress1].Valid = valid;
-				this.BvrFields[BvrFieldId.BeneficiaryAddress2].Valid = valid;
 
 				this.Invalidate ();
 			}
@@ -140,8 +159,14 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckBankAccount (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.BvrFields[BvrFieldId.BankAccount1].Text = value;
 				this.BvrFields[BvrFieldId.BankAccount2].Text = value;
+
 				this.Invalidate ();
 			}
 		}
@@ -154,7 +179,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckLayoutCode (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.BvrFields[BvrFieldId.LayoutCode].Text = value;
+
 				this.Invalidate ();
 			}
 		}
@@ -167,9 +198,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				this.BvrFields[BvrFieldId.Reason].Text = value;
-				this.BvrFields[BvrFieldId.Reason].Valid = BvrWidget.IsReasonValid (value);
+				if (!Bvr303Helper.CheckReason (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
 
+				this.BvrFields[BvrFieldId.Reason].Text = value;
+				
 				this.Invalidate ();
 			}
 		}
@@ -182,7 +217,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckReferenceClientNumber (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.referenceClientNumber = value;
+
 				this.UpdateReferenceLine ();
 			}
 		}
@@ -195,7 +236,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckClearingConstant (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.clearingConstant = value;
+
 				this.UpdateClearingLine ();
 			}
 		}
@@ -208,7 +255,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckClearingBank (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.clearingBank = value;
+
 				this.UpdateClearingLine ();
 			}
 		}
@@ -221,7 +274,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
+				if (!Bvr303Helper.CheckClearingBankKey (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
 				this.clearingBankKey = value;
+
 				this.UpdateClearingLine ();
 			}
 		}
@@ -231,13 +290,18 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				string text = this.BvrFields[BvrFieldId.CcpNumber].Text;
-				return text.Substring (0, text.Length - 1);
+				return this.ccpNumber;
 			}
 			set
 			{
-				this.BvrFields[BvrFieldId.CcpNumber].Text = String.Format ("{0}>", value);
-				this.Invalidate ();
+				if (!Bvr303Helper.CheckBeneficiaryAddress (value))
+				{
+					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+				}
+
+				this.ccpNumber = value;
+
+				this.UpdateCcpNumberLine ();
 			}
 		}
 
@@ -247,55 +311,43 @@ namespace Epsitec.App.BanquePiguet
 			protected set;
 		}
 
-		protected Dictionary<BvrFieldId, BvrField> BvrFields
+		protected Dictionary<BvrFieldId, Bvr303Field> BvrFields
 		{
 			get;
 			set;
 		}
 
-		public bool IsBeneficiaryIbanValid()
+		protected Bitmap BackgroundImage
 		{
-			return BvrWidget.IsBeneficiaryIbanValid (this.BeneficiaryIban);
-		}
-
-		public bool IsBeneficiaryAddressValid()
-		{
-			return BvrWidget.IsbeneficiaryAddressValid (this.BeneficiaryAddress);
-		}
-
-		public bool IsReasonValid()
-		{
-			return BvrWidget.IsReasonValid (this.Reason);
-		}
-
-		public bool IsValid()
-		{
-			return this.IsBeneficiaryIbanValid () && this.IsBeneficiaryAddressValid () && this.IsReasonValid ();
+			get;
+			set;
 		}
 
 		public void Print(IPaintPort paintPort, Rectangle bounds)
 		{
-			this.PaintBvrWidgets (paintPort, bounds);
+			this.PaintBvr303Fields (paintPort, bounds);
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			Rectangle bounds = this.Client.Bounds;
 
-			this.PaintBackground (graphics, bounds);
-			this.PaintBvrWidgets (graphics, bounds);
+			this.PaintBackgroundImage (graphics, bounds);
+			this.PaintBvr303Fields (graphics, bounds);
 		}
 
-		protected void PaintBackground(IPaintPort port, Rectangle bounds)
+		protected void PaintBackgroundImage(IPaintPort port, Rectangle bounds)
 		{
+			port.PaintImage (this.BackgroundImage, bounds);
+
 			using (Path path = Path.FromRectangle (bounds))
 			{
-				port.Color = Color.FromRgb (1.0, 0.8, 0.8);
-				port.PaintSurface (path);
+				port.Color = Color.FromRgb (0, 0, 0);
+				port.PaintOutline (path);
 			}
 		}
 
-		protected void PaintBvrWidgets(IPaintPort paintPort, Rectangle bounds)
+		protected void PaintBvr303Fields(IPaintPort paintPort, Rectangle bounds)
 		{
 
 			foreach (BvrFieldId fieldId in this.BvrFields.Keys)
@@ -307,58 +359,46 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void UpdateReferenceLine()
 		{
+			string iban = this.BeneficiaryIban;
+			string reference = this.ReferenceClientNumber;
 
-			if (this.IsBeneficiaryIbanValid ())
+			if (Bvr303Helper.CheckReferenceLine (iban, reference))
 			{
-				string line = String.Format ("{0}{1}{2}",
-					this.referenceClientNumber,
-					"0000",
-					Regex.Replace (this.BeneficiaryIban, @"\s", "").Substring (9, 12)
-				);
-
-				this.BvrFields[BvrFieldId.ReferenceLine].Text = String.Format ("{0}{1}+", line, ControlKeyComputer.Compute (line));
-				this.BvrFields[BvrFieldId.ReferenceLine].Valid = true;
+				this.BvrFields[BvrFieldId.ReferenceLine].Text = Bvr303Helper.BuildReferenceLine (iban, reference);
+				this.Invalidate ();
 			}
-			else
-			{
-				this.BvrFields[BvrFieldId.ReferenceLine].Valid = false;
-			}
-			this.Invalidate ();
 		}
 
 		protected void UpdateClearingLine()
 		{
-			string line = String.Format ("{0}{1}{2}",
-				this.ClearingConstant,
-				this.ClearingBank,
-				this.ClearingBankKey
-			);
+			string constant = this.ClearingConstant;
+			string clearing = this.ClearingBank;
+			string key = this.ClearingBankKey;
 
-			this.BvrFields[BvrFieldId.ClearingLine].Text = String.Format ("{0}{1}>", line, ControlKeyComputer.Compute (line));
-			this.Invalidate ();
+			if (Bvr303Helper.CheckClearingLine(constant, clearing, key))
+			{
+				this.BvrFields[BvrFieldId.ClearingLine].Text = Bvr303Helper.BuildClearingLine (constant, clearing, key);
+				this.Invalidate ();
+			}
 		}
 
-		protected static bool IsBeneficiaryIbanValid(string iban)
+		protected void UpdateCcpNumberLine()
 		{
-			return Regex.IsMatch (iban, @"^CH\d{2} \d{4} \d{4} \d{4} \d{4} \d{1}$");
-		}
+			string ccp = this.CcpNumber;
 
-		protected static bool IsbeneficiaryAddressValid(string address)
-		{
-			string[] lines = address.Split ('\n');
-			return (lines.Length <= 4) && lines.All (line => line.Length <= 27);
+			if (Bvr303Helper.CheckCcpNumber (ccp))
+			{
+				this.BvrFields[BvrFieldId.CcpNumberLine].Text = Bvr303Helper.BuildCcpNumberLine (ccp);
+				this.Invalidate ();
+			}
 		}
-
-		protected static bool IsReasonValid(string reason)
-		{
-			string[] lines = reason.Split ('\n');
-			return (lines.Length <= 3) && lines.All (line => line.Length <= 10);
-		}
+		
 
 		protected string referenceClientNumber;
 		protected string clearingConstant;
 		protected string clearingBank;
 		protected string clearingBankKey;
+		protected string ccpNumber;
 
 	}
 

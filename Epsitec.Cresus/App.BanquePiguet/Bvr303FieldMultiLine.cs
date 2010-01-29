@@ -10,10 +10,10 @@ using System.Xml.Linq;
 namespace Epsitec.App.BanquePiguet
 {
 
-	class BvrFieldMultiLine : BvrField
+	class Bvr303FieldMultiLine : Bvr303Field
 	{
 
-		public BvrFieldMultiLine(XElement xBvrField, Size bvrSize) : base (xBvrField, bvrSize)
+		public Bvr303FieldMultiLine(XElement xBvrField, Size bvrSize) : base (xBvrField, bvrSize)
 		{ 
 			this.VerticalSpace = Double.Parse (xBvrField.Element ("verticalSpace").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
 		}
@@ -24,7 +24,7 @@ namespace Epsitec.App.BanquePiguet
 			set;
 		}
 
-		protected override void PaintImplementation(IPaintPort port, Rectangle bounds)
+		public override void Paint(IPaintPort port, Rectangle bounds)
 		{
 			port.Color = Color.FromRgb (0, 0, 0);
 

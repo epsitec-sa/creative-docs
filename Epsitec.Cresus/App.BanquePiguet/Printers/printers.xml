@@ -1,40 +1,39 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-
+<?xml version="1.0" encoding="utf-8"?>
 <printers>
-
   <printer>
     <name>myPrinter</name>
     <tray>Tray 1</tray>
     <xOffset>10.5</xOffset>
     <yOffset>21.2</yOffset>
   </printer>
-
   <printer>
     <name>lolipop</name>
     <tray>Tray 2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
   </printer>
-
   <printer>
     <name>a</name>
     <tray>Tray 2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
   </printer>
-
   <printer>
     <name>z</name>
     <tray>Tray 2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
   </printer>
-
   <printer>
     <name>t</name>
     <tray>Tray 2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
   </printer>
-
+  <printer>
+    <name>hgfd</name>
+    <tray>hgdf</tray>
+    <xOffset>0</xOffset>
+    <yOffset>0</yOffset>
+  </printer>
 </printers>

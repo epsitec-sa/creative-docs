@@ -63,20 +63,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
-    <Compile Include="BvrField.cs" />
-    <Compile Include="BvrFieldMultiLine.cs" />
-    <Compile Include="BvrWidget.cs" />
-    <Compile Include="ControlKeyComputer.cs" />
+    <Compile Include="Bvr303Field.cs" />
+    <Compile Include="Bvr303FieldMultiLine.cs" />
+    <Compile Include="Bvr303Widget.cs" />
+    <Compile Include="Bvr303Helper.cs" />
     <Compile Include="Printer.cs" />
     <Compile Include="PrintersManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="BvrFieldMultiLineColumn.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
+    <Compile Include="Bvr303FieldMultiLineColumn.cs" />
+    <Compile Include="Tools.cs" />
     <None Include="App.BanquePiguet.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -174,22 +170,16 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    <EmbeddedResource Include="Resources\BvrDefinition.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\BvrValues.xml" />
+    <EmbeddedResource Include="Resources\OCR_BB.tff" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\bvr.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\BvrDefinition.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\BvrValues.xml" />
-    <None Include="Resources\OCR_BB.tff" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Logs\logs.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

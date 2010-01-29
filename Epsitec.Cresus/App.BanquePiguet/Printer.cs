@@ -1,10 +1,14 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support;
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Globalization;
 using System.Linq;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
@@ -54,27 +58,41 @@ namespace Epsitec.App.BanquePiguet
 			XElement xPrinters = new XElement ("printers");
 
 			printers.ForEach (
-				printer => xPrinters.Add
-				(
-					new XElement
-					(
+				printer => xPrinters.Add (
+					new XElement (
 						"printer",
 						new XElement ("name", printer.Name),
 						new XElement ("tray", printer.Tray),
-						new XElement ("xOffset", printer.XOffset.ToString(CultureInfo.InvariantCulture)),
-						new XElement ("yOffset", printer.YOffset.ToString(CultureInfo.InvariantCulture))
+						new XElement ("xOffset", printer.XOffset.ToString (CultureInfo.InvariantCulture)),
+						new XElement ("yOffset", printer.YOffset.ToString (CultureInfo.InvariantCulture))
 					)
 				)
 			);
 
-			xPrinters.Save (App.BanquePiguet.Properties.Resources.PrintersFile);
+			XmlWriterSettings xmlSettings = new XmlWriterSettings ()
+			{
+				Indent = true,
+				NewLineOnAttributes = true,
+			};
+
+			using (XmlWriter xmlWriter = XmlWriter.Create (new StreamWriter (Printer.configurationFile), xmlSettings))
+			{
+					xPrinters.Save (xmlWriter);
+			}
+
+			
 		}
 
 		public static List<Printer> Load()
 		{
-			XElement xPrinters = XElement.Load (App.BanquePiguet.Properties.Resources.PrintersFile);
+			XElement xPrinters;
 
-			return new List<Printer> (
+			using (XmlReader xmlReader = XmlReader.Create(new StreamReader(Printer.configurationFile)))
+			{
+				xPrinters = XElement.Load (xmlReader);
+			}
+
+			List<Printer> printers = new List<Printer> (
 				from xPrinter in xPrinters.Elements ("printer")
 				select new Printer ()
 				{
@@ -84,7 +102,11 @@ namespace Epsitec.App.BanquePiguet
 					YOffset = Double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
 				}
 			);
+
+			return printers;
 		}
+
+		protected static string configurationFile = String.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
 
 	}
 
