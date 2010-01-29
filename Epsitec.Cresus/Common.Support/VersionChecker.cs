@@ -1,4 +1,4 @@
-//	Copyright © 2003-2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -12,6 +12,12 @@ namespace Epsitec.Common.Support
 	{
 		public static VersionChecker CheckUpdate(string productName, string productVersion)
 		{
+			if (productVersion.Contains (" "))
+			{
+				//	"1.2.3 demo" => "1.2.3"
+				productVersion = productVersion.Split (' ')[0];
+			}
+
 			var url = "http://www.epsitec.ch/dynamics/check.php?software={0}&version={1}";
 			var checker = new VersionChecker (productVersion);
 
@@ -126,7 +132,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2:###}.{3}", this.currentMajor, this.currentMinor, this.currentBuild, this.currentRevision);
+				return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}.{1}.{2:000}.{3}", this.currentMajor, this.currentMinor, this.currentBuild, this.currentRevision);
 			}
 		}
 
