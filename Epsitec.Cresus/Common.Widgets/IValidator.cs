@@ -1,33 +1,60 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// L'interface IValidator permet de déterminer si un objet est dans un état
-	/// valide (ou non).
+	/// The <c>IValidator</c> interface is used to find out if a widget contains
+	/// valid data or not.
 	/// </summary>
 	public interface IValidator
 	{
-		bool				IsValid				{ get; }
-		ValidationState		State				{ get; }
-		string				ErrorMessage		{ get; }
-		
+		/// <summary>
+		/// Gets a value indicating whether the associated widget contains valid data,
+		/// i.e. <c>State</c> is set to <c>ValidationState.Ok</c>.
+		/// </summary>
+		/// <value><c>true</c> if the associated widget contains valid data; otherwise, <c>false</c>.</value>
+		bool IsValid
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the validation state (basically OK or not OK).
+		/// </summary>
+		/// <value>The validation state.</value>
+		ValidationState State
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Gets the error message explaining what is wrong with the data.
+		/// </summary>
+		/// <value>The error message.</value>
+		string ErrorMessage
+		{
+			get;
+		}
+
+		/// <summary>
+		/// Validates the associated data and updates the <c>State</c>.
+		/// </summary>
 		void Validate();
+
+
+		/// <summary>
+		/// Marks the validator as dirty, which means that the <c>State</c> will have
+		/// to be revalidated.
+		/// </summary>
+		/// <param name="deep">If set to <c>true</c>, mark all children validators as dirty too.</param>
 		void MakeDirty(bool deep);
-		
+
+
+		/// <summary>
+		/// Occurs when the validator state became dirty, i.e. <c>State</c> changed to
+		/// <c>ValidationState.Dirty</c>.
+		/// </summary>
 		event Support.EventHandler	BecameDirty;
-	}
-	
-	/// <summary>
-	/// L'énumération ValidationState représente les états possibles pour un
-	/// validateur.
-	/// </summary>
-	public enum ValidationState
-	{
-		Unknown,			//	état inconnu (non défini)
-		Ok,					//	état valide
-		Error,				//	état non valide
-		Dirty				//	état pas à jour => nécessite une validation
 	}
 }
