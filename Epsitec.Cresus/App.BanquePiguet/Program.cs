@@ -12,6 +12,10 @@ namespace Epsitec.App.BanquePiguet
 	static class Program
 	{
 
+		//Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+		//Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
+		//AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
+
 		[System.STAThread]
 		static void Main(string[] args)
 		{

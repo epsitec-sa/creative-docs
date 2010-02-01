@@ -5,13 +5,14 @@ using Epsitec.Common;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -21,14 +22,20 @@ namespace Epsitec.App.BanquePiguet
 
 		public PrintersManager(Application application)
 		{
-			this.Application = application;
-			this.LoadPrinters ();
-
-			this.SetupWindow ();
-			this.SetupButtons ();
-			this.SetupPrintersCellTable ();
-			this.SetupEvents ();
-			this.AdjustWindowSize ();
+			try
+			{
+				this.Application = application;
+				this.Printers = Printer.Load ();
+				this.SetupWindow ();
+				this.SetupButtons ();
+				this.SetupPrintersCellTable ();
+				this.SetupEvents ();
+				this.AdjustWindowSize ();
+			}
+			catch (Exception e)
+			{
+				Tools.Error(new Exception("An error occured while initializing PrintersManager.", e));
+			}
 		}
 
 		protected Application Application
@@ -44,12 +51,6 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		protected CellTable PrintersCellTable
-		{
-			get;
-			set;
-		}
-
-		protected List<AbstractTextField> Cells
 		{
 			get;
 			set;
@@ -84,8 +85,30 @@ namespace Epsitec.App.BanquePiguet
 			this.Text = "Configuration des imprimantes";
 		}
 
+		protected IEnumerable<AbstractTextField> TextFieldCells
+		{
+			get
+			{
+				if (this.PrintersCellTable != null)
+				{
+					for (int i = 0; i < this.Printers.Count; i++)
+					{
+						for (int j = 1; j < 5; j++)
+						{
+							yield return (AbstractTextField) this.PrintersCellTable[j, i].Children[0];
+						}
+					}
+				}
+			}
+		}
+
 		protected void SetupPrintersCellTable()
 		{
+			if (this.PrintersCellTable != null)
+			{
+				this.PrintersCellTable.Dispose ();
+			}
+
 			this.PrintersCellTable = new CellTable ()
 			{
 				Dock = DockStyle.Fill,
@@ -93,8 +116,6 @@ namespace Epsitec.App.BanquePiguet
 				Parent = this.Root,
 
 			};
-
-			this.Cells = new List<AbstractTextField> ();
 
 			this.PrintersCellTable.StyleH  = CellArrayStyles.None;
 			this.PrintersCellTable.StyleH |= CellArrayStyles.Header;
@@ -118,7 +139,7 @@ namespace Epsitec.App.BanquePiguet
 			for (int i = 0; i < this.Printers.Count; i++)
 			{
 				Printer printer = this.Printers[i];
-
+				
 				TextFieldCombo nameTextField = new TextFieldCombo ()
 				{
 					Dock = DockStyle.Fill,
@@ -126,17 +147,7 @@ namespace Epsitec.App.BanquePiguet
 					
 				};
 
-				foreach (string printerName in PrinterSettings.InstalledPrinters)
-				{
-					nameTextField.Items.Add (printerName);
-				}
-
-				if (!nameTextField.Items.Contains (printer.Name) && printer.Name != "")
-				{
-					nameTextField.Items.Add (printer.Name);
-				}
-
-				new PredicateValidator (nameTextField, () => nameTextField.Text.Trim().Length > 0).Validate();
+				this.PopulateNameTextField (printer, nameTextField);
 
 				TextFieldCombo trayTextField = new TextFieldCombo ()
 				{
@@ -144,9 +155,7 @@ namespace Epsitec.App.BanquePiguet
 					Text = printer.Tray,
 				};
 
-				this.UpdateTrays (printer, trayTextField);
-
-				new PredicateValidator (trayTextField, () => trayTextField.Text.Trim().Length > 0).Validate ();
+				this.PopulateTraysTextField (printer, trayTextField);
 
 				TextFieldUpDown xOffsetTextField = new TextFieldUpDown ()
 				{
@@ -170,80 +179,91 @@ namespace Epsitec.App.BanquePiguet
 
 				nameTextField.TextChanged += (sender) =>
 				{
-					printer.Name = nameTextField.Text;
-					this.UpdateTrays (printer, trayTextField);
+					printer.Name = FormattedText.Unescape (nameTextField.Text);
+					this.PopulateTraysTextField (printer, trayTextField);
 				};
 
-				trayTextField.TextChanged += (sender) =>
-				{
-					printer.Tray = trayTextField.Text;
-				};
+				trayTextField.TextChanged += (sender) => printer.Tray = FormattedText.Unescape (trayTextField.Text);				
 
 				xOffsetTextField.TextChanged += (sender) =>
 				{
-					try
+					string text = FormattedText.Unescape (xOffsetTextField.Text);
+					double result;
+
+					if (Double.TryParse (text, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
 					{
-						printer.XOffset = Double.Parse (xOffsetTextField.Text);
-					}
-					catch (Exception e)
-					{
+						printer.XOffset = result;
 					}
 				};
 
 				yOffsetTextField.TextChanged += (sender) =>
 				{
-					try
+					string text = FormattedText.Unescape (yOffsetTextField.Text);
+					double result;
+
+					if (Double.TryParse (text, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
 					{
-						printer.YOffset = Double.Parse (yOffsetTextField.Text);
-					}
-					catch (Exception e)
-					{
+						printer.YOffset = result;
 					}
 				};
+				
+				Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR START");
+
+				//new PredicateValidator (nameTextField, () => { Console.WriteLine(printer.Name + " NAME: " + (FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0;});//.Validate ();
+				//new PredicateValidator (trayTextField, () => { Console.WriteLine(printer.Name + " TRAY: " + (FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0;});//.Validate ();
+
+				new PredicateValidator (nameTextField, () => { Console.WriteLine(">" + printer.Name + "< NAME: " + (false)); return false;}).Validate ();
+				new PredicateValidator (trayTextField, () => { Console.WriteLine(">" + printer.Name + "< TRAY: " + (false)); return false;}).Validate ();
+
+				Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR END");
 
 				this.PrintersCellTable[1, i].Insert(nameTextField);
 				this.PrintersCellTable[2, i].Insert (trayTextField);
 				this.PrintersCellTable[3, i].Insert (xOffsetTextField);
 				this.PrintersCellTable[4, i].Insert (yOffsetTextField);
-
-				this.Cells.Add (nameTextField);
-				this.Cells.Add (trayTextField);
-				this.Cells.Add (xOffsetTextField);
-				this.Cells.Add (yOffsetTextField);
 			}
 
-			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.RemovePrinterButton.Enable = (this.PrintersCellTable.SelectedRow >= 0);
-			this.Cells.ForEach (c => c.TextChanged += (sender) => this.CheckPrintersValidity ());
-			this.CheckPrintersValidity ();
+			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterValidity ();
+			this.CheckRemovePrinterValidity ();
+
+			this.TextFieldCells.ToList ().ForEach (c => c.TextChanged += (sender) => this.CheckSaveValidity ());
+			this.CheckSaveValidity ();
 		}
 
-		protected void UpdateTrays(Printer printer, TextFieldCombo trayTextField)
+		protected void PopulateNameTextField(Printer printer, TextFieldCombo nameTextField)
+		{
+			List<string> printerNames = PrinterSettings.InstalledPrinters.ToList ();
+
+			if (!printerNames.Contains (printer.Name) && printer.Name != "")
+			{
+				printerNames.Add (printer.Name);
+			}
+
+			printerNames.ForEach (printerName => nameTextField.Items.Add (printerName));
+		}
+
+		protected void PopulateTraysTextField(Printer printer, TextFieldCombo trayTextField)
 		{
 			if (trayTextField.Items.Count > 0)
 			{
 				trayTextField.Items.Clear ();
 			}
 
+			List<string> trayNames = new List<string> ();
+
 			PrinterSettings settings = PrinterSettings.FindPrinter (printer.Name);
+			
 			if (settings != null)
 			{
-				foreach (PaperSource trayName in settings.PaperSources)
-				{
-					trayTextField.Items.Add (trayName.Name);
-				}
+				Array.ForEach (settings.PaperSources, paperSource => trayNames.Add (paperSource.Name));
 			}
 
-			if (!trayTextField.Items.Contains (printer.Tray) && printer.Tray != "")
+			if (!trayNames.Contains (printer.Tray) && printer.Tray != "")
 			{
-				trayTextField.Items.Add (printer.Tray);
+				trayNames.Add (printer.Tray);
 			}
 
-		}
-
-		protected void UpdatePrintersCellTable()
-		{
-			this.PrintersCellTable.Dispose ();
-			this.SetupPrintersCellTable ();
+			trayNames.ForEach (trayName => trayTextField.Items.Add (trayName));
 		}
 
 		protected void SetupButtons()
@@ -298,38 +318,39 @@ namespace Epsitec.App.BanquePiguet
 			this.WindowClosed += (sender) => this.Cancel();
 		}
 
-		protected void CheckPrintersValidity()
+		protected void CheckSaveValidity()
 		{
-			this.SaveButton.Enable = this.Cells.All (c => c.IsValid);
-			Console.WriteLine (this.SaveButton.Enable);
+			this.SaveButton.Enable = this.TextFieldCells.All (c => c.IsValid);
 		}
 
-		protected void LoadPrinters()
+		protected void CheckRemovePrinterValidity()
 		{
-			this.Printers = Printer.Load ();
-		}
-
-		protected void SavePrinters()
-		{
-			Printer.Save (this.Printers);
+			this.RemovePrinterButton.Enable  = (this.PrintersCellTable.SelectedRow >= 0);
 		}
 
 		protected void Save()
 		{
-			this.SavePrinters ();
+			try
+			{
+				Printer.Save (this.Printers);
+			}
+			catch (Exception e)
+			{
+				Tools.Error (new Exception ("An error occured while saving the printers.", e));
+			}
+
 			this.Exit ();
 		}
 
 		protected void Cancel()
 		{
-			this.LoadPrinters ();
 			this.Exit ();
 		}
 
 		protected void AddPrinter()
 		{
 			this.Printers.Add (new Printer ("", "", 0, 0));
-			this.UpdatePrintersCellTable ();
+			this.SetupPrintersCellTable ();
 		}
 
 		protected void RemovePrinter()
@@ -341,7 +362,7 @@ namespace Epsitec.App.BanquePiguet
 				this.Printers.RemoveAt (selectedRow);
 			}
 
-			this.UpdatePrintersCellTable ();
+			this.SetupPrintersCellTable ();
 		}
 
 		protected void Exit()

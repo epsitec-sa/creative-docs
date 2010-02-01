@@ -19,7 +19,7 @@
     <yOffset>84</yOffset>
   </printer>
   <printer>
-    <name>z</name>
+    <name>gfds</name>
     <tray>Tray 2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
@@ -29,11 +29,5 @@
     <tray>Tray 2</tray>
     <xOffset>453</xOffset>
     <yOffset>84</yOffset>
-  </printer>
-  <printer>
-    <name>hgfd</name>
-    <tray>hgdf</tray>
-    <xOffset>0</xOffset>
-    <yOffset>0</yOffset>
   </printer>
 </printers>

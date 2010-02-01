@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
-<bvr>
+<bv>
 
   <size>
     <height>106</height>
@@ -11,7 +11,7 @@
 
     <field>
       <name>BankAddress1</name>
-      <type>BvrFieldMultiLine</type>
+      <type>BvFieldMultiLine</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>2.54</xPosition>
@@ -21,7 +21,7 @@
 
     <field>
       <name>BankAddress2</name>
-      <type>BvrFieldMultiLine</type>
+      <type>BvFieldMultiLine</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>63.5</xPosition>
@@ -31,7 +31,7 @@
 
     <field>
       <name>BeneficiaryIban1</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>2.54</xPosition>
@@ -40,7 +40,7 @@
 
     <field>
       <name>BeneficiaryIban2</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>63.5</xPosition>
@@ -49,7 +49,7 @@
 
     <field>
       <name>BeneficiaryAddress1</name>
-      <type>BvrFieldMultiLine</type>
+      <type>BvFieldMultiLine</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>2.54</xPosition>
@@ -59,7 +59,7 @@
 
     <field>
       <name>BeneficiaryAddress2</name>
-      <type>BvrFieldMultiLine</type>
+      <type>BvFieldMultiLine</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>63.5</xPosition>
@@ -69,7 +69,7 @@
 
     <field>
       <name>BankAccount1</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>29.21</xPosition>
@@ -78,7 +78,7 @@
 
     <field>
       <name>BankAccount2</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>90.17</xPosition>
@@ -87,7 +87,7 @@
 
     <field>
       <name>LayoutCode</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.23</textHeight>
       <xPosition>73.152</xPosition>
@@ -96,7 +96,7 @@
 
     <field>
       <name>Reason</name>
-      <type>BvrFieldMultiLineColumn</type>
+      <type>BvFieldMultiLineColumn</type>
       <font>Arial</font>
       <textHeight>4.23</textHeight>
       <xPosition>124.968</xPosition>
@@ -107,7 +107,7 @@
 
     <field>
       <name>ReferenceLine</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.23</textHeight>
       <xPosition>104.14</xPosition>
@@ -116,7 +116,7 @@
 
     <field>
       <name>ClearingLine</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.23</textHeight>
       <xPosition>178.562</xPosition>
@@ -125,7 +125,7 @@
 
     <field>
       <name>CcpNumberLine</name>
-      <type>BvrField</type>
+      <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.23</textHeight>
       <xPosition>178.562</xPosition>
@@ -134,4 +134,4 @@
 
   </fields>
 
-</bvr>
+</bv>

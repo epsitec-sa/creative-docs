@@ -7,17 +7,17 @@ using Epsitec.Common.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
 {
 
-	class Bvr303Widget : Widget
+	class BvWidget : Widget
 	{
 
-		protected enum BvrFieldId {
+		protected enum BvFieldId {
 			BankAddress1,
 			BankAddress2,
 			BeneficiaryIban1,
@@ -33,75 +33,40 @@ namespace Epsitec.App.BanquePiguet
 			CcpNumberLine
 		}
 
-		public Bvr303Widget() : this (null)
+		public BvWidget() : this (null)
 		{
 		}
 
-		public Bvr303Widget(Widget embedder) : base (embedder)
+		public BvWidget(Widget embedder) : base (embedder)
 		{
-			this.BvrFields = new Dictionary<BvrFieldId, Bvr303Field> ();
-
 			try
 			{
-
-				XElement xBvrDefinition;
-				
-				using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream("BvrDefinition.xml")))
-				{
-					xBvrDefinition = XElement.Load (xmlReader);	
-				}
-
-				XElement xSize = xBvrDefinition.Element ("size");
-				this.BvrSize = new Size (
-					Double.Parse (xSize.Element ("width").Value, CultureInfo.InvariantCulture),
-					Double.Parse (xSize.Element ("height").Value, CultureInfo.InvariantCulture)
-				);
-
-				IEnumerable<XElement> xBvrfields = xBvrDefinition.Element ("fields").Elements ("field");
-
-				foreach (XElement xBvrField in xBvrfields)
-				{
-					string name = (string) xBvrField.Element ("name");
-					BvrFieldId id = (BvrFieldId) Enum.Parse (typeof (BvrFieldId), name);
-					this.BvrFields[id] = Bvr303Field.GetInstance (xBvrField, this.BvrSize);
-				}
-
+				this.SetupAttributes ();
+				this.SetupBackgroundImage ();
+				this.SetupBvFields ();
 			}
 			catch (Exception e)
 			{
-				throw new Exception ("An error occured while loading the bvr fields.", e);
+				Tools.Error(new Exception ("An error occured while creating the BvWidget.", e));
 			}
-
-			if (this.BvrFields.Count < Enum.GetValues (typeof (BvrFieldId)).Length)
-			{
-				throw new Exception ("An error occured while loading the bvr fields.", new Exception ("Some fields are missing."));
-			}
-
-			this.BackgroundImage = (Bitmap) Bitmap.FromManifestResource ("Epsitec.App.BanquePiguet.Resources.bvr.jpg", System.Reflection.Assembly.GetExecutingAssembly ());
-
-			this.referenceClientNumber = "";
-			this.clearingConstant = "";
-			this.clearingBank = "";
-			this.clearingBankKey = "";
-			this.ccpNumber = "";
 		}
         
 		public string BankAddress
 		{
 			get
 			{
-				return this.BvrFields[BvrFieldId.BankAddress1].Text;
+				return this.BvFields[BvFieldId.BankAddress1].Text;
 			}
 
 			set
 			{
-				if (!Bvr303Helper.CheckBankAddress (value))
+				if (!BvHelper.CheckBankAddress (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvrFields[BvrFieldId.BankAddress1].Text = value;
-				this.BvrFields[BvrFieldId.BankAddress2].Text = value;
+				this.BvFields[BvFieldId.BankAddress1].Text = value;
+				this.BvFields[BvFieldId.BankAddress2].Text = value;
 
 				this.Invalidate ();
 			}
@@ -111,20 +76,20 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				return this.BvrFields[BvrFieldId.BeneficiaryIban1].Text;
+				return this.BvFields[BvFieldId.BeneficiaryIban1].Text;
 			}
 
 			set
 			{
-				string iban = Bvr303Helper.BuildNormalizedIban (value);
+				string iban = BvHelper.BuildNormalizedIban (value);
 
-				if (!Bvr303Helper.CheckBeneficiaryIban (iban))
+				if (!BvHelper.CheckBeneficiaryIban (iban))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvrFields[BvrFieldId.BeneficiaryIban1].Text = iban;
-				this.BvrFields[BvrFieldId.BeneficiaryIban2].Text = iban;
+				this.BvFields[BvFieldId.BeneficiaryIban1].Text = iban;
+				this.BvFields[BvFieldId.BeneficiaryIban2].Text = iban;
 
 				this.UpdateReferenceLine ();
 				this.Invalidate ();
@@ -135,17 +100,17 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				return this.BvrFields[BvrFieldId.BeneficiaryAddress1].Text;
+				return this.BvFields[BvFieldId.BeneficiaryAddress1].Text;
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckBeneficiaryAddress (value))
+				if (!BvHelper.CheckBeneficiaryAddress (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvrFields[BvrFieldId.BeneficiaryAddress1].Text = value;
-				this.BvrFields[BvrFieldId.BeneficiaryAddress2].Text = value;
+				this.BvFields[BvFieldId.BeneficiaryAddress1].Text = value;
+				this.BvFields[BvFieldId.BeneficiaryAddress2].Text = value;
 
 				this.Invalidate ();
 			}
@@ -155,17 +120,17 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				return this.BvrFields[BvrFieldId.BankAccount1].Text;
+				return this.BvFields[BvFieldId.BankAccount1].Text;
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckBankAccount (value))
+				if (!BvHelper.CheckBankAccount (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvrFields[BvrFieldId.BankAccount1].Text = value;
-				this.BvrFields[BvrFieldId.BankAccount2].Text = value;
+				this.BvFields[BvFieldId.BankAccount1].Text = value;
+				this.BvFields[BvFieldId.BankAccount2].Text = value;
 
 				this.Invalidate ();
 			}
@@ -175,16 +140,16 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				return this.BvrFields[BvrFieldId.LayoutCode].Text;
+				return this.BvFields[BvFieldId.LayoutCode].Text;
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckLayoutCode (value))
+				if (!BvHelper.CheckLayoutCode (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvrFields[BvrFieldId.LayoutCode].Text = value;
+				this.BvFields[BvFieldId.LayoutCode].Text = value;
 
 				this.Invalidate ();
 			}
@@ -194,16 +159,16 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				return this.BvrFields[BvrFieldId.Reason].Text;
+				return this.BvFields[BvFieldId.Reason].Text;
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckReason (value))
+				if (!BvHelper.CheckReason (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvrFields[BvrFieldId.Reason].Text = value;
+				this.BvFields[BvFieldId.Reason].Text = value;
 				
 				this.Invalidate ();
 			}
@@ -217,7 +182,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckReferenceClientNumber (value))
+				if (!BvHelper.CheckReferenceClientNumber (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
@@ -236,7 +201,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckClearingConstant (value))
+				if (!BvHelper.CheckClearingConstant (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
@@ -255,7 +220,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckClearingBank (value))
+				if (!BvHelper.CheckClearingBank (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
@@ -274,7 +239,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckClearingBankKey (value))
+				if (!BvHelper.CheckClearingBankKey (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
@@ -294,7 +259,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!Bvr303Helper.CheckBeneficiaryAddress (value))
+				if (!BvHelper.CheckBeneficiaryAddress (value))
 				{
 					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
 				}
@@ -305,13 +270,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
-		public Size BvrSize
+		public Size BvSize
 		{
 			get;
 			protected set;
 		}
 
-		protected Dictionary<BvrFieldId, Bvr303Field> BvrFields
+		protected Dictionary<BvFieldId, BvField> BvFields
 		{
 			get;
 			set;
@@ -325,7 +290,7 @@ namespace Epsitec.App.BanquePiguet
 
 		public void Print(IPaintPort paintPort, Rectangle bounds)
 		{
-			this.PaintBvr303Fields (paintPort, bounds);
+			this.PaintBvFields (paintPort, bounds);
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -333,7 +298,7 @@ namespace Epsitec.App.BanquePiguet
 			Rectangle bounds = this.Client.Bounds;
 
 			this.PaintBackgroundImage (graphics, bounds);
-			this.PaintBvr303Fields (graphics, bounds);
+			this.PaintBvFields (graphics, bounds);
 		}
 
 		protected void PaintBackgroundImage(IPaintPort port, Rectangle bounds)
@@ -347,24 +312,75 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
-		protected void PaintBvr303Fields(IPaintPort paintPort, Rectangle bounds)
+		protected void PaintBvFields(IPaintPort paintPort, Rectangle bounds)
 		{
 
-			foreach (BvrFieldId fieldId in this.BvrFields.Keys)
+			foreach (BvFieldId fieldId in this.BvFields.Keys)
 			{
-				this.BvrFields[fieldId].Paint (paintPort, bounds);
+				this.BvFields[fieldId].Paint (paintPort, bounds);
 			}
 
 		}
+
+		protected void SetupBvFields()
+		{
+			this.BvFields = new Dictionary<BvFieldId, BvField> ();
+
+			XElement xBvDefinition;
+
+			using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream ("BvDefinition.xml")))
+			{
+				xBvDefinition = XElement.Load (xmlReader);
+			}
+
+			XElement xSize = xBvDefinition.Element ("size");
+			this.BvSize = new Size (
+				Double.Parse (xSize.Element ("width").Value, CultureInfo.InvariantCulture),
+				Double.Parse (xSize.Element ("height").Value, CultureInfo.InvariantCulture)
+			);
+
+			IEnumerable<XElement> xBvfields = xBvDefinition.Element ("fields").Elements ("field");
+
+			foreach (XElement xBvField in xBvfields)
+			{
+				string name = (string) xBvField.Element ("name");
+				BvFieldId id = (BvFieldId) Enum.Parse (typeof (BvFieldId), name);
+				this.BvFields[id] = BvField.GetInstance (xBvField, this.BvSize);
+			}
+			
+
+			if (this.BvFields.Count < Enum.GetValues (typeof (BvFieldId)).Length)
+			{
+				throw new Exception ("Some BvFields are missing.");
+			}
+		}
+
+		protected void SetupBackgroundImage()
+		{
+			Assembly assembly = Assembly.GetExecutingAssembly ();
+			string resource = "Epsitec.App.BanquePiguet.Resources.bv.jpg";
+
+			this.BackgroundImage = (Bitmap) Bitmap.FromManifestResource (resource, assembly);
+		}
+
+		protected void SetupAttributes()
+		{
+			this.referenceClientNumber = "";
+			this.clearingConstant = "";
+			this.clearingBank = "";
+			this.clearingBankKey = "";
+			this.ccpNumber = "";
+		}
+
 
 		protected void UpdateReferenceLine()
 		{
 			string iban = this.BeneficiaryIban;
 			string reference = this.ReferenceClientNumber;
 
-			if (Bvr303Helper.CheckReferenceLine (iban, reference))
+			if (BvHelper.CheckReferenceLine (iban, reference))
 			{
-				this.BvrFields[BvrFieldId.ReferenceLine].Text = Bvr303Helper.BuildReferenceLine (iban, reference);
+				this.BvFields[BvFieldId.ReferenceLine].Text = BvHelper.BuildReferenceLine (iban, reference);
 				this.Invalidate ();
 			}
 		}
@@ -375,9 +391,9 @@ namespace Epsitec.App.BanquePiguet
 			string clearing = this.ClearingBank;
 			string key = this.ClearingBankKey;
 
-			if (Bvr303Helper.CheckClearingLine(constant, clearing, key))
+			if (BvHelper.CheckClearingLine(constant, clearing, key))
 			{
-				this.BvrFields[BvrFieldId.ClearingLine].Text = Bvr303Helper.BuildClearingLine (constant, clearing, key);
+				this.BvFields[BvFieldId.ClearingLine].Text = BvHelper.BuildClearingLine (constant, clearing, key);
 				this.Invalidate ();
 			}
 		}
@@ -386,9 +402,9 @@ namespace Epsitec.App.BanquePiguet
 		{
 			string ccp = this.CcpNumber;
 
-			if (Bvr303Helper.CheckCcpNumber (ccp))
+			if (BvHelper.CheckCcpNumber (ccp))
 			{
-				this.BvrFields[BvrFieldId.CcpNumberLine].Text = Bvr303Helper.BuildCcpNumberLine (ccp);
+				this.BvFields[BvFieldId.CcpNumberLine].Text = BvHelper.BuildCcpNumberLine (ccp);
 				this.Invalidate ();
 			}
 		}

@@ -12,10 +12,10 @@ using System.Xml.Linq;
 namespace Epsitec.App.BanquePiguet
 {
 
-	class Bvr303Field
+	class BvField
 	{
 
-		static Bvr303Field()
+		static BvField()
 		{
 			using (Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("Epsitec.App.BanquePiguet.Resources.OCR_BB.tff"))
 			{
@@ -23,14 +23,14 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 		
-		public Bvr303Field(XElement xBvrField, Size bvrSize)
+		public BvField(XElement xBvField, Size bvSize)
 		{
 			this.Text = "";
-			this.TextRelativeHeight = Double.Parse (xBvrField.Element ("textHeight").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
-			this.XRelativePosition = Double.Parse (xBvrField.Element ("xPosition").Value, CultureInfo.InvariantCulture) / bvrSize.Width;
-			this.YRelativePosition = Double.Parse (xBvrField.Element ("yPosition").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
+			this.TextRelativeHeight = Double.Parse (xBvField.Element ("textHeight").Value, CultureInfo.InvariantCulture) / bvSize.Height;
+			this.XRelativePosition = Double.Parse (xBvField.Element ("xPosition").Value, CultureInfo.InvariantCulture) / bvSize.Width;
+			this.YRelativePosition = Double.Parse (xBvField.Element ("yPosition").Value, CultureInfo.InvariantCulture) / bvSize.Height;
 
-			switch (xBvrField.Element ("font").Value)
+			switch (xBvField.Element ("font").Value)
 			{
 				case "OCR-B1":
 					this.TextFont = Font.GetFont ("OCR-B Bold", "Regular");
@@ -102,28 +102,28 @@ namespace Epsitec.App.BanquePiguet
 			return this.TextRelativeHeight * bounds.Height;
 		}
 
-		public static Bvr303Field GetInstance(XElement xBvrField, Size bvrSize)
+		public static BvField GetInstance(XElement xBvField, Size bvSize)
 		{
-			string type = (string) xBvrField.Element ("type");
+			string type = (string) xBvField.Element ("type");
 
-			Bvr303Field bvrField;
+			BvField bvField;
 
 			switch (type)
 			{
-				case "BvrField":
-					bvrField = new Bvr303Field (xBvrField, bvrSize);
+				case "BvField":
+					bvField = new BvField (xBvField, bvSize);
 					break;
-				case "BvrFieldMultiLine":
-					bvrField = new Bvr303FieldMultiLine (xBvrField, bvrSize);
+				case "BvFieldMultiLine":
+					bvField = new BvFieldMultiLine (xBvField, bvSize);
 					break;
-				case "BvrFieldMultiLineColumn":
-					bvrField = new Bvr303FieldMultiLineColumn (xBvrField, bvrSize);
+				case "BvFieldMultiLineColumn":
+					bvField = new BvFieldMultiLineColumn (xBvField, bvSize);
 					break;
 				default:
-					throw new Exception (String.Format ("Invalid bvrField type: {0}.", type));
+					throw new Exception (String.Format ("Invalid BvField type: {0}.", type));
 			}
 
-			return bvrField;
+			return bvField;
 
 		}
 

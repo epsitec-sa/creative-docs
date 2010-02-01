@@ -10,12 +10,12 @@ using System.Xml.Linq;
 namespace Epsitec.App.BanquePiguet
 {
 
-	class Bvr303FieldMultiLine : Bvr303Field
+	class BvFieldMultiLine : BvField
 	{
 
-		public Bvr303FieldMultiLine(XElement xBvrField, Size bvrSize) : base (xBvrField, bvrSize)
+		public BvFieldMultiLine(XElement xBvField, Size bvSize) : base (xBvField, bvSize)
 		{ 
-			this.VerticalSpace = Double.Parse (xBvrField.Element ("verticalSpace").Value, CultureInfo.InvariantCulture) / bvrSize.Height;
+			this.VerticalSpace = Double.Parse (xBvField.Element ("verticalSpace").Value, CultureInfo.InvariantCulture) / bvSize.Height;
 		}
 
 		public double VerticalSpace

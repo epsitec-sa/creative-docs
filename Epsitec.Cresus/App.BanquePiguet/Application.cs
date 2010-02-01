@@ -5,12 +5,12 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -25,15 +25,13 @@ namespace Epsitec.App.BanquePiguet
 			this.AdminMode = adminMode;
 			this.SetupWindow ();
 			this.SetupForm ();
-			this.SetupBvrWidget ();
+			this.SetupBvWidget ();
 			this.SetupEvents ();
 			this.SetupValidators ();
-			this.SetupPrintersManager ();
 			this.CheckPrintButtonEnbled ();
 			this.Window.AdjustWindowSize ();
 
-			//this.BenefeciaryIbanTextField.Text = "CH00 0000 0000 0000 0000 0";
-			//this.DisplayPrintersManager (true);
+			this.DisplayPrintersManager (true);
 		}
 
 		public override string ShortWindowTitle
@@ -68,7 +66,7 @@ namespace Epsitec.App.BanquePiguet
 			set;
 		}
 
-		protected Bvr303Widget Bvr303Widget
+		protected BvWidget BvWidget
 		{
 			get;
 			set;
@@ -203,9 +201,9 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
-		protected void SetupBvrWidget()
+		protected void SetupBvWidget()
 		{
-			this.Bvr303Widget = new Bvr303Widget ()
+			this.BvWidget = new BvWidget ()
 			{
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 10, 10, 10),
@@ -215,16 +213,16 @@ namespace Epsitec.App.BanquePiguet
 
 			try
 			{
-				XElement xBvrValues;
+				XElement xBvValues;
 
-				using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream("BvrValues.xml")))
+				using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream("BvValues.xml")))
 				{
-					xBvrValues = XElement.Load (xmlReader);
+					xBvValues = XElement.Load (xmlReader);
 				}
 				
 				int nbValues = 0;
 
-				foreach (XElement value in xBvrValues.Elements("value"))
+				foreach (XElement value in xBvValues.Elements("value"))
 				{
 					string name = (string) value.Element ("name");
 					string text = (string) value.Element ("text");
@@ -238,28 +236,28 @@ namespace Epsitec.App.BanquePiguet
 					switch (name)
 					{
 						case "BankAddress":
-							this.Bvr303Widget.BankAddress = text;
+							this.BvWidget.BankAddress = text;
 							break;
 						case "BankAccount":
-							this.Bvr303Widget.BankAccount = text;
+							this.BvWidget.BankAccount = text;
 							break;
 						case "LayoutCode":
-							this.Bvr303Widget.LayoutCode = text;
+							this.BvWidget.LayoutCode = text;
 							break;
 						case "ReferenceClientNumber":
-							this.Bvr303Widget.ReferenceClientNumber = text;
+							this.BvWidget.ReferenceClientNumber = text;
 							break;
 						case "ClearingConstant":
-							this.Bvr303Widget.ClearingConstant = text;
+							this.BvWidget.ClearingConstant = text;
 							break;
 						case "ClearingBank":
-							this.Bvr303Widget.ClearingBank = text;
+							this.BvWidget.ClearingBank = text;
 							break;
 						case "ClearingBankKey":
-							this.Bvr303Widget.ClearingBankKey = text;
+							this.BvWidget.ClearingBankKey = text;
 							break;
 						case "CcpNumber":
-							this.Bvr303Widget.CcpNumber = text;
+							this.BvWidget.CcpNumber = text;
 							break;
 						default:
 							throw new Exception (String.Format ("Unknown value: {0}", name));
@@ -270,14 +268,14 @@ namespace Epsitec.App.BanquePiguet
 
 				if (nbValues < 8)
 				{
-					throw new Exception ("Some bvr values are missing.");
+					throw new Exception ("Some bv values are missing.");
 				}
 
 			
 			}
 			catch (Exception e)
 			{
-				throw new Exception ("An error occured while loading the bvr values.", e);
+				Tools.Error(new Exception ("An error occured while loading the bv values.", e));
 			}
 		}
 
@@ -285,11 +283,9 @@ namespace Epsitec.App.BanquePiguet
 		{
 			this.BenefeciaryIbanTextField.TextChanged += (sender) =>
 			{
-				string iban = this.BenefeciaryIbanTextField.Text;
-
-				if (Bvr303Helper.CheckBeneficiaryIban (Bvr303Helper.BuildNormalizedIban(iban)))
+				if (this.CheckBeneficiaryIban ())
 				{
-					this.Bvr303Widget.BeneficiaryIban = iban;
+					this.BvWidget.BeneficiaryIban = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
 				}
 
 				this.CheckPrintButtonEnbled ();
@@ -297,11 +293,9 @@ namespace Epsitec.App.BanquePiguet
 
 			this.BeneficiaryAddressTextField.TextChanged += (sender) =>
 			{
-				string address = this.BeneficiaryAddressTextField.Text.Replace ("<br/>", "\n");
-
-				if (Bvr303Helper.CheckBeneficiaryAddress (address))
+				if (this.CheckBeneficiaryAddress ())
 				{
-					this.Bvr303Widget.BeneficiaryAddress = address;
+					this.BvWidget.BeneficiaryAddress = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
 				}
 
 				this.CheckPrintButtonEnbled ();
@@ -309,11 +303,9 @@ namespace Epsitec.App.BanquePiguet
 
 			this.ReasonTextField.TextChanged += (sender) =>
 			{
-				string reason = this.ReasonTextField.Text.Replace ("<br/>", "\n");
-
-				if (Bvr303Helper.CheckReason (reason))
+				if (this.CheckReason ())
 				{
-					this.Bvr303Widget.Reason = reason;
+					this.BvWidget.Reason = FormattedText.Unescape(this.ReasonTextField.Text);
 				}
 
 				this.CheckPrintButtonEnbled ();
@@ -330,38 +322,19 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void SetupValidators()
 		{
-#if false
-			List<IValidator> validators = new List<IValidator> ();
-
-			validators.Add(new PredicateValidator (
-				this.BenefeciaryIbanTextField,
-				() => Bvr303Helper.CheckBeneficiaryIban(this.BenefeciaryIbanTextField.Text)
-			));
-
-			validators.Add(new PredicateValidator (
-				this.BeneficiaryAddressTextField,
-				() => Bvr303Helper.CheckBeneficiaryAddress(this.BeneficiaryAddressTextField.Text)
-			));
-
-			validators.Add(new PredicateValidator (
-				this.ReasonTextField,
-				() => Bvr303Helper.CheckReason(this.ReasonTextField.Text)
-			));
-
-			validators.ForEach (validator => validator.Validate());
-#else
 			new PredicateValidator (
 				this.BenefeciaryIbanTextField,
-				() => Bvr303Helper.CheckBeneficiaryIban (this.BenefeciaryIbanTextField.Text));
+				() => this.CheckBeneficiaryIban ()
+			);
 			
 			new PredicateValidator (
 				this.BeneficiaryAddressTextField,
-				() => Bvr303Helper.CheckBeneficiaryAddress (this.BeneficiaryAddressTextField.Text));
-
+				() => this.CheckBeneficiaryAddress ()
+			);
+			
 			new PredicateValidator (
 				this.ReasonTextField,
-				() => Bvr303Helper.CheckReason (this.ReasonTextField.Text));
-#endif
+				() => this.CheckReason ());
 		}
 
 		protected void SetupPrintersManager()
@@ -369,13 +342,31 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintersManager = new PrintersManager (this);
 		}
 
+		protected bool CheckBeneficiaryIban()
+		{
+			string text = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
+			string iban = BvHelper.BuildNormalizedIban (text);
+			return BvHelper.CheckBeneficiaryIban (iban);
+		}
+
+		protected bool CheckBeneficiaryAddress()
+		{
+			string address = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
+			return BvHelper.CheckBeneficiaryAddress (address);
+		}
+
+		protected bool CheckReason()
+		{
+			string reason = FormattedText.Unescape (this.ReasonTextField.Text);
+			return BvHelper.CheckReason (reason);
+		}
 
 		protected void CheckPrintButtonEnbled()
 		{
-			bool check  =  Bvr303Helper.CheckBvr303(this.Bvr303Widget)
-						&& Bvr303Helper.CheckBeneficiaryIban(Bvr303Helper.BuildNormalizedIban(this.BenefeciaryIbanTextField.Text))
-						&& Bvr303Helper.CheckBeneficiaryAddress(this.BeneficiaryAddressTextField.Text)
-						&& Bvr303Helper.CheckReason(this.ReasonTextField.Text);
+			bool check  =  BvHelper.CheckBv (this.BvWidget)
+						&& this.CheckBeneficiaryIban ()
+						&& this.CheckBeneficiaryAddress ()
+						&& this.CheckReason ();
 
 			this.SetEnable (ApplicationCommands.Print, check);
 		}
@@ -384,12 +375,22 @@ namespace Epsitec.App.BanquePiguet
 		{
 			if (display)
 			{
+				if (this.PrintersManager == null)
+				{
+					this.PrintersManager = new PrintersManager (this);
+
+				}
+
 				this.PrintersManager.Show ();
 				this.Window.IsFrozen = true;
 			}
 			else
 			{
-				this.PrintersManager.Hide ();
+				if (this.PrintersManager != null)
+				{
+					this.PrintersManager.Dispose ();
+					this.PrintersManager = null;
+				}
 				this.Window.IsFrozen = false;
 			}
 		}
@@ -412,7 +413,7 @@ namespace Epsitec.App.BanquePiguet
 
 			if (dialog.Result == DialogResult.Accept)
 			{
-				PrintPort.PrintSinglePage (painter => this.Bvr303Widget.Print (painter, new Rectangle (0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
+				PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
 				this.LogPrintCommand (0);
 			}
 		}
@@ -422,9 +423,9 @@ namespace Epsitec.App.BanquePiguet
 			string entry = String.Format ("{0}\n{1}\n{2}\n{3}\n{4}",
 				"========= New entry =========",
 				String.Format ("Number of page printed: {0}", nbPrints),
-				String.Format ("Beneficiary iban: {0}", this.Bvr303Widget.BeneficiaryIban),
-				String.Format ("Beneficiary address: {0}", this.Bvr303Widget.BeneficiaryAddress.Replace ("\n", "\t\t")),
-				String.Format ("Reason: {0}", this.Bvr303Widget.Reason.Replace ("\n", "\t\t"))
+				String.Format ("Beneficiary iban: {0}", this.BvWidget.BeneficiaryIban),
+				String.Format ("Beneficiary address: {0}", this.BvWidget.BeneficiaryAddress.Replace ("\n", "\t\t")),
+				String.Format ("Reason: {0}", this.BvWidget.Reason.Replace ("\n", "\t\t"))
 			);
 
 			Tools.LogMessage (entry);

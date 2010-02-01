@@ -75,21 +75,25 @@ namespace Epsitec.App.BanquePiguet
 				NewLineOnAttributes = true,
 			};
 
-			using (XmlWriter xmlWriter = XmlWriter.Create (new StreamWriter (Printer.configurationFile), xmlSettings))
+			using (StreamWriter streamWriter = new StreamWriter (Printer.configurationFile))
 			{
+				using (XmlWriter xmlWriter = XmlWriter.Create (streamWriter, xmlSettings))
+				{
 					xPrinters.Save (xmlWriter);
+				}
 			}
-
-			
 		}
 
 		public static List<Printer> Load()
 		{
 			XElement xPrinters;
 
-			using (XmlReader xmlReader = XmlReader.Create(new StreamReader(Printer.configurationFile)))
+			using (StreamReader streamReader = new StreamReader (Printer.configurationFile))
 			{
-				xPrinters = XElement.Load (xmlReader);
+				using (XmlReader xmlReader = XmlReader.Create (streamReader))
+				{
+					xPrinters = XElement.Load (xmlReader);
+				}
 			}
 
 			List<Printer> printers = new List<Printer> (

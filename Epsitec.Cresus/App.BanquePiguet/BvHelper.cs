@@ -9,14 +9,14 @@ using System.Text.RegularExpressions;
 namespace Epsitec.App.BanquePiguet
 {
 
-	class Bvr303Helper
+	static class BvHelper
 	{
 
 		/// <summary>
 		/// This bidimensional array is the table used by the modulo 10 recursive algorithm
 		/// to find the next report digit at each step.
 		/// </summary>
-		protected static int[,] table = new int[,]
+		private static int[,] table = new int[,]
 		{
 			{0, 9, 4, 6, 8, 2, 7, 1, 3, 5},
 			{9, 4, 6, 8, 2, 7, 1, 3, 5, 0},
@@ -34,7 +34,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// This array contains the control keys used by the modulo 10 recursive algorithm.
 		/// </summary>
-		protected static char[] keys = new char[]
+		private static char[] keys = new char[]
 		{
 			'0', '9', '8', '7', '6', '5', '4', '3', '2', '1'
 		};
@@ -63,11 +63,11 @@ namespace Epsitec.App.BanquePiguet
 			while (number.Length > 0)
 			{
 				int digit = Int32.Parse (number.Substring (0, 1), CultureInfo.InvariantCulture);
-				report = Bvr303Helper.table[report, digit];
+				report = BvHelper.table[report, digit];
 				number = number.Substring (1);
 			}
 
-			return Bvr303Helper.keys[report];
+			return BvHelper.keys[report];
 		}
 
 		public static bool CheckBankAddress(string address)
@@ -130,65 +130,65 @@ namespace Epsitec.App.BanquePiguet
 
 		public static bool CheckReferenceLine(string iban, string reference)
 		{
-			bool check	=  Bvr303Helper.CheckBeneficiaryIban (iban)
-						&& Bvr303Helper.CheckReferenceClientNumber (reference);
+			bool check	=  BvHelper.CheckBeneficiaryIban (iban)
+						&& BvHelper.CheckReferenceClientNumber (reference);
 
 			return check;
 		}
 
 		public static bool CheckClearingLine(string constant, string clearing, string key)
 		{
-			bool check	=  Bvr303Helper.CheckClearingConstant (constant)
-						&& Bvr303Helper.CheckClearingBank (clearing)
-						&& Bvr303Helper.CheckClearingBankKey (key);
+			bool check	=  BvHelper.CheckClearingConstant (constant)
+						&& BvHelper.CheckClearingBank (clearing)
+						&& BvHelper.CheckClearingBankKey (key);
 
 			return check;
 		}
 
-		public static bool CheckBvr303(Bvr303Widget bvr303Widget)
+		public static bool CheckBv(BvWidget bvWidget)
 		{
-			bool check	=  Bvr303Helper.CheckBankAddress (bvr303Widget.BankAddress)
-						&& Bvr303Helper.CheckBeneficiaryIban (bvr303Widget.BeneficiaryIban)
-						&& Bvr303Helper.CheckBeneficiaryAddress (bvr303Widget.BeneficiaryAddress)
-						&& Bvr303Helper.CheckBankAccount (bvr303Widget.BankAccount)
-						&& Bvr303Helper.CheckLayoutCode (bvr303Widget.LayoutCode)
-						&& Bvr303Helper.CheckReason (bvr303Widget.Reason)
-						&& Bvr303Helper.CheckReferenceClientNumber (bvr303Widget.ReferenceClientNumber)
-						&& Bvr303Helper.CheckClearingConstant (bvr303Widget.ClearingConstant)
-						&& Bvr303Helper.CheckClearingBank (bvr303Widget.ClearingBank)
-						&& Bvr303Helper.CheckClearingBankKey (bvr303Widget.ClearingBankKey)
-						&& Bvr303Helper.CheckCcpNumber (bvr303Widget.CcpNumber);
+			bool check	=  BvHelper.CheckBankAddress (bvWidget.BankAddress)
+						&& BvHelper.CheckBeneficiaryIban (bvWidget.BeneficiaryIban)
+						&& BvHelper.CheckBeneficiaryAddress (bvWidget.BeneficiaryAddress)
+						&& BvHelper.CheckBankAccount (bvWidget.BankAccount)
+						&& BvHelper.CheckLayoutCode (bvWidget.LayoutCode)
+						&& BvHelper.CheckReason (bvWidget.Reason)
+						&& BvHelper.CheckReferenceClientNumber (bvWidget.ReferenceClientNumber)
+						&& BvHelper.CheckClearingConstant (bvWidget.ClearingConstant)
+						&& BvHelper.CheckClearingBank (bvWidget.ClearingBank)
+						&& BvHelper.CheckClearingBankKey (bvWidget.ClearingBankKey)
+						&& BvHelper.CheckCcpNumber (bvWidget.CcpNumber);
 
 			return check;
 		}
 
 		public static string BuildReferenceLine(string iban, string reference)
 		{
-			if (!Bvr303Helper.CheckReferenceLine (iban, reference))
+			if (!BvHelper.CheckReferenceLine (iban, reference))
 			{
 				string message = String.Format ("One of the provided argument is not valid. Iban: {0}. Reference: {1}.", iban, reference);
 				throw new ArgumentException (message);
 			}
 
 			string line = String.Format ("{0}{1}{2}", reference, "0000", Regex.Replace (iban, @"\s", "").Substring (9, 12));
-			return String.Format ("{0}{1}+", line, Bvr303Helper.Compute (line));
+			return String.Format ("{0}{1}+", line, BvHelper.Compute (line));
 		}
 
 		public static string BuildClearingLine(string constant, string clearing, string key)
 		{
-			if (!Bvr303Helper.CheckClearingLine (constant, clearing, key))
+			if (!BvHelper.CheckClearingLine (constant, clearing, key))
 			{
 				string message = String.Format ("One of the provided argument is not valid. Constant: {0}. Clearing: {1}. Key: {2}.", constant, clearing, key);
 				throw new ArgumentException (message);
 			}
 
 			string line = String.Format ("{0}{1}{2}", constant, clearing, key);
-			return String.Format ("{0}{1}>", line, Bvr303Helper.Compute (line));
+			return String.Format ("{0}{1}>", line, BvHelper.Compute (line));
 		}
 
 		public static string BuildCcpNumberLine(string ccp)
 		{
-			if (!Bvr303Helper.CheckCcpNumber (ccp))
+			if (!BvHelper.CheckCcpNumber (ccp))
 			{
 				throw new ArgumentException (String.Format ("The provided value is not valid: {0}", ccp));
 			}

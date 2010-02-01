@@ -11,7 +11,7 @@ using System.Reflection;
 namespace Epsitec.App.BanquePiguet
 {
 
-	class Tools
+	static class Tools
 	{
 
 		public static Stream GetResourceStream(string fileName)
@@ -55,15 +55,15 @@ namespace Epsitec.App.BanquePiguet
 
 		public static void LogMessage(string message)
 		{
-			Tools.Log(message, Tools.logFile);
+			Tools.Log (message, Tools.logFile);
 		}
 
 		public static void LogError(string message)
 		{
-			Tools.Log(message, Tools.errorFile);
+			Tools.Log (message, Tools.errorFile);
 		}
 
-		protected static void Log(string message, string file)
+		private static void Log(string message, string file)
 		{
 			DirectoryInfo logDirectory = Directory.GetParent(file);
 
@@ -83,13 +83,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
-		protected static Assembly assembly = Assembly.GetExecutingAssembly ();
+		private static Assembly assembly = Assembly.GetExecutingAssembly ();
 
-		protected static string resourcesLocation = "Epsitec.App.BanquePiguet.Resources";
+		private static string resourcesLocation = "Epsitec.App.BanquePiguet.Resources";
 
-		protected static string logFile = String.Format (@"{0}\Logs\logs.txt", Globals.Directories.UserAppData);
+		private static string logFile = String.Format (@"{0}\Logs\logs.txt", Globals.Directories.UserAppData);
 
-		protected static string errorFile = String.Format (@"{0}\Logs\errors.txt", Globals.Directories.UserAppData);
+		private static string errorFile = String.Format (@"{0}\Logs\errors.txt", Globals.Directories.UserAppData);
 
 	}
 
