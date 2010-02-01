@@ -4339,6 +4339,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.TextChanged (this);
 			}
+
 			if (this.Validator != null)
 			{
 				this.Validator.MakeDirty (true);
@@ -4414,9 +4415,16 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnValidatorChanged()
 		{
-			if (this.ValidatorChanged != null)
+			var handler = this.ValidatorChanged;
+
+			if (handler != null)
 			{
 				this.ValidatorChanged (this);
+			}
+			
+			if (this.Validator != null)
+			{
+				this.Validator.MakeDirty (true);
 			}
 		}
 		

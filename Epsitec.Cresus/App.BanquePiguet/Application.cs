@@ -330,6 +330,7 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void SetupValidators()
 		{
+#if false
 			List<IValidator> validators = new List<IValidator> ();
 
 			validators.Add(new PredicateValidator (
@@ -348,6 +349,19 @@ namespace Epsitec.App.BanquePiguet
 			));
 
 			validators.ForEach (validator => validator.Validate());
+#else
+			new PredicateValidator (
+				this.BenefeciaryIbanTextField,
+				() => Bvr303Helper.CheckBeneficiaryIban (this.BenefeciaryIbanTextField.Text));
+			
+			new PredicateValidator (
+				this.BeneficiaryAddressTextField,
+				() => Bvr303Helper.CheckBeneficiaryAddress (this.BeneficiaryAddressTextField.Text));
+
+			new PredicateValidator (
+				this.ReasonTextField,
+				() => Bvr303Helper.CheckReason (this.ReasonTextField.Text));
+#endif
 		}
 
 		protected void SetupPrintersManager()
