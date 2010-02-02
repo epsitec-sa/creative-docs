@@ -289,6 +289,15 @@ namespace Epsitec.App.BanquePiguet
 
 		public void Print(IPaintPort paintPort, Rectangle bounds)
 		{
+
+			// Prints the outline of the bv. This is to remove at the end of tests.
+			using (Path path = Path.FromRectangle (bounds))
+			{
+				paintPort.Color = Color.FromRgb (0, 0, 0);
+				paintPort.LineWidth = 0.01;
+				paintPort.PaintOutline (path);
+			}
+
 			this.PaintBvFields (paintPort, bounds);
 		}
 
@@ -298,6 +307,7 @@ namespace Epsitec.App.BanquePiguet
 
 			this.PaintBackgroundImage (graphics, bounds);
 			this.PaintBvFields (graphics, bounds);
+
 		}
 
 		protected void PaintBackgroundImage(IPaintPort port, Rectangle bounds)

@@ -11,13 +11,10 @@ namespace Epsitec.App.BanquePiguet
 	static class Program
 	{
 
-		//Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
-		//Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-		//AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			Program.SetupExceptionHandlers();
 			UI.Initialize ();
 			
 			using (Application application = new Application(args.Contains ("-admin")))
@@ -28,6 +25,14 @@ namespace Epsitec.App.BanquePiguet
 
 			UI.ShutDown ();
 		}
+
+		static void SetupExceptionHandlers()
+		{
+			System.AppDomain.CurrentDomain.UnhandledException += (sender, e) => Tools.Error (e.ExceptionObject as System.Exception);
+			System.Windows.Forms.Application.ThreadException += (sender, e) => Tools.Error (e.Exception);
+			System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.CatchException);
+		}
+
 
 	}
 

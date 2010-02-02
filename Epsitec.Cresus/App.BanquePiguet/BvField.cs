@@ -88,12 +88,12 @@ namespace Epsitec.App.BanquePiguet
 
 		protected double ComputeAbsoluteXPosition(Rectangle bounds)
 		{
-			return this.XRelativePosition * bounds.Width;
+			return this.XRelativePosition * bounds.Width + bounds.X;
 		}
 
 		protected double ComputeAbsoluteYPosition(Rectangle bounds)
 		{
-			return this.YRelativePosition * bounds.Height;
+			return this.YRelativePosition * bounds.Height + bounds.Y;
 		}
 
 		protected double ComputeTextAbsoluteHeight(Rectangle bounds)

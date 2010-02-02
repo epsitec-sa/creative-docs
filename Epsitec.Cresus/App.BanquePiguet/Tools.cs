@@ -33,28 +33,32 @@ namespace Epsitec.App.BanquePiguet
 
 		public static void Error(System.Exception exception)
 		{
-			string error = "========= New entry =========";
-
-			for (System.Exception e = exception; e != null; e = e.InnerException)
-			{
-				error = string.Format ("{0}\n\nType: {1}\nMessage: {2}\nSource: {3}\nStack trace: {4}", 
-					error,
-					e.GetType(),
-					e.Message,
-					e.Source,
-					e.StackTrace
-				);
-				
-			}
-
-			Tools.LogError (error);
-
+			Tools.LogException (exception);
 			throw exception;
 		}
 
 		public static void LogMessage(string message)
 		{
 			Tools.Log (message, Tools.logFile);
+		}
+
+		public static void LogException(System.Exception exception)
+		{
+			string error = "========= New entry =========";
+
+			for (System.Exception e = exception; e != null; e = e.InnerException)
+			{
+				error = string.Format ("{0}\n\nType: {1}\nMessage: {2}\nSource: {3}\nStack trace: {4}",
+					error,
+					e.GetType (),
+					e.Message,
+					e.Source,
+					e.StackTrace
+				);
+
+			}
+
+			Tools.LogError (error);
 		}
 
 		public static void LogError(string message)

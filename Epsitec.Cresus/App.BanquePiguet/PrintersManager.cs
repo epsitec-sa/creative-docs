@@ -1,10 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Common;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
@@ -82,6 +80,7 @@ namespace Epsitec.App.BanquePiguet
 		protected void SetupWindow()
 		{
 			this.Text = "Configuration des imprimantes";
+			this.MakeFixedSizeWindow ();
 		}
 
 		protected IEnumerable<AbstractTextField> TextFieldCells
@@ -211,8 +210,8 @@ namespace Epsitec.App.BanquePiguet
 				//new PredicateValidator (nameTextField, () => { Console.WriteLine(printer.Name + " NAME: " + (FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0;});//.Validate ();
 				//new PredicateValidator (trayTextField, () => { Console.WriteLine(printer.Name + " TRAY: " + (FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0;});//.Validate ();
 
-				new PredicateValidator (nameTextField, () => { System.Console.WriteLine(">" + printer.Name + "< NAME: " + (false)); return false;}).Validate ();
-				new PredicateValidator (trayTextField, () => { System.Console.WriteLine(">" + printer.Name + "< TRAY: " + (false)); return false;}).Validate ();
+				//new PredicateValidator (nameTextField, () => { System.Console.WriteLine(">" + printer.Name + "< NAME: " + (false)); return false;}).Validate ();
+				//new PredicateValidator (trayTextField, () => { System.Console.WriteLine(">" + printer.Name + "< TRAY: " + (false)); return false;}).Validate ();
 
 				System.Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR END");
 
@@ -222,11 +221,11 @@ namespace Epsitec.App.BanquePiguet
 				this.PrintersCellTable[4, i].Insert (yOffsetTextField);
 			}
 
-			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterValidity ();
-			this.CheckRemovePrinterValidity ();
+			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterEnabled ();
+			this.CheckRemovePrinterEnabled ();
 
-			this.TextFieldCells.ToList ().ForEach (c => c.TextChanged += (sender) => this.CheckSaveValidity ());
-			this.CheckSaveValidity ();
+			this.TextFieldCells.ToList ().ForEach (c => c.TextChanged += (sender) => this.CheckSaveEnabled ());
+			this.CheckSaveEnabled ();
 		}
 
 		protected void PopulateNameTextField(Printer printer, TextFieldCombo nameTextField)
@@ -317,12 +316,12 @@ namespace Epsitec.App.BanquePiguet
 			this.WindowClosed += (sender) => this.Cancel();
 		}
 
-		protected void CheckSaveValidity()
+		protected void CheckSaveEnabled()
 		{
 			this.SaveButton.Enable = this.TextFieldCells.All (c => c.IsValid);
 		}
 
-		protected void CheckRemovePrinterValidity()
+		protected void CheckRemovePrinterEnabled()
 		{
 			this.RemovePrinterButton.Enable  = (this.PrintersCellTable.SelectedRow >= 0);
 		}

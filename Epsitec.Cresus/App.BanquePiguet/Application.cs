@@ -4,11 +4,11 @@
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
-using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -30,7 +30,11 @@ namespace Epsitec.App.BanquePiguet
 			this.CheckPrintButtonEnbled ();
 			this.Window.AdjustWindowSize ();
 
+			//this.BenefeciaryIbanTextField.Text = "CH01 2345 6789 0123 4567 8";
+			//this.BeneficiaryAddressTextField.Text = FormattedText.Escape("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
+			//this.ReasonTextField.Text = FormattedText.Escape("0123456789\n0123456789\n0123456789");
 			//this.DisplayPrintersManager (true);
+			//this.DisplayPrintDialog (true);
 		}
 
 		public override string ShortWindowTitle
@@ -84,6 +88,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		protected PrintersManager PrintersManager
+		{
+			get;
+			set;
+		}
+
+		protected PrintDialog PrintDialog
 		{
 			get;
 			set;
@@ -180,10 +190,10 @@ namespace Epsitec.App.BanquePiguet
 
 			this.PrintButton = new Button ()
 			{
-				CommandObject = ApplicationCommands.Print,
 				Dock = DockStyle.StackFill,
 				Margins = new Margins (10, 10, 0, 10),
 				Parent = buttonsFrameBox,
+				Text = "Imprimer",
 				TabIndex = 1,
 			};
 
@@ -312,11 +322,10 @@ namespace Epsitec.App.BanquePiguet
 
 			if (this.AdminMode)
 			{
-				this.OptionsButton.Clicked += (sender, e) =>
-				{
-					this.DisplayPrintersManager (true);
-				};
+				this.OptionsButton.Clicked += (sender, e) => this.DisplayPrintersManager (true);
 			}
+
+			this.PrintButton.Clicked += (sender, e) => this.DisplayPrintDialog (true);
 		}
 
 		protected void SetupValidators()
@@ -367,67 +376,64 @@ namespace Epsitec.App.BanquePiguet
 						&& this.CheckBeneficiaryAddress ()
 						&& this.CheckReason ();
 
-			this.SetEnable (ApplicationCommands.Print, check);
+			this.PrintButton.Enable = check;
 		}
 
 		public void DisplayPrintersManager(bool display)
 		{
 			if (display)
 			{
-				if (this.PrintersManager == null)
-				{
-					this.PrintersManager = new PrintersManager (this);
-
-				}
-
+				this.PrintersManager = new PrintersManager (this);
 				this.PrintersManager.Show ();
 				this.Window.IsFrozen = true;
 			}
 			else
 			{
-				if (this.PrintersManager != null)
-				{
-					this.PrintersManager.Dispose ();
-					this.PrintersManager = null;
-				}
+				this.PrintersManager.Dispose ();
+				this.PrintersManager = null;
 				this.Window.IsFrozen = false;
 			}
 		}
 
-
-		[Command (ApplicationCommands.Id.Print)]
-		protected void ExecuteCommandPrint()
+		public void DisplayPrintDialog(bool display)
 		{
-
-			PrintDialog dialog = new PrintDialog
+			if (display)
 			{
-				Owner = this.Window,
-				AllowFromPageToPage = false,
-				AllowSelectedPages = false,
-			};
+				List<Printer> printers = new List<Printer>
+				(
+					from printer in Printer.Load ()
+					where PrinterSettings.InstalledPrinters.Contains (printer.Name)
+					select printer
+				);
 
-			dialog.Document.PrinterSettings.FromPage = 1;
-			dialog.Document.PrinterSettings.ToPage = 1;
-			dialog.OpenDialog ();
+				bool checkPrintersList = (printers.Count > 0);
+				bool checkPrintersTrays = printers.All (printer =>
+				{
+					PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
+					return trays.Any (tray => (tray.Name == printer.Tray));  
+				});
 
-			if (dialog.Result == DialogResult.Accept)
-			{
-				PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (0, 0, 21.0, 10.6)), dialog.Document, 25, 25);
-				this.LogPrintCommand (0);
+				if (!checkPrintersList)
+				{
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
+				}
+				else if (!checkPrintersTrays)
+				{
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Le bac d'une imprimante est mal configuré.").OpenDialog ();
+				}
+				else
+				{
+					this.PrintDialog = new PrintDialog (this, this.BvWidget, printers);
+					this.PrintDialog.Show ();
+					this.Window.IsFrozen = true;
+				}
 			}
-		}
-
-		protected void LogPrintCommand(int nbPrints)
-		{
-			string entry = string.Format ("{0}\nNumber of page printed: {1}\nBeneficiary iban: {2}\nBeneficiary address: {3}\nReason: {4}",
-				"========= New entry =========",
-				nbPrints,
-				this.BvWidget.BeneficiaryIban,
-				this.BvWidget.BeneficiaryAddress.Replace ("\n", "\t\t"),
-				this.BvWidget.Reason.Replace ("\n", "\t\t")
-			);
-
-			Tools.LogMessage (entry);
+			else
+			{
+				this.PrintDialog.Dispose ();
+				this.PrintDialog = null;
+				this.Window.IsFrozen = false;
+			}
 		}
 
 	}	

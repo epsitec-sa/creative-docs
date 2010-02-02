@@ -3,31 +3,25 @@
   <printer>
     <name>myPrinter</name>
     <tray>Tray 1</tray>
-    <xOffset>10.5</xOffset>
-    <yOffset>21.2</yOffset>
+    <xOffset>0</xOffset>
+    <yOffset>0</yOffset>
   </printer>
   <printer>
     <name>lolipop</name>
     <tray>Tray 2</tray>
-    <xOffset>453</xOffset>
-    <yOffset>84</yOffset>
+    <xOffset>0</xOffset>
+    <yOffset>0</yOffset>
   </printer>
   <printer>
-    <name>a</name>
-    <tray>Tray 2</tray>
-    <xOffset>453</xOffset>
-    <yOffset>84</yOffset>
+    <name>Brother HL-2170W series</name>
+    <tray>Tray1</tray>
+    <xOffset>0</xOffset>
+    <yOffset>0</yOffset>
   </printer>
   <printer>
-    <name>gfds</name>
-    <tray>Tray 2</tray>
-    <xOffset>453</xOffset>
-    <yOffset>84</yOffset>
-  </printer>
-  <printer>
-    <name>t</name>
-    <tray>Tray 2</tray>
-    <xOffset>453</xOffset>
-    <yOffset>84</yOffset>
+    <name>Microsoft XPS Document Writer</name>
+    <tray>Automatically Select</tray>
+    <xOffset>50</xOffset>
+    <yOffset>25</yOffset>
   </printer>
 </printers>
