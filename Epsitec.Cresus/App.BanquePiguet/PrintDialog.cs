@@ -17,7 +17,7 @@ using System.Text;
 namespace Epsitec.App.BanquePiguet
 {
 
-	class PrintDialog : Window
+/*	class PrintDialog : Window
 	{
 
 		public PrintDialog(Application application)
@@ -32,6 +32,6 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 
-	}
+	}*/
 
 }

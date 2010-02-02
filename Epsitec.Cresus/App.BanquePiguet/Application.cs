@@ -31,7 +31,7 @@ namespace Epsitec.App.BanquePiguet
 			this.CheckPrintButtonEnbled ();
 			this.Window.AdjustWindowSize ();
 
-			this.DisplayPrintersManager (true);
+			//this.DisplayPrintersManager (true);
 		}
 
 		public override string ShortWindowTitle
