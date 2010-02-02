@@ -1584,7 +1584,7 @@ namespace Epsitec.Common.Document
 			"Poster",
 			"A1",
 			"A2",
-			"A3+",
+			"A3+ (329×483)",
 			"A3",
 			"A4",
 			"A5",
@@ -1598,10 +1598,11 @@ namespace Epsitec.Common.Document
 			"C4",
 			"C5",
 			"C6",
-			"RA2",
-			"RA3",
-			"RA4",
+			"RA2 (430×610)",
+			"RA3 (305×430)",
+			"RA4 (215×305)",
 			"DL",
+			"SRA3 (320×450)",
 		};
 
 		protected static Size PaperRankToSize(int rank)
@@ -1638,6 +1639,7 @@ namespace Epsitec.Common.Document
 				case 27:  size = new Size(305.000, 430.000);  break;  // RA3
 				case 28:  size = new Size(215.000, 305.000);  break;  // RA4
 				case 29:  size = new Size(220.000, 110.000);  break;  // DL
+				case 30:  size = new Size(320.000, 450.000);  break;  // SRA3
 			}
 			return size*10.0;
 		}
