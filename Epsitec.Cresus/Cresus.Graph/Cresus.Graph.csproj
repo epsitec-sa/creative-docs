@@ -225,6 +225,7 @@
       <Link>Epsitec.Cresus.snk</Link>
     </None>
     <None Include="app.config" />
+    <EmbeddedResource Include="Resources\calibri.ttf" />
     <EmbeddedResource Include="Images\GraphType.PieChart.icon" />
     <EmbeddedResource Include="Images\TakeSnapshot.icon" />
     <EmbeddedResource Include="Images\Cube.Table1.icon" />

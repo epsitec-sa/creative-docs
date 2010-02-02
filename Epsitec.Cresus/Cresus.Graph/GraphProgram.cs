@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Graph
 		static void ExecuteCoreProgram(Splash.SplashScreen splash)
 		{
 			GraphProgram.CreateSemaphore ();
+			
+			Epsitec.Common.Debug.GeneralExceptionCatcher.Setup ();
 
 			UI.Initialize ();
 

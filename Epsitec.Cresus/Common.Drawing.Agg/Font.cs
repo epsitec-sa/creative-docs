@@ -667,6 +667,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		public static void RegisterResourceFont(System.Reflection.Assembly assembly, string resourceName)
+		{
+			using (var stream = assembly.GetManifestResourceStream (resourceName))
+			{
+				Font.RegisterDynamicFont (stream);
+			}
+		}
 
 		public static void RegisterDynamicFont(System.IO.Stream stream)
 		{

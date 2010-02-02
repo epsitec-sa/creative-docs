@@ -94,6 +94,10 @@
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <ProjectReference Include="..\Common.Debug\Common.Debug.csproj">
+      <Project>{AF58270B-4B5C-49F7-81D8-723CFF122F2C}</Project>
+      <Name>Common.Debug</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common.Drawing.Agg\Common.Drawing.Agg.csproj">
       <Name>Common.Drawing.Agg</Name>
       <Project>{7D73AD35-D078-4B4C-AF30-434C6A377058}</Project>

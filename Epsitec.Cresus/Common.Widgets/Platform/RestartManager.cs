@@ -40,17 +40,25 @@ namespace Epsitec.Common.Widgets.Platform
 
 		private static void SetExceptionMode()
 		{
-			try
+			if (Epsitec.Common.Debug.GeneralExceptionCatcher.IsActive)
 			{
-				if (System.AppDomain.CurrentDomain.GetData ("System.Windows.Forms.Application.UnhandledExceptionMode") == null)
-				{
-					System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
-				}
+				//	Don't set the exception mode since we already have an exception
+				//	handler in place.
 			}
-			catch (System.InvalidOperationException)
+			else
 			{
-				//	Never mind, if we cannot set the exception mode, assume the caller
-				//	did it before creating the first Form instances...
+				try
+				{
+					if (System.AppDomain.CurrentDomain.GetData ("System.Windows.Forms.Application.UnhandledExceptionMode") == null)
+					{
+						System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.ThrowException);
+					}
+				}
+				catch (System.InvalidOperationException)
+				{
+					//	Never mind, if we cannot set the exception mode, assume the caller
+					//	did it before creating the first Form instances...
+				}
 			}
 		}
 
