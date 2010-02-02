@@ -1,7 +1,6 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -50,19 +49,19 @@ namespace Epsitec.App.BanquePiguet
 		{
 			if (!Regex.IsMatch (number, @"^\d*$"))
 			{
-				throw new ArgumentException ("The provided string contains non numeric characters");
+				throw new System.ArgumentException ("The provided string contains non numeric characters");
 			}
 
 			if (number.Length == 0)
 			{
-				throw new ArgumentException ("The provided string is empty");
+				throw new System.ArgumentException ("The provided string is empty");
 			}
 
 			int report = 0;
 
 			while (number.Length > 0)
 			{
-				int digit = Int32.Parse (number.Substring (0, 1), CultureInfo.InvariantCulture);
+				int digit = int.Parse (number.Substring (0, 1), CultureInfo.InvariantCulture);
 				report = BvHelper.table[report, digit];
 				number = number.Substring (1);
 			}
@@ -166,34 +165,34 @@ namespace Epsitec.App.BanquePiguet
 		{
 			if (!BvHelper.CheckReferenceLine (iban, reference))
 			{
-				string message = String.Format ("One of the provided argument is not valid. Iban: {0}. Reference: {1}.", iban, reference);
-				throw new ArgumentException (message);
+				string message = string.Format ("One of the provided argument is not valid. Iban: {0}. Reference: {1}.", iban, reference);
+				throw new System.ArgumentException (message);
 			}
 
-			string line = String.Format ("{0}{1}{2}", reference, "0000", Regex.Replace (iban, @"\s", "").Substring (9, 12));
-			return String.Format ("{0}{1}+", line, BvHelper.Compute (line));
+			string line = string.Format ("{0}{1}{2}", reference, "0000", Regex.Replace (iban, @"\s", "").Substring (9, 12));
+			return string.Format ("{0}{1}+", line, BvHelper.Compute (line));
 		}
 
 		public static string BuildClearingLine(string constant, string clearing, string key)
 		{
 			if (!BvHelper.CheckClearingLine (constant, clearing, key))
 			{
-				string message = String.Format ("One of the provided argument is not valid. Constant: {0}. Clearing: {1}. Key: {2}.", constant, clearing, key);
-				throw new ArgumentException (message);
+				string message = string.Format ("One of the provided argument is not valid. Constant: {0}. Clearing: {1}. Key: {2}.", constant, clearing, key);
+				throw new System.ArgumentException (message);
 			}
 
-			string line = String.Format ("{0}{1}{2}", constant, clearing, key);
-			return String.Format ("{0}{1}>", line, BvHelper.Compute (line));
+			string line = string.Format ("{0}{1}{2}", constant, clearing, key);
+			return string.Format ("{0}{1}>", line, BvHelper.Compute (line));
 		}
 
 		public static string BuildCcpNumberLine(string ccp)
 		{
 			if (!BvHelper.CheckCcpNumber (ccp))
 			{
-				throw new ArgumentException (String.Format ("The provided value is not valid: {0}", ccp));
+				throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", ccp));
 			}
 
-			return String.Format ("{0}>", ccp);
+			return string.Format ("{0}>", ccp);
 		}
 
 		public static string BuildNormalizedIban(string iban)

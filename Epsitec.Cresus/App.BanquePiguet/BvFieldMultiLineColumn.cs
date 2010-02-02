@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Drawing;
 
-using System;
 using System.Globalization;
 using System.Xml.Linq;
 
@@ -15,7 +14,7 @@ namespace Epsitec.App.BanquePiguet
 
 		public BvFieldMultiLineColumn(XElement xBvField, Size bvSize) : base (xBvField, bvSize)
 		{
-			this.HorizontalSpace = Double.Parse (xBvField.Element ("horizontalSpace").Value, CultureInfo.InvariantCulture) / bvSize.Width;
+			this.HorizontalSpace = double.Parse (xBvField.Element ("horizontalSpace").Value, CultureInfo.InvariantCulture) / bvSize.Width;
 		}
 
 		public double HorizontalSpace
@@ -43,7 +42,7 @@ namespace Epsitec.App.BanquePiguet
 				for (int j = 0; j < lign.Length; j++)
 				{
 					double xPosition = xPositionBase + this.ComputeHorizontalOffset (j, bounds);
-					string text = String.Format ("{0}", lign[j]);
+					string text = string.Format ("{0}", lign[j]);
 
 					port.PaintText (xPosition, yPosition, text, this.TextFont, textHeight);
 				}

@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -16,12 +15,12 @@ namespace Epsitec.App.BanquePiguet
 
 		public static Stream GetResourceStream(string fileName)
 		{
-			string path = String.Format("{0}.{1}", Tools.resourcesLocation, fileName);
+			string path = string.Format("{0}.{1}", Tools.resourcesLocation, fileName);
 
 			if (!assembly.GetManifestResourceNames ().Contains (path))
 			{
-				string message = String.Format ("The requested resource does not exist: {0}", fileName);
-				throw new ArgumentException (message);
+				string message = string.Format ("The requested resource does not exist: {0}", fileName);
+				throw new System.ArgumentException (message);
 			}
 
 			return Tools.assembly.GetManifestResourceStream (path);
@@ -29,21 +28,21 @@ namespace Epsitec.App.BanquePiguet
 
 		public static void Error(string message)
 		{
-			Tools.Error (new Exception (message));
+			Tools.Error (new System.Exception (message));
 		}
 
-		public static void Error(Exception exception)
+		public static void Error(System.Exception exception)
 		{
 			string error = "========= New entry =========";
 
-			for (Exception e = exception; e != null; e = e.InnerException)
+			for (System.Exception e = exception; e != null; e = e.InnerException)
 			{
-				error = String.Format ("{0}\n\n{1}\n{2}\n{3}\n{4}", 
+				error = string.Format ("{0}\n\nType: {1}\nMessage: {2}\nSource: {3}\nStack trace: {4}", 
 					error,
-					String.Format ("Type: {0}", e.GetType()),
-					String.Format ("Message: {0}", e.Message),
-					String.Format ("Source: {0}", e.Source),
-					String.Format ("Stack trace:\n{0}", e.StackTrace)
+					e.GetType(),
+					e.Message,
+					e.Source,
+					e.StackTrace
 				);
 				
 			}
@@ -74,9 +73,9 @@ namespace Epsitec.App.BanquePiguet
 
 			using (StreamWriter streamWriter = File.AppendText (file))
 			{
-				Array.ForEach (
+				System.Array.ForEach (
 					message.Split ('\n'),
-					line => streamWriter.WriteLine (String.Format ("[{0}]\t{1}", DateTime.Now, line))
+					line => streamWriter.WriteLine (string.Format ("[{0}]\t{1}", System.DateTime.Now, line))
 				);
 
 				streamWriter.WriteLine ();
@@ -87,9 +86,9 @@ namespace Epsitec.App.BanquePiguet
 
 		private static string resourcesLocation = "Epsitec.App.BanquePiguet.Resources";
 
-		private static string logFile = String.Format (@"{0}\Logs\logs.txt", Globals.Directories.UserAppData);
+		private static string logFile = string.Format (@"{0}\Logs\logs.txt", Globals.Directories.UserAppData);
 
-		private static string errorFile = String.Format (@"{0}\Logs\errors.txt", Globals.Directories.UserAppData);
+		private static string errorFile = string.Format (@"{0}\Logs\errors.txt", Globals.Directories.UserAppData);
 
 	}
 

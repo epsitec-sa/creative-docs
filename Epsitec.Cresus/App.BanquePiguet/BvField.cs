@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Drawing;
 
-using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -26,9 +25,9 @@ namespace Epsitec.App.BanquePiguet
 		public BvField(XElement xBvField, Size bvSize)
 		{
 			this.Text = "";
-			this.TextRelativeHeight = Double.Parse (xBvField.Element ("textHeight").Value, CultureInfo.InvariantCulture) / bvSize.Height;
-			this.XRelativePosition = Double.Parse (xBvField.Element ("xPosition").Value, CultureInfo.InvariantCulture) / bvSize.Width;
-			this.YRelativePosition = Double.Parse (xBvField.Element ("yPosition").Value, CultureInfo.InvariantCulture) / bvSize.Height;
+			this.TextRelativeHeight = double.Parse (xBvField.Element ("textHeight").Value, CultureInfo.InvariantCulture) / bvSize.Height;
+			this.XRelativePosition = double.Parse (xBvField.Element ("xPosition").Value, CultureInfo.InvariantCulture) / bvSize.Width;
+			this.YRelativePosition = double.Parse (xBvField.Element ("yPosition").Value, CultureInfo.InvariantCulture) / bvSize.Height;
 
 			switch (xBvField.Element ("font").Value)
 			{
@@ -120,7 +119,7 @@ namespace Epsitec.App.BanquePiguet
 					bvField = new BvFieldMultiLineColumn (xBvField, bvSize);
 					break;
 				default:
-					throw new Exception (String.Format ("Invalid BvField type: {0}.", type));
+					throw new System.Exception (string.Format ("Invalid BvField type: {0}.", type));
 			}
 
 			return bvField;

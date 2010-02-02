@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Globalization;
@@ -102,15 +101,15 @@ namespace Epsitec.App.BanquePiguet
 				{
 					Name = xPrinter.Element ("name").Value,
 					Tray = xPrinter.Element ("tray").Value,
-					XOffset = Double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
-					YOffset = Double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
+					XOffset = double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
+					YOffset = double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
 				}
 			);
 
 			return printers;
 		}
 
-		protected static string configurationFile = String.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
+		protected static string configurationFile = string.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
 
 	}
 

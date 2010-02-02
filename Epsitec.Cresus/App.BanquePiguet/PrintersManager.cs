@@ -9,7 +9,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -32,9 +31,9 @@ namespace Epsitec.App.BanquePiguet
 				this.SetupEvents ();
 				this.AdjustWindowSize ();
 			}
-			catch (Exception e)
+			catch (System.Exception e)
 			{
-				Tools.Error(new Exception("An error occured while initializing PrintersManager.", e));
+				Tools.Error (new System.Exception ("An error occured while initializing PrintersManager.", e));
 			}
 		}
 
@@ -160,8 +159,8 @@ namespace Epsitec.App.BanquePiguet
 				TextFieldUpDown xOffsetTextField = new TextFieldUpDown ()
 				{
 					Dock = DockStyle.Fill,
-					MaxValue = Decimal.MaxValue,
-					MinValue = Decimal.MinValue,
+					MaxValue = decimal.MaxValue,
+					MinValue = decimal.MinValue,
 					Resolution = 0.1M,
 					Step = 0.1M,
 					Text = printer.XOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
@@ -170,8 +169,8 @@ namespace Epsitec.App.BanquePiguet
 				TextFieldUpDown yOffsetTextField = new TextFieldUpDown ()
 				{
 					Dock = DockStyle.Fill,
-					MaxValue = Decimal.MaxValue,
-					MinValue = Decimal.MinValue,
+					MaxValue = decimal.MaxValue,
+					MinValue = decimal.MinValue,
 					Resolution = 0.1M,
 					Step = 0.1M,
 					Text = printer.YOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
@@ -190,7 +189,7 @@ namespace Epsitec.App.BanquePiguet
 					string text = FormattedText.Unescape (xOffsetTextField.Text);
 					double result;
 
-					if (Double.TryParse (text, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
+					if (double.TryParse (text, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
 					{
 						printer.XOffset = result;
 					}
@@ -201,21 +200,21 @@ namespace Epsitec.App.BanquePiguet
 					string text = FormattedText.Unescape (yOffsetTextField.Text);
 					double result;
 
-					if (Double.TryParse (text, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
+					if (double.TryParse (text, NumberStyles.Number, CultureInfo.InvariantCulture, out result))
 					{
 						printer.YOffset = result;
 					}
 				};
-				
-				Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR START");
+
+				System.Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR START");
 
 				//new PredicateValidator (nameTextField, () => { Console.WriteLine(printer.Name + " NAME: " + (FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0;});//.Validate ();
 				//new PredicateValidator (trayTextField, () => { Console.WriteLine(printer.Name + " TRAY: " + (FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0;});//.Validate ();
 
-				new PredicateValidator (nameTextField, () => { Console.WriteLine(">" + printer.Name + "< NAME: " + (false)); return false;}).Validate ();
-				new PredicateValidator (trayTextField, () => { Console.WriteLine(">" + printer.Name + "< TRAY: " + (false)); return false;}).Validate ();
+				new PredicateValidator (nameTextField, () => { System.Console.WriteLine(">" + printer.Name + "< NAME: " + (false)); return false;}).Validate ();
+				new PredicateValidator (trayTextField, () => { System.Console.WriteLine(">" + printer.Name + "< TRAY: " + (false)); return false;}).Validate ();
 
-				Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR END");
+				System.Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR END");
 
 				this.PrintersCellTable[1, i].Insert(nameTextField);
 				this.PrintersCellTable[2, i].Insert (trayTextField);
@@ -255,7 +254,7 @@ namespace Epsitec.App.BanquePiguet
 			
 			if (settings != null)
 			{
-				Array.ForEach (settings.PaperSources, paperSource => trayNames.Add (paperSource.Name));
+				System.Array.ForEach (settings.PaperSources, paperSource => trayNames.Add (paperSource.Name));
 			}
 
 			if (!trayNames.Contains (printer.Tray) && printer.Tray != "")
@@ -334,9 +333,9 @@ namespace Epsitec.App.BanquePiguet
 			{
 				Printer.Save (this.Printers);
 			}
-			catch (Exception e)
+			catch (System.Exception e)
 			{
-				Tools.Error (new Exception ("An error occured while saving the printers.", e));
+				Tools.Error (new System.Exception ("An error occured while saving the printers.", e));
 			}
 
 			this.Exit ();

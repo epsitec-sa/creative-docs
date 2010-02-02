@@ -9,7 +9,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
-using System;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -230,7 +229,7 @@ namespace Epsitec.App.BanquePiguet
 					if (text.Contains ("\\n"))
 					{
 						string[] lines = text.Replace("\\n", "\n").Split ('\n');
-						text = lines.Aggregate ((a, b) => String.Format ("{0}\n{1}", a, b));
+						text = lines.Aggregate ((a, b) => string.Format ("{0}\n{1}", a, b));
 					}
 
 					switch (name)
@@ -260,7 +259,7 @@ namespace Epsitec.App.BanquePiguet
 							this.BvWidget.CcpNumber = text;
 							break;
 						default:
-							throw new Exception (String.Format ("Unknown value: {0}", name));
+							throw new System.Exception (string.Format ("Unknown value: {0}", name));
 					}
 
 					nbValues++;
@@ -268,14 +267,14 @@ namespace Epsitec.App.BanquePiguet
 
 				if (nbValues < 8)
 				{
-					throw new Exception ("Some bv values are missing.");
+					throw new System.Exception ("Some bv values are missing.");
 				}
 
 			
 			}
-			catch (Exception e)
+			catch (System.Exception e)
 			{
-				Tools.Error(new Exception ("An error occured while loading the bv values.", e));
+				Tools.Error (new System.Exception ("An error occured while loading the bv values.", e));
 			}
 		}
 
@@ -420,12 +419,12 @@ namespace Epsitec.App.BanquePiguet
 
 		protected void LogPrintCommand(int nbPrints)
 		{
-			string entry = String.Format ("{0}\n{1}\n{2}\n{3}\n{4}",
+			string entry = string.Format ("{0}\nNumber of page printed: {1}\nBeneficiary iban: {2}\nBeneficiary address: {3}\nReason: {4}",
 				"========= New entry =========",
-				String.Format ("Number of page printed: {0}", nbPrints),
-				String.Format ("Beneficiary iban: {0}", this.BvWidget.BeneficiaryIban),
-				String.Format ("Beneficiary address: {0}", this.BvWidget.BeneficiaryAddress.Replace ("\n", "\t\t")),
-				String.Format ("Reason: {0}", this.BvWidget.Reason.Replace ("\n", "\t\t"))
+				nbPrints,
+				this.BvWidget.BeneficiaryIban,
+				this.BvWidget.BeneficiaryAddress.Replace ("\n", "\t\t"),
+				this.BvWidget.Reason.Replace ("\n", "\t\t")
 			);
 
 			Tools.LogMessage (entry);

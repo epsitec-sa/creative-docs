@@ -4,7 +4,6 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -45,9 +44,9 @@ namespace Epsitec.App.BanquePiguet
 				this.SetupBackgroundImage ();
 				this.SetupBvFields ();
 			}
-			catch (Exception e)
+			catch (System.Exception e)
 			{
-				Tools.Error(new Exception ("An error occured while creating the BvWidget.", e));
+				Tools.Error (new System.Exception ("An error occured while creating the BvWidget.", e));
 			}
 		}
         
@@ -62,7 +61,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckBankAddress (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvFields[BvFieldId.BankAddress1].Text = value;
@@ -85,7 +84,7 @@ namespace Epsitec.App.BanquePiguet
 
 				if (!BvHelper.CheckBeneficiaryIban (iban))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvFields[BvFieldId.BeneficiaryIban1].Text = iban;
@@ -106,7 +105,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckBeneficiaryAddress (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvFields[BvFieldId.BeneficiaryAddress1].Text = value;
@@ -126,7 +125,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckBankAccount (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvFields[BvFieldId.BankAccount1].Text = value;
@@ -146,7 +145,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckLayoutCode (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvFields[BvFieldId.LayoutCode].Text = value;
@@ -165,7 +164,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckReason (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.BvFields[BvFieldId.Reason].Text = value;
@@ -184,7 +183,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckReferenceClientNumber (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.referenceClientNumber = value;
@@ -203,7 +202,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckClearingConstant (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.clearingConstant = value;
@@ -222,7 +221,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckClearingBank (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.clearingBank = value;
@@ -241,7 +240,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckClearingBankKey (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.clearingBankKey = value;
@@ -261,7 +260,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (!BvHelper.CheckBeneficiaryAddress (value))
 				{
-					throw new ArgumentException (String.Format ("The provided value is not valid: {0}", value));
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
 				this.ccpNumber = value;
@@ -335,8 +334,8 @@ namespace Epsitec.App.BanquePiguet
 
 			XElement xSize = xBvDefinition.Element ("size");
 			this.BvSize = new Size (
-				Double.Parse (xSize.Element ("width").Value, CultureInfo.InvariantCulture),
-				Double.Parse (xSize.Element ("height").Value, CultureInfo.InvariantCulture)
+				double.Parse (xSize.Element ("width").Value, CultureInfo.InvariantCulture),
+				double.Parse (xSize.Element ("height").Value, CultureInfo.InvariantCulture)
 			);
 
 			IEnumerable<XElement> xBvfields = xBvDefinition.Element ("fields").Elements ("field");
@@ -344,14 +343,14 @@ namespace Epsitec.App.BanquePiguet
 			foreach (XElement xBvField in xBvfields)
 			{
 				string name = (string) xBvField.Element ("name");
-				BvFieldId id = (BvFieldId) Enum.Parse (typeof (BvFieldId), name);
+				BvFieldId id = (BvFieldId) System.Enum.Parse (typeof (BvFieldId), name);
 				this.BvFields[id] = BvField.GetInstance (xBvField, this.BvSize);
 			}
-			
 
-			if (this.BvFields.Count < Enum.GetValues (typeof (BvFieldId)).Length)
+
+			if (this.BvFields.Count < System.Enum.GetValues (typeof (BvFieldId)).Length)
 			{
-				throw new Exception ("Some BvFields are missing.");
+				throw new System.Exception ("Some BvFields are missing.");
 			}
 		}
 

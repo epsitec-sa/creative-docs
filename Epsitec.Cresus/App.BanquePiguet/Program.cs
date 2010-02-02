@@ -3,7 +3,6 @@
 
 using Epsitec.Cresus.Core;
 
-using System;
 using System.Linq;
 
 namespace Epsitec.App.BanquePiguet
