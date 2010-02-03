@@ -12,13 +12,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using System;
 
 namespace Epsitec.App.BanquePiguet
 {
 
+	/// <summary>
+	/// The Application class displays a form which lets the user type some values of a bv, print them and
+	/// configure the printers to use.
+	/// </summary>
 	class Application : Epsitec.Common.Widgets.Application
 	{
 
+		/// <summary>
+		/// Initializes a new instance of the Application class.
+		/// </summary>
+		/// <param name="adminMode">Tell if the application is launched in admin mode.</param>
 		public Application(bool adminMode)
 		{
 			this.AdminMode = adminMode;
@@ -30,13 +39,21 @@ namespace Epsitec.App.BanquePiguet
 			this.CheckPrintButtonEnbled ();
 			this.Window.AdjustWindowSize ();
 
-			//this.BenefeciaryIbanTextField.Text = "CH01 2345 6789 0123 4567 8";
-			//this.BeneficiaryAddressTextField.Text = FormattedText.Escape("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
-			//this.ReasonTextField.Text = FormattedText.Escape("0123456789\n0123456789\n0123456789");
+#warning Remove me at the end of the tests.
+			
+			//this.BenefeciaryIbanTextField.Text = FormattedText.Escape ("CH01 1234 5678 9012 3456 7");
+			//this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
+			//this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
+			
 			//this.DisplayPrintersManager (true);
+			
 			//this.DisplayPrintDialog (true);
 		}
 
+		/// <summary>
+		/// Gets the short window title.
+		/// </summary>
+		/// <value>The short window title.</value>
 		public override string ShortWindowTitle
 		{
 			get
@@ -45,60 +62,102 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets a value indicating whether the application is launched in admin mode.
+		/// </summary>
+		/// <value><c>A bool indicating whether the application is launched in admin mode.</value>
 		public bool AdminMode
 		{
 			get;
 			protected set;
 		}
 
+		/// <summary>
+		/// Gets or sets the TextField used for the beneficiary iban.
+		/// </summary>
+		/// <value>The TextField used for the beneficiary iban.</value>
 		protected TextField BenefeciaryIbanTextField
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the TextFieldMulti used for the beneficiary address.
+		/// </summary>
+		/// <value>The TextFieldMulti used for the beneficiary address.</value>
 		protected TextFieldMulti BeneficiaryAddressTextField
 		{
 			get;
 			set;
 		}
 
-		protected TextFieldMulti ReasonTextField
-		{
-			get;
-			set;
-		}
-
+		/// <summary>
+		/// Gets or sets the BvWidget associated with this instance.
+		/// </summary>
+		/// <value>The BvWidget associated with this instance.</value>
 		protected BvWidget BvWidget
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the button used to display PrintDialog.
+		/// </summary>
+		/// <value>The button used to print display PrintDialog.</value>
 		protected Button PrintButton
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the button used to display PrintersManager.
+		/// </summary>
+		/// <value>The button used to display PrintersManager.</value>
 		protected Button OptionsButton
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the TextFieldMulti used for the reason of the transfer.
+		/// </summary>
+		/// <value>The TextFieldMulti used for the reason of the transfer.</value>
+		protected TextFieldMulti ReasonTextField
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the PrintersManager associated with this instance.
+		/// </summary>
+		/// <value>The PrintersManager associated with this instance.</value>
 		protected PrintersManager PrintersManager
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the PrintDialog associated with this instance.
+		/// </summary>
+		/// <value>The PrintDialog associated with this instance.</value>
 		protected PrintDialog PrintDialog
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Sets up the window property of this instance.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
 		protected void SetupWindow()
 		{
 			this.Window = new Window ()
@@ -108,6 +167,12 @@ namespace Epsitec.App.BanquePiguet
 			this.Window.MakeFixedSizeWindow ();
 		}
 
+		/// <summary>
+		/// Sets up the form containing the TextFields and the Buttons.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initializatin of this instance.
+		/// </remarks>
 		protected void SetupForm()
 		{
 
@@ -185,7 +250,7 @@ namespace Epsitec.App.BanquePiguet
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Stacked,
 				Parent = formFrameBox,
-				TabIndex = 10,
+				TabIndex = 4,
 			};
 
 			this.PrintButton = new Button ()
@@ -210,6 +275,13 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Sets up the BvWidget associated with this instance.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
+		/// <exception cref="System.Exception">If the definition of the bv values is not valid</exception>
 		protected void SetupBvWidget()
 		{
 			this.BvWidget = new BvWidget ()
@@ -220,74 +292,79 @@ namespace Epsitec.App.BanquePiguet
 				PreferredSize = new Size (525, 265),
 			};
 
-			try
-			{
-				XElement xBvValues;
+			XElement xBvValues;
 
-				using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream("BvValues.xml")))
-				{
-					xBvValues = XElement.Load (xmlReader);
-				}
+			using (XmlReader xmlReader = XmlReader.Create (Tools.GetResourceStream("BvValues.xml")))
+			{
+				xBvValues = XElement.Load (xmlReader);
+			}
+
+			List<string> values = new List<string> ();
+
+			foreach (XElement value in xBvValues.Elements("value"))
+			{
+				string name = (string) value.Element ("name");
+				string text = (string) value.Element ("text");
 				
-				int nbValues = 0;
-
-				foreach (XElement value in xBvValues.Elements("value"))
+				if (text.Contains ("\\n"))
 				{
-					string name = (string) value.Element ("name");
-					string text = (string) value.Element ("text");
-					
-					if (text.Contains ("\\n"))
-					{
-						string[] lines = text.Replace("\\n", "\n").Split ('\n');
-						text = lines.Aggregate ((a, b) => string.Format ("{0}\n{1}", a, b));
-					}
-
-					switch (name)
-					{
-						case "BankAddress":
-							this.BvWidget.BankAddress = text;
-							break;
-						case "BankAccount":
-							this.BvWidget.BankAccount = text;
-							break;
-						case "LayoutCode":
-							this.BvWidget.LayoutCode = text;
-							break;
-						case "ReferenceClientNumber":
-							this.BvWidget.ReferenceClientNumber = text;
-							break;
-						case "ClearingConstant":
-							this.BvWidget.ClearingConstant = text;
-							break;
-						case "ClearingBank":
-							this.BvWidget.ClearingBank = text;
-							break;
-						case "ClearingBankKey":
-							this.BvWidget.ClearingBankKey = text;
-							break;
-						case "CcpNumber":
-							this.BvWidget.CcpNumber = text;
-							break;
-						default:
-							throw new System.Exception (string.Format ("Unknown value: {0}", name));
-					}
-
-					nbValues++;
+					string[] lines = text.Replace("\\n", "\n").Split ('\n');
+					text = lines.Aggregate ((a, b) => string.Format ("{0}\n{1}", a, b));
 				}
 
-				if (nbValues < 8)
+				switch (name)
 				{
-					throw new System.Exception ("Some bv values are missing.");
+					case "BankAddress":
+						this.BvWidget.BankAddress = text;
+						break;
+					case "BankAccount":
+						this.BvWidget.BankAccount = text;
+						break;
+					case "LayoutCode":
+						this.BvWidget.LayoutCode = text;
+						break;
+					case "ReferenceClientNumber":
+						this.BvWidget.ReferenceClientNumber = text;
+						break;
+					case "ClearingConstant":
+						this.BvWidget.ClearingConstant = text;
+						break;
+					case "ClearingBank":
+						this.BvWidget.ClearingBank = text;
+						break;
+					case "ClearingBankKey":
+						this.BvWidget.ClearingBankKey = text;
+						break;
+					case "CcpNumber":
+						this.BvWidget.CcpNumber = text;
+						break;
+					default:
+						throw new System.Exception (string.Format ("Unknown value: {0}", name));
 				}
 
-			
+				if (values.Contains (name))
+				{
+					throw new System.Exception (String.Format ("A bv value is defined more than once: {0}", name));
+				}
+				else
+				{
+					values.Add (name);
+				}
 			}
-			catch (System.Exception e)
+
+			if (values.Count < 8)
 			{
-				Tools.Error (new System.Exception ("An error occured while loading the bv values.", e));
+				throw new System.Exception ("Some bv values are missing.");
 			}
+
 		}
 
+		/// <summary>
+		/// Sets up the events related to the Buttons or to the TextFields.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
 		protected void SetupEvents()
 		{
 			this.BenefeciaryIbanTextField.TextChanged += (sender) =>
@@ -328,6 +405,12 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintButton.Clicked += (sender, e) => this.DisplayPrintDialog (true);
 		}
 
+		/// <summary>
+		/// Sets up the validators of the TextFields.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
 		protected void SetupValidators()
 		{
 			new PredicateValidator (
@@ -345,11 +428,10 @@ namespace Epsitec.App.BanquePiguet
 				() => this.CheckReason ());
 		}
 
-		protected void SetupPrintersManager()
-		{
-			this.PrintersManager = new PrintersManager (this);
-		}
-
+		/// <summary>
+		/// Checks the text of BenefeciaryIbanTextField is valid.
+		/// </summary>
+		/// <returns>A bool indicating if the text of BenefeciaryIbanTextField is valid or not.</returns>
 		protected bool CheckBeneficiaryIban()
 		{
 			string text = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
@@ -357,28 +439,44 @@ namespace Epsitec.App.BanquePiguet
 			return BvHelper.CheckBeneficiaryIban (iban);
 		}
 
+		/// <summary>
+		/// Checks the text of BeneficiaryAddressTextField is valid.
+		/// </summary>
+		/// <returns>A bool indicating if the text of BeneficiaryAddressTextField is valid or not.</returns>
 		protected bool CheckBeneficiaryAddress()
 		{
 			string address = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
 			return BvHelper.CheckBeneficiaryAddress (address);
 		}
 
+		/// <summary>
+		/// Checks the text of ReasonTextField is valid.
+		/// </summary>
+		/// <returns>A bool indicating if the text of ReasonTextField is valid or not.</returns>
 		protected bool CheckReason()
 		{
 			string reason = FormattedText.Unescape (this.ReasonTextField.Text);
 			return BvHelper.CheckReason (reason);
 		}
 
+		/// <summary>
+		/// Enables or disables the PrintButton based on the validity of the TextFields.
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenever the text of one of the TextField changes.
+		/// </remarks>
 		protected void CheckPrintButtonEnbled()
 		{
-			bool check  =  BvHelper.CheckBv (this.BvWidget)
-						&& this.CheckBeneficiaryIban ()
-						&& this.CheckBeneficiaryAddress ()
-						&& this.CheckReason ();
-
-			this.PrintButton.Enable = check;
+			this.PrintButton.Enable =  BvHelper.CheckBv (this.BvWidget)
+									&& this.CheckBeneficiaryIban ()
+									&& this.CheckBeneficiaryAddress ()
+									&& this.CheckReason ();
 		}
 
+		/// <summary>
+		/// Displays or hides the PrintersManager associated to this instance.
+		/// </summary>
+		/// <param name="display">A bool indicating whether to display or hide the PrintersManager.</param>
 		public void DisplayPrintersManager(bool display)
 		{
 			if (display)
@@ -395,6 +493,10 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Displays or hides the PrintDialog associated to this instance.
+		/// </summary>
+		/// <param name="display">A bool indicating whether to display or hide the PrintDialog.</param>
 		public void DisplayPrintDialog(bool display)
 		{
 			if (display)
@@ -419,7 +521,15 @@ namespace Epsitec.App.BanquePiguet
 				}
 				else if (!checkPrintersTrays)
 				{
-					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Le bac d'une imprimante est mal configuré.").OpenDialog ();
+					string printerName = printers.Find (printer =>
+					{
+						PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
+						return !trays.Any (tray => (tray.Name == printer.Tray));  
+					}).Name ;
+
+					string message = String.Format ("Le bac d'une imprimante est mal configuré: {0}", printerName);
+					
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
 				}
 				else
 				{

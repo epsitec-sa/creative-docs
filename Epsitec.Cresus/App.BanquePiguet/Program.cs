@@ -15,15 +15,22 @@ namespace Epsitec.App.BanquePiguet
 		static void Main(string[] args)
 		{
 			Program.SetupExceptionHandlers();
-			UI.Initialize ();
-			
-			using (Application application = new Application(args.Contains ("-admin")))
-			{
-				application.Window.Show ();
-				application.Window.Run ();
-			}
 
-			UI.ShutDown ();
+			try
+			{
+				UI.Initialize ();
+
+				using (Application application = new Application (args.Contains ("-admin")))
+				{
+					application.Window.Show ();
+					application.Window.Run ();
+				}
+				UI.ShutDown ();
+			}
+			catch (System.Exception e)
+			{
+				Tools.Error (e);
+			}
 		}
 
 		static void SetupExceptionHandlers()

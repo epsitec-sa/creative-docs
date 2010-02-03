@@ -15,13 +15,13 @@
   <printer>
     <name>Brother HL-2170W series</name>
     <tray>Tray1</tray>
-    <xOffset>0</xOffset>
-    <yOffset>0</yOffset>
+    <xOffset>-50</xOffset>
+    <yOffset>50</yOffset>
   </printer>
   <printer>
     <name>Microsoft XPS Document Writer</name>
     <tray>Automatically Select</tray>
-    <xOffset>50</xOffset>
-    <yOffset>25</yOffset>
+    <xOffset>0</xOffset>
+    <yOffset>50</yOffset>
   </printer>
 </printers>

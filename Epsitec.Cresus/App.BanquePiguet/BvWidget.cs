@@ -13,43 +13,93 @@ using System.Xml.Linq;
 namespace Epsitec.App.BanquePiguet
 {
 
+	/// <summary>
+	/// The class BvWidget represents a bv and can display it either on the screen or on paper.
+	/// </summary>
 	class BvWidget : Widget
 	{
 
+		/// <summary>
+		/// The BvFieldId enum represents the set of the BvFields of a bv.
+		/// </summary>
 		protected enum BvFieldId {
+			/// <summary>
+			/// The address of the bank on the left part.
+			/// </summary>
 			BankAddress1,
+			/// <summary>
+			/// The address of the bank on the right part.
+			/// </summary>
 			BankAddress2,
+			/// <summary>
+			/// The iban of the beneficiary on the left part.
+			/// </summary>
 			BeneficiaryIban1,
+			/// <summary>
+			/// The iban of the beneficiary on the right part.
+			/// </summary>
 			BeneficiaryIban2,
+			/// <summary>
+			/// The address of the benficiary on the left part.
+			/// </summary>
 			BeneficiaryAddress1,
+			/// <summary>
+			/// The address of the beneficiary on the right part.
+			/// </summary>
 			BeneficiaryAddress2,
+			/// <summary>
+			/// The bank account on the left part.
+			/// </summary>
 			BankAccount1,
+			/// <summary>
+			/// The bank account on the right part.
+			/// </summary>
 			BankAccount2,
+			/// <summary>
+			/// The layout code of the bv.
+			/// </summary>
 			LayoutCode,
+			/// <summary>
+			/// The reason of the transfer.
+			/// </summary>
 			Reason,
+			/// <summary>
+			/// The reference line of the bv.
+			/// </summary>
 			ReferenceLine,
+			/// <summary>
+			/// The clearing line of the bv.
+			/// </summary>
 			ClearingLine,
+			/// <summary>
+			/// The ccp number line of the bv.
+			/// </summary>
 			CcpNumberLine
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the BvWidget class.
+		/// </summary>
 		public BvWidget() : this (null)
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the BvWidget class.
+		/// </summary>
+		/// <param name="embedder">The embedder.</param>
 		public BvWidget(Widget embedder) : base (embedder)
 		{
-			try
-			{
-				this.SetupAttributes ();
-				this.SetupBackgroundImage ();
-				this.SetupBvFields ();
-			}
-			catch (System.Exception e)
-			{
-				Tools.Error (new System.Exception ("An error occured while creating the BvWidget.", e));
-			}
+			this.SetupAttributes ();
+			this.SetupBackgroundImage ();
+			this.SetupBvFields ();
 		}
-        
+
+		/// <summary>
+		/// Gets or sets the bank address.
+		/// </summary>
+		/// <value>The bank address.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BankAddress
 		{
 			get
@@ -71,6 +121,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the beneficiary iban.
+		/// </summary>
+		/// <value>The beneficiary iban.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BeneficiaryIban
 		{
 			get
@@ -95,6 +150,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the beneficiary address.
+		/// </summary>
+		/// <value>The beneficiary address.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BeneficiaryAddress
 		{
 			get
@@ -115,6 +175,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the bank account.
+		/// </summary>
+		/// <value>The bank account.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BankAccount
 		{
 			get
@@ -135,6 +200,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the layout code.
+		/// </summary>
+		/// <value>The layout code.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string LayoutCode
 		{
 			get
@@ -154,6 +224,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the reason of the transfer.
+		/// </summary>
+		/// <value>The reason of the transfer.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string Reason
 		{
 			get
@@ -173,6 +248,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the reference client number.
+		/// </summary>
+		/// <value>The reference client number.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ReferenceClientNumber
 		{
 			get
@@ -192,6 +272,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the clearing constant.
+		/// </summary>
+		/// <value>The clearing constant.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ClearingConstant
 		{
 			get
@@ -211,6 +296,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the clearing number of the bank.
+		/// </summary>
+		/// <value>The clearing number of the bank.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ClearingBank
 		{
 			get
@@ -230,6 +320,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the control key of the clearing number of the bank.
+		/// </summary>
+		/// <value>The control key of the clearing number of the bank.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ClearingBankKey
 		{
 			get
@@ -250,6 +345,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 
+		/// <summary>
+		/// Gets or sets the CCP number of the bank.
+		/// </summary>
+		/// <value>The CCP number of the bank.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string CcpNumber
 		{
 			get
@@ -269,28 +369,47 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Gets or sets the size of the bv (in millimeters).
+		/// </summary>
+		/// <value>The size of the bv.</value>
 		public Size BvSize
 		{
 			get;
 			protected set;
 		}
 
+		/// <summary>
+		/// Gets or sets the dictionnary containing the BvFields.
+		/// </summary>
+		/// <value>The dictionnary containing the BvFields.</value>
 		protected Dictionary<BvFieldId, BvField> BvFields
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the background image of the bv.
+		/// </summary>
+		/// <value>The background image of the bv.</value>
 		protected Bitmap BackgroundImage
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Prints the bv on paintPort and the bounds on the bv. This method is to use only
+		/// to print it on paper as it will print the BvFields but not the background.
+		/// </summary>
+		/// <param name="paintPort">The IPaintPort to use.</param>
+		/// <param name="bounds">The bounds of the bv.</param>
 		public void Print(IPaintPort paintPort, Rectangle bounds)
 		{
 
-			// Prints the outline of the bv. This is to remove at the end of tests.
+#warning Remove me at the end of tests.
+
 			using (Path path = Path.FromRectangle (bounds))
 			{
 				paintPort.Color = Color.FromRgb (0, 0, 0);
@@ -301,6 +420,12 @@ namespace Epsitec.App.BanquePiguet
 			this.PaintBvFields (paintPort, bounds);
 		}
 
+		/// <summary>
+		/// Paints the bv on graphics. This method is to use only to paint it on screen
+		/// as it will print the background image in addition to the BvFields.
+		/// </summary>
+		/// <param name="graphics">The graphics to use.</param>
+		/// <param name="clipRect">The clip rectangle.</param>
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			Rectangle bounds = this.Client.Bounds;
@@ -310,6 +435,11 @@ namespace Epsitec.App.BanquePiguet
 
 		}
 
+		/// <summary>
+		/// Paints the background image of the bv.
+		/// </summary>
+		/// <param name="port">The port to use.</param>
+		/// <param name="bounds">The bounds of the bv.</param>
 		protected void PaintBackgroundImage(IPaintPort port, Rectangle bounds)
 		{
 			port.PaintImage (this.BackgroundImage, bounds);
@@ -321,6 +451,11 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Paints the BvFields using paintPort and the bounds of the bv.
+		/// </summary>
+		/// <param name="paintPort">The IPaintPort to use.</param>
+		/// <param name="bounds">The bounds.</param>
 		protected void PaintBvFields(IPaintPort paintPort, Rectangle bounds)
 		{
 
@@ -331,6 +466,13 @@ namespace Epsitec.App.BanquePiguet
 
 		}
 
+		/// <summary>
+		/// Sets up the BvFields by loading them out of the resource file.
+		/// </summary>
+		/// <remarks>
+		/// This method is called when the BvWidget is initialized.
+		/// </remarks>
+		/// <exception cref="System.Exception">If some Bvfields are missing.</exception>
 		protected void SetupBvFields()
 		{
 			this.BvFields = new Dictionary<BvFieldId, BvField> ();
@@ -364,6 +506,12 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Sets up the background image.
+		/// </summary>
+		/// <remarks>
+		/// This method is called when the BvWidget is initialized.
+		/// </remarks>
 		protected void SetupBackgroundImage()
 		{
 			Assembly assembly = Assembly.GetExecutingAssembly ();
@@ -372,6 +520,12 @@ namespace Epsitec.App.BanquePiguet
 			this.BackgroundImage = (Bitmap) Bitmap.FromManifestResource (resource, assembly);
 		}
 
+		/// <summary>
+		/// Sets up the string attributes in order to give them an empty initial value.
+		/// </summary>
+		/// <remarks>
+		/// This method is called when the BvWidget is initialized.
+		/// </remarks>
 		protected void SetupAttributes()
 		{
 			this.referenceClientNumber = "";
@@ -382,6 +536,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 
+		/// <summary>
+		/// Updates the text of the reference line based on the values of ReferenceClientNumber and BeneficiaryIban.
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenever the text of ReferenceClientNumber and BeneficiaryIban change.
+		/// </remarks>
 		protected void UpdateReferenceLine()
 		{
 			string iban = this.BeneficiaryIban;
@@ -394,6 +554,14 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Updates the text of the clearing line based on the values of ClearingConstant, ClearingBank and
+		/// ClearingBankKey.
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenever the text of ClearingConstant, ClearingBank and ClearingBankKey
+		/// change.
+		/// </remarks>
 		protected void UpdateClearingLine()
 		{
 			string constant = this.ClearingConstant;
@@ -407,6 +575,12 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Updates the text of the CCP number line based on the value of CcpNumber.
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenver the text of CcpNumber changes.
+		/// </remarks>
 		protected void UpdateCcpNumberLine()
 		{
 			string ccp = this.CcpNumber;
@@ -417,12 +591,31 @@ namespace Epsitec.App.BanquePiguet
 				this.Invalidate ();
 			}
 		}
-		
 
+
+		/// <summary>
+		/// This attribute backs the ReferenceClientNumber property.
+		/// </summary>
 		protected string referenceClientNumber;
+		
+		/// <summary>
+		/// This attributes backs the ClearingConstant property.
+		/// </summary>
 		protected string clearingConstant;
+		
+		/// <summary>
+		/// This attribute backs the ClearingBank property.
+		/// </summary>
 		protected string clearingBank;
+		
+		/// <summary>
+		/// This attribute backs the ClearingBankKey property.
+		/// </summary>
 		protected string clearingBankKey;
+		
+		/// <summary>
+		/// This attribute backs the CcpNumber property.
+		/// </summary>
 		protected string ccpNumber;
 
 	}

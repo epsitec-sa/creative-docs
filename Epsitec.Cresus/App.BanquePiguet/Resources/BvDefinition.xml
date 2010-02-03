@@ -71,7 +71,7 @@
       <name>BankAccount1</name>
       <type>BvField</type>
       <font>OCR-B1</font>
-      <textHeight>4.2</textHeight>
+      <textHeight>4.25</textHeight>
       <xPosition>26</xPosition>
       <yPosition>60</yPosition>
     </field>
@@ -80,7 +80,7 @@
       <name>BankAccount2</name>
       <type>BvField</type>
       <font>OCR-B1</font>
-      <textHeight>4.2</textHeight>
+      <textHeight>4.25</textHeight>
       <xPosition>87</xPosition>
       <yPosition>60</yPosition>
     </field>
@@ -89,9 +89,9 @@
       <name>LayoutCode</name>
       <type>BvField</type>
       <font>OCR-B1</font>
-      <textHeight>4.2</textHeight>
-      <xPosition>72</xPosition>
-      <yPosition>30</yPosition>
+      <textHeight>4.25</textHeight>
+      <xPosition>69.5</xPosition>
+      <yPosition>30.5</yPosition>
     </field>
 
     <field>
@@ -109,27 +109,27 @@
       <name>ReferenceLine</name>
       <type>BvField</type>
       <font>OCR-B1</font>
-      <textHeight>4.2</textHeight>
-      <xPosition>105</xPosition>
-      <yPosition>18</yPosition>
+      <textHeight>4.25</textHeight>
+      <xPosition>102.75</xPosition>
+      <yPosition>17.625</yPosition>
     </field>
 
     <field>
       <name>ClearingLine</name>
       <type>BvField</type>
       <font>OCR-B1</font>
-      <textHeight>4.2</textHeight>
-      <xPosition>179</xPosition>
-      <yPosition>18</yPosition>
+      <textHeight>4.25</textHeight>
+      <xPosition>176.75</xPosition>
+      <yPosition>17.625</yPosition>
     </field>
 
     <field>
       <name>CcpNumberLine</name>
       <type>BvField</type>
       <font>OCR-B1</font>
-      <textHeight>4.2</textHeight>
-      <xPosition>179</xPosition>
-      <yPosition>9</yPosition>
+      <textHeight>4.25</textHeight>
+      <xPosition>176.75</xPosition>
+      <yPosition>9.625</yPosition>
     </field>
 
   </fields>

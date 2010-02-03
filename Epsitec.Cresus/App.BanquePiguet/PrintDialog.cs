@@ -9,13 +9,24 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Epsitec.App.BanquePiguet
 {
 
+	/// <summary>
+	/// The PrintDialog class is a window which lets the user choose on which printer he wants to 
+	/// print the bv and how much copies does he want to print.
+	/// </summary>
 	class PrintDialog : Window
 	{
 
+		/// <summary>
+		/// Initializes a new instance of the PrintDialog class.
+		/// </summary>
+		/// <param name="application">The Application creating this instance.</param>
+		/// <param name="BvWidget">The BvWidget containing the bv data.</param>
+		/// <param name="printers">The list of Printer that the user might select.</param>
 		public PrintDialog(Application application, BvWidget BvWidget, List<Printer> printers)
 		{
 			this.Application = application;
@@ -28,48 +39,82 @@ namespace Epsitec.App.BanquePiguet
 			this.AdjustWindowSize ();
 		}
 
+		/// <summary>
+		/// Gets or sets the Application who created this instance.
+		/// </summary>
+		/// <value>The Application who created this instance.</value>
 		protected Application Application
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the BvWidget which contains the bv data.
+		/// </summary>
+		/// <value>The BvWidget which contains the bv data.</value>
 		protected BvWidget BvWidget
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the list of Printers available to the user.
+		/// </summary>
+		/// <value>The list of Printers available to the user.</value>
 		protected List<Printer> Printers
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the button used to print the bv.
+		/// </summary>
+		/// <value>The button used to prints the bv.</value>
 		protected Button PrintButton
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the button used to close the window.
+		/// </summary>
+		/// <value>The button used to close the window.</value>
 		protected Button CancelButton
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the text field used for the number of copies.
+		/// </summary>
+		/// <value>The text field used for the number of copies.</value>
 		protected TextFieldUpDown NbCopiesTextField
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the text field used for the printer selection.
+		/// </summary>
+		/// <value>The text field used for the printer selection.</value>
 		protected TextFieldCombo PrinterTextField
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Sets up the properties of the window of this instance.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
 		protected void SetupWindow()
 		{
 			this.Text = "Imprimer";
@@ -77,6 +122,13 @@ namespace Epsitec.App.BanquePiguet
 			this.MakeFixedSizeWindow ();
 		}
 
+		/// <summary>
+		/// Sets up the widgets of the PrintDialog, such as the PrintButton, CancelButton,
+		/// NbCopiesTextField and PrinterTextField.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
 		protected void SetupWidgets()
 		{
 			FrameBox frameBox = new FrameBox ()
@@ -103,11 +155,21 @@ namespace Epsitec.App.BanquePiguet
 				Parent = printerGroupBox,
 				PreferredWidth = 200,
 				TabIndex = 1,
-				Text = this.Printers[0].Name,
 				IsReadOnly = true,
 			};
 
 			this.Printers.ForEach (printer => this.PrinterTextField.Items.Add (printer.Name));
+
+			string preferredPrinter = Tools.LoadSetting ("preferredPrinter");
+
+			if (preferredPrinter != null && this.Printers.Any (printer => printer.Name == preferredPrinter))
+			{
+				this.PrinterTextField.Text = preferredPrinter;
+			}
+			else
+			{
+				this.PrinterTextField.Text = this.Printers[0].Name;
+			}
 
 			GroupBox nbPagesGroupBox = new GroupBox ()
 			{
@@ -160,6 +222,12 @@ namespace Epsitec.App.BanquePiguet
 			};
 		}
 
+		/// <summary>
+		/// Sets up the events of this instance.
+		/// </summary>
+		/// <remarks>
+		/// This method is called at the initialization of this instance.
+		/// </remarks>
 		protected void SetupEvents()
 		{
 			this.PrinterTextField.TextChanged += (sender) => this.UpdateNbPagesRange ();
@@ -170,6 +238,12 @@ namespace Epsitec.App.BanquePiguet
 			this.WindowClosed += (sender) => this.Exit ();
 		}
 
+		/// <summary>
+		/// Updates the range of NbCopiesTextField based on the value of PrinterTextField.
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenever the text of PrinterTextField changes.
+		/// </remarks>
 		protected void UpdateNbPagesRange()
 		{
 			PrinterSettings printer = PrinterSettings.FindPrinter(FormattedText.Unescape (this.PrinterTextField.Text));
@@ -178,16 +252,28 @@ namespace Epsitec.App.BanquePiguet
 			this.NbCopiesTextField.MaxValue = printer.MaximumCopies;
 		}
 
+		/// <summary>
+		/// Enables or disables PrintButton according to the validity of PrinterTextField and
+		/// NbCopiesTextField.
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenever the text of PrinterTextField and NbCopiesTextField
+		/// changes.
+		/// </remarks>
 		protected void CheckPrintEnabled()
 		{
 			this.PrintButton.Enable = this.NbCopiesTextField.IsValid;	
 		}
 
+		/// <summary>
+		/// Prints BvWidget with the printer given by PrinterTextField with the number of copies
+		/// given by NbCopiesTextField and logs what has been printed to the log file.
+		/// </summary>
 		protected void Print()
 		{
 			try
 			{
-				this.PrintBvs ();
+				this.PrintBv ();
 				this.LogPrint ();
 			}
 			catch (System.Exception e)
@@ -197,16 +283,27 @@ namespace Epsitec.App.BanquePiguet
 			}
 			finally
 			{
+				Tools.SaveSetting ("preferredPrinter", FormattedText.Unescape (this.PrinterTextField.Text));
 				this.Exit ();
 			}
 		}
 
+		/// <summary>
+		/// Exits this window by calling Application.DisplayPrintDialog (false).
+		/// </summary>
+		/// <remarks>
+		/// This method is called whenever CancelButton is clicked, when the close button is clicked
+		/// or when the bv has been printed.
+		/// </remarks>
 		protected void Exit()
 		{
 			this.Application.DisplayPrintDialog (false);
 		}
 
-		protected void PrintBvs()
+		/// <summary>
+		/// Prints the bv corresponding to the data contained in BvWidget.
+		/// </summary>
+		protected void PrintBv()
 		{
 			Printer printer = this.Printers.Find(p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
@@ -225,6 +322,10 @@ namespace Epsitec.App.BanquePiguet
 			PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, yOffset, width, height)), printDocument, 21, (int) 29.7);
 		}
 
+		/// <summary>
+		/// Logs the values of PrinterTextField and NbCopiesTextField as well as part of the data
+		/// of BvWidget.
+		/// </summary>
 		protected void LogPrint()
 		{
 			string entry = string.Format ("{0}\nPrinter: {1}\nNumber of copies: {2}\nBeneficiary iban: {3}\nBeneficiary address: {4}\nReason: {5}",
