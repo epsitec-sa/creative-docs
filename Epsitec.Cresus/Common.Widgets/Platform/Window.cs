@@ -979,6 +979,12 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 			}
 		}
+
+		internal void SetNativeIcon(System.IO.Stream iconStream)
+		{
+			System.Drawing.Icon nativeIcon = new System.Drawing.Icon (iconStream);
+			base.Icon = nativeIcon;
+		}
 		
 		internal double							Alpha
 		{

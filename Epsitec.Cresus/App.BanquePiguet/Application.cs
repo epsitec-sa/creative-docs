@@ -164,6 +164,8 @@ namespace Epsitec.App.BanquePiguet
 			{
 				Text = this.ShortWindowTitle,
 			};
+
+			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico");
 			this.Window.MakeFixedSizeWindow ();
 		}
 

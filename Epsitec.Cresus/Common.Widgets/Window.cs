@@ -224,6 +224,14 @@ namespace Epsitec.Common.Widgets
 				this.window.Focus ();
 			}
 		}
+
+		public void SetNativeIconFromManifest(System.Reflection.Assembly assembly, string resourceName)
+		{
+			using (var stream = assembly.GetManifestResourceStream (resourceName))
+			{
+				this.window.SetNativeIcon (stream);
+			}
+		}
 		
 		
 		public void DisableMouseActivation()

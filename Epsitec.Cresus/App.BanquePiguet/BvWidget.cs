@@ -12,9 +12,10 @@ using System.Xml.Linq;
 
 namespace Epsitec.App.BanquePiguet
 {
-
 	/// <summary>
 	/// The class BvWidget represents a bv and can display it either on the screen or on paper.
+	/// See http://www.postfinance.ch/medialib/pf/de/doc/consult/templ/chf/44103_templ.Par.0001.File.dat/44103_templ.pdf
+	/// for the full specification.
 	/// </summary>
 	class BvWidget : Widget
 	{
