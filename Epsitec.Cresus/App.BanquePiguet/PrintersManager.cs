@@ -34,7 +34,7 @@ namespace Epsitec.App.BanquePiguet
 			this.SetupButtons ();
 			this.SetupPrintersCellTable ();
 			this.SetupEvents ();
-			this.AdjustWindowSize ();
+			//this.AdjustWindowSize ();
 		}
 
 		/// <summary>
@@ -119,9 +119,9 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				for (int i = 0; i < this.Printers.Count; i++)
+				for (int i = 0; i < this.PrintersCellTable.Rows ; i++)
 				{
-					for (int j = 1; j < 5; j++)
+					for (int j = 1; j < this.PrintersCellTable.Columns; j++)
 					{
 						yield return (AbstractTextField) this.PrintersCellTable[j, i].Children[0];
 					}
@@ -138,7 +138,7 @@ namespace Epsitec.App.BanquePiguet
 		protected void SetupWindow()
 		{
 			this.Text = "Configuration des imprimantes";
-			this.MakeFixedSizeWindow ();
+			this.WindowSize = new Size (800, 400);
 		}
 
 		/// <summary>
@@ -176,13 +176,19 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintersCellTable.StyleV |= CellArrayStyles.Separator;
 			this.PrintersCellTable.StyleV |= CellArrayStyles.SelectLine;
 
-			this.PrintersCellTable.SetArraySize (5, this.Printers.Count);
-			this.PrintersCellTable.SetWidthColumn (0, 25);
+			this.PrintersCellTable.SetArraySize (6, this.Printers.Count);
+			this.PrintersCellTable.SetWidthColumn (0, 15);
+			this.PrintersCellTable.SetWidthColumn (1, 200);
+			this.PrintersCellTable.SetWidthColumn (2, 200);
+			this.PrintersCellTable.SetWidthColumn (3, 75);
+			this.PrintersCellTable.SetWidthColumn (4, 75);
+			this.PrintersCellTable.SetWidthColumn (5, 250);
 
 			this.PrintersCellTable.SetHeaderTextH (1, "Nom");
 			this.PrintersCellTable.SetHeaderTextH (2, "Bac");
 			this.PrintersCellTable.SetHeaderTextH (3, "Décalage x");
 			this.PrintersCellTable.SetHeaderTextH (4, "Décalage y");
+			this.PrintersCellTable.SetHeaderTextH (5, "Commentaire");
 
 			for (int i = 0; i < this.Printers.Count; i++)
 			{
@@ -191,7 +197,7 @@ namespace Epsitec.App.BanquePiguet
 				TextFieldCombo nameTextField = new TextFieldCombo ()
 				{
 					Dock = DockStyle.Fill,
-					Text = printer.Name,
+					Text = FormattedText.Escape (printer.Name),
 					
 				};
 
@@ -200,7 +206,7 @@ namespace Epsitec.App.BanquePiguet
 				TextFieldCombo trayTextField = new TextFieldCombo ()
 				{
 					Dock = DockStyle.Fill,
-					Text = printer.Tray,
+					Text = FormattedText.Escape (printer.Tray),
 				};
 
 				this.PopulateTraysTextField (printer, trayTextField);
@@ -223,6 +229,12 @@ namespace Epsitec.App.BanquePiguet
 					Resolution = 0.1M,
 					Step = 0.1M,
 					Text = printer.YOffset.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				};
+
+				TextField commentTextField = new TextField ()
+				{
+					Dock = DockStyle.Fill,
+					Text = FormattedText.Escape (printer.Comment),
 				};
 
 				nameTextField.TextChanged += (sender) =>
@@ -253,6 +265,11 @@ namespace Epsitec.App.BanquePiguet
 					{
 						printer.YOffset = result;
 					}
+				};
+
+				commentTextField.TextChanged += (sender) =>
+				{
+					printer.Comment = FormattedText.Unescape (commentTextField.Text);
 				};
 
 #warning Uncomment validators.
@@ -291,6 +308,7 @@ namespace Epsitec.App.BanquePiguet
 				this.PrintersCellTable[2, i].Insert (trayTextField);
 				this.PrintersCellTable[3, i].Insert (xOffsetTextField);
 				this.PrintersCellTable[4, i].Insert (yOffsetTextField);
+				this.PrintersCellTable[5, i].Insert (commentTextField);
 			}
 
 			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterEnabled ();
@@ -474,7 +492,7 @@ namespace Epsitec.App.BanquePiguet
 		/// </remarks>
 		protected void AddPrinter()
 		{
-			this.Printers.Add (new Printer ("", "", 0, 0));
+			this.Printers.Add (new Printer ("", "", 0, 0, ""));
 			this.SetupPrintersCellTable ();
 		}
 

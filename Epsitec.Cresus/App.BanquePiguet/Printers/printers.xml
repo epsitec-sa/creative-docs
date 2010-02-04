@@ -5,23 +5,27 @@
     <tray>Tray 1</tray>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
+    <comment>mon super commentaire</comment>
   </printer>
   <printer>
     <name>lolipop</name>
     <tray>Tray 2</tray>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
+    <comment>plein de signes trop bizarres: %&amp;/&amp;/(=*&amp;*/(çZU GLJH GDF(&amp;OG §°@#@@@§@°¢´§¬#§|¬@°¢¬|§´@§§¢@#°´¬|@°86§´@°´¬°¬§¢°¬¢°|¢¬´§24</comment>
   </printer>
   <printer>
     <name>Brother HL-2170W series</name>
     <tray>Tray1</tray>
     <xOffset>-50</xOffset>
     <yOffset>50</yOffset>
+    <comment>j'adore cette imprimante!!!!!!!!!!!</comment>
   </printer>
   <printer>
     <name>Microsoft XPS Document Writer</name>
     <tray>Automatically Select</tray>
     <xOffset>0</xOffset>
     <yOffset>50</yOffset>
+    <comment>Pour imprimer vers in fichier.</comment>
   </printer>
 </printers>

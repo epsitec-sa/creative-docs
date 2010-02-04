@@ -10,6 +10,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -164,11 +165,11 @@ namespace Epsitec.App.BanquePiguet
 
 			if (preferredPrinter != null && this.Printers.Any (printer => printer.Name == preferredPrinter))
 			{
-				this.PrinterTextField.Text = preferredPrinter;
+				this.PrinterTextField.Text = FormattedText.Escape (preferredPrinter);
 			}
 			else
 			{
-				this.PrinterTextField.Text = this.Printers[0].Name;
+				this.PrinterTextField.Text = FormattedText.Escape (this.Printers[0].Name);
 			}
 
 			GroupBox nbPagesGroupBox = new GroupBox ()
@@ -308,6 +309,7 @@ namespace Epsitec.App.BanquePiguet
 			Printer printer = this.Printers.Find(p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
 
+			printDocument.DocumentName = String.Format ("bv {0}", this.BvWidget.BeneficiaryIban);
 			printDocument.SelectPrinter(printer.Name);
 			printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.NbCopiesTextField.Text), CultureInfo.InvariantCulture);
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);

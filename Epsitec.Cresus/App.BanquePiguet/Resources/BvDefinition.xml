@@ -97,12 +97,12 @@
     <field>
       <name>Reason</name>
       <type>BvFieldMultiLineColumn</type>
-      <font>Arial</font>
-      <textHeight>4</textHeight>
-      <xPosition>126</xPosition>
-      <yPosition>92</yPosition>
-      <verticalSpace>6.2</verticalSpace>
-      <horizontalSpace>5.1</horizontalSpace>
+      <font>OCR-B1</font>
+      <textHeight>4.25</textHeight>
+      <xPosition>125</xPosition>
+      <yPosition>92.5</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+      <horizontalSpace>5.05</horizontalSpace>
     </field>
 
     <field>

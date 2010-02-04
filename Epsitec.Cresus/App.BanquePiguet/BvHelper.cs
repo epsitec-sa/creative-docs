@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -18,7 +19,7 @@ namespace Epsitec.App.BanquePiguet
 		/// This bidimensional array is the table used by the modulo 10 recursive algorithm
 		/// to find the next report digit at each step.
 		/// </summary>
-		private static int[,] table = new int[,]
+		private static int[,] controlKeyTable = new int[,]
 		{
 			{0, 9, 4, 6, 8, 2, 7, 1, 3, 5},
 			{9, 4, 6, 8, 2, 7, 1, 3, 5, 0},
@@ -36,19 +37,53 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// This array contains the control keys used by the modulo 10 recursive algorithm.
 		/// </summary>
-		private static char[] keys = new char[]
+		private static char[] controlKeys = new char[]
 		{
 			'0', '9', '8', '7', '6', '5', '4', '3', '2', '1'
 		};
 
+		/// <summary>
+		/// This dictionnary is used to convert a char to an int during the iban validation process.
+		/// </summary>
+		private static Dictionary<string, string> charConversionTable = new Dictionary<string, string>
+		{
+			{"A", "10"},
+			{"B", "11"},
+			{"C", "12"},
+			{"D", "13"},
+			{"E", "14"},
+			{"F", "15"},
+			{"G", "16"},
+			{"H", "17"},
+			{"I", "18"},
+			{"J", "19"},
+			{"K", "20"},
+			{"L", "21"},
+			{"M", "22"},
+			{"N", "23"},
+			{"O", "24"},
+			{"P", "25"},
+			{"Q", "26"},
+			{"R", "27"},
+			{"S", "28"},
+			{"T", "29"},
+			{"U", "30"},
+			{"V", "31"},
+			{"W", "32"},
+			{"X", "33"},
+			{"Y", "34"},
+			{"Z", "35"},
+		};
+
 
 		/// <summary>
-		/// Computes the control key of number using the modulo 10 recursive algorithm.
+		/// Computes the control key of number using the modulo 10 recursive algorithm. The reference
+		/// of this algorithm can be found in the DTA document at the paragraph C9.4.
 		/// </summary>
 		/// <param name="number">The number whose control key to compute.</param>
 		/// <returns>The control key of number.</returns>
 		/// <exception cref="System.ArgumentException">If the number is empty or contains non numeric characters.</exception>
-		public static char Compute(string number)
+		public static char ComputeControlKey(string number)
 		{
 			if (!Regex.IsMatch (number, @"^\d*$"))
 			{
@@ -65,11 +100,63 @@ namespace Epsitec.App.BanquePiguet
 			while (number.Length > 0)
 			{
 				int digit = int.Parse (number.Substring (0, 1), CultureInfo.InvariantCulture);
-				report = BvHelper.table[report, digit];
+				report = BvHelper.controlKeyTable[report, digit];
 				number = number.Substring (1);
 			}
 
-			return BvHelper.keys[report];
+			return BvHelper.controlKeys[report];
+		}
+
+		/// <summary>
+		/// Checks that iban is a valid iban using the proper algorithm. The reference
+		/// of this algorithm can be found in the DTA document at the paragraph C10.
+		/// </summary>
+		/// <param name="iban">The iban to check.</param>
+		/// <returns>A bool indicating whether iban is valid or not.</returns>
+		public static bool CheckIban(string iban)
+		{
+			bool valid;
+			
+			iban = iban.Replace(" ", "");
+			
+			if (!Regex.IsMatch (iban, "^[A-Z0-9]*$") || iban.Length < 15 || iban.Length > 34)
+			{
+				valid = false;
+			}
+			else
+			{
+				iban = string.Format ("{0}{1}", iban.Substring (4), iban.Substring (0, 4));
+
+				foreach (string s in BvHelper.charConversionTable.Keys)
+				{
+					iban = iban.Replace (s, BvHelper.charConversionTable[s]);
+				}
+
+				string remainder = "";
+
+				while (iban.Length > 0)
+				{
+					int splitIndex = 9 - remainder.Length;
+					string tmp;
+
+					if (splitIndex < iban.Length)
+					{
+						tmp = string.Format ("{0}{1}", remainder, iban.Substring (0, splitIndex));
+						iban = iban.Substring (splitIndex);
+					}
+					else
+					{
+						tmp = string.Format ("{0}{1}", remainder, iban);
+						iban = "";
+					}
+
+					remainder = (int.Parse (tmp, CultureInfo.InvariantCulture) % 97).ToString ();
+				}
+
+				valid = (remainder == "1");
+			}
+
+			return valid;
 		}
 
 		/// <summary>
@@ -80,7 +167,9 @@ namespace Epsitec.App.BanquePiguet
 		public static bool CheckBankAddress(string address)
 		{
 			string[] lines = address.Split ('\n');
-			return (lines.Length <= 2) && lines.All (line => line.Length <= 27);
+
+			return lines.Length <= 2
+				&& lines.All (line => line.Length <= 27);
 		}
 
 		/// <summary>
@@ -93,7 +182,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <returns>A bool indicating if iban is valid or not.</returns>
 		public static bool CheckBeneficiaryIban(string iban)
 		{
-			return Regex.IsMatch (iban, @"^CH\d{2} \d{4} \d{4} \d{4} \d{4} \d{1}$");
+			return BvHelper.CheckIban (iban);
 		}
 
 		/// <summary>
@@ -104,7 +193,10 @@ namespace Epsitec.App.BanquePiguet
 		public static bool CheckBeneficiaryAddress(string address)
 		{
 			string[] lines = address.Split ('\n');
-			return (lines.Length <= 4) && lines.All (line => line.Length <= 27);
+
+			return lines.Length <= 4
+				&& lines.All (line => line.Length <= 27)
+				&& address.Trim ().Length > 0;
 		}
 
 		/// <summary>
@@ -135,7 +227,8 @@ namespace Epsitec.App.BanquePiguet
 		public static bool CheckReason(string reason)
 		{
 			string[] lines = reason.Split ('\n');
-			return (lines.Length <= 3) && lines.All (line => line.Length <= 10);
+			return lines.Length <= 3
+				&& lines.All (line => line.Length <= 10);
 		}
 
 		/// <summary>
@@ -249,8 +342,10 @@ namespace Epsitec.App.BanquePiguet
 				throw new System.ArgumentException (message);
 			}
 
-			string line = string.Format ("{0}{1}{2}", reference, "0000", Regex.Replace (iban, @"\s", "").Substring (9, 12));
-			return string.Format ("{0}{1}+", line, BvHelper.Compute (line));
+			iban =  Regex.Replace (iban, @"\s", "");
+			string line = string.Format ("{0}{1}{2}", reference, "0000", iban.Substring (iban.Length - 12, 12));
+
+			return string.Format ("{0}{1}+", line, BvHelper.ComputeControlKey (line));
 		}
 
 		/// <summary>
@@ -270,7 +365,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 
 			string line = string.Format ("{0}{1}{2}", constant, clearing, key);
-			return string.Format ("{0}{1}>", line, BvHelper.Compute (line));
+			return string.Format ("{0}{1}>", line, BvHelper.ComputeControlKey (line));
 		}
 
 		/// <summary>
@@ -296,14 +391,16 @@ namespace Epsitec.App.BanquePiguet
 		/// <returns>The normalized version of iban.</returns>
 		public static string BuildNormalizedIban(string iban)
 		{
-			string normalzedIban = Regex.Replace (iban, @"\s", "");
+			string normalizedIban = Regex.Replace (iban, @"\s", "");
 
-			for (int i = 4; i < normalzedIban.Length && i < 27; i += 5)
+			for (int i = 4; i < normalizedIban.Length && i < 27; i += 5)
 			{
-				normalzedIban = normalzedIban.Insert (i, " ");
+				normalizedIban = normalizedIban.Insert (i, " ");
 			}
 
-			return normalzedIban;
+			normalizedIban = normalizedIban.ToUpperInvariant ();
+
+			return normalizedIban;
 		}
 
 	}

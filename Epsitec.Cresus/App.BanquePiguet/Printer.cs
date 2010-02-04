@@ -34,12 +34,14 @@ namespace Epsitec.App.BanquePiguet
 		/// <param name="tray">The selected tray.</param>
 		/// <param name="xOffset">The offset on the x axis.</param>
 		/// <param name="yOffset">The offset on the y axis.</param>
-		public Printer(string name, string tray, double xOffset, double yOffset)
+		/// <param name="comment">The comment on the printer.</param>
+		public Printer(string name, string tray, double xOffset, double yOffset, string comment)
 		{
 			this.Name = name;
 			this.Tray = tray;
 			this.XOffset = xOffset;
 			this.YOffset = yOffset;
+			this.Comment = comment;
 		}
 
 		/// <summary>
@@ -83,6 +85,16 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Gets or sets the comment on the printer.
+		/// </summary>
+		/// <value>The comment on the printer.</value>
+		public string Comment
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Saves the list of Printers to the configuration file. The file is overwritten, therefore
 		/// all printers which might be in the file but not in printers will be erased.
 		/// </summary>
@@ -98,7 +110,8 @@ namespace Epsitec.App.BanquePiguet
 						new XElement ("name", printer.Name),
 						new XElement ("tray", printer.Tray),
 						new XElement ("xOffset", printer.XOffset.ToString (CultureInfo.InvariantCulture)),
-						new XElement ("yOffset", printer.YOffset.ToString (CultureInfo.InvariantCulture))
+						new XElement ("yOffset", printer.YOffset.ToString (CultureInfo.InvariantCulture)),
+						new XElement ("comment", printer.Comment)
 					)
 				)
 			);
@@ -121,7 +134,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Loads a list of Printers from the configuration File.
 		/// </summary>
-		/// <returns>THe list of Printers loaded from the configuration file.</returns>
+		/// <returns>The list of Printers loaded from the configuration file.</returns>
 		public static List<Printer> Load()
 		{
 			XElement xPrinters;
@@ -142,6 +155,7 @@ namespace Epsitec.App.BanquePiguet
 					Tray = xPrinter.Element ("tray").Value,
 					XOffset = double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
 					YOffset = double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
+					Comment = xPrinter.Element ("comment").Value,
 				}
 			);
 

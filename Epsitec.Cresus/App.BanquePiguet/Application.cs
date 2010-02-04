@@ -41,11 +41,11 @@ namespace Epsitec.App.BanquePiguet
 
 #warning Remove me at the end of the tests.
 			
-			//this.BenefeciaryIbanTextField.Text = FormattedText.Escape ("CH01 1234 5678 9012 3456 7");
-			//this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
-			//this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
+			this.BenefeciaryIbanTextField.Text = FormattedText.Escape ("CH01 1234 5678 9012 3456 7");
+			this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
+			this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
 			
-			//this.DisplayPrintersManager (true);
+			this.DisplayPrintersManager (true);
 			
 			//this.DisplayPrintDialog (true);
 		}
