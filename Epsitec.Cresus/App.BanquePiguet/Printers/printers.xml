@@ -12,7 +12,7 @@
     <tray>Tray 2</tray>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
-    <comment>plein de signes trop bizarres: %&amp;/&amp;/(=*&amp;*/(çZU GLJH GDF(&amp;OG §°@#@@@§@°¢´§¬#§|¬@°¢¬|§´@§§¢@#°´¬|@°86§´@°´¬°¬§¢°¬¢°|¢¬´§24</comment>
+    <comment>plein de signes trop bizarres: %&amp;/&amp;/(=*&amp;*/(çZU GLJ&gt;&lt;H GDF(&amp;OG §°@#@@@§@°¢´§¬#§|¬@°¢¬|§´@§§¢@#°´¬|@°86§´@°´¬°¬§¢°¬¢°|¢¬´§24</comment>
   </printer>
   <printer>
     <name>Brother HL-2170W series</name>
@@ -25,7 +25,7 @@
     <name>Microsoft XPS Document Writer</name>
     <tray>Automatically Select</tray>
     <xOffset>0</xOffset>
-    <yOffset>50</yOffset>
+    <yOffset>0</yOffset>
     <comment>Pour imprimer vers in fichier.</comment>
   </printer>
 </printers>

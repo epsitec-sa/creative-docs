@@ -165,7 +165,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// The path to the configuration file containing the Printer definitions.
 		/// </summary>
-		protected static string configurationFile = string.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
+		protected static readonly string configurationFile = string.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
 
 	}
 

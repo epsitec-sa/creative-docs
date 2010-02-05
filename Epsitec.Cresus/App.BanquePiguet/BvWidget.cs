@@ -1,8 +1,9 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Common.Widgets;
+
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Globalization;
@@ -208,6 +209,16 @@ namespace Epsitec.App.BanquePiguet
 		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string LayoutCode
 		{
+			/*
+			 * The proper version of this property is commented and replaced by a dummy one which will
+			 * not touch the empty value of the field and always return "303". This is because the Piguet
+			 * Bank has the layout code allready printed on their bv, but as I implemented everything to print
+			 * it myself, I did not want to erase everything, just in case we might want to print it by
+			 * for another project or if they ask us to change the programm to print it.
+			 * To enable the printing of the layout code, just uncomment the proper (the first one) version
+			 * of this property and comment the dummy one.
+			 */
+			/*
 			get
 			{
 				return this.BvFields[BvFieldId.LayoutCode].Text;
@@ -223,6 +234,14 @@ namespace Epsitec.App.BanquePiguet
 
 				this.Invalidate ();
 			}
+			*/
+			get
+			{
+				return "303";
+			}
+			set
+            {
+            }
 		}
 
 		/// <summary>
@@ -404,21 +423,21 @@ namespace Epsitec.App.BanquePiguet
 		/// Prints the bv on paintPort and the bounds on the bv. This method is to use only
 		/// to print it on paper as it will print the BvFields but not the background.
 		/// </summary>
-		/// <param name="paintPort">The IPaintPort to use.</param>
+		/// <param name="port">The IPaintPort to use.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
-		public void Print(IPaintPort paintPort, Rectangle bounds)
+		public void Print(IPaintPort port, Rectangle bounds)
 		{
 
-#warning Remove me at the end of tests.
+#warning Remove me at the end of the tests.
 
 			using (Path path = Path.FromRectangle (bounds))
 			{
-				paintPort.Color = Color.FromRgb (0, 0, 0);
-				paintPort.LineWidth = 0.01;
-				paintPort.PaintOutline (path);
+				port.Color = Color.FromRgb (0, 0, 0);
+				port.LineWidth = 0.01;
+				port.PaintOutline (path);
 			}
 
-			this.PaintBvFields (paintPort, bounds);
+			this.PaintBvFields (port, bounds);
 		}
 
 		/// <summary>
@@ -431,9 +450,9 @@ namespace Epsitec.App.BanquePiguet
 		{
 			Rectangle bounds = this.Client.Bounds;
 
-			this.PaintBackgroundImage (graphics, bounds);
+			//this.PaintBackgroundImage (graphics, bounds);
+			this.PaintBackgroundBv (graphics, bounds);
 			this.PaintBvFields (graphics, bounds);
-
 		}
 
 		/// <summary>
@@ -443,6 +462,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <param name="bounds">The bounds of the bv.</param>
 		protected void PaintBackgroundImage(IPaintPort port, Rectangle bounds)
 		{
+#warning Remove me?
 			port.PaintImage (this.BackgroundImage, bounds);
 
 			using (Path path = Path.FromRectangle (bounds))
@@ -450,6 +470,321 @@ namespace Epsitec.App.BanquePiguet
 				port.Color = Color.FromRgb (0, 0, 0);
 				port.PaintOutline (path);
 			}
+		}
+
+		/// <summary>
+		/// Paints the background of the bv: the lines, boxes, circles, texts, and so on.
+		/// </summary>
+		/// <param name="graphics">The graphics port to use.</param>
+		/// <param name="bounds">The bounds of the bv.</param>
+		protected void PaintBackgroundBv(Graphics graphics, Rectangle bounds)
+		{
+			Point p1;
+			Point p2;
+
+			// Paints the background.
+			p1 = this.BuildPoint (0, 0, bounds);
+			p2 = this.BuildPoint (1, 1, bounds);
+			graphics.AddFilledRectangle (new Rectangle (p1, p2));
+			graphics.RenderSolid(BvWidget.colorLightPink);
+
+			p1 = this.BuildPoint (0.289, 0, bounds);
+			p2 = this.BuildPoint (1, 0.24, bounds);
+			graphics.AddFilledRectangle (new Rectangle (p1, p2));
+			graphics.RenderSolid(BvWidget.colorWhite);
+
+			// Paints the black separators.
+			p1 = this.BuildPoint (0, 0.96, bounds);
+			p2 = this.BuildPoint (1, 1, bounds);
+			graphics.AddRectangle (new Rectangle (p1, p2));
+
+			p1 = this.BuildPoint (0.289, 0, bounds);
+			p2 = this.BuildPoint (0.289, 1, bounds);
+			graphics.AddLine (p1, p2);
+
+			p1 = this.BuildPoint (0.578, 0.96, bounds);
+			p2 = this.BuildPoint (0.578, 0.24, bounds);
+			graphics.AddLine (p1, p2);
+
+			p1 = this.BuildPoint (0.578, 0.72, bounds);
+			p2 = this.BuildPoint (1, 0.72, bounds);
+			graphics.AddLine (p1, p2);
+
+			p1 = this.BuildPoint (0.843, 0.96, bounds);
+			p2 = this.BuildPoint (0.843, 0.72, bounds);
+			graphics.AddLine (p1, p2);
+
+			graphics.RenderSolid (BvWidget.colorBlack);
+
+			// Paints the two "L".
+			p1 = this.BuildPoint (0.301, 0.241, bounds);
+			p2 = this.BuildPoint (0.325, 0.241, bounds);
+			graphics.AddLine (p1, p2);
+
+			p1 = this.BuildPoint (0.301, 0.241, bounds);
+			p2 = this.BuildPoint (0.301, 0.26, bounds);
+			graphics.AddLine (p1, p2);
+
+			p1 = this.BuildPoint (0.951, 0.241, bounds);
+			p2 = this.BuildPoint (0.975, 0.241, bounds);
+			graphics.AddLine (p1, p2);
+
+			p1 = this.BuildPoint (0.975, 0.241, bounds);
+			p2 = this.BuildPoint (0.975, 0.26, bounds);
+			graphics.AddLine (p1, p2);
+
+			graphics.RenderSolid (BvWidget.colorBlack);
+
+			// Paints the red lines.
+			for (int i = 0; i < 3; i++)
+			{
+				p1 = this.BuildPoint (0.012, (9 - i * 1.5) / 25, bounds);
+				p2 = this.BuildPoint (0.277, (9 - i * 1.5) / 25, bounds);
+				graphics.AddLine (p1, p2);
+			}
+
+			for (int i = 0; i < 4; i++)
+			{
+				p1 = this.BuildPoint (0.590, (12 - i * 1.5) / 25, bounds);
+				p2 = this.BuildPoint (0.975, (12 - i * 1.5) / 25, bounds);
+				graphics.AddLine (p1, p2);
+			}
+
+			graphics.RenderSolid (BvWidget.colorRed);
+
+			// Paints the two red circles
+			int radius = (int) System.Math.Round (0.042 * bounds.Width, 0);
+			
+			p1 = this.BuildPoint (0.922, 0.84, bounds);
+			graphics.AddCircle (p1, radius);
+
+			p1 = this.BuildPoint (0.084, 0.12, bounds);
+			graphics.AddCircle (p1, radius);
+
+			graphics.RenderSolid (BvWidget.colorRed);
+			
+			// Paints the red and white boxes.
+			for (int i = 0; i < 10; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					p1 = this.BuildPoint(0.592 + i * 0.024, 0.910 - j * 0.058, bounds);
+					p2 = this.BuildPoint(0.610 + i * 0.024, 0.862 - j * 0.058, bounds);
+					this.DrawBox (graphics, p1, p2);
+				}
+			}
+
+			for (int i = 0; i < 11; i++)
+			{
+				if (i != 8)
+				{
+					p1 = this.BuildPoint (0.012 + i * 0.024, 0.52, bounds);
+					p2 = this.BuildPoint (0.030 + i * 0.024, 0.472, bounds);
+					this.DrawBox (graphics, p1, p2);
+
+					p1 = this.BuildPoint (0.301 + i * 0.024, 0.52, bounds);
+					p2 = this.BuildPoint (0.319 + i * 0.024, 0.472, bounds);
+					this.DrawBox (graphics, p1, p2);
+				}
+			}
+
+			// Paints the two dots for the amount of money.
+			p1 = this.BuildPoint (0.210, 0.47, bounds);
+			graphics.AddText (p1.X, p1.Y, ".", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
+			
+			p1 = this.BuildPoint (0.499, 0.47, bounds);
+			graphics.AddText (p1.X, p1.Y, ".", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
+
+			graphics.RenderSolid (BvWidget.colorBlack);
+
+			// Paints the black texts.
+			p1 = this.BuildPoint (0.012, 0.967, bounds);
+			graphics.AddText (p1.X, p1.Y, "Empfangsschein / Récépicé / Ricevuta", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeBig, bounds));
+
+			p1 = this.BuildPoint (0.325, 0.967, bounds);
+			graphics.AddText (p1.X, p1.Y, "Einzahlung Giro", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeBig, bounds));
+
+			p1 = this.BuildPoint (0.554, 0.967, bounds);
+			graphics.AddText (p1.X, p1.Y, "Versement Virement", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeBig, bounds));
+
+			p1 = this.BuildPoint (0.819, 0.967, bounds);
+			graphics.AddText (p1.X, p1.Y, "Versamento Girata", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeBig, bounds));
+
+			p1 = this.BuildPoint (0.012, 0.54, bounds);
+			graphics.AddText (p1.X, p1.Y, "CHF", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeBig, bounds));
+
+			p1 = this.BuildPoint (0.301, 0.54, bounds);
+			graphics.AddText (p1.X, p1.Y, "CHF", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeBig, bounds));
+
+			p1 = this.BuildPoint (0.156, 0.168, bounds);
+			graphics.AddText (p1.X, p1.Y, "Die Annahmestelle", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.156, 0.148, bounds);
+			graphics.AddText (p1.X, p1.Y, "L'office de dépôt", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.156, 0.128, bounds);
+			graphics.AddText (p1.X, p1.Y, "L'ufficio d'accettazione", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.342, 0.292, bounds);
+			graphics.AddText (p1.X, p1.Y, "303", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
+
+			graphics.RenderSolid (BvWidget.colorBlack);
+
+			// Paints the red texts.
+			p1 = this.BuildPoint (0.012, 0.928, bounds);
+			graphics.AddText (p1.X, p1.Y, "Einzahlung für/Versement pour/Versamento per", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.301, 0.928, bounds);
+			graphics.AddText (p1.X, p1.Y, "Einzahlung für/Versement pour/Versamento per", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.012, 0.808, bounds);
+			graphics.AddText (p1.X, p1.Y, "Zugunsten von/En faveur de/A favore di", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.301, 0.808, bounds);
+			graphics.AddText (p1.X, p1.Y, "Zugunsten von/En faveur de/A favore di", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.012, 0.568, bounds);
+			graphics.AddText (p1.X, p1.Y, "Konto/Compte/Conto", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.301, 0.568, bounds);
+			graphics.AddText (p1.X, p1.Y, "Konto/Compte/Conto", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.012, 0.44, bounds);
+			graphics.AddText (p1.X, p1.Y, "Einbezahlt von/Versé par/Versato da", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.590, 0.568, bounds);
+			graphics.AddText (p1.X, p1.Y, "Einbezahlt von/Versé par/Versato da", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			p1 = this.BuildPoint (0.590, 0.928, bounds);
+			graphics.AddText (p1.X, p1.Y, "Zahlungszweck/Motif versement/Motivo versamento", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
+
+			graphics.RenderSolid (BvWidget.colorRed);
+
+			// Paints the crosses.
+			this.DrawCross (graphics, 0.309, 0.965, bounds);
+			this.DrawCross (graphics, 0.442, 0.965, bounds);
+			this.DrawCross (graphics, 0.542, 0.965, bounds);
+			this.DrawCross (graphics, 0.704, 0.965, bounds);
+			this.DrawCross (graphics, 0.805, 0.965, bounds);
+			this.DrawCross (graphics, 0.957, 0.965, bounds);
+
+			// Paints the border.
+			graphics.AddRectangle (bounds);
+			graphics.RenderSolid (BvWidget.colorBlack);
+		}
+
+		/// <summary>
+		/// Computes a point given its relative coordinates and the bounds on the bv.
+		/// </summary>
+		/// <param name="relativeX">The relative X coordinate.</param>
+		/// <param name="relativeY">The relative Y coordinate.</param>
+		/// <param name="bounds">The bounds of the bv.</param>
+		/// <returns>The absolute point build from relativeX and relativeY.</returns>
+		protected Point BuildPoint(double relativeX, double relativeY, Rectangle bounds)
+		{
+			double height = bounds.Height;
+			double width = bounds.Width;
+
+			int x = (int) System.Math.Round (relativeX * width, 0);
+			int y = (int) System.Math.Round (relativeY * height, 0);
+
+			return new Point (x, y);
+		}
+
+		/// <summary>
+		/// Computes the size of the text given its relative size and the bounds on the bv.
+		/// </summary>
+		/// <param name="relativeSize">The relative size of the text.</param>
+		/// <param name="bounds">The bounds of the bv.</param>
+		/// <returns>The absolute size of the text.</returns>
+		protected double BuildTextSize(double relativeSize, Rectangle bounds)
+		{
+			return relativeSize * bounds.Height;
+		}
+
+		/// <summary>
+		/// Draws a white box with red outline between the given points.
+		/// </summary>
+		/// <param name="graphics">The graphics port to use.</param>
+		/// <param name="p1">The first point.</param>
+		/// <param name="p2">The second point.</param>
+		protected void DrawBox(Graphics graphics , Point p1, Point p2)
+		{
+			graphics.AddFilledRectangle (new Rectangle(p1, p2));
+			graphics.RenderSolid (BvWidget.colorWhite);
+
+			graphics.AddRectangle (new Rectangle(p1, p2));
+			graphics.RenderSolid (BvWidget.colorRed);
+		}
+
+		/// <summary>
+		/// Draws a cross with black outline at the given relative point.
+		/// </summary>
+		/// <remarks>
+		/// The point defining the position of the cross is the lower left corner of the bottom branch of
+		/// the cross.
+		/// </remarks>
+		/// <param name="graphics">The graphics port to use.</param>
+		/// <param name="relativeX">The relative X coordinate of the cross.</param>
+		/// <param name="relativeY">The relative Y coordinate of the cross.</param>
+		/// <param name="bounds">The bounds of the bv.</param>
+		protected void DrawCross(Graphics graphics, double relativeX, double relativeY, Rectangle bounds)
+		{
+			double relativeHeight = 0.0094;
+			double relativeWidth = 0.0047;
+
+			Point p1;
+			Point p2;
+
+			p1 = this.BuildPoint (relativeX, relativeY, bounds);
+			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY, bounds);
+			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY + relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY + relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + 2 * relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + 2 * relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY + 2 * relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY + 2 * relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY + 3 * relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY + 3 * relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX, relativeY + 3 * relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX, relativeY + 3 * relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX, relativeY + 2 * relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX, relativeY + 2 * relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX - relativeWidth, relativeY + 2 * relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX - relativeWidth, relativeY + 2 * relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX - relativeWidth, relativeY + relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX - relativeWidth, relativeY + relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX, relativeY + relativeHeight, bounds);
+			graphics.AddLine (p1, p2);
+			
+			p1 = this.BuildPoint (relativeX, relativeY + relativeHeight, bounds);
+			p2 = this.BuildPoint (relativeX, relativeY, bounds);
+			graphics.AddLine (p1, p2);
+			
+			graphics.RenderSolid(BvWidget.colorBlack);
 		}
 
 		/// <summary>
@@ -593,7 +928,6 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
-
 		/// <summary>
 		/// This attribute backs the ReferenceClientNumber property.
 		/// </summary>
@@ -618,6 +952,46 @@ namespace Epsitec.App.BanquePiguet
 		/// This attribute backs the CcpNumber property.
 		/// </summary>
 		protected string ccpNumber;
+
+		/// <summary>
+		/// The color used to draw the pink part of the background of the bv.
+		/// </summary>
+		protected static readonly Color colorLightPink = Color.FromRgb (0.964, 0.909, 0.882);
+		
+		/// <summary>
+		/// The color used to draw the white part of the background of the bv and the inner part of the boxes.
+		/// </summary>
+		protected static readonly Color colorWhite = Color.FromRgb (1, 1, 1);
+		
+		/// <summary>
+		/// The color used to draw black elements on the bv.
+		/// </summary>
+		protected static readonly Color colorBlack = Color.FromRgb (0, 0, 0);
+		
+		/// <summary>
+		/// The color used to draw red elements on the bv.
+		/// </summary>
+		protected static readonly Color colorRed = Color.FromRgb (0.788, 0.211, 0.247);
+
+		/// <summary>
+		/// The font used to display text on the bv.
+		/// </summary>
+		protected static readonly Font font = Font.GetFont ("Arial", "Regular");
+
+		/// <summary>
+		/// The size of the big texts on the bv.
+		/// </summary>
+		protected static readonly double fontSizeBig = 0.03;
+		
+		/// <summary>
+		/// The size of the small texts on the bv.
+		/// </summary>
+		protected static readonly double fontSizeSmall = 0.02;
+		
+		/// <summary>
+		/// The size of the two black dots on the bv and of the layout code.
+		/// </summary>
+		protected static readonly double fontSizeSpecials = 0.04;
 
 	}
 

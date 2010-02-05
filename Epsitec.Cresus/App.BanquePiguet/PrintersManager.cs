@@ -189,10 +189,12 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintersCellTable.SetHeaderTextH (3, "Décalage x");
 			this.PrintersCellTable.SetHeaderTextH (4, "Décalage y");
 			this.PrintersCellTable.SetHeaderTextH (5, "Commentaire");
-
+			System.Console.WriteLine ("============================================= START VALIDATOR PRINTERS MANAGER ======================================================== ");
 			for (int i = 0; i < this.Printers.Count; i++)
 			{
 				Printer printer = this.Printers[i];
+
+				System.Console.WriteLine ("============================================= " + printer.Name + " ======================================================== ");
 				
 				TextFieldCombo nameTextField = new TextFieldCombo ()
 				{
@@ -272,9 +274,10 @@ namespace Epsitec.App.BanquePiguet
 					printer.Comment = FormattedText.Unescape (commentTextField.Text);
 				};
 
-#warning Uncomment validators.
+#warning Solve Validator bug
 
 				/*new PredicateValidator (nameTextField, () => {
+					System.Console.WriteLine ("NAME ====================> " + printer.Name);
 					string text = FormattedText.Unescape (nameTextField.Text);
 					
 					bool empty = (text.Trim ().Length == 0);
@@ -282,9 +285,10 @@ namespace Epsitec.App.BanquePiguet
 					bool duplicate = this.Printers.Count (p => p.Name == text) > 1;
 
 					return !empty && !startEndSpace && !duplicate;
-				});
+				});*/
 
-				new PredicateValidator (trayTextField, () => {
+				/*new PredicateValidator (trayTextField, () => {
+					System.Console.WriteLine ("TRAY ====================> " + printer.Name);
 					string text = FormattedText.Unescape (trayTextField.Text);
 
 					bool empty = (text.Trim ().Length == 0);
@@ -293,24 +297,19 @@ namespace Epsitec.App.BanquePiguet
 					return !empty && !startEndSpace;
 				});*/
 				
-
-				//System.Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR START");
-
-				//new PredicateValidator (nameTextField, () => { Console.WriteLine(printer.Name + " NAME: " + (FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (nameTextField.Text).Trim ().Length > 0;});//.Validate ();
-				//new PredicateValidator (trayTextField, () => { Console.WriteLine(printer.Name + " TRAY: " + (FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0)); return FormattedText.Unescape (trayTextField.Text).Trim ().Length > 0;});//.Validate ();
-
-				//new PredicateValidator (nameTextField, () => { System.Console.WriteLine(">" + printer.Name + "< NAME: " + (false)); return false;}).Validate ();
-				//new PredicateValidator (trayTextField, () => { System.Console.WriteLine(">" + printer.Name + "< TRAY: " + (false)); return false;}).Validate ();
-
-				//System.Console.WriteLine (i + " PRINTER: " + printer.Name + " VALIDATOR END");
-
+				new PredicateValidator (nameTextField, () =>
+				{
+					System.Console.WriteLine ("==================> " + printer.Name);
+					return nameTextField.Text == "";
+				});
+			 
 				this.PrintersCellTable[1, i].Insert(nameTextField);
 				this.PrintersCellTable[2, i].Insert (trayTextField);
 				this.PrintersCellTable[3, i].Insert (xOffsetTextField);
 				this.PrintersCellTable[4, i].Insert (yOffsetTextField);
 				this.PrintersCellTable[5, i].Insert (commentTextField);
 			}
-
+			System.Console.WriteLine ("============================================= END VALIDATOR PRINTERS MANAGER ======================================================== ");
 			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterEnabled ();
 			this.CheckRemovePrinterEnabled ();
 

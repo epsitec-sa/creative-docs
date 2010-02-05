@@ -19,7 +19,7 @@ namespace Epsitec.App.BanquePiguet
 		/// This bidimensional array is the table used by the modulo 10 recursive algorithm
 		/// to find the next report digit at each step.
 		/// </summary>
-		private static int[,] controlKeyTable = new int[,]
+		private static readonly int[,] controlKeyTable = new int[,]
 		{
 			{0, 9, 4, 6, 8, 2, 7, 1, 3, 5},
 			{9, 4, 6, 8, 2, 7, 1, 3, 5, 0},
@@ -37,7 +37,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// This array contains the control keys used by the modulo 10 recursive algorithm.
 		/// </summary>
-		private static char[] controlKeys = new char[]
+		private static readonly char[] controlKeys = new char[]
 		{
 			'0', '9', '8', '7', '6', '5', '4', '3', '2', '1'
 		};
@@ -45,7 +45,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// This dictionnary is used to convert a char to an int during the iban validation process.
 		/// </summary>
-		private static Dictionary<string, string> charConversionTable = new Dictionary<string, string>
+		private readonly static Dictionary<string, string> charConversionTable = new Dictionary<string, string>
 		{
 			{"A", "10"},
 			{"B", "11"},

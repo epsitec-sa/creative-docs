@@ -235,29 +235,29 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// The executing assembly.
 		/// </summary>
-		private static Assembly assembly = Assembly.GetExecutingAssembly ();
+		private static readonly Assembly assembly = Assembly.GetExecutingAssembly ();
 
 
 		/// <summary>
 		/// The path to the resources of the program.
 		/// </summary>
-		private static string resourcesLocation = "Epsitec.App.BanquePiguet.Resources";
+		private static readonly string resourcesLocation = "Epsitec.App.BanquePiguet.Resources";
 
 
 		/// <summary>
 		/// The path to the file which stores the settings.
 		/// </summary>
-		private static string settingsFile = string.Format (@"{0}\Settings\settings.xml", Globals.Directories.UserAppData);
+		private static readonly string settingsFile = string.Format (@"{0}\Settings\settings.xml", Globals.Directories.UserAppData);
 
 		/// <summary>
 		/// The path to the file used to log messages.
 		/// </summary>
-		private static string logFile = string.Format (@"{0}\Logs\logs.txt", Globals.Directories.UserAppData);
+		private static readonly string logFile = string.Format (@"{0}\Logs\logs.txt", Globals.Directories.UserAppData);
 
 		/// <summary>
 		/// The path to the file used to log errors.
 		/// </summary>
-		private static string errorFile = string.Format (@"{0}\Logs\errors.txt", Globals.Directories.UserAppData);
+		private static readonly string errorFile = string.Format (@"{0}\Logs\errors.txt", Globals.Directories.UserAppData);
 
 	}
 
