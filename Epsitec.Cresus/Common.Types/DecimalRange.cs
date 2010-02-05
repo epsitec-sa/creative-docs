@@ -266,7 +266,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return ((int) value).ToString ();
+				return decimal.Truncate (value).ToString ();
 			}
 		}
 
@@ -280,7 +280,7 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return ((int) value).ToString (culture);
+				return decimal.Truncate (value).ToString ();
 			}
 		}
 
