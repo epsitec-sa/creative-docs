@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Cresus.Core;
+using Epsitec.Common.Debug;
 
 using System.Linq;
 
@@ -15,7 +16,7 @@ namespace Epsitec.App.BanquePiguet
 		static void Main(string[] args)
 		{
 			Program.SetupExceptionHandlers();
-
+			
 			try
 			{
 				UI.Initialize ();
@@ -29,17 +30,17 @@ namespace Epsitec.App.BanquePiguet
 			}
 			catch (System.Exception e)
 			{
-				Tools.Error (e);
+				ErrorLogger.LogAndThrowException (e);
 			}
+
 		}
 
 		static void SetupExceptionHandlers()
 		{
-			System.AppDomain.CurrentDomain.UnhandledException += (sender, e) => Tools.Error (e.ExceptionObject as System.Exception);
-			System.Windows.Forms.Application.ThreadException += (sender, e) => Tools.Error (e.Exception);
+			System.AppDomain.CurrentDomain.UnhandledException += (sender, e) => ErrorLogger.LogAndThrowException (e.ExceptionObject as System.Exception);
+			System.Windows.Forms.Application.ThreadException += (sender, e) => ErrorLogger.LogAndThrowException (e.Exception);
 			System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.CatchException);
 		}
-
 
 	}
 

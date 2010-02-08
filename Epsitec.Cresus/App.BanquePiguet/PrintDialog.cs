@@ -1,8 +1,10 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Debug;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.IO;
 using Epsitec.Common.Printing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -161,9 +163,10 @@ namespace Epsitec.App.BanquePiguet
 
 			this.Printers.ForEach (printer => this.PrinterTextField.Items.Add (printer.Name));
 
-			string preferredPrinter = Tools.LoadSetting ("preferredPrinter");
+			string preferredPrinter;
+			bool preferredPrinterDefined = Settings.Load ().TryGetValue ("preferredPrinter", out preferredPrinter);
 
-			if (preferredPrinter != null && this.Printers.Any (printer => printer.Name == preferredPrinter))
+			if (preferredPrinterDefined && this.Printers.Any (printer => printer.Name == preferredPrinter))
 			{
 				this.PrinterTextField.Text = FormattedText.Escape (preferredPrinter);
 			}
@@ -280,11 +283,13 @@ namespace Epsitec.App.BanquePiguet
 			catch (System.Exception e)
 			{
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une erreur s'est produite lors de l'impression").OpenDialog ();
-				Tools.LogException (new System.Exception ("An error occured while printing." , e));
+				ErrorLogger.LogException (new System.Exception ("An error occured while printing.", e));
 			}
 			finally
 			{
-				Tools.SaveSetting ("preferredPrinter", FormattedText.Unescape (this.PrinterTextField.Text));
+				Settings settings = Settings.Load ();
+				settings["preferredPrinter"] = FormattedText.Unescape (this.PrinterTextField.Text);
+				settings.Save ();
 				this.Exit ();
 			}
 		}
@@ -338,7 +343,7 @@ namespace Epsitec.App.BanquePiguet
 				this.BvWidget.Reason.Replace ("\n", "\t\t")
 			);
 
-			Tools.LogMessage (entry);
+			 Logger.Log (entry);
 		}
 
 	}

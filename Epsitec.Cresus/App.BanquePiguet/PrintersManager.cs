@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Debug;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Printing;
@@ -491,7 +492,7 @@ namespace Epsitec.App.BanquePiguet
 			catch (System.Exception e)
 			{
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une erreur s'est produite lors de la sauvegarde des imprimantes").OpenDialog ();
-				Tools.LogException (new System.Exception ("An error occured while saving the printers.", e));
+				ErrorLogger.LogException (new System.Exception ("An error occured while saving the printers.", e));
 			}
 
 			this.Exit ();
