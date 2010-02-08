@@ -99,6 +99,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Ascii85.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="SettingsReader.cs" />
     <Compile Include="CsvFormat.cs" />
     <Compile Include="CsvReader.cs" />
