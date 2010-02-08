@@ -180,9 +180,6 @@
     <EmbeddedResource Include="Resources\OCR_BB.tff" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\bv.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

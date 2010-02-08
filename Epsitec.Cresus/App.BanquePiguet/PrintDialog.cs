@@ -320,7 +320,6 @@ namespace Epsitec.App.BanquePiguet
 
 			double xOffset = printer.XOffset / 10;
 			double yOffset = printer.YOffset / 10;
-
 			PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, yOffset, width, height)), printDocument, 21, (int) 29.7);
 		}
 

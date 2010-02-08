@@ -166,7 +166,7 @@ namespace Epsitec.App.BanquePiguet
 			};
 
 			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico");
-			//this.Window.MakeFixedSizeWindow ();
+			this.Window.MakeFixedSizeWindow ();
 		}
 
 		/// <summary>

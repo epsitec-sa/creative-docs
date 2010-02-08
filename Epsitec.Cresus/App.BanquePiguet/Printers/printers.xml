@@ -16,9 +16,9 @@
   </printer>
   <printer>
     <name>Brother HL-2170W series</name>
-    <tray>Tray1</tray>
-    <xOffset>-50</xOffset>
-    <yOffset>50</yOffset>
+    <tray>Manual</tray>
+    <xOffset>0</xOffset>
+    <yOffset>189</yOffset>
     <comment>j'adore cette imprimante!!!!!!!!!!!</comment>
   </printer>
   <printer>

@@ -34,7 +34,7 @@ namespace Epsitec.App.BanquePiguet
 			this.SetupButtons ();
 			this.SetupPrintersCellTable ();
 			this.SetupEvents ();
-			//this.AdjustWindowSize ();
+			this.AdjustWindowSize ();
 		}
 
 		/// <summary>
@@ -189,18 +189,15 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintersCellTable.SetHeaderTextH (3, "Décalage x");
 			this.PrintersCellTable.SetHeaderTextH (4, "Décalage y");
 			this.PrintersCellTable.SetHeaderTextH (5, "Commentaire");
-			System.Console.WriteLine ("============================================= START VALIDATOR PRINTERS MANAGER ======================================================== ");
+
 			for (int i = 0; i < this.Printers.Count; i++)
 			{
 				Printer printer = this.Printers[i];
 
-				System.Console.WriteLine ("============================================= " + printer.Name + " ======================================================== ");
-				
 				TextFieldCombo nameTextField = new TextFieldCombo ()
 				{
 					Dock = DockStyle.Fill,
 					Text = FormattedText.Escape (printer.Name),
-					
 				};
 
 				this.PopulateNameTextField (printer, nameTextField);
@@ -274,42 +271,16 @@ namespace Epsitec.App.BanquePiguet
 					printer.Comment = FormattedText.Unescape (commentTextField.Text);
 				};
 
-#warning Solve Validator bug
-
-				/*new PredicateValidator (nameTextField, () => {
-					System.Console.WriteLine ("NAME ====================> " + printer.Name);
-					string text = FormattedText.Unescape (nameTextField.Text);
-					
-					bool empty = (text.Trim ().Length == 0);
-					bool startEndSpace = (text.Trim ().Length != text.Length);
-					bool duplicate = this.Printers.Count (p => p.Name == text) > 1;
-
-					return !empty && !startEndSpace && !duplicate;
-				});*/
-
-				/*new PredicateValidator (trayTextField, () => {
-					System.Console.WriteLine ("TRAY ====================> " + printer.Name);
-					string text = FormattedText.Unescape (trayTextField.Text);
-
-					bool empty = (text.Trim ().Length == 0);
-					bool startEndSpace = (text.Trim ().Length != text.Length);
-					
-					return !empty && !startEndSpace;
-				});*/
+				new PredicateValidator (nameTextField, () => this.CheckNameTextField(nameTextField));
+				new PredicateValidator (trayTextField, () => this.CheckTrayTextField(trayTextField));
 				
-				new PredicateValidator (nameTextField, () =>
-				{
-					System.Console.WriteLine ("==================> " + printer.Name);
-					return nameTextField.Text == "";
-				});
-			 
 				this.PrintersCellTable[1, i].Insert(nameTextField);
 				this.PrintersCellTable[2, i].Insert (trayTextField);
 				this.PrintersCellTable[3, i].Insert (xOffsetTextField);
 				this.PrintersCellTable[4, i].Insert (yOffsetTextField);
 				this.PrintersCellTable[5, i].Insert (commentTextField);
 			}
-			System.Console.WriteLine ("============================================= END VALIDATOR PRINTERS MANAGER ======================================================== ");
+			
 			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterEnabled ();
 			this.CheckRemovePrinterEnabled ();
 
@@ -388,38 +359,42 @@ namespace Epsitec.App.BanquePiguet
 				Parent = this.Root,
 			};
 
-			this.CancelButton = new Button ()
-			{
-				Dock = DockStyle.Right,
-				Margins = new Margins (10, 10, 10, 10),
-				Parent = buttonsFrameBox,
-				Text = "Annuler",
-			};
-
-			this.SaveButton = new Button ()
-			{
-				Dock = DockStyle.Right,
-				Margins = new Margins (10, 0, 10, 10),
-				Parent = buttonsFrameBox,
-				Text = "Sauvegarder",
-			};
-
 			this.AddPrinterButton = new Button ()
 			{
 				Dock = DockStyle.Left,
-				Margins = new Margins (10, 10, 10, 10),
+				Margins = new Margins (10, 10, 0, 10),
 				Parent = buttonsFrameBox,
+				TabIndex = 1,
 				Text = "Ajouter",
 			};
 
 			this.RemovePrinterButton = new Button ()
 			{
 				Dock = DockStyle.Left,
-				Margins = new Margins (0, 0, 10, 10),
+				Margins = new Margins (0, 10, 0, 10),
 				Parent = buttonsFrameBox,
+				TabIndex = 2,
 				Text = "Supprimer",
 			};
 
+			this.CancelButton = new Button ()
+			{
+				Dock = DockStyle.Right,
+				Margins = new Margins (10, 10, 0, 10),
+				Parent = buttonsFrameBox,
+				TabIndex = 4,
+				Text = "Annuler",
+			};
+
+			this.SaveButton = new Button ()
+			{
+				Dock = DockStyle.Right,
+				Margins = new Margins (0, 0, 0, 10),
+				Parent = buttonsFrameBox,
+				TabIndex = 3,
+				Text = "Sauvegarder",
+			};
+			this.SaveButton.Focus ();
 		}
 
 		/// <summary>
@@ -439,6 +414,38 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Checks that the text of nameTextField is valid.
+		/// </summary>
+		/// <param name="nameTextField">The name text field whose text to check.</param>
+		/// <returns>A bool indicating whether the text of nameTextField is valid or not.</returns>
+		protected bool CheckNameTextField(TextFieldCombo nameTextField)
+		{
+			string text = FormattedText.Unescape (nameTextField.Text);
+
+			bool empty = (text.Trim ().Length == 0);
+			bool startEndSpace = (text.Trim ().Length != text.Length);
+			bool duplicate = this.Printers.Count (p => p.Name == text) > 1;
+
+			return !empty && !startEndSpace && !duplicate;
+		}
+
+		/// <summary>
+		/// Checks that the text of trayTextField is valid.
+		/// </summary>
+		/// <param name="trayTextField">The name text field whose text to check.</param>
+		/// <returns>A bool indicating whether the text of trayTextField is valid or not.</returns>
+		protected bool CheckTrayTextField(TextFieldCombo trayTextField)
+		{
+			string text = FormattedText.Unescape (trayTextField.Text);
+
+			bool empty = (text.Trim ().Length == 0);
+			bool startEndSpace = (text.Trim ().Length != text.Length);
+
+			return !empty && !startEndSpace;
+		}
+
+
+		/// <summary>
 		/// Enables or disables SaveButton according to the validity of the AbstractTextFields
 		/// contained in PrintersCellTable.
 		/// </summary>
@@ -448,7 +455,14 @@ namespace Epsitec.App.BanquePiguet
 		/// </remarks>
 		protected void CheckSaveEnabled()
 		{
-			this.SaveButton.Enable = this.TextFieldCells.All (c => c.IsValid);
+			this.SaveButton.Enable = this.TextFieldCells.All (c =>
+			{
+				if (c.Validator != null)
+				{
+					c.Validator.MakeDirty (true);
+				}
+				return c.IsValid;
+			});
 		}
 
 		/// <summary>

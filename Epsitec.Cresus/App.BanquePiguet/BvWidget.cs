@@ -93,7 +93,6 @@ namespace Epsitec.App.BanquePiguet
 		public BvWidget(Widget embedder) : base (embedder)
 		{
 			this.SetupAttributes ();
-			this.SetupBackgroundImage ();
 			this.SetupBvFields ();
 		}
 
@@ -410,16 +409,6 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the background image of the bv.
-		/// </summary>
-		/// <value>The background image of the bv.</value>
-		protected Bitmap BackgroundImage
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Prints the bv on paintPort and the bounds on the bv. This method is to use only
 		/// to print it on paper as it will print the BvFields but not the background.
 		/// </summary>
@@ -427,16 +416,6 @@ namespace Epsitec.App.BanquePiguet
 		/// <param name="bounds">The bounds of the bv.</param>
 		public void Print(IPaintPort port, Rectangle bounds)
 		{
-
-#warning Remove me at the end of the tests.
-
-			using (Path path = Path.FromRectangle (bounds))
-			{
-				port.Color = Color.FromRgb (0, 0, 0);
-				port.LineWidth = 0.01;
-				port.PaintOutline (path);
-			}
-
 			this.PaintBvFields (port, bounds);
 		}
 
@@ -450,26 +429,8 @@ namespace Epsitec.App.BanquePiguet
 		{
 			Rectangle bounds = this.Client.Bounds;
 
-			//this.PaintBackgroundImage (graphics, bounds);
 			this.PaintBackgroundBv (graphics, bounds);
 			this.PaintBvFields (graphics, bounds);
-		}
-
-		/// <summary>
-		/// Paints the background image of the bv.
-		/// </summary>
-		/// <param name="port">The port to use.</param>
-		/// <param name="bounds">The bounds of the bv.</param>
-		protected void PaintBackgroundImage(IPaintPort port, Rectangle bounds)
-		{
-#warning Remove me?
-			port.PaintImage (this.BackgroundImage, bounds);
-
-			using (Path path = Path.FromRectangle (bounds))
-			{
-				port.Color = Color.FromRgb (0, 0, 0);
-				port.PaintOutline (path);
-			}
 		}
 
 		/// <summary>
@@ -494,44 +455,44 @@ namespace Epsitec.App.BanquePiguet
 			graphics.RenderSolid(BvWidget.colorWhite);
 
 			// Paints the black separators.
-			p1 = this.BuildPoint (0, 0.96, bounds);
-			p2 = this.BuildPoint (1, 1, bounds);
-			graphics.AddRectangle (new Rectangle (p1, p2));
+			using (Path path = new Path ())
+			{
+				path.MoveTo (this.BuildPoint (0, 1, bounds));
+				path.LineTo (this.BuildPoint (1, 1, bounds));
+				path.LineTo (this.BuildPoint (1, 0.96, bounds));
+				path.LineTo (this.BuildPoint (0, 0.96, bounds));
+				path.Close ();
 
-			p1 = this.BuildPoint (0.289, 0, bounds);
-			p2 = this.BuildPoint (0.289, 1, bounds);
-			graphics.AddLine (p1, p2);
+				path.MoveTo (this.BuildPoint (0.289, 0, bounds));
+				path.LineTo (this.BuildPoint (0.289, 1, bounds));
 
-			p1 = this.BuildPoint (0.578, 0.96, bounds);
-			p2 = this.BuildPoint (0.578, 0.24, bounds);
-			graphics.AddLine (p1, p2);
+				path.MoveTo (this.BuildPoint (0.578, 0.96, bounds));
+				path.LineTo (this.BuildPoint (0.578, 0.24, bounds));
 
-			p1 = this.BuildPoint (0.578, 0.72, bounds);
-			p2 = this.BuildPoint (1, 0.72, bounds);
-			graphics.AddLine (p1, p2);
+				path.MoveTo (this.BuildPoint (0.578, 0.72, bounds));
+				path.LineTo (this.BuildPoint (1, 0.72, bounds));
 
-			p1 = this.BuildPoint (0.843, 0.96, bounds);
-			p2 = this.BuildPoint (0.843, 0.72, bounds);
-			graphics.AddLine (p1, p2);
+				path.MoveTo (this.BuildPoint (0.843, 0.96, bounds));
+				path.LineTo (this.BuildPoint (0.843, 0.72, bounds));
 
-			graphics.RenderSolid (BvWidget.colorBlack);
+				graphics.Color = BvWidget.colorBlack;
+				graphics.PaintOutline (path);
+			}
 
 			// Paints the two "L".
-			p1 = this.BuildPoint (0.301, 0.241, bounds);
-			p2 = this.BuildPoint (0.325, 0.241, bounds);
-			graphics.AddLine (p1, p2);
+			using (Path path = new Path ())
+			{
+				path.MoveTo (this.BuildPoint (0.325, 0.241, bounds));
+				path.LineTo (this.BuildPoint (0.301, 0.241, bounds));
+				path.LineTo (this.BuildPoint (0.301, 0.26, bounds));
 
-			p1 = this.BuildPoint (0.301, 0.241, bounds);
-			p2 = this.BuildPoint (0.301, 0.26, bounds);
-			graphics.AddLine (p1, p2);
+				path.MoveTo (this.BuildPoint (0.951, 0.241, bounds));
+				path.LineTo (this.BuildPoint (0.975, 0.241, bounds));
+				path.LineTo (this.BuildPoint (0.975, 0.26, bounds));
 
-			p1 = this.BuildPoint (0.951, 0.241, bounds);
-			p2 = this.BuildPoint (0.975, 0.241, bounds);
-			graphics.AddLine (p1, p2);
-
-			p1 = this.BuildPoint (0.975, 0.241, bounds);
-			p2 = this.BuildPoint (0.975, 0.26, bounds);
-			graphics.AddLine (p1, p2);
+				graphics.Color = BvWidget.colorBlack;
+				graphics.PaintOutline (path);
+			}
 
 			graphics.RenderSolid (BvWidget.colorBlack);
 
@@ -553,7 +514,7 @@ namespace Epsitec.App.BanquePiguet
 			graphics.RenderSolid (BvWidget.colorRed);
 
 			// Paints the two red circles
-			int radius = (int) System.Math.Round (0.042 * bounds.Width, 0);
+			double radius = 0.042 * bounds.Width;
 			
 			p1 = this.BuildPoint (0.922, 0.84, bounds);
 			graphics.AddCircle (p1, radius);
@@ -626,7 +587,7 @@ namespace Epsitec.App.BanquePiguet
 			graphics.AddText (p1.X, p1.Y, "L'ufficio d'accettazione", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSmall, bounds));
 
 			p1 = this.BuildPoint (0.342, 0.292, bounds);
-			graphics.AddText (p1.X, p1.Y, "303", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
+			graphics.AddText (p1.X, p1.Y, this.LayoutCode, BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
 
 			graphics.RenderSolid (BvWidget.colorBlack);
 
@@ -669,6 +630,7 @@ namespace Epsitec.App.BanquePiguet
 			this.DrawCross (graphics, 0.957, 0.965, bounds);
 
 			// Paints the border.
+			graphics.LineWidth = 2;
 			graphics.AddRectangle (bounds);
 			graphics.RenderSolid (BvWidget.colorBlack);
 		}
@@ -682,13 +644,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <returns>The absolute point build from relativeX and relativeY.</returns>
 		protected Point BuildPoint(double relativeX, double relativeY, Rectangle bounds)
 		{
-			double height = bounds.Height;
-			double width = bounds.Width;
-
-			int x = (int) System.Math.Round (relativeX * width, 0);
-			int y = (int) System.Math.Round (relativeY * height, 0);
-
-			return new Point (x, y);
+			return new Point (relativeX * bounds.Width, relativeY * bounds.Height);
 		}
 
 		/// <summary>
@@ -733,58 +689,30 @@ namespace Epsitec.App.BanquePiguet
 			double relativeHeight = 0.0094;
 			double relativeWidth = 0.0047;
 
-			Point p1;
-			Point p2;
+			using (Path path = new Path ())
+			{
+				path.MoveTo(this.BuildPoint (relativeX, relativeY, bounds));
+				path.LineTo(this.BuildPoint (relativeX + relativeWidth, relativeY, bounds));
+				path.LineTo(this.BuildPoint (relativeX + relativeWidth, relativeY + relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + 2 * relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX + relativeWidth, relativeY + 2 * relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX + relativeWidth, relativeY + 3 * relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX, relativeY + 3 * relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX, relativeY + 2 * relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX - relativeWidth, relativeY + 2 * relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX - relativeWidth, relativeY + relativeHeight, bounds));
+				path.LineTo(this.BuildPoint (relativeX, relativeY + relativeHeight, bounds));
+				path.Close ();
+				
+				double oldLineWidth = graphics.LineWidth;
+				
+				graphics.LineWidth = 0.4;
+				graphics.Color = BvWidget.colorBlack;
+				graphics.PaintOutline (path);
 
-			p1 = this.BuildPoint (relativeX, relativeY, bounds);
-			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY, bounds);
-			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY + relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY + relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + 2 * relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX + 2 * relativeWidth, relativeY + 2 * relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY + 2 * relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY + 2 * relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX + relativeWidth, relativeY + 3 * relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX + relativeWidth, relativeY + 3 * relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX, relativeY + 3 * relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX, relativeY + 3 * relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX, relativeY + 2 * relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX, relativeY + 2 * relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX - relativeWidth, relativeY + 2 * relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX - relativeWidth, relativeY + 2 * relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX - relativeWidth, relativeY + relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX - relativeWidth, relativeY + relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX, relativeY + relativeHeight, bounds);
-			graphics.AddLine (p1, p2);
-			
-			p1 = this.BuildPoint (relativeX, relativeY + relativeHeight, bounds);
-			p2 = this.BuildPoint (relativeX, relativeY, bounds);
-			graphics.AddLine (p1, p2);
-			
-			graphics.RenderSolid(BvWidget.colorBlack);
+				graphics.LineWidth = oldLineWidth;
+			}
 		}
 
 		/// <summary>
@@ -840,20 +768,6 @@ namespace Epsitec.App.BanquePiguet
 			{
 				throw new System.Exception ("Some BvFields are missing.");
 			}
-		}
-
-		/// <summary>
-		/// Sets up the background image.
-		/// </summary>
-		/// <remarks>
-		/// This method is called when the BvWidget is initialized.
-		/// </remarks>
-		protected void SetupBackgroundImage()
-		{
-			Assembly assembly = Assembly.GetExecutingAssembly ();
-			string resource = "Epsitec.App.BanquePiguet.Resources.bv.jpg";
-
-			this.BackgroundImage = (Bitmap) Bitmap.FromManifestResource (resource, assembly);
 		}
 
 		/// <summary>

@@ -110,7 +110,7 @@
       <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.25</textHeight>
-      <xPosition>102.75</xPosition>
+      <xPosition>104</xPosition>
       <yPosition>17.625</yPosition>
     </field>
 
@@ -119,7 +119,7 @@
       <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.25</textHeight>
-      <xPosition>176.75</xPosition>
+      <xPosition>178</xPosition>
       <yPosition>17.625</yPosition>
     </field>
 
@@ -128,8 +128,8 @@
       <type>BvField</type>
       <font>OCR-B1</font>
       <textHeight>4.25</textHeight>
-      <xPosition>176.75</xPosition>
-      <yPosition>9.625</yPosition>
+      <xPosition>178</xPosition>
+      <yPosition>9.145</yPosition>
     </field>
 
   </fields>
