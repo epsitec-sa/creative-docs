@@ -3999,6 +3999,12 @@ namespace Epsitec.Common.Widgets
 			{
 				widget.NotifyWindowChanged (oldWindow, newWindow);
 			}
+
+			if ((newWindow != null) &&
+				(this.Validator != null))
+			{
+				newWindow.AsyncValidation (this);
+			}
 		}
 		
 
