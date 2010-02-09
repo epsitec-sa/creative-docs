@@ -425,7 +425,7 @@ namespace Epsitec.App.BanquePiguet
 
 			bool empty = (text.Trim ().Length == 0);
 			bool startEndSpace = (text.Trim ().Length != text.Length);
-			bool duplicate = this.Printers.Count (p => p.Name == text) > 1;
+			bool duplicate = this.Printers.Count (printer => printer.Name == text) > 1;
 
 			return !empty && !startEndSpace && !duplicate;
 		}

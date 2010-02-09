@@ -6,7 +6,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Epsitec.App.BanquePiguet
+namespace Epsitec.Common.Support
 {
 
 	/// <summary>
@@ -23,10 +23,10 @@ namespace Epsitec.App.BanquePiguet
 		/// <param name="file">The file containing the settings to load.</param>
 		/// <param name="defaultValues">The default values of the settings.</param>
 		protected Settings(string file, Dictionary<string,string> defaultValues)
-			: base ()
+			: base (defaultValues)
 		{
 			this.File = file;
-
+			
 			if (System.IO.File.Exists (file))
 			{
 				XElement xSettings;
@@ -37,11 +37,6 @@ namespace Epsitec.App.BanquePiguet
 					{
 						xSettings = XElement.Load (xmlReader);
 					}
-				}
-
-				foreach (string key in defaultValues.Keys)
-				{
-					this[key] = defaultValues[key];
 				}
 
 				foreach (XElement xSetting in xSettings.Elements ("entry"))
@@ -55,7 +50,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the file where the settings are stored..
+		/// Gets or sets the file where the settings are stored.
 		/// </summary>
 		/// <value>The file where the settings are stored.</value>
 		protected string File

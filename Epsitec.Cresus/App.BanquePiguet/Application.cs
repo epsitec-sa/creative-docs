@@ -27,6 +27,14 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Initializes a new instance of the Application class.
 		/// </summary>
+		protected Application()
+			: this (true)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the Application class.
+		/// </summary>
 		/// <param name="adminMode">Tell if the application is launched in admin mode.</param>
 		public Application(bool adminMode)
 		{

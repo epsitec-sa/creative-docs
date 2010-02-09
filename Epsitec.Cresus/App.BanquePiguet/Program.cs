@@ -32,7 +32,6 @@ namespace Epsitec.App.BanquePiguet
 			{
 				ErrorLogger.LogAndThrowException (e);
 			}
-
 		}
 
 		static void SetupExceptionHandlers()

@@ -7,9 +7,10 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Globalization;
-using System.Reflection;
 using System.Xml;
 using System.Xml.Linq;
+using System;
+using System.Collections.ObjectModel;
 
 namespace Epsitec.App.BanquePiguet
 {

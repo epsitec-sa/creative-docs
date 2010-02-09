@@ -270,6 +270,7 @@
     <Compile Include="Serialization\Helper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Settings.cs" />
     <Compile Include="Sync.cs">
       <SubType>Code</SubType>
     </Compile>

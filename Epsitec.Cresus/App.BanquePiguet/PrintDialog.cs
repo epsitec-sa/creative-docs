@@ -6,6 +6,7 @@ using Epsitec.Common.Dialogs;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.IO;
 using Epsitec.Common.Printing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -320,12 +321,12 @@ namespace Epsitec.App.BanquePiguet
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);
 			printDocument.DefaultPageSettings.PaperSource = System.Array.Find (printDocument.PrinterSettings.PaperSources, paperSource => paperSource.Name == printer.Tray);
 
-			double height = this.BvWidget.BvSize.Height / 10;
-			double width = this.BvWidget.BvSize.Width / 10;
+			double height = this.BvWidget.BvSize.Height;
+			double width = this.BvWidget.BvSize.Width;
 
-			double xOffset = printer.XOffset / 10;
-			double yOffset = printer.YOffset / 10;
-			PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, yOffset, width, height)), printDocument, 21, (int) 29.7);
+			double xOffset = printer.XOffset;
+			double yOffset = printer.YOffset;
+			PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, yOffset, width, height)), printDocument);
 		}
 
 		/// <summary>
