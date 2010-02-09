@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			if (dialog.Result == Epsitec.Common.Dialogs.DialogResult.Accept)
 			{
 				var print = dialog.Document;
-				this.RenderToPort ((painter, dx, dy) => PrintPort.PrintSinglePage (painter, print, (int) dx, (int) dy));
+				this.RenderToPort ((painter, dx, dy) => PrintPort.PrintFittedSinglePage (painter, print, (int) dx, (int) dy));
 			}
 		}
 		

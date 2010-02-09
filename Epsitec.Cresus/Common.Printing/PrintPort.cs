@@ -830,7 +830,7 @@ namespace Epsitec.Common.Printing
 			}
 		}
 
-		public static void PrintSinglePage(System.Action<Drawing.IPaintPort> painter, PrintDocument document, int dx, int dy)
+		public static void PrintFittedSinglePage(System.Action<Drawing.IPaintPort> painter, PrintDocument document, double dx, double dy)
 		{
 			var bounds = document.DefaultPageSettings.Bounds;
 			var margins = document.DefaultPageSettings.Margins;
@@ -850,6 +850,11 @@ namespace Epsitec.Common.Printing
 			transform = transform.Translate ((bounds.Width - scale*dx) / 2, (bounds.Height - scale*dy) / 2);
 
 			document.Print (new SinglePagePrintEngine (painter, transform));
+		}
+
+		public static void PrintSinglePage(System.Action<Drawing.IPaintPort> painter, PrintDocument document)
+		{
+			document.Print (new SinglePagePrintEngine (painter, Drawing.Transform.Identity));
 		}
 
 
