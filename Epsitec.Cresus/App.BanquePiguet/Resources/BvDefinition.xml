@@ -14,7 +14,7 @@
       <type>BvFieldMultiLine</type>
       <font>Arial</font>
       <textHeight>3</textHeight>
-      <xPosition>3</xPosition>
+      <xPosition>6</xPosition>
       <yPosition>94</yPosition>
       <verticalSpace>4</verticalSpace>
     </field>
@@ -34,7 +34,7 @@
       <type>BvField</type>
       <font>Arial</font>
       <textHeight>3</textHeight>
-      <xPosition>3</xPosition>
+      <xPosition>6</xPosition>
       <yPosition>81</yPosition>
     </field>
 
@@ -52,7 +52,7 @@
       <type>BvFieldMultiLine</type>
       <font>Arial</font>
       <textHeight>3</textHeight>
-      <xPosition>3</xPosition>
+      <xPosition>6</xPosition>
       <yPosition>77</yPosition>
       <verticalSpace>4</verticalSpace>
     </field>

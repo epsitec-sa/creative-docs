@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <printers>
   <printer>
-    <name>myPrinter</name>
-    <tray>Tray 1</tray>
-    <xOffset>0</xOffset>
-    <yOffset>0</yOffset>
-    <comment>mon super commentaire</comment>
-  </printer>
-  <printer>
-    <name>lolipop</name>
-    <tray>Tray 2</tray>
-    <xOffset>0</xOffset>
-    <yOffset>0</yOffset>
-    <comment>plein de signes trop bizarres: %&amp;/&amp;/(=*&amp;*/(çZU GLJ&gt;&lt;H GDF(&amp;OG §°@#@@@§@°¢´§¬#§|¬@°¢¬|§´@§§¢@#°´¬|@°86§´@°´¬°¬§¢°¬¢°|¢¬´§24</comment>
-  </printer>
-  <printer>
     <name>Brother HL-2170W series</name>
     <tray>Manual</tray>
     <xOffset>0</xOffset>
-    <yOffset>189</yOffset>
+    <yOffset>191.5</yOffset>
     <comment>j'adore cette imprimante!!!!!!!!!!!</comment>
   </printer>
   <printer>
@@ -26,6 +12,6 @@
     <tray>Automatically Select</tray>
     <xOffset>0</xOffset>
     <yOffset>0</yOffset>
-    <comment>Pour imprimer vers in fichier.</comment>
+    <comment>Plein de signes bizarres &lt;&gt;&amp;!üPöä£+*ç%()=/&amp;ç*&amp;=</comment>
   </printer>
 </printers>
