@@ -121,6 +121,8 @@ namespace Epsitec.App.BanquePiguet
 		/// </remarks>
 		protected void SetupWindow()
 		{
+			this.Owner = this.Application.Window;
+			this.Icon = this.Application.Window.Icon;
 			this.Text = "Imprimer";
 			this.WindowSize = new Size (100, 100);
 			this.MakeFixedSizeWindow ();
@@ -238,9 +240,9 @@ namespace Epsitec.App.BanquePiguet
 			this.PrinterTextField.TextChanged += (sender) => this.UpdateNbPagesRange ();
 			this.PrinterTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
 			this.NbCopiesTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
-			this.CancelButton.Clicked += (sender, e) => this.Exit ();
+			this.CancelButton.Clicked += (sender, e) => this.Close ();
 			this.PrintButton.Clicked += (sender, e) => this.Print ();
-			this.WindowClosed += (sender) => this.Exit ();
+			this.WindowClosed += (sender) => this.Close ();
 		}
 
 		/// <summary>
@@ -291,21 +293,10 @@ namespace Epsitec.App.BanquePiguet
 				Settings settings = Settings.Load ();
 				settings["preferredPrinter"] = FormattedText.Unescape (this.PrinterTextField.Text);
 				settings.Save ();
-				this.Exit ();
+				this.Close ();
 			}
 		}
 
-		/// <summary>
-		/// Exits this window by calling Application.DisplayPrintDialog (false).
-		/// </summary>
-		/// <remarks>
-		/// This method is called whenever CancelButton is clicked, when the close button is clicked
-		/// or when the bv has been printed.
-		/// </remarks>
-		protected void Exit()
-		{
-			this.Application.DisplayPrintDialog (false);
-		}
 
 		/// <summary>
 		/// Prints the bv corresponding to the data contained in BvWidget.

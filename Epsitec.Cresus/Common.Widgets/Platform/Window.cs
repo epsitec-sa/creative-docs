@@ -985,8 +985,26 @@ namespace Epsitec.Common.Widgets.Platform
 			System.Drawing.Icon nativeIcon = new System.Drawing.Icon (iconStream);
 			base.Icon = nativeIcon;
 		}
-		
-		internal double							Alpha
+
+		internal void SetNativeIcon(System.IO.Stream iconStream, int dx, int dy)
+		{
+			byte[] buffer = new	 byte[iconStream.Length];
+			iconStream.Read (buffer, 0, buffer.Length);
+			string path = System.IO.Path.GetTempFileName ();
+			
+			try
+			{
+				System.IO.File.WriteAllBytes (path, buffer);
+				System.Drawing.Icon nativeIcon = Epsitec.Common.Drawing.Bitmap.LoadNativeIcon (path, dx, dy);
+				base.Icon = nativeIcon;
+			}
+			finally
+			{
+				System.IO.File.Delete (path);
+			}
+		}
+
+		internal double Alpha
 		{
 			get { return this.alpha; }
 			set

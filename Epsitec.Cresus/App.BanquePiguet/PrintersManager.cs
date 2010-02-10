@@ -138,6 +138,8 @@ namespace Epsitec.App.BanquePiguet
 		/// </remarks>
 		protected void SetupWindow()
 		{
+			this.Owner = this.Application.Window;
+			this.Icon = this.Application.Window.Icon;
 			this.Text = "Configuration des imprimantes";
 			this.WindowSize = new Size (800, 400);
 		}
@@ -410,8 +412,7 @@ namespace Epsitec.App.BanquePiguet
 			this.AddPrinterButton.Clicked += (sender, e) => this.AddPrinter ();
 			this.RemovePrinterButton.Clicked += (sender, e) => this.RemovePrinter ();
 			this.SaveButton.Clicked += (sender, e) => this.Save ();
-			this.CancelButton.Clicked += (sender, e) => this.Exit ();
-			this.WindowClosed += (sender) => this.Exit();
+			this.CancelButton.Clicked += (sender, e) => this.Close ();
 		}
 
 		/// <summary>
@@ -495,7 +496,7 @@ namespace Epsitec.App.BanquePiguet
 				ErrorLogger.LogException (new System.Exception ("An error occured while saving the printers.", e));
 			}
 
-			this.Exit ();
+			this.Close ();
 		}
 
 		/// <summary>
@@ -527,19 +528,6 @@ namespace Epsitec.App.BanquePiguet
 				this.SetupPrintersCellTable ();
 			}
 		}
-
-		/// <summary>
-		/// Exits this window by calling Application.DisplayPrintersManager (false).
-		/// </summary>
-		/// <remarks>
-		/// This method is called whenever CancelButton is clicked, when the close button is clicked
-		/// or when Printers has been saved.
-		/// </remarks>
-		protected void Exit()
-		{
-			this.Application.DisplayPrintersManager (false);
-		}
-
 	}
 
 }

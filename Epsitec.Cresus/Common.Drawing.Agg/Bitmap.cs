@@ -549,6 +549,11 @@ namespace Epsitec.Common.Drawing
 			return Bitmap.FromNativeIcon (IconLoader.LoadIcon (path, dx, dy));
 		}
 
+		public static System.Drawing.Icon LoadNativeIcon(string path, int dx, int dy)
+		{
+			return IconLoader.LoadIcon (path, dx, dy);
+		}
+
 		public static Image FromNativeIcon(PlatformSystemIcon systemIcon)
 		{
 			System.Drawing.Icon icon = null;

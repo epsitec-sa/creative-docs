@@ -151,16 +151,6 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the PrintDialog associated with this instance.
-		/// </summary>
-		/// <value>The PrintDialog associated with this instance.</value>
-		protected PrintDialog PrintDialog
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Sets up the window property of this instance.
 		/// </summary>
 		/// <remarks>
@@ -173,7 +163,7 @@ namespace Epsitec.App.BanquePiguet
 				Text = this.ShortWindowTitle,
 			};
 
-			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico");
+			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico", 48, 48);
 			this.Window.MakeFixedSizeWindow ();
 		}
 
@@ -401,7 +391,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (this.CheckReason ())
 				{
-					this.BvWidget.Reason = FormattedText.Unescape(this.ReasonTextField.Text);
+					this.BvWidget.Reason = FormattedText.Unescape (this.ReasonTextField.Text);
 				}
 
 				this.CheckPrintButtonEnbled ();
@@ -409,10 +399,10 @@ namespace Epsitec.App.BanquePiguet
 
 			if (this.AdminMode)
 			{
-				this.OptionsButton.Clicked += (sender, e) => this.DisplayPrintersManager (true);
+				this.OptionsButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrintersManager);
 			}
 
-			this.PrintButton.Clicked += (sender, e) => this.DisplayPrintDialog (true);
+			this.PrintButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrintDialog);
 		}
 
 		/// <summary>
@@ -484,78 +474,55 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Displays or hides the PrintersManager associated to this instance.
+		/// Shows the modal PrintersManager dialog associated to this instance.
 		/// </summary>
-		/// <param name="display">A bool indicating whether to display or hide the PrintersManager.</param>
-		public void DisplayPrintersManager(bool display)
+		public void ShowPrintersManager()
 		{
-			if (display)
-			{
-				this.PrintersManager = new PrintersManager (this);
-				this.PrintersManager.Show ();
-				this.Window.IsFrozen = true;
-			}
-			else
-			{
-				this.PrintersManager.Dispose ();
-				this.PrintersManager = null;
-				this.Window.IsFrozen = false;
-			}
+			this.PrintersManager = new PrintersManager (this);
+			this.PrintersManager.ShowDialog ();
 		}
 
 		/// <summary>
-		/// Displays or hides the PrintDialog associated to this instance.
+		/// Shows the modal PrintDialog associated to this instance.
 		/// </summary>
-		/// <param name="display">A bool indicating whether to display or hide the PrintDialog.</param>
-		public void DisplayPrintDialog(bool display)
+		public void ShowPrintDialog()
 		{
-			if (display)
-			{
-				List<Printer> printers = new List<Printer>
-				(
-					from printer in Printer.Load ()
-					where PrinterSettings.InstalledPrinters.Contains (printer.Name)
-					select printer
-				);
+			List<Printer> printers = new List<Printer>
+			(
+				from printer in Printer.Load ()
+				where PrinterSettings.InstalledPrinters.Contains (printer.Name)
+				select printer
+			);
 
-				bool checkPrintersList = (printers.Count > 0);
-				bool checkPrintersTrays = printers.All (printer =>
+			bool checkPrintersList = (printers.Count > 0);
+			bool checkPrintersTrays = printers.All (printer =>
+			{
+				PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
+				return trays.Any (tray => (tray.Name == printer.Tray));  
+			});
+
+			if (!checkPrintersList)
+			{
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
+			}
+			else if (!checkPrintersTrays)
+			{
+				string printerName = printers.Find (printer =>
 				{
 					PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
-					return trays.Any (tray => (tray.Name == printer.Tray));  
-				});
+					return !trays.Any (tray => (tray.Name == printer.Tray));  
+				}).Name ;
 
-				if (!checkPrintersList)
-				{
-					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
-				}
-				else if (!checkPrintersTrays)
-				{
-					string printerName = printers.Find (printer =>
-					{
-						PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
-						return !trays.Any (tray => (tray.Name == printer.Tray));  
-					}).Name ;
-
-					string message = String.Format ("Le bac d'une imprimante est mal configuré: {0}", printerName);
-					
-					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
-				}
-				else
-				{
-					this.PrintDialog = new PrintDialog (this, this.BvWidget, printers);
-					this.PrintDialog.Show ();
-					this.Window.IsFrozen = true;
-				}
+				string message = String.Format ("Le bac d'une imprimante est mal configuré: {0}", printerName);
+				
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
 			}
 			else
 			{
-				this.PrintDialog.Dispose ();
-				this.PrintDialog = null;
-				this.Window.IsFrozen = false;
+				var printDialog = new PrintDialog (this, this.BvWidget, printers);
+				printDialog.ShowDialog ();
 			}
 		}
-
 	}	
 
 }
