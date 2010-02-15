@@ -9,8 +9,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
-using System;
-using System.Collections.ObjectModel;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -257,12 +255,14 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckReason (value))
+				string reason = BvHelper.BuildNormalizedReason (value);
+
+				if (!BvHelper.CheckReason (reason))
 				{
 					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
 				}
 
-				this.BvFields[BvFieldId.Reason].Text = value;
+				this.BvFields[BvFieldId.Reason].Text = reason;
 				
 				this.Invalidate ();
 			}

@@ -21,7 +21,9 @@ namespace Epsitec.App.BanquePiguet
 			{
 				UI.Initialize ();
 
-				using (Application application = new Application (args.Contains ("-admin")))
+				bool adminMode = args.Contains ("-admin");
+
+				using (Application application = new Application (adminMode))
 				{
 					application.Window.Show ();
 					application.Window.Run ();

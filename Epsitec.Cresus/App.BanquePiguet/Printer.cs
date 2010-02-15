@@ -99,22 +99,22 @@ namespace Epsitec.App.BanquePiguet
 		/// all printers which might be in the file but not in printers will be erased.
 		/// </summary>
 		/// <param name="printers">The list of Printers to save.</param>
-		public static void Save(List<Printer> printers)
+		public static void Save(IEnumerable<Printer> printers)
 		{
 			XElement xPrinters = new XElement ("printers");
 
-			printers.ForEach (
-				printer => xPrinters.Add (
-					new XElement (
-						"printer",
+			foreach (Printer printer in printers)
+			{
+				xPrinters.Add (
+					new XElement ("printer",
 						new XElement ("name", printer.Name),
 						new XElement ("tray", printer.Tray),
 						new XElement ("xOffset", printer.XOffset.ToString (CultureInfo.InvariantCulture)),
 						new XElement ("yOffset", printer.YOffset.ToString (CultureInfo.InvariantCulture)),
 						new XElement ("comment", printer.Comment)
 					)
-				)
-			);
+				);
+			}
 
 			XmlWriterSettings xmlSettings = new XmlWriterSettings ()
 			{
@@ -135,7 +135,7 @@ namespace Epsitec.App.BanquePiguet
 		/// Loads a list of Printers from the configuration File.
 		/// </summary>
 		/// <returns>The list of Printers loaded from the configuration file.</returns>
-		public static List<Printer> Load()
+		public static IEnumerable<Printer> Load()
 		{
 			XElement xPrinters;
 
@@ -147,19 +147,15 @@ namespace Epsitec.App.BanquePiguet
 				}
 			}
 
-			List<Printer> printers = new List<Printer> (
-				from xPrinter in xPrinters.Elements ("printer")
-				select new Printer ()
-				{
-					Name = xPrinter.Element ("name").Value,
-					Tray = xPrinter.Element ("tray").Value,
-					XOffset = double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
-					YOffset = double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
-					Comment = xPrinter.Element ("comment").Value,
-				}
-			);
-
-			return printers;
+			return from xPrinter in xPrinters.Elements ("printer")
+				   select new Printer ()
+				   {
+					   Name = xPrinter.Element ("name").Value,
+					   Tray = xPrinter.Element ("tray").Value,
+					   XOffset = double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
+					   YOffset = double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
+					   Comment = xPrinter.Element ("comment").Value,
+				   };
 		}
 
 		/// <summary>

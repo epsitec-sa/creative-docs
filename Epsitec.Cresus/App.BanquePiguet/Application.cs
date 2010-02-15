@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using System;
 
 namespace Epsitec.App.BanquePiguet
 {
@@ -52,10 +51,8 @@ namespace Epsitec.App.BanquePiguet
 			this.BenefeciaryIbanTextField.Text = FormattedText.Escape ("CH38 0888 8123 4567 8901 2");
 			this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
 			this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
-			
-			//this.DisplayPrintersManager (true);
-			
-			//this.DisplayPrintDialog (true);
+
+			this.ShowPrinterManagerDialog ();
 		}
 
 		/// <summary>
@@ -144,7 +141,7 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the PrintersManager associated with this instance.
 		/// </summary>
 		/// <value>The PrintersManager associated with this instance.</value>
-		protected PrintersManager PrintersManager
+		protected PrinterManagerDialog PrintersManager
 		{
 			get;
 			set;
@@ -344,7 +341,7 @@ namespace Epsitec.App.BanquePiguet
 
 				if (values.Contains (name))
 				{
-					throw new System.Exception (String.Format ("A bv value is defined more than once: {0}", name));
+					throw new System.Exception (string.Format ("A bv value is defined more than once: {0}", name));
 				}
 				else
 				{
@@ -389,9 +386,11 @@ namespace Epsitec.App.BanquePiguet
 
 			this.ReasonTextField.TextChanged += (sender) =>
 			{
+				BvHelper.BuildNormalizedReason (FormattedText.Unescape (this.ReasonTextField.Text));
+
 				if (this.CheckReason ())
 				{
-					this.BvWidget.Reason = FormattedText.Unescape (this.ReasonTextField.Text);
+					this.BvWidget.Reason = FormattedText.Unescape(this.ReasonTextField.Text);
 				}
 
 				this.CheckPrintButtonEnbled ();
@@ -399,7 +398,7 @@ namespace Epsitec.App.BanquePiguet
 
 			if (this.AdminMode)
 			{
-				this.OptionsButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrintersManager);
+				this.OptionsButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrinterManagerDialog);
 			}
 
 			this.PrintButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrintDialog);
@@ -455,7 +454,8 @@ namespace Epsitec.App.BanquePiguet
 		/// <returns>A bool indicating if the text of ReasonTextField is valid or not.</returns>
 		protected bool CheckReason()
 		{
-			string reason = FormattedText.Unescape (this.ReasonTextField.Text);
+			string text = FormattedText.Unescape (this.ReasonTextField.Text);
+			string reason = BvHelper.BuildNormalizedReason (text);
 			return BvHelper.CheckReason (reason);
 		}
 
@@ -476,10 +476,10 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Shows the modal PrintersManager dialog associated to this instance.
 		/// </summary>
-		public void ShowPrintersManager()
+		public void ShowPrinterManagerDialog()
 		{
-			this.PrintersManager = new PrintersManager (this);
-			this.PrintersManager.ShowDialog ();
+			this.PrintersManager = new PrinterManagerDialog (this);
+			this.PrintersManager.OpenDialog ();
 		}
 
 		/// <summary>
@@ -495,32 +495,15 @@ namespace Epsitec.App.BanquePiguet
 			);
 
 			bool checkPrintersList = (printers.Count > 0);
-			bool checkPrintersTrays = printers.All (printer =>
-			{
-				PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
-				return trays.Any (tray => (tray.Name == printer.Tray));  
-			});
-
+			
 			if (!checkPrintersList)
 			{
 				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Aucune imprimante n'est configurée pour cet ordinateur.").OpenDialog ();
 			}
-			else if (!checkPrintersTrays)
-			{
-				string printerName = printers.Find (printer =>
-				{
-					PaperSource[] trays = PrinterSettings.FindPrinter (printer.Name).PaperSources;
-					return !trays.Any (tray => (tray.Name == printer.Tray));  
-				}).Name ;
-
-				string message = String.Format ("Le bac d'une imprimante est mal configuré: {0}", printerName);
-				
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
-			}
 			else
 			{
-				var printDialog = new PrintDialog (this, this.BvWidget, printers);
-				printDialog.ShowDialog ();
+				PrintDialog printDialog = new PrintDialog (this, this.BvWidget, printers);
+				printDialog.OpenDialog ();
 			}
 		}
 	}	

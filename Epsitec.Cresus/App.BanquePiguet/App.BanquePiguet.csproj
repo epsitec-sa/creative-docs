@@ -71,7 +71,7 @@
     <Compile Include="BvHelper.cs" />
     <Compile Include="PrintDialog.cs" />
     <Compile Include="Printer.cs" />
-    <Compile Include="PrintersManager.cs" />
+    <Compile Include="PrinterManagerDialog.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BvFieldMultiLineColumn.cs" />

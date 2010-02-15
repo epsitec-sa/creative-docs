@@ -13,16 +13,15 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System;
 
 namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The PrintDialog class is a window which lets the user choose on which printer he wants to 
+	/// The PrintDialog class is a dialog which lets the user choose on which printer he wants to 
 	/// print the bv and how much copies does he want to print.
 	/// </summary>
-	class PrintDialog : Window
+	class PrintDialog : AbstractDialog
 	{
 
 		/// <summary>
@@ -36,11 +35,6 @@ namespace Epsitec.App.BanquePiguet
 			this.Application = application;
 			this.BvWidget = BvWidget;
 			this.Printers = printers;
-
-			this.SetupWindow ();
-			this.SetupWidgets ();
-			this.SetupEvents ();
-			this.AdjustWindowSize ();
 		}
 
 		/// <summary>
@@ -113,35 +107,50 @@ namespace Epsitec.App.BanquePiguet
 			set;
 		}
 
+		protected override Window CreateWindow()
+		{
+			Window window = new Window ();
+
+			this.SetupWindow (window);
+			this.SetupWidgets (window);
+			this.SetupEvents (window);
+
+			window.AdjustWindowSize ();
+
+			return window;
+		}
+
 		/// <summary>
 		/// Sets up the properties of the window of this instance.
 		/// </summary>
+		/// <param name="window">The window to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
-		protected void SetupWindow()
+		protected void SetupWindow(Window window)
 		{
-			this.Owner = this.Application.Window;
-			this.Icon = this.Application.Window.Icon;
-			this.Text = "Imprimer";
-			this.WindowSize = new Size (100, 100);
-			this.MakeFixedSizeWindow ();
+			this.OwnerWindow = this.Application.Window;
+			window.Icon = this.Application.Window.Icon;
+			window.Text = "Imprimer";
+			window.WindowSize = new Size (100, 100);
+			window.MakeFixedSizeWindow ();
 		}
 
 		/// <summary>
 		/// Sets up the widgets of the PrintDialog, such as the PrintButton, CancelButton,
 		/// NbCopiesTextField and PrinterTextField.
 		/// </summary>
+		/// <param name="window">The window to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
-		protected void SetupWidgets()
+		protected void SetupWidgets(Window window)
 		{
 			FrameBox frameBox = new FrameBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Top,
-				Parent = this.Root
+				Parent = window.Root
 			};
 
 			GroupBox printerGroupBox = new GroupBox ()
@@ -232,17 +241,17 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Sets up the events of this instance.
 		/// </summary>
+		/// <param name="window">The window to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
-		protected void SetupEvents()
+		protected void SetupEvents(Window window)
 		{
 			this.PrinterTextField.TextChanged += (sender) => this.UpdateNbPagesRange ();
 			this.PrinterTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
 			this.NbCopiesTextField.TextChanged += (sender) => this.CheckPrintEnabled ();
-			this.CancelButton.Clicked += (sender, e) => this.Close ();
+			this.CancelButton.Clicked += (sender, e) => this.CloseDialog ();
 			this.PrintButton.Clicked += (sender, e) => this.Print ();
-			this.WindowClosed += (sender) => this.Close ();
 		}
 
 		/// <summary>
@@ -278,22 +287,35 @@ namespace Epsitec.App.BanquePiguet
 		/// </summary>
 		protected void Print()
 		{
-			try
+			Printer printer = this.Printers.Find (p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
+			PrinterSettings printerSettings = PrinterSettings.FindPrinter (printer.Name);
+			
+			bool checkTray = printerSettings.PaperSources.Any (tray => (tray.Name == printer.Tray));
+
+			if (checkTray)
 			{
-				this.PrintBv ();
-				this.LogPrint ();
+				try
+				{
+					this.PrintBv ();
+					this.LogPrint ();
+				}
+				catch (System.Exception e)
+				{
+					MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une erreur s'est produite lors de l'impression").OpenDialog ();
+					ErrorLogger.LogException (new System.Exception ("An error occured while printing.", e));
+				}
+				finally
+				{
+					Settings settings = Settings.Load ();
+					settings["preferredPrinter"] = FormattedText.Unescape (this.PrinterTextField.Text);
+					settings.Save ();
+					this.CloseDialog ();
+				}
 			}
-			catch (System.Exception e)
+			else
 			{
-				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, "Une erreur s'est produite lors de l'impression").OpenDialog ();
-				ErrorLogger.LogException (new System.Exception ("An error occured while printing.", e));
-			}
-			finally
-			{
-				Settings settings = Settings.Load ();
-				settings["preferredPrinter"] = FormattedText.Unescape (this.PrinterTextField.Text);
-				settings.Save ();
-				this.Close ();
+				string message = string.Format ("Le bac ({0}) de l'imprimante séléctionnée ({1}) n'existe pas.", printer.Tray, printer.Name);
+				MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message).OpenDialog ();
 			}
 		}
 
@@ -306,7 +328,7 @@ namespace Epsitec.App.BanquePiguet
 			Printer printer = this.Printers.Find(p => p.Name == FormattedText.Unescape (this.PrinterTextField.Text));
 			PrintDocument printDocument = new PrintDocument();
 
-			printDocument.DocumentName = String.Format ("bv {0}", this.BvWidget.BeneficiaryIban);
+			printDocument.DocumentName = string.Format ("bv {0}", this.BvWidget.BeneficiaryIban);
 			printDocument.SelectPrinter(printer.Name);
 			printDocument.PrinterSettings.Copies = int.Parse (FormattedText.Unescape (this.NbCopiesTextField.Text), CultureInfo.InvariantCulture);
 			printDocument.DefaultPageSettings.Margins = new Margins (0, 0, 0, 0);

@@ -85,17 +85,22 @@ namespace Epsitec.App.BanquePiguet
 		/// <exception cref="System.ArgumentException">If the number is empty or contains non numeric characters.</exception>
 		public static char ComputeControlKey(string number)
 		{
-			if (!Regex.IsMatch (number, @"^\d*$"))
+			if (!Regex.IsMatch (number, @"[0-9A-Z]*$"))
 			{
-				throw new System.ArgumentException ("The provided string contains non numeric characters");
+				throw new System.ArgumentException (string.Format("The provided string contains non alpah-numeric characters: {0}", number));
 			}
 
 			if (number.Length == 0)
 			{
-				throw new System.ArgumentException ("The provided string is empty");
+				throw new System.ArgumentException ("The provided string is empty.");
 			}
 
 			int report = 0;
+
+			foreach (string s in BvHelper.charConversionTable.Keys)
+			{
+				number = number.Replace (s, BvHelper.charConversionTable[s]);
+			}
 
 			while (number.Length > 0)
 			{
@@ -402,6 +407,30 @@ namespace Epsitec.App.BanquePiguet
 
 			return normalizedIban;
 		}
+
+		/// <summary>
+		/// Normalizes reason so that each line has at least 10 chars on it.
+		/// </summary>
+		/// <param name="reason">The reason to normalize.</param>
+		/// <returns>The normalized vestion of reason.</returns>
+		public static string BuildNormalizedReason(string reason)
+		{
+			string normalizedReason = "";
+
+			foreach (string line in reason.Split ('\n'))
+			{
+				for (int i = 0; i * 10 < line.Length; i++)
+				{
+					int index = i * 10;
+					int length = System.Math.Min (10, line.Length - i * 10);
+
+					normalizedReason = string.Format("{0}\n{1}", normalizedReason, line.Substring (index, length));
+				}
+			}
+
+			return normalizedReason.Trim ();
+		}
+
 
 	}
 
