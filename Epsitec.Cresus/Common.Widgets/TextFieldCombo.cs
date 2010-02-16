@@ -298,7 +298,13 @@ namespace Epsitec.Common.Widgets
 					return;
 				
 				case MessageType.MouseDown:
-					if (this.IsReadOnly)
+					// In addition to the readonly property, we also check manually if the
+					// button is hit. The first time the button is pressed, everything is
+					// fine However, after that, the TextFieldCombo catches the event instead
+					// of the button, even if the mouse pointer is on the button. Therefore,
+					// we open the combo box if the pointer is on the button. That's not a
+					// real fix of the original problem, but a workaround that works fine.
+					if (this.IsReadOnly || this.button.HitTest (pos))
 					{
 						this.OpenCombo ();
 						message.Consumer = this;
