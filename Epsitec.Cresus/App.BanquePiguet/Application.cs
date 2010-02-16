@@ -17,14 +17,14 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The Application class displays a form which lets the user type some values of a bv, print them and
-	/// configure the printers to use.
+	/// The <see cref="Application"/> class displays a form which lets the user type some values of a
+	/// bv, print them and configure the printers to use.
 	/// </summary>
 	class Application : Epsitec.Common.Widgets.Application
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the Application class.
+		/// Initializes a new instance of the <see cref="Application"/> class.
 		/// </summary>
 		protected Application()
 			: this (true)
@@ -32,9 +32,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Application class.
+		/// Initializes a new instance of the <see cref="Application"/> class.
 		/// </summary>
-		/// <param name="adminMode">Tell if the application is launched in admin mode.</param>
+		/// <param name="adminMode">Tell if the <see cref="Application"/> is launched in admin mode.</param>
 		public Application(bool adminMode)
 		{
 			this.AdminMode = adminMode;
@@ -52,7 +52,8 @@ namespace Epsitec.App.BanquePiguet
 			this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
 			this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
 
-			this.ShowPrinterManagerDialog ();
+			//this.ShowPrinterManagerDialog ();
+			//this.ShowPrintDialog();
 		}
 
 		/// <summary>
@@ -68,9 +69,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether the application is launched in admin mode.
+		/// Gets or sets a value indicating whether the <see cref="Application"/> is launched in
+		/// admin mode.
 		/// </summary>
-		/// <value><c>A bool indicating whether the application is launched in admin mode.</value>
+		/// <value>A <see cref="bool"/> indicating whether the <see cref="Application"/> is launched in admin mode.</value>
 		public bool AdminMode
 		{
 			get;
@@ -78,9 +80,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the TextField used for the beneficiary iban.
+		/// Gets or sets the <see cref="TextField"/> used for the beneficiary iban.
 		/// </summary>
-		/// <value>The TextField used for the beneficiary iban.</value>
+		/// <value>The <see cref="TextField"/> used for the beneficiary iban.</value>
 		protected TextField BenefeciaryIbanTextField
 		{
 			get;
@@ -88,9 +90,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the TextFieldMulti used for the beneficiary address.
+		/// Gets or sets the <see cref="TextFieldMulti"/> used for the beneficiary address.
 		/// </summary>
-		/// <value>The TextFieldMulti used for the beneficiary address.</value>
+		/// <value>The <see cref="TextFieldMulti"/> used for the beneficiary address.</value>
 		protected TextFieldMulti BeneficiaryAddressTextField
 		{
 			get;
@@ -98,9 +100,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the BvWidget associated with this instance.
+		/// Gets or sets the <see cref="BvWidget"/> associated with this instance.
 		/// </summary>
-		/// <value>The BvWidget associated with this instance.</value>
+		/// <value>The <see cref="BvWidget"/> associated with this instance.</value>
 		protected BvWidget BvWidget
 		{
 			get;
@@ -108,9 +110,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to display PrintDialog.
+		/// Gets or sets the <see cref="Button"/> used to display <see cref="PrintDialog"/>.
 		/// </summary>
-		/// <value>The button used to print display PrintDialog.</value>
+		/// <value>The <see cref="Button"/> used to print display <see cref="PrintDialog"/>.</value>
 		protected Button PrintButton
 		{
 			get;
@@ -118,9 +120,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to display PrintersManager.
+		/// Gets or sets the <see cref="Button"/> used to display <see cref="PrinterManagerDialog"/>.
 		/// </summary>
-		/// <value>The button used to display PrintersManager.</value>
+		/// <value>The <see cref="Button"/> used to display <see cref="PrinterManagerDialog"/>.</value>
 		protected Button OptionsButton
 		{
 			get;
@@ -128,9 +130,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the TextFieldMulti used for the reason of the transfer.
+		/// Gets or sets the <see cref="TextFieldMulti"/> used for the reason of the transfer.
 		/// </summary>
-		/// <value>The TextFieldMulti used for the reason of the transfer.</value>
+		/// <value>The <see cref="TextFieldMulti"/> used for the reason of the transfer.</value>
 		protected TextFieldMulti ReasonTextField
 		{
 			get;
@@ -138,9 +140,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the PrintersManager associated with this instance.
+		/// Gets or sets the <see cref="PrinterManagerDialog"/> associated with this instance.
 		/// </summary>
-		/// <value>The PrintersManager associated with this instance.</value>
+		/// <value>The <see cref="PrinterManagerDialog"/> associated with this instance.</value>
 		protected PrinterManagerDialog PrintersManager
 		{
 			get;
@@ -148,7 +150,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the window property of this instance.
+		/// Sets up the <see cref="Application.Window"/> property of this instance.
 		/// </summary>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
@@ -165,7 +167,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the form containing the TextFields and the Buttons.
+		/// Sets up the form containing the <see cref="TextField"/>s and the <see cref="Button"/>s.
 		/// </summary>
 		/// <remarks>
 		/// This method is called at the initializatin of this instance.
@@ -273,7 +275,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the BvWidget associated with this instance.
+		/// Sets up the <see cref="BvWidget"/> associated with this instance.
 		/// </summary>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
@@ -357,7 +359,8 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the events related to the Buttons or to the TextFields.
+		/// Sets up the events related to the <see cref="Button"/>s or to the
+		/// <see cref="TextField"/>s.
 		/// </summary>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
@@ -405,7 +408,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the validators of the TextFields.
+		/// Sets up the validators of the <see cref="TextField"/>s.
 		/// </summary>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
@@ -428,9 +431,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks the text of BenefeciaryIbanTextField is valid.
+		/// Checks that the text of <see cref="Application.BenefeciaryIbanTextField"/>
+		/// is valid.
 		/// </summary>
-		/// <returns>A bool indicating if the text of BenefeciaryIbanTextField is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if the text of <see cref="Application.BenefeciaryIbanTextField"/> is valid or not.</returns>
 		protected bool CheckBeneficiaryIban()
 		{
 			string text = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
@@ -439,9 +443,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks the text of BeneficiaryAddressTextField is valid.
+		/// Checks the text of <see cref="Application.BeneficiaryAddressTextField"/>
+		/// is valid.
 		/// </summary>
-		/// <returns>A bool indicating if the text of BeneficiaryAddressTextField is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if the text of <see cref="Application.BeneficiaryAddressTextField"/> is valid or not.</returns>
 		protected bool CheckBeneficiaryAddress()
 		{
 			string address = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
@@ -449,9 +454,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks the text of ReasonTextField is valid.
+		/// Checks the text of <see cref="Application.ReasonTextField"/>
+		/// is valid.
 		/// </summary>
-		/// <returns>A bool indicating if the text of ReasonTextField is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if the text of <see cref="Application.ReasonTextField"/> is valid or not.</returns>
 		protected bool CheckReason()
 		{
 			string text = FormattedText.Unescape (this.ReasonTextField.Text);
@@ -460,10 +466,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Enables or disables the PrintButton based on the validity of the TextFields.
+		/// Enables or disables <see cref="Application.PrintButton"/> based on the validity
+		/// of the <see cref="TextField"/>s.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the text of one of the TextField changes.
+		/// This method is called whenever the text of one of the <see cref="TextField"/> changes.
 		/// </remarks>
 		protected void CheckPrintButtonEnbled()
 		{
@@ -474,7 +481,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Shows the modal PrintersManager dialog associated to this instance.
+		/// Shows the modal <see cref="PrinterManagerDialog"/> associated to this instance.
 		/// </summary>
 		public void ShowPrinterManagerDialog()
 		{
@@ -483,7 +490,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Shows the modal PrintDialog associated to this instance.
+		/// Shows the modal <see cref="PrintDialog"/> associated to this instance.
 		/// </summary>
 		public void ShowPrintDialog()
 		{

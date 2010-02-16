@@ -13,15 +13,15 @@ using System.Xml.Linq;
 namespace Epsitec.App.BanquePiguet
 {
 	/// <summary>
-	/// The class BvWidget represents a bv and can display it either on the screen or on paper.
-	/// See http://www.postfinance.ch/medialib/pf/de/doc/consult/templ/chf/44103_templ.Par.0001.File.dat/44103_templ.pdf
+	/// The class <see cref="BvWidget"/> represents a bv and can display it either on the screen or
+	/// on paper. See http://www.postfinance.ch/medialib/pf/de/doc/consult/templ/chf/44103_templ.Par.0001.File.dat/44103_templ.pdf
 	/// for the full specification.
 	/// </summary>
 	class BvWidget : Widget
 	{
 
 		/// <summary>
-		/// The BvFieldId enum represents the set of the BvFields of a bv.
+		/// The <see cref="BvFieldId"/> enum represents the set of the <see cref="BvField"/>s of a bv.
 		/// </summary>
 		protected enum BvFieldId {
 			/// <summary>
@@ -79,14 +79,14 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the BvWidget class.
+		/// Initializes a new instance of the <see cref="BvWidget"/> class.
 		/// </summary>
 		public BvWidget() : this (null)
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the BvWidget class.
+		/// Initializes a new instance of the <see cref="BvWidget"/> class.
 		/// </summary>
 		/// <param name="embedder">The embedder.</param>
 		public BvWidget(Widget embedder) : base (embedder)
@@ -400,9 +400,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the dictionnary containing the BvFields.
+		/// Gets or sets the <see cref="Dictionnary"/> containing the <see cref="BvField"/>s.
 		/// </summary>
-		/// <value>The dictionnary containing the BvFields.</value>
+		/// <value>The <see cref="Dictionnary"/> containing the <see cref="BvField"/>s.</value>
 		protected Dictionary<BvFieldId, BvField> BvFields
 		{
 			get;
@@ -410,10 +410,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Prints the bv on paintPort and the bounds on the bv. This method is to use only
-		/// to print it on paper as it will print the BvFields but not the background.
+		/// Prints the bv on <paramref name="port"/> within <paramref name="bounds"/>. This method
+		/// is to use only to print it on paper as it will print the <see cref="BvField"/>s but not
+		/// the background.
 		/// </summary>
-		/// <param name="port">The IPaintPort to use.</param>
+		/// <param name="port">The <see cref="IPaintPort"/> to use.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
 		public void Print(IPaintPort port, Rectangle bounds)
 		{
@@ -421,10 +422,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Paints the bv on graphics. This method is to use only to paint it on screen
-		/// as it will print the background image in addition to the BvFields.
+		/// Paints the bv on <paramref name="graphics"/>. This method is to use only to paint it on
+		/// screen as it will print the background of the bv in addition to the <see cref="BvField"/>s.
 		/// </summary>
-		/// <param name="graphics">The graphics to use.</param>
+		/// <param name="graphics">The <see cref="Graphics"/> to use.</param>
 		/// <param name="clipRect">The clip rectangle.</param>
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
@@ -437,7 +438,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Paints the background of the bv: the lines, boxes, circles, texts, and so on.
 		/// </summary>
-		/// <param name="graphics">The graphics port to use.</param>
+		/// <param name="graphics">The <see cref="Graphics"/> to use.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
 		protected void PaintBackgroundBv(Graphics graphics, Rectangle bounds)
 		{
@@ -637,19 +638,19 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Computes a point given its relative coordinates and the bounds on the bv.
+		/// Computes a <see cref="Point"/> given its relative coordinates and <paramref name="bounds"/>.
 		/// </summary>
 		/// <param name="relativeX">The relative X coordinate.</param>
 		/// <param name="relativeY">The relative Y coordinate.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
-		/// <returns>The absolute point build from relativeX and relativeY.</returns>
+		/// <returns>The absolute <see cref="Point"/> build from relativeX and relativeY.</returns>
 		protected Point BuildPoint(double relativeX, double relativeY, Rectangle bounds)
 		{
 			return new Point (relativeX * bounds.Width, relativeY * bounds.Height);
 		}
 
 		/// <summary>
-		/// Computes the size of the text given its relative size and the bounds on the bv.
+		/// Computes the size of the text given its relative size and <paramref name="bounds"/>.
 		/// </summary>
 		/// <param name="relativeSize">The relative size of the text.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
@@ -660,11 +661,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Draws a white box with red outline between the given points.
+		/// Draws a white box with red outline between the given <see cref="Point"/>s.
 		/// </summary>
-		/// <param name="graphics">The graphics port to use.</param>
-		/// <param name="p1">The first point.</param>
-		/// <param name="p2">The second point.</param>
+		/// <param name="graphics">The <see cref="Graphics"/> to use.</param>
+		/// <param name="p1">The first <see cref="Point"/>.</param>
+		/// <param name="p2">The second <see cref="Point"/>.</param>
 		protected void DrawBox(Graphics graphics , Point p1, Point p2)
 		{
 			graphics.AddFilledRectangle (new Rectangle(p1, p2));
@@ -675,13 +676,13 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Draws a cross with black outline at the given relative point.
+		/// Draws a cross with black outline at the given relative <see cref="Point"/>.
 		/// </summary>
 		/// <remarks>
-		/// The point defining the position of the cross is the lower left corner of the bottom branch of
-		/// the cross.
+		/// The <see cref="Point"/> defining the position of the cross is the lower left corner
+		/// of the bottom branch of the cross.
 		/// </remarks>
-		/// <param name="graphics">The graphics port to use.</param>
+		/// <param name="graphics">The <see cref="Graphics"/> to use.</param>
 		/// <param name="relativeX">The relative X coordinate of the cross.</param>
 		/// <param name="relativeY">The relative Y coordinate of the cross.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
@@ -717,9 +718,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Paints the BvFields using paintPort and the bounds of the bv.
+		/// Paints the <see cref="BvField"/>s using <paramref name="paintPort"/> within
+		/// <paramref name="bounds"/>.
 		/// </summary>
-		/// <param name="paintPort">The IPaintPort to use.</param>
+		/// <param name="paintPort">The <see cref="IPaintPort"/> to use.</param>
 		/// <param name="bounds">The bounds.</param>
 		protected void PaintBvFields(IPaintPort paintPort, Rectangle bounds)
 		{
@@ -732,12 +734,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the BvFields by loading them out of the resource file.
+		/// Sets up the <see cref="BvField"/>s by loading them out of the resource file.
 		/// </summary>
 		/// <remarks>
-		/// This method is called when the BvWidget is initialized.
+		/// This method is called when the <see cref="BvWidget"/> is initialized.
 		/// </remarks>
-		/// <exception cref="System.Exception">If some Bvfields are missing.</exception>
+		/// <exception cref="System.Exception">If some <see cref="BvField"/>s are missing.</exception>
 		protected void SetupBvFields()
 		{
 			this.BvFields = new Dictionary<BvFieldId, BvField> ();
@@ -772,10 +774,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the string attributes in order to give them an empty initial value.
+		/// Sets up the <see cref="string"/> attributes in order to give them an empty initial value.
 		/// </summary>
 		/// <remarks>
-		/// This method is called when the BvWidget is initialized.
+		/// This method is called when the <see cref="BvWidget"/> is initialized.
 		/// </remarks>
 		protected void SetupAttributes()
 		{
@@ -788,10 +790,12 @@ namespace Epsitec.App.BanquePiguet
 
 
 		/// <summary>
-		/// Updates the text of the reference line based on the values of ReferenceClientNumber and BeneficiaryIban.
+		/// Updates the text of the reference line based on the values of <see cref="BvWidget.ReferenceClientNumber"/>
+		/// and <see cref="BvWidget.BeneficiaryIban"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the text of ReferenceClientNumber and BeneficiaryIban change.
+		/// This method is called whenever the text of <see cref="BvWidget.ReferenceClientNumber"/> and
+		/// <see cref="BvWidget.BeneficiaryIban"/> change.
 		/// </remarks>
 		protected void UpdateReferenceLine()
 		{
@@ -806,12 +810,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Updates the text of the clearing line based on the values of ClearingConstant, ClearingBank and
-		/// ClearingBankKey.
+		/// Updates the text of the clearing line based on the values of <see cref="BvWidget.ClearingConstant"/>,
+		/// <see cref="BvWidget.ClearingBank"/> and <see cref="BvWidget.ClearingBankKey"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the text of ClearingConstant, ClearingBank and ClearingBankKey
-		/// change.
+		/// This method is called whenever the text of <see cref="BvWidget.ClearingConstant"/>,
+		/// <see cref="BvWidget.ClearingBank"/> and <see cref="BvWidget.ClearingBankKey"/> change.
 		/// </remarks>
 		protected void UpdateClearingLine()
 		{
@@ -827,10 +831,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Updates the text of the CCP number line based on the value of CcpNumber.
+		/// Updates the text of the CCP number line based on the value of <see cref="BvWidget.CcpNumber"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenver the text of CcpNumber changes.
+		/// This method is called whenver the text of <see cref="BvWidget.CcpNumber"/> changes.
 		/// </remarks>
 		protected void UpdateCcpNumberLine()
 		{
@@ -844,52 +848,53 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// This attribute backs the ReferenceClientNumber property.
+		/// This attribute backs the <see cref="BvWidget.ReferenceClientNumber"/> property.
 		/// </summary>
 		protected string referenceClientNumber;
 		
 		/// <summary>
-		/// This attributes backs the ClearingConstant property.
+		/// This attributes backs the <see cref="BvWidget.ClearingConstant"/> property.
 		/// </summary>
 		protected string clearingConstant;
 		
 		/// <summary>
-		/// This attribute backs the ClearingBank property.
+		/// This attribute backs the <see cref="BvWidget.ClearingBank"/> property.
 		/// </summary>
 		protected string clearingBank;
 		
 		/// <summary>
-		/// This attribute backs the ClearingBankKey property.
+		/// This attribute backs the <see cref="BvWidget.ClearingBankKey"/> property.
 		/// </summary>
 		protected string clearingBankKey;
 		
 		/// <summary>
-		/// This attribute backs the CcpNumber property.
+		/// This attribute backs the <see cref="BvWidget.CcpNumber"/> property.
 		/// </summary>
 		protected string ccpNumber;
 
 		/// <summary>
-		/// The color used to draw the pink part of the background of the bv.
+		/// The <see cref="Color"/> used to draw the pink part of the background of the bv.
 		/// </summary>
 		protected static readonly Color colorLightPink = Color.FromRgb (0.964, 0.909, 0.882);
 		
 		/// <summary>
-		/// The color used to draw the white part of the background of the bv and the inner part of the boxes.
+		/// The <see cref="Color"/> used to draw the white part of the background of the bv
+		/// and the inner part of the boxes.
 		/// </summary>
 		protected static readonly Color colorWhite = Color.FromRgb (1, 1, 1);
 		
 		/// <summary>
-		/// The color used to draw black elements on the bv.
+		/// The <see cref="Color"/> used to draw black elements on the bv.
 		/// </summary>
 		protected static readonly Color colorBlack = Color.FromRgb (0, 0, 0);
 		
 		/// <summary>
-		/// The color used to draw red elements on the bv.
+		/// The <see cref="Color"/> used to draw red elements on the bv.
 		/// </summary>
 		protected static readonly Color colorRed = Color.FromRgb (0.788, 0.211, 0.247);
 
 		/// <summary>
-		/// The font used to display text on the bv.
+		/// The <see cref="Font"/> used to display text on the bv.
 		/// </summary>
 		protected static readonly Font font = Font.GetFont ("Arial", "Regular");
 

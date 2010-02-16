@@ -18,18 +18,18 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The PrintDialog class is a dialog which lets the user choose on which printer he wants to 
-	/// print the bv and how much copies does he want to print.
+	/// The <see cref="PrintDialog"/> class is a dialog which lets the user choose on which printer
+	/// he wants to print the bv and how much copies does he want to print.
 	/// </summary>
 	class PrintDialog : AbstractDialog
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the PrintDialog class.
+		/// Initializes a new instance of the <see cref="PrintDialog"/> class.
 		/// </summary>
-		/// <param name="application">The Application creating this instance.</param>
-		/// <param name="BvWidget">The BvWidget containing the bv data.</param>
-		/// <param name="printers">The list of Printer that the user might select.</param>
+		/// <param name="application">The <see cref="Application"/> creating this instance.</param>
+		/// <param name="BvWidget">The <see cref="BvWidget"/> containing the bv data.</param>
+		/// <param name="printers">The list of <see cref="Printer"/>s that the user might select.</param>
 		public PrintDialog(Application application, BvWidget BvWidget, List<Printer> printers)
 		{
 			this.Application = application;
@@ -38,9 +38,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the Application who created this instance.
+		/// Gets or sets the <see cref="Application"/> who created this instance.
 		/// </summary>
-		/// <value>The Application who created this instance.</value>
+		/// <value>The <see cref="Application"/> who created this instance.</value>
 		protected Application Application
 		{
 			get;
@@ -48,9 +48,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the BvWidget which contains the bv data.
+		/// Gets or sets the <see cref="BvWidget"/> which contains the bv data.
 		/// </summary>
-		/// <value>The BvWidget which contains the bv data.</value>
+		/// <value>The <see cref="BvWidget"/> which contains the bv data.</value>
 		protected BvWidget BvWidget
 		{
 			get;
@@ -58,9 +58,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the list of Printers available to the user.
+		/// Gets or sets the list of <see cref="Printer"/>s available to the user.
 		/// </summary>
-		/// <value>The list of Printers available to the user.</value>
+		/// <value>The list of <see cref="Printer"/>s available to the user.</value>
 		protected List<Printer> Printers
 		{
 			get;
@@ -68,9 +68,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to print the bv.
+		/// Gets or sets the <see cref="Button"/> used to print the bv.
 		/// </summary>
-		/// <value>The button used to prints the bv.</value>
+		/// <value>The <see cref="Button"/> used to prints the bv.</value>
 		protected Button PrintButton
 		{
 			get;
@@ -78,9 +78,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to close the window.
+		/// Gets or sets the <see cref="Button"/> used to close the window.
 		/// </summary>
-		/// <value>The button used to close the window.</value>
+		/// <value>The <see cref="Button"/> used to close the window.</value>
 		protected Button CancelButton
 		{
 			get;
@@ -88,9 +88,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the text field used for the number of copies.
+		/// Gets or sets the <see cref="TextFieldUpDown"/> used for the number of copies.
 		/// </summary>
-		/// <value>The text field used for the number of copies.</value>
+		/// <value>The <see cref="TextFieldUpDown"/> used for the number of copies.</value>
 		protected TextFieldUpDown NbCopiesTextField
 		{
 			get;
@@ -98,15 +98,19 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the text field used for the printer selection.
+		/// Gets or sets the <see cref="TextFieldCombo"/> used for the printer selection.
 		/// </summary>
-		/// <value>The text field used for the printer selection.</value>
+		/// <value>The <see cref="TextFieldCombo"/> used for the printer selection.</value>
 		protected TextFieldCombo PrinterTextField
 		{
 			get;
 			set;
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Window"/> for the current dialog.
+		/// </summary>
+		/// <returns>The created <see cref="Window"/>.</returns>
 		protected override Window CreateWindow()
 		{
 			Window window = new Window ();
@@ -121,9 +125,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the properties of the window of this instance.
+		/// Sets up the properties of the <see cref="PrintDialog.window"/> property of this
+		/// instance.
 		/// </summary>
-		/// <param name="window">The window to setup.</param>
+		/// <param name="window">The <see cref="Window"/> to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
@@ -137,10 +142,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the widgets of the PrintDialog, such as the PrintButton, CancelButton,
-		/// NbCopiesTextField and PrinterTextField.
+		/// Sets up the <see cref="Widget"/>s of the <see cref="PrintDialog"/>, such as the
+		/// <see cref="Button"/>s and <see cref="TexfField"/>s.
 		/// </summary>
-		/// <param name="window">The window to setup.</param>
+		/// <param name="window">The <see cref="Window"/> to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
@@ -239,9 +244,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the events of this instance.
+		/// Sets up the <see cref="Event"/>s of this instance.
 		/// </summary>
-		/// <param name="window">The window to setup.</param>
+		/// <param name="window">The <see cref="Window"/> to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
@@ -255,10 +260,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Updates the range of NbCopiesTextField based on the value of PrinterTextField.
+		/// Updates the range of <see cref="PrintDialog.NbCopiesTextField"/> based on the value
+		/// of <see cref="PrintDialog.PrinterTextField"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the text of PrinterTextField changes.
+		/// This method is called whenever the text of <see cref="PrintDialog.PrinterTextField"/> changes.
 		/// </remarks>
 		protected void UpdateNbPagesRange()
 		{
@@ -269,12 +275,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Enables or disables PrintButton according to the validity of PrinterTextField and
-		/// NbCopiesTextField.
+		/// Enables or disables <see cref="PrintDialog.PrintButton"/> according to the validity of
+		/// <see cref="PrintDialog.PrinterTextField"/> and <see cref="PrintDialog.NbCopiesTextField"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the text of PrinterTextField and NbCopiesTextField
-		/// changes.
+		/// This method is called whenever the text of <see cref="PrintDialog.PrinterTextField"/>
+		/// and <see cref="PrintDialog.NbCopiesTextField"/> changes.
 		/// </remarks>
 		protected void CheckPrintEnabled()
 		{
@@ -282,8 +288,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Prints BvWidget with the printer given by PrinterTextField with the number of copies
-		/// given by NbCopiesTextField and logs what has been printed to the log file.
+		/// Prints <see cref="PrintDialog.BvWidget"/> with the printer given by <see cref="PrintDialog.PrinterTextField"/>
+		/// with the number of copies given by <see cref="PrintDialog.NbCopiesTextField"/> and logs what has been printed
+		/// to the log file.
 		/// </summary>
 		protected void Print()
 		{
@@ -321,7 +328,7 @@ namespace Epsitec.App.BanquePiguet
 
 
 		/// <summary>
-		/// Prints the bv corresponding to the data contained in BvWidget.
+		/// Prints the bv corresponding to the data contained in <see cref="PrintDialog.BvWidget"/>.
 		/// </summary>
 		protected void PrintBv()
 		{
@@ -343,8 +350,8 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Logs the values of PrinterTextField and NbCopiesTextField as well as part of the data
-		/// of BvWidget.
+		/// Logs the values of <see cref="PrintDialog.PrinterTextField"/> and <see cref="PrintDialog.NbCopiesTextField"/>
+		/// as well as part of the data of <see cref="PrintDialog.BvWidget"/>.
 		/// </summary>
 		protected void LogPrint()
 		{

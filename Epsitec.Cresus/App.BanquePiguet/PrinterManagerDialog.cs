@@ -17,16 +17,16 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The PrintersManager class is a dialog which lets the user configure the
-	/// printers used to print the bvs.
+	/// The <see cref="PrinterManagerDialog"/> class is a dialog which lets the user configure the
+	/// <see cref="Printer"/>s used to print the bvs.
 	/// </summary>
 	class PrinterManagerDialog : AbstractDialog
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the PrintersManager class.
+		/// Initializes a new instance of the <see cref="PrinterManagerDialog"/> class.
 		/// </summary>
-		/// <param name="application">The Application creating this instance.</param>
+		/// <param name="application">The <see cref="Application"/> creating this instance.</param>
 		public PrinterManagerDialog(Application application)
 		{
 			this.Application = application;
@@ -34,9 +34,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the Application who created this instance..
+		/// Gets or sets the <see cref="Application"/> who created this instance.
 		/// </summary>
-		/// <value>The Application who created this instance.</value>
+		/// <value>The <see cref="Application"/> who created this instance.</value>
 		protected Application Application
 		{
 			get;
@@ -44,9 +44,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets list of configured Printers.
+		/// Gets or sets list of configured <see cref="Printer"/>s.
 		/// </summary>
-		/// <value>The list of configured Printers.</value>
+		/// <value>The list of configured <see cref="Printer"/>s.</value>
 		protected IList<Printer> Printers
 		{
 			get;
@@ -54,9 +54,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the CellTable displaying the Printers.
+		/// Gets or sets the <see cref="CellTable"/> displaying the <see cref="Printer"/>s.
 		/// </summary>
-		/// <value>The CellTable displaying the Printers.</value>
+		/// <value>The <see cref="CellTable"/> displaying the <see cref="Printer"/>s.</value>
 		protected CellTable PrintersCellTable
 		{
 			get;
@@ -64,9 +64,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to save the configuration.
+		/// Gets or sets the <see cref="Button"/> used to save the configuration.
 		/// </summary>
-		/// <value>The button used to save the configuration.</value>
+		/// <value>The <see cref="Button"/> used to save the configuration.</value>
 		protected Button SaveButton
 		{
 			get;
@@ -74,9 +74,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to close the PrintersManager.
+		/// Gets or sets the <see cref="Button"/> used to close the <see cref="PrinterManagerDialog"/>.
 		/// </summary>
-		/// <value>The button used to close the PrintersManager.</value>
+		/// <value>The <see cref="Button"/> used to close the <see cref="PrinterManagerDialog"/>.</value>
 		protected Button CancelButton
 		{
 			get;
@@ -84,9 +84,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to add a new Printer.
+		/// Gets or sets the <see cref="Button"/> used to add a new <see cref="Printer"/>.
 		/// </summary>
-		/// <value>The button used to add a new Printer.</value>
+		/// <value>The <see cref="Button"/> used to add a new <see cref="Printer"/>.</value>
 		protected Button AddPrinterButton
 		{
 			get;
@@ -94,9 +94,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the button used to remove a printer.
+		/// Gets or sets the <see cref="Button"/> used to remove a <see cref="Printer"/>.
 		/// </summary>
-		/// <value>The button used to remove a printer.</value>
+		/// <value>The <see cref="Button"/> used to remove a <see cref="Printer"/>.</value>
 		protected Button RemovePrinterButton
 		{
 			get;
@@ -104,12 +104,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets the AbstractTextFields contained in PrintersCellTable.
+		/// Gets the <see cref="AbstractTextField"/>s contained in PrintersCellTable.
 		/// </summary>
-		/// <value>The AbstractTextFields contained in PrintersCellTable.</value>
+		/// <value>The <see cref="AbstractTextField"/>s contained in PrintersCellTable.</value>
 		/// <remarks>
-		/// This property assumes that PrintersCellTable is properly initialized. Do not call
-		/// it before or while it is initialized.
+		/// This property assumes that <see cref="PrinterManagerDialog.PrintersCellTable"/> is properly
+		/// initialized. Do not call it before or while it is initialized.
 		/// </remarks>
 		protected IEnumerable<AbstractTextField> TextFieldCells
 		{
@@ -125,6 +125,10 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Creates a <see cref="Window"/> for the current dialog.
+		/// </summary>
+		/// <returns>The created <see cref="Window"/>.</returns>
 		protected override Window CreateWindow()
 		{
 			Window window = new Window ();
@@ -139,9 +143,10 @@ namespace Epsitec.App.BanquePiguet
 
 
 		/// <summary>
-		/// Sets up the properties of the window of this instance.
+		/// Sets up the properties of the <see cref="PrinterManagerDialog.Window"/> property of
+		/// this instance.
 		/// </summary>
-		/// <param name="window">The window of the dialog.</param>
+		/// <param name="window">The <see cref="Window"/> to setup.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
@@ -154,14 +159,16 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up PrintersCellTable according to Printers. If PrintersCellTable is allready
-		/// initialized, that instance is removed and replaced by a new one. In addition, the
-		/// events used to update Printers and the validator are also set up.
+		/// Sets up <see cref="PrinterManagerDialog.PrintersCellTable"/> according to
+		/// <see cref="PrinterManagerDialog.Printers"/>. If <see cref="PrinterManagerDialog.PrintersCellTable"/>
+		/// is allready initialized, that instance is removed and replaced by a new one. In addition, the
+		/// <see cref="Event"/>s used to update <see cref="PrinterManagerDialog.Printers"/> and the
+		/// <see cref="IValidator"/>s are also set up.
 		/// </summary>
-		/// <param name="window">The window of the dialog.</param>
+		/// <param name="window">The <see cref="Window"/> of the dialog.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance and when
-		/// a printer is added or removed.
+		/// a <see cref="Printer"/> is added or removed.
 		/// </remarks>
 		protected void SetupPrintersCellTable(Window window)
 		{
@@ -302,13 +309,14 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Populates the items of nameTextField with the installed printers and the name of printer
-		/// and sets its current value to the name of printer.
+		/// Populates the items of <paramref name="nameTextField"/> with the installed printers and
+		/// the name <paramref name="printer"/> of and sets its current value to the name of
+		/// <paramref name="printer"/>.
 		/// </summary>
-		/// <param name="printer">The printer corresponding to nameTextField.</param>
-		/// <param name="nameTextField">The nameTextField to populate.</param>
+		/// <param name="printer">The <see cref="Printer"/> corresponding to nameTextField.</param>
+		/// <param name="nameTextField">The <c>nameTextField</c> to populate.</param>
 		/// <remarks>
-		/// This method is called whenever a nameTextField is initialized.
+		/// This method is called whenever a <c>nameTextField</c> is initialized.
 		/// </remarks>
 		protected void PopulateNameTextField(Printer printer, TextFieldCombo nameTextField)
 		{
@@ -323,15 +331,15 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Populates the items of trayTextField with the trays of the installed printer corresponding
-		/// to the name of printer and with the tray of printer and sets its current value to the tray
-		/// of printer.
+		/// Populates the items of <paramref name="trayTextField"/> with the trays of the installed
+		/// printer corresponding to the name of <paramref name="printer"/> and with the tray of
+		/// <paramref name="printer"/> and sets its current value to the tray of <paramref name="printer"/>.
 		/// </summary>
-		/// <param name="printer">The printer.</param>
-		/// <param name="trayTextField">The tray text field.</param>
+		/// <param name="printer">The <see cref="Printer"/>.</param>
+		/// <param name="trayTextField">The <c>trayTextField</c> field.</param>
 		/// <remarks>
-		/// This method is called whenever a trayTextField is initialized or when the value of the
-		/// corresponding nameTextField changes.
+		/// This method is called whenever a  <c>trayTextField</c> is initialized or when the value of the
+		/// corresponding <c>nameTextField</c> changes.
 		/// </remarks>
 		protected void PopulateTraysTextField(Printer printer, TextFieldCombo trayTextField)
 		{
@@ -358,9 +366,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the buttons of this instance.
+		/// Sets up the <see cref="Button"/>s of this instance.
 		/// </summary>
-		/// <param name="window">The window of the dialog.</param>
+		/// <param name="window">The <see cref="Window"/> of the dialog.</param>
 		/// <remarks>
 		/// This method is called at the initialization of this instance.
 		/// </remarks>
@@ -412,12 +420,13 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Sets up the events of this instance.
+		/// Sets up the <see cref="Event"/>s of this instance.
 		/// </summary>
-		/// <param name="window">The window of the dialog.</param>
+		/// <param name="window">The <see cref="Window"/> of the dialog.</param>
 		/// <remarks>
-		/// This method is called at the initialization of this instance. Note that the events related
-		/// to PrintersCellTable are not set up here, as they are set up in SetupPrintersCellTable.
+		/// This method is called at the initialization of this instance. Note that the <see cref="Event"/>s
+		/// related to <see cref="PrinterManagerDialog.PrintersCellTable"/> are not set up here, as they are
+		/// set up in <see cref="PrinterManagerDialog.SetupPrintersCellTable"/>.
 		/// </remarks>
 		protected void SetupEvents(Window window)
 		{
@@ -428,10 +437,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that the text of nameTextField is valid.
+		/// Checks that the text of <paramref name="nameTextField"/> is valid.
 		/// </summary>
-		/// <param name="nameTextField">The name text field whose text to check.</param>
-		/// <returns>A bool indicating whether the text of nameTextField is valid or not.</returns>
+		/// <param name="nameTextField">The <see cref="PrinterManagerDialog.nameTextField"/> whose text to check.</param>
+		/// <returns>A <see cref="bool"/> indicating whether the text of <paramref name="nameTextField"/> is valid or not.</returns>
 		protected bool CheckNameTextField(TextFieldCombo nameTextField)
 		{
 			string text = FormattedText.Unescape (nameTextField.Text);
@@ -444,13 +453,13 @@ namespace Epsitec.App.BanquePiguet
 
 
 		/// <summary>
-		/// Enables or disables SaveButton according to the validity of the AbstractTextFields
-		/// contained in PrintersCellTable.
+		/// Enables or disables <see cref="PrinterManagerDialog.SaveButton"/> according to the validity
+		/// of the <see cref="AbstractTextField"/>s contained in <see cref="PrinterManagerDialog.PrintersCellTable"/>.
 		/// </summary>
-		/// <param name="sender">The widget whose text modification fired the event.</param>
+		/// <param name="sender">The <see cref="widget"/> whose text modification fired the event.</param>
 		/// <remarks>
-		/// This method is called whenver the text changes in on the the AbstractTextFields
-		/// contained in PrintersCellTable.
+		/// This method is called whenver the text changes in on the the <see cref="AbstractTextField"/>s
+		/// contained in <see cref="PrinterManagerDialog.PrintersCellTable"/>.
 		/// </remarks>
 		protected void CheckSaveEnabled(Widget sender)
 		{
@@ -463,10 +472,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		///Enables or disables RemovePrinterButton according to what is selected in PrintersCellTable.
+		/// Enables or disables <see cref="PrinterManagerDialog.RemovePrinterButton"/> according to
+		/// what is selected in <see cref="PrinterManagerDialog.PrintersCellTable"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the selection changes in PrintersCellTable.
+		/// This method is called whenever the selection changes in <see cref="PrinterManagerDialog.PrintersCellTable"/>.
 		/// </remarks>
 		protected void CheckRemovePrinterEnabled()
 		{
@@ -474,10 +484,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Saves the content of Printers and exits the PrintersManager.
+		/// Saves the content of <see cref="PrinterManagerDialog.Printers"/> and exits the
+		/// <see cref="PrinterManagerDialog"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenever the SaveButton is clicked.
+		/// This method is called whenever <see cref="PrinterManagerDialog.SaveButton"/> is clicked.
 		/// </remarks>
 		protected void Save()
 		{
@@ -495,10 +506,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Adds a new empty Printer to Printers and resets PrintersCellTable.
+		/// Adds a new empty <see cref="Printer"/> to <see cref="PrinterManagerDialog.Printers"/> and
+		/// resets <see cref="PrinterManagerDialog.PrintersCellTable"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenver the AddPrinterButton is clicked.
+		/// This method is called whenver the <see cref="PrinterManagerDialog.AddPrinterButton"/> is clicked.
 		/// </remarks>
 		protected void AddPrinter()
 		{
@@ -507,11 +519,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Removes the Printer selected in PrintersCellTable from Printers and resets
-		/// PrintersCellTable.
+		/// Removes the <see cref="Printer"/> selected in <see cref="PrinterManagerDialog.PrintersCellTable"/>
+		/// from Printers and resets <see cref="PrinterManagerDialog.PrintersCellTable"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenver the RemovePrinterButton is clicked.
+		/// This method is called whenver the <see cref="PrinterManagerDialog.RemovePrinterButton"/> is clicked.
 		/// </remarks>
 		protected void RemovePrinter()
 		{

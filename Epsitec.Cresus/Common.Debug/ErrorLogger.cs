@@ -7,14 +7,14 @@ namespace Epsitec.Common.Debug
 {
 
 	/// <summary>
-	/// The ErrorLogger class provides the tools to log errors and Exceptions.
+	/// The <see cref="ErrorLogger"/> class provides the tools to log errors and
+	/// <see cref="System.Exception"/>s.
 	/// </summary>
 	public static class ErrorLogger
 	{
 		/// <summary>
-		/// Builds a new Exception with message as message, logs it to the default error
-		/// log file and throws it. The format used to log the Exception is the same as
-		/// LogException(Exception, string).
+		/// Builds a new <see cref="System.Exception"/> with <paramref name="message"/> as message,
+		/// logs it to the default error log file and throws it.
 		/// </summary>
 		/// <param name="message">The message of the error.</param>
 		/// <exception cref="System.Exception">Always.</exception>
@@ -24,9 +24,8 @@ namespace Epsitec.Common.Debug
 		}
 
 		/// <summary>
-		/// Builds a new Exception with message as message, logs it to file
-		/// and throws it. The format used to log the Exception is the same as
-		/// LogException(Exception, string).
+		/// Builds a new <see cref="System.Exception"/> with <paramref name="message"/> as message,
+		/// logs it to <paramref name="file"/> and throws it.
 		/// </summary>
 		/// <param name="message">The message of the error.</param>
 		/// <param name="file">The file where to log the error.</param>
@@ -37,10 +36,9 @@ namespace Epsitec.Common.Debug
 		}
 
 		/// <summary>
-		/// Logs exception to the default error log file and throws it. The format used to
-		/// log exception is the same as LogException(Exception, string).
+		/// Logs <paramref name="exception"/> to the default error log file and throws it.
 		/// </summary>
-		/// <param name="exception">The Exception to log and throw.</param>
+		/// <param name="exception">The <see cref="System.Exception"/> to log and throw.</param>
 		/// <exception cref="System.Exception">Always.</exception>
 		public static void LogAndThrowException(System.Exception exception)
 		{
@@ -48,10 +46,9 @@ namespace Epsitec.Common.Debug
 		}
 
 		/// <summary>
-		/// Logs exception to file and throws it. The format used to log exception
-		/// is the same as LogException(Exception, string).
+		/// Logs <paramref name="exception"/> to <paramref name="file"/> and throws it.
 		/// </summary>
-		/// <param name="exception">The Exception to log and throw.</param>
+		/// <param name="exception">The <see cref="System.Exception"/> to log and throw.</param>
 		/// <param name="file">The file where to log the error.</param>
 		public static void LogAndThrowException(System.Exception exception, string file)
 		{
@@ -60,21 +57,20 @@ namespace Epsitec.Common.Debug
 		}
 		
 		/// <summary>
-		/// Logs exception to the default error log file. The format used to log
-		/// exception is the same as LogException(Exception, string).
+		/// Logs <paramref name="exception"/> to the default error log file.
 		/// </summary>
-		/// <param name="exception">The Exception to log.</param>
+		/// <param name="exception">The <see cref="System.Exception"/> to log.</param>
 		public static void LogException(System.Exception exception)
 		{
 			ErrorLogger.LogException (exception, ErrorLogger.defaultErrorFile);
 		}
 
 		/// <summary>
-		/// Logs exception to file. The type of exception, its message, its source and
-		/// its stack trace are written to the log file, recursively for the inner
+		/// Logs <paramref name="exception"/> to file. The type of exception, its message,
+		/// its source and its stack trace are written to the log file, recursively for the inner
 		/// exception.
 		/// </summary>
-		/// <param name="exception">The Exception to log.</param>
+		/// <param name="exception">The <see cref="System.Exception"/> to log.</param>
 		/// <param name="file">The file where to log exception.</param>
 		public static void LogException(System.Exception exception, string file)
 		{
@@ -95,7 +91,7 @@ namespace Epsitec.Common.Debug
 		}
 
 		/// <summary>
-		/// Logs message to the default error log file.
+		/// Logs <paramref name="message"/> to the default error log file.
 		/// </summary>
 		/// <param name="message">The message to log.</param>
 		public static void LogErrorMessage(string message)
@@ -104,7 +100,7 @@ namespace Epsitec.Common.Debug
 		}
 
 		/// <summary>
-		/// Logs message to file.
+		/// Logs <paramref name="message"/> to <paramref name="file"/>.
 		/// </summary>
 		/// <param name="message">The message to log.</param>
 		/// <param name="file">The file where to log message.</param>
@@ -118,7 +114,7 @@ namespace Epsitec.Common.Debug
 		/// The path of the default error file (UserAppData\Logs\logs.txt).
 		/// </summary>
 		/// <remarks>
-		/// Cannot use Epsitec.Common.Support.Globals.Directories.UserAppData to build the path
+		/// Cannot use <see cref="Epsitec.Common.Support.Globals.Directories.UserAppData"/> to build the path
 		/// because Visual Studio cannot handle circular project references.
 		/// </remarks>
 		public static readonly string defaultErrorFile = string.Format (@"{0}\Logs\errors.txt", System.IO.Path.GetDirectoryName (System.Windows.Forms.Application.UserAppDataPath));

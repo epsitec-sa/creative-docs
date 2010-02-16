@@ -12,13 +12,13 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The BvField class represents a field on a bv, that means a simple line of text.
+	/// The <see cref="BvField"/> class represents a field on a bv, that means a simple line of text.
 	/// </summary>
 	class BvField
 	{
 
 		/// <summary>
-		/// Static constructor that registers the OCR-B1 font required by some fields.
+		/// Static constructor that registers the OCR-B1 <see cref="Font"/> required by some fields.
 		/// </summary>
 		static BvField()
 		{
@@ -29,10 +29,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the BvField class based on the values contained in xBvField.
+		/// Initializes a new instance of the <see cref="BvField"/> class based on the values contained
+		/// in <paramref name="xBvField"/> and <paramref name="bvSize"/>.
 		/// </summary>
-		/// <param name="xBvField">The XElement containing the definition of the BvField.</param>
-		/// <param name="bvSize">The size of the Bv in millimeters.</param>
+		/// <param name="xBvField">The <see cref="XElement"/> containing the definition of the <see cref="BvField"/>.</param>
+		/// <param name="bvSize">The size of the bv in millimeters.</param>
 		public BvField(XElement xBvField, Size bvSize)
 		{
 			this.Text = "";
@@ -77,9 +78,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the font of the text.
+		/// Gets or sets the <see cref="Font"/> of the text.
 		/// </summary>
-		/// <value>The font of the text.</value>
+		/// <value>The <see cref="Font"/> of the text.</value>
 		public Font TextFont
 		{
 			get;
@@ -108,12 +109,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Paints this instance on port within bounds.
+		/// Paints this instance on <paramref name="port"/> within <paramref name="bounds"/>.
 		/// </summary>
 		/// <remarks>
-		/// Override this method if you want to change the display of the BvField.
+		/// Override this method if you want to change the display of the <see cref="BvField"/>.
 		/// </remarks>
-		/// <param name="port">The port used to paint</param>
+		/// <param name="port">The <see cref="IPaintPort"/> used to paint</param>
 		/// <param name="bounds">The bounds of the bv.</param>
 		public virtual void Paint(IPaintPort port, Rectangle bounds)
 		{
@@ -126,27 +127,27 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Computes the absolute position of the Text on the x axis given the bounds of the bv.
+		/// Computes the absolute position of the text on the x axis given <paramref name="bounds"/>.
 		/// </summary>
 		/// <param name="bounds">The bounds of the bv.</param>
-		/// <returns>The absolute position of the Text on the x axis.</returns>
+		/// <returns>The absolute position of the text on the x axis.</returns>
 		protected double ComputeAbsoluteXPosition(Rectangle bounds)
 		{
 			return this.XRelativePosition * bounds.Width + bounds.X;
 		}
 
 		/// <summary>
-		///  Computes the absolute position of the Text on the 1 axis given the bounds of the bv.
+		///  Computes the absolute position of the text on the 1 axis given <paramref name="bounds"/>.
 		/// </summary>
 		/// <param name="bounds">The bounds of the bv.</param>
-		/// <returns>The absolute position of the Text on the y axis.</returns>
+		/// <returns>The absolute position of the text on the y axis.</returns>
 		protected double ComputeAbsoluteYPosition(Rectangle bounds)
 		{
 			return this.YRelativePosition * bounds.Height + bounds.Y;
 		}
 
 		/// <summary>
-		/// Computes the absolute height of the text, given the bounds of the bv.
+		/// Computes the absolute height of the text, given <paramref name="bounds"/>.
 		/// </summary>
 		/// <param name="bounds">The bounds of the bv.</param>
 		/// <returns>The absolute height of the text.</returns>
@@ -156,12 +157,12 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Builds a new instance of BvFIeld or one of its subclass based on the values
-		/// contained in xBvField and on bvSize.
+		/// Builds a new instance of <see cref="BvField"/> or one of its subclass based on the
+		/// values contained in <paramref name="xBvField"/> and on <paramref name="bvSize"/>.
 		/// </summary>
-		/// <param name="xBvField">The XElement containing the definition of the BvField.</param>
+		/// <param name="xBvField">The <see cref="XElement"/> containing the definition of the <see cref="BvField"/>.</param>
 		/// <param name="bvSize">The Size of the bv.</param>
-		/// <returns>A new BvField.</returns>
+		/// <returns>A new <see cref="BvField"/>.</returns>
 		public static BvField GetInstance(XElement xBvField, Size bvSize)
 		{
 			string type = (string) xBvField.Element ("type");

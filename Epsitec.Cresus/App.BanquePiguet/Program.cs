@@ -9,9 +9,16 @@ using System.Linq;
 namespace Epsitec.App.BanquePiguet
 {
 
+	/// <summary>
+	/// The <see cref="Program"/> class is the main entry point of the program.
+	/// </summary>
 	static class Program
 	{
 
+		/// <summary>
+		/// Entry point of the program.
+		/// </summary>
+		/// <param name="args">The args given by the user on the commandl line.</param>
 		[System.STAThread]
 		static void Main(string[] args)
 		{
@@ -36,6 +43,9 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		/// <summary>
+		/// Sets up the exception handlers.
+		/// </summary>
 		static void SetupExceptionHandlers()
 		{
 			System.AppDomain.CurrentDomain.UnhandledException += (sender, e) => ErrorLogger.LogAndThrowException (e.ExceptionObject as System.Exception);

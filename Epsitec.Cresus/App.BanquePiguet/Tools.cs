@@ -9,16 +9,16 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The Tools class contains some static methods that are usefull somewhere else.
+	/// The <see cref="Tools"/> class contains some static methods that are usefull somewhere else.
 	/// </summary>
 	static class Tools
 	{
 
 		/// <summary>
-		/// Gets a Stream for the resource given by fileName.
+		/// Gets a <see cref="Stream"/> for the resource given by <paramref name="fileName"/>.
 		/// </summary>
 		/// <param name="fileName">The name of the resource.</param>
-		/// <returns>A Stream for fileName.</returns>
+		/// <returns>A <see cref="Stream"/> for <paramref name="fileName"/>.</returns>
 		/// <exception cref="System.ArgumentException">If the resource does not exit.</exception>
 		public static Stream GetResourceStream(string fileName)
 		{

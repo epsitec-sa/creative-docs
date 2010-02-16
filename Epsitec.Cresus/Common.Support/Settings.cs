@@ -10,15 +10,15 @@ namespace Epsitec.Common.Support
 {
 
 	/// <summary>
-	/// The Settings class provides the tools to load, modify and save settings.
+	/// The <see cref="Settings"/> class provides the tools to load, modify and save settings.
 	/// </summary>
 	public class Settings : Dictionary<string, string>
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the Settings class. The settings are loaded from
-		/// file and if a setting does not exist in file, it is set to its default value
-		/// taken from defaultValues.
+		/// Initializes a new instance of the <see cref="Settings"/> class. The settings are loaded from
+		/// <paramref name="file"/> and if a setting does not exist in <paramref name="file"/>, it is set
+		/// to its default value taken from <paramref name="defaultValues"/>.
 		/// </summary>
 		/// <param name="file">The file containing the settings to load.</param>
 		/// <param name="defaultValues">The default values of the settings.</param>
@@ -50,9 +50,9 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Gets or sets the file where the settings are stored.
+		/// Gets or sets the file where the <see cref="Settings"/> are stored.
 		/// </summary>
-		/// <value>The file where the settings are stored.</value>
+		/// <value>The file where the <see cref="Settings"/> are stored.</value>
 		protected string File
 		{
 			get;
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Saves the settings to their file, which is the file from where they where
+		/// Saves the <see cref="Settings"/> to their file, which is the file from where they where
 		/// loaded.
 		/// </summary>
 		public void Save()
@@ -69,9 +69,9 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Saves the settings to file.
+		/// Saves the <see cref="Settings"/> to <paramref name="file"/>.
 		/// </summary>
-		/// <param name="file">The file.</param>
+		/// <param name="file">The file where to save the <see cref="Settings"/>.</param>
 		public void Save(string file)
 		{
 			XElement xSettings = new XElement ("settings");
@@ -108,42 +108,43 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
-		/// Loads the settings stored in the default settings file.
+		/// Loads the <see cref="Settings"/> stored in the default settings file.
 		/// </summary>
-		/// <returns>The loaded settings.</returns>
+		/// <returns>The loaded <see cref="Settings"/>.</returns>
 		public static Settings Load()
 		{
 			return Settings.Load (Settings.defaultSettingsFile);
 		}
 
 		/// <summary>
-		/// Loads the settings stored in the default settings file and uses defaultValues
-		/// to provide the values which are not present in the file.
+		/// Loads the <see cref="Settings"/> stored in the default settings file and
+		/// uses <paramref name="defaultValues"/> to provide the values which are not
+		/// present in the file.
 		/// </summary>
 		/// <param name="defaultValues">The default values.</param>
-		/// <returns>The loaded settings.</returns>
+		/// <returns>The loaded <see cref="Settings"/>.</returns>
 		public static Settings Load(Dictionary<string, string> defaultValues)
 		{
 			return Settings.Load (Settings.defaultSettingsFile, defaultValues);
 		}
 
 		/// <summary>
-		/// Loads the settings stored in file.
+		/// Loads the <see cref="Settings"/> stored in file.
 		/// </summary>
 		/// <param name="file">The file to load.</param>
-		/// <returns>The loaded settings.</returns>
+		/// <returns>The loaded <see cref="Settings"/>.</returns>
 		public static Settings Load(string file)
 		{
 			return Settings.Load (file, new Dictionary<string,string>());
 		}
 
 		/// <summary>
-		/// Loads the settings stored in file and uses defaultValues to provide the
-		/// values which are not present in the file.
+		/// Loads the <see cref="Settings"/> stored in file and uses <paramref name="defaultValues"/>
+		/// to provide the values which are not present in the file.
 		/// </summary>
 		/// <param name="file">The file to load.</param>
 		/// <param name="defaultValues">The default values.</param>
-		/// <returns>The loaded settings.</returns>
+		/// <returns>The loaded <see cref="Settings"/>.</returns>
 		public static Settings Load(string file, Dictionary<string, string> defaultValues)
 		{
 			return new Settings (file, defaultValues);

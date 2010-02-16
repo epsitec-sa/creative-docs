@@ -96,7 +96,7 @@ namespace Epsitec.Designer
 					case "-dev-id":
 						if (int.TryParse (args[++i], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out devId))
 						{
-							Settings.Default.IdentityCard = IdentityRepository.Default.FindIdentityCard (devId);
+							Epsitec.Common.Designer.Settings.Default.IdentityCard = IdentityRepository.Default.FindIdentityCard (devId);
 						}
 						break;
 

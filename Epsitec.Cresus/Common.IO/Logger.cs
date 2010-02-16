@@ -7,15 +7,14 @@ namespace Epsitec.Common.IO
 {
 
 	/// <summary>
-	/// The Logger class provides the tools used to log simple messages to files and to
+	/// The <see cref="Logger"/> class provides the tools used to log simple messages to files and to
 	/// the console.
 	/// </summary>
 	public static class Logger
 	{
 
 		/// <summary>
-		/// Logs message to the default log file (UserAppData\Logs\logs.txt). The format
-		/// used to print message is the same as the one in Log(string, file).
+		/// Logs <paramref name="message"/> to the default log file (UserAppData\Logs\logs.txt).
 		/// </summary>
 		/// <param name="message">The message to log.</param>
 		public static void Log(string message)
@@ -24,8 +23,8 @@ namespace Epsitec.Common.IO
 		}
 
 		/// <summary>
-		/// Logs message to file. Each line is printed with the date and time
-		/// at the beginning.
+		/// Logs <paramref name="message"/> to <paramref name="file"/>. Each line is printed with
+		/// the date and time at the beginning.
 		/// </summary>
 		/// <param name="message">The message to log.</param>
 		/// <param name="file">The file to use as log file.</param>
@@ -45,7 +44,7 @@ namespace Epsitec.Common.IO
 		}
 
 		/// <summary>
-		/// Logs message to the console. Each line is printed with the date and
+		/// Logs <paramref name="message"/> to the console. Each line is printed with the date and
 		/// time at the beginning.
 		/// </summary>
 		/// <param name="message">The message to log.</param>
@@ -64,7 +63,7 @@ namespace Epsitec.Common.IO
 		/// date and time at the start of each line and removes the trailing '\n'.
 		/// </summary>
 		/// <param name="message">The message whose lines to be built.</param>
-		/// <returns>An array containing the lines of the message.</returns>
+		/// <returns>An <see cref="Array"/> containing the lines of the message.</returns>
 		private static string[] BuildLines(string message)
 		{
 			string[] lines = message.Split ('\n');
@@ -95,7 +94,7 @@ namespace Epsitec.Common.IO
 		/// The path of the default log file (UserAppData\Logs\logs.txt).
 		/// </summary>
 		/// <remarks>
-		/// Cannot use Epsitec.Common.Support.Globals.Directories.UserAppData to build the path
+		/// Cannot use <see cref="Epsitec.Common.Support.Globals.Directories.UserAppData"/> to build the path
 		/// because Visual Studio cannot handle circular project references.
 		/// </remarks>
 		public static readonly string defaultLogFile = string.Format (@"{0}\Logs\logs.txt", System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.UserAppDataPath));

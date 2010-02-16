@@ -14,21 +14,21 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The Printer class represents a printer and its properties. Moreover, it contais two static methods
-	/// used to load and save a list of Printers to a file.
+	/// The <see cref="Printer"/> class represents a printer and its properties. Moreover, it contais
+	/// two static methods used to load and save a list of <see cref="Printer"/>s to a file.
 	/// </summary>
 	class Printer
 	{
 
 		/// <summary>
-		/// Initializes a new empty instance of the Printer class.
+		/// Initializes a new empty instance of the <see cref="Printer"/> class.
 		/// </summary>
 		public Printer()
 		{
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the Printer class.
+		/// Initializes a new instance of the <see cref="Printer"/> class.
 		/// </summary>
 		/// <param name="name">The name of the printer.</param>
 		/// <param name="tray">The selected tray.</param>
@@ -45,9 +45,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the name of the printer.
+		/// Gets or sets the name of the <see cref="Printer"/>.
 		/// </summary>
-		/// <value>The name of the printer.</value>
+		/// <value>The name of the <see cref="Printer"/>.</value>
 		public string Name
 		{
 			get;
@@ -85,9 +85,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the comment on the printer.
+		/// Gets or sets the comment on the <see cref="Printer"/>.
 		/// </summary>
-		/// <value>The comment on the printer.</value>
+		/// <value>The comment on the <see cref="Printer"/>.</value>
 		public string Comment
 		{
 			get;
@@ -95,10 +95,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Saves the list of Printers to the configuration file. The file is overwritten, therefore
-		/// all printers which might be in the file but not in printers will be erased.
+		/// Saves a list of <see cref="Printer"/>s to the configuration file. The file is overwritten,
+		/// therefore all <see cref="Printer"/>s which might be in the file but not in printers will
+		/// be erased.
 		/// </summary>
-		/// <param name="printers">The list of Printers to save.</param>
+		/// <param name="printers">The list of <see cref="Printer"/>s to save.</param>
 		public static void Save(IEnumerable<Printer> printers)
 		{
 			XElement xPrinters = new XElement ("printers");
@@ -132,9 +133,9 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Loads a list of Printers from the configuration File.
+		/// Loads a list of <see cref="Printer"/>s from the configuration file.
 		/// </summary>
-		/// <returns>The list of Printers loaded from the configuration file.</returns>
+		/// <returns>The list of <see cref="Printer"/>s loaded from the configuration file.</returns>
 		public static IEnumerable<Printer> Load()
 		{
 			XElement xPrinters;
@@ -159,7 +160,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// The path to the configuration file containing the Printer definitions.
+		/// The path to the configuration file containing the <see cref="Printer"/>s definitions.
 		/// </summary>
 		protected static readonly string configurationFile = string.Format (@"{0}\Printers\printers.xml", Globals.Directories.ExecutableRoot);
 

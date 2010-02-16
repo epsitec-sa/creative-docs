@@ -10,16 +10,18 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The BvFieldMultiLine represents a BvField which can contain more than one line.
+	/// The <see cref="BvFieldMultiLine"/> represents a <see cref="BvField"/> which can contain more
+	/// than one line.
 	/// </summary>
 	class BvFieldMultiLine : BvField
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the BvFieldMultiLine class based on the values contained in xBvField.
+		/// Initializes a new instance of the <see cref="BvFieldMultiLine"/> class based on the
+		/// values contained in <paramref name="xBvField"/> and <paramref name="bvSize"/>.
 		/// </summary>
-		/// <param name="xBvField">The XElement containing the definition of the BvFieldMultiLine.</param>
-		/// <param name="bvSize">The size of the Bv in millimeters.</param>
+		/// <param name="xBvField">The <see cref="XElement"/> containing the definition of the <see cref="BvFieldMultiLine"/>.</param>
+		/// <param name="bvSize">The size of the bv in millimeters.</param>
 		public BvFieldMultiLine(XElement xBvField, Size bvSize) : base (xBvField, bvSize)
 		{ 
 			this.RelativeVerticalSpace = double.Parse (xBvField.Element ("verticalSpace").Value, CultureInfo.InvariantCulture) / bvSize.Height;
@@ -36,13 +38,13 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Paints this instance on port within bounds.
+		/// Paints this instance on <paramref name="port"/> within <paramref name="bounds"/>.
 		/// </summary>
-		/// <param name="port">The port used to paint</param>
-		/// <param name="bounds">The bounds of the bv.</param>
 		/// <remarks>
-		/// Override this method if you want to change the display of the BvField.
+		/// Override this method if you want to change the display of the <see cref="BvField"/>.
 		/// </remarks>
+		/// <param name="port">The <see cref="IPaintPort"/> used to paint</param>
+		/// <param name="bounds">The bounds of the bv.</param>
 		public override void Paint(IPaintPort port, Rectangle bounds)
 		{
 			port.Color = Color.FromRgb (0, 0, 0);
@@ -61,10 +63,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Computes the absolute vertical offset of the line given by lineNumber and the
-		/// bounds of the bv.
+		/// Computes the absolute vertical offset of the line given <paramref name="lineNumber"/> and
+		/// <paramref name="bounds"/>.
 		/// </summary>
-		/// <param name="lineNumber">The line number.</param>
+		/// <param name="lineNumber">The number of the current line.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
 		/// <returns>The vertical offset of the given line.</returns>
 		/// <remarks>

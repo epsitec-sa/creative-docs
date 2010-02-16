@@ -10,16 +10,17 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The BvMultiLineColumn represents a BvField which can contain more than one line and whose
-	/// characters are separated by spaces.
+	/// The <see cref="BvFieldMultiLineColumn"/> represents a <see cref="BvField"/> which can contain
+	/// more than one line and whose characters are separated by spaces.
 	/// </summary>
 	class BvFieldMultiLineColumn : BvFieldMultiLine
 	{
 
 		/// <summary>
-		/// Initializes a new instance of the BvFieldMultiLineColumn class.
+		/// Initializes a new instance of the <see cref="BvFieldMultiLineColumn"/> class based on
+		/// the values contained in <paramref name="xBvField"/> and <paramref name="bvSize"/>.
 		/// </summary>
-		/// <param name="xBvField">The XElement containing the definition of the BvFieldMultiLineColumn.</param>
+		/// <param name="xBvField">The <see cref="XElement"/> containing the definition of the <see cref="BvFieldMultiLineColumn"/>.</param>
 		/// <param name="bvSize">The size of the Bv in millimeters.</param>
 		public BvFieldMultiLineColumn(XElement xBvField, Size bvSize) : base (xBvField, bvSize)
 		{
@@ -37,13 +38,13 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Paints this instance on port within bounds.
+		/// Paints this instance on <paramref name="port"/> within <paramref name="bounds"/>.
 		/// </summary>
-		/// <param name="port">The port used to paint</param>
-		/// <param name="bounds">The bounds of the bv.</param>
 		/// <remarks>
-		/// Override this method if you want to change the display of the BvField.
+		/// Override this method if you want to change the display of the <see cref="BvField"/>.
 		/// </remarks>
+		/// <param name="port">The <see cref="IPaintPort"/> used to paint</param>
+		/// <param name="bounds">The bounds of the bv.</param>
 		public override void Paint(IPaintPort port, Rectangle bounds)
 		{
 			port.Color = Color.FromRgb (0, 0, 0);
@@ -71,10 +72,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Computes the absolute horizontal offset of the character given by its position
-		/// on its line, charNumber.
+		/// Computes the absolute horizontal offset of the character given by <paramref name="position"/> 
+		/// and <paramref name="charNumber"/>.
 		/// </summary>
-		/// <param name="charNumber">The character number.</param>
+		/// <param name="charNumber">The character number on its line.</param>
 		/// <param name="bounds">The bounds of the bv.</param>
 		/// <returns>The absolute horizontal offset of the given character.</returns>
 		/// <remarks>

@@ -10,14 +10,14 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The class BvHelper contains static methods used to check or build bv values.
+	/// The class <see cref="BvHelper"/> contains static methods used to check or build bv values.
 	/// </summary>
 	static class BvHelper
 	{
 
 		/// <summary>
-		/// This bidimensional array is the table used by the modulo 10 recursive algorithm
-		/// to find the next report digit at each step.
+		/// This bidimensional <see cref="Array"/> is the table used by the modulo 10 recursive
+		/// algorithm to find the next report digit at each step.
 		/// </summary>
 		private static readonly int[,] controlKeyTable = new int[,]
 		{
@@ -35,7 +35,8 @@ namespace Epsitec.App.BanquePiguet
 
 
 		/// <summary>
-		/// This array contains the control keys used by the modulo 10 recursive algorithm.
+		/// This <see cref="Array"/> contains the control keys used by the modulo 10 recursive
+		/// algorithm.
 		/// </summary>
 		private static readonly char[] controlKeys = new char[]
 		{
@@ -43,7 +44,8 @@ namespace Epsitec.App.BanquePiguet
 		};
 
 		/// <summary>
-		/// This dictionnary is used to convert a char to an int during the iban validation process.
+		/// This <see cref="Dictionnary"/> is used to convert a <see cref="char"/> to an <see cref="int"/>
+		/// during the iban validation process.
 		/// </summary>
 		private readonly static Dictionary<string, string> charConversionTable = new Dictionary<string, string>
 		{
@@ -77,12 +79,13 @@ namespace Epsitec.App.BanquePiguet
 
 
 		/// <summary>
-		/// Computes the control key of number using the modulo 10 recursive algorithm. The reference
-		/// of this algorithm can be found in the DTA document at the paragraph C9.4.
+		/// Computes the control key of <paramref name="number"/> using the modulo 10 recursive
+		/// algorithm. The reference of this algorithm can be found in the DTA document at the
+		/// paragraph C9.4.
 		/// </summary>
 		/// <param name="number">The number whose control key to compute.</param>
 		/// <returns>The control key of number.</returns>
-		/// <exception cref="System.ArgumentException">If the number is empty or contains non numeric characters.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="number"/> is empty or contains non alpha-numeric characters.</exception>
 		public static char ComputeControlKey(string number)
 		{
 			if (!Regex.IsMatch (number, @"[0-9A-Z]*$"))
@@ -113,11 +116,11 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that iban is a valid iban using the proper algorithm. The reference
-		/// of this algorithm can be found in the DTA document at the paragraph C10.
+		/// Checks that <paramref name="iban"/> is a valid iban using the proper algorithm. The
+		/// reference of this algorithm can be found in the DTA document at the paragraph C10.
 		/// </summary>
 		/// <param name="iban">The iban to check.</param>
-		/// <returns>A bool indicating whether iban is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating whether <paramref name="iban"/> is valid or not.</returns>
 		public static bool CheckIban(string iban)
 		{
 			bool valid;
@@ -165,10 +168,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that address is a valid bank address.
+		/// Checks that <paramref name="address"/> is a valid bank address.
 		/// </summary>
 		/// <param name="address">The bank address to check.</param>
-		/// <returns>A bool indicating if address is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="address"/> is valid or not.</returns>
 		public static bool CheckBankAddress(string address)
 		{
 			string[] lines = address.Split ('\n');
@@ -178,23 +181,23 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that iban is a valid beneficiary iban.
+		/// Checks that <paramref name="iban"/> is a valid beneficiary iban.
 		/// </summary>
 		/// <remarks>
 		/// You have to normalize the iban using the BuildNormalizedIban method.
 		/// </remarks>
-		/// <param name="iban">The beneficiary iban to check.</param>
-		/// <returns>A bool indicating if iban is valid or not.</returns>
+		/// <param name="iban">The beneficiary <paramref name="iban"/> to check.</param>
+		/// <returns>A <see cref="bool"/> indicating if iban is valid or not.</returns>
 		public static bool CheckBeneficiaryIban(string iban)
 		{
 			return BvHelper.CheckIban (iban);
 		}
 
 		/// <summary>
-		/// Checks that address is a valid beneficiary address.
+		/// Checks that <paramref name="address"/> is a valid beneficiary address.
 		/// </summary>
 		/// <param name="address">The beneficiary address to check.</param>
-		/// <returns>A bool indicating if address is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="address"/> is valid or not.</returns>
 		public static bool CheckBeneficiaryAddress(string address)
 		{
 			string[] lines = address.Split ('\n');
@@ -205,30 +208,30 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that account is a valid bank account.
+		/// Checks that <paramref name="account"/> is a valid bank account.
 		/// </summary>
 		/// <param name="account">The bank account to check.</param>
-		/// <returns>A bool indicating if account is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="account"/> is valid or not.</returns>
 		public static bool CheckBankAccount(string account)
 		{
 			return Regex.IsMatch (account, @"^\d+-\d+-\d$");
 		}
 
 		/// <summary>
-		/// Checks that layoutCode is a valid layout code.
+		/// Checks that <paramref name="layoutCode"/> is a valid layout code.
 		/// </summary>
 		/// <param name="layoutCode">The layout code to check.</param>
-		/// <returns>A bool indicating if layoutCode is valid.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="layoutCode"/> is valid.</returns>
 		public static bool CheckLayoutCode(string layoutCode)
 		{
 			return (layoutCode == "303");
 		}
 
 		/// <summary>
-		/// Checks that reason is a valid reason of transfer.
+		/// Checks that <paramref name="reason"/> is a valid reason of transfer.
 		/// </summary>
 		/// <param name="reason">The reason to check.</param>
-		/// <returns>A bool indicating if reason is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="reason"/> is valid or not.</returns>
 		public static bool CheckReason(string reason)
 		{
 			string[] lines = reason.Split ('\n');
@@ -237,50 +240,50 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that number is a valid reference client number.
+		/// Checks that <paramref name="number"/> is a valid reference client number.
 		/// </summary>
 		/// <param name="number">The reference client number to check.</param>
-		/// <returns>A bool indicating if number is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="number"/> is valid or not.</returns>
 		public static bool CheckReferenceClientNumber(string number)
 		{
 			return Regex.IsMatch (number, @"^\d{10}$");
 		}
 
 		/// <summary>
-		/// Checks that constant is a valid clearing constant.
+		/// Checks that <paramref name="constant"/> is a valid clearing constant.
 		/// </summary>
 		/// <param name="constant">The clearing constant to check.</param>
-		/// <returns>A bool indicating if constant is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="constant"/> is valid or not.</returns>
 		public static bool CheckClearingConstant(string constant)
 		{
 			return (constant == "07");
 		}
 
 		/// <summary>
-		/// Checks that clearing is a valid bank clearing number.
+		/// Checks that <paramref name="clearing"/> is a valid bank clearing number.
 		/// </summary>
 		/// <param name="clearing">The bank clearing number to check.</param>
-		/// <returns>A bool indicating if clearing is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="clearing"/> is valid or not.</returns>
 		public static bool CheckClearingBank(string clearing)
 		{
 			return Regex.IsMatch (clearing, @"^\d{5}$");
 		}
 
 		/// <summary>
-		/// Checks that key is a valid bank clearing number control key.
+		/// Checks that <paramref name="key"/> is a valid bank clearing number control key.
 		/// </summary>
 		/// <param name="key">The bank clearing number key to check.</param>
-		/// <returns>A bool indicating if key is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="key"/> is valid or not.</returns>
 		public static bool CheckClearingBankKey(string key)
 		{
 			return Regex.IsMatch (key, @"^\d{1}$");
 		}
 
 		/// <summary>
-		/// Checks that ccp is a valid CCP number.
+		/// Checks that <paramref name="ccp"/> is a valid CCP number.
 		/// </summary>
 		/// <param name="ccp">The CCP number to check.</param>
-		/// <returns>A bool indicating if ccp is valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="ccp"/> is valid or not.</returns>
 		public static bool CheckCcpNumber(string ccp)
 		{
 			return Regex.IsMatch (ccp, @"^\d{9}$");
@@ -291,7 +294,7 @@ namespace Epsitec.App.BanquePiguet
 		/// </summary>
 		/// <param name="iban">The beneficiary iban.</param>
 		/// <param name="reference">The reference client number.</param>
-		/// <returns>A bool indicating if the values required to build the reference line are valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if the values required to build the reference line are valid or not.</returns>
 		public static bool CheckReferenceLine(string iban, string reference)
 		{
 			return BvHelper.CheckBeneficiaryIban (iban)
@@ -304,7 +307,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <param name="constant">The clearing constant.</param>
 		/// <param name="clearing">The bank clearing number.</param>
 		/// <param name="key">The bank clearing number control key.</param>
-		/// <returns>A bool indicating if the values required to build the clearing line are valid or not.</returns>
+		/// <returns>A <see cref="bool"/> indicating if the values required to build the clearing line are valid or not.</returns>
 		public static bool CheckClearingLine(string constant, string clearing, string key)
 		{
 			return BvHelper.CheckClearingConstant (constant)
@@ -313,10 +316,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Checks that all the values contained in bvWidget are valid.
+		/// Checks that all the values contained in <paramref name="bvWidget"/> are valid.
 		/// </summary>
-		/// <param name="bvWidget">The bv widget whose values to check.</param>
-		/// <returns>A bool indicating if all the values contained in BvWidger are valid or not.</returns>
+		/// <param name="bvWidget">The <see cref="BvWidget"/> whose values to check.</param>
+		/// <returns>A <see cref="bool"/> indicating if all the values contained in <paramref name="bvWidget"/> are valid or not.</returns>
 		public static bool CheckBv(BvWidget bvWidget)
 		{
 			return BvHelper.CheckBankAddress (bvWidget.BankAddress)
@@ -390,10 +393,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Normalizes iban in the format "CH00 0000 0000 0000 0000 0".
+		/// Normalizes <paramref name="iban"/> in the format "CH00 0000 0000 0000 0000 0".
 		/// </summary>
 		/// <param name="iban">The iban to normalize.</param>
-		/// <returns>The normalized version of iban.</returns>
+		/// <returns>The normalized version of <paramref name="iban"/>.</returns>
 		public static string BuildNormalizedIban(string iban)
 		{
 			string normalizedIban = Regex.Replace (iban, @"\s", "");
@@ -409,10 +412,10 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Normalizes reason so that each line has at least 10 chars on it.
+		/// Normalizes <paramref name="reason"/> so that each line has at least 10 chars on it.
 		/// </summary>
 		/// <param name="reason">The reason to normalize.</param>
-		/// <returns>The normalized vestion of reason.</returns>
+		/// <returns>The normalized vestion of <paramref name="reason"/>.</returns>
 		public static string BuildNormalizedReason(string reason)
 		{
 			string normalizedReason = "";
