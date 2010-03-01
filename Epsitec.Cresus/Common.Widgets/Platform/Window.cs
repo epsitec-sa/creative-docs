@@ -996,7 +996,22 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				System.IO.File.WriteAllBytes (path, buffer);
 				System.Drawing.Icon nativeIcon = Epsitec.Common.Drawing.Bitmap.LoadNativeIcon (path, dx, dy);
-				base.Icon = nativeIcon;
+
+#if false
+				//	This does not work (see http://stackoverflow.com/questions/2266479/setclasslonghwnd-gcl-hicon-hicon-cannot-replace-winforms-form-icon)
+				if ((dx == 16) && (dy == 16))
+				{
+					Win32Api.SetClassLong (this.Handle, Win32Const.GCL_HICONSM, nativeIcon.Handle.ToInt32 ());
+				}
+				else if ((dx == 32) && (dy == 32))
+				{
+					Win32Api.SetClassLong (this.Handle, Win32Const.GCL_HICON, nativeIcon.Handle.ToInt32 ());
+				}
+				else
+#endif
+				{
+					base.Icon = nativeIcon;
+				}
 			}
 			finally
 			{

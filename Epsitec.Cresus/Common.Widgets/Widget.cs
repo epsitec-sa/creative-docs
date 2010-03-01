@@ -1431,6 +1431,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				this.MessageHandler (message);
+				this.Invalidate ();
 				
 				if (window != null)
 				{

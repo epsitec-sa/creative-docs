@@ -699,6 +699,11 @@ namespace Epsitec.Common.Drawing
 				int[]    e = new int[n];
 				double[] x = new double[n];
 				double[] y = new double[n];
+
+				if (n > 1000)
+				{
+					System.Diagnostics.Debug.WriteLine ("Huge path, n = " + n.ToString ());
+				}
 				
 				AntiGrain.Path.ElemGet (this.aggPath, n, e, x, y);
 				

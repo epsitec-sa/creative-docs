@@ -28,12 +28,12 @@ namespace Epsitec.App.BanquePiguet
 		/// Initializes a new instance of the <see cref="PrintDialog"/> class.
 		/// </summary>
 		/// <param name="application">The <see cref="Application"/> creating this instance.</param>
-		/// <param name="BvWidget">The <see cref="BvWidget"/> containing the bv data.</param>
+		/// <param name="bvWidget">The <see cref="BvWidget"/> containing the bv data.</param>
 		/// <param name="printers">The list of <see cref="Printer"/>s that the user might select.</param>
-		public PrintDialog(Application application, BvWidget BvWidget, List<Printer> printers)
+		public PrintDialog(Application application, BvWidget bvWidget, List<Printer> printers)
 		{
 			this.Application = application;
-			this.BvWidget = BvWidget;
+			this.BvWidget = bvWidget;
 			this.Printers = printers;
 		}
 

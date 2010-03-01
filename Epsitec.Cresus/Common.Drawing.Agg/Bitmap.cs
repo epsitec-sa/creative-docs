@@ -1151,13 +1151,23 @@ namespace Epsitec.Common.Drawing
 		{
 			public static System.Drawing.Icon LoadIcon(string path, int dx, int dy)
 			{
-				System.IntPtr hIcon = IconLoader.LoadImage (System.IntPtr.Zero, path, IconLoader.IMAGE_ICON, dx, dy, IconLoader.LR_LOADFROMFILE);
+				uint mode = IconLoader.LR_LOADFROMFILE;
+
+				if ((dx == 0) || (dy == 0))
+				{
+					dx = 0;
+					dy = 0;
+					mode |= IconLoader.LR_DEFAULTSIZE;
+				}
+
+				System.IntPtr hIcon = IconLoader.LoadImage (System.IntPtr.Zero, path, IconLoader.IMAGE_ICON, dx, dy, mode);
 				string errorMessage = new System.ComponentModel.Win32Exception (Marshal.GetLastWin32Error ()).Message;
 				return hIcon == System.IntPtr.Zero ? null : System.Drawing.Icon.FromHandle (hIcon);
 			}
 
 			const int IMAGE_ICON = 1;
 			const int LR_LOADFROMFILE = 0x0010;
+			const int LR_DEFAULTSIZE  = 0x0040;
 
 			[DllImport ("user32.dll", SetLastError=true, CharSet=CharSet.Auto)]
 			static extern System.IntPtr LoadImage(System.IntPtr hinst, string lpszName, uint uType,

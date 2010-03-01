@@ -231,6 +231,8 @@ namespace Epsitec.Common.Dialogs
 				throw new System.InvalidOperationException ("Cannot show window");
 			}
 
+			System.Diagnostics.Debug.Assert (Application.IsExecutingAsyncCallbacks == false);
+
 			Window owner = this.OwnerWindow;
 			Drawing.Rectangle ownerBounds;
 

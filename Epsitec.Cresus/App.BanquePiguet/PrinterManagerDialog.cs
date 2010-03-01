@@ -327,7 +327,7 @@ namespace Epsitec.App.BanquePiguet
 				printerNames.Add (printer.Name);
 			}
 
-			printerNames.ForEach (printerName => nameTextField.Items.Add (printerName));
+			printerNames.ForEach (printerName => nameTextField.Items.Add (FormattedText.Escape (printerName)));
 		}
 
 		/// <summary>
@@ -362,7 +362,7 @@ namespace Epsitec.App.BanquePiguet
 				trayNames.Add (printer.Tray);
 			}
 
-			trayNames.ForEach (trayName => trayTextField.Items.Add (trayName));
+			trayNames.ForEach (trayName => trayTextField.Items.Add (FormattedText.Escape (trayName)));
 		}
 
 		/// <summary>

@@ -8,6 +8,9 @@ namespace Epsitec.Common.Widgets.Platform
 	/// </summary>
 	internal class Win32Const
 	{
+		public const int GCL_HICON   = -14;
+		public const int GCL_HICONSM = -34;
+
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_QUERYENDSESSION	= 0x0011;
 		public const int WM_ENDSESSION		= 0x0016;

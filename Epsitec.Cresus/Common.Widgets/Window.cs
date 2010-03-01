@@ -1,7 +1,9 @@
-//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 
 using Epsitec.Common.Types;
@@ -278,6 +280,8 @@ namespace Epsitec.Common.Widgets
 		public virtual void ShowDialog()
 		{
 			this.AsyncValidation ();
+
+			Window.GetAllLiveWindows ().ForEach (window => window.RefreshEnteredWidgets (null));
 			
 			if (this.showCount == 0)
 			{
@@ -1174,9 +1178,14 @@ namespace Epsitec.Common.Widgets
 		public void RefreshEnteredWidgets(Message message)
 		{
 			this.ForceLayout ();
+
 			Widget.ClearEntered (this);
-			Widget child = this.Root.FindChild (message.Cursor, Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipHidden);
-			Widget.UpdateEntered (this, child, message);
+
+			if (message != null)
+			{
+				Widget child = this.Root.FindChild (message.Cursor, Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipHidden);
+				Widget.UpdateEntered (this, child, message);
+			}
 		}
 		
 		
@@ -2116,7 +2125,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if (message.IsMouseType)
+			if (message.IsMouseType && message.MessageType != MessageType.MouseLeave)
 			{
 				this.lastInWidget = this.DetectWidget (message.Cursor);
 

@@ -62,7 +62,7 @@ namespace Epsitec.App.BanquePiguet
 		{
 			get
 			{
-				return "Banque Piguet";
+				return "Banque Piguet — Impression de BV";
 			}
 		}
 
@@ -160,7 +160,8 @@ namespace Epsitec.App.BanquePiguet
 				Text = this.ShortWindowTitle,
 			};
 
-			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico", 48, 48);
+			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico", 16, 16);
+			this.Window.SetNativeIconFromManifest (System.Reflection.Assembly.GetExecutingAssembly (), "Epsitec.App.BanquePiguet.Resources.app.ico", 32, 32);
 			this.Window.MakeFixedSizeWindow ();
 		}
 
@@ -399,10 +400,10 @@ namespace Epsitec.App.BanquePiguet
 
 			if (this.AdminMode)
 			{
-				this.OptionsButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrinterManagerDialog);
+				this.OptionsButton.Clicked += (sender, e) => this.ShowPrinterManagerDialog ();
 			}
 
-			this.PrintButton.Clicked += (sender, e) => Application.QueueAsyncCallback (this.ShowPrintDialog);
+			this.PrintButton.Clicked += (sender, e) => this.ShowPrintDialog ();
 		}
 
 		/// <summary>

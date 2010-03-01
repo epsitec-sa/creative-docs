@@ -111,6 +111,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public static bool						IsExecutingAsyncCallbacks
+		{
+			get
+			{
+				return Application.executingAsyncCallbacks;
+			}
+		}
+
+
 		public static void SetWaitCursor()
 		{
 			System.Threading.Interlocked.Increment (ref Application.waitCursorCount);
