@@ -10,7 +10,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The class <see cref="BvHelper"/> contains static methods used to check or build bv values.
+	/// The class <c>BvHelper</c> contains static methods used to check or build bv values.
 	/// </summary>
 	static class BvHelper
 	{
@@ -88,7 +88,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <exception cref="System.ArgumentException">If <paramref name="number"/> is empty or contains non alpha-numeric characters.</exception>
 		public static char ComputeControlKey(string number)
 		{
-			if (!Regex.IsMatch (number, @"[0-9A-Z]*$"))
+			if (!Regex.IsMatch (number, @"^[0-9]*$"))
 			{
 				throw new System.ArgumentException (string.Format("The provided string contains non alpah-numeric characters: {0}", number));
 			}
@@ -99,11 +99,6 @@ namespace Epsitec.App.BanquePiguet
 			}
 
 			int report = 0;
-
-			foreach (string s in BvHelper.charConversionTable.Keys)
-			{
-				number = number.Replace (s, BvHelper.charConversionTable[s]);
-			}
 
 			while (number.Length > 0)
 			{

@@ -17,7 +17,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="PrinterManagerDialog"/> class is a dialog which lets the user configure the
+	/// The <c>PrinterManagerDialog</c> class is a dialog which lets the user configure the
 	/// <see cref="Printer"/>s used to print the bvs.
 	/// </summary>
 	class PrinterManagerDialog : AbstractDialog

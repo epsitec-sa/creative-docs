@@ -9,7 +9,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="Tools"/> class contains some static methods that are usefull somewhere else.
+	/// The <c>Tools</c> class contains some static methods that are usefull somewhere else.
 	/// </summary>
 	static class Tools
 	{

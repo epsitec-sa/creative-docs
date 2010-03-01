@@ -10,7 +10,7 @@ namespace Epsitec.Common.Support
 {
 
 	/// <summary>
-	/// The <see cref="Settings"/> class provides the tools to load, modify and save settings.
+	/// The <c>Settings</c> class provides the tools to load, modify and save settings.
 	/// </summary>
 	public class Settings : Dictionary<string, string>
 	{

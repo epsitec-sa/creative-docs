@@ -10,7 +10,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="Program"/> class is the main entry point of the program.
+	/// The <c>Program</c> class is the main entry point of the program.
 	/// </summary>
 	static class Program
 	{

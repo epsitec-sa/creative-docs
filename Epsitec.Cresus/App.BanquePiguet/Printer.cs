@@ -14,7 +14,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="Printer"/> class represents a printer and its properties. Moreover, it contais
+	/// The <c>Printer</c> class represents a printer and its properties. Moreover, it contais
 	/// two static methods used to load and save a list of <see cref="Printer"/>s to a file.
 	/// </summary>
 	class Printer

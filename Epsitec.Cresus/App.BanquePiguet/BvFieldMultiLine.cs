@@ -10,7 +10,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="BvFieldMultiLine"/> represents a <see cref="BvField"/> which can contain more
+	/// The <c>BvFieldMultiLine</c> represents a <see cref="BvField"/> which can contain more
 	/// than one line.
 	/// </summary>
 	class BvFieldMultiLine : BvField

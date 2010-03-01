@@ -10,6 +10,7 @@ using Epsitec.Common.Widgets.Validators;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 
@@ -17,7 +18,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="Application"/> class displays a form which lets the user type some values of a
+	/// The <c>Application</c> class displays a form which lets the user type some values of a
 	/// bv, print them and configure the printers to use.
 	/// </summary>
 	class Application : Epsitec.Common.Widgets.Application
@@ -51,9 +52,6 @@ namespace Epsitec.App.BanquePiguet
 			this.BenefeciaryIbanTextField.Text = FormattedText.Escape ("CH38 0888 8123 4567 8901 2");
 			this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
 			this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
-
-			//this.ShowPrinterManagerDialog ();
-			//this.ShowPrintDialog();
 		}
 
 		/// <summary>
@@ -439,7 +437,22 @@ namespace Epsitec.App.BanquePiguet
 		{
 			string text = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
 			string iban = BvHelper.BuildNormalizedIban (text);
-			return BvHelper.CheckBeneficiaryIban (iban);
+			string ibanNoSpace = iban.Replace (" ", "");
+
+			bool validIban = BvHelper.CheckBeneficiaryIban (iban) && ibanNoSpace.Length == 21;
+
+			if (validIban)
+			{
+				validIban = Regex.IsMatch (ibanNoSpace.Substring (ibanNoSpace.Length - 12, 12), "^[0-9]*$");
+
+				if (!validIban)
+				{
+					System.Console.WriteLine ("LETTER IN ACCOUNT NUMBER");
+				}
+			
+			}
+
+			return validIban;
 		}
 
 		/// <summary>

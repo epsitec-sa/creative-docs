@@ -7,7 +7,7 @@ namespace Epsitec.Common.Debug
 {
 
 	/// <summary>
-	/// The <see cref="ErrorLogger"/> class provides the tools to log errors and
+	/// The <c>ErrorLogger</c> class provides the tools to log errors and
 	/// <see cref="System.Exception"/>s.
 	/// </summary>
 	public static class ErrorLogger

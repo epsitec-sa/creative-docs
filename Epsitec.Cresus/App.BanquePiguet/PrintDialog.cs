@@ -18,7 +18,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="PrintDialog"/> class is a dialog which lets the user choose on which printer
+	/// The <c>PrintDialog</c> class is a dialog which lets the user choose on which printer
 	/// he wants to print the bv and how much copies does he want to print.
 	/// </summary>
 	class PrintDialog : AbstractDialog

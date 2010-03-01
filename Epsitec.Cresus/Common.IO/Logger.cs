@@ -7,7 +7,7 @@ namespace Epsitec.Common.IO
 {
 
 	/// <summary>
-	/// The <see cref="Logger"/> class provides the tools used to log simple messages to files and to
+	/// The <c>Logger</c> class provides the tools used to log simple messages to files and to
 	/// the console.
 	/// </summary>
 	public static class Logger

@@ -12,7 +12,7 @@ namespace Epsitec.App.BanquePiguet
 {
 
 	/// <summary>
-	/// The <see cref="BvField"/> class represents a field on a bv, that means a simple line of text.
+	/// The <c>BvField</c> class represents a field on a bv, that means a simple line of text.
 	/// </summary>
 	class BvField
 	{
