@@ -206,8 +206,8 @@ namespace Epsitec.App.BanquePiguet
 
 			this.PrintersCellTable.SetHeaderTextH (1, "Nom");
 			this.PrintersCellTable.SetHeaderTextH (2, "Bac");
-			this.PrintersCellTable.SetHeaderTextH (3, "Décalage x");
-			this.PrintersCellTable.SetHeaderTextH (4, "Décalage y");
+			this.PrintersCellTable.SetHeaderTextH (3, "Pos. horiz.");
+			this.PrintersCellTable.SetHeaderTextH (4, "Pos. vert.");
 			this.PrintersCellTable.SetHeaderTextH (5, "Commentaire");
 
 			for (int i = 0; i < this.Printers.Count; i++)
@@ -414,7 +414,7 @@ namespace Epsitec.App.BanquePiguet
 				Margins = new Margins (0, 0, 0, 10),
 				Parent = buttonsFrameBox,
 				TabIndex = 3,
-				Text = "Sauvegarder",
+				Text = "Enregistrer",
 			};
 			this.SaveButton.Focus ();
 		}
