@@ -46,12 +46,6 @@ namespace Epsitec.App.BanquePiguet
 			this.SetupValidators ();
 			this.CheckPrintButtonEnbled ();
 			this.Window.AdjustWindowSize ();
-
-#warning Remove me at the end of the tests.
-			
-			this.BenefeciaryIbanTextField.Text = FormattedText.Escape ("CH38 0888 8123 4567 8901 2");
-			this.BeneficiaryAddressTextField.Text = FormattedText.Escape ("Monsieur Alfred DUPOND\nRue de la tarte 85 bis\n7894 Tombouctou\nCocagne Land");
-			this.ReasonTextField.Text = FormattedText.Escape ("0123456789\n0123456789\n0123456789");
 		}
 
 		/// <summary>
