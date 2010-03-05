@@ -407,7 +407,7 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Normalizes <paramref name="reason"/> so that each line has at least 10 chars on it.
+		/// Normalizes <paramref name="reason"/> so that each line has at most 10 chars on it.
 		/// </summary>
 		/// <param name="reason">The reason to normalize.</param>
 		/// <returns>The normalized vestion of <paramref name="reason"/>.</returns>

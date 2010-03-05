@@ -1,17 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<printers>
-  <printer>
-    <name>Brother HL-2170W series</name>
-    <tray>Tray 1</tray>
-    <xOffset>0</xOffset>
-    <yOffset>191.5</yOffset>
-    <comment>j'adore cette imprimante!!!!!!!!!!!</comment>
-  </printer>
-  <printer>
-    <name>Microsoft XPS Document Writer</name>
-    <tray>Automatically Select</tray>
-    <xOffset>0</xOffset>
-    <yOffset>0</yOffset>
-    <comment>Plein de signes bizarres &lt;&gt;&amp;!üPöä£+*ç%()=/&amp;ç*&amp;=</comment>
-  </printer>
-</printers>
+<printers />

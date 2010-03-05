@@ -82,10 +82,53 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Gets or sets the <see cref="StaticText"/> used to display errors relative to the
+		/// beneficiary iban.
+		/// </summary>
+		/// <value>The <see cref="StaticText"/> used for the errors of the beneficiary iban.</value>
+		protected StaticText BeneficiaryIbanErrorStaticText
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets the <see cref="TextFieldMulti"/> used for the beneficiary address.
 		/// </summary>
 		/// <value>The <see cref="TextFieldMulti"/> used for the beneficiary address.</value>
 		protected TextFieldMulti BeneficiaryAddressTextField
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="StaticText"/> used to display errors relative to the
+		/// beneficiary address.
+		/// </summary>
+		/// <value>The <see cref="StaticText"/> used for the errors of the beneficiary address.</value>
+		protected StaticText BeneficiaryAddressErrorStaticText
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="TextFieldMulti"/> used for the reason of the transfer.
+		/// </summary>
+		/// <value>The <see cref="TextFieldMulti"/> used for the reason of the transfer.</value>
+		protected TextFieldMulti ReasonTextField
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="StaticText"/> used to display errors relative to the
+		/// reason.
+		/// </summary>
+		/// <value>The <see cref="StaticText"/> used for the errors of the reason.</value>
+		protected StaticText ReasonErrorStaticText
 		{
 			get;
 			set;
@@ -116,16 +159,6 @@ namespace Epsitec.App.BanquePiguet
 		/// </summary>
 		/// <value>The <see cref="Button"/> used to display <see cref="PrinterManagerDialog"/>.</value>
 		protected Button OptionsButton
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
-		/// Gets or sets the <see cref="TextFieldMulti"/> used for the reason of the transfer.
-		/// </summary>
-		/// <value>The <see cref="TextFieldMulti"/> used for the reason of the transfer.</value>
-		protected TextFieldMulti ReasonTextField
 		{
 			get;
 			set;
@@ -180,7 +213,7 @@ namespace Epsitec.App.BanquePiguet
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 10, 10),
-				Padding = new Margins (5, 5, 0, 5),
+				Padding = new Margins (5, 5, 0, 0),
 				Parent = formFrameBox,
 				Text = "N° IBAN du bénéficiaire",
 				TabIndex = 1,
@@ -194,13 +227,20 @@ namespace Epsitec.App.BanquePiguet
 				TabIndex = 1,
 			};
 			this.BenefeciaryIbanTextField.Focus ();
-			
+
+			this.BeneficiaryIbanErrorStaticText = new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				Parent = beneficiaryIbanGroupBox,
+				PreferredWidth = 200,
+			};
+
 			GroupBox beneficiaryAddressGroupBox = new GroupBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 0, 10),
-				Padding = new Margins (5, 5, 0, 5),
+				Padding = new Margins (5, 5, 0, 0),
 				Parent = formFrameBox,
 				Text = "Nom et adresse du bénéficiaire",
 				TabIndex = 2,
@@ -216,12 +256,19 @@ namespace Epsitec.App.BanquePiguet
 				TabIndex = 2,
 			};
 
+			this.BeneficiaryAddressErrorStaticText = new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				Parent = beneficiaryAddressGroupBox,
+				PreferredWidth = 200,
+			};
+
 			GroupBox reasonGroupBox = new GroupBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (10, 10, 0, 10),
-				Padding = new Margins (5, 5, 0, 5),
+				Padding = new Margins (5, 5, 0, 0),
 				Parent = formFrameBox,
 				Text = "Motif du versement",
 				TabIndex = 3,
@@ -235,6 +282,13 @@ namespace Epsitec.App.BanquePiguet
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 				TabIndex = 3,
+			};
+
+			this.ReasonErrorStaticText = new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				Parent = reasonGroupBox,
+				PreferredWidth = 200,
 			};
 
 			FrameBox buttonsFrameBox = new FrameBox ()
@@ -281,7 +335,7 @@ namespace Epsitec.App.BanquePiguet
 				Dock = DockStyle.Left,
 				Margins = new Margins (10, 10, 10, 10),
 				Parent = this.Window.Root,
-				PreferredSize = new Size (525, 265),
+				PreferredSize = new Size (578, 292),
 			};
 
 			XElement xBvValues;
@@ -434,20 +488,28 @@ namespace Epsitec.App.BanquePiguet
 			string iban = BvHelper.BuildNormalizedIban (text);
 			string ibanNoSpace = iban.Replace (" ", "");
 
-			bool validIban = BvHelper.CheckBeneficiaryIban (iban) && ibanNoSpace.Length == 21;
+			bool validLength = ibanNoSpace.Length == 21;
+			bool noLetters = validLength ? Regex.IsMatch (ibanNoSpace.Substring (ibanNoSpace.Length - 12, 12), "^[0-9]*$") : true;
+			bool validIban = BvHelper.CheckBeneficiaryIban (iban);
 
-			if (validIban)
+			if (!validLength)
 			{
-				validIban = Regex.IsMatch (ibanNoSpace.Substring (ibanNoSpace.Length - 12, 12), "^[0-9]*$");
-
-				if (!validIban)
-				{
-					System.Console.WriteLine ("LETTER IN ACCOUNT NUMBER");
-				}
-			
+				this.BeneficiaryIbanErrorStaticText.Text = "L'iban doit contenir 21 caractères.";
+			}
+			else if (!noLetters)
+			{
+				this.BeneficiaryIbanErrorStaticText.Text = "L'iban doit se terminer par 12 chiffres.";
+			}
+			else if (!validIban)
+			{
+				this.BeneficiaryIbanErrorStaticText.Text = "L'iban est invalide.";
+			}
+			else
+			{
+				this.BeneficiaryIbanErrorStaticText.Text = "L'iban est valide.";
 			}
 
-			return validIban;
+			return validIban && validLength && noLetters;
 		}
 
 		/// <summary>
@@ -458,7 +520,28 @@ namespace Epsitec.App.BanquePiguet
 		protected bool CheckBeneficiaryAddress()
 		{
 			string address = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
-			return BvHelper.CheckBeneficiaryAddress (address);
+			bool valid = BvHelper.CheckBeneficiaryAddress (address);
+
+			string[] lines = address.Split ('\n');
+
+			if (address.Length == 0)
+			{
+				this.BeneficiaryAddressErrorStaticText.Text = "L'adresse doit être remplie.";
+			}
+			else if (lines.Count() > 4)
+			{
+				this.BeneficiaryAddressErrorStaticText.Text = "L'adresse doit avoir moins de 5 lignes.";
+			}
+			else if (System.Array.Exists(lines, line => line.Length > 27))
+			{
+				this.BeneficiaryAddressErrorStaticText.Text = "Une ligne doit avoir moins de 28 lettres.";
+			}
+			else
+			{
+				this.BeneficiaryAddressErrorStaticText.Text = "L'adresse est valide.";
+			}
+
+			return valid;
 		}
 
 		/// <summary>
@@ -470,7 +553,28 @@ namespace Epsitec.App.BanquePiguet
 		{
 			string text = FormattedText.Unescape (this.ReasonTextField.Text);
 			string reason = BvHelper.BuildNormalizedReason (text);
-			return BvHelper.CheckReason (reason);
+			bool valid = BvHelper.CheckReason (reason);
+
+			string[] lines = text.Split('\n');
+
+			if (!valid && lines.Count () > 3)
+			{
+				this.ReasonErrorStaticText.Text = "La raison doit avoir moins de 3 lignes.";
+			}
+			else if (!valid && System.Array.Exists (lines, line => line.Length > 10))
+			{
+				this.ReasonErrorStaticText.Text = "Une ligne doit avoir moins de 10 lettres.";
+			}
+			else if (!valid)
+			{
+				this.ReasonErrorStaticText.Text = "La raison est invalide.";
+			}
+			else
+			{
+				this.ReasonErrorStaticText.Text = "La raison est valide.";
+			}
+
+			return valid;
 		}
 
 		/// <summary>

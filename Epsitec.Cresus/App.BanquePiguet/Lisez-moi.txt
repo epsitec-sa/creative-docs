@@ -1,0 +1,23 @@
+﻿Aide mémoire pour l'application d'impression de BV de la Banque Piguet.
+
+- Pour lancer l'application de manière à pouvoir modifier la configuration
+des imprimantes, il faut lui donner l'argument -admin. Cela peut se faire
+soit à partir de la ligne de commande, soit à partir d'un racourci.
+
+- Pour pouvoir sauvegarder la configuration des imprimantes, il faut impérativement
+que l'utilisateur ait les droit d'écriture sur tout le dossier l'application.
+
+- Si rien ne s'imprime sur le bulletin de versement, vérifier que l'imprimante
+est bien configurée. Sur l'imprimante de test utilisée chez Epsitec, il fallait
+utiliser la configuration suivante:
+Poz. horiz. : 0
+Poz. vert. : 192
+
+- Pour utiliser ce programme à travers le réseau, il faut utiliser la fonction
+"Connecter un lecteur réseau" et mapper le dossier vers une lettre, par exemple
+Z:\ Si cela n'est pas fait, il se peut que des problèmes de droit d'accès se
+posent, suivant les versions de Windows.
+
+- Il se peut qu'il y ait des problèmes au niveau de la configuration des imprimantes
+si plusieurs utilisateurs utilisent Windows dans une langue différente. En effet, dans
+ce cas, les imprimantes n'auront pas les mêmes noms pour les bacs.

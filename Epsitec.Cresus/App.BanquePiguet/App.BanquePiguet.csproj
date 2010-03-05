@@ -183,9 +183,15 @@
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="sign.bat" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Lisez-moi.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
