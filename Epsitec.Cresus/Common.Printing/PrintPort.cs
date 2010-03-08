@@ -857,6 +857,10 @@ namespace Epsitec.Common.Printing
 			document.Print (new SinglePagePrintEngine (painter, Drawing.Transform.Identity));
 		}
 
+		public static void PrintSinglePage(System.Action<Drawing.IPaintPort> painter, PrintDocument document, Drawing.Transform transform)
+		{
+			document.Print(new SinglePagePrintEngine(painter, transform));
+		}
 
 		private void ResetTransform()
 		{
