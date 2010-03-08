@@ -196,19 +196,21 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintersCellTable.StyleV |= CellArrayStyles.Separator;
 			this.PrintersCellTable.StyleV |= CellArrayStyles.SelectLine;
 
-			this.PrintersCellTable.SetArraySize (6, this.Printers.Count);
+			this.PrintersCellTable.SetArraySize (7, this.Printers.Count);
 			this.PrintersCellTable.SetWidthColumn (0, 15);
 			this.PrintersCellTable.SetWidthColumn (1, 200);
 			this.PrintersCellTable.SetWidthColumn (2, 200);
-			this.PrintersCellTable.SetWidthColumn (3, 75);
+			this.PrintersCellTable.SetWidthColumn (3, 150);
 			this.PrintersCellTable.SetWidthColumn (4, 75);
-			this.PrintersCellTable.SetWidthColumn (5, 250);
+			this.PrintersCellTable.SetWidthColumn (5, 75);
+			this.PrintersCellTable.SetWidthColumn (6, 250);
 
 			this.PrintersCellTable.SetHeaderTextH (1, "Nom");
 			this.PrintersCellTable.SetHeaderTextH (2, "Bac");
-			this.PrintersCellTable.SetHeaderTextH (3, "Pos. horiz.");
-			this.PrintersCellTable.SetHeaderTextH (4, "Pos. vert.");
-			this.PrintersCellTable.SetHeaderTextH (5, "Commentaire");
+			this.PrintersCellTable.SetHeaderTextH (3, "Orientation");
+			this.PrintersCellTable.SetHeaderTextH (4, "Pos. horiz.");
+			this.PrintersCellTable.SetHeaderTextH (5, "Pos. vert.");
+			this.PrintersCellTable.SetHeaderTextH (6, "Commentaire");
 
 			for (int i = 0; i < this.Printers.Count; i++)
 			{
@@ -217,7 +219,6 @@ namespace Epsitec.App.BanquePiguet
 				TextFieldCombo nameTextField = new TextFieldCombo ()
 				{
 					Dock = DockStyle.Fill,
-					IsReadOnly = true,
 					Text = FormattedText.Escape (printer.Name),
 				};
 
@@ -230,6 +231,16 @@ namespace Epsitec.App.BanquePiguet
 				};
 
 				this.PopulateTraysTextField (printer, trayTextField);
+
+				TextFieldCombo orientationTextField = new TextFieldCombo ()
+				{
+					Dock = DockStyle.Fill,
+					IsReadOnly = true,
+					Text = printer.Horizontal ? "Horizontal" : "Vertical",
+				};
+
+				orientationTextField.Items.Add ("Horizontal");
+				orientationTextField.Items.Add ("Vertical");
 
 				TextFieldUpDown xOffsetTextField = new TextFieldUpDown ()
 				{
@@ -263,7 +274,9 @@ namespace Epsitec.App.BanquePiguet
 					this.PopulateTraysTextField (printer, trayTextField);
 				};
 
-				trayTextField.TextChanged += (sender) => printer.Tray = FormattedText.Unescape (trayTextField.Text);				
+				trayTextField.TextChanged += (sender) => printer.Tray = FormattedText.Unescape (trayTextField.Text);
+
+				orientationTextField.TextChanged += (sender) => printer.Horizontal = (FormattedText.Unescape (orientationTextField.Text) == "Horizontal");
 
 				xOffsetTextField.TextChanged += (sender) =>
 				{
@@ -296,9 +309,10 @@ namespace Epsitec.App.BanquePiguet
 				
 				this.PrintersCellTable[1, i].Insert(nameTextField);
 				this.PrintersCellTable[2, i].Insert (trayTextField);
-				this.PrintersCellTable[3, i].Insert (xOffsetTextField);
-				this.PrintersCellTable[4, i].Insert (yOffsetTextField);
-				this.PrintersCellTable[5, i].Insert (commentTextField);
+				this.PrintersCellTable[3, i].Insert (orientationTextField);
+				this.PrintersCellTable[4, i].Insert (xOffsetTextField);
+				this.PrintersCellTable[5, i].Insert (yOffsetTextField);
+				this.PrintersCellTable[6, i].Insert (commentTextField);
 			}
 			
 			this.PrintersCellTable.FinalSelectionChanged += (sender) => this.CheckRemovePrinterEnabled ();
@@ -514,7 +528,7 @@ namespace Epsitec.App.BanquePiguet
 		/// </remarks>
 		protected void AddPrinter()
 		{
-			this.Printers.Add (new Printer ("", "", 0, 0, ""));
+			this.Printers.Add (new Printer ("", "", true, 0, 0, ""));
 			this.SetupPrintersCellTable (this.DialogWindow);
 		}
 

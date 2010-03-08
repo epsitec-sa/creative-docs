@@ -346,7 +346,17 @@ namespace Epsitec.App.BanquePiguet
 
 			double xOffset = printer.XOffset;
 			double yOffset = printer.YOffset;
-			PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, yOffset, width, height)), printDocument);
+
+			if (printer.Horizontal)
+			{
+				Transform transform = Transform.Identity;
+				PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (xOffset, 192 - yOffset, width, height)), printDocument, transform);
+			}
+			else
+			{
+				Transform transform = Transform.Identity.RotateDeg (90);
+				PrintPort.PrintSinglePage (painter => this.BvWidget.Print (painter, new Rectangle (86 - yOffset, -159 - xOffset, width, height)), printDocument, transform);
+			}
 		}
 
 		/// <summary>

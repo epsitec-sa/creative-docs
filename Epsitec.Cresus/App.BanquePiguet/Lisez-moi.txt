@@ -7,11 +7,14 @@ soit à partir de la ligne de commande, soit à partir d'un racourci.
 - Pour pouvoir sauvegarder la configuration des imprimantes, il faut impérativement
 que l'utilisateur ait les droit d'écriture sur tout le dossier l'application.
 
+- Les décalages horizontaux et verticaux doivent être donnés en millimètres et
+correspondent au décalage entre le coin en haut à gauche de la feuille et le
+coin en haut à gauche du bulletin de versement.
+
 - Si rien ne s'imprime sur le bulletin de versement, vérifier que l'imprimante
 est bien configurée. Sur l'imprimante de test utilisée chez Epsitec, il fallait
-utiliser la configuration suivante:
-Poz. horiz. : 0
-Poz. vert. : 192
+mettre un décalage horizontal de 0 et un décalage vertical de 0, mais cela peut
+changer sur d'autres imprimantes.
 
 - Pour utiliser ce programme à travers le réseau, il faut utiliser la fonction
 "Connecter un lecteur réseau" et mapper le dossier vers une lettre, par exemple
@@ -21,3 +24,9 @@ posent, suivant les versions de Windows.
 - Il se peut qu'il y ait des problèmes au niveau de la configuration des imprimantes
 si plusieurs utilisateurs utilisent Windows dans une langue différente. En effet, dans
 ce cas, les imprimantes n'auront pas les mêmes noms pour les bacs.
+
+- Deux fichiers de logs sont propres à chaque utilisateur, l'un pour avoir une trace des
+impressions, l'autre pour avoir une trace des erreurs. Ils se trouvent à
+  - C:\Users\[USERNAME]\AppData\Roaming\Epsitec\App.BanquePiguet\Logs\logs.txt
+  - C:\Users\[USERNAME]\AppData\Roaming\Epsitec\App.BanquePiguet\Logs\errors.txt
+où [USERNAME] est votre nom d'utilisateur.

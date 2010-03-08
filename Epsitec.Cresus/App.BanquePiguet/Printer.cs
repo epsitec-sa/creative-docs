@@ -32,13 +32,15 @@ namespace Epsitec.App.BanquePiguet
 		/// </summary>
 		/// <param name="name">The name of the printer.</param>
 		/// <param name="tray">The selected tray.</param>
+		/// <param name="horizontal">True for horizontal orientation, false for vertical orientation.</param>
 		/// <param name="xOffset">The offset on the x axis.</param>
 		/// <param name="yOffset">The offset on the y axis.</param>
 		/// <param name="comment">The comment on the printer.</param>
-		public Printer(string name, string tray, double xOffset, double yOffset, string comment)
+		public Printer(string name, string tray, bool horizontal, double xOffset, double yOffset, string comment)
 		{
 			this.Name = name;
 			this.Tray = tray;
+			this.Horizontal = horizontal;
 			this.XOffset = xOffset;
 			this.YOffset = yOffset;
 			this.Comment = comment;
@@ -59,6 +61,17 @@ namespace Epsitec.App.BanquePiguet
 		/// </summary>
 		/// <value>The tray selected to print the bvs.</value>
 		public string Tray
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether the bv should be printed horizontaly or
+		/// vertically.
+		/// </summary>
+		/// <value>True for an horiztontal orientation, false for a vertical orientation.</value>
+		public bool Horizontal
 		{
 			get;
 			set;
@@ -110,6 +123,7 @@ namespace Epsitec.App.BanquePiguet
 					new XElement ("printer",
 						new XElement ("name", printer.Name),
 						new XElement ("tray", printer.Tray),
+						new XElement ("horizontal", printer.Horizontal), 
 						new XElement ("xOffset", printer.XOffset.ToString (CultureInfo.InvariantCulture)),
 						new XElement ("yOffset", printer.YOffset.ToString (CultureInfo.InvariantCulture)),
 						new XElement ("comment", printer.Comment)
@@ -153,6 +167,7 @@ namespace Epsitec.App.BanquePiguet
 				   {
 					   Name = xPrinter.Element ("name").Value,
 					   Tray = xPrinter.Element ("tray").Value,
+					   Horizontal = bool.Parse(xPrinter.Element ("horizontal").Value),
 					   XOffset = double.Parse (xPrinter.Element ("xOffset").Value, CultureInfo.InvariantCulture),
 					   YOffset = double.Parse (xPrinter.Element ("yOffset").Value, CultureInfo.InvariantCulture),
 					   Comment = xPrinter.Element ("comment").Value,
