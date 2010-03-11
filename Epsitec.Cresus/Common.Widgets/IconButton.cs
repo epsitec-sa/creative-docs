@@ -235,7 +235,7 @@ namespace Epsitec.Common.Widgets
 							break;
 					}
 				}
-				
+#if false
 				if ((!ToolTip.HasToolTipText (this)) &&
 					(!ToolTip.HasToolTipWidget (this)))
 				{
@@ -246,6 +246,19 @@ namespace Epsitec.Common.Widgets
 						this.DefineToolTipFromCaption (description);
 					}
 				}
+#endif
+			}
+		}
+
+		protected override string GetCaptionDescription(Types.Caption caption)
+		{
+			if (caption.HasDescription)
+			{
+				return caption.Description;
+			}
+			else
+			{
+				return caption.DefaultLabel;
 			}
 		}
 
