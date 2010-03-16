@@ -369,17 +369,17 @@ namespace Epsitec.Common.Drawing
 
 			if (format == ImageFormat.WindowsIcon)
 			{
-				using (Opac.FreeImage.Image image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
+				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
 				{
-					return Opac.FreeImage.NativeIcon.CreateIcon (image);
+					return image.CreateIcon ();
 				}
 			}
 			
 			if (format == ImageFormat.WindowsVistaIcon)
 			{
-				using (Opac.FreeImage.Image image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
+				using (Opac.FreeImage.ImageClient image = Opac.FreeImage.NativeBitmap.ConvertToImage (this.NativeBitmap))
 				{
-					return Opac.FreeImage.NativeIcon.CreateHighResolutionIcon (image);
+					return image.CreateHighResolutionIcon ();
 				}
 			}
 			
@@ -411,21 +411,25 @@ namespace Epsitec.Common.Drawing
 				{
 					//	FreeImage does a better job than Windows for the PNG compression.
 
-					using (Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load (data))
+					using (Opac.FreeImage.ImageClient fi = Opac.FreeImage.ImageClient.Load (data))
 					{
 						switch (depth)
 						{
 							case 24:
-								using (Opac.FreeImage.Image fi24 = fi.ConvertTo24Bits ())
+								using (Opac.FreeImage.ImageClient fi24 = fi.ConvertTo24Bits ())
 								{
-									fi24.SetDotsPerInch (dpi, dpi);
+									fi24.DotsPerInchX = dpi;
+									fi24.DotsPerInchY = dpi;
+									fi24.InplaceSetDotsPerInch ();
 									data = fi24.SaveToMemory (Opac.FreeImage.FileFormat.Png);
 								}
 								break;
 							case 32:
-								using (Opac.FreeImage.Image fi32 = fi.ConvertTo32Bits ())
+								using (Opac.FreeImage.ImageClient fi32 = fi.ConvertTo32Bits ())
 								{
-									fi32.SetDotsPerInch (dpi, dpi);
+									fi32.DotsPerInchX = dpi;
+									fi32.DotsPerInchY = dpi;
+									fi32.InplaceSetDotsPerInch ();
 									data = fi32.SaveToMemory (Opac.FreeImage.FileFormat.Png);
 								}
 								break;
@@ -453,7 +457,7 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 
-		public static Image FromImage(Opac.FreeImage.Image image)
+		public static Image FromImage(Opac.FreeImage.ImageClient image)
 		{
 			if (image == null)
 			{

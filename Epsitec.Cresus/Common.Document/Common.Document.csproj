@@ -79,9 +79,13 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OPaC.FreeImage, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
+    <Reference Include="OPaC.FreeImage.Client, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\OPaC.FreeImage.dll</HintPath>
+      <HintPath>..\External\FreeImage\OPaC.FreeImage.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="OPaC.FreeImage.Library, Version=1.0.1002.0, Culture=neutral, PublicKeyToken=d4b3a36d594a1874, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\FreeImage\OPaC.FreeImage.Library.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -711,6 +715,9 @@
     <None Include="..\Epsitec.Cresus.snk">
       <Link>Epsitec.Cresus.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

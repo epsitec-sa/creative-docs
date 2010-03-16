@@ -58,7 +58,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public Opac.FreeImage.Image				AssociatedImage
+		public Opac.FreeImage.ImageClient		AssociatedImage
 		{
 			get
 			{
@@ -87,26 +87,29 @@ namespace Epsitec.Common.Drawing
 		/// <param name="copyImageBits">Specifies if the image bits must be copied.</param>
 		/// <returns><c>true</c> if the image bits were inherited directly, without any copy (the
 		/// image must stay alive as long as the pixmap in that case).</returns>
-		public bool AllocatePixmap(Opac.FreeImage.Image image, bool copyImageBits)
+		public bool AllocatePixmap(Opac.FreeImage.ImageClient image, bool copyImageBits)
 		{
 			if ((this.size.IsEmpty) &&
 				(this.aggBuffer == System.IntPtr.Zero))
 			{
-				Opac.FreeImage.Image temp = null;
+				Opac.FreeImage.ImageClient temp = null;
 
-				if (image.GetBitsPerPixel () < 32)
+				if (image.BitsPerPixel < 32)
 				{
 					copyImageBits = true;
 					temp  = image.ConvertTo32Bits ();
 					image = temp;
 				}
 
-				int width  = image.GetWidth ();
-				int height = image.GetHeight ();
-				int stride = image.GetPitch ();
-				System.IntPtr bits = image.GetBits ();
+				int width  = image.Width;
+				int height = image.Height;
+				int stride = image.Pitch;
 
-				this.aggBuffer   = AntiGrain.Buffer.NewFrom (width, height, 32, stride, bits, copyImageBits);
+				image.OperateOnRawImage (bits => 
+					{
+						this.aggBuffer   = AntiGrain.Buffer.NewFrom (width, height, 32, stride, bits, copyImageBits);
+					});
+				
 				this.size         = new System.Drawing.Size (width, height);
 				this.isOsBitmap = true;
 
@@ -555,7 +558,7 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr					aggBuffer;
 		protected System.Drawing.Size			size;
 		protected bool							isOsBitmap;
-		protected Opac.FreeImage.Image			associatedImage;
+		protected Opac.FreeImage.ImageClient	associatedImage;
 
 	}
 }

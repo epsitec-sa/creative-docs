@@ -126,13 +126,13 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, Opac.FreeImage.Image image)
+		public byte[] SaveImageData(string path, System.DateTime date, int pixels, int sourceWidth, int sourceHeight, Opac.FreeImage.ImageClient image)
 		{
-			Opac.FreeImage.Image temp = null;
+			Opac.FreeImage.ImageClient temp = null;
 			string extension = null;
 			byte[] memory = null;
 
-			if (image.GetBitsPerPixel () > 8)
+			if (image.BitsPerPixel > 8)
 			{
 				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Jpeg, Opac.FreeImage.LoadSaveMode.JpegQualitySuperb);
 				extension = ".jpg";
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			if ((memory == null) &&
-				(image.GetBitsPerPixel () == 32))
+				(image.BitsPerPixel == 32))
 			{
 				memory = image.SaveToMemory (Opac.FreeImage.FileFormat.Png, Opac.FreeImage.LoadSaveMode.PngDefault);
 				extension = ".png";

@@ -318,7 +318,7 @@ namespace Epsitec.Common.Document
 				//	Cherche d'abord l'image dans le cache persistant.
 				string path = this.zipFilename == null ? string.Concat ("file:", this.filename) : GlobalImageCache.CreateZipPath (this.zipFilename, this.zipEntryName);
 				ImageData imageData = GlobalImageCache.ImageManager.GetImage (path, this.filename, this.date);
-				Opac.FreeImage.Image sampleImage = imageData.GetSampleImage ();
+				var sampleImage = imageData.GetSampleImage ();
 
 				if (sampleImage == null)
 				{

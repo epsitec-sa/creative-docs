@@ -11,27 +11,27 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestRgbTiff()
 		{
-			Opac.FreeImage.Image image = Opac.FreeImage.Image.Load (@"..\..\images\rgb.tif");
+			Opac.FreeImage.ImageClient image = Opac.FreeImage.ImageClient.Load (@"..\..\images\rgb.tif");
 
-			Opac.FreeImage.Image imageR    = image.GetChannel (ColorChannel.Red);
-			Opac.FreeImage.Image imageG    = image.GetChannel (ColorChannel.Green);
-			Opac.FreeImage.Image imageB    = image.GetChannel (ColorChannel.Blue);
-			Opac.FreeImage.Image imageGray = image.GetChannel (ColorChannel.Grayscale);
-			Opac.FreeImage.Image imageCmyk = image.ConvertToCmyk ();
+			Opac.FreeImage.ImageClient imageR    = image.GetChannel (ColorChannel.Red);
+			Opac.FreeImage.ImageClient imageG    = image.GetChannel (ColorChannel.Green);
+			Opac.FreeImage.ImageClient imageB    = image.GetChannel (ColorChannel.Blue);
+			Opac.FreeImage.ImageClient imageGray = image.GetChannel (ColorChannel.Grayscale);
+			Opac.FreeImage.ImageClient imageCmyk = image.ConvertToCmyk ();
 
-			Assert.AreEqual (Opac.FreeImage.ColorType.Rgb, image.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageR.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageG.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageB.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageGray.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.Cmyk, imageCmyk.GetColorType ());
+			Assert.AreEqual (Opac.FreeImage.ColorType.Rgb, image.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageR.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageG.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageB.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageGray.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.Cmyk, imageCmyk.ColorType);
 
-			Assert.AreEqual (24, image.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageR.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageG.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageB.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageGray.GetBitsPerPixel ());
-			Assert.AreEqual (32, imageCmyk.GetBitsPerPixel ());
+			Assert.AreEqual (24, image.BitsPerPixel);
+			Assert.AreEqual (8, imageR.BitsPerPixel);
+			Assert.AreEqual (8, imageG.BitsPerPixel);
+			Assert.AreEqual (8, imageB.BitsPerPixel);
+			Assert.AreEqual (8, imageGray.BitsPerPixel);
+			Assert.AreEqual (32, imageCmyk.BitsPerPixel);
 
 			System.IO.File.WriteAllBytes ("rgb-R.png",    imageR.SaveToMemory (FileFormat.Png));
 			System.IO.File.WriteAllBytes ("rgb-G.png",    imageG.SaveToMemory (FileFormat.Png));
@@ -50,27 +50,27 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestRgbAlphaTiff()
 		{
-			Opac.FreeImage.Image image = Opac.FreeImage.Image.Load (@"..\..\images\rgba.tif");
+			Opac.FreeImage.ImageClient image = Opac.FreeImage.ImageClient.Load (@"..\..\images\rgba.tif");
 
-			Opac.FreeImage.Image imageR = image.GetChannel (ColorChannel.Red);
-			Opac.FreeImage.Image imageG = image.GetChannel (ColorChannel.Green);
-			Opac.FreeImage.Image imageB = image.GetChannel (ColorChannel.Blue);
-			Opac.FreeImage.Image imageA = image.GetChannel (ColorChannel.Alpha);
-			Opac.FreeImage.Image imageT = image.GetChannel (ColorChannel.Transparency);
+			Opac.FreeImage.ImageClient imageR = image.GetChannel (ColorChannel.Red);
+			Opac.FreeImage.ImageClient imageG = image.GetChannel (ColorChannel.Green);
+			Opac.FreeImage.ImageClient imageB = image.GetChannel (ColorChannel.Blue);
+			Opac.FreeImage.ImageClient imageA = image.GetChannel (ColorChannel.Alpha);
+			Opac.FreeImage.ImageClient imageT = image.GetChannel (ColorChannel.Transparency);
 			
-			Assert.AreEqual (Opac.FreeImage.ColorType.RgbAlpha, image.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageR.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageG.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageB.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageA.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsWhite, imageT.GetColorType ());
+			Assert.AreEqual (Opac.FreeImage.ColorType.RgbAlpha, image.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageR.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageG.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageB.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageA.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsWhite, imageT.ColorType);
 
-			Assert.AreEqual (32, image.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageR.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageG.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageB.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageA.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageT.GetBitsPerPixel ());
+			Assert.AreEqual (32, image.BitsPerPixel);
+			Assert.AreEqual (8, imageR.BitsPerPixel);
+			Assert.AreEqual (8, imageG.BitsPerPixel);
+			Assert.AreEqual (8, imageB.BitsPerPixel);
+			Assert.AreEqual (8, imageA.BitsPerPixel);
+			Assert.AreEqual (8, imageT.BitsPerPixel);
 
 			System.IO.File.WriteAllBytes ("rgba-R.png", imageR.SaveToMemory (FileFormat.Png));
 			System.IO.File.WriteAllBytes ("rgba-G.png", imageG.SaveToMemory (FileFormat.Png));
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Drawing
 			System.IO.File.WriteAllBytes ("rgba-A.png", imageA.SaveToMemory (FileFormat.Png));
 			System.IO.File.WriteAllBytes ("rgba-T.png", imageT.SaveToMemory (FileFormat.Png));
 			
-			byte[] memory = image.GetChannel (ColorChannel.Alpha).GetRawImageSource8Bits (true);
+			byte[] memory = image.GetChannel (ColorChannel.Alpha).GetRawImageDataInCompactFormFor8BitImage (true);
 
 			Assert.AreEqual (128*128, memory.Length);
 
@@ -93,30 +93,30 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestCmykTiff()
 		{
-			Opac.FreeImage.Image image = Opac.FreeImage.Image.Load (@"..\..\images\cmyk.tif");
+			Opac.FreeImage.ImageClient image = Opac.FreeImage.ImageClient.Load (@"..\..\images\cmyk.tif");
 
-			Opac.FreeImage.Image imageC = image.GetChannel (ColorChannel.Cyan);
-			Opac.FreeImage.Image imageM = image.GetChannel (ColorChannel.Magenta);
-			Opac.FreeImage.Image imageY = image.GetChannel (ColorChannel.Yellow);
-			Opac.FreeImage.Image imageK = image.GetChannel (ColorChannel.Black);
-			Opac.FreeImage.Image imageGray = image.GetChannel (ColorChannel.Grayscale);
-			Opac.FreeImage.Image imageRgb = image.ConvertToRgb ();
+			Opac.FreeImage.ImageClient imageC = image.GetChannel (ColorChannel.Cyan);
+			Opac.FreeImage.ImageClient imageM = image.GetChannel (ColorChannel.Magenta);
+			Opac.FreeImage.ImageClient imageY = image.GetChannel (ColorChannel.Yellow);
+			Opac.FreeImage.ImageClient imageK = image.GetChannel (ColorChannel.Black);
+			Opac.FreeImage.ImageClient imageGray = image.GetChannel (ColorChannel.Grayscale);
+			Opac.FreeImage.ImageClient imageRgb = image.ConvertToRgb ();
 
-			Assert.AreEqual (Opac.FreeImage.ColorType.Cmyk, image.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageC.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageM.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageY.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageK.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageGray.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.Rgb, imageRgb.GetColorType ());
-			
-			Assert.AreEqual (32, image.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageC.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageM.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageY.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageK.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageGray.GetBitsPerPixel ());
-			Assert.AreEqual (24, imageRgb.GetBitsPerPixel ());
+			Assert.AreEqual (Opac.FreeImage.ColorType.Cmyk, image.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageC.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageM.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageY.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageK.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageGray.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.Rgb, imageRgb.ColorType);
+
+			Assert.AreEqual (32, image.BitsPerPixel);
+			Assert.AreEqual (8, imageC.BitsPerPixel);
+			Assert.AreEqual (8, imageM.BitsPerPixel);
+			Assert.AreEqual (8, imageY.BitsPerPixel);
+			Assert.AreEqual (8, imageK.BitsPerPixel);
+			Assert.AreEqual (8, imageGray.BitsPerPixel);
+			Assert.AreEqual (24, imageRgb.BitsPerPixel);
 
 			System.IO.File.WriteAllBytes ("cmyk-C.png", imageC.SaveToMemory (FileFormat.Png));
 			System.IO.File.WriteAllBytes ("cmyk-M.png", imageM.SaveToMemory (FileFormat.Png));
@@ -137,36 +137,36 @@ namespace Epsitec.Common.Drawing
 		[Test]
 		public void TestCmykAlphaTiff()
 		{
-			Opac.FreeImage.Image image = Opac.FreeImage.Image.Load (@"..\..\images\cmyka.tif");
+			Opac.FreeImage.ImageClient image = Opac.FreeImage.ImageClient.Load (@"..\..\images\cmyka.tif");
 
-			Opac.FreeImage.Image imageC = image.GetChannel (ColorChannel.Cyan);
-			Opac.FreeImage.Image imageM = image.GetChannel (ColorChannel.Magenta);
-			Opac.FreeImage.Image imageY = image.GetChannel (ColorChannel.Yellow);
-			Opac.FreeImage.Image imageK = image.GetChannel (ColorChannel.Black);
-			Opac.FreeImage.Image imageA = image.GetChannel (ColorChannel.Alpha);
-			Opac.FreeImage.Image imageT = image.GetChannel (ColorChannel.Transparency);
-			Opac.FreeImage.Image imageGray = image.GetChannel (ColorChannel.Grayscale);
-			Opac.FreeImage.Image imageRgb = image.ConvertToRgb ();
+			Opac.FreeImage.ImageClient imageC = image.GetChannel (ColorChannel.Cyan);
+			Opac.FreeImage.ImageClient imageM = image.GetChannel (ColorChannel.Magenta);
+			Opac.FreeImage.ImageClient imageY = image.GetChannel (ColorChannel.Yellow);
+			Opac.FreeImage.ImageClient imageK = image.GetChannel (ColorChannel.Black);
+			Opac.FreeImage.ImageClient imageA = image.GetChannel (ColorChannel.Alpha);
+			Opac.FreeImage.ImageClient imageT = image.GetChannel (ColorChannel.Transparency);
+			Opac.FreeImage.ImageClient imageGray = image.GetChannel (ColorChannel.Grayscale);
+			Opac.FreeImage.ImageClient imageRgb = image.ConvertToRgb ();
 
-			Assert.AreEqual (Opac.FreeImage.ColorType.Cmyk, image.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageC.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageM.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageY.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageK.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageGray.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageA.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsWhite, imageT.GetColorType ());
-			Assert.AreEqual (Opac.FreeImage.ColorType.Rgb, imageRgb.GetColorType ());
+			Assert.AreEqual (Opac.FreeImage.ColorType.Cmyk, image.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageC.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageM.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageY.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageK.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageGray.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsBlack, imageA.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.MinIsWhite, imageT.ColorType);
+			Assert.AreEqual (Opac.FreeImage.ColorType.Rgb, imageRgb.ColorType);
 
-			Assert.AreEqual (32, image.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageC.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageM.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageY.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageK.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageGray.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageA.GetBitsPerPixel ());
-			Assert.AreEqual ( 8, imageT.GetBitsPerPixel ());
-			Assert.AreEqual (24, imageRgb.GetBitsPerPixel ());
+			Assert.AreEqual (32, image.BitsPerPixel);
+			Assert.AreEqual (8, imageC.BitsPerPixel);
+			Assert.AreEqual (8, imageM.BitsPerPixel);
+			Assert.AreEqual (8, imageY.BitsPerPixel);
+			Assert.AreEqual (8, imageK.BitsPerPixel);
+			Assert.AreEqual (8, imageGray.BitsPerPixel);
+			Assert.AreEqual (8, imageA.BitsPerPixel);
+			Assert.AreEqual (8, imageT.BitsPerPixel);
+			Assert.AreEqual (24, imageRgb.BitsPerPixel);
 
 			System.IO.File.WriteAllBytes ("cmyka-C.png", imageC.SaveToMemory (FileFormat.Png));
 			System.IO.File.WriteAllBytes ("cmyka-M.png", imageM.SaveToMemory (FileFormat.Png));

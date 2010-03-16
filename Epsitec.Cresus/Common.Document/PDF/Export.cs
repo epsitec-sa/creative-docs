@@ -1805,21 +1805,21 @@ namespace Epsitec.Common.Document.PDF
 		{
 			//	Crée une image.
 			byte[] imageData = image.Cache.GetImageData();
-			Opac.FreeImage.Image fi = Opac.FreeImage.Image.Load(imageData);
+			var fi = Opac.FreeImage.ImageClient.Load(imageData);
 			image.Cache.FreeImage();
 			imageData = null;
 
 			Margins crop = image.Crop;
 			if (crop != Margins.Zero)  // recadrage nécessaire ?
 			{
-				Opac.FreeImage.Image cropped = fi.Crop((int)crop.Left, (int)crop.Top, fi.GetWidth()-(int)(crop.Left+crop.Right), fi.GetHeight()-(int)(crop.Top+crop.Bottom));
+				var cropped = fi.Crop ((int) crop.Left, (int) crop.Top, fi.Width-(int) (crop.Left+crop.Right), fi.Height-(int) (crop.Top+crop.Bottom));
 				fi.Dispose();
 				fi = cropped;
 			}
 
 			bool useMask = false;
-			int dx = fi.GetWidth();
-			int dy = fi.GetHeight();
+			int dx = fi.Width;
+			int dy = fi.Height;
 
 			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
 			//	Une image sans filtrage n'est jamais mise à l'échelle !
@@ -1852,7 +1852,7 @@ namespace Epsitec.Common.Document.PDF
 
 			if ( resizeRequired )
 			{
-				Opac.FreeImage.Image resized = fi.Rescale(dx, dy, Properties.Image.FilterToFreeImage(image.Filter));
+				var resized = fi.Rescale (dx, dy, Properties.Image.FilterToFreeImage (image.Filter));
 				fi.Dispose();
 				fi = resized;
 			}
@@ -1883,7 +1883,7 @@ namespace Epsitec.Common.Document.PDF
 				}
 				else
 				{
-					switch (fi.GetColorType())
+					switch (fi.ColorType)
 					{
 						case Opac.FreeImage.ColorType.MinIsBlack:
 						case Opac.FreeImage.ColorType.MinIsWhite:
@@ -1928,7 +1928,7 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteString("/Interpolate true ");
 			}
 
-			if (fi.IsTransparent())
+			if (fi.IsTransparent)
 			{
 				useMask = true;
 			}
@@ -1938,29 +1938,29 @@ namespace Epsitec.Common.Document.PDF
 				writer.WriteString("/Filter [/ASCII85Decode /DCTDecode] ");  // voir [*] page 43
 
 				bool isGray = false;
-				if ( this.colorConversion == PDF.ColorConversion.ToGray )        isGray = true;
-				if ( baseType == TypeComplexSurface.XObjectMask )                isGray = true;
-				if ( fi.GetColorType() == Opac.FreeImage.ColorType.MinIsBlack )  isGray = true;
-				if ( fi.GetColorType() == Opac.FreeImage.ColorType.MinIsWhite )  isGray = true;
+				if ( this.colorConversion == PDF.ColorConversion.ToGray )   isGray = true;
+				if ( baseType == TypeComplexSurface.XObjectMask )           isGray = true;
+				if ( fi.ColorType == Opac.FreeImage.ColorType.MinIsBlack )  isGray = true;
+				if ( fi.ColorType == Opac.FreeImage.ColorType.MinIsWhite )  isGray = true;
 
 				byte[] jpeg;
 
 				if ( baseType == TypeComplexSurface.XObjectMask )
 				{
-					Opac.FreeImage.Image mask = fi.GetChannel(Opac.FreeImage.ColorChannel.Alpha);
+					var mask = fi.GetChannel (Opac.FreeImage.ColorChannel.Alpha);
 					jpeg = mask.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
 					mask.Dispose();
 				}
 				else if (isGray)
 				{
-					Opac.FreeImage.Image gray = fi.ConvertToGrayscale();
+					var gray = fi.ConvertToGrayscale ();
 					jpeg = gray.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
 					gray.Dispose();
 				}
 				else
 				{
-					Opac.FreeImage.Image rgb = fi.ConvertToRgb();
-					Opac.FreeImage.Image rgb24 = rgb.ConvertTo24Bits();
+					var rgb = fi.ConvertToRgb ();
+					var rgb24 = rgb.ConvertTo24Bits ();
 					jpeg = rgb24.SaveToMemory(Opac.FreeImage.FileFormat.Jpeg, Properties.Image.FilterQualityToMode(this.jpegQuality));
 					rgb24.Dispose();
 					rgb.Dispose();
@@ -2003,7 +2003,7 @@ namespace Epsitec.Common.Document.PDF
 					}
 					else
 					{
-						switch (fi.GetColorType())
+						switch (fi.ColorType)
 						{
 							case Opac.FreeImage.ColorType.MinIsBlack:
 							case Opac.FreeImage.ColorType.MinIsWhite:
@@ -2107,9 +2107,9 @@ namespace Epsitec.Common.Document.PDF
 			return useMask;
 		}
 
-		protected byte[] CreateImageSurfaceChannel(Opac.FreeImage.Image fi, Opac.FreeImage.ColorChannel channel, ImageFilter filter)
+		protected byte[] CreateImageSurfaceChannel(Opac.FreeImage.ImageClient fi, Opac.FreeImage.ColorChannel channel, ImageFilter filter)
 		{
-			Opac.FreeImage.Image plan = fi.GetChannel (channel);
+			var plan = fi.GetChannel (channel);
 			bool invert = false;
 
 			if ((plan == null) &&
@@ -2119,7 +2119,7 @@ namespace Epsitec.Common.Document.PDF
 				invert = true;
 			}
 
-			byte[] data = plan.GetRawImageSource8Bits(true);
+			byte[] data = plan.GetRawImageDataInCompactFormFor8BitImage(true);
 
 			if (invert)
 			{

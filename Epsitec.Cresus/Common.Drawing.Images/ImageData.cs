@@ -79,10 +79,6 @@ namespace Epsitec.Common.Drawing
 					{
 						size += this.sampleImage.MemorySize;
 					}
-					if (this.imageData != null)
-					{
-						size += this.imageData.Length;
-					}
 					if (this.compressedThumbnail != null)
 					{
 						size += this.compressedThumbnail.Length;
@@ -127,10 +123,10 @@ namespace Epsitec.Common.Drawing
 			
 			return this.fileFormat;
 		}
-		
-		public Opac.FreeImage.Image GetAsyncThumbnail()
+
+		public Opac.FreeImage.ImageClient GetAsyncThumbnail()
 		{
-			Opac.FreeImage.Image thumbnail;
+			Opac.FreeImage.ImageClient thumbnail;
 
 			thumbnail = this.Thumbnail;
 
@@ -142,9 +138,9 @@ namespace Epsitec.Common.Drawing
 			return thumbnail;
 		}
 
-		public Opac.FreeImage.Image GetAsyncSampleImage()
+		public Opac.FreeImage.ImageClient GetAsyncSampleImage()
 		{
-			Opac.FreeImage.Image sampleImage;
+			Opac.FreeImage.ImageClient sampleImage;
 
 			sampleImage = this.SampleImage;
 
@@ -156,9 +152,9 @@ namespace Epsitec.Common.Drawing
 			return sampleImage;
 		}
 
-		public Opac.FreeImage.Image GetThumbnail()
+		public Opac.FreeImage.ImageClient GetThumbnail()
 		{
-			Opac.FreeImage.Image thumbnail;
+			Opac.FreeImage.ImageClient thumbnail;
 
 			thumbnail = this.Thumbnail;
 
@@ -171,9 +167,9 @@ namespace Epsitec.Common.Drawing
 			return thumbnail;
 		}
 
-		public Opac.FreeImage.Image GetSampleImage()
+		public Opac.FreeImage.ImageClient GetSampleImage()
 		{
-			Opac.FreeImage.Image sampleImage;
+			Opac.FreeImage.ImageClient sampleImage;
 
 			sampleImage = this.SampleImage;
 
@@ -186,7 +182,7 @@ namespace Epsitec.Common.Drawing
 			return sampleImage;
 		}
 
-		public Opac.FreeImage.Image Thumbnail
+		public Opac.FreeImage.ImageClient Thumbnail
 		{
 			get
 			{
@@ -228,7 +224,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public Opac.FreeImage.Image SampleImage
+		public Opac.FreeImage.ImageClient SampleImage
 		{
 			get
 			{
@@ -270,10 +266,10 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		private static int GetMemorySize(Opac.FreeImage.Image image)
+		private static int GetMemorySize(Opac.FreeImage.ImageClient image)
 		{
-			int dx = image.GetPitch ();
-			int dy = image.GetHeight ();
+			int dx = image.Pitch;
+			int dy = image.Height;
 
 			return dx * dy;
 		}
@@ -308,7 +304,7 @@ namespace Epsitec.Common.Drawing
 					return;
 				}
 
-				Opac.FreeImage.Image image = null;
+				Opac.FreeImage.ImageClient image = null;
 
 				switch (mode)
 				{
@@ -348,10 +344,7 @@ namespace Epsitec.Common.Drawing
 			if ((this.compressedThumbnail != null) &&
 				(this.thumbnail == null))
 			{
-				using (Opac.FreeImage.Memory memory = new Opac.FreeImage.Memory (this.compressedThumbnail))
-				{
-					this.Thumbnail = memory.Load ();
-				}
+				this.Thumbnail = Opac.FreeImage.ImageClient.Load (this.compressedThumbnail);
 			}
 		}
 
@@ -360,10 +353,7 @@ namespace Epsitec.Common.Drawing
 			if ((this.compressedSampleImage != null) &&
 				(this.sampleImage == null))
 			{
-				using (Opac.FreeImage.Memory memory = new Opac.FreeImage.Memory (this.compressedSampleImage))
-				{
-					this.SampleImage = memory.Load ();
-				}
+				this.SampleImage = Opac.FreeImage.ImageClient.Load (this.compressedSampleImage);
 			}
 		}
 		
@@ -397,11 +387,10 @@ namespace Epsitec.Common.Drawing
 
 		private void ReleaseImageData()
 		{
-			if (this.imageData != null)
+			if (this.fullImage != null)
 			{
-				this.engine.RemoveMemoryPressure (this.imageData.Length);
-				this.imageData.Dispose ();
-				this.imageData = null;
+				this.fullImage.Dispose ();
+				this.fullImage = null;
 				this.imageDataTimestamp = 0;
 			}
 		}
@@ -428,7 +417,7 @@ namespace Epsitec.Common.Drawing
 
 			try
 			{
-				Opac.FreeImage.Image sampleImage = this.SampleImage;
+				Opac.FreeImage.ImageClient sampleImage = this.SampleImage;
 				
 				if (sampleImage == null)
 				{
@@ -441,29 +430,23 @@ namespace Epsitec.Common.Drawing
 					{
 						this.LoadImageData ();
 
-						if ((this.imageData == null) ||
-							(this.imageData.IsValid == false))
+						if ((this.fullImage == null) ||
+							(this.fullImage.IsValid == false))
 						{
 							return;
 						}
 
-						using (Opac.FreeImage.Image fullImage = this.imageData.Load ())
-						{
-							if (fullImage != null)
-							{
-								fullImage.Information = "FULL:" + this.imageFilePath + "/" + System.Environment.TickCount;
-								
-								this.width = fullImage.GetWidth ();
-								this.height	= fullImage.GetHeight ();
-								
-								int dx;
-								int dy;
+						this.fullImage.Information = "FULL:" + this.imageFilePath + "/" + System.Environment.TickCount;
+						
+						this.width  = this.fullImage.Width;
+						this.height	= this.fullImage.Height;
+						
+						int dx;
+						int dy;
 
-								this.GetReducedImageSize (this.engine.SampleImageSize, out dx, out dy);
+						this.GetReducedImageSize (this.engine.SampleImageSize, out dx, out dy);
 
-								sampleImage = fullImage.Rescale (dx, dy, Opac.FreeImage.Filter.Bilinear);
-							}
-						}
+						sampleImage = this.fullImage.Rescale (dx, dy, Opac.FreeImage.Filter.Bilinear);
 
 						if (sampleImage != null)
 						{
@@ -480,15 +463,12 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						using (Opac.FreeImage.Memory memory = new Opac.FreeImage.Memory (cachedSampleImageData))
-						{
-							sampleImage = memory.Load ();
-							this.compressedSampleImage = cachedSampleImageData;
+						sampleImage = Opac.FreeImage.ImageClient.Load (cachedSampleImageData);
+						this.compressedSampleImage = cachedSampleImageData;
 
-							if (this.compressedSampleImage != null)
-							{
-								this.engine.AddMemoryPressure (this.compressedSampleImage.Length);
-							}
+						if (this.compressedSampleImage != null)
+						{
+							this.engine.AddMemoryPressure (this.compressedSampleImage.Length);
 						}
 					}
 
@@ -500,7 +480,7 @@ namespace Epsitec.Common.Drawing
 					this.SampleImage = sampleImage;
 				}
 
-				Opac.FreeImage.Image thumbnail = this.Thumbnail;
+				Opac.FreeImage.ImageClient thumbnail = this.Thumbnail;
 
 				if (thumbnail == null)
 				{
@@ -525,10 +505,7 @@ namespace Epsitec.Common.Drawing
 					}
 					else
 					{
-						using (Opac.FreeImage.Memory memory = new Opac.FreeImage.Memory (cachedThumbnailData))
-						{
-							thumbnail = memory.Load ();
-						}
+						thumbnail = Opac.FreeImage.ImageClient.Load (cachedThumbnailData);
 						
 						this.compressedThumbnail = cachedThumbnailData;
 						
@@ -567,42 +544,20 @@ namespace Epsitec.Common.Drawing
 
 		private void LoadImageData()
 		{
-			if (this.imageData == null)
-			{
-				byte[] data = null;
-
-				try
-				{
-					data = this.engine.ReadAllBytes (this.imageFilePath);
-				}
-				catch (System.OutOfMemoryException)
-				{
-					System.Diagnostics.Debug.WriteLine ("Out of memory condition");
-				}
-
-				if (data != null)
-				{
-					lock (this.exclusion)
-					{
-						if (this.imageData == null)
-						{
-							this.imageData = new Opac.FreeImage.Memory (data);
-						}
-					}
-					
-					this.engine.AddMemoryPressure (data.Length);
-				}
-			}
-
 			lock (this.exclusion)
 			{
-				if (this.imageData != null)
+				Opac.FreeImage.ImageClient image = Opac.FreeImage.ImageClient.Load (this.imageFilePath);
+
+				if ((image != null) &&
+					(image.IsValid))
 				{
-					this.fileFormat = this.imageData.GetFileFormat ();
+					this.fullImage  = image;
+					this.fileFormat = image.FileFormat;
 					this.imageDataTimestamp = System.DateTime.Now.Ticks;
 				}
 				else
 				{
+					this.fullImage  = null;
 					this.imageDataTimestamp = 0;
 				}
 			}
@@ -631,7 +586,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.ReleaseImageData ();
 
-			Opac.FreeImage.Image image;
+			Opac.FreeImage.ImageClient image;
 
 			image = this.thumbnail;
 
@@ -753,9 +708,9 @@ namespace Epsitec.Common.Drawing
 		private long thumbnailTimestamp;
 		private long sampleImageTimestamp;
 
-		private Opac.FreeImage.Image thumbnail;
-		private Opac.FreeImage.Image sampleImage;
-		private Opac.FreeImage.Memory imageData;
+		private Opac.FreeImage.ImageClient thumbnail;
+		private Opac.FreeImage.ImageClient sampleImage;
+		private Opac.FreeImage.ImageClient fullImage;
 		private Opac.FreeImage.FileFormat fileFormat;
 		private int width;
 		private int height;

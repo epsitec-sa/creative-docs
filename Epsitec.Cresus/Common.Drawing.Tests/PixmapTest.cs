@@ -105,16 +105,16 @@ namespace Epsitec.Common.Drawing
 		{
 			Pixmap pixmap = new Pixmap ();
 			
-			Opac.FreeImage.Image image;
+			Opac.FreeImage.ImageClient image;
 			
 			if (size > 0)
 			{
-				image = Opac.FreeImage.Image.Load (path);
+				image = Opac.FreeImage.ImageClient.Load (path);
 				image = image.MakeThumbnail (size);
 			}
 			else
 			{
-				image = Opac.FreeImage.Image.Load (path);
+				image = Opac.FreeImage.ImageClient.Load (path);
 			}
 
 			if (pixmap.AllocatePixmap (image, copyBits) == false)
