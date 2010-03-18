@@ -15,6 +15,8 @@
     <TargetFrameworkSubset>Client</TargetFrameworkSubset>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>App.BanquePiguet.snk</AssemblyOriginatorKeyFile>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,10 +29,8 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -58,15 +58,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="BvField.cs" />
     <Compile Include="BvFieldMultiLine.cs" />
+    <Compile Include="BvFieldMultiLineColumnRight.cs" />
     <Compile Include="BvWidget.cs" />
     <Compile Include="BvHelper.cs" />
     <Compile Include="PrintDialog.cs" />
@@ -139,6 +140,10 @@
       <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
       <Name>Cresus.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Graph\Cresus.Graph.csproj">
+      <Project>{5FC1F7F5-74B3-4C6D-9EED-2F6B00CD9338}</Project>
+      <Name>Cresus.Graph</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -190,6 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lisez-moi.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Splash\splash.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

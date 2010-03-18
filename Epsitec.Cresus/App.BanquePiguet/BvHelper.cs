@@ -33,7 +33,6 @@ namespace Epsitec.App.BanquePiguet
 			{5, 0, 9, 4, 6, 8, 2, 7, 1, 3},
 		};
 
-
 		/// <summary>
 		/// This <see cref="Array"/> contains the control keys used by the modulo 10 recursive
 		/// algorithm.
@@ -76,7 +75,6 @@ namespace Epsitec.App.BanquePiguet
 			{"Y", "34"},
 			{"Z", "35"},
 		};
-
 
 		/// <summary>
 		/// Computes the control key of <paramref name="number"/> using the modulo 10 recursive
@@ -213,6 +211,28 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Checks that <paramref name="amount"/> is a valid amount.
+		/// </summary>
+		/// <param name="amount">The amount to check.</param>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="amount"/> is valid or not.</returns>
+		public static bool CheckAmount(string amount)
+		{
+			return Regex.IsMatch (amount, @"^\d{1,8}[.,]\d{2}$");
+		}
+
+		/// <summary>
+		/// Checks that <paramref name="payedBy"/> is a valid name and address.
+		/// </summary>
+		/// <param name="amount">The name and address to check.</param>
+		/// <returns>A <see cref="bool"/> indicating if <paramref name="payedBy"/> is valid or not.</returns>
+		public static bool CheckPayedBy(string payedBy)
+		{
+			string[] lines = payedBy.Split ('\n');
+
+			return (lines.Length <= 3) && (lines.All (line => line.Length <= 30));
+		}
+
+        /// <summary>
 		/// Checks that <paramref name="layoutCode"/> is a valid layout code.
 		/// </summary>
 		/// <param name="layoutCode">The layout code to check.</param>
@@ -331,6 +351,40 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Gets the francs part of the amount.
+		/// </summary>
+		/// <param name="amount">The amount.</param>
+		/// <returns>The francs part of the amount</returns>
+		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
+		public static string BuildFrancPart(string amount)
+		{
+			if (!BvHelper.CheckAmount (amount))
+			{
+				throw new System.ArgumentException (string.Format("the provided argument is not valid. Iban: {0}.", amount));
+			}
+
+			int index = amount.IndexOfAny (new char[]{',', '.'});
+			return amount.Substring (0, index);
+		}
+
+		/// <summary>
+		/// Gets the cents part of the amount.
+		/// </summary>
+		/// <param name="amount">The amount.</param>
+		/// <returns>The cents part of the amount</returns>
+		/// <exception cref="System.ArgumentException">If the provided value is not valid.</exception>
+		public static string BuildCentPart(string amount)
+		{
+			if (!BvHelper.CheckAmount (amount))
+			{
+				throw new System.ArgumentException (string.Format ("the provided argument is not valid. Iban: {0}.", amount));
+			}
+
+			int index = amount.IndexOfAny (new char[] { ',', '.' });
+			return amount.Substring (index + 1);
+		}
+
+		/// <summary>
 		/// Builds the text of the reference line based on the given values.
 		/// </summary>
 		/// <param name="iban">The beneficiary iban.</param>
@@ -407,6 +461,38 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Normalizes <paramref name="amount"/> in the proper format.
+		/// </summary>
+		/// <param name="amount">The amount to normalize.</param>
+		/// <returns>The normalized version of <paramref name="amount"/>.</returns>
+		public static string BuildNormalizedAmount(string amount)
+		{
+			string normalizedAmount = amount;
+			
+			int index = amount.LastIndexOfAny (new char[] { ',', '.' });
+
+			if (index < 0)
+			{
+				normalizedAmount += ".00";
+			}
+			else if (index == amount.Length - 2)
+			{
+				normalizedAmount += "0";
+			}
+			else if (index == amount.Length - 1)
+			{
+				normalizedAmount += "00";
+			}
+
+			if (normalizedAmount.LastIndexOfAny (new char[] { ',', '.' }) == 0)
+			{
+				normalizedAmount = "0" + normalizedAmount;
+			}
+
+			return normalizedAmount;
+		}
+
+		/// <summary>
 		/// Normalizes <paramref name="reason"/> so that each line has at most 10 chars on it.
 		/// </summary>
 		/// <param name="reason">The reason to normalize.</param>
@@ -429,6 +515,172 @@ namespace Epsitec.App.BanquePiguet
 			return normalizedReason.Trim ();
 		}
 
+		/// <summary>
+		/// Gets the error message for <paramref name="iban"/>.
+		/// </summary>
+		/// <param name="reason">The reason.</param>
+		/// <returns>The error message for <paramref name="iban"/>.</returns>
+		public static string GetErrorMessageForBenefeciaryIban(string iban)
+		{
+			string ibanNoSpace = iban.Replace (" ", "");
+
+			bool validLength = ibanNoSpace.Length == 21;
+			bool noLetters = validLength ? Regex.IsMatch (ibanNoSpace.Substring (ibanNoSpace.Length - 12, 12), "^[0-9]*$") : true;
+
+			string error;
+
+			if (!validLength)
+			{
+				error = "N°Iban du bénéficiaire: doit contenir 21 caractères.";
+			}
+			else if (!noLetters)
+			{
+				error = "N°Iban du bénéficiaire: doit se terminer par 12 chiffres.";
+			}
+			else if (!BvHelper.CheckBeneficiaryIban (iban))
+			{
+				error = "N°Iban du bénéficiaire: invalide.";
+			}
+			else
+			{
+				error = "";
+			}
+
+			return error;
+		}
+
+		/// <summary>
+		/// Gets the error message for <paramref name="address"/>.
+		/// </summary>
+		/// <param name="reason">The reason.</param>
+		/// <returns>The error message for <paramref name="address"/>.</returns>
+		public static string GetErrorMessageForBeneficiaryAddress(string address)
+		{
+			string[] lines = address.Split ('\n');
+
+			string error;
+
+			if (address.Length == 0)
+			{
+				error = "Adresse du bénéficiaire: doit être remplie.";
+			}
+			else if (lines.Count () > 4)
+			{
+				error = "Adresse du bénéficiaire: ne peut contenir que 4 lignes.";
+			}
+			else if (System.Array.Exists (lines, line => line.Length > 27))
+			{
+				error = "Adresse du bénéficiaire: chaque ligne ne peut contenir que 27 caractères.";
+			}
+			else if (!BvHelper.CheckBeneficiaryAddress (address))
+			{
+				error = "Adresse du bénéficiaire: invalide.";
+			}
+			else
+			{
+				error = "";
+			}
+
+			return error;
+		}
+
+		/// <summary>
+		/// Gets the error message for <paramref name="amount"/>.
+		/// </summary>
+		/// <param name="reason">The reason.</param>
+		/// <returns>The error message for <paramref name="amount"/>.</returns>
+		public static string GetErrorMessageForAmount(string amount)
+		{
+			char[] period = new char[] { ',', '.' };
+
+			string error;
+
+			if (amount.IndexOfAny (period) > 8 || amount.LastIndexOfAny (period) < amount.Length - 3)
+			{
+				error = "Montant: ne peut contenir que 8 chiffres et 2 décimales.";
+			}
+			else if (System.Array.FindAll (amount.ToCharArray (), c => period.Contains (c)).Count () != 1)
+			{
+				error = "Montant: ne peut contenir qu'une seule virgule.";
+			}
+			else if (!System.Array.TrueForAll (amount.ToCharArray (), c => char.IsDigit (c) || period.Contains (c)))
+			{
+				error = "Montant: ne peut contenir que des chiffres et une virgule.";
+			}
+			else if (!BvHelper.CheckAmount(amount))
+			{
+				error = "Montant: invalide.";
+			}
+			else
+			{
+				error = "";
+			}
+
+			return error;
+		}
+
+		/// <summary>
+		/// Gets the error message for <paramref name="payedBy"/>.
+		/// </summary>
+		/// <param name="reason">The reason.</param>
+		/// <returns>The error message for <paramref name="payedBy"/>.</returns>
+		public static string GetErrorMessageForPayedBy(string payedBy)
+		{
+			string[] lines = payedBy.Split ('\n');
+
+			string error;
+
+			if (lines.Count () > 3)
+			{
+				error = "Versé par: ne peut contenir que 3 lignes.";
+			}
+			else if (System.Array.Exists (lines, line => line.Length > 30))
+			{
+				error = "Versé par: chaque ligne ne peut contenir que 30 caractères.";
+			}
+			else if (!BvHelper.CheckPayedBy (payedBy))
+			{
+				error = "Versé par: invalide.";
+			}
+			else
+			{
+				error = "";
+			}
+
+			return error;
+		}
+
+		/// <summary>
+		/// Gets the error message for <paramref name="reason"/>.
+		/// </summary>
+		/// <param name="reason">The reason.</param>
+		/// <returns>The error message for <paramref name="reason"/>.</returns>
+		public static string GetErrorMessageForReason(string reason)
+		{
+			string[] lines = reason.Split ('\n');
+			bool valid = BvHelper.CheckReason (reason);
+
+			string error;
+
+			if (!valid && lines.Count () > 3)
+			{
+				error = "Motif du versement: ne peut contenir que 3 lignes.";
+			}
+			else if (!valid && System.Array.Exists (lines, line => line.Length > 10))
+			{
+				error = "Motif du versement: chaque ligne ne peut contenir que 10 caractères.";
+			}
+			else if (!valid)
+			{
+				error = "Motif du versement: invalide.";
+			}
+			else
+			{
+				error = "";
+			}
+
+			return error;
+		}
 
 	}
 

@@ -42,6 +42,7 @@ namespace Epsitec.App.BanquePiguet
 			this.SetupWindow ();
 			this.SetupForm ();
 			this.SetupBvWidget ();
+			this.SetupError ();
 			this.SetupEvents ();
 			this.SetupValidators ();
 			this.CheckPrintButtonEnbled ();
@@ -82,17 +83,6 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the <see cref="StaticText"/> used to display errors relative to the
-		/// beneficiary iban.
-		/// </summary>
-		/// <value>The <see cref="StaticText"/> used for the errors of the beneficiary iban.</value>
-		protected StaticText BeneficiaryIbanErrorStaticText
-		{
-			get;
-			set;
-		}
-
-		/// <summary>
 		/// Gets or sets the <see cref="TextFieldMulti"/> used for the beneficiary address.
 		/// </summary>
 		/// <value>The <see cref="TextFieldMulti"/> used for the beneficiary address.</value>
@@ -103,11 +93,21 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the <see cref="StaticText"/> used to display errors relative to the
-		/// beneficiary address.
+		/// Gets or sets the <see cref="TextField"/> used for the amount.
 		/// </summary>
-		/// <value>The <see cref="StaticText"/> used for the errors of the beneficiary address.</value>
-		protected StaticText BeneficiaryAddressErrorStaticText
+		/// <value>The <see cref="TextField"/> used for the amount.</value>
+		protected TextField AmountTextField
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the <see cref="TextFieldMulti"/> used for the name and address of the person
+		/// who pays.
+		/// </summary>
+		/// <value>The <see cref="TextFieldMulti"/> used for the name and address of the person who pays.</value>
+		protected TextFieldMulti PayedByTextField
 		{
 			get;
 			set;
@@ -124,11 +124,21 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
-		/// Gets or sets the <see cref="StaticText"/> used to display errors relative to the
-		/// reason.
+		/// Gets or sets the <see cref="StaticText"/> used to display errors.
 		/// </summary>
-		/// <value>The <see cref="StaticText"/> used for the errors of the reason.</value>
-		protected StaticText ReasonErrorStaticText
+		/// <value>The <see cref="StaticText"/> used for the errors.</value>
+		protected StaticText ErrorStaticText
+		{
+			get;
+			set;
+		}
+
+
+		/// <summary>
+		/// Gets or sets the <see cref="Dictionary"/> which stores the error messages.
+		/// </summary>
+		/// <value>The <see cref="Dictionary"/> which stores the error messages.</value>
+		protected Dictionary<Widget, string> ErrorMessages
 		{
 			get;
 			set;
@@ -205,90 +215,99 @@ namespace Epsitec.App.BanquePiguet
 			{
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Left,
-				Parent = this.Window.Root
+				Parent = this.Window.Root,
 			};
 
-			GroupBox beneficiaryIbanGroupBox = new GroupBox ()
+			new StaticText ()
 			{
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 10, 10),
-				Padding = new Margins (5, 5, 0, 0),
+				Margins = new Margins (20, 10, 10, 0),
 				Parent = formFrameBox,
 				Text = "N° IBAN du bénéficiaire",
-				TabIndex = 1,
 			};
 
 			this.BenefeciaryIbanTextField = new TextField ()
 			{
 				Dock = DockStyle.Stacked,
-				Parent = beneficiaryIbanGroupBox,
+				Margins = new Margins (10, 10, 2, 0),
+				Parent = formFrameBox,
 				PreferredWidth = 200,
 				TabIndex = 1,
 			};
 			this.BenefeciaryIbanTextField.Focus ();
 
-			this.BeneficiaryIbanErrorStaticText = new StaticText ()
+			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Parent = beneficiaryIbanGroupBox,
-				PreferredWidth = 200,
-			};
-
-			GroupBox beneficiaryAddressGroupBox = new GroupBox ()
-			{
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 0, 10),
-				Padding = new Margins (5, 5, 0, 0),
+				Margins = new Margins (20, 10, 5, 0),
 				Parent = formFrameBox,
-				Text = "Nom et adresse du bénéficiaire",
-				TabIndex = 2,
+				Text = "Nom et adresse bénéficiaire",
 			};
 
 			this.BeneficiaryAddressTextField = new TextFieldMulti ()
 			{
 				Dock = DockStyle.Stacked,
-				Parent = beneficiaryAddressGroupBox,
+				Margins = new Margins (10, 10, 2, 0),
+				Parent = formFrameBox,
 				PreferredHeight = 65,
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 				TabIndex = 2,
 			};
 
-			this.BeneficiaryAddressErrorStaticText = new StaticText ()
+			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Parent = beneficiaryAddressGroupBox,
-				PreferredWidth = 200,
+				Margins = new Margins (20, 10, 5, 0),
+				Parent = formFrameBox,
+				Text = "Montant",
 			};
 
-			GroupBox reasonGroupBox = new GroupBox ()
+			this.AmountTextField = new TextField ()
 			{
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 0, 10),
-				Padding = new Margins (5, 5, 0, 0),
+				Margins = new Margins (10, 10, 2, 0),
+				Parent = formFrameBox,
+				PreferredWidth = 200,
+				TabIndex = 3,
+			};
+
+			new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (20, 10, 5, 0),
+				Parent = formFrameBox,
+				Text = "Payé par",
+			};
+
+			this.PayedByTextField = new TextFieldMulti ()
+			{
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (10, 10, 2, 0),
+				Parent = formFrameBox,
+				PreferredHeight = 52,
+				PreferredWidth = 200,
+				ScrollerVisibility = false,
+				TabIndex = 4,
+			};
+
+			new StaticText ()
+			{
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (20, 10, 5, 0),
 				Parent = formFrameBox,
 				Text = "Motif du versement",
-				TabIndex = 3,
 			};
 
 			this.ReasonTextField = new TextFieldMulti ()
 			{
 				Dock = DockStyle.Stacked,
-				Parent = reasonGroupBox,
+				Margins = new Margins (10, 10, 2, 0),
+				Parent = formFrameBox,
 				PreferredHeight = 52,
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
-				TabIndex = 3,
-			};
-
-			this.ReasonErrorStaticText = new StaticText ()
-			{
-				Dock = DockStyle.Stacked,
-				Parent = reasonGroupBox,
-				PreferredWidth = 200,
+				TabIndex = 5,
 			};
 
 			FrameBox buttonsFrameBox = new FrameBox ()
@@ -296,13 +315,13 @@ namespace Epsitec.App.BanquePiguet
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Stacked,
 				Parent = formFrameBox,
-				TabIndex = 4,
+				TabIndex = 6,
 			};
 
 			this.PrintButton = new Button ()
 			{
 				Dock = DockStyle.StackFill,
-				Margins = new Margins (10, 10, 0, 10),
+				Margins = new Margins (10, 10, 5, 25),
 				Parent = buttonsFrameBox,
 				Text = "Imprimer",
 				TabIndex = 1,
@@ -313,7 +332,7 @@ namespace Epsitec.App.BanquePiguet
 				this.OptionsButton = new Button ()
 				{
 					Dock = DockStyle.StackFill,
-					Margins = new Margins (0, 10, 0, 10),
+					Margins = new Margins (0, 10, 5, 25),
 					Parent = buttonsFrameBox,
 					Text = "Options",
 					TabIndex = 2,
@@ -333,9 +352,9 @@ namespace Epsitec.App.BanquePiguet
 			this.BvWidget = new BvWidget ()
 			{
 				Dock = DockStyle.Left,
-				Margins = new Margins (10, 10, 10, 10),
+				Margins = new Margins (0, 10, 10, 25),
 				Parent = this.Window.Root,
-				PreferredSize = new Size (578, 292),
+				PreferredSize = new Size (678, 342),
 			};
 
 			XElement xBvValues;
@@ -406,6 +425,21 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Sets up the errors mechanism for the <see cref="TextField"/>s.
+		/// </summary>
+		protected void SetupError()
+		{
+			this.ErrorStaticText = new StaticText ()
+			{
+				Dock = DockStyle.StackEnd,
+				Margins = new Margins (10, 10, 5, 5),
+				Parent = this.Window.Root,
+			};
+
+			this.ErrorMessages = new Dictionary<Widget, string> ();
+		}
+
+		/// <summary>
 		/// Sets up the events related to the <see cref="Button"/>s or to the
 		/// <see cref="TextField"/>s.
 		/// </summary>
@@ -434,10 +468,28 @@ namespace Epsitec.App.BanquePiguet
 				this.CheckPrintButtonEnbled ();
 			};
 
+			this.AmountTextField.TextChanged += (sender) =>
+			{
+				if (this.CheckAmount ())
+				{
+					this.BvWidget.Amount = FormattedText.Unescape (this.AmountTextField.Text);
+				}
+
+				this.CheckPrintButtonEnbled ();
+			};
+
+			this.PayedByTextField.TextChanged += (sender) =>
+			{
+				if (this.CheckPayedBy ())
+				{
+					this.BvWidget.PayedBy = FormattedText.Unescape (this.PayedByTextField.Text);
+				}
+
+				this.CheckPrintButtonEnbled ();
+			};
+
 			this.ReasonTextField.TextChanged += (sender) =>
 			{
-				BvHelper.BuildNormalizedReason (FormattedText.Unescape (this.ReasonTextField.Text));
-
 				if (this.CheckReason ())
 				{
 					this.BvWidget.Reason = FormattedText.Unescape(this.ReasonTextField.Text);
@@ -471,6 +523,16 @@ namespace Epsitec.App.BanquePiguet
 				this.BeneficiaryAddressTextField,
 				() => this.CheckBeneficiaryAddress ()
 			);
+
+			new PredicateValidator (
+				this.AmountTextField,
+				() => this.CheckAmount ()
+			);
+
+			new PredicateValidator (
+				this.PayedByTextField,
+				() => this.CheckPayedBy ()
+			);
 			
 			new PredicateValidator (
 				this.ReasonTextField,
@@ -491,25 +553,20 @@ namespace Epsitec.App.BanquePiguet
 			bool validLength = ibanNoSpace.Length == 21;
 			bool noLetters = validLength ? Regex.IsMatch (ibanNoSpace.Substring (ibanNoSpace.Length - 12, 12), "^[0-9]*$") : true;
 			bool validIban = BvHelper.CheckBeneficiaryIban (iban);
+			bool valid = (validIban && validLength && noLetters);
 
-			if (!validLength)
+			if (!valid)
 			{
-				this.BeneficiaryIbanErrorStaticText.Text = "L'iban doit contenir 21 caractères.";
+				this.ErrorMessages[this.BenefeciaryIbanTextField] = BvHelper.GetErrorMessageForBenefeciaryIban (iban);
 			}
-			else if (!noLetters)
+			else if (this.ErrorMessages.ContainsKey(this.BenefeciaryIbanTextField))
 			{
-				this.BeneficiaryIbanErrorStaticText.Text = "L'iban doit se terminer par 12 chiffres.";
-			}
-			else if (!validIban)
-			{
-				this.BeneficiaryIbanErrorStaticText.Text = "L'iban est invalide.";
-			}
-			else
-			{
-				this.BeneficiaryIbanErrorStaticText.Text = "L'iban est valide.";
+				this.ErrorMessages.Remove (this.BenefeciaryIbanTextField);
 			}
 
-			return validIban && validLength && noLetters;
+			this.UpdateErrorMessages ();
+
+			return valid;
 		}
 
 		/// <summary>
@@ -522,24 +579,67 @@ namespace Epsitec.App.BanquePiguet
 			string address = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
 			bool valid = BvHelper.CheckBeneficiaryAddress (address);
 
-			string[] lines = address.Split ('\n');
+			if (!valid)
+			{
+				this.ErrorMessages[this.BeneficiaryAddressTextField] = BvHelper.GetErrorMessageForBeneficiaryAddress (address);
+			}
+			else if (this.ErrorMessages.ContainsKey (this.BeneficiaryAddressTextField))
+			{
+				this.ErrorMessages.Remove (this.BeneficiaryAddressTextField);
+			}
 
-			if (address.Length == 0)
+			this.UpdateErrorMessages ();
+
+			return valid;
+		}
+
+		/// <summary>
+		/// Checks the text of <see cref="Application.AmountTextField"/>
+		/// is valid.
+		/// </summary>
+		/// <returns>A <see cref="bool"/> indicating if the text of <see cref="Application.AmountTextField"/> is valid or not.</returns>
+		public bool CheckAmount()
+		{
+			string text = FormattedText.Unescape (this.AmountTextField.Text);
+			string amount = BvHelper.BuildNormalizedAmount (text);
+
+			bool valid = BvHelper.CheckAmount (amount);
+
+			if (!valid)
 			{
-				this.BeneficiaryAddressErrorStaticText.Text = "L'adresse doit être remplie.";
+				this.ErrorMessages[this.AmountTextField] = BvHelper.GetErrorMessageForAmount (amount);
 			}
-			else if (lines.Count() > 4)
+			else if (this.ErrorMessages.ContainsKey (this.AmountTextField))
 			{
-				this.BeneficiaryAddressErrorStaticText.Text = "L'adresse doit avoir moins de 5 lignes.";
+				this.ErrorMessages.Remove (this.AmountTextField);
 			}
-			else if (System.Array.Exists(lines, line => line.Length > 27))
+
+			this.UpdateErrorMessages ();
+
+			return valid;
+		}
+
+		// <summary>
+		/// Checks the text of <see cref="Application.PayedByTextField"/>
+		/// is valid.
+		/// </summary>
+		/// <returns>A <see cref="bool"/> indicating if the text of <see cref="Application.PayedByTextField"/> is valid or not.</returns>
+		public bool CheckPayedBy()
+		{
+			string payedBy = FormattedText.Unescape (this.PayedByTextField.Text);
+
+			bool valid = BvHelper.CheckPayedBy (payedBy);
+
+			if (!valid)
 			{
-				this.BeneficiaryAddressErrorStaticText.Text = "Une ligne doit avoir moins de 28 lettres.";
+				this.ErrorMessages[this.PayedByTextField] = BvHelper.GetErrorMessageForPayedBy (payedBy);
 			}
-			else
+			else if (this.ErrorMessages.ContainsKey (this.PayedByTextField))
 			{
-				this.BeneficiaryAddressErrorStaticText.Text = "L'adresse est valide.";
+				this.ErrorMessages.Remove (this.PayedByTextField);
 			}
+
+			this.UpdateErrorMessages ();
 
 			return valid;
 		}
@@ -555,26 +655,34 @@ namespace Epsitec.App.BanquePiguet
 			string reason = BvHelper.BuildNormalizedReason (text);
 			bool valid = BvHelper.CheckReason (reason);
 
-			string[] lines = text.Split('\n');
+			if (!valid)
+			{
+				this.ErrorMessages[this.ReasonTextField] = BvHelper.GetErrorMessageForReason (reason);
+			}
+			else if (this.ErrorMessages.ContainsKey (this.ReasonTextField))
+			{
+				this.ErrorMessages.Remove (this.ReasonTextField);
+			}
 
-			if (!valid && lines.Count () > 3)
-			{
-				this.ReasonErrorStaticText.Text = "La raison doit avoir moins de 3 lignes.";
-			}
-			else if (!valid && System.Array.Exists (lines, line => line.Length > 10))
-			{
-				this.ReasonErrorStaticText.Text = "Une ligne doit avoir moins de 10 lettres.";
-			}
-			else if (!valid)
-			{
-				this.ReasonErrorStaticText.Text = "La raison est invalide.";
-			}
-			else
-			{
-				this.ReasonErrorStaticText.Text = "La raison est valide.";
-			}
+			this.UpdateErrorMessages ();
 
 			return valid;
+		}
+
+
+		/// <summary>
+		/// Updates the value of <see cref="ErrorStaticText"/>.
+		/// </summary>
+		protected void UpdateErrorMessages()
+		{
+			string error = "";
+
+			foreach (Widget widget in this.ErrorMessages.Keys)
+			{
+				error += this.ErrorMessages[widget] + "    ";
+			}
+
+			this.ErrorStaticText.Text = error.Trim ();
 		}
 
 		/// <summary>
@@ -589,6 +697,8 @@ namespace Epsitec.App.BanquePiguet
 			this.PrintButton.Enable =  BvHelper.CheckBv (this.BvWidget)
 									&& this.CheckBeneficiaryIban ()
 									&& this.CheckBeneficiaryAddress ()
+									&& this.CheckAmount ()
+									&& this.CheckPayedBy ()
 									&& this.CheckReason ();
 		}
 
@@ -625,6 +735,7 @@ namespace Epsitec.App.BanquePiguet
 				printDialog.OpenDialog ();
 			}
 		}
+
 	}	
 
 }

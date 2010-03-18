@@ -2,6 +2,7 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Graph.Splash;
 using Epsitec.Common.Debug;
 
 using System.Linq;
@@ -18,28 +19,32 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Entry point of the program.
 		/// </summary>
-		/// <param name="args">The args given by the user on the commandl line.</param>
+		/// <param name="args">The args given by the user on the command line.</param>
 		[System.STAThread]
 		static void Main(string[] args)
 		{
 			Program.SetupExceptionHandlers();
-			
-			try
+
+			using (SplashScreen spashScreen = new SplashScreen("Splash\\splash.png"))
 			{
-				UI.Initialize ();
-
-				bool adminMode = args.Contains ("-admin");
-
-				using (Application application = new Application (adminMode))
+				try
 				{
-					application.Window.Show ();
-					application.Window.Run ();
+					UI.Initialize ();
+
+					bool adminMode = args.Contains ("-admin");
+
+					using (Application application = new Application (adminMode))
+					{
+						application.Window.Show ();
+						spashScreen.NotifyIsRunning ();
+						application.Window.Run ();
+					}
+					UI.ShutDown ();
 				}
-				UI.ShutDown ();
-			}
-			catch (System.Exception e)
-			{
-				ErrorLogger.LogAndThrowException (e);
+				catch (System.Exception e)
+				{
+					ErrorLogger.LogAndThrowException (e);
+				}
 			}
 		}
 

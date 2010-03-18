@@ -165,7 +165,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <returns>A new <see cref="BvField"/>.</returns>
 		public static BvField GetInstance(XElement xBvField, Size bvSize)
 		{
-			string type = (string) xBvField.Element ("type");
+			string type = xBvField.Element ("type").Value;
 
 			BvField bvField;
 
@@ -179,6 +179,9 @@ namespace Epsitec.App.BanquePiguet
 					break;
 				case "BvFieldMultiLineColumn":
 					bvField = new BvFieldMultiLineColumn (xBvField, bvSize);
+					break;
+				case "BvFieldMultiLineColumnRight":
+					bvField = new BvFieldMultiLineColumnRight (xBvField, bvSize);
 					break;
 				default:
 					throw new System.Exception (string.Format ("Invalid BvField type: {0}.", type));

@@ -70,8 +70,8 @@
     <field>
       <name>BankAccount1</name>
       <type>BvField</type>
-      <font>OCR-B1</font>
-      <textHeight>4.25</textHeight>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
       <xPosition>26</xPosition>
       <yPosition>60</yPosition>
     </field>
@@ -79,17 +79,81 @@
     <field>
       <name>BankAccount2</name>
       <type>BvField</type>
-      <font>OCR-B1</font>
-      <textHeight>4.25</textHeight>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
       <xPosition>87</xPosition>
       <yPosition>60</yPosition>
     </field>
 
     <field>
+      <name>AmountFranc1</name>
+      <type>BvFieldMultiLineColumnRight</type>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>40</xPosition>
+      <yPosition>51.5</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+      <horizontalSpace>5.05</horizontalSpace>
+    </field>
+
+    <field>
+      <name>AmountFranc2</name>
+      <type>BvFieldMultiLineColumnRight</type>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>101</xPosition>
+      <yPosition>51.5</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+      <horizontalSpace>5.05</horizontalSpace>
+    </field>
+
+    <field>
+      <name>AmountCent1</name>
+      <type>BvFieldMultiLineColumn</type>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>50</xPosition>
+      <yPosition>51.5</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+      <horizontalSpace>5.05</horizontalSpace>
+    </field>
+
+    <field>
+      <name>AmountCent2</name>
+      <type>BvFieldMultiLineColumn</type>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>111</xPosition>
+      <yPosition>51.5</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+      <horizontalSpace>5.05</horizontalSpace>
+    </field>
+
+    <field>
+      <name>PayedBy1</name>
+      <type>BvFieldMultiLine</type>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>6</xPosition>
+      <yPosition>39</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+    </field>
+
+    <field>
+      <name>PayedBy2</name>
+      <type>BvFieldMultiLine</type>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>125</xPosition>
+      <yPosition>52</yPosition>
+      <verticalSpace>6.3</verticalSpace>
+    </field>
+   
+    <field>
       <name>LayoutCode</name>
       <type>BvField</type>
-      <font>OCR-B1</font>
-      <textHeight>4.25</textHeight>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
       <xPosition>69.5</xPosition>
       <yPosition>30.5</yPosition>
     </field>
@@ -97,10 +161,10 @@
     <field>
       <name>Reason</name>
       <type>BvFieldMultiLineColumn</type>
-      <font>OCR-B1</font>
-      <textHeight>4.25</textHeight>
-      <xPosition>125</xPosition>
-      <yPosition>92.5</yPosition>
+      <font>Arial</font>
+      <textHeight>3</textHeight>
+      <xPosition>125.5</xPosition>
+      <yPosition>93</yPosition>
       <verticalSpace>6.3</verticalSpace>
       <horizontalSpace>5.05</horizontalSpace>
     </field>

@@ -41,7 +41,7 @@ namespace Epsitec.App.BanquePiguet
 			/// </summary>
 			BeneficiaryIban2,
 			/// <summary>
-			/// The address of the benficiary on the left part.
+			/// The address of the beneficiary on the left part.
 			/// </summary>
 			BeneficiaryAddress1,
 			/// <summary>
@@ -56,6 +56,30 @@ namespace Epsitec.App.BanquePiguet
 			/// The bank account on the right part.
 			/// </summary>
 			BankAccount2,
+			/// <summary>
+			/// The number of francs on the left part.
+			/// </summary>
+			AmountFranc1,
+			/// <summary>
+			/// The number of francs on the right part.
+			/// </summary>
+			AmountFranc2,
+			/// <summary>
+			/// The number of cents on the left part.
+			/// </summary>
+			AmountCent1,
+			/// <summary>
+			/// The number of cents on the right part.
+			/// </summary>
+			AmountCent2,
+			/// <summary>
+			/// The name and address of the person who pays.
+			/// </summary>
+			PayedBy1,
+			/// <summary>
+			/// The name and address of the person who pays.
+			/// </summary>
+			PayedBy2,
 			/// <summary>
 			/// The layout code of the bv.
 			/// </summary>
@@ -197,6 +221,57 @@ namespace Epsitec.App.BanquePiguet
 				this.BvFields[BvFieldId.BankAccount2].Text = value;
 
 				this.Invalidate ();
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the amount of money.
+		/// </summary>
+		/// <value>The amount of money.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
+		public string Amount
+		{
+			get
+			{
+				return this.amount;
+			}
+			set
+			{
+				string normalizedAmount = BvHelper.BuildNormalizedAmount (value);
+
+				if (!BvHelper.CheckAmount (normalizedAmount))
+				{
+					throw new System.ArgumentException (string.Format("The provided value is not valid: {0}", value));
+				}
+
+				this.amount = normalizedAmount;
+
+				this.UpdateAmount ();
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the name and address of the person who pays.
+		/// </summary>
+		/// <value>The name and address of the person who pay.</value>
+		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
+		public string PayedBy
+		{
+			get
+			{
+				return this.BvFields[BvFieldId.PayedBy1].Text;
+			}
+			set
+			{
+				if (!BvHelper.CheckPayedBy(value))
+				{
+					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
+				}
+
+				this.BvFields[BvFieldId.PayedBy1].Text = value;
+				this.BvFields[BvFieldId.PayedBy2].Text = value;
+
+				this.Invalidate();
 			}
 		}
 
@@ -541,21 +616,21 @@ namespace Epsitec.App.BanquePiguet
 			{
 				if (i != 8)
 				{
-					p1 = this.BuildPoint (0.012 + i * 0.024, 0.52, bounds);
-					p2 = this.BuildPoint (0.030 + i * 0.024, 0.472, bounds);
+					p1 = this.BuildPoint (0.016 + i * 0.024, 0.52, bounds);
+					p2 = this.BuildPoint (0.035 + i * 0.024, 0.472, bounds);
 					this.DrawBox (graphics, p1, p2);
 
-					p1 = this.BuildPoint (0.301 + i * 0.024, 0.52, bounds);
-					p2 = this.BuildPoint (0.319 + i * 0.024, 0.472, bounds);
+					p1 = this.BuildPoint (0.306 + i * 0.024, 0.52, bounds);
+					p2 = this.BuildPoint (0.325 + i * 0.024, 0.472, bounds);
 					this.DrawBox (graphics, p1, p2);
 				}
 			}
 
 			// Paints the two dots for the amount of money.
-			p1 = this.BuildPoint (0.210, 0.47, bounds);
+			p1 = this.BuildPoint (0.216, 0.47, bounds);
 			graphics.AddText (p1.X, p1.Y, ".", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
 			
-			p1 = this.BuildPoint (0.499, 0.47, bounds);
+			p1 = this.BuildPoint (0.505, 0.47, bounds);
 			graphics.AddText (p1.X, p1.Y, ".", BvWidget.font, this.BuildTextSize (BvWidget.fontSizeSpecials, bounds));
 
 			graphics.RenderSolid (BvWidget.colorBlack);
@@ -766,13 +841,12 @@ namespace Epsitec.App.BanquePiguet
 				this.BvFields[id] = BvField.GetInstance (xBvField, this.BvSize);
 			}
 
-
 			if (this.BvFields.Count < System.Enum.GetValues (typeof (BvFieldId)).Length)
 			{
 				throw new System.Exception ("Some BvFields are missing.");
 			}
 		}
-
+		
 		/// <summary>
 		/// Sets up the <see cref="string"/> attributes in order to give them an empty initial value.
 		/// </summary>
@@ -788,6 +862,22 @@ namespace Epsitec.App.BanquePiguet
 			this.ccpNumber = "";
 		}
 
+		/// <summary>
+		/// Updates the text for the amount of money.
+		/// </summary>
+		private void UpdateAmount()
+		{
+			string francs = BvHelper.BuildFrancPart(this.amount);
+			string cents = BvHelper.BuildCentPart(this.amount);
+
+			this.BvFields[BvFieldId.AmountFranc1].Text = francs;
+			this.BvFields[BvFieldId.AmountFranc2].Text = francs;
+
+			this.BvFields[BvFieldId.AmountCent1].Text = cents;
+			this.BvFields[BvFieldId.AmountCent2].Text = cents;
+
+			this.Invalidate ();
+		}
 
 		/// <summary>
 		/// Updates the text of the reference line based on the values of <see cref="BvWidget.ReferenceClientNumber"/>
@@ -846,6 +936,11 @@ namespace Epsitec.App.BanquePiguet
 				this.Invalidate ();
 			}
 		}
+
+		/// <summary>
+		/// This attribute backs the <see cref="BvWidget.Amount"/> property.
+		/// </summary>
+		protected string amount;
 
 		/// <summary>
 		/// This attribute backs the <see cref="BvWidget.ReferenceClientNumber"/> property.
