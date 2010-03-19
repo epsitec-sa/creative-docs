@@ -531,15 +531,15 @@ namespace Epsitec.App.BanquePiguet
 
 			if (!validLength)
 			{
-				error = "N°Iban du bénéficiaire: doit contenir 21 caractères.";
+				error = "N°IBAN du bénéficiaire: doit contenir 21 caractères.";
 			}
 			else if (!noLetters)
 			{
-				error = "N°Iban du bénéficiaire: doit se terminer par 12 chiffres.";
+				error = "N°IBAN du bénéficiaire: doit se terminer par 12 chiffres.";
 			}
 			else if (!BvHelper.CheckBeneficiaryIban (iban))
 			{
-				error = "N°Iban du bénéficiaire: invalide.";
+				error = "N°IBAN du bénéficiaire: invalide.";
 			}
 			else
 			{
