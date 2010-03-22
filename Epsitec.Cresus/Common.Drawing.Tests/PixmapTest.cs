@@ -104,22 +104,28 @@ namespace Epsitec.Common.Drawing
 		private static Pixmap CreatePixmapUsingFreeImage(string path, int size, bool copyBits)
 		{
 			Pixmap pixmap = new Pixmap ();
-			
-			Opac.FreeImage.ImageClient image;
-			
-			if (size > 0)
-			{
-				image = Opac.FreeImage.ImageClient.Load (path);
-				image = image.MakeThumbnail (size);
-			}
-			else
-			{
-				image = Opac.FreeImage.ImageClient.Load (path);
-			}
+			Opac.FreeImage.ImageClient image = null;
 
-			if (pixmap.AllocatePixmap (image, copyBits) == false)
+			try
 			{
-				image.Dispose ();
+				if (size > 0)
+				{
+					image = Opac.FreeImage.ImageClient.Load (path);
+					image = image.MakeThumbnail (size);
+				}
+				else
+				{
+					image = Opac.FreeImage.ImageClient.Load (path);
+				}
+
+				pixmap.AllocatePixmap (image);
+			}
+			finally
+			{
+				if (image != null)
+                {
+					image.Dispose ();
+                }
 			}
 			
 			return pixmap;

@@ -383,8 +383,8 @@ namespace Epsitec.Common.Document
 		}
 
 		
-		//?private static readonly long				globalLimit = 500000;  // limite globale de 0.5 GB
-		private static readonly long				GlobalLimit =  20*1024;  // limite globale de 20 MB
+		private static readonly long				GlobalLimit = 500*1024;  // limite globale de 0.5 GB
+		//?private static readonly long				GlobalLimit =  20*1024;  // limite globale de 20 MB
 		private static readonly long				ImageLimit  =   1*1024;  // limite par image de 1 MB
 		private const string						ZipProtocolPrefix = "crdoc-ZIP:";
 

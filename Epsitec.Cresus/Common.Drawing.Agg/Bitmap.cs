@@ -467,7 +467,7 @@ namespace Epsitec.Common.Drawing
 			try
 			{
 				Pixmap pixmap = new Pixmap ();
-				pixmap.AllocatePixmap (image, true);
+				pixmap.AllocatePixmap (image);
 
 				return Bitmap.FromPixmap (pixmap);
 			}
