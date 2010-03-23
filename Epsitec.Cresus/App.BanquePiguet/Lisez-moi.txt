@@ -5,7 +5,7 @@ des imprimantes, il faut lui donner l'argument -admin. Cela peut se faire
 soit à partir de la ligne de commande, soit à partir d'un racourci.
 
 - Pour pouvoir sauvegarder la configuration des imprimantes, il faut impérativement
-que l'utilisateur ait les droit d'écriture sur tout le dossier l'application.
+que l'utilisateur ait les droit d'écriture sur le dossier l'application.
 
 - Les décalages horizontaux et verticaux doivent être donnés en millimètres et
 correspondent au décalage entre le coin en haut à gauche de la feuille et le
