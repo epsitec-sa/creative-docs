@@ -217,7 +217,7 @@ namespace Epsitec.App.BanquePiguet
 		/// <returns>A <see cref="bool"/> indicating if <paramref name="amount"/> is valid or not.</returns>
 		public static bool CheckAmount(string amount)
 		{
-			return Regex.IsMatch (amount, @"^\d{1,8}[.,]\d{2}$");
+			return (amount.Length == 0) || Regex.IsMatch (amount, @"^\d{1,8}[.,]\d{2}$");
 		}
 
 		/// <summary>
@@ -468,25 +468,28 @@ namespace Epsitec.App.BanquePiguet
 		public static string BuildNormalizedAmount(string amount)
 		{
 			string normalizedAmount = amount;
-			
-			int index = amount.LastIndexOfAny (new char[] { ',', '.' });
 
-			if (index < 0)
+			if (amount.Length > 0)
 			{
-				normalizedAmount += ".00";
-			}
-			else if (index == amount.Length - 2)
-			{
-				normalizedAmount += "0";
-			}
-			else if (index == amount.Length - 1)
-			{
-				normalizedAmount += "00";
-			}
+				int index = amount.LastIndexOfAny (new char[] { ',', '.' });
 
-			if (normalizedAmount.LastIndexOfAny (new char[] { ',', '.' }) == 0)
-			{
-				normalizedAmount = "0" + normalizedAmount;
+				if (index < 0)
+				{
+					normalizedAmount += ".00";
+				}
+				else if (index == amount.Length - 2)
+				{
+					normalizedAmount += "0";
+				}
+				else if (index == amount.Length - 1)
+				{
+					normalizedAmount += "00";
+				}
+
+				if (normalizedAmount.LastIndexOfAny (new char[] { ',', '.' }) == 0)
+				{
+					normalizedAmount = "0" + normalizedAmount;
+				}
 			}
 
 			return normalizedAmount;

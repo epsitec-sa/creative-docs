@@ -24,38 +24,47 @@ namespace Epsitec.App.BanquePiguet
 		/// The <see cref="BvFieldId"/> enum represents the set of the <see cref="BvField"/>s of a bv.
 		/// </summary>
 		protected enum BvFieldId {
+
 			/// <summary>
 			/// The address of the bank on the left part.
 			/// </summary>
 			BankAddress1,
+
 			/// <summary>
 			/// The address of the bank on the right part.
 			/// </summary>
 			BankAddress2,
+
 			/// <summary>
 			/// The iban of the beneficiary on the left part.
 			/// </summary>
 			BeneficiaryIban1,
+
 			/// <summary>
 			/// The iban of the beneficiary on the right part.
 			/// </summary>
 			BeneficiaryIban2,
+
 			/// <summary>
 			/// The address of the beneficiary on the left part.
 			/// </summary>
 			BeneficiaryAddress1,
+
 			/// <summary>
 			/// The address of the beneficiary on the right part.
 			/// </summary>
 			BeneficiaryAddress2,
+
 			/// <summary>
 			/// The bank account on the left part.
 			/// </summary>
 			BankAccount1,
+
 			/// <summary>
 			/// The bank account on the right part.
 			/// </summary>
 			BankAccount2,
+
 			/// <summary>
 			/// The number of francs on the left part.
 			/// </summary>
@@ -64,42 +73,52 @@ namespace Epsitec.App.BanquePiguet
 			/// The number of francs on the right part.
 			/// </summary>
 			AmountFranc2,
+
 			/// <summary>
 			/// The number of cents on the left part.
 			/// </summary>
 			AmountCent1,
+
 			/// <summary>
 			/// The number of cents on the right part.
 			/// </summary>
 			AmountCent2,
+
 			/// <summary>
 			/// The name and address of the person who pays.
 			/// </summary>
 			PayedBy1,
+
 			/// <summary>
 			/// The name and address of the person who pays.
 			/// </summary>
 			PayedBy2,
+
 			/// <summary>
 			/// The layout code of the bv.
 			/// </summary>
 			LayoutCode,
+
 			/// <summary>
 			/// The reason of the transfer.
 			/// </summary>
 			Reason,
+
 			/// <summary>
 			/// The reference line of the bv.
 			/// </summary>
 			ReferenceLine,
+
 			/// <summary>
 			/// The clearing line of the bv.
 			/// </summary>
 			ClearingLine,
+
 			/// <summary>
 			/// The ccp number line of the bv.
 			/// </summary>
 			CcpNumberLine
+
 		}
 
 		/// <summary>
@@ -123,7 +142,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the bank address.
 		/// </summary>
 		/// <value>The bank address.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BankAddress
 		{
 			get
@@ -133,14 +151,17 @@ namespace Epsitec.App.BanquePiguet
 
 			set
 			{
-				if (!BvHelper.CheckBankAddress (value))
+				if (BvHelper.CheckBankAddress (value))
 				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
+					this.BvFields[BvFieldId.BankAddress1].Text = value;
+					this.BvFields[BvFieldId.BankAddress2].Text = value;
 				}
-
-				this.BvFields[BvFieldId.BankAddress1].Text = value;
-				this.BvFields[BvFieldId.BankAddress2].Text = value;
-
+				else
+				{
+					this.BvFields[BvFieldId.BankAddress1].Text = "";
+					this.BvFields[BvFieldId.BankAddress2].Text = "";
+				}
+				
 				this.Invalidate ();
 			}
 		}
@@ -149,7 +170,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the beneficiary iban.
 		/// </summary>
 		/// <value>The beneficiary iban.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BeneficiaryIban
 		{
 			get
@@ -161,13 +181,16 @@ namespace Epsitec.App.BanquePiguet
 			{
 				string iban = BvHelper.BuildNormalizedIban (value);
 
-				if (!BvHelper.CheckBeneficiaryIban (iban))
+				if (BvHelper.CheckBeneficiaryIban (iban))
 				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
+					this.BvFields[BvFieldId.BeneficiaryIban1].Text = iban;
+					this.BvFields[BvFieldId.BeneficiaryIban2].Text = iban;
 				}
-
-				this.BvFields[BvFieldId.BeneficiaryIban1].Text = iban;
-				this.BvFields[BvFieldId.BeneficiaryIban2].Text = iban;
+				else
+				{
+					this.BvFields[BvFieldId.BeneficiaryIban1].Text = "";
+					this.BvFields[BvFieldId.BeneficiaryIban2].Text = "";
+				}
 
 				this.UpdateReferenceLine ();
 				this.Invalidate ();
@@ -178,7 +201,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the beneficiary address.
 		/// </summary>
 		/// <value>The beneficiary address.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BeneficiaryAddress
 		{
 			get
@@ -187,13 +209,16 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckBeneficiaryAddress (value))
+				if (BvHelper.CheckBeneficiaryAddress (value))
 				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
+					this.BvFields[BvFieldId.BeneficiaryAddress1].Text = value;
+					this.BvFields[BvFieldId.BeneficiaryAddress2].Text = value;
 				}
-
-				this.BvFields[BvFieldId.BeneficiaryAddress1].Text = value;
-				this.BvFields[BvFieldId.BeneficiaryAddress2].Text = value;
+				else
+				{
+					this.BvFields[BvFieldId.BeneficiaryAddress1].Text = "";
+					this.BvFields[BvFieldId.BeneficiaryAddress2].Text = "";
+				}
 
 				this.Invalidate ();
 			}
@@ -203,7 +228,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the bank account.
 		/// </summary>
 		/// <value>The bank account.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string BankAccount
 		{
 			get
@@ -212,13 +236,16 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckBankAccount (value))
+				if (BvHelper.CheckBankAccount (value))
 				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
+					this.BvFields[BvFieldId.BankAccount1].Text = value;
+					this.BvFields[BvFieldId.BankAccount2].Text = value;
 				}
-
-				this.BvFields[BvFieldId.BankAccount1].Text = value;
-				this.BvFields[BvFieldId.BankAccount2].Text = value;
+				else
+				{
+					this.BvFields[BvFieldId.BankAccount1].Text = "";
+					this.BvFields[BvFieldId.BankAccount2].Text = "";
+				}
 
 				this.Invalidate ();
 			}
@@ -228,7 +255,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the amount of money.
 		/// </summary>
 		/// <value>The amount of money.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string Amount
 		{
 			get
@@ -239,12 +265,7 @@ namespace Epsitec.App.BanquePiguet
 			{
 				string normalizedAmount = BvHelper.BuildNormalizedAmount (value);
 
-				if (!BvHelper.CheckAmount (normalizedAmount))
-				{
-					throw new System.ArgumentException (string.Format("The provided value is not valid: {0}", value));
-				}
-
-				this.amount = normalizedAmount;
+				this.amount = BvHelper.CheckAmount (normalizedAmount) ? normalizedAmount : "";
 
 				this.UpdateAmount ();
 			}
@@ -254,7 +275,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the name and address of the person who pays.
 		/// </summary>
 		/// <value>The name and address of the person who pay.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string PayedBy
 		{
 			get
@@ -263,13 +283,16 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckPayedBy(value))
+				if (BvHelper.CheckPayedBy (value))
 				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
+					this.BvFields[BvFieldId.PayedBy1].Text = value;
+					this.BvFields[BvFieldId.PayedBy2].Text = value;
 				}
-
-				this.BvFields[BvFieldId.PayedBy1].Text = value;
-				this.BvFields[BvFieldId.PayedBy2].Text = value;
+				else
+				{
+					this.BvFields[BvFieldId.PayedBy1].Text = "";
+					this.BvFields[BvFieldId.PayedBy2].Text = "";
+				}
 
 				this.Invalidate();
 			}
@@ -279,15 +302,14 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the layout code.
 		/// </summary>
 		/// <value>The layout code.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string LayoutCode
 		{
 			/*
 			 * The proper version of this property is commented and replaced by a dummy one which will
 			 * not touch the empty value of the field and always return "303". This is because the Piguet
-			 * Bank has the layout code allready printed on their bv, but as I implemented everything to print
+			 * Bank has the layout code already printed on their bv, but as I implemented everything to print
 			 * it myself, I did not want to erase everything, just in case we might want to print it by
-			 * for another project or if they ask us to change the programm to print it.
+			 * for another project or if they ask us to change the program to print it.
 			 * To enable the printing of the layout code, just uncomment the proper (the first one) version
 			 * of this property and comment the dummy one.
 			 */
@@ -298,12 +320,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckLayoutCode (value))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
-
-				this.BvFields[BvFieldId.LayoutCode].Text = value;
+				this.BvFields[BvFieldId.LayoutCode].Text = BvHelper.CheckLayoutCode (value) ? value : "";
 
 				this.Invalidate ();
 			}
@@ -321,7 +338,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the reason of the transfer.
 		/// </summary>
 		/// <value>The reason of the transfer.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string Reason
 		{
 			get
@@ -332,13 +348,8 @@ namespace Epsitec.App.BanquePiguet
 			{
 				string reason = BvHelper.BuildNormalizedReason (value);
 
-				if (!BvHelper.CheckReason (reason))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
+				this.BvFields[BvFieldId.Reason].Text = BvHelper.CheckReason (reason) ? reason : "";
 
-				this.BvFields[BvFieldId.Reason].Text = reason;
-				
 				this.Invalidate ();
 			}
 		}
@@ -347,7 +358,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the reference client number.
 		/// </summary>
 		/// <value>The reference client number.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ReferenceClientNumber
 		{
 			get
@@ -356,12 +366,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckReferenceClientNumber (value))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
-
-				this.referenceClientNumber = value;
+				this.referenceClientNumber = BvHelper.CheckReferenceClientNumber (value) ? value : "";
 
 				this.UpdateReferenceLine ();
 			}
@@ -371,7 +376,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the clearing constant.
 		/// </summary>
 		/// <value>The clearing constant.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ClearingConstant
 		{
 			get
@@ -380,12 +384,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckClearingConstant (value))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
-
-				this.clearingConstant = value;
+				this.clearingConstant = BvHelper.CheckClearingConstant (value) ? value : "";
 
 				this.UpdateClearingLine ();
 			}
@@ -395,7 +394,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the clearing number of the bank.
 		/// </summary>
 		/// <value>The clearing number of the bank.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ClearingBank
 		{
 			get
@@ -404,12 +402,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckClearingBank (value))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
-
-				this.clearingBank = value;
+				this.clearingBank = BvHelper.CheckClearingBank (value) ? value : "";
 
 				this.UpdateClearingLine ();
 			}
@@ -419,7 +412,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the control key of the clearing number of the bank.
 		/// </summary>
 		/// <value>The control key of the clearing number of the bank.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string ClearingBankKey
 		{
 			get
@@ -428,12 +420,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckClearingBankKey (value))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
-
-				this.clearingBankKey = value;
+				this.clearingBankKey = BvHelper.CheckClearingBankKey (value) ? value : "";
 
 				this.UpdateClearingLine ();
 			}
@@ -444,7 +431,6 @@ namespace Epsitec.App.BanquePiguet
 		/// Gets or sets the CCP number of the bank.
 		/// </summary>
 		/// <value>The CCP number of the bank.</value>
-		/// <exception cref="System.ArgumentException">If the value is not valid.</exception>
 		public string CcpNumber
 		{
 			get
@@ -453,12 +439,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 			set
 			{
-				if (!BvHelper.CheckBeneficiaryAddress (value))
-				{
-					throw new System.ArgumentException (string.Format ("The provided value is not valid: {0}", value));
-				}
-
-				this.ccpNumber = value;
+				this.ccpNumber = BvHelper.CheckBeneficiaryAddress (value) ? value : "";
 
 				this.UpdateCcpNumberLine ();
 			}
@@ -867,15 +848,26 @@ namespace Epsitec.App.BanquePiguet
 		/// </summary>
 		private void UpdateAmount()
 		{
-			string francs = BvHelper.BuildFrancPart(this.amount);
-			string cents = BvHelper.BuildCentPart(this.amount);
+			if (BvHelper.CheckAmount (this.amount))
+			{
+				string francs = BvHelper.BuildFrancPart (this.amount);
+				string cents = BvHelper.BuildCentPart (this.amount);
 
-			this.BvFields[BvFieldId.AmountFranc1].Text = francs;
-			this.BvFields[BvFieldId.AmountFranc2].Text = francs;
+				this.BvFields[BvFieldId.AmountFranc1].Text = francs;
+				this.BvFields[BvFieldId.AmountFranc2].Text = francs;
 
-			this.BvFields[BvFieldId.AmountCent1].Text = cents;
-			this.BvFields[BvFieldId.AmountCent2].Text = cents;
+				this.BvFields[BvFieldId.AmountCent1].Text = cents;
+				this.BvFields[BvFieldId.AmountCent2].Text = cents;
+			}
+			else
+			{
+				this.BvFields[BvFieldId.AmountFranc1].Text = "";
+				this.BvFields[BvFieldId.AmountFranc2].Text = "";
 
+				this.BvFields[BvFieldId.AmountCent1].Text = "";
+				this.BvFields[BvFieldId.AmountCent2].Text = "";
+			}
+			
 			this.Invalidate ();
 		}
 
@@ -892,11 +884,9 @@ namespace Epsitec.App.BanquePiguet
 			string iban = this.BeneficiaryIban;
 			string reference = this.ReferenceClientNumber;
 
-			if (BvHelper.CheckReferenceLine (iban, reference))
-			{
-				this.BvFields[BvFieldId.ReferenceLine].Text = BvHelper.BuildReferenceLine (iban, reference);
-				this.Invalidate ();
-			}
+			this.BvFields[BvFieldId.ReferenceLine].Text = BvHelper.CheckReferenceLine (iban, reference) ? BvHelper.BuildReferenceLine (iban, reference) : "";
+
+			this.Invalidate ();
 		}
 
 		/// <summary>
@@ -913,28 +903,22 @@ namespace Epsitec.App.BanquePiguet
 			string clearing = this.ClearingBank;
 			string key = this.ClearingBankKey;
 
-			if (BvHelper.CheckClearingLine(constant, clearing, key))
-			{
-				this.BvFields[BvFieldId.ClearingLine].Text = BvHelper.BuildClearingLine (constant, clearing, key);
-				this.Invalidate ();
-			}
+			this.BvFields[BvFieldId.ClearingLine].Text = BvHelper.CheckClearingLine (constant, clearing, key) ? BvHelper.BuildClearingLine (constant, clearing, key) : "";
+
+			this.Invalidate ();
 		}
 
 		/// <summary>
 		/// Updates the text of the CCP number line based on the value of <see cref="BvWidget.CcpNumber"/>.
 		/// </summary>
 		/// <remarks>
-		/// This method is called whenver the text of <see cref="BvWidget.CcpNumber"/> changes.
+		/// This method is called whenever the text of <see cref="BvWidget.CcpNumber"/> changes.
 		/// </remarks>
 		protected void UpdateCcpNumberLine()
 		{
-			string ccp = this.CcpNumber;
+			this.BvFields[BvFieldId.CcpNumberLine].Text = BvHelper.CheckCcpNumber (this.CcpNumber) ? BvHelper.BuildCcpNumberLine (this.CcpNumber) : "";
 
-			if (BvHelper.CheckCcpNumber (ccp))
-			{
-				this.BvFields[BvFieldId.CcpNumberLine].Text = BvHelper.BuildCcpNumberLine (ccp);
-				this.Invalidate ();
-			}
+			this.Invalidate ();
 		}
 
 		/// <summary>

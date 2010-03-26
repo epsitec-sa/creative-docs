@@ -165,6 +165,16 @@ namespace Epsitec.App.BanquePiguet
 		}
 
 		/// <summary>
+		/// Gets or sets the <see cref="Button"/> used to erase the bv.
+		/// </summary>
+		/// <value>The <see cref="Button"/> used to erase the bv.</value>
+		protected Button EraseButton
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets the <see cref="Button"/> used to display <see cref="PrinterManagerDialog"/>.
 		/// </summary>
 		/// <value>The <see cref="Button"/> used to display <see cref="PrinterManagerDialog"/>.</value>
@@ -302,13 +312,25 @@ namespace Epsitec.App.BanquePiguet
 			this.ReasonTextField = new TextFieldMulti ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 2, 0),
+				Margins = new Margins (10, 10, 2, 5),
 				Parent = formFrameBox,
 				PreferredHeight = 52,
 				PreferredWidth = 200,
 				ScrollerVisibility = false,
 				TabIndex = 5,
 			};
+
+			if (this.AdminMode)
+			{
+				this.OptionsButton = new Button ()
+				{
+					Dock = DockStyle.Stacked,
+					Margins = new Margins (10, 10, 5, 5),
+					Parent = formFrameBox,
+					Text = "Options",
+					TabIndex = 1,
+				};
+			}
 
 			FrameBox buttonsFrameBox = new FrameBox ()
 			{
@@ -320,24 +342,23 @@ namespace Epsitec.App.BanquePiguet
 
 			this.PrintButton = new Button ()
 			{
-				Dock = DockStyle.StackFill,
-				Margins = new Margins (10, 10, 5, 25),
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (10, 50, 5, 25),
 				Parent = buttonsFrameBox,
+				PreferredWidth = 100,
 				Text = "Imprimer",
-				TabIndex = 1,
+				TabIndex = 2,
 			};
 
-			if (this.AdminMode)
+			this.EraseButton = new Button ()
 			{
-				this.OptionsButton = new Button ()
-				{
-					Dock = DockStyle.StackFill,
-					Margins = new Margins (0, 10, 5, 25),
-					Parent = buttonsFrameBox,
-					Text = "Options",
-					TabIndex = 2,
-				};
-			}
+				Dock = DockStyle.Stacked,
+				Margins = new Margins (0, 10, 5, 25),
+				Parent = buttonsFrameBox,
+				PreferredWidth = 50,
+				Text = "Effacer",
+				TabIndex = 3,
+			};
 		}
 
 		/// <summary>
@@ -354,7 +375,7 @@ namespace Epsitec.App.BanquePiguet
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 10, 10, 25),
 				Parent = this.Window.Root,
-				PreferredSize = new Size (678, 342),
+				PreferredSize = AdminMode ? new Size(754, 381) : new Size (687, 347),
 			};
 
 			XElement xBvValues;
@@ -450,60 +471,42 @@ namespace Epsitec.App.BanquePiguet
 		{
 			this.BenefeciaryIbanTextField.TextChanged += (sender) =>
 			{
-				if (this.CheckBeneficiaryIban ())
-				{
-					this.BvWidget.BeneficiaryIban = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
-				}
-
+				this.BvWidget.BeneficiaryIban = FormattedText.Unescape (this.BenefeciaryIbanTextField.Text);
 				this.CheckPrintButtonEnbled ();
 			};
 
 			this.BeneficiaryAddressTextField.TextChanged += (sender) =>
 			{
-				if (this.CheckBeneficiaryAddress ())
-				{
-					this.BvWidget.BeneficiaryAddress = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
-				}
-
+				this.BvWidget.BeneficiaryAddress = FormattedText.Unescape (this.BeneficiaryAddressTextField.Text);
 				this.CheckPrintButtonEnbled ();
 			};
 
 			this.AmountTextField.TextChanged += (sender) =>
 			{
-				if (this.CheckAmount ())
-				{
-					this.BvWidget.Amount = FormattedText.Unescape (this.AmountTextField.Text);
-				}
-
+				this.BvWidget.Amount = FormattedText.Unescape (this.AmountTextField.Text);
 				this.CheckPrintButtonEnbled ();
 			};
 
 			this.PayedByTextField.TextChanged += (sender) =>
 			{
-				if (this.CheckPayedBy ())
-				{
-					this.BvWidget.PayedBy = FormattedText.Unescape (this.PayedByTextField.Text);
-				}
-
+				this.BvWidget.PayedBy = FormattedText.Unescape (this.PayedByTextField.Text);
 				this.CheckPrintButtonEnbled ();
 			};
 
 			this.ReasonTextField.TextChanged += (sender) =>
 			{
-				if (this.CheckReason ())
-				{
-					this.BvWidget.Reason = FormattedText.Unescape(this.ReasonTextField.Text);
-				}
-
+				this.BvWidget.Reason = FormattedText.Unescape(this.ReasonTextField.Text);
 				this.CheckPrintButtonEnbled ();
 			};
+
+			this.PrintButton.Clicked += (sender, e) => this.ShowPrintDialog ();
+
+			this.EraseButton.Clicked += (sender, e) => this.Erase ();
 
 			if (this.AdminMode)
 			{
 				this.OptionsButton.Clicked += (sender, e) => this.ShowPrinterManagerDialog ();
 			}
-
-			this.PrintButton.Clicked += (sender, e) => this.ShowPrintDialog ();
 		}
 
 		/// <summary>
@@ -565,7 +568,7 @@ namespace Epsitec.App.BanquePiguet
 			}
 
 			this.UpdateErrorMessages ();
-
+			System.Console.WriteLine (this.BvWidget.ActualHeight );
 			return valid;
 		}
 
@@ -734,6 +737,18 @@ namespace Epsitec.App.BanquePiguet
 				PrintDialog printDialog = new PrintDialog (this, this.BvWidget, printers);
 				printDialog.OpenDialog ();
 			}
+		}
+
+		/// <summary>
+		/// Erases the values of the bv.
+		/// </summary>
+		public void Erase()
+		{
+			this.BenefeciaryIbanTextField.Text = "";
+			this.BeneficiaryAddressTextField.Text = "";
+			this.AmountTextField.Text = "";
+			this.PayedByTextField.Text = "";
+			this.ReasonTextField.Text = "";
 		}
 
 	}	

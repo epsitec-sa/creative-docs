@@ -19,32 +19,43 @@ namespace Epsitec.App.BanquePiguet
 		/// <summary>
 		/// Entry point of the program.
 		/// </summary>
-		/// <param name="args">The args given by the user on the command line.</param>
+		/// <param name="args">The arguments given by the user on the command line.</param>
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-			Program.SetupExceptionHandlers();
-
-			using (SplashScreen spashScreen = new SplashScreen("Splash\\splash.png"))
+			using (SplashScreen splashScreen = new SplashScreen("Splash\\splash.png"))
 			{
-				try
-				{
-					UI.Initialize ();
+				// Call the program in another method to allow faster just-in-time
+				// compilation for the splash screen.
+				Program.ExecuteProgram (args, splashScreen);
+			}
+		}
 
-					bool adminMode = args.Contains ("-admin");
+		/// <summary>
+		/// The core of the program.
+		/// </summary>
+		/// <param name="args">The arguments given by the user on the command line.</param>
+		/// <param name="splashScreen">The splash screen.</param>
+		public static void ExecuteProgram(string[] args, SplashScreen splashScreen)
+		{
+			try
+			{
+				Program.SetupExceptionHandlers ();
+				UI.Initialize ();
 
-					using (Application application = new Application (adminMode))
-					{
-						application.Window.Show ();
-						spashScreen.NotifyIsRunning ();
-						application.Window.Run ();
-					}
-					UI.ShutDown ();
-				}
-				catch (System.Exception e)
+				bool adminMode = args.Contains ("-admin");
+
+				using (Application application = new Application (adminMode))
 				{
-					ErrorLogger.LogAndThrowException (e);
+					application.Window.Show ();
+					splashScreen.NotifyIsRunning ();
+					application.Window.Run ();
 				}
+				UI.ShutDown ();
+			}
+			catch (System.Exception e)
+			{
+				ErrorLogger.LogAndThrowException (e);
 			}
 		}
 
