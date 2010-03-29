@@ -51,6 +51,9 @@
     </Compile>
     <Compile Include="Adorners\AbstractAdorner.cs" />
     <Compile Include="Adorners\CoordinateAxisAdorner.cs" />
+    <Compile Include="Adorners\CoordinateAxisAdornerX.cs" />
+    <Compile Include="Adorners\AbstractCoordinateAxisAdorner.cs" />
+    <Compile Include="Adorners\CoordinateAxisAdornerY.cs" />
     <Compile Include="Adorners\HorizontalAxisMode.cs" />
     <Compile Include="CaptionPainter.cs" />
     <Compile Include="ChartCaption.cs" />
