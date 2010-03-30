@@ -231,7 +231,7 @@ namespace Epsitec.App.BanquePiguet
 			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (20, 10, 10, 0),
+				Margins = new Margins (15, 5, 5, 0),
 				Parent = formFrameBox,
 				Text = "N° IBAN du bénéficiaire",
 			};
@@ -239,7 +239,7 @@ namespace Epsitec.App.BanquePiguet
 			this.BenefeciaryIbanTextField = new TextField ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 2, 0),
+				Margins = new Margins (5, 5, 2, 0),
 				Parent = formFrameBox,
 				PreferredWidth = 200,
 				TabIndex = 1,
@@ -249,15 +249,15 @@ namespace Epsitec.App.BanquePiguet
 			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (20, 10, 5, 0),
+				Margins = new Margins (15, 5, 5, 0),
 				Parent = formFrameBox,
-				Text = "Nom et adresse bénéficiaire",
+				Text = "Nom et adresse du bénéficiaire",
 			};
 
 			this.BeneficiaryAddressTextField = new TextFieldMulti ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 2, 0),
+				Margins = new Margins (5, 5, 2, 0),
 				Parent = formFrameBox,
 				PreferredHeight = 65,
 				PreferredWidth = 200,
@@ -268,7 +268,7 @@ namespace Epsitec.App.BanquePiguet
 			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (20, 10, 5, 0),
+				Margins = new Margins (15, 5, 5, 0),
 				Parent = formFrameBox,
 				Text = "Montant",
 			};
@@ -276,7 +276,7 @@ namespace Epsitec.App.BanquePiguet
 			this.AmountTextField = new TextField ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 2, 0),
+				Margins = new Margins (5, 5, 2, 0),
 				Parent = formFrameBox,
 				PreferredWidth = 200,
 				TabIndex = 3,
@@ -285,15 +285,15 @@ namespace Epsitec.App.BanquePiguet
 			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (20, 10, 5, 0),
+				Margins = new Margins (15, 5, 5, 0),
 				Parent = formFrameBox,
-				Text = "Payé par",
+				Text = "Versé par",
 			};
 
 			this.PayedByTextField = new TextFieldMulti ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 2, 0),
+				Margins = new Margins (5, 5, 2, 0),
 				Parent = formFrameBox,
 				PreferredHeight = 52,
 				PreferredWidth = 200,
@@ -304,7 +304,7 @@ namespace Epsitec.App.BanquePiguet
 			new StaticText ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (20, 10, 5, 0),
+				Margins = new Margins (15, 5, 5, 0),
 				Parent = formFrameBox,
 				Text = "Motif du versement",
 			};
@@ -312,7 +312,7 @@ namespace Epsitec.App.BanquePiguet
 			this.ReasonTextField = new TextFieldMulti ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 10, 2, 5),
+				Margins = new Margins (5, 5, 2, 0),
 				Parent = formFrameBox,
 				PreferredHeight = 52,
 				PreferredWidth = 200,
@@ -322,29 +322,38 @@ namespace Epsitec.App.BanquePiguet
 
 			if (this.AdminMode)
 			{
+				FrameBox buttonsFrameBox1 = new FrameBox ()
+				{
+					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+					Dock = DockStyle.Stacked,
+					Parent = formFrameBox,
+					TabIndex = 6,
+				};
+				
 				this.OptionsButton = new Button ()
 				{
 					Dock = DockStyle.Stacked,
-					Margins = new Margins (10, 10, 5, 5),
-					Parent = formFrameBox,
+					Margins = new Margins (5, 5, 5, 0),
+					Parent = buttonsFrameBox1,
+					PreferredWidth = 100,
 					Text = "Options",
 					TabIndex = 1,
 				};
 			}
 
-			FrameBox buttonsFrameBox = new FrameBox ()
+			FrameBox buttonsFrameBox2 = new FrameBox ()
 			{
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock = DockStyle.Stacked,
 				Parent = formFrameBox,
-				TabIndex = 6,
+				TabIndex = 7,
 			};
 
 			this.PrintButton = new Button ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (10, 50, 5, 25),
-				Parent = buttonsFrameBox,
+				Margins = new Margins (5, 50, 5, 24),
+				Parent = buttonsFrameBox2,
 				PreferredWidth = 100,
 				Text = "Imprimer",
 				TabIndex = 2,
@@ -353,8 +362,8 @@ namespace Epsitec.App.BanquePiguet
 			this.EraseButton = new Button ()
 			{
 				Dock = DockStyle.Stacked,
-				Margins = new Margins (0, 10, 5, 25),
-				Parent = buttonsFrameBox,
+				Margins = new Margins (0, 5, 5, 24),
+				Parent = buttonsFrameBox2,
 				PreferredWidth = 50,
 				Text = "Effacer",
 				TabIndex = 3,
@@ -373,9 +382,9 @@ namespace Epsitec.App.BanquePiguet
 			this.BvWidget = new BvWidget ()
 			{
 				Dock = DockStyle.Left,
-				Margins = new Margins (0, 10, 10, 25),
+				Margins = new Margins (0, 5, 5, 24),
 				Parent = this.Window.Root,
-				PreferredSize = AdminMode ? new Size(754, 381) : new Size (687, 347),
+				PreferredSize = AdminMode ? new Size(735, 371) : new Size (667, 337),
 			};
 
 			XElement xBvValues;
@@ -453,7 +462,7 @@ namespace Epsitec.App.BanquePiguet
 			this.ErrorStaticText = new StaticText ()
 			{
 				Dock = DockStyle.StackEnd,
-				Margins = new Margins (10, 10, 5, 5),
+				Margins = new Margins (5, 5, 5, 5),
 				Parent = this.Window.Root,
 			};
 
@@ -539,7 +548,8 @@ namespace Epsitec.App.BanquePiguet
 			
 			new PredicateValidator (
 				this.ReasonTextField,
-				() => this.CheckReason ());
+				() => this.CheckReason ()
+			);
 		}
 
 		/// <summary>

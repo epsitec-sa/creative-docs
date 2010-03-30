@@ -363,8 +363,15 @@ namespace Epsitec.App.BanquePiguet
 				throw new System.ArgumentException (string.Format("the provided argument is not valid. Iban: {0}.", amount));
 			}
 
-			int index = amount.IndexOfAny (new char[]{',', '.'});
-			return amount.Substring (0, index);
+			if (amount.Length > 0)
+			{
+				int index = amount.IndexOfAny (new char[] { ',', '.' });
+				return amount.Substring (0, index);
+			}
+			else
+			{
+				return "";
+			}
 		}
 
 		/// <summary>
@@ -380,8 +387,15 @@ namespace Epsitec.App.BanquePiguet
 				throw new System.ArgumentException (string.Format ("the provided argument is not valid. Iban: {0}.", amount));
 			}
 
-			int index = amount.IndexOfAny (new char[] { ',', '.' });
-			return amount.Substring (index + 1);
+			if (amount.Length > 0)
+			{
+				int index = amount.IndexOfAny (new char[] { ',', '.' });
+				return amount.Substring (index + 1);
+			}
+			else
+			{
+				return "";
+			}
 		}
 
 		/// <summary>
@@ -565,19 +579,19 @@ namespace Epsitec.App.BanquePiguet
 
 			if (address.Length == 0)
 			{
-				error = "Adresse du bénéficiaire: doit être remplie.";
+				error = "Nom et adresse du bénéficiaire: doit être remplie.";
 			}
 			else if (lines.Count () > 4)
 			{
-				error = "Adresse du bénéficiaire: ne peut contenir que 4 lignes.";
+				error = "Nom et adresse du bénéficiaire: ne peut contenir que 4 lignes.";
 			}
 			else if (System.Array.Exists (lines, line => line.Length > 27))
 			{
-				error = "Adresse du bénéficiaire: chaque ligne ne peut contenir que 27 caractères.";
+				error = "Nom et adresse du bénéficiaire: chaque ligne ne peut contenir que 27 caractères.";
 			}
 			else if (!BvHelper.CheckBeneficiaryAddress (address))
 			{
-				error = "Adresse du bénéficiaire: invalide.";
+				error = "Nom et adresse du bénéficiaire: invalide.";
 			}
 			else
 			{
