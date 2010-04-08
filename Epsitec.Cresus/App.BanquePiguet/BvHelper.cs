@@ -229,7 +229,7 @@ namespace Epsitec.App.BanquePiguet
 		{
 			string[] lines = payedBy.Split ('\n');
 
-			return (lines.Length <= 3) && (lines.All (line => line.Length <= 30));
+			return (lines.Length <= 4) && (lines.All (line => line.Length <= 30));
 		}
 
         /// <summary>
@@ -341,6 +341,8 @@ namespace Epsitec.App.BanquePiguet
 				&& BvHelper.CheckBeneficiaryIban (bvWidget.BeneficiaryIban)
 				&& BvHelper.CheckBeneficiaryAddress (bvWidget.BeneficiaryAddress)
 				&& BvHelper.CheckBankAccount (bvWidget.BankAccount)
+				&& BvHelper.CheckAmount(bvWidget.Amount)
+				&& BvHelper.CheckPayedBy(bvWidget.PayedBy)
 				&& BvHelper.CheckLayoutCode (bvWidget.LayoutCode)
 				&& BvHelper.CheckReason (bvWidget.Reason)
 				&& BvHelper.CheckReferenceClientNumber (bvWidget.ReferenceClientNumber)
@@ -579,7 +581,7 @@ namespace Epsitec.App.BanquePiguet
 
 			if (address.Length == 0)
 			{
-				error = "Nom et adresse du bénéficiaire: doit être remplie.";
+				error = "Nom et adresse du bénéficiaire: doit être rempli.";
 			}
 			else if (lines.Count () > 4)
 			{
@@ -647,7 +649,7 @@ namespace Epsitec.App.BanquePiguet
 
 			string error;
 
-			if (lines.Count () > 3)
+			if (lines.Count () > 4)
 			{
 				error = "Versé par: ne peut contenir que 3 lignes.";
 			}
