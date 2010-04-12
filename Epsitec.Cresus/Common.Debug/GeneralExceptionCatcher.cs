@@ -34,6 +34,18 @@ namespace Epsitec.Common.Debug
 			}
 		}
 
+		public static bool AbortOnException
+		{
+			get
+			{
+				return GeneralExceptionCatcher.abortOnException;
+			}
+			set
+			{
+				GeneralExceptionCatcher.abortOnException = value;
+			}
+		}
+
 		public static void AddExceptionHandler(System.Action<System.Exception> handler)
 		{
 			GeneralExceptionCatcher.handlers.Add (handler);
@@ -59,9 +71,15 @@ namespace Epsitec.Common.Debug
 			}
 
 			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+
+			if (GeneralExceptionCatcher.abortOnException)
+            {
+				System.Environment.Exit (1);
+            }
 		}
 
 		private static readonly List<System.Action<System.Exception>> handlers = new List<System.Action<System.Exception>> ();
 		private static bool isActive;
+		private static bool abortOnException;
 	}
 }
