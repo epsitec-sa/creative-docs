@@ -32,11 +32,13 @@ namespace Epsitec.Cresus.Core
 		{
 			public static class Test
 			{
-				
 				//	designer:cap/L0A
 				public const long Crash = 0x150000A000000L;
 			}
+			
 		}
+		
+		
 		
 		//	Code mapping for 'String' resources
 		
