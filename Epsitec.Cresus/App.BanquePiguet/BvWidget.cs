@@ -836,6 +836,7 @@ namespace Epsitec.App.BanquePiguet
 		/// </remarks>
 		protected void SetupAttributes()
 		{
+			this.amount = "";
 			this.referenceClientNumber = "";
 			this.clearingConstant = "";
 			this.clearingBank = "";
