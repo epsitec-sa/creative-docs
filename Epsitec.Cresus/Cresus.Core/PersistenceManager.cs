@@ -14,11 +14,11 @@ namespace Epsitec.Cresus.Core
 	/// <summary>
 	/// The <c>PersistenceManager</c> class handles UI persistence.
 	/// </summary>
-	public sealed class PersistenceManager : System.IDisposable
+	public sealed partial class PersistenceManager : System.IDisposable
 	{
 		public PersistenceManager()
 		{
-			this.bindings = new Dictionary<string, Binding> ();
+			this.bindings = new Dictionary<string, PersistenceManagerBinding> ();
 			this.timer = new Timer ()
 			{
 				Delay = 2.0,
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.Assert (node.Name == "w");
 
 				string path = (string) node.Attribute ("id");
-				Binding binding;
+				PersistenceManagerBinding binding;
 
 				if (this.bindings.TryGetValue (path, out binding))
 				{
@@ -80,16 +80,16 @@ namespace Epsitec.Cresus.Core
 
 
 		/// <summary>
-		/// Registers the specified widget.
+		/// Registers the specified widget with the persistence manager.
 		/// </summary>
 		/// <param name="widget">The widget.</param>
 		public void Register(RibbonBook widget)
 		{
 			this.AddBinding (
-				new Binding<RibbonBook> (widget)
+				new PersistenceManagerBinding<RibbonBook> (widget)
 				{
-					Register   = w => w.ActivePageChanged += this.HandleRibbonActivePageChanged,
-					Unregister = w => w.ActivePageChanged -= this.HandleRibbonActivePageChanged,
+					RegisterChangeHandler   = w => w.ActivePageChanged += this.NotifyChange,
+					UnregisterChangeHandler = w => w.ActivePageChanged -= this.NotifyChange,
 					SaveXml    = (w, xml) => xml.Add (new XAttribute ("book", InvariantConverter.ToString (w.ActivePageIndex))),
 					RestoreXml = (w, xml) => w.ActivePageIndex = InvariantConverter.ToInt (xml.Attribute ("book").Value),
 				});
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core
 		{
 			this.timer.Dispose ();
 
-			foreach (Binding binding in this.bindings.Values)
+			foreach (PersistenceManagerBinding binding in this.bindings.Values)
 			{
 				binding.ExecuteUnregister ();
 			}
@@ -116,10 +116,10 @@ namespace Epsitec.Cresus.Core
 		#endregion
 
 			
-		private void AddBinding(Binding binding)
+		private void AddBinding(PersistenceManagerBinding binding)
 		{
 			string path = binding.GetWidget ().FullPathName;
-			Binding oldBinding;
+			PersistenceManagerBinding oldBinding;
 
 			if (this.bindings.TryGetValue (path, out oldBinding))
 			{
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core
 			this.bindings[path] = binding;
 		}
 
-		private void NotifyChange()
+		private void NotifyChange(object sender)
 		{
 			if (this.changeCount == 0)
 			{
@@ -149,107 +149,10 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 			
-		private void HandleRibbonActivePageChanged(object sender)
-		{
-			this.NotifyChange ();
-		}
-
-
-		#region Binding Classes
-
-		/// <summary>
-		/// The <c>Binding</c> class is used as a common base class for
-		/// the generic <c>Binding&lt;T&gt;</c> class.
-		/// </summary>
-		abstract class Binding
-		{
-			protected Binding()
-			{
-			}
-
-			public abstract Widget GetWidget();
-			public abstract void ExecuteUnregister();
-			public abstract XElement ExecuteSave(XElement xml);
-			public abstract void ExecuteRestore(XElement xml);
-		}
-
-		class Binding<T> : Binding where T : Widget
-		{
-			public Binding(T widget)
-			{
-				this.widget = new Weak<T> (widget);
-			}
-
-			private T Widget
-			{
-				get
-				{
-					return this.widget.Target;
-				}
-			}
-
-			public System.Action<T> Register
-			{
-				set
-				{
-					T widget = this.Widget;
-						
-					if (widget != null)
-					{
-						value (widget);
-					}
-				}
-			}
-			public System.Action<T> Unregister;
-			public System.Action<T, XElement> SaveXml;
-			public System.Action<T, XElement> RestoreXml;
-
-			public override Widget GetWidget()
-			{
-				return this.Widget;
-			}
-
-			public override void ExecuteUnregister()
-			{
-				T widget = this.Widget;
-
-				if (widget != null)
-				{
-					this.Unregister (widget);
-				}
-			}
-
-			public override XElement ExecuteSave(XElement xml)
-			{
-				T widget = this.Widget;
-
-				if (widget != null)
-				{
-					this.SaveXml (widget, xml);
-				}
-					
-				return xml;
-			}
-
-			public override void ExecuteRestore(XElement xml)
-			{
-				T widget = this.Widget;
-
-				if (widget != null)
-				{
-					this.RestoreXml (widget, xml);
-				}
-			}
-
-			private readonly Weak<T> widget;
-		}
-
-		#endregion
-
 
 		public event EventHandler SettingsChanged;
 
-		private readonly Dictionary<string, Binding> bindings;
+		private readonly Dictionary<string, PersistenceManagerBinding> bindings;
 		private readonly Timer timer;
 		private int changeCount;
 	}
