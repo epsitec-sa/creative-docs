@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -24,30 +24,17 @@ namespace Epsitec.Cresus.Core
 	{
 		/// <summary>
 		/// Initializes everything on application startup so that the user
-		/// interface related frameworks are all properly configured.
+		/// interface related infrastructure is properly configured.
 		/// </summary>
 		public static void Initialize()
 		{
-			//	Create a default resource manager pool, used for the UI and
-			//	the application.
-			
-			ResourceManagerPool pool = new ResourceManagerPool ("Core");
-
-			pool.DefaultPrefix = "file";
-			pool.SetupDefaultRootPaths ();
-			pool.ScanForAllModules ();
-
-			ResourceManagerPool.Default = pool;
-
-			//	Set up the fonts, the widgets, the icon rendering engine, etc.
-
-			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
-			Epsitec.Common.Widgets.Widget.Initialize ();
-			Epsitec.Common.Document.Engine.Initialize ();
-			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
-			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
+			UI.SetupResourceManagerPool ();
+			UI.SetupWidgetInfrastructure ();
 		}
 
+		/// <summary>
+		/// Shuts down the user interface related infrastructure.
+		/// </summary>
 		public static void ShutDown()
 		{
 			Epsitec.Common.Drawing.ImageManager.ShutDownDefaultCache ();
@@ -96,8 +83,6 @@ namespace Epsitec.Cresus.Core
 		{
 			UI.windowPlacementHints.Clear ();
 
-			List<Window> windows = new List<Window> (Window.GetAllLiveWindows ());
-
 			foreach (XElement element in xml.Elements ("window"))
 			{
 				string name      = (string) element.Attribute ("name");
@@ -107,27 +92,15 @@ namespace Epsitec.Cresus.Core
 				WindowPlacement wp = WindowPlacement.Parse (placement);
 
 				UI.windowPlacementHints.Add (new WindowPlacementHint (name, title, wp));
-
-				Window window = UI.FindBestWindowMatch (windows, name, title);
-
-				if (window == null)
-				{
-					//	Should never happen
-				}
-				else
-				{
-					if (window.IsVisible)
-					{
-						window.Hide ();
-					}
-
-					window.WindowPlacement = wp;
-					windows.Remove (window);
-				}
 			}
+
+			UI.RestoreWindowPositionsOfExistingWindows ();
 		}
 
-
+		/// <summary>
+		/// Saves the window position for future calls to <see cref="RestoreWindowPosition"/>.
+		/// </summary>
+		/// <param name="window">The window.</param>
 		public static void SaveWindowPosition(Window window)
 		{
 			var hint = UI.FindBestPlacement (window);
@@ -149,9 +122,6 @@ namespace Epsitec.Cresus.Core
 		{
 			var hint = UI.FindBestPlacement (window);
 
-			window.WindowFocused += sender => UI.SaveWindowPosition (window);
-			window.WindowCloseClicked += sender => UI.SaveWindowPosition (window);
-
 			if (hint.IsEmpty)
 			{
 				return false;
@@ -163,87 +133,90 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
-		static UI()
+		/// <summary>
+		/// Sets up the window position saver, which will invoke <see cref="SaveWindowPosition"/>
+		/// every time the window gets the focus or before it is being closed.
+		/// </summary>
+		/// <param name="window">The window.</param>
+		public static void RegisterWindowPositionSaver(Window window)
 		{
-			UI.windowPlacementHints = new List<WindowPlacementHint> ();
+			//	Do this only once for a given window; the attached property is used to
+			//	find out if we already registered the position saver, or not.
+			
+			bool defined;
+			window.TryGetLocalValue (UI.IsWindowPositionSaverActiveProperty, out defined);
+
+			if (!defined)
+			{
+				window.SetLocalValue (UI.IsWindowPositionSaverActiveProperty, true);
+				window.WindowFocused      += sender => UI.SaveWindowPosition (window);
+				window.WindowCloseClicked += sender => UI.SaveWindowPosition (window);
+			}
 		}
 
+		/// <summary>
+		/// Shows the error message.
+		/// The message and the hint can contain <code>{0}</code> and <code>{1}</code>
+		/// placeholders which will be filled in with the short application name and the
+		/// exception message (if any).
+		/// </summary>
+		/// <param name="message">The message.</param>
+		/// <param name="hint">The hint.</param>
+		/// <param name="ex">The exception.</param>
+		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
+		{
+			string exMessage   = ex == null ? "" : ex.Message;
+			string fullMessage = string.Format (message.ToString (), CoreProgram.Application.ShortWindowTitle, exMessage);
+			FormattedText formattedMessage;
+
+			if (hint.IsNullOrEmpty)
+			{
+				formattedMessage = new FormattedText (string.Concat (UI.StringMessageFontElement, fullMessage, UI.StringEndFontElement));
+			}
+			else
+			{
+				formattedMessage = new FormattedText (string.Concat (
+					UI.StringMessageFontElement,
+					fullMessage,
+					UI.StringEndFontElement,
+					@"<br/><br/>",
+					string.Format (hint.ToString (), CoreProgram.Application.ShortWindowTitle, exMessage),
+					@"<br/>&#160;"));
+			}
+
+			MessageDialog.ShowError (formattedMessage, CoreProgram.Application.ShortWindowTitle, null);
+		}
+
+
+		private static void SetupResourceManagerPool()
+		{
+			//	Create a default resource manager pool, used for the UI and
+			//	the application.
+
+			var pool = new ResourceManagerPool ("Core")
+			{
+				DefaultPrefix = "file"
+			};
+
+			pool.SetupDefaultRootPaths ();
+			pool.ScanForAllModules ();
+
+			ResourceManagerPool.Default = pool;
+		}
 		
-		#region WindowPlacementHint Class
-
-		struct WindowPlacementHint : System.IEquatable<WindowPlacementHint>
+		private static void SetupWidgetInfrastructure()
 		{
-			public WindowPlacementHint(string name, string title, WindowPlacement placement)
-			{
-				this.name = name ?? "";
-				this.title = title ?? "";
-				this.placement = placement;
-			}
+			//	Set up the fonts, the widgets, the icon rendering engine, etc.
 
-
-			public string Name
-			{
-				get
-				{
-					return this.name;
-				}
-			}
-
-			public string Title
-			{
-				get
-				{
-					return this.title;
-				}
-			}
-
-			public WindowPlacement Placement
-			{
-				get
-				{
-					return this.placement;
-				}
-			}
-
-			public bool IsEmpty
-			{
-				get
-				{
-					return this.name == null && this.title == null;
-				}
-			}
-
-			public static readonly WindowPlacementHint Empty;
-
-			#region IEquatable<WindowPlacementHint> Members
-
-			public bool Equals(WindowPlacementHint other)
-			{
-				return (this.name == other.name) && (this.title == other.title) && (this.placement.Equals (other.placement));
-			}
-
-			#endregion
-
-			public override bool Equals(object obj)
-			{
-				if (obj is WindowPlacementHint)
-				{
-					return this.Equals ((WindowPlacementHint) obj);
-				}
-				else
-				{
-					return false;
-				}
-			}
-
-			private readonly string name;
-			private readonly string title;
-			private readonly WindowPlacement placement;
+			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
+			Epsitec.Common.Widgets.Widget.Initialize ();
+			Epsitec.Common.Document.Engine.Initialize ();
+			Epsitec.Common.Widgets.Adorners.Factory.SetActive ("LookRoyale");
+			Epsitec.Common.Drawing.ImageManager.InitializeDefaultCache ();
 		}
-
-		#endregion
-
+        
+		
+		
 		private static Window FindBestWindowMatch(IEnumerable<Window> windows, string name, string title)
 		{
 			//	First, try to find an exact match : name + title
@@ -273,6 +246,31 @@ namespace Epsitec.Cresus.Core
 			return null;
 		}
 
+		private static void RestoreWindowPositionsOfExistingWindows()
+		{
+			List<Window> windows = new List<Window> (Window.GetAllLiveWindows ());
+
+			foreach (var hint in UI.windowPlacementHints)
+			{
+				Window window = UI.FindBestWindowMatch (windows, hint.Name, hint.Title);
+
+				if (window == null)
+				{
+					continue;
+				}
+
+				UI.RegisterWindowPositionSaver (window);
+
+				if (window.IsVisible)
+				{
+					window.Hide ();
+				}
+
+				window.WindowPlacement = hint.Placement;
+				windows.Remove (window);
+			}
+		}
+		
 		private static WindowPlacementHint FindBestPlacement(Window window)
 		{
 			string name = window.Name ?? "";
@@ -288,7 +286,7 @@ namespace Epsitec.Cresus.Core
 				}
 			}
 
-			//	Second, try to find a match based only on the anme
+			//	Second, try to find a match based only on the name
 			foreach (var hint in UI.windowPlacementHints)
 			{
 				if (hint.Name == name)
@@ -330,28 +328,12 @@ namespace Epsitec.Cresus.Core
 			throw new System.NotImplementedException ();
 		}
 
-		public static void ShowErrorMessage(FormattedText message, FormattedText hint, System.Exception ex)
-		{
-			string fullMessage = string.Format (message.ToString (), CoreProgram.Application.ShortWindowTitle, ex.Message);
-
-			if (hint.IsNullOrEmpty)
-			{
-				fullMessage = string.Concat (@"<font size=""125%"">", fullMessage, "</font>");
-			}
-			else
-			{
-				fullMessage = string.Concat (
-					@"<font size=""125%"">",
-					fullMessage,
-					@"</font>",
-					@"<br/><br/>",
-					string.Format (hint.ToString (), CoreProgram.Application.ShortWindowTitle, ex.Message),
-					@"<br/>&#160;");
-			}
-			
-			MessageDialog.ShowError (fullMessage, CoreProgram.Application.ShortWindowTitle, null);
-		}
-
-		private static List<WindowPlacementHint> windowPlacementHints;
+		
+		private const string								StringMessageFontElement			= @"<font size=""125%"">";
+		private const string								StringEndFontElement				= "</font>";
+		
+		private static readonly DependencyProperty			IsWindowPositionSaverActiveProperty	= DependencyProperty.RegisterAttached ("isWindowPositionSaverActive", typeof (bool), typeof (UI));
+		
+		private static readonly List<WindowPlacementHint>	windowPlacementHints				= new List<WindowPlacementHint> ();
 	}
 }

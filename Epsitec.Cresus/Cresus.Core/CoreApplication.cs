@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			this.stateManager = new StateManager (this);
-			this.persistenceManager = new UI.PersistenceManager ();
+			this.persistenceManager = new PersistenceManager ();
 
 			this.data = new CoreData ();
 			this.exceptionManager = new CoreLibrary.ExceptionManager ();
@@ -552,7 +552,7 @@ namespace Epsitec.Cresus.Core
 		
 
 		StateManager							stateManager;
-		UI.PersistenceManager					persistenceManager;
+		PersistenceManager						persistenceManager;
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
 		CoreCommands							commands;

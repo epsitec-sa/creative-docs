@@ -48,7 +48,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				FormattedText text = FormattedText.ParseSimpleText (value);
+				FormattedText text = FormattedText.FromSimpleText (value);
 
 				if (this.textField.FormattedText != text)
 				{
