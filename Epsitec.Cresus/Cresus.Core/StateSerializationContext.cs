@@ -40,6 +40,17 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the state contains the specified tag.
+		/// </summary>
+		/// <param name="tag">The tag.</param>
+		/// <returns>
+		/// 	<c>true</c> if the state contains the specified tag; otherwise, <c>false</c>.
+		/// </returns>
+		public bool ContainsState(string tag)
+		{
+			return this.tagToState.ContainsKey (tag);
+		}
 
 		/// <summary>
 		/// Gets the state for the specified tag.
