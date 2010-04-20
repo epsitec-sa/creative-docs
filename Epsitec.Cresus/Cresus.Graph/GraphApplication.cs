@@ -140,6 +140,8 @@ namespace Epsitec.Cresus.Graph
 			this.mainWindowController.SetupUI ();
 			this.workspaceController.SetupUI ();
 
+			System.Diagnostics.Debugger.Launch ();
+
 			this.Window = this.mainWindowController.Window;
 
 			this.SetEnable (ApplicationCommands.Save, false);
