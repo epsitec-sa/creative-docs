@@ -132,6 +132,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		public override string ApplicationIdentifier
+		{
+			get
+			{
+				return "EpDesignerApp";
+			}
+		}
+
 		public bool Standalone
 		{
 			//	Standalone = true signifie que Designer est une application à

@@ -118,6 +118,14 @@ namespace Epsitec.Common.DocumentEditor
 			}
 		}
 
+		public override string ApplicationIdentifier
+		{
+			get
+			{
+				return "EpDocumentEditor";
+			}
+		}
+
 		public static string					Mode
 		{
 			get

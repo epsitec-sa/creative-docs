@@ -76,6 +76,12 @@ namespace Epsitec.Common.Splash
 
 		private void SplashThreadBody()
 		{
+			if ((string.IsNullOrEmpty (this.logoFilePath)) ||
+				(!System.IO.File.Exists (this.logoFilePath)))
+			{
+				return;
+			}
+
 			this.splashForm = new System.Windows.Forms.Form ()
 			{
 				FormBorderStyle = System.Windows.Forms.FormBorderStyle.None,

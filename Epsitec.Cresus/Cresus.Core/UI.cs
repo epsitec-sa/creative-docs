@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
+[assembly: DependencyClass (typeof (Epsitec.Cresus.Core.UI.Properties))]
+
 namespace Epsitec.Cresus.Core
 {
 	using FormResourceAccessor=Epsitec.Common.Support.ResourceAccessors.FormResourceAccessor;
@@ -144,11 +146,11 @@ namespace Epsitec.Cresus.Core
 			//	find out if we already registered the position saver, or not.
 			
 			bool defined;
-			window.TryGetLocalValue (UI.IsWindowPositionSaverActiveProperty, out defined);
+			window.TryGetLocalValue (UI.Properties.IsWindowPositionSaverActiveProperty, out defined);
 
 			if (!defined)
 			{
-				window.SetLocalValue (UI.IsWindowPositionSaverActiveProperty, true);
+				window.SetLocalValue (UI.Properties.IsWindowPositionSaverActiveProperty, true);
 				window.WindowFocused      += sender => UI.SaveWindowPosition (window);
 				window.WindowCloseClicked += sender => UI.SaveWindowPosition (window);
 			}
@@ -332,8 +334,11 @@ namespace Epsitec.Cresus.Core
 		private const string								StringMessageFontElement			= @"<font size=""125%"">";
 		private const string								StringEndFontElement				= "</font>";
 		
-		private static readonly DependencyProperty			IsWindowPositionSaverActiveProperty	= DependencyProperty.RegisterAttached ("isWindowPositionSaverActive", typeof (bool), typeof (UI));
-		
+		internal sealed class Properties : DependencyObject
+		{
+			public static readonly DependencyProperty		IsWindowPositionSaverActiveProperty	= DependencyProperty.RegisterAttached ("isWindowPositionSaverActive", typeof (bool), typeof (Properties));
+		}
+
 		private static readonly List<WindowPlacementHint>	windowPlacementHints				= new List<WindowPlacementHint> ();
 	}
 }
