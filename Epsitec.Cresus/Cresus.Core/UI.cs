@@ -250,9 +250,10 @@ namespace Epsitec.Cresus.Core
 
 		private static void RestoreWindowPositionsOfExistingWindows()
 		{
-			List<Window> windows = new List<Window> (Window.GetAllLiveWindows ());
+			var windows = new List<Window> (Window.GetAllLiveWindows ());
+			var hints   = UI.windowPlacementHints.ToArray ();
 
-			foreach (var hint in UI.windowPlacementHints)
+			foreach (var hint in hints)
 			{
 				Window window = UI.FindBestWindowMatch (windows, hint.Name, hint.Title);
 
@@ -267,6 +268,9 @@ namespace Epsitec.Cresus.Core
 				{
 					window.Hide ();
 				}
+
+				//	Changning the WindowPlacement will update the window placement hints, therefore
+				//	we really need to iterate over a copy of UI.windowPlacementHints.
 
 				window.WindowPlacement = hint.Placement;
 				windows.Remove (window);

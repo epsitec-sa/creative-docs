@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Michael WALZ, Maintainer: Pierre ARNAUD
 
 /*
@@ -41,6 +41,7 @@ static int clipboardHtmlFormat = ::RegisterClipboardFormat(L"HTML Format");
 
 EXPORT
 int
+__stdcall
 ReadHtmlFromClipboard(ClipboardData* data)
 {
 	if (data == NULL)
@@ -104,6 +105,7 @@ ReadHtmlFromClipboard(ClipboardData* data)
 
 EXPORT
 void
+__stdcall
 CopyClipboardData(const ClipboardData* data, BYTE* buffer, int size)
 {
 	if (data != NULL)
@@ -128,6 +130,7 @@ CopyClipboardData(const ClipboardData* data, BYTE* buffer, int size)
 
 EXPORT
 void
+__stdcall
 FreeClipboardData(ClipboardData* data)
 {
 	if (data != NULL)
