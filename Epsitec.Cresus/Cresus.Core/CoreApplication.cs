@@ -68,6 +68,14 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public override string ApplicationIdentifier
+		{
+			get
+			{
+				return "EpCresusCore";		//	TODO: Res.Strings.ProductAppId.ToSimpleText ();
+			}
+		}
+
 		
 		internal void SetupInterface()
 		{

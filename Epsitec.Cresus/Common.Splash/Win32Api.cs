@@ -1,12 +1,9 @@
 ﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 
-namespace Epsitec.Cresus.Graph.Splash
+namespace Epsitec.Common.Splash
 {
 	internal class Win32Api
 	{
@@ -45,7 +42,12 @@ namespace Epsitec.Cresus.Graph.Splash
 			public byte AlphaFormat;
 		}
 
-		public const int ERROR_ALREADY_EXISTS = 183;
+		[DllImport ("kernel32.dll", SetLastError=true)]
+		internal extern static System.IntPtr CreateSemaphore(System.IntPtr securityAttributes, int initialCount, int maximumCount, string name);
+		
+		[DllImport ("kernel32.dll", SetLastError=true)]
+		internal extern static System.IntPtr OpenSemaphore(int desiredAccess, int inheritHandle, string name);
+
 
 		[DllImport ("User32.dll")]
 		internal extern static int SetWindowLong(System.IntPtr handle, int index, int value);

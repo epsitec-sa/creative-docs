@@ -58,6 +58,14 @@ namespace Epsitec.Cresus.Graph
 			}
 		}
 
+		public override string ApplicationIdentifier
+		{
+			get
+			{
+				return "CresusGrapheMainEp";
+			}
+		}
+
 
 		public GraphDocument Document
 		{

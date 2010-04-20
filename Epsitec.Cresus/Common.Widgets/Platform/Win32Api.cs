@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
 
@@ -50,6 +50,12 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryInProgress(out bool pbCanceled);
 		[DllImport ("Kernel32.dll")] internal extern static uint ApplicationRecoveryFinished(bool bSuccess);
 		[DllImport ("Kernel32.dll")] internal extern static int GetCurrentThreadId();
+
+		[DllImport ("kernel32.dll", SetLastError=true)] internal extern static System.IntPtr CreateSemaphore(System.IntPtr securityAttributes, int initialCount, int maximumCount, string name);
+		[DllImport ("kernel32.dll", SetLastError=true)] internal extern static System.IntPtr OpenSemaphore(int desiredAccess, int inheritHandle, string name);
+		[DllImport ("kernel32.dll", SetLastError=true)] internal extern static bool CloseHandle(System.IntPtr handle);
+
+
 
 		internal static uint RegisterApplicationRecoveryCallback(ApplicationRecoveryCallback callback, System.IntPtr parameter, int pingInterval, int flags)
 		{

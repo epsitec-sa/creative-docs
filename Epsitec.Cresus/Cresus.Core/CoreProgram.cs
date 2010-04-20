@@ -1,5 +1,7 @@
-﻿//	Copyright © 2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Splash;
 
 using System.Collections.Generic;
 
@@ -13,6 +15,29 @@ namespace Epsitec.Cresus.Core
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			using (var splash = new SplashScreen ("logo.png"))
+			{
+				CoreProgram.ExecuteCoreProgram (splash);
+			}
+		}
+
+		/// <summary>
+		/// Gets the application object.
+		/// </summary>
+		/// <value>The application object.</value>
+		public static CoreApplication Application
+		{
+			get
+			{
+				return CoreProgram.application;
+			}
+		}
+
+
+		static void ExecuteCoreProgram(SplashScreen splash)
+		{
+			Epsitec.Common.Debug.GeneralExceptionCatcher.Setup ();
+			
 			UI.Initialize ();
 
 			CoreProgram.application = new CoreApplication ();
@@ -31,15 +56,6 @@ namespace Epsitec.Cresus.Core
 			CoreProgram.application = null;
 		}
 
-		public static CoreApplication Application
-		{
-			get
-			{
-				return CoreProgram.application;
-			}
-		}
-
-		
 		private static CoreApplication application;
 	}
 }

@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets
 	{
 		protected Application()
 		{
+			this.applicationStartStatus = Platform.AppSupport.CreateSemaphore (this.ApplicationIdentifier);
 			this.commandDispatcher = CommandDispatcher.DefaultDispatcher;
 			this.commandContext = new CommandContext ();
 			this.resourceManager = Support.Resources.DefaultManager;
@@ -108,6 +109,19 @@ namespace Epsitec.Common.Widgets
 		public abstract string					ShortWindowTitle
 		{
 			get;
+		}
+
+		public abstract string					ApplicationIdentifier
+		{
+			get;
+		}
+
+		public ApplicationStartStatus			ApplicationStartStatus
+		{
+			get
+			{
+				return this.applicationStartStatus;
+			}
 		}
 
 
@@ -403,6 +417,7 @@ namespace Epsitec.Common.Widgets
 		private readonly CommandContext commandContext;
 		private readonly Support.ResourceManager resourceManager;
 		private readonly Support.ResourceManagerPool resourceManagerPool;
+		private readonly ApplicationStartStatus applicationStartStatus;
 		
 		private Window window;
 	}
