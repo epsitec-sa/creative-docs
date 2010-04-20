@@ -88,6 +88,7 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="PersistenceManagerBinding.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="StateSerializationContext.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
