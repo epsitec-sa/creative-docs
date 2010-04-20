@@ -54,6 +54,14 @@ namespace Epsitec.Cresus.ServerManager
 			}
 		}
 
+		public override string ApplicationIdentifier
+		{
+			get
+			{
+				return "EpServerManager";
+			}
+		}
+
 		private void HandleTimerTimeElapsed(object sender)
 		{
 			this.serviceSettings.IsServiceRunning = this.serviceController.IsRunning;
