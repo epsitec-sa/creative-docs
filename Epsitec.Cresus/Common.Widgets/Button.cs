@@ -179,7 +179,6 @@ namespace Epsitec.Common.Widgets
 				case ButtonStyle.DefaultAcceptAndCancel:
 				case ButtonStyle.DefaultCancel:
 					return offset + new Drawing.Point (4, 4);
-					break;
 			}
 			
 			return offset;
