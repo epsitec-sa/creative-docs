@@ -370,7 +370,10 @@ namespace Epsitec.Cresus.Core
 			{
 				foreach (string tag in history.Split (' '))
 				{
-					this.history.Add (context.GetState (tag));
+					if (context.ContainsState (tag))
+					{
+						this.history.Add (context.GetState (tag));
+					}
 				}
 			}
 			
@@ -378,7 +381,10 @@ namespace Epsitec.Cresus.Core
 			{
 				foreach (string tag in zOrder.Split (' '))
 				{
-					this.zOrder.Add (context.GetState (tag));
+					if (context.ContainsState (tag))
+					{
+						this.zOrder.Add (context.GetState (tag));
+					}
 				}
 			}
 			
@@ -386,7 +392,10 @@ namespace Epsitec.Cresus.Core
 			{
 				foreach (string tag in hidden.Split (' '))
 				{
-					this.hidden.Add (context.GetState (tag));
+					if (context.ContainsState (tag))
+					{
+						this.hidden.Add (context.GetState (tag));
+					}
 				}
 			}
 
