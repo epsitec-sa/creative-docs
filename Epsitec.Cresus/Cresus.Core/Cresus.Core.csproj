@@ -110,8 +110,11 @@
     <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Widgets\AbstractTile.cs" />
+    <Compile Include="Widgets\SimpleTile.cs" />
     <Compile Include="Widgets\StateDeckWidget.cs" />
     <Compile Include="FormStateMode.cs" />
+    <Compile Include="Widgets\SubFrameBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cresus.Core\module.info">

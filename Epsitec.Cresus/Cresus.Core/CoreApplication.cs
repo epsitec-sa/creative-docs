@@ -101,6 +101,21 @@ namespace Epsitec.Cresus.Core
 			this.CreateRibbon ();
 			this.RestoreApplicationState ();
 
+			Widgets.SimpleTile tile2 = new Widgets.SimpleTile(window.Root);
+			tile2.SetManualBounds(new Common.Drawing.Rectangle(10, 10+tile2.PreferredHeight+4, 200, tile2.PreferredHeight));
+			tile2.Title = "Bonjour";
+			tile2.ChildrenLocation = Widgets.SubFrameBox.ChildrenLocationEnum.Right;
+
+			Widgets.SimpleTile tile1 = new Widgets.SimpleTile(window.Root);
+			tile1.SetManualBounds(new Common.Drawing.Rectangle(10, 10, 200, tile1.PreferredHeight));
+			tile1.Title = "Coucou";
+			tile1.ChildrenLocation = Widgets.SubFrameBox.ChildrenLocationEnum.Top;
+
+			Widgets.SimpleTile tile3 = new Widgets.SimpleTile(window.Root);
+			tile3.SetManualBounds(new Common.Drawing.Rectangle(10, 10+(tile3.PreferredHeight+4)*2, 200, tile3.PreferredHeight*2));
+			tile3.Title = "Tralala";
+			tile3.ChildrenLocation = Widgets.SubFrameBox.ChildrenLocationEnum.None;
+
 			this.IsReady = true;
 		}
 
