@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Core
 		{
 			this.DiscardChanges ();
 
+			//	<node>
+			//	  <w id="path1" ... />
+			//	  <w id="path2" ... />
+			//	</node>
+
 			return new XElement (xmlNodeName,
 				from path in this.bindings.Keys
 				orderby path ascending
