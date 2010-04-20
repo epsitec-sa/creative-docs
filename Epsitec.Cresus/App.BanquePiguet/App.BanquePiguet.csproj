@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.App.BanquePiguet</RootNamespace>
     <AssemblyName>App.BanquePiguet</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>App.BanquePiguet.snk</AssemblyOriginatorKeyFile>
@@ -196,6 +196,7 @@
     <EmbeddedResource Include="Resources\OCR_BB.tff" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Printers\printers.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
