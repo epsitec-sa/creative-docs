@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Graph
 		public GraphApplication()
 		{
 			this.graphCommands = new GraphCommands (this);
-			this.persistenceManager = new Core.UI.PersistenceManager ();
+			this.persistenceManager = new Core.PersistenceManager ();
 			
 			this.mainWindowController = new Controllers.MainWindowController (this);
 			this.workspaceController = new Controllers.WorkspaceController (this);
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Graph
 		private readonly Controllers.MainWindowController mainWindowController;
 		private readonly Controllers.WorkspaceController workspaceController;
 
-		private readonly Core.UI.PersistenceManager persistenceManager;
+		private readonly Core.PersistenceManager persistenceManager;
 
 		private const int PasteTickCountTimeout = 5000;	//	[ms]
 		

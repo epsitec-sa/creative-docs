@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -15,19 +15,19 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormattedText"/> structure.
 		/// </summary>
-		/// <param name="text">The formatted text source.</param>
-		public FormattedText(string text)
+		/// <param name="formattedTextSource">The formatted text source.</param>
+		public FormattedText(string formattedTextSource)
 		{
-			this.text = text;
+			this.text = formattedTextSource;
 		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormattedText"/> structure.
 		/// </summary>
-		/// <param name="text">The formatted text.</param>
-		public FormattedText(FormattedText text)
+		/// <param name="formattedText">The formatted text.</param>
+		public FormattedText(FormattedText formattedText)
 		{
-			this.text = text.text;
+			this.text = formattedText.text;
 		}
 
 		/// <summary>
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <param name="value">The source text.</param>
 		/// <returns>The result of the conversion.</returns>
-		public static FormattedText ParseSimpleText(string value)
+		public static FormattedText FromSimpleText(string value)
 		{
 			return new FormattedText (FormattedText.Escape (value));
 		}

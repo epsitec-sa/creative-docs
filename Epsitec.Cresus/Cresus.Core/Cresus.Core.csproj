@@ -88,10 +88,11 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="UI.WindowPlacementHint.cs" />
     <Compile Include="StateSerializationContext.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
-    <Compile Include="UI.PersistenceManager.cs" />
+    <Compile Include="PersistenceManager.cs" />
     <Compile Include="HistorySortMode.cs" />
     <Compile Include="CoreCommands.cs" />
     <Compile Include="StateAttribute.cs" />

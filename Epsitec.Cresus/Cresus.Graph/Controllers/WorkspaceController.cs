@@ -979,6 +979,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 					window.Dispose ();
 				};
 
+			UI.RegisterWindowPositionSaver (window);
 			UI.RestoreWindowPosition (window);
 
 			//	Associate the window with the snapshot : there is at most one window for

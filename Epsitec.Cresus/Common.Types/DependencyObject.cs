@@ -347,6 +347,22 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public bool TryGetLocalValue<T>(DependencyProperty property, out T value)
+		{
+			object objectValue;
+
+			if (this.properties.TryGetValue (property, out objectValue))
+			{
+				value = (T) objectValue;
+				return true;
+			}
+			else
+			{
+				value = default (T);
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Sets the value into the internal dictionary. There is no checking and
 		/// no coercion whatsoever.
