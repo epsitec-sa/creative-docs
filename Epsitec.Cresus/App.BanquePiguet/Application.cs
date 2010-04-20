@@ -61,6 +61,14 @@ namespace Epsitec.App.BanquePiguet
 			}
 		}
 
+		public override string ApplicationIdentifier
+		{
+			get
+			{
+				return "EpBanquePiguetBV";
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets a value indicating whether the <see cref="Application"/> is launched in
 		/// admin mode.
