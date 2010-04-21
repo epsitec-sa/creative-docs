@@ -1,10 +1,15 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Support
 {
+	/// <summary>
+	/// The <c>ResourceProviderFactory</c> class loads the resource provider implementation
+	/// from an external assembly and publishes the available <see cref="IResourceProvider"/>
+	/// allocators.
+	/// </summary>
 	public sealed class ResourceProviderFactory
 	{
 		internal ResourceProviderFactory()
@@ -25,6 +30,11 @@ namespace Epsitec.Common.Support
 			System.Type[] constructorArgumentTypes = new System.Type[] { typeof (ResourceManager) };
 			System.Reflection.Assembly assembly = AssemblyLoader.Load ("Common.Support.Implementation");
 
+			if (assembly == null)
+			{
+				throw new System.IO.FileNotFoundException ("Resource provider is missing", "Common.Support.Implementation.dll");
+			}
+
 			foreach (System.Type type in assembly.GetTypes ())
 			{
 				if ((type.IsClass) &&
@@ -39,6 +49,6 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		private List<Allocator<IResourceProvider, ResourceManager>> allocators = new List<Allocator<IResourceProvider, ResourceManager>> ();
+		private readonly List<Allocator<IResourceProvider, ResourceManager>> allocators = new List<Allocator<IResourceProvider, ResourceManager>> ();
 	}
 }
