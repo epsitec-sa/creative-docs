@@ -88,6 +88,8 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
     <Compile Include="Data\PersonRepository.cs" />
@@ -119,7 +121,7 @@
     <Compile Include="Widgets\SimpleTile.cs" />
     <Compile Include="Widgets\StateDeckWidget.cs" />
     <Compile Include="FormStateMode.cs" />
-    <Compile Include="Widgets\SubFrameBox.cs" />
+    <Compile Include="Widgets\TileContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Cresus.Core\module.info">
@@ -235,6 +237,10 @@
     <Content Include="Resources\Cresus.Core\Strings.00.resource">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Images\Data.Mail.icon" />
+    <EmbeddedResource Include="Images\Data.Person.icon" />
+    <EmbeddedResource Include="Images\Data.Telecom.icon" />
+    <EmbeddedResource Include="Images\Data.Uri.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
