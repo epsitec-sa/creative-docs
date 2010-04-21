@@ -44,17 +44,10 @@ namespace Epsitec.Common.Drawing
 
 			try
 			{
-				string   dllName    = "AntiGrain.Win32.dll";
-				string   dllPath    = null;
-				string[] probePaths = new string[]
-				{
-					Support.Globals.Directories.ExecutableRoot,
-					Support.Globals.Directories.Executable,
-					Support.Globals.Directories.InitialDirectory,
-					System.IO.Path.GetDirectoryName (typeof (Font).Assembly.Location),
-				};
+				string dllName = "AntiGrain.Win32.dll";
+				string dllPath = null;
 
-				foreach (string path in probePaths)
+				foreach (string path in Font.GetAntiGrainProbePaths ())
 				{
 					if (System.IO.File.Exists (System.IO.Path.Combine (path, dllName)))
 					{
@@ -109,8 +102,16 @@ namespace Epsitec.Common.Drawing
 		
 		[System.Runtime.InteropServices.DllImport ("Gdi32.dll")]
 		private static extern int RemoveFontResourceEx(string fontPath, int fontFlags, System.IntPtr reserved);
+
+		private static IEnumerable<string> GetAntiGrainProbePaths()
+		{
+			yield return Support.Globals.Directories.ExecutableRoot;
+			yield return Support.Globals.Directories.Executable;
+			yield return Support.Globals.Directories.InitialDirectory;
+			yield return System.IO.Path.GetDirectoryName (typeof (Font).Assembly.Location);
+		}
 		
-		public System.IntPtr					Handle
+		public System.IntPtr Handle
 		{
 			get
 			{
