@@ -41,6 +41,14 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 
+		public DbInfrastructure Infrastructure
+		{
+			get
+			{
+				return this.infrastructure;
+			}
+		}
+
 
 		/// <summary>
 		/// Queries the database by example and returns a collection of data
