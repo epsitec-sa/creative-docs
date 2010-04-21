@@ -59,6 +59,14 @@ namespace Epsitec.Cresus.Core
 				return this.stateManager;
 			}
 		}
+
+		public PersistenceManager				PersistanceManager
+		{
+			get
+			{
+				return this.persistenceManager;
+			}
+		}
 		
 		public override string					ShortWindowTitle
 		{
@@ -68,7 +76,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		public override string ApplicationIdentifier
+		public override string					ApplicationIdentifier
 		{
 			get
 			{
@@ -77,41 +85,29 @@ namespace Epsitec.Cresus.Core
 		}
 
 		
-		internal void SetupInterface()
+		internal void CreateUI()
 		{
-			Window window = new Window ();
+			this.CreateUIMainWindow ();
+			this.CreateUIRootBoxes ();
 
-			window.Text = this.ShortWindowTitle;
-			window.ClientSize = new Epsitec.Common.Drawing.Size (600, 400);
+			this.defaultBoxId = this.stateManager.RegisterBox (this.contentBox);
 
-			this.Window = window;
+			var ribbonHandler = new Handlers.RibbonHandler ();
+			ribbonHandler.CreateUI (this.ribbonBox);
 
-			this.ribbonBox = new FrameBox (window.Root)
-			{
-				Dock = DockStyle.Top
-			};
-
-			this.defaultBox = new FrameBox (window.Root)
-			{
-				Dock = DockStyle.Fill
-			};
-
-			this.defaultBoxId = this.stateManager.RegisterBox (this.defaultBox);
-
-			this.CreateRibbon ();
 			this.RestoreApplicationState ();
 
-			Widgets.SimpleTile tile2 = new Widgets.SimpleTile(window.Root);
+			Widgets.SimpleTile tile2 = new Widgets.SimpleTile(this.Window.Root);
 			tile2.SetManualBounds(new Common.Drawing.Rectangle(10, 10+tile2.PreferredHeight+4, 200, tile2.PreferredHeight));
 			tile2.Title = "Bonjour";
 			tile2.ChildrenLocation = Widgets.SubFrameBox.ChildrenLocationEnum.Right;
 
-			Widgets.SimpleTile tile1 = new Widgets.SimpleTile(window.Root);
+			Widgets.SimpleTile tile1 = new Widgets.SimpleTile(this.Window.Root);
 			tile1.SetManualBounds(new Common.Drawing.Rectangle(10, 10, 200, tile1.PreferredHeight));
 			tile1.Title = "Coucou";
 			tile1.ChildrenLocation = Widgets.SubFrameBox.ChildrenLocationEnum.Top;
 
-			Widgets.SimpleTile tile3 = new Widgets.SimpleTile(window.Root);
+			Widgets.SimpleTile tile3 = new Widgets.SimpleTile(this.Window.Root);
 			tile3.SetManualBounds(new Common.Drawing.Rectangle(10, 10+(tile3.PreferredHeight+4)*2, 200, tile3.PreferredHeight*2));
 			tile3.Title = "Tralala";
 			tile3.ChildrenLocation = Widgets.SubFrameBox.ChildrenLocationEnum.None;
@@ -119,6 +115,32 @@ namespace Epsitec.Cresus.Core
 			this.IsReady = true;
 		}
 
+		private void CreateUIMainWindow()
+		{
+			Window window = new Window ();
+
+			window.Text = this.ShortWindowTitle;
+			window.ClientSize = new Epsitec.Common.Drawing.Size (600, 400);
+
+			this.Window = window;
+		}
+
+		private void CreateUIRootBoxes()
+		{
+			this.ribbonBox = new FrameBox ()
+						{
+							Parent = this.Window.Root,
+							Name = "RibbonBox",
+							Dock = DockStyle.Top,
+						};
+
+			this.contentBox = new FrameBox ()
+			{
+				Parent = this.Window.Root,
+				Name = "ContentBox",
+				Dock = DockStyle.Fill,
+			};
+		}
 		internal void SetupData()
 		{
 //-			this.data.SetupDatabase ();
@@ -376,87 +398,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private void CreateRibbon()
-		{
-			this.ribbonBook = new RibbonBook (this.ribbonBox)
-			{
-				Dock = DockStyle.Fill,
-				Name = "Ribbon"
-			};
-
-			this.persistenceManager.Register (this.ribbonBook);
-			
-			this.ribbonPageHome = new RibbonPage (this.ribbonBook)
-			{
-				Name = "Home",
-				RibbonTitle = "Principal"
-			};
-
-
-			RibbonSection section;
-			FrameBox      frame;
-
-			section = new RibbonSection (this.ribbonPageHome)
-			{
-				Name = "Edition",
-				Title = "Edition",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredWidth = 200,
-			};
-
-			frame = new FrameBox (section)
-			{
-				Dock = DockStyle.Stacked,
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
-			};
-
-			section = new RibbonSection (this.ribbonPageHome)
-			{
-				Name = "Bases",
-				Title = "Bases de données",
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
-			};
-
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
-
-			section = new RibbonSection (this.ribbonPageHome)
-			{
-				Name = "States",
-				Title = "Etats",
-				Dock = DockStyle.Fill,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
-			};
-
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev, (s, e) => this.stateManager.NavigateHistoryPrev ()));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext, (s, e) => this.stateManager.NavigateHistoryNext ()));
-
-			section.Children.Add (
-				new Widgets.StateDeckWidget ()
-				{
-					Dock = DockStyle.Stacked,
-					StateManager = this.stateManager,
-					StateDeck = States.StateDeck.History,
-					PreferredWidth = 48
-				});
-
-			section.Children.Add (
-				new Widgets.StateDeckWidget ()
-				{
-					Dock = DockStyle.StackFill,
-					StateManager = this.stateManager,
-					StateDeck = States.StateDeck.StandAlone,
-					PreferredWidth = 48
-				});
-
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Edit, DockStyle.StackEnd, null, 63));
-		}
-
 		private void RestoreApplicationState()
 		{
 			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
@@ -492,9 +433,9 @@ namespace Epsitec.Cresus.Core
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;	//	TODO: use validity check
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = true;
 
-						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = false;
-						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = true;
-						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = true;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = false;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = true;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = true;
 						break;
 
 					case FormStateMode.Search:
@@ -502,9 +443,9 @@ namespace Epsitec.Cresus.Core
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = false;
 						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = false;
 
-						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = true;
-						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = false;
-						this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = false;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = true;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = false;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = false;
 						break;
 				}
 			}
@@ -533,37 +474,6 @@ namespace Epsitec.Cresus.Core
 
 
 		
-		private IconButton CreateButton(Command command)
-		{
-			return this.CreateButton (command, DockStyle.StackBegin, null);
-		}
-
-		private IconButton CreateButton(Command command, CommandEventHandler handler)
-		{
-			return this.CreateButton (command, DockStyle.StackBegin, handler);
-		}
-
-		private IconButton CreateButton(Command command, DockStyle dockStyle, CommandEventHandler handler)
-		{
-			return this.CreateButton (command, dockStyle, handler, 31);
-		}
-
-		private IconButton CreateButton(Command command, DockStyle dockStyle, CommandEventHandler handler, double dx)
-		{
-			if (handler != null)
-			{
-				this.CommandDispatcher.Register (command, handler);
-			}
-
-			return new IconButton (command, new Epsitec.Common.Drawing.Size (dx, 31), dockStyle)
-			{
-				Name = command.Name,
-				VerticalAlignment = VerticalAlignment.Center,
-				HorizontalAlignment = HorizontalAlignment.Center
-			};
-		}
-
-
 		
 
 		StateManager							stateManager;
@@ -573,10 +483,7 @@ namespace Epsitec.Cresus.Core
 		CoreCommands							commands;
 		
 		private FrameBox						ribbonBox;
-		private FrameBox						defaultBox;
-
-		private RibbonBook						ribbonBook;
-		private RibbonPage						ribbonPageHome;
+		private FrameBox						contentBox;
 
 		private int								defaultBoxId;
 	}
