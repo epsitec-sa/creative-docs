@@ -90,28 +90,28 @@ namespace Epsitec.Cresus.Core
 			var address1 = dataContext.CreateEntity<Entities.AddressEntity> ();
 			var address2 = dataContext.CreateEntity<Entities.AddressEntity> ();
 			var location = dataContext.CreateEntity<Entities.LocationEntity> ();
-			var street1   = dataContext.CreateEntity<Entities.StreetEntity> ();
-			var street2   = dataContext.CreateEntity<Entities.StreetEntity> ();
+			var street1  = dataContext.CreateEntity<Entities.StreetEntity> ();
+			var street2  = dataContext.CreateEntity<Entities.StreetEntity> ();
 			var postBox  = dataContext.CreateEntity<Entities.PostBoxEntity> ();
 
 			var countryKey = this.FindCountryEntities ("CH").First ();
 			var country    = dataContext.ResolveEntity<Entities.CountryEntity> (countryKey);
 
-			address1.Location = location;
-			address1.Street   = street1;
-			address1.PostBox  = postBox;
+			address1.Location   = location;
+			address1.Street     = street1;
+			address1.PostBox    = postBox;
 
-			address2.Location = location;
-			address2.Street   = street2;
+			address2.Location   = location;
+			address2.Street     = street2;
 
 			location.Country    = country;
 			location.Name       = "Yverdon-les-Bains";
 			location.PostalCode = "1400";
 
-			street1.StreetName = "Ch. du Fontenay 6";
-			street2.StreetName = "Rue d'Orbe 28";
+			street1.StreetName  = "Ch. du Fontenay 6";
+			street2.StreetName  = "Rue d'Orbe 28";
 
-			postBox.Number = "Case postale 1234";
+			postBox.Number      = "Case postale 1234";
 			
 			dataContext.SaveChanges ();
 			dataContext.Dispose ();
