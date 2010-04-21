@@ -51,6 +51,7 @@ namespace Epsitec.Common.Drawing
 					Support.Globals.Directories.ExecutableRoot,
 					Support.Globals.Directories.Executable,
 					Support.Globals.Directories.InitialDirectory,
+					System.IO.Path.GetDirectoryName (typeof (Font).Assembly.Location),
 				};
 
 				foreach (string path in probePaths)

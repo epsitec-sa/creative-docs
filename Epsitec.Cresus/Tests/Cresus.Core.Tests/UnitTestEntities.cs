@@ -1,16 +1,8 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Dialogs;
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Entities;
-
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
