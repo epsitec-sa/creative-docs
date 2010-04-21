@@ -27,30 +27,28 @@ namespace Epsitec.Cresus.Core
 		[ClassInitialize]
 		public static void Initialize(TestContext testContext)
 		{
-			//	See http://geekswithblogs.net/sdorman/archive/2009/01/31/migrating-from-nunit-to-mstest.aspx
-			//	for migration tips, from nUnit to MSTest.
-
-			ResourceManagerPool.Default = new ResourceManagerPool ("default");
-			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Core");
-
-			Epsitec.Cresus.Core.States.StateFactory.Setup ();
+			TestSetup.Initialize ();
 		}
-
-		public UnitTestFormState()
-		{
-		}
-
 
 		[TestMethod]
 		public void Test01SaveDialogData()
 		{
 			var context = EntityContext.Current;
 			var manager = new EntityPersistenceManager ();
-
-			AddressEntity address = GetSampleAddressEntity (context);
-			Assert.IsNotNull (address);
-
+			
 			context.PersistenceManagers.Add (manager);
+
+			var address = UnitTestFormState.CreateAddressEntity (context);
+			var country = address.Location.Country;
+			var location = UnitTestFormState.CreateLocationEntityForYverdon (context, country);
+			
+			manager.Map["loc1"] = address.Location;
+			manager.Map["loc2"] = location;
+
+			Assert.AreEqual ("Case postale 16", address.PostBox.Number);
+			Assert.AreEqual ("1462", address.Location.PostalCode);
+			Assert.AreEqual ("Yvonand", address.Location.Name);
+			Assert.AreEqual ("Suisse", address.Location.Country.Name);
 			
 			var data = new DialogData<AddressEntity> (address, DialogDataMode.Isolated);
 			var temp = data.Data;
@@ -60,32 +58,33 @@ namespace Epsitec.Cresus.Core
 			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData />", element.ToString (SaveOptions.DisableFormatting));
 
-#if false
-			AdresseEntity temp = data.Data as AdresseEntity;
-			XElement element;
-
-			//	No changes :
-			element = States.FormState.SaveDialogData (data);
-			Assert.AreEqual (@"<dialogData />", element.ToString (SaveOptions.DisableFormatting));
-
-			//	Single text change :
-			temp.CasePostale = "CP 16";
-			element = States.FormState.SaveDialogData (data);
-			Assert.AreEqual (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
-
 			//	Cascaded text change :
-			temp.Localité.Numéro = "CH-1462";
-			element = States.FormState.SaveDialogData (data);
-			Assert.AreEqual (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><data path=""[8V15].[8V19]"" value=""CH-1462"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
+			temp.PostBox.Number = "Postfach 16";
 
-			temp.Localité = loc2;
+			Assert.AreEqual ("Case postale 16", address.PostBox.Number);
+			Assert.AreEqual ("Postfach 16", temp.PostBox.Number);
+			
 			element = States.FormState.SaveDialogData (data);
-			Assert.AreEqual (@"<dialogData><data path=""[8V14]"" value=""CP 16"" /><ref path=""[8V15]"" id=""loc2"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
+			Assert.AreEqual (@"<dialogData><data path=""[L0AH].[L0AG]"" value=""Postfach 16"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
+
+			//	Replace location with another one :
+			temp.Location = location;
+
+			Assert.AreEqual ("1462", address.Location.PostalCode);
+			Assert.AreEqual ("1400", temp.Location.PostalCode);
+
+			element = States.FormState.SaveDialogData (data);
+			Assert.AreEqual (@"<dialogData><ref path=""[L0AE]"" id=""loc2"" /><data path=""[L0AH].[L0AG]"" value=""Postfach 16"" /></dialogData>", element.ToString (SaveOptions.DisableFormatting));
 
 			data.RevertChanges ();
+
+			Assert.AreEqual ("Case postale 16", temp.PostBox.Number);
+			Assert.AreEqual ("1462", temp.Location.PostalCode);
+			Assert.AreEqual ("Yvonand", temp.Location.Name);
+			Assert.AreEqual ("Suisse", temp.Location.Country.Name);
+
 			element = States.FormState.SaveDialogData (data);
 			Assert.AreEqual (@"<dialogData />", element.ToString (SaveOptions.DisableFormatting));
-#endif
 
 			context.PersistenceManagers.Remove (manager);
 		}
@@ -94,10 +93,34 @@ namespace Epsitec.Cresus.Core
 		[TestMethod]
 		public void Test02RestoreDialogData()
 		{
+			var context = EntityContext.Current;
+			var manager = new EntityPersistenceManager ();
+
+			context.PersistenceManagers.Add (manager);
+
+			var address = UnitTestFormState.CreateAddressEntity (context);
+			var country = address.Location.Country;
+			var location = UnitTestFormState.CreateLocationEntityForYverdon (context, country);
+
+			manager.Map["loc1"] = address.Location;
+			manager.Map["loc2"] = location;
+
+			var data = new DialogData<AddressEntity> (address, DialogDataMode.Isolated);
+			var temp = data.Data;
+
+			//	Restore CasePostale (value) and Localité (reference)
+			XElement element = XElement.Parse (@"<dialogData><ref path=""[L0AE]"" id=""loc2"" /><data path=""[L0AH].[L0AG]"" value=""Postfach 16"" /></dialogData>");
+			States.FormState.RestoreDialogData (data, element);
+
+			Assert.AreEqual ("Postfach 16", temp.PostBox.Number);
+			Assert.AreEqual ("Yverdon-les-Bains", temp.Location.Name);
+			Assert.AreEqual (location, temp.Location);
+
+			context.PersistenceManagers.Remove (manager);
 		}
 
 
-		private static AddressEntity GetSampleAddressEntity(EntityContext context)
+		private static AddressEntity CreateAddressEntity(EntityContext context)
 		{
 			AddressEntity  address  = context.CreateEmptyEntity<AddressEntity> ();
 			LocationEntity location = context.CreateEmptyEntity<LocationEntity> ();
@@ -139,48 +162,18 @@ namespace Epsitec.Cresus.Core
 			return address;
 		}
 
-		#region PersistenceManager Class
-
-		/// <summary>
-		/// The <c>PersistenceManager</c> class implements a simple persistence
-		/// manager which associates entities with ids through a dictionary.
-		/// </summary>
-		private class EntityPersistenceManager : IEntityPersistenceManager
+		private static LocationEntity CreateLocationEntityForYverdon(EntityContext context, CountryEntity country)
 		{
-			#region IEntityPersistenceManager Members
+			var location = context.CreateEmptyEntity<LocationEntity> ();
 
-			public string GetPersistedId(AbstractEntity entity)
+			using (location.DefineOriginalValues ())
 			{
-				foreach (var item in this.Map)
-				{
-					if (item.Value == entity)
-					{
-						return item.Key;
-					}
-				}
-
-				return null;
+				location.Country = country;
+				location.PostalCode = "1400";
+				location.Name = "Yverdon-les-Bains";
 			}
 
-			public AbstractEntity GetPeristedEntity(string id)
-			{
-				AbstractEntity entity;
-
-				if (this.Map.TryGetValue (id, out entity))
-				{
-					return entity;
-				}
-				else
-				{
-					return null;
-				}
-			}
-
-			#endregion
-
-			public readonly Dictionary<string, AbstractEntity> Map = new Dictionary<string, AbstractEntity> ();
+			return location;
 		}
-
-		#endregion
 	}
 }
