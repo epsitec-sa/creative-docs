@@ -16,19 +16,28 @@ namespace Epsitec.Common.Support.Implementation
 		public FileProvider(ResourceManager manager)
 			: base (manager)
 		{
-			string dir1 = manager.DefaultPath;
-			string dir2 = System.IO.Directory.GetCurrentDirectory ();
-			string dir3 = System.IO.Path.GetDirectoryName (typeof (ResourceManager).Assembly.Location);
-
-			if (!this.SelectPath (dir1) &&
-				!this.SelectPath (dir2) &&
-				!this.SelectPath (dir3))
+			foreach (var path in FileProvider.GetProbingPaths (manager))
 			{
-				throw new System.IO.FileNotFoundException ("Cannot find resources directory.");
+				if (this.SelectPath (path))
+				{
+					this.idRegex = RegexFactory.FileName;
+					this.SelectLocale (CultureInfo.CurrentCulture);
+					return;
+				}
+			}
+			
+			throw new System.IO.FileNotFoundException ("Cannot locate any resources directory");
+		}
+
+		private static IEnumerable<string> GetProbingPaths(ResourceManager manager)
+		{
+			foreach (var path in manager.ResourceProbingPaths)
+			{
+				yield return path;
 			}
 
-			this.idRegex = RegexFactory.FileName;
-			this.SelectLocale (CultureInfo.CurrentCulture);
+			yield return System.IO.Directory.GetCurrentDirectory ();
+			yield return System.IO.Path.GetDirectoryName (typeof (ResourceManager).Assembly.Location);
 		}
 
 		public override string Prefix

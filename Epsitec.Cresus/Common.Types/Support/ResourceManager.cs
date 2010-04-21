@@ -92,6 +92,30 @@ namespace Epsitec.Common.Support
 				return this.serialId;
 			}
 		}
+
+		/// <summary>
+		/// Gets the probing paths where the Resource directory could be found.
+		/// </summary>
+		/// <value>The resource probing paths.</value>
+		public IEnumerable<string>				ResourceProbingPaths
+		{
+			get
+			{
+				if (this.defaultPath != null)
+				{
+					yield return this.defaultPath;
+				}
+				
+				if (this.pool != null)
+				{
+					foreach (var path in this.pool.ResourceProbingPaths)
+					{
+						yield return path;
+					}
+				}
+			}
+		}
+
 		
 		
 		public int								ProviderCount

@@ -103,6 +103,18 @@ namespace Epsitec.Common.Support
 		}
 
 		/// <summary>
+		/// Gets the probing paths where the Resource directory could be found.
+		/// </summary>
+		/// <value>The resource probing paths.</value>
+		public IEnumerable<string>				ResourceProbingPaths
+		{
+			get
+			{
+				return this.resourceProbingPaths;
+			}
+		}
+
+		/// <summary>
 		/// Gets the module roots.
 		/// </summary>
 		/// <value>The module roots, which consist of a symbolic name and an
@@ -174,6 +186,15 @@ namespace Epsitec.Common.Support
 			this.AddModuleRootPath (SymbolicNames.Live,    System.IO.Path.Combine (userPath, ResourceManagerPool.LiveModulesDirectory), true);
 		}
 
+
+		/// <summary>
+		/// Adds a probing path where the Resource directory could be found.
+		/// </summary>
+		/// <param name="path">The path.</param>
+		public void AddResourceProbingPath(string path)
+		{
+			this.resourceProbingPaths.Add (path);
+		}
 
 		/// <summary>
 		/// Adds the named module root path: this records a link between a symbolic
@@ -706,14 +727,15 @@ namespace Epsitec.Common.Support
 		internal const string LibraryModulesDirectory = "Library Modules";
 		internal const string LiveModulesDirectory    = "Live Modules";
 
-		private static ResourceManagerPool		defaultPool;
+		private static ResourceManagerPool				defaultPool;
 		
-		string									name;
-		string									defaultPrefix;
-		Dictionary<string, ResourceBundle>		bundles = new Dictionary<string, ResourceBundle> ();
-		List<Weak<ResourceManager>>				managers = new List<Weak<ResourceManager>> ();
-		int										mergedBundlesCount;
-		Dictionary<string, ResourceModuleInfo>	modules = new Dictionary<string, ResourceModuleInfo> ();
-		Dictionary<string, string>				moduleRoots = new Dictionary<string, string> ();
+		string											name;
+		string											defaultPrefix;
+		readonly Dictionary<string, ResourceBundle>		bundles = new Dictionary<string, ResourceBundle> ();
+		readonly List<Weak<ResourceManager>>			managers = new List<Weak<ResourceManager>> ();
+		int												mergedBundlesCount;
+		readonly Dictionary<string, ResourceModuleInfo>	modules = new Dictionary<string, ResourceModuleInfo> ();
+		readonly Dictionary<string, string>				moduleRoots = new Dictionary<string, string> ();
+		readonly List<string>							resourceProbingPaths = new List<string> ();
 	}
 }
