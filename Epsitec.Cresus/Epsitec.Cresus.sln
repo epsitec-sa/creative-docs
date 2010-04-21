@@ -197,7 +197,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.BanquePiguet", "App.Ban
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Splash", "Common.Splash\Common.Splash.csproj", "{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.UnitTests", "Tests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj", "{F18C2336-9F85-4717-99B9-A1C30E8C463E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.UnitTests", "UnitTests\Cresus.Core.UnitTests\Cresus.Core.UnitTests.csproj", "{F18C2336-9F85-4717-99B9-A1C30E8C463E}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
