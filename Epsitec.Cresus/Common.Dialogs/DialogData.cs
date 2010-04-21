@@ -10,6 +10,27 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
+	public class DialogData<T> : DialogData where T : AbstractEntity
+	{
+		public DialogData(T data, DialogDataMode mode)
+			: base (data, mode)
+		{
+		}
+
+		public DialogData(T data, EntityContext defaultContext, DialogDataMode mode)
+			: base (data, defaultContext, mode)
+		{
+		}
+
+		public new T							Data
+		{
+			get
+			{
+				return base.Data as T;
+			}
+		}
+	}
+
 	/// <summary>
 	/// The <c>DialogData</c> class describes data associated with a dialog.
 	/// The data is stored in an entity graph and the <c>DialogData</c> class
