@@ -8,16 +8,24 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public abstract class AbstractTile : SubFrameBox
+	public abstract class AbstractTile : TileContainer
 	{
 		public AbstractTile()
 		{
+			this.iconButton = new IconButton (this);
+			this.iconButton.ButtonStyle = ButtonStyle.ToolItem;
+			this.iconButton.AutoFocus = false;
+
+			this.titleLayout = new TextLayout ();
+			this.titleLayout.BreakMode = Common.Drawing.TextBreakMode.Ellipsis;
+			this.titleLayout.Alignment = Common.Drawing.ContentAlignment.TopLeft;
+			this.titleLayout.DefaultFontSize = AbstractTile.titleHeight*0.8;
 		}
 
 		public AbstractTile(Widget embedder)
-			: this()
+			: this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 
 
@@ -25,17 +33,25 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
 
-			metadataDy.DefineDefaultValue(AbstractTile.iconSize+AbstractTile.iconMargins*2);
+			metadataDy.DefineDefaultValue (AbstractTile.iconSize+AbstractTile.iconMargins*2);
 
-			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata(typeof(AbstractTile), metadataDy);
+			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTile), metadataDy);
 		}
 
+
+		virtual public double ContentHeight
+		{
+			get
+			{
+				return this.PreferredHeight;
+			}
+		}
 
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
 		/// </summary>
 		/// <value>The icon.</value>
-		public Image Icon
+		public string Icon
 		{
 			get
 			{
@@ -44,6 +60,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			set
 			{
 				this.icon = value;
+
+				if (string.IsNullOrEmpty (this.icon) || this.icon.Length == 1)
+				{
+					this.iconButton.Visibility = false;
+				}
+				else
+				{
+					this.iconButton.IconName = Misc.Icon (value);
+					this.iconButton.Visibility = true;
+				}
 			}
 		}
 
@@ -55,85 +81,100 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return this.title;
+				return this.titleLayout.Text;
 			}
 			set
 			{
-				if (this.title != value)
+				if (this.titleLayout.Text != value)
 				{
-					this.title = value;
-					this.Invalidate();
+					this.titleLayout.Text = value;
+					this.Invalidate ();
 				}
 			}
 		}
 
+		public object Data
+		{
+			get;
+			set;
+		}
+
+
+		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
+		{
+			base.SetBoundsOverride (oldRect, newRect);
+			this.UpdateGeometry ();
+		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Rectangle bounds = this.Client.Bounds;
 
-			base.PaintBackgroundImplementation(graphics, clipRect);
+			base.PaintBackgroundImplementation (graphics, clipRect);
 
 			Rectangle iconRectangle  = this.IconRectangle;
 			Rectangle titleRectangle = this.TitleRectangle;
-			Rectangle mainRectangle  = this.MainRectangle;
 
-			if (this.icon == null)
+			if (string.IsNullOrEmpty (this.icon) || this.icon.Length == 1)
 			{
 				Rectangle r = iconRectangle;
-				r.Deflate(AbstractTile.iconMargins+0.5);
+				r.Deflate (AbstractTile.iconMargins);
 
-				graphics.AddRectangle(r);
-				graphics.AddLine(r.TopLeft, r.BottomRight);
-				graphics.AddLine(r.BottomLeft, r.TopRight);
-				graphics.RenderSolid(adorner.ColorBorder);
-			}
-			else
-			{
-				Rectangle r = iconRectangle;
-				r.Deflate(AbstractTile.iconMargins);
+				//?graphics.AddRectangle (r);
+				//?graphics.RenderSolid (adorner.ColorBorder);
 
-				graphics.PaintImage(this.icon, iconRectangle);
+				if (!string.IsNullOrEmpty (this.icon))
+				{
+					graphics.PaintText (r.Left, r.Bottom, r.Width, r.Height, this.icon, Font.DefaultFont, r.Height*0.8, Common.Drawing.ContentAlignment.MiddleCenter);
+				}
 			}
 
-			graphics.PaintText(titleRectangle.Left, titleRectangle.Bottom, titleRectangle.Width, titleRectangle.Height, this.title, Font.DefaultFont, titleRectangle.Height*0.8, Common.Drawing.ContentAlignment.MiddleLeft);
-
-#if false
-			graphics.AddLine(iconRectangle.Right, bounds.Bottom, iconRectangle.Right, bounds.Height);
-			graphics.AddLine(titleRectangle.BottomLeft, titleRectangle.BottomRight);
-			graphics.RenderSolid(adorner.ColorBorder);
-#endif
+			this.titleLayout.LayoutSize = titleRectangle.Size;
+			this.titleLayout.Paint (titleRectangle.BottomLeft, graphics, clipRect, adorner.ColorText (WidgetPaintState.Enabled), GlyphPaintStyle.Normal);
 		}
 
 
-		private Rectangle IconRectangle
+		private void UpdateGeometry()
+		{
+			if (this.iconButton == null)
+			{
+				return;
+			}
+
+			Rectangle iconRectangle  = this.IconRectangle;
+			iconRectangle.Deflate (AbstractTile.iconMargins-0.5);
+
+			this.iconButton.SetManualBounds (iconRectangle);
+		}
+
+
+		protected Rectangle IconRectangle
 		{
 			get
 			{
-				Rectangle bounds = this.Client.Bounds;
+				Rectangle bounds = this.ContentBounds;
 				double size = AbstractTile.iconSize+AbstractTile.iconMargins*2;
-				return new Rectangle(bounds.Left, bounds.Top-size, size, size);
+				return new Rectangle (bounds.Left, bounds.Top-size, size, size);
 			}
 		}
 
-		private Rectangle TitleRectangle
+		protected Rectangle TitleRectangle
 		{
 			get
 			{
-				Rectangle bounds = this.Client.Bounds;
+				Rectangle bounds = this.ContentBounds;
 				Rectangle iconRectangle = this.IconRectangle;
-				return new Rectangle(iconRectangle.Right, bounds.Top-AbstractTile.titleHeight, bounds.Width-iconRectangle.Right, AbstractTile.titleHeight);
+				return new Rectangle (iconRectangle.Right, bounds.Top-AbstractTile.titleHeight, bounds.Width-iconRectangle.Right, AbstractTile.titleHeight);
 			}
 		}
 
-		private Rectangle MainRectangle
+		protected Rectangle MainRectangle
 		{
 			get
 			{
-				Rectangle bounds = this.Client.Bounds;
+				Rectangle bounds = this.ContentBounds;
 				Rectangle titleRectangle = this.TitleRectangle;
-				return new Rectangle(titleRectangle.Left, bounds.Bottom, titleRectangle.Width, bounds.Height-AbstractTile.titleHeight);
+				return new Rectangle (titleRectangle.Left, bounds.Bottom, titleRectangle.Width, bounds.Height-AbstractTile.titleHeight);
 			}
 		}
 
@@ -142,7 +183,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static readonly double iconMargins = 5;
 		private static readonly double titleHeight = 20;
 
-		private Image icon;
-		private string title;
+		private string icon;
+		private IconButton iconButton;
+		private TextLayout titleLayout;
 	}
 }
