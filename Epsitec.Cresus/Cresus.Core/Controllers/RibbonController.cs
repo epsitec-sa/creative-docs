@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateRibbonHomePage ();
 		}
 
+		
 		private void CreateRibbonBook(Widget container)
 		{
 			this.ribbonBook = new RibbonBook ()
@@ -65,7 +66,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 		}
 
-
 		private void CreateRibbonDatabaseSection()
 		{
 			var section = new RibbonSection (this.ribbonPageHome)
@@ -75,11 +75,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
 		}
 
 		private void CreateRibbonStateSection()
@@ -92,14 +92,15 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.History.NavigatePrev));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.History.NavigateNext));
 
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
+			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
 		}
 
-		private IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, double dx = 31.0)
+		
+		private static IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, double dx = 31.0)
 		{
 			if (handler != null)
 			{

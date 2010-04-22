@@ -81,8 +81,8 @@ namespace Epsitec.Cresus.Core
 		{
 			this.CreateUIMainWindow ();
 			this.CreateUIRootBoxes ();
-
 			this.CreateUIControllers ();
+			
 			this.RestoreApplicationState ();
 
 			this.IsReady = true;
