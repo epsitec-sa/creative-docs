@@ -18,15 +18,6 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// </summary>
 	public class TileContainer : FrameBox
 	{
-		public enum ChildrenLocationEnum
-		{
-			Left,
-			Right,
-			Top,
-			Bottom,
-		}
-
-
 		public TileContainer()
 		{
 		}
@@ -55,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Détermine le côté sur lequel s'affiche la flèche.
 		/// </summary>
 		/// <value>The children location.</value>
-		public ChildrenLocationEnum ChildrenLocation
+		public Direction ChildrenLocation
 		{
 			get
 			{
@@ -146,7 +137,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				{
 					switch (this.childrenLocation)
 					{
-						case ChildrenLocationEnum.Left:
+						case Direction.Left:
 							path.MoveTo (p2);
 							path.LineTo (p3);
 							path.LineTo (box.BottomLeft);
@@ -157,7 +148,7 @@ namespace Epsitec.Cresus.Core.Widgets
 							path.Close ();
 							break;
 
-						case ChildrenLocationEnum.Right:
+						case Direction.Right:
 							path.MoveTo (p2);
 							path.LineTo (p3);
 							path.LineTo (box.TopRight);
@@ -168,7 +159,7 @@ namespace Epsitec.Cresus.Core.Widgets
 							path.Close ();
 							break;
 
-						case ChildrenLocationEnum.Top:
+						case Direction.Up:
 							path.MoveTo (p2);
 							path.LineTo (p3);
 							path.LineTo (box.TopLeft);
@@ -179,7 +170,7 @@ namespace Epsitec.Cresus.Core.Widgets
 							path.Close ();
 							break;
 
-						case ChildrenLocationEnum.Bottom:
+						case Direction.Down:
 							path.MoveTo (p2);
 							path.LineTo (p3);
 							path.LineTo (box.BottomRight);
@@ -218,7 +209,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			switch (this.childrenLocation)
 			{
 				default:
-				case ChildrenLocationEnum.Left:
+				case Direction.Left:
 					box = new Rectangle (bounds.Left+TileContainer.arrowBreadth, bounds.Bottom, bounds.Width-TileContainer.arrowBreadth, bounds.Height);
 					width = System.Math.Min (TileContainer.arrowWidth, bounds.Height);
 					p2 = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
@@ -226,7 +217,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					p3 = new Point (box.Left, p2.Y-width);
 					break;
 
-				case ChildrenLocationEnum.Right:
+				case Direction.Right:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-TileContainer.arrowBreadth, bounds.Height);
 					width = System.Math.Min (TileContainer.arrowWidth, bounds.Height);
 					p2 = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
@@ -234,7 +225,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					p3 = new Point (box.Right, p2.Y+width);
 					break;
 
-				case ChildrenLocationEnum.Top:
+				case Direction.Up:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-TileContainer.arrowBreadth);
 					width = System.Math.Min (TileContainer.arrowWidth, bounds.Width);
 					p2 = Point.Scale (bounds.TopLeft, bounds.TopRight, 0.5);
@@ -242,7 +233,7 @@ namespace Epsitec.Cresus.Core.Widgets
 					p3 = new Point (p2.X-width, box.Top);
 					break;
 
-				case ChildrenLocationEnum.Bottom:
+				case Direction.Down:
 					box = new Rectangle (bounds.Left, bounds.Bottom+TileContainer.arrowBreadth, bounds.Width, bounds.Height-TileContainer.arrowBreadth);
 					width = System.Math.Min (TileContainer.arrowWidth, bounds.Width);
 					p2 = Point.Scale (bounds.BottomLeft, bounds.BottomRight, 0.5);
@@ -256,6 +247,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static readonly double arrowWidth = 24;
 		private static readonly double arrowBreadth = 8;
 
-		private ChildrenLocationEnum childrenLocation;
+		private Direction childrenLocation;
 	}
 }
