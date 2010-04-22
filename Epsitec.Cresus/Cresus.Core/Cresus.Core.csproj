@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="CoreCommands.Obsolete.cs" />
     <Compile Include="CoreData.Obsolete.cs" />
     <Compile Include="CoreApplication.Obsolete.cs" />
     <Compile Include="Misc.cs" />
