@@ -90,9 +90,6 @@
     </Compile>
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
-    <Compile Include="CoreCommands.Obsolete.cs" />
-    <Compile Include="CoreData.Obsolete.cs" />
-    <Compile Include="CoreApplication.Obsolete.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
@@ -101,30 +98,17 @@
     <Compile Include="PersistenceManagerBinding.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />
-    <Compile Include="StateSerializationContext.cs" />
     <Compile Include="CoreApplication.Paths.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Res.cs" />
     <Compile Include="PersistenceManager.cs" />
-    <Compile Include="HistorySortMode.cs" />
     <Compile Include="CoreCommands.cs" />
-    <Compile Include="StateAttribute.cs" />
-    <Compile Include="StateStackChange.cs" />
-    <Compile Include="StateStackChangedEventArgs.cs" />
     <Compile Include="CoreData.cs" />
     <Compile Include="CoreProgram.cs" />
     <Compile Include="CoreApplication.cs" />
-    <Compile Include="PanelInteractionMode.cs" />
-    <Compile Include="StateManager.cs" />
-    <Compile Include="States\StateDeck.cs" />
-    <Compile Include="States\CoreState.cs" />
-    <Compile Include="States\FormState.cs" />
-    <Compile Include="States\StateFactory.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
     <Compile Include="Widgets\SimpleTile.cs" />
-    <Compile Include="Widgets\StateDeckWidget.cs" />
-    <Compile Include="FormStateMode.cs" />
     <Compile Include="Widgets\TileContainer.cs" />
   </ItemGroup>
   <ItemGroup>

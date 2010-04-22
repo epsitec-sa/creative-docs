@@ -22,7 +22,6 @@ namespace Epsitec.Cresus.Core
 		public CoreApplication()
 		{
 			this.controllers = new List<Controllers.CoreController> ();
-			this.stateManager = new StateManager (this);
 			this.persistenceManager = new PersistenceManager ();
 
 			this.data = new CoreData ();
@@ -50,14 +49,6 @@ namespace Epsitec.Cresus.Core
 			get
 			{
 				return this.exceptionManager;
-			}
-		}
-
-		public StateManager						StateManager
-		{
-			get
-			{
-				return this.stateManager;
 			}
 		}
 
@@ -90,8 +81,6 @@ namespace Epsitec.Cresus.Core
 		{
 			this.CreateUIMainWindow ();
 			this.CreateUIRootBoxes ();
-
-			this.defaultBoxId = this.stateManager.RegisterBox (this.contentBox);
 
 			this.CreateUIControllers ();
 			this.RestoreApplicationState ();
@@ -180,7 +169,7 @@ namespace Epsitec.Cresus.Core
 				XDocument doc = XDocument.Load (CoreApplication.Paths.SettingsPath);
 				XElement store = doc.Element ("store");
 
-				this.stateManager.RestoreStates (store.Element ("stateManager"));
+//-				this.stateManager.RestoreStates (store.Element ("stateManager"));
 				UI.RestoreWindowPositions (store.Element ("windowPositions"));
 				this.persistenceManager.Restore (store.Element ("uiSettings"));
 			}
@@ -188,10 +177,7 @@ namespace Epsitec.Cresus.Core
 			this.persistenceManager.DiscardChanges ();
 			this.persistenceManager.SettingsChanged += (sender) => this.AsyncSaveApplicationState ();
 
-			this.stateManager.StackChanged += (sender, e) => this.UpdateCommandsAfterStateChange ();
-			this.stateManager.StackChanged += (sender, e) => this.AsyncSaveApplicationState ();
-
-			this.UpdateCommandsAfterStateChange ();
+//-			this.UpdateCommandsAfterStateChange ();
 		}
 
 		private void SaveApplicationState()
@@ -206,7 +192,7 @@ namespace Epsitec.Cresus.Core
 					new XDeclaration ("1.0", "utf-8", "yes"),
 					new XComment ("Saved on " + timeStamp),
 					new XElement ("store",
-						this.StateManager.SaveStates ("stateManager"),
+//-						this.StateManager.SaveStates ("stateManager"),
 						UI.SaveWindowPositions ("windowPositions"),
 						this.persistenceManager.Save ("uiSettings")));
 
@@ -216,7 +202,6 @@ namespace Epsitec.Cresus.Core
 		}
 		
 
-		StateManager							stateManager;
 		PersistenceManager						persistenceManager;
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
@@ -225,7 +210,5 @@ namespace Epsitec.Cresus.Core
 		
 		FrameBox								ribbonBox;
 		FrameBox								contentBox;
-
-		int										defaultBoxId;
 	}
 }

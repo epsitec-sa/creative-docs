@@ -75,26 +75,9 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev, handler: (s, e) => CoreProgram.Application.StateManager.NavigateHistoryPrev ()));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext, handler: (s, e) => CoreProgram.Application.StateManager.NavigateHistoryNext ()));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev, handler: (s, e) => {}/*CoreProgram.Application.StateManager.NavigateHistoryPrev ()*/));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext, handler: (s, e) => {}/*CoreProgram.Application.StateManager.NavigateHistoryNext ()*/));
 
-			section.Children.Add (
-				new Widgets.StateDeckWidget ()
-				{
-					Dock = DockStyle.Stacked,
-					StateManager = CoreProgram.Application.StateManager,
-					StateDeck = States.StateDeck.History,
-					PreferredWidth = 48
-				});
-
-			section.Children.Add (
-				new Widgets.StateDeckWidget ()
-				{
-					Dock = DockStyle.StackFill,
-					StateManager = CoreProgram.Application.StateManager,
-					StateDeck = States.StateDeck.StandAlone,
-					PreferredWidth = 48
-				});
 
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
