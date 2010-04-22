@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -99,6 +100,14 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
+			var entities = this.data.GetSamplePersons ();
+
+			foreach (var entity in entities)
+			{
+				System.Diagnostics.Debug.WriteLine (entity.Dump ());
+				System.Diagnostics.Debug.WriteLine ("---------------------------------------------------");
+			}
+
 			//?this.data.SetupDatabase ();
 		}
 

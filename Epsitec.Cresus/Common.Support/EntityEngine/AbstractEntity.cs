@@ -301,7 +301,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			{
 				if (includeLabels)
 				{
-					buffer.AppendFormat ("{0}--> ...", indent);
+					buffer.AppendFormat ("{0}--> ...\n", indent);
 				}
 			}
 		}

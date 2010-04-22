@@ -35,21 +35,20 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			//	Crée les panneaux gauche et droite séparés par un splitter.
 			this.leftPanel = new FrameBox (this.frame);
+			this.leftPanel.Name = "LeftPanel";
 			this.leftPanel.Dock = DockStyle.Left;
 			this.leftPanel.Padding = new Margins (5);
 			this.leftPanel.PreferredWidth = 150;
 
 			this.rightPanel = new FrameBox (this.frame);
+			this.rightPanel.Name = "RightPanel";
 			this.rightPanel.Dock = DockStyle.Fill;
 			this.rightPanel.Padding = new Margins (5, 0, 5, 5);
 
 			this.splitter = new VSplitter (this.frame);
 			this.splitter.Dock = DockStyle.Left;
 
-			//	Crée la liste de gauche.
-			StaticText label = new StaticText (this.leftPanel);
-			label.Anchor = AnchorStyles.All;
-			label.Text = "Liste de gauche";
+			this.browserController.CreateUI (this.leftPanel);
 
 #if false
 			//	Crée les panneaux dans la partie droite.
