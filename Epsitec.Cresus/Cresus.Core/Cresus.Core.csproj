@@ -88,12 +88,13 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="MainWindow.cs" />
+    <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
     <Compile Include="Data\PersonRepository.cs" />
-    <Compile Include="Handlers\RibbonHandler.cs" />
+    <Compile Include="Controllers\RibbonController.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />

@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
+			this.controllers = new List<Controllers.AbstractController> ();
 			this.stateManager = new StateManager (this);
 			this.persistenceManager = new PersistenceManager ();
 
@@ -84,7 +85,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		
+
 		internal void CreateUI()
 		{
 			this.CreateUIMainWindow ();
@@ -92,10 +93,15 @@ namespace Epsitec.Cresus.Core
 
 			this.defaultBoxId = this.stateManager.RegisterBox (this.contentBox);
 
-			var ribbonHandler = new Handlers.RibbonHandler ();
-			ribbonHandler.CreateUI (this.ribbonBox);
+			var ribbonController  = new Controllers.RibbonController ();
+			var mainViewController = new Controllers.MainViewController ();
 
-			this.CreateInterface ();
+			this.controllers.Add (ribbonController);
+			this.controllers.Add (mainViewController);
+
+			ribbonController.CreateUI (this.ribbonBox);
+			mainViewController.CreateUI (this.contentBox);
+
 			this.RestoreApplicationState ();
 
 			this.IsReady = true;
@@ -384,12 +390,6 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		private void CreateInterface()
-		{
-			MainWindow mainWindow = new MainWindow ();
-			mainWindow.CreateInterface (this.contentBox);
-		}
-
 		private void RestoreApplicationState()
 		{
 			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
@@ -473,6 +473,7 @@ namespace Epsitec.Cresus.Core
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
 		CoreCommands							commands;
+		readonly List<Controllers.AbstractController> controllers;
 		
 		private FrameBox						ribbonBox;
 		private FrameBox						contentBox;

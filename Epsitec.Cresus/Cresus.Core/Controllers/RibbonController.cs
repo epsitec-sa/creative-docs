@@ -11,15 +11,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Epsitec.Cresus.Core.Handlers
+namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonHandler
+	class RibbonController : AbstractController
 	{
-		public void CreateUI(Widget parent)
+		public RibbonController()
+		{
+		}
+
+		public override void CreateUI(Widget container)
 		{
 			this.ribbonBook = new RibbonBook ()
 			{
-				Parent = parent,
+				Parent = container,
 				Dock = DockStyle.Fill,
 				Name = "Ribbon"
 			};
