@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonController : AbstractController
+	class RibbonController : CoreController
 	{
 		public RibbonController()
 		{
