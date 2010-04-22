@@ -15,8 +15,11 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public SimpleTile()
 		{
-			this.staticTextContent = new StaticText (this.mainPanel);
-			this.staticTextContent.Dock = DockStyle.Fill;
+			this.staticTextContent = new StaticText
+			{
+				Parent = this.mainPanel,
+				Dock = DockStyle.Fill,
+			};
 		}
 
 		public SimpleTile(Widget embedder)
