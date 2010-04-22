@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.rightPanel = new FrameBox (this);
 			this.rightPanel.Margins = new Margins (0, AbstractTile.ArrowBreadth, 0, 0);
+			this.rightPanel.MinWidth = AbstractTile.ArrowBreadth;
 			this.rightPanel.Dock = DockStyle.Fill;
 
 			this.staticTextIconUri = new StaticText (this.leftPanel);
@@ -31,9 +32,11 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.staticTextTitle = new StaticText (this.rightPanel);
 			this.staticTextTitle.PreferredHeight = AbstractTile.titleHeight;
+			this.staticTextTitle.MinWidth = 0;
 			this.staticTextTitle.Dock = DockStyle.Top;
 
 			this.mainPanel = new FrameBox (this.rightPanel);
+			this.mainPanel.MinWidth = 0;
 			this.mainPanel.Dock = DockStyle.Fill;
 		}
 
@@ -64,6 +67,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
+		/// Si on donne un sul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
 		public string IconUri
@@ -76,9 +80,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				this.iconUri = value;
 
-				if (string.IsNullOrEmpty (this.iconUri) || this.iconUri.Length == 1)
+				if (string.IsNullOrEmpty (this.iconUri) || this.iconUri.Length == 1)  // un seul caractère ?
 				{
-					this.staticTextIconUri.Text = string.Concat ("<font size=\"300%\">", this.iconUri, "</font>");
+					this.staticTextIconUri.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
 				}
 				else
 				{

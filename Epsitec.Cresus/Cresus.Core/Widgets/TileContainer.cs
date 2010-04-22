@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		/// <summary>
-		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de ChildrenLocation.
+		/// Marge supplémentaire nécessaire pour la flèche. Le côté dépend de ArrowLocation.
 		/// </summary>
-		/// <value>The arrow deep.</value>
+		/// <value>Epaisseur de la flèche.</value>
 		public static double ArrowBreadth
 		{
 			get
@@ -45,16 +45,16 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <summary>
 		/// Détermine le côté sur lequel s'affiche la flèche.
 		/// </summary>
-		/// <value>The children location.</value>
-		public Direction ChildrenLocation
+		/// <value>Position de la flèche.</value>
+		public Direction ArrowLocation
 		{
 			get
 			{
-				return this.childrenLocation;
+				return this.arrowLocation;
 			}
 			set
 			{
-				this.childrenLocation = value;
+				this.arrowLocation = value;
 			}
 		}
 
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				Rectangle box;
 				Point p1, p2, p3;
-				this.ArrowGeometry (out box, out p1, out p2, out p3);
+				this.ComputeArrowGeometry (out box, out p1, out p2, out p3);
 
 				return box;
 			}
@@ -131,11 +131,11 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				Rectangle box;
 				Point p1, p2, p3;
-				this.ArrowGeometry (out box, out p1, out p2, out p3);
+				this.ComputeArrowGeometry (out box, out p1, out p2, out p3);
 
 				if (this.IsSelected)
 				{
-					switch (this.childrenLocation)
+					switch (this.arrowLocation)
 					{
 						case Direction.Left:
 							path.MoveTo (p2);
@@ -199,14 +199,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <param name="p2">Pointe de la flèche.</param>
 		/// <param name="p3">Arrivée de la flèche.</param>
 		/// <value>The arrow rectangle.</value>
-		private void ArrowGeometry(out Rectangle box, out Point p1, out Point p2, out Point p3)
+		private void ComputeArrowGeometry(out Rectangle box, out Point p1, out Point p2, out Point p3)
 		{
 			Rectangle bounds = this.Client.Bounds;
 			bounds.Deflate (0.5);
 
 			double width;
 
-			switch (this.childrenLocation)
+			switch (this.arrowLocation)
 			{
 				default:
 				case Direction.Left:
@@ -247,6 +247,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static readonly double arrowWidth = 24;
 		private static readonly double arrowBreadth = 8;
 
-		private Direction childrenLocation;
+		private Direction arrowLocation;
 	}
 }
