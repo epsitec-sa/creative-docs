@@ -15,27 +15,42 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public AbstractTile()
 		{
-			this.leftPanel = new FrameBox (this);
-			this.leftPanel.PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2;
-			this.leftPanel.Dock = DockStyle.Left;
+			this.leftPanel = new FrameBox
+			{
+				Parent = this,
+				PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2,
+				Dock = DockStyle.Left,
+			};
 
-			this.rightPanel = new FrameBox (this);
-			this.rightPanel.Margins = new Margins (0, AbstractTile.ArrowBreadth, 0, 0);
-			this.rightPanel.Dock = DockStyle.Fill;
+			this.rightPanel = new FrameBox
+			{
+				Parent = this,
+				Margins = new Margins (0, AbstractTile.ArrowBreadth, 0, 0),
+				Dock = DockStyle.Fill,
+			};
 
-			this.staticTextIcon = new StaticText (this.leftPanel);
-			this.staticTextIcon.Margins = new Margins (AbstractTile.iconMargins);
-			this.staticTextIcon.PreferredSize = new Size (AbstractTile.iconSize, AbstractTile.iconSize);
-			this.staticTextIcon.Dock = DockStyle.Top;
-			this.staticTextIcon.ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter;
+			this.staticTextIcon = new StaticText
+			{
+				Parent = this.leftPanel,
+				Margins = new Margins (AbstractTile.iconMargins),
+				PreferredSize = new Size (AbstractTile.iconSize, AbstractTile.iconSize),
+				Dock = DockStyle.Top,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
+			};
 
-			this.staticTextTitle = new StaticText (this.rightPanel);
-			this.staticTextTitle.PreferredHeight = AbstractTile.titleHeight;
-			this.staticTextTitle.PreferredWidth = 0;
-			this.staticTextTitle.Dock = DockStyle.Top;
+			this.staticTextTitle = new StaticText
+			{
+				Parent = this.rightPanel,
+				PreferredHeight = AbstractTile.titleHeight,
+				PreferredWidth = 0,
+				Dock = DockStyle.Top,
+			};
 
-			this.mainPanel = new FrameBox (this.rightPanel);
-			this.mainPanel.Dock = DockStyle.Fill;
+			this.mainPanel = new FrameBox
+			{
+				Parent = this.rightPanel,
+				Dock = DockStyle.Fill,
+			};
 		}
 
 		public AbstractTile(Widget embedder)
@@ -84,7 +99,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					this.staticTextIcon.Text = Misc.GetResourceIconImage (value);
+					this.staticTextIcon.Text = Misc.GetResourceIconImageTag (value);
 				}
 			}
 		}

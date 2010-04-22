@@ -14,22 +14,22 @@ namespace Epsitec.Cresus.Core
 	public static class Misc
 	{
 		/// <summary>
-		/// Retourne le texte permettant de mettre une icône sous forme d'image dans un texte riche.
+		/// Retourne le tag permettant de mettre une icône sous forme d'image dans un texte html.
 		/// </summary>
 		/// <param name="icon">Nom brut de l'icône, sans extension.</param>
 		/// <returns></returns>
-		public static string GetResourceIconImage(string icon)
+		public static string GetResourceIconImageTag(string icon)
 		{
 			return string.Format (@"<img src=""{0}""/>", Misc.GetResourceIconUri (icon));
 		}
 
 		/// <summary>
-		/// Retourne le texte permettant de mettre une icône sous forme d'image dans un texte riche.
+		/// Retourne le tag permettant de mettre une icône sous forme d'image dans un texte html.
 		/// </summary>
 		/// <param name="icon">Nom brut de l'icône, sans extension.</param>
 		/// <param name="verticalOffset">Offset vertical.</param>
 		/// <returns></returns>
-		 public static string Image(string icon, double verticalOffset)
+		public static string GetResourceIconImageTag(string icon, double verticalOffset)
 		{
 			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", Misc.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
 		}

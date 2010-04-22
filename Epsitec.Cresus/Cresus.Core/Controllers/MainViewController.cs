@@ -29,24 +29,36 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			this.frame = new FrameBox (container);
-			this.frame.Dock = DockStyle.Fill;
-			this.frame.DrawFullFrame = true;
+			this.frame = new FrameBox
+			{
+				Parent = container,
+				Dock = DockStyle.Fill,
+				DrawFullFrame = true,
+			};
 
 			//	Crée les panneaux gauche et droite séparés par un splitter.
-			this.leftPanel = new FrameBox (this.frame);
-			this.leftPanel.Name = "LeftPanel";
-			this.leftPanel.Dock = DockStyle.Left;
-			this.leftPanel.Padding = new Margins (5);
-			this.leftPanel.PreferredWidth = 150;
+			this.leftPanel = new FrameBox
+			{
+				Parent = this.frame,
+				Name = "LeftPanel",
+				Dock = DockStyle.Left,
+				Padding = new Margins (5),
+				PreferredWidth = 150,
+			};
 
-			this.rightPanel = new FrameBox (this.frame);
-			this.rightPanel.Name = "RightPanel";
-			this.rightPanel.Dock = DockStyle.Fill;
-			this.rightPanel.Padding = new Margins (5, 0, 5, 5);
+			this.rightPanel = new FrameBox
+			{
+				Parent = this.frame,
+				Name = "RightPanel",
+				Dock = DockStyle.Fill,
+				Padding = new Margins (5, 0, 5, 5),
+			};
 
-			this.splitter = new VSplitter (this.frame);
-			this.splitter.Dock = DockStyle.Left;
+			this.splitter = new VSplitter
+			{
+				Parent = this.frame,
+				Dock = DockStyle.Left,
+			};
 
 			this.browserController.CreateUI (this.leftPanel);
 
