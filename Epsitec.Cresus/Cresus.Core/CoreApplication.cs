@@ -93,48 +93,12 @@ namespace Epsitec.Cresus.Core
 
 			this.defaultBoxId = this.stateManager.RegisterBox (this.contentBox);
 
-			var ribbonController   = new Controllers.RibbonController ();
-			var mainViewController = new Controllers.MainViewController ();
-
-			this.controllers.Add (ribbonController);
-			this.controllers.Add (mainViewController);
-
-			ribbonController.CreateUI (this.ribbonBox);
-			mainViewController.CreateUI (this.contentBox);
-
+			this.CreateUIControllers ();
 			this.RestoreApplicationState ();
 
 			this.IsReady = true;
 		}
 
-		private void CreateUIMainWindow()
-		{
-			Window window = new Window
-			{
-				Text = this.ShortWindowTitle,
-				ClientSize = new Epsitec.Common.Drawing.Size (600, 400)
-			};
-
-			this.Window = window;
-		}
-
-		private void CreateUIRootBoxes()
-		{
-			this.ribbonBox = new FrameBox ()
-			{
-				Parent = this.Window.Root,
-				Name = "RibbonBox",
-				Dock = DockStyle.Top,
-			};
-
-			this.contentBox = new FrameBox ()
-			{
-				Parent = this.Window.Root,
-				Name = "ContentBox",
-				Dock = DockStyle.Fill,
-			};
-		}
-		
 		internal void AsyncSaveApplicationState()
 		{
 			Application.QueueAsyncCallback (this.SaveApplicationState);
@@ -169,6 +133,46 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		private void CreateUIMainWindow()
+		{
+			Window window = new Window
+			{
+				Text = this.ShortWindowTitle,
+				ClientSize = new Epsitec.Common.Drawing.Size (600, 400)
+			};
+
+			this.Window = window;
+		}
+
+		private void CreateUIRootBoxes()
+		{
+			this.ribbonBox = new FrameBox ()
+			{
+				Parent = this.Window.Root,
+				Name = "RibbonBox",
+				Dock = DockStyle.Top,
+			};
+
+			this.contentBox = new FrameBox ()
+			{
+				Parent = this.Window.Root,
+				Name = "ContentBox",
+				Dock = DockStyle.Fill,
+			};
+		}
+
+		private void CreateUIControllers()
+		{
+			var ribbonController   = new Controllers.RibbonController ();
+			var mainViewController = new Controllers.MainViewController ();
+
+			this.controllers.Add (ribbonController);
+			this.controllers.Add (mainViewController);
+
+			ribbonController.CreateUI (this.ribbonBox);
+			mainViewController.CreateUI (this.contentBox);
+		}
+
 		private void RestoreApplicationState()
 		{
 			if (System.IO.File.Exists (CoreApplication.Paths.SettingsPath))
@@ -188,38 +192,6 @@ namespace Epsitec.Cresus.Core
 			this.stateManager.StackChanged += (sender, e) => this.AsyncSaveApplicationState ();
 
 			this.UpdateCommandsAfterStateChange ();
-		}
-
-		private void UpdateCommandsAfterStateChange()
-		{
-			States.FormState formState = this.StateManager.ActiveState as States.FormState;
-
-			if (formState != null)
-			{
-				switch (formState.Mode)
-				{
-					case FormStateMode.Creation:
-					case FormStateMode.Edition:
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = false;
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;	//	TODO: use validity check
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = true;
-
-						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = false;
-						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = true;
-						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = true;
-						break;
-
-					case FormStateMode.Search:
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = true;
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = false;
-						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = false;
-
-						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = true;
-						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = false;
-						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = false;
-						break;
-				}
-			}
 		}
 
 		private void SaveApplicationState()
@@ -242,9 +214,6 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("Save done.");
 			}
 		}
-
-
-		
 		
 
 		StateManager							stateManager;
@@ -254,9 +223,9 @@ namespace Epsitec.Cresus.Core
 		CoreCommands							commands;
 		readonly List<Controllers.AbstractController> controllers;
 		
-		private FrameBox						ribbonBox;
-		private FrameBox						contentBox;
+		FrameBox								ribbonBox;
+		FrameBox								contentBox;
 
-		private int								defaultBoxId;
+		int										defaultBoxId;
 	}
 }

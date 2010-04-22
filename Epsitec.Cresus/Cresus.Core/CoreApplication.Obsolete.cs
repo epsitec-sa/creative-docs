@@ -242,5 +242,37 @@ namespace Epsitec.Cresus.Core
 
 			return Druid.Empty;
 		}
+		
+		private void UpdateCommandsAfterStateChange()
+		{
+			States.FormState formState = this.StateManager.ActiveState as States.FormState;
+
+			if (formState != null)
+			{
+				switch (formState.Mode)
+				{
+					case FormStateMode.Creation:
+					case FormStateMode.Edition:
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = false;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = true;	//	TODO: use validity check
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = true;
+
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = false;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = true;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = true;
+						break;
+
+					case FormStateMode.Search:
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Edit).Enable   = true;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Accept).Enable = false;
+						this.CommandContext.GetCommandState (Mai2008.Res.Commands.Edition.Cancel).Enable = false;
+
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Edit).Visibility   = true;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Accept).Visibility = false;
+						//this.ribbonBook.FindCommandWidget (Mai2008.Res.Commands.Edition.Cancel).Visibility = false;
+						break;
+				}
+			}
+		}
 	}
 }
