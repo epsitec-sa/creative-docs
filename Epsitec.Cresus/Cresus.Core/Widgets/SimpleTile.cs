@@ -15,9 +15,8 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public SimpleTile()
 		{
-			this.contentLayout = new TextLayout ();
-			this.contentLayout.Alignment = Common.Drawing.ContentAlignment.TopLeft;
-			this.contentLayout.BreakMode = Common.Drawing.TextBreakMode.Ellipsis;
+			this.staticTextContent = new StaticText (this.mainPanel);
+			this.staticTextContent.Dock = DockStyle.Fill;
 		}
 
 		public SimpleTile(Widget embedder)
@@ -45,33 +44,15 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return this.contentLayout.Text;
+				return this.staticTextContent.Text;
 			}
 			set
 			{
-				if (this.contentLayout.Text != value)
-				{
-					this.contentLayout.Text = value;
-					this.Invalidate ();
-				}
+				this.staticTextContent.Text = value;
 			}
 		}
 
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Rectangle bounds = this.Client.Bounds;
-
-			base.PaintBackgroundImplementation (graphics, clipRect);
-
-			Rectangle mainRectangle = this.MainRectangle;
-
-			this.contentLayout.LayoutSize = mainRectangle.Size;
-			this.contentLayout.Paint (mainRectangle.BottomLeft, graphics, clipRect, adorner.ColorText (WidgetPaintState.Enabled), GlyphPaintStyle.Normal);
-		}
-
-
-		private TextLayout contentLayout;
+		private StaticText staticTextContent;
 	}
 }
