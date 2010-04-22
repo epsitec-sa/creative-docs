@@ -31,10 +31,8 @@ namespace Epsitec.Cresus.Core
 
 		public bool IsReady
 		{
-			get
-			{
-				return this.ready;
-			}
+			get;
+			private set;
 		}
 
 		public void SetupDatabase()
@@ -63,7 +61,7 @@ namespace Epsitec.Cresus.Core
 			System.Diagnostics.Debug.WriteLine ("Database ready");
 
 			this.SetupDataBrowser ();
-			this.ready = true;
+			this.IsReady = true;
 		}
 
 		private void SetupDataContext()
@@ -149,6 +147,5 @@ namespace Epsitec.Cresus.Core
 		private readonly DbInfrastructure infrastructure;
 		private DataContext dataContext;
 		private DataBrowser dataBrowser;
-		private bool ready;
 	}
 }
