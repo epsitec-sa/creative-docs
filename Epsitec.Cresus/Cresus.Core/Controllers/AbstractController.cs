@@ -8,8 +8,22 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public abstract class AbstractController
+	public abstract class AbstractController : System.IDisposable
 	{
 		public abstract void CreateUI(Widget container);
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
+
+		protected virtual void Dispose(bool disposing)
+		{
+		}
 	}
 }
