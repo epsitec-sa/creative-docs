@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				tile.Title = children.Title;
 				tile.Content = children.Content;
 				tile.SetSelected (children.Selected);
-				tile.ChildrenLocation = Direction.Right;
+				tile.ArrowLocation = Direction.Right;
 				tile.PreferredHeight = tile.ContentHeight;
 				tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
 			}
