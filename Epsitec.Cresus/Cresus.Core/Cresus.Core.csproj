@@ -93,6 +93,7 @@
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Controllers\VerticalStackTilesControler.cs" />
     <Compile Include="CoreData.Hack.cs" />
+    <Compile Include="Data\GenericRepository.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />

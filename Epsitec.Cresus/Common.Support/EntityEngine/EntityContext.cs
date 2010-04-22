@@ -295,7 +295,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
+		public IEnumerable<string> GetEntityFieldIds(AbstractEntity entity)
 		{
 			if (entity == null)
 			{
@@ -369,7 +369,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 
 			return type;
-		}
+		} 
 
 		internal StructuredTypeField GetStructuredTypeField(AbstractEntity entity, string fieldId)
 		{

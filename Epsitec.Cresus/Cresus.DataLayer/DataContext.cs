@@ -10,6 +10,7 @@ using Epsitec.Cresus.DataLayer;
 using Epsitec.Cresus.DataLayer.Helpers;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer
 {
@@ -125,6 +126,41 @@ namespace Epsitec.Cresus.DataLayer
 			Druid entityId = entity.GetEntityStructuredTypeId ();
 
 			return this.ResolveEntity (rowKey, entityId) as T;
+		}
+
+		public EntityType ResolveEntity<EntityType>(DataBrowserRow dataBrowserRow) where EntityType : AbstractEntity, new ()
+		{
+			// TODO Argument check.
+			//AbstractEntity entity;
+
+			//Druid askedEntityId = new EntityType ().GetEntityStructuredTypeId ();
+			//Druid baseEntityId = this.entityContext.GetBaseEntityId (askedEntityId);
+			//Druid realEntityId = Druid.FromLong ((long) dataBrowserRow[EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]")]);
+			
+			//entity = this.entityDataCache.FindEntity (dataBrowserRow.Keys[0], askedEntityId, baseEntityId);
+
+			//if (entity == null)
+			//{
+			//    entity = this.entityContext.CreateEmptyEntity (realEntityId);
+
+			//    using (entity.DefineOriginalValues ())
+			//    {
+			//        /*foreach (var fieldId in this.entityContext.GetEntityFieldIds (entity))
+			//        {
+			//            dataQuery.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse (fieldId)));
+			//        }*/
+
+
+
+
+
+
+
+			//    }
+			//}
+
+			//return entity as EntityType;
+			return this.ResolveEntity<EntityType> (dataBrowserRow.Keys[0]);
 		}
 
 		public bool SerializeChanges()
@@ -387,7 +423,7 @@ namespace Epsitec.Cresus.DataLayer
 			long typeValueId = (long) dataRow[Tags.ColumnInstanceType];
 			Druid realEntityId = Druid.FromLong (typeValueId);
 			AbstractEntity entity = this.entityContext.CreateEmptyEntity (realEntityId);
-
+			
 			using (entity.DefineOriginalValues ())
 			{
 				this.DeserializeEntity (entity, realEntityId, rowKey);
