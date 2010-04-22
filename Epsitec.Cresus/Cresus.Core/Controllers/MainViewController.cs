@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Common.Support;
@@ -6,19 +9,19 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainWindow
+	public class MainViewController : AbstractController
 	{
-		public MainWindow()
+		public MainViewController()
 		{
 			this.CreateTileNodes ();
 		}
 
 
-		public void CreateInterface(Widget embedder)
+		public override void CreateUI(Widget container)
 		{
-			this.frame = new FrameBox (embedder);
+			this.frame = new FrameBox (container);
 			this.frame.Dock = DockStyle.Fill;
 			this.frame.DrawFullFrame = true;
 
@@ -120,7 +123,7 @@ namespace Epsitec.Cresus.Core
 				FrameBox frame = new FrameBox (embedder);
 
 				double posx, width;
-				MainWindow.ComputeFrameGeometry (list.Count, i, out posx, out width);
+				MainViewController.ComputeFrameGeometry (list.Count, i, out posx, out width);
 
 				if (i == list.Count-1)
 				{
@@ -140,12 +143,12 @@ namespace Epsitec.Cresus.Core
 
 		private static void ComputeFrameGeometry(int columnsCount, int columnIndex, out double posx, out double width)
 		{
-			width = MainWindow.ComputeFrameWidth (columnsCount, columnIndex);
+			width = MainViewController.ComputeFrameWidth (columnsCount, columnIndex);
 			posx = 0;
 
 			for (int i = 0; i < columnIndex; i++)
 			{
-				posx += MainWindow.ComputeFrameWidth (columnsCount, i) - 5;
+				posx += MainViewController.ComputeFrameWidth (columnsCount, i) - 5;
 			}
 		}
 
@@ -271,7 +274,7 @@ namespace Epsitec.Cresus.Core
 		{
 			if (node.Selected)
 			{
-				MainWindow.DeselectNode (node);
+				MainViewController.DeselectNode (node);
 			}
 			else
 			{
@@ -279,7 +282,7 @@ namespace Epsitec.Cresus.Core
 				{
 					foreach (TileNode brother in node.Parent.TileNodes)
 					{
-						MainWindow.DeselectNode (brother);
+						MainViewController.DeselectNode (brother);
 					}
 				}
 
@@ -296,7 +299,7 @@ namespace Epsitec.Cresus.Core
 
 			foreach (TileNode children in node.TileNodes)
 			{
-				MainWindow.DeselectNode (children);
+				MainViewController.DeselectNode (children);
 			}
 		}
 
@@ -360,7 +363,7 @@ namespace Epsitec.Cresus.Core
 			Widgets.SimpleTile tile = sender as Widgets.SimpleTile;
 			TileNode node = tile.Data as TileNode;
 
-			MainWindow.SelectNode (node);
+			MainViewController.SelectNode (node);
 			this.CreateTiles (this.rightPanel);
 		}
 
