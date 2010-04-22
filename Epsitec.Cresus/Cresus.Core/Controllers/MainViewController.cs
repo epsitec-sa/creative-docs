@@ -8,6 +8,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -114,18 +115,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateTiles (this.rightPanel);
 #endif
 		}
-
-		private void DeselectAll(Widgets.SimpleTile tile)
-		{
-			foreach (Widgets.SimpleTile children in tile.Parent.Children)
-			{
-				if (children != null)
-				{
-					children.SetSelected (false);
-				}
-			}
-		}
-
 
 
 		private void CreateTiles(Widget embedder)
