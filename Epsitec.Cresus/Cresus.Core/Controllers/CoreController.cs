@@ -10,7 +10,22 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class CoreController : System.IDisposable
 	{
+		public CoreController(string name)
+		{
+			this.name = name;
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+
 		public abstract void CreateUI(Widget container);
+
+		public abstract IEnumerable<CoreController> GetSubControllers();
 
 		#region IDisposable Members
 
@@ -25,5 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected virtual void Dispose(bool disposing)
 		{
 		}
+
+		readonly string name;
 	}
 }

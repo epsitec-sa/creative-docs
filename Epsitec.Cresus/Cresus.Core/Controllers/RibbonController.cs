@@ -13,7 +13,13 @@ namespace Epsitec.Cresus.Core.Controllers
 	class RibbonController : CoreController
 	{
 		public RibbonController()
+			: base ("Ribbon")
 		{
+		}
+
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			yield break;
 		}
 
 		public override void CreateUI(Widget container)

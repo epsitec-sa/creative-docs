@@ -7,6 +7,10 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core;
+using Epsitec.Cresus.CoreLibrary;
+using Epsitec.Cresus.Core.Controllers;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -21,11 +25,11 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
-			this.controllers = new List<Controllers.CoreController> ();
+			this.controllers = new List<CoreController> ();
 			this.persistenceManager = new PersistenceManager ();
 
 			this.data = new CoreData ();
-			this.exceptionManager = new CoreLibrary.ExceptionManager ();
+			this.exceptionManager = new ExceptionManager ();
 			this.commands = new CoreCommands (this);
 		}
 
@@ -152,8 +156,8 @@ namespace Epsitec.Cresus.Core
 
 		private void CreateUIControllers()
 		{
-			var ribbonController   = new Controllers.RibbonController ();
-			var mainViewController = new Controllers.MainViewController ();
+			var ribbonController   = new RibbonController ();
+			var mainViewController = new MainViewController ();
 
 			this.controllers.Add (ribbonController);
 			this.controllers.Add (mainViewController);
@@ -204,9 +208,9 @@ namespace Epsitec.Cresus.Core
 
 		PersistenceManager						persistenceManager;
 		CoreData								data;
-		CoreLibrary.ExceptionManager			exceptionManager;
+		ExceptionManager						exceptionManager;
 		CoreCommands							commands;
-		readonly List<Controllers.CoreController> controllers;
+		readonly List<CoreController>			controllers;
 		
 		FrameBox								ribbonBox;
 		FrameBox								contentBox;
