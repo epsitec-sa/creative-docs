@@ -101,6 +101,7 @@ namespace Epsitec.Common.Identity
 		{
 			if (System.IO.File.Exists (path))
 			{
+				System.Diagnostics.Debug.WriteLine ("Loading identities from " + path);
 				string xml = System.IO.File.ReadAllText (path, System.Text.Encoding.UTF8);
 				IdentityRepository load = Epsitec.Common.Types.Serialization.SimpleSerialization.DeserializeFromString (xml) as IdentityRepository;
 				this.MergeWithRepository (load);
