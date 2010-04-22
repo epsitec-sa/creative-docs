@@ -612,11 +612,11 @@ namespace Epsitec.Common.DocumentEditor.Dialogs
 
 				//	Icône.
 				ib = this.quickList[1, row].Children[0] as IconButton;
-				ib.IconName = c == null ? "" : c.Icon;
+				ib.IconUri = c == null ? "" : c.Icon;
 
 				//	Bouton pour le séparateur.
 				ib = this.quickList[2, row].Children[0] as IconButton;
-				ib.IconName = Misc.Icon(sep ? "QuickSeparatorYes" : "QuickSeparatorNo");
+				ib.IconUri = Misc.Icon(sep ? "QuickSeparatorYes" : "QuickSeparatorNo");
 				ib.Enable = (used);
 
 				//	Texte de la commande.

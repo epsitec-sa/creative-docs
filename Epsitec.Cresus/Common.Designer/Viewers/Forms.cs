@@ -762,8 +762,8 @@ namespace Epsitec.Common.Designer.Viewers
 			this.otherButtonTitle.Enable   = !this.designerApplication.IsReadonly;
 			this.otherButtonGlue.Enable    = isGlue;
 
-			this.fieldsButtonRemove.IconName = isDeletable ? Misc.Icon("Delete") : Misc.Icon("FormDeltaHide");
-			this.fieldsButtonBox.IconName    = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
+			this.fieldsButtonRemove.IconUri = isDeletable ? Misc.Icon("Delete") : Misc.Icon("FormDeltaHide");
+			this.fieldsButtonBox.IconUri    = isUnbox ? Misc.Icon("FormUnbox") : Misc.Icon("FormBox");
 		}
 
 		protected bool IsDeletableField(int sel)

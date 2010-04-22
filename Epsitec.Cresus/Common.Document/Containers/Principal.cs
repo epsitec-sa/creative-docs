@@ -85,7 +85,7 @@ namespace Epsitec.Common.Document.Containers
 			if ( button == null )  return;
 
 			SelectorTypeStretch type = this.document.Modifier.ActiveViewer.SelectorTypeStretch;
-			button.IconName = Principal.GetSelectorTypeStretchIcon(type);
+			button.IconUri = Principal.GetSelectorTypeStretchIcon(type);
 		}
 
 		protected void CreateSelectorToolBar()
@@ -237,7 +237,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.textUsual = new IconButton(this.textToolBar);
 			this.textUsual.AutoFocus = false;
-			this.textUsual.IconName = Misc.Icon("TextFilterUsual");
+			this.textUsual.IconUri = Misc.Icon("TextFilterUsual");
 			this.textUsual.Name = "Usual";
 			this.textUsual.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textUsual.Dock = DockStyle.Left;
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.textFrequently = new IconButton(this.textToolBar);
 			this.textFrequently.AutoFocus = false;
-			this.textFrequently.IconName = Misc.Icon("TextFilterFrequently");
+			this.textFrequently.IconUri = Misc.Icon("TextFilterFrequently");
 			this.textFrequently.Name = "Frequently";
 			this.textFrequently.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textFrequently.Dock = DockStyle.Left;
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.textAll = new IconButton(this.textToolBar);
 			this.textAll.AutoFocus = false;
-			this.textAll.IconName = Misc.Icon("TextFilterAll");
+			this.textAll.IconUri = Misc.Icon("TextFilterAll");
 			this.textAll.Name = "All";
 			this.textAll.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textAll.Dock = DockStyle.Left;
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.textParagraph = new IconButton(this.textToolBar);
 			this.textParagraph.AutoFocus = false;
-			this.textParagraph.IconName = Misc.Icon("TextFilterParagraph");
+			this.textParagraph.IconUri = Misc.Icon("TextFilterParagraph");
 			this.textParagraph.Name = "Paragraph";
 			this.textParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textParagraph.Dock = DockStyle.Left;
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.textCharacter = new IconButton(this.textToolBar);
 			this.textCharacter.AutoFocus = false;
-			this.textCharacter.IconName = Misc.Icon("TextFilterCharacter");
+			this.textCharacter.IconUri = Misc.Icon("TextFilterCharacter");
 			this.textCharacter.Name = "Character";
 			this.textCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.textCharacter.Dock = DockStyle.Left;

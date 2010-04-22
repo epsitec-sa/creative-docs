@@ -137,28 +137,28 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.Children.Add(toolbar);
 
 			this.buttonAdd = new IconButton(toolbar);
-			this.buttonAdd.IconName = Misc.Icon("StringAdd");
+			this.buttonAdd.IconUri = Misc.Icon("StringAdd");
 			this.buttonAdd.Dock = DockStyle.Left;
 			this.buttonAdd.AutoFocus = false;
 			this.buttonAdd.Clicked += this.HandleButtonAddClicked;
 			ToolTip.Default.SetToolTip(this.buttonAdd, Res.Strings.StringCollection.Add);
 
 			this.buttonDuplicate = new IconButton(toolbar);
-			this.buttonDuplicate.IconName = Misc.Icon("StringDuplicate");
+			this.buttonDuplicate.IconUri = Misc.Icon("StringDuplicate");
 			this.buttonDuplicate.Dock = DockStyle.Left;
 			this.buttonDuplicate.AutoFocus = false;
 			this.buttonDuplicate.Clicked += this.HandleButtonDuplicateClicked;
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, Res.Strings.StringCollection.Duplicate);
 
 			this.buttonRemove = new IconButton(toolbar);
-			this.buttonRemove.IconName = Misc.Icon("StringRemove");
+			this.buttonRemove.IconUri = Misc.Icon("StringRemove");
 			this.buttonRemove.Dock = DockStyle.Left;
 			this.buttonRemove.AutoFocus = false;
 			this.buttonRemove.Clicked += this.HandleButtonRemoveClicked;
 			ToolTip.Default.SetToolTip(this.buttonRemove, Res.Strings.StringCollection.Remove);
 
 			this.buttonDefault = new IconButton(toolbar);
-			this.buttonDefault.IconName = Misc.Icon("StringDefault");
+			this.buttonDefault.IconUri = Misc.Icon("StringDefault");
 			this.buttonDefault.Dock = DockStyle.Left;
 			this.buttonDefault.AutoFocus = false;
 			this.buttonDefault.Clicked += this.HandleButtonDefaultClicked;
@@ -169,14 +169,14 @@ namespace Epsitec.Common.Designer.MyWidgets
 			sep.Dock = DockStyle.Left;
 
 			this.buttonPrev = new IconButton(toolbar);
-			this.buttonPrev.IconName = Misc.Icon("StringPrev");
+			this.buttonPrev.IconUri = Misc.Icon("StringPrev");
 			this.buttonPrev.Dock = DockStyle.Left;
 			this.buttonPrev.AutoFocus = false;
 			this.buttonPrev.Clicked += this.HandleButtonPrevClicked;
 			ToolTip.Default.SetToolTip(this.buttonPrev, Res.Strings.StringCollection.Prev);
 
 			this.buttonNext = new IconButton(toolbar);
-			this.buttonNext.IconName = Misc.Icon("StringNext");
+			this.buttonNext.IconUri = Misc.Icon("StringNext");
 			this.buttonNext.Dock = DockStyle.Left;
 			this.buttonNext.AutoFocus = false;
 			this.buttonNext.Clicked += this.HandleButtonNextClicked;

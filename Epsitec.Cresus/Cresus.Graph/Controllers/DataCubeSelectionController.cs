@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var closeButton = new IconButton ()
 			{
 				Parent = topFrame,
-				IconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon",
+				IconUri = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon",
 				PreferredWidth = 19,
 				PreferredHeight = 19,
 				Margins = new Margins (0, 4, 0, 0),

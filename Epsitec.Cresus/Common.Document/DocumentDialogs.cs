@@ -1214,13 +1214,13 @@ namespace Epsitec.Common.Document
 			if ( state )
 			{
 				ib.ActiveState = ActiveState.Yes;
-				ib.IconName = Misc.Icon("Linked");
+				ib.IconUri = Misc.Icon("Linked");
 				sep.Enable = true;
 			}
 			else
 			{
 				ib.ActiveState = ActiveState.No;
-				ib.IconName = Misc.Icon("Unlinked");
+				ib.IconUri = Misc.Icon("Unlinked");
 				sep.Enable = false;
 			}
 		}

@@ -70,9 +70,9 @@ namespace Epsitec.Common.Dialogs
 			fileIcon = new ImagePlaceholder ();
 			fileIcon.Margins = new Margins (1, 1, 1, 1);
 
-			string iconName = item.GetIconName (size < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
+			string iconUri = item.GetIconUri (size < 32 ? FileInfoIconSize.Small : FileInfoIconSize.Large);
 
-			if (string.IsNullOrEmpty (iconName))
+			if (string.IsNullOrEmpty (iconUri))
 			{
 				Image bitmap;
 				bool icon;
@@ -81,11 +81,11 @@ namespace Epsitec.Common.Dialogs
 				fileIcon.Image = bitmap;
 				fileIcon.PaintFrame = icon ? false : true;
 				fileIcon.DisplayMode = icon ? ImageDisplayMode.Center : ImageDisplayMode.Stretch;
-				fileIcon.IconName = null;
+				fileIcon.IconUri = null;
 			}
 			else
 			{
-				fileIcon.IconName = iconName;
+				fileIcon.IconUri = iconUri;
 				fileIcon.Image = null;
 				fileIcon.PaintFrame = false;
 			}

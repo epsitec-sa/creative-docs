@@ -58,7 +58,7 @@ namespace Epsitec.Common.Document.Panels
 			this.rotateText.Clicked += this.HandleRotateTextClicked;
 			this.rotateText.TabIndex = 12;
 			this.rotateText.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.rotateText.IconName = Misc.Icon("DimensionRotateText");
+			this.rotateText.IconUri = Misc.Icon("DimensionRotateText");
 			this.rotateText.ButtonStyle = ButtonStyle.ActivableIcon;  // comme Statefull
 			ToolTip.Default.SetToolTip(this.rotateText, Res.Strings.Panel.Dimension.Tooltip.RotateText);
 

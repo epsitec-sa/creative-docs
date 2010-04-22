@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX & Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -15,12 +15,12 @@ namespace Epsitec.Common.Dialogs
 	//	un fichier, un dossier ou la commande 'nouveau document vide'.
 	public class FileListItem : System.IComparable<FileListItem>, System.IEquatable<FileListItem>, Epsitec.Common.Types.IStructuredData, Epsitec.Common.Types.IStructuredTypeProvider
 	{
-		public FileListItem(string iconName, string fileName, string shortFileName, string description)
+		public FileListItem(string iconUri, string fileName, string shortFileName, string description)
 		{
 			//	Crée un item pour 'Nouveau document vide'.
 			this.isSynthetic = true;
-			this.smallIconName = iconName;
-			this.largeIconName = iconName;
+			this.smallIconUri= iconUri;
+			this.largeIconUri = iconUri;
 			this.cachedFileName = fileName;
 			this.cachedShortFileName = shortFileName;
 			this.cachedDescription = description;
@@ -486,48 +486,48 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 
-		public string GetIconName(FileInfoIconSize size)
+		public string GetIconUri(FileInfoIconSize size)
 		{
 			if (size == FileInfoIconSize.Small)
 			{
-				if (this.smallIconName == null)
+				if (this.smallIconUri == null)
 				{
 					FolderItemIcon icon = this.GetSmallIcon ();
 					
-					this.smallIconName = "";
+					this.smallIconUri = "";
 
 					if (icon != null)
 					{
 						if ((this.IsDirectoryOrShortcut) ||
 							(!this.GetAsyncImage ()))
 						{
-							this.smallIconName = icon.ImageName;
+							this.smallIconUri = icon.ImageName;
 						}
 					}
 				}
 				
-				return this.smallIconName.Length == 0 ? null : this.smallIconName;
+				return this.smallIconUri.Length == 0 ? null : this.smallIconUri;
 			}
 
 			if (size == FileInfoIconSize.Large)
 			{
-				if (this.largeIconName == null)
+				if (this.largeIconUri == null)
 				{
 					FolderItemIcon icon = this.GetLargeIcon ();
 
-					this.largeIconName = "";
+					this.largeIconUri = "";
 
 					if (icon != null)
 					{
 						if ((this.IsDirectoryOrShortcut) ||
 							(!this.GetAsyncImage ()))
 						{
-							this.largeIconName = icon.ImageName;
+							this.largeIconUri = icon.ImageName;
 						}
 					}
 				}
 
-				return this.largeIconName.Length == 0 ? null : this.largeIconName;
+				return this.largeIconUri.Length == 0 ? null : this.largeIconUri;
 			}
 			
 			return null;
@@ -568,8 +568,8 @@ namespace Epsitec.Common.Dialogs
 			text = this.FileDate;
 			text = this.FileSize;
 			text = this.Description;
-//-			text = this.GetIconName (FileInfoIconSize.Small);
-//-			text = this.GetIconName (FileInfoIconSize.Large);
+//-			text = this.GetIconUri (FileInfoIconSize.Small);
+//-			text = this.GetIconUri (FileInfoIconSize.Large);
 		}
 
 		public ImagePlaceholder AttachedImagePlaceholder
@@ -1071,8 +1071,8 @@ namespace Epsitec.Common.Dialogs
 		private Image cachedImage;
 		private FolderItem cachedTarget;
 		
-		private string smallIconName;
-		private string largeIconName;
+		private string smallIconUri;
+		private string largeIconUri;
 		private string defaultDescription;
 
 		private ImagePlaceholder attachedImagePlaceholder;

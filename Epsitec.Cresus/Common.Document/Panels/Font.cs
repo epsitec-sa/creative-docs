@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.buttonFilter = new IconButton (this);
 				this.buttonFilter.CommandObject = Command.Get ("TextFontFilter");
-				this.buttonFilter.IconName = Misc.Icon ("TextFontFilter");
+				this.buttonFilter.IconUri = Misc.Icon ("TextFontFilter");
 				this.buttonFilter.PreferredIconSize = Misc.IconPreferredSize ("Normal");
 				this.buttonFilter.AutoFocus = false;
 				this.buttonFilter.ButtonStyle = ButtonStyle.ActivableIcon;

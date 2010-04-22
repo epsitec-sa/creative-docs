@@ -317,7 +317,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.TabNavigationMode = TabNavigationMode.ForwardTabPassive;
 
 			this.buttonStyleDelete = new IconButton(this.selectorContainer);
-			this.buttonStyleDelete.IconName = Misc.Icon("AggregateStyleDelete");
+			this.buttonStyleDelete.IconUri = Misc.Icon("AggregateStyleDelete");
 			this.buttonStyleDelete.AutoFocus = false;
 			this.buttonStyleDelete.Clicked += this.HandleButtonStyleDelete;
 			this.buttonStyleDelete.Dock = DockStyle.Right;
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.buttonStyleDelete, Res.Strings.Action.AggregateStyleDelete);
 
 			this.buttonStyleNew = new IconButton(this.selectorContainer);
-			this.buttonStyleNew.IconName = Misc.Icon("AggregateStyleNew");
+			this.buttonStyleNew.IconUri = Misc.Icon("AggregateStyleNew");
 			this.buttonStyleNew.AutoFocus = false;
 			this.buttonStyleNew.Pressed += this.HandleButtonStyleNew;
 			this.buttonStyleNew.Dock = DockStyle.Right;
@@ -606,7 +606,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			IconButtonMark button = new IconButtonMark(this.selectorToolBar);
 			button.Name = name;
-			button.IconName = Misc.Icon(icon);
+			button.IconUri = Misc.Icon(icon);
 			button.PreferredWidth = width;
 			button.PreferredHeight = Styles.selectorSize+8;
 			button.Enable = enable;

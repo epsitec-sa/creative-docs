@@ -99,7 +99,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			IconButton button = new IconButton();
 			button.Name = name;
-			button.IconName = Misc.Icon(name);
+			button.IconUri = Misc.Icon(name);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.Clicked += this.HandleButtonClicked;
 

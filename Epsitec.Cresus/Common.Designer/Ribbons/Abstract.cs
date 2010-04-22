@@ -26,7 +26,7 @@ namespace Epsitec.Common.Designer.Ribbons
 				IconButton button = widget as IconButton;
 				if (button != null)
 				{
-					if (button.IconName == icon)
+					if (button.IconUri == icon)
 					{
 						return button;
 					}
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Designer.Ribbons
 		{
 			//	Spécifie le contenu (au repos, càd menu fermé) d'un IconButtonCombo.
 			briefIcon = Misc.IconDyn(briefIcon, parameter);
-			combo.IconButton.IconName = briefIcon;
+			combo.IconButton.IconUri = briefIcon;
 		}
 
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)

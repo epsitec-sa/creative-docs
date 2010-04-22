@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Graph.Widgets
 		}
 
 
-		public void DefineIconButton(ButtonVisibility visibility, string iconName, System.Action buttonClicked)
+		public void DefineIconButton(ButtonVisibility visibility, string iconUri, System.Action buttonClicked)
 		{
 			if (visibility != ButtonVisibility.Hide)
 			{
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Graph.Widgets
 						Margins = new Margins (0, 0, 0, 0),
 						PreferredWidth = 19,
 						PreferredHeight = 19,
-						IconName = iconName,
+						IconUri = iconUri,
 						AutoFocus = false
 					};
 

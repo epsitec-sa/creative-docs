@@ -37,7 +37,7 @@ namespace Epsitec.Common.Widgets
 		public IconButton(string icon)
 			: this ()
 		{
-			this.IconName = icon;
+			this.IconUri = icon;
 		}
 
 		public IconButton(string command, string icon)
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 				if (this.preferredIconSize != value)
 				{
 					this.preferredIconSize = value;
-					this.UpdateText (this.IconName);
+					this.UpdateText (this.IconUri);
 				}
 			}
 		}
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Widgets
 				if (this.preferredIconLanguage != value)
 				{
 					this.preferredIconLanguage = value;
-					this.UpdateText (this.IconName);
+					this.UpdateText (this.IconUri);
 				}
 			}
 		}
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Widgets
 				if (this.preferredIconStyle != value)
 				{
 					this.preferredIconStyle = value;
-					this.UpdateText (this.IconName);
+					this.UpdateText (this.IconUri);
 				}
 			}
 		}
@@ -128,17 +128,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void UpdateText(string iconName)
+		protected void UpdateText(string iconUri)
 		{
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille et langue).
 			
-			this.Text = IconButton.GetSourceForIconText (iconName, this.PreferredIconSize, this.PreferredIconLanguage, this.PreferredIconStyle);
+			this.Text = IconButton.GetSourceForIconText (iconUri, this.PreferredIconSize, this.PreferredIconLanguage, this.PreferredIconStyle);
 		}
 
-		public static string GetSourceForIconText(string iconName, Drawing.Size preferredIconSize, string preferredIconLanguage, string preferredIconStyle)
+		public static string GetSourceForIconText(string iconUri, Drawing.Size preferredIconSize, string preferredIconLanguage, string preferredIconStyle)
 		{
-			if (string.IsNullOrEmpty (iconName))
+			if (string.IsNullOrEmpty (iconUri))
 			{
 				return null;
 			}
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets
 				System.Text.StringBuilder builder = new System.Text.StringBuilder ();
 
 				builder.Append (@"<img src=""");
-				builder.Append (iconName);
+				builder.Append (iconUri);
 				builder.Append (@"""");
 
 				if (preferredIconSize.Width != 0 && preferredIconSize.Height != 0)
@@ -192,19 +192,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		protected override void OnIconUriChanged(string oldiconUri, string newiconUri)
 		{
-			base.OnIconNameChanged (oldIconName, newIconName);
+			base.OnIconUriChanged (oldiconUri, newiconUri);
 
-			if (string.IsNullOrEmpty (oldIconName) &&
-				string.IsNullOrEmpty (newIconName))
+			if (string.IsNullOrEmpty (oldiconUri) &&
+				string.IsNullOrEmpty (newiconUri))
 			{
 				//	Nothing to do. Change is not significant : the text remains
 				//	empty if we swap "" for null.
 			}
 			else
 			{
-				this.UpdateText (newIconName);
+				this.UpdateText (newiconUri);
 			}
 		}
 

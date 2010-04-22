@@ -291,12 +291,12 @@ namespace Epsitec.Common.Designer.Viewers
 
 			if (string.IsNullOrEmpty(icon))
 			{
-				this.primaryIcon.IconName = null;
+				this.primaryIcon.IconUri = null;
 				this.primaryIconInfo.Text = Res.Strings.Dialog.Icon.None;
 			}
 			else
 			{
-				this.primaryIcon.IconName = icon;
+				this.primaryIcon.IconUri = icon;
 
 				string module, name;
 				Misc.GetIconNames(icon, out module, out name);
@@ -311,8 +311,8 @@ namespace Epsitec.Common.Designer.Viewers
 				}
 			}
 
-			this.primarySummaryIcon.IconName = this.primaryIcon.IconName;
-			this.secondarySummaryIcon.IconName = this.primaryIcon.IconName;
+			this.primarySummaryIcon.IconUri = this.primaryIcon.IconUri;
+			this.secondarySummaryIcon.IconUri = this.primaryIcon.IconUri;
 		}
 
 

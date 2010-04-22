@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -762,21 +762,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string								IconName
+		public string								IconUri
 		{
 			get
 			{
-				return (string) this.GetValue (Widget.IconNameProperty);
+				return (string) this.GetValue (Widget.IconUriProperty);
 			}
 			set
 			{
 				if (string.IsNullOrEmpty (value))
 				{
-					this.ClearValue (Widget.IconNameProperty);
+					this.ClearValue (Widget.IconUriProperty);
 				}
 				else
 				{
-					this.SetValue (Widget.IconNameProperty, value);
+					this.SetValue (Widget.IconUriProperty, value);
 				}
 			}
 		}
@@ -3371,12 +3371,12 @@ namespace Epsitec.Common.Widgets
 
 			if (image == null)
 			{
-				this.IconName = null;
+				this.IconUri = null;
 			}
 			else
 			{
-				this.IconName = icon;
-				Types.Serialization.BlackList.Add (this, Widget.IconNameProperty);
+				this.IconUri = icon;
+				Types.Serialization.BlackList.Add (this, Widget.IconUriProperty);
 			}
 		}
 
@@ -4353,7 +4353,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected virtual void OnIconNameChanged(string oldIconName, string newIconName)
+		protected virtual void OnIconUriChanged(string oldIconUri, string newIconUri)
 		{
 		}
 
@@ -4632,17 +4632,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private static void NotifyIconNameChanged(DependencyObject o, object oldValue, object newValue)
+		private static void NotifyIconUriChanged(DependencyObject o, object oldValue, object newValue)
 		{
 			Widget that = o as Widget;
-			string oldIconName = oldValue as string;
-			string newIconName = newValue as string;
-			that.OnIconNameChanged (oldIconName, newIconName);
+			string oldIconUri = oldValue as string;
+			string newIconUri = newValue as string;
+			that.OnIconUriChanged (oldIconUri, newIconUri);
 		}
 
 		public static readonly DependencyProperty TextProperty = DependencyProperty.Register ("Text", typeof (string), typeof (Widget), new DependencyPropertyMetadata (Widget.GetTextValue, Widget.SetTextValue, Widget.NotifyTextChanged));
 		public static readonly DependencyProperty TabIndexProperty = DependencyProperty.Register ("TabIndex", typeof (int), typeof (Widget), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty IconNameProperty = DependencyProperty.Register ("IconName", typeof (string), typeof (Widget), new Helpers.VisualPropertyMetadata (null, Widget.NotifyIconNameChanged, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty IconUriProperty = DependencyProperty.Register ("IconUri", typeof (string), typeof (Widget), new Helpers.VisualPropertyMetadata (null, Widget.NotifyIconUriChanged, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty TabNavigationModeProperty = DependencyProperty.Register ("TabNavigationMode", typeof (TabNavigationMode), typeof (Widget), new DependencyPropertyMetadata (TabNavigationMode.None));
 
 		public static readonly DependencyProperty ForwardTabOverrideProperty  = DependencyProperty.Register ("ForwardTabOverride", typeof (Widget), typeof (Widget));

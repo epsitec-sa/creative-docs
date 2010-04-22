@@ -17,7 +17,7 @@ namespace Epsitec.Common.Designer.MyWidgets
 			this.groupBox.Dock = DockStyle.Fill;
 
 			this.resetButton = new IconButton(this);
-			this.resetButton.IconName = Misc.Icon("Reset");
+			this.resetButton.IconUri = Misc.Icon("Reset");
 			this.resetButton.PreferredWidth = 15;
 			this.resetButton.Dock = DockStyle.Right;
 			this.resetButton.Margins = new Margins(2, 0, 0, 0);

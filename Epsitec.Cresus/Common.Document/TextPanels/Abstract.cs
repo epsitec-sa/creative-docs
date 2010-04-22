@@ -368,7 +368,7 @@ namespace Epsitec.Common.Document.TextPanels
 
 			if ( icon.StartsWith("manifest:") )
 			{
-				button.IconName = icon;
+				button.IconUri = icon;
 			}
 			else
 			{
@@ -415,7 +415,7 @@ namespace Epsitec.Common.Document.TextPanels
 			button.Clicked += handler;
 			button.TabIndex = this.tabIndex++;
 			button.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			button.IconName = Misc.Icon("Nothing");
+			button.IconUri = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(button, Res.Strings.TextPanel.Clear);
 			
 			return button;

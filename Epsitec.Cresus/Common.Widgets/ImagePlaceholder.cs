@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -107,19 +107,19 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 
-		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		protected override void OnIconUriChanged(string oldIconUri, string newIconUri)
 		{
-			base.OnIconNameChanged (oldIconName, newIconName);
+			base.OnIconUriChanged (oldIconUri, newIconUri);
 
-			if (string.IsNullOrEmpty (oldIconName) &&
-				string.IsNullOrEmpty (newIconName))
+			if (string.IsNullOrEmpty (oldIconUri) &&
+				string.IsNullOrEmpty (newIconUri))
 			{
 				//	Nothing to do. Change is not significant : the text remains
 				//	empty if we swap "" for null.
 			}
 			else
 			{
-				this.UpdateText (newIconName);
+				this.UpdateText (newIconUri);
 			}
 		}
 
@@ -195,15 +195,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void UpdateText(string newIconName)
+		private void UpdateText(string newIconUri)
 		{
-			if (string.IsNullOrEmpty (newIconName))
+			if (string.IsNullOrEmpty (newIconUri))
 			{
 				this.Text = null;
 			}
 			else
 			{
-				this.Text = string.Format (@"<img src=""{0}""/>", newIconName);
+				this.Text = string.Format (@"<img src=""{0}""/>", newIconUri);
 				this.ContentAlignment = ContentAlignment.MiddleCenter;
 			}
 		}

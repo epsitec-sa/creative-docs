@@ -15,10 +15,10 @@ namespace Epsitec.Common.Dialogs.Helpers
 			return null;
 		}
 		
-		public static Widget CreateIconAndText(string iconName, string message)
+		public static Widget CreateIconAndText(string iconUri, string message)
 		{
 			Widget container = new Widget ();
-			StaticImage widgetIcon = new StaticImage (container, iconName);
+			StaticImage widgetIcon = new StaticImage (container, iconUri);
 			StaticText  widgetText = new StaticText (container, message);
 			
 			widgetIcon.PreferredSize = new Drawing.Size (48, 48);

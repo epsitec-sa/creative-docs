@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				Anchor = AnchorStyles.BottomRight,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Drop.icon",
+				IconUri = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Drop.icon",
 				AutoFocus = false,
 				Visibility = false
 			};
