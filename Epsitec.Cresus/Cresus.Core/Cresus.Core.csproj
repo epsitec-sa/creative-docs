@@ -91,6 +91,7 @@
     <Compile Include="Controllers\BrowserController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />

@@ -23,8 +23,6 @@ namespace Epsitec.Cresus.Core
 
 			ResourceManagerPool.Default = new ResourceManagerPool ("default");
 			ResourceManagerPool.Default.AddResourceProbingPath (@"S:\Epsitec.Cresus\Cresus.Core");
-
-			Epsitec.Cresus.Core.States.StateFactory.Setup ();
 		}
 
 		/// <summary>

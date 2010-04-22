@@ -10,13 +10,15 @@ using System.Xml.Linq;
 
 using NUnit.Framework;
 
-[assembly: State (Type = typeof (StateManagerTest.DummyState), Name = "Dummy")]
+//- [assembly: State (Type = typeof (StateManagerTest.DummyState), Name = "Dummy")]
 
 namespace Epsitec.Cresus.Core
 {
 	[TestFixture]
 	public class StateManagerTest
 	{
+
+#if false
 		[TestFixtureSetUp]
 		public void Initialize()
 		{
@@ -173,5 +175,6 @@ namespace Epsitec.Cresus.Core
 		#endregion
 
 		private readonly string path = System.IO.Path.Combine (System.IO.Path.GetTempPath (), "core.tests.statemanager.xml");
+#endif
 	}
 }

@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Core
 			this.IsReady = true;
 		}
 
+
+		
 		private void SetupDataContext()
 		{
 			this.dataContext = new DataContext (this.infrastructure);
