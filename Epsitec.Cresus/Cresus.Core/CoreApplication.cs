@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core
 
 		internal void SetupData()
 		{
-			this.data.SetupDatabase ();
+			//?this.data.SetupDatabase ();
 		}
 
 		
