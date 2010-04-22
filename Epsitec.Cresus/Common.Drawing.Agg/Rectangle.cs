@@ -1,46 +1,10 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
-	
-	
-	/// <summary>
-	/// Définition des côtés d'un rectangle. Plusieurs côtés peuvent être
-	/// combinés, c'est donc un bitset.
-	/// </summary>
-	[System.Flags] public enum EdgeId : byte
-	{
-		None = 0,
-		
-		Bottom	= 1,
-		Top		= 2,
-		Left	= 4,
-		Right	= 8
-	}
-	
-	/// <summary>
-	/// Définition des poignées d'un rectangle. Il y en a à chaque sommet, au
-	/// milieu des côtés et au centre de gravité.
-	/// </summary>
-	public enum GripId
-	{
-		None = -1,
-		
-		VertexBottomLeft,
-		VertexBottomRight,
-		VertexTopRight,
-		VertexTopLeft,
-		
-		EdgeBottom,
-		EdgeTop,
-		EdgeLeft,
-		EdgeRight,
-		
-		Body
-	}
 	
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Rectangle.Converter))]

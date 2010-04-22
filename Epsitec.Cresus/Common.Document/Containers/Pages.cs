@@ -181,7 +181,7 @@ namespace Epsitec.Common.Document.Containers
 			this.pageSizeSwap = new IconButton(this.pageSizeGroup);
 			this.pageSizeSwap.PreferredWidth = 12;
 			this.pageSizeSwap.AutoFocus = false;
-			this.pageSizeSwap.IconName = Misc.Icon("SwapDataV");
+			this.pageSizeSwap.IconUri = Misc.Icon("SwapDataV");
 			this.pageSizeSwap.Dock = DockStyle.Left;
 			this.pageSizeSwap.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeSwap.TabIndex = 2;
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.pageSizeClear = new IconButton(this.pageSizeGroup);
 			this.pageSizeClear.AutoFocus = false;
-			this.pageSizeClear.IconName = Misc.Icon("Nothing");
+			this.pageSizeClear.IconUri = Misc.Icon("Nothing");
 			this.pageSizeClear.Dock = DockStyle.Left;
 			this.pageSizeClear.Margins = new Margins(0, 0, 0, 0);
 			this.pageSizeClear.TabIndex = 4;

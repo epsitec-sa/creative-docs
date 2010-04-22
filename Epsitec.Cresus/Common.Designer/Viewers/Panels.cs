@@ -855,7 +855,7 @@ namespace Epsitec.Common.Designer.Viewers
 			}
 
 			IconButton button = new IconButton(this.statusBar);
-			button.IconName = Misc.Icon(icon);
+			button.IconUri = Misc.Icon(icon);
 			button.Name = name;
 			button.Enable = !this.designerApplication.IsReadonly;
 
@@ -1133,7 +1133,7 @@ namespace Epsitec.Common.Designer.Viewers
 			bool sel = this.panelEditor.SelectedObjects.Contains(obj);
 
 			IconButton button = new IconButton(parent);
-			button.IconName = Misc.Icon(icon);
+			button.IconUri = Misc.Icon(icon);
 			button.ButtonStyle = ButtonStyle.ActivableIcon;
 			button.ActiveState = sel ? ActiveState.Yes : ActiveState.No;
 			button.PreferredWidth = Panels.treeButtonWidth;

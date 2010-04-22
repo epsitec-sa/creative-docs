@@ -50,13 +50,13 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.fieldSearch.Dock = DockStyle.Fill;
 
 				this.searchNext = new IconButton(header);
-				this.searchNext.IconName = Misc.Icon("SearchNext");
+				this.searchNext.IconUri = Misc.Icon("SearchNext");
 				this.searchNext.Dock = DockStyle.Right;
 				this.searchNext.Clicked += this.HandleSearchNextClicked;
 				ToolTip.Default.SetToolTip(this.searchNext, Res.Strings.Action.SearchNext);
 
 				this.searchPrev = new IconButton(header);
-				this.searchPrev.IconName = Misc.Icon("SearchPrev");
+				this.searchPrev.IconUri = Misc.Icon("SearchPrev");
 				this.searchPrev.Dock = DockStyle.Right;
 				this.searchPrev.Clicked += this.HandleSearchPrevClicked;
 				ToolTip.Default.SetToolTip(this.searchPrev, Res.Strings.Action.SearchPrev);
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Designer.Dialogs
 				buttonOk.TabNavigationMode = TabNavigationMode.ActivateOnTab;
 
 				this.buttonMode = new IconButton(footer);
-				this.buttonMode.IconName = Misc.Icon("DialogIconMode");
+				this.buttonMode.IconUri = Misc.Icon("DialogIconMode");
 				this.buttonMode.ButtonStyle = ButtonStyle.ActivableIcon;
 				this.buttonMode.Dock = DockStyle.Left;
 				this.buttonMode.Margins = new Margins(0, 6, 0, 0);

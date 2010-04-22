@@ -46,7 +46,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonSave, Res.Strings.Panel.Image.Tooltip.Save);
 
 			this.buttonRotation90 = new IconButton(this);
-			this.buttonRotation90.IconName = Misc.Icon("ImageRotation90");
+			this.buttonRotation90.IconUri = Misc.Icon("ImageRotation90");
 			this.buttonRotation90.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation90.Pressed += this.HandleButtonPressed;
 			this.buttonRotation90.TabIndex = tabIndex++;
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonRotation90, Res.Strings.Panel.Image.Button.Rotation90);
 
 			this.buttonRotation180 = new IconButton(this);
-			this.buttonRotation180.IconName = Misc.Icon("ImageRotation180");
+			this.buttonRotation180.IconUri = Misc.Icon("ImageRotation180");
 			this.buttonRotation180.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation180.Pressed += this.HandleButtonPressed;
 			this.buttonRotation180.TabIndex = tabIndex++;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonRotation180, Res.Strings.Panel.Image.Button.Rotation180);
 
 			this.buttonRotation270 = new IconButton(this);
-			this.buttonRotation270.IconName = Misc.Icon("ImageRotation270");
+			this.buttonRotation270.IconUri = Misc.Icon("ImageRotation270");
 			this.buttonRotation270.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonRotation270.Pressed += this.HandleButtonPressed;
 			this.buttonRotation270.TabIndex = tabIndex++;
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonRotation270, Res.Strings.Panel.Image.Button.Rotation270);
 
 			this.buttonMirrorH = new IconButton(this);
-			this.buttonMirrorH.IconName = Misc.Icon("ImageMirrorH");
+			this.buttonMirrorH.IconUri = Misc.Icon("ImageMirrorH");
 			this.buttonMirrorH.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonMirrorH.Pressed += this.HandleButtonPressed;
 			this.buttonMirrorH.TabIndex = tabIndex++;
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonMirrorH, Res.Strings.Panel.Image.Button.MirrorX);
 
 			this.buttonMirrorV = new IconButton(this);
-			this.buttonMirrorV.IconName = Misc.Icon("ImageMirrorV");
+			this.buttonMirrorV.IconUri = Misc.Icon("ImageMirrorV");
 			this.buttonMirrorV.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonMirrorV.Pressed += this.HandleButtonPressed;
 			this.buttonMirrorV.TabIndex = tabIndex++;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonFilter = new IconButtonCombo(this);
 			this.buttonFilter.AutoFocus = false;
 			this.buttonFilter.IsLiveUpdateEnabled = false;
-			//?this.buttonFilter.IconName = Misc.Icon("ImageFilter");
+			//?this.buttonFilter.IconUri = Misc.Icon("ImageFilter");
 			this.buttonFilter.ComboClosed += this.HandleFilterComboClosed;
 			this.buttonFilter.TabIndex = tabIndex++;
 			this.buttonFilter.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttonFilter, Res.Strings.Panel.Image.Button.Filter);
 
 			this.buttonHomo = new IconButton(this);
-			this.buttonHomo.IconName = Misc.Icon("ImageHomo");
+			this.buttonHomo.IconUri = Misc.Icon("ImageHomo");
 			this.buttonHomo.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonHomo.Pressed += this.HandleButtonPressed;
 			this.buttonHomo.TabIndex = tabIndex++;

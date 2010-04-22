@@ -1039,7 +1039,7 @@ namespace Epsitec.Common.Dialogs
 			FileButton f = new FileButton ();
 			f.AutoFocus = false;
 			f.DisplayName = text;
-			f.IconName = icon;
+			f.IconUri = icon;
 
 			this.AddFavorite (item, f);
 		}
@@ -1055,7 +1055,7 @@ namespace Epsitec.Common.Dialogs
 				
 				f.AutoFocus = false;
 				f.DisplayName = item.DisplayName;
-				f.IconName = item.Icon.ImageName;
+				f.IconUri = item.Icon.ImageName;
 
 				this.AddFavorite (item, f);
 			}

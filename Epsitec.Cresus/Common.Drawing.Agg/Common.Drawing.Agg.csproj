@@ -160,7 +160,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Agg\SafeRasterizerHandle.cs" />
+    <Compile Include="EdgeId.cs" />
     <Compile Include="GradientFill.cs" />
+    <Compile Include="GripId.cs" />
     <Compile Include="IconSize.cs" />
     <Compile Include="MaskComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

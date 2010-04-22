@@ -30,7 +30,7 @@ namespace Epsitec.Common.Document.Panels
 			this.nothingButton.Clicked += this.HandleNothingClicked;
 			this.nothingButton.TabIndex = 2;
 			this.nothingButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.nothingButton.IconName = Misc.Icon("Nothing");
+			this.nothingButton.IconUri = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Gradient.Tooltip.Nothing);
 
 			this.fieldColor1 = new ColorSample(this);
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldHatchDistance, Res.Strings.Panel.Gradient.Tooltip.HatchDistance);
 			
 			this.swapColor = new IconButton(this);
-			this.swapColor.IconName = Misc.Icon("SwapDataV");
+			this.swapColor.IconUri = Misc.Icon("SwapDataV");
 			this.swapColor.Clicked += this.HandleSwapColorClicked;
 			ToolTip.Default.SetToolTip(this.swapColor, Res.Strings.Panel.Gradient.Tooltip.Swap);
 

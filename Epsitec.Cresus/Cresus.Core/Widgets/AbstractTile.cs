@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
@@ -50,8 +53,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
 		/// </summary>
-		/// <value>The icon.</value>
-		public string Icon
+		/// <value>The icon URI.</value>
+		public string IconUri
 		{
 			get
 			{
@@ -67,7 +70,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 				else
 				{
-					this.iconButton.IconName = Misc.Icon (value);
+					this.iconButton.IconUri = Misc.GetResourceIconUri (value);
 					this.iconButton.Visibility = true;
 				}
 			}

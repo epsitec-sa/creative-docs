@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -191,12 +191,12 @@ namespace Epsitec.Cresus.Graph.Controllers
 			var view = this.workspace.CreateView (item);
 			var synt = item as GraphSyntheticDataSeries;
 
-			string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
+			string iconUri = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 
 			if ((synt != null) &&
 				(synt.SourceGroup == group))
 			{
-				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconUri,
 					delegate
 					{
 						group.RemoveSyntheticDataSeries (synt.FunctionName);
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			}
 			else
 			{
-				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconUri,
 					delegate
 					{
 						this.workspace.Groups.RemoveGroup (group, Collection.Single (item));

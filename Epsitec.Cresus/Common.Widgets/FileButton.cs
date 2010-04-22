@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets
 			this.textLayout.Paint(textRect.BottomLeft, graphics);
 
 			//	Affiche l'icône.
-			if (!string.IsNullOrEmpty (this.IconName))
+			if (!string.IsNullOrEmpty (this.IconUri))
 			{
 				if (this.iconLayout == null)
 				{
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 
 				this.iconLayout.Alignment = compact ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleCenter;
 				this.iconLayout.LayoutSize = iconRect.Size;
-				this.iconLayout.Text = string.Format (@"<img src=""{0}"" {1}/>", this.IconName, dim);
+				this.iconLayout.Text = string.Format (@"<img src=""{0}"" {1}/>", this.IconUri, dim);
 				this.iconLayout.Paint(iconRect.BottomLeft, graphics);
 			}
 		}

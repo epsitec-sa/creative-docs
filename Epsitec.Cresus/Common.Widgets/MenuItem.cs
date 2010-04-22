@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets.Helpers;
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 		public MenuItem(string command, string icon, string text, string shortcut) : this ()
 		{
 			this.CommandObject = Command.Get (command);
-			this.IconName = icon;
+			this.IconUri = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
 			this.textOnly = false;
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		
 		public MenuItem(Widget submenu, string icon, string text, string shortcut) : this ()
 		{
-			this.IconName = icon;
+			this.IconUri = icon;
 			this.Text     = text;
 			this.ShortKey = shortcut;	//#fix
 			this.textOnly = false;
@@ -132,35 +132,35 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public string							IconNameActiveNo
+		public string							IconUriActiveNo
 		{
 			get
 			{
-				return this.iconNameActiveNo;
+				return this.iconUriActiveNo;
 			}
 
 			set
 			{
-				if (this.iconNameActiveNo != value)
+				if (this.iconUriActiveNo != value)
 				{
-					this.iconNameActiveNo = value;
+					this.iconUriActiveNo = value;
 					this.UpdateIconSize ();
 				}
 			}
 		}
 		
-		public string							IconNameActiveYes
+		public string							IconUriActiveYes
 		{
 			get
 			{
-				return this.iconNameActiveYes;
+				return this.iconUriActiveYes;
 			}
 
 			set
 			{
-				if (this.iconNameActiveYes != value)
+				if (this.iconUriActiveYes != value)
 				{
-					this.iconNameActiveYes = value;
+					this.iconUriActiveYes = value;
 					this.UpdateIconSize ();
 				}
 			}
@@ -239,8 +239,8 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = new MenuItem (command, "", text, shortcut, name);
 			
-			item.IconNameActiveNo  = "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
-			item.IconNameActiveYes = "manifest:Epsitec.Common.Widgets.Images.ActiveYes.icon";
+			item.IconUriActiveNo  = "manifest:Epsitec.Common.Widgets.Images.ActiveNo.icon";
+			item.IconUriActiveYes = "manifest:Epsitec.Common.Widgets.Images.ActiveYes.icon";
 			
 			return item;
 		}
@@ -252,29 +252,29 @@ namespace Epsitec.Common.Widgets
 			double dx = 0;
 			double dy = 0;
 			
-			if ((this.iconNameActiveNo != null) &&
-				(this.iconNameActiveNo.Length > 0))
+			if ((this.iconUriActiveNo != null) &&
+				(this.iconUriActiveNo.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveNo);
+				TextLayout layout = this.GetIconTextLayout (this.iconUriActiveNo);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			if ((this.iconNameActiveYes != null) &&
-				(this.iconNameActiveYes.Length > 0))
+			if ((this.iconUriActiveYes != null) &&
+				(this.iconUriActiveYes.Length > 0))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.iconNameActiveYes);
+				TextLayout layout = this.GetIconTextLayout (this.iconUriActiveYes);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
 				dy = System.Math.Max (dy, size.Height);
 			}
 			
-			if (this.ContainsValue (Widget.IconNameProperty))
+			if (this.ContainsValue (Widget.IconUriProperty))
 			{
-				TextLayout layout = this.GetIconTextLayout (this.IconName);
+				TextLayout layout = this.GetIconTextLayout (this.IconUri);
 				Drawing.Size size = layout.SingleLineSize;
 				
 				dx = System.Math.Max (dx, size.Width);
@@ -393,9 +393,9 @@ namespace Epsitec.Common.Widgets
 			base.OnExited (e);
 		}
 
-		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		protected override void OnIconUriChanged(string oldIconUri, string newIconUri)
 		{
-			base.OnIconNameChanged (oldIconName, newIconName);
+			base.OnIconUriChanged (oldIconUri, newIconUri);
 			
 			this.UpdateIconSize ();
 		}
@@ -498,23 +498,23 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				string icon = this.IconName;
+				string icon = this.IconUri;
 				
 				switch (this.ActiveState)
 				{
 					case ActiveState.No:
-						if ((this.iconNameActiveNo != null) &&
-							(this.iconNameActiveNo.Length > 0))
+						if ((this.iconUriActiveNo != null) &&
+							(this.iconUriActiveNo.Length > 0))
 						{
-							icon = this.iconNameActiveNo;
+							icon = this.iconUriActiveNo;
 						}
 						break;
 					
 					case ActiveState.Yes:
-						if ((this.iconNameActiveYes != null) &&
-							(this.iconNameActiveYes.Length > 0))
+						if ((this.iconUriActiveYes != null) &&
+							(this.iconUriActiveYes.Length > 0))
 						{
-							icon = this.iconNameActiveYes;
+							icon = this.iconUriActiveYes;
 						}
 						break;
 				}
@@ -523,7 +523,7 @@ namespace Epsitec.Common.Widgets
 					(icon.Length > 0))
 				{
 					if ((this.ActiveState == ActiveState.Yes) &&
-						(icon != this.iconNameActiveYes))
+						(icon != this.iconUriActiveYes))
 					{
 						Drawing.Rectangle iRect = rect;
 						iRect.Width = this.iconSize.Width;
@@ -768,8 +768,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							textOnly = false;
 		
 		protected double						submenuMarkWidth;
-		protected string						iconNameActiveNo;
-		protected string						iconNameActiveYes;
+		protected string						iconUriActiveNo;
+		protected string						iconUriActiveYes;
 		protected TextLayout					icon;
 		protected TextLayout					shortcut;
 		protected Drawing.Size					iconSize;

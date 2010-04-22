@@ -135,7 +135,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public virtual string IconName
+		public virtual string IconUri
 		{
 			//	Nom de l'icône.
 			get { return @""; }

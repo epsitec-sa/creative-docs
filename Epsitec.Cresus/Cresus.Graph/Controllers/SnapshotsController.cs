@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -66,10 +66,10 @@ namespace Epsitec.Cresus.Graph.Controllers
 				};
 
 				var    snapshot = chartSnapShot;
-				string iconName = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
+				string iconUri  = "manifest:Epsitec.Common.Graph.Images.Glyph.DropItem.icon";
 				string guidName = snapshot.GuidName;
 
-				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconName,
+				view.DefineIconButton (ButtonVisibility.ShowOnlyWhenEntered, iconUri,
 					delegate
 					{
 						GraphActions.DocumentHideSnapshot (guidName);

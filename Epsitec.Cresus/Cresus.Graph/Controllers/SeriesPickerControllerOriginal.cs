@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.PlusMinus.icon",
+				IconUri = "manifest:Epsitec.Cresus.Graph.Images.Glyph.PlusMinus.icon",
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Pick.icon",
+				IconUri = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Pick.icon",
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 				PreferredWidth = 22,
 				PreferredHeight = 22,
 				ButtonStyle = ButtonStyle.Icon,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Sum.icon",
+				IconUri = "manifest:Epsitec.Cresus.Graph.Images.Glyph.Sum.icon",
 				Parent = this.scrollList.Parent,
 				Anchor = AnchorStyles.BottomLeft
 			};

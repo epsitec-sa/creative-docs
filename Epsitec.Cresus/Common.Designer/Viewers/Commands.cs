@@ -287,8 +287,8 @@ namespace Epsitec.Common.Designer.Viewers
 			{
 				icon = Misc.Icon("ButtonAspectRichDialog");
 			}
-			this.primarySuiteSummaryIcon.IconName = icon;
-			this.secondarySuiteSummaryIcon.IconName = icon;
+			this.primarySuiteSummaryIcon.IconUri = icon;
+			this.secondarySuiteSummaryIcon.IconUri = icon;
 
 			this.ignoreChange = iic;
 		}

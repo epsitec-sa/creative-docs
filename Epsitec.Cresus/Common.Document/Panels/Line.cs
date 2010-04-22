@@ -48,7 +48,7 @@ namespace Epsitec.Common.Document.Panels
 			this.nothingButton.Clicked += this.HandleNothingClicked;
 			this.nothingButton.TabIndex = 2;
 			this.nothingButton.TabNavigationMode = TabNavigationMode.ActivateOnTab;
-			this.nothingButton.IconName = Misc.Icon("Nothing");
+			this.nothingButton.IconUri = Misc.Icon("Nothing");
 			ToolTip.Default.SetToolTip(this.nothingButton, Res.Strings.Panel.Line.Tooltip.Nothing);
 
 			this.field = new Widgets.TextFieldLabel(this, Widgets.TextFieldLabel.Type.TextFieldReal);

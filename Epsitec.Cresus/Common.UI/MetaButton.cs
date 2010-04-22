@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -185,12 +185,12 @@ namespace Epsitec.Common.UI
 			this.UpdateIcon ();
 		}
 
-		protected override void OnIconNameChanged(string oldIconName, string newIconName)
+		protected override void OnIconUriChanged(string oldIconUri, string newIconUri)
 		{
-			base.OnIconNameChanged(oldIconName, newIconName);
+			base.OnIconUriChanged(oldIconUri, newIconUri);
 
-			if (string.IsNullOrEmpty(oldIconName) &&
-				string.IsNullOrEmpty(newIconName))
+			if (string.IsNullOrEmpty(oldIconUri) &&
+				string.IsNullOrEmpty(newIconUri))
 			{
 				//	Nothing to do. Change is not significant : the text remains
 				//	empty if we swap "" for null.
@@ -330,9 +330,9 @@ namespace Epsitec.Common.UI
 			//	Met à jour le texte du bouton, qui est un tag <img.../> contenant le nom de l'image
 			//	suivi des différentes préférences (taille, langue et style).
 
-			string iconName = this.IconName;
+			string iconUri = this.IconUri;
 
-			if ((string.IsNullOrEmpty (iconName)) || 
+			if ((string.IsNullOrEmpty (iconUri)) || 
 				(this.ButtonClass == ButtonClass.DialogButton))
 			{
 				if (this.iconLayout != null)
@@ -344,7 +344,7 @@ namespace Epsitec.Common.UI
 			else
 			{
 				Drawing.Rectangle iconBounds = this.GetIconBounds ();
-				string            iconSource = IconButton.GetSourceForIconText (iconName, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
+				string            iconSource = IconButton.GetSourceForIconText (iconUri, iconBounds.Size, this.PreferredIconLanguage, this.PreferredIconStyle);
 
 				if (this.iconLayout == null)
 				{
@@ -398,7 +398,7 @@ namespace Epsitec.Common.UI
 			else
 			{
 				var rect = this.GetInnerBounds ();
-				var image = Support.ImageProvider.Default.GetImage (this.IconName, Support.Resources.DefaultManager);
+				var image = Support.ImageProvider.Default.GetImage (this.IconUri, Support.Resources.DefaultManager);
 				var size  = image.Size;
 
 				if (this.ContainsValue (MetaButton.PreferredIconSizeProperty))

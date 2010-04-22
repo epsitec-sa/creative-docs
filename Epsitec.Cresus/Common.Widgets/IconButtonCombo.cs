@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( sel == -1 )
 			{
-				this.buttonMain.IconName = null;
+				this.buttonMain.IconUri = null;
 				return;
 			}
 
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Widgets
 
 				if ( rank == sel )
 				{
-					this.buttonMain.IconName = item.BriefIcon;
+					this.buttonMain.IconUri = item.BriefIcon;
 					break;
 				}
 

@@ -145,8 +145,8 @@ namespace Epsitec.Common.Document.Menus
 				else	// case normale ?
 				{
 					MenuItem mi = new MenuItem(cmi.Command, cmi.Icon, cmi.Text, "", cmi.Name);
-					mi.IconNameActiveNo = cmi.IconActiveNo;
-					mi.IconNameActiveYes = cmi.IconActiveYes;
+					mi.IconUriActiveNo = cmi.IconActiveNo;
+					mi.IconUriActiveYes = cmi.IconActiveYes;
 					mi.ActiveState = cmi.Active ? ActiveState.Yes : ActiveState.No;
 					menu.Items.Add(mi);
 				}

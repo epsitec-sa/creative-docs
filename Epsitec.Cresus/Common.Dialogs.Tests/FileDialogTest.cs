@@ -48,14 +48,14 @@ namespace Epsitec.Common.Dialogs
 			window.Root.Children.Add(button2);
 
 			IconButton button3 = new IconButton();
-			button3.IconName = @"file:images/open.icon";
+			button3.IconUri = @"file:images/open.icon";
 			button3.Margins = new Margins (50, 0, 0, 100);
 			button3.Anchor = AnchorStyles.BottomLeft;
 			button3.Clicked += this.button1_Clicked;
 			window.Root.Children.Add(button3);
 
 			IconButton button4 = new IconButton();
-			button4.IconName = @"file:images/save.icon";
+			button4.IconUri = @"file:images/save.icon";
 			button4.Margins = new Margins (80, 0, 0, 100);
 			button4.Anchor = AnchorStyles.BottomLeft;
 			button4.Clicked += this.button2_Clicked;

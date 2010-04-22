@@ -1,9 +1,10 @@
-//	Copyright © 2004-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -29,7 +30,7 @@ namespace Epsitec.Common.Dialogs
 
 		public static IDialog CreateYesNoCancel(string dialogTitle, DialogIcon icon, string messageText, string commandYesTemplate, string commandNoTemplate, CommandDispatcher commandDispatcher)
 		{
-			string messageIcon = MessageDialog.GetIconName (icon);
+			string messageIcon = MessageDialog.GetIconUri (icon);
 			
 			return MessageDialog.CreateYesNoCancel (dialogTitle, messageIcon, messageText, commandYesTemplate, commandNoTemplate, commandDispatcher);
 		}
@@ -55,7 +56,7 @@ namespace Epsitec.Common.Dialogs
 
 		public static IDialog CreateYesNo(string dialogTitle, DialogIcon icon, string messageText, string commandYesTemplate, string commandNoTemplate, CommandDispatcher commandDispatcher)
 		{
-			string messageIcon = MessageDialog.GetIconName (icon);
+			string messageIcon = MessageDialog.GetIconUri (icon);
 			
 			return MessageDialog.CreateYesNo (dialogTitle, messageIcon, messageText, commandYesTemplate, commandNoTemplate, commandDispatcher);
 		}
@@ -77,7 +78,7 @@ namespace Epsitec.Common.Dialogs
 
 		public static IDialog CreateOkCancel(string dialogTitle, DialogIcon icon, string messageText, string commandOkTemplate, CommandDispatcher commandDispatcher)
 		{
-			string messageIcon = MessageDialog.GetIconName (icon);
+			string messageIcon = MessageDialog.GetIconUri (icon);
 			
 			return MessageDialog.CreateOkCancel (dialogTitle, messageIcon, messageText, commandOkTemplate, commandDispatcher);
 		}
@@ -103,7 +104,7 @@ namespace Epsitec.Common.Dialogs
 		
 		public static IDialog CreateOk(string dialogTitle, DialogIcon icon, string messageText, string commandOkTemplate, CommandDispatcher commandDispatcher)
 		{
-			string messageIcon = MessageDialog.GetIconName (icon);
+			string messageIcon = MessageDialog.GetIconUri (icon);
 			
 			return MessageDialog.CreateOk (dialogTitle, messageIcon, messageText, commandOkTemplate, commandDispatcher);
 		}
@@ -203,7 +204,7 @@ namespace Epsitec.Common.Dialogs
 			return dialog.Result;
 		}
 		
-		protected static string GetIconName(DialogIcon icon)
+		protected static string GetIconUri(DialogIcon icon)
 		{
 			switch (icon)
 			{

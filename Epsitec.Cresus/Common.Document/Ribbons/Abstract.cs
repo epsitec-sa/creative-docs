@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Ribbons
 
 #if false
 			button.CommandLine = command;
-			button.IconName = Misc.Icon(c.Icon);
+			button.IconUri = Misc.Icon(c.Icon);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
 
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Document.Ribbons
 			}
 #else
 			button.CommandObject = c;
-//-			button.IconName = Misc.Icon(c.Icon);
+//-			button.IconUri = Misc.Icon(c.Icon);
 			button.PreferredIconSize = Misc.IconPreferredSize(iconSize);
 			button.AutoFocus = false;
 #endif
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Document.Ribbons
 		{
 			//	Spécifie le contenu (au repos, càd menu fermé) d'un IconButtonCombo.
 			briefIcon = Misc.IconDyn(briefIcon, parameter);
-			combo.IconButton.IconName = briefIcon;
+			combo.IconButton.IconUri = briefIcon;
 		}
 
 		protected IconButtonsCombo CreateIconButtonsCombo(string command)

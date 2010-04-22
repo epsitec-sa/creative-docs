@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		public override string IconName
+		public override string IconUri
 		{
 			//	Nom de l'icône.
 			get { return Misc.Icon("ObjectTextBox"); }

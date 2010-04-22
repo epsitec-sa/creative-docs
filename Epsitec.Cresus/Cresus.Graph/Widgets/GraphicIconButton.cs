@@ -1,4 +1,4 @@
-﻿//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2009-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -21,79 +21,79 @@ namespace Epsitec.Cresus.Graph.Widgets
 		}
 
 
-		public string OnIconName
+		public string OnIconUri
 		{
 			get;
 			set;
 		}
 
-		public string OffIconName
+		public string OffIconUri
 		{
 			get
 			{
-				return base.IconName;
+				return base.IconUri;
 			}
 			set
 			{
-				base.IconName = value;
+				base.IconUri = value;
 			}
 		}
 
-		public string PressIconName
+		public string PressIconUri
 		{
 			get;
 			set;
 		}
 
-		public string OnHiliteIconName
+		public string OnHiliteIconUri
 		{
 			get;
 			set;
 		}
 
-		public string OffHiliteIconName
+		public string OffHiliteIconUri
 		{
 			get;
 			set;
 		}
 
 
-		public string IconFamilyName
+		public string IconFamilyUri
 		{
 			get
 			{
-				string[] elems = this.IconName.Split ('.');
+				string[] elems = this.IconUri.Split ('.');
 				return string.Join (".", elems.Take (elems.Length - 2).ToArray ());
 			}
 			set
 			{
-				this.OffIconName = value + ".Off.icon";
-				this.OnIconName  = value + ".On.icon";
-				this.OffHiliteIconName = value + ".OffHilite.icon";
-				this.OnHiliteIconName = value + ".OnHilite.icon";
-				this.PressIconName = value + ".Press.icon";
+				this.OffIconUri = value + ".Off.icon";
+				this.OnIconUri  = value + ".On.icon";
+				this.OffHiliteIconUri = value + ".OffHilite.icon";
+				this.OnHiliteIconUri = value + ".OnHilite.icon";
+				this.PressIconUri = value + ".Press.icon";
 			}
 		}
 
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			string icon = this.IconName;
+			string icon = this.IconUri;
 			var rectangle = this.Client.Bounds;
 
 			if (this.IsEngaged)
 			{
-				icon = this.PressIconName;
+				icon = this.PressIconUri;
 			}
 			else
 			{
 				if (this.ActiveState == ActiveState.Yes)
 				{
-					icon = this.IsEntered ? this.OnHiliteIconName : this.OnIconName;
+					icon = this.IsEntered ? this.OnHiliteIconUri : this.OnIconUri;
 				}
 				else
 				{
-					icon = this.IsEntered ? this.OffHiliteIconName : this.OffIconName;
+					icon = this.IsEntered ? this.OffHiliteIconUri : this.OffIconUri;
 				}
 			}
 

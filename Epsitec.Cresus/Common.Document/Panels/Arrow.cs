@@ -78,7 +78,7 @@ namespace Epsitec.Common.Document.Panels
 			this.separator2 = new Separator(this);
 
 			this.swapArrow = new IconButton(this);
-			this.swapArrow.IconName = Misc.Icon("SwapData");
+			this.swapArrow.IconUri = Misc.Icon("SwapData");
 			this.swapArrow.Clicked += this.HandleSwapArrowClicked;
 			ToolTip.Default.SetToolTip(this.swapArrow, Res.Strings.Panel.Arrow.Tooltip.Swap);
 

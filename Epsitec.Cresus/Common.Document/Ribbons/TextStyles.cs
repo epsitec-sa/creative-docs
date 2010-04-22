@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//?this.buttonParagraph.Command = "TextEditing";  // (*)
 			this.buttonParagraph.MarkLength = 5;
 			this.buttonParagraph.MarkDisposition = ButtonMarkDisposition.Right;
-			this.buttonParagraph.IconName = Misc.Icon("TextFilterParagraph");
+			this.buttonParagraph.IconUri = Misc.Icon("TextFilterParagraph");
 			this.buttonParagraph.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonParagraph.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonParagraph.AutoFocus = false;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Document.Ribbons
 			//?this.buttonCharacter.Command = "TextEditing";  // (*)
 			this.buttonCharacter.MarkLength = 5;
 			this.buttonCharacter.MarkDisposition = ButtonMarkDisposition.Right;
-			this.buttonCharacter.IconName = Misc.Icon("TextFilterCharacter");
+			this.buttonCharacter.IconUri = Misc.Icon("TextFilterCharacter");
 			this.buttonCharacter.PreferredIconSize = Misc.IconPreferredSize("Normal");
 			this.buttonCharacter.ButtonStyle = ButtonStyle.ActivableIcon;
 			this.buttonCharacter.AutoFocus = false;

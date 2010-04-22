@@ -68,7 +68,7 @@ namespace Epsitec.Common.UI
 					Dock = DockStyle.Stacked,
 					Embedder = box,
 					Text = "Text+Icon, DialogButton",
-					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
 					Margins = new Drawing.Margins (0, 0, 0, 2)
 				};
 
@@ -88,7 +88,7 @@ namespace Epsitec.Common.UI
 					Dock = DockStyle.Stacked,
 					Embedder = box,
 					Text = "Text+Icon, RichDialogButton",
-					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
 					Margins = new Drawing.Margins (0, 0, 0, 2),
 					PreferredHeight = 28
 				};
@@ -108,7 +108,7 @@ namespace Epsitec.Common.UI
 					Dock = DockStyle.Stacked,
 					Embedder = box,
 					Text = "Text+Icon, FlatButton",
-					IconName = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
+					IconUri = "manifest:Epsitec.Common.Widgets.Images.TableEdition.icon",
 					Margins = new Drawing.Margins (0, 0, 0, 2)
 				};
 

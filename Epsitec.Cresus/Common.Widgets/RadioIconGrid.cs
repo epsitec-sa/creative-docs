@@ -1,4 +1,4 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -62,11 +62,11 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		public void AddRadioIcon(string iconName, string tooltip, int enumValue, bool endOfLine)
+		public void AddRadioIcon(string iconUri, string tooltip, int enumValue, bool endOfLine)
 		{
 			RadioIcon icon = new RadioIcon (this);
 			
-			icon.IconName          = iconName;
+			icon.IconUri          = iconUri;
 			icon.EnumValue         = enumValue;
 			icon.EndOfLine         = endOfLine;
 			icon.TabIndex          = this.list.Count + 1;

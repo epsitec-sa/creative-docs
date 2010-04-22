@@ -304,7 +304,7 @@ namespace Epsitec.Common.Widgets
 			if ( index < this.items.Count )
 			{
 				Item item = this.items[index] as Item;
-				this.buttonMain[rank].IconName = item.BriefIcon;
+				this.buttonMain[rank].IconUri = item.BriefIcon;
 				this.buttonMain[rank].PreferredIconSize = new Drawing.Size(this.ButtonWidth, this.ButtonHeight);
 				this.buttonMain[rank].ActiveState = (this.SelectedIndex == index) ? ActiveState.Yes : ActiveState.No;
 				this.buttonMain[rank].SetSelected(this.SelectedIndex == index);
@@ -312,7 +312,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.buttonMain[rank].IconName = null;
+				this.buttonMain[rank].IconUri = null;
 				this.buttonMain[rank].ActiveState = ActiveState.No;
 				this.buttonMain[rank].SetSelected(false);
 				string tooltip = null;

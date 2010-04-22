@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Graph.Controllers
 			{
 				Dock = DockStyle.Left,
 				PreferredWidth = 130,
-				IconName = "manifest:Epsitec.Cresus.Graph.Images.TakeSnapshot.icon",
+				IconUri = "manifest:Epsitec.Cresus.Graph.Images.TakeSnapshot.icon",
 				Text = "Créer un cliché instantané",
 				ButtonClass = ButtonClass.FlatButton,
 //				ContentAlignment = ContentAlignment.MiddleLeft,
