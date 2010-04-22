@@ -1,15 +1,12 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -21,6 +18,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			this.CreateRibbonBook (container);
+			this.CreateRibbonHomePage ();
+		}
+
+		private void CreateRibbonBook(Widget container)
+		{
 			this.ribbonBook = new RibbonBook ()
 			{
 				Parent = container,
@@ -29,34 +32,45 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			CoreProgram.Application.PersistanceManager.Register (this.ribbonBook);
+		}
 
+		private void CreateRibbonHomePage()
+		{
 			this.ribbonPageHome = new RibbonPage (this.ribbonBook)
 			{
 				Name = "Home",
 				RibbonTitle = "Principal"
 			};
 
-			RibbonSection section;
-			FrameBox      frame;
+			this.CreateRibbonEditSection ();
+			this.CreateRibbonDatabaseSection ();
+			this.CreateRibbonStateSection ();
+		}
 
-			section = new RibbonSection (this.ribbonPageHome)
+		private void CreateRibbonEditSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
 			{
-				Name = "Edition",
+				Name = "Edit",
 				Title = "Édition",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				PreferredWidth = 200,
 			};
 
-			frame = new FrameBox ()
+			new FrameBox ()
 			{
 				Parent = section,
 				Dock = DockStyle.Stacked,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow
 			};
+		}
 
-			section = new RibbonSection (this.ribbonPageHome)
+
+		private void CreateRibbonDatabaseSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
 			{
-				Name = "Bases",
+				Name = "Database",
 				Title = "Bases de données",
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
@@ -66,22 +80,23 @@ namespace Epsitec.Cresus.Core.Controllers
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
+		}
 
-			section = new RibbonSection (this.ribbonPageHome)
+		private void CreateRibbonStateSection()
+		{
+			var section = new RibbonSection (this.ribbonPageHome)
 			{
-				Name = "States",
-				Title = "Etats",
+				Name = "State",
+				Title = "États",
 				Dock = DockStyle.Fill,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev, handler: (s, e) => {}/*CoreProgram.Application.StateManager.NavigateHistoryPrev ()*/));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext, handler: (s, e) => {}/*CoreProgram.Application.StateManager.NavigateHistoryNext ()*/));
-
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigatePrev));
+			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.History.NavigateNext));
 
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
 			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
-			section.Children.Add (this.CreateButton (Mai2008.Res.Commands.Edition.Edit, DockStyle.StackEnd, null, 63));
 		}
 
 		private IconButton CreateButton(Command command, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, double dx = 31.0)
