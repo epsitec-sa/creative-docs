@@ -21,22 +21,20 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			this.rightPanel = new FrameBox (this);
 			this.rightPanel.Margins = new Margins (0, AbstractTile.ArrowBreadth, 0, 0);
-			this.rightPanel.MinWidth = AbstractTile.ArrowBreadth;
 			this.rightPanel.Dock = DockStyle.Fill;
 
-			this.staticTextIconUri = new StaticText (this.leftPanel);
-			this.staticTextIconUri.Margins = new Margins (AbstractTile.iconMargins);
-			this.staticTextIconUri.PreferredSize = new Size (AbstractTile.iconSize, AbstractTile.iconSize);
-			this.staticTextIconUri.Dock = DockStyle.Top;
-			this.staticTextIconUri.ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter;
+			this.staticTextIcon = new StaticText (this.leftPanel);
+			this.staticTextIcon.Margins = new Margins (AbstractTile.iconMargins);
+			this.staticTextIcon.PreferredSize = new Size (AbstractTile.iconSize, AbstractTile.iconSize);
+			this.staticTextIcon.Dock = DockStyle.Top;
+			this.staticTextIcon.ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter;
 
 			this.staticTextTitle = new StaticText (this.rightPanel);
 			this.staticTextTitle.PreferredHeight = AbstractTile.titleHeight;
-			this.staticTextTitle.MinWidth = 0;
+			this.staticTextTitle.PreferredWidth = 0;
 			this.staticTextTitle.Dock = DockStyle.Top;
 
 			this.mainPanel = new FrameBox (this.rightPanel);
-			this.mainPanel.MinWidth = 0;
 			this.mainPanel.Dock = DockStyle.Fill;
 		}
 
@@ -82,11 +80,11 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (string.IsNullOrEmpty (this.iconUri) || this.iconUri.Length == 1)  // un seul caractère ?
 				{
-					this.staticTextIconUri.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
+					this.staticTextIcon.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
 				}
 				else
 				{
-					this.staticTextIconUri.Text = Misc.GetResourceIconImage (value);
+					this.staticTextIcon.Text = Misc.GetResourceIconImage (value);
 				}
 			}
 		}
@@ -124,7 +122,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		protected FrameBox mainPanel;
 
 		private string iconUri;
-		private StaticText staticTextIconUri;
+		private StaticText staticTextIcon;
 
 		private string title;
 		private StaticText staticTextTitle;
