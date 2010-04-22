@@ -14,10 +14,18 @@ namespace Epsitec.Cresus.Core.Controllers
 	public class MainViewController : CoreController
 	{
 		public MainViewController()
+			: base ("MainView")
 		{
+			this.browserController = new BrowserController ("MainBrowser");
+
 			this.CreateTileNodes ();
 		}
 
+
+		public override IEnumerable<CoreController> GetSubControllers()
+		{
+			yield return this.browserController;
+		}
 
 		public override void CreateUI(Widget container)
 		{
@@ -368,16 +376,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-	
-		private FrameBox frame;
 
-		private FrameBox leftPanel;
-		private VSplitter splitter;
-		private FrameBox rightPanel;
+		readonly BrowserController browserController;
+		
+		FrameBox frame;
 
-		private FrameBox panel1;
-		private FrameBox panel2;
+		FrameBox leftPanel;
+		VSplitter splitter;
+		FrameBox rightPanel;
 
-		private TileNode root;
+		FrameBox panel1;
+		FrameBox panel2;
+
+		TileNode root;
 	}
 }
