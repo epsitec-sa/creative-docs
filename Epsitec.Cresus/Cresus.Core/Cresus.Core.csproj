@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="CoreApplication.Obsolete.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
