@@ -89,9 +89,12 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Controllers\BrowserController.cs" />
+    <Compile Include="Controllers\AbstractViewControler.cs" />
+    <Compile Include="Controllers\PersonViewControler.cs" />
+    <Compile Include="Controllers\DataViewControler.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
-    <Compile Include="Controllers\VerticalStackTilesControler.cs" />
+    <Compile Include="Controllers\ViewLayoutControler.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
     <Compile Include="Misc.cs" />

@@ -11,9 +11,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class VerticalStackTilesControler : CoreController
+	public class ViewLayoutControler : CoreController
 	{
-		public VerticalStackTilesControler(string name)
+		public ViewLayoutControler(string name)
 			: base (name)
 		{
 		}
@@ -25,6 +25,25 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			this.frame = new FrameBox
+			{
+				Parent = container,
+				Dock = DockStyle.Fill,
+			};
 		}
+
+		public int ColumnsCount
+		{
+			get;
+			set;
+		}
+
+		public int GetColumWidth(int index)
+		{
+			return 200;
+		}
+
+
+		private FrameBox frame;
 	}
 }
