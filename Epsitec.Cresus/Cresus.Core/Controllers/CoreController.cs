@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public abstract class AbstractController : System.IDisposable
+	public abstract class CoreController : System.IDisposable
 	{
 		public abstract void CreateUI(Widget container);
 

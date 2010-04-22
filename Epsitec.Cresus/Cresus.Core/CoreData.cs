@@ -30,25 +30,65 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public bool IsReady
+		{
+			get
+			{
+				return this.ready;
+			}
+		}
+
 		public void SetupDatabase()
 		{
 			System.Diagnostics.Debug.Assert (this.infrastructure.IsConnectionOpen == false);
 			System.Diagnostics.Debug.Assert (this.dataContext == null);
 
-			DbAccess access = DbInfrastructure.CreateDatabaseAccess ("core");
-			bool     empty  = false;
+			DbAccess access = CoreData.GetDatabaseAccess ();
+			bool     empty  = this.ConnectToDatabase (access);
 
-			access.IgnoreInitialConnectionErrors = true;
-			access.CheckConnection = true;
+			System.Diagnostics.Debug.Assert (this.infrastructure.IsConnectionOpen);
 
+			this.SetupDataContext ();
+
+			if (empty)
+			{
+				this.CreateDatabaseSchemas ();
+				this.PopulateDatabase ();
+			}
+			else
+			{
+				this.VerifyDatabaseSchemas ();
+				this.ReloadDatabase ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine ("Database ready");
+
+			this.SetupDataBrowser ();
+			this.ready = true;
+		}
+
+		private void SetupDataContext()
+		{
+			this.dataContext = new DataContext (this.infrastructure);
+		}
+
+		private void SetupDataBrowser()
+		{
+			this.dataBrowser = new DataBrowser (this.infrastructure);
+		}
+
+		private bool ConnectToDatabase(DbAccess access)
+		{
 			if (this.infrastructure.AttachToDatabase (access))
 			{
 				System.Diagnostics.Trace.WriteLine ("Connected to database");
+
+				return false;
 			}
 			else
 			{
 				System.Diagnostics.Trace.WriteLine ("Cannot connect to database");
-				
+
 				try
 				{
 					this.infrastructure.CreateDatabase (access);
@@ -63,37 +103,29 @@ namespace Epsitec.Cresus.Core
 				}
 
 				System.Diagnostics.Trace.WriteLine ("Created new database");
-				empty = true;
+				
+				return true;
 			}
-
-			this.dataContext = new DataContext (this.infrastructure);
-
-			System.Diagnostics.Debug.Assert (this.infrastructure.IsConnectionOpen);
-
-			if (empty)
-			{
-				this.CreateSchemas ();
-				this.PopulateDatabase ();
-			}
-			else
-			{
-				this.VerifySchemas ();
-				this.ReloadDatabase ();
-			}
-			
-			System.Diagnostics.Debug.WriteLine ("Database ready");
-
-			this.dataBrowser = new DataBrowser (this.infrastructure);
 		}
 
-		private void VerifySchemas()
+		private void VerifyDatabaseSchemas()
 		{
 		}
 
-		private void CreateSchemas()
+		private void CreateDatabaseSchemas()
 		{
 			this.dataContext.CreateSchema<Epsitec.Cresus.Mai2008.Entities.ClientEntity> ();
 			this.dataContext.CreateSchema<Epsitec.Cresus.Mai2008.Entities.FactureEntity> ();
+		}
+
+		private static DbAccess GetDatabaseAccess()
+		{
+			DbAccess access = DbInfrastructure.CreateDatabaseAccess ("core");
+
+			access.IgnoreInitialConnectionErrors = true;
+			access.CheckConnection = true;
+
+			return access;
 		}
 
 		
@@ -124,5 +156,6 @@ namespace Epsitec.Cresus.Core
 		private readonly DbInfrastructure infrastructure;
 		private DataContext dataContext;
 		private DataBrowser dataBrowser;
+		private bool ready;
 	}
 }

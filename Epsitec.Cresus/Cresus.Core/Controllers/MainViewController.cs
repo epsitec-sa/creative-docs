@@ -11,7 +11,7 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainViewController : AbstractController
+	public class MainViewController : CoreController
 	{
 		public MainViewController()
 		{

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core
 	{
 		public CoreApplication()
 		{
-			this.controllers = new List<Controllers.AbstractController> ();
+			this.controllers = new List<Controllers.CoreController> ();
 			this.stateManager = new StateManager (this);
 			this.persistenceManager = new PersistenceManager ();
 
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Core
 		CoreData								data;
 		CoreLibrary.ExceptionManager			exceptionManager;
 		CoreCommands							commands;
-		readonly List<Controllers.AbstractController> controllers;
+		readonly List<Controllers.CoreController> controllers;
 		
 		FrameBox								ribbonBox;
 		FrameBox								contentBox;
