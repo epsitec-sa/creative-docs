@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.Core
 		public CoreData()
 		{
 			this.infrastructure = new DbInfrastructure ();
-			this.resolver = new ResolverImplementation (this);
 		}
 
 		public DataContext DataContext
@@ -53,12 +52,12 @@ namespace Epsitec.Cresus.Core
 			if (empty)
 			{
 				this.CreateDatabaseSchemas ();
-				this.PopulateDatabase ();
+//-				this.PopulateDatabase ();
 			}
 			else
 			{
 				this.VerifyDatabaseSchemas ();
-				this.ReloadDatabase ();
+//-				this.ReloadDatabase ();
 			}
 			
 			System.Diagnostics.Debug.WriteLine ("Database ready");
@@ -133,12 +132,6 @@ namespace Epsitec.Cresus.Core
 
 		public void Dispose()
 		{
-			if (this.resolver != null)
-			{
-				this.resolver.Dispose ();
-				this.resolver = null;
-			}
-			
 			if (this.dataContext != null)
 			{
 				this.dataContext.Dispose ();
