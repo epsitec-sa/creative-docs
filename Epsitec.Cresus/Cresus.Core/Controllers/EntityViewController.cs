@@ -62,5 +62,35 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			return null;
 		}
+
+
+		protected void CreateSimpleTile(Widget container, string iconUri, string title, string content)
+		{
+			Widgets.SimpleTile tile = new Widgets.SimpleTile
+			{
+				Parent = container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, -1),  // léger chevauchement vertical
+				ArrowLocation = Direction.Right,
+				IconUri = iconUri,
+				Title = title,
+				Content = content,
+			};
+
+			tile.PreferredHeight = tile.ContentHeight;
+		}
+
+		protected void AdjustLastTile(Widget container)
+		{
+			if (container.Children.Count != 0)
+			{
+				var tile = container.Children[container.Children.Count-1] as Widgets.AbstractTile;
+				if (tile != null)
+				{
+					tile.Margins = new Margins (0);
+				}
+			}
+		}
+
 	}
 }

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				//	Une première tuile pour l'identité de la personne.
 				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateTile (container, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
+				this.CreateSimpleTile (container, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
 
 				//	Une tuile distincte par adresse postale.
 				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (contact is Entities.MailContactEntity)
 					{
 						var mailContact = contact as Entities.MailContactEntity;
-						this.CreateTile (container, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
+						this.CreateSimpleTile (container, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
 					}
 				}
 
@@ -53,40 +53,26 @@ namespace Epsitec.Cresus.Core.Controllers
 				string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (telecomContent))
 				{
-					this.CreateTile (container, "Data.Telecom", "Téléphones", telecomContent);
+					this.CreateSimpleTile (container, "Data.Telecom", "Téléphones", telecomContent);
 				}
 
 				//	Une tuile commune pour toutes les adresses mail.
 				string uriContent = this.GetUriSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (uriContent))
 				{
-					this.CreateTile (container, "Data.Uri", "Mails", uriContent);
+					this.CreateSimpleTile (container, "Data.Uri", "Mails", uriContent);
 				}
 			}
 
 			if (person is Entities.LegalPersonEntity)
 			{
 				var legalPerson = person as Entities.LegalPersonEntity;
-				this.CreateTile (container, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
+				this.CreateSimpleTile (container, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
 			}
+
+			this.AdjustLastTile (container);
 		}
 
-
-		private void CreateTile(Widget container, string iconUri, string title, string content)
-		{
-			Widgets.SimpleTile tile = new Widgets.SimpleTile
-			{
-				Parent = container,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 1),
-				ArrowLocation = Direction.Right,
-				IconUri = iconUri,
-				Title = title,
-				Content = content,
-			};
-
-			tile.PreferredHeight = tile.ContentHeight;
-		}
 
 
 		private string GetNaturalPersonSummary(Entities.NaturalPersonEntity naturalPerson)
