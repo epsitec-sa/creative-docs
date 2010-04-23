@@ -87,6 +87,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Title = title,
 				Content = content,
 			};
+
+			tile.PreferredHeight = tile.ContentHeight;
 		}
 
 
@@ -111,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				builder.Append ("<br/>");
 			}
 
-			return builder.ToString ();
+			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
 		private string GetTelecomDescription(IList<Entities.AbstractContactEntity> contacts)
@@ -129,7 +131,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 
-			return builder.ToString ();
+			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
 		private string GetUriDescription(IList<Entities.AbstractContactEntity> contacts)
@@ -147,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 	
-			return builder.ToString ();
+			return Misc.RemoveLastBreakLine(builder.ToString ());
 		}
 
 
