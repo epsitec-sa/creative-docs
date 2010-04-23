@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// The <c>ICollectionView</c> interface enables collections to have functionalities
 	/// such as current record management, sorting, filtering and grouping.
 	/// </summary>
-	public interface ICollectionView : INotifyCollectionChanged
+	public interface ICollectionView : INotifyCollectionChanged, INotifyCurrentChanged
 	{
 		/// <summary>
 		/// Gets the underlying (unfiltered and unsorted) source collection.
@@ -191,17 +191,5 @@ namespace Epsitec.Common.Types
 		/// disposed of at the end of the modifications to exit the deferred
 		/// refresh mode.</returns>
 		System.IDisposable DeferRefresh();
-
-		/// <summary>
-		/// Occurs when the current item changes.
-		/// <remarks>Subscribing to this event is thread safe.</remarks>
-		/// </summary>
-		event Support.EventHandler CurrentChanged;
-		
-		/// <summary>
-		/// Occurs when the current item is about to change.
-		/// <remarks>Subscribing to this event is thread safe.</remarks>
-		/// </summary>
-		event Support.EventHandler<CurrentChangingEventArgs> CurrentChanging;
 	}
 }

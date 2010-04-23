@@ -61,25 +61,28 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.container.Children.Clear ();
 
-			double x = 0;
-			double overlap = 5;
-
-			foreach (var column in this.columns.Skip (1).Reverse ())
+			if (this.columns.Count > 0)
 			{
-				column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-				column.PreferredWidth = 160;
-				column.Margins = new Margins (x, 0, 0, 0);
-				x += column.PreferredWidth - overlap;
-			}
+				double x = 0;
+				double overlap = 5;
 
-			var lastColumn = this.columns.Peek ();
+				foreach (var column in this.columns.Skip (1).Reverse ())
+				{
+					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+					column.PreferredWidth = 160;
+					column.Margins = new Margins (x, 0, 0, 0);
+					x += column.PreferredWidth - overlap;
+				}
 
-			lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
-			lastColumn.Margins = new Margins (x, 0, 0, 0);
+				var lastColumn = this.columns.Peek ();
 
-			foreach (var column in this.columns)
-			{
-				this.container.Children.Add (column);
+				lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
+				lastColumn.Margins = new Margins (x, 0, 0, 0);
+
+				foreach (var column in this.columns)
+				{
+					this.container.Children.Add (column);
+				}
 			}
 		}
 

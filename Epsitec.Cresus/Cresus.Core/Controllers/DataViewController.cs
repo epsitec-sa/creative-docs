@@ -53,9 +53,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.ClearActiveEntity ();
 
-			this.entity = entity;
-
-			this.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator));
+			if (entity != null)
+			{
+				this.entity = entity;
+				this.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator));
+			}
 		}
 
 		public void ClearActiveEntity()

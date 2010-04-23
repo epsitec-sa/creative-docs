@@ -23,6 +23,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserController = new BrowserViewController ("MainBrowser");
 			this.dataViewController = new DataViewController ("MainViewer");
 
+
+			this.browserController.CurrentChanged += sender => this.dataViewController.SelectEntity (this.browserController.ActiveEntity);
+
 			this.CreateTileNodes ();
 		}
 
@@ -70,6 +73,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.browserController.CreateUI (this.leftPanel);
 			this.dataViewController.CreateUI (this.rightPanel);
+
+			this.browserController.SetContents (this.entities);
 
 			this.dataViewController.SelectEntity (this.entities[0]);
 			//?this.dataViewController.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entities[0], ViewControllerMode.Compact, this.dataViewController.Orchestrator));
