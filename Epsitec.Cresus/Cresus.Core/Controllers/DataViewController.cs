@@ -20,7 +20,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		public DataViewController(string name)
 			: base (name)
 		{
-			this.viewControllers = new Stack<EntityViewController> ();
+			this.viewControllers = new Stack<CoreViewController> ();
+			this.orchestrator = new Orchestrators.DataViewOrchestrator (this);
+		}
+
+		public Orchestrators.DataViewOrchestrator Orchestrator
+		{
+			get
+			{
+				return this.orchestrator;
+			}
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -39,16 +48,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewLayoutController = new ViewLayoutController (this.Name + ".ViewLayout", this.frame);
 		}
 
+		
 		public void SelectEntity(AbstractEntity entity)
 		{
 			this.ClearActiveEntity ();
 
 			this.entity = entity;
 
-			this.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact));
+			this.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator));
 		}
 
-		public void PushViewController(EntityViewController controller)
+		public void ClearActiveEntity()
+		{
+			if (this.entity != null)
+			{
+				while (this.viewControllers.Count > 0)
+				{
+					this.PopViewController ();
+				}
+
+				this.entity = null;
+			}
+		}
+
+		
+		public void PushViewController(CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (controller != null);
 
@@ -69,21 +93,19 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.viewLayoutController.DeleteColumn ();
 		}
 
-		public void ClearActiveEntity()
+		public void PopViewControllersUntil(CoreViewController controller)
 		{
-			if (this.entity != null)
-            {
-				while (this.viewControllers.Count > 0)
-                {
-					this.PopViewController ();
-                }
-				
-				this.entity = null;
-            }
+			System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
+
+			while (this.viewControllers.Peek () != controller)
+			{
+				this.PopViewController ();
+			}
 		}
 
 
-		private readonly Stack<EntityViewController> viewControllers;
+		private readonly Stack<CoreViewController> viewControllers;
+		private readonly Orchestrators.DataViewOrchestrator orchestrator;
 		
 		private ViewLayoutController viewLayoutController;
 		private FrameBox frame;
