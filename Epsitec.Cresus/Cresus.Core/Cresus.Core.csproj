@@ -89,9 +89,10 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\LegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\EntityViewController.cs" />
-    <Compile Include="Controllers\PersonViewController.cs" />
+    <Compile Include="Controllers\NaturalPersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />

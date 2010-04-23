@@ -12,62 +12,50 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class PersonViewController : EntityViewController
+	public class NaturalPersonViewController : EntityViewController
 	{
-		public PersonViewController(string name)
+		public NaturalPersonViewController(string name)
 			: base (name)
 		{
-			this.controllers = new List<CoreController> ();
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			foreach (CoreController controller in this.controllers)
-			{
-				yield return controller;
-			}
+			yield break;
 		}
 
 		public override void CreateUI(Widget container)
 		{
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var person = this.Entity as Entities.AbstractPersonEntity;
+			var person = this.Entity as Entities.NaturalPersonEntity;
+			System.Diagnostics.Debug.Assert (person != null);
 
-			if (person is Entities.NaturalPersonEntity)
+			//	Une première tuile pour l'identité de la personne.
+			var naturalPerson = person as Entities.NaturalPersonEntity;
+			this.CreateSimpleTile (container, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
+
+			//	Une tuile distincte par adresse postale.
+			foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
 			{
-				//	Une première tuile pour l'identité de la personne.
-				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateSimpleTile (container, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
-
-				//	Une tuile distincte par adresse postale.
-				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
+				if (contact is Entities.MailContactEntity)
 				{
-					if (contact is Entities.MailContactEntity)
-					{
-						var mailContact = contact as Entities.MailContactEntity;
-						this.CreateSimpleTile (container, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
-					}
-				}
-
-				//	Une tuile commune pour tous les numéros de téléphone.
-				string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
-				if (!string.IsNullOrEmpty (telecomContent))
-				{
-					this.CreateSimpleTile (container, "Data.Telecom", "Téléphones", telecomContent);
-				}
-
-				//	Une tuile commune pour toutes les adresses mail.
-				string uriContent = this.GetUriSummary (naturalPerson.Contacts);
-				if (!string.IsNullOrEmpty (uriContent))
-				{
-					this.CreateSimpleTile (container, "Data.Uri", "Mails", uriContent);
+					var mailContact = contact as Entities.MailContactEntity;
+					this.CreateSimpleTile (container, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
 				}
 			}
 
-			if (person is Entities.LegalPersonEntity)
+			//	Une tuile commune pour tous les numéros de téléphone.
+			string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
+			if (!string.IsNullOrEmpty (telecomContent))
 			{
-				var legalPerson = person as Entities.LegalPersonEntity;
-				this.CreateSimpleTile (container, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
+				this.CreateSimpleTile (container, "Data.Telecom", "Téléphones", telecomContent);
+			}
+
+			//	Une tuile commune pour toutes les adresses mail.
+			string uriContent = this.GetUriSummary (naturalPerson.Contacts);
+			if (!string.IsNullOrEmpty (uriContent))
+			{
+				this.CreateSimpleTile (container, "Data.Uri", "Mails", uriContent);
 			}
 
 			this.AdjustLastTile (container);
@@ -87,16 +75,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			builder.Append (Misc.SpacingAppend (naturalPerson.Firstname, naturalPerson.Lastname));
-			builder.Append ("<br/>");
-
-			return Misc.RemoveLastBreakLine (builder.ToString ());
-		}
-
-		private string GetLegalPersonSummary(Entities.LegalPersonEntity legalPerson)
-		{
-			var builder = new StringBuilder ();
-
-			builder.Append (legalPerson.Name);
 			builder.Append ("<br/>");
 
 			return Misc.RemoveLastBreakLine (builder.ToString ());
@@ -175,8 +153,5 @@ namespace Epsitec.Cresus.Core.Controllers
 	
 			return Misc.RemoveLastBreakLine(builder.ToString ());
 		}
-
-
-		private List<CoreController> controllers;
 	}
 }
