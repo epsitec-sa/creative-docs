@@ -12,9 +12,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class PersonViewControler : AbstractViewControler
+	public class PersonViewController : AbstractViewController
 	{
-		public PersonViewControler(string name)
+		public PersonViewController(string name)
 			: base (name)
 		{
 		}
@@ -28,8 +28,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			System.Diagnostics.Debug.Assert (this.entity != null);
 
-			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
-
 			Widgets.SimpleTile tile = new Widgets.SimpleTile
 			{
 				Parent = container,
@@ -37,10 +35,28 @@ namespace Epsitec.Cresus.Core.Controllers
 				ArrowLocation = Direction.Right,
 				IconUri = "Data.Person",
 				Title = "Personne",
-				Content = person.Contacts[0].NaturalPerson.Firstname,  // TODO: !
+				Content = this.Description,
 			};
 		}
 
 
+		/// <summary>
+		/// Retourne un texte multiligne court de description d'une personne.
+		/// </summary>
+		/// <value>The description.</value>
+		private string Description
+		{
+			get
+			{
+				Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
+
+				if (person == null)
+				{
+					return null;
+				}
+
+				return person.Contacts[0].NaturalPerson.Firstname;  // TODO: !
+			}
+		}
 	}
 }
