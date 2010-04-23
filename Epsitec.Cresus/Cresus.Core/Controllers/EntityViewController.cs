@@ -60,34 +60,26 @@ namespace Epsitec.Cresus.Core.Controllers
 				return null;
 			}
 
-			if (entity is Entities.NaturalPersonEntity)
+			if (entity is Entities.NaturalPersonEntity || entity is Entities.LegalPersonEntity)
 			{
 				if (mode == ViewControllerMode.TelecomsEdition)
 				{
-					return null;
+					return new TelecomsViewController (name);
 				}
 
 				if (mode == ViewControllerMode.UrisEdition)
 				{
-					return null;
+					return new UrisViewController (name);
 				}
 
-				return new NaturalPersonViewController (name);
-			}
-
-			if (entity is Entities.LegalPersonEntity)
-			{
-				if (mode == ViewControllerMode.TelecomsEdition)
+				if (entity is Entities.NaturalPersonEntity)
 				{
-					return null;
+					return new NaturalPersonViewController (name);
 				}
-
-				if (mode == ViewControllerMode.UrisEdition)
+				else
 				{
-					return null;
+					return new LegalPersonViewController (name);
 				}
-
-				return new LegalPersonViewController (name);
 			}
 
 			if (entity is Entities.MailContactEntity)

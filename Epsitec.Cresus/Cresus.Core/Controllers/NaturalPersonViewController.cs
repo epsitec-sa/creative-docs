@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.Mode == ViewControllerMode.NaturalPersonEdition)
 			{
 				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateSummaryTile (this.Entity, ViewControllerMode.None, "Data.NaturalPerson", "Edition de la personne physique", EntitySummary.GetNaturalPersonSummary (naturalPerson));
+				this.CreateSummaryTile (this.Entity, ViewControllerMode.None, "Data.NaturalPerson", "Personne physique", "[ <i>Ici prendra place l'édition de la personne physique</i> ]");
 			}
 			else
 			{
