@@ -236,9 +236,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Images\Data.Mail.icon" />
-    <EmbeddedResource Include="Images\Data.Person.icon" />
     <EmbeddedResource Include="Images\Data.Telecom.icon" />
     <EmbeddedResource Include="Images\Data.Uri.icon" />
+    <EmbeddedResource Include="Images\Data.LegalPerson.icon" />
+    <EmbeddedResource Include="Images\Data.NaturalPerson.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				//	Une première tuile pour l'identité de la personne.
 				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateTile (container, "Data.Person", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
+				this.CreateTile (container, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
 
 				//	Une tuile distincte par adresse postale.
 				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (person is Entities.LegalPersonEntity)
 			{
 				var legalPerson = person as Entities.LegalPersonEntity;
-				this.CreateTile (container, "Data.Person", "Personne morale", this.GetLegalPersonSummary (legalPerson));
+				this.CreateTile (container, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
 			}
 		}
 
