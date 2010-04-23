@@ -89,6 +89,8 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\UrisViewController.cs" />
+    <Compile Include="Controllers\TelecomsViewController.cs" />
     <Compile Include="Controllers\MailContactViewController.cs" />
     <Compile Include="Controllers\LegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />

@@ -12,9 +12,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MailContactViewController : EntityViewController
+	public class UrisViewController : EntityViewController
 	{
-		public MailContactViewController(string name)
+		public UrisViewController(string name)
 			: base (name)
 		{
 		}
@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var mailContact = this.Entity as Entities.MailContactEntity;
-			System.Diagnostics.Debug.Assert (mailContact != null);
+			var person = this.Entity as Entities.AbstractPersonEntity;
+			System.Diagnostics.Debug.Assert (person != null);
 
 			// TODO: Il faudra créer ici un autre Tile permettant d'éditer !
-			this.CreateSummaryTile (mailContact, ViewControllerMode.None, "Data.Mail", EntitySummary.GetMailTitle (mailContact), "[ <i>Ici prendra place l'édition de l'adresse</i> ]");
+			this.CreateSummaryTile (person, ViewControllerMode.None, "Data.Uri", "Mails", "[ <i>Ici prendra place l'édition des adresses mail</i> ]");
 
 			this.AdjustLastTile ();
 		}

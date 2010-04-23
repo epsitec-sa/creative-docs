@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.Mode == ViewControllerMode.LegalPersonEdition)
 			{
 				var legalPerson = person as Entities.LegalPersonEntity;
-				this.CreateSummaryTile (this.Entity, ViewControllerMode.None, "Data.LegalPerson", "Edtion de la personne morale", EntitySummary.GetLegalPersonSummary (legalPerson));
+				this.CreateSummaryTile (this.Entity, ViewControllerMode.None, "Data.LegalPerson", "Personne morale", "[ <i>Ici prendra place l'édition de la personne morale</i> ]");
 			}
 			else
 			{
