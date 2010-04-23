@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.dataViewController.CreateUI (this.rightPanel);
 
 			this.dataViewController.SelectEntity (this.entities[0]);
-			this.dataViewController.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entities[1], ViewControllerMode.Compact));
+			this.dataViewController.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entities[0], ViewControllerMode.Compact));
 			
 			//?this.CreateTiles (this.rightPanel);
 		}
