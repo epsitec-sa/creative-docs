@@ -13,9 +13,11 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class ViewLayoutController : CoreController
 	{
-		public ViewLayoutController(string name)
+		public ViewLayoutController(string name, Widget container)
 			: base (name)
 		{
+			this.container = container;
+			this.columns = new Stack<Widget> ();
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -23,18 +25,65 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield break;
 		}
 
-		public int ColumnsCount
+		public int ColumnCount
 		{
-			get;
-			set;
+			get
+			{
+				return this.columns.Count;
+			}
 		}
 
-		public int GetColumWidth(int index)
+		public Widget CreateColumn()
 		{
-			return 200;
+			var column = new FrameBox ()
+			{
+				Name = string.Format ("Column{0}", this.ColumnCount)
+			};
+
+			this.columns.Push (column);
+			this.UpdateColumnLayout ();
+
+			return column;
 		}
 
+		public void DeleteColumn()
+		{
+			if (this.ColumnCount > 0)
+			{
+				var column = this.columns.Pop ();
 
-		private FrameBox frame;
+				column.Dispose ();
+				this.UpdateColumnLayout ();
+			}
+		}
+
+		private void UpdateColumnLayout()
+		{
+			this.container.Children.Clear ();
+
+			double x = 0;
+			double overlap = 5;
+
+			foreach (var column in this.columns.Skip (1).Reverse ())
+			{
+				column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+				column.PreferredWidth = 160;
+				column.Margins = new Margins (x, 0, 0, 0);
+				x += column.PreferredWidth - overlap;
+			}
+
+			var lastColumn = this.columns.Peek ();
+
+			lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
+			lastColumn.Margins = new Margins (x, 0, 0, 0);
+
+			foreach (var column in this.columns)
+			{
+				this.container.Children.Add (column);
+			}
+		}
+
+		private readonly Widget container;
+		private readonly Stack<Widget> columns;
 	}
 }
