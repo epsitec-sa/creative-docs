@@ -60,19 +60,28 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <value>The description.</value>
 		private string Description(Entities.AbstractContactEntity contact)
 		{
-				Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
+			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
 
-				if (person == null)
-				{
-					return null;
-				}
+			if (person == null)
+			{
+				return null;
+			}
 
-				StringBuilder builder = new StringBuilder ();
+			StringBuilder builder = new StringBuilder ();
 
+			if (contact.LegalPerson != null)
+			{
+				builder.Append(contact.LegalPerson.Name);
+				builder.Append ("<br/>");
+			}
+
+			if (contact.NaturalPerson !=null)
+			{
 				builder.Append (Misc.SpacingAppend(contact.NaturalPerson.Firstname, contact.NaturalPerson.Lastname));
 				builder.Append ("<br/>");
+			}
 
-				return builder.ToString ();
+			return builder.ToString ();
 		}
 
 
