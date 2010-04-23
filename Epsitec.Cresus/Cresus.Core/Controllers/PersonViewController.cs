@@ -35,52 +35,118 @@ namespace Epsitec.Cresus.Core.Controllers
 			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
-			int index = 0;
-			foreach (Entities.AbstractContactEntity contact in person.Contacts)
+			if (person is Entities.NaturalPersonEntity)
 			{
-				Widgets.SimpleTile tile = new Widgets.SimpleTile
-				{
-					Parent = container,
-					Dock = DockStyle.Top,
-					Margins = new Margins(0, 0, 0, (index<person.Contacts.Count-1) ? -1:0),
-					ArrowLocation = Direction.Right,
-					IconUri = "Data.Person",
-					Title = "Personne",
-					Content = this.Description(contact),
-				};
+				//	Une première tuile pour l'identité de la personne.
+				Entities.NaturalPersonEntity naturalPerson = person as Entities.NaturalPersonEntity;
+				this.CreateTile (container, "Data.Person", "Personne", this.GetDescription(naturalPerson));
 
-				index++;
+				//	Une tuile par adresse postale.
+				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
+				{
+					if (contact is Entities.MailContactEntity)
+					{
+						Entities.MailContactEntity mailContact = contact as Entities.MailContactEntity;
+						this.CreateTile (container, "Data.Mail", "Adresse", this.GetDescription (mailContact));
+					}
+				}
+
+				//	Une tuile pour tous les numéros de téléphone.
+				string telecomContent = this.GetTelecomDescription (naturalPerson.Contacts);
+				if (!string.IsNullOrEmpty (telecomContent))
+				{
+					this.CreateTile (container, "Data.Telecom", "Téléphones", telecomContent);
+				}
+
+				//	Une tuile pour toutes les adresses mail.
+				string uriContent = this.GetUriDescription (naturalPerson.Contacts);
+				if (!string.IsNullOrEmpty (uriContent))
+				{
+					this.CreateTile (container, "Data.Uri", "Mails", uriContent);
+				}
+			}
+
+			if (person is Entities.LegalPersonEntity)
+			{
+				Entities.LegalPersonEntity legalPerson = person as Entities.LegalPersonEntity;
+
+				//	TODO:
 			}
 		}
 
 
-		/// <summary>
-		/// Retourne un texte multiligne court de description d'une personne.
-		/// </summary>
-		/// <value>The description.</value>
-		private string Description(Entities.AbstractContactEntity contact)
+		private void CreateTile(Widget container, string iconUri, string title, string content)
 		{
-			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
-
-			if (person == null)
+			Widgets.SimpleTile tile = new Widgets.SimpleTile
 			{
-				return null;
-			}
+				Parent = container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 1),
+				ArrowLocation = Direction.Right,
+				IconUri = iconUri,
+				Title = title,
+				Content = content,
+			};
+		}
 
+
+		private string GetDescription(Entities.NaturalPersonEntity naturalPerson)
+		{
+			return Misc.SpacingAppend (naturalPerson.Firstname, naturalPerson.Lastname);
+		}
+
+		private string GetDescription(Entities.MailContactEntity mailContact)
+		{
 			StringBuilder builder = new StringBuilder ();
 
-			if (contact.LegalPerson != null)
+			if (mailContact.Address.Street != null && !string.IsNullOrEmpty (mailContact.Address.Street.StreetName))
 			{
-				builder.Append(contact.LegalPerson.Name);
+				builder.Append (mailContact.Address.Street.StreetName);
 				builder.Append ("<br/>");
 			}
 
-			if (contact.NaturalPerson !=null)
+			if (mailContact.Address.Location != null)
 			{
-				builder.Append (Misc.SpacingAppend(contact.NaturalPerson.Firstname, contact.NaturalPerson.Lastname));
+				builder.Append (Misc.SpacingAppend (mailContact.Address.Location.PostalCode, mailContact.Address.Location.Name));
 				builder.Append ("<br/>");
 			}
 
+			return builder.ToString ();
+		}
+
+		private string GetTelecomDescription(IList<Entities.AbstractContactEntity> contacts)
+		{
+			StringBuilder builder = new StringBuilder ();
+
+			foreach (Entities.AbstractContactEntity contact in contacts)
+			{
+				if (contact is Entities.TelecomContactEntity)
+				{
+					Entities.TelecomContactEntity telecomContact = contact as Entities.TelecomContactEntity;
+
+					builder.Append (telecomContact.Number);
+					builder.Append ("<br/>");
+				}
+			}
+
+			return builder.ToString ();
+		}
+
+		private string GetUriDescription(IList<Entities.AbstractContactEntity> contacts)
+		{
+			StringBuilder builder = new StringBuilder ();
+
+			foreach (Entities.AbstractContactEntity contact in contacts)
+			{
+				if (contact is Entities.UriContactEntity)
+				{
+					Entities.UriContactEntity uriContact = contact as Entities.UriContactEntity;
+
+					builder.Append (uriContact.Uri);
+					builder.Append ("<br/>");
+				}
+			}
+	
 			return builder.ToString ();
 		}
 
