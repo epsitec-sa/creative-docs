@@ -31,13 +31,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			Entities.AbstractPersonEntity person = this.Entity as Entities.AbstractPersonEntity;
+			var person = this.Entity as Entities.AbstractPersonEntity;
 
 			if (person is Entities.NaturalPersonEntity)
 			{
 				//	Une première tuile pour l'identité de la personne.
 				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateTile (container, "Data.Person", "Personne", this.GetPersonSummary(naturalPerson));
+				this.CreateTile (container, "Data.Person", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
 
 				//	Une tuile distincte par adresse postale.
 				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
@@ -67,8 +67,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (person is Entities.LegalPersonEntity)
 			{
 				var legalPerson = person as Entities.LegalPersonEntity;
-
-				//	TODO:
+				this.CreateTile (container, "Data.Person", "Personne morale", this.GetLegalPersonSummary (legalPerson));
 			}
 		}
 
@@ -90,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private string GetPersonSummary(Entities.NaturalPersonEntity naturalPerson)
+		private string GetNaturalPersonSummary(Entities.NaturalPersonEntity naturalPerson)
 		{
 			var builder = new StringBuilder ();
 
@@ -102,6 +101,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			builder.Append (Misc.SpacingAppend (naturalPerson.Firstname, naturalPerson.Lastname));
+			builder.Append ("<br/>");
+
+			return Misc.RemoveLastBreakLine (builder.ToString ());
+		}
+
+		private string GetLegalPersonSummary(Entities.LegalPersonEntity legalPerson)
+		{
+			var builder = new StringBuilder ();
+
+			builder.Append (legalPerson.Name);
 			builder.Append ("<br/>");
 
 			return Misc.RemoveLastBreakLine (builder.ToString ());
