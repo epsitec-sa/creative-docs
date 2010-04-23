@@ -31,14 +31,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override void CreateUI(Widget container)
 		{
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-
 			Entities.AbstractPersonEntity person = this.Entity as Entities.AbstractPersonEntity;
-			System.Diagnostics.Debug.Assert (person != null);
 
 			if (person is Entities.NaturalPersonEntity)
 			{
 				//	Une première tuile pour l'identité de la personne.
-				Entities.NaturalPersonEntity naturalPerson = person as Entities.NaturalPersonEntity;
+				var naturalPerson = person as Entities.NaturalPersonEntity;
 				this.CreateTile (container, "Data.Person", "Personne", this.GetPersonSummary(naturalPerson));
 
 				//	Une tuile distincte par adresse postale.
@@ -46,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (contact is Entities.MailContactEntity)
 					{
-						Entities.MailContactEntity mailContact = contact as Entities.MailContactEntity;
+						var mailContact = contact as Entities.MailContactEntity;
 						this.CreateTile (container, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
 					}
 				}
@@ -68,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (person is Entities.LegalPersonEntity)
 			{
-				Entities.LegalPersonEntity legalPerson = person as Entities.LegalPersonEntity;
+				var legalPerson = person as Entities.LegalPersonEntity;
 
 				//	TODO:
 			}
@@ -94,12 +92,24 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private string GetPersonSummary(Entities.NaturalPersonEntity naturalPerson)
 		{
-			return Misc.SpacingAppend (naturalPerson.Firstname, naturalPerson.Lastname);
+			var builder = new StringBuilder ();
+
+			if (naturalPerson.Title != null)
+			{
+				var titleEntity = naturalPerson.Title;
+				builder.Append (titleEntity.Name);
+				builder.Append ("<br/>");
+			}
+
+			builder.Append (Misc.SpacingAppend (naturalPerson.Firstname, naturalPerson.Lastname));
+			builder.Append ("<br/>");
+
+			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
 		private string GetMailTitle(Entities.MailContactEntity mailContact)
 		{
-			StringBuilder builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 
 			builder.Append ("Adresse");
 
@@ -118,7 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private string GetMailSummary(Entities.MailContactEntity mailContact)
 		{
-			StringBuilder builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 
 			if (mailContact.Address.Street != null && !string.IsNullOrEmpty (mailContact.Address.Street.StreetName))
 			{
@@ -137,13 +147,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private string GetTelecomSummary(IList<Entities.AbstractContactEntity> contacts)
 		{
-			StringBuilder builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 
 			foreach (Entities.AbstractContactEntity contact in contacts)
 			{
 				if (contact is Entities.TelecomContactEntity)
 				{
-					Entities.TelecomContactEntity telecomContact = contact as Entities.TelecomContactEntity;
+					var telecomContact = contact as Entities.TelecomContactEntity;
 
 					builder.Append (telecomContact.Number);
 					builder.Append ("<br/>");
@@ -155,13 +165,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private string GetUriSummary(IList<Entities.AbstractContactEntity> contacts)
 		{
-			StringBuilder builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 
 			foreach (Entities.AbstractContactEntity contact in contacts)
 			{
 				if (contact is Entities.UriContactEntity)
 				{
-					Entities.UriContactEntity uriContact = contact as Entities.UriContactEntity;
+					var uriContact = contact as Entities.UriContactEntity;
 
 					builder.Append (uriContact.Uri);
 					builder.Append ("<br/>");
