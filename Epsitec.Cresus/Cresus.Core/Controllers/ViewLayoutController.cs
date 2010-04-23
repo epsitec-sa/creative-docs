@@ -23,15 +23,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			yield break;
 		}
 
-		public override void CreateUI(Widget container)
-		{
-			this.frame = new FrameBox
-			{
-				Parent = container,
-				Dock = DockStyle.Fill,
-			};
-		}
-
 		public int ColumnsCount
 		{
 			get;

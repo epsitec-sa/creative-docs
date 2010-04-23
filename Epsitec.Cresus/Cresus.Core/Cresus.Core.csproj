@@ -88,12 +88,14 @@
     <Compile Include="..\Properties\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Controllers\BrowserController.cs" />
-    <Compile Include="Controllers\AbstractViewController.cs" />
+    <Compile Include="Controllers\BrowserViewController.cs" />
+    <Compile Include="Controllers\CoreViewController.cs" />
+    <Compile Include="Controllers\EntityViewController.cs" />
     <Compile Include="Controllers\PersonViewController.cs" />
     <Compile Include="Controllers\DataViewController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\MainViewController.cs" />
+    <Compile Include="Controllers\ViewControllerMode.cs" />
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
@@ -101,7 +103,7 @@
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
     <Compile Include="Data\PersonRepository.cs" />
-    <Compile Include="Controllers\RibbonController.cs" />
+    <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="PersistenceManagerBinding.cs" />
     <Compile Include="Resources\Cresus.Core\SourceCode\Entities.cs" />
     <Compile Include="UI.WindowPlacementHint.cs" />

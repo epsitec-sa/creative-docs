@@ -10,9 +10,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class RibbonController : CoreController
+	class RibbonViewController : CoreViewController
 	{
-		public RibbonController()
+		public RibbonViewController()
 			: base ("Ribbon")
 		{
 		}
@@ -81,11 +81,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillIn));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Suppliers));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Items));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.Customers));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.SwitchToBase.BillOut));
 		}
 
 		private void CreateRibbonStateSection()
@@ -98,11 +98,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow
 			};
 
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.History.NavigatePrev));
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.History.NavigateNext));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.History.NavigatePrev));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.History.NavigateNext));
 
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
-			section.Children.Add (RibbonController.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.Edition.Accept, DockStyle.StackEnd, null));
+			section.Children.Add (RibbonViewController.CreateButton (Mai2008.Res.Commands.Edition.Cancel, DockStyle.StackEnd, null));
 		}
 
 		
