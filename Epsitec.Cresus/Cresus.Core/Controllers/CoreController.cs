@@ -37,12 +37,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		/// <summary>
-		/// Creates the UI managed by this controller.
-		/// </summary>
-		/// <param name="container">The container.</param>
-		public abstract void CreateUI(Widget container);
-
-		/// <summary>
 		/// Gets the collection of sub-controllers (or an empty collection
 		/// if there is no child controllers used by this controller).
 		/// </summary>

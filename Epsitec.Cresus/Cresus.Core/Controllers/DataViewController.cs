@@ -15,14 +15,14 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// <summary>
 	/// Ce contrôleur représente une bande verticale dans laquelle on empile des tuiles AbstractViewController.
 	/// </summary>
-	public class DataViewController : CoreController
+	public class DataViewController : CoreViewController
 	{
 		public DataViewController(string name, AbstractEntity entity)
 			: base (name)
 		{
 			this.entity = entity;
 
-			this.viewController = AbstractViewController.CreateViewController ("DataViewController", entity, ViewControllerMode.Compact);
+			this.viewController = EntityViewController.CreateViewController ("DataViewController", entity, ViewControllerMode.Compact);
 			System.Diagnostics.Debug.Assert (this.viewController != null);
 		}
 
@@ -38,6 +38,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		private AbstractEntity entity;
-		private AbstractViewController viewController;
+		private EntityViewController viewController;
 	}
 }

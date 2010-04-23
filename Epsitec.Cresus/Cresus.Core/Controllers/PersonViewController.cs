@@ -12,7 +12,7 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class PersonViewController : AbstractViewController
+	public class PersonViewController : EntityViewController
 	{
 		public PersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name, entity, mode)

@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	class BrowserController : CoreController
+	class BrowserViewController : CoreViewController
 	{
-		public BrowserController(string name)
+		public BrowserViewController(string name)
 			: base (name)
 		{
 		}

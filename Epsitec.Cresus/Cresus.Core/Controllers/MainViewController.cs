@@ -13,14 +13,14 @@ using Epsitec.Cresus.Core.Entities;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class MainViewController : CoreController
+	public class MainViewController : CoreViewController
 	{
 		public MainViewController(List<AbstractEntity> entities)
 			: base ("MainView")
 		{
 			this.entities = entities;
 
-			this.browserController = new BrowserController ("MainBrowser");
+			this.browserController = new BrowserViewController ("MainBrowser");
 			this.viewController = new DataViewController ("MainViewer", this.entities[0]);
 
 			this.CreateTileNodes ();
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 
-		private readonly BrowserController browserController;
+		private readonly BrowserViewController browserController;
 		private readonly DataViewController viewController;
 
 		private List<AbstractEntity> entities;
