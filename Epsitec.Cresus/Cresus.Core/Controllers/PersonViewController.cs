@@ -35,20 +35,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
+			int index = 0;
 			foreach (Entities.AbstractContactEntity contact in person.Contacts)
 			{
+				Widgets.SimpleTile tile = new Widgets.SimpleTile
+				{
+					Parent = container,
+					Dock = DockStyle.Top,
+					Margins = new Margins(0, 0, 0, (index<person.Contacts.Count-1) ? -1:0),
+					ArrowLocation = Direction.Right,
+					IconUri = "Data.Person",
+					Title = "Personne",
+					Content = this.Description(contact),
+				};
+
+				index++;
 			}
-
-
-			Widgets.SimpleTile tile = new Widgets.SimpleTile
-			{
-				Parent = container,
-				Dock = DockStyle.Fill,
-				ArrowLocation = Direction.Right,
-				IconUri = "Data.Person",
-				Title = "Personne",
-				Content = this.Description,
-			};
 		}
 
 
@@ -56,10 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Retourne un texte multiligne court de description d'une personne.
 		/// </summary>
 		/// <value>The description.</value>
-		private string Description
+		private string Description(Entities.AbstractContactEntity contact)
 		{
-			get
-			{
 				Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
 
 				if (person == null)
@@ -69,14 +69,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				StringBuilder builder = new StringBuilder ();
 
-				foreach (Entities.AbstractContactEntity contact in person.Contacts)
-				{
-					builder.Append (Misc.SpacingAppend(contact.NaturalPerson.Firstname, contact.NaturalPerson.Lastname));
-					builder.Append ("<br/>");
-				}
+				builder.Append (Misc.SpacingAppend(contact.NaturalPerson.Firstname, contact.NaturalPerson.Lastname));
+				builder.Append ("<br/>");
 
 				return builder.ToString ();
-			}
 		}
 
 
