@@ -101,6 +101,7 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
+    <Compile Include="EntitySummary.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
@@ -120,7 +121,7 @@
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
-    <Compile Include="Widgets\SimpleTile.cs" />
+    <Compile Include="Widgets\SummaryTile.cs" />
     <Compile Include="Widgets\TileContainer.cs" />
   </ItemGroup>
   <ItemGroup>
