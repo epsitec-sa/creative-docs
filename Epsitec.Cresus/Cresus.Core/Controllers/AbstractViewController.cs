@@ -21,12 +21,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 	public abstract class AbstractViewController : CoreController
 	{
-		public AbstractViewController(string name)
+		public AbstractViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name)
-		{
-		}
-
-		public void SetEntity(AbstractEntity entity, ViewControllerMode mode)
 		{
 			this.entity = entity;
 			this.mode = mode;
@@ -54,8 +50,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (entity is Entities.AbstractPersonEntity)
 			{
-				viewController = new PersonViewController (name);
-				viewController.SetEntity (entity, mode);
+				viewController = new PersonViewController (name, entity, mode);
 			}
 
 			return viewController;

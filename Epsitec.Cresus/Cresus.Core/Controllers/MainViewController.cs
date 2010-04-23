@@ -15,11 +15,13 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MainViewController : CoreController
 	{
-		public MainViewController()
+		public MainViewController(List<AbstractEntity> entities)
 			: base ("MainView")
 		{
+			this.entities = entities;
+
 			this.browserController = new BrowserController ("MainBrowser");
-			this.viewController = new DataViewController ("MainViewer");
+			this.viewController = new DataViewController ("MainViewer", this.entities[0]);
 
 			this.CreateTileNodes ();
 		}
@@ -29,11 +31,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			yield return this.browserController;
 			yield return this.viewController;
-		}
-
-		public void SetEntities(List<AbstractEntity> entities)
-		{
-			this.entities = entities;
 		}
 
 		public override void CreateUI(Widget container)
@@ -72,8 +69,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			};
 
 			this.browserController.CreateUI (this.leftPanel);
-
-			this.viewController.SetEntity (this.entities[0]);
 			this.viewController.CreateUI (this.rightPanel);
 			
 			//?this.CreateTiles (this.rightPanel);

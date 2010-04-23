@@ -17,24 +17,15 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	public class DataViewController : CoreController
 	{
-		public DataViewController(string name)
+		public DataViewController(string name, AbstractEntity entity)
 			: base (name)
-		{
-			this.controllers = new List<CoreController> ();
-
-		}
-
-		public void SetEntity(AbstractEntity entity)
 		{
 			this.entity = entity;
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			foreach (CoreController controller in this.controllers)
-			{
-				yield return controller;
-			}
+			yield return this.viewController;
 		}
 
 		public override void CreateUI(Widget container)
@@ -42,9 +33,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (this.entity != null);
 
 			string name = string.Concat (this.Name, ".DataViewController");
-			AbstractViewController viewController = AbstractViewController.CreateViewController (name, entity, ViewControllerMode.Compact);
+			this.viewController = AbstractViewController.CreateViewController (name, entity, ViewControllerMode.Compact);
 
-			if (viewController != null)
+			if (this.viewController != null)
 			{
 				FrameBox frame = new FrameBox
 				{
@@ -55,12 +46,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 
 				viewController.CreateUI (frame);
-				this.controllers.Add (viewController);
 			}
 		}
 
 
-		private List<CoreController> controllers;
 		private AbstractEntity entity;
+		private AbstractViewController viewController;
 	}
 }

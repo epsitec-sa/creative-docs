@@ -14,19 +14,31 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class PersonViewController : AbstractViewController
 	{
-		public PersonViewController(string name)
-			: base (name)
+		public PersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+			: base (name, entity, mode)
 		{
+			this.controllers = new List<CoreController> ();
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			yield break;
+			foreach (CoreController controller in this.controllers)
+			{
+				yield return controller;
+			}
 		}
 
 		public override void CreateUI(Widget container)
 		{
 			System.Diagnostics.Debug.Assert (this.entity != null);
+
+			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
+			System.Diagnostics.Debug.Assert (person != null);
+
+			foreach (Entities.AbstractContactEntity contact in person.Contacts)
+			{
+			}
+
 
 			Widgets.SimpleTile tile = new Widgets.SimpleTile
 			{
@@ -66,5 +78,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				return builder.ToString ();
 			}
 		}
+
+
+		private List<CoreController> controllers;
 	}
 }
