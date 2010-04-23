@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (mailContact != null);
 
 			// TODO: Il faudra créer ici un autre Tile permettant d'éditer !
-			this.CreateSimpleTile (mailContact, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
+			this.CreateSimpleTile (mailContact, ViewControllerMode.None, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
 
 			this.AdjustLastTile ();
 		}

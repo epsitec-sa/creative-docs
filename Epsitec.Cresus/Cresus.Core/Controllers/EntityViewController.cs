@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public static EntityViewController CreateViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
-			EntityViewController controller = EntityViewController.ResolveViewController (name, entity);
+			EntityViewController controller = EntityViewController.ResolveViewController (name, entity, mode);
 
 			if (controller == null)
 			{
@@ -53,15 +53,40 @@ namespace Epsitec.Cresus.Core.Controllers
 			return controller;
 		}
 		
-		private static EntityViewController ResolveViewController(string name, AbstractEntity entity)
+		private static EntityViewController ResolveViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 		{
+			if (mode == ViewControllerMode.None)
+			{
+				return null;
+			}
+
 			if (entity is Entities.NaturalPersonEntity)
 			{
+				if (mode == ViewControllerMode.TelecomsEdition)
+				{
+					return null;
+				}
+
+				if (mode == ViewControllerMode.UrisEdition)
+				{
+					return null;
+				}
+
 				return new NaturalPersonViewController (name);
 			}
 
 			if (entity is Entities.LegalPersonEntity)
 			{
+				if (mode == ViewControllerMode.TelecomsEdition)
+				{
+					return null;
+				}
+
+				if (mode == ViewControllerMode.UrisEdition)
+				{
+					return null;
+				}
+
 				return new LegalPersonViewController (name);
 			}
 
@@ -77,14 +102,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		/// <summary>
-		/// Crée un tuile simple empilée de haut en bas.
+		/// Crée un tuile simple qui s'insère en bas de l'empilement (qui commence en haut).
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="entity">The entity.</param>
 		/// <param name="iconUri">The icon URI.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="content">The content.</param>
-		protected void CreateSimpleTile(AbstractEntity entity, string iconUri, string title, string content)
+		protected void CreateSimpleTile(AbstractEntity entity, ViewControllerMode childrenMode, string iconUri, string title, string content)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -95,6 +120,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (0, 0, 0, -1),  // léger chevauchement vertical
 				ArrowLocation = Direction.Right,
 				Entity = entity,
+				Mode = this.Mode,
+				ChildrenMode = childrenMode,
 				TopLeftIconUri = iconUri,
 				Title = title,
 				Content = content,
@@ -147,11 +174,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileClicked(object sender, MessageEventArgs e)
 		{
-			//	Appelé lorsque une tuile quelconque est cliquée.
+			//	Appelé lorsqu'une tuile quelconque est cliquée.
 			var tile = sender as Widgets.AbstractTile;
-			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", tile.Entity, ViewControllerMode.Compact, this.Orchestrator);
-			
-			if (controller != null)
+			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", tile.Entity, tile.ChildrenMode, this.Orchestrator);
+
+			if (controller == null)
+			{
+				this.DeselectAllTiles ();
+				this.Orchestrator.CloseSubViews (this);
+			}
+			else
 			{
 				this.SelectTile (tile);
 				this.Orchestrator.ShowSubView (this, controller);
