@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				tile.Data = children;
 				tile.Dock = DockStyle.Top;
 				tile.Margins = new Common.Drawing.Margins (0, 0, 0, (i<nodes.Count-1) ? -1:0);
-				tile.IconUri = children.Icon;
+				tile.TopLeftIconUri = children.Icon;
 				tile.Title = children.Title;
 				tile.Content = children.Content;
 				tile.SetSelected (children.Selected);
