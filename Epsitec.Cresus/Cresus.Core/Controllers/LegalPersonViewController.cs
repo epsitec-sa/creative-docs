@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (person != null);
 
 			var legalPerson = person as Entities.LegalPersonEntity;
-			this.CreateSimpleTile (container, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
+			this.CreateSimpleTile (container, this.Entity, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
 
 			this.AdjustLastTile (container);
 		}

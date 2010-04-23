@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -67,6 +68,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			metadataDy.DefineDefaultValue (AbstractTile.iconSize+AbstractTile.iconMargins*2);
 
 			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (AbstractTile), metadataDy);
+		}
+
+
+		public AbstractEntity Entity
+		{
+			get;
+			set;
 		}
 
 
