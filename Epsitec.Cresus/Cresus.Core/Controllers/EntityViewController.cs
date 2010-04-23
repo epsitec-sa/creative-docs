@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="iconUri">The icon URI.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="content">The content.</param>
-		protected void CreateSimpleTile(Widget container, string iconUri, string title, string content)
+		protected void CreateSimpleTile(Widget container, AbstractEntity entity, string iconUri, string title, string content)
 		{
 			var tile = new Widgets.SimpleTile
 			{
@@ -86,6 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, -1),  // léger chevauchement vertical
 				ArrowLocation = Direction.Right,
+				Entity = entity,
 				IconUri = iconUri,
 				Title = title,
 				Content = content,
