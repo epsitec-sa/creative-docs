@@ -102,29 +102,30 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		/// <summary>
-		/// Crée un tuile simple qui s'insère en bas de l'empilement (qui commence en haut).
+		/// Crée un tuile résumé qui s'insère en bas de l'empilement (qui commence en haut).
 		/// </summary>
 		/// <param name="container">The container.</param>
 		/// <param name="entity">The entity.</param>
 		/// <param name="iconUri">The icon URI.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="content">The content.</param>
-		protected void CreateSimpleTile(AbstractEntity entity, ViewControllerMode childrenMode, string iconUri, string title, string content)
+		protected void CreateSummaryTile(AbstractEntity entity, ViewControllerMode childrenMode, string iconUri, string title, string content)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
-			var tile = new Widgets.SimpleTile
+			var tile = new Widgets.SummaryTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, -1),  // léger chevauchement vertical
 				ArrowLocation = Direction.Right,
+				EnteredSensitivity = childrenMode != ViewControllerMode.None,
 				Entity = entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
 				TopLeftIconUri = iconUri,
 				Title = title,
-				Content = content,
+				Summary = content,
 			};
 
 			tile.PreferredHeight = tile.ContentHeight;
@@ -178,7 +179,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var tile = sender as Widgets.AbstractTile;
 			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", tile.Entity, tile.ChildrenMode, this.Orchestrator);
 
-			if (controller == null)
+			if (tile.IsSelected || controller == null)
 			{
 				this.DeselectAllTiles ();
 				this.Orchestrator.CloseSubViews (this);

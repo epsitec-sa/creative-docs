@@ -59,6 +59,22 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		/// <summary>
+		/// Détermine si le widget est sensible au survol de la souris.
+		/// </summary>
+		/// <value><c>true</c> if [entered sensitivity]; otherwise, <c>false</c>.</value>
+		public bool EnteredSensitivity
+		{
+			get
+			{
+				return this.enteredSensitivity;
+			}
+			set
+			{
+				this.enteredSensitivity = value;
+			}
+		}
+
+		/// <summary>
 		/// Rectangle disponible pour le contenu, qui exclut donc la flèche.
 		/// Si la flèche n'est pas dessinée, sa surface est toujours exclue.
 		/// </summary>
@@ -93,11 +109,13 @@ namespace Epsitec.Cresus.Core.Widgets
 			graphics.RenderSolid (backColor);
 
 			//	En mode 'survolé' ou 'sélectionné', hilite le fond.
-			if (this.IsEntered || this.IsSelected)
+			bool isEntered = this.IsEntered && this.enteredSensitivity;
+
+			if (isEntered || this.IsSelected)
 			{
 				double alpha = 0.05;
 
-				if (this.IsEntered)
+				if (isEntered)
 				{
 					alpha *= 2;
 				}
@@ -248,5 +266,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static readonly double arrowBreadth = 8;
 
 		private Direction arrowLocation;
+		private bool enteredSensitivity;
 	}
 }

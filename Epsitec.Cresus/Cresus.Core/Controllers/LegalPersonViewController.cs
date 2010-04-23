@@ -35,13 +35,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.Mode == ViewControllerMode.LegalPersonEdition)
 			{
 				var legalPerson = person as Entities.LegalPersonEntity;
-				this.CreateSimpleTile (this.Entity, ViewControllerMode.None, "Data.LegalPerson", "Edtion de la personne morale", this.GetLegalPersonSummary (legalPerson));
+				this.CreateSummaryTile (this.Entity, ViewControllerMode.None, "Data.LegalPerson", "Edtion de la personne morale", EntitySummary.GetLegalPersonSummary (legalPerson));
 			}
 			else
 			{
 				//	Une première tuile pour l'identité de la personne.
 				var legalPerson = person as Entities.LegalPersonEntity;
-				this.CreateSimpleTile (this.Entity, ViewControllerMode.LegalPersonEdition, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
+				this.CreateSummaryTile (this.Entity, ViewControllerMode.LegalPersonEdition, "Data.LegalPerson", "Personne morale", EntitySummary.GetLegalPersonSummary (legalPerson));
 
 				//	Une tuile distincte par adresse postale.
 				foreach (Entities.AbstractContactEntity contact in legalPerson.Contacts)
@@ -49,112 +49,26 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (contact is Entities.MailContactEntity)
 					{
 						var mailContact = contact as Entities.MailContactEntity;
-						this.CreateSimpleTile (mailContact, ViewControllerMode.GenericEdition, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
+						this.CreateSummaryTile (mailContact, ViewControllerMode.GenericEdition, "Data.Mail", EntitySummary.GetMailTitle (mailContact), EntitySummary.GetMailSummary (mailContact));
 					}
 				}
 
 				//	Une tuile commune pour tous les numéros de téléphone.
-				string telecomContent = this.GetTelecomSummary (legalPerson.Contacts);
+				string telecomContent = EntitySummary.GetTelecomSummary (legalPerson.Contacts);
 				if (!string.IsNullOrEmpty (telecomContent))
 				{
-					this.CreateSimpleTile (this.Entity, ViewControllerMode.TelecomsEdition, "Data.Telecom", "Téléphones", telecomContent);
+					this.CreateSummaryTile (this.Entity, ViewControllerMode.TelecomsEdition, "Data.Telecom", "Téléphones", telecomContent);
 				}
 
 				//	Une tuile commune pour toutes les adresses mail.
-				string uriContent = this.GetUriSummary (legalPerson.Contacts);
+				string uriContent = EntitySummary.GetUriSummary (legalPerson.Contacts);
 				if (!string.IsNullOrEmpty (uriContent))
 				{
-					this.CreateSimpleTile (this.Entity, ViewControllerMode.UrisEdition, "Data.Uri", "Mails", uriContent);
+					this.CreateSummaryTile (this.Entity, ViewControllerMode.UrisEdition, "Data.Uri", "Mails", uriContent);
 				}
 			}
 
 			this.AdjustLastTile ();
-		}
-
-
-
-		private string GetLegalPersonSummary(Entities.LegalPersonEntity legalPerson)
-		{
-			var builder = new StringBuilder ();
-
-			builder.Append (legalPerson.Name);
-			builder.Append ("<br/>");
-
-			return Misc.RemoveLastBreakLine (builder.ToString ());
-		}
-
-		private string GetMailTitle(Entities.MailContactEntity mailContact)
-		{
-			var builder = new StringBuilder ();
-
-			builder.Append ("Adresse");
-
-			if (mailContact.Roles != null && mailContact.Roles.Count != 0)
-			{
-				builder.Append (" ");
-
-				foreach (Entities.ContactRoleEntity role in mailContact.Roles)
-				{
-					builder.Append (role.Name);
-				}
-			}
-
-			return Misc.RemoveLastBreakLine (builder.ToString ());
-		}
-
-		private string GetMailSummary(Entities.MailContactEntity mailContact)
-		{
-			var builder = new StringBuilder ();
-
-			if (mailContact.Address.Street != null && !string.IsNullOrEmpty (mailContact.Address.Street.StreetName))
-			{
-				builder.Append (mailContact.Address.Street.StreetName);
-				builder.Append ("<br/>");
-			}
-
-			if (mailContact.Address.Location != null)
-			{
-				builder.Append (Misc.SpacingAppend (mailContact.Address.Location.PostalCode, mailContact.Address.Location.Name));
-				builder.Append ("<br/>");
-			}
-
-			return Misc.RemoveLastBreakLine (builder.ToString ());
-		}
-
-		private string GetTelecomSummary(IList<Entities.AbstractContactEntity> contacts)
-		{
-			var builder = new StringBuilder ();
-
-			foreach (Entities.AbstractContactEntity contact in contacts)
-			{
-				if (contact is Entities.TelecomContactEntity)
-				{
-					var telecomContact = contact as Entities.TelecomContactEntity;
-
-					builder.Append (telecomContact.Number);
-					builder.Append ("<br/>");
-				}
-			}
-
-			return Misc.RemoveLastBreakLine (builder.ToString ());
-		}
-
-		private string GetUriSummary(IList<Entities.AbstractContactEntity> contacts)
-		{
-			var builder = new StringBuilder ();
-
-			foreach (Entities.AbstractContactEntity contact in contacts)
-			{
-				if (contact is Entities.UriContactEntity)
-				{
-					var uriContact = contact as Entities.UriContactEntity;
-
-					builder.Append (uriContact.Uri);
-					builder.Append ("<br/>");
-				}
-			}
-
-			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 	}
 }

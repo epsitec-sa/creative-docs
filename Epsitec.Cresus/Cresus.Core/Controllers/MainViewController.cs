@@ -151,13 +151,13 @@ namespace Epsitec.Cresus.Core.Controllers
             {
 				TileNode children = nodes[i];
 
-				Widgets.SimpleTile tile = new Widgets.SimpleTile (embedder);
+				Widgets.SummaryTile tile = new Widgets.SummaryTile (embedder);
 				tile.Data = children;
 				tile.Dock = DockStyle.Top;
 				tile.Margins = new Common.Drawing.Margins (0, 0, 0, (i<nodes.Count-1) ? -1:0);
 				tile.TopLeftIconUri = children.Icon;
 				tile.Title = children.Title;
-				tile.Content = children.Content;
+				tile.Summary = children.Content;
 				tile.SetSelected (children.Selected);
 				tile.ArrowLocation = Direction.Right;
 				tile.PreferredHeight = tile.ContentHeight;
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileClicked(object sender, MessageEventArgs e)
 		{
-			Widgets.SimpleTile tile = sender as Widgets.SimpleTile;
+			Widgets.SummaryTile tile = sender as Widgets.SummaryTile;
 			TileNode node = tile.Data as TileNode;
 
 			MainViewController.SelectNode (node);

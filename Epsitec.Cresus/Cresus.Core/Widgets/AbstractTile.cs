@@ -45,6 +45,8 @@ namespace Epsitec.Cresus.Core.Widgets
 				PreferredHeight = AbstractTile.titleHeight,
 				PreferredWidth = 0,
 				Dock = DockStyle.Top,
+				ContentAlignment = ContentAlignment.TopLeft,
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.SingleLine,  // TODO: pourquoi cela n'affiche jamais '...' ?
 			};
 
 			this.mainPanel = new FrameBox

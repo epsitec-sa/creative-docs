@@ -11,18 +11,20 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class SimpleTile : AbstractTile
+	public class SummaryTile : AbstractTile
 	{
-		public SimpleTile()
+		public SummaryTile()
 		{
-			this.staticTextContent = new StaticText
+			this.staticTextSummary = new StaticText
 			{
 				Parent = this.mainPanel,
 				Dock = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.TopLeft,
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis,
 			};
 		}
 
-		public SimpleTile(Widget embedder)
+		public SummaryTile(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
@@ -35,7 +37,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (Mode == Controllers.ViewControllerMode.Compact)
 				{
-					string[] lines = this.Content.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
+					string[] lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
 					double h = 20+lines.Length*16;  // TODO: provisoire
 					return System.Math.Max (h, this.PreferredHeight);
 				}
@@ -47,22 +49,22 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		/// <summary>
-		/// Contenu multilignes affiché sous le titre.
+		/// Résumé multilignes affiché sous le titre.
 		/// </summary>
 		/// <value>The content.</value>
-		public string Content
+		public string Summary
 		{
 			get
 			{
-				return this.staticTextContent.Text;
+				return this.staticTextSummary.Text;
 			}
 			set
 			{
-				this.staticTextContent.Text = value;
+				this.staticTextSummary.Text = value;
 			}
 		}
 
 
-		private StaticText staticTextContent;
+		private StaticText staticTextSummary;
 	}
 }
