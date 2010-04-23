@@ -33,9 +33,16 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				string[] lines = this.Content.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
-				double h = 20+lines.Length*16;  // TODO: provisoire
-				return System.Math.Max (h, this.PreferredHeight);
+				if (Mode == Controllers.ViewControllerMode.Compact)
+				{
+					string[] lines = this.Content.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
+					double h = 20+lines.Length*16;  // TODO: provisoire
+					return System.Math.Max (h, this.PreferredHeight);
+				}
+				else
+				{
+					return 200;
+				}
 			}
 		}
 

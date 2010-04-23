@@ -32,32 +32,40 @@ namespace Epsitec.Cresus.Core.Controllers
 			var person = this.Entity as Entities.NaturalPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
-			//	Une première tuile pour l'identité de la personne.
-			var naturalPerson = person as Entities.NaturalPersonEntity;
-			this.CreateSimpleTile (this.Entity, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
-
-			//	Une tuile distincte par adresse postale.
-			foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
+			if (this.Mode == ViewControllerMode.NaturalPersonEdition)
 			{
-				if (contact is Entities.MailContactEntity)
+				var naturalPerson = person as Entities.NaturalPersonEntity;
+				this.CreateSimpleTile (this.Entity, ViewControllerMode.None, "Data.NaturalPerson", "Edition de la personne physique", this.GetNaturalPersonSummary (naturalPerson));
+			}
+			else
+			{
+				//	Une première tuile pour l'identité de la personne.
+				var naturalPerson = person as Entities.NaturalPersonEntity;
+				this.CreateSimpleTile (this.Entity, ViewControllerMode.NaturalPersonEdition, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary (naturalPerson));
+
+				//	Une tuile distincte par adresse postale.
+				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
 				{
-					var mailContact = contact as Entities.MailContactEntity;
-					this.CreateSimpleTile (mailContact, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
+					if (contact is Entities.MailContactEntity)
+					{
+						var mailContact = contact as Entities.MailContactEntity;
+						this.CreateSimpleTile (mailContact, ViewControllerMode.GenericEdition, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
+					}
 				}
-			}
 
-			//	Une tuile commune pour tous les numéros de téléphone.
-			string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
-			if (!string.IsNullOrEmpty (telecomContent))
-			{
-				this.CreateSimpleTile (this.Entity, "Data.Telecom", "Téléphones", telecomContent);
-			}
+				//	Une tuile commune pour tous les numéros de téléphone.
+				string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
+				if (!string.IsNullOrEmpty (telecomContent))
+				{
+					this.CreateSimpleTile (this.Entity, ViewControllerMode.TelecomsEdition, "Data.Telecom", "Téléphones", telecomContent);
+				}
 
-			//	Une tuile commune pour toutes les adresses mail.
-			string uriContent = this.GetUriSummary (naturalPerson.Contacts);
-			if (!string.IsNullOrEmpty (uriContent))
-			{
-				this.CreateSimpleTile (this.Entity, "Data.Uri", "Mails", uriContent);
+				//	Une tuile commune pour toutes les adresses mail.
+				string uriContent = this.GetUriSummary (naturalPerson.Contacts);
+				if (!string.IsNullOrEmpty (uriContent))
+				{
+					this.CreateSimpleTile (this.Entity, ViewControllerMode.UrisEdition, "Data.Uri", "Mails", uriContent);
+				}
 			}
 
 			this.AdjustLastTile ();

@@ -147,7 +147,25 @@ namespace Epsitec.Cresus.Core
 
 			enterprise.Contacts.Add (telecom3);
 			person1.Contacts.Add (telecom3);
-			
+
+			var uri1 = context.CreateEmptyEntity<UriContactEntity> ();
+
+			uri1.LegalPerson = enterprise;
+			uri1.Uri = "epsitec@epsitec.ch";
+			uri1.Roles.Add (role2);
+			uri1.Roles.Add (role3);
+
+			enterprise.Contacts.Add (uri1);
+			person1.Contacts.Add (uri1);
+
+			var uri2 = context.CreateEmptyEntity<UriContactEntity> ();
+
+			uri2.LegalPerson = enterprise;
+			uri2.Uri = "arnaud@epsitec.ch";
+			uri2.Roles.Add (role3);
+
+			person1.Contacts.Add (uri2);
+
 			persons.Add (person1);
 			persons.Add (enterprise);
 		}

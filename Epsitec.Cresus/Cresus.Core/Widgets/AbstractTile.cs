@@ -77,6 +77,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
+		public Controllers.ViewControllerMode Mode
+		{
+			get;
+			set;
+		}
+
+		public Controllers.ViewControllerMode ChildrenMode
+		{
+			get;
+			set;
+		}
+
 
 		virtual public double ContentHeight
 		{
