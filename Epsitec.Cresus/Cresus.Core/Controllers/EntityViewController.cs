@@ -14,26 +14,53 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class EntityViewController : CoreViewController
 	{
-		public EntityViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public EntityViewController(string name)
 			: base (name)
 		{
-			this.entity = entity;
-			this.mode = mode;
 		}
 
-		public static EntityViewController CreateViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+		public AbstractEntity Entity
+		{
+			get;
+			set;
+		}
+
+		public ViewControllerMode Mode
+		{
+			get;
+			set;
+		}
+
+		public Orchestrators.DataViewOrchestrator Orchestrator
+		{
+			get;
+			set;
+		}
+
+		public static EntityViewController CreateViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
+		{
+			EntityViewController controller = EntityViewController.ResolveViewController (name, entity);
+
+			if (controller == null)
+			{
+				return null;
+			}
+
+			controller.Entity = entity;
+			controller.Mode = mode;
+			controller.Orchestrator = orchestrator;
+
+			return controller;
+		}
+		
+		private static EntityViewController ResolveViewController(string name, AbstractEntity entity)
 		{
 			if (entity is Entities.AbstractPersonEntity)
 			{
-				return new PersonViewController (name, entity, mode);
+				return new PersonViewController (name);
 			}
 
 			return null;
 		}
-
-	
-		protected readonly AbstractEntity entity;
-		protected readonly ViewControllerMode mode;
-		private FrameBox frame;
 	}
 }

@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class PersonViewController : EntityViewController
 	{
-		public PersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
-			: base (name, entity, mode)
+		public PersonViewController(string name)
+			: base (name)
 		{
 			this.controllers = new List<CoreController> ();
 		}
@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			System.Diagnostics.Debug.Assert (this.entity != null);
+			System.Diagnostics.Debug.Assert (this.Entity != null);
 
-			Entities.AbstractPersonEntity person = this.entity as Entities.AbstractPersonEntity;
+			Entities.AbstractPersonEntity person = this.Entity as Entities.AbstractPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
 			if (person is Entities.NaturalPersonEntity)
