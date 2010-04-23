@@ -128,39 +128,44 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public EntityType ResolveEntity<EntityType>(DataBrowserRow dataBrowserRow) where EntityType : AbstractEntity, new ()
+		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow dataRow)
 		{
 			// TODO Argument check.
-			//AbstractEntity entity;
+			Druid baseEntityId = this.entityContext.GetBaseEntityId (askedEntityId);
 
-			//Druid askedEntityId = new EntityType ().GetEntityStructuredTypeId ();
-			//Druid baseEntityId = this.entityContext.GetBaseEntityId (askedEntityId);
-			//Druid realEntityId = Druid.FromLong ((long) dataBrowserRow[EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]")]);
+			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, realEntityId, baseEntityId);
 			
-			//entity = this.entityDataCache.FindEntity (dataBrowserRow.Keys[0], askedEntityId, baseEntityId);
+			if (entity == null)
+			{
+				entity = this.entityContext.CreateEmptyEntity (realEntityId);
 
-			//if (entity == null)
-			//{
-			//    entity = this.entityContext.CreateEmptyEntity (realEntityId);
+				this.entityDataCache.DefineRowKey (this.GetEntityDataMapping (entity), rowKey);
 
-			//    using (entity.DefineOriginalValues ())
-			//    {
-			//        /*foreach (var fieldId in this.entityContext.GetEntityFieldIds (entity))
-			//        {
-			//            dataQuery.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse (fieldId)));
-			//        }*/
+				using (entity.DefineOriginalValues ())
+				{
+					Druid currentId = realEntityId;
 
+					while (currentId != askedEntityId)
+					{
+						StructuredType subType = this.entityContext.GetStructuredType(currentId) as StructuredType;
 
+						// TODO Implement this part.
 
+						currentId = subType.BaseTypeId;
+					}
 
+					while (currentId.IsValid)
+					{
+						StructuredType superType = this.entityContext.GetStructuredType (currentId) as StructuredType;
 
+						this.DeserializeEntityLocal (entity, dataRow, currentId);
 
+						currentId = superType.BaseTypeId;
+					}
+				}
+			}
 
-			//    }
-			//}
-
-			//return entity as EntityType;
-			return this.ResolveEntity<EntityType> (dataBrowserRow.Keys[0]);
+			return entity;
 		}
 
 		public bool SerializeChanges()

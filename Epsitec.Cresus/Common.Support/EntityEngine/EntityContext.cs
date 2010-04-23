@@ -312,7 +312,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entityType.GetFieldIds ();
 		}
 
-		internal IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
+		public IEnumerable<StructuredTypeField> GetEntityFieldDefinitions(Druid id)
 		{
 			IStructuredType entityType = this.GetStructuredType (id);
 
@@ -327,7 +327,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-		internal IStructuredType GetStructuredType(Druid id)
+		public IStructuredType GetStructuredType(Druid id)
 		{
 			this.EnsureCorrectThread ();
 
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Support.EntityEngine
 			return type;
 		}
 
-		internal IStructuredType GetStructuredType(AbstractEntity entity)
+		public IStructuredType GetStructuredType(AbstractEntity entity)
 		{
 			this.EnsureCorrectThread ();
 
