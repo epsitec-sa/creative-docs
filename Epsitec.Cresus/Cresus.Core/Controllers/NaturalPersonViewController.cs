@@ -54,14 +54,14 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 
 				//	Une tuile commune pour tous les numéros de téléphone.
-				string telecomContent = EntitySummary.GetTelecomSummary (naturalPerson.Contacts);
+				string telecomContent = EntitySummary.GetTelecomsSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (telecomContent))
 				{
 					this.CreateSummaryTile (this.Entity, ViewControllerMode.TelecomsEdition, "Data.Telecom", "Téléphones", telecomContent);
 				}
 
 				//	Une tuile commune pour toutes les adresses mail.
-				string uriContent = EntitySummary.GetUriSummary (naturalPerson.Contacts);
+				string uriContent = EntitySummary.GetUrisSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (uriContent))
 				{
 					this.CreateSummaryTile (this.Entity, ViewControllerMode.UrisEdition, "Data.Uri", "Mails", uriContent);
