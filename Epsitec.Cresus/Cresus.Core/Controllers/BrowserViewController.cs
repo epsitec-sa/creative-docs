@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+#if false
 			new StaticText ()
 			{
 				Parent = container,
@@ -38,6 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				TextBreakMode = TextBreakMode.Hyphenate,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 			};
+#endif
 
 			this.scrollList = new ScrollList ()
 			{

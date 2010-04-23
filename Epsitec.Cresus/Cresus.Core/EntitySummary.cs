@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static string GetTelecomSummary(IList<Entities.AbstractContactEntity> contacts)
+		public static string GetTelecomsSummary(IList<Entities.AbstractContactEntity> contacts)
 		{
 			var builder = new StringBuilder ();
 
@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Core
 					var telecomContact = contact as Entities.TelecomContactEntity;
 
 					builder.Append (telecomContact.Number);
+					EntitySummary.AppendRoles (builder, telecomContact.Roles);
 					builder.Append ("<br/>");
 				}
 			}
@@ -102,7 +103,7 @@ namespace Epsitec.Cresus.Core
 			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
-		public static string GetUriSummary(IList<Entities.AbstractContactEntity> contacts)
+		public static string GetUrisSummary(IList<Entities.AbstractContactEntity> contacts)
 		{
 			var builder = new StringBuilder ();
 
@@ -113,11 +114,36 @@ namespace Epsitec.Cresus.Core
 					var uriContact = contact as Entities.UriContactEntity;
 
 					builder.Append (uriContact.Uri);
+					EntitySummary.AppendRoles (builder, uriContact.Roles);
 					builder.Append ("<br/>");
 				}
 			}
 
 			return Misc.RemoveLastBreakLine (builder.ToString ());
+		}
+
+
+		private static void AppendRoles(StringBuilder builder, IList<Entities.ContactRoleEntity> roles)
+		{
+			if (roles != null && roles.Count != 0)
+			{
+				builder.Append (" (");
+
+				bool first = true;
+				foreach (Entities.ContactRoleEntity role in roles)
+				{
+					if (!first)
+					{
+						builder.Append (", ");
+					}
+
+					builder.Append (role.Name);
+					first = false;
+				}
+
+				builder.Append (")");
+
+			}
 		}
 	}
 }
