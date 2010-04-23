@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		}
 
-		public void SetEntity(List<AbstractEntity> entities)
+		public void SetEntity(AbstractEntity entity)
 		{
-			this.entities = entities;
+			this.entity = entity;
 		}
 
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -39,33 +39,28 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
-			System.Diagnostics.Debug.Assert (this.entities != null);
+			System.Diagnostics.Debug.Assert (this.entity != null);
 
-			int index = 0;
-			foreach (Common.Support.EntityEngine.AbstractEntity entity in this.entities)
+			string name = string.Concat (this.Name, ".DataViewController");
+			AbstractViewController viewController = AbstractViewController.CreateViewController (name, entity, ViewControllerMode.Compact);
+
+			if (viewController != null)
 			{
-				string name = string.Concat (this.Name, ".DataViewController", index.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				AbstractViewController viewController = AbstractViewController.CreateViewController (name, entity, ViewControllerMode.Compact);
-
-				if (viewController != null)
+				FrameBox frame = new FrameBox
 				{
-					FrameBox frame = new FrameBox
-					{
-						Parent = container,
-						Margins = new Margins (0, 0, 0, (index<entities.Count-1) ? -1:0),
-						Dock = DockStyle.Top,
-					};
+					Parent = container,
+					Dock = DockStyle.Fill,
+//-					Margins = new Margins (0, 0, 0, (index<entity.Count-1) ? -1:0),
+//-					Dock = DockStyle.Top,
+				};
 
-					viewController.CreateUI (frame);
-					this.controllers.Add (viewController);
-
-					index++;
-				}
+				viewController.CreateUI (frame);
+				this.controllers.Add (viewController);
 			}
 		}
 
 
 		private List<CoreController> controllers;
-		private List<AbstractEntity> entities;
+		private AbstractEntity entity;
 	}
 }

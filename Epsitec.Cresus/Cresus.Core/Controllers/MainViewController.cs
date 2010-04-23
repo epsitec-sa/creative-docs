@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.browserController.CreateUI (this.leftPanel);
 
-			this.viewController.SetEntity (this.entities);
+			this.viewController.SetEntity (this.entities[0]);
 			this.viewController.CreateUI (this.rightPanel);
 			
 			//?this.CreateTiles (this.rightPanel);
