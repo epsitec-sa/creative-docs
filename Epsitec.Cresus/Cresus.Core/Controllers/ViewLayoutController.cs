@@ -11,9 +11,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class ViewLayoutControler : CoreController
+	public class ViewLayoutController : CoreController
 	{
-		public ViewLayoutControler(string name)
+		public ViewLayoutController(string name)
 			: base (name)
 		{
 		}

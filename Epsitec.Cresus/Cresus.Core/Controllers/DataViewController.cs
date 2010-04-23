@@ -13,14 +13,14 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur représente une bande verticale dans laquelle on empile des tuiles AbstractViewControler.
+	/// Ce contrôleur représente une bande verticale dans laquelle on empile des tuiles AbstractViewController.
 	/// </summary>
-	public class DataViewControler : CoreController
+	public class DataViewController : CoreController
 	{
-		public DataViewControler(string name)
+		public DataViewController(string name)
 			: base (name)
 		{
-			this.controlers = new List<CoreController> ();
+			this.controllers = new List<CoreController> ();
 
 		}
 
@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
-			foreach (CoreController controler in this.controlers)
+			foreach (CoreController controller in this.controllers)
 			{
-				yield return controler;
+				yield return controller;
 			}
 		}
 
@@ -44,10 +44,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			int index = 0;
 			foreach (Common.Support.EntityEngine.AbstractEntity entity in this.entities)
 			{
-				string name = string.Concat (this.Name, ".DataViewControler", index.ToString(System.Globalization.CultureInfo.InvariantCulture));
-				AbstractViewControler viewControler = AbstractViewControler.CreateViewControler (name, entity, ViewControlerMode.Compact);
+				string name = string.Concat (this.Name, ".DataViewController", index.ToString(System.Globalization.CultureInfo.InvariantCulture));
+				AbstractViewController viewController = AbstractViewController.CreateViewController (name, entity, ViewControllerMode.Compact);
 
-				if (viewControler != null)
+				if (viewController != null)
 				{
 					FrameBox frame = new FrameBox
 					{
@@ -56,8 +56,8 @@ namespace Epsitec.Cresus.Core.Controllers
 						Dock = DockStyle.Top,
 					};
 
-					viewControler.CreateUI (frame);
-					this.controlers.Add (viewControler);
+					viewController.CreateUI (frame);
+					this.controllers.Add (viewController);
 
 					index++;
 				}
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private List<CoreController> controlers;
+		private List<CoreController> controllers;
 		private List<AbstractEntity> entities;
 	}
 }

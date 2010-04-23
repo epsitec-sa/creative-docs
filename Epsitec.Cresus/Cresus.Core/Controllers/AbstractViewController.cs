@@ -12,21 +12,21 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public enum ViewControlerMode
+	public enum ViewControllerMode
 	{
 		Compact,
 		Edition,
 	}
 
 
-	public abstract class AbstractViewControler : CoreController
+	public abstract class AbstractViewController : CoreController
 	{
-		public AbstractViewControler(string name)
+		public AbstractViewController(string name)
 			: base (name)
 		{
 		}
 
-		public void SetEntity(AbstractEntity entity, ViewControlerMode mode)
+		public void SetEntity(AbstractEntity entity, ViewControllerMode mode)
 		{
 			this.entity = entity;
 			this.mode = mode;
@@ -48,22 +48,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 
-		public static AbstractViewControler CreateViewControler(string name, AbstractEntity entity, ViewControlerMode mode)
+		public static AbstractViewController CreateViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 		{
-			AbstractViewControler viewControler = null;
+			AbstractViewController viewController = null;
 
 			if (entity is Entities.AbstractPersonEntity)
 			{
-				viewControler = new PersonViewControler (name);
-				viewControler.SetEntity (entity, mode);
+				viewController = new PersonViewController (name);
+				viewController.SetEntity (entity, mode);
 			}
 
-			return viewControler;
+			return viewController;
 		}
 
 	
 		protected AbstractEntity entity;
-		protected ViewControlerMode mode;
+		protected ViewControllerMode mode;
 		private FrameBox frame;
 	}
 }
