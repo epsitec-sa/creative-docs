@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -18,6 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base ("MainView")
 		{
 			this.browserController = new BrowserController ("MainBrowser");
+			this.viewController = new DataViewController ("MainViewer");
 
 			this.CreateTileNodes ();
 		}
@@ -26,10 +28,18 @@ namespace Epsitec.Cresus.Core.Controllers
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield return this.browserController;
+			yield return this.viewController;
+		}
+
+		public void SetEntities(List<AbstractEntity> entities)
+		{
+			this.entities = entities;
 		}
 
 		public override void CreateUI(Widget container)
 		{
+			System.Diagnostics.Debug.Assert (this.entities != null);
+
 			this.frame = new FrameBox
 			{
 				Parent = container,
@@ -63,57 +73,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.browserController.CreateUI (this.leftPanel);
 
-#if false
-			//	Crée les panneaux dans la partie droite.
-			this.panel2 = new FrameBox (this.rightPanel);
-			this.panel2.Anchor = AnchorStyles.All;
-			this.panel2.Margins = new Margins (200-5, 0, 0, 0);
-
-			this.panel1 = new FrameBox (this.rightPanel);
-			this.panel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Left;
-			this.panel1.Margins = new Margins (0, 0, 0, 0);
-			this.panel1.PreferredWidth = 200;
-
-			//	Contenu de panel1.
-			Widgets.SimpleTile tile1 = new Widgets.SimpleTile (this.panel1);
-			tile1.Dock = DockStyle.Top;
-			tile1.PreferredHeight = tile1.PreferredHeight;
-			tile1.Margins = new Common.Drawing.Margins (0, 0, 0, -1);
-			tile1.Title = "Coucou";
-			tile1.Content = "Blabla";
-			tile1.ChildrenLocation = Widgets.TileContainer.ChildrenLocationEnum.Right;
-			tile1.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
-
-			Widgets.SimpleTile tile2 = new Widgets.SimpleTile (this.panel1);
-			tile2.Dock = DockStyle.Top;
-			tile2.PreferredHeight = tile2.PreferredHeight;
-			tile2.Margins = new Common.Drawing.Margins (0, 0, 0, -1);
-			tile2.Title = "Long titre pour tester les débordements";
-			tile2.Content = "Ceci est un long texte pour tester les débordements et voir comment s'affiche ce texte...";
-			tile2.ChildrenLocation = Widgets.TileContainer.ChildrenLocationEnum.Right;
-			tile2.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
-
-			Widgets.SimpleTile tile3 = new Widgets.SimpleTile (this.panel1);
-			tile3.Dock = DockStyle.Top;
-			tile3.PreferredHeight = tile3.PreferredHeight*2;
-			tile3.Margins = new Common.Drawing.Margins (0, 0, 0, 0);
-			tile3.Title = "Tralala";
-			tile3.Content = "Première ligne<br/>Deuxième ligne<br/>Troisième ligne<br/>...";
-			tile3.ChildrenLocation = Widgets.TileContainer.ChildrenLocationEnum.Right;
-			tile3.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
-
-			//	Contenu de panel2.
-			Widgets.SimpleTile tile4 = new Widgets.SimpleTile (this.panel2);
-			tile4.Dock = DockStyle.Top;
-			tile4.PreferredHeight = 300;
-			tile4.Margins = new Common.Drawing.Margins (0, 0, 0, 0);
-			tile4.Title = "Final droite";
-			tile4.Content = "dsadsa sad sad asd asd asdsadsad sad sa dsa das dsa dsa d asd asd sad asdsad sad sad sa dsa dsa dsa das d sad sadsadasdsa d sad asd sadsa dsa dsa d sad sad sadsadsad sad sad sa sa dsa dsadsadsa d sad sad sa dasdsadsadsa d sad sad sad sad asdsad sad sa dsa dasdsa...";
-			tile4.ChildrenLocation = Widgets.TileContainer.ChildrenLocationEnum.Right;
-			tile4.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
-#else
-			this.CreateTiles (this.rightPanel);
-#endif
+			this.viewController.SetEntity (this.entities);
+			this.viewController.CreateUI (this.rightPanel);
+			
+			//?this.CreateTiles (this.rightPanel);
 		}
 
 
@@ -377,17 +340,17 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 
-		readonly BrowserController browserController;
-		
-		FrameBox frame;
+		private readonly BrowserController browserController;
+		private readonly DataViewController viewController;
 
-		FrameBox leftPanel;
-		VSplitter splitter;
-		FrameBox rightPanel;
+		private List<AbstractEntity> entities;
 
-		FrameBox panel1;
-		FrameBox panel2;
+		private FrameBox frame;
 
-		TileNode root;
+		private FrameBox leftPanel;
+		private VSplitter splitter;
+		private FrameBox rightPanel;
+
+		private TileNode root;
 	}
 }

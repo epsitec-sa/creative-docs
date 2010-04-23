@@ -55,7 +55,15 @@ namespace Epsitec.Cresus.Core.Controllers
 					return null;
 				}
 
-				return person.Contacts[0].NaturalPerson.Firstname;  // TODO: !
+				StringBuilder builder = new StringBuilder ();
+
+				foreach (Entities.AbstractContactEntity contact in person.Contacts)
+				{
+					builder.Append (Misc.SpacingAppend(contact.NaturalPerson.Firstname, contact.NaturalPerson.Lastname));
+					builder.Append ("<br/>");
+				}
+
+				return builder.ToString ();
 			}
 		}
 	}
