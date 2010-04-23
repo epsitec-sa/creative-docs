@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Core
 			role3.Name = "privé";
 
 			var contact1 = context.CreateEmptyEntity<MailContactEntity> ();
+			var contact2 = context.CreateEmptyEntity<MailContactEntity> ();
 
 			var enterprise = context.CreateEmptyEntity<LegalPersonEntity> ();
 
@@ -94,13 +95,20 @@ namespace Epsitec.Cresus.Core
 			person1.Lastname = "Arnaud";
 			person1.Title = title1;
 			person1.Contacts.Add (contact1);
-			
+			person1.Contacts.Add (contact2);
+
 			contact1.Address = address1;
 			contact1.Complement = "Direction";
 			contact1.Comments.Add (comment1);
-            contact1.Roles.Add (role1);
+			contact1.Roles.Add (role1);
 			contact1.LegalPerson = enterprise;
-            contact1.NaturalPerson = person1;
+			contact1.NaturalPerson = person1;
+
+			contact2.Address = address1;
+			contact2.Complement = "Domicile privé";
+			contact2.Roles.Add (role3);
+			contact2.LegalPerson = enterprise;
+			contact2.NaturalPerson = person1;
 
 			var telecomType1 = context.CreateEmptyEntity<TelecomTypeEntity> ();
 

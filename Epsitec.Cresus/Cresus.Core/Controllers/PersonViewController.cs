@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Entities.NaturalPersonEntity naturalPerson = person as Entities.NaturalPersonEntity;
 				this.CreateTile (container, "Data.Person", "Personne", this.GetPersonSummary(naturalPerson));
 
-				//	Une tuile par adresse postale.
+				//	Une tuile distincte par adresse postale.
 				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
 				{
 					if (contact is Entities.MailContactEntity)
@@ -51,14 +51,14 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				}
 
-				//	Une tuile pour tous les numéros de téléphone.
+				//	Une tuile commune pour tous les numéros de téléphone.
 				string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (telecomContent))
 				{
 					this.CreateTile (container, "Data.Telecom", "Téléphones", telecomContent);
 				}
 
-				//	Une tuile pour toutes les adresses mail.
+				//	Une tuile commune pour toutes les adresses mail.
 				string uriContent = this.GetUriSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (uriContent))
 				{
