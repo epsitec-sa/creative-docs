@@ -166,15 +166,14 @@ namespace Epsitec.Cresus.Core
 		private void CreateUIControllers()
 		{
 			var ribbonController   = new RibbonController ();
-			var mainViewController = new MainViewController ();
+
+			List<AbstractEntity> entities = new List<AbstractEntity> (this.data.GetSamplePersons ());
+			var mainViewController = new MainViewController (entities);
 
 			this.controllers.Add (ribbonController);
 			this.controllers.Add (mainViewController);
 
 			ribbonController.CreateUI (this.ribbonBox);
-
-			List<AbstractEntity> entities = new List<AbstractEntity> (this.data.GetSamplePersons ());
-			mainViewController.SetEntities (entities);
 			mainViewController.CreateUI (this.contentBox);
 		}
 
