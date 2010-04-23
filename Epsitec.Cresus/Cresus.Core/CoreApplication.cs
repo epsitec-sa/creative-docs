@@ -172,6 +172,9 @@ namespace Epsitec.Cresus.Core
 			this.controllers.Add (mainViewController);
 
 			ribbonController.CreateUI (this.ribbonBox);
+
+			List<AbstractEntity> entities = new List<AbstractEntity> (this.data.GetSamplePersons ());
+			mainViewController.SetEntities (entities);
 			mainViewController.CreateUI (this.contentBox);
 		}
 
