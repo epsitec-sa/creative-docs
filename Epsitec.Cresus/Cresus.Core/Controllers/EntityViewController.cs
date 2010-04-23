@@ -65,7 +65,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				return new LegalPersonViewController (name);
 			}
 
-			// todo...
+			if (entity is Entities.MailContactEntity)
+			{
+				return new MailContactViewController (name);
+			}
+
+			// TODO: Compléter ici au fur et à mesure des besoins...
 
 			return null;
 		}
@@ -118,6 +123,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private void SelectTile(Widgets.AbstractTile tile)
+		{
+			this.DeselectAllTiles ();
+			tile.SetSelected (true);
+		}
+
 		private void DeselectAllTiles()
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
@@ -138,12 +149,11 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Appelé lorsque une tuile quelconque est cliquée.
 			var tile = sender as Widgets.AbstractTile;
-			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", this.Entity, ViewControllerMode.Compact, this.Orchestrator);
+			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", tile.Entity, ViewControllerMode.Compact, this.Orchestrator);
 			
 			if (controller != null)
 			{
-				this.DeselectAllTiles ();
-				tile.SetSelected (true);
+				this.SelectTile (tile);
 				this.Orchestrator.ShowSubView (this, controller);
 			}
 		}
