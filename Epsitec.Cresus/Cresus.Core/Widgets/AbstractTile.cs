@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Dock = DockStyle.Fill,
 			};
 
-			this.staticTextIcon = new StaticText
+			this.staticTextTopLeftIcon = new StaticText
 			{
 				Parent = this.leftPanel,
 				Margins = new Margins (AbstractTile.iconMargins),
@@ -91,23 +91,23 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Si on donne un sul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
-		public string IconUri
+		public string TopLeftIconUri
 		{
 			get
 			{
-				return this.iconUri;
+				return this.topLeftIconUri;
 			}
 			set
 			{
-				this.iconUri = value;
+				this.topLeftIconUri = value;
 
-				if (string.IsNullOrEmpty (this.iconUri) || this.iconUri.Length == 1)  // un seul caractère ?
+				if (string.IsNullOrEmpty (this.topLeftIconUri) || this.topLeftIconUri.Length == 1)  // un seul caractère ?
 				{
-					this.staticTextIcon.Text = string.Concat ("<font size=\"200%\">", this.iconUri, "</font>");
+					this.staticTextTopLeftIcon.Text = string.Concat ("<font size=\"200%\">", this.topLeftIconUri, "</font>");
 				}
 				else
 				{
-					this.staticTextIcon.Text = Misc.GetResourceIconImageTag (value);
+					this.staticTextTopLeftIcon.Text = Misc.GetResourceIconImageTag (value);
 				}
 			}
 		}
@@ -144,8 +144,8 @@ namespace Epsitec.Cresus.Core.Widgets
 		private FrameBox rightPanel;
 		protected FrameBox mainPanel;
 
-		private string iconUri;
-		private StaticText staticTextIcon;
+		private string topLeftIconUri;
+		private StaticText staticTextTopLeftIcon;
 
 		private string title;
 		private StaticText staticTextTitle;

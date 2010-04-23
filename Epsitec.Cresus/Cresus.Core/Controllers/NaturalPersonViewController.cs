@@ -26,13 +26,15 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			this.container = container;
+
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var person = this.Entity as Entities.NaturalPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
 			//	Une première tuile pour l'identité de la personne.
 			var naturalPerson = person as Entities.NaturalPersonEntity;
-			this.CreateSimpleTile (container, this.Entity, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
+			this.CreateSimpleTile (this.Entity, "Data.NaturalPerson", "Personne physique", this.GetNaturalPersonSummary(naturalPerson));
 
 			//	Une tuile distincte par adresse postale.
 			foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
@@ -40,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (contact is Entities.MailContactEntity)
 				{
 					var mailContact = contact as Entities.MailContactEntity;
-					this.CreateSimpleTile (container, mailContact, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
+					this.CreateSimpleTile (mailContact, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
 				}
 			}
 
@@ -48,17 +50,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
 			if (!string.IsNullOrEmpty (telecomContent))
 			{
-				this.CreateSimpleTile (container, this.Entity, "Data.Telecom", "Téléphones", telecomContent);
+				this.CreateSimpleTile (this.Entity, "Data.Telecom", "Téléphones", telecomContent);
 			}
 
 			//	Une tuile commune pour toutes les adresses mail.
 			string uriContent = this.GetUriSummary (naturalPerson.Contacts);
 			if (!string.IsNullOrEmpty (uriContent))
 			{
-				this.CreateSimpleTile (container, this.Entity, "Data.Uri", "Mails", uriContent);
+				this.CreateSimpleTile (this.Entity, "Data.Uri", "Mails", uriContent);
 			}
 
-			this.AdjustLastTile (container);
+			this.AdjustLastTile ();
 		}
 
 

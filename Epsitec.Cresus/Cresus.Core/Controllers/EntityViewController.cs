@@ -75,19 +75,22 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Crée un tuile simple empilée de haut en bas.
 		/// </summary>
 		/// <param name="container">The container.</param>
+		/// <param name="entity">The entity.</param>
 		/// <param name="iconUri">The icon URI.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="content">The content.</param>
-		protected void CreateSimpleTile(Widget container, AbstractEntity entity, string iconUri, string title, string content)
+		protected void CreateSimpleTile(AbstractEntity entity, string iconUri, string title, string content)
 		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
 			var tile = new Widgets.SimpleTile
 			{
-				Parent = container,
+				Parent = this.container,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 0, 0, -1),  // léger chevauchement vertical
 				ArrowLocation = Direction.Right,
 				Entity = entity,
-				IconUri = iconUri,
+				TopLeftIconUri = iconUri,
 				Title = title,
 				Content = content,
 			};
@@ -100,11 +103,13 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Ajuste la dernière tuile de l'empilement (celle qui est tout en bas) pour mettre à zéro sa marge inférieure.
 		/// </summary>
 		/// <param name="container">The container.</param>
-		protected void AdjustLastTile(Widget container)
+		protected void AdjustLastTile()
 		{
-			if (container.Children.Count != 0)
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+			if (this.container.Children.Count != 0)
 			{
-				var tile = container.Children[container.Children.Count-1] as Widgets.AbstractTile;
+				var tile = this.container.Children[this.container.Children.Count-1] as Widgets.AbstractTile;
 				if (tile != null)
 				{
 					tile.Margins = new Margins (0);  // la dernière va jusqu'en bas normalement
@@ -113,15 +118,37 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private void DeselectAllTiles()
+		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+			foreach (Widget widget in this.container.Children)
+			{
+				var tile = widget as Widgets.AbstractTile;
+
+				if (tile != null)
+				{
+					tile.SetSelected (false);
+				}
+			}
+		}
+
+
 		private void HandleTileClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsque une tuile quelconque est cliquée.
+			var tile = sender as Widgets.AbstractTile;
 			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", this.Entity, ViewControllerMode.Compact, this.Orchestrator);
 			
 			if (controller != null)
 			{
+				this.DeselectAllTiles ();
+				tile.SetSelected (true);
 				this.Orchestrator.ShowSubView (this, controller);
 			}
 		}
+
+
+		protected Widget container;
 	}
 }

@@ -26,14 +26,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public override void CreateUI(Widget container)
 		{
+			this.container = container;
+
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var person = this.Entity as Entities.LegalPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
 			var legalPerson = person as Entities.LegalPersonEntity;
-			this.CreateSimpleTile (container, this.Entity, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
+			this.CreateSimpleTile (this.Entity, "Data.LegalPerson", "Personne morale", this.GetLegalPersonSummary (legalPerson));
 
-			this.AdjustLastTile (container);
+			this.AdjustLastTile ();
 		}
 
 
