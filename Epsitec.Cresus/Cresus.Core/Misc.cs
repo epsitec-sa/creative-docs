@@ -13,15 +13,21 @@ namespace Epsitec.Cresus.Core
 {
 	public static class Misc
 	{
+		/// <summary>
+		/// Supprime l'éventuel "<br/>" qui termine un texte.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <returns></returns>
 		public static string RemoveLastBreakLine(string text)
 		{
-			if (text.EndsWith ("<br/>"))
+			if (!string.IsNullOrEmpty(text) && text.EndsWith ("<br/>"))
 			{
 				return text.Substring (0, text.Length-5);
 			}
 
 			return text;
 		}
+
 
 		/// <summary>
 		/// Appond trois chaînes avec des espaces intercalaires.

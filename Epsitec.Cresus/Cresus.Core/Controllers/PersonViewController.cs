@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				//	Une première tuile pour l'identité de la personne.
 				Entities.NaturalPersonEntity naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateTile (container, "Data.Person", "Personne", this.GetDescription(naturalPerson));
+				this.CreateTile (container, "Data.Person", "Personne", this.GetPersonSummary(naturalPerson));
 
 				//	Une tuile par adresse postale.
 				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
@@ -47,19 +47,19 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (contact is Entities.MailContactEntity)
 					{
 						Entities.MailContactEntity mailContact = contact as Entities.MailContactEntity;
-						this.CreateTile (container, "Data.Mail", "Adresse", this.GetDescription (mailContact));
+						this.CreateTile (container, "Data.Mail", this.GetMailTitle (mailContact), this.GetMailSummary (mailContact));
 					}
 				}
 
 				//	Une tuile pour tous les numéros de téléphone.
-				string telecomContent = this.GetTelecomDescription (naturalPerson.Contacts);
+				string telecomContent = this.GetTelecomSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (telecomContent))
 				{
 					this.CreateTile (container, "Data.Telecom", "Téléphones", telecomContent);
 				}
 
 				//	Une tuile pour toutes les adresses mail.
-				string uriContent = this.GetUriDescription (naturalPerson.Contacts);
+				string uriContent = this.GetUriSummary (naturalPerson.Contacts);
 				if (!string.IsNullOrEmpty (uriContent))
 				{
 					this.CreateTile (container, "Data.Uri", "Mails", uriContent);
@@ -92,12 +92,31 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private string GetDescription(Entities.NaturalPersonEntity naturalPerson)
+		private string GetPersonSummary(Entities.NaturalPersonEntity naturalPerson)
 		{
 			return Misc.SpacingAppend (naturalPerson.Firstname, naturalPerson.Lastname);
 		}
 
-		private string GetDescription(Entities.MailContactEntity mailContact)
+		private string GetMailTitle(Entities.MailContactEntity mailContact)
+		{
+			StringBuilder builder = new StringBuilder ();
+
+			builder.Append ("Adresse");
+
+			if (mailContact.Roles != null && mailContact.Roles.Count != 0)
+			{
+				builder.Append (" ");
+
+				foreach (Entities.ContactRoleEntity role in mailContact.Roles)
+				{
+					builder.Append (role.Name);
+				}
+			}
+
+			return Misc.RemoveLastBreakLine (builder.ToString ());
+		}
+
+		private string GetMailSummary(Entities.MailContactEntity mailContact)
 		{
 			StringBuilder builder = new StringBuilder ();
 
@@ -116,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
-		private string GetTelecomDescription(IList<Entities.AbstractContactEntity> contacts)
+		private string GetTelecomSummary(IList<Entities.AbstractContactEntity> contacts)
 		{
 			StringBuilder builder = new StringBuilder ();
 
@@ -134,7 +153,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
-		private string GetUriDescription(IList<Entities.AbstractContactEntity> contacts)
+		private string GetUriSummary(IList<Entities.AbstractContactEntity> contacts)
 		{
 			StringBuilder builder = new StringBuilder ();
 
