@@ -58,6 +58,8 @@ namespace Epsitec.Cresus.Core.Controllers
 						this.OnCurrentChanged ();
                     }
 				};
+			
+			this.RefreshScrollList ();
 		}
 
 
@@ -83,7 +85,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.collection.Clear ();
 			this.collection.AddRange (collection);
 			this.RefreshScrollList ();
-			this.OnCurrentChanged ();
 		}
 
 		protected void OnCurrentChanged()
@@ -110,6 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.scrollList != null)
 			{
+				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
 				this.scrollList.Items.Clear ();
 
 				foreach (var entity in this.collection)
@@ -127,6 +129,8 @@ namespace Epsitec.Cresus.Core.Controllers
 						this.scrollList.Items.Add (Misc.SpacingAppend (person.Firstname, person.Lastname));
 					}
 				}
+
+				this.OnCurrentChanged ();
 			}
 		}
 
