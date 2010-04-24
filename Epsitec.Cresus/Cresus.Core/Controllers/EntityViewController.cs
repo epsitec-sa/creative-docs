@@ -60,31 +60,29 @@ namespace Epsitec.Cresus.Core.Controllers
 				return null;
 			}
 
-			if (entity is Entities.NaturalPersonEntity || entity is Entities.LegalPersonEntity)
+			if (entity is Entities.NaturalPersonEntity)
 			{
-				if (mode == ViewControllerMode.TelecomsEdition)
-				{
-					return new TelecomsViewController (name);
-				}
+				return new NaturalPersonViewController (name);
+			}
 
-				if (mode == ViewControllerMode.UrisEdition)
-				{
-					return new UrisViewController (name);
-				}
-
-				if (entity is Entities.NaturalPersonEntity)
-				{
-					return new NaturalPersonViewController (name);
-				}
-				else
-				{
-					return new LegalPersonViewController (name);
-				}
+			if (entity is Entities.LegalPersonEntity)
+			{
+				return new LegalPersonViewController (name);
 			}
 
 			if (entity is Entities.MailContactEntity)
 			{
 				return new MailContactViewController (name);
+			}
+
+			if (entity is Entities.TelecomContactEntity)
+			{
+				return new TelecomViewController (name);
+			}
+
+			if (entity is Entities.UriContactEntity)
+			{
+				return new UriViewController (name);
 			}
 
 			// TODO: Compléter ici au fur et à mesure des besoins...
@@ -101,11 +99,38 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="iconUri">The icon URI.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="content">The content.</param>
-		protected void CreateSummaryTile(AbstractEntity entity, ViewControllerMode childrenMode, string iconUri, string title, string content)
+		protected void CreateSummaryTile(AbstractEntity entity, bool compactFollower, ViewControllerMode childrenMode, string iconUri, string title, string content)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
+			double topMargin = 0;
+			double bottomMargin = -1;  // léger chevauchement vertical
+
 			var tile = new Widgets.SummaryTile
+			{
+				Parent = this.container,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 0, topMargin, bottomMargin),
+				ArrowLocation = Direction.Right,
+				EnteredSensitivity = childrenMode != ViewControllerMode.None,
+				Entity = entity,
+				Mode = this.Mode,
+				ChildrenMode = childrenMode,
+				CompactFollower = compactFollower,
+				TopLeftIconUri = iconUri,
+				Title = title,
+				Summary = content,
+			};
+
+			tile.PreferredHeight = tile.ContentHeight;
+			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
+		}
+
+		protected FrameBox CreateEditionTile(AbstractEntity entity, ViewControllerMode childrenMode, string iconUri, string title)
+		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+			var tile = new Widgets.EditionTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
@@ -115,13 +140,24 @@ namespace Epsitec.Cresus.Core.Controllers
 				Entity = entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
+				IsEditing = true,
 				TopLeftIconUri = iconUri,
 				Title = title,
-				Summary = content,
 			};
 
-			tile.PreferredHeight = tile.ContentHeight;
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
+
+			return tile.Container;
+		}
+
+		protected void CreateSeparator(int height)
+		{
+			var sep = new FrameBox
+			{
+				Parent = this.container,
+				Dock = DockStyle.Top,
+				PreferredHeight = height,
+			};
 		}
 
 		/// <summary>
@@ -140,6 +176,134 @@ namespace Epsitec.Cresus.Core.Controllers
 					tile.Margins = new Margins (0);  // la dernière va jusqu'en bas normalement
 				}
 			}
+		}
+
+
+		protected FrameBox CreateGroup(Widget embedder, string label)
+		{
+			var staticText = new StaticText
+			{
+				Parent = embedder,
+				Text = string.Concat (label, " :"),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var frameBox = new FrameBox
+			{
+				Parent = embedder,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				TabIndex = ++this.tabIndex,
+			};
+
+			return frameBox;
+		}
+
+		protected void CreateTextField(Widget embedder, int width, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		{
+			var textField = new TextField
+			{
+				Parent = embedder,
+				Text = initialValue,
+				Dock = (width == 0) ? DockStyle.Fill : DockStyle.Left,
+				PreferredWidth = width,
+				Margins = new Margins (0, (width == 0) ? 0:2, 0, 0),
+				TabIndex = ++this.tabIndex,
+			};
+
+			textField.TextChanged +=
+				delegate (object sender)
+				{
+					if (validator == null || validator (textField.Text))
+					{
+						callback (textField.Text);
+						textField.BackColor = Color.Empty;
+					}
+					else
+					{
+						textField.BackColor = Color.FromRgb (1, 0, 0);  // TODO: on ne voit rien !
+					}
+				};
+		}
+
+		protected void CreateTextField(Widget embedder, string label, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		{
+			var staticText = new StaticText
+			{
+				Parent = embedder,
+				Text = string.Concat (label, " :"),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var textField = new TextField
+			{
+				Parent = embedder,
+				Text = initialValue,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				TabIndex = ++this.tabIndex,
+			};
+
+			textField.TextChanged +=
+				delegate (object sender)
+				{
+					if (validator == null || validator (textField.Text))
+					{
+						callback (textField.Text);
+						textField.BackColor = Color.Empty;
+					}
+					else
+					{
+						textField.BackColor = Color.FromRgb (1, 0, 0);  // TODO: on ne voit rien !
+					}
+				};
+		}
+
+		protected void CreateTextFieldMulti(Widget embedder, string label, int height, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		{
+			var staticText = new StaticText
+			{
+				Parent = embedder,
+				Text = string.Concat (label, " :"),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			var textField = new TextFieldMulti
+			{
+				Parent = embedder,
+				Text = initialValue,
+				PreferredHeight = height,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 5),
+				TabIndex = ++this.tabIndex,
+			};
+
+			textField.TextChanged +=
+				delegate (object sender)
+				{
+					if (validator == null || validator (textField.Text))
+					{
+						callback (textField.Text);
+						textField.BackColor = Color.Empty;
+					}
+					else
+					{
+						textField.BackColor = Color.FromRgb (1, 0, 0);  // TODO: on ne voit rien !
+					}
+				};
+		}
+
+		protected void CreateMargin(Widget embedder, int marginHeight)
+		{
+			FrameBox frame = new FrameBox
+			{
+				Parent = embedder,
+				Dock = DockStyle.Top,
+				PreferredHeight = marginHeight,
+			};
 		}
 
 
@@ -185,5 +349,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		protected Widget container;
+		private int tabIndex;
 	}
 }

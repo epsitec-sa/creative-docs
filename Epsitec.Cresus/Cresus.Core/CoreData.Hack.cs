@@ -97,6 +97,11 @@ namespace Epsitec.Cresus.Core
 			person1.Contacts.Add (contact1);
 			person1.Contacts.Add (contact2);
 
+			var person2 = context.CreateEmptyEntity<NaturalPersonEntity> ();
+
+			person2.Firstname = "Daniel";
+			person2.Lastname = "Roux";
+
 			contact1.Address = address1;
 			contact1.Complement = "Direction";
 			contact1.Comments.Add (comment1);
@@ -148,10 +153,15 @@ namespace Epsitec.Cresus.Core
 			enterprise.Contacts.Add (telecom3);
 			person1.Contacts.Add (telecom3);
 
+			var uriScheme1 = context.CreateEmptyEntity<UriSchemeEntity> ();
+
+			uriScheme1.Name = "mailto";
+
 			var uri1 = context.CreateEmptyEntity<UriContactEntity> ();
 
 			uri1.LegalPerson = enterprise;
 			uri1.Uri = "epsitec@epsitec.ch";
+			uri1.UriScheme = uriScheme1;
 			uri1.Roles.Add (role2);
 			uri1.Roles.Add (role3);
 
@@ -162,11 +172,22 @@ namespace Epsitec.Cresus.Core
 
 			uri2.LegalPerson = enterprise;
 			uri2.Uri = "arnaud@epsitec.ch";
+			uri2.UriScheme = uriScheme1;
 			uri2.Roles.Add (role3);
 
 			person1.Contacts.Add (uri2);
 
+			var uri3 = context.CreateEmptyEntity<UriContactEntity> ();
+
+			uri3.LegalPerson = enterprise;
+			uri3.Uri = "perre.arnaud@opac.ch";
+			uri3.UriScheme = uriScheme1;
+			uri3.Roles.Add (role3);
+
+			person1.Contacts.Add (uri3);
+
 			persons.Add (person1);
+			persons.Add (person2);
 			persons.Add (enterprise);
 		}
 
