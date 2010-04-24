@@ -12,7 +12,7 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class NaturalPersonViewController : EntityViewController
+	public class NaturalPersonViewController : AbstractPersonViewController
 	{
 		public NaturalPersonViewController(string name)
 			: base (name)
@@ -32,43 +32,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var person = this.Entity as Entities.NaturalPersonEntity;
 			System.Diagnostics.Debug.Assert (person != null);
 
-			if (this.Mode == ViewControllerMode.NaturalPersonEdition)
-			{
-				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateSummaryTile (this.Entity, ViewControllerMode.None, "Data.NaturalPerson", "Personne physique", "[ <i>Ici prendra place l'édition de la personne physique</i> ]");
-			}
-			else
-			{
-				//	Une première tuile pour l'identité de la personne.
-				var naturalPerson = person as Entities.NaturalPersonEntity;
-				this.CreateSummaryTile (this.Entity, ViewControllerMode.NaturalPersonEdition, "Data.NaturalPerson", "Personne physique", EntitySummary.GetNaturalPersonSummary (naturalPerson));
-
-				//	Une tuile distincte par adresse postale.
-				foreach (Entities.AbstractContactEntity contact in naturalPerson.Contacts)
-				{
-					if (contact is Entities.MailContactEntity)
-					{
-						var mailContact = contact as Entities.MailContactEntity;
-						this.CreateSummaryTile (mailContact, ViewControllerMode.GenericEdition, "Data.Mail", EntitySummary.GetMailTitle (mailContact), EntitySummary.GetMailSummary (mailContact));
-					}
-				}
-
-				//	Une tuile commune pour tous les numéros de téléphone.
-				string telecomContent = EntitySummary.GetTelecomsSummary (naturalPerson.Contacts);
-				if (!string.IsNullOrEmpty (telecomContent))
-				{
-					this.CreateSummaryTile (this.Entity, ViewControllerMode.TelecomsEdition, "Data.Telecom", "Téléphones", telecomContent);
-				}
-
-				//	Une tuile commune pour toutes les adresses mail.
-				string uriContent = EntitySummary.GetUrisSummary (naturalPerson.Contacts);
-				if (!string.IsNullOrEmpty (uriContent))
-				{
-					this.CreateSummaryTile (this.Entity, ViewControllerMode.UrisEdition, "Data.Uri", "Mails", uriContent);
-				}
-			}
-
-			this.AdjustLastTile ();
+			this.CreateUITiles (person);
 		}
 	}
 }

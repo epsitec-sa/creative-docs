@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				Parent = this.mainPanel,
 				Dock = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis,
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !
 			};
 		}
 
@@ -37,9 +37,16 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				if (Mode == Controllers.ViewControllerMode.Compact)
 				{
-					string[] lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
-					double h = 20+lines.Length*16;  // TODO: provisoire
-					return System.Math.Max (h, this.PreferredHeight);
+					if (this.CompactFollower)
+					{
+						return 16;
+					}
+					else
+					{
+						string[] lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
+						double h = 20+lines.Length*16;  // TODO: provisoire
+						return System.Math.Max (h, this.PreferredHeight);
+					}
 				}
 				else
 				{
@@ -65,6 +72,21 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		protected override void UpdateCompactFollower()
+		{
+			base.UpdateCompactFollower ();
+
+			if (this.compactFollower)
+			{
+				this.staticTextSummary.ContentAlignment = ContentAlignment.MiddleLeft;
+			}
+			else
+			{
+				this.staticTextSummary.ContentAlignment = ContentAlignment.TopLeft;
+			}
+		}
+
+	
 		private StaticText staticTextSummary;
 	}
 }

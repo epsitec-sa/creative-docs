@@ -9,9 +9,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		Compact,
 
 		GenericEdition,
-		NaturalPersonEdition,
-		LegalPersonEdition,
-		TelecomsEdition,
-		UrisEdition,
+		PersonEdition,
+		TelecomEdition,
+		UriEdition,
 	}
 }

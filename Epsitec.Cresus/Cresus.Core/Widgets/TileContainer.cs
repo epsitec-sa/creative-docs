@@ -74,6 +74,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public bool IsEditing
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Rectangle disponible pour le contenu, qui exclut donc la flèche.
 		/// Si la flèche n'est pas dessinée, sa surface est toujours exclue.
@@ -111,7 +117,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			//	En mode 'survolé' ou 'sélectionné', hilite le fond.
 			bool isEntered = this.IsEntered && this.enteredSensitivity;
 
-			if (isEntered || this.IsSelected)
+			if (isEntered || this.IsSelected || this.IsEditing)
 			{
 				double alpha = 0.05;
 
@@ -123,6 +129,11 @@ namespace Epsitec.Cresus.Core.Widgets
 				if (this.IsSelected)
 				{
 					alpha *= 4;
+				}
+
+				if (this.IsEditing)
+				{
+					alpha *= 2;
 				}
 
 				backColor = new Color (alpha, adorner.ColorCaption.R, adorner.ColorCaption.G, adorner.ColorCaption.B);
@@ -229,7 +240,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				default:
 				case Direction.Left:
 					box = new Rectangle (bounds.Left+TileContainer.arrowBreadth, bounds.Bottom, bounds.Width-TileContainer.arrowBreadth, bounds.Height);
-					width = System.Math.Min (TileContainer.arrowWidth, bounds.Height);
+					width = System.Math.Min (TileContainer.arrowWidth, bounds.Height/2);
 					p2 = Point.Scale (bounds.TopLeft, bounds.BottomLeft, 0.5);
 					p1 = new Point (box.Left, p2.Y+width);
 					p3 = new Point (box.Left, p2.Y-width);
@@ -237,7 +248,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				case Direction.Right:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width-TileContainer.arrowBreadth, bounds.Height);
-					width = System.Math.Min (TileContainer.arrowWidth, bounds.Height);
+					width = System.Math.Min (TileContainer.arrowWidth, bounds.Height/2);
 					p2 = Point.Scale (bounds.TopRight, bounds.BottomRight, 0.5);
 					p1 = new Point (box.Right, p2.Y-width);
 					p3 = new Point (box.Right, p2.Y+width);
@@ -245,7 +256,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				case Direction.Up:
 					box = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, bounds.Height-TileContainer.arrowBreadth);
-					width = System.Math.Min (TileContainer.arrowWidth, bounds.Width);
+					width = System.Math.Min (TileContainer.arrowWidth, bounds.Width/2);
 					p2 = Point.Scale (bounds.TopLeft, bounds.TopRight, 0.5);
 					p1 = new Point (p2.X+width, box.Top);
 					p3 = new Point (p2.X-width, box.Top);
@@ -253,7 +264,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				case Direction.Down:
 					box = new Rectangle (bounds.Left, bounds.Bottom+TileContainer.arrowBreadth, bounds.Width, bounds.Height-TileContainer.arrowBreadth);
-					width = System.Math.Min (TileContainer.arrowWidth, bounds.Width);
+					width = System.Math.Min (TileContainer.arrowWidth, bounds.Width/2);
 					p2 = Point.Scale (bounds.BottomLeft, bounds.BottomRight, 0.5);
 					p1 = new Point (p2.X-width, box.Bottom);
 					p3 = new Point (p2.X+width, box.Bottom);

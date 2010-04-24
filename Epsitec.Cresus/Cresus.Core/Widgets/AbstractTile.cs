@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				PreferredWidth = 0,
 				Dock = DockStyle.Top,
 				ContentAlignment = ContentAlignment.TopLeft,
-				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.SingleLine,  // TODO: pourquoi cela n'affiche jamais '...' ?
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 			};
 
 			this.mainPanel = new FrameBox
@@ -89,6 +89,22 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get;
 			set;
+		}
+
+		public bool CompactFollower
+		{
+			get
+			{
+				return this.compactFollower;
+			}
+			set
+			{
+				if (this.compactFollower != value)
+				{
+					this.compactFollower = value;
+					this.UpdateCompactFollower ();
+				}
+			}
 		}
 
 
@@ -150,9 +166,18 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		protected virtual void UpdateCompactFollower()
+		{
+			this.staticTextTopLeftIcon.Visibility = !this.compactFollower;
+			this.staticTextTitle.Visibility = !this.compactFollower;
+		}
+
+
 		private static readonly double iconSize = 32;
-		private static readonly double iconMargins = 5;
+		private static readonly double iconMargins = 2;
 		private static readonly double titleHeight = 18;
+
+		protected bool compactFollower;
 
 		private FrameBox leftPanel;
 		private FrameBox rightPanel;

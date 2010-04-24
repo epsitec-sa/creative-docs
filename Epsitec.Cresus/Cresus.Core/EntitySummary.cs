@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -17,7 +18,83 @@ namespace Epsitec.Cresus.Core
 	/// </summary>
 	public static class EntitySummary
 	{
-		public static string GetNaturalPersonSummary(Entities.NaturalPersonEntity naturalPerson)
+		public static string GetIcon(AbstractEntity entity)
+		{
+			if (entity is Entities.NaturalPersonEntity)
+			{
+				return "Data.NaturalPerson";
+			}
+
+			if (entity is Entities.LegalPersonEntity)
+			{
+				return "Data.LegalPerson";
+			}
+
+			if (entity is Entities.MailContactEntity)
+			{
+				return "Data.Mail";
+			}
+
+			if (entity is Entities.TelecomContactEntity)
+			{
+				return "Data.Telecom";
+			}
+
+			if (entity is Entities.UriContactEntity)
+			{
+				return "Data.Uri";
+			}
+
+			return "?";
+		}
+
+		public static string GetTitle(AbstractEntity entity)
+		{
+			if (entity is Entities.NaturalPersonEntity)
+			{
+				return "Personne physique";
+			}
+
+			if (entity is Entities.LegalPersonEntity)
+			{
+				return "Persone morale";
+			}
+
+			if (entity is Entities.MailContactEntity)
+			{
+				return EntitySummary.GetMailTitle (entity as Entities.MailContactEntity);
+			}
+
+			if (entity is Entities.TelecomContactEntity)
+			{
+				return "Téléphone";
+			}
+
+			if (entity is Entities.UriContactEntity)
+			{
+				return "Mail";
+			}
+
+			return "?";
+		}
+
+
+		public static string GetPersonSummary(Entities.AbstractPersonEntity person)
+		{
+			if (person is Entities.NaturalPersonEntity)
+			{
+				return EntitySummary.GetNaturalPersonSummary (person as Entities.NaturalPersonEntity);
+			}
+
+			if (person is Entities.LegalPersonEntity)
+			{
+				return EntitySummary.GetLegalPersonSummary (person as Entities.LegalPersonEntity);
+			}
+
+			return null;
+		}
+
+		private static string GetNaturalPersonSummary(Entities.NaturalPersonEntity naturalPerson)
 		{
 			var builder = new StringBuilder ();
 
@@ -34,7 +111,7 @@ namespace Epsitec.Cresus.Core
 			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
-		public static string GetLegalPersonSummary(Entities.LegalPersonEntity legalPerson)
+		private static string GetLegalPersonSummary(Entities.LegalPersonEntity legalPerson)
 		{
 			var builder = new StringBuilder ();
 
@@ -45,7 +122,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static string GetMailTitle(Entities.MailContactEntity mailContact)
+		private static string GetMailTitle(Entities.MailContactEntity mailContact)
 		{
 			var builder = new StringBuilder ();
 
@@ -84,40 +161,24 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public static string GetTelecomsSummary(IList<Entities.AbstractContactEntity> contacts)
+		public static string GetTelecomSummary(Entities.TelecomContactEntity telecomContact)
 		{
 			var builder = new StringBuilder ();
 
-			foreach (Entities.AbstractContactEntity contact in contacts)
-			{
-				if (contact is Entities.TelecomContactEntity)
-				{
-					var telecomContact = contact as Entities.TelecomContactEntity;
-
-					builder.Append (telecomContact.Number);
-					EntitySummary.AppendRoles (builder, telecomContact.Roles);
-					builder.Append ("<br/>");
-				}
-			}
+			builder.Append (telecomContact.Number);
+			EntitySummary.AppendRoles (builder, telecomContact.Roles);
+			builder.Append ("<br/>");
 
 			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
 
-		public static string GetUrisSummary(IList<Entities.AbstractContactEntity> contacts)
+		public static string GetUriSummary(Entities.UriContactEntity uriContact)
 		{
 			var builder = new StringBuilder ();
 
-			foreach (Entities.AbstractContactEntity contact in contacts)
-			{
-				if (contact is Entities.UriContactEntity)
-				{
-					var uriContact = contact as Entities.UriContactEntity;
-
-					builder.Append (uriContact.Uri);
-					EntitySummary.AppendRoles (builder, uriContact.Roles);
-					builder.Append ("<br/>");
-				}
-			}
+			builder.Append (uriContact.Uri);
+			EntitySummary.AppendRoles (builder, uriContact.Roles);
+			builder.Append ("<br/>");
 
 			return Misc.RemoveLastBreakLine (builder.ToString ());
 		}
@@ -145,5 +206,8 @@ namespace Epsitec.Cresus.Core
 
 			}
 		}
+
+
+		public static readonly string emptyText = "<i>(vide)</i>";
 	}
 }
