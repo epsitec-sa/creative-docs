@@ -35,9 +35,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.mailContact), EntitySummary.GetTitle (this.mailContact));
 			FrameBox group;
 
-			this.CreateTextField (frame, "Rue", this.StreetName, x => this.StreetName = x, Validators.StringValidator.Validate);
-			this.CreateTextFieldMulti (frame, "Complément de l'adresse", 52, this.StreetComplement, x => this.StreetComplement = x, null);
-			this.CreateTextField (frame, "Boîte postale", this.PostBoxNumber, x => this.PostBoxNumber = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 0, "Rue", this.StreetName, x => this.StreetName = x, Validators.StringValidator.Validate);
+			this.CreateTextFieldMulti (frame, 52, "Complément de l'adresse", this.StreetComplement, x => this.StreetComplement = x, null);
+			this.CreateTextField (frame, 0, "Boîte postale", this.PostBoxNumber, x => this.PostBoxNumber = x, Validators.StringValidator.Validate);
 
 			group = this.CreateGroup (frame, "Numéro postal et ville");
 			this.CreateTextField (group, 50, this.LocationPostalCode, x => this.LocationPostalCode = x, Validators.StringValidator.Validate);
@@ -50,6 +50,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			group = this.CreateGroup (frame, "Code et nom de la région");
 			this.CreateTextField (group, 50, this.RegionCode, x => this.RegionCode = x, Validators.StringValidator.Validate);
 			this.CreateTextField (group, 0, this.RegionName, x => this.RegionName = x, Validators.StringValidator.Validate);
+
+			this.SetInitialFocus ();
 		}
 
 

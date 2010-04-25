@@ -34,10 +34,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.telecomContact), EntitySummary.GetTitle (this.telecomContact));
 
-			this.CreateTextField (frame, "Type du numéro", this.TelecomType, x => this.TelecomType = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 150, "Type du numéro", this.TelecomType, x => this.TelecomType = x, Validators.StringValidator.Validate);
 			this.CreateMargin (frame, 10);
-			this.CreateTextField (frame, "Numéro de téléphone", this.telecomContact.Number, x => this.telecomContact.Number = x, Validators.StringValidator.Validate);
-			this.CreateTextField (frame, "Numéro interne", this.telecomContact.Extension, x => this.telecomContact.Extension = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 150, "Numéro de téléphone", this.telecomContact.Number, x => this.telecomContact.Number = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 100, "Numéro interne", this.telecomContact.Extension, x => this.telecomContact.Extension = x, Validators.StringValidator.Validate);
+
+			this.SetInitialFocus ();
 		}
 
 

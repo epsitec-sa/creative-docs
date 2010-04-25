@@ -99,23 +99,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="iconUri">The icon URI.</param>
 		/// <param name="title">The title.</param>
 		/// <param name="content">The content.</param>
-		protected void CreateSummaryTile(AbstractEntity entity, bool compactFollower, ViewControllerMode childrenMode, string iconUri, string title, string content)
+		protected void CreateSummaryTile(AbstractEntity entity, int groupIndex, bool compactFollower, ViewControllerMode childrenMode, string iconUri, string title, string content)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
-
-			double topMargin = 0;
-			double bottomMargin = -1;  // léger chevauchement vertical
 
 			var tile = new Widgets.SummaryTile
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, topMargin, bottomMargin),
 				ArrowLocation = Direction.Right,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
 				Entity = entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
+				GroupIndex = groupIndex,
 				CompactFollower = compactFollower,
 				TopLeftIconUri = iconUri,
 				Title = title,
@@ -134,7 +131,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = this.container,
 				Dock = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, -1),  // léger chevauchement vertical
 				ArrowLocation = Direction.Right,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
 				Entity = entity,
@@ -150,32 +146,90 @@ namespace Epsitec.Cresus.Core.Controllers
 			return tile.Container;
 		}
 
-		protected void CreateSeparator(int height)
-		{
-			var sep = new FrameBox
-			{
-				Parent = this.container,
-				Dock = DockStyle.Top,
-				PreferredHeight = height,
-			};
-		}
 
 		/// <summary>
-		/// Ajuste la dernière tuile de l'empilement (celle qui est tout en bas) pour mettre à zéro sa marge inférieure.
+		/// Ajuste l'aspect visuel pour former des groupes bien distincts.
+		/// Les traits horizontaux de séparation à l'intérieur des groupes sont supprimés.
+		/// Les différents groupes sont espacés.
 		/// </summary>
-		/// <param name="container">The container.</param>
-		protected void AdjustLastTile()
+		protected void AdjustVisualForGroups()
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
-			if (this.container.Children.Count != 0)
+			bool first = true;
+			for (int i = 0; i < this.container.Children.Count; i++)
 			{
-				var tile = this.container.Children[this.container.Children.Count-1] as Widgets.AbstractTile;
-				if (tile != null)
+				var currentTile = this.container.Children[i] as Widgets.AbstractTile;
+				var nextTile    = (i+1 < this.container.Children.Count) ? this.container.Children[i+1] as Widgets.AbstractTile : null;
+				System.Diagnostics.Debug.Assert (currentTile != null);
+
+				if (nextTile != null && currentTile.GroupIndex == nextTile.GroupIndex && nextTile.CompactFollower)  // dans le même groupe ?
 				{
-					tile.Margins = new Margins (0);  // la dernière va jusqu'en bas normalement
+					currentTile.Margins = new Margins (0, 0, 0, -1);  // léger chevauchement
+
+					if (first)
+					{
+						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Up;
+					}
+					else
+					{
+						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right;
+					}
+
+					first = false;
+				}
+				else  // dans deux groupes différents ?
+				{
+					currentTile.Margins = new Margins (0, 0, 0, 4);  // espacement
+
+					if (first)
+					{
+						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
+					}
+					else
+					{
+						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Down;
+					}
+
+					first = true;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Met le focus dans la tuile éditable sur le premier widget pertinant.
+		/// </summary>
+		protected void SetInitialFocus()
+		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+			this.SetInitialFocus(this.container);
+		}
+
+		private bool SetInitialFocus(Widget parent)
+		{
+			foreach (Widget widget in parent.Children)
+			{
+				if (widget is AbstractTextField)
+				{
+					var textField = widget as AbstractTextField;
+
+					textField.SelectAll ();
+					textField.Focus ();
+
+					return true;
+				}
+
+				if (widget.Children != null && widget.Children.Count != 0)
+				{
+					if (this.SetInitialFocus (widget))
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 
@@ -212,22 +266,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				TabIndex = ++this.tabIndex,
 			};
 
-			textField.TextChanged +=
-				delegate (object sender)
-				{
-					if (validator == null || validator (textField.Text))
-					{
-						callback (textField.Text);
-						textField.BackColor = Color.Empty;
-					}
-					else
-					{
-						textField.BackColor = Color.FromRgb (1, 0, 0);  // TODO: on ne voit rien !
-					}
-				};
+			this.CreateTextFieldHandler (textField, callback, validator);
 		}
 
-		protected void CreateTextField(Widget embedder, string label, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		protected void CreateTextField(Widget embedder, int width, string label, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
@@ -237,31 +279,42 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			var textField = new TextField
-			{
-				Parent = embedder,
-				Text = initialValue,
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, 10, 0, 5),
-				TabIndex = ++this.tabIndex,
-			};
+			TextField textField;
 
-			textField.TextChanged +=
-				delegate (object sender)
+			if (width == 0)  // occupe toute la largeur ?
+			{
+				textField = new TextField
 				{
-					if (validator == null || validator (textField.Text))
-					{
-						callback (textField.Text);
-						textField.BackColor = Color.Empty;
-					}
-					else
-					{
-						textField.BackColor = Color.FromRgb (1, 0, 0);  // TODO: on ne voit rien !
-					}
+					Parent = embedder,
+					Text = initialValue,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 10, 0, 5),
+					TabIndex = ++this.tabIndex,
 				};
+			}
+			else  // largeur partielle fixe ?
+			{
+				var box = new FrameBox
+				{
+					Parent = embedder,
+					Dock = DockStyle.Top,
+				};
+
+				textField = new TextField
+				{
+					Parent = box,
+					Text = initialValue,
+					Dock = DockStyle.Left,
+					PreferredWidth = width,
+					Margins = new Margins (0, 10, 0, 5),
+					TabIndex = ++this.tabIndex,
+				};
+			}
+
+			this.CreateTextFieldHandler (textField, callback, validator);
 		}
 
-		protected void CreateTextFieldMulti(Widget embedder, string label, int height, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		protected void CreateTextFieldMulti(Widget embedder, int height, string label, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
@@ -281,17 +334,22 @@ namespace Epsitec.Cresus.Core.Controllers
 				TabIndex = ++this.tabIndex,
 			};
 
+			this.CreateTextFieldHandler (textField, callback, validator);
+		}
+
+		private void CreateTextFieldHandler(AbstractTextField textField, System.Action<string> callback, System.Func<string, bool> validator)
+		{
 			textField.TextChanged +=
 				delegate (object sender)
 				{
 					if (validator == null || validator (textField.Text))
 					{
 						callback (textField.Text);
-						textField.BackColor = Color.Empty;
+						textField.SetError (false);
 					}
 					else
 					{
-						textField.BackColor = Color.FromRgb (1, 0, 0);  // TODO: on ne voit rien !
+						textField.SetError (true);
 					}
 				};
 		}
