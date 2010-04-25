@@ -165,6 +165,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
+		public int GroupIndex
+		{
+			get;
+			set;
+		}
+
 
 		protected virtual void UpdateCompactFollower()
 		{

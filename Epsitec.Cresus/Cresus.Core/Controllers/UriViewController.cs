@@ -34,8 +34,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.uriContact), EntitySummary.GetTitle (this.uriContact));
 
-			this.CreateTextField (frame, "Type", this.UriScheme, x => this.UriScheme = x, Validators.StringValidator.Validate);
-			this.CreateTextField (frame, "Adresse mail", this.uriContact.Uri, x => this.uriContact.Uri = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 100, "Type", this.UriScheme, x => this.UriScheme = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 0, "Adresse mail", this.uriContact.Uri, x => this.uriContact.Uri = x, Validators.StringValidator.Validate);
+
+			this.SetInitialFocus ();
 		}
 
 
