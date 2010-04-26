@@ -11,10 +11,10 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
-	public class UriContactAccessor : AbstractAccessor
+	public class UriContactAccessor : AbstractContactAccessor
 	{
-		public UriContactAccessor(AbstractEntity entity)
-			: base(entity)
+		public UriContactAccessor(AbstractEntity entity, bool grouped)
+			: base(entity, grouped)
 		{
 		}
 
@@ -40,7 +40,19 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				return "Mail";
+				if (this.Grouped)
+				{
+					return "Mail";
+				}
+				else
+				{
+					var builder = new StringBuilder ();
+
+					builder.Append ("Mail");
+					builder.Append (Misc.Encapsulate (" ", this.Roles, ""));
+
+					return Misc.RemoveLastBreakLine (builder.ToString ());
+				}
 			}
 		}
 
@@ -51,7 +63,12 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				var builder = new StringBuilder ();
 
 				builder.Append (this.UriContact.Uri);
-				AbstractAccessor.AppendRoles (builder, this.UriContact.Roles);
+				
+				if (this.Grouped)
+				{
+					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
+				}
+
 				builder.Append ("<br/>");
 
 				return AbstractAccessor.SummaryPostprocess (builder.ToString ());

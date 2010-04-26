@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
 	public class NaturalPersonAccessor : AbstractAccessor
 	{
-		public NaturalPersonAccessor(AbstractEntity entity)
-			: base(entity)
+		public NaturalPersonAccessor(AbstractEntity entity, bool grouped)
+			: base (entity, grouped)
 		{
 		}
 

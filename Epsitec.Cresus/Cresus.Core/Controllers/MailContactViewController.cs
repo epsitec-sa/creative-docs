@@ -30,10 +30,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.MailContactAccessor (this.Entity as Entities.MailContactEntity);
+			var accessor = new EntitiesAccessors.MailContactAccessor (this.Entity as Entities.MailContactEntity, false);
 
 			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
 			FrameBox group;
+
+			this.CreateTextField (frame, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
+			this.CreateMargin (frame, true);
 
 			this.CreateTextField (frame, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
 			this.CreateTextFieldMulti (frame, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);

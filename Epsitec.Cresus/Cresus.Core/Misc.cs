@@ -14,6 +14,25 @@ namespace Epsitec.Cresus.Core
 	public static class Misc
 	{
 		/// <summary>
+		/// Encapsule un texte au milieu d'une préface et d'une postface, mais seulement s'il existe.
+		/// </summary>
+		/// <param name="preface">The preface.</param>
+		/// <param name="text">The text.</param>
+		/// <param name="postface">The postface.</param>
+		/// <returns></returns>
+		public static string Encapsulate(string preface, string text, string postface)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			else
+			{
+				return string.Concat (preface, text, postface);
+			}
+		}
+
+		/// <summary>
 		/// Supprime l'éventuel "<br/>" qui termine un texte.
 		/// </summary>
 		/// <param name="text">The text.</param>

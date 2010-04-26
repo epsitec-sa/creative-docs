@@ -11,10 +11,10 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
-	public class TelecomContactAccessor : AbstractAccessor
+	public class TelecomContactAccessor : AbstractContactAccessor
 	{
-		public TelecomContactAccessor(AbstractEntity entity)
-			: base(entity)
+		public TelecomContactAccessor(AbstractEntity entity, bool grouped)
+			: base (entity, grouped)
 		{
 		}
 
@@ -40,7 +40,19 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				return "Téléphone";
+				if (this.Grouped)
+				{
+					return "Téléphone";
+				}
+				else
+				{
+					var builder = new StringBuilder ();
+
+					builder.Append ("Téléphone");
+					builder.Append (Misc.Encapsulate (" ", this.Roles, ""));
+
+					return Misc.RemoveLastBreakLine (builder.ToString ());
+				}
 			}
 		}
 
@@ -51,7 +63,12 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				var builder = new StringBuilder ();
 
 				builder.Append (this.TelecomContact.Number);
-				AbstractAccessor.AppendRoles (builder, this.TelecomContact.Roles);
+				
+				if (this.Grouped)
+				{
+					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
+				}
+				
 				builder.Append ("<br/>");
 
 				return AbstractAccessor.SummaryPostprocess (builder.ToString ());

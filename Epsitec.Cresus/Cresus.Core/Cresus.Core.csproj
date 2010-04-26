@@ -105,6 +105,7 @@
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
     <Compile Include="EntitiesAccessors\AbstractAccessor.cs" />
+    <Compile Include="EntitiesAccessors\AbstractContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\UriContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\TelecomContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\LegalPersonAccessor.cs" />
