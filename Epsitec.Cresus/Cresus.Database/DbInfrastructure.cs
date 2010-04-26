@@ -1305,6 +1305,18 @@ namespace Epsitec.Cresus.Database
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
 
+			if (table.Comment != null && table.Comment != "")
+			{
+				transaction.SqlBuilder.SetTableComment (sqlTable.Name, sqlTable.Comment);
+				this.ExecuteSilent (transaction);
+			}
+
+			foreach (SqlColumn column in sqlTable.Columns)
+			{
+				transaction.SqlBuilder.SetTableColumnComment (sqlTable.Name, column.Name, "coucou");
+				this.ExecuteSilent (transaction);
+			}
+
 			//	Create the revision tracking table, if needed :
 
 			if (table.RevisionMode == DbRevisionMode.TrackChanges)
@@ -1334,11 +1346,18 @@ namespace Epsitec.Cresus.Database
 			SqlTable sqlTable;
 
 			sqlTable = new SqlTable (table.GetRevisionTableName ());
+			sqlTable.Comment = "Revision table for " + table.Comment;
 			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefId, DbKey.RawTypeForId, DbNullability.No));
 			sqlTable.Columns.Add (new SqlColumn (Tags.ColumnRefModel, DbKey.RawTypeForId, DbNullability.No));
 
 			transaction.SqlBuilder.InsertTable (sqlTable);
 			this.ExecuteSilent (transaction);
+
+			if (table.Comment != null && table.Comment != "")
+			{
+				transaction.SqlBuilder.SetTableComment (sqlTable.Name, sqlTable.Comment);
+				this.ExecuteSilent (transaction);
+			}
 		}
 
 		/// <summary>

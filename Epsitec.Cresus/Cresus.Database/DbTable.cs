@@ -66,6 +66,12 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+
+		public string Comment
+		{
+			get;
+			set;
+		}
 		
 		#region IName Members
 
@@ -566,6 +572,8 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.ReplicationMode != DbReplicationMode.Unknown);
 
 			SqlTable sqlTable = new SqlTable (this.GetSqlName ());
+
+			sqlTable.Comment = this.Comment;
 
 			foreach (DbColumn dbColumn in this.columns)
 			{
@@ -1080,6 +1088,8 @@ namespace Epsitec.Cresus.Database
 			string relationTableName = sourceTable.GetRelationTableName (sourceColumn);
 			
 			DbTable relationTable = new DbTable (relationTableName);
+
+			relationTable.Comment = sourceTable.DisplayName + ":" + sourceColumn.DisplayName;
 
 			relationTable.DefineCategory (DbElementCat.Relation);
 			relationTable.DefineReplicationMode (DbReplicationMode.Automatic);

@@ -89,6 +89,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="table">The table.</param>
 		void InsertTable(SqlTable table);
 
+		void SetTableComment(string tableName, string comment);
+
 		/// <summary>
 		/// Removes the specified table from the database.
 		/// </summary>
@@ -101,6 +103,8 @@ namespace Epsitec.Cresus.Database
 		/// <param name="tableName">Name of the table.</param>
 		/// <param name="columns">The columns.</param>
 		void InsertTableColumns(string tableName, SqlColumn[] columns);
+
+		void SetTableColumnComment(string tableName, string columnName, string comment);
 
 		/// <summary>
 		/// Updates the columns in a table definition.
