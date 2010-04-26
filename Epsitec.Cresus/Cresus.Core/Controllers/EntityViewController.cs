@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				ChildrenMode = childrenMode,
 				GroupIndex = groupIndex,
 				CompactFollower = compactFollower,
-				TopLeftIconUri = accessor.Icon,
+				TopLeftIconUri = accessor.IconUri,
 				Title = accessor.Title,
 				Summary = accessor.Summary,
 			};
@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
 				IsEditing = true,
-				TopLeftIconUri = accessor.Icon,
+				TopLeftIconUri = accessor.IconUri,
 				Title = accessor.Title,
 			};
 
@@ -169,17 +169,24 @@ namespace Epsitec.Cresus.Core.Controllers
 				var nextTile    = (i+1 < this.container.Children.Count) ? this.container.Children[i+1] as Widgets.AbstractTile : null;
 				System.Diagnostics.Debug.Assert (currentTile != null);
 
-				if (nextTile != null && currentTile.GroupIndex == nextTile.GroupIndex && nextTile.CompactFollower)  // dans le même groupe ?
+				if (nextTile != null && currentTile.GroupIndex == nextTile.GroupIndex)  // dans le même groupe ?
 				{
 					currentTile.Margins = new Margins (0, 0, 0, -1);  // léger chevauchement
 
-					if (first)
+					if (nextTile != null && nextTile.CompactFollower)
 					{
-						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Up;
+						if (first)
+						{
+							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Up;
+						}
+						else
+						{
+							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right;
+						}
 					}
 					else
 					{
-						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right;
+						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
 					}
 
 					first = false;

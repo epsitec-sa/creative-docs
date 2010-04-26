@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 		/// <summary>
-		/// Indique que la tuile qui affichera l'entité est groupée.
+		/// Indique que la tuile qui affichera l'entité est groupée avec d'autres du même type.
 		/// Il n'y aura donc qu'un titre pour l'ensemble du groupe.
 		/// </summary>
 		/// <value><c>true</c> if grouped; otherwise, <c>false</c>.</value>
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public virtual string Icon
+		public virtual string IconUri
 		{
 			get
 			{

@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.container.Children.Clear ();
 				this.CreateUITiles (person, pass > 2, pass > 1, pass > 0);
 
+				//	TODO: Je serais tranquille si Pierre vérifiait ceci !
 				Common.Widgets.Layouts.LayoutContext.SyncMeasure (this.container);
 				Common.Widgets.Layouts.LayoutContext.SyncArrange (this.container);
 

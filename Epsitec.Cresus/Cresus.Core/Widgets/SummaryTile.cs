@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.staticTextSummary = new StaticText
 			{
 				Parent = this.mainPanel,
+				PreferredWidth = 0,
 				Dock = DockStyle.Fill,
 				ContentAlignment = ContentAlignment.TopLeft,
 				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split,  // TODO: il manque le bon mode !

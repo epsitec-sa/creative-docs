@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public override string Icon
+		public override string IconUri
 		{
 			get
 			{

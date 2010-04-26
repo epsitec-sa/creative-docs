@@ -12,9 +12,6 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	/// <summary>
-	/// Ce contrôleur représente une bande verticale dans laquelle on empile des tuiles AbstractViewController.
-	/// </summary>
 	public class DataViewController : CoreViewController
 	{
 		public DataViewController(string name)
