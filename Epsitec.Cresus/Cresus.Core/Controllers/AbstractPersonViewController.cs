@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected void CreateUITiles(Entities.AbstractPersonEntity person)
 		{
-			//	Incroyable système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
+			//	Subtil système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
 			//	En cas de manque de place, ou groupe d'abord les mails, puis les téléphones, puis finalement les adresses.
 			for (int pass = 0; pass < 4; pass++)
 			{
@@ -60,7 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUITiles(Entities.AbstractPersonEntity person, bool groupMail, bool groupTelecom, bool groupUri)
 		{
-			this.person = person;
 			int count;
 			bool compactFollower;
 
@@ -99,13 +98,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (this.Entity is Entities.NaturalPersonEntity)
 				{
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (this.Entity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.PersonEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.PersonEdition);
 				}
 
 				if (this.Entity is Entities.LegalPersonEntity)
 				{
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (this.Entity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.PersonEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.PersonEdition);
 				}
 
 				groupIndex++;
@@ -113,12 +112,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Une tuile distincte par adresse postale.
 				count = 0;
 				compactFollower = false;
-				foreach (Entities.AbstractContactEntity contact in this.person.Contacts)
+
+				foreach (Entities.AbstractContactEntity contact in person.Contacts)
 				{
 					if (contact is Entities.MailContactEntity)
 					{
 						var accessor = new EntitiesAccessors.MailContactAccessor(contact as Entities.MailContactEntity, groupMail);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, ViewControllerMode.GenericEdition);
+						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, ViewControllerMode.GenericEdition);
 
 						count++;
 						compactFollower = groupMail;
@@ -128,10 +128,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (count == 0)
 				{
 					var emptyEntity = new Entities.MailContactEntity ();
-					this.person.Contacts.Add (emptyEntity);
+					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.MailContactAccessor (emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.GenericEdition);
 				}
 
 				groupIndex++;
@@ -139,12 +139,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Une tuile distincte par numéro de téléphone.
 				count = 0;
 				compactFollower = false;
-				foreach (Entities.AbstractContactEntity contact in this.person.Contacts)
+
+				foreach (Entities.AbstractContactEntity contact in person.Contacts)
 				{
 					if (contact is Entities.TelecomContactEntity)
 					{
 						var accessor = new EntitiesAccessors.TelecomContactAccessor(contact as Entities.TelecomContactEntity, groupTelecom);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, ViewControllerMode.TelecomEdition);
+						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, ViewControllerMode.TelecomEdition);
 
 						count++;
 						compactFollower = groupTelecom;
@@ -154,10 +155,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (count == 0)
 				{
 					var emptyEntity = new Entities.TelecomContactEntity ();
-					this.person.Contacts.Add (emptyEntity);
+					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.TelecomContactAccessor (emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.GenericEdition);
 				}
 
 				groupIndex++;
@@ -165,12 +166,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				//	Une tuile distincte par adresse mail.
 				count = 0;
 				compactFollower = false;
-				foreach (Entities.AbstractContactEntity contact in this.person.Contacts)
+
+				foreach (Entities.AbstractContactEntity contact in person.Contacts)
 				{
 					if (contact is Entities.UriContactEntity)
 					{
 						var accessor = new EntitiesAccessors.UriContactAccessor (contact as Entities.UriContactEntity, groupUri);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, ViewControllerMode.UriEdition);
+						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, ViewControllerMode.UriEdition);
 
 						count++;
 						compactFollower = groupUri;
@@ -180,10 +182,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (count == 0)
 				{
 					var emptyEntity = new Entities.UriContactEntity ();
-					this.person.Contacts.Add (emptyEntity);
+					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.UriContactAccessor (emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.GenericEdition);
 				}
 
 				groupIndex++;
@@ -191,8 +193,5 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.AdjustVisualForGroups ();
 		}
-
-
-		private Entities.AbstractPersonEntity person;
 	}
 }

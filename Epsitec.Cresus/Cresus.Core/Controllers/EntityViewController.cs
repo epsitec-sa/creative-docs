@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="groupIndex">Index of the group.</param>
 		/// <param name="compactFollower">if set to <c>true</c> [compact follower].</param>
 		/// <param name="childrenMode">The children mode.</param>
-		protected void CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, ViewControllerMode childrenMode)
+		protected void CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -114,6 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				ChildrenMode = childrenMode,
 				GroupIndex = groupIndex,
 				CompactFollower = compactFollower,
+				EnableCreateAndRemoveButton = enableCreateAndRemoveButton,
 				TopLeftIconUri = accessor.IconUri,
 				Title = accessor.Title,
 				Summary = accessor.Summary,
