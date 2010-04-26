@@ -93,14 +93,13 @@ namespace Epsitec.Cresus.Core.Controllers
 
 
 		/// <summary>
-		/// Crée un tuile résumé qui s'insère en bas de l'empilement (qui commence en haut).
+		/// Crée une tuile résumée qui s'insère en bas de l'empilement (qui commence en haut).
 		/// </summary>
-		/// <param name="container">The container.</param>
-		/// <param name="entity">The entity.</param>
-		/// <param name="iconUri">The icon URI.</param>
-		/// <param name="title">The title.</param>
-		/// <param name="content">The content.</param>
-		protected void CreateSummaryTile(AbstractEntity entity, int groupIndex, bool compactFollower, ViewControllerMode childrenMode, string iconUri, string title, string content)
+		/// <param name="accessor">The accessor.</param>
+		/// <param name="groupIndex">Index of the group.</param>
+		/// <param name="compactFollower">if set to <c>true</c> [compact follower].</param>
+		/// <param name="childrenMode">The children mode.</param>
+		protected void CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -110,21 +109,21 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
-				Entity = entity,
+				Entity = accessor.Entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
 				GroupIndex = groupIndex,
 				CompactFollower = compactFollower,
-				TopLeftIconUri = iconUri,
-				Title = title,
-				Summary = content,
+				TopLeftIconUri = accessor.Icon,
+				Title = accessor.Title,
+				Summary = accessor.Summary,
 			};
 
 			tile.PreferredHeight = tile.ContentHeight;
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
 		}
 
-		protected FrameBox CreateEditionTile(AbstractEntity entity, ViewControllerMode childrenMode, string iconUri, string title)
+		protected FrameBox CreateEditionTile(EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -134,12 +133,12 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
-				Entity = entity,
+				Entity = accessor.Entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
 				IsEditing = true,
-				TopLeftIconUri = iconUri,
-				Title = title,
+				TopLeftIconUri = accessor.Icon,
+				Title = accessor.Title,
 			};
 
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
