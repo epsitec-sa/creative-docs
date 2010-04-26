@@ -104,7 +104,12 @@
     <Compile Include="Controllers\ViewLayoutController.cs" />
     <Compile Include="CoreData.Hack.cs" />
     <Compile Include="Data\GenericRepository.cs" />
-    <Compile Include="EntitySummary.cs" />
+    <Compile Include="EntitiesAccessors\AbstractAccessor.cs" />
+    <Compile Include="EntitiesAccessors\UriContactAccessor.cs" />
+    <Compile Include="EntitiesAccessors\TelecomContactAccessor.cs" />
+    <Compile Include="EntitiesAccessors\LegalPersonAccessor.cs" />
+    <Compile Include="EntitiesAccessors\NaturalPersonAccessor.cs" />
+    <Compile Include="EntitiesAccessors\MailContactAccessor.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Data\AbstractRepository.cs" />
     <Compile Include="Data\CountryRepository.cs" />

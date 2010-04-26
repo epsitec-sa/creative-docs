@@ -159,12 +159,10 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public object Data
-		{
-			get;
-			set;
-		}
-
+		/// <summary>
+		/// Toutes les tuiles au seing d'un groupe sont identifiées par ce numéro, unique pour le groupe.
+		/// </summary>
+		/// <value>The index of the group.</value>
 		public int GroupIndex
 		{
 			get;

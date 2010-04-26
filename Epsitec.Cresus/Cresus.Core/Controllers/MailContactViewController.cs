@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -29,315 +30,28 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			this.mailContact = this.Entity as Entities.MailContactEntity;
-			System.Diagnostics.Debug.Assert (this.mailContact != null);
+			var accessor = new EntitiesAccessors.MailContactAccessor (this.Entity as Entities.MailContactEntity);
 
-			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.mailContact), EntitySummary.GetTitle (this.mailContact));
+			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, accessor.Icon, accessor.Title);
 			FrameBox group;
 
-			this.CreateTextField (frame, 0, "Rue", this.StreetName, x => this.StreetName = x, Validators.StringValidator.Validate);
-			this.CreateTextFieldMulti (frame, 52, "Complément de l'adresse", this.StreetComplement, x => this.StreetComplement = x, null);
-			this.CreateTextField (frame, 0, "Boîte postale", this.PostBoxNumber, x => this.PostBoxNumber = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
+			this.CreateTextFieldMulti (frame, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
+			this.CreateTextField (frame, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
 
 			group = this.CreateGroup (frame, "Numéro postal et ville");
-			this.CreateTextField (group, 50, this.LocationPostalCode, x => this.LocationPostalCode = x, Validators.StringValidator.Validate);
-			this.CreateTextField (group, 0, this.LocationName, x => this.LocationName = x, Validators.StringValidator.Validate);
+			this.CreateTextField (group, 50, accessor.LocationPostalCode, x => accessor.LocationPostalCode = x, Validators.StringValidator.Validate);
+			this.CreateTextField (group, 0, accessor.LocationName, x => accessor.LocationName = x, Validators.StringValidator.Validate);
 
 			group = this.CreateGroup (frame, "Code et nom du pays");
-			this.CreateTextField (group, 50, this.CountryCode, x => this.CountryCode = x, Validators.StringValidator.Validate);
-			this.CreateTextField (group, 0, this.CountryName, x => this.CountryName = x, Validators.StringValidator.Validate);
+			this.CreateTextField (group, 50, accessor.CountryCode, x => accessor.CountryCode = x, Validators.StringValidator.Validate);
+			this.CreateTextField (group, 0, accessor.CountryName, x => accessor.CountryName = x, Validators.StringValidator.Validate);
 
 			group = this.CreateGroup (frame, "Code et nom de la région");
-			this.CreateTextField (group, 50, this.RegionCode, x => this.RegionCode = x, Validators.StringValidator.Validate);
-			this.CreateTextField (group, 0, this.RegionName, x => this.RegionName = x, Validators.StringValidator.Validate);
+			this.CreateTextField (group, 50, accessor.RegionCode, x => accessor.RegionCode = x, Validators.StringValidator.Validate);
+			this.CreateTextField (group, 0, accessor.RegionName, x => accessor.RegionName = x, Validators.StringValidator.Validate);
 
 			this.SetInitialFocus ();
 		}
-
-
-
-		private string StreetName
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Street != null)
-				{
-					return this.mailContact.Address.Street.StreetName;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Street == null)
-				{
-					this.mailContact.Address.Street = new Entities.StreetEntity ();
-				}
-
-				this.mailContact.Address.Street.StreetName = value;
-			}
-		}
-
-		private string StreetComplement
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Street != null)
-				{
-					return this.mailContact.Address.Street.Complement;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Street == null)
-				{
-					this.mailContact.Address.Street = new Entities.StreetEntity ();
-				}
-
-				this.mailContact.Address.Street.Complement = value;
-			}
-		}
-
-		private string PostBoxNumber
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.PostBox != null)
-				{
-					return this.mailContact.Address.PostBox.Number;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.PostBox == null)
-				{
-					this.mailContact.Address.PostBox = new Entities.PostBoxEntity ();
-				}
-
-				this.mailContact.Address.PostBox.Number = value;
-			}
-		}
-
-		private string LocationPostalCode
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Location != null)
-				{
-					return this.mailContact.Address.Location.PostalCode;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Location == null)
-				{
-					this.mailContact.Address.Location = new Entities.LocationEntity ();
-				}
-
-				this.mailContact.Address.Location.PostalCode = value;
-			}
-		}
-
-		private string LocationName
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Location != null)
-				{
-					return this.mailContact.Address.Location.Name;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Location == null)
-				{
-					this.mailContact.Address.Location = new Entities.LocationEntity ();
-				}
-
-				this.mailContact.Address.Location.Name = value;
-			}
-		}
-
-		private string CountryName
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Location != null && this.mailContact.Address.Location.Country != null)
-				{
-					return this.mailContact.Address.Location.Country.Name;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Location == null)
-				{
-					this.mailContact.Address.Location = new Entities.LocationEntity ();
-				}
-
-				if (this.mailContact.Address.Location.Country == null)
-				{
-					this.mailContact.Address.Location.Country = new Entities.CountryEntity ();
-				}
-
-				this.mailContact.Address.Location.Country.Name = value;
-			}
-		}
-
-		private string CountryCode
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Location != null && this.mailContact.Address.Location.Country != null)
-				{
-					return this.mailContact.Address.Location.Country.Code;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Location == null)
-				{
-					this.mailContact.Address.Location = new Entities.LocationEntity ();
-				}
-
-				if (this.mailContact.Address.Location.Country == null)
-				{
-					this.mailContact.Address.Location.Country = new Entities.CountryEntity ();
-				}
-
-				this.mailContact.Address.Location.Country.Code = value;
-			}
-		}
-
-		private string RegionName
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Location != null && this.mailContact.Address.Location.Region != null)
-				{
-					return this.mailContact.Address.Location.Region.Name;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Location == null)
-				{
-					this.mailContact.Address.Location = new Entities.LocationEntity ();
-				}
-
-				if (this.mailContact.Address.Location.Region == null)
-				{
-					this.mailContact.Address.Location.Region = new Entities.RegionEntity ();
-				}
-
-				this.mailContact.Address.Location.Region.Name = value;
-			}
-		}
-
-		private string RegionCode
-		{
-			get
-			{
-				if (this.mailContact.Address != null && this.mailContact.Address.Location != null && this.mailContact.Address.Location.Region != null)
-				{
-					return this.mailContact.Address.Location.Region.Code;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.mailContact.Address == null)
-				{
-					this.mailContact.Address = new Entities.AddressEntity ();
-				}
-
-				if (this.mailContact.Address.Location == null)
-				{
-					this.mailContact.Address.Location = new Entities.LocationEntity ();
-				}
-
-				if (this.mailContact.Address.Location.Region == null)
-				{
-					this.mailContact.Address.Location.Region = new Entities.RegionEntity ();
-				}
-
-				this.mailContact.Address.Location.Region.Code = value;
-			}
-		}
-
-
-		private Entities.MailContactEntity mailContact;
 	}
 }
