@@ -61,6 +61,29 @@ namespace Epsitec.Cresus.Core.Widgets
 				PreferredWidth = 0,
 				Dock = DockStyle.Fill,
 			};
+
+			//	Crée les boutons +/-.
+			this.buttonCreateEntity = new GlyphButton
+			{
+				Parent = this,
+				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = Common.Widgets.GlyphShape.Plus,
+				Anchor = AnchorStyles.Right | AnchorStyles.Top,
+				PreferredSize = new Size (AbstractTile.simpleButtonSize, AbstractTile.simpleButtonSize),
+				Margins = new Margins (0, 2+TileContainer.ArrowBreadth+AbstractTile.simpleButtonSize-1, 2, 0),
+				Visibility = false,
+			};
+
+			this.buttonRemoveEntity = new GlyphButton
+			{
+				Parent = this,
+				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = Common.Widgets.GlyphShape.Minus,
+				Anchor = AnchorStyles.Right | AnchorStyles.Top,
+				PreferredSize = new Size (AbstractTile.simpleButtonSize, AbstractTile.simpleButtonSize),
+				Margins = new Margins (0, 2+TileContainer.ArrowBreadth, 2, 0),
+				Visibility = false,
+			};
 		}
 
 		public AbstractTile(Widget embedder)
@@ -112,6 +135,12 @@ namespace Epsitec.Cresus.Core.Widgets
 					this.UpdateCompactFollower ();
 				}
 			}
+		}
+
+		public bool EnableCreateAndRemoveButton
+		{
+			get;
+			set;
 		}
 
 
@@ -205,51 +234,25 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
+		protected override void OnEntered(MessageEventArgs e)
 		{
-			base.PaintForegroundImplementation (graphics, clipRect);
+			base.OnEntered (e);
 
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
-			if (this.IsEntered)
+			if (this.buttonCreateEntity != null && this.EnableCreateAndRemoveButton)
 			{
-				this.PaintSimpleButton (graphics, this.CreateButtonRectangle, "+");
-				this.PaintSimpleButton (graphics, this.RemoveButtonRectangle, "-");
+				this.buttonCreateEntity.Visibility = true;
+				this.buttonRemoveEntity.Visibility = true;
 			}
 		}
 
-		private void PaintSimpleButton(Graphics graphics, Rectangle rect, string text)
+		protected override void OnExited(MessageEventArgs e)
 		{
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			base.OnExited (e);
 
-			rect.Deflate (0.5);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (adorner.ColorWindow);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (adorner.ColorBorder);
-
-			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, rect.Height*0.8, Common.Drawing.ContentAlignment.MiddleCenter);
-		}
-
-		private Rectangle CreateButtonRectangle
-		{
-			get
+			if (this.buttonCreateEntity != null)
 			{
-				Rectangle rect = this.Client.Bounds;
-
-				return new Rectangle (rect.Right-TileContainer.ArrowBreadth-AbstractTile.smpleButtonSize*2+1, rect.Top-AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize);
-			}
-		}
-
-		private Rectangle RemoveButtonRectangle
-		{
-			get
-			{
-				Rectangle rect = this.Client.Bounds;
-
-				return new Rectangle (rect.Right-TileContainer.ArrowBreadth-AbstractTile.smpleButtonSize, rect.Top-AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize);
+				this.buttonCreateEntity.Visibility = false;
+				this.buttonRemoveEntity.Visibility = false;
 			}
 		}
 
@@ -257,7 +260,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private static readonly double iconSize = 32;
 		private static readonly double iconMargins = 2;
 		private static readonly double titleHeight = 18;
-		private static readonly double smpleButtonSize = 20;
+		private static readonly double simpleButtonSize = 16;
 
 		protected bool compactFollower;
 
@@ -270,5 +273,8 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private string title;
 		private StaticText staticTextTitle;
+
+		private GlyphButton buttonCreateEntity;
+		private GlyphButton buttonRemoveEntity;
 	}
 }
