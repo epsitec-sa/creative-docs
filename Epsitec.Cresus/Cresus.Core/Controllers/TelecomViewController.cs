@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.TelecomContactAccessor (this.Entity as Entities.TelecomContactEntity);
 
-			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, accessor.Icon, accessor.Title);
+			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
 			this.CreateTextField (frame, 150, "Type du numéro", accessor.TelecomType, x => accessor.TelecomType = x, Validators.StringValidator.Validate);
 			this.CreateMargin (frame, 10);
