@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+
 		public static EntityViewController CreateViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
 			EntityViewController controller = EntityViewController.ResolveViewController (name, entity, mode);

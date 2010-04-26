@@ -37,29 +37,29 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (this.Mode == ViewControllerMode.PersonEdition)
 			{
-				FrameBox container = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.person), EntitySummary.GetTitle (this.person));
-
 				if (person is Entities.NaturalPersonEntity)
 				{
-					var naturalPerson = person as Entities.NaturalPersonEntity;
+					var accessor = new EntitiesAccessors.NaturalPersonAccessor (person as Entities.NaturalPersonEntity);
+					FrameBox container = this.CreateEditionTile (this.Entity, ViewControllerMode.None, accessor.Icon, accessor.Title);
 
-					this.CreateTextField (container, 100, "Titre", this.NaturalTitle, x => this.NaturalTitle = x, Validators.StringValidator.Validate);
+					this.CreateTextField (container, 100, "Titre", accessor.NaturalTitle, x => accessor.NaturalTitle = x, Validators.StringValidator.Validate);
 					this.CreateMargin (container, 10);
-					this.CreateTextField (container, 0, "Prénom", naturalPerson.Firstname, x => naturalPerson.Firstname = x, Validators.StringValidator.Validate);
-					this.CreateTextField (container, 0, "Nom",    naturalPerson.Lastname,  x => naturalPerson.Lastname = x,  Validators.StringValidator.Validate);
+					this.CreateTextField (container, 0, "Prénom", accessor.NaturalPerson.Firstname, x => accessor.NaturalPerson.Firstname = x, Validators.StringValidator.Validate);
+					this.CreateTextField (container, 0, "Nom", accessor.NaturalPerson.Lastname, x => accessor.NaturalPerson.Lastname = x, Validators.StringValidator.Validate);
 					
 					this.CreateMargin (container, 20);
-					this.CreateTextField (container, 100, "Date de naissance", this.NaturalBirthDate, x => this.NaturalBirthDate = x, null);
+					this.CreateTextField (container, 100, "Date de naissance", accessor.NaturalBirthDate, x => accessor.NaturalBirthDate = x, null);
 				}
 
 				if (person is Entities.LegalPersonEntity)
 				{
-					var legalPerson = person as Entities.LegalPersonEntity;
+					var accessor = new EntitiesAccessors.LegalPersonAccessor (person as Entities.LegalPersonEntity);
+					FrameBox container = this.CreateEditionTile (this.Entity, ViewControllerMode.None, accessor.Icon, accessor.Title);
 
-					this.CreateTextField (container,   0, "Nom complet", legalPerson.Name,       x => legalPerson.Name = x,       Validators.StringValidator.Validate);
-					this.CreateTextField (container, 150, "Nom court",   legalPerson.ShortName,  x => legalPerson.ShortName = x,  Validators.StringValidator.Validate);
+					this.CreateTextField (container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
+					this.CreateTextField (container, 150, "Nom court", accessor.LegalPerson.ShortName, x => accessor.LegalPerson.ShortName = x, Validators.StringValidator.Validate);
 					this.CreateMargin (container, 20);
-					this.CreateTextFieldMulti (container, 100, "Complément", legalPerson.Complement, x => legalPerson.Complement = x, null);
+					this.CreateTextFieldMulti (container, 100, "Complément", accessor.LegalPerson.Complement, x => accessor.LegalPerson.Complement = x, null);
 				}
 
 				this.SetInitialFocus ();
@@ -69,7 +69,18 @@ namespace Epsitec.Cresus.Core.Controllers
 				int groupIndex = 0;
 
 				//	Une première tuile pour l'identité de la personne.
-				this.CreateSummaryTile (this.Entity, groupIndex, false, ViewControllerMode.PersonEdition, EntitySummary.GetIcon (this.person), EntitySummary.GetTitle (this.person), EntitySummary.GetPersonSummary (person));
+				if (this.Entity is Entities.NaturalPersonEntity)
+				{
+					var accessor = new EntitiesAccessors.NaturalPersonAccessor (this.Entity);
+					this.CreateSummaryTile (accessor.NaturalPerson, groupIndex, false, ViewControllerMode.PersonEdition, accessor.Icon, accessor.Title, accessor.Summary);
+				}
+
+				if (this.Entity is Entities.LegalPersonEntity)
+				{
+					var accessor = new EntitiesAccessors.LegalPersonAccessor (this.Entity);
+					this.CreateSummaryTile (accessor.LegalPerson, groupIndex, false, ViewControllerMode.PersonEdition, accessor.Icon, accessor.Title, accessor.Summary);
+				}
+
 				groupIndex++;
 
 				//	Une tuile distincte par adresse postale.
@@ -78,15 +89,18 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (contact is Entities.MailContactEntity)
 					{
-						var mailContact = contact as Entities.MailContactEntity;
-						this.CreateSummaryTile (mailContact, groupIndex, false, ViewControllerMode.GenericEdition, EntitySummary.GetIcon (mailContact), EntitySummary.GetTitle (mailContact), EntitySummary.GetMailSummary (mailContact));
+						var accessor = new EntitiesAccessors.MailContactAccessor(contact as Entities.MailContactEntity);
+						this.CreateSummaryTile (accessor.MailContact, groupIndex, false, ViewControllerMode.GenericEdition, accessor.Icon, accessor.Title, accessor.Summary);
 						count++;
 					}
 				}
 
 				if (count == 0)
 				{
-					this.CreateSummaryTile (null, groupIndex, false, ViewControllerMode.None, "Data.Mail", "Adresse", EntitySummary.emptyText);
+					var emptyEntity = new Entities.MailContactEntity ();
+					var accessor = new EntitiesAccessors.MailContactAccessor (emptyEntity);
+					this.CreateSummaryTile (accessor.MailContact, groupIndex, false, ViewControllerMode.GenericEdition, accessor.Icon, accessor.Title, accessor.Summary);
+					//?this.CreateSummaryTile (null, groupIndex, false, ViewControllerMode.None, "Data.Mail", "Adresse", EntitySummary.emptyText);
 				}
 
 				groupIndex++;
@@ -98,8 +112,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (contact is Entities.TelecomContactEntity)
 					{
-						var telecomContact = contact as Entities.TelecomContactEntity;
-						this.CreateSummaryTile (telecomContact, groupIndex, compactFollower, ViewControllerMode.TelecomEdition, EntitySummary.GetIcon (telecomContact), EntitySummary.GetTitle (telecomContact), EntitySummary.GetTelecomSummary (telecomContact));
+						var accessor = new EntitiesAccessors.TelecomContactAccessor(contact as Entities.TelecomContactEntity);
+						this.CreateSummaryTile (accessor.TelecomContact, groupIndex, compactFollower, ViewControllerMode.TelecomEdition, accessor.Icon, accessor.Title, accessor.Summary);
 						count++;
 						compactFollower = true;
 					}
@@ -107,7 +121,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (count == 0)
 				{
-					this.CreateSummaryTile (null, groupIndex, false, ViewControllerMode.None, "Data.Telecom", "Téléphone", EntitySummary.emptyText);
+					var emptyEntity = new Entities.TelecomContactEntity ();
+					var accessor = new EntitiesAccessors.TelecomContactAccessor (emptyEntity);
+					this.CreateSummaryTile (accessor.TelecomContact, groupIndex, false, ViewControllerMode.GenericEdition, accessor.Icon, accessor.Title, accessor.Summary);
+					//?this.CreateSummaryTile (null, groupIndex, false, ViewControllerMode.None, "Data.Telecom", "Téléphone", EntitySummary.emptyText);
 				}
 
 				groupIndex++;
@@ -119,8 +136,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					if (contact is Entities.UriContactEntity)
 					{
-						var uriContact = contact as Entities.UriContactEntity;
-						this.CreateSummaryTile (uriContact, groupIndex, compactFollower, ViewControllerMode.UriEdition, EntitySummary.GetIcon (uriContact), EntitySummary.GetTitle (uriContact), EntitySummary.GetUriSummary (uriContact));
+						var accessor = new EntitiesAccessors.UriContactAccessor (contact as Entities.UriContactEntity);
+						this.CreateSummaryTile (accessor.UriContact, groupIndex, compactFollower, ViewControllerMode.UriEdition, accessor.Icon, accessor.Title, accessor.Summary);
 						count++;
 						compactFollower = true;
 					}
@@ -128,75 +145,16 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (count == 0)
 				{
-					this.CreateSummaryTile (null, groupIndex, false, ViewControllerMode.None, "Data.Uri", "Mail", EntitySummary.emptyText);
+					var emptyEntity = new Entities.UriContactEntity ();
+					var accessor = new EntitiesAccessors.UriContactAccessor (emptyEntity);
+					this.CreateSummaryTile (accessor.UriContact, groupIndex, false, ViewControllerMode.GenericEdition, accessor.Icon, accessor.Title, accessor.Summary);
+					//?this.CreateSummaryTile (null, groupIndex, false, ViewControllerMode.None, "Data.Uri", "Mail", EntitySummary.emptyText);
 				}
 
 				groupIndex++;
 			}
 
 			this.AdjustVisualForGroups ();
-		}
-
-
-		private string NaturalTitle
-		{
-			get
-			{
-				var naturalPerson = this.person as Entities.NaturalPersonEntity;
-
-				if (naturalPerson != null && naturalPerson.Title != null)
-				{
-					return naturalPerson.Title.Name;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				var naturalPerson = this.person as Entities.NaturalPersonEntity;
-
-				if (naturalPerson == null)
-				{
-					return;
-				}
-
-				if (naturalPerson.Title == null)
-				{
-					naturalPerson.Title = new Entities.PersonTitleEntity ();
-				}
-
-				naturalPerson.Title.Name = value;
-			}
-		}
-
-		private string NaturalBirthDate
-		{
-			get
-			{
-				var naturalPerson = this.person as Entities.NaturalPersonEntity;
-
-				if (naturalPerson != null)
-				{
-					return naturalPerson.BirthDate.ToString();
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				var naturalPerson = this.person as Entities.NaturalPersonEntity;
-
-				if (naturalPerson == null)
-				{
-					return;
-				}
-
-				//?naturalPerson.BirthDate = Date.FromString(value);  // TODO:
-			}
 		}
 
 

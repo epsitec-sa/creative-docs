@@ -29,45 +29,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			this.telecomContact = this.Entity as Entities.TelecomContactEntity;
-			System.Diagnostics.Debug.Assert (this.telecomContact != null);
+			var accessor = new EntitiesAccessors.TelecomContactAccessor (this.Entity as Entities.TelecomContactEntity);
 
-			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.telecomContact), EntitySummary.GetTitle (this.telecomContact));
+			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, accessor.Icon, accessor.Title);
 
-			this.CreateTextField (frame, 150, "Type du numéro", this.TelecomType, x => this.TelecomType = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 150, "Type du numéro", accessor.TelecomType, x => accessor.TelecomType = x, Validators.StringValidator.Validate);
 			this.CreateMargin (frame, 10);
-			this.CreateTextField (frame, 150, "Numéro de téléphone", this.telecomContact.Number, x => this.telecomContact.Number = x, Validators.StringValidator.Validate);
-			this.CreateTextField (frame, 100, "Numéro interne", this.telecomContact.Extension, x => this.telecomContact.Extension = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 100, "Numéro interne", accessor.TelecomContact.Extension, x => accessor.TelecomContact.Extension = x, Validators.StringValidator.Validate);
 
 			this.SetInitialFocus ();
 		}
-
-
-		private string TelecomType
-		{
-			get
-			{
-				if (this.telecomContact.TelecomType != null)
-				{
-					return this.telecomContact.TelecomType.Name;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.telecomContact.TelecomType == null)
-				{
-					this.telecomContact.TelecomType = new Entities.TelecomTypeEntity ();
-				}
-
-				this.telecomContact.TelecomType.Name = value;
-			}
-		}
-
-
-		private Entities.TelecomContactEntity telecomContact;
 	}
 }

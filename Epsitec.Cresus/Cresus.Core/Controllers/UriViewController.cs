@@ -29,43 +29,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			this.uriContact = this.Entity as Entities.UriContactEntity;
-			System.Diagnostics.Debug.Assert (this.uriContact != null);
+			var accessor = new EntitiesAccessors.UriContactAccessor (this.Entity as Entities.UriContactEntity);
 
-			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, EntitySummary.GetIcon (this.uriContact), EntitySummary.GetTitle (this.uriContact));
+			FrameBox frame = this.CreateEditionTile (this.Entity, ViewControllerMode.None, accessor.Icon, accessor.Title);
 
-			this.CreateTextField (frame, 100, "Type", this.UriScheme, x => this.UriScheme = x, Validators.StringValidator.Validate);
-			this.CreateTextField (frame, 0, "Adresse mail", this.uriContact.Uri, x => this.uriContact.Uri = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 100, "Type", accessor.UriScheme, x => accessor.UriScheme = x, Validators.StringValidator.Validate);
+			this.CreateTextField (frame, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
 			this.SetInitialFocus ();
 		}
-
-
-		private string UriScheme
-		{
-			get
-			{
-				if (this.uriContact.UriScheme != null)
-				{
-					return this.uriContact.UriScheme.Name;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.uriContact.UriScheme == null)
-				{
-					this.uriContact.UriScheme = new Entities.UriSchemeEntity ();
-				}
-
-				this.uriContact.UriScheme.Name = value;
-			}
-		}
-
-
-		private Entities.UriContactEntity uriContact;
 	}
 }
