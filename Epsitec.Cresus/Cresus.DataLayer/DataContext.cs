@@ -128,11 +128,9 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow dataRow)
+		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, Druid baseEntityId, DbKey rowKey, System.Data.DataRow dataRow)
 		{
 			// TODO Argument check.
-			Druid baseEntityId = this.entityContext.GetBaseEntityId (askedEntityId);
-
 			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, realEntityId, baseEntityId);
 			
 			if (entity == null)
@@ -145,23 +143,18 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					Druid currentId = realEntityId;
 
-					while (currentId != askedEntityId)
+					while (currentId != baseEntityId)
 					{
 						StructuredType subType = this.entityContext.GetStructuredType(currentId) as StructuredType;
 
-						// TODO Implement this part.
+						System.Data.DataRow currentDataRow = this.LoadDataRow (rowKey, currentId);
+
+						this.DeserializeEntityLocal (entity, currentDataRow, currentId);
 
 						currentId = subType.BaseTypeId;
 					}
 
-					while (currentId.IsValid)
-					{
-						StructuredType superType = this.entityContext.GetStructuredType (currentId) as StructuredType;
-
-						this.DeserializeEntityLocal (entity, dataRow, currentId);
-
-						currentId = superType.BaseTypeId;
-					}
+					this.DeserializeEntityLocal (entity, dataRow, baseEntityId);
 				}
 			}
 
