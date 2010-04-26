@@ -311,6 +311,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					Parent = embedder,
 					Dock = DockStyle.Top,
+					TabIndex = ++this.tabIndex,
 				};
 
 				textField = new TextField

@@ -205,9 +205,59 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			base.PaintForegroundImplementation (graphics, clipRect);
+
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			if (this.IsEntered)
+			{
+				this.PaintSimpleButton (graphics, this.CreateButtonRectangle, "+");
+				this.PaintSimpleButton (graphics, this.RemoveButtonRectangle, "-");
+			}
+		}
+
+		private void PaintSimpleButton(Graphics graphics, Rectangle rect, string text)
+		{
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			rect.Deflate (0.5);
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (adorner.ColorWindow);
+
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (adorner.ColorBorder);
+
+			graphics.PaintText (rect.Left, rect.Bottom, rect.Width, rect.Height, text, Font.DefaultFont, rect.Height*0.8, Common.Drawing.ContentAlignment.MiddleCenter);
+		}
+
+		private Rectangle CreateButtonRectangle
+		{
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+
+				return new Rectangle (rect.Right-TileContainer.ArrowBreadth-AbstractTile.smpleButtonSize*2+1, rect.Top-AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize);
+			}
+		}
+
+		private Rectangle RemoveButtonRectangle
+		{
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+
+				return new Rectangle (rect.Right-TileContainer.ArrowBreadth-AbstractTile.smpleButtonSize, rect.Top-AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize, AbstractTile.smpleButtonSize);
+			}
+		}
+
+	
 		private static readonly double iconSize = 32;
 		private static readonly double iconMargins = 2;
 		private static readonly double titleHeight = 18;
+		private static readonly double smpleButtonSize = 20;
 
 		protected bool compactFollower;
 

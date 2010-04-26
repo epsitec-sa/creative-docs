@@ -32,9 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected void CreateUITiles(Entities.AbstractPersonEntity person)
 		{
 			//	Incroyable système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
+			//	En cas de manque de place, ou groupe d'abord les mails, puis les téléphones, puis finalement les adresses.
 			for (int pass = 0; pass < 4; pass++)
 			{
-				this.container.Children.Clear ();
+				this.container.Children.Clear ();  // supprime les widgets générés à la passe précédente
 				this.CreateUITiles (person, pass > 2, pass > 1, pass > 0);
 
 				//	TODO: Je serais tranquille si Pierre vérifiait ceci !
@@ -118,6 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						var accessor = new EntitiesAccessors.MailContactAccessor(contact as Entities.MailContactEntity, groupMail);
 						this.CreateSummaryTile (accessor, groupIndex, compactFollower, ViewControllerMode.GenericEdition);
+
 						count++;
 						compactFollower = groupMail;
 					}
@@ -126,6 +128,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (count == 0)
 				{
 					var emptyEntity = new Entities.MailContactEntity ();
+					this.person.Contacts.Add (emptyEntity);
+
 					var accessor = new EntitiesAccessors.MailContactAccessor (emptyEntity, false);
 					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.GenericEdition);
 				}
@@ -141,6 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						var accessor = new EntitiesAccessors.TelecomContactAccessor(contact as Entities.TelecomContactEntity, groupTelecom);
 						this.CreateSummaryTile (accessor, groupIndex, compactFollower, ViewControllerMode.TelecomEdition);
+
 						count++;
 						compactFollower = groupTelecom;
 					}
@@ -149,6 +154,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (count == 0)
 				{
 					var emptyEntity = new Entities.TelecomContactEntity ();
+					this.person.Contacts.Add (emptyEntity);
+
 					var accessor = new EntitiesAccessors.TelecomContactAccessor (emptyEntity, false);
 					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.GenericEdition);
 				}
@@ -164,6 +171,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					{
 						var accessor = new EntitiesAccessors.UriContactAccessor (contact as Entities.UriContactEntity, groupUri);
 						this.CreateSummaryTile (accessor, groupIndex, compactFollower, ViewControllerMode.UriEdition);
+
 						count++;
 						compactFollower = groupUri;
 					}
@@ -172,6 +180,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (count == 0)
 				{
 					var emptyEntity = new Entities.UriContactEntity ();
+					this.person.Contacts.Add (emptyEntity);
+
 					var accessor = new EntitiesAccessors.UriContactAccessor (emptyEntity, false);
 					this.CreateSummaryTile (accessor, groupIndex, false, ViewControllerMode.GenericEdition);
 				}
