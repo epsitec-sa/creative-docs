@@ -29,7 +29,6 @@ namespace Epsitec.Cresus.Database
 			this.Name = name;
 		}
 
-
 		/// <summary>
 		/// Gets or sets the table name.
 		/// </summary>
@@ -56,6 +55,12 @@ namespace Epsitec.Cresus.Database
 			{
 				return this.columns;
 			}
+		}
+
+		public string Comment
+		{
+			get;
+			set;
 		}
 
 		/// <summary>

@@ -264,6 +264,26 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
+
+		public void SetTableComment(string tableName, string comment)
+		{
+			if (!this.ValidateName (tableName))
+			{
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
+			}
+			
+			this.PrepareCommand ();
+
+			this.commandType = DbCommandType.Silent;
+			this.commandCount++;
+			
+			string escapedComment = comment.Replace ("'", "''");
+
+			string query = string.Format ("COMMENT ON TABLE {0} IS '{1}';\n", tableName, escapedComment);
+
+			this.Append (query);
+		}
+
 		public void RemoveTable(string tableName)
 		{
 			if (!this.ValidateName (tableName))
@@ -310,6 +330,30 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (this.GetSqlColumnAttributes (column));
 				this.Append (";\n");
 			}
+		}
+
+		public void SetTableColumnComment(string tableName, string columnName, string comment)
+		{
+			if (!this.ValidateName (tableName))
+			{
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid table {0}", tableName));
+			}
+
+			if (!this.ValidateName (columnName))
+			{
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid column {0}", columnName));
+			}
+
+			this.PrepareCommand ();
+
+			this.commandType = DbCommandType.Silent;
+			this.commandCount++;
+
+			string escapedComment = comment.Replace ("'", "''");
+
+			string query = string.Format ("COMMENT ON COLUMN {0}.{1} IS '{2}';\n", tableName, columnName, escapedComment);
+
+			this.Append (query);
 		}
 
 		public void UpdateTableColumns(string tableName, SqlColumn[] columns)

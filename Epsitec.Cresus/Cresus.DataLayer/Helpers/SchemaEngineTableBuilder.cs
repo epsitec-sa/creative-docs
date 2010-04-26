@@ -157,6 +157,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 			table = infrastructure.CreateDbTable (entityId, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
 
+			table.Comment = table.DisplayName;
 			this.newTables.Add (table);
 			this.tables.Add (table);
 			this.tablesDictionary[entityId] = table;
@@ -169,7 +170,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 
 				DbTypeDef typeDef = infrastructure.ResolveDbType (this.transaction, Tags.TypeKeyId);
 				DbColumn column = new DbColumn (Tags.ColumnInstanceType, typeDef, DbColumnClass.Data, DbElementCat.Internal, DbRevisionMode.Immutable);
-
+				
 				table.Columns.Add (column);
 			}
 			else
@@ -189,7 +190,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 					(field.Membership == FieldMembership.LocalOverride))
 				{
 					if (field.Source == FieldSource.Value)
-					{
+					{		
 						this.CreateColumn (table, field);
 					}
 				}
@@ -233,7 +234,7 @@ namespace Epsitec.Cresus.DataLayer.Helpers
 		{
 			DbTypeDef typeDef = this.CreateTypeDef (field.Type);
 			DbColumn  column  = new DbColumn (field.CaptionId, typeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, DbRevisionMode.TrackChanges);
-
+			
 			table.Columns.Add (column);
 		}
 
