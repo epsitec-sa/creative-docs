@@ -16,6 +16,9 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public AbstractTile()
 		{
+			this.PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2;
+
+			//	Crée deux panneaux gauche/droite.
 			this.leftPanel = new FrameBox
 			{
 				Parent = this,
@@ -26,10 +29,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.rightPanel = new FrameBox
 			{
 				Parent = this,
+				PreferredWidth = 0,
 				Margins = new Margins (0, AbstractTile.ArrowBreadth, 0, 0),
 				Dock = DockStyle.Fill,
 			};
 
+			//	Crée le contenu du panneau de gauche.
 			this.staticTextTopLeftIcon = new StaticText
 			{
 				Parent = this.leftPanel,
@@ -39,6 +44,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
 			};
 
+			//	Crée le contenu du panneau de droite.
 			this.staticTextTitle = new StaticText
 			{
 				Parent = this.rightPanel,
@@ -52,6 +58,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.mainPanel = new FrameBox
 			{
 				Parent = this.rightPanel,
+				PreferredWidth = 0,
 				Dock = DockStyle.Fill,
 			};
 		}
@@ -108,6 +115,27 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
+		{
+			if (newRect.Width <= AbstractTile.WidthWithOnlyIcon)  // icône seule ?
+			{
+				this.rightPanel.Visibility = false;
+			}
+			else
+			{
+				this.rightPanel.Visibility = true;
+			}
+		}
+
+
+		public static double WidthWithOnlyIcon
+		{
+			get
+			{
+				return AbstractTile.iconSize+AbstractTile.iconMargins*2;
+			}
+		}
+	
 		virtual public double ContentHeight
 		{
 			get
@@ -118,7 +146,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
-		/// Si on donne un sul caractère, il est affiché tel quel.
+		/// Si on donne un seul caractère, il est affiché tel quel.
 		/// </summary>
 		/// <value>Nom brut de l'icône, sans prefix ni extension.</value>
 		public string TopLeftIconUri

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public override string Icon
+		public override string IconUri
 		{
 			get
 			{
@@ -106,6 +106,12 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 					if (this.MailContact.Address != null && this.MailContact.Address.Location != null)
 					{
 						builder.Append (Misc.SpacingAppend (this.MailContact.Address.Location.PostalCode, this.MailContact.Address.Location.Name));
+						builder.Append ("<br/>");
+					}
+
+					if (this.MailContact.Address != null && this.MailContact.Address.Location != null && this.MailContact.Address.Location.Country != null)
+					{
+						builder.Append (this.MailContact.Address.Location.Country.Name);
 						builder.Append ("<br/>");
 					}
 				}

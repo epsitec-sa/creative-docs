@@ -64,12 +64,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.columns.Count > 0)
 			{
 				double x = 0;
-				double overlap = 5;
+				double overlap = Widgets.AbstractTile.ArrowBreadth - 3;
 
 				foreach (var column in this.columns.Skip (1).Reverse ())
 				{
 					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					column.PreferredWidth = 160;
+					column.PreferredWidth = 200;
+					//?column.PreferredWidth = Widgets.AbstractTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
 				}
