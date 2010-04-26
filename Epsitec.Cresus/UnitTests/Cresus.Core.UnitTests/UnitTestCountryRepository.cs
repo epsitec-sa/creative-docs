@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core
 			CountryEntity exampleAllCountries = new CountryEntity ()
 			{
 			};
-				
+
 			CountryEntity exampleSwitzerland = new CountryEntity ()
 			{
 				Code = "CH",
@@ -127,12 +127,12 @@ namespace Epsitec.Cresus.Core
 				Code = "DE",
 				Name = "Germany",
 			};
-			
+
 			using (DataContext dataContext = new DataContext (UnitTestCountryRepository.dbInfrastructure))
 			{
 				CountryRepository countryRepository = new CountryRepository (UnitTestCountryRepository.dbInfrastructure, dataContext);
 
-				List<CountryEntity> allCountries = new List<CountryEntity>(countryRepository.GetEntitiesByExample(exampleAllCountries));
+				List<CountryEntity> allCountries = new List<CountryEntity> (countryRepository.GetEntitiesByExample (exampleAllCountries));
 				List<CountryEntity> switzerland = new List<CountryEntity> (countryRepository.GetEntitiesByExample (exampleSwitzerland));
 				List<CountryEntity> france = new List<CountryEntity> (countryRepository.GetEntitiesByExample (exampleFrance));
 				List<CountryEntity> italy = new List<CountryEntity> (countryRepository.GetEntitiesByExample (exampleItaly));
@@ -144,15 +144,15 @@ namespace Epsitec.Cresus.Core
 				Assert.IsTrue (allCountries.FindAll (country => UnitTestCountryRepository.CheckCountry (country, "CH", "Switzerland")).Count == 1);
 				Assert.IsTrue (allCountries.FindAll (country => UnitTestCountryRepository.CheckCountry (country, "FR", "France")).Count == 1);
 				Assert.IsTrue (allCountries.FindAll (country => UnitTestCountryRepository.CheckCountry (country, "IT", "Italy")).Count == 1);
-				
+
 				Assert.IsTrue (switzerland.Count == 1);
 				Assert.IsTrue (UnitTestCountryRepository.CheckCountry (switzerland[0], "CH", "Switzerland"));
-				
+
 				Assert.IsTrue (france.Count == 1);
 				Assert.IsTrue (UnitTestCountryRepository.CheckCountry (france[0], "FR", "France"));
 
 				Assert.IsTrue (italy.Count == 1);
-				Assert.IsTrue (UnitTestCountryRepository.CheckCountry (italy[0], "IT", "Italy"));	
+				Assert.IsTrue (UnitTestCountryRepository.CheckCountry (italy[0], "IT", "Italy"));
 
 				Assert.IsTrue (germany1.Count == 0);
 				Assert.IsTrue (germany2.Count == 0);

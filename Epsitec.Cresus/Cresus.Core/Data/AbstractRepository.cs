@@ -65,15 +65,17 @@ namespace Epsitec.Cresus.Core.Data
 
 		public IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
 		{
+			// TODO Add join management, for sub typing stuff and for examples with relations.
 			EntityType dummyEntity = this.DataContext.EntityContext.CreateEmptyEntity<EntityType> ();
-			Druid entityId = dummyEntity.GetEntityStructuredTypeId ();
+			Druid askedEntityId = dummyEntity.GetEntityStructuredTypeId ();
+			Druid baseEntityId =  this.DataContext.EntityContext.GetBaseEntityId (askedEntityId);
 
 			DataBrowser dataBrowser = new DataBrowser (this.DbInfrastructure);
-			DataQuery dataQuery = this.BuildQuery (this.DataContext.EntityContext.GetStructuredType(dummyEntity) as StructuredType);
+			DataQuery dataQuery = this.BuildQuery (baseEntityId);
 
 			using (DbTransaction transaction = dataBrowser.Infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				using (DataTable dataTable = this.BuildDataTable (entityId))
+				using (DataTable dataTable = this.BuildDataTable (baseEntityId))
 				{
 					foreach (DataBrowserRow dataBrowserRow in dataBrowser.QueryByExample (transaction, example, dataQuery))
 					{
@@ -81,7 +83,7 @@ namespace Epsitec.Cresus.Core.Data
 						Druid realEntityTypeId = Druid.FromLong ((long) dataBrowserRow[AbstractRepository.InstanceTypeFieldPath]);
 						DataRow dataRow = this.BuildDataRow (dataTable, dataBrowserRow);
 
-						yield return this.DataContext.ResolveEntity (realEntityTypeId, entityId, rowKey, dataRow) as EntityType;
+						yield return this.DataContext.ResolveEntity (realEntityTypeId, askedEntityId, baseEntityId, rowKey, dataRow) as EntityType;
 					}
 				}
 
@@ -89,13 +91,16 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		private DataQuery BuildQuery(StructuredType entityType)
+		private DataQuery BuildQuery(Druid entityId)
 		{
 			DataQuery dataQuery = new DataQuery ();
-
-			foreach (string fieldId in entityType.GetFieldIds())
+			
+			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
 			{
-				dataQuery.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse (fieldId)));
+				if (field.Relation == FieldRelation.None)
+				{
+					dataQuery.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse (field.Id)));
+				}
 			}
 
 			dataQuery.Columns.Add (new DataQueryColumn (AbstractRepository.InstanceTypeFieldPath));
