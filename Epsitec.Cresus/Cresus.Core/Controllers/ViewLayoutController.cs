@@ -35,9 +35,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public Widget CreateColumn()
 		{
-			var column = new FrameBox ()
+			var column = new Widgets.TilesContainer ()
 			{
-				Name = string.Format ("Column{0}", this.ColumnCount)
+				Name = string.Format ("Column{0}", this.ColumnCount),
 			};
 
 			this.columns.Push (column);
