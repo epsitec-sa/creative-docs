@@ -29,9 +29,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.UriContactAccessor (this.Entity as Entities.UriContactEntity);
+			var accessor = new EntitiesAccessors.UriContactAccessor (this.Entity as Entities.UriContactEntity, false);
 
 			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
+
+			this.CreateTextField (frame, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
+			this.CreateMargin (frame, true);
 
 			this.CreateTextField (frame, 100, "Type", accessor.UriScheme, x => accessor.UriScheme = x, Validators.StringValidator.Validate);
 			this.CreateTextField (frame, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);

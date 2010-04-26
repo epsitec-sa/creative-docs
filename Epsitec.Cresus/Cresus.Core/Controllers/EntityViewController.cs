@@ -123,6 +123,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
 		}
 
+		/// <summary>
+		/// Crée une tuile permettant l'édition. En principe, elle est seule dans son empilement.
+		/// </summary>
+		/// <param name="accessor">The accessor.</param>
+		/// <param name="childrenMode">The children mode.</param>
+		/// <returns></returns>
 		protected FrameBox CreateEditionTile(EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
@@ -354,14 +360,27 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
-		protected void CreateMargin(Widget embedder, int marginHeight)
+		protected void CreateMargin(Widget embedder, bool horizontalSeparator)
 		{
-			FrameBox frame = new FrameBox
+			if (horizontalSeparator)
 			{
-				Parent = embedder,
-				Dock = DockStyle.Top,
-				PreferredHeight = marginHeight,
-			};
+				var separator = new Separator
+				{
+					Parent = embedder,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 10, 10, 10),
+					PreferredHeight = 2,
+				};
+			}
+			else
+			{
+				var frame = new FrameBox
+				{
+					Parent = embedder,
+					Dock = DockStyle.Top,
+					PreferredHeight = 10,
+				};
+			}
 		}
 
 

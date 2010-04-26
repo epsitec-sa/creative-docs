@@ -29,12 +29,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.TelecomContactAccessor (this.Entity as Entities.TelecomContactEntity);
+			var accessor = new EntitiesAccessors.TelecomContactAccessor (this.Entity as Entities.TelecomContactEntity, false);
 
 			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
+			this.CreateTextField (frame, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
+			this.CreateMargin (frame, true);
+
 			this.CreateTextField (frame, 150, "Type du numéro", accessor.TelecomType, x => accessor.TelecomType = x, Validators.StringValidator.Validate);
-			this.CreateMargin (frame, 10);
+			this.CreateMargin (frame, false);
+
 			this.CreateTextField (frame, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);
 			this.CreateTextField (frame, 100, "Numéro interne", accessor.TelecomContact.Extension, x => accessor.TelecomContact.Extension = x, Validators.StringValidator.Validate);
 

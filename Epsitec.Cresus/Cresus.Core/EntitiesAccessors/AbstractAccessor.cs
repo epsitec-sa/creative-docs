@@ -13,10 +13,11 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
 	public class AbstractAccessor
 	{
-		public AbstractAccessor(AbstractEntity entity)
+		public AbstractAccessor(AbstractEntity entity, bool grouped)
 		{
 			System.Diagnostics.Debug.Assert (entity != null);
 			this.entity = entity;
+			this.grouped = grouped;
 		}
 
 
@@ -25,6 +26,20 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			get
 			{
 				return this.entity;
+			}
+		}
+
+		/// <summary>
+		/// Indique que la tuile qui affichera l'entité est groupée.
+		/// Il n'y aura donc qu'un titre pour l'ensemble du groupe.
+		/// </summary>
+		/// <value><c>true</c> if grouped; otherwise, <c>false</c>.</value>
+		public bool Grouped
+		{
+			get
+			{
+				return this.grouped;
+
 			}
 		}
 
@@ -66,30 +81,8 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			return summary;
 		}
 
-		protected static void AppendRoles(StringBuilder builder, IList<Entities.ContactRoleEntity> roles)
-		{
-			if (roles != null && roles.Count != 0)
-			{
-				builder.Append (" (");
-
-				bool first = true;
-				foreach (Entities.ContactRoleEntity role in roles)
-				{
-					if (!first)
-					{
-						builder.Append (", ");
-					}
-
-					builder.Append (role.Name);
-					first = false;
-				}
-
-				builder.Append (")");
-
-			}
-		}
-
 
 		private readonly AbstractEntity entity;
+		private readonly bool grouped;
 	}
 }
