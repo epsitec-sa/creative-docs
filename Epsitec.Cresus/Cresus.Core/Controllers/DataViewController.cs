@@ -46,18 +46,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		public void SelectEntity(AbstractEntity entity)
+		public void SetEntity(AbstractEntity entity)
 		{
 			this.ClearActiveEntity ();
 
 			if (entity != null)
 			{
 				this.entity = entity;
-
-				EntityViewController controller = EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
-				controller.DataViewController = this;
-
-				this.PushViewController (controller);
+				this.PushViewController (this.entity);
 			}
 		}
 
@@ -74,14 +70,34 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		
+
+		public void PushViewController(AbstractEntity entity)
+		{
+			EntityViewController controller = EntityViewController.CreateViewController ("ViewController", entity, ViewControllerMode.Compact, this.orchestrator);
+			controller.DataViewController = this;
+
+			this.PushViewController (controller);
+		}
+
 		public void PushViewController(CoreViewController controller)
 		{
 			System.Diagnostics.Debug.Assert (controller != null);
 
+			CoreViewController parent = null;
+
+			if (this.viewControllers.Count != 0)
+			{
+				parent = this.viewControllers.Peek ();
+			}
+
 			var column = this.viewLayoutController.CreateColumn ();
 			this.viewControllers.Push (controller);
 			controller.CreateUI (column);
+
+			if (parent != null)
+			{
+				this.SelectViewController (parent, controller);
+			}
 		}
 
 		public void PopViewController()
@@ -108,6 +124,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			var controller = this.viewControllers.Peek ();
 			var column = this.viewLayoutController.PeekedColumn;
 			controller.CreateUI (column);
+		}
+
+		private void SelectViewController(CoreViewController parentController, CoreViewController selectedController)
+		{
+			var parent   = parentController   as EntityViewController;
+			var selected = selectedController as EntityViewController;
+			System.Diagnostics.Debug.Assert (parent != null && selected != null);
+
+			foreach (var widget in parent.Container.Children)
+			{
+				if (widget is Widgets.AbstractTile)
+				{
+					var tileContainer = widget as Widgets.AbstractTile;
+					tileContainer.SetSelected (tileContainer.Entity == selected.Entity);
+				}
+			}
 		}
 
 

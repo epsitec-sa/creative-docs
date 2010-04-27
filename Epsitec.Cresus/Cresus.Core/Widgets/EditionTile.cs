@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Donne le conteneur dans lequel on va mettre tous les widgets permettant d'éditer l'entité associée à la tuile.
 		/// </summary>
 		/// <value>The container.</value>
-		public FrameBox Container
+		public override FrameBox Container
 		{
 			get
 			{

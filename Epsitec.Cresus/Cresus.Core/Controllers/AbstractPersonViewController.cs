@@ -68,24 +68,24 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (person is Entities.NaturalPersonEntity)
 				{
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);
-					FrameBox container = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-					this.CreateTextField (container, 100, "Titre", accessor.NaturalTitle, x => accessor.NaturalTitle = x, Validators.StringValidator.Validate);
-					this.CreateTextField (container, 0, "Prénom", accessor.NaturalPerson.Firstname, x => accessor.NaturalPerson.Firstname = x, Validators.StringValidator.Validate);
-					this.CreateTextField (container, 0, "Nom", accessor.NaturalPerson.Lastname, x => accessor.NaturalPerson.Lastname = x, Validators.StringValidator.Validate);
-					this.CreateMargin (container, true);
-					this.CreateTextField (container, 100, "Date de naissance", accessor.NaturalBirthDate, x => accessor.NaturalBirthDate = x, null);
+					this.CreateTextField (tile.Container, 100, "Titre", accessor.NaturalTitle, x => accessor.NaturalTitle = x, Validators.StringValidator.Validate);
+					this.CreateTextField (tile.Container, 0, "Prénom", accessor.NaturalPerson.Firstname, x => accessor.NaturalPerson.Firstname = x, Validators.StringValidator.Validate);
+					this.CreateTextField (tile.Container, 0, "Nom", accessor.NaturalPerson.Lastname, x => accessor.NaturalPerson.Lastname = x, Validators.StringValidator.Validate);
+					this.CreateMargin (tile.Container, true);
+					this.CreateTextField (tile.Container, 100, "Date de naissance", accessor.NaturalBirthDate, x => accessor.NaturalBirthDate = x, null);
 				}
 
 				if (person is Entities.LegalPersonEntity)
 				{
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
-					FrameBox container = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-					this.CreateTextField (container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
-					this.CreateTextField (container, 150, "Nom court", accessor.LegalPerson.ShortName, x => accessor.LegalPerson.ShortName = x, Validators.StringValidator.Validate);
-					this.CreateMargin (container, true);
-					this.CreateTextFieldMulti (container, 100, "Complément", accessor.LegalPerson.Complement, x => accessor.LegalPerson.Complement = x, null);
+					this.CreateTextField (tile.Container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
+					this.CreateTextField (tile.Container, 150, "Nom court", accessor.LegalPerson.ShortName, x => accessor.LegalPerson.ShortName = x, Validators.StringValidator.Validate);
+					this.CreateMargin (tile.Container, true);
+					this.CreateTextFieldMulti (tile.Container, 100, "Complément", accessor.LegalPerson.Complement, x => accessor.LegalPerson.Complement = x, null);
 				}
 
 				this.SetInitialFocus ();
