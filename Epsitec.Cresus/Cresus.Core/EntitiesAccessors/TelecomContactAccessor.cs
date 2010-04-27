@@ -100,6 +100,33 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
+		public List<string> RoleList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				list.Add ("professionnel");
+				list.Add ("privé");
+
+				return list;
+			}
+		}
+
+		public List<string> TelecomTypeList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				list.Add ("fixnet");
+				list.Add ("mobile");
+				list.Add ("fax");
+
+				return list;
+			}
+		}
+
 		public string TelecomType
 		{
 			get

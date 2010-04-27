@@ -100,6 +100,34 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
+		public List<string> RoleList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				list.Add ("professionnel");
+				list.Add ("privé");
+
+				return list;
+			}
+		}
+
+		public List<string> UriSchemeList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				list.Add ("mailto");
+				list.Add ("callto");
+				list.Add ("sip");
+				list.Add ("http");
+
+				return list;
+			}
+		}
+
 		public string UriScheme
 		{
 			get

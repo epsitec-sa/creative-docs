@@ -33,6 +33,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public Widget LastColumn
+		{
+			get
+			{
+				return this.columns.Peek ();
+			}
+		}
+
 		public Widget CreateColumn()
 		{
 			var column = new Widgets.TilesContainer ()
@@ -57,13 +65,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public Widget PeekedColumn
-		{
-			get
-			{
-				return this.columns.Peek ();
-			}
-		}
 
 		private void UpdateColumnLayout()
 		{

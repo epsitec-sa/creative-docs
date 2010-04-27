@@ -143,6 +143,20 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
+		public List<string> RoleList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				list.Add ("professionnel");
+				list.Add ("facturation");
+				list.Add ("privé");
+
+				return list;
+			}
+		}
+
 		public string StreetName
 		{
 			get

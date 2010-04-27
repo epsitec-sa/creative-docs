@@ -218,11 +218,11 @@ namespace Epsitec.Common.Widgets
 			
 			switch (this.ButtonShowCondition)
 			{
-				case ButtonShowCondition.Always:				show = true;										break;
-				case ButtonShowCondition.Never:				show = false;										break;
-				case ButtonShowCondition.WhenFocused:			show = this.IsFocused         || this.IsComboOpen;	break;
+				case ButtonShowCondition.Always:				show = true;									break;
+				case ButtonShowCondition.Never:					show = false;									break;
+				case ButtonShowCondition.WhenFocused:			show = this.IsFocused     || this.IsComboOpen;	break;
 				case ButtonShowCondition.WhenKeyboardFocused:	show = this.KeyboardFocus || this.IsComboOpen;	break;
-				case ButtonShowCondition.WhenModified:		show = this.HasEditedText;							break;
+				case ButtonShowCondition.WhenModified:			show = this.HasEditedText;						break;
 				
 				default:
 					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));

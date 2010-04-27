@@ -387,6 +387,56 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
+		protected void CreateCombo(Widget embedder, int width, string label, List<string> list, bool allowMultipleSelection, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		{
+			var staticText = new StaticText
+			{
+				Parent = embedder,
+				Text = string.Concat (label, " :"),
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 0, 2),
+			};
+
+			Widgets.SuperCombo combo;
+
+			if (width == 0)  // occupe toute la largeur ?
+			{
+				combo = new Widgets.SuperCombo
+				{
+					Parent = embedder,
+					AllowMultipleSelection = allowMultipleSelection,
+					Text = initialValue,
+					Dock = DockStyle.Top,
+					Margins = new Margins (0, 10, 0, 5),
+					TabIndex = ++this.tabIndex,
+				};
+			}
+			else  // largeur partielle fixe ?
+			{
+				var box = new FrameBox
+				{
+					Parent = embedder,
+					Dock = DockStyle.Top,
+					TabIndex = ++this.tabIndex,
+				};
+
+				combo = new Widgets.SuperCombo
+				{
+					Parent = box,
+					AllowMultipleSelection = allowMultipleSelection,
+					Text = initialValue,
+					Dock = DockStyle.Left,
+					PreferredWidth = width,
+					Margins = new Margins (0, 10, 0, 5),
+					TabIndex = ++this.tabIndex,
+				};
+			}
+
+			combo.Items.AddRange (list);
+
+			this.CreateTextFieldHandler (combo, callback, validator);
+		}
+
 		protected void CreateMargin(Widget embedder, bool horizontalSeparator)
 		{
 			if (horizontalSeparator)

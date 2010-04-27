@@ -65,6 +65,20 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
+		public List<string> TitleList
+		{
+			get
+			{
+				List<string> list = new List<string> ();
+
+				list.Add ("Monsieur");
+				list.Add ("Madame");
+				list.Add ("Mademoiselle");
+
+				return list;
+			}
+		}
+
 		public string NaturalTitle
 		{
 			get

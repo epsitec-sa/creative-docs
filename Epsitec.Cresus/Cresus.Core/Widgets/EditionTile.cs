@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
