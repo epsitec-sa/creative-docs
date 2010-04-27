@@ -31,13 +31,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
 
-			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
+			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-			this.CreateTextField (frame, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
-			this.CreateMargin (frame, true);
+			this.CreateTextField (tile.Container, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
+			this.CreateMargin (tile.Container, true);
 
-			this.CreateTextField (frame, 100, "Type", accessor.UriScheme, x => accessor.UriScheme = x, Validators.StringValidator.Validate);
-			this.CreateTextField (frame, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
+			this.CreateTextField (tile.Container, 100, "Type", accessor.UriScheme, x => accessor.UriScheme = x, Validators.StringValidator.Validate);
+			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
 			this.SetInitialFocus ();
 		}

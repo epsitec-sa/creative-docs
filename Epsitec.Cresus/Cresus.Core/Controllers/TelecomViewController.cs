@@ -31,16 +31,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (this.Entity != null);
 			var accessor = new EntitiesAccessors.TelecomContactAccessor (null, this.Entity as Entities.TelecomContactEntity, false);
 
-			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
+			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-			this.CreateTextField (frame, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
-			this.CreateMargin (frame, true);
+			this.CreateTextField (tile.Container, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
+			this.CreateMargin (tile.Container, true);
 
-			this.CreateTextField (frame, 150, "Type du numéro", accessor.TelecomType, x => accessor.TelecomType = x, Validators.StringValidator.Validate);
-			this.CreateMargin (frame, false);
+			this.CreateTextField (tile.Container, 150, "Type du numéro", accessor.TelecomType, x => accessor.TelecomType = x, Validators.StringValidator.Validate);
+			this.CreateMargin (tile.Container, false);
 
-			this.CreateTextField (frame, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);
-			this.CreateTextField (frame, 100, "Numéro interne", accessor.TelecomContact.Extension, x => accessor.TelecomContact.Extension = x, Validators.StringValidator.Validate);
+			this.CreateTextField (tile.Container, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);
+			this.CreateTextField (tile.Container, 100, "Numéro interne", accessor.TelecomContact.Extension, x => accessor.TelecomContact.Extension = x, Validators.StringValidator.Validate);
 
 			this.SetInitialFocus ();
 		}

@@ -160,6 +160,14 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
+		public virtual FrameBox Container
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 
 		protected override void SetBoundsOverride(Rectangle oldRect, Rectangle newRect)
 		{

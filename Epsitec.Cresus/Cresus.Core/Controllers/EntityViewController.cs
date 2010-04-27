@@ -43,6 +43,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			set;
 		}
 
+		public Widget Container
+		{
+			get
+			{
+				return this.container;
+			}
+		}
+
 
 		public static EntityViewController CreateViewController(string name, AbstractEntity entity, ViewControllerMode mode, Orchestrators.DataViewOrchestrator orchestrator)
 		{
@@ -106,7 +114,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="compactFollower">if set to <c>true</c> [compact follower].</param>
 		/// <param name="enableCreateAndRemoveButton">if set to <c>true</c> [enable create and remove button].</param>
 		/// <param name="childrenMode">The children mode.</param>
-		protected void CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
+		/// <returns></returns>
+		protected Widgets.AbstractTile CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -133,6 +142,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
 			tile.CreateEntity += new EventHandler (this.HandleTileCreateEntity);
 			tile.RemoveEntity += new EventHandler (this.HandleTileRemoveEntity);
+
+			return tile;
 		}
 
 		/// <summary>
@@ -141,7 +152,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="accessor">The accessor.</param>
 		/// <param name="childrenMode">The children mode.</param>
 		/// <returns></returns>
-		protected FrameBox CreateEditionTile(EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
+		protected Widgets.AbstractTile CreateEditionTile(EntitiesAccessors.AbstractAccessor accessor, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -163,7 +174,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
 
-			return tile.Container;
+			return tile;
 		}
 
 
@@ -406,6 +417,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+#if false
 		private void SelectTile(Widgets.AbstractTile tile)
 		{
 			this.DeselectAllTiles ();
@@ -426,12 +438,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 		}
+#endif
 
 
 		private void CreateEntity(Widgets.AbstractTile tile)
 		{
 			EntitiesAccessors.AbstractAccessor accessor = tile.EntitiesAccessor;
-			accessor.Create ();
+			AbstractEntity newEntity = accessor.Create ();
+
+			this.DataViewController.RebuildViewController ();
+			this.DataViewController.PushViewController (newEntity);
 		}
 
 		private void RemoveEntity(Widgets.AbstractTile tile)
@@ -451,12 +467,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (tile.IsSelected || controller == null)
 			{
-				this.DeselectAllTiles ();
+				//?this.DeselectAllTiles ();
 				this.Orchestrator.CloseSubViews (this);
 			}
 			else
 			{
-				this.SelectTile (tile);
+				//?this.SelectTile (tile);
 				this.Orchestrator.ShowSubView (this, controller);
 			}
 		}
