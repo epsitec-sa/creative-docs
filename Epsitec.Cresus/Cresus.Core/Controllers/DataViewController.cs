@@ -107,6 +107,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			var controller = this.viewControllers.Pop ();
 			controller.Dispose ();
 			this.viewLayoutController.DeleteColumn ();
+
+			if (this.viewControllers.Count != 0)
+			{
+				var parent = this.viewControllers.Peek ();
+				this.SelectViewController (parent, null);
+			}
 		}
 
 		public void PopViewControllersUntil(CoreViewController controller)
@@ -128,16 +134,22 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SelectViewController(CoreViewController parentController, CoreViewController selectedController)
 		{
-			var parent   = parentController   as EntityViewController;
-			var selected = selectedController as EntityViewController;
-			System.Diagnostics.Debug.Assert (parent != null && selected != null);
+			var parent = parentController as EntityViewController;
+			System.Diagnostics.Debug.Assert (parent != null);
+
+			AbstractEntity selectedEntity = null;
+			if (selectedController != null && selectedController is EntityViewController)
+			{
+				var s = selectedController as EntityViewController;
+				selectedEntity = s.Entity;
+			}
 
 			foreach (var widget in parent.Container.Children)
 			{
 				if (widget is Widgets.AbstractTile)
 				{
 					var tileContainer = widget as Widgets.AbstractTile;
-					tileContainer.SetSelected (tileContainer.Entity == selected.Entity);
+					tileContainer.SetSelected (tileContainer.Entity == selectedEntity);
 				}
 			}
 		}
