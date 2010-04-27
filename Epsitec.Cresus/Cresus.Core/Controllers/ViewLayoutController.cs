@@ -73,12 +73,14 @@ namespace Epsitec.Cresus.Core.Controllers
 					//?column.PreferredWidth = Widgets.AbstractTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
+					ViewLayoutController.SetRightColumn (column, false);
 				}
 
 				var lastColumn = this.columns.Peek ();
 
 				lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
 				lastColumn.Margins = new Margins (x, 0, 0, 0);
+				ViewLayoutController.SetRightColumn (lastColumn, true);
 
 				foreach (var column in this.columns)
 				{
@@ -86,6 +88,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 		}
+
+		private static void SetRightColumn(Widget column, bool value)
+		{
+			if (column is Widgets.TilesContainer)
+			{
+				var tilesContainer = column as Widgets.TilesContainer;
+				tilesContainer.IsRightColumn = value;
+			}
+		}
+
 
 		private readonly Widget container;
 		private readonly Stack<Widget> columns;

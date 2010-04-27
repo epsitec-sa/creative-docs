@@ -28,6 +28,19 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		/// <summary>
+		/// Indique s'il s'agit du conteneur de la dernière colonne de droite.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is right column; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsRightColumn
+		{
+			get;
+			set;
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;

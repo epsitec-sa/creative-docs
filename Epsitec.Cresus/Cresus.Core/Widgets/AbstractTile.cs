@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		public AbstractTile()
 		{
 			this.PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2;
+			this.EnableCreateAndRemoveButton = false;
 
 			//	Crée deux panneaux gauche/droite.
 			this.leftPanel = new FrameBox
@@ -238,11 +239,28 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		private bool IsRightColumnParent
+		{
+			get
+			{
+				if (this.Parent != null && this.Parent is Widgets.TilesContainer)
+				{
+					var tilesContainer = this.Parent as Widgets.TilesContainer;
+					return tilesContainer.IsRightColumn;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+
 		protected override void OnEntered(MessageEventArgs e)
 		{
 			base.OnEntered (e);
 
-			if (this.buttonCreateEntity != null && this.EnableCreateAndRemoveButton)
+			if (this.buttonCreateEntity != null && this.EnableCreateAndRemoveButton && this.IsRightColumnParent)
 			{
 				this.buttonCreateEntity.Visibility = true;
 				this.buttonRemoveEntity.Visibility = true;
