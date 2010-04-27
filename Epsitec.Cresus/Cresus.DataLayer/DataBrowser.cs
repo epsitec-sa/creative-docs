@@ -203,26 +203,10 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DbReader reader = new DbReader (this.infrastructure);
 
-			List<DbTableColumn> tableColumns = new List<DbTableColumn> ();
-			
 			foreach (DataQueryColumn queryColumn in query.Columns)
 			{
-				EntityFieldPath fieldPath = queryColumn.FieldPath;
+				DbTableColumn tableColumn = this.GetTableColumn (queryColumn);
 
-				System.Diagnostics.Debug.Assert (fieldPath.IsAbsolute);
-				System.Diagnostics.Debug.Assert (fieldPath.ContainsIndex == false);
-				
-				Druid  dataEntityId;
-				string dataFieldId;
-
-				if (fieldPath.Navigate (out dataEntityId, out dataFieldId) == false)
-				{
-					throw new System.ArgumentException ("Cannot resolve field " + fieldPath.ToString ());
-				}
-
-				DbTableColumn tableColumn = this.GetTableColumn (fieldPath, dataEntityId, dataFieldId);
-
-				tableColumns.Add (tableColumn);
 				reader.AddQueryField (tableColumn);
 
 				switch (queryColumn.SortOrder)
@@ -243,10 +227,36 @@ namespace Epsitec.Cresus.DataLayer
 				}
 			}
 
+			foreach (DataQueryJoin join in query.Joins)
+			{
+				DbTableColumn leftColumn = this.GetTableColumn (join.LeftColumn);
+				DbTableColumn rightColumn = this.GetTableColumn (join.RightColumn);
+
+				reader.AddJoin (leftColumn, rightColumn, join.Type);
+			}
+
 			reader.SelectPredicate = query.Distinct ? SqlSelectPredicate.Distinct : SqlSelectPredicate.All;
 			reader.IncludeRowKeys  = true;
 
 			return reader;
+		}
+
+		private DbTableColumn GetTableColumn(DataQueryColumn column)
+		{
+			EntityFieldPath fieldPath = column.FieldPath;
+
+			System.Diagnostics.Debug.Assert (fieldPath.IsAbsolute);
+			System.Diagnostics.Debug.Assert (fieldPath.ContainsIndex == false);
+
+			Druid  dataEntityId;
+			string dataFieldId;
+
+			if (fieldPath.Navigate (out dataEntityId, out dataFieldId) == false)
+			{
+				throw new System.ArgumentException ("Cannot resolve field " + fieldPath.ToString ());
+			}
+
+			return this.GetTableColumn (fieldPath, dataEntityId, dataFieldId);
 		}
 
 		/// <summary>
@@ -287,6 +297,12 @@ namespace Epsitec.Cresus.DataLayer
 
 			tableColumn.TableAlias  = fieldPath.GetParentPath ().ToString ();
 			tableColumn.ColumnAlias = fieldPath.ToString ();
+
+			if (tableColumn.TableAlias.Length == 0)
+			{
+				tableColumn.TableAlias = fieldPath.GetParentPath ().EntityId.ToString ();
+			}
+			
 			return tableColumn;
 		}
 

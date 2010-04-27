@@ -48,11 +48,11 @@ namespace Epsitec.Cresus.Core.Data
 			Druid baseEntityId =  this.DataContext.EntityContext.GetBaseEntityId (askedEntityId);
 
 			DataBrowser dataBrowser = new DataBrowser (this.DbInfrastructure);
-			DataQuery dataQuery = this.BuildQuery (baseEntityId);
+			DataQuery dataQuery = this.BuildQuery (askedEntityId);
 
 			using (DbTransaction transaction = dataBrowser.Infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				using (DataTable dataTable = this.BuildDataTable (baseEntityId))
+				using (DataTable dataTable = this.BuildDataTable (askedEntityId))
 				{
 					EntityFieldPath typePath = EntityFieldPath.CreateAbsolutePath (baseEntityId, AbstractRepository.FieldPathType);
 
@@ -92,15 +92,27 @@ namespace Epsitec.Cresus.Core.Data
 
 		private IEnumerable<DataQueryColumn> BuildQueryColumns(Druid entityId)
 		{
-			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
-			{
-				if (field.Relation == FieldRelation.None)
-				{
-					yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (entityId, field.Id));
-				}
-			}
+			Druid currentId = entityId;
 
-			yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (entityId, AbstractRepository.FieldPathType));
+			while (currentId.IsValid)
+			{
+				foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (currentId))
+				{
+					if (field.Relation == FieldRelation.None && field.Membership == FieldMembership.Local && field.Expression == null)
+					{
+						yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (currentId, field.Id));
+					}
+				}
+
+				Druid nextId = (this.DataContext.EntityContext.GetStructuredType (currentId) as StructuredType).BaseTypeId;
+
+				if (!nextId.IsValid)
+				{
+					yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (currentId, AbstractRepository.FieldPathType));
+				}
+
+				currentId = nextId;
+			}
 		}
 
 		private IEnumerable<DataQueryJoin> BuildQueryJoins(Druid entityId)
@@ -113,12 +125,12 @@ namespace Epsitec.Cresus.Core.Data
 				DataQueryColumn left = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (leftId,  AbstractRepository.FieldPathId));
 				DataQueryColumn right = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (rightId,  AbstractRepository.FieldPathId));
 
-				SqlJoinCode kind = SqlJoinCode.Inner;
+				SqlJoinCode type = SqlJoinCode.Inner;
 
-				yield return new DataQueryJoin (left, right, kind);
+				yield return new DataQueryJoin (left, right, type);
 
 				leftId = rightId;
-				rightId = (this.DataContext.EntityContext.GetStructuredType (entityId) as StructuredType).BaseTypeId;
+				rightId = (this.DataContext.EntityContext.GetStructuredType (rightId) as StructuredType).BaseTypeId;
 			}
 		}
 
