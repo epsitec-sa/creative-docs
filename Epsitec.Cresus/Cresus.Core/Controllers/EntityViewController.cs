@@ -19,12 +19,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
-		public DataViewController DataViewController
-		{
-			get;
-			set;
-		}
-
 		public AbstractEntity Entity
 		{
 			get;
@@ -417,37 +411,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-#if false
-		private void SelectTile(Widgets.AbstractTile tile)
-		{
-			this.DeselectAllTiles ();
-			tile.SetSelected (true);
-		}
-
-		private void DeselectAllTiles()
-		{
-			System.Diagnostics.Debug.Assert (this.container != null);
-
-			foreach (Widget widget in this.container.Children)
-			{
-				var tile = widget as Widgets.AbstractTile;
-
-				if (tile != null)
-				{
-					tile.SetSelected (false);
-				}
-			}
-		}
-#endif
-
-
 		private void CreateEntity(Widgets.AbstractTile tile)
 		{
 			EntitiesAccessors.AbstractAccessor accessor = tile.EntitiesAccessor;
 			AbstractEntity newEntity = accessor.Create ();
+			CoreViewController controller = EntityViewController.CreateViewController ("ViewController", newEntity, tile.ChildrenMode, this.Orchestrator);
 
-			this.DataViewController.RebuildViewController ();
-			this.DataViewController.PushViewController (newEntity);
+			this.Orchestrator.RebuildView ();
+			this.Orchestrator.ShowSubView (this, controller);
 		}
 
 		private void RemoveEntity(Widgets.AbstractTile tile)
@@ -455,7 +426,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			EntitiesAccessors.AbstractAccessor accessor = tile.EntitiesAccessor;
 			accessor.Remove ();
 
-			this.DataViewController.RebuildViewController ();
+			this.Orchestrator.RebuildView ();
 		}
 
 
@@ -467,12 +438,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (tile.IsSelected || controller == null)
 			{
-				//?this.DeselectAllTiles ();
 				this.Orchestrator.CloseSubViews (this);
 			}
 			else
 			{
-				//?this.SelectTile (tile);
 				this.Orchestrator.ShowSubView (this, controller);
 			}
 		}
