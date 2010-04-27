@@ -74,6 +74,8 @@ namespace Epsitec.Cresus.Core.Widgets
 				Visibility = false,
 			};
 
+			this.buttonCreateEntity.Clicked += new EventHandler<MessageEventArgs> (this.HandleButtonCreateEntityClicked);
+
 			this.buttonRemoveEntity = new GlyphButton
 			{
 				Parent = this,
@@ -84,6 +86,8 @@ namespace Epsitec.Cresus.Core.Widgets
 				Margins = new Margins (0, 2+TileContainer.ArrowBreadth, 2, 0),
 				Visibility = false,
 			};
+
+			this.buttonRemoveEntity.Clicked += new EventHandler<MessageEventArgs> (this.HandleButtonRemoveEntityClicked);
 		}
 
 		public AbstractTile(Widget embedder)
@@ -256,7 +260,74 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-	
+
+		private void HandleButtonCreateEntityClicked(object sender, MessageEventArgs e)
+		{
+			this.OnCreateEntity ();
+		}
+
+		private void HandleButtonRemoveEntityClicked(object sender, MessageEventArgs e)
+		{
+			this.OnRemoveEntity ();
+		}
+
+
+		#region Create entity event
+		private void OnCreateEntity()
+		{
+			//	Génère un événement pour dire qu'on veut créer une entité.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler (AbstractTile.CreateEntityEvent);
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler CreateEntity
+		{
+			add
+			{
+				this.AddUserEventHandler (AbstractTile.CreateEntityEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (AbstractTile.CreateEntityEvent, value);
+			}
+		}
+
+		private const string CreateEntityEvent = "CreateEntity";
+		#endregion
+
+
+		#region Remove entity event
+		private void OnRemoveEntity()
+		{
+			//	Génère un événement pour dire qu'on veut créer une entité.
+			EventHandler handler = (EventHandler) this.GetUserEventHandler (AbstractTile.RemoveEntityEvent);
+
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler RemoveEntity
+		{
+			add
+			{
+				this.AddUserEventHandler (AbstractTile.RemoveEntityEvent, value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler (AbstractTile.RemoveEntityEvent, value);
+			}
+		}
+
+		private const string RemoveEntityEvent = "RemoveEntity";
+		#endregion
+
+
 		private static readonly double iconSize = 32;
 		private static readonly double iconMargins = 2;
 		private static readonly double titleHeight = 18;
