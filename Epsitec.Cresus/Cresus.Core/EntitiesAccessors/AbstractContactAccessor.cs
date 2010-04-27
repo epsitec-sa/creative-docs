@@ -13,11 +13,19 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
 	public class AbstractContactAccessor : AbstractAccessor
 	{
-		public AbstractContactAccessor(AbstractEntity entity, bool grouped)
-			: base (entity, grouped)
+		public AbstractContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+			: base (parentEntities, entity, grouped)
 		{
 		}
 
+
+		public IList<Entities.AbstractContactEntity> ParentAbstractContacts
+		{
+			get
+			{
+				return this.ParentEntities as IList<Entities.AbstractContactEntity>;
+			}
+		}
 
 		public Entities.AbstractContactEntity AbstractContact
 		{
@@ -25,6 +33,12 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			{
 				return this.Entity as Entities.AbstractContactEntity;
 			}
+		}
+
+
+		public override void Remove()
+		{
+			this.ParentAbstractContacts.Remove (this.AbstractContact);
 		}
 
 

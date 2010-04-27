@@ -53,7 +53,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (entity != null)
 			{
 				this.entity = entity;
-				this.PushViewController (EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator));
+
+				EntityViewController controller = EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
+				controller.DataViewController = this;
+
+				this.PushViewController (controller);
 			}
 		}
 
@@ -76,9 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (controller != null);
 
 			var column = this.viewLayoutController.CreateColumn ();
-
 			this.viewControllers.Push (controller);
-			
 			controller.CreateUI (column);
 		}
 
@@ -87,7 +89,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
 
 			var controller = this.viewControllers.Pop ();
-
 			controller.Dispose ();
 			this.viewLayoutController.DeleteColumn ();
 		}
@@ -100,6 +101,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.PopViewController ();
 			}
+		}
+
+		public void RebuildViewController()
+		{
+			var controller = this.viewControllers.Peek ();
+			var column = this.viewLayoutController.PeekedColumn;
+			controller.CreateUI (column);
 		}
 
 

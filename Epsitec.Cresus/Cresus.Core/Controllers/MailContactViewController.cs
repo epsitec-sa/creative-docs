@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.MailContactAccessor (this.Entity as Entities.MailContactEntity, false);
+			var accessor = new EntitiesAccessors.MailContactAccessor (null, this.Entity as Entities.MailContactEntity, false);
 
 			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
 			FrameBox group;

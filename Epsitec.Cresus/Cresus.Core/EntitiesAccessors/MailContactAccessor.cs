@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
 	public class MailContactAccessor : AbstractContactAccessor
 	{
-		public MailContactAccessor(AbstractEntity entity, bool grouped)
-			: base (entity, grouped)
+		public MailContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+			: base (parentEntities, entity, grouped)
 		{
 		}
 
@@ -118,6 +118,28 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
 			}
+		}
+
+		public override AbstractEntity Create()
+		{
+			var newEntity = new Entities.MailContactEntity ();
+
+			foreach (var role in this.MailContact.Roles)
+			{
+				newEntity.Roles.Add (role);
+			}
+
+			int index = this.ParentAbstractContacts.IndexOf (this.MailContact);
+			if (index == -1)
+			{
+				this.ParentAbstractContacts.Add (newEntity);
+			}
+			else
+			{
+				this.ParentAbstractContacts.Insert (index+1, newEntity);
+			}
+
+			return newEntity;
 		}
 
 

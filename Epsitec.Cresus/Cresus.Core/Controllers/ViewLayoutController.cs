@@ -57,6 +57,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public Widget PeekedColumn
+		{
+			get
+			{
+				return this.columns.Peek ();
+			}
+		}
+
 		private void UpdateColumnLayout()
 		{
 			this.container.Children.Clear ();
@@ -69,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				foreach (var column in this.columns.Skip (1).Reverse ())
 				{
 					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					column.PreferredWidth = 200;
+					column.PreferredWidth = 160;
 					//?column.PreferredWidth = Widgets.AbstractTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
