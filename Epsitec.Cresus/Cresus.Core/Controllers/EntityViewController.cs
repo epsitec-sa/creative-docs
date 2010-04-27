@@ -122,6 +122,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			tile.PreferredHeight = tile.ContentHeight;
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
+			tile.CreateEntity += new EventHandler (this.HandleTileCreateEntity);
+			tile.RemoveEntity += new EventHandler (this.HandleTileRemoveEntity);
 		}
 
 		/// <summary>
@@ -431,6 +433,14 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.SelectTile (tile);
 				this.Orchestrator.ShowSubView (this, controller);
 			}
+		}
+
+		private void HandleTileCreateEntity(object sender)
+		{
+		}
+
+		private void HandleTileRemoveEntity(object sender)
+		{
 		}
 
 
