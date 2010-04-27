@@ -13,13 +13,23 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
 	public class AbstractAccessor
 	{
-		public AbstractAccessor(AbstractEntity entity, bool grouped)
+		public AbstractAccessor(object parentEntities, AbstractEntity entity, bool grouped)
 		{
 			System.Diagnostics.Debug.Assert (entity != null);
+
+			this.parentEntities = parentEntities;
 			this.entity = entity;
 			this.grouped = grouped;
 		}
 
+
+		public object ParentEntities
+		{
+			get
+			{
+				return this.parentEntities;
+			}
+		}
 
 		public AbstractEntity Entity
 		{
@@ -68,6 +78,15 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 		}
 
+		public virtual AbstractEntity Create()
+		{
+			return null;
+		}
+
+		public virtual void Remove()
+		{
+		}
+
 
 		protected static string SummaryPostprocess(string summary)
 		{
@@ -82,6 +101,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
+		private readonly object parentEntities;
 		private readonly AbstractEntity entity;
 		private readonly bool grouped;
 	}

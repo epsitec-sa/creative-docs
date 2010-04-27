@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.TelecomContactAccessor (this.Entity as Entities.TelecomContactEntity, false);
+			var accessor = new EntitiesAccessors.TelecomContactAccessor (null, this.Entity as Entities.TelecomContactEntity, false);
 
 			FrameBox frame = this.CreateEditionTile (accessor, ViewControllerMode.None);
 

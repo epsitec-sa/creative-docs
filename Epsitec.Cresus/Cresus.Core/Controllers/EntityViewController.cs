@@ -19,6 +19,12 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 		}
 
+		public DataViewController DataViewController
+		{
+			get;
+			set;
+		}
+
 		public AbstractEntity Entity
 		{
 			get;
@@ -110,6 +116,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
+				EntitiesAccessor = accessor,
+				ParentEntities = accessor.ParentEntities,
 				Entity = accessor.Entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
@@ -143,6 +151,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
+				EntitiesAccessor = accessor,
+				ParentEntities = accessor.ParentEntities,
 				Entity = accessor.Entity,
 				Mode = this.Mode,
 				ChildrenMode = childrenMode,
@@ -418,6 +428,21 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private void CreateEntity(Widgets.AbstractTile tile)
+		{
+			EntitiesAccessors.AbstractAccessor accessor = tile.EntitiesAccessor;
+			accessor.Create ();
+		}
+
+		private void RemoveEntity(Widgets.AbstractTile tile)
+		{
+			EntitiesAccessors.AbstractAccessor accessor = tile.EntitiesAccessor;
+			accessor.Remove ();
+
+			this.DataViewController.RebuildViewController ();
+		}
+
+
 		private void HandleTileClicked(object sender, MessageEventArgs e)
 		{
 			//	Appelé lorsqu'une tuile quelconque est cliquée.
@@ -440,12 +465,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Appelé lorsque le bouton "+" d'une tuile est cliqué.
 			var tile = sender as Widgets.AbstractTile;
+			this.CreateEntity (tile);
 		}
 
 		private void HandleTileRemoveEntity(object sender)
 		{
 			//	Appelé lorsque le bouton "-" d'une tuile est cliqué.
 			var tile = sender as Widgets.AbstractTile;
+			this.RemoveEntity (tile);
 		}
 
 

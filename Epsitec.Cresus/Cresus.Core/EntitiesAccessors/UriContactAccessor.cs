@@ -13,8 +13,8 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
 	public class UriContactAccessor : AbstractContactAccessor
 	{
-		public UriContactAccessor(AbstractEntity entity, bool grouped)
-			: base(entity, grouped)
+		public UriContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+			: base (parentEntities, entity, grouped)
 		{
 		}
 
@@ -73,6 +73,30 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
 			}
+		}
+
+		public override AbstractEntity Create()
+		{
+			var newEntity = new Entities.UriContactEntity ();
+
+			foreach (var role in this.UriContact.Roles)
+			{
+				newEntity.Roles.Add (role);
+			}
+
+			newEntity.UriScheme = this.UriContact.UriScheme;
+
+			int index = this.ParentAbstractContacts.IndexOf (this.UriContact);
+			if (index == -1)
+			{
+				this.ParentAbstractContacts.Add (newEntity);
+			}
+			else
+			{
+				this.ParentAbstractContacts.Insert (index+1, newEntity);
+			}
+
+			return newEntity;
 		}
 
 

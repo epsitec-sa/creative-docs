@@ -108,6 +108,18 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		public EntitiesAccessors.AbstractAccessor EntitiesAccessor
+		{
+			get;
+			set;
+		}
+
+		public object ParentEntities
+		{
+			get;
+			set;
+		}
+
 		public AbstractEntity Entity
 		{
 			get;
