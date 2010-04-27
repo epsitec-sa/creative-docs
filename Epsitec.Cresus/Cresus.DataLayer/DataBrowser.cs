@@ -61,23 +61,9 @@ namespace Epsitec.Cresus.DataLayer
 		public IEnumerable<DataBrowserRow> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
 		{
 			Druid rootEntityId = example.GetEntityStructuredTypeId ();
-
-			DataQuery copy = new DataQuery ();
-
-			copy.Distinct = query.Distinct;
-
-			foreach (DataQueryColumn queryColumn in query.Columns)
-			{
-				EntityFieldPath fieldPath = queryColumn.FieldPath;
-
-				System.Diagnostics.Debug.Assert (fieldPath.IsRelative);
-				System.Diagnostics.Debug.Assert (fieldPath.ContainsIndex == false);
-
-				EntityFieldPath absPath = EntityFieldPath.CreateAbsolutePath (rootEntityId, fieldPath);
-
-				copy.Columns.Add (new DataQueryColumn (absPath, queryColumn.SortOrder));
-			}
-
+			
+			DataQuery copy = query.CreateAbsoluteCopy(rootEntityId);
+			
 			using (DbReader reader = this.CreateReader (copy))
 			{
 				if (example != null)
