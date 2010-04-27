@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 			set
 			{
-				if (this.AbstractContact.Roles == null)
+				if (this.AbstractContact.Roles != null)
 				{
 					this.AbstractContact.Roles.Clear ();
 
