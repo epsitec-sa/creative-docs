@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Database
 			this.shortAliasToColumnMap = new Dictionary<string, DbTableColumn> ();
 			this.renamedTables = new List<DbTable> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
+			this.remanedJoins = new List<DbJoin> ();
 			this.conditions = new List<DbSelectCondition> ();
 			this.orderByTableColumns = new Dictionary<string, SqlSortOrder> ();
 		}
@@ -84,6 +85,20 @@ namespace Epsitec.Cresus.Database
 			this.orderByTableColumns[shortColumnAlias] = order;
 		}
 
+		public void AddJoin(DbTableColumn leftColumn, DbTableColumn rightColumn, SqlJoinCode joinType)
+		{
+			// Hack. I do this to be able to use the columns aliases. The side effect is that their values will
+			// be returned by the query, which is not asked by the user. There is might another way to do this,
+			// I don't know.
+			string aliasColumnLeft = this.RegisterTableColumn (leftColumn);
+			string aliasColumnRight = this.RegisterTableColumn (rightColumn);
+
+			DbTableColumn renamedColumnLeft = this.FindRenamedTableColumn (aliasColumnLeft);
+			DbTableColumn renamedColumnRight = this.FindRenamedTableColumn (aliasColumnRight);
+
+			this.remanedJoins.Add (new DbJoin (renamedColumnLeft, renamedColumnRight, joinType));
+		}
+
 		public void AddCondition(DbSelectCondition condition)
 		{
 			foreach (DbTableColumn column in condition.Columns)
@@ -102,7 +117,6 @@ namespace Epsitec.Cresus.Database
 			ISqlBuilder builder = transaction.SqlBuilder;
 			SqlSelect select = this.CreateSelect ();
 
-			select.Predicate = this.SelectPredicate;
 			builder.SelectData (select);
 
 			System.Data.IDbCommand command = builder.Command;
@@ -289,10 +303,14 @@ namespace Epsitec.Cresus.Database
 
 		internal SqlSelect CreateSelect()
 		{
-			SqlSelect select = new SqlSelect ();
+			SqlSelect select = new SqlSelect ()
+			{
+				Predicate = this.SelectPredicate,
+			};
 
 			this.CreateSelectColumns (select);
 			this.CreateSelectTables (select);
+			this.CreateSelectJoins (select);
 			this.CreateSelectConditions (select);
 			
 			return select;
@@ -396,6 +414,25 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		private void CreateSelectJoins(SqlSelect select)
+		{
+			foreach (DbJoin join in this.remanedJoins)
+			{
+				select.Joins.Add (this.CreateSelectJoin (join));
+			}
+		}
+
+		private SqlJoin CreateSelectJoin(DbJoin join)
+		{
+			DbTableColumn leftColumn = join.LeftColumn;
+			DbTableColumn rightColumn = join.RightColumn;
+
+			SqlField leftField = SqlField.CreateAliasedName (leftColumn.TableAlias, leftColumn.Column.GetSqlName (), leftColumn.ColumnAlias);
+			SqlField rightField = SqlField.CreateAliasedName (rightColumn.TableAlias, rightColumn.Column.GetSqlName (), rightColumn.ColumnAlias);
+
+			return new SqlJoin (join.Type, leftField, rightField);
+		}
+
 		private void CreateSelectConditions(SqlSelect select)
 		{
 			if (this.conditions.Count > 0)
@@ -436,6 +473,7 @@ namespace Epsitec.Cresus.Database
 		private readonly Dictionary<string, DbTableColumn> shortAliasToColumnMap;
 		private readonly List<DbTable> renamedTables;
 		private readonly List<DbTableColumn> renamedTableColumns;
+		private readonly List<DbJoin> remanedJoins;
 		private readonly List<DbSelectCondition> conditions;
 		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;
 		private System.Data.IDataReader dataReader;

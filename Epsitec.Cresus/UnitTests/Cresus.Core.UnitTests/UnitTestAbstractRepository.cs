@@ -44,26 +44,28 @@ namespace Epsitec.Cresus.Core
 
 				UriSchemeEntity mailScheme = this.CreateUriScheme(dataContext, "mailto:", "email");
 				
-				UriContactEntity contact = this.CreateUriContact(dataContext, "coucou@blabla.com", mailScheme);
+				UriContactEntity contactAlfred = this.CreateUriContact(dataContext, "alfred@coucou.com", mailScheme);
+				UriContactEntity contactGertrude = this.CreateUriContact (dataContext, "gertrude@coucou.com", mailScheme);
+				UriContactEntity contactHans = this.CreateUriContact (dataContext, "hans@coucou.com", mailScheme);
 
 				LanguageEntity french = this.CreateLanguage (dataContext, "Fr", "French");
-				//LanguageEntity german = this.CreateLanguage (dataContext, "Ge", "German");
+				LanguageEntity german = this.CreateLanguage (dataContext, "Ge", "German");
 
 				PersonGenderEntity male = this.CreateGender (dataContext, "M", "Male");
-				//PersonGenderEntity female = this.CreateGender (dataContext, "F", "Female");
+				PersonGenderEntity female = this.CreateGender (dataContext, "F", "Female");
 
 				PersonTitleEntity mister = this.CreateTitle (dataContext, "Mister", "M");
-				//PersonTitleEntity lady = this.CreateTitle (dataContext, "Lady", "L");
+				PersonTitleEntity lady = this.CreateTitle (dataContext, "Lady", "L");
 
 				LegalPersonTypeEntity sa = this.CreateLegalPersonType (dataContext, "Société anonyme", "SA");
-				//LegalPersonTypeEntity sarl = this.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
+				LegalPersonTypeEntity sarl = this.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
 
-				NaturalPersonEntity alfred = this.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, mister, male, contact);
-				//NaturalPersonEntity gertrude = this.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female);
-				//NaturalPersonEntity hans = this.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, male);
+				NaturalPersonEntity alfred = this.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, mister, male, contactAlfred);
+				NaturalPersonEntity gertrude = this.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female, contactGertrude);
+				NaturalPersonEntity hans = this.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, male, contactHans);
 
-				//LegalPersonEntity papetVaudois = this.CreateLegalPerson (dataContext, "Papet Vaudois SA", sa, french);
-				//LegalPersonEntity bratwurst = this.CreateLegalPerson (dataContext, "Bratwurst SARL", sarl, german);
+				LegalPersonEntity papetVaudois = this.CreateLegalPerson (dataContext, "Papet Vaudois SA", sa, french);
+				LegalPersonEntity bratwurst = this.CreateLegalPerson (dataContext, "Bratwurst SARL", sarl, german);
 
 				dataContext.SaveChanges ();
 			}
@@ -84,7 +86,7 @@ namespace Epsitec.Cresus.Core
 
 				AbstractPersonEntity personExample = new AbstractPersonEntity();
 
-				AbstractPersonEntity person = abstractPersonRepository.GetEntityByExample (personExample);
+				//AbstractPersonEntity person = abstractPersonRepository.GetEntityByExample (personExample);
 				//NaturalPersonEntity alfred = naturalPersonRepository.GetEntityByExample (alfredExample);
 			}
 		}

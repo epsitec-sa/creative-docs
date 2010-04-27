@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.DataLayer
 				EntityFieldPath leftPath = join.LeftColumn.FieldPath;
 				EntityFieldPath rigthPath = join.RightColumn.FieldPath;
 
-				SqlJoinCode kind = join.Kind;
+				SqlJoinCode kind = join.Type;
 
 				absoluteCopy.Joins.Add (new DataQueryJoin (new DataQueryColumn (leftPath), new DataQueryColumn (rigthPath), kind));
 			}

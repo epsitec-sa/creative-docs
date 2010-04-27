@@ -5,15 +5,7 @@ namespace Epsitec.Cresus.DataLayer
 
 	public class DataQueryJoin
 	{
-
-
-		public DataQueryJoin(DataQueryColumn leftColumn, DataQueryColumn rightColumn)
-			: this (leftColumn, rightColumn, SqlJoinCode.Inner)
-		{
-
-		}
-
-		public DataQueryJoin(DataQueryColumn leftColumn, DataQueryColumn rightColumn, SqlJoinCode kind)
+		public DataQueryJoin(DataQueryColumn leftColumn, DataQueryColumn rightColumn, SqlJoinCode type)
 		{
 			if (leftColumn.FieldPath.IsRelative || rightColumn.FieldPath.IsRelative)
 			{
@@ -23,7 +15,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.LeftColumn = leftColumn;
 			this.RightColumn = rightColumn;
 
-			this.Kind = kind;
+			this.Type = type;
 		}
 
 		public DataQueryColumn LeftColumn
@@ -38,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer
 			private set;
 		}
 
-		public SqlJoinCode Kind
+		public SqlJoinCode Type
 		{
 			get;
 			private set;

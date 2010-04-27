@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					Druid currentId = realEntityId;
 
-					while (currentId != baseEntityId)
+					while (currentId != askedEntityId)
 					{
 						StructuredType subType = this.entityContext.GetStructuredType(currentId) as StructuredType;
 
@@ -154,7 +154,14 @@ namespace Epsitec.Cresus.DataLayer
 						currentId = subType.BaseTypeId;
 					}
 
-					this.DeserializeEntityLocal (entity, dataRow, baseEntityId);
+					while (currentId.IsValid)
+					{
+						StructuredType subType = this.entityContext.GetStructuredType (currentId) as StructuredType;
+
+						this.DeserializeEntityLocal (entity, dataRow, currentId);
+
+						currentId = subType.BaseTypeId;
+					}
 				}
 			}
 
