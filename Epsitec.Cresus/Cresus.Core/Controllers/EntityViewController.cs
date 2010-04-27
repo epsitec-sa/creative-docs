@@ -98,6 +98,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="accessor">The accessor.</param>
 		/// <param name="groupIndex">Index of the group.</param>
 		/// <param name="compactFollower">if set to <c>true</c> [compact follower].</param>
+		/// <param name="enableCreateAndRemoveButton">if set to <c>true</c> [enable create and remove button].</param>
 		/// <param name="childrenMode">The children mode.</param>
 		protected void CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
 		{
@@ -437,10 +438,14 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileCreateEntity(object sender)
 		{
+			//	Appelé lorsque le bouton "+" d'une tuile est cliqué.
+			var tile = sender as Widgets.AbstractTile;
 		}
 
 		private void HandleTileRemoveEntity(object sender)
 		{
+			//	Appelé lorsque le bouton "-" d'une tuile est cliqué.
+			var tile = sender as Widgets.AbstractTile;
 		}
 
 
