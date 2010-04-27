@@ -53,7 +53,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (entity != null)
 			{
 				this.entity = entity;
-				this.PushViewController (this.entity);
+
+				EntityViewController controller = EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
+				this.PushViewController (controller);
 			}
 		}
 
@@ -70,14 +72,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-
-		public void PushViewController(AbstractEntity entity)
-		{
-			EntityViewController controller = EntityViewController.CreateViewController ("ViewController", entity, ViewControllerMode.Compact, this.orchestrator);
-			controller.DataViewController = this;
-
-			this.PushViewController (controller);
-		}
 
 		public void PushViewController(CoreViewController controller)
 		{
@@ -134,6 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void SelectViewController(CoreViewController parentController, CoreViewController selectedController)
 		{
 			//	Parmi toutes les tuiles d'un contrôleur parent, sélectionne celle qui correspond au contrôleur de droite.
+			//	Si selectedController = null, on désélectionne tout.
 			var parent = parentController as EntityViewController;
 			System.Diagnostics.Debug.Assert (parent != null);
 
