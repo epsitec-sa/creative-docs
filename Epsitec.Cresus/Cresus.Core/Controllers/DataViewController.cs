@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		public void RebuildViewController()
 		{
 			var controller = this.viewControllers.Peek ();
-			var column = this.viewLayoutController.PeekedColumn;
+			var column = this.viewLayoutController.LastColumn;
 			controller.CreateUI (column);
 		}
 
