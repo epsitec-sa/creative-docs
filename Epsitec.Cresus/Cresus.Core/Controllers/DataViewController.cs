@@ -84,7 +84,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (controller != null);
 
 			CoreViewController parent = null;
-
 			if (this.viewControllers.Count != 0)
 			{
 				parent = this.viewControllers.Peek ();
@@ -134,6 +133,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SelectViewController(CoreViewController parentController, CoreViewController selectedController)
 		{
+			//	Parmi toutes les tuiles d'un contrôleur parent, sélectionne celle qui correspond au contrôleur de droite.
 			var parent = parentController as EntityViewController;
 			System.Diagnostics.Debug.Assert (parent != null);
 

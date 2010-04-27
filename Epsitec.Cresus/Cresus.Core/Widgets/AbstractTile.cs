@@ -301,12 +301,23 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void HandleButtonCreateEntityClicked(object sender, MessageEventArgs e)
 		{
-			this.OnCreateEntity ();
+			//	Parfois, lorsque la touche Tab est pressée, ce handler est appelé suite à un Widget.SimulateClicked(),
+			//	ce qui ne devrait pas arriver. Pour palier à cette erreur, je teste la visibilité du widget. En effet,
+			//	un vrai événement ne peut pas subvenir si le bouton est caché.
+			//	TODO: Pour Pierre, à corriger !
+			if (this.buttonCreateEntity.Visibility)
+			{
+				this.OnCreateEntity ();
+			}
 		}
 
 		private void HandleButtonRemoveEntityClicked(object sender, MessageEventArgs e)
 		{
-			this.OnRemoveEntity ();
+			//	Voir remarque dans HandleButtonCreateEntityClicked !
+			if (this.buttonRemoveEntity.Visibility)
+			{
+				this.OnRemoveEntity ();
+			}
 		}
 
 
