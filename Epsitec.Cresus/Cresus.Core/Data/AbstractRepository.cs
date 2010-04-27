@@ -26,36 +26,14 @@ namespace Epsitec.Cresus.Core.Data
 
 		public DbInfrastructure DbInfrastructure
 		{
-			get
-			{
-				return this.dbInfrastructure;
-			}
-			private set
-			{
-				if (value == null)
-				{
-					throw new System.ArgumentNullException ();
-				}
-
-				this.dbInfrastructure = value;
-			}
+			get;
+			private set;
 		}
 
 		public DataContext DataContext
 		{
-			get
-			{
-				return dataContext;
-			}
-			private set
-			{
-				if (value == null)
-				{
-					throw new System.ArgumentNullException ();
-				}
-
-				this.dataContext = value;
-			}
+			get;
+			private set;
 		}
 
 		public EntityType GetEntityByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
@@ -65,7 +43,6 @@ namespace Epsitec.Cresus.Core.Data
 
 		public IEnumerable<EntityType> GetEntitiesByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
 		{
-			// TODO Add join management, for sub typing stuff and for examples with relations.
 			EntityType dummyEntity = this.DataContext.EntityContext.CreateEmptyEntity<EntityType> ();
 			Druid askedEntityId = dummyEntity.GetEntityStructuredTypeId ();
 			Druid baseEntityId =  this.DataContext.EntityContext.GetBaseEntityId (askedEntityId);
@@ -77,11 +54,13 @@ namespace Epsitec.Cresus.Core.Data
 			{
 				using (DataTable dataTable = this.BuildDataTable (baseEntityId))
 				{
+					EntityFieldPath typePath = EntityFieldPath.CreateAbsolutePath (baseEntityId, AbstractRepository.FieldPathType);
+
 					foreach (DataBrowserRow dataBrowserRow in dataBrowser.QueryByExample (transaction, example, dataQuery))
 					{
 						DbKey rowKey = dataBrowserRow.Keys[0];
-						Druid realEntityTypeId = Druid.FromLong ((long) dataBrowserRow[AbstractRepository.InstanceTypeFieldPath]);
-						DataRow dataRow = this.BuildDataRow (dataTable, dataBrowserRow);
+						Druid realEntityTypeId = Druid.FromLong ((long) dataBrowserRow[typePath]);
+						DataRow dataRow = this.BuildDataRow (dataTable, dataBrowserRow, typePath);
 
 						yield return this.DataContext.ResolveEntity (realEntityTypeId, askedEntityId, baseEntityId, rowKey, dataRow) as EntityType;
 					}
@@ -93,19 +72,54 @@ namespace Epsitec.Cresus.Core.Data
 
 		private DataQuery BuildQuery(Druid entityId)
 		{
-			DataQuery dataQuery = new DataQuery ();
+			DataQuery dataQuery = new DataQuery ()
+			{
+				Distinct = true,
+			};
+
+			foreach (DataQueryColumn dataQueryColumn in this.BuildQueryColumns (entityId))
+			{
+				dataQuery.Columns.Add (dataQueryColumn);
+			}
+
+			foreach (DataQueryJoin dataQueryJoin in this.BuildQueryJoins (entityId))
+			{
+				dataQuery.Joins.Add (dataQueryJoin);
+			}
 			
+			return dataQuery;
+		}
+
+		private IEnumerable<DataQueryColumn> BuildQueryColumns(Druid entityId)
+		{
 			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
 			{
 				if (field.Relation == FieldRelation.None)
 				{
-					dataQuery.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse (field.Id)));
+					yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (entityId, field.Id));
 				}
 			}
 
-			dataQuery.Columns.Add (new DataQueryColumn (AbstractRepository.InstanceTypeFieldPath));
+			yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (entityId, AbstractRepository.FieldPathType));
+		}
 
-			return dataQuery;
+		private IEnumerable<DataQueryJoin> BuildQueryJoins(Druid entityId)
+		{
+			Druid leftId = entityId;
+			Druid rightId = (this.DataContext.EntityContext.GetStructuredType (entityId) as StructuredType).BaseTypeId;
+
+			while (rightId.IsValid)
+			{
+				DataQueryColumn left = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (leftId,  AbstractRepository.FieldPathId));
+				DataQueryColumn right = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (rightId,  AbstractRepository.FieldPathId));
+
+				SqlJoinCode kind = SqlJoinCode.Inner;
+
+				yield return new DataQueryJoin (left, right, kind);
+
+				leftId = rightId;
+				rightId = (this.DataContext.EntityContext.GetStructuredType (entityId) as StructuredType).BaseTypeId;
+			}
 		}
 
 		private DataTable BuildDataTable(Druid entityId)
@@ -120,29 +134,26 @@ namespace Epsitec.Cresus.Core.Data
 			return dataTable;
 		}
 
-		private DataRow BuildDataRow(DataTable dataTable, DataBrowserRow dataBrowserRow)
+		private DataRow BuildDataRow(DataTable dataTable, DataBrowserRow dataBrowserRow, EntityFieldPath typePath)
 		{
 			DataRow dataRow = dataTable.NewRow ();
 
 			foreach (DataQueryColumn column in dataBrowserRow.Query.Columns)
 			{
-				if (column.FieldPath != AbstractRepository.InstanceTypeFieldPath)
+				if (column.FieldPath != typePath)
 				{
-					string name = column.FieldPath.Fields.Last ();
 					object value = dataBrowserRow[column];
 
-					dataRow[this.DataContext.SchemaEngine.GetDataColumnName (name)] = value;
+					dataRow[this.DataContext.SchemaEngine.GetDataColumnName (column.FieldPath.Fields.Last ())] = value;
 				}
 			}
 
 			return dataRow;
 		}
 
-		private DbInfrastructure dbInfrastructure;
+		private static EntityFieldPath FieldPathId = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnId + "]");
 
-		private DataContext dataContext;
-
-		private static EntityFieldPath InstanceTypeFieldPath = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]");
+		private static EntityFieldPath FieldPathType = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]");
 
 	}
 

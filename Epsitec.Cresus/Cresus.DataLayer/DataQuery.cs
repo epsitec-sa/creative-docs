@@ -2,6 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support;
+
+using Epsitec.Cresus.Database;
 
 using System.Collections.Generic;
 
@@ -19,6 +22,7 @@ namespace Epsitec.Cresus.DataLayer
 		public DataQuery()
 		{
 			this.columns = new List<DataQueryColumn> ();
+			this.Joins = new List<DataQueryJoin> ();
 		}
 
 		/// <summary>
@@ -28,6 +32,7 @@ namespace Epsitec.Cresus.DataLayer
 		protected DataQuery(DataQuery originalQuery)
 		{
 			this.columns  = originalQuery.columns;
+			this.Joins = originalQuery.Joins;
 			this.Distinct = originalQuery.Distinct;
 		}
 
@@ -43,6 +48,13 @@ namespace Epsitec.Cresus.DataLayer
 				return this.columns;
 			}
 		}
+
+		public IList<DataQueryJoin> Joins
+		{
+			get;
+			private set;
+		}
+
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="DataQuery"/>
@@ -67,6 +79,39 @@ namespace Epsitec.Cresus.DataLayer
 		public int IndexOf(EntityFieldPath path)
 		{
 			return this.columns.FindIndex (column => column.FieldPath.Equals (path));
+		}
+
+
+		public DataQuery CreateAbsoluteCopy(Druid entityId)
+		{
+			DataQuery absoluteCopy = new DataQuery ()
+			{
+				Distinct = this.Distinct,
+			};
+
+			foreach (DataQueryColumn column in this.Columns)
+			{
+				EntityFieldPath fieldPath = column.FieldPath;
+
+				if (fieldPath.IsRelative)
+				{
+					fieldPath = EntityFieldPath.CreateAbsolutePath (entityId, fieldPath);
+				}
+
+				absoluteCopy.Columns.Add (new DataQueryColumn (fieldPath, column.SortOrder));
+			}
+
+			foreach (DataQueryJoin join in this.Joins)
+			{
+				EntityFieldPath leftPath = join.LeftColumn.FieldPath;
+				EntityFieldPath rigthPath = join.RightColumn.FieldPath;
+
+				SqlJoinCode kind = join.Kind;
+
+				absoluteCopy.Joins.Add (new DataQueryJoin (new DataQueryColumn (leftPath), new DataQueryColumn (rigthPath), kind));
+			}
+
+			return absoluteCopy;
 		}
 
 		
