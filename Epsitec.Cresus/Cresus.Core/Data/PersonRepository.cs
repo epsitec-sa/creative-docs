@@ -11,7 +11,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Data
 {
 	
-	class PersonRepository : AbstractRepository
+	class PersonRepository : Repository
 	{
 
 		public PersonRepository(DbInfrastructure datadbInfrastructure, DataContext dataContext)

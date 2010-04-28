@@ -130,7 +130,6 @@ namespace Epsitec.Cresus.DataLayer
 
 		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, Druid baseEntityId, DbKey rowKey, System.Data.DataRow dataRow)
 		{
-			// TODO Argument check.
 			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, realEntityId, baseEntityId);
 			
 			if (entity == null)
@@ -145,6 +144,7 @@ namespace Epsitec.Cresus.DataLayer
 
 					while (currentId != askedEntityId)
 					{
+						// TODO Use proxy instead of values obtained with a query.
 						StructuredType subType = this.entityContext.GetStructuredType(currentId) as StructuredType;
 
 						System.Data.DataRow currentDataRow = this.LoadDataRow (rowKey, currentId);
