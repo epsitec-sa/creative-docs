@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Epsitec.Cresus.Core.Data
 {
 	
-	class GenericRepository<EntityType> : AbstractRepository where EntityType : AbstractEntity, new ()
+	class GenericRepository<EntityType> : Repository where EntityType : AbstractEntity, new ()
 	{
 
 		public GenericRepository(DbInfrastructure dbInfrastructure, DataContext dataContext)

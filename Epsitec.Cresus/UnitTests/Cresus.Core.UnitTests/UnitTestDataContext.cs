@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core
 
 		private IEnumerable<DbKey> FindCountryEntities(string code)
 		{
-			DataBrowser browser = new DataBrowser (UnitTestDataContext.infrastructure);
+			DataBrowser browser = new DataBrowser (UnitTestDataContext.infrastructure, new DataContext (UnitTestDataContext.infrastructure));
 			DataQuery query = new DataQuery ();
 
 			var entity = new Entities.CountryEntity ();
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core
 			entity.Code = code;
 			query.Columns.Add (new DataQueryColumn (EntityFieldPath.Parse ("[L0A2]")));
 
-			using (DbTransaction transaction = browser.Infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			using (DbTransaction transaction = browser.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
 				{

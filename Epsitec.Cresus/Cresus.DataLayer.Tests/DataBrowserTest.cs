@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			System.Diagnostics.Debug.WriteLine ("Query by example");
 
-			DataBrowser browser = new DataBrowser (this.infrastructure);
+			DataBrowser browser = new DataBrowser (this.infrastructure, new DataContext (this.infrastructure));
 			List<string> lines = new List<string> ();
 
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction ())

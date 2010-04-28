@@ -9,44 +9,166 @@ using Epsitec.Cresus.Database;
 
 using System.Linq;
 using System.Collections.Generic;
+using System.Data;
 
 namespace Epsitec.Cresus.DataLayer
 {
+	
 	/// <summary>
 	/// The <c>DataBrowser</c> class provides sequential read access to the
 	/// database.
 	/// </summary>
 	public class DataBrowser
 	{
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataBrowser"/> class.
 		/// </summary>
 		/// <param name="infrastructure">The database infrastructure.</param>
-		public DataBrowser(DbInfrastructure infrastructure)
+		public DataBrowser(DbInfrastructure infrastructure, DataContext dataContext)
 		{
-			this.infrastructure = infrastructure;
-			this.schemaEngine   = SchemaEngine.GetSchemaEngine (this.infrastructure) ?? new SchemaEngine (this.infrastructure);
+			this.DbInfrastructure = infrastructure;
+			this.DataContext = dataContext;
+			this.SchemaEngine   = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
 		}
 
-
-		/// <summary>
-		/// Gets the associated schema engine.
-		/// </summary>
-		/// <value>The schema engine.</value>
 		public SchemaEngine SchemaEngine
 		{
-			get
+			get;
+			private set;
+		}
+
+		public DataContext DataContext
+		{
+			get;
+			private set;
+		}
+
+		public DbInfrastructure DbInfrastructure
+		{
+			get;
+			private set;
+		}
+
+
+		public IEnumerable<EntityType> QueryByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
+		{
+			Druid EntityId = this.DataContext.EntityContext.CreateEmptyEntity<EntityType> ().GetEntityStructuredTypeId ();
+			Druid baseEntityId =  this.DataContext.EntityContext.GetBaseEntityId (EntityId);
+
+			DataQuery dataQuery = this.BuildQuery (EntityId);
+			DataTable dataTable = this.BuildDataTable (EntityId);
+
+			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				return this.schemaEngine;
+				EntityFieldPath typePath = EntityFieldPath.CreateAbsolutePath (baseEntityId, DataBrowser.FieldPathType);
+
+				foreach (DataBrowserRow dataBrowserRow in this.QueryByExample (transaction, example, dataQuery))
+				{
+					DbKey rowKey = dataBrowserRow.Keys[0];
+					Druid realEntityTypeId = Druid.FromLong ((long) dataBrowserRow[typePath]);
+					DataRow dataRow = this.BuildDataRow (dataTable, dataBrowserRow, typePath);
+
+					yield return this.DataContext.ResolveEntity (realEntityTypeId, EntityId, baseEntityId, rowKey, dataRow) as EntityType;
+				}
+
+				transaction.Commit ();
+			}
+
+			dataTable.Dispose ();
+		}
+
+		private DataQuery BuildQuery(Druid entityId)
+		{
+			DataQuery dataQuery = new DataQuery ()
+			{
+				Distinct = true,
+			};
+
+			foreach (DataQueryColumn dataQueryColumn in this.BuildQueryColumns (entityId))
+			{
+				dataQuery.Columns.Add (dataQueryColumn);
+			}
+
+			foreach (DataQueryJoin dataQueryJoin in this.BuildQueryJoins (entityId))
+			{
+				dataQuery.Joins.Add (dataQueryJoin);
+			}
+
+			return dataQuery;
+		}
+
+		private IEnumerable<DataQueryColumn> BuildQueryColumns(Druid entityId)
+		{
+			Druid currentId = entityId;
+
+			while (currentId.IsValid)
+			{
+				foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (currentId))
+				{
+					if (field.Relation == FieldRelation.None && field.Membership == FieldMembership.Local && field.Expression == null)
+					{
+						yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (currentId, field.Id));
+					}
+				}
+
+				Druid nextId = (this.DataContext.EntityContext.GetStructuredType (currentId) as StructuredType).BaseTypeId;
+
+				if (!nextId.IsValid)
+				{
+					yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (currentId, DataBrowser.FieldPathType));
+				}
+
+				currentId = nextId;
 			}
 		}
 
-		public DbInfrastructure Infrastructure
+		private IEnumerable<DataQueryJoin> BuildQueryJoins(Druid entityId)
 		{
-			get
+			Druid leftId = entityId;
+			Druid rightId = (this.DataContext.EntityContext.GetStructuredType (entityId) as StructuredType).BaseTypeId;
+
+			while (rightId.IsValid)
 			{
-				return this.infrastructure;
+				DataQueryColumn left = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (leftId, DataBrowser.FieldPathId));
+				DataQueryColumn right = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (rightId, DataBrowser.FieldPathId));
+
+				SqlJoinCode type = SqlJoinCode.Inner;
+
+				yield return new DataQueryJoin (left, right, type);
+
+				leftId = rightId;
+				rightId = (this.DataContext.EntityContext.GetStructuredType (rightId) as StructuredType).BaseTypeId;
 			}
+		}
+
+		private DataTable BuildDataTable(Druid entityId)
+		{
+			DataTable dataTable = new DataTable ();
+
+			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
+			{
+				dataTable.Columns.Add (new DataColumn (this.DataContext.SchemaEngine.GetDataColumnName (field.Id)));
+			}
+
+			return dataTable;
+		}
+
+		private DataRow BuildDataRow(DataTable dataTable, DataBrowserRow dataBrowserRow, EntityFieldPath typePath)
+		{
+			DataRow dataRow = dataTable.NewRow ();
+
+			foreach (DataQueryColumn column in dataBrowserRow.Query.Columns)
+			{
+				if (column.FieldPath != typePath)
+				{
+					object value = dataBrowserRow[column];
+
+					dataRow[this.DataContext.SchemaEngine.GetDataColumnName (column.FieldPath.Fields.Last ())] = value;
+				}
+			}
+
+			return dataRow;
 		}
 
 
@@ -90,7 +212,7 @@ namespace Epsitec.Cresus.DataLayer
 								continue;
 							}
 
-							DbSelectCondition condition   = new DbSelectCondition (this.infrastructure.Converter);
+							DbSelectCondition condition   = new DbSelectCondition (this.DbInfrastructure.Converter);
 							EntityFieldPath   fieldPath   = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
 							DbTableColumn     tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
 
@@ -164,25 +286,25 @@ namespace Epsitec.Cresus.DataLayer
 			switch (searchBehavior)
 			{
 				case StringSearchBehavior.ExactMatch:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
 					break;
 
 				case StringSearchBehavior.WildcardMatch:
-					pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
+					pattern = DbSqlStandard.ConvertToCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
 					break;
 
 				case StringSearchBehavior.MatchStart:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
 					pattern = string.Concat (pattern, "%");
 					break;
 
 				case StringSearchBehavior.MatchEnd:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
 					pattern = string.Concat ("%", pattern);
 					break;
 
 				case StringSearchBehavior.MatchAnywhere:
-					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.infrastructure.DefaultSqlBuilder, searchPattern);
+					pattern = DbSqlStandard.EscapeCompareLikeWildcards (this.DbInfrastructure.DefaultSqlBuilder, searchPattern);
 					pattern = string.Concat ("%", pattern, "%");
 					break;
 
@@ -201,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer
 		/// <returns>The database reader.</returns>
 		private DbReader CreateReader(DataQuery query)
 		{
-			DbReader reader = new DbReader (this.infrastructure);
+			DbReader reader = new DbReader (this.DbInfrastructure);
 
 			foreach (DataQueryColumn queryColumn in query.Columns)
 			{
@@ -271,8 +393,8 @@ namespace Epsitec.Cresus.DataLayer
 			Druid id = dataEntityId;
 		again:
 			DbTableColumn tableColumn;
-			DbTable  tableDef   = this.schemaEngine.FindTableDefinition (id);
-			string   columnName = this.schemaEngine.GetDataColumnName (dataFieldId);
+			DbTable  tableDef   = this.SchemaEngine.FindTableDefinition (id);
+			string   columnName = this.SchemaEngine.GetDataColumnName (dataFieldId);
 			DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
 
 			if (columnDef == null)
@@ -306,8 +428,10 @@ namespace Epsitec.Cresus.DataLayer
 			return tableColumn;
 		}
 
-		
-		readonly DbInfrastructure				infrastructure;
-		readonly SchemaEngine					schemaEngine;
+		private static EntityFieldPath FieldPathId = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnId + "]");
+
+		private static EntityFieldPath FieldPathType = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]");
+
 	}
+
 }

@@ -112,7 +112,7 @@
     <Compile Include="EntitiesAccessors\NaturalPersonAccessor.cs" />
     <Compile Include="EntitiesAccessors\MailContactAccessor.cs" />
     <Compile Include="Misc.cs" />
-    <Compile Include="Data\AbstractRepository.cs" />
+    <Compile Include="Data\Repository.cs" />
     <Compile Include="Data\CountryRepository.cs" />
     <Compile Include="Data\PersonRepository.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
