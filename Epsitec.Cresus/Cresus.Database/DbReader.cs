@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.Database
 		/// TO MALFUNCTION.
 		/// </summary>
 		/// <remarks>
-		/// Given how this class and how FirebirdSqlBuilder are implemented, you must add the joins after
-		/// you have added all the query fields. Moreover, say that the tables targeted by the query fields
+		/// Given how this class and how FirebirdSqlBuilder are implemented, it is better to add the joins before
+		/// you add the query fields. If you don't, say that the tables targeted by the query fields
 		/// appear in a given order, then the tables targeted by the joins must appear in the exact same
 		/// order. If some joins target tables that are not targeted by the query fields, they can be added
 		/// in any order, given that they are added after all the joins which target only tables targeted by

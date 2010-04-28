@@ -13,13 +13,14 @@ using System.Data;
 
 namespace Epsitec.Cresus.DataLayer
 {
-	
+
 	/// <summary>
 	/// The <c>DataBrowser</c> class provides sequential read access to the
 	/// database.
 	/// </summary>
 	public class DataBrowser
 	{
+
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DataBrowser"/> class.
@@ -28,21 +29,10 @@ namespace Epsitec.Cresus.DataLayer
 		public DataBrowser(DbInfrastructure infrastructure, DataContext dataContext)
 		{
 			this.DbInfrastructure = infrastructure;
+			this.SchemaEngine = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
 			this.DataContext = dataContext;
-			this.SchemaEngine   = SchemaEngine.GetSchemaEngine (this.DbInfrastructure) ?? new SchemaEngine (this.DbInfrastructure);
 		}
 
-		public SchemaEngine SchemaEngine
-		{
-			get;
-			private set;
-		}
-
-		public DataContext DataContext
-		{
-			get;
-			private set;
-		}
 
 		public DbInfrastructure DbInfrastructure
 		{
@@ -51,25 +41,40 @@ namespace Epsitec.Cresus.DataLayer
 		}
 
 
+		public SchemaEngine SchemaEngine
+		{
+			get;
+			private set;
+		}
+
+
+		public DataContext DataContext
+		{
+			get;
+			private set;
+		}
+
+
 		public IEnumerable<EntityType> QueryByExample<EntityType>(EntityType example) where EntityType : AbstractEntity, new ()
 		{
-			Druid EntityId = this.DataContext.EntityContext.CreateEmptyEntity<EntityType> ().GetEntityStructuredTypeId ();
-			Druid baseEntityId =  this.DataContext.EntityContext.GetBaseEntityId (EntityId);
-
-			DataQuery dataQuery = this.BuildQuery (EntityId);
-			DataTable dataTable = this.BuildDataTable (EntityId);
+			Druid entityId = this.DataContext.EntityContext.CreateEmptyEntity<EntityType> ().GetEntityStructuredTypeId ();
+			
+			DataTable dataTable = this.BuildDataTable (entityId);
 
 			using (DbTransaction transaction = this.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				EntityFieldPath typePath = EntityFieldPath.CreateAbsolutePath (baseEntityId, DataBrowser.FieldPathType);
-
-				foreach (DataBrowserRow dataBrowserRow in this.QueryByExample (transaction, example, dataQuery))
+				using (DbReader reader = this.CreateReader (entityId, example))
 				{
-					DbKey rowKey = dataBrowserRow.Keys[0];
-					Druid realEntityTypeId = Druid.FromLong ((long) dataBrowserRow[typePath]);
-					DataRow dataRow = this.BuildDataRow (dataTable, dataBrowserRow, typePath);
+					reader.CreateDataReader (transaction);
+					
+					foreach (var row in reader.Rows)
+					{
+						DbKey rowKey = this.ExtractDbKey (row);
+						Druid realEntityId = this.ExtractRealEntityId (row);
+						DataRow dataRow = this.ExtractDataRow (dataTable, row);
 
-					yield return this.DataContext.ResolveEntity (realEntityTypeId, EntityId, baseEntityId, rowKey, dataRow) as EntityType;
+						yield return this.DataContext.ResolveEntity (realEntityId, entityId, rowKey, dataRow) as EntityType;
+					}
 				}
 
 				transaction.Commit ();
@@ -78,27 +83,89 @@ namespace Epsitec.Cresus.DataLayer
 			dataTable.Dispose ();
 		}
 
-		private DataQuery BuildQuery(Druid entityId)
+
+		private DataTable BuildDataTable(Druid entityId)
 		{
-			DataQuery dataQuery = new DataQuery ()
-			{
-				Distinct = true,
-			};
+			DataTable dataTable = new DataTable ();
 
-			foreach (DataQueryColumn dataQueryColumn in this.BuildQueryColumns (entityId))
+			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
 			{
-				dataQuery.Columns.Add (dataQueryColumn);
+				if (field.Relation == FieldRelation.None && field.Expression == null)
+				{
+					dataTable.Columns.Add (new DataColumn (this.DataContext.SchemaEngine.GetDataColumnName (field.Id)));
+				}
 			}
 
-			foreach (DataQueryJoin dataQueryJoin in this.BuildQueryJoins (entityId))
-			{
-				dataQuery.Joins.Add (dataQueryJoin);
-			}
-
-			return dataQuery;
+			return dataTable;
 		}
 
-		private IEnumerable<DataQueryColumn> BuildQueryColumns(Druid entityId)
+
+		private DataRow ExtractDataRow(DataTable dataTable, DbReader.RowData row)
+		{
+			DataRow dataRow = dataTable.NewRow ();
+
+			for (int i = 0; i < dataTable.Columns.Count; i++)
+			{
+				string name = dataTable.Columns[i].ColumnName;
+				object value = row.Values[i];
+
+				dataRow[name] = value;
+			}
+
+			return dataRow;
+		}
+
+
+		private Druid ExtractRealEntityId(DbReader.RowData row)
+		{
+			long realEntityIdAsLong = (long) row.Values.Last ();
+
+			return Druid.FromLong (realEntityIdAsLong);
+		}
+
+
+		private DbKey ExtractDbKey(DbReader.RowData row)
+		{
+			return row.Keys[0];
+		}
+
+
+		private DbReader CreateReader(Druid entityId, AbstractEntity example)
+		{
+			DbReader reader = new DbReader (this.DbInfrastructure)
+			{
+				SelectPredicate = SqlSelectPredicate.Distinct,
+				IncludeRowKeys  = true,
+			};
+
+			this.AddSubtypingJoins (reader, entityId);
+			this.AddQueryFields (reader, entityId);
+			this.AddCondition (reader, entityId, example);
+
+			return reader;
+		}
+
+
+		private void AddSubtypingJoins(DbReader reader, Druid entityId)
+		{
+			Druid subEntityId = entityId;
+			Druid superEntityId = (this.DataContext.EntityContext.GetStructuredType (entityId) as StructuredType).BaseTypeId;
+
+			while (superEntityId.IsValid)
+			{
+				DbTableColumn subEntityColumn = this.GetTableColumn (subEntityId, DataBrowser.idFieldPath);
+				DbTableColumn superEntityColumn = this.GetTableColumn (superEntityId, DataBrowser.idFieldPath);
+				SqlJoinCode type = SqlJoinCode.Inner;
+
+				reader.AddJoin (subEntityColumn, superEntityColumn, type);
+
+				subEntityId = superEntityId;
+				superEntityId = (this.DataContext.EntityContext.GetStructuredType (superEntityId) as StructuredType).BaseTypeId;
+			}
+		}
+
+
+		private void AddQueryFields(DbReader reader, Druid entityId)
 		{
 			Druid currentId = entityId;
 
@@ -108,7 +175,25 @@ namespace Epsitec.Cresus.DataLayer
 				{
 					if (field.Relation == FieldRelation.None && field.Membership == FieldMembership.Local && field.Expression == null)
 					{
-						yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (currentId, field.Id));
+						DbTableColumn tableColumn = this.GetTableColumn (currentId, EntityFieldPath.CreateRelativePath (field.Id));
+						reader.AddQueryField (tableColumn);
+
+						// TODO Find a way to give sorting informations. Below is the way it was done
+						// before.
+
+						//switch (queryColumn.SortOrder)
+						//{
+						//    case DataQuerySortOrder.None:
+						//        break;
+						//    case DataQuerySortOrder.Ascending:
+						//        reader.AddSortOrder (tableColumn, SqlSortOrder.Ascending);
+						//        break;
+						//    case DataQuerySortOrder.Descending:
+						//        reader.AddSortOrder (tableColumn, SqlSortOrder.Descending);
+						//        break;
+						//    default:
+						//        throw new System.NotSupportedException ("Unsupported sort order");
+						//}
 					}
 				}
 
@@ -116,160 +201,85 @@ namespace Epsitec.Cresus.DataLayer
 
 				if (!nextId.IsValid)
 				{
-					yield return new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (currentId, DataBrowser.FieldPathType));
+					DbTableColumn tableColumn = this.GetTableColumn (currentId, DataBrowser.typeFieldPath);
+					reader.AddQueryField (tableColumn);			
 				}
 
 				currentId = nextId;
 			}
 		}
 
-		private IEnumerable<DataQueryJoin> BuildQueryJoins(Druid entityId)
+
+		private void AddCondition(DbReader reader, Druid entityId, AbstractEntity example)
 		{
-			Druid leftId = entityId;
-			Druid rightId = (this.DataContext.EntityContext.GetStructuredType (entityId) as StructuredType).BaseTypeId;
+			// TODO Refractor this method to add the condition on the relations, recursively.
+			EntityContext context = example.GetEntityContext ();
 
-			while (rightId.IsValid)
+			IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
+
+			foreach (string id in context.GetDefinedFieldIds (example))
 			{
-				DataQueryColumn left = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (leftId, DataBrowser.FieldPathId));
-				DataQueryColumn right = new DataQueryColumn (EntityFieldPath.CreateAbsolutePath (rightId, DataBrowser.FieldPathId));
+				AbstractType fieldType  = context.GetFieldType (example, id) as AbstractType;
+				object       fieldValue = example.InternalGetValue (id);
 
-				SqlJoinCode type = SqlJoinCode.Inner;
+				System.Diagnostics.Debug.Assert (fieldType != null);
+				System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.SystemType == null ? "<null>" : fieldType.SystemType.Name));
 
-				yield return new DataQueryJoin (left, right, type);
-
-				leftId = rightId;
-				rightId = (this.DataContext.EntityContext.GetStructuredType (rightId) as StructuredType).BaseTypeId;
-			}
-		}
-
-		private DataTable BuildDataTable(Druid entityId)
-		{
-			DataTable dataTable = new DataTable ();
-
-			foreach (StructuredTypeField field in this.DataContext.EntityContext.GetEntityFieldDefinitions (entityId))
-			{
-				dataTable.Columns.Add (new DataColumn (this.DataContext.SchemaEngine.GetDataColumnName (field.Id)));
-			}
-
-			return dataTable;
-		}
-
-		private DataRow BuildDataRow(DataTable dataTable, DataBrowserRow dataBrowserRow, EntityFieldPath typePath)
-		{
-			DataRow dataRow = dataTable.NewRow ();
-
-			foreach (DataQueryColumn column in dataBrowserRow.Query.Columns)
-			{
-				if (column.FieldPath != typePath)
+				if (fieldType.TypeCode == TypeCode.String)
 				{
-					object value = dataBrowserRow[column];
+					IStringType fieldStringType = fieldType as IStringType;
+					string      textValue       = fieldValue as string;
 
-					dataRow[this.DataContext.SchemaEngine.GetDataColumnName (column.FieldPath.Fields.Last ())] = value;
-				}
-			}
-
-			return dataRow;
-		}
-
-
-		/// <summary>
-		/// Queries the database by example and returns a collection of data
-		/// rows.
-		/// </summary>
-		/// <param name="transaction">The transaction.</param>
-		/// <param name="example">The example entity.</param>
-		/// <param name="query">The query specification.</param>
-		/// <returns>The data rows for the query.</returns>
-		public IEnumerable<DataBrowserRow> QueryByExample(DbTransaction transaction, AbstractEntity example, DataQuery query)
-		{
-			Druid rootEntityId = example.GetEntityStructuredTypeId ();
-			
-			DataQuery copy = query.CreateAbsoluteCopy(rootEntityId);
-			
-			using (DbReader reader = this.CreateReader (copy))
-			{
-				if (example != null)
-				{
-					EntityContext context = example.GetEntityContext ();
-					
-					IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
-
-					foreach (string id in context.GetDefinedFieldIds (example))
+					if (string.IsNullOrEmpty (textValue))
 					{
-						AbstractType fieldType  = context.GetFieldType (example, id) as AbstractType;
-						object       fieldValue = example.InternalGetValue (id);
+						continue;
+					}
 
-						System.Diagnostics.Debug.Assert (fieldType != null);
-						System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.SystemType == null ? "<null>" : fieldType.SystemType.Name));
+					DbSelectCondition condition   = new DbSelectCondition (this.DbInfrastructure.Converter);
+					EntityFieldPath   fieldPath   = EntityFieldPath.CreateRelativePath (id);
+					DbTableColumn     tableColumn = this.GetTableColumn (entityId, fieldPath);
 
-						if (fieldType.TypeCode == TypeCode.String)
+					if (tableColumn == null)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Error: field {0} does not map to a column", id));
+						continue;
+					}
+
+					StringSearchBehavior     searchBehavior     = fieldStringType.DefaultSearchBehavior;
+					StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
+
+					//	If the provided example implements IFieldPropertyStore, check
+					//	if special properties are attached to the current field :
+
+					if (fieldProperties != null)
+					{
+						if (fieldProperties.ContainsValue (id, StringType.DefaultSearchBehaviorProperty))
 						{
-							IStringType fieldStringType = fieldType as IStringType;
-							string      textValue       = fieldValue as string;
-
-							if (string.IsNullOrEmpty (textValue))
-							{
-								continue;
-							}
-
-							DbSelectCondition condition   = new DbSelectCondition (this.DbInfrastructure.Converter);
-							EntityFieldPath   fieldPath   = EntityFieldPath.CreateAbsolutePath (rootEntityId, id);
-							DbTableColumn     tableColumn = this.GetTableColumn (fieldPath, rootEntityId, id);
-
-							if (tableColumn == null)
-							{
-								System.Diagnostics.Debug.WriteLine (string.Format ("Error: field {0} does not map to a column", id));
-								continue;
-							}
-							
-							StringSearchBehavior     searchBehavior     = fieldStringType.DefaultSearchBehavior;
-							StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
-
-							//	If the provided example implements IFieldPropertyStore, check
-							//	if special properties are attached to the current field :
-							
-							if (fieldProperties != null)
-							{
-								if (fieldProperties.ContainsValue (id, StringType.DefaultSearchBehaviorProperty))
-								{
-									searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (id, StringType.DefaultSearchBehaviorProperty);
-								}
-								if (fieldProperties.ContainsValue (id, StringType.DefaultComparisonBehaviorProperty))
-								{
-									comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (id, StringType.DefaultComparisonBehaviorProperty);
-								}
-							}
-
-							string pattern = this.CreateSearchPattern (textValue, searchBehavior);
-
-							if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
-							{
-								condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
-							}
-							else
-							{
-								condition.AddCondition (tableColumn, DbCompare.Like, pattern);
-							}
-							
-							reader.AddCondition (condition);
-
-							System.Diagnostics.Debug.WriteLine ("Condition : " + pattern);
+							searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (id, StringType.DefaultSearchBehaviorProperty);
+						}
+						if (fieldProperties.ContainsValue (id, StringType.DefaultComparisonBehaviorProperty))
+						{
+							comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (id, StringType.DefaultComparisonBehaviorProperty);
 						}
 					}
-				}
 
-				//	Execute the reader and gets back all (flattened) rows, including their
-				//	table row keys.
+					string pattern = this.CreateSearchPattern (textValue, searchBehavior);
 
-				reader.CreateDataReader (transaction);
+					if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
+					{
+						condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
+					}
+					else
+					{
+						condition.AddCondition (tableColumn, DbCompare.Like, pattern);
+					}
 
-				DataQueryResult queryResult = new DataQueryResult (query, reader.Tables.Select (table => table.CaptionId));
+					reader.AddCondition (condition);
 
-				foreach (var row in reader.Rows)
-				{
-					yield return new DataBrowserRow (queryResult, row);
+					System.Diagnostics.Debug.WriteLine ("Condition : " + pattern);
 				}
 			}
+
 		}
 
 
@@ -311,126 +321,26 @@ namespace Epsitec.Cresus.DataLayer
 				default:
 					throw new System.ArgumentException (string.Format ("Unsupported search behavior {0}", searchBehavior));
 			}
-			
+
 			return pattern;
 		}
 
-		/// <summary>
-		/// Creates the database reader and sets it up based on the query
-		/// definition.
-		/// </summary>
-		/// <param name="query">The query definition.</param>
-		/// <returns>The database reader.</returns>
-		private DbReader CreateReader(DataQuery query)
+
+		private DbTableColumn GetTableColumn(Druid entityId, EntityFieldPath relativeFieldPath)
 		{
-			DbReader reader = new DbReader (this.DbInfrastructure);
+			DbTable dbTable = this.SchemaEngine.FindTableDefinition (entityId);
+			DbColumn dbColumn = dbTable.Columns[this.SchemaEngine.GetDataColumnName (relativeFieldPath.ToString ())];
 
-			foreach (DataQueryColumn queryColumn in query.Columns)
+			return new DbTableColumn (dbColumn)
 			{
-				DbTableColumn tableColumn = this.GetTableColumn (queryColumn);
-
-				reader.AddQueryField (tableColumn);
-
-				switch (queryColumn.SortOrder)
-				{
-					case DataQuerySortOrder.None:
-						break;
-
-					case DataQuerySortOrder.Ascending:
-						reader.AddSortOrder (tableColumn, SqlSortOrder.Ascending);
-						break;
-
-					case DataQuerySortOrder.Descending:
-						reader.AddSortOrder (tableColumn, SqlSortOrder.Descending);
-						break;
-
-					default:
-						throw new System.NotSupportedException ("Unsupported sort order");
-				}
-			}
-
-			foreach (DataQueryJoin join in query.Joins)
-			{
-				DbTableColumn leftColumn = this.GetTableColumn (join.LeftColumn);
-				DbTableColumn rightColumn = this.GetTableColumn (join.RightColumn);
-
-				reader.AddJoin (leftColumn, rightColumn, join.Type);
-			}
-
-			reader.SelectPredicate = query.Distinct ? SqlSelectPredicate.Distinct : SqlSelectPredicate.All;
-			reader.IncludeRowKeys  = true;
-
-			return reader;
+				TableAlias = entityId.ToString (),
+				ColumnAlias = relativeFieldPath.ToString (),
+			};
 		}
 
-		private DbTableColumn GetTableColumn(DataQueryColumn column)
-		{
-			EntityFieldPath fieldPath = column.FieldPath;
+		private static EntityFieldPath idFieldPath = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnId + "]");
 
-			System.Diagnostics.Debug.Assert (fieldPath.IsAbsolute);
-			System.Diagnostics.Debug.Assert (fieldPath.ContainsIndex == false);
-
-			Druid  dataEntityId;
-			string dataFieldId;
-
-			if (fieldPath.Navigate (out dataEntityId, out dataFieldId) == false)
-			{
-				throw new System.ArgumentException ("Cannot resolve field " + fieldPath.ToString ());
-			}
-
-			return this.GetTableColumn (fieldPath, dataEntityId, dataFieldId);
-		}
-
-		/// <summary>
-		/// Gets the table/column tuple for the specified field.
-		/// </summary>
-		/// <param name="fieldPath">The field path (used to get the containing table alias).</param>
-		/// <param name="dataEntityId">The data entity id (used to get the table definition).</param>
-		/// <param name="dataFieldId">The data field id (used to get the column definition).</param>
-		/// <returns>The table/column tuple.</returns>
-		private DbTableColumn GetTableColumn(EntityFieldPath fieldPath, Druid dataEntityId, string dataFieldId)
-		{
-			Druid id = dataEntityId;
-		again:
-			DbTableColumn tableColumn;
-			DbTable  tableDef   = this.SchemaEngine.FindTableDefinition (id);
-			string   columnName = this.SchemaEngine.GetDataColumnName (dataFieldId);
-			DbColumn columnDef  = tableDef == null ? null : tableDef.Columns[columnName];
-
-			if (columnDef == null)
-			{
-				StructuredType entityType = EntityContext.Current.GetStructuredType (id) as StructuredType;
-				Druid baseTypeId = entityType.BaseTypeId;
-
-				if (baseTypeId.IsValid)
-				{
-					id = baseTypeId;
-					goto again;
-				}
-				
-				return null;
-			}
-			
-			System.Diagnostics.Debug.Assert (tableDef != null);
-			System.Diagnostics.Debug.Assert (columnDef != null);
-			System.Diagnostics.Debug.Assert (tableDef == columnDef.Table);
-
-			tableColumn = new DbTableColumn (columnDef);
-
-			tableColumn.TableAlias  = fieldPath.GetParentPath ().ToString ();
-			tableColumn.ColumnAlias = fieldPath.ToString ();
-
-			if (tableColumn.TableAlias.Length == 0)
-			{
-				tableColumn.TableAlias = fieldPath.GetParentPath ().EntityId.ToString ();
-			}
-			
-			return tableColumn;
-		}
-
-		private static EntityFieldPath FieldPathId = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnId + "]");
-
-		private static EntityFieldPath FieldPathType = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]");
+		private static EntityFieldPath typeFieldPath = EntityFieldPath.CreateRelativePath ("[" + Tags.ColumnInstanceType + "]");
 
 	}
 

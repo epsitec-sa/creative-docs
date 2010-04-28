@@ -128,8 +128,10 @@ namespace Epsitec.Cresus.DataLayer
 			return this.ResolveEntity (rowKey, entityId) as T;
 		}
 
-		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, Druid baseEntityId, DbKey rowKey, System.Data.DataRow dataRow)
+		public AbstractEntity ResolveEntity (Druid realEntityId, Druid askedEntityId, DbKey rowKey, System.Data.DataRow dataRow)
 		{
+			Druid baseEntityId =  this.EntityContext.GetBaseEntityId (askedEntityId);
+
 			AbstractEntity entity = this.entityDataCache.FindEntity (rowKey, realEntityId, baseEntityId);
 			
 			if (entity == null)

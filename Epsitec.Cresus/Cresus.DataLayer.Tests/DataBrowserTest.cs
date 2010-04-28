@@ -210,10 +210,16 @@ namespace Epsitec.Cresus.DataLayer
 				AdresseEntity example = new AdresseEntity ();
 				example.Npa = "*14*";
 
-				foreach (DataBrowserRow row in browser.QueryByExample (transaction, example, query))
-				{
-					lines.Add (string.Format ("{0}, {1}, {2}", row[0], row[1], row[2]));
-				}
+				// The DataBrowser has been significantly modified. This method does not exist
+				// anymore but it could be implemented again, this is why I leave the test unchanged,
+				// except for the three lines below.
+
+				//foreach (DataBrowserRow row in browser.QueryByExample (transaction, example, query))
+				//{
+				//    lines.Add (string.Format ("{0}, {1}, {2}", row[0], row[1], row[2]));
+				//}
+
+				throw new System.NotImplementedException ("See comments above");
 
 				transaction.Commit ();
 			}
