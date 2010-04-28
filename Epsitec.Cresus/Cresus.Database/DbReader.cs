@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Database
 			this.shortAliasToColumnMap = new Dictionary<string, DbTableColumn> ();
 			this.renamedTables = new List<DbTable> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
-			this.remanedJoins = new List<DbJoin> ();
+			this.joinsWithTableAlias = new List<DbJoin> ();
 			this.conditions = new List<DbSelectCondition> ();
 			this.orderByTableColumns = new Dictionary<string, SqlSortOrder> ();
 		}
@@ -85,18 +85,28 @@ namespace Epsitec.Cresus.Database
 			this.orderByTableColumns[shortColumnAlias] = order;
 		}
 
+		/// <summary>
+		/// Adds a join to the reader. IMPORTANT: IF YOU DON'T READ THE REMARKS, YOU PROGRAM IS DEEMED
+		/// TO MALFUNCTION.
+		/// </summary>
+		/// <remarks>
+		/// Given how this class and how FirebirdSqlBuilder are implemented, you must add the joins after
+		/// you have added all the query fields. Moreover, say that the tables targeted by the query fields
+		/// appear in a given order, then the tables targeted by the joins must appear in the exact same
+		/// order. If some joins target tables that are not targeted by the query fields, they can be added
+		/// in any order, given that they are added after all the joins which target only tables targeted by
+		/// query fields are added. If you don't comply with these constraints, the reader will most certainly
+		/// fail to accomplish what you want it to do.
+		/// </remarks>
+		/// <param name="leftColumn">The left column of the join.</param>
+		/// <param name="rightColumn">The right column of the join.</param>
+		/// <param name="joinType">The type of the join.</param>
 		public void AddJoin(DbTableColumn leftColumn, DbTableColumn rightColumn, SqlJoinCode joinType)
 		{
-			// Hack. I do this to be able to use the columns aliases. The side effect is that their values will
-			// be returned by the query, which is not asked by the user. There is might another way to do this,
-			// I don't know.
-			string aliasColumnLeft = this.RegisterTableColumn (leftColumn);
-			string aliasColumnRight = this.RegisterTableColumn (rightColumn);
+			DbTableColumn columnWithTableAliasLeft = this.ConvertWithTableAlias(leftColumn);
+			DbTableColumn columnWithTableAliasRight = this.ConvertWithTableAlias (rightColumn);
 
-			DbTableColumn renamedColumnLeft = this.FindRenamedTableColumn (aliasColumnLeft);
-			DbTableColumn renamedColumnRight = this.FindRenamedTableColumn (aliasColumnRight);
-
-			this.remanedJoins.Add (new DbJoin (renamedColumnLeft, renamedColumnRight, joinType));
+			this.joinsWithTableAlias.Add (new DbJoin (columnWithTableAliasLeft, columnWithTableAliasRight, joinType));
 		}
 
 		public void AddCondition(DbSelectCondition condition)
@@ -361,6 +371,14 @@ namespace Epsitec.Cresus.Database
 			return shortTableAlias;
 		}
 
+		private DbTableColumn ConvertWithTableAlias(DbTableColumn column)
+		{
+			return new DbTableColumn (column.Column)
+			{
+				TableAlias  =  this.RegisterTable (column),
+			};
+		}
+
 		private void CreateSelectColumns(SqlSelect select)
 		{
 			foreach (DbTableColumn tableColumn in this.renamedTableColumns)
@@ -416,7 +434,7 @@ namespace Epsitec.Cresus.Database
 
 		private void CreateSelectJoins(SqlSelect select)
 		{
-			foreach (DbJoin join in this.remanedJoins)
+			foreach (DbJoin join in this.joinsWithTableAlias)
 			{
 				select.Joins.Add (this.CreateSelectJoin (join));
 			}
@@ -430,7 +448,7 @@ namespace Epsitec.Cresus.Database
 			SqlField leftField = SqlField.CreateAliasedName (leftColumn.TableAlias, leftColumn.Column.GetSqlName (), leftColumn.ColumnAlias);
 			SqlField rightField = SqlField.CreateAliasedName (rightColumn.TableAlias, rightColumn.Column.GetSqlName (), rightColumn.ColumnAlias);
 
-			return new SqlJoin (join.Type, leftField, rightField);
+			return new SqlJoin (join.Type, rightField, leftField);
 		}
 
 		private void CreateSelectConditions(SqlSelect select)
@@ -473,7 +491,7 @@ namespace Epsitec.Cresus.Database
 		private readonly Dictionary<string, DbTableColumn> shortAliasToColumnMap;
 		private readonly List<DbTable> renamedTables;
 		private readonly List<DbTableColumn> renamedTableColumns;
-		private readonly List<DbJoin> remanedJoins;
+		private readonly List<DbJoin> joinsWithTableAlias;
 		private readonly List<DbSelectCondition> conditions;
 		private readonly Dictionary<string, SqlSortOrder> orderByTableColumns;
 		private System.Data.IDataReader dataReader;

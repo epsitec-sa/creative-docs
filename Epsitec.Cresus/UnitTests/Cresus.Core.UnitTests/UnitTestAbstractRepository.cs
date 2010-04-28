@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Core
 				AbstractPersonEntity personExample = new AbstractPersonEntity();
 
 				//AbstractPersonEntity person = abstractPersonRepository.GetEntityByExample (personExample);
-				//NaturalPersonEntity alfred = naturalPersonRepository.GetEntityByExample (alfredExample);
+				NaturalPersonEntity alfred = naturalPersonRepository.GetEntityByExample (alfredExample);
 			}
 		}
 
