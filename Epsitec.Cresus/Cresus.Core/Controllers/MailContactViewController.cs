@@ -35,8 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 			FrameBox group;
 
-			//?this.CreateTextField (tile.Container, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
-			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleList, true, accessor.Roles, x => accessor.Roles = x, null);
+			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleList, true, true, accessor.Roles, x => accessor.Roles = x, null);
 			this.CreateMargin (tile.Container, true);
 
 			this.CreateTextField (tile.Container, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
