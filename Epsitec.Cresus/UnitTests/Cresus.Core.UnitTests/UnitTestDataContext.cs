@@ -130,10 +130,16 @@ namespace Epsitec.Cresus.Core
 
 			using (DbTransaction transaction = browser.DbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
-				{
-					yield return row.Keys[0];
-				}
+				// The DataBrowser has been significantly modified. This method does not exist
+				// anymore but it could be implemented again, this is why I leave the test unchanged,
+				// except for the three lines below.
+
+				//foreach (DataBrowserRow row in browser.QueryByExample (transaction, entity, query))
+				//{
+				//    yield return row.Keys[0];
+				//}
+
+				throw new System.NotImplementedException ("See comments above");
 
 				transaction.Commit ();
 			}
