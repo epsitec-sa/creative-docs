@@ -70,12 +70,11 @@ namespace Epsitec.Cresus.Core.Controllers
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);
 					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-					//?this.CreateTextField (tile.Container, 100, "Titre", accessor.NaturalTitle, x => accessor.NaturalTitle = x, Validators.StringValidator.Validate);
-					this.CreateCombo (tile.Container, 100, "Titre", accessor.TitleList, false, accessor.NaturalTitle, x => accessor.NaturalTitle = x, null);
+					this.CreateCombo (tile.Container, 150, "Titre", accessor.TitleList, false, false, accessor.NaturalTitle, x => accessor.NaturalTitle = x, null);
 					this.CreateTextField (tile.Container, 0, "Prénom", accessor.NaturalPerson.Firstname, x => accessor.NaturalPerson.Firstname = x, Validators.StringValidator.Validate);
 					this.CreateTextField (tile.Container, 0, "Nom", accessor.NaturalPerson.Lastname, x => accessor.NaturalPerson.Lastname = x, Validators.StringValidator.Validate);
 					this.CreateMargin (tile.Container, true);
-					this.CreateTextField (tile.Container, 100, "Date de naissance", accessor.NaturalBirthDate, x => accessor.NaturalBirthDate = x, null);
+					this.CreateTextField (tile.Container, 75, "Date de naissance", accessor.NaturalBirthDate, x => accessor.NaturalBirthDate = x, null);
 				}
 
 				if (person is Entities.LegalPersonEntity)

@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
-		protected void CreateCombo(Widget embedder, int width, string label, List<string> list, bool allowMultipleSelection, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		protected void CreateCombo(Widget embedder, int width, string label, List<string> list, bool readOnly, bool allowMultipleSelection, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
@@ -404,6 +404,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				combo = new Widgets.SuperCombo
 				{
 					Parent = embedder,
+					IsReadOnly = readOnly,
 					AllowMultipleSelection = allowMultipleSelection,
 					Text = initialValue,
 					Dock = DockStyle.Top,
@@ -423,6 +424,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				combo = new Widgets.SuperCombo
 				{
 					Parent = box,
+					IsReadOnly = readOnly,
 					AllowMultipleSelection = allowMultipleSelection,
 					Text = initialValue,
 					Dock = DockStyle.Left,

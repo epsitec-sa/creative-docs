@@ -33,12 +33,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-			//?this.CreateTextField (tile.Container, 0, "Roles", accessor.Roles, x => accessor.Roles = x, Validators.StringValidator.Validate);
-			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleList, true, accessor.Roles, x => accessor.Roles = x, null);
+			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleList, true, true, accessor.Roles, x => accessor.Roles = x, null);
 			this.CreateMargin (tile.Container, true);
 
-			//?this.CreateTextField (tile.Container, 100, "Type", accessor.UriScheme, x => accessor.UriScheme = x, Validators.StringValidator.Validate);
-			this.CreateCombo (tile.Container, 100, "Type", accessor.UriSchemeList, false, accessor.UriScheme, x => accessor.UriScheme = x, null);
+			this.CreateCombo (tile.Container, 100, "Type", accessor.UriSchemeList, true, false, accessor.UriScheme, x => accessor.UriScheme = x, null);
 			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
 			this.SetInitialFocus ();
