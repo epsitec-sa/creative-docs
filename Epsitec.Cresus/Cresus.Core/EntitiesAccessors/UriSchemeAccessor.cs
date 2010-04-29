@@ -11,9 +11,9 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.EntitiesAccessors
 {
-	public class UriContactAccessor : AbstractContactAccessor
+	public class UriSchemeAccessor : AbstractContactAccessor
 	{
-		public UriContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)
+		public UriSchemeAccessor(object parentEntities, AbstractEntity entity, bool grouped)
 			: base (parentEntities, entity, grouped)
 		{
 		}
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				return "Data.Uri";
+				return "T";
 			}
 		}
 
@@ -40,19 +40,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				if (this.Grouped)
-				{
-					return "Mail";
-				}
-				else
-				{
-					var builder = new StringBuilder ();
-
-					builder.Append ("Mail");
-					builder.Append (Misc.Encapsulate (" ", this.Roles, ""));
-
-					return Misc.RemoveLastBreakLine (builder.ToString ());
-				}
+				return "Type";
 			}
 		}
 
@@ -62,56 +50,13 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			{
 				var builder = new StringBuilder ();
 
-				builder.Append (this.UriContact.Uri);
-
-				if (this.Grouped)
-				{
-					builder.Append (Misc.Encapsulate (" (", this.Roles, ")"));
-				}
-
+				builder.Append (this.UriScheme);
 				builder.Append ("<br/>");
 
 				return AbstractAccessor.SummaryPostprocess (builder.ToString ());
 			}
 		}
 
-		public override AbstractEntity Create()
-		{
-			var newEntity = new Entities.UriContactEntity ();
-
-			foreach (var role in this.UriContact.Roles)
-			{
-				newEntity.Roles.Add (role);
-			}
-
-			newEntity.UriScheme = this.UriContact.UriScheme;
-
-			int index = this.ParentAbstractContacts.IndexOf (this.UriContact);
-			if (index == -1)
-			{
-				this.ParentAbstractContacts.Add (newEntity);
-			}
-			else
-			{
-				this.ParentAbstractContacts.Insert (index+1, newEntity);
-			}
-
-			return newEntity;
-		}
-
-
-		public ComboInitializer RoleInitializer
-		{
-			get
-			{
-				ComboInitializer initializer = new ComboInitializer ();
-
-				initializer.Content.Add ("professionnel", "Professionnel");
-				initializer.Content.Add ("privé",         "Privé");
-
-				return initializer;
-			}
-		}
 
 		public ComboInitializer UriSchemeInitializer
 		{
@@ -135,7 +80,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			{
 				if (this.UriContact.UriScheme != null)
 				{
-					return this.UriContact.UriScheme.Code;
+					return this.UriSchemeInitializer.ConvertInternalToEdition (this.UriContact.UriScheme.Code);
 				}
 				else
 				{
@@ -149,7 +94,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 					this.UriContact.UriScheme = new Entities.UriSchemeEntity ();
 				}
 
-				this.UriContact.UriScheme.Code = value;
+				this.UriContact.UriScheme.Code = this.UriSchemeInitializer.ConvertEditionToInternal(value);
 			}
 		}
 	}

@@ -27,6 +27,14 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		/// <summary>
+		/// Closes the last sub views.
+		/// </summary>
+		public void CloseSubView()
+		{
+			this.dataViewController.PopViewController ();
+		}
+
+		/// <summary>
 		/// Closes the sub views of the specified controller. The view of the
 		/// controller becomes the top level view.
 		/// </summary>

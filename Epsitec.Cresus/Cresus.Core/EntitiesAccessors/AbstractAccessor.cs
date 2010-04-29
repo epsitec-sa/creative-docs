@@ -78,6 +78,15 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 		}
 
+		public virtual string RemoveQuestion
+		{
+			get
+			{
+				// TODO: Le texte se termine par "<br/> " pour contourner un bug !
+				return string.Format ("<b>Voulez-vous supprimer l'élément suivant :</b><br/><br/>{0}<br/>{1}<br/> ", this.Title, this.Summary);
+			}
+		}
+
 		public virtual AbstractEntity Create()
 		{
 			return null;

@@ -104,7 +104,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (this.viewControllers.Count != 0)
 			{
 				var parent = this.viewControllers.Peek ();
-				this.SelectViewController (parent, null);
+				//?this.SelectViewController (parent, null);
+				this.orchestrator.RebuildView ();
 			}
 		}
 
@@ -122,6 +123,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var controller = this.viewControllers.Peek ();
 			var column = this.viewLayoutController.LastColumn;
+			
+			column.Children.Clear ();
 			controller.CreateUI (column);
 		}
 
@@ -144,7 +147,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (widget is Widgets.AbstractTile)
 				{
 					var tileContainer = widget as Widgets.AbstractTile;
-					tileContainer.SetSelected (tileContainer.Entity == selectedEntity);
+					tileContainer.SetSelected (tileContainer.ChildrenMode != ViewControllerMode.None && tileContainer.Entity == selectedEntity);
+					// TODO: Le test effectué fonctionne mal !
 				}
 			}
 		}

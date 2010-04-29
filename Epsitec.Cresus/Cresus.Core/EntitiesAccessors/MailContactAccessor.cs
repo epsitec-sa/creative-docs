@@ -147,13 +147,13 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				ComboInitializer initlalizer = new ComboInitializer ();
+				ComboInitializer initializer = new ComboInitializer ();
 
-				initlalizer.Content.Add ("professionnel", "Professionnel");
-				initlalizer.Content.Add ("facturation",   "Facturation");
-				initlalizer.Content.Add ("privé",         "Privé");
+				initializer.Content.Add ("professionnel", "Professionnel");
+				initializer.Content.Add ("facturation",   "Facturation");
+				initializer.Content.Add ("privé",         "Privé");
 
-				return initlalizer;
+				return initializer;
 			}
 		}
 

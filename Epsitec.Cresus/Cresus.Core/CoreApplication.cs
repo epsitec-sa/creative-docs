@@ -215,15 +215,15 @@ namespace Epsitec.Cresus.Core
 				System.Diagnostics.Debug.WriteLine ("Save done.");
 			}
 		}
-		
 
-		PersistenceManager						persistenceManager;
-		CoreData								data;
-		ExceptionManager						exceptionManager;
-		CoreCommands							commands;
-		readonly List<CoreController>			controllers;
-		
-		FrameBox								ribbonBox;
-		FrameBox								contentBox;
+
+		private PersistenceManager						persistenceManager;
+		private CoreData								data;
+		private ExceptionManager						exceptionManager;
+		private CoreCommands							commands;
+		private readonly List<CoreController>			controllers;
+
+		private FrameBox								ribbonBox;
+		private FrameBox								contentBox;
 	}
 }

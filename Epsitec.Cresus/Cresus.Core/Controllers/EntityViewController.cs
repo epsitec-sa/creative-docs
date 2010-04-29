@@ -79,6 +79,23 @@ namespace Epsitec.Cresus.Core.Controllers
 				return new LegalPersonViewController (name);
 			}
 
+			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
+			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
+			{
+				return new RolesContactViewController (name);
+			}
+
+			if (entity is Entities.TelecomContactEntity && mode == ViewControllerMode.TelecomTypeEdition)
+			{
+				return new TelecomTypeViewController (name);
+			}
+
+			if (entity is Entities.UriContactEntity && mode == ViewControllerMode.UriSchemeEdition)
+			{
+				return new UriSchemeViewController (name);
+			}
+
+			//	Après...
 			if (entity is Entities.MailContactEntity)
 			{
 				return new MailContactViewController (name);
@@ -86,12 +103,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (entity is Entities.TelecomContactEntity)
 			{
-				return new TelecomViewController (name);
+				return new TelecomContactViewController (name);
 			}
 
 			if (entity is Entities.UriContactEntity)
 			{
-				return new UriViewController (name);
+				return new UriContactViewController (name);
 			}
 
 			// TODO: Compléter ici au fur et à mesure des besoins...
@@ -100,6 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		#region Tiles creation
 		/// <summary>
 		/// Crée une tuile résumée qui s'insère en bas de l'empilement (qui commence en haut).
 		/// </summary>
@@ -109,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// <param name="enableCreateAndRemoveButton">if set to <c>true</c> [enable create and remove button].</param>
 		/// <param name="childrenMode">The children mode.</param>
 		/// <returns></returns>
-		protected Widgets.AbstractTile CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, ViewControllerMode childrenMode)
+		protected Widgets.AbstractTile CreateSummaryTile(EntitiesAccessors.AbstractAccessor accessor, int groupIndex, bool compactFollower, bool enableCreateAndRemoveButton, bool isEditing, ViewControllerMode childrenMode)
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
 
@@ -127,6 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				GroupIndex = groupIndex,
 				CompactFollower = compactFollower,
 				EnableCreateAndRemoveButton = enableCreateAndRemoveButton,
+				IsEditing = isEditing,
 				TopLeftIconUri = accessor.IconUri,
 				Title = accessor.Title,
 				Summary = accessor.Summary,
@@ -141,7 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		/// <summary>
-		/// Crée une tuile permettant l'édition. En principe, elle est seule dans son empilement.
+		/// Crée une tuile permettant l'édition.
 		/// </summary>
 		/// <param name="accessor">The accessor.</param>
 		/// <param name="childrenMode">The children mode.</param>
@@ -169,6 +188,53 @@ namespace Epsitec.Cresus.Core.Controllers
 			tile.Clicked += new EventHandler<MessageEventArgs> (this.HandleTileClicked);
 
 			return tile;
+		}
+
+		/// <summary>
+		/// Crée une tuile permettant l'édition.
+		/// </summary>
+		/// <param name="accessor">The accessor.</param>
+		/// <param name="childrenMode">The children mode.</param>
+		/// <returns></returns>
+		protected Widgets.AbstractTile CreateEditionTile()
+		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+			var tile = new Widgets.EditionTile
+			{
+				Parent = this.container,
+				Dock = DockStyle.Top,
+				ArrowLocation = Direction.Right,
+				IsEditing = true,
+			};
+
+			return tile;
+		}
+
+		protected void CreateFooterEditorTile()
+		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+#if false
+			var tile = new Widgets.EditionTile
+			{
+				Parent = this.container,
+				Dock = DockStyle.Top,
+				ArrowLocation = Direction.Right,
+				IsEditing = true,
+			};
+
+			var closeButton = new Button
+			{
+				Parent = tile,
+				Text = "Fermer",
+				PreferredWidth = 75,
+				Dock = DockStyle.Right,
+				Margins = new Margins(0, Widgets.TileContainer.ArrowBreadth+10, 10, 10),
+			};
+
+			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
+#endif
 		}
 
 
@@ -227,9 +293,11 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 			}
 		}
+		#endregion
+
 
 		/// <summary>
-		/// Met le focus dans la tuile éditable sur le premier widget pertinant.
+		/// Met le focus dans la tuile éditable sur le premier widget pertinent.
 		/// </summary>
 		protected void SetInitialFocus()
 		{
@@ -264,6 +332,47 @@ namespace Epsitec.Cresus.Core.Controllers
 			return false;
 		}
 
+
+		#region Tiles content creation
+		protected void CreateLinkButtons(Widget embedder)
+		{
+			//	TODO: Prototype non fonctionnel, à valider puis terminer
+			var frameBox = new FrameBox
+			{
+				Parent = embedder,
+				Dock = DockStyle.Top,
+				Margins = new Margins (0, 10, 10, 20),
+				TabIndex = ++this.tabIndex,
+			};
+
+			var linkButton = new Button
+			{
+				Parent = frameBox,
+				Text = "Lier avec...",
+				PreferredWidth = 75,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 10, 0, 0),
+				TabIndex = ++this.tabIndex,
+			};
+
+			var unlinkButton = new Button
+			{
+				Parent = frameBox,
+				Text = "Délier",
+				PreferredWidth = 75,
+				Dock = DockStyle.Left,
+				Margins = new Margins (0, 10, 0, 0),
+				TabIndex = ++this.tabIndex,
+				Enable = false,
+			};
+
+			var label = new StaticText
+			{
+				Parent = frameBox,
+				Text = "Utilisation unique",  // ou "Utilisé 10x"
+				Dock = DockStyle.Fill,
+			};
+		}
 
 		protected FrameBox CreateGroup(Widget embedder, string label)
 		{
@@ -482,6 +591,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 			}
 		}
+		#endregion
 
 
 		private void CreateEntity(Widgets.AbstractTile tile)
@@ -497,9 +607,20 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void RemoveEntity(Widgets.AbstractTile tile)
 		{
 			EntitiesAccessors.AbstractAccessor accessor = tile.EntitiesAccessor;
-			accessor.Remove ();
 
-			this.Orchestrator.RebuildView ();
+			Common.Dialogs.DialogResult result = Common.Dialogs.MessageDialog.ShowQuestion (accessor.RemoveQuestion, tile.Window);
+
+			if (result == Common.Dialogs.DialogResult.Yes)
+			{
+				accessor.Remove ();
+
+				this.Orchestrator.RebuildView ();
+			}
+		}
+
+		private void CloseTile()
+		{
+			this.Orchestrator.CloseSubView ();
 		}
 
 
@@ -531,6 +652,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Appelé lorsque le bouton "-" d'une tuile est cliqué.
 			var tile = sender as Widgets.AbstractTile;
 			this.RemoveEntity (tile);
+		}
+
+		private void HandleCloseButtonClicked(object sender, MessageEventArgs e)
+		{
+			//	Appelé lorsque le bouton "Fermer" d'une tuile est cliqué.
+			this.CloseTile ();
 		}
 
 

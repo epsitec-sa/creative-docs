@@ -90,8 +90,11 @@
     </Compile>
     <Compile Include="Controllers\BrowserViewController.cs" />
     <Compile Include="Controllers\AbstractPersonViewController.cs" />
-    <Compile Include="Controllers\UriViewController.cs" />
-    <Compile Include="Controllers\TelecomViewController.cs" />
+    <Compile Include="Controllers\UriSchemeViewController.cs" />
+    <Compile Include="Controllers\TelecomTypeViewController.cs" />
+    <Compile Include="Controllers\RolesContactViewController.cs" />
+    <Compile Include="Controllers\UriContactViewController.cs" />
+    <Compile Include="Controllers\TelecomContactViewController.cs" />
     <Compile Include="Controllers\MailContactViewController.cs" />
     <Compile Include="Controllers\LegalPersonViewController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
@@ -107,6 +110,9 @@
     <Compile Include="EntitiesAccessors\AbstractAccessor.cs" />
     <Compile Include="EntitiesAccessors\AbstractContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\ComboInitializer.cs" />
+    <Compile Include="EntitiesAccessors\UriSchemeAccessor.cs" />
+    <Compile Include="EntitiesAccessors\TelecomTypeAccessor.cs" />
+    <Compile Include="EntitiesAccessors\RolesContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\UriContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\TelecomContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\LegalPersonAccessor.cs" />
@@ -257,6 +263,7 @@
     <EmbeddedResource Include="Images\Data.Uri.icon" />
     <EmbeddedResource Include="Images\Data.LegalPerson.icon" />
     <EmbeddedResource Include="Images\Data.NaturalPerson.icon" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
