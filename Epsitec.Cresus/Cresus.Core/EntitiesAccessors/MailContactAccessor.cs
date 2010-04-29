@@ -143,19 +143,20 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public List<string> RoleList
+		public ComboInitializer RoleInitializer
 		{
 			get
 			{
-				List<string> list = new List<string> ();
+				ComboInitializer initlalizer = new ComboInitializer ();
 
-				list.Add ("professionnel");
-				list.Add ("facturation");
-				list.Add ("privé");
+				initlalizer.Content.Add ("professionnel", "Professionnel");
+				initlalizer.Content.Add ("facturation",   "Facturation");
+				initlalizer.Content.Add ("privé",         "Privé");
 
-				return list;
+				return initlalizer;
 			}
 		}
+
 
 		public string StreetName
 		{

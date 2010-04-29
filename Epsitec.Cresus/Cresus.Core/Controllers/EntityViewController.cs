@@ -387,7 +387,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 		}
 
-		protected void CreateCombo(Widget embedder, int width, string label, List<string> list, bool readOnly, bool allowMultipleSelection, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+
+		protected void CreateCombo(Widget embedder, int width, string label, EntitiesAccessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
@@ -406,7 +407,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Parent = embedder,
 					IsReadOnly = readOnly,
 					AllowMultipleSelection = allowMultipleSelection,
-					Text = initialValue,
+					Text = initializer.ConvertInternalToEdition (initialValue),
 					Dock = DockStyle.Top,
 					Margins = new Margins (0, 10, 0, 5),
 					TabIndex = ++this.tabIndex,
@@ -426,7 +427,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					Parent = box,
 					IsReadOnly = readOnly,
 					AllowMultipleSelection = allowMultipleSelection,
-					Text = initialValue,
+					Text = initializer.ConvertInternalToEdition (initialValue),
 					Dock = DockStyle.Left,
 					PreferredWidth = width,
 					Margins = new Margins (0, 10, 0, 5),
@@ -434,10 +435,30 @@ namespace Epsitec.Cresus.Core.Controllers
 				};
 			}
 
-			combo.Items.AddRange (list);
+			initializer.InitializeCombo (combo);
 
-			this.CreateTextFieldHandler (combo, callback, validator);
+			this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
 		}
+
+		private void CreateComboHandler(AbstractTextField textField, System.Action<string> callback, System.Func<string, bool> validator, System.Func<string, string> converter)
+		{
+			textField.TextChanged +=
+				delegate (object sender)
+				{
+					string text = converter (textField.Text);
+
+					if (validator == null || validator (text))
+					{
+						callback (text);
+						textField.SetError (false);
+					}
+					else
+					{
+						textField.SetError (true);
+					}
+				};
+		}
+
 
 		protected void CreateMargin(Widget embedder, bool horizontalSeparator)
 		{

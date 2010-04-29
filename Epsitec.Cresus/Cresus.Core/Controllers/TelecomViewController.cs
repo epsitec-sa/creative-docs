@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
-			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleList, true, true, accessor.Roles, x => accessor.Roles = x, null);
+			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleInitializer, true, true, accessor.Roles, x => accessor.Roles = x, null);
 			this.CreateMargin (tile.Container, true);
 
-			this.CreateCombo (tile.Container, 150, "Type du numéro", accessor.TelecomTypeList, true, false, accessor.TelecomType, x => accessor.TelecomType = x, null);
+			this.CreateCombo (tile.Container, 150, "Type du numéro", accessor.TelecomTypeInitializer, true, false, accessor.TelecomType, x => accessor.TelecomType = x, null);
 			this.CreateMargin (tile.Container, false);
 
 			this.CreateTextField (tile.Container, 150, "Numéro de téléphone", accessor.TelecomContact.Number, x => accessor.TelecomContact.Number = x, Validators.StringValidator.Validate);

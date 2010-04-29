@@ -100,33 +100,34 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public List<string> RoleList
+		public ComboInitializer RoleInitializer
 		{
 			get
 			{
-				List<string> list = new List<string> ();
+				ComboInitializer initlalizer = new ComboInitializer ();
 
-				list.Add ("professionnel");
-				list.Add ("privé");
+				initlalizer.Content.Add ("professionnel", "Professionnel");
+				initlalizer.Content.Add ("privé",         "Privé");
 
-				return list;
+				return initlalizer;
 			}
 		}
 
-		public List<string> UriSchemeList
+		public ComboInitializer UriSchemeInitializer
 		{
 			get
 			{
-				List<string> list = new List<string> ();
+				ComboInitializer initlalizer = new ComboInitializer ();
 
-				list.Add ("mailto");
-				list.Add ("callto");
-				list.Add ("sip");
-				list.Add ("http");
+				initlalizer.Content.Add ("mailto", "Mail");
+				initlalizer.Content.Add ("callto", "Skype");
+				initlalizer.Content.Add ("sip",    "Session");
+				initlalizer.Content.Add ("http",   "Web");
 
-				return list;
+				return initlalizer;
 			}
 		}
+
 
 		public string UriScheme
 		{
@@ -134,7 +135,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			{
 				if (this.UriContact.UriScheme != null)
 				{
-					return this.UriContact.UriScheme.Name;
+					return this.UriContact.UriScheme.Code;
 				}
 				else
 				{
@@ -148,7 +149,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 					this.UriContact.UriScheme = new Entities.UriSchemeEntity ();
 				}
 
-				this.UriContact.UriScheme.Name = value;
+				this.UriContact.UriScheme.Code = value;
 			}
 		}
 	}

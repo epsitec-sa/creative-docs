@@ -100,32 +100,33 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public List<string> RoleList
+		public ComboInitializer RoleInitializer
 		{
 			get
 			{
-				List<string> list = new List<string> ();
+				ComboInitializer initlalizer = new ComboInitializer ();
 
-				list.Add ("professionnel");
-				list.Add ("privé");
+				initlalizer.Content.Add ("professionnel", "Professionnel");
+				initlalizer.Content.Add ("privé",         "Privé");
 
-				return list;
+				return initlalizer;
 			}
 		}
 
-		public List<string> TelecomTypeList
+		public ComboInitializer TelecomTypeInitializer
 		{
 			get
 			{
-				List<string> list = new List<string> ();
+				ComboInitializer initlalizer = new ComboInitializer ();
 
-				list.Add ("fixnet");
-				list.Add ("mobile");
-				list.Add ("fax");
+				initlalizer.Content.Add ("fixnet", "Fixe");
+				initlalizer.Content.Add ("mobile", "Mobile");
+				initlalizer.Content.Add ("fax",    "Fax");
 
-				return list;
+				return initlalizer;
 			}
 		}
+
 
 		public string TelecomType
 		{
@@ -133,7 +134,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			{
 				if (this.TelecomContact.TelecomType != null)
 				{
-					return this.TelecomContact.TelecomType.Name;
+					return this.TelecomContact.TelecomType.Code;
 				}
 				else
 				{
@@ -147,7 +148,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 					this.TelecomContact.TelecomType = new Entities.TelecomTypeEntity ();
 				}
 
-				this.TelecomContact.TelecomType.Name = value;
+				this.TelecomContact.TelecomType.Code = value;
 			}
 		}
 	}
