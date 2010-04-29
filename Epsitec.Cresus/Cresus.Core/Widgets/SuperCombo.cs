@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 				if (this.IsSelectedItem (text))
 				{
-					text = string.Concat ("● ", text);
+					text = string.Concat ("● ", text);  // TODO: Mettre un vrai "vu"
 				}
 				else
 				{

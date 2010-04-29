@@ -65,20 +65,21 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
-		public List<string> TitleList
+		public ComboInitializer TitleInitializer
 		{
 			get
 			{
-				List<string> list = new List<string> ();
+				ComboInitializer initlalizer = new ComboInitializer ();
 
-				list.Add ("Monsieur");
-				list.Add ("Madame");
-				list.Add ("Mademoiselle");
+				initlalizer.Content.Add ("Monsieur",     "Monsieur");
+				initlalizer.Content.Add ("Madame",       "Madame");
+				initlalizer.Content.Add ("Mademoiselle", "Mademoiselle");
 
-				return list;
+				return initlalizer;
 			}
 		}
 
+	
 		public string NaturalTitle
 		{
 			get
