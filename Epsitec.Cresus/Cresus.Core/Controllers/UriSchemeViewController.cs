@@ -12,9 +12,9 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
-	public class UriViewController : EntityViewController
+	public class UriSchemeViewController : EntityViewController
 	{
-		public UriViewController(string name)
+		public UriSchemeViewController(string name)
 			: base (name)
 		{
 		}
@@ -29,16 +29,21 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.container = container;
 
 			System.Diagnostics.Debug.Assert (this.Entity != null);
-			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
+			var contact = this.Entity as Entities.AbstractContactEntity;
+			System.Diagnostics.Debug.Assert (contact != null);
 
+			var accessor = new EntitiesAccessors.UriSchemeAccessor (null, contact, false);
+
+			//	Crée les tuiles.
 			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+			this.CreateFooterEditorTile ();
 
-			this.CreateCombo (tile.Container, 0, "Roles", accessor.RoleInitializer, true, true, accessor.Roles, x => accessor.Roles = x, null);
-			this.CreateMargin (tile.Container, true);
+			//?this.CreateLinkButtons (tile.Container);
 
-			this.CreateCombo (tile.Container, 100, "Type", accessor.UriSchemeInitializer, true, false, accessor.UriScheme, x => accessor.UriScheme = x, null);
-			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
+			//	Crée le contenu de la tuile d'édition.
+			this.CreateCombo (tile.Container, 100, "Type du moyen de contact", accessor.UriSchemeInitializer, true, false, accessor.UriScheme, x => accessor.UriScheme = x, null);
 
+			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
 		}
 	}

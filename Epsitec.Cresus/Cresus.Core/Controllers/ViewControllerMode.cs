@@ -12,5 +12,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		PersonEdition,
 		TelecomEdition,
 		UriEdition,
+		RolesEdition,
+		TelecomTypeEdition,
+		UriSchemeEdition,
 	}
 }

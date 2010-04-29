@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);
 					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					this.CreateFooterEditorTile ();
 
 					this.CreateCombo (tile.Container, 150, "Titre", accessor.TitleInitializer, false, false, accessor.NaturalTitle, x => accessor.NaturalTitle = x, null);
 					this.CreateTextField (tile.Container, 0, "Prénom", accessor.NaturalPerson.Firstname, x => accessor.NaturalPerson.Firstname = x, Validators.StringValidator.Validate);
@@ -81,6 +82,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
 					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					this.CreateFooterEditorTile ();
 
 					this.CreateTextField (tile.Container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
 					this.CreateTextField (tile.Container, 150, "Nom court", accessor.LegalPerson.ShortName, x => accessor.LegalPerson.ShortName = x, Validators.StringValidator.Validate);
@@ -98,13 +100,13 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (this.Entity is Entities.NaturalPersonEntity)
 				{
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, this.Entity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.PersonEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.PersonEdition);
 				}
 
 				if (this.Entity is Entities.LegalPersonEntity)
 				{
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, this.Entity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.PersonEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.PersonEdition);
 				}
 
 				groupIndex++;
@@ -118,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (contact is Entities.MailContactEntity)
 					{
 						var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, contact as Entities.MailContactEntity, groupMail);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, ViewControllerMode.GenericEdition);
+						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, false, ViewControllerMode.GenericEdition);
 
 						count++;
 						compactFollower = groupMail;
@@ -131,7 +133,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.MailContactAccessor (person.Contacts, emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.GenericEdition);
 				}
 
 				groupIndex++;
@@ -145,7 +147,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (contact is Entities.TelecomContactEntity)
 					{
 						var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, contact as Entities.TelecomContactEntity, groupTelecom);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, ViewControllerMode.TelecomEdition);
+						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, false, ViewControllerMode.TelecomEdition);
 
 						count++;
 						compactFollower = groupTelecom;
@@ -158,7 +160,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.TelecomContactAccessor (person.Contacts, emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.GenericEdition);
 				}
 
 				groupIndex++;
@@ -172,7 +174,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (contact is Entities.UriContactEntity)
 					{
 						var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, contact as Entities.UriContactEntity, groupUri);
-						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, ViewControllerMode.UriEdition);
+						this.CreateSummaryTile (accessor, groupIndex, compactFollower, true, false, ViewControllerMode.UriEdition);
 
 						count++;
 						compactFollower = groupUri;
@@ -185,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					person.Contacts.Add (emptyEntity);
 
 					var accessor = new EntitiesAccessors.UriContactAccessor (person.Contacts, emptyEntity, false);
-					this.CreateSummaryTile (accessor, groupIndex, false, false, ViewControllerMode.GenericEdition);
+					this.CreateSummaryTile (accessor, groupIndex, false, false, false, ViewControllerMode.GenericEdition);
 				}
 
 				groupIndex++;

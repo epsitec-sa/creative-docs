@@ -118,29 +118,39 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		/// <summary>
-		/// Rectangle disponible pour le contenu, qui exclut donc la flèche.
-		/// Si la flèche n'est pas dessinée, sa surface est toujours exclue.
-		/// </summary>
-		/// <value>The content rectangle.</value>
-		public Rectangle ContentBounds
-		{
-			get
-			{
-				Rectangle box;
-				Point p1, p2, p3;
-				this.ComputeArrowGeometry (out box, out p1, out p2, out p3);
-
-				return box;
-			}
-		}
-
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			Path outlinePath = this.GetFramePath (true);
-			Path surfacePath = this.GetFramePath (false);
+
+			bool isEntered = this.IsEntered && this.enteredSensitivity;
+			Direction arrowLocation = this.arrowLocation;
+
+			if (this.IsSelected && isEntered)
+			{
+				//	Si la flèche est visible et que la souris survole le widget, on inverse son sens.
+				switch (arrowLocation)
+				{
+					case Direction.Left:
+						arrowLocation = Direction.Right;
+						break;
+
+					case Direction.Right:
+						arrowLocation = Direction.Left;
+						break;
+
+					case Direction.Up:
+						arrowLocation = Direction.Down;
+						break;
+
+					case Direction.Down:
+						arrowLocation = Direction.Up;
+						break;
+				}
+			}
+
+			Path outlinePath = this.GetFramePath (true,  arrowLocation);
+			Path surfacePath = this.GetFramePath (false, arrowLocation);
 
 			//	Dessine toujous le fond.
 			Color backColor = this.BackColor;
@@ -154,8 +164,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			graphics.RenderSolid (backColor);
 
 			//	En mode 'survolé' ou 'sélectionné', hilite le fond.
-			bool isEntered = this.IsEntered && this.enteredSensitivity;
-
 			if (isEntered || this.IsSelected || this.IsEditing)
 			{
 				double alpha = 0.05;
@@ -191,59 +199,59 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// Chemin permettant de dessiner la cadre du widget, avec ou sans flèche, selon l'état du widget.
 		/// </summary>
 		/// <value>The frame path.</value>
-		private Path GetFramePath(bool outline)
+		private Path GetFramePath(bool outline, Direction arrowLocation)
 		{
 			Path path = new Path ();
 
 			Rectangle box;
 			Point p1, p2, p3;
-			this.ComputeArrowGeometry (out box, out p1, out p2, out p3);
+			this.ComputeArrowGeometry (out box, out p1, out p2, out p3, arrowLocation);
 
 			if (this.IsSelected)
 			{
-				switch (this.arrowLocation)
+				switch (arrowLocation)
 				{
 					case Direction.Left:
 						path.MoveTo (p2);
-						path.LineTo (p3);
+						//?path.LineTo (p3);
 						path.LineTo (box.BottomLeft);
 						path.LineTo (box.BottomRight);
 						path.LineTo (box.TopRight);
 						path.LineTo (box.TopLeft);
-						path.LineTo (p1);
+						//?path.LineTo (p1);
 						path.Close ();
 						break;
 
 					case Direction.Right:
 						path.MoveTo (p2);
-						path.LineTo (p3);
+						//?path.LineTo (p3);
 						path.LineTo (box.TopRight);
 						path.LineTo (box.TopLeft);
 						path.LineTo (box.BottomLeft);
 						path.LineTo (box.BottomRight);
-						path.LineTo (p1);
+						//?path.LineTo (p1);
 						path.Close ();
 						break;
 
 					case Direction.Up:
 						path.MoveTo (p2);
-						path.LineTo (p3);
+						//?path.LineTo (p3);
 						path.LineTo (box.TopLeft);
 						path.LineTo (box.BottomLeft);
 						path.LineTo (box.BottomRight);
 						path.LineTo (box.TopRight);
-						path.LineTo (p1);
+						//?path.LineTo (p1);
 						path.Close ();
 						break;
 
 					case Direction.Down:
 						path.MoveTo (p2);
-						path.LineTo (p3);
+						//?path.LineTo (p3);
 						path.LineTo (box.BottomRight);
 						path.LineTo (box.TopRight);
 						path.LineTo (box.TopLeft);
 						path.LineTo (box.BottomLeft);
-						path.LineTo (p1);
+						//?path.LineTo (p1);
 						path.Close ();
 						break;
 				}
@@ -293,14 +301,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <param name="p2">Pointe de la flèche.</param>
 		/// <param name="p3">Arrivée de la flèche.</param>
 		/// <value>The arrow rectangle.</value>
-		private void ComputeArrowGeometry(out Rectangle box, out Point p1, out Point p2, out Point p3)
+		private void ComputeArrowGeometry(out Rectangle box, out Point p1, out Point p2, out Point p3, Direction arrowLocation)
 		{
 			Rectangle bounds = this.Client.Bounds;
 			bounds.Deflate (0.5);
 
 			double width;
 
-			switch (this.arrowLocation)
+			switch (arrowLocation)
 			{
 				default:
 				case Direction.Left:

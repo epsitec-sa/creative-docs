@@ -69,13 +69,13 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				ComboInitializer initlalizer = new ComboInitializer ();
+				ComboInitializer initializer = new ComboInitializer ();
 
-				initlalizer.Content.Add ("Monsieur",     "Monsieur");
-				initlalizer.Content.Add ("Madame",       "Madame");
-				initlalizer.Content.Add ("Mademoiselle", "Mademoiselle");
+				initializer.Content.Add ("Monsieur",     "Monsieur");
+				initializer.Content.Add ("Madame",       "Madame");
+				initializer.Content.Add ("Mademoiselle", "Mademoiselle");
 
-				return initlalizer;
+				return initializer;
 			}
 		}
 

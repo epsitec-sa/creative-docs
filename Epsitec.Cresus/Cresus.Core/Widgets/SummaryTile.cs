@@ -36,22 +36,15 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				if (Mode == Controllers.ViewControllerMode.Compact)
+				if (this.CompactFollower)
 				{
-					if (this.CompactFollower)
-					{
-						return 16;
-					}
-					else
-					{
-						string[] lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
-						double h = 20+lines.Length*16;  // TODO: provisoire
-						return System.Math.Max (h, this.PreferredHeight);
-					}
+					return 16;
 				}
 				else
 				{
-					return 200;
+					string[] lines = this.Summary.Split (new string[] { "<br/>" }, System.StringSplitOptions.None);
+					double h = 20+lines.Length*16;  // TODO: provisoire
+					return System.Math.Max (h, this.PreferredHeight);
 				}
 			}
 		}
