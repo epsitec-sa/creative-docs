@@ -497,7 +497,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		protected void CreateCombo(Widget embedder, int width, string label, EntitiesAccessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
+		protected void CreateCombo(Widget embedder, int width, string label, EntitiesAccessors.ComboInitializer initializer, bool readOnly, bool allowMultipleSelection, bool detailed, string initialValue, System.Action<string> callback, System.Func<string, bool> validator)
 		{
 			var staticText = new StaticText
 			{
@@ -507,63 +507,81 @@ namespace Epsitec.Cresus.Core.Controllers
 				Margins = new Margins (0, 10, 0, 2),
 			};
 
-			Widgets.SuperCombo combo;
-
-			if (width == 0)  // occupe toute la largeur ?
+			if (detailed)
 			{
-				combo = new Widgets.SuperCombo
-				{
-					Parent = embedder,
-					IsReadOnly = readOnly,
-					AllowMultipleSelection = allowMultipleSelection,
-					Text = initializer.ConvertInternalToEdition (initialValue),
-					Dock = DockStyle.Top,
-					Margins = new Margins (0, 10, 0, 5),
-					TabIndex = ++this.tabIndex,
-				};
-			}
-			else  // largeur partielle fixe ?
-			{
-				var box = new FrameBox
+				var combo = new Widgets.DetailedCombo
 				{
 					Parent = embedder,
 					Dock = DockStyle.Top,
-					TabIndex = ++this.tabIndex,
-				};
-
-				combo = new Widgets.SuperCombo
-				{
-					Parent = box,
-					IsReadOnly = readOnly,
+					Margins = new Margins (0, 0, 5, 5),
 					AllowMultipleSelection = allowMultipleSelection,
+					ComboInitializer = initializer,
 					Text = initializer.ConvertInternalToEdition (initialValue),
-					Dock = DockStyle.Left,
-					PreferredWidth = width,
-					Margins = new Margins (0, 10, 0, 5),
 					TabIndex = ++this.tabIndex,
 				};
+
+				this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
 			}
+			else
+			{
+				Widgets.SuperCombo combo;
 
-			initializer.InitializeCombo (combo);
+				if (width == 0)  // occupe toute la largeur ?
+				{
+					combo = new Widgets.SuperCombo
+					{
+						Parent = embedder,
+						IsReadOnly = readOnly,
+						AllowMultipleSelection = allowMultipleSelection,
+						Text = initializer.ConvertInternalToEdition (initialValue),
+						Dock = DockStyle.Top,
+						Margins = new Margins (0, 10, 0, 5),
+						TabIndex = ++this.tabIndex,
+					};
+				}
+				else  // largeur partielle fixe ?
+				{
+					var box = new FrameBox
+					{
+						Parent = embedder,
+						Dock = DockStyle.Top,
+						TabIndex = ++this.tabIndex,
+					};
 
-			this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
+					combo = new Widgets.SuperCombo
+					{
+						Parent = box,
+						IsReadOnly = readOnly,
+						AllowMultipleSelection = allowMultipleSelection,
+						Text = initializer.ConvertInternalToEdition (initialValue),
+						Dock = DockStyle.Left,
+						PreferredWidth = width,
+						Margins = new Margins (0, 10, 0, 5),
+						TabIndex = ++this.tabIndex,
+					};
+				}
+
+				initializer.InitializeCombo (combo);
+
+				this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
+			}
 		}
 
-		private void CreateComboHandler(AbstractTextField textField, System.Action<string> callback, System.Func<string, bool> validator, System.Func<string, string> converter)
+		private void CreateComboHandler(Widget widget, System.Action<string> callback, System.Func<string, bool> validator, System.Func<string, string> converter)
 		{
-			textField.TextChanged +=
+			widget.TextChanged +=
 				delegate (object sender)
 				{
-					string text = converter (textField.Text);
+					string text = converter (widget.Text);
 
 					if (validator == null || validator (text))
 					{
 						callback (text);
-						textField.SetError (false);
+						widget.SetError (false);
 					}
 					else
 					{
-						textField.SetError (true);
+						widget.SetError (true);
 					}
 				};
 		}

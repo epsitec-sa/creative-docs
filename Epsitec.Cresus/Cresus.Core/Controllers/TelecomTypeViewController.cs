@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//?this.CreateLinkButtons (tile.Container);
 
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateCombo (tile.Container, 150, "Type du numéro de téléphone", accessor.TelecomTypeInitializer, true, false, accessor.TelecomType, x => accessor.TelecomType = x, null);
+			this.CreateCombo (tile.Container, 150, "Type du numéro de téléphone", accessor.TelecomTypeInitializer, true, false, true, accessor.TelecomType, x => accessor.TelecomType = x, null);
 
 			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();

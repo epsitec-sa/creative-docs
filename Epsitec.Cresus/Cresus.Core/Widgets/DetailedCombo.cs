@@ -1,0 +1,140 @@
+﻿//	Copyright © 2008, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Cresus.Core.Widgets
+{
+	public class DetailedCombo : Widget
+	{
+		public DetailedCombo()
+		{
+		}
+
+		public DetailedCombo(Widget embedder)
+			: this ()
+		{
+			this.SetEmbedder (embedder);
+		}
+
+
+		public EntitiesAccessors.ComboInitializer ComboInitializer
+		{
+			get
+			{
+				return this.comboInitializer;
+			}
+			set
+			{
+				this.comboInitializer = value;
+				this.CreateUI ();
+			}
+		}
+
+		public bool AllowMultipleSelection
+		{
+			get;
+			set;
+		}
+
+
+		public void CreateUI()
+		{
+			int tabIndex = 1;
+
+			foreach (var pair in this.comboInitializer.Content)
+			{
+				AbstractButton button;
+
+				if (this.AllowMultipleSelection)
+				{
+					button = new CheckButton
+					{
+						Parent = this,
+						Name = pair.Key,
+						Text = pair.Value,
+						Dock = DockStyle.Top,
+						TabIndex = tabIndex++,
+					};
+				}
+				else
+				{
+					button = new RadioButton
+					{
+						Parent = this,
+						Name = pair.Key,
+						Text = pair.Value,
+						Dock = DockStyle.Top,
+						TabIndex = tabIndex++,
+					};
+				}
+
+				button.ActiveStateChanged += new EventHandler (this.HandleButtonActiveStateChanged);
+			}
+		}
+
+
+		private void TextToButtons()
+		{
+			string text = this.comboInitializer.ConvertEditionToInternal (this.Text);
+			text = text.Replace (",", " ");
+			string[] words = text.Split (' ');
+
+			foreach (AbstractButton button in this.Children)
+			{
+				button.ActiveState = (words.Contains (button.Name)) ? Common.Widgets.ActiveState.Yes : Common.Widgets.ActiveState.No;
+			}
+		}
+
+		private void ButtonsToText()
+		{
+			var builder = new System.Text.StringBuilder ();
+			bool first = true;
+
+			foreach (AbstractButton button in this.Children)
+			{
+				if (button.IsActive)
+				{
+					if (!first)
+					{
+						builder.Append (", ");
+					}
+
+					builder.Append (button.Text);
+					first = false;
+				}
+			}
+
+			this.ignoreChange = true;
+			this.Text = builder.ToString ();
+			this.ignoreChange = false;
+		}
+
+
+		protected override void OnTextChanged()
+		{
+			base.OnTextChanged ();
+
+			if (!this.ignoreChange)
+			{
+				this.TextToButtons ();
+			}
+		}
+
+
+		private void HandleButtonActiveStateChanged(object sender)
+		{
+			this.ButtonsToText ();
+		}
+
+
+		private EntitiesAccessors.ComboInitializer comboInitializer;
+		private bool ignoreChange;
+	}
+}

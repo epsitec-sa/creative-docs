@@ -28,18 +28,19 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 		public void InitializeCombo(Widgets.SuperCombo combo)
 		{
-			foreach (KeyValuePair<string, string> pair in this.content)
+			foreach (var pair in this.content)
 			{
 				combo.Items.Add (pair.Key, pair.Value);
 			}
 		}
+
 
 		public string ConvertInternalToEdition(string text)
 		{
 			text = text.Replace (",", " ");
 			string[] words = text.Split (' ');
 
-			StringBuilder builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 			bool first = true;
 
 			foreach (string word in words)
@@ -64,7 +65,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			text = text.Replace (",", " ");
 			string[] words = text.Split (' ');
 
-			StringBuilder builder = new StringBuilder ();
+			var builder = new StringBuilder ();
 			bool first = true;
 
 			foreach (string word in words)
