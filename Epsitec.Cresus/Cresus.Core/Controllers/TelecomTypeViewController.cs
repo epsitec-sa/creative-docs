@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class TelecomTypeViewController : EntityViewController
 	{
-		public TelecomTypeViewController(string name, ViewControllerMode mode)
-			: base (name, mode)
+		public TelecomTypeViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+			: base (name, entity, mode)
 		{
 		}
 
@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var accessor = new EntitiesAccessors.TelecomTypeAccessor (null, contact, false);
 
 			//	Crée les tuiles.
+			this.CreateHeaderEditorTile ();
 			Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
 			this.CreateFooterEditorTile ();
 

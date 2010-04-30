@@ -14,10 +14,19 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class EntityViewController : CoreViewController
 	{
-		public EntityViewController(string name, ViewControllerMode mode)
+		public EntityViewController(string name, AbstractEntity entity, ViewControllerMode mode)
 			: base (name)
 		{
+			this.entity = entity;
 			this.mode = mode;
+		}
+
+		public AbstractEntity Entity
+		{
+			get
+			{
+				return this.entity;
+			}
 		}
 
 		public ViewControllerMode Mode
@@ -26,12 +35,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				return this.mode;
 			}
-		}
-
-		public AbstractEntity Entity
-		{
-			get;
-			set;
 		}
 
 		public Orchestrators.DataViewOrchestrator Orchestrator
@@ -58,7 +61,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				return null;
 			}
 
-			controller.Entity = entity;
 			controller.Orchestrator = orchestrator;
 
 			return controller;
@@ -73,44 +75,44 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (entity is Entities.NaturalPersonEntity)
 			{
-				return new NaturalPersonViewController (name, mode);
+				return new NaturalPersonViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.LegalPersonEntity)
 			{
-				return new LegalPersonViewController (name, mode);
+				return new LegalPersonViewController (name, entity, mode);
 			}
 
 			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
 			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
 			{
-				return new RolesContactViewController (name, mode);
+				return new RolesContactViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.TelecomContactEntity && mode == ViewControllerMode.TelecomTypeEdition)
 			{
-				return new TelecomTypeViewController (name, mode);
+				return new TelecomTypeViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.UriContactEntity && mode == ViewControllerMode.UriSchemeEdition)
 			{
-				return new UriSchemeViewController (name, mode);
+				return new UriSchemeViewController (name, entity, mode);
 			}
 
 			//	Après...
 			if (entity is Entities.MailContactEntity)
 			{
-				return new MailContactViewController (name, mode);
+				return new MailContactViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.TelecomContactEntity)
 			{
-				return new TelecomContactViewController (name, mode);
+				return new TelecomContactViewController (name, entity, mode);
 			}
 
 			if (entity is Entities.UriContactEntity)
 			{
-				return new UriContactViewController (name, mode);
+				return new UriContactViewController (name, entity, mode);
 			}
 
 			// TODO: Compléter ici au fur et à mesure des besoins...
@@ -216,6 +218,31 @@ namespace Epsitec.Cresus.Core.Controllers
 			return tile;
 		}
 
+		protected void CreateHeaderEditorTile()
+		{
+			System.Diagnostics.Debug.Assert (this.container != null);
+
+#if true
+			var tile = new FrameBox
+			{
+				Parent = this.container,
+				Dock = DockStyle.Top,
+			};
+
+			var closeButton = new GlyphButton
+			{
+				Parent = tile,
+				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
+				GlyphShape = GlyphShape.Close,
+				Dock = DockStyle.Right,
+				PreferredSize = new Size(18, 18),
+				Margins = new Margins (0, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
+			};
+
+			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
+#endif
+		}
+
 		protected void CreateFooterEditorTile()
 		{
 			System.Diagnostics.Debug.Assert (this.container != null);
@@ -257,45 +284,49 @@ namespace Epsitec.Cresus.Core.Controllers
 			for (int i = 0; i < this.container.Children.Count; i++)
 			{
 				var currentTile = this.container.Children[i] as Widgets.AbstractTile;
-				var nextTile    = (i+1 < this.container.Children.Count) ? this.container.Children[i+1] as Widgets.AbstractTile : null;
-				System.Diagnostics.Debug.Assert (currentTile != null);
 
-				if (nextTile != null && currentTile.GroupIndex == nextTile.GroupIndex)  // dans le même groupe ?
+				if (currentTile != null)
 				{
-					currentTile.Margins = new Margins (0, 0, 0, -1);  // léger chevauchement
+					var nextTile = (i+1 < this.container.Children.Count) ? this.container.Children[i+1] as Widgets.AbstractTile : null;
+					System.Diagnostics.Debug.Assert (currentTile != null);
 
-					if (nextTile != null && nextTile.CompactFollower)
+					if (nextTile != null && currentTile.GroupIndex == nextTile.GroupIndex)  // dans le même groupe ?
 					{
-						if (first)
+						currentTile.Margins = new Margins (0, 0, 0, -1);  // léger chevauchement
+
+						if (nextTile != null && nextTile.CompactFollower)
 						{
-							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Up;
+							if (first)
+							{
+								currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Up;
+							}
+							else
+							{
+								currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right;
+							}
 						}
 						else
 						{
-							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right;
+							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
 						}
-					}
-					else
-					{
-						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
-					}
 
-					first = false;
-				}
-				else  // dans deux groupes différents ?
-				{
-					currentTile.Margins = new Margins (0, 0, 0, 4);  // espacement
-
-					if (first)
-					{
-						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
+						first = false;
 					}
-					else
+					else  // dans deux groupes différents ?
 					{
-						currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Down;
-					}
+						currentTile.Margins = new Margins (0, 0, 0, 4);  // espacement
 
-					first = true;
+						if (first)
+						{
+							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
+						}
+						else
+						{
+							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Down;
+						}
+
+						first = true;
+					}
 				}
 			}
 		}
@@ -648,7 +679,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CloseTile()
 		{
-			this.Orchestrator.CloseSubView ();
+			this.Orchestrator.CloseSubViews (this, true);
 		}
 
 
@@ -660,7 +691,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (tile.IsSelected || controller == null)
 			{
-				this.Orchestrator.CloseSubViews (this);
+				this.Orchestrator.CloseSubViews (this, false);
 			}
 			else
 			{
@@ -689,6 +720,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private readonly AbstractEntity entity;
 		private readonly ViewControllerMode mode;
 		protected Widget container;
 		private int tabIndex;

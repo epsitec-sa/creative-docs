@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class LegalPersonViewController : AbstractPersonViewController
 	{
-		public LegalPersonViewController(string name, ViewControllerMode mode)
-			: base (name, mode)
+		public LegalPersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+			: base (name, entity, mode)
 		{
 		}
 

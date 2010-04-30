@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public void PopViewController()
+		private void PopViewController()
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Count > 0);
 
@@ -109,11 +109,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public void PopViewControllersUntil(CoreViewController controller)
+		public void PopViewControllersUntil(CoreViewController controller, bool andMe)
 		{
 			System.Diagnostics.Debug.Assert (this.viewControllers.Contains (controller));
 
 			while (this.viewControllers.Peek () != controller)
+			{
+				this.PopViewController ();
+			}
+
+			if (andMe)
 			{
 				this.PopViewController ();
 			}
