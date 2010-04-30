@@ -138,6 +138,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
+				ArrowEnabled = true,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				ParentEntities = accessor.ParentEntities,
@@ -176,6 +177,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
+				ArrowEnabled = false,
 				EnteredSensitivity = childrenMode != ViewControllerMode.None,
 				EntitiesAccessor = accessor,
 				ParentEntities = accessor.ParentEntities,
@@ -207,6 +209,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
+				ArrowEnabled = false,
 				IsEditing = true,
 			};
 
@@ -223,6 +226,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Parent = this.container,
 				Dock = DockStyle.Top,
 				ArrowLocation = Direction.Right,
+				ArrowEnabled = false,
 				IsEditing = true,
 			};
 
