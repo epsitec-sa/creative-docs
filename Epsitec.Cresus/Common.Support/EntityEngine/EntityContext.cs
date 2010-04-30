@@ -418,6 +418,24 @@ namespace Epsitec.Common.Support.EntityEngine
 		}
 
 		/// <summary>
+		/// Gets the list of entity ids from the given one to the one of its top supertype,
+		/// including the given one.
+		/// </summary>
+		/// <param name="entityId">The entity id.</param>
+		/// <returns></returns>
+		public IEnumerable<Druid> GetHeritedEntityIds(Druid entityId)
+		{
+			Druid currentId = entityId;
+
+			while (currentId.IsValid)
+			{
+				yield return currentId;
+				
+				currentId = (this.GetStructuredType (currentId) as StructuredType).BaseTypeId;
+			}
+		}
+
+		/// <summary>
 		/// Creates an entity which can be used as a search template. The entity
 		/// implements <see cref="IFieldPropertyStore"/>.
 		/// </summary>
