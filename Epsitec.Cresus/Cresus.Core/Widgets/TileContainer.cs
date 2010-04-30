@@ -127,8 +127,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			Path outlinePath = this.GetFramePath (true);
-			Path surfacePath = this.GetFramePath (false);
+			Path outlinePath = this.GetFramePath (0 ,true);
+			Path surfacePath = this.GetFramePath (0, false);
+			Path enteredPath = this.HasMouseHilite && !this.HasRevertedArrow ? this.GetFramePath (2, true) : null;
 
 			double surfaceAlpha;
 
@@ -141,19 +142,21 @@ namespace Epsitec.Cresus.Core.Widgets
 				surfaceAlpha = this.SurfaceAlpha;
 			}
 
-			this.PaintPath (graphics, outlinePath, surfacePath, surfaceAlpha);
+			this.PaintPath (graphics, enteredPath, outlinePath, surfacePath, surfaceAlpha);
 		}
 
 		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			if (this.HasRevertedArrow)
 			{
-				Path path = this.GetRevertedFramePath ();
-				this.PaintPath (graphics, path, path, 0.2);
+				Path path = this.GetRevertedFramePath (0);
+				Path enteredPath = this.HasMouseHilite ? this.GetRevertedFramePath (2) : null;
+
+				this.PaintPath (graphics, enteredPath, path, path, 0.2);
 			}
 		}
 
-		private void PaintPath(Graphics graphics, Path outlinePath, Path surfacePath, double surfaceAlpha)
+		private void PaintPath(Graphics graphics, Path enteredPath, Path outlinePath, Path surfacePath, double surfaceAlpha)
 		{
 			//	Dessine toujous le fond.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -169,13 +172,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			graphics.RenderSolid (backColor);
 
 			//	En mode 'survolé' ou 'sélectionné', hilite le fond.
-			bool isEntered = this.IsEntered && this.enteredSensitivity;
-			if (isEntered || this.IsSelected || this.IsEditing)
+			if (this.HasMouseHilite || this.IsSelected || this.IsEditing)
 			{
 				backColor = new Color (surfaceAlpha, adorner.ColorCaption.R, adorner.ColorCaption.G, adorner.ColorCaption.B);
 
 				graphics.Rasterizer.AddSurface (surfacePath);
 				graphics.RenderSolid (backColor);
+			}
+
+			//	Dessine le hilite sous forme d'une jolie bordure orange, en accord avec l'adorner utilisé (mais pas les autres).
+			// TODO: Adapter aux autres adorners
+			if (enteredPath != null)
+			{
+				graphics.Rasterizer.AddOutline (enteredPath, 3);
+				graphics.RenderSolid (Color.FromHexa ("ffc83c"));  // orange
 			}
 
 			//	Dessine le cadre.
@@ -189,14 +199,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				double alpha = 0.05;
 
-				if (this.IsEntered && this.enteredSensitivity)
-				{
-					alpha *= 2;
-				}
-
 				if (this.IsSelected)
 				{
-					alpha *= 4;
+					alpha *= 2;
 				}
 
 				if (this.IsEditing)
@@ -208,61 +213,23 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		/// <summary>
-		/// Chemin permettant de dessiner la cadre du widget, avec ou sans flèche, selon l'état du widget.
-		/// </summary>
-		/// <value>The frame path.</value>
-		private Path GetFramePath(bool outline)
+		private Path GetFramePath(double deflate, bool outline)
 		{
-			Path path = new Path ();
-
-			Rectangle box;
-			Point pick;
-			this.ComputeArrowGeometry (out box, out pick);
+			Rectangle bounds = this.Client.Bounds;
+			bounds.Deflate (deflate);
 
 			if (this.HasArrow)
 			{
-				switch (this.arrowLocation)
-				{
-					case Direction.Left:
-						path.MoveTo (pick);
-						path.LineTo (box.BottomLeft);
-						path.LineTo (box.BottomRight);
-						path.LineTo (box.TopRight);
-						path.LineTo (box.TopLeft);
-						path.Close ();
-						break;
-
-					case Direction.Right:
-						path.MoveTo (pick);
-						path.LineTo (box.TopRight);
-						path.LineTo (box.TopLeft);
-						path.LineTo (box.BottomLeft);
-						path.LineTo (box.BottomRight);
-						path.Close ();
-						break;
-
-					case Direction.Up:
-						path.MoveTo (pick);
-						path.LineTo (box.TopLeft);
-						path.LineTo (box.BottomLeft);
-						path.LineTo (box.BottomRight);
-						path.LineTo (box.TopRight);
-						path.Close ();
-						break;
-
-					case Direction.Down:
-						path.MoveTo (pick);
-						path.LineTo (box.BottomRight);
-						path.LineTo (box.TopRight);
-						path.LineTo (box.TopLeft);
-						path.LineTo (box.BottomLeft);
-						path.Close ();
-						break;
-				}
+				return TileContainer.GetArrowPath (bounds, this.arrowLocation);
 			}
 			else
 			{
+				Path path = new Path ();
+
+				Rectangle box;
+				Point pick;
+				TileContainer.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+
 				if (this.rectangleBordersShowed == RectangleBordersShowedEnum.All || outline == false)
 				{
 					path.AppendRectangle (box);
@@ -293,59 +260,92 @@ namespace Epsitec.Cresus.Core.Widgets
 						path.LineTo (box.BottomRight);
 					}
 				}
-			}
 
-			return path;
+				return path;
+			}
 		}
 
-		private Path GetRevertedFramePath()
+		private Path GetRevertedFramePath(double deflate)
 		{
-			Path path = new Path ();
-
 			Rectangle bounds = this.Client.Bounds;
-			bounds.Deflate (0.5);
-
+			Direction arrowLocation = Direction.None;
 			double revertedarrowBody;
 
 			switch (this.arrowLocation)
 			{
 				case Direction.Left:
-					revertedarrowBody = bounds.Width*0.25;
-					path.MoveTo (bounds.Left+revertedarrowBody+TileContainer.arrowBreadth, (bounds.Bottom+bounds.Top)/2);
-					path.LineTo (Point.Move (bounds.TopLeft, bounds.TopRight, revertedarrowBody));
-					path.LineTo (bounds.TopLeft);
-					path.LineTo (bounds.BottomLeft);
-					path.LineTo (Point.Move (bounds.BottomLeft, bounds.BottomRight, revertedarrowBody));
+					arrowLocation = Direction.Right;
+					revertedarrowBody = System.Math.Floor (bounds.Width*0.25);
+					bounds = new Rectangle (bounds.Left, bounds.Bottom, revertedarrowBody, bounds.Height);
+					break;
+
+				case Direction.Right:
+					arrowLocation = Direction.Left;
+					revertedarrowBody = System.Math.Floor (bounds.Width*0.25);
+					bounds = new Rectangle (bounds.Right-revertedarrowBody, bounds.Bottom, revertedarrowBody, bounds.Height);
+					break;
+
+				case Direction.Up:
+					arrowLocation = Direction.Down;
+					revertedarrowBody = System.Math.Floor (bounds.Height*0.25);
+					bounds = new Rectangle (bounds.Left, bounds.Top-revertedarrowBody, bounds.Width, revertedarrowBody);
+					break;
+
+				case Direction.Down:
+					arrowLocation = Direction.Up;
+					revertedarrowBody = System.Math.Floor (bounds.Height*0.25);
+					bounds = new Rectangle (bounds.Left, bounds.Bottom, bounds.Width, revertedarrowBody);
+					break;
+			}
+
+			bounds.Deflate (deflate);
+
+			return TileContainer.GetArrowPath (bounds, arrowLocation);
+		}
+
+		private static Path GetArrowPath(Rectangle bounds, Direction arrowLocation)
+		{
+			Path path = new Path ();
+
+			Rectangle box;
+			Point pick;
+			TileContainer.ComputeArrowGeometry (bounds, arrowLocation, out box, out pick);
+
+			switch (arrowLocation)
+			{
+				case Direction.Left:
+					path.MoveTo (pick);
+					path.LineTo (box.BottomLeft);
+					path.LineTo (box.BottomRight);
+					path.LineTo (box.TopRight);
+					path.LineTo (box.TopLeft);
 					path.Close ();
 					break;
 
 				case Direction.Right:
-					revertedarrowBody = bounds.Width*0.25;
-					path.MoveTo (bounds.Right-revertedarrowBody-TileContainer.arrowBreadth, (bounds.Bottom+bounds.Top)/2);
-					path.LineTo (Point.Move (bounds.BottomRight, bounds.BottomLeft, revertedarrowBody));
-					path.LineTo (bounds.BottomRight);
-					path.LineTo (bounds.TopRight);
-					path.LineTo (Point.Move (bounds.TopRight, bounds.TopLeft, revertedarrowBody));
+					path.MoveTo (pick);
+					path.LineTo (box.TopRight);
+					path.LineTo (box.TopLeft);
+					path.LineTo (box.BottomLeft);
+					path.LineTo (box.BottomRight);
 					path.Close ();
 					break;
 
 				case Direction.Up:
-					revertedarrowBody = bounds.Height*0.25;
-					path.MoveTo ((bounds.Left+bounds.Right)/2, bounds.Top-revertedarrowBody-TileContainer.arrowBreadth);
-					path.LineTo (Point.Move (bounds.TopRight, bounds.BottomRight, revertedarrowBody));
-					path.LineTo (bounds.TopRight);
-					path.LineTo (bounds.TopLeft);
-					path.LineTo (Point.Move (bounds.TopLeft, bounds.BottomLeft, revertedarrowBody));
+					path.MoveTo (pick);
+					path.LineTo (box.TopLeft);
+					path.LineTo (box.BottomLeft);
+					path.LineTo (box.BottomRight);
+					path.LineTo (box.TopRight);
 					path.Close ();
 					break;
 
 				case Direction.Down:
-					revertedarrowBody = bounds.Height*0.25;
-					path.MoveTo ((bounds.Left+bounds.Right)/2, bounds.Bottom+revertedarrowBody+TileContainer.arrowBreadth);
-					path.LineTo (Point.Move (bounds.BottomLeft, bounds.TopLeft, revertedarrowBody));
-					path.LineTo (bounds.BottomLeft);
-					path.LineTo (bounds.BottomRight);
-					path.LineTo (Point.Move (bounds.BottomRight, bounds.TopRight, revertedarrowBody));
+					path.MoveTo (pick);
+					path.LineTo (box.BottomRight);
+					path.LineTo (box.TopRight);
+					path.LineTo (box.TopLeft);
+					path.LineTo (box.BottomLeft);
 					path.Close ();
 					break;
 			}
@@ -353,18 +353,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			return path;
 		}
 
-		/// <summary>
-		/// Calcule la géométrie pour la flèche.
-		/// </summary>
-		/// <param name="box">Boîte sans la flèche.</param>
-		/// <param name="pick">Pointe de la flèche.</param>
-		/// <value>The arrow rectangle.</value>
-		private void ComputeArrowGeometry(out Rectangle box, out Point pick)
+		private static void ComputeArrowGeometry(Rectangle bounds, Direction arrowLocation, out Rectangle box, out Point pick)
 		{
-			Rectangle bounds = this.Client.Bounds;
 			bounds.Deflate (0.5);
 
-			switch (this.arrowLocation)
+			switch (arrowLocation)
 			{
 				default:
 				case Direction.Left:
@@ -389,6 +382,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+
 		private bool HasArrow
 		{
 			get
@@ -401,7 +395,15 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return this.ArrowEnabled && this.IsSelected && this.IsEntered && this.enteredSensitivity;
+				return this.ArrowEnabled && this.IsSelected && this.HasMouseHilite;
+			}
+		}
+
+		private bool HasMouseHilite
+		{
+			get
+			{
+				return this.IsEntered && this.enteredSensitivity;
 			}
 		}
 

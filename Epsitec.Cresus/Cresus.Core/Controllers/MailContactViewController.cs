@@ -57,6 +57,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateTextField (group, 50, accessor.LocationPostalCode, x => accessor.LocationPostalCode = x, Validators.StringValidator.Validate);
 			this.CreateTextField (group, 0, accessor.LocationName, x => accessor.LocationName = x, Validators.StringValidator.Validate);
 
+			this.CreateTextFieldPair (tile2.Container, 50, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.countryConverter);
+			this.CreateTextFieldPair (tile2.Container, 50, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
+
+#if false
 			group = this.CreateGroup (tile2.Container, "Code et nom du pays");
 			this.CreateTextField (group, 50, accessor.CountryCode, x => accessor.CountryCode = x, Validators.StringValidator.Validate);
 			this.CreateTextField (group, 0, accessor.CountryName, x => accessor.CountryName = x, Validators.StringValidator.Validate);
@@ -64,6 +68,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			group = this.CreateGroup (tile2.Container, "Code et nom de la région");
 			this.CreateTextField (group, 50, accessor.RegionCode, x => accessor.RegionCode = x, Validators.StringValidator.Validate);
 			this.CreateTextField (group, 0, accessor.RegionName, x => accessor.RegionName = x, Validators.StringValidator.Validate);
+#endif
 
 			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
