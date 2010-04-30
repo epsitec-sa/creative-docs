@@ -199,6 +199,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				}
 
 				groupIndex++;
+
+				this.CreateFooterEditorTile ();
 			}
 
 			this.AdjustVisualForGroups ();

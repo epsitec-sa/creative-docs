@@ -110,6 +110,7 @@
     <Compile Include="EntitiesAccessors\AbstractAccessor.cs" />
     <Compile Include="EntitiesAccessors\AbstractContactAccessor.cs" />
     <Compile Include="EntitiesAccessors\ComboInitializer.cs" />
+    <Compile Include="EntitiesAccessors\BidirectionnalConverter.cs" />
     <Compile Include="EntitiesAccessors\UriSchemeAccessor.cs" />
     <Compile Include="EntitiesAccessors\TelecomTypeAccessor.cs" />
     <Compile Include="EntitiesAccessors\RolesContactAccessor.cs" />
