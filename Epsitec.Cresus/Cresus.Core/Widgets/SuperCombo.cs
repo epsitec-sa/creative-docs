@@ -238,8 +238,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private bool IsSelectedItem(string text)
 		{
-			string content = this.Text.Replace (",", " ");
-			string[] words = content.Split (' ');
+			var words = Misc.Split (this.Text.Replace (",", " "), " ");
 
 			foreach (var word in words)
 			{
@@ -256,8 +255,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.selections.Clear ();
 
-			string content = this.Text.Replace (",", " ");
-			string[] words = content.Split (' ');
+			var words = Misc.Split (this.Text.Replace (",", " "), " ");
 
 			foreach (var word in words)
 			{
