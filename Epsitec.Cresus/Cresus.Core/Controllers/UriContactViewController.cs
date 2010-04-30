@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class UriContactViewController : EntityViewController
 	{
-		public UriContactViewController(string name, ViewControllerMode mode)
-			: base (name, mode)
+		public UriContactViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+			: base (name, entity, mode)
 		{
 		}
 
@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			var accessor = new EntitiesAccessors.UriContactAccessor (null, this.Entity as Entities.UriContactEntity, false);
 
 			//	Crée les tuiles.
+			this.CreateHeaderEditorTile ();
 			Widgets.AbstractTile tile1 = this.CreateEditionTile (accessor, ViewControllerMode.None);
 
 			var roleAccessor = new EntitiesAccessors.RolesContactAccessor (null, accessor.UriContact, false);

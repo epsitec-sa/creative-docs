@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class AbstractPersonViewController : EntityViewController
 	{
-		public AbstractPersonViewController(string name, ViewControllerMode mode)
-			: base (name, mode)
+		public AbstractPersonViewController(string name, AbstractEntity entity, ViewControllerMode mode)
+			: base (name, entity, mode)
 		{
 		}
 
@@ -67,8 +67,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (person is Entities.NaturalPersonEntity)
 				{
+					this.CreateHeaderEditorTile ();
+
 					var accessor = new EntitiesAccessors.NaturalPersonAccessor (null, person as Entities.NaturalPersonEntity, false);
 					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+
 					this.CreateFooterEditorTile ();
 
 					this.CreateCombo (tile.Container, 150, "Titre", accessor.TitleInitializer, false, false, false, accessor.NaturalTitle, x => accessor.NaturalTitle = x, null);
@@ -80,8 +83,11 @@ namespace Epsitec.Cresus.Core.Controllers
 
 				if (person is Entities.LegalPersonEntity)
 				{
+					this.CreateHeaderEditorTile ();
+
 					var accessor = new EntitiesAccessors.LegalPersonAccessor (null, person as Entities.LegalPersonEntity, false);
 					Widgets.AbstractTile tile = this.CreateEditionTile (accessor, ViewControllerMode.None);
+					
 					this.CreateFooterEditorTile ();
 
 					this.CreateTextField (tile.Container, 0, "Nom complet", accessor.LegalPerson.Name, x => accessor.LegalPerson.Name = x, Validators.StringValidator.Validate);
@@ -94,6 +100,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 			else
 			{
+				this.CreateHeaderEditorTile ();
+
 				int groupIndex = 0;
 
 				//	Une première tuile pour l'identité de la personne.
