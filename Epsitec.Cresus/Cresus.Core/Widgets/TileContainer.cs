@@ -69,6 +69,12 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		public bool ArrowEnabled
+		{
+			get;
+			set;
+		}
+
 		/// <summary>
 		/// Détermine quels sont les bords visibles lorsque le conteneur n'a pas de flèche et
 		/// qu'il a alors la forme d'un simple rectangle.
@@ -214,7 +220,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			Point pick;
 			this.ComputeArrowGeometry (out box, out pick);
 
-			if (this.IsSelected && !this.HasRevertedArrow)
+			if (this.HasArrow)
 			{
 				switch (this.arrowLocation)
 				{
@@ -383,11 +389,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private bool HasArrow
+		{
+			get
+			{
+				return this.ArrowEnabled && (this.IsSelected || this.IsEntered) && !this.HasRevertedArrow;
+			}
+		}
+
 		private bool HasRevertedArrow
 		{
 			get
 			{
-				return this.IsSelected && this.IsEntered && this.enteredSensitivity;
+				return this.ArrowEnabled && this.IsSelected && this.IsEntered && this.enteredSensitivity;
 			}
 		}
 
