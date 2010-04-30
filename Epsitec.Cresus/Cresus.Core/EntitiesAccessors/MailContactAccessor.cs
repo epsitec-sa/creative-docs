@@ -17,52 +17,54 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			MailContactAccessor.countryConverter = new BidirectionnalConverter ();
 
-			MailContactAccessor.countryConverter.Add ("CH", "Suisse");
-			MailContactAccessor.countryConverter.Add ("FR", "France");
-			MailContactAccessor.countryConverter.Add ("DE", "Allemagne");
+			// TODO: A compléter à l'occasion, mais il ne faut surtout pas y mettre tous les pays du monde,
+			//		 sous peine de rendre l'usage peinible !
 			MailContactAccessor.countryConverter.Add ("BE", "Belgique");
-			MailContactAccessor.countryConverter.Add ("UK", "Angleterre");
-			MailContactAccessor.countryConverter.Add ("IT", "Italie");
+			MailContactAccessor.countryConverter.Add ("CA", "Canada");
+			MailContactAccessor.countryConverter.Add ("CH", "Suisse");
+			MailContactAccessor.countryConverter.Add ("CN", "Chine");
+			MailContactAccessor.countryConverter.Add ("DE", "Allemagne");
 			MailContactAccessor.countryConverter.Add ("DK", "Danemark");
 			MailContactAccessor.countryConverter.Add ("FI", "Finlande");
+			MailContactAccessor.countryConverter.Add ("FR", "France");
 			MailContactAccessor.countryConverter.Add ("GR", "Grèce");
+			MailContactAccessor.countryConverter.Add ("IT", "Italie");
+			MailContactAccessor.countryConverter.Add ("JP", "Japon");
 			MailContactAccessor.countryConverter.Add ("LU", "Luxembourg");
 			MailContactAccessor.countryConverter.Add ("NO", "Norvège");
-			MailContactAccessor.countryConverter.Add ("SE", "Suède");
 			MailContactAccessor.countryConverter.Add ("PT", "Portugal");
+			MailContactAccessor.countryConverter.Add ("SE", "Suède");
+			MailContactAccessor.countryConverter.Add ("UK", "Angleterre");
 			MailContactAccessor.countryConverter.Add ("US", "USA");
-			MailContactAccessor.countryConverter.Add ("CA", "Canada");
-			MailContactAccessor.countryConverter.Add ("JP", "Japon");
-			MailContactAccessor.countryConverter.Add ("CN", "Chine");
 
 			MailContactAccessor.regionConverter = new BidirectionnalConverter ();
 
-			MailContactAccessor.regionConverter.Add ("ZH", "Zurich");
-			MailContactAccessor.regionConverter.Add ("BE", "Berne");
-			MailContactAccessor.regionConverter.Add ("LU", "Lucerne");
-			MailContactAccessor.regionConverter.Add ("UR", "Uri");
-			MailContactAccessor.regionConverter.Add ("SZ", "Schwytz");
-			MailContactAccessor.regionConverter.Add ("OW", "Obwald");
-			MailContactAccessor.regionConverter.Add ("NW", "Nidwald");
-			MailContactAccessor.regionConverter.Add ("GL", "Glaris");
-			MailContactAccessor.regionConverter.Add ("ZG", "Zoug");
-			MailContactAccessor.regionConverter.Add ("FR", "Fribourg");
-			MailContactAccessor.regionConverter.Add ("SO", "Soleure");
-			MailContactAccessor.regionConverter.Add ("BS", "Bâle-Ville");
-			MailContactAccessor.regionConverter.Add ("BL", "Bâle-Campagne");
-			MailContactAccessor.regionConverter.Add ("SH", "Schaffhouse");
-			MailContactAccessor.regionConverter.Add ("AR", "Appenzell Rhodes-Extérieures");
-			MailContactAccessor.regionConverter.Add ("AI", "Appenzell Rhodes-Intérieures");
-			MailContactAccessor.regionConverter.Add ("SG", "Saint-Gall");
-			MailContactAccessor.regionConverter.Add ("GR", "Grisons");
 			MailContactAccessor.regionConverter.Add ("AG", "Argovie");
+			MailContactAccessor.regionConverter.Add ("AI", "Appenzell Rhodes-Intérieures");
+			MailContactAccessor.regionConverter.Add ("AR", "Appenzell Rhodes-Extérieures");
+			MailContactAccessor.regionConverter.Add ("BE", "Berne");
+			MailContactAccessor.regionConverter.Add ("BL", "Bâle-Campagne");
+			MailContactAccessor.regionConverter.Add ("BS", "Bâle-Ville");
+			MailContactAccessor.regionConverter.Add ("FR", "Fribourg");
+			MailContactAccessor.regionConverter.Add ("GE", "Genève");
+			MailContactAccessor.regionConverter.Add ("GL", "Glaris");
+			MailContactAccessor.regionConverter.Add ("GR", "Grisons");
+			MailContactAccessor.regionConverter.Add ("JU", "Jura");
+			MailContactAccessor.regionConverter.Add ("LU", "Lucerne");
+			MailContactAccessor.regionConverter.Add ("NE", "Neuchâtel");
+			MailContactAccessor.regionConverter.Add ("NW", "Nidwald");
+			MailContactAccessor.regionConverter.Add ("OW", "Obwald");
+			MailContactAccessor.regionConverter.Add ("SG", "Saint-Gall");
+			MailContactAccessor.regionConverter.Add ("SH", "Schaffhouse");
+			MailContactAccessor.regionConverter.Add ("SO", "Soleure");
+			MailContactAccessor.regionConverter.Add ("SZ", "Schwytz");
 			MailContactAccessor.regionConverter.Add ("TG", "Thurgovie");
 			MailContactAccessor.regionConverter.Add ("TI", "Tessin");
+			MailContactAccessor.regionConverter.Add ("UR", "Uri");
 			MailContactAccessor.regionConverter.Add ("VD", "Vaud");
 			MailContactAccessor.regionConverter.Add ("VS", "Valais");
-			MailContactAccessor.regionConverter.Add ("NE", "Neuchâtel");
-			MailContactAccessor.regionConverter.Add ("GE", "Genève");
-			MailContactAccessor.regionConverter.Add ("JU", "Jura");
+			MailContactAccessor.regionConverter.Add ("ZG", "Zoug");
+			MailContactAccessor.regionConverter.Add ("ZH", "Zurich");
 		}
 
 		public MailContactAccessor(object parentEntities, AbstractEntity entity, bool grouped)

@@ -54,6 +54,22 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		}
 
 
+		public void InitializeComboWithKeys(Widgets.SuperCombo combo)
+		{
+			foreach (var pair in this.content)
+			{
+				combo.Items.Add (pair.Key);
+			}
+		}
+
+		public void InitializeComboWithValues(Widgets.SuperCombo combo)
+		{
+			foreach (var pair in this.content)
+			{
+				combo.Items.Add (pair.Value);
+			}
+		}
+
 
 		private Dictionary<string, string> content;
 	}
