@@ -556,61 +556,66 @@ namespace Epsitec.Cresus.Core.Controllers
 				TabIndex = ++this.tabIndex,
 			};
 
-			var textField1 = new TextField
+			var combo1 = new Widgets.SuperCombo
 			{
 				Parent = frameBox,
 				Text = initialValue1,
+				AllowMultipleSelection = false,
 				Dock = DockStyle.Left,
 				PreferredWidth = width1,
 				Margins = new Margins (0, 2, 0, 0),
 				TabIndex = ++this.tabIndex,
 			};
 
-			var textField2 = new TextField
+			var combo2 = new Widgets.SuperCombo
 			{
 				Parent = frameBox,
+				AllowMultipleSelection = false,
 				Text = initialValue2,
 				Dock = DockStyle.Fill,
 				TabIndex = ++this.tabIndex,
 			};
 
-			textField1.TextChanged +=
+			converter.InitializeComboWithKeys (combo1);
+			converter.InitializeComboWithValues (combo2);
+
+			combo1.TextChanged +=
 				delegate (object sender)
 				{
-					if (validator1 == null || validator1 (textField1.Text))
+					if (validator1 == null || validator1 (combo1.Text))
 					{
-						callback1 (textField1.Text);
-						textField1.SetError (false);
+						callback1 (combo1.Text);
+						combo1.SetError (false);
 
-						string text2 = converter.KeyToValue (textField1.Text);
+						string text2 = converter.KeyToValue (combo1.Text);
 						if (!string.IsNullOrEmpty (text2))
 						{
-							textField2.Text = text2;
+							combo2.Text = text2;
 						}
 					}
 					else
 					{
-						textField1.SetError (true);
+						combo1.SetError (true);
 					}
 				};
 
-			textField2.TextChanged +=
+			combo2.TextChanged +=
 				delegate (object sender)
 				{
-					if (validator2 == null || validator2 (textField2.Text))
+					if (validator2 == null || validator2 (combo2.Text))
 					{
-						callback2 (textField2.Text);
-						textField2.SetError (false);
+						callback2 (combo2.Text);
+						combo2.SetError (false);
 
-						string text1 = converter.ValueToKey (textField2.Text);
+						string text1 = converter.ValueToKey (combo2.Text);
 						if (!string.IsNullOrEmpty (text1))
 						{
-							textField1.Text = text1;
+							combo1.Text = text1;
 						}
 					}
 					else
 					{
-						textField2.SetError (true);
+						combo2.SetError (true);
 					}
 				};
 		}

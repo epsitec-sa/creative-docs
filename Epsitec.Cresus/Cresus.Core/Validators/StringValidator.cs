@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Validators
 	{
 		public static bool Validate(string value)
 		{
-			return value.Length < 20;  // TODO: pour tester...
+			return value.Length < 40;  // TODO: pour tester...
 		}
 	}
 }
