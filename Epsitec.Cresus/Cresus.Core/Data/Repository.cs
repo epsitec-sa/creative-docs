@@ -15,10 +15,10 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Data
 {
 
-	class Repository
+	public class Repository
 	{
 
-		protected Repository(DbInfrastructure dbInfrastructure, DataContext dataContext)
+		public Repository(DbInfrastructure dbInfrastructure, DataContext dataContext)
 		{
 			this.DbInfrastructure = dbInfrastructure;
 			this.DataContext = dataContext;

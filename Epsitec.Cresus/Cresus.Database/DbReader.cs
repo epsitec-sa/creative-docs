@@ -5,6 +5,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Database
 {
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.Database
 			this.longToShortTableAliasMap = new Dictionary<string, string> ();
 			this.shortAliasToTableMap = new Dictionary<string, DbTable> ();
 			this.shortAliasToColumnMap = new Dictionary<string, DbTableColumn> ();
+			this.shortTableAliasOrdered = new List<string> ();
 			this.renamedTables = new List<DbTable> ();
 			this.renamedTableColumns = new List<DbTableColumn>();
 			this.joinsWithTableAlias = new List<DbJoin> ();
@@ -363,6 +365,7 @@ namespace Epsitec.Cresus.Database
 				
 				shortTableAlias = string.Format (System.Globalization.CultureInfo.InvariantCulture, "T{0}", tableIndex);
 
+				this.shortTableAliasOrdered.Add (shortTableAlias);
 				this.longToShortTableAliasMap[longTableAlias] = shortTableAlias;
 				this.shortAliasToTableMap[shortTableAlias] = originalTableColumn.Table;
 				this.renamedTables.Add (originalTableColumn.Table);
@@ -375,7 +378,7 @@ namespace Epsitec.Cresus.Database
 		{
 			return new DbTableColumn (column.Column)
 			{
-				TableAlias  =  this.RegisterTable (column),
+				TableAlias =  this.RegisterTable (column),
 			};
 		}
 
@@ -472,10 +475,17 @@ namespace Epsitec.Cresus.Database
 
 		private IEnumerable<KeyValuePair<string, DbTable>> GetAliasTables()
 		{
-			List<string> keys = new List<string> (this.shortAliasToTableMap.Keys);
-			
-			keys.Sort ();
-			
+			// Before, the keys where ordered alphabetically, but I need them to be ordered in
+			// the order in which they are registered, because of the joins and how the sql
+			// query is generated with the SqlSelect object. I leave the previous code here
+			// because there might have been a good reason why the tables where ordered
+			// alphabetically.
+
+			//List<string> keys = new List<string> (this.shortAliasToTableMap.Keys);
+			//keys.Sort ();
+
+			List<string> keys = this.shortTableAliasOrdered;
+
 			foreach (string key in keys)
 			{
 				DbTable value = this.shortAliasToTableMap[key];
@@ -489,6 +499,7 @@ namespace Epsitec.Cresus.Database
 		private readonly Dictionary<string, string> longToShortTableAliasMap;
 		private readonly Dictionary<string, DbTable> shortAliasToTableMap;
 		private readonly Dictionary<string, DbTableColumn> shortAliasToColumnMap;
+		private readonly List<string> shortTableAliasOrdered;
 		private readonly List<DbTable> renamedTables;
 		private readonly List<DbTableColumn> renamedTableColumns;
 		private readonly List<DbJoin> joinsWithTableAlias;

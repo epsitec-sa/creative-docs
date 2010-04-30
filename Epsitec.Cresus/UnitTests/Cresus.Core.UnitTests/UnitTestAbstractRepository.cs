@@ -57,15 +57,15 @@ namespace Epsitec.Cresus.Core
 				PersonTitleEntity mister = this.CreateTitle (dataContext, "Mister", "M");
 				PersonTitleEntity lady = this.CreateTitle (dataContext, "Lady", "L");
 
-				LegalPersonTypeEntity sa = this.CreateLegalPersonType (dataContext, "Société anonyme", "SA");
-				LegalPersonTypeEntity sarl = this.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
+				//LegalPersonTypeEntity sa = this.CreateLegalPersonType (dataContext, "Société anonyme", "SA");
+				//LegalPersonTypeEntity sarl = this.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
 
 				NaturalPersonEntity alfred = this.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, mister, male, contactAlfred);
 				NaturalPersonEntity gertrude = this.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female, contactGertrude);
 				NaturalPersonEntity hans = this.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, male, contactHans);
 
-				LegalPersonEntity papetVaudois = this.CreateLegalPerson (dataContext, "Papet Vaudois SA", sa, french);
-				LegalPersonEntity bratwurst = this.CreateLegalPerson (dataContext, "Bratwurst SARL", sarl, german);
+				//LegalPersonEntity papetVaudois = this.CreateLegalPerson (dataContext, "Papet Vaudois SA", sa, french);
+				//LegalPersonEntity bratwurst = this.CreateLegalPerson (dataContext, "Bratwurst SARL", sarl, german);
 
 				dataContext.SaveChanges ();
 			}
@@ -76,18 +76,34 @@ namespace Epsitec.Cresus.Core
 		{
 			using (DataContext dataContext = new DataContext (UnitTestAbstractRepository.dbInfrastructure))
 			{
-				GenericRepository<NaturalPersonEntity> naturalPersonRepository = new GenericRepository<NaturalPersonEntity> (UnitTestAbstractRepository.dbInfrastructure, dataContext);
-				GenericRepository<AbstractPersonEntity> abstractPersonRepository = new GenericRepository<AbstractPersonEntity> (UnitTestAbstractRepository.dbInfrastructure, dataContext);
+				Repository repository = new Repository (UnitTestAbstractRepository.dbInfrastructure, dataContext);
 
-				NaturalPersonEntity alfredExample = new NaturalPersonEntity ()
+				NaturalPersonEntity example = new NaturalPersonEntity ()
 				{
-				    Firstname = "Alfred",
+					PreferredLanguage = new LanguageEntity ()
+					{
+					    Code = "Fr",
+					    Name = "French",
+					},
+					Firstname = "Alfred",
+					Gender = new PersonGenderEntity ()
+					{
+						Code = "M",
+						Name = "Male",
+					},
 				};
 
-				AbstractPersonEntity personExample = new AbstractPersonEntity();
+				example.Contacts.Add (new UriContactEntity ()
+				{
+					Uri = "alfred@coucou.com",
+					UriScheme = new UriSchemeEntity ()
+					{
+						Name = "email",
+						Code = "mailto:",
+					},
+				});
 
-				//AbstractPersonEntity person = abstractPersonRepository.GetEntityByExample (personExample);
-				NaturalPersonEntity alfred = naturalPersonRepository.GetEntityByExample (alfredExample);
+				NaturalPersonEntity person = repository.GetEntityByExample<NaturalPersonEntity> (example);
 			}
 		}
 
