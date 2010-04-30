@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.Core.Widgets
 	{
 		public AbstractTile()
 		{
-			this.PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2+AbstractTile.iconLeftGap*2;
+			this.PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2;
 			this.EnableCreateAndRemoveButton = false;
 
 			//	Crée deux panneaux gauche/droite.
 			this.leftPanel = new FrameBox
 			{
 				Parent = this,
-				PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2+AbstractTile.iconLeftGap*2,
+				PreferredWidth = AbstractTile.iconSize+AbstractTile.iconMargins*2,
 				Dock = DockStyle.Left,
 			};
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			this.staticTextTopLeftIcon = new StaticText
 			{
 				Parent = this.leftPanel,
-				Margins = new Margins (AbstractTile.iconMargins+AbstractTile.iconLeftGap, AbstractTile.iconMargins+AbstractTile.iconLeftGap, AbstractTile.iconMargins, AbstractTile.iconMargins),
+				Margins = new Margins (AbstractTile.iconMargins),
 				PreferredSize = new Size (AbstractTile.iconSize, AbstractTile.iconSize),
 				Dock = DockStyle.Top,
 				ContentAlignment = Common.Drawing.ContentAlignment.MiddleCenter,
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			get
 			{
-				return AbstractTile.iconSize+AbstractTile.iconMargins*2+AbstractTile.iconLeftGap*2;
+				return AbstractTile.iconSize+AbstractTile.iconMargins*2;
 			}
 		}
 	
@@ -378,7 +378,6 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 		private static readonly double iconSize = 32;
-		private static readonly double iconLeftGap = 5;
 		private static readonly double iconMargins = 2;
 		private static readonly double titleHeight = 18;
 		private static readonly double simpleButtonSize = 16;

@@ -121,38 +121,37 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			Path outlinePath = this.GetFramePath (true);
+			Path surfacePath = this.GetFramePath (false);
 
-			bool isEntered = this.IsEntered && this.enteredSensitivity;
-			Direction arrowLocation = this.arrowLocation;
+			double surfaceAlpha;
 
-			if (this.IsSelected && isEntered)
+			if (this.HasRevertedArrow)
 			{
-				//	Si la flèche est visible et que la souris survole le widget, on inverse son sens.
-				switch (arrowLocation)
-				{
-					case Direction.Left:
-						arrowLocation = Direction.Right;
-						break;
-
-					case Direction.Right:
-						arrowLocation = Direction.Left;
-						break;
-
-					case Direction.Up:
-						arrowLocation = Direction.Down;
-						break;
-
-					case Direction.Down:
-						arrowLocation = Direction.Up;
-						break;
-				}
+				surfaceAlpha = 0.1;
+			}
+			else
+			{
+				surfaceAlpha = this.SurfaceAlpha;
 			}
 
-			Path outlinePath = this.GetFramePath (true,  arrowLocation);
-			Path surfacePath = this.GetFramePath (false, arrowLocation);
+			this.PaintPath (graphics, outlinePath, surfacePath, surfaceAlpha);
+		}
 
+		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			if (this.HasRevertedArrow)
+			{
+				Path path = this.GetRevertedFramePath ();
+				this.PaintPath (graphics, path, path, 0.2);
+			}
+		}
+
+		private void PaintPath(Graphics graphics, Path outlinePath, Path surfacePath, double surfaceAlpha)
+		{
 			//	Dessine toujous le fond.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
 			Color backColor = this.BackColor;
 
 			if (backColor.IsVisible == false)
@@ -164,11 +163,27 @@ namespace Epsitec.Cresus.Core.Widgets
 			graphics.RenderSolid (backColor);
 
 			//	En mode 'survolé' ou 'sélectionné', hilite le fond.
+			bool isEntered = this.IsEntered && this.enteredSensitivity;
 			if (isEntered || this.IsSelected || this.IsEditing)
+			{
+				backColor = new Color (surfaceAlpha, adorner.ColorCaption.R, adorner.ColorCaption.G, adorner.ColorCaption.B);
+
+				graphics.Rasterizer.AddSurface (surfacePath);
+				graphics.RenderSolid (backColor);
+			}
+
+			//	Dessine le cadre.
+			graphics.Rasterizer.AddOutline (outlinePath);
+			graphics.RenderSolid (adorner.ColorBorder);
+		}
+
+		private double SurfaceAlpha
+		{
+			get
 			{
 				double alpha = 0.05;
 
-				if (isEntered)
+				if (this.IsEntered && this.enteredSensitivity)
 				{
 					alpha *= 2;
 				}
@@ -183,33 +198,25 @@ namespace Epsitec.Cresus.Core.Widgets
 					alpha *= 2;
 				}
 
-				backColor = new Color (alpha, adorner.ColorCaption.R, adorner.ColorCaption.G, adorner.ColorCaption.B);
-
-				graphics.Rasterizer.AddSurface (surfacePath);
-				graphics.RenderSolid (backColor);
+				return alpha;
 			}
-
-			//	Dessine le cadre.
-			graphics.Rasterizer.AddOutline (outlinePath);
-			graphics.RenderSolid (adorner.ColorBorder);
-
 		}
 
 		/// <summary>
 		/// Chemin permettant de dessiner la cadre du widget, avec ou sans flèche, selon l'état du widget.
 		/// </summary>
 		/// <value>The frame path.</value>
-		private Path GetFramePath(bool outline, Direction arrowLocation)
+		private Path GetFramePath(bool outline)
 		{
 			Path path = new Path ();
 
 			Rectangle box;
 			Point p1, p2, p3;
-			this.ComputeArrowGeometry (out box, out p1, out p2, out p3, arrowLocation);
+			this.ComputeArrowGeometry (out box, out p1, out p2, out p3);
 
-			if (this.IsSelected)
+			if (this.IsSelected && !this.HasRevertedArrow)
 			{
-				switch (arrowLocation)
+				switch (this.arrowLocation)
 				{
 					case Direction.Left:
 						path.MoveTo (p2);
@@ -293,6 +300,61 @@ namespace Epsitec.Cresus.Core.Widgets
 			return path;
 		}
 
+		private Path GetRevertedFramePath()
+		{
+			Path path = new Path ();
+
+			Rectangle bounds = this.Client.Bounds;
+			bounds.Deflate (0.5);
+
+			double revertedarrowBody;
+
+			switch (this.arrowLocation)
+			{
+				case Direction.Left:
+					revertedarrowBody = bounds.Width*0.25;
+					path.MoveTo (bounds.Left+revertedarrowBody+TileContainer.arrowBreadth, (bounds.Bottom+bounds.Top)/2);
+					path.LineTo (Point.Move (bounds.TopLeft, bounds.TopRight, revertedarrowBody));
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (Point.Move (bounds.BottomLeft, bounds.BottomRight, revertedarrowBody));
+					path.Close ();
+					break;
+
+				case Direction.Right:
+					revertedarrowBody = bounds.Width*0.25;
+					path.MoveTo (bounds.Right-revertedarrowBody-TileContainer.arrowBreadth, (bounds.Bottom+bounds.Top)/2);
+					path.LineTo (Point.Move (bounds.BottomRight, bounds.BottomLeft, revertedarrowBody));
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (bounds.TopRight);
+					path.LineTo (Point.Move (bounds.TopRight, bounds.TopLeft, revertedarrowBody));
+					path.Close ();
+					break;
+
+				case Direction.Up:
+					revertedarrowBody = bounds.Height*0.25;
+					path.MoveTo ((bounds.Left+bounds.Right)/2, bounds.Top-revertedarrowBody-TileContainer.arrowBreadth);
+					path.LineTo (Point.Move (bounds.TopRight, bounds.BottomRight, revertedarrowBody));
+					path.LineTo (bounds.TopRight);
+					path.LineTo (bounds.TopLeft);
+					path.LineTo (Point.Move (bounds.TopLeft, bounds.BottomLeft, revertedarrowBody));
+					path.Close ();
+					break;
+
+				case Direction.Down:
+					revertedarrowBody = bounds.Height*0.25;
+					path.MoveTo ((bounds.Left+bounds.Right)/2, bounds.Bottom+revertedarrowBody+TileContainer.arrowBreadth);
+					path.LineTo (Point.Move (bounds.BottomLeft, bounds.TopLeft, revertedarrowBody));
+					path.LineTo (bounds.BottomLeft);
+					path.LineTo (bounds.BottomRight);
+					path.LineTo (Point.Move (bounds.BottomRight, bounds.TopRight, revertedarrowBody));
+					path.Close ();
+					break;
+			}
+
+			return path;
+		}
+
 		/// <summary>
 		/// Calcule la géométrie pour la flèche. Les points p1, p2 et p3 sont dans le sens CCW.
 		/// </summary>
@@ -301,14 +363,14 @@ namespace Epsitec.Cresus.Core.Widgets
 		/// <param name="p2">Pointe de la flèche.</param>
 		/// <param name="p3">Arrivée de la flèche.</param>
 		/// <value>The arrow rectangle.</value>
-		private void ComputeArrowGeometry(out Rectangle box, out Point p1, out Point p2, out Point p3, Direction arrowLocation)
+		private void ComputeArrowGeometry(out Rectangle box, out Point p1, out Point p2, out Point p3)
 		{
 			Rectangle bounds = this.Client.Bounds;
 			bounds.Deflate (0.5);
 
 			double width;
 
-			switch (arrowLocation)
+			switch (this.arrowLocation)
 			{
 				default:
 				case Direction.Left:
@@ -345,9 +407,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
+		private bool HasRevertedArrow
+		{
+			get
+			{
+				return this.IsSelected && this.IsEntered && this.enteredSensitivity;
+			}
+		}
+
 
 		private static readonly double arrowWidth = 24;
 		private static readonly double arrowBreadth = 8;
+		private static readonly double revertedarrowBody = 20;
 
 		private Direction arrowLocation;
 		private RectangleBordersShowedEnum rectangleBordersShowed;
