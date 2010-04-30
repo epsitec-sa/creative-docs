@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			//?this.CreateLinkButtons (tile.Container);
 
 			//	Crée le contenu de la tuile d'édition.
-			this.CreateCombo (tile.Container, 100, "Type du moyen de contact", accessor.UriSchemeInitializer, true, false, accessor.UriScheme, x => accessor.UriScheme = x, null);
+			this.CreateCombo (tile.Container, 100, "Type du moyen de contact", accessor.UriSchemeInitializer, true, false, true, accessor.UriScheme, x => accessor.UriScheme = x, null);
 
 			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
