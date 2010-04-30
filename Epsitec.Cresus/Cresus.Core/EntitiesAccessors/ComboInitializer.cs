@@ -37,52 +37,34 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 		public string ConvertInternalToEdition(string text)
 		{
-			text = text.Replace (",", " ");
-			string[] words = text.Split (' ');
-
-			var builder = new StringBuilder ();
-			bool first = true;
+			var words = Misc.Split (text.Replace (",", " "), " ");
+			var list = new List<string> ();
 
 			foreach (string word in words)
 			{
 				if (!string.IsNullOrEmpty (word))
 				{
-					if (!first)
-					{
-						builder.Append (", ");
-					}
-
-					builder.Append (this.WordInternalToEdition(word));
-					first = false;
+					list.Add (this.WordInternalToEdition (word));
 				}
 			}
 
-			return builder.ToString ();
+			return Misc.Combine (list, ", ");
 		}
 
 		public string ConvertEditionToInternal(string text)
 		{
-			text = text.Replace (",", " ");
-			string[] words = text.Split (' ');
-
-			var builder = new StringBuilder ();
-			bool first = true;
+			var words = Misc.Split (text.Replace (",", " "), " ");
+			var list = new List<string> ();
 
 			foreach (string word in words)
 			{
 				if (!string.IsNullOrEmpty (word))
 				{
-					if (!first)
-					{
-						builder.Append (", ");
-					}
-
-					builder.Append (this.WordEditionToInternal (word));
-					first = false;
+					list.Add (this.WordEditionToInternal (word));
 				}
 			}
 
-			return builder.ToString ();
+			return Misc.Combine (list, ", ");
 		}
 
 

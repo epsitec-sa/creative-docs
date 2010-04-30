@@ -14,6 +14,62 @@ namespace Epsitec.Cresus.Core
 	public static class Misc
 	{
 		/// <summary>
+		/// Explose une chaîne avec un séparateur à choix en une liste.
+		/// </summary>
+		/// <param name="text">The text.</param>
+		/// <param name="separator">The separator.</param>
+		/// <returns></returns>
+		public static List<string> Split(string text, string separator)
+		{
+			List<string> list = new List<string> ();
+
+			if (!string.IsNullOrEmpty (text))
+			{
+				string[] words = text.Split (new string[] { separator }, System.StringSplitOptions.RemoveEmptyEntries);
+
+				foreach (string word in words)
+				{
+					if (!string.IsNullOrEmpty (word))
+					{
+						list.Add (word);
+					}
+				}
+			}
+
+			return list;
+		}
+
+		/// <summary>
+		/// Combine une liste en une seule chaîne avec un séparateur à choix.
+		///	C'est un peu l'inverse de Misc.Split().
+		/// </summary>
+		/// <param name="list">The list.</param>
+		/// <param name="separator">The separator.</param>
+		/// <returns></returns>
+		public static string Combine(List<string> list, string separator)
+		{
+			if (list == null)
+			{
+				return null;
+			}
+
+			var builder = new System.Text.StringBuilder ();
+
+			for (int i=0; i<list.Count; i++)
+			{
+				if (i > 0)
+				{
+					builder.Append (separator);
+				}
+
+				builder.Append (list[i]);
+			}
+
+			return builder.ToString ();
+		}
+
+	
+		/// <summary>
 		/// Encapsule un texte au milieu d'une préface et d'une postface, mais seulement s'il existe.
 		/// </summary>
 		/// <param name="preface">The preface.</param>

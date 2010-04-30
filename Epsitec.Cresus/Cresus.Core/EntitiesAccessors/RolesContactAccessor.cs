@@ -70,21 +70,14 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			{
 				if (this.AbstractContact.Roles != null)
 				{
-					StringBuilder builder = new StringBuilder ();
+					var words = new List<string> ();
 
-					bool first = true;
 					foreach (Entities.ContactRoleEntity role in this.AbstractContact.Roles)
 					{
-						if (!first)
-						{
-							builder.Append (", ");
-						}
-
-						builder.Append (role.Name);
-						first = false;
+						words.Add (role.Name);
 					}
 
-					return this.RoleInitializer.ConvertInternalToEdition(builder.ToString ());
+					return Misc.Combine (words, ", ");
 				}
 				else
 				{
@@ -99,19 +92,13 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 					if (!string.IsNullOrEmpty (value))
 					{
-						value = this.RoleInitializer.ConvertEditionToInternal (value);
-						value = value.Replace (" ", ",");
-						string[] words = value.Split (',');
+						var words = Misc.Split (value.Replace (",", " "), " ");
 
-						foreach (string w in words)
+						foreach (string word in words)
 						{
-							string word = w.Trim ();
-							if (!string.IsNullOrEmpty (word))
-							{
-								var role = new Entities.ContactRoleEntity ();
-								role.Name = word;
-								this.AbstractContact.Roles.Add (role);
-							}
+							var role = new Entities.ContactRoleEntity ();
+							role.Name = word;
+							this.AbstractContact.Roles.Add (role);
 						}
 					}
 				}

@@ -24,6 +24,19 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
+		/// <summary>
+		/// Autorise ou non les sélections multiples, ce qui se traduit par des CheckButtons ou des RadioButtons.
+		/// Dans l'implémentation actuelle, le setter doit être appelé avant le setter de ComboInitializer !
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if [allow multiple selection]; otherwise, <c>false</c>.
+		/// </value>
+		public bool AllowMultipleSelection
+		{
+			get;
+			set;
+		}
+
 		public EntitiesAccessors.ComboInitializer ComboInitializer
 		{
 			get
@@ -37,15 +50,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 		}
 
-		public bool AllowMultipleSelection
-		{
-			get;
-			set;
-		}
-
 
 		public void CreateUI()
 		{
+			this.Children.Clear ();
+
 			int tabIndex = 1;
 
 			foreach (var pair in this.comboInitializer.Content)
@@ -83,8 +92,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		private void TextToButtons()
 		{
 			string text = this.comboInitializer.ConvertEditionToInternal (this.Text);
-			text = text.Replace (",", " ");
-			string[] words = text.Split (' ');
+			var words = Misc.Split (text.Replace (",", " "), " ");
 
 			foreach (AbstractButton button in this.Children)
 			{
@@ -94,25 +102,18 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void ButtonsToText()
 		{
-			var builder = new System.Text.StringBuilder ();
-			bool first = true;
+			var words = new List<string> ();
 
 			foreach (AbstractButton button in this.Children)
 			{
 				if (button.IsActive)
 				{
-					if (!first)
-					{
-						builder.Append (", ");
-					}
-
-					builder.Append (button.Text);
-					first = false;
+					words.Add (button.Text);
 				}
 			}
 
 			this.ignoreChange = true;
-			this.Text = builder.ToString ();
+			this.Text = Misc.Combine (words, ", ");
 			this.ignoreChange = false;
 		}
 
