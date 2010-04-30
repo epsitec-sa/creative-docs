@@ -14,18 +14,21 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public abstract class EntityViewController : CoreViewController
 	{
-		public EntityViewController(string name)
+		public EntityViewController(string name, ViewControllerMode mode)
 			: base (name)
 		{
-		}
-
-		public AbstractEntity Entity
-		{
-			get;
-			set;
+			this.mode = mode;
 		}
 
 		public ViewControllerMode Mode
+		{
+			get
+			{
+				return this.mode;
+			}
+		}
+
+		public AbstractEntity Entity
 		{
 			get;
 			set;
@@ -56,7 +59,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 
 			controller.Entity = entity;
-			controller.Mode = mode;
 			controller.Orchestrator = orchestrator;
 
 			return controller;
@@ -71,44 +73,44 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (entity is Entities.NaturalPersonEntity)
 			{
-				return new NaturalPersonViewController (name);
+				return new NaturalPersonViewController (name, mode);
 			}
 
 			if (entity is Entities.LegalPersonEntity)
 			{
-				return new LegalPersonViewController (name);
+				return new LegalPersonViewController (name, mode);
 			}
 
 			//	Doit être avant les tests sur MailContactEntity, TelecomContactEntity et UriContactEntity !
 			if (entity is Entities.AbstractContactEntity && mode == ViewControllerMode.RolesEdition)
 			{
-				return new RolesContactViewController (name);
+				return new RolesContactViewController (name, mode);
 			}
 
 			if (entity is Entities.TelecomContactEntity && mode == ViewControllerMode.TelecomTypeEdition)
 			{
-				return new TelecomTypeViewController (name);
+				return new TelecomTypeViewController (name, mode);
 			}
 
 			if (entity is Entities.UriContactEntity && mode == ViewControllerMode.UriSchemeEdition)
 			{
-				return new UriSchemeViewController (name);
+				return new UriSchemeViewController (name, mode);
 			}
 
 			//	Après...
 			if (entity is Entities.MailContactEntity)
 			{
-				return new MailContactViewController (name);
+				return new MailContactViewController (name, mode);
 			}
 
 			if (entity is Entities.TelecomContactEntity)
 			{
-				return new TelecomContactViewController (name);
+				return new TelecomContactViewController (name, mode);
 			}
 
 			if (entity is Entities.UriContactEntity)
 			{
-				return new UriContactViewController (name);
+				return new UriContactViewController (name, mode);
 			}
 
 			// TODO: Compléter ici au fur et à mesure des besoins...
@@ -349,9 +351,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = frameBox,
 				Text = "Lier avec...",
-				PreferredWidth = 75,
+				PreferredWidth = 70,
 				Dock = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
+				Margins = new Margins (0, 2, 0, 0),
 				TabIndex = ++this.tabIndex,
 			};
 
@@ -359,7 +361,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = frameBox,
 				Text = "Délier",
-				PreferredWidth = 75,
+				PreferredWidth = 70,
 				Dock = DockStyle.Left,
 				Margins = new Margins (0, 10, 0, 0),
 				TabIndex = ++this.tabIndex,
@@ -380,6 +382,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = embedder,
 				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 2),
 			};
@@ -416,6 +419,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = embedder,
 				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 2),
 			};
@@ -462,6 +466,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = embedder,
 				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 2),
 			};
@@ -503,6 +508,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				Parent = embedder,
 				Text = string.Concat (label, " :"),
+				TextBreakMode = Common.Drawing.TextBreakMode.Ellipsis | Common.Drawing.TextBreakMode.Split | Common.Drawing.TextBreakMode.SingleLine,
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 0, 2),
 			};
@@ -679,6 +685,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private readonly ViewControllerMode mode;
 		protected Widget container;
 		private int tabIndex;
 	}

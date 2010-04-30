@@ -74,24 +74,26 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				double x = 0;
 				double overlap = Widgets.AbstractTile.ArrowBreadth - 3;
-				int columnIndex = this.columns.Count-1;
+				int columnIndex = 0;
 
+				//	Positionne les colonnes de gauche à drote, sauf la dernière.
 				foreach (var column in this.columns.Skip (1).Reverse ())
 				{
 					column.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-					column.PreferredWidth = ViewLayoutController.WidthCompute (this.columns.Count, columnIndex);
+					column.PreferredWidth = ViewLayoutController.WidthCompute (this.columns.Count, columnIndex++);
 					column.Margins = new Margins (x, 0, 0, 0);
 					x += column.PreferredWidth - overlap;
-					columnIndex--;
 					ViewLayoutController.SetRightColumn (column, false);
 				}
 
+				//	Positionne la dernière colonne de droite.
 				var lastColumn = this.columns.Peek ();
 
 				lastColumn.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.LeftAndRight;
 				lastColumn.Margins = new Margins (x, 0, 0, 0);
 				ViewLayoutController.SetRightColumn (lastColumn, true);
 
+				//	Ajoute les colonnes au parent, mais de droite à gauche.
 				foreach (var column in this.columns)
 				{
 					this.container.Children.Add (column);
@@ -110,24 +112,23 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private static double WidthCompute(int columnsCount, int columnIndex)
 		{
-			if (columnsCount == 2)
+			double width = 300 - 300*(columnsCount-columnIndex-2)*0.5;
+
+			//	A part la première colonne de gauche, les autres colonnes doivent soit avoir une
+			//	largeur supérieure ou égale à minimalWidth, soit reduceWidth pour ne montrer que
+			//	l'icône, à cause de problèmes de layout !
+			//	TODO: Voir ce problème avec Pierre (mail du 30.04.10 12:07)
+			if (columnIndex != 0 && width < ViewLayoutController.minimalWidth)
 			{
-				//?return 160;
-				return 240;
+				width = ViewLayoutController.reduceWidth;
 			}
-			else
-			{
-				if (columnIndex == columnsCount-2)
-				{
-					//?return 160;
-					return 240;
-				}
-				else
-				{
-					return Widgets.AbstractTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
-				}
-			}
+
+			return width;
 		}
+
+
+		private static readonly double minimalWidth = 220;
+		private static readonly double reduceWidth = Widgets.AbstractTile.WidthWithOnlyIcon + Widgets.AbstractTile.ArrowBreadth;
 
 
 		private readonly Widget container;

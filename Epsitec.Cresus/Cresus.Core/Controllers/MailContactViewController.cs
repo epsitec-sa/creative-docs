@@ -15,8 +15,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class MailContactViewController : EntityViewController
 	{
-		public MailContactViewController(string name)
-			: base (name)
+		public MailContactViewController(string name, ViewControllerMode mode)
+			: base (name, mode)
 		{
 		}
 
