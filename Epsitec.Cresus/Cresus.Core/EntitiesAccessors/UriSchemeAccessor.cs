@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				return "T";
+				return "Data.Type";
 			}
 		}
 

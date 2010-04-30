@@ -265,6 +265,8 @@
     <EmbeddedResource Include="Images\Data.LegalPerson.icon" />
     <EmbeddedResource Include="Images\Data.NaturalPerson.icon" />
     <None Include="ClassDiagram1.cd" />
+    <EmbeddedResource Include="Images\Data.Roles.icon" />
+    <EmbeddedResource Include="Images\Data.Type.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 		{
 			get
 			{
-				return "R";
+				return "Data.Roles";
 			}
 		}
 
