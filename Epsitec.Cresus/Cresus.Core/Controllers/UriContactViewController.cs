@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class UriContactViewController : EntityViewController
 	{
-		public UriContactViewController(string name)
-			: base (name)
+		public UriContactViewController(string name, ViewControllerMode mode)
+			: base (name, mode)
 		{
 		}
 

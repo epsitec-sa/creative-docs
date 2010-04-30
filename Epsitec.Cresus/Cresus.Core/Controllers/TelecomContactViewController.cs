@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class TelecomContactViewController : EntityViewController
 	{
-		public TelecomContactViewController(string name)
-			: base (name)
+		public TelecomContactViewController(string name, ViewControllerMode mode)
+			: base (name, mode)
 		{
 		}
 

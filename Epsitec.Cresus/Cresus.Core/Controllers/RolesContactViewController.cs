@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class RolesContactViewController : EntityViewController
 	{
-		public RolesContactViewController(string name)
-			: base (name)
+		public RolesContactViewController(string name, ViewControllerMode mode)
+			: base (name, mode)
 		{
 		}
 

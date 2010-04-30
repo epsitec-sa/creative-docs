@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	public class UriSchemeViewController : EntityViewController
 	{
-		public UriSchemeViewController(string name)
-			: base (name)
+		public UriSchemeViewController(string name, ViewControllerMode mode)
+			: base (name, mode)
 		{
 		}
 

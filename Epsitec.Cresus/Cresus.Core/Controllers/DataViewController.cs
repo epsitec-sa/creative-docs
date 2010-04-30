@@ -136,10 +136,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (parent != null);
 
 			AbstractEntity selectedEntity = null;
+			ViewControllerMode selectedMode = ViewControllerMode.None;
+
 			if (selectedController != null && selectedController is EntityViewController)
 			{
 				var s = selectedController as EntityViewController;
 				selectedEntity = s.Entity;
+				selectedMode = s.Mode;
 			}
 
 			foreach (var widget in parent.Container.Children)
@@ -147,8 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (widget is Widgets.AbstractTile)
 				{
 					var tileContainer = widget as Widgets.AbstractTile;
-					tileContainer.SetSelected (tileContainer.ChildrenMode != ViewControllerMode.None && tileContainer.Entity == selectedEntity);
-					// TODO: Le test effectué fonctionne mal !
+					tileContainer.SetSelected (tileContainer.ChildrenMode == selectedMode && tileContainer.Entity == selectedEntity);
 				}
 			}
 		}
