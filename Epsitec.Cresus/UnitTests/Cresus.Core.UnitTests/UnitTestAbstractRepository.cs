@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Core
 				UriSchemeEntity mailScheme = this.CreateUriScheme(dataContext, "mailto:", "email");
 				
 				UriContactEntity contactAlfred = this.CreateUriContact(dataContext, "alfred@coucou.com", mailScheme);
+				UriContactEntity contactAlfred2 = this.CreateUriContact (dataContext, "alfred@blabla.com", mailScheme);
 				UriContactEntity contactGertrude = this.CreateUriContact (dataContext, "gertrude@coucou.com", mailScheme);
 				UriContactEntity contactHans = this.CreateUriContact (dataContext, "hans@coucou.com", mailScheme);
 
@@ -61,6 +62,8 @@ namespace Epsitec.Cresus.Core
 				//LegalPersonTypeEntity sarl = this.CreateLegalPersonType (dataContext, "Société à responsabilité limitée", "SARL");
 
 				NaturalPersonEntity alfred = this.CreateNaturalPerson (dataContext, "Alfred", "Dupond", new Date (1950, 12, 31), french, mister, male, contactAlfred);
+				alfred.Contacts.Add (contactAlfred2);
+
 				NaturalPersonEntity gertrude = this.CreateNaturalPerson (dataContext, "Gertrude", "De-La-Motte", new Date (1965, 5, 3), french, lady, female, contactGertrude);
 				NaturalPersonEntity hans = this.CreateNaturalPerson (dataContext, "Hans", "Strüdel", new Date (1984, 8, 9), german, mister, male, contactHans);
 
@@ -82,8 +85,8 @@ namespace Epsitec.Cresus.Core
 				{
 					PreferredLanguage = new LanguageEntity ()
 					{
-					    Code = "Fr",
-					    Name = "French",
+						Code = "Fr",
+						Name = "French",
 					},
 					Firstname = "Alfred",
 					Gender = new PersonGenderEntity ()
@@ -103,7 +106,13 @@ namespace Epsitec.Cresus.Core
 					},
 				});
 
-				NaturalPersonEntity person = repository.GetEntityByExample<NaturalPersonEntity> (example);
+				example.Contacts.Add (new UriContactEntity ()
+				{
+					Uri = "alfred@blabla.com",
+				});
+
+
+				NaturalPersonEntity[] persons = repository.GetEntitiesByExample<NaturalPersonEntity> (example).ToArray ();
 			}
 		}
 

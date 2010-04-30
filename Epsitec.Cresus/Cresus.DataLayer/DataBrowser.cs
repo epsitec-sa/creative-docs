@@ -233,98 +233,86 @@ namespace Epsitec.Cresus.DataLayer
 
 		private void AddQueryDataForField(DbReader reader, Druid currentEntityId, AbstractEntity example, StructuredTypeField field)
 		{
-			// TODO Delete conditions
-			if (field.Membership == FieldMembership.Local && field.Expression == null)
+			switch (field.Relation)
 			{
-				switch (field.Relation)
-				{
-					case FieldRelation.None:
-						this.AddQueryDataForValue (reader, currentEntityId, example, field);
-						break;
+				case FieldRelation.None:
+					this.AddQueryDataForValue (reader, currentEntityId, example, field);
+					break;
 
-					case FieldRelation.Reference:
-						this.AddQueryDataForReference (reader, currentEntityId, example, field);
-						break;
+				case FieldRelation.Reference:
+					this.AddQueryDataForReference (reader, currentEntityId, example, field);
+					break;
 
-					case FieldRelation.Collection:
-						this.AddQueryDataForCollection (reader, currentEntityId, example, field);
-						break;
+				case FieldRelation.Collection:
+					this.AddQueryDataForCollection (reader, currentEntityId, example, field);
+					break;
 
-					default:
-						throw new System.NotSupportedException ();
-				}
-			}
+				default:
+					throw new System.NotSupportedException ();
+			}			
 		}
 
 
 		private void AddQueryDataForValue(DbReader reader, Druid entityId, AbstractEntity example, StructuredTypeField field)
 		{
-			//IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
+			DbTableColumn tableColumn = this.GetEntityTableColumn (entityId, this.PeekSubTypeTableAlias (), field.Id);
+			
+			IFieldPropertyStore fieldProperties = example as IFieldPropertyStore;
+			AbstractType fieldType = field.Type as AbstractType;
+			object fieldValue = example.InternalGetValue (field.Id);
 
-			//string id = field.Id;
-			//object fieldValue = example.InternalGetValue (id);
-			//AbstractType fieldType = field.Type as AbstractType;
+			switch (fieldType.TypeCode)
+			{
+				case TypeCode.String:
+					this.QueryDataForString (reader, tableColumn, field, fieldType, fieldProperties, fieldValue as string);
+					break;
 
-			//System.Diagnostics.Debug.Assert (fieldType != null);
-			//System.Diagnostics.Debug.WriteLine (string.Format ("Field {0} contains {1} (type {2})", id, fieldValue, fieldType.SystemType == null ? "<null>" : fieldType.SystemType.Name));
+				default:
+					// TODO Implement conditions for other field types.
+					break;
+			}
+		}
 
-			//if (fieldType.TypeCode == TypeCode.String)
-			//{
-			//    IStringType fieldStringType = fieldType as IStringType;
-			//    string textValue = fieldValue as string;
 
-			//    if (string.IsNullOrEmpty (textValue))
-			//    {
-			//        return;
-			//    }
+		private void QueryDataForString(DbReader reader, DbTableColumn tableColumn, StructuredTypeField field, AbstractType fieldType, IFieldPropertyStore fieldProperties, string value)
+		{
+			if (!string.IsNullOrEmpty (value))
+			{
+				IStringType fieldStringType = fieldType as IStringType;
 
-			//    DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
-			//    EntityFieldPath fieldPath  = EntityFieldPath.CreateRelativePath (id);
-			//    DbTableColumn tableColumn = this.GetTableColumn (entityId, fieldPath);
+				DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
 
-			//    if (tableColumn == null)
-			//    {
-			//        System.Diagnostics.Debug.WriteLine (string.Format ("Error: field {0} does not map to a column", id));
-			//        return;
-			//    }
+				StringSearchBehavior searchBehavior = fieldStringType.DefaultSearchBehavior;
+				StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
 
-			//    StringSearchBehavior searchBehavior = fieldStringType.DefaultSearchBehavior;
-			//    StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
+				//	If the provided example implements IFieldPropertyStore, check
+				//	if special properties are attached to the current field :
 
-			//    //	If the provided example implements IFieldPropertyStore, check
-			//    //	if special properties are attached to the current field :
+				if (fieldProperties != null)
+				{
+					if (fieldProperties.ContainsValue (field.Id, StringType.DefaultSearchBehaviorProperty))
+					{
+						searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultSearchBehaviorProperty);
+					}
+					if (fieldProperties.ContainsValue (field.Id, StringType.DefaultComparisonBehaviorProperty))
+					{
+						comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultComparisonBehaviorProperty);
+					}
+				}
 
-			//    if (fieldProperties != null)
-			//    {
-			//        if (fieldProperties.ContainsValue (id, StringType.DefaultSearchBehaviorProperty))
-			//        {
-			//            searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (id, StringType.DefaultSearchBehaviorProperty);
-			//        }
-			//        if (fieldProperties.ContainsValue (id, StringType.DefaultComparisonBehaviorProperty))
-			//        {
-			//            comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (id, StringType.DefaultComparisonBehaviorProperty);
-			//        }
-			//    }
+				string pattern = this.CreateSearchPattern (value, searchBehavior);
 
-			//    string pattern = this.CreateSearchPattern (textValue, searchBehavior);
+				if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
+				{
+					condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
+				}
+				else
+				{
+					condition.AddCondition (tableColumn, DbCompare.Like, pattern);
+				}
 
-			//    if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
-			//    {
-			//        condition.AddCondition (tableColumn, DbCompare.LikeEscape, pattern);
-			//    }
-			//    else
-			//    {
-			//        condition.AddCondition (tableColumn, DbCompare.Like, pattern);
-			//    }
-
-			//    reader.AddCondition (condition);
-
-			//    System.Diagnostics.Debug.WriteLine ("Condition : " + pattern);
-			//}
-			//else
-			//{
-			//    // TODO Add condition when field is not of type string
-			//}
+				reader.AddCondition (condition);
+			}
 		}
 
 
