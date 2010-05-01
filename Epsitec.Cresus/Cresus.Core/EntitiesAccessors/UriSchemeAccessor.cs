@@ -69,6 +69,8 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				initializer.Content.Add ("sip",    "Session");
 				initializer.Content.Add ("http",   "Web");
 
+				initializer.DefaultInternalContent = "mailto";
+
 				return initializer;
 			}
 		}

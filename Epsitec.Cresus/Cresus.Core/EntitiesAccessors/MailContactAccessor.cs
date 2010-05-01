@@ -19,21 +19,37 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 			// TODO: A compléter à l'occasion, mais il ne faut surtout pas y mettre tous les pays du monde,
 			//		 sous peine de rendre l'usage peinible !
+			MailContactAccessor.countryConverter.Add ("AT", "Autriche");
 			MailContactAccessor.countryConverter.Add ("BE", "Belgique");
+			MailContactAccessor.countryConverter.Add ("BG", "Bulgarie");
 			MailContactAccessor.countryConverter.Add ("CA", "Canada");
 			MailContactAccessor.countryConverter.Add ("CH", "Suisse");
 			MailContactAccessor.countryConverter.Add ("CN", "Chine");
+			MailContactAccessor.countryConverter.Add ("CY", "Chipre");
+			MailContactAccessor.countryConverter.Add ("CZ", "République tchèque");
 			MailContactAccessor.countryConverter.Add ("DE", "Allemagne");
 			MailContactAccessor.countryConverter.Add ("DK", "Danemark");
+			MailContactAccessor.countryConverter.Add ("EE", "Estonie");
+			MailContactAccessor.countryConverter.Add ("ES", "Espagne");
 			MailContactAccessor.countryConverter.Add ("FI", "Finlande");
 			MailContactAccessor.countryConverter.Add ("FR", "France");
 			MailContactAccessor.countryConverter.Add ("GR", "Grèce");
+			MailContactAccessor.countryConverter.Add ("HU", "Hongrie");
+			MailContactAccessor.countryConverter.Add ("IE", "Irlande");
 			MailContactAccessor.countryConverter.Add ("IT", "Italie");
 			MailContactAccessor.countryConverter.Add ("JP", "Japon");
+			MailContactAccessor.countryConverter.Add ("LT", "Lituanie");
 			MailContactAccessor.countryConverter.Add ("LU", "Luxembourg");
+			MailContactAccessor.countryConverter.Add ("LV", "Lettonie");
+			MailContactAccessor.countryConverter.Add ("NL", "Pays-Bas");
 			MailContactAccessor.countryConverter.Add ("NO", "Norvège");
+			MailContactAccessor.countryConverter.Add ("PL", "Pologne");
 			MailContactAccessor.countryConverter.Add ("PT", "Portugal");
+			MailContactAccessor.countryConverter.Add ("RO", "Roumanie");
+			MailContactAccessor.countryConverter.Add ("RU", "Russie");
 			MailContactAccessor.countryConverter.Add ("SE", "Suède");
+			MailContactAccessor.countryConverter.Add ("SI", "Slovénie");
+			MailContactAccessor.countryConverter.Add ("SK", "Slovaquie");
 			MailContactAccessor.countryConverter.Add ("UK", "Angleterre");
 			MailContactAccessor.countryConverter.Add ("US", "USA");
 
@@ -195,21 +211,6 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 
 			return newEntity;
-		}
-
-
-		public ComboInitializer RoleInitializer
-		{
-			get
-			{
-				ComboInitializer initializer = new ComboInitializer ();
-
-				initializer.Content.Add ("professionnel", "Professionnel");
-				initializer.Content.Add ("facturation",   "Facturation");
-				initializer.Content.Add ("privé",         "Privé");
-
-				return initializer;
-			}
 		}
 
 

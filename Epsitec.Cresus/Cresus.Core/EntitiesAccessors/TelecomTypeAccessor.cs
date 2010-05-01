@@ -68,6 +68,8 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				initializer.Content.Add ("mobile", "Mobile");
 				initializer.Content.Add ("fax",    "Fax");
 
+				initializer.DefaultInternalContent = "fixnet";
+
 				return initializer;
 			}
 		}
