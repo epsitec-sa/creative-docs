@@ -638,7 +638,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					Parent = embedder,
 					Dock = DockStyle.Top,
-					Margins = new Margins (0, 0, 5, 5),
+					Margins = new Margins (0, 0, 5, 10),
 					AllowMultipleSelection = allowMultipleSelection,
 					ComboInitializer = initializer,
 					Text = initializer.ConvertInternalToEdition (initialValue),

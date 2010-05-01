@@ -79,6 +79,22 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 		}
 
+		public ComboInitializer GenderInitializer
+		{
+			get
+			{
+				ComboInitializer initializer = new ComboInitializer ();
+
+				initializer.Content.Add ("unknown", "Inconnu");
+				initializer.Content.Add ("male",    "Homme");
+				initializer.Content.Add ("female",  "Femme");
+
+				initializer.DefaultInternalContent = "unknown";
+
+				return initializer;
+			}
+		}
+
 	
 		public string NaturalTitle
 		{
@@ -113,6 +129,30 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			set
 			{
 				//?this.NaturalPerson.BirthDate = Date.FromString(value);  // TODO:
+			}
+		}
+
+		public string Gender
+		{
+			get
+			{
+				if (this.NaturalPerson.Gender != null)
+				{
+					return this.NaturalPerson.Gender.Name;
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				if (this.NaturalPerson.Gender == null)
+				{
+					this.NaturalPerson.Gender = new Entities.PersonGenderEntity ();
+				}
+
+				this.NaturalPerson.Gender.Name = value;
 			}
 		}
 	}

@@ -26,6 +26,13 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 			}
 		}
 
+		public string DefaultInternalContent
+		{
+			get;
+			set;
+		}
+
+
 		public void InitializeCombo(Widgets.SuperCombo combo)
 		{
 			foreach (var pair in this.content)
@@ -37,6 +44,16 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 		public string ConvertInternalToEdition(string text)
 		{
+			if (string.IsNullOrEmpty (text))
+			{
+				text = this.DefaultInternalContent;
+			}
+
+			if (text == null)
+			{
+				text = "";
+			}
+
 			var words = Misc.Split (text.Replace (",", " "), " ");
 			var list = new List<string> ();
 

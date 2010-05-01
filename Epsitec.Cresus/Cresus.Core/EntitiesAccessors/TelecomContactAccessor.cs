@@ -98,58 +98,5 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 			return newEntity;
 		}
-
-
-		public ComboInitializer RoleInitializer
-		{
-			get
-			{
-				ComboInitializer initializer = new ComboInitializer ();
-
-				initializer.Content.Add ("professionnel", "Professionnel");
-				initializer.Content.Add ("privé",         "Privé");
-
-				return initializer;
-			}
-		}
-
-		public ComboInitializer TelecomTypeInitializer
-		{
-			get
-			{
-				ComboInitializer initlalizer = new ComboInitializer ();
-
-				initlalizer.Content.Add ("fixnet", "Fixe");
-				initlalizer.Content.Add ("mobile", "Mobile");
-				initlalizer.Content.Add ("fax",    "Fax");
-
-				return initlalizer;
-			}
-		}
-
-
-		public string TelecomType
-		{
-			get
-			{
-				if (this.TelecomContact.TelecomType != null)
-				{
-					return this.TelecomContact.TelecomType.Code;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.TelecomContact.TelecomType == null)
-				{
-					this.TelecomContact.TelecomType = new Entities.TelecomTypeEntity ();
-				}
-
-				this.TelecomContact.TelecomType.Code = value;
-			}
-		}
 	}
 }

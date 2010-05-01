@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 	{
 		public BidirectionnalConverter()
 		{
+			// TODO: Remplacer le dictionnaire par utre chose, qui permette 2 keys identiques
 			this.content = new Dictionary<string, string> ();
 		}
 

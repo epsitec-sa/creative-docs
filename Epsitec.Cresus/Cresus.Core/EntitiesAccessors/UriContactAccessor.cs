@@ -98,59 +98,5 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 			return newEntity;
 		}
-
-
-		public ComboInitializer RoleInitializer
-		{
-			get
-			{
-				ComboInitializer initializer = new ComboInitializer ();
-
-				initializer.Content.Add ("professionnel", "Professionnel");
-				initializer.Content.Add ("privé",         "Privé");
-
-				return initializer;
-			}
-		}
-
-		public ComboInitializer UriSchemeInitializer
-		{
-			get
-			{
-				ComboInitializer initializer = new ComboInitializer ();
-
-				initializer.Content.Add ("mailto", "Mail");
-				initializer.Content.Add ("callto", "Skype");
-				initializer.Content.Add ("sip",    "Session");
-				initializer.Content.Add ("http",   "Web");
-
-				return initializer;
-			}
-		}
-
-
-		public string UriScheme
-		{
-			get
-			{
-				if (this.UriContact.UriScheme != null)
-				{
-					return this.UriContact.UriScheme.Code;
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				if (this.UriContact.UriScheme == null)
-				{
-					this.UriContact.UriScheme = new Entities.UriSchemeEntity ();
-				}
-
-				this.UriContact.UriScheme.Code = value;
-			}
-		}
 	}
 }
