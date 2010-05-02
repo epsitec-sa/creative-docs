@@ -56,7 +56,9 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 				ComboInitializer initializer = new ComboInitializer ();
 
 				initializer.Content.Add ("professionnel", "Professionnel");
+				initializer.Content.Add ("commande",      "Commande");
 				initializer.Content.Add ("facturation",   "Facturation");
+				initializer.Content.Add ("livraison",     "Livraison");
 				initializer.Content.Add ("privé",         "Privé");
 
 				return initializer;

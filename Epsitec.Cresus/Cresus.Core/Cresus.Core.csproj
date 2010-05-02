@@ -137,6 +137,7 @@
     <Compile Include="CoreApplication.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators\PostalCodeValidator.cs" />
     <Compile Include="Validators\StringValidator.cs" />
     <Compile Include="Widgets\AbstractTile.cs" />
     <Compile Include="Widgets\DetailedCombo.cs" />
