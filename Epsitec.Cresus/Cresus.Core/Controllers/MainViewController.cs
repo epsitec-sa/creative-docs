@@ -23,7 +23,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.browserController = new BrowserViewController ("MainBrowser");
 			this.dataViewController = new DataViewController ("MainViewer");
 
-
 			this.browserController.SetContents (this.entities);
 			this.browserController.CurrentChanged += sender => this.dataViewController.SetEntity (this.browserController.ActiveEntity);
 		}

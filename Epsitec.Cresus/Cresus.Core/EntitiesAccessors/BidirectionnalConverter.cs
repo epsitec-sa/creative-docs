@@ -117,29 +117,61 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 		private void InitializeComboWithText(Widgets.SuperCombo combo, int index)
 		{
-			var list = new List<string> ();
+			List<string> list;
 
-			foreach (var line in this.content)
+			if (index == 0)
 			{
-				if (!list.Contains (line[index]))
+				if (this.comboList1 == null)
 				{
-					list.Add (line[index]);
+					this.comboList1 = this.PrepareComboList (0);
 				}
+
+				list = this.comboList1;
 			}
-
-			list.Sort ();
-
-			foreach (var text in list)
+			else
 			{
-				combo.Items.Add (text);
+				if (this.comboList2 == null)
+				{
+					this.comboList2 = this.PrepareComboList (1);
+				}
+
+				list = this.comboList2;
 			}
+
+			combo.Items.AddRange (list);
 
 			combo.Autocompletion = true;
 			combo.AutocompletionList.AddRange (list);
 			combo.AutocompletionConverter = Misc.RemoveAccentsToLower;
 		}
 
+		private List<string> PrepareComboList(int index)
+		{
+			var dict = new Dictionary<string, string> ();
+
+			foreach (var line in this.content)
+			{
+				if (!dict.ContainsKey (line[index]))
+				{
+					dict.Add (line[index], null);
+				}
+			}
+
+			var comboList = new List<string> ();
+
+			foreach (var key in dict.Keys)
+			{
+				comboList.Add (key);
+			}
+
+			comboList.Sort ();
+
+			return comboList;
+		}
+
 
 		private readonly List<List<string>> content;
+		private List<string> comboList1;
+		private List<string> comboList2;
 	}
 }
