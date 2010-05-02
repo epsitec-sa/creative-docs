@@ -14,64 +14,132 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 	{
 		public BidirectionnalConverter()
 		{
-			// TODO: Remplacer le dictionnaire par utre chose, qui permette 2 keys identiques
-			this.content = new Dictionary<string, string> ();
+			this.content = new List<List<string>> ();
 		}
 
-		public void Add(string key, string value)
+		public void Add(string text1, string text2)
 		{
-			this.content.Add (key, value);
+			List<string> line = new List<string> ();
+			line.Add (text1);
+			line.Add (text2);
+
+			this.content.Add (line);
 		}
 
 
-		public string KeyToValue(string key)
+		public void Text1ToText2(Common.Widgets.AbstractTextField textField1, Common.Widgets.AbstractTextField textField2)
 		{
-			key = Misc.RemoveAccentsToLower (key);
+			string text2 = this.Text1ToText2 (textField1.Text);
 
-			foreach (var pair in this.content)
+			if (!string.IsNullOrEmpty (text2))
 			{
-				if (key == Misc.RemoveAccentsToLower (pair.Key))
+				textField2.Text = text2;
+			}
+		}
+
+		public void Text2ToText1(Common.Widgets.AbstractTextField textField2, Common.Widgets.AbstractTextField textField1)
+		{
+			string text1 = this.Text2ToText1 (textField2.Text);
+
+			if (!string.IsNullOrEmpty (text1))
+			{
+				textField1.Text = text1;
+			}
+		}
+
+
+		public string Text1ToText2(string text1)
+		{
+			var list = this.Text1ToTexts2 (text1);
+
+			if (list.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return list[0];
+			}
+		}
+
+		public string Text2ToText1(string text2)
+		{
+			var list = this.Text2ToTexts1 (text2);
+
+			if (list.Count == 0)
+			{
+				return null;
+			}
+			else
+			{
+				return list[0];
+			}
+		}
+
+
+		public List<string> Text1ToTexts2(string text1)
+		{
+			return this.TextToTexts (text1, 0, 1);
+		}
+
+		public List<string> Text2ToTexts1(string text2)
+		{
+			return this.TextToTexts(text2, 1, 0);
+		}
+
+		private List<string> TextToTexts(string searchedText, int searchedIndex, int resultIndex)
+		{
+			var list = new List<string> ();
+
+			searchedText = Misc.RemoveAccentsToLower (searchedText);
+
+			foreach (var line in this.content)
+			{
+				if (Misc.RemoveAccentsToLower (line[searchedIndex]).StartsWith (searchedText))
 				{
-					return pair.Value;
+					list.Add (line[resultIndex]);
 				}
 			}
 
-			return null;
+			return list;
 		}
 
-		public string ValueToKey(string value)
-		{
-			value = Misc.RemoveAccentsToLower (value);
 
-			foreach (var pair in this.content)
+		public void InitializeComboWithText1(Widgets.SuperCombo combo)
+		{
+			this.InitializeComboWithText (combo, 0);
+		}
+
+		public void InitializeComboWithText2(Widgets.SuperCombo combo)
+		{
+			this.InitializeComboWithText (combo, 1);
+		}
+
+		private void InitializeComboWithText(Widgets.SuperCombo combo, int index)
+		{
+			var list = new List<string> ();
+
+			foreach (var line in this.content)
 			{
-				if (value == Misc.RemoveAccentsToLower (pair.Value))
+				if (!list.Contains (line[index]))
 				{
-					return pair.Key;
+					list.Add (line[index]);
 				}
 			}
 
-			return null;
-		}
+			list.Sort ();
 
-
-		public void InitializeComboWithKeys(Widgets.SuperCombo combo)
-		{
-			foreach (var pair in this.content)
+			foreach (var text in list)
 			{
-				combo.Items.Add (pair.Key);
+				combo.Items.Add (text);
 			}
-		}
 
-		public void InitializeComboWithValues(Widgets.SuperCombo combo)
-		{
-			foreach (var pair in this.content)
-			{
-				combo.Items.Add (pair.Value);
-			}
+			combo.Autocompletion = true;
+			combo.AutocompletionList.AddRange (list);
+			combo.AutocompletionConverter = Misc.RemoveAccentsToLower;
 		}
 
 
-		private Dictionary<string, string> content;
+		private readonly List<List<string>> content;
 	}
 }

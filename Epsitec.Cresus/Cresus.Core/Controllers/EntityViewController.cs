@@ -229,14 +229,27 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 			};
 
+#if false
+			var title = new StaticText
+			{
+				Parent = tile,
+				Dock = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				Text = "Sous-titre",
+			};
+#endif
+
 			var closeButton = new GlyphButton
 			{
 				Parent = tile,
 				ButtonStyle = Common.Widgets.ButtonStyle.Normal,
 				GlyphShape = GlyphShape.Close,
 				Dock = DockStyle.Right,
-				PreferredSize = new Size(18, 18),
+				//?GlyphShape = GlyphShape.ArrowLeft,
+				//?Dock = DockStyle.Left,
+				PreferredSize = new Size (18, 18),
 				Margins = new Margins (0, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
+				//?Margins = new Margins (2, Widgets.TileContainer.ArrowBreadth+2, 2, 2-1),
 			};
 
 			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
@@ -576,10 +589,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				TabIndex = ++this.tabIndex,
 			};
 
-			converter.InitializeComboWithKeys (combo1);
-			converter.InitializeComboWithValues (combo2);
+			converter.InitializeComboWithText1 (combo1);
+			converter.InitializeComboWithText2 (combo2);
 
-			combo1.TextChanged +=
+			combo1.TextInserted +=
 				delegate (object sender)
 				{
 					if (validator1 == null || validator1 (combo1.Text))
@@ -587,11 +600,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						callback1 (combo1.Text);
 						combo1.SetError (false);
 
-						string text2 = converter.KeyToValue (combo1.Text);
-						if (!string.IsNullOrEmpty (text2))
-						{
-							combo2.Text = text2;
-						}
+						converter.Text1ToText2 (combo1, combo2);
 					}
 					else
 					{
@@ -599,7 +608,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					}
 				};
 
-			combo2.TextChanged +=
+			combo2.TextInserted +=
 				delegate (object sender)
 				{
 					if (validator2 == null || validator2 (combo2.Text))
@@ -607,11 +616,35 @@ namespace Epsitec.Cresus.Core.Controllers
 						callback2 (combo2.Text);
 						combo2.SetError (false);
 
-						string text1 = converter.ValueToKey (combo2.Text);
-						if (!string.IsNullOrEmpty (text1))
-						{
-							combo1.Text = text1;
-						}
+						converter.Text2ToText1 (combo2, combo1);
+					}
+					else
+					{
+						combo2.SetError (true);
+					}
+				};
+
+			combo1.TextDeleted +=
+				delegate (object sender)
+				{
+					if (validator1 == null || validator1 (combo1.Text))
+					{
+						callback1 (combo1.Text);
+						combo1.SetError (false);
+					}
+					else
+					{
+						combo1.SetError (true);
+					}
+				};
+
+			combo2.TextDeleted +=
+				delegate (object sender)
+				{
+					if (validator2 == null || validator2 (combo2.Text))
+					{
+						callback2 (combo2.Text);
+						combo2.SetError (false);
 					}
 					else
 					{

@@ -1,6 +1,7 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
@@ -355,6 +356,84 @@ namespace Epsitec.Common.Widgets
 				return this.textFieldStyle == TextFieldStyle.Combo;
 			}
 		}
+
+
+		#region Autocompletion
+		public bool Autocompletion
+		{
+			get;
+			set;
+		}
+
+		public System.Func<string, string> AutocompletionConverter
+		{
+			get;
+			set;
+		}
+
+		public List<string> AutocompletionList
+		{
+			get
+			{
+				if (this.autocompletionList == null)
+				{
+					this.autocompletionList = new List<string> ();
+				}
+
+				return this.autocompletionList;
+			}
+		}
+
+		private void ProcessAutocompletionTextDeleted()
+		{
+		}
+
+		private void ProcessAutocompletionTextInserted()
+		{
+			if (this.Autocompletion)
+			{
+				string completed = this.AutocompletionSearch (this.Text);
+
+				if (!string.IsNullOrEmpty(completed) && this.Text != completed)
+				{
+					int length = this.Text.Length;
+
+					this.Text = completed;
+					this.CursorFrom = this.Text.Length;
+					this.CursorTo = length;
+				}
+			}
+		}
+
+		private string AutocompletionSearch(string searching)
+		{
+			searching = this.AutocompletionConvert (searching);
+
+			foreach (string t in this.autocompletionList)
+			{
+				string text = this.AutocompletionConvert (t);
+
+				if (text.StartsWith (searching))
+				{
+					return t;
+				}
+			}
+
+			return null;
+		}
+
+		private string AutocompletionConvert(string text)
+		{
+			if (this.AutocompletionConverter == null)
+			{
+				return text;
+			}
+			else
+			{
+				return this.AutocompletionConverter (text);
+			}
+		}
+		#endregion
 
 
 		public int MaxLength
@@ -1486,6 +1565,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextDeleted()
 		{
+			this.ProcessAutocompletionTextDeleted ();
+
 //-			this.OnTextChanged ();
 
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextDeleted");
@@ -1497,6 +1578,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnTextInserted()
 		{
+			this.ProcessAutocompletionTextInserted ();
+
 //-			this.OnTextChanged ();
 
 			EventHandler handler = (EventHandler) this.GetUserEventHandler ("TextInserted");
@@ -2382,5 +2465,7 @@ namespace Epsitec.Common.Widgets
 		private static bool						showCursor = true;
 
 		private static AbstractTextField		blinking;
+
+		private List<string>					autocompletionList;
 	}
 }

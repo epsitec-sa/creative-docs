@@ -4,11 +4,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
 
 
 namespace Epsitec.Cresus.Core.Validators

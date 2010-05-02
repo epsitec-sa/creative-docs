@@ -35,10 +35,19 @@ namespace Epsitec.Cresus.Core.EntitiesAccessors
 
 		public void InitializeCombo(Widgets.SuperCombo combo)
 		{
+			var list = new List<string> ();
+
 			foreach (var pair in this.content)
 			{
 				combo.Items.Add (pair.Key, pair.Value);
+				list.Add (pair.Value);
 			}
+
+			list.Sort ();
+
+			combo.Autocompletion = true;
+			combo.AutocompletionList.AddRange (list);
+			combo.AutocompletionConverter = Misc.RemoveAccentsToLower;
 		}
 
 
