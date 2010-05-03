@@ -149,7 +149,7 @@ namespace Epsitec.Common.Widgets
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))
 			{
-				if (this.Items.FindExactMatch (this.acceptRejectBehavior.InitialText) == -1)
+				if (this.Items.FindIndexByValueExactMatch (this.acceptRejectBehavior.InitialText) == -1)
 				{
 					this.Text = this.PlaceHolder;
 					this.SwitchToState (TextFieldExListMode.EditPassive);

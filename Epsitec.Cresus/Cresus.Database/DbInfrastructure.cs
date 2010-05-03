@@ -1313,7 +1313,7 @@ namespace Epsitec.Cresus.Database
 
 			foreach (SqlColumn column in sqlTable.Columns)
 			{
-				transaction.SqlBuilder.SetTableColumnComment (sqlTable.Name, column.Name, "coucou");
+				transaction.SqlBuilder.SetTableColumnComment (sqlTable.Name, column.Name, "coucou");	//	TODO: what is this "coucou" doing here ?
 				this.ExecuteSilent (transaction);
 			}
 

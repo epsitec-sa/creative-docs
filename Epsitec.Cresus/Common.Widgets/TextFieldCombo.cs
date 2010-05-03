@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets
 			//	match exact ('find' est égal au contenu de la cellule) ou non
 			//	('find' correspond au début de la cellule).
 			
-			index = this.items.FindExactMatch (find);
+			index = this.items.FindIndexByValueExactMatch (find);
 			
 			if (index < 0)
 			{
@@ -141,7 +141,7 @@ namespace Epsitec.Common.Widgets
 					return false;
 				}
 				
-				index = this.items.FindStartMatch (find);
+				index = this.items.FindIndexByValueStartMatch (find);
 				
 				if (index < 0)
 				{
@@ -816,7 +816,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (value.Length > 0)
 					{
-						index = this.items.FindNameIndex (value);
+						index = this.items.FindIndexByName (value);
 						
 						if (index < 0)
 						{

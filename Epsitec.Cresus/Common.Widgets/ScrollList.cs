@@ -632,11 +632,11 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void AutomaticItemSelection(string search, bool continued)
 		{
-			int index = this.items.FindStartMatch (search, this.SelectedIndex + (continued ? 0 : 1));
+			int index = this.items.FindIndexByValueStartMatch (search, this.SelectedIndex + (continued ? 0 : 1));
 
 			if (index < 0)
 			{
-				index = this.items.FindStartMatch (search);
+				index = this.items.FindIndexByValueStartMatch (search);
 			}
 
 			if (index >= 0)
@@ -859,7 +859,7 @@ namespace Epsitec.Common.Widgets
 					
 					if ( value != null )
 					{
-						index = this.items.FindNameIndex(value);
+						index = this.items.FindIndexByName(value);
 					
 						if ( index < 0 )
 						{
