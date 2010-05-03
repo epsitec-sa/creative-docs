@@ -9,6 +9,10 @@ namespace Epsitec.Common.Support.Data
 	/// </summary>
 	public interface INamedStringSelection : IStringSelection
 	{
-		string	SelectedName	{ get; set; }
+		string SelectedName
+		{
+			get;
+			set;
+		}
 	}
 }

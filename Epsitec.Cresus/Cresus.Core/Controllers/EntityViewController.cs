@@ -717,8 +717,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					};
 				}
 
-				combo.Items.Add ("Coucou");
-				//?initializer.InitializeCombo (combo);
+				//?combo.Items.Add ("Coucou");
+				initializer.InitializeCombo (combo);
 
 				this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
 			}

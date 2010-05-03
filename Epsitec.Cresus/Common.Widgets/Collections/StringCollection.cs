@@ -1,17 +1,23 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Collections
 {
+	/// <summary>
+	/// The <c>StringCollection</c> class stores a collection of key/value pairs,
+	/// where the values are converted to strings on demand. This is used by some
+	/// <see cref="Widget"/> classes which have an <c>Items</c> property (see also
+	/// <see cref="IStringCollectionHost"/>).
+	/// </summary>
 	public class StringCollection : System.Collections.IList, System.IDisposable
 	{
 		public StringCollection(IStringCollectionHost host)
 		{
-			this.host  = host;
-			this.list  = new List<object> ();
-			this.names = new List<string> ();
+			this.host   = host;
+			this.values = new List<object> ();
+			this.keys   = new List<string> ();
 		}
 		
 		
@@ -37,14 +43,7 @@ namespace Epsitec.Common.Widgets.Collections
 				}
 				else
 				{
-					if (this.converter != null)
-					{
-						return this.converter (this.list[index]);
-					}
-					else
-					{
-						return this.list[index].ToString ();
-					}
+					return this.ConvertValueToString (this.values[index]);
 				}
 			}
 		}
@@ -53,42 +52,46 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.ToArray ();
+				return this.values.ToArray ();
 			}
 		}
 		
-		public string[]							Names
+		public string[]							Keys
 		{
 			get
 			{
-				string[] names = new string[this.names.Count];
-				this.names.CopyTo (names);
-				return names;
+				return this.keys.ToArray ();
 			}
 		}
 
-		public ConverterCallback				Converter
+		/// <summary>
+		/// Gets or sets the value converter, which is used to convert the <c>object</c>
+		/// values to <c>string</c> values. If no converter is specified, the conversion
+		/// will be done by <see cref="ToString"/>.
+		/// </summary>
+		/// <value>The value converter.</value>
+		public System.Func<object, string>		ValueConverter
 		{
 			get
 			{
-				return this.converter;
+				return this.valueConverter;
 			}
 			set
 			{
-				this.converter = value;
+				this.valueConverter = value;
 			}
 		}
 		
 		
-		public int  Add(string name, object value)
+		public int Add(string name, object value)
 		{
-			int index0 = this.list.Count;
-			int index1 = this.names.Count;
-			
-			this.list.Add (value);
-			this.names.Add (name);
+			int index0 = this.values.Count;
+			int index1 = this.keys.Count;
 			
 			System.Diagnostics.Debug.Assert (index0 == index1);
+			
+			this.values.Add (value);
+			this.keys.Add (name);
 			
 			this.HandleInsert (value);
 			this.HandleChange ();
@@ -103,82 +106,79 @@ namespace Epsitec.Common.Widgets.Collections
 				this.Add (value);
 			}
 		}
-		
-		
-		public int FindNameIndex(string name)
-		{
-			return this.names.IndexOf (name);
-		}
+
 		
 		public void SetName(int index, string name)
 		{
-			this.names[index] = name;
+			this.keys[index] = name;
 		}
 
 		public string GetName(int index)
 		{
-			return this.names[index] as string;
+			return this.keys[index];
 		}
 
-		public int FindIndex(System.Predicate<object> match)
+		public object GetValue(int index)
 		{
-			return this.list.FindIndex (match);
+			return this.values[index];
+		}
+
+		
+		public int FindIndexByName(string name)
+		{
+			return this.keys.IndexOf (name);
 		}
 		
-		public int FindExactMatch(string find)
+		public int FindIndexByValue(System.Predicate<object> match)
 		{
-			if ((find != null) &&
-				(find.Length > 0))
+			return this.values.FindIndex (match);
+		}
+		
+		public int FindIndexByValueExactMatch(string find, int startAt = 0)
+		{
+			if (string.IsNullOrEmpty (find))
+            {
+				return -1;
+            }
+
+			return this.FindIndexByValue (find, startAt, (x, y) => x == y);
+		}
+		
+		public int FindIndexByValueStartMatch(string find, int startAt = 0)
+		{
+			return this.FindIndexByValue (find ?? "", startAt, (x, y) => x.StartsWith (find));
+		}
+
+		public int FindIndexByValue(string find, int startAt, System.Func<string, string, bool> match)
+		{
+			if (match == null)
 			{
-				find = find.ToUpper ();
-				
-				for (int i = 0; i < this.list.Count; i++)
-				{
-					string text = this[i];
-					
-					if (this.acceptsRichText)
-					{
-						text = TextLayout.ConvertToSimpleText (text);
-					}
-					
-					text = text.ToUpper ();
-					
-					if (text == find)
-					{
-						return i;
-					}
-				}
+				throw new System.ArgumentNullException ("No comparator specified");
 			}
-			
-			return -1;
-		}
-		
-		public int FindStartMatch(string find)
-		{
-			return this.FindStartMatch (find, 0);
-		}
-		
-		public int FindStartMatch(string find, int startAt)
-		{
-			find = find.ToUpper ();
-			
-			for (int i = startAt; i < this.list.Count; i++)
+			if (find == null)
+			{
+				throw new System.ArgumentNullException ("No search criteria specified");
+			}
+
+			find = find.ToUpperInvariant ();
+
+			for (int i = startAt; i < this.values.Count; i++)
 			{
 				string text = this[i];
-					
+
 				if (this.acceptsRichText)
 				{
 					text = TextLayout.ConvertToSimpleText (text);
 				}
-					
-				text = text.ToUpper ();
-				
-				if (text.StartsWith (find))
+
+				text = text.ToUpperInvariant ();
+
+				if (match (text, find))
 				{
 					return i;
 				}
 			}
-			
+
 			return -1;
 		}
 		
@@ -188,19 +188,20 @@ namespace Epsitec.Common.Widgets.Collections
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
-		
+
+		#region IDisposable Members
+
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				this.list.Clear ();
-				this.names.Clear ();
-				this.list = null;
-				this.names = null;
+				this.values.Clear ();
+				this.keys.Clear ();
 			}
 		}
-		
-		
+
+		#endregion
+
 		#region IList Members
 		public bool IsReadOnly
 		{
@@ -214,71 +215,71 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list[index];
+				return this.values[index];
 			}
 			set
 			{
-				this.list[index] = value;
+				this.values[index] = value;
 			}
 		}
 
 		public void RemoveAt(int index)
 		{
-			object item = this.list[index];
+			object item = this.values[index];
 			this.HandleRemove (item);
-			this.list.RemoveAt (index);
-			this.names.RemoveAt (index);
+			this.values.RemoveAt (index);
+			this.keys.RemoveAt (index);
 			this.HandleChange ();
 		}
 
 		public void Insert(int index, object value)
 		{
-			this.list.Insert (index, value);
-			this.names.Insert (index, null);
+			this.values.Insert (index, value);
+			this.keys.Insert (index, null);
 			this.HandleInsert (value);
 			this.HandleChange ();
 		}
 
 		public void Remove(object value)
 		{
-			int index = this.list.IndexOf (value);
+			int index = this.values.IndexOf (value);
 			if (index >= 0)
 			{
 				this.HandleRemove (value);
-				this.list.RemoveAt (index);
-				this.names.RemoveAt (index);
+				this.values.RemoveAt (index);
+				this.keys.RemoveAt (index);
 				this.HandleChange ();
 			}
 		}
 
 		public bool Contains(object value)
 		{
-			return this.list.Contains (value);
+			return this.values.Contains (value);
 		}
 
 		public void Clear()
 		{
-			foreach (object item in this.list)
+			foreach (object item in this.values)
 			{
 				this.HandleRemove (item);
 			}
-			this.list.Clear ();
-			this.names.Clear ();
+			this.values.Clear ();
+			this.keys.Clear ();
 			this.HandleChange ();
 		}
 
 		public int IndexOf(object value)
 		{
-			return this.list.IndexOf (value);
+			return this.values.IndexOf (value);
 		}
 
 		public int Add(object value)
 		{
-			int index0 = this.list.Count;
-			int index1 = this.names.Count;
+			int index0 = this.values.Count;
+			int index1 = this.keys.Count;
 
-			this.list.Add (value);
-			this.names.Add (null);
+			this.values.Add (value);
+			this.keys.Add (null);
 			
 			System.Diagnostics.Debug.Assert (index0 == index1);
 			
@@ -310,13 +311,13 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list.Count;
+				return this.values.Count;
 			}
 		}
 
 		public void CopyTo(System.Array array, int index)
 		{
-			System.Collections.IList list = this.list;
+			System.Collections.IList list = this.values;
 			list.CopyTo (array, index);
 		}
 
@@ -324,7 +325,7 @@ namespace Epsitec.Common.Widgets.Collections
 		{
 			get
 			{
-				return this.list;
+				return this.values;
 			}
 		}
 
@@ -333,7 +334,7 @@ namespace Epsitec.Common.Widgets.Collections
 		#region IEnumerable Members
 		public System.Collections.IEnumerator GetEnumerator()
 		{
-			return this.list.GetEnumerator ();
+			return this.values.GetEnumerator ();
 		}
 		#endregion
 		
@@ -353,12 +354,27 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		public delegate string ConverterCallback(object value);
-		
-		private IStringCollectionHost			host;
-		private List<object>					list;
-		private List<string>					names;
+
+		private string ConvertValueToString(object value)
+		{
+			if (this.valueConverter != null)
+			{
+				return this.valueConverter (value);
+			}
+			else if (value == null)
+			{
+				return null;
+			}
+			else
+			{
+				return value.ToString ();
+			}
+		}
+
+		private readonly IStringCollectionHost	host;
+		private readonly List<string>			keys;
+		private readonly List<object>			values;
 		private bool							acceptsRichText;
-		private ConverterCallback				converter;
+		private System.Func<object, string>		valueConverter;
 	}
 }
