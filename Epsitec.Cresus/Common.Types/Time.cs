@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -11,7 +11,7 @@ namespace Epsitec.Common.Types
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Time.Converter))]
 	
-	public struct Time : System.IComparable, INullable
+	public struct Time : System.IComparable, INullable, System.IEquatable<Time>
 	{
 		public Time(long ticks)
 		{
@@ -22,6 +22,16 @@ namespace Epsitec.Common.Types
 			}
 
 			this.milliseconds = (int) (ticks / Time.TicksPerMillisecond);
+		}
+
+		public Time(System.DateTime dateTime)
+			: this (dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond)
+		{
+		}
+
+		private Time(int milliseconds, bool justToMakeSure)
+		{
+			this.milliseconds = milliseconds;
 		}
 		
 		public Time(int hour, int minute, int second) : this (hour, minute, second, 0)
@@ -42,36 +52,6 @@ namespace Epsitec.Common.Types
 			
 			System.Diagnostics.Debug.Assert (this.Ticks >= 0);
 			System.Diagnostics.Debug.Assert (this.Ticks < Time.TicksPerDay);
-		}
-		
-		public Time(object time)
-		{
-			if (time is System.DateTime)
-			{
-				System.DateTime dateTime  = (System.DateTime)time;
-				Time       dateTimeTime = new Time (dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond);
-				
-				this.milliseconds = dateTimeTime.milliseconds;
-			}
-			else if (time is Time)
-			{
-				this.milliseconds = ((Time)time).milliseconds;
-			}
-			else if (time is System.TimeSpan)
-			{
-				System.TimeSpan timeSpan = (System.TimeSpan) time;
-				Time timeSpanTime = new Time (timeSpan.Ticks);
-				
-				this.milliseconds = timeSpanTime.milliseconds;
-			}
-			else if (time == null)
-			{
-				this.milliseconds = -1;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Not a Time nor a DateTime");
-			}
 		}
 		
 		
@@ -107,19 +87,13 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		
 		public long								Ticks
 		{
 			get
 			{
 				return this.milliseconds * Time.TicksPerMillisecond;
 			}
-			set
-			{
-				this.milliseconds = (int) (value / Time.TicksPerMillisecond);
-			}
 		}
-		
 		
 		public static Time						Now
 		{
@@ -129,7 +103,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static readonly Time				Null = new Time (null);
+		public static readonly Time				Null = new Time (-1, true);
 		
 		public const long						TicksPerDay = 1000*60*60*24*10000L;
 		public const long						TicksPerSecond = 1000*10000L;
@@ -203,6 +177,32 @@ namespace Epsitec.Common.Types
 			return this.milliseconds;
 		}
 
+
+		public static Time FromObject(object value)
+		{
+			if (value is System.DateTime)
+			{
+				System.DateTime dateTime  = (System.DateTime) value;
+				return new Time (dateTime);
+			}
+			else if (value is Time)
+			{
+				return (Time) value;
+			}
+			else if (value is System.TimeSpan)
+			{
+				System.TimeSpan timeSpan = (System.TimeSpan) value;
+				return new Time (timeSpan.Ticks);
+			}
+			else if (value == null)
+			{
+				return Time.Null;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Not a Time nor a DateTime");
+			}
+		}
 		
 		public static int Compare(Time t1, Time t2)
 		{
@@ -267,7 +267,16 @@ namespace Epsitec.Common.Types
 		{
 			return new System.TimeSpan (t1.Ticks - t2.Ticks);
 		}
-		
+
+
+		#region IEquatable<Time> Members
+
+		public bool Equals(Time other)
+		{
+			return this.milliseconds == other.milliseconds;
+		}
+
+		#endregion
 		
 		#region INullable Members
 		
@@ -326,8 +335,7 @@ namespace Epsitec.Common.Types
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
 				int milliseconds = System.Int32.Parse (value, culture);
-				Time time = new Time ();
-				time.milliseconds = milliseconds;
+				Time time = new Time (milliseconds, true);
 				return time;
 			}
 			
@@ -353,6 +361,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private int								milliseconds;
+		private readonly int					milliseconds;
+
 	}
 }

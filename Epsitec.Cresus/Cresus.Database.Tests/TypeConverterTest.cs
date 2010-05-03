@@ -152,8 +152,8 @@ namespace Epsitec.Cresus.Database
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.Date, def);
 			
 			System.Console.Out.WriteLine ("Today is {0}", obj);
-			
-			Assert.AreEqual (new Common.Types.Date (val), new Common.Types.Date (res));
+
+			Assert.AreEqual (Common.Types.Date.FromObject (val), Common.Types.Date.FromObject (res));
 			
 			val = System.DateTime.Now;
 			def = null;
@@ -161,8 +161,8 @@ namespace Epsitec.Cresus.Database
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.Time, def);
 			
 			System.Console.Out.WriteLine ("Now is {0}", obj);
-			
-			Assert.AreEqual (new Common.Types.Time (val), new Common.Types.Time (res));
+
+			Assert.AreEqual (Common.Types.Time.FromObject (val), Common.Types.Time.FromObject (res));
 			
 			val = "Hello";
 			def = null;
