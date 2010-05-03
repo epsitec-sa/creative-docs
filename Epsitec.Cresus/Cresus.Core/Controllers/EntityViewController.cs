@@ -689,7 +689,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						Parent = embedder,
 						IsReadOnly = readOnly,
 						AllowMultipleSelection = allowMultipleSelection,
-						Text = initializer.ConvertInternalToEdition (initialValue),
+						//?Text = initializer.ConvertInternalToEdition (initialValue),
 						Dock = DockStyle.Top,
 						Margins = new Margins (0, 10, 0, 5),
 						TabIndex = ++this.tabIndex,
@@ -709,7 +709,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						Parent = box,
 						IsReadOnly = readOnly,
 						AllowMultipleSelection = allowMultipleSelection,
-						Text = initializer.ConvertInternalToEdition (initialValue),
+						//?Text = initializer.ConvertInternalToEdition (initialValue),
 						Dock = DockStyle.Left,
 						PreferredWidth = width,
 						Margins = new Margins (0, 10, 0, 5),
@@ -717,7 +717,8 @@ namespace Epsitec.Cresus.Core.Controllers
 					};
 				}
 
-				initializer.InitializeCombo (combo);
+				combo.Items.Add ("Coucou");
+				//?initializer.InitializeCombo (combo);
 
 				this.CreateComboHandler (combo, callback, validator, initializer.ConvertEditionToInternal);
 			}

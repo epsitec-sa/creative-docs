@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	/// The <c>ScrollListMultiselect</c> class implements a <see cref="ScrollList"/>
 	/// with support for multiple line selection.
 	/// </summary>
-	public class ScrollListMultiSelect : ScrollList
+	public class ScrollListMultiSelect : ScrollList, IMultipleSelection
 	{
 		public ScrollListMultiSelect()
 		{
@@ -28,6 +28,8 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 
+
+		#region IMultipleSelection Members
 
 		public int SelectionCount
 		{
@@ -47,7 +49,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
 		public void AddSelection(IEnumerable<int> selection)
 		{
 			bool dirty = false;
@@ -121,6 +122,9 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 		}
+
+		#endregion
+
 
 		protected override void MouseSelectBegin()
 		{

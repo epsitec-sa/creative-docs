@@ -11,25 +11,18 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public class SuperCombo : TextFieldCombo
+	public class SuperCombo : TextFieldCombo, IMultipleSelection
 	{
 		public SuperCombo()
 		{
 			this.AllowMultipleSelection = true;  //? provisoire
-			this.selections = new List<int> ();
+			this.selection = new HashSet<int> ();
 		}
 
 		public SuperCombo(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
-		}
-
-
-		public bool AllowMultipleSelection
-		{
-			get;
-			set;
 		}
 
 
@@ -41,6 +34,95 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			base.Dispose (disposing);
+		}
+
+
+		public bool AllowMultipleSelection
+		{
+			get;
+			set;
+		}
+
+
+		#region IMultipleSelection Members
+
+		public int SelectionCount
+		{
+			get
+			{
+				return this.selection.Count;
+			}
+		}
+
+		public void AddSelection(IEnumerable<int> selection)
+		{
+			bool dirty = false;
+
+			foreach (var index in selection)
+			{
+				if (this.selection.Add (index))
+				{
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public void RemoveSelection(IEnumerable<int> selection)
+		{
+			bool dirty = false;
+
+			foreach (var index in selection)
+			{
+				if (this.selection.Remove (index))
+				{
+					dirty = true;
+				}
+			}
+
+			if (dirty)
+			{
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public void ClearSelection()
+		{
+			if (this.selection.Count > 0)
+			{
+				this.selection.Clear ();
+				this.OnMultiSelectionChanged ();
+			}
+		}
+
+		public ICollection<int> GetSortedSelection()
+		{
+			return this.selection.OrderBy (x => x).ToList ().AsReadOnly ();
+		}
+
+		public bool IsItemSelected(int index)
+		{
+			if (this.selection.Contains (index))
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		#endregion
+
+
+		public override void NotifyStringCollectionChanged()
+		{
+			//	Appelé lorsque la StringCollection this.Items a changé.
+			this.UpdateText ();
 		}
 
 
@@ -253,7 +335,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void InitializeSelections()
 		{
-			this.selections.Clear ();
+			this.ClearSelection ();
 
 			var words = Misc.Split (this.Text.Replace (",", " "), " ");
 
@@ -262,35 +344,36 @@ namespace Epsitec.Cresus.Core.Widgets
 				int index = this.items.IndexOf (word);
 				if (index != -1)
 				{
-					this.selections.Add (index);
+					this.AddSelection (Enumerable.Range (index, 1));
 				}
 			}
 		}
 
 		private void InitialiseSelectedText(int index)
 		{
-			if (this.selections.Contains (index))
+			if ((this.IsItemSelected (index)))
 			{
-				this.selections.Remove (index);
+				this.RemoveSelection (Enumerable.Range (index, 1));
 			}
 			else
 			{
-				this.selections.Add (index);
+				this.AddSelection (Enumerable.Range (index, 1));
 			}
 
-			System.Text.StringBuilder builder = new System.Text.StringBuilder ();
+			this.UpdateText ();
+		}
 
-			for (int i = 0; i < this.selections.Count; i++)
+		private void UpdateText()
+		{
+			ICollection<int> sels = this.GetSortedSelection ();
+			List<string> list = new List<string> ();
+
+			foreach (int sel in sels)
 			{
-				if (i > 0)
-				{
-					builder.Append (", ");
-				}
-
-				builder.Append (this.items[this.selections[i]]);
+				list.Add (this.items[sel]);
 			}
 
-			this.Text = builder.ToString ();
+			this.Text = Misc.Combine (list, ", ");
 		}
 		
 
@@ -301,6 +384,19 @@ namespace Epsitec.Cresus.Core.Widgets
 			if (this.Window != null)
 			{
 				this.Window.RestoreLogicalFocus ();
+			}
+		}
+
+		protected void OnMultiSelectionChanged()
+		{
+			this.Invalidate ();
+
+			var handler = this.GetUserEventHandler<DependencyPropertyChangedEventArgs> (SuperCombo.MultiSelectionChangedEvent);
+			var e = new DependencyPropertyChangedEventArgs ("MultiSelection");
+
+			if (handler != null)
+			{
+				handler (this, e);
 			}
 		}
 
@@ -331,7 +427,9 @@ namespace Epsitec.Cresus.Core.Widgets
 
 
 
-		private List<int> selections;
+		private const string MultiSelectionChangedEvent = "MultiSelectionChanged";
+
+		private readonly HashSet<int> selection;
 		private ScrollList scrollList;
 	}
 }
