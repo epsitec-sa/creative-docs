@@ -33,22 +33,24 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	Subtil système en 4 passes, pour essayer d'abord de ne mettre que des tuiles distinctes, puis de grouper petit à petit.
 			//	En cas de manque de place, ou groupe d'abord les mails, puis les téléphones, puis finalement les adresses.
+			if (!this.container.IsActualGeometryValid)
+			{
+				Common.Widgets.Layouts.LayoutContext.SyncArrange (this.container);
+			}
+
 			for (int pass = 0; pass < 4; pass++)
 			{
 				this.container.Children.Clear ();  // supprime les widgets générés à la passe précédente
 				this.CreateUITiles (person, pass > 2, pass > 1, pass > 0);
 
-				//	TODO: Je serais tranquille si Pierre vérifiait ceci !
 				Common.Widgets.Layouts.LayoutContext.SyncMeasure (this.container);
-				Common.Widgets.Layouts.LayoutContext.SyncArrange (this.container);
 
 				//	Calcule la hauteur des tuiles qu'on vient de générer.
 				double currentHeight = 0;
 				foreach (Widget widget in this.container.Children)
 				{
-					currentHeight += widget.ActualHeight;
-					currentHeight += widget.Margins.Top;
-					currentHeight += widget.Margins.Bottom;
+					currentHeight += Epsitec.Common.Widgets.Layouts.LayoutMeasure.GetHeight (widget).Desired;
+					currentHeight += widget.Margins.Height;
 				}
 
 				if (currentHeight <= this.container.ActualHeight)  // assez de place ?
