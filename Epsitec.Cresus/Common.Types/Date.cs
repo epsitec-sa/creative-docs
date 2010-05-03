@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
 {
@@ -12,36 +12,26 @@ namespace Epsitec.Common.Types
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Date.Converter))]
 	
-	public struct Date : System.IComparable, INullable
+	public struct Date : System.IComparable, INullable, System.IEquatable<Date>
 	{
-		public Date(int year, int month, int day) : this()
+		public Date(System.DateTime dateTime)
 		{
-			this.Ticks = (new System.DateTime (year, month, day)).Ticks;
+			this.days = (int)(dateTime.Ticks / Time.TicksPerDay);
 		}
-		
-		public Date(object date) : this()
+
+		public Date(int year, int month, int day)
+			: this (new System.DateTime (year, month, day))
 		{
-			if (date is System.DateTime)
-			{
-				this.Ticks = ((System.DateTime) date).Date.Ticks;
-			}
-			else if (date is Date)
-			{
-				this.days = ((Date) date).days;
-			}
-			else if (date == null)
-			{
-				this.days = -1;
-			}
-			else
-			{
-				throw new System.ArgumentException ("Neither a Date nor a DateTime");
-			}
 		}
-		
-		public Date(long ticks) : this()
+
+		public Date(long ticks)
+			: this (new System.DateTime (ticks))
 		{
-			this.Ticks = ticks;
+		}
+
+		private Date(int days, bool justToMakeSure)
+		{
+			this.days = days;
 		}
 		
 		
@@ -77,10 +67,6 @@ namespace Epsitec.Common.Types
 			{
 				return this.days * Time.TicksPerDay;
 			}
-			set
-			{
-				this.days = (int) (value / Time.TicksPerDay);
-			}
 		}
 		
 		
@@ -92,7 +78,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		public static readonly Date				Null = new Date (null);
+		public static readonly Date				Null = new Date (-1, true);
 
 		
 		public Date AddDays(int value)
@@ -148,6 +134,26 @@ namespace Epsitec.Common.Types
 			return this.days.GetHashCode ();
 		}
 
+
+		public static Date FromObject(object value)
+		{
+			if (value is System.DateTime)
+			{
+				return new Date ((System.DateTime) value);
+			}
+			else if (value is Date)
+			{
+				return (Date) value;
+			}
+			else if (value == null)
+			{
+				return Date.Null;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Neither a Date nor a DateTime");
+			}
+		}
 		
 		public static int Compare(Date t1, Date t2)
 		{
@@ -211,6 +217,15 @@ namespace Epsitec.Common.Types
 		{
 			return this.InternalDate.ToString ("d", provider);
 		}
+
+		#region IEquatable<Date> Members
+
+		public bool Equals(Date other)
+		{
+			return this.days == other.days;
+		}
+
+		#endregion
 		
 		
 		#region INullable Members
@@ -268,8 +283,7 @@ namespace Epsitec.Common.Types
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
 				int days = System.Int32.Parse (value, culture);
-				Date date = new Date ();
-				date.days = days;
+				Date date = new Date (days, true);
 				return date;
 			}
 			
@@ -295,6 +309,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		private int								days;
+		private readonly int					days;
 	}
 }

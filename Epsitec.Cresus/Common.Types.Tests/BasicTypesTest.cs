@@ -269,7 +269,7 @@ namespace Epsitec.Common.Types
 
 			Date datePast = new Date (2006, 2, 15);
 			Date dateNow = new Date (System.DateTime.Now);
-			Date dateNull = new Date (null);
+			Date dateNull = Date.FromObject (null);
 
 			Assert.AreEqual (732356 * Time.TicksPerDay, datePast.Ticks);
 			Assert.IsTrue (datePast < dateNow);
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Types
 			Time time1 = new Time (1, 10, 30);
 			Time time2 = new Time (new System.DateTime (2006, 2, 15, 1, 10, 30));
 			Time time3 = new Time (1, 10, 31);
-			Time timeNull = new Time (null);
+			Time timeNull = Time.FromObject (null);
 
 			Assert.AreEqual (time1.Ticks, time2.Ticks);
 			Assert.IsTrue (time1 == time2);

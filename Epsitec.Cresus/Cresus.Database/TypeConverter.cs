@@ -432,8 +432,8 @@ namespace Epsitec.Cresus.Database
 					throw new Exceptions.FormatException (string.Format ("Incompatible numeric format for {0}", num));
 				
 				case DbSimpleType.String:		return value;
-				case DbSimpleType.Date:			return new Common.Types.Date (value);
-				case DbSimpleType.Time:			return new Common.Types.Time (value);
+				case DbSimpleType.Date:			return Common.Types.Date.FromObject (value);
+				case DbSimpleType.Time:			return Common.Types.Time.FromObject (value);
 				case DbSimpleType.DateTime:		return value;
 				case DbSimpleType.ByteArray:	return value;
 				case DbSimpleType.Guid:			return value;
