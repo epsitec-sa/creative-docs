@@ -261,32 +261,67 @@ namespace Epsitec.Cresus.DataLayer
 			AbstractType fieldType = field.Type as AbstractType;
 			object fieldValue = example.InternalGetValue (field.Id);
 
+
+			// TODO Temporary code. Add other comparison behaviors.
+			DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+
 			switch (fieldType.TypeCode)
 			{
 				case TypeCode.String:
-					this.QueryDataForString (reader, tableColumn, field, fieldType, fieldProperties, fieldValue as string);
+					condition.AddCondition (tableColumn, DbCompare.Like, (string) fieldValue);
+					break;
+
+				case TypeCode.Decimal:
+					throw new System.NotImplementedException ();
+					break;
+
+				case TypeCode.Double:
+					throw new System.NotImplementedException ();
+					break;
+
+				case TypeCode.Integer:
+					condition.AddCondition (tableColumn, DbCompare.Equal, (int) fieldValue);
+					break;
+
+				case TypeCode.LongInteger:
+					condition.AddCondition (tableColumn, DbCompare.Equal, (long) fieldValue);
+					break;
+					
+				case TypeCode.Boolean:
+					condition.AddCondition (tableColumn, DbCompare.Equal, (bool) fieldValue);
+					break;
+
+				case TypeCode.Date:
+					throw new System.NotImplementedException ();
+					break;
+
+				case TypeCode.DateTime:
+					throw new System.NotImplementedException ();
+					break;
+
+				case TypeCode.Time:
+					throw new System.NotImplementedException ();
 					break;
 
 				default:
-					// TODO Implement conditions for other field types.
+					throw new System.NotImplementedException ();
 					break;
 			}
+
+			reader.AddCondition (condition);
 		}
 
 
-		private void QueryDataForString(DbReader reader, DbTableColumn tableColumn, StructuredTypeField field, AbstractType fieldType, IFieldPropertyStore fieldProperties, string value)
+		private void QueryDataForString(DbReader reader, DbTableColumn tableColumn, StructuredTypeField field, AbstractType fieldType, IFieldPropertyStore fieldProperties, string fieldValue)
 		{
-			if (!string.IsNullOrEmpty (value))
+			if (!string.IsNullOrEmpty (fieldValue))
 			{
-				IStringType fieldStringType = fieldType as IStringType;
-
 				DbSelectCondition condition = new DbSelectCondition (this.DbInfrastructure.Converter);
+				
+				IStringType fieldStringType = fieldType as IStringType;
 
 				StringSearchBehavior searchBehavior = fieldStringType.DefaultSearchBehavior;
 				StringComparisonBehavior comparisonBehavior = fieldStringType.DefaultComparisonBehavior;
-
-				//	If the provided example implements IFieldPropertyStore, check
-				//	if special properties are attached to the current field :
 
 				if (fieldProperties != null)
 				{
@@ -294,13 +329,16 @@ namespace Epsitec.Cresus.DataLayer
 					{
 						searchBehavior = (StringSearchBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultSearchBehaviorProperty);
 					}
+
 					if (fieldProperties.ContainsValue (field.Id, StringType.DefaultComparisonBehaviorProperty))
 					{
 						comparisonBehavior = (StringComparisonBehavior) fieldProperties.GetValue (field.Id, StringType.DefaultComparisonBehaviorProperty);
 					}
 				}
 
-				string pattern = this.CreateSearchPattern (value, searchBehavior);
+				// TODO Do something useful withcomparisonBehavior or delete it if it is not useful.
+
+				string pattern = this.CreateSearchPattern (fieldValue, searchBehavior);
 
 				if (pattern.Contains (DbSqlStandard.CompareLikeEscape))
 				{
