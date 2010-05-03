@@ -109,6 +109,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public void AddCondition(DbTableColumn a, DbCompare comparison, bool value)
+		{
+			this.conditions.Add (new Condition (a, comparison, value, DbRawType.Boolean));
+		}
+
 		/// <summary>
 		/// Adds a condition.
 		/// </summary>
