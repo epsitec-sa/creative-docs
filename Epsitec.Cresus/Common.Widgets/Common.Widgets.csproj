@@ -183,6 +183,7 @@
     <Compile Include="CommandParameters.cs" />
     <Compile Include="CommandHandlerPair.cs" />
     <Compile Include="AutoSplitter.cs" />
+    <Compile Include="IMultipleSelection.cs" />
     <Compile Include="MultiSelectEventArgs.cs" />
     <Compile Include="ApplicationStartStatus.cs" />
     <Compile Include="Platform\AppSupport.cs" />

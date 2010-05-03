@@ -45,31 +45,17 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.CreateFooterEditorTile ();
 
 			//	Crée le contenu de la tuile d'édition.
-			FrameBox group;
-
 			this.CreateLinkButtons (tile1.Container);
+
+			this.CreateTextFieldPair (tile2.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.countryConverter);
+			this.CreateTextFieldPair (tile2.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
+			this.CreateTextFieldPair (tile2.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, Validators.PostalCodeValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.locationConverter);
+
+			this.CreateMargin (tile2.Container, true);
 
 			this.CreateTextField (tile2.Container, 0, "Rue", accessor.StreetName, x => accessor.StreetName = x, Validators.StringValidator.Validate);
 			this.CreateTextFieldMulti (tile2.Container, 52, "Complément de l'adresse", accessor.StreetComplement, x => accessor.StreetComplement = x, null);
 			this.CreateTextField (tile2.Container, 0, "Boîte postale", accessor.PostBoxNumber, x => accessor.PostBoxNumber = x, Validators.StringValidator.Validate);
-
-#if true
-			this.CreateTextFieldPair (tile2.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationPostalCode = x, Validators.PostalCodeValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.locationConverter);
-			this.CreateTextFieldPair (tile2.Container, 70, "Code et nom du pays", accessor.CountryCode, accessor.CountryName, x => accessor.CountryCode = x, x => accessor.CountryName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.countryConverter);
-			this.CreateTextFieldPair (tile2.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
-#else
-			group = this.CreateGroup (tile2.Container, "Numéro postal et ville");
-			this.CreateTextField (group, 50, accessor.LocationPostalCode, x => accessor.LocationPostalCode = x, Validators.StringValidator.Validate);
-			this.CreateTextField (group, 0, accessor.LocationName, x => accessor.LocationName = x, Validators.StringValidator.Validate);
-
-			group = this.CreateGroup (tile2.Container, "Code et nom du pays");
-			this.CreateTextField (group, 50, accessor.CountryCode, x => accessor.CountryCode = x, Validators.StringValidator.Validate);
-			this.CreateTextField (group, 0, accessor.CountryName, x => accessor.CountryName = x, Validators.StringValidator.Validate);
-
-			group = this.CreateGroup (tile2.Container, "Code et nom de la région");
-			this.CreateTextField (group, 50, accessor.RegionCode, x => accessor.RegionCode = x, Validators.StringValidator.Validate);
-			this.CreateTextField (group, 0, accessor.RegionName, x => accessor.RegionName = x, Validators.StringValidator.Validate);
-#endif
 
 			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
