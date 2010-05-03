@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Common.Widgets.Layouts.LayoutContext.SyncArrange (this.container);
 			}
 
-			for (int pass = 0; pass < 4; pass++)
+			for (int pass = 2; pass < 4; pass++)
 			{
 				this.container.Children.Clear ();  // supprime les widgets générés à la passe précédente
 				this.CreateUITiles (person, pass > 2, pass > 1, pass > 0);
