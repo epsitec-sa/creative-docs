@@ -385,7 +385,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		protected void CreateLinkButtons(Widget embedder)
 		{
 			//	TODO: Prototype non fonctionnel, à valider puis terminer
-			var frameBox = new FrameBox
+			var frameBox = new ClippingFrameBox
 			{
 				Parent = embedder,
 				Dock = DockStyle.Top,
@@ -420,6 +420,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				Text = "Utilisation unique",  // ou "Utilisé 10x"
 				Dock = DockStyle.Fill,
 			};
+
+			
 		}
 
 		protected FrameBox CreateGroup(Widget embedder, string label)
