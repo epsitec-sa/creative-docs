@@ -114,12 +114,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			set;
 		}
 
-		public object ParentEntities
-		{
-			get;
-			set;
-		}
-
 		public AbstractEntity Entity
 		{
 			get;
