@@ -48,7 +48,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			//	Crée le contenu de la tuile d'édition.
 			this.CreateCombo (tile.Container, 0, "Choix du ou des rôles souhaités", accessor.RoleInitializer, true, true, true, accessor.Roles, x => accessor.Roles = x, null);
 
-			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
 		}
 	}

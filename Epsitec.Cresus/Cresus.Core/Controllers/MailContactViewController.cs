@@ -59,7 +59,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			//?this.CreateTextFieldPair (tile.Container.Container, 70, "Code et nom de la région", accessor.RegionCode, accessor.RegionName, x => accessor.RegionCode = x, x => accessor.RegionName = x, Validators.StringValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.regionConverter);
 			this.CreateTextFieldPair (tile.Container, 70, "Numéro postal et ville", accessor.LocationPostalCode, accessor.LocationName, x => accessor.LocationPostalCode = x, x => accessor.LocationName = x, Validators.PostalCodeValidator.Validate, Validators.StringValidator.Validate, EntitiesAccessors.MailContactAccessor.locationConverter);
 
-			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
 		}
 	}

@@ -55,7 +55,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.CreateTextField (tile.Container, 0, "Adresse mail", accessor.UriContact.Uri, x => accessor.UriContact.Uri = x, Validators.StringValidator.Validate);
 
-			this.AdjustVisualForGroups ();
 			this.SetInitialFocus ();
 		}
 	}

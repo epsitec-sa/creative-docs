@@ -251,69 +251,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			closeButton.Clicked += new EventHandler<MessageEventArgs> (this.HandleCloseButtonClicked);
 #endif
 		}
-
-
-		/// <summary>
-		/// Ajuste l'aspect visuel pour former des groupes bien distincts.
-		/// Les traits horizontaux de séparation à l'intérieur des groupes sont supprimés.
-		/// Les différents groupes sont espacés.
-		/// </summary>
-		protected void AdjustVisualForGroups()
-		{
-#if false
-			System.Diagnostics.Debug.Assert (this.container != null);
-
-			bool first = true;
-			for (int i = 0; i < this.container.Children.Count; i++)
-			{
-				var currentTile = this.container.Children[i] as Widgets.AbstractTile;
-
-				if (currentTile != null)
-				{
-					var nextTile = (i+1 < this.container.Children.Count) ? this.container.Children[i+1] as Widgets.AbstractTile : null;
-					System.Diagnostics.Debug.Assert (currentTile != null);
-
-					if (nextTile != null && currentTile.GroupIndex == nextTile.GroupIndex)  // dans le même groupe ?
-					{
-						currentTile.Margins = new Margins (0, 0, 0, -1);  // léger chevauchement
-
-						if (nextTile != null && nextTile.CompactFollower)
-						{
-							if (first)
-							{
-								currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Up;
-							}
-							else
-							{
-								currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right;
-							}
-						}
-						else
-						{
-							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
-						}
-
-						first = false;
-					}
-					else  // dans deux groupes différents ?
-					{
-						currentTile.Margins = new Margins (0, 0, 0, 4);  // espacement
-
-						if (first)
-						{
-							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.All;
-						}
-						else
-						{
-							currentTile.RectangleBordersShowed = Widgets.RectangleBordersShowedEnum.Left | Widgets.RectangleBordersShowedEnum.Right | Widgets.RectangleBordersShowedEnum.Down;
-						}
-
-						first = true;
-					}
-				}
-			}
-#endif
-		}
 		#endregion
 
 
