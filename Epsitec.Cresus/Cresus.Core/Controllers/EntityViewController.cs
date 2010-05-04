@@ -391,6 +391,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Dock = DockStyle.Top,
 				Margins = new Margins (0, 10, 10, 20),
 				TabIndex = ++this.tabIndex,
+				ClippingMode = ClippingMode.ClipWidth,
 			};
 
 			var linkButton = new Button
