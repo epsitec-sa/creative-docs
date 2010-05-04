@@ -798,7 +798,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CloseTile()
 		{
-			this.Orchestrator.CloseSubViews (this, true);
+			this.Orchestrator.CloseView (this);
 		}
 
 
@@ -810,7 +810,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			if (tile.IsSelected || controller == null)
 			{
-				this.Orchestrator.CloseSubViews (this, false);
+				this.Orchestrator.CloseSubViews (this);
 			}
 			else
 			{
