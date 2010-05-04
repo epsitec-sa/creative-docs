@@ -53,9 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (entity != null)
 			{
 				this.entity = entity;
-
-				EntityViewController controller = EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
-				this.PushViewController (controller);
+				this.PushViewController (this.CreateCompactEntityViewController ());
 			}
 		}
 
@@ -131,6 +129,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			column.Children.Clear ();
 			controller.CreateUI (column);
+		}
+
+		private EntityViewController CreateCompactEntityViewController()
+		{
+			return EntityViewController.CreateViewController ("ViewController", this.entity, ViewControllerMode.Compact, this.orchestrator);
 		}
 
 		private void SelectViewController(CoreViewController parentController, CoreViewController selectedController)
