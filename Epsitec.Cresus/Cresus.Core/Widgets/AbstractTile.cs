@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 		/// <summary>
-		/// Toutes les tuiles au seing d'un groupe sont identifiées par ce numéro, unique pour le groupe.
+		/// Toutes les tuiles au sein d'un groupe sont identifiées par ce numéro, unique pour le groupe.
 		/// </summary>
 		/// <value>The index of the group.</value>
 		public int GroupIndex
